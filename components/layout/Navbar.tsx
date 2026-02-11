@@ -85,7 +85,10 @@ export const Navbar = () => {
             <div className="relative z-50 mx-auto w-full max-w-[980px] px-5 lg:px-8">
                 <div className="flex h-[76px] items-center justify-between">
                     {/* Logo */}
-                    <Link href="/" className="flex items-center gap-2.5">
+                    <Link
+                        href="/"
+                        className="flex -translate-x-2 items-center gap-2.5 md:-translate-x-[70px] lg:-translate-x-[110px] xl:-translate-x-[140px]"
+                    >
                         <div className="relative h-9 w-9">
                             <Image
                                 src="/logobueno.png"
@@ -101,7 +104,7 @@ export const Navbar = () => {
                     </Link>
 
                     {/* Navigation Links + Buttons */}
-                    <div className="flex items-center gap-10">
+                    <div className="flex items-center gap-10 md:translate-x-[36px] lg:translate-x-[72px] xl:translate-x-[96px]">
                         <div className="hidden items-center gap-15 md:flex">
                             <Link
                                 href="#"
