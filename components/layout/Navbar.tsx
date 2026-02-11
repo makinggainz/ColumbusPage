@@ -89,7 +89,7 @@ export const Navbar = () => {
                         href="/"
                         className="flex -translate-x-2 items-center gap-2.5 md:-translate-x-[70px] lg:-translate-x-[110px] xl:-translate-x-[140px]"
                     >
-                        <div className="relative h-9 w-9">
+                        <div className="relative h-12 w-12">
                             <Image
                                 src="/logobueno.png"
                                 alt="Columbus Logo"
@@ -98,13 +98,13 @@ export const Navbar = () => {
                                 priority
                             />
                         </div>
-                        <span className="text-[22px] font-semibold leading-none tracking-[-0.01em] text-[#0a1628]">
+                        <span className="text-[27px] font-semibold leading-none tracking-[-0.01em] text-[#0a1628]">
                             Columbus Earth
                         </span>
                     </Link>
 
                     {/* Navigation Links + Buttons */}
-                    <div className="flex items-center gap-10 md:translate-x-[36px] lg:translate-x-[72px] xl:translate-x-[96px]">
+                    <div className="flex items-center gap-10 md:translate-x-[50px] lg:translate-x-[90px] xl:translate-x-[120px]">
                         <div className="hidden items-center gap-15 md:flex">
                             <Link
                                 href="#"
