@@ -12,7 +12,7 @@ export const Hero = () => {
                             "text-[48px] leading-[1.08] tracking-[-0.012em]",
                             "sm:text-[58px] sm:leading-[1.04]",
                             "md:text-[66px] md:leading-[1.02]",
-                            "lg:text-[72px] lg:leading-[1] lg:-translate-x-60",
+                            "lg:text-[72px] lg:leading-[1] lg:-translate-x-35",
                         ].join(" ")}
                     >
                         <span className="block whitespace-nowrap">The frontier AI Lab</span>
