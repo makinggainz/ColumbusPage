@@ -1,4 +1,4 @@
-import { cormorantGaramond } from "@/lib/fonts";
+import { shipporiMincho } from "@/lib/fonts";
 
 export const Hero = () => {
     return (
@@ -7,7 +7,7 @@ export const Hero = () => {
                 <div className="mx-auto w-full max-w-[1080px] px-5 lg:px-8">
                     <h1
                         className={[
-                            cormorantGaramond.className,
+                            shipporiMincho.className,
                             "max-w-[980px] text-[#0a1628]",
                             "text-[48px] leading-[1.08] tracking-[-0.012em]",
                             "sm:text-[58px] sm:leading-[1.04]",
