@@ -112,13 +112,23 @@ export const Navbar = () => {
     };
 
     return (
-        <nav 
-            ref={navRef}
-            className="header-font fixed top-0 left-0 right-0 z-50 border-b border-[#0a1628]/12 bg-[#FFFFFF]"
-            onMouseEnter={handleNavMouseEnter}
-            onMouseLeave={handleMouseLeave}
-        >
-            <div className="relative z-50 mx-auto w-full max-w-[980px] px-5 lg:px-8">
+        <>
+            {/* Backdrop blur overlay */}
+            <div 
+                className={`fixed inset-0 z-40 transition-all duration-500 ${
+                    isMenuOpen 
+                        ? "opacity-100 backdrop-blur-sm bg-black/5" 
+                        : "opacity-0 pointer-events-none"
+                }`}
+            />
+            
+            <nav 
+                ref={navRef}
+                className="header-font fixed top-0 left-0 right-0 z-50 border-b border-[#0a1628]/12 bg-[#FFFFFF]"
+                onMouseEnter={handleNavMouseEnter}
+                onMouseLeave={handleMouseLeave}
+            >
+                <div className="relative z-50 mx-auto w-full max-w-[980px] px-5 lg:px-8">
                 <div className="flex h-[76px] items-center justify-between">
                     {/* Logo */}
                     <Link
@@ -311,5 +321,6 @@ export const Navbar = () => {
 
             </div>
         </nav>
+        </>
     );
 };
