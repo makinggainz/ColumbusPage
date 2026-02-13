@@ -87,7 +87,7 @@ export function TechSidebarNav() {
                   aria-current={isActive ? "page" : undefined}
                 >
                   <span className={styles.sidebarMarker}>{isActive ? "+" : ""}</span>
-                  <span>{item.label}</span>
+                  <span className={item.id === "index" ? styles.sidebarIndexLabel : undefined}>{item.label}</span>
                 </Link>
               </li>
             );

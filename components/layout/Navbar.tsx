@@ -128,7 +128,7 @@ export const Navbar = () => {
                 onMouseEnter={handleNavMouseEnter}
                 onMouseLeave={handleMouseLeave}
             >
-                <div className="relative z-50 mx-auto w-full max-w-[980px] px-5 lg:px-8">
+                <div className="relative z-50 mx-auto w-full max-w-[1200px] px-4 lg:px-6">
                 <div className="flex h-[76px] items-center justify-between">
                     {/* Logo */}
                     <Link
@@ -144,30 +144,32 @@ export const Navbar = () => {
                                 priority
                             />
                         </div>
-                        <span className="text-[27px] font-semibold leading-none tracking-[-0.01em] text-[#0A1344]">
+                        <span className="brand-wordmark text-[27px] font-semibold leading-none tracking-[-0.01em] text-[#0A1344]">
                             Columbus Earth
                         </span>
                     </Link>
 
                     {/* Navigation Links + Buttons */}
-                    <div className="flex items-center gap-10 md:translate-x-[50px] lg:translate-x-[90px] xl:translate-x-[200px]">
+                    {/* <div className="flex items-center gap-10 md:translate-x-[50px] lg:translate-x-[90px] xl:translate-x-[200px]"> */}
+                    <div className="flex items-center gap-13 md:translate-x-[40px] lg:translate-x-[70px] xl:translate-x-[140px]">
                         <div className="hidden items-center gap-15 md:flex">
                             <Link
                                 href="#"
-                                className="text-[18px] font-normal text-[#0a1628] transition-colors hover:text-gray-600"
+                                className="text-[19px] font-normal text-[#0a1628] transition-colors hover:text-gray-600"
                             >
                                 Product
                             </Link>
                             <Link
                                 href="#"
-                                className="text-[18px] font-normal text-[#0a1628] transition-colors hover:text-gray-600"
+                                className="text-[19px] font-normal text-[#0a1628] transition-colors hover:text-gray-600"
                             >
                                 Use Cases
                             </Link>
                             <Link
                                 href="/technology"
-                                className="text-[18px] font-normal text-[#0a1628] transition-colors hover:text-gray-600"
+                                className="text-[19px] font-normal text-[#0a1628] transition-colors hover:text-gray-600"
                             >
+                                {/* Changed text size for nav items: used to be 18px */}
                                 Technology
                             </Link>
                         </div>
@@ -175,7 +177,7 @@ export const Navbar = () => {
                         <div className="flex items-center gap-8">
                             <Link
                                 href="/maps-gpt"
-                                className="h-[44px] min-w-[166px] border border-[#0A1344]/85 bg-white px-8 text-[18px] font-semibold text-[#0A1344] transition-colors hover:bg-gray-50 flex items-center justify-center"
+                                className="h-[44px] min-w-[166px] border border-[#0A1344]/85 bg-white px-8 text-[19px] font-semibold text-[#0A1344] transition-colors hover:bg-gray-50 flex items-center justify-center"
                             >
                                 Start Now
                             </Link>

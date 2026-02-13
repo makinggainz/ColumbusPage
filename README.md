@@ -35,3 +35,44 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
 # ColumbusPage
+
+---
+
+## Working in this project (beginner guide)
+
+### How the project is organized
+
+- **`app/`** – Routes (URLs). For example, `app/technology/page.tsx` is what you see at `/technology`. Each `page.tsx` is the “entry” for that URL.
+- **`components/`** – Reusable UI pieces. The Technology page uses everything under `components/technology/`.
+- **`*.module.css`** – Styles scoped to a component. The Technology page’s look is in `components/technology/technology.module.css`.
+
+So for the Technology page:
+
+1. **URL** `/technology` → **Route** `app/technology/page.tsx` → **Page component** `components/technology/TechnologyPage.tsx` → **Styles** `components/technology/technology.module.css`.
+
+### Changing text color on the Technology page
+
+Text color is controlled by **CSS**. The main file for the Technology page is:
+
+**`components/technology/technology.module.css`**
+
+- **Whole page default text color:** the `.page` rule at the top sets `color: #0a1628` (dark blue‑black). Change that value to change the default text color for the page.
+- **Specific sections** have their own rules. For example:
+  - `.indexCopy p` – paragraph text in the first “Building a brain for Earth” section (e.g. `color: rgba(0, 0, 0, 0.82)`).
+  - `.sidebarLink` – sidebar nav links (`color: rgba(10, 22, 40, 0.86)`).
+  - `.sectionTitle` – big section titles.
+  - `.lgmTitle`, `.fusingTitle`, etc. – titles in other sections.
+
+**Steps to change a color:**
+
+1. Run the dev server: `npm run dev`.
+2. Open [http://localhost:3000/technology](http://localhost:3000/technology).
+3. Open `components/technology/technology.module.css` in your editor.
+4. Find the class that styles the text you want (e.g. `.indexCopy p` for the first section paragraphs).
+5. Change the `color:` value (e.g. to `#1a365d` for blue, or `#0d9488` for teal).
+6. Save the file; the browser will refresh and show the new color.
+
+**Color format tips:**  
+- `#1a365d` = hex color.  
+- `rgba(0, 0, 0, 0.82)` = black at 82% opacity.  
+- Named colors like `rebeccapurple` or `coral` also work.
