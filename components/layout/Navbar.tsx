@@ -161,7 +161,6 @@ export const Navbar = () => {
                     <Link
                         href="/"
                         className="flex items-center gap-2.5"
-
                     >
                         <div className="relative h-12 w-12">
                             <Image
@@ -297,7 +296,6 @@ export const Navbar = () => {
                                     <a
                                         href="mailto:contact@columbus.earth"
                                         className="text-[#0A1344] font-medium block transition-colors duration-300 hover:text-[#0A1344]/70"
-
                                     >
                                         contact@columbus.earth
                                     </a>
