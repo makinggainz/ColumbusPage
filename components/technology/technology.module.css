@@ -59,6 +59,11 @@
   padding: 0;
 }
 
+/* First slide only: center "Building a brain for Earth" + diagram vertically */
+.section:has(.indexSlide) {
+  align-items: center;
+}
+
 .noSnapSection {
   scroll-margin-top: 0;
 }
@@ -483,6 +488,8 @@
 
 .dataCollectionSection {
   min-height: auto;
+  /* Match LGM section gradient end so no white block appears below it */
+  background: linear-gradient(180deg, #9ec9e9 0%, #ffffff 12%);
 }
 
 .dataCollectionSection .slideFrame {

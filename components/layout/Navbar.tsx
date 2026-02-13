@@ -160,7 +160,7 @@ export const Navbar = () => {
                     {/* Logo */}
                     <Link
                         href="/"
-                        className="flex items-center gap-2.5"
+                        className="flex -translate-x-2 items-center gap-2.5 md:-translate-x-[70px] lg:-translate-x-[110px] xl:-translate-x-[140px]"
                     >
                         <div className="relative h-12 w-12">
                             <Image
@@ -171,7 +171,7 @@ export const Navbar = () => {
                                 priority
                             />
                         </div>
-                        <span className="brand-wordmark text-[27px] font-semibold leading-none tracking-[-0.01em] text-[#0A1344]">
+                        <span className="brand-wordmark text-[27px] font-bold leading-none tracking-[-0.01em] text-[#0A1344]">
                             Columbus Earth
                         </span>
                     </Link>
