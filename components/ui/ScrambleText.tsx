@@ -4,18 +4,34 @@ import { useEffect, useState } from "react";
 
 const SCRAMBLE_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
+function scrambled(text: string): string {
+  return text
+    .split("")
+    .map((char) =>
+      char === " "
+        ? " "
+        : SCRAMBLE_CHARS[Math.floor(Math.random() * SCRAMBLE_CHARS.length)]
+    )
+    .join("");
+}
+
 export function ScrambleText({
   text,
   isActive,
   delay = 0,
   className = "",
+  letterDelayMs = 20,
 }: {
   text: string;
   isActive: boolean;
   delay?: number;
   className?: string;
+  /** Delay between revealing each letter (higher = more typewriter-like). */
+  letterDelayMs?: number;
 }) {
-  const [displayText, setDisplayText] = useState(text);
+  const [displayText, setDisplayText] = useState(() =>
+    isActive ? scrambled(text) : text
+  );
 
   useEffect(() => {
     if (!isActive) return;
@@ -44,14 +60,14 @@ export function ScrambleText({
           if (interval) clearInterval(interval);
           setDisplayText(text);
         }
-      }, 20);
+      }, letterDelayMs);
     }, delay);
 
     return () => {
       clearTimeout(timeout);
       if (interval) clearInterval(interval);
     };
-  }, [delay, isActive, text]);
+  }, [delay, isActive, text, letterDelayMs]);
 
   return (
     <span className={className || "font-mono"}>

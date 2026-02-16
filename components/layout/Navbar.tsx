@@ -2,15 +2,57 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import { useEffect, useState, useRef } from "react";
 import { ScrambleText } from "@/components/ui/ScrambleText";
 
 export const Navbar = () => {
+    const pathname = usePathname();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isManuallyToggled, setIsManuallyToggled] = useState(false);
+    const [showBrandInNav, setShowBrandInNav] = useState(true);
+    const [brandFadeIn, setBrandFadeIn] = useState(false);
     const navRef = useRef<HTMLElement>(null);
     const lastMouseY = useRef(0);
-     useEffect(() => {
+
+    // Fade in the nav brand text in sync with scramble animation
+    useEffect(() => {
+        if (!showBrandInNav) {
+            setBrandFadeIn(false);
+            return;
+        }
+        const t = requestAnimationFrame(() => setBrandFadeIn(true));
+        return () => cancelAnimationFrame(t);
+    }, [showBrandInNav]);
+
+    // On home page: hide brand until user scrolls past hero title
+    useEffect(() => {
+        if (pathname !== "/") {
+            setShowBrandInNav(true);
+            return;
+        }
+        setShowBrandInNav(false);
+        let ioCleanup: (() => void) | null = null;
+        const t = setTimeout(() => {
+            const el = document.getElementById("hero-title");
+            if (!el) {
+                setShowBrandInNav(true);
+                return;
+            }
+            const io = new IntersectionObserver(
+                ([entry]) => setShowBrandInNav(!entry.isIntersecting),
+                { threshold: 0, rootMargin: "0px 0px -5% 0px" }
+            );
+            io.observe(el);
+            ioCleanup = () => io.disconnect();
+        }, 0);
+        return () => {
+            clearTimeout(t);
+            ioCleanup?.();
+        };
+    }, [pathname]);
+
+    useEffect(() => {
         const handleMouseMove = (e: MouseEvent) => {
             if (!navRef.current) return;
 
@@ -117,9 +159,23 @@ export const Navbar = () => {
                                 priority
                             />
                         </div>
-                        <span className="brand-wordmark text-[27px] font-bold leading-none tracking-[-0.01em] text-[#0A1344]">
-                            Columbus Earth
-                        </span>
+                        {showBrandInNav && (
+                            <span
+                                className="inline-block transition-opacity ease-out"
+                                style={{
+                                    opacity: brandFadeIn ? 1 : 0,
+                                    transitionDuration: `${"Columbus Earth".length * 55}ms`,
+                                }}
+                            >
+                                <ScrambleText
+                                    text="Columbus Earth"
+                                    isActive={true}
+                                    delay={0}
+                                    letterDelayMs={55}
+                                    className="brand-wordmark text-[27px] font-bold leading-none tracking-[-0.01em] text-[#0A1344]"
+                                />
+                            </span>
+                        )}
                     </Link>
 
                     {/* Navigation Links + Buttons */}
