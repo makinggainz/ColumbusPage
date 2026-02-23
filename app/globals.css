@@ -1,8 +1,13 @@
 @import "tailwindcss";
 @import "mapbox-gl/dist/mapbox-gl.css";
 
+html, body {
+  min-width: 1746px;
+  background: #F9F9F9;
+  color: #171717;
+  overflow-x: hidden;
+}
 :root {
-  --background: #ffffff;
   --foreground: #171717;
   --primary: #0a0e27;
   /* Dark Navy from Image */

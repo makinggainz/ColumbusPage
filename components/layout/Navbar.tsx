@@ -113,6 +113,7 @@ export const Navbar = () => {
                                 src="/logobueno.png"
                                 alt="Columbus Logo"
                                 fill
+                                sizes="48px"
                                 className="object-contain"
                                 priority
                             />

@@ -54,8 +54,8 @@ export function ScrambleText({
   }, [delay, isActive, text]);
 
   return (
-    <span className={className || "font-mono"}>
-      {isActive ? displayText : text}
-    </span>
-  );
+  <span className={className}>
+    {isActive ? displayText : text}
+  </span>
+);
 }

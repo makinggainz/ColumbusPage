@@ -4,65 +4,69 @@ import { useEffect, useState } from "react";
 import { shipporiMincho } from "@/lib/fonts";
 import Image from "next/image";
 import { ScrambleText } from "@/components/ui/ScrambleText";
+import { cormorant } from "@/lib/typography";
 
 export const Hero = () => {
     const [isActive, setIsActive] = useState(false);
-
+    const [mounted, setMounted] = useState(false);
     useEffect(() => {
         const t = setTimeout(() => setIsActive(true), 400);
         return () => clearTimeout(t);
     }, []);
 
     return (
-        <section className="relative z-10 mt-[37px] flex w-full min-h-[calc(100vh-76px)] flex-col overflow-hidden">
-            {/* Background Image */}
-            <Image
+        <section className="relative bg-[#F9F9F9] min-h-[calc(100vh-76px)] overflow-hidden">
+
+            {/* <Image
                 src="/hero-background.jpg"
                 alt="Hero background"
                 fill
-                className="object-cover object-center"
+                sizes="100vw"
+                className="object-cover"
                 priority
-            />
-            {/* Content */}
-            <div className="relative z-10 flex flex-1 items-center">
-                <div className="mx-auto w-full max-w-[1080px] px-5 lg:px-8">
+            /> */}
+
+            <div className="relative z-10 pt-[120px]">
+                <div className="px-[100px]">
+                <div className="w-[1007px]">
+
+                    {/* Eyebrow */}
+                    <p className=" text-[16px] font-medium tracking-[-0.03em] text-[#1C274C]/70 uppercase mb-[20px]
+                    ">
+                    FRONTIER AI RESEARCH AND PRODUCT COMPANY
+                    </p>
+
+                    {/* Main Heading */}
                     <h1
-                        className={[
-                            shipporiMincho.className,
-                            "max-w-[800px] text-[#0a1628]",
-                            "text-[40px] leading-[1.08] tracking-[-0.012em]",
-                            "sm:text-[40px] sm:leading-[1.04]",
-                            "md:text-[40px] md:leading-[1.02]",
-                            "lg:text-[50px] lg:leading-[1] lg:-translate-x-35",
-                        ].join(" ")}
+                    className={`${cormorant.className} font-semibold text-[66px] leading-[120%] tracking-[-0.02em] text-[#0A1344]`}
                     >
-                        <span className="block whitespace-nowrap">
-                            <ScrambleText
-                                text="The frontier AI Lab"
-                                isActive={isActive}
-                                delay={0}
-                                className={shipporiMincho.className}
-                            />
-                        </span>
-                        <span className="mt-[0.16em] block whitespace-nowrap">
-                            <ScrambleText
-                                text="building the first in-production"
-                                isActive={isActive}
-                                delay={200}
-                                className={shipporiMincho.className}
-                            />
-                        </span>
-                        <span className="mt-[0.16em] block whitespace-nowrap">
-                            <ScrambleText
-                                text="Universal Geospatial Model."
-                                isActive={isActive}
-                                delay={400}
-                                className={shipporiMincho.className}
-                            />
-                        </span>
+                    {/* <ScrambleText
+                        text="The frontier AI Lab building the first in-production Large Geospatial Model."
+                        isActive={isActive}
+                        delay={0}
+                    /> */}
+
+                    {mounted ? (
+                    <ScrambleText
+                        text="The frontier AI Lab building the first in-production Large Geospatial Model."
+                        isActive={isActive}
+                        delay={0}
+                    />
+                    ) : (
+                    "The frontier AI Lab building the first in-production Large Geospatial Model."
+                    )}
                     </h1>
+
+                    {/* Tag */}
+                    <p className=" mt-[28px] text-[15px] font-medium tracking-[0.08em]text-[#1C274C]/70
+                    ">
+                    [ COLUMBUS PRO-1 ]
+                    </p>
+
+                </div>
                 </div>
             </div>
-        </section>
+
+            </section>
     );
 };
