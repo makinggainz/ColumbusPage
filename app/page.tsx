@@ -44,9 +44,9 @@
 //updated code with new hero section and typography
 import { Navbar } from "@/components/layout/Navbar";
 import { Hero } from "@/components/home/Hero";
+import { SmoothScroll } from "@/components/home/SmoothScroll";
 import { Vision } from "@/components/home/VisionSection";
 import { Footer } from "@/components/layout/Footer";
-import { MeshSection } from "@/components/home/MeshSection";
 import { GeoWarning } from "@/components/home/GeoWarning";
 import { SiteSelection } from "@/components/home/SiteSelection";
 import { MainFeatures } from "@/components/home/MainFeatures";
@@ -61,9 +61,9 @@ import { UniqueSpotsSection } from "@/components/home/UniqueSpotsSection";
 export default function Home() {
   return (
     <main className="bg-[#F9F9F9]">
+      <SmoothScroll />
       <Navbar />
       <Hero />
-      <MeshSection />
       <Vision />
       
       <GeoWarning />

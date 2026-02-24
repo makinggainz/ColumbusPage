@@ -15,7 +15,7 @@ export const Hero = () => {
     }, []);
 
     return (
-        <section className="relative bg-[#F9F9F9] min-h-[calc(100vh-76px)] overflow-hidden">
+        <section className="relative flex flex-col bg-[#F9F9F9] min-h-[calc(100vh-76px)] overflow-hidden">
 
             {/* <Image
                 src="/hero-background.jpg"
@@ -26,7 +26,7 @@ export const Hero = () => {
                 priority
             /> */}
 
-            <div className="relative z-10 pt-[120px]">
+            <div className="relative z-10 pt-[120px] shrink-0">
                 <div className="px-[100px]">
                 <div className="w-[1007px]">
 
@@ -65,6 +65,18 @@ export const Hero = () => {
 
                 </div>
                 </div>
+            </div>
+
+            {/* Mesh: just below [ COLUMBUS PRO-1 ], extends beyond the viewport */}
+            <div className="relative flex-1 min-h-[120vh] w-full overflow-hidden -mt-[20px]">
+                <Image
+                    src="/images/Background_image ColLanding.png"
+                    alt="Columbus landing grid background"
+                    fill
+                    className="object-cover object-top w-full"
+                    sizes="100vw"
+                    priority
+                />
             </div>
 
             </section>
