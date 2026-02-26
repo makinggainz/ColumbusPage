@@ -5,32 +5,33 @@ import { Mail, Linkedin } from "lucide-react";
 
 export const Footer = () => {
   return (
-    <footer className="relative w-full h-[800px] text-white">
+    <footer className="relative text-white overflow-hidden">
 
-      {/* BACKGROUND IMAGE */}
+      {/* Background */}
       <Image
-        src="/emoji/Footer.png" // with your real image
+        src="/emoji/Footer.png"
         alt="Footer Background"
         fill
         className="object-cover"
         priority
       />
 
-      {/* DARK OVERLAY */}
-      <div className="absolute inset-0 bg-black/55" />
+      {/* Overlay */}
+      <div className="absolute inset-0 bg-black/60" />
 
-      {/* CONTENT */}
-      <div className="relative z-10 h-full max-w-[1730px] mx-auto px-[120px] flex flex-col justify-between py-[80px]">
+      {/* Content */}
+      <div className="relative z-10 max-w-7xl mx-auto px-6 sm:px-8 lg:px-16 py-20 md:py-28 flex flex-col gap-16">
 
         {/* TOP MISSION TEXT */}
-        <div className="text-center max-w-[900px] mx-auto mt-[40px]">
-          <p className="text-[16px] leading-[170%] text-white/80">
+        <div className="text-center max-w-3xl mx-auto space-y-8">
+
+          <p className="text-sm sm:text-base leading-relaxed text-white/80">
             We are a group of engineers, designers, and company builders developing
             foundation models and data collection innovations to power the
             geospatial intelligence systems of tomorrow.
           </p>
 
-          <p className="text-[16px] leading-[170%] text-white/80 mt-[40px]">
+          <p className="text-sm sm:text-base leading-relaxed text-white/80">
             We're building foundation models that understand the physical world
             through geospatial reasoning. GeoContext-1 processes satellite imagery,
             terrain data, infrastructure networks, and temporal patterns to generate
@@ -38,68 +39,62 @@ export const Footer = () => {
             planning domains.
           </p>
 
-          <div className="mt-[50px] space-x-[30px] text-white/70">
+          <div className="flex flex-wrap justify-center gap-6 text-white/70 text-sm">
             <button className="hover:text-white transition">[ Our Mission ]</button>
             <button className="hover:text-white transition">[ Product ]</button>
             <button className="hover:text-white transition">[ Technology ]</button>
             <button className="hover:text-white transition">[ Use Cases ]</button>
           </div>
+
         </div>
 
         {/* BOTTOM SECTION */}
-        <div className="flex justify-between items-end">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-12 items-start">
 
-          {/* LEFT LOGO + DESCRIPTION */}
+          {/* LEFT BLOCK */}
           <div>
-            <h3 className="text-[32px] font-semibold mb-[12px]">
+            <h3 className="text-2xl sm:text-3xl font-semibold mb-4">
               Columbus Earth
             </h3>
 
-            <p className="text-[14px] text-white/70 max-w-[420px] mb-[20px]">
+            <p className="text-sm text-white/70 mb-6 max-w-sm">
               The frontier AI lab building the first production Universal
               Geospatial Model to answer the planet’s toughest questions.
             </p>
 
-            <div className="flex gap-[16px]">
+            <div className="flex gap-4">
               <Mail size={20} className="cursor-pointer hover:text-white/80" />
               <Linkedin size={20} className="cursor-pointer hover:text-white/80" />
             </div>
           </div>
 
-          {/* RIGHT LINKS GRID */}
-          <div className="grid grid-cols-3 gap-[60px] text-[14px] text-white/80">
+          {/* PRODUCT */}
+          <FooterColumn
+            title="PRODUCT"
+            links={["Columbus Pro", "Use-Cases", "MapsGPT"]}
+          />
 
-            <div>
-              <p className="mb-[20px] text-white font-medium">PRODUCT</p>
-              <ul className="space-y-[10px]">
-                <li className="hover:text-white cursor-pointer">Columbus Pro</li>
-                <li className="hover:text-white cursor-pointer">Use-Cases</li>
-                <li className="hover:text-white cursor-pointer">MapsGPT</li>
-              </ul>
-            </div>
+          {/* TECHNOLOGY */}
+          <FooterColumn
+            title="TECHNOLOGY"
+            links={[
+              "LGM vs LLM",
+              "Data Collection",
+              "Core Reasoning",
+              "Research Blog",
+            ]}
+          />
 
-            <div>
-              <p className="mb-[20px] text-white font-medium">TECHNOLOGY</p>
-              <ul className="space-y-[10px]">
-                <li className="hover:text-white cursor-pointer">LGM vs LLM</li>
-                <li className="hover:text-white cursor-pointer">Data Collection</li>
-                <li className="hover:text-white cursor-pointer">Core Reasoning</li>
-                <li className="hover:text-white cursor-pointer">Research Blog</li>
-              </ul>
-            </div>
-
-            <div>
-              <p className="mb-[20px] text-white font-medium">COMPANY</p>
-              <ul className="space-y-[10px]">
-                <li className="hover:text-white cursor-pointer">+ Our Mission</li>
-                <li className="hover:text-white cursor-pointer">+ Careers</li>
-                <li className="hover:text-white cursor-pointer">Legal</li>
-                <li className="hover:text-white cursor-pointer">Report</li>
-
-              </ul>
-            </div>
-
-          </div>
+          {/* COMPANY */}
+          <FooterColumn
+            title="COMPANY"
+            links={[
+              "+ Our Mission",
+              "+ Careers",
+              "Legal",
+              "Report",
+            ]}
+          />
 
         </div>
 
@@ -107,3 +102,24 @@ export const Footer = () => {
     </footer>
   );
 };
+
+const FooterColumn = ({
+  title,
+  links,
+}: {
+  title: string;
+  links: string[];
+}) => (
+  <div>
+    <p className="mb-4 text-white font-medium text-sm tracking-wide">
+      {title}
+    </p>
+    <ul className="space-y-2 text-sm text-white/80">
+      {links.map((link, i) => (
+        <li key={i} className="hover:text-white cursor-pointer">
+          {link}
+        </li>
+      ))}
+    </ul>
+  </div>
+);

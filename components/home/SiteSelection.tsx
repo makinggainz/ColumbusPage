@@ -1,128 +1,90 @@
-
 "use client";
 
 import Image from "next/image";
 
 export const SiteSelection = () => {
   return (
-    <section className="bg-[#F9F9F9] py-[120px]">
+    <section className="bg-[#F9F9F9] py-16 sm:py-24 lg:py-32">
+      <div className="max-w-[1400px] mx-auto px-6 sm:px-10 lg:px-16">
 
-      {/* ================= INTRO OUTSIDE ================= */}
-      <div className="relative w-[1528px] mx-auto mb-[40px]">
+        <div className="rounded-[28px] bg-gradient-to-br from-[#1B2D5A] via-[#13214C] to-[#0B163B] p-8 sm:p-12 lg:p-16 relative overflow-hidden">
 
-        {/* Glow bubble */}
-        <div className="absolute -left-[28px] -top-[18px] w-[190px] h-[95px] bg-gradient-to-r from-green-300/40 via-blue-300/30 to-purple-300/30 blur-[55px] rounded-full" />
+          {/* GRID LAYOUT */}
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
 
-        <div className="relative z-10 flex items-center gap-[14px]">
-          <p className="text-[23px] tracking-[0.12em] font-bold uppercase text-[#1C274C]/70 ">
-            + Introducing Columbus
-          </p>
+            {/* LEFT CONTENT */}
+            <div className="text-white">
 
-          <span className="px-[12px] py-[4px] text-[22px] rounded-full bg-[#E6F7EC] text-[#1F7A4D] font-medium">
-            New
-          </span>
+              <h2 className="text-4xl sm:text-5xl lg:text-6xl font-semibold leading-tight mb-8">
+                Site Selection Reimagined
+              </h2>
+
+              <ul className="space-y-4 text-base sm:text-lg text-white/85 list-disc pl-6 mb-10">
+                <li>An end-to-end Site Selection tool.</li>
+                <li>Generate new maps, in seconds.</li>
+                <li>Find exclusive critical datasets for your decisions.</li>
+                <li>Cheaper due diligence.</li>
+              </ul>
+
+              <p className="text-base sm:text-lg text-white/70 mb-8">
+                Columbus turns you into a{" "}
+                <span className="font-semibold text-white">
+                  super-explorer.
+                </span>
+              </p>
+
+              <button className="bg-white text-[#13214C] px-6 py-3 rounded-lg font-medium">
+                Check it out →
+              </button>
+            </div>
+
+            <div className="relative flex justify-center items-end">
+
+              {/* DESKTOP IMAGE */}
+              <div className="relative w-full max-w-[920px] aspect-[102/56] rounded-2xl overflow-hidden shadow-[0_40px_120px_rgba(0,0,0,0.45)]">
+
+                <Image
+                  src="/Icon/desktop-ui.png"
+                  alt="Desktop UI"
+                  fill
+                  className="object-cover"
+                />
+
+                {/* MOBILE IMAGE */}
+                <div
+                  className="
+                    absolute
+                    right-0
+                    translate-x-1/5
+                    top-0
+                    h-full
+                    aspect-[9/16]
+                    rounded-[32px]
+                    overflow-hidden
+                    border-4
+                    border-white
+                    shadow-[0_40px_140px_rgba(0,0,0,0.55)]
+                  "
+                >
+                  <Image
+                    src="/Icon/mobile-ui.png"
+                    alt="Mobile UI"
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+          {/* Bottom glow */}
+          <div className="absolute -bottom-20 -right-20 w-[250px] h-[250px] bg-purple-500/30 blur-[120px] rounded-full" />
+
         </div>
       </div>
-
-
-      {/* ================= EXACT FIGMA CARD ================= */}
-      <div className="flex justify-center">
-
-        <div
-          className="
-            relative
-            w-[1628px]
-            h-[773px]
-            rounded-[23px]
-            overflow-hidden
-            bg-gradient-to-br
-            from-[#1B2D5A]
-            via-[#13214C]
-            to-[#0B163B]
-          "
-        >
-
-          {/* ================= LEFT CONTENT ================= */}
-          <div className="absolute left-[80px] top-[90px] w-[620px] text-white">
-
-            <h2 className="text-[72px] leading-[108%] tracking-[-0.02em] font-semibold whitespace-nowrap mb-[40px]">
-              Site Selection Reimagined
-            </h2>
-
-            <ul className="space-y-[18px] text-[20px] text-white/85 list-disc pl-[22px] mb-[180px]">
-              <li>An end-to-end Site Selection tool.</li>
-              <li>Generate new maps, in seconds.</li>
-              <li className="pl-[4px]">Find exclusive critical datasets for<br></br> your decisions.</li>
-              <li> Cheaper due diligence.</li>
-            </ul>
-
-            <p className="text-[20px] text-white/70 mb-[32px]">
-              Columbus turns you into a{" "}
-              <span className="font-semibold text-white">
-                super- <br></br>explorer.
-              </span>
-            </p>
-
-            <button className="h-[52px] px-[38px] bg-white text-[#13214C] font-medium rounded-[10px]">
-              Check it out →
-            </button>
-
-          </div>
-
-
-          {/* ================= DESKTOP UI ================= */}
-          <div
-            className="
-              absolute
-              left-[530px]
-              top-[205px]
-              w-[997px]
-              h-[571px]
-              rounded-[18px]
-              overflow-hidden
-              shadow-[0_40px_120px_rgba(0,0,0,0.45)]
-            "
-          >
-            <Image
-              src="/Icon/desktop-ui.png"
-              alt="Desktop UI"
-              fill
-              className="object-cover"
-            />
-          </div>
-
-
-          {/* ================= MOBILE UI ================= */}
-          <div
-            className="
-              absolute
-              left-[1320px]   /* 451 + 997 - 266 */
-              top-[202px]    /* slight 4px vertical balance */
-              w-[266px]
-              h-[579px]
-              rounded-[32px]
-              overflow-hidden
-              shadow-[0_40px_120px_rgba(0,0,0,0.55)]
-              border-[6px]
-              border-white
-            "
-          >
-            <Image
-              src="/Icon/mobile-ui.png"
-              alt="Mobile UI"
-              fill
-              className="object-cover"
-            />
-          </div>
-
-
-          {/* Bottom glow (as in Figma) */}
-          <div className="absolute bottom-[-80px] right-[-60px] w-[260px] h-[260px] bg-purple-500/30 blur-[120px] rounded-full" />
-
-        </div>
-
-      </div>
-
     </section>
   );
 };

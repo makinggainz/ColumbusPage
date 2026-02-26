@@ -1,4 +1,3 @@
-
 "use client";
 
 import Image from "next/image";
@@ -13,43 +12,45 @@ export const TrustStrip = () => {
   ];
 
   return (
-    <section className="bg-white py-[120px]">
-      <div className="max-w-[1528px] mx-auto px-[100px]">
+    <section className="bg-white py-20 md:py-28 lg:py-32">
+      <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-16">
 
         {/* HEADING */}
-        <div className="text-center mb-[50px]">
-          <h2 className="text-[32px] font-semibold text-[#1C274C] mb-[10px]">
-            You’re plans <span className="text-[#1FA7A3]">are in good hands</span>
+        <div className="text-center mb-12 md:mb-16">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-semibold text-[#1C274C] mb-3">
+            Your plans <span className="text-[#1FA7A3]">are in good hands</span>
           </h2>
-          <p className="text-[18px] text-[#1C274C]/60">
+
+          <p className="text-sm sm:text-base md:text-lg text-[#1C274C]/60">
             We work with data from reputable brands
           </p>
         </div>
 
-        {/* LOGOS ROW */}
-        <div className="flex items-center justify-between mb-[60px] opacity-80">
-
-          <Image src="/emoji/gmap.png" alt="Google Maps" width={140} height={40} />
-          <Image src="/emoji/fs.png" alt="Foursquare" width={140} height={40} />
-          <Image src="/emoji/airbnb.png" alt="Airbnb" width={120} height={40} />
-          <Image src="/emoji/idea.png" alt="Idealista" width={120} height={40} />
-          <Image src="/emoji/trip.png" alt="Tripadvisor" width={140} height={40} />
-          <Image src="/emoji/fork.png" alt="TheFork" width={120} height={40} />
-
+        {/* LOGOS */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-8 items-center mb-14 opacity-80">
+          <Logo src="/emoji/gmap.png" />
+          <Logo src="/emoji/fs.png" />
+          <Logo src="/emoji/airbnb.png" />
+          <Logo src="/emoji/idea.png" />
+          <Logo src="/emoji/trip.png" />
+          <Logo src="/emoji/fork.png" />
         </div>
 
         {/* FAQ TITLE */}
-        <div className="mb-[20px]">
-          <h3 className="text-[16px] font-semibold text-[#1FA7A3]">
+        <div className="mb-6">
+          <h3 className="text-xs sm:text-sm font-semibold text-[#1FA7A3] uppercase tracking-wider">
             See what people are asking
           </h3>
         </div>
 
         {/* FAQ LIST */}
-        <div className="space-y-[24px]">
+        <div className="space-y-6">
           {faqs.map((question, index) => (
-            <div key={index} className="pb-[18px] border-b border-dashed border-[#DADADA]">
-              <p className="text-[15px] text-[#1C274C]/85">
+            <div
+              key={index}
+              className="pb-4 border-b border-dashed border-[#DADADA]"
+            >
+              <p className="text-sm sm:text-base text-[#1C274C]/85">
                 {question}
               </p>
             </div>
@@ -60,3 +61,15 @@ export const TrustStrip = () => {
     </section>
   );
 };
+
+const Logo = ({ src }: { src: string }) => (
+  <div className="flex justify-center">
+    <Image
+      src={src}
+      alt=""
+      width={140}
+      height={40}
+      className="object-contain h-8 sm:h-10 md:h-12 w-auto"
+    />
+  </div>
+);

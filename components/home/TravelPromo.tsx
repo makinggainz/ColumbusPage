@@ -4,19 +4,19 @@ import Image from "next/image";
 
 export const TravelPromo = () => {
   return (
-    <section className="relative  h-[989px] overflow-hidden">
+    <section className="relative overflow-hidden py-24 sm:py-32 md:py-40">
 
       {/* Center Content */}
-      <div className="relative z-10 flex flex-col items-center justify-center h-full text-center">
+      <div className="relative z-10 flex flex-col items-center justify-center text-center px-6">
 
-        <h2 className="text-[40px] font-semibold text-[#1C274C] mb-[18px]">
+        <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-semibold text-[#1C274C] mb-4 md:mb-6">
           Love to travel or go out?
         </h2>
 
-        <p className="text-[18px] text-[#1C274C]/70">
-          <span className="text-[#1E74FF] font-medium">MapsGPT 
-          is already answering thousands of queries in your area
-        </span>
+        <p className="text-sm sm:text-base md:text-lg text-[#1C274C]/70 max-w-2xl">
+          <span className="text-[#1E74FF] font-medium">
+            MapsGPT is already answering thousands of queries in your area
+          </span>
         </p>
 
       </div>
@@ -27,6 +27,7 @@ export const TravelPromo = () => {
     </section>
   );
 };
+
 const FloatingEmojis = () => {
   const emojis = [
     { src: "/emoji/cake.png", top: "8%", left: "6%" },
@@ -40,11 +41,11 @@ const FloatingEmojis = () => {
     { src: "/emoji/car.png", top: "75%", left: "8%" },
     { src: "/emoji/champange.png", top: "70%", left: "40%" },
     { src: "/emoji/earth.png", top: "80%", left: "80%" },
-    {src: "/emoji/ice.png", top: "60%", left: "55%" },
-    {src: "/emoji/arrow.png", top: "50%", left: "30%" },
-    {src: "/emoji/laugh.png", top: "40%", left: "70%" },
-    {src: "/emoji/yo.png", top: "65%", left: "20%" },
-    {src: "/emoji/book.png", top: "55%", left: "85%" },
+    { src: "/emoji/ice.png", top: "60%", left: "55%" },
+    { src: "/emoji/arrow.png", top: "50%", left: "20%" },
+    { src: "/emoji/laugh.png", top: "40%", left: "70%" },
+    { src: "/emoji/yo.png", top: "65%", left: "20%" },
+    { src: "/emoji/book.png", top: "55%", left: "85%" },
   ];
 
   return (
@@ -56,7 +57,14 @@ const FloatingEmojis = () => {
           alt=""
           width={98}
           height={98}
-          className="absolute pointer-events-none select-none"
+          className="
+            absolute 
+            pointer-events-none 
+            select-none 
+            w-8 sm:w-10 md:w-14 lg:w-20
+            h-auto
+            opacity-80
+          "
           style={{
             top: emoji.top,
             left: emoji.left,
