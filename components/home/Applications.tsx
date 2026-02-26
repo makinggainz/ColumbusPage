@@ -1,4 +1,3 @@
-
 "use client";
 
 import Image from "next/image";
@@ -6,78 +5,60 @@ import Image from "next/image";
 export const Applications = () => {
   const items = [
     { title: "Residential Real Estate", image: "/apps/1.jpg" },
-    { title: "Commercial Real Estate", image: "/apps/2.jpg" },
-    { title: "Generative Geodata", image: "/apps/3.jpg" },
     { title: "Logistics Optimization", image: "/apps/4.jpg" },
-    { title: "Urban Planning", image: "/apps/5.jpg" },
-    { title: "Site Selection", image: "/apps/6.jpg" },
     { title: "Consumer Mapping", image: "/apps/7.jpg" },
     { title: "Ground Due Diligence", image: "/apps/8.jpg" },
-    { title: "More", image: "/apps/9.jpg" },
+    { title: "Site Selection", image: "/apps/6.jpg" },
   ];
 
   return (
-    <section className="bg-white py-[160px]">
-      <div className="max-w-[1731px] mx-auto px-[100px]">
+    <div className="w-full flex justify-center bg-white">
 
-        {/* HEADER */}
-        <div className="mb-[80px]">
-          <h2 className="text-[56px] leading-[120%] font-semibold tracking-[-0.02em] text-[#1C274C]">
+      {/* 402px Frame */}
+      <div className="w-[402px]">
+
+        {/* Header */}
+        <div className="px-[20px] pt-[24px] pb-[24px]">
+          <h2 className="text-[20px] leading-[130%] font-semibold text-[#1C274C] mb-[10px]">
             We’re actively exploring various application areas
           </h2>
-          <p className="mt-[20px] text-[18px] text-[#1C274C]/70">
-            We’d love to work within your industry, send us a hey@columbus.earth
+
+          <p className="text-[14px] text-[#1C274C]/70">
+            We’d love to work within your industry — hey@columbus.earth
           </p>
         </div>
 
-        {/* COLLAGE GRID — NO GAPS */}
-        <div className="overflow-hidden rounded-[24px]">
-          <div className="grid grid-cols-3">
+        {/* Cards */}
+                  <div className="pb-[40px]">
 
             {items.map((item, index) => (
-              <button
+              <div
                 key={index}
-                className="relative group aspect-[16/9] w-full overflow-hidden"
+                className="relative w-[362px] h-[245px] 
+                          mx-auto rounded-[16px] 
+                          overflow-hidden"
               >
-                {/* IMAGE */}
                 <Image
                   src={item.image}
                   alt={item.title}
                   fill
                   className="object-cover"
-                  priority={index < 3}
+                  priority={index === 0}
                 />
 
-                {/* DARK OVERLAY */}
-                <div className="absolute inset-0 bg-black/40 transition duration-300 group-hover:bg-black/60 z-10" />
+                <div className="absolute inset-0 bg-black/35" />
 
-                {/* TEXT LAYER */}
-                <div className="absolute inset-0 flex items-center justify-center text-center z-20 px-4">
-                  <div className="text-white">
-                    
-                    {/* TITLE (Always Visible) */}
-                    <h3 className="text-[20px] font-semibold">
-                      {item.title}
-                    </h3>
-
-                    {/* LEARN MORE (Hover Only) */}
-                    <p className="mt-3 text-[14px] opacity-0 translate-y-2 
-                                  group-hover:opacity-100 
-                                  group-hover:translate-y-0 
-                                  transition-all duration-300 ease-out">
-                      Learn more →
-                    </p>
-
-                  </div>
+                <div className="absolute bottom-[18px] left-[18px]">
+                  <h3 className="text-white text-[16px] font-semibold">
+                    {item.title}
+                  </h3>
                 </div>
-
-              </button>
+              </div>
             ))}
 
           </div>
-        </div>
 
-      </div>
-    </section>
+      </div>  
+    </div>
   );
 };

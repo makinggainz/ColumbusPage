@@ -4,65 +4,133 @@ import Image from "next/image";
 
 export const TravelPromo = () => {
   return (
-    <section className="relative  h-[989px] overflow-hidden">
+    <div className="w-full flex justify-center bg-[#F5F5F5]">
+      <section className="relative w-[404px] h-[989px] bg-white overflow-hidden">
 
-      {/* Center Content */}
-      <div className="relative z-10 flex flex-col items-center justify-center h-full text-center">
+        {/* TEXT */}
+        <div className="absolute top-[470px] left-0 w-full text-center px-[40px]">
 
-        <h2 className="text-[40px] font-semibold text-[#1C274C] mb-[18px]">
-          Love to travel or go out?
-        </h2>
+          <h2 className="text-[32px] font-semibold leading-[140%] text-[#0E2A2F]">
+            Love to travel <br />
+            or go out?
+          </h2>
 
-        <p className="text-[18px] text-[#1C274C]/70">
-          <span className="text-[#1E74FF] font-medium">MapsGPT 
-          is already answering thousands of queries in your area
-        </span>
-        </p>
+          <p className="mt-[26px] text-[20px] leading-[140%] text-[#1E74FF]">
+            <span className="font-medium">MapsGPT</span> is answering
+            thousands of queries in your area
+          </p>
 
-      </div>
+        </div>
 
-      {/* Floating Emojis */}
-      <FloatingEmojis />
+        <FloatingEmojis />
 
-    </section>
+      </section>
+    </div>
   );
 };
-const FloatingEmojis = () => {
-  const emojis = [
-    { src: "/emoji/cake.png", top: "8%", left: "6%" },
-    { src: "/emoji/palm.png", top: "6%", left: "18%" },
-    { src: "/emoji/drink.png", top: "18%", left: "45%" },
-    { src: "/emoji/heart.png", top: "14%", left: "62%" },
-    { src: "/emoji/plane.png", top: "20%", left: "82%" },
-    { src: "/emoji/basketball.png", top: "28%", left: "12%" },
-    { src: "/emoji/cocktail.png", top: "35%", left: "25%" },
-    { src: "/emoji/burger.png", top: "30%", left: "72%" },
-    { src: "/emoji/car.png", top: "75%", left: "8%" },
-    { src: "/emoji/champange.png", top: "70%", left: "40%" },
-    { src: "/emoji/earth.png", top: "80%", left: "80%" },
-    {src: "/emoji/ice.png", top: "60%", left: "55%" },
-    {src: "/emoji/arrow.png", top: "50%", left: "30%" },
-    {src: "/emoji/laugh.png", top: "40%", left: "70%" },
-    {src: "/emoji/yo.png", top: "65%", left: "20%" },
-    {src: "/emoji/book.png", top: "55%", left: "85%" },
-  ];
 
+const FloatingEmojis = () => {
   return (
     <>
-      {emojis.map((emoji, index) => (
-        <Image
-          key={index}
-          src={emoji.src}
-          alt=""
-          width={98}
-          height={98}
-          className="absolute pointer-events-none select-none"
-          style={{
-            top: emoji.top,
-            left: emoji.left,
-          }}
-        />
-      ))}
+      {/* TOP LEFT CAKE */}
+      <Image
+        src="/emoji/cake.png"
+        alt=""
+        width={116}
+        height={116}
+        className="absolute"
+        style={{ top: 120, left: 30 }}
+      />
+
+      {/* TOP RIGHT PALM */}
+      <Image
+        src="/emoji/palm.png"
+        alt=""
+        width={110}
+        height={110}
+        className="absolute"
+        style={{ top: 120, right: 40 }}
+      />
+
+      {/* DRINK */}
+      <Image
+        src="/emoji/drink.png"
+        alt=""
+        width={159}
+        height={159}
+        className="absolute"
+        style={{ top: 260, left: 35 }}
+      />
+
+      {/* PLANE */}
+      <Image
+        src="/emoji/plane.png"
+        alt=""
+        width={150}
+        height={150}
+        className="absolute"
+        style={{ top: 250, right: 35 }}
+      />
+
+      {/* BURGER */}
+      <Image
+        src="/emoji/burger.png"
+        alt=""
+        width={140}
+        height={140}
+        className="absolute"
+        style={{ top: 350, right: 40 }}
+      />
+
+      {/* COCKTAIL */}
+      <Image
+        src="/emoji/cocktail.png"
+        alt=""
+        width={130}
+        height={130}
+        className="absolute"
+        style={{ bottom: 220, left: 30 }}
+      />
+
+      {/* ARROW (ROTATED LIKE FIGMA) */}
+      <Image
+        src="/emoji/arrow.png"
+        alt=""
+        width={105}
+        height={95}
+        className="absolute rotate-[35deg]"
+        style={{ bottom: 220, left: 160 }}
+      />
+
+      {/* PASSPORT */}
+      <Image
+        src="/emoji/book.png"
+        alt=""
+        width={120}
+        height={120}
+        className="absolute rotate-[15deg]"
+        style={{ bottom: 210, right: 35 }}
+      />
+
+      {/* EARTH */}
+      <Image
+        src="/emoji/earth.png"
+        alt=""
+        width={133}
+        height={139}
+        className="absolute"
+        style={{ bottom: 60, left: 40 }}
+      />
+
+      {/* HAND SIGN */}
+      <Image
+        src="/emoji/champange.png"
+        alt=""
+        width={120}
+        height={120}
+        className="absolute"
+        style={{ bottom: 60, right: 30 }}
+      />
     </>
   );
 };

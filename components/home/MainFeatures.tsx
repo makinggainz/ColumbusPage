@@ -1,5 +1,3 @@
-
-
 "use client";
 
 import {
@@ -11,8 +9,15 @@ import {
   Database,
   ArrowUpRight,
 } from "lucide-react";
+
 export const MainFeatures = () => {
   const features = [
+    {
+      title: "Map Chat",
+      description:
+        "Research like you're talking to an expert with Columbus Chat. Answer any question, roll the dice, or visualize data in your own way.",
+      icon: Map,
+    },
     {
       title: "Generative Geodata",
       description:
@@ -21,22 +26,16 @@ export const MainFeatures = () => {
       link: true,
     },
     {
-      title: "Map Chat",
-      description:
-        "Research like you're talking to an expert with Columbus Chat. Answer any question, roll the dice, or visualize data in your own way.",
-      icon:Map,
-    },
-    {
       title: "Research Reports",
       description:
         "Task Columbus to do all the hard expert-level work for you. Reports are created for your new site selection.",
       icon: BookOpen,
     },
     {
-      title: "Cloud Based",
+      title: "Data Catalogue",
       description:
-        "No more bulky GIS research software. Let your team do work from anywhere with our mobile app and browser based platform.",
-      icon: Cloud,
+        "Find rich and relevant data sets faster with our simple to use interface. If you cant find a relevant dataset, we can personally order the survey.",
+      icon: Database,
     },
     {
       title: "Generative Due Diligence",
@@ -45,36 +44,24 @@ export const MainFeatures = () => {
       icon: Book,
     },
     {
-      title: "Data Catalogue",
+      title: "Cloud Based",
       description:
-       "Find rich and relevant data sets faster with our simple to use interface.  If you cant find a relevant dataset, we can personally order the survey.",
-      icon: Database
+        "No more bulky GIS research software. Let your team do work from anywhere with our mobile app and browser based platform.",
+      icon: Cloud,
     },
   ];
 
   return (
-    <section
-      className="relative py-[160px]"
-      style={{
-        backgroundColor: "#FFFFFF",
-        backgroundImage: `
-          linear-gradient(to right, rgba(28,39,76,0.035) 1px, transparent 1px),
-          linear-gradient(to bottom, rgba(28,39,76,0.035) 1px, transparent 1px)
-        `,
-        backgroundSize: "120px 120px",
-      }}
-    >
-      <div className="max-w-[1528px] mx-auto">
+    <section className="py-[120px] bg-white">
+      <div className="max-w-[404px] mx-auto">
 
         {/* Heading */}
-        <div className="text-center mb-[110px]">
-          <h2 className="text-[42px] font-medium text-[#1C274C] tracking-[-0.01em]">
-            Main Features
-          </h2>
-        </div>
+        <h2 className="text-[28px] font-semibold text-[#1C274C] text-center mb-[60px]">
+          Main Features
+        </h2>
 
-        {/* Grid */}
-        <div className="flex flex-wrap justify-center gap-x-[100px] gap-y-[100px]">
+        {/* Centered Vertical Stack */}
+        <div className="flex flex-col items-center gap-[28px]">
 
           {features.map((feature, index) => {
             const Icon = feature.icon;
@@ -84,48 +71,40 @@ export const MainFeatures = () => {
                 key={index}
                 className="
                   w-[333px]
-                  h-[269px]
-                  rounded-[12px]
-                  bg-white/60
-                  backdrop-blur-[12px]
-                  border border-[#E5E8EF]
-                  px-[28px]
-                  pt-[28px]
-                  shadow-[0_6px_24px_rgba(0,0,0,0.05)]
+                  rounded-[16px]
+                  bg-[#F7F8FA]
+                  border border-[#E6EAF2]
+                  p-[24px]
                 "
               >
-                {/* Icon container */}
-                <div className="w-[36px] h-[36px] rounded-[10px] border border-[#E6EAF2] bg-white/80 flex items-center justify-center mb-[22px]">
-                  <Icon
-                    size={18}
-                    strokeWidth={1.5}
-                    className="text-[#1C274C]"
-                  />
+                {/* Icon */}
+                <div className="w-[40px] h-[40px] rounded-[12px] bg-white border border-[#E6EAF2] flex items-center justify-center mb-[16px]">
+                  <Icon size={18} strokeWidth={1.5} className="text-[#1C274C]" />
                 </div>
 
                 {/* Title */}
-                <h3 className="text-[16px] font-semibold text-[#1C274C] mb-[14px]">
+                <h3 className="text-[15px] font-semibold text-[#1C274C] mb-[8px]">
                   {feature.title}
                 </h3>
 
                 {/* Description */}
-                <p className="text-[14px] leading-[160%] text-[#1C274C]/70 mb-[16px]">
+                <p className="text-[13px] leading-[160%] text-[#1C274C]/70 mb-[12px]">
                   {feature.description}
                 </p>
 
-                {/* Optional Link Button (First Card Only) */}
                 {feature.link && (
                   <a
-                  href="#"
-                  className="text-[15px] font-medium text-[#4C76C6] hover:underline inline-flex items-center gap-[6px]"
-                >
-                  Check out our generative datasets
-                  <ArrowUpRight size={16} strokeWidth={1.6} />
-                </a>
+                    href="#"
+                    className="text-[13px] font-medium text-[#4C76C6] inline-flex items-center gap-[4px]"
+                  >
+                    Check out our generative datasets
+                    <ArrowUpRight size={14} />
+                  </a>
                 )}
               </div>
             );
           })}
+
         </div>
       </div>
     </section>

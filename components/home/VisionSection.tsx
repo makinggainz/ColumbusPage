@@ -1,89 +1,69 @@
-
 "use client";
 
 import Image from "next/image";
 
 export const Vision = () => {
   return (
-    <section className="bg-[#F9F9F9] py-[140px]">
-      <div className="max-w-[1200px] mx-auto">
-        <center>
+    <div className="w-full flex justify-center bg-[#F9F9F9]">
+      
+      {/* 404px FIGMA FRAME */}
+      <section className="w-[404px] bg-[#F9F9F9] pt-[120px] pb-[80px]">
+
         {/* TITLE */}
-        <h2 className="text-[48px] font-semibold text-[#1C274C] leading-[1.2] mb-[64px]">
+        <h2 className="text-[32px] font-semibold text-[#1C274C] leading-[140%] text-center px-[45px] w-[311px] mx-auto mb-[40px]">
           Our vision of a new kind of AI
         </h2>
 
-        {/* GRID */}
-        <div className="grid grid-cols-6 gap-[16px] auto-rows-[160px]">
-        {/* ROW 1 */}
+        {/* 2-COLUMN GRID */}
+        <div className="grid grid-cols-2 gap-[5px] px-[25px]">
+
+          {/* Row 1 */}
           <Tile src="/image1.png" />
-
-           <TextTile className ="col-span-2 col-start-2"
-             title="General Intelligence"
-             subtitle="for the physical world"
-           />
-
           <Tile src="/image2.png" />
-           <Tile src="/image3.png" />
-           <Tile src="/image4.png" />
 
-           {/* ROW 2 */}
-           <Tile src="/image5.png" />
-           <Tile src="/image6.png" />
-           <Tile src="/image7.png" />
-           <Tile src="/image8.png" />
-           <Tile src="/image9.png" />
-           <Tile src="/image10.png" />
+          {/* Row 2 */}
+          <TextTile
+            title="General Intelligence"
+            subtitle="for the physical world"
+          />
+          <Tile src="/image3.png" />
 
-           {/* ROW 3 */}
-           <Tile src="/image111.png" />
-           <Tile src="/image112.png" />
-           <TextTile
-            className="col-span-2 col-start-3"
-             title="Foundational Models"
-             subtitle="for Earth"
-           />
-         <Tile src="/image113.png" />
-         <Tile src="/image114.png" />
+          {/* Row 3 */}
+          <Tile src="/image4.png" />
+          <TextTile
+            title="Foundational Models"
+            subtitle="for Earth"
+          />
 
-             {/* ROW 4 */}
-           <Tile src="/image12.png" />
-          <Tile src="/image.png" />
-         <Tile src="/image14.png" />
-          <Tile src="/image15.png" />
-           <Tile src="/image16.png" />
-         <Tile src="/image17.png" />
-         
+          {/* Row 4 */}
+          <Tile src="/image5.png" />
+          <Tile src="/image6.png" />
+
         </div>
 
-        {/* BOTTOM ROW */}
-        <div className="mt-[56px] flex items-center justify-between">
+        {/* DESCRIPTION */}
+        <p className="mt-[48px] px-[28px] text-[16px] leading-[140%] text-[#1C274C]/80 text-center">
+          ColumbusPro-1 processes satellite imagery, terrain data, human activity,
+          and temporal patterns to generate actionable intelligence across real estate,
+          research, and consumer domains.
+        </p>
 
-          <p className="text-[15px] text-[#1C274C]/70 max-w-[640px] leading-[1.6]">
-            ColumbusPro-1 processes satellite imagery, terrain data, human activity,
-            and temporal patterns to generate actionable intelligence across real estate,
-            research, and consumer domains.
-          </p>
-
-          <button className="border border-[#1C274C] px-[32px] py-[14px] text-[14px] font-medium tracking-wide rounded-md hover:bg-[#1C274C] hover:text-white transition">
+        {/* BUTTON */}
+        <div className="mt-[48px] flex justify-center">
+          <button className="border border-[#1C274C] w-[351px] h-[48px] text-[16px] font-bold tracking-wide rounded-md">
             [ See what we’re building ]
           </button>
-
         </div>
-        </center>
-      </div>
-    </section>
+
+      </section>
+    </div>
   );
 };
+
 const Tile = ({ src }: { src: string }) => {
   return (
-    <div className="relative w-full h-full rounded-[16px] overflow-hidden">
-      <Image
-        src={src}
-        alt=""
-        fill
-        className="object-cover"
-      />
+    <div className="relative w-[173px] h-[162px] rounded-[12px] overflow-hidden">
+      <Image src={src} alt="" fill className="object-cover" />
     </div>
   );
 };
@@ -91,17 +71,13 @@ const Tile = ({ src }: { src: string }) => {
 const TextTile = ({
   title,
   subtitle,
-  className = "",
 }: {
   title: string;
   subtitle: string;
-  className?: string;
 }) => {
   return (
-    <div
-      className={`bg-white rounded-[16px] flex flex-col justify-center items-center text-center px-[40px] ${className}`}
-    >
-      <h3 className="text-[24px] font-medium text-[#1C274C] leading-[1.3]">
+    <div className="bg-white w-[173px] h-[162px] rounded-[12px] flex flex-col justify-center items-center text-center px-[16px]">
+      <h3 className="text-[16px] font-semibold text-[#1C274C]">
         {title}
       </h3>
       <p className="text-[14px] text-[#1C274C]/70 mt-[6px]">

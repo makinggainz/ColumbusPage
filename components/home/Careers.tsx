@@ -1,77 +1,72 @@
-
-
 "use client";
 
 export const Careers = () => {
   return (
-    <section className="bg-[#F3F3F3] min-h-screen flex items-center">
-      <div className="w-full max-w-[1600px] mx-auto px-[100px]">
+    <div className="w-full flex justify-center">
 
-        {/* TOP CENTER */}
-        <div className="text-center mb-[120px]">
-          <h2 className="text-[40px] font-medium text-black mb-[14px]">
+      {/* 404px Frame with ash background */}
+      <div className="w-[404px] bg-[#F3F3F3] px-[20px] pt-[60px] pb-[80px]">
+
+        {/* Top Section */}
+        <div className="text-center mb-[60px]">
+          <h2 className="text-[28px] font-medium text-black mb-[12px]">
             Hiring Humans.
           </h2>
-          <p className="text-[16px] text-black/60">
+          <p className="text-[14px] text-black/60">
             Our team is based in Washington DC and Madrid.
           </p>
         </div>
 
-        {/* TITLE ROW (JUSTIFIED) */}
-        <div className="flex justify-between items-start mb-[40px]">
-          <h3 className="text-[38px] font-medium text-[#0A1344]">
+        {/* Title */}
+        <div className="mb-[20px]">
+          <h3 className="text-[22px] font-semibold text-[#0A1344] mb-[16px]">
             Careers & investment queries
           </h3>
 
-          <p className="max-w-[420px] text-[15px] text-black/60 leading-[160%] text-right">
+          <p className="text-[14px] text-black/60 leading-[160%]">
             If you're excited about creating paradigm shifts in physical world
             understanding. Join us now.
           </p>
         </div>
 
-        {/* DIVIDER */}
-        <div className="border-b border-black/10 mb-[100px]" />
+        {/* Divider */}
+        <div className="border-b border-black/10 mb-[40px]" />
 
-        {/* ONLY FORM CENTERED */}
-        <div className="flex justify-center">
-          <div className="w-[520px]">
+        {/* Form */}
+        <form className="space-y-[36px]">
 
-            <form className="space-y-[70px]">
+          <input
+            type="text"
+            placeholder="Name"
+            className="w-full bg-transparent border-b border-black/20
+                       pb-[12px] text-[14px] outline-none
+                       placeholder:text-black/40"
+          />
 
-              <input
-                type="text"
-                placeholder="Name"
-                className="w-full bg-transparent border-b border-black/20 
-                           pb-[14px] text-[16px] outline-none
-                           placeholder:text-black/40"
-              />
+          <textarea
+            placeholder="Message"
+            rows={2}
+            className="w-full bg-transparent border-b border-black/20
+                       pb-[12px] text-[14px] outline-none resize-none
+                       placeholder:text-black/40"
+          />
 
-              <textarea
-                placeholder="Message"
-                rows={2}
-                className="w-full bg-transparent border-b border-black/20 
-                           pb-[14px] text-[16px] outline-none resize-none
-                           placeholder:text-black/40"
-              />
+          <input
+            type="email"
+            placeholder="Enter email"
+            className="w-full bg-transparent border-b border-black/20
+                       pb-[12px] text-[14px] outline-none
+                       placeholder:text-black/40"
+          />
 
-              <input
-                type="email"
-                placeholder="Enter email"
-                className="w-full bg-transparent border-b border-black/20 
-                           pb-[12px] text-[16px] outline-none
-                           placeholder:text-black/40"
-              />
+        </form>
 
-            </form>
-
-            <p className="mt-[60px] text-[14px] text-black/50 text-right">
-              We accept interns.
-            </p>
-
-          </div>
-        </div>
+        <p className="mt-[40px] text-[13px] text-black/50">
+          We accept interns.
+        </p>
 
       </div>
-    </section>
+
+    </div>
   );
 };
