@@ -34,132 +34,101 @@ export const Footer: FC<FooterProps> = ({ variant = "default" }) => {
   }
 
   return (
-    <footer className="relative w-[404px] h-[1995px] mx-auto text-white overflow-hidden">
+    <footer className="relative w-full h-[800px] text-white">
 
-      {/* Background */}
-      <div className="absolute inset-0">
-        <Image
-          src="/foot/image.png"
-          alt="Footer Background"
-          fill
-          className="object-cover"
-          priority
-        />
-        <div className="absolute inset-0 bg-black/60" />
-      </div>
+      {/* BACKGROUND IMAGE */}
+      <Image
+        src="/emoji/Footer.png" // with your real image
+        alt="Footer Background"
+        fill
+        className="object-cover"
+        priority
+      />
 
-      {/* Content */}
-      <div className="relative z-10 h-full flex flex-col px-[35px] pt-[120px] pb-[80px]">
+      {/* DARK OVERLAY */}
+      <div className="absolute inset-0 bg-black/55" />
 
-        {/* ===== TOP MISSION ===== */}
-        <div className="text-left">
-          <p className="text-[16px] leading-[140%] text-white mb-[32px]">
+      {/* CONTENT */}
+      <div className="relative z-10 h-full max-w-[1730px] mx-auto px-[120px] flex flex-col justify-between py-[80px]">
+
+        {/* TOP MISSION TEXT */}
+        <div className="text-center max-w-[900px] mx-auto mt-[40px]">
+          <p className="text-[16px] leading-[170%] text-white/80">
             We are a group of engineers, designers, and company builders developing
             foundation models and data collection innovations to power the
             geospatial intelligence systems of tomorrow.
           </p>
 
-          <p className="text-[16px] leading-[140%] text-white mb-[60px]">
+          <p className="text-[16px] leading-[170%] text-white/80 mt-[40px]">
             We're building foundation models that understand the physical world
             through geospatial reasoning. GeoContext-1 processes satellite imagery,
-            terrain data, infrastructure networks, and temporal patterns to
-            generate actionable intelligence across defence, climate, consumer
-            and urban planning domains.
+            terrain data, infrastructure networks, and temporal patterns to generate
+            actionable intelligence across defence, climate, consumer and urban
+            planning domains.
           </p>
 
-          {/* Nav Buttons (VERTICAL + CENTERED) */}
-          <div className="flex flex-col items-center space-y-[24px] mb-[80px] text-center">
-          <button className="underline underline-offset-4">
-            [ Our Mission ]
-          </button>
-          <button className="underline underline-offset-4">
-            [ Product ]
-          </button>
-          <button className="underline underline-offset-4">
-            [ Technology ]
-          </button>
-          <button className="underline underline-offset-4">
-            [ Use Cases ]
-          </button>
-        </div>
+          <div className="mt-[50px] space-x-[30px] text-white/70">
+            <button className="hover:text-white transition">[ Our Mission ]</button>
+            <button className="hover:text-white transition">[ Product ]</button>
+            <button className="hover:text-white transition">[ Technology ]</button>
+            <button className="hover:text-white transition">[ Use Cases ]</button>
+          </div>
         </div>
 
-        {/* Divider */}
-        <div className="border-b border-white/30 mb-[80px]" />
+        {/* BOTTOM SECTION */}
+        <div className="flex justify-between items-end">
 
-        {/* ===== LINKS GRID (2 COLUMN MOBILE) ===== */}
-        <div className="grid grid-cols-2 gap-y-[40px] text-[15px] mb-[120px]">
-
+          {/* LEFT LOGO + DESCRIPTION */}
           <div>
-            <p className="text-white/70 mb-[16px]">PRODUCT</p>
-            <ul className="space-y-[12px]">
-              <li>Columbus Pro</li>
-              <li>Use-Cases</li>
-              <li>MapsGPT</li>
-            </ul>
+            <h3 className="text-[32px] font-semibold mb-[12px]">
+              Columbus Earth
+            </h3>
+
+            <p className="text-[14px] text-white/70 max-w-[420px] mb-[20px]">
+              The frontier AI lab building the first production Universal
+              Geospatial Model to answer the planet’s toughest questions.
+            </p>
+
+            <div className="flex gap-[16px]">
+              <Mail size={20} className="cursor-pointer hover:text-white/80" />
+              <Linkedin size={20} className="cursor-pointer hover:text-white/80" />
+            </div>
           </div>
 
-          <div>
-            <p className="text-white/70 mb-[16px]">TECHNOLOGY</p>
-            <ul className="space-y-[12px]">
-              <li>LGM vs LLM</li>
-              <li>Data Collection</li>
-              <li>Core Reasoning</li>
-              <li>Research Blog</li>
-            </ul>
+          {/* RIGHT LINKS GRID */}
+          <div className="grid grid-cols-3 gap-[60px] text-[14px] text-white/80">
+
+            <div>
+              <p className="mb-[20px] text-white font-medium">PRODUCT</p>
+              <ul className="space-y-[10px]">
+                <li className="hover:text-white cursor-pointer">Columbus Pro</li>
+                <li className="hover:text-white cursor-pointer">Use-Cases</li>
+                <li className="hover:text-white cursor-pointer">MapsGPT</li>
+              </ul>
+            </div>
+
+            <div>
+              <p className="mb-[20px] text-white font-medium">TECHNOLOGY</p>
+              <ul className="space-y-[10px]">
+                <li className="hover:text-white cursor-pointer">LGM vs LLM</li>
+                <li className="hover:text-white cursor-pointer">Data Collection</li>
+                <li className="hover:text-white cursor-pointer">Core Reasoning</li>
+                <li className="hover:text-white cursor-pointer">Research Blog</li>
+              </ul>
+            </div>
+
+            <div>
+              <p className="mb-[20px] text-white font-medium">COMPANY</p>
+              <ul className="space-y-[10px]">
+                <li className="hover:text-white cursor-pointer">+ Our Mission</li>
+                <li className="hover:text-white cursor-pointer">+ Careers</li>
+                <li className="hover:text-white cursor-pointer">Legal</li>
+                <li className="hover:text-white cursor-pointer">Report</li>
+
+              </ul>
+            </div>
+
           </div>
-
-          <div>
-            <p className="text-white/70 mb-[16px]">COMPANY</p>
-            <ul className="space-y-[12px]">
-              <li>+ Our Mission</li>
-              <li>+ Careers</li>
-              <li>Legal</li>
-              <li>Report</li>
-            </ul>
-          </div>
-
-        </div>
-
-        {/* ===== BRAND SECTION (BOTTOM) ===== */}
-        <div className="mt-auto">
-
-          {/* Logo Icon */}
-          <div className="mb-[50px]">
-            <Image
-              src="/emoji/logo.png"
-              alt="Logo"
-              width={120}
-              height={120}
-            />
-          </div>
-
-          {/* Brand Name */}
-          <h3 className="text-[48px] leading-[110%] font-semibold mb-[20px]">
-            Columbus <br /> Earth
-          </h3>
-
-          {/* Description */}
-          <p className="text-[14px] text-white/80 leading-[160%] mb-[24px] max-w-[300px]">
-            The frontier AI lab building the first production Universal
-            Geospatial Model to answer the planet’s toughest questions.
-          </p>
-
-          {/* Icons */}
-          <div className="flex gap-[20px] mb-[40px]">
-            <Mail size={20} />
-            <Linkedin size={20} />
-          </div>
-
-          {/* Legal */}
-          <p className="text-[12px] text-white/60 leading-[160%]">
-            Columbus Earth © 2026. For investor relations,
-            contact us on email or LinkedIn.
-          </p>
-
-          <p className="text-[12px] text-white/60 mt-[8px]">
-            Website made by hand, no AI.
-          </p>
 
         </div>
 

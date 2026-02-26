@@ -1,72 +1,77 @@
+
+
 "use client";
 
 export const Careers = () => {
   return (
-    <div className="w-full flex justify-center">
+    <section className="bg-[#F3F3F3] min-h-screen flex items-center">
+      <div className="w-full max-w-[1600px] mx-auto px-[100px]">
 
-      {/* 404px Frame with ash background */}
-      <div className="w-[404px] bg-[#F3F3F3] px-[20px] pt-[60px] pb-[80px]">
-
-        {/* Top Section */}
-        <div className="text-center mb-[60px]">
-          <h2 className="text-[28px] font-medium text-black mb-[12px]">
+        {/* TOP CENTER */}
+        <div className="text-center mb-[120px]">
+          <h2 className="text-[40px] font-medium text-black mb-[14px]">
             Hiring Humans.
           </h2>
-          <p className="text-[14px] text-black/60">
+          <p className="text-[16px] text-black/60">
             Our team is based in Washington DC and Madrid.
           </p>
         </div>
 
-        {/* Title */}
-        <div className="mb-[20px]">
-          <h3 className="text-[22px] font-semibold text-[#0A1344] mb-[16px]">
+        {/* TITLE ROW (JUSTIFIED) */}
+        <div className="flex justify-between items-start mb-[40px]">
+          <h3 className="text-[38px] font-medium text-[#0A1344]">
             Careers & investment queries
           </h3>
 
-          <p className="text-[14px] text-black/60 leading-[160%]">
+          <p className="max-w-[420px] text-[15px] text-black/60 leading-[160%] text-right">
             If you're excited about creating paradigm shifts in physical world
             understanding. Join us now.
           </p>
         </div>
 
-        {/* Divider */}
-        <div className="border-b border-black/10 mb-[40px]" />
+        {/* DIVIDER */}
+        <div className="border-b border-black/10 mb-[100px]" />
 
-        {/* Form */}
-        <form className="space-y-[36px]">
+        {/* ONLY FORM CENTERED */}
+        <div className="flex justify-center">
+          <div className="w-[520px]">
 
-          <input
-            type="text"
-            placeholder="Name"
-            className="w-full bg-transparent border-b border-black/20
-                       pb-[12px] text-[14px] outline-none
-                       placeholder:text-black/40"
-          />
+            <form className="space-y-[70px]">
 
-          <textarea
-            placeholder="Message"
-            rows={2}
-            className="w-full bg-transparent border-b border-black/20
-                       pb-[12px] text-[14px] outline-none resize-none
-                       placeholder:text-black/40"
-          />
+              <input
+                type="text"
+                placeholder="Name"
+                className="w-full bg-transparent border-b border-black/20 
+                           pb-[14px] text-[16px] outline-none
+                           placeholder:text-black/40"
+              />
 
-          <input
-            type="email"
-            placeholder="Enter email"
-            className="w-full bg-transparent border-b border-black/20
-                       pb-[12px] text-[14px] outline-none
-                       placeholder:text-black/40"
-          />
+              <textarea
+                placeholder="Message"
+                rows={2}
+                className="w-full bg-transparent border-b border-black/20 
+                           pb-[14px] text-[16px] outline-none resize-none
+                           placeholder:text-black/40"
+              />
 
-        </form>
+              <input
+                type="email"
+                placeholder="Enter email"
+                className="w-full bg-transparent border-b border-black/20 
+                           pb-[12px] text-[16px] outline-none
+                           placeholder:text-black/40"
+              />
 
-        <p className="mt-[40px] text-[13px] text-black/50">
-          We accept interns.
-        </p>
+            </form>
+
+            <p className="mt-[60px] text-[14px] text-black/50 text-right">
+              We accept interns.
+            </p>
+
+          </div>
+        </div>
 
       </div>
-
-    </div>
+    </section>
   );
 };
