@@ -1,39 +1,40 @@
 
 
+
 "use client";
 
 import Image from "next/image";
 
 export const GeoWarning = () => {
   return (
-    <section className="bg-[#F2F2F2] flex justify-center">
-      <div className="relative w-[1440px] h-[820px]">
+    <section className="bg-[#F2F2F2] flex justify-center overflow-hidden">
+      <div className="relative w-full max-w-[1440px] min-h-[400px] sm:min-h-[600px] md:h-[820px] px-5 sm:px-10">
 
         {/* ===== TOP ROW ===== */}
-        <Icon src="/Icon/icon-openai.png" className="absolute top-[110px] left-[240px] w-[60px]" />
-        <Icon src="/Icon/xai.png" className="absolute top-[90px] left-[560px] w-[55px]" />
-        <Icon src="/Icon/claude.png" className="absolute top-[105px] left-[940px] w-[70px]" />
-        <Icon src="/Icon/mistral.png" className="absolute top-[110px] right-[240px] w-[60px]" />
+        <Icon src="/Icon/icon-openai.png" className="absolute top-[40px] sm:top-[80px] md:top-[110px] left-[10%] sm:left-[16%] w-[35px] sm:w-[48px] md:w-[60px]" />
+        <Icon src="/Icon/xai.png" className="absolute top-[30px] sm:top-[60px] md:top-[90px] left-[35%] sm:left-[38%] w-[30px] sm:w-[42px] md:w-[55px]" />
+        <Icon src="/Icon/claude.png" className="absolute top-[40px] sm:top-[75px] md:top-[105px] right-[30%] sm:right-[33%] w-[38px] sm:w-[55px] md:w-[70px] hidden sm:block" />
+        <Icon src="/Icon/mistral.png" className="absolute top-[40px] sm:top-[80px] md:top-[110px] right-[10%] sm:right-[16%] w-[35px] sm:w-[48px] md:w-[60px]" />
 
         {/* ===== CENTER ===== */}
-        <Icon src="/Icon/gemini.png" className="absolute top-[260px] left-1/2 -translate-x-1/2 w-[65px]" />
+        <Icon src="/Icon/gemini.png" className="absolute top-[100px] sm:top-[180px] md:top-[260px] left-1/2 -translate-x-1/2 w-[40px] sm:w-[52px] md:w-[65px] hidden sm:block" />
 
         {/* ===== MID LOWER ===== */}
-        <Icon src="/Icon/xai2.png" className="absolute top-[480px] left-1/2 -translate-x-1/2 w-[50px]" />
+        <Icon src="/Icon/xai2.png" className="absolute top-[240px] sm:top-[360px] md:top-[480px] left-1/2 -translate-x-1/2 w-[30px] sm:w-[40px] md:w-[50px] hidden md:block" />
 
         {/* ===== BOTTOM ROW ===== */}
-        <Icon src="/Icon/gemini2.png" className="absolute top-[600px] left-[260px] w-[65px]" />
-        <Icon src="/Icon/claude2.png" className="absolute top-[610px] left-[600px] w-[65px]" />
-        <Icon src="/Icon/perplexity.png" className="absolute top-[600px] left-[900px] w-[60px]" />
-        <Icon src="/Icon/icon-openai2.png" className="absolute top-[610px] right-[260px] w-[55px]" />
+        <Icon src="/Icon/gemini2.png" className="absolute bottom-[60px] sm:bottom-[100px] md:top-[600px] left-[10%] sm:left-[18%] w-[38px] sm:w-[52px] md:w-[65px] hidden sm:block" />
+        <Icon src="/Icon/claude2.png" className="absolute bottom-[50px] sm:bottom-[90px] md:top-[610px] left-[35%] sm:left-[40%] w-[38px] sm:w-[52px] md:w-[65px] hidden md:block" />
+        <Icon src="/Icon/perplexity.png" className="absolute bottom-[60px] sm:bottom-[100px] md:top-[600px] right-[30%] sm:right-[36%] w-[35px] sm:w-[48px] md:w-[60px] hidden md:block" />
+        <Icon src="/Icon/icon-openai2.png" className="absolute bottom-[50px] sm:bottom-[90px] md:top-[610px] right-[10%] sm:right-[18%] w-[32px] sm:w-[44px] md:w-[55px] hidden sm:block" />
 
         {/* ===== HEADLINE ===== */}
-        <h1 className="absolute top-[330px] left-1/2 -translate-x-1/2 text-[66px] font-semibold whitespace-nowrap text-[#2A0E0E]">
+        <h1 className="absolute top-[120px] sm:top-[220px] md:top-[330px] left-1/2 -translate-x-1/2 text-[24px] sm:text-[40px] md:text-[56px] lg:text-[66px] font-semibold text-[#2A0E0E] text-center w-[90%] sm:w-auto sm:whitespace-nowrap">
           Stop using <span className="text-black">Language models</span> for Geographical work.
         </h1>
 
         {/* ===== SUBTITLE ===== */}
-        <p className="absolute top-[420px] left-1/2 -translate-x-1/2 text-[38px] font-medium whitespace-nowrap">
+        <p className="absolute top-[200px] sm:top-[300px] md:top-[420px] left-1/2 -translate-x-1/2 text-[14px] sm:text-[22px] md:text-[30px] lg:text-[38px] font-medium text-center w-[90%] sm:w-auto sm:whitespace-nowrap">
           <span className="text-red-600">LLMs</span>{" "}
           <span className="bg-gradient-to-r from-red-600 via-purple-600 to-blue-600 bg-clip-text text-transparent">
             hallucinate and cannot be trusted for the real world
@@ -56,87 +57,3 @@ const Icon = ({
     <Image src={src} alt="" width={100} height={100} />
   </div>
 );
-
-// "use client";
-
-// import Image from "next/image";
-
-// export const GeoWarning = () => {
-//   return (
-//     <section className="bg-[#F2F2F2] w-[1731px] h-[885px] mx-auto relative">
-
-//       {/* ===== TOP ROW ===== */}
-//       <Icon src="/Icon/icon-openai.png" x={202} y={184} w={72} h={71} />
-//       <Icon src="/Icon/xai.png" x={616} y={144} w={70} h={80} />
-//       <Icon src="/Icon/claude.png" x={886} y={150} w={73} h={73} />
-//       <Icon src="/Icon/mistral.png" x={1269} y={184} w={60} h={60} />
-
-//       {/* ===== CENTER ===== */}
-//       <Icon src="/Icon/gemini.png" x={865} y={320} w={73} h={73} />
-
-//       {/* ===== MID LOWER ===== */}
-//       <Icon src="/Icon/xai2.png" x={865} y={520} w={60} h={60} />
-
-//       {/* ===== BOTTOM ROW ===== */}
-//       <Icon src="/Icon/gemini2.png" x={260} y={700} w={65} h={65} />
-//       <Icon src="/Icon/claude2.png" x={808} y={720} w={65} h={65} />
-//       <Icon src="/Icon/perplexity.png" x={1100} y={700} w={60} h={60} />
-//       <Icon src="/Icon/icon-openai2.png" x={1500} y={720} w={55} h={55} />
-
-//       {/* ===== HEADLINE ===== */}
-//       <h1
-//         className="absolute text-[66px] font-semibold whitespace-nowrap text-[#2A0E0E]"
-//         style={{
-//           left: "865px",
-//           top: "350px",
-//           transform: "translateX(-50%)",
-//         }}
-//       >
-//         Stop using{" "}
-//         <span className="text-black">Language models</span> for Geographical work.
-//       </h1>
-
-//       {/* ===== SUBTITLE ===== */}
-//       <p
-//         className="absolute text-[38px] font-medium whitespace-nowrap"
-//         style={{
-//           left: "865px",
-//           top: "440px",
-//           transform: "translateX(-50%)",
-//         }}
-//       >
-//         <span className="text-red-600">LLMs</span>{" "}
-//         <span className="bg-gradient-to-r from-red-600 via-purple-600 to-blue-600 bg-clip-text text-transparent">
-//           hallucinate and cannot be trusted for the real world
-//         </span>
-//       </p>
-
-//     </section>
-//   );
-// };
-
-// const Icon = ({
-//   src,
-//   x,
-//   y,
-//   w,
-//   h,
-// }: {
-//   src: string;
-//   x: number;
-//   y: number;
-//   w: number;
-//   h: number;
-// }) => (
-//   <div
-//     className="absolute opacity-50"
-//     style={{
-//       left: `${x}px`,
-//       top: `${y}px`,
-//       width: `${w}px`,
-//       height: `${h}px`,
-//     }}
-//   >
-//     <Image src={src} alt="" width={w} height={h} />
-//   </div>
-// );

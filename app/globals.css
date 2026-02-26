@@ -2,7 +2,6 @@
 @import "mapbox-gl/dist/mapbox-gl.css";
 
 html, body {
-  min-width: 1746px;
   background: #F9F9F9;
   color: #171717;
   overflow-x: hidden;

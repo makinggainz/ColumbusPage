@@ -1,5 +1,6 @@
 
 
+
 "use client";
 
 import {
@@ -54,7 +55,7 @@ export const MainFeatures = () => {
 
   return (
     <section
-      className="relative py-[160px]"
+      className="relative py-[60px] sm:py-[100px] md:py-[160px]"
       style={{
         backgroundColor: "#FFFFFF",
         backgroundImage: `
@@ -64,17 +65,17 @@ export const MainFeatures = () => {
         backgroundSize: "120px 120px",
       }}
     >
-      <div className="max-w-[1528px] mx-auto">
+      <div className="max-w-[1528px] mx-auto px-5 sm:px-10 md:px-[60px]">
 
         {/* Heading */}
-        <div className="text-center mb-[110px]">
-          <h2 className="text-[42px] font-medium text-[#1C274C] tracking-[-0.01em]">
+        <div className="text-center mb-[40px] sm:mb-[70px] md:mb-[110px]">
+          <h2 className="text-[28px] sm:text-[36px] md:text-[42px] font-medium text-[#1C274C] tracking-[-0.01em]">
             Main Features
           </h2>
         </div>
 
         {/* Grid */}
-        <div className="flex flex-wrap justify-center gap-x-[100px] gap-y-[100px]">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 md:gap-x-[100px] md:gap-y-[100px] justify-items-center">
 
           {features.map((feature, index) => {
             const Icon = feature.icon;
@@ -83,19 +84,24 @@ export const MainFeatures = () => {
               <div
                 key={index}
                 className="
-                  w-[333px]
-                  h-[269px]
+                  w-full
+                  max-w-[333px]
+                  min-h-[240px]
+                  md:h-[269px]
                   rounded-[12px]
                   bg-white/60
                   backdrop-blur-[12px]
                   border border-[#E5E8EF]
-                  px-[28px]
-                  pt-[28px]
+                  px-[20px]
+                  md:px-[28px]
+                  pt-[20px]
+                  md:pt-[28px]
+                  pb-[20px]
                   shadow-[0_6px_24px_rgba(0,0,0,0.05)]
                 "
               >
                 {/* Icon container */}
-                <div className="w-[36px] h-[36px] rounded-[10px] border border-[#E6EAF2] bg-white/80 flex items-center justify-center mb-[22px]">
+                <div className="w-[36px] h-[36px] rounded-[10px] border border-[#E6EAF2] bg-white/80 flex items-center justify-center mb-[16px] md:mb-[22px]">
                   <Icon
                     size={18}
                     strokeWidth={1.5}
@@ -104,12 +110,12 @@ export const MainFeatures = () => {
                 </div>
 
                 {/* Title */}
-                <h3 className="text-[16px] font-semibold text-[#1C274C] mb-[14px]">
+                <h3 className="text-[15px] md:text-[16px] font-semibold text-[#1C274C] mb-[10px] md:mb-[14px]">
                   {feature.title}
                 </h3>
 
                 {/* Description */}
-                <p className="text-[14px] leading-[160%] text-[#1C274C]/70 mb-[16px]">
+                <p className="text-[13px] md:text-[14px] leading-[160%] text-[#1C274C]/70 mb-[12px] md:mb-[16px]">
                   {feature.description}
                 </p>
 
@@ -117,7 +123,7 @@ export const MainFeatures = () => {
                 {feature.link && (
                   <a
                   href="#"
-                  className="text-[15px] font-medium text-[#4C76C6] hover:underline inline-flex items-center gap-[6px]"
+                  className="text-[14px] md:text-[15px] font-medium text-[#4C76C6] hover:underline inline-flex items-center gap-[6px]"
                 >
                   Check out our generative datasets
                   <ArrowUpRight size={16} strokeWidth={1.6} />

@@ -5,7 +5,7 @@
 export const MeshSection = () => {
   return (
     <section className="bg-[#F9F9F9]">
-      <div className="relative w-full h-[520px] overflow-hidden">
+      <div className="relative w-full h-[280px] sm:h-[400px] md:h-[520px] overflow-hidden">
 
         <video
           autoPlay

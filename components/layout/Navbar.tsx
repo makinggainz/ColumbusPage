@@ -102,13 +102,13 @@ export const Navbar = () => {
                 onMouseLeave={handleMouseLeave}
             >
                 <div className="relative z-50 mx-auto w-full max-w-[1200px] px-4 lg:px-6">
-                <div className="flex h-[76px] items-center justify-between">
+                <div className="flex h-[60px] md:h-[76px] items-center justify-between">
                     {/* Logo */}
                     <Link
                         href="/"
-                        className="flex -translate-x-2 items-center gap-2.5 md:-translate-x-[70px] lg:-translate-x-[110px] xl:-translate-x-[140px]"
+                        className="flex items-center gap-2 md:gap-2.5 md:-translate-x-[70px] lg:-translate-x-[110px] xl:-translate-x-[140px]"
                     >
-                        <div className="relative h-12 w-12">
+                        <div className="relative h-9 w-9 md:h-12 md:w-12">
                             <Image
                                 src="/logobueno.png"
                                 alt="Columbus Logo"
@@ -118,14 +118,14 @@ export const Navbar = () => {
                                 priority
                             />
                         </div>
-                        <span className="brand-wordmark text-[27px] font-bold leading-none tracking-[-0.01em] text-[#0A1344]">
+                        <span className="brand-wordmark text-[20px] md:text-[27px] font-bold leading-none tracking-[-0.01em] text-[#0A1344]">
                             Columbus Earth
                         </span>
                     </Link>
 
                     {/* Navigation Links + Buttons */}
-                    <div className="flex items-center gap-13 md:translate-x-[40px] lg:translate-x-[70px] xl:translate-x-[140px]">
-                        <div className="hidden items-center gap-15 md:flex">
+                    <div className="flex items-center gap-4 md:gap-13 md:translate-x-[40px] lg:translate-x-[70px] xl:translate-x-[140px]">
+                        <div className="hidden items-center gap-15 lg:flex">
                             <Link
                                 href="#"
                                 className="group relative text-[19px] font-normal text-[#0a1628] transition-colors duration-300 hover:text-[#0A1344]"
@@ -152,10 +152,10 @@ export const Navbar = () => {
 
                         </div>
 
-                        <div className="flex items-center gap-8">
+                        <div className="flex items-center gap-3 md:gap-8">
                             <Link
                                 href="/maps-gpt"
-                                className="h-[44px] min-w-[166px] border border-[#0A1344]/85 bg-white px-8 text-[19px] font-semibold text-[#0A1344] transition-colors hover:bg-gray-50 flex items-center justify-center"
+                                className="hidden sm:flex h-[38px] md:h-[44px] min-w-[120px] md:min-w-[166px] border border-[#0A1344]/85 bg-white px-4 md:px-8 text-[15px] md:text-[19px] font-semibold text-[#0A1344] transition-colors hover:bg-gray-50 items-center justify-center"
                             >
                                 Start Now
                             </Link>
@@ -212,7 +212,7 @@ export const Navbar = () => {
 
 
                             <div
-                            className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12"
+                            className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-12 max-h-[calc(100vh-60px)] md:max-h-none overflow-y-auto"
 
                             style={{ transitionDelay: isMenuOpen ? "150ms" : "0ms" }}
                             >

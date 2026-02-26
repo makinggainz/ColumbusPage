@@ -4,17 +4,17 @@ import Image from "next/image";
 
 export const TravelPromo = () => {
   return (
-    <section className="relative  h-[989px] overflow-hidden">
+    <section className="relative min-h-[500px] sm:min-h-[700px] md:h-[989px] overflow-hidden">
 
       {/* Center Content */}
-      <div className="relative z-10 flex flex-col items-center justify-center h-full text-center">
+      <div className="relative z-10 flex flex-col items-center justify-center h-full min-h-[500px] sm:min-h-[700px] md:min-h-[989px] text-center px-5">
 
-        <h2 className="text-[40px] font-semibold text-[#1C274C] mb-[18px]">
+        <h2 className="text-[28px] sm:text-[34px] md:text-[40px] font-semibold text-[#1C274C] mb-[14px] md:mb-[18px]">
           Love to travel or go out?
         </h2>
 
-        <p className="text-[18px] text-[#1C274C]/70">
-          <span className="text-[#1E74FF] font-medium">MapsGPT 
+        <p className="text-[14px] sm:text-[16px] md:text-[18px] text-[#1C274C]/70">
+          <span className="text-[#1E74FF] font-medium">MapsGPT
           is already answering thousands of queries in your area
         </span>
         </p>
@@ -56,7 +56,7 @@ const FloatingEmojis = () => {
           alt=""
           width={98}
           height={98}
-          className="absolute pointer-events-none select-none"
+          className="absolute pointer-events-none select-none w-[50px] h-[50px] sm:w-[70px] sm:h-[70px] md:w-[98px] md:h-[98px]"
           style={{
             top: emoji.top,
             left: emoji.left,
