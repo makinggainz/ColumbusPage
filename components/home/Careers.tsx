@@ -1,74 +1,64 @@
-
-
 "use client";
 
 export const Careers = () => {
   return (
-    <section className="bg-[#F3F3F3] min-h-screen flex items-center">
-      <div className="w-full max-w-[1600px] mx-auto px-[100px]">
+    <section className="bg-[#F3F3F3] py-20 md:py-28 lg:py-36">
+      <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-16">
 
         {/* TOP CENTER */}
-        <div className="text-center mb-[120px]">
-          <h2 className="text-[40px] font-medium text-black mb-[14px]">
+        <div className="text-center mb-16 md:mb-24">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-medium text-black mb-4">
             Hiring Humans.
           </h2>
-          <p className="text-[16px] text-black/60">
+          <p className="text-sm sm:text-base text-black/60">
             Our team is based in Washington DC and Madrid.
           </p>
         </div>
 
-        {/* TITLE ROW (JUSTIFIED) */}
-        <div className="flex justify-between items-start mb-[40px]">
-          <h3 className="text-[38px] font-medium text-[#0A1344]">
+        {/* TITLE + DESCRIPTION */}
+        <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-start mb-12 md:mb-16">
+          <h3 className="text-2xl sm:text-3xl md:text-4xl font-medium text-[#0A1344]">
             Careers & investment queries
           </h3>
 
-          <p className="max-w-[420px] text-[15px] text-black/60 leading-[160%] text-right">
+          <p className="text-sm sm:text-base text-black/60 leading-relaxed md:text-right">
             If you're excited about creating paradigm shifts in physical world
             understanding. Join us now.
           </p>
         </div>
 
         {/* DIVIDER */}
-        <div className="border-b border-black/10 mb-[100px]" />
+        <div className="border-b border-black/10 mb-16 md:mb-20" />
 
-        {/* ONLY FORM CENTERED */}
-        <div className="flex justify-center">
-          <div className="w-[520px]">
+        {/* FORM */}
+        <div className="max-w-xl mx-auto">
 
-            <form className="space-y-[70px]">
+          <form className="space-y-10 md:space-y-14">
 
-              <input
-                type="text"
-                placeholder="Name"
-                className="w-full bg-transparent border-b border-black/20 
-                           pb-[14px] text-[16px] outline-none
-                           placeholder:text-black/40"
-              />
+            <input
+              type="text"
+              placeholder="Name"
+              className="w-full bg-transparent border-b border-black/20 pb-3 text-sm sm:text-base outline-none placeholder:text-black/40"
+            />
 
-              <textarea
-                placeholder="Message"
-                rows={2}
-                className="w-full bg-transparent border-b border-black/20 
-                           pb-[14px] text-[16px] outline-none resize-none
-                           placeholder:text-black/40"
-              />
+            <textarea
+              placeholder="Message"
+              rows={2}
+              className="w-full bg-transparent border-b border-black/20 pb-3 text-sm sm:text-base outline-none resize-none placeholder:text-black/40"
+            />
 
-              <input
-                type="email"
-                placeholder="Enter email"
-                className="w-full bg-transparent border-b border-black/20 
-                           pb-[12px] text-[16px] outline-none
-                           placeholder:text-black/40"
-              />
+            <input
+              type="email"
+              placeholder="Enter email"
+              className="w-full bg-transparent border-b border-black/20 pb-3 text-sm sm:text-base outline-none placeholder:text-black/40"
+            />
 
-            </form>
+          </form>
 
-            <p className="mt-[60px] text-[14px] text-black/50 text-right">
-              We accept interns.
-            </p>
+          <p className="mt-12 text-xs sm:text-sm text-black/50 text-right">
+            We accept interns.
+          </p>
 
-          </div>
         </div>
 
       </div>
