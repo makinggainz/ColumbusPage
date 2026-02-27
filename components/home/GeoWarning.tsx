@@ -6,39 +6,33 @@ import Image from "next/image";
 
 export const GeoWarning = () => {
   return (
-    <section className="bg-[#F2F2F2] flex justify-center">
-      <div className="relative w-[1440px] h-[820px]">
+    <section className="bg-[#F2F2F2] flex justify-center px-4 sm:px-6">
+      <div className="relative w-full max-w-[1440px] min-h-[400px] sm:min-h-[520px] md:min-h-[680px] lg:h-[820px] py-12 sm:py-16 md:py-0 md:flex md:items-center">
 
-        {/* ===== TOP ROW ===== */}
-        <Icon src="/Icon/icon-openai.png" className="absolute top-[110px] left-[240px] w-[60px]" />
-        <Icon src="/Icon/xai.png" className="absolute top-[90px] left-[560px] w-[55px]" />
-        <Icon src="/Icon/claude.png" className="absolute top-[105px] left-[940px] w-[70px]" />
-        <Icon src="/Icon/mistral.png" className="absolute top-[110px] right-[240px] w-[60px]" />
+        {/* Decorative icons: hidden on mobile, visible from md up */}
+        <Icon src="/Icon/icon-openai.png" className="hidden md:block absolute top-[110px] left-[8%] lg:left-[240px] w-[40px] lg:w-[60px]" />
+        <Icon src="/Icon/xai.png" className="hidden md:block absolute top-[90px] left-[28%] lg:left-[560px] w-[36px] lg:w-[55px]" />
+        <Icon src="/Icon/claude.png" className="hidden md:block absolute top-[105px] left-[52%] lg:left-[940px] w-[44px] lg:w-[70px]" />
+        <Icon src="/Icon/mistral.png" className="hidden md:block absolute top-[110px] right-[8%] lg:right-[240px] w-[40px] lg:w-[60px]" />
+        <Icon src="/Icon/gemini.png" className="hidden md:block absolute top-[260px] left-1/2 -translate-x-1/2 w-[50px] lg:w-[65px]" />
+        <Icon src="/Icon/xai2.png" className="hidden md:block absolute top-[480px] left-1/2 -translate-x-1/2 w-[40px] lg:w-[50px]" />
+        <Icon src="/Icon/gemini2.png" className="hidden md:block absolute top-[600px] left-[18%] lg:left-[260px] w-[44px] lg:w-[65px]" />
+        <Icon src="/Icon/claude2.png" className="hidden md:block absolute top-[610px] left-[42%] lg:left-[600px] w-[44px] lg:w-[65px]" />
+        <Icon src="/Icon/perplexity.png" className="hidden md:block absolute top-[600px] right-[38%] lg:left-[900px] lg:right-auto w-[40px] lg:w-[60px]" />
+        <Icon src="/Icon/icon-openai2.png" className="hidden md:block absolute top-[610px] right-[18%] lg:right-[260px] w-[36px] lg:w-[55px]" />
 
-        {/* ===== CENTER ===== */}
-        <Icon src="/Icon/gemini.png" className="absolute top-[260px] left-1/2 -translate-x-1/2 w-[65px]" />
-
-        {/* ===== MID LOWER ===== */}
-        <Icon src="/Icon/xai2.png" className="absolute top-[480px] left-1/2 -translate-x-1/2 w-[50px]" />
-
-        {/* ===== BOTTOM ROW ===== */}
-        <Icon src="/Icon/gemini2.png" className="absolute top-[600px] left-[260px] w-[65px]" />
-        <Icon src="/Icon/claude2.png" className="absolute top-[610px] left-[600px] w-[65px]" />
-        <Icon src="/Icon/perplexity.png" className="absolute top-[600px] left-[900px] w-[60px]" />
-        <Icon src="/Icon/icon-openai2.png" className="absolute top-[610px] right-[260px] w-[55px]" />
-
-        {/* ===== HEADLINE ===== */}
-        <h1 className="absolute top-[330px] left-1/2 -translate-x-1/2 text-[66px] font-semibold whitespace-nowrap text-[#2A0E0E]">
-          Stop using <span className="text-black">Language models</span> for Geographical work.
-        </h1>
-
-        {/* ===== SUBTITLE ===== */}
-        <p className="absolute top-[420px] left-1/2 -translate-x-1/2 text-[38px] font-medium whitespace-nowrap">
-          <span className="text-red-600">LLMs</span>{" "}
-          <span className="bg-gradient-to-r from-red-600 via-purple-600 to-blue-600 bg-clip-text text-transparent">
-            hallucinate and cannot be trusted for the real world
-          </span>
-        </p>
+        {/* HEADLINE + SUBTITLE: centered, responsive, wrap on small screens */}
+        <div className="relative z-10 text-center max-w-4xl mx-auto">
+          <h1 className="text-[24px] sm:text-[32px] md:text-[48px] lg:text-[66px] font-semibold text-[#2A0E0E] leading-tight px-2">
+            Stop using <span className="text-black">Language models</span> for Geographical work.
+          </h1>
+          <p className="mt-4 sm:mt-6 md:mt-8 text-[14px] sm:text-[20px] md:text-[28px] lg:text-[38px] font-medium text-center px-2">
+            <span className="text-red-600">LLMs</span>{" "}
+            <span className="bg-gradient-to-r from-red-600 via-purple-600 to-blue-600 bg-clip-text text-transparent">
+              hallucinate and cannot be trusted for the real world
+            </span>
+          </p>
+        </div>
 
       </div>
     </section>

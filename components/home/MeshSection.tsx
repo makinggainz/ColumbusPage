@@ -7,7 +7,7 @@ import Image from "next/image";
 export const MeshSection = () => {
   return (
     <section className="bg-[#F9F9F9]">
-      <div className="relative w-full h-[520px] overflow-hidden">
+      <div className="relative w-full h-[240px] sm:h-[320px] md:h-[420px] lg:h-[520px] overflow-hidden">
         <Image
           src="/images/Background_image ColLanding.png"
           alt="Columbus landing grid background"

@@ -4,7 +4,6 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowUpRight } from "lucide-react";
 
 export const Industries = () => {
   const items = [
@@ -16,35 +15,35 @@ export const Industries = () => {
   ];
 
   return (
-    <section className="bg-white py-[140px]">
-      <div className="max-w-[1731px] mx-auto px-[100px]">
+    <section className="bg-white py-12 sm:py-16 md:py-24 lg:py-[140px] px-4 sm:px-6 md:px-12 lg:px-[100px]">
+      <div className="max-w-[1731px] mx-auto">
 
         {/* Heading */}
-        <h2 className="text-[32px] font-medium text-[#1C274C] mb-[64px]">
+        <h2 className="text-[24px] sm:text-[28px] md:text-[32px] font-medium text-[#1C274C] mb-8 sm:mb-12 md:mb-[64px]">
           See how Columbus could help you
         </h2>
 
-        <div className="flex items-start gap-[24px] mb-[64px]">
+        <div className="flex flex-wrap items-start justify-center sm:justify-start gap-4 sm:gap-5 md:gap-[24px] mb-8 sm:mb-12 md:mb-[64px]">
 
           {/* First 4 normal cards */}
           {items.slice(0, 4).map((item, index) => (
-            <div key={index} className="w-[300px]">
+            <div key={index} className="w-full max-w-[300px] sm:w-[280px] md:w-[300px]">
 
               <Link href={item.href} className="group block">
-                <div className="relative w-[300px] h-[295px] rounded-[16px] overflow-hidden">
+                <div className="relative w-full aspect-[300/295] max-h-[295px] rounded-[12px] sm:rounded-[16px] overflow-hidden">
                   <Image
                     src={item.src}
                     alt={item.label}
                     fill
                     className="object-cover"
                   />
-                  <div className="absolute inset-0 rounded-[16px] border border-transparent group-hover:border-[#2A64F6] transition" />
+                  <div className="absolute inset-0 rounded-[12px] sm:rounded-[16px] border border-transparent group-hover:border-[#2A64F6] transition" />
                 </div>
               </Link>
 
               <Link
                 href={item.href}
-                className="mt-[14px] inline-flex items-center gap-[6px] text-[15px] font-medium text-[#1C274C]"
+                className="mt-2 sm:mt-[14px] inline-flex items-center gap-1 sm:gap-[6px] text-[13px] sm:text-[15px] font-medium text-[#1C274C]"
               >
                 {item.label}
               </Link>
@@ -52,25 +51,23 @@ export const Industries = () => {
           ))}
 
           {/* Special More Card */}
-          <div className="w-[122px]">
+          <div className="w-full max-w-[122px] sm:w-[100px] md:w-[122px]">
 
             <Link href="#" className="group block">
               <div className="
-                relative
-                w-[122px]
-                h-[295px]
-                rounded-[16px]
+                relative w-full aspect-[122/295] max-h-[295px]
+                rounded-[12px] sm:rounded-[16px]
                 overflow-hidden
                 bg-gradient-to-br from-[#2A3F5F]/60 to-[#1C274C]/40
                 backdrop-blur-sm
               ">
-                <div className="absolute inset-0 rounded-[16px] border border-transparent group-hover:border-[#2A64F6] transition" />
+                <div className="absolute inset-0 rounded-[12px] sm:rounded-[16px] border border-transparent group-hover:border-[#2A64F6] transition" />
               </div>
             </Link>
 
             <Link
               href="#"
-              className="mt-[14px] inline-flex items-center gap-[6px] text-[15px] font-medium text-[#1C274C]"
+              className="mt-2 sm:mt-[14px] inline-flex items-center gap-1 sm:gap-[6px] text-[13px] sm:text-[15px] font-medium text-[#1C274C]"
             >
               More
             </Link>
@@ -79,7 +76,7 @@ export const Industries = () => {
         </div>
 
         {/* Buttons */}
-        <div className="flex gap-[24px]">
+        <div className="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-[24px]">
 
           <button className="
             px-[26px]
@@ -91,6 +88,7 @@ export const Industries = () => {
             text-[#1C274C]
             hover:bg-[#1C274C]/5
             transition
+            text-left sm:text-center
           ">
             The technology that powers Columbus Pro
           </button>
@@ -105,6 +103,7 @@ export const Industries = () => {
             text-[#1C274C]
             hover:bg-[#1C274C]/5
             transition
+            text-left sm:text-center
           ">
             Learn more about Columbus Pro platform
           </button>

@@ -93,22 +93,22 @@ export const Navbar = () => {
             
             <nav
                 ref={navRef}
-                className={`header-font fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                className={`header-font fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] md:border-b ${
                     isMenuOpen
                         ? "border-b border-[#0a1628]/25 bg-[#FFFFFF]"
-                        : "border-b border-[#0a1628]/12 bg-[#FFFFFF]"
+                        : "md:border-[#0a1628]/12 bg-[#0A1344] md:bg-[#FFFFFF]"
                 }`}
                 onMouseEnter={handleNavMouseEnter}
                 onMouseLeave={handleMouseLeave}
             >
-                <div className="relative z-50 mx-auto w-full max-w-[1200px] px-4 lg:px-6">
-                <div className="flex h-[76px] items-center justify-between">
+                <div className="relative z-50 mx-auto w-full max-w-[1200px] px-4 sm:px-5 lg:px-6">
+                <div className="flex h-[64px] sm:h-[72px] md:h-[76px] items-center justify-between">
                     {/* Logo */}
                     <Link
                         href="/"
-                        className="flex -translate-x-2 items-center gap-2.5 md:-translate-x-[70px] lg:-translate-x-[110px] xl:-translate-x-[140px]"
+                        className="flex items-center gap-2 sm:gap-2.5 md:-translate-x-[70px] lg:-translate-x-[110px] xl:-translate-x-[140px]"
                     >
-                        <div className="relative h-12 w-12">
+                        <div className="relative h-9 w-9 sm:h-12 sm:w-12 shrink-0">
                             <Image
                                 src="/logobueno.png"
                                 alt="Columbus Logo"
@@ -118,13 +118,13 @@ export const Navbar = () => {
                                 priority
                             />
                         </div>
-                        <span className="brand-wordmark text-[27px] font-bold leading-none tracking-[-0.01em] text-[#0A1344]">
+                        <span className="brand-wordmark text-[18px] sm:text-[22px] md:text-[27px] font-bold leading-none tracking-[-0.01em] text-white md:text-[#0A1344]">
                             Columbus Earth
                         </span>
                     </Link>
 
-                    {/* Navigation Links + Buttons */}
-                    <div className="flex items-center gap-13 md:translate-x-[40px] lg:translate-x-[70px] xl:translate-x-[140px]">
+                    {/* Navigation Links + Buttons: desktop nav hidden on mobile, Start Now hidden on mobile */}
+                    <div className="flex items-center gap-4 sm:gap-6 md:gap-13 md:translate-x-[40px] lg:translate-x-[70px] xl:translate-x-[140px]">
                         <div className="hidden items-center gap-15 md:flex">
                             <Link
                                 href="#"
@@ -152,10 +152,10 @@ export const Navbar = () => {
 
                         </div>
 
-                        <div className="flex items-center gap-8">
+                        <div className="flex items-center gap-4 sm:gap-6 md:gap-8">
                             <Link
                                 href="/maps-gpt"
-                                className="h-[44px] min-w-[166px] border border-[#0A1344]/85 bg-white px-8 text-[19px] font-semibold text-[#0A1344] transition-colors hover:bg-gray-50 flex items-center justify-center"
+                                className="hidden md:flex h-[44px] min-w-[166px] border border-[#0A1344]/85 bg-white px-8 text-[19px] font-semibold text-[#0A1344] transition-colors hover:bg-gray-50 items-center justify-center"
                             >
                                 Start Now
                             </Link>
@@ -164,7 +164,7 @@ export const Navbar = () => {
                             className={`relative flex h-[44px] w-[44px] items-center justify-center transition-all duration-300 ${
                             isMenuOpen
                              ? "bg-[#0A1344] border border-[#0A1344]"
-                            : "bg-white border border-[#0a1628]/85 hover:bg-[#0A1344]/5"
+                            : "bg-transparent border border-white/40 md:bg-white md:border-[#0a1628]/85 hover:bg-white/10 md:hover:bg-[#0A1344]/5"
                           }`}
                               aria-label="Toggle menu"
                              >
@@ -172,15 +172,15 @@ export const Navbar = () => {
                             <div
                             className={`absolute h-[2.6px] w-[22px] transform-gpu transition-all duration-450 ease-[cubic-bezier(0.4,0,0.2,1)] ${
                             isMenuOpen
-                                ? "rotate-45 bg-white"
-                                : "-translate-y-[6px] bg-[#0A1344]"
+                                ? "rotate-45 bg-[#0A1344]"
+                                : "-translate-y-[6px] bg-white md:bg-[#0A1344]"
                             }`}
                         />
 
                             {/* Middle Line */}
                             <div
                                 className={`absolute h-[2.6px] w-[22px] transition-opacity duration-200 ${
-                                isMenuOpen ? "opacity-0 bg-white" : "opacity-100 bg-[#0A1344]"
+                                isMenuOpen ? "opacity-0 bg-[#0A1344]" : "opacity-100 bg-white md:bg-[#0A1344]"
                                 }`}
                             />
 
@@ -188,8 +188,8 @@ export const Navbar = () => {
                             <div
                                 className={`absolute h-[2.6px] w-[22px] transform-gpu transition-all duration-450 ease-[cubic-bezier(0.4,0,0.2,1)] ${
                                 isMenuOpen
-                                    ? "-rotate-45 bg-white"
-                                    : "translate-y-[6px] bg-[#0A1344]"
+                                    ? "-rotate-45 bg-[#0A1344]"
+                                    : "translate-y-[6px] bg-white md:bg-[#0A1344]"
                                 }`}
                             />
                             </button>

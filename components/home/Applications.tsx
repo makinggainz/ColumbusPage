@@ -17,22 +17,22 @@ export const Applications = () => {
   ];
 
   return (
-    <section className="bg-white py-[160px]">
-      <div className="max-w-[1731px] mx-auto px-[100px]">
+    <section className="bg-white py-12 sm:py-16 md:py-24 lg:py-[160px] px-4 sm:px-6 md:px-12 lg:px-[100px]">
+      <div className="max-w-[1731px] mx-auto">
 
         {/* HEADER */}
-        <div className="mb-[80px]">
-          <h2 className="text-[56px] leading-[120%] font-semibold tracking-[-0.02em] text-[#1C274C]">
+        <div className="mb-10 sm:mb-16 md:mb-[80px]">
+          <h2 className="text-[28px] sm:text-[40px] md:text-[48px] lg:text-[56px] leading-[120%] font-semibold tracking-[-0.02em] text-[#1C274C]">
             We’re actively exploring various application areas
           </h2>
-          <p className="mt-[20px] text-[18px] text-[#1C274C]/70">
+          <p className="mt-4 sm:mt-5 md:mt-[20px] text-[14px] sm:text-[16px] md:text-[18px] text-[#1C274C]/70">
             We’d love to work within your industry, send us a hey@columbus.earth
           </p>
         </div>
 
         {/* COLLAGE GRID — NO GAPS */}
-        <div className="overflow-hidden rounded-[24px]">
-          <div className="grid grid-cols-3">
+        <div className="overflow-hidden rounded-[12px] sm:rounded-[18px] lg:rounded-[24px]">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
 
             {items.map((item, index) => (
               <button
@@ -56,7 +56,7 @@ export const Applications = () => {
                   <div className="text-white">
                     
                     {/* TITLE (Always Visible) */}
-                    <h3 className="text-[20px] font-semibold">
+                    <h3 className="text-[16px] sm:text-[18px] md:text-[20px] font-semibold">
                       {item.title}
                     </h3>
 

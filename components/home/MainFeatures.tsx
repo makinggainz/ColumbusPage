@@ -54,7 +54,7 @@ export const MainFeatures = () => {
 
   return (
     <section
-      className="relative py-[160px]"
+      className="relative py-12 sm:py-16 md:py-24 lg:py-[160px] px-4 sm:px-6"
       style={{
         backgroundColor: "#FFFFFF",
         backgroundImage: `
@@ -67,14 +67,14 @@ export const MainFeatures = () => {
       <div className="max-w-[1528px] mx-auto">
 
         {/* Heading */}
-        <div className="text-center mb-[110px]">
-          <h2 className="text-[42px] font-medium text-[#1C274C] tracking-[-0.01em]">
+        <div className="text-center mb-12 sm:mb-16 md:mb-[110px]">
+          <h2 className="text-[28px] sm:text-[34px] md:text-[42px] font-medium text-[#1C274C] tracking-[-0.01em]">
             Main Features
           </h2>
         </div>
 
         {/* Grid */}
-        <div className="flex flex-wrap justify-center gap-x-[100px] gap-y-[100px]">
+        <div className="flex flex-wrap justify-center gap-x-8 gap-y-10 sm:gap-x-12 sm:gap-y-12 md:gap-x-[60px] md:gap-y-[60px] lg:gap-x-[100px] lg:gap-y-[100px]">
 
           {features.map((feature, index) => {
             const Icon = feature.icon;
@@ -83,14 +83,10 @@ export const MainFeatures = () => {
               <div
                 key={index}
                 className="
-                  w-[333px]
-                  h-[269px]
-                  rounded-[12px]
-                  bg-white/60
-                  backdrop-blur-[12px]
-                  border border-[#E5E8EF]
-                  px-[28px]
-                  pt-[28px]
+                  w-full max-w-[333px] min-h-[240px] sm:min-h-[269px]
+                  rounded-[10px] sm:rounded-[12px]
+                  bg-white/60 backdrop-blur-[12px] border border-[#E5E8EF]
+                  px-5 sm:px-6 md:px-[28px] pt-5 sm:pt-6 md:pt-[28px] pb-5 md:pb-6
                   shadow-[0_6px_24px_rgba(0,0,0,0.05)]
                 "
               >

@@ -6,22 +6,21 @@ export const UniqueSpotsSection = () => {
   const spots = Array(5).fill(null);
 
   return (
-    <section className="bg-white py-[120px] overflow-hidden">
+    <section className="bg-white py-12 sm:py-16 md:py-20 lg:py-[120px] overflow-hidden px-4 sm:px-6">
       <div className="max-w-[1528px] mx-auto">
 
-        <h2 className="text-center text-[32px] font-semibold text-[#0F766E] mb-[60px]">
+        <h2 className="text-center text-[24px] sm:text-[28px] md:text-[32px] font-semibold text-[#0F766E] mb-8 sm:mb-12 md:mb-[60px]">
           Unique spots people are favoriting
         </h2>
 
-        <div className="relative overflow-hidden">
+        <div className="relative overflow-x-auto overflow-y-hidden pb-4 md:overflow-visible md:pb-0 -mx-4 px-4 md:mx-0 md:px-0">
 
-          {/* shift left half width (462/2 = 231) */}
-          <div className="flex gap-[32px] w-max -ml-[231px]">
+          <div className="flex gap-4 sm:gap-6 md:gap-[32px] w-max md:w-auto md:justify-center md:-ml-[231px]">
 
             {spots.map((_, i) => (
               <div
                 key={i}
-                className="w-[462px] rounded-[11px] bg-white
+                className="w-[280px] sm:w-[340px] md:w-[462px] flex-shrink-0 rounded-[8px] sm:rounded-[11px] bg-white
                            shadow-[0_10px_40px_rgba(0,0,0,0.06)]
                            flex-shrink-0 overflow-hidden"
               >
