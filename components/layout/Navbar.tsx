@@ -37,6 +37,7 @@ export const Navbar = () => {
         { label: "Our Mission", href: "/our-mission" },
         { label: "Columbus Market Spy", href: "/market-spy" },
         { label: "MapsGPT", href: "/maps-gpt" },
+        { label: "Use Cases", href: "/use-cases" },
         { label: "Technology", href: "/technology" },
     ];
 
@@ -135,7 +136,7 @@ export const Navbar = () => {
                             </Link>
 
                             <Link
-                                href="#"
+                                href="/use-cases"
                                 className="group relative text-[19px] font-normal text-[#0a1628] transition-colors duration-300 hover:text-[#0A1344]"
                             >
                                 Use Cases
