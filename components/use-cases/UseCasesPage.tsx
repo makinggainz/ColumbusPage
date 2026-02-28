@@ -91,7 +91,7 @@ const APPLICATION_AREAS = [
   "City Security",
   "Retail Analytics",
   "Academic Research",
-  "",
+  "Columbus Market Spy",
 ];
 
 export function UseCasesPage() {
@@ -186,7 +186,6 @@ export function UseCasesPage() {
               </li>
             ))}
           </ul>
-          <p className={styles.marketSpyLabel}>Columbus Market Spy.</p>
         </div>
       </section>
 

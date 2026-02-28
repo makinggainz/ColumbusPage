@@ -195,12 +195,6 @@
   line-height: 1;
 }
 
-.marketSpyLabel {
-  margin: 12px 0 0 38px;
-  color: #5e6b7c;
-  font-size: 0.96rem;
-}
-
 .ctaSection {
   position: relative;
   display: grid;
@@ -256,10 +250,6 @@
   .caseMeta {
     grid-template-columns: 1fr;
     gap: 8px;
-  }
-
-  .marketSpyLabel {
-    margin-left: 0;
   }
 
   .itemText {
