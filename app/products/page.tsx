@@ -1,3 +1,5 @@
+import { Navbar } from "@/components/layout/Navbar";
+import { Footer } from "@/components/layout/Footer";
 import FavoritesSection from "@/components/products/FavoritesSection";
 import FinalCTASection from "@/components/products/FinalCTASection";
 import Hero from "@/components/products/Hero";
@@ -12,6 +14,7 @@ import ShowcaseSection from "@/components/products/ShowcaseSection";
 export default function ProductsPage() {
   return (
     <main className="overflow-x-hidden">
+      <Navbar />
       <Hero />
       <ShowcaseSection />
       <QuestionsSection />
@@ -21,6 +24,7 @@ export default function ProductsPage() {
       <SeeWhatPeopleSection />
       <RecommendationsSection />
       <FinalCTASection  />
+      <Footer />
     </main>
   );
 }

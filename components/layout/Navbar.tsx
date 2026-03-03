@@ -127,16 +127,13 @@ export const Navbar = () => {
                     <div className="flex items-center gap-13 md:translate-x-[40px] lg:translate-x-[70px] xl:translate-x-[140px]">
                         <div className="hidden items-center gap-15 md:flex">
                             <Link
-                                href="/products"
-                                onClick={() => {
-                                    setIsMenuOpen(false);
-                                    setIsManuallyToggled(false);
-                                }}
+                                href="#"
                                 className="group relative text-[19px] font-normal text-[#0a1628] transition-colors duration-300 hover:text-[#0A1344]"
-                                >
+                            >
                                 Product
                                 <span className="absolute left-0 -bottom-1 h-[1px] w-0 bg-[#0A1344] transition-all duration-300 group-hover:w-full" />
                             </Link>
+
                             <Link
                                 href="#"
                                 className="group relative text-[19px] font-normal text-[#0a1628] transition-colors duration-300 hover:text-[#0A1344]"
