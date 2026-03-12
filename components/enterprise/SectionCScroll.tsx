@@ -211,6 +211,8 @@ export default function SectionCScroll() {
 
   const lmGifWrap = useRef<HTMLDivElement>(null);
   const lmGif = useRef<HTMLDivElement>(null);
+  const lmHeadlineWrap = useRef<HTMLDivElement>(null);
+  const lmSubWrap = useRef<HTMLDivElement>(null);
   const lmWords = useRef<(HTMLSpanElement | null)[]>([null, null, null]);
   const lmSubs = useRef<(HTMLSpanElement | null)[]>([null, null, null, null]);
 
@@ -263,7 +265,7 @@ export default function SectionCScroll() {
     const ITEM_H = vh * 0.13;
     const anchorY = vh * 0.5;
     const scrollPos = lerp(0, 4, easeOut(norm(pC, 0.04, 0.94)));
-    const palette = ["#e05555", "#d44444", "#b83838", "#9a2e2e", "#7a2424"];
+    const palette = ["#FF4747", "#FF4747", "#FF4747", "#FF4747", "#FF4747"];
     cWords.current.forEach((w, i) => {
       if (!w) return;
       const dist = i - scrollPos;
@@ -285,13 +287,13 @@ export default function SectionCScroll() {
     s(elDGif, { opacity: String(dPinchIn), transform: `translateY(${lerp(28, 0, dPinchIn)}px)` });
     if (pD > 0.44) {
       const dPinchOut = easeIn(norm(pD, 0.44, 0.56));
-      s(elDGif, { transform: `scaleX(${1 - dPinchOut})`, opacity: String(1 - dPinchOut) });
+      s(elDGif, { opacity: String(1 - dPinchOut), transform: "translateY(0)" });
     }
     const dTextIn = easeOut(norm(pD, 0.14, 0.28));
-    s(elDText, { opacity: String(dTextIn), transform: "scaleX(1)" });
+    s(elDText, { opacity: String(dTextIn), transform: "none" });
     if (pD > 0.44) {
       const dTextOut = easeIn(norm(pD, 0.44, 0.56));
-      s(elDText, { transform: `scaleX(${1 - dTextOut})`, opacity: String(1 - dTextOut) });
+      s(elDText, { opacity: String(1 - dTextOut), transform: "none" });
     }
     refDChars.current.forEach((sp) => {
       if (sp) sp.style.opacity = "1";
@@ -364,7 +366,7 @@ export default function SectionCScroll() {
     const cardH = cardW * (9 / 16);
     const gifW = lerp(vw, cardW, shrinkT);
     const gifH = lerp(vh, cardH, shrinkT);
-    const gifTop = lerp(0, vh * 0.12, shrinkT);
+    const gifTop = lerp(0, (vh - cardH) / 2, shrinkT);
     const gifLeft = (vw - gifW) / 2;
 
     if (ijGif.current) {
@@ -387,27 +389,23 @@ export default function SectionCScroll() {
     s(ijBg, { background: `rgb(${bgR},${bgG2},${bgB})` });
     if (layerIJ.current) layerIJ.current.style.background = `rgb(${bgR},${bgG2},${bgB})`;
 
-    const hlR = Math.round(lerp(190, 20, shrinkT));
-    const hlG2 = Math.round(lerp(220, 20, shrinkT));
-    const hlB = Math.round(lerp(255, 20, shrinkT));
-    const hlY = lerp(vh / 2, gifTop + gifH + 20, shrinkT);
+    const hlY = lerp(vh * 0.35, gifTop - 24, shrinkT);
     if (ijHl.current) {
       Object.assign(ijHl.current.style, {
-        color: `rgb(${hlR},${hlG2},${hlB})`,
-        fontSize: `clamp(18px,${lerp(3.5, 2.2, shrinkT)}vw,${lerp(48, 28, shrinkT)}px)`,
         top: hlY + "px",
         left: "50%",
-        transform: "translateX(-50%)",
+        transform: "translate(-50%, -50%)",
       });
     }
 
     const subIn = easeOut(norm(pIJ, 0.68, 0.85));
+    const subY = gifTop + gifH + lerp(60, 32, shrinkT);
     if (ijSub.current) {
       Object.assign(ijSub.current.style, {
         opacity: String(subIn),
-        top: gifTop + gifH + lerp(60, 80, shrinkT) + "px",
+        top: subY + "px",
         left: "50%",
-        transform: `translateX(-50%) translateY(${lerp(20, 0, subIn)}px)`,
+        transform: `translate(-50%, 0) translateY(${lerp(20, 0, subIn)}px)`,
       });
     }
   }
@@ -424,6 +422,8 @@ export default function SectionCScroll() {
       lmGif.current.style.height = gifH + "px";
     }
     if (lmGifWrap.current) lmGifWrap.current.style.opacity = String(easeOut(norm(p, 0, 0.15)));
+    if (lmHeadlineWrap.current) lmHeadlineWrap.current.style.width = gifW + "px";
+    if (lmSubWrap.current) lmSubWrap.current.style.width = gifW + "px";
 
     const wThresh = [0.22, 0.3, 0.37];
     lmWords.current.forEach((w, i) => {
@@ -488,10 +488,13 @@ export default function SectionCScroll() {
           >
             <p
               ref={elA}
-              className="text-center font-light text-white/85"
+              className="text-center font-normal flex items-center"
               style={{
-                fontSize: "clamp(16px,2vw,24px)",
-                letterSpacing: "-0.01em",
+                fontStyle: "normal",
+                fontSize: 36,
+                lineHeight: "140%",
+                letterSpacing: "-0.02em",
+                color: "#FFFFFF",
                 opacity: 0,
               }}
             >
@@ -522,7 +525,11 @@ export default function SectionCScroll() {
                 opacity: 0,
               }}
             >
-              <ArcGISMock />
+              <img
+                src="/enterprise/legacyGIS.png"
+                alt="Legacy GIS"
+                className="w-full h-full object-cover"
+              />
             </div>
           </div>
 
@@ -534,17 +541,17 @@ export default function SectionCScroll() {
           >
             <div
               ref={elCWrap}
-              className="absolute inset-0 flex items-center pl-[8vw] gap-[clamp(20px,3.5vw,52px)]"
+              className="absolute inset-0 flex items-center justify-center gap-[clamp(12px,2vw,32px)]"
               style={{ opacity: 0 }}
             >
               <span
                 className="text-white font-bold whitespace-nowrap flex-shrink-0"
-                style={{ fontSize: "clamp(26px,3.8vw,50px)", letterSpacing: "-0.03em" }}
+                style={{ fontSize: "clamp(18px,2.5vw,32px)", letterSpacing: "-0.03em" }}
               >
                 Legacy GIS is
               </span>
               <div
-                className="relative h-screen w-[60vw] max-w-[860px] overflow-hidden"
+                className="relative h-screen w-[50vw] max-w-[640px] overflow-hidden"
                 style={{
                   WebkitMaskImage: "linear-gradient(to bottom,transparent 0%,black 22%,black 78%,transparent 100%)",
                   maskImage: "linear-gradient(to bottom,transparent 0%,black 22%,black 78%,transparent 100%)",
@@ -559,12 +566,12 @@ export default function SectionCScroll() {
                       }}
                       className="absolute left-0 font-bold whitespace-nowrap"
                       style={{
-                        fontSize: "clamp(34px,5.2vw,72px)",
+                        fontSize: "clamp(22px,3.5vw,44px)",
                         letterSpacing: "-0.04em",
                         transformOrigin: "left center",
                         willChange: "transform,opacity",
                         opacity: 0,
-                        color: "#e05555",
+                        color: "#FF4747",
                       }}
                     >
                       {word}
@@ -578,56 +585,89 @@ export default function SectionCScroll() {
           {/* D — card slides up */}
           <div
             ref={layerD}
-            className="absolute inset-0 flex flex-col items-center justify-center gap-0 z-[4] bg-white"
+            className="absolute inset-0 flex flex-col items-center justify-center z-[4] bg-white"
             style={{ transform: "translateY(100vh)" }}
           >
-            <div
-              ref={elDGif}
-              className="w-[clamp(220px,38vw,480px)] rounded-xl overflow-hidden flex-shrink-0 -mb-4 relative origin-center bg-[#111]"
-              style={{
-                aspectRatio: "16/10",
-                boxShadow: "0 20px 60px rgba(0,0,0,0.18)",
-                opacity: 0,
-              }}
-            >
-              <HoloDots />
-              <div className="absolute inset-0 flex items-center justify-center z-[2]">
-                <div
-                  className="w-[55%] h-[85%]"
-                  style={{
-                    background: "linear-gradient(180deg,#3a3a3a,#2a2a2a)",
-                    clipPath: "polygon(15% 0%,85% 0%,100% 8%,100% 100%,0% 100%,0% 8%)",
-                  }}
+            {/* Gif: centered wrapper so JS transform doesn't break centering */}
+            <div className="relative w-[clamp(220px,38vw,480px)] flex-shrink-0" style={{ aspectRatio: "16/10" }}>
+              <div
+                ref={elDGif}
+                className="absolute inset-0 rounded-xl overflow-hidden origin-center bg-[#111]"
+                style={{
+                  boxShadow: "0 20px 60px rgba(0,0,0,0.18)",
+                  opacity: 0,
+                }}
+              >
+                <img
+                  src="/enterpriseIronManGifs/goodbye.gif"
+                  alt=""
+                  className="absolute inset-0 w-full h-full object-cover"
                 />
               </div>
-              <div
-                className="ij-ring w-[70px] h-[70px] top-[18%] right-[8%]"
-                style={{ position: "absolute" }}
-              />
-              <div
-                className="ij-ring w-11 h-11 top-[28%] right-[13%]"
-                style={{ position: "absolute", animationDirection: "reverse", animationDuration: "2s" }}
-              />
             </div>
+            {/* Text wrapper: scroll animation applies to both layers */}
             <div
               ref={elDText}
-              className="text-center font-bold text-[#111] origin-center"
-              style={{
-                fontSize: "clamp(22px,3.8vw,50px)",
-                letterSpacing: "-0.04em",
-                opacity: 0,
-              }}
+              className="absolute inset-0 flex items-center justify-center pointer-events-none"
+              style={{ opacity: 0 }}
             >
-              {[...PHRASE_D].map((c, i) => (
-                <span
-                  key={i}
-                  ref={(el) => {
-                    if (el) refDChars.current[i] = el;
+              {/* Blended text: only over the gif (same size/position as gif, clipped) */}
+              <div
+                className="absolute overflow-hidden"
+                style={{
+                  width: "clamp(220px,38vw,480px)",
+                  aspectRatio: "16/10",
+                  left: "50%",
+                  top: "50%",
+                  transform: "translate(-50%, -50%)",
+                }}
+              >
+                <div
+                  className="w-full h-full flex items-center justify-center text-center font-bold origin-center"
+                  style={{
+                    fontSize: "clamp(22px,3.8vw,50px)",
+                    letterSpacing: "-0.04em",
+                    mixBlendMode: "difference",
+                    color: "white",
                   }}
                 >
-                  {c === " " ? "\u00A0" : c}
-                </span>
-              ))}
+                  {[...PHRASE_D].map((c, i) => (
+                    <span
+                      key={i}
+                      ref={(el) => {
+                        if (el) refDChars.current[i] = el;
+                      }}
+                    >
+                      {c === " " ? "\u00A0" : c}
+                    </span>
+                  ))}
+                </div>
+              </div>
+              {/* Black text: only outside the gif (mask cuts out gif rectangle) */}
+              <div
+                className="absolute inset-0 flex items-center justify-center text-center font-bold text-[#111]"
+                style={{
+                  fontSize: "clamp(22px,3.8vw,50px)",
+                  letterSpacing: "-0.04em",
+                  width: "100%",
+                  height: "100%",
+                  maskImage: "linear-gradient(white, white), linear-gradient(white, white)",
+                  maskSize: "100% 100%, min(480px, max(220px, 38vw)) calc(min(480px, max(220px, 38vw)) * 10 / 16)",
+                  maskPosition: "0 0, 50% 50%",
+                  maskRepeat: "no-repeat",
+                  maskComposite: "exclude",
+                  WebkitMaskImage: "linear-gradient(white, white), linear-gradient(white, white)",
+                  WebkitMaskSize: "100% 100%, min(480px, max(220px, 38vw)) calc(min(480px, max(220px, 38vw)) * 10 / 16)",
+                  WebkitMaskPosition: "0 0, 50% 50%",
+                  WebkitMaskRepeat: "no-repeat",
+                  WebkitMaskComposite: "xor",
+                }}
+                aria-hidden
+              >
+                {[...PHRASE_D].map((c, i) => (
+                  <span key={i}>{c === " " ? "\u00A0" : c}</span>
+                ))}
+              </div>
             </div>
           </div>
 
@@ -664,20 +704,69 @@ export default function SectionCScroll() {
           >
             <div
               ref={elFImg}
-              className="w-[clamp(300px,58vw,720px)] origin-center"
-              style={{ opacity: 0 }}
+              className="origin-center relative"
+              style={{
+                opacity: 0,
+                width: "992px",
+                height: "569px",
+                boxShadow: "0px 0px 30px 10px rgba(0, 0, 0, 0.05)",
+                borderRadius: 12,
+                overflow: "hidden",
+              }}
             >
-              <div className="w-full rounded-xl overflow-hidden shadow-xl border border-black/10 bg-white">
-                <ColumbusUIMock />
-              </div>
+              <img
+                src="/enterprise/mapchatEnterprise.png"
+                alt="Columbus Pro map chat"
+                width={992}
+                height={569}
+                className="absolute inset-0 w-full h-full object-cover block"
+                style={{ objectFit: "cover" }}
+              />
+              {/* Bottom-edge gradient: full width left-to-right, fades image to white at bottom */}
+              <div
+                className="absolute left-0 right-0 bottom-0 pointer-events-none z-[1]"
+                style={{
+                  height: 328,
+                  background: "linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, #FFFFFF 47.12%)",
+                }}
+                aria-hidden
+              />
             </div>
-            <div ref={elFTxt} className="relative z-[2] text-center" style={{ opacity: 0 }}>
-              <div className="text-[#2656c7] font-semibold mb-0.5" style={{ fontSize: "clamp(14px,1.5vw,20px)" }}>
+            <div
+              ref={elFTxt}
+              className="absolute z-[2] flex flex-col items-start"
+              style={{
+                opacity: 0,
+                left: "calc(50% - 496px + 20px)",
+                bottom: "calc(50% - 284.5px - 20px)",
+                gap: 4,
+              }}
+            >
+              <div
+                className="font-medium flex items-center"
+                style={{
+                  width: 305,
+                  height: 67,
+                  fontSize: 48,
+                  lineHeight: "140%",
+                  letterSpacing: "-0.02em",
+                  background: "linear-gradient(90deg, #001F99 0%, #000000 100%)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  backgroundClip: "text",
+                }}
+              >
                 Columbus Pro
               </div>
               <div
-                className="font-extrabold text-[#111]"
-                style={{ fontSize: "clamp(44px,7vw,96px)", letterSpacing: "-0.05em", lineHeight: 0.92 }}
+                className="font-semibold flex items-center text-[#000000]"
+                style={{
+                  width: 874,
+                  height: 134,
+                  fontSize: 96,
+                  lineHeight: "140%",
+                  letterSpacing: "-0.02em",
+                }}
               >
                 GIS made effortless
               </div>
@@ -741,91 +830,59 @@ export default function SectionCScroll() {
               </div>
               <div
                 ref={elHPanels}
-                className="flex gap-4 w-[clamp(300px,75vw,900px)]"
-                style={{ opacity: 0 }}
+                className="rounded-[20px] overflow-hidden flex-shrink-0"
+                style={{
+                  opacity: 0,
+                  width: "min(90vw, 900px)",
+                  aspectRatio: "16/10",
+                  boxShadow: "0 20px 60px rgba(0,0,0,0.12)",
+                }}
               >
-                <div
-                  className="flex-1 rounded-[20px] overflow-hidden p-3.5 aspect-[4/3] text-[#888]"
-                  style={{ background: "linear-gradient(160deg,#1a1a2e,#0d0d1a)" }}
-                >
-                  <div className="text-[10px] font-bold text-[#aaa] mb-2 font-['DM_Sans',sans-serif]">
-                    Route Manifest
-                  </div>
-                  <div className="flex gap-1.5 mb-1">
-                    <div className="flex-1 text-[7px] text-[#888] bg-white/5 rounded px-1 py-0.5">Route 93</div>
-                    <div className="flex-1 text-[7px] text-[#888] bg-white/5 rounded px-1 py-0.5">Monday</div>
-                    <div className="flex-1 text-[7px] text-[#888] bg-white/5 rounded px-1 py-0.5">Folder 20</div>
-                  </div>
-                  <div className="flex gap-1.5 mb-1">
-                    <div className="flex-1 text-[7px] text-[#888] bg-white/5 rounded px-1 py-0.5">03-1463</div>
-                    <div className="flex-1 text-[7px] text-[#888] bg-white/5 rounded px-1 py-0.5">Stop 4</div>
-                    <div className="flex-1 text-[7px] text-[#888] bg-white/5 rounded px-1 py-0.5">Seq: 12</div>
-                  </div>
-                  <div className="text-[7px] text-[#888] leading-relaxed mt-1.5">
-                    Travel N on Main St<br />Turn right onto Olive St<br />
-                    Travel on Olive St for 0.56 miles<br />Turn right onto 3rd Ave<br />
-                    Turn left onto Avenue Blvd…
-                  </div>
-                </div>
-                <div
-                  className="flex-1 rounded-[20px] overflow-hidden p-3.5 aspect-[4/3] flex flex-col border border-black/10"
-                  style={{ background: "linear-gradient(160deg,#e8f4e8,#f0f8f0)" }}
-                >
-                  <div className="flex items-center gap-1.5 font-bold text-[#2656c7] mb-2 text-[9px]">
-                    <div className="w-3.5 h-3.5 rounded bg-[#2656c7]" />
-                    Columbus is thinking…
-                  </div>
-                  <div className="text-[8px] text-[#888] pl-2 border-l-2 border-[#dde] mb-1">Considering demographics of Miami</div>
-                  <div className="text-[8px] text-[#888] pl-2 border-l-2 border-[#dde] mb-1">Considering lot prices</div>
-                  <div className="text-[8px] text-[#888] pl-2 border-l-2 border-[#dde] mb-1">Considering trade area competition</div>
-                  <div className="text-[8px] text-[#888] pl-2 border-l-2 border-[#dde] mb-1">Considering your customer target</div>
-                  <div className="mt-auto bg-white rounded-xl p-2 text-[8px] text-[#333] shadow-md border border-[#eee] leading-snug">
-                    Where best to open a new branch of my business. We&apos;re a local family owned car wash, and would like to expand to another state.
-                  </div>
-                </div>
+                <img
+                  src="/enterprise/geocoding.png"
+                  alt="Geocoding to simple language"
+                  className="w-full h-full object-cover"
+                />
               </div>
             </div>
 
-            {/* IJ */}
+            {/* IJ: I = full-bleed gif, J = shrinks to center */}
             <div
               ref={layerIJ}
               className="absolute inset-0 z-[3] bg-black"
               style={{ opacity: 0 }}
             >
               <div ref={ijBg} className="absolute inset-0 z-0 pointer-events-none" />
-              <div ref={ijGif} className="absolute overflow-hidden z-[1]" style={{ inset: 0 }}>
-                <div
-                  className="w-full h-full relative flex items-center justify-center"
-                  style={{ background: "linear-gradient(135deg,#0a1628,#1a2a4a)" }}
-                >
-                  <div className="ij-holo absolute inset-0" />
-                  <div className="absolute inset-0 flex items-center justify-center z-[2]">
-                    <div
-                      className="w-[38%] aspect-[3/4]"
-                      style={{
-                        background: "linear-gradient(180deg,#3a3a3a,#222)",
-                        clipPath: "polygon(12% 0%,88% 0%,100% 6%,100% 100%,0% 100%,0% 6%)",
-                      }}
-                    />
-                  </div>
-                  <div className="ij-ring w-[90px] h-[90px] top-[18%] right-[7%]" style={{ position: "absolute" }} />
-                  <div
-                    className="ij-ring w-[55px] h-[55px] top-[28%] right-[12%]"
-                    style={{ position: "absolute", animationDirection: "reverse", animationDuration: "2s" }}
-                  />
-                </div>
+              <div
+                ref={ijGif}
+                className="absolute overflow-hidden z-[1]"
+                style={{ inset: 0 }}
+              >
+                <img
+                  src="/enterpriseIronManGifs/columbusSees.gif"
+                  alt=""
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
                 <div ref={ijOverlay} className="absolute inset-0 bg-black/85 z-[2] pointer-events-none" />
               </div>
               <p
                 ref={ijHl}
-                className="absolute z-[5] font-bold text-center whitespace-nowrap"
+                className="absolute z-[5] font-[Geist]"
                 style={{
-                  letterSpacing: "-0.03em",
-                  color: "rgb(190,220,255)",
-                  fontSize: "clamp(18px,3.5vw,48px)",
-                  top: "50%",
-                  left: "50%",
-                  transform: "translate(-50%,-50%)",
+                  width: "min(763px, 85vw)",
+                  height: 90,
+                  fontStyle: "normal",
+                  fontWeight: 700,
+                  fontSize: 64,
+                  lineHeight: "140%",
+                  display: "flex",
+                  alignItems: "center",
+                  textAlign: "center",
+                  letterSpacing: "-0.02em",
+                  background: "linear-gradient(0deg, #F4F3EB 0%, #5ABAC7 100%)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  backgroundClip: "text",
                 }}
               >
                 This is Columbus at work.
@@ -888,106 +945,101 @@ export default function SectionCScroll() {
             style={{ position: "sticky" }}
           >
             <div
-              className="flex flex-wrap items-baseline justify-center gap-x-[clamp(12px,2vw,28px)]"
-              id="lm-headline"
+              className="w-full max-w-[min(960px,92vw)] min-w-[400px] flex flex-col items-center gap-[clamp(16px,3vh,36px)]"
             >
-              <span
-                ref={(el) => {
-                  if (el) lmWords.current[0] = el;
-                }}
-                className="inline-block font-extrabold leading-none opacity-0"
-                style={{
-                  fontSize: "clamp(48px,8vw,108px)",
-                  letterSpacing: "-0.05em",
-                  color: "#111",
-                  willChange: "opacity,transform",
-                }}
-              >
-                Use
-              </span>
-              <span
-                ref={(el) => {
-                  if (el) lmWords.current[1] = el;
-                }}
-                className="inline-block font-extrabold leading-none opacity-0"
-                style={{
-                  fontSize: "clamp(48px,8vw,108px)",
-                  letterSpacing: "-0.05em",
-                  color: "#2656c7",
-                  willChange: "opacity,transform",
-                }}
-              >
-                Columbus
-              </span>
-              <span
-                ref={(el) => {
-                  if (el) lmWords.current[2] = el;
-                }}
-                className="inline-block font-extrabold leading-none opacity-0"
-                style={{
-                  fontSize: "clamp(48px,8vw,108px)",
-                  letterSpacing: "-0.05em",
-                  color: "#2656c7",
-                  willChange: "opacity,transform",
-                }}
-              >
-                Pro,
-              </span>
-            </div>
+              <div className="flex justify-center w-full">
+                <div
+                  ref={lmHeadlineWrap}
+                  className="flex flex-nowrap items-baseline justify-end gap-x-[clamp(10px,1.5vw,24px)] whitespace-nowrap"
+                  style={{ width: 140 }}
+                >
+                  <span
+                    ref={(el) => {
+                      if (el) lmWords.current[0] = el;
+                    }}
+                    className="inline-block font-extrabold leading-none opacity-0"
+                    style={{
+                      fontSize: "clamp(40px,6.5vw,88px)",
+                      letterSpacing: "-0.05em",
+                      color: "#111",
+                      willChange: "opacity,transform",
+                    }}
+                  >
+                    Use
+                  </span>
+                  <span
+                    ref={(el) => {
+                      if (el) lmWords.current[1] = el;
+                    }}
+                    className="inline-block font-extrabold leading-none opacity-0"
+                    style={{
+                      fontSize: "clamp(40px,6.5vw,88px)",
+                      letterSpacing: "-0.05em",
+                      color: "#2656c7",
+                      willChange: "opacity,transform",
+                    }}
+                  >
+                    Columbus
+                  </span>
+                  <span
+                    ref={(el) => {
+                      if (el) lmWords.current[2] = el;
+                    }}
+                    className="inline-block font-extrabold leading-none opacity-0"
+                    style={{
+                      fontSize: "clamp(40px,6.5vw,88px)",
+                      letterSpacing: "-0.05em",
+                      color: "#2656c7",
+                      willChange: "opacity,transform",
+                    }}
+                  >
+                    Pro,
+                  </span>
+                </div>
+              </div>
 
-            <div
-              ref={lmGifWrap}
-              className="flex justify-center mb-[clamp(20px,3vh,40px)]"
-              style={{ opacity: 0 }}
-            >
               <div
-                ref={lmGif}
-                className="rounded-2xl overflow-hidden shadow-xl bg-[#111] flex-shrink-0"
-                style={{ width: 140, height: 79 }}
+                ref={lmGifWrap}
+                className="flex justify-center w-full mb-[clamp(20px,3vh,40px)]"
+                style={{ opacity: 0 }}
               >
                 <div
-                  className="w-full h-full relative flex items-center justify-center"
-                  style={{ background: "linear-gradient(135deg,#0d1a2e,#1a2a4a)" }}
+                  ref={lmGif}
+                  className="rounded-2xl overflow-hidden shadow-xl bg-[#111] flex-shrink-0"
+                  style={{ width: 140, height: 79 }}
                 >
-                  <div className="ij-holo absolute inset-0" />
-                  <div className="absolute inset-0 flex items-center justify-center z-[2]">
-                    <div
-                      className="w-[52%] h-[82%]"
-                      style={{
-                        background: "linear-gradient(180deg,#3a3a3a,#222)",
-                        clipPath: "polygon(15% 0%,85% 0%,100% 8%,100% 100%,0% 100%,0% 8%)",
-                      }}
-                    />
-                  </div>
-                  <div
-                    className="ij-ring w-[40%] h-[40%] max-w-[60px] max-h-[60px] top-[15%] right-[8%]"
-                    style={{ position: "absolute" }}
-                  />
-                  <div
-                    className="ij-ring w-[26%] h-[26%] max-w-[38px] max-h-[38px] top-[25%] right-[14%]"
-                    style={{ position: "absolute", animationDirection: "reverse", animationDuration: "2s" }}
+                  <img
+                    src="/enterpriseIronManGifs/findTargets.gif"
+                    alt=""
+                    className="w-full h-full object-cover"
                   />
                 </div>
               </div>
-            </div>
 
-            <div className="flex flex-wrap items-baseline justify-center gap-x-[clamp(8px,1.2vw,18px)]" id="lm-sub">
-              {["find", "your", "targets", "faster."].map((word, i) => (
-                <span
-                  key={i}
-                  ref={(el) => {
-                    if (el) lmSubs.current[i] = el;
-                  }}
-                  className="inline-block font-medium text-[#555] opacity-0"
-                  style={{
-                    fontSize: "clamp(24px,3.5vw,48px)",
-                    letterSpacing: "-0.03em",
-                    willChange: "opacity,transform",
-                  }}
+              <div className="flex justify-center w-full">
+                <div
+                  ref={lmSubWrap}
+                  className="flex flex-nowrap items-baseline justify-start gap-x-[clamp(6px,1vw,14px)] whitespace-nowrap"
+                  style={{ width: 140 }}
                 >
-                  {word}
-                </span>
-              ))}
+                  {["find", "your", "targets", "faster."].map((word, i) => (
+                    <span
+                      key={i}
+                      ref={(el) => {
+                        if (el) lmSubs.current[i] = el;
+                      }}
+                      className="inline-block font-medium text-[#555] opacity-0"
+                      style={{
+                        fontSize: "clamp(20px,3vw,40px)",
+                        letterSpacing: "-0.03em",
+                        willChange: "opacity,transform",
+                      }}
+                    >
+                      {word}
+                    </span>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
         </div>
