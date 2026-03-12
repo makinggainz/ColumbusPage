@@ -1,14 +1,14 @@
 @import "tailwindcss";
 @import "mapbox-gl/dist/mapbox-gl.css";
 
-/* Base reset */
+/* Base reset — use overflow-x: clip (not hidden) so position:sticky works on enterprise Section C */
 html,
 body {
   margin: 0;
   padding: 0;
   background: #F9F9F9;
   color: #171717;
-  overflow-x: hidden;
+  overflow-x: clip;
   min-height: 100%;
 }
 
