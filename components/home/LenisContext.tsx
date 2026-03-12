@@ -22,6 +22,13 @@ export function LenisProvider({ children }: { children: React.ReactNode }) {
       return;
     }
 
+    // Disabled: use native scroll (normal speed) instead of Lenis smooth scroll
+    const useSmoothScroll = false;
+    if (!useSmoothScroll) {
+      setLenis(null);
+      return;
+    }
+
     const instance = new Lenis({
       smoothWheel: true,
       wheelMultiplier: 0.7,
