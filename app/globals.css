@@ -12,9 +12,9 @@ body {
   min-height: 100%;
 }
 
-/* Smooth scroll: fallback when Lenis is not active (e.g. before hydration, anchor links) */
+/* Normal scroll (no smooth) — Lenis is disabled for native speed */
 html {
-  scroll-behavior: smooth;
+  scroll-behavior: auto;
 }
 
 /* Theme variables */
