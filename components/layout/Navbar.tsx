@@ -95,7 +95,7 @@ export const Navbar = () => {
 
     // Pill background — rounding is handled by the pill container (rounded-l-full rounded-r-none)
     const pillBg = isMenuOpen
-        ? "bg-white"
+        ? "bg-white rounded-tl-xs rounded-tr-xs"
         : !isScrolled
             ? "bg-transparent"
             : isDarkSection
@@ -136,10 +136,10 @@ export const Navbar = () => {
                 onMouseLeave={handleMouseLeave}
             >
                 {/* Row: logo on left, CTA+hamburger on right */}
-                <div className="relative flex items-stretch h-14.5 pl-[calc(var(--container-padding)+18px)] pr-[calc(var(--container-padding)+18px)]">
+                <div className="relative flex items-stretch h-14.5 pl-[clamp(20px,6.944vw,100px)] pr-[clamp(20px,6.944vw,100px)]">
 
                     {/* Pill background — starts 44px before the centered "Product" link */}
-                    <div className={`absolute top-0 bottom-0 right-[calc(var(--container-padding)+11px)] left-[calc(50%-201px)] rounded-l-full rounded-r-none transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${pillBg}`} />
+                    <div className={`absolute top-0 bottom-0 right-[clamp(13px,calc(6.944vw-7px),93px)] left-[calc(50%-201px)] rounded-l-full rounded-r-none transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${pillBg}`} />
 
                     {/* Left: Logo — no background */}
                     <Link href="/" className="flex shrink-0 items-center gap-2 pr-8 z-50">
@@ -230,7 +230,7 @@ export const Navbar = () => {
 
                 {/* Mega Menu Dropdown */}
                 <div
-                    className={`absolute top-full left-[calc(50%-201px)] right-0 transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                    className={`absolute top-full left-[calc(50%-201px)] right-[clamp(13px,calc(6.944vw-7px),93px)] rounded-bl-xs rounded-br-xs transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
                         isMenuOpen
                             ? "opacity-100 translate-y-0 bg-white pointer-events-auto"
                             : "opacity-0 -translate-y-10 pointer-events-none"
