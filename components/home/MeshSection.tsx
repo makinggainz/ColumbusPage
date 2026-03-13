@@ -4,7 +4,7 @@
 
 export const MeshSection = () => {
   return (
-    <section className="bg-red-500 border-0 border-none shadow-none ring-0 ring-offset-0">
+    <section className="bg-white border-0 border-none shadow-none ring-0 ring-offset-0">
       <div className="relative w-full h-[920px] overflow-hidden border-0 border-none shadow-none ring-0 ring-offset-0">
 
         <video

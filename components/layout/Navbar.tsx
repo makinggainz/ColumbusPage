@@ -94,75 +94,71 @@ export const Navbar = () => {
             
             <nav
                 ref={navRef}
-                className={`header-font fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-                    isMenuOpen
-                        ? "border-b border-[#0a1628]/25 bg-[#FFFFFF]"
-                        : "border-b border-[#0a1628]/12 bg-[#FFFFFF]"
-                }`}
+                className="header-font fixed top-6 left-0 right-0 z-50"
                 onMouseEnter={handleNavMouseEnter}
                 onMouseLeave={handleMouseLeave}
             >
-                <div className="relative z-50 mx-auto w-full max-w-[1200px] px-4 lg:px-6">
-                <div className="flex h-[76px] items-center justify-between">
-                    {/* Logo */}
+                {/* Snug background box — inset from screen edges */}
+                <div className={`absolute inset-0 mx-(--container-padding) transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] bg-white`} />
+
+                <div className="relative z-50 mx-auto w-full max-w-screen-2xl px-(--container-padding)">
+                <div className="grid h-14 md:h-17 grid-cols-[1fr_auto_1fr] items-center">
+                    {/* Left: Logo */}
                     <Link
                         href="/"
-                        className="flex -translate-x-2 items-center gap-2.5 md:-translate-x-[70px] lg:-translate-x-[110px] xl:-translate-x-[140px]"
+                        className="flex shrink-0 items-center gap-2"
                     >
-                        <div className="relative h-12 w-12">
+                        <div className="relative h-10 w-10 shrink-0">
                             <Image
                                 src="/logobueno.png"
                                 alt="Columbus Logo"
                                 fill
-                                sizes="48px"
+                                sizes="40px"
                                 className="object-contain"
                                 priority
                             />
                         </div>
-                        <span className="brand-wordmark text-[27px] font-bold leading-none tracking-[-0.01em] text-[#0A1344]">
+                        <span className="brand-wordmark text-2xl font-medium leading-none tracking-tight text-[#0A1344]">
                             Columbus Earth
                         </span>
                     </Link>
 
-                    {/* Navigation Links + Buttons */}
-                    <div className="flex items-center gap-13 md:translate-x-[40px] lg:translate-x-[70px] xl:translate-x-[140px]">
-                        <div className="hidden items-center gap-15 md:flex">
-                            <Link
-                                href="#"
-                                className="group relative text-[19px] font-normal text-[#0a1628] transition-colors duration-300 hover:text-[#0A1344]"
-                            >
-                                Product
-                                <span className="absolute left-0 -bottom-1 h-[1px] w-0 bg-[#0A1344] transition-all duration-300 group-hover:w-full" />
-                            </Link>
+                    {/* Center: Navigation Links */}
+                    <div className="hidden items-center gap-9 min-[1155px]:flex">
+                        <Link
+                            href="#"
+                            className="group relative text-md font-medium text-[#0a1628] transition-colors duration-300 hover:text-[#0A1344]"
+                        >
+                            Product
+                            <span className="absolute left-0 -bottom-1 h-px w-0 bg-[#0A1344] transition-all duration-300 group-hover:w-full" />
+                        </Link>
+                        <Link
+                            href="/use-cases"
+                            className="group relative text-md font-medium text-[#0a1628] transition-colors duration-300 hover:text-[#0A1344]"
+                        >
+                            Use Cases
+                            <span className="absolute left-0 -bottom-1 h-px w-0 bg-[#0A1344] transition-all duration-300 group-hover:w-full" />
+                        </Link>
+                        <Link
+                            href="/technology"
+                            className="group relative text-md font-medium text-[#0a1628] transition-colors duration-300 hover:text-[#0A1344]"
+                        >
+                            Technology
+                            <span className="absolute left-0 -bottom-1 h-px w-0 bg-[#0A1344] transition-all duration-300 group-hover:w-full" />
+                        </Link>
+                    </div>
 
-                            <Link
-                                href="/use-cases"
-                                className="group relative text-[19px] font-normal text-[#0a1628] transition-colors duration-300 hover:text-[#0A1344]"
-                            >
-                                Use Cases
-                                <span className="absolute left-0 -bottom-1 h-[1px] w-0 bg-[#0A1344] transition-all duration-300 group-hover:w-full" />
-                            </Link>
-                            <Link
-                                href="/technology"
-                                className="group relative text-[19px] font-normal text-[#0a1628] transition-colors duration-300 hover:text-[#0A1344]"
-                            >
-                                Technology
-                                <span className="absolute left-0 -bottom-1 h-[1px] w-0 bg-[#0A1344] transition-all duration-300 group-hover:w-full" />
-                            </Link>
-
-
-                        </div>
-
-                        <div className="flex items-center gap-8">
-                            <Link
-                                href="/maps-gpt"
-                                className="h-[44px] min-w-[166px] border border-[#0A1344]/85 bg-white px-8 text-[19px] font-semibold text-[#0A1344] transition-colors hover:bg-gray-50 flex items-center justify-center"
-                            >
-                                Start Now
-                            </Link>
+                    {/* Right: CTA + Hamburger */}
+                    <div className="col-start-3 flex items-center justify-end gap-3">
+                        <Link
+                            href="/maps-gpt"
+                            className="hidden min-[1155px]:flex items-center justify-center border border-[#0A1344]/85 bg-white px-6 py-3.5 text-md font-semibold leading-none text-[#0A1344] transition-colors hover:bg-gray-50"
+                        >
+                            Start Now
+                        </Link>
                            <button
                             onClick={handleHamburgerClick}
-                            className={`relative flex h-[44px] w-[44px] items-center justify-center transition-all duration-300 ${
+                            className={`relative flex h-11 w-11 items-center justify-center transition-all duration-300 ${
                             isMenuOpen
                              ? "bg-[#0A1344] border border-[#0A1344]"
                             : "bg-white border border-[#0a1628]/85 hover:bg-[#0A1344]/5"
@@ -171,26 +167,26 @@ export const Navbar = () => {
                              >
                             {/* Top Line */}
                             <div
-                            className={`absolute h-[2.6px] w-[22px] transform-gpu transition-all duration-450 ease-[cubic-bezier(0.4,0,0.2,1)] ${
+                            className={`absolute h-px w-5.5 transform-gpu transition-all duration-300 ease-in-out ${
                             isMenuOpen
                                 ? "rotate-45 bg-white"
-                                : "-translate-y-[6px] bg-[#0A1344]"
+                                : "-translate-y-1.5 bg-[#0A1344]"
                             }`}
                         />
 
                             {/* Middle Line */}
                             <div
-                                className={`absolute h-[2.6px] w-[22px] transition-opacity duration-200 ${
+                                className={`absolute h-px w-5.5 transition-opacity duration-200 ${
                                 isMenuOpen ? "opacity-0 bg-white" : "opacity-100 bg-[#0A1344]"
                                 }`}
                             />
 
                             {/* Bottom Line */}
                             <div
-                                className={`absolute h-[2.6px] w-[22px] transform-gpu transition-all duration-450 ease-[cubic-bezier(0.4,0,0.2,1)] ${
+                                className={`absolute h-px w-5.5 transform-gpu transition-all duration-300 ease-in-out ${
                                 isMenuOpen
                                     ? "-rotate-45 bg-white"
-                                    : "translate-y-[6px] bg-[#0A1344]"
+                                    : "translate-y-1.5 bg-[#0A1344]"
                                 }`}
                             />
                             </button>
@@ -199,37 +195,36 @@ export const Navbar = () => {
                       </div>
                     </div>
                 </div>
-            </div>
 
             {/* Mega Menu Dropdown - Slower smooth slide down */}
             <div
-            className={`absolute top-full left-0 right-0 transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+            className={`absolute top-full left-(--container-padding) right-(--container-padding) transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
             isMenuOpen
             ? "opacity-100 translate-y-0 bg-white pointer-events-auto"
-            : "opacity-0 -translate-y-4 pointer-events-none"
+            : "opacity-0 -translate-y-10 pointer-events-none"
             }`}
 
            >
 
 
                             <div
-                            className="mx-auto w-full max-w-[1200px] px-4 py-12 lg:px-6"
+                            className="mx-auto w-full max-w-screen-2xl px-(--container-padding) py-12"
                             style={{ transitionDelay: isMenuOpen ? "150ms" : "0ms" }}
                             >
                             <div className="grid grid-cols-1 md:grid-cols-12 gap-12">
                              {/* Column 1: Description — left edge aligned with logo */}
                             <div
-                            className={`-translate-x-2 md:-translate-x-[70px] lg:-translate-x-[110px] xl:-translate-x-[140px] md:col-span-5 space-y-8 transition-opacity duration-500 ${
+                            className={`md:col-span-5 space-y-8 transition-opacity duration-500 ${
                             isMenuOpen ? "opacity-100" : "opacity-0"
                             }`}
 
                             style={{ transitionDelay: isMenuOpen ? "200ms" : "0ms" }}
                             >
                             <div>
-                                <h4 className="text-[11px] font-semibold text-[#0A1344]/50 tracking-[0.18em] uppercase mb-4">
+                                <h4 className="text-xs font-semibold text-[#0A1344]/50 tracking-widest uppercase mb-4">
                                     <ScrambleText text="COLUMBUS EARTH" isActive={isMenuOpen} delay={300} />
                                 </h4>
-                                <p className=" text-[#0A1344]/70 text-[17px] leading-[1.65]  max-w-md">
+                                <p className="text-[#0A1344]/70 text-base leading-relaxed max-w-md">
                                     Columbus Earth Inc. is a spatial frontier AI company building the first production
                                     Large Geospatial Model to answer the most difficult questions about our planet.
                                 </p>
@@ -296,13 +291,13 @@ export const Navbar = () => {
                                             setIsMenuOpen(false);
                                             setIsManuallyToggled(false);
                                          }}
-                                             className="group relative text-xl font-medium text-[#0A1344] transition-all duration-300 block flex items-center"
+                                             className="group relative text-xl font-medium text-[#0A1344] transition-all duration-300 flex items-center"
                                         >
-                                            <span className="mr-3 transition-transform duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] group-hover:translate-x-1">
+                                            <span className="mr-3 transition-transform duration-300 ease-in-out group-hover:translate-x-1">
                                              +
                                             </span>
 
-                                            <span className="transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] group-hover:translate-x-1">
+                                            <span className="transition-all duration-300 ease-in-out group-hover:translate-x-1">
                                             {item.label}
                                             </span>
 

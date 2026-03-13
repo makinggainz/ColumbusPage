@@ -1,21 +1,8 @@
-"use client";
-
-import { useEffect, useState } from "react";
-import { ScrambleText } from "@/components/ui/ScrambleText";
 import { cormorant } from "@/lib/typography";
 
 export const Hero = () => {
-  const [isActive, setIsActive] = useState(false);
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-    const t = setTimeout(() => setIsActive(true), 400);
-    return () => clearTimeout(t);
-  }, []);
-
   return (
-    <section className="relative bg-[#F9F9F9] min-h-[calc(100vh-576px)] overflow-hidden">
+    <section className="relative bg-white min-h-[calc(100vh-576px)] overflow-hidden">
       <div className="relative z-10 pt-24 md:pt-32">
         <div className="max-w-6xl mx-auto px-6 sm:px-8 lg:px-16">
           <div className="max-w-[1168px]">
@@ -30,15 +17,7 @@ export const Hero = () => {
             <h1
               className={`${cormorant.className} font-semibold text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl leading-tight tracking-tight text-[#0A1344] ml-0 pl-0 text-left`}
             >
-              {mounted ? (
-                <ScrambleText
-                  text="The frontier AI Lab building the first in-production Large Geospatial Model."
-                  isActive={isActive}
-                  delay={0}
-                />
-              ) : (
-                "The frontier AI Lab building the first in-production Large Geospatial Model."
-              )}
+              The frontier AI Lab building the first in-production Large Geospatial Model.
             </h1>
 
             {/* Tag — left edge aligned with Eyebrow */}
