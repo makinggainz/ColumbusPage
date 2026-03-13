@@ -97,7 +97,7 @@ export const Navbar = () => {
     // light: subtle white tint + 10px blur + hairline border
     // dark: near-invisible cool gradient + 10px blur + hairline white border
     const pillBg = isMenuOpen
-        ? "bg-white"
+        ? "bg-white rounded-tl-xs rounded-tr-xs"
         : !isScrolled
             ? "bg-transparent"
             : isDarkSection
@@ -229,18 +229,17 @@ export const Navbar = () => {
                             </div>
                         </div>
                     </div>
-                </div>{/* end max-w-screen-2xl wrapper */}
 
-                {/* Mega Menu Dropdown */}
-                <div
-                    className={`absolute top-full left-(--container-padding) right-(--container-padding) transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-                        isMenuOpen
-                            ? "opacity-100 translate-y-0 bg-white pointer-events-auto"
-                            : "opacity-0 -translate-y-10 pointer-events-none"
-                    }`}
-                >
+                    {/* Mega Menu Dropdown — inside wrapper so edges align with pill */}
                     <div
-                        className="mx-auto w-full max-w-screen-2xl px-(--container-padding) py-12"
+                        className={`absolute top-full left-(--container-padding) right-(--container-padding) rounded-bl-xs rounded-br-xs transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                            isMenuOpen
+                                ? "opacity-100 translate-y-0 bg-white pointer-events-auto"
+                                : "opacity-0 -translate-y-10 pointer-events-none"
+                        }`}
+                    >
+                    <div
+                        className="px-(--container-padding) py-12"
                         style={{ transitionDelay: isMenuOpen ? "150ms" : "0ms" }}
                     >
                         <div className="grid grid-cols-1 md:grid-cols-12 gap-12">
@@ -337,6 +336,7 @@ export const Navbar = () => {
                         </div>
                     </div>
                 </div>
+                </div>{/* end max-w-screen-2xl wrapper */}
             </nav>
         </>
     );
