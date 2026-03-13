@@ -102,7 +102,7 @@ export const Navbar = () => {
             ? "bg-transparent"
             : isDarkSection
                 ? "backdrop-blur-[10px] bg-gradient-to-b from-[#def4ff]/[0.04] via-[#abbcc5]/[0.05] to-[#5d676d]/[0.10] rounded-xl"
-                : "backdrop-blur-[10px] bg-white/70 rounded-xl";
+                : "backdrop-blur-[10px] bg-white/20 rounded-xl";
 
     // Text and interactive element colors
     const dark = isDarkSection && !isMenuOpen;
