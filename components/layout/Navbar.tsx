@@ -93,16 +93,14 @@ export const Navbar = () => {
         handleMouseEnter();
     };
 
-    // Pill background style — matches devin.ai's approach:
-    // light: subtle white tint + 10px blur + hairline border
-    // dark: near-invisible cool gradient + 10px blur + hairline white border
+    // Pill background — rounding is handled by the pill container (rounded-l-full rounded-r-none)
     const pillBg = isMenuOpen
         ? "bg-white"
         : !isScrolled
             ? "bg-transparent"
             : isDarkSection
-                ? "backdrop-blur-[10px] bg-gradient-to-b from-[#def4ff]/[0.04] via-[#abbcc5]/[0.05] to-[#5d676d]/[0.10] rounded-xl"
-                : "backdrop-blur-[10px] bg-white/70 rounded-xl";
+                ? "backdrop-blur-[10px] bg-gradient-to-b from-[#def4ff]/[0.04] via-[#abbcc5]/[0.05] to-[#5d676d]/[0.10]"
+                : "backdrop-blur-[10px] bg-white/70";
 
     // Text and interactive element colors
     const dark = isDarkSection && !isMenuOpen;
@@ -114,7 +112,7 @@ export const Navbar = () => {
         ? "bg-[#0A1344] text-white border border-[#0A1344] hover:bg-[#0A1344]/90"
         : dark
             ? "backdrop-blur-sm bg-white/10 border border-white/30 text-white hover:bg-white/20"
-            : "border border-[#0A1344]/85 bg-white text-[#0A1344] hover:bg-gray-50";
+            : "backdrop-blur-sm bg-white/70 border border-[#0A1344]/85 text-[#0A1344] hover:bg-white/90";
     const hamburgerClosedClass = dark
         ? "backdrop-blur-sm bg-white/10 border border-white/30 hover:bg-white/20"
         : "bg-white border border-[#0a1628]/85 hover:bg-[#0A1344]/5";
@@ -137,103 +135,102 @@ export const Navbar = () => {
                 onMouseEnter={handleNavMouseEnter}
                 onMouseLeave={handleMouseLeave}
             >
-                {/* Constrained wrapper — aligns pill and content to the same max-width box */}
-                <div className="relative mx-auto w-full max-w-screen-2xl">
-                    {/* Pill background */}
-                    <div className={`absolute inset-y-0 left-(--container-padding) right-(--container-padding) transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${pillBg}`} />
+                {/* Row: logo on left, CTA+hamburger on right */}
+                <div className="relative flex items-stretch h-14 md:h-17 pl-[calc(var(--container-padding)+18px)] pr-[calc(var(--container-padding)+18px)]">
 
-                    <div className="relative z-50 px-[calc(var(--container-padding)+18px)]">
-                        <div className="grid h-14 md:h-17 grid-cols-[1fr_auto_1fr] items-center">
-                            {/* Left: Logo */}
-                            <Link href="/" className="flex shrink-0 items-center gap-2">
-                                <div className="relative h-10 w-10 shrink-0">
-                                    <Image
-                                        src="/logobueno.png"
-                                        alt="Columbus Logo"
-                                        fill
-                                        sizes="40px"
-                                        className="object-contain"
-                                        priority
-                                    />
-                                </div>
-                                <span className={`brand-wordmark text-2xl font-medium leading-none tracking-tight transition-colors duration-500 ${wordmarkColor}`}>
-                                    Columbus Earth
-                                </span>
+                    {/* Pill background — starts 44px before the centered "Product" link */}
+                    <div className={`absolute top-0 bottom-0 right-0 left-[calc(50%-201px)] rounded-l-full rounded-r-none transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${pillBg}`} />
+
+                    {/* Left: Logo — no background */}
+                    <Link href="/" className="flex shrink-0 items-center gap-2 pr-8 z-50">
+                        <div className="relative h-10 w-10 shrink-0">
+                            <Image
+                                src="/logobueno.png"
+                                alt="Columbus Logo"
+                                fill
+                                sizes="40px"
+                                className="object-contain"
+                                priority
+                            />
+                        </div>
+                        <span className={`brand-wordmark text-2xl font-medium leading-none tracking-tight transition-colors duration-500 ${wordmarkColor}`}>
+                            Columbus Earth
+                        </span>
+                    </Link>
+
+                    {/* Center: Navigation Links — absolutely centered in the full nav width */}
+                    <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-50">
+                        <div className="hidden items-center gap-[45px] min-[1155px]:flex pointer-events-auto">
+                            <Link
+                                href="#"
+                                className={`group relative text-md font-medium transition-colors duration-300 ${linkColor} ${linkHover}`}
+                            >
+                                Product
+                                <span className={`absolute left-0 -bottom-1 h-px w-0 transition-all duration-300 group-hover:w-full ${underlineColor}`} />
                             </Link>
-
-                            {/* Center: Navigation Links */}
-                            <div className="hidden items-center gap-9 min-[1155px]:flex">
-                                <Link
-                                    href="#"
-                                    className={`group relative text-md font-medium transition-colors duration-300 ${linkColor} ${linkHover}`}
-                                >
-                                    Product
-                                    <span className={`absolute left-0 -bottom-1 h-px w-0 transition-all duration-300 group-hover:w-full ${underlineColor}`} />
-                                </Link>
-                                <Link
-                                    href="/use-cases"
-                                    className={`group relative text-md font-medium transition-colors duration-300 ${linkColor} ${linkHover}`}
-                                >
-                                    Use Cases
-                                    <span className={`absolute left-0 -bottom-1 h-px w-0 transition-all duration-300 group-hover:w-full ${underlineColor}`} />
-                                </Link>
-                                <Link
-                                    href="/technology"
-                                    className={`group relative text-md font-medium transition-colors duration-300 ${linkColor} ${linkHover}`}
-                                >
-                                    Technology
-                                    <span className={`absolute left-0 -bottom-1 h-px w-0 transition-all duration-300 group-hover:w-full ${underlineColor}`} />
-                                </Link>
-                            </div>
-
-                            {/* Right: CTA + Hamburger */}
-                            <div className="col-start-3 flex items-center justify-end gap-3">
-                                <Link
-                                    href="/maps-gpt"
-                                    className={`hidden min-[1155px]:flex items-center justify-center px-6 py-3.5 text-md font-semibold leading-none transition-colors duration-500 rounded-none ${startNowClass}`}
-                                >
-                                    Start Now
-                                </Link>
-                                <button
-                                    onClick={handleHamburgerClick}
-                                    className={`relative flex h-11 w-11 items-center justify-center rounded-none transition-all duration-300 ${
-                                        isMenuOpen
-                                            ? "bg-[#0A1344] border border-[#0A1344]"
-                                            : hamburgerClosedClass
-                                    }`}
-                                    aria-label="Toggle menu"
-                                >
-                                    {/* Top Line */}
-                                    <div
-                                        className={`absolute h-px w-5.5 transform-gpu transition-all duration-300 ease-in-out ${
-                                            isMenuOpen
-                                                ? "rotate-45 bg-white"
-                                                : `-translate-y-1.5 ${hamburgerLineColor}`
-                                        }`}
-                                    />
-                                    {/* Middle Line */}
-                                    <div
-                                        className={`absolute h-px w-5.5 transition-all duration-200 ${
-                                            isMenuOpen ? "opacity-0 bg-white" : `opacity-100 ${hamburgerLineColor}`
-                                        }`}
-                                    />
-                                    {/* Bottom Line */}
-                                    <div
-                                        className={`absolute h-px w-5.5 transform-gpu transition-all duration-300 ease-in-out ${
-                                            isMenuOpen
-                                                ? "-rotate-45 bg-white"
-                                                : `translate-y-1.5 ${hamburgerLineColor}`
-                                        }`}
-                                    />
-                                </button>
-                            </div>
+                            <Link
+                                href="/use-cases"
+                                className={`group relative text-md font-medium transition-colors duration-300 ${linkColor} ${linkHover}`}
+                            >
+                                Use Cases
+                                <span className={`absolute left-0 -bottom-1 h-px w-0 transition-all duration-300 group-hover:w-full ${underlineColor}`} />
+                            </Link>
+                            <Link
+                                href="/technology"
+                                className={`group relative text-md font-medium transition-colors duration-300 ${linkColor} ${linkHover}`}
+                            >
+                                Technology
+                                <span className={`absolute left-0 -bottom-1 h-px w-0 transition-all duration-300 group-hover:w-full ${underlineColor}`} />
+                            </Link>
                         </div>
                     </div>
-                </div>{/* end max-w-screen-2xl wrapper */}
+
+                    {/* Right: CTA + Hamburger */}
+                    <div className="flex items-center gap-3 ml-auto z-50">
+                        <Link
+                            href="/maps-gpt"
+                            className={`hidden min-[1155px]:flex items-center justify-center px-6 py-3.5 text-md font-semibold leading-none transition-colors duration-500 rounded-none ${startNowClass}`}
+                        >
+                            Start Now
+                        </Link>
+                        <button
+                            onClick={handleHamburgerClick}
+                            className={`relative flex h-11 w-11 items-center justify-center rounded-none transition-all duration-300 ${
+                                isMenuOpen
+                                    ? "bg-[#0A1344] border border-[#0A1344]"
+                                    : hamburgerClosedClass
+                            }`}
+                            aria-label="Toggle menu"
+                        >
+                            {/* Top Line */}
+                            <div
+                                className={`absolute h-px w-5.5 transform-gpu transition-all duration-300 ease-in-out ${
+                                    isMenuOpen
+                                        ? "rotate-45 bg-white"
+                                        : `-translate-y-1.5 ${hamburgerLineColor}`
+                                }`}
+                            />
+                            {/* Middle Line */}
+                            <div
+                                className={`absolute h-px w-5.5 transition-all duration-200 ${
+                                    isMenuOpen ? "opacity-0 bg-white" : `opacity-100 ${hamburgerLineColor}`
+                                }`}
+                            />
+                            {/* Bottom Line */}
+                            <div
+                                className={`absolute h-px w-5.5 transform-gpu transition-all duration-300 ease-in-out ${
+                                    isMenuOpen
+                                        ? "-rotate-45 bg-white"
+                                        : `translate-y-1.5 ${hamburgerLineColor}`
+                                }`}
+                            />
+                        </button>
+                    </div>
+                </div>
 
                 {/* Mega Menu Dropdown */}
                 <div
-                    className={`absolute top-full left-(--container-padding) right-(--container-padding) transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                    className={`absolute top-full left-[calc(50%-201px)] right-0 transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
                         isMenuOpen
                             ? "opacity-100 translate-y-0 bg-white pointer-events-auto"
                             : "opacity-0 -translate-y-10 pointer-events-none"
