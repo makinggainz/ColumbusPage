@@ -100,7 +100,7 @@ export const Navbar = () => {
             ? "bg-transparent"
             : isDarkSection
                 ? "backdrop-blur-[10px] bg-gradient-to-b from-[#def4ff]/[0.04] via-[#abbcc5]/[0.05] to-[#5d676d]/[0.10]"
-                : "backdrop-blur-[10px] bg-white/70";
+                : "backdrop-blur-[10px] bg-white/20";
 
     // Text and interactive element colors
     const dark = isDarkSection && !isMenuOpen;
@@ -136,10 +136,10 @@ export const Navbar = () => {
                 onMouseLeave={handleMouseLeave}
             >
                 {/* Row: logo on left, CTA+hamburger on right */}
-                <div className="relative flex items-stretch h-14 md:h-17 pl-[calc(var(--container-padding)+18px)] pr-[calc(var(--container-padding)+18px)]">
+                <div className="relative flex items-stretch h-14.5 pl-[calc(var(--container-padding)+18px)] pr-[calc(var(--container-padding)+18px)]">
 
                     {/* Pill background — starts 44px before the centered "Product" link */}
-                    <div className={`absolute top-0 bottom-0 right-0 left-[calc(50%-201px)] rounded-l-full rounded-r-none transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${pillBg}`} />
+                    <div className={`absolute top-0 bottom-0 right-[calc(var(--container-padding)+11px)] left-[calc(50%-201px)] rounded-l-full rounded-r-none transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${pillBg}`} />
 
                     {/* Left: Logo — no background */}
                     <Link href="/" className="flex shrink-0 items-center gap-2 pr-8 z-50">
