@@ -4,7 +4,7 @@ import Image from "next/image";
 
 export default function ResultsSection() {
   return (
-    <section className="relative w-full py-[120px]">
+    <section className="relative w-full py-[120px] rounded-b-[33px] overflow-hidden" style={{ backgroundColor: "#FFFFFF" }}>
 
       {/* Background */}
       <Image
@@ -21,8 +21,22 @@ export default function ResultsSection() {
           Results of our <br /> Large Geospatial Model:
         </h2>
 
+        {/* Two lines below title — side by side, 2px solid #EDEDED */}
+        <div className="flex flex-nowrap gap-x-6 mb-[24px]">
+          <div
+            className="h-0 shrink-0"
+            style={{ width: "828px", maxWidth: "50%", borderTop: "2px solid #EDEDED" }}
+            aria-hidden
+          />
+          <div
+            className="h-0 shrink-0"
+            style={{ width: "806px", maxWidth: "50%", borderTop: "2px solid #EDEDED" }}
+            aria-hidden
+          />
+        </div>
+
         {/* ROW 1 */}
-        <div className="grid grid-cols-2 gap-x-[120px] max-lg:gap-x-[60px] max-md:grid-cols-1 border-t border-[#E5E7EB] py-[60px]">
+        <div className="grid grid-cols-2 gap-x-[120px] max-lg:gap-x-[60px] max-md:grid-cols-1 pt-[24px] pb-[60px]">
 
           <Feature
             number="1"
@@ -39,8 +53,22 @@ Contextual enrichment.`}
 
         </div>
 
+        {/* Two lines decor — between rows */}
+        <div className="flex flex-nowrap gap-x-6 my-[24px]">
+          <div
+            className="h-0 shrink-0"
+            style={{ width: "828px", maxWidth: "50%", borderTop: "2px solid #EDEDED" }}
+            aria-hidden
+          />
+          <div
+            className="h-0 shrink-0"
+            style={{ width: "806px", maxWidth: "50%", borderTop: "2px solid #EDEDED" }}
+            aria-hidden
+          />
+        </div>
+
         {/* ROW 2 */}
-        <div className="grid grid-cols-2 gap-x-[120px] max-lg:gap-x-[60px] max-md:grid-cols-1 border-t border-[#E5E7EB] py-[60px]">
+        <div className="grid grid-cols-2 gap-x-[120px] max-lg:gap-x-[60px] max-md:grid-cols-1 py-[60px]">
 
           <Feature
             number="1"
@@ -73,7 +101,7 @@ function Feature({ number, text, image }: { number: string; text: string; image:
           {number}
         </span>
 
-        <p className="text-[20px] leading-[140%] whitespace-pre-line text-[#111] max-md:text-[18px]">
+        <p className="text-[28px] leading-[140%] whitespace-pre-line text-[#111] max-md:text-[22px]">
           {text}
         </p>
 

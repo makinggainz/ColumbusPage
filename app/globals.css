@@ -290,3 +290,29 @@ video {
     animation: none;
   }
 }
+
+/* Section E (Chat): left sidebar cells — glass effect when untapped */
+.glass-rect {
+  background-color: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(6px) brightness(0.8);
+  -webkit-backdrop-filter: blur(6px) brightness(0.8);
+  box-shadow:
+    inset -2px -2px 8px rgba(255, 255, 255, 0.08),
+    inset 2px 2px 8px rgba(0, 0, 0, 0.4);
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  isolation: isolate; /* helps backdrop-filter work reliably */
+  z-index: 1;
+}
+
+.glass-rect::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-size: 150px 150px;
+  opacity: 0.25;
+  mix-blend-mode: multiply;
+  pointer-events: none;
+}

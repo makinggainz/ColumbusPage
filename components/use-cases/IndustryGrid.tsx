@@ -195,15 +195,29 @@ export default function IndustryGrid() {
       <div className="w-full max-w-[1728px] px-6">
 
         {/* TITLE */}
-        <h2 className="text-white text-[64px] text-center font-semibold mb-[80px] max-md:text-[36px]">
-          Find your industry
+        <h2 className="text-center mb-[48px] max-md:mb-[36px]">
+          <span
+            className="inline-block text-[64px] font-semibold max-md:text-[36px] bg-gradient-to-b from-[#EBEBEB] to-[#A6A6A6] bg-clip-text text-transparent"
+            style={{
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              WebkitTextStroke: "1px rgba(255,255,255,0.5)",
+              paintOrder: "stroke fill",
+            }}
+          >
+            Find your industry
+          </span>
         </h2>
 
         {/* GRID */}
         <div className="grid grid-cols-3 gap-y-[40px] gap-x-0 max-lg:grid-cols-2 max-md:grid-cols-1">
 
           {industries.map((item, i) => (
-            <div key={i} className="flex flex-col">
+            <a
+              key={i}
+              href="#"
+              className="group flex flex-col cursor-pointer block"
+            >
 
               {/* IMAGE */}
               <div className="relative h-[866px] overflow-hidden">
@@ -215,62 +229,66 @@ export default function IndustryGrid() {
                   className="object-cover"
                 />
 
-                {/* OVERLAY STARTING AT 450px */}
-                {item.overlay && (
-                  <div className="absolute left-0 right-0 top-[450px] bottom-0 bg-gradient-to-t from-black/90 to-transparent flex flex-col justify-center px-8 text-white">
+                {/* OVERLAY: visible on hover, same treatment as Urban Planning */}
+                <div className="absolute inset-0 top-[450px] bg-gradient-to-t from-black/95 to-transparent flex flex-col justify-center px-8 text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100">
 
-                    {/* Heading */}
-                    <h3 className="text-[20px] mb-4 text-center">
-                      {item.overlay.heading}
-                    </h3>
+                  {/* Heading */}
+                  <h3 className="text-[20px] mb-4 text-center">
+                    {item.overlay?.heading ?? item.title}
+                  </h3>
 
-                    {/* Paragraph text */}
-                    {item.overlay.text && (
-                      <p className="text-[14px] text-gray-200 max-w-[320px] mx-auto text-center mb-6 leading-relaxed">
-                        {item.overlay.text}
-                      </p>
-                    )}
+                  {/* Paragraph text */}
+                  {item.overlay?.text && (
+                    <p className="text-[14px] text-gray-200 max-w-[320px] mx-auto text-center mb-6 leading-relaxed">
+                      {item.overlay.text}
+                    </p>
+                  )}
 
-                    {/* Bullet list */}
-                    {item.overlay.list && (
-                      <ul className="text-[14px] text-gray-200 mb-6 space-y-2 max-w-[300px] mx-auto text-left">
-                        {item.overlay.list.map((point, idx) => (
-                          <li key={idx} className="flex gap-2">
-                            <span>•</span>
-                            {point}
-                          </li>
-                        ))}
-                      </ul>
-                    )}
+                  {/* Bullet list */}
+                  {item.overlay?.list && (
+                    <ul className="text-[14px] text-gray-200 mb-6 space-y-2 max-w-[300px] mx-auto text-left">
+                      {item.overlay.list.map((point, idx) => (
+                        <li key={idx} className="flex gap-2">
+                          <span>•</span>
+                          {point}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
 
-                    {/* Buttons */}
-                    <div className="flex items-center justify-center gap-6">
+                  {/* Buttons */}
+                  <div className="flex items-center justify-center gap-6">
 
-                      <button className="border border-white rounded-full px-6 py-2 text-[14px] hover:bg-white hover:text-black transition">
-                        Talk to us
+                    <button
+                      type="button"
+                      className="cursor-pointer border border-white rounded-full px-6 py-2 text-[14px] hover:bg-white hover:text-black transition"
+                    >
+                      Talk to us
+                    </button>
+
+                    {item.overlay?.showLearnMore && (
+                      <button
+                        type="button"
+                        className="cursor-pointer text-white text-[14px] flex items-center gap-1 hover:underline"
+                      >
+                        Learn more →
                       </button>
-
-                      {item.overlay.showLearnMore && (
-                        <button className="text-white text-[14px] flex items-center gap-1 hover:underline">
-                          Learn more →
-                        </button>
-                      )}
-
-                    </div>
+                    )}
 
                   </div>
-                )}
+
+                </div>
 
               </div>
 
               {/* TITLE BAR */}
-              <div className="bg-black h-[42px] flex items-center justify-center">
-                <p className="text-white text-[14px] tracking-wide">
+              <div className="bg-black h-[42px] mt-[10px] flex items-center justify-center">
+                <p className="text-white text-[24px] font-semibold tracking-wide">
                   {item.title}
                 </p>
               </div>
 
-            </div>
+            </a>
           ))}
 
         </div>

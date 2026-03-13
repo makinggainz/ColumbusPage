@@ -4,7 +4,7 @@
 
 ### Overview
 
-Single Next.js 16 application (no backend, no Docker, no database). All pages are static routes served by one dev server on port 3000.
+Single Next.js 16 application (no backend, no Docker, no database). All pages are static routes served by one dev server on port 3000. Main front-end surfaces: **Home** (`/`), **Technology** (`/technology`), **Use Cases** (`/use-cases`), **MapsGPT** (`/maps-gpt`), **Market Spy** (`/market-spy`), **Our Mission** (`/our-mission`).
 
 ### Commands
 
@@ -18,5 +18,5 @@ Single Next.js 16 application (no backend, no Docker, no database). All pages ar
 ### Gotchas
 
 - **Playwright lock conflict**: `npm run e2e` starts its own dev server on port 4173. If a dev server is already running, Playwright will fail with a `.next/dev/lock` error. Stop the existing dev server (or remove `.next/dev/lock`) before running E2E tests.
-- **Mapbox token**: Pages `/maps-gpt`, `/market-spy`, and `/our-mission` require `NEXT_PUBLIC_MAPBOX_TOKEN` to render maps. Without it, those pages throw a runtime error. The homepage (`/`) and `/technology` work without the token. The token is available as a Cursor Cloud secret.
+- **Mapbox token**: Pages `/maps-gpt`, `/market-spy`, and `/our-mission` require `NEXT_PUBLIC_MAPBOX_TOKEN` to render maps. Without it, those pages throw a runtime error. The homepage (`/`), `/technology`, and **Use Cases** (`/use-cases`) work without the token. The token is available as a Cursor Cloud secret.
 - **Pre-existing lint errors**: ESLint currently reports 3 errors and 5 warnings in the existing codebase (unescaped entities, set-state-in-effect, exhaustive-deps). These are not regressions.

@@ -104,7 +104,7 @@ export default function HeroSection() {
       <div className="relative max-w-[1728px] mx-auto h-full">
 
         {/* TEXT BLOCK */}
-        <div className="absolute left-[10px] top-[219px] max-md:left-[24px] max-md:right-[24px]">
+        <div className="absolute left-[80px] top-[219px] max-md:left-[24px] max-md:right-[24px]">
 
           {/* TITLE */}
           <h1
@@ -113,15 +113,15 @@ export default function HeroSection() {
             font-serif
             text-[80px]
             leading-[140%]
-            whitespace-nowrap
             max-xl:text-[72px]
             max-lg:text-[56px]
             max-md:text-[40px]
             max-sm:text-[32px]
-            max-md:whitespace-normal
             "
           >
-            Why you should be excited about our LGM
+            Why you should be excited
+            <br />
+            about our LGM
           </h1>
 
           {/* SUBTITLE */}
@@ -147,7 +147,7 @@ export default function HeroSection() {
         <p
           className="
           absolute
-          left-[10px]
+          left-[80px]
           bottom-[60px]
           text-white
           text-[25px]
