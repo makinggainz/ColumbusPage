@@ -239,7 +239,7 @@ export const Navbar = () => {
                         }`}
                     >
                     <div
-                        className="px-(--container-padding) py-12"
+                        className="pl-7 pr-(--container-padding) py-12"
                         style={{ transitionDelay: isMenuOpen ? "150ms" : "0ms" }}
                     >
                         <div className="grid grid-cols-1 md:grid-cols-12 gap-12">
