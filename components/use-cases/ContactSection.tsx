@@ -1,10 +1,11 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 
 export default function ContactSection() {
   return (
-    <section className="w-full bg-black flex flex-col items-center py-[140px] px-6">
+    <section className="w-full bg-black flex flex-col items-center pt-[240px] pb-[50px] px-6">
 
       {/* TOP TEXT */}
       <p
@@ -13,8 +14,9 @@ export default function ContactSection() {
         text-[30px] leading-[140%]
         tracking-[0.3em]
         max-w-[491px]
-        mb-[60px]
+        mb-[140px]
         max-md:text-[22px]
+        -mt-[90px]
         "
       >
         We’re at the frontier.
@@ -36,15 +38,15 @@ export default function ContactSection() {
         "
       >
         <Image
-          src="/contact/pond.png"
-          alt="pond"
+          src="/use-cases/endImage.png"
+          alt=""
           fill
           className="object-cover"
           priority
         />
 
         {/* DARK OVERLAY */}
-        <div className="absolute inset-0 bg-black/20" />
+        <div className="absolute inset-0 bg-black/10" />
 
         {/* CONTENT */}
         <div
@@ -68,11 +70,19 @@ export default function ContactSection() {
           >
             We’d love to work with you. Contact us, or
             <br />
-            Check out our Products
+            Check out our{" "}
+            <Link
+              href="/products"
+              className="underline cursor-pointer hover:opacity-80 transition-opacity"
+            >
+              Products
+            </Link>
           </p>
 
           <button
+            type="button"
             className="
+            cursor-pointer
             border border-white/40
             text-white
             px-8 py-3
