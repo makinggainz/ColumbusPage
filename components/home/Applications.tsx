@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { Container } from "@/components/layout/Container";
 
 export const Applications = () => {
   const items = [
@@ -18,7 +19,7 @@ export const Applications = () => {
 
   return (
     <section className="bg-white py-20 md:py-28 lg:py-36">
-      <div className="max-w-[1580px] mx-auto px-6 sm:px-8 lg:px-16">
+      <Container>
 
         {/* HEADER */}
         <div className="mb-5 md:mb-6 max-w-full">
@@ -74,7 +75,7 @@ export const Applications = () => {
           </div>
         </div>
 
-      </div>
+      </Container>
     </section>
   );
 };

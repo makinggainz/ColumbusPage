@@ -1,6 +1,7 @@
 "use client";
 
 import { Star, MapPin } from "lucide-react";
+import { Container } from "@/components/layout/Container";
 
 const FAVORITE_SPOTS_FILES = ["(20).jpeg", "(14).jpeg", "(17).jpeg", "(19).jpeg", "(21).jpeg", "(23).jpeg", "(24).jpeg", "(22).jpeg"];
 const spotImageSrc = (filename: string) => `/FavoriteSpots/${encodeURIComponent(filename)}`;
@@ -21,29 +22,29 @@ const SPOTS: { title: string; description: string; location: string; rating: str
 export const UniqueSpotsSection = () => {
   return (
     <section className="bg-[#F9F9F9] py-20 md:py-28 lg:py-32 overflow-hidden relative">
-      <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-16 mb-6 md:mb-8">
+      <Container className="mb-6 md:mb-8">
         <h2 className="text-center text-2xl sm:text-3xl md:text-4xl font-semibold text-[#0F766E]">
           Unique spots people are favoriting
         </h2>
-      </div>
+      </Container>
 
-      <div className="w-full overflow-hidden relative min-h-[480px]">
+      <div className="w-full overflow-hidden relative min-h-120">
         <div
-          className="absolute inset-0 w-full h-[480px] top-0 left-0"
+          className="absolute inset-0 w-full h-120 top-0 left-0"
           style={{
             background: "linear-gradient(270deg, rgba(0, 255, 38, 0.2) 0%, rgba(33, 140, 206, 0.4) 51.15%, rgba(199, 32, 32, 0.3) 100%)",
           }}
           aria-hidden
         />
         <div
-          className="absolute left-0 top-0 w-full h-[144px] pointer-events-none"
+          className="absolute left-0 top-0 w-full h-36 pointer-events-none"
           style={{
             background: "linear-gradient(0deg, rgba(255, 255, 255, 0) 0%, #FFFFFF 100%)",
           }}
           aria-hidden
         />
         <div
-          className="absolute left-0 bottom-0 w-full h-[220px] pointer-events-none"
+          className="absolute left-0 bottom-0 w-full h-55 pointer-events-none"
           style={{
             background: "linear-gradient(0deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.4) 35%, rgba(255, 255, 255, 0.75) 65%, #FFFFFF 100%)",
             transform: "scaleY(-1)",
@@ -62,7 +63,7 @@ export const UniqueSpotsSection = () => {
 
       {/* Vector 4414: horizontal line at bottom (0×1524px rotated 90° → 1524px wide) */}
       <div
-        className="absolute left-[62.5px] bottom-0 w-[1524px] h-px bg-black/20"
+        className="absolute left-[62.5px] bottom-0 w-381 h-px bg-black/20"
         aria-hidden
       />
     </section>
@@ -71,9 +72,9 @@ export const UniqueSpotsSection = () => {
 
 function SpotCard({ spot }: { spot: (typeof SPOTS)[0] }) {
   return (
-    <div className="unique-spots-card flex flex-col flex-shrink-0 rounded-[14px] bg-white/20 overflow-hidden relative px-[18px] pt-[19px] pb-4">
+    <div className="unique-spots-card flex flex-col shrink-0 rounded-[14px] bg-white/20 overflow-hidden relative px-4.5 pt-4.75 pb-4">
       {/* Image area: 462×170, radius 11px (design) */}
-      <div className="relative w-full max-w-[462px] h-[170px] rounded-[11px] overflow-hidden bg-gray-300 flex-shrink-0">
+      <div className="relative w-full max-w-115.5 h-42.5 rounded-[11px] overflow-hidden bg-gray-300 shrink-0">
         {spot.image ? (
           <img
             src={spotImageSrc(spot.image)}
@@ -83,10 +84,10 @@ function SpotCard({ spot }: { spot: (typeof SPOTS)[0] }) {
         ) : null}
         {/* Rating pill: top-right */}
         <div
-          className="absolute top-[9px] right-[9px] h-7 pl-2 pr-2 flex items-center gap-1 rounded-[14px]"
+          className="absolute top-2.25 right-2.25 h-7 pl-2 pr-2 flex items-center gap-1 rounded-[14px]"
           style={{ background: "rgba(217, 217, 217, 0.5)" }}
         >
-          <Star className="w-[17px] h-[17px] flex-shrink-0 text-[#E46962]" fill="#E46962" />
+          <Star className="w-4.25 h-4.25 shrink-0 text-[#E46962]" fill="#E46962" />
           <span className="font-semibold text-base leading-[140%] tracking-[-0.02em] text-black">
             {spot.rating}
           </span>
@@ -94,14 +95,14 @@ function SpotCard({ spot }: { spot: (typeof SPOTS)[0] }) {
       </div>
 
       {/* Title, description, location — design: SF Pro 20px, 140% line-height, -0.02em */}
-      <h3 className="mt-[9px] font-semibold text-xl leading-[140%] tracking-[-0.02em] text-black flex-shrink-0">
+      <h3 className="mt-2.25 font-semibold text-xl leading-[140%] tracking-[-0.02em] text-black shrink-0">
         {spot.title}
       </h3>
-      <p className="mt-2 text-xl leading-[140%] tracking-[-0.02em] text-black font-normal line-clamp-2 flex-shrink-0">
+      <p className="mt-2 text-xl leading-[140%] tracking-[-0.02em] text-black font-normal line-clamp-2 shrink-0">
         {spot.description}
       </p>
-      <div className="mt-2 flex items-center gap-2 opacity-70 flex-shrink-0">
-        <MapPin className="w-6 h-6 flex-shrink-0 text-black" />
+      <div className="mt-2 flex items-center gap-2 opacity-70 shrink-0">
+        <MapPin className="w-6 h-6 shrink-0 text-black" />
         <span className="text-xl leading-[140%] tracking-[-0.02em] text-black">{spot.location}</span>
       </div>
     </div>
