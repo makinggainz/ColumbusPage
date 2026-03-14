@@ -137,7 +137,6 @@ export const Navbar = () => {
                 ref={navRef}
                 className="header-font absolute top-6 left-0 right-0 z-50"
                 style={navBlendStyle}
-                onMouseEnter={handleNavMouseEnter}
                 onMouseLeave={handleMouseLeave}
             >
                 <div className="relative mx-auto w-full max-w-screen-2xl">
@@ -148,7 +147,7 @@ export const Navbar = () => {
                     <div className="relative px-[calc(var(--container-padding)+18px)]">
                         <div className="grid h-14 md:h-17 grid-cols-[1fr_auto_1fr] items-center">
                             {/* Left: Logo */}
-                            <Link href="/" className="flex shrink-0 items-center gap-2">
+                            <Link href="/" className="flex w-fit shrink-0 items-center gap-2" onMouseEnter={handleNavMouseEnter}>
                                 <div
                                     className="relative h-10 w-10 shrink-0"
                                     style={isMenuOpen ? {} : { filter: "brightness(0) invert(1)" }}
@@ -170,15 +169,15 @@ export const Navbar = () => {
                             {/* Center: Navigation Links */}
                             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                                 <div className="hidden items-center gap-9 min-[1155px]:flex pointer-events-auto">
-                                    <Link href="#" className="group relative text-md font-medium transition-opacity duration-300 hover:opacity-70">
+                                    <Link href="#" className="group relative text-md font-medium transition-opacity duration-300 hover:opacity-70" onMouseEnter={handleNavMouseEnter}>
                                         Product
                                         <span className="absolute left-0 -bottom-1 h-px w-0 transition-all duration-300 group-hover:w-full bg-current" />
                                     </Link>
-                                    <Link href="/use-cases" className="group relative text-md font-medium transition-opacity duration-300 hover:opacity-70">
+                                    <Link href="/use-cases" className="group relative text-md font-medium transition-opacity duration-300 hover:opacity-70" onMouseEnter={handleNavMouseEnter}>
                                         Use Cases
                                         <span className="absolute left-0 -bottom-1 h-px w-0 transition-all duration-300 group-hover:w-full bg-current" />
                                     </Link>
-                                    <Link href="/technology" className="group relative text-md font-medium transition-opacity duration-300 hover:opacity-70">
+                                    <Link href="/technology" className="group relative text-md font-medium transition-opacity duration-300 hover:opacity-70" onMouseEnter={handleNavMouseEnter}>
                                         Technology
                                         <span className="absolute left-0 -bottom-1 h-px w-0 transition-all duration-300 group-hover:w-full bg-current" />
                                     </Link>
@@ -190,11 +189,13 @@ export const Navbar = () => {
                                 <Link
                                     href="/maps-gpt"
                                     className="hidden min-[1155px]:flex items-center justify-center px-6 py-3.5 text-md font-semibold leading-none rounded-none border border-current transition-opacity duration-300 hover:opacity-70"
+                                    onMouseEnter={handleNavMouseEnter}
                                 >
                                     Start Now
                                 </Link>
                                 <button
                                     onClick={handleHamburgerClick}
+                                    onMouseEnter={handleNavMouseEnter}
                                     className="relative flex h-11 w-11 items-center justify-center rounded-none border border-current transition-all duration-300"
                                     aria-label="Toggle menu"
                                 >
@@ -318,7 +319,6 @@ export const Navbar = () => {
                     isCompactVisible ? "translate-y-0" : "-translate-y-full"
                 }`}
                 style={compactNavBlendStyle}
-                onMouseEnter={handleCompactNavMouseEnter}
                 onMouseLeave={handleCompactMouseLeave}
             >
                 <div className="relative mx-auto w-full max-w-screen-2xl">
@@ -330,7 +330,7 @@ export const Navbar = () => {
                     <div className="relative px-[calc(var(--container-padding)+18px)]">
                         <div className="grid h-16 grid-cols-[1fr_auto_1fr] items-center">
                             {/* Left: Logo */}
-                            <Link href="/" className="flex shrink-0 items-center gap-2">
+                            <Link href="/" className="flex w-fit shrink-0 items-center gap-2" onMouseEnter={handleCompactNavMouseEnter}>
                                 <div
                                     className="relative h-8 w-8 shrink-0"
                                     style={isCompactMenuOpen ? {} : { filter: "brightness(0) invert(1)" }}
@@ -351,15 +351,15 @@ export const Navbar = () => {
                             {/* Center: Navigation Links */}
                             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                                 <div className="hidden items-center gap-7 min-[1155px]:flex pointer-events-auto">
-                                    <Link href="#" className="group relative text-sm font-medium transition-opacity duration-300 hover:opacity-70">
+                                    <Link href="#" className="group relative text-sm font-medium transition-opacity duration-300 hover:opacity-70" onMouseEnter={handleCompactNavMouseEnter}>
                                         Product
                                         <span className="absolute left-0 -bottom-0.5 h-px w-0 transition-all duration-300 group-hover:w-full bg-current" />
                                     </Link>
-                                    <Link href="/use-cases" className="group relative text-sm font-medium transition-opacity duration-300 hover:opacity-70">
+                                    <Link href="/use-cases" className="group relative text-sm font-medium transition-opacity duration-300 hover:opacity-70" onMouseEnter={handleCompactNavMouseEnter}>
                                         Use Cases
                                         <span className="absolute left-0 -bottom-0.5 h-px w-0 transition-all duration-300 group-hover:w-full bg-current" />
                                     </Link>
-                                    <Link href="/technology" className="group relative text-sm font-medium transition-opacity duration-300 hover:opacity-70">
+                                    <Link href="/technology" className="group relative text-sm font-medium transition-opacity duration-300 hover:opacity-70" onMouseEnter={handleCompactNavMouseEnter}>
                                         Technology
                                         <span className="absolute left-0 -bottom-0.5 h-px w-0 transition-all duration-300 group-hover:w-full bg-current" />
                                     </Link>
@@ -371,11 +371,13 @@ export const Navbar = () => {
                                 <Link
                                     href="/maps-gpt"
                                     className="hidden min-[1155px]:flex items-center justify-center h-10 px-4 text-sm font-semibold leading-none rounded-none border border-current transition-opacity duration-300 hover:opacity-70"
+                                    onMouseEnter={handleCompactNavMouseEnter}
                                 >
                                     Start Now
                                 </Link>
                                 <button
                                     onClick={handleCompactHamburgerClick}
+                                    onMouseEnter={handleCompactNavMouseEnter}
                                     className="relative flex h-10 w-10 items-center justify-center rounded-none border border-current transition-all duration-300"
                                     aria-label="Toggle menu"
                                 >
