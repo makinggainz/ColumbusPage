@@ -93,8 +93,6 @@ export const Vision = () => {
             className="col-span-2 lg:col-span-2"
             title="Foundational Models"
             subtitle="for Earth"
-            align="right"
-            paddingRight={44}
           />
 
           <Tile src="/image113.png" />
