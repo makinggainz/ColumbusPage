@@ -59,22 +59,22 @@ import { PartnerStrip } from "@/components/home/PartnerStrip";
 import { TravelPromo } from "@/components/home/TravelPromo";
 import { UniqueSpotsSection } from "@/components/home/UniqueSpotsSection";
 const sectionColors = [
-  "bg-slate-100",      // a Navbar
-  "bg-blue-50",       // b Hero
-  "bg-emerald-50",    // c MeshSection
-  "bg-amber-50",      // d Vision
-  "bg-rose-50",       // e GeoWarning
-  "bg-cyan-50",       // f SiteSelection
-  "bg-violet-50",     // g PartnerStrip
-  "bg-lime-50",       // h MainFeatures
-  "bg-orange-50",     // i Industries
-  "bg-sky-50",        // j TravelPromo
-  "bg-teal-50",       // k TravelSection
-  "bg-indigo-50",     // l TrustStrip
-  "bg-fuchsia-50",    // m UniqueSpotsSection
-  "bg-stone-100",     // n Applications
-  "bg-zinc-100",      // o Careers
-  "bg-neutral-100",   // p Footer
+  "bg-white",      // a Navbar
+  "bg-white",       // b Hero
+  "bg-white",    // c MeshSection
+  "bg-white",      // d Vision
+  "bg-white",       // e GeoWarning
+  "bg-white",       // f SiteSelection
+  "bg-white",     // g PartnerStrip
+  "bg-white",       // h MainFeatures
+  "bg-white",     // i Industries
+  "bg-white",        // j TravelPromo
+  "bg-white",       // k TravelSection
+  "bg-white",     // l TrustStrip
+  "bg-white",    // m UniqueSpotsSection
+  "bg-white",     // n Applications
+  "bg-white",      // o Careers
+  "bg-white",   // p Footer
 ] as const;
 
 function SectionLabel({ letter }: { letter: string }) {

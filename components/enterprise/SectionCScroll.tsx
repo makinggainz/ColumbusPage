@@ -5,7 +5,7 @@
  * One component, imperative ref-based animation, no Framer Motion / IntersectionObserver.
  */
 
-import { useEffect, useRef } from "react";
+import { useEffect, useLayoutEffect, useRef } from "react";
 
 // ─── Helpers (from reference) ─────────────────────────────────────────────
 const clamp = (v: number, lo: number, hi: number) => Math.max(lo, Math.min(hi, v));
@@ -442,6 +442,40 @@ export default function SectionCScroll() {
     });
   }
 
+  function updateNavTheme() {
+    if (!scroller) return;
+    if (trackAF.current) {
+      const p = getProgress(trackAF.current, scroller);
+      if (p < PH.D[0]) {
+        trackAF.current.setAttribute("data-navbar-theme", "dark");
+      } else {
+        trackAF.current.removeAttribute("data-navbar-theme");
+      }
+      if (layerF.current) {
+        if (p >= PH.F[0]) {
+          layerF.current.setAttribute("data-navbar-cta", "brand");
+        } else {
+          layerF.current.removeAttribute("data-navbar-cta");
+        }
+      }
+    }
+    if (trackGK.current) {
+      const p = getProgress(trackGK.current, scroller);
+      const pIJ = norm(p, PHgk.IJ[0], PHgk.IJ[1]);
+      if (p >= PHgk.IJ[0] && pIJ < 0.68) {
+        trackGK.current.setAttribute("data-navbar-theme", "dark");
+      } else {
+        trackGK.current.removeAttribute("data-navbar-theme");
+      }
+    }
+  }
+
+  // Set nav theme synchronously before first paint so Navbar sees the correct
+  // data-navbar-theme attribute on reload (children fire before parents).
+  useLayoutEffect(() => {
+    updateNavTheme();
+  }, []);
+
   useEffect(() => {
     let pending = false;
     const onScroll = () => {
@@ -452,6 +486,7 @@ export default function SectionCScroll() {
           updateAF();
           updateGK();
           updateLM();
+          updateNavTheme();
         });
       }
     };
@@ -461,11 +496,13 @@ export default function SectionCScroll() {
       updateAF();
       updateGK();
       updateLM();
+      updateNavTheme();
     });
     layoutTracks();
     updateAF();
     updateGK();
     updateLM();
+    updateNavTheme();
     return () => window.removeEventListener("scroll", onScroll);
   });
 

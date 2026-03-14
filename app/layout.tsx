@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 
+import { GeistSans } from "geist/font/sans";
 import { Cormorant_Garamond, Cambo } from "next/font/google";
 import { LenisProvider } from "@/components/home/LenisContext";
 
@@ -35,7 +36,7 @@ export default function RootLayout({
       </head>
 
       {/* Keep global styles simple - match GFrontEndWork: no Navbar/Footer here, no font on body */}
-      <body className="antialiased bg-[#F9F9F9] min-h-screen">
+      <body className={`${GeistSans.className} antialiased bg-white min-h-screen`}>
         <LenisProvider>{children}</LenisProvider>
       </body>
     </html>

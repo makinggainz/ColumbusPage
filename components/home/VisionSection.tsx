@@ -67,7 +67,7 @@ export const Vision = () => {
             research, and consumer domains.
           </p>
 
-          <button className="border border-[#1C274C] px-[69px] md:px-[77px] py-[14.5px] text-base font-semibold tracking-wide rounded-md hover:bg-[#1C274C] hover:text-white transition whitespace-nowrap">
+          <button className="border border-[#1C274C] px-[69px] md:px-[77px] py-[14.5px] text-base font-semibold tracking-wide rounded-none hover:bg-[#1C274C] hover:text-white transition whitespace-nowrap">
             [ See what we’re building ]
           </button>
 

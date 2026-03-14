@@ -7,11 +7,11 @@ import { EnterprisePillsToggle } from "./EnterprisePillsToggle";
 
 export default function EnterpriseHero() {
   return (
-    <section className="relative w-full overflow-hidden h-[1853px]">
+    <section data-navbar-theme="dark" className="relative w-full overflow-hidden h-[1853px]">
 
       {/* Background */}
       <Image
-        src="/enterprise/heroImage.png"
+        src="/enterprise/HeroImage.png"
         alt=""
         fill
         priority
@@ -71,7 +71,7 @@ export default function EnterpriseHero() {
         <EnterprisePillsToggle />
 
         {/* Product UI */}
-        <div className="w-full max-w-[1400px]">
+        <div data-navbar-theme="light" className="w-full max-w-[1400px]">
 
           <Image
             src="/enterprise/hero.png"

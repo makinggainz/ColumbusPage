@@ -6,7 +6,7 @@ html,
 body {
   margin: 0;
   padding: 0;
-  background: #F9F9F9;
+  background: #ffffff;
   color: #171717;
   overflow-x: clip;
   min-height: 100%;
@@ -17,12 +17,24 @@ html {
   scroll-behavior: auto;
 }
 
+/* Custom Tailwind theme extensions */
+@theme {
+  --text-md: 1.0625rem; /* 17px */
+}
+
 /* Theme variables */
 :root {
-  --background: #F9F9F9;
+  --background: #ffffff;
   --foreground: #171717;
   --primary: #0a0e27;
   --accent: #3b82f6;
+  --container-padding: 20px;
+}
+
+@media (min-width: 940px) {
+  :root {
+    --container-padding: 1vw;
+  }
 }
 
 
@@ -32,9 +44,10 @@ body {
   color: var(--foreground);
 }
 
-/* Branding */
-.brand-wordmark {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+/* Branding — inherits Geist from body */
+.brand-wordmark,
+.header-font {
+  font-family: inherit;
 }
 
 /* Lenis smooth scroll support */

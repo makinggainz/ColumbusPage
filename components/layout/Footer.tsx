@@ -11,7 +11,7 @@ export type FooterProps = {
 export const Footer: FC<FooterProps> = ({ variant = "default" }) => {
   if (variant === "compact") {
     return (
-      <footer className="relative w-full min-h-[280px] text-white">
+      <footer data-navbar-theme="dark" className="relative w-full min-h-[280px] text-white">
         <Image
           src="/emoji/Footer.png"
           alt="Footer Background"
@@ -34,7 +34,7 @@ export const Footer: FC<FooterProps> = ({ variant = "default" }) => {
   }
 
   return (
-    <footer className="relative text-white overflow-hidden">
+    <footer data-navbar-theme="dark" className="relative text-white overflow-hidden">
 
       {/* Background */}
       <Image
