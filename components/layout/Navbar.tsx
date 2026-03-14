@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useCallback, useEffect, useLayoutEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef } from "react";
 import { ScrambleText } from "@/components/ui/ScrambleText";
 
 export const Navbar = () => {
@@ -11,50 +11,13 @@ export const Navbar = () => {
     const [isScrolled, setIsScrolled] = useState(() =>
         typeof window !== "undefined" ? window.scrollY > 0 : false
     );
-    const [isDarkSection, setIsDarkSection] = useState(false);
-    const [isBrandCta, setIsBrandCta] = useState(false);
     const navRef = useRef<HTMLElement>(null);
-
-    const checkSection = useCallback(() => {
-        if (!navRef.current) return;
-        const navBottom = navRef.current.getBoundingClientRect().bottom;
-        const darkSections = document.querySelectorAll('[data-navbar-theme="dark"]');
-        const isOverDark = Array.from(darkSections).some((el) => {
-            const rect = el.getBoundingClientRect();
-            return rect.top < navBottom && rect.bottom > 0;
-        });
-        const lightOverrides = document.querySelectorAll('[data-navbar-theme="light"]');
-        const isOverLight = Array.from(lightOverrides).some((el) => {
-            const rect = el.getBoundingClientRect();
-            return rect.top < navBottom && rect.bottom > 0;
-        });
-        setIsDarkSection(isOverDark && !isOverLight);
-
-        const brandCtaEls = document.querySelectorAll('[data-navbar-cta="brand"]');
-        const overBrand = Array.from(brandCtaEls).some((el) => {
-            const rect = el.getBoundingClientRect();
-            return rect.top < navBottom && rect.bottom > 0;
-        });
-        setIsBrandCta(overBrand);
-    }, []);
 
     useEffect(() => {
         const handleScroll = () => setIsScrolled(window.scrollY > 0);
         window.addEventListener("scroll", handleScroll, { passive: true });
         return () => window.removeEventListener("scroll", handleScroll);
     }, []);
-
-    // Run synchronously before first paint so isDarkSection is correct on reload.
-    useLayoutEffect(() => {
-        checkSection();
-    }, [checkSection]);
-
-    // Detect if a dark-background section is currently behind the navbar.
-    // Mark sections with data-navbar-theme="dark" to activate dark mode.
-    useEffect(() => {
-        window.addEventListener("scroll", checkSection, { passive: true });
-        return () => window.removeEventListener("scroll", checkSection);
-    }, [checkSection]);
 
     useEffect(() => {
         const handleMouseMove = (e: MouseEvent) => {
@@ -99,29 +62,13 @@ export const Navbar = () => {
         handleMouseEnter();
     };
 
-    const pillBg = isMenuOpen
-        ? "bg-white rounded-tl-xs rounded-tr-xs"
-        : !isScrolled
-            ? "bg-transparent"
-            : isDarkSection
-                ? "backdrop-blur-[10px] bg-gradient-to-b from-[#def4ff]/[0.04] via-[#abbcc5]/[0.05] to-[#5d676d]/[0.10] rounded-xl"
-                : "backdrop-blur-[10px] bg-white/20 rounded-xl";
-
-    // Text and interactive element colors
-    const dark = isDarkSection && !isMenuOpen;
-    const wordmarkColor  = dark ? "text-white"        : "text-[#0A1344]";
-    const linkColor      = dark ? "text-white/80"     : "text-[#0a1628]";
-    const linkHover      = dark ? "hover:text-white"  : "hover:text-[#0A1344]";
-    const underlineColor = dark ? "bg-white"          : "bg-[#0A1344]";
-    const startNowClass  = isBrandCta
-        ? "bg-[#0A1344] text-white border border-[#0A1344] hover:bg-[#0A1344]/90"
-        : dark
-            ? "backdrop-blur-sm bg-white/10 border border-white/30 text-white hover:bg-white/20"
-            : "border border-[#0A1344]/85 bg-white text-[#0A1344] hover:bg-gray-50";
-    const hamburgerClosedClass = dark
-        ? "backdrop-blur-sm bg-white/10 border border-white/30 hover:bg-white/20"
-        : "bg-white border border-[#0a1628]/85 hover:bg-[#0A1344]/5";
-    const hamburgerLineColor = dark ? "bg-white" : "bg-[#0A1344]";
+    // mix-blend-mode: difference applied to the <nav> element itself (the stacking context).
+    // This blends the entire nav against the document root — the actual page pixels.
+    // Child elements with blend on a wrapper only blend against the nav's transparent bg (wrong).
+    // Switch to normal + dark text when menu opens so the white dropdown renders correctly.
+    const navBlendStyle: React.CSSProperties = isMenuOpen
+        ? { color: "#0A1344" }
+        : { mixBlendMode: "difference", color: "white" };
 
     return (
         <>
@@ -137,19 +84,27 @@ export const Navbar = () => {
             <nav
                 ref={navRef}
                 className="header-font fixed top-6 left-0 right-0 z-50"
+                style={navBlendStyle}
                 onMouseEnter={handleNavMouseEnter}
                 onMouseLeave={handleMouseLeave}
             >
                 {/* Constrained wrapper — aligns pill and content to the same max-width box */}
                 <div className="relative mx-auto w-full max-w-screen-2xl">
-                    {/* Pill background */}
-                    <div className={`absolute inset-y-0 left-(--container-padding) right-(--container-padding) transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${pillBg}`} />
+                    {/* Pill — only visible when menu is open (backdrop-blur creates a compositing
+                         layer that would interfere with the difference blend when closed) */}
+                    <div className={`absolute inset-y-0 left-(--container-padding) right-(--container-padding) transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                        isMenuOpen ? "bg-white rounded-tl-xs rounded-tr-xs" : "bg-transparent"
+                    }`} />
 
-                    <div className="relative z-50 px-[calc(var(--container-padding)+18px)]">
+                    <div className="relative px-[calc(var(--container-padding)+18px)]">
                         <div className="grid h-14 md:h-17 grid-cols-[1fr_auto_1fr] items-center">
                             {/* Left: Logo */}
                             <Link href="/" className="flex shrink-0 items-center gap-2">
-                                <div className="relative h-10 w-10 shrink-0">
+                                {/* Logo: white when blend active (closed), normal when menu open */}
+                                <div
+                                    className="relative h-10 w-10 shrink-0"
+                                    style={isMenuOpen ? {} : { filter: "brightness(0) invert(1)" }}
+                                >
                                     <Image
                                         src="/logobueno.png"
                                         alt="Columbus Logo"
@@ -159,7 +114,8 @@ export const Navbar = () => {
                                         priority
                                     />
                                 </div>
-                                <span className={`brand-wordmark text-2xl font-medium leading-none tracking-tight transition-colors duration-500 ${wordmarkColor}`}>
+                                {/* Wordmark — inherits color: white from wrapper */}
+                                <span className="brand-wordmark text-2xl font-medium leading-none tracking-tight">
                                     Columbus Earth
                                 </span>
                             </Link>
@@ -169,66 +125,54 @@ export const Navbar = () => {
                                 <div className="hidden items-center gap-9 min-[1155px]:flex pointer-events-auto">
                                     <Link
                                         href="#"
-                                        className={`group relative text-md font-medium transition-colors duration-300 ${linkColor} ${linkHover}`}
+                                        className="group relative text-md font-medium transition-opacity duration-300 hover:opacity-70"
                                     >
                                         Product
-                                        <span className={`absolute left-0 -bottom-1 h-px w-0 transition-all duration-300 group-hover:w-full ${underlineColor}`} />
+                                        <span className="absolute left-0 -bottom-1 h-px w-0 transition-all duration-300 group-hover:w-full bg-current" />
                                     </Link>
                                     <Link
                                         href="/use-cases"
-                                        className={`group relative text-md font-medium transition-colors duration-300 ${linkColor} ${linkHover}`}
+                                        className="group relative text-md font-medium transition-opacity duration-300 hover:opacity-70"
                                     >
                                         Use Cases
-                                        <span className={`absolute left-0 -bottom-1 h-px w-0 transition-all duration-300 group-hover:w-full ${underlineColor}`} />
+                                        <span className="absolute left-0 -bottom-1 h-px w-0 transition-all duration-300 group-hover:w-full bg-current" />
                                     </Link>
                                     <Link
                                         href="/technology"
-                                        className={`group relative text-md font-medium transition-colors duration-300 ${linkColor} ${linkHover}`}
+                                        className="group relative text-md font-medium transition-opacity duration-300 hover:opacity-70"
                                     >
                                         Technology
-                                        <span className={`absolute left-0 -bottom-1 h-px w-0 transition-all duration-300 group-hover:w-full ${underlineColor}`} />
+                                        <span className="absolute left-0 -bottom-1 h-px w-0 transition-all duration-300 group-hover:w-full bg-current" />
                                     </Link>
                                 </div>
                             </div>
 
                             {/* Right: CTA + Hamburger */}
                             <div className="col-start-3 flex items-center justify-end gap-3">
+                                {/* Start Now — border-current inherits white from wrapper */}
                                 <Link
                                     href="/maps-gpt"
-                                    className={`hidden min-[1155px]:flex items-center justify-center px-6 py-3.5 text-md font-semibold leading-none transition-colors duration-500 rounded-none ${startNowClass}`}
+                                    className="hidden min-[1155px]:flex items-center justify-center px-6 py-3.5 text-md font-semibold leading-none rounded-none border border-current transition-opacity duration-300 hover:opacity-70"
                                 >
                                     Start Now
                                 </Link>
+                                {/* Hamburger — border-current inherits white from wrapper */}
                                 <button
                                     onClick={handleHamburgerClick}
-                                    className={`relative flex h-11 w-11 items-center justify-center rounded-none transition-all duration-300 ${
-                                        isMenuOpen
-                                            ? "bg-[#0A1344] border border-[#0A1344]"
-                                            : hamburgerClosedClass
-                                    }`}
+                                    className="relative flex h-11 w-11 items-center justify-center rounded-none border border-current transition-all duration-300"
                                     aria-label="Toggle menu"
                                 >
-                                    {/* Top Line */}
+                                    {/* Top Line — bg-current inherits white from wrapper */}
                                     <div
-                                        className={`absolute h-px w-5.5 transform-gpu transition-all duration-300 ease-in-out ${
-                                            isMenuOpen
-                                                ? "rotate-45 bg-white"
-                                                : `-translate-y-1.5 ${hamburgerLineColor}`
-                                        }`}
+                                        className={`absolute h-px w-5.5 bg-current transform-gpu transition-all duration-300 ease-in-out ${isMenuOpen ? "rotate-45" : "-translate-y-1.5"}`}
                                     />
                                     {/* Middle Line */}
                                     <div
-                                        className={`absolute h-px w-5.5 transition-all duration-200 ${
-                                            isMenuOpen ? "opacity-0 bg-white" : `opacity-100 ${hamburgerLineColor}`
-                                        }`}
+                                        className={`absolute h-px w-5.5 bg-current transition-all duration-200 ${isMenuOpen ? "opacity-0" : "opacity-100"}`}
                                     />
                                     {/* Bottom Line */}
                                     <div
-                                        className={`absolute h-px w-5.5 transform-gpu transition-all duration-300 ease-in-out ${
-                                            isMenuOpen
-                                                ? "-rotate-45 bg-white"
-                                                : `translate-y-1.5 ${hamburgerLineColor}`
-                                        }`}
+                                        className={`absolute h-px w-5.5 bg-current transform-gpu transition-all duration-300 ease-in-out ${isMenuOpen ? "-rotate-45" : "translate-y-1.5"}`}
                                     />
                                 </button>
                             </div>
