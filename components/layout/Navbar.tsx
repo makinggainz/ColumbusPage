@@ -161,29 +161,31 @@ export const Navbar = () => {
                                 </span>
                             </Link>
 
-                            {/* Center: Navigation Links */}
-                            <div className="hidden items-center gap-9 min-[1155px]:flex">
-                                <Link
-                                    href="#"
-                                    className={`group relative text-md font-medium transition-colors duration-300 ${linkColor} ${linkHover}`}
-                                >
-                                    Product
-                                    <span className={`absolute left-0 -bottom-1 h-px w-0 transition-all duration-300 group-hover:w-full ${underlineColor}`} />
-                                </Link>
-                                <Link
-                                    href="/use-cases"
-                                    className={`group relative text-md font-medium transition-colors duration-300 ${linkColor} ${linkHover}`}
-                                >
-                                    Use Cases
-                                    <span className={`absolute left-0 -bottom-1 h-px w-0 transition-all duration-300 group-hover:w-full ${underlineColor}`} />
-                                </Link>
-                                <Link
-                                    href="/technology"
-                                    className={`group relative text-md font-medium transition-colors duration-300 ${linkColor} ${linkHover}`}
-                                >
-                                    Technology
-                                    <span className={`absolute left-0 -bottom-1 h-px w-0 transition-all duration-300 group-hover:w-full ${underlineColor}`} />
-                                </Link>
+                            {/* Center: Navigation Links — absolutely centered */}
+                            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                                <div className="hidden items-center gap-9 min-[1155px]:flex pointer-events-auto">
+                                    <Link
+                                        href="#"
+                                        className={`group relative text-md font-medium transition-colors duration-300 ${linkColor} ${linkHover}`}
+                                    >
+                                        Product
+                                        <span className={`absolute left-0 -bottom-1 h-px w-0 transition-all duration-300 group-hover:w-full ${underlineColor}`} />
+                                    </Link>
+                                    <Link
+                                        href="/use-cases"
+                                        className={`group relative text-md font-medium transition-colors duration-300 ${linkColor} ${linkHover}`}
+                                    >
+                                        Use Cases
+                                        <span className={`absolute left-0 -bottom-1 h-px w-0 transition-all duration-300 group-hover:w-full ${underlineColor}`} />
+                                    </Link>
+                                    <Link
+                                        href="/technology"
+                                        className={`group relative text-md font-medium transition-colors duration-300 ${linkColor} ${linkHover}`}
+                                    >
+                                        Technology
+                                        <span className={`absolute left-0 -bottom-1 h-px w-0 transition-all duration-300 group-hover:w-full ${underlineColor}`} />
+                                    </Link>
+                                </div>
                             </div>
 
                             {/* Right: CTA + Hamburger */}
