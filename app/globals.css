@@ -19,7 +19,8 @@ html {
 
 /* Custom Tailwind theme extensions */
 @theme {
-  --text-md: 1.0625rem; /* 17px */
+  --text-md: 1.0625rem;     /* 17px */
+  --text-display: 4rem;     /* 64px — primary display/hero heading size */
 }
 
 /* Theme variables */
