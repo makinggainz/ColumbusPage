@@ -36,6 +36,7 @@ export const Vision = () => {
   return (
     <section className="bg-[#FEFEFE] py-20 md:py-28 lg:py-36">
       <Container>
+        <div className="max-w-290.75 mx-auto">
 
         {/* TITLE */}
         <h2
@@ -121,6 +122,7 @@ export const Vision = () => {
             [ See what we’re building ]
           </button>
 
+        </div>
         </div>
       </Container>
     </section>
