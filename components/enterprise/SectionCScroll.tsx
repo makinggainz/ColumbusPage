@@ -5,7 +5,7 @@
  * One component, imperative ref-based animation, no Framer Motion / IntersectionObserver.
  */
 
-import { useEffect, useRef } from "react";
+import { useEffect, useLayoutEffect, useRef } from "react";
 
 // ─── Helpers (from reference) ─────────────────────────────────────────────
 const clamp = (v: number, lo: number, hi: number) => Math.max(lo, Math.min(hi, v));
@@ -469,6 +469,12 @@ export default function SectionCScroll() {
       }
     }
   }
+
+  // Set nav theme synchronously before first paint so Navbar sees the correct
+  // data-navbar-theme attribute on reload (children fire before parents).
+  useLayoutEffect(() => {
+    updateNavTheme();
+  }, []);
 
   useEffect(() => {
     let pending = false;

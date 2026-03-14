@@ -2,54 +2,59 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useEffect, useState, useRef } from "react";
+import { useCallback, useEffect, useLayoutEffect, useState, useRef } from "react";
 import { ScrambleText } from "@/components/ui/ScrambleText";
 
 export const Navbar = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isManuallyToggled, setIsManuallyToggled] = useState(false);
-    const [isScrolled, setIsScrolled] = useState(false);
+    const [isScrolled, setIsScrolled] = useState(() =>
+        typeof window !== "undefined" ? window.scrollY > 0 : false
+    );
     const [isDarkSection, setIsDarkSection] = useState(false);
     const [isBrandCta, setIsBrandCta] = useState(false);
     const navRef = useRef<HTMLElement>(null);
 
+    const checkSection = useCallback(() => {
+        if (!navRef.current) return;
+        const navBottom = navRef.current.getBoundingClientRect().bottom;
+        const darkSections = document.querySelectorAll('[data-navbar-theme="dark"]');
+        const isOverDark = Array.from(darkSections).some((el) => {
+            const rect = el.getBoundingClientRect();
+            return rect.top < navBottom && rect.bottom > 0;
+        });
+        const lightOverrides = document.querySelectorAll('[data-navbar-theme="light"]');
+        const isOverLight = Array.from(lightOverrides).some((el) => {
+            const rect = el.getBoundingClientRect();
+            return rect.top < navBottom && rect.bottom > 0;
+        });
+        setIsDarkSection(isOverDark && !isOverLight);
+
+        const brandCtaEls = document.querySelectorAll('[data-navbar-cta="brand"]');
+        const overBrand = Array.from(brandCtaEls).some((el) => {
+            const rect = el.getBoundingClientRect();
+            return rect.top < navBottom && rect.bottom > 0;
+        });
+        setIsBrandCta(overBrand);
+    }, []);
+
     useEffect(() => {
-        setIsScrolled(window.scrollY > 0);
         const handleScroll = () => setIsScrolled(window.scrollY > 0);
         window.addEventListener("scroll", handleScroll, { passive: true });
         return () => window.removeEventListener("scroll", handleScroll);
     }, []);
 
+    // Run synchronously before first paint so isDarkSection is correct on reload.
+    useLayoutEffect(() => {
+        checkSection();
+    }, [checkSection]);
+
     // Detect if a dark-background section is currently behind the navbar.
     // Mark sections with data-navbar-theme="dark" to activate dark mode.
     useEffect(() => {
-        const checkSection = () => {
-            if (!navRef.current) return;
-            const navBottom = navRef.current.getBoundingClientRect().bottom;
-            const darkSections = document.querySelectorAll('[data-navbar-theme="dark"]');
-            const isOverDark = Array.from(darkSections).some((el) => {
-                const rect = el.getBoundingClientRect();
-                return rect.top < navBottom && rect.bottom > 0;
-            });
-            const lightOverrides = document.querySelectorAll('[data-navbar-theme="light"]');
-            const isOverLight = Array.from(lightOverrides).some((el) => {
-                const rect = el.getBoundingClientRect();
-                return rect.top < navBottom && rect.bottom > 0;
-            });
-            setIsDarkSection(isOverDark && !isOverLight);
-
-            const brandCtaEls = document.querySelectorAll('[data-navbar-cta="brand"]');
-            const overBrand = Array.from(brandCtaEls).some((el) => {
-                const rect = el.getBoundingClientRect();
-                return rect.top < navBottom && rect.bottom > 0;
-            });
-            setIsBrandCta(overBrand);
-        };
-
         window.addEventListener("scroll", checkSection, { passive: true });
-        checkSection();
         return () => window.removeEventListener("scroll", checkSection);
-    }, []);
+    }, [checkSection]);
 
     useEffect(() => {
         const handleMouseMove = (e: MouseEvent) => {

@@ -2,7 +2,7 @@
 
 export default function TransitionSection() {
   return (
-    <section className="w-full bg-black flex items-center justify-center">
+    <section data-navbar-theme="dark" className="w-full bg-black flex items-center justify-center">
 
       <div className="w-full max-w-[1728px] h-[320px] md:h-[400px] lg:h-[473px] flex flex-col items-center justify-center text-center px-36">
 
