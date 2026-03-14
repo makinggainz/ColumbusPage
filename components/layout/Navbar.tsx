@@ -307,6 +307,7 @@ export const Navbar = () => {
                     height: "62px", /* h-16 (64px) nav, button bottom at 52px, +10px */
                     backdropFilter: "blur(12px)",
                     WebkitBackdropFilter: "blur(12px)",
+                    borderBottom: "1px solid rgba(255, 255, 255, 0.2)",
                 }}
             />
 
@@ -342,7 +343,7 @@ export const Navbar = () => {
                                         className="object-contain"
                                     />
                                 </div>
-                                <span className="brand-wordmark text-sm font-medium leading-none tracking-tight">
+                                <span className="brand-wordmark text-[23px] font-medium leading-none" style={{ letterSpacing: "-0.01em" }}>
                                     Columbus Earth
                                 </span>
                             </Link>
