@@ -3,6 +3,7 @@
 import type { FC } from "react";
 import Image from "next/image";
 import { Mail, Linkedin } from "lucide-react";
+import { Container } from "@/components/layout/Container";
 
 export type FooterProps = {
   variant?: "default" | "compact";
@@ -49,7 +50,7 @@ export const Footer: FC<FooterProps> = ({ variant = "default" }) => {
       <div className="absolute inset-0 bg-black/60" />
 
       {/* Content */}
-      <div className="relative z-10 max-w-7xl mx-auto px-6 sm:px-8 lg:px-16 py-20 md:py-28 flex flex-col gap-16">
+      <Container className="relative z-10 py-20 md:py-28 flex flex-col gap-16">
 
         {/* TOP MISSION TEXT */}
         <div className="text-center max-w-3xl mx-auto space-y-8">
@@ -127,7 +128,7 @@ export const Footer: FC<FooterProps> = ({ variant = "default" }) => {
 
         </div>
 
-      </div>
+      </Container>
     </footer>
   );
 };

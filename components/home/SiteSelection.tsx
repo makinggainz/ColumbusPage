@@ -1,11 +1,12 @@
 "use client";
 
 import Image from "next/image";
+import { Container } from "@/components/layout/Container";
 
 export const SiteSelection = () => {
   return (
     <section className="bg-[#FFFFFF] py-16 sm:py-24 lg:py-32">
-      <div className="max-w-[1650px] mx-auto px-6 sm:px-10 lg:px-16">
+      <Container>
 
         <h2 className="text-2xl sm:text-3xl font-semibold text-[#242424] mb-[19px] lg:mb-[27px]">
           + Introducing Columbus
@@ -102,7 +103,7 @@ export const SiteSelection = () => {
           </div>
 
         </div>
-      </div>
+      </Container>
     </section>
   );
 };

@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { Container } from "@/components/layout/Container";
 
 export const TrustStrip = () => {
   const faqs = [
@@ -12,8 +13,8 @@ export const TrustStrip = () => {
   ];
 
   return (
-    <section className="bg-[#F9F9F9] py-[30px] md:py-[62px] lg:py-[78px]">
-      <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-16">
+    <section className="bg-[#F9F9F9] py-7.5 md:py-15.5 lg:py-19.5">
+      <Container>
 
         {/* HEADING */}
         <div className="text-center mb-12 md:mb-16">
@@ -57,7 +58,7 @@ export const TrustStrip = () => {
           ))}
         </div>
 
-      </div>
+      </Container>
     </section>
   );
 };

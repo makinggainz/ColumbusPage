@@ -1,15 +1,15 @@
 import Link from "next/link";
 import { cormorant } from "@/lib/typography";
-import styles from "@/components/ui/GlassButton.module.css";
+import { Container } from "@/components/layout/Container";
 
 export const Hero = () => {
   return (
     <section className="relative bg-white min-h-[calc(100vh-576px)] overflow-hidden">
       <div className="relative z-10 pt-24 md:pt-32">
-        <div className="max-w-6xl mx-auto px-6 sm:px-8 lg:px-16">
+        <Container>
           <div className="max-w-[1168px]">
-            {/* Eyebrow + Main Heading + Tag — shifted left, aligned */}
-            <div className="-translate-x-[250px]">
+            {/* Eyebrow + Main Heading + Tag */}
+            <div>
             {/* Eyebrow */}
             <p className="text-sm md:text-base font-medium tracking-tight text-[#1C274C]/70 uppercase mb-4 text-left ml-0 pl-0 mt-[60px]">
               FRONTIER AI RESEARCH AND PRODUCT COMPANY
@@ -35,7 +35,7 @@ export const Hero = () => {
             </div>
 
           </div>
-        </div>
+        </Container>
       </div>
     </section>
   );

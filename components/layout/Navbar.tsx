@@ -4,53 +4,39 @@ import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useState, useRef } from "react";
 import { ScrambleText } from "@/components/ui/ScrambleText";
-import glassStyles from "@/components/ui/GlassButton.module.css";
+
+// Scroll threshold (px) at which the compact nav replaces the primary nav
+const COMPACT_THRESHOLD = 80;
 
 export const Navbar = () => {
+    // ── Primary navbar state ──────────────────────────────────────────
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isManuallyToggled, setIsManuallyToggled] = useState(false);
-    const [isScrolled, setIsScrolled] = useState(false);
-    const [isDarkSection, setIsDarkSection] = useState(false);
-    const [isBrandCta, setIsBrandCta] = useState(false);
+    const [isScrolled, setIsScrolled] = useState(() =>
+        typeof window !== "undefined" ? window.scrollY > 0 : false
+    );
     const navRef = useRef<HTMLElement>(null);
 
+    // ── Compact navbar state ──────────────────────────────────────────
+    const [isCompactMenuOpen, setIsCompactMenuOpen] = useState(false);
+    const [isCompactManuallyToggled, setIsCompactManuallyToggled] = useState(false);
+    const [isCompactVisible, setIsCompactVisible] = useState(() =>
+        typeof window !== "undefined" ? window.scrollY > COMPACT_THRESHOLD : false
+    );
+    const compactNavRef = useRef<HTMLElement>(null);
+
+    // ── Scroll listener ───────────────────────────────────────────────
     useEffect(() => {
-        const handleScroll = () => setIsScrolled(window.scrollY > 0);
+        const handleScroll = () => {
+            const y = window.scrollY;
+            setIsScrolled(y > 0);
+            setIsCompactVisible(y > COMPACT_THRESHOLD);
+        };
         window.addEventListener("scroll", handleScroll, { passive: true });
         return () => window.removeEventListener("scroll", handleScroll);
     }, []);
 
-    // Detect if a dark-background section is currently behind the navbar.
-    // Mark sections with data-navbar-theme="dark" to activate dark mode.
-    useEffect(() => {
-        const checkSection = () => {
-            if (!navRef.current) return;
-            const navBottom = navRef.current.getBoundingClientRect().bottom;
-            const darkSections = document.querySelectorAll('[data-navbar-theme="dark"]');
-            const isOverDark = Array.from(darkSections).some((el) => {
-                const rect = el.getBoundingClientRect();
-                return rect.top < navBottom && rect.bottom > 0;
-            });
-            const lightOverrides = document.querySelectorAll('[data-navbar-theme="light"]');
-            const isOverLight = Array.from(lightOverrides).some((el) => {
-                const rect = el.getBoundingClientRect();
-                return rect.top < navBottom && rect.bottom > 0;
-            });
-            setIsDarkSection(isOverDark && !isOverLight);
-
-            const brandCtaEls = document.querySelectorAll('[data-navbar-cta="brand"]');
-            const overBrand = Array.from(brandCtaEls).some((el) => {
-                const rect = el.getBoundingClientRect();
-                return rect.top < navBottom && rect.bottom > 0;
-            });
-            setIsBrandCta(overBrand);
-        };
-
-        window.addEventListener("scroll", checkSection, { passive: true });
-        checkSection();
-        return () => window.removeEventListener("scroll", checkSection);
-    }, []);
-
+    // ── Primary nav: close menu when mouse leaves ─────────────────────
     useEffect(() => {
         const handleMouseMove = (e: MouseEvent) => {
             if (!navRef.current) return;
@@ -64,6 +50,20 @@ export const Navbar = () => {
         return () => window.removeEventListener("mousemove", handleMouseMove);
     }, [isMenuOpen, isManuallyToggled]);
 
+    // ── Compact nav: close menu when mouse leaves ─────────────────────
+    useEffect(() => {
+        const handleMouseMove = (e: MouseEvent) => {
+            if (!compactNavRef.current) return;
+            const navBounds = compactNavRef.current.getBoundingClientRect();
+            if (e.clientY > navBounds.bottom && isCompactMenuOpen && isCompactManuallyToggled) {
+                setIsCompactMenuOpen(false);
+                setIsCompactManuallyToggled(false);
+            }
+        };
+        window.addEventListener("mousemove", handleMouseMove);
+        return () => window.removeEventListener("mousemove", handleMouseMove);
+    }, [isCompactMenuOpen, isCompactManuallyToggled]);
+
     const menuItems = [
         { label: "Our Mission", href: "/our-mission" },
         { label: "Columbus Market Spy", href: "/market-spy" },
@@ -72,10 +72,10 @@ export const Navbar = () => {
         { label: "Technology", href: "/technology" },
     ];
 
+    // ── Primary nav handlers ──────────────────────────────────────────
     const handleMouseEnter = () => {
         if (!isManuallyToggled) setIsMenuOpen(true);
     };
-
     const handleMouseLeave = (e: React.MouseEvent) => {
         if (isManuallyToggled) return;
         const navBounds = navRef.current?.getBoundingClientRect();
@@ -83,42 +83,47 @@ export const Navbar = () => {
         if (e.clientY <= navBounds.top) return;
         setIsMenuOpen(false);
     };
-
     const handleHamburgerClick = () => {
         setIsManuallyToggled(true);
         setIsMenuOpen(!isMenuOpen);
     };
-
     const handleNavMouseEnter = () => {
         if (isManuallyToggled && !isMenuOpen) setIsManuallyToggled(false);
         handleMouseEnter();
     };
 
-    // Pill background
-    const pillBg = isMenuOpen
-        ? "bg-white rounded-tl-xs rounded-tr-xs"
-        : !isScrolled
-            ? "bg-transparent"
-            : "bg-transparent"; // glass effect applied via CSS Module below
-    // Text and interactive element colors
-    const dark = isDarkSection && !isMenuOpen;
-    const wordmarkColor  = dark ? "text-white"        : "text-[#0A1344]";
-    const linkColor      = dark ? "text-white/80"     : "text-[#0a1628]";
-    const linkHover      = dark ? "hover:text-white"  : "hover:text-[#0A1344]";
-    const underlineColor = dark ? "bg-white"          : "bg-[#0A1344]";
-    const startNowClass  = isBrandCta
-        ? "bg-[#0A1344] text-white border border-[#0A1344] hover:bg-[#0A1344]/90"
-        : dark
-            ? "backdrop-blur-sm bg-white/10 border border-white/30 text-white hover:bg-white/20"
-            : "backdrop-blur-sm bg-white/70 border border-[#0A1344]/85 text-[#0A1344] hover:bg-white/90";
-    const hamburgerClosedClass = dark
-        ? "backdrop-blur-sm bg-white/10 border border-white/30 hover:bg-white/20"
-        : "bg-white border border-[#0a1628]/85 hover:bg-[#0A1344]/5";
-    const hamburgerLineColor = dark ? "bg-white" : "bg-[#0A1344]";
+    // ── Compact nav handlers ──────────────────────────────────────────
+    const handleCompactMouseEnter = () => {
+        if (!isCompactManuallyToggled) setIsCompactMenuOpen(true);
+    };
+    const handleCompactMouseLeave = (e: React.MouseEvent) => {
+        if (isCompactManuallyToggled) return;
+        const navBounds = compactNavRef.current?.getBoundingClientRect();
+        if (!navBounds) return;
+        if (e.clientY <= navBounds.top) return;
+        setIsCompactMenuOpen(false);
+    };
+    const handleCompactHamburgerClick = () => {
+        setIsCompactManuallyToggled(true);
+        setIsCompactMenuOpen(!isCompactMenuOpen);
+    };
+    const handleCompactNavMouseEnter = () => {
+        if (isCompactManuallyToggled && !isCompactMenuOpen) setIsCompactManuallyToggled(false);
+        handleCompactMouseEnter();
+    };
+
+    // ── Blend styles ──────────────────────────────────────────────────
+    const navBlendStyle: React.CSSProperties = isMenuOpen
+        ? { color: "#0A1344" }
+        : { mixBlendMode: "difference", color: "white" };
+
+    const compactNavBlendStyle: React.CSSProperties = isCompactMenuOpen
+        ? { color: "#0A1344" }
+        : { mixBlendMode: "difference", color: "white" };
 
     return (
         <>
-            {/* Backdrop blur overlay */}
+            {/* ── Backdrop: primary nav ── */}
             <div
                 className={`fixed inset-0 z-40 transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
                     isMenuOpen
@@ -127,145 +132,81 @@ export const Navbar = () => {
                 }`}
             />
 
+            {/* ══════════════ PRIMARY NAVBAR ══════════════ */}
             <nav
                 ref={navRef}
-                className="header-font fixed top-6 left-0 right-0 z-50"
+                className="header-font absolute top-6 left-0 right-0 z-50"
+                style={navBlendStyle}
                 onMouseEnter={handleNavMouseEnter}
                 onMouseLeave={handleMouseLeave}
             >
-                {/* Row: logo on left, CTA+hamburger on right */}
-                <div className="relative flex items-stretch h-14.5 pl-[clamp(20px,6.944vw,100px)] pr-[clamp(20px,6.944vw,100px)]">
+                <div className="relative mx-auto w-full max-w-screen-2xl">
+                    <div className={`absolute inset-y-0 left-(--container-padding) right-(--container-padding) transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                        isMenuOpen ? "bg-white rounded-tl-xs rounded-tr-xs" : "bg-transparent"
+                    }`} />
 
-                    {/* Pill background — glass on scroll, white when menu open */}
-                    <div
-                        className={`absolute top-0 bottom-0 right-[clamp(13px,calc(6.944vw-7px),93px)] left-[calc(50%-201px)] rounded-l-full rounded-r-none transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${pillBg} ${isScrolled && !isMenuOpen ? glassStyles.navPill : ''}`}
-                        style={isScrolled && !isMenuOpen ? {
-                            background: isDarkSection
-                                ? 'linear-gradient(-75deg, rgba(5,10,35,0.3), rgba(5,10,35,0.45), rgba(5,10,35,0.3))'
-                                : 'linear-gradient(-75deg, #ffffff0d, #fff3, #ffffff0d)',
-                        } : undefined}
-                    />
+                    <div className="relative px-[calc(var(--container-padding)+18px)]">
+                        <div className="grid h-14 md:h-17 grid-cols-[1fr_auto_1fr] items-center">
+                            {/* Left: Logo */}
+                            <Link href="/" className="flex shrink-0 items-center gap-2">
+                                <div
+                                    className="relative h-10 w-10 shrink-0"
+                                    style={isMenuOpen ? {} : { filter: "brightness(0) invert(1)" }}
+                                >
+                                    <Image
+                                        src="/logobueno.png"
+                                        alt="Columbus Logo"
+                                        fill
+                                        sizes="40px"
+                                        className="object-contain"
+                                        priority
+                                    />
+                                </div>
+                                <span className="brand-wordmark text-2xl font-medium leading-none tracking-tight">
+                                    Columbus Earth
+                                </span>
+                            </Link>
 
-                    {/* Left: Logo — no background */}
-                    <Link href="/" className="flex shrink-0 items-center gap-2 pr-8 z-50">
-                        <div className="relative h-10 w-10 shrink-0">
-                            <Image
-                                src="/logobueno.png"
-                                alt="Columbus Logo"
-                                fill
-                                sizes="40px"
-                                className="object-contain"
-                                priority
-                            />
-                        </div>
-                        <span className={`brand-wordmark text-2xl font-medium leading-none tracking-tight transition-colors duration-500 ${wordmarkColor}`}>
-                            Columbus Earth
-                        </span>
-                    </Link>
+                            {/* Center: Navigation Links */}
+                            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                                <div className="hidden items-center gap-9 min-[1155px]:flex pointer-events-auto">
+                                    <Link href="#" className="group relative text-md font-medium transition-opacity duration-300 hover:opacity-70">
+                                        Product
+                                        <span className="absolute left-0 -bottom-1 h-px w-0 transition-all duration-300 group-hover:w-full bg-current" />
+                                    </Link>
+                                    <Link href="/use-cases" className="group relative text-md font-medium transition-opacity duration-300 hover:opacity-70">
+                                        Use Cases
+                                        <span className="absolute left-0 -bottom-1 h-px w-0 transition-all duration-300 group-hover:w-full bg-current" />
+                                    </Link>
+                                    <Link href="/technology" className="group relative text-md font-medium transition-opacity duration-300 hover:opacity-70">
+                                        Technology
+                                        <span className="absolute left-0 -bottom-1 h-px w-0 transition-all duration-300 group-hover:w-full bg-current" />
+                                    </Link>
+                                </div>
+                            </div>
 
-                    {/* Center: Navigation Links — absolutely centered in the full nav width */}
-                    <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-50">
-                        <div className="hidden items-center gap-11.25 min-[1155px]:flex pointer-events-auto">
-                            <Link
-                                href="#"
-                                className={`group relative text-md font-medium transition-colors duration-300 ${linkColor} ${linkHover}`}
-                            >
-                                Product
-                                <span className={`absolute left-0 -bottom-1 h-px w-0 transition-all duration-300 group-hover:w-full ${underlineColor}`} />
-                            </Link>
-                            <Link
-                                href="/use-cases"
-                                className={`group relative text-md font-medium transition-colors duration-300 ${linkColor} ${linkHover}`}
-                            >
-                                Use Cases
-                                <span className={`absolute left-0 -bottom-1 h-px w-0 transition-all duration-300 group-hover:w-full ${underlineColor}`} />
-                            </Link>
-                            <Link
-                                href="/technology"
-                                className={`group relative text-md font-medium transition-colors duration-300 ${linkColor} ${linkHover}`}
-                            >
-                                Technology
-                                <span className={`absolute left-0 -bottom-1 h-px w-0 transition-all duration-300 group-hover:w-full ${underlineColor}`} />
-                            </Link>
+                            {/* Right: CTA + Hamburger */}
+                            <div className="col-start-3 flex items-center justify-end gap-3">
+                                <Link
+                                    href="/maps-gpt"
+                                    className="hidden min-[1155px]:flex items-center justify-center px-6 py-3.5 text-md font-semibold leading-none rounded-none border border-current transition-opacity duration-300 hover:opacity-70"
+                                >
+                                    Start Now
+                                </Link>
+                                <button
+                                    onClick={handleHamburgerClick}
+                                    className="relative flex h-11 w-11 items-center justify-center rounded-none border border-current transition-all duration-300"
+                                    aria-label="Toggle menu"
+                                >
+                                    <div className={`absolute h-px w-5.5 bg-current transform-gpu transition-all duration-300 ease-in-out ${isMenuOpen ? "rotate-45" : "-translate-y-1.5"}`} />
+                                    <div className={`absolute h-px w-5.5 bg-current transition-all duration-200 ${isMenuOpen ? "opacity-0" : "opacity-100"}`} />
+                                    <div className={`absolute h-px w-5.5 bg-current transform-gpu transition-all duration-300 ease-in-out ${isMenuOpen ? "-rotate-45" : "translate-y-1.5"}`} />
+                                </button>
+                            </div>
                         </div>
                     </div>
 
-                    {/* Right: CTA + Hamburger */}
-                    <div className="flex items-center gap-3 ml-auto z-50">
-                        {isBrandCta ? (
-                            <div className="hidden min-[1155px]:block">
-                                <Link
-                                    href="/maps-gpt"
-                                    className={glassStyles.btn}
-                                    style={{
-                                        background: '#0A1344',
-                                        boxShadow: 'none',
-                                    }}
-                                >
-                                    <span style={{ color: 'white', fontSize: '1.0625rem', fontWeight: 600 }}>Start Now</span>
-                                </Link>
-                            </div>
-                        ) : (
-                            <div className="hidden min-[1155px]:block">
-                                <Link
-                                    href="/maps-gpt"
-                                    className={glassStyles.btn}
-                                    style={{
-                                        background: dark
-                                            ? 'linear-gradient(-75deg, rgba(255,255,255,0.08), rgba(255,255,255,0.15), rgba(255,255,255,0.08))'
-                                            : 'linear-gradient(-75deg, rgba(255,255,255,0.7), rgba(255,255,255,0.85), rgba(255,255,255,0.7))',
-                                        boxShadow: dark
-                                            ? 'inset 0 1px 2px rgba(255,255,255,0.1), 0 0 0 1px rgba(255,255,255,0.25)'
-                                            : 'inset 0 1px 2px rgba(255,255,255,0.9), inset 0 -1px 1px rgba(10,19,68,0.05), 0 2px 10px rgba(10,19,68,0.08), 0 0 0 1px rgba(10,19,68,0.14)',
-                                    }}
-                                >
-                                    <span style={{ color: dark ? 'white' : '#0A1344', fontSize: '1.0625rem', fontWeight: 600 }}>Start Now</span>
-                                </Link>
-                            </div>
-                        )}
-                        <button
-                            onClick={handleHamburgerClick}
-                            className={`relative flex h-11 w-11 items-center justify-center rounded-none transition-all duration-300 ${
-                                isMenuOpen
-                                    ? "bg-[#0A1344] border border-[#0A1344]"
-                                    : hamburgerClosedClass
-                            }`}
-                            aria-label="Toggle menu"
-                        >
-                            {/* Top Line */}
-                            <div
-                                className={`absolute h-px w-5.5 transform-gpu transition-all duration-300 ease-in-out ${
-                                    isMenuOpen
-                                        ? "rotate-45 bg-white"
-                                        : `-translate-y-1.5 ${hamburgerLineColor}`
-                                }`}
-                            />
-                            {/* Middle Line */}
-                            <div
-                                className={`absolute h-px w-5.5 transition-all duration-200 ${
-                                    isMenuOpen ? "opacity-0 bg-white" : `opacity-100 ${hamburgerLineColor}`
-                                }`}
-                            />
-                            {/* Bottom Line */}
-                            <div
-                                className={`absolute h-px w-5.5 transform-gpu transition-all duration-300 ease-in-out ${
-                                    isMenuOpen
-                                        ? "-rotate-45 bg-white"
-                                        : `translate-y-1.5 ${hamburgerLineColor}`
-                                }`}
-                            />
-                        </button>
-                    </div>
-                </div>
-
-                {/* Mega Menu Dropdown */}
-                <div
-                    className={`absolute top-full left-[calc(50%-201px)] right-[clamp(13px,calc(6.944vw-7px),93px)] rounded-bl-xs rounded-br-xs transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-                        isMenuOpen
-                            ? "opacity-100 translate-y-0 bg-white pointer-events-auto"
-                            : "opacity-0 -translate-y-10 pointer-events-none"
-                    }`}
-                >
+                    {/* Mega Menu Dropdown */}
                     <div
                         className={`absolute top-full left-(--container-padding) right-(--container-padding) rounded-bl-xs rounded-br-xs transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
                             isMenuOpen
@@ -273,105 +214,257 @@ export const Navbar = () => {
                                 : "opacity-0 -translate-y-10 pointer-events-none"
                         }`}
                     >
-                    <div
-                        className="pl-7 pr-(--container-padding) py-12"
-                        style={{ transitionDelay: isMenuOpen ? "150ms" : "0ms" }}
-                    >
-                        <div className="grid grid-cols-1 md:grid-cols-12 gap-12">
-                            {/* Column 1: Description */}
-                            <div
-                                className={`md:col-span-5 space-y-8 transition-opacity duration-500 ${
-                                    isMenuOpen ? "opacity-100" : "opacity-0"
-                                }`}
-                                style={{ transitionDelay: isMenuOpen ? "200ms" : "0ms" }}
-                            >
-                                <div>
-                                    <h4 className="text-xs font-semibold text-[#0A1344]/50 tracking-widest uppercase mb-4">
-                                        <ScrambleText text="COLUMBUS EARTH" isActive={isMenuOpen} delay={300} />
-                                    </h4>
-                                    <p className="text-[#0A1344]/70 text-base leading-relaxed max-w-md">
-                                        Columbus Earth Inc. is a spatial frontier AI company building the first production
-                                        Large Geospatial Model to answer the most difficult questions about our planet.
-                                    </p>
-                                </div>
-
-                                <div className="grid grid-cols-2 gap-8">
-                                    <div>
-                                        <h4 className="text-xs font-semibold text-gray-500 tracking-wider uppercase mb-2">
-                                            <ScrambleText text="CONTACT" isActive={isMenuOpen} delay={450} />
-                                        </h4>
-                                        <a
-                                            href="mailto:contact@columbus.earth"
-                                            className="text-[#0A1344] font-medium block transition-colors duration-300 hover:text-[#0A1344]/70"
-                                        >
-                                            contact@columbus.earth
-                                        </a>
-                                    </div>
-                                    <div>
-                                        <h4 className="text-xs font-semibold text-gray-500 tracking-wider uppercase mb-2">
-                                            <ScrambleText text="SOCIAL" isActive={isMenuOpen} delay={550} />
-                                        </h4>
-                                        <a
-                                            href="https://www.linkedin.com/company/columbusearth/about/?viewAsMember=true"
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="text-gray-900 hover:text-primary font-medium block transition-colors"
-                                        >
-                                            LinkedIn
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* Spacer */}
-                            <div className="md:col-span-3"></div>
-
-                            {/* Column 2: Company Links */}
-                            <div className="md:col-span-4 space-y-6">
-                                <h4
-                                    className={`text-xs font-semibold text-gray-500 tracking-wider uppercase mb-4 transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-                                        isMenuOpen ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
-                                    }`}
-                                    style={{ transitionDelay: isMenuOpen ? "250ms" : "0ms" }}
+                        <div className="pl-7 pr-(--container-padding) py-12" style={{ transitionDelay: isMenuOpen ? "150ms" : "0ms" }}>
+                            <div className="grid grid-cols-1 md:grid-cols-12 gap-12">
+                                <div
+                                    className={`md:col-span-5 space-y-8 transition-opacity duration-500 ${isMenuOpen ? "opacity-100" : "opacity-0"}`}
+                                    style={{ transitionDelay: isMenuOpen ? "200ms" : "0ms" }}
                                 >
-                                    <ScrambleText text="COMPANY" isActive={isMenuOpen} delay={400} />
-                                </h4>
-                                <ul className="space-y-4">
-                                    {menuItems.map((item, index) => (
-                                        <li
-                                            key={item.href}
-                                            className={`transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-                                                isMenuOpen ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
-                                            }`}
-                                            style={{
-                                                transitionDelay: isMenuOpen
-                                                    ? `${320 + index * 70 + index * index * 8}ms`
-                                                    : "0ms",
-                                            }}
-                                        >
-                                            <Link
-                                                href={item.href}
-                                                onClick={() => {
-                                                    setIsMenuOpen(false);
-                                                    setIsManuallyToggled(false);
-                                                }}
-                                                className="group relative text-xl font-medium text-[#0A1344] transition-all duration-300 flex items-center"
+                                    <div>
+                                        <h4 className="text-xs font-semibold text-[#0A1344]/50 tracking-widest uppercase mb-4">
+                                            <ScrambleText text="COLUMBUS EARTH" isActive={isMenuOpen} delay={300} />
+                                        </h4>
+                                        <p className="text-[#0A1344]/70 text-base leading-relaxed max-w-md">
+                                            Columbus Earth Inc. is a spatial frontier AI company building the first production
+                                            Large Geospatial Model to answer the most difficult questions about our planet.
+                                        </p>
+                                    </div>
+                                    <div className="grid grid-cols-2 gap-8">
+                                        <div>
+                                            <h4 className="text-xs font-semibold text-gray-500 tracking-wider uppercase mb-2">
+                                                <ScrambleText text="CONTACT" isActive={isMenuOpen} delay={450} />
+                                            </h4>
+                                            <a href="mailto:contact@columbus.earth" className="text-[#0A1344] font-medium block transition-colors duration-300 hover:text-[#0A1344]/70">
+                                                contact@columbus.earth
+                                            </a>
+                                        </div>
+                                        <div>
+                                            <h4 className="text-xs font-semibold text-gray-500 tracking-wider uppercase mb-2">
+                                                <ScrambleText text="SOCIAL" isActive={isMenuOpen} delay={550} />
+                                            </h4>
+                                            <a href="https://www.linkedin.com/company/columbusearth/about/?viewAsMember=true" target="_blank" rel="noopener noreferrer" className="text-gray-900 hover:text-primary font-medium block transition-colors">
+                                                LinkedIn
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="md:col-span-3"></div>
+                                <div className="md:col-span-4 space-y-6">
+                                    <h4
+                                        className={`text-xs font-semibold text-gray-500 tracking-wider uppercase mb-4 transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                                            isMenuOpen ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
+                                        }`}
+                                        style={{ transitionDelay: isMenuOpen ? "250ms" : "0ms" }}
+                                    >
+                                        <ScrambleText text="COMPANY" isActive={isMenuOpen} delay={400} />
+                                    </h4>
+                                    <ul className="space-y-4">
+                                        {menuItems.map((item, index) => (
+                                            <li
+                                                key={item.href}
+                                                className={`transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                                                    isMenuOpen ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
+                                                }`}
+                                                style={{ transitionDelay: isMenuOpen ? `${320 + index * 70 + index * index * 8}ms` : "0ms" }}
                                             >
-                                                <span className="mr-3 transition-transform duration-300 ease-in-out group-hover:translate-x-1">
-                                                    +
-                                                </span>
-                                                <span className="transition-all duration-300 ease-in-out group-hover:translate-x-1">
-                                                    {item.label}
-                                                </span>
-                                            </Link>
-                                        </li>
-                                    ))}
-                                </ul>
+                                                <Link
+                                                    href={item.href}
+                                                    onClick={() => { setIsMenuOpen(false); setIsManuallyToggled(false); }}
+                                                    className="group relative text-xl font-medium text-[#0A1344] transition-all duration-300 flex items-center"
+                                                >
+                                                    <span className="mr-3 transition-transform duration-300 ease-in-out group-hover:translate-x-1">+</span>
+                                                    <span className="transition-all duration-300 ease-in-out group-hover:translate-x-1">{item.label}</span>
+                                                </Link>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                </div>{/* end max-w-screen-2xl wrapper */}
+            </nav>
+
+            {/* ── Backdrop: compact nav ── */}
+            <div
+                className={`fixed inset-0 z-40 transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                    isCompactMenuOpen
+                        ? "opacity-100 backdrop-blur-md bg-black/10"
+                        : "opacity-0 pointer-events-none"
+                }`}
+            />
+
+            {/* ── Blur gradient background for compact nav ──
+                 Separate from the nav so it doesn't interfere with mix-blend-mode.
+                 Spans top-0 to 10px below the nav bottom edge (h-10/h-11 + 10px).
+                 Fades from full blur at top to transparent at the bottom edge. */}
+            <div
+                className={`fixed top-0 left-0 right-0 pointer-events-none transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                    isCompactVisible ? "translate-y-0" : "-translate-y-full"
+                }`}
+                style={{
+                    zIndex: 49,
+                    height: "calc(2.75rem + 10px)", /* h-11 (44px) + 10px */
+                    backdropFilter: "blur(12px)",
+                    WebkitBackdropFilter: "blur(12px)",
+                    maskImage: "linear-gradient(to bottom, black 55%, transparent 100%)",
+                    WebkitMaskImage: "linear-gradient(to bottom, black 55%, transparent 100%)",
+                }}
+            />
+
+            {/* ══════════════ COMPACT NAVBAR ══════════════ */}
+            <nav
+                ref={compactNavRef}
+                className={`header-font fixed top-0 left-0 right-0 z-50 transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                    isCompactVisible ? "translate-y-0" : "-translate-y-full"
+                }`}
+                style={compactNavBlendStyle}
+                onMouseEnter={handleCompactNavMouseEnter}
+                onMouseLeave={handleCompactMouseLeave}
+            >
+                <div className="relative mx-auto w-full max-w-screen-2xl">
+                    {/* Pill — only shown when compact menu open */}
+                    <div className={`absolute inset-y-0 left-(--container-padding) right-(--container-padding) transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                        isCompactMenuOpen ? "bg-white rounded-tl-xs rounded-tr-xs" : "bg-transparent"
+                    }`} />
+
+                    <div className="relative px-[calc(var(--container-padding)+18px)]">
+                        <div className="grid h-10 md:h-11 grid-cols-[1fr_auto_1fr] items-center">
+                            {/* Left: Logo */}
+                            <Link href="/" className="flex shrink-0 items-center gap-1.5">
+                                <div
+                                    className="relative h-6 w-6 shrink-0"
+                                    style={isCompactMenuOpen ? {} : { filter: "brightness(0) invert(1)" }}
+                                >
+                                    <Image
+                                        src="/logobueno.png"
+                                        alt="Columbus Logo"
+                                        fill
+                                        sizes="24px"
+                                        className="object-contain"
+                                    />
+                                </div>
+                                <span className="brand-wordmark text-base font-medium leading-none tracking-tight">
+                                    Columbus Earth
+                                </span>
+                            </Link>
+
+                            {/* Center: Navigation Links */}
+                            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                                <div className="hidden items-center gap-7 min-[1155px]:flex pointer-events-auto">
+                                    <Link href="#" className="group relative text-sm font-medium transition-opacity duration-300 hover:opacity-70">
+                                        Product
+                                        <span className="absolute left-0 -bottom-0.5 h-px w-0 transition-all duration-300 group-hover:w-full bg-current" />
+                                    </Link>
+                                    <Link href="/use-cases" className="group relative text-sm font-medium transition-opacity duration-300 hover:opacity-70">
+                                        Use Cases
+                                        <span className="absolute left-0 -bottom-0.5 h-px w-0 transition-all duration-300 group-hover:w-full bg-current" />
+                                    </Link>
+                                    <Link href="/technology" className="group relative text-sm font-medium transition-opacity duration-300 hover:opacity-70">
+                                        Technology
+                                        <span className="absolute left-0 -bottom-0.5 h-px w-0 transition-all duration-300 group-hover:w-full bg-current" />
+                                    </Link>
+                                </div>
+                            </div>
+
+                            {/* Right: CTA + Hamburger */}
+                            <div className="col-start-3 flex items-center justify-end gap-2">
+                                <Link
+                                    href="/maps-gpt"
+                                    className="hidden min-[1155px]:flex items-center justify-center px-4 py-2 text-sm font-semibold leading-none rounded-none border border-current transition-opacity duration-300 hover:opacity-70"
+                                >
+                                    Start Now
+                                </Link>
+                                <button
+                                    onClick={handleCompactHamburgerClick}
+                                    className="relative flex h-8 w-8 items-center justify-center rounded-none border border-current transition-all duration-300"
+                                    aria-label="Toggle menu"
+                                >
+                                    <div className={`absolute h-px w-4 bg-current transform-gpu transition-all duration-300 ease-in-out ${isCompactMenuOpen ? "rotate-45" : "-translate-y-1"}`} />
+                                    <div className={`absolute h-px w-4 bg-current transition-all duration-200 ${isCompactMenuOpen ? "opacity-0" : "opacity-100"}`} />
+                                    <div className={`absolute h-px w-4 bg-current transform-gpu transition-all duration-300 ease-in-out ${isCompactMenuOpen ? "-rotate-45" : "translate-y-1"}`} />
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Mega Menu Dropdown */}
+                    <div
+                        className={`absolute top-full left-(--container-padding) right-(--container-padding) rounded-bl-xs rounded-br-xs transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                            isCompactMenuOpen
+                                ? "opacity-100 translate-y-0 bg-white pointer-events-auto"
+                                : "opacity-0 -translate-y-10 pointer-events-none"
+                        }`}
+                    >
+                        <div className="pl-7 pr-(--container-padding) py-12" style={{ transitionDelay: isCompactMenuOpen ? "150ms" : "0ms" }}>
+                            <div className="grid grid-cols-1 md:grid-cols-12 gap-12">
+                                <div
+                                    className={`md:col-span-5 space-y-8 transition-opacity duration-500 ${isCompactMenuOpen ? "opacity-100" : "opacity-0"}`}
+                                    style={{ transitionDelay: isCompactMenuOpen ? "200ms" : "0ms" }}
+                                >
+                                    <div>
+                                        <h4 className="text-xs font-semibold text-[#0A1344]/50 tracking-widest uppercase mb-4">
+                                            <ScrambleText text="COLUMBUS EARTH" isActive={isCompactMenuOpen} delay={300} />
+                                        </h4>
+                                        <p className="text-[#0A1344]/70 text-base leading-relaxed max-w-md">
+                                            Columbus Earth Inc. is a spatial frontier AI company building the first production
+                                            Large Geospatial Model to answer the most difficult questions about our planet.
+                                        </p>
+                                    </div>
+                                    <div className="grid grid-cols-2 gap-8">
+                                        <div>
+                                            <h4 className="text-xs font-semibold text-gray-500 tracking-wider uppercase mb-2">
+                                                <ScrambleText text="CONTACT" isActive={isCompactMenuOpen} delay={450} />
+                                            </h4>
+                                            <a href="mailto:contact@columbus.earth" className="text-[#0A1344] font-medium block transition-colors duration-300 hover:text-[#0A1344]/70">
+                                                contact@columbus.earth
+                                            </a>
+                                        </div>
+                                        <div>
+                                            <h4 className="text-xs font-semibold text-gray-500 tracking-wider uppercase mb-2">
+                                                <ScrambleText text="SOCIAL" isActive={isCompactMenuOpen} delay={550} />
+                                            </h4>
+                                            <a href="https://www.linkedin.com/company/columbusearth/about/?viewAsMember=true" target="_blank" rel="noopener noreferrer" className="text-gray-900 hover:text-primary font-medium block transition-colors">
+                                                LinkedIn
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="md:col-span-3"></div>
+                                <div className="md:col-span-4 space-y-6">
+                                    <h4
+                                        className={`text-xs font-semibold text-gray-500 tracking-wider uppercase mb-4 transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                                            isCompactMenuOpen ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
+                                        }`}
+                                        style={{ transitionDelay: isCompactMenuOpen ? "250ms" : "0ms" }}
+                                    >
+                                        <ScrambleText text="COMPANY" isActive={isCompactMenuOpen} delay={400} />
+                                    </h4>
+                                    <ul className="space-y-4">
+                                        {menuItems.map((item, index) => (
+                                            <li
+                                                key={item.href}
+                                                className={`transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                                                    isCompactMenuOpen ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
+                                                }`}
+                                                style={{ transitionDelay: isCompactMenuOpen ? `${320 + index * 70 + index * index * 8}ms` : "0ms" }}
+                                            >
+                                                <Link
+                                                    href={item.href}
+                                                    onClick={() => { setIsCompactMenuOpen(false); setIsCompactManuallyToggled(false); }}
+                                                    className="group relative text-xl font-medium text-[#0A1344] transition-all duration-300 flex items-center"
+                                                >
+                                                    <span className="mr-3 transition-transform duration-300 ease-in-out group-hover:translate-x-1">+</span>
+                                                    <span className="transition-all duration-300 ease-in-out group-hover:translate-x-1">{item.label}</span>
+                                                </Link>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </nav>
         </>
     );

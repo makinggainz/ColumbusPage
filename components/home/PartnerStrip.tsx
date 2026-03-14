@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { Container } from "@/components/layout/Container";
 
 export const PartnerStrip = () => {
   return (
@@ -25,7 +26,7 @@ export const PartnerStrip = () => {
         }}
         aria-hidden
       />
-      <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-16">
+      <Container>
 
         {/* Heading Block */}
         <div className="max-w-5xl mb-10 -translate-x-[120px]">
@@ -51,7 +52,7 @@ export const PartnerStrip = () => {
         </div>
 
         </div>
-      </div>
+      </Container>
     </section>
   );
 };

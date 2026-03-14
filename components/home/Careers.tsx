@@ -1,9 +1,11 @@
 "use client";
 
+import { Container } from "@/components/layout/Container";
+
 export const Careers = () => {
   return (
     <section className="bg-[#F9F9F9] py-[115px] md:py-[147px] lg:py-[179px]">
-      <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-16">
+      <Container>
 
         {/* TOP CENTER */}
         <div className="text-center mb-36 md:mb-44">
@@ -67,7 +69,7 @@ export const Careers = () => {
 
         </div>
 
-      </div>
+      </Container>
     </section>
   );
 };

@@ -1,12 +1,13 @@
 "use client";
 
 import Image from "next/image";
+import { Container } from "@/components/layout/Container";
 
 export const TravelPromo = () => {
   return (
     <section className="bg-[#F9F9F9] relative overflow-hidden py-24 md:py-32 lg:py-40">
 
-      <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-16 relative min-h-[500px] md:min-h-[650px]">
+      <Container className="relative min-h-125 md:min-h-162.5">
 
         {/* Center Content */}
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4 z-10">
@@ -25,7 +26,7 @@ export const TravelPromo = () => {
         {/* Floating Emojis */}
         <FloatingEmojis />
 
-      </div>
+      </Container>
     </section>
   );
 };
