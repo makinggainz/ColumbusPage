@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { cormorant } from "@/lib/typography";
 import { Container } from "@/components/layout/Container";
+import styles from "@/components/ui/GlassButton.module.css";
 
 export const Hero = () => {
   return (

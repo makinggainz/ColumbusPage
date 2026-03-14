@@ -94,24 +94,26 @@ export default function ComparisonSection() {
               Columbus LGM
             </h3>
 
-            {/* Card with perfect image fit */}
-            <div className="relative w-full max-w-[467px] aspect-[467/319] rounded-[10px] overflow-hidden shadow-md">
-            <Image
-              src="/enterprise/lgm.png"
-              alt="lgm"
-              fill
-              className="object-cover scale-[1.15]"
-            />
-          </div>
+            {/* Card with perfect image fit — same width as list below so left edges align */}
+            <div className="w-full max-w-[467px]">
+              <div className="relative w-full aspect-[467/319] rounded-[10px] overflow-hidden shadow-md">
+                <Image
+                  src="/enterprise/lgm.png"
+                  alt="lgm"
+                  fill
+                  className="object-cover scale-[1.15]"
+                />
+              </div>
 
-            <ul className="mt-8 space-y-3 text-left max-w-[420px]">
-              <li>✔ Highest fidelity and fresh data</li>
-              <li>✔ Understands space and coordinates</li>
-              <li>✔ Spatial and contextual reasoning</li>
-              <li>✔ Thinks with human-like intuition</li>
-              <li>✔ Produces maps and visuals</li>
-              <li>✔ Built for physical world, enterprises</li>
-            </ul>
+              <ul className="mt-8 space-y-3 text-left w-full list-none pl-0 text-[16px] md:text-[20px] font-normal leading-[140%] tracking-[-0.02em] text-black">
+                <li className="flex items-center gap-2"><span className="text-green-600">✔</span> Highest fidelity and fresh data</li>
+                <li className="flex items-center gap-2"><span className="text-green-600">✔</span> Understands space and coordinates</li>
+                <li className="flex items-center gap-2"><span className="text-green-600">✔</span> Spatial and contextual reasoning</li>
+                <li className="flex items-center gap-2"><span className="text-green-600">✔</span> Thinks with human-like intuition</li>
+                <li className="flex items-center gap-2"><span className="text-green-600">✔</span> Produces maps and visuals</li>
+                <li className="flex items-center gap-2"><span className="text-green-600">✔</span> Built for physical world, enterprises</li>
+              </ul>
+            </div>
           </div>
 
           {/* Basic AI */}
@@ -121,25 +123,27 @@ export default function ComparisonSection() {
               Basic AI
             </h3>
 
-            <div className="relative w-full max-w-[467px] aspect-[467/319] rounded-[10px] overflow-hidden">
-              <Image
-                src="/enterprise/basic.png"
-                alt="basic"
-                fill
-                className="object-cover opacity-90"
-              />
-            </div>
+            <div className="w-full max-w-[467px]">
+              <div className="relative w-full aspect-[467/319] rounded-[10px] overflow-hidden">
+                <Image
+                  src="/enterprise/basic.png"
+                  alt="basic"
+                  fill
+                  className="object-cover opacity-90"
+                />
+              </div>
 
-            <ul className="mt-8 space-y-3 text-left max-w-[420px]">
-              <li>✖ Regurgitates old articles about areas</li>
-              <li>
-                ✖ Hallucinates Coordinates 60% of time{" "}
-                <span className="text-blue-600">Source</span>
-              </li>
-              <li>✖ Limited data reach</li>
-              <li>✖ Text outputs, no map or GIS</li>
-              <li>✖ Built for text, consumers</li>
-            </ul>
+              <ul className="mt-8 space-y-3 text-left w-full list-none pl-0 text-[16px] md:text-[20px] font-normal leading-[140%] tracking-[-0.02em] text-black">
+                <li className="flex items-center gap-2"><span className="text-red-500">✖</span> Regurgitates old articles about areas</li>
+                <li className="flex items-center gap-2">
+                  <span className="text-red-500">✖</span> Hallucinates Coordinates 60% of time{" "}
+                  <span className="text-blue-600">Source</span>
+                </li>
+                <li className="flex items-center gap-2"><span className="text-red-500">✖</span> Limited data reach</li>
+                <li className="flex items-center gap-2"><span className="text-red-500">✖</span> Text outputs, no map or GIS</li>
+                <li className="flex items-center gap-2"><span className="text-red-500">✖</span> Built for text, consumers</li>
+              </ul>
+            </div>
           </div>
 
         </div>
