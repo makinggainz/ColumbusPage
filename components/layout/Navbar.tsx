@@ -117,9 +117,7 @@ export const Navbar = () => {
         ? { color: "#0A1344" }
         : { mixBlendMode: "difference", color: "white" };
 
-    const compactNavBlendStyle: React.CSSProperties = isCompactMenuOpen
-        ? { color: "#0A1344" }
-        : { mixBlendMode: "difference", color: "white" };
+    const compactNavBlendStyle: React.CSSProperties = { color: "#0A1344" };
 
     return (
         <>
@@ -304,9 +302,8 @@ export const Navbar = () => {
                 }`}
                 style={{
                     zIndex: 49,
-                    height: "62px", /* h-16 (64px) nav, button bottom at 52px, +10px */
-                    backdropFilter: "blur(12px)",
-                    WebkitBackdropFilter: "blur(12px)",
+                    height: "64px", /* h-16 */
+                    backgroundColor: "white",
                 }}
             />
 
@@ -332,7 +329,7 @@ export const Navbar = () => {
                             <Link href="/" className="flex shrink-0 items-center gap-2">
                                 <div
                                     className="relative h-8 w-8 shrink-0"
-                                    style={isCompactMenuOpen ? {} : { filter: "brightness(0) invert(1)" }}
+                                    style={{}}
                                 >
                                     <Image
                                         src="/logobueno.png"
