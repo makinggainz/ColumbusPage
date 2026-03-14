@@ -7,8 +7,8 @@ export const Hero = () => {
       <div className="relative z-10 pt-24 md:pt-32">
         <Container>
           <div className="max-w-[1168px]">
-            {/* Eyebrow + Main Heading + Tag — shifted left, aligned */}
-            <div className="-translate-x-[250px]">
+            {/* Eyebrow + Main Heading + Tag */}
+            <div>
             {/* Eyebrow */}
             <p className="text-sm md:text-base font-medium tracking-tight text-[#1C274C]/70 uppercase mb-4 text-left ml-0 pl-0 mt-[60px]">
               FRONTIER AI RESEARCH AND PRODUCT COMPANY
