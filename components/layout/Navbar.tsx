@@ -294,6 +294,24 @@ export const Navbar = () => {
                 }`}
             />
 
+            {/* ── Blur gradient background for compact nav ──
+                 Separate from the nav so it doesn't interfere with mix-blend-mode.
+                 Spans top-0 to 10px below the nav bottom edge (h-10/h-11 + 10px).
+                 Fades from full blur at top to transparent at the bottom edge. */}
+            <div
+                className={`fixed top-0 left-0 right-0 pointer-events-none transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                    isCompactVisible ? "translate-y-0" : "-translate-y-full"
+                }`}
+                style={{
+                    zIndex: 49,
+                    height: "calc(2.75rem + 10px)", /* h-11 (44px) + 10px */
+                    backdropFilter: "blur(12px)",
+                    WebkitBackdropFilter: "blur(12px)",
+                    maskImage: "linear-gradient(to bottom, black 55%, transparent 100%)",
+                    WebkitMaskImage: "linear-gradient(to bottom, black 55%, transparent 100%)",
+                }}
+            />
+
             {/* ══════════════ COMPACT NAVBAR ══════════════ */}
             <nav
                 ref={compactNavRef}
