@@ -304,11 +304,9 @@ export const Navbar = () => {
                 }`}
                 style={{
                     zIndex: 49,
-                    height: "calc(2.75rem + 10px)", /* h-11 (44px) + 10px */
+                    height: "62px", /* h-16 (64px) nav, button bottom at 52px, +10px */
                     backdropFilter: "blur(12px)",
                     WebkitBackdropFilter: "blur(12px)",
-                    maskImage: "linear-gradient(to bottom, black 55%, transparent 100%)",
-                    WebkitMaskImage: "linear-gradient(to bottom, black 55%, transparent 100%)",
                 }}
             />
 
@@ -329,22 +327,22 @@ export const Navbar = () => {
                     }`} />
 
                     <div className="relative px-[calc(var(--container-padding)+18px)]">
-                        <div className="grid h-10 md:h-11 grid-cols-[1fr_auto_1fr] items-center">
+                        <div className="grid h-16 grid-cols-[1fr_auto_1fr] items-center">
                             {/* Left: Logo */}
-                            <Link href="/" className="flex shrink-0 items-center gap-1.5">
+                            <Link href="/" className="flex shrink-0 items-center gap-2">
                                 <div
-                                    className="relative h-6 w-6 shrink-0"
+                                    className="relative h-8 w-8 shrink-0"
                                     style={isCompactMenuOpen ? {} : { filter: "brightness(0) invert(1)" }}
                                 >
                                     <Image
                                         src="/logobueno.png"
                                         alt="Columbus Logo"
                                         fill
-                                        sizes="24px"
+                                        sizes="32px"
                                         className="object-contain"
                                     />
                                 </div>
-                                <span className="brand-wordmark text-base font-medium leading-none tracking-tight">
+                                <span className="brand-wordmark text-sm font-medium leading-none tracking-tight">
                                     Columbus Earth
                                 </span>
                             </Link>
@@ -371,18 +369,18 @@ export const Navbar = () => {
                             <div className="col-start-3 flex items-center justify-end gap-2">
                                 <Link
                                     href="/maps-gpt"
-                                    className="hidden min-[1155px]:flex items-center justify-center px-4 py-2 text-sm font-semibold leading-none rounded-none border border-current transition-opacity duration-300 hover:opacity-70"
+                                    className="hidden min-[1155px]:flex items-center justify-center h-10 px-4 text-sm font-semibold leading-none rounded-none border border-current transition-opacity duration-300 hover:opacity-70"
                                 >
                                     Start Now
                                 </Link>
                                 <button
                                     onClick={handleCompactHamburgerClick}
-                                    className="relative flex h-8 w-8 items-center justify-center rounded-none border border-current transition-all duration-300"
+                                    className="relative flex h-10 w-10 items-center justify-center rounded-none border border-current transition-all duration-300"
                                     aria-label="Toggle menu"
                                 >
-                                    <div className={`absolute h-px w-4 bg-current transform-gpu transition-all duration-300 ease-in-out ${isCompactMenuOpen ? "rotate-45" : "-translate-y-1"}`} />
-                                    <div className={`absolute h-px w-4 bg-current transition-all duration-200 ${isCompactMenuOpen ? "opacity-0" : "opacity-100"}`} />
-                                    <div className={`absolute h-px w-4 bg-current transform-gpu transition-all duration-300 ease-in-out ${isCompactMenuOpen ? "-rotate-45" : "translate-y-1"}`} />
+                                    <div className={`absolute h-px w-4.5 bg-current transform-gpu transition-all duration-300 ease-in-out ${isCompactMenuOpen ? "rotate-45" : "-translate-y-1.25"}`} />
+                                    <div className={`absolute h-px w-4.5 bg-current transition-all duration-200 ${isCompactMenuOpen ? "opacity-0" : "opacity-100"}`} />
+                                    <div className={`absolute h-px w-4.5 bg-current transform-gpu transition-all duration-300 ease-in-out ${isCompactMenuOpen ? "-rotate-45" : "translate-y-1.25"}`} />
                                 </button>
                             </div>
                         </div>
