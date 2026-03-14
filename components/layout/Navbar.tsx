@@ -99,9 +99,6 @@ export const Navbar = () => {
         handleMouseEnter();
     };
 
-    // Pill background style — matches devin.ai's approach:
-    // light: subtle white tint + 10px blur + hairline border
-    // dark: near-invisible cool gradient + 10px blur + hairline white border
     const pillBg = isMenuOpen
         ? "bg-white rounded-tl-xs rounded-tr-xs"
         : !isScrolled
