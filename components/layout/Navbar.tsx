@@ -14,6 +14,7 @@ export const Navbar = () => {
     const navRef = useRef<HTMLElement>(null);
 
     useEffect(() => {
+        setIsScrolled(window.scrollY > 0);
         const handleScroll = () => setIsScrolled(window.scrollY > 0);
         window.addEventListener("scroll", handleScroll, { passive: true });
         return () => window.removeEventListener("scroll", handleScroll);
