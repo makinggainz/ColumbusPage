@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useState, useRef } from "react";
 import { ScrambleText } from "@/components/ui/ScrambleText";
+import glassStyles from "@/components/ui/GlassButton.module.css";
 
 export const Navbar = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -93,15 +94,12 @@ export const Navbar = () => {
         handleMouseEnter();
     };
 
-    // Pill background — rounding is handled by the pill container (rounded-l-full rounded-r-none)
+    // Pill background
     const pillBg = isMenuOpen
         ? "bg-white rounded-tl-xs rounded-tr-xs"
         : !isScrolled
             ? "bg-transparent"
-            : isDarkSection
-                ? "backdrop-blur-[10px] bg-gradient-to-b from-[#def4ff]/[0.04] via-[#abbcc5]/[0.05] to-[#5d676d]/[0.10]"
-                : "backdrop-blur-[10px] bg-white/20";
-
+            : "bg-transparent"; // glass effect applied via CSS Module below
     // Text and interactive element colors
     const dark = isDarkSection && !isMenuOpen;
     const wordmarkColor  = dark ? "text-white"        : "text-[#0A1344]";
@@ -138,8 +136,15 @@ export const Navbar = () => {
                 {/* Row: logo on left, CTA+hamburger on right */}
                 <div className="relative flex items-stretch h-14.5 pl-[clamp(20px,6.944vw,100px)] pr-[clamp(20px,6.944vw,100px)]">
 
-                    {/* Pill background — starts 44px before the centered "Product" link */}
-                    <div className={`absolute top-0 bottom-0 right-[clamp(13px,calc(6.944vw-7px),93px)] left-[calc(50%-201px)] rounded-l-full rounded-r-none transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${pillBg}`} />
+                    {/* Pill background — glass on scroll, white when menu open */}
+                    <div
+                        className={`absolute top-0 bottom-0 right-[clamp(13px,calc(6.944vw-7px),93px)] left-[calc(50%-201px)] rounded-l-full rounded-r-none transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${pillBg} ${isScrolled && !isMenuOpen ? glassStyles.navPill : ''}`}
+                        style={isScrolled && !isMenuOpen ? {
+                            background: isDarkSection
+                                ? 'linear-gradient(-75deg, rgba(5,10,35,0.3), rgba(5,10,35,0.45), rgba(5,10,35,0.3))'
+                                : 'linear-gradient(-75deg, #ffffff0d, #fff3, #ffffff0d)',
+                        } : undefined}
+                    />
 
                     {/* Left: Logo — no background */}
                     <Link href="/" className="flex shrink-0 items-center gap-2 pr-8 z-50">
@@ -160,7 +165,7 @@ export const Navbar = () => {
 
                     {/* Center: Navigation Links — absolutely centered in the full nav width */}
                     <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-50">
-                        <div className="hidden items-center gap-[45px] min-[1155px]:flex pointer-events-auto">
+                        <div className="hidden items-center gap-11.25 min-[1155px]:flex pointer-events-auto">
                             <Link
                                 href="#"
                                 className={`group relative text-md font-medium transition-colors duration-300 ${linkColor} ${linkHover}`}
@@ -187,12 +192,37 @@ export const Navbar = () => {
 
                     {/* Right: CTA + Hamburger */}
                     <div className="flex items-center gap-3 ml-auto z-50">
-                        <Link
-                            href="/maps-gpt"
-                            className={`hidden min-[1155px]:flex items-center justify-center px-6 py-3.5 text-md font-semibold leading-none transition-colors duration-500 rounded-none ${startNowClass}`}
-                        >
-                            Start Now
-                        </Link>
+                        {isBrandCta ? (
+                            <div className="hidden min-[1155px]:block">
+                                <Link
+                                    href="/maps-gpt"
+                                    className={glassStyles.btn}
+                                    style={{
+                                        background: '#0A1344',
+                                        boxShadow: 'none',
+                                    }}
+                                >
+                                    <span style={{ color: 'white', fontSize: '1.0625rem', fontWeight: 600 }}>Start Now</span>
+                                </Link>
+                            </div>
+                        ) : (
+                            <div className="hidden min-[1155px]:block">
+                                <Link
+                                    href="/maps-gpt"
+                                    className={glassStyles.btn}
+                                    style={{
+                                        background: dark
+                                            ? 'linear-gradient(-75deg, rgba(255,255,255,0.08), rgba(255,255,255,0.15), rgba(255,255,255,0.08))'
+                                            : 'linear-gradient(-75deg, rgba(255,255,255,0.7), rgba(255,255,255,0.85), rgba(255,255,255,0.7))',
+                                        boxShadow: dark
+                                            ? 'inset 0 1px 2px rgba(255,255,255,0.1), 0 0 0 1px rgba(255,255,255,0.25)'
+                                            : 'inset 0 1px 2px rgba(255,255,255,0.9), inset 0 -1px 1px rgba(10,19,68,0.05), 0 2px 10px rgba(10,19,68,0.08), 0 0 0 1px rgba(10,19,68,0.14)',
+                                    }}
+                                >
+                                    <span style={{ color: dark ? 'white' : '#0A1344', fontSize: '1.0625rem', fontWeight: 600 }}>Start Now</span>
+                                </Link>
+                            </div>
+                        )}
                         <button
                             onClick={handleHamburgerClick}
                             className={`relative flex h-11 w-11 items-center justify-center rounded-none transition-all duration-300 ${
