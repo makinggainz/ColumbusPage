@@ -1,19 +1,66 @@
 "use client";
 
 import Image from "next/image";
+import { useEffect, useRef, useState } from "react";
 
 export const Vision = () => {
+  const titleRef = useRef<HTMLHeadingElement>(null);
+  const gridRef = useRef<HTMLDivElement>(null);
+  const [titleVisible, setTitleVisible] = useState(false);
+  const [gridVisible, setGridVisible] = useState(false);
+
+  useEffect(() => {
+    const observe = (el: HTMLElement | null, onVisible: () => void) => {
+      if (!el) return () => {};
+      const observer = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) {
+            onVisible();
+            observer.disconnect();
+          }
+        },
+        { threshold: 0 }
+      );
+      observer.observe(el);
+      return () => observer.disconnect();
+    };
+
+    const cleanups = [
+      observe(titleRef.current, () => setTitleVisible(true)),
+      observe(gridRef.current, () => setGridVisible(true)),
+    ];
+    return () => cleanups.forEach((fn) => fn());
+  }, []);
+
   return (
     <section className="bg-[#FEFEFE] py-20 md:py-28 lg:py-36">
       <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-16">
 
         {/* TITLE */}
-        <h2 className="text-display font-semibold leading-tight text-left mb-12 md:mb-16 -mt-20 bg-linear-to-b from-[#0A1344] to-[#838383] bg-clip-text text-transparent tracking-[-0.015em]">
+        <h2
+          ref={titleRef}
+          className="text-display font-semibold leading-tight text-left mb-12 md:mb-16 -mt-20 bg-linear-to-b from-[#0A1344] to-[#838383] bg-clip-text text-transparent tracking-[-0.015em]"
+          style={{
+            opacity: titleVisible ? 1 : 0,
+            filter: titleVisible ? "blur(0px)" : "blur(8px)",
+            transform: titleVisible ? "translateY(0)" : "translateY(16px)",
+            transition: "opacity 0.6s ease-out 0.1s, filter 0.6s ease-out 0.1s, transform 0.6s ease-out 0.1s",
+          }}
+        >
           A new species of AI
         </h2>
 
         {/* GRID */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-[5px] auto-rows-[120px] sm:auto-rows-[140px] lg:auto-rows-[160px] -mt-[30px]">
+        <div
+          ref={gridRef}
+          className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-1.25 auto-rows-[120px] sm:auto-rows-[140px] lg:auto-rows-[160px] -mt-7.5"
+          style={{
+            opacity: gridVisible ? 1 : 0,
+            filter: gridVisible ? "blur(0px)" : "blur(8px)",
+            transform: gridVisible ? "translateY(0)" : "translateY(16px)",
+            transition: "opacity 0.6s ease-out 0.25s, filter 0.6s ease-out 0.25s, transform 0.6s ease-out 0.25s",
+          }}
+        >
 
           {/* ROW 1 */}
           <Tile src="/image1.png" />
@@ -61,7 +108,7 @@ export const Vision = () => {
         </div>
 
         {/* BOTTOM ROW */}
-        <div className="mt-[28px] md:mt-[44px] flex flex-col md:flex-row items-start justify-between gap-6">
+        <div className="mt-7 md:mt-11 flex flex-col md:flex-row items-start justify-between gap-6">
 
           <p className="text-sm md:text-base text-[#010101] max-w-2xl leading-[1.4]">
             ColumbusPro-1 processes satellite imagery, terrain data, human activity,
@@ -69,7 +116,7 @@ export const Vision = () => {
             research, and consumer domains.
           </p>
 
-          <button className="border border-[#1C274C] px-[69px] md:px-[77px] py-[14.5px] text-xl font-bold tracking-wide rounded-none hover:bg-[#1C274C] hover:text-white transition whitespace-nowrap">
+          <button className="border border-[#1C274C] px-17.25 md:px-19.25 py-[14.5px] text-xl font-bold tracking-wide rounded-none hover:bg-[#1C274C] hover:text-white transition whitespace-nowrap">
             [ See what we’re building ]
           </button>
 

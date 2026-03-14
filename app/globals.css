@@ -123,6 +123,21 @@ video {
   animation: sonar-pulse-dark 2s ease-out infinite;
 }
 
+/* Section D (Vision): title fade-in on scroll enter */
+@keyframes heroFadeIn {
+  0% {
+    opacity: 0;
+    filter: blur(8px);
+    transform: translateY(16px);
+  }
+  100% {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0px);
+  }
+}
+
+
 /* Section D case intro: when one card hovered, dim others */
 .case-intro-grid:has(.case-intro-card:hover) .case-intro-card:not(:hover) .case-intro-rest-overlay {
   opacity: 1;
