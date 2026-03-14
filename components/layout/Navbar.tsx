@@ -306,8 +306,8 @@ export const Navbar = () => {
                 style={{
                     zIndex: 49,
                     height: "62px", /* h-16 (64px) nav, button bottom at 52px, +10px */
-                    backdropFilter: "blur(12px)",
-                    WebkitBackdropFilter: "blur(12px)",
+                    backdropFilter: "blur(24px)",
+                    WebkitBackdropFilter: "blur(24px)",
                     borderBottom: "1px solid rgba(255, 255, 255, 0.2)",
                 }}
             />
