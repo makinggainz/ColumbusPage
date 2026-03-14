@@ -5,7 +5,6 @@ import SectionCScroll from "@/components/enterprise/SectionCScroll";
 import ComparisonSection from "@/components/enterprise/ComparisonSection";
 import ChatSection from "@/components/enterprise/ChatSection";
 import PromptShowcase from "@/components/enterprise/PromptShowcase";
-import DrawAreaSection from "@/components/enterprise/DrawAreaSection";
 import DataCollectionSection from "@/components/enterprise/DataCollectionSection";
 import DataSection from "@/components/enterprise/DataSection";
 import MapChatSection from "@/components/enterprise/MapChatSection";
@@ -13,7 +12,7 @@ import ResearchReportsSection from "@/components/enterprise/ResearchReportSectio
 import GeneratedLayersSection from "@/components/enterprise/GeneratedLayerSection";
 import HumanSupportSection from "@/components/enterprise/HumanSupportSection";
 
-const sectionLabels = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n"] as const;
+const sectionLabels = ["a", "b", "c", "d", "e", "g", "h", "i", "j", "k", "l", "m", "n"] as const;
 
 function SectionWithLabel({
   label,
@@ -54,30 +53,27 @@ export default function EnterprisePage() {
         <PromptShowcase/>
       </SectionWithLabel>
       <SectionWithLabel label={sectionLabels[5]}>
-        <DrawAreaSection/>
-      </SectionWithLabel>
-      <SectionWithLabel label={sectionLabels[6]}>
         <DataCollectionSection/>
       </SectionWithLabel>
-      <SectionWithLabel label={sectionLabels[7]}>
+      <SectionWithLabel label={sectionLabels[6]}>
         <DataSection/>
       </SectionWithLabel>
-      <SectionWithLabel label={sectionLabels[8]}>
+      <SectionWithLabel label={sectionLabels[7]}>
         <MapChatSection />
       </SectionWithLabel>
-      <SectionWithLabel label={sectionLabels[9]}>
+      <SectionWithLabel label={sectionLabels[8]}>
         <ResearchReportsSection />
       </SectionWithLabel>
-      <SectionWithLabel label={sectionLabels[10]}>
+      <SectionWithLabel label={sectionLabels[9]}>
         <GeneratedLayersSection />
       </SectionWithLabel>
-      <SectionWithLabel label={sectionLabels[11]}>
+      <SectionWithLabel label={sectionLabels[10]}>
         <HumanSupportSection />
       </SectionWithLabel>
-      <SectionWithLabel label={sectionLabels[12]}>
+      <SectionWithLabel label={sectionLabels[11]}>
         <ChatSection/>
       </SectionWithLabel>
-      <SectionWithLabel label={sectionLabels[13]}>
+      <SectionWithLabel label={sectionLabels[12]}>
         <Footer />
       </SectionWithLabel>
     </main>

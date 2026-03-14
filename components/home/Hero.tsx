@@ -1,5 +1,7 @@
+import Link from "next/link";
 import { cormorant } from "@/lib/typography";
 import { Container } from "@/components/layout/Container";
+import styles from "@/components/ui/GlassButton.module.css";
 
 export const Hero = () => {
   return (
@@ -20,6 +22,12 @@ export const Hero = () => {
             >
               The frontier AI Lab building the first in-production Large Geospatial Model.
             </h1>
+
+            {/* Glass CTA */}
+            <div className={`${styles.wrap} mt-8`}>
+              <Link href="/maps-gpt" className={`${styles.btn} ${styles.btnCta}`}><span>Get started</span></Link>
+              <div className={styles.shadow}></div>
+            </div>
 
             {/* Tag — left edge aligned with Eyebrow */}
             <p className="mt-6 text-xs md:text-sm font-medium tracking-widest text-[#1C274C]/70">

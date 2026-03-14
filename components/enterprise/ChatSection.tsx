@@ -6,22 +6,15 @@ export default function ChatSection() {
 
       {/* Heading */}
       <h2
-        className="
-        font-[Geist]
-        font-semibold
-        text-center
-        text-[28px]
-        md:text-[36px]
-        lg:text-[48px]
-        leading-[140%]
-      "
+        className="font-semibold text-center text-[28px] md:text-[36px] lg:text-[48px] leading-[140%]"
+        style={{
+          background: "linear-gradient(90deg, #9B9B9B 0%, #0A1344 100%)",
+          WebkitBackgroundClip: "text",
+          WebkitTextFillColor: "transparent",
+          backgroundClip: "text",
+        }}
       >
-        <span className="text-[#8A8A8A]">
-          Chat with us now about{" "}
-        </span>
-        <span className="text-[#0E1A44]">
-          Columbus Pro
-        </span>
+        Chat with us now about Columbus Pro
       </h2>
 
       {/* Button */}
@@ -42,6 +35,7 @@ export default function ChatSection() {
         justify-center
         hover:bg-[#F8F8F8]
         transition
+        cursor-pointer
       "
       >
         Get in touch
