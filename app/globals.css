@@ -30,11 +30,13 @@ html {
   --primary: #0a0e27;
   --accent: #3b82f6;
   --container-padding: 20px;
+  --page-padding: calc(var(--container-padding) + 18px); /* matches navbar logo/hamburger edges */
 }
 
 @media (min-width: 940px) {
   :root {
     --container-padding: 1vw;
+    /* --page-padding recalculates automatically since it references --container-padding */
   }
 }
 

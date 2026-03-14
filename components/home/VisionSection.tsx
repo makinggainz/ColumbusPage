@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
+import { Container } from "@/components/layout/Container";
 
 export const Vision = () => {
   const titleRef = useRef<HTMLHeadingElement>(null);
@@ -34,7 +35,7 @@ export const Vision = () => {
 
   return (
     <section className="bg-[#FEFEFE] py-20 md:py-28 lg:py-36">
-      <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-16">
+      <Container>
 
         {/* TITLE */}
         <h2
@@ -121,7 +122,7 @@ export const Vision = () => {
           </button>
 
         </div>
-      </div>
+      </Container>
     </section>
   );
 };

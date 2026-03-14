@@ -11,6 +11,7 @@ import {
   Database,
   ArrowUpRight,
 } from "lucide-react";
+import { Container } from "@/components/layout/Container";
 export const MainFeatures = () => {
   const features = [
     {
@@ -64,7 +65,7 @@ export const MainFeatures = () => {
         backgroundSize: "144px 120px",
       }}
     >
-      <div className="max-w-[1528px] mx-auto">
+      <Container>
 
         {/* Heading */}
         <div className="text-center mb-[55px]">
@@ -127,7 +128,7 @@ export const MainFeatures = () => {
             );
           })}
         </div>
-      </div>
+      </Container>
     </section>
   );
 };
