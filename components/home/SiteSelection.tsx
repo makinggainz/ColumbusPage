@@ -12,6 +12,7 @@ export const SiteSelection = () => {
         </h2>
 
         <div
+          data-navbar-theme="dark"
           className="px-8 sm:px-12 lg:px-16 pt-[17px] pb-[187px] sm:pt-[33px] sm:pb-[203px] lg:pt-[49px] lg:pb-[219px] relative overflow-hidden"
           style={{
             background: "linear-gradient(314.26deg, rgba(10, 19, 66, 0.9) -6.86%, rgba(29, 59, 94, 0.9) 108.55%)",
