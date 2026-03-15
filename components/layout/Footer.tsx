@@ -35,7 +35,7 @@ export const Footer: FC<FooterProps> = ({ variant = "default" }) => {
   }
 
   return (
-    <footer data-navbar-theme="dark" className="relative text-white overflow-hidden">
+    <footer data-navbar-theme="dark" className="text-white overflow-hidden flex flex-col h-screen" style={{ position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 0 }}>
 
       {/* Background */}
       <Image
@@ -50,10 +50,10 @@ export const Footer: FC<FooterProps> = ({ variant = "default" }) => {
       <div className="absolute inset-0 bg-black/60" />
 
       {/* Content */}
-      <Container className="relative z-10 py-24 md:py-36 flex flex-col gap-36 md:gap-48 justify-between">
+      <Container className="relative z-10 flex-1 py-12 md:py-16 flex flex-col justify-between">
 
         {/* TOP MISSION TEXT */}
-        <div className="text-center max-w-3xl mx-auto space-y-8">
+        <div className="text-center max-w-3xl mx-auto space-y-8" style={{ paddingTop: "50px" }}>
 
           <p className="text-sm sm:text-base leading-relaxed text-white/80">
             We are a group of engineers, designers, and company builders developing
@@ -69,7 +69,7 @@ export const Footer: FC<FooterProps> = ({ variant = "default" }) => {
             planning domains.
           </p>
 
-          <div className="flex flex-col items-center gap-12 text-white/70 w-full" style={{ fontSize: "20px", fontWeight: 500, marginTop: "100px" }}>
+          <div className="flex flex-col items-center gap-12 text-white/70 w-full" style={{ fontSize: "20px", fontWeight: 500 }}>
             <button className="hover:text-white transition">[ Our Mission ]</button>
             <div className="flex justify-between w-full max-w-2xl mx-auto" style={{ translate: "10px" }}>
               <button className="hover:text-white transition">[ Product ]</button>
@@ -133,15 +133,14 @@ export const Footer: FC<FooterProps> = ({ variant = "default" }) => {
       </Container>
 
       {/* Bottom bar */}
-      <div
-        className="relative z-10 w-full px-6 py-4 flex items-center justify-between text-white/70 font-light"
-        style={{ fontSize: "18px", letterSpacing: "-0.02em" }}
-      >
-        <span>Columbus Earth © 2026. For investor relations, contact us on email or LinkedIn.</span>
-        <div className="flex items-center gap-10">
-          <span>Website made by hand, no AI.</span>
-          <span>www.columbus.earth</span>
-        </div>
+      <div className="relative z-10 w-full py-4" style={{ fontSize: "18px", letterSpacing: "-0.02em" }}>
+        <Container className="flex items-center justify-between text-white/70 font-light">
+          <span>Columbus Earth © 2026. For investor relations, contact us on email or LinkedIn.</span>
+          <div className="flex items-center gap-10">
+            <span>Website made by hand, no AI.</span>
+            <span>www.columbus.earth</span>
+          </div>
+        </Container>
       </div>
 
     </footer>

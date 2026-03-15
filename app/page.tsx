@@ -91,8 +91,10 @@ function SectionLabel({ letter }: { letter: string }) {
 export default function Home() {
   return (
     <main className="min-h-screen">
-      {/* Sections a–o: sit on top of the footer */}
-      <div className="relative z-10">
+      {/* Sections a–o: sit on top of the footer.
+          paddingBottom creates 100vh of transparent space below Careers so
+          the footer (z-0) gradually reveals through it as you scroll. */}
+      <div className="relative z-10" style={{ paddingBottom: "100vh" }}>
         <section className={`relative ${sectionColors[0]}`}>
           <SectionLabel letter="a" />
           <Navbar />
@@ -155,13 +157,10 @@ export default function Home() {
         </section>
       </div>
 
-      {/* Section p — Footer: sticky at bottom, pulled up behind content.
-          z-0 keeps it behind z-10 content; reveals as sections scroll away.
-          -800px margin accounts for the larger footer height (min-h-[150vh]). */}
-      <section
-        className="sticky bottom-0 z-0"
-        style={{ marginTop: "-800px" }}
-      >
+      {/* Section p — Footer: normal flow, z-0 so content (z-10) covers it.
+          -100vh marginTop tucks the top of the footer behind the last content section.
+          No sticky — footer scrolls naturally so full height is always reachable. */}
+      <section className="relative z-0">
         <SectionLabel letter="p" />
         <Footer />
       </section>
