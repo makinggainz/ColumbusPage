@@ -80,7 +80,7 @@ const sectionColors = [
 function SectionLabel({ letter }: { letter: string }) {
   return (
     <span
-      className="absolute left-4 top-4 z-10 text-2xl font-bold text-black/40 select-none"
+      className="absolute left-4 top-4 z-10 text-2xl font-bold text-black/10 select-none"
       aria-hidden
     >
       {letter}
