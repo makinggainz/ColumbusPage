@@ -58,6 +58,7 @@ import { Industries } from "@/components/home/Industries";
 import { PartnerStrip } from "@/components/home/PartnerStrip";
 import { TravelPromo } from "@/components/home/TravelPromo";
 import { UniqueSpotsSection } from "@/components/home/UniqueSpotsSection";
+import { CoverLetter } from "@/components/home/CoverLetter";
 const sectionColors = [
   "bg-white",      // a Navbar
   "bg-white",       // b Hero
@@ -91,6 +92,7 @@ function SectionLabel({ letter }: { letter: string }) {
 export default function Home() {
   return (
     <main className="min-h-screen">
+      <CoverLetter />
         <section className={`relative ${sectionColors[0]}`}>
         <SectionLabel letter="a" />
         <Navbar />
