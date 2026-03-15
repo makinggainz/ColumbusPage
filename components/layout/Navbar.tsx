@@ -188,7 +188,7 @@ export const Navbar = () => {
                             <div className="col-start-3 flex items-center justify-end gap-3">
                                 <Link
                                     href="/maps-gpt"
-                                    className="hidden min-[1155px]:flex items-center justify-center px-6 py-3.5 text-md font-semibold leading-none rounded-none border border-current transition-opacity duration-300 hover:opacity-70"
+                                    className={`hidden min-[1155px]:flex items-center justify-center px-6 py-3.5 text-md font-semibold leading-none rounded-none border transition-opacity duration-300 hover:opacity-70 ${isScrolled ? "border-black bg-white text-black" : "border-current"}`}
                                     onMouseEnter={handleNavMouseEnter}
                                 >
                                     Start Now
@@ -370,7 +370,7 @@ export const Navbar = () => {
                             <div className="col-start-3 flex items-center justify-end gap-2">
                                 <Link
                                     href="/maps-gpt"
-                                    className="hidden min-[1155px]:flex items-center justify-center h-10 px-4 text-sm font-semibold leading-none rounded-none border border-current transition-opacity duration-300 hover:opacity-70"
+                                    className="hidden min-[1155px]:flex items-center justify-center h-10 px-4 text-sm font-semibold leading-none rounded-none border border-black bg-white text-black transition-opacity duration-300 hover:opacity-70"
                                     onMouseEnter={handleCompactNavMouseEnter}
                                 >
                                     Start Now
