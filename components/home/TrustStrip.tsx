@@ -13,33 +13,33 @@ export const TrustStrip = () => {
   ];
 
   return (
-    <section className="bg-[#F9F9F9] py-7.5 md:py-15.5 lg:py-19.5">
+    <section className="bg-[#F9F9F9] pt-2.5 pb-7.5 md:pb-15.5 lg:pb-19.5">
       <Container>
 
         {/* HEADING */}
         <div className="text-center mb-12 md:mb-16">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-semibold text-[#1C274C] mb-3">
-            Your plans <span className="text-[#1FA7A3]">are in good hands</span>
+          <h2 className="text-[40px] font-semibold tracking-[-0.02em] mb-1.25 bg-linear-to-r from-[#313131] to-[#4ECDD6] bg-clip-text text-transparent">
+            Your plans are in good hands
           </h2>
 
-          <p className="text-sm sm:text-base md:text-lg text-[#1C274C]/60">
+          <p className="font-light text-black" style={{ fontSize: "20px", letterSpacing: "-0.03em" }}>
             We work with data from reputable brands
           </p>
         </div>
 
         {/* LOGOS */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-8 items-center mb-14 opacity-80">
-          <Logo src="/emoji/gmap.png" />
-          <Logo src="/emoji/fs.png" />
-          <Logo src="/emoji/airbnb.png" />
-          <Logo src="/emoji/idea.png" />
-          <Logo src="/emoji/trip.png" />
-          <Logo src="/emoji/fork.png" />
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-8 items-center mb-[52.5px] opacity-80">
+          <Logo src="/MapsGPTLogos/Logo1.png" />
+          <Logo src="/MapsGPTLogos/Logo2.png" />
+          <Logo src="/MapsGPTLogos/Logo3.png" />
+          <Logo src="/MapsGPTLogos/Logo4.png" />
+          <Logo src="/MapsGPTLogos/Logo5.png" />
+          <Logo src="/MapsGPTLogos/Logo6.png" />
         </div>
 
         {/* FAQ TITLE */}
         <div className="mb-6">
-          <h3 className="text-xs sm:text-sm font-semibold text-[#1FA7A3] uppercase tracking-wider">
+          <h3 className="text-[30px] font-medium tracking-[-0.04em] text-[#1FA7A3]">
             See what people are asking
           </h3>
         </div>
@@ -68,9 +68,9 @@ const Logo = ({ src }: { src: string }) => (
     <Image
       src={src}
       alt=""
-      width={140}
-      height={40}
-      className="object-contain h-8 sm:h-10 md:h-12 w-auto"
+      width={105}
+      height={30}
+      className="object-contain h-6 sm:h-7.5 md:h-9 w-auto"
     />
   </div>
 );
