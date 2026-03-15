@@ -12,7 +12,7 @@ export const Careers = () => {
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-medium text-black mb-4">
             Hiring Humans.
           </h2>
-          <p className="text-sm sm:text-base text-black/80">
+          <p className="text-[20px] font-normal tracking-[-0.02em] text-black">
             Our team is based in Washington DC and Madrid.
           </p>
         </div>
@@ -23,17 +23,16 @@ export const Careers = () => {
             Careers & investment queries
           </h3>
 
-          <p className="text-sm sm:text-base text-black/60 leading-relaxed md:text-right">
-            If you're excited about creating paradigm shifts in physical world
-            understanding. Join us now.
+          <p className="text-[20px] font-normal tracking-[-0.02em] text-black md:text-right">
+            <span className="opacity-70">If you're excited about creating paradigm shifts in<br />physical world understanding. </span>Join us now.
           </p>
         </div>
 
-        {/* DIVIDER — 60px wider; radial gradient */}
+        {/* DIVIDER — strong red under each text column, fades in the center */}
         <div
-          className="h-px mb-16 md:mb-20 -ml-[30px] w-[calc(100%+60px)]"
+          className="h-px mb-16 md:mb-20 -ml-7.5 w-[calc(100%+60px)]"
           style={{
-            background: "radial-gradient(circle, rgba(255, 0, 0, 1) 0%, rgba(255, 255, 255, 0.35) 100%)",
+            background: "linear-gradient(to right, rgba(255,0,0,0.45) 0%, rgba(255,0,0,0.25) 20%, rgba(255,0,0,0.04) 45%, rgba(255,0,0,0.04) 55%, rgba(255,0,0,0.25) 80%, rgba(255,0,0,0.45) 100%)",
           }}
           aria-hidden
         />
