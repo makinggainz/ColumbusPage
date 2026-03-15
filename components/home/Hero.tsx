@@ -16,8 +16,8 @@ export const Hero = () => {
 
             {/* Main Heading — left edge aligned with Eyebrow */}
             <h1
-              className="font-thin leading-tight tracking-tight text-[#0A1344] ml-0 pl-0 text-left"
-              style={{ fontSize: "68px" }}
+              className={`${cormorant.className} font-semibold leading-tight tracking-tight text-[#0A1344] ml-0 pl-0 text-left`}
+              style={{ fontSize: "66px" }}
             >
               The frontier AI Lab building the first in-production Large Geospatial Model.
             </h1>

@@ -31,11 +31,11 @@ export const PartnerStrip = () => {
 
           {/* Heading Block */}
           <div className="max-w-5xl">
-            <h3 className="font-semibold text-[#1C274C] leading-tight" style={{ fontSize: 40 }}>
+            <h3 className="font-semibold text-[#1C274C] leading-tight" style={{ fontSize: 40, letterSpacing: "-0.02em" }}>
               Vetted, high-fidelity, and smart datasets
             </h3>
 
-            <p className="font-light text-[#010101]" style={{ fontSize: 20, marginTop: 14 }}>
+            <p className="font-light text-[#010101]" style={{ fontSize: 20, marginTop: 12 }}>
               We vet our data with partner organizations
             </p>
           </div>
