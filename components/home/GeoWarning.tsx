@@ -46,7 +46,7 @@ export const GeoWarning = () => {
   const imagesRef    = useRef<HTMLImageElement[]>([]);
   const idRef        = useRef(0);
   const spawnedRef   = useRef(false);
-  const rafRef       = useRef<number>();
+  const rafRef       = useRef<number | undefined>(undefined);
   const mouseRef = useRef<{ x: number; y: number; active: boolean }>({ x: 0, y: 0, active: false });
   const [progress, setProgress] = useState(0);
 
@@ -259,7 +259,7 @@ export const GeoWarning = () => {
         />
 
         {/* Centered text */}
-        <Container style={{ position: "relative", zIndex: 2 }}>
+        <div className="relative" style={{ zIndex: 2 }}><Container>
           <div className="flex flex-col items-center text-center">
 
             <h2
@@ -284,7 +284,7 @@ export const GeoWarning = () => {
             </p>
 
           </div>
-        </Container>
+        </Container></div>
       </div>
     </section>
   );
