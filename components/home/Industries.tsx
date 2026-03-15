@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowUp } from "lucide-react";
+import { ArrowUp, ArrowUpRight } from "lucide-react";
 import { Container } from "@/components/layout/Container";
 
 export const Industries = () => {
@@ -15,91 +15,77 @@ export const Industries = () => {
   ];
 
   return (
-    <section className="bg-white py-20 md:py-28 lg:py-36 relative">
-      {/* Vector 4412 */}
-      <div
-        className="absolute w-0 h-[645px] border-l border-[#E8EAF0]"
-        style={{
-          left: "99.5px",
-          top: 0,
-          transform: "matrix(1, 0, 0, -1, 0, 0)",
-        }}
-        aria-hidden
-      />
-      {/* Vector 4412 — right side */}
-      <div
-        className="absolute w-0 h-[645px] border-r border-[#E8EAF0]"
-        style={{
-          right: "99.5px",
-          top: 0,
-          transform: "matrix(1, 0, 0, -1, 0, 0)",
-        }}
-        aria-hidden
-      />
-      <Container>
+    <section className="bg-white relative" style={{ height: 656 }}>
+      <Container className="h-full flex items-center">
+        <div className="pl-16 w-full">
 
-        {/* Heading */}
-        <h2 className="text-2xl sm:text-3xl md:text-4xl font-medium text-[#1C274C] mb-[33px] md:mb-[49px] -translate-x-[50px]">
-          See how Columbus could help you
-        </h2>
+          {/* Heading */}
+          <h2 className="font-semibold text-[#1C274C]" style={{ fontSize: 40, letterSpacing: "-0.02em", marginBottom: 30 }}>
+            See how Columbus could help you
+          </h2>
 
-        {/* Cards Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 mb-16 -translate-x-[50px] w-[calc(100%+30px)] sm:w-[calc(100%+40px)] md:w-[calc(100%+50px)] lg:w-[calc(100%+70px)]">
+          {/* Cards Grid */}
+          <div className="flex flex-wrap gap-4 mb-16">
 
-          {items.map((item, index) => (
-            <div key={index}>
+            {items.map((item, index) => (
+              <div key={index}>
 
-              <Link href={item.href} className="group block">
-                <div className="relative w-full aspect-[4/5] rounded-xl overflow-hidden">
+                <Link href={item.href} className="group block">
+                  <div className="relative rounded-xl overflow-hidden" style={{ width: index === 4 ? 122 : 300, height: 295 }}>
 
-                  {index === 4 ? (
-                    <div className="absolute inset-0 bg-gradient-to-br from-[#2A3F5F]/60 to-[#1C274C]/40 backdrop-blur-sm" />
-                  ) : (
-                    <Image
-                      src={item.src}
-                      alt={item.label}
-                      fill
-                      className="object-cover"
-                    />
-                  )}
+                    {index === 4 ? (
+                      <div className="absolute inset-0 bg-gradient-to-br from-[#2A3F5F]/90 to-[#1C274C]/80 backdrop-blur-sm" />
+                    ) : (
+                      <Image
+                        src={item.src}
+                        alt={item.label}
+                        fill
+                        className="object-cover"
+                      />
+                    )}
 
-                  <div className="absolute inset-0 rounded-xl border border-transparent group-hover:border-[#2A64F6] transition" />
-                </div>
-              </Link>
+                    <div className="absolute inset-0 rounded-xl border border-transparent group-hover:border-[#2A64F6] transition" />
+                  </div>
+                </Link>
 
-              <Link
-                href={item.href}
-                className="mt-4 inline-flex items-center gap-2 text-sm sm:text-base font-medium text-[#1C274C]"
-              >
-                {item.label}
-              </Link>
+                <Link
+                  href={item.href}
+                  className="mt-4 inline-flex items-center gap-2 text-xl font-medium text-[#1C274C]"
+                  style={{ letterSpacing: "-0.01em" }}
+                >
+                  {item.label}
+                  <ArrowUpRight size={20} strokeWidth={1.6} />
+                </Link>
 
-            </div>
-          ))}
+              </div>
+            ))}
 
-        </div>
+          </div>
 
-        {/* Buttons */}
-        <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 -translate-x-[50px]">
+          {/* Buttons */}
+          <div className="flex flex-col sm:flex-row gap-4 sm:gap-6">
 
-          <Link
-            href="/technology"
-            className="px-6 py-3 border border-[#1C274C]/40 rounded-[2px] text-sm font-medium text-[#010101] hover:bg-[#1C274C]/5 transition w-full sm:w-auto inline-flex items-center justify-center gap-2"
-          >
-            The technology that powers Columbus Pro
-            <ArrowUp size={20} strokeWidth={2} />
-          </Link>
+            <Link
+              href="/technology"
+              className="border border-[#1C274C]/40 rounded-none text-xl font-semibold text-[#010101] hover:bg-[#1C274C]/5 transition inline-flex items-center justify-center gap-2"
+              style={{ width: 486, height: 54 }}
+            >
+              The technology that powers Columbus Pro
+              <ArrowUp size={20} strokeWidth={2} />
+            </Link>
 
-          <Link
-            href="/platform"
-            className="px-6 py-3 border border-[#1C274C]/40 rounded-[2px] text-sm font-medium text-[#010101] hover:bg-[#1C274C]/5 transition w-full sm:w-auto inline-flex items-center justify-center gap-2"
-          >
-            Learn more about Columbus Pro platform
-            <ArrowUp size={20} strokeWidth={2} />
-          </Link>
+            <Link
+              href="/platform"
+              className="border border-[#1C274C]/40 rounded-none text-xl font-semibold text-[#010101] hover:bg-[#1C274C]/5 transition inline-flex items-center justify-center gap-2"
+              style={{ width: 486, height: 54 }}
+            >
+              Learn more about Columbus Pro platform
+              <ArrowUp size={20} strokeWidth={2} />
+            </Link>
+
+          </div>
 
         </div>
-
       </Container>
     </section>
   );
