@@ -1,21 +1,23 @@
 "use client";
 
+import Link from "next/link";
+
 export function ConsumerEnterpriseToggle() {
   return (
-    <div className="flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-1 py-1 backdrop-blur-sm">
-      <button
-        type="button"
-        className="rounded-full px-4 py-2 text-sm font-medium text-white/80 transition hover:text-white"
-        aria-current="page"
+    <div className="flex items-center rounded-full border border-black/[0.07] bg-black/30 backdrop-blur-sm" style={{ width: "266px", height: "43px", padding: "3px" }}>
+      <Link
+        href="/products"
+        className="flex-1 flex items-center justify-center rounded-full text-[16px] font-medium text-white/70 transition hover:text-white h-full"
       >
         Consumer
-      </button>
-      <button
-        type="button"
-        className="rounded-full bg-white px-4 py-2 text-sm font-medium text-black transition"
+      </Link>
+      <Link
+        href="/enterprise"
+        className="flex-1 flex items-center justify-center rounded-full text-[16px] font-medium text-white/70 transition h-full"
+        style={{ backgroundColor: "rgba(0, 0, 0, 0.30)" }}
       >
         Enterprise
-      </button>
+      </Link>
     </div>
   );
 }
