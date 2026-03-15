@@ -62,7 +62,7 @@ export const MainFeatures = () => {
           linear-gradient(to right, rgba(28,39,76,0.035) 1px, transparent 1px),
           linear-gradient(to bottom, rgba(28,39,76,0.035) 1px, transparent 1px)
         `,
-        backgroundSize: "144px 120px",
+        backgroundSize: "48px 48px",
       }}
     >
       <Container>
