@@ -1,23 +1,59 @@
 "use client";
 
 import Image from "next/image";
+import { useEffect, useRef, useState } from "react";
 import { Container } from "@/components/layout/Container";
 
 export const SiteSelection = () => {
+  const titleRef = useRef<HTMLHeadingElement>(null);
+  const cardRef  = useRef<HTMLDivElement>(null);
+  const [titleVisible, setTitleVisible] = useState(false);
+  const [cardVisible,  setCardVisible]  = useState(false);
+
+  useEffect(() => {
+    const observe = (el: HTMLElement | null, onVisible: () => void) => {
+      if (!el) return () => {};
+      const obs = new IntersectionObserver(
+        ([entry]) => { if (entry.isIntersecting) { onVisible(); obs.disconnect(); } },
+        { threshold: 0, rootMargin: "0px 0px -18% 0px" }
+      );
+      obs.observe(el);
+      return () => obs.disconnect();
+    };
+    const cleanups = [
+      observe(titleRef.current, () => setTitleVisible(true)),
+      observe(cardRef.current,  () => setCardVisible(true)),
+    ];
+    return () => cleanups.forEach(fn => fn());
+  }, []);
+
+  const animStyle = (visible: boolean, delay = "0s") => ({
+    opacity:    visible ? 1 : 0,
+    filter:     visible ? "blur(0px)" : "blur(8px)",
+    transform:  visible ? "translateY(0)" : "translateY(16px)",
+    transition: `opacity 0.6s ease-out ${delay}, filter 0.6s ease-out ${delay}, transform 0.6s ease-out ${delay}`,
+  });
+
   return (
     <section className="bg-[#FFFFFF] py-16 sm:py-24 lg:py-32">
       <Container>
 
-        <h2 className="text-2xl sm:text-3xl font-semibold text-[#242424] mb-[19px] lg:mb-[27px]">
+        <h2
+          ref={titleRef}
+          className="font-semibold text-[#242424] mb-4.75 lg:mb-6.75"
+          style={{ fontSize: "40px", ...animStyle(titleVisible, "0.1s") }}
+        >
           + Introducing Columbus
         </h2>
 
         <div
+          ref={cardRef}
           data-navbar-theme="dark"
           className="px-8 sm:px-12 lg:px-16 pt-[17px] pb-[187px] sm:pt-[33px] sm:pb-[203px] lg:pt-[49px] lg:pb-[219px] relative overflow-hidden"
           style={{
             background: "linear-gradient(314.26deg, rgba(10, 19, 66, 0.9) -6.86%, rgba(29, 59, 94, 0.9) 108.55%)",
             borderRadius: "23px",
+            ...animStyle(cardVisible, "0.25s"),
           }}
         >
 

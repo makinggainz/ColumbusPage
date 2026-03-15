@@ -47,6 +47,7 @@ export const GeoWarning = () => {
   const idRef        = useRef(0);
   const spawnedRef   = useRef(false);
   const rafRef       = useRef<number>();
+  const mouseRef = useRef<{ x: number; y: number; active: boolean }>({ x: 0, y: 0, active: false });
   const [progress, setProgress] = useState(0);
 
   // ── Preload images ───────────────────────────────────────────────────────────
@@ -115,6 +116,14 @@ export const GeoWarning = () => {
     resize();
     window.addEventListener("resize", resize);
 
+    const onMouseMove = (e: MouseEvent) => {
+      const rect = canvas.getBoundingClientRect();
+      mouseRef.current = { x: e.clientX - rect.left, y: e.clientY - rect.top, active: true };
+    };
+    const onMouseLeave = () => { mouseRef.current.active = false; };
+    container.addEventListener("mousemove", onMouseMove);
+    container.addEventListener("mouseleave", onMouseLeave);
+
     const loop = () => {
       const W = canvas.width;
       const H = canvas.height;
@@ -123,10 +132,27 @@ export const GeoWarning = () => {
       const boxes = boxesRef.current;
 
       // ── Integrate ────────────────────────────────────────────────────────────
+      const MOUSE_RADIUS = 130;
+      const MOUSE_FORCE  = 10;
+      const mouse = mouseRef.current;
+
       for (const b of boxes) {
         b.vy += GRAVITY;
         b.vx *= FRICTION;
         b.angularVel *= ANG_FRICTION;
+
+        if (mouse.active) {
+          const dx = b.x - mouse.x;
+          const dy = b.y - mouse.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < MOUSE_RADIUS && dist > 0.001) {
+            const strength = (1 - dist / MOUSE_RADIUS) * MOUSE_FORCE;
+            b.vx += (dx / dist) * strength;
+            b.vy += (dy / dist) * strength;
+            b.angularVel += strength * (Math.random() - 0.5) * 3;
+          }
+        }
+
         b.x += b.vx;
         b.y += b.vy;
         b.rotation += b.angularVel;
@@ -192,6 +218,8 @@ export const GeoWarning = () => {
     return () => {
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
       window.removeEventListener("resize", resize);
+      container.removeEventListener("mousemove", onMouseMove);
+      container.removeEventListener("mouseleave", onMouseLeave);
     };
   }, []);
 
