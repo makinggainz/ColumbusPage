@@ -5,17 +5,17 @@ import { Container } from "@/components/layout/Container";
 
 // Each icon: src, initial position as % of viewport, size in px
 const ICON_DEFS = [
-  { src: "/Icon/icon-openai.png",  top: 0.18, left: 0.10, size: 48 },
-  { src: "/Icon/xai.png",          top: 0.12, left: 0.34, size: 44 },
-  { src: "/Icon/perplexity.png",   top: 0.12, left: 0.64, size: 52 },
-  { src: "/Icon/claude.png",       top: 0.20, left: 0.83, size: 48 },
-  { src: "/Icon/gemini.png",       top: 0.34, left: 0.55, size: 52 },
-  { src: "/Icon/xai2.png",         top: 0.60, left: 0.45, size: 44 },
-  { src: "/Icon/gemini2.png",      top: 0.72, left: 0.13, size: 44 },
-  { src: "/Icon/claude2.png",      top: 0.76, left: 0.29, size: 44 },
-  { src: "/Icon/logo7.png",        top: 0.77, left: 0.63, size: 48 },
-  { src: "/Icon/icon-openai2.png", top: 0.72, left: 0.83, size: 48 },
-  { src: "/Icon/mistral.png",      top: 0.44, left: 0.08, size: 40 },
+  { src: "/Icon/icon-openai.png",  top: 0.18, left: 0.10, size: 72 },
+  { src: "/Icon/xai.png",          top: 0.12, left: 0.34, size: 66 },
+  { src: "/Icon/perplexity.png",   top: 0.12, left: 0.64, size: 78 },
+  { src: "/Icon/claude.png",       top: 0.20, left: 0.83, size: 72 },
+  { src: "/Icon/gemini.png",       top: 0.34, left: 0.55, size: 78 },
+  { src: "/Icon/xai2.png",         top: 0.60, left: 0.45, size: 66 },
+  { src: "/Icon/gemini2.png",      top: 0.72, left: 0.13, size: 66 },
+  { src: "/Icon/claude2.png",      top: 0.76, left: 0.29, size: 66 },
+  { src: "/Icon/logo7.png",        top: 0.77, left: 0.63, size: 72 },
+  { src: "/Icon/icon-openai2.png", top: 0.72, left: 0.83, size: 72 },
+  { src: "/Icon/mistral.png",      top: 0.44, left: 0.08, size: 60 },
 ];
 
 type Box = {
@@ -202,7 +202,7 @@ export const GeoWarning = () => {
       for (const b of boxes) {
         if (!b.img.complete || !b.img.naturalWidth) continue;
         const age = now - b.spawnTime;
-        const alpha = Math.min(0.85, 0.85 * (age / FADE_IN_MS));
+        const alpha = Math.min(0.5, 0.5 * (age / FADE_IN_MS));
         ctx.save();
         ctx.translate(b.x, b.y);
         ctx.rotate((b.rotation * Math.PI) / 180);
