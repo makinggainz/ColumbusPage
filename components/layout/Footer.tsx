@@ -50,7 +50,7 @@ export const Footer: FC<FooterProps> = ({ variant = "default" }) => {
       <div className="absolute inset-0 bg-black/60" />
 
       {/* Content */}
-      <Container className="relative z-10 py-20 md:py-28 flex flex-col gap-16">
+      <Container className="relative z-10 py-24 md:py-36 flex flex-col gap-36 md:gap-48 justify-between">
 
         {/* TOP MISSION TEXT */}
         <div className="text-center max-w-3xl mx-auto space-y-8">
@@ -69,11 +69,13 @@ export const Footer: FC<FooterProps> = ({ variant = "default" }) => {
             planning domains.
           </p>
 
-          <div className="flex flex-wrap justify-center gap-6 text-white/70 text-sm">
+          <div className="flex flex-col items-center gap-12 text-white/70 w-full" style={{ fontSize: "20px", fontWeight: 500, marginTop: "100px" }}>
             <button className="hover:text-white transition">[ Our Mission ]</button>
-            <button className="hover:text-white transition">[ Product ]</button>
-            <button className="hover:text-white transition">[ Technology ]</button>
-            <button className="hover:text-white transition">[ Use Cases ]</button>
+            <div className="flex justify-between w-full max-w-2xl mx-auto" style={{ translate: "10px" }}>
+              <button className="hover:text-white transition">[ Product ]</button>
+              <button className="hover:text-white transition">[ Technology ]</button>
+              <button className="hover:text-white transition">[ Use Cases ]</button>
+            </div>
           </div>
 
         </div>
@@ -83,11 +85,11 @@ export const Footer: FC<FooterProps> = ({ variant = "default" }) => {
 
           {/* LEFT BLOCK */}
           <div>
-            <h3 className="text-2xl sm:text-3xl font-semibold mb-4">
+            <h3 className="text-[30px] sm:text-[37.5px] font-semibold mb-4">
               Columbus Earth
             </h3>
 
-            <p className="text-sm text-white/70 mb-6 max-w-sm">
+            <p className="text-[17.5px] text-white/70 mb-6 max-w-sm">
               The frontier AI lab building the first production Universal
               Geospatial Model to answer the planet’s toughest questions.
             </p>
@@ -129,6 +131,19 @@ export const Footer: FC<FooterProps> = ({ variant = "default" }) => {
         </div>
 
       </Container>
+
+      {/* Bottom bar */}
+      <div
+        className="relative z-10 w-full px-6 py-4 flex items-center justify-between text-white/70 font-light"
+        style={{ fontSize: "18px", letterSpacing: "-0.02em" }}
+      >
+        <span>Columbus Earth © 2026. For investor relations, contact us on email or LinkedIn.</span>
+        <div className="flex items-center gap-10">
+          <span>Website made by hand, no AI.</span>
+          <span>www.columbus.earth</span>
+        </div>
+      </div>
+
     </footer>
   );
 };
@@ -141,10 +156,10 @@ const FooterColumn = ({
   links: string[];
 }) => (
   <div>
-    <p className="mb-4 text-white font-medium text-sm tracking-wide">
+    <p className="mb-4 text-white font-medium text-[17.5px] tracking-wide">
       {title}
     </p>
-    <ul className="space-y-2 text-sm text-white/80">
+    <ul className="space-y-2 text-[17.5px] text-white/80">
       {links.map((link, i) => (
         <li key={i} className="hover:text-white cursor-pointer">
           {link}

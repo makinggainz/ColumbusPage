@@ -91,67 +91,77 @@ function SectionLabel({ letter }: { letter: string }) {
 export default function Home() {
   return (
     <main className="min-h-screen">
+      {/* Sections a–o: sit on top of the footer */}
+      <div className="relative z-10">
         <section className={`relative ${sectionColors[0]}`}>
-        <SectionLabel letter="a" />
-        <Navbar />
-      </section>
-      <section className={`relative ${sectionColors[1]}`}>
-        <SectionLabel letter="b" />
-        <Hero />
-      </section>
-      <section className={`relative ${sectionColors[2]}`}>
-        <SectionLabel letter="c" />
-        <MeshSection />
-      </section>
-      <section className={`relative ${sectionColors[3]}`}>
-        <SectionLabel letter="d" />
-        <Vision />
-      </section>
-      <section className={`relative ${sectionColors[4]}`}>
-        <SectionLabel letter="e" />
-        <GeoWarning />
-      </section>
-      <section className={`relative ${sectionColors[5]}`}>
-        <SectionLabel letter="f" />
-        <SiteSelection />
-      </section>
-      <section className={`relative ${sectionColors[6]}`}>
-        <SectionLabel letter="g" />
-        <PartnerStrip />
-      </section>
-      <section className={`relative ${sectionColors[7]}`}>
-        <SectionLabel letter="h" />
-        <MainFeatures />
-      </section>
-      <section className={`relative ${sectionColors[8]}`}>
-        <SectionLabel letter="i" />
-        <Industries />
-      </section>
-      <section className={`relative ${sectionColors[9]}`}>
-        <SectionLabel letter="j" />
-        <TravelPromo />
-      </section>
-      <section className={`relative ${sectionColors[10]}`}>
-        <SectionLabel letter="k" />
-        <TravelSection />
-      </section>
-      <section className={`relative ${sectionColors[11]}`}>
-        <SectionLabel letter="l" />
-        <TrustStrip />
-      </section>
-      <section className={`relative ${sectionColors[12]}`}>
-        <SectionLabel letter="m" />
-        <UniqueSpotsSection />
-      </section>
-      <section className={`relative ${sectionColors[13]}`}>
-        <SectionLabel letter="n" />
-        <Applications />
-      </section>
-      <section className={`relative ${sectionColors[14]}`}>
-        <SectionLabel letter="o" />
-        <Careers />
-      </section>
-      <section className={`relative ${sectionColors[15]}`}>
+          <SectionLabel letter="a" />
+          <Navbar />
+        </section>
+        <section className={`relative ${sectionColors[1]}`}>
+          <SectionLabel letter="b" />
+          <Hero />
+        </section>
+        <section className={`relative ${sectionColors[2]}`}>
+          <SectionLabel letter="c" />
+          <MeshSection />
+        </section>
+        <section className={`relative ${sectionColors[3]}`}>
+          <SectionLabel letter="d" />
+          <Vision />
+        </section>
+        <section className={`relative ${sectionColors[4]}`}>
+          <SectionLabel letter="e" />
+          <GeoWarning />
+        </section>
+        <section className={`relative ${sectionColors[5]}`}>
+          <SectionLabel letter="f" />
+          <SiteSelection />
+        </section>
+        <section className={`relative ${sectionColors[6]}`}>
+          <SectionLabel letter="g" />
+          <PartnerStrip />
+        </section>
+        <section className={`relative ${sectionColors[7]}`}>
+          <SectionLabel letter="h" />
+          <MainFeatures />
+        </section>
+        <section className={`relative ${sectionColors[8]}`}>
+          <SectionLabel letter="i" />
+          <Industries />
+        </section>
+        <section className={`relative ${sectionColors[9]}`}>
+          <SectionLabel letter="j" />
+          <TravelPromo />
+        </section>
+        <section className={`relative ${sectionColors[10]}`}>
+          <SectionLabel letter="k" />
+          <TravelSection />
+        </section>
+        <section className={`relative ${sectionColors[11]}`}>
+          <SectionLabel letter="l" />
+          <TrustStrip />
+        </section>
+        <section className={`relative ${sectionColors[12]}`}>
+          <SectionLabel letter="m" />
+          <UniqueSpotsSection />
+        </section>
+        <section className={`relative ${sectionColors[13]}`}>
+          <SectionLabel letter="n" />
+          <Applications />
+        </section>
+        <section className={`relative ${sectionColors[14]}`}>
+          <SectionLabel letter="o" />
+          <Careers />
+        </section>
+      </div>
+
+      {/* Section p — Footer: sticky at bottom, pulled up behind content.
+          z-0 keeps it behind z-10 content; reveals as sections scroll away.
+          -800px margin accounts for the larger footer height (min-h-[150vh]). */}
+      <section
+        className="sticky bottom-0 z-0"
+        style={{ marginTop: "-800px" }}
+      >
         <SectionLabel letter="p" />
         <Footer />
       </section>
