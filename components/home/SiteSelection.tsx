@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { Container } from "@/components/layout/Container";
+import glassStyles from "@/components/ui/GlassButton.module.css";
 
 export const SiteSelection = () => {
   const titleRef = useRef<HTMLHeadingElement>(null);
@@ -38,13 +39,46 @@ export const SiteSelection = () => {
     <section className="bg-[#FFFFFF] py-16 sm:py-24 lg:py-32">
       <Container>
 
-        <h2
-          ref={titleRef}
-          className="font-semibold text-[#242424] mb-4.75 lg:mb-6.75"
-          style={{ fontSize: "40px", ...animStyle(titleVisible, "0.1s") }}
-        >
-          + Introducing Columbus
-        </h2>
+        {/* Outer wrapper — blobs positioned relative to both title and card */}
+        <div className="relative">
+
+          {/* Blob A: just to the right of the title text — small, vivid */}
+          <div className="absolute pointer-events-none" style={{
+            left: 420, top: 10,
+            width: 160, height: 130, borderRadius: "50%",
+            background: "radial-gradient(ellipse, #33B1EA 0%, #5A83EC 55%, transparent 100%)",
+            filter: "blur(52.4px)", opacity: 0.85, zIndex: 0,
+            animation: "intro-blob-A 9s linear infinite",
+          }} />
+
+          {/* Blob B: right at the top-left corner of the card */}
+          <div className="absolute pointer-events-none" style={{
+            left: -40, top: 48,
+            width: 260, height: 220, borderRadius: "50%",
+            background: "radial-gradient(ellipse, #73E277 0%, #68E9BC 55%, transparent 100%)",
+            filter: "blur(52.4px)", opacity: 0.52, zIndex: 0,
+            animation: "intro-blob-B 11s linear infinite",
+            animationDelay: "-4s",
+          }} />
+
+          {/* Title + New badge */}
+          <div className="relative mb-4.75 lg:mb-6.75 flex items-center gap-4" style={{ ...animStyle(titleVisible, "0.1s"), zIndex: 1 }}>
+            <h2
+              ref={titleRef}
+              className="font-semibold text-[#242424]"
+              style={{ fontSize: "40px" }}
+            >
+              + Introducing Columbus
+            </h2>
+
+            {/* Glass "New" badge */}
+            <div className={glassStyles.wrap + " " + glassStyles.wrapNew}>
+              <div className={glassStyles.shadow} />
+              <button className={glassStyles.btn + " " + glassStyles.btnNew}>
+                <span>New</span>
+              </button>
+            </div>
+          </div>
 
         <div
           ref={cardRef}
@@ -139,6 +173,7 @@ export const SiteSelection = () => {
           </div>
 
         </div>
+        </div>{/* end outer blob wrapper */}
       </Container>
     </section>
   );
