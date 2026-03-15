@@ -2,17 +2,40 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
 import { Container } from "@/components/layout/Container";
 import { cambo } from "@/app/fonts";
 
 export const TravelSection = () => {
+  const cardRef = useRef<HTMLDivElement>(null);
+  const [cardVisible, setCardVisible] = useState(false);
+
+  useEffect(() => {
+    const el = cardRef.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) { setCardVisible(true); obs.disconnect(); } },
+      { threshold: 0 }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+
+  const animStyle = (visible: boolean, delay = "0s") => ({
+    opacity:    visible ? 1 : 0,
+    filter:     visible ? "blur(0px)" : "blur(8px)",
+    transform:  visible ? "translateY(0)" : "translateY(16px)",
+    transition: `opacity 0.6s ease-out ${delay}, filter 0.6s ease-out ${delay}, transform 0.6s ease-out ${delay}`,
+  });
+
   return (
     <section className="bg-[#F9F9F9] py-3.5 sm:py-11.5 lg:py-19.5">
       <Container>
 
         <div
+          ref={cardRef}
           className="relative overflow-hidden rounded-[23px] bg-linear-to-br from-[#FAEAE2] via-[#FAEAE2] via-90% to-[#E2A383]"
-          style={{ height: 773, padding: "49px 64px 0" }}
+          style={{ height: 773, padding: "49px 64px 0", ...animStyle(cardVisible, "0.1s") }}
         >
 
           {/* TEXT BLOCK */}
