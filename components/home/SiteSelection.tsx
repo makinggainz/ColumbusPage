@@ -48,8 +48,10 @@ export const SiteSelection = () => {
             left: 420, top: 10,
             width: 160, height: 130, borderRadius: "50%",
             background: "radial-gradient(ellipse, #33B1EA 0%, #5A83EC 55%, transparent 100%)",
-            filter: "blur(52.4px)", opacity: 0.85, zIndex: 0,
+            filter: "blur(52.4px)", zIndex: 0,
             animation: "intro-blob-A 9s linear infinite",
+            opacity: titleVisible ? 0.85 : 0,
+            transition: "opacity 0.8s ease-out 0.7s",
           }} />
 
           {/* Blob B: right at the top-left corner of the card */}
@@ -57,9 +59,23 @@ export const SiteSelection = () => {
             left: -40, top: 48,
             width: 260, height: 220, borderRadius: "50%",
             background: "radial-gradient(ellipse, #73E277 0%, #68E9BC 55%, transparent 100%)",
-            filter: "blur(52.4px)", opacity: 0.52, zIndex: 0,
+            filter: "blur(52.4px)", zIndex: 0,
             animation: "intro-blob-B 11s linear infinite",
             animationDelay: "-4s",
+            opacity: titleVisible ? 0.52 : 0,
+            transition: "opacity 0.8s ease-out 0.7s",
+          }} />
+
+          {/* Blob C: bottom-right corner of the card */}
+          <div className="absolute pointer-events-none" style={{
+            right: -55, bottom: -35,
+            width: 300, height: 250, borderRadius: "50%",
+            background: "radial-gradient(ellipse, #33B1EA 0%, #9973E2 33%, #E96890 66%, #EC5A67 100%)",
+            filter: "blur(52.4px)", zIndex: 0,
+            animation: "intro-blob-C 13s linear infinite",
+            animationDelay: "-7s",
+            opacity: titleVisible ? 0.7 : 0,
+            transition: "opacity 0.8s ease-out 0.7s",
           }} />
 
           {/* Title + New badge */}
@@ -94,6 +110,18 @@ export const SiteSelection = () => {
           }}
         >
 
+          {/* Noise texture overlay — Figma: Mono, size 1.5, density 100%, #000000 at 25% opacity */}
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              zIndex: 0,
+              opacity: 0.25,
+              backgroundImage: `url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4' stitchTiles='stitch' result='t'/><feColorMatrix type='matrix' values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0' in='t'/></filter><rect width='200' height='200' filter='url(%23n)'/></svg>")`,
+              backgroundSize: "200px 200px",
+              backgroundRepeat: "repeat",
+            }}
+          />
+
           {/* Heading */}
           <h2
             className={`${cambo.className} font-normal leading-none text-white`}
@@ -106,26 +134,26 @@ export const SiteSelection = () => {
           {/* right: 997 (desktop width) + 75 (gap) = 1072px from card right edge */}
           <div className="absolute text-white" style={{ top: 202, left: 64, right: 1072 }}>
 
-            <ul className="space-y-4 text-lg text-white list-none pl-0 mb-10">
-              <li className="flex items-center gap-3">
+            <ul className="space-y-4 text-white list-none pl-0 mb-10" style={{ fontSize: "20px" }}>
+              <li className="flex items-center gap-5">
                 <span className="rounded-full bg-white w-2 h-2 shrink-0 bullet-halo" aria-hidden />
                 <span>An end-to-end Site Selection tool.</span>
               </li>
-              <li className="flex items-center gap-3">
+              <li className="flex items-center gap-5">
                 <span className="rounded-full bg-white w-2 h-2 shrink-0 bullet-halo" aria-hidden />
                 <span>Generate new maps, in seconds.</span>
               </li>
-              <li className="flex items-center gap-3">
+              <li className="flex items-center gap-5">
                 <span className="rounded-full bg-white w-2 h-2 shrink-0 bullet-halo" aria-hidden />
                 <span>Find exclusive critical datasets for your decisions.</span>
               </li>
-              <li className="flex items-center gap-3">
+              <li className="flex items-center gap-5">
                 <span className="rounded-full bg-white w-2 h-2 shrink-0 bullet-halo" aria-hidden />
                 <span>Cheaper due diligence.</span>
               </li>
             </ul>
 
-            <p className="text-lg text-white/70 mb-8">
+            <p className="text-white mb-8" style={{ fontSize: "20px" }}>
               Columbus turns you into a{" "}
               <br />
               <span className="font-semibold text-white">super-explorer.</span>
