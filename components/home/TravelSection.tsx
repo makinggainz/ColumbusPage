@@ -30,32 +30,47 @@ export const TravelSection = () => {
               MapsGPT is your local guide in your pocket.
             </p>
 
-            <ul className="space-y-3 text-sm sm:text-base md:text-lg text-black mb-8">
-              <li>• Plan cool trips</li>
-              <li>• Make itineraries</li>
-              <li>• Take care of every preference & detail</li>
+            <ul className="space-y-4 list-none pl-0 text-black mb-8" style={{ fontSize: "20px" }}>
+              <li className="flex items-center gap-5">
+                <span className="rounded-full bg-black w-2 h-2 shrink-0 bullet-halo-dark" aria-hidden />
+                <span>Plan cool trips</span>
+              </li>
+              <li className="flex items-center gap-5">
+                <span className="rounded-full bg-black w-2 h-2 shrink-0 bullet-halo-dark" aria-hidden />
+                <span>Make itineraries</span>
+              </li>
+              <li className="flex items-center gap-5">
+                <span className="rounded-full bg-black w-2 h-2 shrink-0 bullet-halo-dark" aria-hidden />
+                <span>Take care of every preference &<br />detail</span>
+              </li>
             </ul>
 
-            <p className="text-sm sm:text-base md:text-lg font-medium text-black mb-8">
+
+          </div>
+
+          {/* BUTTONS — absolute bottom like Section F */}
+          <div className="absolute" style={{ bottom: 62, left: 64 }}>
+            <p className="text-black mb-8" style={{ fontSize: "20px" }}>
               Find your next hang out spot, easier.
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-4 sm:gap-10">
+            <div className="flex flex-row" style={{ gap: 15 }}>
               <Link
                 href="/maps-gpt"
-                className="px-6 py-3 bg-white border border-[#1C274C]/30 rounded-xs text-[20px] font-semibold text-[#1C274C] w-full sm:w-auto inline-block text-center"
+                className="bg-white rounded-xs text-[20px] font-semibold text-[#1C274C] inline-flex items-center justify-center"
+                style={{ width: 190, height: 46 }}
               >
                 Try it out now ↗
               </Link>
 
               <Link
                 href="/technology"
-                className="px-6 py-3 rounded-xs text-[20px] font-semibold text-[#1C274C] w-full sm:w-auto inline-block text-center bg-transparent hover:bg-[#1C274C]/5 transition-colors"
+                className="rounded-xs text-[20px] font-semibold text-[#1C274C] inline-flex items-center px-3 bg-transparent hover:bg-[#1C274C]/5 transition-colors"
+                style={{ height: 46 }}
               >
-                Learn more ↗
+                Learn more <span style={{ marginLeft: 7 }}>↗</span>
               </Link>
             </div>
-
           </div>
 
           {/* DESKTOP UI */}
