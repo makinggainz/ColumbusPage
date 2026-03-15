@@ -130,11 +130,9 @@ export const SiteSelection = () => {
             Site Selection Reimagined
           </h2>
 
-          {/* Left content — top aligns with desktop image top edge (773 − 571 = 202px from card top) */}
-          {/* right: 997 (desktop width) + 75 (gap) = 1072px from card right edge */}
+          {/* Bullet points — anchored to top of desktop image */}
           <div className="absolute text-white" style={{ top: 202, left: 64, right: 1072 }}>
-
-            <ul className="space-y-4 text-white list-none pl-0 mb-10" style={{ fontSize: "20px" }}>
+            <ul className="space-y-4 text-white list-none pl-0" style={{ fontSize: "20px" }}>
               <li className="flex items-center gap-5">
                 <span className="rounded-full bg-white w-2 h-2 shrink-0 bullet-halo" aria-hidden />
                 <span>An end-to-end Site Selection tool.</span>
@@ -152,17 +150,19 @@ export const SiteSelection = () => {
                 <span>Cheaper due diligence.</span>
               </li>
             </ul>
+          </div>
 
+          {/* Paragraph + button — button bottom sits 62px from card bottom edge */}
+          <div className="absolute text-white" style={{ bottom: 62, left: 64, right: 1072 }}>
             <p className="text-white mb-8" style={{ fontSize: "20px" }}>
               Columbus turns you into a{" "}
               <br />
               <span className="font-semibold text-white">super-explorer.</span>
             </p>
 
-            <button className="bg-white text-[#13214C] px-10 py-3 rounded-xs font-medium min-w-50">
-              Check it out →
+            <button className="bg-white text-[#13214C] rounded-xs text-[20px] font-semibold" style={{ width: 226, height: 46 }}>
+              Check it out <span style={{ marginLeft: 7 }}>→</span>
             </button>
-
           </div>
 
           {/* DESKTOP UI — Figma: 997×571 */}
