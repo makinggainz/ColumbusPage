@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { Container } from "@/components/layout/Container";
 import glassStyles from "@/components/ui/GlassButton.module.css";
+import { cambo } from "@/app/fonts";
 
 export const SiteSelection = () => {
   const titleRef = useRef<HTMLHeadingElement>(null);
@@ -83,93 +84,97 @@ export const SiteSelection = () => {
         <div
           ref={cardRef}
           data-navbar-theme="dark"
-          className="px-8 sm:px-12 lg:px-16 pt-[17px] pb-[187px] sm:pt-[33px] sm:pb-[203px] lg:pt-[49px] lg:pb-[219px] relative overflow-hidden"
+          className="relative overflow-hidden"
           style={{
+            height: 773,
+            padding: "49px 64px 0",
             background: "linear-gradient(314.26deg, rgba(10, 19, 66, 0.9) -6.86%, rgba(29, 59, 94, 0.9) 108.55%)",
             borderRadius: "23px",
             ...animStyle(cardVisible, "0.25s"),
           }}
         >
 
-          <h2 className="text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-semibold leading-tight text-white mb-10 lg:mb-12">
+          {/* Heading */}
+          <h2
+            className={`${cambo.className} font-normal leading-none text-white`}
+            style={{ fontSize: "96px", letterSpacing: "-0.02em" }}
+          >
             Site Selection Reimagined
           </h2>
 
-          {/* GRID LAYOUT */}
-          <div className="grid lg:grid-cols-2 gap-12 items-stretch">
+          {/* Left content — top aligns with desktop image top edge (773 − 571 = 202px from card top) */}
+          {/* right: 997 (desktop width) + 75 (gap) = 1072px from card right edge */}
+          <div className="absolute text-white" style={{ top: 202, left: 64, right: 1072 }}>
 
-            {/* LEFT CONTENT */}
-            <div className="text-white flex flex-col">
+            <ul className="space-y-4 text-lg text-white list-none pl-0 mb-10">
+              <li className="flex items-center gap-3">
+                <span className="rounded-full bg-white w-2 h-2 shrink-0 bullet-halo" aria-hidden />
+                <span>An end-to-end Site Selection tool.</span>
+              </li>
+              <li className="flex items-center gap-3">
+                <span className="rounded-full bg-white w-2 h-2 shrink-0 bullet-halo" aria-hidden />
+                <span>Generate new maps, in seconds.</span>
+              </li>
+              <li className="flex items-center gap-3">
+                <span className="rounded-full bg-white w-2 h-2 shrink-0 bullet-halo" aria-hidden />
+                <span>Find exclusive critical datasets for your decisions.</span>
+              </li>
+              <li className="flex items-center gap-3">
+                <span className="rounded-full bg-white w-2 h-2 shrink-0 bullet-halo" aria-hidden />
+                <span>Cheaper due diligence.</span>
+              </li>
+            </ul>
 
-              <ul className="space-y-4 text-base sm:text-lg text-[#FFFFFF] list-none pl-0 mb-10">
-                <li className="flex items-center gap-3">
-                  <span className="rounded-full bg-white w-2 h-2 flex-shrink-0 bullet-halo" aria-hidden />
-                  <span>An end-to-end Site Selection tool.</span>
-                </li>
-                <li className="flex items-center gap-3">
-                  <span className="rounded-full bg-white w-2 h-2 flex-shrink-0 bullet-halo" aria-hidden />
-                  <span>Generate new maps, in seconds.</span>
-                </li>
-                <li className="flex items-center gap-3">
-                  <span className="rounded-full bg-white w-2 h-2 flex-shrink-0 bullet-halo" aria-hidden />
-                  <span>Find exclusive critical datasets for your decisions.</span>
-                </li>
-                <li className="flex items-center gap-3">
-                  <span className="rounded-full bg-white w-2 h-2 flex-shrink-0 bullet-halo" aria-hidden />
-                  <span>Cheaper due diligence.</span>
-                </li>
-              </ul>
+            <p className="text-lg text-white/70 mb-8">
+              Columbus turns you into a{" "}
+              <br />
+              <span className="font-semibold text-white">super-explorer.</span>
+            </p>
 
-              <div className="mt-auto mb-[-140px] sm:mb-[-120px] lg:mb-[-160px]">
-                <p className="text-base sm:text-lg text-white/70 mb-8">
-                  Columbus turns you into a{" "}
-                  <br />
-                  <span className="font-semibold text-white">
-                    super-explorer.
-                  </span>
-                </p>
-
-                <button className="bg-white text-[#13214C] px-10 py-3 rounded-[2px] font-medium min-w-[200px]">
-                  Check it out →
-                </button>
-              </div>
-            </div>
-
-            {/* Right column spacer for grid layout */}
-            <div className="relative min-h-[280px] lg:min-h-[320px]" aria-hidden />
+            <button className="bg-white text-[#13214C] px-10 py-3 rounded-xs font-medium min-w-50">
+              Check it out →
+            </button>
 
           </div>
 
-          {/* DESKTOP + MOBILE IMAGE — positioned at card bottom, right edge 30px from card */}
-          <div className="absolute bottom-0 right-[30px] w-[min(calc(50%+200px),calc(100%-60px))] aspect-[102/56] rounded-none overflow-hidden shadow-[0_40px_120px_rgba(0,0,0,0.45)]">
+          {/* DESKTOP UI — Figma: 997×571 */}
+          <div
+            className="absolute bottom-0 right-0"
+            style={{
+              width: 997,
+              height: 571,
+              borderRadius: "6px 0 0 0",
+              overflow: "hidden",
+              border: "7px solid rgba(0,0,0,0.30)",
+              boxShadow: "0 40px 120px rgba(0,0,0,0.45)",
+            }}
+          >
             <Image
               src="/Icon/desktop-ui.png"
               alt="Desktop UI"
               fill
               className="object-cover"
             />
-            <div
-              className="
-                absolute
-                right-0
-                translate-x-1/5
-                top-0
-                h-full
-                aspect-[9/16]
-                rounded-[32px]
-                overflow-hidden
-                border-4
-                border-white
-                shadow-[0_40px_140px_rgba(0,0,0,0.55)]
-              "
-            >
-              <Image
-                src="/Icon/mobile-ui.png"
-                alt="Mobile UI"
-                fill
-                className="object-cover"
-              />
-            </div>
+          </div>
+
+          {/* MOBILE UI — Figma: 266×579 */}
+          <div
+            className="absolute bottom-0"
+            style={{
+              right: 15,
+              width: 266,
+              height: 579,
+              borderRadius: 28,
+              overflow: "hidden",
+              boxShadow: "0 40px 140px rgba(0,0,0,0.55)",
+            }}
+          >
+            <Image
+              src="/Icon/mobile-ui.png"
+              alt="Mobile UI"
+              fill
+              className="object-cover"
+            />
           </div>
 
         </div>
