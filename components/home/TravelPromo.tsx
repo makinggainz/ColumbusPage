@@ -12,11 +12,11 @@ export const TravelPromo = () => {
         {/* Center Content */}
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4 z-10">
 
-          <h2 className="text-display font-semibold tracking-[-0.01em] text-[#1C274C] mb-1 md:mb-1.5">
+          <h2 className="text-display font-semibold tracking-[-0.02em] text-[#1C274C] mb-1 md:mb-1.5">
             Love to travel or go out?
           </h2>
 
-          <p className="mt-1.5 text-[40px] font-normal tracking-[-0.02em] whitespace-nowrap bg-gradient-to-r from-[#00BFFF] to-[#1E3A98] bg-clip-text text-transparent">
+          <p className="mt-1.5 text-[40px] font-normal tracking-[-0.03em] whitespace-nowrap bg-gradient-to-r from-[#00BFFF] to-[#1E3A98] bg-clip-text text-transparent">
             <span className="font-semibold">MapsGPT</span>
             <span> is already answering thousands of queries in your area</span>
           </p>
@@ -39,14 +39,14 @@ const FloatingEmojis = () => {
     { src: "/emoji/heart.png",      top: "9%",  left: "70%" },
     { src: "/emoji/plane.png",      top: "2%",  left: "89%" },
     { src: "/emoji/basketball.png", top: "40%", left: "1%",  width: 120 },
-    { src: "/emoji/cocktail.png",   top: "30%", left: "20%", width: 120 },
-    { src: "/emoji/burger.png",     top: "42%", left: "74%" },
+    { src: "/emoji/cocktail.png",   top: "calc(30% - 100px)", left: "calc(20% + 150px)", width: 102 },
+    { src: "/emoji/burger.png",     top: "calc(42% + 200px)", left: "74%" },
     { src: "/emoji/yo.png",         top: "36%", left: "89%" },
     { src: "/emoji/arrow.png",      top: "62%", left: "2%" },
     { src: "/emoji/laugh.png",      top: "70%", left: "24%" },
-    { src: "/emoji/champange.png",  top: "72%", left: "60%" },
+    { src: "/emoji/champange.png",  top: "calc(72% + 100px)", left: "60%" },
     { src: "/emoji/book.png",       top: "56%", left: "90%", width: 144 },
-    { src: "/emoji/car.png",        top: "87%", left: "2%" },
+    { src: "/emoji/car.png",        top: "calc(87% + 100px)", left: "calc(2% + 200px)" },
     { src: "/emoji/ice.png",        top: "88%", left: "42%", width: 136 },
     { src: "/emoji/earth.png",      top: "84%", left: "86%" },
   ];
