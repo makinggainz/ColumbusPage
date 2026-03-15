@@ -95,11 +95,6 @@ export const UniqueSpotsSection = () => {
         </div>
       </div>
 
-      {/* Vector 4414: horizontal line at bottom */}
-      <div
-        className="absolute left-[62.5px] bottom-0 w-381 h-px bg-black/20"
-        aria-hidden
-      />
     </section>
   );
 };

@@ -27,7 +27,7 @@ export const Applications = () => {
             We’re actively exploring various application areas
           </h2>
 
-          <p className="mt-4 md:mt-6 text-sm sm:text-base md:text-lg text-[#1C274C]/70">
+          <p className="mt-2 md:mt-3 text-[24px] font-normal text-black">
             We’d love to work within your industry, send us a hey@columbus.earth
           </p>
         </div>
@@ -52,7 +52,7 @@ export const Applications = () => {
                 />
 
                 {/* Overlay: only on hover */}
-                <div className="absolute inset-0 bg-black/0 transition duration-300 group-hover:bg-black/60 z-10 pointer-events-none" />
+                <div className="absolute inset-0 bg-black/30 transition duration-300 group-hover:bg-black/60 z-10 pointer-events-none" />
 
                 {/* TEXT — bottom, centered; 10px padding; title higher to fit Learn more below */}
                 <div className="absolute inset-x-0 bottom-0 flex flex-col items-center text-center z-20 px-4 pt-6 pb-2.5">
