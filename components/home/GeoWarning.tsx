@@ -3,6 +3,21 @@
 import { useEffect, useRef, useState } from "react";
 import { Container } from "@/components/layout/Container";
 
+// Each icon: src, initial position as % of viewport, size in px
+const ICON_DEFS = [
+  { src: "/Icon/icon-openai.png",  top: 0.18, left: 0.10, size: 48 },
+  { src: "/Icon/xai.png",          top: 0.12, left: 0.34, size: 44 },
+  { src: "/Icon/perplexity.png",   top: 0.12, left: 0.64, size: 52 },
+  { src: "/Icon/claude.png",       top: 0.20, left: 0.83, size: 48 },
+  { src: "/Icon/gemini.png",       top: 0.34, left: 0.55, size: 52 },
+  { src: "/Icon/xai2.png",         top: 0.60, left: 0.45, size: 44 },
+  { src: "/Icon/gemini2.png",      top: 0.72, left: 0.13, size: 44 },
+  { src: "/Icon/claude2.png",      top: 0.76, left: 0.29, size: 44 },
+  { src: "/Icon/logo7.png",        top: 0.77, left: 0.63, size: 48 },
+  { src: "/Icon/icon-openai2.png", top: 0.72, left: 0.83, size: 48 },
+  { src: "/Icon/mistral.png",      top: 0.44, left: 0.08, size: 40 },
+];
+
 type Box = {
   id: number;
   x: number;
@@ -11,62 +26,34 @@ type Box = {
   vy: number;
   rotation: number;
   angularVel: number;
-  size: number; // single value — always square
-  imgIndex: number;
+  size: number;
+  img: HTMLImageElement;
   spawnTime: number;
 };
 
-const ICON_SRCS = [
-  "/Icon/claude.png",
-  "/Icon/claude2.png",
-  "/Icon/desktop-ui.png",
-  "/Icon/gemini.png",
-  "/Icon/gemini2.png",
-  "/Icon/gen.png",
-  "/Icon/icon-openai.png",
-  "/Icon/icon-openai2.png",
-  "/Icon/img1.png",
-  "/Icon/logo1.png",
-  "/Icon/logo2.png",
-  "/Icon/logo3.png",
-  "/Icon/logo4.png",
-  "/Icon/logo5.png",
-  "/Icon/logo6.png",
-  "/Icon/logo7.png",
-  "/Icon/mistral.png",
-  "/Icon/mobile-ui.png",
-  "/Icon/more.png",
-  "/Icon/perplexity.png",
-  "/Icon/site.png",
-  "/Icon/urban.png",
-  "/Icon/xai.png",
-  "/Icon/xai2.png",
-];
-
-const GRAVITY = 0.45;
-const DAMPING = 0.52;
-const FRICTION = 0.975;
+const GRAVITY     = 0.45;
+const DAMPING     = 0.52;
+const FRICTION    = 0.975;
 const ANG_FRICTION = 0.93;
 const RESTITUTION = 0.38;
-const SPAWN_THROTTLE_MS = 55;
-const ICON_SIZE = 52; // rendered size in px
+const FADE_IN_MS  = 600; // ms to fade in after spawn
 
 export const GeoWarning = () => {
-  const sectionRef = useRef<HTMLElement>(null);
+  const sectionRef   = useRef<HTMLElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const boxesRef = useRef<Box[]>([]);
-  const imagesRef = useRef<HTMLImageElement[]>([]);
-  const idRef = useRef(0);
-  const lastSpawnRef = useRef(0);
-  const rafRef = useRef<number>();
+  const canvasRef    = useRef<HTMLCanvasElement>(null);
+  const boxesRef     = useRef<Box[]>([]);
+  const imagesRef    = useRef<HTMLImageElement[]>([]);
+  const idRef        = useRef(0);
+  const spawnedRef   = useRef(false);
+  const rafRef       = useRef<number>();
   const [progress, setProgress] = useState(0);
 
-  // ── Preload icons ────────────────────────────────────────────────────────────
+  // ── Preload images ───────────────────────────────────────────────────────────
   useEffect(() => {
-    imagesRef.current = ICON_SRCS.map((src) => {
+    imagesRef.current = ICON_DEFS.map((def) => {
       const img = new window.Image();
-      img.src = src;
+      img.src = def.src;
       return img;
     });
   }, []);
@@ -78,13 +65,40 @@ export const GeoWarning = () => {
       if (!s) return;
       const rect = s.getBoundingClientRect();
       const scrollable = s.offsetHeight - window.innerHeight;
-      const p = Math.max(0, Math.min(1, -rect.top / scrollable));
-      setProgress(p);
+      setProgress(Math.max(0, Math.min(1, -rect.top / scrollable)));
     };
     window.addEventListener("scroll", onScroll, { passive: true });
     onScroll();
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  // ── Spawn icons when animation threshold is reached ──────────────────────────
+  useEffect(() => {
+    if (spawnedRef.current) return;
+    if (progress < 0.20) return; // wait until icons have animated in
+    spawnedRef.current = true;
+
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const W = canvas.width;
+    const H = canvas.height;
+
+    ICON_DEFS.forEach((def, i) => {
+      const img = imagesRef.current[i];
+      boxesRef.current.push({
+        id: idRef.current++,
+        x: def.left * W,
+        y: def.top  * H,
+        vx: (Math.random() - 0.5) * 1.5,
+        vy: 0,
+        rotation: 0,
+        angularVel: (Math.random() - 0.5) * 4,
+        size: def.size,
+        img,
+        spawnTime: Date.now(),
+      });
+    });
+  }, [progress]);
 
   // ── Physics + canvas loop ────────────────────────────────────────────────────
   useEffect(() => {
@@ -95,7 +109,7 @@ export const GeoWarning = () => {
     if (!ctx) return;
 
     const resize = () => {
-      canvas.width = container.offsetWidth;
+      canvas.width  = container.offsetWidth;
       canvas.height = container.offsetHeight;
     };
     resize();
@@ -108,7 +122,7 @@ export const GeoWarning = () => {
 
       const boxes = boxesRef.current;
 
-      // ── Integrate ──────────────────────────────────────────────────────────
+      // ── Integrate ────────────────────────────────────────────────────────────
       for (const b of boxes) {
         b.vy += GRAVITY;
         b.vx *= FRICTION;
@@ -117,7 +131,6 @@ export const GeoWarning = () => {
         b.y += b.vy;
         b.rotation += b.angularVel;
 
-        // Floor
         if (b.y + b.size / 2 >= H) {
           b.y = H - b.size / 2;
           b.vy = -Math.abs(b.vy) * DAMPING;
@@ -125,70 +138,50 @@ export const GeoWarning = () => {
           b.angularVel *= 0.6;
           if (Math.abs(b.vy) < 0.8) b.vy = 0;
         }
-
-        // Walls
-        if (b.x - b.size / 2 < 0)  { b.x = b.size / 2;     b.vx =  Math.abs(b.vx) * 0.55; }
-        if (b.x + b.size / 2 > W)  { b.x = W - b.size / 2; b.vx = -Math.abs(b.vx) * 0.55; }
+        if (b.x - b.size / 2 < 0) { b.x = b.size / 2;     b.vx =  Math.abs(b.vx) * 0.55; }
+        if (b.x + b.size / 2 > W) { b.x = W - b.size / 2; b.vx = -Math.abs(b.vx) * 0.55; }
       }
 
-      // ── Box–box collisions (circle approximation) ──────────────────────────
+      // ── Box–box collisions ───────────────────────────────────────────────────
       for (let i = 0; i < boxes.length; i++) {
         for (let j = i + 1; j < boxes.length; j++) {
           const a = boxes[i];
           const b = boxes[j];
-
           const ra = a.size / Math.SQRT2;
           const rb = b.size / Math.SQRT2;
-
           const dx = b.x - a.x;
           const dy = b.y - a.y;
           const dist = Math.sqrt(dx * dx + dy * dy);
           const minDist = ra + rb;
-
           if (dist < minDist && dist > 0.001) {
             const nx = dx / dist;
             const ny = dy / dist;
-
             const overlap = (minDist - dist) * 0.5;
-            a.x -= nx * overlap;
-            a.y -= ny * overlap;
-            b.x += nx * overlap;
-            b.y += ny * overlap;
-
-            const dvx = b.vx - a.vx;
-            const dvy = b.vy - a.vy;
-            const dvn = dvx * nx + dvy * ny;
-
+            a.x -= nx * overlap; a.y -= ny * overlap;
+            b.x += nx * overlap; b.y += ny * overlap;
+            const dvn = (b.vx - a.vx) * nx + (b.vy - a.vy) * ny;
             if (dvn < 0) {
-              const impulse = -(1 + RESTITUTION) * dvn / 2;
-              a.vx -= impulse * nx;
-              a.vy -= impulse * ny;
-              b.vx += impulse * nx;
-              b.vy += impulse * ny;
-
-              a.angularVel += impulse * 2.5 * (Math.random() - 0.5);
-              b.angularVel -= impulse * 2.5 * (Math.random() - 0.5);
+              const imp = -(1 + RESTITUTION) * dvn / 2;
+              a.vx -= imp * nx; a.vy -= imp * ny;
+              b.vx += imp * nx; b.vy += imp * ny;
+              a.angularVel += imp * 2.5 * (Math.random() - 0.5);
+              b.angularVel -= imp * 2.5 * (Math.random() - 0.5);
             }
           }
         }
       }
 
-      // ── Remove fully faded boxes ───────────────────────────────────────────
+      // ── Draw ─────────────────────────────────────────────────────────────────
       const now = Date.now();
-      boxesRef.current = boxes.filter(b => now - b.spawnTime < 32000);
-
-      // ── Draw ───────────────────────────────────────────────────────────────
-      const imgs = imagesRef.current;
-      for (const b of boxesRef.current) {
-        const img = imgs[b.imgIndex];
-        if (!img?.complete || !img.naturalWidth) continue;
+      for (const b of boxes) {
+        if (!b.img.complete || !b.img.naturalWidth) continue;
         const age = now - b.spawnTime;
-        const alpha = age < 30000 ? 0.85 : Math.max(0, 0.85 * (1 - (age - 30000) / 2000));
+        const alpha = Math.min(0.85, 0.85 * (age / FADE_IN_MS));
         ctx.save();
         ctx.translate(b.x, b.y);
         ctx.rotate((b.rotation * Math.PI) / 180);
         ctx.globalAlpha = alpha;
-        ctx.drawImage(img, -b.size / 2, -b.size / 2, b.size, b.size);
+        ctx.drawImage(b.img, -b.size / 2, -b.size / 2, b.size, b.size);
         ctx.restore();
       }
 
@@ -202,41 +195,18 @@ export const GeoWarning = () => {
     };
   }, []);
 
-  // ── Mouse handler ────────────────────────────────────────────────────────────
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const now = Date.now();
-    if (now - lastSpawnRef.current < SPAWN_THROTTLE_MS) return;
-    lastSpawnRef.current = now;
-
-    const rect = containerRef.current!.getBoundingClientRect();
-
-    boxesRef.current.push({
-      id: idRef.current++,
-      x: e.clientX - rect.left,
-      y: e.clientY - rect.top,
-      vx: (Math.random() - 0.5) * 5,
-      vy: (Math.random() - 0.5) * 3 - 1.5,
-      rotation: Math.random() * 360,
-      angularVel: (Math.random() - 0.5) * 14,
-      size: ICON_SIZE,
-      imgIndex: Math.floor(Math.random() * ICON_SRCS.length),
-      spawnTime: Date.now(),
-    });
-  };
-
   // ── Scroll-driven text animations ────────────────────────────────────────────
   const ease = (p: number, start: number, end: number) =>
     Math.max(0, Math.min(1, (p - start) / (end - start)));
 
   const bgProgress = ease(progress, 0, 0.25);
-  const bgChannel = Math.round(235 + (255 - 235) * bgProgress);
-  const bgColor = `rgb(${bgChannel}, ${bgChannel}, ${bgChannel})`;
+  const bgChannel  = Math.round(235 + (255 - 235) * bgProgress);
+  const bgColor    = `rgb(${bgChannel}, ${bgChannel}, ${bgChannel})`;
 
-  const eyebrowP = ease(progress, 0.05, 0.22);
-  const line1P   = ease(progress, 0.18, 0.38);
-  const line2P   = ease(progress, 0.32, 0.52);
+  const line1P = ease(progress, 0.15, 0.38);
+  const line2P = ease(progress, 0.30, 0.52);
 
-  const fadeUp = (p: number, dist = 36) => ({
+  const fadeUp = (p: number, dist = 32) => ({
     opacity: p,
     filter: `blur(${(1 - p) * 8}px)`,
     transform: `translateY(${(1 - p) * dist}px)`,
@@ -250,41 +220,40 @@ export const GeoWarning = () => {
     >
       <div
         ref={containerRef}
-        className="sticky top-0 h-screen overflow-hidden flex items-center"
+        className="sticky top-0 h-screen overflow-hidden flex items-center justify-center"
         style={{ backgroundColor: bgColor, transition: "background-color 0.05s linear" }}
-        onMouseMove={handleMouseMove}
       >
-        {/* Physics canvas — behind text */}
+        {/* Physics canvas — icons fall here */}
         <canvas
           ref={canvasRef}
           className="absolute inset-0 pointer-events-none"
           style={{ zIndex: 1 }}
         />
 
-        {/* Text content */}
+        {/* Centered text */}
         <Container style={{ position: "relative", zIndex: 2 }}>
-          <div className="max-w-3xl">
+          <div className="flex flex-col items-center text-center">
+
+            <h2
+              style={{ fontSize: "64px", lineHeight: 1.1, ...fadeUp(line1P) }}
+              className="tracking-tight text-[#2A0E0E] whitespace-nowrap"
+            >
+              <span className="font-semibold">Stop using </span>
+              <span className="font-bold">Language models </span>
+              <span className="font-semibold">for Geographical work.</span>
+            </h2>
 
             <p
-              className="text-sm font-medium tracking-widest uppercase text-[#1C274C]/60 mb-8"
-              style={fadeUp(eyebrowP, 20)}
+              style={{ fontSize: "40px", lineHeight: 1.3, ...fadeUp(line2P) }}
+              className="mt-6 tracking-tight whitespace-nowrap"
             >
-              GEOSPATIAL INTELLIGENCE
+              <span className="font-semibold text-[#CD0A00]">LLMs</span>{" "}
+              <span className="font-normal bg-linear-to-r from-[#CD0A00] to-[#000000] bg-clip-text text-transparent">
+                hallucinate and{" "}
+                <span className="font-bold">cannot</span>
+                {" "}be trusted for the real world
+              </span>
             </p>
-
-            <h2
-              className="font-thin leading-[1.05] tracking-tight text-[#0A1344]"
-              style={{ fontSize: "clamp(48px, 6vw, 80px)", ...fadeUp(line1P) }}
-            >
-              Stop using language models
-            </h2>
-
-            <h2
-              className="font-thin leading-[1.05] tracking-tight text-[#838383]"
-              style={{ fontSize: "clamp(48px, 6vw, 80px)", ...fadeUp(line2P) }}
-            >
-              for geographical work.
-            </h2>
 
           </div>
         </Container>
