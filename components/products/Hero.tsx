@@ -5,7 +5,6 @@ import { useRef, useEffect, useState } from "react";
 import glassStyles from "@/components/ui/GlassButton.module.css";
 import { ConsumerEnterpriseToggle } from "@/components/enterprise/ConsumerEnterpriseToggle";
 
-const PHONE_HEIGHT = 778;
 const CANVAS_W     = 1728;
 const CANVAS_H     = 1756;
 
@@ -26,6 +25,12 @@ const RESTITUTION  = 0.72;
 const MOUSE_RADIUS = 200;
 const MOUSE_FORCE  = 8;   // per-frame impulse, same style as TravelPromo
 
+// Sparkle colors — light, airy, playful
+const SPARKLE_COLORS = ["#59E1EB", "#FFD166", "#FF9A8B", "#A8E6CF", "#FFFFFF", "#C3B1E1"];
+
+// Confetti colors — vivid but small, celebratory
+const CONFETTI_COLORS = ["#59E1EB", "#FFD166", "#FF9A8B", "#A8E6CF", "#FFC3E1", "#B5EAD7", "#FFDAC1"];
+
 type Box = {
   x: number; y: number;
   vx: number; vy: number;
@@ -37,15 +42,57 @@ type Box = {
   alpha: number;
 };
 
+type Sparkle = {
+  x: number; y: number;
+  vx: number; vy: number;
+  rotation: number;
+  angularVel: number;
+  radius: number;
+  color: string;
+  life: number;      // 0→1, counts down to 0
+  maxLife: number;
+};
+
+type Confetti = {
+  x: number; y: number;
+  vx: number; vy: number;
+  rotation: number;
+  angularVel: number;
+  w: number;
+  h: number;
+  color: string;
+  alpha: number;
+  life: number;      // counts down to 0
+  maxLife: number;
+};
+
+// Draw a 4-pointed star at (0,0)
+function drawStar(ctx: CanvasRenderingContext2D, outerR: number) {
+  const innerR = outerR * 0.28;
+  const pts    = 4;
+  ctx.beginPath();
+  for (let i = 0; i < pts * 2; i++) {
+    const angle = (i * Math.PI) / pts - Math.PI / 2;
+    const r     = i % 2 === 0 ? outerR : innerR;
+    if (i === 0) ctx.moveTo(Math.cos(angle) * r, Math.sin(angle) * r);
+    else         ctx.lineTo(Math.cos(angle) * r, Math.sin(angle) * r);
+  }
+  ctx.closePath();
+  ctx.fill();
+}
+
 export default function Hero() {
-  const [isLocked, setIsLocked]         = useState(false);
   const [titleVisible, setTitleVisible] = useState(false);
   const [contentVisible, setContentVisible] = useState(false);
 
-  const phoneContainerRef = useRef<HTMLDivElement>(null);
-  const phoneRef          = useRef<HTMLDivElement>(null);
+  const phoneRef              = useRef<HTMLDivElement>(null);
+  const phoneSpringWrapperRef = useRef<HTMLDivElement>(null);
+  const phoneSpringRef        = useRef({ offset: 0, velocity: 0 });
+  const lastScrollYRef        = useRef(0);
   const canvasRef         = useRef<HTMLCanvasElement>(null);
   const boxesRef          = useRef<Box[]>([]);
+  const sparklesRef       = useRef<Sparkle[]>([]);
+  const confettiRef       = useRef<Confetti[]>([]);
   const imagesRef         = useRef<HTMLImageElement[]>([]);
   const mouseRef          = useRef({ x: -9999, y: -9999, active: false });
   const scrollYRef        = useRef(0);
@@ -61,15 +108,15 @@ export default function Hero() {
     });
   }, []);
 
-  // Content fade-in on mount
-  useEffect(() => {
-    const t = setTimeout(() => setContentVisible(true), 80);
-    return () => clearTimeout(t);
-  }, []);
-
   // Title gradient sweep-in
   useEffect(() => {
     const t = setTimeout(() => setTitleVisible(true), 300);
+    return () => clearTimeout(t);
+  }, []);
+
+  // Content fade-in on mount
+  useEffect(() => {
+    const t = setTimeout(() => setContentVisible(true), 80);
     return () => clearTimeout(t);
   }, []);
 
@@ -79,26 +126,6 @@ export default function Hero() {
     transform:  contentVisible ? "translateY(0)" : "translateY(16px)",
     transition: `opacity 0.6s ease-out ${delay}s, filter 0.6s ease-out ${delay}s, transform 0.6s ease-out ${delay}s`,
   });
-
-  // Phone scroll-lock (unchanged)
-  useEffect(() => {
-    const onScroll = () => {
-      const el = phoneContainerRef.current;
-      if (!el) return;
-      const rect        = el.getBoundingClientRect();
-      const viewCenter  = window.innerHeight / 2;
-      const phoneCenter = rect.top + PHONE_HEIGHT / 2;
-      const threshold   = 60;
-      if (phoneCenter <= viewCenter + threshold && phoneCenter >= viewCenter - threshold) {
-        setIsLocked(true);
-      } else if (phoneCenter > viewCenter + threshold || rect.bottom < 0) {
-        setIsLocked(false);
-      }
-    };
-    window.addEventListener("scroll", onScroll, { passive: true });
-    onScroll();
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
 
   // Cannon fire — 1 second delay
   useEffect(() => {
@@ -124,7 +151,6 @@ export default function Hero() {
         const maxAngle = (-20  * Math.PI) / 180;
         const angle    = minAngle + (maxAngle - minAngle) * (i / (ICONS.length - 1))
                          + (Math.random() - 0.5) * 0.2;
-        // per-frame speed in canvas-pixel units (same scale as TravelPromo)
         const speed = 32 + Math.random() * 22;
         return {
           x: ox,
@@ -139,6 +165,29 @@ export default function Hero() {
           alpha: 1,
         };
       });
+
+      // ── Confetti burst from phone center ──────────────────────────────────────
+      const pieces: Confetti[] = [];
+      for (let i = 0; i < 80; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const speed = 20 + Math.random() * 40;
+        const life  = 70 + Math.random() * 50;
+        pieces.push({
+          x: ox + (Math.random() - 0.5) * 40,
+          y: oy + (Math.random() - 0.5) * 40,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed - 12, // stronger upward bias
+          rotation:   Math.random() * 360,
+          angularVel: (Math.random() - 0.5) * 18,
+          w: 16 + Math.random() * 20,
+          h: 8 + Math.random() * 10,
+          color: CONFETTI_COLORS[Math.floor(Math.random() * CONFETTI_COLORS.length)],
+          alpha: 0.9 + Math.random() * 0.1,
+          life,
+          maxLife: life,
+        });
+      }
+      confettiRef.current = pieces;
     }, 1000);
 
     return () => clearTimeout(t);
@@ -156,13 +205,11 @@ export default function Hero() {
     const loop = () => {
       ctx.clearRect(0, 0, CANVAS_W, CANVAS_H);
 
-      const boxes = boxesRef.current;
-      if (!boxes.length) {
-        rafRef.current = requestAnimationFrame(loop);
-        return;
-      }
+      const boxes    = boxesRef.current;
+      const sparkles = sparklesRef.current;
+      const confetti = confettiRef.current;
 
-      // Phone target in canvas coords (updated every frame — works locked or not)
+      // Phone target in canvas coords (updated every frame)
       let targetX = CANVAS_W / 2;
       let targetY = CANVAS_H / 2;
       const phone = phoneRef.current;
@@ -188,7 +235,6 @@ export default function Hero() {
       for (const b of boxes) {
         if (!b.alive) continue;
 
-        // Friction (matches TravelPromo exactly)
         b.vx         *= FRICTION;
         b.vy         *= FRICTION;
         b.angularVel *= ANG_FRICTION;
@@ -212,10 +258,29 @@ export default function Hero() {
           const dy   = targetY - b.y;
           const dist = Math.sqrt(dx * dx + dy * dy);
 
-          if (dist < b.size * 0.4) {
-            // Close enough — fade out
-            b.alpha -= 0.06;
-            if (b.alpha <= 0) { b.alive = false; continue; }
+          if (dist < b.size * 1.8) {
+            // Immediately absorb — spawn sparkles then kill
+            b.alive = false;
+
+            const count = 10 + Math.floor(Math.random() * 6);
+            for (let k = 0; k < count; k++) {
+              const angle = (k / count) * Math.PI * 2 + Math.random() * 0.5;
+              const speed = 18 + Math.random() * 28;
+              const life  = 30 + Math.floor(Math.random() * 20);
+              sparkles.push({
+                x: b.x,
+                y: b.y,
+                vx: Math.cos(angle) * speed,
+                vy: Math.sin(angle) * speed,
+                rotation:   Math.random() * 360,
+                angularVel: (Math.random() - 0.5) * 22,
+                radius: 18 + Math.random() * 24,
+                color: SPARKLE_COLORS[Math.floor(Math.random() * SPARKLE_COLORS.length)],
+                life,
+                maxLife: life,
+              });
+            }
+            continue;
           } else {
             const sf = suckT * 14;
             b.vx += (dx / dist) * sf;
@@ -235,7 +300,7 @@ export default function Hero() {
         if (b.y + r > floorY)   { b.y = floorY - r;   b.vy = -Math.abs(b.vy) * RESTITUTION; }
       }
 
-      // ── Emoji–emoji collisions (identical to TravelPromo) ────────────────────
+      // ── Emoji–emoji collisions ────────────────────────────────────────────────
       for (let i = 0; i < boxes.length; i++) {
         for (let j = i + 1; j < boxes.length; j++) {
           const a = boxes[i];
@@ -265,7 +330,53 @@ export default function Hero() {
         }
       }
 
-      // ── Draw ─────────────────────────────────────────────────────────────────
+      // ── Sparkle physics + draw ────────────────────────────────────────────────
+      sparklesRef.current = sparkles.filter(s => s.life > 0);
+      for (const s of sparklesRef.current) {
+        s.vx       *= 0.90;
+        s.vy       *= 0.90;
+        s.x        += s.vx;
+        s.y        += s.vy;
+        s.rotation += s.angularVel;
+        s.life     -= 1;
+
+        // Fade out as life drains (t goes 1→0)
+        const t     = s.life / s.maxLife;
+        const alpha = t < 0.3 ? t / 0.3 : 1;
+
+        ctx.save();
+        ctx.globalAlpha = Math.min(1, alpha) * 0.88;
+        ctx.fillStyle   = s.color;
+        ctx.translate(s.x, s.y);
+        ctx.rotate((s.rotation * Math.PI) / 180);
+        drawStar(ctx, s.radius);
+        ctx.restore();
+      }
+
+      // ── Confetti physics + draw ───────────────────────────────────────────────
+      confettiRef.current = confetti.filter(c => c.life > 0);
+      for (const c of confettiRef.current) {
+        c.vy       += 0.55;  // gravity
+        c.vx       *= 0.985; // air resistance
+        c.vy       *= 0.985;
+        c.x        += c.vx;
+        c.y        += c.vy;
+        c.rotation += c.angularVel;
+        c.life     -= 1;
+
+        const lifeRatio = c.life / c.maxLife;
+        const alpha     = lifeRatio < 0.25 ? lifeRatio / 0.25 : 1;
+
+        ctx.save();
+        ctx.globalAlpha = c.alpha * alpha;
+        ctx.fillStyle   = c.color;
+        ctx.translate(c.x, c.y);
+        ctx.rotate((c.rotation * Math.PI) / 180);
+        ctx.fillRect(-c.w / 2, -c.h / 2, c.w, c.h);
+        ctx.restore();
+      }
+
+      // ── Draw emojis ───────────────────────────────────────────────────────────
       for (const b of boxes) {
         if (!b.alive) continue;
         if (!b.img.complete || !b.img.naturalWidth) continue;
@@ -299,11 +410,37 @@ export default function Hero() {
     return () => window.removeEventListener("mousemove", onMove);
   }, []);
 
-  // Scroll tracking
+  // Scroll tracking + phone spring impulse
   useEffect(() => {
-    const onScroll = () => { scrollYRef.current = window.scrollY; };
+    lastScrollYRef.current = window.scrollY;
+    const onScroll = () => {
+      const y = window.scrollY;
+      const delta = y - lastScrollYRef.current;
+      lastScrollYRef.current = y;
+      scrollYRef.current = y;
+      phoneSpringRef.current.velocity += delta * 0.28;
+    };
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  // Phone floating spring loop
+  useEffect(() => {
+    const STIFFNESS = 0.055;
+    const DAMPING   = 0.80;
+    let raf: number;
+    const loop = () => {
+      const s = phoneSpringRef.current;
+      s.velocity += (0 - s.offset) * STIFFNESS;
+      s.velocity *= DAMPING;
+      s.offset   += s.velocity;
+      if (phoneSpringWrapperRef.current) {
+        phoneSpringWrapperRef.current.style.transform = `translateY(${s.offset}px)`;
+      }
+      raf = requestAnimationFrame(loop);
+    };
+    raf = requestAnimationFrame(loop);
+    return () => cancelAnimationFrame(raf);
   }, []);
 
   return (
@@ -331,7 +468,7 @@ export default function Hero() {
           <canvas
             ref={canvasRef}
             className="absolute inset-0 pointer-events-none"
-            style={{ width: CANVAS_W, height: CANVAS_H, zIndex: 1 }}
+            style={{ width: CANVAS_W, height: CANVAS_H, zIndex: 3 }}
           />
 
           {/* Toggle + Badge + Title + Phone */}
@@ -381,20 +518,12 @@ export default function Hero() {
               </div>
             </div>
 
-            {/* Phone — always mounted, positioned via inline style */}
-            <div ref={phoneContainerRef} className="mt-[100px]">
-              {isLocked && (
-                <div style={{ width: 404, height: PHONE_HEIGHT }} aria-hidden />
-              )}
-              <div
-                ref={phoneRef}
-                style={
-                  isLocked
-                    ? { position: "fixed", left: "50%", top: "50%", transform: "translate(-50%, -50%)", zIndex: 10, ...fadeIn(0.4) }
-                    : fadeIn(0.4)
-                }
-              >
-                <Image src="/product/phone.png" width={404} height={778} alt="Phone" priority />
+            {/* Phone — floating spring frame */}
+            <div className="mt-[100px]">
+              <div ref={phoneSpringWrapperRef}>
+                <div ref={phoneRef} style={fadeIn(0.4)}>
+                  <Image src="/product/phone.png" width={404} height={778} alt="Phone" priority />
+                </div>
               </div>
             </div>
           </div>
