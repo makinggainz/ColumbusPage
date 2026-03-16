@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { Container } from "@/components/layout/Container";
+import { cormorant } from "@/lib/typography";
 
 export const TravelPromo = () => {
   return (
@@ -12,7 +13,7 @@ export const TravelPromo = () => {
         {/* Center Content */}
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4 z-10">
 
-          <h2 className="text-xl sm:text-2xl md:text-4xl lg:text-5xl font-semibold text-[#1C274C] mb-4 md:mb-6">
+          <h2 className={`${cormorant.className} text-xl sm:text-2xl md:text-4xl lg:text-5xl font-semibold text-[#1C274C] mb-4 md:mb-6`}>
             Love to travel or go out?
           </h2>
 

@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Container } from "@/components/layout/Container";
+import { cormorant } from "@/lib/typography";
 
 export const Applications = () => {
   const items = [
@@ -23,7 +24,7 @@ export const Applications = () => {
 
         {/* HEADER */}
         <div className="mb-5 md:mb-6 max-w-full">
-          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl leading-tight font-semibold tracking-tight text-[#1C274C]">
+          <h2 className={`${cormorant.className} text-3xl sm:text-4xl md:text-5xl lg:text-6xl leading-tight font-semibold tracking-tight text-[#1C274C]`}>
             We’re actively exploring various application areas
           </h2>
 

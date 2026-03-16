@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { useLenis } from "@/components/home/LenisContext";
 import { Container } from "@/components/layout/Container";
+import { cormorant } from "@/lib/typography";
 
 export const GeoWarning = () => {
   const sectionRef = useRef<HTMLElement>(null);
@@ -101,7 +102,7 @@ export const GeoWarning = () => {
 
         {/* HEADLINE */}
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4 pointer-events-none">
-          <h1 className="text-xl sm:text-2xl md:text-4xl lg:text-5xl font-semibold text-[#2A0E0E] leading-tight">
+          <h1 className={`${cormorant.className} text-xl sm:text-2xl md:text-4xl lg:text-5xl font-semibold text-[#2A0E0E] leading-tight`}>
             Stop using <span className="text-black font-normal">Language models</span> for Geographical work.
           </h1>
 

@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Container } from "@/components/layout/Container";
+import { cormorant } from "@/lib/typography";
 
 export const TravelSection = () => {
   return (
@@ -22,7 +23,7 @@ export const TravelSection = () => {
                 Available everywhere
               </p>
 
-              <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl leading-tight font-semibold text-[#1C274C] mb-6">
+              <h2 className={`${cormorant.className} text-3xl sm:text-4xl md:text-5xl lg:text-6xl leading-tight font-semibold text-[#1C274C] mb-6`}>
                 Travel like a boss
               </h2>
 

@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowUp } from "lucide-react";
 import { Container } from "@/components/layout/Container";
+import { cormorant } from "@/lib/typography";
 
 export const Industries = () => {
   const items = [
@@ -39,7 +40,7 @@ export const Industries = () => {
       <Container>
 
         {/* Heading */}
-        <h2 className="text-2xl sm:text-3xl md:text-4xl font-medium text-[#1C274C] mb-[33px] md:mb-[49px] -translate-x-[50px]">
+        <h2 className={`${cormorant.className} text-2xl sm:text-3xl md:text-4xl font-medium text-[#1C274C] mb-[33px] md:mb-[49px] -translate-x-[50px]`}>
           See how Columbus could help you
         </h2>
 

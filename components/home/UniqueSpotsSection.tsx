@@ -2,6 +2,7 @@
 
 import { Star, MapPin } from "lucide-react";
 import { Container } from "@/components/layout/Container";
+import { cormorant } from "@/lib/typography";
 
 const FAVORITE_SPOTS_FILES = ["(20).jpeg", "(14).jpeg", "(17).jpeg", "(19).jpeg", "(21).jpeg", "(23).jpeg", "(24).jpeg", "(22).jpeg"];
 const spotImageSrc = (filename: string) => `/FavoriteSpots/${encodeURIComponent(filename)}`;
@@ -23,7 +24,7 @@ export const UniqueSpotsSection = () => {
   return (
     <section className="bg-[#F9F9F9] py-20 md:py-28 lg:py-32 overflow-hidden relative">
       <Container className="mb-6 md:mb-8">
-        <h2 className="text-center text-2xl sm:text-3xl md:text-4xl font-semibold text-[#0F766E]">
+        <h2 className={`${cormorant.className} text-center text-2xl sm:text-3xl md:text-4xl font-semibold text-[#0F766E]`}>
           Unique spots people are favoriting
         </h2>
       </Container>

@@ -2,13 +2,14 @@
 
 import Image from "next/image";
 import { Container } from "@/components/layout/Container";
+import { cormorant } from "@/lib/typography";
 
 export const SiteSelection = () => {
   return (
     <section className="bg-[#FFFFFF] py-16 sm:py-24 lg:py-32">
       <Container>
 
-        <h2 className="text-2xl sm:text-3xl font-semibold text-[#242424] mb-[19px] lg:mb-[27px]">
+        <h2 className={`${cormorant.className} text-2xl sm:text-3xl font-semibold text-[#242424] mb-[19px] lg:mb-[27px]`}>
           + Introducing Columbus
         </h2>
 
@@ -21,7 +22,7 @@ export const SiteSelection = () => {
           }}
         >
 
-          <h2 className="text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-semibold leading-tight text-white mb-10 lg:mb-12">
+          <h2 className={`${cormorant.className} text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-semibold leading-tight text-white mb-10 lg:mb-12`}>
             Site Selection Reimagined
           </h2>
 

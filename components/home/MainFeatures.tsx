@@ -12,6 +12,7 @@ import {
   ArrowUpRight,
 } from "lucide-react";
 import { Container } from "@/components/layout/Container";
+import { cormorant } from "@/lib/typography";
 export const MainFeatures = () => {
   const features = [
     {
@@ -69,7 +70,7 @@ export const MainFeatures = () => {
 
         {/* Heading */}
         <div className="text-center mb-[55px]">
-          <h2 className="text-[42px] font-medium text-[#1C274C] tracking-[-0.01em]">
+          <h2 className={`${cormorant.className} text-[42px] font-medium text-[#1C274C] tracking-[-0.01em]`}>
             Main Features
           </h2>
         </div>

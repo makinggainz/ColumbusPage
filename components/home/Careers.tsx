@@ -1,6 +1,7 @@
 "use client";
 
 import { Container } from "@/components/layout/Container";
+import { cormorant } from "@/lib/typography";
 
 export const Careers = () => {
   return (
@@ -9,7 +10,7 @@ export const Careers = () => {
 
         {/* TOP CENTER */}
         <div className="text-center mb-36 md:mb-44">
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-medium text-black mb-4">
+          <h2 className={`${cormorant.className} text-3xl sm:text-4xl md:text-5xl font-medium text-black mb-4`}>
             Hiring Humans.
           </h2>
           <p className="text-sm sm:text-base text-black/80">

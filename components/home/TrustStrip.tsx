@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { Container } from "@/components/layout/Container";
+import { cormorant } from "@/lib/typography";
 
 export const TrustStrip = () => {
   const faqs = [
@@ -18,7 +19,7 @@ export const TrustStrip = () => {
 
         {/* HEADING */}
         <div className="text-center mb-12 md:mb-16">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-semibold text-[#1C274C] mb-3">
+          <h2 className={`${cormorant.className} text-2xl sm:text-3xl md:text-4xl font-semibold text-[#1C274C] mb-3`}>
             Your plans <span className="text-[#1FA7A3]">are in good hands</span>
           </h2>
 

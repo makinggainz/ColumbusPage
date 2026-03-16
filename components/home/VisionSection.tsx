@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { Container } from "@/components/layout/Container";
+import { cormorant } from "@/lib/typography";
 
 export const Vision = () => {
   const titleRef = useRef<HTMLHeadingElement>(null);
@@ -40,7 +41,7 @@ export const Vision = () => {
         {/* TITLE */}
         <h2
           ref={titleRef}
-          className="text-display font-semibold leading-tight text-left mb-12 md:mb-16 -mt-20 bg-linear-to-b from-[#0A1344] to-[#838383] bg-clip-text text-transparent tracking-[-0.015em]"
+          className={`${cormorant.className} text-display font-semibold leading-tight text-left mb-12 md:mb-16 -mt-20 bg-linear-to-b from-[#0A1344] to-[#838383] bg-clip-text text-transparent tracking-[-0.015em]`}
           style={{
             opacity: titleVisible ? 1 : 0,
             filter: titleVisible ? "blur(0px)" : "blur(8px)",
