@@ -1,4 +1,5 @@
 import { Navbar } from "@/components/layout/Navbar";
+import { CoverLetter } from "@/components/home/CoverLetter";
 import { Hero } from "@/components/home/Hero";
 import { Vision } from "@/components/home/VisionSection";
 import { MainFeatures } from "@/components/home/MainFeatures";
@@ -9,6 +10,7 @@ import { Footer } from "@/components/layout/Footer";
 export default function Home() {
   return (
     <main className="bg-[#070709] min-h-screen">
+      <CoverLetter />
       {/* Content sits above the fixed footer */}
       <div className="relative z-10" style={{ paddingBottom: "100vh" }}>
         <Navbar />
