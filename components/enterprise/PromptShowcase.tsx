@@ -79,20 +79,31 @@ export default function PromptShowcase() {
   const [headerVisible, setHeaderVisible] = useState(false);
   const [cardsVisible, setCardsVisible] = useState(false);
 
+  const part2Ref = useRef<HTMLDivElement>(null);
+  const [part2Visible, setPart2Visible] = useState(false);
+  const [part2CardsVisible, setPart2CardsVisible] = useState(false);
+
   useEffect(() => {
-    const el = headerRef.current;
-    if (!el) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setHeaderVisible(true);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.1 }
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
+    const observe = (el: HTMLElement | null, onVisible: () => void) => {
+      if (!el) return () => {};
+      const observer = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) {
+            onVisible();
+            observer.disconnect();
+          }
+        },
+        { threshold: 0.1 }
+      );
+      observer.observe(el);
+      return () => observer.disconnect();
+    };
+
+    const cleanups = [
+      observe(headerRef.current, () => setHeaderVisible(true)),
+      observe(part2Ref.current, () => setPart2Visible(true)),
+    ];
+    return () => cleanups.forEach((fn) => fn());
   }, []);
 
   // Cards pop in after header has faded in
@@ -101,6 +112,13 @@ export default function PromptShowcase() {
     const t = setTimeout(() => setCardsVisible(true), 600);
     return () => clearTimeout(t);
   }, [headerVisible]);
+
+  // Part 2 cards pop in after Part 2 text fades in
+  useEffect(() => {
+    if (!part2Visible) return;
+    const t = setTimeout(() => setPart2CardsVisible(true), 600);
+    return () => clearTimeout(t);
+  }, [part2Visible]);
 
   const fadeInStyle = (visible: boolean, delay: number): React.CSSProperties => ({
     opacity: visible ? 1 : 0,
@@ -239,7 +257,7 @@ export default function PromptShowcase() {
       </div>
 
       {/* ═══ PART 2: Ask about a drawn area ═══ */}
-      <div data-prompt-area="part-2" className="relative w-full h-[1036px] mt-16 md:mt-24 rounded-2xl overflow-hidden mx-auto max-w-[1235px]">
+      <div ref={part2Ref} data-prompt-area="part-2" className="relative w-full h-[1036px] mt-16 md:mt-24 rounded-2xl overflow-hidden mx-auto max-w-[1235px]">
         {/* Part 2 — Map background */}
         <Image
           src="/enterprise/drawnAreaMap.png"
@@ -261,16 +279,21 @@ export default function PromptShowcase() {
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
               backgroundClip: "text",
+              ...fadeInStyle(part2Visible, 0),
             }}
           >
             Ask about a drawn area
           </h3>
-          <p className="font-medium text-[26px] md:text-[32px] leading-[140%] tracking-[-0.02em] text-black mt-3 max-w-[334px]">
+          <p className="font-medium text-[26px] md:text-[32px] leading-[140%] tracking-[-0.02em] text-black mt-3 max-w-[334px]"
+            style={fadeInStyle(part2Visible, 0.15)}
+          >
             Draw a specific space and ask
           </p>
 
           {/* Selected area card — 280px below bottom edge of "and ask" */}
-          <div className="mt-[280px] w-[320px] md:w-[360px] rounded-[14px] bg-white border border-[#EDEDED] shadow-xl overflow-hidden">
+          <div className="mt-[280px] w-[320px] md:w-[360px] rounded-[14px] bg-white border border-[#EDEDED] shadow-xl overflow-hidden"
+            style={popStyle(part2CardsVisible, 0)}
+          >
             <div className="flex items-center justify-between px-4 py-3 border-b border-[#EDEDED]">
               <span className="font-semibold text-[15px] text-[#111] flex items-center gap-2">
                 Selected area
@@ -320,7 +343,9 @@ export default function PromptShowcase() {
           </div>
 
           {/* Bottom-left CTA — 30px below selected area card */}
-          <p className="mt-[30px] text-black font-medium text-[26px] md:text-[32px] leading-[140%] tracking-[-0.02em] max-w-[380px]">
+          <p className="mt-[30px] text-black font-medium text-[26px] md:text-[32px] leading-[140%] tracking-[-0.02em] max-w-[380px]"
+            style={fadeInStyle(part2Visible, 0.3)}
+          >
             Or access full advanced data about the polygon.
           </p>
           </div>
@@ -337,6 +362,7 @@ export default function PromptShowcase() {
               borderRight: "1px solid #EDECED",
               boxShadow: "0px 0px 30px rgba(0, 0, 0, 0.2)",
               borderRadius: 19,
+              ...popStyle(part2CardsVisible, 0.1),
             }}
           >
             <div className="flex items-center gap-2 px-5 py-4" style={{ paddingLeft: 24 }}>
@@ -381,10 +407,10 @@ export default function PromptShowcase() {
       <div className="flex justify-center pt-8 pb-4">
         <button
           type="button"
-          className="px-6 py-3 rounded-[10px] bg-white border border-[#EDEDED] shadow-lg text-[15px] font-medium text-[#111] hover:bg-[#FAFAFA] transition-colors flex items-center gap-2 cursor-pointer"
+          className="flex items-center gap-2 px-6 py-3.5 text-md font-semibold leading-none rounded-none border border-[#0A1344] bg-transparent text-[#0A1344] transition-opacity duration-300 hover:opacity-70 cursor-pointer"
         >
           More use cases
-          <span className="text-[#666]">→</span>
+          →
         </button>
       </div>
 
