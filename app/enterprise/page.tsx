@@ -5,14 +5,9 @@ import SectionCScroll from "@/components/enterprise/SectionCScroll";
 import ComparisonSection from "@/components/enterprise/ComparisonSection";
 import ChatSection from "@/components/enterprise/ChatSection";
 import PromptShowcase from "@/components/enterprise/PromptShowcase";
-import DataCollectionSection from "@/components/enterprise/DataCollectionSection";
-import DataSection from "@/components/enterprise/DataSection";
-import MapChatSection from "@/components/enterprise/MapChatSection";
-import ResearchReportsSection from "@/components/enterprise/ResearchReportSection";
-import GeneratedLayersSection from "@/components/enterprise/GeneratedLayerSection";
-import HumanSupportSection from "@/components/enterprise/HumanSupportSection";
+import StickyScrollSection from "@/components/enterprise/StickyScrollSection";
 
-const sectionLabels = ["a", "b", "c", "d", "e", "g", "h", "i", "j", "k", "l", "m", "n"] as const;
+const sectionLabels = ["a", "b", "c", "d", "e", "g", "m", "n"] as const;
 
 function SectionWithLabel({
   label,
@@ -53,29 +48,14 @@ export default function EnterprisePage() {
         <PromptShowcase/>
       </SectionWithLabel>
       <SectionWithLabel label={sectionLabels[5]}>
-        <DataCollectionSection/>
+        <StickyScrollSection />
       </SectionWithLabel>
       <SectionWithLabel label={sectionLabels[6]}>
-        <DataSection/>
-      </SectionWithLabel>
-      <SectionWithLabel label={sectionLabels[7]}>
-        <MapChatSection />
-      </SectionWithLabel>
-      <SectionWithLabel label={sectionLabels[8]}>
-        <ResearchReportsSection />
-      </SectionWithLabel>
-      <SectionWithLabel label={sectionLabels[9]}>
-        <GeneratedLayersSection />
-      </SectionWithLabel>
-      <SectionWithLabel label={sectionLabels[10]}>
-        <HumanSupportSection />
-      </SectionWithLabel>
-      <SectionWithLabel label={sectionLabels[11]}>
         <ChatSection/>
       </SectionWithLabel>
-      <SectionWithLabel label={sectionLabels[12]}>
+      <SectionWithLabel label={sectionLabels[7]}>
         <Footer />
       </SectionWithLabel>
     </main>
   );
-}   
+}
