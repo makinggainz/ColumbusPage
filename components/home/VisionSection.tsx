@@ -1,176 +1,111 @@
 "use client";
 
-import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { Container } from "@/components/layout/Container";
 import { cormorant } from "@/lib/typography";
 
 export const Vision = () => {
-  const titleRef = useRef<HTMLHeadingElement>(null);
-  const gridRef = useRef<HTMLDivElement>(null);
-  const [titleVisible, setTitleVisible] = useState(false);
-  const [gridVisible, setGridVisible] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    const observe = (el: HTMLElement | null, onVisible: () => void) => {
-      if (!el) return () => {};
-      const observer = new IntersectionObserver(
-        ([entry]) => {
-          if (entry.isIntersecting) {
-            onVisible();
-            observer.disconnect();
-          }
-        },
-        { threshold: 0 }
-      );
-      observer.observe(el);
-      return () => observer.disconnect();
-    };
-
-    const cleanups = [
-      observe(titleRef.current, () => setTitleVisible(true)),
-      observe(gridRef.current, () => setGridVisible(true)),
-    ];
-    return () => cleanups.forEach((fn) => fn());
+    const el = ref.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([e]) => { if (e.isIntersecting) { setVisible(true); obs.disconnect(); } },
+      { threshold: 0.08 }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
   }, []);
 
+  const fadeIn = (delay: number): React.CSSProperties => ({
+    opacity: visible ? 1 : 0,
+    transform: visible ? "translateY(0)" : "translateY(20px)",
+    transition: `opacity 0.75s ease ${delay}s, transform 0.75s ease ${delay}s`,
+  });
+
+  const stats = [
+    { value: "148M", label: "km² covered" },
+    { value: "2.3T", label: "training data points" },
+    { value: "47×", label: "faster than manual GIS" },
+    { value: "99.1%", label: "spatial accuracy" },
+  ];
+
   return (
-    <section className="bg-[#FEFEFE] py-20 md:py-28 lg:py-36">
+    <section
+      id="research"
+      data-navbar-theme="dark"
+      className="bg-[#070709] py-32 border-b border-white/[0.05]"
+    >
       <Container>
+        <div ref={ref}>
 
-        {/* TITLE */}
-        <h2
-          ref={titleRef}
-          className={`${cormorant.className} text-display font-semibold leading-tight text-left mb-12 md:mb-16 -mt-20 bg-linear-to-b from-[#0A1344] to-[#838383] bg-clip-text text-transparent tracking-[-0.015em]`}
-          style={{
-            opacity: titleVisible ? 1 : 0,
-            filter: titleVisible ? "blur(0px)" : "blur(8px)",
-            transform: titleVisible ? "translateY(0)" : "translateY(16px)",
-            transition: "opacity 0.6s ease-out 0.1s, filter 0.6s ease-out 0.1s, transform 0.6s ease-out 0.1s",
-          }}
-        >
-          A new species of AI
-        </h2>
+          {/* Section marker */}
+          <div className="flex items-center gap-4 mb-20" style={fadeIn(0)}>
+            <span className="text-[10px] tracking-[0.2em] text-white/20 uppercase font-mono">
+              02 / Research
+            </span>
+            <div className="flex-1 h-px bg-white/[0.05]" />
+          </div>
 
-        {/* GRID */}
-        <div
-          ref={gridRef}
-          className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-1.25 auto-rows-[120px] sm:auto-rows-[140px] lg:auto-rows-[160px] -mt-7.5"
-          style={{
-            opacity: gridVisible ? 1 : 0,
-            filter: gridVisible ? "blur(0px)" : "blur(8px)",
-            transform: gridVisible ? "translateY(0)" : "translateY(16px)",
-            transition: "opacity 0.6s ease-out 0.25s, filter 0.6s ease-out 0.25s, transform 0.6s ease-out 0.25s",
-          }}
-        >
+          {/* Two-column */}
+          <div className="grid lg:grid-cols-2 gap-16 lg:gap-24 items-start mb-24">
 
-          {/* ROW 1 */}
-          <Tile src="/image1.png" />
+            <div style={fadeIn(0.1)}>
+              <h2
+                className={`${cormorant.className} font-semibold leading-[0.93] tracking-[-0.025em] text-[#EDEDEA]`}
+                style={{ fontSize: "clamp(44px, 5.5vw, 76px)" }}
+              >
+                Not a language<br />
+                model.<br />
+                A <em>world</em> model.
+              </h2>
+            </div>
 
-          <TextTile
-            className="col-span-2 lg:col-span-2"
-            title="General Intelligence"
-            subtitle="for the physical world"
-          />
+            <div className="flex flex-col gap-6 lg:pt-2" style={fadeIn(0.2)}>
+              <p className="text-[15px] text-white/40 leading-[1.85]">
+                Large Language Models understand text. GeoContext-1 understands
+                space — the relationships between terrain, infrastructure, human
+                activity, climate, and time. It reasons natively in coordinates,
+                not words.
+              </p>
+              <p className="text-[15px] text-white/40 leading-[1.85]">
+                Where LLMs predict the next token, GeoContext-1 predicts the
+                next state of a physical environment. It models cities,
+                coastlines, supply chains, and ecosystems as dynamic,
+                interconnected systems — at planetary scale.
+              </p>
+              <a
+                href="#"
+                className="mt-2 inline-flex items-center gap-2 text-[13px] text-[#1396F3]/70 hover:text-[#1396F3] transition-colors"
+              >
+                Read the technical whitepaper →
+              </a>
+            </div>
+          </div>
 
-          <Tile src="/image2.png" />
-          <Tile src="/image3.png" />
-          <Tile src="/image4.png" />
-
-          {/* ROW 2 */}
-          <Tile src="/image5.png" />
-          <Tile src="/image6.png" />
-          <Tile src="/image7.png" />
-          <Tile src="/image8.png" />
-          <Tile src="/image9.png" />
-          <Tile src="/image10.png" />
-
-          {/* ROW 3 */}
-          <Tile src="/image111.png" />
-          <Tile src="/image112.png" />
-
-          <TextTile
-            className="col-span-2 lg:col-span-2"
-            title="Foundational Models"
-            subtitle="for Earth"
-            align="right"
-            paddingRight={44}
-          />
-
-          <Tile src="/image113.png" />
-          <Tile src="/image114.png" />
-
-          {/* ROW 4 */}
-          <Tile src="/image12.png" />
-          <Tile src="/image.png" />
-          <Tile src="/image14.png" />
-          <Tile src="/image15.png" />
-          <Tile src="/image16.png" />
-          <Tile src="/image17.png" />
-        </div>
-
-        {/* BOTTOM ROW */}
-        <div className="mt-7 md:mt-11 flex flex-col md:flex-row items-start justify-between gap-6">
-
-          <p className="text-sm md:text-base text-[#010101] max-w-2xl leading-[1.4]">
-            ColumbusPro-1 processes satellite imagery, terrain data, human activity,
-            and temporal patterns to generate actionable intelligence across real estate,
-            research, and consumer domains.
-          </p>
-
-          <button className="border border-[#1C274C] px-17.25 md:px-19.25 py-[14.5px] text-xl font-bold tracking-wide rounded-none hover:bg-[#1C274C] hover:text-white transition whitespace-nowrap">
-            [ See what we’re building ]
-          </button>
+          {/* Stats */}
+          <div
+            className="grid grid-cols-2 lg:grid-cols-4 gap-px bg-white/[0.05]"
+            style={fadeIn(0.3)}
+          >
+            {stats.map((s, i) => (
+              <div key={i} className="bg-[#070709] px-8 py-10">
+                <div
+                  className={`${cormorant.className} font-semibold text-[52px] text-[#EDEDEA] leading-none mb-2 tracking-[-0.02em]`}
+                >
+                  {s.value}
+                </div>
+                <div className="text-[11px] text-white/25 tracking-[0.12em] uppercase">
+                  {s.label}
+                </div>
+              </div>
+            ))}
+          </div>
 
         </div>
       </Container>
     </section>
-  );
-};
-
-const Tile = ({ src }: { src: string }) => {
-  return (
-    <div className="relative w-full h-full overflow-hidden">
-      <Image
-        src={src}
-        alt=""
-        fill
-        className="object-cover"
-      />
-    </div>
-  );
-};
-
-const TextTile = ({
-  title,
-  subtitle,
-  className = "",
-  align = "center",
-  paddingLeft,
-  paddingRight,
-}: {
-  title: string;
-  subtitle: string;
-  className?: string;
-  align?: "center" | "right";
-  paddingLeft?: number;
-  paddingRight?: number;
-}) => {
-  const alignClass = align === "right" ? "text-right" : "items-center text-center";
-  const inlineStyle: React.CSSProperties = {};
-  if (paddingLeft !== undefined) inlineStyle.paddingLeft = `${paddingLeft}px`;
-  if (paddingRight !== undefined) inlineStyle.paddingRight = `${paddingRight}px`;
-  return (
-    <div
-      className={`bg-white flex flex-col justify-center px-6 sm:px-8 ${alignClass} ${className}`}
-      style={inlineStyle}
-    >
-      <h3 className="text-3xl font-medium text-[#010101] leading-[0.9] tracking-[-0.04em]">
-      {title}
-      </h3>
-      <p className="text-lg sm:text-xl md:text-2xl font-medium text-[#010101] mt-2 tracking-[-0.04em]">
-        {subtitle}
-      </p>
-    </div>
   );
 };

@@ -1,133 +1,185 @@
-
-
 "use client";
 
-import {
-  PenTool,
-  Map,
-  BookOpen,
-  Cloud,
-  Book,
-  Database,
-  ArrowUpRight,
-} from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { Container } from "@/components/layout/Container";
 import { cormorant } from "@/lib/typography";
+import Link from "next/link";
+
 export const MainFeatures = () => {
-  const features = [
-    {
-      title: "Generative Geodata",
-      description:
-        "Our proprietary model can create predictive data or unique datasets tailored to your exact preferences.",
-      icon: PenTool,
-      link: true,
-    },
-    {
-      title: "Map Chat",
-      description:
-        "Research like you're talking to an expert with Columbus Chat. Answer any question, roll the dice, or visualize data in your own way.",
-      icon:Map,
-    },
-    {
-      title: "Research Reports",
-      description:
-        "Task Columbus to do all the hard expert-level work for you. Reports are created for your new site selection.",
-      icon: BookOpen,
-    },
-    {
-      title: "Cloud Based",
-      description:
-        "No more bulky GIS research software. Let your team do work from anywhere with our mobile app and browser based platform.",
-      icon: Cloud,
-    },
-    {
-      title: "Generative Due Diligence",
-      description:
-        "Cheaper, faster audits on neighbourhoods, sites, parcels, businesses and cities.",
-      icon: Book,
-    },
-    {
-      title: "Data Catalogue",
-      description:
-       "Find rich and relevant data sets faster with our simple to use interface.  If you cant find a relevant dataset, we can personally order the survey.",
-      icon: Database
-    },
+  const ref = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([e]) => { if (e.isIntersecting) { setVisible(true); obs.disconnect(); } },
+      { threshold: 0.05 }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+
+  const fadeIn = (delay: number): React.CSSProperties => ({
+    opacity: visible ? 1 : 0,
+    transform: visible ? "translateY(0)" : "translateY(20px)",
+    transition: `opacity 0.75s ease ${delay}s, transform 0.75s ease ${delay}s`,
+  });
+
+  const proFeatures = [
+    "Map Chat & Research Reports",
+    "Generative Due Diligence",
+    "Custom Data Surveys",
+    "Team Collaboration",
+  ];
+
+  const consumerFeatures = [
+    "AI-Curated Local Discovery",
+    "Hidden Spots & Insider Access",
+    "Neighbourhood Intelligence",
+    "Available on iOS & Android",
   ];
 
   return (
     <section
-      className="relative py-[130px]"
-      style={{
-        backgroundColor: "#FFFFFF",
-        backgroundImage: `
-          linear-gradient(to right, rgba(28,39,76,0.035) 1px, transparent 1px),
-          linear-gradient(to bottom, rgba(28,39,76,0.035) 1px, transparent 1px)
-        `,
-        backgroundSize: "144px 120px",
-      }}
+      data-navbar-theme="dark"
+      className="bg-[#070709] py-32 border-b border-white/[0.05]"
     >
       <Container>
+        <div ref={ref}>
 
-        {/* Heading */}
-        <div className="text-center mb-[55px]">
-          <h2 className={`${cormorant.className} text-[42px] font-medium text-[#1C274C] tracking-[-0.01em]`}>
-            Main Features
-          </h2>
-        </div>
+          {/* Section marker */}
+          <div className="flex items-center gap-4 mb-20" style={fadeIn(0)}>
+            <span className="text-[10px] tracking-[0.2em] text-white/20 uppercase font-mono">
+              03 / Products
+            </span>
+            <div className="flex-1 h-px bg-white/[0.05]" />
+          </div>
 
-        {/* Grid */}
-        <div className="flex flex-wrap justify-center gap-x-[100px] gap-y-[100px]">
+          {/* Heading */}
+          <div className="mb-16" style={fadeIn(0.1)}>
+            <h2
+              className={`${cormorant.className} font-semibold leading-[0.93] tracking-[-0.025em] text-[#EDEDEA]`}
+              style={{ fontSize: "clamp(44px, 5.5vw, 76px)" }}
+            >
+              Two products.<br />
+              One <em>model</em>.
+            </h2>
+          </div>
 
-          {features.map((feature, index) => {
-            const Icon = feature.icon;
+          {/* Cards */}
+          <div className="grid lg:grid-cols-2 gap-4">
 
-            return (
+            {/* Columbus Pro */}
+            <div
+              className="relative flex flex-col justify-between p-10 min-h-[520px] overflow-hidden"
+              style={{
+                background: "linear-gradient(145deg, #0A1344 0%, #0C1859 60%, #091140 100%)",
+                border: "1px solid rgba(19,150,243,0.18)",
+                ...fadeIn(0.2),
+              }}
+            >
+              {/* Decorative grid */}
               <div
-                key={index}
-                className="
-                  w-[333px]
-                  h-[269px]
-                  rounded-[12px]
-                  bg-white/60
-                  backdrop-blur-[12px]
-                  border border-[#E5E8EF]
-                  px-[28px]
-                  pt-[28px]
-                  shadow-[0_2px_8px_rgba(0,0,0,0.03)]
-                "
-              >
-                {/* Icon container */}
-                <div className="w-[36px] h-[36px] rounded-[10px] border border-[#E6EAF2] bg-white/80 flex items-center justify-center mb-[22px]">
-                  <Icon
-                    size={18}
-                    strokeWidth={1.5}
-                    className="text-[#1C274C]"
-                  />
-                </div>
+                className="absolute inset-0 pointer-events-none"
+                style={{
+                  backgroundImage:
+                    "linear-gradient(rgba(19,150,243,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(19,150,243,0.04) 1px, transparent 1px)",
+                  backgroundSize: "44px 44px",
+                }}
+                aria-hidden
+              />
 
-                {/* Title */}
-                <h3 className="text-[16px] font-semibold text-[#1C274C] mb-[14px]">
-                  {feature.title}
+              <div className="relative z-10">
+                <span className="text-[10px] tracking-[0.22em] text-white/25 uppercase font-mono block mb-10">
+                  Enterprise · Site Selection · GIS
+                </span>
+
+                <h3
+                  className={`${cormorant.className} font-semibold leading-[0.93] tracking-[-0.02em] text-white mb-6`}
+                  style={{ fontSize: "clamp(48px, 5vw, 68px)" }}
+                >
+                  Columbus<br />
+                  <em>Pro</em>
                 </h3>
 
-                {/* Description */}
-                <p className="text-[14px] leading-[160%] text-[#1C274C]/70 mb-[16px]">
-                  {feature.description}
+                <p className="text-[14px] text-white/40 leading-[1.8] max-w-sm mb-10">
+                  Enterprise-grade geospatial intelligence. AI-powered site
+                  selection, due diligence, and market analysis for
+                  professionals who can't afford to be wrong.
                 </p>
 
-                {/* Optional Link Button (First Card Only) */}
-                {feature.link && (
-                  <a
-                  href="#"
-                  className="text-[15px] font-medium text-[#4C76C6] hover:underline inline-flex items-center gap-[6px]"
-                >
-                  Check out our generative datasets
-                  <ArrowUpRight size={16} strokeWidth={1.6} />
-                </a>
-                )}
+                <ul className="space-y-2.5 mb-12">
+                  {proFeatures.map((f) => (
+                    <li key={f} className="flex items-center gap-3 text-[13px] text-white/45">
+                      <span className="w-1 h-1 rounded-full bg-[#1396F3] shrink-0" />
+                      {f}
+                    </li>
+                  ))}
+                </ul>
               </div>
-            );
-          })}
+
+              <div className="relative z-10 flex items-center justify-between">
+                <Link
+                  href="/enterprise"
+                  className="inline-flex items-center px-5 py-2.5 bg-white text-black text-[13px] font-semibold hover:bg-white/90 transition-colors"
+                >
+                  Explore Columbus Pro →
+                </Link>
+                <span className="text-[10px] font-mono text-white/12 tracking-wider">PRO-1</span>
+              </div>
+            </div>
+
+            {/* Columbus Consumer */}
+            <div
+              className="relative flex flex-col justify-between p-10 min-h-[520px] overflow-hidden"
+              style={{
+                background: "linear-gradient(145deg, #0D0E14 0%, #111318 100%)",
+                border: "1px solid rgba(255,255,255,0.07)",
+                ...fadeIn(0.3),
+              }}
+            >
+              <div>
+                <span className="text-[10px] tracking-[0.22em] text-white/25 uppercase font-mono block mb-10">
+                  Consumer · Travel · Discovery
+                </span>
+
+                <h3
+                  className={`${cormorant.className} font-semibold leading-[0.93] tracking-[-0.02em] text-white mb-6`}
+                  style={{ fontSize: "clamp(48px, 5vw, 68px)" }}
+                >
+                  Columbus<br />
+                  <em>Consumer</em>
+                </h3>
+
+                <p className="text-[14px] text-white/40 leading-[1.8] max-w-sm mb-10">
+                  Travel like you know everything. AI-powered local discovery,
+                  neighbourhood insights, and hidden spots curated by the same
+                  model that powers Pro.
+                </p>
+
+                <ul className="space-y-2.5 mb-12">
+                  {consumerFeatures.map((f) => (
+                    <li key={f} className="flex items-center gap-3 text-[13px] text-white/45">
+                      <span className="w-1 h-1 rounded-full bg-white/25 shrink-0" />
+                      {f}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className="flex items-center justify-between">
+                <Link
+                  href="/products"
+                  className="inline-flex items-center px-5 py-2.5 border border-white/18 text-white text-[13px] font-semibold hover:bg-white/5 transition-colors"
+                >
+                  Explore Consumer →
+                </Link>
+                <span className="text-[10px] font-mono text-white/12 tracking-wider">CONSUMER-1</span>
+              </div>
+            </div>
+
+          </div>
         </div>
       </Container>
     </section>
