@@ -8,7 +8,7 @@ export default function MapsGPTPage() {
     return (
         <main className="min-h-screen relative">
             <MapBackground initialChapter="gpt-intro" />
-            <Navbar />
+            <Navbar theme="dark" />
 
             {/* Content Container - Left 50% on desktop */}
             <div className="relative z-10 w-full md:w-1/2 pointer-events-none">

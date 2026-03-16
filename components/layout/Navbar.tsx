@@ -3,30 +3,29 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useState, useRef } from "react";
-import { usePathname } from "next/navigation";
+
 import { ScrambleText } from "@/components/ui/ScrambleText";
 
-// Scroll threshold (px) at which the compact nav replaces the primary nav
 const COMPACT_THRESHOLD = 80;
 
-export const Navbar = () => {
-    // ── Primary navbar state ──────────────────────────────────────────
+const menuItems = [
+    { label: "Our Mission", href: "/our-mission" },
+    { label: "Columbus Market Spy", href: "/market-spy" },
+    { label: "MapsGPT", href: "/maps-gpt" },
+    { label: "Use Cases", href: "/use-cases" },
+    { label: "Technology", href: "/technology" },
+];
+
+// ─────────────────────────────────────────────────────────────────────────────
+
+export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isManuallyToggled, setIsManuallyToggled] = useState(false);
     const [isScrolled, setIsScrolled] = useState(() =>
         typeof window !== "undefined" ? window.scrollY > 0 : false
     );
-    const pathname = usePathname();
-    const isDarkPage = pathname === "/enterprise" || pathname.startsWith("/enterprise/");
-    const [navTheme, setNavTheme] = useState<"light" | "dark">(isDarkPage ? "dark" : "light");
     const navRef = useRef<HTMLElement>(null);
 
-    // ── Sync theme immediately when pathname changes ───────────────────
-    useEffect(() => {
-        setNavTheme(isDarkPage ? "dark" : "light");
-    }, [isDarkPage]);
-
-    // ── Compact navbar state ──────────────────────────────────────────
     const [isCompactMenuOpen, setIsCompactMenuOpen] = useState(false);
     const [isCompactManuallyToggled, setIsCompactManuallyToggled] = useState(false);
     const [isCompactVisible, setIsCompactVisible] = useState(() =>
@@ -34,7 +33,6 @@ export const Navbar = () => {
     );
     const compactNavRef = useRef<HTMLElement>(null);
 
-    // ── Scroll listener ───────────────────────────────────────────────
     useEffect(() => {
         const handleScroll = () => {
             const y = window.scrollY;
@@ -46,7 +44,6 @@ export const Navbar = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    // ── Primary nav: close menu when mouse leaves ─────────────────────
     useEffect(() => {
         const handleMouseMove = (e: MouseEvent) => {
             if (!navRef.current) return;
@@ -60,7 +57,6 @@ export const Navbar = () => {
         return () => window.removeEventListener("mousemove", handleMouseMove);
     }, [isMenuOpen, isManuallyToggled]);
 
-    // ── Compact nav: close menu when mouse leaves ─────────────────────
     useEffect(() => {
         const handleMouseMove = (e: MouseEvent) => {
             if (!compactNavRef.current) return;
@@ -73,14 +69,6 @@ export const Navbar = () => {
         window.addEventListener("mousemove", handleMouseMove);
         return () => window.removeEventListener("mousemove", handleMouseMove);
     }, [isCompactMenuOpen, isCompactManuallyToggled]);
-
-    const menuItems = [
-        { label: "Our Mission", href: "/our-mission" },
-        { label: "Columbus Market Spy", href: "/market-spy" },
-        { label: "MapsGPT", href: "/maps-gpt" },
-        { label: "Use Cases", href: "/use-cases" },
-        { label: "Technology", href: "/technology" },
-    ];
 
     // ── Primary nav handlers ──────────────────────────────────────────
     const handleMouseEnter = () => {
@@ -124,16 +112,14 @@ export const Navbar = () => {
 
     // ── Blend styles ──────────────────────────────────────────────────
     const navBlendStyle: React.CSSProperties = isMenuOpen
-        ? { color: "#0A1344" }
+        ? { color: "#111111" }
         : isScrolled
         ? { mixBlendMode: "difference", color: "white" }
-        : navTheme === "dark"
+        : theme === "dark"
         ? { color: "white" }
         : { color: "#0A1344" };
 
-    const compactNavBlendStyle: React.CSSProperties = isCompactMenuOpen
-        ? { color: "#0A1344" }
-        : { mixBlendMode: "difference", color: "white" };
+    const compactNavBlendStyle: React.CSSProperties = { color: "#111111" };
 
     return (
         <>
@@ -154,9 +140,12 @@ export const Navbar = () => {
                 onMouseLeave={handleMouseLeave}
             >
                 <div className="relative mx-auto w-full max-w-screen-2xl">
-                    <div className={`absolute inset-y-0 left-(--container-padding) right-(--container-padding) transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-                        isMenuOpen ? "bg-white rounded-tl-xs rounded-tr-xs" : "bg-transparent"
-                    }`} />
+                    {/* Nav bar background pill — transparent by default, white when menu open */}
+                    <div
+                        className={`absolute inset-y-0 left-(--container-padding) right-(--container-padding) transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                            isMenuOpen ? "bg-white rounded-tl-xs rounded-tr-xs" : "bg-transparent rounded-xs"
+                        }`}
+                    />
 
                     <div className="relative px-[calc(var(--container-padding)+18px)]">
                         <div className="grid h-14 md:h-17 grid-cols-[1fr_auto_1fr] items-center">
@@ -164,7 +153,7 @@ export const Navbar = () => {
                             <Link href="/" className="flex w-fit shrink-0 items-center gap-2" onMouseEnter={handleNavMouseEnter}>
                                 <div
                                     className="relative h-10 w-10 shrink-0"
-                                    style={isMenuOpen || (!isScrolled && navTheme === "light") ? {} : { filter: "brightness(0) invert(1)" }}
+                                    style={(isScrolled && !isMenuOpen) || (theme === "dark" && !isMenuOpen) ? { filter: "brightness(0) invert(1)" } : {}}
                                 >
                                     <Image
                                         src="/logobueno.png"
@@ -182,7 +171,7 @@ export const Navbar = () => {
 
                             {/* Center: Navigation Links */}
                             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                                <div className={`hidden items-center gap-9 min-[1155px]:flex pointer-events-auto transition-opacity duration-300 ${!isScrolled ? "opacity-70" : ""}`}>
+                                <div className={`hidden items-center gap-9 min-[1155px]:flex pointer-events-auto transition-opacity duration-300 ${!isScrolled && !isMenuOpen ? "opacity-70" : ""}`}>
                                     <Link href="#" className="group relative text-md font-medium transition-opacity duration-300 hover:opacity-70" onMouseEnter={handleNavMouseEnter}>
                                         Product
                                         <span className="absolute left-0 -bottom-1 h-px w-0 transition-all duration-300 group-hover:w-full bg-current" />
@@ -202,7 +191,13 @@ export const Navbar = () => {
                             <div className="col-start-3 flex items-center justify-end gap-3">
                                 <Link
                                     href="/maps-gpt"
-                                    className={`hidden min-[1155px]:flex items-center justify-center px-6 py-3.5 text-md font-semibold leading-none rounded-none border transition-opacity duration-300 hover:opacity-70 ${isScrolled ? "border-black bg-white text-black" : "border-[#0A1344] bg-transparent text-[#0A1344]"}`}
+                                    className={`hidden min-[1155px]:flex items-center justify-center px-6 py-3.5 text-md font-semibold leading-none rounded-none border transition-opacity duration-300 hover:opacity-70 ${
+                                        isScrolled
+                                            ? "border-black bg-white text-black"
+                                            : theme === "dark"
+                                            ? "border-white/50 bg-transparent text-white"
+                                            : "border-[#0A1344] bg-transparent text-[#0A1344]"
+                                    }`}
                                     onMouseEnter={handleNavMouseEnter}
                                 >
                                     Start Now
@@ -210,7 +205,7 @@ export const Navbar = () => {
                                 <button
                                     onClick={handleHamburgerClick}
                                     onMouseEnter={handleNavMouseEnter}
-                                    className={`relative flex h-11 w-11 items-center justify-center rounded-none border transition-all duration-300 border-current`}
+                                    className="relative flex h-11 w-11 items-center justify-center rounded-none border transition-all duration-300 border-current"
                                     aria-label="Toggle menu"
                                 >
                                     <div className={`absolute h-px w-5.5 bg-current transform-gpu transition-all duration-300 ease-in-out ${isMenuOpen ? "rotate-45" : "-translate-y-1.5"}`} />
@@ -221,13 +216,19 @@ export const Navbar = () => {
                         </div>
                     </div>
 
-                    {/* Mega Menu Dropdown */}
+                    {/* ── Dropdown ── */}
                     <div
-                        className={`absolute top-full left-(--container-padding) right-(--container-padding) rounded-bl-xs rounded-br-xs transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                        className={`absolute top-full left-(--container-padding) right-(--container-padding) rounded-bl-xs rounded-br-xs overflow-hidden transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
                             isMenuOpen
-                                ? "opacity-100 translate-y-0 bg-white pointer-events-auto"
-                                : "opacity-0 -translate-y-10 pointer-events-none"
+                                ? "opacity-100 translate-y-0 pointer-events-auto"
+                                : "opacity-0 -translate-y-6 pointer-events-none"
                         }`}
+                        style={{
+                            background: "rgba(248, 249, 252, 0.92)",
+                            backdropFilter: "blur(20px)",
+                            WebkitBackdropFilter: "blur(20px)",
+                            boxShadow: "0 8px 32px rgba(0,0,0,0.08)",
+                        }}
                     >
                         <div className="pl-7 pr-(--container-padding) py-12" style={{ transitionDelay: isMenuOpen ? "150ms" : "0ms" }}>
                             <div className="grid grid-cols-1 md:grid-cols-12 gap-12">
@@ -309,20 +310,18 @@ export const Navbar = () => {
                 }`}
             />
 
-            {/* ── Blur gradient background for compact nav ──
-                 Separate from the nav so it doesn't interfere with mix-blend-mode.
-                 Spans top-0 to 10px below the nav bottom edge (h-10/h-11 + 10px).
-                 Fades from full blur at top to transparent at the bottom edge. */}
+            {/* ── Blur gradient background for compact nav ── */}
             <div
                 className={`fixed top-0 left-0 right-0 pointer-events-none transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
                     isCompactVisible ? "translate-y-0" : "-translate-y-full"
                 }`}
                 style={{
                     zIndex: 49,
-                    height: "62px", /* h-16 (64px) nav, button bottom at 52px, +10px */
-                    backdropFilter: "blur(24px)",
-                    WebkitBackdropFilter: "blur(24px)",
-                    borderBottom: "1px solid rgba(255, 255, 255, 0.2)",
+                    height: "62px",
+                    background: "rgba(248, 249, 252, 0.88)",
+                    backdropFilter: "blur(20px)",
+                    WebkitBackdropFilter: "blur(20px)",
+                    borderBottom: "1px solid rgba(0, 0, 0, 0.07)",
                 }}
             />
 
@@ -336,10 +335,12 @@ export const Navbar = () => {
                 onMouseLeave={handleCompactMouseLeave}
             >
                 <div className="relative mx-auto w-full max-w-screen-2xl">
-                    {/* Pill — only shown when compact menu open */}
-                    <div className={`absolute inset-y-0 left-(--container-padding) right-(--container-padding) transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-                        isCompactMenuOpen ? "bg-white rounded-tl-xs rounded-tr-xs" : "bg-transparent"
-                    }`} />
+                    {/* Nav bar background pill — transparent (compact bar handles bg) */}
+                    <div
+                        className={`absolute inset-y-0 left-(--container-padding) right-(--container-padding) transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                            isCompactMenuOpen ? "rounded-tl-xs rounded-tr-xs" : ""
+                        }`}
+                    />
 
                     <div className="relative px-[calc(var(--container-padding)+18px)]">
                         <div className="grid h-16 grid-cols-[1fr_auto_1fr] items-center">
@@ -347,7 +348,6 @@ export const Navbar = () => {
                             <Link href="/" className="flex w-fit shrink-0 items-center gap-2" onMouseEnter={handleCompactNavMouseEnter}>
                                 <div
                                     className="relative h-8 w-8 shrink-0"
-                                    style={isCompactMenuOpen ? {} : { filter: "brightness(0) invert(1)" }}
                                 >
                                     <Image
                                         src="/logobueno.png"
@@ -384,7 +384,7 @@ export const Navbar = () => {
                             <div className="col-start-3 flex items-center justify-end gap-2">
                                 <Link
                                     href="/maps-gpt"
-                                    className="hidden min-[1155px]:flex items-center justify-center h-10 px-4 text-sm font-semibold leading-none rounded-none border border-black bg-white text-black transition-opacity duration-300 hover:opacity-70"
+                                    className="hidden min-[1155px]:flex items-center justify-center h-10 px-4 text-sm font-semibold leading-none rounded-none border border-black/20 bg-black/5 text-[#111] transition-opacity duration-300 hover:opacity-70"
                                     onMouseEnter={handleCompactNavMouseEnter}
                                 >
                                     Start Now
@@ -403,13 +403,19 @@ export const Navbar = () => {
                         </div>
                     </div>
 
-                    {/* Mega Menu Dropdown */}
+                    {/* ── Dropdown ── */}
                     <div
-                        className={`absolute top-full left-(--container-padding) right-(--container-padding) rounded-bl-xs rounded-br-xs transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                        className={`absolute top-full left-(--container-padding) right-(--container-padding) rounded-bl-xs rounded-br-xs overflow-hidden transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
                             isCompactMenuOpen
-                                ? "opacity-100 translate-y-0 bg-white pointer-events-auto"
-                                : "opacity-0 -translate-y-10 pointer-events-none"
+                                ? "opacity-100 translate-y-0 pointer-events-auto"
+                                : "opacity-0 -translate-y-6 pointer-events-none"
                         }`}
+                        style={{
+                            background: "rgba(248, 249, 252, 0.92)",
+                            backdropFilter: "blur(20px)",
+                            WebkitBackdropFilter: "blur(20px)",
+                            boxShadow: "0 8px 32px rgba(0,0,0,0.08)",
+                        }}
                     >
                         <div className="pl-7 pr-(--container-padding) py-12" style={{ transitionDelay: isCompactMenuOpen ? "150ms" : "0ms" }}>
                             <div className="grid grid-cols-1 md:grid-cols-12 gap-12">

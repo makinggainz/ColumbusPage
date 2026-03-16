@@ -27,7 +27,7 @@ export default function UseCasesRoute() {
     <main>
       <section className="relative">
         <SectionLabel letter="a" />
-        <Navbar />
+        <Navbar theme="dark" />
       </section>
       <section className="relative">
         <SectionLabel letter="b" />
