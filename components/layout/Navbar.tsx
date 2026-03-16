@@ -3,6 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useState, useRef } from "react";
+import { usePathname } from "next/navigation";
 import { ScrambleText } from "@/components/ui/ScrambleText";
 
 // Scroll threshold (px) at which the compact nav replaces the primary nav
@@ -15,7 +16,15 @@ export const Navbar = () => {
     const [isScrolled, setIsScrolled] = useState(() =>
         typeof window !== "undefined" ? window.scrollY > 0 : false
     );
+    const pathname = usePathname();
+    const isDarkPage = pathname === "/enterprise" || pathname.startsWith("/enterprise/");
+    const [navTheme, setNavTheme] = useState<"light" | "dark">(isDarkPage ? "dark" : "light");
     const navRef = useRef<HTMLElement>(null);
+
+    // ── Sync theme immediately when pathname changes ───────────────────
+    useEffect(() => {
+        setNavTheme(isDarkPage ? "dark" : "light");
+    }, [isDarkPage]);
 
     // ── Compact navbar state ──────────────────────────────────────────
     const [isCompactMenuOpen, setIsCompactMenuOpen] = useState(false);
@@ -34,6 +43,7 @@ export const Navbar = () => {
         };
         window.addEventListener("scroll", handleScroll, { passive: true });
         return () => window.removeEventListener("scroll", handleScroll);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     // ── Primary nav: close menu when mouse leaves ─────────────────────
@@ -117,6 +127,8 @@ export const Navbar = () => {
         ? { color: "#0A1344" }
         : isScrolled
         ? { mixBlendMode: "difference", color: "white" }
+        : navTheme === "dark"
+        ? { color: "white" }
         : { color: "#0A1344" };
 
     const compactNavBlendStyle: React.CSSProperties = isCompactMenuOpen
@@ -152,7 +164,7 @@ export const Navbar = () => {
                             <Link href="/" className="flex w-fit shrink-0 items-center gap-2" onMouseEnter={handleNavMouseEnter}>
                                 <div
                                     className="relative h-10 w-10 shrink-0"
-                                    style={isMenuOpen || !isScrolled ? {} : { filter: "brightness(0) invert(1)" }}
+                                    style={isMenuOpen || (!isScrolled && navTheme === "light") ? {} : { filter: "brightness(0) invert(1)" }}
                                 >
                                     <Image
                                         src="/logobueno.png"

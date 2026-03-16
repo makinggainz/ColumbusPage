@@ -3,7 +3,7 @@ import { Container } from "@/components/layout/Container";
 
 export const Hero = () => {
   return (
-    <section className="relative bg-[#F9F9F9] min-h-[calc(100vh-576px)] overflow-hidden">
+    <section data-navbar-theme="light" className="relative bg-[#F9F9F9] min-h-[calc(100vh-576px)] overflow-hidden">
       <div className="relative z-10 pt-24 md:pt-32">
         <Container>
           <div className="max-w-292">
