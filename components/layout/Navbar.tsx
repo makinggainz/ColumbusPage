@@ -113,13 +113,8 @@ export const Navbar = () => {
     };
 
     // ── Blend styles ──────────────────────────────────────────────────
-    const navBlendStyle: React.CSSProperties = isMenuOpen
-        ? { color: "#0A1344" }
-        : { mixBlendMode: "difference", color: "white" };
-
-    const compactNavBlendStyle: React.CSSProperties = isCompactMenuOpen
-        ? { color: "#0A1344" }
-        : { mixBlendMode: "difference", color: "white" };
+    const navBlendStyle: React.CSSProperties = { mixBlendMode: "difference", color: "white" };
+    const compactNavBlendStyle: React.CSSProperties = { mixBlendMode: "difference", color: "white" };
 
     return (
         <>
@@ -142,7 +137,7 @@ export const Navbar = () => {
             >
                 <div className="relative mx-auto w-full max-w-screen-2xl">
                     <div className={`absolute inset-y-0 left-(--container-padding) right-(--container-padding) transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-                        isMenuOpen ? "bg-white rounded-tl-xs rounded-tr-xs" : "bg-transparent"
+                        isMenuOpen ? "bg-[#0C0D13] border-x border-t border-white/[0.07] rounded-tl-xs rounded-tr-xs" : "bg-transparent"
                     }`} />
 
                     <div className="relative px-[calc(var(--container-padding)+18px)]">
@@ -151,7 +146,7 @@ export const Navbar = () => {
                             <Link href="/" className="flex shrink-0 items-center gap-2">
                                 <div
                                     className="relative h-10 w-10 shrink-0"
-                                    style={isMenuOpen ? {} : { filter: "brightness(0) invert(1)" }}
+                                    style={{ filter: "brightness(0) invert(1)" }}
                                 >
                                     <Image
                                         src="/logobueno.png"
@@ -208,9 +203,9 @@ export const Navbar = () => {
 
                     {/* Mega Menu Dropdown */}
                     <div
-                        className={`absolute top-full left-(--container-padding) right-(--container-padding) rounded-bl-xs rounded-br-xs transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                        className={`absolute top-full left-(--container-padding) right-(--container-padding) rounded-bl-xs rounded-br-xs border-x border-b border-white/[0.07] transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
                             isMenuOpen
-                                ? "opacity-100 translate-y-0 bg-white pointer-events-auto"
+                                ? "opacity-100 translate-y-0 bg-[#0C0D13] pointer-events-auto"
                                 : "opacity-0 -translate-y-10 pointer-events-none"
                         }`}
                     >
@@ -221,28 +216,28 @@ export const Navbar = () => {
                                     style={{ transitionDelay: isMenuOpen ? "200ms" : "0ms" }}
                                 >
                                     <div>
-                                        <h4 className="text-xs font-semibold text-[#0A1344]/50 tracking-widest uppercase mb-4">
+                                        <h4 className="text-xs font-semibold text-white/25 tracking-widest uppercase mb-4">
                                             <ScrambleText text="COLUMBUS EARTH" isActive={isMenuOpen} delay={300} />
                                         </h4>
-                                        <p className="text-[#0A1344]/70 text-base leading-relaxed max-w-md">
+                                        <p className="text-white/40 text-base leading-relaxed max-w-md">
                                             Columbus Earth Inc. is a spatial frontier AI company building the first production
                                             Large Geospatial Model to answer the most difficult questions about our planet.
                                         </p>
                                     </div>
                                     <div className="grid grid-cols-2 gap-8">
                                         <div>
-                                            <h4 className="text-xs font-semibold text-gray-500 tracking-wider uppercase mb-2">
+                                            <h4 className="text-xs font-semibold text-white/25 tracking-wider uppercase mb-2">
                                                 <ScrambleText text="CONTACT" isActive={isMenuOpen} delay={450} />
                                             </h4>
-                                            <a href="mailto:contact@columbus.earth" className="text-[#0A1344] font-medium block transition-colors duration-300 hover:text-[#0A1344]/70">
+                                            <a href="mailto:contact@columbus.earth" className="text-white/70 font-medium block transition-colors duration-300 hover:text-white">
                                                 contact@columbus.earth
                                             </a>
                                         </div>
                                         <div>
-                                            <h4 className="text-xs font-semibold text-gray-500 tracking-wider uppercase mb-2">
+                                            <h4 className="text-xs font-semibold text-white/25 tracking-wider uppercase mb-2">
                                                 <ScrambleText text="SOCIAL" isActive={isMenuOpen} delay={550} />
                                             </h4>
-                                            <a href="https://www.linkedin.com/company/columbusearth/about/?viewAsMember=true" target="_blank" rel="noopener noreferrer" className="text-gray-900 hover:text-primary font-medium block transition-colors">
+                                            <a href="https://www.linkedin.com/company/columbusearth/about/?viewAsMember=true" target="_blank" rel="noopener noreferrer" className="text-white/70 hover:text-white font-medium block transition-colors">
                                                 LinkedIn
                                             </a>
                                         </div>
@@ -251,7 +246,7 @@ export const Navbar = () => {
                                 <div className="md:col-span-3"></div>
                                 <div className="md:col-span-4 space-y-6">
                                     <h4
-                                        className={`text-xs font-semibold text-gray-500 tracking-wider uppercase mb-4 transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                                        className={`text-xs font-semibold text-white/25 tracking-wider uppercase mb-4 transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
                                             isMenuOpen ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
                                         }`}
                                         style={{ transitionDelay: isMenuOpen ? "250ms" : "0ms" }}
@@ -270,9 +265,9 @@ export const Navbar = () => {
                                                 <Link
                                                     href={item.href}
                                                     onClick={() => { setIsMenuOpen(false); setIsManuallyToggled(false); }}
-                                                    className="group relative text-xl font-medium text-[#0A1344] transition-all duration-300 flex items-center"
+                                                    className="group relative text-xl font-medium text-white/75 hover:text-white transition-all duration-300 flex items-center"
                                                 >
-                                                    <span className="mr-3 transition-transform duration-300 ease-in-out group-hover:translate-x-1">+</span>
+                                                    <span className="mr-3 transition-transform duration-300 ease-in-out group-hover:translate-x-1 text-white/25">+</span>
                                                     <span className="transition-all duration-300 ease-in-out group-hover:translate-x-1">{item.label}</span>
                                                 </Link>
                                             </li>
@@ -325,7 +320,7 @@ export const Navbar = () => {
                 <div className="relative mx-auto w-full max-w-screen-2xl">
                     {/* Pill — only shown when compact menu open */}
                     <div className={`absolute inset-y-0 left-(--container-padding) right-(--container-padding) transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-                        isCompactMenuOpen ? "bg-white rounded-tl-xs rounded-tr-xs" : "bg-transparent"
+                        isCompactMenuOpen ? "bg-[#0C0D13] border-x border-t border-white/[0.07] rounded-tl-xs rounded-tr-xs" : "bg-transparent"
                     }`} />
 
                     <div className="relative px-[calc(var(--container-padding)+18px)]">
@@ -334,7 +329,7 @@ export const Navbar = () => {
                             <Link href="/" className="flex shrink-0 items-center gap-1.5">
                                 <div
                                     className="relative h-6 w-6 shrink-0"
-                                    style={isCompactMenuOpen ? {} : { filter: "brightness(0) invert(1)" }}
+                                    style={{ filter: "brightness(0) invert(1)" }}
                                 >
                                     <Image
                                         src="/logobueno.png"
@@ -390,9 +385,9 @@ export const Navbar = () => {
 
                     {/* Mega Menu Dropdown */}
                     <div
-                        className={`absolute top-full left-(--container-padding) right-(--container-padding) rounded-bl-xs rounded-br-xs transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                        className={`absolute top-full left-(--container-padding) right-(--container-padding) rounded-bl-xs rounded-br-xs border-x border-b border-white/[0.07] transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
                             isCompactMenuOpen
-                                ? "opacity-100 translate-y-0 bg-white pointer-events-auto"
+                                ? "opacity-100 translate-y-0 bg-[#0C0D13] pointer-events-auto"
                                 : "opacity-0 -translate-y-10 pointer-events-none"
                         }`}
                     >
@@ -403,28 +398,28 @@ export const Navbar = () => {
                                     style={{ transitionDelay: isCompactMenuOpen ? "200ms" : "0ms" }}
                                 >
                                     <div>
-                                        <h4 className="text-xs font-semibold text-[#0A1344]/50 tracking-widest uppercase mb-4">
+                                        <h4 className="text-xs font-semibold text-white/25 tracking-widest uppercase mb-4">
                                             <ScrambleText text="COLUMBUS EARTH" isActive={isCompactMenuOpen} delay={300} />
                                         </h4>
-                                        <p className="text-[#0A1344]/70 text-base leading-relaxed max-w-md">
+                                        <p className="text-white/40 text-base leading-relaxed max-w-md">
                                             Columbus Earth Inc. is a spatial frontier AI company building the first production
                                             Large Geospatial Model to answer the most difficult questions about our planet.
                                         </p>
                                     </div>
                                     <div className="grid grid-cols-2 gap-8">
                                         <div>
-                                            <h4 className="text-xs font-semibold text-gray-500 tracking-wider uppercase mb-2">
+                                            <h4 className="text-xs font-semibold text-white/25 tracking-wider uppercase mb-2">
                                                 <ScrambleText text="CONTACT" isActive={isCompactMenuOpen} delay={450} />
                                             </h4>
-                                            <a href="mailto:contact@columbus.earth" className="text-[#0A1344] font-medium block transition-colors duration-300 hover:text-[#0A1344]/70">
+                                            <a href="mailto:contact@columbus.earth" className="text-white/70 font-medium block transition-colors duration-300 hover:text-white">
                                                 contact@columbus.earth
                                             </a>
                                         </div>
                                         <div>
-                                            <h4 className="text-xs font-semibold text-gray-500 tracking-wider uppercase mb-2">
+                                            <h4 className="text-xs font-semibold text-white/25 tracking-wider uppercase mb-2">
                                                 <ScrambleText text="SOCIAL" isActive={isCompactMenuOpen} delay={550} />
                                             </h4>
-                                            <a href="https://www.linkedin.com/company/columbusearth/about/?viewAsMember=true" target="_blank" rel="noopener noreferrer" className="text-gray-900 hover:text-primary font-medium block transition-colors">
+                                            <a href="https://www.linkedin.com/company/columbusearth/about/?viewAsMember=true" target="_blank" rel="noopener noreferrer" className="text-white/70 hover:text-white font-medium block transition-colors">
                                                 LinkedIn
                                             </a>
                                         </div>
@@ -433,7 +428,7 @@ export const Navbar = () => {
                                 <div className="md:col-span-3"></div>
                                 <div className="md:col-span-4 space-y-6">
                                     <h4
-                                        className={`text-xs font-semibold text-gray-500 tracking-wider uppercase mb-4 transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                                        className={`text-xs font-semibold text-white/25 tracking-wider uppercase mb-4 transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
                                             isCompactMenuOpen ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
                                         }`}
                                         style={{ transitionDelay: isCompactMenuOpen ? "250ms" : "0ms" }}
@@ -452,9 +447,9 @@ export const Navbar = () => {
                                                 <Link
                                                     href={item.href}
                                                     onClick={() => { setIsCompactMenuOpen(false); setIsCompactManuallyToggled(false); }}
-                                                    className="group relative text-xl font-medium text-[#0A1344] transition-all duration-300 flex items-center"
+                                                    className="group relative text-xl font-medium text-white/75 hover:text-white transition-all duration-300 flex items-center"
                                                 >
-                                                    <span className="mr-3 transition-transform duration-300 ease-in-out group-hover:translate-x-1">+</span>
+                                                    <span className="mr-3 transition-transform duration-300 ease-in-out group-hover:translate-x-1 text-white/25">+</span>
                                                     <span className="transition-all duration-300 ease-in-out group-hover:translate-x-1">{item.label}</span>
                                                 </Link>
                                             </li>
