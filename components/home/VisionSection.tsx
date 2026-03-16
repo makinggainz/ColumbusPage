@@ -46,7 +46,7 @@ export const Vision = () => {
             backgroundImage: "linear-gradient(to bottom, #0A1344 0%, #0A1344 20%, #C8D2EE 35%, #0A1344 50%, #0A1344 65%, #838383 100%)",
             backgroundSize: "100% 200%",
             backgroundPosition: "0% 0%",
-            animation: "text-shimmer-down 1.4s ease-in-out 0.7s 1 forwards",
+            animation: titleVisible ? "text-shimmer-down 1.4s ease-in-out 0.3s 1 forwards" : "none",
             opacity: titleVisible ? 1 : 0,
             filter: titleVisible ? "blur(0px)" : "blur(8px)",
             transform: titleVisible ? "translateY(0)" : "translateY(16px)",
