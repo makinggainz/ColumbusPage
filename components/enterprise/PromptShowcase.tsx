@@ -1,11 +1,14 @@
 "use client";
 
 import Image from "next/image";
+import { useEffect, useRef, useState } from "react";
 
-function PromptCard({ image, text }: { image: string; text: string }) {
+function PromptCard({ image, text, popStyle }: { image: string; text: string; popStyle?: React.CSSProperties }) {
   return (
-    
-    <div className="w-[320px] md:w-[360px] lg:w-[376px] rounded-[18px] bg-[#FDFDFD] border border-[#EDEDED] shadow-lg overflow-hidden">
+    <div
+      className="w-[320px] md:w-[360px] lg:w-[376px] rounded-[18px] bg-[#FDFDFD] border border-[#EDEDED] shadow-lg overflow-hidden"
+      style={popStyle}
+    >
 
       {/* Header */}
       <div className="flex items-center gap-2 px-4 py-3 text-[14px] text-[#374151] font-medium">
@@ -32,9 +35,12 @@ function PromptCard({ image, text }: { image: string; text: string }) {
   );
 }
 
-function CenterPrompt() {
+function CenterPrompt({ popStyle }: { popStyle?: React.CSSProperties }) {
   return (
-    <div className="relative w-[320px] md:w-[420px] lg:w-[503px] rounded-[18px] bg-[#F7F7F7] border border-[#EDEDED] shadow-xl overflow-visible">
+    <div
+      className="relative w-[320px] md:w-[420px] lg:w-[503px] rounded-[18px] bg-[#F7F7F7] border border-[#EDEDED] shadow-xl overflow-visible"
+      style={popStyle}
+    >
 
       <div className="px-5 py-4 text-[13px] text-[#6B7280] leading-[150%]">
 
@@ -58,19 +64,69 @@ function CenterPrompt() {
   );
 }
 
+const SPRING = "cubic-bezier(0.34, 1.56, 0.64, 1)";
+
+function popStyle(visible: boolean, delay: number): React.CSSProperties {
+  return {
+    opacity: visible ? 1 : 0,
+    transform: visible ? "scale(1)" : "scale(0.82)",
+    transition: `opacity 0.45s ease-out ${delay}s, transform 0.45s ${SPRING} ${delay}s`,
+  };
+}
+
 export default function PromptShowcase() {
+  const headerRef = useRef<HTMLDivElement>(null);
+  const [headerVisible, setHeaderVisible] = useState(false);
+  const [cardsVisible, setCardsVisible] = useState(false);
+
+  useEffect(() => {
+    const el = headerRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setHeaderVisible(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.1 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  // Cards pop in after header has faded in
+  useEffect(() => {
+    if (!headerVisible) return;
+    const t = setTimeout(() => setCardsVisible(true), 600);
+    return () => clearTimeout(t);
+  }, [headerVisible]);
+
+  const fadeInStyle = (visible: boolean, delay: number): React.CSSProperties => ({
+    opacity: visible ? 1 : 0,
+    filter: visible ? "blur(0px)" : "blur(8px)",
+    transform: visible ? "translateY(0)" : "translateY(16px)",
+    transition: `opacity 0.6s ease-out ${delay}s, filter 0.6s ease-out ${delay}s, transform 0.6s ease-out ${delay}s`,
+  });
+
   return (
     <section className="w-full py-24 md:py-32 overflow-hidden" style={{ backgroundColor: "#ffffff", paddingBottom: 100 }}>
 
       {/* ═══ PART 1: See prompts you can ask ═══ */}
-      <div data-prompt-area="part-1" className="contents">
+      <div data-prompt-area="part-1">
       {/* Part 1 header */}
-      <div className="text-center mb-16 md:mb-20 px-6">
-        <p className="text-[12px] md:text-[14px] tracking-[0.2em] text-[#6B7280] uppercase">
+      <div ref={headerRef} className="text-center mb-16 md:mb-20 px-6">
+        <p
+          className="text-[12px] md:text-[14px] tracking-[0.2em] text-[#6B7280] uppercase"
+          style={fadeInStyle(headerVisible, 0)}
+        >
           REAL USE CASE STORIES
         </p>
 
-        <h2 className="font-medium text-[28px] md:text-[48px] lg:text-[64px] leading-[140%] tracking-[-0.02em] mt-3">
+        <h2
+          className="font-medium text-[28px] md:text-[48px] lg:text-[64px] leading-[140%] tracking-[-0.02em] mt-3"
+          style={fadeInStyle(headerVisible, 0.15)}
+        >
           See prompts you can ask
         </h2>
       </div>
@@ -81,23 +137,27 @@ export default function PromptShowcase() {
         <PromptCard
           image="/enterprise/citymap.png"
           text="map of philly to drive my truck to run over as many pedestrians as possible"
+          popStyle={popStyle(cardsVisible, 0)}
         />
 
         <PromptCard
           image="/enterprise/map2.png"
           text="make me a map of charlotte, but filter only vacant lots next to transportation lines"
+          popStyle={popStyle(cardsVisible, 0.08)}
         />
 
-        <CenterPrompt />
+        <CenterPrompt popStyle={popStyle(cardsVisible, 0.16)} />
 
         <PromptCard
           image="/enterprise/map3.png"
           text="map of france but in weird colors to make it hard to understand"
+          popStyle={popStyle(cardsVisible, 0.24)}
         />
 
         <PromptCard
           image="/enterprise/map4.png"
           text="lava map for silly billies"
+          popStyle={popStyle(cardsVisible, 0.32)}
         />
 
       </div>
@@ -126,7 +186,7 @@ export default function PromptShowcase() {
 
         {/* CENTER */}
         <div className="absolute left-1/2 top-[52%] -translate-x-1/2 -translate-y-1/2">
-          <CenterPrompt />
+          <CenterPrompt popStyle={popStyle(cardsVisible, 0.1)} />
         </div>
 
         {/* TOP LEFT */}
@@ -134,6 +194,7 @@ export default function PromptShowcase() {
           <PromptCard
             image="/enterprise/citymap.png"
             text="map of philly to drive my truck to run over as many pedestrians as possible"
+            popStyle={popStyle(cardsVisible, 0)}
           />
         </div>
 
@@ -142,6 +203,7 @@ export default function PromptShowcase() {
           <PromptCard
             image="/enterprise/map2.png"
             text="make me a map of charlotte, but filter only vacant lots next to transportation lines"
+            popStyle={popStyle(cardsVisible, 0.08)}
           />
         </div>
 
@@ -150,6 +212,7 @@ export default function PromptShowcase() {
           <PromptCard
             image="/enterprise/map3.png"
             text="map of france but in weird colors to make it hard to understand"
+            popStyle={popStyle(cardsVisible, 0.16)}
           />
         </div>
 
@@ -158,6 +221,7 @@ export default function PromptShowcase() {
           <PromptCard
             image="/enterprise/map4.png"
             text="lava map for silly billies"
+            popStyle={popStyle(cardsVisible, 0.24)}
           />
         </div>
 
