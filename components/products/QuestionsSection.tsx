@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState, useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 
 const CARD_SOURCES = [
   "Question1.png",
@@ -17,40 +17,74 @@ const CARD_SOURCES = [
   "Question11.png",
 ];
 
-const CARD_LAYOUT = [
-  { width: 280, height: 340, className: "left-[8%] top-[10%] opacity-40" },
-  { width: 320, height: 360, className: "left-[38%] top-[5%] opacity-40" },
-  { width: 320, height: 360, className: "right-[10%] top-[8%] opacity-40" },
-  { width: 300, height: 360, className: "left-[5%] bottom-[12%] opacity-40" },
-  { width: 480, height: 360, className: "left-[30%] bottom-[5%] opacity-100 z-10" },
-  { width: 300, height: 360, className: "right-[2%] bottom-[5%] opacity-40" },
-  { width: 260, height: 320, className: "left-[15%] top-[25%] opacity-40" },
-  { width: 300, height: 360, className: "right-[20%] top-[20%] opacity-40" },
-  { width: 280, height: 340, className: "left-[45%] top-[15%] opacity-40" },
-  { width: 320, height: 360, className: "right-[5%] bottom-[25%] opacity-40" },
-  { width: 260, height: 320, className: "left-[20%] bottom-[20%] opacity-40" },
-] as const;
+interface CardDef {
+  width: number;
+  height: number;
+  left?: string;
+  right?: string;
+  top?: string;
+  bottom?: string;
+  startZ: number;  // initial translateZ — more negative = further back = disappears LAST
+  opacity: number;
+}
+
+// Assign each card a unique Z depth.
+// The spread from -280 to -760 creates obvious layering: nearest cards fly past first,
+// furthest cards (hero card at -760) fly past last.
+const CARDS: CardDef[] = [
+  { width: 238, height: 289, left: "8%",   top: "10%",    startZ: -320, opacity: 0.55 },
+  { width: 272, height: 306, left: "38%",  top: "5%",     startZ: -640, opacity: 0.55 },
+  { width: 272, height: 306, right: "10%", top: "8%",     startZ: -480, opacity: 0.55 },
+  { width: 255, height: 306, left: "5%",   bottom: "12%", startZ: -400, opacity: 0.55 },
+  { width: 408, height: 306, left: "28%",  bottom: "5%",  startZ: -760, opacity: 1.00 }, // hero — last to go
+  { width: 255, height: 306, right: "2%",  bottom: "5%",  startZ: -360, opacity: 0.55 },
+  { width: 221, height: 272, left: "15%",  top: "25%",    startZ: -560, opacity: 0.55 },
+  { width: 255, height: 306, right: "20%", top: "20%",    startZ: -280, opacity: 0.55 }, // nearest — first to go
+  { width: 238, height: 289, left: "45%",  top: "15%",    startZ: -680, opacity: 0.55 },
+  { width: 272, height: 306, right: "5%",  bottom: "25%", startZ: -520, opacity: 0.55 },
+  { width: 221, height: 272, left: "20%",  bottom: "20%", startZ: -600, opacity: 0.55 },
+];
+
+const TRAVEL      = 1000; // px each card travels forward over progress 0→1
+const PERSPECTIVE = 900;  // CSS perspective depth (px)
+const FADE_START  = -160; // Z at which card starts fading out
+const FADE_END    = -20;  // Z at which card is fully transparent
+
+function cardStyle(card: CardDef, progress: number) {
+  const currentZ = card.startZ + progress * TRAVEL;
+  let alpha = card.opacity;
+  if (currentZ >= FADE_END) {
+    alpha = 0;
+  } else if (currentZ >= FADE_START) {
+    alpha = card.opacity * (1 - (currentZ - FADE_START) / (FADE_END - FADE_START));
+  }
+  return {
+    left:    card.left,
+    right:   card.right,
+    top:     card.top,
+    bottom:  card.bottom,
+    opacity: alpha,
+    transform: `translateZ(${currentZ}px)`,
+    willChange: "transform, opacity" as const,
+  };
+}
 
 export default function QuestionsSection() {
   const sectionRef = useRef<HTMLDivElement>(null);
-  const [progress, setProgress] = useState(0);
+  const [progress, setProgress]           = useState(0);
   const [isStickyActive, setIsStickyActive] = useState(false);
 
   useEffect(() => {
     const onScroll = () => {
       const el = sectionRef.current;
       if (!el) return;
-      const rect = el.getBoundingClientRect();
-      const viewportHeight = window.innerHeight;
-      const sectionHeight = el.offsetHeight;
-      // Sticky zone: section top has passed viewport top and section bottom still in view
+      const rect        = el.getBoundingClientRect();
+      const scrollRange = el.offsetHeight - window.innerHeight;
+
+      // Sticky is active: section top has passed viewport top AND bottom still visible
       setIsStickyActive(rect.top <= 0 && rect.bottom > 0);
-      // Progress 0 when section top hits viewport top; 1 when we've scrolled through the section
-      const scrollRange = sectionHeight - viewportHeight;
-      if (scrollRange <= 0) {
-        setProgress(1);
-        return;
-      }
+
+      if (scrollRange <= 0) { setProgress(1); return; }
       const p = -rect.top / scrollRange;
       setProgress(Math.min(1, Math.max(0, p)));
     };
@@ -59,96 +93,125 @@ export default function QuestionsSection() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Original positions + zoom (scale up) + tunnel (translateZ: far → near)
-  const scale = 0.6 + progress * 1.0; // 0.6 → 1.6
-  const tunnelZ = -400 + progress * 480; // -400px (far) → 80px (toward viewer)
+  const atEnd = progress >= 0.97;
 
-  // At bottom of viewport (end of sticky scroll): show duplicate again in start pose, hide fixed animation
-  const atStickyEnd = progress >= 0.98;
-  const showFixedLayer = isStickyActive && !atStickyEnd;
-  const showDuplicate = !isStickyActive || atStickyEnd;
-  const duplicateScale = atStickyEnd ? 0.6 : scale;
-  const duplicateTunnelZ = atStickyEnd ? -400 : tunnelZ;
+  // Fixed layer shows during the scroll animation window
+  const showFixed = isStickyActive && !atEnd;
+
+  // Text opacities
+  const headingOpacity =
+    progress < 0.70 ? 1
+    : progress < 0.83 ? 1 - (progress - 0.70) / 0.13
+    : 0;
+
+  const tryItOpacity =
+    progress < 0.87 ? 0
+    : Math.min(1, (progress - 0.87) / 0.13);
 
   return (
-    <div ref={sectionRef} className="min-h-[500vh]">
-      <div className="sticky top-0 h-screen overflow-hidden">
-        <section className="relative h-full w-full bg-[#F9F9F9]">
+    // Tall outer div = scroll range
+    <div ref={sectionRef} style={{ height: "500vh" }}>
 
-          {/* In-section duplicate: visible at start and again at bottom of scroll (start pose); hidden during middle when fixed layer shows */}
+      {/* ── In-flow placeholder ──────────────────────────────────────────────────
+          Visible BEFORE the scroll range starts (initial state, p=0) and
+          AFTER it ends (final state, p≈1). Hidden while the fixed layer is showing.
+          Uses sticky so it pins at top when the section first reaches the viewport,
+          giving the user a moment to see the initial state before scrolling.
+      ─────────────────────────────────────────────────────────────────────────── */}
+      <div
+        className="sticky top-0 h-screen bg-[#F9F9F9]"
+        style={{
+          perspective: `${PERSPECTIVE}px`,
+          visibility: showFixed ? "hidden" : "visible",
+        }}
+      >
+        {CARDS.map((card, i) => (
           <div
-            className={`absolute inset-0 transition-opacity duration-150 ${showDuplicate ? "" : "invisible pointer-events-none"}`}
-            aria-hidden={!showDuplicate}
+            key={`placeholder-${CARD_SOURCES[i]}`}
+            className="absolute"
+            style={cardStyle(card, atEnd ? 1 : 0)}
           >
-            <div className="absolute left-1/2 top-1/2 z-20 -translate-x-1/2 -translate-y-1/2 text-center">
+            <Image
+              src={`/QuestionsMapsGPT/${CARD_SOURCES[i]}`}
+              width={card.width}
+              height={card.height}
+              alt=""
+              draggable={false}
+            />
+          </div>
+        ))}
+
+        {/* Text shown in placeholder (initial or final) */}
+        <div className="absolute left-1/2 top-1/2 z-20 -translate-x-1/2 -translate-y-1/2 text-center pointer-events-none">
+          {atEnd ? (
+            <h2 className="text-4xl font-semibold text-[#0F6B6E] md:text-6xl">
+              Try it—find out why
+            </h2>
+          ) : (
+            <>
               <h2 className="text-4xl font-semibold text-[#0F6B6E] md:text-6xl">
                 We&apos;ve already answered
               </h2>
               <h2 className="mt-4 text-4xl font-semibold text-[#0F6B6E] md:text-6xl">
                 thousands of questions!
               </h2>
-            </div>
-            <div className="absolute inset-0 z-10" style={{ perspective: "1000px" }}>
-              <div className="absolute inset-0" style={{ transformStyle: "preserve-3d" }}>
-                {CARD_SOURCES.map((filename, i) => (
-                  <div
-                    key={`inflow-${filename}-${i}`}
-                    className={`absolute ${CARD_LAYOUT[i].className}`}
-                    style={{
-                      transform: `scale(${duplicateScale}) translateZ(${duplicateTunnelZ}px)`,
-                    }}
-                  >
-                    <Image
-                      src={`/QuestionsMapsGPT/${filename}`}
-                      width={CARD_LAYOUT[i].width}
-                      height={CARD_LAYOUT[i].height}
-                      alt=""
-                    />
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* Sticky layer: fixed headline + images during scroll; hidden at bottom so duplicate shows again */}
-          {showFixedLayer && (
-            <>
-              <div
-                className="fixed left-1/2 top-1/2 z-20 -translate-x-1/2 -translate-y-1/2 text-center pointer-events-none"
-                aria-hidden={!showFixedLayer}
-              >
-                <h2 className="text-4xl font-semibold text-[#0F6B6E] md:text-6xl">
-                  We&apos;ve already answered
-                </h2>
-                <h2 className="mt-4 text-4xl font-semibold text-[#0F6B6E] md:text-6xl">
-                  thousands of questions!
-                </h2>
-              </div>
-              <div className="fixed inset-0 z-10 pointer-events-none" style={{ perspective: "1000px" }}>
-                <div className="absolute inset-0" style={{ transformStyle: "preserve-3d" }}>
-                  {CARD_SOURCES.map((filename, i) => (
-                    <div
-                      key={`fixed-${filename}-${i}`}
-                      className={`absolute ${CARD_LAYOUT[i].className}`}
-                      style={{
-                        transform: `scale(${scale}) translateZ(${tunnelZ}px)`,
-                      }}
-                    >
-                      <Image
-                        src={`/QuestionsMapsGPT/${filename}`}
-                        width={CARD_LAYOUT[i].width}
-                        height={CARD_LAYOUT[i].height}
-                        alt=""
-                      />
-                    </div>
-                  ))}
-                </div>
-              </div>
             </>
           )}
-
-        </section>
+        </div>
       </div>
+
+      {/* ── Fixed animation layer ────────────────────────────────────────────────
+          Renders as position:fixed (viewport-relative) during the scroll window.
+          Using fixed instead of sticky avoids the overflow-x:hidden on <main>
+          breaking sticky, and avoids overflow:hidden + perspective conflicts.
+          z-index below the navbar (which is typically z-50).
+      ─────────────────────────────────────────────────────────────────────────── */}
+      {showFixed && (
+        <div
+          className="fixed inset-0 z-30 bg-[#F9F9F9] pointer-events-none"
+          style={{ perspective: `${PERSPECTIVE}px` }}
+        >
+          {/* 3D Cards — each at its own Z depth, staggered disappearance */}
+          {CARDS.map((card, i) => (
+            <div
+              key={`fixed-${CARD_SOURCES[i]}`}
+              className="absolute"
+              style={cardStyle(card, progress)}
+            >
+              <Image
+                src={`/QuestionsMapsGPT/${CARD_SOURCES[i]}`}
+                width={card.width}
+                height={card.height}
+                alt=""
+                draggable={false}
+              />
+            </div>
+          ))}
+
+          {/* "We've already answered thousands of questions!" */}
+          <div
+            className="absolute left-1/2 top-1/2 z-20 -translate-x-1/2 -translate-y-1/2 text-center"
+            style={{ opacity: headingOpacity }}
+          >
+            <h2 className="text-4xl font-semibold text-[#0F6B6E] md:text-6xl">
+              We&apos;ve already answered
+            </h2>
+            <h2 className="mt-4 text-4xl font-semibold text-[#0F6B6E] md:text-6xl">
+              thousands of questions!
+            </h2>
+          </div>
+
+          {/* "Try it—find out why" */}
+          <div
+            className="absolute left-1/2 top-1/2 z-20 -translate-x-1/2 -translate-y-1/2 text-center"
+            style={{ opacity: tryItOpacity }}
+          >
+            <h2 className="text-4xl font-semibold text-[#0F6B6E] md:text-6xl">
+              Try it—find out why
+            </h2>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
