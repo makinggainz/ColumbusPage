@@ -256,7 +256,7 @@ export function GlobeHero({ style }: { style?: React.CSSProperties }) {
     <div className="w-full h-full" style={{ minHeight: "500px", ...style }}>
       <Canvas
         camera={{ position: [0, 0, 2.6], fov: 45 }}
-        style={{ background: "transparent" }}
+        style={{ background: "transparent", width: "100%", height: "100%" }}
         dpr={[1, 2]}
         gl={{ antialias: true, alpha: true }}
       >

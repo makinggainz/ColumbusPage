@@ -81,11 +81,10 @@ export const Hero = () => {
             </div>
 
             {/* Right: 3D globe */}
-            <div
-              className="hidden lg:block w-full"
-              style={{ height: "min(80vh, 700px)", ...fadeIn(0.4) }}
-            >
-              <GlobeHero />
+            <div className="hidden lg:block w-full" style={{ height: "min(80vh, 700px)" }}>
+              <div style={{ width: "100%", height: "100%", ...fadeIn(0.4) }}>
+                <GlobeHero style={{ width: "100%", height: "100%" }} />
+              </div>
             </div>
 
           </div>
