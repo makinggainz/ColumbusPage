@@ -133,12 +133,12 @@ export const Vision = () => {
 
 const Tile = ({ src }: { src: string }) => {
   return (
-    <div className="relative w-full h-full overflow-hidden">
+    <div className="relative w-full h-full overflow-hidden group">
       <Image
         src={src}
         alt=""
         fill
-        className="object-cover"
+        className="object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
       />
     </div>
   );
