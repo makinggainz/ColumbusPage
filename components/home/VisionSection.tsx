@@ -9,6 +9,7 @@ export const Vision = () => {
   const gridRef = useRef<HTMLDivElement>(null);
   const [titleVisible, setTitleVisible] = useState(false);
   const [gridVisible, setGridVisible] = useState(false);
+  const [btnHovered, setBtnHovered] = useState(false);
 
   useEffect(() => {
     const observe = (el: HTMLElement | null, onVisible: () => void) => {
@@ -34,6 +35,15 @@ export const Vision = () => {
   }, []);
 
   return (
+    <>
+    <div
+      className="fixed inset-0 z-40 pointer-events-none transition-[opacity,backdrop-filter] duration-500"
+      style={{
+        opacity: btnHovered ? 1 : 0,
+        backdropFilter: btnHovered ? "blur(6px)" : "blur(0px)",
+        WebkitBackdropFilter: btnHovered ? "blur(6px)" : "blur(0px)",
+      }}
+    />
     <section className="bg-[#FEFEFE] py-20 md:py-28 lg:py-36">
       <Container>
         <div className="max-w-290.75 mx-auto">
@@ -120,8 +130,12 @@ export const Vision = () => {
             research, and consumer domains.
           </p>
 
-          <div className="relative group/btn inline-block">
-            <div className="absolute -inset-3 bg-[#1C274C]/15 blur-xl opacity-0 group-hover/btn:opacity-100 transition-opacity duration-500 rounded-sm" />
+          <div
+            className="relative group/btn inline-block z-50"
+            onMouseEnter={() => setBtnHovered(true)}
+            onMouseLeave={() => setBtnHovered(false)}
+          >
+            <div className="absolute -inset-12 bg-[#1C274C]/20 blur-3xl opacity-0 group-hover/btn:opacity-100 transition-opacity duration-500 rounded-sm" />
           <button className="relative border border-[#1C274C] px-17.25 md:px-19.25 py-[14.5px] text-xl font-bold tracking-wide rounded-none hover:bg-[#1C274C] hover:text-white transition whitespace-nowrap">
             [ See what we’re building ]
           </button>
@@ -131,6 +145,7 @@ export const Vision = () => {
         </div>
       </Container>
     </section>
+    </>
   );
 };
 
