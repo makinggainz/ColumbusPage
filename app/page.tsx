@@ -9,13 +9,20 @@ import { Footer } from "@/components/layout/Footer";
 export default function Home() {
   return (
     <main className="bg-[#070709] min-h-screen">
-      <Navbar />
-      <Hero />
-      <Vision />
-      <MainFeatures />
-      <Applications />
-      <Careers />
-      <Footer />
+      {/* Content sits above the fixed footer */}
+      <div className="relative z-10" style={{ paddingBottom: "100vh" }}>
+        <Navbar />
+        <Hero />
+        <Vision />
+        <MainFeatures />
+        <Applications />
+        <Careers />
+      </div>
+
+      {/* Footer: fixed at z-0, revealed as content scrolls away */}
+      <section className="relative z-0">
+        <Footer reveal />
+      </section>
     </main>
   );
 }
