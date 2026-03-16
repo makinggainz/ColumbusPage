@@ -16,16 +16,6 @@ interface DataPoint {
   value: string;
 }
 
-const TYPE_COLOR: Record<string, string> = {
-  HQ:         "#ffffff",
-  Urban:      "#1396F3",
-  Finance:    "#22d3ee",
-  Climate:    "#4ade80",
-  Defence:    "#f87171",
-  Logistics:  "#a78bfa",
-  Seismic:    "#fb923c",
-  Monitoring: "#94a3b8",
-};
 
 const NAMED_POINTS: DataPoint[] = [
   { id: 0,  lat:  38.9, lon:  -77.0, label: "Washington D.C.",  type: "HQ",        value: "GeoContext-1 Origin" },
@@ -107,10 +97,9 @@ function latLonToVec3(lat: number, lon: number, r = 1.01): THREE.Vector3 {
 
 function Dot({ point, onHover }: { point: DataPoint; onHover: (id: number | null) => void }) {
   const meshRef = useRef<THREE.Mesh>(null);
+  const matRef  = useRef<THREE.MeshBasicMaterial>(null);
   const [hovered, setHovered] = useState(false);
   const pos = useMemo(() => latLonToVec3(point.lat, point.lon), [point.lat, point.lon]);
-  const color = TYPE_COLOR[point.type] ?? "#ffffff";
-  const isNamed = point.id < 100;
 
   const handleOver = useCallback((e: ThreeEvent<PointerEvent>) => {
     e.stopPropagation();
@@ -124,10 +113,12 @@ function Dot({ point, onHover }: { point: DataPoint; onHover: (id: number | null
   }, [onHover]);
 
   useFrame(() => {
-    if (!meshRef.current) return;
-    const scale = hovered ? 2.2 : 1;
+    if (!meshRef.current || !matRef.current) return;
+    const targetOpacity = hovered ? 1 : 0;
+    matRef.current.opacity = THREE.MathUtils.lerp(matRef.current.opacity, targetOpacity, 0.15);
+    const targetScale = hovered ? 1.8 : 1;
     meshRef.current.scale.setScalar(
-      THREE.MathUtils.lerp(meshRef.current.scale.x, scale, 0.12)
+      THREE.MathUtils.lerp(meshRef.current.scale.x, targetScale, 0.12)
     );
   });
 
@@ -138,8 +129,8 @@ function Dot({ point, onHover }: { point: DataPoint; onHover: (id: number | null
       onPointerOver={handleOver}
       onPointerOut={handleOut}
     >
-      <sphereGeometry args={[isNamed ? 0.018 : 0.011, 8, 8]} />
-      <meshBasicMaterial color={color} transparent opacity={hovered ? 1 : isNamed ? 0.75 : 0.45} />
+      <sphereGeometry args={[0.014, 8, 8]} />
+      <meshBasicMaterial ref={matRef} color="#ffffff" transparent opacity={0} />
       {hovered && (
         <Html
           center
@@ -149,9 +140,9 @@ function Dot({ point, onHover }: { point: DataPoint; onHover: (id: number | null
         >
           <div
             style={{
-              background: "rgba(7, 7, 9, 0.92)",
-              border: `1px solid ${color}33`,
-              borderLeft: `2px solid ${color}`,
+              background: "rgba(7, 7, 9, 0.88)",
+              border: "1px solid rgba(255,255,255,0.08)",
+              borderLeft: "2px solid rgba(255,255,255,0.35)",
               padding: "10px 14px",
               borderRadius: "2px",
               minWidth: "180px",
@@ -160,13 +151,13 @@ function Dot({ point, onHover }: { point: DataPoint; onHover: (id: number | null
               userSelect: "none",
             }}
           >
-            <p style={{ color, fontSize: "9px", fontFamily: "monospace", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: "4px", opacity: 0.9 }}>
+            <p style={{ color: "rgba(255,255,255,0.3)", fontSize: "9px", fontFamily: "monospace", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: "4px" }}>
               {point.type}
             </p>
-            <p style={{ color: "#EDEDEA", fontSize: "13px", fontWeight: 500, marginBottom: "4px", lineHeight: 1.3 }}>
+            <p style={{ color: "rgba(255,255,255,0.85)", fontSize: "13px", fontWeight: 500, marginBottom: "4px", lineHeight: 1.3 }}>
               {point.label}
             </p>
-            <p style={{ color: "rgba(255,255,255,0.45)", fontSize: "11px", fontFamily: "monospace" }}>
+            <p style={{ color: "rgba(255,255,255,0.4)", fontSize: "11px", fontFamily: "monospace" }}>
               {point.value}
             </p>
           </div>
@@ -180,7 +171,7 @@ function Dot({ point, onHover }: { point: DataPoint; onHover: (id: number | null
 
 function WireframeGlobe() {
   const groupRef = useRef<THREE.Group>(null);
-  const [hoveredId, setHoveredId] = useState<number | null>(null);
+  const [, setHoveredId] = useState<number | null>(null);
 
   const latLines = useMemo(() => {
     const lines: THREE.BufferGeometry[] = [];
