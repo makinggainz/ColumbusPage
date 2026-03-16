@@ -117,7 +117,7 @@ export const Navbar = () => {
         ? { color: "#0A1344" }
         : isScrolled
         ? { mixBlendMode: "difference", color: "white" }
-        : { color: "white" };
+        : { color: "#0A1344" };
 
     const compactNavBlendStyle: React.CSSProperties = isCompactMenuOpen
         ? { color: "#0A1344" }
@@ -152,7 +152,7 @@ export const Navbar = () => {
                             <Link href="/" className="flex w-fit shrink-0 items-center gap-2" onMouseEnter={handleNavMouseEnter}>
                                 <div
                                     className="relative h-10 w-10 shrink-0"
-                                    style={isMenuOpen ? {} : { filter: "brightness(0) invert(1)" }}
+                                    style={isMenuOpen || !isScrolled ? {} : { filter: "brightness(0) invert(1)" }}
                                 >
                                     <Image
                                         src="/logobueno.png"
@@ -190,7 +190,7 @@ export const Navbar = () => {
                             <div className="col-start-3 flex items-center justify-end gap-3">
                                 <Link
                                     href="/maps-gpt"
-                                    className={`hidden min-[1155px]:flex items-center justify-center px-6 py-3.5 text-md font-semibold leading-none rounded-none border transition-opacity duration-300 hover:opacity-70 ${isScrolled ? "border-black bg-white text-black" : "border-black bg-black/30"}`}
+                                    className={`hidden min-[1155px]:flex items-center justify-center px-6 py-3.5 text-md font-semibold leading-none rounded-none border transition-opacity duration-300 hover:opacity-70 ${isScrolled ? "border-black bg-white text-black" : "border-[#0A1344] bg-transparent text-[#0A1344]"}`}
                                     onMouseEnter={handleNavMouseEnter}
                                 >
                                     Start Now
@@ -198,7 +198,7 @@ export const Navbar = () => {
                                 <button
                                     onClick={handleHamburgerClick}
                                     onMouseEnter={handleNavMouseEnter}
-                                    className={`relative flex h-11 w-11 items-center justify-center rounded-none border transition-all duration-300 ${isScrolled ? "border-current" : "border-black bg-black/30"}`}
+                                    className={`relative flex h-11 w-11 items-center justify-center rounded-none border transition-all duration-300 border-current`}
                                     aria-label="Toggle menu"
                                 >
                                     <div className={`absolute h-px w-5.5 bg-current transform-gpu transition-all duration-300 ease-in-out ${isMenuOpen ? "rotate-45" : "-translate-y-1.5"}`} />
