@@ -6,11 +6,174 @@ import { useEffect, useState, useRef } from "react";
 import { usePathname } from "next/navigation";
 import { ScrambleText } from "@/components/ui/ScrambleText";
 
-// Scroll threshold (px) at which the compact nav replaces the primary nav
 const COMPACT_THRESHOLD = 80;
 
+const PRODUCTS = [
+  {
+    name: "MapsGPT",
+    tagline: "Your AI guide for travel & local exploration",
+    href: "/products",
+    accent: "#59E1EB",
+  },
+  {
+    name: "Columbus Enterprise",
+    tagline: "Geospatial intelligence for organizations",
+    href: "/enterprise",
+    accent: "#818CF8",
+  },
+  {
+    name: "Market Spy",
+    tagline: "Real estate analytics, AI‑powered",
+    href: "/market-spy",
+    accent: "#34D399",
+  },
+];
+
+const COMPANY_LINKS = [
+  { label: "Our Mission", href: "/our-mission" },
+  { label: "Technology",  href: "/technology"  },
+  { label: "Use Cases",   href: "/use-cases"   },
+  { label: "Research",    href: "/research"    },
+  { label: "Careers",     href: "/careers"     },
+];
+
+// ── Shared dropdown markup ────────────────────────────────────────────────────
+function DropdownContent({
+  isOpen,
+  onClose,
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+}) {
+  return (
+    <div className="px-10 pt-9 pb-10">
+      <div className="grid grid-cols-12 gap-10">
+
+        {/* ── Left: Products ──────────────────────────────────────────── */}
+        <div className="col-span-7">
+          <p className="text-[10px] font-semibold tracking-[0.16em] uppercase text-white/30 mb-7">
+            <ScrambleText text="PRODUCTS" isActive={isOpen} delay={180} />
+          </p>
+
+          <div className="space-y-1">
+            {PRODUCTS.map((p, i) => (
+              <Link
+                key={p.href}
+                href={p.href}
+                onClick={onClose}
+                className="group flex items-center gap-5 rounded-sm px-4 py-3.5 transition-colors duration-200 hover:bg-white/[0.05]"
+                style={{
+                  opacity:    isOpen ? 1 : 0,
+                  transform:  isOpen ? "translateY(0)" : "translateY(10px)",
+                  transition: `opacity 0.45s ease-out ${200 + i * 70}ms, transform 0.45s ease-out ${200 + i * 70}ms, background-color 0.2s`,
+                }}
+              >
+                {/* Accent dot */}
+                <span
+                  className="h-2 w-2 rounded-full shrink-0 ring-[3px] ring-white/10"
+                  style={{ backgroundColor: p.accent }}
+                />
+
+                {/* Text */}
+                <div className="flex-1 min-w-0">
+                  <span className="text-white font-semibold text-[15px] leading-none">
+                    {p.name}
+                  </span>
+                  <p className="text-white/40 text-[13px] mt-1 leading-snug">
+                    {p.tagline}
+                  </p>
+                </div>
+
+                {/* Arrow */}
+                <span className="text-white/20 text-sm group-hover:text-white/55 transition-colors duration-200 shrink-0">
+                  ↗
+                </span>
+              </Link>
+            ))}
+          </div>
+        </div>
+
+        {/* ── Divider ─────────────────────────────────────────────────── */}
+        <div className="col-span-1 flex justify-center">
+          <div
+            className="w-px self-stretch"
+            style={{
+              background: "linear-gradient(to bottom, transparent, rgba(255,255,255,0.1) 20%, rgba(255,255,255,0.1) 80%, transparent)",
+              opacity: isOpen ? 1 : 0,
+              transition: `opacity 0.5s ease-out 300ms`,
+            }}
+          />
+        </div>
+
+        {/* ── Right: Company + Contact ────────────────────────────────── */}
+        <div className="col-span-4 flex flex-col justify-between min-h-0">
+
+          {/* Company links */}
+          <div>
+            <p className="text-[10px] font-semibold tracking-[0.16em] uppercase text-white/30 mb-7">
+              <ScrambleText text="COMPANY" isActive={isOpen} delay={280} />
+            </p>
+            <ul className="space-y-1">
+              {COMPANY_LINKS.map((item, i) => (
+                <li key={item.href}>
+                  <Link
+                    href={item.href}
+                    onClick={onClose}
+                    className="group flex items-center justify-between py-2 text-[15px] font-medium text-white/60 hover:text-white transition-colors duration-200"
+                    style={{
+                      opacity:    isOpen ? 1 : 0,
+                      transform:  isOpen ? "translateY(0)" : "translateY(8px)",
+                      transition: `opacity 0.45s ease-out ${260 + i * 55}ms, transform 0.45s ease-out ${260 + i * 55}ms, color 0.2s`,
+                    }}
+                  >
+                    <span>{item.label}</span>
+                    <span className="text-white/15 group-hover:text-white/40 transition-colors duration-200 text-xs">→</span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Contact + Social */}
+          <div
+            className="mt-8 pt-6 grid grid-cols-2 gap-6"
+            style={{
+              borderTop: "1px solid rgba(255,255,255,0.08)",
+              opacity:    isOpen ? 1 : 0,
+              transition: `opacity 0.5s ease-out 500ms`,
+            }}
+          >
+            <div>
+              <p className="text-[10px] tracking-widest uppercase text-white/25 mb-2">Contact</p>
+              <a
+                href="mailto:contact@columbus.earth"
+                className="text-white/55 text-[13px] hover:text-white transition-colors duration-200 block"
+              >
+                contact@columbus.earth
+              </a>
+            </div>
+            <div>
+              <p className="text-[10px] tracking-widest uppercase text-white/25 mb-2">Social</p>
+              <a
+                href="https://www.linkedin.com/company/columbusearth/about/?viewAsMember=true"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-white/55 text-[13px] hover:text-white transition-colors duration-200 block"
+              >
+                LinkedIn ↗
+              </a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+
 export const Navbar = () => {
-    // ── Primary navbar state ──────────────────────────────────────────
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isManuallyToggled, setIsManuallyToggled] = useState(false);
     const [isScrolled, setIsScrolled] = useState(() =>
@@ -21,12 +184,10 @@ export const Navbar = () => {
     const [navTheme, setNavTheme] = useState<"light" | "dark">(isDarkPage ? "dark" : "light");
     const navRef = useRef<HTMLElement>(null);
 
-    // ── Sync theme immediately when pathname changes ───────────────────
     useEffect(() => {
         setNavTheme(isDarkPage ? "dark" : "light");
     }, [isDarkPage]);
 
-    // ── Compact navbar state ──────────────────────────────────────────
     const [isCompactMenuOpen, setIsCompactMenuOpen] = useState(false);
     const [isCompactManuallyToggled, setIsCompactManuallyToggled] = useState(false);
     const [isCompactVisible, setIsCompactVisible] = useState(() =>
@@ -34,7 +195,6 @@ export const Navbar = () => {
     );
     const compactNavRef = useRef<HTMLElement>(null);
 
-    // ── Scroll listener ───────────────────────────────────────────────
     useEffect(() => {
         const handleScroll = () => {
             const y = window.scrollY;
@@ -46,7 +206,6 @@ export const Navbar = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    // ── Primary nav: close menu when mouse leaves ─────────────────────
     useEffect(() => {
         const handleMouseMove = (e: MouseEvent) => {
             if (!navRef.current) return;
@@ -60,7 +219,6 @@ export const Navbar = () => {
         return () => window.removeEventListener("mousemove", handleMouseMove);
     }, [isMenuOpen, isManuallyToggled]);
 
-    // ── Compact nav: close menu when mouse leaves ─────────────────────
     useEffect(() => {
         const handleMouseMove = (e: MouseEvent) => {
             if (!compactNavRef.current) return;
@@ -73,14 +231,6 @@ export const Navbar = () => {
         window.addEventListener("mousemove", handleMouseMove);
         return () => window.removeEventListener("mousemove", handleMouseMove);
     }, [isCompactMenuOpen, isCompactManuallyToggled]);
-
-    const menuItems = [
-        { label: "Our Mission", href: "/our-mission" },
-        { label: "Columbus Market Spy", href: "/market-spy" },
-        { label: "MapsGPT", href: "/maps-gpt" },
-        { label: "Use Cases", href: "/use-cases" },
-        { label: "Technology", href: "/technology" },
-    ];
 
     // ── Primary nav handlers ──────────────────────────────────────────
     const handleMouseEnter = () => {
@@ -122,9 +272,10 @@ export const Navbar = () => {
         handleCompactMouseEnter();
     };
 
-    // ── Blend styles ──────────────────────────────────────────────────
+    // ── Blend styles — nav bar text color ────────────────────────────
+    // When menu open: dark bg → white text
     const navBlendStyle: React.CSSProperties = isMenuOpen
-        ? { color: "#0A1344" }
+        ? { color: "white" }
         : isScrolled
         ? { mixBlendMode: "difference", color: "white" }
         : navTheme === "dark"
@@ -132,7 +283,7 @@ export const Navbar = () => {
         : { color: "#0A1344" };
 
     const compactNavBlendStyle: React.CSSProperties = isCompactMenuOpen
-        ? { color: "#0A1344" }
+        ? { color: "white" }
         : { mixBlendMode: "difference", color: "white" };
 
     return (
@@ -154,9 +305,13 @@ export const Navbar = () => {
                 onMouseLeave={handleMouseLeave}
             >
                 <div className="relative mx-auto w-full max-w-screen-2xl">
-                    <div className={`absolute inset-y-0 left-(--container-padding) right-(--container-padding) transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-                        isMenuOpen ? "bg-white rounded-tl-xs rounded-tr-xs" : "bg-transparent"
-                    }`} />
+                    {/* Nav bar background pill — dark when open */}
+                    <div
+                        className={`absolute inset-y-0 left-(--container-padding) right-(--container-padding) transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                            isMenuOpen ? "rounded-tl-xs rounded-tr-xs" : "bg-transparent"
+                        }`}
+                        style={{ background: isMenuOpen ? "#0A1344" : "transparent" }}
+                    />
 
                     <div className="relative px-[calc(var(--container-padding)+18px)]">
                         <div className="grid h-14 md:h-17 grid-cols-[1fr_auto_1fr] items-center">
@@ -164,7 +319,12 @@ export const Navbar = () => {
                             <Link href="/" className="flex w-fit shrink-0 items-center gap-2" onMouseEnter={handleNavMouseEnter}>
                                 <div
                                     className="relative h-10 w-10 shrink-0"
-                                    style={isMenuOpen || (!isScrolled && navTheme === "light") ? {} : { filter: "brightness(0) invert(1)" }}
+                                    style={
+                                        // Dark logo: only on light unscrolled when menu closed
+                                        !isMenuOpen && !isScrolled && navTheme === "light"
+                                            ? {}
+                                            : { filter: "brightness(0) invert(1)" }
+                                    }
                                 >
                                     <Image
                                         src="/logobueno.png"
@@ -182,7 +342,7 @@ export const Navbar = () => {
 
                             {/* Center: Navigation Links */}
                             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                                <div className={`hidden items-center gap-9 min-[1155px]:flex pointer-events-auto transition-opacity duration-300 ${!isScrolled ? "opacity-70" : ""}`}>
+                                <div className={`hidden items-center gap-9 min-[1155px]:flex pointer-events-auto transition-opacity duration-300 ${!isScrolled && !isMenuOpen ? "opacity-70" : ""}`}>
                                     <Link href="#" className="group relative text-md font-medium transition-opacity duration-300 hover:opacity-70" onMouseEnter={handleNavMouseEnter}>
                                         Product
                                         <span className="absolute left-0 -bottom-1 h-px w-0 transition-all duration-300 group-hover:w-full bg-current" />
@@ -202,7 +362,13 @@ export const Navbar = () => {
                             <div className="col-start-3 flex items-center justify-end gap-3">
                                 <Link
                                     href="/maps-gpt"
-                                    className={`hidden min-[1155px]:flex items-center justify-center px-6 py-3.5 text-md font-semibold leading-none rounded-none border transition-opacity duration-300 hover:opacity-70 ${isScrolled ? "border-black bg-white text-black" : "border-[#0A1344] bg-transparent text-[#0A1344]"}`}
+                                    className={`hidden min-[1155px]:flex items-center justify-center px-6 py-3.5 text-md font-semibold leading-none rounded-none border transition-opacity duration-300 hover:opacity-70 ${
+                                        isScrolled
+                                            ? "border-black bg-white text-black"
+                                            : isMenuOpen
+                                            ? "border-white/30 bg-white/10 text-white"
+                                            : "border-[#0A1344] bg-transparent text-[#0A1344]"
+                                    }`}
                                     onMouseEnter={handleNavMouseEnter}
                                 >
                                     Start Now
@@ -210,7 +376,7 @@ export const Navbar = () => {
                                 <button
                                     onClick={handleHamburgerClick}
                                     onMouseEnter={handleNavMouseEnter}
-                                    className={`relative flex h-11 w-11 items-center justify-center rounded-none border transition-all duration-300 border-current`}
+                                    className="relative flex h-11 w-11 items-center justify-center rounded-none border transition-all duration-300 border-current"
                                     aria-label="Toggle menu"
                                 >
                                     <div className={`absolute h-px w-5.5 bg-current transform-gpu transition-all duration-300 ease-in-out ${isMenuOpen ? "rotate-45" : "-translate-y-1.5"}`} />
@@ -221,81 +387,19 @@ export const Navbar = () => {
                         </div>
                     </div>
 
-                    {/* Mega Menu Dropdown */}
+                    {/* ── Dropdown ── */}
                     <div
-                        className={`absolute top-full left-(--container-padding) right-(--container-padding) rounded-bl-xs rounded-br-xs transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                        className={`absolute top-full left-(--container-padding) right-(--container-padding) rounded-bl-xs rounded-br-xs overflow-hidden transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
                             isMenuOpen
-                                ? "opacity-100 translate-y-0 bg-white pointer-events-auto"
-                                : "opacity-0 -translate-y-10 pointer-events-none"
+                                ? "opacity-100 translate-y-0 pointer-events-auto"
+                                : "opacity-0 -translate-y-6 pointer-events-none"
                         }`}
+                        style={{ background: "#0A1344" }}
                     >
-                        <div className="pl-7 pr-(--container-padding) py-12" style={{ transitionDelay: isMenuOpen ? "150ms" : "0ms" }}>
-                            <div className="grid grid-cols-1 md:grid-cols-12 gap-12">
-                                <div
-                                    className={`md:col-span-5 space-y-8 transition-opacity duration-500 ${isMenuOpen ? "opacity-100" : "opacity-0"}`}
-                                    style={{ transitionDelay: isMenuOpen ? "200ms" : "0ms" }}
-                                >
-                                    <div>
-                                        <h4 className="text-xs font-semibold text-[#0A1344]/50 tracking-widest uppercase mb-4">
-                                            <ScrambleText text="COLUMBUS EARTH" isActive={isMenuOpen} delay={300} />
-                                        </h4>
-                                        <p className="text-[#0A1344]/70 text-base leading-relaxed max-w-md">
-                                            Columbus Earth Inc. is a spatial frontier AI company building the first production
-                                            Large Geospatial Model to answer the most difficult questions about our planet.
-                                        </p>
-                                    </div>
-                                    <div className="grid grid-cols-2 gap-8">
-                                        <div>
-                                            <h4 className="text-xs font-semibold text-gray-500 tracking-wider uppercase mb-2">
-                                                <ScrambleText text="CONTACT" isActive={isMenuOpen} delay={450} />
-                                            </h4>
-                                            <a href="mailto:contact@columbus.earth" className="text-[#0A1344] font-medium block transition-colors duration-300 hover:text-[#0A1344]/70">
-                                                contact@columbus.earth
-                                            </a>
-                                        </div>
-                                        <div>
-                                            <h4 className="text-xs font-semibold text-gray-500 tracking-wider uppercase mb-2">
-                                                <ScrambleText text="SOCIAL" isActive={isMenuOpen} delay={550} />
-                                            </h4>
-                                            <a href="https://www.linkedin.com/company/columbusearth/about/?viewAsMember=true" target="_blank" rel="noopener noreferrer" className="text-gray-900 hover:text-primary font-medium block transition-colors">
-                                                LinkedIn
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="md:col-span-3"></div>
-                                <div className="md:col-span-4 space-y-6">
-                                    <h4
-                                        className={`text-xs font-semibold text-gray-500 tracking-wider uppercase mb-4 transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-                                            isMenuOpen ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
-                                        }`}
-                                        style={{ transitionDelay: isMenuOpen ? "250ms" : "0ms" }}
-                                    >
-                                        <ScrambleText text="COMPANY" isActive={isMenuOpen} delay={400} />
-                                    </h4>
-                                    <ul className="space-y-4">
-                                        {menuItems.map((item, index) => (
-                                            <li
-                                                key={item.href}
-                                                className={`transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-                                                    isMenuOpen ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
-                                                }`}
-                                                style={{ transitionDelay: isMenuOpen ? `${320 + index * 70 + index * index * 8}ms` : "0ms" }}
-                                            >
-                                                <Link
-                                                    href={item.href}
-                                                    onClick={() => { setIsMenuOpen(false); setIsManuallyToggled(false); }}
-                                                    className="group relative text-xl font-medium text-[#0A1344] transition-all duration-300 flex items-center"
-                                                >
-                                                    <span className="mr-3 transition-transform duration-300 ease-in-out group-hover:translate-x-1">+</span>
-                                                    <span className="transition-all duration-300 ease-in-out group-hover:translate-x-1">{item.label}</span>
-                                                </Link>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
+                        <DropdownContent
+                            isOpen={isMenuOpen}
+                            onClose={() => { setIsMenuOpen(false); setIsManuallyToggled(false); }}
+                        />
                     </div>
                 </div>
             </nav>
@@ -309,17 +413,14 @@ export const Navbar = () => {
                 }`}
             />
 
-            {/* ── Blur gradient background for compact nav ──
-                 Separate from the nav so it doesn't interfere with mix-blend-mode.
-                 Spans top-0 to 10px below the nav bottom edge (h-10/h-11 + 10px).
-                 Fades from full blur at top to transparent at the bottom edge. */}
+            {/* ── Blur gradient background for compact nav ── */}
             <div
                 className={`fixed top-0 left-0 right-0 pointer-events-none transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
                     isCompactVisible ? "translate-y-0" : "-translate-y-full"
                 }`}
                 style={{
                     zIndex: 49,
-                    height: "62px", /* h-16 (64px) nav, button bottom at 52px, +10px */
+                    height: "62px",
                     backdropFilter: "blur(24px)",
                     WebkitBackdropFilter: "blur(24px)",
                     borderBottom: "1px solid rgba(255, 255, 255, 0.2)",
@@ -336,10 +437,13 @@ export const Navbar = () => {
                 onMouseLeave={handleCompactMouseLeave}
             >
                 <div className="relative mx-auto w-full max-w-screen-2xl">
-                    {/* Pill — only shown when compact menu open */}
-                    <div className={`absolute inset-y-0 left-(--container-padding) right-(--container-padding) transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-                        isCompactMenuOpen ? "bg-white rounded-tl-xs rounded-tr-xs" : "bg-transparent"
-                    }`} />
+                    {/* Nav bar background pill — dark when open */}
+                    <div
+                        className={`absolute inset-y-0 left-(--container-padding) right-(--container-padding) transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                            isCompactMenuOpen ? "rounded-tl-xs rounded-tr-xs" : "bg-transparent"
+                        }`}
+                        style={{ background: isCompactMenuOpen ? "#0A1344" : "transparent" }}
+                    />
 
                     <div className="relative px-[calc(var(--container-padding)+18px)]">
                         <div className="grid h-16 grid-cols-[1fr_auto_1fr] items-center">
@@ -347,7 +451,7 @@ export const Navbar = () => {
                             <Link href="/" className="flex w-fit shrink-0 items-center gap-2" onMouseEnter={handleCompactNavMouseEnter}>
                                 <div
                                     className="relative h-8 w-8 shrink-0"
-                                    style={isCompactMenuOpen ? {} : { filter: "brightness(0) invert(1)" }}
+                                    style={{ filter: "brightness(0) invert(1)" }}
                                 >
                                     <Image
                                         src="/logobueno.png"
@@ -384,7 +488,7 @@ export const Navbar = () => {
                             <div className="col-start-3 flex items-center justify-end gap-2">
                                 <Link
                                     href="/maps-gpt"
-                                    className="hidden min-[1155px]:flex items-center justify-center h-10 px-4 text-sm font-semibold leading-none rounded-none border border-black bg-white text-black transition-opacity duration-300 hover:opacity-70"
+                                    className="hidden min-[1155px]:flex items-center justify-center h-10 px-4 text-sm font-semibold leading-none rounded-none border border-white/30 bg-white/10 text-white transition-opacity duration-300 hover:opacity-70"
                                     onMouseEnter={handleCompactNavMouseEnter}
                                 >
                                     Start Now
@@ -403,81 +507,19 @@ export const Navbar = () => {
                         </div>
                     </div>
 
-                    {/* Mega Menu Dropdown */}
+                    {/* ── Dropdown ── */}
                     <div
-                        className={`absolute top-full left-(--container-padding) right-(--container-padding) rounded-bl-xs rounded-br-xs transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                        className={`absolute top-full left-(--container-padding) right-(--container-padding) rounded-bl-xs rounded-br-xs overflow-hidden transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
                             isCompactMenuOpen
-                                ? "opacity-100 translate-y-0 bg-white pointer-events-auto"
-                                : "opacity-0 -translate-y-10 pointer-events-none"
+                                ? "opacity-100 translate-y-0 pointer-events-auto"
+                                : "opacity-0 -translate-y-6 pointer-events-none"
                         }`}
+                        style={{ background: "#0A1344" }}
                     >
-                        <div className="pl-7 pr-(--container-padding) py-12" style={{ transitionDelay: isCompactMenuOpen ? "150ms" : "0ms" }}>
-                            <div className="grid grid-cols-1 md:grid-cols-12 gap-12">
-                                <div
-                                    className={`md:col-span-5 space-y-8 transition-opacity duration-500 ${isCompactMenuOpen ? "opacity-100" : "opacity-0"}`}
-                                    style={{ transitionDelay: isCompactMenuOpen ? "200ms" : "0ms" }}
-                                >
-                                    <div>
-                                        <h4 className="text-xs font-semibold text-[#0A1344]/50 tracking-widest uppercase mb-4">
-                                            <ScrambleText text="COLUMBUS EARTH" isActive={isCompactMenuOpen} delay={300} />
-                                        </h4>
-                                        <p className="text-[#0A1344]/70 text-base leading-relaxed max-w-md">
-                                            Columbus Earth Inc. is a spatial frontier AI company building the first production
-                                            Large Geospatial Model to answer the most difficult questions about our planet.
-                                        </p>
-                                    </div>
-                                    <div className="grid grid-cols-2 gap-8">
-                                        <div>
-                                            <h4 className="text-xs font-semibold text-gray-500 tracking-wider uppercase mb-2">
-                                                <ScrambleText text="CONTACT" isActive={isCompactMenuOpen} delay={450} />
-                                            </h4>
-                                            <a href="mailto:contact@columbus.earth" className="text-[#0A1344] font-medium block transition-colors duration-300 hover:text-[#0A1344]/70">
-                                                contact@columbus.earth
-                                            </a>
-                                        </div>
-                                        <div>
-                                            <h4 className="text-xs font-semibold text-gray-500 tracking-wider uppercase mb-2">
-                                                <ScrambleText text="SOCIAL" isActive={isCompactMenuOpen} delay={550} />
-                                            </h4>
-                                            <a href="https://www.linkedin.com/company/columbusearth/about/?viewAsMember=true" target="_blank" rel="noopener noreferrer" className="text-gray-900 hover:text-primary font-medium block transition-colors">
-                                                LinkedIn
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="md:col-span-3"></div>
-                                <div className="md:col-span-4 space-y-6">
-                                    <h4
-                                        className={`text-xs font-semibold text-gray-500 tracking-wider uppercase mb-4 transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-                                            isCompactMenuOpen ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
-                                        }`}
-                                        style={{ transitionDelay: isCompactMenuOpen ? "250ms" : "0ms" }}
-                                    >
-                                        <ScrambleText text="COMPANY" isActive={isCompactMenuOpen} delay={400} />
-                                    </h4>
-                                    <ul className="space-y-4">
-                                        {menuItems.map((item, index) => (
-                                            <li
-                                                key={item.href}
-                                                className={`transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-                                                    isCompactMenuOpen ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
-                                                }`}
-                                                style={{ transitionDelay: isCompactMenuOpen ? `${320 + index * 70 + index * index * 8}ms` : "0ms" }}
-                                            >
-                                                <Link
-                                                    href={item.href}
-                                                    onClick={() => { setIsCompactMenuOpen(false); setIsCompactManuallyToggled(false); }}
-                                                    className="group relative text-xl font-medium text-[#0A1344] transition-all duration-300 flex items-center"
-                                                >
-                                                    <span className="mr-3 transition-transform duration-300 ease-in-out group-hover:translate-x-1">+</span>
-                                                    <span className="transition-all duration-300 ease-in-out group-hover:translate-x-1">{item.label}</span>
-                                                </Link>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
+                        <DropdownContent
+                            isOpen={isCompactMenuOpen}
+                            onClose={() => { setIsCompactMenuOpen(false); setIsCompactManuallyToggled(false); }}
+                        />
                     </div>
                 </div>
             </nav>
