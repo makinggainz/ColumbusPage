@@ -76,9 +76,8 @@ export const CoverLetter = () => {
           style={{
             position: "relative",
             fontSize: "clamp(42px, 6vw, 80px)",
-            fontWeight: 400,
-            fontStyle: "italic",
-            letterSpacing: "-0.02em",
+            fontWeight: 700,
+            letterSpacing: "-0.04em",
             lineHeight: 1,
             // Shimmer gradient on text
             background: "linear-gradient(90deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.9) 40%, rgba(255,255,255,1) 50%, rgba(255,255,255,0.9) 60%, rgba(255,255,255,0.25) 100%)",

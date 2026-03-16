@@ -46,11 +46,11 @@ export const Careers = () => {
             {/* Left */}
             <div style={fadeIn(0.1)}>
               <h2
-                className={`${cormorant.className} font-semibold leading-[0.93] tracking-[-0.025em] text-[#EDEDEA] mb-6`}
-                style={{ fontSize: "clamp(52px, 6vw, 84px)" }}
+                className={`${cormorant.className} font-bold leading-[0.93] tracking-[-0.04em] text-[#EDEDEA] mb-6`}
+                style={{ fontSize: "clamp(48px, 6vw, 80px)" }}
               >
                 Hiring<br />
-                <em>Humans</em>.
+                Humans.
               </h2>
               <p className="text-[15px] text-white/35 leading-[1.8] max-w-sm mb-4">
                 Our team is based in Washington DC and Madrid. If you're excited

@@ -40,15 +40,15 @@ export const Hero = () => {
 
               {/* Main headline */}
               <h1
-                className={`${cormorant.className} font-semibold leading-[0.92] tracking-[-0.025em] text-[#EDEDEA] mb-10`}
+                className={`${cormorant.className} font-bold leading-[0.93] tracking-[-0.045em] text-[#EDEDEA] mb-10`}
                 style={{
-                  fontSize: "clamp(64px, 10vw, 140px)",
+                  fontSize: "clamp(56px, 9vw, 128px)",
                   ...fadeIn(0.2),
                 }}
               >
                 Building<br />
                 the first<br />
-                <em>Large</em><br />
+                Large<br />
                 Geospatial<br />
                 Model.
               </h1>

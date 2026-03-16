@@ -54,12 +54,12 @@ export const Vision = () => {
 
             <div style={fadeIn(0.1)}>
               <h2
-                className={`${cormorant.className} font-semibold leading-[0.93] tracking-[-0.025em] text-[#EDEDEA]`}
-                style={{ fontSize: "clamp(44px, 5.5vw, 76px)" }}
+                className={`${cormorant.className} font-bold leading-[0.93] tracking-[-0.04em] text-[#EDEDEA]`}
+                style={{ fontSize: "clamp(40px, 5.5vw, 72px)" }}
               >
                 Not a language<br />
                 model.<br />
-                A <em>world</em> model.
+                A world model.
               </h2>
             </div>
 

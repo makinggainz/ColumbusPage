@@ -58,11 +58,11 @@ export const Applications = () => {
           {/* Header */}
           <div className="grid lg:grid-cols-2 gap-8 items-end mb-16" style={fadeIn(0.1)}>
             <h2
-              className={`${cormorant.className} font-semibold leading-[0.93] tracking-[-0.025em] text-[#EDEDEA]`}
-              style={{ fontSize: "clamp(40px, 5vw, 64px)" }}
+              className={`${cormorant.className} font-bold leading-[0.93] tracking-[-0.04em] text-[#EDEDEA]`}
+              style={{ fontSize: "clamp(36px, 5vw, 60px)" }}
             >
               Where GeoContext-1<br />
-              <em>goes to work</em>.
+              goes to work.
             </h2>
             <p className="text-[14px] text-white/35 leading-[1.8] lg:text-right max-w-sm lg:max-w-none lg:ml-auto">
               From defence to real estate to consumer discovery —
