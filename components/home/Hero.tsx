@@ -3,6 +3,12 @@
 import { cormorant } from "@/lib/typography";
 import { Container } from "@/components/layout/Container";
 import { useEffect, useState } from "react";
+import dynamic from "next/dynamic";
+
+const GlobeHero = dynamic(
+  () => import("./GlobeHero").then((m) => m.GlobeHero),
+  { ssr: false }
+);
 
 export const Hero = () => {
   const [visible, setVisible] = useState(false);
@@ -27,7 +33,7 @@ export const Hero = () => {
       {/* Main content */}
       <div className="flex-1 flex items-center py-28">
         <Container>
-          <div className="grid lg:grid-cols-[1fr_160px] gap-12 items-start">
+          <div className="grid lg:grid-cols-2 gap-0 items-center">
 
             {/* Left: headline block */}
             <div>
@@ -82,22 +88,12 @@ export const Hero = () => {
               </div>
             </div>
 
-            {/* Right: coordinate readout */}
+            {/* Right: 3D globe */}
             <div
-              className="hidden lg:flex flex-col gap-2.5 font-mono text-[11px] text-white/18 tracking-widest mt-[240px]"
-              style={fadeIn(0.6)}
+              className="hidden lg:block w-full"
+              style={{ height: "min(80vh, 700px)", ...fadeIn(0.4) }}
             >
-              <span className="text-white/10 text-[9px] tracking-[0.15em] uppercase mb-1">// position</span>
-              <span>38.8977° N</span>
-              <span>77.0365° W</span>
-              <span>+18 m</span>
-              <div className="w-px h-8 bg-white/[0.07] my-3 ml-0" />
-              <span className="text-white/10 text-[9px] tracking-[0.15em] uppercase mb-1">// status</span>
-              <span className="flex items-center gap-2">
-                <span className="w-1 h-1 rounded-full bg-[#1396F3]" />
-                ONLINE
-              </span>
-              <span>v1.0.0</span>
+              <GlobeHero />
             </div>
 
           </div>
