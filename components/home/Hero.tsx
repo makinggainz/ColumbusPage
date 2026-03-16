@@ -38,14 +38,6 @@ export const Hero = () => {
             {/* Left: headline block */}
             <div>
 
-              {/* Classification tag */}
-              <div className="flex items-center gap-3 mb-12" style={fadeIn(0.1)}>
-                <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#1396F3]" />
-                <span className="text-[11px] tracking-[0.22em] text-white/30 uppercase font-medium">
-                  Frontier AI Research · Washington D.C.
-                </span>
-              </div>
-
               {/* Main headline */}
               <h1
                 className={`${cormorant.className} font-semibold leading-[0.92] tracking-[-0.025em] text-[#EDEDEA] mb-10`}
