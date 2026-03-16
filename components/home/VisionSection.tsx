@@ -138,7 +138,7 @@ const Tile = ({ src }: { src: string }) => {
         src={src}
         alt=""
         fill
-        className="object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
+        className="object-cover grayscale contrast-125 group-hover:grayscale-0 group-hover:contrast-100 transition-all duration-500"
       />
     </div>
   );
