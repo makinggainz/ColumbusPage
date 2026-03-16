@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useState, useRef } from "react";
-import { usePathname } from "next/navigation";
+
 import { ScrambleText } from "@/components/ui/ScrambleText";
 
 const COMPACT_THRESHOLD = 80;
@@ -51,7 +51,7 @@ function DropdownContent({
 
         {/* ── Left: Products ──────────────────────────────────────────── */}
         <div className="col-span-7">
-          <p className="text-[10px] font-semibold tracking-[0.16em] uppercase text-white/30 mb-7">
+          <p className="text-[10px] font-semibold tracking-[0.16em] uppercase text-black/35 mb-7">
             <ScrambleText text="PRODUCTS" isActive={isOpen} delay={180} />
           </p>
 
@@ -61,7 +61,7 @@ function DropdownContent({
                 key={p.href}
                 href={p.href}
                 onClick={onClose}
-                className="group flex items-center gap-5 rounded-sm px-4 py-3.5 transition-colors duration-200 hover:bg-white/[0.05]"
+                className="group flex items-center gap-5 rounded-sm px-4 py-3.5 transition-colors duration-200 hover:bg-black/[0.06]"
                 style={{
                   opacity:    isOpen ? 1 : 0,
                   transform:  isOpen ? "translateY(0)" : "translateY(10px)",
@@ -70,22 +70,22 @@ function DropdownContent({
               >
                 {/* Accent dot */}
                 <span
-                  className="h-2 w-2 rounded-full shrink-0 ring-[3px] ring-white/10"
+                  className="h-2 w-2 rounded-full shrink-0 ring-[3px] ring-black/10"
                   style={{ backgroundColor: p.accent }}
                 />
 
                 {/* Text */}
                 <div className="flex-1 min-w-0">
-                  <span className="text-white font-semibold text-[15px] leading-none">
+                  <span className="text-[#111] font-semibold text-[15px] leading-none">
                     {p.name}
                   </span>
-                  <p className="text-white/40 text-[13px] mt-1 leading-snug">
+                  <p className="text-black/45 text-[13px] mt-1 leading-snug">
                     {p.tagline}
                   </p>
                 </div>
 
                 {/* Arrow */}
-                <span className="text-white/20 text-sm group-hover:text-white/55 transition-colors duration-200 shrink-0">
+                <span className="text-black/20 text-sm group-hover:text-black/55 transition-colors duration-200 shrink-0">
                   ↗
                 </span>
               </Link>
@@ -98,7 +98,7 @@ function DropdownContent({
           <div
             className="w-px self-stretch"
             style={{
-              background: "linear-gradient(to bottom, transparent, rgba(255,255,255,0.1) 20%, rgba(255,255,255,0.1) 80%, transparent)",
+              background: "linear-gradient(to bottom, transparent, rgba(0,0,0,0.12) 20%, rgba(0,0,0,0.12) 80%, transparent)",
               opacity: isOpen ? 1 : 0,
               transition: `opacity 0.5s ease-out 300ms`,
             }}
@@ -110,7 +110,7 @@ function DropdownContent({
 
           {/* Company links */}
           <div>
-            <p className="text-[10px] font-semibold tracking-[0.16em] uppercase text-white/30 mb-7">
+            <p className="text-[10px] font-semibold tracking-[0.16em] uppercase text-black/35 mb-7">
               <ScrambleText text="COMPANY" isActive={isOpen} delay={280} />
             </p>
             <ul className="space-y-1">
@@ -119,7 +119,7 @@ function DropdownContent({
                   <Link
                     href={item.href}
                     onClick={onClose}
-                    className="group flex items-center justify-between py-2 text-[15px] font-medium text-white/60 hover:text-white transition-colors duration-200"
+                    className="group flex items-center justify-between py-2 text-[15px] font-medium text-black/60 hover:text-black transition-colors duration-200"
                     style={{
                       opacity:    isOpen ? 1 : 0,
                       transform:  isOpen ? "translateY(0)" : "translateY(8px)",
@@ -127,7 +127,7 @@ function DropdownContent({
                     }}
                   >
                     <span>{item.label}</span>
-                    <span className="text-white/15 group-hover:text-white/40 transition-colors duration-200 text-xs">→</span>
+                    <span className="text-black/15 group-hover:text-black/45 transition-colors duration-200 text-xs">→</span>
                   </Link>
                 </li>
               ))}
@@ -138,27 +138,27 @@ function DropdownContent({
           <div
             className="mt-8 pt-6 grid grid-cols-2 gap-6"
             style={{
-              borderTop: "1px solid rgba(255,255,255,0.08)",
+              borderTop: "1px solid rgba(0,0,0,0.1)",
               opacity:    isOpen ? 1 : 0,
               transition: `opacity 0.5s ease-out 500ms`,
             }}
           >
             <div>
-              <p className="text-[10px] tracking-widest uppercase text-white/25 mb-2">Contact</p>
+              <p className="text-[10px] tracking-widest uppercase text-black/30 mb-2">Contact</p>
               <a
                 href="mailto:contact@columbus.earth"
-                className="text-white/55 text-[13px] hover:text-white transition-colors duration-200 block"
+                className="text-black/55 text-[13px] hover:text-black transition-colors duration-200 block"
               >
                 contact@columbus.earth
               </a>
             </div>
             <div>
-              <p className="text-[10px] tracking-widest uppercase text-white/25 mb-2">Social</p>
+              <p className="text-[10px] tracking-widest uppercase text-black/30 mb-2">Social</p>
               <a
                 href="https://www.linkedin.com/company/columbusearth/about/?viewAsMember=true"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-white/55 text-[13px] hover:text-white transition-colors duration-200 block"
+                className="text-black/55 text-[13px] hover:text-black transition-colors duration-200 block"
               >
                 LinkedIn ↗
               </a>
@@ -179,14 +179,7 @@ export const Navbar = () => {
     const [isScrolled, setIsScrolled] = useState(() =>
         typeof window !== "undefined" ? window.scrollY > 0 : false
     );
-    const pathname = usePathname();
-    const isDarkPage = pathname === "/enterprise" || pathname.startsWith("/enterprise/");
-    const [navTheme, setNavTheme] = useState<"light" | "dark">(isDarkPage ? "dark" : "light");
     const navRef = useRef<HTMLElement>(null);
-
-    useEffect(() => {
-        setNavTheme(isDarkPage ? "dark" : "light");
-    }, [isDarkPage]);
 
     const [isCompactMenuOpen, setIsCompactMenuOpen] = useState(false);
     const [isCompactManuallyToggled, setIsCompactManuallyToggled] = useState(false);
@@ -272,19 +265,9 @@ export const Navbar = () => {
         handleCompactMouseEnter();
     };
 
-    // ── Blend styles — nav bar text color ────────────────────────────
-    // When menu open: dark bg → white text
-    const navBlendStyle: React.CSSProperties = isMenuOpen
-        ? { color: "white" }
-        : isScrolled
-        ? { mixBlendMode: "difference", color: "white" }
-        : navTheme === "dark"
-        ? { color: "white" }
-        : { color: "#0A1344" };
-
-    const compactNavBlendStyle: React.CSSProperties = isCompactMenuOpen
-        ? { color: "white" }
-        : { mixBlendMode: "difference", color: "white" };
+    // ── Text color — always dark black ───────────────────────────────
+    const navBlendStyle: React.CSSProperties = { color: "#111111" };
+    const compactNavBlendStyle: React.CSSProperties = { color: "#111111" };
 
     return (
         <>
@@ -305,12 +288,17 @@ export const Navbar = () => {
                 onMouseLeave={handleMouseLeave}
             >
                 <div className="relative mx-auto w-full max-w-screen-2xl">
-                    {/* Nav bar background pill — dark when open */}
+                    {/* Nav bar background pill — always frosted glass */}
                     <div
                         className={`absolute inset-y-0 left-(--container-padding) right-(--container-padding) transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-                            isMenuOpen ? "rounded-tl-xs rounded-tr-xs" : "bg-transparent"
+                            isMenuOpen ? "rounded-tl-xs rounded-tr-xs" : "rounded-xs"
                         }`}
-                        style={{ background: isMenuOpen ? "#0A1344" : "transparent" }}
+                        style={{
+                            background: "rgba(248, 249, 252, 0.88)",
+                            backdropFilter: "blur(20px)",
+                            WebkitBackdropFilter: "blur(20px)",
+                            boxShadow: "0 1px 0 0 rgba(0,0,0,0.06)",
+                        }}
                     />
 
                     <div className="relative px-[calc(var(--container-padding)+18px)]">
@@ -319,12 +307,6 @@ export const Navbar = () => {
                             <Link href="/" className="flex w-fit shrink-0 items-center gap-2" onMouseEnter={handleNavMouseEnter}>
                                 <div
                                     className="relative h-10 w-10 shrink-0"
-                                    style={
-                                        // Dark logo: only on light unscrolled when menu closed
-                                        !isMenuOpen && !isScrolled && navTheme === "light"
-                                            ? {}
-                                            : { filter: "brightness(0) invert(1)" }
-                                    }
                                 >
                                     <Image
                                         src="/logobueno.png"
@@ -362,13 +344,7 @@ export const Navbar = () => {
                             <div className="col-start-3 flex items-center justify-end gap-3">
                                 <Link
                                     href="/maps-gpt"
-                                    className={`hidden min-[1155px]:flex items-center justify-center px-6 py-3.5 text-md font-semibold leading-none rounded-none border transition-opacity duration-300 hover:opacity-70 ${
-                                        isScrolled
-                                            ? "border-black bg-white text-black"
-                                            : isMenuOpen
-                                            ? "border-white/30 bg-white/10 text-white"
-                                            : "border-[#0A1344] bg-transparent text-[#0A1344]"
-                                    }`}
+                                    className="hidden min-[1155px]:flex items-center justify-center px-6 py-3.5 text-md font-semibold leading-none rounded-none border border-black/20 bg-black/5 text-[#111] transition-opacity duration-300 hover:opacity-70"
                                     onMouseEnter={handleNavMouseEnter}
                                 >
                                     Start Now
@@ -394,7 +370,12 @@ export const Navbar = () => {
                                 ? "opacity-100 translate-y-0 pointer-events-auto"
                                 : "opacity-0 -translate-y-6 pointer-events-none"
                         }`}
-                        style={{ background: "#0A1344" }}
+                        style={{
+                            background: "rgba(248, 249, 252, 0.92)",
+                            backdropFilter: "blur(20px)",
+                            WebkitBackdropFilter: "blur(20px)",
+                            boxShadow: "0 8px 32px rgba(0,0,0,0.08)",
+                        }}
                     >
                         <DropdownContent
                             isOpen={isMenuOpen}
@@ -421,9 +402,10 @@ export const Navbar = () => {
                 style={{
                     zIndex: 49,
                     height: "62px",
-                    backdropFilter: "blur(24px)",
-                    WebkitBackdropFilter: "blur(24px)",
-                    borderBottom: "1px solid rgba(255, 255, 255, 0.2)",
+                    background: "rgba(248, 249, 252, 0.88)",
+                    backdropFilter: "blur(20px)",
+                    WebkitBackdropFilter: "blur(20px)",
+                    borderBottom: "1px solid rgba(0, 0, 0, 0.07)",
                 }}
             />
 
@@ -437,12 +419,11 @@ export const Navbar = () => {
                 onMouseLeave={handleCompactMouseLeave}
             >
                 <div className="relative mx-auto w-full max-w-screen-2xl">
-                    {/* Nav bar background pill — dark when open */}
+                    {/* Nav bar background pill — transparent (compact bar handles bg) */}
                     <div
                         className={`absolute inset-y-0 left-(--container-padding) right-(--container-padding) transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-                            isCompactMenuOpen ? "rounded-tl-xs rounded-tr-xs" : "bg-transparent"
+                            isCompactMenuOpen ? "rounded-tl-xs rounded-tr-xs" : ""
                         }`}
-                        style={{ background: isCompactMenuOpen ? "#0A1344" : "transparent" }}
                     />
 
                     <div className="relative px-[calc(var(--container-padding)+18px)]">
@@ -451,7 +432,6 @@ export const Navbar = () => {
                             <Link href="/" className="flex w-fit shrink-0 items-center gap-2" onMouseEnter={handleCompactNavMouseEnter}>
                                 <div
                                     className="relative h-8 w-8 shrink-0"
-                                    style={{ filter: "brightness(0) invert(1)" }}
                                 >
                                     <Image
                                         src="/logobueno.png"
@@ -488,7 +468,7 @@ export const Navbar = () => {
                             <div className="col-start-3 flex items-center justify-end gap-2">
                                 <Link
                                     href="/maps-gpt"
-                                    className="hidden min-[1155px]:flex items-center justify-center h-10 px-4 text-sm font-semibold leading-none rounded-none border border-white/30 bg-white/10 text-white transition-opacity duration-300 hover:opacity-70"
+                                    className="hidden min-[1155px]:flex items-center justify-center h-10 px-4 text-sm font-semibold leading-none rounded-none border border-black/20 bg-black/5 text-[#111] transition-opacity duration-300 hover:opacity-70"
                                     onMouseEnter={handleCompactNavMouseEnter}
                                 >
                                     Start Now
@@ -514,7 +494,12 @@ export const Navbar = () => {
                                 ? "opacity-100 translate-y-0 pointer-events-auto"
                                 : "opacity-0 -translate-y-6 pointer-events-none"
                         }`}
-                        style={{ background: "#0A1344" }}
+                        style={{
+                            background: "rgba(248, 249, 252, 0.92)",
+                            backdropFilter: "blur(20px)",
+                            WebkitBackdropFilter: "blur(20px)",
+                            boxShadow: "0 8px 32px rgba(0,0,0,0.08)",
+                        }}
                     >
                         <DropdownContent
                             isOpen={isCompactMenuOpen}
