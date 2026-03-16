@@ -120,9 +120,12 @@ export const Vision = () => {
             research, and consumer domains.
           </p>
 
-          <button className="border border-[#1C274C] px-17.25 md:px-19.25 py-[14.5px] text-xl font-bold tracking-wide rounded-none hover:bg-[#1C274C] hover:text-white transition whitespace-nowrap">
+          <div className="relative group/btn inline-block">
+            <div className="absolute -inset-3 bg-[#1C274C]/15 blur-xl opacity-0 group-hover/btn:opacity-100 transition-opacity duration-500 rounded-sm" />
+          <button className="relative border border-[#1C274C] px-17.25 md:px-19.25 py-[14.5px] text-xl font-bold tracking-wide rounded-none hover:bg-[#1C274C] hover:text-white transition whitespace-nowrap">
             [ See what we’re building ]
           </button>
+          </div>
 
         </div>
         </div>
