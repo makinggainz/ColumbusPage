@@ -115,7 +115,9 @@ export const Navbar = () => {
     // ── Blend styles ──────────────────────────────────────────────────
     const navBlendStyle: React.CSSProperties = isMenuOpen
         ? { color: "#0A1344" }
-        : { mixBlendMode: "difference", color: "white" };
+        : isScrolled
+        ? { mixBlendMode: "difference", color: "white" }
+        : { color: "white" };
 
     const compactNavBlendStyle: React.CSSProperties = isCompactMenuOpen
         ? { color: "#0A1344" }
@@ -168,7 +170,7 @@ export const Navbar = () => {
 
                             {/* Center: Navigation Links */}
                             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                                <div className="hidden items-center gap-9 min-[1155px]:flex pointer-events-auto">
+                                <div className={`hidden items-center gap-9 min-[1155px]:flex pointer-events-auto transition-opacity duration-300 ${!isScrolled ? "opacity-70" : ""}`}>
                                     <Link href="#" className="group relative text-md font-medium transition-opacity duration-300 hover:opacity-70" onMouseEnter={handleNavMouseEnter}>
                                         Product
                                         <span className="absolute left-0 -bottom-1 h-px w-0 transition-all duration-300 group-hover:w-full bg-current" />
@@ -188,7 +190,7 @@ export const Navbar = () => {
                             <div className="col-start-3 flex items-center justify-end gap-3">
                                 <Link
                                     href="/maps-gpt"
-                                    className={`hidden min-[1155px]:flex items-center justify-center px-6 py-3.5 text-md font-semibold leading-none rounded-none border transition-opacity duration-300 hover:opacity-70 ${isScrolled ? "border-black bg-white text-black" : "border-current"}`}
+                                    className={`hidden min-[1155px]:flex items-center justify-center px-6 py-3.5 text-md font-semibold leading-none rounded-none border transition-opacity duration-300 hover:opacity-70 ${isScrolled ? "border-black bg-white text-black" : "border-black bg-black/30"}`}
                                     onMouseEnter={handleNavMouseEnter}
                                 >
                                     Start Now
@@ -196,7 +198,7 @@ export const Navbar = () => {
                                 <button
                                     onClick={handleHamburgerClick}
                                     onMouseEnter={handleNavMouseEnter}
-                                    className="relative flex h-11 w-11 items-center justify-center rounded-none border border-current transition-all duration-300"
+                                    className={`relative flex h-11 w-11 items-center justify-center rounded-none border transition-all duration-300 ${isScrolled ? "border-current" : "border-black bg-black/30"}`}
                                     aria-label="Toggle menu"
                                 >
                                     <div className={`absolute h-px w-5.5 bg-current transform-gpu transition-all duration-300 ease-in-out ${isMenuOpen ? "rotate-45" : "-translate-y-1.5"}`} />

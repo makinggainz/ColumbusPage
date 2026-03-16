@@ -7,9 +7,10 @@ import { Container } from "@/components/layout/Container";
 
 export type FooterProps = {
   variant?: "default" | "compact";
+  reveal?: boolean;
 };
 
-export const Footer: FC<FooterProps> = ({ variant = "default" }) => {
+export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false }) => {
   if (variant === "compact") {
     return (
       <footer data-navbar-theme="dark" className="relative w-full min-h-[280px] text-white">
@@ -35,7 +36,11 @@ export const Footer: FC<FooterProps> = ({ variant = "default" }) => {
   }
 
   return (
-    <footer data-navbar-theme="dark" className="text-white overflow-hidden flex flex-col h-screen" style={{ position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 0 }}>
+    <footer
+      data-navbar-theme="dark"
+      className={`text-white overflow-hidden flex flex-col ${reveal ? "h-screen" : "min-h-screen"}`}
+      style={reveal ? { position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 0 } : undefined}
+    >
 
       {/* Background */}
       <Image

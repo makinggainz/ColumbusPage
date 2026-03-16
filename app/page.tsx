@@ -162,7 +162,7 @@ export default function Home() {
           No sticky — footer scrolls naturally so full height is always reachable. */}
       <section className="relative z-0">
         <SectionLabel letter="p" />
-        <Footer />
+        <Footer reveal />
       </section>
     </main>
   );
