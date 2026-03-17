@@ -79,7 +79,7 @@ export default function SuperModelSection() {
 
   return (
     <section className="w-full bg-black py-[120px] flex justify-center">
-      <div className="w-full max-w-[1728px] px-[100px] max-xl:px-12 max-md:px-6">
+      <div className="w-full max-w-screen-2xl px-[var(--page-padding)]">
 
         <h2 className="text-white text-[36px] font-semibold mb-[50px] max-md:text-[28px]">
           Surveying the earth with a super model

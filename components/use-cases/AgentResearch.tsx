@@ -70,7 +70,7 @@ export default function AgenticResearch() {
 
   return (
     <section className="w-full bg-black py-[120px] flex justify-center">
-      <div className="w-full max-w-[1728px] px-[100px] max-xl:px-12 max-md:px-6">
+      <div className="w-full max-w-screen-2xl px-[var(--page-padding)]">
 
         <h2 className="text-white text-[32px] font-semibold mb-[30px] max-md:text-[28px]">
           Agentic geospatial research

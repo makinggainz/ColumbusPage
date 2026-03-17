@@ -14,7 +14,7 @@ export default function ResultsSection() {
         className="object-cover -z-10"
       />
 
-      <div className="max-w-[1728px] mx-auto px-[94px] max-lg:px-[40px] max-md:px-[20px]">
+      <div className="max-w-screen-2xl mx-auto px-[var(--page-padding)]">
 
         {/* TITLE */}
         <h2 className="font-serif text-[64px] leading-[100%] text-[#1F2A44] mb-[80px] max-lg:text-[48px] max-md:text-[36px]">
