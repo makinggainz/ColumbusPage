@@ -1,3 +1,6 @@
+"use client";
+
+import { useEffect, useRef, useState } from "react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 
@@ -23,21 +26,36 @@ function SectionLabel({ letter }: { letter: string }) {
 }
 
 export default function UseCasesRoute() {
+  const [navTheme, setNavTheme] = useState<"light" | "dark">("dark");
+  const sectionCRef = useRef<HTMLElement>(null);
+  const sectionDRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const NAVBAR_H = 80;
+    const update = () => {
+      if (!sectionCRef.current || !sectionDRef.current) return;
+      const cRect = sectionCRef.current.getBoundingClientRect();
+      const overC = cRect.top <= NAVBAR_H && cRect.bottom > NAVBAR_H;
+      setNavTheme(overC ? "light" : "dark");
+    };
+    window.addEventListener("scroll", update, { passive: true });
+    update();
+    return () => window.removeEventListener("scroll", update);
+  }, []);
+
   return (
     <main>
-      <section className="relative">
-        <SectionLabel letter="a" />
-        <Navbar theme="dark" />
-      </section>
+      <Navbar theme={navTheme} />
+
       <section className="relative">
         <SectionLabel letter="b" />
         <HeroSection />
       </section>
-      <section className="relative bg-black">
+      <section className="relative bg-black" ref={sectionCRef}>
         <SectionLabel letter="c" />
         <ResultsSection />
       </section>
-      <section className="relative">
+      <section className="relative" ref={sectionDRef}>
         <SectionLabel letter="d" />
         <UseCasesHero />
       </section>
