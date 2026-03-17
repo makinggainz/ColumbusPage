@@ -5,7 +5,6 @@ import FinalCTASection from "@/components/products/FinalCTASection";
 import Hero from "@/components/products/Hero";
 import HowItWorksSection from "@/components/products/HowItWorksSection";
 import InspirationSection from "@/components/products/InspirationSection";
-import { ProductsSmoothScroll } from "@/components/products/ProductsSmoothScroll";
 import QuestionsSection from "@/components/products/QuestionsSection";
 import RecommendationsSection from "@/components/products/RecommendationsSection";
 import SeeWhatPeopleSection from "@/components/products/SeeWhatPeopleSection";
@@ -37,7 +36,6 @@ function SectionWithLabel({
 export default function ProductsPage() {
   return (
     <main className="overflow-x-hidden">
-      <ProductsSmoothScroll />
       <SectionWithLabel label={sectionLabels[0]}>
         <Navbar />
       </SectionWithLabel>
