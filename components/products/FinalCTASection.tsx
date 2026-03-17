@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import glassStyles from "@/components/ui/GlassButton.module.css";
 
 export default function FinalCTASection() {
   const FRAME_WIDTH = 1728;
@@ -51,18 +52,13 @@ export default function FinalCTASection() {
               style={{
                 left: 160,
                 top: 280,
-                width: 420,
+                width: 680,
               }}
             >
-              <p className="text-2xl font-bold text-white mb-8">
+              <p className="text-[32px] font-medium text-white mb-8">
                 <span
-                  className="inline-block"
-                  style={{
-                    background: "linear-gradient(to right, #8DF7FF 0%, #FFFFFF 84%)",
-                    WebkitBackgroundClip: "text",
-                    WebkitTextFillColor: "transparent",
-                    backgroundClip: "text",
-                  }}
+                  className="inline-block font-semibold"
+                  style={{ color: "#8DF7FF" }}
                 >
                   MapsGPT
                 </span>
@@ -70,13 +66,13 @@ export default function FinalCTASection() {
                 is browser based
               </p>
 
-              <h2 className="text-[64px] font-semibold leading-[1.15] mb-8">
+              <h2 className="text-[80px] font-semibold leading-[105%] mb-8">
                 We’re always
                 <br />
                 there for you.
               </h2>
 
-              <p className="text-[20px] text-white mb-10 leading-[140%]">
+              <p className="text-[32px] font-medium text-white mb-10 leading-[140%]">
                 Access your local AI travel pal
                 <br />
                 on any browser.
@@ -84,32 +80,34 @@ export default function FinalCTASection() {
 
               <Link
                 href="/maps-gpt"
-                className="inline-block backdrop-blur-md no-underline text-white hover:opacity-90 transition-opacity cursor-pointer"
+                className={`${glassStyles.btn} no-underline text-white hover:opacity-90 transition-opacity cursor-pointer`}
                 style={{
-                  padding: "18px 36px",
-                  borderRadius: 50,
-                  border: "1px solid rgba(255,255,255,0.7)",
-                  background: "rgba(255,255,255,0.15)",
-                  fontSize: 18,
+                  width: 412,
+                  height: 71,
+                  fontSize: 24,
+                  fontWeight: 600,
+                  letterSpacing: "-0.02em",
                 }}
               >
                 Try it out! It’s completely free →
               </Link>
             </div>
 
-            {/* PHONE */}
+            {/* PHONE SCREEN OVERLAY */}
             <div
-              className="absolute"
+              className="absolute overflow-hidden"
               style={{
-                left: FRAME_WIDTH * 0.75 - 210,
-                top: 180,
+                left: 1150,
+                top: 346,
+                width: 274,
+                height: 505,
+                borderRadius: 24,
               }}
             >
               <Image
                 src="/how/mob.png"
-                alt="Phone"
-                width={420}
-                height={820}
+                alt="Phone screen"
+                fill
                 className="object-contain"
               />
             </div>
@@ -118,8 +116,8 @@ export default function FinalCTASection() {
             <Image
               src="/how/heart.png"
               alt=""
-              width={90}
-              height={90}
+              width={180}
+              height={180}
               className="absolute"
               style={{
                 left: FRAME_WIDTH * 0.75 - 300,
@@ -130,8 +128,8 @@ export default function FinalCTASection() {
             <Image
               src="/how/heart.png"
               alt=""
-              width={80}
-              height={80}
+              width={160}
+              height={160}
               className="absolute"
               style={{
                 left: FRAME_WIDTH * 0.75 + 150,
@@ -145,7 +143,7 @@ export default function FinalCTASection() {
 
       {/* ================= CTA: centered in viewport ================= */}
       <div className="relative z-10 w-full flex flex-col items-center justify-center text-center py-16 px-4">
-            <p className="text-[#4E4E4E] text-[20px] leading-[150%] mb-10 max-w-[600px] font-semibold">
+            <p className="text-[#4E4E4E] text-[36px] leading-[150%] mb-10 max-w-[600px] font-semibold">
               MapsGPT is updated regularly.
               <br />
               We’d love to hear your thoughts.
@@ -154,11 +152,12 @@ export default function FinalCTASection() {
             <div className="flex flex-wrap gap-8 justify-center">
               <Link
                 href="/feedback"
-                className="inline-flex items-center justify-center border border-[#CFCFCF] bg-white hover:bg-gray-50 transition no-underline text-[#2C2C2C] cursor-pointer relative z-10"
+                className={`${glassStyles.btn} no-underline text-[#2C2C2C] cursor-pointer`}
                 style={{
-                  padding: "14px 28px",
-                  borderRadius: 8,
-                  fontSize: 16,
+                  padding: "18px 40px",
+                  fontSize: 20,
+                  fontWeight: 600,
+                  letterSpacing: "-0.02em",
                 }}
               >
                 Request a feature
@@ -166,11 +165,12 @@ export default function FinalCTASection() {
 
               <Link
                 href="/feedback"
-                className="inline-flex items-center justify-center border border-[#CFCFCF] bg-white hover:bg-gray-50 transition no-underline text-[#2C2C2C] cursor-pointer relative z-10"
+                className={`${glassStyles.btn} no-underline text-[#2C2C2C] cursor-pointer`}
                 style={{
-                  padding: "14px 28px",
-                  borderRadius: 8,
-                  fontSize: 16,
+                  padding: "18px 40px",
+                  fontSize: 20,
+                  fontWeight: 600,
+                  letterSpacing: "-0.02em",
                 }}
               >
                 Report a bug
