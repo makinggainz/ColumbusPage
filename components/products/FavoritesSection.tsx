@@ -77,7 +77,7 @@ export default function FavoritesSection() {
             </div>
           </div>
 
-          <div className="mt-24 flex justify-center mb-[100px] mt-auto">
+          <div className="mt-24 flex justify-center mb-[100px] mt-auto relative z-20">
             <p
               className="text-center max-w-[837px]"
               style={{
