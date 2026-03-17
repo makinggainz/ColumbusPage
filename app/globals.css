@@ -382,79 +382,31 @@ video {
   animation: rec-orb-drift-b 14s ease-in-out infinite alternate;
 }
 
-/* Recommendation cards: glass style matching glass experiment branch */
+/* Recommendation cards: glass style */
 .rec-glass-card {
   -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
-  background: rgba(255, 255, 255, 0.08);
+  background: transparent;
   border-radius: 14px;
   position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.7);
   box-shadow:
-    inset 0 1px 1px #ffffff99,
-    inset 0 -1px 1px #ffffff40,
-    0 4px 20px rgba(0,0,0,0.07);
+    inset 0 1px 1px #ffffffcc,
+    0 4px 24px rgba(0,0,0,0.09);
 }
 
-.rec-glass-card::after {
-  content: "";
-  z-index: 10;
-  pointer-events: none;
-  box-sizing: border-box;
-  background:
-    conic-gradient(from -125deg at 50% 50%, #00000066, #0000 5% 40%, #00000066 50%, #0000 60% 95%, #00000066),
-    linear-gradient(180deg, #ffffff66, #ffffff66);
-  border-radius: 14px;
-  width: calc(100% + 1px);
-  height: calc(100% + 1px);
-  padding: 1px;
-  position: absolute;
-  inset: -0.5px 0 0 -0.5px;
-  -webkit-mask-image: linear-gradient(#000 0 0), linear-gradient(#000 0 0);
-  mask-image: linear-gradient(#000 0 0), linear-gradient(#000 0 0);
-  -webkit-mask-clip: content-box, border-box;
-  mask-clip: content-box, border-box;
-  -webkit-mask-origin: content-box, border-box;
-  mask-origin: content-box, border-box;
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-}
-
-/* Recommendation category pills: same glass effect with pill radius */
+/* Recommendation category pills: glass effect */
 .rec-glass-pill {
   -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
-  background: rgba(255, 255, 255, 0.08);
+  background: transparent;
   border-radius: 999px;
   position: relative;
+  border: 1px solid rgba(255, 255, 255, 0.7);
   box-shadow:
-    inset 0 1px 1px #ffffff99,
-    inset 0 -1px 1px #ffffff40,
-    0 4px 20px rgba(0,0,0,0.07),
-    inset 0 0 0 1px rgba(255,255,255,0.7);
-}
-
-.rec-glass-pill::after {
-  content: "";
-  z-index: 10;
-  pointer-events: none;
-  box-sizing: border-box;
-  background:
-    conic-gradient(from -125deg at 50% 50%, #00000066, #0000 5% 40%, #00000066 50%, #0000 60% 95%, #00000066),
-    linear-gradient(180deg, #ffffff66, #ffffff66);
-  border-radius: 999px;
-  width: calc(100% + 1px);
-  height: calc(100% + 1px);
-  padding: 1px;
-  position: absolute;
-  inset: -0.5px 0 0 -0.5px;
-  -webkit-mask-image: linear-gradient(#000 0 0), linear-gradient(#000 0 0);
-  mask-image: linear-gradient(#000 0 0), linear-gradient(#000 0 0);
-  -webkit-mask-clip: content-box, border-box;
-  mask-clip: content-box, border-box;
-  -webkit-mask-origin: content-box, border-box;
-  mask-origin: content-box, border-box;
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
+    inset 0 1px 1px #ffffffcc,
+    0 2px 8px rgba(0,0,0,0.06);
 }
 
 /* Recommendations section: infinite horizontal marquee */
