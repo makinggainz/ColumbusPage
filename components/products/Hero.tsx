@@ -18,17 +18,13 @@ const ICONS = [
   { src: "/product/earth.png",      size: 143 },
 ];
 
-// Matching section-j (TravelPromo) physics constants exactly
 const FRICTION     = 0.985;
 const ANG_FRICTION = 0.96;
 const RESTITUTION  = 0.72;
 const MOUSE_RADIUS = 200;
-const MOUSE_FORCE  = 8;   // per-frame impulse, same style as TravelPromo
+const MOUSE_FORCE  = 8;
 
-// Sparkle colors — light, airy, playful
 const SPARKLE_COLORS = ["#59E1EB", "#FFD166", "#FF9A8B", "#A8E6CF", "#FFFFFF", "#C3B1E1"];
-
-// Confetti colors — vivid but small, celebratory
 const CONFETTI_COLORS = ["#59E1EB", "#FFD166", "#FF9A8B", "#A8E6CF", "#FFC3E1", "#B5EAD7", "#FFDAC1"];
 
 type Box = {
@@ -49,7 +45,7 @@ type Sparkle = {
   angularVel: number;
   radius: number;
   color: string;
-  life: number;      // 0→1, counts down to 0
+  life: number;
   maxLife: number;
 };
 
@@ -62,11 +58,10 @@ type Confetti = {
   h: number;
   color: string;
   alpha: number;
-  life: number;      // counts down to 0
+  life: number;
   maxLife: number;
 };
 
-// Draw a 4-pointed star at (0,0)
 function drawStar(ctx: CanvasRenderingContext2D, outerR: number) {
   const innerR = outerR * 0.28;
   const pts    = 4;
@@ -89,23 +84,60 @@ export default function Hero() {
   const phoneSpringWrapperRef = useRef<HTMLDivElement>(null);
   const phoneSpringRef        = useRef({ offset: 0, velocity: 0 });
   const lastScrollYRef        = useRef(0);
-  const canvasRef         = useRef<HTMLCanvasElement>(null);
-  const boxesRef          = useRef<Box[]>([]);
-  const sparklesRef       = useRef<Sparkle[]>([]);
-  const confettiRef       = useRef<Confetti[]>([]);
-  const imagesRef         = useRef<HTMLImageElement[]>([]);
-  const mouseRef          = useRef({ x: -9999, y: -9999, active: false });
-  const scrollYRef        = useRef(0);
-  const firedRef          = useRef(false);
-  const rafRef            = useRef<number>(0);
+  const canvasRef             = useRef<HTMLCanvasElement>(null);
+  const boxesRef              = useRef<Box[]>([]);
+  const sparklesRef           = useRef<Sparkle[]>([]);
+  const confettiRef           = useRef<Confetti[]>([]);
+  const imagesRef             = useRef<HTMLImageElement[]>([]);
+  const mouseRef              = useRef({ x: -9999, y: -9999, active: false });
+  const scrollYRef            = useRef(0);
+  const firedRef              = useRef(false);
+  const rafRef                = useRef<number>(0);
 
-  // Pre-load images immediately
+  // Transition refs
+  const outerContainerRef       = useRef<HTMLDivElement>(null);
+  const toggleRef               = useRef<HTMLDivElement>(null);
+  const badgeTitleRef           = useRef<HTMLDivElement>(null);
+  const transitionPhoneRef      = useRef<HTMLDivElement>(null);
+  const windContainerRef        = useRef<HTMLDivElement>(null);
+  const phoneStartCapturedRef   = useRef(false);
+  const phoneStartXRef          = useRef(0);
+  const phoneStartYRef          = useRef(0);
+  const phoneDisplayWRef        = useRef(0);
+  const phoneDisplayHRef        = useRef(0);
+  const windFiredRef            = useRef(false);
+  const audioCtxRef             = useRef<AudioContext | null>(null);
+  const audioBufferRef          = useRef<AudioBuffer | null>(null);
+
+  // Pre-load images
   useEffect(() => {
     imagesRef.current = ICONS.map(({ src }) => {
       const img = new window.Image();
       img.src = src;
       return img;
     });
+  }, []);
+
+  // Load horse sound via Web Audio API (more reliable from scroll events)
+  useEffect(() => {
+    const ctx = new AudioContext();
+    audioCtxRef.current = ctx;
+
+    fetch("/horse.mp3")
+      .then(r => r.arrayBuffer())
+      .then(buf => ctx.decodeAudioData(buf))
+      .then(decoded => { audioBufferRef.current = decoded; })
+      .catch(() => {});
+
+    // Resume AudioContext on first user gesture
+    const resume = () => ctx.resume();
+    window.addEventListener("pointerdown", resume, { once: true });
+    window.addEventListener("keydown", resume, { once: true });
+
+    return () => {
+      window.removeEventListener("pointerdown", resume);
+      window.removeEventListener("keydown", resume);
+    };
   }, []);
 
   // Title gradient sweep-in
@@ -141,12 +173,10 @@ export default function Hero() {
       const pr    = phone.getBoundingClientRect();
       const scale = Math.min(1, window.innerWidth / CANVAS_W);
 
-      // Phone center in canvas coords
       const ox = (pr.left - cr.left) / scale + pr.width  / scale / 2;
       const oy = (pr.top  - cr.top)  / scale + pr.height / scale / 2;
 
       boxesRef.current = ICONS.map(({ size }, i) => {
-        // Fan upward: -160° to -20°
         const minAngle = (-160 * Math.PI) / 180;
         const maxAngle = (-20  * Math.PI) / 180;
         const angle    = minAngle + (maxAngle - minAngle) * (i / (ICONS.length - 1))
@@ -166,7 +196,6 @@ export default function Hero() {
         };
       });
 
-      // ── Confetti burst from phone center ──────────────────────────────────────
       const pieces: Confetti[] = [];
       for (let i = 0; i < 80; i++) {
         const angle = Math.random() * Math.PI * 2;
@@ -176,7 +205,7 @@ export default function Hero() {
           x: ox + (Math.random() - 0.5) * 40,
           y: oy + (Math.random() - 0.5) * 40,
           vx: Math.cos(angle) * speed,
-          vy: Math.sin(angle) * speed - 12, // stronger upward bias
+          vy: Math.sin(angle) * speed - 12,
           rotation:   Math.random() * 360,
           angularVel: (Math.random() - 0.5) * 18,
           w: 16 + Math.random() * 20,
@@ -209,7 +238,6 @@ export default function Hero() {
       const sparkles = sparklesRef.current;
       const confetti = confettiRef.current;
 
-      // Phone target in canvas coords (updated every frame)
       let targetX = CANVAS_W / 2;
       let targetY = CANVAS_H / 2;
       const phone = phoneRef.current;
@@ -221,17 +249,13 @@ export default function Hero() {
         targetY = (pr.top  - cr.top)  / scale + pr.height / scale / 2;
       }
 
-      // Viewport-bottom floor in canvas coords
       const cr    = canvas.getBoundingClientRect();
       const scale = Math.min(1, window.innerWidth / CANVAS_W);
       const floorY = (window.innerHeight - cr.top) / scale;
 
-      // Scroll suck strength
       const suckT = Math.max(0, Math.min((scrollYRef.current - 80) / 320, 1));
-
       const mouse = mouseRef.current;
 
-      // ── Physics step ──────────────────────────────────────────────────────────
       for (const b of boxes) {
         if (!b.alive) continue;
 
@@ -239,7 +263,6 @@ export default function Hero() {
         b.vy         *= FRICTION;
         b.angularVel *= ANG_FRICTION;
 
-        // Mouse repulsion
         if (mouse.active) {
           const dx   = b.x - mouse.x;
           const dy   = b.y - mouse.y;
@@ -252,16 +275,13 @@ export default function Hero() {
           }
         }
 
-        // Scroll suck toward phone
         if (suckT > 0) {
           const dx   = targetX - b.x;
           const dy   = targetY - b.y;
           const dist = Math.sqrt(dx * dx + dy * dy);
 
           if (dist < b.size * 1.8) {
-            // Immediately absorb — spawn sparkles then kill
             b.alive = false;
-
             const count = 10 + Math.floor(Math.random() * 6);
             for (let k = 0; k < count; k++) {
               const angle = (k / count) * Math.PI * 2 + Math.random() * 0.5;
@@ -292,7 +312,6 @@ export default function Hero() {
         b.y        += b.vy;
         b.rotation += b.angularVel;
 
-        // Wall bounces (bottom = viewport edge)
         const r = b.size / 2;
         if (b.x - r < 0)        { b.x = r;            b.vx =  Math.abs(b.vx) * RESTITUTION; }
         if (b.x + r > CANVAS_W) { b.x = CANVAS_W - r; b.vx = -Math.abs(b.vx) * RESTITUTION; }
@@ -300,7 +319,6 @@ export default function Hero() {
         if (b.y + r > floorY)   { b.y = floorY - r;   b.vy = -Math.abs(b.vy) * RESTITUTION; }
       }
 
-      // ── Emoji–emoji collisions ────────────────────────────────────────────────
       for (let i = 0; i < boxes.length; i++) {
         for (let j = i + 1; j < boxes.length; j++) {
           const a = boxes[i];
@@ -330,7 +348,6 @@ export default function Hero() {
         }
       }
 
-      // ── Sparkle physics + draw ────────────────────────────────────────────────
       sparklesRef.current = sparkles.filter(s => s.life > 0);
       for (const s of sparklesRef.current) {
         s.vx       *= 0.90;
@@ -340,7 +357,6 @@ export default function Hero() {
         s.rotation += s.angularVel;
         s.life     -= 1;
 
-        // Fade out as life drains (t goes 1→0)
         const t     = s.life / s.maxLife;
         const alpha = t < 0.3 ? t / 0.3 : 1;
 
@@ -353,11 +369,10 @@ export default function Hero() {
         ctx.restore();
       }
 
-      // ── Confetti physics + draw ───────────────────────────────────────────────
       confettiRef.current = confetti.filter(c => c.life > 0);
       for (const c of confettiRef.current) {
-        c.vy       += 0.55;  // gravity
-        c.vx       *= 0.985; // air resistance
+        c.vy       += 0.55;
+        c.vx       *= 0.985;
         c.vy       *= 0.985;
         c.x        += c.vx;
         c.y        += c.vy;
@@ -376,7 +391,6 @@ export default function Hero() {
         ctx.restore();
       }
 
-      // ── Draw emojis ───────────────────────────────────────────────────────────
       for (const b of boxes) {
         if (!b.alive) continue;
         if (!b.img.complete || !b.img.naturalWidth) continue;
@@ -395,7 +409,7 @@ export default function Hero() {
     return () => cancelAnimationFrame(rafRef.current);
   }, []);
 
-  // Mouse tracking — convert screen coords to canvas coords
+  // Mouse tracking
   useEffect(() => {
     const onMove = (e: MouseEvent) => {
       const canvas = canvasRef.current;
@@ -408,20 +422,6 @@ export default function Hero() {
     };
     window.addEventListener("mousemove", onMove);
     return () => window.removeEventListener("mousemove", onMove);
-  }, []);
-
-  // Scroll tracking + phone spring impulse
-  useEffect(() => {
-    lastScrollYRef.current = window.scrollY;
-    const onScroll = () => {
-      const y = window.scrollY;
-      const delta = y - lastScrollYRef.current;
-      lastScrollYRef.current = y;
-      scrollYRef.current = y;
-      phoneSpringRef.current.velocity += delta * 0.28;
-    };
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   // Phone floating spring loop
@@ -443,93 +443,297 @@ export default function Hero() {
     return () => cancelAnimationFrame(raf);
   }, []);
 
+  const playHorse = () => {
+    const ctx = audioCtxRef.current;
+    const buf = audioBufferRef.current;
+    if (!ctx || !buf) return;
+    ctx.resume().then(() => {
+      const src = ctx.createBufferSource();
+      src.buffer = buf;
+      src.connect(ctx.destination);
+      src.start(0);
+    });
+  };
+
+  // Merged scroll handler: physics impulse + transition animation
+  useEffect(() => {
+    lastScrollYRef.current = window.scrollY;
+
+    const fireWind = (cx: number, cy: number) => {
+      const container = windContainerRef.current;
+      if (!container) return;
+      const emojis = ["💨", "💨", "💨", "💨", "✨", "💫", "🌀", "💨"];
+      const count = 12;
+      for (let i = 0; i < count; i++) {
+        const el = document.createElement("span");
+        el.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+        const angle = (i / count) * Math.PI * 2 + (Math.random() - 0.5) * 0.5;
+        const dist  = 120 + Math.random() * 180;
+        const dur   = 500 + Math.random() * 350;
+        const size  = 22 + Math.floor(Math.random() * 22);
+
+        el.style.cssText = `
+          position: fixed;
+          left: ${cx}px;
+          top: ${cy}px;
+          font-size: ${size}px;
+          line-height: 1;
+          pointer-events: none;
+          transform: translate(-50%, -50%);
+          opacity: 1;
+          z-index: 9999;
+          transition: none;
+        `;
+        container.appendChild(el);
+
+        requestAnimationFrame(() => {
+          el.style.transition = `left ${dur}ms ease-out, top ${dur}ms ease-out, opacity ${dur * 0.5}ms ease-in ${dur * 0.5}ms`;
+          el.style.left    = `${cx + Math.cos(angle) * dist}px`;
+          el.style.top     = `${cy + Math.sin(angle) * dist}px`;
+          el.style.opacity = "0";
+          setTimeout(() => el.remove(), dur + 100);
+        });
+      }
+    };
+
+    const onScroll = () => {
+      const y     = window.scrollY;
+      const delta = y - lastScrollYRef.current;
+      lastScrollYRef.current  = y;
+      scrollYRef.current      = y;
+      phoneSpringRef.current.velocity += delta * 0.28;
+
+      // Transition progress
+      const el = outerContainerRef.current;
+      if (!el) return;
+      const rect    = el.getBoundingClientRect();
+      const extraPx = window.innerHeight * 2;
+      const raw     = Math.max(0, Math.min(1, -rect.top / extraPx));
+
+      const origPhone = phoneRef.current;
+
+      // Reset when user scrolls back to top
+      if (raw === 0) {
+        phoneStartCapturedRef.current = false;
+        windFiredRef.current          = false;
+        if (phoneSpringWrapperRef.current) phoneSpringWrapperRef.current.style.opacity = "1";
+        const tp = transitionPhoneRef.current;
+        if (tp) tp.style.display = "none";
+        if (toggleRef.current)    toggleRef.current.style.opacity    = "1";
+        if (badgeTitleRef.current) badgeTitleRef.current.style.opacity = "1";
+        return;
+      }
+
+      // Capture phone starting position (once, first frame of transition)
+      if (!phoneStartCapturedRef.current && origPhone) {
+        const pr = origPhone.getBoundingClientRect();
+        phoneStartXRef.current    = pr.left;
+        phoneStartYRef.current    = pr.top;
+        phoneDisplayWRef.current  = pr.width;
+        phoneDisplayHRef.current  = pr.height;
+        phoneStartCapturedRef.current = true;
+      }
+
+      // Fade out toggle + title
+      const contentFade = Math.max(0, 1 - raw * 3.5);
+      if (toggleRef.current)     toggleRef.current.style.opacity     = String(contentFade);
+      if (badgeTitleRef.current) badgeTitleRef.current.style.opacity  = String(contentFade);
+
+      // Hide original phone spring wrapper
+      if (phoneSpringWrapperRef.current) phoneSpringWrapperRef.current.style.opacity = "0";
+
+      // Move + fade transition phone
+      const tp = transitionPhoneRef.current;
+      if (tp && phoneStartCapturedRef.current) {
+        tp.style.display = "block";
+        tp.style.width   = `${phoneDisplayWRef.current}px`;
+        tp.style.height  = `${phoneDisplayHRef.current}px`;
+
+        const startX  = phoneStartXRef.current;
+        const startY  = phoneStartYRef.current;
+        const endX    = window.innerWidth  / 2 - phoneDisplayWRef.current / 2;
+        const endY    = window.innerHeight / 2 - phoneDisplayHRef.current / 2;
+
+        // Phone moves to center over first 70% of progress
+        const moveP = Math.min(1, raw / 0.7);
+        const eased = 1 - Math.pow(1 - moveP, 3); // ease-out cubic
+
+        const currentX = startX + (endX - startX) * eased;
+        const currentY = startY + (endY - startY) * eased;
+
+        // Phone pops (scale up) and fades out between 65%–80%
+        const popT         = Math.max(0, (raw - 0.65) / 0.15);
+        const phoneOpacity = raw >= 0.65 ? Math.max(0, 1 - popT) : 1;
+        const phoneScale   = 1 + popT * 0.18;
+
+        tp.style.left      = `${currentX}px`;
+        tp.style.top       = `${currentY}px`;
+        tp.style.opacity   = String(phoneOpacity);
+        tp.style.transform = `scale(${phoneScale})`;
+        tp.style.transformOrigin = "center center";
+      }
+
+      // Wind explosion fires once at 65%
+      if (raw >= 0.65 && !windFiredRef.current) {
+        windFiredRef.current = true;
+        fireWind(
+          window.innerWidth  / 2,
+          window.innerHeight / 2,
+        );
+        playHorse();
+      }
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   return (
-    <section
-      className="relative overflow-hidden flex justify-center"
-      style={{
-        background: "linear-gradient(180deg, #D2ECF7 73.22%, #F9F9F9 100%)",
-        height: "calc(1756px * min(1, 100vw / 1728))",
-      }}
+    <div
+      ref={outerContainerRef}
+      style={{ height: "calc(1756px * min(1, 100vw / 1728) + 200vh)" }}
     >
-      {/* Scaled canvas wrapper */}
-      <div
-        className="origin-top"
+      <section
+        className="sticky top-0 overflow-hidden flex justify-center"
         style={{
-          width: 1728,
-          height: 1756,
-          transform: "scale(min(1, 100vw / 1728))",
-          transformOrigin: "top center",
-          flexShrink: 0,
+          background: "linear-gradient(180deg, #D2ECF7 73.22%, #F9F9F9 100%)",
+          height: "calc(1756px * min(1, 100vw / 1728))",
         }}
       >
-        <div className="relative w-[1728px] h-[1756px]">
+        {/* Scaled canvas wrapper */}
+        <div
+          className="origin-top"
+          style={{
+            width: 1728,
+            height: 1756,
+            transform: "scale(min(1, 100vw / 1728))",
+            transformOrigin: "top center",
+            flexShrink: 0,
+          }}
+        >
+          <div className="relative w-[1728px] h-[1756px]">
 
-          {/* Physics canvas — pointer-events-none so UI underneath stays clickable */}
-          <canvas
-            ref={canvasRef}
-            className="absolute inset-0 pointer-events-none"
-            style={{ width: CANVAS_W, height: CANVAS_H, zIndex: 3 }}
-          />
+            {/* Physics canvas — pointer-events-none so UI stays clickable */}
+            <canvas
+              ref={canvasRef}
+              className="absolute inset-0 pointer-events-none"
+              style={{ width: CANVAS_W, height: CANVAS_H, zIndex: 3 }}
+            />
 
-          {/* Toggle + Badge + Title + Phone */}
-          <div
-            className="absolute top-[100px] left-1/2 -translate-x-1/2 flex flex-col items-center gap-[200px]"
-            style={{ zIndex: 2 }}
-          >
-            <div style={fadeIn(0)}>
-              <ConsumerEnterpriseToggle variant="light" active="consumer" />
-            </div>
-
-            <div className="flex flex-col items-center gap-[21px]">
-              <div className={glassStyles.btn} style={{ width: 266, height: 43, padding: 0, ...fadeIn(0.1) }}>
-                <span style={{ fontSize: 16, fontWeight: 500 }}>Only Available on Earth</span>
+            {/* All hero content in one flex column */}
+            <div
+              className="absolute top-[100px] left-1/2 -translate-x-1/2 flex flex-col items-center gap-[200px]"
+              style={{ zIndex: 2 }}
+            >
+              {/* Toggle — fades out on transition */}
+              <div ref={toggleRef} style={fadeIn(0)}>
+                <ConsumerEnterpriseToggle variant="light" active="consumer" />
               </div>
-              <div className="text-center">
-                <h1
-                  className="text-[48px] font-semibold leading-[140%] flex items-center justify-center"
-                  style={{
-                    fontFamily: '"SF Compact", -apple-system, BlinkMacSystemFont, sans-serif',
-                    background: "linear-gradient(90deg, #074146 0%, #000000 100%)",
-                    WebkitBackgroundClip: "text",
-                    WebkitTextFillColor: "transparent",
-                    backgroundClip: "text",
-                    ...fadeIn(0.2),
-                  }}
-                >
-                  MapsGPT
-                </h1>
-                <h2
-                  className="text-[64px] font-semibold leading-[140%] flex items-center justify-center"
-                  style={{
-                    backgroundImage: "linear-gradient(90deg, #59E1EB 14.99%, #313434 100%)",
-                    backgroundSize: "200% 100%",
-                    backgroundPosition: titleVisible ? "0% 0" : "100% 0",
-                    WebkitBackgroundClip: "text",
-                    WebkitTextFillColor: "transparent",
-                    backgroundClip: "text",
-                    transition: `background-position 1.4s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.6s ease-out 0.3s, filter 0.6s ease-out 0.3s, transform 0.6s ease-out 0.3s`,
-                    opacity:   contentVisible ? 1 : 0,
-                    filter:    contentVisible ? "blur(0px)" : "blur(8px)",
-                    transform: contentVisible ? "translateY(0)" : "translateY(16px)",
-                  }}
-                >
-                  Travel Like a Boss
-                </h2>
-              </div>
-            </div>
 
-            {/* Phone — floating spring frame */}
-            <div className="mt-[100px]">
-              <div ref={phoneSpringWrapperRef}>
-                <div ref={phoneRef} style={fadeIn(0.4)}>
-                  <Image src="/product/phone.png" width={404} height={778} alt="Phone" priority />
+              {/* Badge + Title — fades out on transition */}
+              <div ref={badgeTitleRef} className="flex flex-col items-center gap-[21px]">
+                <div className={glassStyles.btn} style={{ width: 266, height: 43, padding: 0, ...fadeIn(0.1) }}>
+                  <span style={{ fontSize: 16, fontWeight: 500 }}>Only Available on Earth</span>
+                </div>
+                <div className="text-center">
+                  <h1
+                    className="text-[48px] font-semibold leading-[140%] flex items-center justify-center"
+                    style={{
+                      fontFamily: '"SF Compact", -apple-system, BlinkMacSystemFont, sans-serif',
+                      background: "linear-gradient(90deg, #074146 0%, #000000 100%)",
+                      WebkitBackgroundClip: "text",
+                      WebkitTextFillColor: "transparent",
+                      backgroundClip: "text",
+                      ...fadeIn(0.2),
+                    }}
+                  >
+                    MapsGPT
+                  </h1>
+                  <h2
+                    className="text-[64px] font-semibold leading-[140%] flex items-center justify-center"
+                    style={{
+                      backgroundImage: "linear-gradient(90deg, #59E1EB 14.99%, #313434 100%)",
+                      backgroundSize: "200% 100%",
+                      backgroundPosition: titleVisible ? "0% 0" : "100% 0",
+                      WebkitBackgroundClip: "text",
+                      WebkitTextFillColor: "transparent",
+                      backgroundClip: "text",
+                      transition: `background-position 1.4s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.6s ease-out 0.3s, filter 0.6s ease-out 0.3s, transform 0.6s ease-out 0.3s`,
+                      opacity:   contentVisible ? 1 : 0,
+                      filter:    contentVisible ? "blur(0px)" : "blur(8px)",
+                      transform: contentVisible ? "translateY(0)" : "translateY(16px)",
+                    }}
+                  >
+                    Travel Like a Boss
+                  </h2>
+                </div>
+              </div>
+
+              {/* TEST BUTTON — remove once sound is confirmed */}
+              <button
+                type="button"
+                onClick={playHorse}
+                style={{
+                  position: "fixed",
+                  bottom: 24,
+                  right: 24,
+                  zIndex: 9999,
+                  padding: "10px 18px",
+                  background: "#000",
+                  color: "#fff",
+                  fontSize: 14,
+                  fontWeight: 600,
+                  borderRadius: 8,
+                  border: "none",
+                  cursor: "pointer",
+                }}
+              >
+                🐴 Test horse sound
+              </button>
+
+              {/* Phone — spring wrapper opacity controlled by transition */}
+              <div className="mt-[100px]">
+                <div ref={phoneSpringWrapperRef}>
+                  <div ref={phoneRef} style={fadeIn(0.4)}>
+                    <Image src="/product/phone.png" width={404} height={778} alt="Phone" priority />
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
 
+          </div>
         </div>
+      </section>
+
+      {/* Fixed transition phone — shown during scroll animation */}
+      <div
+        ref={transitionPhoneRef}
+        style={{
+          position: "fixed",
+          display: "none",
+          zIndex: 100,
+          pointerEvents: "none",
+        }}
+      >
+        <Image
+          src="/product/phone.png"
+          fill
+          alt=""
+          style={{ objectFit: "contain" }}
+        />
       </div>
-    </section>
+
+      {/* Wind emoji particle container */}
+      <div
+        ref={windContainerRef}
+        style={{
+          position: "fixed",
+          inset: 0,
+          pointerEvents: "none",
+          zIndex: 9999,
+          overflow: "hidden",
+        }}
+      />
+    </div>
   );
 }
