@@ -19,6 +19,7 @@ const menuItems = [
 // ─────────────────────────────────────────────────────────────────────────────
 
 export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
+    const [navVisible, setNavVisible] = useState(false);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isManuallyToggled, setIsManuallyToggled] = useState(false);
     const [isScrolled, setIsScrolled] = useState(() =>
@@ -32,6 +33,11 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
         typeof window !== "undefined" ? window.scrollY > COMPACT_THRESHOLD : false
     );
     const compactNavRef = useRef<HTMLElement>(null);
+
+    useEffect(() => {
+        const timer = setTimeout(() => setNavVisible(true), 500);
+        return () => clearTimeout(timer);
+    }, []);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -152,7 +158,12 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
             <nav
                 ref={navRef}
                 className="header-font absolute top-6 left-0 right-0 z-50"
-                style={navBlendStyle}
+                style={{
+                    ...navBlendStyle,
+                    opacity: navVisible ? 1 : 0,
+                    filter: navVisible ? "blur(0px)" : "blur(6px)",
+                    transition: "opacity 700ms ease, filter 700ms ease",
+                }}
                 onMouseLeave={handleMouseLeave}
             >
                 <div className="relative mx-auto w-full max-w-screen-2xl">

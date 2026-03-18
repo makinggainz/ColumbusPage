@@ -2,9 +2,25 @@
 
 "use client";
 
+import { useEffect, useState } from "react";
+
 export const MeshSection = () => {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    const raf = requestAnimationFrame(() => setMounted(true));
+    return () => cancelAnimationFrame(raf);
+  }, []);
+
   return (
-    <section className="bg-[#F9F9F9] border-0 border-none shadow-none ring-0 ring-offset-0">
+    <section
+      className="bg-[#F9F9F9] border-0 border-none shadow-none ring-0 ring-offset-0"
+      style={{
+        opacity: mounted ? 1 : 0,
+        filter: mounted ? "blur(0px)" : "blur(8px)",
+        transition: "opacity 800ms ease 100ms, filter 800ms ease 100ms",
+      }}
+    >
       <div className="relative w-full h-[920px] overflow-hidden border-0 border-none shadow-none ring-0 ring-offset-0">
 
         <video
