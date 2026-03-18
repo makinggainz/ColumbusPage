@@ -221,7 +221,7 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
                                 <button
                                     onClick={handleHamburgerClick}
                                     onMouseEnter={handleNavMouseEnter}
-                                    className="relative flex h-11 w-11 items-center justify-center rounded-none border transition-all duration-300 border-current"
+                                    className={`relative flex h-11 w-11 items-center justify-center rounded-none border transition-all duration-300 ${isDark && !isMenuOpen ? "border-white/50" : "border-current"}`}
                                     aria-label="Toggle menu"
                                 >
                                     <div className={`absolute h-px w-5.5 bg-current transform-gpu transition-all duration-300 ease-in-out ${isMenuOpen ? "rotate-45" : "-translate-y-1.5"}`} />
@@ -407,7 +407,7 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
                                 <button
                                     onClick={handleCompactHamburgerClick}
                                     onMouseEnter={handleCompactNavMouseEnter}
-                                    className="relative flex h-10 w-10 items-center justify-center rounded-none border border-current transition-all duration-300"
+                                    className={`relative flex h-10 w-10 items-center justify-center rounded-none border transition-all duration-300 ${isDark && !isCompactMenuOpen ? "border-white/30" : "border-current"}`}
                                     aria-label="Toggle menu"
                                 >
                                     <div className={`absolute h-px w-4.5 bg-current transform-gpu transition-all duration-300 ease-in-out ${isCompactMenuOpen ? "rotate-45" : "-translate-y-1.25"}`} />
