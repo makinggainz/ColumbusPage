@@ -69,7 +69,7 @@
 //             <div key={i} className="flex flex-col">
 
 //               {/* IMAGE */}
-//               <div className="relative h-[866px] overflow-hidden">
+//               <div className="relative h-[433px] overflow-hidden">
 
 //                 <Image
 //                   src={item.img}
@@ -220,7 +220,7 @@ export default function IndustryGrid() {
             >
 
               {/* IMAGE */}
-              <div className="relative h-[866px] overflow-hidden">
+              <div className="relative h-[433px] overflow-hidden">
 
                 <Image
                   src={item.img}

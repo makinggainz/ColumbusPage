@@ -16,7 +16,7 @@ const USE_CASES_IMAGES = [
 
 export default function UseCasesHero() {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
-  const cellSize = 75;
+  const cellSize = 150;
   const cols = 20;
   const rows = 10;
   const totalCells = cols * rows;
@@ -62,7 +62,7 @@ export default function UseCasesHero() {
             linear-gradient(to right, #29303D 1px, transparent 1px),
             linear-gradient(to bottom, #29303D 1px, transparent 1px)
           `,
-          backgroundSize: "75px 75px",
+          backgroundSize: "150px 150px",
           maskImage: "radial-gradient(circle at 50% 50%, black 0%, transparent 90%)",
           WebkitMaskImage: "radial-gradient(circle at 50% 50%, black 0%, transparent 90%)",
         }}
