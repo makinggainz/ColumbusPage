@@ -30,8 +30,8 @@ export default function UseCasesHero() {
         style={{
           gridTemplateColumns: `repeat(${cols}, ${cellSize}px)`,
           gridAutoRows: `${cellSize}px`,
-          maskImage: "radial-gradient(circle at 50% 50%, black 0%, transparent 70%)",
-          WebkitMaskImage: "radial-gradient(circle at 50% 50%, black 0%, transparent 70%)",
+          maskImage: "radial-gradient(circle at 50% 50%, black 0%, transparent 90%)",
+          WebkitMaskImage: "radial-gradient(circle at 50% 50%, black 0%, transparent 90%)",
         }}
         aria-hidden
       >
@@ -47,7 +47,7 @@ export default function UseCasesHero() {
               src={`/use-cases/${USE_CASES_IMAGES[i % USE_CASES_IMAGES.length]}`}
               alt=""
               fill
-              className={`object-cover transition-opacity ease-in-out ${activeIndex === i ? "opacity-100 duration-[810ms]" : "opacity-0 duration-[585ms]"}`}
+              className={`object-cover transition-opacity ease-in-out ${activeIndex === i ? "opacity-60 duration-0" : "opacity-0 duration-[2000ms]"}`}
               sizes={`${cellSize}px`}
             />
           </div>
@@ -56,15 +56,15 @@ export default function UseCasesHero() {
 
       {/* THIN-LINE GRID — 150px × 150px squares, fades out from center */}
       <div
-        className="absolute inset-0 opacity-30 pointer-events-none"
+        className="absolute inset-0 pointer-events-none"
         style={{
           backgroundImage: `
-            linear-gradient(to right, rgba(255,255,255,0.4) 1px, transparent 1px),
-            linear-gradient(to bottom, rgba(255,255,255,0.4) 1px, transparent 1px)
+            linear-gradient(to right, #29303D 1px, transparent 1px),
+            linear-gradient(to bottom, #29303D 1px, transparent 1px)
           `,
           backgroundSize: "150px 150px",
-          maskImage: "radial-gradient(circle at 50% 50%, black 0%, transparent 70%)",
-          WebkitMaskImage: "radial-gradient(circle at 50% 50%, black 0%, transparent 70%)",
+          maskImage: "radial-gradient(circle at 50% 50%, black 0%, transparent 90%)",
+          WebkitMaskImage: "radial-gradient(circle at 50% 50%, black 0%, transparent 90%)",
         }}
         aria-hidden
       />
@@ -72,15 +72,18 @@ export default function UseCasesHero() {
       {/* CENTER CONTENT */}
       <div className="relative z-10 flex flex-col items-center text-center px-6 pointer-events-none">
 
-        <p className="text-gray-400 text-[32px] mb-4 max-md:text-[14px]">
+        <p className="text-gray-400 text-[32px] mb-4 max-md:text-[14px] font-normal">
           An agentic approach to geography and space
         </p>
 
-        <h1 className="text-white font-semibold text-[64px] leading-[140%] max-md:text-[36px]">
+        <h1
+          className="font-semibold text-[64px] leading-[140%] max-md:text-[36px] bg-clip-text text-transparent"
+          style={{ backgroundImage: "linear-gradient(to right, #ffffff 0%, #B0B0B0 100%)", fontWeight: 600 }}
+        >
           More than Site Selection
         </h1>
 
-        <p className="text-gray-400 text-[32px] mt-3 max-md:text-[16px]">
+        <p className="text-gray-400 text-[32px] mt-3 max-md:text-[16px] font-normal">
           Industry use cases of Columbus Pro
         </p>
 

@@ -5,7 +5,7 @@ import { MapBackground } from "@/components/map/MapBackground";
 export default function OurMissionPage() {
     return (
         <main className="relative min-h-screen flex flex-col">
-            <Navbar />
+            <Navbar theme="dark" />
             <MapBackground initialChapter="mission" />
 
             <div className="relative z-10 pt-32 pb-20 px-4 sm:px-6 lg:px-8 max-w-7xl  flex-grow w-full">

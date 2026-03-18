@@ -80,7 +80,7 @@ const sectionColors = [
 function SectionLabel({ letter }: { letter: string }) {
   return (
     <span
-      className="absolute left-4 top-4 z-10 text-2xl font-bold text-black/40 select-none"
+      className="absolute left-4 top-4 z-10 text-2xl font-bold text-black/10 select-none"
       aria-hidden
     >
       {letter}
@@ -91,7 +91,7 @@ function SectionLabel({ letter }: { letter: string }) {
 export default function Home() {
   return (
     <main className="min-h-screen">
-        <section className={`relative ${sectionColors[0]}`}>
+      <section className={`relative ${sectionColors[0]}`}>
         <SectionLabel letter="a" />
         <Navbar />
       </section>
@@ -151,7 +151,7 @@ export default function Home() {
         <SectionLabel letter="o" />
         <Careers />
       </section>
-      <section className={`relative ${sectionColors[15]}`}>
+      <section className="relative">
         <SectionLabel letter="p" />
         <Footer />
       </section>

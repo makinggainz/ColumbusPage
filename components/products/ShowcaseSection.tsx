@@ -36,11 +36,33 @@ export default function ShowcaseSection() {
   const [isDeleting, setIsDeleting] = useState(false);
   const [expandedPillIndex, setExpandedPillIndex] = useState<number | null>(null);
   const [closingPillIndex, setClosingPillIndex] = useState<number | null>(null);
+  const [pillContentVisible, setPillContentVisible] = useState(false);
+  const [pillIsClosing, setPillIsClosing] = useState(false);
+
+  useEffect(() => {
+    if (expandedPillIndex !== null) {
+      setPillIsClosing(false);
+      setPillContentVisible(false);
+      const t = setTimeout(() => setPillContentVisible(true), 90);
+      return () => clearTimeout(t);
+    }
+    setPillContentVisible(false);
+  }, [expandedPillIndex]);
 
   const handleClosePill = (index: number) => {
-    setClosingPillIndex(index);
-    setExpandedPillIndex(null);
-    window.setTimeout(() => setClosingPillIndex(null), 450);
+    // 1. Fade content out (slides up + fades)
+    setPillIsClosing(true);
+    setPillContentVisible(false);
+    // 2. After content has faded, collapse height
+    window.setTimeout(() => {
+      setClosingPillIndex(index);
+      setExpandedPillIndex(null);
+    }, 130);
+    // 3. Fully clean up
+    window.setTimeout(() => {
+      setClosingPillIndex(null);
+      setPillIsClosing(false);
+    }, 700);
   };
 
   useEffect(() => {
@@ -99,11 +121,14 @@ export default function ShowcaseSection() {
                 top: 348,
                 width: 1175,
                 height: 685,
-                background: "rgba(0, 0, 0, 0.03)",
-                backdropFilter: "blur(10px)",
-                WebkitBackdropFilter: "blur(10px)",
               }}
             >
+              <Image
+                src="/emoji/deskback.png"
+                alt=""
+                fill
+                className="object-cover"
+              />
               <div
                 className="absolute overflow-hidden rounded-[23px]"
                 style={{
@@ -129,32 +154,50 @@ export default function ShowcaseSection() {
               className="absolute left-[140px] top-[160px] flex flex-col"
               style={{
                 fontFamily: "'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif",
-                fontWeight: 590,
-                fontSize: "42px",
-                lineHeight: "130%",
-                letterSpacing: "-0.02em",
-                color: "#083445",
               }}
             >
-              <span>MapsGPT</span>
-              <span className="whitespace-nowrap" style={{ minWidth: "900px" }}>
-              {SUBTITLE_PREFIX}
-              <span className="inline-block min-w-[1ch]">{suffix}</span>
-              <span
-                className="animate-pulse"
+              <div
                 style={{
-                  opacity: !isDeleting && suffix === ROTATING_PHRASES[phraseIndex] ? 0 : 1,
+                  fontWeight: 600,
+                  fontSize: "48px",
+                  lineHeight: "130%",
+                  letterSpacing: "-0.02em",
+                  color: "#083445",
                 }}
               >
-                |
-              </span>
-            </span>
+                MapsGPT
+              </div>
+              <div
+                className="whitespace-nowrap"
+                style={{
+                  minWidth: "900px",
+                  fontWeight: 590,
+                  fontSize: "48px",
+                  lineHeight: "130%",
+                  letterSpacing: "-0.02em",
+                  background: "linear-gradient(180deg, #063140 0%, rgba(6, 64, 58, 0.38) 100%)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  backgroundClip: "text",
+                }}
+              >
+                {SUBTITLE_PREFIX}
+                <span className="inline-block min-w-[1ch]">{suffix}</span>
+                <span
+                  className="animate-pulse"
+                  style={{
+                    opacity: !isDeleting && suffix === ROTATING_PHRASES[phraseIndex] ? 0 : 1,
+                  }}
+                >
+                  |
+                </span>
+              </div>
             </div>
 
             {/* CTA */}
             <Link
               href="/maps-gpt"
-              className="absolute left-[1296px] top-[194px] z-20 flex w-[317px] h-[56px] min-h-[44px] items-center justify-center gap-2 rounded-[26px] cursor-pointer border-0 no-underline touch-manipulation active:scale-[0.98] transition-transform select-none"
+              className="absolute left-[1296px] top-[229px] z-20 flex w-[317px] h-[56px] min-h-[44px] items-center justify-center gap-2 rounded-[26px] cursor-pointer border-0 no-underline touch-manipulation active:scale-[0.98] transition-transform select-none"
               style={{
                 background: "#00B2FF",
                 WebkitTapHighlightColor: "transparent",
@@ -192,8 +235,8 @@ export default function ShowcaseSection() {
 
             {/* Left column: 6 feature pills; tapped pill expands/collapses in place and pushes others down */}
             <div
-              className="absolute left-[140px] flex min-h-[685px] flex-col gap-[10px]"
-              style={{ top: 378 }}
+              className="absolute left-[140px] flex flex-col justify-center gap-[10px]"
+              style={{ top: 348, height: 685 }}
             >
               {FEATURE_PILL_LABELS.map((label, index) => {
                 const isExpanded = expandedPillIndex === index;
@@ -207,7 +250,9 @@ export default function ShowcaseSection() {
                       height: isExpanded ? 301 : 56,
                       width: showCard ? 313 : undefined,
                       minWidth: showCard ? 313 : 176,
-                      transition: "height 0.45s cubic-bezier(0.4, 0, 0.2, 1)",
+                      transition: isClosing
+                        ? "height 0.5s cubic-bezier(0.4, 0, 0.6, 1)"
+                        : "height 0.55s cubic-bezier(0.25, 1, 0.5, 1)",
                     }}
                   >
                     {showCard ? (
@@ -219,15 +264,37 @@ export default function ShowcaseSection() {
                         aria-label={isExpanded ? `Close ${label}` : undefined}
                       >
                         <span
-                          className="text-[19px] font-normal leading-[140%] tracking-[-0.02em]"
+                          className="text-[19px] font-semibold leading-[140%] tracking-[-0.02em]"
                           style={{
                             fontFamily: "'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif",
                             color: "#06403A",
+                            opacity: pillContentVisible ? 1 : 0,
+                            transform: pillContentVisible
+                              ? "translateY(0)"
+                              : pillIsClosing
+                              ? "translateY(-6px)"
+                              : "translateY(8px)",
+                            transition: pillIsClosing
+                              ? "opacity 0.18s ease-in, transform 0.18s ease-in"
+                              : "opacity 0.35s ease-out, transform 0.35s cubic-bezier(0.25, 1, 0.5, 1)",
                           }}
                         >
                           {label}
                         </span>
-                        <p className="mt-3 text-[14px] leading-[1.6] text-[#06403A]/80">
+                        <p
+                          className="mt-3 text-[19px] font-semibold leading-[1.6] tracking-[-0.02em] text-[#06403A]/80"
+                          style={{
+                            opacity: pillContentVisible ? 1 : 0,
+                            transform: pillContentVisible
+                              ? "translateY(0)"
+                              : pillIsClosing
+                              ? "translateY(-4px)"
+                              : "translateY(10px)",
+                            transition: pillIsClosing
+                              ? "opacity 0.15s ease-in, transform 0.15s ease-in"
+                              : "opacity 0.35s ease-out 0.06s, transform 0.35s cubic-bezier(0.25, 1, 0.5, 1) 0.06s",
+                          }}
+                        >
                           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam
                         </p>
                       </button>
@@ -235,9 +302,13 @@ export default function ShowcaseSection() {
                       <button
                         type="button"
                         onClick={() => setExpandedPillIndex(index)}
-                        className="flex h-[56px] min-w-[176px] w-max cursor-pointer items-center gap-3 rounded-[28px] border-0 px-4 text-left touch-manipulation"
-                        style={{ background: "#E1F6FF" }}
+                        className="group relative flex h-[56px] min-w-[176px] w-max cursor-pointer items-center gap-3 rounded-[28px] border-0 px-4 text-left touch-manipulation overflow-hidden"
                       >
+                        {/* Background layer — scales on hover without moving text */}
+                        <span
+                          className="absolute inset-0 rounded-[28px] bg-[#E1F6FF] group-hover:bg-[#C8EAF7] group-hover:scale-[1.06] transition-all duration-200 ease-out"
+                          aria-hidden
+                        />
                         <span
                           className="relative flex h-[11px] w-[11px] shrink-0 items-center justify-center"
                           aria-hidden
@@ -252,7 +323,7 @@ export default function ShowcaseSection() {
                           />
                         </span>
                         <span
-                          className="whitespace-nowrap text-[19px] font-normal leading-[140%] tracking-[-0.02em]"
+                          className="relative whitespace-nowrap text-[19px] font-semibold leading-[140%] tracking-[-0.02em]"
                           style={{
                             fontFamily: "'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif",
                             color: "#06403A",
@@ -276,9 +347,9 @@ export default function ShowcaseSection() {
                 className="mb-0 flex h-[40px] w-[303px] items-center justify-center text-center"
                 style={{
                   fontFamily: "'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif",
-                  fontWeight: 400,
+                  fontWeight: 500,
                   fontSize: "20px",
-                  lineHeight: "100%",
+                  lineHeight: "110%",
                   letterSpacing: "-0.02em",
                   color: "#9F9F9F",
                 }}
@@ -286,29 +357,29 @@ export default function ShowcaseSection() {
                 We work with data from the most reputable brands
               </p>
 
-              {/* Infinite scroll marquee: viewport fits 5 full logos + 2 partially visible (5.5 × (120+48) ≈ 924) */}
+              {/* Infinite scroll marquee */}
               <div
                 className="relative mt-0 overflow-hidden"
-                style={{ width: "924px", maxWidth: "100vw" }}
+                style={{ width: "1440px", maxWidth: "100vw" }}
               >
                 <div
-                  className="pointer-events-none absolute inset-y-0 left-0 z-10 w-16 shrink-0"
+                  className="pointer-events-none absolute inset-y-0 left-0 z-10 w-24 shrink-0"
                   style={{
                     background: "linear-gradient(to right, #FFFFFF, transparent)",
                   }}
                 />
                 <div
-                  className="pointer-events-none absolute inset-y-0 right-0 z-10 w-16 shrink-0"
+                  className="pointer-events-none absolute inset-y-0 right-0 z-10 w-24 shrink-0"
                   style={{
                     background: "linear-gradient(to left, #FFFFFF, transparent)",
                   }}
                 />
-                <div className="trusted-marquee flex w-max items-center gap-12">
+                <div className="trusted-marquee flex w-max items-center gap-[72px]">
                   {MARQUEE_LOGOS.map((src) => (
-                    <Image key={src} src={src} width={120} height={40} alt="" className="shrink-0" />
+                    <Image key={src} src={src} width={180} height={60} alt="" className="shrink-0 grayscale opacity-50 hover:grayscale-0 hover:opacity-100 transition-all duration-300 cursor-pointer" />
                   ))}
                   {MARQUEE_LOGOS.map((src) => (
-                    <Image key={`dup-${src}`} src={src} width={120} height={40} alt="" className="shrink-0" aria-hidden />
+                    <Image key={`dup-${src}`} src={src} width={180} height={60} alt="" className="shrink-0 grayscale opacity-50 hover:grayscale-0 hover:opacity-100 transition-all duration-300 cursor-pointer" aria-hidden />
                   ))}
                 </div>
               </div>

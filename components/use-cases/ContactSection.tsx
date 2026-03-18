@@ -2,6 +2,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import glassStyles from "@/components/ui/GlassButton.module.css";
+import { instrumentSerif } from "@/app/fonts";
 
 export default function ContactSection() {
   return (
@@ -60,40 +62,31 @@ export default function ContactSection() {
           <p
             className="
             text-white
-            text-[30px]
-            leading-[140%]
-            font-serif
+            text-[40px]
             max-w-[600px]
             mb-8
             max-md:text-[22px]
             "
+            style={{ fontFamily: instrumentSerif.style.fontFamily, fontWeight: 400, letterSpacing: "-0.02em", lineHeight: "130%" }}
           >
             We’d love to work with you. Contact us, or
             <br />
             Check out our{" "}
             <Link
               href="/products"
-              className="underline cursor-pointer hover:opacity-80 transition-opacity"
+              className="cursor-pointer hover:opacity-80 transition-opacity"
+              style={{ borderBottom: "0.5px solid currentColor", paddingBottom: "1px" }}
             >
               Products
             </Link>
           </p>
 
-          <button
-            type="button"
-            className="
-            cursor-pointer
-            border border-white/40
-            text-white
-            px-8 py-3
-            rounded-full
-            text-[14px]
-            hover:bg-white hover:text-black
-            transition
-            "
-          >
-            Talk to us
-          </button>
+          <div className={glassStyles.wrap}>
+            <div className={glassStyles.shadow} aria-hidden />
+            <button type="button" className={`${glassStyles.btn} text-white text-[17px] font-semibold`} style={{ width: 184, height: 47, background: "transparent" }}>
+              <span>Talk to us</span>
+            </button>
+          </div>
         </div>
       </div>
 

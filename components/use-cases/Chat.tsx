@@ -241,7 +241,7 @@ export default function Chat() {
 
   return (
     <section className="w-full bg-black py-[120px] flex justify-center">
-      <div className="w-full max-w-[1728px] px-[100px] max-xl:px-12 max-md:px-6">
+      <div className="w-full max-w-screen-2xl px-[var(--page-padding)]">
 
         {/* TITLE — left edge aligned with sidebar; 30px above top edge of left sidebar */}
         <div className="mb-[30px]">
@@ -306,7 +306,7 @@ export default function Chat() {
         </div>
 
         {/* MAP FRAME — sidebar + map */}
-        <div className="relative w-full overflow-hidden flex max-md:flex-col">
+        <div className="relative w-full overflow-hidden flex max-md:flex-col rounded-lg">
 
           {/* DESKTOP SIDEBAR — takes fixed width; map starts at its right edge */}
           <div className="
@@ -316,6 +316,7 @@ export default function Chat() {
             flex-shrink-0
             text-white flex-col overflow-hidden
             h-[673px] max-lg:h-[520px]
+            border-[0.7px] border-white/50 border-r-0 rounded-l-lg
           ">
             {SIDEBAR_ITEMS.map((item) => (
               <button
@@ -376,7 +377,7 @@ export default function Chat() {
 
           {/* MAP — left edge at sidebar right edge; fades out/in when user taps a cell */}
           <div
-            className="relative flex-1 min-w-0 h-[673px] max-lg:h-[520px] max-md:h-[420px] transition-opacity ease-in-out"
+            className="relative flex-1 min-w-0 h-[673px] max-lg:h-[520px] max-md:h-[420px] transition-opacity ease-in-out overflow-hidden border-[0.7px] border-white/50 border-l-0 rounded-r-lg"
             style={{
               opacity: mapOpacity,
               transitionDuration: `${FADE_DURATION_MS / 2}ms`,

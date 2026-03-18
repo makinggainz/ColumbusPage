@@ -239,3 +239,29 @@
 .btnCta:hover span::after {
   background-position: 25%;
 }
+
+/* "New" pill variant — fixed 68×35px, 5px radius */
+.btnNew {
+  padding: 0;
+  width: 68px;
+  height: 35px;
+  border-radius: 5px;
+}
+
+.btnNew::after {
+  border-radius: 5px;
+}
+
+.wrapNew {
+  border-radius: 5px;
+}
+
+.wrapNew .shadow::after {
+  border-radius: 5px;
+}
+
+.btnNew span {
+  font-size: 16px;
+  font-weight: 500;
+  color: #323232;
+}

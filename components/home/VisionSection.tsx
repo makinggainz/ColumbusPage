@@ -41,8 +41,12 @@ export const Vision = () => {
         {/* TITLE */}
         <h2
           ref={titleRef}
-          className="text-display font-semibold leading-tight text-left mb-12 md:mb-16 -mt-20 bg-linear-to-b from-[#0A1344] to-[#838383] bg-clip-text text-transparent tracking-[-0.015em]"
+          className="text-display font-semibold leading-tight text-left mb-12 md:mb-16 -mt-20 bg-clip-text text-transparent tracking-[-0.015em]"
           style={{
+            backgroundImage: "linear-gradient(to bottom, #0A1344 0%, #0A1344 20%, #C8D2EE 35%, #0A1344 50%, #0A1344 100%)",
+            backgroundSize: "100% 200%",
+            backgroundPosition: "0% 0%",
+            animation: titleVisible ? "text-shimmer-down 1.4s ease-in-out 0.3s 1 forwards" : "none",
             opacity: titleVisible ? 1 : 0,
             filter: titleVisible ? "blur(0px)" : "blur(8px)",
             transform: titleVisible ? "translateY(0)" : "translateY(16px)",

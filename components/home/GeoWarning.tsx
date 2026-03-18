@@ -1,131 +1,291 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Image from "next/image";
-import { useLenis } from "@/components/home/LenisContext";
 import { Container } from "@/components/layout/Container";
 
+// Each icon: src, initial position as % of viewport, size in px
+const ICON_DEFS = [
+  { src: "/Icon/icon-openai.png",  top: 0.18, left: 0.10, size: 72 },
+  { src: "/Icon/xai.png",          top: 0.12, left: 0.34, size: 66 },
+  { src: "/Icon/perplexity.png",   top: 0.12, left: 0.64, size: 78 },
+  { src: "/Icon/claude.png",       top: 0.20, left: 0.83, size: 72 },
+  { src: "/Icon/gemini.png",       top: 0.34, left: 0.55, size: 78 },
+  { src: "/Icon/xai2.png",         top: 0.60, left: 0.45, size: 66 },
+  { src: "/Icon/gemini2.png",      top: 0.72, left: 0.13, size: 66 },
+  { src: "/Icon/claude2.png",      top: 0.76, left: 0.29, size: 66 },
+  { src: "/Icon/logo7.png",        top: 0.77, left: 0.63, size: 72 },
+  { src: "/Icon/icon-openai2.png", top: 0.72, left: 0.83, size: 72 },
+  { src: "/Icon/mistral.png",      top: 0.44, left: 0.08, size: 60 },
+];
+
+type Box = {
+  id: number;
+  x: number;
+  y: number;
+  vx: number;
+  vy: number;
+  rotation: number;
+  angularVel: number;
+  size: number;
+  img: HTMLImageElement;
+  spawnTime: number;
+};
+
+const GRAVITY     = 0.45;
+const DAMPING     = 0.52;
+const FRICTION    = 0.975;
+const ANG_FRICTION = 0.93;
+const RESTITUTION = 0.38;
+const FADE_IN_MS  = 600; // ms to fade in after spawn
+
 export const GeoWarning = () => {
-  const sectionRef = useRef<HTMLElement>(null);
-  const [triggerAnimation, setTriggerAnimation] = useState(false);
-  const hasTriggeredRef = useRef(false);
-  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const lenis = useLenis();
+  const sectionRef   = useRef<HTMLElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const canvasRef    = useRef<HTMLCanvasElement>(null);
+  const boxesRef     = useRef<Box[]>([]);
+  const imagesRef    = useRef<HTMLImageElement[]>([]);
+  const idRef        = useRef(0);
+  const spawnedRef   = useRef(false);
+  const rafRef       = useRef<number | undefined>(undefined);
+  const mouseRef = useRef<{ x: number; y: number; active: boolean }>({ x: 0, y: 0, active: false });
+  const [progress, setProgress] = useState(0);
 
+  // ── Preload images ───────────────────────────────────────────────────────────
   useEffect(() => {
-    const section = sectionRef.current;
-    if (!section) return;
+    imagesRef.current = ICON_DEFS.map((def) => {
+      const img = new window.Image();
+      img.src = def.src;
+      return img;
+    });
+  }, []);
 
-    const startTimer = () => {
-      if (hasTriggeredRef.current) return;
-      if (timeoutRef.current) return;
-      timeoutRef.current = setTimeout(() => {
-        timeoutRef.current = null;
-        hasTriggeredRef.current = true;
-        setTriggerAnimation(true);
-      }, 500);
+  // ── Scroll progress ──────────────────────────────────────────────────────────
+  useEffect(() => {
+    const onScroll = () => {
+      const s = sectionRef.current;
+      if (!s) return;
+      const rect = s.getBoundingClientRect();
+      const scrollable = s.offsetHeight - window.innerHeight;
+      setProgress(Math.max(0, Math.min(1, -rect.top / scrollable)));
     };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
-    const clearTimer = () => {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-        timeoutRef.current = null;
-      }
+  // ── Spawn icons when animation threshold is reached ──────────────────────────
+  useEffect(() => {
+    if (spawnedRef.current) return;
+    if (progress < 0.20) return; // wait until icons have animated in
+    spawnedRef.current = true;
+
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const W = canvas.width;
+    const H = canvas.height;
+
+    ICON_DEFS.forEach((def, i) => {
+      const img = imagesRef.current[i];
+      boxesRef.current.push({
+        id: idRef.current++,
+        x: def.left * W,
+        y: def.top  * H,
+        vx: (Math.random() - 0.5) * 1.5,
+        vy: 0,
+        rotation: 0,
+        angularVel: (Math.random() - 0.5) * 4,
+        size: def.size,
+        img,
+        spawnTime: Date.now(),
+      });
+    });
+  }, [progress]);
+
+  // ── Physics + canvas loop ────────────────────────────────────────────────────
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    const container = containerRef.current;
+    if (!canvas || !container) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    const resize = () => {
+      canvas.width  = container.offsetWidth;
+      canvas.height = container.offsetHeight;
     };
+    resize();
+    window.addEventListener("resize", resize);
 
-    const checkInView = () => {
-      const rect = section.getBoundingClientRect();
-      const inView =
-        rect.top < window.innerHeight * 0.9 && rect.bottom > window.innerHeight * 0.1;
-      if (inView) {
-        startTimer();
-      } else {
-        clearTimer();
-      }
+    const onMouseMove = (e: MouseEvent) => {
+      const rect = canvas.getBoundingClientRect();
+      mouseRef.current = { x: e.clientX - rect.left, y: e.clientY - rect.top, active: true };
     };
+    const onMouseLeave = () => { mouseRef.current.active = false; };
+    container.addEventListener("mousemove", onMouseMove);
+    container.addEventListener("mouseleave", onMouseLeave);
 
-    if (lenis) {
-      const unsub = lenis.on("scroll", checkInView);
-      checkInView(); // run once in case already in view
-      return () => {
-        unsub();
-        clearTimer();
-      };
-    }
+    const loop = () => {
+      const W = canvas.width;
+      const H = canvas.height;
+      ctx.clearRect(0, 0, W, H);
 
-    // No Lenis: use Intersection Observer
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const entry = entries[0];
-        if (!entry) return;
-        if (entry.isIntersecting) {
-          startTimer();
-        } else {
-          clearTimer();
+      const boxes = boxesRef.current;
+
+      // ── Integrate ────────────────────────────────────────────────────────────
+      const MOUSE_RADIUS = 130;
+      const MOUSE_FORCE  = 10;
+      const mouse = mouseRef.current;
+
+      for (const b of boxes) {
+        b.vy += GRAVITY;
+        b.vx *= FRICTION;
+        b.angularVel *= ANG_FRICTION;
+
+        if (mouse.active) {
+          const dx = b.x - mouse.x;
+          const dy = b.y - mouse.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < MOUSE_RADIUS && dist > 0.001) {
+            const strength = (1 - dist / MOUSE_RADIUS) * MOUSE_FORCE;
+            b.vx += (dx / dist) * strength;
+            b.vy += (dy / dist) * strength;
+            b.angularVel += strength * (Math.random() - 0.5) * 3;
+          }
         }
-      },
-      { root: null, rootMargin: "0px", threshold: 0 }
-    );
-    observer.observe(section);
-    return () => {
-      observer.disconnect();
-      clearTimer();
+
+        b.x += b.vx;
+        b.y += b.vy;
+        b.rotation += b.angularVel;
+
+        if (b.y + b.size / 2 >= H) {
+          b.y = H - b.size / 2;
+          b.vy = -Math.abs(b.vy) * DAMPING;
+          b.vx *= 0.82;
+          b.angularVel *= 0.6;
+          if (Math.abs(b.vy) < 0.8) b.vy = 0;
+        }
+        if (b.x - b.size / 2 < 0) { b.x = b.size / 2;     b.vx =  Math.abs(b.vx) * 0.55; }
+        if (b.x + b.size / 2 > W) { b.x = W - b.size / 2; b.vx = -Math.abs(b.vx) * 0.55; }
+      }
+
+      // ── Box–box collisions ───────────────────────────────────────────────────
+      for (let i = 0; i < boxes.length; i++) {
+        for (let j = i + 1; j < boxes.length; j++) {
+          const a = boxes[i];
+          const b = boxes[j];
+          const ra = a.size / Math.SQRT2;
+          const rb = b.size / Math.SQRT2;
+          const dx = b.x - a.x;
+          const dy = b.y - a.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          const minDist = ra + rb;
+          if (dist < minDist && dist > 0.001) {
+            const nx = dx / dist;
+            const ny = dy / dist;
+            const overlap = (minDist - dist) * 0.5;
+            a.x -= nx * overlap; a.y -= ny * overlap;
+            b.x += nx * overlap; b.y += ny * overlap;
+            const dvn = (b.vx - a.vx) * nx + (b.vy - a.vy) * ny;
+            if (dvn < 0) {
+              const imp = -(1 + RESTITUTION) * dvn / 2;
+              a.vx -= imp * nx; a.vy -= imp * ny;
+              b.vx += imp * nx; b.vy += imp * ny;
+              a.angularVel += imp * 2.5 * (Math.random() - 0.5);
+              b.angularVel -= imp * 2.5 * (Math.random() - 0.5);
+            }
+          }
+        }
+      }
+
+      // ── Draw ─────────────────────────────────────────────────────────────────
+      const now = Date.now();
+      for (const b of boxes) {
+        if (!b.img.complete || !b.img.naturalWidth) continue;
+        const age = now - b.spawnTime;
+        const alpha = Math.min(0.5, 0.5 * (age / FADE_IN_MS));
+        ctx.save();
+        ctx.translate(b.x, b.y);
+        ctx.rotate((b.rotation * Math.PI) / 180);
+        ctx.globalAlpha = alpha;
+        ctx.drawImage(b.img, -b.size / 2, -b.size / 2, b.size, b.size);
+        ctx.restore();
+      }
+
+      rafRef.current = requestAnimationFrame(loop);
     };
-  }, [lenis]);
+
+    rafRef.current = requestAnimationFrame(loop);
+    return () => {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      window.removeEventListener("resize", resize);
+      container.removeEventListener("mousemove", onMouseMove);
+      container.removeEventListener("mouseleave", onMouseLeave);
+    };
+  }, []);
+
+  // ── Scroll-driven text animations ────────────────────────────────────────────
+  const ease = (p: number, start: number, end: number) =>
+    Math.max(0, Math.min(1, (p - start) / (end - start)));
+
+  const bgProgress = ease(progress, 0, 0.25);
+  const bgChannel  = Math.round(235 + (255 - 235) * bgProgress);
+  const bgColor    = `rgb(${bgChannel}, ${bgChannel}, ${bgChannel})`;
+
+  const line1P = ease(progress, 0.15, 0.38);
+  const line2P = ease(progress, 0.30, 0.52);
+
+  const fadeUp = (p: number, dist = 32) => ({
+    opacity: p,
+    filter: `blur(${(1 - p) * 8}px)`,
+    transform: `translateY(${(1 - p) * dist}px)`,
+  });
 
   return (
     <section
       ref={sectionRef}
-      className="bg-[#F9F9F9] relative overflow-visible py-24 md:py-32 lg:py-40"
+      className="relative"
+      style={{ height: "200vh" }}
     >
-      <Container className="relative min-h-125 md:min-h-162.5 overflow-hidden">
+      <div
+        ref={containerRef}
+        className="sticky top-0 h-screen overflow-hidden flex items-center justify-center"
+        style={{ backgroundColor: bgColor, transition: "background-color 0.05s linear" }}
+      >
+        {/* Physics canvas — icons fall here */}
+        <canvas
+          ref={canvasRef}
+          className="absolute inset-0 pointer-events-none"
+          style={{ zIndex: 1 }}
+        />
 
-        {/* FLOATING ICONS — shake then fall after 0.5s in view */}
-        <div
-          className={`absolute inset-0 ${triggerAnimation ? "geo-warning-icons-animate" : ""}`}
-          aria-hidden
-        >
-          <Icon src="/Icon/icon-openai.png" className="top-[10%] left-[10%] w-8 md:w-12 lg:w-14" />
-          <Icon src="/Icon/xai.png" className="top-[8%] left-[35%] w-8 md:w-12" />
-          <Icon src="/Icon/claude.png" className="top-[10%] right-[30%] w-8 md:w-14" />
-          <Icon src="/Icon/mistral.png" className="top-[12%] right-[10%] w-8 md:w-12" />
+        {/* Centered text */}
+        <div className="relative" style={{ zIndex: 2 }}><Container>
+          <div className="flex flex-col items-center text-center">
 
-          <Icon src="/Icon/gemini.png" className="top-[30%] left-1/2 -translate-x-1/2 w-10 md:w-14" />
-          <Icon src="/Icon/xai2.png" className="top-[60%] left-1/2 -translate-x-1/2 w-8 md:w-12" />
+            <h2
+              style={{ fontSize: "64px", lineHeight: 1.1, ...fadeUp(line1P) }}
+              className="tracking-tight text-[#2A0E0E] whitespace-nowrap"
+            >
+              <span className="font-semibold">Stop using </span>
+              <span className="font-bold">Language models </span>
+              <span className="font-semibold">for Geographical work.</span>
+            </h2>
 
-          <Icon src="/Icon/gemini2.png" className="bottom-[10%] left-[12%] w-8 md:w-12" />
-          <Icon src="/Icon/claude2.png" className="bottom-[8%] left-[40%] w-8 md:w-12" />
-          <Icon src="/Icon/perplexity.png" className="bottom-[10%] right-[35%] w-8 md:w-12" />
-          <Icon src="/Icon/icon-openai2.png" className="bottom-[8%] right-[12%] w-8 md:w-12" />
-        </div>
+            <p
+              style={{ fontSize: "40px", lineHeight: 1.3, ...fadeUp(line2P) }}
+              className="mt-6 tracking-tight whitespace-nowrap"
+            >
+              <span className="font-semibold text-[#CD0A00]">LLMs</span>{" "}
+              <span className="font-normal bg-linear-to-r from-[#CD0A00] to-[#000000] bg-clip-text text-transparent">
+                hallucinate and{" "}
+                <span className="font-bold">cannot</span>
+                {" "}be trusted for the real world
+              </span>
+            </p>
 
-        {/* HEADLINE */}
-        <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4 pointer-events-none">
-          <h1 className="text-xl sm:text-2xl md:text-4xl lg:text-5xl font-semibold text-[#2A0E0E] leading-tight">
-            Stop using <span className="text-black font-normal">Language models</span> for Geographical work.
-          </h1>
-
-          <p className="mt-6 text-base sm:text-lg md:text-2xl lg:text-3xl font-normal">
-            <span className="text-red-600 font-bold">LLMs</span>{" "}
-            <span className="bg-gradient-to-r from-[#CD0A00] to-[#1E4898] bg-clip-text text-transparent">
-              hallucinate and cannot be trusted for the real world
-            </span>
-          </p>
-        </div>
-
-      </Container>
+          </div>
+        </Container></div>
+      </div>
     </section>
   );
 };
-
-const Icon = ({
-  src,
-  className,
-}: {
-  src: string;
-  className: string;
-}) => (
-  <div className={`absolute opacity-40 ${className}`}>
-    <Image src={src} alt="" width={80} height={80} />
-  </div>
-);

@@ -8,13 +8,7 @@ export function ProductsSmoothScroll() {
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reducedMotion) return;
 
-    const lenis = new Lenis({
-      smoothWheel: true,
-      wheelMultiplier: 0.52,
-      touchMultiplier: 0.52,
-      lerp: 0.07,
-      syncTouch: true,
-    });
+    const lenis = new Lenis();
 
     let rafId = 0;
     const raf = (time: number) => {

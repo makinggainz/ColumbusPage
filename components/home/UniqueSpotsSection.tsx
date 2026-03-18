@@ -2,6 +2,7 @@
 
 import { Star, MapPin } from "lucide-react";
 import { Container } from "@/components/layout/Container";
+import { useRef, useState } from "react";
 
 const FAVORITE_SPOTS_FILES = ["(20).jpeg", "(14).jpeg", "(17).jpeg", "(19).jpeg", "(21).jpeg", "(23).jpeg", "(24).jpeg", "(22).jpeg"];
 const spotImageSrc = (filename: string) => `/FavoriteSpots/${encodeURIComponent(filename)}`;
@@ -20,6 +21,28 @@ const SPOTS: { title: string; description: string; location: string; rating: str
 ];
 
 export const UniqueSpotsSection = () => {
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [scrollLeft, setScrollLeft] = useState(0);
+
+  const onMouseDown = (e: React.MouseEvent) => {
+    setIsDragging(true);
+    setStartX(e.pageX - (scrollRef.current?.offsetLeft ?? 0));
+    setScrollLeft(scrollRef.current?.scrollLeft ?? 0);
+  };
+
+  const onMouseLeave = () => setIsDragging(false);
+  const onMouseUp = () => setIsDragging(false);
+
+  const onMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging) return;
+    e.preventDefault();
+    const x = e.pageX - (scrollRef.current?.offsetLeft ?? 0);
+    const walk = (x - startX) * 1.5;
+    if (scrollRef.current) scrollRef.current.scrollLeft = scrollLeft - walk;
+  };
+
   return (
     <section className="bg-[#F9F9F9] py-20 md:py-28 lg:py-32 overflow-hidden relative">
       <Container className="mb-6 md:mb-8">
@@ -28,7 +51,7 @@ export const UniqueSpotsSection = () => {
         </h2>
       </Container>
 
-      <div className="w-full overflow-hidden relative min-h-120">
+      <div className="w-full relative min-h-120">
         <div
           className="absolute inset-0 w-full h-120 top-0 left-0"
           style={{
@@ -36,43 +59,49 @@ export const UniqueSpotsSection = () => {
           }}
           aria-hidden
         />
+        {/* Top fade */}
         <div
-          className="absolute left-0 top-0 w-full h-36 pointer-events-none"
+          className="absolute left-0 top-0 w-full pointer-events-none z-20"
           style={{
-            background: "linear-gradient(0deg, rgba(255, 255, 255, 0) 0%, #FFFFFF 100%)",
+            height: "180px",
+            background: "linear-gradient(to bottom, #F9F9F9 0%, rgba(249,249,249,0.85) 30%, rgba(249,249,249,0.4) 65%, rgba(249,249,249,0) 100%)",
+          }}
+          aria-hidden
+        />
+        {/* Bottom fade */}
+        <div
+          className="absolute left-0 bottom-0 w-full pointer-events-none z-20"
+          style={{
+            height: "180px",
+            background: "linear-gradient(to top, #F9F9F9 0%, rgba(249,249,249,0.85) 30%, rgba(249,249,249,0.4) 65%, rgba(249,249,249,0) 100%)",
           }}
           aria-hidden
         />
         <div
-          className="absolute left-0 bottom-0 w-full h-55 pointer-events-none"
+          ref={scrollRef}
+          className="flex gap-6 overflow-x-auto py-6 px-6 relative z-30 select-none"
           style={{
-            background: "linear-gradient(0deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.4) 35%, rgba(255, 255, 255, 0.75) 65%, #FFFFFF 100%)",
-            transform: "scaleY(-1)",
+            scrollbarWidth: "none",
+            cursor: isDragging ? "grabbing" : "grab",
           }}
-          aria-hidden
-        />
-        <div className="unique-spots-ticker flex w-max gap-6 relative z-10 py-6">
+          onMouseDown={onMouseDown}
+          onMouseLeave={onMouseLeave}
+          onMouseUp={onMouseUp}
+          onMouseMove={onMouseMove}
+        >
           {SPOTS.map((spot, i) => (
-            <SpotCard key={`a-${i}`} spot={spot} />
-          ))}
-          {SPOTS.map((spot, i) => (
-            <SpotCard key={`b-${i}`} spot={spot} />
+            <SpotCard key={i} spot={spot} />
           ))}
         </div>
       </div>
 
-      {/* Vector 4414: horizontal line at bottom (0×1524px rotated 90° → 1524px wide) */}
-      <div
-        className="absolute left-[62.5px] bottom-0 w-381 h-px bg-black/20"
-        aria-hidden
-      />
     </section>
   );
 };
 
 function SpotCard({ spot }: { spot: (typeof SPOTS)[0] }) {
   return (
-    <div className="unique-spots-card flex flex-col shrink-0 rounded-[14px] bg-white/20 overflow-hidden relative px-4.5 pt-4.75 pb-4">
+    <div className="unique-spots-card flex flex-col shrink-0 rounded-[14px] bg-white/20 overflow-hidden relative px-4.5 pt-4.75 pb-4 transition-transform duration-200 ease-out hover:scale-[1.03]">
       {/* Image area: 462×170, radius 11px (design) */}
       <div className="relative w-full max-w-115.5 h-42.5 rounded-[11px] overflow-hidden bg-gray-300 shrink-0">
         {spot.image ? (
@@ -94,7 +123,7 @@ function SpotCard({ spot }: { spot: (typeof SPOTS)[0] }) {
         </div>
       </div>
 
-      {/* Title, description, location — design: SF Pro 20px, 140% line-height, -0.02em */}
+      {/* Title, description, location */}
       <h3 className="mt-2.25 font-semibold text-xl leading-[140%] tracking-[-0.02em] text-black shrink-0">
         {spot.title}
       </h3>

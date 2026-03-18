@@ -4,7 +4,7 @@
 
 export const MeshSection = () => {
   return (
-    <section className="bg-white border-0 border-none shadow-none ring-0 ring-offset-0">
+    <section className="bg-[#F9F9F9] border-0 border-none shadow-none ring-0 ring-offset-0">
       <div className="relative w-full h-[920px] overflow-hidden border-0 border-none shadow-none ring-0 ring-offset-0">
 
         <video
@@ -13,11 +13,21 @@ export const MeshSection = () => {
           muted
           playsInline
           preload="auto"
-          className="w-full h-full object-cover border-0 border-none outline-none shadow-none ring-0 ring-offset-0"
+          className="w-full h-full object-cover object-top border-0 border-none outline-none shadow-none ring-0 ring-offset-0"
         >
           <source src="/mesh-animation.mp4" type="video/mp4" />
         </video>
 
+        {/* Top fade — blends into Hero above */}
+        <div
+          className="absolute top-0 left-0 right-0 w-full h-30 pointer-events-none"
+          style={{
+            background: `linear-gradient(to bottom, rgba(249,249,249,1) 0%, rgba(249,249,249,0) 100%)`,
+          }}
+          aria-hidden
+        />
+
+        {/* Bottom fade */}
         <div
           className="absolute bottom-0 left-0 right-0 w-full h-[70px] pointer-events-none"
           style={{

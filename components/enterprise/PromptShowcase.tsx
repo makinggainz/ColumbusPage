@@ -1,11 +1,14 @@
 "use client";
 
 import Image from "next/image";
+import { useEffect, useRef, useState } from "react";
 
-function PromptCard({ image, text }: { image: string; text: string }) {
+function PromptCard({ image, text, popStyle }: { image: string; text: string; popStyle?: React.CSSProperties }) {
   return (
-    
-    <div className="w-[320px] md:w-[360px] lg:w-[376px] rounded-[18px] bg-[#FDFDFD] border border-[#EDEDED] shadow-lg overflow-hidden">
+    <div
+      className="w-[320px] md:w-[360px] lg:w-[376px] rounded-[18px] bg-[#FDFDFD] border border-[#EDEDED] shadow-lg overflow-hidden"
+      style={popStyle}
+    >
 
       {/* Header */}
       <div className="flex items-center gap-2 px-4 py-3 text-[14px] text-[#374151] font-medium">
@@ -32,9 +35,12 @@ function PromptCard({ image, text }: { image: string; text: string }) {
   );
 }
 
-function CenterPrompt() {
+function CenterPrompt({ popStyle }: { popStyle?: React.CSSProperties }) {
   return (
-    <div className="relative w-[320px] md:w-[420px] lg:w-[503px] rounded-[18px] bg-[#F7F7F7] border border-[#EDEDED] shadow-xl overflow-visible">
+    <div
+      className="relative w-[320px] md:w-[420px] lg:w-[503px] rounded-[18px] bg-[#F7F7F7] border border-[#EDEDED] shadow-xl overflow-visible"
+      style={popStyle}
+    >
 
       <div className="px-5 py-4 text-[13px] text-[#6B7280] leading-[150%]">
 
@@ -58,19 +64,87 @@ function CenterPrompt() {
   );
 }
 
+const SPRING = "cubic-bezier(0.34, 1.56, 0.64, 1)";
+
+function popStyle(visible: boolean, delay: number): React.CSSProperties {
+  return {
+    opacity: visible ? 1 : 0,
+    transform: visible ? "scale(1)" : "scale(0.82)",
+    transition: `opacity 0.45s ease-out ${delay}s, transform 0.45s ${SPRING} ${delay}s`,
+  };
+}
+
 export default function PromptShowcase() {
+  const headerRef = useRef<HTMLDivElement>(null);
+  const [headerVisible, setHeaderVisible] = useState(false);
+  const [cardsVisible, setCardsVisible] = useState(false);
+
+  const part2Ref = useRef<HTMLDivElement>(null);
+  const [part2Visible, setPart2Visible] = useState(false);
+  const [part2CardsVisible, setPart2CardsVisible] = useState(false);
+
+  useEffect(() => {
+    const observe = (el: HTMLElement | null, onVisible: () => void) => {
+      if (!el) return () => {};
+      const observer = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) {
+            onVisible();
+            observer.disconnect();
+          }
+        },
+        { threshold: 0.1 }
+      );
+      observer.observe(el);
+      return () => observer.disconnect();
+    };
+
+    const cleanups = [
+      observe(headerRef.current, () => setHeaderVisible(true)),
+      observe(part2Ref.current, () => setPart2Visible(true)),
+    ];
+    return () => cleanups.forEach((fn) => fn());
+  }, []);
+
+  // Cards pop in after header has faded in
+  useEffect(() => {
+    if (!headerVisible) return;
+    const t = setTimeout(() => setCardsVisible(true), 600);
+    return () => clearTimeout(t);
+  }, [headerVisible]);
+
+  // Part 2 cards pop in after Part 2 text fades in
+  useEffect(() => {
+    if (!part2Visible) return;
+    const t = setTimeout(() => setPart2CardsVisible(true), 600);
+    return () => clearTimeout(t);
+  }, [part2Visible]);
+
+  const fadeInStyle = (visible: boolean, delay: number): React.CSSProperties => ({
+    opacity: visible ? 1 : 0,
+    filter: visible ? "blur(0px)" : "blur(8px)",
+    transform: visible ? "translateY(0)" : "translateY(16px)",
+    transition: `opacity 0.6s ease-out ${delay}s, filter 0.6s ease-out ${delay}s, transform 0.6s ease-out ${delay}s`,
+  });
+
   return (
     <section className="w-full py-24 md:py-32 overflow-hidden" style={{ backgroundColor: "#ffffff", paddingBottom: 100 }}>
 
       {/* ═══ PART 1: See prompts you can ask ═══ */}
-      <div data-prompt-area="part-1" className="contents">
+      <div data-prompt-area="part-1">
       {/* Part 1 header */}
-      <div className="text-center mb-16 md:mb-20 px-6">
-        <p className="text-[12px] md:text-[14px] tracking-[0.2em] text-[#6B7280] uppercase">
+      <div ref={headerRef} className="text-center mb-16 md:mb-20 px-6">
+        <p
+          className="text-[12px] md:text-[14px] tracking-[0.2em] text-[#6B7280] uppercase"
+          style={fadeInStyle(headerVisible, 0)}
+        >
           REAL USE CASE STORIES
         </p>
 
-        <h2 className="font-medium text-[28px] md:text-[48px] lg:text-[64px] leading-[140%] tracking-[-0.02em] mt-3">
+        <h2
+          className="font-medium text-[28px] md:text-[48px] lg:text-[64px] leading-[140%] tracking-[-0.02em] mt-3"
+          style={fadeInStyle(headerVisible, 0.15)}
+        >
           See prompts you can ask
         </h2>
       </div>
@@ -81,23 +155,27 @@ export default function PromptShowcase() {
         <PromptCard
           image="/enterprise/citymap.png"
           text="map of philly to drive my truck to run over as many pedestrians as possible"
+          popStyle={popStyle(cardsVisible, 0)}
         />
 
         <PromptCard
           image="/enterprise/map2.png"
           text="make me a map of charlotte, but filter only vacant lots next to transportation lines"
+          popStyle={popStyle(cardsVisible, 0.08)}
         />
 
-        <CenterPrompt />
+        <CenterPrompt popStyle={popStyle(cardsVisible, 0.16)} />
 
         <PromptCard
           image="/enterprise/map3.png"
           text="map of france but in weird colors to make it hard to understand"
+          popStyle={popStyle(cardsVisible, 0.24)}
         />
 
         <PromptCard
           image="/enterprise/map4.png"
           text="lava map for silly billies"
+          popStyle={popStyle(cardsVisible, 0.32)}
         />
 
       </div>
@@ -126,7 +204,7 @@ export default function PromptShowcase() {
 
         {/* CENTER */}
         <div className="absolute left-1/2 top-[52%] -translate-x-1/2 -translate-y-1/2">
-          <CenterPrompt />
+          <CenterPrompt popStyle={popStyle(cardsVisible, 0.1)} />
         </div>
 
         {/* TOP LEFT */}
@@ -134,6 +212,7 @@ export default function PromptShowcase() {
           <PromptCard
             image="/enterprise/citymap.png"
             text="map of philly to drive my truck to run over as many pedestrians as possible"
+            popStyle={popStyle(cardsVisible, 0)}
           />
         </div>
 
@@ -142,6 +221,7 @@ export default function PromptShowcase() {
           <PromptCard
             image="/enterprise/map2.png"
             text="make me a map of charlotte, but filter only vacant lots next to transportation lines"
+            popStyle={popStyle(cardsVisible, 0.08)}
           />
         </div>
 
@@ -150,6 +230,7 @@ export default function PromptShowcase() {
           <PromptCard
             image="/enterprise/map3.png"
             text="map of france but in weird colors to make it hard to understand"
+            popStyle={popStyle(cardsVisible, 0.16)}
           />
         </div>
 
@@ -158,6 +239,7 @@ export default function PromptShowcase() {
           <PromptCard
             image="/enterprise/map4.png"
             text="lava map for silly billies"
+            popStyle={popStyle(cardsVisible, 0.24)}
           />
         </div>
 
@@ -175,7 +257,7 @@ export default function PromptShowcase() {
       </div>
 
       {/* ═══ PART 2: Ask about a drawn area ═══ */}
-      <div data-prompt-area="part-2" className="relative w-full h-[1036px] mt-16 md:mt-24 rounded-2xl overflow-hidden mx-auto max-w-[1235px]">
+      <div ref={part2Ref} data-prompt-area="part-2" className="relative w-full h-[1036px] mt-16 md:mt-24 rounded-2xl overflow-hidden mx-auto max-w-[1235px]">
         {/* Part 2 — Map background */}
         <Image
           src="/enterprise/drawnAreaMap.png"
@@ -197,16 +279,21 @@ export default function PromptShowcase() {
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
               backgroundClip: "text",
+              ...fadeInStyle(part2Visible, 0),
             }}
           >
             Ask about a drawn area
           </h3>
-          <p className="font-medium text-[26px] md:text-[32px] leading-[140%] tracking-[-0.02em] text-black mt-3 max-w-[334px]">
+          <p className="font-medium text-[26px] md:text-[32px] leading-[140%] tracking-[-0.02em] text-black mt-3 max-w-[334px]"
+            style={fadeInStyle(part2Visible, 0.15)}
+          >
             Draw a specific space and ask
           </p>
 
           {/* Selected area card — 280px below bottom edge of "and ask" */}
-          <div className="mt-[280px] w-[320px] md:w-[360px] rounded-[14px] bg-white border border-[#EDEDED] shadow-xl overflow-hidden">
+          <div className="mt-[280px] w-[320px] md:w-[360px] rounded-[14px] bg-white border border-[#EDEDED] shadow-xl overflow-hidden"
+            style={popStyle(part2CardsVisible, 0)}
+          >
             <div className="flex items-center justify-between px-4 py-3 border-b border-[#EDEDED]">
               <span className="font-semibold text-[15px] text-[#111] flex items-center gap-2">
                 Selected area
@@ -256,7 +343,9 @@ export default function PromptShowcase() {
           </div>
 
           {/* Bottom-left CTA — 30px below selected area card */}
-          <p className="mt-[30px] text-black font-medium text-[26px] md:text-[32px] leading-[140%] tracking-[-0.02em] max-w-[380px]">
+          <p className="mt-[30px] text-black font-medium text-[26px] md:text-[32px] leading-[140%] tracking-[-0.02em] max-w-[380px]"
+            style={fadeInStyle(part2Visible, 0.3)}
+          >
             Or access full advanced data about the polygon.
           </p>
           </div>
@@ -273,6 +362,7 @@ export default function PromptShowcase() {
               borderRight: "1px solid #EDECED",
               boxShadow: "0px 0px 30px rgba(0, 0, 0, 0.2)",
               borderRadius: 19,
+              ...popStyle(part2CardsVisible, 0.1),
             }}
           >
             <div className="flex items-center gap-2 px-5 py-4" style={{ paddingLeft: 24 }}>
@@ -317,10 +407,10 @@ export default function PromptShowcase() {
       <div className="flex justify-center pt-8 pb-4">
         <button
           type="button"
-          className="px-6 py-3 rounded-[10px] bg-white border border-[#EDEDED] shadow-lg text-[15px] font-medium text-[#111] hover:bg-[#FAFAFA] transition-colors flex items-center gap-2 cursor-pointer"
+          className="flex items-center gap-2 px-6 py-3.5 text-md font-semibold leading-none rounded-none border border-[#0A1344] bg-transparent text-[#0A1344] transition-opacity duration-300 hover:opacity-70 cursor-pointer"
         >
           More use cases
-          <span className="text-[#666]">→</span>
+          →
         </button>
       </div>
 

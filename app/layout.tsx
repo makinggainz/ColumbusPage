@@ -2,19 +2,10 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 import { GeistSans } from "geist/font/sans";
-import { Cormorant_Garamond, Cambo } from "next/font/google";
+import { cormorant, cambo } from "@/app/fonts";
 import { LenisProvider } from "@/components/home/LenisContext";
 
-export const cormorant = Cormorant_Garamond({
-  subsets: ["latin"],
-  weight: ["600"],
-  display: "swap",
-});
-
-const cambo = Cambo({
-  weight: "400",
-  subsets: ["latin"],
-});
+export { cormorant, cambo };
 
 export const metadata: Metadata = {
   title: "Columbus",

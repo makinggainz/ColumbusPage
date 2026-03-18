@@ -70,14 +70,14 @@ export default function AgenticResearch() {
 
   return (
     <section className="w-full bg-black py-[120px] flex justify-center">
-      <div className="w-full max-w-[1728px] px-[100px] max-xl:px-12 max-md:px-6">
+      <div className="w-full max-w-screen-2xl px-[var(--page-padding)]">
 
         <h2 className="text-white text-[32px] font-semibold mb-[30px] max-md:text-[28px]">
           Agentic geospatial research
         </h2>
 
         {/* MOBILE SIDEBAR */}
-        <div className="hidden max-md:flex max-md:flex-col max-md:h-[420px] overflow-hidden rounded-lg mb-6 border-[0.7px] border-white">
+        <div className="hidden max-md:flex max-md:flex-col max-md:h-[420px] overflow-hidden rounded-lg mb-6 border-[0.7px] border-white/50">
           {SIDEBAR_ITEMS.map((item) => (
             <button
               key={item.id}
@@ -122,7 +122,7 @@ export default function AgenticResearch() {
         {/* DESKTOP: sidebar + main content (same layout as E/F) */}
         <div className="flex flex-col md:flex-row overflow-hidden gap-0 min-h-0">
           <div
-            className="hidden md:flex w-[348px] max-lg:w-[280px] flex-shrink-0 text-white flex-col overflow-hidden h-[674px] max-lg:h-[520px] border-[0.7px] border-white border-r-0 rounded-l-lg"
+            className="hidden md:flex w-[348px] max-lg:w-[280px] flex-shrink-0 text-white flex-col overflow-hidden h-[674px] max-lg:h-[520px] border-[0.7px] border-white/50 border-r-0 rounded-l-lg"
           >
             {SIDEBAR_ITEMS.map((item) => (
               <button
@@ -171,7 +171,7 @@ export default function AgenticResearch() {
 
           {/* MAIN CONTENT — templates + report (fades on sidebar tap) */}
           <div
-            className="flex-1 min-w-0 transition-opacity ease-in-out overflow-auto"
+            className="flex-1 min-w-0 h-[674px] max-lg:h-[520px] transition-opacity ease-in-out overflow-auto border-[0.7px] border-white/50 border-l-0 rounded-r-lg p-6"
             style={{
               opacity: contentOpacity,
               transitionDuration: `${FADE_DURATION_MS / 2}ms`,
