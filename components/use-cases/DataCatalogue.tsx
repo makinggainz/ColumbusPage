@@ -180,7 +180,7 @@ export default function DataCatalogue() {
 
           {/* MAIN CONTENT — tabs + cards (fades on sidebar tap) */}
           <div
-            className="flex-1 min-w-0 transition-opacity ease-in-out overflow-auto"
+            className="flex-1 min-w-0 h-[674px] max-lg:h-[520px] transition-opacity ease-in-out overflow-auto border-[0.7px] border-white border-l-0 rounded-r-lg p-6"
             style={{
               opacity: contentOpacity,
               transitionDuration: `${FADE_DURATION_MS / 2}ms`,

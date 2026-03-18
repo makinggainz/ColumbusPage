@@ -179,7 +179,7 @@ export default function SuperModelSection() {
           </div>
 
           <div
-            className="relative flex-1 min-w-0 h-[674px] max-lg:h-[520px] max-md:h-[420px] rounded-lg overflow-hidden transition-opacity ease-in-out"
+            className="relative flex-1 min-w-0 h-[674px] max-lg:h-[520px] max-md:h-[420px] rounded-r-lg overflow-hidden transition-opacity ease-in-out border-[0.7px] border-white border-l-0"
             style={{
               opacity: mapOpacity,
               transitionDuration: `${FADE_DURATION_MS / 2}ms`,
