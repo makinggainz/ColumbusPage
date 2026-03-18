@@ -16,10 +16,9 @@ const USE_CASES_IMAGES = [
 
 export default function UseCasesHero() {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
-  const cellWidth = 150;
-  const cellHeight = 75;
+  const cellSize = 75;
   const cols = 20;
-  const rows = 20;
+  const rows = 10;
   const totalCells = cols * rows;
 
   return (
@@ -29,8 +28,8 @@ export default function UseCasesHero() {
       <div
         className="absolute inset-0 grid"
         style={{
-          gridTemplateColumns: `repeat(${cols}, ${cellWidth}px)`,
-          gridAutoRows: `${cellHeight}px`,
+          gridTemplateColumns: `repeat(${cols}, ${cellSize}px)`,
+          gridAutoRows: `${cellSize}px`,
           maskImage: "radial-gradient(circle at 50% 50%, black 0%, transparent 90%)",
           WebkitMaskImage: "radial-gradient(circle at 50% 50%, black 0%, transparent 90%)",
         }}
@@ -40,7 +39,7 @@ export default function UseCasesHero() {
           <div
             key={i}
             className="relative w-full h-full overflow-hidden"
-            style={{ width: cellWidth, height: cellHeight }}
+            style={{ width: cellSize, height: cellSize }}
             onMouseEnter={() => setActiveIndex(i)}
             onMouseLeave={() => setActiveIndex(null)}
           >
@@ -49,7 +48,7 @@ export default function UseCasesHero() {
               alt=""
               fill
               className={`object-cover transition-opacity ease-in-out ${activeIndex === i ? "opacity-60 duration-0" : "opacity-0 duration-[2000ms]"}`}
-              sizes={`${cellWidth}px`}
+              sizes={`${cellSize}px`}
             />
           </div>
         ))}
@@ -63,7 +62,7 @@ export default function UseCasesHero() {
             linear-gradient(to right, #29303D 1px, transparent 1px),
             linear-gradient(to bottom, #29303D 1px, transparent 1px)
           `,
-          backgroundSize: `${cellWidth}px ${cellHeight}px`,
+          backgroundSize: "75px 75px",
           maskImage: "radial-gradient(circle at 50% 50%, black 0%, transparent 90%)",
           WebkitMaskImage: "radial-gradient(circle at 50% 50%, black 0%, transparent 90%)",
         }}
