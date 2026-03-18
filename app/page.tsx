@@ -59,28 +59,28 @@ import { PartnerStrip } from "@/components/home/PartnerStrip";
 import { TravelPromo } from "@/components/home/TravelPromo";
 import { UniqueSpotsSection } from "@/components/home/UniqueSpotsSection";
 const sectionColors = [
-  "bg-white",      // a Navbar
-  "bg-white",       // b Hero
-  "bg-white",    // c MeshSection
-  "bg-white",      // d Vision
-  "bg-white",       // e GeoWarning
-  "bg-white",       // f SiteSelection
-  "bg-white",     // g PartnerStrip
-  "bg-white",       // h MainFeatures
-  "bg-white",     // i Industries
-  "bg-white",        // j TravelPromo
-  "bg-white",       // k TravelSection
-  "bg-white",     // l TrustStrip
-  "bg-white",    // m UniqueSpotsSection
-  "bg-white",     // n Applications
-  "bg-white",      // o Careers
-  "bg-white",   // p Footer
+  "bg-[#07112A]",      // a Navbar
+  "bg-[#07112A]",       // b Hero
+  "bg-[#07112A]",    // c MeshSection
+  "bg-[#07112A]",      // d Vision
+  "bg-[#07112A]",       // e GeoWarning
+  "bg-[#07112A]",       // f SiteSelection
+  "bg-[#07112A]",     // g PartnerStrip
+  "bg-[#07112A]",       // h MainFeatures
+  "bg-[#07112A]",     // i Industries
+  "bg-[#07112A]",        // j TravelPromo
+  "bg-[#07112A]",       // k TravelSection
+  "bg-[#07112A]",     // l TrustStrip
+  "bg-[#07112A]",    // m UniqueSpotsSection
+  "bg-[#07112A]",     // n Applications
+  "bg-[#07112A]",      // o Careers
+  "bg-[#07112A]",   // p Footer
 ] as const;
 
 function SectionLabel({ letter }: { letter: string }) {
   return (
     <span
-      className="absolute left-4 top-4 z-10 text-2xl font-bold text-black/10 select-none"
+      className="absolute left-4 top-4 z-10 text-2xl font-bold text-white/10 select-none"
       aria-hidden
     >
       {letter}
@@ -93,7 +93,7 @@ export default function Home() {
     <main className="min-h-screen">
       <section className={`relative ${sectionColors[0]}`}>
         <SectionLabel letter="a" />
-        <Navbar />
+        <Navbar theme="dark" />
       </section>
       <section className={`relative ${sectionColors[1]}`}>
         <SectionLabel letter="b" />

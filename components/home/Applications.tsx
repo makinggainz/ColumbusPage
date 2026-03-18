@@ -18,16 +18,16 @@ export const Applications = () => {
   ];
 
   return (
-    <section className="bg-white py-20 md:py-28 lg:py-36">
+    <section className="bg-[#07112A] py-20 md:py-28 lg:py-36">
       <Container>
 
         {/* HEADER */}
         <div className="mb-5 md:mb-6 max-w-full">
-          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl leading-tight font-semibold tracking-tight text-[#1C274C]">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl leading-tight font-semibold tracking-tight text-white">
             We’re actively exploring various application areas
           </h2>
 
-          <p className="mt-2 md:mt-3 text-[24px] font-normal text-black">
+          <p className="mt-2 md:mt-3 text-[24px] font-normal text-white/70">
             We’d love to work within your industry, send us a hey@columbus.earth
           </p>
         </div>

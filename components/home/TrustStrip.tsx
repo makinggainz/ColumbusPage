@@ -13,16 +13,16 @@ export const TrustStrip = () => {
   ];
 
   return (
-    <section className="bg-[#F9F9F9] pt-2.5 pb-7.5 md:pb-15.5 lg:pb-19.5">
+    <section className="bg-[#07112A] pt-2.5 pb-7.5 md:pb-15.5 lg:pb-19.5">
       <Container>
 
         {/* HEADING */}
         <div className="text-center mb-12 md:mb-16">
-          <h2 className="text-[40px] font-semibold tracking-[-0.02em] mb-1.25 bg-linear-to-r from-[#313131] to-[#4ECDD6] bg-clip-text text-transparent">
+          <h2 className="text-[40px] font-semibold tracking-[-0.02em] mb-1.25 bg-linear-to-r from-[#E8EDF8] to-[#4ECDD6] bg-clip-text text-transparent">
             Your plans are in good hands
           </h2>
 
-          <p className="font-light text-black" style={{ fontSize: "20px", letterSpacing: "-0.03em" }}>
+          <p className="font-light text-white/60" style={{ fontSize: "20px", letterSpacing: "-0.03em" }}>
             We work with data from reputable brands
           </p>
         </div>
@@ -49,9 +49,9 @@ export const TrustStrip = () => {
           {faqs.map((question, index) => (
             <div
               key={index}
-              className="pb-4 border-b border-dashed border-[#DADADA]"
+              className="pb-4 border-b border-dashed border-white/15"
             >
-              <p className="text-sm sm:text-base text-[#1C274C]/85">
+              <p className="text-sm sm:text-base text-white/70">
                 {question}
               </p>
             </div>

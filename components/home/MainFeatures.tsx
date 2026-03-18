@@ -57,10 +57,10 @@ export const MainFeatures = () => {
     <section
       className="relative py-[130px]"
       style={{
-        backgroundColor: "#FFFFFF",
+        backgroundColor: "#07112A",
         backgroundImage: `
-          linear-gradient(to right, rgba(28,39,76,0.035) 1px, transparent 1px),
-          linear-gradient(to bottom, rgba(28,39,76,0.035) 1px, transparent 1px)
+          linear-gradient(to right, rgba(100,150,255,0.06) 1px, transparent 1px),
+          linear-gradient(to bottom, rgba(100,150,255,0.06) 1px, transparent 1px)
         `,
         backgroundSize: "48px 48px",
       }}
@@ -69,7 +69,7 @@ export const MainFeatures = () => {
 
         {/* Heading */}
         <div className="text-center mb-[55px]">
-          <h2 className="text-[42px] font-medium text-[#1C274C] tracking-[-0.01em]">
+          <h2 className="text-[42px] font-medium text-white tracking-[-0.01em]">
             Main Features
           </h2>
         </div>
@@ -87,30 +87,30 @@ export const MainFeatures = () => {
                   w-[333px]
                   h-[269px]
                   rounded-[12px]
-                  bg-white/60
+                  bg-white/5
                   backdrop-blur-[12px]
-                  border border-[#E5E8EF]
+                  border border-white/10
                   px-[28px]
                   pt-[28px]
                   shadow-[0_2px_8px_rgba(0,0,0,0.03)]
                 "
               >
                 {/* Icon container */}
-                <div className="w-[36px] h-[36px] rounded-[10px] border border-[#E6EAF2] bg-white/80 flex items-center justify-center mb-[22px]">
+                <div className="w-[36px] h-[36px] rounded-[10px] border border-white/15 bg-white/10 flex items-center justify-center mb-[22px]">
                   <Icon
                     size={18}
                     strokeWidth={1.5}
-                    className="text-[#1C274C]"
+                    className="text-white/80"
                   />
                 </div>
 
                 {/* Title */}
-                <h3 className="text-[16px] font-semibold text-[#1C274C] mb-[14px]">
+                <h3 className="text-[16px] font-semibold text-white mb-[14px]">
                   {feature.title}
                 </h3>
 
                 {/* Description */}
-                <p className="text-[14px] leading-[160%] text-[#1C274C]/70 mb-[16px]">
+                <p className="text-[14px] leading-[160%] text-white/55 mb-[16px]">
                   {feature.description}
                 </p>
 

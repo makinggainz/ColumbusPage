@@ -228,8 +228,10 @@ export const GeoWarning = () => {
     Math.max(0, Math.min(1, (p - start) / (end - start)));
 
   const bgProgress = ease(progress, 0, 0.25);
-  const bgChannel  = Math.round(235 + (255 - 235) * bgProgress);
-  const bgColor    = `rgb(${bgChannel}, ${bgChannel}, ${bgChannel})`;
+  const bgR = Math.round(7  + (13 - 7)  * bgProgress);
+  const bgG = Math.round(17 + (27 - 17) * bgProgress);
+  const bgB = Math.round(42 + (62 - 42) * bgProgress);
+  const bgColor = `rgb(${bgR},${bgG},${bgB})`;
 
   const line1P = ease(progress, 0.15, 0.38);
   const line2P = ease(progress, 0.30, 0.52);
@@ -264,7 +266,7 @@ export const GeoWarning = () => {
 
             <h2
               style={{ fontSize: "64px", lineHeight: 1.1, ...fadeUp(line1P) }}
-              className="tracking-tight text-[#2A0E0E] whitespace-nowrap"
+              className="tracking-tight text-white whitespace-nowrap"
             >
               <span className="font-semibold">Stop using </span>
               <span className="font-bold">Language models </span>
@@ -276,7 +278,7 @@ export const GeoWarning = () => {
               className="mt-6 tracking-tight whitespace-nowrap"
             >
               <span className="font-semibold text-[#CD0A00]">LLMs</span>{" "}
-              <span className="font-normal bg-linear-to-r from-[#CD0A00] to-[#000000] bg-clip-text text-transparent">
+              <span className="font-normal bg-linear-to-r from-[#CD0A00] to-[#E8EDF8] bg-clip-text text-transparent">
                 hallucinate and{" "}
                 <span className="font-bold">cannot</span>
                 {" "}be trusted for the real world

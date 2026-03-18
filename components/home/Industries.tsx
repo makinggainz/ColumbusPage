@@ -15,12 +15,12 @@ export const Industries = () => {
   ];
 
   return (
-    <section className="bg-white relative" style={{ height: 656 }}>
+    <section className="bg-[#07112A] relative" style={{ height: 656 }}>
       <Container className="h-full flex items-center">
         <div className="pl-16 w-full">
 
           {/* Heading */}
-          <h2 className="font-semibold text-[#1C274C]" style={{ fontSize: 40, letterSpacing: "-0.02em", marginBottom: 30 }}>
+          <h2 className="font-semibold text-white" style={{ fontSize: 40, letterSpacing: "-0.02em", marginBottom: 30 }}>
             See how Columbus could help you
           </h2>
 
@@ -50,7 +50,7 @@ export const Industries = () => {
 
                 <Link
                   href={item.href}
-                  className="mt-4 inline-flex items-center gap-2 text-xl font-medium text-[#1C274C]"
+                  className="mt-4 inline-flex items-center gap-2 text-xl font-medium text-white/80"
                   style={{ letterSpacing: "-0.01em" }}
                 >
                   {item.label}
@@ -67,7 +67,7 @@ export const Industries = () => {
 
             <Link
               href="/technology"
-              className="border border-[#1C274C]/40 rounded-none text-xl font-semibold text-[#010101] hover:bg-[#1C274C]/5 transition inline-flex items-center justify-center gap-2"
+              className="border border-white/20 rounded-none text-xl font-semibold text-white/80 hover:bg-white/5 transition inline-flex items-center justify-center gap-2"
               style={{ width: 486, height: 54 }}
             >
               The technology that powers Columbus Pro
@@ -76,7 +76,7 @@ export const Industries = () => {
 
             <Link
               href="/platform"
-              className="border border-[#1C274C]/40 rounded-none text-xl font-semibold text-[#010101] hover:bg-[#1C274C]/5 transition inline-flex items-center justify-center gap-2"
+              className="border border-white/20 rounded-none text-xl font-semibold text-white/80 hover:bg-white/5 transition inline-flex items-center justify-center gap-2"
               style={{ width: 486, height: 54 }}
             >
               Learn more about Columbus Pro platform

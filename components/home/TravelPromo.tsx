@@ -282,7 +282,7 @@ export const TravelPromo = () => {
     <section ref={sectionRef} className="relative" style={{ height: "200vh" }}>
       <div
         ref={containerRef}
-        className="sticky top-0 h-screen overflow-hidden bg-[#F9F9F9]"
+        className="sticky top-0 h-screen overflow-hidden bg-[#07112A]"
       >
         {/* Physics canvas */}
         <canvas
@@ -299,7 +299,7 @@ export const TravelPromo = () => {
           >
             <h2
               ref={titleRef}
-              className="text-display font-semibold tracking-[-0.02em] text-[#1C274C] mb-1 md:mb-1.5"
+              className="text-display font-semibold tracking-[-0.02em] text-white mb-1 md:mb-1.5"
               style={fadeUp(titleP)}
             >
               Love to travel or go out?

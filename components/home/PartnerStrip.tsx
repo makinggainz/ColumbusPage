@@ -5,10 +5,10 @@ import { Container } from "@/components/layout/Container";
 
 export const PartnerStrip = () => {
   return (
-    <section className="bg-[#F9F9F9] border-b border-[#E8EAF0] relative" style={{ height: 288 }}>
+    <section className="bg-[#07112A] border-b border-white/10 relative" style={{ height: 288 }}>
       {/* Vector 4410 */}
       <div
-        className="absolute w-0 h-[288px] border-l border-[#E8EAF0]"
+        className="absolute w-0 h-[288px] border-l border-white/10"
         style={{
           left: "99.5px",
           top: 0,
@@ -18,7 +18,7 @@ export const PartnerStrip = () => {
       />
       {/* Vector 4410 — right side */}
       <div
-        className="absolute w-0 h-[288px] border-r border-[#E8EAF0]"
+        className="absolute w-0 h-[288px] border-r border-white/10"
         style={{
           right: "99.5px",
           top: 0,
@@ -31,11 +31,11 @@ export const PartnerStrip = () => {
 
           {/* Heading Block */}
           <div className="max-w-5xl">
-            <h3 className="font-semibold text-[#1C274C] leading-tight" style={{ fontSize: 40, letterSpacing: "-0.02em" }}>
+            <h3 className="font-semibold text-white leading-tight" style={{ fontSize: 40, letterSpacing: "-0.02em" }}>
               Vetted, high-fidelity, and smart datasets
             </h3>
 
-            <p className="font-light text-[#010101]" style={{ fontSize: 20, marginTop: 12 }}>
+            <p className="font-light text-white/60" style={{ fontSize: 20, marginTop: 12 }}>
               We vet our data with partner organizations
             </p>
           </div>

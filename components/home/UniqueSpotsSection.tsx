@@ -44,9 +44,9 @@ export const UniqueSpotsSection = () => {
   };
 
   return (
-    <section className="bg-[#F9F9F9] py-20 md:py-28 lg:py-32 overflow-hidden relative">
+    <section className="bg-[#07112A] py-20 md:py-28 lg:py-32 overflow-hidden relative">
       <Container className="mb-6 md:mb-8">
-        <h2 className="text-center text-2xl sm:text-3xl md:text-4xl font-semibold text-[#0F766E]">
+        <h2 className="text-center text-2xl sm:text-3xl md:text-4xl font-semibold text-white">
           Unique spots people are favoriting
         </h2>
       </Container>
@@ -64,7 +64,7 @@ export const UniqueSpotsSection = () => {
           className="absolute left-0 top-0 w-full pointer-events-none z-20"
           style={{
             height: "180px",
-            background: "linear-gradient(to bottom, #F9F9F9 0%, rgba(249,249,249,0.85) 30%, rgba(249,249,249,0.4) 65%, rgba(249,249,249,0) 100%)",
+            background: "linear-gradient(to bottom, #07112A 0%, rgba(7,17,42,0.85) 30%, rgba(7,17,42,0.4) 65%, rgba(7,17,42,0) 100%)",
           }}
           aria-hidden
         />
@@ -73,7 +73,7 @@ export const UniqueSpotsSection = () => {
           className="absolute left-0 bottom-0 w-full pointer-events-none z-20"
           style={{
             height: "180px",
-            background: "linear-gradient(to top, #F9F9F9 0%, rgba(249,249,249,0.85) 30%, rgba(249,249,249,0.4) 65%, rgba(249,249,249,0) 100%)",
+            background: "linear-gradient(to top, #07112A 0%, rgba(7,17,42,0.85) 30%, rgba(7,17,42,0.4) 65%, rgba(7,17,42,0) 100%)",
           }}
           aria-hidden
         />
@@ -101,9 +101,9 @@ export const UniqueSpotsSection = () => {
 
 function SpotCard({ spot }: { spot: (typeof SPOTS)[0] }) {
   return (
-    <div className="unique-spots-card flex flex-col shrink-0 rounded-[14px] bg-white/20 overflow-hidden relative px-4.5 pt-4.75 pb-4 transition-transform duration-200 ease-out hover:scale-[1.03]">
+    <div className="unique-spots-card flex flex-col shrink-0 rounded-[14px] bg-white/10 overflow-hidden relative px-4.5 pt-4.75 pb-4 transition-transform duration-200 ease-out hover:scale-[1.03]">
       {/* Image area: 462×170, radius 11px (design) */}
-      <div className="relative w-full max-w-115.5 h-42.5 rounded-[11px] overflow-hidden bg-gray-300 shrink-0">
+      <div className="relative w-full max-w-115.5 h-42.5 rounded-[11px] overflow-hidden bg-white/10 shrink-0">
         {spot.image ? (
           <img
             src={spotImageSrc(spot.image)}
@@ -114,25 +114,25 @@ function SpotCard({ spot }: { spot: (typeof SPOTS)[0] }) {
         {/* Rating pill: top-right */}
         <div
           className="absolute top-2.25 right-2.25 h-7 pl-2 pr-2 flex items-center gap-1 rounded-[14px]"
-          style={{ background: "rgba(217, 217, 217, 0.5)" }}
+          style={{ background: "rgba(0, 0, 0, 0.4)" }}
         >
           <Star className="w-4.25 h-4.25 shrink-0 text-[#E46962]" fill="#E46962" />
-          <span className="font-semibold text-base leading-[140%] tracking-[-0.02em] text-black">
+          <span className="font-semibold text-base leading-[140%] tracking-[-0.02em] text-white">
             {spot.rating}
           </span>
         </div>
       </div>
 
       {/* Title, description, location */}
-      <h3 className="mt-2.25 font-semibold text-xl leading-[140%] tracking-[-0.02em] text-black shrink-0">
+      <h3 className="mt-2.25 font-semibold text-xl leading-[140%] tracking-[-0.02em] text-white shrink-0">
         {spot.title}
       </h3>
-      <p className="mt-2 text-xl leading-[140%] tracking-[-0.02em] text-black font-normal line-clamp-2 shrink-0">
+      <p className="mt-2 text-xl leading-[140%] tracking-[-0.02em] text-white/70 font-normal line-clamp-2 shrink-0">
         {spot.description}
       </p>
       <div className="mt-2 flex items-center gap-2 opacity-70 shrink-0">
-        <MapPin className="w-6 h-6 shrink-0 text-black" />
-        <span className="text-xl leading-[140%] tracking-[-0.02em] text-black">{spot.location}</span>
+        <MapPin className="w-6 h-6 shrink-0 text-white" />
+        <span className="text-xl leading-[140%] tracking-[-0.02em] text-white">{spot.location}</span>
       </div>
     </div>
   );

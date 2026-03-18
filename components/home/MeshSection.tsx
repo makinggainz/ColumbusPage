@@ -132,7 +132,7 @@ export const MeshSection = () => {
             ctx.beginPath();
             ctx.moveTo(p.x, p.y);
             ctx.lineTo(n.x, n.y);
-            ctx.strokeStyle = `rgba(28, 39, 108, ${alpha})`;
+            ctx.strokeStyle = `rgba(100, 150, 255, ${alpha})`;
             ctx.lineWidth = 0.75;
             ctx.stroke();
           }
@@ -151,7 +151,7 @@ export const MeshSection = () => {
 
         ctx.beginPath();
         ctx.arc(p.x, p.y, radius, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(28, 39, 108, ${alpha})`;
+        ctx.fillStyle = `rgba(130, 170, 255, ${alpha})`;
         ctx.fill();
       }
 
@@ -160,8 +160,8 @@ export const MeshSection = () => {
       const cy = canvas.height / 2;
       const r = Math.max(cx, cy) * 1.1;
       const vignette = ctx.createRadialGradient(cx, cy, r * 0.35, cx, cy, r);
-      vignette.addColorStop(0, "rgba(249,249,249,0)");
-      vignette.addColorStop(1, "rgba(249,249,249,0.82)");
+      vignette.addColorStop(0, "rgba(7,17,42,0)");
+      vignette.addColorStop(1, "rgba(7,17,42,0.85)");
       ctx.fillStyle = vignette;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -184,7 +184,7 @@ export const MeshSection = () => {
 
   return (
     <section
-      className="bg-[#F9F9F9] border-0 border-none shadow-none ring-0 ring-offset-0"
+      className="bg-[#07112A] border-0 border-none shadow-none ring-0 ring-offset-0"
       style={{
         opacity: mounted ? 1 : 0,
         filter: mounted ? "blur(0px)" : "blur(8px)",
@@ -202,7 +202,7 @@ export const MeshSection = () => {
         <div
           className="absolute top-0 left-0 right-0 w-full h-30 pointer-events-none"
           style={{
-            background: `linear-gradient(to bottom, rgba(249,249,249,1) 0%, rgba(249,249,249,0) 100%)`,
+            background: `linear-gradient(to bottom, rgba(7,17,42,1) 0%, rgba(7,17,42,0) 100%)`,
           }}
           aria-hidden
         />
@@ -211,7 +211,7 @@ export const MeshSection = () => {
         <div
           className="absolute bottom-0 left-0 right-0 w-full h-[70px] pointer-events-none"
           style={{
-            background: `linear-gradient(to bottom, rgba(249,249,249,0) 0%, rgba(251,251,251,0.45) 25%, rgba(253,253,253,0.83) 46%, rgba(254,254,254,0.9) 52%, rgba(254,254,254,0.94) 62%, rgba(254,254,254,1) 100%)`,
+            background: `linear-gradient(to bottom, rgba(7,17,42,0) 0%, rgba(7,17,42,0.45) 25%, rgba(7,17,42,0.83) 46%, rgba(7,17,42,0.9) 52%, rgba(7,17,42,0.94) 62%, rgba(7,17,42,1) 100%)`,
           }}
           aria-hidden
         />

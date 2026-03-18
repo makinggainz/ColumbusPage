@@ -37,7 +37,7 @@ export const SiteSelection = () => {
   });
 
   return (
-    <section className="bg-[#FFFFFF] py-16 sm:py-24 lg:py-32">
+    <section className="bg-[#07112A] py-16 sm:py-24 lg:py-32">
       <Container>
 
         {/* Outer wrapper — blobs positioned relative to both title and card */}
@@ -82,7 +82,7 @@ export const SiteSelection = () => {
           <div className="relative mb-4.75 lg:mb-6.75 flex items-center gap-4" style={{ ...animStyle(titleVisible, "0.1s"), zIndex: 1 }}>
             <h2
               ref={titleRef}
-              className="font-semibold text-[#242424]"
+              className="font-semibold text-white"
               style={{ fontSize: "40px" }}
             >
               + Introducing Columbus

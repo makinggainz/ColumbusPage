@@ -34,7 +34,7 @@ export const Vision = () => {
   }, []);
 
   return (
-    <section className="bg-[#FEFEFE] py-20 md:py-28 lg:py-36">
+    <section className="bg-[#07112A] py-20 md:py-28 lg:py-36">
       <Container>
         <div className="max-w-290.75 mx-auto">
 
@@ -43,7 +43,7 @@ export const Vision = () => {
           ref={titleRef}
           className="text-display font-semibold leading-tight text-left mb-12 md:mb-16 -mt-20 bg-clip-text text-transparent tracking-[-0.015em]"
           style={{
-            backgroundImage: "linear-gradient(to bottom, #0A1344 0%, #0A1344 20%, #C8D2EE 35%, #0A1344 50%, #0A1344 100%)",
+            backgroundImage: "linear-gradient(to bottom, #E8EDF8 0%, #E8EDF8 20%, #6496FF 35%, #E8EDF8 50%, #E8EDF8 100%)",
             backgroundSize: "100% 200%",
             backgroundPosition: "0% 0%",
             animation: titleVisible ? "text-shimmer-down 1.4s ease-in-out 0.3s 1 forwards" : "none",
@@ -114,13 +114,13 @@ export const Vision = () => {
         {/* BOTTOM ROW */}
         <div className="mt-7 md:mt-11 flex flex-col md:flex-row items-start justify-between gap-6">
 
-          <p className="text-sm md:text-base text-[#010101] max-w-2xl leading-[1.4]">
+          <p className="text-sm md:text-base text-white/70 max-w-2xl leading-[1.4]">
             ColumbusPro-1 processes satellite imagery, terrain data, human activity,
             and temporal patterns to generate actionable intelligence across real estate,
             research, and consumer domains.
           </p>
 
-          <button className="border border-[#1C274C] px-17.25 md:px-19.25 py-[14.5px] text-xl font-bold tracking-wide rounded-none hover:bg-[#1C274C] hover:text-white transition whitespace-nowrap">
+          <button className="border border-white/30 text-white/80 px-17.25 md:px-19.25 py-[14.5px] text-xl font-bold tracking-wide rounded-none hover:bg-white/10 hover:text-white transition whitespace-nowrap">
             [ See what we’re building ]
           </button>
 
@@ -165,13 +165,13 @@ const TextTile = ({
   if (paddingRight !== undefined) inlineStyle.paddingRight = `${paddingRight}px`;
   return (
     <div
-      className={`bg-white flex flex-col justify-center px-6 sm:px-8 ${alignClass} ${className}`}
+      className={`bg-[#0D1B3E] flex flex-col justify-center px-6 sm:px-8 ${alignClass} ${className}`}
       style={inlineStyle}
     >
-      <h3 className="text-3xl font-medium text-[#010101] leading-[0.9] tracking-[-0.04em]">
+      <h3 className="text-3xl font-medium text-white leading-[0.9] tracking-[-0.04em]">
       {title}
       </h3>
-      <p className="text-lg sm:text-xl md:text-2xl font-medium text-[#010101] mt-2 tracking-[-0.04em]">
+      <p className="text-lg sm:text-xl md:text-2xl font-medium text-white/70 mt-2 tracking-[-0.04em]">
         {subtitle}
       </p>
     </div>
