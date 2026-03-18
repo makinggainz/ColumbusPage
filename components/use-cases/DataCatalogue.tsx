@@ -86,7 +86,7 @@ export default function DataCatalogue() {
         </h2>
 
         {/* MOBILE SIDEBAR */}
-        <div className="hidden max-md:flex max-md:flex-col max-md:h-[420px] overflow-hidden rounded-lg mb-6 border-[0.7px] border-white">
+        <div className="hidden max-md:flex max-md:flex-col max-md:h-[420px] overflow-hidden rounded-lg mb-6 border-[0.7px] border-white/50">
           {SIDEBAR_ITEMS.map((item) => (
             <button
               key={item.id}
@@ -131,7 +131,7 @@ export default function DataCatalogue() {
         {/* DESKTOP: sidebar + main content */}
         <div className="flex flex-col md:flex-row overflow-hidden gap-0 min-h-0">
           <div
-            className="hidden md:flex w-[348px] max-lg:w-[280px] flex-shrink-0 text-white flex-col overflow-hidden h-[674px] max-lg:h-[520px] border-[0.7px] border-white border-r-0 rounded-l-lg"
+            className="hidden md:flex w-[348px] max-lg:w-[280px] flex-shrink-0 text-white flex-col overflow-hidden h-[674px] max-lg:h-[520px] border-[0.7px] border-white/50 border-r-0 rounded-l-lg"
           >
             {SIDEBAR_ITEMS.map((item) => (
               <button
@@ -180,7 +180,7 @@ export default function DataCatalogue() {
 
           {/* MAIN CONTENT — tabs + cards (fades on sidebar tap) */}
           <div
-            className="flex-1 min-w-0 h-[674px] max-lg:h-[520px] transition-opacity ease-in-out overflow-auto border-[0.7px] border-white border-l-0 rounded-r-lg p-6"
+            className="flex-1 min-w-0 h-[674px] max-lg:h-[520px] transition-opacity ease-in-out overflow-auto border-[0.7px] border-white/50 border-l-0 rounded-r-lg p-6"
             style={{
               opacity: contentOpacity,
               transitionDuration: `${FADE_DURATION_MS / 2}ms`,

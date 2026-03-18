@@ -86,7 +86,7 @@ export default function SuperModelSection() {
         </h2>
 
         {/* MOBILE SIDEBAR — 4 cells, no images; total height matches map (420px) so last cell bottom aligns */}
-        <div className="hidden max-md:flex max-md:flex-col max-md:h-[420px] overflow-hidden rounded-lg mb-6 border-[0.7px] border-white">
+        <div className="hidden max-md:flex max-md:flex-col max-md:h-[420px] overflow-hidden rounded-lg mb-6 border-[0.7px] border-white/50">
           {SIDEBAR_ITEMS.map((item) => (
             <button
               key={item.id}
@@ -131,7 +131,7 @@ export default function SuperModelSection() {
         {/* DESKTOP: sidebar + map — 4 cells, no images; expanded cell uses flex-1 so last cell bottom = map bottom */}
         <div className="flex flex-col md:flex-row overflow-hidden rounded-lg gap-0">
           <div
-            className="hidden md:flex w-[348px] max-lg:w-[280px] flex-shrink-0 text-white flex-col overflow-hidden h-[674px] max-lg:h-[520px] border-[0.7px] border-white border-r-0 rounded-l-lg"
+            className="hidden md:flex w-[348px] max-lg:w-[280px] flex-shrink-0 text-white flex-col overflow-hidden h-[674px] max-lg:h-[520px] border-[0.7px] border-white/50 border-r-0 rounded-l-lg"
           >
             {SIDEBAR_ITEMS.map((item) => (
               <button
@@ -179,7 +179,7 @@ export default function SuperModelSection() {
           </div>
 
           <div
-            className="relative flex-1 min-w-0 h-[674px] max-lg:h-[520px] max-md:h-[420px] rounded-r-lg overflow-hidden transition-opacity ease-in-out border-[0.7px] border-white border-l-0"
+            className="relative flex-1 min-w-0 h-[674px] max-lg:h-[520px] max-md:h-[420px] rounded-r-lg overflow-hidden transition-opacity ease-in-out border-[0.7px] border-white/50 border-l-0"
             style={{
               opacity: mapOpacity,
               transitionDuration: `${FADE_DURATION_MS / 2}ms`,
