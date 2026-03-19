@@ -1,8 +1,14 @@
-import { Cormorant_Garamond, Instrument_Serif } from "next/font/google";
+import { Cormorant_Garamond, Instrument_Serif, Baumans } from "next/font/google";
 
 export const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
   weight: ["600"],
+  display: "swap",
+});
+
+export const baumans = Baumans({
+  subsets: ["latin"],
+  weight: ["400"],
   display: "swap",
 });
 

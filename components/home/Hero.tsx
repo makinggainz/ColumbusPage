@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { cormorant } from "@/lib/typography";
+import { baumans } from "@/lib/typography";
 
 export const Hero = () => {
   const [mounted, setMounted] = useState(false);
@@ -74,7 +74,7 @@ export const Hero = () => {
 
         {/* Main Heading */}
         <h1
-          className={`${cormorant.className} font-semibold text-white`}
+          className={`${baumans.className} font-semibold text-white`}
           style={{
             fontSize: "clamp(50px, 7vw, 96px)",
             letterSpacing: "-0.03em",
@@ -82,7 +82,10 @@ export const Hero = () => {
             ...fadeIn(80),
           }}
         >
-          The frontier AI Lab building the first in&#8209;production Large Geospatial Model.
+          <span className="block text-white/40 font-normal">The frontier AI Lab</span>
+          building the first in&#8209;production
+          <br />
+          Large Geospatial Model.
         </h1>
 
         {/* Model tag */}
