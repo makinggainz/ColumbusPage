@@ -282,7 +282,7 @@ export const TravelPromo = () => {
     <section ref={sectionRef} className="relative" style={{ height: "200vh" }}>
       <div
         ref={containerRef}
-        className="sticky top-0 h-screen overflow-hidden bg-[#07112A]"
+        className="sticky top-0 h-screen overflow-hidden bg-black"
       >
         {/* Physics canvas */}
         <canvas

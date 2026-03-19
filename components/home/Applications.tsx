@@ -2,9 +2,26 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
 import { Container } from "@/components/layout/Container";
 
 export const Applications = () => {
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) { setVisible(true); obs.disconnect(); }
+      },
+      { threshold: 0.05 }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+
   const items = [
     { title: "Residential Real Estate", image: "/UseCases/ResidentialRealEstate.jpg", href: "/applications/residential-real-estate" },
     { title: "Commercial Real Estate", image: "/UseCases/CommercialRealEstate.jpg", href: "/applications/commercial-real-estate" },
@@ -18,63 +35,76 @@ export const Applications = () => {
   ];
 
   return (
-    <section className="bg-[#07112A] py-20 md:py-28 lg:py-36">
+    <section className="bg-black py-24 md:py-32 lg:py-40">
       <Container>
+        <div ref={sectionRef}>
 
-        {/* HEADER */}
-        <div className="mb-5 md:mb-6 max-w-full">
-          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl leading-tight font-semibold tracking-tight text-white">
-            We’re actively exploring various application areas
-          </h2>
-
-          <p className="mt-2 md:mt-3 text-[24px] font-normal text-white/70">
-            We’d love to work within your industry, send us a hey@columbus.earth
-          </p>
-        </div>
-
-        {/* RESPONSIVE GRID */}
-        <div className="overflow-hidden rounded-2xl">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-
-            {items.map((item, index) => (
-              <Link
-                key={index}
-                href={item.href}
-                className="relative group aspect-[16/9] w-full overflow-hidden block"
-              >
-                {/* IMAGE */}
-                <Image
-                  src={item.image}
-                  alt={item.title}
-                  fill
-                  className="object-cover"
-                  priority={index < 3}
-                />
-
-                {/* Overlay: only on hover */}
-                <div className="absolute inset-0 bg-black/30 transition duration-300 group-hover:bg-black/60 z-10 pointer-events-none" />
-
-                {/* TEXT — bottom, centered; 10px padding; title higher to fit Learn more below */}
-                <div className="absolute inset-x-0 bottom-0 flex flex-col items-center text-center z-20 px-4 pt-6 pb-2.5">
-                  <h3 className="text-base sm:text-lg md:text-xl font-semibold text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
-                    {item.title}
-                  </h3>
-
-                  <p className="mt-2 text-xs sm:text-sm text-white opacity-0 translate-y-2 
-                                group-hover:opacity-100 
-                                group-hover:translate-y-0 
-                                group-hover:underline
-                                transition-all duration-300 ease-out drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
-                    Learn more →
-                  </p>
-                </div>
-
-              </Link>
-            ))}
-
+          {/* Header */}
+          <div
+            className="mb-10 md:mb-12"
+            style={{
+              opacity: visible ? 1 : 0,
+              transform: visible ? "translateY(0)" : "translateY(16px)",
+              filter: visible ? "blur(0px)" : "blur(6px)",
+              transition: "opacity 0.7s ease, transform 0.7s ease, filter 0.7s ease",
+            }}
+          >
+            <p className="text-[10px] font-medium tracking-[0.28em] text-white/22 uppercase mb-5">
+              Use Cases
+            </p>
+            <h2
+              className="font-semibold text-white leading-tight tracking-tight"
+              style={{ fontSize: "clamp(28px, 4vw, 52px)", letterSpacing: "-0.025em" }}
+            >
+              We&apos;re actively exploring
+              <br className="hidden md:block" /> various application areas
+            </h2>
+            <p className="mt-4 text-[15px] font-normal text-white/38">
+              We&apos;d love to work within your industry —{" "}
+              <a href="mailto:hey@columbus.earth" className="text-white/55 hover:text-white transition-colors underline underline-offset-2">
+                hey@columbus.earth
+              </a>
+            </p>
           </div>
-        </div>
 
+          {/* Grid */}
+          <div
+            className="overflow-hidden border border-white/[0.07]"
+            style={{
+              opacity: visible ? 1 : 0,
+              transform: visible ? "translateY(0)" : "translateY(16px)",
+              transition: "opacity 0.7s ease 0.15s, transform 0.7s ease 0.15s",
+            }}
+          >
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+              {items.map((item, index) => (
+                <Link
+                  key={index}
+                  href={item.href}
+                  className="relative group aspect-[16/9] w-full overflow-hidden block border-b border-r border-white/[0.06]"
+                >
+                  <Image
+                    src={item.image}
+                    alt={item.title}
+                    fill
+                    className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                    priority={index < 3}
+                  />
+                  <div className="absolute inset-0 bg-black/40 transition-colors duration-300 group-hover:bg-black/25" />
+                  <div className="absolute inset-x-0 bottom-0 flex flex-col items-center text-center z-20 px-4 pt-6 pb-3">
+                    <h3 className="text-[14px] font-semibold text-white drop-shadow-sm">
+                      {item.title}
+                    </h3>
+                    <p className="mt-1.5 text-[12px] text-white/60 opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 group-hover:underline transition-all duration-300 ease-out">
+                      Learn more →
+                    </p>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+
+        </div>
       </Container>
     </section>
   );

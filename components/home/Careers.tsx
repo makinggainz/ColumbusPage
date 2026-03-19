@@ -1,73 +1,120 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import { Container } from "@/components/layout/Container";
 
 export const Careers = () => {
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) { setVisible(true); obs.disconnect(); }
+      },
+      { threshold: 0.05 }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+
+  const anim = (delay = 0) => ({
+    opacity: visible ? 1 : 0,
+    transform: visible ? "translateY(0)" : "translateY(16px)",
+    filter: visible ? "blur(0px)" : "blur(6px)",
+    transition: `opacity 0.7s ease ${delay}ms, transform 0.7s ease ${delay}ms, filter 0.7s ease ${delay}ms`,
+  });
+
   return (
-    <section className="bg-[#07112A] py-[115px] md:py-[147px] lg:py-[179px]">
+    <section className="bg-black py-32 lg:py-44">
       <Container>
+        <div ref={sectionRef}>
 
-        {/* TOP CENTER */}
-        <div className="text-center mb-36 md:mb-44">
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-medium text-white mb-4">
-            Hiring Humans.
-          </h2>
-          <p className="text-[20px] font-normal tracking-[-0.02em] text-white/70">
-            Our team is based in Washington DC and Madrid.
-          </p>
+          {/* Eyebrow + big heading */}
+          <div className="mb-20 md:mb-28" style={anim(0)}>
+            <p className="text-[10px] font-medium tracking-[0.28em] text-white/22 uppercase mb-8">
+              Careers
+            </p>
+            <h2
+              className="font-semibold text-white leading-none"
+              style={{ fontSize: "clamp(52px, 8vw, 110px)", letterSpacing: "-0.04em" }}
+            >
+              Hiring
+              <br />
+              Humans.
+            </h2>
+            <p className="mt-8 text-[17px] font-normal tracking-[-0.015em] text-white/40 max-w-lg">
+              Our team is based in Washington DC and Madrid. We are building the first production
+              Large Geospatial Model.
+            </p>
+          </div>
+
+          {/* Two-column */}
+          <div className="grid md:grid-cols-2 gap-12 md:gap-20 items-start mb-14" style={anim(120)}>
+            <div>
+              <h3
+                className="font-semibold text-white leading-tight"
+                style={{ fontSize: "clamp(22px, 2.5vw, 30px)", letterSpacing: "-0.025em" }}
+              >
+                Careers &amp; investment queries
+              </h3>
+            </div>
+            <p className="text-[16px] font-normal tracking-[-0.015em] text-white/40 leading-relaxed">
+              If you're excited about creating paradigm shifts in physical world understanding.{" "}
+              <span className="text-white/70">Join us now.</span>
+            </p>
+          </div>
+
+          {/* Divider */}
+          <div
+            className="h-px mb-16 md:mb-20"
+            style={{
+              background: "linear-gradient(to right, rgba(255,0,0,0.35) 0%, rgba(255,0,0,0.15) 20%, rgba(255,255,255,0.04) 45%, rgba(255,255,255,0.04) 55%, rgba(255,0,0,0.15) 80%, rgba(255,0,0,0.35) 100%)",
+            }}
+            aria-hidden
+          />
+
+          {/* Form */}
+          <div className="max-w-lg mx-auto" style={anim(200)}>
+            <form className="space-y-12">
+              <div>
+                <input
+                  type="text"
+                  placeholder="Name"
+                  className="w-full bg-transparent border-b border-white/12 pb-4 text-[15px] text-white outline-none placeholder:text-white/22 focus:border-white/30 transition-colors"
+                />
+              </div>
+              <div>
+                <textarea
+                  placeholder="Message"
+                  rows={2}
+                  className="w-full bg-transparent border-b border-white/12 pb-4 text-[15px] text-white outline-none resize-none placeholder:text-white/22 focus:border-white/30 transition-colors"
+                />
+              </div>
+              <div>
+                <input
+                  type="email"
+                  placeholder="Email address"
+                  className="w-full bg-transparent border-b border-white/12 pb-4 text-[15px] text-white outline-none placeholder:text-white/22 focus:border-white/30 transition-colors"
+                />
+              </div>
+              <div className="flex items-center justify-between pt-2">
+                <p className="text-[12px] text-white/22">
+                  We accept interns.
+                </p>
+                <button
+                  type="submit"
+                  className="h-11 px-8 bg-white text-black text-[13px] font-semibold tracking-tight hover:bg-white/90 transition-colors"
+                >
+                  Send →
+                </button>
+              </div>
+            </form>
+          </div>
+
         </div>
-
-        {/* TITLE + DESCRIPTION */}
-        <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-start mb-6 md:mb-8">
-          <h3 className="text-2xl sm:text-3xl md:text-4xl font-medium text-white">
-            Careers & investment queries
-          </h3>
-
-          <p className="text-[20px] font-normal tracking-[-0.02em] text-white/70 md:text-right">
-            <span className="opacity-70">If you're excited about creating paradigm shifts in<br />physical world understanding. </span>Join us now.
-          </p>
-        </div>
-
-        {/* DIVIDER — strong red under each text column, fades in the center */}
-        <div
-          className="h-px mb-16 md:mb-20 -ml-7.5 w-[calc(100%+60px)]"
-          style={{
-            background: "linear-gradient(to right, rgba(255,0,0,0.45) 0%, rgba(255,0,0,0.25) 20%, rgba(255,0,0,0.04) 45%, rgba(255,0,0,0.04) 55%, rgba(255,0,0,0.25) 80%, rgba(255,0,0,0.45) 100%)",
-          }}
-          aria-hidden
-        />
-
-        {/* FORM */}
-        <div className="max-w-xl mx-auto">
-
-          <form className="space-y-10 md:space-y-14">
-
-            <input
-              type="text"
-              placeholder="Name"
-              className="w-full bg-transparent border-b border-white/20 pb-3 text-sm sm:text-base text-white outline-none placeholder:text-white/30"
-            />
-
-            <textarea
-              placeholder="Message"
-              rows={2}
-              className="w-full bg-transparent border-b border-white/20 pb-3 text-sm sm:text-base text-white outline-none resize-none placeholder:text-white/30"
-            />
-
-            <input
-              type="email"
-              placeholder="Enter email"
-              className="w-full bg-transparent border-b border-white/20 pb-3 text-sm sm:text-base text-white outline-none placeholder:text-white/30"
-            />
-
-          </form>
-
-          <p className="mt-3 text-xs sm:text-sm text-white/40 text-right">
-            We accept interns.
-          </p>
-
-        </div>
-
       </Container>
     </section>
   );

@@ -228,9 +228,9 @@ export const GeoWarning = () => {
     Math.max(0, Math.min(1, (p - start) / (end - start)));
 
   const bgProgress = ease(progress, 0, 0.25);
-  const bgR = Math.round(7  + (13 - 7)  * bgProgress);
-  const bgG = Math.round(17 + (27 - 17) * bgProgress);
-  const bgB = Math.round(42 + (62 - 42) * bgProgress);
+  const bgR = Math.round(0  + (4  - 0)  * bgProgress);
+  const bgG = Math.round(0  + (8  - 0)  * bgProgress);
+  const bgB = Math.round(0  + (20 - 0)  * bgProgress);
   const bgColor = `rgb(${bgR},${bgG},${bgB})`;
 
   const line1P = ease(progress, 0.15, 0.38);

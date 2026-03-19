@@ -35,7 +35,7 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
     const compactNavRef = useRef<HTMLElement>(null);
 
     useEffect(() => {
-        const timer = setTimeout(() => setNavVisible(true), 500);
+        const timer = setTimeout(() => setNavVisible(true), 200);
         return () => clearTimeout(timer);
     }, []);
 
@@ -157,7 +157,7 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
             {/* ══════════════ PRIMARY NAVBAR ══════════════ */}
             <nav
                 ref={navRef}
-                className="header-font absolute top-6 left-0 right-0 z-50"
+                className="header-font fixed top-6 left-0 right-0 z-50"
                 style={{
                     ...navBlendStyle,
                     opacity: navVisible ? 1 : 0,

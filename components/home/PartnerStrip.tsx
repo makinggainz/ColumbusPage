@@ -5,52 +5,37 @@ import { Container } from "@/components/layout/Container";
 
 export const PartnerStrip = () => {
   return (
-    <section className="bg-[#07112A] border-b border-white/10 relative" style={{ height: 288 }}>
-      {/* Vector 4410 */}
-      <div
-        className="absolute w-0 h-[288px] border-l border-white/10"
-        style={{
-          left: "99.5px",
-          top: 0,
-          transform: "matrix(1, 0, 0, -1, 0, 0)",
-        }}
-        aria-hidden
-      />
-      {/* Vector 4410 — right side */}
-      <div
-        className="absolute w-0 h-[288px] border-r border-white/10"
-        style={{
-          right: "99.5px",
-          top: 0,
-          transform: "matrix(1, 0, 0, -1, 0, 0)",
-        }}
-        aria-hidden
-      />
+    <section className="bg-black py-20">
       <Container>
-        <div className="pl-16 flex flex-col" style={{ paddingTop: 54, height: 234 }}>
+        <div className="pl-0 lg:pl-0">
 
-          {/* Heading Block */}
-          <div className="max-w-5xl">
-            <h3 className="font-semibold text-white leading-tight" style={{ fontSize: 40, letterSpacing: "-0.02em" }}>
+          {/* Label */}
+          <p className="text-[10px] font-medium tracking-[0.28em] text-white/22 uppercase mb-8">
+            Data Partners
+          </p>
+
+          {/* Heading */}
+          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-14">
+            <h3
+              className="font-semibold text-white leading-tight"
+              style={{ fontSize: "clamp(28px, 3.5vw, 40px)", letterSpacing: "-0.025em", maxWidth: 540 }}
+            >
               Vetted, high-fidelity, and smart datasets
             </h3>
-
-            <p className="font-light text-white/60" style={{ fontSize: 20, marginTop: 12 }}>
-              We vet our data with partner organizations
+            <p className="text-[15px] text-white/38 max-w-xs leading-relaxed">
+              We vet our data with partner organizations to ensure precision at every layer.
             </p>
           </div>
 
-          {/* Logos Grid — vertically centered in remaining space */}
-          <div className="flex-1 flex items-center pt-6">
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-7 gap-x-10 w-full opacity-80">
-              <Logo src="/Icon/logo1.png" />
-              <Logo src="/Icon/logo2.png" />
-              <Logo src="/Icon/image1.png" />
-              <Logo src="/Icon/logo4.png" />
-              <Logo src="/Icon/image2.png" />
-              <Logo src="/Icon/logo6.png" />
-              <Logo src="/Icon/logo7.png" />
-            </div>
+          {/* Logos */}
+          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 xl:grid-cols-7 gap-x-10 gap-y-6 w-full opacity-55">
+            <Logo src="/Icon/logo1.png" />
+            <Logo src="/Icon/logo2.png" />
+            <Logo src="/Icon/image1.png" />
+            <Logo src="/Icon/logo4.png" />
+            <Logo src="/Icon/image2.png" />
+            <Logo src="/Icon/logo6.png" />
+            <Logo src="/Icon/logo7.png" />
           </div>
 
         </div>
@@ -60,13 +45,13 @@ export const PartnerStrip = () => {
 };
 
 const Logo = ({ src }: { src: string }) => (
-  <div className="flex justify-start items-center">
+  <div className="flex items-center">
     <Image
       src={src}
       alt=""
       width={175}
       height={62}
-      className="object-contain h-[46.5px] sm:h-13.5 md:h-15.5 lg:h-[77.5px] w-auto transition-opacity duration-300 hover:opacity-100"
+      className="object-contain h-9 w-auto transition-opacity duration-300 hover:opacity-100"
     />
   </div>
 );

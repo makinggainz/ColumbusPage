@@ -160,8 +160,8 @@ export const MeshSection = () => {
       const cy = canvas.height / 2;
       const r = Math.max(cx, cy) * 1.1;
       const vignette = ctx.createRadialGradient(cx, cy, r * 0.35, cx, cy, r);
-      vignette.addColorStop(0, "rgba(7,17,42,0)");
-      vignette.addColorStop(1, "rgba(7,17,42,0.85)");
+      vignette.addColorStop(0, "rgba(0,0,0,0)");
+      vignette.addColorStop(1, "rgba(0,0,0,0.85)");
       ctx.fillStyle = vignette;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -184,7 +184,7 @@ export const MeshSection = () => {
 
   return (
     <section
-      className="bg-[#07112A] border-0 border-none shadow-none ring-0 ring-offset-0"
+      className="bg-black border-0 border-none shadow-none ring-0 ring-offset-0"
       style={{
         opacity: mounted ? 1 : 0,
         filter: mounted ? "blur(0px)" : "blur(8px)",
@@ -202,7 +202,7 @@ export const MeshSection = () => {
         <div
           className="absolute top-0 left-0 right-0 w-full h-30 pointer-events-none"
           style={{
-            background: `linear-gradient(to bottom, rgba(7,17,42,1) 0%, rgba(7,17,42,0) 100%)`,
+            background: `linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 100%)`,
           }}
           aria-hidden
         />
@@ -211,7 +211,7 @@ export const MeshSection = () => {
         <div
           className="absolute bottom-0 left-0 right-0 w-full h-[70px] pointer-events-none"
           style={{
-            background: `linear-gradient(to bottom, rgba(7,17,42,0) 0%, rgba(7,17,42,0.45) 25%, rgba(7,17,42,0.83) 46%, rgba(7,17,42,0.9) 52%, rgba(7,17,42,0.94) 62%, rgba(7,17,42,1) 100%)`,
+            background: `linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.45) 25%, rgba(0,0,0,0.83) 46%, rgba(0,0,0,0.9) 52%, rgba(0,0,0,0.94) 62%, rgba(0,0,0,1) 100%)`,
           }}
           aria-hidden
         />

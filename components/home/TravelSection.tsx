@@ -25,73 +25,76 @@ export const TravelSection = () => {
     opacity:    visible ? 1 : 0,
     filter:     visible ? "blur(0px)" : "blur(8px)",
     transform:  visible ? "translateY(0)" : "translateY(16px)",
-    transition: `opacity 0.6s ease-out ${delay}, filter 0.6s ease-out ${delay}, transform 0.6s ease-out ${delay}`,
+    transition: `opacity 0.7s ease-out ${delay}, filter 0.7s ease-out ${delay}, transform 0.7s ease-out ${delay}`,
   });
 
   return (
-    <section className="bg-[#07112A] py-3.5 sm:py-11.5 lg:py-19.5">
+    <section className="bg-black py-4 sm:py-10 lg:py-16">
       <Container>
-
         <div
           ref={cardRef}
-          className="relative overflow-hidden rounded-[23px]"
-          style={{ height: 773, padding: "49px 64px 0", background: "linear-gradient(314.26deg, rgba(10, 19, 66, 0.9) -6.86%, rgba(29, 59, 94, 0.9) 108.55%)", ...animStyle(cardVisible, "0.1s") }}
+          className="relative overflow-hidden border border-white/[0.07]"
+          style={{
+            height: 773,
+            padding: "52px 64px 0",
+            background: "linear-gradient(314deg, rgba(4,10,30,0.95) -7%, rgba(8,24,50,0.92) 108%)",
+            ...animStyle(cardVisible, "0.1s"),
+          }}
         >
 
           {/* TEXT BLOCK */}
-          <div className="flex flex-col" style={{ maxWidth: 500 }}>
-
-            <p className="text-xs sm:text-sm tracking-widest uppercase text-white/60 mb-4">
+          <div className="flex flex-col" style={{ maxWidth: 480 }}>
+            <p className="text-[10px] font-medium tracking-[0.28em] uppercase text-white/25 mb-5">
               Available everywhere
             </p>
 
-            <h2 className="text-[96px] font-normal tracking-[-0.02em] leading-tight whitespace-nowrap text-white mb-6" style={{ fontFamily: cambo.style.fontFamily }}>
-              Travel like a boss
+            <h2
+              className="font-normal leading-none text-white mb-6"
+              style={{
+                fontSize: "clamp(56px, 6vw, 96px)",
+                letterSpacing: "-0.02em",
+                fontFamily: cambo.style.fontFamily,
+              }}
+            >
+              Travel like
+              <br />a boss
             </h2>
 
-            <p className="text-sm sm:text-base md:text-lg text-white/70 mb-4">
+            <p className="text-[15px] text-white/45 mb-6">
               MapsGPT is your local guide in your pocket.
             </p>
 
-            <ul className="space-y-4 list-none pl-0 text-white mb-8" style={{ fontSize: "20px" }}>
-              <li className="flex items-center gap-5">
-                <span className="rounded-full bg-white w-2 h-2 shrink-0 bullet-halo" aria-hidden />
-                <span>Plan cool trips</span>
-              </li>
-              <li className="flex items-center gap-5">
-                <span className="rounded-full bg-white w-2 h-2 shrink-0 bullet-halo" aria-hidden />
-                <span>Make itineraries</span>
-              </li>
-              <li className="flex items-center gap-5">
-                <span className="rounded-full bg-white w-2 h-2 shrink-0 bullet-halo" aria-hidden />
-                <span>Take care of every preference &<br />detail</span>
-              </li>
+            <ul className="space-y-3.5 list-none pl-0 text-white" style={{ fontSize: "17px" }}>
+              {[
+                "Plan cool trips",
+                "Make itineraries",
+                "Take care of every preference & detail",
+              ].map((item, i) => (
+                <li key={i} className="flex items-center gap-5">
+                  <span className="rounded-full bg-white/40 w-1.5 h-1.5 shrink-0" aria-hidden />
+                  <span className="text-white/70">{item}</span>
+                </li>
+              ))}
             </ul>
-
-
           </div>
 
-          {/* BUTTONS — absolute bottom like Section F */}
+          {/* BUTTONS */}
           <div className="absolute" style={{ bottom: 62, left: 64 }}>
-            <p className="text-white mb-8" style={{ fontSize: "20px" }}>
+            <p className="text-white/50 mb-8" style={{ fontSize: "17px" }}>
               Find your next hang out spot, easier.
             </p>
-
-            <div className="flex flex-row" style={{ gap: 15 }}>
+            <div className="flex flex-row gap-3">
               <Link
                 href="/maps-gpt"
-                className="bg-white rounded-xs text-[20px] font-semibold text-[#13214C] inline-flex items-center justify-center"
-                style={{ width: 190, height: 46 }}
+                className="bg-white text-black text-[14px] font-semibold hover:bg-white/90 transition-colors inline-flex items-center justify-center h-11 px-7"
               >
-                Try it out now ↗
+                Try it out now →
               </Link>
-
               <Link
                 href="/technology"
-                className="rounded-xs text-[20px] font-semibold text-white/70 inline-flex items-center px-3 bg-transparent hover:bg-white/10 transition-colors"
-                style={{ height: 46 }}
+                className="border border-white/15 text-white/55 text-[14px] font-medium hover:border-white/30 hover:text-white/80 transition-all inline-flex items-center px-7 h-11"
               >
-                Learn more <span style={{ marginLeft: 7 }}>↗</span>
+                Learn more
               </Link>
             </div>
           </div>
@@ -102,18 +105,12 @@ export const TravelSection = () => {
             style={{
               width: 997,
               height: 571,
-              borderRadius: "6px 0 0 0",
               overflow: "hidden",
-              border: "7px solid rgba(0,0,0,0.15)",
-              boxShadow: "0 40px 120px rgba(0,0,0,0.25)",
+              border: "1px solid rgba(255,255,255,0.06)",
+              boxShadow: "0 40px 120px rgba(0,0,0,0.5)",
             }}
           >
-            <Image
-              src="/emoji/desk.png"
-              alt="Desktop UI"
-              fill
-              className="object-cover"
-            />
+            <Image src="/emoji/desk.png" alt="Desktop UI" fill className="object-cover" />
           </div>
 
           {/* MOBILE UI */}
@@ -123,21 +120,15 @@ export const TravelSection = () => {
               right: 15,
               width: 266,
               height: 579,
-              borderRadius: 28,
               overflow: "hidden",
-              boxShadow: "0 40px 140px rgba(0,0,0,0.35)",
+              boxShadow: "0 40px 140px rgba(0,0,0,0.6)",
+              border: "1px solid rgba(255,255,255,0.04)",
             }}
           >
-            <Image
-              src="/emoji/mob.png"
-              alt="Mobile UI"
-              fill
-              className="object-cover"
-            />
+            <Image src="/emoji/mob.png" alt="Mobile UI" fill className="object-cover" />
           </div>
 
         </div>
-
       </Container>
     </section>
   );

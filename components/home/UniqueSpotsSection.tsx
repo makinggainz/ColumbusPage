@@ -2,13 +2,13 @@
 
 import { Star, MapPin } from "lucide-react";
 import { Container } from "@/components/layout/Container";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 
 const FAVORITE_SPOTS_FILES = ["(20).jpeg", "(14).jpeg", "(17).jpeg", "(19).jpeg", "(21).jpeg", "(23).jpeg", "(24).jpeg", "(22).jpeg"];
 const spotImageSrc = (filename: string) => `/FavoriteSpots/${encodeURIComponent(filename)}`;
 
 const SPOTS: { title: string; description: string; location: string; rating: string; image?: string }[] = [
-  { title: "The Palm Hotel", description: "Luxury hotel, with unique aquarium restaurant. Great food, and a great view.", location: "Dubai, UAE", rating: "4.2", image: FAVORITE_SPOTS_FILES[0] },
+  { title: "The Palm Hotel", description: "Luxury hotel with unique aquarium restaurant. Great food, and a great view.", location: "Dubai, UAE", rating: "4.2", image: FAVORITE_SPOTS_FILES[0] },
   { title: "Sky Garden Lounge", description: "Rooftop bar with panoramic city views. Perfect for sunset drinks.", location: "London, UK", rating: "4.5", image: FAVORITE_SPOTS_FILES[1] },
   { title: "Casa del Mar", description: "Beachfront dining with fresh seafood and Mediterranean cuisine.", location: "Barcelona, Spain", rating: "4.8", image: FAVORITE_SPOTS_FILES[2] },
   { title: "Temple of Dawn", description: "Historic temple with riverside views. Best visited at golden hour.", location: "Bangkok, Thailand", rating: "4.6", image: FAVORITE_SPOTS_FILES[3] },
@@ -22,19 +22,32 @@ const SPOTS: { title: string; description: string; location: string; rating: str
 
 export const UniqueSpotsSection = () => {
   const scrollRef = useRef<HTMLDivElement>(null);
+  const sectionRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);
   const [scrollLeft, setScrollLeft] = useState(0);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) { setVisible(true); obs.disconnect(); }
+      },
+      { threshold: 0.05 }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
 
   const onMouseDown = (e: React.MouseEvent) => {
     setIsDragging(true);
     setStartX(e.pageX - (scrollRef.current?.offsetLeft ?? 0));
     setScrollLeft(scrollRef.current?.scrollLeft ?? 0);
   };
-
   const onMouseLeave = () => setIsDragging(false);
   const onMouseUp = () => setIsDragging(false);
-
   const onMouseMove = (e: React.MouseEvent) => {
     if (!isDragging) return;
     e.preventDefault();
@@ -44,45 +57,51 @@ export const UniqueSpotsSection = () => {
   };
 
   return (
-    <section className="bg-[#07112A] py-20 md:py-28 lg:py-32 overflow-hidden relative">
-      <Container className="mb-6 md:mb-8">
-        <h2 className="text-center text-2xl sm:text-3xl md:text-4xl font-semibold text-white">
-          Unique spots people are favoriting
-        </h2>
+    <section className="bg-black py-24 md:py-32 overflow-hidden" ref={sectionRef}>
+
+      {/* Header */}
+      <Container className="mb-10">
+        <div
+          style={{
+            opacity: visible ? 1 : 0,
+            transform: visible ? "translateY(0)" : "translateY(16px)",
+            transition: "opacity 0.7s ease, transform 0.7s ease",
+          }}
+        >
+          <p className="text-[10px] font-medium tracking-[0.28em] text-white/22 uppercase mb-5">
+            MapsGPT
+          </p>
+          <h2
+            className="font-semibold text-white"
+            style={{ fontSize: "clamp(24px, 3vw, 38px)", letterSpacing: "-0.025em" }}
+          >
+            Unique spots people are favoriting
+          </h2>
+        </div>
       </Container>
 
-      <div className="w-full relative min-h-120">
+      {/* Scrollable cards */}
+      <div className="w-full relative">
+        {/* Left fade */}
         <div
-          className="absolute inset-0 w-full h-120 top-0 left-0"
-          style={{
-            background: "linear-gradient(270deg, rgba(0, 255, 38, 0.2) 0%, rgba(33, 140, 206, 0.4) 51.15%, rgba(199, 32, 32, 0.3) 100%)",
-          }}
+          className="absolute left-0 top-0 bottom-0 w-24 pointer-events-none z-20"
+          style={{ background: "linear-gradient(to right, #000000 0%, transparent 100%)" }}
           aria-hidden
         />
-        {/* Top fade */}
+        {/* Right fade */}
         <div
-          className="absolute left-0 top-0 w-full pointer-events-none z-20"
-          style={{
-            height: "180px",
-            background: "linear-gradient(to bottom, #07112A 0%, rgba(7,17,42,0.85) 30%, rgba(7,17,42,0.4) 65%, rgba(7,17,42,0) 100%)",
-          }}
-          aria-hidden
-        />
-        {/* Bottom fade */}
-        <div
-          className="absolute left-0 bottom-0 w-full pointer-events-none z-20"
-          style={{
-            height: "180px",
-            background: "linear-gradient(to top, #07112A 0%, rgba(7,17,42,0.85) 30%, rgba(7,17,42,0.4) 65%, rgba(7,17,42,0) 100%)",
-          }}
+          className="absolute right-0 top-0 bottom-0 w-24 pointer-events-none z-20"
+          style={{ background: "linear-gradient(to left, #000000 0%, transparent 100%)" }}
           aria-hidden
         />
         <div
           ref={scrollRef}
-          className="flex gap-6 overflow-x-auto py-6 px-6 relative z-30 select-none"
+          className="flex gap-4 overflow-x-auto py-4 px-8 select-none"
           style={{
             scrollbarWidth: "none",
             cursor: isDragging ? "grabbing" : "grab",
+            opacity: visible ? 1 : 0,
+            transition: "opacity 0.7s ease 0.15s",
           }}
           onMouseDown={onMouseDown}
           onMouseLeave={onMouseLeave}
@@ -101,38 +120,41 @@ export const UniqueSpotsSection = () => {
 
 function SpotCard({ spot }: { spot: (typeof SPOTS)[0] }) {
   return (
-    <div className="unique-spots-card flex flex-col shrink-0 rounded-[14px] bg-white/10 overflow-hidden relative px-4.5 pt-4.75 pb-4 transition-transform duration-200 ease-out hover:scale-[1.03]">
-      {/* Image area: 462×170, radius 11px (design) */}
-      <div className="relative w-full max-w-115.5 h-42.5 rounded-[11px] overflow-hidden bg-white/10 shrink-0">
-        {spot.image ? (
+    <div
+      className="flex flex-col shrink-0 overflow-hidden border border-white/[0.07] hover:border-white/15 transition-colors duration-300"
+      style={{ width: 320, background: "#070D1C" }}
+    >
+      {/* Image area */}
+      <div className="relative w-full h-44 overflow-hidden bg-white/5 shrink-0">
+        {spot.image && (
           <img
             src={spotImageSrc(spot.image)}
             alt=""
             className="absolute inset-0 w-full h-full object-cover"
           />
-        ) : null}
-        {/* Rating pill: top-right */}
+        )}
+        {/* Rating pill */}
         <div
-          className="absolute top-2.25 right-2.25 h-7 pl-2 pr-2 flex items-center gap-1 rounded-[14px]"
-          style={{ background: "rgba(0, 0, 0, 0.4)" }}
+          className="absolute top-3 right-3 h-7 px-2.5 flex items-center gap-1.5"
+          style={{ background: "rgba(0,0,0,0.55)", backdropFilter: "blur(8px)" }}
         >
-          <Star className="w-4.25 h-4.25 shrink-0 text-[#E46962]" fill="#E46962" />
-          <span className="font-semibold text-base leading-[140%] tracking-[-0.02em] text-white">
-            {spot.rating}
-          </span>
+          <Star className="w-3.5 h-3.5 shrink-0 text-[#E46962]" fill="#E46962" />
+          <span className="font-semibold text-[13px] text-white">{spot.rating}</span>
         </div>
       </div>
 
-      {/* Title, description, location */}
-      <h3 className="mt-2.25 font-semibold text-xl leading-[140%] tracking-[-0.02em] text-white shrink-0">
-        {spot.title}
-      </h3>
-      <p className="mt-2 text-xl leading-[140%] tracking-[-0.02em] text-white/70 font-normal line-clamp-2 shrink-0">
-        {spot.description}
-      </p>
-      <div className="mt-2 flex items-center gap-2 opacity-70 shrink-0">
-        <MapPin className="w-6 h-6 shrink-0 text-white" />
-        <span className="text-xl leading-[140%] tracking-[-0.02em] text-white">{spot.location}</span>
+      {/* Content */}
+      <div className="px-5 py-4 flex flex-col flex-1">
+        <h3 className="font-semibold text-[16px] text-white tracking-[-0.015em] mb-1.5">
+          {spot.title}
+        </h3>
+        <p className="text-[13px] leading-[1.55] text-white/40 line-clamp-2 mb-3">
+          {spot.description}
+        </p>
+        <div className="flex items-center gap-2 opacity-40 mt-auto">
+          <MapPin className="w-4 h-4 shrink-0 text-white" />
+          <span className="text-[13px] text-white">{spot.location}</span>
+        </div>
       </div>
     </div>
   );
