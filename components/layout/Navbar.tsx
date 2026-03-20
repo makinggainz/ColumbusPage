@@ -4,17 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useState, useRef } from "react";
 
-import { ScrambleText } from "@/components/ui/ScrambleText";
-
 const COMPACT_THRESHOLD = 80;
-
-const menuItems = [
-    { label: "Our Mission", href: "/our-mission" },
-    { label: "Columbus Market Spy", href: "/market-spy" },
-    { label: "MapsGPT", href: "/maps-gpt" },
-    { label: "Use Cases", href: "/use-cases" },
-    { label: "Technology", href: "/technology" },
-];
 
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -80,9 +70,7 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
     }, [isCompactMenuOpen, isCompactManuallyToggled]);
 
     // ── Primary nav handlers ──────────────────────────────────────────
-    const handleMouseEnter = () => {
-        if (!isManuallyToggled) setIsMenuOpen(true);
-    };
+    const handleMouseEnter = () => {};
     const handleMouseLeave = (e: React.MouseEvent) => {
         if (isManuallyToggled) return;
         const navBounds = navRef.current?.getBoundingClientRect();
@@ -90,19 +78,14 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
         if (e.clientY <= navBounds.top) return;
         setIsMenuOpen(false);
     };
-    const handleHamburgerClick = () => {
-        setIsManuallyToggled(true);
-        setIsMenuOpen(!isMenuOpen);
-    };
+    const handleHamburgerClick = () => {};
     const handleNavMouseEnter = () => {
         if (isManuallyToggled && !isMenuOpen) setIsManuallyToggled(false);
         handleMouseEnter();
     };
 
     // ── Compact nav handlers ──────────────────────────────────────────
-    const handleCompactMouseEnter = () => {
-        if (!isCompactManuallyToggled) setIsCompactMenuOpen(true);
-    };
+    const handleCompactMouseEnter = () => {};
     const handleCompactMouseLeave = (e: React.MouseEvent) => {
         if (isCompactManuallyToggled) return;
         const navBounds = compactNavRef.current?.getBoundingClientRect();
@@ -110,10 +93,7 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
         if (e.clientY <= navBounds.top) return;
         setIsCompactMenuOpen(false);
     };
-    const handleCompactHamburgerClick = () => {
-        setIsCompactManuallyToggled(true);
-        setIsCompactMenuOpen(!isCompactMenuOpen);
-    };
+    const handleCompactHamburgerClick = () => {};
     const handleCompactNavMouseEnter = () => {
         if (isCompactManuallyToggled && !isCompactMenuOpen) setIsCompactManuallyToggled(false);
         handleCompactMouseEnter();
@@ -134,17 +114,6 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
 
     // ── Dark theme tokens ─────────────────────────────────────────────
     const isDark = theme === "dark";
-
-    const dropdownBg = isDark
-        ? { background: "rgba(6, 8, 20, 0.96)", backdropFilter: "blur(24px)", WebkitBackdropFilter: "blur(24px)", boxShadow: "0 8px 40px rgba(0,0,0,0.5)" }
-        : { background: "rgba(248, 249, 252, 0.92)", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)", boxShadow: "0 8px 32px rgba(0,0,0,0.08)" };
-
-    const dropdownHeadingClass = isDark ? "text-white/40" : "text-[#0A1344]/50";
-    const dropdownBodyClass    = isDark ? "text-white/65" : "text-[#0A1344]/70";
-    const dropdownLinkClass    = isDark ? "text-white"    : "text-[#0A1344]";
-    const dropdownSubheadClass = isDark ? "text-white/40" : "text-gray-500";
-    const dropdownSocialClass  = isDark ? "text-white hover:text-white/70" : "text-gray-900 hover:text-primary";
-    const dropdownNavLinkClass = isDark ? "text-white"    : "text-[#0A1344]";
 
     return (
         <>
@@ -169,15 +138,15 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
                 }}
                 onMouseLeave={handleMouseLeave}
             >
-                <div className="relative mx-auto w-full max-w-screen-2xl">
+                <div className="relative mx-auto w-full">
                     {/* Nav bar background pill — transparent by default, white when menu open */}
                     <div
-                        className={`absolute inset-y-0 left-(--container-padding) right-(--container-padding) transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                        className={`absolute inset-y-0 left-8 right-8 lg:left-10 lg:right-10 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
                             isMenuOpen ? "bg-white rounded-tl-xs rounded-tr-xs" : "bg-transparent rounded-xs"
                         }`}
                     />
 
-                    <div className="relative px-[calc(var(--container-padding)+18px)]">
+                    <div className="relative px-8 lg:px-10">
                         <div className="grid h-14 md:h-17 grid-cols-[1fr_auto_1fr] items-center">
                             {/* Left: Logo */}
                             <Link href="/" className="flex w-fit shrink-0 items-center gap-2" onMouseEnter={handleNavMouseEnter}>
@@ -220,7 +189,7 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
                                     href="/maps-gpt"
                                     className={`hidden min-[1155px]:flex items-center justify-center px-6 py-3.5 text-md font-semibold leading-none rounded-full border transition-opacity duration-300 hover:opacity-70 ${
                                         isScrolled
-                                            ? "border-black bg-white text-black"
+                                            ? "border-current bg-transparent"
                                             : isDark
                                             ? "border-white/50 bg-transparent text-white"
                                             : "border-[#0A1344] bg-transparent text-[#0A1344]"
@@ -243,83 +212,6 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
                         </div>
                     </div>
 
-                    {/* ── Dropdown ── */}
-                    <div
-                        className={`absolute top-full left-(--container-padding) right-(--container-padding) rounded-bl-xs rounded-br-xs overflow-hidden transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-                            isMenuOpen
-                                ? "opacity-100 translate-y-0 pointer-events-auto"
-                                : "opacity-0 -translate-y-6 pointer-events-none"
-                        }`}
-                        style={dropdownBg}
-                    >
-                        <div className="pl-7 pr-(--container-padding) py-12" style={{ transitionDelay: isMenuOpen ? "150ms" : "0ms" }}>
-                            <div className="grid grid-cols-1 md:grid-cols-12 gap-12">
-                                <div
-                                    className={`md:col-span-5 space-y-8 transition-opacity duration-500 ${isMenuOpen ? "opacity-100" : "opacity-0"}`}
-                                    style={{ transitionDelay: isMenuOpen ? "200ms" : "0ms" }}
-                                >
-                                    <div>
-                                        <h4 className={`text-xs font-semibold tracking-widest uppercase mb-4 ${dropdownHeadingClass}`}>
-                                            <ScrambleText text="COLUMBUS EARTH" isActive={isMenuOpen} delay={300} />
-                                        </h4>
-                                        <p className={`text-base leading-relaxed max-w-md ${dropdownBodyClass}`}>
-                                            Columbus Earth Inc. is a spatial frontier AI company building the first production
-                                            Large Geospatial Model to answer the most difficult questions about our planet.
-                                        </p>
-                                    </div>
-                                    <div className="grid grid-cols-2 gap-8">
-                                        <div>
-                                            <h4 className={`text-xs font-semibold tracking-wider uppercase mb-2 ${dropdownSubheadClass}`}>
-                                                <ScrambleText text="CONTACT" isActive={isMenuOpen} delay={450} />
-                                            </h4>
-                                            <a href="mailto:contact@columbus.earth" className={`font-medium block transition-colors duration-300 ${dropdownLinkClass} hover:opacity-70`}>
-                                                contact@columbus.earth
-                                            </a>
-                                        </div>
-                                        <div>
-                                            <h4 className={`text-xs font-semibold tracking-wider uppercase mb-2 ${dropdownSubheadClass}`}>
-                                                <ScrambleText text="SOCIAL" isActive={isMenuOpen} delay={550} />
-                                            </h4>
-                                            <a href="https://www.linkedin.com/company/columbusearth/about/?viewAsMember=true" target="_blank" rel="noopener noreferrer" className={`font-medium block transition-colors ${dropdownSocialClass}`}>
-                                                LinkedIn
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="md:col-span-3"></div>
-                                <div className="md:col-span-4 space-y-6">
-                                    <h4
-                                        className={`text-xs font-semibold tracking-wider uppercase mb-4 transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${dropdownSubheadClass} ${
-                                            isMenuOpen ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
-                                        }`}
-                                        style={{ transitionDelay: isMenuOpen ? "250ms" : "0ms" }}
-                                    >
-                                        <ScrambleText text="COMPANY" isActive={isMenuOpen} delay={400} />
-                                    </h4>
-                                    <ul className="space-y-4">
-                                        {menuItems.map((item, index) => (
-                                            <li
-                                                key={item.href}
-                                                className={`transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-                                                    isMenuOpen ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
-                                                }`}
-                                                style={{ transitionDelay: isMenuOpen ? `${320 + index * 70 + index * index * 8}ms` : "0ms" }}
-                                            >
-                                                <Link
-                                                    href={item.href}
-                                                    onClick={() => { setIsMenuOpen(false); setIsManuallyToggled(false); }}
-                                                    className={`group relative text-xl font-medium transition-all duration-300 flex items-center ${dropdownNavLinkClass}`}
-                                                >
-                                                    <span className="mr-3 transition-transform duration-300 ease-in-out group-hover:translate-x-1">+</span>
-                                                    <span className="transition-all duration-300 ease-in-out group-hover:translate-x-1">{item.label}</span>
-                                                </Link>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </nav>
 
@@ -356,14 +248,14 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
                 style={compactNavBlendStyle}
                 onMouseLeave={handleCompactMouseLeave}
             >
-                <div className="relative mx-auto w-full max-w-screen-2xl">
+                <div className="relative mx-auto w-full">
                     <div
-                        className={`absolute inset-y-0 left-(--container-padding) right-(--container-padding) transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                        className={`absolute inset-y-0 left-8 right-8 lg:left-10 lg:right-10 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
                             isCompactMenuOpen ? "rounded-tl-xs rounded-tr-xs" : ""
                         }`}
                     />
 
-                    <div className="relative px-[calc(var(--container-padding)+18px)]">
+                    <div className="relative px-8 lg:px-10">
                         <div className="grid h-16 grid-cols-[1fr_auto_1fr] items-center">
                             {/* Left: Logo */}
                             <Link href="/" className="flex w-fit shrink-0 items-center gap-2" onMouseEnter={handleCompactNavMouseEnter}>
@@ -426,83 +318,6 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
                         </div>
                     </div>
 
-                    {/* ── Dropdown ── */}
-                    <div
-                        className={`absolute top-full left-(--container-padding) right-(--container-padding) rounded-bl-xs rounded-br-xs overflow-hidden transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-                            isCompactMenuOpen
-                                ? "opacity-100 translate-y-0 pointer-events-auto"
-                                : "opacity-0 -translate-y-6 pointer-events-none"
-                        }`}
-                        style={dropdownBg}
-                    >
-                        <div className="pl-7 pr-(--container-padding) py-12" style={{ transitionDelay: isCompactMenuOpen ? "150ms" : "0ms" }}>
-                            <div className="grid grid-cols-1 md:grid-cols-12 gap-12">
-                                <div
-                                    className={`md:col-span-5 space-y-8 transition-opacity duration-500 ${isCompactMenuOpen ? "opacity-100" : "opacity-0"}`}
-                                    style={{ transitionDelay: isCompactMenuOpen ? "200ms" : "0ms" }}
-                                >
-                                    <div>
-                                        <h4 className={`text-xs font-semibold tracking-widest uppercase mb-4 ${dropdownHeadingClass}`}>
-                                            <ScrambleText text="COLUMBUS EARTH" isActive={isCompactMenuOpen} delay={300} />
-                                        </h4>
-                                        <p className={`text-base leading-relaxed max-w-md ${dropdownBodyClass}`}>
-                                            Columbus Earth Inc. is a spatial frontier AI company building the first production
-                                            Large Geospatial Model to answer the most difficult questions about our planet.
-                                        </p>
-                                    </div>
-                                    <div className="grid grid-cols-2 gap-8">
-                                        <div>
-                                            <h4 className={`text-xs font-semibold tracking-wider uppercase mb-2 ${dropdownSubheadClass}`}>
-                                                <ScrambleText text="CONTACT" isActive={isCompactMenuOpen} delay={450} />
-                                            </h4>
-                                            <a href="mailto:contact@columbus.earth" className={`font-medium block transition-colors duration-300 ${dropdownLinkClass} hover:opacity-70`}>
-                                                contact@columbus.earth
-                                            </a>
-                                        </div>
-                                        <div>
-                                            <h4 className={`text-xs font-semibold tracking-wider uppercase mb-2 ${dropdownSubheadClass}`}>
-                                                <ScrambleText text="SOCIAL" isActive={isCompactMenuOpen} delay={550} />
-                                            </h4>
-                                            <a href="https://www.linkedin.com/company/columbusearth/about/?viewAsMember=true" target="_blank" rel="noopener noreferrer" className={`font-medium block transition-colors ${dropdownSocialClass}`}>
-                                                LinkedIn
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="md:col-span-3"></div>
-                                <div className="md:col-span-4 space-y-6">
-                                    <h4
-                                        className={`text-xs font-semibold tracking-wider uppercase mb-4 transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${dropdownSubheadClass} ${
-                                            isCompactMenuOpen ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
-                                        }`}
-                                        style={{ transitionDelay: isCompactMenuOpen ? "250ms" : "0ms" }}
-                                    >
-                                        <ScrambleText text="COMPANY" isActive={isCompactMenuOpen} delay={400} />
-                                    </h4>
-                                    <ul className="space-y-4">
-                                        {menuItems.map((item, index) => (
-                                            <li
-                                                key={item.href}
-                                                className={`transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-                                                    isCompactMenuOpen ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
-                                                }`}
-                                                style={{ transitionDelay: isCompactMenuOpen ? `${320 + index * 70 + index * index * 8}ms` : "0ms" }}
-                                            >
-                                                <Link
-                                                    href={item.href}
-                                                    onClick={() => { setIsCompactMenuOpen(false); setIsCompactManuallyToggled(false); }}
-                                                    className={`group relative text-xl font-medium transition-all duration-300 flex items-center ${dropdownNavLinkClass}`}
-                                                >
-                                                    <span className="mr-3 transition-transform duration-300 ease-in-out group-hover:translate-x-1">+</span>
-                                                    <span className="transition-all duration-300 ease-in-out group-hover:translate-x-1">{item.label}</span>
-                                                </Link>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </nav>
         </>
