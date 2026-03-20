@@ -201,18 +201,15 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
 
                             {/* Center: Navigation Links */}
                             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                                <div className={`hidden items-center gap-9 min-[1155px]:flex pointer-events-auto transition-opacity duration-300 ${!isScrolled && !isMenuOpen ? "opacity-70" : ""}`}>
-                                    <Link href="#" className="group relative text-md font-medium transition-opacity duration-300 hover:opacity-70" onMouseEnter={handleNavMouseEnter}>
+                                <div className={`hidden items-center gap-3 min-[1155px]:flex pointer-events-auto transition-opacity duration-300 ${!isScrolled && !isMenuOpen ? "opacity-70" : ""}`}>
+                                    <Link href="#" className="text-md font-medium px-4 py-1.5 rounded-full border border-transparent hover:border-current/20 transition-all duration-300" onMouseEnter={handleNavMouseEnter}>
                                         Product
-                                        <span className="absolute left-0 -bottom-1 h-px w-0 transition-all duration-300 group-hover:w-full bg-current" />
                                     </Link>
-                                    <Link href="/use-cases" className="group relative text-md font-medium transition-opacity duration-300 hover:opacity-70" onMouseEnter={handleNavMouseEnter}>
+                                    <Link href="/use-cases" className="text-md font-medium px-4 py-1.5 rounded-full border border-transparent hover:border-current/20 transition-all duration-300" onMouseEnter={handleNavMouseEnter}>
                                         Use Cases
-                                        <span className="absolute left-0 -bottom-1 h-px w-0 transition-all duration-300 group-hover:w-full bg-current" />
                                     </Link>
-                                    <Link href="/technology" className="group relative text-md font-medium transition-opacity duration-300 hover:opacity-70" onMouseEnter={handleNavMouseEnter}>
+                                    <Link href="/technology" className="text-md font-medium px-4 py-1.5 rounded-full border border-transparent hover:border-current/20 transition-all duration-300" onMouseEnter={handleNavMouseEnter}>
                                         Technology
-                                        <span className="absolute left-0 -bottom-1 h-px w-0 transition-all duration-300 group-hover:w-full bg-current" />
                                     </Link>
                                 </div>
                             </div>
@@ -389,18 +386,15 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
 
                             {/* Center: Navigation Links */}
                             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                                <div className="hidden items-center gap-7 min-[1155px]:flex pointer-events-auto">
-                                    <Link href="#" className="group relative text-sm font-medium transition-opacity duration-300 hover:opacity-70" onMouseEnter={handleCompactNavMouseEnter}>
+                                <div className="hidden items-center gap-3 min-[1155px]:flex pointer-events-auto">
+                                    <Link href="#" className="text-sm font-medium px-3.5 py-1.5 rounded-full border border-transparent hover:border-current/20 transition-all duration-300" onMouseEnter={handleCompactNavMouseEnter}>
                                         Product
-                                        <span className="absolute left-0 -bottom-0.5 h-px w-0 transition-all duration-300 group-hover:w-full bg-current" />
                                     </Link>
-                                    <Link href="/use-cases" className="group relative text-sm font-medium transition-opacity duration-300 hover:opacity-70" onMouseEnter={handleCompactNavMouseEnter}>
+                                    <Link href="/use-cases" className="text-sm font-medium px-3.5 py-1.5 rounded-full border border-transparent hover:border-current/20 transition-all duration-300" onMouseEnter={handleCompactNavMouseEnter}>
                                         Use Cases
-                                        <span className="absolute left-0 -bottom-0.5 h-px w-0 transition-all duration-300 group-hover:w-full bg-current" />
                                     </Link>
-                                    <Link href="/technology" className="group relative text-sm font-medium transition-opacity duration-300 hover:opacity-70" onMouseEnter={handleCompactNavMouseEnter}>
+                                    <Link href="/technology" className="text-sm font-medium px-3.5 py-1.5 rounded-full border border-transparent hover:border-current/20 transition-all duration-300" onMouseEnter={handleCompactNavMouseEnter}>
                                         Technology
-                                        <span className="absolute left-0 -bottom-0.5 h-px w-0 transition-all duration-300 group-hover:w-full bg-current" />
                                     </Link>
                                 </div>
                             </div>
