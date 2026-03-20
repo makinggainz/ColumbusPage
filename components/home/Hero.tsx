@@ -926,20 +926,20 @@ export const Hero = () => {
           style={{
             color: "#1D1D1F",
             fontWeight: 400,
-            letterSpacing: "-0.003em",
-            lineHeight: 1.05,
+            letterSpacing: "-0.02em",
+            lineHeight: 1.2,
             ...fadeIn(80),
           }}
         >
           <span
-            className="block text-[40px] md:text-[80px]"
-            style={{ fontWeight: 400, letterSpacing: "-0.003em", lineHeight: 1.05 }}
+            className="block text-[40px] md:text-[66px]"
+            style={{ fontWeight: 400, letterSpacing: "-0.02em", lineHeight: 1.2 }}
           >
             The frontier AI Lab building the first in&#8209;production
           </span>
           <span
-            className="block text-[40px] md:text-[80px]"
-            style={{ fontWeight: 400, letterSpacing: "-0.003em", lineHeight: 1.05 }}
+            className="block text-[40px] md:text-[66px]"
+            style={{ fontWeight: 400, letterSpacing: "-0.02em", lineHeight: 1.2 }}
           >
             Large Geospatial Model.
           </span>
