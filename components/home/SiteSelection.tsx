@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+import { Container } from "@/components/layout/Container";
 
 export const SiteSelection = () => {
   const titleRef = useRef<HTMLHeadingElement>(null);
@@ -36,7 +37,7 @@ export const SiteSelection = () => {
 
   return (
     <section className="bg-[#FFFFFF] py-[80px] md:py-[120px]">
-      <div className="max-w-[980px] mx-auto px-6">
+      <Container>
 
         {/* Centered intro */}
         <div
@@ -164,7 +165,7 @@ export const SiteSelection = () => {
           </div>
         </div>
 
-      </div>
+      </Container>
     </section>
   );
 };
