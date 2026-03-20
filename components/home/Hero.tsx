@@ -19,10 +19,10 @@ interface BoatPhysics {
 function getWaveHeight(wx: number, wz: number, t: number, drift: number, driftZ: number) {
   const swx = wx + drift, swz = wz + driftZ;
   return (
-    Math.sin(swx * 0.006 + t * 1.2) * Math.cos(swz * 0.008 + t * 0.7) * 14 +
-    Math.sin(swx * 0.01 - t * 0.8 + 1.5) * Math.cos(swz * 0.012 + t * 0.45) * 8 +
-    Math.sin((swx + swz) * 0.004 + t * 0.9) * 6 +
-    Math.sin(swx * 0.02 + t * 2.0) * Math.cos(swz * 0.018 + t * 1.1) * 3
+    Math.sin(swx * 0.003 + t * 0.6) * Math.cos(swz * 0.004 + t * 0.35) * 40 +
+    Math.sin(swx * 0.005 - t * 0.4 + 1.5) * Math.cos(swz * 0.006 + t * 0.25) * 25 +
+    Math.sin((swx + swz) * 0.002 + t * 0.45) * 18 +
+    Math.sin(swx * 0.01 + t * 1.0) * Math.cos(swz * 0.009 + t * 0.55) * 8
   );
 }
 
@@ -511,7 +511,7 @@ const WaveMesh = () => {
     // ── 3D Projection ──
     const fov = 600;
     const horizonY = H * 0.32 + 100;
-    const cameraHeight = 280;
+    const cameraHeight = 500;
     const cellSize = 24;
     const gridCols = 280;
     const gridRows = 90;
