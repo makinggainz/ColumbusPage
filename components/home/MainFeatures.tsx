@@ -1,7 +1,6 @@
-
-
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import {
   PenTool,
   Map,
@@ -9,126 +8,136 @@ import {
   Cloud,
   Book,
   Database,
-  ArrowUpRight,
 } from "lucide-react";
-import { Container } from "@/components/layout/Container";
+
+const features = [
+  {
+    title: "Generative Geodata",
+    description:
+      "Our proprietary model creates predictive data or unique datasets tailored to your exact preferences.",
+    icon: PenTool,
+    link: true,
+  },
+  {
+    title: "Map Chat",
+    description:
+      "Research like you're talking to an expert with Columbus Chat. Answer any question, roll the dice, or visualize data in your own way.",
+    icon: Map,
+  },
+  {
+    title: "Research Reports",
+    description:
+      "Task Columbus to do all the hard expert-level work for you. Reports are created for your new site selection.",
+    icon: BookOpen,
+  },
+  {
+    title: "Cloud Based",
+    description:
+      "No more bulky GIS research software. Let your team do work from anywhere with our mobile app and browser-based platform.",
+    icon: Cloud,
+  },
+  {
+    title: "Generative Due Diligence",
+    description:
+      "Cheaper, faster audits on neighbourhoods, sites, parcels, businesses and cities.",
+    icon: Book,
+  },
+  {
+    title: "Data Catalogue",
+    description:
+      "Find rich and relevant datasets faster with our simple interface. If you can't find a relevant dataset, we can personally order the survey.",
+    icon: Database,
+  },
+];
+
 export const MainFeatures = () => {
-  const features = [
-    {
-      title: "Generative Geodata",
-      description:
-        "Our proprietary model can create predictive data or unique datasets tailored to your exact preferences.",
-      icon: PenTool,
-      link: true,
-    },
-    {
-      title: "Map Chat",
-      description:
-        "Research like you're talking to an expert with Columbus Chat. Answer any question, roll the dice, or visualize data in your own way.",
-      icon:Map,
-    },
-    {
-      title: "Research Reports",
-      description:
-        "Task Columbus to do all the hard expert-level work for you. Reports are created for your new site selection.",
-      icon: BookOpen,
-    },
-    {
-      title: "Cloud Based",
-      description:
-        "No more bulky GIS research software. Let your team do work from anywhere with our mobile app and browser based platform.",
-      icon: Cloud,
-    },
-    {
-      title: "Generative Due Diligence",
-      description:
-        "Cheaper, faster audits on neighbourhoods, sites, parcels, businesses and cities.",
-      icon: Book,
-    },
-    {
-      title: "Data Catalogue",
-      description:
-       "Find rich and relevant data sets faster with our simple to use interface.  If you cant find a relevant dataset, we can personally order the survey.",
-      icon: Database
-    },
-  ];
+  const sectionRef = useRef<HTMLElement>(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisible(true);
+          obs.disconnect();
+        }
+      },
+      { threshold: 0.05 }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
 
   return (
-    <section
-      className="relative py-[130px]"
-      style={{
-        backgroundColor: "#FFFFFF",
-        backgroundImage: `
-          linear-gradient(to right, rgba(28,39,76,0.035) 1px, transparent 1px),
-          linear-gradient(to bottom, rgba(28,39,76,0.035) 1px, transparent 1px)
-        `,
-        backgroundSize: "48px 48px",
-      }}
-    >
-      <Container>
+    <section ref={sectionRef} className="bg-[#FFFFFF] py-[80px] md:py-[120px]">
+      <div className="max-w-[980px] mx-auto px-6">
 
-        {/* Heading */}
-        <div className="text-center mb-[55px]">
-          <h2 className="text-[42px] font-medium text-[#1C274C] tracking-[-0.01em]">
-            Main Features
+        {/* Centered intro */}
+        <div
+          className="text-center mb-16"
+          style={{
+            opacity: visible ? 1 : 0,
+            transform: visible ? "translateY(0)" : "translateY(16px)",
+            filter: visible ? "blur(0px)" : "blur(6px)",
+            transition: "opacity 0.7s ease, transform 0.7s ease, filter 0.7s ease",
+          }}
+        >
+          <p className="text-[17px] font-semibold text-[#6E6E73] mb-4">
+            Capabilities
+          </p>
+          <h2 className="text-[48px] md:text-[56px] font-semibold tracking-[-0.003em] leading-[1.07] text-[#1D1D1F] text-center">
+            What Columbus can do for you
           </h2>
+          <p className="text-[21px] md:text-[24px] font-normal leading-[1.38] text-[#6E6E73] text-center max-w-[600px] mx-auto mt-4">
+            Powerful tools that transform how you research, analyze, and select sites.
+          </p>
         </div>
 
-        {/* Grid */}
-        <div className="flex flex-wrap justify-center gap-x-[100px] gap-y-[100px]">
-
+        {/* Feature rows */}
+        <div className="w-full">
           {features.map((feature, index) => {
             const Icon = feature.icon;
-
             return (
               <div
                 key={index}
-                className="
-                  w-[333px]
-                  h-[269px]
-                  rounded-[12px]
-                  bg-white/60
-                  backdrop-blur-[12px]
-                  border border-[#E5E8EF]
-                  px-[28px]
-                  pt-[28px]
-                  shadow-[0_2px_8px_rgba(0,0,0,0.03)]
-                "
+                className="group flex items-start gap-5 py-5 px-4 -mx-4 border-b border-[rgba(0,0,0,0.06)] hover:bg-[#F5F5F7] rounded-xl transition-colors duration-300 cursor-pointer"
+                style={{
+                  opacity: visible ? 1 : 0,
+                  transform: visible ? "translateY(0)" : "translateY(12px)",
+                  filter: visible ? "blur(0px)" : "blur(4px)",
+                  transition: `opacity 0.6s ease ${index * 60 + 200}ms, transform 0.6s ease ${index * 60 + 200}ms, filter 0.6s ease ${index * 60 + 200}ms, background-color 0.3s ease`,
+                }}
               >
-                {/* Icon container */}
-                <div className="w-[36px] h-[36px] rounded-[10px] border border-[#E6EAF2] bg-white/80 flex items-center justify-center mb-[22px]">
-                  <Icon
-                    size={18}
-                    strokeWidth={1.5}
-                    className="text-[#1C274C]"
-                  />
+                {/* Icon */}
+                <div className="shrink-0 w-12 h-12 flex items-center justify-center rounded-2xl bg-[#F5F5F7]">
+                  <Icon size={22} strokeWidth={1.5} className="text-[#1D1D1F]" />
                 </div>
 
-                {/* Title */}
-                <h3 className="text-[16px] font-semibold text-[#1C274C] mb-[14px]">
-                  {feature.title}
-                </h3>
-
-                {/* Description */}
-                <p className="text-[14px] leading-[160%] text-[#1C274C]/70 mb-[16px]">
-                  {feature.description}
-                </p>
-
-                {/* Optional Link Button (First Card Only) */}
-                {feature.link && (
-                  <a
-                  href="#"
-                  className="text-[15px] font-medium text-[#4C76C6] hover:underline inline-flex items-center gap-[6px]"
-                >
-                  Check out our generative datasets
-                  <ArrowUpRight size={16} strokeWidth={1.6} />
-                </a>
-                )}
+                {/* Text */}
+                <div className="flex-1 min-w-0">
+                  <h3 className="text-[17px] font-semibold text-[#1D1D1F] leading-snug">
+                    {feature.title}
+                  </h3>
+                  <p className="text-[17px] font-normal leading-[1.47] text-[#6E6E73] mt-1">
+                    {feature.description}
+                    {feature.link && (
+                      <a
+                        href="#"
+                        className="ml-2 text-[#4F46E5] hover:underline inline-flex items-center gap-0.5 font-normal text-[17px]"
+                      >
+                        Datasets &#8250;
+                      </a>
+                    )}
+                  </p>
+                </div>
               </div>
             );
           })}
         </div>
-      </Container>
+
+      </div>
     </section>
   );
 };

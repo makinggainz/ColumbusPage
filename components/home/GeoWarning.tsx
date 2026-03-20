@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Container } from "@/components/layout/Container";
 
 // Each icon: src, initial position as % of viewport, size in px
 const ICON_DEFS = [
@@ -168,7 +167,7 @@ export const GeoWarning = () => {
         if (b.x + b.size / 2 > W) { b.x = W - b.size / 2; b.vx = -Math.abs(b.vx) * 0.55; }
       }
 
-      // ── Box–box collisions ───────────────────────────────────────────────────
+      // ── Box-box collisions ───────────────────────────────────────────────────
       for (let i = 0; i < boxes.length; i++) {
         for (let j = i + 1; j < boxes.length; j++) {
           const a = boxes[i];
@@ -227,12 +226,16 @@ export const GeoWarning = () => {
   const ease = (p: number, start: number, end: number) =>
     Math.max(0, Math.min(1, (p - start) / (end - start)));
 
+  // Interpolate from white (#FFFFFF) to Apple light gray (#F5F5F7) on scroll
   const bgProgress = ease(progress, 0, 0.25);
-  const bgChannel  = Math.round(235 + (255 - 235) * bgProgress);
-  const bgColor    = `rgb(${bgChannel}, ${bgChannel}, ${bgChannel})`;
+  const bgR = Math.round(255 + (245 - 255) * bgProgress);
+  const bgG = Math.round(255 + (245 - 255) * bgProgress);
+  const bgB = Math.round(255 + (247 - 255) * bgProgress);
+  const bgColor = `rgb(${bgR},${bgG},${bgB})`;
 
   const line1P = ease(progress, 0.15, 0.38);
   const line2P = ease(progress, 0.30, 0.52);
+  const ctaP   = ease(progress, 0.42, 0.58);
 
   const fadeUp = (p: number, dist = 32) => ({
     opacity: p,
@@ -259,32 +262,42 @@ export const GeoWarning = () => {
         />
 
         {/* Centered text */}
-        <div className="relative" style={{ zIndex: 2 }}><Container>
-          <div className="flex flex-col items-center text-center">
+        <div className="relative" style={{ zIndex: 2 }}>
+          <div className="max-w-[980px] mx-auto px-6">
+            <div className="flex flex-col items-center text-center">
 
-            <h2
-              style={{ fontSize: "64px", lineHeight: 1.1, ...fadeUp(line1P) }}
-              className="tracking-tight text-[#2A0E0E] whitespace-nowrap"
-            >
-              <span className="font-semibold">Stop using </span>
-              <span className="font-bold">Language models </span>
-              <span className="font-semibold">for Geographical work.</span>
-            </h2>
+              <h2
+                style={{ ...fadeUp(line1P) }}
+                className="text-[48px] md:text-[56px] font-semibold tracking-[-0.003em] leading-[1.07] text-[#1D1D1F] text-center"
+              >
+                <span>Stop using Language models</span>
+                <br />
+                <span>for Geographical work.</span>
+              </h2>
 
-            <p
-              style={{ fontSize: "40px", lineHeight: 1.3, ...fadeUp(line2P) }}
-              className="mt-6 tracking-tight whitespace-nowrap"
-            >
-              <span className="font-semibold text-[#CD0A00]">LLMs</span>{" "}
-              <span className="font-normal bg-linear-to-r from-[#CD0A00] to-[#000000] bg-clip-text text-transparent">
-                hallucinate and{" "}
-                <span className="font-bold">cannot</span>
-                {" "}be trusted for the real world
-              </span>
-            </p>
+              <p
+                style={{ ...fadeUp(line2P) }}
+                className="mt-6 text-[28px] md:text-[32px] leading-[1.3] tracking-tight"
+              >
+                <span className="font-semibold bg-linear-to-r from-[#CD0A00] to-[#1D1D1F] bg-clip-text text-transparent">
+                  LLMs hallucinate and{" "}
+                  <span className="font-bold">cannot</span>
+                  {" "}be trusted for the real world
+                </span>
+              </p>
 
+              <div style={{ ...fadeUp(ctaP) }} className="mt-8">
+                <a
+                  href="#"
+                  className="text-[#4F46E5] text-[20px] hover:underline transition-colors"
+                >
+                  Learn why &#8250;
+                </a>
+              </div>
+
+            </div>
           </div>
-        </Container></div>
+        </div>
       </div>
     </section>
   );

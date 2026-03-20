@@ -3,7 +3,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { Container } from "@/components/layout/Container";
 import { cambo } from "@/app/fonts";
 
 export const TravelSection = () => {
@@ -25,120 +24,106 @@ export const TravelSection = () => {
     opacity:    visible ? 1 : 0,
     filter:     visible ? "blur(0px)" : "blur(8px)",
     transform:  visible ? "translateY(0)" : "translateY(16px)",
-    transition: `opacity 0.6s ease-out ${delay}, filter 0.6s ease-out ${delay}, transform 0.6s ease-out ${delay}`,
+    transition: `opacity 0.7s ease-out ${delay}, filter 0.7s ease-out ${delay}, transform 0.7s ease-out ${delay}`,
   });
 
   return (
-    <section className="bg-[#F9F9F9] py-3.5 sm:py-11.5 lg:py-19.5">
-      <Container>
-
+    <section className="bg-[#F5F5F7] py-[80px] md:py-[120px]">
+      <div className="max-w-[980px] mx-auto px-6">
         <div
           ref={cardRef}
-          className="relative overflow-hidden rounded-[23px] bg-linear-to-br from-[#FAEAE2] via-[#FAEAE2] via-90% to-[#E2A383]"
-          style={{ height: 773, padding: "49px 64px 0", ...animStyle(cardVisible, "0.1s") }}
+          className="relative overflow-hidden bg-white rounded-3xl shadow-sm"
+          style={{
+            height: 773,
+            padding: "52px 64px 0",
+            ...animStyle(cardVisible, "0.1s"),
+          }}
         >
 
           {/* TEXT BLOCK */}
-          <div className="flex flex-col" style={{ maxWidth: 500 }}>
-
-            <p className="text-xs sm:text-sm tracking-widest uppercase text-black mb-4">
+          <div className="flex flex-col" style={{ maxWidth: 480 }}>
+            <p className="text-[12px] font-semibold tracking-[0.1em] uppercase text-[#6E6E73] mb-5">
               Available everywhere
             </p>
 
-            <h2 className="text-[96px] font-normal tracking-[-0.02em] leading-tight whitespace-nowrap text-[#1C274C] mb-6" style={{ fontFamily: cambo.style.fontFamily }}>
-              Travel like a boss
+            <h2
+              className="font-semibold leading-none text-[#1D1D1F] mb-6"
+              style={{
+                fontSize: "clamp(56px, 6vw, 96px)",
+                letterSpacing: "-0.02em",
+                fontFamily: cambo.style.fontFamily,
+              }}
+            >
+              Travel like
+              <br />a boss
             </h2>
 
-            <p className="text-sm sm:text-base md:text-lg text-black mb-4">
+            <p className="text-[17px] text-[#6E6E73] mb-6 leading-[1.47]">
               MapsGPT is your local guide in your pocket.
             </p>
 
-            <ul className="space-y-4 list-none pl-0 text-black mb-8" style={{ fontSize: "20px" }}>
-              <li className="flex items-center gap-5">
-                <span className="rounded-full bg-black w-2 h-2 shrink-0 bullet-halo-dark" aria-hidden />
-                <span>Plan cool trips</span>
-              </li>
-              <li className="flex items-center gap-5">
-                <span className="rounded-full bg-black w-2 h-2 shrink-0 bullet-halo-dark" aria-hidden />
-                <span>Make itineraries</span>
-              </li>
-              <li className="flex items-center gap-5">
-                <span className="rounded-full bg-black w-2 h-2 shrink-0 bullet-halo-dark" aria-hidden />
-                <span>Take care of every preference &<br />detail</span>
-              </li>
+            <ul className="space-y-3.5 list-none pl-0">
+              {[
+                "Plan cool trips",
+                "Make itineraries",
+                "Take care of every preference & detail",
+              ].map((item, i) => (
+                <li key={i} className="flex items-center gap-4 text-[17px]">
+                  <span className="rounded-full bg-[#1D1D1F]/30 w-[5px] h-[5px] shrink-0" aria-hidden />
+                  <span className="text-[#1D1D1F]">{item}</span>
+                </li>
+              ))}
             </ul>
-
-
           </div>
 
-          {/* BUTTONS — absolute bottom like Section F */}
+          {/* BUTTONS */}
           <div className="absolute" style={{ bottom: 62, left: 64 }}>
-            <p className="text-black mb-8" style={{ fontSize: "20px" }}>
+            <p className="text-[#6E6E73] mb-6 text-[17px] leading-[1.47]">
               Find your next hang out spot, easier.
             </p>
-
-            <div className="flex flex-row" style={{ gap: 15 }}>
+            <div className="flex flex-row items-center gap-4">
               <Link
                 href="/maps-gpt"
-                className="bg-white rounded-xs text-[20px] font-semibold text-[#1C274C] inline-flex items-center justify-center"
-                style={{ width: 190, height: 46 }}
+                className="text-[#4F46E5] text-[20px] hover:underline"
               >
-                Try it out now ↗
+                Try it out now ›
               </Link>
-
               <Link
                 href="/technology"
-                className="rounded-xs text-[20px] font-semibold text-[#1C274C] inline-flex items-center px-3 bg-transparent hover:bg-[#1C274C]/5 transition-colors"
-                style={{ height: 46 }}
+                className="bg-[#4F46E5] text-white text-[17px] font-normal rounded-full px-[22px] py-[11px] hover:bg-[#4338CA] transition-colors inline-flex items-center"
               >
-                Learn more <span style={{ marginLeft: 7 }}>↗</span>
+                Get started
               </Link>
             </div>
           </div>
 
           {/* DESKTOP UI */}
           <div
-            className="absolute bottom-0 right-0"
+            className="absolute bottom-0 right-0 rounded-tl-2xl overflow-hidden"
             style={{
               width: 997,
               height: 571,
-              borderRadius: "6px 0 0 0",
-              overflow: "hidden",
-              border: "7px solid rgba(0,0,0,0.15)",
-              boxShadow: "0 40px 120px rgba(0,0,0,0.25)",
+              boxShadow: "0 20px 80px rgba(0,0,0,0.08)",
             }}
           >
-            <Image
-              src="/emoji/desk.png"
-              alt="Desktop UI"
-              fill
-              className="object-cover"
-            />
+            <Image src="/emoji/desk.png" alt="Desktop UI" fill className="object-cover" />
           </div>
 
           {/* MOBILE UI */}
           <div
-            className="absolute bottom-0"
+            className="absolute bottom-0 rounded-t-2xl overflow-hidden"
             style={{
               right: 15,
               width: 266,
               height: 579,
-              borderRadius: 28,
-              overflow: "hidden",
-              boxShadow: "0 40px 140px rgba(0,0,0,0.35)",
+              boxShadow: "0 20px 80px rgba(0,0,0,0.1)",
             }}
           >
-            <Image
-              src="/emoji/mob.png"
-              alt="Mobile UI"
-              fill
-              className="object-cover"
-            />
+            <Image src="/emoji/mob.png" alt="Mobile UI" fill className="object-cover" />
           </div>
 
         </div>
-
-      </Container>
+      </div>
     </section>
   );
 };

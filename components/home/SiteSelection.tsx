@@ -1,10 +1,8 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { Container } from "@/components/layout/Container";
-import glassStyles from "@/components/ui/GlassButton.module.css";
-import { cambo } from "@/app/fonts";
 
 export const SiteSelection = () => {
   const titleRef = useRef<HTMLHeadingElement>(null);
@@ -17,7 +15,7 @@ export const SiteSelection = () => {
       if (!el) return () => {};
       const obs = new IntersectionObserver(
         ([entry]) => { if (entry.isIntersecting) { onVisible(); obs.disconnect(); } },
-        { threshold: 0, rootMargin: "0px 0px -18% 0px" }
+        { threshold: 0, rootMargin: "0px 0px -12% 0px" }
       );
       obs.observe(el);
       return () => obs.disconnect();
@@ -33,181 +31,140 @@ export const SiteSelection = () => {
     opacity:    visible ? 1 : 0,
     filter:     visible ? "blur(0px)" : "blur(8px)",
     transform:  visible ? "translateY(0)" : "translateY(16px)",
-    transition: `opacity 0.6s ease-out ${delay}, filter 0.6s ease-out ${delay}, transform 0.6s ease-out ${delay}`,
+    transition: `opacity 0.7s ease-out ${delay}, filter 0.7s ease-out ${delay}, transform 0.7s ease-out ${delay}`,
   });
 
   return (
-    <section className="bg-[#FFFFFF] py-16 sm:py-24 lg:py-32">
-      <Container>
+    <section className="bg-[#FFFFFF] py-[80px] md:py-[120px]">
+      <div className="max-w-[980px] mx-auto px-6">
 
-        {/* Outer wrapper — blobs positioned relative to both title and card */}
-        <div className="relative">
-
-          {/* Blob A: just to the right of the title text — small, vivid */}
-          <div className="absolute pointer-events-none" style={{
-            left: 420, top: 10,
-            width: 160, height: 130, borderRadius: "50%",
-            background: "radial-gradient(ellipse, #33B1EA 0%, #5A83EC 55%, transparent 100%)",
-            filter: "blur(52.4px)", zIndex: 0,
-            animation: "intro-blob-A 9s linear infinite",
-            opacity: titleVisible ? 0.85 : 0,
-            transition: "opacity 0.8s ease-out 0.7s",
-          }} />
-
-          {/* Blob B: right at the top-left corner of the card */}
-          <div className="absolute pointer-events-none" style={{
-            left: -40, top: 48,
-            width: 260, height: 220, borderRadius: "50%",
-            background: "radial-gradient(ellipse, #73E277 0%, #68E9BC 55%, transparent 100%)",
-            filter: "blur(52.4px)", zIndex: 0,
-            animation: "intro-blob-B 11s linear infinite",
-            animationDelay: "-4s",
-            opacity: titleVisible ? 0.52 : 0,
-            transition: "opacity 0.8s ease-out 0.7s",
-          }} />
-
-          {/* Blob C: bottom-right corner of the card */}
-          <div className="absolute pointer-events-none" style={{
-            right: -55, bottom: -35,
-            width: 300, height: 250, borderRadius: "50%",
-            background: "radial-gradient(ellipse, #33B1EA 0%, #9973E2 33%, #E96890 66%, #EC5A67 100%)",
-            filter: "blur(52.4px)", zIndex: 0,
-            animation: "intro-blob-C 13s linear infinite",
-            animationDelay: "-7s",
-            opacity: titleVisible ? 0.7 : 0,
-            transition: "opacity 0.8s ease-out 0.7s",
-          }} />
-
-          {/* Title + New badge */}
-          <div className="relative mb-4.75 lg:mb-6.75 flex items-center gap-4" style={{ ...animStyle(titleVisible, "0.1s"), zIndex: 1 }}>
-            <h2
-              ref={titleRef}
-              className="font-semibold text-[#242424]"
-              style={{ fontSize: "40px" }}
-            >
-              + Introducing Columbus
-            </h2>
-
-            {/* Glass "New" badge */}
-            <div className={glassStyles.wrap + " " + glassStyles.wrapNew}>
-              <div className={glassStyles.shadow} />
-              <button className={glassStyles.btn + " " + glassStyles.btnNew}>
-                <span>New</span>
-              </button>
-            </div>
-          </div>
-
+        {/* Centered intro */}
         <div
-          ref={cardRef}
-          data-navbar-theme="dark"
-          className="relative overflow-hidden"
-          style={{
-            height: 773,
-            padding: "49px 64px 0",
-            background: "linear-gradient(314.26deg, rgba(10, 19, 66, 0.9) -6.86%, rgba(29, 59, 94, 0.9) 108.55%)",
-            borderRadius: "23px",
-            ...animStyle(cardVisible, "0.25s"),
-          }}
+          className="text-center mb-12"
+          style={animStyle(titleVisible, "0.05s")}
         >
-
-          {/* Noise texture overlay — Figma: Mono, size 1.5, density 100%, #000000 at 25% opacity */}
-          <div
-            className="absolute inset-0 pointer-events-none"
-            style={{
-              zIndex: 0,
-              opacity: 0.25,
-              backgroundImage: `url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4' stitchTiles='stitch' result='t'/><feColorMatrix type='matrix' values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0' in='t'/></filter><rect width='200' height='200' filter='url(%23n)'/></svg>")`,
-              backgroundSize: "200px 200px",
-              backgroundRepeat: "repeat",
-            }}
-          />
-
-          {/* Heading */}
+          <p className="text-[17px] font-semibold text-[#6E6E73] mb-4">
+            Product
+          </p>
           <h2
-            className={`${cambo.className} font-normal leading-none text-white`}
-            style={{ fontSize: "96px", letterSpacing: "-0.02em" }}
+            ref={titleRef}
+            className="text-[48px] md:text-[56px] font-semibold tracking-[-0.003em] leading-[1.07] text-[#1D1D1F] text-center"
           >
             Site Selection Reimagined
           </h2>
+          <p className="text-[21px] md:text-[24px] font-normal leading-[1.38] text-[#6E6E73] text-center max-w-[600px] mx-auto mt-4">
+            An entirely new way to explore, analyze, and decide.
+          </p>
+        </div>
 
-          {/* Bullet points — anchored to top of desktop image */}
-          <div className="absolute text-white" style={{ top: 202, left: 64, right: 1072 }}>
-            <ul className="space-y-4 text-white list-none pl-0" style={{ fontSize: "20px" }}>
-              <li className="flex items-center gap-5">
-                <span className="rounded-full bg-white w-2 h-2 shrink-0 bullet-halo" aria-hidden />
-                <span>An end-to-end Site Selection tool.</span>
-              </li>
-              <li className="flex items-center gap-5">
-                <span className="rounded-full bg-white w-2 h-2 shrink-0 bullet-halo" aria-hidden />
-                <span>Generate new maps, in seconds.</span>
-              </li>
-              <li className="flex items-center gap-5">
-                <span className="rounded-full bg-white w-2 h-2 shrink-0 bullet-halo" aria-hidden />
-                <span>Find exclusive critical datasets for your decisions.</span>
-              </li>
-              <li className="flex items-center gap-5">
-                <span className="rounded-full bg-white w-2 h-2 shrink-0 bullet-halo" aria-hidden />
-                <span>Cheaper due diligence.</span>
-              </li>
+        {/* Large feature card */}
+        <div
+          ref={cardRef}
+          className="relative overflow-hidden rounded-3xl bg-[#F5F5F7]"
+          style={{
+            minHeight: 680,
+            ...animStyle(cardVisible, "0.2s"),
+          }}
+        >
+          {/* Text content - top left */}
+          <div className="relative z-10 p-10 md:p-14 lg:p-16 max-w-[420px]">
+            {/* Bullet points */}
+            <ul className="space-y-4 mb-10">
+              {[
+                "An end-to-end Site Selection tool.",
+                "Generate new maps, in seconds.",
+                "Find exclusive critical datasets for your decisions.",
+                "Cheaper due diligence.",
+              ].map((item, i) => (
+                <li key={i} className="flex items-start gap-3">
+                  <span className="mt-[10px] w-[5px] h-[5px] rounded-full bg-[#6E6E73] shrink-0" aria-hidden />
+                  <span className="text-[17px] font-normal leading-[1.47] text-[#1D1D1F]">{item}</span>
+                </li>
+              ))}
             </ul>
-          </div>
 
-          {/* Paragraph + button — button bottom sits 62px from card bottom edge */}
-          <div className="absolute text-white" style={{ bottom: 62, left: 64, right: 1072 }}>
-            <p className="text-white mb-8" style={{ fontSize: "20px" }}>
+            {/* Super-explorer tagline */}
+            <p className="text-[17px] leading-[1.47] text-[#6E6E73] mb-8">
               Columbus turns you into a{" "}
-              <br />
-              <span className="font-semibold text-white">super-explorer.</span>
+              <span className="font-semibold text-[#6E6E73]">super-explorer.</span>
             </p>
 
-            <button className="bg-white text-[#13214C] rounded-xs text-[20px] font-semibold" style={{ width: 226, height: 46 }}>
-              Check it out <span style={{ marginLeft: 7 }}>→</span>
-            </button>
+            {/* CTA links + pill button */}
+            <div className="flex flex-wrap items-center gap-4">
+              <Link
+                href="/platform"
+                className="bg-[#4F46E5] text-white rounded-full px-[22px] py-[11px] text-[17px] font-normal hover:bg-[#4338CA] transition-colors"
+              >
+                Start now
+              </Link>
+              <Link
+                href="/technology"
+                className="text-[#4F46E5] text-[20px] hover:underline transition-colors"
+              >
+                Learn more &#8250;
+              </Link>
+              <Link
+                href="/platform"
+                className="text-[#4F46E5] text-[20px] hover:underline transition-colors"
+              >
+                Try it now &#8250;
+              </Link>
+            </div>
           </div>
 
-          {/* DESKTOP UI — Figma: 997×571 */}
+          {/* DESKTOP UI mockup */}
           <div
-            className="absolute bottom-0 right-0"
+            className="absolute bottom-0 right-0 z-10 hidden md:block"
             style={{
-              width: 997,
-              height: 571,
-              borderRadius: "6px 0 0 0",
+              width: "62%",
+              height: "75%",
               overflow: "hidden",
-              border: "7px solid rgba(0,0,0,0.30)",
-              boxShadow: "0 40px 120px rgba(0,0,0,0.45)",
+              borderTopLeftRadius: 12,
+              boxShadow: "0 40px 120px rgba(0,0,0,0.08), 0 0 60px rgba(0,0,0,0.04)",
             }}
           >
             <Image
               src="/Icon/desktop-ui.png"
               alt="Desktop UI"
               fill
-              className="object-cover"
+              className="object-cover object-top-left rounded-tl-xl"
             />
           </div>
 
-          {/* MOBILE UI — Figma: 266×579 */}
+          {/* MOBILE UI mockup */}
           <div
-            className="absolute bottom-0"
+            className="absolute bottom-0 z-20 hidden md:block"
             style={{
-              right: 15,
-              width: 266,
-              height: 579,
-              borderRadius: 28,
+              right: 16,
+              width: 200,
+              height: "78%",
               overflow: "hidden",
-              boxShadow: "0 40px 140px rgba(0,0,0,0.55)",
+              borderRadius: 20,
+              boxShadow: "0 40px 140px rgba(0,0,0,0.10)",
             }}
           >
             <Image
               src="/Icon/mobile-ui.png"
               alt="Mobile UI"
               fill
-              className="object-cover"
+              className="object-cover rounded-[20px]"
             />
           </div>
 
+          {/* Mobile-only stacked images */}
+          <div className="block md:hidden px-6 pb-6">
+            <div className="relative w-full h-[300px] rounded-2xl overflow-hidden shadow-sm">
+              <Image
+                src="/Icon/desktop-ui.png"
+                alt="Desktop UI"
+                fill
+                className="object-cover rounded-2xl"
+              />
+            </div>
+          </div>
         </div>
-        </div>{/* end outer blob wrapper */}
-      </Container>
+
+      </div>
     </section>
   );
 };
