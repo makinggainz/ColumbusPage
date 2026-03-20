@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState, useRef, useCallback } from "react";
-import Link from "next/link";
 
 /* Ripple in world-space (on the XZ ground plane) */
 interface Ripple {
@@ -237,8 +236,8 @@ const WaveMesh = () => {
   return (
     <canvas
       ref={canvasRef}
-      className="absolute inset-0 w-full h-full"
-      style={{ zIndex: 0 }}
+      className="absolute left-0 right-0 w-full h-full"
+      style={{ zIndex: 0, top: 350 }}
       aria-hidden
     />
   );
@@ -286,20 +285,7 @@ export const Hero = () => {
       />
 
       {/* Content — sits above the mesh */}
-      <div className="relative z-10 flex flex-col items-center text-center px-6 w-full max-w-[1024px] mx-auto">
-
-        {/* Eyebrow */}
-        <p
-          style={{
-            color: "#6E6E73",
-            fontSize: 17,
-            fontWeight: 600,
-            marginBottom: 16,
-            ...fadeIn(0),
-          }}
-        >
-          The frontier AI lab
-        </p>
+      <div className="relative z-10 flex flex-col items-center text-center px-6 w-full max-w-[1024px] mx-auto" style={{ marginTop: -100 }}>
 
         {/* Main Heading */}
         <h1
@@ -325,47 +311,6 @@ export const Hero = () => {
             Large Geospatial Model.
           </span>
         </h1>
-
-        {/* Subtitle */}
-        <p
-          className="text-[21px] md:text-[28px] text-center"
-          style={{
-            color: "#6E6E73",
-            fontWeight: 400,
-            lineHeight: 1.38,
-            marginTop: 16,
-            ...fadeIn(200),
-          }}
-        >
-          Intelligence for the physical world.
-        </p>
-
-        {/* CTA Links */}
-        <div
-          className="flex items-center gap-8 mt-8"
-          style={fadeIn(340)}
-        >
-          <Link
-            href="/technology"
-            className="hover:underline transition-all duration-200"
-            style={{
-              color: "#4F46E5",
-              fontSize: 20,
-            }}
-          >
-            Learn more &#x203A;
-          </Link>
-          <Link
-            href="/platform"
-            className="hover:underline transition-all duration-200"
-            style={{
-              color: "#4F46E5",
-              fontSize: 20,
-            }}
-          >
-            Start now &#x203A;
-          </Link>
-        </div>
 
       </div>
     </section>
