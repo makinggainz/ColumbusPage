@@ -3,15 +3,15 @@
 import { useEffect, useState, useRef, useCallback } from "react";
 import Link from "next/link";
 
-/* ── Wave Mesh Canvas ── */
-/* Ripple dropped by mouse movement */
+/* Ripple in world-space (on the XZ ground plane) */
 interface Ripple {
-  x: number;
-  y: number;
-  t: number;        // time of creation (seconds)
-  strength: number;  // amplitude
+  wx: number;
+  wz: number;
+  t: number;
+  strength: number;
 }
 
+/* ── 3D Perspective Wave Mesh ── */
 const WaveMesh = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const mouseRef = useRef({ x: -9999, y: -9999 });
@@ -38,114 +38,170 @@ const WaveMesh = () => {
     ctx.clearRect(0, 0, W, H);
 
     const t = performance.now() * 0.001;
-    const mx = mouseRef.current.x;
-    const my = mouseRef.current.y;
+    const smx = mouseRef.current.x;
+    const smy = mouseRef.current.y;
 
-    // Spawn ripples as the mouse moves
+    // ── 3D Projection Setup ──
+    const fov = 700;
+    const horizonY = H * 0.38;       // horizon line on screen
+    const cameraHeight = 180;        // camera above ground plane
+    const cellSize = 28;             // world-space grid spacing
+    const gridCols = 100;
+    const gridRows = 70;
+    // Project world (wx, wy, wz) → screen (sx, sy)
+    // wy = height (positive = up = lower on screen in our projection)
+    const project = (wx: number, wy: number, wz: number): { sx: number; sy: number } | null => {
+      if (wz <= 1) return null; // behind camera
+      const sx = (wx * fov) / wz + W / 2;
+      const sy = ((-wy + cameraHeight) * fov) / wz + horizonY;
+      return { sx, sy };
+    };
+
+    // Unproject screen mouse → world XZ plane (wy=0)
+    const unproject = (screenX: number, screenY: number): { wx: number; wz: number } | null => {
+      const wz = (cameraHeight * fov) / (screenY - horizonY);
+      if (wz <= 1 || wz > 5000) return null;
+      const wx = ((screenX - W / 2) * wz) / fov;
+      return { wx, wz };
+    };
+
+    // Spawn ripples from mouse in world-space
     const pmx = prevMouseRef.current.x;
     const pmy = prevMouseRef.current.y;
-    const mouseDist = Math.sqrt((mx - pmx) ** 2 + (my - pmy) ** 2);
-    if (mx > -999 && mouseDist > 20) {
-      ripplesRef.current.push({ x: mx, y: my, t, strength: Math.min(mouseDist * 0.15, 18) });
-      prevMouseRef.current = { x: mx, y: my };
+    const screenDist = Math.sqrt((smx - pmx) ** 2 + (smy - pmy) ** 2);
+    if (smx > -999 && smy > horizonY && screenDist > 15) {
+      const wp = unproject(smx, smy);
+      if (wp) {
+        ripplesRef.current.push({ wx: wp.wx, wz: wp.wz, t, strength: Math.min(screenDist * 0.3, 25) });
+      }
+      prevMouseRef.current = { x: smx, y: smy };
     }
 
-    // Expire old ripples (live ~3 seconds)
-    ripplesRef.current = ripplesRef.current.filter((r) => t - r.t < 3);
+    // Expire old ripples
+    ripplesRef.current = ripplesRef.current.filter((r) => t - r.t < 4);
 
-    const spacing = 48;
-    const cols = Math.ceil(W / spacing) + 2;
-    const rows = Math.ceil(H / spacing) + 2;
-    const offsetX = (W - (cols - 1) * spacing) / 2;
-    const offsetY = (H - (rows - 1) * spacing) / 2;
+    // Mouse world position for proximity push
+    let mouseWorld: { wx: number; wz: number } | null = null;
+    if (smx > -999 && smy > horizonY) {
+      mouseWorld = unproject(smx, smy);
+    }
 
-    // Build displaced grid
-    const points: { x: number; y: number }[][] = [];
-    for (let r = 0; r < rows; r++) {
-      points[r] = [];
-      for (let c = 0; c < cols; c++) {
-        const bx = offsetX + c * spacing;
-        const by = offsetY + r * spacing;
+    // Ocean drift
+    const drift = t * 40;
+    const driftZ = t * 12;
 
-        // Layered wave displacement (ocean-like)
-        const wave1 = Math.sin(bx * 0.008 + t * 0.6) * Math.cos(by * 0.006 + t * 0.4) * 6;
-        const wave2 = Math.sin(bx * 0.012 - t * 0.35 + 1.2) * Math.cos(by * 0.01 + t * 0.25) * 4;
-        const wave3 = Math.sin((bx + by) * 0.005 + t * 0.5) * 3;
+    // ── Build 3D grid with wave height ──
+    const grid: ({ sx: number; sy: number; wy: number } | null)[][] = [];
 
-        let dx = wave1 * 0.5 + wave2 * 0.3;
-        let dy = wave1 + wave2 + wave3;
+    for (let r = 0; r < gridRows; r++) {
+      grid[r] = [];
+      for (let c = 0; c < gridCols; c++) {
+        const wx = (c - gridCols / 2) * cellSize;
+        const wz = (r + 2) * cellSize; // depth starts near camera
 
-        // Mouse proximity — gentle push
-        const distX = bx - mx;
-        const distY = by - my;
-        const dist = Math.sqrt(distX * distX + distY * distY);
-        const influence = Math.max(0, 1 - dist / 200);
-        if (influence > 0) {
-          const angle = Math.atan2(distY, distX);
-          const push = influence * influence * 18;
-          dx += Math.cos(angle) * push;
-          dy += Math.sin(angle) * push;
-        }
+        // Sample waves with drift
+        const swx = wx + drift;
+        const swz = wz + driftZ;
 
-        // Ripple contributions — expanding rings that displace points
-        for (const rip of ripplesRef.current) {
-          const rdx = bx - rip.x;
-          const rdy = by - rip.y;
-          const rdist = Math.sqrt(rdx * rdx + rdy * rdy);
-          const age = t - rip.t;
-          const speed = 280;
-          const waveRadius = age * speed;
-          const ringDist = Math.abs(rdist - waveRadius);
-          const ringWidth = 120;
+        // Layered ocean waves
+        const wave1 = Math.sin(swx * 0.006 + t * 1.2) * Math.cos(swz * 0.008 + t * 0.7) * 14;
+        const wave2 = Math.sin(swx * 0.01 - t * 0.8 + 1.5) * Math.cos(swz * 0.012 + t * 0.45) * 8;
+        const wave3 = Math.sin((swx + swz) * 0.004 + t * 0.9) * 6;
+        const wave4 = Math.sin(swx * 0.02 + t * 2.0) * Math.cos(swz * 0.018 + t * 1.1) * 3;
 
-          if (ringDist < ringWidth) {
-            const fade = Math.max(0, 1 - age / 3);
-            const ringFade = 1 - ringDist / ringWidth;
-            const amp = rip.strength * fade * ringFade * ringFade;
-            const ripplePhase = Math.sin((rdist - waveRadius) * 0.04);
-            const angle = Math.atan2(rdy, rdx);
-            dx += Math.cos(angle) * ripplePhase * amp;
-            dy += Math.sin(angle) * ripplePhase * amp;
+        let wy = wave1 + wave2 + wave3 + wave4;
+
+        // Mouse proximity push (in world space)
+        if (mouseWorld) {
+          const dx = wx - mouseWorld.wx;
+          const dz = wz - mouseWorld.wz;
+          const dist = Math.sqrt(dx * dx + dz * dz);
+          const influence = Math.max(0, 1 - dist / 250);
+          if (influence > 0) {
+            wy += influence * influence * 35; // push up near mouse
           }
         }
 
-        points[r][c] = { x: bx + dx, y: by + dy };
+        // Ripple contributions in world space
+        for (const rip of ripplesRef.current) {
+          const rdx = wx - rip.wx;
+          const rdz = wz - rip.wz;
+          const rdist = Math.sqrt(rdx * rdx + rdz * rdz);
+          const age = t - rip.t;
+          const speed = 200;
+          const waveRadius = age * speed;
+          const ringDist = Math.abs(rdist - waveRadius);
+          const ringWidth = 140;
+          if (ringDist < ringWidth) {
+            const fade = Math.max(0, 1 - age / 4);
+            const ringFade = 1 - ringDist / ringWidth;
+            const amp = rip.strength * fade * ringFade * ringFade;
+            wy += Math.sin((rdist - waveRadius) * 0.05) * amp;
+          }
+        }
+
+        const p = project(wx, wy, wz);
+        grid[r][c] = p ? { sx: p.sx, sy: p.sy, wy } : null;
       }
     }
 
-    // Draw lines
-    ctx.strokeStyle = "rgba(55,40,140,0.18)";
-    ctx.lineWidth = 0.8;
+    // ── Draw grid lines (back to front for correct overlap) ──
 
-    // Horizontal
-    for (let r = 0; r < rows; r++) {
+    // Depth lines (along Z — running into the distance)
+    for (let c = 0; c < gridCols; c++) {
       ctx.beginPath();
-      for (let c = 0; c < cols; c++) {
-        const p = points[r][c];
-        if (c === 0) ctx.moveTo(p.x, p.y);
-        else ctx.lineTo(p.x, p.y);
+      let started = false;
+      for (let r = gridRows - 1; r >= 0; r--) {
+        const p = grid[r][c];
+        if (!p) continue;
+        // Fade with distance
+        const depthT = r / gridRows;
+        const alpha = 0.04 + depthT * 0.14;
+        ctx.strokeStyle = `rgba(55,40,140,${alpha.toFixed(3)})`;
+        ctx.lineWidth = 0.4 + depthT * 0.5;
+        if (!started) {
+          ctx.moveTo(p.sx, p.sy);
+          started = true;
+        } else {
+          ctx.lineTo(p.sx, p.sy);
+        }
       }
       ctx.stroke();
     }
 
-    // Vertical
-    for (let c = 0; c < cols; c++) {
+    // Cross lines (along X — left to right at each depth)
+    for (let r = 0; r < gridRows; r++) {
+      const depthT = r / gridRows;
+      const alpha = 0.04 + depthT * 0.16;
+      ctx.strokeStyle = `rgba(55,40,140,${alpha.toFixed(3)})`;
+      ctx.lineWidth = 0.4 + depthT * 0.6;
+
       ctx.beginPath();
-      for (let r = 0; r < rows; r++) {
-        const p = points[r][c];
-        if (r === 0) ctx.moveTo(p.x, p.y);
-        else ctx.lineTo(p.x, p.y);
+      let started = false;
+      for (let c = 0; c < gridCols; c++) {
+        const p = grid[r][c];
+        if (!p) continue;
+        if (!started) {
+          ctx.moveTo(p.sx, p.sy);
+          started = true;
+        } else {
+          ctx.lineTo(p.sx, p.sy);
+        }
       }
       ctx.stroke();
     }
 
-    // Dots at intersections
-    ctx.fillStyle = "rgba(55,40,140,0.22)";
-    for (let r = 0; r < rows; r++) {
-      for (let c = 0; c < cols; c++) {
-        const p = points[r][c];
+    // Dots at close intersections only (front rows)
+    for (let r = Math.floor(gridRows * 0.5); r < gridRows; r++) {
+      const depthT = r / gridRows;
+      const alpha = 0.06 + depthT * 0.2;
+      ctx.fillStyle = `rgba(55,40,140,${alpha.toFixed(3)})`;
+      for (let c = 0; c < gridCols; c++) {
+        const p = grid[r][c];
+        if (!p) continue;
+        const radius = 0.6 + depthT * 1.0;
         ctx.beginPath();
-        ctx.arc(p.x, p.y, 1.2, 0, Math.PI * 2);
+        ctx.arc(p.sx, p.sy, radius, 0, Math.PI * 2);
         ctx.fill();
       }
     }
@@ -210,29 +266,26 @@ export const Hero = () => {
       style={{
         background: "#FFFFFF",
         minHeight: "100vh",
-        paddingTop: 140,
-        paddingBottom: 100,
+        paddingTop: 120,
+        paddingBottom: 60,
       }}
     >
-      {/* Wave mesh background */}
+      {/* 3D perspective wave mesh */}
       <WaveMesh />
 
-      {/* Soft radial glow behind text */}
+      {/* White fade at horizon line so mesh blends cleanly */}
       <div
-        className="absolute pointer-events-none"
+        className="absolute left-0 right-0 pointer-events-none"
         style={{
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-          width: 1100,
-          height: 900,
-          background: "radial-gradient(ellipse at center, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.5) 35%, rgba(79,70,229,0.03) 55%, transparent 75%)",
+          top: "30%",
+          height: "15%",
+          background: "linear-gradient(to bottom, #FFFFFF, transparent)",
           zIndex: 1,
         }}
         aria-hidden
       />
 
-      {/* Content */}
+      {/* Content — sits above the mesh */}
       <div className="relative z-10 flex flex-col items-center text-center px-6 w-full max-w-[1024px] mx-auto">
 
         {/* Eyebrow */}
