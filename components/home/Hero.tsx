@@ -67,7 +67,7 @@ export const Hero = () => {
             ...fadeIn(0),
           }}
         >
-          Columbus Earth
+          The frontier AI lab
         </p>
 
         {/* Main Heading */}
@@ -85,13 +85,7 @@ export const Hero = () => {
             className="block text-[40px] md:text-[80px]"
             style={{ fontWeight: 600, letterSpacing: "-0.003em", lineHeight: 1.05 }}
           >
-            The frontier AI lab
-          </span>
-          <span
-            className="block text-[40px] md:text-[80px]"
-            style={{ fontWeight: 600, letterSpacing: "-0.003em", lineHeight: 1.05 }}
-          >
-            building the first in&#8209;production
+            The first in&#8209;production
           </span>
           <span
             className="block text-[40px] md:text-[80px]"
