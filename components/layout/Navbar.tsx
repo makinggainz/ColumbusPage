@@ -70,9 +70,10 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
         return () => window.removeEventListener("mousemove", handleMouseMove);
     }, [isCompactMenuOpen, isCompactManuallyToggled]);
 
-    // ── Primary nav handlers ──────────────────────────────────────────
+    // ── Primary nav handlers (dropdown disabled) ─────────────────────
     const handleMouseEnter = () => {
-        if (!isManuallyToggled) setIsMenuOpen(true);
+        // Dropdown disabled — uncomment to re-enable:
+        // if (!isManuallyToggled) setIsMenuOpen(true);
     };
     const handleMouseLeave = (e: React.MouseEvent) => {
         if (isManuallyToggled) return;
@@ -82,17 +83,19 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
         setIsMenuOpen(false);
     };
     const handleHamburgerClick = () => {
-        setIsManuallyToggled(true);
-        setIsMenuOpen(!isMenuOpen);
+        // Dropdown disabled — uncomment to re-enable:
+        // setIsManuallyToggled(true);
+        // setIsMenuOpen(!isMenuOpen);
     };
     const handleNavMouseEnter = () => {
         if (isManuallyToggled && !isMenuOpen) setIsManuallyToggled(false);
         handleMouseEnter();
     };
 
-    // ── Compact nav handlers ──────────────────────────────────────────
+    // ── Compact nav handlers (dropdown disabled) ─────────────────────
     const handleCompactMouseEnter = () => {
-        if (!isCompactManuallyToggled) setIsCompactMenuOpen(true);
+        // Dropdown disabled — uncomment to re-enable:
+        // if (!isCompactManuallyToggled) setIsCompactMenuOpen(true);
     };
     const handleCompactMouseLeave = (e: React.MouseEvent) => {
         if (isCompactManuallyToggled) return;
@@ -102,8 +105,9 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
         setIsCompactMenuOpen(false);
     };
     const handleCompactHamburgerClick = () => {
-        setIsCompactManuallyToggled(true);
-        setIsCompactMenuOpen(!isCompactMenuOpen);
+        // Dropdown disabled — uncomment to re-enable:
+        // setIsCompactManuallyToggled(true);
+        // setIsCompactMenuOpen(!isCompactMenuOpen);
     };
     const handleCompactNavMouseEnter = () => {
         if (isCompactManuallyToggled && !isCompactMenuOpen) setIsCompactManuallyToggled(false);
@@ -188,17 +192,14 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
                             {/* Center: Navigation Links */}
                             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                                 <div className={`hidden items-center gap-9 min-[1155px]:flex pointer-events-auto transition-opacity duration-300 ${!isScrolled && !isMenuOpen ? "opacity-70" : ""}`}>
-                                    <Link href="#" className="group relative text-md font-medium transition-opacity duration-300 hover:opacity-70" onMouseEnter={handleNavMouseEnter}>
+                                    <Link href="#" className="text-md font-medium transition-opacity duration-300 hover:opacity-70" onMouseEnter={handleNavMouseEnter}>
                                         Product
-                                        <span className="absolute left-0 -bottom-1 h-px w-0 transition-all duration-300 group-hover:w-full bg-current" />
                                     </Link>
-                                    <Link href="/use-cases" className="group relative text-md font-medium transition-opacity duration-300 hover:opacity-70" onMouseEnter={handleNavMouseEnter}>
+                                    <Link href="/use-cases" className="text-md font-medium transition-opacity duration-300 hover:opacity-70" onMouseEnter={handleNavMouseEnter}>
                                         Use Cases
-                                        <span className="absolute left-0 -bottom-1 h-px w-0 transition-all duration-300 group-hover:w-full bg-current" />
                                     </Link>
-                                    <Link href="/technology" className="group relative text-md font-medium transition-opacity duration-300 hover:opacity-70" onMouseEnter={handleNavMouseEnter}>
+                                    <Link href="/technology" className="text-md font-medium transition-opacity duration-300 hover:opacity-70" onMouseEnter={handleNavMouseEnter}>
                                         Technology
-                                        <span className="absolute left-0 -bottom-1 h-px w-0 transition-all duration-300 group-hover:w-full bg-current" />
                                     </Link>
                                 </div>
                             </div>
@@ -207,12 +208,10 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
                             <div className="col-start-3 flex items-center justify-end gap-3">
                                 <Link
                                     href="/maps-gpt"
-                                    className={`hidden min-[1155px]:flex items-center justify-center px-6 py-3.5 text-md font-semibold leading-none rounded-none border transition-opacity duration-300 hover:opacity-70 ${
-                                        isScrolled
-                                            ? "border-black bg-white text-black"
-                                            : isDark
+                                    className={`hidden min-[1155px]:flex items-center justify-center px-6 py-3.5 text-md font-semibold leading-none rounded-full border transition-opacity duration-300 hover:opacity-80 ${
+                                        isDark
                                             ? "border-white/50 bg-transparent text-white"
-                                            : "border-[#0A1344] bg-transparent text-[#0A1344]"
+                                            : "border-[#0A1344]/30 bg-transparent text-[#0A1344]"
                                     }`}
                                     onMouseEnter={handleNavMouseEnter}
                                 >
@@ -221,7 +220,7 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
                                 <button
                                     onClick={handleHamburgerClick}
                                     onMouseEnter={handleNavMouseEnter}
-                                    className={`relative flex h-11 w-11 items-center justify-center rounded-none border transition-all duration-300 ${isDark && !isMenuOpen ? "border-white/50" : "border-current"}`}
+                                    className={`relative flex h-11 w-11 items-center justify-center rounded-full border transition-opacity duration-300 hover:opacity-80 ${isDark ? "border-white/50" : "border-current/30"}`}
                                     aria-label="Toggle menu"
                                 >
                                     <div className={`absolute h-px w-5.5 bg-current transform-gpu transition-all duration-300 ease-in-out ${isMenuOpen ? "rotate-45" : "-translate-y-1.5"}`} />
@@ -376,17 +375,14 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
                             {/* Center: Navigation Links */}
                             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                                 <div className="hidden items-center gap-7 min-[1155px]:flex pointer-events-auto">
-                                    <Link href="#" className="group relative text-sm font-medium transition-opacity duration-300 hover:opacity-70" onMouseEnter={handleCompactNavMouseEnter}>
+                                    <Link href="#" className="text-sm font-medium transition-opacity duration-300 hover:opacity-70" onMouseEnter={handleCompactNavMouseEnter}>
                                         Product
-                                        <span className="absolute left-0 -bottom-0.5 h-px w-0 transition-all duration-300 group-hover:w-full bg-current" />
                                     </Link>
-                                    <Link href="/use-cases" className="group relative text-sm font-medium transition-opacity duration-300 hover:opacity-70" onMouseEnter={handleCompactNavMouseEnter}>
+                                    <Link href="/use-cases" className="text-sm font-medium transition-opacity duration-300 hover:opacity-70" onMouseEnter={handleCompactNavMouseEnter}>
                                         Use Cases
-                                        <span className="absolute left-0 -bottom-0.5 h-px w-0 transition-all duration-300 group-hover:w-full bg-current" />
                                     </Link>
-                                    <Link href="/technology" className="group relative text-sm font-medium transition-opacity duration-300 hover:opacity-70" onMouseEnter={handleCompactNavMouseEnter}>
+                                    <Link href="/technology" className="text-sm font-medium transition-opacity duration-300 hover:opacity-70" onMouseEnter={handleCompactNavMouseEnter}>
                                         Technology
-                                        <span className="absolute left-0 -bottom-0.5 h-px w-0 transition-all duration-300 group-hover:w-full bg-current" />
                                     </Link>
                                 </div>
                             </div>
@@ -395,10 +391,10 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
                             <div className="col-start-3 flex items-center justify-end gap-2">
                                 <Link
                                     href="/maps-gpt"
-                                    className={`hidden min-[1155px]:flex items-center justify-center h-10 px-4 text-sm font-semibold leading-none rounded-none border transition-opacity duration-300 hover:opacity-70 ${
+                                    className={`hidden min-[1155px]:flex items-center justify-center h-10 px-4 text-sm font-semibold leading-none rounded-full border transition-opacity duration-300 hover:opacity-80 ${
                                         isDark
-                                            ? "border-white/30 bg-white/10 text-white"
-                                            : "border-black/20 bg-black/5 text-[#111]"
+                                            ? "border-white/30 bg-transparent text-white"
+                                            : "border-black/20 bg-transparent text-[#111]"
                                     }`}
                                     onMouseEnter={handleCompactNavMouseEnter}
                                 >
@@ -407,7 +403,7 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
                                 <button
                                     onClick={handleCompactHamburgerClick}
                                     onMouseEnter={handleCompactNavMouseEnter}
-                                    className={`relative flex h-10 w-10 items-center justify-center rounded-none border transition-all duration-300 ${isDark && !isCompactMenuOpen ? "border-white/30" : "border-current"}`}
+                                    className={`relative flex h-10 w-10 items-center justify-center rounded-full border transition-opacity duration-300 hover:opacity-80 ${isDark ? "border-white/30" : "border-current/30"}`}
                                     aria-label="Toggle menu"
                                 >
                                     <div className={`absolute h-px w-4.5 bg-current transform-gpu transition-all duration-300 ease-in-out ${isCompactMenuOpen ? "rotate-45" : "-translate-y-1.25"}`} />
