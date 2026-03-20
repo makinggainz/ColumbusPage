@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useEffect, useState, useRef } from "react";
 
 import { ScrambleText } from "@/components/ui/ScrambleText";
+import { geist } from "@/app/fonts";
 
 const COMPACT_THRESHOLD = 80;
 
@@ -184,7 +185,7 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
                                         priority
                                     />
                                 </div>
-                                <span className="brand-wordmark text-2xl font-medium leading-none tracking-tight">
+                                <span className={`${geist.className} text-2xl font-medium leading-none tracking-tight`}>
                                     Columbus Earth
                                 </span>
                             </Link>
@@ -367,7 +368,7 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
                                         className="object-contain"
                                     />
                                 </div>
-                                <span className="brand-wordmark text-[23px] font-medium leading-none" style={{ letterSpacing: "-0.01em" }}>
+                                <span className={`${geist.className} text-[23px] font-medium leading-none`} style={{ letterSpacing: "-0.01em" }}>
                                     Columbus Earth
                                 </span>
                             </Link>

@@ -4,7 +4,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { Container } from "@/components/layout/Container";
-
 export const Vision = () => {
   const gridRef = useRef<HTMLDivElement>(null);
   const [gridVisible, setGridVisible] = useState(false);
@@ -49,9 +48,9 @@ export const Vision = () => {
                 We are
               </span>
               <h3 className="text-2xl md:text-3xl font-bold text-[#0A1344] leading-tight tracking-tight text-center">
-                General Intelligence
+                Moving beyond LLMs
                 <br />
-                for the physical world
+                and into LGMs
               </h3>
             </div>
 
@@ -77,7 +76,7 @@ export const Vision = () => {
             <p className="text-base md:text-lg text-[#1C274C]/70 leading-relaxed">
               We&apos;re building foundation models that{" "}
               <span className="text-[#0A1344]">understand the physical
-              world through geospatial core reasoning</span>. ColumbusPro-1 processes
+              world through geospatial core reasoning</span>. <span className="text-[#0A1344]">ColumbusPro-1</span> processes
               satellite imagery, terrain data, human activity, and temporal
               patterns to generate{" "}
               <span className="text-[#0A1344]">actionable intelligence</span> across real estate,
