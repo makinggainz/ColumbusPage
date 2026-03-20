@@ -1,179 +1,109 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { Container } from "@/components/layout/Container";
 
 export const Vision = () => {
-  const titleRef = useRef<HTMLHeadingElement>(null);
   const gridRef = useRef<HTMLDivElement>(null);
-  const [titleVisible, setTitleVisible] = useState(false);
   const [gridVisible, setGridVisible] = useState(false);
 
   useEffect(() => {
-    const observe = (el: HTMLElement | null, onVisible: () => void) => {
-      if (!el) return () => {};
-      const observer = new IntersectionObserver(
-        ([entry]) => {
-          if (entry.isIntersecting) {
-            onVisible();
-            observer.disconnect();
-          }
-        },
-        { threshold: 0 }
-      );
-      observer.observe(el);
-      return () => observer.disconnect();
-    };
-
-    const cleanups = [
-      observe(titleRef.current, () => setTitleVisible(true)),
-      observe(gridRef.current, () => setGridVisible(true)),
-    ];
-    return () => cleanups.forEach((fn) => fn());
+    if (!gridRef.current) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setGridVisible(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0 }
+    );
+    observer.observe(gridRef.current);
+    return () => observer.disconnect();
   }, []);
 
   return (
-    <section className="bg-[#FEFEFE] py-20 md:py-28 lg:py-36">
+    <section className="bg-white py-20 md:py-28 lg:py-36">
       <Container>
-        <div className="max-w-290.75 mx-auto">
+        <div>
 
-        {/* TITLE */}
-        <h2
-          ref={titleRef}
-          className="text-display font-semibold leading-tight text-left mb-12 md:mb-16 -mt-20 bg-clip-text text-transparent tracking-[-0.015em]"
-          style={{
-            backgroundImage: "linear-gradient(to bottom, #0A1344 0%, #0A1344 20%, #C8D2EE 35%, #0A1344 50%, #0A1344 100%)",
-            backgroundSize: "100% 200%",
-            backgroundPosition: "0% 0%",
-            animation: titleVisible ? "text-shimmer-down 1.4s ease-in-out 0.3s 1 forwards" : "none",
-            opacity: titleVisible ? 1 : 0,
-            filter: titleVisible ? "blur(0px)" : "blur(8px)",
-            transform: titleVisible ? "translateY(0)" : "translateY(16px)",
-            transition: "opacity 0.6s ease-out 0.1s, filter 0.6s ease-out 0.1s, transform 0.6s ease-out 0.1s",
-          }}
-        >
-          A new species of AI
-        </h2>
+          {/* GRID */}
+          <div
+            ref={gridRef}
+            className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-1.25 auto-rows-[120px] sm:auto-rows-[140px] lg:auto-rows-[160px]"
+            style={{
+              opacity: gridVisible ? 1 : 0,
+              filter: gridVisible ? "blur(0px)" : "blur(8px)",
+              transform: gridVisible ? "translateY(0)" : "translateY(16px)",
+              transition:
+                "opacity 0.6s ease-out 0.15s, filter 0.6s ease-out 0.15s, transform 0.6s ease-out 0.15s",
+            }}
+          >
+            {/* ROW 1 */}
+            <Tile src="/image1.png" className="rounded-tl-[20px]" />
 
-        {/* GRID */}
-        <div
-          ref={gridRef}
-          className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-1.25 auto-rows-[120px] sm:auto-rows-[140px] lg:auto-rows-[160px] -mt-7.5"
-          style={{
-            opacity: gridVisible ? 1 : 0,
-            filter: gridVisible ? "blur(0px)" : "blur(8px)",
-            transform: gridVisible ? "translateY(0)" : "translateY(16px)",
-            transition: "opacity 0.6s ease-out 0.25s, filter 0.6s ease-out 0.25s, transform 0.6s ease-out 0.25s",
-          }}
-        >
+            <div className="col-span-2 bg-white flex flex-col items-center justify-center px-6">
+              <span className="inline-block border border-[#0A1344]/30 rounded-full px-4 py-1.5 text-sm text-[#1C274C]/70 mb-3">
+                We are
+              </span>
+              <h3 className="text-2xl md:text-3xl font-bold text-[#0A1344] leading-tight tracking-tight text-center">
+                General Intelligence
+                <br />
+                for the physical world
+              </h3>
+            </div>
 
-          {/* ROW 1 */}
-          <Tile src="/image1.png" />
+            <Tile src="/image2.png" />
+            <Tile src="/image3.png" />
+            <Tile src="/image4.png" />
+            <Tile src="/image5.png" />
+            <Tile src="/image6.png" className="rounded-tr-[20px]" />
 
-          <TextTile
-            className="col-span-2 lg:col-span-2"
-            title="General Intelligence"
-            subtitle="for the physical world"
-          />
+            {/* ROW 2 */}
+            <Tile src="/image7.png" className="rounded-bl-[20px]" />
+            <Tile src="/image8.png" />
+            <Tile src="/image9.png" />
+            <Tile src="/image10.png" />
+            <Tile src="/image12.png" />
+            <Tile src="/image14.png" />
+            <Tile src="/image15.png" />
+            <Tile src="/image16.png" className="rounded-br-[20px]" />
+          </div>
 
-          <Tile src="/image2.png" />
-          <Tile src="/image3.png" />
-          <Tile src="/image4.png" />
+          {/* BOTTOM TEXT */}
+          <div className="mt-12 md:mt-16 flex flex-col items-center text-center max-w-3xl mx-auto">
+            <p className="text-base md:text-lg text-[#1C274C]/70 leading-relaxed">
+              We&apos;re building foundation models that{" "}
+              <span className="text-[#0A1344]">understand the physical
+              world through geospatial core reasoning</span>. ColumbusPro-1 processes
+              satellite imagery, terrain data, human activity, and temporal
+              patterns to generate{" "}
+              <span className="text-[#0A1344]">actionable intelligence</span> across real estate,
+              research, and consumer domains.
+            </p>
 
-          {/* ROW 2 */}
-          <Tile src="/image5.png" />
-          <Tile src="/image6.png" />
-          <Tile src="/image7.png" />
-          <Tile src="/image8.png" />
-          <Tile src="/image9.png" />
-          <Tile src="/image10.png" />
+            <p className="text-base md:text-lg text-[#0A1344] font-medium mt-6">
+              Think of us like the OpenAI for maps.
+            </p>
 
-          {/* ROW 3 */}
-          <Tile src="/image111.png" />
-          <Tile src="/image112.png" />
+            <Link
+              href="/technology"
+              className="mt-8 inline-flex items-center justify-center border border-[#0A1344]/30 px-12 py-4 text-lg font-bold tracking-wide rounded-full hover:opacity-80 transition-opacity whitespace-nowrap text-[#0A1344]"
+            >
+              [ Check out our technology ]
+            </Link>
+          </div>
 
-          <TextTile
-            className="col-span-2 lg:col-span-2"
-            title="Foundational Models"
-            subtitle="for Earth"
-          />
-
-          <Tile src="/image113.png" />
-          <Tile src="/image114.png" />
-
-          {/* ROW 4 */}
-          <Tile src="/image12.png" />
-          <Tile src="/image.png" />
-          <Tile src="/image14.png" />
-          <Tile src="/image15.png" />
-          <Tile src="/image16.png" />
-          <Tile src="/image17.png" />
-        </div>
-
-        {/* BOTTOM ROW */}
-        <div className="mt-7 md:mt-11 flex flex-col md:flex-row items-start justify-between gap-6">
-
-          <p className="text-sm md:text-base text-[#010101] max-w-2xl leading-[1.4]">
-            ColumbusPro-1 processes satellite imagery, terrain data, human activity,
-            and temporal patterns to generate actionable intelligence across real estate,
-            research, and consumer domains.
-          </p>
-
-          <button className="border border-[#1C274C] px-17.25 md:px-19.25 py-[14.5px] text-xl font-bold tracking-wide rounded-none hover:bg-[#1C274C] hover:text-white transition whitespace-nowrap">
-            [ See what we’re building ]
-          </button>
-
-        </div>
         </div>
       </Container>
     </section>
   );
 };
 
-const Tile = ({ src }: { src: string }) => {
-  return (
-    <div className="relative w-full h-full overflow-hidden">
-      <Image
-        src={src}
-        alt=""
-        fill
-        className="object-cover"
-      />
-    </div>
-  );
-};
-
-const TextTile = ({
-  title,
-  subtitle,
-  className = "",
-  align = "center",
-  paddingLeft,
-  paddingRight,
-}: {
-  title: string;
-  subtitle: string;
-  className?: string;
-  align?: "center" | "right";
-  paddingLeft?: number;
-  paddingRight?: number;
-}) => {
-  const alignClass = align === "right" ? "text-right" : "items-center text-center";
-  const inlineStyle: React.CSSProperties = {};
-  if (paddingLeft !== undefined) inlineStyle.paddingLeft = `${paddingLeft}px`;
-  if (paddingRight !== undefined) inlineStyle.paddingRight = `${paddingRight}px`;
-  return (
-    <div
-      className={`bg-white flex flex-col justify-center px-6 sm:px-8 ${alignClass} ${className}`}
-      style={inlineStyle}
-    >
-      <h3 className="text-3xl font-medium text-[#010101] leading-[0.9] tracking-[-0.04em]">
-      {title}
-      </h3>
-      <p className="text-lg sm:text-xl md:text-2xl font-medium text-[#010101] mt-2 tracking-[-0.04em]">
-        {subtitle}
-      </p>
-    </div>
-  );
-};
+const Tile = ({ src, className = "" }: { src: string; className?: string }) => (
+  <div className={`relative w-full h-full overflow-hidden ${className}`}>
+    <Image src={src} alt="" fill className="object-cover" />
+  </div>
+);
