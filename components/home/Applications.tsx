@@ -56,7 +56,7 @@ export const Applications = () => {
           </h2>
           <p className="mt-4 text-[21px] font-normal leading-[1.38] text-[#6E6E73] text-center">
             We&apos;d love to work within your industry —{" "}
-            <a href="mailto:hey@columbus.earth" className="text-[#0066CC] hover:underline">
+            <a href="mailto:hey@columbus.earth" className="text-[#4F46E5] hover:underline">
               hey@columbus.earth
             </a>
           </p>

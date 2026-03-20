@@ -93,19 +93,19 @@ export const SiteSelection = () => {
             <div className="flex flex-wrap items-center gap-4">
               <Link
                 href="/platform"
-                className="bg-[#0071E3] text-white rounded-full px-[22px] py-[11px] text-[17px] font-normal hover:bg-[#0077ED] transition-colors"
+                className="bg-[#4F46E5] text-white rounded-full px-[22px] py-[11px] text-[17px] font-normal hover:bg-[#4338CA] transition-colors"
               >
                 Start now
               </Link>
               <Link
                 href="/technology"
-                className="text-[#0066CC] text-[20px] hover:underline transition-colors"
+                className="text-[#4F46E5] text-[20px] hover:underline transition-colors"
               >
                 Learn more &#8250;
               </Link>
               <Link
                 href="/platform"
-                className="text-[#0066CC] text-[20px] hover:underline transition-colors"
+                className="text-[#4F46E5] text-[20px] hover:underline transition-colors"
               >
                 Try it now &#8250;
               </Link>

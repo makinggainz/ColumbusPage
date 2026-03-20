@@ -103,13 +103,13 @@ export const Industries = () => {
         >
           <Link
             href="/technology"
-            className="text-[#0066CC] text-[20px] hover:underline transition-colors"
+            className="text-[#4F46E5] text-[20px] hover:underline transition-colors"
           >
             Explore technology &#8250;
           </Link>
           <Link
             href="/platform"
-            className="text-[#0066CC] text-[20px] hover:underline transition-colors"
+            className="text-[#4F46E5] text-[20px] hover:underline transition-colors"
           >
             Start now &#8250;
           </Link>

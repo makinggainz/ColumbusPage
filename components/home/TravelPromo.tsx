@@ -323,7 +323,7 @@ export const TravelPromo = () => {
             >
               <Link
                 href="/maps-gpt"
-                className="text-[#0066CC] text-[20px] hover:underline"
+                className="text-[#4F46E5] text-[20px] hover:underline"
               >
                 Try MapsGPT ›
               </Link>

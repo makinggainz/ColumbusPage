@@ -125,7 +125,7 @@ export const MainFeatures = () => {
                     {feature.link && (
                       <a
                         href="#"
-                        className="ml-2 text-[#0066CC] hover:underline inline-flex items-center gap-0.5 font-normal text-[17px]"
+                        className="ml-2 text-[#4F46E5] hover:underline inline-flex items-center gap-0.5 font-normal text-[17px]"
                       >
                         Datasets &#8250;
                       </a>

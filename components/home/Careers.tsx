@@ -50,21 +50,21 @@ export const Careers = () => {
             <input
               type="text"
               placeholder="Your name"
-              className="w-full bg-[#F5F5F7] rounded-xl border-none px-4 py-3 text-[17px] text-[#1D1D1F] outline-none placeholder:text-[#6E6E73] focus:ring-2 focus:ring-[#0071E3] transition-shadow"
+              className="w-full bg-[#F5F5F7] rounded-xl border-none px-4 py-3 text-[17px] text-[#1D1D1F] outline-none placeholder:text-[#6E6E73] focus:ring-2 focus:ring-[#4F46E5] transition-shadow"
             />
             <textarea
               placeholder="Your message"
               rows={3}
-              className="w-full bg-[#F5F5F7] rounded-xl border-none px-4 py-3 text-[17px] text-[#1D1D1F] outline-none resize-none placeholder:text-[#6E6E73] focus:ring-2 focus:ring-[#0071E3] transition-shadow"
+              className="w-full bg-[#F5F5F7] rounded-xl border-none px-4 py-3 text-[17px] text-[#1D1D1F] outline-none resize-none placeholder:text-[#6E6E73] focus:ring-2 focus:ring-[#4F46E5] transition-shadow"
             />
             <input
               type="email"
               placeholder="your@email.com"
-              className="w-full bg-[#F5F5F7] rounded-xl border-none px-4 py-3 text-[17px] text-[#1D1D1F] outline-none placeholder:text-[#6E6E73] focus:ring-2 focus:ring-[#0071E3] transition-shadow"
+              className="w-full bg-[#F5F5F7] rounded-xl border-none px-4 py-3 text-[17px] text-[#1D1D1F] outline-none placeholder:text-[#6E6E73] focus:ring-2 focus:ring-[#4F46E5] transition-shadow"
             />
             <button
               type="submit"
-              className="w-full bg-[#0071E3] text-white rounded-full py-3 text-[17px] font-semibold mt-4 hover:bg-[#0077ED] transition-colors"
+              className="w-full bg-[#4F46E5] text-white rounded-full py-3 text-[17px] font-semibold mt-4 hover:bg-[#4338CA] transition-colors"
             >
               Send Message
             </button>

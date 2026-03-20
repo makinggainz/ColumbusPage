@@ -84,13 +84,13 @@ export const TravelSection = () => {
             <div className="flex flex-row items-center gap-4">
               <Link
                 href="/maps-gpt"
-                className="text-[#0066CC] text-[20px] hover:underline"
+                className="text-[#4F46E5] text-[20px] hover:underline"
               >
                 Try it out now ›
               </Link>
               <Link
                 href="/technology"
-                className="bg-[#0071E3] text-white text-[17px] font-normal rounded-full px-[22px] py-[11px] hover:bg-[#0077ED] transition-colors inline-flex items-center"
+                className="bg-[#4F46E5] text-white text-[17px] font-normal rounded-full px-[22px] py-[11px] hover:bg-[#4338CA] transition-colors inline-flex items-center"
               >
                 Get started
               </Link>

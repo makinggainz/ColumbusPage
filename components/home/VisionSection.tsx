@@ -121,7 +121,7 @@ export const Vision = () => {
         <div className="mt-12 md:mt-16 flex justify-center">
           <a
             href="#"
-            className="text-[#0066CC] text-[20px] hover:underline transition-colors"
+            className="text-[#4F46E5] text-[20px] hover:underline transition-colors"
           >
             See what we&apos;re building &#8250;
           </a>
