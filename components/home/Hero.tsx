@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useRef, useCallback } from "react";
+import { Container } from "@/components/layout/Container";
 
 /* ── Types ── */
 interface Ripple { wx: number; wz: number; t: number; strength: number }
@@ -888,12 +889,10 @@ export const Hero = () => {
 
   return (
     <section
-      className="relative overflow-hidden flex flex-col items-center justify-center"
+      className="relative overflow-hidden flex flex-col"
       style={{
         background: "#FFFFFF",
         minHeight: "100vh",
-        paddingTop: 120,
-        paddingBottom: 60,
       }}
     >
       {/* Mesh + gradient — only fade in after scroll */}
@@ -920,31 +919,36 @@ export const Hero = () => {
       />
 
       {/* Hero text — fades in immediately on mount */}
-      <div className="relative z-10 flex flex-col items-center text-center px-6 w-full max-w-[1024px] mx-auto" style={{ marginTop: -100 }}>
-        <h1
-          className="text-center"
-          style={{
-            color: "#1D1D1F",
-            fontWeight: 400,
-            letterSpacing: "-0.003em",
-            lineHeight: 1.05,
-            ...fadeIn(80),
-          }}
-        >
-          <span
-            className="block text-[40px] md:text-[80px]"
-            style={{ fontWeight: 400, letterSpacing: "-0.003em", lineHeight: 1.05 }}
+      <Container className="relative z-10 pt-24 md:pt-32">
+        <div className="max-w-292">
+          {/* Eyebrow */}
+          <p
+            className="text-sm md:text-base font-medium tracking-tight text-[#1C274C]/70 uppercase mb-4 mt-15"
+            style={fadeIn(0)}
           >
-            The frontier AI Lab building the first in&#8209;production
-          </span>
-          <span
-            className="block text-[40px] md:text-[80px]"
-            style={{ fontWeight: 400, letterSpacing: "-0.003em", lineHeight: 1.05 }}
+            FRONTIER AI RESEARCH AND PRODUCT COMPANY
+          </p>
+
+          {/* Main Heading */}
+          <h1
+            className="font-medium leading-[1.35] tracking-tight text-[#0A1344]"
+            style={{
+              fontSize: 56,
+              ...fadeIn(80),
+            }}
           >
-            Large Geospatial Model.
-          </span>
-        </h1>
-      </div>
+            The frontier AI Lab building the first in&#8209;production Large Geospatial Model.
+          </h1>
+
+          {/* Tag */}
+          <p
+            className="mt-6 text-xs md:text-sm font-medium tracking-widest text-[#1C274C]/70"
+            style={fadeIn(200)}
+          >
+            [ COLUMBUS PRO-1 ]
+          </p>
+        </div>
+      </Container>
     </section>
   );
 };

@@ -138,15 +138,15 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
                 }}
                 onMouseLeave={handleMouseLeave}
             >
-                <div className="relative mx-auto w-full">
+                <div className="relative mx-auto w-full max-w-screen-2xl">
                     {/* Nav bar background pill — transparent by default, white when menu open */}
                     <div
-                        className={`absolute inset-y-0 left-8 right-8 lg:left-10 lg:right-10 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                        className={`absolute inset-y-0 left-(--container-padding) right-(--container-padding) transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
                             isMenuOpen ? "bg-white rounded-tl-xs rounded-tr-xs" : "bg-transparent rounded-xs"
                         }`}
                     />
 
-                    <div className="relative px-8 lg:px-10">
+                    <div className="relative px-[calc(var(--container-padding)+18px)]">
                         <div className="grid h-14 md:h-17 grid-cols-[1fr_auto_1fr] items-center">
                             {/* Left: Logo */}
                             <Link href="/" className="flex w-fit shrink-0 items-center gap-2" onMouseEnter={handleNavMouseEnter}>
@@ -248,14 +248,14 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
                 style={compactNavBlendStyle}
                 onMouseLeave={handleCompactMouseLeave}
             >
-                <div className="relative mx-auto w-full">
+                <div className="relative mx-auto w-full max-w-screen-2xl">
                     <div
-                        className={`absolute inset-y-0 left-8 right-8 lg:left-10 lg:right-10 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                        className={`absolute inset-y-0 left-(--container-padding) right-(--container-padding) transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
                             isCompactMenuOpen ? "rounded-tl-xs rounded-tr-xs" : ""
                         }`}
                     />
 
-                    <div className="relative px-8 lg:px-10">
+                    <div className="relative px-[calc(var(--container-padding)+18px)]">
                         <div className="grid h-16 grid-cols-[1fr_auto_1fr] items-center">
                             {/* Left: Logo */}
                             <Link href="/" className="flex w-fit shrink-0 items-center gap-2" onMouseEnter={handleCompactNavMouseEnter}>
