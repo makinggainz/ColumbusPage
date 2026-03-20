@@ -821,11 +821,63 @@ const WaveMesh = () => {
 /* ── Hero Section ── */
 export const Hero = () => {
   const [mounted, setMounted] = useState(false);
+  const [hasScrolled, setHasScrolled] = useState(false);
 
   useEffect(() => {
     const raf = requestAnimationFrame(() => setMounted(true));
     return () => cancelAnimationFrame(raf);
   }, []);
+
+  useEffect(() => {
+    let unlockTimer: ReturnType<typeof setTimeout>;
+
+    const onWheel = (e: WheelEvent) => {
+      if (!hasScrolled) {
+        e.preventDefault();
+        setHasScrolled(true);
+        // Signal the navbar to fade in too
+        window.dispatchEvent(new CustomEvent("hero-reveal"));
+        // Keep scroll locked for 2s while fade-in plays
+        unlockTimer = setTimeout(() => {
+          window.removeEventListener("wheel", onWheel);
+        }, 2000);
+      }
+    };
+
+    const onTouchMove = (e: TouchEvent) => {
+      if (!hasScrolled) {
+        e.preventDefault();
+        setHasScrolled(true);
+        window.dispatchEvent(new CustomEvent("hero-reveal"));
+        unlockTimer = setTimeout(() => {
+          window.removeEventListener("touchmove", onTouchMove);
+        }, 2000);
+      }
+    };
+
+    // Block scrolling until 2s after first scroll attempt
+    document.body.style.overflow = "hidden";
+
+    window.addEventListener("wheel", onWheel, { passive: false });
+    window.addEventListener("touchmove", onTouchMove, { passive: false });
+
+    return () => {
+      clearTimeout(unlockTimer);
+      document.body.style.overflow = "";
+      window.removeEventListener("wheel", onWheel);
+      window.removeEventListener("touchmove", onTouchMove);
+    };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Unlock scroll 2s after hasScrolled becomes true
+  useEffect(() => {
+    if (!hasScrolled) return;
+    const timer = setTimeout(() => {
+      document.body.style.overflow = "";
+    }, 2000);
+    return () => clearTimeout(timer);
+  }, [hasScrolled]);
 
   const fadeIn = (delay: number): React.CSSProperties => ({
     opacity: mounted ? 1 : 0,
@@ -844,7 +896,15 @@ export const Hero = () => {
         paddingBottom: 60,
       }}
     >
-      <WaveMesh />
+      {/* Mesh + gradient — only fade in after scroll */}
+      <div
+        style={{
+          opacity: hasScrolled ? 1 : 0,
+          transition: "opacity 1200ms ease",
+        }}
+      >
+        <WaveMesh />
+      </div>
 
       <div
         className="absolute left-0 right-0 pointer-events-none"
@@ -853,16 +913,19 @@ export const Hero = () => {
           height: "15%",
           background: "linear-gradient(to bottom, #FFFFFF, transparent)",
           zIndex: 1,
+          opacity: hasScrolled ? 1 : 0,
+          transition: "opacity 1200ms ease",
         }}
         aria-hidden
       />
 
+      {/* Hero text — fades in immediately on mount */}
       <div className="relative z-10 flex flex-col items-center text-center px-6 w-full max-w-[1024px] mx-auto" style={{ marginTop: -100 }}>
         <h1
           className="text-center"
           style={{
             color: "#1D1D1F",
-            fontWeight: 600,
+            fontWeight: 400,
             letterSpacing: "-0.003em",
             lineHeight: 1.05,
             ...fadeIn(80),
@@ -870,13 +933,13 @@ export const Hero = () => {
         >
           <span
             className="block text-[40px] md:text-[80px]"
-            style={{ fontWeight: 600, letterSpacing: "-0.003em", lineHeight: 1.05 }}
+            style={{ fontWeight: 400, letterSpacing: "-0.003em", lineHeight: 1.05 }}
           >
-            The first in&#8209;production
+            The frontier AI Lab building the first in&#8209;production
           </span>
           <span
             className="block text-[40px] md:text-[80px]"
-            style={{ fontWeight: 600, letterSpacing: "-0.003em", lineHeight: 1.05 }}
+            style={{ fontWeight: 400, letterSpacing: "-0.003em", lineHeight: 1.05 }}
           >
             Large Geospatial Model.
           </span>

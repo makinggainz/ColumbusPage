@@ -24,6 +24,9 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
     const [isScrolled, setIsScrolled] = useState(() =>
         typeof window !== "undefined" ? window.scrollY > 0 : false
     );
+    const [hasScrolled, setHasScrolled] = useState(() =>
+        typeof window !== "undefined" ? window.scrollY > 5 : false
+    );
     const navRef = useRef<HTMLElement>(null);
 
     const [isCompactMenuOpen, setIsCompactMenuOpen] = useState(false);
@@ -37,10 +40,16 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
         const handleScroll = () => {
             const y = window.scrollY;
             setIsScrolled(y > 0);
+            if (y > 5) setHasScrolled(true);
             setIsCompactVisible(y > COMPACT_THRESHOLD);
         };
+        const handleReveal = () => setHasScrolled(true);
         window.addEventListener("scroll", handleScroll, { passive: true });
-        return () => window.removeEventListener("scroll", handleScroll);
+        window.addEventListener("hero-reveal", handleReveal);
+        return () => {
+            window.removeEventListener("scroll", handleScroll);
+            window.removeEventListener("hero-reveal", handleReveal);
+        };
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -152,7 +161,12 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
             <nav
                 ref={navRef}
                 className="header-font absolute top-6 left-0 right-0 z-50"
-                style={navBlendStyle}
+                style={{
+                    ...navBlendStyle,
+                    opacity: hasScrolled ? 1 : 0,
+                    transform: hasScrolled ? "translateY(0)" : "translateY(-8px)",
+                    transition: "opacity 1000ms ease, transform 1000ms ease",
+                }}
                 onMouseLeave={handleMouseLeave}
             >
                 <div className="relative mx-auto w-full max-w-screen-2xl">
