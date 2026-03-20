@@ -132,7 +132,7 @@ export const MeshSection = () => {
             ctx.beginPath();
             ctx.moveTo(p.x, p.y);
             ctx.lineTo(n.x, n.y);
-            ctx.strokeStyle = `rgba(100, 150, 255, ${alpha})`;
+            ctx.strokeStyle = `rgba(20, 30, 60, ${alpha})`;
             ctx.lineWidth = 0.75;
             ctx.stroke();
           }
@@ -151,17 +151,17 @@ export const MeshSection = () => {
 
         ctx.beginPath();
         ctx.arc(p.x, p.y, radius, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(130, 170, 255, ${alpha})`;
+        ctx.fillStyle = `rgba(30, 40, 70, ${alpha})`;
         ctx.fill();
       }
 
-      // Soft vignette — radial gradient to blend edges
+      // Soft vignette — radial gradient to blend edges into white
       const cx = canvas.width / 2;
       const cy = canvas.height / 2;
       const r = Math.max(cx, cy) * 1.1;
       const vignette = ctx.createRadialGradient(cx, cy, r * 0.35, cx, cy, r);
-      vignette.addColorStop(0, "rgba(0,0,0,0)");
-      vignette.addColorStop(1, "rgba(0,0,0,0.85)");
+      vignette.addColorStop(0, "rgba(255,255,255,0)");
+      vignette.addColorStop(1, "rgba(255,255,255,0.85)");
       ctx.fillStyle = vignette;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -184,7 +184,7 @@ export const MeshSection = () => {
 
   return (
     <section
-      className="bg-black border-0 border-none shadow-none ring-0 ring-offset-0"
+      className="bg-white border-0 border-none shadow-none ring-0 ring-offset-0"
       style={{
         opacity: mounted ? 1 : 0,
         filter: mounted ? "blur(0px)" : "blur(8px)",
@@ -202,7 +202,7 @@ export const MeshSection = () => {
         <div
           className="absolute top-0 left-0 right-0 w-full h-30 pointer-events-none"
           style={{
-            background: `linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 100%)`,
+            background: `linear-gradient(to bottom, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%)`,
           }}
           aria-hidden
         />
@@ -211,7 +211,7 @@ export const MeshSection = () => {
         <div
           className="absolute bottom-0 left-0 right-0 w-full h-[70px] pointer-events-none"
           style={{
-            background: `linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.45) 25%, rgba(0,0,0,0.83) 46%, rgba(0,0,0,0.9) 52%, rgba(0,0,0,0.94) 62%, rgba(0,0,0,1) 100%)`,
+            background: `linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,0.45) 25%, rgba(255,255,255,0.83) 46%, rgba(255,255,255,0.9) 52%, rgba(255,255,255,0.94) 62%, rgba(255,255,255,1) 100%)`,
           }}
           aria-hidden
         />

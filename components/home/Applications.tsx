@@ -35,7 +35,7 @@ export const Applications = () => {
   ];
 
   return (
-    <section className="bg-black py-24 md:py-32 lg:py-40">
+    <section className="bg-white py-24 md:py-32 lg:py-40">
       <Container>
         <div ref={sectionRef}>
 
@@ -49,19 +49,19 @@ export const Applications = () => {
               transition: "opacity 0.7s ease, transform 0.7s ease, filter 0.7s ease",
             }}
           >
-            <p className="text-[10px] font-medium tracking-[0.28em] text-white/22 uppercase mb-5">
+            <p className="text-[10px] font-medium tracking-[0.28em] text-[#A1A1AA] uppercase mb-5">
               Use Cases
             </p>
             <h2
-              className="font-semibold text-white leading-tight tracking-tight"
-              style={{ fontSize: "clamp(28px, 4vw, 52px)", letterSpacing: "-0.025em" }}
+              className="font-bold text-[#09090B] leading-tight tracking-tight"
+              style={{ fontSize: "clamp(28px, 4vw, 52px)" }}
             >
               We&apos;re actively exploring
               <br className="hidden md:block" /> various application areas
             </h2>
-            <p className="mt-4 text-[15px] font-normal text-white/38">
+            <p className="mt-4 text-[15px] font-normal text-[#71717A]">
               We&apos;d love to work within your industry —{" "}
-              <a href="mailto:hey@columbus.earth" className="text-white/55 hover:text-white transition-colors underline underline-offset-2">
+              <a href="mailto:hey@columbus.earth" className="text-[#3F3F46] hover:text-[#09090B] transition-colors underline underline-offset-2">
                 hey@columbus.earth
               </a>
             </p>
@@ -69,7 +69,7 @@ export const Applications = () => {
 
           {/* Grid */}
           <div
-            className="overflow-hidden border border-white/[0.07]"
+            className="overflow-hidden border border-[#E4E4E7]"
             style={{
               opacity: visible ? 1 : 0,
               transform: visible ? "translateY(0)" : "translateY(16px)",
@@ -81,7 +81,7 @@ export const Applications = () => {
                 <Link
                   key={index}
                   href={item.href}
-                  className="relative group aspect-[16/9] w-full overflow-hidden block border-b border-r border-white/[0.06]"
+                  className="relative group aspect-[16/9] w-full overflow-hidden block border-b border-r border-[#E4E4E7]"
                 >
                   <Image
                     src={item.image}

@@ -17,7 +17,7 @@ const SPOTS: { title: string; description: string; location: string; rating: str
   { title: "Sakura Garden", description: "Traditional Japanese garden with tea house and cherry blossoms.", location: "Kyoto, Japan", rating: "4.9", image: FAVORITE_SPOTS_FILES[6] },
   { title: "Rooftop Vineyard", description: "Urban vineyard with wine tastings and city skyline.", location: "Cape Town, South Africa", rating: "4.1", image: FAVORITE_SPOTS_FILES[7] },
   { title: "Coral Reef Bar", description: "Underwater-themed bar with aquariums and tropical cocktails.", location: "Miami, USA", rating: "4.0", image: FAVORITE_SPOTS_FILES[0] },
-  { title: "Northern Lights Cabin", description: "Glass cabin for aurora viewing. Cozy and unforgettable.", location: "Tromsø, Norway", rating: "4.7", image: FAVORITE_SPOTS_FILES[1] },
+  { title: "Northern Lights Cabin", description: "Glass cabin for aurora viewing. Cozy and unforgettable.", location: "Troms\u00F8, Norway", rating: "4.7", image: FAVORITE_SPOTS_FILES[1] },
 ];
 
 export const UniqueSpotsSection = () => {
@@ -57,7 +57,7 @@ export const UniqueSpotsSection = () => {
   };
 
   return (
-    <section className="bg-black py-24 md:py-32 overflow-hidden" ref={sectionRef}>
+    <section className="bg-white py-24 md:py-32 overflow-hidden" ref={sectionRef}>
 
       {/* Header */}
       <Container className="mb-10">
@@ -68,12 +68,12 @@ export const UniqueSpotsSection = () => {
             transition: "opacity 0.7s ease, transform 0.7s ease",
           }}
         >
-          <p className="text-[10px] font-medium tracking-[0.28em] text-white/22 uppercase mb-5">
+          <p className="text-[10px] font-medium tracking-[0.28em] text-[#A1A1AA] uppercase mb-5">
             MapsGPT
           </p>
           <h2
-            className="font-semibold text-white"
-            style={{ fontSize: "clamp(24px, 3vw, 38px)", letterSpacing: "-0.025em" }}
+            className="font-bold text-[#09090B] tracking-tight"
+            style={{ fontSize: "clamp(24px, 3vw, 38px)" }}
           >
             Unique spots people are favoriting
           </h2>
@@ -85,13 +85,13 @@ export const UniqueSpotsSection = () => {
         {/* Left fade */}
         <div
           className="absolute left-0 top-0 bottom-0 w-24 pointer-events-none z-20"
-          style={{ background: "linear-gradient(to right, #000000 0%, transparent 100%)" }}
+          style={{ background: "linear-gradient(to right, #FFFFFF 0%, transparent 100%)" }}
           aria-hidden
         />
         {/* Right fade */}
         <div
           className="absolute right-0 top-0 bottom-0 w-24 pointer-events-none z-20"
-          style={{ background: "linear-gradient(to left, #000000 0%, transparent 100%)" }}
+          style={{ background: "linear-gradient(to left, #FFFFFF 0%, transparent 100%)" }}
           aria-hidden
         />
         <div
@@ -121,11 +121,11 @@ export const UniqueSpotsSection = () => {
 function SpotCard({ spot }: { spot: (typeof SPOTS)[0] }) {
   return (
     <div
-      className="flex flex-col shrink-0 overflow-hidden border border-white/[0.07] hover:border-white/15 transition-colors duration-300"
-      style={{ width: 320, background: "#070D1C" }}
+      className="flex flex-col shrink-0 overflow-hidden border border-[#E4E4E7] hover:border-[#A1A1AA] transition-colors duration-300 bg-white"
+      style={{ width: 320 }}
     >
       {/* Image area */}
-      <div className="relative w-full h-44 overflow-hidden bg-white/5 shrink-0">
+      <div className="relative w-full h-44 overflow-hidden bg-[#FAFAFA] shrink-0">
         {spot.image && (
           <img
             src={spotImageSrc(spot.image)}
@@ -145,15 +145,15 @@ function SpotCard({ spot }: { spot: (typeof SPOTS)[0] }) {
 
       {/* Content */}
       <div className="px-5 py-4 flex flex-col flex-1">
-        <h3 className="font-semibold text-[16px] text-white tracking-[-0.015em] mb-1.5">
+        <h3 className="font-semibold text-[16px] text-[#09090B] tracking-[-0.015em] mb-1.5">
           {spot.title}
         </h3>
-        <p className="text-[13px] leading-[1.55] text-white/40 line-clamp-2 mb-3">
+        <p className="text-[13px] leading-[1.55] text-[#3F3F46] line-clamp-2 mb-3">
           {spot.description}
         </p>
-        <div className="flex items-center gap-2 opacity-40 mt-auto">
-          <MapPin className="w-4 h-4 shrink-0 text-white" />
-          <span className="text-[13px] text-white">{spot.location}</span>
+        <div className="flex items-center gap-2 mt-auto">
+          <MapPin className="w-4 h-4 shrink-0 text-[#A1A1AA]" />
+          <span className="text-[13px] text-[#A1A1AA]">{spot.location}</span>
         </div>
       </div>
     </div>

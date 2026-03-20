@@ -6,8 +6,8 @@ html,
 body {
   margin: 0;
   padding: 0;
-  background: #000000;
-  color: #171717;
+  background: #FFFFFF;
+  color: #09090B;
   overflow-x: clip;
   min-height: 100%;
 }
@@ -25,10 +25,10 @@ html {
 
 /* Theme variables */
 :root {
-  --background: #000000;
-  --foreground: #171717;
-  --primary: #0a0e27;
-  --accent: #3b82f6;
+  --background: #FFFFFF;
+  --foreground: #09090B;
+  --primary: #09090B;
+  --accent: #1C274C;
   --container-padding: 20px;
   --page-padding: calc(var(--container-padding) + 18px); /* matches navbar logo/hamburger edges */
 }

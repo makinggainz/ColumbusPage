@@ -34,13 +34,13 @@ export const Vision = () => {
   }, []);
 
   return (
-    <section className="bg-black py-20 md:py-28 lg:py-36">
+    <section className="bg-white py-24 md:py-32 lg:py-32">
       <Container>
         <div className="max-w-full mx-auto">
 
           {/* Label */}
           <p
-            className="text-[10px] font-medium tracking-[0.28em] text-white/22 uppercase mb-8"
+            className="text-[10px] font-medium tracking-[0.28em] text-[#A1A1AA] uppercase mb-8"
             style={{
               opacity: titleVisible ? 1 : 0,
               transition: "opacity 0.6s ease",
@@ -52,9 +52,9 @@ export const Vision = () => {
           {/* TITLE */}
           <h2
             ref={titleRef}
-            className="text-display font-semibold leading-tight text-left mb-12 md:mb-16 -mt-2 bg-clip-text text-transparent tracking-[-0.025em]"
+            className="text-display font-bold leading-tight text-left mb-12 md:mb-16 -mt-2 bg-clip-text text-transparent tracking-tight"
             style={{
-              backgroundImage: "linear-gradient(to bottom, #FFFFFF 0%, #FFFFFF 30%, #4472F5 55%, #FFFFFF 70%, #FFFFFF 100%)",
+              backgroundImage: "linear-gradient(to bottom, #09090B 0%, #09090B 30%, #3F3F46 55%, #09090B 70%, #09090B 100%)",
               backgroundSize: "100% 200%",
               backgroundPosition: "0% 0%",
               animation: titleVisible ? "text-shimmer-down 1.4s ease-in-out 0.3s 1 forwards" : "none",
@@ -70,7 +70,7 @@ export const Vision = () => {
           {/* GRID */}
           <div
             ref={gridRef}
-            className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-1 auto-rows-[120px] sm:auto-rows-[140px] lg:auto-rows-[160px]"
+            className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-[1px] auto-rows-[120px] sm:auto-rows-[140px] lg:auto-rows-[160px]"
             style={{
               opacity: gridVisible ? 1 : 0,
               filter: gridVisible ? "blur(0px)" : "blur(8px)",
@@ -111,14 +111,14 @@ export const Vision = () => {
 
           {/* BOTTOM ROW */}
           <div className="mt-8 md:mt-12 flex flex-col md:flex-row items-start justify-between gap-6">
-            <p className="text-[14px] md:text-[15px] text-white/40 max-w-2xl leading-[1.6]">
+            <p className="text-[14px] md:text-[15px] text-[#71717A] max-w-2xl leading-[1.6]">
               ColumbusPro-1 processes satellite imagery, terrain data, human activity,
               and temporal patterns to generate actionable intelligence across real estate,
               research, and consumer domains.
             </p>
 
-            <button className="border border-white/15 text-white/55 px-8 py-4 text-[14px] font-medium hover:border-white/30 hover:text-white/80 transition-all whitespace-nowrap">
-              See what we&apos;re building →
+            <button className="border border-[#E4E4E7] text-[#3F3F46] h-11 px-6 text-sm font-medium hover:bg-[#FAFAFA] transition-all whitespace-nowrap">
+              See what we&apos;re building &rarr;
             </button>
           </div>
         </div>
@@ -129,7 +129,7 @@ export const Vision = () => {
 
 const Tile = ({ src }: { src: string }) => {
   return (
-    <div className="relative w-full h-full overflow-hidden">
+    <div className="relative w-full h-full overflow-hidden border border-[#E4E4E7]">
       <Image src={src} alt="" fill className="object-cover" />
     </div>
   );
@@ -146,13 +146,12 @@ const TextTile = ({
 }) => {
   return (
     <div
-      className={`flex flex-col justify-center px-6 sm:px-8 items-center text-center ${className}`}
-      style={{ background: "#080F1E" }}
+      className={`flex flex-col justify-center px-6 sm:px-8 items-center text-center bg-[#FAFAFA] border border-[#E4E4E7] ${className}`}
     >
-      <h3 className="text-2xl md:text-3xl font-semibold text-white leading-tight tracking-[-0.035em]">
+      <h3 className="text-2xl md:text-3xl font-bold text-[#09090B] leading-tight tracking-tight">
         {title}
       </h3>
-      <p className="text-lg md:text-xl font-normal text-white/45 mt-2 tracking-[-0.025em]">
+      <p className="text-lg md:text-xl font-normal text-[#71717A] mt-2 tracking-tight">
         {subtitle}
       </p>
     </div>

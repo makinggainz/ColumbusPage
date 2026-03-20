@@ -79,7 +79,7 @@ export const MainFeatures = () => {
   }, []);
 
   return (
-    <section ref={sectionRef} className="bg-black py-32 lg:py-44">
+    <section ref={sectionRef} className="bg-white py-32 lg:py-44">
       <Container>
 
         {/* Header */}
@@ -92,10 +92,10 @@ export const MainFeatures = () => {
             transition: "opacity 0.7s ease, transform 0.7s ease, filter 0.7s ease",
           }}
         >
-          <p className="text-[10px] font-medium tracking-[0.28em] text-white/25 uppercase mb-5">
+          <p className="text-[10px] font-medium tracking-[0.28em] text-[#A1A1AA] uppercase mb-5">
             Capabilities
           </p>
-          <h2 className="text-4xl lg:text-5xl font-semibold text-white tracking-[-0.025em] leading-tight max-w-xl">
+          <h2 className="text-4xl lg:text-5xl font-bold text-[#09090B] tracking-tight leading-tight max-w-xl">
             What Columbus can do for you
           </h2>
         </div>
@@ -107,7 +107,7 @@ export const MainFeatures = () => {
             return (
               <div
                 key={index}
-                className="group border-t border-white/[0.07] py-8 grid grid-cols-[52px_1fr_2fr_40px] gap-8 items-start hover:border-white/15 transition-colors duration-300"
+                className="group border-t border-[#E4E4E7] py-8 grid grid-cols-[52px_1fr_2fr_40px] gap-8 items-start hover:bg-[#FAFAFA] transition-colors duration-300"
                 style={{
                   opacity: visible ? 1 : 0,
                   transform: visible ? "translateY(0)" : "translateY(12px)",
@@ -116,30 +116,29 @@ export const MainFeatures = () => {
                 }}
               >
                 {/* Number */}
-                <span className="text-[11px] font-medium tracking-[0.18em] text-white/20 pt-1">
+                <span className="text-[11px] font-medium tracking-[0.18em] text-[#A1A1AA] pt-1">
                   {feature.number}
                 </span>
 
                 {/* Icon + Title */}
                 <div className="flex items-start gap-4">
                   <div
-                    className="shrink-0 w-9 h-9 flex items-center justify-center border border-white/10"
-                    style={{ background: "rgba(255,255,255,0.03)" }}
+                    className="shrink-0 w-9 h-9 flex items-center justify-center border border-[#E4E4E7] bg-[#FAFAFA]"
                   >
-                    <Icon size={16} strokeWidth={1.4} className="text-white/60" />
+                    <Icon size={16} strokeWidth={1.4} className="text-[#3F3F46]" />
                   </div>
-                  <h3 className="text-[17px] font-semibold text-white tracking-[-0.01em] leading-snug pt-[7px]">
+                  <h3 className="text-[17px] font-semibold text-[#09090B] tracking-[-0.01em] leading-snug pt-[7px]">
                     {feature.title}
                   </h3>
                 </div>
 
                 {/* Description */}
-                <p className="text-[15px] leading-[1.65] text-white/45 pt-1">
+                <p className="text-[15px] leading-[1.65] text-[#71717A] pt-1">
                   {feature.description}
                   {feature.link && (
                     <a
                       href="#"
-                      className="ml-2 text-[#4472F5] hover:text-[#6A96FF] inline-flex items-center gap-1 transition-colors"
+                      className="ml-2 text-[#09090B] hover:text-[#3F3F46] inline-flex items-center gap-1 transition-colors font-medium"
                     >
                       Datasets <ArrowUpRight size={13} strokeWidth={1.6} />
                     </a>
@@ -148,13 +147,13 @@ export const MainFeatures = () => {
 
                 {/* Arrow */}
                 <div className="flex items-center justify-end pt-1 opacity-0 group-hover:opacity-40 transition-opacity">
-                  <ArrowUpRight size={18} strokeWidth={1.5} className="text-white" />
+                  <ArrowUpRight size={18} strokeWidth={1.5} className="text-[#09090B]" />
                 </div>
               </div>
             );
           })}
           {/* Last row bottom border */}
-          <div className="border-t border-white/[0.07]" />
+          <div className="border-t border-[#E4E4E7]" />
         </div>
 
       </Container>

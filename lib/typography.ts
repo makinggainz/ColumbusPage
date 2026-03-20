@@ -1,4 +1,10 @@
-import { Cormorant_Garamond, Instrument_Serif, Baumans } from "next/font/google";
+import { Cormorant_Garamond, Instrument_Serif, Baumans, Space_Grotesk } from "next/font/google";
+
+export const spaceGrotesk = Space_Grotesk({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
+  display: "swap",
+});
 
 export const cormorant = Cormorant_Garamond({
   subsets: ["latin"],

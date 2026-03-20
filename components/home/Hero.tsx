@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { baumans } from "@/lib/typography";
+import { spaceGrotesk } from "@/lib/typography";
 
 export const Hero = () => {
   const [mounted, setMounted] = useState(false);
@@ -22,21 +22,20 @@ export const Hero = () => {
 
   return (
     <section
-      data-navbar-theme="dark"
-      className="relative bg-black min-h-screen overflow-hidden flex flex-col items-center justify-center"
+      className="relative bg-[#FFFFFF] min-h-screen overflow-hidden flex flex-col items-center justify-center"
     >
       {/* Dot grid */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
-          backgroundImage: `radial-gradient(circle, rgba(255,255,255,0.03) 1px, transparent 1px)`,
+          backgroundImage: `radial-gradient(circle, rgba(0,0,0,0.04) 1px, transparent 1px)`,
           backgroundSize: `28px 28px`,
           zIndex: 0,
         }}
         aria-hidden
       />
 
-      {/* Center blue radial glow */}
+      {/* Center subtle blue radial glow */}
       <div
         className="absolute pointer-events-none"
         style={{
@@ -45,18 +44,8 @@ export const Hero = () => {
           transform: "translate(-50%, -55%)",
           width: 900,
           height: 700,
-          background: "radial-gradient(ellipse at center, rgba(20,60,180,0.14) 0%, transparent 65%)",
+          background: "radial-gradient(ellipse at center, rgba(20,60,180,0.04) 0%, transparent 65%)",
           zIndex: 0,
-        }}
-        aria-hidden
-      />
-
-      {/* Bottom fade into mesh */}
-      <div
-        className="absolute bottom-0 left-0 right-0 h-56 pointer-events-none"
-        style={{
-          background: "linear-gradient(to bottom, transparent, #000000)",
-          zIndex: 1,
         }}
         aria-hidden
       />
@@ -66,7 +55,7 @@ export const Hero = () => {
 
         {/* Eyebrow */}
         <p
-          className="text-[10px] font-medium tracking-[0.28em] text-white/25 uppercase mb-12"
+          className="text-[11px] font-medium tracking-[0.15em] text-[#A1A1AA] uppercase mb-12"
           style={fadeIn(0)}
         >
           Columbus Earth — Frontier AI Research
@@ -74,15 +63,14 @@ export const Hero = () => {
 
         {/* Main Heading */}
         <h1
-          className={`${baumans.className} font-semibold text-white`}
+          className={`${spaceGrotesk.className} font-bold text-[#09090B] tracking-tight`}
           style={{
             fontSize: "clamp(50px, 7vw, 96px)",
-            letterSpacing: "-0.03em",
             lineHeight: 1.01,
             ...fadeIn(80),
           }}
         >
-          <span className="block text-white/40 font-normal">The frontier AI Lab</span>
+          <span className="block text-[#A1A1AA] font-normal">The frontier AI Lab</span>
           building the first in&#8209;production
           <br />
           Large Geospatial Model.
@@ -93,11 +81,11 @@ export const Hero = () => {
           className="mt-10 flex items-center gap-4"
           style={fadeIn(220)}
         >
-          <div style={{ width: 32, height: 1, background: "rgba(255,255,255,0.18)" }} />
-          <p className="text-[10px] font-medium tracking-[0.28em] text-white/22 uppercase">
+          <div style={{ width: 32, height: 1, background: "#E4E4E7" }} />
+          <p className="text-[11px] font-medium tracking-[0.15em] text-[#A1A1AA] uppercase">
             Columbus Pro-1
           </p>
-          <div style={{ width: 32, height: 1, background: "rgba(255,255,255,0.18)" }} />
+          <div style={{ width: 32, height: 1, background: "#E4E4E7" }} />
         </div>
 
         {/* CTAs */}
@@ -107,13 +95,13 @@ export const Hero = () => {
         >
           <Link
             href="/platform"
-            className="inline-flex items-center justify-center h-12 px-8 bg-white text-black text-[13px] font-semibold tracking-tight hover:bg-white/90 transition-colors"
+            className="inline-flex items-center justify-center h-11 px-6 bg-[#09090B] text-white text-sm font-medium hover:bg-[#09090B]/90 transition-colors"
           >
             Start Now
           </Link>
           <Link
             href="/technology"
-            className="inline-flex items-center justify-center h-12 px-8 border border-white/15 text-white/55 text-[13px] font-medium tracking-tight hover:border-white/30 hover:text-white/90 transition-all"
+            className="inline-flex items-center justify-center h-11 px-6 border border-[#E4E4E7] text-[#3F3F46] text-sm font-medium hover:bg-[#FAFAFA] transition-all"
           >
             Learn More →
           </Link>

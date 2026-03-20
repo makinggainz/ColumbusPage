@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
 
-import { GeistSans } from "geist/font/sans";
 import { cormorant, cambo } from "@/app/fonts";
+import { spaceGrotesk } from "@/lib/typography";
 import { LenisProvider } from "@/components/home/LenisContext";
 
 export { cormorant, cambo };
@@ -27,7 +27,7 @@ export default function RootLayout({
       </head>
 
       {/* Keep global styles simple - match GFrontEndWork: no Navbar/Footer here, no font on body */}
-      <body className={`${GeistSans.className} antialiased bg-white min-h-screen`}>
+      <body className={`${spaceGrotesk.className} antialiased bg-white min-h-screen`}>
         <LenisProvider>{children}</LenisProvider>
       </body>
     </html>

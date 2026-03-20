@@ -18,8 +18,8 @@ import { UniqueSpotsSection } from "@/components/home/UniqueSpotsSection";
 function Divider() {
   return (
     <div
-      className="w-full"
-      style={{ height: "1px", background: "rgba(255,255,255,0.06)" }}
+      className="w-full max-w-6xl mx-auto"
+      style={{ height: "1px", background: "#E4E4E7" }}
       aria-hidden
     />
   );
@@ -27,8 +27,8 @@ function Divider() {
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-black">
-      <Navbar theme="dark" />
+    <main className="min-h-screen bg-white">
+      <Navbar />
       <Hero />
       <MeshSection />
       <Divider />

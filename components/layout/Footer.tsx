@@ -14,14 +14,14 @@ export type FooterProps = {
 export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false }) => {
   if (variant === "compact") {
     return (
-      <footer data-navbar-theme="dark" className="relative bg-black border-t border-white/[0.06] text-white py-16">
+      <footer data-navbar-theme="light" className="relative bg-[#FAFAFA] border-t border-[#E4E4E7] py-16">
         <Container className="flex flex-col items-center text-center gap-6">
-          <p className="text-[14px] text-white/40 max-w-md leading-relaxed">
+          <p className="text-[14px] text-[#71717A] max-w-md leading-relaxed">
             The frontier AI lab building the first production Universal Geospatial Model.
           </p>
           <div className="flex gap-4">
-            <Mail size={16} className="cursor-pointer text-white/40 hover:text-white/70 transition-colors" />
-            <Linkedin size={16} className="cursor-pointer text-white/40 hover:text-white/70 transition-colors" />
+            <Mail size={16} className="cursor-pointer text-[#71717A] hover:text-[#09090B] transition-colors" />
+            <Linkedin size={16} className="cursor-pointer text-[#71717A] hover:text-[#09090B] transition-colors" />
           </div>
         </Container>
       </footer>
@@ -30,8 +30,8 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false })
 
   return (
     <footer
-      data-navbar-theme="dark"
-      className={`bg-black text-white border-t border-white/[0.06] ${reveal ? "h-screen" : ""}`}
+      data-navbar-theme="light"
+      className={`bg-[#FAFAFA] border-t border-[#E4E4E7] ${reveal ? "h-screen" : ""}`}
       style={reveal ? { position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 0 } : undefined}
     >
       <Container className="py-20 md:py-28 flex flex-col justify-between min-h-[500px]">
@@ -40,7 +40,7 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false })
         <div className="mb-20">
           {/* Logo */}
           <div className="flex items-center gap-2.5 mb-10">
-            <div className="relative h-8 w-8 shrink-0" style={{ filter: "brightness(0) invert(1)" }}>
+            <div className="relative h-8 w-8 shrink-0">
               <Image
                 src="/logobueno.png"
                 alt="Columbus Logo"
@@ -49,17 +49,17 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false })
                 className="object-contain"
               />
             </div>
-            <span className="text-[20px] font-medium leading-none tracking-tight text-white">
+            <span className="text-[20px] font-medium leading-none tracking-tight text-[#09090B]">
               Columbus Earth
             </span>
           </div>
 
-          <p className="text-[14px] leading-[1.7] text-white/35 max-w-md mb-5">
+          <p className="text-[14px] leading-[1.7] text-[#71717A] max-w-md mb-5">
             We are a group of engineers, designers, and company builders developing
             foundation models and data collection innovations to power the geospatial
             intelligence systems of tomorrow.
           </p>
-          <p className="text-[14px] leading-[1.7] text-white/35 max-w-md">
+          <p className="text-[14px] leading-[1.7] text-[#71717A] max-w-md">
             GeoContext-1 processes satellite imagery, terrain data, infrastructure networks,
             and temporal patterns to generate actionable intelligence across defence, climate,
             consumer and urban planning domains.
@@ -67,7 +67,7 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false })
         </div>
 
         {/* Bottom: Nav columns */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-10 md:gap-16 border-t border-white/[0.06] pt-12">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-10 md:gap-16 border-t border-[#E4E4E7] pt-12">
 
           <FooterColumn
             title="PRODUCT"
@@ -98,18 +98,18 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false })
           />
 
           <div>
-            <p className="text-[10px] font-medium tracking-[0.22em] text-white/22 uppercase mb-5">
+            <p className="text-[11px] font-medium tracking-[0.15em] text-[#A1A1AA] uppercase mb-5">
               Connect
             </p>
             <a
               href="mailto:contact@columbus.earth"
-              className="block text-[14px] text-white/40 hover:text-white/70 transition-colors mb-3"
+              className="block text-[14px] text-[#71717A] hover:text-[#09090B] transition-colors mb-3"
             >
               contact@columbus.earth
             </a>
             <div className="flex gap-4 mt-6">
-              <Mail size={16} className="cursor-pointer text-white/30 hover:text-white/60 transition-colors" />
-              <Linkedin size={16} className="cursor-pointer text-white/30 hover:text-white/60 transition-colors" />
+              <Mail size={16} className="cursor-pointer text-[#71717A] hover:text-[#09090B] transition-colors" />
+              <Linkedin size={16} className="cursor-pointer text-[#71717A] hover:text-[#09090B] transition-colors" />
             </div>
           </div>
 
@@ -118,9 +118,9 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false })
       </Container>
 
       {/* Bottom bar */}
-      <div className="border-t border-white/[0.05]">
-        <Container className="flex flex-col sm:flex-row items-center justify-between py-5 gap-3 text-white/22 text-[12px] tracking-[-0.01em]">
-          <span>Columbus Earth © 2026</span>
+      <div className="border-t border-[#E4E4E7]">
+        <Container className="flex flex-col sm:flex-row items-center justify-between py-5 gap-3 text-[#A1A1AA] text-[12px] tracking-[-0.01em]">
+          <span>Columbus Earth &copy; 2026</span>
           <div className="flex items-center gap-8">
             <span>Website made by hand, no AI.</span>
             <span>www.columbus.earth</span>
@@ -140,7 +140,7 @@ const FooterColumn = ({
   links: { label: string; href: string }[];
 }) => (
   <div>
-    <p className="text-[10px] font-medium tracking-[0.22em] text-white/22 uppercase mb-5">
+    <p className="text-[11px] font-medium tracking-[0.15em] text-[#A1A1AA] uppercase mb-5">
       {title}
     </p>
     <ul className="space-y-3">
@@ -148,7 +148,7 @@ const FooterColumn = ({
         <li key={i}>
           <Link
             href={link.href}
-            className="text-[14px] text-white/40 hover:text-white/70 transition-colors"
+            className="text-[14px] text-[#71717A] hover:text-[#09090B] transition-colors"
           >
             {link.label}
           </Link>

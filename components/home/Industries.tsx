@@ -28,11 +28,11 @@ export const Industries = () => {
     { src: "/Icon/img1.png", label: "Logistics Optimization", href: "#", num: "02" },
     { src: "/Icon/site.png", label: "Site Selection", href: "#", num: "03" },
     { src: "/Icon/urban.png", label: "Urban Planning Research", href: "#", num: "04" },
-    { src: "/Icon/more.png", label: "More", href: "#", num: "→" },
+    { src: "/Icon/more.png", label: "More", href: "#", num: "\u2192" },
   ];
 
   return (
-    <section className="bg-black py-28 lg:py-36">
+    <section className="bg-white py-28 lg:py-36">
       <Container>
         <div ref={sectionRef}>
 
@@ -46,12 +46,12 @@ export const Industries = () => {
               transition: "opacity 0.7s ease, transform 0.7s ease, filter 0.7s ease",
             }}
           >
-            <p className="text-[10px] font-medium tracking-[0.28em] text-white/25 uppercase mb-5">
+            <p className="text-[10px] font-medium tracking-[0.28em] text-[#A1A1AA] uppercase mb-5">
               Applications
             </p>
             <h2
-              className="font-semibold text-white"
-              style={{ fontSize: "clamp(28px, 3.5vw, 40px)", letterSpacing: "-0.025em" }}
+              className="font-bold text-[#09090B] tracking-tight"
+              style={{ fontSize: "clamp(28px, 3.5vw, 40px)" }}
             >
               See how Columbus could help you
             </h2>
@@ -71,22 +71,21 @@ export const Industries = () => {
               >
                 <Link href={item.href} className="group block">
                   <div
-                    className="relative overflow-hidden border border-white/[0.07] group-hover:border-white/20 transition-colors duration-300"
+                    className="relative overflow-hidden border border-[#E4E4E7] group-hover:border-[#A1A1AA] transition-colors duration-300"
                     style={{ width: index === 4 ? 120 : 295, height: 280 }}
                   >
                     {/* Number label */}
                     <div className="absolute top-4 left-4 z-20">
-                      <span className="text-[11px] font-medium tracking-[0.18em] text-white/30">
+                      <span className="text-[11px] font-medium tracking-[0.18em] text-white/70">
                         {item.num}
                       </span>
                     </div>
 
                     {index === 4 ? (
                       <div
-                        className="absolute inset-0 flex items-center justify-center"
-                        style={{ background: "rgba(7,17,42,0.6)" }}
+                        className="absolute inset-0 flex items-center justify-center bg-[#FAFAFA]"
                       >
-                        <ArrowUpRight size={28} strokeWidth={1.2} className="text-white/40" />
+                        <ArrowUpRight size={28} strokeWidth={1.2} className="text-[#A1A1AA]" />
                       </div>
                     ) : (
                       <>
@@ -96,20 +95,26 @@ export const Industries = () => {
                           fill
                           className="object-cover"
                         />
-                        <div className="absolute inset-0 bg-black/30 group-hover:bg-black/15 transition-colors duration-300" />
+                        <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors duration-300" />
+                        {/* Bottom label overlay */}
+                        <div className="absolute bottom-0 left-0 right-0 z-10 bg-white/80 backdrop-blur-sm px-4 py-3">
+                          <span className="text-[13px] font-medium text-[#09090B]">{item.label}</span>
+                        </div>
                       </>
                     )}
                   </div>
                 </Link>
 
-                <Link
-                  href={item.href}
-                  className="mt-4 inline-flex items-center gap-1.5 text-[14px] font-medium text-white/55 hover:text-white transition-colors duration-300"
-                  style={{ letterSpacing: "-0.01em" }}
-                >
-                  {item.label}
-                  <ArrowUpRight size={14} strokeWidth={1.6} />
-                </Link>
+                {index === 4 && (
+                  <Link
+                    href={item.href}
+                    className="mt-4 inline-flex items-center gap-1.5 text-[14px] font-medium text-[#71717A] hover:text-[#09090B] transition-colors duration-300"
+                    style={{ letterSpacing: "-0.01em" }}
+                  >
+                    {item.label}
+                    <ArrowUpRight size={14} strokeWidth={1.6} />
+                  </Link>
+                )}
               </div>
             ))}
           </div>
@@ -125,14 +130,14 @@ export const Industries = () => {
           >
             <Link
               href="/technology"
-              className="border border-white/[0.07] text-[14px] font-medium text-white/45 hover:text-white hover:border-white/20 transition-all inline-flex items-center justify-center gap-2 px-8 h-12"
+              className="border border-[#E4E4E7] text-[14px] font-medium text-[#3F3F46] hover:bg-[#FAFAFA] hover:border-[#A1A1AA] transition-all inline-flex items-center justify-center gap-2 px-8 h-12"
             >
               The technology that powers Columbus Pro
               <ArrowUpRight size={15} strokeWidth={1.6} />
             </Link>
             <Link
               href="/platform"
-              className="border border-white/[0.07] text-[14px] font-medium text-white/45 hover:text-white hover:border-white/20 transition-all inline-flex items-center justify-center gap-2 px-8 h-12"
+              className="border border-[#E4E4E7] text-[14px] font-medium text-[#3F3F46] hover:bg-[#FAFAFA] hover:border-[#A1A1AA] transition-all inline-flex items-center justify-center gap-2 px-8 h-12"
             >
               Learn more about Columbus Pro platform
               <ArrowUpRight size={15} strokeWidth={1.6} />

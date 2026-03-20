@@ -211,7 +211,7 @@ export const TravelPromo = () => {
         }
       }
 
-      // Emoji–emoji collisions
+      // Emoji-emoji collisions
       for (let i = 0; i < boxes.length; i++) {
         for (let j = i + 1; j < boxes.length; j++) {
           const a = boxes[i];
@@ -282,7 +282,7 @@ export const TravelPromo = () => {
     <section ref={sectionRef} className="relative" style={{ height: "200vh" }}>
       <div
         ref={containerRef}
-        className="sticky top-0 h-screen overflow-hidden bg-black"
+        className="sticky top-0 h-screen overflow-hidden bg-white"
       >
         {/* Physics canvas */}
         <canvas
@@ -299,7 +299,7 @@ export const TravelPromo = () => {
           >
             <h2
               ref={titleRef}
-              className="text-display font-semibold tracking-[-0.02em] text-white mb-1 md:mb-1.5"
+              className="text-display font-bold tracking-[-0.02em] text-[#09090B] mb-1 md:mb-1.5"
               style={fadeUp(titleP)}
             >
               Love to travel or go out?
@@ -307,10 +307,10 @@ export const TravelPromo = () => {
 
             <p
               ref={subtitleRef}
-              className="mt-1.5 text-[40px] font-normal tracking-[-0.03em] whitespace-nowrap bg-linear-to-r from-[#00BFFF] to-[#1E3A98] bg-clip-text text-transparent"
+              className="mt-1.5 text-[40px] font-normal tracking-[-0.03em] whitespace-nowrap text-[#71717A]"
               style={fadeUp(subtitleP)}
             >
-              <span className="font-semibold">MapsGPT</span>
+              <span className="font-semibold text-[#09090B]">MapsGPT</span>
               <span> is already answering thousands of queries in your area</span>
             </p>
           </div>
