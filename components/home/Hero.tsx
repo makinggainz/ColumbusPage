@@ -509,12 +509,12 @@ const WaveMesh = () => {
     const smy = mouseRef.current.y;
 
     // ── 3D Projection ──
-    const fov = 700;
-    const horizonY = H * 0.38;
-    const cameraHeight = 180;
-    const cellSize = 28;
-    const gridCols = 100;
-    const gridRows = 70;
+    const fov = 600;
+    const horizonY = H * 0.32 + 100;
+    const cameraHeight = 280;
+    const cellSize = 24;
+    const gridCols = 280;
+    const gridRows = 90;
 
     const project = (wx: number, wy: number, wz: number): { sx: number; sy: number } | null => {
       if (wz <= 1) return null;
@@ -712,8 +712,8 @@ const WaveMesh = () => {
         const p = grid[r][c];
         if (!p) continue;
         const depthT = r / gridRows;
-        ctx.strokeStyle = `rgba(55,40,140,${(0.04 + depthT * 0.14).toFixed(3)})`;
-        ctx.lineWidth = 0.4 + depthT * 0.5;
+        ctx.strokeStyle = `rgba(55,40,140,${(0.08 + depthT * 0.22).toFixed(3)})`;
+        ctx.lineWidth = 0.8 + depthT * 1.2;
         if (!started) { ctx.moveTo(p.sx, p.sy); started = true; }
         else ctx.lineTo(p.sx, p.sy);
       }
@@ -722,8 +722,8 @@ const WaveMesh = () => {
 
     for (let r = 0; r < gridRows; r++) {
       const depthT = r / gridRows;
-      ctx.strokeStyle = `rgba(55,40,140,${(0.04 + depthT * 0.16).toFixed(3)})`;
-      ctx.lineWidth = 0.4 + depthT * 0.6;
+      ctx.strokeStyle = `rgba(55,40,140,${(0.08 + depthT * 0.22).toFixed(3)})`;
+      ctx.lineWidth = 0.8 + depthT * 1.2;
       ctx.beginPath();
       let started = false;
       for (let c = 0; c < gridCols; c++) {
@@ -735,14 +735,14 @@ const WaveMesh = () => {
       ctx.stroke();
     }
 
-    for (let r = Math.floor(gridRows * 0.5); r < gridRows; r++) {
+    for (let r = Math.floor(gridRows * 0.6); r < gridRows; r++) {
       const depthT = r / gridRows;
-      ctx.fillStyle = `rgba(55,40,140,${(0.06 + depthT * 0.2).toFixed(3)})`;
+      ctx.fillStyle = `rgba(55,40,140,${(0.05 + depthT * 0.15).toFixed(3)})`;
       for (let c = 0; c < gridCols; c++) {
         const p = grid[r][c];
         if (!p) continue;
         ctx.beginPath();
-        ctx.arc(p.sx, p.sy, 0.6 + depthT, 0, Math.PI * 2);
+        ctx.arc(p.sx, p.sy, 0.4 + depthT * 0.6, 0, Math.PI * 2);
         ctx.fill();
       }
     }
@@ -812,8 +812,8 @@ const WaveMesh = () => {
   return (
     <canvas
       ref={canvasRef}
-      className="absolute left-0 right-0 w-full h-full"
-      style={{ zIndex: 0, top: 350 }}
+      className="absolute inset-0 w-full h-full"
+      style={{ zIndex: 0 }}
       aria-hidden
     />
   );
@@ -891,7 +891,7 @@ export const Hero = () => {
     <section
       className="relative overflow-hidden flex flex-col"
       style={{
-        background: "#FFFFFF",
+        background: "#F9F9F9",
         minHeight: "100vh",
       }}
     >
@@ -908,9 +908,9 @@ export const Hero = () => {
       <div
         className="absolute left-0 right-0 pointer-events-none"
         style={{
-          top: "30%",
-          height: "15%",
-          background: "linear-gradient(to bottom, #FFFFFF, transparent)",
+          top: "22%",
+          height: "18%",
+          background: "linear-gradient(to bottom, #F9F9F9, transparent)",
           zIndex: 1,
           opacity: hasScrolled ? 1 : 0,
           transition: "opacity 1200ms ease",
@@ -937,7 +937,7 @@ export const Hero = () => {
               ...fadeIn(80),
             }}
           >
-            The frontier AI Lab building the first in&#8209;production Large Geospatial Model.
+            Building the first in&#8209;production Large Geospatial Model.
           </h1>
 
           {/* Tag */}
