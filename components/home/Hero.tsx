@@ -23,7 +23,7 @@ export const Hero = () => {
       className="relative overflow-hidden flex flex-col items-center justify-center"
       style={{
         background: "#FFFFFF",
-        minHeight: "80vh",
+        minHeight: "100vh",
         paddingTop: 140,
         paddingBottom: 100,
       }}
