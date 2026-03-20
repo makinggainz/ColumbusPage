@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
-import { Container } from "@/components/layout/Container";
 import { Plus } from "lucide-react";
 
 export const TrustStrip = () => {
@@ -47,96 +46,90 @@ export const TrustStrip = () => {
   ];
 
   return (
-    <section className="bg-white py-28 lg:py-36">
-      <Container>
-        <div ref={sectionRef}>
+    <section className="bg-[#FFFFFF] py-[80px] md:py-[120px]">
+      <div className="max-w-[980px] mx-auto px-6" ref={sectionRef}>
 
-          {/* Header */}
-          <div
-            className="mb-16"
-            style={{
-              opacity: visible ? 1 : 0,
-              transform: visible ? "translateY(0)" : "translateY(16px)",
-              filter: visible ? "blur(0px)" : "blur(6px)",
-              transition: "opacity 0.7s ease, transform 0.7s ease, filter 0.7s ease",
-            }}
-          >
-            <p className="text-[10px] font-medium tracking-[0.28em] text-[#A1A1AA] uppercase mb-5">
-              Trusted Data
-            </p>
-            <h2
-              className="font-bold text-[#09090B] leading-tight tracking-tight"
-              style={{ fontSize: "clamp(28px, 3.5vw, 40px)" }}
-            >
-              Your plans are in good hands
-            </h2>
-            <p className="mt-3 text-[15px] text-[#71717A]">
-              We work with data from reputable global partners.
-            </p>
-          </div>
-
-          {/* Logos */}
-          <div
-            className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-8 items-center mb-20"
-            style={{
-              opacity: visible ? 0.6 : 0,
-              transition: "opacity 0.7s ease 0.15s",
-              filter: "grayscale(100%)",
-            }}
-          >
-            <Logo src="/MapsGPTLogos/Logo1.png" />
-            <Logo src="/MapsGPTLogos/Logo2.png" />
-            <Logo src="/MapsGPTLogos/Logo3.png" />
-            <Logo src="/MapsGPTLogos/Logo4.png" />
-            <Logo src="/MapsGPTLogos/Logo5.png" />
-            <Logo src="/MapsGPTLogos/Logo6.png" />
-          </div>
-
-          {/* FAQ */}
-          <div
-            style={{
-              opacity: visible ? 1 : 0,
-              transform: visible ? "translateY(0)" : "translateY(10px)",
-              transition: "opacity 0.7s ease 0.25s, transform 0.7s ease 0.25s",
-            }}
-          >
-            <p className="text-[10px] font-medium tracking-[0.28em] text-[#A1A1AA] uppercase mb-8">
-              Frequently Asked
-            </p>
-
-            <div>
-              {faqs.map((faq, index) => (
-                <div key={index} className="border-b border-[#E4E4E7]">
-                  <button
-                    className="w-full flex items-center justify-between py-6 text-left group"
-                    onClick={() => setOpenIndex(openIndex === index ? null : index)}
-                  >
-                    <span className="flex items-center gap-6">
-                      <span className="text-[11px] font-medium tracking-[0.18em] text-[#A1A1AA] shrink-0">
-                        {String(index + 1).padStart(2, "0")}
-                      </span>
-                      <span className="text-[15px] font-medium text-[#09090B] group-hover:text-[#3F3F46] transition-colors duration-200">
-                        {faq.q}
-                      </span>
-                    </span>
-                    <Plus
-                      size={16}
-                      strokeWidth={1.5}
-                      className={`text-[#A1A1AA] shrink-0 ml-4 transition-transform duration-300 ${openIndex === index ? "rotate-45" : ""}`}
-                    />
-                  </button>
-                  {openIndex === index && (
-                    <p className="pb-6 pl-[calc(11px+24px)] text-[14px] leading-relaxed text-[#3F3F46]">
-                      {faq.a}
-                    </p>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-
+        {/* Header */}
+        <div
+          className="mb-16"
+          style={{
+            opacity: visible ? 1 : 0,
+            transform: visible ? "translateY(0)" : "translateY(16px)",
+            filter: visible ? "blur(0px)" : "blur(6px)",
+            transition: "opacity 0.7s ease, transform 0.7s ease, filter 0.7s ease",
+          }}
+        >
+          <h2 className="text-[48px] md:text-[56px] font-semibold tracking-[-0.003em] leading-[1.07] text-[#1D1D1F] text-center">
+            Your plans are in good hands
+          </h2>
+          <p className="mt-4 text-[21px] md:text-[24px] font-normal leading-[1.38] text-[#6E6E73] text-center">
+            We work with data from reputable global partners.
+          </p>
         </div>
-      </Container>
+
+        {/* Logos */}
+        <div
+          className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-8 items-center justify-items-center mb-20"
+          style={{
+            opacity: visible ? 0.5 : 0,
+            transition: "opacity 0.7s ease 0.15s",
+            filter: "grayscale(100%)",
+          }}
+        >
+          <Logo src="/MapsGPTLogos/Logo1.png" />
+          <Logo src="/MapsGPTLogos/Logo2.png" />
+          <Logo src="/MapsGPTLogos/Logo3.png" />
+          <Logo src="/MapsGPTLogos/Logo4.png" />
+          <Logo src="/MapsGPTLogos/Logo5.png" />
+          <Logo src="/MapsGPTLogos/Logo6.png" />
+        </div>
+
+        {/* FAQ */}
+        <div
+          className="max-w-[680px] mx-auto"
+          style={{
+            opacity: visible ? 1 : 0,
+            transform: visible ? "translateY(0)" : "translateY(10px)",
+            transition: "opacity 0.7s ease 0.25s, transform 0.7s ease 0.25s",
+          }}
+        >
+          <h3 className="text-[21px] md:text-[24px] font-semibold text-[#1D1D1F] text-center mb-10">
+            Frequently Asked Questions
+          </h3>
+
+          <div>
+            {faqs.map((faq, index) => (
+              <div key={index} className="border-b border-[rgba(0,0,0,0.08)]">
+                <button
+                  className="w-full flex items-center justify-between py-5 text-left group"
+                  onClick={() => setOpenIndex(openIndex === index ? null : index)}
+                >
+                  <span className="text-[17px] font-semibold text-[#1D1D1F] pr-4">
+                    {faq.q}
+                  </span>
+                  <Plus
+                    size={18}
+                    strokeWidth={1.5}
+                    className={`text-[#6E6E73] shrink-0 transition-transform duration-300 ease-in-out ${openIndex === index ? "rotate-45" : ""}`}
+                  />
+                </button>
+                <div
+                  className="overflow-hidden transition-all duration-300 ease-in-out"
+                  style={{
+                    maxHeight: openIndex === index ? "200px" : "0px",
+                    opacity: openIndex === index ? 1 : 0,
+                  }}
+                >
+                  <p className="pb-5 text-[17px] leading-[1.47] text-[#6E6E73]">
+                    {faq.a}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+      </div>
     </section>
   );
 };

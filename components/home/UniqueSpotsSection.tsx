@@ -1,7 +1,6 @@
 "use client";
 
 import { Star, MapPin } from "lucide-react";
-import { Container } from "@/components/layout/Container";
 import { useRef, useState, useEffect } from "react";
 
 const FAVORITE_SPOTS_FILES = ["(20).jpeg", "(14).jpeg", "(17).jpeg", "(19).jpeg", "(21).jpeg", "(23).jpeg", "(24).jpeg", "(22).jpeg"];
@@ -57,10 +56,10 @@ export const UniqueSpotsSection = () => {
   };
 
   return (
-    <section className="bg-white py-24 md:py-32 overflow-hidden" ref={sectionRef}>
+    <section className="bg-[#F5F5F7] py-[80px] md:py-[120px] overflow-hidden" ref={sectionRef}>
 
       {/* Header */}
-      <Container className="mb-10">
+      <div className="max-w-[980px] mx-auto px-6 mb-12">
         <div
           style={{
             opacity: visible ? 1 : 0,
@@ -68,35 +67,32 @@ export const UniqueSpotsSection = () => {
             transition: "opacity 0.7s ease, transform 0.7s ease",
           }}
         >
-          <p className="text-[10px] font-medium tracking-[0.28em] text-[#A1A1AA] uppercase mb-5">
-            MapsGPT
-          </p>
-          <h2
-            className="font-bold text-[#09090B] tracking-tight"
-            style={{ fontSize: "clamp(24px, 3vw, 38px)" }}
-          >
+          <h2 className="text-[48px] md:text-[56px] font-semibold tracking-[-0.003em] leading-[1.07] text-[#1D1D1F] text-center">
             Unique spots people are favoriting
           </h2>
+          <p className="mt-4 text-[21px] md:text-[24px] font-normal leading-[1.38] text-[#6E6E73] text-center">
+            Curated places discovered through MapsGPT.
+          </p>
         </div>
-      </Container>
+      </div>
 
       {/* Scrollable cards */}
       <div className="w-full relative">
         {/* Left fade */}
         <div
           className="absolute left-0 top-0 bottom-0 w-24 pointer-events-none z-20"
-          style={{ background: "linear-gradient(to right, #FFFFFF 0%, transparent 100%)" }}
+          style={{ background: "linear-gradient(to right, #F5F5F7 0%, transparent 100%)" }}
           aria-hidden
         />
         {/* Right fade */}
         <div
           className="absolute right-0 top-0 bottom-0 w-24 pointer-events-none z-20"
-          style={{ background: "linear-gradient(to left, #FFFFFF 0%, transparent 100%)" }}
+          style={{ background: "linear-gradient(to left, #F5F5F7 0%, transparent 100%)" }}
           aria-hidden
         />
         <div
           ref={scrollRef}
-          className="flex gap-4 overflow-x-auto py-4 px-8 select-none"
+          className="flex gap-5 overflow-x-auto py-4 px-8 select-none"
           style={{
             scrollbarWidth: "none",
             cursor: isDragging ? "grabbing" : "grab",
@@ -121,11 +117,11 @@ export const UniqueSpotsSection = () => {
 function SpotCard({ spot }: { spot: (typeof SPOTS)[0] }) {
   return (
     <div
-      className="flex flex-col shrink-0 overflow-hidden border border-[#E4E4E7] hover:border-[#A1A1AA] transition-colors duration-300 bg-white"
+      className="flex flex-col shrink-0 overflow-hidden rounded-2xl bg-white shadow-sm hover:shadow-md transition-shadow duration-300"
       style={{ width: 320 }}
     >
       {/* Image area */}
-      <div className="relative w-full h-44 overflow-hidden bg-[#FAFAFA] shrink-0">
+      <div className="relative w-full h-48 overflow-hidden bg-[#F5F5F7] shrink-0">
         {spot.image && (
           <img
             src={spotImageSrc(spot.image)}
@@ -134,26 +130,23 @@ function SpotCard({ spot }: { spot: (typeof SPOTS)[0] }) {
           />
         )}
         {/* Rating pill */}
-        <div
-          className="absolute top-3 right-3 h-7 px-2.5 flex items-center gap-1.5"
-          style={{ background: "rgba(0,0,0,0.55)", backdropFilter: "blur(8px)" }}
-        >
+        <div className="absolute top-3 right-3 h-7 px-2.5 flex items-center gap-1.5 rounded-full bg-white/90 backdrop-blur-md">
           <Star className="w-3.5 h-3.5 shrink-0 text-[#E46962]" fill="#E46962" />
-          <span className="font-semibold text-[13px] text-white">{spot.rating}</span>
+          <span className="font-semibold text-[13px] text-[#1D1D1F]">{spot.rating}</span>
         </div>
       </div>
 
       {/* Content */}
-      <div className="px-5 py-4 flex flex-col flex-1">
-        <h3 className="font-semibold text-[16px] text-[#09090B] tracking-[-0.015em] mb-1.5">
+      <div className="px-5 py-5 flex flex-col flex-1">
+        <h3 className="font-semibold text-[17px] text-[#1D1D1F] tracking-[-0.01em] mb-1.5">
           {spot.title}
         </h3>
-        <p className="text-[13px] leading-[1.55] text-[#3F3F46] line-clamp-2 mb-3">
+        <p className="text-[14px] leading-[1.47] text-[#6E6E73] line-clamp-2 mb-3">
           {spot.description}
         </p>
         <div className="flex items-center gap-2 mt-auto">
-          <MapPin className="w-4 h-4 shrink-0 text-[#A1A1AA]" />
-          <span className="text-[13px] text-[#A1A1AA]">{spot.location}</span>
+          <MapPin className="w-4 h-4 shrink-0 text-[#6E6E73]" />
+          <span className="text-[14px] text-[#6E6E73]">{spot.location}</span>
         </div>
       </div>
     </div>

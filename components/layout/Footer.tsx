@@ -4,26 +4,26 @@ import type { FC } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Mail, Linkedin } from "lucide-react";
-import { Container } from "@/components/layout/Container";
 
 export type FooterProps = {
   variant?: "default" | "compact";
   reveal?: boolean;
+  theme?: "light" | "dark";
 };
 
 export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false }) => {
   if (variant === "compact") {
     return (
-      <footer data-navbar-theme="light" className="relative bg-[#FAFAFA] border-t border-[#E4E4E7] py-16">
-        <Container className="flex flex-col items-center text-center gap-6">
-          <p className="text-[14px] text-[#71717A] max-w-md leading-relaxed">
+      <footer data-navbar-theme="light" className="relative bg-[#F5F5F7] border-t border-[rgba(0,0,0,0.08)] py-10">
+        <div className="max-w-[980px] mx-auto px-6 flex flex-col items-center text-center gap-5">
+          <p className="text-[12px] text-[#6E6E73] max-w-md leading-relaxed">
             The frontier AI lab building the first production Universal Geospatial Model.
           </p>
           <div className="flex gap-4">
-            <Mail size={16} className="cursor-pointer text-[#71717A] hover:text-[#09090B] transition-colors" />
-            <Linkedin size={16} className="cursor-pointer text-[#71717A] hover:text-[#09090B] transition-colors" />
+            <Mail size={16} className="cursor-pointer text-[#6E6E73] hover:text-[#1D1D1F] transition-colors" />
+            <Linkedin size={16} className="cursor-pointer text-[#6E6E73] hover:text-[#1D1D1F] transition-colors" />
           </div>
-        </Container>
+        </div>
       </footer>
     );
   }
@@ -31,35 +31,35 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false })
   return (
     <footer
       data-navbar-theme="light"
-      className={`bg-[#FAFAFA] border-t border-[#E4E4E7] ${reveal ? "h-screen" : ""}`}
+      className={`bg-[#F5F5F7] border-t border-[rgba(0,0,0,0.08)] ${reveal ? "h-screen" : ""}`}
       style={reveal ? { position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 0 } : undefined}
     >
-      <Container className="py-20 md:py-28 flex flex-col justify-between min-h-[500px]">
+      <div className="max-w-[980px] mx-auto px-6 py-[40px] flex flex-col justify-between min-h-[460px]">
 
-        {/* Top: Mission */}
-        <div className="mb-20">
+        {/* Top: Logo + description */}
+        <div className="mb-16">
           {/* Logo */}
-          <div className="flex items-center gap-2.5 mb-10">
-            <div className="relative h-8 w-8 shrink-0">
+          <div className="flex items-center gap-2.5 mb-6">
+            <div className="relative h-7 w-7 shrink-0">
               <Image
                 src="/logobueno.png"
                 alt="Columbus Logo"
                 fill
-                sizes="32px"
+                sizes="28px"
                 className="object-contain"
               />
             </div>
-            <span className="text-[20px] font-medium leading-none tracking-tight text-[#09090B]">
+            <span className="text-[14px] font-semibold leading-none text-[#1D1D1F]">
               Columbus Earth
             </span>
           </div>
 
-          <p className="text-[14px] leading-[1.7] text-[#71717A] max-w-md mb-5">
+          <p className="text-[12px] leading-[1.7] text-[#6E6E73] max-w-[280px] mb-4">
             We are a group of engineers, designers, and company builders developing
             foundation models and data collection innovations to power the geospatial
             intelligence systems of tomorrow.
           </p>
-          <p className="text-[14px] leading-[1.7] text-[#71717A] max-w-md">
+          <p className="text-[12px] leading-[1.7] text-[#6E6E73] max-w-[280px]">
             GeoContext-1 processes satellite imagery, terrain data, infrastructure networks,
             and temporal patterns to generate actionable intelligence across defence, climate,
             consumer and urban planning domains.
@@ -67,10 +67,10 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false })
         </div>
 
         {/* Bottom: Nav columns */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-10 md:gap-16 border-t border-[#E4E4E7] pt-12">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-10 md:gap-16 border-t border-[rgba(0,0,0,0.08)] pt-10">
 
           <FooterColumn
-            title="PRODUCT"
+            title="Product"
             links={[
               { label: "Columbus Pro", href: "/platform" },
               { label: "Use Cases", href: "/use-cases" },
@@ -79,7 +79,7 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false })
           />
 
           <FooterColumn
-            title="TECHNOLOGY"
+            title="Technology"
             links={[
               { label: "LGM vs LLM", href: "/technology" },
               { label: "Data Collection", href: "/technology" },
@@ -89,7 +89,7 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false })
           />
 
           <FooterColumn
-            title="COMPANY"
+            title="Company"
             links={[
               { label: "Our Mission", href: "/our-mission" },
               { label: "Careers", href: "/" },
@@ -98,34 +98,34 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false })
           />
 
           <div>
-            <p className="text-[11px] font-medium tracking-[0.15em] text-[#A1A1AA] uppercase mb-5">
+            <p className="text-[12px] font-semibold text-[#1D1D1F] mb-3">
               Connect
             </p>
             <a
               href="mailto:contact@columbus.earth"
-              className="block text-[14px] text-[#71717A] hover:text-[#09090B] transition-colors mb-3"
+              className="block text-[12px] text-[#6E6E73] hover:text-[#1D1D1F] hover:underline transition-colors mb-2 leading-[2]"
             >
               contact@columbus.earth
             </a>
-            <div className="flex gap-4 mt-6">
-              <Mail size={16} className="cursor-pointer text-[#71717A] hover:text-[#09090B] transition-colors" />
-              <Linkedin size={16} className="cursor-pointer text-[#71717A] hover:text-[#09090B] transition-colors" />
+            <div className="flex gap-4 mt-4">
+              <Mail size={16} className="cursor-pointer text-[#6E6E73] hover:text-[#1D1D1F] transition-colors" />
+              <Linkedin size={16} className="cursor-pointer text-[#6E6E73] hover:text-[#1D1D1F] transition-colors" />
             </div>
           </div>
 
         </div>
 
-      </Container>
+      </div>
 
       {/* Bottom bar */}
-      <div className="border-t border-[#E4E4E7]">
-        <Container className="flex flex-col sm:flex-row items-center justify-between py-5 gap-3 text-[#A1A1AA] text-[12px] tracking-[-0.01em]">
+      <div className="border-t border-[rgba(0,0,0,0.08)]">
+        <div className="max-w-[980px] mx-auto px-6 flex flex-col sm:flex-row items-center justify-between py-4 gap-3 text-[#6E6E73] text-[12px]">
           <span>Columbus Earth &copy; 2026</span>
           <div className="flex items-center gap-8">
             <span>Website made by hand, no AI.</span>
             <span>www.columbus.earth</span>
           </div>
-        </Container>
+        </div>
       </div>
 
     </footer>
@@ -140,15 +140,15 @@ const FooterColumn = ({
   links: { label: string; href: string }[];
 }) => (
   <div>
-    <p className="text-[11px] font-medium tracking-[0.15em] text-[#A1A1AA] uppercase mb-5">
+    <p className="text-[12px] font-semibold text-[#1D1D1F] mb-3">
       {title}
     </p>
-    <ul className="space-y-3">
+    <ul className="space-y-0">
       {links.map((link, i) => (
         <li key={i}>
           <Link
             href={link.href}
-            className="text-[14px] text-[#71717A] hover:text-[#09090B] transition-colors"
+            className="text-[12px] leading-[2] text-[#6E6E73] hover:text-[#1D1D1F] hover:underline transition-colors"
           >
             {link.label}
           </Link>

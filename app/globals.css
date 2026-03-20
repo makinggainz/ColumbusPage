@@ -7,7 +7,7 @@ body {
   margin: 0;
   padding: 0;
   background: #FFFFFF;
-  color: #09090B;
+  color: #1D1D1F;
   overflow-x: clip;
   min-height: 100%;
 }
@@ -26,9 +26,9 @@ html {
 /* Theme variables */
 :root {
   --background: #FFFFFF;
-  --foreground: #09090B;
-  --primary: #09090B;
-  --accent: #1C274C;
+  --foreground: #1D1D1F;
+  --primary: #1D1D1F;
+  --accent: #0066CC;
   --container-padding: 20px;
   --page-padding: calc(var(--container-padding) + 18px); /* matches navbar logo/hamburger edges */
 }

@@ -1,9 +1,8 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { Container } from "@/components/layout/Container";
-import { spaceGrotesk } from "@/lib/typography";
 
 export const SiteSelection = () => {
   const titleRef = useRef<HTMLHeadingElement>(null);
@@ -36,131 +35,136 @@ export const SiteSelection = () => {
   });
 
   return (
-    <section className="bg-white py-16 sm:py-24 lg:py-32">
-      <Container>
-        <div className="relative">
+    <section className="bg-[#FFFFFF] py-[80px] md:py-[120px]">
+      <div className="max-w-[980px] mx-auto px-6">
 
-          {/* Label + Title */}
-          <div
-            className="mb-6 lg:mb-8"
-            style={animStyle(titleVisible, "0.05s")}
+        {/* Centered intro */}
+        <div
+          className="text-center mb-12"
+          style={animStyle(titleVisible, "0.05s")}
+        >
+          <p className="text-[17px] font-semibold text-[#6E6E73] mb-4">
+            Product
+          </p>
+          <h2
+            ref={titleRef}
+            className="text-[48px] md:text-[56px] font-semibold tracking-[-0.003em] leading-[1.07] text-[#1D1D1F] text-center"
           >
-            <p className="text-[10px] font-medium tracking-[0.28em] text-[#A1A1AA] uppercase mb-5">
-              Product
+            Site Selection Reimagined
+          </h2>
+          <p className="text-[21px] md:text-[24px] font-normal leading-[1.38] text-[#6E6E73] text-center max-w-[600px] mx-auto mt-4">
+            An entirely new way to explore, analyze, and decide.
+          </p>
+        </div>
+
+        {/* Large feature card */}
+        <div
+          ref={cardRef}
+          className="relative overflow-hidden rounded-3xl bg-[#F5F5F7]"
+          style={{
+            minHeight: 680,
+            ...animStyle(cardVisible, "0.2s"),
+          }}
+        >
+          {/* Text content - top left */}
+          <div className="relative z-10 p-10 md:p-14 lg:p-16 max-w-[420px]">
+            {/* Bullet points */}
+            <ul className="space-y-4 mb-10">
+              {[
+                "An end-to-end Site Selection tool.",
+                "Generate new maps, in seconds.",
+                "Find exclusive critical datasets for your decisions.",
+                "Cheaper due diligence.",
+              ].map((item, i) => (
+                <li key={i} className="flex items-start gap-3">
+                  <span className="mt-[10px] w-[5px] h-[5px] rounded-full bg-[#6E6E73] shrink-0" aria-hidden />
+                  <span className="text-[17px] font-normal leading-[1.47] text-[#1D1D1F]">{item}</span>
+                </li>
+              ))}
+            </ul>
+
+            {/* Super-explorer tagline */}
+            <p className="text-[17px] leading-[1.47] text-[#6E6E73] mb-8">
+              Columbus turns you into a{" "}
+              <span className="font-semibold text-[#6E6E73]">super-explorer.</span>
             </p>
-            <h2
-              ref={titleRef}
-              className="font-bold text-[#09090B] flex items-center gap-4 flex-wrap tracking-tight"
-              style={{ fontSize: "clamp(24px, 3vw, 40px)" }}
-            >
-              Introducing Columbus
-              <span className="text-[10px] font-medium tracking-[0.22em] text-[#A1A1AA] border border-[#E4E4E7] px-3 py-1 uppercase">
-                NEW
-              </span>
-            </h2>
+
+            {/* CTA links + pill button */}
+            <div className="flex flex-wrap items-center gap-4">
+              <Link
+                href="/platform"
+                className="bg-[#0071E3] text-white rounded-full px-[22px] py-[11px] text-[17px] font-normal hover:bg-[#0077ED] transition-colors"
+              >
+                Start now
+              </Link>
+              <Link
+                href="/technology"
+                className="text-[#0066CC] text-[20px] hover:underline transition-colors"
+              >
+                Learn more &#8250;
+              </Link>
+              <Link
+                href="/platform"
+                className="text-[#0066CC] text-[20px] hover:underline transition-colors"
+              >
+                Try it now &#8250;
+              </Link>
+            </div>
           </div>
 
-          {/* Card */}
+          {/* DESKTOP UI mockup */}
           <div
-            ref={cardRef}
-            data-navbar-theme="dark"
-            className="relative overflow-hidden border border-[#E4E4E7] bg-[#FAFAFA]"
+            className="absolute bottom-0 right-0 z-10 hidden md:block"
             style={{
-              height: 773,
-              padding: "52px 64px 0",
-              ...animStyle(cardVisible, "0.2s"),
+              width: "62%",
+              height: "75%",
+              overflow: "hidden",
+              borderTopLeftRadius: 12,
+              boxShadow: "0 40px 120px rgba(0,0,0,0.08), 0 0 60px rgba(0,0,0,0.04)",
             }}
           >
-            {/* Heading */}
-            <h2
-              className={`${spaceGrotesk.className} font-bold leading-none text-[#09090B] relative z-10`}
-              style={{ fontSize: "clamp(60px, 6vw, 96px)", letterSpacing: "-0.02em" }}
-            >
-              Site Selection
-              <br />
-              Reimagined
-            </h2>
+            <Image
+              src="/Icon/desktop-ui.png"
+              alt="Desktop UI"
+              fill
+              className="object-cover object-top-left rounded-tl-xl"
+            />
+          </div>
 
-            {/* Bullet points */}
-            <div className="absolute text-[#3F3F46] z-10" style={{ top: 220, left: 64, right: 1072 }}>
-              <ul className="space-y-4 list-none pl-0" style={{ fontSize: "17px" }}>
-                {[
-                  "An end-to-end Site Selection tool.",
-                  "Generate new maps, in seconds.",
-                  "Find exclusive critical datasets for your decisions.",
-                  "Cheaper due diligence.",
-                ].map((item, i) => (
-                  <li key={i} className="flex items-center gap-5">
-                    <span className="bg-[#09090B] w-1 h-1 shrink-0" aria-hidden />
-                    <span className="text-[#3F3F46]">{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
+          {/* MOBILE UI mockup */}
+          <div
+            className="absolute bottom-0 z-20 hidden md:block"
+            style={{
+              right: 16,
+              width: 200,
+              height: "78%",
+              overflow: "hidden",
+              borderRadius: 20,
+              boxShadow: "0 40px 140px rgba(0,0,0,0.10)",
+            }}
+          >
+            <Image
+              src="/Icon/mobile-ui.png"
+              alt="Mobile UI"
+              fill
+              className="object-cover rounded-[20px]"
+            />
+          </div>
 
-            {/* Paragraph + buttons */}
-            <div className="absolute z-10" style={{ bottom: 62, left: 64, right: 1072 }}>
-              <p className="text-[#A1A1AA] mb-8" style={{ fontSize: "17px", lineHeight: 1.5 }}>
-                Columbus turns you into a{" "}
-                <span className="font-semibold text-[#09090B]">super-explorer.</span>
-              </p>
-
-              <div className="flex items-center gap-3">
-                <button
-                  className="bg-[#09090B] text-white text-[14px] font-medium hover:bg-[#3F3F46] transition-colors h-11 px-8"
-                >
-                  Check it out &rarr;
-                </button>
-                <button
-                  className="border border-[#E4E4E7] text-[#3F3F46] text-[14px] font-medium hover:bg-[#FAFAFA] transition-colors h-11 px-8"
-                >
-                  Learn more
-                </button>
-              </div>
-            </div>
-
-            {/* DESKTOP UI */}
-            <div
-              className="absolute bottom-0 right-0 z-10"
-              style={{
-                width: 997,
-                height: 571,
-                overflow: "hidden",
-                border: "1px solid rgba(0,0,0,0.06)",
-                boxShadow: "0 40px 120px rgba(0,0,0,0.08), 0 0 60px rgba(0,0,0,0.04)",
-              }}
-            >
+          {/* Mobile-only stacked images */}
+          <div className="block md:hidden px-6 pb-6">
+            <div className="relative w-full h-[300px] rounded-2xl overflow-hidden shadow-sm">
               <Image
                 src="/Icon/desktop-ui.png"
                 alt="Desktop UI"
                 fill
-                className="object-cover"
+                className="object-cover rounded-2xl"
               />
             </div>
-
-            {/* MOBILE UI */}
-            <div
-              className="absolute bottom-0 z-20"
-              style={{
-                right: 15,
-                width: 266,
-                height: 579,
-                overflow: "hidden",
-                boxShadow: "0 40px 140px rgba(0,0,0,0.08)",
-                border: "1px solid rgba(0,0,0,0.06)",
-              }}
-            >
-              <Image
-                src="/Icon/mobile-ui.png"
-                alt="Mobile UI"
-                fill
-                className="object-cover"
-              />
-            </div>
-
           </div>
         </div>
-      </Container>
+
+      </div>
     </section>
   );
 };

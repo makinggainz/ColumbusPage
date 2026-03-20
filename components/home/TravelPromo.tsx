@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Container } from "@/components/layout/Container";
+import Link from "next/link";
 
 const EMOJI_DEFS = [
   { src: "/emoji/cake.png",       top: 0.02, left: 0.01,  size: 160 },
@@ -75,6 +75,7 @@ export const TravelPromo = () => {
   const canvasRef    = useRef<HTMLCanvasElement>(null);
   const titleRef     = useRef<HTMLHeadingElement>(null);
   const subtitleRef  = useRef<HTMLParagraphElement>(null);
+  const ctaRef       = useRef<HTMLDivElement>(null);
   const boxesRef     = useRef<Box[]>([]);
   const imagesRef    = useRef<HTMLImageElement[]>([]);
   const spawnedRef   = useRef(false);
@@ -166,7 +167,7 @@ export const TravelPromo = () => {
       // Text obstacle rects in canvas-local coords
       const canvasRect = canvas.getBoundingClientRect();
       const obstacles: Rect[] = [];
-      for (const el of [titleRef.current, subtitleRef.current]) {
+      for (const el of [titleRef.current, subtitleRef.current, ctaRef.current]) {
         if (!el) continue;
         const r = el.getBoundingClientRect();
         obstacles.push({
@@ -277,12 +278,13 @@ export const TravelPromo = () => {
 
   const titleP    = ease(progress, 0.15, 0.38);
   const subtitleP = ease(progress, 0.30, 0.52);
+  const ctaP      = ease(progress, 0.40, 0.60);
 
   return (
     <section ref={sectionRef} className="relative" style={{ height: "200vh" }}>
       <div
         ref={containerRef}
-        className="sticky top-0 h-screen overflow-hidden bg-white"
+        className="sticky top-0 h-screen overflow-hidden bg-[#FFFFFF]"
       >
         {/* Physics canvas */}
         <canvas
@@ -292,14 +294,14 @@ export const TravelPromo = () => {
         />
 
         {/* Center Content */}
-        <Container className="relative h-full">
+        <div className="relative h-full">
           <div
-            className="absolute inset-0 flex flex-col items-center justify-center text-center px-4 pointer-events-none"
+            className="absolute inset-0 flex flex-col items-center justify-center text-center px-6 pointer-events-none"
             style={{ zIndex: 2 }}
           >
             <h2
               ref={titleRef}
-              className="text-display font-bold tracking-[-0.02em] text-[#09090B] mb-1 md:mb-1.5"
+              className="text-[48px] md:text-[56px] font-semibold tracking-[-0.003em] leading-[1.07] text-[#1D1D1F] mb-4"
               style={fadeUp(titleP)}
             >
               Love to travel or go out?
@@ -307,14 +309,27 @@ export const TravelPromo = () => {
 
             <p
               ref={subtitleRef}
-              className="mt-1.5 text-[40px] font-normal tracking-[-0.03em] whitespace-nowrap text-[#71717A]"
+              className="text-[21px] md:text-[24px] font-normal leading-[1.38] text-[#6E6E73] max-w-[680px]"
               style={fadeUp(subtitleP)}
             >
-              <span className="font-semibold text-[#09090B]">MapsGPT</span>
-              <span> is already answering thousands of queries in your area</span>
+              <span className="font-semibold text-[#1D1D1F]">MapsGPT</span>
+              {" "}is already answering thousands of queries in your area
             </p>
+
+            <div
+              ref={ctaRef}
+              className="mt-6 pointer-events-auto"
+              style={fadeUp(ctaP)}
+            >
+              <Link
+                href="/maps-gpt"
+                className="text-[#0066CC] text-[20px] hover:underline"
+              >
+                Try MapsGPT ›
+              </Link>
+            </div>
           </div>
-        </Container>
+        </div>
       </div>
     </section>
   );

@@ -3,7 +3,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { Container } from "@/components/layout/Container";
 import { cambo } from "@/app/fonts";
 
 export const TravelSection = () => {
@@ -29,27 +28,26 @@ export const TravelSection = () => {
   });
 
   return (
-    <section className="bg-white py-4 sm:py-10 lg:py-16">
-      <Container>
+    <section className="bg-[#F5F5F7] py-[80px] md:py-[120px]">
+      <div className="max-w-[980px] mx-auto px-6">
         <div
           ref={cardRef}
-          className="relative overflow-hidden border border-[#E4E4E7]"
+          className="relative overflow-hidden bg-white rounded-3xl shadow-sm"
           style={{
             height: 773,
             padding: "52px 64px 0",
-            background: "linear-gradient(314deg, #FAFAFA -7%, #F0F0F2 50%, #E8E8EC 108%)",
             ...animStyle(cardVisible, "0.1s"),
           }}
         >
 
           {/* TEXT BLOCK */}
           <div className="flex flex-col" style={{ maxWidth: 480 }}>
-            <p className="text-[10px] font-medium tracking-[0.28em] uppercase text-[#A1A1AA] mb-5">
+            <p className="text-[12px] font-semibold tracking-[0.1em] uppercase text-[#6E6E73] mb-5">
               Available everywhere
             </p>
 
             <h2
-              className="font-normal leading-none text-[#09090B] mb-6"
+              className="font-semibold leading-none text-[#1D1D1F] mb-6"
               style={{
                 fontSize: "clamp(56px, 6vw, 96px)",
                 letterSpacing: "-0.02em",
@@ -60,19 +58,19 @@ export const TravelSection = () => {
               <br />a boss
             </h2>
 
-            <p className="text-[15px] text-[#71717A] mb-6">
+            <p className="text-[17px] text-[#6E6E73] mb-6 leading-[1.47]">
               MapsGPT is your local guide in your pocket.
             </p>
 
-            <ul className="space-y-3.5 list-none pl-0 text-[#09090B]" style={{ fontSize: "17px" }}>
+            <ul className="space-y-3.5 list-none pl-0">
               {[
                 "Plan cool trips",
                 "Make itineraries",
                 "Take care of every preference & detail",
               ].map((item, i) => (
-                <li key={i} className="flex items-center gap-5">
-                  <span className="rounded-full bg-[#09090B]/40 w-1.5 h-1.5 shrink-0 bullet-halo-dark" aria-hidden />
-                  <span className="text-[#3F3F46]">{item}</span>
+                <li key={i} className="flex items-center gap-4 text-[17px]">
+                  <span className="rounded-full bg-[#1D1D1F]/30 w-[5px] h-[5px] shrink-0" aria-hidden />
+                  <span className="text-[#1D1D1F]">{item}</span>
                 </li>
               ))}
             </ul>
@@ -80,34 +78,32 @@ export const TravelSection = () => {
 
           {/* BUTTONS */}
           <div className="absolute" style={{ bottom: 62, left: 64 }}>
-            <p className="text-[#71717A] mb-8" style={{ fontSize: "17px" }}>
+            <p className="text-[#6E6E73] mb-6 text-[17px] leading-[1.47]">
               Find your next hang out spot, easier.
             </p>
-            <div className="flex flex-row gap-3">
+            <div className="flex flex-row items-center gap-4">
               <Link
                 href="/maps-gpt"
-                className="bg-[#09090B] text-white text-[14px] font-medium hover:bg-[#09090B]/90 transition-colors inline-flex items-center justify-center h-11 px-6"
+                className="text-[#0066CC] text-[20px] hover:underline"
               >
-                Try it out now →
+                Try it out now ›
               </Link>
               <Link
                 href="/technology"
-                className="border border-[#E4E4E7] text-[#3F3F46] text-[14px] font-medium hover:bg-[#FAFAFA] hover:text-[#09090B] transition-all inline-flex items-center px-6 h-11"
+                className="bg-[#0071E3] text-white text-[17px] font-normal rounded-full px-[22px] py-[11px] hover:bg-[#0077ED] transition-colors inline-flex items-center"
               >
-                Learn more
+                Get started
               </Link>
             </div>
           </div>
 
           {/* DESKTOP UI */}
           <div
-            className="absolute bottom-0 right-0"
+            className="absolute bottom-0 right-0 rounded-tl-2xl overflow-hidden"
             style={{
               width: 997,
               height: 571,
-              overflow: "hidden",
-              border: "1px solid rgba(0,0,0,0.06)",
-              boxShadow: "0 40px 120px rgba(0,0,0,0.1)",
+              boxShadow: "0 20px 80px rgba(0,0,0,0.08)",
             }}
           >
             <Image src="/emoji/desk.png" alt="Desktop UI" fill className="object-cover" />
@@ -115,21 +111,19 @@ export const TravelSection = () => {
 
           {/* MOBILE UI */}
           <div
-            className="absolute bottom-0"
+            className="absolute bottom-0 rounded-t-2xl overflow-hidden"
             style={{
               right: 15,
               width: 266,
               height: 579,
-              overflow: "hidden",
-              boxShadow: "0 40px 140px rgba(0,0,0,0.12)",
-              border: "1px solid rgba(0,0,0,0.04)",
+              boxShadow: "0 20px 80px rgba(0,0,0,0.1)",
             }}
           >
             <Image src="/emoji/mob.png" alt="Mobile UI" fill className="object-cover" />
           </div>
 
         </div>
-      </Container>
+      </div>
     </section>
   );
 };

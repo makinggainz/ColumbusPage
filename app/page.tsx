@@ -15,45 +15,23 @@ import { PartnerStrip } from "@/components/home/PartnerStrip";
 import { TravelPromo } from "@/components/home/TravelPromo";
 import { UniqueSpotsSection } from "@/components/home/UniqueSpotsSection";
 
-function Divider() {
-  return (
-    <div
-      className="w-full max-w-6xl mx-auto"
-      style={{ height: "1px", background: "#E4E4E7" }}
-      aria-hidden
-    />
-  );
-}
-
 export default function Home() {
   return (
     <main className="min-h-screen bg-white">
       <Navbar />
       <Hero />
       <MeshSection />
-      <Divider />
       <Vision />
-      <Divider />
       <GeoWarning />
-      <Divider />
       <SiteSelection />
-      <Divider />
       <PartnerStrip />
-      <Divider />
       <MainFeatures />
-      <Divider />
       <Industries />
-      <Divider />
       <TravelPromo />
-      <Divider />
       <TravelSection />
-      <Divider />
       <TrustStrip />
-      <Divider />
       <UniqueSpotsSection />
-      <Divider />
       <Applications />
-      <Divider />
       <Careers />
       <Footer />
     </main>
