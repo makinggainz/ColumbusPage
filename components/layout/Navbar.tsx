@@ -173,7 +173,7 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
                     {/* Nav bar background pill — transparent by default, white when menu open */}
                     <div
                         className={`absolute inset-y-0 left-(--container-padding) right-(--container-padding) transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-                            isMenuOpen ? "bg-white rounded-tl-xs rounded-tr-xs" : "bg-transparent rounded-xs"
+                            isMenuOpen ? "bg-white rounded-tl-[20px] rounded-tr-[20px]" : "bg-transparent rounded-[20px]"
                         }`}
                     />
 
@@ -194,48 +194,32 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
                                         priority
                                     />
                                 </div>
-                                <span className="brand-wordmark text-2xl font-medium leading-none tracking-tight">
+                                <span className="brand-wordmark text-2xl font-medium leading-none" style={{ letterSpacing: "-0.02em" }}>
                                     Columbus Earth
                                 </span>
                             </Link>
 
                             {/* Center: Navigation Links */}
                             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                                <div className={`hidden items-center gap-9 min-[1155px]:flex pointer-events-auto transition-opacity duration-300 ${!isScrolled && !isMenuOpen ? "opacity-70" : ""}`}>
-                                    <Link href="#" className="group relative text-md font-medium transition-opacity duration-300 hover:opacity-70" onMouseEnter={handleNavMouseEnter}>
+                                <div className={`hidden items-center gap-3 min-[1155px]:flex pointer-events-auto transition-opacity duration-300 ${!isScrolled && !isMenuOpen ? "opacity-70" : ""}`}>
+                                    <Link href="#" className="text-md font-medium px-4 py-1.5 rounded-full border border-transparent hover:border-current/20 transition-all duration-300" onMouseEnter={handleNavMouseEnter}>
                                         Product
-                                        <span className="absolute left-0 -bottom-1 h-px w-0 transition-all duration-300 group-hover:w-full bg-current" />
                                     </Link>
-                                    <Link href="/use-cases" className="group relative text-md font-medium transition-opacity duration-300 hover:opacity-70" onMouseEnter={handleNavMouseEnter}>
+                                    <Link href="/use-cases" className="text-md font-medium px-4 py-1.5 rounded-full border border-transparent hover:border-current/20 transition-all duration-300" onMouseEnter={handleNavMouseEnter}>
                                         Use Cases
-                                        <span className="absolute left-0 -bottom-1 h-px w-0 transition-all duration-300 group-hover:w-full bg-current" />
                                     </Link>
-                                    <Link href="/technology" className="group relative text-md font-medium transition-opacity duration-300 hover:opacity-70" onMouseEnter={handleNavMouseEnter}>
+                                    <Link href="/technology" className="text-md font-medium px-4 py-1.5 rounded-full border border-transparent hover:border-current/20 transition-all duration-300" onMouseEnter={handleNavMouseEnter}>
                                         Technology
-                                        <span className="absolute left-0 -bottom-1 h-px w-0 transition-all duration-300 group-hover:w-full bg-current" />
                                     </Link>
                                 </div>
                             </div>
 
                             {/* Right: CTA + Hamburger */}
                             <div className="col-start-3 flex items-center justify-end gap-3">
-                                <Link
-                                    href="/maps-gpt"
-                                    className={`hidden min-[1155px]:flex items-center justify-center px-6 py-3.5 text-md font-semibold leading-none rounded-full border transition-opacity duration-300 hover:opacity-70 ${
-                                        isScrolled
-                                            ? "border-black bg-white text-black"
-                                            : isDark
-                                            ? "border-white/50 bg-transparent text-white"
-                                            : "border-[#0A1344] bg-transparent text-[#0A1344]"
-                                    }`}
-                                    onMouseEnter={handleNavMouseEnter}
-                                >
-                                    Start Now
-                                </Link>
                                 <button
                                     onClick={handleHamburgerClick}
                                     onMouseEnter={handleNavMouseEnter}
-                                    className={`relative flex h-11 w-11 items-center justify-center rounded-full border transition-all duration-300 ${isDark && !isMenuOpen ? "border-white/50" : "border-current"}`}
+                                    className={`relative flex h-11 w-11 items-center justify-center rounded-full border border-transparent transition-all duration-300 ${isDark && !isMenuOpen ? "hover:border-white/50" : "hover:border-current"}`}
                                     aria-label="Toggle menu"
                                 >
                                     <div className={`absolute h-px w-5.5 bg-current transform-gpu transition-all duration-300 ease-in-out ${isMenuOpen ? "rotate-45" : "-translate-y-1.5"}`} />
@@ -248,7 +232,7 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
 
                     {/* ── Dropdown ── */}
                     <div
-                        className={`absolute top-full left-(--container-padding) right-(--container-padding) rounded-bl-xs rounded-br-xs overflow-hidden transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                        className={`absolute top-full left-(--container-padding) right-(--container-padding) rounded-bl-[20px] rounded-br-[20px] overflow-hidden transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
                             isMenuOpen
                                 ? "opacity-100 translate-y-0 pointer-events-auto"
                                 : "opacity-0 -translate-y-6 pointer-events-none"
@@ -362,7 +346,7 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
                 <div className="relative mx-auto w-full max-w-screen-2xl">
                     <div
                         className={`absolute inset-y-0 left-(--container-padding) right-(--container-padding) transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-                            isCompactMenuOpen ? "rounded-tl-xs rounded-tr-xs" : ""
+                            isCompactMenuOpen ? "rounded-tl-[20px] rounded-tr-[20px]" : ""
                         }`}
                     />
 
@@ -382,25 +366,22 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
                                         className="object-contain"
                                     />
                                 </div>
-                                <span className="brand-wordmark text-[23px] font-medium leading-none" style={{ letterSpacing: "-0.01em" }}>
+                                <span className="brand-wordmark text-[23px] font-medium leading-none" style={{ letterSpacing: "-0.02em" }}>
                                     Columbus Earth
                                 </span>
                             </Link>
 
                             {/* Center: Navigation Links */}
                             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                                <div className="hidden items-center gap-7 min-[1155px]:flex pointer-events-auto">
-                                    <Link href="#" className="group relative text-sm font-medium transition-opacity duration-300 hover:opacity-70" onMouseEnter={handleCompactNavMouseEnter}>
+                                <div className="hidden items-center gap-3 min-[1155px]:flex pointer-events-auto">
+                                    <Link href="#" className="text-sm font-medium px-3.5 py-1.5 rounded-full border border-transparent hover:border-current/20 transition-all duration-300" onMouseEnter={handleCompactNavMouseEnter}>
                                         Product
-                                        <span className="absolute left-0 -bottom-0.5 h-px w-0 transition-all duration-300 group-hover:w-full bg-current" />
                                     </Link>
-                                    <Link href="/use-cases" className="group relative text-sm font-medium transition-opacity duration-300 hover:opacity-70" onMouseEnter={handleCompactNavMouseEnter}>
+                                    <Link href="/use-cases" className="text-sm font-medium px-3.5 py-1.5 rounded-full border border-transparent hover:border-current/20 transition-all duration-300" onMouseEnter={handleCompactNavMouseEnter}>
                                         Use Cases
-                                        <span className="absolute left-0 -bottom-0.5 h-px w-0 transition-all duration-300 group-hover:w-full bg-current" />
                                     </Link>
-                                    <Link href="/technology" className="group relative text-sm font-medium transition-opacity duration-300 hover:opacity-70" onMouseEnter={handleCompactNavMouseEnter}>
+                                    <Link href="/technology" className="text-sm font-medium px-3.5 py-1.5 rounded-full border border-transparent hover:border-current/20 transition-all duration-300" onMouseEnter={handleCompactNavMouseEnter}>
                                         Technology
-                                        <span className="absolute left-0 -bottom-0.5 h-px w-0 transition-all duration-300 group-hover:w-full bg-current" />
                                     </Link>
                                 </div>
                             </div>
@@ -434,7 +415,7 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
 
                     {/* ── Dropdown ── */}
                     <div
-                        className={`absolute top-full left-(--container-padding) right-(--container-padding) rounded-bl-xs rounded-br-xs overflow-hidden transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                        className={`absolute top-full left-(--container-padding) right-(--container-padding) rounded-bl-[20px] rounded-br-[20px] overflow-hidden transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
                             isCompactMenuOpen
                                 ? "opacity-100 translate-y-0 pointer-events-auto"
                                 : "opacity-0 -translate-y-6 pointer-events-none"

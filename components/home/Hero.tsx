@@ -886,6 +886,13 @@ export const Hero = () => {
     transition: `opacity 1000ms ease ${delay}ms, filter 1000ms ease ${delay}ms, transform 1000ms ease ${delay}ms`,
   });
 
+  const fadeInOnScroll = (delay: number): React.CSSProperties => ({
+    opacity: hasScrolled ? 1 : 0,
+    filter: hasScrolled ? "blur(0px)" : "blur(8px)",
+    transform: hasScrolled ? "translateY(0px)" : "translateY(18px)",
+    transition: `opacity 1000ms ease ${delay}ms, filter 1000ms ease ${delay}ms, transform 1000ms ease ${delay}ms`,
+  });
+
   return (
     <section
       className="relative overflow-hidden flex flex-col items-center justify-center"
@@ -921,6 +928,20 @@ export const Hero = () => {
 
       {/* Hero text — fades in immediately on mount */}
       <div className="relative z-10 flex flex-col items-center text-center px-6 w-full max-w-[1024px] mx-auto" style={{ marginTop: -100 }}>
+        {/* Eyebrow */}
+        <p
+          className="text-[15px] md:text-[17px] mb-5"
+          style={{
+            color: "#0A1344",
+            opacity: 0.3,
+            fontWeight: 400,
+            letterSpacing: "0.01em",
+            ...fadeInOnScroll(0),
+          }}
+        >
+          The frontier AI Lab
+        </p>
+
         <h1
           className="text-center"
           style={{
@@ -935,7 +956,7 @@ export const Hero = () => {
             className="block text-[40px] md:text-[66px]"
             style={{ fontWeight: 400, letterSpacing: "-0.02em", lineHeight: 1.2 }}
           >
-            The frontier AI Lab building the first in&#8209;production
+            Building the first in&#8209;production
           </span>
           <span
             className="block text-[40px] md:text-[66px]"
@@ -944,6 +965,22 @@ export const Hero = () => {
             Large Geospatial Model.
           </span>
         </h1>
+
+        {/* CTA buttons */}
+        <div className="flex items-center gap-4 mt-10" style={fadeInOnScroll(100)}>
+          <a
+            href="/maps-gpt"
+            className="flex items-center justify-center px-6 py-3.5 text-md font-semibold leading-none rounded-full border border-[#0A1344] bg-transparent text-[#0A1344] transition-opacity duration-300 hover:opacity-70"
+          >
+            Start Now
+          </a>
+          <a
+            href="#learn-more"
+            className="flex items-center justify-center px-6 py-3.5 text-md font-semibold leading-none rounded-full text-[#0A1344] transition-opacity duration-300 hover:opacity-70"
+          >
+            Learn More
+          </a>
+        </div>
       </div>
     </section>
   );
