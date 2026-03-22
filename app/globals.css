@@ -680,3 +680,19 @@ video {
   mix-blend-mode: multiply;
   pointer-events: none;
 }
+
+/* Core capability cards: subtle pulse dot */
+@keyframes capability-pulse {
+  0%, 100% { opacity: 0.1; transform: scale(1); }
+  50% { opacity: 0.3; transform: scale(1.8); }
+}
+
+.capability-pulse {
+  animation: capability-pulse 3s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .capability-pulse {
+    animation: none;
+  }
+}

@@ -14,14 +14,14 @@ export type FooterProps = {
 export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false }) => {
   if (variant === "compact") {
     return (
-      <footer data-navbar-theme="light" className="relative bg-[#F5F5F7] border-t border-[rgba(0,0,0,0.08)] py-10">
+      <footer data-navbar-theme="dark" className="relative bg-[#060812] py-10">
         <div className="max-w-[980px] mx-auto px-6 flex flex-col items-center text-center gap-5">
-          <p className="text-[12px] text-[#6E6E73] max-w-md leading-relaxed">
-            The frontier AI lab building the first production Universal Geospatial Model.
+          <p className="text-[12px] text-white/30 max-w-md leading-relaxed">
+            The frontier AI lab building the first production Large Geospatial Model.
           </p>
           <div className="flex gap-4">
-            <Mail size={16} className="cursor-pointer text-[#6E6E73] hover:text-[#1D1D1F] transition-colors" />
-            <Linkedin size={16} className="cursor-pointer text-[#6E6E73] hover:text-[#1D1D1F] transition-colors" />
+            <Mail size={16} className="cursor-pointer text-white/30 hover:text-white/60 transition-colors" />
+            <Linkedin size={16} className="cursor-pointer text-white/30 hover:text-white/60 transition-colors" />
           </div>
         </div>
       </footer>
@@ -30,11 +30,31 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false })
 
   return (
     <footer
-      data-navbar-theme="light"
-      className={`bg-[#F5F5F7] border-t border-[rgba(0,0,0,0.08)] ${reveal ? "h-screen" : ""}`}
+      data-navbar-theme="dark"
+      className={`relative bg-[#060812] ${reveal ? "h-screen" : ""}`}
       style={reveal ? { position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 0 } : undefined}
     >
-      <div className="max-w-[980px] mx-auto px-6 py-[40px] flex flex-col justify-between min-h-[460px]">
+      {/* Subtle depth gradient overlay */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background: "linear-gradient(to bottom, rgba(10, 15, 40, 0.3) 0%, transparent 40%, rgba(6, 8, 18, 0.5) 100%)",
+        }}
+      />
+
+      {/* Faint grid lines — deep data system feel */}
+      <div className="absolute inset-0 pointer-events-none" style={{ opacity: 0.03 }}>
+        <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <pattern id="footer-grid" width="80" height="80" patternUnits="userSpaceOnUse">
+              <path d="M 80 0 L 0 0 0 80" fill="none" stroke="#ffffff" strokeWidth="0.5" />
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#footer-grid)" />
+        </svg>
+      </div>
+
+      <div className="relative z-10 max-w-[980px] mx-auto px-6 py-[50px] flex flex-col justify-between min-h-[460px]">
 
         {/* Top: Logo + description */}
         <div className="mb-16">
@@ -46,20 +66,20 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false })
                 alt="Columbus Logo"
                 fill
                 sizes="28px"
-                className="object-contain"
+                className="object-contain brightness-0 invert"
               />
             </div>
-            <span className="text-[14px] font-semibold leading-none text-[#1D1D1F]">
+            <span className="text-[14px] font-semibold leading-none text-white/90">
               Columbus Earth
             </span>
           </div>
 
-          <p className="text-[12px] leading-[1.7] text-[#6E6E73] max-w-[280px] mb-4">
+          <p className="text-[12px] leading-[1.7] text-white/30 max-w-[320px] mb-4">
             We are a group of engineers, designers, and company builders developing
             foundation models and data collection innovations to power the geospatial
             intelligence systems of tomorrow.
           </p>
-          <p className="text-[12px] leading-[1.7] text-[#6E6E73] max-w-[280px]">
+          <p className="text-[12px] leading-[1.7] text-white/25 max-w-[320px]">
             GeoContext-1 processes satellite imagery, terrain data, infrastructure networks,
             and temporal patterns to generate actionable intelligence across defence, climate,
             consumer and urban planning domains.
@@ -67,7 +87,7 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false })
         </div>
 
         {/* Bottom: Nav columns */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-10 md:gap-16 border-t border-[rgba(0,0,0,0.08)] pt-10">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-10 md:gap-16 border-t border-white/8 pt-10">
 
           <FooterColumn
             title="Product"
@@ -98,18 +118,18 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false })
           />
 
           <div>
-            <p className="text-[12px] font-semibold text-[#1D1D1F] mb-3">
+            <p className="text-[12px] font-semibold text-white/50 mb-3">
               Connect
             </p>
             <a
               href="mailto:contact@columbus.earth"
-              className="block text-[12px] text-[#6E6E73] hover:text-[#1D1D1F] hover:underline transition-colors mb-2 leading-[2]"
+              className="block text-[12px] text-white/30 hover:text-white/60 hover:underline transition-colors mb-2 leading-[2]"
             >
               contact@columbus.earth
             </a>
             <div className="flex gap-4 mt-4">
-              <Mail size={16} className="cursor-pointer text-[#6E6E73] hover:text-[#1D1D1F] transition-colors" />
-              <Linkedin size={16} className="cursor-pointer text-[#6E6E73] hover:text-[#1D1D1F] transition-colors" />
+              <Mail size={16} className="cursor-pointer text-white/30 hover:text-white/60 transition-colors" />
+              <Linkedin size={16} className="cursor-pointer text-white/30 hover:text-white/60 transition-colors" />
             </div>
           </div>
 
@@ -118,8 +138,8 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false })
       </div>
 
       {/* Bottom bar */}
-      <div className="border-t border-[rgba(0,0,0,0.08)]">
-        <div className="max-w-[980px] mx-auto px-6 flex flex-col sm:flex-row items-center justify-between py-4 gap-3 text-[#6E6E73] text-[12px]">
+      <div className="relative z-10 border-t border-white/6">
+        <div className="max-w-[980px] mx-auto px-6 flex flex-col sm:flex-row items-center justify-between py-4 gap-3 text-white/20 text-[12px]">
           <span>Columbus Earth &copy; 2026</span>
           <div className="flex items-center gap-8">
             <span>Website made by hand, no AI.</span>
@@ -140,7 +160,7 @@ const FooterColumn = ({
   links: { label: string; href: string }[];
 }) => (
   <div>
-    <p className="text-[12px] font-semibold text-[#1D1D1F] mb-3">
+    <p className="text-[12px] font-semibold text-white/50 mb-3">
       {title}
     </p>
     <ul className="space-y-0">
@@ -148,7 +168,7 @@ const FooterColumn = ({
         <li key={i}>
           <Link
             href={link.href}
-            className="text-[12px] leading-[2] text-[#6E6E73] hover:text-[#1D1D1F] hover:underline transition-colors"
+            className="text-[12px] leading-[2] text-white/30 hover:text-white/60 hover:underline transition-colors"
           >
             {link.label}
           </Link>
