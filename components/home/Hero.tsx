@@ -466,6 +466,8 @@ function drawBoat3D(
   });
 }
 
+
+
 /* ── 3D Perspective Wave Mesh ── */
 const WaveMesh = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -484,7 +486,6 @@ const WaveMesh = () => {
   const draggingRef = useRef(false);
   const hoveringBoatRef = useRef(false);
   const prevBoatPosRef = useRef({ wx: -700, wz: 900 });
-
   const draw = useCallback(() => {
     const cvs = canvasRef.current;
     if (!cvs) return;
@@ -890,13 +891,13 @@ export const Hero = () => {
     <section
       className="relative overflow-hidden flex flex-col items-center justify-center"
       style={{
-        background: "#FFFFFF",
+        background: "linear-gradient(to bottom, #FFFFFF 30%, rgba(188,191,255,0.45) 100%)",
         minHeight: "100vh",
         paddingTop: 120,
         paddingBottom: 60,
       }}
     >
-      {/* Mesh + gradient — only fade in after scroll */}
+      {/* Ocean mesh — fades in after scroll */}
       <div
         style={{
           opacity: hasScrolled ? 1 : 0,
@@ -905,19 +906,6 @@ export const Hero = () => {
       >
         <WaveMesh />
       </div>
-
-      <div
-        className="absolute left-0 right-0 pointer-events-none"
-        style={{
-          top: "30%",
-          height: "15%",
-          background: "linear-gradient(to bottom, #FFFFFF, transparent)",
-          zIndex: 1,
-          opacity: hasScrolled ? 1 : 0,
-          transition: "opacity 1200ms ease",
-        }}
-        aria-hidden
-      />
 
       {/* Hero text — fades in immediately on mount */}
       <div className="relative z-10 flex flex-col items-center text-center px-6 w-full max-w-[1024px] mx-auto" style={{ marginTop: -100 }}>
