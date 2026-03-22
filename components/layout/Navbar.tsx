@@ -5,16 +5,9 @@ import Image from "next/image";
 import { useEffect, useState, useRef } from "react";
 
 import { ScrambleText } from "@/components/ui/ScrambleText";
+import { geist } from "@/lib/typography";
 
 const COMPACT_THRESHOLD = 80;
-
-const menuItems = [
-    { label: "Our Mission", href: "/our-mission" },
-    { label: "Columbus Market Spy", href: "/market-spy" },
-    { label: "MapsGPT", href: "/maps-gpt" },
-    { label: "Use Cases", href: "/use-cases" },
-    { label: "Technology", href: "/technology" },
-];
 
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -139,12 +132,12 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
         ? { background: "rgba(6, 8, 20, 0.96)", backdropFilter: "blur(24px)", WebkitBackdropFilter: "blur(24px)", boxShadow: "0 8px 40px rgba(0,0,0,0.5)" }
         : { background: "rgba(248, 249, 252, 0.92)", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)", boxShadow: "0 8px 32px rgba(0,0,0,0.08)" };
 
-    const dropdownHeadingClass = isDark ? "text-white/40" : "text-[#0A1344]/50";
     const dropdownBodyClass    = isDark ? "text-white/65" : "text-[#0A1344]/70";
     const dropdownLinkClass    = isDark ? "text-white"    : "text-[#0A1344]";
     const dropdownSubheadClass = isDark ? "text-white/40" : "text-gray-500";
-    const dropdownSocialClass  = isDark ? "text-white hover:text-white/70" : "text-gray-900 hover:text-primary";
     const dropdownNavLinkClass = isDark ? "text-white"    : "text-[#0A1344]";
+    const dropdownHoverBg      = isDark ? "hover:bg-white/[0.06]" : "hover:bg-black/[0.04]";
+    const dropdownDivider      = isDark ? "border-white/10" : "border-[#0A1344]/10";
 
     return (
         <>
@@ -239,71 +232,123 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
                         }`}
                         style={dropdownBg}
                     >
-                        <div className="pl-7 pr-(--container-padding) py-12" style={{ transitionDelay: isMenuOpen ? "150ms" : "0ms" }}>
-                            <div className="grid grid-cols-1 md:grid-cols-12 gap-12">
+                        <div className={`px-8 py-8 ${geist.className}`}>
+                            <div className="grid grid-cols-1 md:grid-cols-12 gap-x-6 gap-y-8">
+                                {/* Products */}
                                 <div
-                                    className={`md:col-span-5 space-y-8 transition-opacity duration-500 ${isMenuOpen ? "opacity-100" : "opacity-0"}`}
+                                    className={`md:col-span-5 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                                        isMenuOpen ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
+                                    }`}
                                     style={{ transitionDelay: isMenuOpen ? "200ms" : "0ms" }}
                                 >
-                                    <div>
-                                        <h4 className={`text-xs font-semibold tracking-widest uppercase mb-4 ${dropdownHeadingClass}`}>
-                                            <ScrambleText text="COLUMBUS EARTH" isActive={isMenuOpen} delay={300} />
-                                        </h4>
-                                        <p className={`text-base leading-relaxed max-w-md ${dropdownBodyClass}`}>
-                                            Columbus Earth Inc. is a spatial frontier AI company building the first production
-                                            Large Geospatial Model to answer the most difficult questions about our planet.
-                                        </p>
-                                    </div>
-                                    <div className="grid grid-cols-2 gap-8">
-                                        <div>
-                                            <h4 className={`text-xs font-semibold tracking-wider uppercase mb-2 ${dropdownSubheadClass}`}>
-                                                <ScrambleText text="CONTACT" isActive={isMenuOpen} delay={450} />
-                                            </h4>
-                                            <a href="mailto:contact@columbus.earth" className={`font-medium block transition-colors duration-300 ${dropdownLinkClass} hover:opacity-70`}>
-                                                contact@columbus.earth
-                                            </a>
-                                        </div>
-                                        <div>
-                                            <h4 className={`text-xs font-semibold tracking-wider uppercase mb-2 ${dropdownSubheadClass}`}>
-                                                <ScrambleText text="SOCIAL" isActive={isMenuOpen} delay={550} />
-                                            </h4>
-                                            <a href="https://www.linkedin.com/company/columbusearth/about/?viewAsMember=true" target="_blank" rel="noopener noreferrer" className={`font-medium block transition-colors ${dropdownSocialClass}`}>
-                                                LinkedIn
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="md:col-span-3"></div>
-                                <div className="md:col-span-4 space-y-6">
-                                    <h4
-                                        className={`text-xs font-semibold tracking-wider uppercase mb-4 transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${dropdownSubheadClass} ${
-                                            isMenuOpen ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
-                                        }`}
-                                        style={{ transitionDelay: isMenuOpen ? "250ms" : "0ms" }}
-                                    >
-                                        <ScrambleText text="COMPANY" isActive={isMenuOpen} delay={400} />
+                                    <h4 className={`text-xs font-semibold tracking-widest uppercase mb-3 ${dropdownSubheadClass}`}>
+                                        <ScrambleText text="PRODUCTS" isActive={isMenuOpen} delay={250} />
                                     </h4>
-                                    <ul className="space-y-4">
-                                        {menuItems.map((item, index) => (
-                                            <li
-                                                key={item.href}
-                                                className={`transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-                                                    isMenuOpen ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
-                                                }`}
-                                                style={{ transitionDelay: isMenuOpen ? `${320 + index * 70 + index * index * 8}ms` : "0ms" }}
-                                            >
-                                                <Link
-                                                    href={item.href}
-                                                    onClick={() => { setIsMenuOpen(false); setIsManuallyToggled(false); }}
-                                                    className={`group relative text-xl font-medium transition-all duration-300 flex items-center ${dropdownNavLinkClass}`}
-                                                >
-                                                    <span className="mr-3 transition-transform duration-300 ease-in-out group-hover:translate-x-1">+</span>
-                                                    <span className="transition-all duration-300 ease-in-out group-hover:translate-x-1">{item.label}</span>
-                                                </Link>
-                                            </li>
-                                        ))}
-                                    </ul>
+                                    <div className="space-y-1">
+                                        <Link
+                                            href="/maps-gpt"
+                                            onClick={() => { setIsMenuOpen(false); setIsManuallyToggled(false); }}
+                                            className={`group flex items-center justify-between p-4 -mx-2 rounded-2xl transition-all duration-300 ${dropdownHoverBg} ${dropdownNavLinkClass}`}
+                                        >
+                                            <div>
+                                                <div className="text-lg font-semibold">MapsGPT</div>
+                                                <div className={`text-sm mt-0.5 ${dropdownBodyClass}`}>AI-powered geospatial answers</div>
+                                            </div>
+                                            <span className="opacity-0 group-hover:opacity-40 transition-all duration-300 group-hover:translate-x-1 text-lg mr-2">→</span>
+                                        </Link>
+                                        <Link
+                                            href="/market-spy"
+                                            onClick={() => { setIsMenuOpen(false); setIsManuallyToggled(false); }}
+                                            className={`group flex items-center justify-between p-4 -mx-2 rounded-2xl transition-all duration-300 ${dropdownHoverBg} ${dropdownNavLinkClass}`}
+                                        >
+                                            <div>
+                                                <div className="text-lg font-semibold">Columbus Market Spy</div>
+                                                <div className={`text-sm mt-0.5 ${dropdownBodyClass}`}>Real-time market intelligence</div>
+                                            </div>
+                                            <span className="opacity-0 group-hover:opacity-40 transition-all duration-300 group-hover:translate-x-1 text-lg mr-2">→</span>
+                                        </Link>
+                                    </div>
                                 </div>
+
+                                {/* Explore */}
+                                <div
+                                    className={`md:col-span-3 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                                        isMenuOpen ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
+                                    }`}
+                                    style={{ transitionDelay: isMenuOpen ? "280ms" : "0ms" }}
+                                >
+                                    <h4 className={`text-xs font-semibold tracking-widest uppercase mb-3 ${dropdownSubheadClass}`}>
+                                        <ScrambleText text="EXPLORE" isActive={isMenuOpen} delay={350} />
+                                    </h4>
+                                    <div className="space-y-1">
+                                        <Link
+                                            href="/use-cases"
+                                            onClick={() => { setIsMenuOpen(false); setIsManuallyToggled(false); }}
+                                            className={`group flex items-center justify-between py-2.5 px-4 -mx-2 rounded-xl transition-all duration-300 ${dropdownHoverBg} font-medium ${dropdownNavLinkClass}`}
+                                        >
+                                            Use Cases
+                                            <span className="opacity-0 group-hover:opacity-40 transition-all duration-300 text-sm mr-2">→</span>
+                                        </Link>
+                                        <Link
+                                            href="/technology"
+                                            onClick={() => { setIsMenuOpen(false); setIsManuallyToggled(false); }}
+                                            className={`group flex items-center justify-between py-2.5 px-4 -mx-2 rounded-xl transition-all duration-300 ${dropdownHoverBg} font-medium ${dropdownNavLinkClass}`}
+                                        >
+                                            Technology
+                                            <span className="opacity-0 group-hover:opacity-40 transition-all duration-300 text-sm mr-2">→</span>
+                                        </Link>
+                                    </div>
+                                </div>
+
+                                {/* Company */}
+                                <div
+                                    className={`md:col-span-4 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                                        isMenuOpen ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
+                                    }`}
+                                    style={{ transitionDelay: isMenuOpen ? "360ms" : "0ms" }}
+                                >
+                                    <h4 className={`text-xs font-semibold tracking-widest uppercase mb-3 ${dropdownSubheadClass}`}>
+                                        <ScrambleText text="COMPANY" isActive={isMenuOpen} delay={450} />
+                                    </h4>
+                                    <div className="space-y-1">
+                                        <Link
+                                            href="/our-mission"
+                                            onClick={() => { setIsMenuOpen(false); setIsManuallyToggled(false); }}
+                                            className={`group flex items-center justify-between py-2.5 px-4 -mx-2 rounded-xl transition-all duration-300 ${dropdownHoverBg} font-medium ${dropdownNavLinkClass}`}
+                                        >
+                                            Our Mission
+                                            <span className="opacity-0 group-hover:opacity-40 transition-all duration-300 text-sm mr-2">→</span>
+                                        </Link>
+                                        <a
+                                            href="mailto:contact@columbus.earth"
+                                            className={`group flex items-center justify-between py-2.5 px-4 -mx-2 rounded-xl transition-all duration-300 ${dropdownHoverBg} font-medium ${dropdownLinkClass}`}
+                                        >
+                                            Contact
+                                            <span className="opacity-0 group-hover:opacity-40 transition-all duration-300 text-sm mr-2">→</span>
+                                        </a>
+                                        <a
+                                            href="https://www.linkedin.com/company/columbusearth/about/?viewAsMember=true"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className={`group flex items-center justify-between py-2.5 px-4 -mx-2 rounded-xl transition-all duration-300 ${dropdownHoverBg} font-medium ${dropdownLinkClass}`}
+                                        >
+                                            LinkedIn
+                                            <span className="opacity-0 group-hover:opacity-40 transition-all duration-300 text-sm mr-2">↗</span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Tagline */}
+                            <div
+                                className={`mt-8 pt-5 border-t ${dropdownDivider} transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                                    isMenuOpen ? "translate-y-0 opacity-100" : "translate-y-2 opacity-0"
+                                }`}
+                                style={{ transitionDelay: isMenuOpen ? "450ms" : "0ms" }}
+                            >
+                                <p className={`text-sm leading-relaxed max-w-lg ${dropdownBodyClass}`}>
+                                    The spatial frontier AI company building the first production Large Geospatial Model.
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -422,71 +467,123 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
                         }`}
                         style={dropdownBg}
                     >
-                        <div className="pl-7 pr-(--container-padding) py-12" style={{ transitionDelay: isCompactMenuOpen ? "150ms" : "0ms" }}>
-                            <div className="grid grid-cols-1 md:grid-cols-12 gap-12">
+                        <div className={`px-8 py-8 ${geist.className}`}>
+                            <div className="grid grid-cols-1 md:grid-cols-12 gap-x-6 gap-y-8">
+                                {/* Products */}
                                 <div
-                                    className={`md:col-span-5 space-y-8 transition-opacity duration-500 ${isCompactMenuOpen ? "opacity-100" : "opacity-0"}`}
+                                    className={`md:col-span-5 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                                        isCompactMenuOpen ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
+                                    }`}
                                     style={{ transitionDelay: isCompactMenuOpen ? "200ms" : "0ms" }}
                                 >
-                                    <div>
-                                        <h4 className={`text-xs font-semibold tracking-widest uppercase mb-4 ${dropdownHeadingClass}`}>
-                                            <ScrambleText text="COLUMBUS EARTH" isActive={isCompactMenuOpen} delay={300} />
-                                        </h4>
-                                        <p className={`text-base leading-relaxed max-w-md ${dropdownBodyClass}`}>
-                                            Columbus Earth Inc. is a spatial frontier AI company building the first production
-                                            Large Geospatial Model to answer the most difficult questions about our planet.
-                                        </p>
-                                    </div>
-                                    <div className="grid grid-cols-2 gap-8">
-                                        <div>
-                                            <h4 className={`text-xs font-semibold tracking-wider uppercase mb-2 ${dropdownSubheadClass}`}>
-                                                <ScrambleText text="CONTACT" isActive={isCompactMenuOpen} delay={450} />
-                                            </h4>
-                                            <a href="mailto:contact@columbus.earth" className={`font-medium block transition-colors duration-300 ${dropdownLinkClass} hover:opacity-70`}>
-                                                contact@columbus.earth
-                                            </a>
-                                        </div>
-                                        <div>
-                                            <h4 className={`text-xs font-semibold tracking-wider uppercase mb-2 ${dropdownSubheadClass}`}>
-                                                <ScrambleText text="SOCIAL" isActive={isCompactMenuOpen} delay={550} />
-                                            </h4>
-                                            <a href="https://www.linkedin.com/company/columbusearth/about/?viewAsMember=true" target="_blank" rel="noopener noreferrer" className={`font-medium block transition-colors ${dropdownSocialClass}`}>
-                                                LinkedIn
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="md:col-span-3"></div>
-                                <div className="md:col-span-4 space-y-6">
-                                    <h4
-                                        className={`text-xs font-semibold tracking-wider uppercase mb-4 transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${dropdownSubheadClass} ${
-                                            isCompactMenuOpen ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
-                                        }`}
-                                        style={{ transitionDelay: isCompactMenuOpen ? "250ms" : "0ms" }}
-                                    >
-                                        <ScrambleText text="COMPANY" isActive={isCompactMenuOpen} delay={400} />
+                                    <h4 className={`text-xs font-semibold tracking-widest uppercase mb-3 ${dropdownSubheadClass}`}>
+                                        <ScrambleText text="PRODUCTS" isActive={isCompactMenuOpen} delay={250} />
                                     </h4>
-                                    <ul className="space-y-4">
-                                        {menuItems.map((item, index) => (
-                                            <li
-                                                key={item.href}
-                                                className={`transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-                                                    isCompactMenuOpen ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
-                                                }`}
-                                                style={{ transitionDelay: isCompactMenuOpen ? `${320 + index * 70 + index * index * 8}ms` : "0ms" }}
-                                            >
-                                                <Link
-                                                    href={item.href}
-                                                    onClick={() => { setIsCompactMenuOpen(false); setIsCompactManuallyToggled(false); }}
-                                                    className={`group relative text-xl font-medium transition-all duration-300 flex items-center ${dropdownNavLinkClass}`}
-                                                >
-                                                    <span className="mr-3 transition-transform duration-300 ease-in-out group-hover:translate-x-1">+</span>
-                                                    <span className="transition-all duration-300 ease-in-out group-hover:translate-x-1">{item.label}</span>
-                                                </Link>
-                                            </li>
-                                        ))}
-                                    </ul>
+                                    <div className="space-y-1">
+                                        <Link
+                                            href="/maps-gpt"
+                                            onClick={() => { setIsCompactMenuOpen(false); setIsCompactManuallyToggled(false); }}
+                                            className={`group flex items-center justify-between p-4 -mx-2 rounded-2xl transition-all duration-300 ${dropdownHoverBg} ${dropdownNavLinkClass}`}
+                                        >
+                                            <div>
+                                                <div className="text-lg font-semibold">MapsGPT</div>
+                                                <div className={`text-sm mt-0.5 ${dropdownBodyClass}`}>AI-powered geospatial answers</div>
+                                            </div>
+                                            <span className="opacity-0 group-hover:opacity-40 transition-all duration-300 group-hover:translate-x-1 text-lg mr-2">→</span>
+                                        </Link>
+                                        <Link
+                                            href="/market-spy"
+                                            onClick={() => { setIsCompactMenuOpen(false); setIsCompactManuallyToggled(false); }}
+                                            className={`group flex items-center justify-between p-4 -mx-2 rounded-2xl transition-all duration-300 ${dropdownHoverBg} ${dropdownNavLinkClass}`}
+                                        >
+                                            <div>
+                                                <div className="text-lg font-semibold">Columbus Market Spy</div>
+                                                <div className={`text-sm mt-0.5 ${dropdownBodyClass}`}>Real-time market intelligence</div>
+                                            </div>
+                                            <span className="opacity-0 group-hover:opacity-40 transition-all duration-300 group-hover:translate-x-1 text-lg mr-2">→</span>
+                                        </Link>
+                                    </div>
                                 </div>
+
+                                {/* Explore */}
+                                <div
+                                    className={`md:col-span-3 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                                        isCompactMenuOpen ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
+                                    }`}
+                                    style={{ transitionDelay: isCompactMenuOpen ? "280ms" : "0ms" }}
+                                >
+                                    <h4 className={`text-xs font-semibold tracking-widest uppercase mb-3 ${dropdownSubheadClass}`}>
+                                        <ScrambleText text="EXPLORE" isActive={isCompactMenuOpen} delay={350} />
+                                    </h4>
+                                    <div className="space-y-1">
+                                        <Link
+                                            href="/use-cases"
+                                            onClick={() => { setIsCompactMenuOpen(false); setIsCompactManuallyToggled(false); }}
+                                            className={`group flex items-center justify-between py-2.5 px-4 -mx-2 rounded-xl transition-all duration-300 ${dropdownHoverBg} font-medium ${dropdownNavLinkClass}`}
+                                        >
+                                            Use Cases
+                                            <span className="opacity-0 group-hover:opacity-40 transition-all duration-300 text-sm mr-2">→</span>
+                                        </Link>
+                                        <Link
+                                            href="/technology"
+                                            onClick={() => { setIsCompactMenuOpen(false); setIsCompactManuallyToggled(false); }}
+                                            className={`group flex items-center justify-between py-2.5 px-4 -mx-2 rounded-xl transition-all duration-300 ${dropdownHoverBg} font-medium ${dropdownNavLinkClass}`}
+                                        >
+                                            Technology
+                                            <span className="opacity-0 group-hover:opacity-40 transition-all duration-300 text-sm mr-2">→</span>
+                                        </Link>
+                                    </div>
+                                </div>
+
+                                {/* Company */}
+                                <div
+                                    className={`md:col-span-4 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                                        isCompactMenuOpen ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
+                                    }`}
+                                    style={{ transitionDelay: isCompactMenuOpen ? "360ms" : "0ms" }}
+                                >
+                                    <h4 className={`text-xs font-semibold tracking-widest uppercase mb-3 ${dropdownSubheadClass}`}>
+                                        <ScrambleText text="COMPANY" isActive={isCompactMenuOpen} delay={450} />
+                                    </h4>
+                                    <div className="space-y-1">
+                                        <Link
+                                            href="/our-mission"
+                                            onClick={() => { setIsCompactMenuOpen(false); setIsCompactManuallyToggled(false); }}
+                                            className={`group flex items-center justify-between py-2.5 px-4 -mx-2 rounded-xl transition-all duration-300 ${dropdownHoverBg} font-medium ${dropdownNavLinkClass}`}
+                                        >
+                                            Our Mission
+                                            <span className="opacity-0 group-hover:opacity-40 transition-all duration-300 text-sm mr-2">→</span>
+                                        </Link>
+                                        <a
+                                            href="mailto:contact@columbus.earth"
+                                            className={`group flex items-center justify-between py-2.5 px-4 -mx-2 rounded-xl transition-all duration-300 ${dropdownHoverBg} font-medium ${dropdownLinkClass}`}
+                                        >
+                                            Contact
+                                            <span className="opacity-0 group-hover:opacity-40 transition-all duration-300 text-sm mr-2">→</span>
+                                        </a>
+                                        <a
+                                            href="https://www.linkedin.com/company/columbusearth/about/?viewAsMember=true"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className={`group flex items-center justify-between py-2.5 px-4 -mx-2 rounded-xl transition-all duration-300 ${dropdownHoverBg} font-medium ${dropdownLinkClass}`}
+                                        >
+                                            LinkedIn
+                                            <span className="opacity-0 group-hover:opacity-40 transition-all duration-300 text-sm mr-2">↗</span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Tagline */}
+                            <div
+                                className={`mt-8 pt-5 border-t ${dropdownDivider} transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                                    isCompactMenuOpen ? "translate-y-0 opacity-100" : "translate-y-2 opacity-0"
+                                }`}
+                                style={{ transitionDelay: isCompactMenuOpen ? "450ms" : "0ms" }}
+                            >
+                                <p className={`text-sm leading-relaxed max-w-lg ${dropdownBodyClass}`}>
+                                    The spatial frontier AI company building the first production Large Geospatial Model.
+                                </p>
                             </div>
                         </div>
                     </div>
