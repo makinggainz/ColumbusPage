@@ -231,11 +231,11 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
                                             : "bg-[#0A1344] text-white hover:bg-[#0A1344]/85"
                                     }`}
                                     style={{
-                                        fontSize: isCompact ? 13 : 14,
-                                        height: isCompact ? 36 : 40,
-                                        paddingLeft: isCompact ? 16 : 20,
-                                        paddingRight: isCompact ? 16 : 20,
-                                        transition: `font-size ${t}, height ${t}, padding ${t}, background-color 200ms ease`,
+                                        fontSize: 14,
+                                        height: 40,
+                                        paddingLeft: 20,
+                                        paddingRight: 20,
+                                        transition: `background-color 200ms ease`,
                                     }}
                                     onMouseEnter={handleNavMouseEnter}
                                 >
