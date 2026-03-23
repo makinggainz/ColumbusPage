@@ -13,7 +13,7 @@ export function GridSection({
 }) {
   return (
     <section
-      className={`grid-section max-w-[980px] mx-auto bg-white ${className}`}
+      className={`grid-section max-w-[1287px] mx-auto bg-white ${className}`}
       style={{ borderTop: gl, borderLeft: gl }}
     >
       {children}

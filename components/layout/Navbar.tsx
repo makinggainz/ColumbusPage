@@ -138,7 +138,7 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
                     }}
                 />
 
-                <div className="relative mx-auto w-full max-w-screen-2xl">
+                <div className="relative mx-auto w-full" style={{ maxWidth: 1287 }}>
                     {/* White pill background when dropdown is open */}
                     <div
                         className={`absolute inset-y-0 left-(--container-padding) right-(--container-padding) transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
@@ -222,19 +222,10 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
 
                             {/* ── Right: CTA buttons ── */}
                             <div className="flex items-center gap-3">
-                                {/* Log in link — desktop only */}
-                                <Link
-                                    href="/maps-gpt"
-                                    className="hidden min-[900px]:inline-flex font-medium hover:opacity-70 transition-opacity duration-200"
-                                    style={{ fontSize: isCompact ? 14 : 15, transition: `font-size ${t}` }}
-                                >
-                                    Log in
-                                </Link>
-
                                 {/* Start Now — always visible on desktop, dark pill CTA */}
                                 <Link
                                     href="/maps-gpt"
-                                    className={`hidden min-[900px]:inline-flex items-center justify-center font-semibold leading-none rounded-full transition-all duration-200 ${
+                                    className={`hidden min-[900px]:inline-flex items-center justify-center font-semibold leading-none rounded-none transition-all duration-200 ${
                                         isDark && !isMenuOpen
                                             ? "bg-white text-[#0A1344] hover:bg-white/90"
                                             : "bg-[#0A1344] text-white hover:bg-[#0A1344]/85"

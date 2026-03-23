@@ -919,11 +919,11 @@ export const Hero = () => {
       />
 
       {/* Hero text — fades in immediately on mount */}
-      <Container className="relative z-10 pt-24 md:pt-32">
+      <Container className="relative z-10 pt-24 md:pt-32" style={{ maxWidth: 1287 }}>
         <div className="max-w-292">
           {/* Eyebrow */}
           <p
-            className="text-sm md:text-base font-medium tracking-tight text-[#1C274C]/70 uppercase mb-4 mt-15"
+            className="text-sm md:text-base font-medium tracking-tight text-[#0A1344] uppercase mb-4 mt-15"
             style={fadeIn(0)}
           >
             FRONTIER AI RESEARCH AND PRODUCT COMPANY
@@ -931,23 +931,24 @@ export const Hero = () => {
 
           {/* Main Heading */}
           <h1
-            className="font-medium leading-[1.35] tracking-tight text-[#0A1344]"
+            className="font-light leading-[1.2] text-[#0A1344]"
             style={{
-              fontSize: 56,
+              fontSize: 66,
+              letterSpacing: "-0.02em",
               ...fadeIn(80),
             }}
           >
-            Building the first in&#8209;production Large Geospatial Model.
+            Building the first in&#8209;production<br /> Large Geospatial Model.
           </h1>
 
           {/* CTA buttons */}
           <div className="flex items-center gap-5 mt-10" style={fadeIn(200)}>
             <a
               href="/maps-gpt"
-              className="ripple-btn group relative flex items-center justify-center px-7 py-4 text-[15px] font-semibold leading-none rounded-full bg-[#0A1344] text-white overflow-hidden transition-all duration-500 hover:shadow-[0_8px_30px_rgba(10,19,68,0.25)] hover:-translate-y-0.5"
+              className="ripple-btn group relative flex items-center justify-center px-7 py-4 text-[15px] font-semibold leading-none rounded-none bg-[#0A1344] text-white overflow-hidden transition-all duration-500 hover:shadow-[0_8px_30px_rgba(10,19,68,0.25)] hover:-translate-y-0.5"
             >
               <span className="relative z-10">Start Now</span>
-              <span className="ripple-ring absolute inset-0 rounded-full border border-white/20 scale-100 opacity-0 group-hover:scale-[1.08] group-hover:opacity-100 transition-all duration-700 ease-out pointer-events-none" />
+              <span className="ripple-ring absolute inset-0 rounded-none border border-white/20 scale-100 opacity-0 group-hover:scale-[1.08] group-hover:opacity-100 transition-all duration-700 ease-out pointer-events-none" />
             </a>
             <a
               href="#learn-more"
