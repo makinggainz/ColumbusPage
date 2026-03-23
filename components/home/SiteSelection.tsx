@@ -57,10 +57,15 @@ export const SiteSelection = () => {
           </Link>
         </div>
 
-        {/* Hero card with background */}
+        {/* Hero card with background — full bleed */}
         <div
-          className="relative overflow-hidden"
-          style={{ borderRadius: 16, ...anim(100) }}
+          className="relative overflow-hidden -mx-8 md:-mx-10"
+          style={{
+            width: "100vw",
+            marginLeft: "calc(-50vw + 50%)",
+            borderRadius: 0,
+            ...anim(100),
+          }}
         >
           {/* Background image */}
           <div className="relative" style={{ minHeight: 700 }}>
