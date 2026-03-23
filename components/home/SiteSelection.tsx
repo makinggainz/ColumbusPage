@@ -29,7 +29,6 @@ export const SiteSelection = () => {
   return (
     <GridSection>
       <GridHeader
-        label="03 — PRODUCT"
         title="Site Selection Reimagined"
         subtitle="An entirely new way to explore, analyze, and decide."
       />

@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { GridSection, GridHeader, gl } from "./ContentGrid";
+import { GridSection, GridHeader } from "./ContentGrid";
 
 export const Applications = () => {
   const ref = useRef<HTMLDivElement>(null);
@@ -35,7 +35,6 @@ export const Applications = () => {
   return (
     <GridSection>
       <GridHeader
-        label="11 — USE CASES"
         title="Exploring various application areas"
         subtitle="We'd love to work within your industry — hey@columbus.earth"
       />
@@ -56,8 +55,6 @@ export const Applications = () => {
             className="relative group overflow-hidden block"
             style={{
               aspectRatio: "16/10",
-              borderRight: gl,
-              borderBottom: gl,
             }}
           >
             <Image

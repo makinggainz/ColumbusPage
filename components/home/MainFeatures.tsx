@@ -70,7 +70,6 @@ export const MainFeatures = () => {
     <GridSection>
       <div ref={ref as React.RefObject<HTMLDivElement>}>
         <GridHeader
-          label="05 — CAPABILITIES"
           title="What Columbus can do for you"
           subtitle="Powerful tools that transform how you research, analyze, and select sites."
         />

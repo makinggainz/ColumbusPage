@@ -2,8 +2,6 @@
 
 import { type ReactNode, type CSSProperties } from "react";
 
-const gl = "1px solid var(--grid-line)";
-
 export function GridSection({
   children,
   className = "",
@@ -12,34 +10,24 @@ export function GridSection({
   className?: string;
 }) {
   return (
-    <section
-      className={`grid-section max-w-[1287px] mx-auto bg-white ${className}`}
-      style={{ borderTop: gl, borderLeft: gl }}
-    >
+    <section className={`grid-section max-w-[1287px] mx-auto bg-white ${className}`}>
       {children}
     </section>
   );
 }
 
 export function GridHeader({
-  label,
   title,
   subtitle,
 }: {
-  label: string;
   title?: string;
   subtitle?: string;
 }) {
+  if (!title && !subtitle) return null;
   return (
-    <div
-      className="py-6 px-8 md:px-10"
-      style={{ borderRight: gl, borderBottom: gl }}
-    >
-      <span className="text-[11px] font-semibold tracking-[0.2em] uppercase text-[#0A1344]/30 font-mono block">
-        {label}
-      </span>
+    <div className="py-6 px-8 md:px-10">
       {title && (
-        <h2 className="text-[32px] md:text-[40px] font-semibold tracking-[-0.02em] leading-[1.1] text-[#1D1D1F] mt-3">
+        <h2 className="text-[32px] md:text-[40px] font-semibold tracking-[-0.02em] leading-[1.1] text-[#1D1D1F]">
           {title}
         </h2>
       )}
@@ -68,15 +56,9 @@ export function GridCell({
   return (
     <div
       className={`${flush ? "" : "p-8 md:p-10"} ${hoverable ? "transition-colors duration-200 hover:bg-[rgba(120,120,200,0.04)]" : ""} ${className}`}
-      style={{
-        borderRight: gl,
-        borderBottom: gl,
-        ...style,
-      }}
+      style={style}
     >
       {children}
     </div>
   );
 }
-
-export { gl };

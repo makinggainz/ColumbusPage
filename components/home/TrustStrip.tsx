@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { Plus } from "lucide-react";
-import { GridSection, GridHeader, GridCell, gl } from "./ContentGrid";
+import { GridSection, GridHeader, GridCell } from "./ContentGrid";
 
 export const TrustStrip = () => {
   const ref = useRef<HTMLDivElement>(null);
@@ -47,7 +47,6 @@ export const TrustStrip = () => {
   return (
     <GridSection>
       <GridHeader
-        label="09 — TRUST"
         title="Your plans are in good hands"
         subtitle="We work with data from reputable global partners."
       />
@@ -73,7 +72,7 @@ export const TrustStrip = () => {
             <div
               key={i}
               className="flex items-center justify-center py-6 px-4"
-              style={{ borderRight: gl, borderBottom: gl }}
+              style={{  }}
             >
               <Image
                 src={src}
@@ -101,7 +100,7 @@ export const TrustStrip = () => {
 
           <div className="max-w-[680px]">
             {faqs.map((faq, index) => (
-              <div key={index} className="border-b border-[var(--grid-line)]">
+              <div key={index} className="border-b border-gray-200">
                 <button
                   className="w-full flex items-center justify-between py-5 text-left group"
                   onClick={() => setOpenIndex(openIndex === index ? null : index)}

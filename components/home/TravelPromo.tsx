@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { GridSection, GridHeader, gl } from "./ContentGrid";
+import { GridSection } from "./ContentGrid";
 
 const EMOJI_DEFS = [
   { src: "/emoji/cake.png",       top: 0.02, left: 0.01,  size: 160 },
@@ -208,9 +208,7 @@ export const TravelPromo = () => {
 
   return (
     <GridSection>
-      <GridHeader label="07 — CONSUMER" />
-
-      <div style={{ borderRight: gl, borderBottom: gl }}>
+      <div>
         <div ref={sectionRef} className="relative" style={{ height: "200vh" }}>
           <div ref={containerRef} className="sticky top-0 h-screen overflow-hidden bg-white">
             <canvas ref={canvasRef} className="absolute inset-0 pointer-events-none" style={{ zIndex: 1 }} />

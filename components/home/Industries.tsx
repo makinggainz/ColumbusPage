@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { GridSection, GridHeader, gl } from "./ContentGrid";
+import { GridSection, GridHeader } from "./ContentGrid";
 
 export const Industries = () => {
   const ref = useRef<HTMLDivElement>(null);
@@ -31,7 +31,6 @@ export const Industries = () => {
   return (
     <GridSection>
       <GridHeader
-        label="06 — INDUSTRIES"
         title="Find your industry"
         subtitle="See how Columbus could help you across every sector."
       />
@@ -44,8 +43,6 @@ export const Industries = () => {
             className="group relative overflow-hidden block transition-colors duration-200 hover:bg-[rgba(120,120,200,0.04)]"
             style={{
               height: 280,
-              borderRight: gl,
-              borderBottom: gl,
               opacity: visible ? 1 : 0,
               transform: visible ? "translateY(0)" : "translateY(14px)",
               transition: `opacity 0.6s ease ${index * 70 + 150}ms, transform 0.6s ease ${index * 70 + 150}ms, background-color 0.2s ease`,
@@ -68,8 +65,6 @@ export const Industries = () => {
         <div
           className="flex flex-col items-center justify-center gap-4 p-8 transition-colors duration-200 hover:bg-[rgba(120,120,200,0.04)]"
           style={{
-            borderRight: gl,
-            borderBottom: gl,
             height: 280,
             opacity: visible ? 1 : 0,
             transition: "opacity 0.6s ease 600ms",

@@ -27,7 +27,6 @@ export const Careers = () => {
   return (
     <GridSection>
       <GridHeader
-        label="12 — JOIN US"
         title="Hiring Humans."
         subtitle="Our team is based in Washington DC and Madrid. We are building the first production Large Geospatial Model."
       />
@@ -51,17 +50,17 @@ export const Careers = () => {
             <input
               type="text"
               placeholder="Your name"
-              className="w-full bg-[#F5F5F7] border border-[var(--grid-line)] px-4 py-3 text-[17px] text-[#1D1D1F] outline-none placeholder:text-[#6E6E73] focus:ring-2 focus:ring-[#4F46E5] transition-shadow"
+              className="w-full bg-[#F5F5F7] border border-gray-200 px-4 py-3 text-[17px] text-[#1D1D1F] outline-none placeholder:text-[#6E6E73] focus:ring-2 focus:ring-[#4F46E5] transition-shadow"
             />
             <textarea
               placeholder="Your message"
               rows={3}
-              className="w-full bg-[#F5F5F7] border border-[var(--grid-line)] px-4 py-3 text-[17px] text-[#1D1D1F] outline-none resize-none placeholder:text-[#6E6E73] focus:ring-2 focus:ring-[#4F46E5] transition-shadow"
+              className="w-full bg-[#F5F5F7] border border-gray-200 px-4 py-3 text-[17px] text-[#1D1D1F] outline-none resize-none placeholder:text-[#6E6E73] focus:ring-2 focus:ring-[#4F46E5] transition-shadow"
             />
             <input
               type="email"
               placeholder="your@email.com"
-              className="w-full bg-[#F5F5F7] border border-[var(--grid-line)] px-4 py-3 text-[17px] text-[#1D1D1F] outline-none placeholder:text-[#6E6E73] focus:ring-2 focus:ring-[#4F46E5] transition-shadow"
+              className="w-full bg-[#F5F5F7] border border-gray-200 px-4 py-3 text-[17px] text-[#1D1D1F] outline-none placeholder:text-[#6E6E73] focus:ring-2 focus:ring-[#4F46E5] transition-shadow"
             />
             <button
               type="submit"

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { GridSection, GridHeader, gl } from "./ContentGrid";
+import { GridSection } from "./ContentGrid";
 
 const ICON_DEFS = [
   { src: "/Icon/icon-openai.png",  top: 0.18, left: 0.10, size: 72 },
@@ -188,9 +188,7 @@ export const GeoWarning = () => {
 
   return (
     <GridSection>
-      <GridHeader label="02 — THE PROBLEM" />
-
-      <div style={{ borderRight: gl, borderBottom: gl }}>
+      <div>
         <div ref={sectionRef} className="relative" style={{ height: "200vh" }}>
           <div
             ref={containerRef}

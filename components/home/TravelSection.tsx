@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { cambo } from "@/app/fonts";
-import { GridSection, GridHeader, GridCell } from "./ContentGrid";
+import { GridSection, GridCell } from "./ContentGrid";
 
 export const TravelSection = () => {
   const ref = useRef<HTMLDivElement>(null);
@@ -29,8 +29,6 @@ export const TravelSection = () => {
 
   return (
     <GridSection>
-      <GridHeader label="08 — MAPSGPT" />
-
       <div ref={ref} className="grid grid-cols-1 md:grid-cols-5">
         {/* Text — 2 cols */}
         <GridCell className="md:col-span-2 flex flex-col justify-between" style={{ ...anim(0), minHeight: 500 }}>

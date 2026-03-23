@@ -2,7 +2,7 @@
 
 import { Star, MapPin } from "lucide-react";
 import { useRef, useState, useEffect } from "react";
-import { GridSection, GridHeader, gl } from "./ContentGrid";
+import { GridSection, GridHeader } from "./ContentGrid";
 
 const FAVORITE_SPOTS_FILES = ["(20).jpeg", "(14).jpeg", "(17).jpeg", "(19).jpeg", "(21).jpeg", "(23).jpeg", "(24).jpeg", "(22).jpeg"];
 const spotImageSrc = (filename: string) => `/FavoriteSpots/${encodeURIComponent(filename)}`;
@@ -57,14 +57,13 @@ export const UniqueSpotsSection = () => {
   return (
     <GridSection>
       <GridHeader
-        label="10 — DISCOVERY"
         title="Unique spots people are favoriting"
         subtitle="Curated places discovered through MapsGPT."
       />
 
       <div
         ref={ref}
-        style={{ borderRight: gl, borderBottom: gl, overflow: "hidden" }}
+        style={{ overflow: "hidden" }}
       >
         <div
           ref={scrollRef}
@@ -93,7 +92,7 @@ function SpotCard({ spot }: { spot: (typeof SPOTS)[0] }) {
   return (
     <div
       className="flex flex-col shrink-0 overflow-hidden bg-white"
-      style={{ width: 300, borderRight: gl }}
+      style={{ width: 300 }}
     >
       <div className="relative w-full h-48 overflow-hidden bg-[#F5F5F7] shrink-0">
         {spot.image && (
@@ -109,7 +108,7 @@ function SpotCard({ spot }: { spot: (typeof SPOTS)[0] }) {
         </div>
       </div>
 
-      <div className="px-5 py-5 flex flex-col flex-1" style={{ borderTop: gl }}>
+      <div className="px-5 py-5 flex flex-col flex-1">
         <h3 className="font-semibold text-[17px] text-[#1D1D1F] tracking-[-0.01em] mb-1.5">
           {spot.title}
         </h3>

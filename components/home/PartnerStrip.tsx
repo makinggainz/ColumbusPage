@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { GridSection, GridHeader, gl } from "./ContentGrid";
+import { GridSection, GridHeader } from "./ContentGrid";
 
 const LOGOS = [
   "/Icon/logo1.png",
@@ -17,7 +17,6 @@ export const PartnerStrip = () => {
   return (
     <GridSection>
       <GridHeader
-        label="04 — DATA PARTNERS"
         title="Vetted, high-fidelity, and smart datasets"
       />
 
@@ -26,7 +25,7 @@ export const PartnerStrip = () => {
           <div
             key={i}
             className="flex items-center justify-center py-8 px-4 transition-colors duration-200 hover:bg-[rgba(120,120,200,0.04)]"
-            style={{ borderRight: gl, borderBottom: gl }}
+            style={{  }}
           >
             <Image
               src={src}
@@ -40,10 +39,7 @@ export const PartnerStrip = () => {
         ))}
 
         {/* Fill remaining cells on sm (4-col) to avoid gaps */}
-        <div
-          className="hidden sm:block md:hidden"
-          style={{ borderRight: gl, borderBottom: gl }}
-        />
+        <div className="hidden sm:block md:hidden" />
       </div>
     </GridSection>
   );
