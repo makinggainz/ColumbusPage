@@ -1,4 +1,4 @@
-import { Cormorant_Garamond, Instrument_Serif, Baumans, Space_Grotesk, Inter } from "next/font/google";
+import { Cormorant_Garamond, Instrument_Serif, Baumans, Space_Grotesk, Inter, Geist } from "next/font/google";
 
 export const inter = Inter({
   subsets: ["latin"],
@@ -27,5 +27,11 @@ export const baumans = Baumans({
 export const instrumentSerif = Instrument_Serif({
   subsets: ["latin"],
   weight: ["400"],
+  display: "swap",
+});
+
+export const geist = Geist({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
   display: "swap",
 });
