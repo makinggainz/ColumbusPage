@@ -940,13 +940,26 @@ export const Hero = () => {
             Building the first in&#8209;production Large Geospatial Model.
           </h1>
 
-          {/* Tag */}
-          <p
-            className="mt-6 text-xs md:text-sm font-medium tracking-widest text-[#1C274C]/70"
-            style={fadeIn(200)}
-          >
-            [ COLUMBUS PRO-1 ]
-          </p>
+          {/* CTA buttons */}
+          <div className="flex items-center gap-5 mt-10" style={fadeIn(200)}>
+            <a
+              href="/maps-gpt"
+              className="ripple-btn group relative flex items-center justify-center px-7 py-4 text-[15px] font-semibold leading-none rounded-full bg-[#0A1344] text-white overflow-hidden transition-all duration-500 hover:shadow-[0_8px_30px_rgba(10,19,68,0.25)] hover:-translate-y-0.5"
+            >
+              <span className="relative z-10">Start Now</span>
+              <span className="ripple-ring absolute inset-0 rounded-full border border-white/20 scale-100 opacity-0 group-hover:scale-[1.08] group-hover:opacity-100 transition-all duration-700 ease-out pointer-events-none" />
+            </a>
+            <a
+              href="#learn-more"
+              className="group relative flex items-center justify-center px-7 py-4 text-[15px] font-semibold leading-none rounded-full text-[#0A1344] overflow-hidden transition-all duration-500 hover:-translate-y-0.5"
+            >
+              <span className="absolute inset-0 rounded-full bg-[#0A1344]/[0.04] scale-0 opacity-0 group-hover:scale-100 group-hover:opacity-100 transition-all duration-500 ease-out" />
+              <span className="relative z-10">Learn More</span>
+              <svg className="relative z-10 ml-1.5 w-4 h-4 transition-transform duration-300 group-hover:translate-x-0.5" fill="none" viewBox="0 0 16 16" stroke="currentColor" strokeWidth="1.5">
+                <path d="M3 8h10M9 4l4 4-4 4" />
+              </svg>
+            </a>
+          </div>
         </div>
       </Container>
     </section>
