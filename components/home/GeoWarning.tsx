@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { GridSection, GridHeader, gl } from "./ContentGrid";
+import { useEffect, useRef, useState, useMemo } from "react";
+import { GridSection, gl } from "./ContentGrid";
 
 const ICON_DEFS = [
   { src: "/Icon/icon-openai.png",  top: 0.18, left: 0.10, size: 72 },
@@ -34,6 +34,13 @@ const FRICTION    = 0.975;
 const ANG_FRICTION = 0.93;
 const RESTITUTION = 0.38;
 const FADE_IN_MS  = 600;
+
+/* ── Word-by-word reveal text ── */
+const LINE1_WORDS = "Stop using Language models for Geographical work.".split(" ");
+const LINE2_WORDS = "LLMs hallucinate and cannot be trusted for the real world".split(" ");
+const ALL_WORDS = [...LINE1_WORDS, ...LINE2_WORDS];
+const TOTAL_WORDS = ALL_WORDS.length;
+const LINE1_COUNT = LINE1_WORDS.length;
 
 export const GeoWarning = () => {
   const sectionRef   = useRef<HTMLDivElement>(null);
@@ -167,62 +174,73 @@ export const GeoWarning = () => {
     };
   }, []);
 
-  const ease = (p: number, start: number, end: number) =>
-    Math.max(0, Math.min(1, (p - start) / (end - start)));
+  /* Compute per-word opacity based on scroll progress */
+  const wordOpacities = useMemo(() => {
+    const DIM = 0.12;       // starting opacity for unlit words
+    const SPREAD = 0.06;    // scroll range over which a single word fades in
+    const START = 0.08;     // progress at which first word starts revealing
+    const END = 0.85;       // progress at which last word is fully revealed
 
-  const bgProgress = ease(progress, 0, 0.25);
-  const bgR = Math.round(255 + (245 - 255) * bgProgress);
-  const bgG = Math.round(255 + (245 - 255) * bgProgress);
-  const bgB = Math.round(255 + (247 - 255) * bgProgress);
-  const bgColor = `rgb(${bgR},${bgG},${bgB})`;
-
-  const line1P = ease(progress, 0.15, 0.38);
-  const line2P = ease(progress, 0.30, 0.52);
-  const ctaP   = ease(progress, 0.42, 0.58);
-
-  const fadeUp = (p: number, dist = 32) => ({
-    opacity: p,
-    filter: `blur(${(1 - p) * 8}px)`,
-    transform: `translateY(${(1 - p) * dist}px)`,
-  });
+    return ALL_WORDS.map((_, i) => {
+      const wordStart = START + (i / (TOTAL_WORDS - 1)) * (END - START);
+      const t = Math.max(0, Math.min(1, (progress - wordStart) / SPREAD));
+      return DIM + (1 - DIM) * t;
+    });
+  }, [progress]);
 
   return (
     <GridSection>
-      <GridHeader label="02 — THE PROBLEM" />
-
       <div style={{ borderRight: gl, borderBottom: gl }}>
-        <div ref={sectionRef} className="relative" style={{ height: "200vh" }}>
+        <div ref={sectionRef} className="relative" style={{ height: "300vh" }}>
           <div
             ref={containerRef}
             className="sticky top-0 h-screen overflow-hidden flex items-center justify-center"
-            style={{ backgroundColor: bgColor, transition: "background-color 0.05s linear" }}
+            style={{
+              backgroundColor: "#FAFAFA",
+              backgroundImage: `linear-gradient(rgba(55,40,140,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(55,40,140,0.06) 1px, transparent 1px)`,
+              backgroundSize: "20px 20px",
+            }}
           >
             <canvas ref={canvasRef} className="absolute inset-0 pointer-events-none" style={{ zIndex: 1 }} />
 
             <div className="relative" style={{ zIndex: 2 }}>
-              <div className="max-w-[800px] mx-auto px-6">
-                <div className="flex flex-col items-center text-center">
-                  <h2
-                    style={fadeUp(line1P)}
-                    className="text-[48px] md:text-[56px] font-semibold tracking-[-0.003em] leading-[1.07] text-[#1D1D1F] text-center"
-                  >
-                    <span>Stop using Language models</span>
-                    <br />
-                    <span>for Geographical work.</span>
-                  </h2>
-
-                  <p style={fadeUp(line2P)} className="mt-6 text-[28px] md:text-[32px] leading-[1.3] tracking-tight">
-                    <span className="font-semibold bg-linear-to-r from-[#CD0A00] to-[#1D1D1F] bg-clip-text text-transparent">
-                      LLMs hallucinate and <span className="font-bold">cannot</span> be trusted for the real world
+              <div className="max-w-[900px] mx-auto px-6">
+                {/* Line 1 — large heading */}
+                <p className="text-center leading-[1.12] tracking-[-0.02em]" style={{ fontSize: "clamp(36px, 5vw, 56px)", fontWeight: 600 }}>
+                  {LINE1_WORDS.map((word, i) => (
+                    <span
+                      key={i}
+                      className="text-[#1D1D1F]"
+                      style={{
+                        opacity: wordOpacities[i],
+                        transition: "opacity 0.05s linear",
+                      }}
+                    >
+                      {word}{" "}
                     </span>
-                  </p>
+                  ))}
+                </p>
 
-                  <div style={fadeUp(ctaP)} className="mt-8">
-                    <a href="#" className="text-[#4F46E5] text-sm font-mono tracking-wide hover:underline transition-colors">
-                      LEARN WHY →
-                    </a>
-                  </div>
-                </div>
+                {/* Line 2 — secondary text */}
+                <p className="text-center leading-[1.25] tracking-[-0.01em] mt-6" style={{ fontSize: "clamp(24px, 3.5vw, 36px)", fontWeight: 500 }}>
+                  {LINE2_WORDS.map((word, i) => {
+                    const globalIdx = LINE1_COUNT + i;
+                    const isCannot = word === "cannot";
+                    return (
+                      <span
+                        key={i}
+                        className={isCannot ? "text-[#37288C]" : "text-[#1D1D1F]"}
+                        style={{
+                          opacity: wordOpacities[globalIdx],
+                          transition: "opacity 0.05s linear",
+                          fontWeight: isCannot ? 700 : undefined,
+                        }}
+                      >
+                        {word}{" "}
+                      </span>
+                    );
+                  })}
+                </p>
               </div>
             </div>
           </div>

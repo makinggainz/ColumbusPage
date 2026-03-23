@@ -22,6 +22,8 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
     );
     const navRef = useRef<HTMLElement>(null);
 
+    const [visionStuck, setVisionStuck] = useState(false);
+
     useEffect(() => {
         const handleScroll = () => {
             const y = window.scrollY;
@@ -29,11 +31,16 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
             setIsCompact(y > COMPACT_THRESHOLD);
         };
         const handleReveal = () => setHasScrolled(true);
+        const handleVisionSticky = (e: Event) => {
+            setVisionStuck((e as CustomEvent).detail.stuck);
+        };
         window.addEventListener("scroll", handleScroll, { passive: true });
         window.addEventListener("hero-reveal", handleReveal);
+        window.addEventListener("vision-sticky", handleVisionSticky);
         return () => {
             window.removeEventListener("scroll", handleScroll);
             window.removeEventListener("hero-reveal", handleReveal);
+            window.removeEventListener("vision-sticky", handleVisionSticky);
         };
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
@@ -222,10 +229,10 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
 
                             {/* ── Right: CTA buttons ── */}
                             <div className="flex items-center gap-3">
-                                {/* Start Now — always visible on desktop, dark pill CTA */}
+                                {/* CTA — swaps text when Vision sticky bar is stuck */}
                                 <Link
-                                    href="/maps-gpt"
-                                    className={`hidden min-[900px]:inline-flex items-center justify-center font-semibold leading-none rounded-none transition-all duration-200 ${
+                                    href={visionStuck ? "/technology" : "/maps-gpt"}
+                                    className={`hidden min-[900px]:inline-flex items-center justify-center font-semibold leading-none rounded-none ${
                                         isDark && !isMenuOpen
                                             ? "bg-white text-[#0A1344] hover:bg-white/90"
                                             : "bg-[#0A1344] text-white hover:bg-[#0A1344]/85"
@@ -235,11 +242,34 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
                                         height: 40,
                                         paddingLeft: 20,
                                         paddingRight: 20,
-                                        transition: `background-color 200ms ease`,
+                                        transition: "background-color 200ms ease, padding 300ms ease",
                                     }}
                                     onMouseEnter={handleNavMouseEnter}
                                 >
-                                    Start Now →
+                                    <span
+                                        className="inline-flex items-center gap-1 whitespace-nowrap"
+                                        style={{
+                                            transition: "opacity 250ms ease, transform 250ms ease",
+                                            opacity: visionStuck ? 0 : 1,
+                                            transform: visionStuck ? "translateY(-8px)" : "translateY(0)",
+                                            position: visionStuck ? "absolute" : "relative",
+                                            pointerEvents: visionStuck ? "none" : "auto",
+                                        }}
+                                    >
+                                        Start Now →
+                                    </span>
+                                    <span
+                                        className="inline-flex items-center gap-1 whitespace-nowrap"
+                                        style={{
+                                            transition: "opacity 250ms ease, transform 250ms ease",
+                                            opacity: visionStuck ? 1 : 0,
+                                            transform: visionStuck ? "translateY(0)" : "translateY(8px)",
+                                            position: visionStuck ? "relative" : "absolute",
+                                            pointerEvents: visionStuck ? "auto" : "none",
+                                        }}
+                                    >
+                                        Our research &amp; technology →
+                                    </span>
                                 </Link>
 
                                 {/* Hamburger — mobile only */}
