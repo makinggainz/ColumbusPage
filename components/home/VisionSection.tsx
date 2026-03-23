@@ -60,16 +60,7 @@ export const Vision = () => {
 
   return (
     <div>
-      {/* Sentinel — when this scrolls above the navbar, the sticky bar is "stuck" */}
       <div ref={sentinelTopRef} className="h-0" />
-
-      {/* Sticky "Technology" label */}
-      <div
-        className="sticky top-[56px] z-20 bg-white max-w-[1287px] mx-auto px-8 md:px-10 py-4"
-        style={{ borderTop: gl, borderLeft: gl, borderRight: gl, borderBottom: gl }}
-      >
-        <span className="text-[15px] font-medium text-[#1D1D1F]">Technology</span>
-      </div>
 
     <GridSection>
       {/* Top content area */}

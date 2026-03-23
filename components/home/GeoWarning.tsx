@@ -189,63 +189,59 @@ export const GeoWarning = () => {
   }, [progress]);
 
   return (
-    <GridSection>
-      <div style={{ borderRight: gl, borderBottom: gl }}>
-        <div ref={sectionRef} className="relative" style={{ height: "300vh" }}>
-          <div
-            ref={containerRef}
-            className="sticky top-0 h-screen overflow-hidden flex items-center justify-center"
-            style={{
-              backgroundColor: "#FAFAFA",
-              backgroundImage: `linear-gradient(rgba(55,40,140,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(55,40,140,0.06) 1px, transparent 1px)`,
-              backgroundSize: "20px 20px",
-            }}
-          >
-            <canvas ref={canvasRef} className="absolute inset-0 pointer-events-none" style={{ zIndex: 1 }} />
+    <div ref={sectionRef} className="relative" style={{ height: "300vh" }}>
+      <div
+        ref={containerRef}
+        className="sticky top-0 h-screen overflow-hidden flex items-center justify-center"
+        style={{
+          backgroundColor: "#FAFAFA",
+          backgroundImage: `linear-gradient(rgba(55,40,140,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(55,40,140,0.06) 1px, transparent 1px)`,
+          backgroundSize: "20px 20px",
+        }}
+      >
+        <canvas ref={canvasRef} className="absolute inset-0 pointer-events-none" style={{ zIndex: 1 }} />
 
-            <div className="relative" style={{ zIndex: 2 }}>
-              <div className="max-w-[900px] mx-auto px-6">
-                {/* Line 1 — large heading */}
-                <p className="text-center leading-[1.12] tracking-[-0.02em]" style={{ fontSize: "clamp(36px, 5vw, 56px)", fontWeight: 600 }}>
-                  {LINE1_WORDS.map((word, i) => (
-                    <span
-                      key={i}
-                      className="text-[#1D1D1F]"
-                      style={{
-                        opacity: wordOpacities[i],
-                        transition: "opacity 0.05s linear",
-                      }}
-                    >
-                      {word}{" "}
-                    </span>
-                  ))}
-                </p>
+        <div className="relative" style={{ zIndex: 2 }}>
+          <div className="max-w-[900px] mx-auto px-6">
+            {/* Line 1 */}
+            <p className="text-center leading-[1.12] tracking-[-0.02em]" style={{ fontSize: "clamp(36px, 5vw, 56px)", fontWeight: 600 }}>
+              {LINE1_WORDS.map((word, i) => (
+                <span
+                  key={i}
+                  className="text-[#1D1D1F]"
+                  style={{
+                    opacity: wordOpacities[i],
+                    transition: "opacity 0.05s linear",
+                  }}
+                >
+                  {word}{" "}
+                </span>
+              ))}
+            </p>
 
-                {/* Line 2 — secondary text */}
-                <p className="text-center leading-[1.25] tracking-[-0.01em] mt-6" style={{ fontSize: "clamp(24px, 3.5vw, 36px)", fontWeight: 500 }}>
-                  {LINE2_WORDS.map((word, i) => {
-                    const globalIdx = LINE1_COUNT + i;
-                    const isCannot = word === "cannot";
-                    return (
-                      <span
-                        key={i}
-                        className={isCannot ? "text-[#37288C]" : "text-[#1D1D1F]"}
-                        style={{
-                          opacity: wordOpacities[globalIdx],
-                          transition: "opacity 0.05s linear",
-                          fontWeight: isCannot ? 700 : undefined,
-                        }}
-                      >
-                        {word}{" "}
-                      </span>
-                    );
-                  })}
-                </p>
-              </div>
-            </div>
+            {/* Line 2 */}
+            <p className="text-center leading-[1.25] tracking-[-0.01em] mt-6" style={{ fontSize: "clamp(24px, 3.5vw, 36px)", fontWeight: 500 }}>
+              {LINE2_WORDS.map((word, i) => {
+                const globalIdx = LINE1_COUNT + i;
+                const isCannot = word === "cannot";
+                return (
+                  <span
+                    key={i}
+                    className={isCannot ? "text-[#37288C]" : "text-[#1D1D1F]"}
+                    style={{
+                      opacity: wordOpacities[globalIdx],
+                      transition: "opacity 0.05s linear",
+                      fontWeight: isCannot ? 700 : undefined,
+                    }}
+                  >
+                    {word}{" "}
+                  </span>
+                );
+              })}
+            </p>
           </div>
         </div>
       </div>
-    </GridSection>
+    </div>
   );
 };
