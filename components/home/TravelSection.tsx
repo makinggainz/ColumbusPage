@@ -4,52 +4,45 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { cambo } from "@/app/fonts";
+import { GridSection, GridHeader, GridCell } from "./ContentGrid";
 
 export const TravelSection = () => {
-  const cardRef = useRef<HTMLDivElement>(null);
-  const [cardVisible, setCardVisible] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    const el = cardRef.current;
+    const el = ref.current;
     if (!el) return;
     const obs = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) { setCardVisible(true); obs.disconnect(); } },
+      ([entry]) => { if (entry.isIntersecting) { setVisible(true); obs.disconnect(); } },
       { threshold: 0 }
     );
     obs.observe(el);
     return () => obs.disconnect();
   }, []);
 
-  const animStyle = (visible: boolean, delay = "0s") => ({
-    opacity:    visible ? 1 : 0,
-    filter:     visible ? "blur(0px)" : "blur(8px)",
-    transform:  visible ? "translateY(0)" : "translateY(16px)",
-    transition: `opacity 0.7s ease-out ${delay}, filter 0.7s ease-out ${delay}, transform 0.7s ease-out ${delay}`,
+  const anim = (delay = 0) => ({
+    opacity: visible ? 1 : 0,
+    transform: visible ? "translateY(0)" : "translateY(16px)",
+    transition: `opacity 0.7s ease ${delay}ms, transform 0.7s ease ${delay}ms`,
   });
 
   return (
-    <section className="bg-[#F5F5F7] py-[80px] md:py-[120px]">
-      <div className="max-w-[980px] mx-auto px-6">
-        <div
-          ref={cardRef}
-          className="relative overflow-hidden bg-white rounded-3xl shadow-sm"
-          style={{
-            height: 773,
-            padding: "52px 64px 0",
-            ...animStyle(cardVisible, "0.1s"),
-          }}
-        >
+    <GridSection>
+      <GridHeader label="08 — MAPSGPT" />
 
-          {/* TEXT BLOCK */}
-          <div className="flex flex-col" style={{ maxWidth: 480 }}>
-            <p className="text-[12px] font-semibold tracking-[0.1em] uppercase text-[#6E6E73] mb-5">
+      <div ref={ref} className="grid grid-cols-1 md:grid-cols-5">
+        {/* Text — 2 cols */}
+        <GridCell className="md:col-span-2 flex flex-col justify-between" style={{ ...anim(0), minHeight: 500 }}>
+          <div>
+            <p className="text-[11px] font-semibold tracking-[0.2em] uppercase text-[#0A1344]/30 font-mono mb-5">
               Available everywhere
             </p>
 
             <h2
               className="font-semibold leading-none text-[#1D1D1F] mb-6"
               style={{
-                fontSize: "clamp(56px, 6vw, 96px)",
+                fontSize: "clamp(48px, 5vw, 80px)",
                 letterSpacing: "-0.02em",
                 fontFamily: cambo.style.fontFamily,
               }}
@@ -62,68 +55,50 @@ export const TravelSection = () => {
               MapsGPT is your local guide in your pocket.
             </p>
 
-            <ul className="space-y-3.5 list-none pl-0">
-              {[
-                "Plan cool trips",
-                "Make itineraries",
-                "Take care of every preference & detail",
-              ].map((item, i) => (
+            <ul className="space-y-3.5 list-none pl-0 mb-8">
+              {["Plan cool trips", "Make itineraries", "Take care of every preference & detail"].map((item, i) => (
                 <li key={i} className="flex items-center gap-4 text-[17px]">
-                  <span className="rounded-full bg-[#1D1D1F]/30 w-[5px] h-[5px] shrink-0" aria-hidden />
+                  <span className="w-1.25 h-1.25 bg-[#1D1D1F]/30 shrink-0" aria-hidden />
                   <span className="text-[#1D1D1F]">{item}</span>
                 </li>
               ))}
             </ul>
           </div>
 
-          {/* BUTTONS */}
-          <div className="absolute" style={{ bottom: 62, left: 64 }}>
-            <p className="text-[#6E6E73] mb-6 text-[17px] leading-[1.47]">
+          <div>
+            <p className="text-[#6E6E73] mb-4 text-[15px] leading-[1.47]">
               Find your next hang out spot, easier.
             </p>
             <div className="flex flex-row items-center gap-4">
-              <Link
-                href="/maps-gpt"
-                className="text-[#4F46E5] text-[20px] hover:underline"
-              >
-                Try it out now ›
+              <Link href="/maps-gpt" className="text-[#4F46E5] text-sm font-mono tracking-wide hover:underline">
+                TRY IT NOW →
               </Link>
               <Link
                 href="/technology"
-                className="bg-[#4F46E5] text-white text-[17px] font-normal rounded-full px-[22px] py-[11px] hover:bg-[#4338CA] transition-colors inline-flex items-center"
+                className="bg-[#0A1344] text-white text-[15px] font-medium px-5 py-2.5 hover:bg-[#0A1344]/85 transition-colors inline-flex items-center"
               >
                 Get started
               </Link>
             </div>
           </div>
+        </GridCell>
 
-          {/* DESKTOP UI */}
+        {/* Image — 3 cols, flush */}
+        <GridCell flush hoverable={false} className="md:col-span-3 relative hidden md:block" style={{ ...anim(200), minHeight: 500 }}>
           <div
-            className="absolute bottom-0 right-0 rounded-tl-2xl overflow-hidden"
-            style={{
-              width: 997,
-              height: 571,
-              boxShadow: "0 20px 80px rgba(0,0,0,0.08)",
-            }}
+            className="absolute bottom-0 right-0 overflow-hidden"
+            style={{ width: "95%", height: "85%" }}
           >
             <Image src="/emoji/desk.png" alt="Desktop UI" fill className="object-cover" />
           </div>
-
-          {/* MOBILE UI */}
           <div
-            className="absolute bottom-0 rounded-t-2xl overflow-hidden"
-            style={{
-              right: 15,
-              width: 266,
-              height: 579,
-              boxShadow: "0 20px 80px rgba(0,0,0,0.1)",
-            }}
+            className="absolute bottom-0 overflow-hidden"
+            style={{ right: 12, width: 200, height: "88%" }}
           >
             <Image src="/emoji/mob.png" alt="Mobile UI" fill className="object-cover" />
           </div>
-
-        </div>
+        </GridCell>
       </div>
-    </section>
+    </GridSection>
   );
 };

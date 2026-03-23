@@ -9,6 +9,7 @@ import {
   Book,
   Database,
 } from "lucide-react";
+import { GridSection, GridHeader, GridCell } from "./ContentGrid";
 
 const features = [
   {
@@ -51,19 +52,14 @@ const features = [
 ];
 
 export const MainFeatures = () => {
-  const sectionRef = useRef<HTMLElement>(null);
+  const ref = useRef<HTMLElement>(null);
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    const el = sectionRef.current;
+    const el = ref.current;
     if (!el) return;
     const obs = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setVisible(true);
-          obs.disconnect();
-        }
-      },
+      ([entry]) => { if (entry.isIntersecting) { setVisible(true); obs.disconnect(); } },
       { threshold: 0.05 }
     );
     obs.observe(el);
@@ -71,73 +67,45 @@ export const MainFeatures = () => {
   }, []);
 
   return (
-    <section ref={sectionRef} className="bg-[#FFFFFF] py-[80px] md:py-[120px]">
-      <div className="max-w-[980px] mx-auto px-6">
+    <GridSection>
+      <div ref={ref as React.RefObject<HTMLDivElement>}>
+        <GridHeader
+          label="05 — CAPABILITIES"
+          title="What Columbus can do for you"
+          subtitle="Powerful tools that transform how you research, analyze, and select sites."
+        />
 
-        {/* Centered intro */}
-        <div
-          className="text-center mb-16"
-          style={{
-            opacity: visible ? 1 : 0,
-            transform: visible ? "translateY(0)" : "translateY(16px)",
-            filter: visible ? "blur(0px)" : "blur(6px)",
-            transition: "opacity 0.7s ease, transform 0.7s ease, filter 0.7s ease",
-          }}
-        >
-          <p className="text-[17px] font-semibold text-[#6E6E73] mb-4">
-            Capabilities
-          </p>
-          <h2 className="text-[48px] md:text-[56px] font-semibold tracking-[-0.003em] leading-[1.07] text-[#1D1D1F] text-center">
-            What Columbus can do for you
-          </h2>
-          <p className="text-[21px] md:text-[24px] font-normal leading-[1.38] text-[#6E6E73] text-center max-w-[600px] mx-auto mt-4">
-            Powerful tools that transform how you research, analyze, and select sites.
-          </p>
-        </div>
-
-        {/* Feature rows */}
-        <div className="w-full">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
           {features.map((feature, index) => {
             const Icon = feature.icon;
             return (
-              <div
+              <GridCell
                 key={index}
-                className="group flex items-start gap-5 py-5 px-4 -mx-4 border-b border-[rgba(0,0,0,0.06)] hover:bg-[#F5F5F7] rounded-xl transition-colors duration-300 cursor-pointer"
                 style={{
                   opacity: visible ? 1 : 0,
                   transform: visible ? "translateY(0)" : "translateY(12px)",
-                  filter: visible ? "blur(0px)" : "blur(4px)",
-                  transition: `opacity 0.6s ease ${index * 60 + 200}ms, transform 0.6s ease ${index * 60 + 200}ms, filter 0.6s ease ${index * 60 + 200}ms, background-color 0.3s ease`,
+                  transition: `opacity 0.6s ease ${index * 60 + 200}ms, transform 0.6s ease ${index * 60 + 200}ms`,
                 }}
               >
-                {/* Icon */}
-                <div className="shrink-0 w-12 h-12 flex items-center justify-center rounded-2xl bg-[#F5F5F7]">
-                  <Icon size={22} strokeWidth={1.5} className="text-[#1D1D1F]" />
+                <div className="mb-4">
+                  <Icon size={24} strokeWidth={1.5} className="text-[#0A1344]/60" />
                 </div>
-
-                {/* Text */}
-                <div className="flex-1 min-w-0">
-                  <h3 className="text-[17px] font-semibold text-[#1D1D1F] leading-snug">
-                    {feature.title}
-                  </h3>
-                  <p className="text-[17px] font-normal leading-[1.47] text-[#6E6E73] mt-1">
-                    {feature.description}
-                    {feature.link && (
-                      <a
-                        href="#"
-                        className="ml-2 text-[#4F46E5] hover:underline inline-flex items-center gap-0.5 font-normal text-[17px]"
-                      >
-                        Datasets &#8250;
-                      </a>
-                    )}
-                  </p>
-                </div>
-              </div>
+                <h3 className="text-[17px] font-semibold text-[#1D1D1F] leading-snug mb-2">
+                  {feature.title}
+                </h3>
+                <p className="text-[15px] font-normal leading-[1.5] text-[#6E6E73]">
+                  {feature.description}
+                  {feature.link && (
+                    <a href="#" className="ml-1 text-[#4F46E5] hover:underline font-mono text-[13px] tracking-wide">
+                      DATASETS →
+                    </a>
+                  )}
+                </p>
+              </GridCell>
             );
           })}
         </div>
-
       </div>
-    </section>
+    </GridSection>
   );
 };

@@ -3,19 +3,18 @@
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { Plus } from "lucide-react";
+import { GridSection, GridHeader, GridCell, gl } from "./ContentGrid";
 
 export const TrustStrip = () => {
-  const sectionRef = useRef<HTMLDivElement>(null);
+  const ref = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   useEffect(() => {
-    const el = sectionRef.current;
+    const el = ref.current;
     if (!el) return;
     const obs = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) { setVisible(true); obs.disconnect(); }
-      },
+      ([entry]) => { if (entry.isIntersecting) { setVisible(true); obs.disconnect(); } },
       { threshold: 0.05 }
     );
     obs.observe(el);
@@ -46,60 +45,63 @@ export const TrustStrip = () => {
   ];
 
   return (
-    <section className="bg-[#FFFFFF] py-[80px] md:py-[120px]">
-      <div className="max-w-[980px] mx-auto px-6" ref={sectionRef}>
+    <GridSection>
+      <GridHeader
+        label="09 — TRUST"
+        title="Your plans are in good hands"
+        subtitle="We work with data from reputable global partners."
+      />
 
-        {/* Header */}
+      <div ref={ref}>
+        {/* Logo row */}
         <div
-          className="mb-16"
-          style={{
-            opacity: visible ? 1 : 0,
-            transform: visible ? "translateY(0)" : "translateY(16px)",
-            filter: visible ? "blur(0px)" : "blur(6px)",
-            transition: "opacity 0.7s ease, transform 0.7s ease, filter 0.7s ease",
-          }}
-        >
-          <h2 className="text-[48px] md:text-[56px] font-semibold tracking-[-0.003em] leading-[1.07] text-[#1D1D1F] text-center">
-            Your plans are in good hands
-          </h2>
-          <p className="mt-4 text-[21px] md:text-[24px] font-normal leading-[1.38] text-[#6E6E73] text-center">
-            We work with data from reputable global partners.
-          </p>
-        </div>
-
-        {/* Logos */}
-        <div
-          className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-8 items-center justify-items-center mb-20"
+          className="grid grid-cols-3 sm:grid-cols-6"
           style={{
             opacity: visible ? 0.5 : 0,
             transition: "opacity 0.7s ease 0.15s",
             filter: "grayscale(100%)",
           }}
         >
-          <Logo src="/MapsGPTLogos/Logo1.png" />
-          <Logo src="/MapsGPTLogos/Logo2.png" />
-          <Logo src="/MapsGPTLogos/Logo3.png" />
-          <Logo src="/MapsGPTLogos/Logo4.png" />
-          <Logo src="/MapsGPTLogos/Logo5.png" />
-          <Logo src="/MapsGPTLogos/Logo6.png" />
+          {[
+            "/MapsGPTLogos/Logo1.png",
+            "/MapsGPTLogos/Logo2.png",
+            "/MapsGPTLogos/Logo3.png",
+            "/MapsGPTLogos/Logo4.png",
+            "/MapsGPTLogos/Logo5.png",
+            "/MapsGPTLogos/Logo6.png",
+          ].map((src, i) => (
+            <div
+              key={i}
+              className="flex items-center justify-center py-6 px-4"
+              style={{ borderRight: gl, borderBottom: gl }}
+            >
+              <Image
+                src={src}
+                alt=""
+                width={105}
+                height={30}
+                className="object-contain h-6 sm:h-7 w-auto"
+              />
+            </div>
+          ))}
         </div>
 
-        {/* FAQ */}
-        <div
-          className="max-w-[680px] mx-auto"
+        {/* FAQ section */}
+        <GridCell
+          hoverable={false}
           style={{
             opacity: visible ? 1 : 0,
             transform: visible ? "translateY(0)" : "translateY(10px)",
             transition: "opacity 0.7s ease 0.25s, transform 0.7s ease 0.25s",
           }}
         >
-          <h3 className="text-[21px] md:text-[24px] font-semibold text-[#1D1D1F] text-center mb-10">
-            Frequently Asked Questions
-          </h3>
+          <span className="text-[11px] font-semibold tracking-[0.2em] uppercase text-[#0A1344]/30 font-mono block mb-6">
+            FAQ
+          </span>
 
-          <div>
+          <div className="max-w-[680px]">
             {faqs.map((faq, index) => (
-              <div key={index} className="border-b border-[rgba(0,0,0,0.08)]">
+              <div key={index} className="border-b border-[var(--grid-line)]">
                 <button
                   className="w-full flex items-center justify-between py-5 text-left group"
                   onClick={() => setOpenIndex(openIndex === index ? null : index)}
@@ -127,21 +129,8 @@ export const TrustStrip = () => {
               </div>
             ))}
           </div>
-        </div>
-
+        </GridCell>
       </div>
-    </section>
+    </GridSection>
   );
 };
-
-const Logo = ({ src }: { src: string }) => (
-  <div className="flex justify-center">
-    <Image
-      src={src}
-      alt=""
-      width={105}
-      height={30}
-      className="object-contain h-6 sm:h-7 w-auto"
-    />
-  </div>
-);

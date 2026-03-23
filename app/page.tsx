@@ -14,43 +14,23 @@ import { PartnerStrip } from "@/components/home/PartnerStrip";
 import { TravelPromo } from "@/components/home/TravelPromo";
 import { UniqueSpotsSection } from "@/components/home/UniqueSpotsSection";
 
-function SectionLabel({ n }: { n: number }) {
-  return (
-    <div
-      className="absolute top-2 left-2 z-50 bg-red-500 text-white text-[11px] font-bold rounded-full w-6 h-6 flex items-center justify-center pointer-events-none"
-      style={{ lineHeight: 1 }}
-    >
-      {n}
-    </div>
-  );
-}
-
-function Section({ n, children }: { n: number; children: React.ReactNode }) {
-  return (
-    <div className="relative">
-      <SectionLabel n={n} />
-      {children}
-    </div>
-  );
-}
-
 export default function Home() {
   return (
     <main className="min-h-screen bg-white">
       <Navbar />
-      <Section n={1}><Hero /></Section>
-      <Section n={2}><Vision /></Section>
-      <Section n={3}><GeoWarning /></Section>
-      <Section n={4}><SiteSelection /></Section>
-      <Section n={5}><PartnerStrip /></Section>
-      <Section n={6}><MainFeatures /></Section>
-      <Section n={7}><Industries /></Section>
-      <Section n={8}><TravelPromo /></Section>
-      <Section n={9}><TravelSection /></Section>
-      <Section n={10}><TrustStrip /></Section>
-      <Section n={11}><UniqueSpotsSection /></Section>
-      <Section n={12}><Applications /></Section>
-      <Section n={13}><Careers /></Section>
+      <Hero />
+      <Vision />
+      <GeoWarning />
+      <SiteSelection />
+      <PartnerStrip />
+      <MainFeatures />
+      <Industries />
+      <TravelPromo />
+      <TravelSection />
+      <TrustStrip />
+      <UniqueSpotsSection />
+      <Applications />
+      <Careers />
       <Footer />
     </main>
   );

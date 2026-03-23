@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { GridSection, GridHeader, gl } from "./ContentGrid";
 
-// Each icon: src, initial position as % of viewport, size in px
 const ICON_DEFS = [
   { src: "/Icon/icon-openai.png",  top: 0.18, left: 0.10, size: 72 },
   { src: "/Icon/xai.png",          top: 0.12, left: 0.34, size: 66 },
@@ -19,10 +19,8 @@ const ICON_DEFS = [
 
 type Box = {
   id: number;
-  x: number;
-  y: number;
-  vx: number;
-  vy: number;
+  x: number; y: number;
+  vx: number; vy: number;
   rotation: number;
   angularVel: number;
   size: number;
@@ -35,10 +33,10 @@ const DAMPING     = 0.52;
 const FRICTION    = 0.975;
 const ANG_FRICTION = 0.93;
 const RESTITUTION = 0.38;
-const FADE_IN_MS  = 600; // ms to fade in after spawn
+const FADE_IN_MS  = 600;
 
 export const GeoWarning = () => {
-  const sectionRef   = useRef<HTMLElement>(null);
+  const sectionRef   = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef    = useRef<HTMLCanvasElement>(null);
   const boxesRef     = useRef<Box[]>([]);
@@ -46,10 +44,9 @@ export const GeoWarning = () => {
   const idRef        = useRef(0);
   const spawnedRef   = useRef(false);
   const rafRef       = useRef<number | undefined>(undefined);
-  const mouseRef = useRef<{ x: number; y: number; active: boolean }>({ x: 0, y: 0, active: false });
+  const mouseRef     = useRef<{ x: number; y: number; active: boolean }>({ x: 0, y: 0, active: false });
   const [progress, setProgress] = useState(0);
 
-  // ── Preload images ───────────────────────────────────────────────────────────
   useEffect(() => {
     imagesRef.current = ICON_DEFS.map((def) => {
       const img = new window.Image();
@@ -58,7 +55,6 @@ export const GeoWarning = () => {
     });
   }, []);
 
-  // ── Scroll progress ──────────────────────────────────────────────────────────
   useEffect(() => {
     const onScroll = () => {
       const s = sectionRef.current;
@@ -72,49 +68,36 @@ export const GeoWarning = () => {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // ── Spawn icons when animation threshold is reached ──────────────────────────
   useEffect(() => {
     if (spawnedRef.current) return;
-    if (progress < 0.20) return; // wait until icons have animated in
+    if (progress < 0.20) return;
     spawnedRef.current = true;
-
     const canvas = canvasRef.current;
     if (!canvas) return;
     const W = canvas.width;
     const H = canvas.height;
-
     ICON_DEFS.forEach((def, i) => {
       const img = imagesRef.current[i];
       boxesRef.current.push({
         id: idRef.current++,
-        x: def.left * W,
-        y: def.top  * H,
-        vx: (Math.random() - 0.5) * 1.5,
-        vy: 0,
+        x: def.left * W, y: def.top * H,
+        vx: (Math.random() - 0.5) * 1.5, vy: 0,
         rotation: 0,
         angularVel: (Math.random() - 0.5) * 4,
-        size: def.size,
-        img,
-        spawnTime: Date.now(),
+        size: def.size, img, spawnTime: Date.now(),
       });
     });
   }, [progress]);
 
-  // ── Physics + canvas loop ────────────────────────────────────────────────────
   useEffect(() => {
     const canvas = canvasRef.current;
     const container = containerRef.current;
     if (!canvas || !container) return;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
-
-    const resize = () => {
-      canvas.width  = container.offsetWidth;
-      canvas.height = container.offsetHeight;
-    };
+    const resize = () => { canvas.width = container.offsetWidth; canvas.height = container.offsetHeight; };
     resize();
     window.addEventListener("resize", resize);
-
     const onMouseMove = (e: MouseEvent) => {
       const rect = canvas.getBoundingClientRect();
       mouseRef.current = { x: e.clientX - rect.left, y: e.clientY - rect.top, active: true };
@@ -124,95 +107,57 @@ export const GeoWarning = () => {
     container.addEventListener("mouseleave", onMouseLeave);
 
     const loop = () => {
-      const W = canvas.width;
-      const H = canvas.height;
+      const W = canvas.width; const H = canvas.height;
       ctx.clearRect(0, 0, W, H);
-
       const boxes = boxesRef.current;
-
-      // ── Integrate ────────────────────────────────────────────────────────────
-      const MOUSE_RADIUS = 130;
-      const MOUSE_FORCE  = 10;
+      const MOUSE_RADIUS = 130; const MOUSE_FORCE = 10;
       const mouse = mouseRef.current;
-
       for (const b of boxes) {
-        b.vy += GRAVITY;
-        b.vx *= FRICTION;
-        b.angularVel *= ANG_FRICTION;
-
+        b.vy += GRAVITY; b.vx *= FRICTION; b.angularVel *= ANG_FRICTION;
         if (mouse.active) {
-          const dx = b.x - mouse.x;
-          const dy = b.y - mouse.y;
+          const dx = b.x - mouse.x; const dy = b.y - mouse.y;
           const dist = Math.sqrt(dx * dx + dy * dy);
           if (dist < MOUSE_RADIUS && dist > 0.001) {
             const strength = (1 - dist / MOUSE_RADIUS) * MOUSE_FORCE;
-            b.vx += (dx / dist) * strength;
-            b.vy += (dy / dist) * strength;
+            b.vx += (dx / dist) * strength; b.vy += (dy / dist) * strength;
             b.angularVel += strength * (Math.random() - 0.5) * 3;
           }
         }
-
-        b.x += b.vx;
-        b.y += b.vy;
-        b.rotation += b.angularVel;
-
-        if (b.y + b.size / 2 >= H) {
-          b.y = H - b.size / 2;
-          b.vy = -Math.abs(b.vy) * DAMPING;
-          b.vx *= 0.82;
-          b.angularVel *= 0.6;
-          if (Math.abs(b.vy) < 0.8) b.vy = 0;
-        }
-        if (b.x - b.size / 2 < 0) { b.x = b.size / 2;     b.vx =  Math.abs(b.vx) * 0.55; }
+        b.x += b.vx; b.y += b.vy; b.rotation += b.angularVel;
+        if (b.y + b.size / 2 >= H) { b.y = H - b.size / 2; b.vy = -Math.abs(b.vy) * DAMPING; b.vx *= 0.82; b.angularVel *= 0.6; if (Math.abs(b.vy) < 0.8) b.vy = 0; }
+        if (b.x - b.size / 2 < 0) { b.x = b.size / 2; b.vx = Math.abs(b.vx) * 0.55; }
         if (b.x + b.size / 2 > W) { b.x = W - b.size / 2; b.vx = -Math.abs(b.vx) * 0.55; }
       }
-
-      // ── Box-box collisions ───────────────────────────────────────────────────
       for (let i = 0; i < boxes.length; i++) {
         for (let j = i + 1; j < boxes.length; j++) {
-          const a = boxes[i];
-          const b = boxes[j];
-          const ra = a.size / Math.SQRT2;
-          const rb = b.size / Math.SQRT2;
-          const dx = b.x - a.x;
-          const dy = b.y - a.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          const minDist = ra + rb;
+          const a = boxes[i]; const b = boxes[j];
+          const ra = a.size / Math.SQRT2; const rb = b.size / Math.SQRT2;
+          const dx = b.x - a.x; const dy = b.y - a.y;
+          const dist = Math.sqrt(dx * dx + dy * dy); const minDist = ra + rb;
           if (dist < minDist && dist > 0.001) {
-            const nx = dx / dist;
-            const ny = dy / dist;
-            const overlap = (minDist - dist) * 0.5;
-            a.x -= nx * overlap; a.y -= ny * overlap;
-            b.x += nx * overlap; b.y += ny * overlap;
+            const nx = dx / dist; const ny = dy / dist; const overlap = (minDist - dist) * 0.5;
+            a.x -= nx * overlap; a.y -= ny * overlap; b.x += nx * overlap; b.y += ny * overlap;
             const dvn = (b.vx - a.vx) * nx + (b.vy - a.vy) * ny;
             if (dvn < 0) {
               const imp = -(1 + RESTITUTION) * dvn / 2;
-              a.vx -= imp * nx; a.vy -= imp * ny;
-              b.vx += imp * nx; b.vy += imp * ny;
+              a.vx -= imp * nx; a.vy -= imp * ny; b.vx += imp * nx; b.vy += imp * ny;
               a.angularVel += imp * 2.5 * (Math.random() - 0.5);
               b.angularVel -= imp * 2.5 * (Math.random() - 0.5);
             }
           }
         }
       }
-
-      // ── Draw ─────────────────────────────────────────────────────────────────
       const now = Date.now();
       for (const b of boxes) {
         if (!b.img.complete || !b.img.naturalWidth) continue;
         const age = now - b.spawnTime;
         const alpha = Math.min(0.5, 0.5 * (age / FADE_IN_MS));
-        ctx.save();
-        ctx.translate(b.x, b.y);
-        ctx.rotate((b.rotation * Math.PI) / 180);
-        ctx.globalAlpha = alpha;
-        ctx.drawImage(b.img, -b.size / 2, -b.size / 2, b.size, b.size);
+        ctx.save(); ctx.translate(b.x, b.y); ctx.rotate((b.rotation * Math.PI) / 180);
+        ctx.globalAlpha = alpha; ctx.drawImage(b.img, -b.size / 2, -b.size / 2, b.size, b.size);
         ctx.restore();
       }
-
       rafRef.current = requestAnimationFrame(loop);
     };
-
     rafRef.current = requestAnimationFrame(loop);
     return () => {
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
@@ -222,11 +167,9 @@ export const GeoWarning = () => {
     };
   }, []);
 
-  // ── Scroll-driven text animations ────────────────────────────────────────────
   const ease = (p: number, start: number, end: number) =>
     Math.max(0, Math.min(1, (p - start) / (end - start)));
 
-  // Interpolate from white (#FFFFFF) to Apple light gray (#F5F5F7) on scroll
   const bgProgress = ease(progress, 0, 0.25);
   const bgR = Math.round(255 + (245 - 255) * bgProgress);
   const bgG = Math.round(255 + (245 - 255) * bgProgress);
@@ -244,61 +187,47 @@ export const GeoWarning = () => {
   });
 
   return (
-    <section
-      ref={sectionRef}
-      className="relative"
-      style={{ height: "200vh" }}
-    >
-      <div
-        ref={containerRef}
-        className="sticky top-0 h-screen overflow-hidden flex items-center justify-center"
-        style={{ backgroundColor: bgColor, transition: "background-color 0.05s linear" }}
-      >
-        {/* Physics canvas — icons fall here */}
-        <canvas
-          ref={canvasRef}
-          className="absolute inset-0 pointer-events-none"
-          style={{ zIndex: 1 }}
-        />
+    <GridSection>
+      <GridHeader label="02 — THE PROBLEM" />
 
-        {/* Centered text */}
-        <div className="relative" style={{ zIndex: 2 }}>
-          <div className="max-w-[980px] mx-auto px-6">
-            <div className="flex flex-col items-center text-center">
+      <div style={{ borderRight: gl, borderBottom: gl }}>
+        <div ref={sectionRef} className="relative" style={{ height: "200vh" }}>
+          <div
+            ref={containerRef}
+            className="sticky top-0 h-screen overflow-hidden flex items-center justify-center"
+            style={{ backgroundColor: bgColor, transition: "background-color 0.05s linear" }}
+          >
+            <canvas ref={canvasRef} className="absolute inset-0 pointer-events-none" style={{ zIndex: 1 }} />
 
-              <h2
-                style={{ ...fadeUp(line1P) }}
-                className="text-[48px] md:text-[56px] font-semibold tracking-[-0.003em] leading-[1.07] text-[#1D1D1F] text-center"
-              >
-                <span>Stop using Language models</span>
-                <br />
-                <span>for Geographical work.</span>
-              </h2>
+            <div className="relative" style={{ zIndex: 2 }}>
+              <div className="max-w-[800px] mx-auto px-6">
+                <div className="flex flex-col items-center text-center">
+                  <h2
+                    style={fadeUp(line1P)}
+                    className="text-[48px] md:text-[56px] font-semibold tracking-[-0.003em] leading-[1.07] text-[#1D1D1F] text-center"
+                  >
+                    <span>Stop using Language models</span>
+                    <br />
+                    <span>for Geographical work.</span>
+                  </h2>
 
-              <p
-                style={{ ...fadeUp(line2P) }}
-                className="mt-6 text-[28px] md:text-[32px] leading-[1.3] tracking-tight"
-              >
-                <span className="font-semibold bg-linear-to-r from-[#CD0A00] to-[#1D1D1F] bg-clip-text text-transparent">
-                  LLMs hallucinate and{" "}
-                  <span className="font-bold">cannot</span>
-                  {" "}be trusted for the real world
-                </span>
-              </p>
+                  <p style={fadeUp(line2P)} className="mt-6 text-[28px] md:text-[32px] leading-[1.3] tracking-tight">
+                    <span className="font-semibold bg-linear-to-r from-[#CD0A00] to-[#1D1D1F] bg-clip-text text-transparent">
+                      LLMs hallucinate and <span className="font-bold">cannot</span> be trusted for the real world
+                    </span>
+                  </p>
 
-              <div style={{ ...fadeUp(ctaP) }} className="mt-8">
-                <a
-                  href="#"
-                  className="text-[#4F46E5] text-[20px] hover:underline transition-colors"
-                >
-                  Learn why &#8250;
-                </a>
+                  <div style={fadeUp(ctaP)} className="mt-8">
+                    <a href="#" className="text-[#4F46E5] text-sm font-mono tracking-wide hover:underline transition-colors">
+                      LEARN WHY →
+                    </a>
+                  </div>
+                </div>
               </div>
-
             </div>
           </div>
         </div>
       </div>
-    </section>
+    </GridSection>
   );
 };

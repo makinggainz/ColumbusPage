@@ -2,6 +2,7 @@
 
 import { Star, MapPin } from "lucide-react";
 import { useRef, useState, useEffect } from "react";
+import { GridSection, GridHeader, gl } from "./ContentGrid";
 
 const FAVORITE_SPOTS_FILES = ["(20).jpeg", "(14).jpeg", "(17).jpeg", "(19).jpeg", "(21).jpeg", "(23).jpeg", "(24).jpeg", "(22).jpeg"];
 const spotImageSrc = (filename: string) => `/FavoriteSpots/${encodeURIComponent(filename)}`;
@@ -16,24 +17,22 @@ const SPOTS: { title: string; description: string; location: string; rating: str
   { title: "Sakura Garden", description: "Traditional Japanese garden with tea house and cherry blossoms.", location: "Kyoto, Japan", rating: "4.9", image: FAVORITE_SPOTS_FILES[6] },
   { title: "Rooftop Vineyard", description: "Urban vineyard with wine tastings and city skyline.", location: "Cape Town, South Africa", rating: "4.1", image: FAVORITE_SPOTS_FILES[7] },
   { title: "Coral Reef Bar", description: "Underwater-themed bar with aquariums and tropical cocktails.", location: "Miami, USA", rating: "4.0", image: FAVORITE_SPOTS_FILES[0] },
-  { title: "Northern Lights Cabin", description: "Glass cabin for aurora viewing. Cozy and unforgettable.", location: "Troms\u00F8, Norway", rating: "4.7", image: FAVORITE_SPOTS_FILES[1] },
+  { title: "Northern Lights Cabin", description: "Glass cabin for aurora viewing. Cozy and unforgettable.", location: "Tromsø, Norway", rating: "4.7", image: FAVORITE_SPOTS_FILES[1] },
 ];
 
 export const UniqueSpotsSection = () => {
   const scrollRef = useRef<HTMLDivElement>(null);
-  const sectionRef = useRef<HTMLDivElement>(null);
+  const ref = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);
   const [scrollLeft, setScrollLeft] = useState(0);
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    const el = sectionRef.current;
+    const el = ref.current;
     if (!el) return;
     const obs = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) { setVisible(true); obs.disconnect(); }
-      },
+      ([entry]) => { if (entry.isIntersecting) { setVisible(true); obs.disconnect(); } },
       { threshold: 0.05 }
     );
     obs.observe(el);
@@ -56,43 +55,20 @@ export const UniqueSpotsSection = () => {
   };
 
   return (
-    <section className="bg-[#F5F5F7] py-[80px] md:py-[120px] overflow-hidden" ref={sectionRef}>
+    <GridSection>
+      <GridHeader
+        label="10 — DISCOVERY"
+        title="Unique spots people are favoriting"
+        subtitle="Curated places discovered through MapsGPT."
+      />
 
-      {/* Header */}
-      <div className="max-w-[980px] mx-auto px-6 mb-12">
-        <div
-          style={{
-            opacity: visible ? 1 : 0,
-            transform: visible ? "translateY(0)" : "translateY(16px)",
-            transition: "opacity 0.7s ease, transform 0.7s ease",
-          }}
-        >
-          <h2 className="text-[48px] md:text-[56px] font-semibold tracking-[-0.003em] leading-[1.07] text-[#1D1D1F] text-center">
-            Unique spots people are favoriting
-          </h2>
-          <p className="mt-4 text-[21px] md:text-[24px] font-normal leading-[1.38] text-[#6E6E73] text-center">
-            Curated places discovered through MapsGPT.
-          </p>
-        </div>
-      </div>
-
-      {/* Scrollable cards */}
-      <div className="w-full relative">
-        {/* Left fade */}
-        <div
-          className="absolute left-0 top-0 bottom-0 w-24 pointer-events-none z-20"
-          style={{ background: "linear-gradient(to right, #F5F5F7 0%, transparent 100%)" }}
-          aria-hidden
-        />
-        {/* Right fade */}
-        <div
-          className="absolute right-0 top-0 bottom-0 w-24 pointer-events-none z-20"
-          style={{ background: "linear-gradient(to left, #F5F5F7 0%, transparent 100%)" }}
-          aria-hidden
-        />
+      <div
+        ref={ref}
+        style={{ borderRight: gl, borderBottom: gl, overflow: "hidden" }}
+      >
         <div
           ref={scrollRef}
-          className="flex gap-5 overflow-x-auto py-4 px-8 select-none"
+          className="flex overflow-x-auto py-0 select-none"
           style={{
             scrollbarWidth: "none",
             cursor: isDragging ? "grabbing" : "grab",
@@ -109,18 +85,16 @@ export const UniqueSpotsSection = () => {
           ))}
         </div>
       </div>
-
-    </section>
+    </GridSection>
   );
 };
 
 function SpotCard({ spot }: { spot: (typeof SPOTS)[0] }) {
   return (
     <div
-      className="flex flex-col shrink-0 overflow-hidden rounded-2xl bg-white shadow-sm hover:shadow-md transition-shadow duration-300"
-      style={{ width: 320 }}
+      className="flex flex-col shrink-0 overflow-hidden bg-white"
+      style={{ width: 300, borderRight: gl }}
     >
-      {/* Image area */}
       <div className="relative w-full h-48 overflow-hidden bg-[#F5F5F7] shrink-0">
         {spot.image && (
           <img
@@ -129,15 +103,13 @@ function SpotCard({ spot }: { spot: (typeof SPOTS)[0] }) {
             className="absolute inset-0 w-full h-full object-cover"
           />
         )}
-        {/* Rating pill */}
-        <div className="absolute top-3 right-3 h-7 px-2.5 flex items-center gap-1.5 rounded-full bg-white/90 backdrop-blur-md">
+        <div className="absolute top-3 right-3 h-7 px-2.5 flex items-center gap-1.5 bg-white/90 backdrop-blur-md">
           <Star className="w-3.5 h-3.5 shrink-0 text-[#E46962]" fill="#E46962" />
           <span className="font-semibold text-[13px] text-[#1D1D1F]">{spot.rating}</span>
         </div>
       </div>
 
-      {/* Content */}
-      <div className="px-5 py-5 flex flex-col flex-1">
+      <div className="px-5 py-5 flex flex-col flex-1" style={{ borderTop: gl }}>
         <h3 className="font-semibold text-[17px] text-[#1D1D1F] tracking-[-0.01em] mb-1.5">
           {spot.title}
         </h3>

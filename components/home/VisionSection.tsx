@@ -2,98 +2,51 @@
 
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
+import { GridSection, GridHeader, gl } from "./ContentGrid";
 
 export const Vision = () => {
-  const titleRef = useRef<HTMLHeadingElement>(null);
-  const gridRef = useRef<HTMLDivElement>(null);
-  const [titleVisible, setTitleVisible] = useState(false);
-  const [gridVisible, setGridVisible] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    const observe = (el: HTMLElement | null, onVisible: () => void) => {
-      if (!el) return () => {};
-      const observer = new IntersectionObserver(
-        ([entry]) => {
-          if (entry.isIntersecting) {
-            onVisible();
-            observer.disconnect();
-          }
-        },
-        { threshold: 0 }
-      );
-      observer.observe(el);
-      return () => observer.disconnect();
-    };
-
-    const cleanups = [
-      observe(titleRef.current, () => setTitleVisible(true)),
-      observe(gridRef.current, () => setGridVisible(true)),
-    ];
-    return () => cleanups.forEach((fn) => fn());
+    const el = ref.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) { setVisible(true); obs.disconnect(); }
+      },
+      { threshold: 0 }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
   }, []);
 
   return (
-    <section className="bg-[#F5F5F7] py-[80px] md:py-[120px]">
-      <div className="max-w-[980px] mx-auto px-6">
+    <GridSection>
+      <GridHeader
+        label="01 — VISION"
+        title="A new species of AI"
+        subtitle="ColumbusPro-1 processes satellite imagery, terrain data, human activity, and temporal patterns to generate actionable intelligence."
+      />
 
-        {/* Eyebrow */}
-        <p
-          className="text-[17px] font-semibold text-[#6E6E73] text-center mb-4"
-          style={{
-            opacity: titleVisible ? 1 : 0,
-            transition: "opacity 0.6s ease",
-          }}
-        >
-          Our Vision
-        </p>
-
-        {/* TITLE */}
-        <h2
-          ref={titleRef}
-          className="text-[48px] md:text-[56px] font-semibold tracking-[-0.003em] leading-[1.07] text-[#1D1D1F] text-center mb-4"
-          style={{
-            opacity: titleVisible ? 1 : 0,
-            filter: titleVisible ? "blur(0px)" : "blur(8px)",
-            transform: titleVisible ? "translateY(0)" : "translateY(16px)",
-            transition: "opacity 0.6s ease-out 0.1s, filter 0.6s ease-out 0.1s, transform 0.6s ease-out 0.1s",
-          }}
-        >
-          A new species of AI
-        </h2>
-
-        {/* Subtitle */}
-        <p
-          className="text-[21px] md:text-[24px] font-normal leading-[1.38] text-[#6E6E73] text-center max-w-[600px] mx-auto mb-12 md:mb-16"
-          style={{
-            opacity: titleVisible ? 1 : 0,
-            filter: titleVisible ? "blur(0px)" : "blur(8px)",
-            transform: titleVisible ? "translateY(0)" : "translateY(12px)",
-            transition: "opacity 0.6s ease-out 0.2s, filter 0.6s ease-out 0.2s, transform 0.6s ease-out 0.2s",
-          }}
-        >
-          ColumbusPro-1 processes satellite imagery, terrain data, human activity,
-          and temporal patterns to generate actionable intelligence.
-        </p>
-
-        {/* GRID */}
+      <div ref={ref}>
         <div
-          ref={gridRef}
-          className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 auto-rows-[120px] sm:auto-rows-[140px] lg:auto-rows-[160px]"
+          className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 auto-rows-[120px] sm:auto-rows-[140px] lg:auto-rows-[160px]"
           style={{
-            opacity: gridVisible ? 1 : 0,
-            filter: gridVisible ? "blur(0px)" : "blur(8px)",
-            transform: gridVisible ? "translateY(0)" : "translateY(16px)",
-            transition: "opacity 0.7s ease-out 0.2s, filter 0.7s ease-out 0.2s, transform 0.7s ease-out 0.2s",
+            gridAutoFlow: "dense",
+            opacity: visible ? 1 : 0,
+            transform: visible ? "translateY(0)" : "translateY(16px)",
+            transition: "opacity 0.7s ease 0.2s, transform 0.7s ease 0.2s",
           }}
         >
-          {/* ROW 1 */}
+          {/* Row 1 */}
           <Tile src="/image1.png" />
-          <TextTile className="col-span-2 lg:col-span-2" title="General Intelligence" subtitle="for the physical world" />
+          <TextTile title="General Intelligence" subtitle="for the physical world" />
           <Tile src="/image2.png" />
           <Tile src="/image3.png" />
           <Tile src="/image4.png" />
 
-          {/* ROW 2 */}
+          {/* Row 2 */}
           <Tile src="/image5.png" />
           <Tile src="/image6.png" />
           <Tile src="/image7.png" />
@@ -101,14 +54,14 @@ export const Vision = () => {
           <Tile src="/image9.png" />
           <Tile src="/image10.png" />
 
-          {/* ROW 3 */}
+          {/* Row 3 */}
           <Tile src="/image111.png" />
           <Tile src="/image112.png" />
-          <TextTile className="col-span-2 lg:col-span-2" title="Foundational Models" subtitle="for Earth" />
+          <TextTile title="Foundational Models" subtitle="for Earth" />
           <Tile src="/image113.png" />
           <Tile src="/image114.png" />
 
-          {/* ROW 4 */}
+          {/* Row 4 */}
           <Tile src="/image12.png" />
           <Tile src="/image.png" />
           <Tile src="/image14.png" />
@@ -116,48 +69,37 @@ export const Vision = () => {
           <Tile src="/image16.png" />
           <Tile src="/image17.png" />
         </div>
-
-        {/* BOTTOM CTA */}
-        <div className="mt-12 md:mt-16 flex justify-center">
-          <a
-            href="#"
-            className="text-[#4F46E5] text-[20px] hover:underline transition-colors"
-          >
-            See what we&apos;re building &#8250;
-          </a>
-        </div>
       </div>
-    </section>
+
+      {/* CTA */}
+      <div style={{ borderRight: gl, borderBottom: gl }} className="py-5 px-8 text-center">
+        <a href="#" className="text-[#4F46E5] text-sm font-mono tracking-wide hover:underline transition-colors">
+          SEE WHAT WE&apos;RE BUILDING →
+        </a>
+      </div>
+    </GridSection>
   );
 };
 
-const Tile = ({ src }: { src: string }) => {
-  return (
-    <div className="relative w-full h-full overflow-hidden rounded-2xl">
-      <Image src={src} alt="" fill className="object-cover" />
-    </div>
-  );
-};
+const Tile = ({ src }: { src: string }) => (
+  <div
+    className="relative w-full h-full overflow-hidden"
+    style={{ borderRight: gl, borderBottom: gl }}
+  >
+    <Image src={src} alt="" fill className="object-cover" />
+  </div>
+);
 
-const TextTile = ({
-  title,
-  subtitle,
-  className = "",
-}: {
-  title: string;
-  subtitle: string;
-  className?: string;
-}) => {
-  return (
-    <div
-      className={`flex flex-col justify-center px-8 sm:px-10 items-center text-center bg-white rounded-2xl ${className}`}
-    >
-      <h3 className="text-2xl md:text-3xl font-semibold text-[#1D1D1F] leading-tight tracking-tight">
-        {title}
-      </h3>
-      <p className="text-lg md:text-xl font-normal text-[#6E6E73] mt-2 tracking-tight">
-        {subtitle}
-      </p>
-    </div>
-  );
-};
+const TextTile = ({ title, subtitle }: { title: string; subtitle: string }) => (
+  <div
+    className="col-span-1 sm:col-span-2 flex flex-col justify-center items-center text-center px-6 transition-colors duration-200 hover:bg-[rgba(120,120,200,0.04)]"
+    style={{ borderRight: gl, borderBottom: gl }}
+  >
+    <h3 className="text-xl md:text-2xl font-semibold text-[#1D1D1F] leading-tight tracking-tight">
+      {title}
+    </h3>
+    <p className="text-base text-[#6E6E73] mt-1 tracking-tight">
+      {subtitle}
+    </p>
+  </div>
+);
