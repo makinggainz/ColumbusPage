@@ -681,6 +681,33 @@ video {
   pointer-events: none;
 }
 
+/* Start Now button: water-ripple effect on click */
+@keyframes ripple-expand {
+  0% { transform: translate(-50%, -50%) scale(0); opacity: 0.4; }
+  100% { transform: translate(-50%, -50%) scale(2.5); opacity: 0; }
+}
+
+.ripple-btn {
+  position: relative;
+  overflow: hidden;
+}
+
+.ripple-btn .ripple-wave {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  width: 100%;
+  aspect-ratio: 1;
+  pointer-events: none;
+  animation: ripple-expand 0.7s ease-out forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ripple-btn .ripple-wave {
+    animation: none;
+  }
+}
+
 /* Core capability cards: subtle pulse dot */
 @keyframes capability-pulse {
   0%, 100% { opacity: 0.1; transform: scale(1); }

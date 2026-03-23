@@ -134,15 +134,18 @@ export const ClosingCTA = () => {
         >
           <Link
             href="/maps-gpt"
-            className="flex items-center justify-center px-8 py-4 text-[16px] font-semibold leading-none rounded-full bg-[#0A1344] text-white transition-all duration-300 hover:bg-[#0A1344]/85 hover:shadow-lg"
+            className="ripple-btn group relative flex items-center justify-center px-9 py-4.5 text-[16px] font-semibold leading-none rounded-full bg-[#0A1344] text-white overflow-hidden transition-all duration-500 hover:shadow-[0_12px_40px_rgba(10,19,68,0.3)] hover:-translate-y-0.5"
           >
-            Start Now
+            <span className="relative z-10">Start Now</span>
+            <span className="ripple-ring absolute inset-0 rounded-full border border-white/20 scale-100 opacity-0 group-hover:scale-[1.08] group-hover:opacity-100 transition-all duration-700 ease-out pointer-events-none" />
           </Link>
           <Link
             href="/our-mission"
-            className="flex items-center justify-center px-8 py-4 text-[16px] font-semibold leading-none rounded-full border border-[#0A1344]/15 text-[#0A1344] transition-all duration-300 hover:border-[#0A1344]/30"
+            className="group relative flex items-center justify-center px-9 py-4.5 text-[16px] font-semibold leading-none rounded-full text-[#0A1344] overflow-hidden transition-all duration-500 hover:-translate-y-0.5"
           >
-            Our Mission
+            <span className="absolute inset-0 rounded-full border border-[#0A1344]/10 group-hover:border-[#0A1344]/20 transition-colors duration-500" />
+            <span className="absolute inset-0 rounded-full bg-[#0A1344]/[0.03] scale-0 opacity-0 group-hover:scale-100 group-hover:opacity-100 transition-all duration-500 ease-out" />
+            <span className="relative z-10">Our Mission</span>
           </Link>
         </div>
       </div>
