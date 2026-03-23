@@ -57,7 +57,7 @@ export const SiteSelection = () => {
           </Link>
         </div>
 
-        {/* Hero card — contained within grid bounds */}
+        {/* Hero card */}
         <div
           className="relative overflow-hidden"
           style={anim(100)}
