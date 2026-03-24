@@ -121,7 +121,6 @@ export const Vision = () => {
       <div className="grid grid-cols-1 md:grid-cols-[1fr_auto]" style={anim(200)}>
         <div
           className="flex flex-col justify-center px-8 md:px-10 py-8"
-          style={{ borderBottom: gl }}
         >
           <p className="text-[15px] leading-[1.6] text-[#6E6E73] max-w-[600px]">
             ColumbusPro-1 processes satellite imagery, terrain data, human activity, and temporal patterns
@@ -130,7 +129,7 @@ export const Vision = () => {
         </div>
         <div
           className="flex items-center justify-start gap-6 py-8"
-          style={{ borderBottom: gl, borderRight: gl }}
+          style={{ borderRight: gl }}
         >
           <div className="w-[44px] h-[44px] overflow-hidden rounded-sm">
             <SatelliteDiagram />
@@ -144,26 +143,22 @@ export const Vision = () => {
         </div>
       </div>
 
-      {/* Tagline */}
+      {/* Tagline + CTA */}
       <div
-        className="flex items-center justify-center py-5 px-8"
+        className="flex flex-col items-center py-10 px-8 gap-8"
         style={{ borderRight: gl, borderBottom: gl, ...anim(280) }}
       >
         <p className="text-[15px] font-medium text-[#1D1D1F] tracking-tight">
           Think of us like the OpenAI for maps.
         </p>
-      </div>
-
-      {/* CTA link with left border accent */}
-      <div
-        className="flex items-center justify-center"
-        style={{ borderRight: gl, borderBottom: gl, ...anim(350) }}
-      >
         <Link
           href="/technology"
-          className="inline-flex items-center justify-center gap-2 w-full h-full py-5 px-8 bg-[#0A1344] text-white text-[15px] font-semibold hover:bg-[#0A1344]/85 transition-colors"
+          className="inline-flex items-center justify-center gap-2 px-10 py-4 border border-[#0A1344]/20 text-[#0A1344] text-[15px] font-medium hover:bg-[#0A1344] hover:text-white transition-colors"
         >
-          Our research &amp; technology →
+          Our research &amp; technology
+          <svg width="7" height="12" viewBox="0 0 7 12" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M1 1l5 5-5 5" />
+          </svg>
         </Link>
       </div>
     </GridSection>

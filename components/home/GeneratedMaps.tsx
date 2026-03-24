@@ -53,7 +53,7 @@ export const GeneratedMaps = () => {
           style={anim(150)}
         >
           {MAPS.map((item, i) => (
-            <div key={i} className="flex flex-col">
+            <div key={i} className="flex flex-col rounded-lg overflow-hidden" style={{ border: "1px solid var(--grid-line)" }}>
               {/* Image */}
               <div className="relative w-full overflow-hidden rounded-lg" style={{ aspectRatio: "16 / 10" }}>
                 <img
@@ -68,7 +68,7 @@ export const GeneratedMaps = () => {
               </div>
 
               {/* Info */}
-              <div className="pt-3 flex flex-col">
+              <div className="pt-4 pb-3 px-3 flex flex-col">
                 <h3 className="font-semibold text-[15px] text-[#1D1D1F] tracking-[-0.01em] mb-1">
                   {item.title}
                 </h3>

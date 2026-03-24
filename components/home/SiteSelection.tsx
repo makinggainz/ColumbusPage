@@ -138,11 +138,11 @@ export const SiteSelection = () => {
         {/* Check it out CTA */}
         <div
           className="flex items-center justify-center py-6"
-          style={{ borderRight: gl, borderBottom: gl }}
+          style={{ borderRight: gl }}
         >
           <Link
             href="/maps-gpt"
-            className="inline-flex items-center gap-2 px-10 py-4 rounded-none border border-[#1D1D1F] text-[#1D1D1F] text-[17px] font-medium hover:bg-[#1D1D1F] hover:text-white transition-colors"
+            className="inline-flex items-center gap-2 px-10 py-4 rounded-none border border-[#1D1D1F] text-[#1D1D1F] text-[20px] font-semibold hover:bg-[#1D1D1F] hover:text-white transition-colors"
           >
             Check it out
             <svg width="8" height="14" viewBox="0 0 8 14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

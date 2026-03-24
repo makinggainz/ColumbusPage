@@ -112,27 +112,17 @@ export const Capabilities = () => {
       <div ref={sectionRef}>
         {/* Header */}
         <div
-          className="flex items-center justify-between px-8 md:px-10 py-6"
+          className="flex items-center justify-center px-8 md:px-10 py-6"
           style={{
             borderRight: gl,
-            borderBottom: gl,
             opacity: visible ? 1 : 0,
             transform: visible ? "translateY(0)" : "translateY(12px)",
             transition: "opacity 0.7s ease, transform 0.7s ease",
           }}
         >
-          <h2 className="text-[#1D1D1F] text-[28px] md:text-[32px] font-semibold tracking-[-0.02em]">
+          <h2 className="text-[#1D1D1F] text-[24px] font-normal tracking-[-0.02em]">
             Capabilities
           </h2>
-          <Link
-            href="/use-cases"
-            className="flex items-center gap-2 text-[#0A1344] text-[15px] font-medium hover:opacity-70 transition-opacity"
-          >
-            More examples
-            <svg width="7" height="12" viewBox="0 0 7 12" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M1 1l5 5-5 5" />
-            </svg>
-          </Link>
         </div>
 
         {/* Main content */}
