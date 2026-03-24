@@ -22,8 +22,6 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
     );
     const navRef = useRef<HTMLElement>(null);
 
-    const [visionStuck, setVisionStuck] = useState(false);
-
     useEffect(() => {
         const handleScroll = () => {
             const y = window.scrollY;
@@ -31,16 +29,11 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
             setIsCompact(y > COMPACT_THRESHOLD);
         };
         const handleReveal = () => setHasScrolled(true);
-        const handleVisionSticky = (e: Event) => {
-            setVisionStuck((e as CustomEvent).detail.stuck);
-        };
         window.addEventListener("scroll", handleScroll, { passive: true });
         window.addEventListener("hero-reveal", handleReveal);
-        window.addEventListener("vision-sticky", handleVisionSticky);
         return () => {
             window.removeEventListener("scroll", handleScroll);
             window.removeEventListener("hero-reveal", handleReveal);
-            window.removeEventListener("vision-sticky", handleVisionSticky);
         };
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
@@ -160,123 +153,101 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
 
                     <div className="relative px-[calc(var(--container-padding)+18px)]">
                         <div
-                            className="flex items-center justify-between"
+                            className="grid grid-cols-[1fr_auto_1fr] items-center"
                             style={{
                                 height: isCompact ? 56 : 68,
                                 paddingTop: isCompact ? 0 : 12,
                                 transition: `height ${t}, padding-top ${t}`,
                             }}
                         >
-                            {/* ── Left: Logo + Nav Links ── */}
-                            <div className="flex items-center gap-6">
-                                <Link href="/" className="flex w-fit shrink-0 items-center gap-2" onMouseEnter={handleNavMouseEnter}>
-                                    <div
-                                        className="relative shrink-0"
-                                        style={{
-                                            width: isCompact ? 28 : 34,
-                                            height: isCompact ? 28 : 34,
-                                            transition: `width ${t}, height ${t}, filter ${t}`,
-                                            filter: (isDark && !isMenuOpen) ? "brightness(0) invert(1)" : "none",
-                                        }}
-                                    >
-                                        <Image
-                                            src="/logobueno.png"
-                                            alt="Columbus Logo"
-                                            fill
-                                            sizes="34px"
-                                            className="object-contain"
-                                            priority
-                                        />
-                                    </div>
-                                </Link>
+                            {/* ── Left: Logo ── */}
+                            <Link href="/" className="flex w-fit shrink-0 items-center gap-2" onMouseEnter={handleNavMouseEnter}>
+                                <div
+                                    className="relative shrink-0"
+                                    style={{
+                                        width: isCompact ? 30 : 40,
+                                        height: isCompact ? 30 : 40,
+                                        transition: `width ${t}, height ${t}, filter ${t}`,
+                                        filter: (isDark && !isMenuOpen) ? "brightness(0) invert(1)" : "none",
+                                    }}
+                                >
+                                    <Image
+                                        src="/logobueno.png"
+                                        alt="Columbus Logo"
+                                        fill
+                                        sizes="40px"
+                                        className="object-contain"
+                                        priority
+                                    />
+                                </div>
+                                <span
+                                    className="brand-wordmark font-medium leading-none"
+                                    style={{
+                                        fontSize: isCompact ? 20 : 24,
+                                        letterSpacing: "-0.02em",
+                                        transition: `font-size ${t}`,
+                                    }}
+                                >
+                                    Columbus Earth
+                                </span>
+                            </Link>
 
-                                {/* Desktop nav links — inline next to logo */}
-                                <div className={`hidden min-[900px]:flex items-center gap-1`}>
+                            {/* ── Center: Navigation Links ── */}
+                            <div className="absolute inset-0 flex items-center justify-center pointer-events-none" style={{ paddingTop: isCompact ? 0 : 12, transition: `padding-top ${t}` }}>
+                                <div className={`hidden items-center gap-3 min-[1155px]:flex pointer-events-auto transition-opacity duration-300 ${!isCompact && !isMenuOpen ? "opacity-70" : ""}`}>
                                     <Link
                                         href="#"
-                                        className="font-medium px-3 py-1.5 rounded-full hover:bg-current/[0.06] transition-all duration-200"
-                                        style={{ fontSize: isCompact ? 14 : 15, transition: `font-size ${t}` }}
+                                        className="font-medium px-4 py-1.5 rounded-full border border-transparent hover:border-current/20 transition-all duration-300"
+                                        style={{ fontSize: isCompact ? 14 : 17, transition: `font-size ${t}` }}
                                         onMouseEnter={handleNavMouseEnter}
                                     >
                                         Product
                                     </Link>
                                     <Link
                                         href="/use-cases"
-                                        className="font-medium px-3 py-1.5 rounded-full hover:bg-current/[0.06] transition-all duration-200"
-                                        style={{ fontSize: isCompact ? 14 : 15, transition: `font-size ${t}` }}
+                                        className="font-medium px-4 py-1.5 rounded-full border border-transparent hover:border-current/20 transition-all duration-300"
+                                        style={{ fontSize: isCompact ? 14 : 17, transition: `font-size ${t}` }}
                                         onMouseEnter={handleNavMouseEnter}
                                     >
                                         Use Cases
                                     </Link>
                                     <Link
                                         href="/technology"
-                                        className="font-medium px-3 py-1.5 rounded-full hover:bg-current/[0.06] transition-all duration-200"
-                                        style={{ fontSize: isCompact ? 14 : 15, transition: `font-size ${t}` }}
+                                        className="font-medium px-4 py-1.5 rounded-full border border-transparent hover:border-current/20 transition-all duration-300"
+                                        style={{ fontSize: isCompact ? 14 : 17, transition: `font-size ${t}` }}
                                         onMouseEnter={handleNavMouseEnter}
                                     >
                                         Technology
                                     </Link>
-                                    <Link
-                                        href="/our-mission"
-                                        className="font-medium px-3 py-1.5 rounded-full hover:bg-current/[0.06] transition-all duration-200"
-                                        style={{ fontSize: isCompact ? 14 : 15, transition: `font-size ${t}` }}
-                                        onMouseEnter={handleNavMouseEnter}
-                                    >
-                                        Company
-                                    </Link>
                                 </div>
                             </div>
 
-                            {/* ── Right: CTA buttons ── */}
-                            <div className="flex items-center gap-3">
-                                {/* CTA — swaps text when Vision sticky bar is stuck */}
+                            {/* ── Right: CTA + Hamburger ── */}
+                            <div className="col-start-3 flex items-center justify-end gap-2">
+                                {/* Start Now — slides in when compact */}
                                 <Link
-                                    href={visionStuck ? "/technology" : "/maps-gpt"}
-                                    className={`hidden min-[900px]:inline-flex items-center justify-center font-semibold leading-none rounded-none ${
-                                        isDark && !isMenuOpen
-                                            ? "bg-white text-[#0A1344] hover:bg-white/90"
-                                            : "bg-[#0A1344] text-white hover:bg-[#0A1344]/85"
+                                    href="/maps-gpt"
+                                    className={`hidden min-[1155px]:flex items-center justify-center px-4 font-semibold leading-none rounded-full border transition-all hover:opacity-70 ${
+                                        isDark
+                                            ? "border-white/30 bg-white/10 text-white"
+                                            : "border-[#0A1344]/15 bg-[#0A1344]/5 text-[#0A1344]"
                                     }`}
                                     style={{
-                                        fontSize: 14,
-                                        height: 40,
-                                        paddingLeft: 20,
-                                        paddingRight: 20,
-                                        transition: "background-color 200ms ease, padding 300ms ease",
+                                        fontSize: 13,
+                                        height: isCompact ? 36 : 0,
+                                        opacity: isCompact ? 1 : 0,
+                                        overflow: "hidden",
+                                        pointerEvents: isCompact ? "auto" : "none",
+                                        transition: `height ${t}, opacity 300ms ease`,
                                     }}
                                     onMouseEnter={handleNavMouseEnter}
                                 >
-                                    <span
-                                        className="inline-flex items-center gap-1 whitespace-nowrap"
-                                        style={{
-                                            transition: "opacity 250ms ease, transform 250ms ease",
-                                            opacity: visionStuck ? 0 : 1,
-                                            transform: visionStuck ? "translateY(-8px)" : "translateY(0)",
-                                            position: visionStuck ? "absolute" : "relative",
-                                            pointerEvents: visionStuck ? "none" : "auto",
-                                        }}
-                                    >
-                                        Start Now →
-                                    </span>
-                                    <span
-                                        className="inline-flex items-center gap-1 whitespace-nowrap"
-                                        style={{
-                                            transition: "opacity 250ms ease, transform 250ms ease",
-                                            opacity: visionStuck ? 1 : 0,
-                                            transform: visionStuck ? "translateY(0)" : "translateY(8px)",
-                                            position: visionStuck ? "relative" : "absolute",
-                                            pointerEvents: visionStuck ? "auto" : "none",
-                                        }}
-                                    >
-                                        Our research &amp; technology →
-                                    </span>
+                                    Start Now
                                 </Link>
-
-                                {/* Hamburger — mobile only */}
                                 <button
                                     onClick={handleHamburgerClick}
                                     onMouseEnter={handleNavMouseEnter}
-                                    className={`min-[900px]:hidden relative flex items-center justify-center rounded-full border border-transparent transition-all duration-300 ${isDark && !isMenuOpen ? "hover:border-white/50" : "hover:border-current"}`}
+                                    className={`relative flex items-center justify-center rounded-full border border-transparent transition-all duration-300 ${isDark && !isMenuOpen ? "hover:border-white/50" : "hover:border-current"}`}
                                     style={{
                                         width: isCompact ? 38 : 44,
                                         height: isCompact ? 38 : 44,
@@ -287,23 +258,23 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
                                     <div
                                         className="absolute h-px bg-current transform-gpu"
                                         style={{
-                                            width: isCompact ? 16 : 20,
-                                            transform: isMenuOpen ? "rotate(45deg)" : `translateY(${isCompact ? -4 : -5}px)`,
+                                            width: isCompact ? 16 : 22,
+                                            transform: isMenuOpen ? "rotate(45deg)" : `translateY(${isCompact ? -4.5 : -6}px)`,
                                             transition: `width ${t}, transform 300ms ease-in-out`,
                                         }}
                                     />
                                     <div
                                         className={`absolute h-px bg-current ${isMenuOpen ? "opacity-0" : "opacity-100"}`}
                                         style={{
-                                            width: isCompact ? 16 : 20,
+                                            width: isCompact ? 16 : 22,
                                             transition: `width ${t}, opacity 200ms ease`,
                                         }}
                                     />
                                     <div
                                         className="absolute h-px bg-current transform-gpu"
                                         style={{
-                                            width: isCompact ? 16 : 20,
-                                            transform: isMenuOpen ? "rotate(-45deg)" : `translateY(${isCompact ? 4 : 5}px)`,
+                                            width: isCompact ? 16 : 22,
+                                            transform: isMenuOpen ? "rotate(-45deg)" : `translateY(${isCompact ? 4.5 : 6}px)`,
                                             transition: `width ${t}, transform 300ms ease-in-out`,
                                         }}
                                     />
