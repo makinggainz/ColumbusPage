@@ -10,6 +10,8 @@ const TABS = ["Plan cool trips", "Group planning", "Find spots", "Custom maps"];
 
 export const TravelSection = () => {
   const ref = useRef<HTMLDivElement>(null);
+  const beachRef = useRef<HTMLDivElement>(null);
+  const travelHeadingRef = useRef<HTMLHeadingElement>(null);
   const [visible, setVisible] = useState(false);
   const [activeTab, setActiveTab] = useState(0);
 
@@ -27,6 +29,65 @@ export const TravelSection = () => {
     );
     obs.observe(el);
     return () => obs.disconnect();
+  }, []);
+
+  // Scroll-driven expansion with lerp smoothing
+  useEffect(() => {
+    const card = beachRef.current;
+    const heading = travelHeadingRef.current;
+    if (!card || !heading) return;
+
+    let current = 0;
+    let rafId = 0;
+    let lastTime = 0;
+    let running = false;
+
+    const tick = (now: number) => {
+      const dt = lastTime ? (now - lastTime) / 1000 : 0.016;
+      lastTime = now;
+
+      const rect = heading.getBoundingClientRect();
+      const viewH = window.innerHeight;
+      const headingCenter = rect.top + rect.height / 2;
+      const offset = viewH * 0.5 - headingCenter;
+      const target = Math.max(0, Math.min(1, offset / 200));
+
+      const speed = 4.0;
+      const lerp = 1 - Math.exp(-speed * dt);
+      current += (target - current) * lerp;
+      if (Math.abs(target - current) < 0.001) current = target;
+
+      const vw = window.innerWidth;
+      const islandWidth = Math.min(1287, vw);
+      const startInsetPx = (vw - islandWidth) / 2;
+      const startInsetPct = (startInsetPx / vw) * 100;
+
+      const inset = startInsetPct * (1 - current);
+      const radius = current > 0 ? 12 * (1 - current) : 0;
+      card.style.clipPath = `inset(0 ${inset}% 0 ${inset}% round ${radius}px)`;
+
+      if (Math.abs(target - current) > 0.0005) {
+        rafId = requestAnimationFrame(tick);
+      } else {
+        running = false;
+      }
+    };
+
+    const startTick = () => {
+      if (!running) {
+        running = true;
+        lastTime = 0;
+        rafId = requestAnimationFrame(tick);
+      }
+    };
+
+    window.addEventListener("scroll", startTick, { passive: true });
+    startTick();
+
+    return () => {
+      window.removeEventListener("scroll", startTick);
+      cancelAnimationFrame(rafId);
+    };
   }, []);
 
   const anim = (delay = 0) => ({
@@ -59,14 +120,17 @@ export const TravelSection = () => {
         </div>
       </GridSection>
 
-      {/* Main content area with sand background */}
+      {/* Main content area with sand background — scroll-driven expansion */}
       <div
+        ref={beachRef}
         className="relative"
         style={{
           backgroundImage: "url('/beach.png')",
           backgroundSize: "cover",
           backgroundPosition: "center",
           minHeight: 700,
+          clipPath: "inset(0 0 0 0 round 0px)",
+          willChange: "clip-path",
         }}
       >
         {/* Flower — top right */}
@@ -107,6 +171,7 @@ export const TravelSection = () => {
         <div className="relative z-10 flex flex-col items-center pt-16 md:pt-24 pb-8 px-6">
           {/* Heading */}
           <h2
+            ref={travelHeadingRef}
             className="text-center text-[#1D1D1F] mb-4"
             style={{
               fontSize: "clamp(48px, 7vw, 96px)",

@@ -5,9 +5,16 @@ import Image from "next/image";
 import { useEffect, useState, useRef } from "react";
 
 import { ScrambleText } from "@/components/ui/ScrambleText";
-import { geist } from "@/lib/typography";
 
 const COMPACT_THRESHOLD = 10;
+
+const menuItems = [
+    { label: "Our Mission", href: "/our-mission" },
+    { label: "Columbus Market Spy", href: "/market-spy" },
+    { label: "MapsGPT", href: "/maps-gpt" },
+    { label: "Use Cases", href: "/use-cases" },
+    { label: "Technology", href: "/technology" },
+];
 
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -79,7 +86,6 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
     // ── Theme ───────────────────────────────────────────────────────────
     const isDark = theme === "dark";
 
-    // Color: always direct colors, no mix-blend-mode to avoid flash on transition
     const navColor = isMenuOpen
         ? "#111111"
         : isCompact
@@ -93,14 +99,23 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
         ? { background: "rgba(6, 8, 20, 0.96)", backdropFilter: "blur(24px)", WebkitBackdropFilter: "blur(24px)", boxShadow: "0 8px 40px rgba(0,0,0,0.5)" }
         : { background: "rgba(248, 249, 252, 0.92)", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)", boxShadow: "0 8px 32px rgba(0,0,0,0.08)" };
 
+    const dropdownHeadingClass = isDark ? "text-white/40" : "text-[#0A1344]/50";
     const dropdownBodyClass    = isDark ? "text-white/65" : "text-[#0A1344]/70";
     const dropdownLinkClass    = isDark ? "text-white"    : "text-[#0A1344]";
     const dropdownSubheadClass = isDark ? "text-white/40" : "text-gray-500";
+    const dropdownSocialClass  = isDark ? "text-white hover:text-white/70" : "text-gray-900 hover:text-primary";
     const dropdownNavLinkClass = isDark ? "text-white"    : "text-[#0A1344]";
-    const dropdownHoverBg      = isDark ? "hover:bg-white/[0.06]" : "hover:bg-black/[0.04]";
-    const dropdownDivider      = isDark ? "border-white/10" : "border-[#0A1344]/10";
 
     const t = "500ms cubic-bezier(0.22, 1, 0.36, 1)";
+
+    // ── Nav link style (Anthropic-style underline hover) ────────────────
+    const navLinkClass = "nav-link-underline px-3 py-1.5";
+    const navLinkInline = (compact: boolean): React.CSSProperties => ({
+        fontSize: compact ? 14 : 15,
+        fontWeight: 400,
+        letterSpacing: "-0.0025em",
+        transition: `font-size ${t}`,
+    });
 
     return (
         <>
@@ -153,7 +168,7 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
 
                     <div className="relative px-[calc(var(--container-padding)+18px)]">
                         <div
-                            className="grid grid-cols-[1fr_auto_1fr] items-center"
+                            className="flex items-center justify-between"
                             style={{
                                 height: isCompact ? 56 : 68,
                                 paddingTop: isCompact ? 0 : 12,
@@ -192,62 +207,63 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
                                 </span>
                             </Link>
 
-                            {/* ── Center: Navigation Links ── */}
-                            <div className="absolute inset-0 flex items-center justify-center pointer-events-none" style={{ paddingTop: isCompact ? 0 : 12, transition: `padding-top ${t}` }}>
-                                <div className={`hidden items-center gap-3 min-[1155px]:flex pointer-events-auto transition-opacity duration-300 ${!isCompact && !isMenuOpen ? "opacity-70" : ""}`}>
-                                    <Link
-                                        href="#"
-                                        className="font-medium px-4 py-1.5 rounded-full border border-transparent hover:border-current/20 transition-all duration-300"
-                                        style={{ fontSize: isCompact ? 14 : 17, transition: `font-size ${t}` }}
-                                        onMouseEnter={handleNavMouseEnter}
-                                    >
-                                        Product
-                                    </Link>
-                                    <Link
-                                        href="/use-cases"
-                                        className="font-medium px-4 py-1.5 rounded-full border border-transparent hover:border-current/20 transition-all duration-300"
-                                        style={{ fontSize: isCompact ? 14 : 17, transition: `font-size ${t}` }}
-                                        onMouseEnter={handleNavMouseEnter}
-                                    >
-                                        Use Cases
-                                    </Link>
-                                    <Link
-                                        href="/technology"
-                                        className="font-medium px-4 py-1.5 rounded-full border border-transparent hover:border-current/20 transition-all duration-300"
-                                        style={{ fontSize: isCompact ? 14 : 17, transition: `font-size ${t}` }}
-                                        onMouseEnter={handleNavMouseEnter}
-                                    >
-                                        Technology
-                                    </Link>
+                            {/* ── Right: Nav Links + CTA + Hamburger ── */}
+                            <div className="flex items-center">
+                                {/* Desktop nav links */}
+                                <div
+                                    className="hidden min-[1155px]:flex items-center"
+                                    style={{
+                                        gap: isCompact ? 4 : 8,
+                                        marginRight: isCompact ? 16 : 0,
+                                        transition: `gap ${t}, margin-right ${t}`,
+                                    }}
+                                >
+                                    {[
+                                        { label: "Product", href: "#" },
+                                        { label: "Use Cases", href: "/use-cases" },
+                                        { label: "Technology", href: "/technology" },
+                                    ].map((link) => (
+                                        <Link
+                                            key={link.label}
+                                            href={link.href}
+                                            className={navLinkClass}
+                                            style={navLinkInline(isCompact)}
+                                            onMouseEnter={handleNavMouseEnter}
+                                        >
+                                            {link.label}
+                                        </Link>
+                                    ))}
                                 </div>
-                            </div>
 
-                            {/* ── Right: CTA + Hamburger ── */}
-                            <div className="col-start-3 flex items-center justify-end gap-2">
-                                {/* Start Now — slides in when compact */}
+                                {/* Start Now — grows laterally into position */}
                                 <Link
                                     href="/maps-gpt"
-                                    className={`hidden min-[1155px]:flex items-center justify-center px-4 font-semibold leading-none rounded-none border transition-all hover:opacity-70 ${
+                                    className={`hidden min-[1155px]:flex items-center justify-center font-semibold leading-none rounded-none whitespace-nowrap ${
                                         isDark
-                                            ? "border-white/30 bg-white/10 text-white"
-                                            : "border-[#0A1344]/15 bg-[#0A1344]/5 text-[#0A1344]"
+                                            ? "bg-white text-[#0A1344] hover:bg-white/90"
+                                            : "bg-[#0A1344] text-white hover:bg-[#0A1344]/85"
                                     }`}
                                     style={{
-                                        fontSize: 13,
-                                        height: isCompact ? 36 : 0,
+                                        fontSize: 14,
+                                        height: 36,
+                                        width: isCompact ? 120 : 0,
                                         opacity: isCompact ? 1 : 0,
                                         overflow: "hidden",
                                         pointerEvents: isCompact ? "auto" : "none",
-                                        transition: `height ${t}, opacity 300ms ease`,
+                                        marginRight: isCompact ? 8 : 0,
+                                        marginLeft: isCompact ? 8 : 0,
+                                        transition: `width ${t}, opacity 300ms ease, margin ${t}`,
                                     }}
                                     onMouseEnter={handleNavMouseEnter}
                                 >
                                     Start Now
                                 </Link>
+
+                                {/* Hamburger */}
                                 <button
                                     onClick={handleHamburgerClick}
                                     onMouseEnter={handleNavMouseEnter}
-                                    className={`relative flex items-center justify-center rounded-full border border-transparent transition-all duration-300 ${isDark && !isMenuOpen ? "hover:border-white/50" : "hover:border-current"}`}
+                                    className={`relative flex items-center justify-center rounded-none border border-transparent transition-all duration-300 ${isDark && !isMenuOpen ? "hover:border-white/50" : "hover:border-current"}`}
                                     style={{
                                         width: isCompact ? 38 : 44,
                                         height: isCompact ? 38 : 44,
@@ -292,123 +308,71 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
                         }`}
                         style={dropdownBg}
                     >
-                        <div className={`px-8 py-8 ${geist.className}`}>
-                            <div className="grid grid-cols-1 md:grid-cols-12 gap-x-6 gap-y-8">
-                                {/* Products */}
+                        <div className="pl-7 pr-(--container-padding) py-12" style={{ transitionDelay: isMenuOpen ? "150ms" : "0ms" }}>
+                            <div className="grid grid-cols-1 md:grid-cols-12 gap-12">
                                 <div
-                                    className={`md:col-span-5 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-                                        isMenuOpen ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
-                                    }`}
+                                    className={`md:col-span-5 space-y-8 transition-opacity duration-500 ${isMenuOpen ? "opacity-100" : "opacity-0"}`}
                                     style={{ transitionDelay: isMenuOpen ? "200ms" : "0ms" }}
                                 >
-                                    <h4 className={`text-xs font-semibold tracking-widest uppercase mb-3 ${dropdownSubheadClass}`}>
-                                        <ScrambleText text="PRODUCTS" isActive={isMenuOpen} delay={250} />
-                                    </h4>
-                                    <div className="space-y-1">
-                                        <Link
-                                            href="/maps-gpt"
-                                            onClick={closeMenu}
-                                            className={`group flex items-center justify-between p-4 -mx-2 rounded-2xl transition-all duration-300 ${dropdownHoverBg} ${dropdownNavLinkClass}`}
-                                        >
-                                            <div>
-                                                <div className="text-lg font-semibold">MapsGPT</div>
-                                                <div className={`text-sm mt-0.5 ${dropdownBodyClass}`}>AI-powered geospatial answers</div>
-                                            </div>
-                                            <span className="opacity-0 group-hover:opacity-40 transition-all duration-300 group-hover:translate-x-1 text-lg mr-2">→</span>
-                                        </Link>
-                                        <Link
-                                            href="/market-spy"
-                                            onClick={closeMenu}
-                                            className={`group flex items-center justify-between p-4 -mx-2 rounded-2xl transition-all duration-300 ${dropdownHoverBg} ${dropdownNavLinkClass}`}
-                                        >
-                                            <div>
-                                                <div className="text-lg font-semibold">Columbus Market Spy</div>
-                                                <div className={`text-sm mt-0.5 ${dropdownBodyClass}`}>Real-time market intelligence</div>
-                                            </div>
-                                            <span className="opacity-0 group-hover:opacity-40 transition-all duration-300 group-hover:translate-x-1 text-lg mr-2">→</span>
-                                        </Link>
+                                    <div>
+                                        <h4 className={`text-xs font-semibold tracking-widest uppercase mb-4 ${dropdownHeadingClass}`}>
+                                            <ScrambleText text="COLUMBUS EARTH" isActive={isMenuOpen} delay={300} />
+                                        </h4>
+                                        <p className={`text-base leading-relaxed max-w-md ${dropdownBodyClass}`}>
+                                            Columbus Earth Inc. is a spatial frontier AI company building the first production
+                                            Large Geospatial Model to answer the most difficult questions about our planet.
+                                        </p>
+                                    </div>
+                                    <div className="grid grid-cols-2 gap-8">
+                                        <div>
+                                            <h4 className={`text-xs font-semibold tracking-wider uppercase mb-2 ${dropdownSubheadClass}`}>
+                                                <ScrambleText text="CONTACT" isActive={isMenuOpen} delay={450} />
+                                            </h4>
+                                            <a href="mailto:contact@columbus.earth" className={`font-medium block transition-colors duration-300 ${dropdownLinkClass} hover:opacity-70`}>
+                                                contact@columbus.earth
+                                            </a>
+                                        </div>
+                                        <div>
+                                            <h4 className={`text-xs font-semibold tracking-wider uppercase mb-2 ${dropdownSubheadClass}`}>
+                                                <ScrambleText text="SOCIAL" isActive={isMenuOpen} delay={550} />
+                                            </h4>
+                                            <a href="https://www.linkedin.com/company/columbusearth/about/?viewAsMember=true" target="_blank" rel="noopener noreferrer" className={`font-medium block transition-colors ${dropdownSocialClass}`}>
+                                                LinkedIn
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
-
-                                {/* Explore */}
-                                <div
-                                    className={`md:col-span-3 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-                                        isMenuOpen ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
-                                    }`}
-                                    style={{ transitionDelay: isMenuOpen ? "280ms" : "0ms" }}
-                                >
-                                    <h4 className={`text-xs font-semibold tracking-widest uppercase mb-3 ${dropdownSubheadClass}`}>
-                                        <ScrambleText text="EXPLORE" isActive={isMenuOpen} delay={350} />
+                                <div className="md:col-span-3"></div>
+                                <div className="md:col-span-4 space-y-6">
+                                    <h4
+                                        className={`text-xs font-semibold tracking-wider uppercase mb-4 transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${dropdownSubheadClass} ${
+                                            isMenuOpen ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
+                                        }`}
+                                        style={{ transitionDelay: isMenuOpen ? "250ms" : "0ms" }}
+                                    >
+                                        <ScrambleText text="COMPANY" isActive={isMenuOpen} delay={400} />
                                     </h4>
-                                    <div className="space-y-1">
-                                        <Link
-                                            href="/use-cases"
-                                            onClick={closeMenu}
-                                            className={`group flex items-center justify-between py-2.5 px-4 -mx-2 rounded-xl transition-all duration-300 ${dropdownHoverBg} font-medium ${dropdownNavLinkClass}`}
-                                        >
-                                            Use Cases
-                                            <span className="opacity-0 group-hover:opacity-40 transition-all duration-300 text-sm mr-2">→</span>
-                                        </Link>
-                                        <Link
-                                            href="/technology"
-                                            onClick={closeMenu}
-                                            className={`group flex items-center justify-between py-2.5 px-4 -mx-2 rounded-xl transition-all duration-300 ${dropdownHoverBg} font-medium ${dropdownNavLinkClass}`}
-                                        >
-                                            Technology
-                                            <span className="opacity-0 group-hover:opacity-40 transition-all duration-300 text-sm mr-2">→</span>
-                                        </Link>
-                                    </div>
+                                    <ul className="space-y-4">
+                                        {menuItems.map((item, index) => (
+                                            <li
+                                                key={item.href}
+                                                className={`transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                                                    isMenuOpen ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
+                                                }`}
+                                                style={{ transitionDelay: isMenuOpen ? `${320 + index * 70 + index * index * 8}ms` : "0ms" }}
+                                            >
+                                                <Link
+                                                    href={item.href}
+                                                    onClick={closeMenu}
+                                                    className={`group relative text-xl font-medium transition-all duration-300 flex items-center ${dropdownNavLinkClass}`}
+                                                >
+                                                    <span className="mr-3 transition-transform duration-300 ease-in-out group-hover:translate-x-1">+</span>
+                                                    <span className="transition-all duration-300 ease-in-out group-hover:translate-x-1">{item.label}</span>
+                                                </Link>
+                                            </li>
+                                        ))}
+                                    </ul>
                                 </div>
-
-                                {/* Company */}
-                                <div
-                                    className={`md:col-span-4 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-                                        isMenuOpen ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
-                                    }`}
-                                    style={{ transitionDelay: isMenuOpen ? "360ms" : "0ms" }}
-                                >
-                                    <h4 className={`text-xs font-semibold tracking-widest uppercase mb-3 ${dropdownSubheadClass}`}>
-                                        <ScrambleText text="COMPANY" isActive={isMenuOpen} delay={450} />
-                                    </h4>
-                                    <div className="space-y-1">
-                                        <Link
-                                            href="/our-mission"
-                                            onClick={closeMenu}
-                                            className={`group flex items-center justify-between py-2.5 px-4 -mx-2 rounded-xl transition-all duration-300 ${dropdownHoverBg} font-medium ${dropdownNavLinkClass}`}
-                                        >
-                                            Our Mission
-                                            <span className="opacity-0 group-hover:opacity-40 transition-all duration-300 text-sm mr-2">→</span>
-                                        </Link>
-                                        <a
-                                            href="mailto:contact@columbus.earth"
-                                            className={`group flex items-center justify-between py-2.5 px-4 -mx-2 rounded-xl transition-all duration-300 ${dropdownHoverBg} font-medium ${dropdownLinkClass}`}
-                                        >
-                                            Contact
-                                            <span className="opacity-0 group-hover:opacity-40 transition-all duration-300 text-sm mr-2">→</span>
-                                        </a>
-                                        <a
-                                            href="https://www.linkedin.com/company/columbusearth/about/?viewAsMember=true"
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className={`group flex items-center justify-between py-2.5 px-4 -mx-2 rounded-xl transition-all duration-300 ${dropdownHoverBg} font-medium ${dropdownLinkClass}`}
-                                        >
-                                            LinkedIn
-                                            <span className="opacity-0 group-hover:opacity-40 transition-all duration-300 text-sm mr-2">↗</span>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* Tagline */}
-                            <div
-                                className={`mt-8 pt-5 border-t ${dropdownDivider} transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-                                    isMenuOpen ? "translate-y-0 opacity-100" : "translate-y-2 opacity-0"
-                                }`}
-                                style={{ transitionDelay: isMenuOpen ? "450ms" : "0ms" }}
-                            >
-                                <p className={`text-sm leading-relaxed max-w-lg ${dropdownBodyClass}`}>
-                                    The spatial frontier AI company building the first production Large Geospatial Model.
-                                </p>
                             </div>
                         </div>
                     </div>

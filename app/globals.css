@@ -88,6 +88,28 @@ body {
   font-family: inherit;
 }
 
+/* Navbar links — premium underline hover (scales from center) */
+.nav-link-underline {
+  position: relative;
+  text-decoration: none;
+}
+
+.nav-link-underline::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 1.5px;
+  background: currentColor;
+  transform: translateX(-50%);
+  transition: width 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.nav-link-underline:hover::after {
+  width: calc(100% - 24px);
+}
+
 /* Lenis smooth scroll support */
 html.lenis,
 html.lenis body {

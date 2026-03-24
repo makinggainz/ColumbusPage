@@ -11,6 +11,9 @@ const INSET = 4;
 
 export const SiteSelection = () => {
   const ref = useRef<HTMLDivElement>(null);
+  const heroCardRef = useRef<HTMLDivElement>(null);
+  const headingRef = useRef<HTMLHeadingElement>(null);
+  const imgRef = useRef<HTMLImageElement>(null);
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -22,6 +25,80 @@ export const SiteSelection = () => {
     );
     obs.observe(el);
     return () => obs.disconnect();
+  }, []);
+
+  // Scroll-driven expansion with lerp smoothing (like GSAP scrub: 0.8)
+  useEffect(() => {
+    const card = heroCardRef.current;
+    const heading = headingRef.current;
+    const img = imgRef.current;
+    if (!card || !heading) return;
+
+    let current = 0;          // lerped progress
+    let rafId = 0;
+    let lastTime = 0;
+    let running = false;
+
+    const tick = (now: number) => {
+      const dt = lastTime ? (now - lastTime) / 1000 : 0.016;
+      lastTime = now;
+
+      // Target: 0 when heading center is at viewport center, 1 after 200px more scroll
+      const rect = heading.getBoundingClientRect();
+      const viewH = window.innerHeight;
+      const headingCenter = rect.top + rect.height / 2;
+      const offset = viewH * 0.5 - headingCenter; // positive = scrolled past center
+      const target = Math.max(0, Math.min(1, offset / 200));
+
+      // Smooth lerp — frame-rate independent, ~0.6s to catch up
+      const speed = 4.0;
+      const lerp = 1 - Math.exp(-speed * dt);
+      current += (target - current) * lerp;
+
+      // Snap to target when very close (avoid infinite micro-updates)
+      if (Math.abs(target - current) < 0.001) current = target;
+
+      // Calculate inset so progress=0 fits exactly within the island (1287px max-width)
+      // The card is 100vw wide; we need to clip it to match the island container
+      const vw = window.innerWidth;
+      const islandWidth = Math.min(1287, vw); // island can't exceed viewport
+      const startInsetPx = (vw - islandWidth) / 2;
+      const startInsetPct = (startInsetPx / vw) * 100;
+
+      // Interpolate: startInsetPct → 0%
+      const inset = startInsetPct * (1 - current);
+      card.style.clipPath = `inset(0 ${inset}% 0 ${inset}%)`;
+
+      // Image scale: 1.02 → 1
+      if (img) {
+        const scale = 1 + 0.02 * (1 - current);
+        img.style.transform = `scale(${scale})`;
+      }
+
+      // Keep ticking if not settled
+      if (Math.abs(target - current) > 0.0005) {
+        rafId = requestAnimationFrame(tick);
+      } else {
+        running = false;
+      }
+    };
+
+    const startTick = () => {
+      if (!running) {
+        running = true;
+        lastTime = 0;
+        rafId = requestAnimationFrame(tick);
+      }
+    };
+
+    window.addEventListener("scroll", startTick, { passive: true });
+    // Run once on mount
+    startTick();
+
+    return () => {
+      window.removeEventListener("scroll", startTick);
+      cancelAnimationFrame(rafId);
+    };
   }, []);
 
   const anim = (delay = 0) => ({
@@ -57,23 +134,38 @@ export const SiteSelection = () => {
           </Link>
         </div>
 
-        {/* Hero card */}
+        {/* Hero card — clip-path expansion from compact to full-screen on scroll */}
         <div
+          ref={heroCardRef}
           className="relative overflow-hidden"
-          style={{ width: "100vw", marginLeft: "calc(-50vw + 50%)", ...anim(100) }}
+          style={{
+            width: "100vw",
+            marginLeft: "calc(-50vw + 50%)",
+            clipPath: "inset(0 0 0 0 round 0px)",
+            opacity: visible ? 1 : 0,
+            transform: visible ? "translateY(0)" : "translateY(16px)",
+            transition: "opacity 0.7s ease 100ms, transform 0.7s ease 100ms",
+            willChange: "clip-path",
+          }}
         >
           <div className="relative" style={{ minHeight: 800 }}>
             <Image
+              ref={imgRef}
               src="/ProductBackgroundImageHome.png"
               alt=""
               fill
               className="object-cover"
+              style={{
+                transform: "scale(1.03)",
+                willChange: "transform",
+              }}
             />
 
             {/* Content over image */}
             <div className="relative z-10 flex flex-col items-center pt-16 md:pt-24 px-6">
               {/* Main heading */}
               <h2
+                ref={headingRef}
                 className="text-[#1D1D1F] text-center leading-[1.05] tracking-[-0.02em]"
                 style={{ fontSize: 96, fontWeight: 400 }}
               >
