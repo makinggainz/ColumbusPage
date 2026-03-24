@@ -15,7 +15,7 @@ import { UniqueSpotsSection } from "@/components/home/UniqueSpotsSection";
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-white">
+    <main className="min-h-screen" style={{ backgroundColor: "rgba(55, 40, 140, 0.03)" }}>
       <Navbar />
       <Hero />
       <Vision />
