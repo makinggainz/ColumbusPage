@@ -60,14 +60,14 @@ export const UniqueSpotsSection = () => {
       <div ref={ref} style={{ borderRight: gl, borderBottom: gl }}>
         {/* Heading */}
         <div className="flex flex-col items-center text-center px-8 pt-14 pb-3" style={anim(0)}>
-          <h2 className="text-[#1D1D1F] text-[32px] md:text-[40px] font-bold tracking-[-0.02em] leading-[1.1]">
+          <h2 className="text-[#1D1D1F] text-[40px] md:text-[48px] font-semibold tracking-[-0.02em] leading-[1.08]">
             Find your next hang out spot, easier
           </h2>
         </div>
 
         {/* Subtitle */}
         <div className="flex items-center justify-center px-8 pb-10" style={anim(100)}>
-          <p className="text-[#6E6E73] text-[17px]">
+          <p className="text-[#86868b] text-[21px]">
             Spots found faster on MapsGPT
           </p>
         </div>
@@ -113,15 +113,15 @@ function SpotCard({ spot }: { spot: (typeof SPOTS)[0] }) {
 
       {/* Info */}
       <div className="pt-4 pb-3 px-3 flex flex-col flex-1">
-        <h3 className="font-semibold text-[15px] text-[#1D1D1F] tracking-[-0.01em] mb-1">
+        <h3 className="font-semibold text-[17px] text-[#1D1D1F] tracking-[-0.01em] mb-1">
           {spot.title}
         </h3>
-        <p className="text-[13px] leading-[1.5] text-[#6E6E73] line-clamp-2 mb-2">
+        <p className="text-[15px] leading-[1.47] text-[#86868b] line-clamp-2 mb-2">
           {spot.description}
         </p>
         <div className="flex items-center gap-1.5 mt-auto">
           <MapPin className="w-3.5 h-3.5 shrink-0 text-[#6E6E73]" />
-          <span className="text-[13px] text-[#6E6E73]">{spot.location}</span>
+          <span className="text-[13px] text-[#86868b]">{spot.location}</span>
         </div>
       </div>
     </div>

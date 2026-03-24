@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 import { cormorant, cambo } from "@/app/fonts";
-import { inter } from "@/lib/typography";
+import { geist } from "@/lib/typography";
 import { LenisProvider } from "@/components/home/LenisContext";
 
 export { cormorant, cambo };
@@ -27,7 +27,7 @@ export default function RootLayout({
       </head>
 
       {/* Keep global styles simple - match GFrontEndWork: no Navbar/Footer here, no font on body */}
-      <body className={`${inter.className} antialiased bg-white min-h-screen`}>
+      <body className={`${geist.className} antialiased bg-white min-h-screen`}>
         <LenisProvider>{children}</LenisProvider>
       </body>
     </html>

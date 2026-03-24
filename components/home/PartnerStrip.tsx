@@ -20,10 +20,10 @@ export const PartnerStrip = () => {
         className="flex flex-col items-center px-8 md:px-10 pt-16 pb-8"
         style={{ borderRight: gl }}
       >
-        <h2 className="text-[32px] md:text-[40px] font-bold tracking-[-0.02em] leading-[1.1] text-[#1D1D1F] text-center">
+        <h2 className="text-[40px] md:text-[48px] font-semibold tracking-[-0.02em] leading-[1.08] text-[#1D1D1F] text-center">
           High-fidelity and smart datasets
         </h2>
-        <p className="text-[15px] text-[#6E6E73] mt-3 text-center">
+        <p className="text-[21px] text-[#86868b] mt-3 text-center">
           We vet our data with reputable partner organizations
         </p>
       </div>

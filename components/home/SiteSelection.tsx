@@ -36,7 +36,7 @@ export const SiteSelection = () => {
         {/* Top bar: Columbus Pro + New | Start Now */}
         <div className="flex items-center justify-between px-8 md:px-10 py-6" style={anim(0)}>
           <div className="flex items-center gap-3">
-            <span className="text-[#1D1D1F] font-bold" style={{ fontSize: 40 }}>
+            <span className="text-[#1D1D1F] font-semibold" style={{ fontSize: 36 }}>
               Columbus Pro
             </span>
             <div className={glassStyles.wrapNew}>
@@ -48,7 +48,7 @@ export const SiteSelection = () => {
           <Link
             href="/maps-gpt"
             className="flex items-center gap-2 text-[#1D1D1F] font-semibold hover:opacity-70 transition-opacity"
-            style={{ fontSize: 20 }}
+            style={{ fontSize: 17 }}
           >
             Start Now
             <svg width="8" height="14" viewBox="0 0 8 14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -74,15 +74,15 @@ export const SiteSelection = () => {
             <div className="relative z-10 flex flex-col items-center pt-16 md:pt-24 px-6">
               {/* Main heading */}
               <h2
-                className="text-[#1D1D1F] text-center leading-[1.05] tracking-[-0.02em]"
-                style={{ fontSize: 96, fontWeight: 400 }}
+                className="text-[#1D1D1F] text-center leading-[1.05] tracking-[-0.03em]"
+                style={{ fontSize: 80, fontWeight: 600 }}
               >
                 An Agentic GIS platform
               </h2>
 
               {/* Subtitle */}
-              <p className="text-[17px] text-[#1D1D1F]/70 mt-8 text-center">
-                Columbus turns you into a <span className="font-bold text-[#1D1D1F]">super-explorer.</span>
+              <p className="text-[21px] text-[#86868b] mt-8 text-center">
+                Columbus turns you into a <span className="font-semibold text-[#1D1D1F]">super-explorer.</span>
               </p>
 
               {/* Pill toggle */}
@@ -223,8 +223,8 @@ function PillToggle() {
           className="h-full flex items-center justify-center whitespace-nowrap relative"
           style={{
             flex: 1,
-            fontSize: 16,
-            fontWeight: 500,
+            fontSize: 15,
+            fontWeight: 600,
             letterSpacing: "-0.01em",
             zIndex: 2,
             color: active === i ? "#1D1D1F" : "rgba(29,29,31,0.5)",

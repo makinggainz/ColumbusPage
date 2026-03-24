@@ -43,7 +43,7 @@ export const Industries = () => {
           className="flex items-center justify-center py-8 px-8"
           style={{ borderRight: gl, borderBottom: gl, ...anim(0) }}
         >
-          <h2 className="text-[#1D1D1F] text-[24px] md:text-[28px] font-normal tracking-[-0.01em]">
+          <h2 className="text-[#1D1D1F] text-[28px] font-semibold tracking-[-0.02em]">
             Find your industry
           </h2>
         </div>
@@ -75,7 +75,7 @@ export const Industries = () => {
 
               {/* Label */}
               <div className="flex items-center justify-between px-4 py-3">
-                <span className="text-[#1D1D1F] text-[15px] font-medium">
+                <span className="text-[#1D1D1F] text-[17px] font-semibold">
                   {card.label}
                 </span>
                 <svg
@@ -104,7 +104,7 @@ export const Industries = () => {
         >
           <Link
             href="/maps-gpt"
-            className="inline-flex items-center gap-2 px-10 py-4 rounded-none border border-[#1D1D1F] text-[#1D1D1F] text-[17px] font-medium hover:bg-[#1D1D1F] hover:text-white transition-colors"
+            className="inline-flex items-center gap-2 px-10 py-4 rounded-none border border-[#1D1D1F] text-[#1D1D1F] text-[17px] font-semibold hover:bg-[#1D1D1F] hover:text-white transition-colors"
           >
             Learn more about Columbus Pro
             <svg width="8" height="14" viewBox="0 0 8 14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

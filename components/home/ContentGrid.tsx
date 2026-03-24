@@ -37,16 +37,16 @@ export function GridHeader({
       className="py-6 px-8 md:px-10"
       style={{ borderRight: gl, borderBottom: gl }}
     >
-      <span className="text-[11px] font-semibold tracking-[0.2em] uppercase text-[#0A1344]/30 font-mono block">
+      <span className="text-[12px] font-semibold tracking-[0.12em] uppercase text-[#86868b] block">
         {label}
       </span>
       {title && (
-        <h2 className="text-[32px] md:text-[40px] font-semibold tracking-[-0.02em] leading-[1.1] text-[#1D1D1F] mt-3">
+        <h2 className="text-[36px] md:text-[48px] font-semibold tracking-[-0.02em] leading-[1.08] text-[#1D1D1F] mt-3">
           {title}
         </h2>
       )}
       {subtitle && (
-        <p className="text-[17px] leading-[1.6] text-[#6E6E73] mt-2 max-w-[600px]">
+        <p className="text-[17px] leading-[1.47] text-[#86868b] mt-2 max-w-[600px]">
           {subtitle}
         </p>
       )}

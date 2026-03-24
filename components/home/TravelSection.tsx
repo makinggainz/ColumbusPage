@@ -3,7 +3,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { cambo } from "@/app/fonts";
 import { GridSection, gl } from "./ContentGrid";
 
 const TABS = ["Plan cool trips", "Group planning", "Find spots", "Custom maps"];
@@ -46,13 +45,13 @@ export const TravelSection = () => {
           className="flex items-center justify-between px-8 md:px-10 py-6"
           style={{ borderRight: gl, borderBottom: gl }}
         >
-          <span className="text-[#1D1D1F] font-bold" style={{ fontSize: 40 }}>
+          <span className="text-[#1D1D1F] font-semibold" style={{ fontSize: 36 }}>
             MapsGPT <span className="font-normal">– AI-powered social map</span>
           </span>
           <Link
             href="/maps-gpt"
             className="flex items-center gap-2 text-[#1D1D1F] font-semibold hover:opacity-70 transition-opacity"
-            style={{ fontSize: 20 }}
+            style={{ fontSize: 17 }}
           >
             Learn more
             <svg width="8" height="14" viewBox="0 0 8 14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -112,11 +111,10 @@ export const TravelSection = () => {
           <h2
             className="text-center text-[#1D1D1F] mb-4"
             style={{
-              fontSize: "clamp(48px, 7vw, 96px)",
-              fontFamily: cambo.style.fontFamily,
-              fontWeight: 400,
+              fontSize: "clamp(48px, 7vw, 80px)",
+              fontWeight: 600,
               lineHeight: 1.05,
-              letterSpacing: "-0.02em",
+              letterSpacing: "-0.03em",
               ...anim(0),
             }}
           >
@@ -125,7 +123,7 @@ export const TravelSection = () => {
 
           {/* Subtitle */}
           <p
-            className="text-center text-[#4a4540] text-[17px] md:text-[20px] mb-10"
+            className="text-center text-[#86868b] text-[19px] md:text-[21px] mb-10"
             style={anim(100)}
           >
             MapsGPT is a local guide in your pocket
@@ -145,7 +143,7 @@ export const TravelSection = () => {
               <button
                 key={tab}
                 onClick={() => setActiveTab(i)}
-                className="relative px-5 md:px-7 py-2.5 text-[14px] md:text-[15px] font-medium rounded-full transition-all duration-200"
+                className="relative px-5 md:px-7 py-2.5 text-[15px] md:text-[15px] font-semibold rounded-full transition-all duration-200"
                 style={{
                   color: activeTab === i ? "#1D1D1F" : "#6E6E73",
                   backgroundColor: activeTab === i ? "rgba(255,255,255,0.85)" : "transparent",

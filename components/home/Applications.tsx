@@ -46,8 +46,8 @@ export const Applications = () => {
         {/* Header area */}
         <div className="px-8 md:px-10 pt-14 pb-4">
           <h2
-            className="text-[#1D1D1F] font-bold tracking-[-0.02em] leading-[1.12] max-w-[700px]"
-            style={{ fontSize: "clamp(32px, 4vw, 48px)", ...anim(0) }}
+            className="text-[#1D1D1F] font-semibold tracking-[-0.02em] leading-[1.08] max-w-[700px]"
+            style={{ fontSize: "clamp(36px, 4vw, 48px)", ...anim(0) }}
           >
             We&apos;re actively exploring various application areas
           </h2>
@@ -58,7 +58,7 @@ export const Applications = () => {
           className="flex items-end justify-between px-8 md:px-10 pb-8"
           style={anim(100)}
         >
-          <p className="text-[#6E6E73] text-[17px] leading-[1.47]">
+          <p className="text-[#86868b] text-[17px] leading-[1.47]">
             We&apos;d love to work within your industry, send us a{" "}
             <a href="mailto:hey@columbus.earth" className="text-[#1D1D1F] hover:underline">
               hey@columbus.earth

@@ -70,11 +70,11 @@ export const Vision = () => {
         style={{ borderRight: gl, borderBottom: gl }}
       >
         <h2
-          className="text-[#1D1D1F] leading-[1.15] tracking-[-0.02em]"
-          style={{ fontSize: 48, fontWeight: 300, ...anim(0) }}
+          className="text-[#1D1D1F] leading-[1.08] tracking-[-0.02em]"
+          style={{ fontSize: 48, fontWeight: 600, ...anim(0) }}
         >
           A new breed of AI,{" "}
-          <span className="font-bold">COLUMBUS-01</span>
+          <span className="font-semibold">COLUMBUS-01</span>
         </h2>
       </div>
 
@@ -122,7 +122,7 @@ export const Vision = () => {
         <div
           className="flex flex-col justify-center px-8 md:px-10 py-8"
         >
-          <p className="text-[15px] leading-[1.6] text-[#6E6E73] max-w-[600px]">
+          <p className="text-[17px] leading-[1.47] text-[#86868b] max-w-[600px]">
             ColumbusPro-1 processes satellite imagery, terrain data, human activity, and temporal patterns
             to generate actionable intelligence across real estate, research, and consumer domains.
           </p>
@@ -148,12 +148,12 @@ export const Vision = () => {
         className="flex flex-col items-center py-10 px-8 gap-8"
         style={{ borderRight: gl, borderBottom: gl, ...anim(280) }}
       >
-        <p className="text-[15px] font-medium text-[#1D1D1F] tracking-tight">
+        <p className="text-[17px] font-medium text-[#1D1D1F] tracking-[-0.01em]">
           Think of us like the OpenAI for maps.
         </p>
         <Link
           href="/technology"
-          className="inline-flex items-center justify-center gap-2 px-10 py-4 border border-[#0A1344]/20 text-[#0A1344] text-[15px] font-medium hover:bg-[#0A1344] hover:text-white transition-colors"
+          className="inline-flex items-center justify-center gap-2 px-10 py-4 border border-[#0A1344]/20 text-[#0A1344] text-[17px] font-semibold hover:bg-[#0A1344] hover:text-white transition-colors"
         >
           Our research &amp; technology
           <svg width="7" height="12" viewBox="0 0 7 12" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
@@ -182,10 +182,10 @@ const TextTile = ({ title, subtitle }: { title: string; subtitle: string }) => (
     className="col-span-1 sm:col-span-2 flex flex-col justify-center items-center text-center px-6"
     style={{ borderRight: gl, borderBottom: gl }}
   >
-    <h3 className="text-xl md:text-2xl font-semibold text-[#1D1D1F] leading-tight tracking-tight">
+    <h3 className="text-[21px] md:text-[24px] font-semibold text-[#1D1D1F] leading-tight tracking-[-0.02em]">
       {title}
     </h3>
-    <p className="text-base text-[#6E6E73] mt-1 tracking-tight">
+    <p className="text-[15px] text-[#86868b] mt-1 tracking-[-0.01em]">
       {subtitle}
     </p>
   </div>
