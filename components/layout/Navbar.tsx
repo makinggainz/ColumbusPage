@@ -227,7 +227,7 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
                                 {/* Start Now — slides in when compact */}
                                 <Link
                                     href="/maps-gpt"
-                                    className={`hidden min-[1155px]:flex items-center justify-center px-4 font-semibold leading-none rounded-full border transition-all hover:opacity-70 ${
+                                    className={`hidden min-[1155px]:flex items-center justify-center px-4 font-semibold leading-none rounded-none border transition-all hover:opacity-70 ${
                                         isDark
                                             ? "border-white/30 bg-white/10 text-white"
                                             : "border-[#0A1344]/15 bg-[#0A1344]/5 text-[#0A1344]"

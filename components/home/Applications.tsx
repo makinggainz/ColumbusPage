@@ -39,9 +39,7 @@ export const Applications = () => {
   ];
 
   return (
-    <>
-    <div style={{ borderTop: gl }} />
-    <GridSection style={{ borderTop: "none" }}>
+    <GridSection>
       <div ref={ref} style={{ borderRight: gl, borderBottom: gl }}>
         {/* Header area */}
         <div className="px-8 md:px-10 pt-14 pb-4">
@@ -100,6 +98,5 @@ export const Applications = () => {
         </div>
       </div>
     </GridSection>
-    </>
   );
 };

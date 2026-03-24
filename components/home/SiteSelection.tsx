@@ -31,7 +31,7 @@ export const SiteSelection = () => {
   });
 
   return (
-    <GridSection style={{ borderTop: "none" }}>
+    <GridSection>
       <div ref={ref} style={{ borderRight: gl, borderBottom: gl }}>
         {/* Top bar: Columbus Pro + New | Start Now */}
         <div className="flex items-center justify-between px-8 md:px-10 py-6" style={anim(0)}>

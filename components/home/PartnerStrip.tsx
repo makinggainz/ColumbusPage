@@ -15,7 +15,7 @@ const LOGOS = [
 
 export const PartnerStrip = () => {
   return (
-    <GridSection>
+    <GridSection style={{ borderTop: "none" }}>
       <div
         className="flex flex-col items-center px-8 md:px-10 pt-16 pb-8"
         style={{ borderRight: gl }}

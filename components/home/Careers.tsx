@@ -25,9 +25,7 @@ export const Careers = () => {
   });
 
   return (
-    <>
-    <div style={{ borderTop: gl }} />
-    <GridSection style={{ borderTop: "none" }}>
+    <GridSection>
       <div ref={ref} style={{ borderRight: gl, borderBottom: gl }}>
         {/* Top centered heading */}
         <div className="text-center pt-20 pb-24 px-8" style={anim(0)}>
@@ -107,6 +105,5 @@ export const Careers = () => {
         </div>
       </div>
     </GridSection>
-    </>
   );
 };

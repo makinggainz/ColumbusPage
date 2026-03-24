@@ -37,11 +37,8 @@ export const TravelSection = () => {
 
   return (
     <section ref={ref} className="relative overflow-hidden">
-      {/* Full-width top border */}
-      <div style={{ borderTop: gl }} />
-
       {/* Top bar — wrapped in GridSection for left/right grid lines */}
-      <GridSection style={{ borderTop: "none" }}>
+      <GridSection>
         <div
           className="flex items-center justify-between px-8 md:px-10 py-6"
           style={{ borderRight: gl, borderBottom: gl }}

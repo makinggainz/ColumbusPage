@@ -35,7 +35,6 @@ export const Industries = () => {
   });
 
   return (
-    <>
     <GridSection style={{ borderTop: "none" }}>
       <div ref={ref}>
         {/* Title */}
@@ -114,7 +113,5 @@ export const Industries = () => {
         </div>
       </div>
     </GridSection>
-    <div style={{ borderTop: gl }} />
-    </>
   );
 };

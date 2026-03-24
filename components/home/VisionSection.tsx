@@ -62,7 +62,7 @@ export const Vision = () => {
     <div>
       <div ref={sentinelTopRef} className="h-0" />
 
-    <GridSection style={{ borderTop: "none" }}>
+    <GridSection>
       {/* Heading */}
       <div
         ref={ref}
