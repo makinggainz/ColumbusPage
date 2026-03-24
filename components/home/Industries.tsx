@@ -3,7 +3,15 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { GridSection, GridHeader, gl } from "./ContentGrid";
+import { GridSection, gl } from "./ContentGrid";
+
+const CARDS = [
+  { src: "/Icon/gen.png", label: "City Security", href: "/use-cases" },
+  { src: "/Icon/urban.png", label: "Urban Planning", href: "/use-cases" },
+  { src: "/Icon/site.png", label: "Site Selection", href: "/use-cases" },
+  { src: "/Icon/img1.png", label: "CRE", href: "/use-cases" },
+  { src: "/Icon/more.png", label: "More", href: "/use-cases" },
+];
 
 export const Industries = () => {
   const ref = useRef<HTMLDivElement>(null);
@@ -20,69 +28,93 @@ export const Industries = () => {
     return () => obs.disconnect();
   }, []);
 
-  const items = [
-    { src: "/Icon/gen.png", label: "Generative Geodata", href: "#" },
-    { src: "/Icon/img1.png", label: "Logistics Optimization", href: "#" },
-    { src: "/Icon/site.png", label: "Site Selection", href: "#" },
-    { src: "/Icon/urban.png", label: "Urban Planning Research", href: "#" },
-    { src: "/Icon/more.png", label: "More", href: "#" },
-  ];
+  const anim = (delay = 0) => ({
+    opacity: visible ? 1 : 0,
+    transform: visible ? "translateY(0)" : "translateY(14px)",
+    transition: `opacity 0.7s ease ${delay}ms, transform 0.7s ease ${delay}ms`,
+  });
 
   return (
-    <GridSection>
-      <GridHeader
-        label="06 — INDUSTRIES"
-        title="Find your industry"
-        subtitle="See how Columbus could help you across every sector."
-      />
-
-      <div ref={ref} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-        {items.map((item, index) => (
-          <Link
-            key={index}
-            href={item.href}
-            className="group relative overflow-hidden block transition-colors duration-200 hover:bg-[rgba(120,120,200,0.04)]"
-            style={{
-              height: 280,
-              borderRight: gl,
-              borderBottom: gl,
-              opacity: visible ? 1 : 0,
-              transform: visible ? "translateY(0)" : "translateY(14px)",
-              transition: `opacity 0.6s ease ${index * 70 + 150}ms, transform 0.6s ease ${index * 70 + 150}ms, background-color 0.2s ease`,
-            }}
-          >
-            <Image
-              src={item.src}
-              alt={item.label}
-              fill
-              className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.02]"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
-            <div className="absolute bottom-0 left-0 right-0 p-5 z-10">
-              <span className="text-white font-semibold text-[17px]">{item.label}</span>
-            </div>
-          </Link>
-        ))}
-
-        {/* CTA cell fills last spot */}
+    <>
+    <GridSection style={{ borderTop: "none" }}>
+      <div ref={ref}>
+        {/* Title */}
         <div
-          className="flex flex-col items-center justify-center gap-4 p-8 transition-colors duration-200 hover:bg-[rgba(120,120,200,0.04)]"
-          style={{
-            borderRight: gl,
-            borderBottom: gl,
-            height: 280,
-            opacity: visible ? 1 : 0,
-            transition: "opacity 0.6s ease 600ms",
-          }}
+          className="flex items-center justify-center py-8 px-8"
+          style={{ borderRight: gl, borderBottom: gl, ...anim(0) }}
         >
-          <Link href="/technology" className="text-[#4F46E5] text-sm font-mono tracking-wide hover:underline transition-colors">
-            EXPLORE TECHNOLOGY →
-          </Link>
-          <Link href="/platform" className="text-[#4F46E5] text-sm font-mono tracking-wide hover:underline transition-colors">
-            START NOW →
+          <h2 className="text-[#1D1D1F] text-[24px] md:text-[28px] font-normal tracking-[-0.01em]">
+            Find your industry
+          </h2>
+        </div>
+
+        {/* Cards row */}
+        <div
+          className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5"
+          style={{ borderBottom: gl }}
+        >
+          {CARDS.map((card, i) => (
+            <Link
+              key={card.label}
+              href={card.href}
+              className="group block"
+              style={{
+                borderRight: gl,
+                ...anim(100 + i * 80),
+              }}
+            >
+              {/* Image */}
+              <div className="relative w-full overflow-hidden" style={{ aspectRatio: "4 / 3" }}>
+                <Image
+                  src={card.src}
+                  alt={card.label}
+                  fill
+                  className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]"
+                />
+              </div>
+
+              {/* Label */}
+              <div className="flex items-center justify-between px-4 py-3">
+                <span className="text-[#1D1D1F] text-[15px] font-medium">
+                  {card.label}
+                </span>
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 14 14"
+                  fill="none"
+                  stroke="#6E6E73"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="flex-shrink-0"
+                >
+                  <path d="M4 1h9v9" />
+                  <path d="M13 1L1 13" />
+                </svg>
+              </div>
+            </Link>
+          ))}
+        </div>
+
+        {/* CTA button */}
+        <div
+          className="flex items-center justify-center py-6 px-8"
+          style={{ borderRight: gl, borderBottom: gl, ...anim(550) }}
+        >
+          <Link
+            href="/maps-gpt"
+            className="inline-flex items-center gap-2 px-10 py-4 rounded-none border border-[#1D1D1F] text-[#1D1D1F] text-[17px] font-medium hover:bg-[#1D1D1F] hover:text-white transition-colors"
+          >
+            Learn more about Columbus Pro
+            <svg width="8" height="14" viewBox="0 0 8 14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M1 1l6 6-6 6" />
+            </svg>
           </Link>
         </div>
       </div>
     </GridSection>
+    <div style={{ borderTop: gl }} />
+    </>
   );
 };

@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { GridSection, GridHeader, gl } from "./ContentGrid";
+import { GridSection, gl } from "./ContentGrid";
 
 const LOGOS = [
   "/Icon/logo1.png",
@@ -16,34 +16,33 @@ const LOGOS = [
 export const PartnerStrip = () => {
   return (
     <GridSection>
-      <GridHeader
-        label="04 — DATA PARTNERS"
-        title="Vetted, high-fidelity, and smart datasets"
-      />
+      <div
+        className="flex flex-col items-center px-8 md:px-10 pt-16 pb-8"
+        style={{ borderRight: gl }}
+      >
+        <h2 className="text-[32px] md:text-[40px] font-bold tracking-[-0.02em] leading-[1.1] text-[#1D1D1F] text-center">
+          High-fidelity and smart datasets
+        </h2>
+        <p className="text-[15px] text-[#6E6E73] mt-3 text-center">
+          We vet our data with reputable partner organizations
+        </p>
+      </div>
 
-      <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-7">
+      <div
+        className="flex items-center justify-center gap-10 md:gap-14 flex-wrap px-8 md:px-10 py-10 pb-32"
+        style={{ borderRight: gl, borderBottom: gl }}
+      >
         {LOGOS.map((src, i) => (
-          <div
+          <Image
             key={i}
-            className="flex items-center justify-center py-8 px-4 transition-colors duration-200 hover:bg-[rgba(120,120,200,0.04)]"
-            style={{ borderRight: gl, borderBottom: gl }}
-          >
-            <Image
-              src={src}
-              alt=""
-              width={175}
-              height={62}
-              className="object-contain h-8 w-auto"
-              style={{ filter: "grayscale(100%)", opacity: 0.5 }}
-            />
-          </div>
+            src={src}
+            alt=""
+            width={175}
+            height={62}
+            className="object-contain h-7 w-auto"
+            style={{ filter: "grayscale(100%)", opacity: 0.45 }}
+          />
         ))}
-
-        {/* Fill remaining cells on sm (4-col) to avoid gaps */}
-        <div
-          className="hidden sm:block md:hidden"
-          style={{ borderRight: gl, borderBottom: gl }}
-        />
       </div>
     </GridSection>
   );

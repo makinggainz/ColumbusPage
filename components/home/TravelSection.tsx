@@ -4,18 +4,26 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { cambo } from "@/app/fonts";
-import { GridSection, GridHeader, GridCell } from "./ContentGrid";
+import { GridSection, gl } from "./ContentGrid";
+
+const TABS = ["Plan cool trips", "Group planning", "Find spots", "Custom maps"];
 
 export const TravelSection = () => {
   const ref = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
+  const [activeTab, setActiveTab] = useState(0);
 
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
     const obs = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) { setVisible(true); obs.disconnect(); } },
-      { threshold: 0 }
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisible(true);
+          obs.disconnect();
+        }
+      },
+      { threshold: 0.1 }
     );
     obs.observe(el);
     return () => obs.disconnect();
@@ -23,82 +31,166 @@ export const TravelSection = () => {
 
   const anim = (delay = 0) => ({
     opacity: visible ? 1 : 0,
-    transform: visible ? "translateY(0)" : "translateY(16px)",
+    transform: visible ? "translateY(0)" : "translateY(24px)",
     transition: `opacity 0.7s ease ${delay}ms, transform 0.7s ease ${delay}ms`,
   });
 
   return (
-    <GridSection>
-      <GridHeader label="08 — MAPSGPT" />
+    <section ref={ref} className="relative overflow-hidden">
+      {/* Full-width top border */}
+      <div style={{ borderTop: gl }} />
 
-      <div ref={ref} className="grid grid-cols-1 md:grid-cols-5">
-        {/* Text — 2 cols */}
-        <GridCell className="md:col-span-2 flex flex-col justify-between" style={{ ...anim(0), minHeight: 500 }}>
-          <div>
-            <p className="text-[11px] font-semibold tracking-[0.2em] uppercase text-[#0A1344]/30 font-mono mb-5">
-              Available everywhere
-            </p>
+      {/* Top bar — wrapped in GridSection for left/right grid lines */}
+      <GridSection style={{ borderTop: "none" }}>
+        <div
+          className="flex items-center justify-between px-8 md:px-10 py-6"
+          style={{ borderRight: gl, borderBottom: gl }}
+        >
+          <span className="text-[#1D1D1F] font-bold" style={{ fontSize: 40 }}>
+            MapsGPT <span className="font-normal">– AI-powered social map</span>
+          </span>
+          <Link
+            href="/maps-gpt"
+            className="flex items-center gap-2 text-[#1D1D1F] font-semibold hover:opacity-70 transition-opacity"
+            style={{ fontSize: 20 }}
+          >
+            Learn more
+            <svg width="8" height="14" viewBox="0 0 8 14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M1 1l6 6-6 6" />
+            </svg>
+          </Link>
+        </div>
+      </GridSection>
 
-            <h2
-              className="font-semibold leading-none text-[#1D1D1F] mb-6"
-              style={{
-                fontSize: "clamp(48px, 5vw, 80px)",
-                letterSpacing: "-0.02em",
-                fontFamily: cambo.style.fontFamily,
-              }}
-            >
-              Travel like
-              <br />a boss
-            </h2>
+      {/* Main content area with sand background */}
+      <div
+        className="relative"
+        style={{
+          backgroundImage: "url('/beach.png')",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          minHeight: 700,
+        }}
+      >
+        {/* Flower — top right */}
+        <div className="absolute top-[-40px] right-[-20px] z-20 pointer-events-none" style={anim(100)}>
+          <Image
+            src="/flower.png"
+            alt=""
+            width={280}
+            height={280}
+            className="object-contain"
+            style={{ transform: "rotate(0deg)" }}
+          />
+        </div>
 
-            <p className="text-[17px] text-[#6E6E73] mb-6 leading-[1.47]">
-              MapsGPT is your local guide in your pocket.
-            </p>
+        {/* Fern 1 — left side */}
+        <div className="absolute bottom-[10%] left-[-60px] z-20 pointer-events-none" style={anim(200)}>
+          <Image
+            src="/fern1.png"
+            alt=""
+            width={240}
+            height={480}
+            className="object-contain"
+          />
+        </div>
 
-            <ul className="space-y-3.5 list-none pl-0 mb-8">
-              {["Plan cool trips", "Make itineraries", "Take care of every preference & detail"].map((item, i) => (
-                <li key={i} className="flex items-center gap-4 text-[17px]">
-                  <span className="w-1.25 h-1.25 bg-[#1D1D1F]/30 shrink-0" aria-hidden />
-                  <span className="text-[#1D1D1F]">{item}</span>
-                </li>
-              ))}
-            </ul>
+        {/* Fern 2 — bottom right */}
+        <div className="absolute bottom-[-20px] right-[-30px] z-20 pointer-events-none" style={anim(300)}>
+          <Image
+            src="/fern2.png"
+            alt=""
+            width={200}
+            height={400}
+            className="object-contain"
+          />
+        </div>
+
+        {/* Centered content */}
+        <div className="relative z-10 flex flex-col items-center pt-16 md:pt-24 pb-8 px-6">
+          {/* Heading */}
+          <h2
+            className="text-center text-[#1D1D1F] mb-4"
+            style={{
+              fontSize: "clamp(48px, 7vw, 96px)",
+              fontFamily: cambo.style.fontFamily,
+              fontWeight: 400,
+              lineHeight: 1.05,
+              letterSpacing: "-0.02em",
+              ...anim(0),
+            }}
+          >
+            Travel like a boss
+          </h2>
+
+          {/* Subtitle */}
+          <p
+            className="text-center text-[#4a4540] text-[17px] md:text-[20px] mb-10"
+            style={anim(100)}
+          >
+            MapsGPT is a local guide in your pocket
+          </p>
+
+          {/* Tab bar */}
+          <div
+            className="inline-flex items-center rounded-full px-2 py-1.5 mb-12"
+            style={{
+              backgroundColor: "rgba(255,255,255,0.55)",
+              backdropFilter: "blur(12px)",
+              boxShadow: "0 1px 4px rgba(0,0,0,0.06)",
+              ...anim(200),
+            }}
+          >
+            {TABS.map((tab, i) => (
+              <button
+                key={tab}
+                onClick={() => setActiveTab(i)}
+                className="relative px-5 md:px-7 py-2.5 text-[14px] md:text-[15px] font-medium rounded-full transition-all duration-200"
+                style={{
+                  color: activeTab === i ? "#1D1D1F" : "#6E6E73",
+                  backgroundColor: activeTab === i ? "rgba(255,255,255,0.85)" : "transparent",
+                  boxShadow: activeTab === i ? "0 1px 3px rgba(0,0,0,0.08)" : "none",
+                }}
+              >
+                {tab}
+              </button>
+            ))}
           </div>
 
-          <div>
-            <p className="text-[#6E6E73] mb-4 text-[15px] leading-[1.47]">
-              Find your next hang out spot, easier.
-            </p>
-            <div className="flex flex-row items-center gap-4">
-              <Link href="/maps-gpt" className="text-[#4F46E5] text-sm font-mono tracking-wide hover:underline">
-                TRY IT NOW →
-              </Link>
-              <Link
-                href="/technology"
-                className="bg-[#0A1344] text-white text-[15px] font-medium px-5 py-2.5 hover:bg-[#0A1344]/85 transition-colors inline-flex items-center"
-              >
-                Get started
-              </Link>
+          {/* Phone mockups */}
+          <div
+            className="relative flex items-end justify-center gap-4 md:gap-8 w-full"
+            style={{ maxWidth: 1320, ...anim(350) }}
+          >
+            {/* Desktop/browser mockup */}
+            <div
+              className="relative rounded-xl overflow-hidden shadow-2xl"
+              style={{ width: 995, maxWidth: "70%", height: 570 }}
+            >
+              <Image
+                src="/emoji/desk.png"
+                alt="MapsGPT desktop interface"
+                fill
+                className="object-cover object-top"
+              />
+            </div>
+
+            {/* Mobile mockup */}
+            <div
+              className="relative rounded-xl overflow-hidden shadow-2xl"
+              style={{ width: 293, maxWidth: "25%", height: 570 }}
+            >
+              <Image
+                src="/emoji/mob.png"
+                alt="MapsGPT mobile interface"
+                fill
+                className="object-cover object-top"
+              />
             </div>
           </div>
-        </GridCell>
 
-        {/* Image — 3 cols, flush */}
-        <GridCell flush hoverable={false} className="md:col-span-3 relative hidden md:block" style={{ ...anim(200), minHeight: 500 }}>
-          <div
-            className="absolute bottom-0 right-0 overflow-hidden"
-            style={{ width: "95%", height: "85%" }}
-          >
-            <Image src="/emoji/desk.png" alt="Desktop UI" fill className="object-cover" />
-          </div>
-          <div
-            className="absolute bottom-0 overflow-hidden"
-            style={{ right: 12, width: 200, height: "88%" }}
-          >
-            <Image src="/emoji/mob.png" alt="Mobile UI" fill className="object-cover" />
-          </div>
-        </GridCell>
+        </div>
       </div>
-    </GridSection>
+    </section>
   );
 };

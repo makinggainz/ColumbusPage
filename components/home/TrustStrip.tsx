@@ -2,13 +2,20 @@
 
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
-import { Plus } from "lucide-react";
-import { GridSection, GridHeader, GridCell, gl } from "./ContentGrid";
+import { GridSection, gl } from "./ContentGrid";
+
+const LOGOS = [
+  "/MapsGPTLogos/Logo1.png",
+  "/MapsGPTLogos/Logo2.png",
+  "/MapsGPTLogos/Logo3.png",
+  "/MapsGPTLogos/Logo4.png",
+  "/MapsGPTLogos/Logo5.png",
+  "/MapsGPTLogos/Logo6.png",
+];
 
 export const TrustStrip = () => {
   const ref = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
-  const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   useEffect(() => {
     const el = ref.current;
@@ -21,115 +28,52 @@ export const TrustStrip = () => {
     return () => obs.disconnect();
   }, []);
 
-  const faqs = [
-    {
-      q: "How were the samples in the video and website generated?",
-      a: "Our Columbus Pro-1 model processes satellite imagery, terrain data, and temporal patterns to generate high-fidelity geospatial outputs. All samples shown are real model outputs.",
-    },
-    {
-      q: "How does geospatial intelligence generation work?",
-      a: "Columbus Pro-1 fuses multiple data modalities — satellite, terrain, human activity signals — and reasons over them spatially to produce insights, maps, and predictions.",
-    },
-    {
-      q: "Is this available over API?",
-      a: "Yes. Columbus Pro-1 is accessible via our REST API and SDK. Contact us at contact@columbus.earth to get API access.",
-    },
-    {
-      q: "What data types are supported?",
-      a: "We support satellite imagery, terrain data, infrastructure networks, mobility data, parcel data, and custom survey data ordered on demand.",
-    },
-    {
-      q: "What regions does Columbus cover?",
-      a: "Columbus Pro-1 has global coverage, with highest resolution and update frequency in North America and Western Europe.",
-    },
-  ];
+  const anim = (delay = 0) => ({
+    opacity: visible ? 1 : 0,
+    transform: visible ? "translateY(0)" : "translateY(14px)",
+    transition: `opacity 0.7s ease ${delay}ms, transform 0.7s ease ${delay}ms`,
+  });
 
   return (
-    <GridSection>
-      <GridHeader
-        label="09 — TRUST"
-        title="Your plans are in good hands"
-        subtitle="We work with data from reputable global partners."
-      />
+    <GridSection style={{ borderTop: "none" }}>
+      <div ref={ref} style={{ borderRight: gl, borderBottom: gl }}>
+        {/* Heading */}
+        <div className="flex flex-col items-center text-center px-8 pt-16 pb-4" style={anim(0)}>
+          <h2 className="text-[#1D1D1F] text-[36px] md:text-[44px] font-bold tracking-[-0.02em] leading-[1.1]">
+            Your plans are in good hands
+          </h2>
+        </div>
 
-      <div ref={ref}>
+        {/* Subtitle */}
+        <div className="flex items-center justify-center px-8 pb-12" style={anim(100)}>
+          <p className="text-[#6E6E73] text-[17px]">
+            We work with data from reputable brands
+          </p>
+        </div>
+
         {/* Logo row */}
         <div
-          className="grid grid-cols-3 sm:grid-cols-6"
+          className="flex items-center justify-center gap-12 md:gap-16 px-8 py-12 flex-wrap"
           style={{
-            opacity: visible ? 0.5 : 0,
-            transition: "opacity 0.7s ease 0.15s",
+            ...anim(200),
             filter: "grayscale(100%)",
+            opacity: visible ? 0.4 : 0,
           }}
         >
-          {[
-            "/MapsGPTLogos/Logo1.png",
-            "/MapsGPTLogos/Logo2.png",
-            "/MapsGPTLogos/Logo3.png",
-            "/MapsGPTLogos/Logo4.png",
-            "/MapsGPTLogos/Logo5.png",
-            "/MapsGPTLogos/Logo6.png",
-          ].map((src, i) => (
-            <div
+          {LOGOS.map((src, i) => (
+            <Image
               key={i}
-              className="flex items-center justify-center py-6 px-4"
-              style={{ borderRight: gl, borderBottom: gl }}
-            >
-              <Image
-                src={src}
-                alt=""
-                width={105}
-                height={30}
-                className="object-contain h-6 sm:h-7 w-auto"
-              />
-            </div>
+              src={src}
+              alt=""
+              width={120}
+              height={36}
+              className="object-contain h-7 md:h-8 w-auto"
+            />
           ))}
         </div>
 
-        {/* FAQ section */}
-        <GridCell
-          hoverable={false}
-          style={{
-            opacity: visible ? 1 : 0,
-            transform: visible ? "translateY(0)" : "translateY(10px)",
-            transition: "opacity 0.7s ease 0.25s, transform 0.7s ease 0.25s",
-          }}
-        >
-          <span className="text-[11px] font-semibold tracking-[0.2em] uppercase text-[#0A1344]/30 font-mono block mb-6">
-            FAQ
-          </span>
-
-          <div className="max-w-[680px]">
-            {faqs.map((faq, index) => (
-              <div key={index} className="border-b border-[var(--grid-line)]">
-                <button
-                  className="w-full flex items-center justify-between py-5 text-left group"
-                  onClick={() => setOpenIndex(openIndex === index ? null : index)}
-                >
-                  <span className="text-[17px] font-semibold text-[#1D1D1F] pr-4">
-                    {faq.q}
-                  </span>
-                  <Plus
-                    size={18}
-                    strokeWidth={1.5}
-                    className={`text-[#6E6E73] shrink-0 transition-transform duration-300 ease-in-out ${openIndex === index ? "rotate-45" : ""}`}
-                  />
-                </button>
-                <div
-                  className="overflow-hidden transition-all duration-300 ease-in-out"
-                  style={{
-                    maxHeight: openIndex === index ? "200px" : "0px",
-                    opacity: openIndex === index ? 1 : 0,
-                  }}
-                >
-                  <p className="pb-5 text-[17px] leading-[1.47] text-[#6E6E73]">
-                    {faq.a}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </GridCell>
+        {/* Bottom spacing */}
+        <div className="h-12" />
       </div>
     </GridSection>
   );

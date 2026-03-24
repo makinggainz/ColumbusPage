@@ -9,7 +9,7 @@ import {
   Book,
   Database,
 } from "lucide-react";
-import { GridSection, GridHeader, GridCell } from "./ContentGrid";
+import { GridSection, GridCell } from "./ContentGrid";
 
 const features = [
   {
@@ -69,12 +69,6 @@ export const MainFeatures = () => {
   return (
     <GridSection>
       <div ref={ref as React.RefObject<HTMLDivElement>}>
-        <GridHeader
-          label="05 — CAPABILITIES"
-          title="What Columbus can do for you"
-          subtitle="Powerful tools that transform how you research, analyze, and select sites."
-        />
-
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
           {features.map((feature, index) => {
             const Icon = feature.icon;

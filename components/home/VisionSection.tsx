@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { GridSection, gl } from "./ContentGrid";
 
 export const Vision = () => {
@@ -62,43 +62,20 @@ export const Vision = () => {
     <div>
       <div ref={sentinelTopRef} className="h-0" />
 
-    <GridSection>
-      {/* Top content area */}
+    <GridSection style={{ borderTop: "none" }}>
+      {/* Heading */}
       <div
         ref={ref}
         className="px-8 md:px-10 py-10 md:py-14"
         style={{ borderRight: gl, borderBottom: gl }}
       >
-        {/* Heading */}
         <h2
-          className="text-[#1D1D1F] leading-[1.15] tracking-[-0.02em] mb-5"
+          className="text-[#1D1D1F] leading-[1.15] tracking-[-0.02em]"
           style={{ fontSize: 48, fontWeight: 300, ...anim(0) }}
         >
-          Introducing <span className="font-semibold">new kind of AI</span>,{" "}
+          A new breed of AI,{" "}
           <span className="font-bold">COLUMBUS-01</span>
         </h2>
-
-        {/* Description */}
-        <p
-          className="text-[15px] leading-[1.6] text-[#6E6E73] max-w-[600px] mb-6"
-          style={anim(80)}
-        >
-          ColumbusPro-1 processes satellite imagery, terrain data, human activity, and temporal patterns
-          to generate actionable intelligence across real estate, research, and consumer domains.
-        </p>
-
-        {/* Contact link */}
-        <div style={anim(150)}>
-          <Link
-            href="mailto:contact@columbus.earth"
-            className="inline-flex items-center gap-2 text-[#0A1344] text-[15px] font-medium underline underline-offset-4 hover:opacity-70 transition-opacity"
-          >
-            Contact Us
-            <svg width="7" height="12" viewBox="0 0 7 12" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M1 1l5 5-5 5" />
-            </svg>
-          </Link>
-        </div>
       </div>
 
       {/* Image grid */}
@@ -106,7 +83,7 @@ export const Vision = () => {
         className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 auto-rows-[120px] sm:auto-rows-[140px] lg:auto-rows-[160px]"
         style={{
           gridAutoFlow: "dense",
-          ...anim(200),
+          ...anim(100),
         }}
       >
         {/* Row 1 */}
@@ -140,25 +117,53 @@ export const Vision = () => {
         <Tile src="/image17.png" />
       </div>
 
-      {/* Bottom bar — split: tagline left, CTA right */}
-      <div className="grid grid-cols-1 md:grid-cols-[1fr_auto]" style={anim(350)}>
+      {/* Description + placeholder logos */}
+      <div className="grid grid-cols-1 md:grid-cols-[1fr_auto]" style={anim(200)}>
         <div
-          className="flex items-center justify-center py-5 px-8"
-          style={{ borderRight: gl, borderBottom: gl, backgroundColor: "rgba(10, 19, 68, 0.05)" }}
-        >
-          <p className="text-[15px] font-medium text-[#1D1D1F] tracking-tight">
-            Think of us like the OpenAI for maps.
-          </p>
-        </div>
-        <Link
-          href="/technology"
-          className="flex items-center justify-center gap-2 py-5 px-10 bg-[#0A1344] text-white text-[15px] font-medium hover:bg-[#0A1344]/90 transition-colors"
+          className="flex flex-col justify-center px-8 md:px-10 py-8"
           style={{ borderBottom: gl }}
         >
-          Our research &amp; technology
-          <svg width="7" height="12" viewBox="0 0 7 12" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M1 1l5 5-5 5" />
-          </svg>
+          <p className="text-[15px] leading-[1.6] text-[#6E6E73] max-w-[600px]">
+            ColumbusPro-1 processes satellite imagery, terrain data, human activity, and temporal patterns
+            to generate actionable intelligence across real estate, research, and consumer domains.
+          </p>
+        </div>
+        <div
+          className="flex items-center justify-start gap-6 py-8"
+          style={{ borderBottom: gl, borderRight: gl }}
+        >
+          <div className="w-[44px] h-[44px] overflow-hidden rounded-sm">
+            <SatelliteDiagram />
+          </div>
+          <div className="w-[44px] h-[44px] overflow-hidden rounded-sm">
+            <TerrainDiagram />
+          </div>
+          <div className="w-[44px] h-[44px] overflow-hidden rounded-sm">
+            <ActivityDiagram />
+          </div>
+        </div>
+      </div>
+
+      {/* Tagline */}
+      <div
+        className="flex items-center justify-center py-5 px-8"
+        style={{ borderRight: gl, borderBottom: gl, ...anim(280) }}
+      >
+        <p className="text-[15px] font-medium text-[#1D1D1F] tracking-tight">
+          Think of us like the OpenAI for maps.
+        </p>
+      </div>
+
+      {/* CTA link with left border accent */}
+      <div
+        className="flex items-center justify-center"
+        style={{ borderRight: gl, borderBottom: gl, ...anim(350) }}
+      >
+        <Link
+          href="/technology"
+          className="inline-flex items-center justify-center gap-2 w-full h-full py-5 px-8 bg-[#0A1344] text-white text-[15px] font-semibold hover:bg-[#0A1344]/85 transition-colors"
+        >
+          Our research &amp; technology →
         </Link>
       </div>
     </GridSection>
@@ -190,3 +195,213 @@ const TextTile = ({ title, subtitle }: { title: string; subtitle: string }) => (
     </p>
   </div>
 );
+
+/* ── Mini animated diagrams ── */
+
+function useCanvasLoop(draw: (ctx: CanvasRenderingContext2D, w: number, h: number, t: number) => void) {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const rafRef = useRef(0);
+
+  const render = useCallback(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+    const dpr = window.devicePixelRatio || 1;
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+    ctx.scale(dpr, dpr);
+    draw(ctx, rect.width, rect.height, performance.now() * 0.001);
+    rafRef.current = requestAnimationFrame(render);
+  }, [draw]);
+
+  useEffect(() => {
+    rafRef.current = requestAnimationFrame(render);
+    return () => cancelAnimationFrame(rafRef.current);
+  }, [render]);
+
+  return canvasRef;
+}
+
+/** Satellite — orbital scan lines sweeping across a grid */
+const SatelliteDiagram = () => {
+  const draw = useCallback((ctx: CanvasRenderingContext2D, w: number, h: number, t: number) => {
+    ctx.fillStyle = "#F8F8FA";
+    ctx.fillRect(0, 0, w, h);
+
+    // Grid
+    ctx.strokeStyle = "rgba(10, 19, 68, 0.06)";
+    ctx.lineWidth = 0.5;
+    for (let x = 0; x < w; x += 12) {
+      ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke();
+    }
+    for (let y = 0; y < h; y += 12) {
+      ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke();
+    }
+
+    // Scan line sweeping diagonally
+    const scanY = ((t * 18) % (h + 30)) - 15;
+    const grad = ctx.createLinearGradient(0, scanY - 8, 0, scanY + 8);
+    grad.addColorStop(0, "rgba(10, 19, 68, 0)");
+    grad.addColorStop(0.5, "rgba(10, 19, 68, 0.12)");
+    grad.addColorStop(1, "rgba(10, 19, 68, 0)");
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, scanY - 8, w, 16);
+
+    // Orbit arc
+    ctx.beginPath();
+    ctx.ellipse(w / 2, h / 2, w * 0.4, h * 0.3, 0, 0, Math.PI * 2);
+    ctx.strokeStyle = "rgba(10, 19, 68, 0.08)";
+    ctx.lineWidth = 0.8;
+    ctx.stroke();
+
+    // Satellite dot on orbit
+    const angle = t * 1.2;
+    const sx = w / 2 + Math.cos(angle) * w * 0.4;
+    const sy = h / 2 + Math.sin(angle) * h * 0.3;
+    ctx.beginPath();
+    ctx.arc(sx, sy, 2.5, 0, Math.PI * 2);
+    ctx.fillStyle = "rgba(10, 19, 68, 0.5)";
+    ctx.fill();
+
+    // Pulse ring around satellite
+    const pulse = (Math.sin(t * 4) + 1) * 3 + 3;
+    ctx.beginPath();
+    ctx.arc(sx, sy, pulse, 0, Math.PI * 2);
+    ctx.strokeStyle = "rgba(10, 19, 68, 0.15)";
+    ctx.lineWidth = 0.5;
+    ctx.stroke();
+
+    // Label
+    ctx.font = "7px monospace";
+    ctx.fillStyle = "rgba(10, 19, 68, 0.2)";
+    ctx.fillText("SAT", 4, 10);
+  }, []);
+
+  const canvasRef = useCanvasLoop(draw);
+  return <canvas ref={canvasRef} className="w-full h-full block" />;
+};
+
+/** Terrain — topographic contour lines with gentle drift */
+const TerrainDiagram = () => {
+  const draw = useCallback((ctx: CanvasRenderingContext2D, w: number, h: number, t: number) => {
+    ctx.fillStyle = "#F8F8FA";
+    ctx.fillRect(0, 0, w, h);
+
+    const cx = w * 0.45;
+    const cy = h * 0.5;
+
+    // Contour rings
+    for (let ring = 1; ring <= 8; ring++) {
+      const baseR = ring * 7;
+      ctx.beginPath();
+      const steps = 60;
+      for (let s = 0; s <= steps; s++) {
+        const a = (s / steps) * Math.PI * 2;
+        const wobble = Math.sin(a * 3 + t * 1.5 + ring * 0.7) * 3 +
+                       Math.sin(a * 5 - t) * 1.5;
+        const r = baseR + wobble;
+        const px = cx + Math.cos(a) * r;
+        const py = cy + Math.sin(a) * r * 0.7;
+        if (s === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+      }
+      ctx.closePath();
+      const alpha = 0.12 - ring * 0.012;
+      ctx.strokeStyle = `rgba(10, 19, 68, ${Math.max(0.03, alpha)})`;
+      ctx.lineWidth = 0.7;
+      ctx.stroke();
+    }
+
+    // Elevation marker
+    ctx.beginPath();
+    ctx.arc(cx, cy, 1.5, 0, Math.PI * 2);
+    ctx.fillStyle = "rgba(10, 19, 68, 0.3)";
+    ctx.fill();
+
+    // Label
+    ctx.font = "7px monospace";
+    ctx.fillStyle = "rgba(10, 19, 68, 0.2)";
+    ctx.fillText("TOPO", 4, 10);
+  }, []);
+
+  const canvasRef = useCanvasLoop(draw);
+  return <canvas ref={canvasRef} className="w-full h-full block" />;
+};
+
+/** Activity — pulsing data points representing human activity signals */
+const ActivityDiagram = () => {
+  const pointsRef = useRef<{ x: number; y: number; phase: number; speed: number }[]>([]);
+
+  if (pointsRef.current.length === 0) {
+    for (let i = 0; i < 18; i++) {
+      const seed = i * 5.73;
+      pointsRef.current.push({
+        x: (Math.sin(seed) + 1) / 2,
+        y: (Math.cos(seed * 1.4) + 1) / 2,
+        phase: seed,
+        speed: 1.5 + Math.random() * 2,
+      });
+    }
+  }
+
+  const draw = useCallback((ctx: CanvasRenderingContext2D, w: number, h: number, t: number) => {
+    ctx.fillStyle = "#F8F8FA";
+    ctx.fillRect(0, 0, w, h);
+
+    // Subtle grid
+    ctx.strokeStyle = "rgba(10, 19, 68, 0.04)";
+    ctx.lineWidth = 0.5;
+    for (let x = 0; x < w; x += 16) {
+      ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke();
+    }
+    for (let y = 0; y < h; y += 16) {
+      ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke();
+    }
+
+    // Data points
+    for (const p of pointsRef.current) {
+      const px = p.x * w;
+      const py = p.y * h;
+      const pulse = Math.sin(t * p.speed + p.phase) * 0.5 + 0.5;
+
+      // Glow
+      ctx.beginPath();
+      ctx.arc(px, py, 3 + pulse * 4, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(10, 19, 68, ${0.03 + pulse * 0.04})`;
+      ctx.fill();
+
+      // Core dot
+      ctx.beginPath();
+      ctx.arc(px, py, 1 + pulse * 0.8, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(10, 19, 68, ${0.15 + pulse * 0.25})`;
+      ctx.fill();
+    }
+
+    // Connection lines between nearby points
+    ctx.strokeStyle = "rgba(10, 19, 68, 0.05)";
+    ctx.lineWidth = 0.4;
+    const pts = pointsRef.current;
+    for (let i = 0; i < pts.length; i++) {
+      for (let j = i + 1; j < pts.length; j++) {
+        const dx = (pts[i].x - pts[j].x) * w;
+        const dy = (pts[i].y - pts[j].y) * h;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < 30) {
+          ctx.beginPath();
+          ctx.moveTo(pts[i].x * w, pts[i].y * h);
+          ctx.lineTo(pts[j].x * w, pts[j].y * h);
+          ctx.stroke();
+        }
+      }
+    }
+
+    // Label
+    ctx.font = "7px monospace";
+    ctx.fillStyle = "rgba(10, 19, 68, 0.2)";
+    ctx.fillText("ACT", 4, 10);
+  }, []);
+
+  const canvasRef = useCanvasLoop(draw);
+  return <canvas ref={canvasRef} className="w-full h-full block" />;
+};

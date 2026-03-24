@@ -2,22 +2,17 @@
 
 import { Star, MapPin } from "lucide-react";
 import { useRef, useState, useEffect } from "react";
-import { GridSection, GridHeader, gl } from "./ContentGrid";
+import { GridSection, gl } from "./ContentGrid";
 
 const FAVORITE_SPOTS_FILES = ["(20).jpeg", "(14).jpeg", "(17).jpeg", "(19).jpeg", "(21).jpeg", "(23).jpeg", "(24).jpeg", "(22).jpeg"];
 const spotImageSrc = (filename: string) => `/FavoriteSpots/${encodeURIComponent(filename)}`;
 
-const SPOTS: { title: string; description: string; location: string; rating: string; image?: string }[] = [
-  { title: "The Palm Hotel", description: "Luxury hotel with unique aquarium restaurant. Great food, and a great view.", location: "Dubai, UAE", rating: "4.2", image: FAVORITE_SPOTS_FILES[0] },
+const SPOTS: { title: string; description: string; location: string; rating: string; image: string }[] = [
+  { title: "The Palm Hotel", description: "Luxury hotel, with unique aquarium restaurant. Great food, and a great view.", location: "Dubai, UAE", rating: "4.2", image: FAVORITE_SPOTS_FILES[0] },
   { title: "Sky Garden Lounge", description: "Rooftop bar with panoramic city views. Perfect for sunset drinks.", location: "London, UK", rating: "4.5", image: FAVORITE_SPOTS_FILES[1] },
   { title: "Casa del Mar", description: "Beachfront dining with fresh seafood and Mediterranean cuisine.", location: "Barcelona, Spain", rating: "4.8", image: FAVORITE_SPOTS_FILES[2] },
   { title: "Temple of Dawn", description: "Historic temple with riverside views. Best visited at golden hour.", location: "Bangkok, Thailand", rating: "4.6", image: FAVORITE_SPOTS_FILES[3] },
-  { title: "Alpine Lodge", description: "Cozy mountain retreat with fireplace and mountain views.", location: "Zermatt, Switzerland", rating: "4.4", image: FAVORITE_SPOTS_FILES[4] },
-  { title: "Harbor Lights", description: "Waterfront restaurant known for lobster and harbor views.", location: "Boston, USA", rating: "4.3", image: FAVORITE_SPOTS_FILES[5] },
-  { title: "Sakura Garden", description: "Traditional Japanese garden with tea house and cherry blossoms.", location: "Kyoto, Japan", rating: "4.9", image: FAVORITE_SPOTS_FILES[6] },
-  { title: "Rooftop Vineyard", description: "Urban vineyard with wine tastings and city skyline.", location: "Cape Town, South Africa", rating: "4.1", image: FAVORITE_SPOTS_FILES[7] },
-  { title: "Coral Reef Bar", description: "Underwater-themed bar with aquariums and tropical cocktails.", location: "Miami, USA", rating: "4.0", image: FAVORITE_SPOTS_FILES[0] },
-  { title: "Northern Lights Cabin", description: "Glass cabin for aurora viewing. Cozy and unforgettable.", location: "Tromsø, Norway", rating: "4.7", image: FAVORITE_SPOTS_FILES[1] },
+  { title: "Alpine Lodge", description: "Cozy mountain retreat with fireplace and stunning mountain views.", location: "Zermatt, Switzerland", rating: "4.4", image: FAVORITE_SPOTS_FILES[4] },
 ];
 
 export const UniqueSpotsSection = () => {
@@ -39,6 +34,12 @@ export const UniqueSpotsSection = () => {
     return () => obs.disconnect();
   }, []);
 
+  const anim = (delay = 0) => ({
+    opacity: visible ? 1 : 0,
+    transform: visible ? "translateY(0)" : "translateY(14px)",
+    transition: `opacity 0.7s ease ${delay}ms, transform 0.7s ease ${delay}ms`,
+  });
+
   const onMouseDown = (e: React.MouseEvent) => {
     setIsDragging(true);
     setStartX(e.pageX - (scrollRef.current?.offsetLeft ?? 0));
@@ -55,25 +56,30 @@ export const UniqueSpotsSection = () => {
   };
 
   return (
-    <GridSection>
-      <GridHeader
-        label="10 — DISCOVERY"
-        title="Unique spots people are favoriting"
-        subtitle="Curated places discovered through MapsGPT."
-      />
+    <GridSection style={{ borderTop: "none" }}>
+      <div ref={ref} style={{ borderRight: gl, borderBottom: gl }}>
+        {/* Heading */}
+        <div className="flex flex-col items-center text-center px-8 pt-14 pb-3" style={anim(0)}>
+          <h2 className="text-[#1D1D1F] text-[32px] md:text-[40px] font-bold tracking-[-0.02em] leading-[1.1]">
+            Find your next hang out spot, easier
+          </h2>
+        </div>
 
-      <div
-        ref={ref}
-        style={{ borderRight: gl, borderBottom: gl, overflow: "hidden" }}
-      >
+        {/* Subtitle */}
+        <div className="flex items-center justify-center px-8 pb-10" style={anim(100)}>
+          <p className="text-[#6E6E73] text-[17px]">
+            Spots found faster on MapsGPT
+          </p>
+        </div>
+
+        {/* Scrollable cards */}
         <div
           ref={scrollRef}
-          className="flex overflow-x-auto py-0 select-none"
+          className="flex overflow-x-auto px-6 pb-12 gap-5 select-none"
           style={{
             scrollbarWidth: "none",
             cursor: isDragging ? "grabbing" : "grab",
-            opacity: visible ? 1 : 0,
-            transition: "opacity 0.7s ease 0.15s",
+            ...anim(200),
           }}
           onMouseDown={onMouseDown}
           onMouseLeave={onMouseLeave}
@@ -91,34 +97,31 @@ export const UniqueSpotsSection = () => {
 
 function SpotCard({ spot }: { spot: (typeof SPOTS)[0] }) {
   return (
-    <div
-      className="flex flex-col shrink-0 overflow-hidden bg-white"
-      style={{ width: 300, borderRight: gl }}
-    >
-      <div className="relative w-full h-48 overflow-hidden bg-[#F5F5F7] shrink-0">
-        {spot.image && (
-          <img
-            src={spotImageSrc(spot.image)}
-            alt=""
-            className="absolute inset-0 w-full h-full object-cover"
-          />
-        )}
-        <div className="absolute top-3 right-3 h-7 px-2.5 flex items-center gap-1.5 bg-white/90 backdrop-blur-md">
+    <div className="flex flex-col shrink-0 overflow-hidden rounded-lg" style={{ width: 260, border: "1px solid var(--grid-line)" }}>
+      {/* Image */}
+      <div className="relative w-full overflow-hidden rounded-lg" style={{ aspectRatio: "4 / 3" }}>
+        <img
+          src={spotImageSrc(spot.image)}
+          alt=""
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+        <div className="absolute top-3 right-3 h-7 px-2.5 flex items-center gap-1.5 bg-white/90 backdrop-blur-md rounded-sm">
           <Star className="w-3.5 h-3.5 shrink-0 text-[#E46962]" fill="#E46962" />
           <span className="font-semibold text-[13px] text-[#1D1D1F]">{spot.rating}</span>
         </div>
       </div>
 
-      <div className="px-5 py-5 flex flex-col flex-1" style={{ borderTop: gl }}>
-        <h3 className="font-semibold text-[17px] text-[#1D1D1F] tracking-[-0.01em] mb-1.5">
+      {/* Info */}
+      <div className="pt-4 pb-3 px-3 flex flex-col flex-1">
+        <h3 className="font-semibold text-[15px] text-[#1D1D1F] tracking-[-0.01em] mb-1">
           {spot.title}
         </h3>
-        <p className="text-[14px] leading-[1.47] text-[#6E6E73] line-clamp-2 mb-3">
+        <p className="text-[13px] leading-[1.5] text-[#6E6E73] line-clamp-2 mb-2">
           {spot.description}
         </p>
-        <div className="flex items-center gap-2 mt-auto">
-          <MapPin className="w-4 h-4 shrink-0 text-[#6E6E73]" />
-          <span className="text-[14px] text-[#6E6E73]">{spot.location}</span>
+        <div className="flex items-center gap-1.5 mt-auto">
+          <MapPin className="w-3.5 h-3.5 shrink-0 text-[#6E6E73]" />
+          <span className="text-[13px] text-[#6E6E73]">{spot.location}</span>
         </div>
       </div>
     </div>

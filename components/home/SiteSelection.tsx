@@ -31,7 +31,7 @@ export const SiteSelection = () => {
   });
 
   return (
-    <GridSection>
+    <GridSection style={{ borderTop: "none" }}>
       <div ref={ref} style={{ borderRight: gl, borderBottom: gl }}>
         {/* Top bar: Columbus Pro + New | Start Now */}
         <div className="flex items-center justify-between px-8 md:px-10 py-6" style={anim(0)}>
@@ -60,7 +60,7 @@ export const SiteSelection = () => {
         {/* Hero card */}
         <div
           className="relative overflow-hidden"
-          style={anim(100)}
+          style={{ width: "100vw", marginLeft: "calc(-50vw + 50%)", ...anim(100) }}
         >
           <div className="relative" style={{ minHeight: 800 }}>
             <Image
@@ -71,7 +71,7 @@ export const SiteSelection = () => {
             />
 
             {/* Content over image */}
-            <div className="relative z-10 flex flex-col items-center pt-12 md:pt-16 px-6">
+            <div className="relative z-10 flex flex-col items-center pt-16 md:pt-24 px-6">
               {/* Main heading */}
               <h2
                 className="text-[#1D1D1F] text-center leading-[1.05] tracking-[-0.02em]"
@@ -81,7 +81,7 @@ export const SiteSelection = () => {
               </h2>
 
               {/* Subtitle */}
-              <p className="text-[17px] text-[#1D1D1F]/70 mt-4 text-center">
+              <p className="text-[17px] text-[#1D1D1F]/70 mt-8 text-center">
                 Columbus turns you into a <span className="font-bold text-[#1D1D1F]">super-explorer.</span>
               </p>
 
@@ -89,7 +89,7 @@ export const SiteSelection = () => {
               <PillToggle />
 
               {/* Desktop + Mobile UI mockups */}
-              <div className="relative w-full max-w-[1100px] mx-auto mt-8" style={{ height: 480 }}>
+              <div className="relative w-full max-w-[1100px] mx-auto mt-12" style={{ height: 480 }}>
                 {/* Desktop UI */}
                 <div
                   className="absolute overflow-hidden"
@@ -133,6 +133,22 @@ export const SiteSelection = () => {
               </div>
             </div>
           </div>
+        </div>
+
+        {/* Check it out CTA */}
+        <div
+          className="flex items-center justify-center py-6"
+          style={{ borderRight: gl, borderBottom: gl }}
+        >
+          <Link
+            href="/maps-gpt"
+            className="inline-flex items-center gap-2 px-10 py-4 rounded-none border border-[#1D1D1F] text-[#1D1D1F] text-[17px] font-medium hover:bg-[#1D1D1F] hover:text-white transition-colors"
+          >
+            Check it out
+            <svg width="8" height="14" viewBox="0 0 8 14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M1 1l6 6-6 6" />
+            </svg>
+          </Link>
         </div>
       </div>
     </GridSection>

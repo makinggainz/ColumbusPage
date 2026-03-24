@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { GridSection, GridHeader, gl } from "./ContentGrid";
+import { GridSection, gl } from "./ContentGrid";
 
 const EMOJI_DEFS = [
   { src: "/emoji/cake.png",       top: 0.02, left: 0.01,  size: 160 },
@@ -207,12 +207,10 @@ export const TravelPromo = () => {
   const ctaP      = ease(progress, 0.40, 0.60);
 
   return (
-    <GridSection>
-      <GridHeader label="07 — CONSUMER" />
-
+    <GridSection style={{ borderTop: "none" }}>
       <div style={{ borderRight: gl, borderBottom: gl }}>
         <div ref={sectionRef} className="relative" style={{ height: "200vh" }}>
-          <div ref={containerRef} className="sticky top-0 h-screen overflow-hidden bg-white">
+          <div ref={containerRef} className="sticky top-0 h-screen overflow-hidden bg-white" style={{ width: "100vw", marginLeft: "calc(-50vw + 50%)" }}>
             <canvas ref={canvasRef} className="absolute inset-0 pointer-events-none" style={{ zIndex: 1 }} />
             <div className="relative h-full">
               <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-6 pointer-events-none" style={{ zIndex: 2 }}>

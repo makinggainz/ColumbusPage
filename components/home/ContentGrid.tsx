@@ -7,14 +7,16 @@ const gl = "1px solid var(--grid-line)";
 export function GridSection({
   children,
   className = "",
+  style,
 }: {
   children: ReactNode;
   className?: string;
+  style?: CSSProperties;
 }) {
   return (
     <section
       className={`grid-section max-w-[1287px] mx-auto bg-white ${className}`}
-      style={{ borderTop: gl, borderLeft: gl }}
+      style={{ borderTop: gl, borderLeft: gl, ...style }}
     >
       {children}
     </section>
