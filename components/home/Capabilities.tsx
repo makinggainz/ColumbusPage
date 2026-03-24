@@ -112,7 +112,7 @@ export const Capabilities = () => {
       <div ref={sectionRef}>
         {/* Header */}
         <div
-          className="flex items-center justify-center px-8 md:px-10 py-6"
+          className="flex items-center justify-center px-8 md:px-10 py-10"
           style={{
             borderRight: gl,
             opacity: visible ? 1 : 0,

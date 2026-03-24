@@ -41,7 +41,7 @@ export const GeneratedMaps = () => {
     <GridSection style={{ borderTop: "none" }}>
       <div ref={ref} style={{ borderRight: gl, borderBottom: gl }}>
         {/* Heading */}
-        <div className="flex items-center justify-center px-8 pt-14 pb-10" style={anim(0)}>
+        <div className="flex items-center justify-center px-8 pt-20 pb-12" style={anim(0)}>
           <h2 className="text-[#1D1D1F] text-[40px] md:text-[48px] font-semibold tracking-[-0.02em] leading-[1.08]">
             Generated Maps
           </h2>
@@ -49,7 +49,7 @@ export const GeneratedMaps = () => {
 
         {/* 3x2 grid */}
         <div
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-10 gap-y-10 px-8 md:px-16 pb-14"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-10 gap-y-12 px-8 md:px-16 pb-20"
           style={anim(150)}
         >
           {MAPS.map((item, i) => (

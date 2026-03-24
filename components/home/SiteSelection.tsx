@@ -34,7 +34,7 @@ export const SiteSelection = () => {
     <GridSection style={{ borderTop: "none" }}>
       <div ref={ref} style={{ borderRight: gl, borderBottom: gl }}>
         {/* Top bar: Columbus Pro + New | Start Now */}
-        <div className="flex items-center justify-between px-8 md:px-10 py-6" style={anim(0)}>
+        <div className="flex items-center justify-between px-8 md:px-10 py-8" style={anim(0)}>
           <div className="flex items-center gap-3">
             <span className="text-[#1D1D1F] font-semibold" style={{ fontSize: 36 }}>
               Columbus Pro
@@ -137,7 +137,7 @@ export const SiteSelection = () => {
 
         {/* Check it out CTA */}
         <div
-          className="flex items-center justify-center py-6"
+          className="flex items-center justify-center py-8"
           style={{ borderRight: gl }}
         >
           <Link

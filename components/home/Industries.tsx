@@ -40,7 +40,7 @@ export const Industries = () => {
       <div ref={ref}>
         {/* Title */}
         <div
-          className="flex items-center justify-center py-8 px-8"
+          className="flex items-center justify-center py-10 px-8"
           style={{ borderRight: gl, borderBottom: gl, ...anim(0) }}
         >
           <h2 className="text-[#1D1D1F] text-[28px] font-semibold tracking-[-0.02em]">
@@ -99,7 +99,7 @@ export const Industries = () => {
 
         {/* CTA button */}
         <div
-          className="flex items-center justify-center py-6 px-8"
+          className="flex items-center justify-center py-8 px-8"
           style={{ borderRight: gl, borderBottom: gl, ...anim(550) }}
         >
           <Link

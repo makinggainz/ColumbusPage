@@ -30,8 +30,8 @@ export const Careers = () => {
     <GridSection style={{ borderTop: "none" }}>
       <div ref={ref} style={{ borderRight: gl, borderBottom: gl }}>
         {/* Top centered heading */}
-        <div className="text-center pt-20 pb-24 px-8" style={anim(0)}>
-          <h2 className="text-[#0A1344] font-semibold tracking-[-0.02em] leading-[1.08] mb-4" style={{ fontSize: "clamp(36px, 4.5vw, 48px)" }}>
+        <div className="text-center pt-24 pb-20 px-8" style={anim(0)}>
+          <h2 className="text-[#0A1344] font-semibold tracking-[-0.02em] leading-[1.08] mb-6" style={{ fontSize: "clamp(36px, 4.5vw, 48px)" }}>
             Hiring Humans.
           </h2>
           <p className="text-[#86868b] text-[21px] tracking-[-0.01em]">

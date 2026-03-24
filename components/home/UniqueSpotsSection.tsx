@@ -59,14 +59,14 @@ export const UniqueSpotsSection = () => {
     <GridSection style={{ borderTop: "none" }}>
       <div ref={ref} style={{ borderRight: gl, borderBottom: gl }}>
         {/* Heading */}
-        <div className="flex flex-col items-center text-center px-8 pt-14 pb-3" style={anim(0)}>
+        <div className="flex flex-col items-center text-center px-8 pt-20 pb-4" style={anim(0)}>
           <h2 className="text-[#1D1D1F] text-[40px] md:text-[48px] font-semibold tracking-[-0.02em] leading-[1.08]">
             Find your next hang out spot, easier
           </h2>
         </div>
 
         {/* Subtitle */}
-        <div className="flex items-center justify-center px-8 pb-10" style={anim(100)}>
+        <div className="flex items-center justify-center px-8 pb-12" style={anim(100)}>
           <p className="text-[#86868b] text-[21px]">
             Spots found faster on MapsGPT
           </p>
@@ -75,7 +75,7 @@ export const UniqueSpotsSection = () => {
         {/* Scrollable cards */}
         <div
           ref={scrollRef}
-          className="flex overflow-x-auto px-6 pb-12 gap-5 select-none"
+          className="flex overflow-x-auto px-8 pb-16 gap-6 select-none"
           style={{
             scrollbarWidth: "none",
             cursor: isDragging ? "grabbing" : "grab",

@@ -38,14 +38,14 @@ export const TrustStrip = () => {
     <GridSection style={{ borderTop: "none" }}>
       <div ref={ref} style={{ borderRight: gl, borderBottom: gl }}>
         {/* Heading */}
-        <div className="flex flex-col items-center text-center px-8 pt-16 pb-4" style={anim(0)}>
+        <div className="flex flex-col items-center text-center px-8 pt-20 pb-4" style={anim(0)}>
           <h2 className="text-[#1D1D1F] text-[40px] md:text-[48px] font-semibold tracking-[-0.02em] leading-[1.08]">
             Your plans are in good hands
           </h2>
         </div>
 
         {/* Subtitle */}
-        <div className="flex items-center justify-center px-8 pb-12" style={anim(100)}>
+        <div className="flex items-center justify-center px-8 pb-16" style={anim(100)}>
           <p className="text-[#86868b] text-[21px]">
             We work with data from reputable brands
           </p>
@@ -73,7 +73,7 @@ export const TrustStrip = () => {
         </div>
 
         {/* Bottom spacing */}
-        <div className="h-12" />
+        <div className="h-16" />
       </div>
     </GridSection>
   );

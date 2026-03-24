@@ -66,7 +66,7 @@ export const Vision = () => {
       {/* Heading */}
       <div
         ref={ref}
-        className="px-8 md:px-10 py-10 md:py-14"
+        className="px-8 md:px-10 py-12 md:py-20"
         style={{ borderRight: gl, borderBottom: gl }}
       >
         <h2
@@ -120,7 +120,7 @@ export const Vision = () => {
       {/* Description + placeholder logos */}
       <div className="grid grid-cols-1 md:grid-cols-[1fr_auto]" style={anim(200)}>
         <div
-          className="flex flex-col justify-center px-8 md:px-10 py-8"
+          className="flex flex-col justify-center px-8 md:px-10 py-10"
         >
           <p className="text-[17px] leading-[1.47] text-[#86868b] max-w-[600px]">
             ColumbusPro-1 processes satellite imagery, terrain data, human activity, and temporal patterns
@@ -145,7 +145,7 @@ export const Vision = () => {
 
       {/* Tagline + CTA */}
       <div
-        className="flex flex-col items-center py-10 px-8 gap-8"
+        className="flex flex-col items-center py-14 px-8 gap-6"
         style={{ borderRight: gl, borderBottom: gl, ...anim(280) }}
       >
         <p className="text-[17px] font-medium text-[#1D1D1F] tracking-[-0.01em]">

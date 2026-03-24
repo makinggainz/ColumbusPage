@@ -42,7 +42,7 @@ export const TravelSection = () => {
       {/* Top bar — wrapped in GridSection for left/right grid lines */}
       <GridSection style={{ borderTop: "none" }}>
         <div
-          className="flex items-center justify-between px-8 md:px-10 py-6"
+          className="flex items-center justify-between px-8 md:px-10 py-8"
           style={{ borderRight: gl, borderBottom: gl }}
         >
           <span className="text-[#1D1D1F] font-semibold" style={{ fontSize: 36 }}>
