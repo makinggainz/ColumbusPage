@@ -105,6 +105,8 @@ export const TravelSection = () => {
   const travelHeadingRef = useRef<HTMLHeadingElement>(null);
   const [visible, setVisible] = useState(false);
   const [activeTab, setActiveTab] = useState(0);
+  const [plantsVisible, setPlantsVisible] = useState(false);
+  const island3Ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const el = ref.current;
@@ -157,6 +159,17 @@ export const TravelSection = () => {
       const radius = current > 0 ? 12 * (1 - current) : 0;
       card.style.clipPath = `inset(0 ${inset}% 0 ${inset}% round ${radius}px)`;
 
+      // Trigger plants when expansion is nearly complete AND still within Island 3
+      const sectionEl = ref.current;
+      const island = sectionEl?.closest(".mt-16") as HTMLElement | null;
+      if (current > 0.92 && island) {
+        const islandRect = island.getBoundingClientRect();
+        const inView = islandRect.top < window.innerHeight && islandRect.bottom > 0;
+        setPlantsVisible(inView);
+      } else {
+        setPlantsVisible(false);
+      }
+
       if (Math.abs(target - current) > 0.0005) {
         rafId = requestAnimationFrame(tick);
       } else {
@@ -188,7 +201,7 @@ export const TravelSection = () => {
   });
 
   return (
-    <section ref={ref} className="relative overflow-hidden">
+    <section ref={ref} className="relative">
       {/* Top bar — wrapped in GridSection for left/right grid lines */}
       <GridSection>
         <div
@@ -230,40 +243,6 @@ export const TravelSection = () => {
           willChange: "clip-path",
         }}
       >
-        {/* Flower — top right */}
-        <div className="absolute top-[-40px] right-[-20px] z-20 pointer-events-none" style={anim(100)}>
-          <Image
-            src="/flower.png"
-            alt=""
-            width={280}
-            height={280}
-            className="object-contain"
-            style={{ transform: "rotate(0deg)" }}
-          />
-        </div>
-
-        {/* Fern 1 — left side */}
-        <div className="absolute bottom-[10%] left-[-60px] z-20 pointer-events-none" style={anim(200)}>
-          <Image
-            src="/fern1.png"
-            alt=""
-            width={240}
-            height={480}
-            className="object-contain"
-          />
-        </div>
-
-        {/* Fern 2 — bottom right */}
-        <div className="absolute bottom-[-20px] right-[-30px] z-20 pointer-events-none" style={anim(300)}>
-          <Image
-            src="/fern2.png"
-            alt=""
-            width={200}
-            height={400}
-            className="object-contain"
-          />
-        </div>
-
         {/* Centered content */}
         <div className="relative z-10 flex flex-col items-center pt-16 md:pt-24 pb-8 px-6">
           {/* Heading */}
@@ -325,6 +304,7 @@ export const TravelSection = () => {
 
         </div>
       </div>
+
     </section>
   );
 };

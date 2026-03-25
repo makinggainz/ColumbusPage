@@ -44,8 +44,8 @@ export const Applications = () => {
         {/* Header area */}
         <div className="px-8 md:px-10 pt-14 pb-4">
           <h2
-            className="text-[#1D1D1F] font-bold tracking-[-0.02em] leading-[1.12] max-w-[700px]"
-            style={{ fontSize: "clamp(32px, 4vw, 48px)", ...anim(0) }}
+            className="text-[#1D1D1F] font-medium tracking-[-0.02em] leading-[1.12]"
+            style={{ fontSize: 48, ...anim(0) }}
           >
             We&apos;re actively exploring various application areas
           </h2>
@@ -53,18 +53,15 @@ export const Applications = () => {
 
         {/* Subtitle + tag row */}
         <div
-          className="flex items-end justify-between px-8 md:px-10 pb-8"
+          className="px-8 md:px-10 pb-8"
           style={anim(100)}
         >
-          <p className="text-[#6E6E73] text-[17px] leading-[1.47]">
+          <p className="text-[#6E6E73] text-[20px] leading-[1.47]">
             We&apos;d love to work within your industry, send us a{" "}
             <a href="mailto:hey@columbus.earth" className="text-[#1D1D1F] hover:underline">
               hey@columbus.earth
             </a>
           </p>
-          <span className="text-[#1D1D1F] font-mono text-[13px] tracking-wide whitespace-nowrap ml-6">
-            [ COLUMBUS PRO-1 ]
-          </span>
         </div>
 
         {/* 3×3 image grid — flush, no gaps */}
@@ -86,12 +83,17 @@ export const Applications = () => {
                 className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.02]"
                 priority={index < 3}
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent transition-opacity duration-300" />
+              {/* Purple overlay */}
+              <div className="absolute inset-0 transition-opacity duration-300" style={{ backgroundColor: "rgba(100, 60, 220, 0.22)" }} />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent transition-opacity duration-300" />
               <div className="absolute inset-x-0 bottom-0 flex flex-col z-20 px-5 pb-5">
-                <h3 className="text-[17px] font-semibold text-white">{item.title}</h3>
-                <p className="mt-1 text-white/70 opacity-0 translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 ease-out font-mono text-[11px] tracking-wide">
-                  LEARN MORE →
-                </p>
+                <h3 className="text-[17px] font-semibold text-white mb-2">{item.title}</h3>
+                <div className="flex items-center gap-10 opacity-0 translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 ease-out">
+                  <span className="text-white/90 text-[15px] font-medium">Learn more</span>
+                  <svg width="10" height="18" viewBox="0 0 7 12" fill="none" stroke="#7B6FE8" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M1 1l5 5-5 5" />
+                  </svg>
+                </div>
               </div>
             </Link>
           ))}

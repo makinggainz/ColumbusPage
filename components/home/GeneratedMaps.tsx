@@ -4,16 +4,61 @@ import { Star, MapPin } from "lucide-react";
 import { useRef, useState, useEffect } from "react";
 import { GridSection, gl } from "./ContentGrid";
 
-const FAVORITE_SPOTS_FILES = ["(20).jpeg", "(14).jpeg", "(17).jpeg", "(19).jpeg", "(21).jpeg", "(23).jpeg"];
-const spotImageSrc = (filename: string) => `/FavoriteSpots/${encodeURIComponent(filename)}`;
-
 const MAPS = [
-  { title: "The Palm Hotel", description: "Luxury hotel, with unique aquarium restaurant. Great food, and a great view.", location: "Dubai, UAE", rating: "4.2", image: FAVORITE_SPOTS_FILES[0] },
-  { title: "Sky Garden Lounge", description: "Rooftop bar with panoramic city views. Perfect for sunset drinks.", location: "London, UK", rating: "4.5", image: FAVORITE_SPOTS_FILES[1] },
-  { title: "Casa del Mar", description: "Beachfront dining with fresh seafood and Mediterranean cuisine.", location: "Barcelona, Spain", rating: "4.8", image: FAVORITE_SPOTS_FILES[2] },
-  { title: "Temple of Dawn", description: "Historic temple with riverside views. Best visited at golden hour.", location: "Bangkok, Thailand", rating: "4.6", image: FAVORITE_SPOTS_FILES[3] },
-  { title: "Alpine Lodge", description: "Cozy mountain retreat with fireplace and stunning mountain views.", location: "Zermatt, Switzerland", rating: "4.4", image: FAVORITE_SPOTS_FILES[4] },
-  { title: "Harbor Lights", description: "Waterfront restaurant known for lobster and harbor views.", location: "Boston, USA", rating: "4.3", image: FAVORITE_SPOTS_FILES[5] },
+  {
+    title: "Coolest Date Night Spots",
+    description: "Moody lighting, great cocktails, and vibes that actually impress. Curated by locals who've done the research.",
+    location: "Philadelphia, PA",
+    rating: "4.8",
+    emoji: "🕯️",
+    gradient: "linear-gradient(135deg, #0d0820 0%, #2e1760 55%, #7b6fe8 100%)",
+    accent: "#7b6fe8",
+  },
+  {
+    title: "Best Valentine's Day Restaurants",
+    description: "No cringe, no overpriced prix fixe. Just genuinely romantic spots worth booking.",
+    location: "New York, NY",
+    rating: "4.7",
+    emoji: "🌹",
+    gradient: "linear-gradient(135deg, #120834 0%, #4a2080 55%, #a98af5 100%)",
+    accent: "#a98af5",
+  },
+  {
+    title: "Most Expensive Neighborhoods",
+    description: "A visual breakdown of DC's priciest zip codes — where the money lives and what it looks like.",
+    location: "Washington, DC",
+    rating: "4.5",
+    emoji: "💰",
+    gradient: "linear-gradient(135deg, #07051a 0%, #142994 55%, #4a5fe8 100%)",
+    accent: "#4a5fe8",
+  },
+  {
+    title: "TikTok Famous Restaurants",
+    description: "Every place that went viral this year, mapped so you can actually find them.",
+    location: "Los Angeles, CA",
+    rating: "4.6",
+    emoji: "🎵",
+    gradient: "linear-gradient(135deg, #0a0818 0%, #1e1252 45%, #6b5fd4 80%, #9b8ff0 100%)",
+    accent: "#9b8ff0",
+  },
+  {
+    title: "Queer Parks & Hangouts",
+    description: "Community-built guide to the parks, plazas, and outdoor spots where you belong.",
+    location: "Washington, DC",
+    rating: "4.9",
+    emoji: "🏳️‍🌈",
+    gradient: "linear-gradient(135deg, #0e0b2a 0%, #3a1878 50%, #8b6fe8 80%, #b8a0f5 100%)",
+    accent: "#b8a0f5",
+  },
+  {
+    title: "Hidden Rooftop Bars",
+    description: "The ones without signs, without reservations, and without tourists. Locals only — until now.",
+    location: "Chicago, IL",
+    rating: "4.4",
+    emoji: "🌆",
+    gradient: "linear-gradient(135deg, #050410 0%, #1a1440 50%, #5548c8 100%)",
+    accent: "#7b6fe8",
+  },
 ];
 
 export const GeneratedMaps = () => {
@@ -54,13 +99,45 @@ export const GeneratedMaps = () => {
         >
           {MAPS.map((item, i) => (
             <div key={i} className="flex flex-col rounded-lg overflow-hidden" style={{ border: "1px solid var(--grid-line)" }}>
-              {/* Image */}
-              <div className="relative w-full overflow-hidden rounded-lg" style={{ aspectRatio: "16 / 10" }}>
-                <img
-                  src={spotImageSrc(item.image)}
-                  alt=""
-                  className="absolute inset-0 w-full h-full object-cover"
-                />
+              {/* Gradient visual */}
+              <div
+                className="relative w-full flex items-center justify-center overflow-hidden rounded-lg"
+                style={{ aspectRatio: "16 / 10", background: item.gradient }}
+              >
+                {/* Street grid SVG */}
+                <svg className="absolute inset-0 w-full h-full" viewBox="0 0 320 200" preserveAspectRatio="xMidYMid slice" fill="none">
+                  {/* City blocks — vertical streets */}
+                  <line x1="48" y1="0" x2="48" y2="200" stroke={item.accent} strokeOpacity="0.25" strokeWidth="1.5"/>
+                  <line x1="96" y1="0" x2="96" y2="200" stroke={item.accent} strokeOpacity="0.15" strokeWidth="0.75"/>
+                  <line x1="152" y1="0" x2="152" y2="200" stroke={item.accent} strokeOpacity="0.25" strokeWidth="1.5"/>
+                  <line x1="210" y1="0" x2="210" y2="200" stroke={item.accent} strokeOpacity="0.15" strokeWidth="0.75"/>
+                  <line x1="268" y1="0" x2="268" y2="200" stroke={item.accent} strokeOpacity="0.25" strokeWidth="1.5"/>
+                  {/* City blocks — horizontal streets */}
+                  <line x1="0" y1="42" x2="320" y2="42" stroke={item.accent} strokeOpacity="0.25" strokeWidth="1.5"/>
+                  <line x1="0" y1="80" x2="320" y2="80" stroke={item.accent} strokeOpacity="0.15" strokeWidth="0.75"/>
+                  <line x1="0" y1="118" x2="320" y2="118" stroke={item.accent} strokeOpacity="0.25" strokeWidth="1.5"/>
+                  <line x1="0" y1="158" x2="320" y2="158" stroke={item.accent} strokeOpacity="0.15" strokeWidth="0.75"/>
+                  {/* Diagonal road */}
+                  <line x1="0" y1="200" x2="320" y2="0" stroke={item.accent} strokeOpacity="0.12" strokeWidth="1.5"/>
+                  {/* Curved road */}
+                  <path d="M 0 100 Q 160 20 320 100" stroke={item.accent} strokeOpacity="0.18" strokeWidth="1.5"/>
+                  {/* Map pins */}
+                  <circle cx="152" cy="80" r="5" fill={item.accent} fillOpacity="0.9"/>
+                  <circle cx="152" cy="80" r="9" fill={item.accent} fillOpacity="0.2"/>
+                  <circle cx="96" cy="118" r="3.5" fill={item.accent} fillOpacity="0.7"/>
+                  <circle cx="96" cy="118" r="6.5" fill={item.accent} fillOpacity="0.15"/>
+                  <circle cx="268" cy="42" r="3.5" fill={item.accent} fillOpacity="0.7"/>
+                  <circle cx="268" cy="42" r="6.5" fill={item.accent} fillOpacity="0.15"/>
+                  {/* Block fills */}
+                  <rect x="49" y="43" width="46" height="36" fill={item.accent} fillOpacity="0.06" rx="1"/>
+                  <rect x="153" y="119" width="56" height="38" fill={item.accent} fillOpacity="0.06" rx="1"/>
+                  <rect x="211" y="43" width="56" height="36" fill={item.accent} fillOpacity="0.08" rx="1"/>
+                </svg>
+
+                {/* Emoji */}
+                <span className="relative z-10 select-none drop-shadow-lg" style={{ fontSize: 36 }}>{item.emoji}</span>
+
+                {/* Rating badge */}
                 <div className="absolute top-3 right-3 h-7 px-2.5 flex items-center gap-1.5 bg-white/90 backdrop-blur-md rounded-sm">
                   <Star className="w-3.5 h-3.5 shrink-0 text-[#E46962]" fill="#E46962" />
                   <span className="font-semibold text-[13px] text-[#1D1D1F]">{item.rating}</span>
