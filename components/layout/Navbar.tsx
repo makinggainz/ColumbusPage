@@ -176,49 +176,53 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
                                 transition: `height ${t}, padding-top ${t}`,
                             }}
                         >
-                            {/* ── Left: Logo ── */}
-                            <Link href="/" className="flex w-fit shrink-0 items-center gap-2" onMouseEnter={handleNavMouseEnter}>
-                                <div
-                                    className="relative shrink-0"
-                                    style={{
-                                        width: isCompact ? 30 : 40,
-                                        height: isCompact ? 30 : 40,
-                                        transition: `width ${t}, height ${t}, filter ${t}`,
-                                        filter: (isDark && !isMenuOpen) ? "brightness(0) invert(1)" : "none",
-                                    }}
-                                >
-                                    <Image
-                                        src="/logobueno.png"
-                                        alt="Columbus Logo"
-                                        fill
-                                        sizes="40px"
-                                        className="object-contain"
-                                        priority
-                                    />
-                                </div>
-                                <span
-                                    className="brand-wordmark font-medium leading-none"
-                                    style={{
-                                        fontSize: isCompact ? 20 : 24,
-                                        letterSpacing: "-0.02em",
-                                        transition: `font-size ${t}`,
-                                    }}
-                                >
-                                    Columbus Earth
-                                </span>
-                            </Link>
-
-                            {/* ── Right: Nav Links + CTA + Hamburger ── */}
+                            {/* ── Left: Logo + Nav Links ── */}
                             <div className="flex items-center">
-                                {/* Desktop nav links — only visible in compact state */}
+                                <Link href="/" className="flex w-fit shrink-0 items-center gap-2" onMouseEnter={handleNavMouseEnter}>
+                                    <div
+                                        className="relative shrink-0"
+                                        style={{
+                                            width: isCompact ? 30 : 40,
+                                            height: isCompact ? 30 : 40,
+                                            transition: `width ${t}, height ${t}, filter ${t}`,
+                                            filter: (isDark && !isMenuOpen) ? "brightness(0) invert(1)" : "none",
+                                        }}
+                                    >
+                                        <Image
+                                            src="/logobueno.png"
+                                            alt="Columbus Logo"
+                                            fill
+                                            sizes="40px"
+                                            className="object-contain"
+                                            priority
+                                        />
+                                    </div>
+                                    <span
+                                        className="brand-wordmark font-medium leading-none overflow-hidden whitespace-nowrap"
+                                        style={{
+                                            fontSize: isCompact ? 20 : 24,
+                                            letterSpacing: "-0.02em",
+                                            maxWidth: isCompact ? 0 : 200,
+                                            opacity: isCompact ? 0 : 1,
+                                            marginLeft: isCompact ? 0 : undefined,
+                                            transition: `font-size ${t}, max-width ${t}, opacity 300ms ease, margin ${t}`,
+                                        }}
+                                    >
+                                        Columbus Earth
+                                    </span>
+                                </Link>
+
+                                {/* Desktop nav links — only visible in compact state, placed left of logo */}
                                 <div
                                     className="hidden min-[1155px]:flex items-center"
                                     style={{
-                                        gap: isCompact ? 4 : 0,
-                                        marginRight: isCompact ? 16 : 0,
+                                        gap: isCompact ? 20 : 0,
+                                        marginLeft: isCompact ? 40 : 0,
+                                        maxWidth: isCompact ? 600 : 0,
                                         opacity: isCompact ? 1 : 0,
+                                        overflow: "hidden",
                                         pointerEvents: isCompact ? "auto" : "none",
-                                        transition: `gap ${t}, margin-right ${t}, opacity 300ms ease`,
+                                        transition: `gap ${t}, margin-left ${t}, max-width ${t}, opacity 300ms ease`,
                                     }}
                                 >
                                     {[
@@ -237,6 +241,10 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
                                         </Link>
                                     ))}
                                 </div>
+                            </div>
+
+                            {/* ── Right: CTA + Hamburger ── */}
+                            <div className="flex items-center">
 
                                 {/* Start Now — matches "Our research & technology" style */}
                                 <Link

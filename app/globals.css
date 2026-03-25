@@ -109,6 +109,12 @@ body {
   color: var(--foreground);
 }
 
+/* Bottle note appearance */
+@keyframes noteAppear {
+  0% { opacity: 0; transform: translateY(30px) scale(0.95); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
 /* Branding — inherits Geist from body */
 .brand-wordmark,
 .header-font {
