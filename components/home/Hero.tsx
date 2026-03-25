@@ -823,10 +823,27 @@ const WaveMesh = () => {
 export const Hero = () => {
   const [mounted, setMounted] = useState(false);
   const [hasScrolled, setHasScrolled] = useState(false);
+  const [vignetteOpacity, setVignetteOpacity] = useState(0);
+  const sectionRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     const raf = requestAnimationFrame(() => setMounted(true));
     return () => cancelAnimationFrame(raf);
+  }, []);
+
+  // Scroll-driven vignette: fades in/out based on how far user has scrolled through hero
+  useEffect(() => {
+    const onScroll = () => {
+      const el = sectionRef.current;
+      if (!el) return;
+      const rect = el.getBoundingClientRect();
+      const scrolled = -rect.top;
+      const total = el.offsetHeight - window.innerHeight;
+      const progress = Math.max(0, Math.min(1, scrolled / total));
+      setVignetteOpacity(progress);
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   useEffect(() => {
@@ -889,6 +906,7 @@ export const Hero = () => {
 
   return (
     <section
+      ref={sectionRef}
       className="relative overflow-hidden flex flex-col"
       style={{
         background: "#F9F9F9",
@@ -926,9 +944,31 @@ export const Hero = () => {
         style={{
           height: 300,
           background: "linear-gradient(to bottom, transparent, #ffffff)",
-          zIndex: 1,
+          zIndex: 3,
           opacity: hasScrolled ? 1 : 0,
           transition: "opacity 1200ms ease",
+        }}
+        aria-hidden
+      />
+
+      {/* Side vignette gradients — scroll-driven opacity */}
+      <div
+        className="absolute top-0 bottom-0 left-0 pointer-events-none"
+        style={{
+          width: "30%",
+          background: "linear-gradient(to right, #F9F9F9 0%, transparent 100%)",
+          zIndex: 1,
+          opacity: vignetteOpacity,
+        }}
+        aria-hidden
+      />
+      <div
+        className="absolute top-0 bottom-0 right-0 pointer-events-none"
+        style={{
+          width: "30%",
+          background: "linear-gradient(to left, #F9F9F9 0%, transparent 100%)",
+          zIndex: 1,
+          opacity: vignetteOpacity,
         }}
         aria-hidden
       />
