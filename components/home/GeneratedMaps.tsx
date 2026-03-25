@@ -42,7 +42,7 @@ export const GeneratedMaps = () => {
       <div ref={ref} style={{ borderBottom: gl }}>
         {/* Heading */}
         <div className="flex items-center justify-center px-8 pt-14 pb-10" style={anim(0)}>
-          <h2 className="text-[#1D1D1F] text-[32px] md:text-[40px] font-bold tracking-[-0.02em] leading-[1.1]">
+          <h2 className="text-[#1D1D1F] text-[36px] font-semibold tracking-[-0.02em] leading-[1.1]">
             Generated Maps
           </h2>
         </div>

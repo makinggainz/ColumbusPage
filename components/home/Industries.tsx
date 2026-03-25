@@ -35,30 +35,32 @@ export const Industries = () => {
   });
 
   return (
-    <GridSection style={{ borderTop: "none" }}>
+    <GridSection fadeTop={false} style={{ borderTop: "none", paddingTop: 100 }}>
       <div ref={ref}>
+        <div style={{ marginTop: -150 }}>
         {/* Title */}
         <div
           className="flex items-center justify-center py-8 px-8"
-          style={{ borderBottom: gl, ...anim(0) }}
+          style={anim(0)}
         >
-          <h2 className="text-[#1D1D1F] text-[24px] md:text-[28px] font-normal tracking-[-0.01em]">
+          <h2 className="text-[#1D1D1F] font-bold tracking-[-0.02em]" style={{ fontSize: 36 }}>
             Find your industry
           </h2>
         </div>
 
         {/* Cards row */}
         <div
-          className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5"
-          style={{ borderBottom: gl }}
+          className="flex justify-center gap-1.5 px-8 md:px-10 pb-10"
+          style={anim(100)}
         >
           {CARDS.map((card, i) => (
             <Link
               key={card.label}
               href={card.href}
-              className="group block"
+              className="group block rounded-lg overflow-hidden"
               style={{
-                ...(i < CARDS.length - 1 ? { borderRight: gl } : {}),
+                width: 220,
+                background: "rgba(18, 8, 52, 0.04)",
                 ...anim(100 + i * 80),
               }}
             >
@@ -70,44 +72,43 @@ export const Industries = () => {
                   fill
                   className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]"
                 />
+                <div className="absolute inset-0" style={{ backgroundColor: "rgba(100, 60, 220, 0.18)" }} />
               </div>
 
               {/* Label */}
-              <div className="flex items-center justify-between px-4 py-3">
-                <span className="text-[#1D1D1F] text-[15px] font-medium">
+              <div className="flex items-center justify-between px-3 py-2.5">
+                <span className="text-[#1D1D1F] text-[13px] font-medium">
                   {card.label}
                 </span>
                 <svg
-                  width="14"
-                  height="14"
-                  viewBox="0 0 14 14"
-                  fill="none"
-                  stroke="#6E6E73"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="flex-shrink-0"
+                  className="shrink-0 transition-transform duration-300 group-hover:translate-x-0.5"
+                  width="7" height="12" viewBox="0 0 7 12" fill="none"
+                  stroke="#7B6FE8" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"
                 >
-                  <path d="M4 1h9v9" />
-                  <path d="M13 1L1 13" />
+                  <path d="M1 1l5 5-5 5" />
                 </svg>
               </div>
             </Link>
           ))}
         </div>
 
-        {/* CTA button */}
-        <div
-          className="flex items-center justify-center py-6 px-8"
-          style={{ borderBottom: gl, ...anim(550) }}
-        >
+        </div>
+
+        {/* Bottom bar */}
+        <div className="grid grid-cols-2 mt-24" style={{ ...anim(550) }}>
+          <div className="px-10 flex items-center" style={{ height: 76, borderRight: gl, backgroundColor: "rgba(20, 41, 148, 0.07)" }}>
+            <p className="text-[20px] font-medium text-[#1D1D1F] tracking-[-0.01em]">
+              Become a super-explorer.
+            </p>
+          </div>
           <Link
-            href="/maps-gpt"
-            className="inline-flex items-center gap-2 px-10 py-4 rounded-none border border-[#1D1D1F] text-[#1D1D1F] text-[17px] font-medium hover:bg-[#1D1D1F] hover:text-white transition-colors"
+            href="/use-cases"
+            className="px-10 flex items-center justify-between hover:opacity-90 transition-opacity"
+            style={{ height: 76, backgroundColor: "#000000" }}
           >
-            Learn more about Columbus Pro
-            <svg width="8" height="14" viewBox="0 0 8 14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M1 1l6 6-6 6" />
+            <span className="text-white text-[20px] font-medium">Start now</span>
+            <svg width="10" height="18" viewBox="0 0 7 12" fill="none" stroke="#7B6FE8" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M1 1l5 5-5 5" />
             </svg>
           </Link>
         </div>

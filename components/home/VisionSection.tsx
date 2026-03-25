@@ -111,10 +111,10 @@ export const Vision = () => {
           <Link
             href="/technology"
             className="px-10 flex items-center justify-between hover:opacity-90 transition-opacity"
-            style={{ height: 76, backgroundColor: "#0A1344" }}
+            style={{ height: 76, backgroundColor: "#000000" }}
           >
             <span className="text-white text-[20px] font-medium">Our research &amp; technology</span>
-            <svg width="7" height="12" viewBox="0 0 7 12" fill="none" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <svg width="10" height="18" viewBox="0 0 7 12" fill="none" stroke="#7B6FE8" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
               <path d="M1 1l5 5-5 5" />
             </svg>
           </Link>
@@ -229,7 +229,7 @@ const ArchitectureDiagram = () => {
         })}
 
         {/* Central Columbus-01 node */}
-        <rect x={CX} y={CY_TOP} width={CW} height={CH} rx={5} fill="#0A1344" />
+        <rect x={CX} y={CY_TOP} width={CW} height={CH} rx={5} fill="rgba(10,19,68,0.55)" />
         {/* Inner vertical dividers */}
         {[0.25, 0.5, 0.75].map((p, i) => (
           <line key={`cv${i}`}
@@ -263,7 +263,7 @@ const ArchitectureDiagram = () => {
           </text>
         ))}
         <text x={CX + CW / 2} y={CY_TOP + 118}
-          textAnchor="middle" fill="rgba(255,255,255,0.13)"
+          textAnchor="middle" fill="rgba(255,255,255,0.05)"
           fontSize={6.5} fontFamily="ui-monospace,monospace" letterSpacing="0.13em">
           v1.0 · PRODUCTION
         </text>
@@ -279,7 +279,7 @@ const ArchitectureDiagram = () => {
                 strokeDasharray="6 4"
                 style={{ animation: `visionDash ${1.3 + i * 0.18}s linear infinite` }}
               />
-              <rect x={OUT_X} y={out.y} width={OUT_W} height={NODE_H} rx={3} fill="#0A1344" />
+              <rect x={OUT_X} y={out.y} width={OUT_W} height={NODE_H} rx={3} fill="rgba(10,19,68,0.55)" />
               <text x={OUT_X + OUT_W / 2} y={out.y + 15}
                 textAnchor="middle" fill="rgba(255,255,255,0.85)"
                 fontSize={8.5} fontFamily="ui-monospace,monospace" fontWeight="700" letterSpacing="0.1em">

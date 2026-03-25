@@ -7,6 +7,97 @@ import { cambo } from "@/app/fonts";
 import { GridSection, gl } from "./ContentGrid";
 
 const TABS = ["Plan cool trips", "Group planning", "Find spots", "Custom maps"];
+const PILL_INSET = 4;
+
+function TravelPillToggle({ activeTab, setActiveTab, anim }: {
+  activeTab: number;
+  setActiveTab: (i: number) => void;
+  anim: (delay?: number) => React.CSSProperties;
+}) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const buttonRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const [indicator, setIndicator] = useState({ left: 0, width: 0, ready: false });
+
+  const measure = (idx: number) => {
+    const btn = buttonRefs.current[idx];
+    const container = containerRef.current;
+    if (!btn || !container) return;
+    const bRect = btn.getBoundingClientRect();
+    const cRect = container.getBoundingClientRect();
+    setIndicator({
+      left: bRect.left - cRect.left + PILL_INSET,
+      width: bRect.width - PILL_INSET * 2,
+      ready: true,
+    });
+  };
+
+  useEffect(() => { measure(activeTab); }, []);
+
+  return (
+    <div
+      ref={containerRef}
+      className="inline-flex items-center relative mb-12"
+      style={{
+        height: 56,
+        borderRadius: 28,
+        overflow: "hidden",
+        backgroundColor: "rgba(255, 255, 255, 0.65)",
+        backdropFilter: "blur(12px)",
+        WebkitBackdropFilter: "blur(12px)",
+        boxShadow: "inset 0 1px 2px rgba(0,0,0,0.04), 0 2px 12px rgba(0,0,0,0.06)",
+        ...anim(200),
+      }}
+    >
+      <div
+        aria-hidden
+        style={{
+          position: "absolute",
+          top: PILL_INSET,
+          left: indicator.left,
+          width: indicator.width,
+          height: `calc(100% - ${PILL_INSET * 2}px)`,
+          borderRadius: 24,
+          backgroundColor: "rgba(255, 255, 255, 0.9)",
+          boxShadow: "0 1px 4px rgba(0,0,0,0.08)",
+          opacity: indicator.ready ? 1 : 0,
+          transition: [
+            "left 0.45s cubic-bezier(0.25, 1, 0.5, 1)",
+            "width 0.45s cubic-bezier(0.25, 1, 0.5, 1)",
+            "opacity 0.2s ease",
+          ].join(", "),
+          pointerEvents: "none" as const,
+          zIndex: 1,
+        }}
+      />
+      {TABS.map((tab, i) => (
+        <button
+          key={tab}
+          ref={el => { buttonRefs.current[i] = el; }}
+          type="button"
+          onClick={() => { setActiveTab(i); measure(i); }}
+          className="h-full flex items-center justify-center whitespace-nowrap relative cursor-pointer"
+          style={{
+            fontSize: 16,
+            fontWeight: 500,
+            letterSpacing: "-0.01em",
+            padding: "0 24px",
+            zIndex: 2,
+            color: activeTab === i ? "#1D1D1F" : "rgba(29,29,31,0.5)",
+            transition: "color 0.35s cubic-bezier(0.25, 1, 0.5, 1)",
+          }}
+          onMouseEnter={e => {
+            if (activeTab !== i) (e.currentTarget as HTMLElement).style.color = "rgba(29,29,31,0.75)";
+          }}
+          onMouseLeave={e => {
+            if (activeTab !== i) (e.currentTarget as HTMLElement).style.color = "rgba(29,29,31,0.5)";
+          }}
+        >
+          {tab}
+        </button>
+      ))}
+    </div>
+  );
+}
 
 export const TravelSection = () => {
   const ref = useRef<HTMLDivElement>(null);
@@ -104,17 +195,23 @@ export const TravelSection = () => {
           className="flex items-center justify-between px-8 md:px-10 py-6"
           style={{ borderBottom: gl }}
         >
-          <span className="text-[#1D1D1F] font-bold" style={{ fontSize: 40 }}>
+          <span className="text-[#1D1D1F] font-bold" style={{ fontSize: 40, letterSpacing: "-0.02em" }}>
             MapsGPT <span className="font-normal">– AI-powered social map</span>
           </span>
           <Link
             href="/maps-gpt"
-            className="flex items-center gap-2 text-[#1D1D1F] font-semibold hover:opacity-70 transition-opacity"
-            style={{ fontSize: 20 }}
+            className="flex items-center gap-2 font-semibold hover:opacity-70 transition-opacity"
+            style={{
+              fontSize: 20,
+              background: "linear-gradient(90deg, #111111 0%, #7B6FE8 100%)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              backgroundClip: "text",
+            }}
           >
-            Learn more
-            <svg width="8" height="14" viewBox="0 0 8 14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M1 1l6 6-6 6" />
+            Try it out now
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#7B6FE8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M2 10L10 2M10 2H4M10 2V8" />
             </svg>
           </Link>
         </div>
@@ -172,12 +269,10 @@ export const TravelSection = () => {
           {/* Heading */}
           <h2
             ref={travelHeadingRef}
-            className="text-center text-[#1D1D1F] mb-4"
+            className="text-center text-[#1D1D1F] leading-[1.05] tracking-[-0.02em] mb-4"
             style={{
-              fontSize: "clamp(48px, 7vw, 96px)",
-              fontFamily: cambo.style.fontFamily,
-              fontWeight: 400,
-              lineHeight: 1.05,
+              fontSize: 78,
+              fontWeight: 500,
               letterSpacing: "-0.02em",
               ...anim(0),
             }}
@@ -187,50 +282,27 @@ export const TravelSection = () => {
 
           {/* Subtitle */}
           <p
-            className="text-center text-[#4a4540] text-[17px] md:text-[20px] mb-10"
-            style={anim(100)}
+            className="text-center mb-10"
+            style={{ fontSize: 20, color: "rgba(29,29,31,0.45)", letterSpacing: "-0.015em", fontWeight: 400, ...anim(100) }}
           >
             MapsGPT is a local guide in your pocket
           </p>
 
-          {/* Tab bar */}
-          <div
-            className="inline-flex items-center rounded-full px-2 py-1.5 mb-12"
-            style={{
-              backgroundColor: "rgba(255,255,255,0.55)",
-              backdropFilter: "blur(12px)",
-              boxShadow: "0 1px 4px rgba(0,0,0,0.06)",
-              ...anim(200),
-            }}
-          >
-            {TABS.map((tab, i) => (
-              <button
-                key={tab}
-                onClick={() => setActiveTab(i)}
-                className="relative px-5 md:px-7 py-2.5 text-[14px] md:text-[15px] font-medium rounded-full transition-all duration-200"
-                style={{
-                  color: activeTab === i ? "#1D1D1F" : "#6E6E73",
-                  backgroundColor: activeTab === i ? "rgba(255,255,255,0.85)" : "transparent",
-                  boxShadow: activeTab === i ? "0 1px 3px rgba(0,0,0,0.08)" : "none",
-                }}
-              >
-                {tab}
-              </button>
-            ))}
-          </div>
+          {/* Tab bar — matches SiteSelection PillToggle */}
+          <TravelPillToggle activeTab={activeTab} setActiveTab={setActiveTab} anim={anim} />
 
           {/* Phone mockups */}
           <div
-            className="relative flex items-end justify-center gap-4 md:gap-8 w-full"
-            style={{ maxWidth: 1320, ...anim(350) }}
+            className="relative w-full max-w-[1100px] mx-auto mt-12"
+            style={{ height: 572, ...anim(350) }}
           >
-            {/* Desktop/browser mockup */}
+            {/* Desktop mockup */}
             <div
-              className="relative rounded-xl overflow-hidden shadow-2xl"
-              style={{ width: 995, maxWidth: "70%", height: 570 }}
+              className="absolute overflow-hidden"
+              style={{ left: "2%", bottom: 0, width: 995, height: 570, borderRadius: "12px 12px 0 0", boxShadow: "0 -4px 40px rgba(0,0,0,0.12)" }}
             >
               <Image
-                src="/emoji/desk.png"
+                src="/MapsGPTDesktop.png"
                 alt="MapsGPT desktop interface"
                 fill
                 className="object-cover object-top"
@@ -239,11 +311,11 @@ export const TravelSection = () => {
 
             {/* Mobile mockup */}
             <div
-              className="relative rounded-xl overflow-hidden shadow-2xl"
-              style={{ width: 293, maxWidth: "25%", height: 570 }}
+              className="absolute overflow-hidden"
+              style={{ right: "5%", bottom: 0, width: 263, height: 572, borderRadius: "16px 16px 0 0", boxShadow: "-4px 0 40px rgba(0,0,0,0.15)", zIndex: 2 }}
             >
               <Image
-                src="/emoji/mob.png"
+                src="/MapsGPTMobile.png"
                 alt="MapsGPT mobile interface"
                 fill
                 className="object-cover object-top"

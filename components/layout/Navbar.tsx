@@ -114,6 +114,7 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
         fontSize: compact ? 14 : 15,
         fontWeight: 400,
         letterSpacing: "-0.0025em",
+        color: "#111111",
         transition: `font-size ${t}`,
     });
 
@@ -154,15 +155,15 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
                 />
 
                 <div className="relative mx-auto w-full" style={{ maxWidth: 1287 }}>
-                    {/* White pill background when dropdown is open */}
+                    {/* White background when dropdown is open — always full width, only opacity transitions */}
                     <div
-                        className={`absolute inset-y-0 left-(--container-padding) right-(--container-padding) transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-                            isMenuOpen ? "bg-white rounded-tl-[20px] rounded-tr-[20px]" : "bg-transparent rounded-[20px]"
+                        className={`absolute inset-y-0 transition-opacity duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                            isMenuOpen ? "opacity-100" : "opacity-0"
                         }`}
                         style={{
-                            top: isCompact ? 0 : undefined,
-                            left: isCompact && !isMenuOpen ? 0 : undefined,
-                            right: isCompact && !isMenuOpen ? 0 : undefined,
+                            left: "calc(-50vw + 50%)",
+                            right: "calc(-50vw + 50%)",
+                            background: "white",
                         }}
                     />
 
@@ -242,28 +243,27 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
                                     href="/maps-gpt"
                                     className="group hidden min-[1155px]:flex items-center justify-between gap-3 leading-none whitespace-nowrap hover:opacity-90 transition-opacity"
                                     style={{
-                                        fontSize: 14,
+                                        fontSize: isCompact ? 14 : 15,
                                         fontWeight: 500,
-                                        height: 36,
-                                        width: isCompact ? 130 : 0,
+                                        height: 45,
+                                        width: isCompact ? 145 : 0,
                                         opacity: isCompact ? 1 : 0,
                                         overflow: "hidden",
                                         pointerEvents: isCompact ? "auto" : "none",
                                         marginRight: isCompact ? 8 : 0,
                                         marginLeft: isCompact ? 8 : 0,
-                                        paddingLeft: 16,
-                                        paddingRight: 14,
+                                        paddingLeft: 20,
+                                        paddingRight: 16,
                                         transition: `width ${t}, opacity 300ms ease, margin ${t}`,
-                                        backgroundColor: isDark ? "white" : "#0A1344",
-                                        color: isDark ? "#0A1344" : "white",
+                                        backgroundColor: "#000000",
+                                        color: "white",
                                     }}
-                                    onMouseEnter={handleNavMouseEnter}
                                 >
                                     <span>Start Now</span>
                                     <svg
                                         className="transition-transform duration-300 group-hover:translate-x-0.5"
-                                        width="7" height="12" viewBox="0 0 7 12" fill="none"
-                                        stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"
+                                        width="10" height="18" viewBox="0 0 7 12" fill="none"
+                                        stroke="#7B6FE8" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"
                                     >
                                         <path d="M1 1l5 5-5 5" />
                                     </svg>
@@ -273,10 +273,10 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
                                 <button
                                     onClick={handleHamburgerClick}
                                     onMouseEnter={handleNavMouseEnter}
-                                    className={`relative flex items-center justify-center rounded-none border border-transparent transition-all duration-300 ${isDark && !isMenuOpen ? "hover:border-white/50" : "hover:border-current"}`}
+                                    className={`relative flex items-center justify-center rounded-none border transition-all duration-300 ${isDark && !isMenuOpen ? "border-white/30 hover:border-white/50" : "border-[#0A1344] hover:border-current"}`}
                                     style={{
-                                        width: isCompact ? 38 : 44,
-                                        height: isCompact ? 38 : 44,
+                                        width: 45,
+                                        height: 45,
                                         transition: `width ${t}, height ${t}`,
                                     }}
                                     aria-label="Toggle menu"
@@ -311,14 +311,14 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
 
                     {/* ── Dropdown ── */}
                     <div
-                        className={`absolute top-full left-(--container-padding) right-(--container-padding) rounded-bl-[20px] rounded-br-[20px] overflow-hidden transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                        className={`fixed left-0 right-0 overflow-hidden transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
                             isMenuOpen
                                 ? "opacity-100 translate-y-0 pointer-events-auto"
                                 : "opacity-0 -translate-y-6 pointer-events-none"
                         }`}
-                        style={dropdownBg}
+                        style={{ ...dropdownBg, top: isCompact ? 56 : 68 }}
                     >
-                        <div className="pl-7 pr-(--container-padding) py-12" style={{ transitionDelay: isMenuOpen ? "150ms" : "0ms" }}>
+                        <div className="mx-auto w-full px-[calc(var(--container-padding)+18px)] py-12" style={{ maxWidth: 1287, transitionDelay: isMenuOpen ? "150ms" : "0ms" }}>
                             <div className="grid grid-cols-1 md:grid-cols-12 gap-12">
                                 <div
                                     className={`md:col-span-5 space-y-8 transition-opacity duration-500 ${isMenuOpen ? "opacity-100" : "opacity-0"}`}

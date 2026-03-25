@@ -108,12 +108,12 @@ export const SiteSelection = () => {
   });
 
   return (
-    <GridSection>
+    <GridSection fadeBottom={false}>
       <div ref={ref} style={{ borderBottom: gl }}>
         {/* Top bar: Columbus Pro + New | Start Now */}
         <div className="flex items-center justify-between px-8 md:px-10 py-6" style={anim(0)}>
           <div className="flex items-center gap-3">
-            <span className="text-[#1D1D1F] font-bold" style={{ fontSize: 40 }}>
+            <span className="text-[#1D1D1F] font-bold" style={{ fontSize: 36 }}>
               Columbus Pro
             </span>
             <div className={glassStyles.wrapNew}>
@@ -124,12 +124,16 @@ export const SiteSelection = () => {
           </div>
           <Link
             href="/maps-gpt"
-            className="flex items-center gap-2 text-[#1D1D1F] font-semibold hover:opacity-70 transition-opacity"
+            className="group flex items-center gap-10 text-[#1D1D1F] font-semibold hover:opacity-70 transition-opacity"
             style={{ fontSize: 20 }}
           >
             Start Now
-            <svg width="8" height="14" viewBox="0 0 8 14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M1 1l6 6-6 6" />
+            <svg
+              className="transition-transform duration-300 group-hover:translate-x-0.5"
+              width="9" height="16" viewBox="0 0 7 12" fill="none"
+              stroke="#7B6FE8" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"
+            >
+              <path d="M1 1l5 5-5 5" />
             </svg>
           </Link>
         </div>
@@ -169,29 +173,29 @@ export const SiteSelection = () => {
               <h2
                 ref={headingRef}
                 className="text-[#1D1D1F] text-center leading-[1.05] tracking-[-0.02em]"
-                style={{ fontSize: 96, fontWeight: 400 }}
+                style={{ fontSize: 78, fontWeight: 500, letterSpacing: "-0.02em" }}
               >
                 An Agentic GIS platform
               </h2>
 
               {/* Subtitle */}
-              <p className="text-[17px] text-[#1D1D1F]/70 mt-8 text-center">
-                Columbus turns you into a <span className="font-bold text-[#1D1D1F]">super-explorer.</span>
+              <p className="mt-6 text-center" style={{ fontSize: 20, color: "rgba(29,29,31,0.45)", letterSpacing: "-0.015em", fontWeight: 400 }}>
+                Columbus turns you into a <span style={{ fontWeight: 600, color: "rgba(29,29,31,0.65)" }}>super-explorer.</span>
               </p>
 
               {/* Pill toggle */}
               <PillToggle />
 
               {/* Desktop + Mobile UI mockups */}
-              <div className="relative w-full max-w-[1100px] mx-auto mt-12" style={{ height: 480 }}>
+              <div className="relative w-full max-w-[1100px] mx-auto mt-12" style={{ height: 570 }}>
                 {/* Desktop UI */}
                 <div
                   className="absolute overflow-hidden"
                   style={{
                     left: "2%",
                     bottom: 0,
-                    width: "68%",
-                    height: "100%",
+                    width: 995,
+                    height: 570,
                     borderRadius: "12px 12px 0 0",
                     boxShadow: "0 -4px 40px rgba(0,0,0,0.12)",
                   }}
@@ -210,8 +214,8 @@ export const SiteSelection = () => {
                   style={{
                     right: "5%",
                     bottom: 0,
-                    width: 220,
-                    height: "95%",
+                    width: 263,
+                    height: 572,
                     borderRadius: "16px 16px 0 0",
                     boxShadow: "-4px 0 40px rgba(0,0,0,0.15)",
                     zIndex: 2,
@@ -229,20 +233,6 @@ export const SiteSelection = () => {
           </div>
         </div>
 
-        {/* Check it out CTA */}
-        <div
-          className="flex items-center justify-center py-6"
-        >
-          <Link
-            href="/maps-gpt"
-            className="inline-flex items-center gap-2 px-10 py-4 rounded-none border border-[#1D1D1F] text-[#1D1D1F] text-[20px] font-semibold hover:bg-[#1D1D1F] hover:text-white transition-colors"
-          >
-            Check it out
-            <svg width="8" height="14" viewBox="0 0 8 14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M1 1l6 6-6 6" />
-            </svg>
-          </Link>
-        </div>
       </div>
     </GridSection>
   );
@@ -273,7 +263,7 @@ function PillToggle() {
   return (
     <div
       ref={containerRef}
-      className="flex items-center relative mt-8 w-full max-w-[893px]"
+      className="inline-flex items-center relative mt-8"
       style={{
         height: 56,
         borderRadius: 28,
@@ -313,12 +303,12 @@ function PillToggle() {
           ref={el => { buttonRefs.current[i] = el; }}
           type="button"
           onClick={() => { setActive(i); measure(i); }}
-          className="h-full flex items-center justify-center whitespace-nowrap relative"
+          className="h-full flex items-center justify-center whitespace-nowrap relative cursor-pointer"
           style={{
-            flex: 1,
             fontSize: 16,
             fontWeight: 500,
             letterSpacing: "-0.01em",
+            padding: "0 24px",
             zIndex: 2,
             color: active === i ? "#1D1D1F" : "rgba(29,29,31,0.5)",
             transition: "color 0.35s cubic-bezier(0.25, 1, 0.5, 1)",

@@ -56,6 +56,15 @@ html {
   pointer-events: none;
   z-index: 1;
 }
+.grid-section[data-fade-top="false"]::after {
+  background: linear-gradient(to bottom, var(--grid-line) 0px, var(--grid-line) calc(100% - 72px), transparent 100%);
+}
+.grid-section[data-fade-bottom="false"]::after {
+  background: linear-gradient(to bottom, transparent 0px, var(--grid-line) 72px, var(--grid-line) 100%);
+}
+.grid-section[data-fade-top="false"][data-fade-bottom="false"]::after {
+  background: var(--grid-line);
+}
 
 @media (min-width: 940px) {
   :root {

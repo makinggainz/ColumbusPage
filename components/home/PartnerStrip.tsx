@@ -15,21 +15,21 @@ const LOGOS = [
 
 export const PartnerStrip = () => {
   return (
-    <GridSection style={{ borderTop: "none" }}>
-      <div
-        className="flex flex-col items-center px-8 md:px-10 pt-16 pb-8"
-      >
-        <h2 className="text-[32px] md:text-[40px] font-bold tracking-[-0.02em] leading-[1.1] text-[#1D1D1F] text-center">
+    <GridSection fadeTop={false} fadeBottom={false} style={{ borderTop: "none", paddingTop: 100 }}>
+      <div className="flex flex-col items-center px-8 md:px-10">
+        {/* Top separator */}
+        <div className="w-4/5 mt-16 mb-28" style={{ height: 1, borderTop: gl }} />
+
+        <h2 className="font-bold tracking-[-0.02em] text-[#1D1D1F] text-center" style={{ fontSize: 36 }}>
           High-fidelity and smart datasets
         </h2>
-        <p className="text-[15px] text-[#6E6E73] mt-3 text-center">
+        <p className="text-[20px] text-[#000000] mt-3 text-center">
           We vet our data with reputable partner organizations
         </p>
       </div>
 
       <div
-        className="flex items-center justify-center gap-10 md:gap-14 flex-wrap px-8 md:px-10 py-10 pb-32"
-        style={{ borderBottom: gl }}
+        className="flex items-center justify-center gap-10 md:gap-14 flex-wrap px-8 md:px-10 pt-16 pb-28"
       >
         {LOGOS.map((src, i) => (
           <Image
@@ -38,10 +38,15 @@ export const PartnerStrip = () => {
             alt=""
             width={175}
             height={62}
-            className="object-contain h-7 w-auto"
+            className="object-contain h-[42px] w-auto"
             style={{ filter: "grayscale(100%)", opacity: 0.45 }}
           />
         ))}
+      </div>
+
+      {/* Bottom separator */}
+      <div className="flex justify-center px-8 md:px-10 pb-40">
+        <div className="w-4/5" style={{ height: 1, borderTop: gl }} />
       </div>
     </GridSection>
   );
