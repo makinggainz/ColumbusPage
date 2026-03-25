@@ -18,7 +18,7 @@ export default function Home() {
     <main
       className="min-h-screen"
       style={{
-        backgroundColor: "rgba(55, 40, 140, 0.03)",
+        backgroundColor: "#ffffff",
         backgroundImage: `linear-gradient(rgba(55,40,140,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(55,40,140,0.06) 1px, transparent 1px)`,
         backgroundSize: "20px 20px",
       }}
