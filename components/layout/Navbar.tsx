@@ -2,378 +2,233 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 
-import { ScrambleText } from "@/components/ui/ScrambleText";
-
-const COMPACT_THRESHOLD = 10;
-
-const menuItems = [
-    { label: "Our Mission", href: "/our-mission" },
-    { label: "Columbus Market Spy", href: "/market-spy" },
-    { label: "MapsGPT", href: "/maps-gpt" },
+const NAV_LINKS = [
+    { label: "Product", href: "#" },
     { label: "Use Cases", href: "/use-cases" },
     { label: "Technology", href: "/technology" },
+    { label: "MapsGPT", href: "/maps-gpt" },
+    { label: "Our Mission", href: "/our-mission" },
 ];
 
-// ─────────────────────────────────────────────────────────────────────────────
+const MENU_LINKS = [
+    { label: "Product", href: "#" },
+    { label: "Use Cases", href: "/use-cases" },
+    { label: "Technology", href: "/technology" },
+    { label: "MapsGPT", href: "/maps-gpt" },
+    { label: "Our Mission", href: "/our-mission" },
+    { label: "Columbus Market Spy", href: "/market-spy" },
+];
+
+const NAV_HEIGHT = 56;
 
 export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const [isManuallyToggled, setIsManuallyToggled] = useState(false);
-    const [hasScrolled, setHasScrolled] = useState(() =>
-        typeof window !== "undefined" ? window.scrollY > 5 : false
-    );
-    const [isCompact, setIsCompact] = useState(() =>
-        typeof window !== "undefined" ? window.scrollY > COMPACT_THRESHOLD : false
-    );
+    const [scrolled, setScrolled] = useState(false);
     const navRef = useRef<HTMLElement>(null);
-
-    useEffect(() => {
-        const handleScroll = () => {
-            const y = window.scrollY;
-            if (y > 5) setHasScrolled(true);
-            setIsCompact(y > COMPACT_THRESHOLD);
-        };
-        const handleReveal = () => setHasScrolled(true);
-        window.addEventListener("scroll", handleScroll, { passive: true });
-        window.addEventListener("hero-reveal", handleReveal);
-        return () => {
-            window.removeEventListener("scroll", handleScroll);
-            window.removeEventListener("hero-reveal", handleReveal);
-        };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-
-    // Close dropdown when mouse leaves nav area
-    useEffect(() => {
-        const handleMouseMove = (e: MouseEvent) => {
-            if (!navRef.current) return;
-            const navBounds = navRef.current.getBoundingClientRect();
-            if (e.clientY > navBounds.bottom && isMenuOpen && isManuallyToggled) {
-                setIsMenuOpen(false);
-                setIsManuallyToggled(false);
-            }
-        };
-        window.addEventListener("mousemove", handleMouseMove);
-        return () => window.removeEventListener("mousemove", handleMouseMove);
-    }, [isMenuOpen, isManuallyToggled]);
-
-    // ── Handlers ────────────────────────────────────────────────────────
-    const handleMouseEnter = () => {
-        if (!isManuallyToggled) setIsMenuOpen(true);
-    };
-    const handleMouseLeave = (e: React.MouseEvent) => {
-        if (isManuallyToggled) return;
-        const navBounds = navRef.current?.getBoundingClientRect();
-        if (!navBounds) return;
-        if (e.clientY <= navBounds.top) return;
-        setIsMenuOpen(false);
-    };
-    const handleHamburgerClick = () => {
-        setIsManuallyToggled(true);
-        setIsMenuOpen(!isMenuOpen);
-    };
-    const handleNavMouseEnter = () => {
-        if (isManuallyToggled && !isMenuOpen) setIsManuallyToggled(false);
-        handleMouseEnter();
-    };
-    const closeMenu = () => {
-        setIsMenuOpen(false);
-        setIsManuallyToggled(false);
-    };
-
-    // ── Theme ───────────────────────────────────────────────────────────
     const isDark = theme === "dark";
 
-    const navColor = isMenuOpen
-        ? "#111111"
-        : isCompact
-        ? (isDark ? "white" : "#0A1344")
-        : isDark
-        ? "white"
-        : "#0A1344";
+    useEffect(() => {
+        const onScroll = () => setScrolled(window.scrollY > 40);
+        onScroll();
+        window.addEventListener("scroll", onScroll, { passive: true });
+        return () => window.removeEventListener("scroll", onScroll);
+    }, []);
 
-    // ── Dropdown tokens ─────────────────────────────────────────────────
-    const dropdownBg = isDark
-        ? { background: "rgba(6, 8, 20, 0.96)", backdropFilter: "blur(24px)", WebkitBackdropFilter: "blur(24px)", boxShadow: "0 8px 40px rgba(0,0,0,0.5)" }
-        : { background: "rgba(248, 249, 252, 0.92)", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)", boxShadow: "0 8px 32px rgba(0,0,0,0.08)" };
+    // Lock body scroll when menu is open
+    useEffect(() => {
+        document.body.style.overflow = isMenuOpen ? "hidden" : "";
+        return () => { document.body.style.overflow = ""; };
+    }, [isMenuOpen]);
 
-    const dropdownHeadingClass = isDark ? "text-white/40" : "text-[#0A1344]/50";
-    const dropdownBodyClass    = isDark ? "text-white/65" : "text-[#0A1344]/70";
-    const dropdownLinkClass    = isDark ? "text-white"    : "text-[#0A1344]";
-    const dropdownSubheadClass = isDark ? "text-white/40" : "text-gray-500";
-    const dropdownSocialClass  = isDark ? "text-white hover:text-white/70" : "text-gray-900 hover:text-primary";
-    const dropdownNavLinkClass = isDark ? "text-white"    : "text-[#0A1344]";
+    const closeMenu = useCallback(() => setIsMenuOpen(false), []);
 
-    const t = "500ms cubic-bezier(0.22, 1, 0.36, 1)";
-
-    // ── Nav link style (Anthropic-style underline hover) ────────────────
-    const navLinkClass = "nav-link-underline px-3 py-1.5";
-    const navLinkInline = (compact: boolean): React.CSSProperties => ({
-        fontSize: compact ? 14 : 15,
-        fontWeight: 400,
-        letterSpacing: "-0.0025em",
-        transition: `font-size ${t}`,
-    });
+    // Transparent at top with white or dark text depending on theme.
+    // On scroll or menu open: white bg + dark text always.
+    const showBg = scrolled || isMenuOpen;
+    const textColor = showBg ? "#171a20" : (isDark ? "#FFFFFF" : "#171a20");
 
     return (
         <>
-            {/* ── Backdrop overlay (dropdown open) ── */}
-            <div
-                className={`fixed inset-0 z-40 transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-                    isMenuOpen
-                        ? "opacity-100 backdrop-blur-md bg-black/10"
-                        : "opacity-0 pointer-events-none"
-                }`}
-            />
+            {/* Backdrop overlay when menu is open */}
+            {isMenuOpen && (
+                <div
+                    className="fixed inset-0 z-40 bg-black/30"
+                    onClick={closeMenu}
+                />
+            )}
 
-            {/* ══════════════ NAVBAR ══════════════ */}
             <nav
                 ref={navRef}
-                className="header-font fixed top-0 left-0 right-0 z-50"
-                style={{
-                    color: navColor,
-                    opacity: hasScrolled ? 1 : 0,
-                    transform: hasScrolled ? "translateY(0)" : "translateY(-8px)",
-                    transition: `opacity 1000ms ease, transform 1000ms ease, color ${t}`,
-                }}
-                onMouseLeave={handleMouseLeave}
+                className="fixed top-0 left-0 right-0 z-50"
+                style={{ height: NAV_HEIGHT }}
             >
-                {/* Frosted glass background — fades in on compact */}
+                {/* Background layer */}
                 <div
-                    className="absolute inset-0 pointer-events-none"
+                    className="absolute inset-0 pointer-events-none transition-all duration-300 ease-out"
                     style={{
-                        background: isDark ? "rgba(6, 8, 20, 0.85)" : "rgba(255, 255, 255, 0.82)",
-                        backdropFilter: "blur(20px) saturate(1.2)",
-                        WebkitBackdropFilter: "blur(20px) saturate(1.2)",
-                        borderBottom: isDark ? "1px solid rgba(255,255,255,0.06)" : "1px solid rgba(0,0,0,0.06)",
-                        opacity: isCompact && !isMenuOpen ? 1 : 0,
-                        transition: `opacity ${t}`,
+                        backgroundColor: showBg ? "rgba(255,255,255,0.97)" : "transparent",
+                        backdropFilter: showBg ? "blur(20px) saturate(1.2)" : "none",
+                        WebkitBackdropFilter: showBg ? "blur(20px) saturate(1.2)" : "none",
+                        borderBottom: showBg ? "1px solid rgba(0,0,0,0.06)" : "1px solid transparent",
                     }}
                 />
 
-                <div className="relative mx-auto w-full" style={{ maxWidth: 1280 }}>
-                    {/* White pill background when dropdown is open */}
-                    <div
-                        className={`absolute inset-y-0 left-(--container-padding) right-(--container-padding) transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-                            isMenuOpen ? "bg-white rounded-tl-[20px] rounded-tr-[20px]" : "bg-transparent rounded-[20px]"
-                        }`}
-                        style={{
-                            top: isCompact ? 0 : undefined,
-                            left: isCompact && !isMenuOpen ? 0 : undefined,
-                            right: isCompact && !isMenuOpen ? 0 : undefined,
-                        }}
-                    />
-
-                    <div className="relative px-[calc(var(--container-padding)+18px)]">
+                {/* Nav content */}
+                <div
+                    className="relative mx-auto h-full flex items-center justify-between"
+                    style={{
+                        maxWidth: 1280,
+                        paddingLeft: 24,
+                        paddingRight: 24,
+                        color: textColor,
+                        transition: "color 300ms ease",
+                    }}
+                >
+                    {/* Left: Logo */}
+                    <Link href="/" className="flex items-center gap-2 shrink-0 z-10">
                         <div
-                            className="flex items-center justify-between"
+                            className="relative shrink-0"
                             style={{
-                                height: isCompact ? 56 : 68,
-                                paddingTop: isCompact ? 0 : 12,
-                                transition: `height ${t}, padding-top ${t}`,
+                                width: 28,
+                                height: 28,
+                                filter: showBg ? "none" : (isDark ? "brightness(0) invert(1)" : "none"),
+                                transition: "filter 300ms ease",
                             }}
                         >
-                            {/* ── Left: Logo ── */}
-                            <Link href="/" className="flex w-fit shrink-0 items-center gap-2" onMouseEnter={handleNavMouseEnter}>
-                                <div
-                                    className="relative shrink-0"
-                                    style={{
-                                        width: isCompact ? 30 : 40,
-                                        height: isCompact ? 30 : 40,
-                                        transition: `width ${t}, height ${t}, filter ${t}`,
-                                        filter: (isDark && !isMenuOpen) ? "brightness(0) invert(1)" : "none",
-                                    }}
-                                >
-                                    <Image
-                                        src="/logobueno.png"
-                                        alt="Columbus Logo"
-                                        fill
-                                        sizes="40px"
-                                        className="object-contain"
-                                        priority
-                                    />
-                                </div>
-                                <span
-                                    className="brand-wordmark font-medium leading-none"
-                                    style={{
-                                        fontSize: isCompact ? 20 : 24,
-                                        letterSpacing: "-0.02em",
-                                        transition: `font-size ${t}`,
-                                    }}
-                                >
-                                    Columbus Earth
-                                </span>
-                            </Link>
-
-                            {/* ── Right: Nav Links + CTA + Hamburger ── */}
-                            <div className="flex items-center">
-                                {/* Desktop nav links */}
-                                <div
-                                    className="hidden min-[1155px]:flex items-center"
-                                    style={{
-                                        gap: isCompact ? 4 : 8,
-                                        marginRight: isCompact ? 16 : 0,
-                                        transition: `gap ${t}, margin-right ${t}`,
-                                    }}
-                                >
-                                    {[
-                                        { label: "Product", href: "#" },
-                                        { label: "Use Cases", href: "/use-cases" },
-                                        { label: "Technology", href: "/technology" },
-                                    ].map((link) => (
-                                        <Link
-                                            key={link.label}
-                                            href={link.href}
-                                            className={navLinkClass}
-                                            style={navLinkInline(isCompact)}
-                                            onMouseEnter={handleNavMouseEnter}
-                                        >
-                                            {link.label}
-                                        </Link>
-                                    ))}
-                                </div>
-
-                                {/* Start Now — grows laterally into position */}
-                                <Link
-                                    href="/maps-gpt"
-                                    className={`hidden min-[1155px]:flex items-center justify-center font-semibold leading-none rounded-none whitespace-nowrap ${
-                                        isDark
-                                            ? "bg-white text-[#0A1344] hover:bg-white/90"
-                                            : "bg-[#0A1344] text-white hover:bg-[#0A1344]/85"
-                                    }`}
-                                    style={{
-                                        fontSize: 14,
-                                        height: 36,
-                                        width: isCompact ? 120 : 0,
-                                        opacity: isCompact ? 1 : 0,
-                                        overflow: "hidden",
-                                        pointerEvents: isCompact ? "auto" : "none",
-                                        marginRight: isCompact ? 8 : 0,
-                                        marginLeft: isCompact ? 8 : 0,
-                                        transition: `width ${t}, opacity 300ms ease, margin ${t}`,
-                                    }}
-                                    onMouseEnter={handleNavMouseEnter}
-                                >
-                                    Start Now
-                                </Link>
-
-                                {/* Hamburger */}
-                                <button
-                                    onClick={handleHamburgerClick}
-                                    onMouseEnter={handleNavMouseEnter}
-                                    className={`relative flex items-center justify-center rounded-none border border-transparent transition-all duration-300 ${isDark && !isMenuOpen ? "hover:border-white/50" : "hover:border-current"}`}
-                                    style={{
-                                        width: isCompact ? 38 : 44,
-                                        height: isCompact ? 38 : 44,
-                                        transition: `width ${t}, height ${t}`,
-                                    }}
-                                    aria-label="Toggle menu"
-                                >
-                                    <div
-                                        className="absolute h-px bg-current transform-gpu"
-                                        style={{
-                                            width: isCompact ? 16 : 22,
-                                            transform: isMenuOpen ? "rotate(45deg)" : `translateY(${isCompact ? -4.5 : -6}px)`,
-                                            transition: `width ${t}, transform 300ms ease-in-out`,
-                                        }}
-                                    />
-                                    <div
-                                        className={`absolute h-px bg-current ${isMenuOpen ? "opacity-0" : "opacity-100"}`}
-                                        style={{
-                                            width: isCompact ? 16 : 22,
-                                            transition: `width ${t}, opacity 200ms ease`,
-                                        }}
-                                    />
-                                    <div
-                                        className="absolute h-px bg-current transform-gpu"
-                                        style={{
-                                            width: isCompact ? 16 : 22,
-                                            transform: isMenuOpen ? "rotate(-45deg)" : `translateY(${isCompact ? 4.5 : 6}px)`,
-                                            transition: `width ${t}, transform 300ms ease-in-out`,
-                                        }}
-                                    />
-                                </button>
-                            </div>
+                            <Image
+                                src="/logobueno.png"
+                                alt="Columbus"
+                                fill
+                                sizes="28px"
+                                className="object-contain"
+                                priority
+                            />
                         </div>
+                    </Link>
+
+                    {/* Center: Nav links (desktop only) */}
+                    <div className="hidden lg:flex items-center gap-1 absolute left-1/2 -translate-x-1/2">
+                        {NAV_LINKS.map((link) => (
+                            <Link
+                                key={link.label}
+                                href={link.href}
+                                className={`px-4 py-1.5 text-[14px] font-medium rounded-sm transition-colors duration-200 ${
+                                    !showBg && isDark ? "hover:bg-white/10" : "hover:bg-black/5"
+                                }`}
+                                style={{
+                                    letterSpacing: "-0.01em",
+                                    color: "inherit",
+                                }}
+                            >
+                                {link.label}
+                            </Link>
+                        ))}
                     </div>
 
-                    {/* ── Dropdown ── */}
-                    <div
-                        className={`absolute top-full left-(--container-padding) right-(--container-padding) rounded-bl-[20px] rounded-br-[20px] overflow-hidden transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-                            isMenuOpen
-                                ? "opacity-100 translate-y-0 pointer-events-auto"
-                                : "opacity-0 -translate-y-6 pointer-events-none"
-                        }`}
-                        style={dropdownBg}
-                    >
-                        <div className="pl-7 pr-(--container-padding) py-12" style={{ transitionDelay: isMenuOpen ? "150ms" : "0ms" }}>
-                            <div className="grid grid-cols-1 md:grid-cols-12 gap-12">
-                                <div
-                                    className={`md:col-span-5 space-y-8 transition-opacity duration-500 ${isMenuOpen ? "opacity-100" : "opacity-0"}`}
-                                    style={{ transitionDelay: isMenuOpen ? "200ms" : "0ms" }}
-                                >
-                                    <div>
-                                        <h4 className={`text-xs font-semibold tracking-widest uppercase mb-4 ${dropdownHeadingClass}`}>
-                                            <ScrambleText text="COLUMBUS EARTH" isActive={isMenuOpen} delay={300} />
-                                        </h4>
-                                        <p className={`text-base leading-relaxed max-w-md ${dropdownBodyClass}`}>
-                                            Columbus Earth Inc. is a spatial frontier AI company building the first production
-                                            Large Geospatial Model to answer the most difficult questions about our planet.
-                                        </p>
-                                    </div>
-                                    <div className="grid grid-cols-2 gap-8">
-                                        <div>
-                                            <h4 className={`text-xs font-semibold tracking-wider uppercase mb-2 ${dropdownSubheadClass}`}>
-                                                <ScrambleText text="CONTACT" isActive={isMenuOpen} delay={450} />
-                                            </h4>
-                                            <a href="mailto:contact@columbus.earth" className={`font-medium block transition-colors duration-300 ${dropdownLinkClass} hover:opacity-70`}>
-                                                contact@columbus.earth
-                                            </a>
-                                        </div>
-                                        <div>
-                                            <h4 className={`text-xs font-semibold tracking-wider uppercase mb-2 ${dropdownSubheadClass}`}>
-                                                <ScrambleText text="SOCIAL" isActive={isMenuOpen} delay={550} />
-                                            </h4>
-                                            <a href="https://www.linkedin.com/company/columbusearth/about/?viewAsMember=true" target="_blank" rel="noopener noreferrer" className={`font-medium block transition-colors ${dropdownSocialClass}`}>
-                                                LinkedIn
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="md:col-span-3"></div>
-                                <div className="md:col-span-4 space-y-6">
-                                    <h4
-                                        className={`text-xs font-semibold tracking-wider uppercase mb-4 transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${dropdownSubheadClass} ${
-                                            isMenuOpen ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
-                                        }`}
-                                        style={{ transitionDelay: isMenuOpen ? "250ms" : "0ms" }}
-                                    >
-                                        <ScrambleText text="COMPANY" isActive={isMenuOpen} delay={400} />
-                                    </h4>
-                                    <ul className="space-y-4">
-                                        {menuItems.map((item, index) => (
-                                            <li
-                                                key={item.href}
-                                                className={`transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-                                                    isMenuOpen ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
-                                                }`}
-                                                style={{ transitionDelay: isMenuOpen ? `${320 + index * 70 + index * index * 8}ms` : "0ms" }}
-                                            >
-                                                <Link
-                                                    href={item.href}
-                                                    onClick={closeMenu}
-                                                    className={`group relative text-xl font-medium transition-all duration-300 flex items-center ${dropdownNavLinkClass}`}
-                                                >
-                                                    <span className="mr-3 transition-transform duration-300 ease-in-out group-hover:translate-x-1">+</span>
-                                                    <span className="transition-all duration-300 ease-in-out group-hover:translate-x-1">{item.label}</span>
-                                                </Link>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </div>
+                    {/* Right: CTA + Hamburger */}
+                    <div className="flex items-center gap-3 z-10">
+                        {/* Help icon */}
+                        <button
+                            className="hidden lg:flex items-center justify-center w-9 h-9 rounded-sm transition-colors duration-200 hover:bg-black/5"
+                            aria-label="Help"
+                        >
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                                <circle cx="12" cy="12" r="10" />
+                                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+                                <line x1="12" y1="17" x2="12.01" y2="17" />
+                            </svg>
+                        </button>
+
+                        {/* Account icon */}
+                        <Link
+                            href="/maps-gpt"
+                            className="hidden lg:flex items-center justify-center w-9 h-9 rounded-sm transition-colors duration-200 hover:bg-black/5"
+                            aria-label="Account"
+                        >
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                                <circle cx="12" cy="7" r="4" />
+                            </svg>
+                        </Link>
+
+                        {/* Hamburger */}
+                        <button
+                            onClick={() => setIsMenuOpen(!isMenuOpen)}
+                            className="flex items-center justify-center w-9 h-9 rounded-sm transition-colors duration-200 hover:bg-black/5 lg:hidden"
+                            aria-label="Toggle menu"
+                        >
+                            <div className="relative w-[18px] h-[14px]">
+                                <span
+                                    className="absolute left-0 h-px bg-current transition-all duration-300 ease-out"
+                                    style={{
+                                        width: 18,
+                                        top: isMenuOpen ? 7 : 0,
+                                        transform: isMenuOpen ? "rotate(45deg)" : "rotate(0)",
+                                    }}
+                                />
+                                <span
+                                    className="absolute left-0 top-[7px] h-px bg-current transition-opacity duration-200"
+                                    style={{
+                                        width: 18,
+                                        opacity: isMenuOpen ? 0 : 1,
+                                    }}
+                                />
+                                <span
+                                    className="absolute left-0 h-px bg-current transition-all duration-300 ease-out"
+                                    style={{
+                                        width: 18,
+                                        top: isMenuOpen ? 7 : 14,
+                                        transform: isMenuOpen ? "rotate(-45deg)" : "rotate(0)",
+                                    }}
+                                />
                             </div>
+                        </button>
+                    </div>
+                </div>
+
+                {/* Mobile menu panel */}
+                <div
+                    className="lg:hidden absolute top-full left-0 right-0 bg-white overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]"
+                    style={{
+                        maxHeight: isMenuOpen ? 500 : 0,
+                        opacity: isMenuOpen ? 1 : 0,
+                        borderBottom: isMenuOpen ? "1px solid rgba(0,0,0,0.06)" : "none",
+                    }}
+                >
+                    <div className="px-6 py-8 space-y-1">
+                        {MENU_LINKS.map((link, i) => (
+                            <Link
+                                key={link.label}
+                                href={link.href}
+                                onClick={closeMenu}
+                                className="block py-3 text-[22px] font-medium text-[#171a20] transition-all duration-300"
+                                style={{
+                                    opacity: isMenuOpen ? 1 : 0,
+                                    transform: isMenuOpen ? "translateY(0)" : "translateY(12px)",
+                                    transitionDelay: isMenuOpen ? `${80 + i * 50}ms` : "0ms",
+                                }}
+                            >
+                                {link.label}
+                            </Link>
+                        ))}
+
+                        <div className="pt-6 mt-4 border-t border-black/10">
+                            <Link
+                                href="mailto:contact@columbus.earth"
+                                className="block py-2 text-[15px] text-[#171a20]/60"
+                            >
+                                contact@columbus.earth
+                            </Link>
+                            <a
+                                href="https://www.linkedin.com/company/columbusearth/about/"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="block py-2 text-[15px] text-[#171a20]/60"
+                            >
+                                LinkedIn
+                            </a>
                         </div>
                     </div>
                 </div>
