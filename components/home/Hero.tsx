@@ -510,7 +510,7 @@ const WaveMesh = () => {
 
     // ── 3D Projection ──
     const fov = 600;
-    const horizonY = H * 0.32 + 100;
+    const horizonY = H * 0.24 + 100;
     const cameraHeight = 500;
     const cellSize = 24;
     const gridCols = 280;
@@ -892,11 +892,12 @@ export const Hero = () => {
       className="relative overflow-hidden flex flex-col"
       style={{
         background: "#F9F9F9",
-        minHeight: "100vh",
+        minHeight: "calc(100vh + 300px)",
       }}
     >
-      {/* Mesh + gradient — only fade in after scroll */}
+      {/* Mesh — absolutely positioned, fills entire section */}
       <div
+        className="absolute inset-0"
         style={{
           opacity: hasScrolled ? 1 : 0,
           transition: "opacity 1200ms ease",
@@ -905,12 +906,26 @@ export const Hero = () => {
         <WaveMesh />
       </div>
 
+      {/* Top gradient — fades text area into mesh */}
       <div
         className="absolute left-0 right-0 pointer-events-none"
         style={{
-          top: "22%",
-          height: "18%",
+          top: "calc(100vh * 0.22)",
+          height: "calc(100vh * 0.18)",
           background: "linear-gradient(to bottom, #F9F9F9, transparent)",
+          zIndex: 1,
+          opacity: hasScrolled ? 1 : 0,
+          transition: "opacity 1200ms ease",
+        }}
+        aria-hidden
+      />
+
+      {/* Bottom gradient — smooth transition from mesh ocean into content */}
+      <div
+        className="absolute left-0 right-0 bottom-0 pointer-events-none"
+        style={{
+          height: 300,
+          background: "linear-gradient(to bottom, transparent, #ffffff)",
           zIndex: 1,
           opacity: hasScrolled ? 1 : 0,
           transition: "opacity 1200ms ease",
@@ -938,28 +953,39 @@ export const Hero = () => {
               ...fadeIn(80),
             }}
           >
-            Building the first in&#8209;production<br /> Large Geospatial Model.
+            Building the first in&#8209;production<br />Large Geospatial Model.
           </h1>
 
-          {/* CTA buttons */}
-          <div className="flex items-center gap-5 mt-10" style={fadeIn(200)}>
+          {/* CTA + Nav links — appear after scroll */}
+          <div className="flex items-center gap-8 mt-7" style={{
+            opacity: hasScrolled ? 1 : 0,
+            filter: hasScrolled ? "blur(0px)" : "blur(8px)",
+            transform: hasScrolled ? "translateY(0px)" : "translateY(18px)",
+            transition: "opacity 1000ms ease 200ms, filter 1000ms ease 200ms, transform 1000ms ease 200ms",
+          }}>
             <a
-              href="/maps-gpt"
-              className="ripple-btn group relative flex items-center justify-center px-7 py-4 text-[15px] font-semibold leading-none rounded-none bg-[#0A1344] text-white overflow-hidden transition-all duration-500 hover:shadow-[0_8px_30px_rgba(10,19,68,0.25)] hover:-translate-y-0.5"
+              href="mailto:contact@columbus.earth"
+              className="flex items-center justify-center text-[17px] font-semibold leading-none rounded-none border border-[#0A1344] text-[#0A1344] transition-all duration-300 hover:bg-[#0A1344] hover:text-white"
+              style={{ width: 145, height: 45, marginRight: 16 }}
             >
-              <span className="relative z-10">Start Now</span>
-              <span className="ripple-ring absolute inset-0 rounded-none border border-white/20 scale-100 opacity-0 group-hover:scale-[1.08] group-hover:opacity-100 transition-all duration-700 ease-out pointer-events-none" />
+              Contact
             </a>
-            <a
-              href="#learn-more"
-              className="group relative flex items-center justify-center px-7 py-4 text-[15px] font-semibold leading-none rounded-full text-[#0A1344] overflow-hidden transition-all duration-500 hover:-translate-y-0.5"
-            >
-              <span className="absolute inset-0 rounded-full bg-[#0A1344]/[0.04] scale-0 opacity-0 group-hover:scale-100 group-hover:opacity-100 transition-all duration-500 ease-out" />
-              <span className="relative z-10">Learn More</span>
-              <svg className="relative z-10 ml-1.5 w-4 h-4 transition-transform duration-300 group-hover:translate-x-0.5" fill="none" viewBox="0 0 16 16" stroke="currentColor" strokeWidth="1.5">
-                <path d="M3 8h10M9 4l4 4-4 4" />
-              </svg>
-            </a>
+            {[
+              { label: "Technology", href: "/technology" },
+              { label: "Products", href: "#" },
+              { label: "Use Cases", href: "/use-cases" },
+            ].map((link) => (
+              <a
+                key={link.label}
+                href={link.href}
+                className="group flex items-center gap-1 text-[17px] font-medium text-[#0A1344] transition-opacity duration-300 hover:opacity-60"
+              >
+                {link.label}
+                <svg className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-0.5" fill="none" viewBox="0 0 16 16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M6 4l4 4-4 4" />
+                </svg>
+              </a>
+            ))}
           </div>
         </div>
       </Container>

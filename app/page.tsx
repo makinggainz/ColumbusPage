@@ -1,3 +1,4 @@
+import { type ReactNode } from "react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Hero } from "@/components/home/Hero";
 import { Vision } from "@/components/home/VisionSection";
@@ -13,49 +14,66 @@ import { TravelSection } from "@/components/home/TravelSection";
 import { GeneratedMaps } from "@/components/home/GeneratedMaps";
 import { UniqueSpotsSection } from "@/components/home/UniqueSpotsSection";
 
+function Island({ children }: { children: ReactNode }) {
+  return (
+    <div className="mt-16 relative">
+      <div
+        aria-hidden
+        style={{
+          position: "absolute", top: 0, left: 0, right: 0, height: 80,
+          background: "linear-gradient(to bottom, #ffffff, transparent)",
+          pointerEvents: "none", zIndex: 10,
+        }}
+      />
+      {children}
+      <div
+        aria-hidden
+        style={{
+          position: "absolute", bottom: 0, left: 0, right: 0, height: 80,
+          background: "linear-gradient(to top, #ffffff, transparent)",
+          pointerEvents: "none", zIndex: 10,
+        }}
+      />
+    </div>
+  );
+}
+
 export default function Home() {
   return (
-    <main
-      className="min-h-screen"
-      style={{
-        backgroundColor: "rgba(55, 40, 140, 0.03)",
-        backgroundImage: `linear-gradient(rgba(55,40,140,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(55,40,140,0.06) 1px, transparent 1px)`,
-        backgroundSize: "20px 20px",
-      }}
-    >
+    <main className="min-h-screen" style={{ backgroundColor: "#ffffff" }}>
       <Navbar />
       <Hero />
 
       {/* Island 1: Vision */}
-      <div className="mt-16">
+      <Island>
         <Vision />
-      </div>
+      </Island>
 
       {/* Island 2: Columbus Pro */}
-      <div className="mt-16">
+      <Island>
         <SiteSelection />
         <Capabilities />
         <PartnerStrip />
         <Industries />
-      </div>
+      </Island>
 
       {/* Island 3: MapsGPT */}
-      <div className="mt-16">
+      <Island>
         <TravelSection />
         <TrustStrip />
         <GeneratedMaps />
         <UniqueSpotsSection />
-      </div>
+      </Island>
 
       {/* Island 4: Applications */}
-      <div className="mt-16">
+      <Island>
         <Applications />
-      </div>
+      </Island>
 
       {/* Island 5: Hiring Humans */}
-      <div className="mt-16">
+      <Island>
         <Careers />
-      </div>
+      </Island>
 
       <Footer />
     </main>

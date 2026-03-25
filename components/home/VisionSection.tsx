@@ -120,7 +120,7 @@ export const Vision = () => {
       {/* Bottom section — tagline, diagrams, description, CTA */}
       <div
         className="flex flex-col items-center px-8 py-14 gap-10"
-        style={{ borderRight: gl, borderBottom: gl, ...anim(200) }}
+        style={{ borderRight: gl, ...anim(200) }}
       >
         {/* Mini title */}
         <p className="text-[20px] font-semibold text-[#1D1D1F] tracking-[-0.02em]">

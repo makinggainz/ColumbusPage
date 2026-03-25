@@ -209,13 +209,15 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
 
                             {/* ── Right: Nav Links + CTA + Hamburger ── */}
                             <div className="flex items-center">
-                                {/* Desktop nav links */}
+                                {/* Desktop nav links — only visible in compact state */}
                                 <div
                                     className="hidden min-[1155px]:flex items-center"
                                     style={{
-                                        gap: isCompact ? 4 : 8,
+                                        gap: isCompact ? 4 : 0,
                                         marginRight: isCompact ? 16 : 0,
-                                        transition: `gap ${t}, margin-right ${t}`,
+                                        opacity: isCompact ? 1 : 0,
+                                        pointerEvents: isCompact ? "auto" : "none",
+                                        transition: `gap ${t}, margin-right ${t}, opacity 300ms ease`,
                                     }}
                                 >
                                     {[
