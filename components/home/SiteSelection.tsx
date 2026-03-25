@@ -14,6 +14,7 @@ export const SiteSelection = () => {
   const heroCardRef = useRef<HTMLDivElement>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
   const imgRef = useRef<HTMLImageElement>(null);
+  const overlayRef = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -32,6 +33,7 @@ export const SiteSelection = () => {
     const card = heroCardRef.current;
     const heading = headingRef.current;
     const img = imgRef.current;
+    const overlay = overlayRef.current;
     if (!card || !heading) return;
 
     let current = 0;          // lerped progress
@@ -69,11 +71,25 @@ export const SiteSelection = () => {
       const inset = startInsetPct * (1 - current);
       card.style.clipPath = `inset(0 ${inset}% 0 ${inset}%)`;
 
-      // Image scale: 1.02 → 1
+      // Image scale: 1.02 → 1, blur fades in with scroll (0 → 14px)
       if (img) {
         const scale = 1 + 0.02 * (1 - current);
+        const blur = (current * 14).toFixed(2);
         img.style.transform = `scale(${scale})`;
+        img.style.filter = `blur(${blur}px)`;
       }
+
+      // Dark purple overlay fades in with scroll (0 → 0.35)
+      // if (overlay) {
+      //   overlay.style.opacity = (current * 0.35).toFixed(3);
+      // }
+
+      // backdrop-filter blur approach (kept for reference, replaced by direct image filter above)
+      // if (overlay) {
+      //   const blur = (current * 24).toFixed(2);
+      //   overlay.style.backdropFilter = `blur(${blur}px)`;
+      //   overlay.style.webkitBackdropFilter = `blur(${blur}px)`;
+      // }
 
       // Keep ticking if not settled
       if (Math.abs(target - current) > 0.0005) {
@@ -167,6 +183,20 @@ export const SiteSelection = () => {
               }}
             />
 
+            {/* Dark purple overlay — fades in with scroll expansion (commented out, re-enable in tick if needed) */}
+            {/* <div
+              ref={overlayRef}
+              className="absolute inset-0 pointer-events-none"
+              style={{ background: "rgba(10,4,40,1)", opacity: 0, zIndex: 1 }}
+            /> */}
+
+            {/* Background blur overlay — fades in with scroll expansion */}
+            <div
+              ref={overlayRef}
+              className="absolute inset-0 pointer-events-none"
+              style={{ backdropFilter: "blur(0px)", WebkitBackdropFilter: "blur(0px)", opacity: 1, zIndex: 1 }}
+            />
+
             {/* Content over image */}
             <div className="relative z-10 flex flex-col items-center pt-16 md:pt-24 px-6">
               {/* Main heading */}
@@ -187,7 +217,7 @@ export const SiteSelection = () => {
               <PillToggle />
 
               {/* Desktop + Mobile UI mockups */}
-              <div className="relative w-full max-w-[1100px] mx-auto mt-12" style={{ height: 570 }}>
+              <div className="relative w-full max-w-[1100px] mx-auto mt-4" style={{ height: 570 }}>
                 {/* Desktop UI */}
                 <div
                   className="absolute overflow-hidden"

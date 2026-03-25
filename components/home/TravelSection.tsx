@@ -36,7 +36,7 @@ function TravelPillToggle({ activeTab, setActiveTab, anim }: {
   return (
     <div
       ref={containerRef}
-      className="inline-flex items-center relative mb-12"
+      className="inline-flex items-center relative mb-0"
       style={{
         height: 56,
         borderRadius: 28,
@@ -103,6 +103,7 @@ export const TravelSection = () => {
   const ref = useRef<HTMLDivElement>(null);
   const beachRef = useRef<HTMLDivElement>(null);
   const travelHeadingRef = useRef<HTMLHeadingElement>(null);
+  const bgImgRef = useRef<HTMLImageElement>(null);
   const [visible, setVisible] = useState(false);
   const [activeTab, setActiveTab] = useState(0);
   const [plantsVisible, setPlantsVisible] = useState(false);
@@ -128,6 +129,7 @@ export const TravelSection = () => {
   useEffect(() => {
     const card = beachRef.current;
     const heading = travelHeadingRef.current;
+    const bgImg = bgImgRef.current;
     if (!card || !heading) return;
 
     let current = 0;
@@ -158,6 +160,11 @@ export const TravelSection = () => {
       const inset = startInsetPct * (1 - current);
       const radius = current > 0 ? 12 * (1 - current) : 0;
       card.style.clipPath = `inset(0 ${inset}% 0 ${inset}% round ${radius}px)`;
+
+      // Background blur fades in with scroll (0 → 14px)
+      if (bgImg) {
+        bgImg.style.filter = `blur(${(current * 14).toFixed(2)}px)`;
+      }
 
       // Trigger plants when expansion is nearly complete AND still within Island 3
       const sectionEl = ref.current;
@@ -235,14 +242,21 @@ export const TravelSection = () => {
         ref={beachRef}
         className="relative"
         style={{
-          backgroundImage: "url('/beach.png')",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
           minHeight: 700,
           clipPath: "inset(0 0 0 0 round 0px)",
           willChange: "clip-path",
         }}
       >
+        {/* Background image — blurred via ref on scroll */}
+        <Image
+          ref={bgImgRef}
+          src="/beach.png"
+          alt=""
+          fill
+          className="object-cover object-center"
+          style={{ willChange: "filter" }}
+        />
+
         {/* Centered content */}
         <div className="relative z-10 flex flex-col items-center pt-16 md:pt-24 pb-8 px-6">
           {/* Heading */}
@@ -272,13 +286,13 @@ export const TravelSection = () => {
 
           {/* Phone mockups */}
           <div
-            className="relative w-full max-w-[1100px] mx-auto mt-12"
-            style={{ height: 572, ...anim(350) }}
+            className="relative w-full max-w-300 mx-auto"
+            style={{ height: 660, marginTop: 16, ...anim(350) }}
           >
             {/* Desktop mockup */}
             <div
               className="absolute overflow-hidden"
-              style={{ left: "2%", bottom: 0, width: 995, height: 570, borderRadius: "12px 12px 0 0", boxShadow: "0 -4px 40px rgba(0,0,0,0.12)" }}
+              style={{ left: "2%", bottom: 0, width: 1080, height: 658, borderRadius: "12px 12px 0 0", boxShadow: "0 -2px 20px rgba(0,0,0,0.08)" }}
             >
               <Image
                 src="/MapsGPTDesktop.png"
@@ -291,7 +305,7 @@ export const TravelSection = () => {
             {/* Mobile mockup */}
             <div
               className="absolute overflow-hidden"
-              style={{ right: "5%", bottom: 0, width: 263, height: 572, borderRadius: "16px 16px 0 0", boxShadow: "-4px 0 40px rgba(0,0,0,0.15)", zIndex: 2 }}
+              style={{ right: "3%", bottom: 0, width: 300, height: 660, borderRadius: "16px 16px 0 0", boxShadow: "-2px 0 20px rgba(0,0,0,0.10)", zIndex: 2 }}
             >
               <Image
                 src="/MapsGPTMobile.png"

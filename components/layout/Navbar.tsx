@@ -27,17 +27,37 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
     const [isCompact, setIsCompact] = useState(() =>
         typeof window !== "undefined" ? window.scrollY > COMPACT_THRESHOLD : false
     );
+    // Links only appear once hero CTA has scrolled out of view
+    const [showLinks, setShowLinks] = useState(false);
     const navRef = useRef<HTMLElement>(null);
 
     useEffect(() => {
+        const handleReveal = () => setHasScrolled(true);
+        window.addEventListener("hero-reveal", handleReveal);
+
+        // Background + resize on any scroll
         const handleScroll = () => {
             const y = window.scrollY;
             if (y > 5) setHasScrolled(true);
             setIsCompact(y > COMPACT_THRESHOLD);
         };
-        const handleReveal = () => setHasScrolled(true);
         window.addEventListener("scroll", handleScroll, { passive: true });
-        window.addEventListener("hero-reveal", handleReveal);
+
+        // Nav links appear only after hero CTA leaves viewport
+        const cta = document.getElementById("hero-cta");
+        if (cta) {
+            const obs = new IntersectionObserver(
+                ([entry]) => setShowLinks(!entry.isIntersecting),
+                { threshold: 0 }
+            );
+            obs.observe(cta);
+            return () => {
+                obs.disconnect();
+                window.removeEventListener("scroll", handleScroll);
+                window.removeEventListener("hero-reveal", handleReveal);
+            };
+        }
+
         return () => {
             window.removeEventListener("scroll", handleScroll);
             window.removeEventListener("hero-reveal", handleReveal);
@@ -176,7 +196,7 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
                                 transition: `height ${t}, padding-top ${t}`,
                             }}
                         >
-                            {/* ── Left: Logo + Nav Links ── */}
+                            {/* ── Left: Logo ── */}
                             <div className="flex items-center">
                                 <Link href="/" className="flex w-fit shrink-0 items-center gap-2" onMouseEnter={handleNavMouseEnter}>
                                     <div
@@ -198,31 +218,32 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
                                         />
                                     </div>
                                     <span
-                                        className="brand-wordmark font-medium leading-none overflow-hidden whitespace-nowrap"
+                                        className="brand-wordmark font-medium leading-none whitespace-nowrap"
                                         style={{
                                             fontSize: isCompact ? 20 : 24,
                                             letterSpacing: "-0.02em",
-                                            maxWidth: isCompact ? 0 : 200,
-                                            opacity: isCompact ? 0 : 1,
-                                            marginLeft: isCompact ? 0 : undefined,
-                                            transition: `font-size ${t}, max-width ${t}, opacity 300ms ease, margin ${t}`,
+                                            transition: `font-size ${t}`,
                                         }}
                                     >
                                         Columbus Earth
                                     </span>
                                 </Link>
+                            </div>
 
-                                {/* Desktop nav links — only visible in compact state, placed left of logo */}
+                            {/* ── Right: Nav Links + CTA + Hamburger ── */}
+                            <div className="flex items-center gap-4">
+
+                                {/* Desktop nav links — appear after hero CTA leaves viewport */}
                                 <div
-                                    className="hidden min-[1155px]:flex items-center"
+                                    className="hidden min-[1155px]:flex items-center gap-5"
                                     style={{
-                                        gap: isCompact ? 20 : 0,
-                                        marginLeft: isCompact ? 40 : 0,
-                                        maxWidth: isCompact ? 600 : 0,
-                                        opacity: isCompact ? 1 : 0,
+                                        maxWidth: showLinks ? 600 : 0,
                                         overflow: "hidden",
-                                        pointerEvents: isCompact ? "auto" : "none",
-                                        transition: `gap ${t}, margin-left ${t}, max-width ${t}, opacity 300ms ease`,
+                                        opacity: showLinks ? 1 : 0,
+                                        clipPath: showLinks ? "inset(0 0% 0 0)" : "inset(0 100% 0 0)",
+                                        pointerEvents: showLinks ? "auto" : "none",
+                                        paddingRight: 16,
+                                        transition: `opacity 300ms ease, clip-path 400ms cubic-bezier(0.22, 1, 0.36, 1)`,
                                     }}
                                 >
                                     {[
@@ -234,35 +255,29 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
                                             key={link.label}
                                             href={link.href}
                                             className={navLinkClass}
-                                            style={navLinkInline(isCompact)}
+                                            style={{ ...navLinkInline(isCompact), whiteSpace: "nowrap" }}
                                             onMouseEnter={handleNavMouseEnter}
                                         >
                                             {link.label}
                                         </Link>
                                     ))}
                                 </div>
-                            </div>
 
-                            {/* ── Right: CTA + Hamburger ── */}
-                            <div className="flex items-center">
-
-                                {/* Start Now — matches "Our research & technology" style */}
+                                {/* Start Now — appears after hero CTA leaves viewport */}
                                 <Link
                                     href="/maps-gpt"
                                     className="group hidden min-[1155px]:flex items-center justify-between gap-3 leading-none whitespace-nowrap hover:opacity-90 transition-opacity"
                                     style={{
-                                        fontSize: isCompact ? 14 : 15,
+                                        fontSize: 14,
                                         fontWeight: 500,
                                         height: 45,
-                                        width: isCompact ? 145 : 0,
-                                        opacity: isCompact ? 1 : 0,
+                                        width: showLinks ? 145 : 0,
+                                        opacity: showLinks ? 1 : 0,
                                         overflow: "hidden",
-                                        pointerEvents: isCompact ? "auto" : "none",
-                                        marginRight: isCompact ? 8 : 0,
-                                        marginLeft: isCompact ? 8 : 0,
+                                        pointerEvents: showLinks ? "auto" : "none",
                                         paddingLeft: 20,
                                         paddingRight: 16,
-                                        transition: `width ${t}, opacity 300ms ease, margin ${t}`,
+                                        transition: `width ${t}, opacity 300ms ease`,
                                         backgroundColor: "#000000",
                                         color: "white",
                                     }}
@@ -277,39 +292,40 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
                                     </svg>
                                 </Link>
 
-                                {/* Hamburger */}
+                                {/* Hamburger — hidden after hero CTA leaves viewport */}
                                 <button
                                     onClick={handleHamburgerClick}
                                     onMouseEnter={handleNavMouseEnter}
                                     className={`relative flex items-center justify-center rounded-none border transition-all duration-300 ${isDark && !isMenuOpen ? "border-white/30 hover:border-white/50" : "border-[#0A1344] hover:border-current"}`}
                                     style={{
-                                        width: 45,
+                                        width: showLinks ? 0 : 45,
                                         height: 45,
-                                        transition: `width ${t}, height ${t}`,
+                                        opacity: showLinks ? 0 : 1,
+                                        overflow: "hidden",
+                                        pointerEvents: showLinks ? "none" : "auto",
+                                        borderWidth: isCompact ? 0 : 1,
+                                        transition: `width ${t}, opacity 120ms ease, border-width ${t}`,
                                     }}
                                     aria-label="Toggle menu"
                                 >
                                     <div
                                         className="absolute h-px bg-current transform-gpu"
                                         style={{
-                                            width: isCompact ? 16 : 22,
-                                            transform: isMenuOpen ? "rotate(45deg)" : `translateY(${isCompact ? -4.5 : -6}px)`,
-                                            transition: `width ${t}, transform 300ms ease-in-out`,
+                                            width: 22,
+                                            transform: isMenuOpen ? "rotate(45deg)" : "translateY(-6px)",
+                                            transition: `transform 300ms ease-in-out`,
                                         }}
                                     />
                                     <div
                                         className={`absolute h-px bg-current ${isMenuOpen ? "opacity-0" : "opacity-100"}`}
-                                        style={{
-                                            width: isCompact ? 16 : 22,
-                                            transition: `width ${t}, opacity 200ms ease`,
-                                        }}
+                                        style={{ width: 22, transition: `opacity 200ms ease` }}
                                     />
                                     <div
                                         className="absolute h-px bg-current transform-gpu"
                                         style={{
-                                            width: isCompact ? 16 : 22,
-                                            transform: isMenuOpen ? "rotate(-45deg)" : `translateY(${isCompact ? 4.5 : 6}px)`,
-                                            transition: `width ${t}, transform 300ms ease-in-out`,
+                                            width: 22,
+                                            transform: isMenuOpen ? "rotate(-45deg)" : "translateY(6px)",
+                                            transition: `transform 300ms ease-in-out`,
                                         }}
                                     />
                                 </button>

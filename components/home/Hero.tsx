@@ -997,7 +997,7 @@ export const Hero = () => {
           </h1>
 
           {/* CTA + Nav links — appear after scroll */}
-          <div className="flex items-center gap-8 mt-7" style={{
+          <div id="hero-cta" className="flex items-center gap-8 mt-7" style={{
             opacity: hasScrolled ? 1 : 0,
             filter: hasScrolled ? "blur(0px)" : "blur(8px)",
             transform: hasScrolled ? "translateY(0px)" : "translateY(18px)",

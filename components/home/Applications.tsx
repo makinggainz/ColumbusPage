@@ -45,9 +45,9 @@ export const Applications = () => {
         <div className="px-8 md:px-10 pt-14 pb-4">
           <h2
             className="text-[#1D1D1F] font-medium tracking-[-0.02em] leading-[1.12]"
-            style={{ fontSize: 48, ...anim(0) }}
+            style={{ fontSize: 48, letterSpacing: "-0.02em", ...anim(0) }}
           >
-            We&apos;re actively exploring various application areas
+            We&apos;re actively exploring various{" "}<br />application areas
           </h2>
         </div>
 
@@ -80,7 +80,7 @@ export const Applications = () => {
                 src={item.image}
                 alt={item.title}
                 fill
-                className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.02]"
+                className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.08]"
                 priority={index < 3}
               />
               {/* Purple overlay */}
