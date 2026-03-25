@@ -109,7 +109,7 @@ export const SiteSelection = () => {
 
   return (
     <GridSection>
-      <div ref={ref} style={{ borderRight: gl, borderBottom: gl }}>
+      <div ref={ref} style={{ borderBottom: gl }}>
         {/* Top bar: Columbus Pro + New | Start Now */}
         <div className="flex items-center justify-between px-8 md:px-10 py-6" style={anim(0)}>
           <div className="flex items-center gap-3">
@@ -146,6 +146,8 @@ export const SiteSelection = () => {
             transform: visible ? "translateY(0)" : "translateY(16px)",
             transition: "opacity 0.7s ease 100ms, transform 0.7s ease 100ms",
             willChange: "clip-path",
+            position: "relative",
+            zIndex: 2,
           }}
         >
           <div className="relative" style={{ minHeight: 800 }}>
@@ -230,7 +232,6 @@ export const SiteSelection = () => {
         {/* Check it out CTA */}
         <div
           className="flex items-center justify-center py-6"
-          style={{ borderRight: gl }}
         >
           <Link
             href="/maps-gpt"

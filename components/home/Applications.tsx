@@ -40,7 +40,7 @@ export const Applications = () => {
 
   return (
     <GridSection>
-      <div ref={ref} style={{ borderRight: gl, borderBottom: gl }}>
+      <div ref={ref} style={{ borderBottom: gl }}>
         {/* Header area */}
         <div className="px-8 md:px-10 pt-14 pb-4">
           <h2

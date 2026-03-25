@@ -102,7 +102,7 @@ export const TravelSection = () => {
       <GridSection>
         <div
           className="flex items-center justify-between px-8 md:px-10 py-6"
-          style={{ borderRight: gl, borderBottom: gl }}
+          style={{ borderBottom: gl }}
         >
           <span className="text-[#1D1D1F] font-bold" style={{ fontSize: 40 }}>
             MapsGPT <span className="font-normal">– AI-powered social map</span>

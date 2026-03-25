@@ -18,7 +18,6 @@ export const PartnerStrip = () => {
     <GridSection style={{ borderTop: "none" }}>
       <div
         className="flex flex-col items-center px-8 md:px-10 pt-16 pb-8"
-        style={{ borderRight: gl }}
       >
         <h2 className="text-[32px] md:text-[40px] font-bold tracking-[-0.02em] leading-[1.1] text-[#1D1D1F] text-center">
           High-fidelity and smart datasets
@@ -30,7 +29,7 @@ export const PartnerStrip = () => {
 
       <div
         className="flex items-center justify-center gap-10 md:gap-14 flex-wrap px-8 md:px-10 py-10 pb-32"
-        style={{ borderRight: gl, borderBottom: gl }}
+        style={{ borderBottom: gl }}
       >
         {LOGOS.map((src, i) => (
           <Image

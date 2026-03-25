@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState } from "react";
 import { GridSection, gl } from "./ContentGrid";
 
 export const Vision = () => {
@@ -28,7 +28,6 @@ export const Vision = () => {
     transition: `opacity 0.7s ease ${delay}ms, transform 0.7s ease ${delay}ms`,
   });
 
-  /* Detect when sticky bar is stuck: top sentinel scrolled past AND bottom sentinel still below */
   const sentinelTopRef = useRef<HTMLDivElement>(null);
   const sentinelBottomRef = useRef<HTMLDivElement>(null);
   const topPastRef = useRef(false);
@@ -62,337 +61,239 @@ export const Vision = () => {
     <div>
       <div ref={sentinelTopRef} className="h-0" />
 
-    <GridSection>
-      {/* Heading */}
-      <div
-        ref={ref}
-        className="px-8 md:px-10 py-10 md:py-14"
-        style={{ borderRight: gl, borderBottom: gl }}
-      >
-        <h2
-          className="text-[#1D1D1F] leading-[1.15] tracking-[-0.02em]"
-          style={{ fontSize: 48, fontWeight: 300, ...anim(0) }}
+      <GridSection>
+        {/* Heading */}
+        <div
+          ref={ref}
+          className="px-8 md:px-10 py-12 md:py-16"
         >
-          A new breed of AI,{" "}
-          <span className="font-bold">COLUMBUS-01</span>
-        </h2>
-      </div>
-
-      {/* Image grid */}
-      <div
-        className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 auto-rows-[120px] sm:auto-rows-[140px] lg:auto-rows-[160px]"
-        style={{
-          gridAutoFlow: "dense",
-          ...anim(100),
-        }}
-      >
-        {/* Row 1 */}
-        <Tile src="/image1.png" />
-        <TextTile title="General Intelligence" subtitle="for the physical world" />
-        <Tile src="/image2.png" />
-        <Tile src="/image3.png" />
-        <Tile src="/image4.png" />
-
-        {/* Row 2 */}
-        <Tile src="/image5.png" />
-        <Tile src="/image6.png" />
-        <Tile src="/image7.png" />
-        <Tile src="/image8.png" />
-        <Tile src="/image9.png" />
-        <Tile src="/image10.png" />
-
-        {/* Row 3 */}
-        <Tile src="/image111.png" />
-        <Tile src="/image112.png" />
-        <TextTile title="Foundational Models" subtitle="for Earth" />
-        <Tile src="/image113.png" />
-        <Tile src="/image114.png" />
-
-        {/* Row 4 */}
-        <Tile src="/image12.png" />
-        <Tile src="/image.png" />
-        <Tile src="/image14.png" />
-        <Tile src="/image15.png" />
-        <Tile src="/image16.png" />
-        <Tile src="/image17.png" />
-      </div>
-
-      {/* Bottom section — tagline, diagrams, description, CTA */}
-      <div
-        className="flex flex-col items-center px-8 py-14 gap-10"
-        style={{ borderRight: gl, ...anim(200) }}
-      >
-        {/* Mini title */}
-        <p className="text-[20px] font-semibold text-[#1D1D1F] tracking-[-0.02em]">
-          Think of us like the OpenAI for maps.
-        </p>
-
-        {/* Diagrams */}
-        <div className="flex items-center justify-center gap-8">
-          <div className="w-[100px] h-[100px] overflow-hidden rounded-sm">
-            <SatelliteDiagram />
-          </div>
-          <div className="w-[100px] h-[100px] overflow-hidden rounded-sm">
-            <TerrainDiagram />
-          </div>
-          <div className="w-[100px] h-[100px] overflow-hidden rounded-sm">
-            <ActivityDiagram />
-          </div>
+          <h2
+            className="text-[#1D1D1F] leading-[1.15] tracking-[-0.02em]"
+            style={{ fontSize: 48, fontWeight: 300, ...anim(0) }}
+          >
+            Introducing new kind of AI,{" "}
+            <span className="font-bold">COLUMBUS-01</span>
+          </h2>
         </div>
 
-        {/* Description */}
-        <p className="text-[15px] leading-[1.6] text-[#6E6E73] max-w-[600px] text-center">
-          ColumbusPro-1 processes satellite imagery, terrain data, human activity, and temporal patterns
-          to generate actionable intelligence across real estate, research, and consumer domains.
-        </p>
-
-        {/* CTA */}
-        <Link
-          href="/technology"
-          className="inline-flex items-center justify-center gap-2 px-10 py-4 border border-[#0A1344]/20 text-[#0A1344] text-[15px] font-medium hover:bg-[#0A1344] hover:text-white transition-colors"
+        {/* Image grid */}
+        <div
+          className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 auto-rows-[120px] sm:auto-rows-[140px] lg:auto-rows-[160px]"
+          style={{ gridAutoFlow: "dense", ...anim(100) }}
         >
-          Our research &amp; technology
-          <svg width="7" height="12" viewBox="0 0 7 12" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M1 1l5 5-5 5" />
-          </svg>
-        </Link>
-      </div>
-    </GridSection>
-    {/* Bottom sentinel — when this scrolls past, sticky is over */}
-    <div ref={sentinelBottomRef} className="h-0" />
+          {/* Row 1: img · General Intelligence (2 cols) · img · img · img */}
+          <Tile src="/image1.png" />
+          <TextTile title="General Intelligence" subtitle="for the physical world" />
+          <Tile src="/image2.png" />
+          <Tile src="/image3.png" />
+          <Tile src="/image4.png" />
+
+          {/* Row 2: img · img · img · img · Foundational Models (2 cols) */}
+          <Tile src="/image111.png" />
+          <Tile src="/image112.png" />
+          <Tile src="/image113.png" />
+          <TextTile title="Foundational Models" subtitle="for Earth" />
+          <Tile src="/image114.png" />
+        </div>
+
+        {/* Architecture diagram */}
+        <div style={{ borderBottom: gl, ...anim(180) }}>
+          <ArchitectureDiagram />
+        </div>
+
+        {/* Bottom bar — two columns */}
+        <div className="grid grid-cols-2" style={{ ...anim(260) }}>
+          <div className="px-10 flex items-center" style={{ height: 76, borderRight: gl, backgroundColor: "rgba(20, 41, 148, 0.07)" }}>
+            <p className="text-[20px] font-medium text-[#1D1D1F] tracking-[-0.01em]">
+              Think of us like the OpenAI for maps.
+            </p>
+          </div>
+          <Link
+            href="/technology"
+            className="px-10 flex items-center justify-between hover:opacity-90 transition-opacity"
+            style={{ height: 76, backgroundColor: "#0A1344" }}
+          >
+            <span className="text-white text-[20px] font-medium">Our research &amp; technology</span>
+            <svg width="7" height="12" viewBox="0 0 7 12" fill="none" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M1 1l5 5-5 5" />
+            </svg>
+          </Link>
+        </div>
+      </GridSection>
+
+      <div ref={sentinelBottomRef} className="h-0" />
     </div>
   );
 };
 
+/* ── Tile components ── */
+
 const Tile = ({ src }: { src: string }) => (
   <div
-    className="relative w-full h-full overflow-hidden rounded-none"
-    style={{ borderRight: gl, borderBottom: gl }}
+    className="relative w-full h-full overflow-hidden"
   >
-    <Image src={src} alt="" fill className="object-cover rounded-none" />
+    <Image src={src} alt="" fill className="object-cover" />
   </div>
 );
 
 const TextTile = ({ title, subtitle }: { title: string; subtitle: string }) => (
   <div
     className="col-span-1 sm:col-span-2 flex flex-col justify-center items-center text-center px-6"
-    style={{ borderRight: gl, borderBottom: gl }}
   >
-    <h3 className="text-xl md:text-2xl font-semibold text-[#1D1D1F] leading-tight tracking-tight">
+    <h3 className="text-2xl md:text-3xl font-semibold text-[#1D1D1F] leading-tight tracking-tight">
       {title}
     </h3>
-    <p className="text-base text-[#6E6E73] mt-1 tracking-tight">
-      {subtitle}
-    </p>
+    <p className="text-base md:text-lg text-[#6E6E73] mt-1 tracking-tight">{subtitle}</p>
   </div>
 );
 
-/* ── Mini animated diagrams ── */
+/* ── Architecture diagram ── */
 
-function useCanvasLoop(draw: (ctx: CanvasRenderingContext2D, w: number, h: number, t: number) => void) {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const rafRef = useRef(0);
+const ArchitectureDiagram = () => {
+  const inputs = [
+    { lines: ["SATELLITE", "IMAGERY"],   y: 10 },
+    { lines: ["TERRAIN",   "DATA"],      y: 76 },
+    { lines: ["HUMAN",     "ACTIVITY"],  y: 142 },
+    { lines: ["TEMPORAL",  "PATTERNS"],  y: 208 },
+  ];
 
-  const render = useCallback(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-    const dpr = window.devicePixelRatio || 1;
-    const rect = canvas.getBoundingClientRect();
-    canvas.width = rect.width * dpr;
-    canvas.height = rect.height * dpr;
-    ctx.scale(dpr, dpr);
-    draw(ctx, rect.width, rect.height, performance.now() * 0.001);
-    rafRef.current = requestAnimationFrame(render);
-  }, [draw]);
+  const outputs = [
+    { lines: ["REAL ESTATE", "ANALYTICS"],    y: 50  },
+    { lines: ["RESEARCH &",  "INTELLIGENCE"], y: 109 },
+    { lines: ["CONSUMER",    "APPS"],         y: 168 },
+  ];
 
-  useEffect(() => {
-    rafRef.current = requestAnimationFrame(render);
-    return () => cancelAnimationFrame(rafRef.current);
-  }, [render]);
+  const NODE_H = 40;
+  const INPUT_X = 40,  INPUT_W = 155, INPUT_RIGHT = INPUT_X + INPUT_W;   // 195
+  const OUT_X   = 1005, OUT_W  = 155;
+  const CX = 435, CY_TOP = 54, CW = 330, CH = 140;
+  const CCY = CY_TOP + CH / 2; // 124
+  const CR = CX + CW; // 765
 
-  return canvasRef;
-}
+  // mid-x for bezier elbows
+  const LMX = (INPUT_RIGHT + CX) / 2; // 315
+  const RMX = (CR + OUT_X) / 2;       // 885
 
-/** Satellite — orbital scan lines sweeping across a grid */
-const SatelliteDiagram = () => {
-  const draw = useCallback((ctx: CanvasRenderingContext2D, w: number, h: number, t: number) => {
-    ctx.fillStyle = "#F8F8FA";
-    ctx.fillRect(0, 0, w, h);
+  return (
+    <div style={{ padding: "120px 0 112px" }}>
+      <svg
+        viewBox="0 0 1200 258"
+        width="100%"
+        style={{ display: "block", overflow: "visible" }}
+      >
+        <defs>
+          <style>{`
+            @keyframes visionDash {
+              to { stroke-dashoffset: -20; }
+            }
+          `}</style>
+        </defs>
 
-    // Grid
-    ctx.strokeStyle = "rgba(10, 19, 68, 0.06)";
-    ctx.lineWidth = 0.5;
-    for (let x = 0; x < w; x += 12) {
-      ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke();
-    }
-    for (let y = 0; y < h; y += 12) {
-      ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke();
-    }
+        {/* Background grid */}
+        {Array.from({ length: 29 }).map((_, i) => (
+          <line key={`gv${i}`}
+            x1={(i + 1) * 40} y1={0} x2={(i + 1) * 40} y2={258}
+            stroke="rgba(10,19,68,0.03)" strokeWidth={0.5} />
+        ))}
+        {Array.from({ length: 7 }).map((_, i) => (
+          <line key={`gh${i}`}
+            x1={0} y1={(i + 1) * 32} x2={1200} y2={(i + 1) * 32}
+            stroke="rgba(10,19,68,0.03)" strokeWidth={0.5} />
+        ))}
 
-    // Scan line sweeping diagonally
-    const scanY = ((t * 18) % (h + 30)) - 15;
-    const grad = ctx.createLinearGradient(0, scanY - 8, 0, scanY + 8);
-    grad.addColorStop(0, "rgba(10, 19, 68, 0)");
-    grad.addColorStop(0.5, "rgba(10, 19, 68, 0.12)");
-    grad.addColorStop(1, "rgba(10, 19, 68, 0)");
-    ctx.fillStyle = grad;
-    ctx.fillRect(0, scanY - 8, w, 16);
+        {/* Input nodes + fan-in paths */}
+        {inputs.map((inp, i) => {
+          const cy = inp.y + NODE_H / 2;
+          return (
+            <g key={`inp${i}`}>
+              <rect x={INPUT_X} y={inp.y} width={INPUT_W} height={NODE_H} rx={3}
+                fill="rgba(10,19,68,0.05)" stroke="rgba(10,19,68,0.14)" strokeWidth={0.75} />
+              <text x={INPUT_X + INPUT_W / 2} y={inp.y + 15}
+                textAnchor="middle" fill="rgba(10,19,68,0.52)"
+                fontSize={8.5} fontFamily="ui-monospace,monospace" fontWeight="700" letterSpacing="0.1em">
+                {inp.lines[0]}
+              </text>
+              <text x={INPUT_X + INPUT_W / 2} y={inp.y + 28}
+                textAnchor="middle" fill="rgba(10,19,68,0.34)"
+                fontSize={8.5} fontFamily="ui-monospace,monospace" letterSpacing="0.07em">
+                {inp.lines[1]}
+              </text>
+              <path
+                d={`M${INPUT_RIGHT} ${cy} C${LMX} ${cy} ${LMX} ${CCY} ${CX} ${CCY}`}
+                stroke="rgba(10,19,68,0.2)" strokeWidth={1} fill="none"
+                strokeDasharray="6 4"
+                style={{ animation: `visionDash ${1.3 + i * 0.18}s linear infinite` }}
+              />
+            </g>
+          );
+        })}
 
-    // Orbit arc
-    ctx.beginPath();
-    ctx.ellipse(w / 2, h / 2, w * 0.4, h * 0.3, 0, 0, Math.PI * 2);
-    ctx.strokeStyle = "rgba(10, 19, 68, 0.08)";
-    ctx.lineWidth = 0.8;
-    ctx.stroke();
+        {/* Central Columbus-01 node */}
+        <rect x={CX} y={CY_TOP} width={CW} height={CH} rx={5} fill="#0A1344" />
+        {/* Inner vertical dividers */}
+        {[0.25, 0.5, 0.75].map((p, i) => (
+          <line key={`cv${i}`}
+            x1={CX + CW * p} y1={CY_TOP + 8} x2={CX + CW * p} y2={CY_TOP + CH - 8}
+            stroke="rgba(255,255,255,0.05)" strokeWidth={0.5} />
+        ))}
+        {/* Horizontal divider */}
+        <line x1={CX + 16} y1={CY_TOP + CH * 0.56} x2={CX + CW - 16} y2={CY_TOP + CH * 0.56}
+          stroke="rgba(255,255,255,0.07)" strokeWidth={0.5} />
+        {/* Label */}
+        <text x={CX + CW / 2} y={CY_TOP + 38}
+          textAnchor="middle" fill="white"
+          fontSize={15} fontFamily="ui-monospace,monospace" fontWeight="700" letterSpacing="0.08em">
+          COLUMBUS-01
+        </text>
+        <text x={CX + CW / 2} y={CY_TOP + 56}
+          textAnchor="middle" fill="rgba(255,255,255,0.38)"
+          fontSize={7.5} fontFamily="ui-monospace,monospace" letterSpacing="0.11em">
+          GEOSPATIAL FOUNDATION MODEL
+        </text>
+        {/* Capability labels */}
+        {[
+          { label: "VISION",   pct: 0.2 },
+          { label: "SPATIAL",  pct: 0.5 },
+          { label: "TEMPORAL", pct: 0.8 },
+        ].map(c => (
+          <text key={c.label} x={CX + CW * c.pct} y={CY_TOP + 93}
+            textAnchor="middle" fill="rgba(255,255,255,0.25)"
+            fontSize={7} fontFamily="ui-monospace,monospace" letterSpacing="0.1em">
+            {c.label}
+          </text>
+        ))}
+        <text x={CX + CW / 2} y={CY_TOP + 118}
+          textAnchor="middle" fill="rgba(255,255,255,0.13)"
+          fontSize={6.5} fontFamily="ui-monospace,monospace" letterSpacing="0.13em">
+          v1.0 · PRODUCTION
+        </text>
 
-    // Satellite dot on orbit
-    const angle = t * 1.2;
-    const sx = w / 2 + Math.cos(angle) * w * 0.4;
-    const sy = h / 2 + Math.sin(angle) * h * 0.3;
-    ctx.beginPath();
-    ctx.arc(sx, sy, 2.5, 0, Math.PI * 2);
-    ctx.fillStyle = "rgba(10, 19, 68, 0.5)";
-    ctx.fill();
-
-    // Pulse ring around satellite
-    const pulse = (Math.sin(t * 4) + 1) * 3 + 3;
-    ctx.beginPath();
-    ctx.arc(sx, sy, pulse, 0, Math.PI * 2);
-    ctx.strokeStyle = "rgba(10, 19, 68, 0.15)";
-    ctx.lineWidth = 0.5;
-    ctx.stroke();
-
-    // Label
-    ctx.font = "7px monospace";
-    ctx.fillStyle = "rgba(10, 19, 68, 0.2)";
-    ctx.fillText("SAT", 4, 10);
-  }, []);
-
-  const canvasRef = useCanvasLoop(draw);
-  return <canvas ref={canvasRef} className="w-full h-full block" />;
-};
-
-/** Terrain — topographic contour lines with gentle drift */
-const TerrainDiagram = () => {
-  const draw = useCallback((ctx: CanvasRenderingContext2D, w: number, h: number, t: number) => {
-    ctx.fillStyle = "#F8F8FA";
-    ctx.fillRect(0, 0, w, h);
-
-    const cx = w * 0.45;
-    const cy = h * 0.5;
-
-    // Contour rings
-    for (let ring = 1; ring <= 8; ring++) {
-      const baseR = ring * 7;
-      ctx.beginPath();
-      const steps = 60;
-      for (let s = 0; s <= steps; s++) {
-        const a = (s / steps) * Math.PI * 2;
-        const wobble = Math.sin(a * 3 + t * 1.5 + ring * 0.7) * 3 +
-                       Math.sin(a * 5 - t) * 1.5;
-        const r = baseR + wobble;
-        const px = cx + Math.cos(a) * r;
-        const py = cy + Math.sin(a) * r * 0.7;
-        if (s === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
-      }
-      ctx.closePath();
-      const alpha = 0.12 - ring * 0.012;
-      ctx.strokeStyle = `rgba(10, 19, 68, ${Math.max(0.03, alpha)})`;
-      ctx.lineWidth = 0.7;
-      ctx.stroke();
-    }
-
-    // Elevation marker
-    ctx.beginPath();
-    ctx.arc(cx, cy, 1.5, 0, Math.PI * 2);
-    ctx.fillStyle = "rgba(10, 19, 68, 0.3)";
-    ctx.fill();
-
-    // Label
-    ctx.font = "7px monospace";
-    ctx.fillStyle = "rgba(10, 19, 68, 0.2)";
-    ctx.fillText("TOPO", 4, 10);
-  }, []);
-
-  const canvasRef = useCanvasLoop(draw);
-  return <canvas ref={canvasRef} className="w-full h-full block" />;
-};
-
-/** Activity — pulsing data points representing human activity signals */
-const ActivityDiagram = () => {
-  const pointsRef = useRef<{ x: number; y: number; phase: number; speed: number }[]>([]);
-
-  if (pointsRef.current.length === 0) {
-    for (let i = 0; i < 18; i++) {
-      const seed = i * 5.73;
-      pointsRef.current.push({
-        x: (Math.sin(seed) + 1) / 2,
-        y: (Math.cos(seed * 1.4) + 1) / 2,
-        phase: seed,
-        speed: 1.5 + Math.random() * 2,
-      });
-    }
-  }
-
-  const draw = useCallback((ctx: CanvasRenderingContext2D, w: number, h: number, t: number) => {
-    ctx.fillStyle = "#F8F8FA";
-    ctx.fillRect(0, 0, w, h);
-
-    // Subtle grid
-    ctx.strokeStyle = "rgba(10, 19, 68, 0.04)";
-    ctx.lineWidth = 0.5;
-    for (let x = 0; x < w; x += 16) {
-      ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke();
-    }
-    for (let y = 0; y < h; y += 16) {
-      ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke();
-    }
-
-    // Data points
-    for (const p of pointsRef.current) {
-      const px = p.x * w;
-      const py = p.y * h;
-      const pulse = Math.sin(t * p.speed + p.phase) * 0.5 + 0.5;
-
-      // Glow
-      ctx.beginPath();
-      ctx.arc(px, py, 3 + pulse * 4, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(10, 19, 68, ${0.03 + pulse * 0.04})`;
-      ctx.fill();
-
-      // Core dot
-      ctx.beginPath();
-      ctx.arc(px, py, 1 + pulse * 0.8, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(10, 19, 68, ${0.15 + pulse * 0.25})`;
-      ctx.fill();
-    }
-
-    // Connection lines between nearby points
-    ctx.strokeStyle = "rgba(10, 19, 68, 0.05)";
-    ctx.lineWidth = 0.4;
-    const pts = pointsRef.current;
-    for (let i = 0; i < pts.length; i++) {
-      for (let j = i + 1; j < pts.length; j++) {
-        const dx = (pts[i].x - pts[j].x) * w;
-        const dy = (pts[i].y - pts[j].y) * h;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-        if (dist < 30) {
-          ctx.beginPath();
-          ctx.moveTo(pts[i].x * w, pts[i].y * h);
-          ctx.lineTo(pts[j].x * w, pts[j].y * h);
-          ctx.stroke();
-        }
-      }
-    }
-
-    // Label
-    ctx.font = "7px monospace";
-    ctx.fillStyle = "rgba(10, 19, 68, 0.2)";
-    ctx.fillText("ACT", 4, 10);
-  }, []);
-
-  const canvasRef = useCanvasLoop(draw);
-  return <canvas ref={canvasRef} className="w-full h-full block" />;
+        {/* Fan-out paths + output nodes */}
+        {outputs.map((out, i) => {
+          const cy = out.y + NODE_H / 2;
+          return (
+            <g key={`out${i}`}>
+              <path
+                d={`M${CR} ${CCY} C${RMX} ${CCY} ${RMX} ${cy} ${OUT_X} ${cy}`}
+                stroke="rgba(10,19,68,0.2)" strokeWidth={1} fill="none"
+                strokeDasharray="6 4"
+                style={{ animation: `visionDash ${1.3 + i * 0.18}s linear infinite` }}
+              />
+              <rect x={OUT_X} y={out.y} width={OUT_W} height={NODE_H} rx={3} fill="#0A1344" />
+              <text x={OUT_X + OUT_W / 2} y={out.y + 15}
+                textAnchor="middle" fill="rgba(255,255,255,0.85)"
+                fontSize={8.5} fontFamily="ui-monospace,monospace" fontWeight="700" letterSpacing="0.1em">
+                {out.lines[0]}
+              </text>
+              <text x={OUT_X + OUT_W / 2} y={out.y + 28}
+                textAnchor="middle" fill="rgba(255,255,255,0.45)"
+                fontSize={8.5} fontFamily="ui-monospace,monospace" letterSpacing="0.07em">
+                {out.lines[1]}
+              </text>
+            </g>
+          );
+        })}
+      </svg>
+    </div>
+  );
 };

@@ -1005,10 +1005,17 @@ export const Hero = () => {
           }}>
             <a
               href="mailto:contact@columbus.earth"
-              className="flex items-center justify-center text-[17px] font-semibold leading-none rounded-none border border-[#0A1344] text-[#0A1344] transition-all duration-300 hover:bg-[#0A1344] hover:text-white"
-              style={{ width: 145, height: 45, marginRight: 16 }}
+              className="group flex items-center justify-between gap-3 leading-none rounded-none hover:opacity-90 transition-opacity"
+              style={{ width: 145, height: 45, marginRight: 16, paddingLeft: 20, paddingRight: 16, fontSize: 17, fontWeight: 500, backgroundColor: "#0A1344", color: "white" }}
             >
-              Contact
+              <span>Contact</span>
+              <svg
+                className="transition-transform duration-300 group-hover:translate-x-0.5"
+                width="7" height="12" viewBox="0 0 7 12" fill="none"
+                stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"
+              >
+                <path d="M1 1l5 5-5 5" />
+              </svg>
             </a>
             {[
               { label: "Technology", href: "/technology" },

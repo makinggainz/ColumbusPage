@@ -35,8 +35,26 @@ html {
 }
 
 /* Grid-based content layout — collapse borders between stacked sections */
+.grid-section {
+  position: relative;
+  isolation: isolate;
+}
+
 .grid-section + .grid-section {
   margin-top: -1px;
+}
+
+/* Right-side fading border — painted on top of child borderRight via ::after */
+.grid-section::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 1px;
+  height: 100%;
+  background: linear-gradient(to bottom, transparent 0px, var(--grid-line) 72px, var(--grid-line) calc(100% - 72px), transparent 100%);
+  pointer-events: none;
+  z-index: 1;
 }
 
 @media (min-width: 940px) {

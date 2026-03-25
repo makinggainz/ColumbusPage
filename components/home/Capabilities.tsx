@@ -114,7 +114,6 @@ export const Capabilities = () => {
         <div
           className="flex items-center justify-center px-8 md:px-10 py-6"
           style={{
-            borderRight: gl,
             opacity: visible ? 1 : 0,
             transform: visible ? "translateY(0)" : "translateY(12px)",
             transition: "opacity 0.7s ease, transform 0.7s ease",
@@ -128,7 +127,6 @@ export const Capabilities = () => {
         {/* Main content */}
         <div
           style={{
-            borderRight: gl,
             borderBottom: gl,
             opacity: visible ? 1 : 0,
             transform: visible ? "translateY(0)" : "translateY(16px)",

@@ -26,7 +26,7 @@ export const Careers = () => {
 
   return (
     <GridSection>
-      <div ref={ref} style={{ borderRight: gl, borderBottom: gl }}>
+      <div ref={ref} style={{ borderBottom: gl }}>
         {/* Top centered heading */}
         <div className="text-center pt-20 pb-24 px-8" style={anim(0)}>
           <h2 className="text-[#0A1344] font-semibold tracking-[-0.02em] leading-[1.1] mb-4" style={{ fontSize: "clamp(36px, 4.5vw, 52px)" }}>

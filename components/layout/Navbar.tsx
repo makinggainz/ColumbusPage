@@ -237,28 +237,36 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
                                     ))}
                                 </div>
 
-                                {/* Start Now — grows laterally into position */}
+                                {/* Start Now — matches "Our research & technology" style */}
                                 <Link
                                     href="/maps-gpt"
-                                    className={`hidden min-[1155px]:flex items-center justify-center font-semibold leading-none rounded-none whitespace-nowrap ${
-                                        isDark
-                                            ? "bg-white text-[#0A1344] hover:bg-white/90"
-                                            : "bg-[#0A1344] text-white hover:bg-[#0A1344]/85"
-                                    }`}
+                                    className="group hidden min-[1155px]:flex items-center justify-between gap-3 leading-none whitespace-nowrap hover:opacity-90 transition-opacity"
                                     style={{
                                         fontSize: 14,
+                                        fontWeight: 500,
                                         height: 36,
-                                        width: isCompact ? 120 : 0,
+                                        width: isCompact ? 130 : 0,
                                         opacity: isCompact ? 1 : 0,
                                         overflow: "hidden",
                                         pointerEvents: isCompact ? "auto" : "none",
                                         marginRight: isCompact ? 8 : 0,
                                         marginLeft: isCompact ? 8 : 0,
+                                        paddingLeft: 16,
+                                        paddingRight: 14,
                                         transition: `width ${t}, opacity 300ms ease, margin ${t}`,
+                                        backgroundColor: isDark ? "white" : "#0A1344",
+                                        color: isDark ? "#0A1344" : "white",
                                     }}
                                     onMouseEnter={handleNavMouseEnter}
                                 >
-                                    Start Now
+                                    <span>Start Now</span>
+                                    <svg
+                                        className="transition-transform duration-300 group-hover:translate-x-0.5"
+                                        width="7" height="12" viewBox="0 0 7 12" fill="none"
+                                        stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"
+                                    >
+                                        <path d="M1 1l5 5-5 5" />
+                                    </svg>
                                 </Link>
 
                                 {/* Hamburger */}
