@@ -16,7 +16,13 @@ export function GridSection({
   return (
     <section
       className={`grid-section max-w-[1287px] mx-auto bg-white ${className}`}
-      style={{ borderLeft: gl, ...style }}
+      style={{
+        backgroundImage: `linear-gradient(to bottom, transparent 0px, var(--grid-line) 72px, var(--grid-line) calc(100% - 72px), transparent 100%)`,
+        backgroundSize: "1px 100%",
+        backgroundRepeat: "no-repeat",
+        backgroundPosition: "left top",
+        ...style,
+      }}
     >
       {children}
     </section>

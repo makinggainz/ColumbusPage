@@ -14,28 +14,8 @@ import { TravelSection } from "@/components/home/TravelSection";
 import { GeneratedMaps } from "@/components/home/GeneratedMaps";
 import { UniqueSpotsSection } from "@/components/home/UniqueSpotsSection";
 
-function Island({ children }: { children: ReactNode }) {
-  return (
-    <div className="mt-16 relative">
-      <div
-        aria-hidden
-        style={{
-          position: "absolute", top: 0, left: 0, right: 0, height: 80,
-          background: "linear-gradient(to bottom, #ffffff, transparent)",
-          pointerEvents: "none", zIndex: 10,
-        }}
-      />
-      {children}
-      <div
-        aria-hidden
-        style={{
-          position: "absolute", bottom: 0, left: 0, right: 0, height: 80,
-          background: "linear-gradient(to top, #ffffff, transparent)",
-          pointerEvents: "none", zIndex: 10,
-        }}
-      />
-    </div>
-  );
+function Island({ children, className = "" }: { children: ReactNode; className?: string }) {
+  return <div className={`mt-64 ${className}`}>{children}</div>;
 }
 
 export default function Home() {
@@ -45,7 +25,7 @@ export default function Home() {
       <Hero />
 
       {/* Island 1: Vision */}
-      <Island>
+      <Island className="mt-16!">
         <Vision />
       </Island>
 
