@@ -32,6 +32,8 @@ html {
   --container-padding: 20px;
   --page-padding: calc(var(--container-padding) + 18px); /* matches navbar logo/hamburger edges */
   --grid-line: rgba(120, 120, 200, 0.2);
+  --cell-grid: rgba(55, 40, 140, 0.06);
+  --cell-grid-size: 40px;
 }
 
 /* Grid-based content layout — collapse borders between stacked sections */

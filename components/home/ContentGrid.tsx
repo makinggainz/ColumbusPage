@@ -16,7 +16,14 @@ export function GridSection({
   return (
     <section
       className={`grid-section max-w-[1287px] mx-auto bg-white ${className}`}
-      style={{ borderTop: gl, borderLeft: gl, ...style }}
+      style={{
+        borderTop: gl,
+        borderLeft: gl,
+        backgroundImage:
+          "linear-gradient(var(--cell-grid) 1px, transparent 1px), linear-gradient(90deg, var(--cell-grid) 1px, transparent 1px)",
+        backgroundSize: "var(--cell-grid-size) var(--cell-grid-size)",
+        ...style,
+      }}
     >
       {children}
     </section>
@@ -73,6 +80,9 @@ export function GridCell({
       style={{
         borderRight: gl,
         borderBottom: gl,
+        backgroundImage:
+          "linear-gradient(var(--cell-grid) 1px, transparent 1px), linear-gradient(90deg, var(--cell-grid) 1px, transparent 1px)",
+        backgroundSize: "var(--cell-grid-size) var(--cell-grid-size)",
         ...style,
       }}
     >
