@@ -1,9 +1,15 @@
 "use client";
 
-import { type ReactNode, type CSSProperties } from "react";
+import { type ReactNode, type CSSProperties, forwardRef } from "react";
 
-const gl = "1px solid var(--grid-line)";
+// Unified grid line — used as box-shadow on cells to create the mesh
+const gridLine = "0 0 0 1px var(--grid-line)";
 
+/**
+ * GridSection — a 6-column CSS Grid section.
+ * Each section is its own grid container with matching columns,
+ * so stacked sections create a visually unified grid (like dify.ai).
+ */
 export function GridSection({
   children,
   className = "",
@@ -15,13 +21,47 @@ export function GridSection({
 }) {
   return (
     <section
-      className={`grid-section max-w-[1287px] mx-auto bg-white ${className}`}
-      style={{ borderTop: gl, borderLeft: gl, ...style }}
+      className={`max-w-[1280px] mx-auto bg-white ${className}`}
+      style={{
+        display: "grid",
+        gridTemplateColumns: "repeat(6, 1fr)",
+        gridAutoRows: "min-content",
+        boxShadow: gridLine,
+        ...style,
+      }}
     >
       {children}
     </section>
   );
 }
+
+/**
+ * GridCell — a cell within a GridSection.
+ * Box-shadow creates visible grid lines between cells.
+ */
+export const GridCell = forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement> & {
+    children?: ReactNode;
+    span?: number;
+  }
+>(({ children, span = 6, className = "", style, ...rest }, ref) => (
+  <div
+    ref={ref}
+    className={className}
+    style={{
+      gridColumn: `span ${span}`,
+      ...style,
+    }}
+    {...rest}
+  >
+    {children}
+  </div>
+));
+GridCell.displayName = "GridCell";
+
+// Legacy exports
+export const gl = "1px solid var(--grid-line)";
 
 export function GridHeader({
   label,
@@ -33,10 +73,7 @@ export function GridHeader({
   subtitle?: string;
 }) {
   return (
-    <div
-      className="py-6 px-8 md:px-10"
-      style={{ borderRight: gl, borderBottom: gl }}
-    >
+    <GridCell className="py-6 px-8 md:px-10">
       <span className="text-[11px] font-semibold tracking-[0.2em] uppercase text-[#0A1344]/30 font-mono block">
         {label}
       </span>
@@ -50,35 +87,8 @@ export function GridHeader({
           {subtitle}
         </p>
       )}
-    </div>
+    </GridCell>
   );
 }
 
-export function GridCell({
-  children,
-  className = "",
-  flush = false,
-  hoverable = true,
-  style,
-}: {
-  children: ReactNode;
-  className?: string;
-  flush?: boolean;
-  hoverable?: boolean;
-  style?: CSSProperties;
-}) {
-  return (
-    <div
-      className={`${flush ? "" : "p-8 md:p-10"} ${hoverable ? "transition-colors duration-200 hover:bg-[rgba(120,120,200,0.04)]" : ""} ${className}`}
-      style={{
-        borderRight: gl,
-        borderBottom: gl,
-        ...style,
-      }}
-    >
-      {children}
-    </div>
-  );
-}
-
-export { gl };
+export { gridLine };

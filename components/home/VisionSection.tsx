@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState, useCallback } from "react";
-import { GridSection, gl } from "./ContentGrid";
+import { GridSection, GridCell } from "./ContentGrid";
 
 export const Vision = () => {
   const ref = useRef<HTMLDivElement>(null);
@@ -63,12 +63,8 @@ export const Vision = () => {
       <div ref={sentinelTopRef} className="h-0" />
 
     <GridSection>
-      {/* Heading */}
-      <div
-        ref={ref}
-        className="px-8 md:px-10 py-10 md:py-14"
-        style={{ borderRight: gl, borderBottom: gl }}
-      >
+      {/* Heading — full-width cell */}
+      <GridCell ref={ref} className="px-8 md:px-10 py-10 md:py-14">
         <h2
           className="text-[#1D1D1F] leading-[1.15] tracking-[-0.02em]"
           style={{ fontSize: 48, fontWeight: 300, ...anim(0) }}
@@ -76,51 +72,50 @@ export const Vision = () => {
           A new breed of AI,{" "}
           <span className="font-bold">COLUMBUS-01</span>
         </h2>
-      </div>
+      </GridCell>
 
-      {/* Image grid */}
-      <div
-        className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 auto-rows-[120px] sm:auto-rows-[140px] lg:auto-rows-[160px]"
-        style={{
-          gridAutoFlow: "dense",
-          ...anim(100),
-        }}
-      >
-        {/* Row 1 */}
-        <Tile src="/image1.png" />
-        <TextTile title="General Intelligence" subtitle="for the physical world" />
-        <Tile src="/image2.png" />
-        <Tile src="/image3.png" />
-        <Tile src="/image4.png" />
+      {/* Image mosaic — nested 6-col grid inside a full-width cell */}
+      <GridCell style={{ padding: 0, ...anim(100) }}>
+        <div
+          className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 auto-rows-[120px] sm:auto-rows-[140px] lg:auto-rows-[160px]"
+          style={{ gridAutoFlow: "dense" }}
+        >
+          {/* Row 1 */}
+          <Tile src="/image1.png" />
+          <TextTile title="General Intelligence" subtitle="for the physical world" />
+          <Tile src="/image2.png" />
+          <Tile src="/image3.png" />
+          <Tile src="/image4.png" />
 
-        {/* Row 2 */}
-        <Tile src="/image5.png" />
-        <Tile src="/image6.png" />
-        <Tile src="/image7.png" />
-        <Tile src="/image8.png" />
-        <Tile src="/image9.png" />
-        <Tile src="/image10.png" />
+          {/* Row 2 */}
+          <Tile src="/image5.png" />
+          <Tile src="/image6.png" />
+          <Tile src="/image7.png" />
+          <Tile src="/image8.png" />
+          <Tile src="/image9.png" />
+          <Tile src="/image10.png" />
 
-        {/* Row 3 */}
-        <Tile src="/image111.png" />
-        <Tile src="/image112.png" />
-        <TextTile title="Foundational Models" subtitle="for Earth" />
-        <Tile src="/image113.png" />
-        <Tile src="/image114.png" />
+          {/* Row 3 */}
+          <Tile src="/image111.png" />
+          <Tile src="/image112.png" />
+          <TextTile title="Foundational Models" subtitle="for Earth" />
+          <Tile src="/image113.png" />
+          <Tile src="/image114.png" />
 
-        {/* Row 4 */}
-        <Tile src="/image12.png" />
-        <Tile src="/image.png" />
-        <Tile src="/image14.png" />
-        <Tile src="/image15.png" />
-        <Tile src="/image16.png" />
-        <Tile src="/image17.png" />
-      </div>
+          {/* Row 4 */}
+          <Tile src="/image12.png" />
+          <Tile src="/image.png" />
+          <Tile src="/image14.png" />
+          <Tile src="/image15.png" />
+          <Tile src="/image16.png" />
+          <Tile src="/image17.png" />
+        </div>
+      </GridCell>
 
       {/* Bottom section — tagline, diagrams, description, CTA */}
-      <div
+      <GridCell
         className="flex flex-col items-center px-8 py-14 gap-10"
-        style={{ borderRight: gl, borderBottom: gl, ...anim(200) }}
+        style={{ ...anim(200) }}
       >
         {/* Mini title */}
         <p className="text-[20px] font-semibold text-[#1D1D1F] tracking-[-0.02em]">
@@ -156,7 +151,7 @@ export const Vision = () => {
             <path d="M1 1l5 5-5 5" />
           </svg>
         </Link>
-      </div>
+      </GridCell>
     </GridSection>
     {/* Bottom sentinel — when this scrolls past, sticky is over */}
     <div ref={sentinelBottomRef} className="h-0" />
@@ -166,17 +161,15 @@ export const Vision = () => {
 
 const Tile = ({ src }: { src: string }) => (
   <div
-    className="relative w-full h-full overflow-hidden rounded-none"
-    style={{ borderRight: gl, borderBottom: gl }}
+    className="relative w-full h-full overflow-hidden"
   >
-    <Image src={src} alt="" fill className="object-cover rounded-none" />
+    <Image src={src} alt="" fill className="object-cover" />
   </div>
 );
 
 const TextTile = ({ title, subtitle }: { title: string; subtitle: string }) => (
   <div
     className="col-span-1 sm:col-span-2 flex flex-col justify-center items-center text-center px-6"
-    style={{ borderRight: gl, borderBottom: gl }}
   >
     <h3 className="text-xl md:text-2xl font-semibold text-[#1D1D1F] leading-tight tracking-tight">
       {title}

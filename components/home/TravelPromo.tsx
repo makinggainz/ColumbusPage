@@ -34,8 +34,8 @@ export const TravelPromo = () => {
   const ctaP = ease(progress, 0.40, 0.60);
 
   return (
-    <GridSection style={{ borderTop: "none" }}>
-      <div style={{ borderRight: gl, borderBottom: gl }}>
+    <GridSection>
+      <div>
         <div ref={sectionRef} className="relative" style={{ height: "200vh" }}>
           <div
             className="sticky top-0 h-screen overflow-hidden"

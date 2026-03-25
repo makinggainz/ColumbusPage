@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { GridSection, gl } from "./ContentGrid";
+import { GridSection, GridCell } from "./ContentGrid";
 
 const CARDS = [
   { src: "/Icon/gen.png", label: "City Security", href: "/use-cases" },
@@ -35,22 +35,16 @@ export const Industries = () => {
   });
 
   return (
-    <GridSection style={{ borderTop: "none" }}>
-      <div ref={ref}>
-        {/* Title */}
-        <div
-          className="flex items-center justify-center py-8 px-8"
-          style={{ borderRight: gl, borderBottom: gl, ...anim(0) }}
-        >
-          <h2 className="text-[#1D1D1F] text-[24px] md:text-[28px] font-normal tracking-[-0.01em]">
-            Find your industry
-          </h2>
-        </div>
+    <GridSection>
+      <GridCell ref={ref} className="flex items-center justify-center py-8 px-8" style={{ ...anim(0) }}>
+        <h2 className="text-[#1D1D1F] text-[24px] md:text-[28px] font-normal tracking-[-0.01em]">
+          Find your industry
+        </h2>
+      </GridCell>
 
-        {/* Cards row */}
+      <GridCell style={{ padding: 0 }}>
         <div
           className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5"
-          style={{ borderBottom: gl }}
         >
           {CARDS.map((card, i) => (
             <Link
@@ -58,7 +52,6 @@ export const Industries = () => {
               href={card.href}
               className="group block"
               style={{
-                borderRight: gl,
                 ...anim(100 + i * 80),
               }}
             >
@@ -95,23 +88,19 @@ export const Industries = () => {
             </Link>
           ))}
         </div>
+      </GridCell>
 
-        {/* CTA button */}
-        <div
-          className="flex items-center justify-center py-6 px-8"
-          style={{ borderRight: gl, borderBottom: gl, ...anim(550) }}
+      <GridCell className="flex items-center justify-center py-6 px-8" style={{ ...anim(550) }}>
+        <Link
+          href="/maps-gpt"
+          className="inline-flex items-center gap-2 px-10 py-4 rounded-none border border-[#1D1D1F] text-[#1D1D1F] text-[17px] font-medium hover:bg-[#1D1D1F] hover:text-white transition-colors"
         >
-          <Link
-            href="/maps-gpt"
-            className="inline-flex items-center gap-2 px-10 py-4 rounded-none border border-[#1D1D1F] text-[#1D1D1F] text-[17px] font-medium hover:bg-[#1D1D1F] hover:text-white transition-colors"
-          >
-            Learn more about Columbus Pro
-            <svg width="8" height="14" viewBox="0 0 8 14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M1 1l6 6-6 6" />
-            </svg>
-          </Link>
-        </div>
-      </div>
+          Learn more about Columbus Pro
+          <svg width="8" height="14" viewBox="0 0 8 14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M1 1l6 6-6 6" />
+          </svg>
+        </Link>
+      </GridCell>
     </GridSection>
   );
 };

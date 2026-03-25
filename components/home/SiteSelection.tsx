@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { GridSection, gl } from "./ContentGrid";
+import { GridSection, GridCell } from "./ContentGrid";
 import glassStyles from "@/components/ui/GlassButton.module.css";
 
 const PILLS = ["Map Chat", "Agentic Audits", "Agentic Research Reports", "Data Catalogue"];
@@ -58,10 +58,10 @@ export const SiteSelection = () => {
       // Snap to target when very close (avoid infinite micro-updates)
       if (Math.abs(target - current) < 0.001) current = target;
 
-      // Calculate inset so progress=0 fits exactly within the island (1287px max-width)
+      // Calculate inset so progress=0 fits exactly within the island (1280px max-width)
       // The card is 100vw wide; we need to clip it to match the island container
       const vw = window.innerWidth;
-      const islandWidth = Math.min(1287, vw); // island can't exceed viewport
+      const islandWidth = Math.min(1280, vw); // island can't exceed viewport
       const startInsetPx = (vw - islandWidth) / 2;
       const startInsetPct = (startInsetPx / vw) * 100;
 
@@ -109,9 +109,16 @@ export const SiteSelection = () => {
 
   return (
     <GridSection>
-      <div ref={ref} style={{ borderRight: gl, borderBottom: gl }}>
+      <div
+        ref={ref}
+        style={{
+          gridColumn: "1 / -1",
+          display: "grid",
+          gridTemplateColumns: "repeat(6, 1fr)",
+        }}
+      >
         {/* Top bar: Columbus Pro + New | Start Now */}
-        <div className="flex items-center justify-between px-8 md:px-10 py-6" style={anim(0)}>
+        <GridCell className="flex items-center justify-between px-8 md:px-10 py-6" style={anim(0)}>
           <div className="flex items-center gap-3">
             <span className="text-[#1D1D1F] font-bold" style={{ fontSize: 40 }}>
               Columbus Pro
@@ -132,106 +139,105 @@ export const SiteSelection = () => {
               <path d="M1 1l6 6-6 6" />
             </svg>
           </Link>
-        </div>
+        </GridCell>
 
         {/* Hero card — clip-path expansion from compact to full-screen on scroll */}
-        <div
-          ref={heroCardRef}
-          className="relative overflow-hidden"
-          style={{
-            width: "100vw",
-            marginLeft: "calc(-50vw + 50%)",
-            clipPath: "inset(0 0 0 0 round 0px)",
-            opacity: visible ? 1 : 0,
-            transform: visible ? "translateY(0)" : "translateY(16px)",
-            transition: "opacity 0.7s ease 100ms, transform 0.7s ease 100ms",
-            willChange: "clip-path",
-          }}
-        >
-          <div className="relative" style={{ minHeight: 800 }}>
-            <Image
-              ref={imgRef}
-              src="/ProductBackgroundImageHome.png"
-              alt=""
-              fill
-              className="object-cover"
-              style={{
-                transform: "scale(1.03)",
-                willChange: "transform",
-              }}
-            />
+        <GridCell style={{ padding: 0, overflow: "visible" }}>
+          <div
+            ref={heroCardRef}
+            className="relative overflow-hidden"
+            style={{
+              width: "100vw",
+              marginLeft: "calc(-50vw + 50%)",
+              clipPath: "inset(0 0 0 0 round 0px)",
+              opacity: visible ? 1 : 0,
+              transform: visible ? "translateY(0)" : "translateY(16px)",
+              transition: "opacity 0.7s ease 100ms, transform 0.7s ease 100ms",
+              willChange: "clip-path",
+            }}
+          >
+            <div className="relative" style={{ minHeight: 800 }}>
+              <Image
+                ref={imgRef}
+                src="/ProductBackgroundImageHome.png"
+                alt=""
+                fill
+                className="object-cover"
+                style={{
+                  transform: "scale(1.03)",
+                  willChange: "transform",
+                }}
+              />
 
-            {/* Content over image */}
-            <div className="relative z-10 flex flex-col items-center pt-16 md:pt-24 px-6">
-              {/* Main heading */}
-              <h2
-                ref={headingRef}
-                className="text-[#1D1D1F] text-center leading-[1.05] tracking-[-0.02em]"
-                style={{ fontSize: 96, fontWeight: 400 }}
-              >
-                An Agentic GIS platform
-              </h2>
-
-              {/* Subtitle */}
-              <p className="text-[17px] text-[#1D1D1F]/70 mt-8 text-center">
-                Columbus turns you into a <span className="font-bold text-[#1D1D1F]">super-explorer.</span>
-              </p>
-
-              {/* Pill toggle */}
-              <PillToggle />
-
-              {/* Desktop + Mobile UI mockups */}
-              <div className="relative w-full max-w-[1100px] mx-auto mt-12" style={{ height: 480 }}>
-                {/* Desktop UI */}
-                <div
-                  className="absolute overflow-hidden"
-                  style={{
-                    left: "2%",
-                    bottom: 0,
-                    width: "68%",
-                    height: "100%",
-                    borderRadius: "12px 12px 0 0",
-                    boxShadow: "0 -4px 40px rgba(0,0,0,0.12)",
-                  }}
+              {/* Content over image */}
+              <div className="relative z-10 flex flex-col items-center pt-16 md:pt-24 px-6">
+                {/* Main heading */}
+                <h2
+                  ref={headingRef}
+                  className="text-[#1D1D1F] text-center leading-[1.05] tracking-[-0.02em]"
+                  style={{ fontSize: 96, fontWeight: 400 }}
                 >
-                  <Image
-                    src="/Icon/desktop-ui.png"
-                    alt="Desktop UI"
-                    fill
-                    className="object-cover object-top"
-                  />
-                </div>
+                  An Agentic GIS platform
+                </h2>
 
-                {/* Mobile UI */}
-                <div
-                  className="absolute overflow-hidden"
-                  style={{
-                    right: "5%",
-                    bottom: 0,
-                    width: 220,
-                    height: "95%",
-                    borderRadius: "16px 16px 0 0",
-                    boxShadow: "-4px 0 40px rgba(0,0,0,0.15)",
-                    zIndex: 2,
-                  }}
-                >
-                  <Image
-                    src="/Icon/mobile-ui.png"
-                    alt="Mobile UI"
-                    fill
-                    className="object-cover object-top"
-                  />
+                {/* Subtitle */}
+                <p className="text-[17px] text-[#1D1D1F]/70 mt-8 text-center">
+                  Columbus turns you into a <span className="font-bold text-[#1D1D1F]">super-explorer.</span>
+                </p>
+
+                {/* Pill toggle */}
+                <PillToggle />
+
+                {/* Desktop + Mobile UI mockups */}
+                <div className="relative w-full max-w-[1100px] mx-auto mt-12" style={{ height: 480 }}>
+                  {/* Desktop UI */}
+                  <div
+                    className="absolute overflow-hidden"
+                    style={{
+                      left: "2%",
+                      bottom: 0,
+                      width: "68%",
+                      height: "100%",
+                      borderRadius: "12px 12px 0 0",
+                      boxShadow: "0 -4px 40px rgba(0,0,0,0.12)",
+                    }}
+                  >
+                    <Image
+                      src="/Icon/desktop-ui.png"
+                      alt="Desktop UI"
+                      fill
+                      className="object-cover object-top"
+                    />
+                  </div>
+
+                  {/* Mobile UI */}
+                  <div
+                    className="absolute overflow-hidden"
+                    style={{
+                      right: "5%",
+                      bottom: 0,
+                      width: 220,
+                      height: "95%",
+                      borderRadius: "16px 16px 0 0",
+                      boxShadow: "-4px 0 40px rgba(0,0,0,0.15)",
+                      zIndex: 2,
+                    }}
+                  >
+                    <Image
+                      src="/Icon/mobile-ui.png"
+                      alt="Mobile UI"
+                      fill
+                      className="object-cover object-top"
+                    />
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
+        </GridCell>
 
         {/* Check it out CTA */}
-        <div
-          className="flex items-center justify-center py-6"
-          style={{ borderRight: gl }}
-        >
+        <GridCell className="flex items-center justify-center py-6">
           <Link
             href="/maps-gpt"
             className="inline-flex items-center gap-2 px-10 py-4 rounded-none border border-[#1D1D1F] text-[#1D1D1F] text-[20px] font-semibold hover:bg-[#1D1D1F] hover:text-white transition-colors"
@@ -241,7 +247,7 @@ export const SiteSelection = () => {
               <path d="M1 1l6 6-6 6" />
             </svg>
           </Link>
-        </div>
+        </GridCell>
       </div>
     </GridSection>
   );

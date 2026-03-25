@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { GridSection, gl } from "./ContentGrid";
+import { GridSection, GridCell } from "./ContentGrid";
 
 type SidebarItem = {
   id: string;
@@ -108,13 +108,19 @@ export const Capabilities = () => {
   };
 
   return (
-    <GridSection style={{ borderTop: "none" }}>
-      <div ref={sectionRef}>
+    <GridSection>
+      <div
+        ref={sectionRef}
+        style={{
+          gridColumn: "1 / -1",
+          display: "grid",
+          gridTemplateColumns: "repeat(6, 1fr)",
+        }}
+      >
         {/* Header */}
-        <div
+        <GridCell
           className="flex items-center justify-center px-8 md:px-10 py-6"
           style={{
-            borderRight: gl,
             opacity: visible ? 1 : 0,
             transform: visible ? "translateY(0)" : "translateY(12px)",
             transition: "opacity 0.7s ease, transform 0.7s ease",
@@ -123,13 +129,12 @@ export const Capabilities = () => {
           <h2 className="text-[#1D1D1F] text-[24px] font-normal tracking-[-0.02em]">
             Capabilities
           </h2>
-        </div>
+        </GridCell>
 
         {/* Main content */}
-        <div
+        <GridCell
           style={{
-            borderRight: gl,
-            borderBottom: gl,
+            padding: 0,
             opacity: visible ? 1 : 0,
             transform: visible ? "translateY(0)" : "translateY(16px)",
             transition: "opacity 0.7s ease 0.15s, transform 0.7s ease 0.15s",
@@ -292,7 +297,7 @@ export const Capabilities = () => {
               </Link>
             </div>
           </div>
-        </div>
+        </GridCell>
       </div>
     </GridSection>
   );

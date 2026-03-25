@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { GridSection, gl } from "./ContentGrid";
+import { GridSection, GridCell } from "./ContentGrid";
 
 export const Applications = () => {
   const ref = useRef<HTMLDivElement>(null);
@@ -40,34 +40,31 @@ export const Applications = () => {
 
   return (
     <GridSection>
-      <div ref={ref} style={{ borderRight: gl, borderBottom: gl }}>
-        {/* Header area */}
-        <div className="px-8 md:px-10 pt-14 pb-4">
-          <h2
-            className="text-[#1D1D1F] font-bold tracking-[-0.02em] leading-[1.12] max-w-[700px]"
-            style={{ fontSize: "clamp(32px, 4vw, 48px)", ...anim(0) }}
-          >
-            We&apos;re actively exploring various application areas
-          </h2>
-        </div>
-
-        {/* Subtitle + tag row */}
-        <div
-          className="flex items-end justify-between px-8 md:px-10 pb-8"
-          style={anim(100)}
+      <GridCell ref={ref} className="px-8 md:px-10 pt-14 pb-4">
+        <h2
+          className="text-[#1D1D1F] font-bold tracking-[-0.02em] leading-[1.12] max-w-[700px]"
+          style={{ fontSize: "clamp(32px, 4vw, 48px)", ...anim(0) }}
         >
-          <p className="text-[#6E6E73] text-[17px] leading-[1.47]">
-            We&apos;d love to work within your industry, send us a{" "}
-            <a href="mailto:hey@columbus.earth" className="text-[#1D1D1F] hover:underline">
-              hey@columbus.earth
-            </a>
-          </p>
-          <span className="text-[#1D1D1F] font-mono text-[13px] tracking-wide whitespace-nowrap ml-6">
-            [ COLUMBUS PRO-1 ]
-          </span>
-        </div>
+          We&apos;re actively exploring various application areas
+        </h2>
+      </GridCell>
 
-        {/* 3×3 image grid — flush, no gaps */}
+      <GridCell
+        className="flex items-end justify-between px-8 md:px-10 pb-8"
+        style={anim(100)}
+      >
+        <p className="text-[#6E6E73] text-[17px] leading-[1.47]">
+          We&apos;d love to work within your industry, send us a{" "}
+          <a href="mailto:hey@columbus.earth" className="text-[#1D1D1F] hover:underline">
+            hey@columbus.earth
+          </a>
+        </p>
+        <span className="text-[#1D1D1F] font-mono text-[13px] tracking-wide whitespace-nowrap ml-6">
+          [ COLUMBUS PRO-1 ]
+        </span>
+      </GridCell>
+
+      <GridCell style={{ padding: 0 }}>
         <div
           className="grid grid-cols-1 md:grid-cols-3"
           style={anim(200)}
@@ -96,7 +93,7 @@ export const Applications = () => {
             </Link>
           ))}
         </div>
-      </div>
+      </GridCell>
     </GridSection>
   );
 };

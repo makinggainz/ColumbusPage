@@ -919,7 +919,7 @@ export const Hero = () => {
       />
 
       {/* Hero text — fades in immediately on mount */}
-      <Container className="relative z-10 pt-24 md:pt-32" style={{ maxWidth: 1287 }}>
+      <Container className="relative z-10 pt-24 md:pt-32" style={{ maxWidth: 1280 }}>
         <div className="max-w-292">
           {/* Eyebrow */}
           <p

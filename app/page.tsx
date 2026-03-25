@@ -18,43 +18,25 @@ export default function Home() {
     <main
       className="min-h-screen"
       style={{
-        backgroundColor: "rgba(55, 40, 140, 0.03)",
+        backgroundColor: "#FFFFFF",
+        backgroundImage: `linear-gradient(var(--grid-line) 1px, transparent 1px), linear-gradient(90deg, var(--grid-line) 1px, transparent 1px)`,
+        backgroundSize: "80px 80px",
+        backgroundPosition: "calc(50vw - 640px) 0",
       }}
     >
       <Navbar />
       <Hero />
-
-      {/* Island 1: Vision */}
-      <div className="mt-16">
-        <Vision />
-      </div>
-
-      {/* Island 2: Columbus Pro */}
-      <div className="mt-16">
-        <SiteSelection />
-        <Capabilities />
-        <PartnerStrip />
-        <Industries />
-      </div>
-
-      {/* Island 3: MapsGPT */}
-      <div className="mt-16">
-        <TravelSection />
-        <TrustStrip />
-        <GeneratedMaps />
-        <UniqueSpotsSection />
-      </div>
-
-      {/* Island 4: Applications */}
-      <div className="mt-16">
-        <Applications />
-      </div>
-
-      {/* Island 5: Hiring Humans */}
-      <div className="mt-16">
-        <Careers />
-      </div>
-
+      <Vision />
+      <SiteSelection />
+      <Capabilities />
+      <PartnerStrip />
+      <Industries />
+      <TravelSection />
+      <TrustStrip />
+      <GeneratedMaps />
+      <UniqueSpotsSection />
+      <Applications />
+      <Careers />
       <Footer />
     </main>
   );

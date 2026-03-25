@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { cambo } from "@/app/fonts";
-import { GridSection, gl } from "./ContentGrid";
+import { GridSection } from "./ContentGrid";
 
 const TABS = ["Plan cool trips", "Group planning", "Find spots", "Custom maps"];
 
@@ -58,7 +58,7 @@ export const TravelSection = () => {
       if (Math.abs(target - current) < 0.001) current = target;
 
       const vw = window.innerWidth;
-      const islandWidth = Math.min(1287, vw);
+      const islandWidth = Math.min(1280, vw);
       const startInsetPx = (vw - islandWidth) / 2;
       const startInsetPct = (startInsetPx / vw) * 100;
 
@@ -97,12 +97,11 @@ export const TravelSection = () => {
   });
 
   return (
-    <section ref={ref} className="relative overflow-hidden">
-      {/* Top bar — wrapped in GridSection for left/right grid lines */}
-      <GridSection>
+    <section ref={ref} className="relative overflow-hidden max-w-[1280px] mx-auto" style={{ boxShadow: "0 0 0 1px var(--grid-line)" }}>
+      {/* Top bar */}
+      <GridSection style={{ boxShadow: "none" }}>
         <div
           className="flex items-center justify-between px-8 md:px-10 py-6"
-          style={{ borderRight: gl, borderBottom: gl }}
         >
           <span className="text-[#1D1D1F] font-bold" style={{ fontSize: 40 }}>
             MapsGPT <span className="font-normal">– AI-powered social map</span>

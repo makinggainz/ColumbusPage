@@ -2,7 +2,7 @@
 
 import { Star, MapPin } from "lucide-react";
 import { useRef, useState, useEffect } from "react";
-import { GridSection, gl } from "./ContentGrid";
+import { GridSection, GridCell } from "./ContentGrid";
 
 const FAVORITE_SPOTS_FILES = ["(20).jpeg", "(14).jpeg", "(17).jpeg", "(19).jpeg", "(21).jpeg", "(23).jpeg", "(24).jpeg", "(22).jpeg"];
 const spotImageSrc = (filename: string) => `/FavoriteSpots/${encodeURIComponent(filename)}`;
@@ -56,23 +56,20 @@ export const UniqueSpotsSection = () => {
   };
 
   return (
-    <GridSection style={{ borderTop: "none" }}>
-      <div ref={ref} style={{ borderRight: gl, borderBottom: gl }}>
-        {/* Heading */}
-        <div className="flex flex-col items-center text-center px-8 pt-14 pb-3" style={anim(0)}>
-          <h2 className="text-[#1D1D1F] text-[32px] md:text-[40px] font-bold tracking-[-0.02em] leading-[1.1]">
-            Find your next hang out spot, easier
-          </h2>
-        </div>
+    <GridSection>
+      <GridCell ref={ref} className="flex flex-col items-center text-center px-8 pt-14 pb-3" style={anim(0)}>
+        <h2 className="text-[#1D1D1F] text-[32px] md:text-[40px] font-bold tracking-[-0.02em] leading-[1.1]">
+          Find your next hang out spot, easier
+        </h2>
+      </GridCell>
 
-        {/* Subtitle */}
-        <div className="flex items-center justify-center px-8 pb-10" style={anim(100)}>
-          <p className="text-[#6E6E73] text-[17px]">
-            Spots found faster on MapsGPT
-          </p>
-        </div>
+      <GridCell className="flex items-center justify-center px-8 pb-10" style={anim(100)}>
+        <p className="text-[#6E6E73] text-[17px]">
+          Spots found faster on MapsGPT
+        </p>
+      </GridCell>
 
-        {/* Scrollable cards */}
+      <GridCell>
         <div
           ref={scrollRef}
           className="flex overflow-x-auto px-6 pb-12 gap-5 select-none"
@@ -90,7 +87,7 @@ export const UniqueSpotsSection = () => {
             <SpotCard key={i} spot={spot} />
           ))}
         </div>
-      </div>
+      </GridCell>
     </GridSection>
   );
 };

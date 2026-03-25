@@ -31,12 +31,7 @@ html {
   --accent: #0066CC;
   --container-padding: 20px;
   --page-padding: calc(var(--container-padding) + 18px); /* matches navbar logo/hamburger edges */
-  --grid-line: rgba(120, 120, 200, 0.2);
-}
-
-/* Grid-based content layout — collapse borders between stacked sections */
-.grid-section + .grid-section {
-  margin-top: -1px;
+  --grid-line: rgba(55, 40, 140, 0.10);
 }
 
 @media (min-width: 940px) {

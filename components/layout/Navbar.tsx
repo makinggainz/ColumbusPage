@@ -153,7 +153,7 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
                     }}
                 />
 
-                <div className="relative mx-auto w-full" style={{ maxWidth: 1287 }}>
+                <div className="relative mx-auto w-full" style={{ maxWidth: 1280 }}>
                     {/* White pill background when dropdown is open */}
                     <div
                         className={`absolute inset-y-0 left-(--container-padding) right-(--container-padding) transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
