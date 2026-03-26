@@ -41,7 +41,8 @@ export const Careers = () => {
           </h3>
 
           <p className="md:text-right" style={{ fontSize: 20, color: "rgba(29,29,31,0.45)", letterSpacing: "-0.015em", fontWeight: 400 }}>
-            If you&apos;re excited about creating paradigm shifts in physical world understanding.{" "}
+            If you&apos;re excited about creating paradigm<br />
+            shifts in physical world understanding.{" "}
             <span style={{ fontWeight: 600, color: "rgba(29,29,31,0.8)" }}>Join us now.</span>
           </p>
         </div>
