@@ -105,8 +105,8 @@ export const Industries = () => {
           </div>
           <Link
             href="/use-cases"
-            className="group pl-10 flex items-center justify-between hover:opacity-90 transition-opacity"
-            style={{ height: 76, backgroundColor: "#000000", paddingRight: "calc(var(--page-padding) + 16px)" }}
+            className="group px-10 flex items-center justify-between hover:opacity-90 transition-opacity"
+            style={{ height: 76, backgroundColor: "#000000" }}
           >
             <span className="text-white text-[20px] font-medium transition-colors duration-300 group-hover:text-[#2563EB]">Start now</span>
             <svg className="transition-transform duration-300 group-hover:translate-x-0.5" width="10" height="18" viewBox="0 0 7 12" fill="none" stroke="#2563EB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">

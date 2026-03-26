@@ -198,7 +198,7 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
                         }}
                     />
 
-                    <div className="relative px-[calc(var(--container-padding)+18px)]">
+                    <div className="relative px-0">
                         <div
                             className="flex items-center justify-between"
                             style={{
@@ -242,7 +242,7 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
                             </div>
 
                             {/* ── Right: Nav Links + CTA + Hamburger ── */}
-                            <div className="flex items-center gap-4">
+                            <div className="flex items-center">
 
                                 {/* Desktop nav links — appear after hero CTA leaves viewport */}
                                 <div
@@ -254,6 +254,7 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
                                         clipPath: showLinks ? "inset(0 0% 0 0)" : "inset(0 100% 0 0)",
                                         pointerEvents: showLinks ? "auto" : "none",
                                         paddingRight: 16,
+                                        marginRight: 16,
                                         transition: `opacity 300ms ease, clip-path 400ms cubic-bezier(0.22, 1, 0.36, 1)`,
                                     }}
                                 >
@@ -353,7 +354,7 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
                         }`}
                         style={{ ...dropdownBg, top: isCompact ? 56 : 68 }}
                     >
-                        <div className="mx-auto w-full px-[calc(var(--container-padding)+18px)] py-12" style={{ maxWidth: 1287, transitionDelay: isMenuOpen ? "150ms" : "0ms" }}>
+                        <div className="mx-auto w-full px-0 py-12" style={{ maxWidth: 1287, transitionDelay: isMenuOpen ? "150ms" : "0ms" }}>
                             <div className="grid grid-cols-1 md:grid-cols-12 gap-12">
                                 <div
                                     className={`md:col-span-5 space-y-8 transition-opacity duration-500 ${isMenuOpen ? "opacity-100" : "opacity-0"}`}

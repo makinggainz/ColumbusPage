@@ -211,8 +211,8 @@ export const TravelSection = () => {
       {/* Top bar — wrapped in GridSection for left/right grid lines */}
       <GridSection>
         <div
-          className="flex items-center justify-between pl-10 py-6"
-          style={{ borderBottom: gl, paddingRight: "calc(var(--page-padding) + 16px)" }}
+          className="flex items-center justify-between px-10 py-6"
+          style={{ borderBottom: gl }}
         >
           <span className="flex items-center gap-3 text-[#1D1D1F] font-bold" style={{ fontSize: 20, letterSpacing: "-0.02em" }}>
             <img src="/MapsGPT-logo.png" alt="" className="w-8 h-8 rounded-full object-cover shrink-0" />
