@@ -132,6 +132,7 @@ export const Careers = () => {
   const figuresRef   = useRef<Figure[]>([]);
   const animRef      = useRef(0);
   const hoveredIdRef = useRef<number | null>(null);
+  const hoverTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [active, setActive] = useState(false);
   const [note, setNote]     = useState<string | null>(null);
 
@@ -399,7 +400,14 @@ export const Careers = () => {
             Hiring{" "}
             <span
               style={{ color: "#2563EB", cursor: "default" }}
-              onMouseEnter={spawnFigures}
+              onMouseEnter={() => {
+                if (hoverTimerRef.current) clearTimeout(hoverTimerRef.current);
+                hoverTimerRef.current = setTimeout(spawnFigures, 5000);
+              }}
+              onMouseLeave={() => {
+                if (hoverTimerRef.current) { clearTimeout(hoverTimerRef.current); hoverTimerRef.current = null; }
+              }}
+              onClick={spawnFigures}
             >
               Humans.
             </span>
