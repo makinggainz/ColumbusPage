@@ -11,8 +11,8 @@ const MAPS = [
     location: "Philadelphia, PA",
     rating: "4.8",
     emoji: "🕯️",
-    gradient: "linear-gradient(135deg, #020617 0%, #1E3A8A 55%, #2563EB 100%)",
-    accent: "#2563EB",
+    gradient: "linear-gradient(135deg, #1a0a04 0%, #7C2D12 55%, #FF6A3D 100%)",
+    accent: "#FF6A3D",
   },
   {
     title: "Best Valentine's Day Restaurants",
@@ -20,8 +20,8 @@ const MAPS = [
     location: "New York, NY",
     rating: "4.7",
     emoji: "🌹",
-    gradient: "linear-gradient(135deg, #0A1628 0%, #1D4ED8 55%, #60A5FA 100%)",
-    accent: "#60A5FA",
+    gradient: "linear-gradient(135deg, #1C0C06 0%, #9A3412 55%, #FB923C 100%)",
+    accent: "#FB923C",
   },
   {
     title: "Most Expensive Neighborhoods",
@@ -29,8 +29,8 @@ const MAPS = [
     location: "Washington, DC",
     rating: "4.5",
     emoji: "💰",
-    gradient: "linear-gradient(135deg, #030712 0%, #0A1344 55%, #3B82F6 100%)",
-    accent: "#3B82F6",
+    gradient: "linear-gradient(135deg, #140A04 0%, #7C2D12 55%, #EA580C 100%)",
+    accent: "#EA580C",
   },
   {
     title: "TikTok Famous Restaurants",
@@ -38,8 +38,8 @@ const MAPS = [
     location: "Los Angeles, CA",
     rating: "4.6",
     emoji: "🎵",
-    gradient: "linear-gradient(135deg, #020617 0%, #172554 45%, #2563EB 80%, #93C5FD 100%)",
-    accent: "#93C5FD",
+    gradient: "linear-gradient(135deg, #180B04 0%, #7C2D12 45%, #FF6A3D 80%, #FDBA74 100%)",
+    accent: "#FDBA74",
   },
   {
     title: "Queer Parks & Hangouts",
@@ -47,8 +47,8 @@ const MAPS = [
     location: "Washington, DC",
     rating: "4.9",
     emoji: "🏳️‍🌈",
-    gradient: "linear-gradient(135deg, #0A1628 0%, #1E40AF 50%, #3B82F6 80%, #93C5FD 100%)",
-    accent: "#93C5FD",
+    gradient: "linear-gradient(135deg, #1C0C06 0%, #9A3412 50%, #EA580C 80%, #FDBA74 100%)",
+    accent: "#FDBA74",
   },
   {
     title: "Hidden Rooftop Bars",
@@ -56,8 +56,8 @@ const MAPS = [
     location: "Chicago, IL",
     rating: "4.4",
     emoji: "🌆",
-    gradient: "linear-gradient(135deg, #030712 0%, #0F172A 50%, #1E3A8A 100%)",
-    accent: "#2563EB",
+    gradient: "linear-gradient(135deg, #140A04 0%, #1E0F08 50%, #7C2D12 100%)",
+    accent: "#FF6A3D",
   },
 ];
 

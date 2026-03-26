@@ -223,14 +223,14 @@ export const TravelSection = () => {
             className="flex items-center gap-2 font-semibold hover:opacity-70 transition-opacity"
             style={{
               fontSize: 20,
-              background: "linear-gradient(90deg, #111111 0%, #2563EB 100%)",
+              background: "linear-gradient(90deg, #111111 0%, #FF6A3D 100%)",
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
               backgroundClip: "text",
             }}
           >
             Try it out now
-            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#2563EB" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#FF6A3D" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M2 10L10 2M10 2H4M10 2V8" />
             </svg>
           </Link>

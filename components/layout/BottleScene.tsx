@@ -174,7 +174,7 @@ export const BottleScene = ({ onBottleClick, visible }: { onBottleClick?: () => 
       } else {
         alpha = Math.max(0, 0.06 * (1 - (wz - shoreWZ - 80) / 400));
       }
-      ctx.strokeStyle = `rgba(20,60,160,${Math.max(0, alpha).toFixed(3)})`;
+      ctx.strokeStyle = `rgba(180,75,35,${Math.max(0, alpha).toFixed(3)})`;
       ctx.lineWidth = wz > shoreWZ - 100 && wz < shoreWZ + 80 ? 1.3 : 0.7 + depthT * 1.0;
       ctx.beginPath();
       let started = false;
@@ -197,7 +197,7 @@ export const BottleScene = ({ onBottleClick, visible }: { onBottleClick?: () => 
         const depthT = r / gridRows;
         const wz = (r + 4) * cellSize;
         const alpha = wz < shoreWZ ? 0.04 + depthT * 0.12 : Math.max(0, 0.03 * (1 - (wz - shoreWZ) / 400));
-        ctx.strokeStyle = `rgba(20,60,160,${alpha.toFixed(3)})`;
+        ctx.strokeStyle = `rgba(180,75,35,${alpha.toFixed(3)})`;
         ctx.lineWidth = 0.5 + depthT * 0.5;
         if (!started) { ctx.moveTo(p[0], p[1]); started = true; }
         else ctx.lineTo(p[0], p[1]);
@@ -450,7 +450,7 @@ export const BottleScene = ({ onBottleClick, visible }: { onBottleClick?: () => 
       if (!shStarted) { ctx.moveTo(p[0], p[1]); shStarted = true; }
       else ctx.lineTo(p[0], p[1]);
     }
-    ctx.strokeStyle = "rgba(20,60,160,0.06)";
+    ctx.strokeStyle = "rgba(180,75,35,0.06)";
     ctx.lineWidth = 14;
     ctx.stroke();
 
@@ -466,7 +466,7 @@ export const BottleScene = ({ onBottleClick, visible }: { onBottleClick?: () => 
       if (hintP) {
         ctx.save();
         ctx.font = "14px system-ui, sans-serif";
-        ctx.fillStyle = "rgba(20,60,160,0.5)";
+        ctx.fillStyle = "rgba(180,75,35,0.5)";
         ctx.textAlign = "center";
         ctx.fillText("click to open", hintP[0], hintP[1] - 10);
         ctx.restore();

@@ -169,17 +169,17 @@ function drawBoat3D(
     ctx.stroke();
   };
 
-  const hullStroke = `rgba(20,60,160,${(0.5 * a).toFixed(3)})`;
-  const hullFill = `rgba(20,60,160,${(0.06 * a).toFixed(3)})`;
-  const hullFillDark = `rgba(20,60,160,${(0.1 * a).toFixed(3)})`;
-  const ribStroke = `rgba(20,60,160,${(0.25 * a).toFixed(3)})`;
-  const mastStroke = `rgba(20,60,160,${(0.45 * a).toFixed(3)})`;
-  const sailFill = `rgba(20,60,160,${(0.05 * a).toFixed(3)})`;
-  const sailStroke = `rgba(20,60,160,${(0.25 * a).toFixed(3)})`;
-  const riggingStroke = `rgba(20,60,160,${(0.15 * a).toFixed(3)})`;
-  const flagFill = `rgba(20,60,160,${(0.3 * a).toFixed(3)})`;
-  const scStroke = `rgba(20,60,160,${(0.4 * a).toFixed(3)})`;
-  const scFill = `rgba(20,60,160,${(0.08 * a).toFixed(3)})`;
+  const hullStroke = `rgba(180,75,35,${(0.5 * a).toFixed(3)})`;
+  const hullFill = `rgba(180,75,35,${(0.06 * a).toFixed(3)})`;
+  const hullFillDark = `rgba(180,75,35,${(0.1 * a).toFixed(3)})`;
+  const ribStroke = `rgba(180,75,35,${(0.25 * a).toFixed(3)})`;
+  const mastStroke = `rgba(180,75,35,${(0.45 * a).toFixed(3)})`;
+  const sailFill = `rgba(180,75,35,${(0.05 * a).toFixed(3)})`;
+  const sailStroke = `rgba(180,75,35,${(0.25 * a).toFixed(3)})`;
+  const riggingStroke = `rgba(180,75,35,${(0.15 * a).toFixed(3)})`;
+  const flagFill = `rgba(180,75,35,${(0.3 * a).toFixed(3)})`;
+  const scStroke = `rgba(180,75,35,${(0.4 * a).toFixed(3)})`;
+  const scFill = `rgba(180,75,35,${(0.08 * a).toFixed(3)})`;
 
   // ── Hull faces (port side panels) ──
   for (let i = 0; i < STATIONS.length - 1; i++) {
@@ -340,8 +340,8 @@ function drawBoat3D(
   drawFace(flagPts, flagFill, mastStroke, 0.6);
 
   // ── Crew ──
-  const crewStroke = `rgba(20,60,160,${(0.5 * a).toFixed(3)})`;
-  const crewHead = `rgba(20,60,160,${(0.35 * a).toFixed(3)})`;
+  const crewStroke = `rgba(180,75,35,${(0.5 * a).toFixed(3)})`;
+  const crewHead = `rgba(180,75,35,${(0.35 * a).toFixed(3)})`;
   const headR = 0.9;
   const bodyH = 3;
 
@@ -712,7 +712,7 @@ const WaveMesh = () => {
         const p = grid[r][c];
         if (!p) continue;
         const depthT = r / gridRows;
-        ctx.strokeStyle = `rgba(20,60,160,${(0.08 + depthT * 0.22).toFixed(3)})`;
+        ctx.strokeStyle = `rgba(180,75,35,${(0.08 + depthT * 0.22).toFixed(3)})`;
         ctx.lineWidth = 0.8 + depthT * 1.2;
         if (!started) { ctx.moveTo(p.sx, p.sy); started = true; }
         else ctx.lineTo(p.sx, p.sy);
@@ -722,7 +722,7 @@ const WaveMesh = () => {
 
     for (let r = 0; r < gridRows; r++) {
       const depthT = r / gridRows;
-      ctx.strokeStyle = `rgba(20,60,160,${(0.08 + depthT * 0.22).toFixed(3)})`;
+      ctx.strokeStyle = `rgba(180,75,35,${(0.08 + depthT * 0.22).toFixed(3)})`;
       ctx.lineWidth = 0.8 + depthT * 1.2;
       ctx.beginPath();
       let started = false;
@@ -737,7 +737,7 @@ const WaveMesh = () => {
 
     for (let r = Math.floor(gridRows * 0.6); r < gridRows; r++) {
       const depthT = r / gridRows;
-      ctx.fillStyle = `rgba(20,60,160,${(0.05 + depthT * 0.15).toFixed(3)})`;
+      ctx.fillStyle = `rgba(180,75,35,${(0.05 + depthT * 0.15).toFixed(3)})`;
       for (let c = 0; c < gridCols; c++) {
         const p = grid[r][c];
         if (!p) continue;
@@ -1012,7 +1012,7 @@ export const Hero = () => {
               <svg
                 className="transition-transform duration-300 group-hover:translate-x-0.5"
                 width="10" height="18" viewBox="0 0 7 12" fill="none"
-                stroke="#2563EB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"
+                stroke="#FF6A3D" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"
               >
                 <path d="M1 1l5 5-5 5" />
               </svg>

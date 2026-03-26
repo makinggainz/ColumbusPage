@@ -147,7 +147,7 @@ export const SiteSelection = () => {
             <svg
               className="transition-transform duration-300 group-hover:translate-x-0.5"
               width="9" height="16" viewBox="0 0 7 12" fill="none"
-              stroke="#2563EB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"
+              stroke="#FF6A3D" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"
             >
               <path d="M1 1l5 5-5 5" />
             </svg>

@@ -6,7 +6,7 @@ export const Products = () => {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
                 <div className="text-center mb-20">
-                    <span className="text-blue-500 font-bold tracking-wider uppercase text-sm mb-4 block">Our Suite</span>
+                    <span className="text-orange-500 font-bold tracking-wider uppercase text-sm mb-4 block">Our Suite</span>
                     <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">Decision-Grade Tools</h2>
                     <p className="text-xl text-gray-600 max-w-2xl mx-auto">
                         A complete ecosystem for geospatial intelligence. From generative exploration to hard tactical data.
@@ -16,9 +16,9 @@ export const Products = () => {
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
 
                     {/* Market Spy - Large Card */}
-                    <div className="group relative bg-gray-800 rounded-[2rem] p-8 md:p-12 overflow-hidden border border-gray-700 hover:border-blue-500/50 transition-all duration-500">
+                    <div className="group relative bg-gray-800 rounded-[2rem] p-8 md:p-12 overflow-hidden border border-gray-700 hover:border-orange-500/50 transition-all duration-500">
                         <div className="relative z-10 flex flex-col h-full">
-                            <div className="w-14 h-14 bg-blue-600 rounded-2xl flex items-center justify-center mb-8 shadow-xl shadow-blue-900/20">
+                            <div className="w-14 h-14 bg-orange-500 rounded-2xl flex items-center justify-center mb-8 shadow-xl shadow-orange-900/20">
                                 <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
                             </div>
 
@@ -30,7 +30,7 @@ export const Products = () => {
                             <div className="mt-auto">
                                 <Link
                                     href="/market-spy"
-                                    className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white font-semibold px-6 py-3 rounded-full transition-all group-hover:gap-4"
+                                    className="inline-flex items-center gap-2 bg-orange-500 hover:bg-orange-500 text-white font-semibold px-6 py-3 rounded-full transition-all group-hover:gap-4"
                                 >
                                     Launch Dashboard <span className="transition-transform">→</span>
                                 </Link>
@@ -54,9 +54,9 @@ export const Products = () => {
                     </div>
 
                     {/* MapsGPT - Large Card */}
-                    <div className="group relative bg-gray-800 rounded-[2rem] p-8 md:p-12 overflow-hidden border border-gray-700 hover:border-blue-500/50 transition-all duration-500">
+                    <div className="group relative bg-gray-800 rounded-[2rem] p-8 md:p-12 overflow-hidden border border-gray-700 hover:border-orange-500/50 transition-all duration-500">
                         <div className="relative z-10 flex flex-col h-full">
-                            <div className="w-14 h-14 bg-blue-600 rounded-2xl flex items-center justify-center mb-8 shadow-xl shadow-blue-900/20">
+                            <div className="w-14 h-14 bg-orange-500 rounded-2xl flex items-center justify-center mb-8 shadow-xl shadow-orange-900/20">
                                 <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
                             </div>
 
@@ -68,7 +68,7 @@ export const Products = () => {
                             <div className="mt-auto">
                                 <Link
                                     href="/maps-gpt"
-                                    className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white font-semibold px-6 py-3 rounded-full transition-all group-hover:gap-4"
+                                    className="inline-flex items-center gap-2 bg-orange-500 hover:bg-orange-500 text-white font-semibold px-6 py-3 rounded-full transition-all group-hover:gap-4"
                                 >
                                     Try MapsGPT <span className="transition-transform">→</span>
                                 </Link>
@@ -76,7 +76,7 @@ export const Products = () => {
                         </div>
 
                         {/* UI Preview Decor */}
-                        <div className="absolute -right-20 -bottom-20 w-80 h-80 bg-blue-600/20 rounded-full blur-[80px] group-hover:bg-blue-600/30 transition-all"></div>
+                        <div className="absolute -right-20 -bottom-20 w-80 h-80 bg-orange-500/20 rounded-full blur-[80px] group-hover:bg-orange-500/30 transition-all"></div>
                     </div>
 
                     {/* API - Full Width */}
@@ -109,14 +109,14 @@ export const Products = () => {
                                 <div className="w-3 h-3 rounded-full bg-green-500/50"></div>
                             </div>
                             <div className="space-y-1 opacity-80">
-                                <div className="text-blue-400">POST <span className="text-white">/v1/enrich/place</span></div>
+                                <div className="text-orange-400">POST <span className="text-white">/v1/enrich/place</span></div>
                                 <div className="text-gray-500">{"{"}</div>
                                 <div className="pl-4">
-                                    <span className="text-blue-400">&quot;name&quot;</span>:{" "}
+                                    <span className="text-orange-400">&quot;name&quot;</span>:{" "}
                                     <span className="text-green-400">&quot;Zara Serrano&quot;</span>,
                                 </div>
                                 <div className="pl-4">
-                                    <span className="text-blue-400">&quot;context&quot;</span>: [
+                                    <span className="text-orange-400">&quot;context&quot;</span>: [
                                     <span className="text-green-400">&quot;traffic&quot;</span>,{" "}
                                     <span className="text-green-400">&quot;sentiment&quot;</span>]
                                 </div>

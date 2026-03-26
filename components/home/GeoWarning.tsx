@@ -46,7 +46,7 @@ export const GeoWarning = () => {
         className="sticky top-0 h-screen overflow-hidden flex items-center justify-center"
         style={{
           backgroundColor: "#FAFAFA",
-          backgroundImage: `linear-gradient(rgba(20,60,160,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(20,60,160,0.06) 1px, transparent 1px)`,
+          backgroundImage: `linear-gradient(rgba(180,75,35,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(180,75,35,0.06) 1px, transparent 1px)`,
           backgroundSize: "20px 20px",
         }}
       >

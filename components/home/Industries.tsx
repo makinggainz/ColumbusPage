@@ -72,7 +72,7 @@ export const Industries = () => {
                   fill
                   className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]"
                 />
-                <div className="absolute inset-0" style={{ backgroundColor: "rgba(37, 99, 235, 0.14)" }} />
+                <div className="absolute inset-0" style={{ backgroundColor: "rgba(255, 106, 61, 0.10)" }} />
               </div>
 
               {/* Label */}
@@ -83,7 +83,7 @@ export const Industries = () => {
                 <svg
                   className="shrink-0 transition-transform duration-300 group-hover:translate-x-0.5"
                   width="7" height="12" viewBox="0 0 7 12" fill="none"
-                  stroke="#2563EB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"
+                  stroke="#FF6A3D" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"
                 >
                   <path d="M1 1l5 5-5 5" />
                 </svg>
@@ -96,7 +96,7 @@ export const Industries = () => {
 
         {/* Bottom bar */}
         <div className="grid grid-cols-2 mt-24" style={{ ...anim(550) }}>
-          <div className="px-10 flex items-center" style={{ height: 76, borderRight: gl, backgroundColor: "rgba(37, 99, 235, 0.06)" }}>
+          <div className="px-10 flex items-center" style={{ height: 76, borderRight: gl, backgroundColor: "rgba(255, 106, 61, 0.05)" }}>
             <p className="text-[20px] font-medium text-[#1D1D1F] tracking-[-0.01em]">
               Become a super-explorer.
             </p>
@@ -107,7 +107,7 @@ export const Industries = () => {
             style={{ height: 76, backgroundColor: "#000000" }}
           >
             <span className="text-white text-[20px] font-medium">Start now</span>
-            <svg width="10" height="18" viewBox="0 0 7 12" fill="none" stroke="#2563EB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <svg width="10" height="18" viewBox="0 0 7 12" fill="none" stroke="#FF6A3D" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
               <path d="M1 1l5 5-5 5" />
             </svg>
           </Link>

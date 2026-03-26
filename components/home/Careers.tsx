@@ -4,7 +4,7 @@ import { Container } from "@/components/layout/Container";
 
 export const Careers = () => {
   return (
-    <section className="py-[115px] md:py-[147px] lg:py-[179px]" style={{ backgroundColor: "rgba(37, 99, 235, 0.04)" }}>
+    <section className="py-[115px] md:py-[147px] lg:py-[179px]" style={{ backgroundColor: "rgba(255, 106, 61, 0.03)" }}>
       <Container>
 
         {/* TOP CENTER */}
@@ -14,7 +14,7 @@ export const Careers = () => {
             style={{ fontSize: 56, color: "#1D1D1F" }}
           >
             Hiring{" "}
-            <span style={{ color: "#2563EB" }}>Humans.</span>
+            <span style={{ color: "#FF6A3D" }}>Humans.</span>
           </h2>
           <p style={{ fontSize: 20, color: "rgba(29,29,31,0.45)", letterSpacing: "-0.015em", fontWeight: 400 }}>
             Our team is based in Washington DC and Madrid.
@@ -40,7 +40,7 @@ export const Careers = () => {
         <div
           className="h-px mb-16 md:mb-20 -ml-7.5 w-[calc(100%+60px)]"
           style={{
-            background: "linear-gradient(to right, rgba(37,99,235,0.5) 0%, rgba(37,99,235,0.25) 20%, rgba(37,99,235,0.04) 45%, rgba(37,99,235,0.04) 55%, rgba(37,99,235,0.25) 80%, rgba(37,99,235,0.5) 100%)",
+            background: "linear-gradient(to right, rgba(255,106,61,0.35) 0%, rgba(255,106,61,0.18) 20%, rgba(255,106,61,0.03) 45%, rgba(255,106,61,0.03) 55%, rgba(255,106,61,0.18) 80%, rgba(255,106,61,0.35) 100%)",
           }}
           aria-hidden
         />
@@ -97,7 +97,7 @@ export const Careers = () => {
               style={{ height: 56, backgroundColor: "#000000", width: "100%" }}
             >
               <span className="text-white font-medium" style={{ fontSize: 20 }}>Submit</span>
-              <svg width="10" height="18" viewBox="0 0 7 12" fill="none" stroke="#2563EB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+              <svg width="10" height="18" viewBox="0 0 7 12" fill="none" stroke="#FF6A3D" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M1 1l5 5-5 5" />
               </svg>
             </button>
