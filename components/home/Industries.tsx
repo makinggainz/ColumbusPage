@@ -43,7 +43,7 @@ export const Industries = () => {
           className="flex items-center justify-center py-8 px-8"
           style={anim(0)}
         >
-          <h2 className="text-[#1D1D1F] font-bold tracking-[-0.02em]" style={{ fontSize: 36 }}>
+          <h2 className="text-[#1D1D1F] font-normal tracking-[-0.02em]" style={{ fontSize: 20 }}>
             Find your industry
           </h2>
         </div>

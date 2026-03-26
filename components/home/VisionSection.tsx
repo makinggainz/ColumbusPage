@@ -71,7 +71,7 @@ export const Vision = () => {
             className="text-[#1D1D1F] leading-[1.15] tracking-[-0.02em]"
             style={{ fontSize: 48, fontWeight: 300, ...anim(0) }}
           >
-            Introducing new kind of AI,{" "}
+            <span style={{ opacity: 0.7 }}>Introducing</span>{" "}new kind of AI,{" "}
             <span className="font-bold">COLUMBUS-01</span>
           </h2>
         </div>

@@ -16,10 +16,7 @@ const LOGOS = [
 export const PartnerStrip = () => {
   return (
     <GridSection fadeTop={false} fadeBottom={false} style={{ borderTop: "none", paddingTop: 100 }}>
-      <div className="flex flex-col items-center px-8 md:px-10">
-        {/* Top separator */}
-        <div className="w-4/5 mt-16 mb-28" style={{ height: 1, borderTop: gl }} />
-
+      <div className="flex flex-col items-center px-8 md:px-10 pt-20">
         <h2 className="font-bold tracking-[-0.02em] text-[#1D1D1F] text-center" style={{ fontSize: 36 }}>
           High-fidelity and smart datasets
         </h2>

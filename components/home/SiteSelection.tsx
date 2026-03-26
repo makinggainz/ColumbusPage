@@ -73,7 +73,7 @@ export const SiteSelection = () => {
 
       // Image scale: 1.02 → 1, blur fades in with scroll (0 → 14px)
       if (img) {
-        const scale = 1 + 0.02 * (1 - current);
+        const scale = 1 + 0.14 * (1 - current);
         const blur = (current * 14).toFixed(2);
         img.style.transform = `scale(${scale})`;
         img.style.filter = `blur(${blur}px)`;
@@ -178,7 +178,7 @@ export const SiteSelection = () => {
               fill
               className="object-cover"
               style={{
-                transform: "scale(1.03)",
+                transform: "scale(1.14)",
                 willChange: "transform",
               }}
             />
@@ -217,7 +217,7 @@ export const SiteSelection = () => {
               <PillToggle />
 
               {/* Desktop + Mobile UI mockups */}
-              <div className="relative w-full max-w-[1100px] mx-auto mt-4" style={{ height: 570 }}>
+              <div className="relative w-full max-w-[1100px] mx-auto mt-10" style={{ height: 570 }}>
                 {/* Desktop UI */}
                 <div
                   className="absolute overflow-hidden"
@@ -227,7 +227,7 @@ export const SiteSelection = () => {
                     width: 995,
                     height: 570,
                     borderRadius: "12px 12px 0 0",
-                    boxShadow: "0 -4px 40px rgba(0,0,0,0.12)",
+                    boxShadow: "0 -8px 60px rgba(0,0,0,0.28)",
                   }}
                 >
                   <Image
@@ -293,7 +293,7 @@ function PillToggle() {
   return (
     <div
       ref={containerRef}
-      className="inline-flex items-center relative mt-8"
+      className="inline-flex items-center relative mt-14"
       style={{
         height: 56,
         borderRadius: 28,
