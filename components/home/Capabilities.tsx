@@ -195,7 +195,7 @@ function AnimatedChatCard() {
         </span>
         <div
           className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0 transition-all duration-200"
-          style={{ background: sent ? "#0A1344" : "rgba(123, 111, 232, 0.15)" }}
+          style={{ background: sent ? "#0A1344" : "rgba(37, 99, 235, 0.12)" }}
         >
           <div className="w-5 h-5 rounded-sm" style={{ background: sent ? "white" : "#0A1344" }} />
         </div>
@@ -324,7 +324,7 @@ export const Capabilities = () => {
                   openId === item.id ? "h-[330px]" : "h-[76px]"
                 }`}
               >
-                <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, #111827 0%, #1a1535 30%, #241d45 60%, #141028 100%)" }} />
+                <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, #111827 0%, #15203a 30%, #1a2d50 60%, #0f1a2e 100%)" }} />
                 <Image src={item.bgImage} alt="" fill className="object-cover" sizes="100vw" style={{ filter: "grayscale(1) brightness(0.8) contrast(1.1)", mixBlendMode: "luminosity", opacity: 0.35 }} />
                 {openId === item.id ? (
                   <span className="absolute inset-0 z-[1] bg-black/20 pointer-events-none" aria-hidden />
@@ -378,7 +378,7 @@ export const Capabilities = () => {
                       : "h-[76px] flex-shrink-0"
                   }`}
                 >
-                  <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, #111827 0%, #1a1535 30%, #241d45 60%, #141028 100%)" }} />
+                  <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, #111827 0%, #15203a 30%, #1a2d50 60%, #0f1a2e 100%)" }} />
                   <Image src={item.bgImage} alt="" fill className="object-cover" sizes="348px" style={{ filter: "grayscale(1) brightness(0.8) contrast(1.1)", mixBlendMode: "luminosity", opacity: 0.35 }} />
                   {openId === item.id ? (
                     <span className="absolute inset-0 z-[1] bg-black/20 pointer-events-none" aria-hidden />
@@ -446,7 +446,7 @@ export const Capabilities = () => {
                 style={{ backgroundColor: "rgba(255,255,255,0.12)", backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)", border: "1px solid rgba(255,255,255,0.2)", padding: "10px 18px", borderRadius: 9999 }}
               >
                 More examples
-                <svg width="8" height="14" viewBox="0 0 8 14" fill="none" stroke="#7B6FE8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <svg width="8" height="14" viewBox="0 0 8 14" fill="none" stroke="#2563EB" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M1 1l6 6-6 6" />
                 </svg>
               </Link>

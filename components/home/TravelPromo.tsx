@@ -43,7 +43,7 @@ export const TravelPromo = () => {
               width: "100vw",
               marginLeft: "calc(-50vw + 50%)",
               backgroundColor: "#FAFAFA",
-              backgroundImage: `linear-gradient(rgba(55,40,140,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(55,40,140,0.06) 1px, transparent 1px)`,
+              backgroundImage: `linear-gradient(rgba(20,60,160,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(20,60,160,0.06) 1px, transparent 1px)`,
               backgroundSize: "20px 20px",
             }}
           >

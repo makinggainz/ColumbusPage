@@ -79,7 +79,7 @@ export const SiteSelection = () => {
         img.style.filter = `blur(${blur}px)`;
       }
 
-      // Dark purple overlay fades in with scroll (0 → 0.35)
+      // Dark blue overlay fades in with scroll (0 → 0.35)
       // if (overlay) {
       //   overlay.style.opacity = (current * 0.35).toFixed(3);
       // }
@@ -147,7 +147,7 @@ export const SiteSelection = () => {
             <svg
               className="transition-transform duration-300 group-hover:translate-x-0.5"
               width="9" height="16" viewBox="0 0 7 12" fill="none"
-              stroke="#7B6FE8" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"
+              stroke="#2563EB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"
             >
               <path d="M1 1l5 5-5 5" />
             </svg>
@@ -183,7 +183,7 @@ export const SiteSelection = () => {
               }}
             />
 
-            {/* Dark purple overlay — fades in with scroll expansion (commented out, re-enable in tick if needed) */}
+            {/* Dark blue overlay — fades in with scroll expansion (commented out, re-enable in tick if needed) */}
             {/* <div
               ref={overlayRef}
               className="absolute inset-0 pointer-events-none"
