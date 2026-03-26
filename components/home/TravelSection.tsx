@@ -219,12 +219,16 @@ export const TravelSection = () => {
           </span>
           <Link
             href="/maps-gpt"
-            className="flex items-center gap-2 font-semibold hover:opacity-70 transition-opacity"
+            className="group flex items-center gap-10 font-semibold transition-opacity"
             style={{ fontSize: 20, color: "#1D1D1F" }}
           >
-            Try it out now
-            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#7B6FE8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M2 10L10 2M10 2H4M10 2V8" />
+            <span className="transition-colors duration-300 group-hover:text-[#2563EB]">Try it out now</span>
+            <svg
+              className="transition-transform duration-300 group-hover:translate-x-0.5"
+              width="9" height="16" viewBox="0 0 7 12" fill="none"
+              stroke="#2563EB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"
+            >
+              <path d="M1 1l5 5-5 5" />
             </svg>
           </Link>
         </div>

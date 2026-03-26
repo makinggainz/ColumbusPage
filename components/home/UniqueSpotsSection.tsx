@@ -110,7 +110,10 @@ export const UniqueSpotsSection = () => {
 
 function SpotCard({ spot }: { spot: (typeof SPOTS)[0] }) {
   return (
-    <Link href="/maps-gpt" className="flex flex-col shrink-0 overflow-hidden rounded-lg hover:opacity-90 transition-opacity" style={{ width: 260, border: "1px solid var(--grid-line)", background: "rgba(37, 99, 235, 0.06)" }}>
+    <Link href="/maps-gpt" className="flex flex-col shrink-0 overflow-hidden rounded-lg transition-colors duration-300" style={{ width: 260, border: "1px solid var(--grid-line)", background: "rgba(37, 99, 235, 0.06)" }}
+      onMouseEnter={e => (e.currentTarget.style.background = "rgba(37, 99, 235, 0.14)")}
+      onMouseLeave={e => (e.currentTarget.style.background = "rgba(37, 99, 235, 0.06)")}
+    >
       {/* Image */}
       <div className="relative w-full overflow-hidden rounded-lg" style={{ aspectRatio: "4 / 3" }}>
         <img

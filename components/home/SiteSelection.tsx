@@ -140,10 +140,10 @@ export const SiteSelection = () => {
           </div>
           <Link
             href="/maps-gpt"
-            className="group flex items-center gap-10 text-[#1D1D1F] font-semibold hover:opacity-70 transition-opacity"
+            className="group flex items-center gap-10 text-[#1D1D1F] font-semibold transition-opacity"
             style={{ fontSize: 20 }}
           >
-            Start Now
+            <span className="transition-colors duration-300 group-hover:text-[#2563EB]">Start Now</span>
             <svg
               className="transition-transform duration-300 group-hover:translate-x-0.5"
               width="9" height="16" viewBox="0 0 7 12" fill="none"

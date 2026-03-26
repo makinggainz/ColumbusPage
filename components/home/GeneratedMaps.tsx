@@ -99,7 +99,10 @@ export const GeneratedMaps = () => {
           style={{ scrollbarWidth: "none", ...anim(150) }}
         >
           {MAPS.map((item, i) => (
-            <Link key={i} href="/maps-gpt" className="flex flex-col shrink-0 rounded-lg overflow-hidden hover:opacity-90 transition-opacity" style={{ width: 260, border: "1px solid var(--grid-line)", background: "rgba(37, 99, 235, 0.06)" }}>
+            <Link key={i} href="/maps-gpt" className="group flex flex-col shrink-0 rounded-lg overflow-hidden transition-colors duration-300" style={{ width: 260, border: "1px solid var(--grid-line)", background: "rgba(37, 99, 235, 0.06)" }}
+              onMouseEnter={e => (e.currentTarget.style.background = "rgba(37, 99, 235, 0.14)")}
+              onMouseLeave={e => (e.currentTarget.style.background = "rgba(37, 99, 235, 0.06)")}
+            >
               {/* Gradient visual */}
               <div
                 className="relative w-full flex items-center justify-center overflow-hidden rounded-lg"

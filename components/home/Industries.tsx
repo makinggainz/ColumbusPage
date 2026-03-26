@@ -57,12 +57,14 @@ export const Industries = () => {
             <Link
               key={card.label}
               href={card.href}
-              className="group flex flex-col rounded-lg overflow-hidden"
+              className="group flex flex-col rounded-lg overflow-hidden transition-colors duration-300"
               style={{
                 width: card.label === "More" ? 110 : 220,
                 background: "rgba(37, 99, 235, 0.06)",
                 ...anim(100 + i * 80),
               }}
+              onMouseEnter={e => (e.currentTarget.style.background = "rgba(37, 99, 235, 0.14)")}
+              onMouseLeave={e => (e.currentTarget.style.background = "rgba(37, 99, 235, 0.06)")}
             >
               {/* Image */}
               <div className="relative w-full overflow-hidden" style={card.label === "More" ? { flex: 1 } : { aspectRatio: "4 / 3" }}>
