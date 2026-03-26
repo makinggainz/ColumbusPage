@@ -8,12 +8,12 @@ import { GridSection, gl } from "./ContentGrid";
 const FAVORITE_SPOTS_FILES = ["(20).jpeg", "(14).jpeg", "(17).jpeg", "(19).jpeg", "(21).jpeg", "(23).jpeg", "(24).jpeg", "(22).jpeg"];
 const spotImageSrc = (filename: string) => `/FavoriteSpots/${encodeURIComponent(filename)}`;
 
-const SPOTS: { title: string; description: string; location: string; rating: string; image: string }[] = [
-  { title: "The Palm Hotel", description: "Luxury hotel, with unique aquarium restaurant. Great food, and a great view.", location: "Dubai, UAE", rating: "4.2", image: FAVORITE_SPOTS_FILES[0] },
-  { title: "Sky Garden Lounge", description: "Rooftop bar with panoramic city views. Perfect for sunset drinks.", location: "London, UK", rating: "4.5", image: FAVORITE_SPOTS_FILES[1] },
-  { title: "Casa del Mar", description: "Beachfront dining with fresh seafood and Mediterranean cuisine.", location: "Barcelona, Spain", rating: "4.8", image: FAVORITE_SPOTS_FILES[2] },
-  { title: "Temple of Dawn", description: "Historic temple with riverside views. Best visited at golden hour.", location: "Bangkok, Thailand", rating: "4.6", image: FAVORITE_SPOTS_FILES[3] },
-  { title: "Alpine Lodge", description: "Cozy mountain retreat with fireplace and stunning mountain views.", location: "Zermatt, Switzerland", rating: "4.4", image: FAVORITE_SPOTS_FILES[4] },
+const SPOTS: { title: string; location: string; rating: string; image: string; query: string; response: string; avatar: string }[] = [
+  { title: "The Palm Hotel", location: "Dubai, UAE", rating: "4.2", image: FAVORITE_SPOTS_FILES[0], query: "Best luxury hotel with a view in Dubai?", response: "Top match — iconic palm location, aquarium dining, 4.2★", avatar: "https://i.pravatar.cc/32?img=3" },
+  { title: "Sky Garden Lounge", location: "London, UK", rating: "4.5", image: FAVORITE_SPOTS_FILES[1], query: "Rooftop bar with sunset views in London?", response: "Great pick — panoramic skyline, relaxed vibe, 4.5★", avatar: "https://i.pravatar.cc/32?img=7" },
+  { title: "Casa del Mar", location: "Barcelona, Spain", rating: "4.8", image: FAVORITE_SPOTS_FILES[2], query: "Most romantic restaurant in Barcelona for a date?", response: "Strong match — beachfront, fresh seafood, 4.8★", avatar: "https://i.pravatar.cc/32?img=11" },
+  { title: "Temple of Dawn", location: "Bangkok, Thailand", rating: "4.6", image: FAVORITE_SPOTS_FILES[3], query: "Best spot for golden hour in Bangkok?", response: "Perfect fit — riverside temple, stunning at dusk, 4.6★", avatar: "https://i.pravatar.cc/32?img=16" },
+  { title: "Alpine Lodge", location: "Zermatt, Switzerland", rating: "4.4", image: FAVORITE_SPOTS_FILES[4], query: "Cozy mountain retreat near the Matterhorn?", response: "Great match — fireplace, mountain views, 4.4★", avatar: "https://i.pravatar.cc/32?img=22" },
 ];
 
 export const UniqueSpotsSection = () => {
@@ -114,30 +114,49 @@ function SpotCard({ spot }: { spot: (typeof SPOTS)[0] }) {
       onMouseEnter={e => (e.currentTarget.style.background = "rgba(37, 99, 235, 0.14)")}
       onMouseLeave={e => (e.currentTarget.style.background = "rgba(37, 99, 235, 0.06)")}
     >
-      {/* Image */}
+      {/* Image with overlaid info */}
       <div className="relative w-full overflow-hidden rounded-lg" style={{ aspectRatio: "4 / 3" }}>
         <img
           src={spotImageSrc(spot.image)}
           alt=""
           className="absolute inset-0 w-full h-full object-cover"
         />
-        <div className="absolute top-3 right-3 h-7 px-2.5 flex items-center gap-1.5 bg-white/90 backdrop-blur-md rounded-sm">
-          <Star className="w-3.5 h-3.5 shrink-0 text-[#E46962]" fill="#E46962" />
-          <span className="font-semibold text-[13px] text-[#1D1D1F]">{spot.rating}</span>
+        {/* Gradient scrim */}
+        <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.18) 55%, transparent 100%)" }} />
+        {/* Rating badge */}
+        <div className="absolute top-3 right-3 h-6 px-2 flex items-center gap-1 bg-white/90 backdrop-blur-md rounded-sm">
+          <Star className="w-3 h-3 shrink-0 text-[#E46962]" fill="#E46962" />
+          <span className="font-semibold text-[12px] text-[#1D1D1F]">{spot.rating}</span>
+        </div>
+        {/* Title + location over image */}
+        <div className="absolute bottom-0 inset-x-0 px-3 pb-3">
+          <h3 className="font-semibold text-[14px] text-white tracking-[-0.01em] leading-tight mb-1">
+            {spot.title}
+          </h3>
+          <div className="flex items-center gap-1">
+            <MapPin className="w-3 h-3 shrink-0 text-white/70" />
+            <span className="text-[11px] text-white/70">{spot.location}</span>
+          </div>
         </div>
       </div>
 
-      {/* Info */}
-      <div className="pt-4 pb-3 px-3 flex flex-col flex-1">
-        <h3 className="font-semibold text-[15px] text-[#1D1D1F] tracking-[-0.01em] mb-1">
-          {spot.title}
-        </h3>
-        <p className="text-[13px] leading-[1.5] text-[#6E6E73] line-clamp-2 mb-2">
-          {spot.description}
-        </p>
-        <div className="flex items-center gap-1.5 mt-auto">
-          <MapPin className="w-3.5 h-3.5 shrink-0 text-[#6E6E73]" />
-          <span className="text-[13px] text-[#6E6E73]">{spot.location}</span>
+      {/* Chat UI */}
+      <div className="px-3 pt-3 pb-3 flex flex-col gap-2">
+        {/* Response row — earth + bubble */}
+        <div className="flex items-start gap-2">
+          <div className="w-6 h-6 rounded-full shrink-0 overflow-hidden" style={{ marginTop: 1 }}>
+            <img src="/MapsGPT-logo.png" alt="" className="w-full h-full object-cover" />
+          </div>
+          <div className="flex-1 rounded-lg px-2.5 py-1.5" style={{ background: "rgba(37,99,235,0.10)", border: "1px solid rgba(37,99,235,0.18)" }}>
+            <p className="text-[11px] leading-[1.45] text-[#1D1D1F] line-clamp-2">{spot.response}</p>
+          </div>
+        </div>
+        {/* Query row — avatar + bubble */}
+        <div className="flex items-start gap-2 flex-row-reverse">
+          <img src={spot.avatar} alt="" className="w-6 h-6 rounded-full shrink-0 object-cover border border-white" style={{ marginTop: 1 }} />
+          <div className="flex-1 rounded-lg px-2.5 py-1.5" style={{ background: "rgba(0,0,0,0.05)", border: "1px solid rgba(0,0,0,0.08)" }}>
+            <p className="text-[11px] leading-[1.45] text-[#3C3C43] line-clamp-2">{spot.query}</p>
+          </div>
         </div>
       </div>
     </Link>

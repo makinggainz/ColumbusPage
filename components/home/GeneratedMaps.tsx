@@ -1,64 +1,91 @@
 "use client";
 
-import { Star, MapPin } from "lucide-react";
+import { ThumbsUp, ThumbsDown, MapPin } from "lucide-react";
 import { useRef, useState, useEffect } from "react";
 import Link from "next/link";
 import { GridSection, gl } from "./ContentGrid";
+
+const AVATARS = [
+  "https://i.pravatar.cc/64?img=1",
+  "https://i.pravatar.cc/64?img=5",
+  "https://i.pravatar.cc/64?img=8",
+  "https://i.pravatar.cc/64?img=12",
+  "https://i.pravatar.cc/64?img=15",
+  "https://i.pravatar.cc/64?img=20",
+  "https://i.pravatar.cc/64?img=25",
+  "https://i.pravatar.cc/64?img=32",
+  "https://i.pravatar.cc/64?img=36",
+  "https://i.pravatar.cc/64?img=41",
+  "https://i.pravatar.cc/64?img=44",
+  "https://i.pravatar.cc/64?img=47",
+  "https://i.pravatar.cc/64?img=49",
+  "https://i.pravatar.cc/64?img=52",
+  "https://i.pravatar.cc/64?img=56",
+  "https://i.pravatar.cc/64?img=60",
+  "https://i.pravatar.cc/64?img=63",
+  "https://i.pravatar.cc/64?img=68",
+];
 
 const MAPS = [
   {
     title: "Coolest Date Night Spots",
     description: "Moody lighting, great cocktails, and vibes that actually impress. Curated by locals who've done the research.",
     location: "Philadelphia, PA",
-    rating: "4.8",
+    upvotes: 842, downvotes: 67,
     emoji: "🕯️",
     gradient: "linear-gradient(135deg, #020617 0%, #1E3A8A 55%, #2563EB 100%)",
     accent: "#2563EB",
+    avatars: [AVATARS[0], AVATARS[1], AVATARS[2]],
   },
   {
     title: "Best Valentine's Day Restaurants",
     description: "No cringe, no overpriced prix fixe. Just genuinely romantic spots worth booking.",
     location: "New York, NY",
-    rating: "4.7",
+    upvotes: 1247, downvotes: 89,
     emoji: "🌹",
     gradient: "linear-gradient(135deg, #0A1628 0%, #1D4ED8 55%, #60A5FA 100%)",
     accent: "#60A5FA",
+    avatars: [AVATARS[3], AVATARS[4], AVATARS[5]],
   },
   {
     title: "Most Expensive Neighborhoods",
     description: "A visual breakdown of DC's priciest zip codes — where the money lives and what it looks like.",
     location: "Washington, DC",
-    rating: "4.5",
+    upvotes: 384, downvotes: 41,
     emoji: "💰",
     gradient: "linear-gradient(135deg, #030712 0%, #0A1344 55%, #3B82F6 100%)",
     accent: "#3B82F6",
+    avatars: [AVATARS[6], AVATARS[7], AVATARS[8]],
   },
   {
     title: "TikTok Famous Restaurants",
     description: "Every place that went viral this year, mapped so you can actually find them.",
     location: "Los Angeles, CA",
-    rating: "4.6",
+    upvotes: 2103, downvotes: 154,
     emoji: "🎵",
     gradient: "linear-gradient(135deg, #020617 0%, #172554 45%, #2563EB 80%, #93C5FD 100%)",
     accent: "#93C5FD",
+    avatars: [AVATARS[9], AVATARS[10], AVATARS[11]],
   },
   {
     title: "Queer Parks & Hangouts",
     description: "Community-built guide to the parks, plazas, and outdoor spots where you belong.",
     location: "Washington, DC",
-    rating: "4.9",
+    upvotes: 679, downvotes: 28,
     emoji: "🏳️‍🌈",
     gradient: "linear-gradient(135deg, #0A1628 0%, #1E40AF 50%, #3B82F6 80%, #93C5FD 100%)",
     accent: "#93C5FD",
+    avatars: [AVATARS[12], AVATARS[13], AVATARS[14]],
   },
   {
     title: "Hidden Rooftop Bars",
     description: "The ones without signs, without reservations, and without tourists. Locals only — until now.",
     location: "Chicago, IL",
-    rating: "4.4",
+    upvotes: 516, downvotes: 73,
     emoji: "🌆",
     gradient: "linear-gradient(135deg, #030712 0%, #0F172A 50%, #1E3A8A 100%)",
     accent: "#2563EB",
+    avatars: [AVATARS[15], AVATARS[16], AVATARS[17]],
   },
 ];
 
@@ -141,10 +168,16 @@ export const GeneratedMaps = () => {
                 {/* Emoji */}
                 <span className="relative z-10 select-none drop-shadow-lg" style={{ fontSize: 36 }}>{item.emoji}</span>
 
-                {/* Rating badge */}
-                <div className="absolute top-3 right-3 h-7 px-2.5 flex items-center gap-1.5 bg-white/90 backdrop-blur-md rounded-sm">
-                  <Star className="w-3.5 h-3.5 shrink-0 text-[#E46962]" fill="#E46962" />
-                  <span className="font-semibold text-[13px] text-[#1D1D1F]">{item.rating}</span>
+                {/* Upvote / Downvote badge */}
+                <div className="absolute top-3 right-3 flex items-center gap-2">
+                  <div className="h-7 px-2.5 flex items-center gap-1.5 bg-white/90 backdrop-blur-md rounded-sm">
+                    <ThumbsUp className="w-3 h-3 shrink-0 text-[#22C55E]" />
+                    <span className="font-semibold text-[12px] text-[#1D1D1F]">{item.upvotes}</span>
+                  </div>
+                  <div className="h-7 px-2.5 flex items-center gap-1.5 bg-white/90 backdrop-blur-md rounded-sm">
+                    <ThumbsDown className="w-3 h-3 shrink-0 text-[#EF4444]" />
+                    <span className="font-semibold text-[12px] text-[#1D1D1F]">{item.downvotes}</span>
+                  </div>
                 </div>
               </div>
 
@@ -156,9 +189,22 @@ export const GeneratedMaps = () => {
                 <p className="text-[13px] leading-[1.5] text-[#6E6E73] line-clamp-2 mb-2">
                   {item.description}
                 </p>
-                <div className="flex items-center gap-1.5">
+                <div className="flex items-center gap-1.5 mb-3">
                   <MapPin className="w-3.5 h-3.5 shrink-0 text-[#6E6E73]" />
                   <span className="text-[13px] text-[#6E6E73]">{item.location}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="flex -space-x-2">
+                    {item.avatars.map((src, j) => (
+                      <img
+                        key={j}
+                        src={src}
+                        alt=""
+                        className="w-8 h-8 rounded-full object-cover border border-white"
+                      />
+                    ))}
+                  </div>
+                  <span className="text-[12px] text-[#6E6E73] font-medium">{item.upvotes + item.downvotes} votes</span>
                 </div>
               </div>
             </Link>

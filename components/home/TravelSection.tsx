@@ -214,7 +214,8 @@ export const TravelSection = () => {
           className="flex items-center justify-between pl-10 py-6"
           style={{ borderBottom: gl, paddingRight: "calc(var(--page-padding) + 16px)" }}
         >
-          <span className="text-[#1D1D1F] font-bold" style={{ fontSize: 20, letterSpacing: "-0.02em" }}>
+          <span className="flex items-center gap-3 text-[#1D1D1F] font-bold" style={{ fontSize: 20, letterSpacing: "-0.02em" }}>
+            <img src="/MapsGPT-logo.png" alt="" className="w-8 h-8 rounded-full object-cover shrink-0" />
             MapsGPT <span className="font-normal">– AI-powered social map</span>
           </span>
           <Link
