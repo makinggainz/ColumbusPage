@@ -1,8 +1,18 @@
 "use client";
 
+import { useRef } from "react";
 import { Container } from "@/components/layout/Container";
 
 export const Careers = () => {
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  const handleTextareaInput = () => {
+    const el = textareaRef.current;
+    if (!el) return;
+    el.style.height = "auto";
+    el.style.height = `${el.scrollHeight}px`;
+  };
+
   return (
     <section className="py-[115px] md:py-[147px] lg:py-[179px]" style={{ backgroundColor: "rgba(37, 99, 235, 0.04)" }}>
       <Container>
@@ -48,42 +58,36 @@ export const Careers = () => {
         {/* FORM */}
         <div className="max-w-xl mx-auto">
 
-          <form className="flex flex-col gap-10">
+          <form className="flex flex-col gap-2">
             {[
               { type: "text", placeholder: "Name", tag: "input" },
               { type: "text", placeholder: "Message", tag: "textarea" },
               { type: "email", placeholder: "Enter email", tag: "input" },
-            ].map(({ type, placeholder, tag }) =>
-              tag === "textarea" ? (
-                <textarea
-                  key={placeholder}
-                  placeholder={placeholder}
-                  rows={1}
-                  className="w-full bg-transparent outline-none resize-none block"
-                  style={{
-                    borderBottom: "1px solid rgba(29,29,31,0.18)",
-                    fontSize: 16,
-                    color: "#1D1D1F",
-                    paddingBottom: 12,
-                    lineHeight: 1.5,
-                  }}
-                />
-              ) : (
-                <input
-                  key={placeholder}
-                  type={type}
-                  placeholder={placeholder}
-                  className="w-full bg-transparent outline-none block"
-                  style={{
-                    borderBottom: "1px solid rgba(29,29,31,0.18)",
-                    fontSize: 16,
-                    color: "#1D1D1F",
-                    paddingBottom: 12,
-                    lineHeight: 1.5,
-                  }}
-                />
-              )
-            )}
+            ].map(({ type, placeholder, tag }) => (
+              <label
+                key={placeholder}
+                className="block cursor-text border-b border-[rgba(29,29,31,0.18)] focus-within:border-[#7B6FE8] transition-colors duration-300"
+                style={{ paddingTop: 20, paddingBottom: 20 }}
+              >
+                {tag === "textarea" ? (
+                  <textarea
+                    ref={textareaRef}
+                    placeholder={placeholder}
+                    rows={1}
+                    onInput={handleTextareaInput}
+                    className="w-full bg-transparent outline-none resize-none block placeholder-[rgba(29,29,31,0.35)] overflow-hidden"
+                    style={{ fontSize: 16, color: "#1D1D1F", lineHeight: 1.6 }}
+                  />
+                ) : (
+                  <input
+                    type={type}
+                    placeholder={placeholder}
+                    className="w-full bg-transparent outline-none block placeholder-[rgba(29,29,31,0.35)]"
+                    style={{ fontSize: 16, color: "#1D1D1F", lineHeight: 1.6 }}
+                  />
+                )}
+              </label>
+            ))}
           </form>
 
           <p className="mt-3 text-right" style={{ fontSize: 13, color: "rgba(29,29,31,0.4)", letterSpacing: "-0.01em" }}>
@@ -93,10 +97,10 @@ export const Careers = () => {
           <div className="mt-10">
             <button
               type="submit"
-              className="px-10 flex items-center justify-between hover:opacity-90 transition-opacity"
+              className="group px-10 flex items-center justify-between hover:opacity-90 transition-opacity cursor-pointer"
               style={{ height: 56, backgroundColor: "#000000", width: "100%" }}
             >
-              <span className="text-white font-medium" style={{ fontSize: 20 }}>Submit</span>
+              <span className="text-white font-medium transition-colors duration-300 group-hover:text-[#2563EB]" style={{ fontSize: 20 }}>Submit</span>
               <svg width="10" height="18" viewBox="0 0 7 12" fill="none" stroke="#2563EB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M1 1l5 5-5 5" />
               </svg>

@@ -98,7 +98,7 @@ export const GeneratedMaps = () => {
           style={anim(150)}
         >
           {MAPS.map((item, i) => (
-            <div key={i} className="flex flex-col rounded-lg overflow-hidden" style={{ border: "1px solid var(--grid-line)" }}>
+            <div key={i} className="flex flex-col rounded-lg overflow-hidden" style={{ border: "1px solid var(--grid-line)", background: "rgba(37, 99, 235, 0.06)" }}>
               {/* Gradient visual */}
               <div
                 className="relative w-full flex items-center justify-center overflow-hidden rounded-lg"

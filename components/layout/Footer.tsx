@@ -23,7 +23,7 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false })
     if (!el) return;
     const obs = new IntersectionObserver(
       ([entry]) => { if (entry.isIntersecting) { setFooterVisible(true); obs.disconnect(); } },
-      { threshold: 0.15 }
+      { threshold: 0.5 }
     );
     obs.observe(el);
     return () => obs.disconnect();
@@ -48,6 +48,7 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false })
   return (
     <footer
       ref={footerRef}
+      data-footer
       data-navbar-theme="light"
       className={`text-[#1D1D1F] overflow-hidden flex flex-col relative ${reveal ? "h-screen" : "min-h-screen"}`}
       style={{
@@ -55,6 +56,39 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false })
         ...(reveal ? { position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 0 } as React.CSSProperties : {}),
       }}
     >
+      {/* Mission text — top center, above the bottle */}
+      <div
+        className="relative z-10 flex flex-col items-center text-center px-8 pt-24 pb-0 max-w-3xl mx-auto w-full"
+        style={{
+          opacity: bottleOpened ? 1 : 0,
+          transform: bottleOpened ? "translateY(0)" : "translateY(10px)",
+          transition: "opacity 0.5s ease, transform 0.5s ease",
+          pointerEvents: bottleOpened ? "auto" : "none",
+        }}
+      >
+        <p className="text-[15px] leading-relaxed mb-6" style={{ color: "rgba(29,29,31,0.5)" }}>
+          We are a group of engineers, designers, and company builders developing
+          foundation models and data collection innovations to power the
+          geospatial intelligence systems of tomorrow.
+        </p>
+        <p className="text-[15px] leading-relaxed mb-12" style={{ color: "rgba(29,29,31,0.5)" }}>
+          We're building foundation models that understand the physical world
+          through geospatial reasoning. GeoContext-1 processes satellite imagery,
+          terrain data, infrastructure networks, and temporal patterns to generate
+          actionable intelligence across defence, climate, consumer and urban
+          planning domains.
+        </p>
+
+        <div className="flex flex-col items-center gap-8 w-full" style={{ fontSize: 18, fontWeight: 500 }}>
+          <Link href="/our-mission" className="hover:opacity-60 transition-opacity text-[#1D1D1F]">[ Our Mission ]</Link>
+          <div className="flex justify-between w-full max-w-xl">
+            <Link href="#" className="hover:opacity-60 transition-opacity text-[#1D1D1F]">[ Product ]</Link>
+            <Link href="/technology" className="hover:opacity-60 transition-opacity text-[#1D1D1F]">[ Technology ]</Link>
+            <Link href="/use-cases" className="hover:opacity-60 transition-opacity text-[#1D1D1F]">[ Use Cases ]</Link>
+          </div>
+        </div>
+      </div>
+
       {/* 3D Bottle scene */}
       <BottleScene onBottleClick={() => { setNoteOpen(true); setBottleOpened(true); }} visible={footerVisible} />
 

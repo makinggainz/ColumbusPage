@@ -29,6 +29,7 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
     );
     // Links only appear once hero CTA has scrolled out of view
     const [showLinks, setShowLinks] = useState(false);
+    const [footerInView, setFooterInView] = useState(false);
     const navRef = useRef<HTMLElement>(null);
 
     useEffect(() => {
@@ -45,20 +46,29 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
 
         // Nav links appear only after hero CTA leaves viewport
         const cta = document.getElementById("hero-cta");
+        let ctaObs: IntersectionObserver | undefined;
         if (cta) {
-            const obs = new IntersectionObserver(
+            ctaObs = new IntersectionObserver(
                 ([entry]) => setShowLinks(!entry.isIntersecting),
                 { threshold: 0 }
             );
-            obs.observe(cta);
-            return () => {
-                obs.disconnect();
-                window.removeEventListener("scroll", handleScroll);
-                window.removeEventListener("hero-reveal", handleReveal);
-            };
+            ctaObs.observe(cta);
+        }
+
+        // Hide navbar when footer is in view
+        const footer = document.querySelector("[data-footer]");
+        let footerObs: IntersectionObserver | undefined;
+        if (footer) {
+            footerObs = new IntersectionObserver(
+                ([entry]) => setFooterInView(entry.isIntersecting),
+                { threshold: 0.5 }
+            );
+            footerObs.observe(footer);
         }
 
         return () => {
+            ctaObs?.disconnect();
+            footerObs?.disconnect();
             window.removeEventListener("scroll", handleScroll);
             window.removeEventListener("hero-reveal", handleReveal);
         };
@@ -155,9 +165,10 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
                 className="header-font fixed top-0 left-0 right-0 z-50"
                 style={{
                     color: navColor,
-                    opacity: hasScrolled ? 1 : 0,
-                    transform: hasScrolled ? "translateY(0)" : "translateY(-8px)",
-                    transition: `opacity 1000ms ease, transform 1000ms ease, color ${t}`,
+                    opacity: footerInView ? 0 : hasScrolled ? 1 : 0,
+                    transform: footerInView ? "translateY(-12px)" : hasScrolled ? "translateY(0)" : "translateY(-8px)",
+                    pointerEvents: footerInView ? "none" : undefined,
+                    transition: `opacity 600ms ease, transform 600ms ease, color ${t}`,
                 }}
                 onMouseLeave={handleMouseLeave}
             >
@@ -282,7 +293,7 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
                                         color: "white",
                                     }}
                                 >
-                                    <span>Start Now</span>
+                                    <span className="transition-colors duration-300 group-hover:text-[#2563EB]">Start Now</span>
                                     <svg
                                         className="transition-transform duration-300 group-hover:translate-x-0.5"
                                         width="10" height="18" viewBox="0 0 7 12" fill="none"

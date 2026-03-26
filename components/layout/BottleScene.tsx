@@ -114,7 +114,7 @@ export const BottleScene = ({ onBottleClick, visible }: { onBottleClick?: () => 
 
     // ── 3D Camera ──
     const fov = 550;
-    const horizonY = H * 0.30;
+    const horizonY = H * 0.30 - 100;
     const camHeight = 380;
 
     const project = (wx: number, wy: number, wz: number): [number, number] | null => {

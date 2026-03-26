@@ -215,22 +215,16 @@ export const TravelSection = () => {
           className="flex items-center justify-between px-8 md:px-10 py-6"
           style={{ borderBottom: gl }}
         >
-          <span className="text-[#1D1D1F] font-bold" style={{ fontSize: 40, letterSpacing: "-0.02em" }}>
+          <span className="text-[#1D1D1F] font-bold" style={{ fontSize: 20, letterSpacing: "-0.02em" }}>
             MapsGPT <span className="font-normal">– AI-powered social map</span>
           </span>
           <Link
             href="/maps-gpt"
             className="flex items-center gap-2 font-semibold hover:opacity-70 transition-opacity"
-            style={{
-              fontSize: 20,
-              background: "linear-gradient(90deg, #111111 0%, #2563EB 100%)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              backgroundClip: "text",
-            }}
+            style={{ fontSize: 20, color: "#1D1D1F" }}
           >
             Try it out now
-            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#2563EB" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#7B6FE8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M2 10L10 2M10 2H4M10 2V8" />
             </svg>
           </Link>
@@ -286,26 +280,27 @@ export const TravelSection = () => {
 
           {/* Phone mockups */}
           <div
-            className="relative w-full max-w-300 mx-auto"
-            style={{ height: 660, marginTop: 16, ...anim(350) }}
+            className="relative w-full px-8 md:px-10"
+            style={{ marginTop: 16, ...anim(350) }}
           >
             {/* Desktop mockup */}
             <div
-              className="absolute overflow-hidden"
-              style={{ left: "2%", bottom: 0, width: 1080, height: 658, borderRadius: "12px 12px 0 0", boxShadow: "0 -2px 20px rgba(0,0,0,0.08)" }}
+              className="relative overflow-hidden w-full"
+              style={{ borderRadius: "8px 8px 0 0" }}
             >
               <Image
                 src="/MapsGPTDesktop.png"
                 alt="MapsGPT desktop interface"
-                fill
-                className="object-cover object-top"
+                width={1920}
+                height={1080}
+                className="w-full h-auto"
               />
             </div>
 
             {/* Mobile mockup */}
             <div
               className="absolute overflow-hidden"
-              style={{ right: "3%", bottom: 0, width: 300, height: 660, borderRadius: "16px 16px 0 0", boxShadow: "-2px 0 20px rgba(0,0,0,0.10)", zIndex: 2 }}
+              style={{ right: "5%", bottom: 0, width: 263, height: 572, borderRadius: "16px 16px 0 0", boxShadow: "-2px 0 20px rgba(0,0,0,0.10)", zIndex: 2 }}
             >
               <Image
                 src="/MapsGPTMobile.png"

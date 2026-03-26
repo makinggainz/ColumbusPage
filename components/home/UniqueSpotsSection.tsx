@@ -93,18 +93,18 @@ export const UniqueSpotsSection = () => {
 
         {/* Bottom CTA bar */}
         <div className="grid grid-cols-2 mt-24">
-          <div className="px-10 flex items-center" style={{ height: 76, borderRight: gl, backgroundColor: "rgba(37, 99, 235, 0.06)" }}>
+          <div className="px-10 flex items-center" style={{ height: 76, borderRight: gl, backgroundColor: "rgba(20, 41, 148, 0.07)" }}>
             <p className="text-[20px] font-medium text-[#1D1D1F] tracking-[-0.01em]">
               MapsGPT is a local guide in your pocket
             </p>
           </div>
           <a
             href="/maps-gpt"
-            className="px-10 flex items-center justify-between hover:opacity-90 transition-opacity"
+            className="group px-10 flex items-center justify-between hover:opacity-90 transition-opacity"
             style={{ height: 76, backgroundColor: "#000000" }}
           >
-            <span className="text-white text-[20px] font-medium">Try it out</span>
-            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#2563EB" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <span className="text-white text-[20px] font-medium transition-colors duration-300 group-hover:text-[#2563EB]">Try it out</span>
+            <svg className="transition-transform duration-300 group-hover:translate-x-0.5" width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#2563EB" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M2 10L10 2M10 2H4M10 2V8" />
             </svg>
           </a>
@@ -116,7 +116,7 @@ export const UniqueSpotsSection = () => {
 
 function SpotCard({ spot }: { spot: (typeof SPOTS)[0] }) {
   return (
-    <div className="flex flex-col shrink-0 overflow-hidden rounded-lg" style={{ width: 260, border: "1px solid var(--grid-line)" }}>
+    <div className="flex flex-col shrink-0 overflow-hidden rounded-lg" style={{ width: 260, border: "1px solid var(--grid-line)", background: "rgba(37, 99, 235, 0.06)" }}>
       {/* Image */}
       <div className="relative w-full overflow-hidden rounded-lg" style={{ aspectRatio: "4 / 3" }}>
         <img

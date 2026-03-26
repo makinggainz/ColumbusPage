@@ -60,7 +60,7 @@ export const Industries = () => {
               className="group block rounded-lg overflow-hidden"
               style={{
                 width: 220,
-                background: "rgba(18, 8, 52, 0.04)",
+                background: "rgba(37, 99, 235, 0.06)",
                 ...anim(100 + i * 80),
               }}
             >
@@ -103,11 +103,11 @@ export const Industries = () => {
           </div>
           <Link
             href="/use-cases"
-            className="px-10 flex items-center justify-between hover:opacity-90 transition-opacity"
+            className="group px-10 flex items-center justify-between hover:opacity-90 transition-opacity"
             style={{ height: 76, backgroundColor: "#000000" }}
           >
-            <span className="text-white text-[20px] font-medium">Start now</span>
-            <svg width="10" height="18" viewBox="0 0 7 12" fill="none" stroke="#2563EB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <span className="text-white text-[20px] font-medium transition-colors duration-300 group-hover:text-[#2563EB]">Start now</span>
+            <svg className="transition-transform duration-300 group-hover:translate-x-0.5" width="10" height="18" viewBox="0 0 7 12" fill="none" stroke="#2563EB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
               <path d="M1 1l5 5-5 5" />
             </svg>
           </Link>
