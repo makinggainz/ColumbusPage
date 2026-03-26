@@ -299,7 +299,7 @@ export const Capabilities = () => {
             transition: "opacity 0.7s ease, transform 0.7s ease",
           }}
         >
-          <h2 className="text-[#1D1D1F] font-normal tracking-[-0.02em]" style={{ fontSize: 24 }}>
+          <h2 className="font-medium tracking-[-0.02em]" style={{ fontSize: 24, color: "#717074" }}>
             Capabilities
           </h2>
         </div>
@@ -332,8 +332,8 @@ export const Capabilities = () => {
                   <div className="absolute inset-0 z-[1] bg-black/35 pointer-events-none" aria-hidden />
                 )}
                 <span
-                  className={`relative z-10 flex items-center h-[76px] px-6 font-medium drop-shadow-md flex-shrink-0 transition-[font-size] duration-300 ease-in-out ${
-                    openId === item.id ? "text-[20px]" : "text-[14px]"
+                  className={`relative z-10 flex items-center h-[76px] px-8 font-medium drop-shadow-md flex-shrink-0 transition-[font-size] duration-300 ease-in-out ${
+                    openId === item.id ? "text-[18px]" : "text-[13px]"
                   }`}
                 >
                   {item.label}
@@ -346,7 +346,7 @@ export const Capabilities = () => {
                       animate={{ opacity: 1 }}
                       exit={{ opacity: 0 }}
                       transition={{ duration: 0.25 }}
-                      className="relative z-10 flex-1 px-6 pb-6 pt-0 flex flex-col min-h-0"
+                      className="relative z-10 flex-1 px-8 pb-6 pt-0 flex flex-col min-h-0"
                     >
                       <p className="text-[14px] text-gray-300 mb-4">{item.openContent.description}</p>
                       {item.openContent.listItems.length > 0 && (
@@ -386,8 +386,8 @@ export const Capabilities = () => {
                     <div className="absolute inset-0 z-[1] bg-black/35 pointer-events-none" aria-hidden />
                   )}
                   <span
-                    className={`relative z-10 flex items-center h-[76px] px-6 font-medium drop-shadow-md flex-shrink-0 transition-[font-size] duration-300 ease-in-out ${
-                      openId === item.id ? "text-[24px] max-lg:text-[20px]" : "text-[14px]"
+                    className={`relative z-10 flex items-center h-[76px] px-8 font-medium drop-shadow-md flex-shrink-0 transition-[font-size] duration-300 ease-in-out ${
+                      openId === item.id ? "text-[18px] max-lg:text-[16px]" : "text-[13px]"
                     }`}
                   >
                     {item.label}
@@ -400,7 +400,7 @@ export const Capabilities = () => {
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         transition={{ duration: 0.25 }}
-                        className="relative z-10 flex-1 px-6 pb-6 pt-0 flex flex-col min-h-0"
+                        className="relative z-10 flex-1 px-8 pb-6 pt-0 flex flex-col min-h-0"
                       >
                         <p className="text-[16px] text-gray-300 mb-4 leading-relaxed max-lg:text-[14px]">
                           {item.openContent.description}

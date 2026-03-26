@@ -20,7 +20,7 @@ export const PartnerStrip = () => {
         <h2 className="font-bold tracking-[-0.02em] text-[#1D1D1F] text-center" style={{ fontSize: 36 }}>
           High-fidelity and smart datasets
         </h2>
-        <p className="text-[20px] text-[#000000] mt-3 text-center">
+        <p className="text-[20px] text-[#000000] mt-3 text-center font-medium">
           We vet our data with reputable partner organizations
         </p>
       </div>
