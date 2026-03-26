@@ -1,0 +1,515 @@
+/**
+ * Material Design 3 — Design Tokens
+ * Source: https://m3.material.io/
+ * Token naming follows the official md-sys-* / md-ref-* convention.
+ *
+ * Three-tier hierarchy:
+ *   1. Reference tokens  (md-ref-*)   — raw palette values, never use directly in components
+ *   2. System tokens     (md-sys-*)   — semantic roles, use these in components
+ *   3. Component tokens  (md-comp-*)  — component-specific overrides
+ */
+
+/* ============================================================
+   REFERENCE TOKENS — Tonal Palettes
+   Generated from a neutral baseline brand color.
+   Replace these with your brand's generated palette from
+   https://m3.material.io/theme-builder
+   ============================================================ */
+:root {
+  /* Primary palette */
+  --md-ref-palette-primary0:   #000000;
+  --md-ref-palette-primary10:  #21005d;
+  --md-ref-palette-primary20:  #381e72;
+  --md-ref-palette-primary30:  #4f378b;
+  --md-ref-palette-primary40:  #6750a4;
+  --md-ref-palette-primary50:  #7f67be;
+  --md-ref-palette-primary60:  #9a82db;
+  --md-ref-palette-primary70:  #b69df8;
+  --md-ref-palette-primary80:  #d0bcff;
+  --md-ref-palette-primary90:  #eaddff;
+  --md-ref-palette-primary95:  #f6edff;
+  --md-ref-palette-primary99:  #fffbfe;
+  --md-ref-palette-primary100: #ffffff;
+
+  /* Secondary palette */
+  --md-ref-palette-secondary0:   #000000;
+  --md-ref-palette-secondary10:  #1d192b;
+  --md-ref-palette-secondary20:  #332d41;
+  --md-ref-palette-secondary30:  #4a4458;
+  --md-ref-palette-secondary40:  #625b71;
+  --md-ref-palette-secondary50:  #7a7289;
+  --md-ref-palette-secondary60:  #958da5;
+  --md-ref-palette-secondary70:  #b0a7c0;
+  --md-ref-palette-secondary80:  #ccc2dc;
+  --md-ref-palette-secondary90:  #e8def8;
+  --md-ref-palette-secondary95:  #f6edff;
+  --md-ref-palette-secondary99:  #fffbfe;
+  --md-ref-palette-secondary100: #ffffff;
+
+  /* Tertiary palette */
+  --md-ref-palette-tertiary0:   #000000;
+  --md-ref-palette-tertiary10:  #31111d;
+  --md-ref-palette-tertiary20:  #492532;
+  --md-ref-palette-tertiary30:  #633b48;
+  --md-ref-palette-tertiary40:  #7d5260;
+  --md-ref-palette-tertiary50:  #986977;
+  --md-ref-palette-tertiary60:  #b58392;
+  --md-ref-palette-tertiary70:  #d29dac;
+  --md-ref-palette-tertiary80:  #efb8c8;
+  --md-ref-palette-tertiary90:  #ffd8e4;
+  --md-ref-palette-tertiary95:  #ffecf1;
+  --md-ref-palette-tertiary99:  #fffbfa;
+  --md-ref-palette-tertiary100: #ffffff;
+
+  /* Error palette */
+  --md-ref-palette-error0:   #000000;
+  --md-ref-palette-error10:  #410002;
+  --md-ref-palette-error20:  #690005;
+  --md-ref-palette-error30:  #93000a;
+  --md-ref-palette-error40:  #ba1a1a;
+  --md-ref-palette-error50:  #de3730;
+  --md-ref-palette-error60:  #ff5449;
+  --md-ref-palette-error70:  #ff897d;
+  --md-ref-palette-error80:  #ffb4ab;
+  --md-ref-palette-error90:  #ffdad6;
+  --md-ref-palette-error95:  #ffedea;
+  --md-ref-palette-error99:  #fffbff;
+  --md-ref-palette-error100: #ffffff;
+
+  /* Neutral palette */
+  --md-ref-palette-neutral0:   #000000;
+  --md-ref-palette-neutral10:  #1c1b1f;
+  --md-ref-palette-neutral20:  #313033;
+  --md-ref-palette-neutral30:  #484649;
+  --md-ref-palette-neutral40:  #605d62;
+  --md-ref-palette-neutral50:  #787579;
+  --md-ref-palette-neutral60:  #939094;
+  --md-ref-palette-neutral70:  #aeaaae;
+  --md-ref-palette-neutral80:  #cac5cd;
+  --md-ref-palette-neutral90:  #e6e1e5;
+  --md-ref-palette-neutral95:  #f4eff4;
+  --md-ref-palette-neutral99:  #fffbfe;
+  --md-ref-palette-neutral100: #ffffff;
+
+  /* Neutral variant palette */
+  --md-ref-palette-neutral-variant0:   #000000;
+  --md-ref-palette-neutral-variant10:  #1d1a22;
+  --md-ref-palette-neutral-variant20:  #322f37;
+  --md-ref-palette-neutral-variant30:  #49454f;
+  --md-ref-palette-neutral-variant40:  #605d66;
+  --md-ref-palette-neutral-variant50:  #79747e;
+  --md-ref-palette-neutral-variant60:  #938f99;
+  --md-ref-palette-neutral-variant70:  #aea9b4;
+  --md-ref-palette-neutral-variant80:  #cac4d0;
+  --md-ref-palette-neutral-variant90:  #e7e0ec;
+  --md-ref-palette-neutral-variant95:  #f5eefa;
+  --md-ref-palette-neutral-variant99:  #fffbfe;
+  --md-ref-palette-neutral-variant100: #ffffff;
+
+  /* Typeface */
+  --md-ref-typeface-brand:          'Google Sans', 'Roboto', sans-serif;
+  --md-ref-typeface-plain:          'Roboto', sans-serif;
+  --md-ref-typeface-weight-regular: 400;
+  --md-ref-typeface-weight-medium:  500;
+  --md-ref-typeface-weight-bold:    700;
+}
+
+
+/* ============================================================
+   SYSTEM TOKENS — Light Theme (default)
+   ============================================================ */
+:root,
+[data-theme="light"] {
+  /* --- Color roles --- */
+  --md-sys-color-primary:              var(--md-ref-palette-primary40);
+  --md-sys-color-on-primary:           var(--md-ref-palette-primary100);
+  --md-sys-color-primary-container:    var(--md-ref-palette-primary90);
+  --md-sys-color-on-primary-container: var(--md-ref-palette-primary10);
+
+  --md-sys-color-secondary:              var(--md-ref-palette-secondary40);
+  --md-sys-color-on-secondary:           var(--md-ref-palette-secondary100);
+  --md-sys-color-secondary-container:    var(--md-ref-palette-secondary90);
+  --md-sys-color-on-secondary-container: var(--md-ref-palette-secondary10);
+
+  --md-sys-color-tertiary:              var(--md-ref-palette-tertiary40);
+  --md-sys-color-on-tertiary:           var(--md-ref-palette-tertiary100);
+  --md-sys-color-tertiary-container:    var(--md-ref-palette-tertiary90);
+  --md-sys-color-on-tertiary-container: var(--md-ref-palette-tertiary10);
+
+  --md-sys-color-error:              var(--md-ref-palette-error40);
+  --md-sys-color-on-error:           var(--md-ref-palette-error100);
+  --md-sys-color-error-container:    var(--md-ref-palette-error90);
+  --md-sys-color-on-error-container: var(--md-ref-palette-error10);
+
+  --md-sys-color-background:    var(--md-ref-palette-neutral99);
+  --md-sys-color-on-background: var(--md-ref-palette-neutral10);
+
+  --md-sys-color-surface:           var(--md-ref-palette-neutral99);
+  --md-sys-color-on-surface:        var(--md-ref-palette-neutral10);
+  --md-sys-color-surface-variant:   var(--md-ref-palette-neutral-variant90);
+  --md-sys-color-on-surface-variant: var(--md-ref-palette-neutral-variant30);
+
+  --md-sys-color-surface-dim:     #ded8e1;
+  --md-sys-color-surface-bright:  var(--md-ref-palette-neutral99);
+  --md-sys-color-surface-container-lowest:  var(--md-ref-palette-neutral100);
+  --md-sys-color-surface-container-low:     var(--md-ref-palette-neutral95);
+  --md-sys-color-surface-container:         var(--md-ref-palette-neutral90);
+  --md-sys-color-surface-container-high:    #ece6f0;
+  --md-sys-color-surface-container-highest: var(--md-ref-palette-neutral-variant90);
+
+  --md-sys-color-outline:         var(--md-ref-palette-neutral-variant50);
+  --md-sys-color-outline-variant: var(--md-ref-palette-neutral-variant80);
+  --md-sys-color-shadow:          var(--md-ref-palette-neutral0);
+  --md-sys-color-scrim:           var(--md-ref-palette-neutral0);
+  --md-sys-color-inverse-surface:    var(--md-ref-palette-neutral20);
+  --md-sys-color-inverse-on-surface: var(--md-ref-palette-neutral95);
+  --md-sys-color-inverse-primary:    var(--md-ref-palette-primary80);
+}
+
+
+/* ============================================================
+   SYSTEM TOKENS — Dark Theme
+   ============================================================ */
+[data-theme="dark"] {
+  --md-sys-color-primary:              var(--md-ref-palette-primary80);
+  --md-sys-color-on-primary:           var(--md-ref-palette-primary20);
+  --md-sys-color-primary-container:    var(--md-ref-palette-primary30);
+  --md-sys-color-on-primary-container: var(--md-ref-palette-primary90);
+
+  --md-sys-color-secondary:              var(--md-ref-palette-secondary80);
+  --md-sys-color-on-secondary:           var(--md-ref-palette-secondary20);
+  --md-sys-color-secondary-container:    var(--md-ref-palette-secondary30);
+  --md-sys-color-on-secondary-container: var(--md-ref-palette-secondary90);
+
+  --md-sys-color-tertiary:              var(--md-ref-palette-tertiary80);
+  --md-sys-color-on-tertiary:           var(--md-ref-palette-tertiary20);
+  --md-sys-color-tertiary-container:    var(--md-ref-palette-tertiary30);
+  --md-sys-color-on-tertiary-container: var(--md-ref-palette-tertiary90);
+
+  --md-sys-color-error:              var(--md-ref-palette-error80);
+  --md-sys-color-on-error:           var(--md-ref-palette-error20);
+  --md-sys-color-error-container:    var(--md-ref-palette-error30);
+  --md-sys-color-on-error-container: var(--md-ref-palette-error90);
+
+  --md-sys-color-background:    var(--md-ref-palette-neutral10);
+  --md-sys-color-on-background: var(--md-ref-palette-neutral90);
+
+  --md-sys-color-surface:            var(--md-ref-palette-neutral10);
+  --md-sys-color-on-surface:         var(--md-ref-palette-neutral90);
+  --md-sys-color-surface-variant:    var(--md-ref-palette-neutral-variant30);
+  --md-sys-color-on-surface-variant: var(--md-ref-palette-neutral-variant80);
+
+  --md-sys-color-surface-dim:     var(--md-ref-palette-neutral10);
+  --md-sys-color-surface-bright:  #3b383e;
+  --md-sys-color-surface-container-lowest:  #0f0d13;
+  --md-sys-color-surface-container-low:     var(--md-ref-palette-neutral20);
+  --md-sys-color-surface-container:         #211f26;
+  --md-sys-color-surface-container-high:    #2b2930;
+  --md-sys-color-surface-container-highest: var(--md-ref-palette-neutral30);
+
+  --md-sys-color-outline:         var(--md-ref-palette-neutral-variant60);
+  --md-sys-color-outline-variant: var(--md-ref-palette-neutral-variant30);
+  --md-sys-color-shadow:          var(--md-ref-palette-neutral0);
+  --md-sys-color-scrim:           var(--md-ref-palette-neutral0);
+  --md-sys-color-inverse-surface:    var(--md-ref-palette-neutral90);
+  --md-sys-color-inverse-on-surface: var(--md-ref-palette-neutral20);
+  --md-sys-color-inverse-primary:    var(--md-ref-palette-primary40);
+}
+
+
+/* ============================================================
+   SYSTEM TOKENS — Typography / Type Scale
+   ============================================================ */
+:root {
+  /* Display */
+  --md-sys-typescale-display-large-font:        var(--md-ref-typeface-brand);
+  --md-sys-typescale-display-large-size:        3.5625rem;   /* 57px */
+  --md-sys-typescale-display-large-line-height: 4rem;        /* 64px */
+  --md-sys-typescale-display-large-weight:      var(--md-ref-typeface-weight-regular);
+  --md-sys-typescale-display-large-tracking:    -0.015625rem;
+
+  --md-sys-typescale-display-medium-font:        var(--md-ref-typeface-brand);
+  --md-sys-typescale-display-medium-size:        2.8125rem;  /* 45px */
+  --md-sys-typescale-display-medium-line-height: 3.25rem;    /* 52px */
+  --md-sys-typescale-display-medium-weight:      var(--md-ref-typeface-weight-regular);
+  --md-sys-typescale-display-medium-tracking:    0;
+
+  --md-sys-typescale-display-small-font:        var(--md-ref-typeface-brand);
+  --md-sys-typescale-display-small-size:        2.25rem;    /* 36px */
+  --md-sys-typescale-display-small-line-height: 2.75rem;    /* 44px */
+  --md-sys-typescale-display-small-weight:      var(--md-ref-typeface-weight-regular);
+  --md-sys-typescale-display-small-tracking:    0;
+
+  /* Headline */
+  --md-sys-typescale-headline-large-font:        var(--md-ref-typeface-brand);
+  --md-sys-typescale-headline-large-size:        2rem;       /* 32px */
+  --md-sys-typescale-headline-large-line-height: 2.5rem;     /* 40px */
+  --md-sys-typescale-headline-large-weight:      var(--md-ref-typeface-weight-regular);
+  --md-sys-typescale-headline-large-tracking:    0;
+
+  --md-sys-typescale-headline-medium-font:        var(--md-ref-typeface-brand);
+  --md-sys-typescale-headline-medium-size:        1.75rem;   /* 28px */
+  --md-sys-typescale-headline-medium-line-height: 2.25rem;   /* 36px */
+  --md-sys-typescale-headline-medium-weight:      var(--md-ref-typeface-weight-regular);
+  --md-sys-typescale-headline-medium-tracking:    0;
+
+  --md-sys-typescale-headline-small-font:        var(--md-ref-typeface-brand);
+  --md-sys-typescale-headline-small-size:        1.5rem;     /* 24px */
+  --md-sys-typescale-headline-small-line-height: 2rem;       /* 32px */
+  --md-sys-typescale-headline-small-weight:      var(--md-ref-typeface-weight-regular);
+  --md-sys-typescale-headline-small-tracking:    0;
+
+  /* Title */
+  --md-sys-typescale-title-large-font:        var(--md-ref-typeface-brand);
+  --md-sys-typescale-title-large-size:        1.375rem;  /* 22px */
+  --md-sys-typescale-title-large-line-height: 1.75rem;   /* 28px */
+  --md-sys-typescale-title-large-weight:      var(--md-ref-typeface-weight-regular);
+  --md-sys-typescale-title-large-tracking:    0;
+
+  --md-sys-typescale-title-medium-font:        var(--md-ref-typeface-plain);
+  --md-sys-typescale-title-medium-size:        1rem;      /* 16px */
+  --md-sys-typescale-title-medium-line-height: 1.5rem;    /* 24px */
+  --md-sys-typescale-title-medium-weight:      var(--md-ref-typeface-weight-medium);
+  --md-sys-typescale-title-medium-tracking:    0.009375rem;
+
+  --md-sys-typescale-title-small-font:        var(--md-ref-typeface-plain);
+  --md-sys-typescale-title-small-size:        0.875rem;  /* 14px */
+  --md-sys-typescale-title-small-line-height: 1.25rem;   /* 20px */
+  --md-sys-typescale-title-small-weight:      var(--md-ref-typeface-weight-medium);
+  --md-sys-typescale-title-small-tracking:    0.00625rem;
+
+  /* Body */
+  --md-sys-typescale-body-large-font:        var(--md-ref-typeface-plain);
+  --md-sys-typescale-body-large-size:        1rem;      /* 16px */
+  --md-sys-typescale-body-large-line-height: 1.5rem;    /* 24px */
+  --md-sys-typescale-body-large-weight:      var(--md-ref-typeface-weight-regular);
+  --md-sys-typescale-body-large-tracking:    0.03125rem;
+
+  --md-sys-typescale-body-medium-font:        var(--md-ref-typeface-plain);
+  --md-sys-typescale-body-medium-size:        0.875rem; /* 14px */
+  --md-sys-typescale-body-medium-line-height: 1.25rem;  /* 20px */
+  --md-sys-typescale-body-medium-weight:      var(--md-ref-typeface-weight-regular);
+  --md-sys-typescale-body-medium-tracking:    0.015625rem;
+
+  --md-sys-typescale-body-small-font:        var(--md-ref-typeface-plain);
+  --md-sys-typescale-body-small-size:        0.75rem;  /* 12px */
+  --md-sys-typescale-body-small-line-height: 1rem;     /* 16px */
+  --md-sys-typescale-body-small-weight:      var(--md-ref-typeface-weight-regular);
+  --md-sys-typescale-body-small-tracking:    0.025rem;
+
+  /* Label */
+  --md-sys-typescale-label-large-font:        var(--md-ref-typeface-plain);
+  --md-sys-typescale-label-large-size:        0.875rem; /* 14px */
+  --md-sys-typescale-label-large-line-height: 1.25rem;  /* 20px */
+  --md-sys-typescale-label-large-weight:      var(--md-ref-typeface-weight-medium);
+  --md-sys-typescale-label-large-tracking:    0.00625rem;
+
+  --md-sys-typescale-label-medium-font:        var(--md-ref-typeface-plain);
+  --md-sys-typescale-label-medium-size:        0.75rem; /* 12px */
+  --md-sys-typescale-label-medium-line-height: 1rem;    /* 16px */
+  --md-sys-typescale-label-medium-weight:      var(--md-ref-typeface-weight-medium);
+  --md-sys-typescale-label-medium-tracking:    0.03125rem;
+
+  --md-sys-typescale-label-small-font:        var(--md-ref-typeface-plain);
+  --md-sys-typescale-label-small-size:        0.6875rem; /* 11px */
+  --md-sys-typescale-label-small-line-height: 1rem;      /* 16px */
+  --md-sys-typescale-label-small-weight:      var(--md-ref-typeface-weight-medium);
+  --md-sys-typescale-label-small-tracking:    0.03125rem;
+}
+
+
+/* ============================================================
+   SYSTEM TOKENS — Shape
+   ============================================================ */
+:root {
+  --md-sys-shape-corner-none:        0px;
+  --md-sys-shape-corner-extra-small: 4px;
+  --md-sys-shape-corner-small:       8px;
+  --md-sys-shape-corner-medium:      12px;
+  --md-sys-shape-corner-large:       16px;
+  --md-sys-shape-corner-extra-large: 28px;
+  --md-sys-shape-corner-full:        9999px;
+}
+
+
+/* ============================================================
+   SYSTEM TOKENS — Elevation (shadow values)
+   ============================================================ */
+:root {
+  --md-sys-elevation-level0: none;
+  --md-sys-elevation-level1:
+    0px 1px 2px rgba(0,0,0,0.30),
+    0px 1px 3px 1px rgba(0,0,0,0.15);
+  --md-sys-elevation-level2:
+    0px 1px 2px rgba(0,0,0,0.30),
+    0px 2px 6px 2px rgba(0,0,0,0.15);
+  --md-sys-elevation-level3:
+    0px 1px 3px rgba(0,0,0,0.30),
+    0px 4px 8px 3px rgba(0,0,0,0.15);
+  --md-sys-elevation-level4:
+    0px 2px 3px rgba(0,0,0,0.30),
+    0px 6px 10px 4px rgba(0,0,0,0.15);
+  --md-sys-elevation-level5:
+    0px 4px 4px rgba(0,0,0,0.30),
+    0px 8px 12px 6px rgba(0,0,0,0.15);
+}
+
+
+/* ============================================================
+   SYSTEM TOKENS — Motion / Duration
+   ============================================================ */
+:root {
+  /* Durations */
+  --md-sys-motion-duration-short1:  50ms;
+  --md-sys-motion-duration-short2:  100ms;
+  --md-sys-motion-duration-short3:  150ms;
+  --md-sys-motion-duration-short4:  200ms;
+  --md-sys-motion-duration-medium1: 250ms;
+  --md-sys-motion-duration-medium2: 300ms;
+  --md-sys-motion-duration-medium3: 350ms;
+  --md-sys-motion-duration-medium4: 400ms;
+  --md-sys-motion-duration-long1:   450ms;
+  --md-sys-motion-duration-long2:   500ms;
+  --md-sys-motion-duration-long3:   550ms;
+  --md-sys-motion-duration-long4:   600ms;
+  --md-sys-motion-duration-extra-long1: 700ms;
+  --md-sys-motion-duration-extra-long2: 800ms;
+  --md-sys-motion-duration-extra-long3: 900ms;
+  --md-sys-motion-duration-extra-long4: 1000ms;
+
+  /* Easing */
+  --md-sys-motion-easing-standard:          cubic-bezier(0.2, 0, 0, 1);
+  --md-sys-motion-easing-standard-decelerate: cubic-bezier(0, 0, 0, 1);
+  --md-sys-motion-easing-standard-accelerate: cubic-bezier(0.3, 0, 1, 1);
+  --md-sys-motion-easing-emphasized:         cubic-bezier(0.2, 0, 0, 1);
+  --md-sys-motion-easing-emphasized-decelerate: cubic-bezier(0.05, 0.7, 0.1, 1);
+  --md-sys-motion-easing-emphasized-accelerate: cubic-bezier(0.3, 0, 0.8, 0.15);
+  --md-sys-motion-easing-legacy:             cubic-bezier(0.4, 0, 0.2, 1);
+  --md-sys-motion-easing-legacy-decelerate:  cubic-bezier(0, 0, 0.2, 1);
+  --md-sys-motion-easing-legacy-accelerate:  cubic-bezier(0.4, 0, 1, 1);
+  --md-sys-motion-easing-linear:             cubic-bezier(0, 0, 1, 1);
+}
+
+
+/* ============================================================
+   SYSTEM TOKENS — State Layers (opacity only)
+   ============================================================ */
+:root {
+  --md-sys-state-hover-state-layer-opacity:    0.08;
+  --md-sys-state-focus-state-layer-opacity:    0.12;
+  --md-sys-state-pressed-state-layer-opacity:  0.12;
+  --md-sys-state-dragged-state-layer-opacity:  0.16;
+  --md-sys-state-disabled-container-opacity:   0.12;
+  --md-sys-state-disabled-content-opacity:     0.38;
+}
+
+
+/* ============================================================
+   COMPONENT TOKENS — Buttons (filled)
+   ============================================================ */
+:root {
+  --md-comp-filled-button-container-color:      var(--md-sys-color-primary);
+  --md-comp-filled-button-label-text-color:     var(--md-sys-color-on-primary);
+  --md-comp-filled-button-container-height:     40px;
+  --md-comp-filled-button-container-shape:      var(--md-sys-shape-corner-full);
+  --md-comp-filled-button-horizontal-padding:   24px;
+  --md-comp-filled-button-icon-size:            18px;
+  --md-comp-filled-button-label-text-font:      var(--md-sys-typescale-label-large-font);
+  --md-comp-filled-button-label-text-size:      var(--md-sys-typescale-label-large-size);
+  --md-comp-filled-button-label-text-weight:    var(--md-sys-typescale-label-large-weight);
+  --md-comp-filled-button-label-text-tracking:  var(--md-sys-typescale-label-large-tracking);
+}
+
+/* ============================================================
+   COMPONENT TOKENS — FAB (Floating Action Button)
+   ============================================================ */
+:root {
+  --md-comp-fab-container-color:  var(--md-sys-color-primary-container);
+  --md-comp-fab-icon-color:       var(--md-sys-color-on-primary-container);
+  --md-comp-fab-container-shape:  var(--md-sys-shape-corner-large);
+  --md-comp-fab-container-size:   56px;
+  --md-comp-fab-icon-size:        24px;
+  --md-comp-fab-container-elevation: var(--md-sys-elevation-level3);
+}
+
+/* ============================================================
+   COMPONENT TOKENS — Cards
+   ============================================================ */
+:root {
+  --md-comp-card-container-color:     var(--md-sys-color-surface-container-low);
+  --md-comp-card-container-shape:     var(--md-sys-shape-corner-medium);
+  --md-comp-card-container-elevation: var(--md-sys-elevation-level1);
+  --md-comp-card-outline-color:       var(--md-sys-color-outline-variant);
+  --md-comp-card-padding:             16px;
+}
+
+/* ============================================================
+   COMPONENT TOKENS — Navigation Bar
+   ============================================================ */
+:root {
+  --md-comp-navigation-bar-container-color:        var(--md-sys-color-surface-container);
+  --md-comp-navigation-bar-active-indicator-color: var(--md-sys-color-secondary-container);
+  --md-comp-navigation-bar-icon-color:             var(--md-sys-color-on-surface-variant);
+  --md-comp-navigation-bar-active-icon-color:      var(--md-sys-color-on-secondary-container);
+  --md-comp-navigation-bar-label-text-color:       var(--md-sys-color-on-surface-variant);
+  --md-comp-navigation-bar-active-label-text-color: var(--md-sys-color-on-surface);
+  --md-comp-navigation-bar-container-height:       80px;
+  --md-comp-navigation-bar-icon-size:              24px;
+  --md-comp-navigation-bar-active-indicator-shape: var(--md-sys-shape-corner-full);
+  --md-comp-navigation-bar-active-indicator-width: 64px;
+  --md-comp-navigation-bar-active-indicator-height: 32px;
+}
+
+/* ============================================================
+   COMPONENT TOKENS — Text Field (outlined)
+   ============================================================ */
+:root {
+  --md-comp-outlined-text-field-container-shape:    var(--md-sys-shape-corner-extra-small);
+  --md-comp-outlined-text-field-container-height:   56px;
+  --md-comp-outlined-text-field-outline-color:      var(--md-sys-color-outline);
+  --md-comp-outlined-text-field-focus-outline-color: var(--md-sys-color-primary);
+  --md-comp-outlined-text-field-input-text-color:   var(--md-sys-color-on-surface);
+  --md-comp-outlined-text-field-label-text-color:   var(--md-sys-color-on-surface-variant);
+  --md-comp-outlined-text-field-focus-label-text-color: var(--md-sys-color-primary);
+  --md-comp-outlined-text-field-horizontal-padding: 16px;
+  --md-comp-outlined-text-field-body-text-font:     var(--md-ref-typeface-plain);
+  --md-comp-outlined-text-field-body-text-size:     var(--md-sys-typescale-body-large-size);
+}
+
+/* ============================================================
+   COMPONENT TOKENS — Chip (assist / filter / input / suggestion)
+   ============================================================ */
+:root {
+  --md-comp-chip-container-shape:        var(--md-sys-shape-corner-small);
+  --md-comp-chip-container-height:       32px;
+  --md-comp-chip-horizontal-padding:     16px;
+  --md-comp-chip-outline-color:          var(--md-sys-color-outline);
+  --md-comp-chip-label-text-color:       var(--md-sys-color-on-surface-variant);
+  --md-comp-chip-selected-container-color: var(--md-sys-color-secondary-container);
+  --md-comp-chip-selected-label-text-color: var(--md-sys-color-on-secondary-container);
+  --md-comp-chip-icon-size:              18px;
+}
+
+/* ============================================================
+   COMPONENT TOKENS — Dialog
+   ============================================================ */
+:root {
+  --md-comp-dialog-container-color:  var(--md-sys-color-surface-container-high);
+  --md-comp-dialog-container-shape:  var(--md-sys-shape-corner-extra-large);
+  --md-comp-dialog-container-elevation: var(--md-sys-elevation-level3);
+  --md-comp-dialog-headline-color:   var(--md-sys-color-on-surface);
+  --md-comp-dialog-supporting-text-color: var(--md-sys-color-on-surface-variant);
+  --md-comp-dialog-padding:          24px;
+}
+
+/* ============================================================
+   COMPONENT TOKENS — Top App Bar
+   ============================================================ */
+:root {
+  --md-comp-top-app-bar-container-color:  var(--md-sys-color-surface);
+  --md-comp-top-app-bar-headline-color:   var(--md-sys-color-on-surface);
+  --md-comp-top-app-bar-leading-icon-color: var(--md-sys-color-on-surface);
+  --md-comp-top-app-bar-trailing-icon-color: var(--md-sys-color-on-surface-variant);
+  --md-comp-top-app-bar-container-height: 64px;
+  --md-comp-top-app-bar-small-container-height: 56px;
+}
