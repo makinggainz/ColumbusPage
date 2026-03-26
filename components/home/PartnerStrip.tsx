@@ -20,7 +20,7 @@ export const PartnerStrip = () => {
         <h2 className="font-bold tracking-[-0.02em] text-[#1D1D1F] text-center" style={{ fontSize: 36 }}>
           High-fidelity and smart datasets
         </h2>
-        <p className="text-[20px] text-[#000000] mt-3 text-center font-medium">
+        <p className="text-[20px] mt-3 text-center font-medium" style={{ color: "#717074" }}>
           We vet our data with reputable partner organizations
         </p>
       </div>
@@ -41,10 +41,7 @@ export const PartnerStrip = () => {
         ))}
       </div>
 
-      {/* Bottom separator */}
-      <div className="flex justify-center px-8 md:px-10 pb-40">
-        <div className="w-4/5" style={{ height: 1, borderTop: gl }} />
-      </div>
+      <div className="pb-20" />
     </GridSection>
   );
 };

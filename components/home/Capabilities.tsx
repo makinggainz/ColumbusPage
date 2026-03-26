@@ -294,6 +294,8 @@ export const Capabilities = () => {
         <div
           className="flex items-center justify-center px-8 md:px-10 pt-6 pb-12"
           style={{
+            position: "relative",
+            zIndex: 2,
             opacity: visible ? 1 : 0,
             transform: visible ? "translateY(0)" : "translateY(12px)",
             transition: "opacity 0.7s ease, transform 0.7s ease",
@@ -308,6 +310,8 @@ export const Capabilities = () => {
         <div
           style={{
             borderBottom: gl,
+            position: "relative",
+            zIndex: 10,
             opacity: visible ? 1 : 0,
             transform: visible ? "translateY(0)" : "translateY(16px)",
             transition: "opacity 0.7s ease 0.15s, transform 0.7s ease 0.15s",

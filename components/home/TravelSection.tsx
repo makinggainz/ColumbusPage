@@ -280,34 +280,44 @@ export const TravelSection = () => {
 
           {/* Phone mockups */}
           <div
-            className="relative w-full px-8 md:px-10"
+            className="relative w-full"
             style={{ marginTop: 16, ...anim(350) }}
           >
-            {/* Desktop mockup */}
-            <div
-              className="relative overflow-hidden w-full"
-              style={{ borderRadius: "8px 8px 0 0" }}
-            >
-              <Image
-                src="/MapsGPTDesktop.png"
-                alt="MapsGPT desktop interface"
-                width={1920}
-                height={1080}
-                className="w-full h-auto"
-              />
-            </div>
+            <div className="relative max-w-[1287px] mx-auto">
+              {/* Desktop mockup */}
+              <div
+                className="relative overflow-hidden w-full"
+                style={{ borderRadius: "8px 8px 0 0" }}
+              >
+                <Image
+                  src="/MapsGPTDesktop.png"
+                  alt="MapsGPT desktop interface"
+                  width={1920}
+                  height={1080}
+                  className="w-full h-auto"
+                />
+              </div>
 
-            {/* Mobile mockup */}
-            <div
-              className="absolute overflow-hidden"
-              style={{ right: "5%", bottom: 0, width: 263, height: 572, borderRadius: "16px 16px 0 0", boxShadow: "-2px 0 20px rgba(0,0,0,0.10)", zIndex: 2 }}
-            >
-              <Image
-                src="/MapsGPTMobile.png"
-                alt="MapsGPT mobile interface"
-                fill
-                className="object-cover object-top"
-              />
+              {/* Mobile mockup — height matches parent (= desktop image), width from aspect ratio */}
+              <div
+                className="absolute overflow-hidden"
+                style={{
+                  right: 0,
+                  bottom: 0,
+                  height: "100%",
+                  aspectRatio: "263 / 572",
+                  borderRadius: "16px 16px 0 0",
+                  boxShadow: "-2px 0 20px rgba(0,0,0,0.10)",
+                  zIndex: 2,
+                }}
+              >
+                <Image
+                  src="/MapsGPTMobile.png"
+                  alt="MapsGPT mobile interface"
+                  fill
+                  className="object-cover object-top"
+                />
+              </div>
             </div>
           </div>
 
