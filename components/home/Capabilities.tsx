@@ -288,7 +288,7 @@ export const Capabilities = () => {
   };
 
   return (
-    <GridSection fadeTop={false} fadeBottom={false} style={{ borderTop: "none", paddingTop: 100, position: "relative", zIndex: 1 }}>
+    <GridSection style={{ borderTop: "none", paddingTop: 100, position: "relative", zIndex: 1 }}>
       <div ref={sectionRef} style={{ overflow: "visible" }}>
         {/* Header */}
         <div

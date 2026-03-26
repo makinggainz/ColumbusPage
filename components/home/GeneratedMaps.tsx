@@ -2,6 +2,7 @@
 
 import { Star, MapPin } from "lucide-react";
 import { useRef, useState, useEffect } from "react";
+import Link from "next/link";
 import { GridSection, gl } from "./ContentGrid";
 
 const MAPS = [
@@ -87,22 +88,22 @@ export const GeneratedMaps = () => {
       <div ref={ref} style={{ borderBottom: gl }}>
         {/* Heading */}
         <div className="flex items-center justify-center px-8 pt-14 pb-10" style={anim(0)}>
-          <h2 className="text-[#1D1D1F] text-[36px] font-semibold tracking-[-0.02em] leading-[1.1]">
+          <h2 className="font-medium tracking-[-0.02em]" style={{ fontSize: 24, color: "#717074" }}>
             Generated Maps
           </h2>
         </div>
 
-        {/* 3x2 grid */}
+        {/* Scrollable row */}
         <div
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-10 gap-y-10 px-8 md:px-16 pb-14"
-          style={anim(150)}
+          className="flex overflow-x-auto px-6 pb-12 gap-5 select-none"
+          style={{ scrollbarWidth: "none", ...anim(150) }}
         >
           {MAPS.map((item, i) => (
-            <div key={i} className="flex flex-col rounded-lg overflow-hidden" style={{ border: "1px solid var(--grid-line)", background: "rgba(37, 99, 235, 0.06)" }}>
+            <Link key={i} href="/maps-gpt" className="flex flex-col shrink-0 rounded-lg overflow-hidden hover:opacity-90 transition-opacity" style={{ width: 260, border: "1px solid var(--grid-line)", background: "rgba(37, 99, 235, 0.06)" }}>
               {/* Gradient visual */}
               <div
                 className="relative w-full flex items-center justify-center overflow-hidden rounded-lg"
-                style={{ aspectRatio: "16 / 10", background: item.gradient }}
+                style={{ aspectRatio: "4 / 3", background: item.gradient }}
               >
                 {/* Street grid SVG */}
                 <svg className="absolute inset-0 w-full h-full" viewBox="0 0 320 200" preserveAspectRatio="xMidYMid slice" fill="none">
@@ -157,7 +158,7 @@ export const GeneratedMaps = () => {
                   <span className="text-[13px] text-[#6E6E73]">{item.location}</span>
                 </div>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </div>

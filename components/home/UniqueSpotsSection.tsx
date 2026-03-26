@@ -2,6 +2,7 @@
 
 import { Star, MapPin } from "lucide-react";
 import { useRef, useState, useEffect } from "react";
+import Link from "next/link";
 import { GridSection, gl } from "./ContentGrid";
 
 const FAVORITE_SPOTS_FILES = ["(20).jpeg", "(14).jpeg", "(17).jpeg", "(19).jpeg", "(21).jpeg", "(23).jpeg", "(24).jpeg", "(22).jpeg"];
@@ -59,17 +60,10 @@ export const UniqueSpotsSection = () => {
     <GridSection style={{ borderTop: "none" }}>
       <div ref={ref} style={{ borderBottom: gl }}>
         {/* Heading */}
-        <div className="flex flex-col items-center text-center px-8 pt-14 pb-3" style={anim(0)}>
-          <h2 className="text-[#1D1D1F] text-[36px] font-semibold tracking-[-0.02em] leading-[1.1]">
-            Find your next hang out spot, easier
-          </h2>
-        </div>
-
-        {/* Subtitle */}
-        <div className="flex items-center justify-center px-8 pb-10" style={anim(100)}>
-          <p className="text-[#6E6E73] text-[20px]">
+        <div className="flex items-center justify-center px-8 pt-14 pb-10" style={anim(0)}>
+          <h2 className="font-medium tracking-[-0.02em]" style={{ fontSize: 24, color: "#717074" }}>
             Spots found faster on MapsGPT
-          </p>
+          </h2>
         </div>
 
         {/* Scrollable cards */}
@@ -100,8 +94,8 @@ export const UniqueSpotsSection = () => {
           </div>
           <a
             href="/maps-gpt"
-            className="group px-10 flex items-center justify-between hover:opacity-90 transition-opacity"
-            style={{ height: 76, backgroundColor: "#000000" }}
+            className="group pl-10 flex items-center justify-between hover:opacity-90 transition-opacity"
+            style={{ height: 76, backgroundColor: "#000000", paddingRight: "calc(var(--page-padding) + 16px)" }}
           >
             <span className="text-white text-[20px] font-medium transition-colors duration-300 group-hover:text-[#2563EB]">Try it out</span>
             <svg className="transition-transform duration-300 group-hover:translate-x-0.5" width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#2563EB" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -116,7 +110,7 @@ export const UniqueSpotsSection = () => {
 
 function SpotCard({ spot }: { spot: (typeof SPOTS)[0] }) {
   return (
-    <div className="flex flex-col shrink-0 overflow-hidden rounded-lg" style={{ width: 260, border: "1px solid var(--grid-line)", background: "rgba(37, 99, 235, 0.06)" }}>
+    <Link href="/maps-gpt" className="flex flex-col shrink-0 overflow-hidden rounded-lg hover:opacity-90 transition-opacity" style={{ width: 260, border: "1px solid var(--grid-line)", background: "rgba(37, 99, 235, 0.06)" }}>
       {/* Image */}
       <div className="relative w-full overflow-hidden rounded-lg" style={{ aspectRatio: "4 / 3" }}>
         <img
@@ -143,6 +137,6 @@ function SpotCard({ spot }: { spot: (typeof SPOTS)[0] }) {
           <span className="text-[13px] text-[#6E6E73]">{spot.location}</span>
         </div>
       </div>
-    </div>
+    </Link>
   );
 }

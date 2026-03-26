@@ -158,8 +158,7 @@ export const TravelSection = () => {
       const startInsetPct = (startInsetPx / vw) * 100;
 
       const inset = startInsetPct * (1 - current);
-      const radius = current > 0 ? 12 * (1 - current) : 0;
-      card.style.clipPath = `inset(0 ${inset}% 0 ${inset}% round ${radius}px)`;
+      card.style.clipPath = `inset(0 ${inset}% 0 ${inset}%)`;
 
       // Background blur fades in with scroll (0 → 14px)
       if (bgImg) {
@@ -212,8 +211,8 @@ export const TravelSection = () => {
       {/* Top bar — wrapped in GridSection for left/right grid lines */}
       <GridSection>
         <div
-          className="flex items-center justify-between px-8 md:px-10 py-6"
-          style={{ borderBottom: gl }}
+          className="flex items-center justify-between pl-10 py-6"
+          style={{ borderBottom: gl, paddingRight: "calc(var(--page-padding) + 16px)" }}
         >
           <span className="text-[#1D1D1F] font-bold" style={{ fontSize: 20, letterSpacing: "-0.02em" }}>
             MapsGPT <span className="font-normal">– AI-powered social map</span>
@@ -234,9 +233,9 @@ export const TravelSection = () => {
       {/* Main content area with sand background — scroll-driven expansion */}
       <div
         ref={beachRef}
-        className="relative"
+        className="relative flex flex-col"
         style={{
-          minHeight: 700,
+          height: 1000,
           clipPath: "inset(0 0 0 0 round 0px)",
           willChange: "clip-path",
         }}
@@ -252,7 +251,7 @@ export const TravelSection = () => {
         />
 
         {/* Centered content */}
-        <div className="relative z-10 flex flex-col items-center pt-16 md:pt-24 pb-8 px-6">
+        <div className="relative z-10 flex flex-col flex-1 items-center pt-16 md:pt-24 px-6">
           {/* Heading */}
           <h2
             ref={travelHeadingRef}
@@ -272,7 +271,7 @@ export const TravelSection = () => {
             className="text-center mb-10"
             style={{ fontSize: 20, color: "rgba(29,29,31,0.45)", letterSpacing: "-0.015em", fontWeight: 400, ...anim(100) }}
           >
-            MapsGPT is a local guide in your pocket
+            Find your next hang out spot, easier
           </p>
 
           {/* Tab bar — matches SiteSelection PillToggle */}
@@ -280,44 +279,46 @@ export const TravelSection = () => {
 
           {/* Phone mockups */}
           <div
-            className="relative w-full"
-            style={{ marginTop: 16, ...anim(350) }}
+            className="relative flex-1 w-full max-w-[1287px] mx-auto mt-10"
+            style={anim(350)}
           >
-            <div className="relative max-w-[1287px] mx-auto">
-              {/* Desktop mockup */}
-              <div
-                className="relative overflow-hidden w-full"
-                style={{ borderRadius: "8px 8px 0 0" }}
-              >
-                <Image
-                  src="/MapsGPTDesktop.png"
-                  alt="MapsGPT desktop interface"
-                  width={1920}
-                  height={1080}
-                  className="w-full h-auto"
-                />
-              </div>
+            {/* Desktop mockup */}
+            <div
+              className="absolute overflow-hidden"
+              style={{
+                left: "2%",
+                bottom: 0,
+                width: 1158,
+                height: "100%",
+                borderRadius: "12px 12px 0 0",
+                boxShadow: "0 -8px 60px rgba(0,0,0,0.28)",
+              }}
+            >
+              <img
+                src="/MapsGPTDesktop.png"
+                alt="MapsGPT desktop interface"
+                className="w-full h-full object-cover object-top"
+              />
+            </div>
 
-              {/* Mobile mockup — height matches parent (= desktop image), width from aspect ratio */}
-              <div
-                className="absolute overflow-hidden"
-                style={{
-                  right: 0,
-                  bottom: 0,
-                  height: "100%",
-                  aspectRatio: "263 / 572",
-                  borderRadius: "16px 16px 0 0",
-                  boxShadow: "-2px 0 20px rgba(0,0,0,0.10)",
-                  zIndex: 2,
-                }}
-              >
-                <Image
-                  src="/MapsGPTMobile.png"
-                  alt="MapsGPT mobile interface"
-                  fill
-                  className="object-cover object-top"
-                />
-              </div>
+            {/* Mobile mockup */}
+            <div
+              className="absolute overflow-hidden"
+              style={{
+                right: "5%",
+                bottom: 0,
+                height: "100%",
+                aspectRatio: "263 / 572",
+                borderRadius: "16px 16px 0 0",
+                boxShadow: "-4px 0 40px rgba(0,0,0,0.15)",
+                zIndex: 2,
+              }}
+            >
+              <img
+                src="/MapsGPTMobile.png"
+                alt="MapsGPT mobile interface"
+                className="w-full h-full object-cover object-top"
+              />
             </div>
           </div>
 

@@ -72,7 +72,7 @@ export const Vision = () => {
             style={{ fontSize: 48, fontWeight: 300, ...anim(0) }}
           >
             <span style={{ opacity: 0.7 }}>Introducing</span>{" "}<span className="font-medium">new kind of AI,</span>{" "}
-            <span className="font-bold">COLUMBUS-01</span>
+            <span className="font-semibold">COLUMBUS-01</span>
           </h2>
         </div>
 
@@ -110,8 +110,8 @@ export const Vision = () => {
           </div>
           <Link
             href="/technology"
-            className="group px-10 flex items-center justify-between hover:opacity-90 transition-opacity"
-            style={{ height: 76, backgroundColor: "#000000" }}
+            className="group pl-10 flex items-center justify-between hover:opacity-90 transition-opacity"
+            style={{ height: 76, backgroundColor: "#000000", paddingRight: "calc(var(--page-padding) + 16px)" }}
           >
             <span className="text-white text-[20px] font-medium transition-colors duration-300 group-hover:text-[#2563EB]">Our research &amp; technology</span>
             <svg className="transition-transform duration-300 group-hover:translate-x-0.5" width="10" height="18" viewBox="0 0 7 12" fill="none" stroke="#2563EB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">

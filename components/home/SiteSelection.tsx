@@ -124,10 +124,10 @@ export const SiteSelection = () => {
   });
 
   return (
-    <GridSection fadeBottom={false}>
+    <GridSection>
       <div ref={ref} style={{ borderBottom: gl }}>
         {/* Top bar: Columbus Pro + New | Start Now */}
-        <div className="flex items-center justify-between px-8 md:px-10 py-6" style={anim(0)}>
+        <div className="flex items-center justify-between pl-10 py-6" style={{ ...anim(0), paddingRight: "calc(var(--page-padding) + 16px)" }}>
           <div className="flex items-center gap-3">
             <span className="text-[#1D1D1F] font-bold" style={{ fontSize: 20 }}>
               Columbus Pro
@@ -170,7 +170,7 @@ export const SiteSelection = () => {
             zIndex: 2,
           }}
         >
-          <div className="relative" style={{ minHeight: 800 }}>
+          <div className="relative flex flex-col" style={{ height: 1000 }}>
             <Image
               ref={imgRef}
               src="/ProductBackgroundImageHome.png"
@@ -198,7 +198,7 @@ export const SiteSelection = () => {
             />
 
             {/* Content over image */}
-            <div className="relative z-10 flex flex-col items-center pt-16 md:pt-24 px-6">
+            <div className="relative z-10 flex flex-col flex-1 items-center pt-16 md:pt-24 px-6">
               {/* Main heading */}
               <h2
                 ref={headingRef}
@@ -217,24 +217,23 @@ export const SiteSelection = () => {
               <PillToggle />
 
               {/* Desktop + Mobile UI mockups */}
-              <div className="relative w-full max-w-[1100px] mx-auto mt-10" style={{ height: 570 }}>
+              <div className="relative flex-1 w-full max-w-[1287px] mx-auto mt-10">
                 {/* Desktop UI */}
                 <div
                   className="absolute overflow-hidden"
                   style={{
                     left: "2%",
                     bottom: 0,
-                    width: 995,
-                    height: 570,
+                    width: 1158,
+                    height: "100%",
                     borderRadius: "12px 12px 0 0",
                     boxShadow: "0 -8px 60px rgba(0,0,0,0.28)",
                   }}
                 >
-                  <Image
+                  <img
                     src="/Icon/desktop-ui.png"
                     alt="Desktop UI"
-                    fill
-                    className="object-cover object-top"
+                    className="w-full h-full object-cover object-top"
                   />
                 </div>
 
@@ -244,8 +243,8 @@ export const SiteSelection = () => {
                   style={{
                     right: "5%",
                     bottom: 0,
-                    width: 263,
-                    height: 572,
+                    height: "100%",
+                    aspectRatio: "263 / 572",
                     borderRadius: "16px 16px 0 0",
                     boxShadow: "-4px 0 40px rgba(0,0,0,0.15)",
                     zIndex: 2,

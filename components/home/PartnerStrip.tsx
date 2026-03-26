@@ -15,8 +15,8 @@ const LOGOS = [
 
 export const PartnerStrip = () => {
   return (
-    <GridSection fadeTop={false} fadeBottom={false} style={{ borderTop: "none", paddingTop: 100 }}>
-      <div className="flex flex-col items-center px-8 md:px-10 pt-20">
+    <GridSection style={{ borderTop: "none", paddingTop: 100 }}>
+      <div className="flex flex-col items-center px-8 md:px-10 pt-32">
         <h2 className="font-bold tracking-[-0.02em] text-[#1D1D1F] text-center" style={{ fontSize: 36 }}>
           High-fidelity and smart datasets
         </h2>
@@ -26,7 +26,7 @@ export const PartnerStrip = () => {
       </div>
 
       <div
-        className="flex items-center justify-center gap-10 md:gap-14 flex-wrap px-8 md:px-10 pt-16 pb-28"
+        className="flex items-center justify-center gap-10 md:gap-14 flex-wrap px-8 md:px-10 pt-10 pb-28"
       >
         {LOGOS.map((src, i) => (
           <Image
@@ -35,13 +35,15 @@ export const PartnerStrip = () => {
             alt=""
             width={175}
             height={62}
-            className="object-contain h-[42px] w-auto"
+            className="object-contain h-[48px] w-auto"
             style={{ filter: "grayscale(100%)", opacity: 0.45 }}
           />
         ))}
       </div>
 
-      <div className="pb-20" />
+      <div className="flex justify-center pb-20">
+        <div style={{ width: "85%", height: 1, background: "var(--grid-line)" }} />
+      </div>
     </GridSection>
   );
 };

@@ -56,7 +56,7 @@ export const Applications = () => {
           className="px-8 md:px-10 pb-8"
           style={anim(100)}
         >
-          <p className="text-[#6E6E73] text-[20px] leading-[1.47]">
+          <p className="text-[#6E6E73] text-[20px] leading-[1.47] font-medium">
             We&apos;d love to work within your industry, send us a{" "}
             <a href="mailto:hey@columbus.earth" className="text-[#1D1D1F] hover:underline">
               hey@columbus.earth
@@ -86,14 +86,16 @@ export const Applications = () => {
               {/* Purple overlay */}
               <div className="absolute inset-0 transition-opacity duration-300" style={{ backgroundColor: "rgba(37, 99, 235, 0.18)" }} />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent transition-opacity duration-300" />
-              <div className="absolute inset-x-0 bottom-0 flex flex-col z-20 px-5 pb-5">
-                <h3 className="text-[17px] font-semibold text-white mb-2">{item.title}</h3>
-                <div className="flex items-center gap-10 opacity-0 translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 ease-out">
-                  <span className="text-white/90 text-[15px] font-medium">Learn more</span>
-                  <svg width="10" height="18" viewBox="0 0 7 12" fill="none" stroke="#2563EB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M1 1l5 5-5 5" />
-                  </svg>
-                </div>
+              {/* Title — sits at bottom, lifts on hover */}
+              <div className="absolute inset-x-0 bottom-0 z-20 px-5 pb-8 translate-y-0 group-hover:-translate-y-8 transition-transform duration-300 ease-out">
+                <h3 className="text-md font-semibold text-white">{item.title}</h3>
+              </div>
+              {/* Learn more — fades in at bottom on hover */}
+              <div className="absolute inset-x-0 bottom-0 z-20 px-5 pb-8 flex items-center gap-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-out">
+                <span className="text-white/90 text-[15px] font-medium">Learn more</span>
+                <svg width="10" height="18" viewBox="0 0 7 12" fill="none" stroke="#2563EB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M1 1l5 5-5 5" />
+                </svg>
               </div>
             </Link>
           ))}

@@ -41,27 +41,27 @@ export const TrustStrip = () => {
         <div
           className="absolute z-20 pointer-events-none"
           style={{
-            left: -500,
-            top: -450,
+            left: -380,
+            top: -360,
             opacity: visible ? 1 : 0,
             transform: visible ? "translate(0, 0) scaleX(-1)" : "translate(-500px, -80px) scaleX(-1)",
             transition: "opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.2s, transform 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.2s",
           }}
         >
-          <Image src="/Fern.png" alt="" width={840} height={1176} />
+          <Image src="/Fern.png" alt="" width={650} height={910} />
         </div>
         {/* Fern — right side, beyond screen edge */}
         <div
           className="absolute z-20 pointer-events-none"
           style={{
-            right: -500,
-            top: -450,
+            right: -380,
+            top: -360,
             opacity: visible ? 1 : 0,
             transform: visible ? "translate(0, 0)" : "translate(500px, -80px)",
             transition: "opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.3s, transform 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.3s",
           }}
         >
-          <Image src="/Fern.png" alt="" width={840} height={1176} />
+          <Image src="/Fern.png" alt="" width={650} height={910} />
         </div>
         {/* Heading */}
         <div className="flex flex-col items-center text-center px-8 pt-16 pb-4" style={anim(0)}>
@@ -72,7 +72,7 @@ export const TrustStrip = () => {
 
         {/* Subtitle */}
         <div className="flex items-center justify-center px-8 pb-10" style={anim(100)}>
-          <p className="text-[#6E6E73] text-[20px]">
+          <p className="text-[#6E6E73] text-[20px] font-medium">
             We work with data from reputable brands
           </p>
         </div>

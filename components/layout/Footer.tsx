@@ -81,7 +81,7 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false })
 
         <div className="flex flex-col items-center gap-8 w-full" style={{ fontSize: 18, fontWeight: 500 }}>
           <Link href="/our-mission" className="hover:opacity-60 transition-opacity text-[#1D1D1F]">[ Our Mission ]</Link>
-          <div className="flex justify-between w-full max-w-xl">
+          <div className="flex justify-between w-full max-w-xl" style={{ paddingLeft: 28 }}>
             <Link href="#" className="hover:opacity-60 transition-opacity text-[#1D1D1F]">[ Product ]</Link>
             <Link href="/technology" className="hover:opacity-60 transition-opacity text-[#1D1D1F]">[ Technology ]</Link>
             <Link href="/use-cases" className="hover:opacity-60 transition-opacity text-[#1D1D1F]">[ Use Cases ]</Link>
