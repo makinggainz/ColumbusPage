@@ -42,7 +42,7 @@ export const Applications = () => {
     <GridSection>
       <div ref={ref} style={{ borderBottom: gl }}>
         {/* Header area */}
-        <div className="px-8 md:px-10 pt-14 pb-4">
+        <div className="px-5 min-[1287px]:px-10 pt-14 pb-4">
           <h2
             className="text-[#1D1D1F] font-medium tracking-[-0.02em] leading-[1.12] text-[31px] md:text-[39px] lg:text-[49px]"
             style={{ letterSpacing: "-0.02em", ...anim(0) }}
@@ -53,7 +53,7 @@ export const Applications = () => {
 
         {/* Subtitle + tag row */}
         <div
-          className="px-8 md:px-10 pb-8"
+          className="px-5 min-[1287px]:px-10 pb-8"
           style={anim(100)}
         >
           <p className="text-[#6E6E73] text-[16px] md:text-[20px] leading-[1.47] font-medium">

@@ -50,7 +50,7 @@ export const Industries = () => {
 
         {/* Cards row */}
         <div
-          className="flex items-stretch gap-1.5 px-8 md:px-10 pb-10 overflow-x-auto md:justify-center"
+          className="flex items-stretch gap-1.5 px-5 min-[1287px]:px-10 pb-10 overflow-x-auto md:justify-center"
           style={{ scrollbarWidth: "none", ...anim(100) }}
         >
           {CARDS.map((card, i) => (
@@ -97,16 +97,16 @@ export const Industries = () => {
         </div>
 
         {/* Bottom bar */}
-        <div className="grid grid-cols-2 mt-40" style={{ ...anim(550) }}>
-          <div className="px-10 flex items-center" style={{ height: 76, borderRight: gl, backgroundColor: "rgba(37, 99, 235, 0.06)" }}>
+        <div className="flex flex-wrap mt-40" style={{ ...anim(550) }}>
+          <div className="px-5 min-[1287px]:px-10 py-5 flex items-center flex-1 min-w-70" style={{ minHeight: 76, borderRight: gl, backgroundColor: "rgba(37, 99, 235, 0.06)" }}>
             <p className="text-[20px] font-medium text-[#1D1D1F] tracking-[-0.01em]">
               Become a super-explorer.
             </p>
           </div>
           <Link
             href="/use-cases"
-            className="group px-10 flex items-center justify-between hover:opacity-90 transition-opacity"
-            style={{ height: 76, backgroundColor: "#000000" }}
+            className="group px-5 min-[1287px]:px-10 py-5 flex items-center justify-between hover:opacity-90 transition-opacity flex-1 min-w-70"
+            style={{ minHeight: 76, backgroundColor: "#000000" }}
           >
             <span className="text-white text-[20px] font-medium transition-colors duration-300 group-hover:text-[#2563EB]">Start now</span>
             <svg className="transition-transform duration-300 group-hover:translate-x-0.5" width="10" height="18" viewBox="0 0 7 12" fill="none" stroke="#2563EB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">

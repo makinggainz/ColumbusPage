@@ -65,7 +65,7 @@ export const Vision = () => {
         {/* Heading */}
         <div
           ref={ref}
-          className="px-8 md:px-10 py-12 md:py-16"
+          className="px-5 min-[1287px]:px-10 py-12 md:py-16"
         >
           <h2
             className="text-[#1D1D1F] leading-[1.15] tracking-[-0.02em] text-[31px] md:text-[39px] lg:text-[49px]"
@@ -102,16 +102,16 @@ export const Vision = () => {
         </div>
 
         {/* Bottom bar — two columns */}
-        <div className="grid grid-cols-2" style={{ ...anim(260) }}>
-          <div className="px-10 flex items-center" style={{ height: 76, borderRight: gl, backgroundColor: "rgba(37, 99, 235, 0.06)" }}>
+        <div className="flex flex-wrap" style={{ ...anim(260) }}>
+          <div className="px-5 min-[1287px]:px-10 py-5 flex items-center flex-1 min-w-70" style={{ minHeight: 76, borderRight: gl, backgroundColor: "rgba(37, 99, 235, 0.06)" }}>
             <p className="text-[20px] font-medium text-[#1D1D1F] tracking-[-0.01em]">
               Think of us like the OpenAI for maps.
             </p>
           </div>
           <Link
             href="/technology"
-            className="group px-10 flex items-center justify-between hover:opacity-90 transition-opacity"
-            style={{ height: 76, backgroundColor: "#000000" }}
+            className="group px-5 min-[1287px]:px-10 py-5 flex items-center justify-between hover:opacity-90 transition-opacity flex-1 min-w-70"
+            style={{ minHeight: 76, backgroundColor: "#000000" }}
           >
             <span className="text-white text-[20px] font-medium transition-colors duration-300 group-hover:text-[#2563EB]">Our research &amp; technology</span>
             <svg className="transition-transform duration-300 group-hover:translate-x-0.5" width="10" height="18" viewBox="0 0 7 12" fill="none" stroke="#2563EB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">

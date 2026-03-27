@@ -211,7 +211,7 @@ export const TravelSection = () => {
       {/* Top bar — wrapped in GridSection for left/right grid lines */}
       <GridSection>
         <div
-          className="flex items-center justify-between px-10 py-6"
+          className="flex items-center justify-between px-5 min-[1287px]:px-10 py-6"
           style={{ borderBottom: gl }}
         >
           <span className="flex items-center gap-3 text-[#1D1D1F] font-bold" style={{ fontSize: 20, letterSpacing: "-0.02em" }}>

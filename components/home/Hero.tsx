@@ -1166,7 +1166,7 @@ export const Hero = () => {
             className="text-sm md:text-base font-medium tracking-tight text-[#0A1344] uppercase mb-4 mt-15"
             style={fadeIn(0)}
           >
-            FRONTIER AI RESEARCH AND PRODUCT COMPANY
+            FRONTIER AI RESEARCH & PRODUCT COMPANY
           </p>
 
           {/* Main Heading */}
@@ -1209,7 +1209,7 @@ export const Hero = () => {
               <a
                 key={link.label}
                 href={link.href}
-                className="group flex items-center gap-1 text-md font-medium text-[#0A1344] transition-opacity duration-300 hover:opacity-60"
+                className="group hidden min-[642px]:flex items-center gap-1 text-md font-medium text-[#0A1344] transition-opacity duration-300 hover:opacity-60"
               >
                 {link.label}
                 <svg className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-0.5" fill="none" viewBox="0 0 16 16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

@@ -7,6 +7,7 @@ import { useEffect, useState, useRef } from "react";
 import { ScrambleText } from "@/components/ui/ScrambleText";
 
 const COMPACT_THRESHOLD = 10;
+const NAV_BREAKPOINT = 900;
 
 const menuItems = [
     { label: "Our Mission", href: "/our-mission" },
@@ -30,6 +31,9 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
     // Links only appear once hero CTA has scrolled out of view
     const [showLinks, setShowLinks] = useState(false);
     const [footerInView, setFooterInView] = useState(false);
+    const [isWideScreen, setIsWideScreen] = useState(() =>
+        typeof window !== "undefined" ? window.innerWidth >= NAV_BREAKPOINT : true
+    );
     const navRef = useRef<HTMLElement>(null);
 
     useEffect(() => {
@@ -43,6 +47,11 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
             setIsCompact(y > COMPACT_THRESHOLD);
         };
         window.addEventListener("scroll", handleScroll, { passive: true });
+
+        // Track viewport width for hamburger/nav-links breakpoint
+        const handleResize = () => setIsWideScreen(window.innerWidth >= NAV_BREAKPOINT);
+        handleResize(); // Correct SSR default on mount
+        window.addEventListener("resize", handleResize);
 
         // Nav links appear only after hero CTA leaves viewport
         const cta = document.getElementById("hero-cta");
@@ -70,6 +79,7 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
             ctaObs?.disconnect();
             footerObs?.disconnect();
             window.removeEventListener("scroll", handleScroll);
+            window.removeEventListener("resize", handleResize);
             window.removeEventListener("hero-reveal", handleReveal);
         };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -198,7 +208,7 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
                         }}
                     />
 
-                    <div className="relative px-0">
+                    <div className="relative px-5 min-[1287px]:px-0">
                         <div
                             className="flex items-center justify-between"
                             style={{
@@ -246,7 +256,7 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
 
                                 {/* Desktop nav links — appear after hero CTA leaves viewport */}
                                 <div
-                                    className="hidden min-[1155px]:flex items-center gap-5"
+                                    className="hidden min-[900px]:flex items-center gap-5"
                                     style={{
                                         maxWidth: showLinks ? 600 : 0,
                                         overflow: "hidden",
@@ -278,7 +288,7 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
                                 {/* Start Now — appears after hero CTA leaves viewport */}
                                 <Link
                                     href="/maps-gpt"
-                                    className="group hidden min-[1155px]:flex items-center justify-between gap-3 leading-none whitespace-nowrap hover:opacity-90 transition-opacity"
+                                    className="group hidden min-[900px]:flex items-center justify-between gap-3 leading-none whitespace-nowrap hover:opacity-90 transition-opacity"
                                     style={{
                                         fontSize: 14,
                                         fontWeight: 500,
@@ -304,19 +314,18 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
                                     </svg>
                                 </Link>
 
-                                {/* Hamburger — hidden after hero CTA leaves viewport */}
+                                {/* Hamburger — hides only when nav links are visible (wide screen + scrolled past CTA) */}
                                 <button
                                     onClick={handleHamburgerClick}
                                     onMouseEnter={handleNavMouseEnter}
-                                    className={`relative flex items-center justify-center rounded-none border transition-all duration-300 ${isDark && !isMenuOpen ? "border-white/30 hover:border-white/50" : "border-[#0A1344] hover:border-current"}`}
+                                    className="relative flex items-center justify-center rounded-none transition-all duration-300"
                                     style={{
-                                        width: showLinks ? 0 : 45,
+                                        width: (showLinks && isWideScreen) ? 0 : 45,
                                         height: 45,
-                                        opacity: showLinks ? 0 : 1,
+                                        opacity: (showLinks && isWideScreen) ? 0 : 1,
                                         overflow: "hidden",
-                                        pointerEvents: showLinks ? "none" : "auto",
-                                        borderWidth: isCompact ? 0 : 1,
-                                        transition: `width ${t}, opacity 120ms ease, border-width ${t}`,
+                                        pointerEvents: (showLinks && isWideScreen) ? "none" : "auto",
+                                        transition: `width ${t}, opacity 120ms ease`,
                                     }}
                                     aria-label="Toggle menu"
                                 >
@@ -354,7 +363,7 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
                         }`}
                         style={{ ...dropdownBg, top: isCompact ? 56 : 68 }}
                     >
-                        <div className="mx-auto w-full px-0 py-12" style={{ maxWidth: 1287, transitionDelay: isMenuOpen ? "150ms" : "0ms" }}>
+                        <div className="mx-auto w-full px-5 min-[1287px]:px-0 py-12" style={{ maxWidth: 1287, transitionDelay: isMenuOpen ? "150ms" : "0ms" }}>
                             <div className="grid grid-cols-1 md:grid-cols-12 gap-12">
                                 <div
                                     className={`md:col-span-5 space-y-8 transition-opacity duration-500 ${isMenuOpen ? "opacity-100" : "opacity-0"}`}

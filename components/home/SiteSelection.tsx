@@ -127,7 +127,7 @@ export const SiteSelection = () => {
     <GridSection>
       <div ref={ref} style={{ borderBottom: gl }}>
         {/* Top bar: Columbus Pro + New | Start Now */}
-        <div className="flex items-center justify-between px-10 py-6" style={anim(0)}>
+        <div className="flex items-center justify-between px-5 min-[1287px]:px-10 py-6" style={anim(0)}>
           <div className="flex items-center gap-3">
             <span className="text-[#1D1D1F] font-bold" style={{ fontSize: 20 }}>
               Columbus Pro
