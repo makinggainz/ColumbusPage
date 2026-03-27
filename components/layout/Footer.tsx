@@ -63,26 +63,38 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false })
       {/* Mission text — top center, above the bottle */}
       <div
         className="relative z-10 flex flex-col items-center text-center px-8 pt-24 pb-0 max-w-3xl mx-auto w-full"
-        style={{
-          opacity: bottleOpened ? 1 : 0,
-          transform: bottleOpened ? "translateY(0)" : "translateY(10px)",
-          transition: "opacity 0.5s ease, transform 0.5s ease",
-          pointerEvents: bottleOpened ? "auto" : "none",
-        }}
+        style={{ pointerEvents: bottleOpened ? "auto" : "none" }}
       >
-        <p className="text-[15px] leading-relaxed mb-6" style={{ color: "rgba(29,29,31,0.5)" }}>
+        <p
+          className="text-[15px] leading-relaxed mb-6"
+          style={{
+            color: "rgba(29,29,31,0.5)",
+            opacity: bottleOpened ? 1 : 0,
+            transform: bottleOpened ? "translateY(0)" : "translateY(10px)",
+            transition: "opacity 600ms cubic-bezier(0.22, 1, 0.36, 1), transform 600ms cubic-bezier(0.22, 1, 0.36, 1)",
+            transitionDelay: bottleOpened ? "100ms" : "0ms",
+          }}
+        >
           We are a group of engineers, designers, and company builders developing
           foundation models and data collection innovations to power the
           geospatial intelligence systems of tomorrow.
         </p>
-        <p className="text-[15px] leading-relaxed mb-12" style={{ color: "rgba(29,29,31,0.5)" }}>
-          We're building foundation models that understand the physical world
+        <p
+          className="text-[15px] leading-relaxed mb-12"
+          style={{
+            color: "rgba(29,29,31,0.5)",
+            opacity: bottleOpened ? 1 : 0,
+            transform: bottleOpened ? "translateY(0)" : "translateY(10px)",
+            transition: "opacity 600ms cubic-bezier(0.22, 1, 0.36, 1), transform 600ms cubic-bezier(0.22, 1, 0.36, 1)",
+            transitionDelay: bottleOpened ? "250ms" : "0ms",
+          }}
+        >
+          We&apos;re building foundation models that understand the physical world
           through geospatial reasoning. GeoContext-1 processes satellite imagery,
           terrain data, infrastructure networks, and temporal patterns to generate
           actionable intelligence across defence, climate, consumer and urban
           planning domains.
         </p>
-
       </div>
 
       {/* 3D Bottle scene */}
@@ -136,33 +148,54 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false })
       >
         <div className="max-w-[1200px] mx-auto px-8 pb-6 pt-12">
           <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12 items-start mb-12">
-            <div>
-              <h3 className="text-[24px] font-semibold text-[#1D1D1F] mb-3">Columbus Earth</h3>
-              <p className="text-[14px] text-[#1D1D1F]/50 leading-relaxed mb-4 max-w-[260px]">
-                The frontier AI lab building the first production Universal Geospatial Model.
-              </p>
-              <div className="flex gap-4">
-                <a href="mailto:contact@columbus.earth"><Mail size={18} className="text-[#1D1D1F]/40 hover:text-[#1D1D1F] transition-colors" /></a>
-                <a href="https://www.linkedin.com/company/columbusearth/about/" target="_blank" rel="noopener noreferrer"><Linkedin size={18} className="text-[#1D1D1F]/40 hover:text-[#1D1D1F] transition-colors" /></a>
+            {[
+              <div key="brand">
+                <h3 className="text-[24px] font-semibold text-[#1D1D1F] mb-3">Columbus Earth</h3>
+                <p className="text-[14px] text-[#1D1D1F]/50 leading-relaxed mb-4 max-w-[260px]">
+                  The frontier AI lab building the first production Universal Geospatial Model.
+                </p>
+                <div className="flex gap-4">
+                  <a href="mailto:contact@columbus.earth"><Mail size={18} className="text-[#1D1D1F]/40 hover:text-[#1D1D1F] transition-colors" /></a>
+                  <a href="https://www.linkedin.com/company/columbusearth/about/" target="_blank" rel="noopener noreferrer"><Linkedin size={18} className="text-[#1D1D1F]/40 hover:text-[#1D1D1F] transition-colors" /></a>
+                </div>
+              </div>,
+              <FooterColumn key="product" title="Product" links={[
+                { label: "Columbus Pro", href: "/platform" },
+                { label: "Use Cases", href: "/use-cases" },
+                { label: "MapsGPT", href: "/maps-gpt" },
+              ]} />,
+              <FooterColumn key="technology" title="Technology" links={[
+                { label: "LGM vs LLM", href: "/technology" },
+                { label: "Data Collection", href: "/technology" },
+                { label: "Core Reasoning", href: "/technology" },
+              ]} />,
+              <FooterColumn key="company" title="Company" links={[
+                { label: "Our Mission", href: "/our-mission" },
+                { label: "Careers", href: "/" },
+                { label: "Legal", href: "/" },
+              ]} />,
+            ].map((col, i) => (
+              <div
+                key={i}
+                style={{
+                  opacity: bottleOpened ? 1 : 0,
+                  transform: bottleOpened ? "translateY(0)" : "translateY(12px)",
+                  transition: "opacity 600ms cubic-bezier(0.22, 1, 0.36, 1), transform 600ms cubic-bezier(0.22, 1, 0.36, 1)",
+                  transitionDelay: bottleOpened ? `${400 + i * 120}ms` : "0ms",
+                }}
+              >
+                {col}
               </div>
-            </div>
-            <FooterColumn title="Product" links={[
-              { label: "Columbus Pro", href: "/platform" },
-              { label: "Use Cases", href: "/use-cases" },
-              { label: "MapsGPT", href: "/maps-gpt" },
-            ]} />
-            <FooterColumn title="Technology" links={[
-              { label: "LGM vs LLM", href: "/technology" },
-              { label: "Data Collection", href: "/technology" },
-              { label: "Core Reasoning", href: "/technology" },
-            ]} />
-            <FooterColumn title="Company" links={[
-              { label: "Our Mission", href: "/our-mission" },
-              { label: "Careers", href: "/" },
-              { label: "Legal", href: "/" },
-            ]} />
+            ))}
           </div>
-          <div className="border-t border-[#1D1D1F]/10 pt-4 pb-2 flex items-center justify-between text-[13px] text-[#1D1D1F]/30">
+          <div
+            className="border-t border-[#1D1D1F]/10 pt-4 pb-2 flex items-center justify-between text-[13px] text-[#1D1D1F]/30"
+            style={{
+              opacity: bottleOpened ? 1 : 0,
+              transition: "opacity 600ms cubic-bezier(0.22, 1, 0.36, 1)",
+              transitionDelay: bottleOpened ? "900ms" : "0ms",
+            }}
+          >
             <span>Columbus Earth &copy; 2026</span>
             <span>www.columbus.earth</span>
           </div>

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useLayoutEffect, useState, useRef } from "react";
 
 import { ScrambleText } from "@/components/ui/ScrambleText";
 
@@ -22,12 +22,8 @@ const menuItems = [
 export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isManuallyToggled, setIsManuallyToggled] = useState(false);
-    const [hasScrolled, setHasScrolled] = useState(() =>
-        typeof window !== "undefined" ? window.scrollY > 5 : false
-    );
-    const [isCompact, setIsCompact] = useState(() =>
-        typeof window !== "undefined" ? window.scrollY > COMPACT_THRESHOLD : false
-    );
+    const [hasScrolled, setHasScrolled] = useState(false);
+    const [isCompact, setIsCompact] = useState(false);
     // Links only appear once hero CTA has scrolled out of view
     const [showLinks, setShowLinks] = useState(false);
     const [footerInView, setFooterInView] = useState(false);
@@ -37,6 +33,16 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
     const navRef = useRef<HTMLElement>(null);
     const dropdownRef = useRef<HTMLDivElement>(null);
 
+    // Sync scroll state before first paint to prevent navbar flash on reload
+    useLayoutEffect(() => {
+        let scrolled = window.scrollY > 5;
+        try {
+            if (sessionStorage.getItem("navbar-scrolled") === "true") scrolled = true;
+        } catch {}
+        if (scrolled) setHasScrolled(true);
+        setIsCompact(window.scrollY > COMPACT_THRESHOLD);
+    }, []);
+
     useEffect(() => {
         const handleReveal = () => setHasScrolled(true);
         window.addEventListener("hero-reveal", handleReveal);
@@ -44,7 +50,12 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
         // Background + resize on any scroll
         const handleScroll = () => {
             const y = window.scrollY;
-            if (y > 5) setHasScrolled(true);
+            if (y > 5) {
+                setHasScrolled(true);
+                try { sessionStorage.setItem("navbar-scrolled", "true"); } catch {}
+            } else {
+                try { sessionStorage.setItem("navbar-scrolled", "false"); } catch {}
+            }
             setIsCompact(y > COMPACT_THRESHOLD);
         };
         window.addEventListener("scroll", handleScroll, { passive: true });
@@ -84,6 +95,26 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
             window.removeEventListener("hero-reveal", handleReveal);
         };
     // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    // Enable transitions after first paint (rAF fires after paint, so useLayoutEffect
+    // state updates render with transition:"none" → navbar appears instantly on reload)
+    const [navMounted, setNavMounted] = useState(false);
+    useEffect(() => {
+        const id = requestAnimationFrame(() => setNavMounted(true));
+        return () => cancelAnimationFrame(id);
+    }, []);
+
+    // Polling fallback for late scroll restoration (mobile, slow devices, private browsing)
+    useEffect(() => {
+        const sync = () => {
+            if (window.scrollY > 5) setHasScrolled(true);
+            setIsCompact(window.scrollY > COMPACT_THRESHOLD);
+        };
+        const t1 = setTimeout(sync, 100);
+        const t2 = setTimeout(sync, 300);
+        const t3 = setTimeout(sync, 1000);
+        return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
     }, []);
 
     // Close dropdown when mouse leaves nav area
@@ -187,7 +218,7 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
                     opacity: footerInView ? 0 : hasScrolled ? 1 : 0,
                     transform: footerInView ? "translateY(-12px)" : hasScrolled ? "translateY(0)" : "translateY(-8px)",
                     pointerEvents: footerInView ? "none" : undefined,
-                    transition: `opacity 600ms ease, transform 600ms ease, color ${t}`,
+                    transition: navMounted ? `opacity 600ms ease, transform 600ms ease, color ${t}` : "none",
                 }}
                 onMouseLeave={handleMouseLeave}
             >

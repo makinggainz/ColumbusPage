@@ -1010,11 +1010,26 @@ const HEADING_LINE1 = "Building the first in\u2011production";
 const HEADING_LINE2 = "Large Geospatial Model.";
 const WORDMARK_TEXT = "Columbus Earth";
 
-const EYEBROW_SPEED = 28;
-const HEADING_SPEED = 35;
-const WORDMARK_SPEED = 45;
+const EYEBROW_DURATION = 1000;  // total ms for eyebrow
+const HEADING1_DURATION = 1100; // total ms for heading line 1
+const HEADING2_DURATION = 850;  // total ms for heading line 2
+const WORDMARK_DURATION = 630;  // total ms for wordmark
 const PHASE_GAP = 150;
 const LOGO_TRAVEL_MS = 600;
+
+// Cubic-bezier easing for typing speed: starts fast, eases out
+function typingEase(t: number): number {
+  // cubic-bezier(0.22, 1, 0.36, 1) approximation
+  const t2 = t * t;
+  const t3 = t2 * t;
+  return 3 * t2 - 2 * t3 + t3; // ease-out-ish
+}
+
+function easedCharCount(elapsed: number, duration: number, totalChars: number): number {
+  const progress = Math.min(1, elapsed / duration);
+  const eased = typingEase(progress);
+  return Math.min(totalChars, Math.floor(eased * totalChars));
+}
 
 /* ── Hero Section ── */
 export const Hero = () => {
@@ -1030,9 +1045,11 @@ export const Hero = () => {
   const eyebrowRef = useRef<HTMLParagraphElement>(null);
   const h1Ref = useRef<HTMLSpanElement>(null);
   const h2Ref = useRef<HTMLSpanElement>(null);
+  const cursorMarkerRef = useRef<HTMLSpanElement>(null);
   const phaseRef = useRef(phase);
   phaseRef.current = phase;
   const revealedRef = useRef(false);
+  const skipRef = useRef(false);
 
   // Logo target position (for text-following phase)
   const [logoPos, setLogoPos] = useState({ x: 32, y: 120, size: 40, opacity: 0 });
@@ -1041,14 +1058,32 @@ export const Hero = () => {
   const [logoPopped, setLogoPopped] = useState(false);
 
   // Measure text element positions for logo placement
+  const lastPhaseForLogo = useRef("");
   const updateLogoTarget = useCallback(() => {
-    let targetEl: HTMLElement | null = null;
-    if (phaseRef.current === "eyebrow") targetEl = eyebrowRef.current;
-    else if (phaseRef.current === "h1") targetEl = h1Ref.current;
-    else if (phaseRef.current === "h2") targetEl = h2Ref.current;
+    const isMobile = window.innerWidth < 640;
+    const p = phaseRef.current;
 
-    if (targetEl) {
-      const rect = targetEl.getBoundingClientRect();
+    let lineEl: HTMLElement | null = null;
+    if (p === "eyebrow") lineEl = eyebrowRef.current;
+    else if (p === "h1") lineEl = h1Ref.current;
+    else if (p === "h2") lineEl = h2Ref.current;
+    if (!lineEl) return;
+
+    if (isMobile) {
+      // On mobile: only update position when phase changes (not every char).
+      // First phase: logo sits above the line (centered horizontally on left edge).
+      // Subsequent phases: logo moves to the right of the line container.
+      if (lastPhaseForLogo.current === p) return;
+      lastPhaseForLogo.current = p;
+      const lr = lineEl.getBoundingClientRect();
+      const logoSize = 24;
+      const isFirst = p === "eyebrow";
+      const x = isFirst ? lr.left : lr.right + 8;
+      const y = isFirst ? lr.top - logoSize - 8 : lr.top + lr.height / 2 - logoSize / 2;
+      setLogoPos({ x, y, size: logoSize, opacity: 1 });
+    } else {
+      // On desktop: position logo to the left of the current line (updates per tick for smooth tracking)
+      const rect = lineEl.getBoundingClientRect();
       setLogoPos({ x: rect.left - 48, y: rect.top + rect.height / 2 - 20, size: 40, opacity: 1 });
     }
   }, []);
@@ -1068,13 +1103,46 @@ export const Hero = () => {
     return () => window.removeEventListener("resize", measureNavbarLogo);
   }, [measureNavbarLogo]);
 
-  // Pop-in: place logo at eyebrow position first (no transition), then pop scale
+  // Skip-all helper (used by scroll skip and reload detection)
+  const skipToEnd = useCallback(() => {
+    if (skipRef.current) return;
+    skipRef.current = true;
+    setEyebrowChars(EYEBROW_TEXT.length);
+    setH1Chars(HEADING_LINE1.length);
+    setH2Chars(HEADING_LINE2.length);
+    setWordmarkChars(WORDMARK_TEXT.length);
+    setLogoNavbar(true);
+    setLogoPopped(true);
+    revealedRef.current = true;
+    setRevealed(true);
+    setPhase("done");
+    window.dispatchEvent(new CustomEvent("hero-reveal"));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // On mount: detect if already scrolled past hero (reload), otherwise pop-in
   useEffect(() => {
-    // Frame 1: measure and set position instantly (opacity still 0, no visual)
-    const posTimer = setTimeout(() => updateLogoTarget(), 50);
-    // Frame 2: trigger the pop-in scale animation after position is set
-    const popTimer = setTimeout(() => setLogoPopped(true), 150);
-    return () => { clearTimeout(posTimer); clearTimeout(popTimer); };
+    let cancelled = false;
+
+    // Poll for scroll restoration — browsers restore scrollY asynchronously
+    const checkScroll = () => {
+      if (cancelled || skipRef.current) return;
+      if (window.scrollY > 100) { skipToEnd(); return; }
+    };
+
+    // Check at multiple intervals to catch scroll restoration
+    checkScroll();
+    const timers = [0, 50, 100, 200, 400, 800].map(d => setTimeout(checkScroll, d));
+
+    // Also start the pop-in animation (will be overridden by skipToEnd if needed)
+    const posTimer = setTimeout(() => {
+      if (!skipRef.current) updateLogoTarget();
+    }, 60);
+    const popTimer = setTimeout(() => {
+      if (!skipRef.current) setLogoPopped(true);
+    }, 160);
+
+    return () => { cancelled = true; timers.forEach(clearTimeout); clearTimeout(posTimer); clearTimeout(popTimer); };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -1092,33 +1160,33 @@ export const Hero = () => {
     const initialDelay = 300;
 
     const tick = () => {
+      if (skipRef.current) return; // cancelled by skipToEnd
       const elapsed = performance.now() - startTime - initialDelay;
       if (elapsed < 0) { rafId = requestAnimationFrame(tick); return; }
 
       const p = phaseRef.current;
 
       if (p === "eyebrow") {
-        const chars = Math.min(EYEBROW_TEXT.length, Math.floor(elapsed / EYEBROW_SPEED));
+        const chars = easedCharCount(elapsed, EYEBROW_DURATION, EYEBROW_TEXT.length);
         setEyebrowChars(chars);
         updateLogoTarget();
         if (chars >= EYEBROW_TEXT.length) { startTime = performance.now(); setPhase("h1"); }
       } else if (p === "h1") {
         if (elapsed < PHASE_GAP) { rafId = requestAnimationFrame(tick); return; }
-        const chars = Math.min(HEADING_LINE1.length, Math.floor((elapsed - PHASE_GAP) / HEADING_SPEED));
+        const chars = easedCharCount(elapsed - PHASE_GAP, HEADING1_DURATION, HEADING_LINE1.length);
         setH1Chars(chars);
         updateLogoTarget();
         if (chars >= HEADING_LINE1.length) { startTime = performance.now(); setPhase("h2"); }
       } else if (p === "h2") {
         if (elapsed < PHASE_GAP) { rafId = requestAnimationFrame(tick); return; }
-        const chars = Math.min(HEADING_LINE2.length, Math.floor((elapsed - PHASE_GAP) / HEADING_SPEED));
+        const chars = easedCharCount(elapsed - PHASE_GAP, HEADING2_DURATION, HEADING_LINE2.length);
         setH2Chars(chars);
         updateLogoTarget();
         if (chars >= HEADING_LINE2.length) { startTime = performance.now(); measureNavbarLogo(); setPhase("toNavbar"); setLogoNavbar(true); }
       } else if (p === "toNavbar") {
-        // Wait for logo CSS transition to navbar position
         if (elapsed > LOGO_TRAVEL_MS) { startTime = performance.now(); setPhase("wordmark"); }
       } else if (p === "wordmark") {
-        const chars = Math.min(WORDMARK_TEXT.length, Math.floor(elapsed / WORDMARK_SPEED));
+        const chars = easedCharCount(elapsed, WORDMARK_DURATION, WORDMARK_TEXT.length);
         setWordmarkChars(chars);
         if (chars >= WORDMARK_TEXT.length) {
           triggerReveal();
@@ -1136,16 +1204,7 @@ export const Hero = () => {
 
   // Skip to reveal on scroll
   useEffect(() => {
-    const onScroll = () => {
-      if (phaseRef.current === "done") return;
-      setEyebrowChars(EYEBROW_TEXT.length);
-      setH1Chars(HEADING_LINE1.length);
-      setH2Chars(HEADING_LINE2.length);
-      setWordmarkChars(WORDMARK_TEXT.length);
-      setLogoNavbar(true);
-      triggerReveal();
-      setPhase("done");
-    };
+    const onScroll = () => skipToEnd();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -1195,7 +1254,19 @@ export const Hero = () => {
           transition: logoTransition,
         }}
       >
-        <img src="/logobueno.png" alt="" className="w-full h-full object-contain" />
+        {/* Radial glow behind logo on mobile — matches #F9F9F9 bg */}
+        <div
+          className="absolute inset-0 sm:hidden"
+          style={{
+            width: "300%",
+            height: "300%",
+            left: "-100%",
+            top: "-100%",
+            background: "radial-gradient(circle, #F9F9F9 30%, rgba(249,249,249,0) 70%)",
+            pointerEvents: "none",
+          }}
+        />
+        <img src="/logobueno.png" alt="" className="relative w-full h-full object-contain" />
       </div>
 
       {/* Wordmark typing — appears fixed next to logo in navbar position */}
@@ -1255,6 +1326,7 @@ export const Hero = () => {
           {/* Eyebrow — typed */}
           <p ref={eyebrowRef} className="text-sm md:text-base font-medium tracking-tight text-[#0A1344] uppercase mb-4 mt-15" style={{ minHeight: "1.5em" }}>
             {EYEBROW_TEXT.slice(0, eyebrowChars)}
+            {phase === "eyebrow" && <span ref={cursorMarkerRef} className="inline-block w-0" />}
             {showCursor && phase === "eyebrow" && <span className="inline-block w-0.5 h-[1em] bg-[#0A1344]/40 ml-0.5 align-text-bottom" style={{ animation: "heroCursorBlink 1s step-end infinite" }} />}
           </p>
 
@@ -1262,11 +1334,13 @@ export const Hero = () => {
           <h1 className="font-light leading-[1.2] text-[#0A1344] text-[39px] md:text-[49px] lg:text-[61px]" style={{ letterSpacing: "-0.02em" }}>
             <span ref={h1Ref}>
               {HEADING_LINE1.slice(0, h1Chars)}
+              {phase === "h1" && <span ref={cursorMarkerRef} className="inline-block w-0" />}
               {showCursor && phase === "h1" && <span className="inline-block w-0.5 h-[0.85em] bg-[#0A1344]/40 ml-0.5 align-text-bottom" style={{ animation: "heroCursorBlink 1s step-end infinite" }} />}
             </span>
             {h1Chars > 0 && <br />}
             <span ref={h2Ref}>
               {HEADING_LINE2.slice(0, h2Chars)}
+              {phase === "h2" && <span ref={cursorMarkerRef} className="inline-block w-0" />}
               {showCursor && phase === "h2" && <span className="inline-block w-0.5 h-[0.85em] bg-[#0A1344]/40 ml-0.5 align-text-bottom" style={{ animation: "heroCursorBlink 1s step-end infinite" }} />}
             </span>
           </h1>
