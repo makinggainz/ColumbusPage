@@ -473,25 +473,26 @@ export default function Hero() {
 
       const origPhone = phoneRef.current;
 
-      // Background expansion — clip-path + scale (both GPU-composited)
+      // Background expansion — clip-path for shape, backgroundSize to fill past white borders
       const bg = bgRef.current;
       const nearZero = raw < 0.005;
       if (bg) {
         if (nearZero) {
-          bg.style.clipPath  = "inset(80px 4% 80px 4% round 55px)";
-          bg.style.transform = "scale(1)";
+          bg.style.clipPath       = "inset(100px 5% 100px 5% round 55px)";
+          bg.style.backgroundSize = "100% 100%";
         } else {
           const expandT = Math.min(1, raw / 0.3);
           const easeOut = 1 - Math.pow(1 - expandT, 3);
-          // Clip-path: contained → flush with element edges
-          const top    = 80 * (1 - easeOut);
-          const side   = 4  * (1 - easeOut);
-          const bottom = 80 * (1 - easeOut);
-          const radius = 55 * (1 - easeOut);
-          // Scale: 1 → 1.12 to zoom past the PNG's white borders
-          const scale  = 1 + 0.12 * easeOut;
-          bg.style.clipPath  = `inset(${top}px ${side}% ${bottom}px ${side}% round ${radius}px)`;
-          bg.style.transform = `scale(${scale})`;
+          // Clip inset shrinks to 0, radius shrinks to 0
+          const top    = 100 * (1 - easeOut);
+          const side   = 5   * (1 - easeOut);
+          const bottom = 100 * (1 - easeOut);
+          const radius = 55  * (1 - easeOut);
+          // Background grows past 100% to push white PNG borders outside
+          const bgW = 100 + 30 * easeOut;
+          const bgH = 100 + 30 * easeOut;
+          bg.style.clipPath       = `inset(${top}px ${side}% ${bottom}px ${side}% round ${radius}px)`;
+          bg.style.backgroundSize = `${bgW}% ${bgH}%`;
         }
       }
 
@@ -591,11 +592,10 @@ export default function Hero() {
             position: "absolute",
             inset: 0,
             backgroundImage: "url('/BeachLanding.png')",
-            backgroundSize: "cover",
+            backgroundSize: "100% 100%",
             backgroundPosition: "center",
-            clipPath: "inset(80px 4% 80px 4% round 55px)",
-            transform: "scale(1)",
-            willChange: "clip-path, transform",
+            clipPath: "inset(100px 5% 100px 5% round 55px)",
+            willChange: "clip-path, background-size",
             zIndex: 0,
           }}
         />
