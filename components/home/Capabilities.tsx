@@ -368,12 +368,31 @@ export const Capabilities = () => {
                     >
                       <p className="text-[14px] text-gray-300 mb-4">{item.openContent.description}</p>
                       {item.openContent.listItems.length > 0 && (
-                        <ul className="text-[14px] text-gray-300 space-y-2">
+                        <ul className="text-[14px] text-gray-300 space-y-2 mb-4">
                           {item.openContent.listItems.map((li) => (
                             <li key={li}>• {li}</li>
                           ))}
                         </ul>
                       )}
+                      <Link
+                        href="/use-cases"
+                        onClick={e => e.stopPropagation()}
+                        className="group inline-flex items-center gap-4 mt-auto leading-none whitespace-nowrap hover:opacity-80 transition-opacity"
+                        style={{
+                          fontSize: 14,
+                          fontWeight: 500,
+                          color: "white",
+                        }}
+                      >
+                        <span className="transition-colors duration-300 group-hover:text-[#2563EB]">Learn more</span>
+                        <svg
+                          className="transition-transform duration-300 group-hover:translate-x-0.5"
+                          width="8" height="14" viewBox="0 0 7 12" fill="none"
+                          stroke="#2563EB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"
+                        >
+                          <path d="M1 1l5 5-5 5" />
+                        </svg>
+                      </Link>
                     </motion.div>
                   )}
                 </AnimatePresence>

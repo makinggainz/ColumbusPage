@@ -91,7 +91,7 @@ export const Applications = () => {
                 <h3 className="text-md font-semibold text-white">{item.title}</h3>
               </div>
               {/* Learn more — fades in at bottom on hover (always visible on touch) */}
-              <div className="absolute inset-x-0 bottom-0 z-20 px-5 pb-8 flex items-center gap-10 opacity-0 group-hover:opacity-100 pointer-coarse:opacity-100 transition-opacity duration-300 ease-out">
+              <div className="absolute inset-x-0 bottom-0 z-20 px-5 pb-8 flex items-center gap-4 pointer-coarse:gap-4 group-hover:gap-10 opacity-0 group-hover:opacity-100 pointer-coarse:opacity-100 transition-all duration-300 ease-out">
                 <span className="text-white/90 text-[15px] font-medium">Learn more</span>
                 <svg width="10" height="18" viewBox="0 0 7 12" fill="none" stroke="#2563EB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M1 1l5 5-5 5" />
