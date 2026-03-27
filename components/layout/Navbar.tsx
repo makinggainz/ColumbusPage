@@ -3,6 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useLayoutEffect, useState, useRef } from "react";
+import { usePathname } from "next/navigation";
 
 import { ScrambleText } from "@/components/ui/ScrambleText";
 
@@ -30,6 +31,9 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
     const [isWideScreen, setIsWideScreen] = useState(() =>
         typeof window !== "undefined" ? window.innerWidth >= NAV_BREAKPOINT : true
     );
+    const [bgTriggerPassed, setBgTriggerPassed] = useState(false);
+    const pathname = usePathname();
+    const isProductsPage = pathname === "/products";
     const navRef = useRef<HTMLElement>(null);
     const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -87,9 +91,21 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
             footerObs.observe(footer);
         }
 
+        // Products page: show navbar bg only when "We work with data" section enters view
+        const bgTrigger = document.querySelector("[data-navbar-bg-trigger]");
+        let bgTriggerObs: IntersectionObserver | undefined;
+        if (bgTrigger) {
+            bgTriggerObs = new IntersectionObserver(
+                ([entry]) => setBgTriggerPassed(entry.boundingClientRect.top <= 0),
+                { threshold: 0 }
+            );
+            bgTriggerObs.observe(bgTrigger);
+        }
+
         return () => {
             ctaObs?.disconnect();
             footerObs?.disconnect();
+            bgTriggerObs?.disconnect();
             window.removeEventListener("scroll", handleScroll);
             window.removeEventListener("resize", handleResize);
             window.removeEventListener("hero-reveal", handleReveal);
@@ -230,7 +246,7 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
                         backdropFilter: "blur(20px) saturate(1.2)",
                         WebkitBackdropFilter: "blur(20px) saturate(1.2)",
                         borderBottom: isDark ? "1px solid rgba(255,255,255,0.06)" : "1px solid rgba(0,0,0,0.06)",
-                        opacity: isCompact && !isMenuOpen ? 1 : 0,
+                        opacity: (isProductsPage ? bgTriggerPassed : isCompact) && !isMenuOpen ? 1 : 0,
                         transition: `opacity ${t}`,
                     }}
                 />

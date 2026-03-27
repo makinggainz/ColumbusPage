@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect, useState, useCallback } from "react";
 import glassStyles from "@/components/ui/GlassButton.module.css";
 import { ConsumerEnterpriseToggle } from "@/components/enterprise/ConsumerEnterpriseToggle";
 
@@ -96,6 +96,8 @@ export default function Hero() {
 
   // Transition refs
   const outerContainerRef       = useRef<HTMLDivElement>(null);
+  const sectionRef              = useRef<HTMLElement>(null);
+  const bgRef                   = useRef<HTMLDivElement>(null);
   const toggleRef               = useRef<HTMLDivElement>(null);
   const badgeTitleRef           = useRef<HTMLDivElement>(null);
   const transitionPhoneRef      = useRef<HTMLDivElement>(null);
@@ -106,8 +108,6 @@ export default function Hero() {
   const phoneDisplayWRef        = useRef(0);
   const phoneDisplayHRef        = useRef(0);
   const windFiredRef            = useRef(false);
-  const audioCtxRef             = useRef<AudioContext | null>(null);
-  const audioBufferRef          = useRef<AudioBuffer | null>(null);
 
   // Pre-load images
   useEffect(() => {
@@ -118,27 +118,6 @@ export default function Hero() {
     });
   }, []);
 
-  // Load horse sound via Web Audio API (more reliable from scroll events)
-  useEffect(() => {
-    const ctx = new AudioContext();
-    audioCtxRef.current = ctx;
-
-    fetch("/horse.mp3")
-      .then(r => r.arrayBuffer())
-      .then(buf => ctx.decodeAudioData(buf))
-      .then(decoded => { audioBufferRef.current = decoded; })
-      .catch(() => {});
-
-    // Resume AudioContext on first user gesture
-    const resume = () => ctx.resume();
-    window.addEventListener("pointerdown", resume, { once: true });
-    window.addEventListener("keydown", resume, { once: true });
-
-    return () => {
-      window.removeEventListener("pointerdown", resume);
-      window.removeEventListener("keydown", resume);
-    };
-  }, []);
 
   // Title gradient sweep-in
   useEffect(() => {
@@ -159,67 +138,60 @@ export default function Hero() {
     transition: `opacity 0.6s ease-out ${delay}s, filter 0.6s ease-out ${delay}s, transform 0.6s ease-out ${delay}s`,
   });
 
-  // Cannon fire — 1 second delay
-  useEffect(() => {
-    const t = setTimeout(() => {
-      if (firedRef.current) return;
-      firedRef.current = true;
+  // Fire confetti + icons from phone center (triggered on phone click)
+  const fireConfetti = useCallback(() => {
+    const canvas = canvasRef.current;
+    const phone  = phoneRef.current;
+    if (!canvas || !phone) return;
 
-      const canvas = canvasRef.current;
-      const phone  = phoneRef.current;
-      if (!canvas || !phone) return;
+    const cr    = canvas.getBoundingClientRect();
+    const pr    = phone.getBoundingClientRect();
+    const scale = Math.min(1, window.innerWidth / CANVAS_W);
 
-      const cr    = canvas.getBoundingClientRect();
-      const pr    = phone.getBoundingClientRect();
-      const scale = Math.min(1, window.innerWidth / CANVAS_W);
+    const ox = (pr.left - cr.left) / scale + pr.width  / scale / 2;
+    const oy = (pr.top  - cr.top)  / scale + pr.height / scale / 2;
 
-      const ox = (pr.left - cr.left) / scale + pr.width  / scale / 2;
-      const oy = (pr.top  - cr.top)  / scale + pr.height / scale / 2;
+    boxesRef.current = ICONS.map(({ size }, i) => {
+      const minAngle = (-160 * Math.PI) / 180;
+      const maxAngle = (-20  * Math.PI) / 180;
+      const angle    = minAngle + (maxAngle - minAngle) * (i / (ICONS.length - 1))
+                       + (Math.random() - 0.5) * 0.2;
+      const speed = 32 + Math.random() * 22;
+      return {
+        x: ox,
+        y: oy,
+        vx: Math.cos(angle) * speed,
+        vy: Math.sin(angle) * speed,
+        rotation:   (Math.random() - 0.5) * 30,
+        angularVel: (Math.random() - 0.5) * 4,
+        size,
+        img:   imagesRef.current[i],
+        alive: true,
+        alpha: 1,
+      };
+    });
 
-      boxesRef.current = ICONS.map(({ size }, i) => {
-        const minAngle = (-160 * Math.PI) / 180;
-        const maxAngle = (-20  * Math.PI) / 180;
-        const angle    = minAngle + (maxAngle - minAngle) * (i / (ICONS.length - 1))
-                         + (Math.random() - 0.5) * 0.2;
-        const speed = 32 + Math.random() * 22;
-        return {
-          x: ox,
-          y: oy,
-          vx: Math.cos(angle) * speed,
-          vy: Math.sin(angle) * speed,
-          rotation:   (Math.random() - 0.5) * 30,
-          angularVel: (Math.random() - 0.5) * 4,
-          size,
-          img:   imagesRef.current[i],
-          alive: true,
-          alpha: 1,
-        };
+    const pieces: Confetti[] = [];
+    for (let i = 0; i < 80; i++) {
+      const angle = Math.random() * Math.PI * 2;
+      const speed = 20 + Math.random() * 40;
+      const life  = 70 + Math.random() * 50;
+      pieces.push({
+        x: ox + (Math.random() - 0.5) * 40,
+        y: oy + (Math.random() - 0.5) * 40,
+        vx: Math.cos(angle) * speed,
+        vy: Math.sin(angle) * speed - 12,
+        rotation:   Math.random() * 360,
+        angularVel: (Math.random() - 0.5) * 18,
+        w: 16 + Math.random() * 20,
+        h: 8 + Math.random() * 10,
+        color: CONFETTI_COLORS[Math.floor(Math.random() * CONFETTI_COLORS.length)],
+        alpha: 0.9 + Math.random() * 0.1,
+        life,
+        maxLife: life,
       });
-
-      const pieces: Confetti[] = [];
-      for (let i = 0; i < 80; i++) {
-        const angle = Math.random() * Math.PI * 2;
-        const speed = 20 + Math.random() * 40;
-        const life  = 70 + Math.random() * 50;
-        pieces.push({
-          x: ox + (Math.random() - 0.5) * 40,
-          y: oy + (Math.random() - 0.5) * 40,
-          vx: Math.cos(angle) * speed,
-          vy: Math.sin(angle) * speed - 12,
-          rotation:   Math.random() * 360,
-          angularVel: (Math.random() - 0.5) * 18,
-          w: 16 + Math.random() * 20,
-          h: 8 + Math.random() * 10,
-          color: CONFETTI_COLORS[Math.floor(Math.random() * CONFETTI_COLORS.length)],
-          alpha: 0.9 + Math.random() * 0.1,
-          life,
-          maxLife: life,
-        });
-      }
-      confettiRef.current = pieces;
-    }, 1000);
-
-    return () => clearTimeout(t);
+    }
+    confettiRef.current = pieces;
   }, []);
 
   // Physics + canvas render loop
@@ -443,17 +415,6 @@ export default function Hero() {
     return () => cancelAnimationFrame(raf);
   }, []);
 
-  const playHorse = () => {
-    const ctx = audioCtxRef.current;
-    const buf = audioBufferRef.current;
-    if (!ctx || !buf) return;
-    ctx.resume().then(() => {
-      const src = ctx.createBufferSource();
-      src.buffer = buf;
-      src.connect(ctx.destination);
-      src.start(0);
-    });
-  };
 
   // Merged scroll handler: physics impulse + transition animation
   useEffect(() => {
@@ -512,8 +473,30 @@ export default function Hero() {
 
       const origPhone = phoneRef.current;
 
+      // Background expansion — clip-path + scale (both GPU-composited)
+      const bg = bgRef.current;
+      const nearZero = raw < 0.005;
+      if (bg) {
+        if (nearZero) {
+          bg.style.clipPath  = "inset(80px 4% 80px 4% round 55px)";
+          bg.style.transform = "scale(1)";
+        } else {
+          const expandT = Math.min(1, raw / 0.3);
+          const easeOut = 1 - Math.pow(1 - expandT, 3);
+          // Clip-path: contained → flush with element edges
+          const top    = 80 * (1 - easeOut);
+          const side   = 4  * (1 - easeOut);
+          const bottom = 80 * (1 - easeOut);
+          const radius = 55 * (1 - easeOut);
+          // Scale: 1 → 1.12 to zoom past the PNG's white borders
+          const scale  = 1 + 0.12 * easeOut;
+          bg.style.clipPath  = `inset(${top}px ${side}% ${bottom}px ${side}% round ${radius}px)`;
+          bg.style.transform = `scale(${scale})`;
+        }
+      }
+
       // Reset when user scrolls back to top
-      if (raw === 0) {
+      if (nearZero) {
         phoneStartCapturedRef.current = false;
         windFiredRef.current          = false;
         if (phoneSpringWrapperRef.current) phoneSpringWrapperRef.current.style.opacity = "1";
@@ -580,7 +563,6 @@ export default function Hero() {
           window.innerWidth  / 2,
           window.innerHeight / 2,
         );
-        playHorse();
       }
     };
 
@@ -594,16 +576,30 @@ export default function Hero() {
       style={{ height: "calc(100vh + 200vh)", marginTop: -32 }}
     >
       <section
+        ref={sectionRef}
         className="sticky top-0 overflow-hidden flex justify-center"
         style={{
-          backgroundImage: "url('/BeachLanding.png')",
-          backgroundSize: "100% 100%",
-          backgroundPosition: "center",
           height: "100vh",
           width: "100vw",
           marginLeft: "calc(-50vw + 50%)",
         }}
       >
+        {/* Background div — expands on scroll to push white borders outside overflow */}
+        <div
+          ref={bgRef}
+          style={{
+            position: "absolute",
+            inset: 0,
+            backgroundImage: "url('/BeachLanding.png')",
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            clipPath: "inset(80px 4% 80px 4% round 55px)",
+            transform: "scale(1)",
+            willChange: "clip-path, transform",
+            zIndex: 0,
+          }}
+        />
+
         {/* Scaled canvas wrapper */}
         <div
           className="origin-top"
@@ -641,30 +637,31 @@ export default function Hero() {
                 </div>
                 <div className="text-center">
                   <h1
-                    className="text-[48px] font-semibold leading-[140%] flex items-center justify-center"
+                    className="flex items-center justify-center"
                     style={{
                       fontFamily: '"SF Compact", -apple-system, BlinkMacSystemFont, sans-serif',
-                      background: "linear-gradient(90deg, #074146 0%, #000000 100%)",
+                      fontSize: 48,
+                      fontWeight: 600,
+                      background: "linear-gradient(180deg, rgba(255,255,255,0.9) 0%, rgba(180,156,83,0.75) 40%, rgba(140,120,60,0.6) 100%)",
                       WebkitBackgroundClip: "text",
                       WebkitTextFillColor: "transparent",
                       backgroundClip: "text",
+                      filter: "drop-shadow(0 1px 2px rgba(0,0,0,0.1))",
                       ...fadeIn(0.2),
                     }}
                   >
                     MapsGPT
                   </h1>
                   <h2
-                    className="text-[64px] font-semibold leading-[140%] flex items-center justify-center"
+                    className="text-[64px] font-bold leading-[140%] flex items-center justify-center"
                     style={{
-                      backgroundImage: "linear-gradient(90deg, #59E1EB 14.99%, #313434 100%)",
-                      backgroundSize: "200% 100%",
-                      backgroundPosition: titleVisible ? "0% 0" : "100% 0",
+                      backgroundImage: "linear-gradient(to bottom, #00B1D4 40%, #F9C795 95%)",
                       WebkitBackgroundClip: "text",
                       WebkitTextFillColor: "transparent",
                       backgroundClip: "text",
-                      transition: `background-position 1.4s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.6s ease-out 0.3s, filter 0.6s ease-out 0.3s, transform 0.6s ease-out 0.3s`,
+                      filter: contentVisible ? "drop-shadow(0 0 100px rgba(255,255,255,1)) blur(0px)" : "blur(8px)",
+                      transition: `opacity 0.6s ease-out 0.3s, filter 0.6s ease-out 0.3s, transform 0.6s ease-out 0.3s`,
                       opacity:   contentVisible ? 1 : 0,
-                      filter:    contentVisible ? "blur(0px)" : "blur(8px)",
                       transform: contentVisible ? "translateY(0)" : "translateY(16px)",
                     }}
                   >
@@ -673,33 +670,28 @@ export default function Hero() {
                 </div>
               </div>
 
-              {/* TEST BUTTON — remove once sound is confirmed */}
-              <button
-                type="button"
-                onClick={playHorse}
-                style={{
-                  position: "fixed",
-                  bottom: 24,
-                  right: 24,
-                  zIndex: 9999,
-                  padding: "10px 18px",
-                  background: "#000",
-                  color: "#fff",
-                  fontSize: 14,
-                  fontWeight: 600,
-                  borderRadius: 8,
-                  border: "none",
-                  cursor: "pointer",
-                }}
-              >
-                🐴 Test horse sound
-              </button>
+
 
               {/* Phone — spring wrapper opacity controlled by transition */}
               <div className="mt-[100px]">
                 <div ref={phoneSpringWrapperRef}>
                   <div ref={phoneRef} style={fadeIn(0.4)}>
-                    <Image src="/product/phone.png" width={404} height={778} alt="Phone" priority />
+                    <div
+                      className="phone-clickable"
+                      style={{ position: "relative", display: "inline-block", cursor: "pointer" }}
+                      onClick={fireConfetti}
+                    >
+                      {/* Glass border — extends 12px beyond phone on all sides */}
+                      <div style={{
+                        position: "absolute",
+                        inset: -12,
+                        borderRadius: 67,
+                        background: "rgba(150, 225, 255, 0.20)",
+                        boxShadow: "0 -2px 10px rgba(0,0,0,0.15)",
+                        zIndex: -1,
+                      }} />
+                      <Image src="/MapsGPTMobile.png" width={404} height={778} alt="Phone" priority style={{ borderRadius: 55, display: "block" }} />
+                    </div>
                   </div>
                 </div>
               </div>
@@ -719,11 +711,19 @@ export default function Hero() {
           pointerEvents: "none",
         }}
       >
+        {/* Glass border */}
+        <div style={{
+          position: "absolute",
+          inset: -12,
+          borderRadius: 67,
+          background: "rgba(150, 225, 255, 0.20)",
+          boxShadow: "0 -2px 10px rgba(0,0,0,0.15)",
+        }} />
         <Image
-          src="/product/phone.png"
+          src="/MapsGPTMobile.png"
           fill
           alt=""
-          style={{ objectFit: "contain" }}
+          style={{ objectFit: "contain", borderRadius: 55 }}
         />
       </div>
 

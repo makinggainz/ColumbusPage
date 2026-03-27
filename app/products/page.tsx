@@ -35,13 +35,14 @@ function SectionWithLabel({
 
 export default function ProductsPage() {
   return (
-    <main className="overflow-x-hidden">
+    <main style={{ overflowX: "clip" }}>
       <SectionWithLabel label={sectionLabels[0]}>
         <Navbar />
       </SectionWithLabel>
       <SectionWithLabel label={sectionLabels[1]}>
         <Hero />
       </SectionWithLabel>
+      <div data-navbar-bg-trigger />
       <SectionWithLabel label={sectionLabels[2]}>
         <ShowcaseSection />
       </SectionWithLabel>

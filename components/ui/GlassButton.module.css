@@ -55,6 +55,51 @@
   pointer-events: none;
 }
 
+/* Toggle pill glass effect — fully rounded variant of navPill */
+.togglePill {
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  box-shadow:
+    inset 0 .125em .125em #0000000d,
+    inset 0 -.125em .125em #ffffff80,
+    0 .25em .125em -.125em #0003,
+    inset 0 0 .1em .25em #fff3;
+}
+
+.togglePill::after {
+  content: "";
+  z-index: 1;
+  box-sizing: border-box;
+  background:
+    conic-gradient(from var(--gb-angle-1) at 50% 50%, #00000080, #0000 5% 40%, #00000080 50%, #0000 60% 95%, #00000080),
+    linear-gradient(180deg, #ffffff80, #ffffff80);
+  border-radius: 999vw;
+  width: calc(100% + clamp(1px,.0625em,4px));
+  height: calc(100% + clamp(1px,.0625em,4px));
+  padding: clamp(1px,.0625em,4px);
+  transition: all .4s cubic-bezier(.25,1,.5,1), --gb-angle-1 .5s;
+  position: absolute;
+  inset: calc(0% - clamp(1px,.0625em,4px)/2) 0 0 calc(0% - clamp(1px,.0625em,4px)/2);
+  box-shadow: inset 0 0 0 calc(clamp(1px,.0625em,4px)/2) #ffffff80;
+  -webkit-mask-image: linear-gradient(#000 0 0), linear-gradient(#000 0 0);
+  mask-image: linear-gradient(#000 0 0), linear-gradient(#000 0 0);
+  -webkit-mask-position: 0 0, 0 0;
+  mask-position: 0 0, 0 0;
+  -webkit-mask-size: auto, auto;
+  mask-size: auto, auto;
+  -webkit-mask-repeat: repeat, repeat;
+  mask-repeat: repeat, repeat;
+  -webkit-mask-clip: content-box, border-box;
+  mask-clip: content-box, border-box;
+  -webkit-mask-origin: content-box, border-box;
+  mask-origin: content-box, border-box;
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  -webkit-mask-source-type: auto, auto;
+  mask-mode: match-source, match-source;
+  pointer-events: none;
+}
+
 .wrap {
   z-index: 2;
   pointer-events: none;
@@ -272,4 +317,91 @@
   font-size: 13px;
   font-weight: 500;
   color: #323232;
+}
+
+/* Toggle pill hover — subtle float lift */
+.togglePillHover {
+  transition: transform 0.35s cubic-bezier(.25,1,.5,1), box-shadow 0.35s cubic-bezier(.25,1,.5,1);
+  cursor: default;
+}
+
+.togglePillHover:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    inset 0 .125em .125em #0000000d,
+    inset 0 -.125em .125em #ffffff80,
+    0 6px 18px -4px rgba(0,0,0,0.18),
+    inset 0 0 .1em .25em #fff3;
+}
+
+/* Active consumer pill — glass effect with teal tint
+   Light: -45°, 80% · Refraction: 80 · Depth: 20 · Dispersion: 50 · Frost: 4 · Splay: 0 */
+.activePillConsumer {
+  position: relative;
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  background:
+    linear-gradient(160deg, rgba(165,244,236,0.06) 0%, rgba(165,244,236,0.32) 45%, rgba(165,244,236,0.06) 100%);
+  box-shadow:
+    inset 2px -2px 3px rgba(255,255,255,0.55),
+    inset -2px 2px 3px rgba(0,0,0,0.06),
+    0 2px 6px -2px rgba(0,0,0,0.15);
+  transition: all .4s cubic-bezier(.25,1,.5,1);
+}
+
+.activePillConsumer:hover {
+  transform: scale(.975);
+  box-shadow:
+    inset 2px -2px 3px rgba(255,255,255,0.60),
+    inset -2px 2px 3px rgba(0,0,0,0.08),
+    0 1px 3px -1px rgba(0,0,0,0.20);
+}
+
+.activePillConsumer::after {
+  content: "";
+  z-index: 1;
+  box-sizing: border-box;
+  background:
+    conic-gradient(from 160deg at 30% 70%, rgba(0,0,0,0.40), transparent 8% 35%, rgba(0,0,0,0.40) 50%, transparent 58% 90%, rgba(0,0,0,0.40)),
+    linear-gradient(160deg, rgba(255,255,255,0.85) 0%, rgba(255,255,255,0.15) 50%, rgba(255,255,255,0.85) 100%);
+  border-radius: 999vw;
+  width: calc(100% + 2px);
+  height: calc(100% + 2px);
+  padding: 1px;
+  transition: all .4s cubic-bezier(.25,1,.5,1);
+  position: absolute;
+  inset: -1px 0 0 -1px;
+  box-shadow: inset 0 0 0 0.5px rgba(255,255,255,0.50);
+  -webkit-mask-image: linear-gradient(#000 0 0), linear-gradient(#000 0 0);
+  mask-image: linear-gradient(#000 0 0), linear-gradient(#000 0 0);
+  -webkit-mask-clip: content-box, border-box;
+  mask-clip: content-box, border-box;
+  -webkit-mask-origin: content-box, border-box;
+  mask-origin: content-box, border-box;
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* Glass shine text effect — animated light sweep */
+@keyframes glassShine {
+  0%   { background-position: 200% center; }
+  100% { background-position: -200% center; }
+}
+
+.glassText {
+  background: linear-gradient(
+    -75deg,
+    rgba(180, 156, 83, 0.75) 0%,
+    rgba(180, 156, 83, 0.75) 35%,
+    rgba(255, 255, 255, 0.9) 45%,
+    rgba(255, 255, 255, 0.95) 50%,
+    rgba(180, 156, 83, 0.75) 65%,
+    rgba(180, 156, 83, 0.75) 100%
+  );
+  background-size: 300% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: glassShine 4s ease-in-out infinite;
 }
