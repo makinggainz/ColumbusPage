@@ -62,6 +62,30 @@ html {
   z-index: 1;
 }
 
+/* Light-background lateral constraint lines (matches landing page --grid-line color) */
+.section-lines-light {
+  position: relative;
+  isolation: isolate;
+}
+.section-lines-light::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0;
+  width: 1px; height: 100%;
+  background: linear-gradient(to bottom, transparent 0px, rgba(120,120,200,0.35) 72px, rgba(120,120,200,0.35) calc(100% - 72px), transparent 100%);
+  pointer-events: none;
+  z-index: 1;
+}
+.section-lines-light::after {
+  content: "";
+  position: absolute;
+  top: 0; right: 0;
+  width: 1px; height: 100%;
+  background: linear-gradient(to bottom, transparent 0px, rgba(120,120,200,0.35) 72px, rgba(120,120,200,0.35) calc(100% - 72px), transparent 100%);
+  pointer-events: none;
+  z-index: 1;
+}
+
 /* Grid-based content layout — collapse borders between stacked sections */
 .grid-section {
   position: relative;

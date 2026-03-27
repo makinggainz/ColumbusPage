@@ -3,7 +3,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { instrumentSerif } from "@/lib/typography";
 import { ConsumerEnterpriseToggle } from "./ConsumerEnterpriseToggle";
 import { EnterprisePillsToggle } from "./EnterprisePillsToggle";
 
@@ -56,18 +55,8 @@ export default function EnterpriseHero() {
 
         {/* Heading */}
         <h1
-          className={`${instrumentSerif.className}
-          mt-[40px]
-          max-w-[1206px]
-          text-white
-          font-normal
-          leading-[110%]
-          tracking-[0em]
-          text-[42px]
-          md:text-[64px]
-          lg:text-[96px]
-        `}
-          style={{ color: "#ffffff", ...fadeIn(visible, 0.25) }}
+          className="mt-[40px] max-w-[1206px] text-white font-normal leading-[110%] text-[42px] md:text-[64px] lg:text-[96px]"
+          style={{ color: "#ffffff", fontWeight: 300, letterSpacing: "-0.02em", ...fadeIn(visible, 0.25) }}
         >
           GIS so easy, the janitor could be your new researcher
         </h1>
@@ -83,17 +72,20 @@ export default function EnterpriseHero() {
         {/* CTA */}
         <Link
           href="/contact"
-          className="mt-[25px] w-[184px] h-[47px] flex items-center justify-center bg-white text-black rounded-full font-semibold hover:bg-white/90 transition shrink-0"
-          style={{ fontSize: "17px", letterSpacing: "-0.02em", ...fadeIn(visible, 0.5) }}
+          className="group mt-[25px] flex items-center gap-3 leading-none whitespace-nowrap hover:opacity-90 transition-all duration-300"
+          style={{ fontSize: 14, fontWeight: 500, height: 45, paddingLeft: 20, paddingRight: 16, backgroundColor: "white", color: "#1D1D1F", ...fadeIn(visible, 0.5) }}
         >
-          Talk to us
+          <span className="transition-colors duration-300 group-hover:text-[#2563EB]">Talk to us</span>
+          <svg className="transition-transform duration-300 group-hover:translate-x-0.5" width="10" height="18" viewBox="0 0 7 12" fill="none" stroke="#2563EB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M1 1l5 5-5 5" />
+          </svg>
         </Link>
 
         {/* Pills + product */}
         <div style={{ marginTop: "100px", ...fadeIn(visible, 0.65) }} className="w-full flex flex-col items-center">
           <EnterprisePillsToggle />
 
-          <div data-navbar-theme="light" className="w-full max-w-[1400px]">
+          <div data-navbar-theme="light" className="w-full max-w-[1287px]">
             <Image
               src="/enterprise/hero.png"
               alt="product preview"

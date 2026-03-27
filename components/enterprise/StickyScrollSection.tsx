@@ -44,6 +44,7 @@ const features: {
     fullBleedTop: true,
     content: (
       <div className="relative w-full h-[500px] md:h-[600px] lg:h-[694px]">
+        <span className="absolute left-0 top-0 z-50 flex h-8 w-8 items-center justify-center rounded-br bg-black/80 text-[11px] font-bold text-white" aria-hidden>g1.1</span>
         <Image
           src="/enterprise/sunbg.png"
           alt="background"
@@ -75,7 +76,8 @@ const features: {
       "Through our proprietary innovations we have accrued the most expansive data collection available for geospatial research.",
     content: (
       <div>
-        <div className="mb-10">
+        <div className="relative mb-10">
+          <span className="absolute left-0 top-0 z-50 flex h-8 w-8 items-center justify-center rounded-br bg-black/80 text-[11px] font-bold text-white" aria-hidden>g2.1</span>
           <h2 className="text-[32px] md:text-[40px] font-semibold text-[#111] leading-[140%] opacity-[0.62]">
             Can't find relevant datasets for your research?
           </h2>
@@ -84,7 +86,8 @@ const features: {
           </h3>
         </div>
 
-        <div className="flex flex-wrap gap-6 text-[14px] text-[#6B7280] border-b border-[#E5E7EB] pb-3 mb-6">
+        <div className="relative flex flex-wrap gap-6 text-[14px] text-[#6B7280] border-b border-[#E5E7EB] pb-3 mb-6">
+          <span className="absolute left-0 top-0 z-50 flex h-8 w-8 items-center justify-center rounded-br bg-black/80 text-[11px] font-bold text-white" aria-hidden>g2.2</span>
           <span>Suggested</span>
           <span>Base Maps</span>
           <span>Overlays</span>
@@ -95,7 +98,8 @@ const features: {
           <span>Demographic</span>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+        <div className="relative grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+          <span className="absolute left-0 top-0 z-50 flex h-8 w-8 items-center justify-center rounded-br bg-black/80 text-[11px] font-bold text-white" aria-hidden>g2.3</span>
           <DatasetCard
             image="/enterprise/mp1.png"
             title="Future Appreciation Zones"
@@ -122,7 +126,8 @@ const features: {
           />
         </div>
 
-        <div className="max-w-[900px] mb-10">
+        <div className="relative max-w-[900px] mb-10">
+          <span className="absolute left-0 top-0 z-50 flex h-8 w-8 items-center justify-center rounded-br bg-black/80 text-[11px] font-bold text-white" aria-hidden>g2.4</span>
           <p className="text-[24px] md:text-[28px] leading-[140%] text-[#111]">
             The <span className="font-semibold">highest quality</span>, and most versatile
             data-sets for your critical research and decisions.
@@ -132,7 +137,8 @@ const features: {
           </a>
         </div>
 
-        <div className="bg-white border border-[#E6E6E6] rounded-[10px] p-10">
+        <div className="relative bg-white border border-[#E6E6E6] rounded-[10px] p-10">
+          <span className="absolute left-0 top-0 z-50 flex h-8 w-8 items-center justify-center rounded-br bg-black/80 text-[11px] font-bold text-white" aria-hidden>g2.5</span>
           <h3 className="text-center text-[24px] font-semibold mb-2">
             Vetted, high-fidelity, and smart datasets
           </h3>
@@ -158,7 +164,8 @@ const features: {
     description:
       "Work with your map through natural language inputs like if you're having a conversation. Our powerful technology allows you to do XYZ (WOWzers!)",
     content: (
-      <div className="w-full bg-white rounded-[10px] shadow-[0_30px_80px_rgba(0,0,0,0.08)] overflow-hidden">
+      <div className="relative w-full bg-white rounded-[10px] shadow-[0_30px_80px_rgba(0,0,0,0.08)] overflow-hidden">
+        <span className="absolute left-0 top-0 z-50 flex h-8 w-8 items-center justify-center rounded-br bg-black/80 text-[11px] font-bold text-white" aria-hidden>g3.1</span>
         <img src="/enterprise/mapchat.png" alt="Map Chat" className="w-full h-auto block" />
       </div>
     ),
@@ -169,7 +176,8 @@ const features: {
     description:
       "Work with your map through natural language inputs like if you're having a conversation. Our powerful technology allows you to do XYZ (WOWzers!)",
     content: (
-      <div className="w-full h-[500px] bg-white rounded-[10px] shadow-[0_30px_80px_rgba(0,0,0,0.08)] flex items-center justify-center">
+      <div className="relative w-full h-[500px] bg-white rounded-[10px] shadow-[0_30px_80px_rgba(0,0,0,0.08)] flex items-center justify-center">
+        <span className="absolute left-0 top-0 z-50 flex h-8 w-8 items-center justify-center rounded-br bg-black/80 text-[11px] font-bold text-white" aria-hidden>g4.1</span>
         <span className="text-[#9CA3AF] text-[14px]">Coming soon</span>
       </div>
     ),
@@ -180,7 +188,8 @@ const features: {
     description:
       "Work with your map through natural language inputs like if you're having a conversation. Our powerful technology allows you to do XYZ (WOWzers!)",
     content: (
-      <div className="w-full h-[500px] bg-white rounded-[10px] shadow-[0_30px_80px_rgba(0,0,0,0.08)] flex items-center justify-center">
+      <div className="relative w-full h-[500px] bg-white rounded-[10px] shadow-[0_30px_80px_rgba(0,0,0,0.08)] flex items-center justify-center">
+        <span className="absolute left-0 top-0 z-50 flex h-8 w-8 items-center justify-center rounded-br bg-black/80 text-[11px] font-bold text-white" aria-hidden>g5.1</span>
         <span className="text-[#9CA3AF] text-[14px]">Coming soon</span>
       </div>
     ),
@@ -191,7 +200,8 @@ const features: {
     description:
       "Work with your map through natural language inputs like if you're having a conversation. Our powerful technology allows you to do XYZ (WOWzers!)",
     content: (
-      <div className="w-full bg-white rounded-[10px] p-[64px] shadow-[0_30px_80px_rgba(0,0,0,0.08)] flex flex-col lg:flex-row items-center gap-[80px]">
+      <div className="relative w-full bg-white rounded-[10px] p-[64px] shadow-[0_30px_80px_rgba(0,0,0,0.08)] flex flex-col lg:flex-row items-center gap-[80px]">
+        <span className="absolute left-0 top-0 z-50 flex h-8 w-8 items-center justify-center rounded-br bg-black/80 text-[11px] font-bold text-white" aria-hidden>g6.1</span>
         <div className="max-w-[520px]">
           <h2 className="text-[28px] font-semibold mb-6">24/7 Help &amp; Columbus Bot</h2>
           <ul className="space-y-3 text-[18px] text-[#333]">
@@ -216,45 +226,87 @@ const features: {
   },
 ];
 
+const LINE = "linear-gradient(to bottom, transparent 0px, rgba(120,120,200,0.35) 72px, rgba(120,120,200,0.35) calc(100% - 72px), transparent 100%)";
+
 // ── component ───────────────────────────────────────────────────────────────
 export default function StickyScrollSection() {
+  const [g1, ...rest] = features;
+
   return (
     <div className="w-full bg-[#F4F3EB]">
       {/* Gradient transition from white (section E) to #F4F3EB */}
       <div className="h-24 w-full" style={{ background: "linear-gradient(to bottom, #ffffff 0%, #F4F3EB 100%)" }} />
 
-      {features.map((feature) => (
-        <div
-          key={feature.id}
-          className="grid grid-cols-1 lg:grid-cols-[355px_1fr_99px]"
-        >
-          {/* Left column — bg fills full row height; inner div is sticky */}
-          <div className="bg-[#F4F3EB]">
-            <div className="sticky top-20 px-8 py-[94px]">
-              <div className="max-w-[270px]">
-                <p className="text-[11px] font-semibold tracking-[0.12em] uppercase text-[#9CA3AF] mb-3">{feature.label}</p>
-                <p className="text-[22px] font-semibold leading-[130%] tracking-[-0.02em] text-[#111] opacity-60">
-                  {feature.description}
-                </p>
-              </div>
+      {/* G1 — technology-page style: sidebar left of grid line, content fills the rest */}
+      <div className="relative flex w-full">
+        <span className="absolute left-0 top-0 z-50 flex h-8 w-8 items-center justify-center rounded-br bg-black/80 text-sm font-bold text-white" aria-hidden>g1</span>
+
+        {/* Left sidebar — outside the grid line */}
+        <div className="hidden lg:block flex-shrink-0 w-[355px] bg-[#F4F3EB]">
+          <div className="sticky top-20 px-8 py-[94px]">
+            <div className="max-w-[270px]">
+              <p className="text-[11px] font-semibold tracking-[0.12em] uppercase text-[#9CA3AF] mb-3">{g1.label}</p>
+              <p className="text-[22px] font-semibold leading-[130%] tracking-[-0.02em] text-[#111] opacity-60">{g1.description}</p>
             </div>
           </div>
-
-          {/* Center — drives row height, content scrolls past sticky left */}
-          {feature.fullBleedTop ? (
-            <div className="bg-white rounded-[14px] overflow-hidden">
-              {feature.content}
-            </div>
-          ) : (
-            <div className="bg-white py-[74px] px-6 lg:px-12 flex justify-center">
-              <div className="w-full max-w-[1274px]">{feature.content}</div>
-            </div>
-          )}
-
-          {/* Right accent bar */}
-          <div className="hidden lg:block bg-[#F4F3EB]" />
         </div>
-      ))}
+
+        {/* Grid line */}
+        <div className="hidden lg:block flex-shrink-0 w-px self-stretch" style={{ background: LINE }} />
+
+        {/* Content */}
+        <div className="flex-1 min-w-0 overflow-hidden">
+          {g1.content}
+        </div>
+      </div>
+
+      {/* G2–G6 — inside constraint wrapper */}
+      <div
+        className="section-lines-light w-full max-w-[1287px] mx-auto"
+        style={{
+          backgroundImage: LINE,
+          backgroundSize: "1px 100%",
+          backgroundRepeat: "no-repeat",
+          backgroundPosition: "left top",
+        }}
+      >
+        {rest.map((feature, i) => (
+          <div
+            key={feature.id}
+            className="relative grid grid-cols-1 lg:grid-cols-[355px_1fr_99px]"
+          >
+            <span className="absolute left-0 top-0 z-50 flex h-8 w-8 items-center justify-center rounded-br bg-black/80 text-sm font-bold text-white" aria-hidden>
+              g{i + 2}
+            </span>
+
+            {/* Left column */}
+            <div className="bg-[#F4F3EB]">
+              <div className="sticky top-20 px-8 py-[94px]">
+                <div className="max-w-[270px]">
+                  <p className="text-[11px] font-semibold tracking-[0.12em] uppercase text-[#9CA3AF] mb-3">{feature.label}</p>
+                  <p className="text-[22px] font-semibold leading-[130%] tracking-[-0.02em] text-[#111] opacity-60">
+                    {feature.description}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Center */}
+            {feature.fullBleedTop ? (
+              <div className="bg-white rounded-[14px] overflow-hidden">
+                {feature.content}
+              </div>
+            ) : (
+              <div className="bg-white py-[74px] px-6 lg:px-12 flex justify-center">
+                <div className="w-full max-w-[1274px]">{feature.content}</div>
+              </div>
+            )}
+
+            {/* Right accent bar */}
+            <div className="hidden lg:block bg-[#F4F3EB]" />
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

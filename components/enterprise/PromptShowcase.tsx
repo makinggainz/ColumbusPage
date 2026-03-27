@@ -133,7 +133,7 @@ export default function PromptShowcase() {
       {/* ═══ PART 1: See prompts you can ask ═══ */}
       <div data-prompt-area="part-1">
       {/* Part 1 header */}
-      <div ref={headerRef} className="text-center mb-16 md:mb-20 px-6">
+      <div ref={headerRef} className="text-center mb-16 md:mb-20 px-8 md:px-10 max-w-[1287px] mx-auto">
         <p
           className="text-[12px] md:text-[14px] tracking-[0.2em] text-[#6B7280] uppercase"
           style={fadeInStyle(headerVisible, 0)}
@@ -150,7 +150,7 @@ export default function PromptShowcase() {
       </div>
 
       {/* Part 1 — MOBILE STACK */}
-      <div className="flex flex-col items-center gap-8 lg:hidden px-6">
+      <div className="flex flex-col items-center gap-8 lg:hidden px-8 md:px-10">
 
         <PromptCard
           image="/enterprise/citymap.png"
@@ -407,10 +407,13 @@ export default function PromptShowcase() {
       <div className="flex justify-center pt-8 pb-4">
         <button
           type="button"
-          className="flex items-center gap-2 px-6 py-3.5 text-md font-semibold leading-none rounded-none border border-[#0A1344] bg-transparent text-[#0A1344] transition-opacity duration-300 hover:opacity-70 cursor-pointer"
+          className="group flex items-center gap-3 leading-none whitespace-nowrap hover:opacity-90 transition-all duration-300 cursor-pointer"
+          style={{ fontSize: 14, fontWeight: 500, height: 45, paddingLeft: 20, paddingRight: 16, backgroundColor: "#1D1D1F", color: "white" }}
         >
-          More use cases
-          →
+          <span className="transition-colors duration-300 group-hover:text-[#2563EB]">More use cases</span>
+          <svg className="transition-transform duration-300 group-hover:translate-x-0.5" width="10" height="18" viewBox="0 0 7 12" fill="none" stroke="#2563EB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M1 1l5 5-5 5" />
+          </svg>
         </button>
       </div>
 

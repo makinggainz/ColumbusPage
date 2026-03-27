@@ -9,10 +9,12 @@ import { BottleScene } from "@/components/layout/BottleScene";
 export type FooterProps = {
   variant?: "default" | "compact";
   reveal?: boolean;
-  theme?: "light" | "dark";
+  theme?: "light" | "dark" | "light-blue";
 };
 
 export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false, theme = "light" }) => {
+  const isLight = theme === "light" || theme === "light-blue";
+  const bgColor = theme === "dark" ? "#000000" : theme === "light-blue" ? "#F4F3EB" : "#F9F9F9";
   const [noteOpen, setNoteOpen] = useState(false);
   const [bottleOpened, setBottleOpened] = useState(false);
   const [footerVisible, setFooterVisible] = useState(false);
@@ -52,7 +54,7 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false, t
       data-navbar-theme={theme === "dark" ? "dark" : "light"}
       className={`overflow-hidden flex flex-col relative ${theme === "dark" ? "text-white" : "text-[#1D1D1F]"} ${reveal ? "h-screen" : "min-h-screen"}`}
       style={{
-        background: theme === "dark" ? "#000000" : "#F9F9F9",
+        background: bgColor,
         cursor: !bottleOpened ? "default" : undefined,
         ...(reveal ? { position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 0 } as React.CSSProperties : {}),
       }}
@@ -68,7 +70,7 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false, t
         <p
           className="text-[15px] leading-relaxed mb-6"
           style={{
-            color: theme === "dark" ? "rgba(255,255,255,0.5)" : "rgba(29,29,31,0.5)",
+            color: theme === "dark" ? "rgba(255,255,255,0.5)" : "rgba(29,29,31,0.6)",
             opacity: bottleOpened ? 1 : 0,
             transform: bottleOpened ? "translateY(0)" : "translateY(10px)",
             transition: "opacity 600ms cubic-bezier(0.22, 1, 0.36, 1), transform 600ms cubic-bezier(0.22, 1, 0.36, 1)",
@@ -82,7 +84,7 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false, t
         <p
           className="text-[15px] leading-relaxed mb-12"
           style={{
-            color: theme === "dark" ? "rgba(255,255,255,0.5)" : "rgba(29,29,31,0.5)",
+            color: theme === "dark" ? "rgba(255,255,255,0.5)" : "rgba(29,29,31,0.6)",
             opacity: bottleOpened ? 1 : 0,
             transform: bottleOpened ? "translateY(0)" : "translateY(10px)",
             transition: "opacity 600ms cubic-bezier(0.22, 1, 0.36, 1), transform 600ms cubic-bezier(0.22, 1, 0.36, 1)",
@@ -98,7 +100,7 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false, t
       </div>
 
       {/* 3D Bottle scene */}
-      <BottleScene onBottleClick={() => { setNoteOpen(true); setBottleOpened(true); }} visible={footerVisible} dark={theme === "dark"} />
+      <BottleScene onBottleClick={() => { setNoteOpen(true); setBottleOpened(true); }} visible={footerVisible} dark={theme === "dark"} bg={theme === "light-blue" ? "#F4F3EB" : undefined} waveRgb={theme === "light-blue" ? "10,19,68" : undefined} />
 
       {/* Note overlay — appears when bottle is clicked */}
       {noteOpen && (
@@ -189,7 +191,7 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false, t
             ))}
           </div>
           <div
-            className={`border-t pt-4 pb-2 flex items-center justify-between text-[13px] ${theme === "dark" ? "border-white/10 text-white/30" : "border-[#1D1D1F]/10 text-[#1D1D1F]/30"}`}
+            className={`border-t pt-4 pb-2 flex items-center justify-between text-[13px] ${theme === "dark" ? "border-white/10 text-white/30" : "border-[#1D1D1F]/10 text-[#1D1D1F]/40"}`}
             style={{
               opacity: bottleOpened ? 1 : 0,
               transition: "opacity 600ms cubic-bezier(0.22, 1, 0.36, 1)",

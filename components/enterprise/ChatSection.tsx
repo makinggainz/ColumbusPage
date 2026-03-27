@@ -2,7 +2,7 @@
 
 export default function ChatSection() {
   return (
-    <section className="w-full bg-white py-24 lg:py-[160px] flex flex-col items-center">
+    <section className="w-full py-24 lg:py-[160px] flex flex-col items-center" style={{ backgroundColor: "#F4F3EB" }}>
 
       {/* Heading */}
       <h2
@@ -19,26 +19,14 @@ export default function ChatSection() {
 
       {/* Button */}
       <button
-        className="
-        mt-8
-        w-[260px]
-        md:w-[428px]
-        h-[54px]
-        border
-        border-[#334EDF]/20
-        rounded-[4px]
-        text-[#0E1A44]
-        font-medium
-        text-[16px]
-        flex
-        items-center
-        justify-center
-        hover:bg-[#F8F8F8]
-        transition
-        cursor-pointer
-      "
+        type="button"
+        className="group mt-8 flex items-center gap-3 leading-none whitespace-nowrap hover:opacity-90 transition-all duration-300 cursor-pointer"
+        style={{ fontSize: 14, fontWeight: 500, height: 45, paddingLeft: 20, paddingRight: 16, backgroundColor: "#1D1D1F", color: "white" }}
       >
-        Get in touch
+        <span className="transition-colors duration-300 group-hover:text-[#2563EB]">Get in touch</span>
+        <svg className="transition-transform duration-300 group-hover:translate-x-0.5" width="10" height="18" viewBox="0 0 7 12" fill="none" stroke="#2563EB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M1 1l5 5-5 5" />
+        </svg>
       </button>
 
     </section>

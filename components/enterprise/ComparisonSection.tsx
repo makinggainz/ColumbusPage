@@ -80,7 +80,7 @@ export default function ComparisonSection() {
   }, [columbusLoaded]);
 
   return (
-    <section ref={sectionRef} className="w-full bg-[#F6F5F4] py-20 lg:py-[140px]">
+    <section ref={sectionRef} className="w-full bg-[#F4F3EB] py-20 lg:py-[140px]">
       <style>{`
         @keyframes comparison-shimmer {
           0% { background-position: 100% 0; }
@@ -88,12 +88,12 @@ export default function ComparisonSection() {
         }
       `}</style>
 
-      <div className="max-w-[1728px] mx-auto px-6 flex flex-col items-center">
+      <div className="max-w-[1287px] mx-auto px-8 md:px-10 flex flex-col items-center">
 
         {/* Title */}
         <h2
-          style={fadeIn(visible, 0)}
-          className="font-[Instrument_Serif] text-[64px] leading-[140%] text-center whitespace-nowrap"
+          className="text-[64px] leading-[140%] text-center whitespace-nowrap max-md:text-[36px]"
+          style={{ fontWeight: 300, letterSpacing: "-0.02em", ...fadeIn(visible, 0) }}
         >
           See How We&apos;re Different
         </h2>
@@ -128,7 +128,7 @@ export default function ComparisonSection() {
           <div style={fadeIn(visible, 0.3)} className="flex flex-col items-end text-center pr-20">
             <div className="w-full max-w-[467px]">
 
-              <h3 className="text-[48px] font-[Instrument_Serif] font-normal mb-3 flex items-center justify-center gap-3">
+              <h3 className="text-[48px] font-normal mb-3 flex items-center justify-center gap-3" style={{ fontWeight: 300, letterSpacing: "-0.02em" }}>
                 <Image src="/enterprise/logo.png" alt="columbus" width={42} height={42} />
                 <span style={columbusLoaded ? {} : loadingTextStyle}>Columbus LGM</span>
               </h3>
@@ -154,7 +154,7 @@ export default function ComparisonSection() {
           <div style={fadeIn(visible, 0.45)} className="flex flex-col items-start text-center pl-20">
             <div className="w-full max-w-[467px]">
 
-              <h3 className="text-[48px] font-[Instrument_Serif] font-normal mb-3 text-center">
+              <h3 className="text-[48px] font-normal mb-3 text-center" style={{ fontWeight: 300, letterSpacing: "-0.02em" }}>
                 <span style={basicLoaded ? {} : loadingTextStyle}>Basic AI</span>
               </h3>
 
