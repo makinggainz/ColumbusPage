@@ -879,30 +879,31 @@ const WaveMesh = () => {
       const isHovered = dist < 22;
       if (isHovered) hoveredLocIdx = i;
 
-      const pulse = Math.sin(t * 1.2 + i * 0.9) * 0.12;
-      const baseR = (2.5 + pulse) * depthScale;
-      const dotR = isHovered ? baseR * 2 : baseR;
+      const baseR = 4 * depthScale;
+      const dotR = isHovered ? baseR * 1.8 : baseR;
 
-      // Outer glow
-      const glowR = dotR + (isHovered ? 18 : 10) * depthScale;
-      const g = ctx.createRadialGradient(sx, sy, dotR * 0.3, sx, sy, glowR);
-      g.addColorStop(0, `rgba(37,99,235,${(isHovered ? 0.5 : 0.18 + pulse * 0.3).toFixed(3)})`);
-      g.addColorStop(1, "rgba(37,99,235,0)");
-      ctx.beginPath();
-      ctx.arc(sx, sy, glowR, 0, Math.PI * 2);
-      ctx.fillStyle = g;
-      ctx.fill();
+      if (isHovered) {
+        // Glow — only on hover
+        const glowR = dotR + 18 * depthScale;
+        const g = ctx.createRadialGradient(sx, sy, dotR * 0.3, sx, sy, glowR);
+        g.addColorStop(0, "rgba(37,99,235,0.5)");
+        g.addColorStop(1, "rgba(37,99,235,0)");
+        ctx.beginPath();
+        ctx.arc(sx, sy, glowR, 0, Math.PI * 2);
+        ctx.fillStyle = g;
+        ctx.fill();
+
+        // Bright center
+        ctx.beginPath();
+        ctx.arc(sx, sy, dotR * 0.4, 0, Math.PI * 2);
+        ctx.fillStyle = "rgba(147,197,253,0.85)";
+        ctx.fill();
+      }
 
       // Core dot
       ctx.beginPath();
       ctx.arc(sx, sy, dotR, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(37,99,235,${isHovered ? 0.95 : 0.55 + pulse * 0.2})`;
-      ctx.fill();
-
-      // Bright center
-      ctx.beginPath();
-      ctx.arc(sx, sy, dotR * 0.4, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(147,197,253,${isHovered ? 0.85 : 0.35})`;
+      ctx.fillStyle = `rgba(37,99,235,${isHovered ? 0.95 : 0.55})`;
       ctx.fill();
 
       // Label (on hover)
@@ -1210,7 +1211,7 @@ export const Hero = () => {
               <a
                 key={link.label}
                 href={link.href}
-                className="group flex items-center gap-1 text-[17px] font-medium text-[#0A1344] transition-opacity duration-300 hover:opacity-60"
+                className="group flex items-center gap-1 text-md font-medium text-[#0A1344] transition-opacity duration-300 hover:opacity-60"
               >
                 {link.label}
                 <svg className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-0.5" fill="none" viewBox="0 0 16 16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
