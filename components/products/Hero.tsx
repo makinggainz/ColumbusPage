@@ -591,13 +591,17 @@ export default function Hero() {
   return (
     <div
       ref={outerContainerRef}
-      style={{ height: "calc(1756px * min(1, 100vw / 1728) + 200vh)" }}
+      style={{ height: "calc(100vh + 200vh)", marginTop: -32 }}
     >
       <section
         className="sticky top-0 overflow-hidden flex justify-center"
         style={{
-          background: "linear-gradient(180deg, #D2ECF7 73.22%, #F9F9F9 100%)",
-          height: "calc(1756px * min(1, 100vw / 1728))",
+          backgroundImage: "url('/BeachLanding.png')",
+          backgroundSize: "100% 100%",
+          backgroundPosition: "center",
+          height: "100vh",
+          width: "100vw",
+          marginLeft: "calc(-50vw + 50%)",
         }}
       >
         {/* Scaled canvas wrapper */}
