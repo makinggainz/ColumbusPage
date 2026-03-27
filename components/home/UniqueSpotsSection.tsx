@@ -93,7 +93,7 @@ export const UniqueSpotsSection = () => {
             </p>
           </div>
           <a
-            href="/maps-gpt"
+            href="/products"
             className="group px-10 flex items-center justify-between hover:opacity-90 transition-opacity"
             style={{ height: 76, backgroundColor: "#000000" }}
           >

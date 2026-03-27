@@ -132,14 +132,14 @@ export const SiteSelection = () => {
             <span className="text-[#1D1D1F] font-bold" style={{ fontSize: 20 }}>
               Columbus Pro
             </span>
-            <div className={glassStyles.wrapNew} style={{ filter: "drop-shadow(0 0 8px rgba(37, 99, 235, 0.5)) drop-shadow(0 0 20px rgba(37, 99, 235, 0.25))" }}>
+            <Link href="/enterprise" className={glassStyles.wrapNew} style={{ filter: "drop-shadow(0 0 8px rgba(37, 99, 235, 0.5)) drop-shadow(0 0 20px rgba(37, 99, 235, 0.25))" }}>
               <div className={`${glassStyles.btn} ${glassStyles.btnNew}`}>
                 <span>New</span>
               </div>
-            </div>
+            </Link>
           </div>
           <Link
-            href="/maps-gpt"
+            href="/enterprise"
             className="group flex items-center gap-10 text-[#1D1D1F] font-semibold transition-opacity"
             style={{ fontSize: 20 }}
           >

@@ -259,7 +259,7 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
                                     }}
                                 >
                                     {[
-                                        { label: "Product", href: "#" },
+                                        { label: "Products", href: "/enterprise" },
                                         { label: "Use Cases", href: "/use-cases" },
                                         { label: "Technology", href: "/technology" },
                                     ].map((link) => (

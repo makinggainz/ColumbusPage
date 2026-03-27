@@ -27,15 +27,15 @@ export const Applications = () => {
   });
 
   const items = [
-    { title: "Residential Real Estate", image: "/UseCases/ResidentialRealEstate.jpg", href: "/applications/residential-real-estate" },
-    { title: "Commercial Real Estate", image: "/UseCases/CommercialRealEstate.jpg", href: "/applications/commercial-real-estate" },
-    { title: "Generative Geodata", image: "/UseCases/GenDatalayers.png", href: "/applications/generative-geodata" },
-    { title: "Logistics Optimization", image: "/UseCases/Logistics.webp", href: "/applications/logistics-optimization" },
-    { title: "Urban Planning", image: "/UseCases/UrbanPlanning.jpg", href: "/applications/urban-planning" },
-    { title: "Site Selection", image: "/UseCases/SiteSelection.jpg", href: "/applications/site-selection" },
-    { title: "Consumer Mapping", image: "/UseCases/ConsumerMapping.jpeg", href: "/applications/consumer-mapping" },
-    { title: "Ground Due Diligence", image: "/UseCases/GroundDueDillegence.png", href: "/applications/ground-due-diligence" },
-    { title: "More", image: "/UseCases/GeoMarketing.png", href: "/applications" },
+    { title: "Residential Real Estate", image: "/UseCases/ResidentialRealEstate.jpg", href: "/use-cases" },
+    { title: "Commercial Real Estate", image: "/UseCases/CommercialRealEstate.jpg", href: "/use-cases" },
+    { title: "Generative Geodata", image: "/UseCases/GenDatalayers.png", href: "/use-cases" },
+    { title: "Logistics Optimization", image: "/UseCases/Logistics.webp", href: "/use-cases" },
+    { title: "Urban Planning", image: "/UseCases/UrbanPlanning.jpg", href: "/use-cases" },
+    { title: "Site Selection", image: "/UseCases/SiteSelection.jpg", href: "/use-cases" },
+    { title: "Consumer Mapping", image: "/UseCases/ConsumerMapping.jpeg", href: "/use-cases" },
+    { title: "Ground Due Diligence", image: "/UseCases/GroundDueDillegence.png", href: "/use-cases" },
+    { title: "More", image: "/UseCases/GeoMarketing.png", href: "/use-cases" },
   ];
 
   return (

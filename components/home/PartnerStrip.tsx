@@ -91,7 +91,7 @@ export const PartnerStrip = () => {
             }}
           >
             <Link
-              href="/technology"
+              href="/enterprise"
               className="group flex items-center justify-between gap-3 leading-none whitespace-nowrap hover:opacity-90 transition-all duration-300"
               style={{
                 fontSize: 14,
