@@ -11,7 +11,7 @@ const NAV_BREAKPOINT = 900;
 
 const menuItems = [
     { label: "Our Mission", href: "/our-mission" },
-    { label: "Columbus Market Spy", href: "/market-spy" },
+    { label: "Columbus Pro", href: "/enterprise" },
     { label: "MapsGPT", href: "/maps-gpt" },
     { label: "Use Cases", href: "/use-cases" },
     { label: "Technology", href: "/technology" },
@@ -35,6 +35,7 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
         typeof window !== "undefined" ? window.innerWidth >= NAV_BREAKPOINT : true
     );
     const navRef = useRef<HTMLElement>(null);
+    const dropdownRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         const handleReveal = () => setHasScrolled(true);
@@ -105,9 +106,17 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
     };
     const handleMouseLeave = (e: React.MouseEvent) => {
         if (isManuallyToggled) return;
+        const relatedTarget = e.relatedTarget as Element | null;
+        if (dropdownRef.current?.contains(relatedTarget)) return;
         const navBounds = navRef.current?.getBoundingClientRect();
         if (!navBounds) return;
         if (e.clientY <= navBounds.top) return;
+        setIsMenuOpen(false);
+    };
+    const handleDropdownMouseLeave = (e: React.MouseEvent) => {
+        if (isManuallyToggled) return;
+        const relatedTarget = e.relatedTarget as Element | null;
+        if (navRef.current?.contains(relatedTarget)) return;
         setIsMenuOpen(false);
     };
     const handleHamburgerClick = () => {
@@ -269,7 +278,7 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
                                     }}
                                 >
                                     {[
-                                        { label: "Product", href: "#" },
+                                        { label: "Product", href: "/enterprise" },
                                         { label: "Use Cases", href: "/use-cases" },
                                         { label: "Technology", href: "/technology" },
                                     ].map((link) => (
@@ -359,12 +368,14 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
 
             {/* ── Dropdown (outside nav so fixed positioning isn't broken by nav's transform) ── */}
             <div
+                ref={dropdownRef}
                 className={`fixed left-0 right-0 max-md:bottom-0 z-50 overflow-y-auto transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
                     isMenuOpen
                         ? "opacity-100 translate-y-0 pointer-events-auto"
                         : "opacity-0 -translate-y-6 pointer-events-none"
                 }`}
                 style={{ ...dropdownBg, top: isCompact ? 56 : 68 }}
+                onMouseLeave={handleDropdownMouseLeave}
             >
                 <div className="mx-auto w-full px-6 md:px-8 min-[1287px]:px-0 py-8 md:py-12" style={{ maxWidth: 1287, transitionDelay: isMenuOpen ? "150ms" : "0ms" }}>
                     <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12">
@@ -373,28 +384,28 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
                             style={{ transitionDelay: isMenuOpen ? "200ms" : "0ms" }}
                         >
                             <div>
-                                <h4 className={`text-xs font-semibold tracking-widest uppercase mb-3 md:mb-4 ${dropdownHeadingClass}`}>
+                                <h4 className={`text-[13px] font-medium tracking-[0.08em] uppercase mb-3 md:mb-4 ${dropdownHeadingClass}`}>
                                     <ScrambleText text="COLUMBUS EARTH" isActive={isMenuOpen} delay={300} />
                                 </h4>
-                                <p className={`text-sm md:text-base leading-relaxed max-w-md ${dropdownBodyClass}`}>
+                                <p className={`text-[16px] leading-[1.6] max-w-md ${dropdownBodyClass}`}>
                                     Columbus Earth Inc. is a spatial frontier AI company building the first production
                                     Large Geospatial Model to answer the most difficult questions about our planet.
                                 </p>
                             </div>
                             <div className="grid grid-cols-2 gap-6 md:gap-8">
                                 <div>
-                                    <h4 className={`text-xs font-semibold tracking-wider uppercase mb-2 ${dropdownSubheadClass}`}>
+                                    <h4 className={`text-[13px] font-medium tracking-[0.08em] uppercase mb-2 ${dropdownSubheadClass}`}>
                                         <ScrambleText text="CONTACT" isActive={isMenuOpen} delay={450} />
                                     </h4>
-                                    <a href="mailto:contact@columbus.earth" className={`text-sm md:text-base font-medium block transition-colors duration-300 break-all ${dropdownLinkClass} hover:opacity-70`}>
+                                    <a href="mailto:contact@columbus.earth" className={`text-[16px] font-medium block transition-colors duration-300 break-all hover:text-[#2563EB] ${dropdownLinkClass}`}>
                                         contact@columbus.earth
                                     </a>
                                 </div>
                                 <div>
-                                    <h4 className={`text-xs font-semibold tracking-wider uppercase mb-2 ${dropdownSubheadClass}`}>
+                                    <h4 className={`text-[13px] font-medium tracking-[0.08em] uppercase mb-2 ${dropdownSubheadClass}`}>
                                         <ScrambleText text="SOCIAL" isActive={isMenuOpen} delay={550} />
                                     </h4>
-                                    <a href="https://www.linkedin.com/company/columbusearth/about/?viewAsMember=true" target="_blank" rel="noopener noreferrer" className={`text-sm md:text-base font-medium block transition-colors ${dropdownSocialClass}`}>
+                                    <a href="https://www.linkedin.com/company/columbusearth/about/?viewAsMember=true" target="_blank" rel="noopener noreferrer" className={`text-[16px] font-medium block transition-colors duration-300 hover:text-[#2563EB] ${dropdownSocialClass}`}>
                                         LinkedIn
                                     </a>
                                 </div>
@@ -403,7 +414,7 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
                         <div className="hidden md:block md:col-span-3"></div>
                         <div className="md:col-span-4 space-y-4 md:space-y-6">
                             <h4
-                                className={`text-xs font-semibold tracking-wider uppercase mb-4 transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${dropdownSubheadClass} ${
+                                className={`text-[13px] font-medium tracking-[0.08em] uppercase mb-4 transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${dropdownSubheadClass} ${
                                     isMenuOpen ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
                                 }`}
                                 style={{ transitionDelay: isMenuOpen ? "250ms" : "0ms" }}
@@ -424,8 +435,10 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
                                             onClick={closeMenu}
                                             className={`group relative text-xl font-medium transition-all duration-300 flex items-center ${dropdownNavLinkClass}`}
                                         >
-                                            <span className="mr-3 transition-transform duration-300 ease-in-out group-hover:translate-x-1">+</span>
                                             <span className="transition-all duration-300 ease-in-out group-hover:translate-x-1">{item.label}</span>
+                                            <svg className="ml-3 shrink-0 transition-all duration-300 ease-in-out group-hover:translate-x-1 stroke-[#0A1344] group-hover:stroke-[#2563EB]" width="9" height="16" viewBox="0 0 7 12" fill="none" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                                                <path d="M1 1l5 5-5 5" />
+                                            </svg>
                                         </Link>
                                     </li>
                                 ))}

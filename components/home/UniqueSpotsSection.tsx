@@ -61,7 +61,7 @@ export const UniqueSpotsSection = () => {
       <div ref={ref} style={{ borderBottom: gl }}>
         {/* Heading */}
         <div className="flex items-center justify-center px-8 pt-14 pb-10" style={anim(0)}>
-          <h2 className="font-medium tracking-[-0.02em]" style={{ fontSize: 25, color: "#6E6E73" }}>
+          <h2 className="font-medium tracking-[-0.02em] text-[20px] lg:text-[25px] text-[#6E6E73]">
             Spots found faster on MapsGPT
           </h2>
         </div>
@@ -88,7 +88,7 @@ export const UniqueSpotsSection = () => {
         {/* Bottom CTA bar */}
         <div className="flex flex-wrap mt-24">
           <div className="px-8 min-[1287px]:px-10 py-5 flex items-center flex-1 min-w-70" style={{ minHeight: 76, borderRight: gl, backgroundColor: "rgba(20, 41, 148, 0.07)" }}>
-            <p className="text-[20px] font-medium text-[#1D1D1F] tracking-[-0.01em]">
+            <p className="text-[18px] lg:text-[20px] font-medium text-[#1D1D1F] tracking-[-0.01em]">
               MapsGPT is a local guide in your pocket
             </p>
           </div>
@@ -97,7 +97,7 @@ export const UniqueSpotsSection = () => {
             className="group px-8 min-[1287px]:px-10 py-5 flex items-center justify-between hover:opacity-90 transition-opacity flex-1 min-w-70"
             style={{ minHeight: 76, backgroundColor: "#000000" }}
           >
-            <span className="text-white text-[20px] font-medium transition-colors duration-300 group-hover:text-[#2563EB]">Try it out</span>
+            <span className="text-white text-[18px] lg:text-[20px] font-medium transition-colors duration-300 group-hover:text-[#2563EB]">Try it out</span>
             <svg className="transition-transform duration-300 group-hover:translate-x-0.5" width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#2563EB" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M2 10L10 2M10 2H4M10 2V8" />
             </svg>

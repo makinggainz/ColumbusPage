@@ -315,7 +315,7 @@ export const Capabilities = () => {
             transition: "opacity 0.7s ease, transform 0.7s ease",
           }}
         >
-          <h2 className="font-medium tracking-[-0.02em]" style={{ fontSize: 25, color: "#6E6E73" }}>
+          <h2 className="font-medium tracking-[-0.02em] text-[20px] lg:text-[25px] text-[#6E6E73]">
             Capabilities
           </h2>
         </div>

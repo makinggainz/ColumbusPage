@@ -210,9 +210,14 @@ export const BottleScene = ({ onBottleClick, visible }: { onBottleClick?: () => 
     const dt = 0.016;
 
     if (visible && elapsed > 0 && !bottle.grounded) {
-      // Wave-driven drift toward shore
-      const waveForceZ = 30; // push toward shore (increasing wz)
-      const waveForceLateral = Math.sin(t * 0.7) * 8; // gentle lateral sway
+      // Ease-out: bottle starts fast and decelerates as it nears shore
+      const journeyProgress = Math.max(0, Math.min(1, (bottle.wz - 150) / (shoreWZ - 150)));
+      const easeOut = 1 - journeyProgress * journeyProgress; // quadratic ease-out
+      const mobileBoost = W < 640 ? 1.5 : 1; // 50% faster on mobile
+
+      // Wave-driven drift toward shore — strong at start, gentle near shore
+      const waveForceZ = (15 + 40 * easeOut) * mobileBoost; // 55 far out → 15 near shore
+      const waveForceLateral = Math.sin(t * 0.7) * 8 * (0.3 + 0.7 * easeOut);
 
       // Current pushes bottle to shore
       bottle.vx += waveForceLateral * dt;
@@ -220,13 +225,14 @@ export const BottleScene = ({ onBottleClick, visible }: { onBottleClick?: () => 
 
       // Gentle centering force — keeps bottle within navbar width (~±600 world units)
       // Ramps up as bottle nears shore so it reliably lands in view
-      const shoreApproach = Math.max(0, (bottle.wz - 150) / (shoreWZ - 150));
+      const shoreApproach = journeyProgress;
       const centerForce = -bottle.wx * 0.006 * shoreApproach;
       bottle.vx += centerForce * dt;
 
-      // Damping
-      bottle.vx *= 0.995;
-      bottle.vz *= 0.995;
+      // Damping — increases as bottle approaches shore for smoother arrival
+      const damping = 0.995 - journeyProgress * 0.015; // 0.995 far → 0.980 near
+      bottle.vx *= damping;
+      bottle.vz *= damping;
 
       bottle.wx += bottle.vx * dt;
       bottle.wz += bottle.vz * dt;
@@ -481,6 +487,8 @@ export const BottleScene = ({ onBottleClick, visible }: { onBottleClick?: () => 
     return () => cancelAnimationFrame(animRef.current);
   }, [draw]);
 
+  const clickedRef = useRef(false);
+
   useEffect(() => {
     const cvs = canvasRef.current;
     if (!cvs) return;
@@ -492,17 +500,19 @@ export const BottleScene = ({ onBottleClick, visible }: { onBottleClick?: () => 
     };
 
     const onMove = (e: MouseEvent) => {
+      if (clickedRef.current) { cvs.style.cursor = "default"; setHoveringBottle(false); return; }
       const rect = cvs.getBoundingClientRect();
       const over = isInBottle(e.clientX - rect.left, e.clientY - rect.top);
       setHoveringBottle(over);
       cvs.style.cursor = over ? "pointer" : "default";
     };
 
-    const onClick = (e: MouseEvent) => {
-      const rect = cvs.getBoundingClientRect();
-      if (isInBottle(e.clientX - rect.left, e.clientY - rect.top)) {
-        onBottleClick?.();
-      }
+    const onClick = () => {
+      if (clickedRef.current) return;
+      clickedRef.current = true;
+      setHoveringBottle(false);
+      cvs.style.cursor = "default";
+      onBottleClick?.();
     };
 
     cvs.addEventListener("mousemove", onMove);

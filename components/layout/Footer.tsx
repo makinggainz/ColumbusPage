@@ -53,7 +53,11 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false })
       className={`text-[#1D1D1F] overflow-hidden flex flex-col relative ${reveal ? "h-screen" : "min-h-screen"}`}
       style={{
         background: "#F9F9F9",
+        cursor: !bottleOpened ? "default" : undefined,
         ...(reveal ? { position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 0 } as React.CSSProperties : {}),
+      }}
+      onClick={() => {
+        if (!bottleOpened) { setNoteOpen(true); setBottleOpened(true); }
       }}
     >
       {/* Mission text — top center, above the bottle */}
@@ -79,14 +83,6 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false })
           planning domains.
         </p>
 
-        <div className="hidden md:flex flex-col items-center gap-8 w-full" style={{ fontSize: 18, fontWeight: 500 }}>
-          <Link href="/our-mission" className="hover:opacity-60 transition-opacity text-[#1D1D1F]">[ Our Mission ]</Link>
-          <div className="flex flex-wrap justify-center gap-x-8 gap-y-4 w-full max-w-xl">
-            <Link href="#" className="hover:opacity-60 transition-opacity text-[#1D1D1F]">[ Product ]</Link>
-            <Link href="/technology" className="hover:opacity-60 transition-opacity text-[#1D1D1F]">[ Technology ]</Link>
-            <Link href="/use-cases" className="hover:opacity-60 transition-opacity text-[#1D1D1F]">[ Use Cases ]</Link>
-          </div>
-        </div>
       </div>
 
       {/* 3D Bottle scene */}
@@ -135,6 +131,7 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false })
         style={{
           opacity: bottleOpened ? 1 : 0,
           transform: bottleOpened ? "translateY(0)" : "translateY(20px)",
+          pointerEvents: bottleOpened ? "auto" : "none",
         }}
       >
         <div className="max-w-[1200px] mx-auto px-8 pb-6 pt-12">

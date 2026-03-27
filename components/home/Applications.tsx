@@ -27,15 +27,15 @@ export const Applications = () => {
   });
 
   const items = [
-    { title: "Residential Real Estate", image: "/UseCases/ResidentialRealEstate.jpg", href: "/applications/residential-real-estate" },
-    { title: "Commercial Real Estate", image: "/UseCases/CommercialRealEstate.jpg", href: "/applications/commercial-real-estate" },
-    { title: "Generative Geodata", image: "/UseCases/GenDatalayers.png", href: "/applications/generative-geodata" },
-    { title: "Logistics Optimization", image: "/UseCases/Logistics.webp", href: "/applications/logistics-optimization" },
-    { title: "Urban Planning", image: "/UseCases/UrbanPlanning.jpg", href: "/applications/urban-planning" },
-    { title: "Site Selection", image: "/UseCases/SiteSelection.jpg", href: "/applications/site-selection" },
-    { title: "Consumer Mapping", image: "/UseCases/ConsumerMapping.jpeg", href: "/applications/consumer-mapping" },
-    { title: "Ground Due Diligence", image: "/UseCases/GroundDueDillegence.png", href: "/applications/ground-due-diligence" },
-    { title: "More", image: "/UseCases/GeoMarketing.png", href: "/applications" },
+    { title: "Residential Real Estate", image: "/UseCases/ResidentialRealEstate.jpg", href: "/use-cases" },
+    { title: "Commercial Real Estate", image: "/UseCases/CommercialRealEstate.jpg", href: "/use-cases" },
+    { title: "Generative Geodata", image: "/UseCases/GenDatalayers.png", href: "/use-cases" },
+    { title: "Logistics Optimization", image: "/UseCases/Logistics.webp", href: "/use-cases" },
+    { title: "Urban Planning", image: "/UseCases/UrbanPlanning.jpg", href: "/use-cases" },
+    { title: "Site Selection", image: "/UseCases/SiteSelection.jpg", href: "/use-cases" },
+    { title: "Consumer Mapping", image: "/UseCases/ConsumerMapping.jpeg", href: "/use-cases" },
+    { title: "Ground Due Diligence", image: "/UseCases/GroundDueDillegence.png", href: "/use-cases" },
+    { title: "More", image: "/UseCases/GeoMarketing.png", href: "/use-cases" },
   ];
 
   return (
@@ -86,12 +86,12 @@ export const Applications = () => {
               {/* Purple overlay */}
               <div className="absolute inset-0 transition-opacity duration-300" style={{ backgroundColor: "rgba(37, 99, 235, 0.18)" }} />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent transition-opacity duration-300" />
-              {/* Title — sits at bottom, lifts on hover */}
-              <div className="absolute inset-x-0 bottom-0 z-20 px-5 pb-8 translate-y-0 group-hover:-translate-y-8 transition-transform duration-300 ease-out">
+              {/* Title — sits at bottom, lifts on hover (always lifted on touch) */}
+              <div className="absolute inset-x-0 bottom-0 z-20 px-5 pb-8 translate-y-0 group-hover:-translate-y-8 pointer-coarse:-translate-y-8 transition-transform duration-300 ease-out">
                 <h3 className="text-md font-semibold text-white">{item.title}</h3>
               </div>
-              {/* Learn more — fades in at bottom on hover */}
-              <div className="absolute inset-x-0 bottom-0 z-20 px-5 pb-8 flex items-center gap-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-out">
+              {/* Learn more — fades in at bottom on hover (always visible on touch) */}
+              <div className="absolute inset-x-0 bottom-0 z-20 px-5 pb-8 flex items-center gap-10 opacity-0 group-hover:opacity-100 pointer-coarse:opacity-100 transition-opacity duration-300 ease-out">
                 <span className="text-white/90 text-[15px] font-medium">Learn more</span>
                 <svg width="10" height="18" viewBox="0 0 7 12" fill="none" stroke="#2563EB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M1 1l5 5-5 5" />

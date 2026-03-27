@@ -104,7 +104,7 @@ export const Vision = () => {
         {/* Bottom bar — two columns */}
         <div className="flex flex-wrap" style={{ ...anim(260) }}>
           <div className="px-8 min-[1287px]:px-10 py-5 flex items-center flex-1 min-w-70" style={{ minHeight: 76, borderRight: gl, backgroundColor: "rgba(37, 99, 235, 0.06)" }}>
-            <p className="text-[20px] font-medium text-[#1D1D1F] tracking-[-0.01em]">
+            <p className="text-[18px] lg:text-[20px] font-medium text-[#1D1D1F] tracking-[-0.01em]">
               Think of us like the OpenAI for maps.
             </p>
           </div>
@@ -113,7 +113,7 @@ export const Vision = () => {
             className="group px-8 min-[1287px]:px-10 py-5 flex items-center justify-between hover:opacity-90 transition-opacity flex-1 min-w-70"
             style={{ minHeight: 76, backgroundColor: "#000000" }}
           >
-            <span className="text-white text-[20px] font-medium transition-colors duration-300 group-hover:text-[#2563EB]">Our research &amp; technology</span>
+            <span className="text-white text-[18px] lg:text-[20px] font-medium transition-colors duration-300 group-hover:text-[#2563EB]">Our research &amp; technology</span>
             <svg className="transition-transform duration-300 group-hover:translate-x-0.5" width="10" height="18" viewBox="0 0 7 12" fill="none" stroke="#2563EB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
               <path d="M1 1l5 5-5 5" />
             </svg>

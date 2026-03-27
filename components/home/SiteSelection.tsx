@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import { GridSection, gl } from "./ContentGrid";
 import glassStyles from "@/components/ui/GlassButton.module.css";
 
-const PILLS = ["Map Chat", "Agentic Audits", "Agentic Research Reports", "Data Catalogue"];
+const PILLS = ["Map Chat", "Agentic Audits", "AI Research Reports", "Data Catalogue"];
 const INSET = 4;
 
 export const SiteSelection = () => {
@@ -129,7 +129,7 @@ export const SiteSelection = () => {
         {/* Top bar: Columbus Pro + New | Start Now */}
         <div className="flex items-center justify-between px-8 min-[1287px]:px-10 py-6" style={anim(0)}>
           <div className="flex items-center gap-3">
-            <span className="text-[#1D1D1F] font-bold" style={{ fontSize: 20 }}>
+            <span className="text-[18px] lg:text-[20px] text-[#1D1D1F] font-bold">
               Columbus Pro
             </span>
             <div className={`hidden min-[640px]:block ${glassStyles.wrapNew}`} style={{ filter: "drop-shadow(0 0 8px rgba(37, 99, 235, 0.5)) drop-shadow(0 0 20px rgba(37, 99, 235, 0.25))" }}>
@@ -140,8 +140,7 @@ export const SiteSelection = () => {
           </div>
           <Link
             href="/maps-gpt"
-            className="group flex items-center gap-3 min-[640px]:gap-10 text-[#1D1D1F] font-semibold transition-opacity"
-            style={{ fontSize: 20 }}
+            className="group flex items-center gap-3 min-[640px]:gap-10 text-[18px] lg:text-[20px] text-[#1D1D1F] font-semibold transition-opacity"
           >
             <span className="transition-colors duration-300 group-hover:text-[#2563EB]">Start Now</span>
             <svg
@@ -198,18 +197,18 @@ export const SiteSelection = () => {
             />
 
             {/* Content over image */}
-            <div className="relative z-10 flex flex-col flex-1 items-center pt-16 md:pt-24 px-6">
+            <div className="relative z-10 flex flex-col flex-1 items-center pt-10 md:pt-16 lg:pt-24 px-6">
               {/* Main heading */}
               <h2
                 ref={headingRef}
-                className="text-[#1D1D1F] text-center leading-[1.05] tracking-[-0.02em] text-[39px] md:text-[49px] lg:text-[76px]"
+                className="text-[#1D1D1F] text-center leading-[1.1] tracking-[-0.02em] text-[39px] md:text-[49px] lg:text-[76px]"
                 style={{ fontWeight: 500, letterSpacing: "-0.02em" }}
               >
                 An Agentic GIS platform
               </h2>
 
               {/* Subtitle */}
-              <p className="mt-6 text-center text-[16px] md:text-[20px]" style={{ color: "rgba(29,29,31,0.45)", letterSpacing: "-0.015em", fontWeight: 400 }}>
+              <p className="mt-3 md:mt-4 lg:mt-6 text-center text-[16px] md:text-[20px]" style={{ color: "rgba(29,29,31,0.45)", letterSpacing: "-0.015em", fontWeight: 400 }}>
                 Columbus turns you into a <span style={{ fontWeight: 600, color: "rgba(29,29,31,0.65)" }}>super-explorer.</span>
               </p>
 
@@ -217,14 +216,15 @@ export const SiteSelection = () => {
               <PillToggle />
 
               {/* Desktop + Mobile UI mockups */}
-              <div className="relative flex-1 w-full max-w-[1287px] mx-auto mt-10">
+              <div className="relative flex-1 w-full max-w-[1287px] mx-auto mt-6 md:mt-8 lg:mt-10">
                 {/* Desktop UI */}
                 <div
-                  className="absolute overflow-hidden hidden md:block"
+                  className="absolute overflow-hidden"
                   style={{
                     left: "2%",
                     bottom: 0,
-                    width: 1158,
+                    width: "90%",
+                    maxWidth: 1158,
                     height: "100%",
                     borderRadius: "12px 12px 0 0",
                     boxShadow: "0 -8px 60px rgba(0,0,0,0.28)",
@@ -239,7 +239,7 @@ export const SiteSelection = () => {
 
                 {/* Mobile UI */}
                 <div
-                  className="absolute overflow-hidden right-1/2 translate-x-1/2 md:right-[5%] md:translate-x-0"
+                  className="absolute overflow-hidden right-[5%]"
                   style={{
                     bottom: 0,
                     height: "100%",
@@ -289,68 +289,94 @@ function PillToggle() {
   useEffect(() => { measure(0); }, []);
 
   return (
-    <div
-      ref={containerRef}
-      className="inline-flex items-center relative mt-14"
-      style={{
-        height: 56,
-        borderRadius: 28,
-        overflow: "hidden",
-        backgroundColor: "rgba(255, 255, 255, 0.65)",
-        backdropFilter: "blur(12px)",
-        WebkitBackdropFilter: "blur(12px)",
-        boxShadow: "inset 0 1px 2px rgba(0,0,0,0.04), 0 2px 12px rgba(0,0,0,0.06)",
-      }}
-    >
-      {/* Sliding indicator */}
+    <>
+      {/* ── Desktop: horizontal pill bar with sliding indicator (≥684px) ── */}
       <div
-        aria-hidden
+        ref={containerRef}
+        className="hidden min-[684px]:inline-flex items-center relative mt-8 md:mt-10 lg:mt-14"
         style={{
-          position: "absolute",
-          top: INSET,
-          left: indicator.left,
-          width: indicator.width,
-          height: `calc(100% - ${INSET * 2}px)`,
-          borderRadius: 24,
-          backgroundColor: "rgba(255, 255, 255, 0.9)",
-          boxShadow: "0 1px 4px rgba(0,0,0,0.08)",
-          opacity: indicator.ready ? 1 : 0,
-          transition: [
-            "left 0.45s cubic-bezier(0.25, 1, 0.5, 1)",
-            "width 0.45s cubic-bezier(0.25, 1, 0.5, 1)",
-            "opacity 0.2s ease",
-          ].join(", "),
-          pointerEvents: "none",
-          zIndex: 1,
+          height: 56,
+          borderRadius: 28,
+          overflow: "hidden",
+          backgroundColor: "rgba(255, 255, 255, 0.65)",
+          backdropFilter: "blur(12px)",
+          WebkitBackdropFilter: "blur(12px)",
+          boxShadow: "inset 0 1px 2px rgba(0,0,0,0.04), 0 2px 12px rgba(0,0,0,0.06)",
         }}
-      />
-
-      {PILLS.map((label, i) => (
-        <button
-          key={label}
-          ref={el => { buttonRefs.current[i] = el; }}
-          type="button"
-          onClick={() => { setActive(i); measure(i); }}
-          className="h-full flex items-center justify-center whitespace-nowrap relative cursor-pointer"
+      >
+        {/* Sliding indicator */}
+        <div
+          aria-hidden
           style={{
-            fontSize: 16,
-            fontWeight: 500,
-            letterSpacing: "-0.01em",
-            padding: "0 24px",
-            zIndex: 2,
-            color: active === i ? "#1D1D1F" : "rgba(29,29,31,0.5)",
-            transition: "color 0.35s cubic-bezier(0.25, 1, 0.5, 1)",
+            position: "absolute",
+            top: INSET,
+            left: indicator.left,
+            width: indicator.width,
+            height: `calc(100% - ${INSET * 2}px)`,
+            borderRadius: 24,
+            backgroundColor: "rgba(255, 255, 255, 0.9)",
+            boxShadow: "0 1px 4px rgba(0,0,0,0.08)",
+            opacity: indicator.ready ? 1 : 0,
+            transition: [
+              "left 0.45s cubic-bezier(0.25, 1, 0.5, 1)",
+              "width 0.45s cubic-bezier(0.25, 1, 0.5, 1)",
+              "opacity 0.2s ease",
+            ].join(", "),
+            pointerEvents: "none",
+            zIndex: 1,
           }}
-          onMouseEnter={e => {
-            if (active !== i) (e.currentTarget as HTMLElement).style.color = "rgba(29,29,31,0.75)";
-          }}
-          onMouseLeave={e => {
-            if (active !== i) (e.currentTarget as HTMLElement).style.color = "rgba(29,29,31,0.5)";
-          }}
-        >
-          {label}
-        </button>
-      ))}
-    </div>
+        />
+
+        {PILLS.map((label, i) => (
+          <button
+            key={label}
+            ref={el => { buttonRefs.current[i] = el; }}
+            type="button"
+            onClick={() => { setActive(i); measure(i); }}
+            className="h-full flex items-center justify-center whitespace-nowrap relative cursor-pointer"
+            style={{
+              fontSize: 16,
+              fontWeight: 500,
+              letterSpacing: "-0.01em",
+              padding: "0 24px",
+              zIndex: 2,
+              color: active === i ? "#1D1D1F" : "rgba(29,29,31,0.5)",
+              transition: "color 0.35s cubic-bezier(0.25, 1, 0.5, 1)",
+            }}
+            onMouseEnter={e => {
+              if (active !== i) (e.currentTarget as HTMLElement).style.color = "rgba(29,29,31,0.75)";
+            }}
+            onMouseLeave={e => {
+              if (active !== i) (e.currentTarget as HTMLElement).style.color = "rgba(29,29,31,0.5)";
+            }}
+          >
+            {label}
+          </button>
+        ))}
+      </div>
+
+      {/* ── Mobile: 2×2 grid of pill buttons (<684px) ── */}
+      <div className="min-[684px]:hidden grid grid-cols-2 gap-2 mt-8 w-full max-w-100 px-4">
+        {PILLS.map((label, i) => (
+          <button
+            key={label}
+            type="button"
+            onClick={() => { setActive(i); measure(i); }}
+            className="flex items-center justify-center rounded-full cursor-pointer transition-all duration-300"
+            style={{
+              height: 44,
+              fontSize: 13,
+              fontWeight: 500,
+              letterSpacing: "-0.01em",
+              backgroundColor: active === i ? "rgba(255,255,255,0.9)" : "rgba(255,255,255,0.3)",
+              color: active === i ? "#1D1D1F" : "rgba(29,29,31,0.5)",
+              boxShadow: active === i ? "0 1px 4px rgba(0,0,0,0.08)" : "none",
+            }}
+          >
+            {label}
+          </button>
+        ))}
+      </div>
+    </>
   );
 }

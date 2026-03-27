@@ -34,68 +34,94 @@ function TravelPillToggle({ activeTab, setActiveTab, anim }: {
   useEffect(() => { measure(activeTab); }, []);
 
   return (
-    <div
-      ref={containerRef}
-      className="inline-flex items-center relative mb-0"
-      style={{
-        height: 56,
-        borderRadius: 28,
-        overflow: "hidden",
-        backgroundColor: "rgba(255, 255, 255, 0.65)",
-        backdropFilter: "blur(12px)",
-        WebkitBackdropFilter: "blur(12px)",
-        boxShadow: "inset 0 1px 2px rgba(0,0,0,0.04), 0 2px 12px rgba(0,0,0,0.06)",
-        ...anim(200),
-      }}
-    >
+    <>
+      {/* ── Desktop: horizontal pill bar with sliding indicator (≥684px) ── */}
       <div
-        aria-hidden
+        ref={containerRef}
+        className="hidden min-[684px]:inline-flex items-center relative mb-0"
         style={{
-          position: "absolute",
-          top: PILL_INSET,
-          left: indicator.left,
-          width: indicator.width,
-          height: `calc(100% - ${PILL_INSET * 2}px)`,
-          borderRadius: 24,
-          backgroundColor: "rgba(255, 255, 255, 0.9)",
-          boxShadow: "0 1px 4px rgba(0,0,0,0.08)",
-          opacity: indicator.ready ? 1 : 0,
-          transition: [
-            "left 0.45s cubic-bezier(0.25, 1, 0.5, 1)",
-            "width 0.45s cubic-bezier(0.25, 1, 0.5, 1)",
-            "opacity 0.2s ease",
-          ].join(", "),
-          pointerEvents: "none" as const,
-          zIndex: 1,
+          height: 56,
+          borderRadius: 28,
+          overflow: "hidden",
+          backgroundColor: "rgba(255, 255, 255, 0.65)",
+          backdropFilter: "blur(12px)",
+          WebkitBackdropFilter: "blur(12px)",
+          boxShadow: "inset 0 1px 2px rgba(0,0,0,0.04), 0 2px 12px rgba(0,0,0,0.06)",
+          ...anim(200),
         }}
-      />
-      {TABS.map((tab, i) => (
-        <button
-          key={tab}
-          ref={el => { buttonRefs.current[i] = el; }}
-          type="button"
-          onClick={() => { setActiveTab(i); measure(i); }}
-          className="h-full flex items-center justify-center whitespace-nowrap relative cursor-pointer"
+      >
+        <div
+          aria-hidden
           style={{
-            fontSize: 16,
-            fontWeight: 500,
-            letterSpacing: "-0.01em",
-            padding: "0 24px",
-            zIndex: 2,
-            color: activeTab === i ? "#1D1D1F" : "rgba(29,29,31,0.5)",
-            transition: "color 0.35s cubic-bezier(0.25, 1, 0.5, 1)",
+            position: "absolute",
+            top: PILL_INSET,
+            left: indicator.left,
+            width: indicator.width,
+            height: `calc(100% - ${PILL_INSET * 2}px)`,
+            borderRadius: 24,
+            backgroundColor: "rgba(255, 255, 255, 0.9)",
+            boxShadow: "0 1px 4px rgba(0,0,0,0.08)",
+            opacity: indicator.ready ? 1 : 0,
+            transition: [
+              "left 0.45s cubic-bezier(0.25, 1, 0.5, 1)",
+              "width 0.45s cubic-bezier(0.25, 1, 0.5, 1)",
+              "opacity 0.2s ease",
+            ].join(", "),
+            pointerEvents: "none" as const,
+            zIndex: 1,
           }}
-          onMouseEnter={e => {
-            if (activeTab !== i) (e.currentTarget as HTMLElement).style.color = "rgba(29,29,31,0.75)";
-          }}
-          onMouseLeave={e => {
-            if (activeTab !== i) (e.currentTarget as HTMLElement).style.color = "rgba(29,29,31,0.5)";
-          }}
-        >
-          {tab}
-        </button>
-      ))}
-    </div>
+        />
+        {TABS.map((tab, i) => (
+          <button
+            key={tab}
+            ref={el => { buttonRefs.current[i] = el; }}
+            type="button"
+            onClick={() => { setActiveTab(i); measure(i); }}
+            className="h-full flex items-center justify-center whitespace-nowrap relative cursor-pointer"
+            style={{
+              fontSize: 16,
+              fontWeight: 500,
+              letterSpacing: "-0.01em",
+              padding: "0 24px",
+              zIndex: 2,
+              color: activeTab === i ? "#1D1D1F" : "rgba(29,29,31,0.5)",
+              transition: "color 0.35s cubic-bezier(0.25, 1, 0.5, 1)",
+            }}
+            onMouseEnter={e => {
+              if (activeTab !== i) (e.currentTarget as HTMLElement).style.color = "rgba(29,29,31,0.75)";
+            }}
+            onMouseLeave={e => {
+              if (activeTab !== i) (e.currentTarget as HTMLElement).style.color = "rgba(29,29,31,0.5)";
+            }}
+          >
+            {tab}
+          </button>
+        ))}
+      </div>
+
+      {/* ── Mobile: 2×2 grid of pill buttons (<684px) ── */}
+      <div className="min-[684px]:hidden grid grid-cols-2 gap-2 w-full max-w-100 px-4" style={anim(200)}>
+        {TABS.map((tab, i) => (
+          <button
+            key={tab}
+            type="button"
+            onClick={() => { setActiveTab(i); measure(i); }}
+            className="flex items-center justify-center rounded-full cursor-pointer transition-all duration-300"
+            style={{
+              height: 44,
+              fontSize: 13,
+              fontWeight: 500,
+              letterSpacing: "-0.01em",
+              backgroundColor: activeTab === i ? "rgba(255,255,255,0.9)" : "rgba(255,255,255,0.3)",
+              color: activeTab === i ? "#1D1D1F" : "rgba(29,29,31,0.5)",
+              boxShadow: activeTab === i ? "0 1px 4px rgba(0,0,0,0.08)" : "none",
+            }}
+          >
+            {tab}
+          </button>
+        ))}
+      </div>
+    </>
   );
 }
 
@@ -214,16 +240,17 @@ export const TravelSection = () => {
           className="flex items-center justify-between px-8 min-[1287px]:px-10 py-6"
           style={{ borderBottom: gl }}
         >
-          <span className="flex items-center gap-3 text-[#1D1D1F] font-bold" style={{ fontSize: 20, letterSpacing: "-0.02em" }}>
-            <img src="/MapsGPT-logo.png" alt="" className="w-8 h-8 rounded-full object-cover shrink-0" />
-            MapsGPT <span className="font-normal">– AI-powered social map</span>
+          <span className="text-[18px] lg:text-[20px] text-[#1D1D1F] font-bold" style={{ letterSpacing: "-0.02em" }}>
+            MapsGPT <span className="hidden min-[640px]:inline font-normal">– AI-powered social map</span>
           </span>
           <Link
             href="/maps-gpt"
-            className="group flex items-center gap-10 font-semibold transition-opacity"
-            style={{ fontSize: 20, color: "#1D1D1F" }}
+            className="group flex items-center gap-3 min-[640px]:gap-10 text-[18px] lg:text-[20px] text-[#1D1D1F] font-semibold transition-opacity"
           >
-            <span className="transition-colors duration-300 group-hover:text-[#2563EB]">Try it out now</span>
+            <span className="transition-colors duration-300 group-hover:text-[#2563EB]">
+              <span className="hidden min-[640px]:inline">Try it out now</span>
+              <span className="min-[640px]:hidden">Try it now</span>
+            </span>
             <svg
               className="transition-transform duration-300 group-hover:translate-x-0.5"
               width="9" height="16" viewBox="0 0 7 12" fill="none"
@@ -255,11 +282,11 @@ export const TravelSection = () => {
         />
 
         {/* Centered content */}
-        <div className="relative z-10 flex flex-col flex-1 items-center pt-16 md:pt-24 px-6">
+        <div className="relative z-10 flex flex-col flex-1 items-center pt-10 md:pt-16 lg:pt-24 px-6">
           {/* Heading */}
           <h2
             ref={travelHeadingRef}
-            className="text-center text-[#1D1D1F] leading-[1.05] tracking-[-0.02em] mb-4 text-[39px] md:text-[49px] lg:text-[76px]"
+            className="text-center text-[#1D1D1F] leading-[1.1] tracking-[-0.02em] mb-3 md:mb-4 text-[39px] md:text-[49px] lg:text-[76px]"
             style={{
               fontWeight: 500,
               letterSpacing: "-0.02em",
@@ -271,10 +298,11 @@ export const TravelSection = () => {
 
           {/* Subtitle */}
           <p
-            className="text-center mb-10 text-[16px] md:text-[20px]"
+            className="text-center mb-6 md:mb-8 lg:mb-10 text-[16px] md:text-[20px]"
             style={{ color: "rgba(29,29,31,0.45)", letterSpacing: "-0.015em", fontWeight: 400, ...anim(100) }}
           >
-            Find your next hang out spot, easier
+            <span className="hidden min-[640px]:inline">Find your next hang out spot, easier</span>
+            <span className="min-[640px]:hidden">AI-powered social map</span>
           </p>
 
           {/* Tab bar — matches SiteSelection PillToggle */}
@@ -282,16 +310,17 @@ export const TravelSection = () => {
 
           {/* Phone mockups */}
           <div
-            className="relative flex-1 w-full max-w-[1287px] mx-auto mt-10"
+            className="relative flex-1 w-full max-w-[1287px] mx-auto mt-6 md:mt-8 lg:mt-10"
             style={anim(350)}
           >
             {/* Desktop mockup */}
             <div
-              className="absolute overflow-hidden hidden md:block"
+              className="absolute overflow-hidden"
               style={{
                 left: "2%",
                 bottom: 0,
-                width: 1158,
+                width: "90%",
+                maxWidth: 1158,
                 height: "100%",
                 borderRadius: "12px 12px 0 0",
                 boxShadow: "0 -8px 60px rgba(0,0,0,0.28)",
@@ -306,7 +335,7 @@ export const TravelSection = () => {
 
             {/* Mobile mockup */}
             <div
-              className="absolute overflow-hidden right-1/2 translate-x-1/2 md:right-[5%] md:translate-x-0"
+              className="absolute overflow-hidden right-[5%]"
               style={{
                 bottom: 0,
                 height: "100%",

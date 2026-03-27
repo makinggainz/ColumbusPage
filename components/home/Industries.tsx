@@ -43,23 +43,23 @@ export const Industries = () => {
           className="flex items-center justify-center pt-2 pb-12 px-8"
           style={anim(0)}
         >
-          <h2 className="font-medium tracking-[-0.02em]" style={{ fontSize: 20, color: "#6E6E73" }}>
+          <h2 className="font-medium tracking-[-0.02em] text-[16px] lg:text-[20px] text-[#6E6E73]">
             Find your industry
           </h2>
         </div>
 
-        {/* Cards row */}
+        {/* Cards row — horizontal scroll, matching GeneratedMaps pattern */}
         <div
-          className="flex items-stretch gap-1.5 px-8 min-[1287px]:px-10 pb-10 overflow-x-auto md:justify-center"
+          className="flex items-stretch gap-3 px-8 min-[1287px]:px-10 pb-10 overflow-x-auto min-[1010px]:justify-center"
           style={{ scrollbarWidth: "none", ...anim(100) }}
         >
           {CARDS.map((card, i) => (
             <Link
               key={card.label}
               href={card.href}
-              className="group flex flex-col rounded-lg overflow-hidden transition-colors duration-300"
+              className="group flex flex-col rounded-lg overflow-hidden transition-colors duration-300 shrink-0"
               style={{
-                width: card.label === "More" ? 110 : 220,
+                width: card.label === "More" ? 110 : 200,
                 background: "rgba(37, 99, 235, 0.06)",
                 ...anim(100 + i * 80),
               }}
@@ -99,7 +99,7 @@ export const Industries = () => {
         {/* Bottom bar */}
         <div className="flex flex-wrap mt-40" style={{ ...anim(550) }}>
           <div className="px-8 min-[1287px]:px-10 py-5 flex items-center flex-1 min-w-70" style={{ minHeight: 76, borderRight: gl, backgroundColor: "rgba(37, 99, 235, 0.06)" }}>
-            <p className="text-[20px] font-medium text-[#1D1D1F] tracking-[-0.01em]">
+            <p className="text-[18px] lg:text-[20px] font-medium text-[#1D1D1F] tracking-[-0.01em]">
               Become a super-explorer.
             </p>
           </div>
@@ -108,7 +108,7 @@ export const Industries = () => {
             className="group px-8 min-[1287px]:px-10 py-5 flex items-center justify-between hover:opacity-90 transition-opacity flex-1 min-w-70"
             style={{ minHeight: 76, backgroundColor: "#000000" }}
           >
-            <span className="text-white text-[20px] font-medium transition-colors duration-300 group-hover:text-[#2563EB]">Start now</span>
+            <span className="text-white text-[18px] lg:text-[20px] font-medium transition-colors duration-300 group-hover:text-[#2563EB]">Start now</span>
             <svg className="transition-transform duration-300 group-hover:translate-x-0.5" width="10" height="18" viewBox="0 0 7 12" fill="none" stroke="#2563EB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
               <path d="M1 1l5 5-5 5" />
             </svg>

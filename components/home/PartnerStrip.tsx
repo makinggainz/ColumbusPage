@@ -27,7 +27,7 @@ export const PartnerStrip = () => {
         <h2 className="font-medium tracking-[-0.02em] text-[#1D1D1F] text-center text-[25px] md:text-[31px] lg:text-[39px]">
           High-fidelity and smart datasets
         </h2>
-        <p className="text-[16px] md:text-[20px] mt-3 text-center font-medium" style={{ color: "#6E6E73" }}>
+        <p className="text-[16px] lg:text-[20px] mt-3 text-center font-medium" style={{ color: "#6E6E73" }}>
           We vet our data with reputable partner organizations
         </p>
       </div>

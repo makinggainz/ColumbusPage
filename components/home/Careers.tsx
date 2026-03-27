@@ -486,7 +486,7 @@ export const Careers = () => {
               className="group px-10 flex items-center justify-between hover:opacity-90 transition-opacity cursor-pointer"
               style={{ height: 56, backgroundColor: "#000000", width: "100%" }}
             >
-              <span className="text-white font-medium transition-colors duration-300 group-hover:text-[#2563EB]" style={{ fontSize: 20 }}>Submit</span>
+              <span className="text-white text-[18px] lg:text-[20px] font-medium transition-colors duration-300 group-hover:text-[#2563EB]">Submit</span>
               <svg width="10" height="18" viewBox="0 0 7 12" fill="none" stroke="#2563EB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M1 1l5 5-5 5" />
               </svg>
