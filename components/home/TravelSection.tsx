@@ -262,7 +262,7 @@ export const TravelSection = () => {
             ref={travelHeadingRef}
             className="text-center text-[#1D1D1F] leading-[1.05] tracking-[-0.02em] mb-4"
             style={{
-              fontSize: 78,
+              fontSize: 76,
               fontWeight: 500,
               letterSpacing: "-0.02em",
               ...anim(0),

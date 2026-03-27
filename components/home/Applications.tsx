@@ -45,7 +45,7 @@ export const Applications = () => {
         <div className="px-8 md:px-10 pt-14 pb-4">
           <h2
             className="text-[#1D1D1F] font-medium tracking-[-0.02em] leading-[1.12]"
-            style={{ fontSize: 48, letterSpacing: "-0.02em", ...anim(0) }}
+            style={{ fontSize: 49, letterSpacing: "-0.02em", ...anim(0) }}
           >
             We&apos;re actively exploring various{" "}<br />application areas
           </h2>

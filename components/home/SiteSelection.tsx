@@ -203,7 +203,7 @@ export const SiteSelection = () => {
               <h2
                 ref={headingRef}
                 className="text-[#1D1D1F] text-center leading-[1.05] tracking-[-0.02em]"
-                style={{ fontSize: 78, fontWeight: 500, letterSpacing: "-0.02em" }}
+                style={{ fontSize: 76, fontWeight: 500, letterSpacing: "-0.02em" }}
               >
                 An Agentic GIS platform
               </h2>

@@ -69,7 +69,7 @@ export const Vision = () => {
         >
           <h2
             className="text-[#1D1D1F] leading-[1.15] tracking-[-0.02em]"
-            style={{ fontSize: 48, fontWeight: 300, ...anim(0) }}
+            style={{ fontSize: 49, fontWeight: 300, ...anim(0) }}
           >
             <span style={{ opacity: 0.7 }}>Introducing</span>{" "}<span className="font-medium">new kind of AI,</span>{" "}
             <span className="font-semibold">COLUMBUS-01</span>
@@ -140,7 +140,7 @@ const TextTile = ({ title, subtitle }: { title: string; subtitle: string }) => (
   <div
     className="col-span-1 sm:col-span-2 flex flex-col justify-center items-center text-center px-6"
   >
-    <h3 className="text-2xl md:text-3xl font-semibold text-[#1D1D1F] leading-tight tracking-tight">
+    <h3 className="text-[20px] md:text-[25px] font-semibold text-[#1D1D1F] leading-tight tracking-tight">
       {title}
     </h3>
     <p className="text-base md:text-lg text-[#6E6E73] mt-1 tracking-tight">{subtitle}</p>

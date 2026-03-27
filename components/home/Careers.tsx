@@ -395,7 +395,7 @@ export const Careers = () => {
         <div className="text-center mb-36 md:mb-44">
           <h2
             className="font-medium tracking-[-0.02em] leading-[1.05] mb-5"
-            style={{ fontSize: 56, color: "#1D1D1F" }}
+            style={{ fontSize: 49, color: "#1D1D1F" }}
           >
             Hiring{" "}
             <span
@@ -421,7 +421,7 @@ export const Careers = () => {
         <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-start mb-6 md:mb-8">
           <h3
             className="font-semibold tracking-[-0.02em] leading-[1.12]"
-            style={{ fontSize: 36, color: "#1D1D1F" }}
+            style={{ fontSize: 39, color: "#1D1D1F" }}
           >
             Careers &amp; investment queries
           </h3>

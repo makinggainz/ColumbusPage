@@ -1173,7 +1173,7 @@ export const Hero = () => {
           <h1
             className="font-light leading-[1.2] text-[#0A1344]"
             style={{
-              fontSize: 66,
+              fontSize: 61,
               letterSpacing: "-0.02em",
               ...fadeIn(80),
             }}
@@ -1191,7 +1191,7 @@ export const Hero = () => {
             <a
               href="mailto:contact@columbus.earth"
               className="group flex items-center justify-between gap-3 leading-none rounded-none hover:opacity-90 transition-opacity"
-              style={{ width: 145, height: 45, marginRight: 16, paddingLeft: 20, paddingRight: 16, fontSize: 17, fontWeight: 500, backgroundColor: "#000000", color: "white" }}
+              style={{ width: 145, height: 45, marginRight: 16, paddingLeft: 20, paddingRight: 16, fontSize: 16, fontWeight: 500, backgroundColor: "#000000", color: "white" }}
             >
               <span className="transition-colors duration-300 group-hover:text-[#2563EB]">Contact</span>
               <svg

@@ -24,7 +24,7 @@ export const PartnerStrip = () => {
   return (
     <GridSection style={{ borderTop: "none", paddingTop: 100 }}>
       <div className="flex flex-col items-center px-8 md:px-10 pt-32">
-        <h2 className="font-bold tracking-[-0.02em] text-[#1D1D1F] text-center" style={{ fontSize: 36 }}>
+        <h2 className="font-semibold tracking-[-0.02em] text-[#1D1D1F] text-center" style={{ fontSize: 39 }}>
           High-fidelity and smart datasets
         </h2>
         <p className="text-[20px] mt-3 text-center font-medium" style={{ color: "#717074" }}>

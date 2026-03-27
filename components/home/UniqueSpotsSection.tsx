@@ -61,7 +61,7 @@ export const UniqueSpotsSection = () => {
       <div ref={ref} style={{ borderBottom: gl }}>
         {/* Heading */}
         <div className="flex items-center justify-center px-8 pt-14 pb-10" style={anim(0)}>
-          <h2 className="font-medium tracking-[-0.02em]" style={{ fontSize: 24, color: "#717074" }}>
+          <h2 className="font-medium tracking-[-0.02em]" style={{ fontSize: 25, color: "#717074" }}>
             Spots found faster on MapsGPT
           </h2>
         </div>
