@@ -69,7 +69,7 @@ export const Vision = () => {
         >
           <h2
             className="text-[#1D1D1F] leading-[1.15] tracking-[-0.02em]"
-            style={{ fontSize: 49, fontWeight: 300, ...anim(0) }}
+            style={{ fontSize: 49, fontWeight: 500, ...anim(0) }}
           >
             <span style={{ opacity: 0.7 }}>Introducing</span>{" "}<span className="font-medium">new kind of AI,</span>{" "}
             <span className="font-semibold">COLUMBUS-01</span>

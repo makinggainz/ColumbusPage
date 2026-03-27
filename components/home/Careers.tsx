@@ -420,7 +420,7 @@ export const Careers = () => {
         {/* TITLE + DESCRIPTION */}
         <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-start mb-6 md:mb-8">
           <h3
-            className="font-semibold tracking-[-0.02em] leading-[1.12]"
+            className="font-medium tracking-[-0.02em] leading-[1.12]"
             style={{ fontSize: 39, color: "#1D1D1F" }}
           >
             Careers &amp; investment queries
