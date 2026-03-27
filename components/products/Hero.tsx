@@ -78,6 +78,7 @@ function drawStar(ctx: CanvasRenderingContext2D, outerR: number) {
 }
 
 export default function Hero() {
+  const [heroReady, setHeroReady] = useState(false);
   const [titleVisible, setTitleVisible] = useState(false);
   const [contentVisible, setContentVisible] = useState(false);
 
@@ -121,15 +122,21 @@ export default function Hero() {
   }, []);
 
 
+  // Phase 1: Logo, title, and background animate in
+  useEffect(() => {
+    const t = setTimeout(() => setHeroReady(true), 80);
+    return () => clearTimeout(t);
+  }, []);
+
   // Title gradient sweep-in
   useEffect(() => {
     const t = setTimeout(() => setTitleVisible(true), 300);
     return () => clearTimeout(t);
   }, []);
 
-  // Content fade-in on mount
+  // Phase 2: Everything else fades in after logo + title are visible
   useEffect(() => {
-    const t = setTimeout(() => setContentVisible(true), 80);
+    const t = setTimeout(() => setContentVisible(true), 1200);
     return () => clearTimeout(t);
   }, []);
 
@@ -611,6 +618,8 @@ export default function Hero() {
             clipPath: "inset(100px 5% 100px 5% round 55px)",
             willChange: "clip-path, background-size",
             zIndex: 0,
+            opacity: heroReady ? 1 : 0,
+            transition: "opacity 0.8s ease-out",
           }}
         />
 
@@ -651,20 +660,35 @@ export default function Hero() {
                 </div>
                 <div className="text-center">
                   <h1
-                    className="flex items-center justify-center"
+                    className="flex items-center justify-center gap-3"
                     style={{
                       fontFamily: '"SF Compact", -apple-system, BlinkMacSystemFont, sans-serif',
                       fontSize: 48,
                       fontWeight: 600,
-                      background: "linear-gradient(180deg, rgba(255,255,255,0.9) 0%, rgba(180,156,83,0.75) 40%, rgba(140,120,60,0.6) 100%)",
-                      WebkitBackgroundClip: "text",
-                      WebkitTextFillColor: "transparent",
-                      backgroundClip: "text",
-                      filter: "drop-shadow(0 1px 2px rgba(0,0,0,0.1))",
-                      ...fadeIn(0.2),
+                      opacity: heroReady ? 1 : 0,
+                      filter: heroReady ? "blur(0px)" : "blur(8px)",
+                      transform: heroReady ? "translateY(0)" : "translateY(16px)",
+                      transition: "opacity 0.6s ease-out, filter 0.6s ease-out, transform 0.6s ease-out",
                     }}
                   >
-                    MapsGPT
+                    <Image
+                      src="/MapsGPT-logo.png"
+                      alt="MapsGPT Logo"
+                      width={67}
+                      height={67}
+                      style={{ filter: "drop-shadow(0 1px 2px rgba(0,0,0,0.1))" }}
+                    />
+                    <span
+                      style={{
+                        background: "linear-gradient(180deg, rgba(255,255,255,0.9) 0%, rgba(180,156,83,0.75) 40%, rgba(140,120,60,0.6) 100%)",
+                        WebkitBackgroundClip: "text",
+                        WebkitTextFillColor: "transparent",
+                        backgroundClip: "text",
+                        filter: "drop-shadow(0 1px 2px rgba(0,0,0,0.1))",
+                      }}
+                    >
+                      MapsGPT
+                    </span>
                   </h1>
                   <h2
                     className="text-[64px] font-bold leading-[140%] flex items-center justify-center"

@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import glassStyles from "@/components/ui/GlassButton.module.css";
 
 const SUBTITLE_PREFIX = "Find your next ";
 const ROTATING_PHRASES = [
@@ -92,7 +93,7 @@ export default function ShowcaseSection() {
   }, [phraseIndex, suffix, isDeleting]);
 
   return (
-    <section className="relative bg-[#FFFFFF] overflow-hidden flex justify-center">
+    <section className="relative overflow-hidden flex justify-center">
 
       {/* Aspect Ratio Wrapper (True Responsive Height) */}
       <div
@@ -113,38 +114,55 @@ export default function ShowcaseSection() {
         >
           <div className="relative w-[1728px] h-[1343px]">
 
-            {/* Rectangle layer: frosted glass + Map UI inside */}
+            {/* Desktop image card — 3D tilt on hover */}
             <div
-              className="absolute overflow-hidden rounded-[23px]"
+              className="absolute"
               style={{
                 left: 474,
                 top: 348,
                 width: 1175,
                 height: 685,
+                perspective: 1200,
               }}
             >
-              <Image
-                src="/emoji/deskback.png"
-                alt=""
-                fill
-                className="object-cover"
-              />
               <div
-                className="absolute overflow-hidden rounded-[23px]"
+                className="desktop-tilt-card"
                 style={{
-                  left: 31,
-                  top: 30,
-                  width: 1118,
-                  height: 626,
-                  border: "5px solid rgba(225, 246, 255, 0.71)",
+                  width: "100%",
+                  height: "100%",
                   borderRadius: 23,
+                  overflow: "hidden",
+                  border: "1px solid rgba(150, 200, 220, 0.35)",
+                  background: "rgba(150, 225, 255, 0.10)",
+                  boxShadow: "0 4px 12px rgba(0, 0, 0, 0.06)",
+                  transition: "transform 0.15s ease-out, box-shadow 0.3s ease-out",
+                  cursor: "pointer",
+                  transformStyle: "preserve-3d",
+                  willChange: "transform",
+                }}
+                onMouseMove={(e) => {
+                  const rect = e.currentTarget.getBoundingClientRect();
+                  const x = (e.clientX - rect.left) / rect.width;
+                  const y = (e.clientY - rect.top) / rect.height;
+                  const rotateX = (0.5 - y) * 16;
+                  const rotateY = (x - 0.5) * 16;
+                  e.currentTarget.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-4px)`;
+                  e.currentTarget.style.boxShadow = `${-rotateY * 2}px ${rotateX * 2 + 16}px 48px rgba(0, 50, 80, 0.14), 0 8px 16px rgba(0, 50, 80, 0.06)`;
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = "rotateX(0deg) rotateY(0deg) translateY(0)";
+                  e.currentTarget.style.boxShadow = "0 4px 12px rgba(0, 0, 0, 0.06)";
+                  e.currentTarget.style.transition = "transform 0.5s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 0.5s cubic-bezier(0.23, 1, 0.32, 1)";
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transition = "transform 0.15s ease-out, box-shadow 0.3s ease-out";
                 }}
               >
                 <Image
-                  src="/emoji/desk.png"
+                  src="/MapsGPTDesktop.png"
                   alt="Maps UI"
                   fill
-                  className="object-cover"
+                  className="object-fill"
                 />
               </div>
             </div>
@@ -197,20 +215,20 @@ export default function ShowcaseSection() {
             {/* CTA */}
             <Link
               href="/maps-gpt"
-              className="absolute left-[1296px] top-[229px] z-20 flex w-[317px] h-[56px] min-h-[44px] items-center justify-center gap-2 rounded-[26px] cursor-pointer border-0 no-underline touch-manipulation active:scale-[0.98] transition-transform select-none"
+              className={`absolute left-[1296px] top-[229px] z-20 flex w-[317px] h-[56px] min-h-[44px] items-center justify-center gap-2 cursor-pointer border-0 no-underline touch-manipulation active:scale-[0.98] select-none ${glassStyles.btn}`}
               style={{
-                background: "#00B2FF",
+                padding: 0,
                 WebkitTapHighlightColor: "transparent",
               }}
             >
               <span
-                className="text-white"
                 style={{
                   fontFamily: "'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif",
                   fontWeight: 590,
                   fontSize: "20px",
                   lineHeight: "140%",
                   letterSpacing: "-0.02em",
+                  color: "#00B1D4",
                 }}
               >
                 Try it out now
@@ -225,7 +243,7 @@ export default function ShowcaseSection() {
               >
                 <path
                   d="M1 5.5h11M11 5.5L7 1.5M11 5.5L7 9.5"
-                  stroke="white"
+                  stroke="#00B1D4"
                   strokeWidth="1.5"
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -259,8 +277,7 @@ export default function ShowcaseSection() {
                       <button
                         type="button"
                         onClick={() => isExpanded && handleClosePill(index)}
-                        className="flex h-full w-[313px] cursor-pointer flex-col rounded-[28px] border-0 p-6 text-left touch-manipulation"
-                        style={{ background: "#E1F6FF" }}
+                        className={`flex h-full w-[313px] cursor-pointer flex-col rounded-[28px] border-0 p-6 text-left touch-manipulation ${glassStyles.featurePill}`}
                         aria-label={isExpanded ? `Close ${label}` : undefined}
                       >
                         <span
@@ -302,13 +319,8 @@ export default function ShowcaseSection() {
                       <button
                         type="button"
                         onClick={() => setExpandedPillIndex(index)}
-                        className="group relative flex h-[56px] min-w-[176px] w-max cursor-pointer items-center gap-3 rounded-[28px] border-0 px-4 text-left touch-manipulation overflow-hidden"
+                        className={`group relative flex h-[56px] min-w-[176px] w-max cursor-pointer items-center gap-3 rounded-[28px] border-0 px-4 text-left touch-manipulation overflow-hidden ${glassStyles.featurePill}`}
                       >
-                        {/* Background layer — scales on hover without moving text */}
-                        <span
-                          className="absolute inset-0 rounded-[28px] bg-[#E1F6FF] group-hover:bg-[#C8EAF7] group-hover:scale-[1.06] transition-all duration-200 ease-out"
-                          aria-hidden
-                        />
                         <span
                           className="relative flex h-[11px] w-[11px] shrink-0 items-center justify-center"
                           aria-hidden
