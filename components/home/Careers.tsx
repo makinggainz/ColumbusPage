@@ -420,13 +420,13 @@ export const Careers = () => {
         {/* TITLE + DESCRIPTION */}
         <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-start mb-6 md:mb-8">
           <h3
-            className="font-medium tracking-[-0.02em] leading-[1.12] text-[25px] md:text-[31px] lg:text-[39px]"
+            className="font-medium tracking-[-0.02em] leading-[1.12] text-[25px] md:text-[31px] lg:text-[39px] text-center md:text-left"
             style={{ color: "#1D1D1F" }}
           >
             Careers &amp; investment queries
           </h3>
 
-          <p className="md:text-right text-[16px] md:text-[20px]" style={{ color: "rgba(29,29,31,0.45)", letterSpacing: "-0.015em", fontWeight: 400 }}>
+          <p className="text-center md:text-right text-[16px] md:text-[20px]" style={{ color: "rgba(29,29,31,0.45)", letterSpacing: "-0.015em", fontWeight: 400 }}>
             If you&apos;re excited about creating paradigm<br />
             shifts in physical world understanding.{" "}
             <span style={{ fontWeight: 600, color: "rgba(29,29,31,0.8)" }}>Join us now.</span>

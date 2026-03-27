@@ -23,7 +23,7 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false })
     if (!el) return;
     const obs = new IntersectionObserver(
       ([entry]) => { if (entry.isIntersecting) { setFooterVisible(true); obs.disconnect(); } },
-      { threshold: 0.5 }
+      { threshold: 0.1 }
     );
     obs.observe(el);
     return () => obs.disconnect();
@@ -79,9 +79,9 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false })
           planning domains.
         </p>
 
-        <div className="flex flex-col items-center gap-8 w-full" style={{ fontSize: 18, fontWeight: 500 }}>
+        <div className="hidden md:flex flex-col items-center gap-8 w-full" style={{ fontSize: 18, fontWeight: 500 }}>
           <Link href="/our-mission" className="hover:opacity-60 transition-opacity text-[#1D1D1F]">[ Our Mission ]</Link>
-          <div className="flex justify-between w-full max-w-xl" style={{ paddingLeft: 28 }}>
+          <div className="flex flex-wrap justify-center gap-x-8 gap-y-4 w-full max-w-xl">
             <Link href="#" className="hover:opacity-60 transition-opacity text-[#1D1D1F]">[ Product ]</Link>
             <Link href="/technology" className="hover:opacity-60 transition-opacity text-[#1D1D1F]">[ Technology ]</Link>
             <Link href="/use-cases" className="hover:opacity-60 transition-opacity text-[#1D1D1F]">[ Use Cases ]</Link>
@@ -138,7 +138,7 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false })
         }}
       >
         <div className="max-w-[1200px] mx-auto px-8 pb-6 pt-12">
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-12 items-start mb-12">
+          <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12 items-start mb-12">
             <div>
               <h3 className="text-[24px] font-semibold text-[#1D1D1F] mb-3">Columbus Earth</h3>
               <p className="text-[14px] text-[#1D1D1F]/50 leading-relaxed mb-4 max-w-[260px]">

@@ -127,12 +127,12 @@ export const SiteSelection = () => {
     <GridSection>
       <div ref={ref} style={{ borderBottom: gl }}>
         {/* Top bar: Columbus Pro + New | Start Now */}
-        <div className="flex items-center justify-between px-5 min-[1287px]:px-10 py-6" style={anim(0)}>
+        <div className="flex items-center justify-between px-8 min-[1287px]:px-10 py-6" style={anim(0)}>
           <div className="flex items-center gap-3">
             <span className="text-[#1D1D1F] font-bold" style={{ fontSize: 20 }}>
               Columbus Pro
             </span>
-            <div className={glassStyles.wrapNew} style={{ filter: "drop-shadow(0 0 8px rgba(37, 99, 235, 0.5)) drop-shadow(0 0 20px rgba(37, 99, 235, 0.25))" }}>
+            <div className={`hidden min-[640px]:block ${glassStyles.wrapNew}`} style={{ filter: "drop-shadow(0 0 8px rgba(37, 99, 235, 0.5)) drop-shadow(0 0 20px rgba(37, 99, 235, 0.25))" }}>
               <div className={`${glassStyles.btn} ${glassStyles.btnNew}`}>
                 <span>New</span>
               </div>
@@ -140,7 +140,7 @@ export const SiteSelection = () => {
           </div>
           <Link
             href="/maps-gpt"
-            className="group flex items-center gap-10 text-[#1D1D1F] font-semibold transition-opacity"
+            className="group flex items-center gap-3 min-[640px]:gap-10 text-[#1D1D1F] font-semibold transition-opacity"
             style={{ fontSize: 20 }}
           >
             <span className="transition-colors duration-300 group-hover:text-[#2563EB]">Start Now</span>

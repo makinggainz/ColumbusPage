@@ -87,14 +87,14 @@ export const UniqueSpotsSection = () => {
 
         {/* Bottom CTA bar */}
         <div className="flex flex-wrap mt-24">
-          <div className="px-5 min-[1287px]:px-10 py-5 flex items-center flex-1 min-w-70" style={{ minHeight: 76, borderRight: gl, backgroundColor: "rgba(20, 41, 148, 0.07)" }}>
+          <div className="px-8 min-[1287px]:px-10 py-5 flex items-center flex-1 min-w-70" style={{ minHeight: 76, borderRight: gl, backgroundColor: "rgba(20, 41, 148, 0.07)" }}>
             <p className="text-[20px] font-medium text-[#1D1D1F] tracking-[-0.01em]">
               MapsGPT is a local guide in your pocket
             </p>
           </div>
           <a
             href="/maps-gpt"
-            className="group px-5 min-[1287px]:px-10 py-5 flex items-center justify-between hover:opacity-90 transition-opacity flex-1 min-w-70"
+            className="group px-8 min-[1287px]:px-10 py-5 flex items-center justify-between hover:opacity-90 transition-opacity flex-1 min-w-70"
             style={{ minHeight: 76, backgroundColor: "#000000" }}
           >
             <span className="text-white text-[20px] font-medium transition-colors duration-300 group-hover:text-[#2563EB]">Try it out</span>

@@ -77,7 +77,7 @@ export const BottleScene = ({ onBottleClick, visible }: { onBottleClick?: () => 
 
   // Bottle physics state
   const bottleRef = useRef({
-    wx: -400, wz: 200, wy: 0,
+    wx: 0, wz: 200, wy: 0,
     vx: 0, vz: 0,
     roll: 0, pitch: 0, heading: -0.4,
     rollVel: 0, pitchVel: 0,
@@ -211,7 +211,7 @@ export const BottleScene = ({ onBottleClick, visible }: { onBottleClick?: () => 
 
     if (visible && elapsed > 0 && !bottle.grounded) {
       // Wave-driven drift toward shore
-      const waveForceZ = 25; // push toward shore (increasing wz)
+      const waveForceZ = 30; // push toward shore (increasing wz)
       const waveForceLateral = Math.sin(t * 0.7) * 8; // gentle lateral sway
 
       // Current pushes bottle to shore
@@ -275,9 +275,9 @@ export const BottleScene = ({ onBottleClick, visible }: { onBottleClick?: () => 
       bottle.roll += (Math.sin(t * 0.8) * 0.03 - bottle.roll) * 0.02;
     } else {
       // Not visible yet — keep in starting position
-      bottle.wx = -400;
+      bottle.wx = 0;
       bottle.wz = 200;
-      bottle.wy = getHeight(-400, 200) + 5;
+      bottle.wy = getHeight(0, 200) + 5;
     }
 
     // ── Draw bottle ──
@@ -456,12 +456,12 @@ export const BottleScene = ({ onBottleClick, visible }: { onBottleClick?: () => 
 
     // Store bounds
     if (minSX < Infinity) {
-      const pad = 60;
+      const pad = 120;
       bottleBoundsRef.current = { x: minSX - pad, y: minSY - pad, w: maxSX - minSX + pad * 2, h: maxSY - minSY + pad * 2 };
     }
 
     // Hover hint
-    if (hoveringBottle && bottle.grounded) {
+    if (hoveringBottle) {
       const hintP = project(bottle.wx, bottle.wy + 55, bottle.wz);
       if (hintP) {
         ctx.save();
@@ -500,7 +500,7 @@ export const BottleScene = ({ onBottleClick, visible }: { onBottleClick?: () => 
 
     const onClick = (e: MouseEvent) => {
       const rect = cvs.getBoundingClientRect();
-      if (isInBottle(e.clientX - rect.left, e.clientY - rect.top) && bottleRef.current.grounded) {
+      if (isInBottle(e.clientX - rect.left, e.clientY - rect.top)) {
         onBottleClick?.();
       }
     };
