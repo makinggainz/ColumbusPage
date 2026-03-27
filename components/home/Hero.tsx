@@ -879,31 +879,30 @@ const WaveMesh = () => {
       const isHovered = dist < 22;
       if (isHovered) hoveredLocIdx = i;
 
-      const baseR = 4 * depthScale;
-      const dotR = isHovered ? baseR * 1.8 : baseR;
+      const pulse = Math.sin(t * 1.2 + i * 0.9) * 0.12;
+      const baseR = (2.5 + pulse) * depthScale;
+      const dotR = isHovered ? baseR * 2 : baseR;
 
-      if (isHovered) {
-        // Glow — only on hover
-        const glowR = dotR + 18 * depthScale;
-        const g = ctx.createRadialGradient(sx, sy, dotR * 0.3, sx, sy, glowR);
-        g.addColorStop(0, "rgba(37,99,235,0.5)");
-        g.addColorStop(1, "rgba(37,99,235,0)");
-        ctx.beginPath();
-        ctx.arc(sx, sy, glowR, 0, Math.PI * 2);
-        ctx.fillStyle = g;
-        ctx.fill();
-
-        // Bright center
-        ctx.beginPath();
-        ctx.arc(sx, sy, dotR * 0.4, 0, Math.PI * 2);
-        ctx.fillStyle = "rgba(147,197,253,0.85)";
-        ctx.fill();
-      }
+      // Outer glow
+      const glowR = dotR + (isHovered ? 18 : 10) * depthScale;
+      const g = ctx.createRadialGradient(sx, sy, dotR * 0.3, sx, sy, glowR);
+      g.addColorStop(0, `rgba(37,99,235,${(isHovered ? 0.5 : 0.18 + pulse * 0.3).toFixed(3)})`);
+      g.addColorStop(1, "rgba(37,99,235,0)");
+      ctx.beginPath();
+      ctx.arc(sx, sy, glowR, 0, Math.PI * 2);
+      ctx.fillStyle = g;
+      ctx.fill();
 
       // Core dot
       ctx.beginPath();
       ctx.arc(sx, sy, dotR, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(37,99,235,${isHovered ? 0.95 : 0.55})`;
+      ctx.fillStyle = `rgba(37,99,235,${isHovered ? 0.95 : 0.55 + pulse * 0.2})`;
+      ctx.fill();
+
+      // Bright center
+      ctx.beginPath();
+      ctx.arc(sx, sy, dotR * 0.4, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(147,197,253,${isHovered ? 0.85 : 0.35})`;
       ctx.fill();
 
       // Label (on hover)
