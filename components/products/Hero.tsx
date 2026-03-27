@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useRef, useEffect, useState, useCallback } from "react";
 import glassStyles from "@/components/ui/GlassButton.module.css";
 import { ConsumerEnterpriseToggle } from "@/components/enterprise/ConsumerEnterpriseToggle";
+import ShowcaseSection from "@/components/products/ShowcaseSection";
 
 const CANVAS_W     = 1728;
 const CANVAS_H     = 1756;
@@ -102,6 +103,7 @@ export default function Hero() {
   const badgeTitleRef           = useRef<HTMLDivElement>(null);
   const transitionPhoneRef      = useRef<HTMLDivElement>(null);
   const windContainerRef        = useRef<HTMLDivElement>(null);
+  const showcaseOverlayRef      = useRef<HTMLDivElement>(null);
   const phoneStartCapturedRef   = useRef(false);
   const phoneStartXRef          = useRef(0);
   const phoneStartYRef          = useRef(0);
@@ -505,6 +507,8 @@ export default function Hero() {
         if (tp) tp.style.display = "none";
         if (toggleRef.current)    toggleRef.current.style.opacity    = "1";
         if (badgeTitleRef.current) badgeTitleRef.current.style.opacity = "1";
+        const so = showcaseOverlayRef.current;
+        if (so) { so.style.opacity = "0"; so.style.display = "none"; }
         return;
       }
 
@@ -526,6 +530,9 @@ export default function Hero() {
       // Hide original phone spring wrapper
       if (phoneSpringWrapperRef.current) phoneSpringWrapperRef.current.style.opacity = "0";
 
+      // Phone pop/fade progress (65%–80% of raw)
+      const popT = Math.max(0, (raw - 0.65) / 0.15);
+
       // Move + fade transition phone
       const tp = transitionPhoneRef.current;
       if (tp && phoneStartCapturedRef.current) {
@@ -545,8 +552,6 @@ export default function Hero() {
         const currentX = startX + (endX - startX) * eased;
         const currentY = startY + (endY - startY) * eased;
 
-        // Phone pops (scale up) and fades out between 65%–80%
-        const popT         = Math.max(0, (raw - 0.65) / 0.15);
         const phoneOpacity = raw >= 0.65 ? Math.max(0, 1 - popT) : 1;
         const phoneScale   = 1 + popT * 0.18;
 
@@ -555,6 +560,15 @@ export default function Hero() {
         tp.style.opacity   = String(phoneOpacity);
         tp.style.transform = `scale(${phoneScale})`;
         tp.style.transformOrigin = "center center";
+      }
+
+      // Showcase overlay fades in as phone fades out (65%–80%)
+      const so = showcaseOverlayRef.current;
+      if (so) {
+        const showcaseOpacity = Math.max(0, Math.min(1, popT));
+        so.style.opacity = String(showcaseOpacity);
+        so.style.display = showcaseOpacity > 0 ? "block" : "none";
+        so.style.pointerEvents = showcaseOpacity >= 1 ? "auto" : "none";
       }
 
       // Wind explosion fires once at 65%
@@ -699,6 +713,25 @@ export default function Hero() {
 
           </div>
         </div>
+
+        {/* Showcase overlay — fades in as phone fades out, inside sticky section */}
+        <div
+          ref={showcaseOverlayRef}
+          style={{
+            position: "absolute",
+            top: -100,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            display: "none",
+            opacity: 0,
+            zIndex: 10,
+            pointerEvents: "none",
+            overflow: "hidden",
+          }}
+        >
+          <ShowcaseSection />
+        </div>
       </section>
 
       {/* Fixed transition phone — shown during scroll animation */}
@@ -738,6 +771,7 @@ export default function Hero() {
           overflow: "hidden",
         }}
       />
+
     </div>
   );
 }
