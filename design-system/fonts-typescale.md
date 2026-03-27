@@ -22,6 +22,23 @@ Only these sizes should be used. Do not invent intermediate values.
 
 ---
 
+## Responsive Scale
+
+Every heading steps down one scale level at mobile. Use Tailwind breakpoints — mobile-first (no prefix = mobile, `md:` = 768px+, `lg:` = 1024px+).
+
+| Role | Mobile | md: (768px+) | lg: (1024px+) |
+|------|--------|--------------|---------------|
+| Product heroes | `text-[39px]` | `md:text-[49px]` | `lg:text-[76px]` |
+| Section headings | `text-[31px]` | `md:text-[39px]` | `lg:text-[49px]` |
+| Secondary headings | `text-[25px]` | `md:text-[31px]` | `lg:text-[39px]` |
+| Subheadings | `text-[20px]` | `md:text-[20px]` | `lg:text-[25px]` |
+| Body large | `text-[16px]` | `md:text-[16px]` | `lg:text-[20px]` |
+| Hero heading | `text-[39px]` | `md:text-[49px]` | `lg:text-[61px]` |
+
+The hero heading (61px, weight 300, `#0A1344`) follows the same step-down pattern but keeps its unique weight and color at all sizes.
+
+---
+
 ## Font Weights
 
 | Weight | Name | When to use |

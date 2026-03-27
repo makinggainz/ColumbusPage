@@ -50,8 +50,8 @@ export const Industries = () => {
 
         {/* Cards row */}
         <div
-          className="flex justify-center items-stretch gap-1.5 px-8 md:px-10 pb-10"
-          style={anim(100)}
+          className="flex items-stretch gap-1.5 px-8 md:px-10 pb-10 overflow-x-auto md:justify-center"
+          style={{ scrollbarWidth: "none", ...anim(100) }}
         >
           {CARDS.map((card, i) => (
             <Link

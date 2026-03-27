@@ -238,9 +238,8 @@ export const TravelSection = () => {
       {/* Main content area with sand background — scroll-driven expansion */}
       <div
         ref={beachRef}
-        className="relative flex flex-col"
+        className="relative flex flex-col h-137.5 md:h-200 lg:h-250"
         style={{
-          height: 1000,
           clipPath: "inset(0 0 0 0 round 0px)",
           willChange: "clip-path",
         }}
@@ -260,9 +259,8 @@ export const TravelSection = () => {
           {/* Heading */}
           <h2
             ref={travelHeadingRef}
-            className="text-center text-[#1D1D1F] leading-[1.05] tracking-[-0.02em] mb-4"
+            className="text-center text-[#1D1D1F] leading-[1.05] tracking-[-0.02em] mb-4 text-[39px] md:text-[49px] lg:text-[76px]"
             style={{
-              fontSize: 76,
               fontWeight: 500,
               letterSpacing: "-0.02em",
               ...anim(0),
@@ -273,8 +271,8 @@ export const TravelSection = () => {
 
           {/* Subtitle */}
           <p
-            className="text-center mb-10"
-            style={{ fontSize: 20, color: "rgba(29,29,31,0.45)", letterSpacing: "-0.015em", fontWeight: 400, ...anim(100) }}
+            className="text-center mb-10 text-[16px] md:text-[20px]"
+            style={{ color: "rgba(29,29,31,0.45)", letterSpacing: "-0.015em", fontWeight: 400, ...anim(100) }}
           >
             Find your next hang out spot, easier
           </p>
@@ -289,7 +287,7 @@ export const TravelSection = () => {
           >
             {/* Desktop mockup */}
             <div
-              className="absolute overflow-hidden"
+              className="absolute overflow-hidden hidden md:block"
               style={{
                 left: "2%",
                 bottom: 0,
@@ -308,9 +306,8 @@ export const TravelSection = () => {
 
             {/* Mobile mockup */}
             <div
-              className="absolute overflow-hidden"
+              className="absolute overflow-hidden right-1/2 translate-x-1/2 md:right-[5%] md:translate-x-0"
               style={{
-                right: "5%",
                 bottom: 0,
                 height: "100%",
                 aspectRatio: "263 / 572",

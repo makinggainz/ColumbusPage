@@ -170,7 +170,7 @@ export const SiteSelection = () => {
             zIndex: 2,
           }}
         >
-          <div className="relative flex flex-col" style={{ height: 1000 }}>
+          <div className="relative flex flex-col h-137.5 md:h-200 lg:h-250">
             <Image
               ref={imgRef}
               src="/ProductBackgroundImageHome.png"
@@ -202,14 +202,14 @@ export const SiteSelection = () => {
               {/* Main heading */}
               <h2
                 ref={headingRef}
-                className="text-[#1D1D1F] text-center leading-[1.05] tracking-[-0.02em]"
-                style={{ fontSize: 76, fontWeight: 500, letterSpacing: "-0.02em" }}
+                className="text-[#1D1D1F] text-center leading-[1.05] tracking-[-0.02em] text-[39px] md:text-[49px] lg:text-[76px]"
+                style={{ fontWeight: 500, letterSpacing: "-0.02em" }}
               >
                 An Agentic GIS platform
               </h2>
 
               {/* Subtitle */}
-              <p className="mt-6 text-center" style={{ fontSize: 20, color: "rgba(29,29,31,0.45)", letterSpacing: "-0.015em", fontWeight: 400 }}>
+              <p className="mt-6 text-center text-[16px] md:text-[20px]" style={{ color: "rgba(29,29,31,0.45)", letterSpacing: "-0.015em", fontWeight: 400 }}>
                 Columbus turns you into a <span style={{ fontWeight: 600, color: "rgba(29,29,31,0.65)" }}>super-explorer.</span>
               </p>
 
@@ -220,7 +220,7 @@ export const SiteSelection = () => {
               <div className="relative flex-1 w-full max-w-[1287px] mx-auto mt-10">
                 {/* Desktop UI */}
                 <div
-                  className="absolute overflow-hidden"
+                  className="absolute overflow-hidden hidden md:block"
                   style={{
                     left: "2%",
                     bottom: 0,
@@ -239,9 +239,8 @@ export const SiteSelection = () => {
 
                 {/* Mobile UI */}
                 <div
-                  className="absolute overflow-hidden"
+                  className="absolute overflow-hidden right-1/2 translate-x-1/2 md:right-[5%] md:translate-x-0"
                   style={{
-                    right: "5%",
                     bottom: 0,
                     height: "100%",
                     aspectRatio: "263 / 572",

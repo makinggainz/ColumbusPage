@@ -53,7 +53,7 @@ export const GeoWarning = () => {
         <div className="relative" style={{ zIndex: 2 }}>
           <div className="max-w-[900px] mx-auto px-6">
             {/* Line 1 */}
-            <p className="text-center leading-[1.12] tracking-[-0.02em]" style={{ fontSize: "clamp(39px, 5vw, 49px)", fontWeight: 500 }}>
+            <p className="text-center leading-[1.12] tracking-[-0.02em]" style={{ fontSize: "clamp(25px, 5vw, 49px)", fontWeight: 500 }}>
               {LINE1_WORDS.map((word, i) => (
                 <span
                   key={i}
@@ -69,7 +69,7 @@ export const GeoWarning = () => {
             </p>
 
             {/* Line 2 */}
-            <p className="text-center leading-[1.25] tracking-[-0.01em] mt-6" style={{ fontSize: "clamp(25px, 3.5vw, 39px)", fontWeight: 500 }}>
+            <p className="text-center leading-[1.25] tracking-[-0.01em] mt-6" style={{ fontSize: "clamp(20px, 3.5vw, 39px)", fontWeight: 500 }}>
               {LINE2_WORDS.map((word, i) => {
                 const globalIdx = LINE1_COUNT + i;
                 const isCannot = word === "cannot";

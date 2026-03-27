@@ -1171,9 +1171,8 @@ export const Hero = () => {
 
           {/* Main Heading */}
           <h1
-            className="font-light leading-[1.2] text-[#0A1344]"
+            className="font-light leading-[1.2] text-[#0A1344] text-[39px] md:text-[49px] lg:text-[61px]"
             style={{
-              fontSize: 61,
               letterSpacing: "-0.02em",
               ...fadeIn(80),
             }}

@@ -394,8 +394,8 @@ export const Careers = () => {
         {/* TOP CENTER */}
         <div className="text-center mb-36 md:mb-44">
           <h2
-            className="font-medium tracking-[-0.02em] leading-[1.05] mb-5"
-            style={{ fontSize: 49, color: "#1D1D1F" }}
+            className="font-medium tracking-[-0.02em] leading-[1.05] mb-5 text-[31px] md:text-[39px] lg:text-[49px]"
+            style={{ color: "#1D1D1F" }}
           >
             Hiring{" "}
             <span
@@ -412,7 +412,7 @@ export const Careers = () => {
               Humans.
             </span>
           </h2>
-          <p style={{ fontSize: 20, color: "rgba(29,29,31,0.45)", letterSpacing: "-0.015em", fontWeight: 400 }}>
+          <p className="text-[16px] md:text-[20px]" style={{ color: "rgba(29,29,31,0.45)", letterSpacing: "-0.015em", fontWeight: 400 }}>
             Our team is based in Washington DC and Madrid.
           </p>
         </div>
@@ -420,13 +420,13 @@ export const Careers = () => {
         {/* TITLE + DESCRIPTION */}
         <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-start mb-6 md:mb-8">
           <h3
-            className="font-medium tracking-[-0.02em] leading-[1.12]"
-            style={{ fontSize: 39, color: "#1D1D1F" }}
+            className="font-medium tracking-[-0.02em] leading-[1.12] text-[25px] md:text-[31px] lg:text-[39px]"
+            style={{ color: "#1D1D1F" }}
           >
             Careers &amp; investment queries
           </h3>
 
-          <p className="md:text-right" style={{ fontSize: 20, color: "rgba(29,29,31,0.45)", letterSpacing: "-0.015em", fontWeight: 400 }}>
+          <p className="md:text-right text-[16px] md:text-[20px]" style={{ color: "rgba(29,29,31,0.45)", letterSpacing: "-0.015em", fontWeight: 400 }}>
             If you&apos;re excited about creating paradigm<br />
             shifts in physical world understanding.{" "}
             <span style={{ fontWeight: 600, color: "rgba(29,29,31,0.8)" }}>Join us now.</span>

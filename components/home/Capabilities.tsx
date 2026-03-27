@@ -249,8 +249,12 @@ export const Capabilities = () => {
       current += (target - current) * lerp;
       if (Math.abs(target - current) < 0.001) current = target;
 
-      const scale = 1 + 0.07 * current;
-      content.style.transform = `scale(${scale})`;
+      if (window.innerWidth >= 1375) {
+        const scale = 1 + 0.07 * current;
+        content.style.transform = `scale(${scale})`;
+      } else {
+        content.style.transform = "scale(1)";
+      }
 
       if (Math.abs(target - current) > 0.0005) {
         rafId = requestAnimationFrame(tick);
@@ -263,9 +267,19 @@ export const Capabilities = () => {
       if (!running) { running = true; lastTime = 0; rafId = requestAnimationFrame(tick); }
     };
 
+    const onResize = () => {
+      if (content && window.innerWidth < 1375) {
+        content.style.transform = "scale(1)";
+        current = 0;
+      } else {
+        startTick();
+      }
+    };
+
     window.addEventListener("scroll", startTick, { passive: true });
+    window.addEventListener("resize", onResize, { passive: true });
     startTick();
-    return () => { window.removeEventListener("scroll", startTick); cancelAnimationFrame(rafId); };
+    return () => { window.removeEventListener("scroll", startTick); window.removeEventListener("resize", onResize); cancelAnimationFrame(rafId); };
   }, []);
 
   useEffect(() => {
@@ -288,11 +302,11 @@ export const Capabilities = () => {
   };
 
   return (
-    <GridSection style={{ borderTop: "none", paddingTop: 100, position: "relative", zIndex: 1 }}>
+    <GridSection style={{ borderTop: "none", position: "relative", zIndex: 1 }}>
       <div ref={sectionRef} style={{ overflow: "visible" }}>
         {/* Header */}
         <div
-          className="flex items-center justify-center px-8 md:px-10 pt-6 pb-12"
+          className="flex items-center justify-center px-8 md:px-10 pt-24 pb-12"
           style={{
             position: "relative",
             zIndex: 2,
@@ -368,7 +382,7 @@ export const Capabilities = () => {
           </div>
 
           {/* Desktop layout: sidebar + map */}
-          <div ref={contentRef} className="relative w-full overflow-hidden flex max-md:hidden rounded-lg h-[673px] max-lg:h-[520px]" style={{ transformOrigin: "center center", willChange: "transform" }}>
+          <div ref={contentRef} className="capabilities-scale relative w-full overflow-hidden flex max-md:hidden rounded-lg h-[673px] max-lg:h-[520px]" style={{ transformOrigin: "center center", willChange: "transform" }}>
             {/* Sidebar */}
             <div className="w-[348px] max-lg:w-[280px] shrink-0 text-white flex flex-col overflow-hidden h-full border-[0.7px] border-[var(--grid-line)] border-r-0 rounded-l-lg">
               {SIDEBAR_ITEMS.map((item) => (
