@@ -69,7 +69,7 @@
 //             <div key={i} className="flex flex-col">
 
 //               {/* IMAGE */}
-//               <div className="relative h-[866px] overflow-hidden">
+//               <div className="relative h-[674px] overflow-hidden">
 
 //                 <Image
 //                   src={item.img}
@@ -140,8 +140,28 @@
 "use client";
 
 import Image from "next/image";
+import { useEffect, useRef, useState } from "react";
 
 export default function IndustryGrid() {
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) { setVisible(true); obs.disconnect(); } },
+      { threshold: 0.1 }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+
+  const anim = (delay = 0): React.CSSProperties => ({
+    opacity: visible ? 1 : 0,
+    transform: visible ? "translateY(0)" : "translateY(16px)",
+    transition: `opacity 0.7s ease ${delay}ms, transform 0.7s ease ${delay}ms`,
+  });
 
   const industries = [
     { title: "Commercial Real Estate", img: "/use-cases/comercial.png" },
@@ -190,12 +210,12 @@ export default function IndustryGrid() {
   ];
 
   return (
-    <section className="w-full bg-black py-[120px] flex justify-center">
+    <section className="w-full bg-black flex justify-center">
 
-      <div className="w-full max-w-[1728px] px-6">
+      <div ref={sectionRef} className="section-lines-dark w-full max-w-[1287px] mx-auto py-[120px]">
 
         {/* TITLE */}
-        <h2 className="text-center mb-[48px] max-md:mb-[36px]">
+        <h2 className="text-center mb-[48px] max-md:mb-[36px] px-8 md:px-10" style={anim(0)}>
           <span
             className="inline-block text-[64px] font-semibold max-md:text-[36px] bg-gradient-to-b from-[#EBEBEB] to-[#A6A6A6] bg-clip-text text-transparent"
             style={{
@@ -210,7 +230,7 @@ export default function IndustryGrid() {
         </h2>
 
         {/* GRID */}
-        <div className="grid grid-cols-3 gap-y-[40px] gap-x-0 max-lg:grid-cols-2 max-md:grid-cols-1">
+        <div className="grid grid-cols-3 gap-y-[40px] gap-x-0 max-lg:grid-cols-2 max-md:grid-cols-1" style={anim(100)}>
 
           {industries.map((item, i) => (
             <a
@@ -220,7 +240,7 @@ export default function IndustryGrid() {
             >
 
               {/* IMAGE */}
-              <div className="relative h-[866px] overflow-hidden">
+              <div className="relative h-[674px] overflow-hidden">
 
                 <Image
                   src={item.img}
@@ -257,21 +277,29 @@ export default function IndustryGrid() {
                   )}
 
                   {/* Buttons */}
-                  <div className="flex items-center justify-center gap-6">
+                  <div className="flex items-center justify-center gap-4">
 
                     <button
                       type="button"
-                      className="cursor-pointer border border-white rounded-full px-6 py-2 text-[14px] hover:bg-white hover:text-black transition"
+                      className="group flex items-center gap-3 leading-none whitespace-nowrap hover:opacity-90 transition-all duration-300"
+                      style={{ fontSize: 14, fontWeight: 500, height: 45, paddingLeft: 20, paddingRight: 16, backgroundColor: "white", color: "#1D1D1F" }}
                     >
-                      Talk to us
+                      <span className="transition-colors duration-300 group-hover:text-[#2563EB]">Talk to us</span>
+                      <svg className="transition-transform duration-300 group-hover:translate-x-0.5" width="10" height="18" viewBox="0 0 7 12" fill="none" stroke="#2563EB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M1 1l5 5-5 5" />
+                      </svg>
                     </button>
 
                     {item.overlay?.showLearnMore && (
                       <button
                         type="button"
-                        className="cursor-pointer text-white text-[14px] flex items-center gap-1 hover:underline"
+                        className="group flex items-center gap-3 leading-none whitespace-nowrap hover:opacity-90 transition-all duration-300"
+                        style={{ fontSize: 14, fontWeight: 500, height: 45, paddingLeft: 20, paddingRight: 16, backgroundColor: "white", color: "#1D1D1F" }}
                       >
-                        Learn more →
+                        <span className="transition-colors duration-300 group-hover:text-[#2563EB]">Learn more</span>
+                        <svg className="transition-transform duration-300 group-hover:translate-x-0.5" width="10" height="18" viewBox="0 0 7 12" fill="none" stroke="#2563EB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M1 1l5 5-5 5" />
+                        </svg>
                       </button>
                     )}
 

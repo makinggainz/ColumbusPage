@@ -78,6 +78,8 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
                 { threshold: 0 }
             );
             ctaObs.observe(cta);
+        } else {
+            setShowLinks(true);
         }
 
         // Hide navbar when footer is in view
@@ -210,8 +212,8 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
         fontSize: compact ? 14 : 15,
         fontWeight: 400,
         letterSpacing: "-0.0025em",
-        color: "#111111",
-        transition: `font-size ${t}`,
+        color: navColor,
+        transition: `font-size ${t}, color ${t}`,
     });
 
     return (

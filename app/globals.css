@@ -34,6 +34,34 @@ html {
   --grid-line: rgba(120, 120, 200, 0.2);
 }
 
+/* Dark section lateral constraint lines — for use-cases dark sections */
+.section-lines-dark {
+  position: relative;
+  isolation: isolate;
+}
+.section-lines-dark::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1px;
+  height: 100%;
+  background: linear-gradient(to bottom, transparent 0px, rgba(255,255,255,0.12) 72px, rgba(255,255,255,0.12) calc(100% - 72px), transparent 100%);
+  pointer-events: none;
+  z-index: 1;
+}
+.section-lines-dark::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 1px;
+  height: 100%;
+  background: linear-gradient(to bottom, transparent 0px, rgba(255,255,255,0.12) 72px, rgba(255,255,255,0.12) calc(100% - 72px), transparent 100%);
+  pointer-events: none;
+  z-index: 1;
+}
+
 /* Grid-based content layout — collapse borders between stacked sections */
 .grid-section {
   position: relative;

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -50,6 +50,25 @@ export default function AgenticResearch() {
   const [openId, setOpenId] = useState<string>("research");
   const [userHasTapped, setUserHasTapped] = useState(false);
   const [contentOpacity, setContentOpacity] = useState(1);
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) { setVisible(true); obs.disconnect(); } },
+      { threshold: 0.1 }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+
+  const anim = (delay = 0): React.CSSProperties => ({
+    opacity: visible ? 1 : 0,
+    transform: visible ? "translateY(0)" : "translateY(16px)",
+    transition: `opacity 0.7s ease ${delay}ms, transform 0.7s ease ${delay}ms`,
+  });
 
   useEffect(() => {
     if (userHasTapped) return;
@@ -69,15 +88,15 @@ export default function AgenticResearch() {
   };
 
   return (
-    <section className="w-full bg-black py-[120px] flex justify-center">
-      <div className="w-full max-w-screen-2xl px-[var(--page-padding)]">
+    <section className="w-full bg-black flex justify-center">
+      <div ref={sectionRef} className="section-lines-dark w-full max-w-[1287px] mx-auto px-8 md:px-10 py-[120px]">
 
-        <h2 className="text-white text-[32px] font-semibold mb-[30px] max-md:text-[28px]">
+        <h2 className="text-white text-[48px] font-semibold tracking-[-0.02em] mb-[30px] max-md:text-[28px]" style={anim(0)}>
           Agentic geospatial research
         </h2>
 
         {/* MOBILE SIDEBAR */}
-        <div className="hidden max-md:flex max-md:flex-col max-md:h-[420px] overflow-hidden rounded-lg mb-6 border-[0.7px] border-white/50">
+        <div className="hidden max-md:flex max-md:flex-col max-md:h-[420px] overflow-hidden rounded-lg mb-6 border-[0.7px] border-white/50" style={anim(100)}>
           {SIDEBAR_ITEMS.map((item) => (
             <button
               key={item.id}
@@ -120,7 +139,7 @@ export default function AgenticResearch() {
         </div>
 
         {/* DESKTOP: sidebar + main content (same layout as E/F) */}
-        <div className="flex flex-col md:flex-row overflow-hidden gap-0 min-h-0">
+        <div className="flex flex-col md:flex-row overflow-hidden gap-0 min-h-0" style={anim(100)}>
           <div
             className="hidden md:flex w-[348px] max-lg:w-[280px] flex-shrink-0 text-white flex-col overflow-hidden h-[674px] max-lg:h-[520px] border-[0.7px] border-white/50 border-r-0 rounded-l-lg"
           >
