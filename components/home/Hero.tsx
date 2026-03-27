@@ -1004,19 +1004,154 @@ const WaveMesh = () => {
   );
 };
 
+/* ── Typing text constants ── */
+const EYEBROW_TEXT = "FRONTIER AI RESEARCH & PRODUCT COMPANY";
+const HEADING_LINE1 = "Building the first in\u2011production";
+const HEADING_LINE2 = "Large Geospatial Model.";
+const WORDMARK_TEXT = "Columbus Earth";
+
+const EYEBROW_SPEED = 28;
+const HEADING_SPEED = 35;
+const WORDMARK_SPEED = 45;
+const PHASE_GAP = 150;
+const LOGO_TRAVEL_MS = 600;
+
 /* ── Hero Section ── */
 export const Hero = () => {
-  const [mounted, setMounted] = useState(false);
-  const [hasScrolled, setHasScrolled] = useState(false);
+  const [phase, setPhase] = useState<"eyebrow" | "h1" | "h2" | "toNavbar" | "wordmark" | "done">("eyebrow");
+  const [eyebrowChars, setEyebrowChars] = useState(0);
+  const [h1Chars, setH1Chars] = useState(0);
+  const [h2Chars, setH2Chars] = useState(0);
+  const [wordmarkChars, setWordmarkChars] = useState(0);
+  const [revealed, setRevealed] = useState(false);
+  const [logoNavbar, setLogoNavbar] = useState(false);
   const [vignetteOpacity, setVignetteOpacity] = useState(0);
   const sectionRef = useRef<HTMLElement>(null);
+  const eyebrowRef = useRef<HTMLParagraphElement>(null);
+  const h1Ref = useRef<HTMLSpanElement>(null);
+  const h2Ref = useRef<HTMLSpanElement>(null);
+  const phaseRef = useRef(phase);
+  phaseRef.current = phase;
+  const revealedRef = useRef(false);
 
-  useEffect(() => {
-    const raf = requestAnimationFrame(() => setMounted(true));
-    return () => cancelAnimationFrame(raf);
+  // Logo target position (for text-following phase)
+  const [logoPos, setLogoPos] = useState({ x: 32, y: 120, size: 40, opacity: 0 });
+  // Navbar logo target (measured from actual DOM element)
+  const [navTarget, setNavTarget] = useState({ x: 32, y: 20, w: 40 });
+  const [logoPopped, setLogoPopped] = useState(false);
+
+  // Measure text element positions for logo placement
+  const updateLogoTarget = useCallback(() => {
+    let targetEl: HTMLElement | null = null;
+    if (phaseRef.current === "eyebrow") targetEl = eyebrowRef.current;
+    else if (phaseRef.current === "h1") targetEl = h1Ref.current;
+    else if (phaseRef.current === "h2") targetEl = h2Ref.current;
+
+    if (targetEl) {
+      const rect = targetEl.getBoundingClientRect();
+      setLogoPos({ x: rect.left - 48, y: rect.top + rect.height / 2 - 20, size: 40, opacity: 1 });
+    }
   }, []);
 
-  // Scroll-driven vignette: fades in/out based on how far user has scrolled through hero
+  // Measure the real navbar logo element position
+  const measureNavbarLogo = useCallback(() => {
+    const el = document.querySelector("[data-navbar-logo]");
+    if (el) {
+      const rect = el.getBoundingClientRect();
+      setNavTarget({ x: rect.left, y: rect.top, w: rect.width || 40 });
+    }
+  }, []);
+
+  useEffect(() => {
+    measureNavbarLogo();
+    window.addEventListener("resize", measureNavbarLogo, { passive: true });
+    return () => window.removeEventListener("resize", measureNavbarLogo);
+  }, [measureNavbarLogo]);
+
+  // Pop-in: place logo at eyebrow position first (no transition), then pop scale
+  useEffect(() => {
+    // Frame 1: measure and set position instantly (opacity still 0, no visual)
+    const posTimer = setTimeout(() => updateLogoTarget(), 50);
+    // Frame 2: trigger the pop-in scale animation after position is set
+    const popTimer = setTimeout(() => setLogoPopped(true), 150);
+    return () => { clearTimeout(posTimer); clearTimeout(popTimer); };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const triggerReveal = useCallback(() => {
+    if (revealedRef.current) return;
+    revealedRef.current = true;
+    setRevealed(true);
+    window.dispatchEvent(new CustomEvent("hero-reveal"));
+  }, []);
+
+  // Typing animation driver
+  useEffect(() => {
+    let rafId: number;
+    let startTime = performance.now();
+    const initialDelay = 300;
+
+    const tick = () => {
+      const elapsed = performance.now() - startTime - initialDelay;
+      if (elapsed < 0) { rafId = requestAnimationFrame(tick); return; }
+
+      const p = phaseRef.current;
+
+      if (p === "eyebrow") {
+        const chars = Math.min(EYEBROW_TEXT.length, Math.floor(elapsed / EYEBROW_SPEED));
+        setEyebrowChars(chars);
+        updateLogoTarget();
+        if (chars >= EYEBROW_TEXT.length) { startTime = performance.now(); setPhase("h1"); }
+      } else if (p === "h1") {
+        if (elapsed < PHASE_GAP) { rafId = requestAnimationFrame(tick); return; }
+        const chars = Math.min(HEADING_LINE1.length, Math.floor((elapsed - PHASE_GAP) / HEADING_SPEED));
+        setH1Chars(chars);
+        updateLogoTarget();
+        if (chars >= HEADING_LINE1.length) { startTime = performance.now(); setPhase("h2"); }
+      } else if (p === "h2") {
+        if (elapsed < PHASE_GAP) { rafId = requestAnimationFrame(tick); return; }
+        const chars = Math.min(HEADING_LINE2.length, Math.floor((elapsed - PHASE_GAP) / HEADING_SPEED));
+        setH2Chars(chars);
+        updateLogoTarget();
+        if (chars >= HEADING_LINE2.length) { startTime = performance.now(); measureNavbarLogo(); setPhase("toNavbar"); setLogoNavbar(true); }
+      } else if (p === "toNavbar") {
+        // Wait for logo CSS transition to navbar position
+        if (elapsed > LOGO_TRAVEL_MS) { startTime = performance.now(); setPhase("wordmark"); }
+      } else if (p === "wordmark") {
+        const chars = Math.min(WORDMARK_TEXT.length, Math.floor(elapsed / WORDMARK_SPEED));
+        setWordmarkChars(chars);
+        if (chars >= WORDMARK_TEXT.length) {
+          triggerReveal();
+          setPhase("done");
+        }
+      }
+
+      if (p !== "done") rafId = requestAnimationFrame(tick);
+    };
+
+    rafId = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(rafId);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Skip to reveal on scroll
+  useEffect(() => {
+    const onScroll = () => {
+      if (phaseRef.current === "done") return;
+      setEyebrowChars(EYEBROW_TEXT.length);
+      setH1Chars(HEADING_LINE1.length);
+      setH2Chars(HEADING_LINE2.length);
+      setWordmarkChars(WORDMARK_TEXT.length);
+      setLogoNavbar(true);
+      triggerReveal();
+      setPhase("done");
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Scroll-driven vignette
   useEffect(() => {
     const onScroll = () => {
       const el = sectionRef.current;
@@ -1024,167 +1159,123 @@ export const Hero = () => {
       const rect = el.getBoundingClientRect();
       const scrolled = -rect.top;
       const total = el.offsetHeight - window.innerHeight;
-      const progress = Math.max(0, Math.min(1, scrolled / total));
-      setVignetteOpacity(progress);
+      setVignetteOpacity(Math.max(0, Math.min(1, scrolled / total)));
     };
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  useEffect(() => {
-    let unlockTimer: ReturnType<typeof setTimeout>;
+  const showCursor = phase === "eyebrow" || phase === "h1" || phase === "h2" || phase === "wordmark";
+  const logoInNavbar = logoNavbar || phase === "toNavbar" || phase === "wordmark" || phase === "done";
 
-    const onWheel = (e: WheelEvent) => {
-      if (!hasScrolled) {
-        e.preventDefault();
-        setHasScrolled(true);
-        // Signal the navbar to fade in too
-        window.dispatchEvent(new CustomEvent("hero-reveal"));
-        // Keep scroll locked for 2s while fade-in plays
-        unlockTimer = setTimeout(() => {
-          window.removeEventListener("wheel", onWheel);
-        }, 2000);
-      }
-    };
-
-    const onTouchMove = (e: TouchEvent) => {
-      if (!hasScrolled) {
-        e.preventDefault();
-        setHasScrolled(true);
-        window.dispatchEvent(new CustomEvent("hero-reveal"));
-        unlockTimer = setTimeout(() => {
-          window.removeEventListener("touchmove", onTouchMove);
-        }, 2000);
-      }
-    };
-
-    // Block scrolling until 2s after first scroll attempt
-    document.body.style.overflow = "hidden";
-
-    window.addEventListener("wheel", onWheel, { passive: false });
-    window.addEventListener("touchmove", onTouchMove, { passive: false });
-
-    return () => {
-      clearTimeout(unlockTimer);
-      document.body.style.overflow = "";
-      window.removeEventListener("wheel", onWheel);
-      window.removeEventListener("touchmove", onTouchMove);
-    };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  // Unlock scroll 2s after hasScrolled becomes true
-  useEffect(() => {
-    if (!hasScrolled) return;
-    const timer = setTimeout(() => {
-      document.body.style.overflow = "";
-    }, 2000);
-    return () => clearTimeout(timer);
-  }, [hasScrolled]);
-
-  const fadeIn = (delay: number): React.CSSProperties => ({
-    opacity: mounted ? 1 : 0,
-    filter: mounted ? "blur(0px)" : "blur(8px)",
-    transform: mounted ? "translateY(0px)" : "translateY(18px)",
-    transition: `opacity 1000ms ease ${delay}ms, filter 1000ms ease ${delay}ms, transform 1000ms ease ${delay}ms`,
-  });
+  // 3 transition states: pre-pop (none), text-following (position), navbar-bound (all)
+  const ease = "cubic-bezier(0.22,1,0.36,1)";
+  const logoTransition = !logoPopped
+    ? "none"
+    : logoInNavbar
+      ? `left ${LOGO_TRAVEL_MS}ms ${ease}, top ${LOGO_TRAVEL_MS}ms ${ease}, width ${LOGO_TRAVEL_MS}ms ${ease}, height ${LOGO_TRAVEL_MS}ms ${ease}, opacity 0.3s ${ease} 0.1s, transform 0.01s`
+      : `left 0.3s ${ease}, top 0.3s ${ease}, opacity 0.3s ${ease}, transform 0.45s ${ease}`;
 
   return (
     <section
       ref={sectionRef}
       className="relative overflow-hidden flex flex-col"
-      style={{
-        background: "#F9F9F9",
-        minHeight: "calc(100vh + 300px)",
-      }}
+      style={{ background: "#F9F9F9", minHeight: "calc(100vh + 300px)" }}
     >
-      {/* Mesh — absolutely positioned, fills entire section */}
+      {/* Animated logo — pops in at eyebrow, follows text lines, flies to navbar */}
       <div
-        className="absolute inset-0"
+        className="fixed z-50 pointer-events-none"
         style={{
-          opacity: hasScrolled ? 1 : 0,
-          transition: "opacity 1200ms ease",
+          left: logoInNavbar ? navTarget.x : logoPos.x,
+          top: logoInNavbar ? navTarget.y : logoPos.y,
+          width: logoInNavbar ? navTarget.w : logoPos.size,
+          height: logoInNavbar ? navTarget.w : logoPos.size,
+          opacity: phase === "done" ? 0 : (logoPopped ? logoPos.opacity : 0),
+          transform: logoPopped ? "scale(1)" : "scale(0.3)",
+          transition: logoTransition,
         }}
       >
+        <img src="/logobueno.png" alt="" className="w-full h-full object-contain" />
+      </div>
+
+      {/* Wordmark typing — appears fixed next to logo in navbar position */}
+      {(phase === "wordmark" || phase === "done") && (
+        <div
+          className="fixed z-50 pointer-events-none brand-wordmark font-medium leading-none whitespace-nowrap text-[#0A1344]"
+          style={{
+            left: navTarget.x + navTarget.w + 8,
+            top: navTarget.y + navTarget.w / 2,
+            fontSize: 24,
+            letterSpacing: "-0.02em",
+            opacity: phase === "done" ? 0 : 1,
+            transition: "opacity 0.3s ease",
+            transform: "translateY(-50%)",
+          }}
+        >
+          {WORDMARK_TEXT.slice(0, wordmarkChars)}
+          {showCursor && phase === "wordmark" && (
+            <span className="inline-block w-0.5 h-[0.85em] bg-[#0A1344]/40 ml-0.5 align-text-bottom" style={{ animation: "heroCursorBlink 1s step-end infinite" }} />
+          )}
+        </div>
+      )}
+
+      {/* Mesh */}
+      <div className="absolute inset-0" style={{ opacity: revealed ? 1 : 0, transition: "opacity 1200ms ease" }}>
         <WaveMesh />
       </div>
 
-      {/* Top gradient — fades text area into mesh */}
+      {/* Top gradient */}
       <div
         className="absolute left-0 right-0 pointer-events-none"
         style={{
-          top: "calc(100vh * 0.22)",
-          height: "calc(100vh * 0.18)",
+          top: "calc(100vh * 0.22)", height: "calc(100vh * 0.18)",
           background: "linear-gradient(to bottom, #F9F9F9, transparent)",
-          zIndex: 1,
-          opacity: hasScrolled ? 1 : 0,
-          transition: "opacity 1200ms ease",
+          zIndex: 1, opacity: revealed ? 1 : 0, transition: "opacity 1200ms ease",
         }}
         aria-hidden
       />
 
-      {/* Bottom gradient — smooth transition from mesh ocean into content */}
+      {/* Bottom gradient */}
       <div
         className="absolute left-0 right-0 bottom-0 pointer-events-none"
         style={{
-          height: 300,
-          background: "linear-gradient(to bottom, transparent, #ffffff)",
-          zIndex: 3,
-          opacity: hasScrolled ? 1 : 0,
-          transition: "opacity 1200ms ease",
+          height: 300, background: "linear-gradient(to bottom, transparent, #ffffff)",
+          zIndex: 3, opacity: revealed ? 1 : 0, transition: "opacity 1200ms ease",
         }}
         aria-hidden
       />
 
-      {/* Side vignette gradients — scroll-driven opacity */}
-      <div
-        className="absolute top-0 bottom-0 left-0 pointer-events-none"
-        style={{
-          width: "30%",
-          background: "linear-gradient(to right, #F9F9F9 0%, transparent 100%)",
-          zIndex: 1,
-          opacity: vignetteOpacity,
-        }}
-        aria-hidden
-      />
-      <div
-        className="absolute top-0 bottom-0 right-0 pointer-events-none"
-        style={{
-          width: "30%",
-          background: "linear-gradient(to left, #F9F9F9 0%, transparent 100%)",
-          zIndex: 1,
-          opacity: vignetteOpacity,
-        }}
-        aria-hidden
-      />
+      {/* Side vignettes */}
+      <div className="absolute top-0 bottom-0 left-0 pointer-events-none" style={{ width: "30%", background: "linear-gradient(to right, #F9F9F9 0%, transparent 100%)", zIndex: 1, opacity: vignetteOpacity }} aria-hidden />
+      <div className="absolute top-0 bottom-0 right-0 pointer-events-none" style={{ width: "30%", background: "linear-gradient(to left, #F9F9F9 0%, transparent 100%)", zIndex: 1, opacity: vignetteOpacity }} aria-hidden />
 
-      {/* Hero text — fades in immediately on mount */}
+      {/* Hero text */}
       <Container className="relative z-10 pt-24 md:pt-32" style={{ maxWidth: 1287 }}>
         <div className="max-w-292">
-          {/* Eyebrow */}
-          <p
-            className="text-sm md:text-base font-medium tracking-tight text-[#0A1344] uppercase mb-4 mt-15"
-            style={fadeIn(0)}
-          >
-            FRONTIER AI RESEARCH & PRODUCT COMPANY
+          {/* Eyebrow — typed */}
+          <p ref={eyebrowRef} className="text-sm md:text-base font-medium tracking-tight text-[#0A1344] uppercase mb-4 mt-15" style={{ minHeight: "1.5em" }}>
+            {EYEBROW_TEXT.slice(0, eyebrowChars)}
+            {showCursor && phase === "eyebrow" && <span className="inline-block w-0.5 h-[1em] bg-[#0A1344]/40 ml-0.5 align-text-bottom" style={{ animation: "heroCursorBlink 1s step-end infinite" }} />}
           </p>
 
-          {/* Main Heading */}
-          <h1
-            className="font-light leading-[1.2] text-[#0A1344] text-[39px] md:text-[49px] lg:text-[61px]"
-            style={{
-              letterSpacing: "-0.02em",
-              ...fadeIn(80),
-            }}
-          >
-            Building the first in&#8209;production<br />Large Geospatial Model.
+          {/* Heading — typed line by line */}
+          <h1 className="font-light leading-[1.2] text-[#0A1344] text-[39px] md:text-[49px] lg:text-[61px]" style={{ letterSpacing: "-0.02em" }}>
+            <span ref={h1Ref}>
+              {HEADING_LINE1.slice(0, h1Chars)}
+              {showCursor && phase === "h1" && <span className="inline-block w-0.5 h-[0.85em] bg-[#0A1344]/40 ml-0.5 align-text-bottom" style={{ animation: "heroCursorBlink 1s step-end infinite" }} />}
+            </span>
+            {h1Chars > 0 && <br />}
+            <span ref={h2Ref}>
+              {HEADING_LINE2.slice(0, h2Chars)}
+              {showCursor && phase === "h2" && <span className="inline-block w-0.5 h-[0.85em] bg-[#0A1344]/40 ml-0.5 align-text-bottom" style={{ animation: "heroCursorBlink 1s step-end infinite" }} />}
+            </span>
           </h1>
 
-          {/* CTA + Nav links — appear after scroll */}
+          {/* CTA + Nav links — appear after reveal */}
           <div id="hero-cta" className="flex items-center gap-8 mt-7" style={{
-            opacity: hasScrolled ? 1 : 0,
-            filter: hasScrolled ? "blur(0px)" : "blur(8px)",
-            transform: hasScrolled ? "translateY(0px)" : "translateY(18px)",
+            opacity: revealed ? 1 : 0,
+            filter: revealed ? "blur(0px)" : "blur(8px)",
+            transform: revealed ? "translateY(0px)" : "translateY(18px)",
             transition: "opacity 1000ms ease 200ms, filter 1000ms ease 200ms, transform 1000ms ease 200ms",
           }}>
             <a
@@ -1193,11 +1284,7 @@ export const Hero = () => {
               style={{ width: 145, height: 45, marginRight: 16, paddingLeft: 20, paddingRight: 16, fontSize: 16, fontWeight: 500, backgroundColor: "#000000", color: "white" }}
             >
               <span className="transition-colors duration-300 group-hover:text-[#2563EB]">Contact</span>
-              <svg
-                className="transition-transform duration-300 group-hover:translate-x-0.5"
-                width="10" height="18" viewBox="0 0 7 12" fill="none"
-                stroke="#2563EB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"
-              >
+              <svg className="transition-transform duration-300 group-hover:translate-x-0.5" width="10" height="18" viewBox="0 0 7 12" fill="none" stroke="#2563EB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M1 1l5 5-5 5" />
               </svg>
             </a>
@@ -1220,6 +1307,13 @@ export const Hero = () => {
           </div>
         </div>
       </Container>
+
+      <style jsx global>{`
+        @keyframes heroCursorBlink {
+          0%, 49% { opacity: 1; }
+          50%, 100% { opacity: 0; }
+        }
+      `}</style>
     </section>
   );
 };

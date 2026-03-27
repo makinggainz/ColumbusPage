@@ -230,12 +230,14 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
                             <div className="flex items-center">
                                 <Link href="/" className="flex w-fit shrink-0 items-center gap-2" onMouseEnter={handleNavMouseEnter}>
                                     <div
+                                        data-navbar-logo
                                         className="relative shrink-0"
                                         style={{
                                             width: isCompact ? 30 : 40,
                                             height: isCompact ? 30 : 40,
-                                            transition: `width ${t}, height ${t}, filter ${t}`,
+                                            transition: `width ${t}, height ${t}, filter ${t}, opacity 0.4s ease`,
                                             filter: (isDark && !isMenuOpen) ? "brightness(0) invert(1)" : "none",
+                                            opacity: hasScrolled ? 1 : 0,
                                         }}
                                     >
                                         <Image
@@ -252,7 +254,8 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
                                         style={{
                                             fontSize: isCompact ? 20 : 24,
                                             letterSpacing: "-0.02em",
-                                            transition: `font-size ${t}`,
+                                            transition: `font-size ${t}, opacity 0.4s ease`,
+                                            opacity: hasScrolled ? 1 : 0,
                                         }}
                                     >
                                         Columbus Earth
