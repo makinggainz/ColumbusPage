@@ -219,7 +219,7 @@ export const TravelSection = () => {
             MapsGPT <span className="font-normal">– AI-powered social map</span>
           </span>
           <Link
-            href="/maps-gpt"
+            href="https://www.mapsgpt.es/"
             className="group flex items-center gap-10 font-semibold transition-opacity"
             style={{ fontSize: 20, color: "#1D1D1F" }}
           >

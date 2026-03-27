@@ -104,7 +104,7 @@ export const Industries = () => {
             </p>
           </div>
           <Link
-            href="/use-cases"
+            href="/enterprise"
             className="group px-10 flex items-center justify-between hover:opacity-90 transition-opacity"
             style={{ height: 76, backgroundColor: "#000000" }}
           >
