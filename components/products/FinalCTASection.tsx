@@ -2,14 +2,28 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useState, useEffect, useRef } from "react";
 import glassStyles from "@/components/ui/GlassButton.module.css";
 
 export default function FinalCTASection() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const [heartsVisible, setHeartsVisible] = useState(false);
+
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) { setHeartsVisible(true); obs.disconnect(); } },
+      { threshold: 0.3 }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
   const FRAME_WIDTH = 1728;
   const HERO_HEIGHT = 1092;
 
   return (
-    <section className="bg-white flex flex-col items-center overflow-hidden">
+    <section ref={sectionRef} className="bg-white flex flex-col items-center overflow-hidden">
 
       {/* Responsive Scaling Wrapper — hero only */}
       <div
@@ -55,16 +69,22 @@ export default function FinalCTASection() {
                 width: 680,
               }}
             >
-              <p className="text-[32px] font-medium text-white mb-8">
-                <span
-                  className="inline-block font-semibold"
-                  style={{ color: "#8DF7FF" }}
+              <div className="flex items-center gap-3 mb-8">
+                <Image
+                  src="/MapsGPT-logo.png"
+                  alt="MapsGPT"
+                  width={32}
+                  height={32}
+                  style={{ filter: "drop-shadow(0 1px 2px rgba(0,0,0,0.2))" }}
+                />
+                <p
+                  className="font-medium text-white"
+                  style={{ fontSize: 36, letterSpacing: "-0.02em", lineHeight: "140%" }}
                 >
-                  MapsGPT
-                </span>
-                {" "}
-                is browser based
-              </p>
+                  <span className="font-semibold" style={{ color: "#8DF7FF" }}>MapsGPT</span>
+                  {" "}is browser based
+                </p>
+              </div>
 
               <h2 className="text-[80px] font-semibold leading-[105%] mb-8">
                 We’re always
@@ -72,45 +92,70 @@ export default function FinalCTASection() {
                 there for you.
               </h2>
 
-              <p className="text-[32px] font-medium text-white mb-10 leading-[140%]">
+              <p className="text-[36px] font-medium text-white mb-10 leading-[140%]">
                 Access your local AI travel pal
                 <br />
                 on any browser.
               </p>
 
-              <Link
-                href="/maps-gpt"
-                className={`${glassStyles.btn} no-underline text-white hover:opacity-90 transition-opacity cursor-pointer`}
-                style={{
-                  width: 412,
-                  height: 71,
-                  fontSize: 24,
-                  fontWeight: 600,
-                  letterSpacing: "-0.02em",
-                }}
+              <a
+                href="https://mapsgpt.es"
+                className={`group flex items-center justify-center gap-10 no-underline cursor-pointer active:scale-[0.98] select-none ${glassStyles.btn}`}
+                style={{ width: 412, height: 71, padding: 0, backdropFilter: "blur(3px)", WebkitBackdropFilter: "blur(3px)" }}
               >
-                Try it out! It’s completely free →
-              </Link>
+                <span
+                  style={{
+                    fontFamily: "’SF Pro’, -apple-system, BlinkMacSystemFont, sans-serif",
+                    fontWeight: 590,
+                    fontSize: "20px",
+                    lineHeight: "140%",
+                    letterSpacing: "-0.02em",
+                    color: "#ffffff",
+                  }}
+                >
+                  Try it out! It&apos;s completely free
+                </span>
+                <svg
+                  width="13"
+                  height="13"
+                  viewBox="0 0 13 13"
+                  fill="none"
+                  className="shrink-0 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                  aria-hidden
+                >
+                  <path
+                    d="M2 11L11 2M11 2H4M11 2V9"
+                    stroke="#ffffff"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </a>
             </div>
 
             {/* PHONE SCREEN OVERLAY */}
-            <div
-              className="absolute overflow-hidden"
+            <a
+              href="https://mapsgpt.es"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="absolute overflow-hidden cursor-pointer"
               style={{
-                left: 1150,
-                top: 346,
-                width: 274,
-                height: 505,
+                left: 1151,
+                top: 316,
+                width: 234,
+                height: 545,
                 borderRadius: 24,
               }}
             >
               <Image
-                src="/how/mob.png"
+                src="/MapsGPTMobile.png"
                 alt="Phone screen"
                 fill
-                className="object-contain"
+                className="object-cover"
+                style={{ borderRadius: 24 }}
               />
-            </div>
+            </a>
 
             {/* FLOATING HEARTS */}
             <Image
@@ -122,6 +167,10 @@ export default function FinalCTASection() {
               style={{
                 left: FRAME_WIDTH * 0.75 - 300,
                 top: 200,
+                opacity: heartsVisible ? 1 : 0,
+                transform: heartsVisible ? "translateY(0) scale(1)" : "translateY(40px) scale(0.3)",
+                transition: "opacity 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1)",
+                animation: heartsVisible ? "heartFloat1 4s ease-in-out 0.6s infinite" : "none",
               }}
             />
 
@@ -134,6 +183,10 @@ export default function FinalCTASection() {
               style={{
                 left: FRAME_WIDTH * 0.75 + 150,
                 top: 300,
+                opacity: heartsVisible ? 1 : 0,
+                transform: heartsVisible ? "translateY(0) scale(1)" : "translateY(40px) scale(0.3)",
+                transition: "opacity 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.2s, transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.2s",
+                animation: heartsVisible ? "heartFloat2 5s ease-in-out 0.8s infinite" : "none",
               }}
             />
           </div>
@@ -142,8 +195,8 @@ export default function FinalCTASection() {
       </div>
 
       {/* ================= CTA: centered in viewport ================= */}
-      <div className="relative z-10 w-full flex flex-col items-center justify-center text-center py-16 px-4">
-            <p className="text-[#4E4E4E] text-[36px] leading-[150%] mb-10 max-w-[600px] font-semibold">
+      <div className="relative z-10 w-full flex flex-col items-center justify-center text-center py-16 px-4 max-w-[1408px] mx-auto">
+            <p className="text-[#2C2C2C] text-[36px] leading-[150%] mb-10 max-w-[600px] font-semibold">
               MapsGPT is updated regularly.
               <br />
               We’d love to hear your thoughts.

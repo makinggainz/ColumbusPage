@@ -166,14 +166,25 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
+import { useRef, useState } from "react";
 
 export default function HowItWorksSection() {
+  const [inputValue, setInputValue] = useState("");
+  const [isFocused, setIsFocused] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const hasText = inputValue.trim().length > 0;
+
+  const handleSend = () => {
+    window.location.href = "https://mapsgpt.es";
+  };
+
   return (
     <section className="bg-[#F9F9F9] py-16 lg:py-24">
-      <div className="max-w-[1400px] mx-auto px-4 lg:px-6">
+      <div className="max-w-[1408px] mx-auto px-4 lg:px-6">
 
         {/* ================= TITLE ================= */}
-        <h2 className="text-center text-[32px] md:text-[48px] lg:text-[64px] leading-[140%] font-semibold text-black mb-12 lg:mb-24">
+        <h2 className="text-center text-[36px] md:text-[48px] lg:text-[64px] leading-[140%] font-semibold text-black mb-12 lg:mb-24">
           How It Works
         </h2>
 
@@ -193,7 +204,7 @@ export default function HowItWorksSection() {
                 display: "block",
                 maxWidth: "449px",
                 width: "100%",
-                background: "linear-gradient(90deg, #00454A 0%, #00A4B0 100%)",
+                background: "linear-gradient(90deg, #063140 0%, #5FBFF1 100%)",
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
                 backgroundClip: "text",
@@ -280,88 +291,159 @@ export default function HowItWorksSection() {
                 />
 
                 {/* Pills: positions as % of 669×426 (pills can sit slightly outside) */}
-                <Pill style={{ left: "12.71%", top: "46.48%" }} />
-                <Pill style={{ left: "7.32%", top: "0%" }} />
-                <Pill style={{ left: "34.98%", top: "89.44%" }} />
-                <Pill style={{ left: "67.41%", top: "16.9%" }} />
-                <Pill style={{ left: "40.66%", top: "2.58%" }} />
-                <Pill style={{ left: "76.08%", top: "60.8%" }} />
-                <Pill style={{ left: "64.87%", top: "80.99%" }} />
-                <Pill style={{ left: "0%", top: "75.82%" }} />
+                <Pill index={0} style={{ left: "12.71%", top: "46.48%" }} />
+                <Pill index={1} style={{ left: "7.32%", top: "0%" }} />
+                <Pill index={2} style={{ left: "34.98%", top: "89.44%" }} />
+                <Pill index={3} style={{ left: "67.41%", top: "16.9%" }} />
+                <Pill index={4} style={{ left: "40.66%", top: "2.58%" }} />
+                <Pill index={5} style={{ left: "76.08%", top: "60.8%" }} />
+                <Pill index={6} style={{ left: "64.87%", top: "80.99%" }} />
+                <Pill index={7} style={{ left: "0%", top: "75.82%" }} />
               </div>
             </div>
 
-            {/* ================= INPUT BOX (Group 1371: 593×166) ================= */}
+            {/* ================= INPUT BOX ================= */}
             <div className="flex flex-col items-center w-full max-w-[593px]">
-              {/* Rectangle 3183: card 593×134 */}
               <div
-                className="relative w-full rounded-[15px] bg-white overflow-hidden"
+                className="relative w-full rounded-2xl bg-white overflow-hidden cursor-text"
                 style={{
-                  height: 134,
-                  border: "2px solid rgba(0, 69, 74, 0.5)",
-                  boxShadow: "0px 0px 30px rgba(0, 0, 0, 0.05)",
+                  border: `1.5px solid ${isFocused ? "#5FBFF1" : "#D1D5DB"}`,
+                  boxShadow: isFocused
+                    ? "0px 2px 12px rgba(0, 177, 212, 0.15)"
+                    : "0px 2px 12px rgba(0, 0, 0, 0.06)",
+                  transition: "border-color 0.2s, box-shadow 0.2s",
                 }}
+                onClick={() => inputRef.current?.focus()}
               >
-                {/* Roll the dice — Inter 600 16px #5AB7AE, ~22px from top, centered */}
-                <div
-                  className="absolute left-0 w-full flex justify-center items-center"
-                  style={{
-                    top: 22,
-                    fontFamily: "'Inter', sans-serif",
-                    fontWeight: 600,
-                    fontSize: "16px",
-                    lineHeight: "140%",
-                    color: "#5AB7AE",
-                  }}
+                {/* Header: dice icon + "Suggested questions" — clickable, goes to mapsgpt.es */}
+                <a
+                  href="https://mapsgpt.es"
+                  className="flex items-center justify-center gap-2 px-6 hover:opacity-75 transition-opacity"
+                  style={{ height: 62, textDecoration: "none" }}
+                  onClick={(e) => e.stopPropagation()}
                 >
-                  Roll the dice
-                </div>
-
-                {/* Rectangle 3184: input area 589×69, from top 63px, bottom radius only */}
-                <div
-                  className="absolute left-[2px] right-[2px] bg-white"
-                  style={{
-                    top: 63,
-                    height: 69,
-                    borderTop: "2px solid rgba(0, 0, 0, 0.1)",
-                    borderRadius: "0 0 13px 13px",
-                  }}
-                >
-                  {/* Ask MapsGPT anything — Inter 500 20px #839694 */}
-                  <div
-                    className="absolute left-[31px] flex items-center"
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden>
+                    <rect x="1.5" y="1.5" width="17" height="17" rx="4" stroke="#5FBFF1" strokeWidth="1.5"/>
+                    <circle cx="6.5" cy="6.5" r="1.25" fill="#5FBFF1"/>
+                    <circle cx="13.5" cy="6.5" r="1.25" fill="#5FBFF1"/>
+                    <circle cx="10" cy="10" r="1.25" fill="#5FBFF1"/>
+                    <circle cx="6.5" cy="13.5" r="1.25" fill="#5FBFF1"/>
+                    <circle cx="13.5" cy="13.5" r="1.25" fill="#5FBFF1"/>
+                  </svg>
+                  <span
                     style={{
-                      top: "50%",
-                      transform: "translateY(-50%)",
                       fontFamily: "'Inter', sans-serif",
-                      fontWeight: 500,
-                      fontSize: "20px",
+                      fontWeight: 600,
+                      fontSize: "15px",
                       lineHeight: "140%",
-                      color: "#839694",
+                      color: "#5FBFF1",
                     }}
                   >
-                    Ask MapsGPT anything
-                  </div>
+                    Suggested questions
+                  </span>
+                </a>
 
-                  {/* Group 1123: arrow button 37×36px */}
+                {/* Divider */}
+                <div style={{ height: "1px", background: "#E5E7EB" }} />
+
+                {/* Input row */}
+                <div
+                  className="flex items-center gap-3 px-4"
+                  style={{ height: 70 }}
+                >
+                  {/* Paperclip icon */}
                   <div
-                    className="absolute right-[14px] top-[50%] flex items-center justify-center -translate-y-1/2 rounded-[11px]"
-                    style={{
-                      width: 37,
-                      height: 36,
-                      background: "rgba(139, 235, 225, 0.8)",
-                    }}
+                    className="flex items-center justify-center shrink-0 rounded-full"
+                    style={{ width: 40, height: 40, border: "1.5px solid #D1D5DB", background: "#F9FAFB" }}
                     aria-hidden
                   >
-                    <svg width="20" height="16" viewBox="0 0 20 16" fill="none" className="text-white/90 shrink-0">
-                      <path d="M2 8h10M12 5l5 3-5 3V5z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                      <path d="M15.5 8.5L8.5 15.5C6.84 17.16 4.16 17.16 2.5 15.5C0.84 13.84 0.84 11.16 2.5 9.5L9 3C10.1 1.9 11.9 1.9 13 3C14.1 4.1 14.1 5.9 13 7L6.5 13.5C5.95 14.05 5.05 14.05 4.5 13.5C3.95 12.95 3.95 12.05 4.5 11.5L10.5 5.5" stroke="#9CA3AF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                     </svg>
                   </div>
+
+                  {/* Real input */}
+                  <div className="relative flex-1 flex items-center">
+                    <input
+                      ref={inputRef}
+                      type="text"
+                      value={inputValue}
+                      onChange={(e) => setInputValue(e.target.value)}
+                      onFocus={() => setIsFocused(true)}
+                      onBlur={() => setIsFocused(false)}
+                      onKeyDown={(e) => { if (e.key === "Enter" && hasText) handleSend(); }}
+                      className="w-full bg-transparent outline-none border-none placeholder-transparent"
+                      style={{
+                        fontFamily: "'Inter', sans-serif",
+                        fontWeight: 400,
+                        fontSize: "18px",
+                        color: "#111827",
+                        caretColor: "#5FBFF1",
+                      }}
+                    />
+                    {/* Idle state: blinking cursor + placeholder text */}
+                    {!isFocused && !inputValue && (
+                      <div className="pointer-events-none absolute left-0 top-1/2 -translate-y-1/2 flex items-center gap-0.75">
+                        <span
+                          style={{
+                            width: "2px",
+                            height: "20px",
+                            background: "#000000",
+                            borderRadius: "1px",
+                            animation: "blink 1.1s step-start infinite",
+                            flexShrink: 0,
+                            display: "block",
+                          }}
+                        />
+                        <span
+                          style={{
+                            fontFamily: "'Inter', sans-serif",
+                            fontWeight: 400,
+                            fontSize: "18px",
+                            color: "#9CA3AF",
+                            lineHeight: 1,
+                          }}
+                        >
+                          Ask MapsGPT anything
+                        </span>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Send button */}
+                  <button
+                    type="button"
+                    onClick={(e) => { e.stopPropagation(); if (hasText) handleSend(); }}
+                    className="flex items-center justify-center shrink-0 rounded-full transition-all duration-200"
+                    style={{
+                      width: 40,
+                      height: 40,
+                      background: "#5FBFF1",
+                      opacity: hasText ? 1 : 0.4,
+                      cursor: hasText ? "pointer" : "default",
+                      transition: "opacity 0.2s",
+                    }}
+                    aria-label="Send"
+                  >
+                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                      <path
+                        d="M9 14V4M4 9l5-5 5 5"
+                        stroke="#ffffff"
+                        strokeWidth="1.75"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </button>
                 </div>
               </div>
 
-              {/* Powered by Columbus-01 + play icon — SF Pro 274 15px, gradient text */}
-              <div className="flex items-center justify-center gap-2 mt-[24px]">
+              {/* Powered by Columbus-01 — links to /technology */}
+              <Link
+                href="/technology"
+                className="flex items-center justify-center gap-2 mt-6 hover:opacity-75 transition-opacity"
+                style={{ textDecoration: "none" }}
+              >
                 <span
                   className="text-[15px] leading-[140%]"
                   style={{
@@ -380,7 +462,7 @@ export default function HowItWorksSection() {
                     <path d="M8 5v14l11-7L8 5z" fill="currentColor" />
                   </svg>
                 </span>
-              </div>
+              </Link>
             </div>
 
           </div>
@@ -393,10 +475,22 @@ export default function HowItWorksSection() {
 
 /* ===================== PILL COMPONENT ===================== */
 
-function Pill({ className, style }: { className?: string; style?: React.CSSProperties }) {
+const PILL_DATA = [
+  { emoji: "🍜", label: "Street Food" },
+  { emoji: "🏖️", label: "Beach Vibes" },
+  { emoji: "🎭", label: "Night Out" },
+  { emoji: "🌿", label: "Eco Trail" },
+  { emoji: "🛍️", label: "Hidden Gems" },
+  { emoji: "🗺️", label: "Adventure" },
+  { emoji: "☕", label: "Café Culture" },
+  { emoji: "🎨", label: "Art & Culture" },
+];
+
+function Pill({ className, style, index = 0 }: { className?: string; style?: React.CSSProperties; index?: number }) {
+  const { emoji, label } = PILL_DATA[index % PILL_DATA.length];
   return (
     <div
-      className={`absolute flex items-center justify-center gap-2 sm:gap-3 px-2 sm:px-4 bg-white rounded-[22.5px] ${className ?? ""}`}
+      className={`absolute flex items-center justify-center gap-1.5 px-2 bg-white rounded-[22.5px] ${className ?? ""}`}
       style={{
         width: "23.92%",
         height: "10.56%",
@@ -408,15 +502,16 @@ function Pill({ className, style }: { className?: string; style?: React.CSSPrope
         boxSizing: "border-box",
         fontFamily: "'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif",
         fontStyle: "normal",
-        fontWeight: 510,
-        fontSize: "clamp(10px, 2.4vw, 16px)",
-        lineHeight: "140%",
+        fontWeight: 500,
+        fontSize: "15px",
+        lineHeight: "135%",
+        letterSpacing: 0,
         color: "#000000",
         ...style,
       }}
     >
-      <span className="leading-none shrink-0" aria-hidden>💁‍♀️</span>
-      <span className="truncate">Gen Z Spots</span>
+      <span className="leading-none shrink-0" aria-hidden>{emoji}</span>
+      <span className="truncate">{label}</span>
     </div>
   );
 }

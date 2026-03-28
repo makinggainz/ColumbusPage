@@ -150,13 +150,17 @@ export default function InspirationStrip() {
 
         {/* Center Pill */}
         <div className="absolute inset-0 flex items-center justify-center">
-          <div className={glassStyles.btn} style={{ width: 567, height: 101, padding: 0, flexShrink: 0 }}>
+          <button
+            className={glassStyles.btn}
+            style={{ width: 567, height: 101, padding: 0, flexShrink: 0, cursor: "pointer" }}
+            onClick={() => document.getElementById("section-see-what-people")?.scrollIntoView({ behavior: "smooth" })}
+          >
             <span
               style={{
                 fontSize: 36,
-                fontWeight: 500,
+                fontWeight: 590,
                 whiteSpace: "nowrap",
-                background: "linear-gradient(180deg, #00454A 0%, #01A35D 100%)",
+                background: "linear-gradient(180deg, #063140 0%, #01A35D 100%)",
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
                 backgroundClip: "text",
@@ -164,7 +168,7 @@ export default function InspirationStrip() {
             >
               Need some travel inspiration?
             </span>
-          </div>
+          </button>
         </div>
 
       </div>

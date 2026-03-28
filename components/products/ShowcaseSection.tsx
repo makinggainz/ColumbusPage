@@ -41,6 +41,7 @@ export default function ShowcaseSection({ compact = false }: { compact?: boolean
   const [closingPillIndex, setClosingPillIndex] = useState<number | null>(null);
   const [pillContentVisible, setPillContentVisible] = useState(false);
   const [pillIsClosing, setPillIsClosing] = useState(false);
+  const [ctaShineKey, setCtaShineKey] = useState(0);
 
   useEffect(() => {
     if (expandedPillIndex !== null) {
@@ -94,6 +95,8 @@ export default function ShowcaseSection({ compact = false }: { compact?: boolean
     return () => clearTimeout(t);
   }, [phraseIndex, suffix, isDeleting]);
 
+  const [marqueeHovered, setMarqueeHovered] = useState(false);
+
   if (compact) {
     return (
       <section className="relative overflow-hidden flex flex-col items-center py-16">
@@ -110,16 +113,65 @@ export default function ShowcaseSection({ compact = false }: { compact?: boolean
         >
           We work with data from the most reputable brands
         </p>
-        <div className="relative overflow-hidden" style={{ width: "1440px", maxWidth: "100vw" }}>
+        <div
+          className="relative overflow-hidden"
+          style={{ width: "1440px", maxWidth: "100vw" }}
+          onMouseEnter={() => setMarqueeHovered(true)}
+          onMouseLeave={() => setMarqueeHovered(false)}
+        >
           <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-24" style={{ background: "linear-gradient(to right, #FFFFFF, transparent)" }} />
           <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-24" style={{ background: "linear-gradient(to left, #FFFFFF, transparent)" }} />
-          <div className="trusted-marquee flex w-max items-center gap-[72px]">
+          <div
+            className="trusted-marquee flex w-max items-center gap-[72px]"
+            style={{ animationPlayState: marqueeHovered ? "paused" : "running" }}
+          >
             {MARQUEE_LOGOS.map((src) => (
               <Image key={src} src={src} width={180} height={60} alt="" className="shrink-0 grayscale opacity-50 hover:grayscale-0 hover:opacity-100 transition-all duration-300 cursor-pointer" />
             ))}
             {MARQUEE_LOGOS.map((src) => (
               <Image key={`dup-${src}`} src={src} width={180} height={60} alt="" className="shrink-0 grayscale opacity-50 hover:grayscale-0 hover:opacity-100 transition-all duration-300 cursor-pointer" aria-hidden />
             ))}
+          </div>
+
+          {/* Blur overlay + glass CTA on hover */}
+          <div
+            className="absolute z-20 flex items-center justify-center transition-opacity duration-300"
+            style={{
+              top: -28,
+              bottom: -28,
+              left: 0,
+              right: 0,
+              opacity: marqueeHovered ? 1 : 0,
+              pointerEvents: marqueeHovered ? "auto" : "none",
+              backdropFilter: "blur(3px)",
+              WebkitBackdropFilter: "blur(3px)",
+              backgroundColor: "rgba(255,255,255,0.4)",
+            }}
+          >
+            <Link
+              href="/maps-gpt"
+              className={`group flex items-center gap-3 ${glassStyles.btn}`}
+              style={{
+                padding: "12px 24px",
+                opacity: marqueeHovered ? 1 : 0,
+                transform: marqueeHovered ? "translateY(0)" : "translateY(6px)",
+                transition: "opacity 0.3s, transform 0.3s",
+              }}
+            >
+              <span className="text-[14px] font-medium transition-colors duration-300" style={{ color: "#00B1D4" }}>
+                Try MapsGPT
+              </span>
+              <svg
+                className="shrink-0 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                width="13" height="13" viewBox="0 0 13 13" fill="none"
+                aria-hidden
+              >
+                <path
+                  d="M2 11L11 2M11 2H4M11 2V9"
+                  stroke="#00B1D4" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"
+                />
+              </svg>
+            </Link>
           </div>
         </div>
       </section>
@@ -264,8 +316,6 @@ export default function ShowcaseSection({ compact = false }: { compact?: boolean
                   top: 105,
                   width: 275,
                   height: 580,
-                  opacity: 0,
-                  transition: "opacity 0.3s ease",
                   borderRadius: 38,
                   cursor: "pointer",
                   boxShadow: "none",
@@ -363,12 +413,14 @@ export default function ShowcaseSection({ compact = false }: { compact?: boolean
 
             {/* CTA */}
             <Link
+              key={ctaShineKey}
               href="/maps-gpt"
-              className={`group absolute left-[1251px] top-[269px] z-20 flex w-[317px] h-[56px] min-h-[44px] items-center justify-center gap-10 cursor-pointer border-0 no-underline touch-manipulation active:scale-[0.98] select-none ${glassStyles.btn}`}
+              className={`group absolute left-[1251px] top-[269px] z-20 flex w-[317px] h-[56px] min-h-[44px] items-center justify-center gap-10 cursor-pointer border-0 no-underline touch-manipulation active:scale-[0.98] select-none ${glassStyles.btn} ${ctaShineKey > 0 ? glassStyles.borderShine : ""}`}
               style={{
                 padding: 0,
                 WebkitTapHighlightColor: "transparent",
               }}
+              onMouseEnter={() => setCtaShineKey((k) => k + 1)}
             >
               <span
                 style={{
@@ -428,6 +480,7 @@ export default function ShowcaseSection({ compact = false }: { compact?: boolean
                         onClick={() => isExpanded && handleClosePill(index)}
                         className={`flex h-full w-[313px] cursor-pointer flex-col rounded-[28px] border-0 p-6 text-left touch-manipulation ${glassStyles.featurePill}`}
                         aria-label={isExpanded ? `Close ${label}` : undefined}
+                        onMouseEnter={() => setCtaShineKey((k) => k + 1)}
                       >
                         <span
                           className="text-[20px] font-semibold leading-[140%] tracking-[-0.02em]"
@@ -469,6 +522,7 @@ export default function ShowcaseSection({ compact = false }: { compact?: boolean
                         type="button"
                         onClick={() => setExpandedPillIndex(index)}
                         className={`group relative flex h-[56px] min-w-[176px] w-max cursor-pointer items-center gap-3 rounded-[28px] border-0 px-4 text-left touch-manipulation overflow-hidden ${glassStyles.featurePill}`}
+                        onMouseEnter={() => setCtaShineKey((k) => k + 1)}
                       >
                         <span
                           className="relative flex h-[11px] w-[11px] shrink-0 items-center justify-center"

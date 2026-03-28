@@ -5,7 +5,7 @@ import FinalCTASection from "@/components/products/FinalCTASection";
 import Hero from "@/components/products/Hero";
 import HowItWorksSection from "@/components/products/HowItWorksSection";
 import InspirationSection from "@/components/products/InspirationSection";
-import QuestionsSection from "@/components/products/QuestionsSection";
+// import QuestionsSection from "@/components/products/QuestionsSection";
 import RecommendationsSection from "@/components/products/RecommendationsSection";
 import SeeWhatPeopleSection from "@/components/products/SeeWhatPeopleSection";
 import ShowcaseSection from "@/components/products/ShowcaseSection";
@@ -46,9 +46,11 @@ export default function ProductsPage() {
       <SectionWithLabel label={sectionLabels[2]}>
         <ShowcaseSection compact />
       </SectionWithLabel>
+      {/* Section D — QuestionsSection (commented out, may restore later)
       <SectionWithLabel label={sectionLabels[3]}>
         <QuestionsSection />
       </SectionWithLabel>
+      */}
       <SectionWithLabel label={sectionLabels[4]}>
         <HowItWorksSection />
       </SectionWithLabel>
@@ -59,6 +61,7 @@ export default function ProductsPage() {
         <InspirationSection />
       </SectionWithLabel>
       <SectionWithLabel label={sectionLabels[7]}>
+        <div id="section-see-what-people" />
         <SeeWhatPeopleSection />
       </SectionWithLabel>
       <SectionWithLabel label={sectionLabels[8]}>

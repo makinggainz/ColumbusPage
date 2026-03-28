@@ -75,6 +75,11 @@ html {
 
 
 /* Section F (SiteSelection): animated gradient blobs — orbital paths, linear timing = no pause at loop */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+
 @keyframes intro-blob-A {
   0%   { transform: translate(  0px,   0px) scale(1.0); }
   25%  { transform: translate( 16px, -12px) scale(1.14); }
@@ -312,6 +317,18 @@ video {
   100% { transform: rotate(0deg) scale(1); }
 }
 
+/* Heart float — subtle hovering after pop-in */
+@keyframes heartFloat1 {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50%      { transform: translateY(-12px) scale(1.03); }
+}
+
+@keyframes heartFloat2 {
+  0%, 100% { transform: translateY(0) scale(1); }
+  40%      { transform: translateY(-8px) scale(1.02) rotate(3deg); }
+  80%      { transform: translateY(-14px) scale(1.01) rotate(-2deg); }
+}
+
 /* Flower subtle wind sway — gentle rotation from top-right anchor */
 @keyframes flowerWind {
   0%, 100% { transform: rotate(0deg); }
@@ -376,6 +393,19 @@ video {
 
 @media (prefers-reduced-motion: reduce) {
   .trusted-marquee {
+    animation: none;
+  }
+}
+
+.adventurers-marquee {
+  display: flex;
+  width: max-content;
+  gap: 16px;
+  animation: trusted-marquee-scroll 35s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .adventurers-marquee {
     animation: none;
   }
 }
@@ -475,6 +505,29 @@ video {
   box-shadow:
     inset 0 1px 1px #ffffffcc,
     0 4px 24px rgba(0,0,0,0.09);
+}
+
+.rec-glass-card-link {
+  display: block;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.25s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.25s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.rec-glass-card-link:hover .rec-glass-card {
+  box-shadow:
+    inset 0 1px 1px #ffffffcc,
+    0 12px 40px rgba(0, 0, 0, 0.18);
+  border-color: rgba(255, 255, 255, 0.9);
+}
+
+.rec-glass-card-link:hover {
+  transform: translateY(-6px) scale(1.015);
+}
+
+.rec-glass-card-link:active {
+  transform: translateY(-2px) scale(0.99);
+  transition-duration: 0.1s;
 }
 
 /* Recommendation category pills: glass effect */

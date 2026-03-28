@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRef, useEffect, useState } from "react";
+import glassStyles from "@/components/ui/GlassButton.module.css";
 
 // Animation stages:
 //  hidden    → waiting for scroll trigger
@@ -20,12 +21,29 @@ const FULL_MSG = LINE1 + "\n" + LINE2;
 const HEADER_SETTLE = 900;  // wait for header to fade in before typing starts
 const TYPE_INTERVAL = 28;   // ms per character
 
+type Place = {
+  name: string;
+  description: string;
+  location: string;
+  rating: string;
+  image: string;
+  category: { label: string; icon: string };
+};
+
+const PLACES: Place[] = [
+  { name: "Aman Spa & Resort", description: "Secluded jungle retreat with open-air pavilions and traditional Balinese healing rituals.", location: "Ubud, Bali", rating: "4.9", image: "/see/2.png", category: { label: "Spa/Wellness", icon: "🧖‍♀️" } },
+  { name: "Shibuya Sky", description: "Rooftop observation deck above Tokyo's most electric crossing — best at golden hour.", location: "Tokyo, Japan", rating: "4.7", image: "/see/3.png", category: { label: "Gen Z Spots", icon: "✨" } },
+  { name: "Le Jules Verne", description: "Michelin-starred French cuisine on the second floor of the Eiffel Tower with sweeping city views.", location: "Paris, France", rating: "4.8", image: "/see/4.png", category: { label: "Fine Dining", icon: "🍷" } },
+  { name: "Blue Lagoon Geothermal Spa", description: "Iconic silica-rich geothermal waters set against dramatic black lava fields.", location: "Grindavík, Iceland", rating: "4.8", image: "/see/5.png", category: { label: "Spa/Wellness", icon: "🧖‍♀️" } },
+  { name: "Bondi Icebergs Club", description: "Ocean pool carved into the cliffs — swim with the surf crashing over the walls.", location: "Sydney, Australia", rating: "4.6", image: "/see/8.png", category: { label: "Gen Z Spots", icon: "✨" } },
+  { name: "Noma", description: "Four-time world's best restaurant. Hyper-seasonal Nordic tasting menus that redefine what food can be.", location: "Copenhagen, Denmark", rating: "4.9", image: "/see/9.png", category: { label: "Fine Dining", icon: "🍷" } },
+  { name: "The Palm Hotel & Spa", description: "Luxury beachfront hotel with a legendary underwater restaurant and panoramic sea views.", location: "Dubai, UAE", rating: "4.8", image: "/see/10.png", category: { label: "Spa/Wellness", icon: "🧖‍♀️" } },
+  { name: "The High Line", description: "Elevated park threading through Chelsea's art galleries and rooftop bars — the city from above.", location: "New York, USA", rating: "4.7", image: "/see/11.png", category: { label: "Gen Z Spots", icon: "✨" } },
+  { name: "Osteria Francescana", description: "Massimo Bottura's three-Michelin-star temple of Italian tradition reimagined as contemporary art.", location: "Modena, Italy", rating: "4.9", image: "/see/13.png", category: { label: "Fine Dining", icon: "🍷" } },
+  { name: "Banyan Tree Spa", description: "Award-winning sanctuary blending ancient Thai therapies with tropical garden serenity.", location: "Phuket, Thailand", rating: "4.8", image: "/see/14.png", category: { label: "Spa/Wellness", icon: "🧖‍♀️" } },
+];
+
 export default function RecommendationsSection() {
-  const categories = [
-    { label: "Spa/Wellness", icon: "🧖‍♀️" },
-    { label: "Gen Z Spots", icon: "✨" },
-    { label: "Fine Dining", icon: "🍷" },
-  ];
 
   const sectionRef  = useRef<HTMLDivElement>(null);
   const [stage, setStage]               = useState<Stage>("hidden");
@@ -105,14 +123,14 @@ export default function RecommendationsSection() {
         {/* ================= HEADLINE ================= */}
         <div className="text-center mb-20">
           <h2
-            className="text-[#1F6F6C] font-semibold text-[clamp(32px,4vw,64px)] leading-[140%] max-w-[1400px] mx-auto"
+            className="text-[#0F6B6E] font-semibold text-[clamp(36px,4vw,64px)] leading-[140%] max-w-[1408px] mx-auto"
             style={fadeIn(0)}
           >
             Or get daily recommendations from our AI.
           </h2>
 
           <p
-            className="text-[#1F6F6C] mt-6 text-[clamp(18px,2.5vw,36px)] leading-[140%] max-w-[797px] mx-auto"
+            className="text-[#0F6B6E] mt-6 text-[clamp(20px,2.5vw,36px)] leading-[140%] max-w-[797px] mx-auto"
             style={fadeIn(0.1)}
           >
             We&apos;re thinking of new places for you while you sleep
@@ -120,14 +138,15 @@ export default function RecommendationsSection() {
         </div>
 
         {/* ================= CHAT ================= */}
-        <div className="flex items-center gap-6 mb-16 max-w-[560px] ml-[40px]">
+        <div className="max-w-[1408px] mx-auto w-full px-6">
+          <div className="flex items-center gap-6 mb-16 max-w-[560px]">
           <div
             className="w-[69px] h-[69px] relative flex-shrink-0"
             style={fadeIn(0.2)}
           >
             <Image
-              src="/how/ai.png"
-              alt="AI"
+              src="/MapsGPT-logo.png"
+              alt="MapsGPT Logo"
               fill
               className="object-contain"
             />
@@ -145,6 +164,7 @@ export default function RecommendationsSection() {
             )}
           </div>
         </div>
+        </div>
 
         {/* ================= CARDS: 10 cards with category pill each, infinite marquee ================= */}
         <div
@@ -152,37 +172,58 @@ export default function RecommendationsSection() {
           style={fadeIn(0.05, contentVisible)}
         >
           <div className="recommendations-marquee flex gap-[49px] items-start">
-            {Array.from({ length: 10 }).map((_, index) => (
-              <CardWithPill
-                key={index}
-                category={categories[index % categories.length]}
-              />
+            {PLACES.map((place, index) => (
+              <CardWithPill key={index} place={place} />
             ))}
-            {Array.from({ length: 10 }).map((_, index) => (
-              <CardWithPill
-                key={`dup-${index}`}
-                category={categories[index % categories.length]}
-                ariaHidden
-              />
+            {PLACES.map((place, index) => (
+              <CardWithPill key={`dup-${index}`} place={place} ariaHidden />
             ))}
           </div>
         </div>
 
         {/* ================= CTA ================= */}
         <div
-          className="text-center mt-24"
+          className="flex flex-col items-center mt-24"
           style={fadeIn(0.15, contentVisible)}
         >
           <p className="text-[20px] text-[#2C2C2C] mb-3 font-semibold">
             What&apos;re you waiting for?
           </p>
 
-          <Link
-            href="/maps-gpt"
-            className="rec-glass-card inline-flex items-center justify-center transition w-full max-w-[857px] h-[74px] text-[18px] text-[#2C2C2C] no-underline cursor-pointer"
+          <a
+            href="https://mapsgpt.es"
+            className={`group flex items-center justify-center gap-10 w-full max-w-214.25 h-18.5 no-underline cursor-pointer active:scale-[0.98] select-none ${glassStyles.btn}`}
+            style={{ borderRadius: 14, padding: 0 }}
           >
-            Find your own favourite spots now →
-          </Link>
+            <span
+              style={{
+                fontFamily: "'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif",
+                fontWeight: 590,
+                fontSize: "20px",
+                lineHeight: "140%",
+                letterSpacing: "-0.02em",
+                color: "#00B1D4",
+              }}
+            >
+              Find your own favourite spots now
+            </span>
+            <svg
+              width="13"
+              height="13"
+              viewBox="0 0 13 13"
+              fill="none"
+              className="shrink-0 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+              aria-hidden
+            >
+              <path
+                d="M2 11L11 2M11 2H4M11 2V9"
+                stroke="#00B1D4"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </a>
         </div>
 
       </div>
@@ -190,102 +231,96 @@ export default function RecommendationsSection() {
   );
 }
 
-type Category = { label: string; icon: string };
-
 function CardWithPill({
-  category,
+  place,
   ariaHidden = false,
 }: {
-  category: Category;
+  place: Place;
   ariaHidden?: boolean;
 }) {
+  const sf: React.CSSProperties = { fontFamily: "'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif" };
   return (
-    <div
-      className="flex flex-col items-center w-[497px] shrink-0 gap-4"
+    <a
+      href="https://mapsgpt.es"
+      className="rec-glass-card-link flex flex-col items-center w-124.25 shrink-0"
       aria-hidden={ariaHidden || undefined}
+      tabIndex={ariaHidden ? -1 : undefined}
     >
-      <div className="rec-glass-pill flex items-center justify-center gap-2 w-[160px] h-[45px] shrink-0">
-        <span className="leading-none" aria-hidden>{category.icon}</span>
+      {/* Category pill — centered over card with padding below */}
+      <div className="rec-glass-pill flex items-center justify-center gap-2 w-40 h-11.25 shrink-0 mb-5">
+        <span className="leading-none" aria-hidden>{place.category.icon}</span>
         <span
           className="text-center"
           style={{
             fontFamily: "'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif",
             fontStyle: "normal",
             fontWeight: 510,
-            fontSize: "16px",
+            fontSize: "15px",
             lineHeight: "140%",
             color: "#000000",
           }}
         >
-          {category.label}
-        </span>
-      </div>
-      <RecommendationCard />
-    </div>
-  );
-}
-
-function RecommendationCard({ "aria-hidden": ariaHidden }: { "aria-hidden"?: boolean } = {}) {
-  const sf: React.CSSProperties = { fontFamily: "'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif" };
-  return (
-    <div
-      className="rec-glass-card w-[497px] h-[334px] shrink-0 text-left"
-      aria-hidden={ariaHidden}
-    >
-      {/* Image: full-width minus padding, 170px tall, 16px from top */}
-      <div className="absolute left-4 top-4 w-[462px] max-w-[calc(100%-32px)] h-[170px] rounded-[11px] overflow-hidden">
-        <Image
-          src="/how/card.png"
-          alt=""
-          width={462}
-          height={170}
-          className="object-cover w-full h-full"
-        />
-      </div>
-
-      {/* Rating pill: overlaid top-right on the image */}
-      <div
-        className="absolute right-[30px] top-[24px] w-[64px] h-[28px] rounded-[14px] flex items-center justify-center gap-1"
-        style={{ background: "rgba(217, 217, 217, 0.6)" }}
-      >
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" className="shrink-0" aria-hidden>
-          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="#E46962" />
-        </svg>
-        <span className="font-semibold text-[15px] tracking-[-0.02em] text-black" style={sf}>
-          4.2
+          {place.category.label}
         </span>
       </div>
 
-      {/* Text content: flex column filling space below image */}
-      <div
-        className="absolute left-4 right-4 flex flex-col justify-between"
-        style={{ top: 196, bottom: 16 }}
-      >
-        <div>
-          <h3
-            className="text-[20px] leading-[130%] tracking-[-0.02em] text-black"
-            style={{ ...sf, fontWeight: 590 }}
-          >
-            The Palm Hotel
-          </h3>
-          <p
-            className="mt-1.5 text-[15px] leading-[135%] tracking-[-0.02em] text-black opacity-75"
-            style={{ ...sf, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}
-          >
-            Luxury hotel, with unique aquarium restaurant. Great food, and a great view.
-          </p>
+      {/* Card */}
+      <div className="rec-glass-card w-124.25 h-83.5 shrink-0 text-left">
+        {/* Image */}
+        <div className="absolute left-4 top-4 w-115.5 max-w-[calc(100%-32px)] h-42.5 rounded-[11px] overflow-hidden">
+          <Image
+            src={place.image}
+            alt={place.name}
+            width={462}
+            height={170}
+            className="object-cover w-full h-full"
+          />
         </div>
 
-        {/* Location */}
-        <div className="flex items-center gap-1.5 opacity-60">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" className="shrink-0 text-black" aria-hidden>
-            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 110-5 2.5 2.5 0 010 5z" fill="currentColor" />
+        {/* Rating pill */}
+        <div
+          className="absolute right-7.5 top-6 w-16 h-7 rounded-[14px] flex items-center justify-center gap-1"
+          style={{ background: "rgba(217, 217, 217, 0.6)" }}
+        >
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" className="shrink-0" aria-hidden>
+            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="#E46962" />
           </svg>
-          <span className="text-[16px] leading-[140%] tracking-[-0.02em] text-black" style={sf}>
-            Dubai, UAE
+          <span className="font-semibold text-[15px] tracking-[-0.02em] text-black" style={sf}>
+            {place.rating}
           </span>
         </div>
+
+        {/* Text content */}
+        <div
+          className="absolute left-4 right-4 flex flex-col justify-between"
+          style={{ top: 196, bottom: 16 }}
+        >
+          <div>
+            <h3
+              className="text-[20px] leading-[130%] tracking-[-0.02em] text-black"
+              style={{ ...sf, fontWeight: 590 }}
+            >
+              {place.name}
+            </h3>
+            <p
+              className="mt-1.5 text-[15px] leading-[135%] tracking-[-0.02em] text-black opacity-75"
+              style={{ ...sf, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}
+            >
+              {place.description}
+            </p>
+          </div>
+
+          {/* Location */}
+          <div className="flex items-center gap-1.5 opacity-60">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" className="shrink-0 text-black" aria-hidden>
+              <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 110-5 2.5 2.5 0 010 5z" fill="currentColor" />
+            </svg>
+            <span className="text-[15px] leading-[140%] tracking-[-0.02em] text-black" style={sf}>
+              {place.location}
+            </span>
+          </div>
+        </div>
       </div>
-    </div>
+    </a>
   );
 }

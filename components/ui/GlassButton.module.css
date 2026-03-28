@@ -406,6 +406,17 @@
   animation: glassShine 4s ease-in-out infinite;
 }
 
+/* Border shine sweep — animates the conic gradient angle on ::after */
+@keyframes borderShineSweep {
+  0%   { --gb-angle-1: -125deg; }
+  50%  { --gb-angle-1: 55deg; }
+  100% { --gb-angle-1: -125deg; }
+}
+
+.borderShine::after {
+  animation: borderShineSweep 1.5s ease-in-out;
+}
+
 /* Glass shine text — teal variant for CTA buttons */
 .glassTextTeal {
   background: linear-gradient(
