@@ -210,7 +210,14 @@ export default function ShowcaseSection() {
                   if (phoneTiltRef.current) phoneTiltRef.current.style.transition = "transform 0.25s cubic-bezier(0.22, 1, 0.36, 1)";
                 }}
               >
-                <Image src="/MapsGPTDesktop.png" alt="Maps UI" fill className="object-fill" />
+                <Image
+                  src="/MapsGPTDesktop.png"
+                  alt="Maps UI"
+                  width={1175}
+                  height={685}
+                  className="absolute object-fill"
+                  style={{ top: -12, left: -12, width: "calc(100% + 24px)", height: "calc(100% + 24px)" }}
+                />
               </div>
 
               {/* Phone — sibling outside preserve-3d so CSS :hover works reliably.
@@ -262,7 +269,7 @@ export default function ShowcaseSection() {
 
             {/* Title + Subtitle */}
             <div
-              className="absolute left-[140px] top-[160px] flex flex-col"
+              className="absolute left-[140px] top-[200px] flex flex-col"
               style={{
                 fontFamily: "'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif",
               }}
@@ -325,7 +332,7 @@ export default function ShowcaseSection() {
             {/* CTA */}
             <Link
               href="/maps-gpt"
-              className={`absolute left-[1296px] top-[229px] z-20 flex w-[317px] h-[56px] min-h-[44px] items-center justify-center gap-10 cursor-pointer border-0 no-underline touch-manipulation active:scale-[0.98] select-none ${glassStyles.btn}`}
+              className={`absolute left-[1296px] top-[269px] z-20 flex w-[317px] h-[56px] min-h-[44px] items-center justify-center gap-10 cursor-pointer border-0 no-underline touch-manipulation active:scale-[0.98] select-none ${glassStyles.btn}`}
               style={{
                 padding: 0,
                 WebkitTapHighlightColor: "transparent",
