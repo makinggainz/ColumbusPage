@@ -164,7 +164,7 @@ function FavoriteSpotCard() {
           alt=""
           style={{ width: 44, height: 44, borderRadius: "50%", objectFit: "cover", flexShrink: 0, marginTop: 4 }}
         />
-        <p style={{ fontSize: 26, fontWeight: 500, color: "#1D1D1F", lineHeight: 1.35, margin: 0 }}>
+        <p className="text-[20px] lg:text-[26px]" style={{ fontWeight: 500, color: "#1D1D1F", lineHeight: 1.35, margin: 0 }}>
           Find me a cute romantic restaurant with views of the river
         </p>
       </div>
@@ -176,7 +176,7 @@ export default function FavoritesSection() {
   return (
     <>
       {/* ================= SECTION 1: Headline + 2 emojis ================= */}
-      <section className="bg-[#F9F9F9] w-full overflow-hidden min-h-[1000px] flex items-center">
+      <section className="bg-[#F9F9F9] w-full overflow-hidden min-h-[500px] lg:min-h-[1000px] flex items-center">
         <div className="max-w-[1408px] mx-auto px-6 lg:px-12 py-20 lg:py-32">
           <div className="flex flex-col lg:flex-row items-center justify-center gap-6 lg:gap-12 text-center">
             <span className="hover-bee inline-block cursor-default transition-transform">
@@ -218,14 +218,10 @@ export default function FavoritesSection() {
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
             <div>
               <p
-                className="max-w-[739px]"
+                className="max-w-[739px] text-[27px] sm:text-[36px] lg:text-[64px] leading-[140%]"
                 style={{
                   fontFamily: "'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif",
-                  fontStyle: "normal",
                   fontWeight: 590,
-                  fontSize: "64px",
-                  lineHeight: "140%",
-                  display: "block",
                   background: "linear-gradient(90deg, #DE2F32 0%, #B00098 100%)",
                   WebkitBackgroundClip: "text",
                   WebkitTextFillColor: "transparent",
@@ -244,14 +240,10 @@ export default function FavoritesSection() {
 
           <div className="mt-24 flex justify-center mb-[100px] mt-auto relative z-20">
             <p
-              className="text-center max-w-[837px]"
+              className="text-center max-w-[837px] text-[27px] sm:text-[36px] lg:text-[48px] leading-[130%]"
               style={{
                 fontFamily: "'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif",
-                fontStyle: "normal",
                 fontWeight: 400,
-                fontSize: "48px",
-                lineHeight: "130%",
-                display: "block",
                 background: "linear-gradient(180deg, #000000 0%, #666666 100%)",
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",

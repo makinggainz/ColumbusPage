@@ -1100,8 +1100,21 @@ export const Hero = () => {
   useEffect(() => {
     measureNavbarLogo();
     window.addEventListener("resize", measureNavbarLogo, { passive: true });
-    return () => window.removeEventListener("resize", measureNavbarLogo);
+    // Also re-measure on scroll so the wordmark tracks the navbar when it goes compact
+    window.addEventListener("scroll", measureNavbarLogo, { passive: true });
+    return () => {
+      window.removeEventListener("resize", measureNavbarLogo);
+      window.removeEventListener("scroll", measureNavbarLogo);
+    };
   }, [measureNavbarLogo]);
+
+  // Track compact state in hero so the persisted mobile wordmark matches navbar font-size
+  const [isCompactHero, setIsCompactHero] = useState(false);
+  useEffect(() => {
+    const check = () => setIsCompactHero(window.scrollY > 10);
+    window.addEventListener("scroll", check, { passive: true });
+    return () => window.removeEventListener("scroll", check);
+  }, []);
 
   // Skip-all helper (used by scroll skip and reload detection)
   const skipToEnd = useCallback(() => {
@@ -1224,6 +1237,7 @@ export const Hero = () => {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+
   const showCursor = phase === "eyebrow" || phase === "h1" || phase === "h2" || phase === "wordmark";
   const logoInNavbar = logoNavbar || phase === "toNavbar" || phase === "wordmark" || phase === "done";
 
@@ -1276,10 +1290,10 @@ export const Hero = () => {
           style={{
             left: navTarget.x + navTarget.w + 8,
             top: navTarget.y + navTarget.w / 2,
-            fontSize: 24,
+            fontSize: isCompactHero ? 20 : 24,
             letterSpacing: "-0.02em",
             opacity: phase === "done" ? 0 : 1,
-            transition: "opacity 0.3s ease",
+            transition: "opacity 0.3s ease, font-size 500ms cubic-bezier(0.22, 1, 0.36, 1)",
             transform: "translateY(-50%)",
           }}
         >

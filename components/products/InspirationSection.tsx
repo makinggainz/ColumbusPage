@@ -90,7 +90,7 @@ export default function InspirationStrip() {
   }, []);
 
   return (
-    <section className="relative w-full overflow-visible pb-[210px]" style={{ background: "#F6F7F8" }}>
+    <section className="relative w-full overflow-visible pb-[100px] lg:pb-[210px]" style={{ background: "#F6F7F8" }}>
       {/* Blending gradient — top, bleeds into section above */}
       <div
         className="absolute left-0 right-0 pointer-events-none z-10"
@@ -152,12 +152,12 @@ export default function InspirationStrip() {
         <div className="absolute inset-0 flex items-center justify-center">
           <button
             className={glassStyles.btn}
-            style={{ width: 567, height: 101, padding: 0, flexShrink: 0, cursor: "pointer" }}
+            style={{ width: "clamp(280px, 80vw, 567px)", height: "clamp(56px, 14vw, 101px)", padding: 0, flexShrink: 0, cursor: "pointer" }}
             onClick={() => document.getElementById("section-see-what-people")?.scrollIntoView({ behavior: "smooth" })}
           >
             <span
               style={{
-                fontSize: 36,
+                fontSize: "clamp(20px, 5vw, 36px)",
                 fontWeight: 590,
                 whiteSpace: "nowrap",
                 background: "linear-gradient(180deg, #063140 0%, #01A35D 100%)",

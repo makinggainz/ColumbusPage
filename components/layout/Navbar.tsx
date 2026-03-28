@@ -302,7 +302,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                         }}
                     />
 
-                    <div className={`relative ${wide ? "px-12 min-[1408px]:px-0" : "px-8 min-[1287px]:px-0"}`}>
+                    <div className={`relative ${wide ? "px-8 lg:px-12 min-[1408px]:px-0" : "px-8 min-[1287px]:px-0"}`}>
                         <div
                             className="flex items-center justify-between"
                             style={{
@@ -318,8 +318,8 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                         data-navbar-logo
                                         className="relative shrink-0"
                                         style={{
-                                            width: isCompact ? 30 : 40,
-                                            height: isCompact ? 30 : 40,
+                                            width: isCompact ? 36 : 40,
+                                            height: isCompact ? 36 : 40,
                                             transition: `width ${t}, height ${t}, filter ${t}, opacity 0.4s ease`,
                                             filter: (isDark && !isMenuOpen) ? "brightness(0) invert(1)" : "none",
                                             opacity: hasScrolled ? 1 : 0,
@@ -340,7 +340,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                             fontSize: isCompact ? 20 : 24,
                                             letterSpacing: "-0.02em",
                                             transition: `font-size ${t}, opacity 0.4s ease`,
-                                            opacity: hasScrolled ? 1 : 0,
+                                            opacity: hasScrolled && (!ctaVisible || isWideScreen) ? 1 : 0,
                                         }}
                                     >
                                         Columbus Earth
@@ -385,18 +385,20 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                 {/* Start Now — appears after hero CTA leaves viewport */}
                                 <Link
                                     href="/maps-gpt"
-                                    className={`group hidden min-[900px]:flex items-center justify-between gap-3 leading-none whitespace-nowrap hover:opacity-90 transition-opacity ${wide ? glassStyles.btn : ""}`}
+                                    className={`group flex items-center justify-between leading-none whitespace-nowrap hover:opacity-90 transition-opacity ${wide ? glassStyles.btn : ""}`}
                                     style={{
                                         fontSize: 14,
                                         fontWeight: 500,
                                         height: 45,
+                                        gap: isWideScreen ? 12 : 6,
                                         width: ctaVisible ? 145 : 0,
                                         opacity: ctaVisible ? 1 : 0,
                                         overflow: wide ? undefined : "hidden",
                                         pointerEvents: ctaVisible ? "auto" : "none",
                                         paddingLeft: 20,
                                         paddingRight: 16,
-                                        transition: `width ${t}, opacity 300ms ease`,
+                                        marginRight: !isWideScreen && ctaVisible ? 8 : 0,
+                                        transition: `width ${t}, opacity 300ms ease, margin-right ${t}`,
                                         ...(wide
                                             ? { backdropFilter: "blur(6px)", WebkitBackdropFilter: "blur(6px)" }
                                             : { backgroundColor: "#000000", color: "white" }),

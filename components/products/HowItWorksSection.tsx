@@ -194,16 +194,10 @@ export default function HowItWorksSection() {
           {/* LEFT TEXT */}
           <div className="flex justify-center lg:justify-start items-center">
             <p
-              className="text-center lg:text-left"
+              className="text-center lg:text-left text-[36px] md:text-[48px] lg:text-[64px] leading-[140%] max-w-[449px] w-full"
               style={{
                 fontFamily: "'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif",
-                fontStyle: "normal",
                 fontWeight: 590,
-                fontSize: "64px",
-                lineHeight: "140%",
-                display: "block",
-                maxWidth: "449px",
-                width: "100%",
                 background: "linear-gradient(90deg, #063140 0%, #5FBFF1 100%)",
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",

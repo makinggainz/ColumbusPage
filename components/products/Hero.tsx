@@ -434,7 +434,8 @@ export default function Hero() {
       const el = outerContainerRef.current;
       if (!el) return;
       const rect    = el.getBoundingClientRect();
-      const extraPx = window.innerHeight * 2;
+      const isMobile = window.innerWidth < 1024;
+      const extraPx = window.innerHeight * (isMobile ? 1 : 2);
       const raw     = Math.max(0, Math.min(1, -rect.top / extraPx));
 
       const origPhone = phoneRef.current;
@@ -584,7 +585,7 @@ export default function Hero() {
           const container = outerContainerRef.current;
           if (!container) return;
           const r2       = container.getBoundingClientRect();
-          const extra    = window.innerHeight * 2;
+          const extra    = window.innerHeight * (window.innerWidth < 1024 ? 1 : 2);
           const curRaw   = Math.max(0, Math.min(1, -r2.top / extra));
           if (curRaw <= 0.005 || curRaw >= 0.995) return;
           const elementDocTop = window.scrollY + r2.top;
@@ -613,13 +614,26 @@ export default function Hero() {
     <div
       ref={outerContainerRef}
       data-hero-outer
-      style={{ height: "calc(100vh + 200vh)", marginTop: -32 }}
+      className="lg:h-[calc(100dvh+200dvh)] h-[calc(100dvh+100dvh)]"
+      style={{ marginTop: -32 }}
     >
+      {/* Mobile safe-area fill — beach bg behind entire viewport, fades in with hero expansion */}
+      <div
+        className="fixed inset-0 lg:hidden pointer-events-none"
+        style={{
+          backgroundImage: "url('/BeachLanding.png')",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          zIndex: -1,
+          opacity: bgExpanded ? 1 : 0,
+          transition: "opacity 0.9s cubic-bezier(0.4, 0, 0.2, 1)",
+        }}
+      />
       <section
         ref={sectionRef}
         className="sticky top-0 overflow-hidden flex justify-center"
         style={{
-          height: "100vh",
+          height: "100dvh",
           width: "100vw",
           marginLeft: "calc(-50vw + 50%)",
         }}
@@ -635,7 +649,7 @@ export default function Hero() {
             backgroundPosition: "center",
             clipPath: bgExpanded
               ? "inset(0px 0% 0px 0% round 0px)"
-              : "inset(100px 5% 100px 5% round 55px)",
+              : "inset(clamp(0px, 5vw, 100px) clamp(0px, 2vw, 5%) clamp(0px, 5vw, 100px) clamp(0px, 2vw, 5%) round clamp(0px, 3vw, 55px))",
             willChange: "clip-path, background-size",
             zIndex: 0,
             opacity: heroReady ? 1 : 0,

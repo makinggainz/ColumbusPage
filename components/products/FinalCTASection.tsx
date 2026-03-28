@@ -25,9 +25,43 @@ export default function FinalCTASection() {
   return (
     <section ref={sectionRef} className="bg-white flex flex-col items-center overflow-hidden">
 
-      {/* Responsive Scaling Wrapper — hero only */}
+      {/* ═══════════ MOBILE HERO (below lg:) ═══════════ */}
+      <div className="lg:hidden relative w-full overflow-hidden" style={{ aspectRatio: "16/10" }}>
+        <Image src="/ConsumerPageCity.png" alt="City" fill className="object-cover" priority />
+        {/* Gradient overlay */}
+        <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.2) 50%, transparent 100%)" }} />
+        {/* Content */}
+        <div className="absolute inset-x-0 bottom-0 z-10 text-white px-6 pb-8 pt-16">
+          <div className="flex items-center gap-2 mb-4">
+            <Image src="/MapsGPT-logo.png" alt="MapsGPT" width={24} height={24} style={{ filter: "drop-shadow(0 1px 2px rgba(0,0,0,0.2))" }} />
+            <p className="font-medium text-white text-[20px]" style={{ letterSpacing: "-0.02em" }}>
+              <span className="font-semibold" style={{ color: "#8DF7FF" }}>MapsGPT</span>{" "}is browser based
+            </p>
+          </div>
+          <h2 className="text-[36px] sm:text-[48px] font-semibold leading-[105%] mb-4 tracking-[-0.02em]">
+            We&apos;re always<br />there for you.
+          </h2>
+          <p className="text-[20px] font-medium text-white mb-6 leading-[140%]">
+            Access your local AI travel pal<br />on any browser.
+          </p>
+          <a
+            href="https://mapsgpt.es"
+            className={`group flex items-center justify-center gap-6 w-full h-[52px] no-underline cursor-pointer active:scale-[0.98] select-none ${glassStyles.btn}`}
+            style={{ padding: 0, backdropFilter: "blur(3px)", WebkitBackdropFilter: "blur(3px)" }}
+          >
+            <span style={{ fontFamily: "'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif", fontWeight: 590, fontSize: "20px", letterSpacing: "-0.02em", color: "#ffffff" }}>
+              Try it out! It&apos;s completely free
+            </span>
+            <svg width="13" height="13" viewBox="0 0 13 13" fill="none" className="shrink-0" aria-hidden>
+              <path d="M2 11L11 2M11 2H4M11 2V9" stroke="#ffffff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </a>
+        </div>
+      </div>
+
+      {/* ═══════════ DESKTOP HERO (lg: and above) ═══════════ */}
       <div
-        className="origin-top"
+        className="hidden lg:block origin-top"
         style={{
           width: FRAME_WIDTH,
           height: HERO_HEIGHT,
@@ -196,7 +230,7 @@ export default function FinalCTASection() {
 
       {/* ================= CTA: centered in viewport ================= */}
       <div className="relative z-10 w-full flex flex-col items-center justify-center text-center py-16 px-4 max-w-[1408px] mx-auto">
-            <p className="text-[#2C2C2C] text-[36px] leading-[150%] mb-10 max-w-[600px] font-semibold">
+            <p className="text-[#2C2C2C] text-[27px] sm:text-[36px] leading-[150%] mb-10 max-w-[600px] font-semibold">
               MapsGPT is updated regularly.
               <br />
               We’d love to hear your thoughts.
