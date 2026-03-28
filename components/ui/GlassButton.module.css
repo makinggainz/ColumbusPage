@@ -406,6 +406,37 @@
   animation: glassShine 4s ease-in-out infinite;
 }
 
+/* Glass shine text — teal variant for CTA buttons */
+.glassTextTeal {
+  background: linear-gradient(
+    -75deg,
+    #00B1D4 0%,
+    #00B1D4 35%,
+    rgba(255, 255, 255, 0.95) 45%,
+    rgba(255, 255, 255, 1) 50%,
+    #00B1D4 65%,
+    #00B1D4 100%
+  );
+  background-size: 300% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: glassShine 4s ease-in-out infinite;
+}
+
+/* Glass text without animation — subtle top-highlight, inherits base color */
+.glassTextStatic {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.9) 0%,
+    currentColor 40%,
+    currentColor 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
 /* Showcase phone hover — premium shadow, no transform (JS handles tilt) */
 .showcasePhone {
   border-radius: 55px;

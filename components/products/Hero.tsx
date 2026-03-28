@@ -117,6 +117,8 @@ export default function Hero() {
   const phoneEndWRef            = useRef(0);
   const phoneEndHRef            = useRef(0);
   const phoneEndElRef           = useRef<HTMLElement | null>(null);
+  const scrollStopTimerRef      = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const lastScrollDeltaRef      = useRef(0);
 
   // Pre-load images
   useEffect(() => {
@@ -423,8 +425,9 @@ export default function Hero() {
     const onScroll = () => {
       const y     = window.scrollY;
       const delta = y - lastScrollYRef.current;
-      lastScrollYRef.current  = y;
-      scrollYRef.current      = y;
+      lastScrollYRef.current      = y;
+      scrollYRef.current          = y;
+      lastScrollDeltaRef.current  = delta;
       phoneSpringRef.current.velocity += delta * 0.28;
 
       // Transition progress
@@ -556,7 +559,8 @@ export default function Hero() {
       if (so) {
         const showcaseT = Math.max(0, Math.min(1, (raw - 0.60) / 0.20));
         so.style.opacity       = String(showcaseT);
-        so.style.pointerEvents = showcaseT >= 1 ? "auto" : "none";
+        // Enable pointer events as soon as overlay starts becoming visible
+        so.style.pointerEvents = showcaseT > 0 ? "auto" : "none";
       }
 
       // Reveal static showcase phone once transition phone reaches final position (raw >= 0.80)
@@ -564,15 +568,51 @@ export default function Hero() {
       if (staticPhone) {
         staticPhone.style.opacity = raw >= 0.80 ? "1" : "0";
       }
+
+      // Auto-complete: snap to end if scrolling stops mid-transition.
+      // Two cases:
+      //   1. Scrolling forward anywhere → snap to end on stop.
+      //   2. Scrolling backward while in the late zone (raw > 0.6, showcase visible)
+      //      → snap back to end so a small accidental scroll up doesn't leave a stuck state.
+      if (scrollStopTimerRef.current) clearTimeout(scrollStopTimerRef.current);
+      const inLateZone = raw > 0.6;
+      if (raw > 0.005 && raw < 0.995 && (delta > 0 || inLateZone)) {
+        scrollStopTimerRef.current = setTimeout(() => {
+          scrollStopTimerRef.current = null;
+          // Outside late zone: bail if user ended up scrolling backward
+          if (!inLateZone && lastScrollDeltaRef.current <= 0) return;
+          const container = outerContainerRef.current;
+          if (!container) return;
+          const r2       = container.getBoundingClientRect();
+          const extra    = window.innerHeight * 2;
+          const curRaw   = Math.max(0, Math.min(1, -r2.top / extra));
+          if (curRaw <= 0.005 || curRaw >= 0.995) return;
+          const elementDocTop = window.scrollY + r2.top;
+          window.scrollTo({ top: elementDocTop + extra, behavior: "smooth" });
+        }, 400);
+      }
     };
 
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+
+    // Invalidate cached positions on resize so they're recaptured at the new viewport size
+    const onResize = () => {
+      phoneStartCapturedRef.current = false;
+      phoneEndCapturedRef.current   = false;
+    };
+    window.addEventListener("resize", onResize);
+
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onResize);
+      if (scrollStopTimerRef.current) clearTimeout(scrollStopTimerRef.current);
+    };
   }, []);
 
   return (
     <div
       ref={outerContainerRef}
+      data-hero-outer
       style={{ height: "calc(100vh + 200vh)", marginTop: -32 }}
     >
       <section

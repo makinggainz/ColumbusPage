@@ -6,6 +6,7 @@ import { useEffect, useLayoutEffect, useState, useRef } from "react";
 import { usePathname } from "next/navigation";
 
 import { ScrambleText } from "@/components/ui/ScrambleText";
+import glassStyles from "@/components/ui/GlassButton.module.css";
 
 const COMPACT_THRESHOLD = 10;
 const NAV_BREAKPOINT = 900;
@@ -20,13 +21,15 @@ const menuItems = [
 
 // ─────────────────────────────────────────────────────────────────────────────
 
-export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
+export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "dark"; wide?: boolean }) => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isManuallyToggled, setIsManuallyToggled] = useState(false);
     const [hasScrolled, setHasScrolled] = useState(false);
     const [isCompact, setIsCompact] = useState(false);
-    // Links only appear once hero CTA has scrolled out of view
+    // Links only appear once hero CTA has scrolled out of view (or immediately on products page)
     const [showLinks, setShowLinks] = useState(false);
+    const [inHeroTransition, setInHeroTransition] = useState(false);
+    const [heroTransitionStarted, setHeroTransitionStarted] = useState(false);
     const [footerInView, setFooterInView] = useState(false);
     const [isWideScreen, setIsWideScreen] = useState(() =>
         typeof window !== "undefined" ? window.innerWidth >= NAV_BREAKPOINT : true
@@ -69,7 +72,7 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
         handleResize(); // Correct SSR default on mount
         window.addEventListener("resize", handleResize);
 
-        // Nav links appear only after hero CTA leaves viewport
+        // Nav links appear only after hero CTA leaves viewport (non-products pages)
         const cta = document.getElementById("hero-cta");
         let ctaObs: IntersectionObserver | undefined;
         if (cta) {
@@ -78,6 +81,24 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
                 { threshold: 0 }
             );
             ctaObs.observe(cta);
+        }
+
+        // Products page: track hero transition scroll zone to hide/show links
+        let heroTransitionHandler: (() => void) | undefined;
+        if (wide) {
+            const heroOuter = document.querySelector<HTMLElement>("[data-hero-outer]");
+            if (heroOuter) {
+                heroTransitionHandler = () => {
+                    const rect = heroOuter.getBoundingClientRect();
+                    const extraPx = window.innerHeight * 2;
+                    const raw = Math.max(0, Math.min(1, -rect.top / extraPx));
+                    const transitioning = raw > 0.05 && raw < 0.95;
+                    setInHeroTransition(transitioning);
+                    if (transitioning) setHeroTransitionStarted(true);
+                    if (raw <= 0.05) setHeroTransitionStarted(false);
+                };
+                window.addEventListener("scroll", heroTransitionHandler, { passive: true });
+            }
         }
 
         // Hide navbar when footer is in view
@@ -106,6 +127,7 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
             ctaObs?.disconnect();
             footerObs?.disconnect();
             bgTriggerObs?.disconnect();
+            if (heroTransitionHandler) window.removeEventListener("scroll", heroTransitionHandler);
             window.removeEventListener("scroll", handleScroll);
             window.removeEventListener("resize", handleResize);
             window.removeEventListener("hero-reveal", handleReveal);
@@ -218,9 +240,17 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
         fontSize: compact ? 14 : 15,
         fontWeight: 400,
         letterSpacing: "-0.0025em",
-        color: "#111111",
+        ...(wide ? {} : { color: "#111111" }),
         transition: `font-size ${t}`,
     });
+
+    // On products page: nav links at top or after white bg; CTA also shows after hero transition
+    const linksVisible = wide
+        ? hasScrolled && (!heroTransitionStarted || bgTriggerPassed)
+        : showLinks;
+    const ctaVisible = wide
+        ? hasScrolled && (!heroTransitionStarted || !inHeroTransition || bgTriggerPassed)
+        : showLinks;
 
     return (
         <>
@@ -259,7 +289,7 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
                     }}
                 />
 
-                <div className="relative mx-auto w-full" style={{ maxWidth: 1287 }}>
+                <div className="relative mx-auto w-full" style={{ maxWidth: wide ? 1408 : 1287 }}>
                     {/* White background when dropdown is open — always full width, only opacity transitions */}
                     <div
                         className={`absolute inset-y-0 transition-opacity duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
@@ -272,7 +302,7 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
                         }}
                     />
 
-                    <div className="relative px-8 min-[1287px]:px-0">
+                    <div className={`relative ${wide ? "px-12 min-[1408px]:px-0" : "px-8 min-[1287px]:px-0"}`}>
                         <div
                             className="flex items-center justify-between"
                             style={{
@@ -305,7 +335,7 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
                                         />
                                     </div>
                                     <span
-                                        className="brand-wordmark font-medium leading-none whitespace-nowrap"
+                                        className={`brand-wordmark font-medium leading-none whitespace-nowrap ${wide ? glassStyles.glassTextStatic : ""}`}
                                         style={{
                                             fontSize: isCompact ? 20 : 24,
                                             letterSpacing: "-0.02em",
@@ -325,11 +355,11 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
                                 <div
                                     className="hidden min-[900px]:flex items-center gap-5"
                                     style={{
-                                        maxWidth: showLinks ? 600 : 0,
+                                        maxWidth: linksVisible ? 600 : 0,
                                         overflow: "hidden",
-                                        opacity: showLinks ? 1 : 0,
-                                        clipPath: showLinks ? "inset(0 0% 0 0)" : "inset(0 100% 0 0)",
-                                        pointerEvents: showLinks ? "auto" : "none",
+                                        opacity: linksVisible ? 1 : 0,
+                                        clipPath: linksVisible ? "inset(0 0% 0 0)" : "inset(0 100% 0 0)",
+                                        pointerEvents: linksVisible ? "auto" : "none",
                                         paddingRight: 16,
                                         marginRight: 16,
                                         transition: `opacity 300ms ease, clip-path 400ms cubic-bezier(0.22, 1, 0.36, 1)`,
@@ -343,7 +373,7 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
                                         <Link
                                             key={link.label}
                                             href={link.href}
-                                            className={navLinkClass}
+                                            className={`${navLinkClass} ${wide ? glassStyles.glassTextStatic : ""}`}
                                             style={{ ...navLinkInline(isCompact), whiteSpace: "nowrap" }}
                                             onMouseEnter={handleNavMouseEnter}
                                         >
@@ -355,23 +385,24 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
                                 {/* Start Now — appears after hero CTA leaves viewport */}
                                 <Link
                                     href="/maps-gpt"
-                                    className="group hidden min-[900px]:flex items-center justify-between gap-3 leading-none whitespace-nowrap hover:opacity-90 transition-opacity"
+                                    className={`group hidden min-[900px]:flex items-center justify-between gap-3 leading-none whitespace-nowrap hover:opacity-90 transition-opacity ${wide ? glassStyles.btn : ""}`}
                                     style={{
                                         fontSize: 14,
                                         fontWeight: 500,
                                         height: 45,
-                                        width: showLinks ? 145 : 0,
-                                        opacity: showLinks ? 1 : 0,
-                                        overflow: "hidden",
-                                        pointerEvents: showLinks ? "auto" : "none",
+                                        width: ctaVisible ? 145 : 0,
+                                        opacity: ctaVisible ? 1 : 0,
+                                        overflow: wide ? undefined : "hidden",
+                                        pointerEvents: ctaVisible ? "auto" : "none",
                                         paddingLeft: 20,
                                         paddingRight: 16,
                                         transition: `width ${t}, opacity 300ms ease`,
-                                        backgroundColor: "#000000",
-                                        color: "white",
+                                        ...(wide
+                                            ? { backdropFilter: "blur(6px)", WebkitBackdropFilter: "blur(6px)" }
+                                            : { backgroundColor: "#000000", color: "white" }),
                                     }}
                                 >
-                                    <span className="transition-colors duration-300 group-hover:text-[#2563EB]">Start Now</span>
+                                    <span className={`transition-colors duration-300 ${wide ? (isProductsPage ? "text-black" : isMenuOpen ? "text-black" : "text-white") : ""} group-hover:text-[#2563EB]`}>Start Now</span>
                                     <svg
                                         className="transition-transform duration-300 group-hover:translate-x-0.5"
                                         width="10" height="18" viewBox="0 0 7 12" fill="none"
@@ -387,11 +418,12 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
                                     onMouseEnter={handleNavMouseEnter}
                                     className="relative flex items-center justify-center rounded-none transition-all duration-300"
                                     style={{
-                                        width: (showLinks && isWideScreen) ? 0 : 30,
+                                        marginLeft: wide && (linksVisible || ctaVisible) ? 16 : 0,
+                                        width: (linksVisible && isWideScreen && !wide) ? 0 : 30,
                                         height: 45,
-                                        opacity: (showLinks && isWideScreen) ? 0 : 1,
+                                        opacity: (linksVisible && isWideScreen && !wide) ? 0 : 1,
                                         overflow: "hidden",
-                                        pointerEvents: (showLinks && isWideScreen) ? "none" : "auto",
+                                        pointerEvents: (linksVisible && isWideScreen && !wide) ? "none" : "auto",
                                         transition: `width ${t}, opacity 120ms ease`,
                                     }}
                                     aria-label="Toggle menu"
@@ -435,7 +467,7 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
                 style={{ ...dropdownBg, top: isCompact ? 56 : 68 }}
                 onMouseLeave={handleDropdownMouseLeave}
             >
-                <div className="mx-auto w-full px-6 md:px-8 min-[1287px]:px-0 py-8 md:py-12" style={{ maxWidth: 1287, transitionDelay: isMenuOpen ? "150ms" : "0ms" }}>
+                <div className={`mx-auto w-full px-6 md:px-8 ${wide ? "min-[1408px]:px-0" : "min-[1287px]:px-0"} py-8 md:py-12`} style={{ maxWidth: wide ? 1408 : 1287, transitionDelay: isMenuOpen ? "150ms" : "0ms" }}>
                     <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12">
                         <div
                             className={`md:col-span-5 space-y-6 md:space-y-8 transition-opacity duration-500 ${isMenuOpen ? "opacity-100" : "opacity-0"}`}

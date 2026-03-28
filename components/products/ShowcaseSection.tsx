@@ -163,7 +163,7 @@ export default function ShowcaseSection() {
               style={{
                 left: 474,
                 top: 348,
-                width: 1175,
+                width: 1094,
                 height: 685,
                 perspective: 1200,
               }}
@@ -228,7 +228,7 @@ export default function ShowcaseSection() {
                 data-showcase-phone
                 style={{
                   position: "absolute",
-                  left: 880,
+                  left: 800,
                   top: 105,
                   width: 275,
                   height: 580,
@@ -269,7 +269,7 @@ export default function ShowcaseSection() {
 
             {/* Title + Subtitle */}
             <div
-              className="absolute left-[140px] top-[200px] flex flex-col"
+              className="absolute left-40 top-50 flex flex-col"
               style={{
                 fontFamily: "'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif",
               }}
@@ -332,7 +332,7 @@ export default function ShowcaseSection() {
             {/* CTA */}
             <Link
               href="/maps-gpt"
-              className={`absolute left-[1296px] top-[269px] z-20 flex w-[317px] h-[56px] min-h-[44px] items-center justify-center gap-10 cursor-pointer border-0 no-underline touch-manipulation active:scale-[0.98] select-none ${glassStyles.btn}`}
+              className={`absolute left-[1251px] top-[269px] z-20 flex w-[317px] h-[56px] min-h-[44px] items-center justify-center gap-10 cursor-pointer border-0 no-underline touch-manipulation active:scale-[0.98] select-none ${glassStyles.btn}`}
               style={{
                 padding: 0,
                 WebkitTapHighlightColor: "transparent",
@@ -370,7 +370,7 @@ export default function ShowcaseSection() {
 
             {/* Left column: 6 feature pills; tapped pill expands/collapses in place and pushes others down */}
             <div
-              className="absolute left-[140px] flex flex-col justify-center gap-[10px]"
+              className="absolute left-40 flex flex-col justify-center gap-2.5"
               style={{ top: 348, height: 685 }}
             >
               {FEATURE_PILL_LABELS.map((label, index) => {

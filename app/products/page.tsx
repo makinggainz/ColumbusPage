@@ -37,7 +37,7 @@ export default function ProductsPage() {
   return (
     <main style={{ overflowX: "clip" }}>
       <SectionWithLabel label={sectionLabels[0]}>
-        <Navbar />
+        <Navbar wide />
       </SectionWithLabel>
       <SectionWithLabel label={sectionLabels[1]}>
         <Hero />
