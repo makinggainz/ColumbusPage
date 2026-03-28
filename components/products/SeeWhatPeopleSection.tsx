@@ -387,6 +387,7 @@ export default function SeeWhatPeopleSection() {
 
       {/* 6-column pyramid — outer cols have fewer cards so they end higher */}
       <div
+        className="lg:scale-100 scale-50 origin-top"
         style={{
           display: "flex",
           justifyContent: "center",

@@ -192,17 +192,18 @@ export default function RecommendationsSection() {
 
           <a
             href="https://mapsgpt.es"
-            className={`group flex items-center justify-center gap-10 w-full max-w-214.25 h-18.5 no-underline cursor-pointer active:scale-[0.98] select-none ${glassStyles.btn}`}
+            className={`group flex items-center justify-center gap-4 lg:gap-10 w-full max-w-214.25 h-14 lg:h-18.5 no-underline cursor-pointer active:scale-[0.98] select-none ${glassStyles.btn}`}
             style={{ borderRadius: 14, padding: 0 }}
           >
             <span
               style={{
                 fontFamily: "'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif",
                 fontWeight: 590,
-                fontSize: "20px",
+                fontSize: "clamp(15px, 2vw, 20px)",
                 lineHeight: "140%",
                 letterSpacing: "-0.02em",
                 color: "#00B1D4",
+                whiteSpace: "nowrap",
               }}
             >
               Find your own favourite spots now

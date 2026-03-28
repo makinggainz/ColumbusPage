@@ -26,12 +26,12 @@ export default function FinalCTASection() {
     <section ref={sectionRef} className="bg-white flex flex-col items-center overflow-hidden">
 
       {/* ═══════════ MOBILE HERO (below lg:) ═══════════ */}
-      <div className="lg:hidden relative w-full overflow-hidden" style={{ aspectRatio: "16/10" }}>
+      <div className="lg:hidden relative w-full overflow-hidden min-h-dvh flex flex-col justify-end">
         <Image src="/ConsumerPageCity.png" alt="City" fill className="object-cover" priority />
         {/* Gradient overlay */}
         <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.2) 50%, transparent 100%)" }} />
         {/* Content */}
-        <div className="absolute inset-x-0 bottom-0 z-10 text-white px-6 pb-8 pt-16">
+        <div className="relative z-10 text-white px-6 md:px-8 pb-12 pt-16 max-w-[1408px] mx-auto w-full">
           <div className="flex items-center gap-2 mb-4">
             <Image src="/MapsGPT-logo.png" alt="MapsGPT" width={24} height={24} style={{ filter: "drop-shadow(0 1px 2px rgba(0,0,0,0.2))" }} />
             <p className="font-medium text-white text-[20px]" style={{ letterSpacing: "-0.02em" }}>

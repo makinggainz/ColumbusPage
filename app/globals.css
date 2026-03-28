@@ -148,6 +148,25 @@ body {
   width: calc(100% - 24px);
 }
 
+/* CTA wrapper: absolute on mobile to keep it out of flex flow, display:contents on desktop */
+.navbar-cta-wrapper {
+  position: absolute;
+  right: var(--cta-right, 46px);
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1;
+}
+@media (min-width: 900px) {
+  .navbar-cta-wrapper {
+    position: static;
+    right: auto;
+    top: auto;
+    transform: none;
+    z-index: auto;
+    display: contents;
+  }
+}
+
 /* Lenis smooth scroll support */
 html.lenis,
 html.lenis body {

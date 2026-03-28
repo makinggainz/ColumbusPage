@@ -5,10 +5,10 @@ import glassStyles from "@/components/ui/GlassButton.module.css";
 import { useRef, useEffect } from "react";
 
 const EMOJIS = [
-  { src: "/how/palm.png",  width: 92,  height: 85,  cls: "absolute left-[15%] top-[35%] w-[5%] h-auto" },
-  { src: "/how/glas.png",  width: 129, height: 142, cls: "absolute left-[24%] top-[30%] w-[7%] h-auto" },
-  { src: "/how/earth.png", width: 133, height: 109, cls: "absolute right-[25%] top-[34%] w-[7%] h-auto" },
-  { src: "/how/pane.png",  width: 134, height: 115, cls: "absolute right-[15%] top-[30%] w-[7%] h-auto" },
+  { src: "/how/palm.png",  width: 92,  height: 85,  cls: "absolute left-[2%] top-[22%] w-[13%] h-auto" },
+  { src: "/how/glas.png",  width: 129, height: 142, cls: "absolute left-[14%] top-[58%] w-[15%] h-auto" },
+  { src: "/how/earth.png", width: 133, height: 109, cls: "absolute right-[14%] top-[58%] w-[15%] h-auto" },
+  { src: "/how/pane.png",  width: 134, height: 115, cls: "absolute right-[2%] top-[22%] w-[13%] h-auto" },
 ];
 
 // Weak magnetic attraction — pulls toward cursor, springs back to home
@@ -109,7 +109,7 @@ export default function InspirationStrip() {
         }}
       />
 
-      <div ref={sectionRef} className="relative w-full aspect-[1730/500]">
+      <div ref={sectionRef} className="relative w-full aspect-[1730/600]">
 
         {/* Rectangle 2541: main gradient (270deg = right to left) */}
         <div

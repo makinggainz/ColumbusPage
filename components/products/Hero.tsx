@@ -83,6 +83,7 @@ export default function Hero() {
   const [taglineVisible, setTaglineVisible] = useState(false);
   const [bgExpanded,     setBgExpanded]     = useState(false);
   const [phoneVisible,   setPhoneVisible]   = useState(false);
+  const [isLg,           setIsLg]           = useState(true); // SSR default: desktop
 
   const phoneRef              = useRef<HTMLDivElement>(null);
   const phoneSpringWrapperRef = useRef<HTMLDivElement>(null);
@@ -129,6 +130,14 @@ export default function Hero() {
     });
   }, []);
 
+
+  // Responsive breakpoint — conditional render for mobile vs desktop
+  useEffect(() => {
+    const check = () => setIsLg(window.innerWidth >= 1024);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
 
   // Staged entrance animation sequence
   useEffect(() => {
@@ -560,8 +569,11 @@ export default function Hero() {
       if (so) {
         const showcaseT = Math.max(0, Math.min(1, (raw - 0.60) / 0.20));
         so.style.opacity       = String(showcaseT);
-        // Enable pointer events as soon as overlay starts becoming visible
-        so.style.pointerEvents = showcaseT > 0 ? "auto" : "none";
+        // Enable pointer events once overlay is mostly visible (raw >= 0.75)
+        // so users can tap pills before transition is 100% complete.
+        // Touch-action: pan-y ensures vertical scrolling still works through the overlay.
+        so.style.pointerEvents = raw >= 0.75 ? "auto" : "none";
+        so.style.touchAction   = "pan-y";
       }
 
       // Reveal static showcase phone once transition phone reaches final position (raw >= 0.80)
@@ -571,23 +583,35 @@ export default function Hero() {
       }
 
       // Auto-complete: snap to end if scrolling stops mid-transition.
-      // Two cases:
-      //   1. Scrolling forward anywhere → snap to end on stop.
-      //   2. Scrolling backward while in the late zone (raw > 0.6, showcase visible)
-      //      → snap back to end so a small accidental scroll up doesn't leave a stuck state.
+      // Desktop: snap forward when scrolling forward at any progress. Uses a shorter
+      //          timeout and doesn't bail on last-delta so trackpad inertia can't prevent it.
+      // Mobile: only snap forward when deep into transition (raw > 0.5) and scrolling forward.
       if (scrollStopTimerRef.current) clearTimeout(scrollStopTimerRef.current);
-      const inLateZone = raw > 0.6;
-      if (raw > 0.005 && raw < 0.995 && (delta > 0 || inLateZone)) {
+      if (!isMobile && raw > 0.005 && raw < 0.995 && (delta > 0 || raw > 0.85)) {
+        // Desktop: snap forward when scrolling forward OR when scrolling back but very close to end
         scrollStopTimerRef.current = setTimeout(() => {
           scrollStopTimerRef.current = null;
-          // Outside late zone: bail if user ended up scrolling backward
-          if (!inLateZone && lastScrollDeltaRef.current <= 0) return;
           const container = outerContainerRef.current;
           if (!container) return;
           const r2       = container.getBoundingClientRect();
-          const extra    = window.innerHeight * (window.innerWidth < 1024 ? 1 : 2);
+          const extra    = window.innerHeight * 2;
           const curRaw   = Math.max(0, Math.min(1, -r2.top / extra));
           if (curRaw <= 0.005 || curRaw >= 0.995) return;
+          // If scrolling backward and no longer in the late zone, let them go
+          if (lastScrollDeltaRef.current < 0 && curRaw <= 0.85) return;
+          const elementDocTop = window.scrollY + r2.top;
+          window.scrollTo({ top: elementDocTop + extra, behavior: "smooth" });
+        }, 300);
+      } else if (isMobile && raw > 0.5 && raw < 0.995 && delta > 0) {
+        scrollStopTimerRef.current = setTimeout(() => {
+          scrollStopTimerRef.current = null;
+          if (lastScrollDeltaRef.current <= 0) return;
+          const container = outerContainerRef.current;
+          if (!container) return;
+          const r2       = container.getBoundingClientRect();
+          const extra    = window.innerHeight;
+          const curRaw   = Math.max(0, Math.min(1, -r2.top / extra));
+          if (curRaw <= 0.5 || curRaw >= 0.995) return;
           const elementDocTop = window.scrollY + r2.top;
           window.scrollTo({ top: elementDocTop + extra, behavior: "smooth" });
         }, 400);
@@ -657,7 +681,8 @@ export default function Hero() {
           }}
         />
 
-        {/* Scaled canvas wrapper */}
+        {/* ═══ DESKTOP: Scaled canvas (lg+) ═══ */}
+        {isLg && (
         <div
           className="origin-top"
           style={{
@@ -669,20 +694,15 @@ export default function Hero() {
           }}
         >
           <div className="relative w-[1728px] h-[1756px]">
-
-            {/* Physics canvas — pointer-events-none so UI stays clickable */}
             <canvas
               ref={canvasRef}
               className="absolute inset-0 pointer-events-none"
               style={{ width: CANVAS_W, height: CANVAS_H, zIndex: 3 }}
             />
-
-            {/* All hero content in one flex column */}
             <div
               className="absolute top-[100px] left-1/2 -translate-x-1/2 flex flex-col items-center gap-[200px]"
               style={{ zIndex: 2 }}
             >
-              {/* Toggle — fades out on transition */}
               <div ref={toggleRef} style={{
                 opacity:   bgExpanded ? 1 : 0,
                 transform: bgExpanded ? "translateY(0)" : "translateY(16px)",
@@ -690,8 +710,6 @@ export default function Hero() {
               }}>
                 <ConsumerEnterpriseToggle variant="light" active="consumer" />
               </div>
-
-              {/* Badge + Title — fades out on transition */}
               <div ref={badgeTitleRef} className="flex flex-col items-center gap-[21px]">
                 <div className={glassStyles.btn} style={{
                   width: 266, height: 43, padding: 0,
@@ -714,76 +732,110 @@ export default function Hero() {
                       transition: "opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), filter 0.6s cubic-bezier(0.4, 0, 0.2, 1), transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)",
                     }}
                   >
-                    <Image
-                      src="/MapsGPT-logo.png"
-                      alt="MapsGPT Logo"
-                      width={67}
-                      height={67}
-                      style={{ filter: "drop-shadow(0 1px 2px rgba(0,0,0,0.1))" }}
-                    />
-                    <span
-                      style={{
-                        background: "linear-gradient(180deg, rgba(255,255,255,0.9) 0%, rgba(180,156,83,0.75) 40%, rgba(140,120,60,0.6) 100%)",
-                        WebkitBackgroundClip: "text",
-                        WebkitTextFillColor: "transparent",
-                        backgroundClip: "text",
-                        filter: "drop-shadow(0 1px 2px rgba(0,0,0,0.1))",
-                      }}
-                    >
-                      MapsGPT
-                    </span>
+                    <Image src="/MapsGPT-logo.png" alt="MapsGPT Logo" width={67} height={67} style={{ filter: "drop-shadow(0 1px 2px rgba(0,0,0,0.1))" }} />
+                    <span style={{
+                      background: "linear-gradient(180deg, rgba(255,255,255,0.9) 0%, rgba(180,156,83,0.75) 40%, rgba(140,120,60,0.6) 100%)",
+                      WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text",
+                      filter: "drop-shadow(0 1px 2px rgba(0,0,0,0.1))",
+                    }}>MapsGPT</span>
                   </h1>
                   <h2
                     className="text-[64px] font-bold leading-[140%] tracking-[-0.02em] flex items-center justify-center"
                     style={{
                       backgroundImage: "linear-gradient(to bottom, #00B1D4 40%, #F9C795 95%)",
-                      WebkitBackgroundClip: "text",
-                      WebkitTextFillColor: "transparent",
-                      backgroundClip: "text",
-                      filter:    taglineVisible ? "drop-shadow(0 0 100px rgba(255,255,255,1)) blur(0px)" : "blur(8px)",
-                      opacity:   taglineVisible ? 1 : 0,
+                      WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text",
+                      filter: taglineVisible ? "drop-shadow(0 0 100px rgba(255,255,255,1)) blur(0px)" : "blur(8px)",
+                      opacity: taglineVisible ? 1 : 0,
                       transform: taglineVisible ? "translateY(0)" : "translateY(16px)",
                       transition: "opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), filter 0.6s cubic-bezier(0.4, 0, 0.2, 1), transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)",
                     }}
-                  >
-                    Travel Like a Boss
-                  </h2>
+                  >Travel Like a Boss</h2>
                 </div>
               </div>
-
-
-
-              {/* Phone — spring wrapper opacity controlled by transition */}
               <div className="mt-[100px]">
                 <div ref={phoneSpringWrapperRef}>
                   <div ref={phoneRef} style={{
-                    opacity:   phoneVisible ? 1 : 0,
+                    opacity: phoneVisible ? 1 : 0,
                     transform: phoneVisible ? "translateY(0)" : "translateY(60px)",
                     transition: "opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1), transform 0.7s cubic-bezier(0.34, 1.56, 0.64, 1)",
                   }}>
-                    <div
-                      className="phone-clickable"
-                      style={{ position: "relative", display: "inline-block", cursor: "pointer" }}
-                      onClick={fireConfetti}
-                    >
-                      {/* Glass border — extends 12px beyond phone on all sides */}
-                      <div style={{
-                        position: "absolute",
-                        inset: -12,
-                        borderRadius: 67,
-                        background: "rgba(150, 225, 255, 0.20)",
-                        boxShadow: "0 -2px 10px rgba(0,0,0,0.15)",
-                        zIndex: -1,
-                      }} />
+                    <div className="phone-clickable" style={{ position: "relative", display: "inline-block", cursor: "pointer" }} onClick={fireConfetti}>
+                      <div style={{ position: "absolute", inset: -12, borderRadius: 67, background: "rgba(150, 225, 255, 0.20)", boxShadow: "0 -2px 10px rgba(0,0,0,0.15)", zIndex: -1 }} />
                       <Image src="/MapsGPTMobile.png" width={404} height={778} alt="Phone" priority style={{ borderRadius: 55, display: "block" }} />
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-
           </div>
         </div>
+        )}
+
+        {/* ═══ MOBILE: Flow layout (<lg) ═══ */}
+        {!isLg && (
+        <div className="relative z-[2] flex flex-col items-center text-center w-full h-full px-6" style={{ overflow: "visible" }}>
+          {/* Toggle — pinned near top */}
+          <div className="pt-24" ref={toggleRef} style={{
+            opacity: bgExpanded ? 1 : 0,
+            transform: bgExpanded ? "translateY(0)" : "translateY(16px)",
+            transition: "opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1), transform 0.5s cubic-bezier(0.4, 0, 0.2, 1)",
+          }}>
+            <ConsumerEnterpriseToggle variant="light" active="consumer" />
+          </div>
+          {/* Logo + tagline — positioned ~25% from top */}
+          <div className="absolute left-0 right-0 flex flex-col items-center" style={{ top: "25%" }}>
+            <div ref={badgeTitleRef} className="flex flex-col items-center gap-4">
+              <div className="text-center">
+                <h1
+                  className="flex flex-col items-center justify-center gap-2"
+                  style={{
+                    fontFamily: '"SF Compact", -apple-system, BlinkMacSystemFont, sans-serif',
+                    fontSize: 36,
+                    fontWeight: 600,
+                    opacity: logoVisible ? 1 : 0,
+                    filter: logoVisible ? "blur(0px)" : "blur(8px)",
+                    transform: logoVisible ? "translateY(0)" : "translateY(16px)",
+                    transition: "opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), filter 0.6s cubic-bezier(0.4, 0, 0.2, 1), transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)",
+                  }}
+                >
+                  <Image src="/MapsGPT-logo.png" alt="MapsGPT Logo" width={60} height={60} style={{ filter: "drop-shadow(0 1px 2px rgba(0,0,0,0.1))" }} />
+                  <span style={{
+                    background: "linear-gradient(180deg, rgba(255,255,255,0.9) 0%, rgba(180,156,83,0.75) 40%, rgba(140,120,60,0.6) 100%)",
+                    WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text",
+                    filter: "drop-shadow(0 1px 2px rgba(0,0,0,0.1))",
+                  }}>MapsGPT</span>
+                </h1>
+                <h2
+                  className="text-[36px] sm:text-[48px] font-bold leading-[140%] tracking-[-0.02em]"
+                  style={{
+                    backgroundImage: "linear-gradient(to bottom, #00B1D4 40%, #F9C795 95%)",
+                    WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text",
+                    filter: taglineVisible ? "drop-shadow(0 0 80px rgba(255,255,255,1)) blur(0px)" : "blur(8px)",
+                    opacity: taglineVisible ? 1 : 0,
+                    transform: taglineVisible ? "translateY(0)" : "translateY(16px)",
+                    transition: "opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), filter 0.6s cubic-bezier(0.4, 0, 0.2, 1), transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)",
+                  }}
+                >Travel Like a Boss</h2>
+              </div>
+            </div>
+          </div>
+          {/* Phone — absolutely positioned at bottom center, only top peeks out */}
+          <div className="absolute bottom-0 left-1/2" style={{ transform: "translateX(-50%)" }}>
+            <div ref={phoneSpringWrapperRef}>
+              <div ref={phoneRef} style={{
+                opacity: phoneVisible ? 1 : 0,
+                transform: phoneVisible ? "translateY(60%)" : "translateY(calc(60% + 40px))",
+                transition: "opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1), transform 0.7s cubic-bezier(0.34, 1.56, 0.64, 1)",
+              }}>
+                <div className="phone-clickable" style={{ position: "relative", display: "inline-block", cursor: "pointer" }} onClick={fireConfetti}>
+                  <div style={{ position: "absolute", inset: -10, borderRadius: 50, background: "rgba(150, 225, 255, 0.20)", boxShadow: "0 -2px 10px rgba(0,0,0,0.15)", zIndex: -1 }} />
+                  <Image src="/MapsGPTMobile.png" width={220} height={424} alt="Phone" priority className="sm:w-[280px] sm:h-auto" style={{ borderRadius: 42, display: "block" }} />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        )}
 
         {/* Showcase overlay — fades in as phone fades out, inside sticky section */}
         <div
@@ -801,7 +853,17 @@ export default function Hero() {
             overflow: "hidden",
           }}
         >
-          <ShowcaseSection />
+          <ShowcaseSection onInteraction={() => {
+            const container = outerContainerRef.current;
+            if (!container) return;
+            const r = container.getBoundingClientRect();
+            const isMob = window.innerWidth < 1024;
+            const extra = window.innerHeight * (isMob ? 1 : 2);
+            const curRaw = Math.max(0, Math.min(1, -r.top / extra));
+            if (curRaw >= 0.995) return; // already done
+            const elementDocTop = window.scrollY + r.top;
+            window.scrollTo({ top: elementDocTop + extra, behavior: "smooth" });
+          }} />
         </div>
       </section>
 

@@ -37,6 +37,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
     const [bgTriggerPassed, setBgTriggerPassed] = useState(false);
     const pathname = usePathname();
     const isProductsPage = pathname === "/products";
+    const showWordmarkOnMobile = pathname === "/" || pathname === "/our-mission" || pathname === "/contact";
     const navRef = useRef<HTMLElement>(null);
     const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -302,7 +303,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                         }}
                     />
 
-                    <div className={`relative ${wide ? "px-8 lg:px-12 min-[1408px]:px-0" : "px-8 min-[1287px]:px-0"}`}>
+                    <div className={`relative ${wide ? "px-8 min-[1408px]:px-0" : "px-8 min-[1287px]:px-0"}`}>
                         <div
                             className="flex items-center justify-between"
                             style={{
@@ -313,7 +314,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                         >
                             {/* ── Left: Logo ── */}
                             <div className="flex items-center">
-                                <Link href="/" className="flex w-fit shrink-0 items-center gap-2" onMouseEnter={handleNavMouseEnter}>
+                                <Link href="/" className="flex w-fit shrink-0 items-center gap-2" onMouseEnter={isWideScreen ? handleNavMouseEnter : undefined}>
                                     <div
                                         data-navbar-logo
                                         className="relative shrink-0"
@@ -335,12 +336,12 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                         />
                                     </div>
                                     <span
-                                        className={`brand-wordmark font-medium leading-none whitespace-nowrap ${wide ? glassStyles.glassTextStatic : ""}`}
+                                        className={`brand-wordmark font-medium leading-none whitespace-nowrap ${wide && !bgTriggerPassed ? glassStyles.glassTextStatic : ""}`}
                                         style={{
                                             fontSize: isCompact ? 20 : 24,
                                             letterSpacing: "-0.02em",
                                             transition: `font-size ${t}, opacity 0.4s ease`,
-                                            opacity: hasScrolled && (!ctaVisible || isWideScreen) ? 1 : 0,
+                                            opacity: (!isWideScreen && !showWordmarkOnMobile) ? 0 : hasScrolled && (!ctaVisible || isWideScreen) ? 1 : 0,
                                         }}
                                     >
                                         Columbus Earth
@@ -355,26 +356,28 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                 <div
                                     className="hidden min-[900px]:flex items-center gap-5"
                                     style={{
-                                        maxWidth: linksVisible ? 600 : 0,
-                                        overflow: "hidden",
-                                        opacity: linksVisible ? 1 : 0,
-                                        clipPath: linksVisible ? "inset(0 0% 0 0)" : "inset(0 100% 0 0)",
                                         pointerEvents: linksVisible ? "auto" : "none",
-                                        paddingRight: 16,
-                                        marginRight: 16,
-                                        transition: `opacity 300ms ease, clip-path 400ms cubic-bezier(0.22, 1, 0.36, 1)`,
+                                        paddingRight: linksVisible ? 16 : 0,
+                                        marginRight: linksVisible ? 16 : 0,
+                                        transition: `padding-right 400ms cubic-bezier(0.22, 1, 0.36, 1), margin-right 400ms cubic-bezier(0.22, 1, 0.36, 1)`,
                                     }}
                                 >
                                     {[
                                         { label: "Product", href: "/enterprise" },
                                         { label: "Use Cases", href: "/use-cases" },
                                         { label: "Technology", href: "/technology" },
-                                    ].map((link) => (
+                                    ].map((link, i) => (
                                         <Link
                                             key={link.label}
                                             href={link.href}
                                             className={`${navLinkClass} ${wide ? glassStyles.glassTextStatic : ""}`}
-                                            style={{ ...navLinkInline(isCompact), whiteSpace: "nowrap" }}
+                                            style={{
+                                                ...navLinkInline(isCompact),
+                                                whiteSpace: "nowrap",
+                                                opacity: linksVisible ? 1 : 0,
+                                                transform: linksVisible ? "translateX(0)" : "translateX(8px)",
+                                                transition: `opacity 350ms ease ${i * 80}ms, transform 400ms cubic-bezier(0.22, 1, 0.36, 1) ${i * 80}ms, font-size ${t}`,
+                                            }}
                                             onMouseEnter={handleNavMouseEnter}
                                         >
                                             {link.label}
@@ -382,75 +385,87 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                     ))}
                                 </div>
 
-                                {/* Start Now — appears after hero CTA leaves viewport */}
-                                <Link
-                                    href="/maps-gpt"
-                                    className={`group flex items-center justify-between leading-none whitespace-nowrap hover:opacity-90 transition-opacity ${wide ? glassStyles.btn : ""}`}
-                                    style={{
-                                        fontSize: 14,
-                                        fontWeight: 500,
-                                        height: 45,
-                                        gap: isWideScreen ? 12 : 6,
-                                        width: ctaVisible ? 145 : 0,
-                                        opacity: ctaVisible ? 1 : 0,
-                                        overflow: wide ? undefined : "hidden",
-                                        pointerEvents: ctaVisible ? "auto" : "none",
-                                        paddingLeft: 20,
-                                        paddingRight: 16,
-                                        marginRight: !isWideScreen && ctaVisible ? 8 : 0,
-                                        transition: `width ${t}, opacity 300ms ease, margin-right ${t}`,
-                                        ...(wide
-                                            ? { backdropFilter: "blur(6px)", WebkitBackdropFilter: "blur(6px)" }
-                                            : { backgroundColor: "#000000", color: "white" }),
-                                    }}
-                                >
-                                    <span className={`transition-colors duration-300 ${wide ? (isProductsPage ? "text-black" : isMenuOpen ? "text-black" : "text-white") : ""} group-hover:text-[#2563EB]`}>Start Now</span>
-                                    <svg
-                                        className="transition-transform duration-300 group-hover:translate-x-0.5"
-                                        width="10" height="18" viewBox="0 0 7 12" fill="none"
-                                        stroke="#2563EB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"
-                                    >
-                                        <path d="M1 1l5 5-5 5" />
-                                    </svg>
-                                </Link>
+                                {/* CTA + Hamburger wrapper — isolates hamburger from CTA width animation */}
+                                <div className="relative flex items-center" style={{ flexShrink: 0 }}>
 
-                                {/* Hamburger — hides only when nav links are visible (wide screen + scrolled past CTA) */}
-                                <button
-                                    onClick={handleHamburgerClick}
-                                    onMouseEnter={handleNavMouseEnter}
-                                    className="relative flex items-center justify-center rounded-none transition-all duration-300"
-                                    style={{
-                                        marginLeft: wide && (linksVisible || ctaVisible) ? 16 : 0,
-                                        width: (linksVisible && isWideScreen && !wide) ? 0 : 30,
-                                        height: 45,
-                                        opacity: (linksVisible && isWideScreen && !wide) ? 0 : 1,
-                                        overflow: "hidden",
-                                        pointerEvents: (linksVisible && isWideScreen && !wide) ? "none" : "auto",
-                                        transition: `width ${t}, opacity 120ms ease`,
-                                    }}
-                                    aria-label="Toggle menu"
-                                >
-                                    <div
-                                        className="absolute h-px bg-current transform-gpu"
+                                    {/* Start Now — appears after hero CTA leaves viewport */}
+                                    {/* Position wrapper: on mobile products page, absolutely positioned to keep CTA
+                                        out of flex flow so it can't push the hamburger. On desktop, display:contents
+                                        makes this wrapper invisible to layout so the Link flows normally. */}
+                                    <div className="navbar-cta-wrapper" style={{
+                                        ["--cta-right" as string]: wide ? "52px" : "46px",
+                                    }}>
+                                        <Link
+                                            href="/maps-gpt"
+                                            className={`group flex items-center justify-between leading-none whitespace-nowrap hover:opacity-90 transition-opacity ${wide ? glassStyles.btn : ""}`}
+                                            style={{
+                                                fontSize: 14,
+                                                fontWeight: 500,
+                                                height: 45,
+                                                gap: isWideScreen ? 12 : 6,
+                                                width: ctaVisible ? 145 : 0,
+                                                opacity: ctaVisible ? 1 : 0,
+                                                overflow: "hidden",
+                                                pointerEvents: ctaVisible ? "auto" : "none",
+                                                paddingLeft: ctaVisible ? 20 : 0,
+                                                paddingRight: ctaVisible ? 16 : 0,
+                                                marginRight: 0,
+                                                transition: `width ${t}, opacity 300ms ease, padding ${t}`,
+                                                ...(wide
+                                                    ? { backdropFilter: "blur(6px)", WebkitBackdropFilter: "blur(6px)" }
+                                                    : { backgroundColor: "#000000", color: "white" }),
+                                            }}
+                                        >
+                                            <span className={`transition-colors duration-300 ${wide ? (isProductsPage ? "text-black" : isMenuOpen ? "text-black" : "text-white") : ""} group-hover:text-[#2563EB]`}>Start Now</span>
+                                            <svg
+                                                className="transition-transform duration-300 group-hover:translate-x-0.5"
+                                                width="10" height="18" viewBox="0 0 7 12" fill="none"
+                                                stroke="#2563EB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"
+                                            >
+                                                <path d="M1 1l5 5-5 5" />
+                                            </svg>
+                                        </Link>
+                                    </div>
+
+                                    {/* Hamburger — hides only when nav links are visible (wide screen + scrolled past CTA) */}
+                                    <button
+                                        onClick={handleHamburgerClick}
+                                        onMouseEnter={handleNavMouseEnter}
+                                        className="relative flex items-center justify-center rounded-none transition-all duration-300"
                                         style={{
-                                            width: 22,
-                                            transform: isMenuOpen ? "rotate(45deg)" : "translateY(-6px)",
-                                            transition: `transform 300ms ease-in-out`,
+                                            flexShrink: 0,
+                                            marginLeft: wide && isWideScreen && (linksVisible || ctaVisible) ? 16 : 0,
+                                            width: (linksVisible && isWideScreen && !wide) ? 0 : 30,
+                                            height: 45,
+                                            opacity: (linksVisible && isWideScreen && !wide) ? 0 : 1,
+                                            overflow: "hidden",
+                                            pointerEvents: (linksVisible && isWideScreen && !wide) ? "none" : "auto",
+                                            transition: `width ${t}, opacity 120ms ease, margin-left ${t}`,
                                         }}
-                                    />
-                                    <div
-                                        className={`absolute h-px bg-current ${isMenuOpen ? "opacity-0" : "opacity-100"}`}
-                                        style={{ width: 22, transition: `opacity 200ms ease` }}
-                                    />
-                                    <div
-                                        className="absolute h-px bg-current transform-gpu"
-                                        style={{
-                                            width: 22,
-                                            transform: isMenuOpen ? "rotate(-45deg)" : "translateY(6px)",
-                                            transition: `transform 300ms ease-in-out`,
-                                        }}
-                                    />
-                                </button>
+                                        aria-label="Toggle menu"
+                                    >
+                                        <div
+                                            className="absolute h-px bg-current transform-gpu"
+                                            style={{
+                                                width: 22,
+                                                transform: isMenuOpen ? "rotate(45deg)" : "translateY(-6px)",
+                                                transition: `transform 300ms ease-in-out`,
+                                            }}
+                                        />
+                                        <div
+                                            className={`absolute h-px bg-current ${isMenuOpen ? "opacity-0" : "opacity-100"}`}
+                                            style={{ width: 22, transition: `opacity 200ms ease` }}
+                                        />
+                                        <div
+                                            className="absolute h-px bg-current transform-gpu"
+                                            style={{
+                                                width: 22,
+                                                transform: isMenuOpen ? "rotate(-45deg)" : "translateY(6px)",
+                                                transition: `transform 300ms ease-in-out`,
+                                            }}
+                                        />
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
