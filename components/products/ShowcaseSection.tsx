@@ -28,7 +28,7 @@ const FEATURE_PILL_LABELS = [
 
 const MARQUEE_LOGOS = Array.from({ length: 12 }, (_, i) => `/MapsGPTLogos/Logo${i + 1}.png`);
 
-export default function ShowcaseSection() {
+export default function ShowcaseSection({ compact = false }: { compact?: boolean }) {
   const FRAME_WIDTH = 1728;
   const FRAME_HEIGHT = 1343;
 
@@ -93,6 +93,38 @@ export default function ShowcaseSection() {
     }, pauseAtEmpty);
     return () => clearTimeout(t);
   }, [phraseIndex, suffix, isDeleting]);
+
+  if (compact) {
+    return (
+      <section className="relative overflow-hidden flex flex-col items-center py-16">
+        <p
+          className="mb-6 flex h-[40px] w-[303px] items-center justify-center text-center"
+          style={{
+            fontFamily: "'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif",
+            fontWeight: 500,
+            fontSize: "20px",
+            lineHeight: "140%",
+            letterSpacing: "-0.02em",
+            color: "#9F9F9F",
+          }}
+        >
+          We work with data from the most reputable brands
+        </p>
+        <div className="relative overflow-hidden" style={{ width: "1440px", maxWidth: "100vw" }}>
+          <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-24" style={{ background: "linear-gradient(to right, #FFFFFF, transparent)" }} />
+          <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-24" style={{ background: "linear-gradient(to left, #FFFFFF, transparent)" }} />
+          <div className="trusted-marquee flex w-max items-center gap-[72px]">
+            {MARQUEE_LOGOS.map((src) => (
+              <Image key={src} src={src} width={180} height={60} alt="" className="shrink-0 grayscale opacity-50 hover:grayscale-0 hover:opacity-100 transition-all duration-300 cursor-pointer" />
+            ))}
+            {MARQUEE_LOGOS.map((src) => (
+              <Image key={`dup-${src}`} src={src} width={180} height={60} alt="" className="shrink-0 grayscale opacity-50 hover:grayscale-0 hover:opacity-100 transition-all duration-300 cursor-pointer" aria-hidden />
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="relative overflow-hidden flex justify-center">
@@ -332,7 +364,7 @@ export default function ShowcaseSection() {
             {/* CTA */}
             <Link
               href="/maps-gpt"
-              className={`absolute left-[1251px] top-[269px] z-20 flex w-[317px] h-[56px] min-h-[44px] items-center justify-center gap-10 cursor-pointer border-0 no-underline touch-manipulation active:scale-[0.98] select-none ${glassStyles.btn}`}
+              className={`group absolute left-[1251px] top-[269px] z-20 flex w-[317px] h-[56px] min-h-[44px] items-center justify-center gap-10 cursor-pointer border-0 no-underline touch-manipulation active:scale-[0.98] select-none ${glassStyles.btn}`}
               style={{
                 padding: 0,
                 WebkitTapHighlightColor: "transparent",
@@ -355,7 +387,7 @@ export default function ShowcaseSection() {
                 height="13"
                 viewBox="0 0 13 13"
                 fill="none"
-                className="shrink-0"
+                className="shrink-0 transition-transform duration-300 group-hover:translate-x-0.5"
                 aria-hidden
               >
                 <path

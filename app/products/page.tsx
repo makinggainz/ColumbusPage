@@ -44,7 +44,7 @@ export default function ProductsPage() {
       </SectionWithLabel>
       <div data-navbar-bg-trigger />
       <SectionWithLabel label={sectionLabels[2]}>
-        <ShowcaseSection />
+        <ShowcaseSection compact />
       </SectionWithLabel>
       <SectionWithLabel label={sectionLabels[3]}>
         <QuestionsSection />
