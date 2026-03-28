@@ -95,6 +95,43 @@ export default function ShowcaseSection() {
   return (
     <section className="relative overflow-hidden flex justify-center">
 
+      {/* Flower — top right, popping down from top edge behind the CTA */}
+      <div
+        className="absolute z-10 pointer-events-none"
+        style={{
+          right: "clamp(40px, 8vw, 180px)",
+          top: -60,
+          width: "clamp(140px, 18vw, 280px)",
+        }}
+      >
+        <Image src="/flower.png" alt="" width={280} height={350} className="w-full h-auto" />
+      </div>
+
+      {/* Fern — bottom left */}
+      <div
+        className="absolute z-10 pointer-events-none"
+        style={{
+          left: "clamp(-120px, -8vw, -40px)",
+          bottom: "clamp(120px, calc(-6vw + 200px), 180px)",
+          width: "clamp(200px, 28vw, 450px)",
+          transform: "scaleX(-1)",
+        }}
+      >
+        <Image src="/Fern.png" alt="" width={650} height={910} className="w-full h-auto" />
+      </div>
+
+      {/* Fern — bottom right */}
+      <div
+        className="absolute z-10 pointer-events-none"
+        style={{
+          right: "clamp(-120px, -8vw, -40px)",
+          bottom: "clamp(120px, calc(-6vw + 200px), 180px)",
+          width: "clamp(200px, 28vw, 450px)",
+        }}
+      >
+        <Image src="/Fern.png" alt="" width={650} height={910} className="w-full h-auto" />
+      </div>
+
       {/* Aspect Ratio Wrapper (True Responsive Height) */}
       <div
         className="relative w-full max-w-[1728px]"
