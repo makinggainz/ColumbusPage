@@ -107,11 +107,11 @@ backgroundClip: "text"
 |------|----------|---------|
 | Hero Headline | `linear-gradient(to bottom, #00B1D4 40%, #F9C795 95%)` | "Travel Like a Boss" |
 | Hero Badge Title | `linear-gradient(180deg, rgba(255,255,255,0.9) 0%, rgba(180,156,83,0.75) 40%, rgba(140,120,60,0.6) 100%)` | "MapsGPT" (SF Compact) |
-| HowItWorks Heading | `linear-gradient(90deg, #00454A 0%, #00A4B0 100%)` | "Chat to find…" |
+| HowItWorks Heading | `linear-gradient(90deg, #063140 0%, #00B1D4 100%)` | "Chat to find…" |
 | Favorites Top | `linear-gradient(90deg, #DE2F32 0%, #B00098 100%)` | FavoritesSection top heading |
 | Favorites Bottom | `linear-gradient(180deg, #000000 0%, #666666 100%)` | FavoritesSection bottom heading |
-| Showcase Subtitle | `linear-gradient(180deg, #063140 0%, rgba(6,64,58,0.38) 100%)` | Rotating subtitle text |
-| Inspiration | `linear-gradient(180deg, #00454A 0%, #01A35D 100%)` | "Need some travel inspiration?" |
+| Showcase Subtitle | `linear-gradient(180deg, #063140 0%, rgba(6, 49, 64, 0.38) 100%)` | Rotating subtitle text |
+| Inspiration | `linear-gradient(180deg, #063140 0%, #01A35D 100%)` | "Need some travel inspiration?" |
 | Powered By | `linear-gradient(90deg, #0A1342 0%, #2A2A2A 100%)` | "Powered by Columbus-01" |
 
 ### Text drop shadows (gradient text only)
@@ -127,22 +127,16 @@ backgroundClip: "text"
 
 ## Color System
 
-### Cyans & Teals — Primary palette
+### Teal & Cyan — Consolidated palette (4 values)
 
-| Name | Value | Usage |
-|------|-------|-------|
-| Brand Cyan | `#00B1D4` | Hero headline bottom stop, CTA link text, ShowcaseSection accent |
-| Light Cyan | `#59E1EB` | Sparkle particles, earlier gradient experiments |
-| Glass Cyan | `#8DF7FF` | FinalCTA inline "MapsGPT" highlight text |
-| Teal Accent | `#5AB7AE` | HowItWorks "Roll the dice" label |
-| Arrow Teal | `rgba(139, 235, 225, 0.8)` | HowItWorks submit arrow background |
-| Soft Teal | `#1F6F6C` | RecommendationsSection headings and subheadings |
-| Emerald Teal | `#0F6B6E` | QuestionsSection heading |
-| Mid Teal | `#00454A` | HowItWorks gradient heading start, InspirationSection |
-| Muted Teal | `#00A4B0` | HowItWorks gradient heading end |
-| Dark Teal UI | `#06403A` | ShowcaseSection feature pill label and body text |
-| Deep Teal | `#083445` | ShowcaseSection "MapsGPT" title color |
-| Deep Ocean | `#063140` | ShowcaseSection label, subtitle gradient start |
+> **Rule: Do not introduce new teal/cyan hex values.** Every teal or cyan on this page must be one of these four tokens.
+
+| Token | Value | Role | Replaces |
+|-------|-------|------|----------|
+| **Teal Dark** | `#063140` | Dark text, labels, pill text, gradient starts | `#083445`, `#06403A`, `#00454A` |
+| **Teal Mid** | `#0F6B6E` | Section headings on light backgrounds | `#1F6F6C` |
+| **Cyan Accent** | `#00B1D4` | CTAs, links, interactive highlights, gradient endpoints | `#5AB7AE`, `#00A4B0` |
+| **Cyan Light** | `#8DF7FF` | Text highlights on dark backgrounds, particles, glows | `#59E1EB`, `rgba(139,235,225,0.8)` |
 
 ### Glassmorphism tints
 

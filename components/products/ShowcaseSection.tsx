@@ -97,38 +97,42 @@ export default function ShowcaseSection() {
   return (
     <section className="relative overflow-hidden flex justify-center">
 
-      {/* Flower — top right, popping down from top edge behind the CTA */}
+      {/* Flower — top right, bounces in like a natural branch */}
       <div
         className="absolute z-10 pointer-events-none"
         style={{
           right: "clamp(40px, 8vw, 180px)",
           top: -60,
           width: "clamp(140px, 18vw, 280px)",
+          transformOrigin: "top right",
+          animation: "flowerBounceIn 1.4s cubic-bezier(0.22, 1, 0.36, 1) both, flowerWind 5s ease-in-out 2.4s infinite",
         }}
       >
         <Image src="/flower.png" alt="" width={280} height={350} className="w-full h-auto" />
       </div>
 
-      {/* Fern — bottom left */}
+      {/* Fern — bottom left, behind the feature pills */}
       <div
-        className="absolute z-10 pointer-events-none"
+        className="absolute z-0 pointer-events-none"
         style={{
           left: "clamp(-120px, -8vw, -40px)",
           bottom: "clamp(120px, calc(-6vw + 200px), 180px)",
           width: "clamp(200px, 28vw, 450px)",
           transform: "scaleX(-1)",
+          opacity: 0.75,
         }}
       >
         <Image src="/Fern.png" alt="" width={650} height={910} className="w-full h-auto" />
       </div>
 
-      {/* Fern — bottom right */}
+      {/* Fern — bottom right, behind the desktop card */}
       <div
-        className="absolute z-10 pointer-events-none"
+        className="absolute z-0 pointer-events-none"
         style={{
           right: "clamp(-120px, -8vw, -40px)",
           bottom: "clamp(120px, calc(-6vw + 200px), 180px)",
           width: "clamp(200px, 28vw, 450px)",
+          opacity: 0.75,
         }}
       >
         <Image src="/Fern.png" alt="" width={650} height={910} className="w-full h-auto" />
@@ -221,6 +225,8 @@ export default function ShowcaseSection() {
                   top: 105,
                   width: 275,
                   height: 580,
+                  opacity: 0,
+                  transition: "opacity 0.3s ease",
                   borderRadius: 38,
                   cursor: "pointer",
                   boxShadow: "none",
@@ -262,15 +268,32 @@ export default function ShowcaseSection() {
               }}
             >
               <div
+                className="flex items-center gap-3"
                 style={{
                   fontWeight: 600,
                   fontSize: "48px",
                   lineHeight: "130%",
                   letterSpacing: "-0.02em",
-                  color: "#083445",
                 }}
               >
-                MapsGPT
+                <Image
+                  src="/MapsGPT-logo.png"
+                  alt="MapsGPT Logo"
+                  width={52}
+                  height={52}
+                  style={{ filter: "drop-shadow(0 1px 2px rgba(0,0,0,0.1))" }}
+                />
+                <span
+                  style={{
+                    background: "linear-gradient(180deg, rgba(255,255,255,0.9) 0%, rgba(180,156,83,0.75) 40%, rgba(140,120,60,0.6) 100%)",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                    backgroundClip: "text",
+                    filter: "drop-shadow(0 1px 2px rgba(0,0,0,0.1))",
+                  }}
+                >
+                  MapsGPT
+                </span>
               </div>
               <div
                 className="whitespace-nowrap"
@@ -280,7 +303,7 @@ export default function ShowcaseSection() {
                   fontSize: "48px",
                   lineHeight: "130%",
                   letterSpacing: "-0.02em",
-                  background: "linear-gradient(180deg, #063140 0%, rgba(6, 64, 58, 0.38) 100%)",
+                  background: "linear-gradient(180deg, #063140 0%, rgba(6, 49, 64, 0.38) 100%)",
                   WebkitBackgroundClip: "text",
                   WebkitTextFillColor: "transparent",
                   backgroundClip: "text",
@@ -302,7 +325,7 @@ export default function ShowcaseSection() {
             {/* CTA */}
             <Link
               href="/maps-gpt"
-              className={`absolute left-[1296px] top-[229px] z-20 flex w-[317px] h-[56px] min-h-[44px] items-center justify-center gap-2 cursor-pointer border-0 no-underline touch-manipulation active:scale-[0.98] select-none ${glassStyles.btn}`}
+              className={`absolute left-[1296px] top-[229px] z-20 flex w-[317px] h-[56px] min-h-[44px] items-center justify-center gap-10 cursor-pointer border-0 no-underline touch-manipulation active:scale-[0.98] select-none ${glassStyles.btn}`}
               style={{
                 padding: 0,
                 WebkitTapHighlightColor: "transparent",
@@ -318,18 +341,18 @@ export default function ShowcaseSection() {
                   color: "#00B1D4",
                 }}
               >
-                Try it out now
+                Try MapsGPT
               </span>
               <svg
-                width="15"
-                height="11"
-                viewBox="0 0 15 11"
+                width="13"
+                height="13"
+                viewBox="0 0 13 13"
                 fill="none"
                 className="shrink-0"
                 aria-hidden
               >
                 <path
-                  d="M1 5.5h11M11 5.5L7 1.5M11 5.5L7 9.5"
+                  d="M2 11L11 2M11 2H4M11 2V9"
                   stroke="#00B1D4"
                   strokeWidth="1.5"
                   strokeLinecap="round"
@@ -368,10 +391,10 @@ export default function ShowcaseSection() {
                         aria-label={isExpanded ? `Close ${label}` : undefined}
                       >
                         <span
-                          className="text-[19px] font-semibold leading-[140%] tracking-[-0.02em]"
+                          className="text-[20px] font-semibold leading-[140%] tracking-[-0.02em]"
                           style={{
                             fontFamily: "'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif",
-                            color: "#06403A",
+                            color: "#063140",
                             opacity: pillContentVisible ? 1 : 0,
                             transform: pillContentVisible
                               ? "translateY(0)"
@@ -386,7 +409,7 @@ export default function ShowcaseSection() {
                           {label}
                         </span>
                         <p
-                          className="mt-3 text-[19px] font-semibold leading-[1.6] tracking-[-0.02em] text-[#06403A]/80"
+                          className="mt-3 text-[20px] font-normal leading-[1.6] tracking-[-0.02em] text-[#063140]/80"
                           style={{
                             opacity: pillContentVisible ? 1 : 0,
                             transform: pillContentVisible
@@ -414,18 +437,18 @@ export default function ShowcaseSection() {
                         >
                           <span
                             className="absolute left-1/2 top-0 h-[11px] w-[2px] -translate-x-px rounded-[1px]"
-                            style={{ background: "#06403A" }}
+                            style={{ background: "#063140" }}
                           />
                           <span
                             className="absolute left-0 top-1/2 h-[2px] w-[11px] -translate-y-px rounded-[1px]"
-                            style={{ background: "#06403A" }}
+                            style={{ background: "#063140" }}
                           />
                         </span>
                         <span
-                          className="relative whitespace-nowrap text-[19px] font-semibold leading-[140%] tracking-[-0.02em]"
+                          className="relative whitespace-nowrap text-[20px] font-semibold leading-[140%] tracking-[-0.02em]"
                           style={{
                             fontFamily: "'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif",
-                            color: "#06403A",
+                            color: "#063140",
                           }}
                         >
                           {label}
@@ -448,7 +471,7 @@ export default function ShowcaseSection() {
                   fontFamily: "'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif",
                   fontWeight: 500,
                   fontSize: "20px",
-                  lineHeight: "110%",
+                  lineHeight: "140%",
                   letterSpacing: "-0.02em",
                   color: "#9F9F9F",
                 }}

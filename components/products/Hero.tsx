@@ -116,6 +116,7 @@ export default function Hero() {
   const phoneEndYRef            = useRef(0);
   const phoneEndWRef            = useRef(0);
   const phoneEndHRef            = useRef(0);
+  const phoneEndElRef           = useRef<HTMLElement | null>(null);
 
   // Pre-load images
   useEffect(() => {
@@ -441,6 +442,7 @@ export default function Hero() {
       if (nearZero) {
         phoneStartCapturedRef.current = false;
         phoneEndCapturedRef.current   = false;
+        if (phoneEndElRef.current) { phoneEndElRef.current.style.opacity = "0"; phoneEndElRef.current = null; }
         if (phoneSpringWrapperRef.current) phoneSpringWrapperRef.current.style.opacity = "1";
         const tp = transitionPhoneRef.current;
         if (tp) tp.style.display = "none";
@@ -489,6 +491,7 @@ export default function Hero() {
               phoneEndYRef.current = r.top;
               phoneEndWRef.current = r.width;
               phoneEndHRef.current = r.height;
+              phoneEndElRef.current = endEl;
               phoneEndCapturedRef.current = true;
             }
           }
@@ -505,24 +508,30 @@ export default function Hero() {
         const endW   = phoneEndWRef.current;
         const endH   = phoneEndHRef.current;
 
-        let curX: number, curY: number, curW: number, curH: number;
+        let curX: number, curY: number, curW: number, curH: number, curRadius: number;
+
+        // Border radius: hero phone = 55px, final showcase phone = 38px in canvas coords
+        const startRadius = 55;
+        const endRadius   = endW > 0 ? 38 * (endW / 275) : startRadius;
 
         if (raw <= 0.45) {
-          // Phase 1: hero → center
+          // Phase 1: hero → center (size and radius hold at hero values)
           const t = Math.min(1, raw / 0.45);
           const e = 1 - Math.pow(1 - t, 3);
           curX = startX + (midX - startX) * e;
           curY = startY + (midY - startY) * e;
           curW = startW;
           curH = startH;
+          curRadius = startRadius;
         } else {
-          // Phase 2: center → final canvas position, shrinking to match
+          // Phase 2: center → final canvas position, shrinking + corner radius matching
           const t = Math.min(1, (raw - 0.45) / 0.35);
           const e = 1 - Math.pow(1 - t, 3);
           curX = midX + (endX - midX) * e;
           curY = midY + (endY - midY) * e;
           curW = startW + (endW - startW) * e;
           curH = startH + (endH - startH) * e;
+          curRadius = startRadius + (endRadius - startRadius) * e;
         }
 
         // Phase 3: instant hide once phone reaches final position
@@ -535,6 +544,12 @@ export default function Hero() {
         tp.style.top       = `${curY}px`;
         tp.style.opacity   = String(phoneOpacity);
         tp.style.transform = "none";
+
+        // Animate corner radius on image and glass border
+        const phoneImg = tp.querySelector<HTMLElement>('img');
+        if (phoneImg) phoneImg.style.borderRadius = `${curRadius}px`;
+        const glassBorder = tp.querySelector<HTMLElement>(':scope > div');
+        if (glassBorder) glassBorder.style.borderRadius = `${curRadius + 12}px`;
       }
 
       // Showcase overlay fades in (60%–80%)
@@ -542,6 +557,12 @@ export default function Hero() {
         const showcaseT = Math.max(0, Math.min(1, (raw - 0.60) / 0.20));
         so.style.opacity       = String(showcaseT);
         so.style.pointerEvents = showcaseT >= 1 ? "auto" : "none";
+      }
+
+      // Reveal static showcase phone once transition phone reaches final position (raw >= 0.80)
+      const staticPhone = phoneEndElRef.current;
+      if (staticPhone) {
+        staticPhone.style.opacity = raw >= 0.80 ? "1" : "0";
       }
     };
 
@@ -624,7 +645,7 @@ export default function Hero() {
                   transform: bgExpanded ? "translateY(0)" : "translateY(16px)",
                   transition: "opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.1s, transform 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.1s",
                 }}>
-                  <span style={{ fontSize: 16, fontWeight: 500 }}>Only Available on Earth</span>
+                  <span style={{ fontSize: 15, fontWeight: 500 }}>Only Available on Earth</span>
                 </div>
                 <div className="text-center">
                   <h1
@@ -659,7 +680,7 @@ export default function Hero() {
                     </span>
                   </h1>
                   <h2
-                    className="text-[64px] font-bold leading-[140%] flex items-center justify-center"
+                    className="text-[64px] font-bold leading-[140%] tracking-[-0.02em] flex items-center justify-center"
                     style={{
                       backgroundImage: "linear-gradient(to bottom, #00B1D4 40%, #F9C795 95%)",
                       WebkitBackgroundClip: "text",
