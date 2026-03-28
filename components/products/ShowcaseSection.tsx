@@ -195,15 +195,15 @@ export default function ShowcaseSection() {
                   const reset = "rotateX(0deg) rotateY(0deg) translateY(0)";
                   e.currentTarget.style.transform = reset;
                   e.currentTarget.style.boxShadow = "0 4px 12px rgba(0, 0, 0, 0.06)";
-                  e.currentTarget.style.transition = "transform 0.5s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 0.5s cubic-bezier(0.23, 1, 0.32, 1)";
+                  e.currentTarget.style.transition = "transform 0.7s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.7s cubic-bezier(0.22, 1, 0.36, 1)";
                   if (phoneTiltRef.current) {
                     phoneTiltRef.current.style.transform = reset;
-                    phoneTiltRef.current.style.transition = "transform 0.5s cubic-bezier(0.23, 1, 0.32, 1)";
+                    phoneTiltRef.current.style.transition = "transform 0.7s cubic-bezier(0.22, 1, 0.36, 1)";
                   }
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.transition = "transform 0.15s ease-out, box-shadow 0.3s ease-out";
-                  if (phoneTiltRef.current) phoneTiltRef.current.style.transition = "transform 0.15s ease-out";
+                  e.currentTarget.style.transition = "transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.4s cubic-bezier(0.22, 1, 0.36, 1)";
+                  if (phoneTiltRef.current) phoneTiltRef.current.style.transition = "transform 0.25s cubic-bezier(0.22, 1, 0.36, 1)";
                 }}
               >
                 <Image src="/MapsGPTDesktop.png" alt="Maps UI" fill className="object-fill" />
@@ -215,20 +215,31 @@ export default function ShowcaseSection() {
               <div
                 ref={phoneTiltRef}
                 data-showcase-phone
-                className={glassStyles.showcasePhone}
                 style={{
                   position: "absolute",
                   left: 880,
                   top: 105,
                   width: 275,
                   height: 580,
+                  borderRadius: 38,
+                  cursor: "pointer",
+                  boxShadow: "none",
+                  transition: "box-shadow 0.5s cubic-bezier(0.22, 1, 0.36, 1)",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.boxShadow = "0 32px 72px rgba(0, 40, 80, 0.35), 0 12px 24px rgba(0, 40, 80, 0.10), 0 0 0 1px rgba(255, 255, 255, 0.08)";
+                  e.currentTarget.style.transition = "box-shadow 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.08s";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.boxShadow = "none";
+                  e.currentTarget.style.transition = "box-shadow 0.6s cubic-bezier(0.22, 1, 0.36, 1)";
                 }}
               >
                 <div
                   style={{
                     position: "absolute",
                     inset: -12,
-                    borderRadius: 67,
+                    borderRadius: 50,
                     background: "rgba(150, 225, 255, 0.20)",
                     boxShadow: "0 -2px 10px rgba(0,0,0,0.15)",
                     pointerEvents: "none",
@@ -238,7 +249,7 @@ export default function ShowcaseSection() {
                   src="/MapsGPTMobile.png"
                   fill
                   alt=""
-                  style={{ objectFit: "fill", borderRadius: 55 }}
+                  style={{ objectFit: "fill", borderRadius: 38 }}
                 />
               </div>
             </div>

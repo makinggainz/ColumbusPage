@@ -121,6 +121,14 @@ export const Navbar = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
         return () => cancelAnimationFrame(id);
     }, []);
 
+    // Products page: show navbar after entrance animation completes (phone slides in at t=1500ms)
+    useEffect(() => {
+        if (!isProductsPage || window.scrollY > 5) return;
+        const t = setTimeout(() => setHasScrolled(true), 1700);
+        return () => clearTimeout(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
     // Polling fallback for late scroll restoration (mobile, slow devices, private browsing)
     useEffect(() => {
         const sync = () => {

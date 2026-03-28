@@ -78,9 +78,11 @@ function drawStar(ctx: CanvasRenderingContext2D, outerR: number) {
 }
 
 export default function Hero() {
-  const [heroReady, setHeroReady] = useState(false);
-  const [titleVisible, setTitleVisible] = useState(false);
-  const [contentVisible, setContentVisible] = useState(false);
+  const [heroReady,      setHeroReady]      = useState(false);
+  const [logoVisible,    setLogoVisible]    = useState(false);
+  const [taglineVisible, setTaglineVisible] = useState(false);
+  const [bgExpanded,     setBgExpanded]     = useState(false);
+  const [phoneVisible,   setPhoneVisible]   = useState(false);
 
   const phoneRef              = useRef<HTMLDivElement>(null);
   const phoneSpringWrapperRef = useRef<HTMLDivElement>(null);
@@ -125,30 +127,15 @@ export default function Hero() {
   }, []);
 
 
-  // Phase 1: Logo, title, and background animate in
+  // Staged entrance animation sequence
   useEffect(() => {
-    const t = setTimeout(() => setHeroReady(true), 80);
-    return () => clearTimeout(t);
+    const t0 = setTimeout(() => setHeroReady(true),      80);
+    const t1 = setTimeout(() => setLogoVisible(true),    500);
+    const t2 = setTimeout(() => setTaglineVisible(true), 900);
+    const t3 = setTimeout(() => setBgExpanded(true),     1300);
+    const t4 = setTimeout(() => setPhoneVisible(true),   1500);
+    return () => { clearTimeout(t0); clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); clearTimeout(t4); };
   }, []);
-
-  // Title gradient sweep-in
-  useEffect(() => {
-    const t = setTimeout(() => setTitleVisible(true), 300);
-    return () => clearTimeout(t);
-  }, []);
-
-  // Phase 2: Everything else fades in after logo + title are visible
-  useEffect(() => {
-    const t = setTimeout(() => setContentVisible(true), 1200);
-    return () => clearTimeout(t);
-  }, []);
-
-  const fadeIn = (delay = 0): React.CSSProperties => ({
-    opacity:    contentVisible ? 1 : 0,
-    filter:     contentVisible ? "blur(0px)" : "blur(8px)",
-    transform:  contentVisible ? "translateY(0)" : "translateY(16px)",
-    transition: `opacity 0.6s ease-out ${delay}s, filter 0.6s ease-out ${delay}s, transform 0.6s ease-out ${delay}s`,
-  });
 
   // Fire confetti + icons from phone center (triggered on phone click)
   const fireConfetti = useCallback(() => {
@@ -448,28 +435,7 @@ export default function Hero() {
 
       const origPhone = phoneRef.current;
 
-      // Background expansion — clip-path for shape, backgroundSize to fill past white borders
-      const bg = bgRef.current;
       const nearZero = raw < 0.005;
-      if (bg) {
-        if (nearZero) {
-          bg.style.clipPath       = "inset(100px 5% 100px 5% round 55px)";
-          bg.style.backgroundSize = "100% 100%";
-        } else {
-          const expandT = Math.min(1, raw / 0.3);
-          const easeOut = 1 - Math.pow(1 - expandT, 3);
-          // Clip inset shrinks to 0, radius shrinks to 0
-          const top    = 100 * (1 - easeOut);
-          const side   = 5   * (1 - easeOut);
-          const bottom = 100 * (1 - easeOut);
-          const radius = 55  * (1 - easeOut);
-          // Background grows past 100% to push white PNG borders outside
-          const bgW = 100 + 30 * easeOut;
-          const bgH = 100 + 30 * easeOut;
-          bg.style.clipPath       = `inset(${top}px ${side}% ${bottom}px ${side}% round ${radius}px)`;
-          bg.style.backgroundSize = `${bgW}% ${bgH}%`;
-        }
-      }
 
       // Reset when user scrolls back to top
       if (nearZero) {
@@ -559,9 +525,8 @@ export default function Hero() {
           curH = startH + (endH - startH) * e;
         }
 
-        // Phase 3: gentle fade-out (raw 0.80–0.95)
-        const fadeT        = Math.max(0, Math.min(1, (raw - 0.80) / 0.15));
-        const phoneOpacity = 1 - fadeT;
+        // Phase 3: instant hide once phone reaches final position
+        const phoneOpacity = raw >= 0.80 ? 0 : 1;
 
         tp.style.display   = "block";
         tp.style.width     = `${curW}px`;
@@ -605,13 +570,15 @@ export default function Hero() {
             position: "absolute",
             inset: 0,
             backgroundImage: "url('/BeachLanding.png')",
-            backgroundSize: "100% 100%",
+            backgroundSize: bgExpanded ? "130% 130%" : "100% 100%",
             backgroundPosition: "center",
-            clipPath: "inset(100px 5% 100px 5% round 55px)",
+            clipPath: bgExpanded
+              ? "inset(0px 0% 0px 0% round 0px)"
+              : "inset(100px 5% 100px 5% round 55px)",
             willChange: "clip-path, background-size",
             zIndex: 0,
             opacity: heroReady ? 1 : 0,
-            transition: "opacity 0.8s ease-out",
+            transition: "opacity 0.8s ease-out, clip-path 0.9s cubic-bezier(0.4, 0, 0.2, 1), background-size 0.9s cubic-bezier(0.4, 0, 0.2, 1)",
           }}
         />
 
@@ -641,13 +608,22 @@ export default function Hero() {
               style={{ zIndex: 2 }}
             >
               {/* Toggle — fades out on transition */}
-              <div ref={toggleRef} style={fadeIn(0)}>
+              <div ref={toggleRef} style={{
+                opacity:   bgExpanded ? 1 : 0,
+                transform: bgExpanded ? "translateY(0)" : "translateY(16px)",
+                transition: "opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1), transform 0.5s cubic-bezier(0.4, 0, 0.2, 1)",
+              }}>
                 <ConsumerEnterpriseToggle variant="light" active="consumer" />
               </div>
 
               {/* Badge + Title — fades out on transition */}
               <div ref={badgeTitleRef} className="flex flex-col items-center gap-[21px]">
-                <div className={glassStyles.btn} style={{ width: 266, height: 43, padding: 0, ...fadeIn(0.1) }}>
+                <div className={glassStyles.btn} style={{
+                  width: 266, height: 43, padding: 0,
+                  opacity:   bgExpanded ? 1 : 0,
+                  transform: bgExpanded ? "translateY(0)" : "translateY(16px)",
+                  transition: "opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.1s, transform 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.1s",
+                }}>
                   <span style={{ fontSize: 16, fontWeight: 500 }}>Only Available on Earth</span>
                 </div>
                 <div className="text-center">
@@ -657,10 +633,10 @@ export default function Hero() {
                       fontFamily: '"SF Compact", -apple-system, BlinkMacSystemFont, sans-serif',
                       fontSize: 48,
                       fontWeight: 600,
-                      opacity: heroReady ? 1 : 0,
-                      filter: heroReady ? "blur(0px)" : "blur(8px)",
-                      transform: heroReady ? "translateY(0)" : "translateY(16px)",
-                      transition: "opacity 0.6s ease-out, filter 0.6s ease-out, transform 0.6s ease-out",
+                      opacity:   logoVisible ? 1 : 0,
+                      filter:    logoVisible ? "blur(0px)" : "blur(8px)",
+                      transform: logoVisible ? "translateY(0)" : "translateY(16px)",
+                      transition: "opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), filter 0.6s cubic-bezier(0.4, 0, 0.2, 1), transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)",
                     }}
                   >
                     <Image
@@ -689,10 +665,10 @@ export default function Hero() {
                       WebkitBackgroundClip: "text",
                       WebkitTextFillColor: "transparent",
                       backgroundClip: "text",
-                      filter: contentVisible ? "drop-shadow(0 0 100px rgba(255,255,255,1)) blur(0px)" : "blur(8px)",
-                      transition: `opacity 0.6s ease-out 0.3s, filter 0.6s ease-out 0.3s, transform 0.6s ease-out 0.3s`,
-                      opacity:   contentVisible ? 1 : 0,
-                      transform: contentVisible ? "translateY(0)" : "translateY(16px)",
+                      filter:    taglineVisible ? "drop-shadow(0 0 100px rgba(255,255,255,1)) blur(0px)" : "blur(8px)",
+                      opacity:   taglineVisible ? 1 : 0,
+                      transform: taglineVisible ? "translateY(0)" : "translateY(16px)",
+                      transition: "opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), filter 0.6s cubic-bezier(0.4, 0, 0.2, 1), transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)",
                     }}
                   >
                     Travel Like a Boss
@@ -705,7 +681,11 @@ export default function Hero() {
               {/* Phone — spring wrapper opacity controlled by transition */}
               <div className="mt-[100px]">
                 <div ref={phoneSpringWrapperRef}>
-                  <div ref={phoneRef} style={fadeIn(0.4)}>
+                  <div ref={phoneRef} style={{
+                    opacity:   phoneVisible ? 1 : 0,
+                    transform: phoneVisible ? "translateY(0)" : "translateY(60px)",
+                    transition: "opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1), transform 0.7s cubic-bezier(0.34, 1.56, 0.64, 1)",
+                  }}>
                     <div
                       className="phone-clickable"
                       style={{ position: "relative", display: "inline-block", cursor: "pointer" }}
