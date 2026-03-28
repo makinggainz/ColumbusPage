@@ -9,10 +9,12 @@ import { BottleScene } from "@/components/layout/BottleScene";
 export type FooterProps = {
   variant?: "default" | "compact";
   reveal?: boolean;
-  theme?: "light" | "dark";
+  theme?: "light" | "dark" | "light-blue";
 };
 
-export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false }) => {
+export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false, theme = "light" }) => {
+  const isLight = theme === "light" || theme === "light-blue";
+  const bgColor = theme === "dark" ? "#000000" : theme === "light-blue" ? "#F4F3EB" : "#F9F9F9";
   const [noteOpen, setNoteOpen] = useState(false);
   const [bottleOpened, setBottleOpened] = useState(false);
   const [footerVisible, setFooterVisible] = useState(false);
@@ -49,10 +51,10 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false })
     <footer
       ref={footerRef}
       data-footer
-      data-navbar-theme="light"
-      className={`text-[#1D1D1F] overflow-hidden flex flex-col relative ${reveal ? "h-screen" : "min-h-screen"}`}
+      data-navbar-theme={theme === "dark" ? "dark" : "light"}
+      className={`overflow-hidden flex flex-col relative ${theme === "dark" ? "text-white" : "text-[#1D1D1F]"} ${reveal ? "h-screen" : "min-h-screen"}`}
       style={{
-        background: "#F9F9F9",
+        background: bgColor,
         cursor: !bottleOpened ? "default" : undefined,
         ...(reveal ? { position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 0 } as React.CSSProperties : {}),
       }}
@@ -68,7 +70,7 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false })
         <p
           className="text-[15px] leading-relaxed mb-6"
           style={{
-            color: "rgba(29,29,31,0.5)",
+            color: theme === "dark" ? "rgba(255,255,255,0.5)" : "rgba(29,29,31,0.6)",
             opacity: bottleOpened ? 1 : 0,
             transform: bottleOpened ? "translateY(0)" : "translateY(10px)",
             transition: "opacity 600ms cubic-bezier(0.22, 1, 0.36, 1), transform 600ms cubic-bezier(0.22, 1, 0.36, 1)",
@@ -82,7 +84,7 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false })
         <p
           className="text-[15px] leading-relaxed mb-12"
           style={{
-            color: "rgba(29,29,31,0.5)",
+            color: theme === "dark" ? "rgba(255,255,255,0.5)" : "rgba(29,29,31,0.6)",
             opacity: bottleOpened ? 1 : 0,
             transform: bottleOpened ? "translateY(0)" : "translateY(10px)",
             transition: "opacity 600ms cubic-bezier(0.22, 1, 0.36, 1), transform 600ms cubic-bezier(0.22, 1, 0.36, 1)",
@@ -98,7 +100,7 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false })
       </div>
 
       {/* 3D Bottle scene */}
-      <BottleScene onBottleClick={() => { setNoteOpen(true); setBottleOpened(true); }} visible={footerVisible} />
+      <BottleScene onBottleClick={() => { setNoteOpen(true); setBottleOpened(true); }} visible={footerVisible} dark={theme === "dark"} bg={theme === "light-blue" ? "#F4F3EB" : undefined} waveRgb={theme === "light-blue" ? "10,19,68" : undefined} />
 
       {/* Note overlay — appears when bottle is clicked */}
       {noteOpen && (
@@ -150,26 +152,26 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false })
           <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12 items-start mb-12">
             {[
               <div key="brand">
-                <h3 className="text-[24px] font-semibold text-[#1D1D1F] mb-3">Columbus Earth</h3>
-                <p className="text-[14px] text-[#1D1D1F]/50 leading-relaxed mb-4 max-w-[260px]">
+                <h3 className={`text-[24px] font-semibold mb-3 ${theme === "dark" ? "text-white" : "text-[#1D1D1F]"}`}>Columbus Earth</h3>
+                <p className={`text-[14px] leading-relaxed mb-4 max-w-[260px] ${theme === "dark" ? "text-white/50" : "text-[#1D1D1F]/50"}`}>
                   The frontier AI lab building the first production Universal Geospatial Model.
                 </p>
                 <div className="flex gap-4">
-                  <a href="mailto:contact@columbus.earth"><Mail size={18} className="text-[#1D1D1F]/40 hover:text-[#1D1D1F] transition-colors" /></a>
-                  <a href="https://www.linkedin.com/company/columbusearth/about/" target="_blank" rel="noopener noreferrer"><Linkedin size={18} className="text-[#1D1D1F]/40 hover:text-[#1D1D1F] transition-colors" /></a>
+                  <a href="mailto:contact@columbus.earth"><Mail size={18} className={`transition-colors ${theme === "dark" ? "text-white/40 hover:text-white" : "text-[#1D1D1F]/40 hover:text-[#1D1D1F]"}`} /></a>
+                  <a href="https://www.linkedin.com/company/columbusearth/about/" target="_blank" rel="noopener noreferrer"><Linkedin size={18} className={`transition-colors ${theme === "dark" ? "text-white/40 hover:text-white" : "text-[#1D1D1F]/40 hover:text-[#1D1D1F]"}`} /></a>
                 </div>
               </div>,
-              <FooterColumn key="product" title="Product" links={[
+              <FooterColumn key="product" theme={theme} title="Product" links={[
                 { label: "Columbus Pro", href: "/platform" },
                 { label: "Use Cases", href: "/use-cases" },
                 { label: "MapsGPT", href: "/maps-gpt" },
               ]} />,
-              <FooterColumn key="technology" title="Technology" links={[
+              <FooterColumn key="technology" theme={theme} title="Technology" links={[
                 { label: "LGM vs LLM", href: "/technology" },
                 { label: "Data Collection", href: "/technology" },
                 { label: "Core Reasoning", href: "/technology" },
               ]} />,
-              <FooterColumn key="company" title="Company" links={[
+              <FooterColumn key="company" theme={theme} title="Company" links={[
                 { label: "Our Mission", href: "/our-mission" },
                 { label: "Careers", href: "/" },
                 { label: "Legal", href: "/" },
@@ -189,7 +191,7 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false })
             ))}
           </div>
           <div
-            className="border-t border-[#1D1D1F]/10 pt-4 pb-2 flex items-center justify-between text-[13px] text-[#1D1D1F]/30"
+            className={`border-t pt-4 pb-2 flex items-center justify-between text-[13px] ${theme === "dark" ? "border-white/10 text-white/30" : "border-[#1D1D1F]/10 text-[#1D1D1F]/40"}`}
             style={{
               opacity: bottleOpened ? 1 : 0,
               transition: "opacity 600ms cubic-bezier(0.22, 1, 0.36, 1)",
@@ -209,20 +211,22 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false })
 const FooterColumn = ({
   title,
   links,
+  theme = "light",
 }: {
   title: string;
   links: { label: string; href: string }[];
+  theme?: "light" | "dark";
 }) => (
   <div>
-    <p className="mb-4 text-[#1D1D1F] font-medium text-[17.5px] tracking-wide">
+    <p className={`mb-4 font-medium text-[17.5px] tracking-wide ${theme === "dark" ? "text-white" : "text-[#1D1D1F]"}`}>
       {title}
     </p>
-    <ul className="space-y-2 text-[17.5px] text-[#1D1D1F]/60">
+    <ul className={`space-y-2 text-[17.5px] ${theme === "dark" ? "text-white/60" : "text-[#1D1D1F]/60"}`}>
       {links.map((link, i) => (
         <li key={i}>
           <Link
             href={link.href}
-            className="hover:text-[#0A1344] cursor-pointer transition-colors"
+            className={`cursor-pointer transition-colors ${theme === "dark" ? "hover:text-white" : "hover:text-[#0A1344]"}`}
           >
             {link.label}
           </Link>

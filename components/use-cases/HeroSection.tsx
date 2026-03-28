@@ -1,6 +1,5 @@
 "use client";
 
-import { instrumentSerif } from "@/app/fonts";
 import { useEffect, useRef, useState } from "react";
 
 const BOTTOM_TEXT = "[ We have just launched our technology in various sectors. ]";
@@ -91,20 +90,18 @@ export default function HeroSection() {
         aria-hidden
       />
 
-      {/* 1728 container */}
-      <div className="relative z-20 max-w-screen-2xl mx-auto h-full">
+      {/* Content container — lateral constraints */}
+      <div className="relative z-20 w-full max-w-[1287px] mx-auto px-8 md:px-10 h-full flex flex-col">
 
         {/* TEXT BLOCK */}
-        <div className="absolute top-[295px]" style={{ left: "var(--page-padding)", right: "var(--page-padding)" }}>
+        <div className="mt-[295px] max-md:mt-[180px]">
 
           {/* TITLE */}
           <h1
-            className="text-white text-[96px] whitespace-nowrap"
+            className="text-white text-[61px] md:text-[78px] max-md:text-[39px] leading-[1.2]"
             style={{
-              fontFamily: instrumentSerif.style.fontFamily,
-              fontWeight: 400,
-              letterSpacing: "0%",
-              lineHeight: "140%",
+              fontWeight: 300,
+              letterSpacing: "-0.02em",
               ...fadeIn(0),
             }}
           >
@@ -113,16 +110,7 @@ export default function HeroSection() {
 
           {/* SUBTITLE */}
           <p
-            className="
-            text-white/90
-            mt-[5px]
-            max-w-[1198px]
-            text-[30px]
-            font-medium
-            leading-[140%]
-            max-lg:text-[22px]
-            max-md:text-[18px]
-            "
+            className="text-white/70 mt-4 max-w-[760px] text-[20px] font-normal leading-[1.5] max-md:text-[16px]"
             style={fadeIn(0.15)}
           >
             ChatGPT, Gemini and Claude do not comprehend coordinates nor are
@@ -134,16 +122,8 @@ export default function HeroSection() {
 
         {/* BOTTOM TEXT — typed in last */}
         <p
-          className="
-          absolute
-          bottom-[48px]
-          text-white
-          text-[25px]
-          font-bold
-          tracking-[0.04em]
-          max-md:text-[18px]
-          "
-          style={{ left: "var(--page-padding)", minHeight: "1.4em" }}
+          className="mt-auto pb-[48px] text-white text-[16px] font-medium tracking-[0.04em] max-md:text-[14px]"
+          style={{ minHeight: "1.4em" }}
         >
           {typedText}
         </p>

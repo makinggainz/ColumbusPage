@@ -146,7 +146,7 @@
 // }
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -218,6 +218,25 @@ export default function Chat() {
   const [openId, setOpenId] = useState<string>("urban-planning");
   const [userHasTapped, setUserHasTapped] = useState(false);
   const [mapOpacity, setMapOpacity] = useState(1);
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) { setVisible(true); obs.disconnect(); } },
+      { threshold: 0.1 }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+
+  const anim = (delay = 0): React.CSSProperties => ({
+    opacity: visible ? 1 : 0,
+    transform: visible ? "translateY(0)" : "translateY(16px)",
+    transition: `opacity 0.7s ease ${delay}ms, transform 0.7s ease ${delay}ms`,
+  });
 
   // Auto-cycle to next sidebar cell every 5s; stops once the user taps a cell
   useEffect(() => {
@@ -240,18 +259,17 @@ export default function Chat() {
   };
 
   return (
-    <section className="w-full bg-black py-[120px] flex justify-center">
-      <div className="w-full max-w-screen-2xl px-[var(--page-padding)]">
+    <section className="w-full bg-black flex justify-center">
+      <div ref={sectionRef} className="section-lines-dark w-full max-w-[1287px] mx-auto px-8 md:px-10 py-[120px]">
 
-        {/* TITLE — left edge aligned with sidebar; 30px above top edge of left sidebar */}
-        <div className="mb-[30px]">
-          <h2 className="text-white text-[36px] font-semibold max-md:text-[28px]">
+        <div className="mb-[30px]" style={anim(0)}>
+          <h2 className="text-white text-[48px] font-semibold tracking-[-0.02em] max-md:text-[28px]">
             Conversational map chat
           </h2>
         </div>
 
         {/* MOBILE SIDEBAR (shows above map) */}
-        <div className="hidden max-md:block overflow-hidden mb-6">
+        <div className="hidden max-md:block overflow-hidden mb-6" style={anim(100)}>
           {SIDEBAR_ITEMS.map((item) => (
             <button
               key={item.id}
@@ -306,7 +324,7 @@ export default function Chat() {
         </div>
 
         {/* MAP FRAME — sidebar + map */}
-        <div className="relative w-full overflow-hidden flex max-md:flex-col rounded-lg">
+        <div className="relative w-full overflow-hidden flex max-md:flex-col rounded-lg" style={anim(100)}>
 
           {/* DESKTOP SIDEBAR — takes fixed width; map starts at its right edge */}
           <div className="

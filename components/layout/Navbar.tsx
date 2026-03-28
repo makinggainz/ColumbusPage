@@ -82,6 +82,8 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                 { threshold: 0 }
             );
             ctaObs.observe(cta);
+        } else {
+            setShowLinks(true);
         }
 
         // Products page: track hero transition scroll zone to hide/show links

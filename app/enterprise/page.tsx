@@ -54,7 +54,7 @@ export default function EnterprisePage() {
         <ChatSection/>
       </SectionWithLabel>
       <SectionWithLabel label={sectionLabels[7]}>
-        <Footer />
+        <Footer theme="light-blue" />
       </SectionWithLabel>
     </main>
   );
