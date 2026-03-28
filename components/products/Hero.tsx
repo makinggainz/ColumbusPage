@@ -103,14 +103,17 @@ export default function Hero() {
   const toggleRef               = useRef<HTMLDivElement>(null);
   const badgeTitleRef           = useRef<HTMLDivElement>(null);
   const transitionPhoneRef      = useRef<HTMLDivElement>(null);
-  const windContainerRef        = useRef<HTMLDivElement>(null);
   const showcaseOverlayRef      = useRef<HTMLDivElement>(null);
   const phoneStartCapturedRef   = useRef(false);
   const phoneStartXRef          = useRef(0);
   const phoneStartYRef          = useRef(0);
   const phoneDisplayWRef        = useRef(0);
   const phoneDisplayHRef        = useRef(0);
-  const windFiredRef            = useRef(false);
+  const phoneEndCapturedRef     = useRef(false);
+  const phoneEndXRef            = useRef(0);
+  const phoneEndYRef            = useRef(0);
+  const phoneEndWRef            = useRef(0);
+  const phoneEndHRef            = useRef(0);
 
   // Pre-load images
   useEffect(() => {
@@ -429,43 +432,6 @@ export default function Hero() {
   useEffect(() => {
     lastScrollYRef.current = window.scrollY;
 
-    const fireWind = (cx: number, cy: number) => {
-      const container = windContainerRef.current;
-      if (!container) return;
-      const emojis = ["💨", "💨", "💨", "💨", "✨", "💫", "🌀", "💨"];
-      const count = 12;
-      for (let i = 0; i < count; i++) {
-        const el = document.createElement("span");
-        el.textContent = emojis[Math.floor(Math.random() * emojis.length)];
-        const angle = (i / count) * Math.PI * 2 + (Math.random() - 0.5) * 0.5;
-        const dist  = 120 + Math.random() * 180;
-        const dur   = 500 + Math.random() * 350;
-        const size  = 22 + Math.floor(Math.random() * 22);
-
-        el.style.cssText = `
-          position: fixed;
-          left: ${cx}px;
-          top: ${cy}px;
-          font-size: ${size}px;
-          line-height: 1;
-          pointer-events: none;
-          transform: translate(-50%, -50%);
-          opacity: 1;
-          z-index: 9999;
-          transition: none;
-        `;
-        container.appendChild(el);
-
-        requestAnimationFrame(() => {
-          el.style.transition = `left ${dur}ms ease-out, top ${dur}ms ease-out, opacity ${dur * 0.5}ms ease-in ${dur * 0.5}ms`;
-          el.style.left    = `${cx + Math.cos(angle) * dist}px`;
-          el.style.top     = `${cy + Math.sin(angle) * dist}px`;
-          el.style.opacity = "0";
-          setTimeout(() => el.remove(), dur + 100);
-        });
-      }
-    };
-
     const onScroll = () => {
       const y     = window.scrollY;
       const delta = y - lastScrollYRef.current;
@@ -508,7 +474,7 @@ export default function Hero() {
       // Reset when user scrolls back to top
       if (nearZero) {
         phoneStartCapturedRef.current = false;
-        windFiredRef.current          = false;
+        phoneEndCapturedRef.current   = false;
         if (phoneSpringWrapperRef.current) phoneSpringWrapperRef.current.style.opacity = "1";
         const tp = transitionPhoneRef.current;
         if (tp) tp.style.display = "none";
@@ -537,54 +503,80 @@ export default function Hero() {
       // Hide original phone spring wrapper
       if (phoneSpringWrapperRef.current) phoneSpringWrapperRef.current.style.opacity = "0";
 
-      // Phone pop/fade progress (65%–80% of raw)
-      const popT = Math.max(0, (raw - 0.65) / 0.15);
-
-      // Move + fade transition phone
-      const tp = transitionPhoneRef.current;
-      if (tp && phoneStartCapturedRef.current) {
-        tp.style.display = "block";
-        tp.style.width   = `${phoneDisplayWRef.current}px`;
-        tp.style.height  = `${phoneDisplayHRef.current}px`;
-
-        const startX  = phoneStartXRef.current;
-        const startY  = phoneStartYRef.current;
-        const endX    = window.innerWidth  / 2 - phoneDisplayWRef.current / 2;
-        const endY    = window.innerHeight / 2 - phoneDisplayHRef.current / 2;
-
-        // Phone moves to center over first 70% of progress
-        const moveP = Math.min(1, raw / 0.7);
-        const eased = 1 - Math.pow(1 - moveP, 3); // ease-out cubic
-
-        const currentX = startX + (endX - startX) * eased;
-        const currentY = startY + (endY - startY) * eased;
-
-        const phoneOpacity = raw >= 0.65 ? Math.max(0, 1 - popT) : 1;
-        const phoneScale   = 1 + popT * 0.18;
-
-        tp.style.left      = `${currentX}px`;
-        tp.style.top       = `${currentY}px`;
-        tp.style.opacity   = String(phoneOpacity);
-        tp.style.transform = `scale(${phoneScale})`;
-        tp.style.transformOrigin = "center center";
-      }
-
-      // Showcase overlay fades in as phone fades out (65%–80%)
+      // Ensure showcase overlay is in DOM (display:block) early enough for position capture.
+      // Opacity stays 0 until raw=0.60; display switches at raw=0.40 so getBoundingClientRect works.
       const so = showcaseOverlayRef.current;
       if (so) {
-        const showcaseOpacity = Math.max(0, Math.min(1, popT));
-        so.style.opacity = String(showcaseOpacity);
-        so.style.display = showcaseOpacity > 0 ? "block" : "none";
-        so.style.pointerEvents = showcaseOpacity >= 1 ? "auto" : "none";
+        if (raw >= 0.40 && so.style.display === "none") so.style.display = "block";
       }
 
-      // Wind explosion fires once at 65%
-      if (raw >= 0.65 && !windFiredRef.current) {
-        windFiredRef.current = true;
-        fireWind(
-          window.innerWidth  / 2,
-          window.innerHeight / 2,
-        );
+      // Move + fade transition phone — 3-phase smooth movement
+      const tp = transitionPhoneRef.current;
+      if (tp && phoneStartCapturedRef.current) {
+        // Capture final phone position from ShowcaseSection (once, after overlay is block)
+        if (!phoneEndCapturedRef.current && raw >= 0.40) {
+          const endEl = document.querySelector<HTMLElement>('[data-showcase-phone]');
+          if (endEl) {
+            const r = endEl.getBoundingClientRect();
+            if (r.width > 0) {
+              phoneEndXRef.current = r.left;
+              phoneEndYRef.current = r.top;
+              phoneEndWRef.current = r.width;
+              phoneEndHRef.current = r.height;
+              phoneEndCapturedRef.current = true;
+            }
+          }
+        }
+
+        const startX = phoneStartXRef.current;
+        const startY = phoneStartYRef.current;
+        const startW = phoneDisplayWRef.current;
+        const startH = phoneDisplayHRef.current;
+        const midX   = window.innerWidth  / 2 - startW / 2;
+        const midY   = window.innerHeight / 2 - startH / 2;
+        const endX   = phoneEndXRef.current;
+        const endY   = phoneEndYRef.current;
+        const endW   = phoneEndWRef.current;
+        const endH   = phoneEndHRef.current;
+
+        let curX: number, curY: number, curW: number, curH: number;
+
+        if (raw <= 0.45) {
+          // Phase 1: hero → center
+          const t = Math.min(1, raw / 0.45);
+          const e = 1 - Math.pow(1 - t, 3);
+          curX = startX + (midX - startX) * e;
+          curY = startY + (midY - startY) * e;
+          curW = startW;
+          curH = startH;
+        } else {
+          // Phase 2: center → final canvas position, shrinking to match
+          const t = Math.min(1, (raw - 0.45) / 0.35);
+          const e = 1 - Math.pow(1 - t, 3);
+          curX = midX + (endX - midX) * e;
+          curY = midY + (endY - midY) * e;
+          curW = startW + (endW - startW) * e;
+          curH = startH + (endH - startH) * e;
+        }
+
+        // Phase 3: gentle fade-out (raw 0.80–0.95)
+        const fadeT        = Math.max(0, Math.min(1, (raw - 0.80) / 0.15));
+        const phoneOpacity = 1 - fadeT;
+
+        tp.style.display   = "block";
+        tp.style.width     = `${curW}px`;
+        tp.style.height    = `${curH}px`;
+        tp.style.left      = `${curX}px`;
+        tp.style.top       = `${curY}px`;
+        tp.style.opacity   = String(phoneOpacity);
+        tp.style.transform = "none";
+      }
+
+      // Showcase overlay fades in (60%–80%)
+      if (so) {
+        const showcaseT = Math.max(0, Math.min(1, (raw - 0.60) / 0.20));
+        so.style.opacity       = String(showcaseT);
+        so.style.pointerEvents = showcaseT >= 1 ? "auto" : "none";
       }
     };
 
@@ -783,18 +775,6 @@ export default function Hero() {
           style={{ objectFit: "contain", borderRadius: 55 }}
         />
       </div>
-
-      {/* Wind emoji particle container */}
-      <div
-        ref={windContainerRef}
-        style={{
-          position: "fixed",
-          inset: 0,
-          pointerEvents: "none",
-          zIndex: 9999,
-          overflow: "hidden",
-        }}
-      />
 
     </div>
   );

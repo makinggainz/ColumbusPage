@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import glassStyles from "@/components/ui/GlassButton.module.css";
 
 const SUBTITLE_PREFIX = "Find your next ";
@@ -31,6 +31,8 @@ const MARQUEE_LOGOS = Array.from({ length: 12 }, (_, i) => `/MapsGPTLogos/Logo${
 export default function ShowcaseSection() {
   const FRAME_WIDTH = 1728;
   const FRAME_HEIGHT = 1343;
+
+  const phoneTiltRef = useRef<HTMLDivElement>(null);
 
   const [phraseIndex, setPhraseIndex] = useState(0);
   const [suffix, setSuffix] = useState("");
@@ -151,7 +153,7 @@ export default function ShowcaseSection() {
         >
           <div className="relative w-[1728px] h-[1343px]">
 
-            {/* Desktop image card — 3D tilt on hover */}
+            {/* Desktop card + phone — shared perspective wrapper */}
             <div
               className="absolute"
               style={{
@@ -162,11 +164,12 @@ export default function ShowcaseSection() {
                 perspective: 1200,
               }}
             >
+              {/* Desktop card — overflow:hidden clips image to border-radius */}
               <div
                 className="desktop-tilt-card"
                 style={{
-                  width: "100%",
-                  height: "100%",
+                  position: "absolute",
+                  inset: 0,
                   borderRadius: 23,
                   overflow: "hidden",
                   border: "1px solid rgba(150, 200, 220, 0.35)",
@@ -183,23 +186,59 @@ export default function ShowcaseSection() {
                   const y = (e.clientY - rect.top) / rect.height;
                   const rotateX = (0.5 - y) * 16;
                   const rotateY = (x - 0.5) * 16;
-                  e.currentTarget.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-4px)`;
+                  const tilt = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-4px)`;
+                  e.currentTarget.style.transform = tilt;
                   e.currentTarget.style.boxShadow = `${-rotateY * 2}px ${rotateX * 2 + 16}px 48px rgba(0, 50, 80, 0.14), 0 8px 16px rgba(0, 50, 80, 0.06)`;
+                  if (phoneTiltRef.current) phoneTiltRef.current.style.transform = tilt;
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = "rotateX(0deg) rotateY(0deg) translateY(0)";
+                  const reset = "rotateX(0deg) rotateY(0deg) translateY(0)";
+                  e.currentTarget.style.transform = reset;
                   e.currentTarget.style.boxShadow = "0 4px 12px rgba(0, 0, 0, 0.06)";
                   e.currentTarget.style.transition = "transform 0.5s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 0.5s cubic-bezier(0.23, 1, 0.32, 1)";
+                  if (phoneTiltRef.current) {
+                    phoneTiltRef.current.style.transform = reset;
+                    phoneTiltRef.current.style.transition = "transform 0.5s cubic-bezier(0.23, 1, 0.32, 1)";
+                  }
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.transition = "transform 0.15s ease-out, box-shadow 0.3s ease-out";
+                  if (phoneTiltRef.current) phoneTiltRef.current.style.transition = "transform 0.15s ease-out";
                 }}
               >
+                <Image src="/MapsGPTDesktop.png" alt="Maps UI" fill className="object-fill" />
+              </div>
+
+              {/* Phone — sibling outside preserve-3d so CSS :hover works reliably.
+                  Tilt synced from card handlers via phoneTiltRef.
+                  iPhone 17 ratio: 275×580 ≈ 150.9mm / 71.5mm = 2.11 */}
+              <div
+                ref={phoneTiltRef}
+                data-showcase-phone
+                className={glassStyles.showcasePhone}
+                style={{
+                  position: "absolute",
+                  left: 880,
+                  top: 105,
+                  width: 275,
+                  height: 580,
+                }}
+              >
+                <div
+                  style={{
+                    position: "absolute",
+                    inset: -12,
+                    borderRadius: 67,
+                    background: "rgba(150, 225, 255, 0.20)",
+                    boxShadow: "0 -2px 10px rgba(0,0,0,0.15)",
+                    pointerEvents: "none",
+                  }}
+                />
                 <Image
-                  src="/MapsGPTDesktop.png"
-                  alt="Maps UI"
+                  src="/MapsGPTMobile.png"
                   fill
-                  className="object-fill"
+                  alt=""
+                  style={{ objectFit: "fill", borderRadius: 55 }}
                 />
               </div>
             </div>

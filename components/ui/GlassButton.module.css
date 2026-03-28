@@ -406,6 +406,18 @@
   animation: glassShine 4s ease-in-out infinite;
 }
 
+/* Showcase phone hover — shadow pop on hover */
+.showcasePhone {
+  border-radius: 55px;
+  cursor: pointer;
+  transition: box-shadow 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.showcasePhone:hover {
+  box-shadow: 0 24px 56px rgba(0, 40, 80, 0.45);
+  transition: box-shadow 0.2s ease-out;
+}
+
 /* Feature pill — same glass as .btn but for pill-shaped buttons */
 .featurePill {
   -webkit-backdrop-filter: blur(clamp(1px,.125em,4px));
