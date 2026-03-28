@@ -1,8 +1,7 @@
 "use client";
 
-import Image from "next/image";
 import { instrumentSerif } from "@/app/fonts";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const BOTTOM_TEXT = "[ We have just launched our technology in various sectors. ]";
 const TYPE_INTERVAL = 28; // ms per character
@@ -10,11 +9,23 @@ const TYPE_INTERVAL = 28; // ms per character
 export default function HeroSection() {
   const [visible, setVisible] = useState(false);
   const [typedText, setTypedText] = useState("");
+  const [videoReady, setVideoReady] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   // Trigger fade-in shortly after mount (first section, no scroll needed)
   useEffect(() => {
     const t = window.setTimeout(() => setVisible(true), 120);
     return () => clearTimeout(t);
+  }, []);
+
+  // Check if video can play immediately on mount
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+    // If readyState is already sufficient, mark ready immediately
+    if (video.readyState >= 3) {
+      setVideoReady(true);
+    }
   }, []);
 
   // Start typing bottom text after title + subtitle have faded in
@@ -43,23 +54,28 @@ export default function HeroSection() {
   return (
     <section className="relative w-full h-screen overflow-hidden bg-black">
 
-      {/* Background image — always visible, no animation */}
-      <Image
-        src="/use-cases/hero.png"
-        alt="city"
-        fill
-        priority
-        className="object-cover"
+      {/* Background video — looped, muted, autoplay */}
+      <video
+        ref={videoRef}
+        src="/use-cases-video.mp4"
+        autoPlay
+        loop
+        muted
+        playsInline
+        onPlaying={() => setVideoReady(true)}
+        className="absolute inset-0 w-full h-full object-cover"
       />
 
-      {/* Dark overlay — fades in with blur */}
+      {/* Dark overlay — includes blur while video is loading */}
       <div
         className="absolute inset-0"
         style={{
           background:
             "radial-gradient(ellipse 75% 60% at 28% 50%, rgba(0,0,0,0.58) 0%, rgba(0,0,0,0.20) 100%)",
+          backdropFilter: videoReady ? "none" : "blur(20px)",
+          WebkitBackdropFilter: videoReady ? "none" : "blur(20px)",
           opacity: visible ? 1 : 0,
-          transition: "opacity 1.2s ease-out 0s",
+          transition: "opacity 1.2s ease-out 0s, backdrop-filter 0.8s ease-out, -webkit-backdrop-filter 0.8s ease-out",
         }}
       />
 
