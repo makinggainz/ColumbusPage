@@ -42,6 +42,11 @@ export default function ShowcaseSection({ compact = false, onInteraction }: { co
   const [pillContentVisible, setPillContentVisible] = useState(false);
   const [pillIsClosing, setPillIsClosing] = useState(false);
   const [ctaShineKey, setCtaShineKey] = useState(0);
+  const closePillTimers = useRef<ReturnType<typeof setTimeout>[]>([]);
+
+  useEffect(() => {
+    return () => closePillTimers.current.forEach(clearTimeout);
+  }, []);
 
   useEffect(() => {
     if (expandedPillIndex !== null) {
@@ -54,19 +59,23 @@ export default function ShowcaseSection({ compact = false, onInteraction }: { co
   }, [expandedPillIndex]);
 
   const handleClosePill = (index: number) => {
+    // Clear any pending close timers from a previous close
+    closePillTimers.current.forEach(clearTimeout);
+    closePillTimers.current = [];
     // 1. Fade content out (slides up + fades)
     setPillIsClosing(true);
     setPillContentVisible(false);
     // 2. After content has faded, collapse height
-    window.setTimeout(() => {
+    const t1 = window.setTimeout(() => {
       setClosingPillIndex(index);
       setExpandedPillIndex(null);
     }, 130);
     // 3. Fully clean up
-    window.setTimeout(() => {
+    const t2 = window.setTimeout(() => {
       setClosingPillIndex(null);
       setPillIsClosing(false);
     }, 700);
+    closePillTimers.current.push(t1, t2);
   };
 
   useEffect(() => {
@@ -74,7 +83,7 @@ export default function ShowcaseSection({ compact = false, onInteraction }: { co
     const typeSpeed = 60;
     const deleteSpeed = 40;
     const pauseAtEnd = 800;
-    const pauseAtEmpty = 150;
+    const pauseAtEmpty = 50;
 
     if (!isDeleting) {
       if (suffix.length < phrase.length) {

@@ -31,6 +31,7 @@ function FavoriteSpotCard() {
     };
 
     const runCycle = () => {
+      clear();
       timers.current = [];
       setPhase("idle");
       after(1500, () => setPhase("tapping"));

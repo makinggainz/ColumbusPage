@@ -100,7 +100,7 @@ export default function RecommendationsSection() {
   const typedLines = typedText.split("\n");
 
   return (
-    <section className="relative bg-[#F9F9F9] py-32 px-6 overflow-hidden" ref={sectionRef}>
+    <section className="relative bg-[#F9F9F9] py-16 lg:py-32 px-6 overflow-hidden" ref={sectionRef}>
 
       {/* Ambient AI gradient orbs — appear with the cards */}
       <div

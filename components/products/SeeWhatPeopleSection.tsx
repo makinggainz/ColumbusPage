@@ -375,7 +375,7 @@ export default function SeeWhatPeopleSection() {
   });
 
   return (
-    <section ref={sectionRef} className="bg-[#F6F7F8] pt-20 pb-32 relative overflow-hidden">
+    <section ref={sectionRef} className="bg-[#F6F7F8] pt-20 pb-16 lg:pb-32 relative overflow-hidden">
 
       {/* Title */}
       <h2
@@ -386,42 +386,45 @@ export default function SeeWhatPeopleSection() {
       </h2>
 
       {/* 6-column pyramid — outer cols have fewer cards so they end higher */}
-      <div
-        className="lg:scale-100 scale-50 origin-top"
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "flex-start",
-          gap: 20,
-          ...fadeIn(0.15),
-        }}
-      >
-        {COLUMNS.map((col, ci) => (
-          <div
-            key={ci}
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: 20,
-              flexShrink: 0,
-            }}
-          >
-            {col.map((card, i) => (
-              <QueryCard key={i} {...card} />
-            ))}
-          </div>
-        ))}
-      </div>
+      {/* Wrapper clips the scaled cards so the layout height matches the visual height */}
+      <div className="relative overflow-hidden" style={{ height: "clamp(500px, 120vw, 900px)" }}>
+        <div
+          className="lg:scale-100 scale-50 origin-top absolute inset-x-0 top-0"
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "flex-start",
+            gap: 20,
+            ...fadeIn(0.15),
+          }}
+        >
+          {COLUMNS.map((col, ci) => (
+            <div
+              key={ci}
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: 20,
+                flexShrink: 0,
+              }}
+            >
+              {col.map((card, i) => (
+                <QueryCard key={i} {...card} />
+              ))}
+            </div>
+          ))}
+        </div>
 
-      {/* Bottom fade — covers last ~2 rows, fades to next section */}
-      <div
-        className="absolute left-0 right-0 bottom-0 pointer-events-none"
-        style={{
-          height: 770,
-          background: "linear-gradient(180deg, rgba(255,255,255,0) 0%, #FFFFFF 100%)",
-        }}
-        aria-hidden
-      />
+        {/* Bottom fade — covers last rows, fades to section background */}
+        <div
+          className="absolute left-0 right-0 bottom-0 pointer-events-none"
+          style={{
+            height: "40%",
+            background: "linear-gradient(180deg, transparent 0%, #F6F7F8 80%)",
+          }}
+          aria-hidden
+        />
+      </div>
     </section>
   );
 }

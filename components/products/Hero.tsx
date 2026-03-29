@@ -121,6 +121,9 @@ export default function Hero() {
   const scrollStopTimerRef      = useRef<ReturnType<typeof setTimeout> | null>(null);
   const lastScrollDeltaRef      = useRef(0);
   const peakRawRef              = useRef(0);
+  const mountedRef              = useRef(true);
+  const isSnappingRef           = useRef(false);
+  const confettiCooldownRef     = useRef(false);
 
   // Pre-load images
   useEffect(() => {
@@ -152,6 +155,10 @@ export default function Hero() {
 
   // Fire confetti + icons from phone center (triggered on phone click)
   const fireConfetti = useCallback(() => {
+    if (confettiCooldownRef.current) return;
+    confettiCooldownRef.current = true;
+    setTimeout(() => { confettiCooldownRef.current = false; }, 500);
+
     const canvas = canvasRef.current;
     const phone  = phoneRef.current;
     if (!canvas || !phone) return;
@@ -532,8 +539,9 @@ export default function Hero() {
         const startRadius = 55;
         const endRadius   = endW > 0 ? 38 * (endW / 275) : startRadius;
 
-        if (raw <= 0.45) {
+        if (raw <= 0.45 || endW === 0) {
           // Phase 1: hero → center (size and radius hold at hero values)
+          // Also stay in phase 1 if end position hasn't been captured yet (endW === 0)
           const t = Math.min(1, raw / 0.45);
           const e = 1 - Math.pow(1 - t, 3);
           curX = startX + (midX - startX) * e;
@@ -593,10 +601,11 @@ export default function Hero() {
       //   Desktop: peak-raw scroll-back distance (< 0.15 = forward, else backward)
       //   Mobile:  past halfway + last delta forward = forward, else backward
       if (scrollStopTimerRef.current) clearTimeout(scrollStopTimerRef.current);
-      if (raw > 0.005 && raw < 0.995) {
+      if (raw > 0.005 && raw < 0.995 && !isSnappingRef.current) {
         const snapDelay = isMobile ? 400 : 350;
         scrollStopTimerRef.current = setTimeout(() => {
           scrollStopTimerRef.current = null;
+          if (!mountedRef.current) return;
           const container = outerContainerRef.current;
           if (!container) return;
           const r2     = container.getBoundingClientRect();
@@ -615,12 +624,15 @@ export default function Hero() {
             snapForward = curRaw >= 0.20;
           }
 
+          isSnappingRef.current = true;
           const elementDocTop = window.scrollY + r2.top;
           if (snapForward) {
             window.scrollTo({ top: elementDocTop + extra, behavior: "smooth" });
           } else {
             window.scrollTo({ top: elementDocTop, behavior: "smooth" });
           }
+          // Clear snapping flag after smooth scroll completes
+          setTimeout(() => { isSnappingRef.current = false; }, 600);
         }, snapDelay);
       }
     };
@@ -628,15 +640,21 @@ export default function Hero() {
     window.addEventListener("scroll", onScroll, { passive: true });
 
     // Invalidate cached positions on resize so they're recaptured at the new viewport size
+    let resizeTimer: ReturnType<typeof setTimeout>;
     const onResize = () => {
-      phoneStartCapturedRef.current = false;
-      phoneEndCapturedRef.current   = false;
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        phoneStartCapturedRef.current = false;
+        phoneEndCapturedRef.current   = false;
+      }, 150);
     };
     window.addEventListener("resize", onResize);
 
     return () => {
+      mountedRef.current = false;
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onResize);
+      clearTimeout(resizeTimer);
       if (scrollStopTimerRef.current) clearTimeout(scrollStopTimerRef.current);
     };
   }, []);

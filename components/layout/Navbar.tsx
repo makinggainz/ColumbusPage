@@ -149,7 +149,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
     // Products page: show navbar after entrance animation completes (phone slides in at t=1500ms)
     useEffect(() => {
         if (!isProductsPage || window.scrollY > 5) return;
-        const t = setTimeout(() => setHasScrolled(true), 1700);
+        const t = setTimeout(() => { if (window.scrollY <= 5) setHasScrolled(true); }, 1700);
         return () => clearTimeout(t);
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
