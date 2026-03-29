@@ -66,12 +66,12 @@ export default function ShowcaseSection({ compact = false, onInteraction }: { co
     setPillIsClosing(true);
     setPillContentVisible(false);
     // 2. After content has faded, collapse height
-    const t1 = window.setTimeout(() => {
+    const t1 = setTimeout(() => {
       setClosingPillIndex(index);
       setExpandedPillIndex(null);
     }, 130);
     // 3. Fully clean up
-    const t2 = window.setTimeout(() => {
+    const t2 = setTimeout(() => {
       setClosingPillIndex(null);
       setPillIsClosing(false);
     }, 700);

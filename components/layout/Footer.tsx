@@ -215,7 +215,7 @@ const FooterColumn = ({
 }: {
   title: string;
   links: { label: string; href: string }[];
-  theme?: "light" | "dark";
+  theme?: "light" | "dark" | "light-blue";
 }) => (
   <div>
     <p className={`mb-4 font-medium text-[17.5px] tracking-wide ${theme === "dark" ? "text-white" : "text-[#1D1D1F]"}`}>
