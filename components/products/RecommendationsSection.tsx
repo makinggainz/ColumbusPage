@@ -138,7 +138,7 @@ export default function RecommendationsSection() {
         </div>
 
         {/* ================= CHAT ================= */}
-        <div className="max-w-[1408px] mx-auto w-full px-8 lg:px-12 min-[1408px]:px-0">
+        <div className="max-w-[1408px] mx-auto w-full px-8 min-[1408px]:px-0">
           <div className="flex items-center gap-6 mb-16 max-w-[560px]">
           <div
             className="w-[69px] h-[69px] relative flex-shrink-0"

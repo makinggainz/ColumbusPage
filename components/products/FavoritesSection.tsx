@@ -177,7 +177,7 @@ export default function FavoritesSection() {
     <>
       {/* ================= SECTION 1: Headline + 2 emojis ================= */}
       <section className="bg-[#F9F9F9] w-full overflow-hidden min-h-[500px] lg:min-h-[1000px] flex items-center">
-        <div className="max-w-[1408px] mx-auto px-8 lg:px-12 min-[1408px]:px-0 py-20 lg:py-32">
+        <div className="max-w-[1408px] mx-auto px-8 min-[1408px]:px-0 py-20 lg:py-32">
           <div className="flex flex-col lg:flex-row items-center justify-center gap-6 lg:gap-12 text-center">
             <span className="hover-bee inline-block cursor-default transition-transform">
               <Image
@@ -214,7 +214,7 @@ export default function FavoritesSection() {
         >
           2
         </span>
-        <div className="max-w-[1408px] mx-auto px-8 lg:px-12 min-[1408px]:px-0 pt-0 pb-0 flex flex-col flex-1 min-h-0">
+        <div className="max-w-[1408px] mx-auto px-8 min-[1408px]:px-0 pt-0 pb-0 flex flex-col flex-1 min-h-0">
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
             <div>
               <p

@@ -432,69 +432,7 @@ export default function ShowcaseSection({ compact = false, onInteraction }: { co
               </div>
             </div>
 
-            {/* Title + Subtitle */}
-            <div
-              className="absolute left-40 top-50 flex flex-col"
-              style={{
-                fontFamily: "'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif",
-              }}
-            >
-              <div
-                className="flex items-center gap-3"
-                style={{
-                  fontWeight: 600,
-                  fontSize: "48px",
-                  lineHeight: "130%",
-                  letterSpacing: "-0.02em",
-                }}
-              >
-                <Image
-                  src="/MapsGPT-logo.png"
-                  alt="MapsGPT Logo"
-                  width={52}
-                  height={52}
-                  style={{ filter: "drop-shadow(0 1px 2px rgba(0,0,0,0.1))" }}
-                />
-                <span
-                  style={{
-                    background: "linear-gradient(180deg, rgba(255,255,255,0.9) 0%, rgba(180,156,83,0.75) 40%, rgba(140,120,60,0.6) 100%)",
-                    WebkitBackgroundClip: "text",
-                    WebkitTextFillColor: "transparent",
-                    backgroundClip: "text",
-                    filter: "drop-shadow(0 1px 2px rgba(0,0,0,0.1))",
-                  }}
-                >
-                  MapsGPT
-                </span>
-              </div>
-              <div
-                className="whitespace-nowrap"
-                style={{
-                  minWidth: "900px",
-                  fontWeight: 590,
-                  fontSize: "48px",
-                  lineHeight: "130%",
-                  letterSpacing: "-0.02em",
-                  background: "linear-gradient(180deg, #063140 0%, rgba(6, 49, 64, 0.38) 100%)",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                  backgroundClip: "text",
-                }}
-              >
-                {SUBTITLE_PREFIX}
-                <span className="inline-block min-w-[1ch]">{suffix}</span>
-                <span
-                  className="animate-pulse"
-                  style={{
-                    opacity: !isDeleting && suffix === ROTATING_PHRASES[phraseIndex] ? 0 : 1,
-                  }}
-                >
-                  |
-                </span>
-              </div>
-            </div>
-
-            {/* CTA */}
+            {/* CTA — stays in scaled frame, positioned near card */}
             <Link
               key={ctaShineKey}
               href="/maps-gpt"
@@ -535,109 +473,178 @@ export default function ShowcaseSection({ compact = false, onInteraction }: { co
               </svg>
             </Link>
 
-            {/* Left column: 6 feature pills; tapped pill expands/collapses in place and pushes others down */}
-            <div
-              className="absolute left-40 flex flex-col justify-center gap-2.5"
-              style={{ top: 348, height: 685 }}
-            >
-              {FEATURE_PILL_LABELS.map((label, index) => {
-                const isExpanded = expandedPillIndex === index;
-                const isClosing = closingPillIndex === index;
-                const showCard = isExpanded || isClosing;
-                return (
-                  <div
-                    key={label}
-                    className="overflow-hidden rounded-[28px]"
-                    style={{
-                      height: isExpanded ? 301 : 56,
-                      width: showCard ? 313 : undefined,
-                      minWidth: showCard ? 313 : 176,
-                      transition: isClosing
-                        ? "height 0.5s cubic-bezier(0.4, 0, 0.6, 1)"
-                        : "height 0.55s cubic-bezier(0.25, 1, 0.5, 1)",
-                    }}
-                  >
-                    {showCard ? (
-                      <button
-                        type="button"
-                        onClick={() => isExpanded && handleClosePill(index)}
-                        className={`flex h-full w-[313px] cursor-pointer flex-col rounded-[28px] border-0 p-6 text-left touch-manipulation ${glassStyles.featurePill}`}
-                        aria-label={isExpanded ? `Close ${label}` : undefined}
-                        onMouseEnter={() => setCtaShineKey((k) => k + 1)}
-                      >
-                        <span
-                          className="text-[20px] font-semibold leading-[140%] tracking-[-0.02em]"
-                          style={{
-                            fontFamily: "'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif",
-                            color: "#063140",
-                            opacity: pillContentVisible ? 1 : 0,
-                            transform: pillContentVisible
-                              ? "translateY(0)"
-                              : pillIsClosing
-                              ? "translateY(-6px)"
-                              : "translateY(8px)",
-                            transition: pillIsClosing
-                              ? "opacity 0.18s ease-in, transform 0.18s ease-in"
-                              : "opacity 0.35s ease-out, transform 0.35s cubic-bezier(0.25, 1, 0.5, 1)",
-                          }}
-                        >
-                          {label}
-                        </span>
-                        <p
-                          className="mt-3 text-[20px] font-normal leading-[1.6] tracking-[-0.02em] text-[#063140]/80"
-                          style={{
-                            opacity: pillContentVisible ? 1 : 0,
-                            transform: pillContentVisible
-                              ? "translateY(0)"
-                              : pillIsClosing
-                              ? "translateY(-4px)"
-                              : "translateY(10px)",
-                            transition: pillIsClosing
-                              ? "opacity 0.15s ease-in, transform 0.15s ease-in"
-                              : "opacity 0.35s ease-out 0.06s, transform 0.35s cubic-bezier(0.25, 1, 0.5, 1) 0.06s",
-                          }}
-                        >
-                          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam
-                        </p>
-                      </button>
-                    ) : (
-                      <button
-                        type="button"
-                        onClick={() => setExpandedPillIndex(index)}
-                        className={`group relative flex h-[56px] min-w-[176px] w-max cursor-pointer items-center gap-3 rounded-[28px] border-0 px-4 text-left touch-manipulation overflow-hidden ${glassStyles.featurePill}`}
-                        onMouseEnter={() => setCtaShineKey((k) => k + 1)}
-                      >
-                        <span
-                          className="relative flex h-[11px] w-[11px] shrink-0 items-center justify-center"
-                          aria-hidden
-                        >
-                          <span
-                            className="absolute left-1/2 top-0 h-[11px] w-[2px] -translate-x-px rounded-[1px]"
-                            style={{ background: "#063140" }}
-                          />
-                          <span
-                            className="absolute left-0 top-1/2 h-[2px] w-[11px] -translate-y-px rounded-[1px]"
-                            style={{ background: "#063140" }}
-                          />
-                        </span>
-                        <span
-                          className="relative whitespace-nowrap text-[20px] font-semibold leading-[140%] tracking-[-0.02em]"
-                          style={{
-                            fontFamily: "'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif",
-                            color: "#063140",
-                          }}
-                        >
-                          {label}
-                        </span>
-                      </button>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-
           </div>
         </div>
+
+      {/* LEFT CONTENT — unscaled overlay, uses navbar width system */}
+      <div className="absolute inset-0 z-10 pointer-events-none">
+        <div className="max-w-[1408px] mx-auto w-full h-full px-8 min-[1408px]:px-0 relative">
+
+          {/* Title + Subtitle */}
+          <div
+            className="absolute pointer-events-auto flex flex-col"
+            style={{
+              top: "14.9%",
+              fontFamily: "'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif",
+            }}
+          >
+            <div
+              className="flex items-center gap-3"
+              style={{
+                fontWeight: 600,
+                fontSize: "clamp(36px, 3.3vw, 48px)",
+                lineHeight: "130%",
+                letterSpacing: "-0.02em",
+              }}
+            >
+              <Image
+                src="/MapsGPT-logo.png"
+                alt="MapsGPT Logo"
+                width={52}
+                height={52}
+                style={{ filter: "drop-shadow(0 1px 2px rgba(0,0,0,0.1))" }}
+              />
+              <span
+                style={{
+                  background: "linear-gradient(180deg, rgba(255,255,255,0.9) 0%, rgba(180,156,83,0.75) 40%, rgba(140,120,60,0.6) 100%)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  backgroundClip: "text",
+                  filter: "drop-shadow(0 1px 2px rgba(0,0,0,0.1))",
+                }}
+              >
+                MapsGPT
+              </span>
+            </div>
+            <div
+              className="whitespace-nowrap"
+              style={{
+                fontWeight: 590,
+                fontSize: "clamp(36px, 3.3vw, 48px)",
+                lineHeight: "130%",
+                letterSpacing: "-0.02em",
+                background: "linear-gradient(180deg, #063140 0%, rgba(6, 49, 64, 0.38) 100%)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+              }}
+            >
+              {SUBTITLE_PREFIX}
+              <span className="inline-block min-w-[1ch]">{suffix}</span>
+              <span
+                className="animate-pulse"
+                style={{
+                  opacity: !isDeleting && suffix === ROTATING_PHRASES[phraseIndex] ? 0 : 1,
+                }}
+              >
+                |
+              </span>
+            </div>
+          </div>
+
+          {/* Left column: 6 feature pills */}
+          <div
+            className="absolute pointer-events-auto flex flex-col justify-center gap-2.5"
+            style={{ top: "25.9%", height: "51%" }}
+          >
+            {FEATURE_PILL_LABELS.map((label, index) => {
+              const isExpanded = expandedPillIndex === index;
+              const isClosing = closingPillIndex === index;
+              const showCard = isExpanded || isClosing;
+              return (
+                <div
+                  key={label}
+                  className="overflow-hidden rounded-[28px]"
+                  style={{
+                    height: isExpanded ? 301 : 56,
+                    width: showCard ? 313 : undefined,
+                    minWidth: showCard ? 313 : 176,
+                    transition: isClosing
+                      ? "height 0.5s cubic-bezier(0.4, 0, 0.6, 1)"
+                      : "height 0.55s cubic-bezier(0.25, 1, 0.5, 1)",
+                  }}
+                >
+                  {showCard ? (
+                    <button
+                      type="button"
+                      onClick={() => isExpanded && handleClosePill(index)}
+                      className={`flex h-full w-[313px] cursor-pointer flex-col rounded-[28px] border-0 p-6 text-left touch-manipulation ${glassStyles.featurePill}`}
+                      aria-label={isExpanded ? `Close ${label}` : undefined}
+                      onMouseEnter={() => setCtaShineKey((k) => k + 1)}
+                    >
+                      <span
+                        className="text-[20px] font-semibold leading-[140%] tracking-[-0.02em]"
+                        style={{
+                          fontFamily: "'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif",
+                          color: "#063140",
+                          opacity: pillContentVisible ? 1 : 0,
+                          transform: pillContentVisible
+                            ? "translateY(0)"
+                            : pillIsClosing
+                            ? "translateY(-6px)"
+                            : "translateY(8px)",
+                          transition: pillIsClosing
+                            ? "opacity 0.18s ease-in, transform 0.18s ease-in"
+                            : "opacity 0.35s ease-out, transform 0.35s cubic-bezier(0.25, 1, 0.5, 1)",
+                        }}
+                      >
+                        {label}
+                      </span>
+                      <p
+                        className="mt-3 text-[20px] font-normal leading-[1.6] tracking-[-0.02em] text-[#063140]/80"
+                        style={{
+                          opacity: pillContentVisible ? 1 : 0,
+                          transform: pillContentVisible
+                            ? "translateY(0)"
+                            : pillIsClosing
+                            ? "translateY(-4px)"
+                            : "translateY(10px)",
+                          transition: pillIsClosing
+                            ? "opacity 0.15s ease-in, transform 0.15s ease-in"
+                            : "opacity 0.35s ease-out 0.06s, transform 0.35s cubic-bezier(0.25, 1, 0.5, 1) 0.06s",
+                        }}
+                      >
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam
+                      </p>
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => setExpandedPillIndex(index)}
+                      className={`group relative flex h-[56px] min-w-[176px] w-max cursor-pointer items-center gap-3 rounded-[28px] border-0 px-4 text-left touch-manipulation overflow-hidden ${glassStyles.featurePill}`}
+                      onMouseEnter={() => setCtaShineKey((k) => k + 1)}
+                    >
+                      <span
+                        className="relative flex h-[11px] w-[11px] shrink-0 items-center justify-center"
+                        aria-hidden
+                      >
+                        <span
+                          className="absolute left-1/2 top-0 h-[11px] w-[2px] -translate-x-px rounded-[1px]"
+                          style={{ background: "#063140" }}
+                        />
+                        <span
+                          className="absolute left-0 top-1/2 h-[2px] w-[11px] -translate-y-px rounded-[1px]"
+                          style={{ background: "#063140" }}
+                        />
+                      </span>
+                      <span
+                        className="relative whitespace-nowrap text-[20px] font-semibold leading-[140%] tracking-[-0.02em]"
+                        style={{
+                          fontFamily: "'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif",
+                          color: "#063140",
+                        }}
+                      >
+                        {label}
+                      </span>
+                    </button>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+
+        </div>
+      </div>
       </div>
       )}
     </section>

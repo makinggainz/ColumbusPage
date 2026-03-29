@@ -160,7 +160,7 @@ export default function FinalCTASection() {
 
         {/* LEFT CONTENT — unscaled overlay, uses navbar width system */}
         <div className="absolute inset-0 z-10 flex items-center">
-          <div className="max-w-[1408px] mx-auto w-full px-8 lg:px-12 min-[1408px]:px-0">
+          <div className="max-w-[1408px] mx-auto w-full px-8 min-[1408px]:px-0">
             <div className="text-white max-w-[680px]">
               <div className="flex items-center gap-3 mb-8">
                 <Image
