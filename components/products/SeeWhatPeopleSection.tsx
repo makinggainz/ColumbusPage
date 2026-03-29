@@ -415,12 +415,30 @@ export default function SeeWhatPeopleSection() {
           ))}
         </div>
 
-        {/* Bottom fade — covers last rows, fades to section background */}
+        {/* Bottom fade */}
         <div
           className="absolute left-0 right-0 bottom-0 pointer-events-none"
           style={{
             height: "40%",
             background: "linear-gradient(180deg, transparent 0%, #F6F7F8 80%)",
+          }}
+          aria-hidden
+        />
+        {/* Left fade */}
+        <div
+          className="absolute left-0 top-0 bottom-0 pointer-events-none"
+          style={{
+            width: "clamp(100px, 22vw, 350px)",
+            background: "linear-gradient(270deg, transparent 0%, #F6F7F8 90%)",
+          }}
+          aria-hidden
+        />
+        {/* Right fade */}
+        <div
+          className="absolute right-0 top-0 bottom-0 pointer-events-none"
+          style={{
+            width: "clamp(100px, 22vw, 350px)",
+            background: "linear-gradient(90deg, transparent 0%, #F6F7F8 90%)",
           }}
           aria-hidden
         />
