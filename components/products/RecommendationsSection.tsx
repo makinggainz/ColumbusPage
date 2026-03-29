@@ -100,7 +100,7 @@ export default function RecommendationsSection() {
   const typedLines = typedText.split("\n");
 
   return (
-    <section className="relative bg-[#F9F9F9] py-32 px-6 overflow-hidden" ref={sectionRef}>
+    <section className="relative bg-[#F9F9F9] py-32 px-6 lg:px-0 overflow-hidden" ref={sectionRef}>
 
       {/* Ambient AI gradient orbs — appear with the cards */}
       <div
@@ -123,7 +123,7 @@ export default function RecommendationsSection() {
         {/* ================= HEADLINE ================= */}
         <div className="text-center mb-20">
           <h2
-            className="text-[#0F6B6E] font-semibold text-[clamp(36px,4vw,64px)] leading-[140%] max-w-[1408px] mx-auto"
+            className="text-[#0F6B6E] font-semibold text-[clamp(36px,4vw,64px)] leading-[140%] products-content"
             style={fadeIn(0)}
           >
             Or get daily recommendations from our AI.
@@ -138,7 +138,7 @@ export default function RecommendationsSection() {
         </div>
 
         {/* ================= CHAT ================= */}
-        <div className="max-w-[1408px] mx-auto w-full px-6">
+        <div className="products-content w-full px-6 lg:px-0">
           <div className="flex items-center gap-6 mb-16 max-w-[560px]">
           <div
             className="w-[69px] h-[69px] relative flex-shrink-0"

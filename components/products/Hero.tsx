@@ -120,6 +120,7 @@ export default function Hero() {
   const phoneEndElRef           = useRef<HTMLElement | null>(null);
   const scrollStopTimerRef      = useRef<ReturnType<typeof setTimeout> | null>(null);
   const lastScrollDeltaRef      = useRef(0);
+  const peakRawRef              = useRef(0);
 
   // Pre-load images
   useEffect(() => {
@@ -449,10 +450,14 @@ export default function Hero() {
 
       const origPhone = phoneRef.current;
 
+      // Track peak transition progress for scroll-back intent detection
+      if (raw > peakRawRef.current) peakRawRef.current = raw;
+
       const nearZero = raw < 0.005;
 
       // Reset when user scrolls back to top
       if (nearZero) {
+        peakRawRef.current = 0;
         phoneStartCapturedRef.current = false;
         phoneEndCapturedRef.current   = false;
         if (phoneEndElRef.current) { phoneEndElRef.current.style.opacity = "0"; phoneEndElRef.current = null; }
@@ -582,39 +587,41 @@ export default function Hero() {
         staticPhone.style.opacity = raw >= 0.80 ? "1" : "0";
       }
 
-      // Auto-complete: snap to end if scrolling stops mid-transition.
-      // Desktop: snap forward when scrolling forward at any progress. Uses a shorter
-      //          timeout and doesn't bail on last-delta so trackpad inertia can't prevent it.
-      // Mobile: only snap forward when deep into transition (raw > 0.5) and scrolling forward.
+      // ── Snap: never leave user stranded mid-transition ──
+      // Any time the user stops scrolling between raw=0 and raw=1, snap to the
+      // nearest end state. Direction is chosen by intent:
+      //   Desktop: peak-raw scroll-back distance (< 0.15 = forward, else backward)
+      //   Mobile:  past halfway + last delta forward = forward, else backward
       if (scrollStopTimerRef.current) clearTimeout(scrollStopTimerRef.current);
-      if (!isMobile && raw > 0.005 && raw < 0.995 && (delta > 0 || raw > 0.85)) {
-        // Desktop: snap forward when scrolling forward OR when scrolling back but very close to end
+      if (raw > 0.005 && raw < 0.995) {
+        const snapDelay = isMobile ? 400 : 350;
         scrollStopTimerRef.current = setTimeout(() => {
           scrollStopTimerRef.current = null;
           const container = outerContainerRef.current;
           if (!container) return;
-          const r2       = container.getBoundingClientRect();
-          const extra    = window.innerHeight * 2;
-          const curRaw   = Math.max(0, Math.min(1, -r2.top / extra));
-          if (curRaw <= 0.005 || curRaw >= 0.995) return;
-          // If scrolling backward and no longer in the late zone, let them go
-          if (lastScrollDeltaRef.current < 0 && curRaw <= 0.85) return;
+          const r2     = container.getBoundingClientRect();
+          const extra  = window.innerHeight * (isMobile ? 1 : 2);
+          const curRaw = Math.max(0, Math.min(1, -r2.top / extra));
+          if (curRaw <= 0.005 || curRaw >= 0.995) return; // already at an end state
+
+          // Strong bias toward forward (showcase). Only snap backward if
+          // the user has very deliberately scrolled most of the way back.
+          let snapForward: boolean;
+          if (isMobile) {
+            snapForward = curRaw >= 0.25;
+          } else {
+            // Desktop: only snap backward if user is back below 20% raw
+            // (i.e. nearly all the way back to the hero)
+            snapForward = curRaw >= 0.20;
+          }
+
           const elementDocTop = window.scrollY + r2.top;
-          window.scrollTo({ top: elementDocTop + extra, behavior: "smooth" });
-        }, 300);
-      } else if (isMobile && raw > 0.5 && raw < 0.995 && delta > 0) {
-        scrollStopTimerRef.current = setTimeout(() => {
-          scrollStopTimerRef.current = null;
-          if (lastScrollDeltaRef.current <= 0) return;
-          const container = outerContainerRef.current;
-          if (!container) return;
-          const r2       = container.getBoundingClientRect();
-          const extra    = window.innerHeight;
-          const curRaw   = Math.max(0, Math.min(1, -r2.top / extra));
-          if (curRaw <= 0.5 || curRaw >= 0.995) return;
-          const elementDocTop = window.scrollY + r2.top;
-          window.scrollTo({ top: elementDocTop + extra, behavior: "smooth" });
-        }, 400);
+          if (snapForward) {
+            window.scrollTo({ top: elementDocTop + extra, behavior: "smooth" });
+          } else {
+            window.scrollTo({ top: elementDocTop, behavior: "smooth" });
+          }
+        }, snapDelay);
       }
     };
 
