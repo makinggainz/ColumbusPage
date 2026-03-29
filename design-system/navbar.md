@@ -133,6 +133,39 @@
 
 ---
 
+## Per-Page Treatment
+
+The navbar adapts its behaviour per page via props, pathname checks, and DOM markers.
+
+| Page | Props | Theme | Wordmark on mobile | Nav links trigger | Special behaviour |
+|------|-------|-------|--------------------|-------------------|-------------------|
+| `/` (homepage) | `<Navbar />` | light | **Visible** | Hero CTA (`#hero-cta`) scrolls out of viewport | Standard behaviour — frosted glass appears on compact scroll |
+| `/products` | `<Navbar wide />` | light (glass) | **Hidden** | `[data-navbar-bg-trigger]` passes viewport top + hero transition complete | Glass CTA button, glass wordmark text, hero-transition tracking hides links/CTA mid-scroll, `hasScrolled` forced true after 1700ms entrance animation, hamburger always visible with 12px left margin from CTA |
+| `/our-mission` | `<Navbar theme="dark" />` | dark | **Visible** | Immediate (no hero CTA) | Dark frosted glass, inverted logo via `brightness(0) invert(1)` |
+| `/contact` | `<Navbar />` | light | **Visible** | Immediate (no hero CTA) | Standard behaviour |
+| `/enterprise` | `<Navbar theme="dark" />` | dark | **Hidden** | Immediate (no hero CTA) | Dark frosted glass |
+| `/maps-gpt` | `<Navbar theme="dark" />` | dark | **Hidden** | Immediate (no hero CTA) | Dark frosted glass |
+| `/use-cases` | `<Navbar theme={navTheme} />` | dynamic | **Hidden** | Immediate (no hero CTA) | Theme switches dynamically based on scroll section |
+| `/mission` | `<Navbar />` | light | **Hidden** | Immediate (no hero CTA) | Standard behaviour |
+| `/market-spy` | `<Navbar />` | light | **Hidden** | Immediate (no hero CTA) | Standard behaviour |
+
+### Key per-page variables in code
+
+- **`isProductsPage`** — `pathname === "/products"`. Controls: glass CTA style, `bgTriggerPassed` bg logic, Start Now text colour (always black), hero-transition tracking.
+- **`showWordmarkOnMobile`** — `pathname === "/" || "/our-mission" || "/contact"`. Controls: wordmark opacity on mobile.
+- **`wide`** — Prop. Controls: glass text effects (`glassTextStatic`), wider max-width (1408px vs 1287px), hero-outer scroll tracking, `[data-navbar-bg-trigger]` usage, hamburger always showing on desktop.
+
+### DOM markers by page
+
+| Marker | Page(s) | Purpose |
+|--------|---------|---------|
+| `#hero-cta` | `/` (homepage) | IntersectionObserver hides nav links until CTA scrolls out |
+| `[data-hero-outer]` | `/products` | Tracks hero scroll progress to hide links/CTA during transition |
+| `[data-navbar-bg-trigger]` | `/products` | Zero-height div — when it passes viewport top, frosted glass bg appears |
+| `[data-footer]` | All pages | Hides entire navbar when footer is 50% in view |
+
+---
+
 ## Adding a New Page
 
 When adding a new page to the site, decide:

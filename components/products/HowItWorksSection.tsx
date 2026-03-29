@@ -191,8 +191,8 @@ export default function HowItWorksSection() {
         {/* ================= CONTENT ================= */}
         <div className="grid lg:grid-cols-2 items-center gap-12 lg:gap-20">
 
-          {/* LEFT TEXT */}
-          <div className="flex justify-center lg:justify-start items-center">
+          {/* LEFT TEXT — appears below content on mobile */}
+          <div className="flex justify-center lg:justify-start items-center order-last lg:order-first">
             <p
               className="text-center lg:text-left text-[36px] md:text-[48px] lg:text-[64px] leading-[140%] max-w-[449px] w-full"
               style={{

@@ -216,9 +216,9 @@ export default function FavoritesSection() {
         </span>
         <div className="max-w-[1408px] mx-auto px-8 min-[1408px]:px-0 pt-0 pb-0 flex flex-col flex-1 min-h-0">
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-            <div>
+            <div className="text-center lg:text-left">
               <p
-                className="max-w-[739px] text-[27px] sm:text-[36px] lg:text-[64px] leading-[140%]"
+                className="max-w-[739px] mx-auto lg:mx-0 text-[27px] sm:text-[36px] lg:text-[64px] leading-[140%]"
                 style={{
                   fontFamily: "'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif",
                   fontWeight: 590,
