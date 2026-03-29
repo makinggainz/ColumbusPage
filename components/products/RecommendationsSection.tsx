@@ -100,7 +100,7 @@ export default function RecommendationsSection() {
   const typedLines = typedText.split("\n");
 
   return (
-    <section className="relative bg-[#F9F9F9] py-32 px-6 lg:px-0 overflow-hidden" ref={sectionRef}>
+    <section className="relative bg-[#F9F9F9] py-32 px-6 overflow-hidden" ref={sectionRef}>
 
       {/* Ambient AI gradient orbs — appear with the cards */}
       <div
@@ -123,7 +123,7 @@ export default function RecommendationsSection() {
         {/* ================= HEADLINE ================= */}
         <div className="text-center mb-20">
           <h2
-            className="text-[#0F6B6E] font-semibold text-[clamp(36px,4vw,64px)] leading-[140%] products-content"
+            className="text-[#0F6B6E] font-semibold text-[clamp(36px,4vw,64px)] leading-[140%] max-w-[1408px] mx-auto"
             style={fadeIn(0)}
           >
             Or get daily recommendations from our AI.
@@ -138,7 +138,7 @@ export default function RecommendationsSection() {
         </div>
 
         {/* ================= CHAT ================= */}
-        <div className="products-content w-full px-6 lg:px-0">
+        <div className="max-w-[1408px] mx-auto w-full px-8 lg:px-12 min-[1408px]:px-0">
           <div className="flex items-center gap-6 mb-16 max-w-[560px]">
           <div
             className="w-[69px] h-[69px] relative flex-shrink-0"
@@ -167,19 +167,7 @@ export default function RecommendationsSection() {
         </div>
 
         {/* ================= CARDS: 10 cards with category pill each, infinite marquee ================= */}
-        <div
-          className="relative overflow-hidden w-full"
-          style={fadeIn(0.05, contentVisible)}
-        >
-          <div className="recommendations-marquee flex gap-[49px] items-start">
-            {PLACES.map((place, index) => (
-              <CardWithPill key={index} place={place} />
-            ))}
-            {PLACES.map((place, index) => (
-              <CardWithPill key={`dup-${index}`} place={place} ariaHidden />
-            ))}
-          </div>
-        </div>
+        <MarqueeCards fadeIn={fadeIn} contentVisible={contentVisible} />
 
         {/* ================= CTA ================= */}
         <div
@@ -229,6 +217,95 @@ export default function RecommendationsSection() {
 
       </div>
     </section>
+  );
+}
+
+function MarqueeCards({
+  fadeIn,
+  contentVisible,
+}: {
+  fadeIn: (d: number, v?: boolean) => React.CSSProperties;
+  contentVisible: boolean;
+}) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const marqueeRef = useRef<HTMLDivElement>(null);
+  const isDragging = useRef(false);
+  const startX = useRef(0);
+  const scrollStart = useRef(0);
+  const didDrag = useRef(false);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    const marquee = marqueeRef.current;
+    if (!container || !marquee) return;
+
+    const onPointerDown = (e: PointerEvent) => {
+      isDragging.current = true;
+      didDrag.current = false;
+      startX.current = e.clientX;
+      scrollStart.current = container.scrollLeft;
+      container.setPointerCapture(e.pointerId);
+      marquee.style.animationPlayState = "paused";
+      // Disable pointer events on all links so drag works over cards
+      marquee.style.pointerEvents = "none";
+    };
+
+    const onPointerMove = (e: PointerEvent) => {
+      if (!isDragging.current) return;
+      const dx = e.clientX - startX.current;
+      if (Math.abs(dx) > 3) didDrag.current = true;
+      container.scrollLeft = scrollStart.current - dx;
+    };
+
+    const onPointerUp = () => {
+      isDragging.current = false;
+      const marquee = marqueeRef.current;
+      if (marquee) {
+        marquee.style.animationPlayState = "";
+        // Re-enable pointer events after a tick so the click prevention fires first
+        requestAnimationFrame(() => {
+          marquee.style.pointerEvents = "";
+        });
+      }
+    };
+
+    const preventClick = (e: MouseEvent) => {
+      if (didDrag.current) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+    };
+
+    container.addEventListener("pointerdown", onPointerDown);
+    container.addEventListener("pointermove", onPointerMove);
+    container.addEventListener("pointerup", onPointerUp);
+    container.addEventListener("pointercancel", onPointerUp);
+    container.addEventListener("click", preventClick, true);
+
+    return () => {
+      container.removeEventListener("pointerdown", onPointerDown);
+      container.removeEventListener("pointermove", onPointerMove);
+      container.removeEventListener("pointerup", onPointerUp);
+      container.removeEventListener("pointercancel", onPointerUp);
+      container.removeEventListener("click", preventClick, true);
+    };
+  }, []);
+
+  return (
+    <div
+      ref={containerRef}
+      className="relative overflow-x-auto w-full cursor-grab active:cursor-grabbing select-none [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+      style={fadeIn(0.05, contentVisible)}
+    >
+      <div ref={marqueeRef} className="recommendations-marquee flex gap-[49px] items-start py-3">
+        {PLACES.map((place, index) => (
+          <CardWithPill key={index} place={place} />
+        ))}
+        {PLACES.map((place, index) => (
+          <CardWithPill key={`dup-${index}`} place={place} ariaHidden />
+        ))}
+      </div>
+    </div>
   );
 }
 

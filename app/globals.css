@@ -586,9 +586,6 @@ video {
 }
 
 .rec-glass-card-link:hover .rec-glass-card {
-  box-shadow:
-    inset 0 1px 1px #ffffffcc,
-    0 12px 40px rgba(0, 0, 0, 0.18);
   border-color: rgba(255, 255, 255, 0.9);
 }
 
@@ -624,6 +621,10 @@ video {
   display: flex;
   width: max-content;
   animation: recommendations-marquee-scroll 60s linear infinite;
+}
+
+.recommendations-marquee:hover {
+  animation-play-state: paused;
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -181,7 +181,7 @@ export default function HowItWorksSection() {
 
   return (
     <section className="bg-[#F9F9F9] py-16 lg:py-24">
-      <div className="max-w-[1408px] mx-auto px-4 lg:px-6">
+      <div className="max-w-[1408px] mx-auto px-8 lg:px-12 min-[1408px]:px-0">
 
         {/* ================= TITLE ================= */}
         <h2 className="text-center text-[36px] md:text-[48px] lg:text-[64px] leading-[140%] font-semibold text-black mb-12 lg:mb-24">
