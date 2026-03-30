@@ -453,16 +453,17 @@ export default function ShowcaseSection({ compact = false, onInteraction }: { co
               onMouseEnter={() => setCtaShineKey((k) => k + 1)}
             >
               <span
+                className="flex items-center gap-1"
                 style={{
                   fontFamily: "'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif",
                   fontWeight: 590,
-                  fontSize: "20px",
+                  fontSize: "22px",
                   lineHeight: "140%",
                   letterSpacing: "-0.02em",
                   color: "#00B1D4",
                 }}
               >
-                Try MapsGPT
+                Try<span style={{ width: 8, display: "inline-block" }} /><Image src="/MapsGPT-logo.png" alt="MapsGPT logo" width={30} height={30} className="inline-block" style={{ marginRight: -2 }} /> MapsGPT
               </span>
               <svg
                 width="13"
@@ -506,13 +507,6 @@ export default function ShowcaseSection({ compact = false, onInteraction }: { co
                 letterSpacing: "-0.02em",
               }}
             >
-              <Image
-                src="/MapsGPT-logo.png"
-                alt="MapsGPT Logo"
-                width={52}
-                height={52}
-                style={{ filter: "drop-shadow(0 1px 2px rgba(0,0,0,0.1))" }}
-              />
               <span
                 style={{
                   background: "linear-gradient(180deg, rgba(255,255,255,0.9) 0%, rgba(26,26,26,0.75) 40%, rgba(26,26,26,0.6) 100%)",
