@@ -234,12 +234,12 @@ export const TravelSection = () => {
 
   return (
     <section ref={ref} className="relative">
-      {/* Top bar — wrapped in GridSection for left/right grid lines */}
-      <GridSection>
-        <div
-          className="flex items-center justify-between px-8 min-[1287px]:px-10 py-6"
-          style={{ borderBottom: gl }}
-        >
+      {/* Top bar — full width with grid lines */}
+      <div style={{
+        borderTop: "1px solid rgba(37, 99, 235, 0.08)",
+        borderBottom: "1px solid rgba(37, 99, 235, 0.08)"
+      }}>
+        <div className="flex items-center justify-between max-w-[1287px] mx-auto px-8 min-[1287px]:px-10 py-6">
           <span className="text-[18px] lg:text-[20px] text-[#1D1D1F] font-bold" style={{ letterSpacing: "-0.02em" }}>
             MapsGPT <span className="hidden min-[640px]:inline font-normal">– AI-powered social map</span>
           </span>
@@ -260,12 +260,12 @@ export const TravelSection = () => {
             </svg>
           </Link>
         </div>
-      </GridSection>
+      </div>
 
       {/* Main content area with sand background — scroll-driven expansion */}
-      <div
-        ref={beachRef}
-        className="relative flex flex-col h-137.5 md:h-200 lg:h-250"
+        <div
+          ref={beachRef}
+          className="relative flex flex-col h-137.5 md:h-200 lg:h-250"
         style={{
           clipPath: "inset(0 0 0 0 round 0px)",
           willChange: "clip-path",
@@ -355,7 +355,6 @@ export const TravelSection = () => {
 
         </div>
       </div>
-
     </section>
   );
 };
