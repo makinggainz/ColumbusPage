@@ -427,11 +427,25 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                                     : { backgroundColor: "#000000", color: "white" }),
                                             }}
                                         >
-                                            <span className={`transition-colors duration-300 ${wide ? (isProductsPage ? "text-black" : isMenuOpen ? "text-black" : "text-white") : ""} group-hover:text-[#2563EB]`}>Start Now</span>
+                                            <span
+                                                className={`transition-colors duration-300 ${wide ? (isProductsPage ? "text-black" : isMenuOpen ? "text-black" : "text-white") : ""} group-hover:text-[#2563EB]`}
+                                                style={{
+                                                    opacity: ctaVisible ? 1 : 0,
+                                                    transition: ctaVisible
+                                                        ? "opacity 200ms ease 450ms, color 300ms"
+                                                        : "opacity 100ms ease",
+                                                }}
+                                            >Start Now</span>
                                             <svg
                                                 className="transition-transform duration-300 group-hover:translate-x-0.5"
                                                 width="10" height="18" viewBox="0 0 7 12" fill="none"
                                                 stroke="#2563EB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"
+                                                style={{
+                                                    opacity: ctaVisible ? 1 : 0,
+                                                    transition: ctaVisible
+                                                        ? "opacity 200ms ease 500ms, transform 300ms"
+                                                        : "opacity 80ms ease",
+                                                }}
                                             >
                                                 <path d="M1 1l5 5-5 5" />
                                             </svg>
@@ -467,26 +481,42 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                         }}
                                         aria-label="Toggle menu"
                                     >
-                                        <div
-                                            className="absolute h-px bg-current transform-gpu"
-                                            style={{
-                                                width: 22,
-                                                transform: isMenuOpen ? "rotate(45deg)" : "translateY(-6px)",
-                                                transition: `transform 300ms ease-in-out`,
-                                            }}
-                                        />
-                                        <div
-                                            className={`absolute h-px bg-current ${isMenuOpen ? "opacity-0" : "opacity-100"}`}
-                                            style={{ width: 22, transition: `opacity 200ms ease` }}
-                                        />
-                                        <div
-                                            className="absolute h-px bg-current transform-gpu"
-                                            style={{
-                                                width: 22,
-                                                transform: isMenuOpen ? "rotate(-45deg)" : "translateY(6px)",
-                                                transition: `transform 300ms ease-in-out`,
-                                            }}
-                                        />
+                                        {/* Bars delayed until container expansion finishes */}
+                                        {(() => {
+                                            const hamburgerHidden = linksVisible && isWideScreen && !wide;
+                                            const barsOpacity = hamburgerHidden ? 0 : 1;
+                                            const barsTransition = hamburgerHidden
+                                                ? "opacity 80ms ease"
+                                                : "opacity 200ms ease 450ms";
+                                            return (<>
+                                                <div
+                                                    className="absolute h-px bg-current transform-gpu"
+                                                    style={{
+                                                        width: 22,
+                                                        opacity: barsOpacity,
+                                                        transform: isMenuOpen ? "rotate(45deg)" : "translateY(-6px)",
+                                                        transition: `transform 300ms ease-in-out, ${barsTransition}`,
+                                                    }}
+                                                />
+                                                <div
+                                                    className="absolute h-px bg-current"
+                                                    style={{
+                                                        width: 22,
+                                                        opacity: isMenuOpen ? 0 : barsOpacity,
+                                                        transition: `${barsTransition}, ${isMenuOpen ? "opacity 200ms ease" : ""}`,
+                                                    }}
+                                                />
+                                                <div
+                                                    className="absolute h-px bg-current transform-gpu"
+                                                    style={{
+                                                        width: 22,
+                                                        opacity: barsOpacity,
+                                                        transform: isMenuOpen ? "rotate(-45deg)" : "translateY(6px)",
+                                                        transition: `transform 300ms ease-in-out, ${barsTransition}`,
+                                                    }}
+                                                />
+                                            </>);
+                                        })()}
                                     </button>
                                 </div>
                             </div>
