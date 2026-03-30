@@ -69,7 +69,7 @@ export default function ContactSection() {
         />
 
         {/* DARK OVERLAY */}
-        <div className="absolute inset-0 bg-black/10" />
+        <div className="absolute inset-0 bg-black/30" />
 
         {/* CONTENT */}
         <div
