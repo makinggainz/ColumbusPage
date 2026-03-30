@@ -1010,12 +1010,12 @@ const HEADING_LINE1 = "Building the first in\u2011production";
 const HEADING_LINE2 = "Large Geospatial Model.";
 const WORDMARK_TEXT = "Columbus Earth";
 
-const EYEBROW_DURATION = 1000;  // total ms for eyebrow
-const HEADING1_DURATION = 1100; // total ms for heading line 1
-const HEADING2_DURATION = 850;  // total ms for heading line 2
-const WORDMARK_DURATION = 630;  // total ms for wordmark
-const PHASE_GAP = 150;
-const LOGO_TRAVEL_MS = 600;
+const EYEBROW_DURATION = 750;   // total ms for eyebrow
+const HEADING1_DURATION = 825;  // total ms for heading line 1
+const HEADING2_DURATION = 638;  // total ms for heading line 2
+const WORDMARK_DURATION = 473;  // total ms for wordmark
+const PHASE_GAP = 113;
+const LOGO_TRAVEL_MS = 450;
 
 // Cubic-bezier easing for typing speed: starts fast, eases out
 function typingEase(t: number): number {
@@ -1150,10 +1150,10 @@ export const Hero = () => {
     // Also start the pop-in animation (will be overridden by skipToEnd if needed)
     const posTimer = setTimeout(() => {
       if (!skipRef.current) updateLogoTarget();
-    }, 60);
+    }, 45);
     const popTimer = setTimeout(() => {
       if (!skipRef.current) setLogoPopped(true);
-    }, 160);
+    }, 120);
 
     return () => { cancelled = true; timers.forEach(clearTimeout); clearTimeout(posTimer); clearTimeout(popTimer); };
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -1170,7 +1170,7 @@ export const Hero = () => {
   useEffect(() => {
     let rafId: number;
     let startTime = performance.now();
-    const initialDelay = 300;
+    const initialDelay = 225;
 
     const tick = () => {
       if (skipRef.current) return; // cancelled by skipToEnd
@@ -1246,8 +1246,8 @@ export const Hero = () => {
   const logoTransition = !logoPopped
     ? "none"
     : logoInNavbar
-      ? `left ${LOGO_TRAVEL_MS}ms ${ease}, top ${LOGO_TRAVEL_MS}ms ${ease}, width ${LOGO_TRAVEL_MS}ms ${ease}, height ${LOGO_TRAVEL_MS}ms ${ease}, opacity 0.3s ${ease} 0.1s, transform 0.01s`
-      : `left 0.3s ${ease}, top 0.3s ${ease}, opacity 0.3s ${ease}, transform 0.45s ${ease}`;
+      ? `left ${LOGO_TRAVEL_MS}ms ${ease}, top ${LOGO_TRAVEL_MS}ms ${ease}, width ${LOGO_TRAVEL_MS}ms ${ease}, height ${LOGO_TRAVEL_MS}ms ${ease}, opacity 0.225s ${ease} 0.075s, transform 0.01s`
+      : `left 0.225s ${ease}, top 0.225s ${ease}, opacity 0.225s ${ease}, transform 0.338s ${ease}`;
 
   return (
     <section
@@ -1293,7 +1293,7 @@ export const Hero = () => {
             fontSize: isCompactHero ? 20 : 24,
             letterSpacing: "-0.02em",
             opacity: phase === "done" ? 0 : 1,
-            transition: "opacity 0.3s ease, font-size 500ms cubic-bezier(0.22, 1, 0.36, 1)",
+            transition: "opacity 0.225s ease, font-size 375ms cubic-bezier(0.22, 1, 0.36, 1)",
             transform: "translateY(-50%)",
           }}
         >
@@ -1305,7 +1305,7 @@ export const Hero = () => {
       )}
 
       {/* Mesh */}
-      <div className="absolute inset-0" style={{ opacity: revealed ? 1 : 0, transition: "opacity 1200ms ease" }}>
+      <div className="absolute inset-0" style={{ opacity: revealed ? 1 : 0, transition: "opacity 900ms ease" }}>
         <WaveMesh />
       </div>
 
@@ -1315,7 +1315,7 @@ export const Hero = () => {
         style={{
           top: "calc(100vh * 0.22)", height: "calc(100vh * 0.18)",
           background: "linear-gradient(to bottom, #F9F9F9, transparent)",
-          zIndex: 1, opacity: revealed ? 1 : 0, transition: "opacity 1200ms ease",
+          zIndex: 1, opacity: revealed ? 1 : 0, transition: "opacity 900ms ease",
         }}
         aria-hidden
       />
@@ -1325,7 +1325,7 @@ export const Hero = () => {
         className="absolute left-0 right-0 bottom-0 pointer-events-none"
         style={{
           height: 300, background: "linear-gradient(to bottom, transparent, #ffffff)",
-          zIndex: 3, opacity: revealed ? 1 : 0, transition: "opacity 1200ms ease",
+          zIndex: 3, opacity: revealed ? 1 : 0, transition: "opacity 900ms ease",
         }}
         aria-hidden
       />
@@ -1364,7 +1364,7 @@ export const Hero = () => {
             opacity: revealed ? 1 : 0,
             filter: revealed ? "blur(0px)" : "blur(8px)",
             transform: revealed ? "translateY(0px)" : "translateY(18px)",
-            transition: "opacity 1000ms ease 200ms, filter 1000ms ease 200ms, transform 1000ms ease 200ms",
+            transition: "opacity 750ms ease 150ms, filter 750ms ease 150ms, transform 750ms ease 150ms",
           }}>
             <a
               href="mailto:contact@columbus.earth"
