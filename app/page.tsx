@@ -13,6 +13,7 @@ import { PartnerStrip } from "@/components/home/PartnerStrip";
 import { TravelSection } from "@/components/home/TravelSection";
 import { GeneratedMaps } from "@/components/home/GeneratedMaps";
 import { UniqueSpotsSection } from "@/components/home/UniqueSpotsSection";
+import { ScrollRevealQuote } from "@/components/home/ScrollRevealQuote";
 
 function Island({ children, className = "" }: { children: ReactNode; className?: string }) {
   return <div className={`mt-64 ${className}`}>{children}</div>;
@@ -23,6 +24,8 @@ export default function Home() {
     <main className="min-h-screen" style={{ backgroundColor: "#ffffff" }}>
       <Navbar />
       <Hero />
+
+      <ScrollRevealQuote />
 
       {/* Island 1: Vision */}
       <Island className="mt-16!">
