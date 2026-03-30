@@ -181,6 +181,36 @@ The `/use-cases` page has unique navbar requirements driven by its dark hero and
 
 ---
 
+## Page Transitions
+
+All internal link clicks (navbar links, CTAs, in-page links) are intercepted by `PageTransitionProvider` (`components/layout/PageTransition.tsx`), which wraps the entire app in `layout.tsx`.
+
+The transition uses a **clip-path wipe** (inspired by noomoagency.com) with a branded interstitial screen.
+
+| Phase | Duration | Effect |
+|-------|----------|--------|
+| **Wipe in** | 800ms | Light overlay (`#F9F9F9`) wipes upward from the bottom of the screen via `clip-path` animation (Quart in-out easing) |
+| **Typing** | ~50ms/char | Logo fades in (centred), then a unique quote about the destination page types out in italic with a blinking cursor. Quote is randomly selected from a pool per route. |
+| **Hold** | 400ms | Brief pause after typing completes, then Next.js router pushes the new route |
+| **Wipe out** | 800ms | Overlay wipes upward out of view, revealing the new page beneath |
+
+**Logo selection:**
+- Default: Columbus Earth logo (`/logobueno.png`)
+- `/maps-gpt` and `/mapsgpt` routes: MapsGPT logo (`/MapsGPT-logo.png`)
+
+**Typed quote** (what gets typed on the interstitial):
+Each route has a pool of 2–3 unique quotes that are randomly selected per navigation. Examples: `/` → "Mapping the future of our planet.", `/technology` → "Inside the Large Geospatial Model.", `/use-cases` → "See what spatial intelligence can do." Unknown routes fall back to generic exploration quotes. Quotes are defined in `ROUTE_QUOTES` in `PageTransition.tsx`.
+
+**Behaviour notes:**
+- Modifier-key clicks (Cmd/Ctrl+click) are not intercepted — they open in a new tab as normal.
+- External links (`http`, `mailto:`, `tel:`, `#` anchors, `target="_blank"`) are not intercepted.
+- Scroll position resets to top on route change.
+- The overlay sits at `z-index: 9999` so it covers everything including the navbar.
+- During transition, pointer events are blocked on the overlay to prevent double-clicks.
+- When adding a new page, add its route to the `ROUTE_NAMES` map in `PageTransition.tsx`.
+
+---
+
 ## Adding a New Page
 
 When adding a new page to the site, decide:

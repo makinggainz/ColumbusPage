@@ -4,6 +4,7 @@ import "./globals.css";
 import { cormorant, cambo } from "@/app/fonts";
 import { inter } from "@/lib/typography";
 import { LenisProvider } from "@/components/home/LenisContext";
+import { PageTransitionProvider } from "@/components/layout/PageTransition";
 
 export { cormorant, cambo };
 
@@ -28,7 +29,9 @@ export default function RootLayout({
 
       {/* Keep global styles simple - match GFrontEndWork: no Navbar/Footer here, no font on body */}
       <body className={`${inter.className} antialiased bg-white min-h-screen`}>
-        <LenisProvider>{children}</LenisProvider>
+        <PageTransitionProvider>
+          <LenisProvider>{children}</LenisProvider>
+        </PageTransitionProvider>
       </body>
     </html>
   );

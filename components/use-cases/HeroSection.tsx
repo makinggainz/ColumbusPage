@@ -94,7 +94,7 @@ export default function HeroSection() {
       <div className="relative z-20 w-full max-w-[1287px] mx-auto px-8 md:px-10 h-full flex flex-col">
 
         {/* TEXT BLOCK */}
-        <div className="mt-[295px] max-md:mt-[180px]">
+        <div className="mt-[295px] max-md:mt-[180px] text-center">
 
           {/* TITLE */}
           <h1
@@ -110,7 +110,7 @@ export default function HeroSection() {
 
           {/* SUBTITLE */}
           <p
-            className="text-white/70 mt-4 max-w-[760px] text-[20px] font-normal leading-[1.5] max-md:text-[16px]"
+            className="text-white/70 mt-4 mx-auto max-w-[760px] text-[20px] font-normal leading-[1.5] max-md:text-[16px]"
             style={fadeIn(0.15)}
           >
             ChatGPT, Gemini and Claude do not comprehend coordinates nor are
@@ -122,7 +122,7 @@ export default function HeroSection() {
 
         {/* BOTTOM TEXT — typed in last */}
         <p
-          className="mt-auto pb-[48px] text-white text-[16px] font-medium tracking-[0.04em] max-md:text-[14px]"
+          className="mt-auto pb-[48px] text-white text-[16px] font-medium tracking-[0.04em] max-md:text-[14px] text-center"
           style={{ minHeight: "1.4em" }}
         >
           {typedText}
