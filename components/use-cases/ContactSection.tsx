@@ -94,7 +94,7 @@ export default function ContactSection() {
             <br />
             Check out our{" "}
             <Link
-              href="/products"
+              href="/mapsgpt"
               className="cursor-pointer hover:opacity-80 transition-opacity"
               style={{ borderBottom: "0.5px solid currentColor", paddingBottom: "1px" }}
             >

@@ -41,18 +41,18 @@ export function ConsumerEnterpriseToggle({ variant = "dark", active = "enterpris
   return (
     <div className={containerClass} style={containerStyle}>
       <Link
-        href="/products"
-        className={`${consumerActive ? activeClass : inactiveClass} ${consumerActive && !isDark ? glassStyles.activePillConsumer : ""}`}
-        style={consumerActive && isDark ? activePillStyle : undefined}
-      >
-        Consumer
-      </Link>
-      <Link
         href="/enterprise"
         className={enterpriseActive ? activeClass : inactiveClass}
         style={enterpriseActive ? activePillStyle : undefined}
       >
-        Enterprise
+        Columbus Pro
+      </Link>
+      <Link
+        href="/mapsgpt"
+        className={`${consumerActive ? activeClass : inactiveClass} ${consumerActive && !isDark ? glassStyles.activePillConsumer : ""}`}
+        style={consumerActive && isDark ? activePillStyle : undefined}
+      >
+        MapsGPT
       </Link>
     </div>
   );

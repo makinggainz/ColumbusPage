@@ -439,8 +439,7 @@
 .glassTextStatic {
   background: linear-gradient(
     180deg,
-    rgba(255, 255, 255, 0.9) 0%,
-    currentColor 40%,
+    currentColor 0%,
     currentColor 100%
   );
   -webkit-background-clip: text;

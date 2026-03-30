@@ -36,7 +36,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
     );
     const [bgTriggerPassed, setBgTriggerPassed] = useState(false);
     const pathname = usePathname();
-    const isProductsPage = pathname === "/products";
+    const isProductsPage = pathname === "/mapsgpt";
     const showWordmarkOnMobile = pathname === "/" || pathname === "/our-mission" || pathname === "/contact";
     const navRef = useRef<HTMLElement>(null);
     const dropdownRef = useRef<HTMLDivElement>(null);
