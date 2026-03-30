@@ -61,6 +61,31 @@ export const Vision = () => {
     <div>
       <div ref={sentinelTopRef} className="h-0" />
 
+      {/* Top bar — full width with grid lines */}
+      <div style={{
+        borderTop: "1px solid rgba(37, 99, 235, 0.08)",
+        borderBottom: "1px solid rgba(37, 99, 235, 0.08)"
+      }}>
+        <div className="flex items-center justify-between max-w-[1287px] mx-auto px-8 min-[1287px]:px-10 py-6" style={anim(0)}>
+          <span className="text-[18px] lg:text-[20px] text-[#1D1D1F] font-bold" style={{ letterSpacing: "-0.02em" }}>
+            Columbus-01 <span className="hidden min-[640px]:inline font-normal">– Large Geospatial Model</span>
+          </span>
+          <Link
+            href="/technology"
+            className="group flex items-center gap-3 min-[640px]:gap-10 text-[18px] lg:text-[20px] text-[#1D1D1F] font-semibold transition-opacity"
+          >
+            <span className="transition-colors duration-300 group-hover:text-[#2563EB]">Learn more</span>
+            <svg
+              className="transition-transform duration-300 group-hover:translate-x-0.5"
+              width="9" height="16" viewBox="0 0 7 12" fill="none"
+              stroke="#2563EB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"
+            >
+              <path d="M1 1l5 5-5 5" />
+            </svg>
+          </Link>
+        </div>
+      </div>
+
       <GridSection>
         {/* Heading */}
         <div
