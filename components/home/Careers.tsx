@@ -437,15 +437,42 @@ export const Careers = ({ hideHeader, className = "" }: { hideHeader?: boolean; 
           </div>
         )}
 
-        {/* DIVIDER */}
+        {/* DIVIDER — animated wave */}
         {!hideHeader && (
           <div
-            className="h-px mb-16 md:mb-20 -ml-7.5 w-[calc(100%+60px)]"
-            style={{
-              background: "linear-gradient(to right, rgba(37,99,235,0.5) 0%, rgba(37,99,235,0.25) 20%, rgba(37,99,235,0.04) 45%, rgba(37,99,235,0.04) 55%, rgba(37,99,235,0.25) 80%, rgba(37,99,235,0.5) 100%)",
-            }}
+            className="mb-16 md:mb-20 -ml-7.5 w-[calc(100%+60px)] overflow-hidden"
+            style={{ height: 8 }}
             aria-hidden
-          />
+          >
+            <svg
+              viewBox="0 0 1200 8"
+              preserveAspectRatio="none"
+              className="w-[200%] h-full"
+              style={{ animation: "wave-flow 8s linear infinite" }}
+            >
+              <defs>
+                <linearGradient id="wave-grad" x1="0%" y1="0" x2="100%" y2="0">
+                  <stop offset="0%"  stopColor="rgb(37,99,235)" stopOpacity="0.5" />
+                  <stop offset="10%" stopColor="rgb(37,99,235)" stopOpacity="0.25" />
+                  <stop offset="22%" stopColor="rgb(37,99,235)" stopOpacity="0.04" />
+                  <stop offset="28%" stopColor="rgb(37,99,235)" stopOpacity="0.04" />
+                  <stop offset="40%" stopColor="rgb(37,99,235)" stopOpacity="0.25" />
+                  <stop offset="50%" stopColor="rgb(37,99,235)" stopOpacity="0.5" />
+                  <stop offset="60%" stopColor="rgb(37,99,235)" stopOpacity="0.25" />
+                  <stop offset="72%" stopColor="rgb(37,99,235)" stopOpacity="0.04" />
+                  <stop offset="78%" stopColor="rgb(37,99,235)" stopOpacity="0.04" />
+                  <stop offset="90%" stopColor="rgb(37,99,235)" stopOpacity="0.25" />
+                  <stop offset="100%" stopColor="rgb(37,99,235)" stopOpacity="0.5" />
+                </linearGradient>
+              </defs>
+              <path
+                d="M0,4 C25,1 50,1 75,4 C100,7 125,7 150,4 C175,1 200,1 225,4 C250,7 275,7 300,4 C325,1 350,1 375,4 C400,7 425,7 450,4 C475,1 500,1 525,4 C550,7 575,7 600,4 C625,1 650,1 675,4 C700,7 725,7 750,4 C775,1 800,1 825,4 C850,7 875,7 900,4 C925,1 950,1 975,4 C1000,7 1025,7 1050,4 C1075,1 1100,1 1125,4 C1150,7 1175,7 1200,4"
+                fill="none"
+                stroke="url(#wave-grad)"
+                strokeWidth="1.5"
+              />
+            </svg>
+          </div>
         )}
 
         {/* FORM */}

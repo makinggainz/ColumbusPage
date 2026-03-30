@@ -503,6 +503,12 @@ video {
   animation: ai-thinking-wave 0.45s ease-in-out 3 forwards;
 }
 
+/* Careers section: wavy divider line */
+@keyframes wave-flow {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
 /* Recommendation section: ambient AI gradient orbs */
 @keyframes rec-orb-drift-a {
   0%   { transform: translate(0, 0) scale(1); }

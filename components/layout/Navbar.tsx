@@ -259,11 +259,20 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
         <>
             {/* ── Backdrop overlay (dropdown open) ── */}
             <div
-                className={`fixed inset-0 z-40 transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                className={`fixed inset-0 z-40 ${
                     isMenuOpen
-                        ? "opacity-100 backdrop-blur-md bg-black/10"
-                        : "opacity-0 pointer-events-none"
+                        ? "pointer-events-auto"
+                        : "pointer-events-none"
                 }`}
+                style={{
+                    backgroundColor: "rgba(0, 0, 0, 0.1)",
+                    backdropFilter: isMenuOpen ? "blur(12px)" : "blur(0px)",
+                    WebkitBackdropFilter: isMenuOpen ? "blur(12px)" : "blur(0px)",
+                    opacity: isMenuOpen ? 1 : 0,
+                    transition: isMenuOpen
+                        ? "opacity 500ms cubic-bezier(0.16, 1, 0.3, 1) 100ms, backdrop-filter 600ms cubic-bezier(0.16, 1, 0.3, 1) 100ms, -webkit-backdrop-filter 600ms cubic-bezier(0.16, 1, 0.3, 1) 100ms"
+                        : "opacity 400ms ease 50ms, backdrop-filter 400ms ease, -webkit-backdrop-filter 400ms ease",
+                }}
             />
 
             {/* ══════════════ NAVBAR ══════════════ */}
@@ -429,20 +438,32 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                         </Link>
                                     </div>
 
-                                    {/* Hamburger — hides only when nav links are visible (wide screen + scrolled past CTA) */}
+                                    {/* Hamburger — hides when nav links are visible on desktop */}
                                     <button
                                         onClick={handleHamburgerClick}
                                         onMouseEnter={handleNavMouseEnter}
-                                        className="relative flex items-center justify-center rounded-none transition-all duration-300"
+                                        className={`relative flex items-center justify-center transition-all duration-300 ${wide ? glassStyles.togglePill : "rounded-none"}`}
                                         style={{
                                             flexShrink: 0,
-                                            marginLeft: wide && isWideScreen && (linksVisible || ctaVisible) ? 16 : 0,
-                                            width: (linksVisible && isWideScreen && !wide) ? 0 : 30,
-                                            height: 45,
-                                            opacity: (linksVisible && isWideScreen && !wide) ? 0 : 1,
+                                            ...(wide
+                                                ? {
+                                                    width: linksVisible && isWideScreen ? 0 : 45,
+                                                    height: 45,
+                                                    borderRadius: "999px",
+                                                    transform: linksVisible && isWideScreen ? "scale(0)" : "scale(1)",
+                                                    opacity: linksVisible && isWideScreen ? 0 : 1,
+                                                    marginLeft: linksVisible && isWideScreen ? 0 : (isWideScreen && (linksVisible || ctaVisible) ? 16 : 0),
+                                                    pointerEvents: linksVisible && isWideScreen ? "none" : "auto",
+                                                    transition: `transform 400ms cubic-bezier(0.22, 1, 0.36, 1), opacity 300ms cubic-bezier(0.22, 1, 0.36, 1), width 400ms cubic-bezier(0.22, 1, 0.36, 1), margin-left 400ms cubic-bezier(0.22, 1, 0.36, 1)`,
+                                                }
+                                                : {
+                                                    width: (linksVisible && isWideScreen) ? 0 : 45,
+                                                    height: 45,
+                                                    opacity: (linksVisible && isWideScreen) ? 0 : 1,
+                                                    pointerEvents: (linksVisible && isWideScreen) ? "none" : "auto",
+                                                    transition: `width ${t}, opacity 120ms ease, margin-left ${t}`,
+                                                }),
                                             overflow: "hidden",
-                                            pointerEvents: (linksVisible && isWideScreen && !wide) ? "none" : "auto",
-                                            transition: `width ${t}, opacity 120ms ease, margin-left ${t}`,
                                         }}
                                         aria-label="Toggle menu"
                                     >
@@ -478,23 +499,36 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
             {/* ── Dropdown (outside nav so fixed positioning isn't broken by nav's transform) ── */}
             <div
                 ref={dropdownRef}
-                className={`fixed left-0 right-0 max-md:bottom-0 z-50 overflow-y-auto transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-                    isMenuOpen
-                        ? "opacity-100 translate-y-0 pointer-events-auto"
-                        : "opacity-0 -translate-y-6 pointer-events-none"
-                }`}
-                style={{ ...dropdownBg, top: isCompact ? 56 : 68 }}
+                className="fixed left-0 right-0 max-md:bottom-0 z-50 overflow-y-auto"
+                style={{
+                    ...dropdownBg,
+                    top: isCompact ? 56 : 68,
+                    clipPath: isMenuOpen
+                        ? "circle(150% at calc(100% - 48px) 0px)"
+                        : "circle(0% at calc(100% - 48px) 0px)",
+                    opacity: isMenuOpen ? 1 : 0,
+                    pointerEvents: isMenuOpen ? "auto" : "none",
+                    transition: isMenuOpen
+                        ? "clip-path 750ms cubic-bezier(0.16, 1, 0.3, 1), opacity 200ms ease"
+                        : "clip-path 550ms cubic-bezier(0.4, 0, 0.2, 1) 80ms, opacity 300ms ease 250ms",
+                }}
                 onMouseLeave={handleDropdownMouseLeave}
             >
-                <div className={`mx-auto w-full px-6 md:px-8 ${wide ? "min-[1408px]:px-0" : "min-[1287px]:px-0"} py-8 md:py-12`} style={{ maxWidth: wide ? 1408 : 1287, transitionDelay: isMenuOpen ? "150ms" : "0ms" }}>
+                <div className={`mx-auto w-full px-6 md:px-8 ${wide ? "min-[1408px]:px-0" : "min-[1287px]:px-0"} py-8 md:py-12`} style={{ maxWidth: wide ? 1408 : 1287 }}>
                     <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12">
                         <div
-                            className={`md:col-span-5 space-y-6 md:space-y-8 transition-opacity duration-500 ${isMenuOpen ? "opacity-100" : "opacity-0"}`}
-                            style={{ transitionDelay: isMenuOpen ? "200ms" : "0ms" }}
+                            className="md:col-span-5 space-y-6 md:space-y-8"
+                            style={{
+                                opacity: isMenuOpen ? 1 : 0,
+                                transform: isMenuOpen ? "translateY(0) scale(1)" : "translateY(12px) scale(0.98)",
+                                transition: isMenuOpen
+                                    ? "opacity 450ms ease 250ms, transform 500ms cubic-bezier(0.16, 1, 0.3, 1) 250ms"
+                                    : "opacity 200ms ease, transform 200ms ease",
+                            }}
                         >
                             <div>
                                 <h4 className={`text-[13px] font-medium tracking-[0.08em] uppercase mb-3 md:mb-4 ${dropdownHeadingClass}`}>
-                                    <ScrambleText text="COLUMBUS EARTH" isActive={isMenuOpen} delay={300} />
+                                    <ScrambleText text="COLUMBUS EARTH" isActive={isMenuOpen} delay={350} />
                                 </h4>
                                 <p className={`text-[16px] leading-[1.6] max-w-md ${dropdownBodyClass}`}>
                                     Columbus Earth Inc. is a spatial frontier AI company building the first production
@@ -504,7 +538,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                             <div className="grid grid-cols-2 gap-6 md:gap-8">
                                 <div>
                                     <h4 className={`text-[13px] font-medium tracking-[0.08em] uppercase mb-2 ${dropdownSubheadClass}`}>
-                                        <ScrambleText text="CONTACT" isActive={isMenuOpen} delay={450} />
+                                        <ScrambleText text="CONTACT" isActive={isMenuOpen} delay={500} />
                                     </h4>
                                     <a href="mailto:contact@columbus.earth" className={`text-[16px] font-medium block transition-colors duration-300 break-all hover:text-[#2563EB] ${dropdownLinkClass}`}>
                                         contact@columbus.earth
@@ -512,7 +546,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                 </div>
                                 <div>
                                     <h4 className={`text-[13px] font-medium tracking-[0.08em] uppercase mb-2 ${dropdownSubheadClass}`}>
-                                        <ScrambleText text="SOCIAL" isActive={isMenuOpen} delay={550} />
+                                        <ScrambleText text="SOCIAL" isActive={isMenuOpen} delay={600} />
                                     </h4>
                                     <a href="https://www.linkedin.com/company/columbusearth/about/?viewAsMember=true" target="_blank" rel="noopener noreferrer" className={`text-[16px] font-medium block transition-colors duration-300 hover:text-[#2563EB] ${dropdownSocialClass}`}>
                                         LinkedIn
@@ -523,10 +557,14 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                         <div className="hidden md:block md:col-span-3"></div>
                         <div className="md:col-span-4 space-y-4 md:space-y-6">
                             <h4
-                                className={`text-[13px] font-medium tracking-[0.08em] uppercase mb-4 transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${dropdownSubheadClass} ${
-                                    isMenuOpen ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
-                                }`}
-                                style={{ transitionDelay: isMenuOpen ? "250ms" : "0ms" }}
+                                className={`text-[13px] font-medium tracking-[0.08em] uppercase mb-4 ${dropdownSubheadClass}`}
+                                style={{
+                                    opacity: isMenuOpen ? 1 : 0,
+                                    transform: isMenuOpen ? "translateY(0)" : "translateY(8px)",
+                                    transition: isMenuOpen
+                                        ? "opacity 400ms ease 300ms, transform 500ms cubic-bezier(0.16, 1, 0.3, 1) 300ms"
+                                        : "opacity 150ms ease, transform 150ms ease",
+                                }}
                             >
                                 <ScrambleText text="COMPANY" isActive={isMenuOpen} delay={400} />
                             </h4>
@@ -534,10 +572,15 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                 {menuItems.map((item, index) => (
                                     <li
                                         key={item.href}
-                                        className={`transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-                                            isMenuOpen ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
-                                        }`}
-                                        style={{ transitionDelay: isMenuOpen ? `${320 + index * 70 + index * index * 8}ms` : "0ms" }}
+                                        style={{
+                                            opacity: isMenuOpen ? 1 : 0,
+                                            transform: isMenuOpen
+                                                ? "translateY(0) scale(1)"
+                                                : "translateY(16px) scale(0.96)",
+                                            transition: isMenuOpen
+                                                ? `opacity 400ms ease ${350 + index * 60}ms, transform 550ms cubic-bezier(0.16, 1, 0.3, 1) ${350 + index * 60}ms`
+                                                : `opacity 150ms ease ${(menuItems.length - 1 - index) * 30}ms, transform 150ms ease ${(menuItems.length - 1 - index) * 30}ms`,
+                                        }}
                                     >
                                         <Link
                                             href={item.href}
