@@ -184,12 +184,12 @@ export default function HowItWorksSection() {
       <div className="max-w-[1408px] mx-auto px-8 min-[1408px]:px-0">
 
         {/* ================= TITLE ================= */}
-        <h2 className="text-center text-[36px] md:text-[48px] lg:text-[64px] leading-[140%] font-semibold text-black mb-12 lg:mb-24">
+        <h2 className="text-center text-[36px] md:text-[48px] lg:text-[64px] leading-[140%] font-semibold text-black mb-16 lg:mb-32">
           How It Works
         </h2>
 
         {/* ================= CONTENT ================= */}
-        <div className="grid lg:grid-cols-2 items-center gap-12 lg:gap-20">
+        <div className="grid lg:grid-cols-[auto_1fr] items-center gap-12 lg:gap-14 lg:pl-40">
 
           {/* LEFT TEXT — appears below content on mobile */}
           <div className="flex justify-center lg:justify-start items-center order-last lg:order-first">

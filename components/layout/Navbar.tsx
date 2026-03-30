@@ -176,8 +176,19 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                 setIsManuallyToggled(false);
             }
         };
+        // Close dropdown when mouse leaves the browser window entirely
+        const handleMouseLeaveDocument = () => {
+            if (isMenuOpen) {
+                setIsMenuOpen(false);
+                setIsManuallyToggled(false);
+            }
+        };
         window.addEventListener("mousemove", handleMouseMove);
-        return () => window.removeEventListener("mousemove", handleMouseMove);
+        document.documentElement.addEventListener("mouseleave", handleMouseLeaveDocument);
+        return () => {
+            window.removeEventListener("mousemove", handleMouseMove);
+            document.documentElement.removeEventListener("mouseleave", handleMouseLeaveDocument);
+        };
     }, [isMenuOpen, isManuallyToggled]);
 
     // ── Handlers ────────────────────────────────────────────────────────
