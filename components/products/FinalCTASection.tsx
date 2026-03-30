@@ -24,7 +24,7 @@ export default function FinalCTASection() {
 
 
   return (
-    <section ref={sectionRef} className="bg-white flex flex-col items-center overflow-hidden">
+    <section ref={sectionRef} className="flex flex-col items-center overflow-hidden" style={{ background: "linear-gradient(to bottom, #FFFFFF 0%, #F9F9F9 100%)" }}>
 
       {/* ═══════════ MOBILE HERO (below lg:) ═══════════ */}
       <div className="lg:hidden relative w-full overflow-hidden min-h-dvh flex flex-col justify-end">

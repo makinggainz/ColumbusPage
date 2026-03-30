@@ -281,8 +281,8 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                     WebkitBackdropFilter: isMenuOpen ? "blur(12px)" : "blur(0px)",
                     opacity: isMenuOpen ? 1 : 0,
                     transition: isMenuOpen
-                        ? "opacity 500ms cubic-bezier(0.16, 1, 0.3, 1) 100ms, backdrop-filter 600ms cubic-bezier(0.16, 1, 0.3, 1) 100ms, -webkit-backdrop-filter 600ms cubic-bezier(0.16, 1, 0.3, 1) 100ms"
-                        : "opacity 400ms ease 50ms, backdrop-filter 400ms ease, -webkit-backdrop-filter 400ms ease",
+                        ? "opacity 400ms cubic-bezier(0.05, 0.7, 0.1, 1) 50ms, backdrop-filter 500ms cubic-bezier(0.05, 0.7, 0.1, 1) 50ms, -webkit-backdrop-filter 500ms cubic-bezier(0.05, 0.7, 0.1, 1) 50ms"
+                        : "opacity 350ms ease 50ms, backdrop-filter 350ms ease, -webkit-backdrop-filter 350ms ease",
                 }}
             />
 
@@ -313,17 +313,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                 />
 
                 <div className="relative mx-auto w-full" style={{ maxWidth: wide ? 1408 : 1287 }}>
-                    {/* White background when dropdown is open — always full width, only opacity transitions */}
-                    <div
-                        className={`absolute inset-y-0 transition-opacity duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-                            isMenuOpen ? "opacity-100" : "opacity-0"
-                        }`}
-                        style={{
-                            left: "calc(-50vw + 50%)",
-                            right: "calc(-50vw + 50%)",
-                            background: "white",
-                        }}
-                    />
+                    {/* (navbar bg when dropdown open is now part of the dropdown itself) */}
 
                     <div className={`relative ${wide ? "px-8 min-[1408px]:px-0" : "px-8 min-[1287px]:px-0"}`}>
                         <div
@@ -540,36 +530,38 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
             {/* ── Dropdown (outside nav so fixed positioning isn't broken by nav's transform) ── */}
             <div
                 ref={dropdownRef}
-                className="fixed left-0 right-0 max-md:bottom-0 z-50 overflow-y-auto"
+                className={`fixed left-0 right-0 max-md:bottom-0 overflow-hidden`}
                 style={{
                     ...dropdownBg,
-                    top: isCompact ? 56 : 68,
-                    clipPath: isMenuOpen
-                        ? "circle(150% at calc(100% - 48px) 0px)"
-                        : "circle(0% at calc(100% - 48px) 0px)",
+                    zIndex: 45,
+                    top: 0,
+                    maxHeight: isMenuOpen ? "100dvh" : "0px",
                     opacity: isMenuOpen ? 1 : 0,
                     pointerEvents: isMenuOpen ? "auto" : "none",
+                    borderBottom: isMenuOpen ? (isDark ? "1px solid rgba(255,255,255,0.08)" : "1px solid rgba(0,0,0,0.06)") : "none",
+                    borderRadius: "0 0 16px 16px",
+                    willChange: "max-height, opacity",
                     transition: isMenuOpen
-                        ? "clip-path 750ms cubic-bezier(0.16, 1, 0.3, 1), opacity 200ms ease"
-                        : "clip-path 550ms cubic-bezier(0.4, 0, 0.2, 1) 80ms, opacity 300ms ease 250ms",
+                        ? "max-height 500ms cubic-bezier(0.05, 0.7, 0.1, 1), opacity 200ms ease"
+                        : "max-height 400ms cubic-bezier(0.3, 0, 0.8, 0.15), opacity 250ms ease 200ms",
                 }}
                 onMouseLeave={handleDropdownMouseLeave}
             >
-                <div className={`mx-auto w-full px-6 md:px-8 ${wide ? "min-[1408px]:px-0" : "min-[1287px]:px-0"} py-8 md:py-12`} style={{ maxWidth: wide ? 1408 : 1287 }}>
+                <div className={`mx-auto w-full px-6 md:px-8 ${wide ? "min-[1408px]:px-0" : "min-[1287px]:px-0"} py-8 md:py-12`} style={{ maxWidth: wide ? 1408 : 1287, paddingTop: isCompact ? 56 + 32 : 68 + 48 }}>
                     <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12">
                         <div
                             className="md:col-span-5 space-y-6 md:space-y-8"
                             style={{
                                 opacity: isMenuOpen ? 1 : 0,
-                                transform: isMenuOpen ? "translateY(0) scale(1)" : "translateY(12px) scale(0.98)",
+                                transform: isMenuOpen ? "translateY(0) scale(1)" : "translateY(8px) scale(0.99)",
                                 transition: isMenuOpen
-                                    ? "opacity 450ms ease 250ms, transform 500ms cubic-bezier(0.16, 1, 0.3, 1) 250ms"
-                                    : "opacity 200ms ease, transform 200ms ease",
+                                    ? "opacity 350ms cubic-bezier(0.05, 0.7, 0.1, 1) 150ms, transform 400ms cubic-bezier(0.05, 0.7, 0.1, 1) 150ms"
+                                    : "opacity 150ms ease, transform 150ms ease",
                             }}
                         >
                             <div>
                                 <h4 className={`text-[13px] font-medium tracking-[0.08em] uppercase mb-3 md:mb-4 ${dropdownHeadingClass}`}>
-                                    <ScrambleText text="COLUMBUS EARTH" isActive={isMenuOpen} delay={350} />
+                                    <ScrambleText text="COLUMBUS EARTH" isActive={isMenuOpen} delay={200} />
                                 </h4>
                                 <p className={`text-[16px] leading-[1.6] max-w-md ${dropdownBodyClass}`}>
                                     Columbus Earth Inc. is a spatial frontier AI company building the first production
@@ -579,7 +571,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                             <div className="grid grid-cols-2 gap-6 md:gap-8">
                                 <div>
                                     <h4 className={`text-[13px] font-medium tracking-[0.08em] uppercase mb-2 ${dropdownSubheadClass}`}>
-                                        <ScrambleText text="CONTACT" isActive={isMenuOpen} delay={500} />
+                                        <ScrambleText text="CONTACT" isActive={isMenuOpen} delay={300} />
                                     </h4>
                                     <a href="mailto:contact@columbus.earth" className={`text-[16px] font-medium block transition-colors duration-300 break-all hover:text-[#2563EB] ${dropdownLinkClass}`}>
                                         contact@columbus.earth
@@ -587,7 +579,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                 </div>
                                 <div>
                                     <h4 className={`text-[13px] font-medium tracking-[0.08em] uppercase mb-2 ${dropdownSubheadClass}`}>
-                                        <ScrambleText text="SOCIAL" isActive={isMenuOpen} delay={600} />
+                                        <ScrambleText text="SOCIAL" isActive={isMenuOpen} delay={350} />
                                     </h4>
                                     <a href="https://www.linkedin.com/company/columbusearth/about/?viewAsMember=true" target="_blank" rel="noopener noreferrer" className={`text-[16px] font-medium block transition-colors duration-300 hover:text-[#2563EB] ${dropdownSocialClass}`}>
                                         LinkedIn
@@ -603,11 +595,11 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                     opacity: isMenuOpen ? 1 : 0,
                                     transform: isMenuOpen ? "translateY(0)" : "translateY(8px)",
                                     transition: isMenuOpen
-                                        ? "opacity 400ms ease 300ms, transform 500ms cubic-bezier(0.16, 1, 0.3, 1) 300ms"
+                                        ? "opacity 350ms ease 180ms, transform 400ms cubic-bezier(0.05, 0.7, 0.1, 1) 180ms"
                                         : "opacity 150ms ease, transform 150ms ease",
                                 }}
                             >
-                                <ScrambleText text="COMPANY" isActive={isMenuOpen} delay={400} />
+                                <ScrambleText text="COMPANY" isActive={isMenuOpen} delay={250} />
                             </h4>
                             <ul className="space-y-4">
                                 {menuItems.map((item, index) => (
@@ -617,10 +609,10 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                             opacity: isMenuOpen ? 1 : 0,
                                             transform: isMenuOpen
                                                 ? "translateY(0) scale(1)"
-                                                : "translateY(16px) scale(0.96)",
+                                                : "translateY(12px) scale(0.97)",
                                             transition: isMenuOpen
-                                                ? `opacity 400ms ease ${350 + index * 60}ms, transform 550ms cubic-bezier(0.16, 1, 0.3, 1) ${350 + index * 60}ms`
-                                                : `opacity 150ms ease ${(menuItems.length - 1 - index) * 30}ms, transform 150ms ease ${(menuItems.length - 1 - index) * 30}ms`,
+                                                ? `opacity 350ms cubic-bezier(0.05, 0.7, 0.1, 1) ${200 + index * 50}ms, transform 400ms cubic-bezier(0.05, 0.7, 0.1, 1) ${200 + index * 50}ms`
+                                                : `opacity 120ms ease ${(menuItems.length - 1 - index) * 25}ms, transform 120ms ease ${(menuItems.length - 1 - index) * 25}ms`,
                                         }}
                                     >
                                         <Link
