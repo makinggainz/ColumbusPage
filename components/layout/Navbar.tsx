@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useEffect, useLayoutEffect, useState, useRef, useCallback } from "react";
+import { useEffect, useLayoutEffect, useState, useRef } from "react";
 import { usePathname } from "next/navigation";
 
 import { ScrambleText } from "@/components/ui/ScrambleText";
@@ -40,98 +40,6 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
     const showWordmarkOnMobile = pathname === "/" || pathname === "/our-mission" || pathname === "/contact";
     const navRef = useRef<HTMLElement>(null);
     const dropdownRef = useRef<HTMLDivElement>(null);
-
-    // ── Wave wipe clip-path animation ───────────────────────────────────
-    const waveAnimRef = useRef<{ rafId: number; startTime: number; direction: "open" | "close" } | null>(null);
-
-    const buildWaveClip = useCallback((progress: number, waveTime: number) => {
-        // progress: 0 = collapsed, 1 = fully open
-        // Wave amplitude peaks mid-animation and dampens at the end
-        const amplitude = 20 * Math.sin(progress * Math.PI) * (1 - progress * progress);
-        const numPoints = 36;
-        const bottomY = progress * 100; // percentage
-        const points: string[] = [];
-
-        // Top edge: straight line
-        points.push("0% 0%", "100% 0%");
-
-        // Right edge down to wave
-        points.push(`100% ${bottomY}%`);
-
-        // Bottom edge: wavy, right-to-left
-        for (let i = numPoints; i >= 0; i--) {
-            const xPct = (i / numPoints) * 100;
-            const xNorm = i / numPoints;
-            // Use hero-inspired frequency ratios (scaled to 0–1 range)
-            const wave =
-                Math.sin(xNorm * 12 + waveTime * 2.4) * 0.5 +
-                Math.sin(xNorm * 8 - waveTime * 1.6 + 1.5) * 0.3 +
-                Math.sin(xNorm * 18 + waveTime * 3.2) * 0.2;
-            const yOffset = amplitude * wave;
-            const yPct = Math.max(0, bottomY + yOffset);
-            points.push(`${xPct.toFixed(1)}% ${yPct.toFixed(2)}%`);
-        }
-
-        // Left edge back to top
-        points.push("0% 0%");
-
-        return `polygon(${points.join(", ")})`;
-    }, []);
-
-    useEffect(() => {
-        // Cancel any running animation
-        if (waveAnimRef.current) {
-            cancelAnimationFrame(waveAnimRef.current.rafId);
-            waveAnimRef.current = null;
-        }
-
-        const el = dropdownRef.current;
-        if (!el) return;
-
-        const direction = isMenuOpen ? "open" : "close";
-        const duration = isMenuOpen ? 700 : 500;
-        const startTime = performance.now();
-
-        // Easing functions
-        const easeOut = (t: number) => 1 - Math.pow(1 - t, 3); // cubic ease-out
-        const easeIn = (t: number) => t * t * t; // cubic ease-in
-
-        const animate = (now: number) => {
-            const elapsed = now - startTime;
-            const rawT = Math.min(1, elapsed / duration);
-            const easedT = direction === "open" ? easeOut(rawT) : 1 - easeIn(rawT);
-            const waveTime = elapsed / 1000;
-
-            el.style.clipPath = buildWaveClip(easedT, waveTime);
-
-            if (rawT < 1) {
-                waveAnimRef.current = {
-                    rafId: requestAnimationFrame(animate),
-                    startTime,
-                    direction,
-                };
-            } else {
-                // Final state: fully open = no clip, fully closed = collapsed
-                el.style.clipPath = direction === "open"
-                    ? "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)"
-                    : "polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)";
-                waveAnimRef.current = null;
-            }
-        };
-
-        waveAnimRef.current = {
-            rafId: requestAnimationFrame(animate),
-            startTime,
-            direction,
-        };
-
-        return () => {
-            if (waveAnimRef.current) {
-                cancelAnimationFrame(waveAnimRef.current.rafId);
-                waveAnimRef.current = null;
-            }
-        };
-    }, [isMenuOpen, buildWaveClip]);
 
     // Sync scroll state before first paint to prevent navbar flash on reload
     useLayoutEffect(() => {
@@ -608,11 +516,14 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                 style={{
                     ...dropdownBg,
                     top: isCompact ? 56 : 68,
-                    // clip-path is driven by JS wave wipe animation (waveAnimRef)
-                    clipPath: "polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)",
+                    clipPath: isMenuOpen
+                        ? "circle(150% at calc(100% - 48px) 0px)"
+                        : "circle(0% at calc(100% - 48px) 0px)",
                     opacity: isMenuOpen ? 1 : 0,
                     pointerEvents: isMenuOpen ? "auto" : "none",
-                    transition: "opacity 200ms ease",
+                    transition: isMenuOpen
+                        ? "clip-path 750ms cubic-bezier(0.16, 1, 0.3, 1), opacity 200ms ease"
+                        : "clip-path 550ms cubic-bezier(0.4, 0, 0.2, 1) 80ms, opacity 300ms ease 250ms",
                 }}
                 onMouseLeave={handleDropdownMouseLeave}
             >
