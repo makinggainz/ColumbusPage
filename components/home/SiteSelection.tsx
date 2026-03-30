@@ -124,10 +124,13 @@ export const SiteSelection = () => {
   });
 
   return (
-    <GridSection>
-      <div ref={ref} style={{ borderBottom: gl }}>
-        {/* Top bar: Columbus Pro + New | Start Now */}
-        <div className="flex items-center justify-between px-8 min-[1287px]:px-10 py-6" style={anim(0)}>
+    <>
+      {/* Top bar — full width with grid lines */}
+      <div style={{
+        borderTop: "1px solid rgba(37, 99, 235, 0.08)",
+        borderBottom: "1px solid rgba(37, 99, 235, 0.08)"
+      }}>
+        <div className="flex items-center justify-between max-w-[1287px] mx-auto px-8 min-[1287px]:px-10 py-6" style={anim(0)}>
           <div className="flex items-center gap-3">
             <span className="text-[18px] lg:text-[20px] text-[#1D1D1F] font-bold">
               Columbus Pro
@@ -152,6 +155,11 @@ export const SiteSelection = () => {
             </svg>
           </Link>
         </div>
+      </div>
+
+      {/* Rest wrapped in GridSection for left/right grid lines */}
+      <GridSection>
+      <div ref={ref} style={{ borderBottom: gl }}>
 
         {/* Hero card — clip-path expansion from compact to full-screen on scroll */}
         <div
@@ -263,6 +271,7 @@ export const SiteSelection = () => {
 
       </div>
     </GridSection>
+    </>
   );
 };
 

@@ -421,31 +421,35 @@ export const Careers = ({ hideHeader, className = "" }: { hideHeader?: boolean; 
 
         {/* TITLE + DESCRIPTION */}
         {!hideHeader && (
-          <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-start mb-6 md:mb-8">
-            <h3
-              className="font-medium tracking-[-0.02em] leading-[1.12] text-[25px] md:text-[31px] lg:text-[39px] text-center md:text-left"
-              style={{ color: "#1D1D1F" }}
-            >
-              Careers &amp; investment queries
-            </h3>
+          <div className="max-w-[1287px] mx-auto">
+            <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-start mb-6 md:mb-8">
+              <h3
+                className="font-medium tracking-[-0.02em] leading-[1.12] text-[25px] md:text-[31px] lg:text-[39px] text-center md:text-left"
+                style={{ color: "#1D1D1F" }}
+              >
+                Careers &amp; investment queries
+              </h3>
 
-            <p className="text-center md:text-right text-[16px] md:text-[20px]" style={{ color: "rgba(29,29,31,0.45)", letterSpacing: "-0.015em", fontWeight: 400 }}>
-              If you&apos;re excited about creating paradigm<br />
-              shifts in physical world understanding.{" "}
-              <span style={{ fontWeight: 600, color: "rgba(29,29,31,0.8)" }}>Join us now.</span>
-            </p>
+              <p className="text-center md:text-right text-[16px] md:text-[20px]" style={{ color: "rgba(29,29,31,0.45)", letterSpacing: "-0.015em", fontWeight: 400 }}>
+                If you&apos;re excited about creating paradigm<br />
+                shifts in physical world understanding.{" "}
+                <span style={{ fontWeight: 600, color: "rgba(29,29,31,0.8)" }}>Join us now.</span>
+              </p>
+            </div>
           </div>
         )}
 
         {/* DIVIDER */}
         {!hideHeader && (
-          <div
-            className="h-px mb-16 md:mb-20 -ml-7.5 w-[calc(100%+60px)]"
-            style={{
-              background: "linear-gradient(to right, rgba(37,99,235,0.5) 0%, rgba(37,99,235,0.25) 20%, rgba(37,99,235,0.04) 45%, rgba(37,99,235,0.04) 55%, rgba(37,99,235,0.25) 80%, rgba(37,99,235,0.5) 100%)",
-            }}
-            aria-hidden
-          />
+          <div className="max-w-[1287px] mx-auto">
+            <div
+              className="h-px mb-16 md:mb-20"
+              style={{
+                background: "linear-gradient(to right, rgba(37,99,235,0.5) 0%, rgba(37,99,235,0.25) 20%, rgba(37,99,235,0.04) 45%, rgba(37,99,235,0.04) 55%, rgba(37,99,235,0.25) 80%, rgba(37,99,235,0.5) 100%)",
+              }}
+              aria-hidden
+            />
+          </div>
         )}
 
         {/* FORM */}

@@ -57,36 +57,43 @@ export const UniqueSpotsSection = () => {
   };
 
   return (
-    <GridSection style={{ borderTop: "none" }}>
-      <div ref={ref} style={{ borderBottom: gl }}>
-        {/* Heading */}
-        <div className="flex items-center justify-center px-8 pt-14 pb-10" style={anim(0)}>
-          <h2 className="font-medium tracking-[-0.02em] text-[20px] lg:text-[25px] text-[#6E6E73]">
-            Spots found faster on MapsGPT
-          </h2>
-        </div>
+    <>
+      <GridSection style={{ borderTop: "none" }}>
+        <div ref={ref} style={{ borderBottom: gl }}>
+          {/* Heading */}
+          <div className="flex items-center justify-center px-8 pt-14 pb-10" style={anim(0)}>
+            <h2 className="font-medium tracking-[-0.02em] text-[20px] lg:text-[25px] text-[#6E6E73]">
+              Spots found faster on MapsGPT
+            </h2>
+          </div>
 
-        {/* Scrollable cards */}
-        <div
-          ref={scrollRef}
-          className="flex overflow-x-auto px-6 pb-12 gap-5 select-none"
-          style={{
-            scrollbarWidth: "none",
-            cursor: isDragging ? "grabbing" : "grab",
-            ...anim(200),
-          }}
-          onMouseDown={onMouseDown}
-          onMouseLeave={onMouseLeave}
-          onMouseUp={onMouseUp}
-          onMouseMove={onMouseMove}
-        >
-          {SPOTS.map((spot, i) => (
-            <SpotCard key={i} spot={spot} />
-          ))}
+          {/* Scrollable cards */}
+          <div
+            ref={scrollRef}
+            className="flex overflow-x-auto px-6 pb-12 gap-5 select-none"
+            style={{
+              scrollbarWidth: "none",
+              cursor: isDragging ? "grabbing" : "grab",
+              ...anim(200),
+            }}
+            onMouseDown={onMouseDown}
+            onMouseLeave={onMouseLeave}
+            onMouseUp={onMouseUp}
+            onMouseMove={onMouseMove}
+          >
+            {SPOTS.map((spot, i) => (
+              <SpotCard key={i} spot={spot} />
+            ))}
+          </div>
         </div>
+      </GridSection>
 
-        {/* Bottom CTA bar */}
-        <div className="flex flex-wrap mt-24">
+      {/* Bottom CTA bar — full width with grid lines */}
+      <div style={{
+        borderTop: "1px solid rgba(37, 99, 235, 0.08)",
+        borderBottom: "1px solid rgba(37, 99, 235, 0.08)"
+      }}>
+        <div className="flex flex-wrap max-w-[1287px] mx-auto">
           <div className="px-8 min-[1287px]:px-10 py-5 flex items-center flex-1 min-w-70" style={{ minHeight: 76, borderRight: gl, backgroundColor: "rgba(20, 41, 148, 0.07)" }}>
             <p className="text-[18px] lg:text-[20px] font-medium text-[#1D1D1F] tracking-[-0.01em]">
               MapsGPT is a local guide in your pocket
@@ -104,7 +111,7 @@ export const UniqueSpotsSection = () => {
           </a>
         </div>
       </div>
-    </GridSection>
+    </>
   );
 };
 
