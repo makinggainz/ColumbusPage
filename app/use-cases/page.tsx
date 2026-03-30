@@ -49,6 +49,7 @@ export default function UseCasesRoute() {
       <Navbar theme={navTheme} />
 
       <section className="relative" ref={sectionBRef}>
+        <span className="absolute top-4 left-4 z-50 text-red-500 font-bold text-xl">1</span>
         <HeroSection />
         <div
           className="absolute inset-0 bg-black pointer-events-none z-30"
@@ -56,27 +57,35 @@ export default function UseCasesRoute() {
         />
       </section>
       <section className="relative bg-black" ref={sectionCRef}>
+        <span className="absolute top-4 left-4 z-50 text-red-500 font-bold text-xl">2</span>
         <ResultsSection />
       </section>
       <section className="relative" ref={sectionDRef}>
+        <span className="absolute top-4 left-4 z-50 text-red-500 font-bold text-xl">3</span>
         <UseCasesHero />
       </section>
       <section className="relative">
+        <span className="absolute top-4 left-4 z-50 text-red-500 font-bold text-xl">4</span>
         <Chat />
       </section>
       <section className="relative">
+        <span className="absolute top-4 left-4 z-50 text-red-500 font-bold text-xl">5</span>
         <SuperModelSection />
       </section>
       <section className="relative">
+        <span className="absolute top-4 left-4 z-50 text-red-500 font-bold text-xl">6</span>
         <AgentResearch />
       </section>
       <section className="relative">
+        <span className="absolute top-4 left-4 z-50 text-red-500 font-bold text-xl">7</span>
         <DataCatalogue />
       </section>
       <section className="relative">
+        <span className="absolute top-4 left-4 z-50 text-red-500 font-bold text-xl">8</span>
         <IndustryGrid />
       </section>
       <section className="relative">
+        <span className="absolute top-4 left-4 z-50 text-red-500 font-bold text-xl">9</span>
         <ContactSection />
       </section>
       <Footer theme="dark" />
