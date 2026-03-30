@@ -208,7 +208,7 @@ export default function FavoritesSection() {
       </section>
 
       {/* ================= SECTION 2: Save favorites + card + bottom text ================= */}
-      <section className="bg-[#F9F9F9] w-full relative min-h-350 flex flex-col">
+      <section className="bg-[#F9F9F9] w-full relative min-h-0 lg:min-h-350 flex flex-col">
         <span
           className="absolute left-6 lg:left-12 top-6 lg:top-8 text-[#E5E5E5] font-semibold text-4xl sm:text-5xl lg:text-6xl leading-none select-none"
           aria-hidden
@@ -217,7 +217,7 @@ export default function FavoritesSection() {
         </span>
         <div className="max-w-[1408px] mx-auto px-8 min-[1408px]:px-0 pt-0 pb-0 flex flex-col flex-1 min-h-0">
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-            <div className="text-center lg:text-left">
+            <div className="text-center lg:text-left order-2 lg:order-1">
               <p
                 className="max-w-[739px] mx-auto lg:mx-0 text-[27px] sm:text-[36px] lg:text-[64px] leading-[140%]"
                 style={{
@@ -232,14 +232,14 @@ export default function FavoritesSection() {
                 Save your favorite spots, share with your friends.
               </p>
             </div>
-            <div className="relative flex justify-end">
+            <div className="relative flex justify-end order-1 lg:order-2">
               <div className="w-full max-w-lg">
                 <FavoriteSpotCard />
               </div>
             </div>
           </div>
 
-          <div className="mt-24 flex justify-center mb-[100px] mt-auto relative z-20">
+          <div className="mt-32 lg:mt-auto flex justify-center mb-20 lg:mb-25 relative z-20">
             <p
               className="text-center max-w-[837px] text-[27px] sm:text-[36px] lg:text-[48px] leading-[130%]"
               style={{
