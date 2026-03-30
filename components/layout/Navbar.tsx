@@ -414,30 +414,17 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                                 fontWeight: 500,
                                                 height: 45,
                                                 gap: isWideScreen ? 12 : 6,
-                                                ...(wide
-                                                    ? {
-                                                        width: ctaVisible ? 145 : 0,
-                                                        opacity: ctaVisible ? 1 : 0,
-                                                        transform: ctaVisible ? "scale(1)" : "scale(0)",
-                                                        paddingLeft: ctaVisible ? 20 : 0,
-                                                        paddingRight: ctaVisible ? 16 : 0,
-                                                        marginRight: 0,
-                                                        backdropFilter: "blur(6px)",
-                                                        WebkitBackdropFilter: "blur(6px)",
-                                                        transition: `transform 400ms cubic-bezier(0.22, 1, 0.36, 1), opacity 300ms cubic-bezier(0.22, 1, 0.36, 1), width 400ms cubic-bezier(0.22, 1, 0.36, 1), padding 400ms cubic-bezier(0.22, 1, 0.36, 1)`,
-                                                    }
-                                                    : {
-                                                        width: ctaVisible ? 145 : 0,
-                                                        opacity: ctaVisible ? 1 : 0,
-                                                        paddingLeft: ctaVisible ? 20 : 0,
-                                                        paddingRight: ctaVisible ? 16 : 0,
-                                                        marginRight: 0,
-                                                        backgroundColor: "#000000",
-                                                        color: "white",
-                                                        transition: `width ${t}, opacity 300ms ease, padding ${t}`,
-                                                    }),
+                                                width: ctaVisible ? 145 : 0,
+                                                opacity: ctaVisible ? 1 : 0,
                                                 overflow: "hidden",
                                                 pointerEvents: ctaVisible ? "auto" : "none",
+                                                paddingLeft: ctaVisible ? 20 : 0,
+                                                paddingRight: ctaVisible ? 16 : 0,
+                                                marginRight: 0,
+                                                transition: `width ${t}, opacity 300ms ease, padding ${t}`,
+                                                ...(wide
+                                                    ? { backdropFilter: "blur(6px)", WebkitBackdropFilter: "blur(6px)" }
+                                                    : { backgroundColor: "#000000", color: "white" }),
                                             }}
                                         >
                                             <span className={`transition-colors duration-300 ${wide ? (isProductsPage ? "text-black" : isMenuOpen ? "text-black" : "text-white") : ""} group-hover:text-[#2563EB]`}>Start Now</span>
