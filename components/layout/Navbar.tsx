@@ -37,6 +37,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
     const [bgTriggerPassed, setBgTriggerPassed] = useState(false);
     const pathname = usePathname();
     const isProductsPage = pathname === "/mapsgpt";
+    const isUseCasesPage = pathname === "/use-cases";
     const showWordmarkOnMobile = pathname === "/" || pathname === "/our-mission" || pathname === "/contact";
     const navRef = useRef<HTMLElement>(null);
     const dropdownRef = useRef<HTMLDivElement>(null);
@@ -48,6 +49,8 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
             if (sessionStorage.getItem("navbar-scrolled") === "true") scrolled = true;
         } catch {}
         if (scrolled) setHasScrolled(true);
+        // Use-cases page: navbar visible immediately (no hero entrance animation)
+        if (isUseCasesPage) setHasScrolled(true);
         setIsCompact(window.scrollY > COMPACT_THRESHOLD);
     }, []);
 
@@ -154,6 +157,13 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
+    // Use-cases page: navbar visible immediately (no hero entrance animation)
+    useEffect(() => {
+        if (!isUseCasesPage) return;
+        setHasScrolled(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
     // Polling fallback for late scroll restoration (mobile, slow devices, private browsing)
     useEffect(() => {
         const sync = () => {
@@ -227,7 +237,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
     const isDark = theme === "dark";
 
     const navColor = isMenuOpen
-        ? "#111111"
+        ? (isUseCasesPage && isDark ? "white" : "#111111")
         : isCompact
         ? (isDark ? "white" : "#0A1344")
         : isDark
@@ -254,7 +264,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
         fontSize: compact ? 14 : 15,
         fontWeight: 400,
         letterSpacing: "-0.0025em",
-        ...(wide ? {} : { color: "#111111" }),
+        ...(wide ? {} : { color: isDark ? "white" : "#111111" }),
         transition: `font-size ${t}`,
     });
 
@@ -334,7 +344,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                             width: isCompact ? 36 : 40,
                                             height: isCompact ? 36 : 40,
                                             transition: `width ${t}, height ${t}, filter ${t}, opacity 0.4s ease`,
-                                            filter: (isDark && !isMenuOpen) ? "brightness(0) invert(1)" : "none",
+                                            filter: (isDark && (!isMenuOpen || isUseCasesPage)) ? "brightness(0) invert(1)" : "none",
                                             opacity: hasScrolled ? 1 : 0,
                                         }}
                                     >
@@ -409,7 +419,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                     }}>
                                         <Link
                                             href="/maps-gpt"
-                                            className={`group flex items-center justify-between leading-none whitespace-nowrap hover:opacity-90 transition-opacity ${wide ? glassStyles.btn : ""}`}
+                                            className={`group flex items-center justify-between leading-none whitespace-nowrap transition-all duration-300 ${isUseCasesPage ? (isDark ? "hover:bg-white!" : "hover:opacity-90") : "hover:opacity-90"} ${wide ? glassStyles.btn : ""}`}
                                             style={{
                                                 fontSize: 14,
                                                 fontWeight: 500,
@@ -422,14 +432,16 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                                 paddingLeft: ctaVisible ? 20 : 0,
                                                 paddingRight: ctaVisible ? 16 : 0,
                                                 marginRight: 0,
-                                                transition: `width ${t}, opacity 300ms ease, padding ${t}`,
+                                                transition: `width ${t}, opacity 300ms ease, padding ${t}, background-color 300ms ease, color 300ms ease`,
                                                 ...(wide
                                                     ? { backdropFilter: "blur(6px)", WebkitBackdropFilter: "blur(6px)" }
+                                                    : isUseCasesPage
+                                                    ? { backgroundColor: isDark ? "rgba(255, 255, 255, 0.10)" : "#000000", color: isDark ? "white" : "white" }
                                                     : { backgroundColor: "#000000", color: "white" }),
                                             }}
                                         >
                                             <span
-                                                className={`transition-colors duration-300 ${wide ? (isProductsPage ? "text-black" : isMenuOpen ? "text-black" : "text-white") : ""} group-hover:text-[#2563EB]`}
+                                                className={`transition-colors duration-300 ${wide ? (isProductsPage ? "text-black" : isMenuOpen ? "text-black" : "text-white") : isUseCasesPage && isDark ? "group-hover:text-black!" : ""} group-hover:text-[#2563EB]`}
                                                 style={{
                                                     opacity: ctaVisible ? 1 : 0,
                                                     transition: ctaVisible
@@ -621,7 +633,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                             className={`group relative text-xl font-medium transition-all duration-300 flex items-center ${dropdownNavLinkClass}`}
                                         >
                                             <span className="transition-all duration-300 ease-in-out group-hover:translate-x-1">{item.label}</span>
-                                            <svg className="ml-3 shrink-0 transition-all duration-300 ease-in-out group-hover:translate-x-1 stroke-[#0A1344] group-hover:stroke-[#2563EB]" width="9" height="16" viewBox="0 0 7 12" fill="none" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                                            <svg className={`ml-3 shrink-0 transition-all duration-300 ease-in-out group-hover:translate-x-1 group-hover:stroke-[#2563EB] ${isDark ? "stroke-white" : "stroke-[#0A1344]"}`} width="9" height="16" viewBox="0 0 7 12" fill="none" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                                                 <path d="M1 1l5 5-5 5" />
                                             </svg>
                                         </Link>
