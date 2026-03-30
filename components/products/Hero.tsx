@@ -5,6 +5,7 @@ import { useRef, useEffect, useState, useCallback } from "react";
 import glassStyles from "@/components/ui/GlassButton.module.css";
 import { ConsumerEnterpriseToggle } from "@/components/enterprise/ConsumerEnterpriseToggle";
 import ShowcaseSection from "@/components/products/ShowcaseSection";
+import MapsGPTGlobe from "@/components/products/MapsGPTGlobe";
 
 const CANVAS_W     = 1728;
 const CANVAS_H     = 1756;
@@ -414,11 +415,11 @@ export default function Hero() {
                       transition: "opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), filter 0.6s cubic-bezier(0.4, 0, 0.2, 1), transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)",
                     }}
                   >
-                    <Image src="/MapsGPT-logo.png" alt="MapsGPT Logo" width={67} height={67} style={{ filter: "drop-shadow(0 1px 2px rgba(0,0,0,0.1))" }} />
+                    <MapsGPTGlobe size={67} />
                     <span style={{
-                      background: "linear-gradient(180deg, rgba(255,255,255,0.9) 0%, rgba(180,156,83,0.75) 40%, rgba(140,120,60,0.6) 100%)",
+                      background: "linear-gradient(180deg, rgba(255,255,255,0.9) 0%, rgba(26,26,26,0.75) 40%, rgba(26,26,26,0.6) 100%)",
                       WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text",
-                      filter: "drop-shadow(0 1px 2px rgba(0,0,0,0.1))",
+                      filter: "drop-shadow(0 1px 2px rgba(0,0,0,0.12)) drop-shadow(0 0.5px 1px rgba(0,0,0,0.08))",
                     }}>MapsGPT</span>
                   </h1>
                   <h2
@@ -482,7 +483,7 @@ export default function Hero() {
                 >
                   <Image src="/MapsGPT-logo.png" alt="MapsGPT Logo" width={60} height={60} style={{ filter: "drop-shadow(0 1px 2px rgba(0,0,0,0.1))" }} />
                   <span style={{
-                    background: "linear-gradient(180deg, rgba(255,255,255,0.9) 0%, rgba(180,156,83,0.75) 40%, rgba(140,120,60,0.6) 100%)",
+                    background: "linear-gradient(180deg, rgba(255,255,255,0.9) 0%, rgba(26,26,26,0.75) 40%, rgba(26,26,26,0.6) 100%)",
                     WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text",
                     filter: "drop-shadow(0 1px 2px rgba(0,0,0,0.1))",
                   }}>MapsGPT</span>

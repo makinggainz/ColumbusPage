@@ -249,9 +249,9 @@ export default function ShowcaseSection({ compact = false, onInteraction }: { co
             <span
               className="text-[27px] sm:text-[36px] font-semibold tracking-[-0.02em]"
               style={{
-                background: "linear-gradient(180deg, rgba(255,255,255,0.9) 0%, rgba(180,156,83,0.75) 40%, rgba(140,120,60,0.6) 100%)",
+                background: "linear-gradient(180deg, rgba(255,255,255,0.9) 0%, rgba(26,26,26,0.75) 40%, rgba(26,26,26,0.6) 100%)",
                 WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text",
-                filter: "drop-shadow(0 1px 2px rgba(0,0,0,0.1))",
+                filter: "drop-shadow(0 1px 2px rgba(0,0,0,0.12)) drop-shadow(0 0.5px 1px rgba(0,0,0,0.08))",
               }}
             >MapsGPT</span>
           </div>
@@ -259,7 +259,7 @@ export default function ShowcaseSection({ compact = false, onInteraction }: { co
             className="text-[27px] sm:text-[36px] tracking-[-0.02em]"
             style={{
               fontWeight: 590,
-              background: "linear-gradient(180deg, #063140 0%, rgba(6, 49, 64, 0.38) 100%)",
+              background: "linear-gradient(180deg, rgba(26,26,26,1) 0%, rgba(26,26,26,0.2) 100%)",
               WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text",
             }}
           >
@@ -515,11 +515,11 @@ export default function ShowcaseSection({ compact = false, onInteraction }: { co
               />
               <span
                 style={{
-                  background: "linear-gradient(180deg, rgba(255,255,255,0.9) 0%, rgba(180,156,83,0.75) 40%, rgba(140,120,60,0.6) 100%)",
+                  background: "linear-gradient(180deg, rgba(255,255,255,0.9) 0%, rgba(26,26,26,0.75) 40%, rgba(26,26,26,0.6) 100%)",
                   WebkitBackgroundClip: "text",
                   WebkitTextFillColor: "transparent",
                   backgroundClip: "text",
-                  filter: "drop-shadow(0 1px 2px rgba(0,0,0,0.1))",
+                  filter: "drop-shadow(0 1px 2px rgba(0,0,0,0.12)) drop-shadow(0 0.5px 1px rgba(0,0,0,0.08))",
                 }}
               >
                 MapsGPT
@@ -532,7 +532,7 @@ export default function ShowcaseSection({ compact = false, onInteraction }: { co
                 fontSize: "clamp(36px, 3.3vw, 48px)",
                 lineHeight: "130%",
                 letterSpacing: "-0.02em",
-                background: "linear-gradient(180deg, #063140 0%, rgba(6, 49, 64, 0.38) 100%)",
+                background: "linear-gradient(180deg, rgba(26,26,26,1) 0%, rgba(26,26,26,0.2) 100%)",
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
                 backgroundClip: "text",
