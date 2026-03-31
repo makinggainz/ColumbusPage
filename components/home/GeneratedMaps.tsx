@@ -77,16 +77,6 @@ const MAPS = [
     accent: "#93C5FD",
     avatars: [AVATARS[12], AVATARS[13], AVATARS[14]],
   },
-  {
-    title: "Hidden Rooftop Bars",
-    description: "The ones without signs, without reservations, and without tourists. Locals only — until now.",
-    location: "Chicago, IL",
-    upvotes: 516, downvotes: 73,
-    emoji: "🌆",
-    gradient: "linear-gradient(135deg, #030712 0%, #0F172A 50%, #1E3A8A 100%)",
-    accent: "#2563EB",
-    avatars: [AVATARS[15], AVATARS[16], AVATARS[17]],
-  },
 ];
 
 export const GeneratedMaps = () => {
@@ -122,11 +112,11 @@ export const GeneratedMaps = () => {
 
         {/* Scrollable row */}
         <div
-          className="flex overflow-x-auto px-6 pb-12 gap-5 select-none"
+          className="flex overflow-x-auto px-8 min-[1287px]:px-10 pb-12 gap-3 select-none min-[1010px]:justify-center"
           style={{ scrollbarWidth: "none", ...anim(150) }}
         >
           {MAPS.map((item, i) => (
-            <Link key={i} href="/maps-gpt" className="group flex flex-col shrink-0 rounded-lg overflow-hidden transition-colors duration-300" style={{ width: 260, border: "1px solid var(--grid-line)", background: "rgba(37, 99, 235, 0.06)" }}
+            <Link key={i} href="/maps-gpt" className="group flex flex-col shrink-0 rounded-lg overflow-hidden transition-colors duration-300" style={{ width: 182, border: "1px solid var(--grid-line)", background: "rgba(37, 99, 235, 0.06)" }}
               onMouseEnter={e => (e.currentTarget.style.background = "rgba(37, 99, 235, 0.14)")}
               onMouseLeave={e => (e.currentTarget.style.background = "rgba(37, 99, 235, 0.06)")}
             >

@@ -70,7 +70,7 @@ export const UniqueSpotsSection = () => {
           {/* Scrollable cards */}
           <div
             ref={scrollRef}
-            className="flex overflow-x-auto px-6 pb-12 gap-5 select-none"
+            className="flex overflow-x-auto px-8 min-[1287px]:px-10 pb-12 gap-3 select-none min-[1010px]:justify-center"
             style={{
               scrollbarWidth: "none",
               cursor: isDragging ? "grabbing" : "grab",
@@ -117,7 +117,7 @@ export const UniqueSpotsSection = () => {
 
 function SpotCard({ spot }: { spot: (typeof SPOTS)[0] }) {
   return (
-    <Link href="/maps-gpt" className="flex flex-col shrink-0 overflow-hidden rounded-lg transition-colors duration-300" style={{ width: 260, border: "1px solid var(--grid-line)", background: "rgba(37, 99, 235, 0.06)" }}
+    <Link href="/maps-gpt" className="flex flex-col shrink-0 overflow-hidden rounded-lg transition-colors duration-300" style={{ width: 182, border: "1px solid var(--grid-line)", background: "rgba(37, 99, 235, 0.06)" }}
       onMouseEnter={e => (e.currentTarget.style.background = "rgba(37, 99, 235, 0.14)")}
       onMouseLeave={e => (e.currentTarget.style.background = "rgba(37, 99, 235, 0.06)")}
     >
