@@ -79,69 +79,15 @@ const CONSIDERING = [
 ];
 
 function AnimatedChatCard() {
-  const [phase, setPhase] = useState<"typing" | "sending" | "thinking" | "done">("typing");
-  const [typedQuery, setTypedQuery] = useState("");
-  const [visibleSteps, setVisibleSteps] = useState(0);
-  const [showResponse, setShowResponse] = useState(false);
-  const [showFollowUp, setShowFollowUp] = useState(false);
-
-  useEffect(() => {
-    let cancelled = false;
-
-    const runSequence = async () => {
-      // Phase 1: type the query
-      setPhase("typing");
-      setTypedQuery("");
-      setVisibleSteps(0);
-      setShowResponse(false);
-      setShowFollowUp(false);
-
-      for (let i = 1; i <= QUERY.length; i++) {
-        if (cancelled) return;
-        await new Promise(r => setTimeout(r, 28));
-        setTypedQuery(QUERY.slice(0, i));
-      }
-
-      // Phase 2: send
-      await new Promise(r => setTimeout(r, 300));
-      if (cancelled) return;
-      setPhase("sending");
-
-      // Phase 3: thinking + steps
-      await new Promise(r => setTimeout(r, 400));
-      if (cancelled) return;
-      setPhase("thinking");
-
-      for (let i = 1; i <= CONSIDERING.length; i++) {
-        await new Promise(r => setTimeout(r, 380));
-        if (cancelled) return;
-        setVisibleSteps(i);
-      }
-
-      // Phase 4: response
-      await new Promise(r => setTimeout(r, 400));
-      if (cancelled) return;
-      setShowResponse(true);
-
-      await new Promise(r => setTimeout(r, 500));
-      if (cancelled) return;
-      setShowFollowUp(true);
-      setPhase("done");
-
-      // Loop after pause
-      await new Promise(r => setTimeout(r, 4000));
-      if (cancelled) return;
-      runSequence();
-    };
-
-    runSequence();
-    return () => { cancelled = true; };
-  }, []);
-
-  const sent = phase === "sending" || phase === "thinking" || phase === "done";
+  const phase = "done" as const;
+  const typedQuery = QUERY;
+  const visibleSteps = CONSIDERING.length;
+  const showResponse = true;
+  const showFollowUp = true;
+  const sent = true;
 
   return (
-    <div className="absolute left-[72px] top-[40px] bottom-[40px] w-[514px] max-xl:left-[48px] max-xl:w-[440px] max-lg:left-[24px] max-lg:w-[360px] bg-[#f5f5f7] rounded-2xl shadow-xl p-8 flex flex-col">
+    <div className="absolute left-[72px] top-[40px] bottom-[40px] w-[514px] max-xl:left-[48px] max-xl:w-[440px] max-lg:left-[24px] max-lg:w-[360px] bg-[#f5f5f7] shadow-xl p-8 flex flex-col">
       {/* Thinking header */}
       <div
         className="flex items-center gap-3 mb-4"
@@ -223,64 +169,6 @@ export const Capabilities = () => {
     return () => obs.disconnect();
   }, []);
 
-  // Scroll-driven scale with lerp smoothing
-  useEffect(() => {
-    const content = contentRef.current;
-    const section = sectionRef.current;
-    if (!content || !section) return;
-
-    let current = 0;
-    let rafId = 0;
-    let lastTime = 0;
-    let running = false;
-
-    const tick = (now: number) => {
-      const dt = lastTime ? (now - lastTime) / 1000 : 0.016;
-      lastTime = now;
-
-      const rect = section.getBoundingClientRect();
-      const viewH = window.innerHeight;
-      // Start when section top reaches 80% down the viewport, complete 400px later
-      const offset = viewH * 0.8 - rect.top;
-      const target = Math.max(0, Math.min(1, offset / 400));
-
-      const speed = 3.5;
-      const lerp = 1 - Math.exp(-speed * dt);
-      current += (target - current) * lerp;
-      if (Math.abs(target - current) < 0.001) current = target;
-
-      if (window.innerWidth >= 1375) {
-        const scale = 1 + 0.07 * current;
-        content.style.transform = `scale(${scale})`;
-      } else {
-        content.style.transform = "scale(1)";
-      }
-
-      if (Math.abs(target - current) > 0.0005) {
-        rafId = requestAnimationFrame(tick);
-      } else {
-        running = false;
-      }
-    };
-
-    const startTick = () => {
-      if (!running) { running = true; lastTime = 0; rafId = requestAnimationFrame(tick); }
-    };
-
-    const onResize = () => {
-      if (content && window.innerWidth < 1375) {
-        content.style.transform = "scale(1)";
-        current = 0;
-      } else {
-        startTick();
-      }
-    };
-
-    window.addEventListener("scroll", startTick, { passive: true });
-    window.addEventListener("resize", onResize, { passive: true });
-    startTick();
-    return () => { window.removeEventListener("scroll", startTick); window.removeEventListener("resize", onResize); cancelAnimationFrame(rafId); };
-  }, []);
 
   useEffect(() => {
     if (userHasTapped) return;
@@ -326,9 +214,6 @@ export const Capabilities = () => {
             borderBottom: gl,
             position: "relative",
             zIndex: 10,
-            opacity: visible ? 1 : 0,
-            transform: visible ? "translateY(0)" : "translateY(16px)",
-            transition: "opacity 0.7s ease 0.15s, transform 0.7s ease 0.15s",
           }}
         >
           {/* Mobile sidebar */}
@@ -401,9 +286,9 @@ export const Capabilities = () => {
           </div>
 
           {/* Desktop layout: sidebar + map */}
-          <div ref={contentRef} className="capabilities-scale relative w-full overflow-hidden flex max-md:hidden rounded-lg h-[673px] max-lg:h-[520px]" style={{ transformOrigin: "center center", willChange: "transform" }}>
+          <div ref={contentRef} className="relative w-full overflow-hidden flex max-md:hidden h-[673px] max-lg:h-[520px]">
             {/* Sidebar */}
-            <div className="w-[348px] max-lg:w-[280px] shrink-0 text-white flex flex-col overflow-hidden h-full border border-[var(--grid-line)] border-r-0 rounded-l-lg">
+            <div className="w-[348px] max-lg:w-[280px] shrink-0 text-white flex flex-col overflow-hidden h-full border border-[var(--grid-line)] border-r-0">
               {SIDEBAR_ITEMS.map((item) => (
                 <button
                   key={item.id}
@@ -458,7 +343,7 @@ export const Capabilities = () => {
 
             {/* Map area */}
             <div
-              className="absolute top-0 bottom-0 right-0 left-[348px] max-lg:left-[280px] transition-opacity ease-in-out overflow-hidden border border-[var(--grid-line)] border-l-0 rounded-r-lg"
+              className="absolute top-0 bottom-0 right-0 left-[348px] max-lg:left-[280px] transition-opacity ease-in-out overflow-hidden border border-[var(--grid-line)] border-l-0"
               style={{
                 opacity: mapOpacity,
                 transitionDuration: `${FADE_DURATION_MS / 2}ms`,

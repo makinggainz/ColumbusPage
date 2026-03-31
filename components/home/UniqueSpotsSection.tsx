@@ -3,7 +3,7 @@
 import { Star, MapPin } from "lucide-react";
 import { useRef, useState, useEffect } from "react";
 import Link from "next/link";
-import { GridSection, BarDots, gl } from "./ContentGrid";
+import { GridSection, gl } from "./ContentGrid";
 
 const FAVORITE_SPOTS_FILES = ["(20).jpeg", "(14).jpeg", "(17).jpeg", "(19).jpeg", "(21).jpeg", "(23).jpeg", "(24).jpeg", "(22).jpeg"];
 const spotImageSrc = (filename: string) => `/FavoriteSpots/${encodeURIComponent(filename)}`;
@@ -93,8 +93,7 @@ export const UniqueSpotsSection = () => {
         borderTop: "1px solid var(--grid-line)",
         borderBottom: "1px solid var(--grid-line)"
       }}>
-        <div className="relative flex flex-wrap max-w-[1287px] mx-auto">
-          <BarDots top bottom />
+        <div className="grid-section relative flex flex-wrap max-w-[1287px] mx-auto">
           <div className="px-8 min-[1287px]:px-10 py-5 flex items-center flex-1 min-w-70" style={{ minHeight: 76, borderRight: gl, backgroundColor: "rgba(20, 41, 148, 0.07)" }}>
             <p className="text-[18px] lg:text-[20px] font-medium text-[#1D1D1F] tracking-[-0.01em]">
               MapsGPT is a local guide in your pocket

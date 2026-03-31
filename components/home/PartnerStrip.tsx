@@ -34,8 +34,8 @@ export const PartnerStrip = () => {
 
       {/* Carousel with edge fade + hover overlay */}
       <div
-        className="relative pt-10 pb-28 mx-auto"
-        style={{ width: "85%" }}
+        className="relative pt-20 pb-28 mx-auto"
+        style={{ width: 958, maxWidth: "100%" }}
       >
         <div
           className="relative"
@@ -118,8 +118,8 @@ export const PartnerStrip = () => {
         </div>
       </div>
 
-      <div className="flex justify-center pb-20">
-        <div style={{ width: "85%", height: 1, background: "var(--grid-line)" }} />
+      <div className="flex justify-center px-8 min-[1287px]:px-10 pb-20">
+        <div style={{ width: 958, maxWidth: "100%", height: 1, background: "var(--grid-line)" }} />
       </div>
 
       <style jsx global>{`

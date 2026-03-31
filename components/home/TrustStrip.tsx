@@ -41,7 +41,7 @@ export const TrustStrip = () => {
   });
 
   return (
-    <GridSection extendTop style={{ borderTop: "none", overflow: "visible", position: "relative" }}>
+    <GridSection style={{ borderTop: "none", overflow: "visible", position: "relative" }}>
       <div ref={ref} style={{ borderBottom: gl, position: "relative", overflow: "visible" }}>
         {/* Fern — left side (mobile: angled inward, desktop: original) */}
         <div

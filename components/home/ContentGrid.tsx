@@ -8,23 +8,14 @@ export function GridSection({
   children,
   className = "",
   style,
-  fadeTop = true,
-  fadeBottom = true,
-  extendTop = false,
 }: {
   children: ReactNode;
   className?: string;
   style?: CSSProperties;
-  fadeTop?: boolean;
-  fadeBottom?: boolean;
-  extendTop?: boolean;
 }) {
   return (
     <section
       className={`grid-section max-w-[1287px] mx-auto bg-white ${className}`}
-      data-fade-top={String(fadeTop)}
-      data-fade-bottom={String(fadeBottom)}
-      data-extend-top={String(extendTop)}
       style={style}
     >
       {children}
@@ -87,17 +78,6 @@ export function GridCell({
     >
       {children}
     </div>
-  );
-}
-
-export function BarDots({ top = false, bottom = false }: { top?: boolean; bottom?: boolean } = {}) {
-  return (
-    <>
-      {top && <span className="grid-dot" style={{ top: 0, left: 0 }} />}
-      {top && <span className="grid-dot" style={{ top: 0, right: 0 }} />}
-      {bottom && <span className="grid-dot" style={{ bottom: 0, left: 0 }} />}
-      {bottom && <span className="grid-dot" style={{ bottom: 0, right: 0 }} />}
-    </>
   );
 }
 

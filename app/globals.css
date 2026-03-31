@@ -96,67 +96,20 @@ html {
   margin-top: -1px;
 }
 
-/* Grid intersection dots */
-.grid-dot {
-  position: absolute;
-  width: 4px;
-  height: 4px;
-  margin: -2px;
-  border-radius: 50%;
-  background: var(--grid-line);
-  pointer-events: none;
-  z-index: 2;
-}
-
-/* Vertical grid lines — extend beyond the section, fading out */
+/* Vertical grid lines — solid interior lines, tails handled by React */
 .grid-section::before,
 .grid-section::after {
   content: "";
   position: absolute;
   top: 0;
   width: 1px;
-  height: calc(100% + 192px);
+  height: 100%;
   pointer-events: none;
   z-index: 1;
-  background: linear-gradient(to bottom, transparent 0px, var(--grid-line) 192px, var(--grid-line) calc(100% - 192px), transparent 100%);
+  background: var(--grid-line);
 }
 .grid-section::before { left: 0; }
 .grid-section::after { right: 0; }
-
-/* Extend top — lines reach 192px above the section and fade in */
-.grid-section[data-extend-top="true"]::before,
-.grid-section[data-extend-top="true"]::after {
-  top: -192px;
-  height: calc(100% + 384px);
-  background: linear-gradient(to bottom, transparent 0px, var(--grid-line) 160px, var(--grid-line) calc(100% - 192px), transparent 100%);
-}
-
-.grid-section[data-fade-top="false"]::before,
-.grid-section[data-fade-top="false"]::after {
-  top: 0;
-  height: calc(100% + 192px);
-  background: linear-gradient(to bottom, var(--grid-line) 0px, var(--grid-line) calc(100% - 192px), transparent 100%);
-}
-.grid-section[data-fade-bottom="false"]::before,
-.grid-section[data-fade-bottom="false"]::after {
-  top: 0;
-  height: 100%;
-  background: linear-gradient(to bottom, transparent 0px, var(--grid-line) 192px, var(--grid-line) 100%);
-}
-.grid-section[data-fade-top="false"][data-fade-bottom="false"]::before,
-.grid-section[data-fade-top="false"][data-fade-bottom="false"]::after {
-  top: 0;
-  height: 100%;
-  background: var(--grid-line);
-}
-
-/* Extend top + fade-top=false combo */
-.grid-section[data-extend-top="true"][data-fade-top="false"]::before,
-.grid-section[data-extend-top="true"][data-fade-top="false"]::after {
-  top: -192px;
-  height: calc(100% + 384px);
-  background: linear-gradient(to bottom, var(--grid-line) 0px, var(--grid-line) calc(100% - 192px), transparent 100%);
-}
 
 @media (min-width: 940px) {
   :root {

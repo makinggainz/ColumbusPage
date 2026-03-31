@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { GridSection, BarDots, gl } from "./ContentGrid";
+import { GridSection, gl } from "./ContentGrid";
 
 const CARDS = [
   { src: "/Icon/gen.png", label: "City Security", href: "/use-cases" },
@@ -36,12 +36,12 @@ export const Industries = () => {
 
   return (
     <>
-    <GridSection style={{ borderTop: "none", paddingTop: 100 }}>
+    <GridSection style={{ borderTop: "none" }}>
       <div ref={ref}>
-        <div style={{ marginTop: -54 }}>
+        <div>
         {/* Title */}
         <div
-          className="flex items-center justify-center pt-2 pb-12 px-8"
+          className="flex items-center justify-center pt-8 pb-12 px-8"
           style={anim(0)}
         >
           <h2 className="font-medium tracking-[-0.02em] text-[16px] lg:text-[20px] text-[#6E6E73]">
@@ -51,7 +51,7 @@ export const Industries = () => {
 
         {/* Cards row — horizontal scroll, matching GeneratedMaps pattern */}
         <div
-          className="flex items-stretch gap-3 px-8 min-[1287px]:px-10 pb-10 overflow-x-auto min-[1010px]:justify-center"
+          className="flex items-stretch gap-3 px-8 min-[1287px]:px-10 pb-24 overflow-x-auto min-[1010px]:justify-center"
           style={{ scrollbarWidth: "none", ...anim(100) }}
         >
           {CARDS.map((card, i) => (
@@ -104,8 +104,7 @@ export const Industries = () => {
         borderTop: "1px solid var(--grid-line)",
         borderBottom: "1px solid var(--grid-line)"
       }}>
-        <div className="relative flex flex-wrap max-w-[1287px] mx-auto" style={{ ...anim(550) }}>
-          <BarDots top bottom />
+        <div className="grid-section relative flex flex-wrap max-w-[1287px] mx-auto" style={{ ...anim(550) }}>
           <div className="px-8 min-[1287px]:px-10 py-5 flex items-center flex-1 min-w-70" style={{ minHeight: 76, borderRight: gl, backgroundColor: "rgba(37, 99, 235, 0.06)" }}>
             <p className="text-[18px] lg:text-[20px] font-medium text-[#1D1D1F] tracking-[-0.01em]">
               Become a super-explorer.

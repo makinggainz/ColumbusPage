@@ -13,8 +13,46 @@ import { PartnerStrip } from "@/components/home/PartnerStrip";
 import { TravelSection } from "@/components/home/TravelSection";
 import { GeneratedMaps } from "@/components/home/GeneratedMaps";
 import { UniqueSpotsSection } from "@/components/home/UniqueSpotsSection";
-function Island({ children, className = "" }: { children: ReactNode; className?: string }) {
-  return <div className={`mt-64 ${className}`}>{children}</div>;
+const TAIL_LENGTH = 96;
+
+function IslandTail({ side, edge }: { side: "left" | "right"; edge: "top" | "bottom" }) {
+  return (
+    <div
+      style={{
+        position: "absolute",
+        ...(edge === "top" ? { top: -TAIL_LENGTH - 1 } : { bottom: -TAIL_LENGTH - 1 }),
+        [side]: 0,
+        width: 1,
+        height: TAIL_LENGTH,
+        background: edge === "top"
+          ? "linear-gradient(to bottom, transparent 0px, var(--grid-line) 100%)"
+          : "linear-gradient(to top, transparent 0px, var(--grid-line) 100%)",
+        pointerEvents: "none",
+        zIndex: 1,
+      }}
+    />
+  );
+}
+
+function Island({ children, className = "", tails = true }: { children: ReactNode; className?: string; tails?: boolean }) {
+  return (
+    <div className={`mt-64 ${className}`} style={{ position: "relative", overflow: "visible" }}>
+      {tails && (
+        <div
+          className="pointer-events-none absolute mx-auto"
+          style={{ maxWidth: 1287, zIndex: 1, top: 0, bottom: 0, left: 0, right: 0 }}
+        >
+          <div style={{ position: "relative", width: "100%", height: "100%" }}>
+            <IslandTail side="left" edge="top" />
+            <IslandTail side="right" edge="top" />
+            <IslandTail side="left" edge="bottom" />
+            <IslandTail side="right" edge="bottom" />
+          </div>
+        </div>
+      )}
+      {children}
+    </div>
+  );
 }
 
 export default function Home() {
@@ -24,7 +62,7 @@ export default function Home() {
       <Hero />
 
       {/* Island 1: Vision */}
-      <Island className="mt-16!">
+      <Island className="mt-16!" tails={false}>
         <Vision />
       </Island>
 
@@ -50,7 +88,7 @@ export default function Home() {
       </Island>
 
       {/* Island 5: Hiring Humans */}
-      <Island>
+      <Island tails={false}>
         <Careers />
       </Island>
 
