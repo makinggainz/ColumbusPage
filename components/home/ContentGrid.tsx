@@ -10,18 +10,21 @@ export function GridSection({
   style,
   fadeTop = true,
   fadeBottom = true,
+  extendTop = false,
 }: {
   children: ReactNode;
   className?: string;
   style?: CSSProperties;
   fadeTop?: boolean;
   fadeBottom?: boolean;
+  extendTop?: boolean;
 }) {
   return (
     <section
       className={`grid-section max-w-[1287px] mx-auto bg-white ${className}`}
       data-fade-top={String(fadeTop)}
       data-fade-bottom={String(fadeBottom)}
+      data-extend-top={String(extendTop)}
       style={style}
     >
       {children}

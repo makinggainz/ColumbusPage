@@ -96,7 +96,7 @@ html {
   margin-top: -1px;
 }
 
-/* Vertical grid lines — extend beyond the section bottom, through the bottom bar, fading out */
+/* Vertical grid lines — extend beyond the section, fading out */
 .grid-section::before,
 .grid-section::after {
   content: "";
@@ -111,6 +111,14 @@ html {
 .grid-section::before { left: 0; }
 .grid-section::after { right: 0; }
 
+/* Extend top — lines reach 192px above the section and fade in */
+.grid-section[data-extend-top="true"]::before,
+.grid-section[data-extend-top="true"]::after {
+  top: -192px;
+  height: calc(100% + 384px);
+  background: linear-gradient(to bottom, transparent 0px, var(--grid-line) 192px, var(--grid-line) calc(100% - 192px), transparent 100%);
+}
+
 .grid-section[data-fade-top="false"]::before,
 .grid-section[data-fade-top="false"]::after {
   background: linear-gradient(to bottom, var(--grid-line) 0px, var(--grid-line) calc(100% - 192px), transparent 100%);
@@ -122,6 +130,14 @@ html {
 .grid-section[data-fade-top="false"][data-fade-bottom="false"]::before,
 .grid-section[data-fade-top="false"][data-fade-bottom="false"]::after {
   background: var(--grid-line);
+}
+
+/* Extend top + fade-top=false combo */
+.grid-section[data-extend-top="true"][data-fade-top="false"]::before,
+.grid-section[data-extend-top="true"][data-fade-top="false"]::after {
+  top: -192px;
+  height: calc(100% + 384px);
+  background: linear-gradient(to bottom, transparent 0px, var(--grid-line) 192px, var(--grid-line) calc(100% - 192px), transparent 100%);
 }
 
 @media (min-width: 940px) {

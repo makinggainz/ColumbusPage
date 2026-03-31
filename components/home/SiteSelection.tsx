@@ -158,7 +158,7 @@ export const SiteSelection = () => {
       </div>
 
       {/* Rest wrapped in GridSection for left/right grid lines */}
-      <GridSection>
+      <GridSection extendTop>
       <div ref={ref} style={{ borderBottom: gl }}>
 
         {/* Hero card — clip-path expansion from compact to full-screen on scroll */}

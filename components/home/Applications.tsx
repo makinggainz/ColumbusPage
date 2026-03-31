@@ -65,7 +65,7 @@ export const Applications = () => {
         </div>
       </div>
 
-    <GridSection>
+    <GridSection extendTop>
       <div ref={ref} style={{ borderBottom: gl }}>
         {/* Header area */}
         <div className="px-8 min-[1287px]:px-10 pt-14 pb-4">
