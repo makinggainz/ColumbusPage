@@ -59,7 +59,7 @@ export const UniqueSpotsSection = () => {
   return (
     <>
       <GridSection style={{ borderTop: "none" }}>
-        <div ref={ref} style={{ borderBottom: gl }}>
+        <div ref={ref}>
           {/* Heading */}
           <div className="flex items-center justify-center px-8 pt-14 pb-10" style={anim(0)}>
             <h2 className="font-medium tracking-[-0.02em] text-[20px] lg:text-[25px] text-[#6E6E73]">

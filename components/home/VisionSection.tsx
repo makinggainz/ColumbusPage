@@ -97,7 +97,7 @@ export const Vision = () => {
         </div>
 
         {/* Architecture diagram */}
-        <div style={{ borderBottom: gl, ...anim(180) }}>
+        <div style={anim(180)}>
           <ArchitectureDiagram />
         </div>
 
