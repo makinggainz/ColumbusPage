@@ -157,8 +157,8 @@ export const SiteSelection = () => {
         </div>
       </div>
 
-      {/* Rest wrapped in GridSection for left/right grid lines */}
-      <GridSection>
+      {/* Rest wrapped in GridSection — hide vertical lines so they don't overlay the hero image */}
+      <GridSection className="[&::before]:hidden [&::after]:hidden">
       <div ref={ref} style={{ borderBottom: gl }}>
 
         {/* Hero card — clip-path expansion from compact to full-screen on scroll */}
