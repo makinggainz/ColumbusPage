@@ -17,21 +17,12 @@ export function GridSection({
   fadeTop?: boolean;
   fadeBottom?: boolean;
 }) {
-  const top = fadeTop ? "transparent 0px, var(--grid-line) 72px" : "var(--grid-line) 0px, var(--grid-line) 0px";
-  const bottom = fadeBottom ? "var(--grid-line) calc(100% - 72px), transparent 100%" : "var(--grid-line) 100%, var(--grid-line) 100%";
-
   return (
     <section
       className={`grid-section max-w-[1287px] mx-auto bg-white ${className}`}
       data-fade-top={String(fadeTop)}
       data-fade-bottom={String(fadeBottom)}
-      style={{
-        backgroundImage: `linear-gradient(to bottom, ${top}, ${bottom})`,
-        backgroundSize: "1px 100%",
-        backgroundRepeat: "no-repeat",
-        backgroundPosition: "left top",
-        ...style,
-      }}
+      style={style}
     >
       {children}
     </section>

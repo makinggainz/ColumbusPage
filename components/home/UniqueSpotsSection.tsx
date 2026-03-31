@@ -90,8 +90,8 @@ export const UniqueSpotsSection = () => {
 
       {/* Bottom CTA bar — full width with grid lines */}
       <div style={{
-        borderTop: "1px solid rgba(37, 99, 235, 0.08)",
-        borderBottom: "1px solid rgba(37, 99, 235, 0.08)"
+        borderTop: "1px solid var(--grid-line)",
+        borderBottom: "1px solid var(--grid-line)"
       }}>
         <div className="flex flex-wrap max-w-[1287px] mx-auto">
           <div className="px-8 min-[1287px]:px-10 py-5 flex items-center flex-1 min-w-70" style={{ minHeight: 76, borderRight: gl, backgroundColor: "rgba(20, 41, 148, 0.07)" }}>

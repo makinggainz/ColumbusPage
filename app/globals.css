@@ -31,7 +31,7 @@ html {
   --accent: #0066CC;
   --container-padding: 20px;
   --page-padding: calc(var(--container-padding) + 18px); /* matches navbar logo/hamburger edges */
-  --grid-line: rgba(120, 120, 200, 0.2);
+  --grid-line: rgba(37, 99, 235, 0.2);
 }
 
 /* Dark section lateral constraint lines — for use-cases dark sections */
@@ -72,7 +72,7 @@ html {
   position: absolute;
   top: 0; left: 0;
   width: 1px; height: 100%;
-  background: linear-gradient(to bottom, transparent 0px, rgba(120,120,200,0.35) 72px, rgba(120,120,200,0.35) calc(100% - 72px), transparent 100%);
+  background: linear-gradient(to bottom, transparent 0px, rgba(37,99,235,0.2) 72px, rgba(37,99,235,0.2) calc(100% - 72px), transparent 100%);
   pointer-events: none;
   z-index: 1;
 }
@@ -81,7 +81,7 @@ html {
   position: absolute;
   top: 0; right: 0;
   width: 1px; height: 100%;
-  background: linear-gradient(to bottom, transparent 0px, rgba(120,120,200,0.35) 72px, rgba(120,120,200,0.35) calc(100% - 72px), transparent 100%);
+  background: linear-gradient(to bottom, transparent 0px, rgba(37,99,235,0.2) 72px, rgba(37,99,235,0.2) calc(100% - 72px), transparent 100%);
   pointer-events: none;
   z-index: 1;
 }
@@ -96,24 +96,30 @@ html {
   margin-top: -1px;
 }
 
-/* Right-side fading border — painted on top of child borderRight via ::after */
+/* Vertical grid lines — extend beyond the section bottom, through the bottom bar, fading out */
+.grid-section::before,
 .grid-section::after {
   content: "";
   position: absolute;
   top: 0;
-  right: 0;
   width: 1px;
-  height: 100%;
-  background: linear-gradient(to bottom, transparent 0px, var(--grid-line) 72px, var(--grid-line) calc(100% - 72px), transparent 100%);
+  height: calc(100% + 192px);
   pointer-events: none;
   z-index: 1;
+  background: linear-gradient(to bottom, transparent 0px, var(--grid-line) 72px, var(--grid-line) calc(100% - 192px), transparent 100%);
 }
+.grid-section::before { left: 0; }
+.grid-section::after { right: 0; }
+
+.grid-section[data-fade-top="false"]::before,
 .grid-section[data-fade-top="false"]::after {
-  background: linear-gradient(to bottom, var(--grid-line) 0px, var(--grid-line) calc(100% - 72px), transparent 100%);
+  background: linear-gradient(to bottom, var(--grid-line) 0px, var(--grid-line) calc(100% - 192px), transparent 100%);
 }
+.grid-section[data-fade-bottom="false"]::before,
 .grid-section[data-fade-bottom="false"]::after {
   background: linear-gradient(to bottom, transparent 0px, var(--grid-line) 72px, var(--grid-line) 100%);
 }
+.grid-section[data-fade-top="false"][data-fade-bottom="false"]::before,
 .grid-section[data-fade-top="false"][data-fade-bottom="false"]::after {
   background: var(--grid-line);
 }
