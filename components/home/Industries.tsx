@@ -101,8 +101,8 @@ export const Industries = () => {
 
       {/* Bottom bar — outside GridSection for full-width lines */}
       <div style={{
-        borderTop: "0.75px solid var(--grid-line)",
-        borderBottom: "0.75px solid var(--grid-line)"
+        borderTop: "1px solid var(--grid-line)",
+        borderBottom: "1px solid var(--grid-line)"
       }}>
         <div className="flex flex-wrap max-w-[1287px] mx-auto" style={{ ...anim(550) }}>
           <div className="px-8 min-[1287px]:px-10 py-5 flex items-center flex-1 min-w-70" style={{ minHeight: 76, borderRight: gl, backgroundColor: "rgba(37, 99, 235, 0.06)" }}>

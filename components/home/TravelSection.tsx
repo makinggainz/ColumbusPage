@@ -236,8 +236,8 @@ export const TravelSection = () => {
     <section ref={ref} className="relative">
       {/* Top bar — full width with grid lines */}
       <div style={{
-        borderTop: "0.75px solid var(--grid-line)",
-        borderBottom: "0.75px solid var(--grid-line)"
+        borderTop: "1px solid var(--grid-line)",
+        borderBottom: "1px solid var(--grid-line)"
       }}>
         <GridSection extendTop className="bg-transparent!">
           <div className="flex items-center justify-between px-8 min-[1287px]:px-10 py-6">

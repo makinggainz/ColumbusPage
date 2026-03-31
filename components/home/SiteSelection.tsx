@@ -127,8 +127,8 @@ export const SiteSelection = () => {
     <>
       {/* Top bar — full width with grid lines */}
       <div style={{
-        borderTop: "0.75px solid var(--grid-line)",
-        borderBottom: "0.75px solid var(--grid-line)"
+        borderTop: "1px solid var(--grid-line)",
+        borderBottom: "1px solid var(--grid-line)"
       }}>
         <div className="flex items-center justify-between max-w-[1287px] mx-auto px-8 min-[1287px]:px-10 py-6" style={anim(0)}>
           <div className="flex items-center gap-3">
