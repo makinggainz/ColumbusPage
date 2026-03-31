@@ -4,23 +4,19 @@ import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 
 /* ── Tile data (moved from VisionSection) ── */
-type TileItem =
-  | { type: "image"; src: string }
-  | { type: "text"; title: string; subtitle: string };
-
-const TILES: TileItem[] = [
+const TILES = [
   // Row 1
-  { type: "image", src: "/image1.png" },
-  { type: "text", title: "General Intelligence", subtitle: "for the physical world" },
-  { type: "image", src: "/image2.png" },
-  { type: "image", src: "/image3.png" },
-  { type: "image", src: "/image4.png" },
+  "/image1.png",
+  "/image5.png",
+  "/image2.png",
+  "/image3.png",
+  "/image4.png",
   // Row 2
-  { type: "image", src: "/image111.png" },
-  { type: "image", src: "/image112.png" },
-  { type: "image", src: "/image113.png" },
-  { type: "text", title: "Foundational Models", subtitle: "for Earth" },
-  { type: "image", src: "/image114.png" },
+  "/image111.png",
+  "/image112.png",
+  "/image113.png",
+  "/image6.png",
+  "/image114.png",
 ];
 
 export function ScrollRevealQuote() {
@@ -92,32 +88,12 @@ export function ScrollRevealQuote() {
       {/* Image grid — tiles reveal one by one on scroll */}
       <div
         ref={gridRef}
-        className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 auto-rows-[120px] sm:auto-rows-[140px] lg:auto-rows-[160px] mt-16 md:mt-24"
+        className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 auto-rows-[120px] sm:auto-rows-[140px] lg:auto-rows-[160px] mt-16 md:mt-24"
         style={{ gridAutoFlow: "dense" }}
       >
-        {TILES.map((tile, i) => {
+        {TILES.map((src, i) => {
           const tileThreshold = (i + 1) / TILES.length;
           const opacity = gridProgress >= tileThreshold ? 1 : 0.06;
-
-          if (tile.type === "text") {
-            return (
-              <div
-                key={i}
-                className="col-span-1 sm:col-span-2 flex flex-col justify-center items-center text-center px-6"
-                style={{
-                  opacity,
-                  transition: "opacity 0.4s ease",
-                }}
-              >
-                <h3 className="text-[20px] md:text-[25px] font-semibold text-[#1D1D1F] leading-tight tracking-tight">
-                  {tile.title}
-                </h3>
-                <p className="text-base md:text-lg text-[#6E6E73] mt-1 tracking-tight">
-                  {tile.subtitle}
-                </p>
-              </div>
-            );
-          }
 
           return (
             <div
@@ -128,7 +104,7 @@ export function ScrollRevealQuote() {
                 transition: "opacity 0.4s ease",
               }}
             >
-              <Image src={tile.src} alt="" fill className="object-cover" />
+              <Image src={src} alt="" fill className="object-cover" />
             </div>
           );
         })}
