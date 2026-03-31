@@ -2,7 +2,7 @@
 
 import { type ReactNode, type CSSProperties } from "react";
 
-const gl = "0.8px solid var(--grid-line)";
+const gl = "1px solid var(--grid-line)";
 
 export function GridSection({
   children,
@@ -87,6 +87,17 @@ export function GridCell({
     >
       {children}
     </div>
+  );
+}
+
+export function BarDots({ top = false, bottom = false }: { top?: boolean; bottom?: boolean } = {}) {
+  return (
+    <>
+      {top && <span className="grid-dot" style={{ top: 0, left: 0 }} />}
+      {top && <span className="grid-dot" style={{ top: 0, right: 0 }} />}
+      {bottom && <span className="grid-dot" style={{ bottom: 0, left: 0 }} />}
+      {bottom && <span className="grid-dot" style={{ bottom: 0, right: 0 }} />}
+    </>
   );
 }
 

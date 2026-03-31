@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { GridSection, gl } from "./ContentGrid";
+import { GridSection, BarDots, gl } from "./ContentGrid";
 
 export const Vision = () => {
   const ref = useRef<HTMLDivElement>(null);
@@ -100,10 +100,11 @@ export const Vision = () => {
 
       {/* Bottom bar — full width with grid lines */}
       <div style={{
-        borderTop: "0.8px solid var(--grid-line)",
-        borderBottom: "0.8px solid var(--grid-line)"
+        borderTop: "1px solid var(--grid-line)",
+        borderBottom: "1px solid var(--grid-line)"
       }}>
-        <div className="flex flex-wrap max-w-[1287px] mx-auto" style={anim(260)}>
+        <div className="relative flex flex-wrap max-w-[1287px] mx-auto" style={anim(260)}>
+          <BarDots top bottom />
           <div className="px-8 min-[1287px]:px-10 py-5 flex items-center flex-1 min-w-70" style={{ minHeight: 76, borderRight: gl, backgroundColor: "rgba(37, 99, 235, 0.06)" }}>
             <p className="text-[18px] lg:text-[20px] font-medium text-[#1D1D1F] tracking-[-0.01em]">
               Think of us like the OpenAI for maps.

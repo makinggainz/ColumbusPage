@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { GridSection, gl } from "./ContentGrid";
+import { GridSection, BarDots, gl } from "./ContentGrid";
 import glassStyles from "@/components/ui/GlassButton.module.css";
 
 const PILLS = ["Map Chat", "Agentic Audits", "AI Research Reports", "Data Catalogue"];
@@ -127,10 +127,11 @@ export const SiteSelection = () => {
     <>
       {/* Top bar — full width with grid lines */}
       <div style={{
-        borderTop: "0.8px solid var(--grid-line)",
-        borderBottom: "0.8px solid var(--grid-line)"
+        borderTop: "1px solid var(--grid-line)",
+        borderBottom: "1px solid var(--grid-line)"
       }}>
-        <div className="flex items-center justify-between max-w-[1287px] mx-auto px-8 min-[1287px]:px-10 py-6" style={anim(0)}>
+        <div className="relative flex items-center justify-between max-w-[1287px] mx-auto px-8 min-[1287px]:px-10 py-6" style={anim(0)}>
+          <BarDots top bottom />
           <div className="flex items-center gap-3">
             <span className="text-[18px] lg:text-[20px] text-[#1D1D1F] font-bold">
               Columbus Pro

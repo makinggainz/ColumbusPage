@@ -3,7 +3,7 @@
 import { Star, MapPin } from "lucide-react";
 import { useRef, useState, useEffect } from "react";
 import Link from "next/link";
-import { GridSection, gl } from "./ContentGrid";
+import { GridSection, BarDots, gl } from "./ContentGrid";
 
 const FAVORITE_SPOTS_FILES = ["(20).jpeg", "(14).jpeg", "(17).jpeg", "(19).jpeg", "(21).jpeg", "(23).jpeg", "(24).jpeg", "(22).jpeg"];
 const spotImageSrc = (filename: string) => `/FavoriteSpots/${encodeURIComponent(filename)}`;
@@ -90,10 +90,11 @@ export const UniqueSpotsSection = () => {
 
       {/* Bottom CTA bar — full width with grid lines */}
       <div style={{
-        borderTop: "0.8px solid var(--grid-line)",
-        borderBottom: "0.8px solid var(--grid-line)"
+        borderTop: "1px solid var(--grid-line)",
+        borderBottom: "1px solid var(--grid-line)"
       }}>
-        <div className="flex flex-wrap max-w-[1287px] mx-auto">
+        <div className="relative flex flex-wrap max-w-[1287px] mx-auto">
+          <BarDots top bottom />
           <div className="px-8 min-[1287px]:px-10 py-5 flex items-center flex-1 min-w-70" style={{ minHeight: 76, borderRight: gl, backgroundColor: "rgba(20, 41, 148, 0.07)" }}>
             <p className="text-[18px] lg:text-[20px] font-medium text-[#1D1D1F] tracking-[-0.01em]">
               MapsGPT is a local guide in your pocket
@@ -117,7 +118,7 @@ export const UniqueSpotsSection = () => {
 
 function SpotCard({ spot }: { spot: (typeof SPOTS)[0] }) {
   return (
-    <Link href="/maps-gpt" className="flex flex-col shrink-0 overflow-hidden rounded-lg transition-colors duration-300" style={{ width: 260, border: "0.8px solid var(--grid-line)", background: "rgba(37, 99, 235, 0.06)" }}
+    <Link href="/maps-gpt" className="flex flex-col shrink-0 overflow-hidden rounded-lg transition-colors duration-300" style={{ width: 260, border: "1px solid var(--grid-line)", background: "rgba(37, 99, 235, 0.06)" }}
       onMouseEnter={e => (e.currentTarget.style.background = "rgba(37, 99, 235, 0.14)")}
       onMouseLeave={e => (e.currentTarget.style.background = "rgba(37, 99, 235, 0.06)")}
     >

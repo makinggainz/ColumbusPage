@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { cambo } from "@/app/fonts";
-import { GridSection, gl } from "./ContentGrid";
+import { GridSection, BarDots, gl } from "./ContentGrid";
 
 const TABS = ["Plan cool trips", "Group planning", "Find spots", "Custom maps"];
 const PILL_INSET = 4;
@@ -236,11 +236,12 @@ export const TravelSection = () => {
     <section ref={ref} className="relative">
       {/* Top bar — full width with grid lines */}
       <div style={{
-        borderTop: "0.8px solid var(--grid-line)",
-        borderBottom: "0.8px solid var(--grid-line)"
+        borderTop: "1px solid var(--grid-line)",
+        borderBottom: "1px solid var(--grid-line)"
       }}>
         <GridSection extendTop className="bg-transparent!">
-          <div className="flex items-center justify-between px-8 min-[1287px]:px-10 py-6">
+          <div className="relative flex items-center justify-between px-8 min-[1287px]:px-10 py-6">
+            <BarDots top bottom />
             <span className="text-[18px] lg:text-[20px] text-[#1D1D1F] font-bold" style={{ letterSpacing: "-0.02em" }}>
               MapsGPT <span className="hidden min-[640px]:inline font-normal">– AI-powered social map</span>
             </span>

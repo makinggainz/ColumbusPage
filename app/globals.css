@@ -31,7 +31,7 @@ html {
   --accent: #0066CC;
   --container-padding: 20px;
   --page-padding: calc(var(--container-padding) + 18px); /* matches navbar logo/hamburger edges */
-  --grid-line: rgba(20, 60, 160, 0.8);
+  --grid-line: rgba(20, 60, 160, 0.6);
 }
 
 /* Dark section lateral constraint lines — for use-cases dark sections */
@@ -44,7 +44,7 @@ html {
   position: absolute;
   top: 0;
   left: 0;
-  width: 0.8px;
+  width: 1px;
   height: 100%;
   background: linear-gradient(to bottom, transparent 0px, rgba(255,255,255,0.12) 72px, rgba(255,255,255,0.12) calc(100% - 72px), transparent 100%);
   pointer-events: none;
@@ -55,7 +55,7 @@ html {
   position: absolute;
   top: 0;
   right: 0;
-  width: 0.8px;
+  width: 1px;
   height: 100%;
   background: linear-gradient(to bottom, transparent 0px, rgba(255,255,255,0.12) 72px, rgba(255,255,255,0.12) calc(100% - 72px), transparent 100%);
   pointer-events: none;
@@ -71,8 +71,8 @@ html {
   content: "";
   position: absolute;
   top: 0; left: 0;
-  width: 0.8px; height: 100%;
-  background: linear-gradient(to bottom, transparent 0px, rgba(20,60,160,0.8) 72px, rgba(20,60,160,0.8) calc(100% - 72px), transparent 100%);
+  width: 1px; height: 100%;
+  background: linear-gradient(to bottom, transparent 0px, rgba(20,60,160,0.6) 72px, rgba(20,60,160,0.6) calc(100% - 72px), transparent 100%);
   pointer-events: none;
   z-index: 1;
 }
@@ -80,8 +80,8 @@ html {
   content: "";
   position: absolute;
   top: 0; right: 0;
-  width: 0.8px; height: 100%;
-  background: linear-gradient(to bottom, transparent 0px, rgba(20,60,160,0.8) 72px, rgba(20,60,160,0.8) calc(100% - 72px), transparent 100%);
+  width: 1px; height: 100%;
+  background: linear-gradient(to bottom, transparent 0px, rgba(20,60,160,0.6) 72px, rgba(20,60,160,0.6) calc(100% - 72px), transparent 100%);
   pointer-events: none;
   z-index: 1;
 }
@@ -96,17 +96,29 @@ html {
   margin-top: -1px;
 }
 
+/* Grid intersection dots */
+.grid-dot {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  margin: -2px;
+  border-radius: 50%;
+  background: var(--grid-line);
+  pointer-events: none;
+  z-index: 2;
+}
+
 /* Vertical grid lines — extend beyond the section, fading out */
 .grid-section::before,
 .grid-section::after {
   content: "";
   position: absolute;
   top: 0;
-  width: 0.8px;
+  width: 1px;
   height: calc(100% + 192px);
   pointer-events: none;
   z-index: 1;
-  background: linear-gradient(to bottom, transparent 0px, var(--grid-line) 72px, var(--grid-line) calc(100% - 192px), transparent 100%);
+  background: linear-gradient(to bottom, transparent 0px, var(--grid-line) 192px, var(--grid-line) calc(100% - 192px), transparent 100%);
 }
 .grid-section::before { left: 0; }
 .grid-section::after { right: 0; }
@@ -116,19 +128,25 @@ html {
 .grid-section[data-extend-top="true"]::after {
   top: -192px;
   height: calc(100% + 384px);
-  background: linear-gradient(to bottom, transparent 0px, var(--grid-line) 192px, var(--grid-line) calc(100% - 192px), transparent 100%);
+  background: linear-gradient(to bottom, transparent 0px, var(--grid-line) 160px, var(--grid-line) calc(100% - 192px), transparent 100%);
 }
 
 .grid-section[data-fade-top="false"]::before,
 .grid-section[data-fade-top="false"]::after {
+  top: 0;
+  height: calc(100% + 192px);
   background: linear-gradient(to bottom, var(--grid-line) 0px, var(--grid-line) calc(100% - 192px), transparent 100%);
 }
 .grid-section[data-fade-bottom="false"]::before,
 .grid-section[data-fade-bottom="false"]::after {
-  background: linear-gradient(to bottom, transparent 0px, var(--grid-line) 72px, var(--grid-line) 100%);
+  top: 0;
+  height: 100%;
+  background: linear-gradient(to bottom, transparent 0px, var(--grid-line) 192px, var(--grid-line) 100%);
 }
 .grid-section[data-fade-top="false"][data-fade-bottom="false"]::before,
 .grid-section[data-fade-top="false"][data-fade-bottom="false"]::after {
+  top: 0;
+  height: 100%;
   background: var(--grid-line);
 }
 
@@ -137,7 +155,7 @@ html {
 .grid-section[data-extend-top="true"][data-fade-top="false"]::after {
   top: -192px;
   height: calc(100% + 384px);
-  background: linear-gradient(to bottom, transparent 0px, var(--grid-line) 192px, var(--grid-line) calc(100% - 192px), transparent 100%);
+  background: linear-gradient(to bottom, var(--grid-line) 0px, var(--grid-line) calc(100% - 192px), transparent 100%);
 }
 
 @media (min-width: 940px) {
