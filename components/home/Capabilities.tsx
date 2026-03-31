@@ -403,7 +403,7 @@ export const Capabilities = () => {
           {/* Desktop layout: sidebar + map */}
           <div ref={contentRef} className="capabilities-scale relative w-full overflow-hidden flex max-md:hidden rounded-lg h-[673px] max-lg:h-[520px]" style={{ transformOrigin: "center center", willChange: "transform" }}>
             {/* Sidebar */}
-            <div className="w-[348px] max-lg:w-[280px] shrink-0 text-white flex flex-col overflow-hidden h-full border-[1px] border-[var(--grid-line)] border-r-0 rounded-l-lg">
+            <div className="w-[348px] max-lg:w-[280px] shrink-0 text-white flex flex-col overflow-hidden h-full border-[0.8px] border-[var(--grid-line)] border-r-0 rounded-l-lg">
               {SIDEBAR_ITEMS.map((item) => (
                 <button
                   key={item.id}
@@ -458,7 +458,7 @@ export const Capabilities = () => {
 
             {/* Map area */}
             <div
-              className="absolute top-0 bottom-0 right-0 left-[348px] max-lg:left-[280px] transition-opacity ease-in-out overflow-hidden border-[1px] border-[var(--grid-line)] border-l-0 rounded-r-lg"
+              className="absolute top-0 bottom-0 right-0 left-[348px] max-lg:left-[280px] transition-opacity ease-in-out overflow-hidden border-[0.8px] border-[var(--grid-line)] border-l-0 rounded-r-lg"
               style={{
                 opacity: mapOpacity,
                 transitionDuration: `${FADE_DURATION_MS / 2}ms`,

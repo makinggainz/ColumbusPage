@@ -2,7 +2,7 @@
 
 import { type ReactNode, type CSSProperties } from "react";
 
-const gl = "1px solid var(--grid-line)";
+const gl = "0.8px solid var(--grid-line)";
 
 export function GridSection({
   children,
