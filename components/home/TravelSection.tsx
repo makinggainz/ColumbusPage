@@ -239,27 +239,29 @@ export const TravelSection = () => {
         borderTop: "1px solid var(--grid-line)",
         borderBottom: "1px solid var(--grid-line)"
       }}>
-        <div className="flex items-center justify-between max-w-[1287px] mx-auto px-8 min-[1287px]:px-10 py-6">
-          <span className="text-[18px] lg:text-[20px] text-[#1D1D1F] font-bold" style={{ letterSpacing: "-0.02em" }}>
-            MapsGPT <span className="hidden min-[640px]:inline font-normal">– AI-powered social map</span>
-          </span>
-          <Link
-            href="/maps-gpt"
-            className="group flex items-center gap-3 min-[640px]:gap-10 text-[18px] lg:text-[20px] text-[#1D1D1F] font-semibold transition-opacity"
-          >
-            <span className="transition-colors duration-300 group-hover:text-[#2563EB]">
-              <span className="hidden min-[640px]:inline">Try it out now</span>
-              <span className="min-[640px]:hidden">Try it now</span>
+        <GridSection extendTop className="bg-transparent!">
+          <div className="flex items-center justify-between px-8 min-[1287px]:px-10 py-6">
+            <span className="text-[18px] lg:text-[20px] text-[#1D1D1F] font-bold" style={{ letterSpacing: "-0.02em" }}>
+              MapsGPT <span className="hidden min-[640px]:inline font-normal">– AI-powered social map</span>
             </span>
-            <svg
-              className="transition-transform duration-300 group-hover:translate-x-0.5"
-              width="9" height="16" viewBox="0 0 7 12" fill="none"
-              stroke="#2563EB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"
+            <Link
+              href="/maps-gpt"
+              className="group flex items-center gap-3 min-[640px]:gap-10 text-[18px] lg:text-[20px] text-[#1D1D1F] font-semibold transition-opacity"
             >
-              <path d="M1 1l5 5-5 5" />
-            </svg>
-          </Link>
-        </div>
+              <span className="transition-colors duration-300 group-hover:text-[#2563EB]">
+                <span className="hidden min-[640px]:inline">Try it out now</span>
+                <span className="min-[640px]:hidden">Try it now</span>
+              </span>
+              <svg
+                className="transition-transform duration-300 group-hover:translate-x-0.5"
+                width="9" height="16" viewBox="0 0 7 12" fill="none"
+                stroke="#2563EB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"
+              >
+                <path d="M1 1l5 5-5 5" />
+              </svg>
+            </Link>
+          </div>
+        </GridSection>
       </div>
 
       {/* Main content area with sand background — scroll-driven expansion */}
