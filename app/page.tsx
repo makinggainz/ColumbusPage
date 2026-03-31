@@ -20,7 +20,7 @@ function IslandTail({ side, edge }: { side: "left" | "right"; edge: "top" | "bot
     <div
       style={{
         position: "absolute",
-        ...(edge === "top" ? { top: -TAIL_LENGTH - 1 } : { bottom: -TAIL_LENGTH - 1 }),
+        ...(edge === "top" ? { top: -TAIL_LENGTH } : { bottom: -TAIL_LENGTH }),
         [side]: 0,
         width: 1,
         height: TAIL_LENGTH,
@@ -34,19 +34,20 @@ function IslandTail({ side, edge }: { side: "left" | "right"; edge: "top" | "bot
   );
 }
 
-function Island({ children, className = "", tails = true }: { children: ReactNode; className?: string; tails?: boolean }) {
+function Island({ children, className = "", tailTop = true, tailBottom = true }: { children: ReactNode; className?: string; tailTop?: boolean; tailBottom?: boolean }) {
+  const showTails = tailTop || tailBottom;
   return (
     <div className={`mt-64 ${className}`} style={{ position: "relative", overflow: "visible" }}>
-      {tails && (
+      {showTails && (
         <div
           className="pointer-events-none absolute mx-auto"
           style={{ maxWidth: 1287, zIndex: 1, top: 0, bottom: 0, left: 0, right: 0 }}
         >
           <div style={{ position: "relative", width: "100%", height: "100%" }}>
-            <IslandTail side="left" edge="top" />
-            <IslandTail side="right" edge="top" />
-            <IslandTail side="left" edge="bottom" />
-            <IslandTail side="right" edge="bottom" />
+            {tailTop && <IslandTail side="left" edge="top" />}
+            {tailTop && <IslandTail side="right" edge="top" />}
+            {tailBottom && <IslandTail side="left" edge="bottom" />}
+            {tailBottom && <IslandTail side="right" edge="bottom" />}
           </div>
         </div>
       )}
@@ -62,7 +63,7 @@ export default function Home() {
       <Hero />
 
       {/* Island 1: Vision */}
-      <Island className="mt-16!" tails={false}>
+      <Island className="mt-16!" tailTop={false}>
         <Vision />
       </Island>
 
@@ -88,7 +89,7 @@ export default function Home() {
       </Island>
 
       {/* Island 5: Hiring Humans */}
-      <Island tails={false}>
+      <Island tailTop={false} tailBottom={false}>
         <Careers />
       </Island>
 

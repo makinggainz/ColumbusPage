@@ -111,6 +111,12 @@ html {
 .grid-section::before { left: 0; }
 .grid-section::after { right: 0; }
 
+/* Fade vertical lines at the top of the section */
+.grid-section-fade-top::before,
+.grid-section-fade-top::after {
+  background: linear-gradient(to bottom, transparent 0px, var(--grid-line) 192px, var(--grid-line) 100%);
+}
+
 @media (min-width: 940px) {
   :root {
     --container-padding: 1vw;
