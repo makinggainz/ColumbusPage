@@ -598,7 +598,6 @@ const WaveMesh = () => {
   });
   const draggingRef = useRef(false);
   const hoveringBoatRef = useRef(false);
-  const hoveringLocationRef = useRef(false);
   const prevBoatPosRef = useRef({ wx: -700, wz: 900 });
 
   const draw = useCallback(() => {
@@ -863,7 +862,6 @@ const WaveMesh = () => {
     }
 
     // ── Madrid location dots ──
-    let hoveredLocIdx = -1;
     for (let i = 0; i < MADRID_LOCATIONS.length; i++) {
       const loc = MADRID_LOCATIONS[i];
       const wy = getFullWaveHeight(loc.wx, loc.wz);
@@ -873,20 +871,13 @@ const WaveMesh = () => {
       const { sx, sy } = p;
       const depthScale = Math.min(1, fov / loc.wz * 0.45);
 
-      // Hover detection
-      const dx = smx - sx, dy = smy - sy;
-      const dist = Math.sqrt(dx * dx + dy * dy);
-      const isHovered = dist < 22;
-      if (isHovered) hoveredLocIdx = i;
-
       const pulse = Math.sin(t * 1.2 + i * 0.9) * 0.12;
       const baseR = (2.5 + pulse) * depthScale;
-      const dotR = isHovered ? baseR * 2 : baseR;
 
       // Outer glow
-      const glowR = dotR + (isHovered ? 18 : 10) * depthScale;
-      const g = ctx.createRadialGradient(sx, sy, dotR * 0.3, sx, sy, glowR);
-      g.addColorStop(0, `rgba(37,99,235,${(isHovered ? 0.5 : 0.18 + pulse * 0.3).toFixed(3)})`);
+      const glowR = baseR + 10 * depthScale;
+      const g = ctx.createRadialGradient(sx, sy, baseR * 0.3, sx, sy, glowR);
+      g.addColorStop(0, `rgba(37,99,235,${(0.18 + pulse * 0.3).toFixed(3)})`);
       g.addColorStop(1, "rgba(37,99,235,0)");
       ctx.beginPath();
       ctx.arc(sx, sy, glowR, 0, Math.PI * 2);
@@ -895,41 +886,16 @@ const WaveMesh = () => {
 
       // Core dot
       ctx.beginPath();
-      ctx.arc(sx, sy, dotR, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(37,99,235,${isHovered ? 0.95 : 0.55 + pulse * 0.2})`;
+      ctx.arc(sx, sy, baseR, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(37,99,235,${(0.55 + pulse * 0.2).toFixed(3)})`;
       ctx.fill();
 
       // Bright center
       ctx.beginPath();
-      ctx.arc(sx, sy, dotR * 0.4, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(147,197,253,${isHovered ? 0.85 : 0.35})`;
+      ctx.arc(sx, sy, baseR * 0.4, 0, Math.PI * 2);
+      ctx.fillStyle = "rgba(147,197,253,0.35)";
       ctx.fill();
-
-      // Label (on hover)
-      if (isHovered) {
-        const fs = Math.max(11, Math.round(13 * depthScale));
-        ctx.font = `600 ${fs}px -apple-system, system-ui, sans-serif`;
-        ctx.textAlign = "center";
-        ctx.textBaseline = "bottom";
-
-        const tw = ctx.measureText(loc.name).width;
-        const labelY = sy - dotR - 10;
-
-        // Chip bg
-        ctx.fillStyle = "rgba(10,19,68,0.88)";
-        ctx.beginPath();
-        ctx.roundRect(sx - tw / 2 - 10, labelY - 16, tw + 20, 24, 6);
-        ctx.fill();
-        ctx.strokeStyle = "rgba(37,99,235,0.45)";
-        ctx.lineWidth = 1;
-        ctx.stroke();
-
-        // Text
-        ctx.fillStyle = "rgba(255,255,255,0.92)";
-        ctx.fillText(loc.name, sx, labelY + 4);
-      }
     }
-    hoveringLocationRef.current = hoveredLocIdx >= 0;
 
     // ── Draw boat ──
     const boatDepthAlpha = Math.min(1, Math.max(0.2, fov / boat.wz * 0.5));
@@ -950,7 +916,6 @@ const WaveMesh = () => {
     if (cvs) {
       if (draggingRef.current) cvs.style.cursor = "grabbing";
       else if (hoveringBoatRef.current) cvs.style.cursor = "grab";
-      else if (hoveringLocationRef.current) cvs.style.cursor = "pointer";
       else cvs.style.cursor = "";
     }
 

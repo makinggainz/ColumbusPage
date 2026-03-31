@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { GridSection, gl } from "./ContentGrid";
@@ -98,6 +99,26 @@ export const Vision = () => {
             <span style={{ opacity: 0.7 }}>Introducing</span>{" "}<span className="font-medium">new kind of AI,</span>{" "}
             <span className="font-semibold">COLUMBUS-01</span>
           </h2>
+        </div>
+
+        {/* Image grid */}
+        <div
+          className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 auto-rows-[120px] sm:auto-rows-[140px] lg:auto-rows-[160px]"
+          style={{ gridAutoFlow: "dense" }}
+        >
+          {/* Row 1 */}
+          <Tile src="/image1.png" anim={anim} i={0} />
+          <TextTile title="General Intelligence" subtitle="for the physical world" anim={anim} i={1} />
+          <Tile src="/image2.png" anim={anim} i={2} />
+          <Tile src="/image3.png" anim={anim} i={3} />
+          <Tile src="/image4.png" anim={anim} i={4} />
+
+          {/* Row 2 */}
+          <Tile src="/image111.png" anim={anim} i={5} />
+          <Tile src="/image112.png" anim={anim} i={6} />
+          <Tile src="/image113.png" anim={anim} i={7} />
+          <TextTile title="Foundational Models" subtitle="for Earth" anim={anim} i={8} />
+          <Tile src="/image114.png" anim={anim} i={9} />
         </div>
 
         {/* Architecture diagram */}
@@ -287,3 +308,28 @@ const ArchitectureDiagram = () => {
     </div>
   );
 };
+
+/* ── Tile components ── */
+
+const TILE_STAGGER = 120; // ms between each tile appearing
+
+const Tile = ({ src, anim, i }: { src: string; anim: (delay?: number) => React.CSSProperties; i: number }) => (
+  <div
+    className="relative w-full h-full overflow-hidden"
+    style={anim(100 + i * TILE_STAGGER)}
+  >
+    <Image src={src} alt="" fill className="object-cover" />
+  </div>
+);
+
+const TextTile = ({ title, subtitle, anim, i }: { title: string; subtitle: string; anim: (delay?: number) => React.CSSProperties; i: number }) => (
+  <div
+    className="col-span-1 sm:col-span-2 flex flex-col justify-center items-center text-center px-6"
+    style={anim(100 + i * TILE_STAGGER)}
+  >
+    <h3 className="text-[20px] md:text-[25px] font-semibold text-[#1D1D1F] leading-tight tracking-tight">
+      {title}
+    </h3>
+    <p className="text-base md:text-lg text-[#6E6E73] mt-1 tracking-tight">{subtitle}</p>
+  </div>
+);
