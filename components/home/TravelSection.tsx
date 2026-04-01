@@ -239,7 +239,7 @@ export const TravelSection = () => {
         borderTop: "1px solid var(--grid-line)",
         borderBottom: "1px solid var(--grid-line)"
       }}>
-        <GridSection className="bg-transparent!">
+        <GridSection className="bg-transparent! [&::before]:hidden [&::after]:hidden">
           <div className="relative flex items-center justify-between px-8 min-[1287px]:px-10 py-6">
             <span className="text-[18px] lg:text-[20px] text-[#1D1D1F] font-bold" style={{ letterSpacing: "-0.02em" }}>
               MapsGPT <span className="hidden min-[640px]:inline font-normal">– AI-powered social map</span>
