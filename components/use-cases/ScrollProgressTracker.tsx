@@ -130,9 +130,18 @@ function SectionDot({
       const container = containerRef.current;
       if (!section || !container) return;
       const containerTop = container.getBoundingClientRect().top + window.scrollY;
-      const sectionTop = section.getBoundingClientRect().top + window.scrollY;
-      const sectionH = section.offsetHeight;
-      setTop(sectionTop - containerTop + sectionH / 2);
+      // Find the h2 title inside this section and center on it
+      const h2 = section.querySelector("h2");
+      if (h2) {
+        const h2Rect = h2.getBoundingClientRect();
+        const h2Top = h2Rect.top + window.scrollY;
+        const h2H = h2Rect.height;
+        setTop(h2Top - containerTop + h2H / 2);
+      } else {
+        // Fallback: center on section
+        const sectionTop = section.getBoundingClientRect().top + window.scrollY;
+        setTop(sectionTop - containerTop + section.offsetHeight / 2);
+      }
     };
     calc();
     window.addEventListener("resize", calc);
