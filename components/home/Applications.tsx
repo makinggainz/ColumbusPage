@@ -45,7 +45,7 @@ export const Applications = () => {
         borderTop: "1px solid var(--grid-line)",
         borderBottom: "1px solid var(--grid-line)"
       }}>
-        <div className="relative flex items-center justify-between max-w-[1287px] mx-auto px-8 min-[1287px]:px-10 py-6" style={anim(0)}>
+        <div className="grid-section relative flex items-center justify-between max-w-[1287px] mx-auto px-8 min-[1287px]:px-10 py-6" style={anim(0)}>
           <span className="text-[18px] lg:text-[20px] text-[#1D1D1F] font-bold" style={{ letterSpacing: "-0.02em" }}>
             Applications <span className="hidden min-[640px]:inline font-normal">– across industries</span>
           </span>
