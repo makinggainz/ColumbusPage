@@ -325,7 +325,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                 <div className="relative mx-auto w-full" style={{ maxWidth: wide ? 1408 : 1287 }}>
                     {/* (navbar bg when dropdown open is now part of the dropdown itself) */}
 
-                    <div className={`relative ${wide ? "px-8 min-[1408px]:px-0" : "px-8 min-[1287px]:px-0"}`}>
+                    <div className={`relative ${wide ? "px-6 min-[1408px]:px-0" : "px-6 min-[1287px]:px-0"}`}>
                         <div
                             className="flex items-center justify-between"
                             style={{

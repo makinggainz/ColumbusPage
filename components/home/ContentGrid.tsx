@@ -15,7 +15,7 @@ export function GridSection({
 }) {
   return (
     <section
-      className={`grid-section max-w-[1287px] mx-auto bg-white ${className}`}
+      className={`grid-section max-w-[1287px] mx-2.5 md:mx-auto bg-white ${className}`}
       style={style}
     >
       {children}
@@ -34,7 +34,7 @@ export function GridHeader({
 }) {
   return (
     <div
-      className="py-6 px-8 md:px-10"
+      className="py-6 px-6 md:px-10"
       style={{ borderRight: gl, borderBottom: gl }}
     >
       <span className="text-[11px] font-semibold tracking-[0.2em] uppercase text-[#0A1344]/30 font-mono block">
@@ -69,7 +69,7 @@ export function GridCell({
 }) {
   return (
     <div
-      className={`${flush ? "" : "p-8 md:p-10"} ${hoverable ? "transition-colors duration-200 hover:bg-[rgba(120,120,200,0.04)]" : ""} ${className}`}
+      className={`${flush ? "" : "p-6 md:p-10"} ${hoverable ? "transition-colors duration-200 hover:bg-[rgba(120,120,200,0.04)]" : ""} ${className}`}
       style={{
         borderRight: gl,
         borderBottom: gl,

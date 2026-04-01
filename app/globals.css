@@ -29,8 +29,8 @@ html {
   --foreground: #1D1D1F;
   --primary: #1D1D1F;
   --accent: #0066CC;
-  --container-padding: 20px;
-  --page-padding: calc(var(--container-padding) + 18px); /* matches navbar logo/hamburger edges */
+  --container-padding: 24px;
+  --page-padding: 24px; /* matches structure lines + navbar logo/hamburger edges */
   --grid-line: rgba(37, 99, 235, 0.6);
 }
 
