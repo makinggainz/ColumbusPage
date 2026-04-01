@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 
-const FADE_IN = 618; // 1000 / φ
+const FADE_IN = 250;
 
 const USE_CASES_IMAGES = [
   "comercial.png", "planning.png", "residentila.png", "geomarketing.png",
@@ -133,10 +133,22 @@ export default function UseCasesHero() {
               style={{
                 opacity: (activeIndex === i || lockedSet.has(i)) ? (textCells.has(i) ? 0.45 : 0.6) : 0,
                 transition: (activeIndex === i || lockedSet.has(i))
-                  ? `opacity ${FADE_IN}ms cubic-bezier(0.25, 0.1, 0.25, 1)`
-                  : "opacity 1000ms cubic-bezier(0.25, 0.1, 0.25, 1)",
+                  ? `opacity ${FADE_IN}ms ease-out`
+                  : "opacity 1000ms ease-out",
               }}
               sizes={`${cellSize}px`}
+            />
+            {/* Blue accent tint */}
+            <div
+              className="absolute inset-0 pointer-events-none"
+              style={{
+                background: "rgba(0, 102, 204, 0.35)",
+                mixBlendMode: "color",
+                opacity: (activeIndex === i || lockedSet.has(i)) ? 1 : 0,
+                transition: (activeIndex === i || lockedSet.has(i))
+                  ? `opacity ${FADE_IN}ms ease-out`
+                  : "opacity 1000ms ease-out",
+              }}
             />
           </div>
         ))}
