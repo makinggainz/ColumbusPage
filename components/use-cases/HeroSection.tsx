@@ -105,7 +105,7 @@ export default function HeroSection() {
               ...fadeIn(0),
             }}
           >
-            Why you should be excited about our LGM
+            Why you should be excited<br /> about our LGM
           </h1>
 
           {/* SUBTITLE */}
@@ -113,9 +113,7 @@ export default function HeroSection() {
             className="text-white/70 mt-4 max-w-[760px] text-[20px] font-normal leading-[1.5] max-md:text-[16px]"
             style={fadeIn(0.15)}
           >
-            ChatGPT, Gemini and Claude do not comprehend coordinates nor are
-            trained on earth data. Don&apos;t use hallucinatory chat bots for your
-            critical work.
+            Our Geospatial Model — spatial reasoning at scale, without the hallucinations.
           </p>
 
         </div>
