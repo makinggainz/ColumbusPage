@@ -36,7 +36,7 @@ export const Industries = () => {
 
   return (
     <>
-    <GridSection style={{ borderTop: "none" }}>
+    <GridSection style={{ borderTop: "none" }} className="bg-[#0B0B0B]!">
       <div ref={ref}>
         <div>
         {/* Title */}
@@ -44,7 +44,7 @@ export const Industries = () => {
           className="flex items-center justify-center pt-8 pb-12 px-8"
           style={anim(0)}
         >
-          <h2 className="font-medium tracking-[-0.02em] text-[16px] lg:text-[20px] text-[#6E6E73]">
+          <h2 className="font-medium tracking-[-0.02em] text-[16px] lg:text-[20px]" style={{ color: "rgba(255,255,255,0.5)" }}>
             Find your industry
           </h2>
         </div>
@@ -61,11 +61,11 @@ export const Industries = () => {
               className="group flex flex-col rounded-lg overflow-hidden transition-colors duration-300 shrink-0"
               style={{
                 width: card.label === "More" ? 110 : 200,
-                background: "rgba(37, 99, 235, 0.06)",
+                background: "rgba(255, 255, 255, 0.06)",
                 ...anim(100 + i * 80),
               }}
-              onMouseEnter={e => (e.currentTarget.style.background = "rgba(37, 99, 235, 0.14)")}
-              onMouseLeave={e => (e.currentTarget.style.background = "rgba(37, 99, 235, 0.06)")}
+              onMouseEnter={e => (e.currentTarget.style.background = "rgba(255, 255, 255, 0.12)")}
+              onMouseLeave={e => (e.currentTarget.style.background = "rgba(255, 255, 255, 0.06)")}
             >
               {/* Image */}
               <div className="relative w-full overflow-hidden" style={card.label === "More" ? { flex: 1 } : { aspectRatio: "4 / 3" }}>
@@ -75,12 +75,12 @@ export const Industries = () => {
                   fill
                   className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]"
                 />
-                <div className="absolute inset-0" style={{ backgroundColor: "rgba(37, 99, 235, 0.14)" }} />
+                <div className="absolute inset-0" style={{ backgroundColor: "rgba(0, 0, 0, 0.2)" }} />
               </div>
 
               {/* Label */}
               <div className="flex items-center justify-between px-3 py-2.5">
-                <span className="text-[#1D1D1F] text-[13px] font-medium">
+                <span className="text-white text-[13px] font-medium">
                   {card.label}
                 </span>
                 <svg
@@ -105,15 +105,15 @@ export const Industries = () => {
         borderBottom: "1px solid var(--grid-line)"
       }}>
         <div className="grid-section relative flex flex-wrap max-w-[1287px] mx-auto" style={{ ...anim(550) }}>
-          <div className="px-8 min-[1287px]:px-10 py-5 flex items-center flex-1 min-w-70" style={{ minHeight: 76, borderRight: gl, backgroundColor: "rgba(37, 99, 235, 0.06)" }}>
-            <p className="text-[18px] lg:text-[20px] font-medium text-[#1D1D1F] tracking-[-0.01em]">
+          <div className="px-8 min-[1287px]:px-10 py-5 flex items-center flex-1 min-w-70" style={{ minHeight: 76, borderRight: gl, backgroundColor: "rgba(255, 255, 255, 0.06)" }}>
+            <p className="text-[18px] lg:text-[20px] font-medium text-white tracking-[-0.01em]">
               Become a super-explorer.
             </p>
           </div>
           <Link
             href="/use-cases"
             className="group px-8 min-[1287px]:px-10 py-5 flex items-center justify-between hover:opacity-90 transition-opacity flex-1 min-w-70"
-            style={{ minHeight: 76, backgroundColor: "#000000" }}
+            style={{ minHeight: 76, backgroundColor: "rgba(255,255,255,0.06)" }}
           >
             <span className="text-white text-[18px] lg:text-[20px] font-medium transition-colors duration-300 group-hover:text-[#2563EB]">Start now</span>
             <svg className="transition-transform duration-300 group-hover:translate-x-0.5" width="10" height="18" viewBox="0 0 7 12" fill="none" stroke="#2563EB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">

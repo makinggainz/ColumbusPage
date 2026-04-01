@@ -1,4 +1,6 @@
-import { type ReactNode } from "react";
+"use client";
+
+import { type ReactNode, useRef, useState, useEffect } from "react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Hero } from "@/components/home/Hero";
 import { Vision } from "@/components/home/VisionSection";
@@ -36,9 +38,26 @@ function IslandGap() {
 }
 
 export default function Home() {
+  const darkSectionRef = useRef<HTMLDivElement>(null);
+  const [navTheme, setNavTheme] = useState<"light" | "dark">("light");
+
+  useEffect(() => {
+    const NAVBAR_H = 80;
+    const update = () => {
+      if (darkSectionRef.current) {
+        const rect = darkSectionRef.current.getBoundingClientRect();
+        const overDark = rect.top <= NAVBAR_H && rect.bottom > NAVBAR_H;
+        setNavTheme(overDark ? "dark" : "light");
+      }
+    };
+    window.addEventListener("scroll", update, { passive: true });
+    update();
+    return () => window.removeEventListener("scroll", update);
+  }, []);
+
   return (
     <main className="min-h-screen" style={{ backgroundColor: "#ffffff" }}>
-      <Navbar />
+      <Navbar theme={navTheme} />
       <Hero />
 
       {/* Island 1: Vision */}
@@ -49,7 +68,7 @@ export default function Home() {
       <IslandGap />
 
       {/* Island 2: Columbus Pro */}
-      <div>
+      <div ref={darkSectionRef} style={{ backgroundColor: "#0B0B0B" }}>
         <SiteSelection />
         <Capabilities />
         <PartnerStrip />

@@ -22,12 +22,12 @@ export const PartnerStrip = () => {
   const [hovered, setHovered] = useState(false);
 
   return (
-    <GridSection style={{ borderTop: "none", paddingTop: 100 }}>
+    <GridSection style={{ borderTop: "none", paddingTop: 100 }} className="bg-[#0B0B0B]!">
       <div className="flex flex-col items-center px-8 md:px-10 pt-32">
-        <h2 className="font-medium tracking-[-0.02em] text-[#1D1D1F] text-center text-[25px] md:text-[31px] lg:text-[39px]">
+        <h2 className="font-medium tracking-[-0.02em] text-white text-center text-[25px] md:text-[31px] lg:text-[39px]">
           High-fidelity and smart datasets
         </h2>
-        <p className="text-[16px] lg:text-[20px] mt-3 text-center font-medium" style={{ color: "#6E6E73" }}>
+        <p className="text-[16px] lg:text-[20px] mt-3 text-center font-medium" style={{ color: "rgba(255,255,255,0.5)" }}>
           We vet our data with reputable partner organizations
         </p>
       </div>
@@ -46,12 +46,12 @@ export const PartnerStrip = () => {
             {/* Left fade */}
             <div
               className="absolute left-0 top-0 bottom-0 z-10 pointer-events-none"
-              style={{ width: 100, background: "linear-gradient(to right, white, transparent)" }}
+              style={{ width: 100, background: "linear-gradient(to right, #0B0B0B, transparent)" }}
             />
             {/* Right fade */}
             <div
               className="absolute right-0 top-0 bottom-0 z-10 pointer-events-none"
-              style={{ width: 100, background: "linear-gradient(to left, white, transparent)" }}
+              style={{ width: 100, background: "linear-gradient(to left, #0B0B0B, transparent)" }}
             />
 
             <div
@@ -87,7 +87,7 @@ export const PartnerStrip = () => {
               pointerEvents: hovered ? "auto" : "none",
               backdropFilter: "blur(3px)",
               WebkitBackdropFilter: "blur(3px)",
-              backgroundColor: "rgba(255,255,255,0.4)",
+              backgroundColor: "rgba(0,0,0,0.5)",
             }}
           >
             <Link

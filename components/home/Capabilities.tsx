@@ -195,7 +195,7 @@ export const Capabilities = () => {
   };
 
   return (
-    <GridSection style={{ borderTop: "none", position: "relative", zIndex: 1 }}>
+    <GridSection style={{ borderTop: "none", position: "relative", zIndex: 1 }} className="bg-[#0B0B0B]!">
       <D n={1} />
       <div ref={sectionRef} style={{ overflow: "visible", position: "relative" }}>
         <D n={2} />
@@ -211,7 +211,7 @@ export const Capabilities = () => {
           }}
         >
           <D n={3} />
-          <h2 className="font-medium tracking-[-0.02em] text-[20px] lg:text-[25px] text-[#6E6E73]">
+          <h2 className="font-medium tracking-[-0.02em] text-[20px] lg:text-[25px] text-[rgba(255,255,255,0.5)]">
             Capabilities
           </h2>
         </div>
