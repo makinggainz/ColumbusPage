@@ -333,9 +333,9 @@ export default function Hero() {
       <div
         className="fixed inset-0 lg:hidden pointer-events-none"
         style={{
-          backgroundImage: "url('/BeachLanding.png')",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
+          backgroundImage: "url('/Gtestlast.jpeg')",
+            backgroundSize: "80%",
+            backgroundPosition: "top right",
           zIndex: -1,
           opacity: bgExpanded ? 1 : 0,
           transition: "opacity 0.9s cubic-bezier(0.4, 0, 0.2, 1)",
@@ -356,9 +356,9 @@ export default function Hero() {
           style={{
             position: "absolute",
             inset: 0,
-            backgroundImage: "url('/BeachLanding.png')",
-            backgroundSize: bgExpanded ? "130% 130%" : "100% 100%",
-            backgroundPosition: "center",
+            backgroundImage: "url('/Gtestlast.jpeg')",
+            backgroundSize: bgExpanded ? "100% 100%" : "80% 80%",
+            backgroundPosition: "top right",
             clipPath: bgExpanded
               ? "inset(0px 0% 0px 0% round 0px)"
               : "inset(clamp(0px, 5vw, 100px) clamp(0px, 2vw, 5%) clamp(0px, 5vw, 100px) clamp(0px, 2vw, 5%) round clamp(0px, 3vw, 55px))",
@@ -425,8 +425,7 @@ export default function Hero() {
                   <h2
                     className="text-[64px] font-bold leading-[140%] tracking-[-0.02em] flex items-center justify-center"
                     style={{
-                      backgroundImage: "linear-gradient(to bottom, #00B1D4 40%, #F9C795 95%)",
-                      WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text",
+                      color: "#00B1D4",
                       filter: taglineVisible ? "drop-shadow(0 0 100px rgba(255,255,255,1)) blur(0px)" : "blur(8px)",
                       opacity: taglineVisible ? 1 : 0,
                       transform: taglineVisible ? "translateY(0)" : "translateY(16px)",
@@ -491,8 +490,7 @@ export default function Hero() {
                 <h2
                   className="text-[36px] sm:text-[48px] font-bold leading-[140%] tracking-[-0.02em]"
                   style={{
-                    backgroundImage: "linear-gradient(to bottom, #00B1D4 40%, #F9C795 95%)",
-                    WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text",
+                    color: "#00B1D4",
                     filter: taglineVisible ? "drop-shadow(0 0 80px rgba(255,255,255,1)) blur(0px)" : "blur(8px)",
                     opacity: taglineVisible ? 1 : 0,
                     transform: taglineVisible ? "translateY(0)" : "translateY(16px)",

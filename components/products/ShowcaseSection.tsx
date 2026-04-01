@@ -249,7 +249,7 @@ export default function ShowcaseSection({ compact = false, onInteraction }: { co
             <span
               className="text-[27px] sm:text-[36px] font-semibold tracking-[-0.02em]"
               style={{
-                background: "linear-gradient(180deg, rgba(255,255,255,0.9) 0%, rgba(26,26,26,0.75) 40%, rgba(26,26,26,0.6) 100%)",
+                background: "linear-gradient(180deg, rgba(255,255,255,0.9) 0%, rgba(11,11,11,0.75) 40%, rgba(11,11,11,0.6) 100%)",
                 WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text",
                 filter: "drop-shadow(0 1px 2px rgba(0,0,0,0.12)) drop-shadow(0 0.5px 1px rgba(0,0,0,0.08))",
               }}
@@ -258,8 +258,8 @@ export default function ShowcaseSection({ compact = false, onInteraction }: { co
           <div
             className="text-[27px] sm:text-[36px] tracking-[-0.02em]"
             style={{
-              fontWeight: 590,
-              background: "linear-gradient(180deg, rgba(26,26,26,1) 0%, rgba(26,26,26,0.2) 100%)",
+              fontWeight: 500,
+              background: "linear-gradient(180deg, rgba(11,11,11,1) 0%, rgba(11,11,11,0.2) 100%)",
               WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text",
             }}
           >
@@ -509,10 +509,8 @@ export default function ShowcaseSection({ compact = false, onInteraction }: { co
             >
               <span
                 style={{
-                  background: "linear-gradient(180deg, rgba(255,255,255,0.9) 0%, rgba(26,26,26,0.75) 40%, rgba(26,26,26,0.6) 100%)",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                  backgroundClip: "text",
+                  background: "linear-gradient(180deg, rgba(255,255,255,0.9) 0%, rgba(11,11,11,0.75) 40%, rgba(11,11,11,0.6) 100%)",
+                  WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text",
                   filter: "drop-shadow(0 1px 2px rgba(0,0,0,0.12)) drop-shadow(0 0.5px 1px rgba(0,0,0,0.08))",
                 }}
               >
@@ -522,14 +520,12 @@ export default function ShowcaseSection({ compact = false, onInteraction }: { co
             <div
               className="whitespace-nowrap"
               style={{
-                fontWeight: 590,
+                fontWeight: 500,
                 fontSize: "clamp(36px, 3.3vw, 48px)",
                 lineHeight: "130%",
                 letterSpacing: "-0.02em",
-                background: "linear-gradient(180deg, rgba(26,26,26,1) 0%, rgba(26,26,26,0.2) 100%)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                backgroundClip: "text",
+                background: "linear-gradient(180deg, rgba(11,11,11,1) 0%, rgba(11,11,11,0.2) 100%)",
+                WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text",
               }}
             >
               {SUBTITLE_PREFIX}

@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import glassStyles from "@/components/ui/GlassButton.module.css";
 
@@ -10,6 +11,7 @@ interface Props {
 
 export function ConsumerEnterpriseToggle({ variant = "dark", active = "enterprise" }: Props) {
   const isDark = variant === "dark";
+  const [hoveringInactive, setHoveringInactive] = useState(false);
 
   const containerStyle: React.CSSProperties = {
     width: "266px",
@@ -38,19 +40,38 @@ export function ConsumerEnterpriseToggle({ variant = "dark", active = "enterpris
   const consumerActive = active === "consumer";
   const enterpriseActive = active === "enterprise";
 
+  // Subtle shift: active pill nudges toward hovered inactive side
+  const shift = hoveringInactive ? (enterpriseActive ? 4 : -4) : 0;
+
   return (
     <div className={containerClass} style={containerStyle}>
       <Link
         href="/enterprise"
         className={enterpriseActive ? activeClass : inactiveClass}
-        style={enterpriseActive ? activePillStyle : undefined}
+        style={{
+          ...(enterpriseActive ? {
+            ...activePillStyle,
+            transform: `translateX(${shift}px)`,
+            transition: "transform 0.3s cubic-bezier(0.25, 1, 0.5, 1)",
+          } : {}),
+        }}
+        onMouseEnter={() => { if (!enterpriseActive) setHoveringInactive(true); }}
+        onMouseLeave={() => setHoveringInactive(false)}
       >
         Columbus Pro
       </Link>
       <Link
         href="/mapsgpt"
         className={`${consumerActive ? activeClass : inactiveClass} ${consumerActive && !isDark ? glassStyles.activePillConsumer : ""}`}
-        style={consumerActive && isDark ? activePillStyle : undefined}
+        style={{
+          ...(consumerActive ? {
+            ...(isDark ? activePillStyle : {}),
+            transform: `translateX(${shift}px)`,
+            transition: "transform 0.3s cubic-bezier(0.25, 1, 0.5, 1)",
+          } : {}),
+        }}
+        onMouseEnter={() => { if (!consumerActive) setHoveringInactive(true); }}
+        onMouseLeave={() => setHoveringInactive(false)}
       >
         MapsGPT
       </Link>
