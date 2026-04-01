@@ -60,7 +60,7 @@ export function ScrollRevealQuote() {
   return (
     <div
       ref={ref}
-      className="relative z-10 max-w-[1287px] mx-auto px-8 min-[1287px]:px-10 pt-0 pb-52 md:pb-72 -mt-16 md:-mt-24"
+      className="relative z-10 max-w-[1287px] mx-5 md:mx-auto px-8 min-[1287px]:px-10 pt-0 pb-52 md:pb-72 -mt-16 md:-mt-24"
     >
       {/* Scroll-reveal quote text */}
       <p

@@ -424,7 +424,7 @@ export const Careers = ({ hideHeader, className = "" }: { hideHeader?: boolean; 
 
         {/* TITLE + DESCRIPTION */}
         {!hideHeader && (
-          <div className="max-w-[1287px] mx-auto">
+          <div className="max-w-[1287px] mx-5 md:mx-auto">
             <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-start mb-6 md:mb-8">
               <h3
                 className="font-medium tracking-[-0.02em] leading-[1.12] text-[25px] md:text-[31px] lg:text-[39px] text-center md:text-left"
@@ -444,13 +444,13 @@ export const Careers = ({ hideHeader, className = "" }: { hideHeader?: boolean; 
 
         {/* DIVIDER — straight line */}
         {!hideHeader && (
-          <div className="max-w-[1287px] mx-auto mb-16 md:mb-20">
+          <div className="max-w-[1287px] mx-5 md:mx-auto mb-16 md:mb-20">
             <div style={{ height: 1, background: "rgba(29,29,31,0.18)" }} />
           </div>
         )}
 
         {/* FORM */}
-        <div className="max-w-xl mx-auto">
+        <div className="max-w-xl mx-5 md:mx-auto">
           <form className="flex flex-col gap-2">
             {[
               { type: "text", placeholder: "Name", tag: "input" },

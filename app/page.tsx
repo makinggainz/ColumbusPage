@@ -15,7 +15,7 @@ import { GeneratedMaps } from "@/components/home/GeneratedMaps";
 import { UniqueSpotsSection } from "@/components/home/UniqueSpotsSection";
 function IslandGap() {
   return (
-    <div className="max-w-[1287px] mx-2.5 md:mx-auto relative pointer-events-none" style={{ height: 240 }}>
+    <div className="max-w-[1287px] mx-5 md:mx-auto relative pointer-events-none" style={{ height: 240 }}>
       {/* Mesh pattern */}
       <div
         className="absolute inset-0"

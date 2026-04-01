@@ -194,7 +194,7 @@ export const TravelSection = () => {
       {/* Main content area with sand background */}
         <div
           ref={beachRef}
-          className="relative flex flex-col h-137.5 md:h-200 lg:h-250 max-w-[1287px] mx-auto overflow-hidden"
+          className="relative flex flex-col h-137.5 md:h-200 lg:h-250 max-w-[1287px] mx-5 md:mx-auto overflow-hidden"
       >
         {/* Background image — blurred via ref on scroll */}
         <Image
@@ -235,7 +235,7 @@ export const TravelSection = () => {
 
           {/* Phone mockups */}
           <div
-            className="relative flex-1 w-full max-w-[1287px] mx-auto mt-6 md:mt-8 lg:mt-10"
+            className="relative flex-1 w-full max-w-[1287px] mx-5 md:mx-auto mt-6 md:mt-8 lg:mt-10"
             style={anim(350)}
           >
             {/* Desktop mockup */}

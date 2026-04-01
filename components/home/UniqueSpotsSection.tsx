@@ -93,7 +93,7 @@ export const UniqueSpotsSection = () => {
         borderTop: "1px solid var(--grid-line)",
         borderBottom: "1px solid var(--grid-line)"
       }}>
-        <div className="grid-section relative flex flex-wrap max-w-[1287px] mx-auto">
+        <div className="grid-section relative flex flex-wrap max-w-[1287px] mx-5 md:mx-auto">
           <div className="px-8 min-[1287px]:px-10 py-5 flex items-center flex-1 min-w-70" style={{ minHeight: 76, borderRight: gl, backgroundColor: "rgba(20, 41, 148, 0.07)" }}>
             <p className="text-[18px] lg:text-[20px] font-medium text-[#1D1D1F] tracking-[-0.01em]">
               MapsGPT is a local guide in your pocket
