@@ -1291,7 +1291,11 @@ export const Hero = () => {
         style={{
           height: "50%",
           background: "linear-gradient(to bottom, rgba(0, 102, 204, 0.15) 0%, rgba(0, 102, 204, 0.08) 60%, transparent 100%)",
-          zIndex: 3, opacity: revealed ? 1 : 0, transition: "opacity 900ms ease",
+          zIndex: 3,
+          opacity: revealed ? 1 : 0,
+          transform: revealed ? "translateY(0)" : "translateY(-30%)",
+          transformOrigin: "top center",
+          transition: "opacity 1800ms ease 800ms, transform 1800ms cubic-bezier(0.4, 0, 0.2, 1) 800ms",
         }}
         aria-hidden
       />
