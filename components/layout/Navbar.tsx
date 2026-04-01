@@ -13,8 +13,8 @@ const NAV_BREAKPOINT = 900;
 
 const menuItems = [
     { label: "Our Mission", href: "/our-mission" },
-    { label: "Columbus Pro", href: "/enterprise" },
-    { label: "MapsGPT", href: "/maps-gpt" },
+    { label: "Columbus Pro", href: "/products/enterprise" },
+    { label: "MapsGPT", href: "/products/maps-gpt" },
     { label: "Use Cases", href: "/use-cases" },
     { label: "Technology", href: "/technology" },
 ];
@@ -36,7 +36,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
     );
     const [bgTriggerPassed, setBgTriggerPassed] = useState(false);
     const pathname = usePathname();
-    const isProductsPage = pathname === "/mapsgpt";
+    const isProductsPage = pathname === "/products/mapsgpt";
     const isUseCasesPage = pathname === "/use-cases";
     const showWordmarkOnMobile = pathname === "/" || pathname === "/our-mission" || pathname === "/contact";
     const navRef = useRef<HTMLElement>(null);
@@ -385,7 +385,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                     }}
                                 >
                                     {[
-                                        { label: "Product", href: "/enterprise" },
+                                        { label: "Product", href: "/products/enterprise" },
                                         { label: "Use Cases", href: "/use-cases" },
                                         { label: "Technology", href: "/technology" },
                                     ].map((link, i) => (

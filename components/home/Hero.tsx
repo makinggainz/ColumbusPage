@@ -1358,7 +1358,7 @@ export const Hero = () => {
             </a>
             {[
               { label: "Technology", href: "/technology" },
-              { label: "Products", href: "/enterprise" },
+              { label: "Products", href: "/products/enterprise" },
               { label: "Use Cases", href: "/use-cases" },
             ].map((link) => (
               <a

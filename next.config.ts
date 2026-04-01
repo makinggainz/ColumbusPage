@@ -5,11 +5,10 @@ const nextConfig: NextConfig = {
   devIndicators: false,
   async redirects() {
     return [
-      {
-        source: "/products",
-        destination: "/mapsgpt",
-        permanent: true,
-      },
+      { source: "/products",    destination: "/products/mapsgpt",    permanent: true },
+      { source: "/enterprise",  destination: "/products/enterprise", permanent: true },
+      { source: "/mapsgpt",     destination: "/products/mapsgpt",    permanent: true },
+      { source: "/maps-gpt",    destination: "/products/maps-gpt",   permanent: true },
     ];
   },
   images: {

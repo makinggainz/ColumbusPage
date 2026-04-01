@@ -20,12 +20,12 @@ const ROUTE_QUOTES: Record<string, string[]> = {
     "Where frontier AI meets the real world.",
     "Every location tells a story.",
   ],
-  "/mapsgpt": [
+  "/products/mapsgpt": [
     "Your intelligent travel copilot awaits.",
     "The world, understood by AI.",
     "Every journey starts with a question.",
   ],
-  "/maps-gpt": [
+  "/products/maps-gpt": [
     "Your intelligent travel copilot awaits.",
     "The world, understood by AI.",
     "Every journey starts with a question.",
@@ -35,7 +35,7 @@ const ROUTE_QUOTES: Record<string, string[]> = {
     "From insight to action, across industries.",
     "Real problems. Real answers. Real places.",
   ],
-  "/enterprise": [
+  "/products/enterprise": [
     "Spatial intelligence, enterprise-grade.",
     "Built for the questions that matter most.",
     "The geospatial model, at your service.",
@@ -78,7 +78,7 @@ function getQuote(href: string): string {
 
 function isMapsGptRoute(href: string): boolean {
   const path = href.split("?")[0].split("#")[0];
-  return path === "/maps-gpt" || path === "/mapsgpt";
+  return path === "/products/maps-gpt" || path === "/products/mapsgpt";
 }
 
 /* ── Transition states ──────────────────────────────────── */

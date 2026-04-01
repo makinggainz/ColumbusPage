@@ -46,7 +46,7 @@ export function ConsumerEnterpriseToggle({ variant = "dark", active = "enterpris
   return (
     <div className={containerClass} style={containerStyle}>
       <Link
-        href="/enterprise"
+        href="/products/enterprise"
         className={enterpriseActive ? activeClass : inactiveClass}
         style={{
           ...(enterpriseActive ? {
@@ -61,7 +61,7 @@ export function ConsumerEnterpriseToggle({ variant = "dark", active = "enterpris
         Columbus Pro
       </Link>
       <Link
-        href="/mapsgpt"
+        href="/products/mapsgpt"
         className={`${consumerActive ? activeClass : inactiveClass} ${consumerActive && !isDark ? glassStyles.activePillConsumer : ""}`}
         style={{
           ...(consumerActive ? {
