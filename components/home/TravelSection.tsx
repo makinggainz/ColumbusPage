@@ -152,79 +152,6 @@ export const TravelSection = () => {
   }, []);
 
   // Scroll-driven expansion with lerp smoothing
-  useEffect(() => {
-    const card = beachRef.current;
-    const heading = travelHeadingRef.current;
-    const bgImg = bgImgRef.current;
-    if (!card || !heading) return;
-
-    let current = 0;
-    let rafId = 0;
-    let lastTime = 0;
-    let running = false;
-
-    const tick = (now: number) => {
-      const dt = lastTime ? (now - lastTime) / 1000 : 0.016;
-      lastTime = now;
-
-      const rect = heading.getBoundingClientRect();
-      const viewH = window.innerHeight;
-      const headingCenter = rect.top + rect.height / 2;
-      const offset = viewH * 0.5 - headingCenter;
-      const target = Math.max(0, Math.min(1, offset / 200));
-
-      const speed = 4.0;
-      const lerp = 1 - Math.exp(-speed * dt);
-      current += (target - current) * lerp;
-      if (Math.abs(target - current) < 0.001) current = target;
-
-      const vw = window.innerWidth;
-      const islandWidth = Math.min(1287, vw);
-      const startInsetPx = (vw - islandWidth) / 2;
-      const startInsetPct = (startInsetPx / vw) * 100;
-
-      const inset = startInsetPct * (1 - current);
-      card.style.clipPath = `inset(0 ${inset}% 0 ${inset}%)`;
-
-      // Background blur fades in with scroll (0 → 14px)
-      if (bgImg) {
-        bgImg.style.filter = `blur(${(current * 14).toFixed(2)}px)`;
-      }
-
-      // Trigger plants when expansion is nearly complete AND still within Island 3
-      const sectionEl = ref.current;
-      const island = sectionEl?.closest(".mt-16") as HTMLElement | null;
-      if (current > 0.92 && island) {
-        const islandRect = island.getBoundingClientRect();
-        const inView = islandRect.top < window.innerHeight && islandRect.bottom > 0;
-        setPlantsVisible(inView);
-      } else {
-        setPlantsVisible(false);
-      }
-
-      if (Math.abs(target - current) > 0.0005) {
-        rafId = requestAnimationFrame(tick);
-      } else {
-        running = false;
-      }
-    };
-
-    const startTick = () => {
-      if (!running) {
-        running = true;
-        lastTime = 0;
-        rafId = requestAnimationFrame(tick);
-      }
-    };
-
-    window.addEventListener("scroll", startTick, { passive: true });
-    startTick();
-
-    return () => {
-      window.removeEventListener("scroll", startTick);
-      cancelAnimationFrame(rafId);
-    };
-  }, []);
 
   const anim = (delay = 0) => ({
     opacity: visible ? 1 : 0,
@@ -264,14 +191,10 @@ export const TravelSection = () => {
         </GridSection>
       </div>
 
-      {/* Main content area with sand background — scroll-driven expansion */}
+      {/* Main content area with sand background */}
         <div
           ref={beachRef}
-          className="relative flex flex-col h-137.5 md:h-200 lg:h-250"
-        style={{
-          clipPath: "inset(0 0 0 0 round 0px)",
-          willChange: "clip-path",
-        }}
+          className="relative flex flex-col h-137.5 md:h-200 lg:h-250 max-w-[1287px] mx-auto overflow-hidden"
       >
         {/* Background image — blurred via ref on scroll */}
         <Image
