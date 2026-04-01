@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   title: "Columbus",
   description: "AI-powered location and market research",
   icons: {
-    icon: "/logobueno.png",
+    icon: "/favicon.png",
   },
 };
 

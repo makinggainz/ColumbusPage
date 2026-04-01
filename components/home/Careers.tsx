@@ -416,6 +416,9 @@ export const Careers = ({ hideHeader, className = "" }: { hideHeader?: boolean; 
             <p className="text-[16px] md:text-[20px]" style={{ color: "rgba(29,29,31,0.45)", letterSpacing: "-0.015em", fontWeight: 400 }}>
               Our team is based in Washington DC and Madrid.
             </p>
+            <div className="flex justify-center pt-16 pb-20 md:pt-20 md:pb-24">
+              <WorldMapDots />
+            </div>
           </div>
         )}
 
@@ -605,5 +608,124 @@ export const Careers = ({ hideHeader, className = "" }: { hideHeader?: boolean; 
         }
       `}</style>
     </section>
+  );
+};
+
+/* ── World Map Dots Component (CSS3 Box-Shadow based) ── */
+
+const WorldMapDots = () => {
+  const dotConfig = [
+    { child: 1, marginTop: 90, shadows: [] },
+    { child: 2, marginTop: 40, shadows: [10, 20, 30] },
+    { child: 3, marginTop: 40, shadows: [10, 20, 30, 40, 110] },
+    { child: 4, marginTop: 40, shadows: [10, 20, 30] },
+    { child: 5, marginTop: 40, shadows: [10, 20, 30] },
+    { child: 6, marginTop: 50, shadows: [10, 20] },
+    { child: 7, marginTop: 50, shadows: [10, 20, 30] },
+    { child: 8, marginTop: 40, shadows: [10, 20, 30, 40, 50] },
+    { child: 9, marginTop: 20, shadows: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100] },
+    { child: 10, marginTop: 20, shadows: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110] },
+    { child: 11, marginTop: 20, shadows: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120] },
+    { child: 12, marginTop: 10, shadows: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140] },
+    { child: 13, marginTop: 10, shadows: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150] },
+    { child: 14, marginTop: 10, shadows: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150] },
+    { child: 15, marginTop: 0, shadows: [10, 20, 30, 40, 50, 60, 80, 90, 100, 110, 120, 130, 160, 170] },
+    { child: 16, marginTop: 0, shadows: [10, 20, 30, 40, 50, 90, 100, 110, 120, 130, 170, 200] },
+    { child: 17, marginTop: 0, shadows: [10, 20, 30, 40, 60, 70, 80, 90, 100, 110, 120, 130, 140, 180, 190, 200, 210, 220] },
+    { child: 18, marginTop: 0, shadows: [10, 20, 40, 50, 60, 70, 80, 90, 100, 110, 120, 160, 170, 180, 190, 200, 210, 220, 230, 260, 270, 280] },
+    { child: 19, marginTop: 0, shadows: [10, 20, 50, 60, 80, 90, 100, 160, 170, 180, 190, 200, 210, 220, 230, 240, 250, 260, 270, 280, 290] },
+    { child: 20, marginTop: 0, shadows: [10, 20, 80, 90, 100, 180, 190, 200, 210, 220, 230, 240, 250, 260, 270] },
+    { child: 21, marginTop: 0, shadows: [10, 20, 30, 40, 60, 180, 190, 200, 210, 220, 230, 240, 250, 260] },
+    { child: 22, marginTop: 0, shadows: [10, 20, 30, 40, 50, 60, 70, 190, 200, 210, 220, 230, 240, 250] },
+    { child: 23, marginTop: 0, shadows: [10, 20, 30, 40, 50, 60, 70, 200, 210, 220, 230, 240] },
+    { child: 24, marginTop: 0, shadows: [10, 20, 30, 40, 50, 200, 210, 220] },
+    { child: 25, marginTop: 0, shadows: [10, 20, 30, 40, 50] },
+    { child: 26, marginTop: 0, shadows: [10, 20, 30, 40, 60] },
+    { child: 27, marginTop: 10, shadows: [10, 50, 140, 150, 160] },
+    { child: 28, marginTop: 90, shadows: [50, 60, 70, 80, 90] },
+    { child: 29, marginTop: 80, shadows: [30, 40, 50, 60, 70, 80, 90, 100, 110] },
+    { child: 30, marginTop: 80, shadows: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110] },
+    { child: 31, marginTop: 70, shadows: [20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120] },
+    { child: 32, marginTop: 60, shadows: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170] },
+    { child: 33, marginTop: 40, shadows: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200, 210] },
+    { child: 34, marginTop: 40, shadows: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200, 210] },
+    { child: 35, marginTop: 40, shadows: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200] },
+    { child: 36, marginTop: 40, shadows: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190] },
+    { child: 37, marginTop: 60, shadows: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 150] },
+    { child: 38, marginTop: 50, shadows: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 170, 180] },
+    { child: 39, marginTop: 50, shadows: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110] },
+    { child: 40, marginTop: 30, shadows: [20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130] },
+    { child: 41, marginTop: 20, shadows: [20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130] },
+    { child: 42, marginTop: 20, shadows: [20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130] },
+    { child: 43, marginTop: 40, shadows: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140] },
+    { child: 44, marginTop: 40, shadows: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130] },
+    { child: 45, marginTop: 30, shadows: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130] },
+    { child: 46, marginTop: 30, shadows: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130] },
+    { child: 47, marginTop: 10, shadows: [20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180] },
+    { child: 48, marginTop: 10, shadows: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190] },
+    { child: 49, marginTop: 20, shadows: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 180, 190] },
+    { child: 50, marginTop: 30, shadows: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 170, 210, 220, 230] },
+    { child: 51, marginTop: 40, shadows: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 130, 160, 200, 210, 220] },
+    { child: 52, marginTop: 40, shadows: [10, 20, 30, 40, 50, 60, 70, 80, 90, 150, 190, 200, 210, 220] },
+    { child: 53, marginTop: 40, shadows: [10, 20, 30, 40, 50, 60, 70, 80, 190, 200, 210, 220] },
+    { child: 54, marginTop: 40, shadows: [10, 20, 30, 40, 50, 60, 70, 100, 170, 190, 200, 210, 220, 230] },
+    { child: 55, marginTop: 40, shadows: [10, 20, 30, 40, 60, 70, 80, 90, 170, 190, 200, 210, 220, 230, 240] },
+    { child: 56, marginTop: 40, shadows: [10, 20, 30, 40, 180, 200, 210, 220, 230] },
+    { child: 57, marginTop: 50, shadows: [10, 20, 30, 40] },
+    { child: 58, marginTop: 50, shadows: [10, 20, 30, 40] },
+    { child: 59, marginTop: 50, shadows: [10, 20, 30, 240] },
+    { child: 60, marginTop: 50, shadows: [10, 20, 30, 220, 230] },
+    { child: 61, marginTop: 50, shadows: [10, 20] },
+    { child: 62, marginTop: 60, shadows: [] },
+    { child: 63, marginTop: 60, shadows: [] },
+  ];
+
+  const isSpecialDot = (child: number, idx: number) => {
+    return (child === 18 && idx === 8) || (child === 30 && idx === 4);
+  };
+
+  const shadowsToBoxShadow = (shadows: number[], child?: number) => {
+    return shadows
+      .map((offset, idx) => {
+        const special = isSpecialDot(child || 0, idx);
+        const dotColor = special ? "#2563EB" : "#060606";
+        return `0 ${offset}px 0 ${dotColor}`;
+      })
+      .join(", ");
+  };
+
+  return (
+    <div className="flex justify-center">
+      <div
+        style={{
+          width: "100%",
+          maxWidth: "900px",
+          display: "flex",
+          flexWrap: "wrap",
+          gap: "3px",
+          margin: "0 auto",
+          padding: "0 20px",
+        }}
+      >
+        {dotConfig.map(({ child, marginTop, shadows }) => {
+          const hasSpecial = shadows.some((_, idx) => isSpecialDot(child, idx));
+          return (
+            <div
+              key={child}
+              style={{
+                position: "relative",
+                width: "4px",
+                height: "4px",
+                borderRadius: "50%",
+                backgroundColor: hasSpecial ? "#2563EB" : "#060606",
+                marginRight: "3px",
+                marginTop: `${marginTop}px`,
+                boxShadow: shadowsToBoxShadow(shadows, child),
+              }}
+            />
+          );
+        })}
+      </div>
+    </div>
   );
 };
