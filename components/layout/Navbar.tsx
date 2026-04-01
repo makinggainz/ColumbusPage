@@ -14,7 +14,7 @@ const NAV_BREAKPOINT = 900;
 const menuItems = [
     { label: "Our Mission", href: "/our-mission" },
     { label: "Columbus Pro", href: "/products/enterprise" },
-    { label: "MapsGPT", href: "/products/maps-gpt" },
+    { label: "MapsGPT", href: "/products/mapsgpt" },
     { label: "Use Cases", href: "/use-cases" },
     { label: "Technology", href: "/technology" },
 ];
@@ -418,7 +418,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                         ["--cta-right" as string]: wide ? "52px" : "46px",
                                     }}>
                                         <Link
-                                            href="/maps-gpt"
+                                            href="/products/mapsgpt"
                                             className={`group flex items-center justify-between leading-none whitespace-nowrap transition-all duration-300 ${isUseCasesPage ? (isDark ? "hover:bg-white!" : "hover:opacity-90") : "hover:opacity-90"} ${wide ? glassStyles.btn : ""}`}
                                             style={{
                                                 fontSize: 14,

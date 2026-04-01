@@ -975,12 +975,12 @@ const HEADING_LINE1 = "Building the first in\u2011production";
 const HEADING_LINE2 = "Large Geospatial Model.";
 const WORDMARK_TEXT = "Columbus Earth";
 
-const EYEBROW_DURATION = 750;   // total ms for eyebrow
-const HEADING1_DURATION = 825;  // total ms for heading line 1
-const HEADING2_DURATION = 638;  // total ms for heading line 2
-const WORDMARK_DURATION = 473;  // total ms for wordmark
-const PHASE_GAP = 113;
-const LOGO_TRAVEL_MS = 450;
+const EYEBROW_DURATION = 250;   // total ms for eyebrow
+const HEADING1_DURATION = 275;  // total ms for heading line 1
+const HEADING2_DURATION = 213;  // total ms for heading line 2
+const WORDMARK_DURATION = 158;  // total ms for wordmark
+const PHASE_GAP = 38;
+const LOGO_TRAVEL_MS = 150;
 
 // Cubic-bezier easing for typing speed: starts fast, eases out
 function typingEase(t: number): number {
