@@ -1285,7 +1285,18 @@ export const Hero = () => {
         aria-hidden
       />
 
-      {/* Bottom gradient */}
+      {/* Accent gradient — top of hero */}
+      <div
+        className="absolute left-0 right-0 top-0 pointer-events-none"
+        style={{
+          height: "50%",
+          background: "linear-gradient(to bottom, rgba(0, 102, 204, 0.15) 0%, rgba(0, 102, 204, 0.08) 60%, transparent 100%)",
+          zIndex: 3, opacity: revealed ? 1 : 0, transition: "opacity 900ms ease",
+        }}
+        aria-hidden
+      />
+
+      {/* Bottom gradient — fade to white */}
       <div
         className="absolute left-0 right-0 bottom-0 pointer-events-none"
         style={{

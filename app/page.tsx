@@ -13,45 +13,11 @@ import { PartnerStrip } from "@/components/home/PartnerStrip";
 import { TravelSection } from "@/components/home/TravelSection";
 import { GeneratedMaps } from "@/components/home/GeneratedMaps";
 import { UniqueSpotsSection } from "@/components/home/UniqueSpotsSection";
-const TAIL_LENGTH = 96;
-
-function IslandTail({ side, edge }: { side: "left" | "right"; edge: "top" | "bottom" }) {
+function IslandGap() {
   return (
-    <div
-      style={{
-        position: "absolute",
-        ...(edge === "top" ? { top: -TAIL_LENGTH } : { bottom: -TAIL_LENGTH }),
-        [side]: 0,
-        width: 1,
-        height: TAIL_LENGTH,
-        background: edge === "top"
-          ? "linear-gradient(to bottom, transparent 0px, var(--grid-line) 100%)"
-          : "linear-gradient(to top, transparent 0px, var(--grid-line) 100%)",
-        pointerEvents: "none",
-        zIndex: 1,
-      }}
-    />
-  );
-}
-
-function Island({ children, className = "", tailTop = true, tailBottom = true }: { children: ReactNode; className?: string; tailTop?: boolean; tailBottom?: boolean }) {
-  const showTails = tailTop || tailBottom;
-  return (
-    <div className={`mt-64 ${className}`} style={{ position: "relative", overflow: "visible" }}>
-      {showTails && (
-        <div
-          className="pointer-events-none absolute mx-auto"
-          style={{ maxWidth: 1287, zIndex: 1, top: 0, bottom: 0, left: 0, right: 0 }}
-        >
-          <div style={{ position: "relative", width: "100%", height: "100%" }}>
-            {tailTop && <IslandTail side="left" edge="top" />}
-            {tailTop && <IslandTail side="right" edge="top" />}
-            {tailBottom && <IslandTail side="left" edge="bottom" />}
-            {tailBottom && <IslandTail side="right" edge="bottom" />}
-          </div>
-        </div>
-      )}
-      {children}
+    <div className="h-64 max-w-[1287px] mx-auto relative pointer-events-none">
+      <div style={{ position: "absolute", top: 0, left: 0, width: 1, height: "100%", background: "var(--grid-line)" }} />
+      <div style={{ position: "absolute", top: 0, right: 0, width: 1, height: "100%", background: "var(--grid-line)" }} />
     </div>
   );
 }
@@ -63,35 +29,43 @@ export default function Home() {
       <Hero />
 
       {/* Island 1: Vision */}
-      <Island className="mt-16!" tailTop={false}>
+      <div className="mt-16">
         <Vision />
-      </Island>
+      </div>
+
+      <IslandGap />
 
       {/* Island 2: Columbus Pro */}
-      <Island>
+      <div>
         <SiteSelection />
         <Capabilities />
         <PartnerStrip />
         <Industries />
-      </Island>
+      </div>
+
+      <IslandGap />
 
       {/* Island 3: MapsGPT */}
-      <Island>
+      <div>
         <TravelSection />
         <TrustStrip />
         <GeneratedMaps />
         <UniqueSpotsSection />
-      </Island>
+      </div>
+
+      <IslandGap />
 
       {/* Island 4: Applications */}
-      <Island>
+      <div>
         <Applications />
-      </Island>
+      </div>
+
+      <IslandGap />
 
       {/* Island 5: Hiring Humans */}
-      <Island tailTop={false} tailBottom={false}>
+      <div>
         <Careers />
-      </Island>
+      </div>
 
       <Footer />
     </main>

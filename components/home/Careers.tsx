@@ -680,22 +680,28 @@ const WorldMapDots = () => {
     { child: 63, marginTop: 60, shadows: [] },
   ];
 
-  const isSpecialDot = (child: number, idx: number) => {
-    return (child === 18 && idx === 8) || (child === 30 && idx === 4);
-  };
+  const SPECIAL_DOTS: [number, number][] = [[18, 9], [30, 4]];
 
-  const shadowsToBoxShadow = (shadows: number[], child?: number) => {
+  const isSpecial = (child: number, idx: number) =>
+    SPECIAL_DOTS.some(([c, i]) => c === child && i === idx);
+
+  const shadowsToBoxShadow = (shadows: number[], child: number) => {
     return shadows
       .map((offset, idx) => {
-        const special = isSpecialDot(child || 0, idx);
-        const dotColor = special ? "#2563EB" : "#060606";
-        return `0 ${offset}px 0 ${dotColor}`;
+        const color = isSpecial(child, idx) ? "#2563EB" : "#060606";
+        return `0 ${offset}px 0 ${color}`;
       })
       .join(", ");
   };
 
   return (
     <div className="flex justify-center">
+      <style jsx>{`
+        @keyframes worldmap-pulse {
+          0%, 100% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.6); }
+          50% { box-shadow: 0 0 0 4px rgba(37, 99, 235, 0); }
+        }
+      `}</style>
       <div
         style={{
           width: "100%",
@@ -708,7 +714,11 @@ const WorldMapDots = () => {
         }}
       >
         {dotConfig.map(({ child, marginTop, shadows }) => {
-          const hasSpecial = shadows.some((_, idx) => isSpecialDot(child, idx));
+          // Check if this column has a special dot — render pulse markers
+          const specialIndices = SPECIAL_DOTS
+            .filter(([c]) => c === child)
+            .map(([, i]) => i);
+
           return (
             <div
               key={child}
@@ -717,12 +727,28 @@ const WorldMapDots = () => {
                 width: "4px",
                 height: "4px",
                 borderRadius: "50%",
-                backgroundColor: hasSpecial ? "#2563EB" : "#060606",
+                backgroundColor: "#060606",
                 marginRight: "3px",
                 marginTop: `${marginTop}px`,
                 boxShadow: shadowsToBoxShadow(shadows, child),
               }}
-            />
+            >
+              {specialIndices.map((si) => (
+                <span
+                  key={si}
+                  style={{
+                    position: "absolute",
+                    top: shadows[si],
+                    left: 0,
+                    width: 4,
+                    height: 4,
+                    borderRadius: "50%",
+                    backgroundColor: "#2563EB",
+                    animation: "worldmap-pulse 2s ease-in-out infinite",
+                  }}
+                />
+              ))}
+            </div>
           );
         })}
       </div>

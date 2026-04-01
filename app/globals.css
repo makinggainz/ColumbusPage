@@ -96,7 +96,7 @@ html {
   margin-top: -1px;
 }
 
-/* Vertical grid lines — solid interior lines, tails handled by React */
+/* Vertical grid lines on each GridSection */
 .grid-section::before,
 .grid-section::after {
   content: "";
