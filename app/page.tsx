@@ -15,7 +15,20 @@ import { GeneratedMaps } from "@/components/home/GeneratedMaps";
 import { UniqueSpotsSection } from "@/components/home/UniqueSpotsSection";
 function IslandGap() {
   return (
-    <div className="h-64 max-w-[1287px] mx-auto relative pointer-events-none">
+    <div className="max-w-[1287px] mx-auto relative pointer-events-none" style={{ height: 240 }}>
+      {/* Mesh pattern */}
+      <div
+        className="absolute inset-0"
+        style={{
+          backgroundImage: `
+            linear-gradient(to right, rgba(37, 99, 235, 0.1) 1px, transparent 1px),
+            linear-gradient(to bottom, rgba(37, 99, 235, 0.1) 1px, transparent 1px)
+          `,
+          backgroundSize: "48px 48px",
+          backgroundPosition: "0 0",
+        }}
+      />
+      {/* Side lines */}
       <div style={{ position: "absolute", top: 0, left: 0, width: 1, height: "100%", background: "var(--grid-line)" }} />
       <div style={{ position: "absolute", top: 0, right: 0, width: 1, height: "100%", background: "var(--grid-line)" }} />
     </div>

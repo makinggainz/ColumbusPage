@@ -31,7 +31,7 @@ html {
   --accent: #0066CC;
   --container-padding: 20px;
   --page-padding: calc(var(--container-padding) + 18px); /* matches navbar logo/hamburger edges */
-  --grid-line: rgba(20, 60, 160, 0.6);
+  --grid-line: rgba(37, 99, 235, 0.6);
 }
 
 /* Dark section lateral constraint lines — for use-cases dark sections */
@@ -72,7 +72,7 @@ html {
   position: absolute;
   top: 0; left: 0;
   width: 1px; height: 100%;
-  background: linear-gradient(to bottom, transparent 0px, rgba(20,60,160,0.6) 72px, rgba(20,60,160,0.6) calc(100% - 72px), transparent 100%);
+  background: linear-gradient(to bottom, transparent 0px, rgba(37,99,235,0.6) 72px, rgba(37,99,235,0.6) calc(100% - 72px), transparent 100%);
   pointer-events: none;
   z-index: 1;
 }
@@ -81,7 +81,7 @@ html {
   position: absolute;
   top: 0; right: 0;
   width: 1px; height: 100%;
-  background: linear-gradient(to bottom, transparent 0px, rgba(20,60,160,0.6) 72px, rgba(20,60,160,0.6) calc(100% - 72px), transparent 100%);
+  background: linear-gradient(to bottom, transparent 0px, rgba(37,99,235,0.6) 72px, rgba(37,99,235,0.6) calc(100% - 72px), transparent 100%);
   pointer-events: none;
   z-index: 1;
 }
