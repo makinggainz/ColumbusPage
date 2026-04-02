@@ -529,8 +529,8 @@ export default function SectionCScroll() {
               style={{
                 fontStyle: "normal",
                 fontSize: 36,
-                lineHeight: "1.2",
-                letterSpacing: "-0.02em",
+                lineHeight: "1.1",
+                letterSpacing: "-0.04em",
                 color: "#FFFFFF",
                 opacity: 0,
               }}
@@ -801,8 +801,8 @@ export default function SectionCScroll() {
                   width: 874,
                   height: 134,
                   fontSize: 96,
-                  lineHeight: "1.2",
-                  letterSpacing: "-0.02em",
+                  lineHeight: "1.05",
+                  letterSpacing: "-0.04em",
                 }}
               >
                 GIS made effortless
@@ -824,8 +824,8 @@ export default function SectionCScroll() {
             >
               <blockquote
                 ref={elGQuote}
-                className="text-center font-medium text-[#111] max-w-[820px] leading-[1.2]"
-                style={{ fontSize: "clamp(20px,2.8vw,36px)", letterSpacing: "-0.02em", opacity: 0 }}
+                className="text-center font-medium text-[#111] max-w-[820px] leading-[1.55]"
+                style={{ fontSize: "clamp(20px,2.8vw,36px)", letterSpacing: "-0.01em", opacity: 0 }}
               >
                 &quot;Think of Columbus as ArcGIS and your best Data-scientist combined into one&quot;
               </blockquote>
@@ -948,8 +948,8 @@ export default function SectionCScroll() {
         style={{ background: "#f0ece4" }}
       >
         <p
-          className="text-center text-[#555] max-w-[580px] leading-normal"
-          style={{ fontSize: "clamp(20px,2.5vw,30px)", letterSpacing: "-0.02em" }}
+          className="text-center text-[#555] max-w-[580px] leading-[1.65]"
+          style={{ fontSize: "clamp(20px,2.5vw,30px)", letterSpacing: "-0.01em" }}
         >
           We&apos;ve also added abilities that will make your work <strong className="text-[#111] font-bold">faster,</strong> and your life{" "}
           <em className="font-bold not-italic text-[#2656c7]">easier.</em>

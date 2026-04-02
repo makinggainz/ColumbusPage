@@ -128,7 +128,7 @@ export default function PromptShowcase() {
   });
 
   return (
-    <section className="w-full py-24 md:py-32 overflow-hidden" style={{ backgroundColor: "#ffffff", paddingBottom: 100 }}>
+    <section className="w-full py-32 md:py-40 overflow-hidden" style={{ backgroundColor: "#ffffff", paddingBottom: 120 }}>
 
       {/* ═══ PART 1: See prompts you can ask ═══ */}
       <div data-prompt-area="part-1">
@@ -142,7 +142,7 @@ export default function PromptShowcase() {
         </p>
 
         <h2
-          className="font-medium text-[28px] md:text-[48px] lg:text-[64px] leading-[140%] tracking-[-0.02em] mt-3"
+          className="font-medium text-[28px] md:text-[48px] lg:text-[64px] leading-[1.05] tracking-[-0.04em] mt-3"
           style={fadeInStyle(headerVisible, 0.15)}
         >
           See prompts you can ask
@@ -273,7 +273,7 @@ export default function PromptShowcase() {
         <div className="absolute left-0 right-0 top-8 md:top-[72px] z-10 flex flex-row items-end justify-between">
           <div className="w-[320px] md:w-[480px] ml-[40px]">
           <h3
-            className="font-medium text-[28px] md:text-[36px] leading-[140%] tracking-[-0.02em] flex items-center whitespace-nowrap"
+            className="font-medium text-[28px] md:text-[36px] leading-[1.1] tracking-[-0.03em] flex items-center whitespace-nowrap"
             style={{
               background: "linear-gradient(90deg, #06096D 0%, #318BCA 100%)",
               WebkitBackgroundClip: "text",
@@ -284,7 +284,7 @@ export default function PromptShowcase() {
           >
             Ask about a drawn area
           </h3>
-          <p className="font-medium text-[26px] md:text-[32px] leading-[140%] tracking-[-0.02em] text-black mt-3 max-w-[334px]"
+          <p className="font-medium text-[22px] md:text-[28px] leading-[1.55] tracking-[-0.01em] text-black mt-4 max-w-[334px]"
             style={fadeInStyle(part2Visible, 0.15)}
           >
             Draw a specific space and ask
@@ -343,7 +343,7 @@ export default function PromptShowcase() {
           </div>
 
           {/* Bottom-left CTA — 30px below selected area card */}
-          <p className="mt-[30px] text-black font-medium text-[26px] md:text-[32px] leading-[140%] tracking-[-0.02em] max-w-[380px]"
+          <p className="mt-[30px] text-black font-medium text-[22px] md:text-[28px] leading-[1.55] tracking-[-0.01em] max-w-[380px]"
             style={fadeInStyle(part2Visible, 0.3)}
           >
             Or access full advanced data about the polygon.

@@ -22,7 +22,7 @@ function DatasetCard({
       <div className="p-4">
         <h4 className="text-[15px] font-medium text-[#111]">{title}</h4>
         <p className="text-[12px] text-[#6B7280] mt-1">{rows}</p>
-        <p className="text-[13px] text-[#6B7280] mt-2 leading-[140%]">{desc}</p>
+        <p className="text-[13px] text-[#6B7280] mt-2 leading-[1.6]">{desc}</p>
       </div>
     </div>
   );
@@ -78,10 +78,10 @@ const features: {
       <div>
         <div className="relative mb-10">
           <span className="absolute left-0 top-0 z-50 flex h-8 w-8 items-center justify-center rounded-br bg-black/80 text-[11px] font-bold text-white" aria-hidden>g2.1</span>
-          <h2 className="text-[32px] md:text-[40px] font-light text-[#111] leading-[1.15] tracking-[-0.02em] opacity-[0.62]">
+          <h2 className="text-[32px] md:text-[40px] font-light text-[#111] leading-[1.1] tracking-[-0.03em] opacity-[0.62]">
             Can't find relevant datasets for your research?
           </h2>
-          <h3 className="text-[32px] md:text-[40px] font-medium text-[#111] leading-[1.15] tracking-[-0.02em]">
+          <h3 className="text-[32px] md:text-[40px] font-medium text-[#111] leading-[1.1] tracking-[-0.03em]">
             Columbus has it.
           </h3>
         </div>
@@ -128,7 +128,7 @@ const features: {
 
         <div className="relative max-w-[900px] mb-10">
           <span className="absolute left-0 top-0 z-50 flex h-8 w-8 items-center justify-center rounded-br bg-black/80 text-[11px] font-bold text-white" aria-hidden>g2.4</span>
-          <p className="text-[24px] md:text-[28px] leading-[140%] text-[#111]">
+          <p className="text-[24px] md:text-[28px] leading-[1.55] tracking-[-0.01em] text-[#111]">
             The <span className="font-semibold">highest quality</span>, and most versatile
             data-sets for your critical research and decisions.
           </p>
@@ -246,7 +246,7 @@ export default function StickyScrollSection() {
           <div className="sticky top-20 px-8 py-[94px]">
             <div className="max-w-[270px]">
               <p className="text-[11px] font-medium tracking-[0.12em] uppercase text-[#9CA3AF] mb-3">{g1.label}</p>
-              <p className="text-[22px] font-normal leading-[1.3] tracking-[-0.02em] text-[#111] opacity-60">{g1.description}</p>
+              <p className="text-[22px] font-normal leading-[1.6] tracking-[-0.01em] text-[#111] opacity-60">{g1.description}</p>
             </div>
           </div>
         </div>
@@ -284,7 +284,7 @@ export default function StickyScrollSection() {
               <div className="sticky top-20 px-8 py-[94px]">
                 <div className="max-w-[270px]">
                   <p className="text-[11px] font-medium tracking-[0.12em] uppercase text-[#9CA3AF] mb-3">{feature.label}</p>
-                  <p className="text-[22px] font-normal leading-[1.3] tracking-[-0.02em] text-[#111] opacity-60">
+                  <p className="text-[22px] font-normal leading-[1.6] tracking-[-0.01em] text-[#111] opacity-60">
                     {feature.description}
                   </p>
                 </div>

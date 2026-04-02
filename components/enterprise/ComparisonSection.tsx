@@ -80,7 +80,7 @@ export default function ComparisonSection() {
   }, [columbusLoaded]);
 
   return (
-    <section ref={sectionRef} className="w-full bg-[#F4F3EB] py-20 lg:py-[140px]">
+    <section ref={sectionRef} className="w-full bg-[#F4F3EB] py-28 lg:py-[180px]">
       <style>{`
         @keyframes comparison-shimmer {
           0% { background-position: 100% 0; }
@@ -92,8 +92,8 @@ export default function ComparisonSection() {
 
         {/* Title */}
         <h2
-          className="font-light leading-[1.15] text-center whitespace-nowrap text-[36px] lg:text-[64px]"
-          style={{ letterSpacing: "-0.02em", ...fadeIn(visible, 0) }}
+          className="font-light leading-[1.05] text-center whitespace-nowrap text-[36px] lg:text-[64px]"
+          style={{ letterSpacing: "-0.04em", ...fadeIn(visible, 0) }}
         >
           See How We&apos;re Different
         </h2>
@@ -106,7 +106,7 @@ export default function ComparisonSection() {
           }}
           className="mt-8 w-full max-w-[759px] bg-white border-[1.5px] border-[#1B37CE]/25 rounded-[14px] px-6 py-5 flex items-center justify-between gap-6"
         >
-          <p className="text-[16px] md:text-[20px] font-medium leading-[140%] tracking-[-0.02em] text-left line-clamp-3 min-h-[4.2em]">
+          <p className="text-[16px] md:text-[20px] font-medium leading-[1.65] tracking-[-0.01em] text-left line-clamp-3 min-h-[4.2em]">
             {typedText}
             {typedText.length > 0 && typedText.length < FULL_TEXT.length && (
               <span className="inline-block w-[2px] h-[1.1em] bg-current align-middle ml-0.5 animate-pulse" />
@@ -128,7 +128,7 @@ export default function ComparisonSection() {
           <div style={fadeIn(visible, 0.3)} className="flex flex-col items-end text-center pr-20">
             <div className="w-full max-w-[467px]">
 
-              <h3 className="text-[48px] font-light leading-[1.15] mb-3 flex items-center justify-center gap-3" style={{ letterSpacing: "-0.02em" }}>
+              <h3 className="text-[48px] font-light leading-[1.05] mb-3 flex items-center justify-center gap-3" style={{ letterSpacing: "-0.03em" }}>
                 <Image src="/enterprise/logo.png" alt="columbus" width={42} height={42} />
                 <span style={columbusLoaded ? {} : loadingTextStyle}>Columbus LGM</span>
               </h3>
@@ -137,7 +137,7 @@ export default function ComparisonSection() {
                 <div className="relative w-full aspect-[467/319] rounded-[10px] overflow-hidden shadow-md">
                   <Image src="/enterprise/lgm.png" alt="lgm" fill className="object-cover scale-[1.15]" />
                 </div>
-                <ul className="mt-8 space-y-3 text-left w-full list-none pl-0 text-[16px] md:text-[20px] font-normal leading-[140%] tracking-[-0.02em] text-black">
+                <ul className="mt-8 space-y-4 text-left w-full list-none pl-0 text-[16px] md:text-[18px] font-normal leading-[1.65] tracking-[0em] text-black">
                   <li className="flex items-center gap-2"><span className="text-green-600">✔</span> Highest fidelity and fresh data</li>
                   <li className="flex items-center gap-2"><span className="text-green-600">✔</span> Understands space and coordinates</li>
                   <li className="flex items-center gap-2"><span className="text-green-600">✔</span> Spatial and contextual reasoning</li>
@@ -154,7 +154,7 @@ export default function ComparisonSection() {
           <div style={fadeIn(visible, 0.45)} className="flex flex-col items-start text-center pl-20">
             <div className="w-full max-w-[467px]">
 
-              <h3 className="text-[48px] font-light leading-[1.15] mb-3 text-center" style={{ letterSpacing: "-0.02em" }}>
+              <h3 className="text-[48px] font-light leading-[1.05] mb-3 text-center" style={{ letterSpacing: "-0.03em" }}>
                 <span style={basicLoaded ? {} : loadingTextStyle}>Basic AI</span>
               </h3>
 
@@ -162,7 +162,7 @@ export default function ComparisonSection() {
                 <div className="relative w-full aspect-[467/319] rounded-[10px] overflow-hidden">
                   <Image src="/enterprise/basic.png" alt="basic" fill className="object-cover opacity-90" />
                 </div>
-                <ul className="mt-8 space-y-3 text-left w-full list-none pl-0 text-[16px] md:text-[20px] font-normal leading-[140%] tracking-[-0.02em] text-black">
+                <ul className="mt-8 space-y-4 text-left w-full list-none pl-0 text-[16px] md:text-[18px] font-normal leading-[1.65] tracking-[0em] text-black">
                   <li className="flex items-center gap-2"><span className="text-black">✖</span> Regurgitates old articles about areas</li>
                   <li className="flex items-center gap-2">
                     <span className="text-black">✖</span> Hallucinates Coordinates 60% of time{" "}

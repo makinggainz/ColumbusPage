@@ -55,15 +55,15 @@ export default function EnterpriseHero() {
 
         {/* Heading */}
         <h1
-          className="mt-[40px] max-w-[1206px] text-white font-light leading-[1.15] text-[42px] md:text-[64px] lg:text-[96px]"
-          style={{ letterSpacing: "-0.02em", ...fadeIn(visible, 0.25) }}
+          className="mt-[40px] max-w-[1206px] text-white font-light leading-[1.05] text-[42px] md:text-[64px] lg:text-[96px]"
+          style={{ letterSpacing: "-0.04em", ...fadeIn(visible, 0.25) }}
         >
           GIS so easy, the janitor could be your new researcher
         </h1>
 
         {/* Subtext */}
         <p
-          className="mt-6 text-white font-light text-[24px] md:text-[32px] leading-[1.2] tracking-[-0.02em] max-w-[477px]"
+          className="mt-8 text-white font-light text-[20px] md:text-[26px] leading-[1.65] tracking-[-0.01em] max-w-[520px]"
           style={fadeIn(visible, 0.4)}
         >
           Simple, AI powered GIS for Site Selection, and more.

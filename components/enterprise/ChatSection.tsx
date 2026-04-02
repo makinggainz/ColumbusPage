@@ -2,7 +2,7 @@
 
 export default function ChatSection() {
   return (
-    <section className="w-full py-24 lg:py-[160px] flex flex-col items-center" style={{ backgroundColor: "#F4F3EB" }}>
+    <section className="w-full py-32 lg:py-[200px] flex flex-col items-center" style={{ backgroundColor: "#F4F3EB" }}>
 
       {/* Heading */}
       <h2
