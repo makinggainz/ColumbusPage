@@ -370,8 +370,8 @@ export default function EnterpriseHero() {
       {/* ── Text block ── */}
       <div className="flex flex-col items-center text-center px-6" style={reveal(visible, 0.1)}>
         <h1
-          className="font-light text-[#0A1344] leading-[1.2] text-[39px] md:text-[49px] lg:text-[61px]"
-          style={{ letterSpacing: "-0.02em", maxWidth: 900 }}
+          className="text-[#1D1D1F] leading-[1.1] text-[39px] md:text-[49px] lg:text-[76px]"
+          style={{ fontWeight: 500, letterSpacing: "-0.02em", maxWidth: 900 }}
         >
           An Agentic GIS platform
         </h1>
@@ -402,10 +402,10 @@ export default function EnterpriseHero() {
       {/* ── MacBook Pro mockup ── */}
       <div
         className="relative flex justify-center w-full"
-        style={{ marginTop: "clamp(48px, 6vw, 80px)", paddingLeft: "clamp(16px, 4vw, 48px)", paddingRight: "clamp(16px, 4vw, 48px)", ...reveal(visible, 0.22) }}
+        style={{ marginTop: "clamp(48px, 6vw, 80px)", paddingLeft: 20, paddingRight: 20, ...reveal(visible, 0.22) }}
       >
         {/* Mockup wrapper */}
-        <div style={{ width: "min(96%, 1380px)", position: "relative" }}>
+        <div style={{ width: "100%", maxWidth: 1287, position: "relative" }}>
 
           {/* ── Lid with 3D hinge ── */}
           <div

@@ -21,9 +21,9 @@ export function ConsumerEnterpriseToggle({ variant = "dark", active = "enterpris
 
   const containerClass = isDark
     ? `relative flex items-center rounded-full border border-white/[0.10] bg-white/[0.06] ${glassStyles.togglePill} ${glassStyles.togglePillHover}`
-    : `relative flex items-center rounded-full border border-[#0A1344]/[0.12] bg-[#0A1344]/[0.06] ${glassStyles.togglePillHover}`;
+    : `relative flex items-center rounded-full border border-[#0A1344]/[0.08] bg-[#0A1344]/[0.03] ${glassStyles.togglePillHover}`;
 
-  const baseClass = "flex-1 flex items-center justify-center rounded-full text-[15px] font-medium h-full tracking-[-0.01em] transition-colors duration-250";
+  const baseClass = "flex-1 flex items-center justify-center rounded-full text-[14px] font-normal h-full tracking-[-0.01em] transition-colors duration-250";
 
   const activeClass = isDark
     ? `${baseClass} text-white`
@@ -39,8 +39,8 @@ export function ConsumerEnterpriseToggle({ variant = "dark", active = "enterpris
         boxShadow: "inset 0 1px 0 rgba(255,255,255,0.22), 0 1px 4px rgba(0,0,0,0.40)",
       }
     : {
-        backgroundColor: "#0A1344",
-        boxShadow: "0 2px 6px rgba(10,19,68,0.25)",
+        backgroundColor: "rgba(10,19,68,0.55)",
+        boxShadow: "0 1px 4px rgba(10,19,68,0.12)",
       };
 
   const consumerActive = active === "consumer";
