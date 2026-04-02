@@ -551,7 +551,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                     opacity: isMenuOpen ? 1 : 0,
                     pointerEvents: isMenuOpen ? "auto" : "none",
                     borderBottom: isMenuOpen ? (isDark ? "1px solid rgba(255,255,255,0.08)" : "1px solid rgba(0,0,0,0.06)") : "none",
-                    borderRadius: "0 0 16px 16px",
+                    borderRadius: 0,
                     willChange: "max-height, opacity",
                     transition: isMenuOpen
                         ? "max-height 500ms cubic-bezier(0.05, 0.7, 0.1, 1), opacity 200ms ease"

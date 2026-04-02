@@ -155,7 +155,7 @@ export const SiteSelection = () => {
 
                 {/* Mobile UI */}
                 <div
-                  className="absolute overflow-hidden right-[5%]"
+                  className="absolute overflow-hidden right-[2%]"
                   style={{
                     bottom: 0,
                     height: "100%",
@@ -187,6 +187,7 @@ export const SiteSelection = () => {
 function PillToggle() {
   const [active, setActive] = useState(0);
   const [hovered, setHovered] = useState<number | null>(null);
+  const [pressed, setPressed] = useState<number | null>(null);
   const [indicator, setIndicator] = useState({ left: 0, width: 0, ready: false });
   const [hoverIndicator, setHoverIndicator] = useState({ left: 0, width: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
@@ -249,12 +250,15 @@ function PillToggle() {
             width: hoverIndicator.width,
             height: `calc(100% - ${INSET * 2}px)`,
             borderRadius: 24,
-            backgroundColor: "rgba(37,99,235,0.05)",
+            backgroundColor: pressed !== null && pressed !== active
+              ? "rgba(37,99,235,0.12)"
+              : "rgba(37,99,235,0.05)",
             opacity: hovered !== null && hovered !== active ? 1 : 0,
             transition: [
               "left 0.3s cubic-bezier(0.25, 1, 0.5, 1)",
               "width 0.3s cubic-bezier(0.25, 1, 0.5, 1)",
               "opacity 0.2s ease",
+              "background-color 0.1s ease",
             ].join(", "),
             pointerEvents: "none",
             zIndex: 1,
@@ -301,7 +305,9 @@ function PillToggle() {
             }}
             onClick={() => handleClick(i)}
             onMouseEnter={() => { setHovered(i); measureHover(i); }}
-            onMouseLeave={() => setHovered(null)}
+            onMouseLeave={() => { setHovered(null); setPressed(null); }}
+            onMouseDown={() => { if (i !== active) setPressed(i); }}
+            onMouseUp={() => setPressed(null)}
           >
             {label}
           </button>
