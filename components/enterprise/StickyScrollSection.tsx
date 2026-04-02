@@ -78,10 +78,10 @@ const features: {
       <div>
         <div className="relative mb-10">
           <span className="absolute left-0 top-0 z-50 flex h-8 w-8 items-center justify-center rounded-br bg-black/80 text-[11px] font-bold text-white" aria-hidden>g2.1</span>
-          <h2 className="text-[32px] md:text-[40px] font-semibold text-[#111] leading-[140%] opacity-[0.62]">
+          <h2 className="text-[32px] md:text-[40px] font-light text-[#111] leading-[1.15] tracking-[-0.02em] opacity-[0.62]">
             Can't find relevant datasets for your research?
           </h2>
-          <h3 className="text-[32px] md:text-[40px] font-semibold text-[#111]">
+          <h3 className="text-[32px] md:text-[40px] font-medium text-[#111] leading-[1.15] tracking-[-0.02em]">
             Columbus has it.
           </h3>
         </div>
@@ -139,7 +139,7 @@ const features: {
 
         <div className="relative bg-white border border-[#E6E6E6] rounded-[10px] p-10">
           <span className="absolute left-0 top-0 z-50 flex h-8 w-8 items-center justify-center rounded-br bg-black/80 text-[11px] font-bold text-white" aria-hidden>g2.5</span>
-          <h3 className="text-center text-[24px] font-semibold mb-2">
+          <h3 className="text-center text-[24px] font-medium tracking-[-0.02em] mb-2">
             Vetted, high-fidelity, and smart datasets
           </h3>
           <p className="text-center text-[#6B7280] text-[14px] mb-8">
@@ -203,7 +203,7 @@ const features: {
       <div className="relative w-full bg-white rounded-[10px] p-[64px] shadow-[0_30px_80px_rgba(0,0,0,0.08)] flex flex-col lg:flex-row items-center gap-[80px]">
         <span className="absolute left-0 top-0 z-50 flex h-8 w-8 items-center justify-center rounded-br bg-black/80 text-[11px] font-bold text-white" aria-hidden>g6.1</span>
         <div className="max-w-[520px]">
-          <h2 className="text-[28px] font-semibold mb-6">24/7 Help &amp; Columbus Bot</h2>
+          <h2 className="text-[28px] font-medium tracking-[-0.02em] mb-6">24/7 Help &amp; Columbus Bot</h2>
           <ul className="space-y-3 text-[18px] text-[#333]">
             <li>• Find relevant data sets,</li>
             <li>• Show you tips to use our platform,</li>
@@ -245,8 +245,8 @@ export default function StickyScrollSection() {
         <div className="hidden lg:block flex-shrink-0 w-[355px] bg-[#F4F3EB]">
           <div className="sticky top-20 px-8 py-[94px]">
             <div className="max-w-[270px]">
-              <p className="text-[11px] font-semibold tracking-[0.12em] uppercase text-[#9CA3AF] mb-3">{g1.label}</p>
-              <p className="text-[22px] font-semibold leading-[130%] tracking-[-0.02em] text-[#111] opacity-60">{g1.description}</p>
+              <p className="text-[11px] font-medium tracking-[0.12em] uppercase text-[#9CA3AF] mb-3">{g1.label}</p>
+              <p className="text-[22px] font-normal leading-[1.3] tracking-[-0.02em] text-[#111] opacity-60">{g1.description}</p>
             </div>
           </div>
         </div>
@@ -283,8 +283,8 @@ export default function StickyScrollSection() {
             <div className="bg-[#F4F3EB]">
               <div className="sticky top-20 px-8 py-[94px]">
                 <div className="max-w-[270px]">
-                  <p className="text-[11px] font-semibold tracking-[0.12em] uppercase text-[#9CA3AF] mb-3">{feature.label}</p>
-                  <p className="text-[22px] font-semibold leading-[130%] tracking-[-0.02em] text-[#111] opacity-60">
+                  <p className="text-[11px] font-medium tracking-[0.12em] uppercase text-[#9CA3AF] mb-3">{feature.label}</p>
+                  <p className="text-[22px] font-normal leading-[1.3] tracking-[-0.02em] text-[#111] opacity-60">
                     {feature.description}
                   </p>
                 </div>

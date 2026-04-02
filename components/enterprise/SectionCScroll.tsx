@@ -525,11 +525,11 @@ export default function SectionCScroll() {
           >
             <p
               ref={elA}
-              className="text-center font-normal flex items-center"
+              className="text-center font-light flex items-center"
               style={{
                 fontStyle: "normal",
                 fontSize: 36,
-                lineHeight: "140%",
+                lineHeight: "1.2",
                 letterSpacing: "-0.02em",
                 color: "#FFFFFF",
                 opacity: 0,
@@ -547,7 +547,7 @@ export default function SectionCScroll() {
           >
             <div
               ref={elBHl}
-              className="text-center font-normal text-white/70"
+              className="text-center font-light text-white/70"
               style={{ fontSize: "clamp(18px,2.5vw,32px)", letterSpacing: "-0.02em", opacity: 0 }}
             >
               This is your Legacy GIS
@@ -796,12 +796,12 @@ export default function SectionCScroll() {
                 Columbus Pro
               </div>
               <div
-                className="font-semibold flex items-center text-[#000000]"
+                className="font-medium flex items-center text-[#000000]"
                 style={{
                   width: 874,
                   height: 134,
                   fontSize: 96,
-                  lineHeight: "140%",
+                  lineHeight: "1.2",
                   letterSpacing: "-0.02em",
                 }}
               >
@@ -824,8 +824,8 @@ export default function SectionCScroll() {
             >
               <blockquote
                 ref={elGQuote}
-                className="text-center font-bold text-[#111] max-w-[820px] leading-snug"
-                style={{ fontSize: "clamp(20px,2.8vw,36px)", letterSpacing: "-0.03em", opacity: 0 }}
+                className="text-center font-medium text-[#111] max-w-[820px] leading-[1.2]"
+                style={{ fontSize: "clamp(20px,2.8vw,36px)", letterSpacing: "-0.02em", opacity: 0 }}
               >
                 &quot;Think of Columbus as ArcGIS and your best Data-scientist combined into one&quot;
               </blockquote>
@@ -968,7 +968,7 @@ export default function SectionCScroll() {
               >
                 {emoji}
               </div>
-              <div className="text-[13px] font-semibold text-[#333] text-center leading-snug">{label}</div>
+              <div className="text-[13px] font-medium text-[#333] text-center leading-snug">{label}</div>
             </div>
           ))}
         </div>

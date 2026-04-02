@@ -6,7 +6,7 @@ export default function ChatSection() {
 
       {/* Heading */}
       <h2
-        className="font-semibold text-center text-[28px] md:text-[36px] lg:text-[48px] leading-[140%]"
+        className="font-medium text-center text-[28px] md:text-[36px] lg:text-[48px] leading-[1.15] tracking-[-0.02em]"
         style={{
           background: "linear-gradient(90deg, #9B9B9B 0%, #0A1344 100%)",
           WebkitBackgroundClip: "text",

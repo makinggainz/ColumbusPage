@@ -55,16 +55,16 @@ export default function EnterpriseHero() {
 
         {/* Heading */}
         <h1
-          className="mt-[40px] max-w-[1206px] text-white font-normal leading-[110%] text-[42px] md:text-[64px] lg:text-[96px]"
-          style={{ color: "#ffffff", fontWeight: 300, letterSpacing: "-0.02em", ...fadeIn(visible, 0.25) }}
+          className="mt-[40px] max-w-[1206px] text-white font-light leading-[1.15] text-[42px] md:text-[64px] lg:text-[96px]"
+          style={{ letterSpacing: "-0.02em", ...fadeIn(visible, 0.25) }}
         >
           GIS so easy, the janitor could be your new researcher
         </h1>
 
         {/* Subtext */}
         <p
-          className="mt-6 text-white font-normal max-w-[477px]"
-          style={{ fontSize: "32px", letterSpacing: "-0.02em", lineHeight: "120%", ...fadeIn(visible, 0.4) }}
+          className="mt-6 text-white font-light text-[24px] md:text-[32px] leading-[1.2] tracking-[-0.02em] max-w-[477px]"
+          style={fadeIn(visible, 0.4)}
         >
           Simple, AI powered GIS for Site Selection, and more.
         </p>
@@ -72,8 +72,8 @@ export default function EnterpriseHero() {
         {/* CTA */}
         <Link
           href="/contact"
-          className="group mt-[25px] flex items-center gap-3 leading-none whitespace-nowrap hover:opacity-90 transition-all duration-300"
-          style={{ fontSize: 14, fontWeight: 500, height: 45, paddingLeft: 20, paddingRight: 16, backgroundColor: "white", color: "#1D1D1F", ...fadeIn(visible, 0.5) }}
+          className="group mt-[25px] flex items-center gap-3 text-[14px] font-medium leading-none whitespace-nowrap hover:opacity-90 transition-all duration-300"
+          style={{ height: 45, paddingLeft: 20, paddingRight: 16, backgroundColor: "white", color: "#1D1D1F", ...fadeIn(visible, 0.5) }}
         >
           <span className="transition-colors duration-300 group-hover:text-[#2563EB]">Talk to us</span>
           <svg className="transition-transform duration-300 group-hover:translate-x-0.5" width="10" height="18" viewBox="0 0 7 12" fill="none" stroke="#2563EB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
@@ -96,7 +96,7 @@ export default function EnterpriseHero() {
           </div>
 
           {/* Bottom Text */}
-          <p className="mt-10 text-white text-[32px] font-bold">
+          <p className="mt-10 text-white text-[32px] font-medium tracking-[-0.02em]">
             GIS made effortless
           </p>
         </div>

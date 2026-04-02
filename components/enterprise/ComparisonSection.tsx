@@ -92,8 +92,8 @@ export default function ComparisonSection() {
 
         {/* Title */}
         <h2
-          className="text-[64px] leading-[140%] text-center whitespace-nowrap max-md:text-[36px]"
-          style={{ fontWeight: 300, letterSpacing: "-0.02em", ...fadeIn(visible, 0) }}
+          className="font-light leading-[1.15] text-center whitespace-nowrap text-[36px] lg:text-[64px]"
+          style={{ letterSpacing: "-0.02em", ...fadeIn(visible, 0) }}
         >
           See How We&apos;re Different
         </h2>
@@ -128,7 +128,7 @@ export default function ComparisonSection() {
           <div style={fadeIn(visible, 0.3)} className="flex flex-col items-end text-center pr-20">
             <div className="w-full max-w-[467px]">
 
-              <h3 className="text-[48px] font-normal mb-3 flex items-center justify-center gap-3" style={{ fontWeight: 300, letterSpacing: "-0.02em" }}>
+              <h3 className="text-[48px] font-light leading-[1.15] mb-3 flex items-center justify-center gap-3" style={{ letterSpacing: "-0.02em" }}>
                 <Image src="/enterprise/logo.png" alt="columbus" width={42} height={42} />
                 <span style={columbusLoaded ? {} : loadingTextStyle}>Columbus LGM</span>
               </h3>
@@ -154,7 +154,7 @@ export default function ComparisonSection() {
           <div style={fadeIn(visible, 0.45)} className="flex flex-col items-start text-center pl-20">
             <div className="w-full max-w-[467px]">
 
-              <h3 className="text-[48px] font-normal mb-3 text-center" style={{ fontWeight: 300, letterSpacing: "-0.02em" }}>
+              <h3 className="text-[48px] font-light leading-[1.15] mb-3 text-center" style={{ letterSpacing: "-0.02em" }}>
                 <span style={basicLoaded ? {} : loadingTextStyle}>Basic AI</span>
               </h3>
 
