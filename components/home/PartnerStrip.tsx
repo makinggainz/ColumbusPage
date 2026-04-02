@@ -118,10 +118,6 @@ export const PartnerStrip = () => {
         </div>
       </div>
 
-      <div className="flex justify-center px-8 min-[1287px]:px-10 pb-20">
-        <div style={{ width: 958, maxWidth: "100%", height: 1, background: "var(--grid-line)" }} />
-      </div>
-
       <style jsx global>{`
         @keyframes partner-scroll {
           0%   { transform: translateX(0); }

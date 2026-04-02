@@ -35,12 +35,6 @@ const PH = {
   F: [1280 / 1560, 1.0],
 };
 
-const PHgk = {
-  G: [0, 180 / 640],
-  H: [180 / 640, 420 / 640],
-  IJ: [420 / 640, 1.0],
-};
-
 const PHRASE_D = "So we said bye to the noise";
 
 // ─── Static mocks (from reference HTML) ────────────────────────────────────
@@ -159,26 +153,10 @@ function ColumbusUIMock() {
   );
 }
 
-function HoloDots() {
-  return (
-    <div
-      className="absolute inset-0 opacity-80"
-      style={{
-        backgroundImage: "radial-gradient(circle,rgba(64,160,255,.4) 2px,transparent 2px)",
-        backgroundSize: "60px 60px",
-        animation: "holoDrift 8s linear infinite",
-      }}
-    />
-  );
-}
-
 export default function SectionCScroll() {
   const scroller = typeof document !== "undefined" ? document.documentElement : null;
 
   const trackAF = useRef<HTMLDivElement>(null);
-  const trackGK = useRef<HTMLDivElement>(null);
-  const trackLM = useRef<HTMLDivElement>(null);
-
   const elA = useRef<HTMLParagraphElement>(null);
   const layerB = useRef<HTMLDivElement>(null);
   const elBHl = useRef<HTMLDivElement>(null);
@@ -196,33 +174,10 @@ export default function SectionCScroll() {
   const elFImg = useRef<HTMLDivElement>(null);
   const elFTxt = useRef<HTMLDivElement>(null);
 
-  const layerG = useRef<HTMLDivElement>(null);
-  const elGQuote = useRef<HTMLQuoteElement>(null);
-  const elGAttr = useRef<HTMLDivElement>(null);
-  const layerH = useRef<HTMLDivElement>(null);
-  const elHLabels = useRef<HTMLDivElement>(null);
-  const elHPanels = useRef<HTMLDivElement>(null);
-  const layerIJ = useRef<HTMLDivElement>(null);
-  const ijBg = useRef<HTMLDivElement>(null);
-  const ijGif = useRef<HTMLDivElement>(null);
-  const ijOverlay = useRef<HTMLDivElement>(null);
-  const ijHl = useRef<HTMLParagraphElement>(null);
-  const ijSub = useRef<HTMLParagraphElement>(null);
-
-  const lmGifWrap = useRef<HTMLDivElement>(null);
-  const lmGif = useRef<HTMLDivElement>(null);
-  const lmHeadlineWrap = useRef<HTMLDivElement>(null);
-  const lmSubWrap = useRef<HTMLDivElement>(null);
-  const lmWords = useRef<(HTMLSpanElement | null)[]>([null, null, null]);
-  const lmSubs = useRef<(HTMLSpanElement | null)[]>([null, null, null, null]);
 
   function layoutTracks() {
     if (trackAF.current)
-      trackAF.current.style.height = (1560 * window.innerHeight) / 100 + "px";
-    if (trackGK.current)
-      trackGK.current.style.height = (560 * window.innerHeight) / 100 + "px";
-    if (trackLM.current)
-      trackLM.current.style.height = (340 * window.innerHeight) / 100 + "px";
+      trackAF.current.style.height = (900 * window.innerHeight) / 100 + "px";
   }
 
   function updateAF() {
@@ -326,122 +281,6 @@ export default function SectionCScroll() {
     s(elFTxt, { opacity: String(fTxt), transform: `translateY(${lerp(24, 0, fTxt)}px)` });
   }
 
-  function updateGK() {
-    if (!scroller || !trackGK.current) return;
-    const p = getProgress(trackGK.current, scroller);
-    const vh = window.innerHeight;
-    const vw = window.innerWidth;
-
-    const s = (el: { current: HTMLElement | null }, style: Partial<CSSStyleDeclaration>) => {
-      if (el.current) Object.assign(el.current.style, style);
-    };
-
-    const pG = norm(p, PHgk.G[0], PHgk.G[1]);
-    const gIn = easeOut(norm(pG, 0, 0.22));
-    s(elGQuote, { opacity: String(gIn) });
-    s(elGAttr, { opacity: String(easeOut(norm(pG, 0.1, 0.3))) });
-    if (pG > 0.7) {
-      const gOut = easeIn(norm(pG, 0.7, 0.88));
-      s(elGQuote, { opacity: String(Math.max(0, gIn * (1 - gOut))) });
-      s(elGAttr, { opacity: String(Math.max(0, gIn * (1 - gOut))) });
-    }
-
-    const hSlide = easeOut(norm(p, PHgk.H[0], PHgk.H[0] + (PHgk.H[1] - PHgk.H[0]) * 0.1));
-    if (layerH.current) layerH.current.style.transform = `translateY(${lerp(vh, 0, hSlide)}px)`;
-
-    const pH = norm(p, PHgk.H[0], PHgk.H[1]);
-    const hIn = easeOut(norm(pH, 0.1, 0.3));
-    s(elHLabels, { opacity: String(hIn), transform: `translateY(${lerp(60, 0, hIn)}px)` });
-    s(elHPanels, { opacity: String(hIn), transform: `translateY(${lerp(80, 0, hIn)}px)` });
-
-    const pIJ = norm(p, PHgk.IJ[0], PHgk.IJ[1]);
-    if (layerIJ.current) layerIJ.current.style.opacity = String(easeOut(norm(pIJ, 0, 0.08)));
-
-    const ijOverlayOp = Math.max(0, 1 - easeOut(norm(pIJ, 0, 0.18)) * 1.2);
-    s(ijOverlay, { opacity: String(ijOverlayOp) });
-    s(ijHl, { opacity: String(easeOut(norm(pIJ, 0.1, 0.28))) });
-
-    const shrinkT = easeOut(norm(pIJ, 0.35, 0.68));
-    const cardW = Math.min(vw * 0.48, 520);
-    const cardH = cardW * (9 / 16);
-    const gifW = lerp(vw, cardW, shrinkT);
-    const gifH = lerp(vh, cardH, shrinkT);
-    const gifTop = lerp(0, (vh - cardH) / 2, shrinkT);
-    const gifLeft = (vw - gifW) / 2;
-
-    if (ijGif.current) {
-      Object.assign(ijGif.current.style, {
-        width: gifW + "px",
-        height: gifH + "px",
-        left: gifLeft + "px",
-        top: gifTop + "px",
-        borderRadius: lerp(0, 18, shrinkT) + "px",
-        boxShadow:
-          shrinkT > 0.1
-            ? `0 ${lerp(0, 30, shrinkT)}px ${lerp(0, 80, shrinkT)}px rgba(0,0,0,${lerp(0, 0.35, shrinkT)})`
-            : "none",
-      });
-    }
-
-    const bgR = Math.round(lerp(0, 240, shrinkT));
-    const bgG2 = Math.round(lerp(0, 236, shrinkT));
-    const bgB = Math.round(lerp(0, 228, shrinkT));
-    s(ijBg, { background: `rgb(${bgR},${bgG2},${bgB})` });
-    if (layerIJ.current) layerIJ.current.style.background = `rgb(${bgR},${bgG2},${bgB})`;
-
-    const hlY = lerp(vh * 0.35, gifTop - 24, shrinkT);
-    if (ijHl.current) {
-      Object.assign(ijHl.current.style, {
-        top: hlY + "px",
-        left: "50%",
-        transform: "translate(-50%, -50%)",
-      });
-    }
-
-    const subIn = easeOut(norm(pIJ, 0.68, 0.85));
-    const subY = gifTop + gifH + lerp(60, 32, shrinkT);
-    if (ijSub.current) {
-      Object.assign(ijSub.current.style, {
-        opacity: String(subIn),
-        top: subY + "px",
-        left: "50%",
-        transform: `translate(-50%, 0) translateY(${lerp(20, 0, subIn)}px)`,
-      });
-    }
-  }
-
-  function updateLM() {
-    if (!scroller || !trackLM.current) return;
-    const p = getProgress(trackLM.current, scroller);
-
-    const gifT = easeOut(norm(p, 0, 0.2));
-    const gifW = Math.round(lerp(140, 400, gifT));
-    const gifH = Math.round(gifW * (9 / 16));
-    if (lmGif.current) {
-      lmGif.current.style.width = gifW + "px";
-      lmGif.current.style.height = gifH + "px";
-    }
-    if (lmGifWrap.current) lmGifWrap.current.style.opacity = String(easeOut(norm(p, 0, 0.15)));
-    if (lmHeadlineWrap.current) lmHeadlineWrap.current.style.width = gifW + "px";
-    if (lmSubWrap.current) lmSubWrap.current.style.width = gifW + "px";
-
-    const wThresh = [0.22, 0.3, 0.37];
-    lmWords.current.forEach((w, i) => {
-      if (!w) return;
-      const t = easeOut(norm(p, wThresh[i], wThresh[i] + 0.1));
-      w.style.opacity = String(t);
-      w.style.transform = `translateY(${lerp(40, 0, t)}px)`;
-    });
-
-    const sThresh = [0.48, 0.54, 0.6, 0.66];
-    lmSubs.current.forEach((w, i) => {
-      if (!w) return;
-      const t = easeOut(norm(p, sThresh[i], sThresh[i] + 0.08));
-      w.style.opacity = String(t);
-      w.style.transform = `translateY(${lerp(25, 0, t)}px)`;
-    });
-  }
-
   function updateNavTheme() {
     if (!scroller) return;
     if (trackAF.current) {
@@ -457,15 +296,6 @@ export default function SectionCScroll() {
         } else {
           layerF.current.removeAttribute("data-navbar-cta");
         }
-      }
-    }
-    if (trackGK.current) {
-      const p = getProgress(trackGK.current, scroller);
-      const pIJ = norm(p, PHgk.IJ[0], PHgk.IJ[1]);
-      if (p >= PHgk.IJ[0] && pIJ < 0.68) {
-        trackGK.current.setAttribute("data-navbar-theme", "dark");
-      } else {
-        trackGK.current.removeAttribute("data-navbar-theme");
       }
     }
   }
@@ -484,8 +314,6 @@ export default function SectionCScroll() {
         requestAnimationFrame(() => {
           pending = false;
           updateAF();
-          updateGK();
-          updateLM();
           updateNavTheme();
         });
       }
@@ -494,27 +322,16 @@ export default function SectionCScroll() {
     window.addEventListener("resize", () => {
       layoutTracks();
       updateAF();
-      updateGK();
-      updateLM();
       updateNavTheme();
     });
     layoutTracks();
     updateAF();
-    updateGK();
-    updateLM();
     updateNavTheme();
     return () => window.removeEventListener("scroll", onScroll);
   });
 
   return (
     <>
-      <style>{`
-        @keyframes holoDrift { from { background-position: 0 0 } to { background-position: 60px 60px } }
-        @keyframes holoSpin { from { transform: rotate(0deg) } to { transform: rotate(360deg) } }
-        .ij-holo { background-image: radial-gradient(circle,rgba(64,160,255,.4) 2px,transparent 2px); background-size: 60px 60px; animation: holoDrift 8s linear infinite; }
-        .ij-ring { position: absolute; border-radius: 50%; border: 2px solid rgba(64,160,255,.5); animation: holoSpin 3s linear infinite; }
-      `}</style>
-
       {/* ═══ Section AF ═══ */}
       <div ref={trackAF} className="relative">
         <div className="sticky top-0 h-screen w-full overflow-hidden" style={{ position: "sticky" }}>
@@ -812,275 +629,6 @@ export default function SectionCScroll() {
         </div>
       </div>
 
-      {/* ═══ Section GK ═══ */}
-      <div className="relative">
-        <div ref={trackGK} className="relative">
-          <div className="sticky top-0 h-screen w-full overflow-hidden" style={{ position: "sticky" }}>
-            {/* G */}
-            <div
-              ref={layerG}
-              className="absolute inset-0 flex flex-col items-center justify-center gap-5 px-[8vw] z-[1]"
-              style={{ background: "#f0ece4" }}
-            >
-              <blockquote
-                ref={elGQuote}
-                className="text-center font-medium text-[#111] max-w-[820px] leading-[1.55]"
-                style={{ fontSize: "clamp(20px,2.8vw,36px)", letterSpacing: "-0.01em", opacity: 0 }}
-              >
-                &quot;Think of Columbus as ArcGIS and your best Data-scientist combined into one&quot;
-              </blockquote>
-              <div
-                ref={elGAttr}
-                className="flex items-center gap-2 justify-center text-[#555]"
-                style={{ fontSize: "clamp(14px,1.5vw,18px)", opacity: 0 }}
-              >
-                <div
-                  className="w-7 h-7 rounded-full flex items-center justify-center text-[13px]"
-                  style={{ background: "linear-gradient(135deg,#8a6a4a,#5a4030)" }}
-                >
-                  👤
-                </div>
-                — Erick Lara
-              </div>
-            </div>
-
-            {/* H */}
-            <div
-              ref={layerH}
-              className="absolute inset-0 flex flex-col items-center justify-center gap-8 z-[2]"
-              style={{ background: "#f0ece4", transform: "translateY(100vh)" }}
-            >
-              <div
-                ref={elHLabels}
-                className="flex items-center gap-[clamp(16px,4vw,60px)]"
-                style={{ opacity: 0 }}
-              >
-                <span className="font-medium text-[#999]" style={{ fontSize: "clamp(13px,1.8vw,22px)", letterSpacing: "-0.02em" }}>
-                  Complex GeoCoding
-                </span>
-                <span className="text-[#bbb]" style={{ fontSize: "clamp(14px,1.8vw,20px)", letterSpacing: "0.08em" }}>
-                  ——›
-                </span>
-                <span className="font-bold text-[#111]" style={{ fontSize: "clamp(13px,1.8vw,22px)", letterSpacing: "-0.02em" }}>
-                  Simple Language prompts
-                </span>
-              </div>
-              <div
-                ref={elHPanels}
-                className="rounded-[20px] overflow-hidden flex-shrink-0"
-                style={{
-                  opacity: 0,
-                  width: "min(90vw, 900px)",
-                  aspectRatio: "16/10",
-                  boxShadow: "0 20px 60px rgba(0,0,0,0.12)",
-                }}
-              >
-                <img
-                  src="/enterprise/geocoding.png"
-                  alt="Geocoding to simple language"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-            </div>
-
-            {/* IJ: I = full-bleed gif, J = shrinks to center */}
-            <div
-              ref={layerIJ}
-              className="absolute inset-0 z-[3] bg-black"
-              style={{ opacity: 0 }}
-            >
-              <div ref={ijBg} className="absolute inset-0 z-0 pointer-events-none" />
-              <div
-                ref={ijGif}
-                className="absolute overflow-hidden z-[1]"
-                style={{ inset: 0 }}
-              >
-                <img
-                  src="/enterpriseIronManGifs/columbusSees.gif"
-                  alt=""
-                  className="absolute inset-0 w-full h-full object-cover"
-                />
-                <div ref={ijOverlay} className="absolute inset-0 bg-black/85 z-[2] pointer-events-none" />
-              </div>
-              <p
-                ref={ijHl}
-                className="absolute z-[5] font-[Geist]"
-                style={{
-                  width: "min(763px, 85vw)",
-                  height: 90,
-                  fontStyle: "normal",
-                  fontWeight: 700,
-                  fontSize: 64,
-                  lineHeight: "140%",
-                  display: "flex",
-                  alignItems: "center",
-                  textAlign: "center",
-                  letterSpacing: "-0.02em",
-                  background: "linear-gradient(0deg, #F4F3EB 0%, #5ABAC7 100%)",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                  backgroundClip: "text",
-                }}
-              >
-                This is Columbus at work.
-              </p>
-              <p
-                ref={ijSub}
-                className="absolute z-[5] text-center font-bold text-[#111] leading-snug"
-                style={{
-                  fontSize: "clamp(18px,2.5vw,32px)",
-                  letterSpacing: "-0.03em",
-                  opacity: 0,
-                }}
-              >
-                It sees everything all at once,
-                <br />
-                so you don&apos;t have to.
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* ═══ Section K ═══ */}
-      <div
-        className="flex flex-col items-center justify-center gap-10 py-16 px-[10vw]"
-        style={{ background: "#f0ece4" }}
-      >
-        <p
-          className="text-center text-[#555] max-w-[580px] leading-[1.65]"
-          style={{ fontSize: "clamp(20px,2.5vw,30px)", letterSpacing: "-0.01em" }}
-        >
-          We&apos;ve also added abilities that will make your work <strong className="text-[#111] font-bold">faster,</strong> and your life{" "}
-          <em className="font-bold not-italic text-[#2656c7]">easier.</em>
-        </p>
-        <div className="flex flex-wrap gap-12 justify-center">
-          {[
-            { emoji: "🚀", label: "Data Catalogue", bg: "linear-gradient(135deg,#3d6e3d,#4a7a4a)" },
-            { emoji: "🧭", label: "Predictive Datasets", bg: "linear-gradient(135deg,#2a3a5a,#3a4a6a)" },
-            { emoji: "🗺️", label: "Creative Heatmaps", bg: "linear-gradient(135deg,#b48020,#d06020)" },
-            { emoji: "🔬", label: "AI Research Audits", bg: "linear-gradient(135deg,#4a5a8a,#5a6a9a)" },
-          ].map(({ emoji, label, bg }) => (
-            <div key={label} className="flex flex-col items-center gap-3 w-32">
-              <div
-                className="w-28 h-28 rounded-full flex items-center justify-center text-4xl border-2 border-black/10 shadow-lg"
-                style={{ background: bg }}
-              >
-                {emoji}
-              </div>
-              <div className="text-[13px] font-medium text-[#333] text-center leading-snug">{label}</div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* ═══ Section LM ═══ */}
-      <div className="relative bg-white">
-        <div ref={trackLM} className="relative">
-          <div
-            className="sticky top-0 h-screen w-full overflow-hidden bg-white flex flex-col items-center justify-center gap-[clamp(16px,3vh,36px)] px-[8vw]"
-            style={{ position: "sticky" }}
-          >
-            <div
-              className="w-full max-w-[min(960px,92vw)] min-w-[400px] flex flex-col items-center gap-[clamp(16px,3vh,36px)]"
-            >
-              <div className="flex justify-center w-full">
-                <div
-                  ref={lmHeadlineWrap}
-                  className="flex flex-nowrap items-baseline justify-end gap-x-[clamp(10px,1.5vw,24px)] whitespace-nowrap"
-                  style={{ width: 140 }}
-                >
-                  <span
-                    ref={(el) => {
-                      if (el) lmWords.current[0] = el;
-                    }}
-                    className="inline-block font-extrabold leading-none opacity-0"
-                    style={{
-                      fontSize: "clamp(40px,6.5vw,88px)",
-                      letterSpacing: "-0.05em",
-                      color: "#111",
-                      willChange: "opacity,transform",
-                    }}
-                  >
-                    Use
-                  </span>
-                  <span
-                    ref={(el) => {
-                      if (el) lmWords.current[1] = el;
-                    }}
-                    className="inline-block font-extrabold leading-none opacity-0"
-                    style={{
-                      fontSize: "clamp(40px,6.5vw,88px)",
-                      letterSpacing: "-0.05em",
-                      color: "#2656c7",
-                      willChange: "opacity,transform",
-                    }}
-                  >
-                    Columbus
-                  </span>
-                  <span
-                    ref={(el) => {
-                      if (el) lmWords.current[2] = el;
-                    }}
-                    className="inline-block font-extrabold leading-none opacity-0"
-                    style={{
-                      fontSize: "clamp(40px,6.5vw,88px)",
-                      letterSpacing: "-0.05em",
-                      color: "#2656c7",
-                      willChange: "opacity,transform",
-                    }}
-                  >
-                    Pro,
-                  </span>
-                </div>
-              </div>
-
-              <div
-                ref={lmGifWrap}
-                className="flex justify-center w-full mb-[clamp(20px,3vh,40px)]"
-                style={{ opacity: 0 }}
-              >
-                <div
-                  ref={lmGif}
-                  className="rounded-2xl overflow-hidden shadow-xl bg-[#111] flex-shrink-0"
-                  style={{ width: 140, height: 79 }}
-                >
-                  <img
-                    src="/enterpriseIronManGifs/findTargets.gif"
-                    alt=""
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-              </div>
-
-              <div className="flex justify-center w-full">
-                <div
-                  ref={lmSubWrap}
-                  className="flex flex-nowrap items-baseline justify-start gap-x-[clamp(6px,1vw,14px)] whitespace-nowrap"
-                  style={{ width: 140 }}
-                >
-                  {["find", "your", "targets", "faster."].map((word, i) => (
-                    <span
-                      key={i}
-                      ref={(el) => {
-                        if (el) lmSubs.current[i] = el;
-                      }}
-                      className="inline-block font-medium text-[#555] opacity-0"
-                      style={{
-                        fontSize: "clamp(20px,3vw,40px)",
-                        letterSpacing: "-0.03em",
-                        willChange: "opacity,transform",
-                      }}
-                    >
-                      {word}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
     </>
   );
 }

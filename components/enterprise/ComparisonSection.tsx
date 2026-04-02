@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
+import { StructureGrid } from "./StructureGrid";
 
 const FULL_TEXT =
   "generate the fastest route for next tuesday 10am. It'll be a multi-stop route through Philadelphia. I've attached a file with vehicle type and each location.";
@@ -80,7 +81,8 @@ export default function ComparisonSection() {
   }, [columbusLoaded]);
 
   return (
-    <section ref={sectionRef} className="w-full bg-[#F4F3EB] py-28 lg:py-[180px]">
+    <section ref={sectionRef} className="relative w-full bg-white pt-8 pb-28 lg:pt-10 lg:pb-[180px]">
+      <StructureGrid />
       <style>{`
         @keyframes comparison-shimmer {
           0% { background-position: 100% 0; }
@@ -88,56 +90,71 @@ export default function ComparisonSection() {
         }
       `}</style>
 
-      <div className="max-w-[1287px] mx-auto px-8 md:px-10 flex flex-col items-center">
+      <div className="relative z-10 max-w-[1287px] mx-auto px-8 md:px-10 flex flex-col items-center">
 
-        {/* Title */}
+        {/* Title — Headline Medium */}
         <h2
-          className="font-light leading-[1.05] text-center whitespace-nowrap text-[36px] lg:text-[64px]"
-          style={{ letterSpacing: "-0.04em", ...fadeIn(visible, 0) }}
+          className="font-light leading-[1.05] text-center whitespace-nowrap text-[28px] lg:text-[44px]"
+          style={{ letterSpacing: "-0.03em", ...fadeIn(visible, 0) }}
         >
           See How We&apos;re Different
         </h2>
+
+        {/* For Any Query label */}
+        <p
+          className="mt-6 text-center"
+          style={{
+            fontSize: 13,
+            fontWeight: 600,
+            letterSpacing: "0.06em",
+            textTransform: "uppercase" as const,
+            color: "rgba(10,19,68,0.35)",
+            ...fadeIn(visible, 0.08),
+          }}
+        >
+          For Any Query:
+        </p>
 
         {/* Prompt Box */}
         <div
           style={{
             ...fadeIn(visible, 0.15),
-            boxShadow: "0px 0px 30px 5px rgba(191, 197, 235, 0.25)",
+            boxShadow: "0px 0px 20px 3px rgba(191, 197, 235, 0.20)",
           }}
-          className="mt-8 w-full max-w-[759px] bg-white border-[1.5px] border-[#1B37CE]/25 rounded-[14px] px-6 py-5 flex items-center justify-between gap-6"
+          className="mt-4 w-full max-w-[600px] bg-white border border-[#1B37CE]/20 rounded-[10px] px-5 py-4 flex items-center justify-between gap-4"
         >
-          <p className="text-[16px] md:text-[20px] font-medium leading-[1.65] tracking-[-0.01em] text-left line-clamp-3 min-h-[4.2em]">
+          <p className="text-[13px] md:text-[15px] font-medium leading-[1.6] tracking-[-0.01em] text-left line-clamp-3 min-h-[3.6em]">
             {typedText}
             {typedText.length > 0 && typedText.length < FULL_TEXT.length && (
               <span className="inline-block w-[2px] h-[1.1em] bg-current align-middle ml-0.5 animate-pulse" />
             )}
           </p>
 
-          <button className="flex-shrink-0 w-[54px] h-[55px] rounded-[11px] bg-[#0A1344] flex items-center justify-center text-white">
+          <button className="flex-shrink-0 w-[42px] h-[42px] rounded-[8px] bg-[#0A1344] flex items-center justify-center text-white text-sm">
             →
           </button>
         </div>
 
         {/* Comparison */}
-        <div className="mt-20 w-full grid lg:grid-cols-2 gap-0 relative">
+        <div className="mt-14 w-full grid lg:grid-cols-2 gap-0 relative">
 
           {/* Divider */}
           <div className="hidden lg:block absolute left-1/2 top-0 bottom-0 w-[1px] bg-[#DADADA] opacity-50" />
 
           {/* Columbus LGM */}
-          <div style={fadeIn(visible, 0.3)} className="flex flex-col items-end text-center pr-20">
-            <div className="w-full max-w-[467px]">
+          <div style={fadeIn(visible, 0.3)} className="flex flex-col items-end text-center pr-14">
+            <div className="w-full max-w-[380px]">
 
-              <h3 className="text-[48px] font-light leading-[1.05] mb-3 flex items-center justify-center gap-3" style={{ letterSpacing: "-0.03em" }}>
-                <Image src="/enterprise/logo.png" alt="columbus" width={42} height={42} />
+              <h3 className="text-[32px] font-light leading-[1.05] mb-2 flex items-center justify-center gap-2" style={{ letterSpacing: "-0.03em" }}>
+                <Image src="/enterprise/logo.png" alt="columbus" width={28} height={28} />
                 <span style={columbusLoaded ? {} : loadingTextStyle}>Columbus LGM</span>
               </h3>
 
               <div style={fadeIn(columbusLoaded, 0)}>
-                <div className="relative w-full aspect-[467/319] rounded-[10px] overflow-hidden shadow-md">
+                <div className="relative w-full aspect-[467/319] rounded-[8px] overflow-hidden shadow-md">
                   <Image src="/enterprise/lgm.png" alt="lgm" fill className="object-cover scale-[1.15]" />
                 </div>
-                <ul className="mt-8 space-y-4 text-left w-full list-none pl-0 text-[16px] md:text-[18px] font-normal leading-[1.65] tracking-[0em] text-black">
+                <ul className="mt-5 space-y-3 text-left w-full list-none pl-0 text-[13px] md:text-[14px] font-normal leading-[1.6] tracking-[0em] text-black">
                   <li className="flex items-center gap-2"><span className="text-green-600">✔</span> Highest fidelity and fresh data</li>
                   <li className="flex items-center gap-2"><span className="text-green-600">✔</span> Understands space and coordinates</li>
                   <li className="flex items-center gap-2"><span className="text-green-600">✔</span> Spatial and contextual reasoning</li>
@@ -151,22 +168,22 @@ export default function ComparisonSection() {
           </div>
 
           {/* Basic AI */}
-          <div style={fadeIn(visible, 0.45)} className="flex flex-col items-start text-center pl-20">
-            <div className="w-full max-w-[467px]">
+          <div style={fadeIn(visible, 0.45)} className="flex flex-col items-start text-center pl-14">
+            <div className="w-full max-w-[380px]">
 
-              <h3 className="text-[48px] font-light leading-[1.05] mb-3 text-center" style={{ letterSpacing: "-0.03em" }}>
+              <h3 className="text-[32px] font-light leading-[1.05] mb-2 text-center" style={{ letterSpacing: "-0.03em" }}>
                 <span style={basicLoaded ? {} : loadingTextStyle}>Basic AI</span>
               </h3>
 
               <div style={fadeIn(basicLoaded, 0)}>
-                <div className="relative w-full aspect-[467/319] rounded-[10px] overflow-hidden">
+                <div className="relative w-full aspect-[467/319] rounded-[8px] overflow-hidden">
                   <Image src="/enterprise/basic.png" alt="basic" fill className="object-cover opacity-90" />
                 </div>
-                <ul className="mt-8 space-y-4 text-left w-full list-none pl-0 text-[16px] md:text-[18px] font-normal leading-[1.65] tracking-[0em] text-black">
+                <ul className="mt-5 space-y-3 text-left w-full list-none pl-0 text-[13px] md:text-[14px] font-normal leading-[1.6] tracking-[0em] text-black">
                   <li className="flex items-center gap-2"><span className="text-black">✖</span> Regurgitates old articles about areas</li>
                   <li className="flex items-center gap-2">
                     <span className="text-black">✖</span> Hallucinates Coordinates 60% of time{" "}
-                    <span className="text-blue-600">Source</span>
+                    <span className="text-blue-600 text-[12px]">Source</span>
                   </li>
                   <li className="flex items-center gap-2"><span className="text-black">✖</span> Limited data reach</li>
                   <li className="flex items-center gap-2"><span className="text-black">✖</span> Text outputs, no map or GIS</li>

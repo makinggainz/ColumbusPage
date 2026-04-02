@@ -1,4 +1,6 @@
 import EnterpriseHero from "@/components/enterprise/EnterpriseHero";
+import ProblemCards from "@/components/enterprise/ProblemCards";
+import SolutionShowcase from "@/components/enterprise/SolutionShowcase";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import SectionCScroll from "@/components/enterprise/SectionCScroll";
@@ -7,7 +9,7 @@ import ChatSection from "@/components/enterprise/ChatSection";
 import PromptShowcase from "@/components/enterprise/PromptShowcase";
 import StickyScrollSection from "@/components/enterprise/StickyScrollSection";
 
-const sectionLabels = ["a", "b", "c", "d", "e", "g", "m", "n"] as const;
+const sectionLabels = ["a", "b", "b2", "b3", "c", "d", "e", "g", "m", "n"] as const;
 
 function SectionWithLabel({
   label,
@@ -39,21 +41,27 @@ export default function EnterprisePage() {
         <EnterpriseHero />
       </SectionWithLabel>
       <SectionWithLabel label={sectionLabels[2]}>
-        <SectionCScroll />
+        <ProblemCards />
       </SectionWithLabel>
       <SectionWithLabel label={sectionLabels[3]}>
-        <ComparisonSection/>
+        <SolutionShowcase />
       </SectionWithLabel>
       <SectionWithLabel label={sectionLabels[4]}>
-        <PromptShowcase/>
+        <ComparisonSection />
       </SectionWithLabel>
       <SectionWithLabel label={sectionLabels[5]}>
-        <StickyScrollSection />
+        <SectionCScroll />
       </SectionWithLabel>
       <SectionWithLabel label={sectionLabels[6]}>
-        <ChatSection/>
+        <PromptShowcase />
       </SectionWithLabel>
       <SectionWithLabel label={sectionLabels[7]}>
+        <StickyScrollSection />
+      </SectionWithLabel>
+      <SectionWithLabel label={sectionLabels[8]}>
+        <ChatSection />
+      </SectionWithLabel>
+      <SectionWithLabel label={sectionLabels[9]}>
         <Footer theme="light-blue" />
       </SectionWithLabel>
     </main>

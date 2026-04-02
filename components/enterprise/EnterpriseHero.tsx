@@ -378,19 +378,24 @@ export default function EnterpriseHero() {
 
         <p
           className="mt-5"
-          style={{ fontSize: "clamp(15px, 1.3vw, 19px)", color: "rgba(10,19,68,0.45)", letterSpacing: "-0.01em", fontWeight: 400, maxWidth: 480 }}
+          style={{ fontSize: 21, color: "rgba(10,19,68,0.45)", letterSpacing: "-0.01em", fontWeight: 400, maxWidth: 480 }}
         >
           GIS so easy, the janitor could be your new researcher
         </p>
 
         <Link
           href="/contact"
-          className="flex items-center justify-center mt-8 whitespace-nowrap transition-colors duration-200"
-          style={{ height: 46, paddingLeft: 28, paddingRight: 28, fontSize: 15, fontWeight: 400, color: "#0A1344", border: "1px solid rgba(10,19,68,0.30)", letterSpacing: "-0.01em", backgroundColor: "transparent" }}
-          onMouseEnter={e => { (e.currentTarget as HTMLElement).style.backgroundColor = "rgba(10,19,68,0.06)"; }}
-          onMouseLeave={e => { (e.currentTarget as HTMLElement).style.backgroundColor = "transparent"; }}
+          className="group flex items-center justify-between mt-8 whitespace-nowrap hover:opacity-90 transition-all duration-300"
+          style={{ height: 45, paddingLeft: 20, paddingRight: 16, fontSize: 14, fontWeight: 500, letterSpacing: "-0.01em", backgroundColor: "#000000", color: "white", gap: 12 }}
         >
-          Talk to us
+          <span className="transition-colors duration-300 group-hover:text-[#2563EB]">Talk to us</span>
+          <svg
+            className="transition-transform duration-300 group-hover:translate-x-0.5"
+            width="10" height="18" viewBox="0 0 7 12" fill="none"
+            stroke="#2563EB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"
+          >
+            <path d="M1 1l5 5-5 5" />
+          </svg>
         </Link>
       </div>
 
