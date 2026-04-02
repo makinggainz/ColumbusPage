@@ -34,16 +34,7 @@ export default function EnterpriseHero() {
   }, []);
 
   return (
-    <section ref={sectionRef} data-navbar-theme="dark" className="relative w-full overflow-hidden h-[1853px]">
-
-      {/* Background */}
-      <Image
-        src="/enterprise/HeroImage.png"
-        alt=""
-        fill
-        priority
-        className="object-cover"
-      />
+    <section ref={sectionRef} className="relative w-full overflow-hidden bg-white">
 
       {/* Content */}
       <div className="relative z-10 flex flex-col items-center text-center px-6 pt-[140px] pb-[140px]">
@@ -55,7 +46,7 @@ export default function EnterpriseHero() {
 
         {/* Heading */}
         <h1
-          className="mt-[40px] max-w-[1206px] text-white font-light leading-[1.05] text-[42px] md:text-[64px] lg:text-[96px]"
+          className="mt-[40px] max-w-[1206px] text-[#0A1344] font-light leading-[1.05] text-[42px] md:text-[64px] lg:text-[96px]"
           style={{ letterSpacing: "-0.04em", ...fadeIn(visible, 0.25) }}
         >
           GIS so easy, the janitor could be your new researcher
@@ -63,7 +54,7 @@ export default function EnterpriseHero() {
 
         {/* Subtext */}
         <p
-          className="mt-8 text-white font-light text-[20px] md:text-[26px] leading-[1.65] tracking-[-0.01em] max-w-[520px]"
+          className="mt-8 text-[#4B5563] font-light text-[20px] md:text-[26px] leading-[1.65] tracking-[-0.01em] max-w-[520px]"
           style={fadeIn(visible, 0.4)}
         >
           Simple, AI powered GIS for Site Selection, and more.
@@ -73,10 +64,10 @@ export default function EnterpriseHero() {
         <Link
           href="/contact"
           className="group mt-[25px] flex items-center gap-3 text-[14px] font-medium leading-none whitespace-nowrap hover:opacity-90 transition-all duration-300"
-          style={{ height: 45, paddingLeft: 20, paddingRight: 16, backgroundColor: "white", color: "#1D1D1F", ...fadeIn(visible, 0.5) }}
+          style={{ height: 45, paddingLeft: 20, paddingRight: 16, backgroundColor: "#0A1344", color: "white", ...fadeIn(visible, 0.5) }}
         >
-          <span className="transition-colors duration-300 group-hover:text-[#2563EB]">Talk to us</span>
-          <svg className="transition-transform duration-300 group-hover:translate-x-0.5" width="10" height="18" viewBox="0 0 7 12" fill="none" stroke="#2563EB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+          <span className="transition-colors duration-300 group-hover:text-[#93C5FD]">Talk to us</span>
+          <svg className="transition-transform duration-300 group-hover:translate-x-0.5" width="10" height="18" viewBox="0 0 7 12" fill="none" stroke="#93C5FD" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
             <path d="M1 1l5 5-5 5" />
           </svg>
         </Link>
@@ -96,7 +87,7 @@ export default function EnterpriseHero() {
           </div>
 
           {/* Bottom Text */}
-          <p className="mt-10 text-white text-[32px] font-medium tracking-[-0.02em]">
+          <p className="mt-10 text-[#0A1344] text-[32px] font-medium tracking-[-0.02em]">
             GIS made effortless
           </p>
         </div>
