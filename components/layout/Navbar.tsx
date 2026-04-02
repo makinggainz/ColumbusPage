@@ -418,7 +418,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                         ["--cta-right" as string]: wide ? "52px" : "46px",
                                     }}>
                                         <Link
-                                            href="/products/mapsgpt"
+                                            href="/contact"
                                             className={`group flex items-center justify-between leading-none whitespace-nowrap transition-all duration-300 ${isUseCasesPage ? (isDark ? "hover:bg-white!" : "hover:opacity-90") : "hover:opacity-90"} ${wide ? glassStyles.btn : ""}`}
                                             style={{
                                                 fontSize: 14,

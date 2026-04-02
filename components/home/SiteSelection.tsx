@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import { GridSection, gl } from "./ContentGrid";
 import glassStyles from "@/components/ui/GlassButton.module.css";
 
-const PILLS = ["Map Chat", "Agentic Audits", "AI Research Reports", "Data Catalogue"];
+const PILLS = ["Map Chat", "Agentic Audits", "Agentic Research", "Data Catalogue"];
 const INSET = 4;
 
 export const SiteSelection = () => {
@@ -186,7 +186,9 @@ export const SiteSelection = () => {
 /* ── Pill Toggle ── */
 function PillToggle() {
   const [active, setActive] = useState(0);
+  const [hovered, setHovered] = useState<number | null>(null);
   const [indicator, setIndicator] = useState({ left: 0, width: 0, ready: false });
+  const [hoverIndicator, setHoverIndicator] = useState({ left: 0, width: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
   const buttonRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
@@ -203,6 +205,24 @@ function PillToggle() {
     });
   };
 
+  const measureHover = (idx: number) => {
+    const btn = buttonRefs.current[idx];
+    const container = containerRef.current;
+    if (!btn || !container) return;
+    const bRect = btn.getBoundingClientRect();
+    const cRect = container.getBoundingClientRect();
+    setHoverIndicator({
+      left: bRect.left - cRect.left + INSET,
+      width: bRect.width - INSET * 2,
+    });
+  };
+
+  const handleClick = (i: number) => {
+    if (i === active) return;
+    setActive(i);
+    measure(i);
+  };
+
   useEffect(() => { measure(0); }, []);
 
   return (
@@ -215,13 +235,33 @@ function PillToggle() {
           height: 56,
           borderRadius: 28,
           overflow: "hidden",
-          backgroundColor: "rgba(255, 255, 255, 0.65)",
-          backdropFilter: "blur(12px)",
-          WebkitBackdropFilter: "blur(12px)",
-          boxShadow: "inset 0 1px 2px rgba(0,0,0,0.04), 0 2px 12px rgba(0,0,0,0.06)",
+          backgroundColor: "#ffffff",
+          boxShadow: "0 4px 20px rgba(0,0,0,0.12)",
         }}
       >
-        {/* Sliding indicator */}
+        {/* Hover highlight */}
+        <div
+          aria-hidden
+          style={{
+            position: "absolute",
+            top: INSET,
+            left: hoverIndicator.left,
+            width: hoverIndicator.width,
+            height: `calc(100% - ${INSET * 2}px)`,
+            borderRadius: 24,
+            backgroundColor: "rgba(37,99,235,0.05)",
+            opacity: hovered !== null && hovered !== active ? 1 : 0,
+            transition: [
+              "left 0.3s cubic-bezier(0.25, 1, 0.5, 1)",
+              "width 0.3s cubic-bezier(0.25, 1, 0.5, 1)",
+              "opacity 0.2s ease",
+            ].join(", "),
+            pointerEvents: "none",
+            zIndex: 1,
+          }}
+        />
+
+        {/* Active sliding indicator */}
         <div
           aria-hidden
           style={{
@@ -231,16 +271,16 @@ function PillToggle() {
             width: indicator.width,
             height: `calc(100% - ${INSET * 2}px)`,
             borderRadius: 24,
-            backgroundColor: "rgba(255, 255, 255, 0.9)",
+            backgroundColor: "#0A1344",
             boxShadow: "0 1px 4px rgba(0,0,0,0.08)",
             opacity: indicator.ready ? 1 : 0,
             transition: [
-              "left 0.45s cubic-bezier(0.25, 1, 0.5, 1)",
-              "width 0.45s cubic-bezier(0.25, 1, 0.5, 1)",
-              "opacity 0.2s ease",
+              "left 0.35s cubic-bezier(0.34, 1.15, 0.64, 1)",
+              "width 0.35s cubic-bezier(0.34, 1.15, 0.64, 1)",
+              "opacity 0.15s ease",
             ].join(", "),
             pointerEvents: "none",
-            zIndex: 1,
+            zIndex: 2,
           }}
         />
 
@@ -249,23 +289,19 @@ function PillToggle() {
             key={label}
             ref={el => { buttonRefs.current[i] = el; }}
             type="button"
-            onClick={() => { setActive(i); measure(i); }}
             className="h-full flex items-center justify-center whitespace-nowrap relative cursor-pointer"
             style={{
               fontSize: 16,
               fontWeight: 500,
               letterSpacing: "-0.01em",
               padding: "0 24px",
-              zIndex: 2,
-              color: active === i ? "#1D1D1F" : "rgba(29,29,31,0.5)",
-              transition: "color 0.35s cubic-bezier(0.25, 1, 0.5, 1)",
+              zIndex: 3,
+              color: active === i ? "#ffffff" : hovered === i ? "#1D1D1F" : "rgba(29,29,31,0.6)",
+              transition: "color 0.25s ease",
             }}
-            onMouseEnter={e => {
-              if (active !== i) (e.currentTarget as HTMLElement).style.color = "rgba(29,29,31,0.75)";
-            }}
-            onMouseLeave={e => {
-              if (active !== i) (e.currentTarget as HTMLElement).style.color = "rgba(29,29,31,0.5)";
-            }}
+            onClick={() => handleClick(i)}
+            onMouseEnter={() => { setHovered(i); measureHover(i); }}
+            onMouseLeave={() => setHovered(null)}
           >
             {label}
           </button>

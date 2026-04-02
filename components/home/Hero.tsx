@@ -1347,7 +1347,7 @@ export const Hero = () => {
             transition: "opacity 750ms ease 150ms, filter 750ms ease 150ms, transform 750ms ease 150ms",
           }}>
             <a
-              href="mailto:contact@columbus.earth"
+              href="/contact"
               className="group flex items-center justify-between gap-3 leading-none rounded-none hover:opacity-90 transition-opacity"
               style={{ width: 145, height: 45, marginRight: 16, paddingLeft: 20, paddingRight: 16, fontSize: 16, fontWeight: 500, backgroundColor: "#000000", color: "white" }}
             >
