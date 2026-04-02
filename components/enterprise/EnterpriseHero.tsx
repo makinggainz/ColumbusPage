@@ -440,16 +440,16 @@ export default function EnterpriseHero() {
                   boxShadow: "0 40px 100px rgba(0,0,0,0.30), 0 12px 32px rgba(0,0,0,0.16)",
                 }}
               >
-                {/* Screen bezel */}
+                {/* Screen bezel — thin modern MacBook style */}
                 <div
                   style={{
                     position: "absolute",
-                    top: "4%",
-                    left: "3%",
-                    right: "3%",
+                    top: "1.8%",
+                    left: "1.2%",
+                    right: "1.2%",
                     bottom: 0,
                     backgroundColor: "#000",
-                    borderRadius: "clamp(6px, 0.8vw, 10px) clamp(6px, 0.8vw, 10px) 0 0",
+                    borderRadius: "clamp(4px, 0.6vw, 8px) clamp(4px, 0.6vw, 8px) 0 0",
                     overflow: "hidden",
                   }}
                 >
@@ -460,10 +460,10 @@ export default function EnterpriseHero() {
                       top: 0,
                       left: "50%",
                       transform: "translateX(-50%)",
-                      width: "clamp(10px, 1.2vw, 16px)",
-                      height: "clamp(4px, 0.5vw, 7px)",
+                      width: "clamp(8px, 1vw, 14px)",
+                      height: "clamp(3px, 0.35vw, 5px)",
                       backgroundColor: "#1D1D1F",
-                      borderRadius: "0 0 4px 4px",
+                      borderRadius: "0 0 3px 3px",
                       zIndex: 10,
                     }}
                   />
