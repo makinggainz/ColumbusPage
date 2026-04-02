@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import glassStyles from "@/components/ui/GlassButton.module.css";
 
 const PILLS = ["Map Chat", "Agentic Audits", "Agentic Research Reports", "Data Catalogue"];
-const INSET = 4; // gap between outer pill edge and inner indicator (all sides)
+const INSET = 4;
 
 export function EnterprisePillsToggle() {
   const [active, setActive] = useState(0);
