@@ -38,6 +38,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
     const pathname = usePathname();
     const isProductsPage = pathname === "/products/mapsgpt";
     const isUseCasesPage = pathname === "/use-cases";
+    const isEnterprisePage = pathname === "/products/enterprise";
     const showWordmarkOnMobile = pathname === "/" || pathname === "/our-mission" || pathname === "/contact";
     const navRef = useRef<HTMLElement>(null);
     const dropdownRef = useRef<HTMLDivElement>(null);
@@ -435,6 +436,8 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                                 transition: `width ${t}, opacity 300ms ease, padding ${t}, background-color 300ms ease, color 300ms ease`,
                                                 ...(wide
                                                     ? { backdropFilter: "blur(6px)", WebkitBackdropFilter: "blur(6px)" }
+                                                    : isEnterprisePage
+                                                    ? { backgroundColor: "rgba(0, 0, 0, 0.10)", color: "#0A1344" }
                                                     : isUseCasesPage
                                                     ? { backgroundColor: isDark ? "rgba(255, 255, 255, 0.10)" : "#000000", color: isDark ? "white" : "white" }
                                                     : { backgroundColor: "#000000", color: "white" }),

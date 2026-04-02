@@ -334,7 +334,6 @@ export default function EnterpriseHero() {
     return () => clearInterval(id);
   }, [phase]);
 
-  const lidOpen = phase !== "idle" && phase !== "opening";
   const windowVisible = phase === "windowed" || phase === "typing" || phase === "done";
   const showTyped = phase === "typing" || phase === "done";
 
@@ -364,7 +363,7 @@ export default function EnterpriseHero() {
       />
       {/* ── Toggle ── */}
       <div className="flex justify-center pt-32 pb-10 px-6" style={reveal(visible, 0)}>
-        <ConsumerEnterpriseToggle variant="light" active="enterprise" />
+        <ConsumerEnterpriseToggle variant="dark" active="enterprise" glass={false} />
       </div>
 
       {/* ── Text block ── */}
@@ -399,303 +398,196 @@ export default function EnterpriseHero() {
         </Link>
       </div>
 
-      {/* ── MacBook Pro mockup ── */}
+      {/* ── Product screenshot ── */}
       <div
         className="relative flex justify-center w-full"
         style={{ marginTop: "clamp(48px, 6vw, 80px)", paddingLeft: 20, paddingRight: 20, ...reveal(visible, 0.22) }}
       >
-        {/* Mockup wrapper */}
         <div style={{ width: "100%", maxWidth: 1287, position: "relative" }}>
-
-          {/* ── Lid with 3D hinge ── */}
+          {/* Image container */}
           <div
             style={{
               position: "relative",
               width: "100%",
-              paddingBottom: "63%",
-              perspective: "2400px",
-              perspectiveOrigin: "50% 100%",
+              aspectRatio: "16 / 9",
+              borderRadius: "clamp(8px, 1vw, 16px)",
+              overflow: "hidden",
+              boxShadow: "none",
             }}
           >
-            <div
-              style={{
-                position: "absolute",
-                inset: 0,
-                transformOrigin: "50% 100%",
-                transform: lidOpen ? "rotateX(0deg)" : "rotateX(-76deg)",
-                transition: phase === "opening"
-                  ? "transform 1.1s cubic-bezier(0.22, 1, 0.36, 1)"
-                  : phase === "idle"
-                  ? "none"
-                  : "none",
-              }}
-            >
-              {/* Outer chassis */}
-              <div
-                style={{
-                  position: "absolute",
-                  inset: 0,
-                  backgroundColor: "#1D1D1F",
-                  borderRadius: "clamp(10px, 1.4vw, 20px) clamp(10px, 1.4vw, 20px) 0 0",
-                  boxShadow: "0 40px 100px rgba(0,0,0,0.30), 0 12px 32px rgba(0,0,0,0.16)",
-                }}
-              >
-                {/* Screen bezel — thin modern MacBook style */}
-                <div
-                  style={{
-                    position: "absolute",
-                    top: "1.8%",
-                    left: "1.2%",
-                    right: "1.2%",
-                    bottom: 0,
-                    backgroundColor: "#000",
-                    borderRadius: "clamp(4px, 0.6vw, 8px) clamp(4px, 0.6vw, 8px) 0 0",
-                    overflow: "hidden",
-                  }}
-                >
-                  {/* Camera notch */}
-                  <div
-                    style={{
-                      position: "absolute",
-                      top: 0,
-                      left: "50%",
-                      transform: "translateX(-50%)",
-                      width: "clamp(8px, 1vw, 14px)",
-                      height: "clamp(3px, 0.35vw, 5px)",
-                      backgroundColor: "#1D1D1F",
-                      borderRadius: "0 0 3px 3px",
-                      zIndex: 10,
-                    }}
+            {/* Wallpaper background with blur */}
+            <Image
+              src="/ProductBackgroundImageHome.png"
+              alt=""
+              fill
+              className="object-cover object-center"
+              style={{}}
+              priority
+            />
+
+            {/* App window */}
+            <div style={{
+              position: "absolute", top: "4%", left: "3%", right: "3%", bottom: "4%",
+              zIndex: 2, borderRadius: "clamp(4px,0.5vw,8px)",
+              overflow: "hidden",
+              boxShadow: "0 16px 56px rgba(0,0,0,0.42), 0 4px 14px rgba(0,0,0,0.22), 0 0 0 1px rgba(255,255,255,0.14)",
+              display: "flex", flexDirection: "column",
+              backgroundColor: "#fff",
+              opacity: windowVisible ? 1 : 0,
+              transform: windowVisible ? "scale(1) translateY(0)" : "scale(0.96) translateY(10px)",
+              transition: "opacity 0.5s cubic-bezier(0.22,1,0.36,1), transform 0.5s cubic-bezier(0.22,1,0.36,1)",
+            }}>
+
+              {/* Window title bar */}
+              <div style={{
+                height: "6%", minHeight: 20,
+                backgroundColor: "#F5F5F7",
+                borderBottom: "1px solid rgba(0,0,0,0.10)",
+                display: "flex", alignItems: "center",
+                paddingLeft: "1.5%", gap: "0.55%", flexShrink: 0, position: "relative",
+              }}>
+                {(["#FF5F57","#FEBC2E","#28C840"] as const).map(c => (
+                  <div key={c} style={{ width: "1.3%", aspectRatio: "1", minWidth: 7, borderRadius: "50%", backgroundColor: c }} />
+                ))}
+                <div style={{
+                  position: "absolute", left: "50%", transform: "translateX(-50%)",
+                  height: "62%", width: "20%", minWidth: 60,
+                  backgroundColor: "rgba(0,0,0,0.07)", border: "1px solid rgba(0,0,0,0.09)",
+                  borderRadius: 3, display: "flex", alignItems: "center", justifyContent: "center",
+                }}>
+                  <span style={{ fontSize: "clamp(6px,0.65vw,10px)", color: "rgba(0,0,0,0.40)", userSelect: "none" }}>columbus.earth/pro</span>
+                </div>
+              </div>
+
+              {/* App top navbar */}
+              <div style={{
+                height: "7%", minHeight: 22,
+                backgroundColor: "#fff",
+                borderBottom: "1px solid rgba(0,0,0,0.08)",
+                display: "flex", alignItems: "center",
+                paddingLeft: "1.2%", paddingRight: "1.5%",
+                flexShrink: 0, gap: "0.8%",
+              }}>
+                <div style={{ display: "flex", flexDirection: "column", gap: "0.3vw", marginRight: "0.6%" }}>
+                  {[0,1,2].map(i => <div key={i} style={{ width: "clamp(8px,1.1vw,14px)", height: "1px", backgroundColor: "#0A1344" }} />)}
+                </div>
+                <div style={{ width: "clamp(10px,1.4vw,18px)", height: "clamp(10px,1.4vw,18px)", borderRadius: "50%", backgroundColor: "#0A1344", opacity: 0.85 }} />
+                <span style={{ fontSize: "clamp(7px,0.75vw,11px)", fontWeight: 600, color: "#0A1344", letterSpacing: "-0.01em" }}>Columbus</span>
+                <span style={{ fontSize: "clamp(6px,0.65vw,10px)", color: "rgba(10,19,68,0.35)" }}>/</span>
+                <span style={{ fontSize: "clamp(6px,0.65vw,10px)", color: "rgba(10,19,68,0.45)" }}>untitled chat</span>
+                <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: "0.8%" }}>
+                  {["Report View","Save Mapshot","Edits not saved"].map((label, i) => (
+                    <div key={label} style={{
+                      height: "clamp(12px,1.4vw,20px)",
+                      paddingLeft: "0.6%", paddingRight: "0.6%",
+                      border: `1px solid ${i === 2 ? "transparent" : "rgba(10,19,68,0.18)"}`,
+                      borderRadius: 3,
+                      display: "flex", alignItems: "center",
+                      fontSize: "clamp(5px,0.58vw,9px)", color: i === 2 ? "rgba(10,19,68,0.35)" : "#0A1344",
+                      whiteSpace: "nowrap",
+                    }}>{label}</div>
+                  ))}
+                </div>
+              </div>
+
+              {/* App body */}
+              <div style={{ flex: 1, display: "flex", overflow: "hidden", minHeight: 0 }}>
+                {/* Icon sidebar */}
+                <div style={{
+                  width: "4.5%", minWidth: 16,
+                  backgroundColor: "#fff",
+                  borderRight: "1px solid rgba(0,0,0,0.07)",
+                  display: "flex", flexDirection: "column",
+                  alignItems: "center", paddingTop: "2%", gap: "1.8%",
+                  flexShrink: 0,
+                }}>
+                  {[
+                    <svg key="grid" viewBox="0 0 16 16" fill="none" style={{ width: "55%", maxWidth: 12 }}>
+                      <rect x="1" y="1" width="6" height="6" rx="1" stroke="#0A1344" strokeWidth="1.2" opacity="0.5"/>
+                      <rect x="9" y="1" width="6" height="6" rx="1" stroke="#0A1344" strokeWidth="1.2" opacity="0.5"/>
+                      <rect x="1" y="9" width="6" height="6" rx="1" stroke="#0A1344" strokeWidth="1.2" opacity="0.5"/>
+                      <rect x="9" y="9" width="6" height="6" rx="1" stroke="#0A1344" strokeWidth="1.2" opacity="0.5"/>
+                    </svg>,
+                    <div key="active" style={{ width: "55%", maxWidth: 12, aspectRatio: "1", borderRadius: "50%", backgroundColor: "#0A1344" }} />,
+                    <svg key="check" viewBox="0 0 16 16" fill="none" style={{ width: "55%", maxWidth: 12 }}>
+                      <rect x="1" y="1" width="14" height="14" rx="2" stroke="#0A1344" strokeWidth="1.2" opacity="0.4"/>
+                      <path d="M4 8l3 3 5-5" stroke="#0A1344" strokeWidth="1.2" strokeLinecap="round" opacity="0.4"/>
+                    </svg>,
+                    <svg key="layers" viewBox="0 0 16 16" fill="none" style={{ width: "55%", maxWidth: 12 }}>
+                      <path d="M8 1L14 5L8 9L2 5L8 1Z" stroke="#0A1344" strokeWidth="1.2" opacity="0.4"/>
+                      <path d="M2 9l6 4 6-4" stroke="#0A1344" strokeWidth="1.2" strokeLinecap="round" opacity="0.4"/>
+                    </svg>,
+                  ]}
+                </div>
+
+                {/* Chat panel */}
+                <div style={{
+                  width: "30%",
+                  backgroundColor: "#fff",
+                  borderRight: "1px solid rgba(0,0,0,0.07)",
+                  display: "flex", flexDirection: "column",
+                  flexShrink: 0, position: "relative",
+                }}>
+                  <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", padding: "8% 6%" }}>
+                    {showTyped ? (
+                      <span style={{ fontSize: "clamp(7px,0.85vw,13px)", color: "#0A1344", letterSpacing: "-0.01em", lineHeight: 1.4, alignSelf: "flex-start", width: "100%" }}>
+                        {typed}
+                        <span style={{ opacity: cursorOn ? 1 : 0, transition: "opacity 0.1s", borderRight: "1.5px solid #0A1344", marginLeft: 1 }}>&nbsp;</span>
+                      </span>
+                    ) : (
+                      <span style={{ fontSize: "clamp(7px,0.85vw,13px)", fontWeight: 500, color: "#0A1344", letterSpacing: "-0.01em" }}>
+                        Where should we begin?
+                      </span>
+                    )}
+                  </div>
+                  <div style={{
+                    height: "11%", minHeight: 18,
+                    borderTop: "1px solid rgba(0,0,0,0.07)",
+                    display: "flex", alignItems: "center",
+                    paddingLeft: "5%", paddingRight: "3%", gap: "3%",
+                    flexShrink: 0,
+                  }}>
+                    <span style={{ fontSize: "clamp(6px,0.65vw,10px)", color: "rgba(10,19,68,0.30)", flex: 1 }}>Ask Columbus</span>
+                    <div style={{
+                      width: "clamp(12px,1.6vw,22px)", height: "clamp(12px,1.6vw,22px)",
+                      borderRadius: "50%", backgroundColor: "#0A1344",
+                      display: "flex", alignItems: "center", justifyContent: "center",
+                    }}>
+                      <svg viewBox="0 0 10 10" fill="none" style={{ width: "50%" }}>
+                        <path d="M2 8L8 2M8 2H4M8 2V6" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Map panel */}
+                <div style={{ flex: 1, position: "relative", overflow: "hidden" }}>
+                  <Image
+                    src="/enterprise/mapchat.png"
+                    alt=""
+                    fill
+                    className="object-cover object-center"
                   />
-
-                  {/* ── Desktop: wallpaper + floating app window ── */}
-                  <div style={{ position: "relative", width: "100%", height: "100%" }}>
-
-                    {/* Wallpaper */}
-                    <Image
-                      src="/ProductBackgroundImageHome.png"
-                      alt=""
-                      fill
-                      className="object-cover object-center"
-                      priority
-                    />
-
-                    {/* macOS menu bar */}
-                    <div style={{
-                      position: "absolute", top: 0, left: 0, right: 0, zIndex: 2,
-                      height: "3.5%", minHeight: 14,
-                      backgroundColor: "rgba(236,238,245,0.55)",
-                      backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)",
-                      borderBottom: "1px solid rgba(0,0,0,0.08)",
-                      display: "flex", alignItems: "center", paddingLeft: "1.5%", gap: "0.8%",
-                    }}>
-                      {["rgba(0,0,0,0.55)","rgba(0,0,0,0.25)","rgba(0,0,0,0.25)","rgba(0,0,0,0.25)","rgba(0,0,0,0.18)"].map((c, i) => (
-                        <div key={i} style={{ width: `${[0.9,1.8,2.4,1.8,1.4][i]}%`, height: "45%", backgroundColor: c, borderRadius: 2, minWidth: 4 }} />
-                      ))}
-                    </div>
-
-                    {/* Floating app window */}
-                    <div style={{
-                      position: "absolute", top: "7%", left: "4%", right: "4%", bottom: "3%",
-                      zIndex: 3, borderRadius: "clamp(4px,0.5vw,8px)",
-                      overflow: "hidden",
-                      boxShadow: "0 16px 56px rgba(0,0,0,0.42), 0 4px 14px rgba(0,0,0,0.22), 0 0 0 1px rgba(255,255,255,0.14)",
-                      display: "flex", flexDirection: "column",
-                      backgroundColor: "#fff",
-                      opacity: windowVisible ? 1 : 0,
-                      transform: windowVisible ? "scale(1) translateY(0)" : "scale(0.96) translateY(10px)",
-                      transition: "opacity 0.5s cubic-bezier(0.22,1,0.36,1), transform 0.5s cubic-bezier(0.22,1,0.36,1)",
-                    }}>
-
-                      {/* Window title bar */}
-                      <div style={{
-                        height: "6%", minHeight: 20,
-                        backgroundColor: "#F5F5F7",
-                        borderBottom: "1px solid rgba(0,0,0,0.10)",
-                        display: "flex", alignItems: "center",
-                        paddingLeft: "1.5%", gap: "0.55%", flexShrink: 0, position: "relative",
-                      }}>
-                        {(["#FF5F57","#FEBC2E","#28C840"] as const).map(c => (
-                          <div key={c} style={{ width: "1.3%", aspectRatio: "1", minWidth: 7, borderRadius: "50%", backgroundColor: c }} />
-                        ))}
-                        <div style={{
-                          position: "absolute", left: "50%", transform: "translateX(-50%)",
-                          height: "62%", width: "20%", minWidth: 60,
-                          backgroundColor: "rgba(0,0,0,0.07)", border: "1px solid rgba(0,0,0,0.09)",
-                          borderRadius: 3, display: "flex", alignItems: "center", justifyContent: "center",
-                        }}>
-                          <span style={{ fontSize: "clamp(6px,0.65vw,10px)", color: "rgba(0,0,0,0.40)", userSelect: "none" }}>columbus.earth/pro</span>
-                        </div>
-                      </div>
-
-                      {/* App top navbar */}
-                      <div style={{
-                        height: "7%", minHeight: 22,
-                        backgroundColor: "#fff",
-                        borderBottom: "1px solid rgba(0,0,0,0.08)",
-                        display: "flex", alignItems: "center",
-                        paddingLeft: "1.2%", paddingRight: "1.5%",
-                        flexShrink: 0, gap: "0.8%",
-                      }}>
-                        {/* Hamburger */}
-                        <div style={{ display: "flex", flexDirection: "column", gap: "0.3vw", marginRight: "0.6%" }}>
-                          {[0,1,2].map(i => <div key={i} style={{ width: "clamp(8px,1.1vw,14px)", height: "1px", backgroundColor: "#0A1344" }} />)}
-                        </div>
-                        {/* Logo mark */}
-                        <div style={{ width: "clamp(10px,1.4vw,18px)", height: "clamp(10px,1.4vw,18px)", borderRadius: "50%", backgroundColor: "#0A1344", opacity: 0.85 }} />
-                        <span style={{ fontSize: "clamp(7px,0.75vw,11px)", fontWeight: 600, color: "#0A1344", letterSpacing: "-0.01em" }}>Columbus</span>
-                        <span style={{ fontSize: "clamp(6px,0.65vw,10px)", color: "rgba(10,19,68,0.35)" }}>/</span>
-                        <span style={{ fontSize: "clamp(6px,0.65vw,10px)", color: "rgba(10,19,68,0.45)" }}>untitled chat</span>
-                        {/* Right actions */}
-                        <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: "0.8%" }}>
-                          {["Report View","Save Mapshot","Edits not saved"].map((label, i) => (
-                            <div key={label} style={{
-                              height: "clamp(12px,1.4vw,20px)",
-                              paddingLeft: "0.6%", paddingRight: "0.6%",
-                              border: `1px solid ${i === 2 ? "transparent" : "rgba(10,19,68,0.18)"}`,
-                              borderRadius: 3,
-                              display: "flex", alignItems: "center",
-                              fontSize: "clamp(5px,0.58vw,9px)", color: i === 2 ? "rgba(10,19,68,0.35)" : "#0A1344",
-                              whiteSpace: "nowrap",
-                            }}>{label}</div>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* App body */}
-                      <div style={{ flex: 1, display: "flex", overflow: "hidden", minHeight: 0 }}>
-
-                        {/* Icon sidebar */}
-                        <div style={{
-                          width: "4.5%", minWidth: 16,
-                          backgroundColor: "#fff",
-                          borderRight: "1px solid rgba(0,0,0,0.07)",
-                          display: "flex", flexDirection: "column",
-                          alignItems: "center", paddingTop: "2%", gap: "1.8%",
-                          flexShrink: 0,
-                        }}>
-                          {[
-                            <svg key="grid" viewBox="0 0 16 16" fill="none" style={{ width: "55%", maxWidth: 12 }}>
-                              <rect x="1" y="1" width="6" height="6" rx="1" stroke="#0A1344" strokeWidth="1.2" opacity="0.5"/>
-                              <rect x="9" y="1" width="6" height="6" rx="1" stroke="#0A1344" strokeWidth="1.2" opacity="0.5"/>
-                              <rect x="1" y="9" width="6" height="6" rx="1" stroke="#0A1344" strokeWidth="1.2" opacity="0.5"/>
-                              <rect x="9" y="9" width="6" height="6" rx="1" stroke="#0A1344" strokeWidth="1.2" opacity="0.5"/>
-                            </svg>,
-                            <div key="active" style={{ width: "55%", maxWidth: 12, aspectRatio: "1", borderRadius: "50%", backgroundColor: "#0A1344" }} />,
-                            <svg key="check" viewBox="0 0 16 16" fill="none" style={{ width: "55%", maxWidth: 12 }}>
-                              <rect x="1" y="1" width="14" height="14" rx="2" stroke="#0A1344" strokeWidth="1.2" opacity="0.4"/>
-                              <path d="M4 8l3 3 5-5" stroke="#0A1344" strokeWidth="1.2" strokeLinecap="round" opacity="0.4"/>
-                            </svg>,
-                            <svg key="layers" viewBox="0 0 16 16" fill="none" style={{ width: "55%", maxWidth: 12 }}>
-                              <path d="M8 1L14 5L8 9L2 5L8 1Z" stroke="#0A1344" strokeWidth="1.2" opacity="0.4"/>
-                              <path d="M2 9l6 4 6-4" stroke="#0A1344" strokeWidth="1.2" strokeLinecap="round" opacity="0.4"/>
-                            </svg>,
-                          ]}
-                        </div>
-
-                        {/* Chat panel */}
-                        <div style={{
-                          width: "30%",
-                          backgroundColor: "#fff",
-                          borderRight: "1px solid rgba(0,0,0,0.07)",
-                          display: "flex", flexDirection: "column",
-                          flexShrink: 0, position: "relative",
-                        }}>
-                          {/* Empty state / typed message */}
-                          <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", padding: "8% 6%" }}>
-                            {showTyped ? (
-                              <span style={{ fontSize: "clamp(7px,0.85vw,13px)", color: "#0A1344", letterSpacing: "-0.01em", lineHeight: 1.4, alignSelf: "flex-start", width: "100%" }}>
-                                {typed}
-                                <span style={{ opacity: cursorOn ? 1 : 0, transition: "opacity 0.1s", borderRight: "1.5px solid #0A1344", marginLeft: 1 }}>&nbsp;</span>
-                              </span>
-                            ) : (
-                              <span style={{ fontSize: "clamp(7px,0.85vw,13px)", fontWeight: 500, color: "#0A1344", letterSpacing: "-0.01em" }}>
-                                Where should we begin?
-                              </span>
-                            )}
-                          </div>
-                          {/* Input bar */}
-                          <div style={{
-                            height: "11%", minHeight: 18,
-                            borderTop: "1px solid rgba(0,0,0,0.07)",
-                            display: "flex", alignItems: "center",
-                            paddingLeft: "5%", paddingRight: "3%", gap: "3%",
-                            flexShrink: 0,
-                          }}>
-                            <span style={{ fontSize: "clamp(6px,0.65vw,10px)", color: "rgba(10,19,68,0.30)", flex: 1 }}>Ask Columbus</span>
-                            <div style={{
-                              width: "clamp(12px,1.6vw,22px)", height: "clamp(12px,1.6vw,22px)",
-                              borderRadius: "50%", backgroundColor: "#0A1344",
-                              display: "flex", alignItems: "center", justifyContent: "center",
-                            }}>
-                              <svg viewBox="0 0 10 10" fill="none" style={{ width: "50%" }}>
-                                <path d="M2 8L8 2M8 2H4M8 2V6" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                              </svg>
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* Map panel */}
-                        <div style={{ flex: 1, position: "relative", overflow: "hidden" }}>
-                          <Image
-                            src="/enterprise/mapchat.png"
-                            alt=""
-                            fill
-                            className="object-cover object-center"
-                          />
-                          {/* Zoom controls */}
-                          <div style={{
-                            position: "absolute", right: "2%", top: "50%", transform: "translateY(-50%)",
-                            display: "flex", flexDirection: "column", gap: 1,
-                            backgroundColor: "#fff",
-                            border: "1px solid rgba(0,0,0,0.12)",
-                            borderRadius: 4, overflow: "hidden",
-                          }}>
-                            {["+","−"].map(s => (
-                              <div key={s} style={{
-                                width: "clamp(12px,1.5vw,20px)", height: "clamp(12px,1.5vw,20px)",
-                                display: "flex", alignItems: "center", justifyContent: "center",
-                                fontSize: "clamp(8px,0.9vw,13px)", color: "#0A1344", cursor: "pointer",
-                                borderBottom: s === "+" ? "1px solid rgba(0,0,0,0.10)" : "none",
-                              }}>{s}</div>
-                            ))}
-                          </div>
-                        </div>
-
-                      </div>
-                    </div>
+                  <div style={{
+                    position: "absolute", right: "2%", top: "50%", transform: "translateY(-50%)",
+                    display: "flex", flexDirection: "column", gap: 1,
+                    backgroundColor: "#fff",
+                    border: "1px solid rgba(0,0,0,0.12)",
+                    borderRadius: 4, overflow: "hidden",
+                  }}>
+                    {["+","−"].map(s => (
+                      <div key={s} style={{
+                        width: "clamp(12px,1.5vw,20px)", height: "clamp(12px,1.5vw,20px)",
+                        display: "flex", alignItems: "center", justifyContent: "center",
+                        fontSize: "clamp(8px,0.9vw,13px)", color: "#0A1344", cursor: "pointer",
+                        borderBottom: s === "+" ? "1px solid rgba(0,0,0,0.10)" : "none",
+                      }}>{s}</div>
+                    ))}
                   </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          {/* ── Base ── */}
-          <div style={{ position: "relative", width: "100%" }}>
-            <div style={{ height: 3, backgroundColor: "#111" }} />
-            <div
-              style={{
-                height: "clamp(16px, 2.4vw, 32px)",
-                background: "linear-gradient(180deg, #2A2A2C 0%, #3A3A3C 100%)",
-                borderRadius: "0 0 4px 4px",
-                position: "relative",
-              }}
-            >
-              <div
-                style={{
-                  position: "absolute",
-                  bottom: "15%",
-                  left: "50%",
-                  transform: "translateX(-50%)",
-                  width: "clamp(44px, 7%, 90px)",
-                  height: "42%",
-                  backgroundColor: "rgba(255,255,255,0.05)",
-                  borderRadius: 3,
-                }}
-              />
-            </div>
-            <div style={{ height: "clamp(6px, 0.9vw, 12px)", background: "linear-gradient(180deg, #3A3A3C 0%, #505052 100%)", borderRadius: "0 0 8px 8px" }} />
-            <div style={{ height: "clamp(16px, 2.5vw, 32px)", background: "radial-gradient(ellipse 75% 100% at 50% 0%, rgba(0,0,0,0.20) 0%, transparent 100%)" }} />
           </div>
         </div>
       </div>
