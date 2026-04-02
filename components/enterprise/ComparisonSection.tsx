@@ -81,7 +81,7 @@ export default function ComparisonSection() {
   }, [columbusLoaded]);
 
   return (
-    <section ref={sectionRef} className="relative w-full bg-white pt-8 pb-28 lg:pt-10 lg:pb-[180px]">
+    <section ref={sectionRef} className="relative w-full pt-8 pb-28 lg:pt-10 lg:pb-[180px]">
       <StructureGrid />
       <style>{`
         @keyframes comparison-shimmer {

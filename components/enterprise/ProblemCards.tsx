@@ -33,12 +33,12 @@ export default function ProblemCards() {
   }, []);
 
   return (
-    <div ref={sectionRef} style={{ "--grid-line": "rgba(10,19,68,0.08)" } as React.CSSProperties}>
+    <div ref={sectionRef}>
       <GridSection
         style={{
           borderLeft: gl,
           borderTop: gl,
-          background: "radial-gradient(ellipse 80% 65% at 50% 105%, rgba(0, 102, 204, 0.12) 0%, rgba(0, 102, 204, 0.05) 55%, transparent 100%), #fff",
+          backgroundColor: "transparent",
         }}
       >
         {/* Header row — Hebbia-scale centered heading */}
@@ -74,10 +74,10 @@ export default function ProblemCards() {
             key={i}
             style={{
               padding: "48px 24px",
-              backgroundColor: "rgba(0, 102, 204, 0.06)",
-              borderRight: i < PAIN_POINTS.length - 1 ? "1px solid rgba(10,19,68,0.08)" : "none",
-              borderBottom: "1px solid rgba(10,19,68,0.08)",
-              borderTop: "1px solid rgba(10,19,68,0.08)",
+              backgroundColor: "transparent",
+              borderRight: i < PAIN_POINTS.length - 1 ? "1px solid var(--grid-line)" : "none",
+              borderBottom: "1px solid var(--grid-line)",
+              borderTop: "1px solid var(--grid-line)",
               fontSize: 15,
               fontWeight: 400,
               lineHeight: 1.5,

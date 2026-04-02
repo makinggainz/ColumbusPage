@@ -2,11 +2,9 @@
 
 /**
  * Blueprint-style structural grid of squares behind content sections.
- * Uses a repeating CSS background so cells are always perfectly square.
+ * Uses var(--grid-line) to match the home page line color.
  */
 export function StructureGrid({ cellSize = 80 }: { cellSize?: number }) {
-  const lineColor = "rgba(10,19,68,0.06)";
-
   return (
     <div
       className="absolute inset-0 pointer-events-none overflow-hidden"
@@ -18,11 +16,11 @@ export function StructureGrid({ cellSize = 80 }: { cellSize?: number }) {
         style={{
           width: "100%",
           maxWidth: 1287,
-          borderLeft: `1px solid ${lineColor}`,
-          borderRight: `1px solid ${lineColor}`,
+          borderLeft: "1px solid var(--grid-line)",
+          borderRight: "1px solid var(--grid-line)",
           backgroundImage:
-            `linear-gradient(to right, ${lineColor} 1px, transparent 1px), ` +
-            `linear-gradient(to bottom, ${lineColor} 1px, transparent 1px)`,
+            `linear-gradient(to right, var(--grid-line) 1px, transparent 1px), ` +
+            `linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px)`,
           backgroundSize: `${cellSize}px ${cellSize}px`,
         }}
       />

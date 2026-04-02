@@ -24,11 +24,11 @@ export default function SolutionShowcase() {
   }, []);
 
   return (
-    <div ref={sectionRef} style={{ "--grid-line": "rgba(10,19,68,0.08)" } as React.CSSProperties}>
+    <div ref={sectionRef}>
       <GridSection
         style={{
           borderLeft: gl,
-          background: "radial-gradient(ellipse 80% 65% at 50% -5%, rgba(0, 102, 204, 0.12) 0%, rgba(0, 102, 204, 0.05) 55%, transparent 100%), #fff",
+          backgroundColor: "transparent",
         }}
       >
         {/* Header row — Hebbia-scale centered heading + subtitle */}
