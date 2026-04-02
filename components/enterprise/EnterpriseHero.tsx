@@ -5,83 +5,257 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { ConsumerEnterpriseToggle } from "./ConsumerEnterpriseToggle";
 
-// Globe graticule — orthographic projection, globe centre offset to top-right
-function GlobeGraticule() {
-  const W = 480, H = 360;
-  const R = 420; // globe radius — large so only ~1/4 fits in the viewBox
-  // Place globe centre near top-right so just the lower-left quadrant is visible
-  const cx = W - 60, cy = 60;
+// ── Topographic contour map with 3D drawn effect ──
+// Height field + marching-squares extraction, computed once at module load
 
-  // Rotate so a mix of meridians and parallels arc nicely across the visible area
-  const tiltX = 25 * (Math.PI / 180);
-  const tiltY = -20 * (Math.PI / 180);
+const TOPO_W = 600;
+const TOPO_H = 500;
+const TOPO_CELL = 5;
+const TOPO_NX = Math.floor(TOPO_W / TOPO_CELL);
+const TOPO_NY = Math.floor(TOPO_H / TOPO_CELL);
 
-  function project(lon: number, lat: number): [number, number] | null {
-    const l = lon * (Math.PI / 180);
-    const p = lat * (Math.PI / 180);
-    // 3D point on unit sphere
-    let x = Math.cos(p) * Math.cos(l);
-    let y = Math.cos(p) * Math.sin(l);
-    let z = Math.sin(p);
-    // Apply tilt rotations
-    const y1 = y * Math.cos(tiltX) - z * Math.sin(tiltX);
-    const z1 = y * Math.sin(tiltX) + z * Math.cos(tiltX);
-    const x2 = x * Math.cos(tiltY) + z1 * Math.sin(tiltY);
-    const z2 = -x * Math.sin(tiltY) + z1 * Math.cos(tiltY);
-    // Only draw front hemisphere
-    if (z2 < 0) return null;
-    return [cx + x2 * R, cy - y1 * R];
+// Canyon / ridge chain running diagonally across the top-left corner
+function topoHeight(x: number, y: number): number {
+  // Diagonal axis — cliff edge runs at ~35° from top-left
+  const ang = 0.62;
+  const cosA = Math.cos(ang), sinA = Math.sin(ang);
+  const along = x * cosA + y * sinA;
+  const perp = -x * sinA + y * cosA;
+
+  // Organic undulations along the cliff edge
+  const wave =
+    28 * Math.sin(along * 0.015) +
+    18 * Math.sin(along * 0.033 + 1.8) +
+    9 * Math.sin(along * 0.064 + 0.7);
+  const ep = perp - wave;
+
+  // Main cliff face — sigmoid creates open contour lines
+  let h = 1.0 / (1 + Math.exp((ep + 10) / 32));
+
+  // Second parallel ridge — canyon depth
+  const wave2 = 14 * Math.sin(along * 0.022 + 2.5) + 8 * Math.sin(along * 0.05 + 1.0);
+  const ep2 = perp - wave2;
+  h += 0.3 / (1 + Math.exp((ep2 + 80) / 28));
+
+  // Third shelf further out — more distant ridge in the chain
+  const wave3 = 10 * Math.sin(along * 0.028 + 0.8);
+  const ep3 = perp - wave3;
+  h += 0.18 / (1 + Math.exp((ep3 + 140) / 24));
+
+  // Spur ridges branching off the main cliff for interesting shapes
+  h += 0.18 * Math.exp(-((along - 100) * (along - 100)) / 2500)
+     * Math.exp(-(ep + 30) * (ep + 30) / 1800);
+  h += 0.12 * Math.exp(-((along - 220) * (along - 220)) / 1800)
+     * Math.exp(-(ep + 20) * (ep + 20) / 1400);
+
+  // Small knoll / outcrop sitting on the ridge
+  h += 0.14 * Math.exp(-((x - 50) * (x - 50) + (y - 40) * (y - 40)) / 600);
+
+  return Math.max(0, h);
+}
+
+const TOPO_GRID: number[][] = [];
+for (let iy = 0; iy <= TOPO_NY; iy++) {
+  const row: number[] = [];
+  for (let ix = 0; ix <= TOPO_NX; ix++) {
+    row.push(topoHeight(ix * TOPO_CELL, iy * TOPO_CELL));
   }
+  TOPO_GRID.push(row);
+}
 
-  function buildLine(points: ([number, number] | null)[]): string {
-    let d = "";
-    let penDown = false;
-    for (const pt of points) {
-      if (!pt) { penDown = false; continue; }
-      if (!penDown) { d += `M ${pt[0].toFixed(1)} ${pt[1].toFixed(1)} `; penDown = true; }
-      else d += `L ${pt[0].toFixed(1)} ${pt[1].toFixed(1)} `;
+function extractContour(level: number): string[] {
+  const segments: [number, number, number, number][] = [];
+
+  for (let iy = 0; iy < TOPO_NY; iy++) {
+    for (let ix = 0; ix < TOPO_NX; ix++) {
+      const tl = TOPO_GRID[iy][ix];
+      const tr = TOPO_GRID[iy][ix + 1];
+      const br = TOPO_GRID[iy + 1][ix + 1];
+      const bl = TOPO_GRID[iy + 1][ix];
+
+      const config =
+        (tl >= level ? 8 : 0) |
+        (tr >= level ? 4 : 0) |
+        (br >= level ? 2 : 0) |
+        (bl >= level ? 1 : 0);
+
+      if (config === 0 || config === 15) continue;
+
+      const x0 = ix * TOPO_CELL, y0 = iy * TOPO_CELL;
+      const x1 = x0 + TOPO_CELL, y1 = y0 + TOPO_CELL;
+
+      const lerp = (a: number, b: number, va: number, vb: number) => {
+        if (Math.abs(vb - va) < 1e-10) return (a + b) / 2;
+        const t = Math.max(0, Math.min(1, (level - va) / (vb - va)));
+        return a + t * (b - a);
+      };
+
+      const top: [number, number] = [lerp(x0, x1, tl, tr), y0];
+      const right: [number, number] = [x1, lerp(y0, y1, tr, br)];
+      const bottom: [number, number] = [lerp(x0, x1, bl, br), y1];
+      const left: [number, number] = [x0, lerp(y0, y1, tl, bl)];
+
+      const add = (a: [number, number], b: [number, number]) =>
+        segments.push([a[0], a[1], b[0], b[1]]);
+
+      const avg = (tl + tr + br + bl) / 4;
+
+      switch (config) {
+        case 1: add(left, bottom); break;
+        case 2: add(bottom, right); break;
+        case 3: add(left, right); break;
+        case 4: add(top, right); break;
+        case 5:
+          if (avg >= level) { add(left, top); add(bottom, right); }
+          else { add(left, bottom); add(top, right); }
+          break;
+        case 6: add(top, bottom); break;
+        case 7: add(left, top); break;
+        case 8: add(top, left); break;
+        case 9: add(top, bottom); break;
+        case 10:
+          if (avg >= level) { add(top, right); add(left, bottom); }
+          else { add(top, left); add(bottom, right); }
+          break;
+        case 11: add(top, right); break;
+        case 12: add(left, right); break;
+        case 13: add(bottom, right); break;
+        case 14: add(left, bottom); break;
+      }
     }
+  }
+
+  // Join segments into polylines via endpoint hashing
+  const EPS = 0.5;
+  const k = (x: number, y: number) => `${Math.round(x / EPS)},${Math.round(y / EPS)}`;
+
+  type Seg = { s: [number, number]; e: [number, number]; used: boolean };
+  const segs: Seg[] = segments.map(([x1, y1, x2, y2]) => ({
+    s: [x1, y1], e: [x2, y2], used: false,
+  }));
+
+  const endMap = new Map<string, number[]>();
+  for (let i = 0; i < segs.length; i++) {
+    for (const pt of [segs[i].s, segs[i].e]) {
+      const key = k(pt[0], pt[1]);
+      if (!endMap.has(key)) endMap.set(key, []);
+      endMap.get(key)!.push(i);
+    }
+  }
+
+  const chains: [number, number][][] = [];
+
+  for (let i = 0; i < segs.length; i++) {
+    if (segs[i].used) continue;
+    segs[i].used = true;
+    const chain: [number, number][] = [segs[i].s, segs[i].e];
+
+    for (const pickHead of [false, true]) {
+      let grew = true;
+      while (grew) {
+        grew = false;
+        const tip = pickHead ? chain[0] : chain[chain.length - 1];
+        const key = k(tip[0], tip[1]);
+        const cands = endMap.get(key);
+        if (!cands) break;
+        for (const j of cands) {
+          if (segs[j].used) continue;
+          const match = k(segs[j].s[0], segs[j].s[1]) === key;
+          const pt = match ? segs[j].e : segs[j].s;
+          if (pickHead) chain.unshift(pt); else chain.push(pt);
+          segs[j].used = true;
+          grew = true;
+          break;
+        }
+      }
+    }
+
+    if (chain.length >= 3) chains.push(chain);
+  }
+
+  // Smooth with quadratic Bezier through midpoints
+  return chains.map(pts => {
+    if (pts.length < 2) return "";
+    if (pts.length === 2)
+      return `M${pts[0][0].toFixed(1)},${pts[0][1].toFixed(1)} L${pts[1][0].toFixed(1)},${pts[1][1].toFixed(1)}`;
+
+    const closed =
+      Math.abs(pts[0][0] - pts[pts.length - 1][0]) < EPS * 2 &&
+      Math.abs(pts[0][1] - pts[pts.length - 1][1]) < EPS * 2;
+
+    const mid = (a: [number, number], b: [number, number]): [number, number] =>
+      [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2];
+
+    if (closed) {
+      const m0 = mid(pts[pts.length - 1], pts[0]);
+      let d = `M${m0[0].toFixed(1)},${m0[1].toFixed(1)}`;
+      for (let i = 0; i < pts.length; i++) {
+        const m = mid(pts[i], pts[(i + 1) % pts.length]);
+        d += ` Q${pts[i][0].toFixed(1)},${pts[i][1].toFixed(1)} ${m[0].toFixed(1)},${m[1].toFixed(1)}`;
+      }
+      return d + "Z";
+    }
+
+    let d = `M${pts[0][0].toFixed(1)},${pts[0][1].toFixed(1)}`;
+    for (let i = 1; i < pts.length - 1; i++) {
+      const m = mid(pts[i], pts[i + 1]);
+      d += ` Q${pts[i][0].toFixed(1)},${pts[i][1].toFixed(1)} ${m[0].toFixed(1)},${m[1].toFixed(1)}`;
+    }
+    const last = pts[pts.length - 1];
+    d += ` L${last[0].toFixed(1)},${last[1].toFixed(1)}`;
     return d;
+  }).filter(Boolean);
+}
+
+// Pre-compute contour paths
+const CONTOUR_DATA: { level: number; paths: string[]; isIndex: boolean }[] = [];
+{
+  let idx = 0;
+  for (let l = 0.04; l < 1.3; l += 0.028) {
+    CONTOUR_DATA.push({ level: l, paths: extractContour(l), isIndex: idx % 5 === 0 });
+    idx++;
   }
+}
 
-  const steps = 90;
-  const meridians: string[] = [];
-  const parallels: string[] = [];
-
-  // Meridians every 15°
-  for (let lon = -180; lon < 180; lon += 15) {
-    const pts = Array.from({ length: steps + 1 }, (_, i) => project(lon, -90 + i * (180 / steps)));
-    const d = buildLine(pts);
-    if (d) meridians.push(d);
-  }
-
-  // Parallels every 15°
-  for (let lat = -75; lat <= 75; lat += 15) {
-    const pts = Array.from({ length: steps + 1 }, (_, i) => project(-180 + i * (360 / steps), lat));
-    const d = buildLine(pts);
-    if (d) parallels.push(d);
-  }
-
+function TopoMap3D() {
   return (
     <svg
-      viewBox={`0 0 ${W} ${H}`}
-      preserveAspectRatio="xMaxYMin meet"
+      viewBox={`0 0 ${TOPO_W} ${TOPO_H}`}
+      preserveAspectRatio="xMinYMin meet"
       className="absolute"
-      style={{ top: 0, right: 0, width: "100%", height: "100%" }}
+      style={{ top: 0, left: 0, width: "100%", height: "100%" }}
     >
       <defs>
-        <radialGradient id="globeFade" cx={W} cy={0} r={W * 0.9} gradientUnits="userSpaceOnUse">
-          <stop offset="0%"   stopColor="white" stopOpacity="1" />
-          <stop offset="60%"  stopColor="white" stopOpacity="0.5" />
+        {/* 3D depth — warm shadow beneath each contour line */}
+        <filter id="topo3d" x="-2%" y="-2%" width="104%" height="108%">
+          <feDropShadow dx="0.5" dy="1.2" stdDeviation="0.8" floodColor="rgba(120,105,85,0.18)" />
+        </filter>
+        {/* Radial fade — tight to top-left */}
+        <radialGradient id="topoFade" cx="8%" cy="6%" r="52%" gradientUnits="objectBoundingBox">
+          <stop offset="0%" stopColor="white" stopOpacity="1" />
+          <stop offset="45%" stopColor="white" stopOpacity="0.8" />
+          <stop offset="75%" stopColor="white" stopOpacity="0.18" />
           <stop offset="100%" stopColor="white" stopOpacity="0" />
         </radialGradient>
-        <mask id="globeMask">
-          <rect x="0" y="0" width={W} height={H} fill="url(#globeFade)" />
+        <mask id="topoMask">
+          <rect x="0" y="0" width={TOPO_W} height={TOPO_H} fill="url(#topoFade)" />
         </mask>
       </defs>
-      <g mask="url(#globeMask)" stroke="rgba(0,102,204,0.28)" strokeWidth="1" fill="none">
-        {meridians.map((d, i) => <path key={`m${i}`} d={d} />)}
-        {parallels.map((d, i) => <path key={`p${i}`} d={d} />)}
+
+      <g mask="url(#topoMask)" filter="url(#topo3d)">
+        {CONTOUR_DATA.map(({ level, paths, isIndex }) =>
+          paths.map((d, j) => (
+            <path
+              key={`c${level.toFixed(2)}-${j}`}
+              d={d}
+              fill="none"
+              stroke={isIndex ? "rgba(140,125,105,0.50)" : "rgba(150,138,120,0.28)"}
+              strokeWidth={isIndex ? 2.0 : 1.0}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          ))
+        )}
       </g>
     </svg>
   );
@@ -170,13 +344,13 @@ export default function EnterpriseHero() {
       className="relative w-full overflow-hidden"
       style={{ backgroundColor: "#F9F9F9" }}
     >
-      {/* Globe graticule — top-right corner, partial quadrant bleeding in */}
+      {/* Topographic contour map — top-left flowing background */}
       <div
         className="absolute pointer-events-none overflow-hidden"
-        style={{ top: 0, right: 0, width: "48%", height: "60%", zIndex: 0 }}
+        style={{ top: 0, left: 0, width: "52%", height: "70%", zIndex: 0 }}
         aria-hidden
       >
-        <GlobeGraticule />
+        <TopoMap3D />
       </div>
 
       {/* Radial blue gradient */}
