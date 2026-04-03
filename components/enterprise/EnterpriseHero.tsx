@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+import { Dithering } from "@paper-design/shaders-react";
 import { ConsumerEnterpriseToggle } from "./ConsumerEnterpriseToggle";
 
 // ── Topographic contour map with 3D drawn effect ──
@@ -349,23 +350,40 @@ export default function EnterpriseHero() {
     <section
       ref={sectionRef}
       className="relative w-full overflow-hidden"
-      style={{ backgroundColor: "#1a1a1a" }}
+      style={{ backgroundColor: "#0a1628" }}
     >
-      {/* Background image — aerial/landscape */}
+      {/* Background image — aerial/landscape with blue tint */}
       <Image
         src="/ProductBackgroundImageHome.png"
         alt=""
         fill
         className="object-cover object-center"
-        style={{ opacity: 0.45 }}
+        style={{ opacity: 0.55, filter: "saturate(0.5) brightness(0.9) sepia(0.25) hue-rotate(190deg)" }}
         priority
       />
+      {/* Warp/contour dithering shader overlay — V2.3.1 style */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{ zIndex: 1, mixBlendMode: "soft-light", opacity: 0.7 }}
+        aria-hidden
+      >
+        <Dithering
+          colorBack="rgba(0,0,0,0)"
+          colorFront="#2563EB"
+          speed={0.15}
+          shape="warp"
+          type="4x4"
+          size={3}
+          style={{ width: "100%", height: "100%" }}
+        />
+      </div>
+
       {/* Dark gradient overlay for text readability */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
-          background: "linear-gradient(180deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.25) 50%, rgba(0,0,0,0.45) 100%)",
-          zIndex: 1,
+          background: "linear-gradient(180deg, rgba(0,0,0,0.40) 0%, rgba(0,0,0,0.15) 50%, rgba(0,0,0,0.30) 100%)",
+          zIndex: 2,
         }}
         aria-hidden
       />
