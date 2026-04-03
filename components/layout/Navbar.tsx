@@ -265,7 +265,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
         fontSize: compact ? 14 : 15,
         fontWeight: 400,
         letterSpacing: "-0.0025em",
-        ...(wide ? {} : { color: isDark ? "white" : "#111111" }),
+        ...(wide ? {} : { color: isDark ? "white" : isEnterprisePage ? "#0A1344" : "#111111" }),
         transition: `font-size ${t}`,
     });
 
@@ -436,6 +436,8 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                                 transition: `width ${t}, opacity 300ms ease, padding ${t}, background-color 300ms ease, color 300ms ease`,
                                                 ...(wide
                                                     ? { backdropFilter: "blur(6px)", WebkitBackdropFilter: "blur(6px)" }
+                                                    : isEnterprisePage
+                                                    ? { backgroundColor: "rgba(0, 0, 0, 0.05)", color: "#0A1344", backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)" }
                                                     : isUseCasesPage
                                                     ? { backgroundColor: isDark ? "rgba(255, 255, 255, 0.10)" : "#000000", color: isDark ? "white" : "white" }
                                                     : { backgroundColor: "#000000", color: "white" }),
