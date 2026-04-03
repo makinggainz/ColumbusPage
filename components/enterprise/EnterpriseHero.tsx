@@ -351,6 +351,16 @@ export default function EnterpriseHero() {
       className="relative w-full overflow-hidden"
       style={{ backgroundColor: "#F2F4F8" }}
     >
+      {/* ── Blue gradient from bottom ── */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background: "linear-gradient(to top, rgba(0, 102, 204, 0.15) 0%, rgba(0, 102, 204, 0.10) 50%, rgba(0, 102, 204, 0.04) 80%, transparent 100%)",
+          zIndex: 0,
+        }}
+        aria-hidden
+      />
+
       {/* ── Island topography contour lines — top corners ── */}
       <svg
         className="absolute top-0 left-0 w-full pointer-events-none"
