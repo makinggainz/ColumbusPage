@@ -419,9 +419,8 @@ export default function EnterpriseHero() {
               position: "relative",
               width: "100%",
               backgroundColor: "#1D1D1F",
-              borderRadius: "clamp(12px, 1.6vw, 24px) clamp(12px, 1.6vw, 24px) 0 0",
+              borderRadius: "clamp(12px, 1.6vw, 24px)",
               padding: "clamp(6px, 0.8vw, 12px)",
-              paddingBottom: 0,
               boxShadow: "0 40px 100px rgba(0,0,0,0.50), 0 12px 32px rgba(0,0,0,0.30)",
             }}
           >
@@ -431,7 +430,7 @@ export default function EnterpriseHero() {
                 position: "relative",
                 width: "100%",
                 aspectRatio: "16 / 10",
-                borderRadius: "clamp(4px, 0.5vw, 8px) clamp(4px, 0.5vw, 8px) 0 0",
+                borderRadius: "clamp(4px, 0.5vw, 8px)",
                 overflow: "hidden",
                 display: "flex",
                 flexDirection: "column",
@@ -592,13 +591,6 @@ export default function EnterpriseHero() {
               </div>
             </div>
           </div>
-
-          {/* Monitor chin */}
-          <div style={{
-            height: "clamp(8px, 1.2vw, 16px)",
-            backgroundColor: "#1D1D1F",
-            borderRadius: "0 0 clamp(12px, 1.6vw, 24px) clamp(12px, 1.6vw, 24px)",
-          }} />
 
           {/* Monitor stand neck */}
           <div style={{ display: "flex", justifyContent: "center" }}>

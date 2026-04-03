@@ -75,6 +75,10 @@ export default function ProblemCards() {
               fontWeight: 400,
               lineHeight: 1.5,
               color: "#0A1344",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              textAlign: "center" as const,
               letterSpacing: "-0.01em",
             }}
           >
