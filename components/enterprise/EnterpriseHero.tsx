@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+import { Dithering } from "@paper-design/shaders-react";
 import { ConsumerEnterpriseToggle } from "./ConsumerEnterpriseToggle";
 
 // ── Topographic contour map with 3D drawn effect ──
@@ -351,24 +352,22 @@ export default function EnterpriseHero() {
       className="relative w-full overflow-hidden"
       style={{ backgroundColor: "#F9F9F9" }}
     >
-      {/* Topographic contour map — top-left flowing background */}
-      <div
-        className="absolute pointer-events-none overflow-hidden"
-        style={{ top: 0, left: 0, width: "40%", height: "50%", zIndex: 0 }}
-        aria-hidden
-      >
-        <TopoMap3D />
-      </div>
-
-      {/* Radial blue gradient */}
+      {/* Animated dithering shader background */}
       <div
         className="absolute inset-0 pointer-events-none"
-        style={{
-          background: "radial-gradient(ellipse 120% 90% at 50% 100%, rgba(0, 102, 204, 0.32) 0%, rgba(0, 102, 204, 0.16) 50%, transparent 85%)",
-          zIndex: 0,
-        }}
+        style={{ zIndex: 0 }}
         aria-hidden
-      />
+      >
+        <Dithering
+          colorBack="#F9F9F9"
+          colorFront="#d0dBea"
+          speed={0.3}
+          shape="simplex"
+          type="4x4"
+          size={3}
+          style={{ width: "100%", height: "100%" }}
+        />
+      </div>
       {/* ── Toggle ── */}
       <div className="flex justify-center pt-32 pb-10 px-6" style={reveal(visible, 0)}>
         <ConsumerEnterpriseToggle variant="dark" active="enterprise" glass={false} />
