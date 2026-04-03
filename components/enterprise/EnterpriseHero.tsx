@@ -393,14 +393,13 @@ export default function EnterpriseHero() {
 
         <Link
           href="/contact"
-          className="group flex items-center justify-between mt-8 whitespace-nowrap hover:opacity-90 transition-all duration-300"
-          style={{ height: 45, paddingLeft: 20, paddingRight: 16, fontSize: 14, fontWeight: 500, letterSpacing: "-0.01em", backgroundColor: "rgba(255,255,255,0.12)", color: "white", boxShadow: "0 4px 16px rgba(0,0,0,0.25)", gap: 12 }}
+          className="group flex items-center gap-3 mt-8 text-[18px] lg:text-[20px] text-white font-semibold transition-opacity"
         >
           <span className="transition-colors duration-300 group-hover:text-[#6BA3FF]">Talk to us</span>
           <svg
-            className="transition-all duration-300 group-hover:translate-x-0.5 [stroke:white] group-hover:[stroke:#6BA3FF]"
-            width="10" height="18" viewBox="0 0 7 12" fill="none"
-            strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"
+            className="transition-transform duration-300 group-hover:translate-x-0.5"
+            width="9" height="16" viewBox="0 0 7 12" fill="none"
+            stroke="#6BA3FF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"
           >
             <path d="M1 1l5 5-5 5" />
           </svg>

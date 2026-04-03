@@ -81,7 +81,7 @@ export default function ComparisonSection() {
   }, [columbusLoaded]);
 
   return (
-    <section ref={sectionRef} className="relative w-full pt-8 pb-28 lg:pt-10 lg:pb-[180px]" style={{ backgroundColor: "#0C1B5E" }}>
+    <section ref={sectionRef} className="relative w-full py-28 lg:py-[140px]" style={{ backgroundColor: "#0C1B5E" }}>
       <StructureGrid lineColor="rgba(37, 99, 235, 0.15)" />
       <style>{`
         @keyframes comparison-shimmer {
