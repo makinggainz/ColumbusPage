@@ -1,201 +1,322 @@
 "use client";
 
-import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
-import { StructureGrid } from "./StructureGrid";
+import { useCallback, useEffect, useRef, useState } from "react";
 
-const FULL_TEXT =
-  "generate the fastest route for next tuesday 10am. It'll be a multi-stop route through Philadelphia. I've attached a file with vehicle type and each location.";
+// ── Use-case data ──────────────────────────────────────────────────────────
 
-const fadeIn = (visible: boolean, delay: number): React.CSSProperties => ({
-  opacity: visible ? 1 : 0,
-  filter: visible ? "blur(0px)" : "blur(8px)",
-  transform: visible ? "translateY(0)" : "translateY(16px)",
-  transition: `opacity 0.6s ease-out ${delay}s, filter 0.6s ease-out ${delay}s, transform 0.6s ease-out ${delay}s`,
-});
+interface UseCase {
+  number: string;
+  title: string;
+  prompt: string;
+  thinkingSteps: string[];
+  resultLines: string[];
+  legacyLine: string;
+}
 
-const loadingTextStyle: React.CSSProperties = {
-  backgroundImage: "linear-gradient(90deg, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0.6) 30%, rgba(255,255,255,1) 50%, rgba(255,255,255,0.6) 70%, rgba(255,255,255,0.6) 100%)",
-  backgroundSize: "200% 100%",
-  WebkitBackgroundClip: "text",
-  backgroundClip: "text",
-  color: "transparent",
-  animation: "comparison-shimmer 1.6s ease-in-out infinite",
-};
+const USE_CASES: UseCase[] = [
+  {
+    number: "01",
+    title: "Reason through uploaded data",
+    prompt: "I've uploaded our 200 franchise locations. Show me coverage gaps and the 5 best cities for expansion.",
+    thinkingSteps: ["Analyzing spatial distribution", "Identifying underserved regions", "Cross-referencing demographics"],
+    resultLines: ["3 major coverage gaps identified in the Southeast", "Top expansion cities: Nashville, Raleigh, Tampa, Austin, Denver", "Population density vs. store proximity mapped"],
+    legacyLine: "With legacy GIS this takes 2+ weeks of manual layer stacking",
+  },
+  {
+    number: "02",
+    title: "Ask questions, get maps",
+    prompt: "Where should I open a new pizzeria? Consider demographics, lot prices, and competition.",
+    thinkingSteps: ["Considering demographics", "Considering lot prices", "Considering trade area competition"],
+    resultLines: ["7 high-potential zones ranked by composite score", "Avg. household income $78K+ within 1-mile radius", "Nearest competitor distance: 2.3 mi minimum"],
+    legacyLine: "With legacy GIS this requires a trained analyst and 3 separate data vendors",
+  },
+  {
+    number: "03",
+    title: "Complex operations in plain English",
+    prompt: "Generate the fastest route for next Tuesday 10am. Multi-stop through Philadelphia with my vehicle file attached.",
+    thinkingSteps: ["Parsing vehicle constraints", "Optimizing stop sequence", "Calculating ETA per segment"],
+    resultLines: ["12-stop route optimized: 47 min faster than manual", "Avoids 3 construction zones active on Tuesdays", "Total distance: 38.2 mi | Est. fuel: 2.4 gal"],
+    legacyLine: "With legacy GIS this needs separate routing software and manual data entry",
+  },
+  {
+    number: "04",
+    title: "Draw an area, know everything",
+    prompt: "What's the property history, ownership, and displacement risk for this selected zone?",
+    thinkingSteps: ["Querying parcel records", "Pulling ownership history", "Running displacement model"],
+    resultLines: ["142 parcels analyzed | 23 changed hands in last 2 years", "Displacement risk: Moderate (rising 12% YoY)", "Top 3 listed owners with contact info returned"],
+    legacyLine: "With legacy GIS this means county records offices and weeks of due diligence",
+  },
+  {
+    number: "05",
+    title: "Coordinates you can trust",
+    prompt: "Plot all vacant lots within 500m of the SEPTA Broad Street Line in Philadelphia.",
+    thinkingSteps: ["Geocoding transit line", "Buffering 500m corridor", "Filtering vacant parcels"],
+    resultLines: ["87 vacant lots plotted with verified coordinates", "Spatial accuracy: 99.7% — basic AI hallucinates 60% of the time", "Each lot linked to parcel ID, zoning, and assessed value"],
+    legacyLine: "With legacy GIS this requires manual digitization and unverified geocoding",
+  },
+];
+
+const SLIDE_DURATION = 8000;
+const TYPING_SPEED = 26;
+const THINKING_DELAY = 600;
+const RESULT_DELAY = 400;
+
+// ── Component ──────────────────────────────────────────────────────────────
 
 export default function ComparisonSection() {
   const sectionRef = useRef<HTMLElement>(null);
   const [visible, setVisible] = useState(false);
-  const [typedText, setTypedText] = useState("");
-  const [typingDone, setTypingDone] = useState(false);
-  const [columbusLoaded, setColumbusLoaded] = useState(false);
-  const [basicLoaded, setBasicLoaded] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [paused, setPaused] = useState(false);
+  const [typed, setTyped] = useState("");
+  const [thinkingStep, setThinkingStep] = useState(-1);
+  const [showResult, setShowResult] = useState(false);
 
-  // Intersection observer
   useEffect(() => {
     const el = sectionRef.current;
     if (!el) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setVisible(true);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.1 }
+    const obs = new IntersectionObserver(
+      ([e]) => { if (e.isIntersecting) { setVisible(true); obs.disconnect(); } },
+      { threshold: 0.08 }
     );
-    observer.observe(el);
-    return () => observer.disconnect();
+    obs.observe(el);
+    return () => obs.disconnect();
   }, []);
 
-  // Typewriter — starts after prompt box finishes fading in (~0.75s)
+  const resetSlide = useCallback(() => {
+    setTyped("");
+    setThinkingStep(-1);
+    setShowResult(false);
+  }, []);
+
+  useEffect(() => {
+    if (!visible || paused) return;
+    const id = setInterval(() => setActiveIndex(i => (i + 1) % USE_CASES.length), SLIDE_DURATION);
+    return () => clearInterval(id);
+  }, [visible, paused]);
+
+  useEffect(() => { resetSlide(); }, [activeIndex, resetSlide]);
+
   useEffect(() => {
     if (!visible) return;
+    const prompt = USE_CASES[activeIndex].prompt;
     let i = 0;
-    const startDelay = setTimeout(() => {
-      const interval = setInterval(() => {
-        i++;
-        setTypedText(FULL_TEXT.slice(0, i));
-        if (i >= FULL_TEXT.length) {
-          clearInterval(interval);
-          setTypingDone(true);
-        }
-      }, 18);
-      return () => clearInterval(interval);
-    }, 750);
-    return () => clearTimeout(startDelay);
-  }, [visible]);
+    const id = setInterval(() => {
+      i++;
+      setTyped(prompt.slice(0, i));
+      if (i >= prompt.length) clearInterval(id);
+    }, TYPING_SPEED);
+    return () => clearInterval(id);
+  }, [activeIndex, visible]);
 
-  // Columbus loads 0.5s after typing finishes
   useEffect(() => {
-    if (!typingDone) return;
-    const t = setTimeout(() => setColumbusLoaded(true), 500);
-    return () => clearTimeout(t);
-  }, [typingDone]);
+    if (typed.length < USE_CASES[activeIndex].prompt.length) return;
+    const steps = USE_CASES[activeIndex].thinkingSteps;
+    let step = 0;
+    setThinkingStep(0);
+    const id = setInterval(() => {
+      step++;
+      if (step >= steps.length) {
+        clearInterval(id);
+        setTimeout(() => setShowResult(true), RESULT_DELAY);
+      } else {
+        setThinkingStep(step);
+      }
+    }, THINKING_DELAY);
+    return () => clearInterval(id);
+  }, [typed, activeIndex]);
 
-  // Basic AI loads 1s after Columbus
-  useEffect(() => {
-    if (!columbusLoaded) return;
-    const t = setTimeout(() => setBasicLoaded(true), 1000);
-    return () => clearTimeout(t);
-  }, [columbusLoaded]);
+  const current = USE_CASES[activeIndex];
 
   return (
-    <section ref={sectionRef} className="relative w-full py-28 lg:py-[140px]" style={{ backgroundColor: "#0C1B5E" }}>
-      <StructureGrid lineColor="rgba(37, 99, 235, 0.15)" />
-      <style>{`
-        @keyframes comparison-shimmer {
-          0% { background-position: 100% 0; }
-          100% { background-position: -100% 0; }
-        }
-      `}</style>
+    <section
+      ref={sectionRef}
+      className="relative w-full"
+      style={{ backgroundColor: "#060810" }}
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+    >
+      {/* Top divider */}
+      <div style={{ height: 1, backgroundColor: "rgba(255,255,255,0.06)" }} />
 
-      <div className="relative z-10 max-w-[1287px] mx-auto px-8 md:px-10 flex flex-col items-center">
+      <div className="max-w-[1287px] mx-auto px-6 md:px-10">
 
-        {/* Title — Headline Medium */}
-        <h2
-          className="font-light leading-[1.05] text-center whitespace-nowrap text-[28px] lg:text-[44px] text-white"
-          style={{ letterSpacing: "-0.03em", ...fadeIn(visible, 0) }}
-        >
-          See How We&apos;re Different
-        </h2>
-
-        {/* For Any Query label */}
-        <p
-          className="mt-6 text-center"
-          style={{
-            fontSize: 13,
-            fontWeight: 600,
-            letterSpacing: "0.06em",
-            textTransform: "uppercase" as const,
-            color: "rgba(255,255,255,0.35)",
-            ...fadeIn(visible, 0.08),
-          }}
-        >
-          For Any Query:
-        </p>
-
-        {/* Prompt Box */}
+        {/* Header — generous spacing, editorial hierarchy */}
         <div
+          className="pt-32 pb-20 lg:pt-40 lg:pb-28"
           style={{
-            ...fadeIn(visible, 0.15),
-            boxShadow: "0px 0px 30px 5px rgba(0, 0, 0, 0.25)",
+            opacity: visible ? 1 : 0,
+            transform: visible ? "translateY(0)" : "translateY(16px)",
+            transition: "opacity 0.7s ease, transform 0.7s ease",
           }}
-          className="mt-4 w-full max-w-[600px] bg-white border border-white/20 rounded-[10px] px-5 py-4 flex items-center justify-between gap-4"
         >
-          <p className="text-[13px] md:text-[15px] font-medium leading-[1.6] tracking-[-0.01em] text-left line-clamp-3 min-h-[3.6em]">
-            {typedText}
-            {typedText.length > 0 && typedText.length < FULL_TEXT.length && (
-              <span className="inline-block w-[2px] h-[1.1em] bg-current align-middle ml-0.5 animate-pulse" />
-            )}
+          <p
+            className="text-[12px] font-medium tracking-[0.15em] uppercase"
+            style={{ color: "rgba(255,255,255,0.25)" }}
+          >
+            What Columbus does differently
           </p>
-
-          <button className="flex-shrink-0 w-[42px] h-[42px] rounded-[8px] bg-[#0A1344] flex items-center justify-center text-white text-sm">
-            →
-          </button>
+          <h2
+            className="mt-5 text-white leading-[1.08] text-[32px] md:text-[42px] lg:text-[52px]"
+            style={{ fontWeight: 500, letterSpacing: "-0.025em", maxWidth: 640 }}
+          >
+            The queries that legacy GIS can&apos;t answer
+          </h2>
         </div>
 
-        {/* Comparison */}
-        <div className="mt-14 w-full grid lg:grid-cols-2 gap-0 relative">
+        {/* Slide number navigation */}
+        <div
+          className="flex gap-0 mb-16"
+          style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}
+        >
+          {USE_CASES.map((uc, i) => (
+            <button
+              key={i}
+              onClick={() => setActiveIndex(i)}
+              className="cursor-pointer group relative"
+              style={{
+                flex: 1,
+                paddingTop: 20,
+                paddingBottom: 20,
+                borderRight: i < USE_CASES.length - 1 ? "1px solid rgba(255,255,255,0.06)" : "none",
+                backgroundColor: "transparent",
+                border: "none",
+                borderTop: "none",
+                textAlign: "left",
+                paddingLeft: 0,
+                paddingRight: 16,
+              }}
+            >
+              {/* Top progress bar */}
+              <div
+                style={{
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  height: 1,
+                  backgroundColor: "rgba(255,255,255,0.5)",
+                  width: i === activeIndex ? "100%" : "0%",
+                  transition: i === activeIndex ? `width ${SLIDE_DURATION}ms linear` : "width 0.15s ease",
+                }}
+              />
+              <span
+                className="block text-[28px] md:text-[36px] font-light"
+                style={{
+                  color: i === activeIndex ? "white" : "rgba(255,255,255,0.12)",
+                  letterSpacing: "-0.02em",
+                  transition: "color 0.3s",
+                }}
+              >
+                {uc.number}
+              </span>
+            </button>
+          ))}
+        </div>
 
-          {/* Divider */}
-          <div className="hidden lg:block absolute left-1/2 top-0 bottom-0 w-[1px] bg-white/15" />
+        {/* Active slide content */}
+        <div className="pb-32 lg:pb-40">
+          <div key={activeIndex} style={{ animation: "compFadeIn 0.5s ease-out both" }}>
 
-          {/* Columbus LGM */}
-          <div style={fadeIn(visible, 0.3)} className="flex flex-col items-end text-center pr-14">
-            <div className="w-full max-w-[380px]">
+            {/* Slide title — large, editorial */}
+            <h3
+              className="text-white leading-[1.12] text-[26px] md:text-[34px] lg:text-[40px]"
+              style={{ fontWeight: 500, letterSpacing: "-0.02em", maxWidth: 550 }}
+            >
+              {current.title}
+            </h3>
 
-              <h3 className="text-[32px] font-light leading-[1.05] mb-2 flex items-center justify-center gap-2 text-white" style={{ letterSpacing: "-0.03em" }}>
-                <Image src="/enterprise/logo.png" alt="columbus" width={28} height={28} />
-                <span style={columbusLoaded ? {} : loadingTextStyle}>Columbus LGM</span>
-              </h3>
+            {/* Two-column content below title */}
+            <div className="grid lg:grid-cols-2 gap-10 lg:gap-20 mt-12">
 
-              <div style={fadeIn(columbusLoaded, 0)}>
-                <div className="relative w-full aspect-[467/319] rounded-[8px] overflow-hidden shadow-md">
-                  <Image src="/enterprise/lgm.png" alt="lgm" fill className="object-cover scale-[1.15]" />
+              {/* Left: prompt + thinking */}
+              <div>
+                {/* Prompt */}
+                <p
+                  className="text-[16px] md:text-[18px] leading-[1.65] text-white/50"
+                  style={{ letterSpacing: "-0.01em", minHeight: "3.2em" }}
+                >
+                  &ldquo;{typed}
+                  {typed.length > 0 && typed.length < current.prompt.length && (
+                    <span className="inline-block w-[1.5px] h-[1em] bg-white/40 align-middle ml-0.5 animate-pulse" />
+                  )}
+                  {typed.length >= current.prompt.length && "&rdquo;"}
+                </p>
+
+                {/* Thinking steps */}
+                <div className="mt-8 space-y-3">
+                  {current.thinkingSteps.map((step, i) => (
+                    <div
+                      key={i}
+                      className="flex items-center gap-3"
+                      style={{
+                        opacity: thinkingStep >= i ? 1 : 0,
+                        transform: thinkingStep >= i ? "translateX(0)" : "translateX(-4px)",
+                        transition: "opacity 0.3s ease, transform 0.3s ease",
+                      }}
+                    >
+                      <div
+                        style={{
+                          width: 4,
+                          height: 4,
+                          borderRadius: "50%",
+                          backgroundColor: thinkingStep === i && !showResult ? "rgba(255,255,255,0.6)" : "rgba(255,255,255,0.12)",
+                          transition: "background-color 0.3s",
+                          flexShrink: 0,
+                        }}
+                      />
+                      <span className="text-[13px] text-white/25">{step}</span>
+                    </div>
+                  ))}
                 </div>
-                <ul className="mt-5 space-y-3 text-left w-full list-none pl-0 text-[13px] md:text-[14px] font-normal leading-[1.6] tracking-[0em] text-white/80">
-                  <li className="flex items-center gap-2"><span className="text-green-600">✔</span> Highest fidelity and fresh data</li>
-                  <li className="flex items-center gap-2"><span className="text-green-600">✔</span> Understands space and coordinates</li>
-                  <li className="flex items-center gap-2"><span className="text-green-600">✔</span> Spatial and contextual reasoning</li>
-                  <li className="flex items-center gap-2"><span className="text-green-600">✔</span> Thinks with human-like intuition</li>
-                  <li className="flex items-center gap-2"><span className="text-green-600">✔</span> Produces maps and visuals</li>
-                  <li className="flex items-center gap-2"><span className="text-green-600">✔</span> Built for physical world, enterprises</li>
-                </ul>
               </div>
 
-            </div>
-          </div>
-
-          {/* Basic AI */}
-          <div style={fadeIn(visible, 0.45)} className="flex flex-col items-start text-center pl-14">
-            <div className="w-full max-w-[380px]">
-
-              <h3 className="text-[32px] font-light leading-[1.05] mb-2 text-center text-white" style={{ letterSpacing: "-0.03em" }}>
-                <span style={basicLoaded ? {} : loadingTextStyle}>Basic AI</span>
-              </h3>
-
-              <div style={fadeIn(basicLoaded, 0)}>
-                <div className="relative w-full aspect-[467/319] rounded-[8px] overflow-hidden">
-                  <Image src="/enterprise/basic.png" alt="basic" fill className="object-cover opacity-90" />
+              {/* Right: results */}
+              <div
+                style={{
+                  opacity: showResult ? 1 : 0,
+                  transform: showResult ? "translateY(0)" : "translateY(6px)",
+                  transition: "opacity 0.45s ease, transform 0.45s ease",
+                }}
+              >
+                <div className="space-y-5">
+                  {current.resultLines.map((line, i) => (
+                    <p
+                      key={i}
+                      className="text-[15px] md:text-[16px] leading-[1.6] text-white/70"
+                      style={{
+                        opacity: showResult ? 1 : 0,
+                        transition: `opacity 0.4s ease ${i * 0.12}s`,
+                        paddingLeft: 16,
+                        borderLeft: "1px solid rgba(255,255,255,0.08)",
+                      }}
+                    >
+                      {line}
+                    </p>
+                  ))}
                 </div>
-                <ul className="mt-5 space-y-3 text-left w-full list-none pl-0 text-[13px] md:text-[14px] font-normal leading-[1.6] tracking-[0em] text-white/80">
-                  <li className="flex items-center gap-2"><span className="text-red-400">✖</span> Regurgitates old articles about areas</li>
-                  <li className="flex items-center gap-2">
-                    <span className="text-red-400">✖</span> Hallucinates Coordinates 60% of time{" "}
-                    <span className="text-blue-400 text-[12px]">Source</span>
-                  </li>
-                  <li className="flex items-center gap-2"><span className="text-red-400">✖</span> Limited data reach</li>
-                  <li className="flex items-center gap-2"><span className="text-red-400">✖</span> Text outputs, no map or GIS</li>
-                  <li className="flex items-center gap-2"><span className="text-red-400">✖</span> Built for text, consumers</li>
-                </ul>
-              </div>
 
+                {/* Legacy comparison */}
+                <p
+                  className="mt-10 text-[13px] text-white/15"
+                  style={{ letterSpacing: "-0.005em" }}
+                >
+                  {current.legacyLine}
+                </p>
+              </div>
             </div>
           </div>
-
         </div>
       </div>
+
+      {/* Bottom divider */}
+      <div style={{ height: 1, backgroundColor: "rgba(255,255,255,0.06)" }} />
+
+      <style>{`
+        @keyframes compFadeIn {
+          from { opacity: 0; transform: translateY(10px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+      `}</style>
     </section>
   );
 }
