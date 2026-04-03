@@ -37,7 +37,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
     const [bgTriggerPassed, setBgTriggerPassed] = useState(false);
     const pathname = usePathname();
     const isProductsPage = pathname === "/products/mapsgpt";
-    const isUseCasesPage = pathname === "/use-cases";
+    const isUseCasesPage = pathname === "/use-cases" || pathname === "/products/enterprise";
     const isEnterprisePage = pathname === "/products/enterprise";
     const showWordmarkOnMobile = pathname === "/" || pathname === "/our-mission" || pathname === "/contact";
     const navRef = useRef<HTMLElement>(null);
@@ -420,7 +420,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                     }}>
                                         <Link
                                             href="/contact"
-                                            className={`group flex items-center justify-between leading-none whitespace-nowrap transition-all duration-300 ${isEnterprisePage ? "hover:bg-black!" : isUseCasesPage ? (isDark ? "hover:bg-white!" : "hover:opacity-90") : "hover:opacity-90"} ${wide ? glassStyles.btn : ""}`}
+                                            className={`group flex items-center justify-between leading-none whitespace-nowrap transition-all duration-300 ${isUseCasesPage ? (isDark ? "hover:bg-white!" : "hover:opacity-90") : "hover:opacity-90"} ${wide ? glassStyles.btn : ""}`}
                                             style={{
                                                 fontSize: 14,
                                                 fontWeight: 500,
@@ -436,15 +436,13 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                                 transition: `width ${t}, opacity 300ms ease, padding ${t}, background-color 300ms ease, color 300ms ease`,
                                                 ...(wide
                                                     ? { backdropFilter: "blur(6px)", WebkitBackdropFilter: "blur(6px)" }
-                                                    : isEnterprisePage
-                                                    ? { backgroundColor: "rgba(0, 0, 0, 0.10)", color: "#0A1344" }
                                                     : isUseCasesPage
                                                     ? { backgroundColor: isDark ? "rgba(255, 255, 255, 0.10)" : "#000000", color: isDark ? "white" : "white" }
                                                     : { backgroundColor: "#000000", color: "white" }),
                                             }}
                                         >
                                             <span
-                                                className={`transition-colors duration-300 ${wide ? (isProductsPage ? "text-black" : isMenuOpen ? "text-black" : "text-white") : isUseCasesPage && isDark ? "group-hover:text-black!" : ""} ${isEnterprisePage ? "group-hover:text-[#2563EB]!" : "group-hover:text-[#2563EB]"}`}
+                                                className={`transition-colors duration-300 ${wide ? (isProductsPage ? "text-black" : isMenuOpen ? "text-black" : "text-white") : isUseCasesPage && isDark ? "group-hover:text-black!" : ""} group-hover:text-[#2563EB]`}
                                                 style={{
                                                     opacity: ctaVisible ? 1 : 0,
                                                     transition: ctaVisible

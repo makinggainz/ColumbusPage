@@ -35,7 +35,7 @@ export default function EnterprisePage() {
   return (
     <main>
       <SectionWithLabel label={sectionLabels[0]}>
-        <Navbar theme="light" />
+        <Navbar theme="dark" />
       </SectionWithLabel>
       <SectionWithLabel label={sectionLabels[1]}>
         <EnterpriseHero />

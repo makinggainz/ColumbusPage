@@ -349,35 +349,36 @@ export default function EnterpriseHero() {
     <section
       ref={sectionRef}
       className="relative w-full overflow-hidden"
-      style={{ backgroundColor: "#F9F9F9" }}
+      style={{ backgroundColor: "#1a1a1a" }}
     >
-      {/* Topographic contour map — top-left flowing background */}
-      <div
-        className="absolute pointer-events-none overflow-hidden"
-        style={{ top: 0, left: 0, width: "40%", height: "50%", zIndex: 0 }}
-        aria-hidden
-      >
-        <TopoMap3D />
-      </div>
-
-      {/* Radial blue gradient */}
+      {/* Background image — aerial/landscape */}
+      <Image
+        src="/ProductBackgroundImageHome.png"
+        alt=""
+        fill
+        className="object-cover object-center"
+        style={{ opacity: 0.45 }}
+        priority
+      />
+      {/* Dark gradient overlay for text readability */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
-          background: "radial-gradient(ellipse 120% 90% at 50% 100%, rgba(0, 102, 204, 0.32) 0%, rgba(0, 102, 204, 0.16) 50%, transparent 85%)",
-          zIndex: 0,
+          background: "linear-gradient(180deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.25) 50%, rgba(0,0,0,0.45) 100%)",
+          zIndex: 1,
         }}
         aria-hidden
       />
+
       {/* ── Toggle ── */}
-      <div className="flex justify-center pt-32 pb-10 px-6" style={reveal(visible, 0)}>
+      <div className="relative z-10 flex justify-center pt-32 pb-10 px-6" style={reveal(visible, 0)}>
         <ConsumerEnterpriseToggle variant="dark" active="enterprise" glass={false} />
       </div>
 
       {/* ── Text block ── */}
-      <div className="flex flex-col items-center text-center px-6" style={reveal(visible, 0.1)}>
+      <div className="relative z-10 flex flex-col items-center text-center px-6" style={reveal(visible, 0.1)}>
         <h1
-          className="text-[#1D1D1F] leading-[1.1] text-[39px] md:text-[49px] lg:text-[76px]"
+          className="text-white leading-[1.1] text-[39px] md:text-[49px] lg:text-[76px]"
           style={{ fontWeight: 500, letterSpacing: "-0.02em", maxWidth: 900 }}
         >
           An Agentic GIS platform
@@ -385,7 +386,7 @@ export default function EnterpriseHero() {
 
         <p
           className="mt-5"
-          style={{ fontSize: 21, color: "rgba(10,19,68,0.45)", letterSpacing: "-0.01em", fontWeight: 400, maxWidth: 480 }}
+          style={{ fontSize: 21, color: "rgba(255,255,255,0.55)", letterSpacing: "-0.01em", fontWeight: 400, maxWidth: 480 }}
         >
           GIS so easy, the janitor could be your new researcher
         </p>
@@ -393,58 +394,53 @@ export default function EnterpriseHero() {
         <Link
           href="/contact"
           className="group flex items-center justify-between mt-8 whitespace-nowrap hover:opacity-90 transition-all duration-300"
-          style={{ height: 45, paddingLeft: 20, paddingRight: 16, fontSize: 14, fontWeight: 500, letterSpacing: "-0.01em", backgroundColor: "#000000", color: "white", gap: 12 }}
+          style={{ height: 45, paddingLeft: 20, paddingRight: 16, fontSize: 14, fontWeight: 500, letterSpacing: "-0.01em", backgroundColor: "rgba(255,255,255,0.12)", color: "white", boxShadow: "0 4px 16px rgba(0,0,0,0.25)", gap: 12 }}
         >
-          <span className="transition-colors duration-300 group-hover:text-[#2563EB]">Talk to us</span>
+          <span className="transition-colors duration-300 group-hover:text-[#6BA3FF]">Talk to us</span>
           <svg
-            className="transition-transform duration-300 group-hover:translate-x-0.5"
+            className="transition-all duration-300 group-hover:translate-x-0.5 [stroke:white] group-hover:[stroke:#6BA3FF]"
             width="10" height="18" viewBox="0 0 7 12" fill="none"
-            stroke="#2563EB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"
+            strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"
           >
             <path d="M1 1l5 5-5 5" />
           </svg>
         </Link>
       </div>
 
-      {/* ── Product screenshot ── */}
+      {/* ── Desktop monitor mockup ── */}
       <div
-        className="relative flex justify-center w-full"
+        className="relative z-10 flex justify-center w-full"
         style={{ marginTop: "clamp(48px, 6vw, 80px)", paddingLeft: 20, paddingRight: 20, ...reveal(visible, 0.22) }}
       >
-        <div style={{ width: "100%", maxWidth: 1287, position: "relative" }}>
-          {/* Image container */}
+        <div style={{ width: "100%", maxWidth: 1100, position: "relative" }}>
+          {/* Monitor frame */}
           <div
             style={{
               position: "relative",
               width: "100%",
-              aspectRatio: "16 / 9",
-              borderRadius: "clamp(8px, 1vw, 16px)",
-              overflow: "hidden",
-              boxShadow: "none",
+              backgroundColor: "#1D1D1F",
+              borderRadius: "clamp(12px, 1.6vw, 24px) clamp(12px, 1.6vw, 24px) 0 0",
+              padding: "clamp(6px, 0.8vw, 12px)",
+              paddingBottom: 0,
+              boxShadow: "0 40px 100px rgba(0,0,0,0.50), 0 12px 32px rgba(0,0,0,0.30)",
             }}
           >
-            {/* Wallpaper background with blur */}
-            <Image
-              src="/ProductBackgroundImageHome.png"
-              alt=""
-              fill
-              className="object-cover object-center"
-              style={{}}
-              priority
-            />
-
-            {/* App window */}
-            <div style={{
-              position: "absolute", top: "4%", left: "3%", right: "3%", bottom: "4%",
-              zIndex: 2, borderRadius: "clamp(4px,0.5vw,8px)",
-              overflow: "hidden",
-              boxShadow: "0 16px 56px rgba(0,0,0,0.42), 0 4px 14px rgba(0,0,0,0.22), 0 0 0 1px rgba(255,255,255,0.14)",
-              display: "flex", flexDirection: "column",
-              backgroundColor: "#fff",
-              opacity: windowVisible ? 1 : 0,
-              transform: windowVisible ? "scale(1) translateY(0)" : "scale(0.96) translateY(10px)",
-              transition: "opacity 0.5s cubic-bezier(0.22,1,0.36,1), transform 0.5s cubic-bezier(0.22,1,0.36,1)",
-            }}>
+            {/* Screen area */}
+            <div
+              style={{
+                position: "relative",
+                width: "100%",
+                aspectRatio: "16 / 10",
+                borderRadius: "clamp(4px, 0.5vw, 8px) clamp(4px, 0.5vw, 8px) 0 0",
+                overflow: "hidden",
+                display: "flex",
+                flexDirection: "column",
+                backgroundColor: "#fff",
+                opacity: windowVisible ? 1 : 0,
+                transform: windowVisible ? "scale(1) translateY(0)" : "scale(0.97) translateY(8px)",
+                transition: "opacity 0.5s cubic-bezier(0.22,1,0.36,1), transform 0.5s cubic-bezier(0.22,1,0.36,1)",
+              }}
+            >
 
               {/* Window title bar */}
               <div style={{
@@ -595,7 +591,32 @@ export default function EnterpriseHero() {
                 </div>
               </div>
             </div>
+          </div>
 
+          {/* Monitor chin */}
+          <div style={{
+            height: "clamp(8px, 1.2vw, 16px)",
+            backgroundColor: "#1D1D1F",
+            borderRadius: "0 0 clamp(12px, 1.6vw, 24px) clamp(12px, 1.6vw, 24px)",
+          }} />
+
+          {/* Monitor stand neck */}
+          <div style={{ display: "flex", justifyContent: "center" }}>
+            <div style={{
+              width: "clamp(80px, 10%, 130px)",
+              height: "clamp(40px, 5vw, 70px)",
+              background: "linear-gradient(180deg, #2A2A2C 0%, #3A3A3C 100%)",
+            }} />
+          </div>
+
+          {/* Monitor stand base */}
+          <div style={{ display: "flex", justifyContent: "center" }}>
+            <div style={{
+              width: "clamp(180px, 25%, 320px)",
+              height: "clamp(10px, 1.2vw, 16px)",
+              background: "linear-gradient(180deg, #3A3A3C 0%, #505052 100%)",
+              borderRadius: "0 0 6px 6px",
+            }} />
           </div>
         </div>
       </div>
