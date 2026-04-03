@@ -8,48 +8,60 @@ import { ConsumerEnterpriseToggle } from "./ConsumerEnterpriseToggle";
 // ── Topographic contour map with 3D drawn effect ──
 // Height field + marching-squares extraction, computed once at module load
 
-const TOPO_W = 600;
-const TOPO_H = 500;
+const TOPO_W = 900;
+const TOPO_H = 700;
 const TOPO_CELL = 5;
 const TOPO_NX = Math.floor(TOPO_W / TOPO_CELL);
 const TOPO_NY = Math.floor(TOPO_H / TOPO_CELL);
 
-// Canyon / ridge chain running diagonally across the top-left corner
+// Realistic map topography — mountain range, valleys, river drainage
+const MOUNTAINS = [
+  { x: 200, y: 180, h: 1.0, sx: 110, sy: 90 },    // main summit
+  { x: 340, y: 220, h: 0.85, sx: 95, sy: 75 },     // adjacent peak
+  { x: 130, y: 310, h: 0.72, sx: 80, sy: 100 },    // southern peak
+  { x: 450, y: 140, h: 0.60, sx: 70, sy: 65 },     // eastern knob
+  { x: 280, y: 100, h: 0.55, sx: 60, sy: 55 },     // northern shoulder
+  { x: 550, y: 280, h: 0.45, sx: 90, sy: 80 },     // distant foothill
+  { x: 100, y: 130, h: 0.50, sx: 75, sy: 60 },     // NW ridge
+  { x: 400, y: 350, h: 0.38, sx: 65, sy: 70 },     // SE outlier
+  { x: 680, y: 180, h: 0.30, sx: 80, sy: 55 },     // far east hill
+  { x: 250, y: 420, h: 0.42, sx: 70, sy: 90 },     // south basin rim
+];
+
 function topoHeight(x: number, y: number): number {
-  // Diagonal axis — cliff edge runs at ~35° from top-left
-  const ang = 0.62;
-  const cosA = Math.cos(ang), sinA = Math.sin(ang);
-  const along = x * cosA + y * sinA;
-  const perp = -x * sinA + y * cosA;
+  let h = 0;
 
-  // Organic undulations along the cliff edge
-  const wave =
-    28 * Math.sin(along * 0.015) +
-    18 * Math.sin(along * 0.033 + 1.8) +
-    9 * Math.sin(along * 0.064 + 0.7);
-  const ep = perp - wave;
+  // Mountain peaks — Gaussian summits
+  for (const m of MOUNTAINS) {
+    const dx = x - m.x, dy = y - m.y;
+    h += m.h * Math.exp(-(dx * dx) / (2 * m.sx * m.sx) - (dy * dy) / (2 * m.sy * m.sy));
+  }
 
-  // Main cliff face — sigmoid creates open contour lines
-  let h = 1.0 / (1 + Math.exp((ep + 10) / 32));
+  // Mountain ridge connecting main peaks — NW to SE trending
+  const ridgeLine = 160 + 0.35 * (x - 150);
+  const ridgeDist = y - ridgeLine;
+  h += 0.35 * Math.exp(-ridgeDist * ridgeDist / 3600)
+     * Math.exp(-((x - 280) * (x - 280)) / 80000);
 
-  // Second parallel ridge — canyon depth
-  const wave2 = 14 * Math.sin(along * 0.022 + 2.5) + 8 * Math.sin(along * 0.05 + 1.0);
-  const ep2 = perp - wave2;
-  h += 0.3 / (1 + Math.exp((ep2 + 80) / 28));
+  // Secondary spur ridge branching south
+  const spur = 240 + 0.8 * (x - 300);
+  const spurDist = y - spur;
+  h += 0.20 * Math.exp(-spurDist * spurDist / 2000)
+     * Math.exp(-((x - 350) * (x - 350)) / 20000);
 
-  // Third shelf further out — more distant ridge in the chain
-  const wave3 = 10 * Math.sin(along * 0.028 + 0.8);
-  const ep3 = perp - wave3;
-  h += 0.18 / (1 + Math.exp((ep3 + 140) / 24));
+  // River valley carving through — sinuous drainage lowering elevation
+  const riverX = 320 + 60 * Math.sin(y * 0.008) + 25 * Math.sin(y * 0.022 + 1.5);
+  const riverDist = x - riverX;
+  h -= 0.25 * Math.exp(-riverDist * riverDist / 900);
 
-  // Spur ridges branching off the main cliff for interesting shapes
-  h += 0.18 * Math.exp(-((along - 100) * (along - 100)) / 2500)
-     * Math.exp(-(ep + 30) * (ep + 30) / 1800);
-  h += 0.12 * Math.exp(-((along - 220) * (along - 220)) / 1800)
-     * Math.exp(-(ep + 20) * (ep + 20) / 1400);
+  // Tributary joining from the east
+  const tribY = 250 + 40 * Math.sin(x * 0.012);
+  const tribDist = y - tribY;
+  h -= 0.12 * Math.exp(-tribDist * tribDist / 600)
+     * (1 / (1 + Math.exp(-(x - 380) / 40)));
 
-  // Small knoll / outcrop sitting on the ridge
-  h += 0.14 * Math.exp(-((x - 50) * (x - 50) + (y - 40) * (y - 40)) / 600);
+  // Gentle base elevation so outer contours exist
+  h += 0.08 * Math.exp(-((x - 350) * (x - 350) + (y - 280) * (y - 280)) / 120000);
 
   return Math.max(0, h);
 }
@@ -211,7 +223,7 @@ function extractContour(level: number): string[] {
 const CONTOUR_DATA: { level: number; paths: string[]; isIndex: boolean }[] = [];
 {
   let idx = 0;
-  for (let l = 0.04; l < 1.3; l += 0.028) {
+  for (let l = 0.03; l < 1.1; l += 0.025) {
     CONTOUR_DATA.push({ level: l, paths: extractContour(l), isIndex: idx % 5 === 0 });
     idx++;
   }
@@ -226,15 +238,11 @@ function TopoMap3D() {
       style={{ top: 0, left: 0, width: "100%", height: "100%" }}
     >
       <defs>
-        {/* 3D depth — warm shadow beneath each contour line */}
-        <filter id="topo3d" x="-2%" y="-2%" width="104%" height="108%">
-          <feDropShadow dx="0.5" dy="1.2" stdDeviation="0.8" floodColor="rgba(120,105,85,0.18)" />
-        </filter>
-        {/* Radial fade — tight to top-left */}
-        <radialGradient id="topoFade" cx="8%" cy="6%" r="52%" gradientUnits="objectBoundingBox">
+        {/* Fade edges so contours blend into the background */}
+        <radialGradient id="topoFade" cx="12%" cy="10%" r="42%" gradientUnits="objectBoundingBox">
           <stop offset="0%" stopColor="white" stopOpacity="1" />
-          <stop offset="45%" stopColor="white" stopOpacity="0.8" />
-          <stop offset="75%" stopColor="white" stopOpacity="0.18" />
+          <stop offset="45%" stopColor="white" stopOpacity="0.7" />
+          <stop offset="75%" stopColor="white" stopOpacity="0.15" />
           <stop offset="100%" stopColor="white" stopOpacity="0" />
         </radialGradient>
         <mask id="topoMask">
@@ -242,15 +250,15 @@ function TopoMap3D() {
         </mask>
       </defs>
 
-      <g mask="url(#topoMask)" filter="url(#topo3d)">
+      <g mask="url(#topoMask)">
         {CONTOUR_DATA.map(({ level, paths, isIndex }) =>
           paths.map((d, j) => (
             <path
               key={`c${level.toFixed(2)}-${j}`}
               d={d}
               fill="none"
-              stroke={isIndex ? "rgba(140,125,105,0.50)" : "rgba(150,138,120,0.28)"}
-              strokeWidth={isIndex ? 2.0 : 1.0}
+              stroke={isIndex ? "rgba(140,130,115,0.35)" : "rgba(150,140,125,0.18)"}
+              strokeWidth={isIndex ? 1.5 : 0.7}
               strokeLinecap="round"
               strokeLinejoin="round"
             />
@@ -346,7 +354,7 @@ export default function EnterpriseHero() {
       {/* Topographic contour map — top-left flowing background */}
       <div
         className="absolute pointer-events-none overflow-hidden"
-        style={{ top: 0, left: 0, width: "52%", height: "70%", zIndex: 0 }}
+        style={{ top: 0, left: 0, width: "40%", height: "50%", zIndex: 0 }}
         aria-hidden
       >
         <TopoMap3D />
@@ -356,7 +364,7 @@ export default function EnterpriseHero() {
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
-          background: "radial-gradient(ellipse 80% 65% at 50% -5%, rgba(0, 102, 204, 0.32) 0%, rgba(0, 102, 204, 0.16) 55%, transparent 100%)",
+          background: "radial-gradient(ellipse 120% 90% at 50% 100%, rgba(0, 102, 204, 0.32) 0%, rgba(0, 102, 204, 0.16) 50%, transparent 85%)",
           zIndex: 0,
         }}
         aria-hidden

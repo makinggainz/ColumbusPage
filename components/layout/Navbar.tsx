@@ -50,8 +50,8 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
             if (sessionStorage.getItem("navbar-scrolled") === "true") scrolled = true;
         } catch {}
         if (scrolled) setHasScrolled(true);
-        // Use-cases page: navbar visible immediately (no hero entrance animation)
-        if (isUseCasesPage) setHasScrolled(true);
+        // Use-cases & enterprise page: navbar visible immediately (no hero entrance animation)
+        if (isUseCasesPage || isEnterprisePage) setHasScrolled(true);
         setIsCompact(window.scrollY > COMPACT_THRESHOLD);
     }, []);
 
@@ -158,9 +158,9 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    // Use-cases page: navbar visible immediately (no hero entrance animation)
+    // Use-cases & enterprise page: navbar visible immediately (no hero entrance animation)
     useEffect(() => {
-        if (!isUseCasesPage) return;
+        if (!isUseCasesPage && !isEnterprisePage) return;
         setHasScrolled(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
@@ -420,7 +420,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                     }}>
                                         <Link
                                             href="/contact"
-                                            className={`group flex items-center justify-between leading-none whitespace-nowrap transition-all duration-300 ${isUseCasesPage ? (isDark ? "hover:bg-white!" : "hover:opacity-90") : "hover:opacity-90"} ${wide ? glassStyles.btn : ""}`}
+                                            className={`group flex items-center justify-between leading-none whitespace-nowrap transition-all duration-300 ${isEnterprisePage ? "hover:bg-black!" : isUseCasesPage ? (isDark ? "hover:bg-white!" : "hover:opacity-90") : "hover:opacity-90"} ${wide ? glassStyles.btn : ""}`}
                                             style={{
                                                 fontSize: 14,
                                                 fontWeight: 500,
@@ -444,7 +444,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                             }}
                                         >
                                             <span
-                                                className={`transition-colors duration-300 ${wide ? (isProductsPage ? "text-black" : isMenuOpen ? "text-black" : "text-white") : isUseCasesPage && isDark ? "group-hover:text-black!" : ""} group-hover:text-[#2563EB]`}
+                                                className={`transition-colors duration-300 ${wide ? (isProductsPage ? "text-black" : isMenuOpen ? "text-black" : "text-white") : isUseCasesPage && isDark ? "group-hover:text-black!" : ""} ${isEnterprisePage ? "group-hover:text-[#2563EB]!" : "group-hover:text-[#2563EB]"}`}
                                                 style={{
                                                     opacity: ctaVisible ? 1 : 0,
                                                     transition: ctaVisible

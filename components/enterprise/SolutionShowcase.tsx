@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { GridSection, gl } from "../home/ContentGrid";
+import { GridSection } from "../home/ContentGrid";
 
 export default function SolutionShowcase() {
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -27,14 +27,13 @@ export default function SolutionShowcase() {
     <div ref={sectionRef}>
       <GridSection
         style={{
-          borderLeft: gl,
           backgroundColor: "transparent",
         }}
       >
-        {/* Header row — Hebbia-scale centered heading + subtitle */}
+        {/* Header row */}
         <div
           className="flex flex-col items-center text-center px-6 md:px-10"
-          style={{ borderRight: gl, borderBottom: gl, paddingTop: 120, paddingBottom: 120 }}
+          style={{ paddingTop: 120, paddingBottom: 120 }}
         >
           <h2
             className="text-[#1D1D1F] leading-[1.1] text-[28px] md:text-[36px] lg:text-[45px]"

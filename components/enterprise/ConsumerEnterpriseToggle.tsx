@@ -18,6 +18,7 @@ export function ConsumerEnterpriseToggle({ variant = "dark", active = "enterpris
     width: "304px",
     height: "48px",
     padding: "4px",
+    border: "1px solid rgba(0, 0, 0, 0.10)",
   };
 
   const containerClass = isDark

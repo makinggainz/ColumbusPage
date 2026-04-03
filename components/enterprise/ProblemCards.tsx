@@ -36,15 +36,13 @@ export default function ProblemCards() {
     <div ref={sectionRef}>
       <GridSection
         style={{
-          borderLeft: gl,
-          borderTop: gl,
           backgroundColor: "transparent",
         }}
       >
-        {/* Header row — Hebbia-scale centered heading */}
+        {/* Header row */}
         <div
           className="flex flex-col items-center text-center px-6 md:px-10"
-          style={{ borderRight: gl, borderBottom: gl, paddingTop: 100, paddingBottom: 100 }}
+          style={{ paddingTop: 100, paddingBottom: 100 }}
         >
           <h2
             className="text-[#1D1D1F] leading-[1.1] text-[28px] md:text-[36px] lg:text-[45px]"
@@ -60,6 +58,7 @@ export default function ProblemCards() {
         className="w-full grid"
         style={{
           gridTemplateColumns: `repeat(${PAIN_POINTS.length}, 1fr)`,
+          borderTop: "1px solid var(--grid-line)",
           opacity: visible ? 1 : 0,
           transition: "opacity 0.7s ease 0.3s",
         }}
@@ -72,7 +71,6 @@ export default function ProblemCards() {
               backgroundColor: "transparent",
               borderRight: i < PAIN_POINTS.length - 1 ? "1px solid var(--grid-line)" : "none",
               borderBottom: "1px solid var(--grid-line)",
-              borderTop: "1px solid var(--grid-line)",
               fontSize: 15,
               fontWeight: 400,
               lineHeight: 1.5,
