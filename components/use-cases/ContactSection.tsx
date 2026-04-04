@@ -61,7 +61,7 @@ export default function ContactSection() {
         "
       >
         <Image
-          src="/use-cases/endImage2.png"
+          src="/use-cases-end.png"
           alt=""
           fill
           className="object-cover"
@@ -69,7 +69,7 @@ export default function ContactSection() {
         />
 
         {/* DARK OVERLAY */}
-        <div className="absolute inset-0 bg-black/30" />
+        <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse 70% 60% at 50% 50%, rgba(0,0,0,0.60) 0%, rgba(0,0,0,0.20) 100%)" }} />
 
         {/* CONTENT */}
         <div

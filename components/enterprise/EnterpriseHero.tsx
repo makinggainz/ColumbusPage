@@ -395,7 +395,7 @@ export default function EnterpriseHero() {
           href="/contact"
           className="group flex items-center gap-3 mt-8 text-[18px] lg:text-[20px] text-white font-semibold transition-opacity"
         >
-          <span className="transition-colors duration-300 group-hover:text-[#6BA3FF]">Talk to us</span>
+          <span className="transition-colors duration-300 group-hover:text-[#6BA3FF]">Talk to Founders</span>
           <svg
             className="transition-transform duration-300 group-hover:translate-x-0.5"
             width="9" height="16" viewBox="0 0 7 12" fill="none"
