@@ -42,14 +42,15 @@ export default function ProductBanner() {
         fill
         className="object-cover object-center"
       />
-      {/* Blue tint overlay */}
+
+      {/* Dark overlay */}
       <div
         className="absolute inset-0"
-        style={{ backgroundColor: "rgba(37, 99, 235, 0.55)", zIndex: 1 }}
+        style={{ backgroundColor: "rgba(0, 0, 0, 0.40)", zIndex: 1 }}
       />
 
-      {/* Generated noise grain texture — full width, extreme */}
-      <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ zIndex: 2, opacity: 0.90, mixBlendMode: "overlay" }}>
+      {/* Generated noise grain texture — full width */}
+      <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ zIndex: 2, opacity: 0.40, mixBlendMode: "multiply" }}>
         <filter id="bannerNoise">
           <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="4" stitchTiles="stitch" />
           <feColorMatrix type="saturate" values="0" />
@@ -71,12 +72,10 @@ export default function ProductBanner() {
             borderLeft: "1px solid rgba(255,255,255,0.10)",
             borderRight: "1px solid rgba(255,255,255,0.10)",
             backgroundImage:
-              "url(/ProductBackgroundImageHome.png), " +
               "linear-gradient(to right, rgba(255,255,255,0.12) 1px, transparent 1px), " +
               "linear-gradient(to bottom, rgba(255,255,255,0.12) 1px, transparent 1px)",
-            backgroundSize: "cover, 80px 80px, 80px 80px",
-            backgroundPosition: "center, center top, center top",
-            backgroundBlendMode: "soft-light, normal, normal",
+            backgroundSize: "80px 80px, 80px 80px",
+            backgroundPosition: "center top, center top",
           }}
         />
       </div>
@@ -128,7 +127,7 @@ export default function ProductBanner() {
             fontWeight: 600,
             letterSpacing: "-0.01em",
             borderRadius: 0,
-            backgroundColor: "#1d4ed8",
+            backgroundColor: "#0A1344",
             color: "white",
             boxShadow: "none",
           }}
