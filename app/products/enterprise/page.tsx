@@ -1,3 +1,6 @@
+"use client";
+
+import { useEffect, useRef, useState } from "react";
 import EnterpriseHero from "@/components/enterprise/EnterpriseHero";
 import ProblemCards from "@/components/enterprise/ProblemCards";
 import SolutionShowcase from "@/components/enterprise/SolutionShowcase";
@@ -33,10 +36,27 @@ function SectionWithLabel({
 }
 
 export default function EnterprisePage() {
+  const [navTheme, setNavTheme] = useState<"light" | "dark">("dark");
+  const diffRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const NAVBAR_H = 80;
+    const update = () => {
+      if (diffRef.current) {
+        const rect = diffRef.current.getBoundingClientRect();
+        // Switch to light when the diff section (white bg) reaches the navbar
+        setNavTheme(rect.top <= NAVBAR_H ? "light" : "dark");
+      }
+    };
+    window.addEventListener("scroll", update, { passive: true });
+    update();
+    return () => window.removeEventListener("scroll", update);
+  }, []);
+
   return (
     <main>
       <SectionWithLabel label={sectionLabels[0]}>
-        <Navbar theme="dark" />
+        <Navbar theme={navTheme} />
       </SectionWithLabel>
       <SectionWithLabel label={sectionLabels[1]}>
         <EnterpriseHero />
@@ -67,12 +87,14 @@ export default function EnterprisePage() {
       <SectionWithLabel label={sectionLabels[7]}>
         <StickyScrollSection />
       </SectionWithLabel>
-      <SectionWithLabel label="diff">
-        <DifferenceSection />
-      </SectionWithLabel>
-      <SectionWithLabel label={sectionLabels[6]}>
-        <PromptShowcase />
-      </SectionWithLabel>
+      <div ref={diffRef}>
+        <SectionWithLabel label="diff">
+          <DifferenceSection />
+        </SectionWithLabel>
+        <SectionWithLabel label={sectionLabels[6]}>
+          <PromptShowcase />
+        </SectionWithLabel>
+      </div>
       <SectionWithLabel label={sectionLabels[8]}>
         <ChatSection />
       </SectionWithLabel>
