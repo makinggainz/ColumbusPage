@@ -23,6 +23,7 @@ export function StructureGrid({ cellSize = 80, lineColor }: { cellSize?: number;
             `linear-gradient(to right, ${color} 1px, transparent 1px), ` +
             `linear-gradient(to bottom, ${color} 1px, transparent 1px)`,
           backgroundSize: `${cellSize}px ${cellSize}px`,
+          backgroundPosition: "center top",
         }}
       />
     </div>

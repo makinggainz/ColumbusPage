@@ -3,11 +3,11 @@ import ProblemCards from "@/components/enterprise/ProblemCards";
 import SolutionShowcase from "@/components/enterprise/SolutionShowcase";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
-import SectionCScroll from "@/components/enterprise/SectionCScroll";
 import ComparisonSection from "@/components/enterprise/ComparisonSection";
 import ChatSection from "@/components/enterprise/ChatSection";
 import PromptShowcase from "@/components/enterprise/PromptShowcase";
 import StickyScrollSection from "@/components/enterprise/StickyScrollSection";
+import ProductBanner from "@/components/enterprise/ProductBanner";
 
 const sectionLabels = ["a", "b", "b2", "b3", "c", "d", "e", "g", "m", "n"] as const;
 
@@ -52,7 +52,7 @@ export default function EnterprisePage() {
         <ComparisonSection />
       </SectionWithLabel>
       <SectionWithLabel label={sectionLabels[5]}>
-        <SectionCScroll />
+        <ProductBanner />
       </SectionWithLabel>
       <SectionWithLabel label={sectionLabels[6]}>
         <PromptShowcase />
