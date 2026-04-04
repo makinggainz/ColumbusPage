@@ -19,16 +19,6 @@ export default function ProductBanner() {
     return () => obs.disconnect();
   }, []);
 
-  const materialText: React.CSSProperties = {
-    backgroundImage: "url(/ProductBackgroundImageHome.png)",
-    backgroundSize: "cover",
-    backgroundPosition: "center",
-    backgroundClip: "text",
-    WebkitBackgroundClip: "text",
-    color: "transparent",
-    filter: "brightness(2.0) saturate(0.6) contrast(1.3)",
-  };
-
   return (
     <section
       ref={sectionRef}
@@ -43,14 +33,24 @@ export default function ProductBanner() {
         className="object-cover object-center"
       />
 
+      {/* Blur on left and right edges — only outside grid bounds */}
+      <div
+        className="absolute top-0 bottom-0 left-0 pointer-events-none"
+        style={{ width: "calc((100% - 1287px) / 2)", backdropFilter: "blur(4px)", WebkitBackdropFilter: "blur(4px)", zIndex: 1 }}
+      />
+      <div
+        className="absolute top-0 bottom-0 right-0 pointer-events-none"
+        style={{ width: "calc((100% - 1287px) / 2)", backdropFilter: "blur(4px)", WebkitBackdropFilter: "blur(4px)", zIndex: 1 }}
+      />
+
       {/* Dark overlay */}
       <div
         className="absolute inset-0"
-        style={{ backgroundColor: "rgba(0, 0, 0, 0.40)", zIndex: 1 }}
+        style={{ backgroundColor: "rgba(0, 0, 0, 0.40)", zIndex: 2 }}
       />
 
       {/* Generated noise grain texture — full width */}
-      <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ zIndex: 2, opacity: 0.40, mixBlendMode: "multiply" }}>
+      <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ zIndex: 3, opacity: 0.40, mixBlendMode: "multiply" }}>
         <filter id="bannerNoise">
           <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="4" stitchTiles="stitch" />
           <feColorMatrix type="saturate" values="0" />
@@ -61,7 +61,7 @@ export default function ProductBanner() {
       {/* Textured grid lines */}
       <div
         className="absolute inset-0 pointer-events-none overflow-hidden"
-        style={{ zIndex: 3 }}
+        style={{ zIndex: 4 }}
         aria-hidden
       >
         <div
@@ -91,10 +91,15 @@ export default function ProductBanner() {
         }}
       >
         <h2
-          className="text-center leading-[1.15] text-[24px] md:text-[32px] lg:text-[40px]"
+          className="text-center leading-[1.1] text-[28px] md:text-[36px] lg:text-[45px]"
           style={{
             letterSpacing: "-0.025em",
-            ...materialText,
+            color: "transparent",
+            backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='200' height='200' fill='white' /%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.15'/%3E%3C/svg%3E")`,
+            backgroundSize: "200px 200px",
+            backgroundClip: "text",
+            WebkitBackgroundClip: "text",
+            textShadow: "0 1px 3px rgba(0,0,0,0.3), 0 0 8px rgba(0,0,0,0.1)",
           }}
         >
           <strong>Columbus Pro</strong>

@@ -59,7 +59,7 @@ export default function ComparisonSection() {
               color: "rgba(255,255,255,0.25)",
             }}
           >
-            Video Demo
+            The Solution. full video demo
           </span>
         </div>
       </div>

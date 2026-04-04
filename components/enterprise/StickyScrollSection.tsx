@@ -233,7 +233,7 @@ export default function StickyScrollSection() {
   const [, ...rest] = features;
 
   return (
-    <div className="relative w-full" style={{ "--grid-line": "rgba(255,255,255,0.10)", backgroundColor: "#060810" } as React.CSSProperties}>
+    <div className="relative w-full" style={{ "--grid-line": "rgba(255,255,255,0.10)", backgroundColor: "#060810", backgroundImage: "linear-gradient(rgba(255,255,255,0.04), rgba(255,255,255,0.04))" } as React.CSSProperties}>
 
       {/* Noise grain texture */}
       <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ zIndex: 1, opacity: 0.40, mixBlendMode: "multiply" }}>
