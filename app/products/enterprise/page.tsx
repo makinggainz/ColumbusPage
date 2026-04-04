@@ -76,6 +76,11 @@ export default function EnterprisePage() {
           <SectionWithLabel label={sectionLabels[3]}>
             <SolutionShowcase />
           </SectionWithLabel>
+          {/* Horizontal line from screen edges to grid bounds */}
+          <div className="relative w-full" style={{ height: 1 }}>
+            <div className="absolute top-0 left-0 h-px" style={{ width: "calc((100% - 1287px) / 2)", backgroundColor: "rgba(255,255,255,0.10)" }} />
+            <div className="absolute top-0 right-0 h-px" style={{ width: "calc((100% - 1287px) / 2)", backgroundColor: "rgba(255,255,255,0.10)" }} />
+          </div>
           <SectionWithLabel label={sectionLabels[4]}>
             <ComparisonSection />
           </SectionWithLabel>
