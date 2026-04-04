@@ -54,11 +54,11 @@ export default function EnterprisePage() {
       <SectionWithLabel label={sectionLabels[5]}>
         <ProductBanner />
       </SectionWithLabel>
-      <SectionWithLabel label={sectionLabels[6]}>
-        <PromptShowcase />
-      </SectionWithLabel>
       <SectionWithLabel label={sectionLabels[7]}>
         <StickyScrollSection />
+      </SectionWithLabel>
+      <SectionWithLabel label={sectionLabels[6]}>
+        <PromptShowcase />
       </SectionWithLabel>
       <SectionWithLabel label={sectionLabels[8]}>
         <ChatSection />

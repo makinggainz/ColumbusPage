@@ -118,34 +118,11 @@ export default function ProductBanner() {
 
         <Link
           href="/contact"
-          className="group relative mt-10 flex items-center justify-center gap-3 whitespace-nowrap transition-all duration-200 hover:brightness-110 overflow-hidden"
-          style={{
-            height: 48,
-            paddingLeft: 48,
-            paddingRight: 44,
-            fontSize: 14,
-            fontWeight: 600,
-            letterSpacing: "-0.01em",
-            borderRadius: 0,
-            backgroundColor: "#0A1344",
-            color: "white",
-            boxShadow: "none",
-          }}
+          className="group mt-10 flex items-center gap-3 leading-none whitespace-nowrap hover:opacity-90 transition-all duration-300"
+          style={{ fontSize: 14, fontWeight: 500, height: 45, paddingLeft: 20, paddingRight: 16, backgroundColor: "#1D1D1F", color: "white" }}
         >
-          {/* Button noise texture */}
-          <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ opacity: 0.45, mixBlendMode: "overlay" }}>
-            <filter id="btnNoise">
-              <feTurbulence type="fractalNoise" baseFrequency="0.7" numOctaves="4" stitchTiles="stitch" />
-              <feColorMatrix type="saturate" values="0" />
-            </filter>
-            <rect width="100%" height="100%" filter="url(#btnNoise)" />
-          </svg>
-          <span className="relative z-10">Try Demo</span>
-          <svg
-            className="relative z-10 transition-transform duration-300 group-hover:translate-x-0.5"
-            width="9" height="16" viewBox="0 0 7 12" fill="none"
-            stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"
-          >
+          <span className="transition-colors duration-300 group-hover:text-[#2563EB]">Try Demo</span>
+          <svg className="transition-transform duration-300 group-hover:translate-x-0.5" width="10" height="18" viewBox="0 0 7 12" fill="none" stroke="#2563EB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
             <path d="M1 1l5 5-5 5" />
           </svg>
         </Link>
