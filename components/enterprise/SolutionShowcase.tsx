@@ -24,7 +24,7 @@ export default function SolutionShowcase() {
   }, []);
 
   return (
-    <div ref={sectionRef} style={{ "--grid-line": "rgba(255,255,255,0.10)", backgroundColor: "rgba(255,255,255,0.04)" } as React.CSSProperties}>
+    <div ref={sectionRef} style={{ "--grid-line": "rgba(255,255,255,0.10)", backgroundColor: "#0A1344" } as React.CSSProperties}>
       <GridSection
         style={{
           backgroundColor: "transparent",
@@ -33,7 +33,7 @@ export default function SolutionShowcase() {
         {/* Header row */}
         <div
           className="flex flex-col items-center text-center px-6 md:px-10"
-          style={{ paddingTop: 120, paddingBottom: 120 }}
+          style={{ paddingTop: 100, paddingBottom: 44 }}
         >
           <h2
             className="text-white leading-[1.1] text-[28px] md:text-[36px] lg:text-[45px]"
