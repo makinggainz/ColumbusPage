@@ -15,14 +15,14 @@ function DatasetCard({
   desc: string;
 }) {
   return (
-    <div className="w-full rounded-[10px] border border-[#E6E6E6] bg-white overflow-hidden">
+    <div className="w-full rounded-[10px] border border-white/10 bg-white/5 overflow-hidden">
       <div className="relative w-full h-[200px]">
         <Image src={image} alt="" fill className="object-cover" />
       </div>
       <div className="p-4">
-        <h4 className="text-[15px] font-medium text-[#111]">{title}</h4>
-        <p className="text-[12px] text-[#6B7280] mt-1">{rows}</p>
-        <p className="text-[13px] text-[#6B7280] mt-2 leading-[1.6]">{desc}</p>
+        <h4 className="text-[15px] font-medium text-white">{title}</h4>
+        <p className="text-[12px] text-white/40 mt-1">{rows}</p>
+        <p className="text-[13px] text-white/40 mt-2 leading-[1.6]">{desc}</p>
       </div>
     </div>
   );
@@ -78,15 +78,15 @@ const features: {
       <div>
         <div className="relative mb-10">
           <span className="absolute left-0 top-0 z-50 flex h-8 w-8 items-center justify-center rounded-br bg-black/80 text-[11px] font-bold text-white" aria-hidden>g2.1</span>
-          <h2 className="text-[32px] md:text-[40px] font-light text-[#111] leading-[1.1] tracking-[-0.03em] opacity-[0.62]">
+          <h2 className="text-[32px] md:text-[40px] font-light text-white leading-[1.1] tracking-[-0.03em] opacity-[0.62]">
             Can't find relevant datasets for your research?
           </h2>
-          <h3 className="text-[32px] md:text-[40px] font-medium text-[#111] leading-[1.1] tracking-[-0.03em]">
+          <h3 className="text-[32px] md:text-[40px] font-medium text-white leading-[1.1] tracking-[-0.03em]">
             Columbus has it.
           </h3>
         </div>
 
-        <div className="relative flex flex-wrap gap-6 text-[14px] text-[#6B7280] border-b border-[#E5E7EB] pb-3 mb-6">
+        <div className="relative flex flex-wrap gap-6 text-[14px] text-white/40 border-b border-white/10 pb-3 mb-6">
           <span className="absolute left-0 top-0 z-50 flex h-8 w-8 items-center justify-center rounded-br bg-black/80 text-[11px] font-bold text-white" aria-hidden>g2.2</span>
           <span>Suggested</span>
           <span>Base Maps</span>
@@ -94,7 +94,7 @@ const features: {
           <span>Packs</span>
           <span>Environmental</span>
           <span>Infrastructure</span>
-          <span className="text-[#111] border-b-2 border-[#111] pb-2">Smart Layers</span>
+          <span className="text-white border-b-2 border-[#111] pb-2">Smart Layers</span>
           <span>Demographic</span>
         </div>
 
@@ -128,21 +128,21 @@ const features: {
 
         <div className="relative max-w-[900px] mb-10">
           <span className="absolute left-0 top-0 z-50 flex h-8 w-8 items-center justify-center rounded-br bg-black/80 text-[11px] font-bold text-white" aria-hidden>g2.4</span>
-          <p className="text-[24px] md:text-[28px] leading-[1.55] tracking-[-0.01em] text-[#111]">
+          <p className="text-[24px] md:text-[28px] leading-[1.55] tracking-[-0.01em] text-white">
             The <span className="font-semibold">highest quality</span>, and most versatile
             data-sets for your critical research and decisions.
           </p>
-          <a className="text-[14px] text-[#0A1344] mt-4 inline-flex items-center gap-2">
+          <a className="text-[14px] text-white/70 mt-4 inline-flex items-center gap-2">
             Learn about our Data Collection →
           </a>
         </div>
 
-        <div className="relative bg-white border border-[#E6E6E6] rounded-[10px] p-10">
+        <div className="relative bg-white/5 border border-white/10 rounded-[10px] p-10">
           <span className="absolute left-0 top-0 z-50 flex h-8 w-8 items-center justify-center rounded-br bg-black/80 text-[11px] font-bold text-white" aria-hidden>g2.5</span>
           <h3 className="text-center text-[24px] font-medium tracking-[-0.02em] mb-2">
             Vetted, high-fidelity, and smart datasets
           </h3>
-          <p className="text-center text-[#6B7280] text-[14px] mb-8">
+          <p className="text-center text-white/40 text-[14px] mb-8">
             We vet our data with partner organizations
           </p>
           <div className="flex flex-wrap justify-center items-center gap-10">
@@ -164,7 +164,7 @@ const features: {
     description:
       "Query any location on Earth in natural language. Ask questions, get maps and spatial answers instantly.",
     content: (
-      <div className="relative w-full bg-white rounded-[10px] shadow-[0_30px_80px_rgba(0,0,0,0.08)] overflow-hidden">
+      <div className="relative w-full bg-white/5 rounded-[10px] shadow-[0_30px_80px_rgba(0,0,0,0.08)] overflow-hidden">
         <span className="absolute left-0 top-0 z-50 flex h-8 w-8 items-center justify-center rounded-br bg-black/80 text-[11px] font-bold text-white" aria-hidden>g3.1</span>
         <img src="/enterprise/mapchat.png" alt="Map Chat" className="w-full h-auto block" />
       </div>
@@ -176,7 +176,7 @@ const features: {
     description:
       "Generate full site-selection and due diligence reports from a single prompt. What took weeks now takes minutes.",
     content: (
-      <div className="relative w-full h-[500px] bg-white rounded-[10px] shadow-[0_30px_80px_rgba(0,0,0,0.08)] flex items-center justify-center">
+      <div className="relative w-full h-[500px] bg-white/5 rounded-[10px] shadow-[0_30px_80px_rgba(0,0,0,0.08)] flex items-center justify-center">
         <span className="absolute left-0 top-0 z-50 flex h-8 w-8 items-center justify-center rounded-br bg-black/80 text-[11px] font-bold text-white" aria-hidden>g4.1</span>
         <span className="text-[#9CA3AF] text-[14px]">Coming soon</span>
       </div>
@@ -188,7 +188,7 @@ const features: {
     description:
       "AI-generated geospatial datasets that fill gaps where traditional surveying is too expensive or unavailable.",
     content: (
-      <div className="relative w-full h-[500px] bg-white rounded-[10px] shadow-[0_30px_80px_rgba(0,0,0,0.08)] flex items-center justify-center">
+      <div className="relative w-full h-[500px] bg-white/5 rounded-[10px] shadow-[0_30px_80px_rgba(0,0,0,0.08)] flex items-center justify-center">
         <span className="absolute left-0 top-0 z-50 flex h-8 w-8 items-center justify-center rounded-br bg-black/80 text-[11px] font-bold text-white" aria-hidden>g5.1</span>
         <span className="text-[#9CA3AF] text-[14px]">Coming soon</span>
       </div>
@@ -200,11 +200,11 @@ const features: {
     description:
       "Real humans available around the clock — find datasets, get platform tips, or connect with a live agent instantly.",
     content: (
-      <div className="relative w-full bg-white rounded-[10px] p-[64px] shadow-[0_30px_80px_rgba(0,0,0,0.08)] flex flex-col lg:flex-row items-center gap-[80px]">
+      <div className="relative w-full bg-white/5 rounded-[10px] p-[64px] shadow-[0_30px_80px_rgba(0,0,0,0.08)] flex flex-col lg:flex-row items-center gap-[80px]">
         <span className="absolute left-0 top-0 z-50 flex h-8 w-8 items-center justify-center rounded-br bg-black/80 text-[11px] font-bold text-white" aria-hidden>g6.1</span>
         <div className="max-w-[520px]">
           <h2 className="text-[28px] font-medium tracking-[-0.02em] mb-6">24/7 Help &amp; Columbus Bot</h2>
-          <ul className="space-y-3 text-[18px] text-[#333]">
+          <ul className="space-y-3 text-[18px] text-white/70">
             <li>• Find relevant data sets,</li>
             <li>• Show you tips to use our platform,</li>
             <li>• Connect you to a live human agent.</li>
@@ -233,11 +233,20 @@ export default function StickyScrollSection() {
   const [, ...rest] = features;
 
   return (
-    <div className="w-full" style={{ backgroundColor: "#ffffff" }}>
+    <div className="relative w-full" style={{ "--grid-line": "rgba(255,255,255,0.10)", backgroundColor: "#060810" } as React.CSSProperties}>
+
+      {/* Noise grain texture */}
+      <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ zIndex: 1, opacity: 0.40, mixBlendMode: "multiply" }}>
+        <filter id="sectionGNoise">
+          <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="4" stitchTiles="stitch" />
+          <feColorMatrix type="saturate" values="0" />
+        </filter>
+        <rect width="100%" height="100%" filter="url(#sectionGNoise)" />
+      </svg>
 
       {/* G2–G6 — inside constraint wrapper */}
       <div
-        className="w-full max-w-[1287px] mx-auto"
+        className="relative z-10 w-full max-w-[1287px] mx-auto"
         style={{
           borderLeft: "1px solid var(--grid-line)",
           borderRight: "1px solid var(--grid-line)",
@@ -256,8 +265,8 @@ export default function StickyScrollSection() {
             <div className="bg-transparent">
               <div className="sticky top-20 px-8 py-[94px]">
                 <div className="max-w-[270px]">
-                  <p className="text-[11px] font-medium tracking-[0.12em] uppercase text-[#9CA3AF] mb-3">{feature.label}</p>
-                  <p className="text-[22px] font-normal leading-[1.6] tracking-[-0.01em] text-[#111] opacity-60">
+                  <p className="text-[11px] font-medium tracking-[0.12em] uppercase text-white/30 mb-3">{feature.label}</p>
+                  <p className="text-[22px] font-normal leading-[1.6] tracking-[-0.01em] text-white/50">
                     {feature.description}
                   </p>
                 </div>

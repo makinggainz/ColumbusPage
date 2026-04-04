@@ -6,7 +6,7 @@ export default function ChatSection() {
   return (
     <section
       className="relative w-full overflow-hidden flex flex-col items-center"
-      style={{ backgroundColor: "#1a1a1a", paddingTop: 140, paddingBottom: 0 }}
+      style={{ backgroundColor: "#1a1a1a", paddingTop: 280, paddingBottom: 0 }}
     >
       {/* Background image — same as hero */}
       <Image
@@ -48,9 +48,9 @@ export default function ChatSection() {
       {/* Monitor — top 50% visible, popping from bottom */}
       <div
         className="relative z-10 flex justify-center w-full"
-        style={{ marginTop: 80, paddingLeft: 20, paddingRight: 20, height: 340, overflow: "hidden" }}
+        style={{ marginTop: 80, paddingLeft: 20, paddingRight: 20, height: 500, overflow: "hidden" }}
       >
-        <div style={{ width: "100%", maxWidth: 1100, position: "relative" }}>
+        <div style={{ width: "100%", maxWidth: 1287, position: "relative" }}>
           {/* Monitor frame */}
           <div
             style={{
