@@ -22,8 +22,13 @@ export default function ComparisonSection() {
     <section
       ref={sectionRef}
       className="relative w-full py-10 lg:py-14"
-      style={{ backgroundColor: "#0A1344" }}
+      style={{ backgroundColor: "rgba(255,255,255,0.04)" }}
     >
+      {/* Brighter grid area */}
+      <div
+        className="absolute top-0 bottom-0 left-1/2 -translate-x-1/2"
+        style={{ width: "100%", maxWidth: 1287, backgroundColor: "rgba(255,255,255,0.04)" }}
+      />
       <StructureGrid lineColor="rgba(255,255,255,0.06)" />
 
       <div
@@ -35,7 +40,7 @@ export default function ComparisonSection() {
             width: "100%",
             aspectRatio: "16 / 9",
             borderRadius: 12,
-            background: "linear-gradient(135deg, #0e1a4a 0%, #162258 50%, #1a2a6a 100%)",
+            background: "linear-gradient(135deg, #08090e 0%, #0c0e15 50%, #0a0b12 100%)",
             border: "1px solid rgba(255,255,255,0.08)",
             display: "flex",
             alignItems: "center",

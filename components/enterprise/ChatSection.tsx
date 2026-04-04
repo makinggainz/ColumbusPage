@@ -37,10 +37,10 @@ export default function ChatSection() {
       <button
         type="button"
         className="relative z-10 group mt-8 flex items-center gap-3 leading-none whitespace-nowrap hover:opacity-90 transition-all duration-300 cursor-pointer"
-        style={{ fontSize: 14, fontWeight: 500, height: 45, paddingLeft: 20, paddingRight: 16, backgroundColor: "rgba(255,255,255,0.12)", color: "white", border: "1px solid rgba(255,255,255,0.18)" }}
+        style={{ fontSize: 14, fontWeight: 500, height: 45, paddingLeft: 20, paddingRight: 16, backgroundColor: "#1D1D1F", color: "white" }}
       >
-        <span className="transition-colors duration-300 group-hover:text-[#6BA3FF]">Get in touch</span>
-        <svg className="transition-transform duration-300 group-hover:translate-x-0.5" width="10" height="18" viewBox="0 0 7 12" fill="none" stroke="#6BA3FF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <span className="transition-colors duration-300 group-hover:text-[#2563EB]">Get in touch</span>
+        <svg className="transition-transform duration-300 group-hover:translate-x-0.5" width="10" height="18" viewBox="0 0 7 12" fill="none" stroke="#2563EB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
           <path d="M1 1l5 5-5 5" />
         </svg>
       </button>

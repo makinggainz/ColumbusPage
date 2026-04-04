@@ -411,7 +411,7 @@ export default function EnterpriseHero() {
         className="relative z-10 flex justify-center w-full"
         style={{ marginTop: "clamp(48px, 6vw, 80px)", paddingLeft: 20, paddingRight: 20, ...reveal(visible, 0.22) }}
       >
-        <div style={{ width: "100%", maxWidth: 1100, position: "relative" }}>
+        <div style={{ width: "100%", maxWidth: 1100, display: "flex", flexDirection: "column" }}>
           {/* Monitor frame */}
           <div
             style={{
@@ -591,22 +591,13 @@ export default function EnterpriseHero() {
             </div>
           </div>
 
-          {/* Monitor stand neck */}
-          <div style={{ display: "flex", justifyContent: "center" }}>
+          {/* Monitor stand neck — extends to bottom of section */}
+          <div style={{ display: "flex", justifyContent: "center", flex: 1 }}>
             <div style={{
               width: "clamp(80px, 10%, 130px)",
-              height: "clamp(40px, 5vw, 70px)",
+              minHeight: "clamp(40px, 5vw, 70px)",
+              height: "100%",
               background: "linear-gradient(180deg, #2A2A2C 0%, #3A3A3C 100%)",
-            }} />
-          </div>
-
-          {/* Monitor stand base */}
-          <div style={{ display: "flex", justifyContent: "center" }}>
-            <div style={{
-              width: "clamp(180px, 25%, 320px)",
-              height: "clamp(10px, 1.2vw, 16px)",
-              background: "linear-gradient(180deg, #3A3A3C 0%, #505052 100%)",
-              borderRadius: "0 0 6px 6px",
             }} />
           </div>
         </div>

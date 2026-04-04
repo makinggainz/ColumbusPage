@@ -71,9 +71,9 @@ const features: {
   },
   {
     id: "data",
-    label: "Data",
+    label: "Proprietary Data",
     description:
-      "Through our proprietary innovations we have accrued the most expansive data collection available for geospatial research.",
+      "The most expansive geospatial data catalogue available — vetted, high-fidelity datasets that no one else has.",
     content: (
       <div>
         <div className="relative mb-10">
@@ -162,7 +162,7 @@ const features: {
     id: "map-chat",
     label: "Map Chat",
     description:
-      "Work with your map through natural language inputs like if you're having a conversation. Our powerful technology allows you to do XYZ (WOWzers!)",
+      "Query any location on Earth in natural language. Ask questions, get maps and spatial answers instantly.",
     content: (
       <div className="relative w-full bg-white rounded-[10px] shadow-[0_30px_80px_rgba(0,0,0,0.08)] overflow-hidden">
         <span className="absolute left-0 top-0 z-50 flex h-8 w-8 items-center justify-center rounded-br bg-black/80 text-[11px] font-bold text-white" aria-hidden>g3.1</span>
@@ -174,7 +174,7 @@ const features: {
     id: "research-reports",
     label: "Research Reports",
     description:
-      "Work with your map through natural language inputs like if you're having a conversation. Our powerful technology allows you to do XYZ (WOWzers!)",
+      "Generate full site-selection and due diligence reports from a single prompt. What took weeks now takes minutes.",
     content: (
       <div className="relative w-full h-[500px] bg-white rounded-[10px] shadow-[0_30px_80px_rgba(0,0,0,0.08)] flex items-center justify-center">
         <span className="absolute left-0 top-0 z-50 flex h-8 w-8 items-center justify-center rounded-br bg-black/80 text-[11px] font-bold text-white" aria-hidden>g4.1</span>
@@ -184,9 +184,9 @@ const features: {
   },
   {
     id: "generated-layers",
-    label: "Generated Layers",
+    label: "Generative Geodata",
     description:
-      "Work with your map through natural language inputs like if you're having a conversation. Our powerful technology allows you to do XYZ (WOWzers!)",
+      "AI-generated geospatial datasets that fill gaps where traditional surveying is too expensive or unavailable.",
     content: (
       <div className="relative w-full h-[500px] bg-white rounded-[10px] shadow-[0_30px_80px_rgba(0,0,0,0.08)] flex items-center justify-center">
         <span className="absolute left-0 top-0 z-50 flex h-8 w-8 items-center justify-center rounded-br bg-black/80 text-[11px] font-bold text-white" aria-hidden>g5.1</span>
@@ -196,9 +196,9 @@ const features: {
   },
   {
     id: "human-support",
-    label: "Human Customer Support",
+    label: "24/7 Human Support",
     description:
-      "Work with your map through natural language inputs like if you're having a conversation. Our powerful technology allows you to do XYZ (WOWzers!)",
+      "Real humans available around the clock — find datasets, get platform tips, or connect with a live agent instantly.",
     content: (
       <div className="relative w-full bg-white rounded-[10px] p-[64px] shadow-[0_30px_80px_rgba(0,0,0,0.08)] flex flex-col lg:flex-row items-center gap-[80px]">
         <span className="absolute left-0 top-0 z-50 flex h-8 w-8 items-center justify-center rounded-br bg-black/80 text-[11px] font-bold text-white" aria-hidden>g6.1</span>
@@ -230,57 +230,30 @@ const LINE = "linear-gradient(to bottom, transparent 0px, rgba(120,120,200,0.35)
 
 // ── component ───────────────────────────────────────────────────────────────
 export default function StickyScrollSection() {
-  const [g1, ...rest] = features;
+  const [, ...rest] = features;
 
   return (
-    <div className="w-full bg-[#F4F3EB]">
-      {/* Gradient transition from white (section E) to #F4F3EB */}
-      <div className="h-24 w-full" style={{ background: "linear-gradient(to bottom, #ffffff 0%, #F4F3EB 100%)" }} />
-
-      {/* G1 — technology-page style: sidebar left of grid line, content fills the rest */}
-      <div className="relative flex w-full">
-        <span className="absolute left-0 top-0 z-50 flex h-8 w-8 items-center justify-center rounded-br bg-black/80 text-sm font-bold text-white" aria-hidden>g1</span>
-
-        {/* Left sidebar — outside the grid line */}
-        <div className="hidden lg:block flex-shrink-0 w-[355px] bg-[#F4F3EB]">
-          <div className="sticky top-20 px-8 py-[94px]">
-            <div className="max-w-[270px]">
-              <p className="text-[11px] font-medium tracking-[0.12em] uppercase text-[#9CA3AF] mb-3">{g1.label}</p>
-              <p className="text-[22px] font-normal leading-[1.6] tracking-[-0.01em] text-[#111] opacity-60">{g1.description}</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Grid line */}
-        <div className="hidden lg:block flex-shrink-0 w-px self-stretch" style={{ background: LINE }} />
-
-        {/* Content */}
-        <div className="flex-1 min-w-0 overflow-hidden">
-          {g1.content}
-        </div>
-      </div>
+    <div className="w-full" style={{ backgroundColor: "#ffffff" }}>
 
       {/* G2–G6 — inside constraint wrapper */}
       <div
-        className="section-lines-light w-full max-w-[1287px] mx-auto"
+        className="w-full max-w-[1287px] mx-auto"
         style={{
-          backgroundImage: LINE,
-          backgroundSize: "1px 100%",
-          backgroundRepeat: "no-repeat",
-          backgroundPosition: "left top",
+          borderLeft: "1px solid var(--grid-line)",
+          borderRight: "1px solid var(--grid-line)",
         }}
       >
         {rest.map((feature, i) => (
           <div
             key={feature.id}
-            className="relative grid grid-cols-1 lg:grid-cols-[355px_1fr_99px]"
+            className="relative grid grid-cols-1 lg:grid-cols-[355px_1fr]"
           >
             <span className="absolute left-0 top-0 z-50 flex h-8 w-8 items-center justify-center rounded-br bg-black/80 text-sm font-bold text-white" aria-hidden>
               g{i + 2}
             </span>
 
             {/* Left column */}
-            <div className="bg-[#F4F3EB]">
+            <div className="bg-transparent">
               <div className="sticky top-20 px-8 py-[94px]">
                 <div className="max-w-[270px]">
                   <p className="text-[11px] font-medium tracking-[0.12em] uppercase text-[#9CA3AF] mb-3">{feature.label}</p>
@@ -293,20 +266,21 @@ export default function StickyScrollSection() {
 
             {/* Center */}
             {feature.fullBleedTop ? (
-              <div className="bg-white rounded-[14px] overflow-hidden">
+              <div className="bg-transparent rounded-[14px] overflow-hidden">
                 {feature.content}
               </div>
             ) : (
-              <div className="bg-white py-[74px] px-6 lg:px-12 flex justify-center">
-                <div className="w-full max-w-[1274px]">{feature.content}</div>
+              <div className="bg-transparent py-[74px] px-6 lg:px-12 flex justify-center">
+                <div className="w-full">{feature.content}</div>
               </div>
             )}
 
-            {/* Right accent bar */}
-            <div className="hidden lg:block bg-[#F4F3EB]" />
           </div>
         ))}
       </div>
+
+      {/* Bottom horizontal line */}
+      <div className="w-full" style={{ height: 1, backgroundColor: "var(--grid-line)" }} />
     </div>
   );
 }

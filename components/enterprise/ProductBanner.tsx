@@ -83,8 +83,8 @@ export default function ProductBanner() {
       <div
         className="relative z-10 flex flex-col items-center justify-center px-6 md:px-10"
         style={{
-          paddingTop: 120,
-          paddingBottom: 120,
+          paddingTop: 180,
+          paddingBottom: 180,
           opacity: visible ? 1 : 0,
           transform: visible ? "translateY(0)" : "translateY(10px)",
           transition: "opacity 0.6s ease, transform 0.6s ease",

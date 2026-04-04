@@ -40,17 +40,17 @@ export default function EnterprisePage() {
       <SectionWithLabel label={sectionLabels[1]}>
         <EnterpriseHero />
       </SectionWithLabel>
-      <div style={{ backgroundColor: "rgba(37, 99, 235, 0.06)" }}>
+      <div style={{ backgroundColor: "#060810" }}>
         <SectionWithLabel label={sectionLabels[2]}>
           <ProblemCards />
         </SectionWithLabel>
+        <SectionWithLabel label={sectionLabels[3]}>
+          <SolutionShowcase />
+        </SectionWithLabel>
+        <SectionWithLabel label={sectionLabels[4]}>
+          <ComparisonSection />
+        </SectionWithLabel>
       </div>
-      <SectionWithLabel label={sectionLabels[3]}>
-        <SolutionShowcase />
-      </SectionWithLabel>
-      <SectionWithLabel label={sectionLabels[4]}>
-        <ComparisonSection />
-      </SectionWithLabel>
       <SectionWithLabel label={sectionLabels[5]}>
         <ProductBanner />
       </SectionWithLabel>
