@@ -33,7 +33,8 @@ export default function ProblemCards() {
   }, []);
 
   return (
-    <div ref={sectionRef} style={{ "--grid-line": "rgba(255,255,255,0.10)", backgroundColor: "rgba(255,255,255,0.04)" } as React.CSSProperties}>
+    <div ref={sectionRef}>
+      <div style={{ backgroundColor: "rgba(255, 255, 255, 0.5)" }}>
       <GridSection
         style={{
           backgroundColor: "transparent",
@@ -45,47 +46,52 @@ export default function ProblemCards() {
           style={{ paddingTop: 100, paddingBottom: 100 }}
         >
           <h2
-            className="text-white leading-[1.1] text-[28px] md:text-[36px] lg:text-[45px]"
+            className="text-[#1D1D1F] leading-[1.1] text-[28px] md:text-[36px] lg:text-[45px]"
             style={{ fontWeight: 500, letterSpacing: "-0.02em", maxWidth: 720 }}
           >
             Legacy GIS slows you down because...
           </h2>
         </div>
       </GridSection>
+      </div>
 
-      {/* Full-width card strip — breaks out of the max-width container */}
-      <div
-        className="w-full grid"
-        style={{
-          gridTemplateColumns: `repeat(${PAIN_POINTS.length}, 1fr)`,
-          backgroundColor: "#060810",
-          borderTop: "1px solid var(--grid-line)",
-          opacity: visible ? 1 : 0,
-          transition: "opacity 0.7s ease 0.3s",
-        }}
-      >
-        {PAIN_POINTS.map((text, i) => (
-          <div
-            key={i}
-            style={{
-              padding: "48px 24px",
-              backgroundColor: "transparent",
-              borderRight: i < PAIN_POINTS.length - 1 ? "1px solid var(--grid-line)" : "none",
-              borderBottom: "1px solid var(--grid-line)",
-              fontSize: 15,
-              fontWeight: 400,
-              lineHeight: 1.5,
-              color: "rgba(255,255,255,0.75)",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              textAlign: "center" as const,
-              letterSpacing: "-0.01em",
-            }}
-          >
-            {text}
-          </div>
-        ))}
+      {/* Card strip — constrained within vertical grid lines */}
+      <div style={{ backgroundColor: "rgba(255, 255, 255, 0.5)" }}>
+        <div
+          className="max-w-[1287px] mx-auto grid"
+          style={{
+            gridTemplateColumns: `repeat(${PAIN_POINTS.length}, 1fr)`,
+            backgroundColor: "rgba(37, 99, 235, 0.04)",
+            borderTop: "1px solid var(--grid-line)",
+            borderLeft: "1px solid var(--grid-line)",
+            borderRight: "1px solid var(--grid-line)",
+            opacity: visible ? 1 : 0,
+            transition: "opacity 0.7s ease 0.3s",
+          }}
+        >
+          {PAIN_POINTS.map((text, i) => (
+            <div
+              key={i}
+              style={{
+                padding: "48px 24px",
+                backgroundColor: "transparent",
+                borderRight: i < PAIN_POINTS.length - 1 ? "1px solid var(--grid-line)" : "none",
+                borderBottom: "1px solid var(--grid-line)",
+                fontSize: 15,
+                fontWeight: 400,
+                lineHeight: 1.5,
+                color: "#0A1344",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                textAlign: "center" as const,
+                letterSpacing: "-0.01em",
+              }}
+            >
+              {text}
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
