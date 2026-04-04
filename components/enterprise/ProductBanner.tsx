@@ -33,17 +33,8 @@ export default function ProductBanner() {
         className="object-cover object-center"
       />
 
-      {/* Blur on left and right edges — only outside grid bounds */}
-      <div
-        className="absolute top-0 bottom-0 left-0 pointer-events-none"
-        style={{ width: "calc((100% - 1287px) / 2)", backdropFilter: "blur(4px)", WebkitBackdropFilter: "blur(4px)", zIndex: 1 }}
-      />
-      <div
-        className="absolute top-0 bottom-0 right-0 pointer-events-none"
-        style={{ width: "calc((100% - 1287px) / 2)", backdropFilter: "blur(4px)", WebkitBackdropFilter: "blur(4px)", zIndex: 1 }}
-      />
 
-      {/* Dark overlay */}
+{/* Dark overlay */}
       <div
         className="absolute inset-0"
         style={{ backgroundColor: "rgba(0, 0, 0, 0.40)", zIndex: 2 }}
