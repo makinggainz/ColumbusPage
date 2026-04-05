@@ -98,6 +98,15 @@ export default function EnterpriseHero() {
         aria-hidden
       />
 
+      {/* Noise grain texture */}
+      <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ zIndex: 1, opacity: 0.40, mixBlendMode: "multiply" }}>
+        <filter id="heroNoise">
+          <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="4" stitchTiles="stitch" />
+          <feColorMatrix type="saturate" values="0" />
+        </filter>
+        <rect width="100%" height="100%" filter="url(#heroNoise)" />
+      </svg>
+
       <HeroLineArt />
 
       {/* ── Toggle ── */}

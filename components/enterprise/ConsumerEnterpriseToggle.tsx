@@ -21,8 +21,8 @@ export function ConsumerEnterpriseToggle({ variant = "dark", active = "enterpris
   };
 
   const containerClass = isDark
-    ? `relative flex items-center rounded-full border border-white/[0.10] ${glass ? `bg-white/[0.06] ${glassStyles.togglePill} ${glassStyles.togglePillHover}` : ""}`
-    : `relative flex items-center rounded-full border border-black/[0.07] bg-white/20 ${glass ? glassStyles.togglePillHover : ""}`;
+    ? `relative flex items-center rounded-full border border-white/[0.10] ${glass ? `${glassStyles.togglePill} ${glassStyles.togglePillHover}` : ""}`
+    : `relative flex items-center rounded-full border border-black/[0.07] ${glass ? glassStyles.togglePillHover : ""}`;
 
   const baseClass = "flex-1 flex items-center justify-center rounded-full text-[15px] font-medium h-full tracking-[-0.01em] transition-colors duration-250";
 
