@@ -342,8 +342,8 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                         data-navbar-logo
                                         className="relative shrink-0"
                                         style={{
-                                            width: isCompact ? 36 : 40,
-                                            height: isCompact ? 36 : 40,
+                                            width: isCompact ? 42 : 46,
+                                            height: isCompact ? 42 : 46,
                                             transition: `width ${t}, height ${t}, filter ${t}, opacity 0.4s ease`,
                                             filter: (isDark && (!isMenuOpen || isUseCasesPage)) ? "brightness(0) invert(1)" : "none",
                                             opacity: hasScrolled ? 1 : 0,
@@ -353,7 +353,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                             src="/logobueno.png"
                                             alt="Columbus Logo"
                                             fill
-                                            sizes="40px"
+                                            sizes="46px"
                                             className="object-contain"
                                             priority
                                         />
@@ -424,7 +424,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                             style={{
                                                 fontSize: 14,
                                                 fontWeight: 500,
-                                                height: 45,
+                                                height: 36,
                                                 gap: isWideScreen ? 12 : 6,
                                                 width: ctaVisible ? 145 : 0,
                                                 opacity: ctaVisible ? 1 : 0,

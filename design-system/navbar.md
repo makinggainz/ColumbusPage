@@ -115,7 +115,7 @@
 
 - Triggered when `scrollY > 10px`.
 - Navbar height: 68px → 56px.
-- Logo: 40px → 36px.
+- Logo: 46px → 42px.
 - Wordmark font size: 24px → 20px.
 - All size transitions use `500ms cubic-bezier(0.22, 1, 0.36, 1)`.
 

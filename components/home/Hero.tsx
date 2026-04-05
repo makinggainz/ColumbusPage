@@ -998,13 +998,13 @@ function easedCharCount(elapsed: number, duration: number, totalChars: number): 
 
 /* ── Hero Section ── */
 export const Hero = () => {
-  const [phase, setPhase] = useState<"eyebrow" | "h1" | "h2" | "toNavbar" | "wordmark" | "done">("eyebrow");
-  const [eyebrowChars, setEyebrowChars] = useState(0);
-  const [h1Chars, setH1Chars] = useState(0);
-  const [h2Chars, setH2Chars] = useState(0);
-  const [wordmarkChars, setWordmarkChars] = useState(0);
-  const [revealed, setRevealed] = useState(false);
-  const [logoNavbar, setLogoNavbar] = useState(false);
+  const [phase, setPhase] = useState<"eyebrow" | "h1" | "h2" | "toNavbar" | "wordmark" | "done">("done");
+  const [eyebrowChars, setEyebrowChars] = useState(EYEBROW_TEXT.length);
+  const [h1Chars, setH1Chars] = useState(HEADING_LINE1.length);
+  const [h2Chars, setH2Chars] = useState(HEADING_LINE2.length);
+  const [wordmarkChars, setWordmarkChars] = useState(WORDMARK_TEXT.length);
+  const [revealed, setRevealed] = useState(true);
+  const [logoNavbar, setLogoNavbar] = useState(true);
   const [vignetteOpacity, setVignetteOpacity] = useState(0);
   const sectionRef = useRef<HTMLElement>(null);
   const eyebrowRef = useRef<HTMLParagraphElement>(null);
@@ -1013,14 +1013,14 @@ export const Hero = () => {
   const cursorMarkerRef = useRef<HTMLSpanElement>(null);
   const phaseRef = useRef(phase);
   phaseRef.current = phase;
-  const revealedRef = useRef(false);
-  const skipRef = useRef(false);
+  const revealedRef = useRef(true);
+  const skipRef = useRef(true);
 
   // Logo target position (for text-following phase)
   const [logoPos, setLogoPos] = useState({ x: 32, y: 120, size: 40, opacity: 0 });
   // Navbar logo target (measured from actual DOM element)
   const [navTarget, setNavTarget] = useState({ x: 32, y: 20, w: 40 });
-  const [logoPopped, setLogoPopped] = useState(false);
+  const [logoPopped, setLogoPopped] = useState(true);
 
   // Measure text element positions for logo placement
   const lastPhaseForLogo = useRef("");
@@ -1098,30 +1098,9 @@ export const Hero = () => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // On mount: detect if already scrolled past hero (reload), otherwise pop-in
+  // On mount: notify downstream components
   useEffect(() => {
-    let cancelled = false;
-
-    // Poll for scroll restoration — browsers restore scrollY asynchronously
-    const checkScroll = () => {
-      if (cancelled || skipRef.current) return;
-      if (window.scrollY > 100) { skipToEnd(); return; }
-    };
-
-    // Check at multiple intervals to catch scroll restoration
-    checkScroll();
-    const timers = [0, 50, 100, 200, 400, 800].map(d => setTimeout(checkScroll, d));
-
-    // Also start the pop-in animation (will be overridden by skipToEnd if needed)
-    const posTimer = setTimeout(() => {
-      if (!skipRef.current) updateLogoTarget();
-    }, 45);
-    const popTimer = setTimeout(() => {
-      if (!skipRef.current) setLogoPopped(true);
-    }, 120);
-
-    return () => { cancelled = true; timers.forEach(clearTimeout); clearTimeout(posTimer); clearTimeout(popTimer); };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    window.dispatchEvent(new CustomEvent("hero-reveal"));
   }, []);
 
   const triggerReveal = useCallback(() => {
@@ -1270,7 +1249,7 @@ export const Hero = () => {
       )}
 
       {/* Mesh */}
-      <div className="absolute inset-0" style={{ opacity: revealed ? 1 : 0, transition: "opacity 900ms ease" }}>
+      <div className="absolute inset-0">
         <WaveMesh />
       </div>
 
@@ -1280,7 +1259,7 @@ export const Hero = () => {
         style={{
           top: "calc(100vh * 0.22)", height: "calc(100vh * 0.18)",
           background: "linear-gradient(to bottom, #F9F9F9, transparent)",
-          zIndex: 1, opacity: revealed ? 1 : 0, transition: "opacity 900ms ease",
+          zIndex: 1,
         }}
         aria-hidden
       />
@@ -1292,10 +1271,6 @@ export const Hero = () => {
           height: "50%",
           background: "linear-gradient(to bottom, rgba(0, 102, 204, 0.15) 0%, rgba(0, 102, 204, 0.08) 60%, transparent 100%)",
           zIndex: 3,
-          opacity: revealed ? 1 : 0,
-          transform: revealed ? "translateY(0)" : "translateY(-30%)",
-          transformOrigin: "top center",
-          transition: "opacity 1800ms ease 800ms, transform 1800ms cubic-bezier(0.4, 0, 0.2, 1) 800ms",
         }}
         aria-hidden
       />
@@ -1305,7 +1280,7 @@ export const Hero = () => {
         className="absolute left-0 right-0 bottom-0 pointer-events-none"
         style={{
           height: 300, background: "linear-gradient(to bottom, transparent, #ffffff)",
-          zIndex: 3, opacity: revealed ? 1 : 0, transition: "opacity 900ms ease",
+          zIndex: 3,
         }}
         aria-hidden
       />
@@ -1340,12 +1315,7 @@ export const Hero = () => {
           </h1>
 
           {/* CTA + Nav links — appear after reveal */}
-          <div id="hero-cta" className="flex items-center gap-8 mt-7" style={{
-            opacity: revealed ? 1 : 0,
-            filter: revealed ? "blur(0px)" : "blur(8px)",
-            transform: revealed ? "translateY(0px)" : "translateY(18px)",
-            transition: "opacity 750ms ease 150ms, filter 750ms ease 150ms, transform 750ms ease 150ms",
-          }}>
+          <div id="hero-cta" className="flex items-center gap-8 mt-7">
             <a
               href="/contact"
               className="group flex items-center justify-between gap-3 leading-none rounded-none hover:opacity-90 transition-opacity"
