@@ -4,7 +4,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { ConsumerEnterpriseToggle } from "./ConsumerEnterpriseToggle";
-import { HeroLineArt } from "./HeroLineArt";
 
 const QUESTION = "Where is the best place to purchase property for new company headquarters for our billion dollar company Manthano?";
 
@@ -88,26 +87,20 @@ export default function EnterpriseHero() {
       className="relative w-full overflow-hidden"
       style={{ backgroundColor: "#F9F9F9" }}
     >
-      {/* ── Blue gradient from bottom ── */}
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          background: "linear-gradient(to bottom, rgba(0, 102, 204, 0.15) 0%, rgba(0, 102, 204, 0.10) 50%, rgba(0, 102, 204, 0.04) 80%, transparent 100%)",
-          zIndex: 0,
-        }}
-        aria-hidden
+      {/* Background image — desaturated */}
+      <Image
+        src="/vibegreen.png"
+        alt=""
+        fill
+        className="object-cover object-center"
+        style={{ filter: "grayscale(1) brightness(1.1)" }}
+        priority
       />
-
-      {/* Noise grain texture */}
-      <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ zIndex: 1, opacity: 0.40, mixBlendMode: "multiply" }}>
-        <filter id="heroNoise">
-          <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="4" stitchTiles="stitch" />
-          <feColorMatrix type="saturate" values="0" />
-        </filter>
-        <rect width="100%" height="100%" filter="url(#heroNoise)" />
-      </svg>
-
-      <HeroLineArt />
+      {/* Blue tint overlay */}
+      <div
+        className="absolute inset-0"
+        style={{ backgroundColor: "#0066CC", mixBlendMode: "color", opacity: 0.6, zIndex: 1 }}
+      />
 
       {/* ── Toggle ── */}
       <div className="relative z-10 flex justify-center pt-32 pb-10 px-6" style={reveal(visible, 0)}>
