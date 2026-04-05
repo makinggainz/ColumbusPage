@@ -1319,9 +1319,9 @@ export const Hero = () => {
             <a
               href="/contact"
               className="group flex items-center justify-between gap-3 leading-none rounded-none hover:opacity-90 transition-opacity"
-              style={{ width: 145, height: 45, marginRight: 16, paddingLeft: 20, paddingRight: 16, fontSize: 16, fontWeight: 500, backgroundColor: "#000000", color: "white" }}
+              style={{ width: 186, height: 36, marginRight: 16, paddingLeft: 20, paddingRight: 16, fontSize: 15, fontWeight: 500, borderRadius: 0, backgroundColor: "#000000", color: "white" }}
             >
-              <span className="transition-colors duration-300 group-hover:text-[#2563EB]">Contact</span>
+              <span className="transition-colors duration-300 group-hover:text-[#2563EB]">Contact Founders</span>
               <svg className="transition-transform duration-300 group-hover:translate-x-0.5" width="10" height="18" viewBox="0 0 7 12" fill="none" stroke="#2563EB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M1 1l5 5-5 5" />
               </svg>

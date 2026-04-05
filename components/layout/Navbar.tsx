@@ -399,7 +399,8 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                                 whiteSpace: "nowrap",
                                                 opacity: linksVisible ? 1 : 0,
                                                 transform: linksVisible ? "translateX(0)" : "translateX(8px)",
-                                                transition: `opacity 350ms ease ${i * 80}ms, transform 400ms cubic-bezier(0.22, 1, 0.36, 1) ${i * 80}ms, font-size ${t}`,
+                                                filter: !isProductsPage ? (linksVisible ? "blur(0px)" : "blur(4px)") : undefined,
+                                                transition: `opacity 350ms ease ${i * 80}ms, transform 400ms cubic-bezier(0.22, 1, 0.36, 1) ${i * 80}ms${!isProductsPage ? `, filter 350ms ease ${i * 80}ms` : ""}, font-size ${t}`,
                                             }}
                                             onMouseEnter={handleNavMouseEnter}
                                         >
@@ -454,20 +455,22 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                                 className={`transition-colors duration-300 ${wide ? (isProductsPage ? "text-black" : isMenuOpen ? "text-black" : "text-white") : isUseCasesPage && isDark ? "group-hover:text-black!" : ""} group-hover:text-[#2563EB]`}
                                                 style={{
                                                     opacity: ctaVisible ? 1 : 0,
+                                                    filter: !isProductsPage ? (ctaVisible ? "blur(0px)" : "blur(4px)") : undefined,
                                                     transition: ctaVisible
-                                                        ? "opacity 200ms ease 450ms, color 300ms"
-                                                        : "opacity 100ms ease",
+                                                        ? `opacity 200ms ease 450ms, color 300ms${!isProductsPage ? ", filter 300ms ease 450ms" : ""}`
+                                                        : `opacity 100ms ease${!isProductsPage ? ", filter 100ms ease" : ""}`,
                                                 }}
                                             >Start Now</span>
                                             <svg
-                                                className="transition-transform duration-300 group-hover:translate-x-0.5"
+                                                className="group-hover:translate-x-1"
                                                 width="10" height="18" viewBox="0 0 7 12" fill="none"
                                                 stroke="#2563EB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"
                                                 style={{
                                                     opacity: ctaVisible ? 1 : 0,
+                                                    filter: !isProductsPage ? (ctaVisible ? "blur(0px)" : "blur(4px)") : undefined,
                                                     transition: ctaVisible
-                                                        ? "opacity 200ms ease 500ms, transform 300ms"
-                                                        : "opacity 80ms ease",
+                                                        ? `opacity 200ms ease 500ms, transform 400ms cubic-bezier(0.22, 1, 0.36, 1)${!isProductsPage ? ", filter 300ms ease 500ms" : ""}`
+                                                        : `opacity 80ms ease, transform 400ms cubic-bezier(0.22, 1, 0.36, 1)${!isProductsPage ? ", filter 80ms ease" : ""}`,
                                                 }}
                                             >
                                                 <path d="M1 1l5 5-5 5" />
