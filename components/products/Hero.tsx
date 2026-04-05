@@ -49,6 +49,10 @@ export default function Hero() {
   const peakRawRef              = useRef(0);
   const mountedRef              = useRef(true);
   const isSnappingRef           = useRef(false);
+  const mobileAnimatingRef      = useRef(false);
+  const mobileAnimRafRef        = useRef(0);
+  const transitionPhoneImgRef   = useRef<HTMLElement | null>(null);
+  const transitionPhoneGlassRef = useRef<HTMLElement | null>(null);
 
   // Responsive breakpoint — conditional render for mobile vs desktop
   useEffect(() => {
@@ -84,12 +88,14 @@ export default function Hero() {
     const DAMPING   = 0.80;
     let raf: number;
     const loop = () => {
-      const s = phoneSpringRef.current;
-      s.velocity += (0 - s.offset) * STIFFNESS;
-      s.velocity *= DAMPING;
-      s.offset   += s.velocity;
-      if (phoneSpringWrapperRef.current) {
-        phoneSpringWrapperRef.current.style.transform = `translateY(${s.offset}px)`;
+      if (!mobileAnimatingRef.current) {
+        const s = phoneSpringRef.current;
+        s.velocity += (0 - s.offset) * STIFFNESS;
+        s.velocity *= DAMPING;
+        s.offset   += s.velocity;
+        if (phoneSpringWrapperRef.current) {
+          phoneSpringWrapperRef.current.style.transform = `translateY(${s.offset}px)`;
+        }
       }
       raf = requestAnimationFrame(loop);
     };
@@ -97,6 +103,185 @@ export default function Hero() {
     return () => cancelAnimationFrame(raf);
   }, []);
 
+
+  // ── Apply visual transition at a given progress (0–1) ──
+  const applyTransitionAtRaw = useCallback((raw: number) => {
+    const nearZero = raw < 0.005;
+    const origPhone = phoneRef.current;
+
+    // Reset when back to top
+    if (nearZero) {
+      peakRawRef.current = 0;
+      phoneStartCapturedRef.current = false;
+      phoneEndCapturedRef.current   = false;
+      if (phoneEndElRef.current) { phoneEndElRef.current.style.opacity = "0"; phoneEndElRef.current = null; }
+      if (phoneSpringWrapperRef.current) phoneSpringWrapperRef.current.style.opacity = "1";
+      const tp = transitionPhoneRef.current;
+      if (tp) tp.style.display = "none";
+      if (toggleRef.current)    toggleRef.current.style.opacity    = "1";
+      if (badgeTitleRef.current) badgeTitleRef.current.style.opacity = "1";
+      const so = showcaseOverlayRef.current;
+      if (so) { so.style.opacity = "0"; so.style.display = "none"; }
+      return;
+    }
+
+    // Capture phone starting position (once)
+    if (!phoneStartCapturedRef.current && origPhone) {
+      const pr = origPhone.getBoundingClientRect();
+      phoneStartXRef.current    = pr.left;
+      phoneStartYRef.current    = pr.top;
+      phoneDisplayWRef.current  = pr.width;
+      phoneDisplayHRef.current  = pr.height;
+      phoneStartCapturedRef.current = true;
+    }
+
+    // Fade out toggle + title
+    const contentFade = Math.max(0, 1 - raw * 3.5);
+    if (toggleRef.current)     toggleRef.current.style.opacity     = String(contentFade);
+    if (badgeTitleRef.current) badgeTitleRef.current.style.opacity  = String(contentFade);
+
+    // Hide original phone spring wrapper
+    if (phoneSpringWrapperRef.current) phoneSpringWrapperRef.current.style.opacity = "0";
+
+    // Ensure showcase overlay is in DOM early enough for position capture
+    const so = showcaseOverlayRef.current;
+    if (so) {
+      if (raw >= 0.40 && so.style.display === "none") so.style.display = "block";
+    }
+
+    // Move + fade transition phone
+    const tp = transitionPhoneRef.current;
+    if (tp && phoneStartCapturedRef.current) {
+      // Capture final phone position from ShowcaseSection (once)
+      if (!phoneEndCapturedRef.current && raw >= 0.40) {
+        const endEl = document.querySelector<HTMLElement>('[data-showcase-phone]');
+        if (endEl) {
+          const r = endEl.getBoundingClientRect();
+          if (r.width > 0) {
+            phoneEndXRef.current = r.left;
+            phoneEndYRef.current = r.top;
+            phoneEndWRef.current = r.width;
+            phoneEndHRef.current = r.height;
+            phoneEndElRef.current = endEl;
+            phoneEndCapturedRef.current = true;
+          }
+        }
+      }
+
+      const startX = phoneStartXRef.current;
+      const startY = phoneStartYRef.current;
+      const startW = phoneDisplayWRef.current;
+      const startH = phoneDisplayHRef.current;
+      const midX   = window.innerWidth  / 2 - startW / 2;
+      const midY   = window.innerHeight / 2 - startH / 2;
+      const endX   = phoneEndXRef.current;
+      const endY   = phoneEndYRef.current;
+      const endW   = phoneEndWRef.current;
+      const endH   = phoneEndHRef.current;
+
+      let curX: number, curY: number, curW: number, curH: number, curRadius: number;
+
+      const startRadius = 55;
+      const endRadius   = endW > 0 ? 38 * (endW / 275) : startRadius;
+
+      if (raw <= 0.45 || endW === 0) {
+        const t = Math.min(1, raw / 0.45);
+        const e = 1 - Math.pow(1 - t, 3);
+        curX = startX + (midX - startX) * e;
+        curY = startY + (midY - startY) * e;
+        curW = startW;
+        curH = startH;
+        curRadius = startRadius;
+      } else {
+        const t = Math.min(1, (raw - 0.45) / 0.35);
+        const e = 1 - Math.pow(1 - t, 3);
+        curX = midX + (endX - midX) * e;
+        curY = midY + (endY - midY) * e;
+        curW = startW + (endW - startW) * e;
+        curH = startH + (endH - startH) * e;
+        curRadius = startRadius + (endRadius - startRadius) * e;
+      }
+
+      const phoneOpacity = raw >= 0.80 ? 0 : 1;
+
+      tp.style.display   = "block";
+      tp.style.width     = `${curW}px`;
+      tp.style.height    = `${curH}px`;
+      tp.style.left      = `${curX}px`;
+      tp.style.top       = `${curY}px`;
+      tp.style.opacity   = String(phoneOpacity);
+      tp.style.transform = "none";
+
+      // Cache child elements on first access
+      if (!transitionPhoneImgRef.current) transitionPhoneImgRef.current = tp.querySelector<HTMLElement>('img');
+      if (!transitionPhoneGlassRef.current) transitionPhoneGlassRef.current = tp.querySelector<HTMLElement>(':scope > div');
+      if (transitionPhoneImgRef.current) transitionPhoneImgRef.current.style.borderRadius = `${curRadius}px`;
+      if (transitionPhoneGlassRef.current) transitionPhoneGlassRef.current.style.borderRadius = `${curRadius + 12}px`;
+    }
+
+    // Showcase overlay fades in (60%–80%)
+    if (so) {
+      const showcaseT = Math.max(0, Math.min(1, (raw - 0.60) / 0.20));
+      so.style.opacity       = String(showcaseT);
+      so.style.pointerEvents = raw >= 0.75 ? "auto" : "none";
+      so.style.touchAction   = "pan-y";
+    }
+
+    // Reveal static showcase phone at raw >= 0.80
+    const staticPhone = phoneEndElRef.current;
+    if (staticPhone) {
+      staticPhone.style.opacity = raw >= 0.80 ? "1" : "0";
+    }
+  }, []);
+
+  // ── Mobile: time-driven animation (decoupled from scroll) ──
+  const runMobileAnimation = useCallback((forward: boolean) => {
+    if (mobileAnimatingRef.current) return;
+    mobileAnimatingRef.current = true;
+    cancelAnimationFrame(mobileAnimRafRef.current);
+
+    const DURATION = 600; // ms
+    const startRaw = forward ? 0 : 1;
+    const endRaw   = forward ? 1 : 0;
+    const startTime = performance.now();
+
+    // Pre-display showcase overlay so layout cost is paid before animation starts
+    if (forward) {
+      const so = showcaseOverlayRef.current;
+      if (so && so.style.display === "none") {
+        so.style.display = "block";
+        so.style.opacity = "0";
+      }
+    }
+
+    // Immediately jump scroll to end position so user can't interfere
+    const el = outerContainerRef.current;
+    if (el) {
+      const rect = el.getBoundingClientRect();
+      const extraPx = window.innerHeight;
+      const elementDocTop = window.scrollY + rect.top;
+      window.scrollTo({ top: forward ? elementDocTop + extraPx : elementDocTop, behavior: "instant" as ScrollBehavior });
+    }
+
+    const tick = (now: number) => {
+      const elapsed = now - startTime;
+      const t = Math.min(1, elapsed / DURATION);
+      // Ease-out cubic
+      const eased = 1 - Math.pow(1 - t, 3);
+      const raw = startRaw + (endRaw - startRaw) * eased;
+
+      applyTransitionAtRaw(raw);
+
+      if (t < 1) {
+        mobileAnimRafRef.current = requestAnimationFrame(tick);
+      } else {
+        applyTransitionAtRaw(endRaw);
+        mobileAnimatingRef.current = false;
+      }
+    };
+
+    mobileAnimRafRef.current = requestAnimationFrame(tick);
+  }, [applyTransitionAtRaw]);
 
   // Merged scroll handler: physics impulse + transition animation
   useEffect(() => {
@@ -118,175 +303,38 @@ export default function Hero() {
       const extraPx = window.innerHeight * (isMobile ? 1 : 2);
       const raw     = Math.max(0, Math.min(1, -rect.top / extraPx));
 
-      const origPhone = phoneRef.current;
-
       // Track peak transition progress for scroll-back intent detection
       if (raw > peakRawRef.current) peakRawRef.current = raw;
 
-      const nearZero = raw < 0.005;
-
-      // Reset when user scrolls back to top
-      if (nearZero) {
-        peakRawRef.current = 0;
-        phoneStartCapturedRef.current = false;
-        phoneEndCapturedRef.current   = false;
-        if (phoneEndElRef.current) { phoneEndElRef.current.style.opacity = "0"; phoneEndElRef.current = null; }
-        if (phoneSpringWrapperRef.current) phoneSpringWrapperRef.current.style.opacity = "1";
-        const tp = transitionPhoneRef.current;
-        if (tp) tp.style.display = "none";
-        if (toggleRef.current)    toggleRef.current.style.opacity    = "1";
-        if (badgeTitleRef.current) badgeTitleRef.current.style.opacity = "1";
-        const so = showcaseOverlayRef.current;
-        if (so) { so.style.opacity = "0"; so.style.display = "none"; }
+      // ── Mobile: trigger time-driven animation, ignore scroll-driven updates ──
+      if (isMobile) {
+        if (mobileAnimatingRef.current) return; // animation in progress, ignore scroll
+        if (raw > 0.005 && raw < 0.995) {
+          runMobileAnimation(delta >= 0);
+          return;
+        }
+        // At endpoints, apply directly (for reset at top)
+        applyTransitionAtRaw(raw);
         return;
       }
 
-      // Capture phone starting position (once, first frame of transition)
-      if (!phoneStartCapturedRef.current && origPhone) {
-        const pr = origPhone.getBoundingClientRect();
-        phoneStartXRef.current    = pr.left;
-        phoneStartYRef.current    = pr.top;
-        phoneDisplayWRef.current  = pr.width;
-        phoneDisplayHRef.current  = pr.height;
-        phoneStartCapturedRef.current = true;
-      }
+      // ── Desktop: scroll-driven animation ──
+      applyTransitionAtRaw(raw);
 
-      // Fade out toggle + title
-      const contentFade = Math.max(0, 1 - raw * 3.5);
-      if (toggleRef.current)     toggleRef.current.style.opacity     = String(contentFade);
-      if (badgeTitleRef.current) badgeTitleRef.current.style.opacity  = String(contentFade);
-
-      // Hide original phone spring wrapper
-      if (phoneSpringWrapperRef.current) phoneSpringWrapperRef.current.style.opacity = "0";
-
-      // Ensure showcase overlay is in DOM (display:block) early enough for position capture.
-      // Opacity stays 0 until raw=0.60; display switches at raw=0.40 so getBoundingClientRect works.
-      const so = showcaseOverlayRef.current;
-      if (so) {
-        if (raw >= 0.40 && so.style.display === "none") so.style.display = "block";
-      }
-
-      // Move + fade transition phone — 3-phase smooth movement
-      const tp = transitionPhoneRef.current;
-      if (tp && phoneStartCapturedRef.current) {
-        // Capture final phone position from ShowcaseSection (once, after overlay is block)
-        if (!phoneEndCapturedRef.current && raw >= 0.40) {
-          const endEl = document.querySelector<HTMLElement>('[data-showcase-phone]');
-          if (endEl) {
-            const r = endEl.getBoundingClientRect();
-            if (r.width > 0) {
-              phoneEndXRef.current = r.left;
-              phoneEndYRef.current = r.top;
-              phoneEndWRef.current = r.width;
-              phoneEndHRef.current = r.height;
-              phoneEndElRef.current = endEl;
-              phoneEndCapturedRef.current = true;
-            }
-          }
-        }
-
-        const startX = phoneStartXRef.current;
-        const startY = phoneStartYRef.current;
-        const startW = phoneDisplayWRef.current;
-        const startH = phoneDisplayHRef.current;
-        const midX   = window.innerWidth  / 2 - startW / 2;
-        const midY   = window.innerHeight / 2 - startH / 2;
-        const endX   = phoneEndXRef.current;
-        const endY   = phoneEndYRef.current;
-        const endW   = phoneEndWRef.current;
-        const endH   = phoneEndHRef.current;
-
-        let curX: number, curY: number, curW: number, curH: number, curRadius: number;
-
-        // Border radius: hero phone = 55px, final showcase phone = 38px in canvas coords
-        const startRadius = 55;
-        const endRadius   = endW > 0 ? 38 * (endW / 275) : startRadius;
-
-        if (raw <= 0.45 || endW === 0) {
-          // Phase 1: hero → center (size and radius hold at hero values)
-          // Also stay in phase 1 if end position hasn't been captured yet (endW === 0)
-          const t = Math.min(1, raw / 0.45);
-          const e = 1 - Math.pow(1 - t, 3);
-          curX = startX + (midX - startX) * e;
-          curY = startY + (midY - startY) * e;
-          curW = startW;
-          curH = startH;
-          curRadius = startRadius;
-        } else {
-          // Phase 2: center → final canvas position, shrinking + corner radius matching
-          const t = Math.min(1, (raw - 0.45) / 0.35);
-          const e = 1 - Math.pow(1 - t, 3);
-          curX = midX + (endX - midX) * e;
-          curY = midY + (endY - midY) * e;
-          curW = startW + (endW - startW) * e;
-          curH = startH + (endH - startH) * e;
-          curRadius = startRadius + (endRadius - startRadius) * e;
-        }
-
-        // Phase 3: instant hide once phone reaches final position
-        const phoneOpacity = raw >= 0.80 ? 0 : 1;
-
-        tp.style.display   = "block";
-        tp.style.width     = `${curW}px`;
-        tp.style.height    = `${curH}px`;
-        tp.style.left      = `${curX}px`;
-        tp.style.top       = `${curY}px`;
-        tp.style.opacity   = String(phoneOpacity);
-        tp.style.transform = "none";
-
-        // Animate corner radius on image and glass border
-        const phoneImg = tp.querySelector<HTMLElement>('img');
-        if (phoneImg) phoneImg.style.borderRadius = `${curRadius}px`;
-        const glassBorder = tp.querySelector<HTMLElement>(':scope > div');
-        if (glassBorder) glassBorder.style.borderRadius = `${curRadius + 12}px`;
-      }
-
-      // Showcase overlay fades in (60%–80%)
-      if (so) {
-        const showcaseT = Math.max(0, Math.min(1, (raw - 0.60) / 0.20));
-        so.style.opacity       = String(showcaseT);
-        // Enable pointer events once overlay is mostly visible (raw >= 0.75)
-        // so users can tap pills before transition is 100% complete.
-        // Touch-action: pan-y ensures vertical scrolling still works through the overlay.
-        so.style.pointerEvents = raw >= 0.75 ? "auto" : "none";
-        so.style.touchAction   = "pan-y";
-      }
-
-      // Reveal static showcase phone once transition phone reaches final position (raw >= 0.80)
-      const staticPhone = phoneEndElRef.current;
-      if (staticPhone) {
-        staticPhone.style.opacity = raw >= 0.80 ? "1" : "0";
-      }
-
-      // ── Snap: never leave user stranded mid-transition ──
-      // Any time the user stops scrolling between raw=0 and raw=1, snap to the
-      // nearest end state. Direction is chosen by intent:
-      //   Desktop: peak-raw scroll-back distance (< 0.15 = forward, else backward)
-      //   Mobile:  past halfway + last delta forward = forward, else backward
+      // Desktop snap logic
       if (scrollStopTimerRef.current) clearTimeout(scrollStopTimerRef.current);
       if (raw > 0.005 && raw < 0.995 && !isSnappingRef.current) {
-        const snapDelay = isMobile ? 400 : 350;
         scrollStopTimerRef.current = setTimeout(() => {
           scrollStopTimerRef.current = null;
           if (!mountedRef.current) return;
           const container = outerContainerRef.current;
           if (!container) return;
           const r2     = container.getBoundingClientRect();
-          const extra  = window.innerHeight * (isMobile ? 1 : 2);
+          const extra  = window.innerHeight * 2;
           const curRaw = Math.max(0, Math.min(1, -r2.top / extra));
-          if (curRaw <= 0.005 || curRaw >= 0.995) return; // already at an end state
+          if (curRaw <= 0.005 || curRaw >= 0.995) return;
 
-          // Strong bias toward forward (showcase). Only snap backward if
-          // the user has very deliberately scrolled most of the way back.
-          let snapForward: boolean;
-          if (isMobile) {
-            snapForward = curRaw >= 0.25;
-          } else {
-            // Desktop: only snap backward if user is back below 20% raw
-            // (i.e. nearly all the way back to the hero)
-            snapForward = curRaw >= 0.20;
-          }
-
+          const snapForward = curRaw >= 0.20;
           isSnappingRef.current = true;
           const elementDocTop = window.scrollY + r2.top;
           if (snapForward) {
@@ -294,9 +342,8 @@ export default function Hero() {
           } else {
             window.scrollTo({ top: elementDocTop, behavior: "smooth" });
           }
-          // Clear snapping flag after smooth scroll completes
           setTimeout(() => { isSnappingRef.current = false; }, 600);
-        }, snapDelay);
+        }, 350);
       }
     };
 
@@ -319,8 +366,9 @@ export default function Hero() {
       window.removeEventListener("resize", onResize);
       clearTimeout(resizeTimer);
       if (scrollStopTimerRef.current) clearTimeout(scrollStopTimerRef.current);
+      cancelAnimationFrame(mobileAnimRafRef.current);
     };
-  }, []);
+  }, [applyTransitionAtRaw, runMobileAnimation]);
 
   return (
     <div
