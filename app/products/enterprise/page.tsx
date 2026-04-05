@@ -36,16 +36,22 @@ function SectionWithLabel({
 }
 
 export default function EnterprisePage() {
-  const [navTheme, setNavTheme] = useState<"light" | "dark">("dark");
+  const [navTheme, setNavTheme] = useState<"light" | "dark">("light");
+  const darkStartRef = useRef<HTMLDivElement>(null);
   const diffRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const NAVBAR_H = 80;
     const update = () => {
-      if (diffRef.current) {
-        const rect = diffRef.current.getBoundingClientRect();
-        // Switch to light when the diff section (white bg) reaches the navbar
-        setNavTheme(rect.top <= NAVBAR_H ? "light" : "dark");
+      const darkEl = darkStartRef.current;
+      const diffEl = diffRef.current;
+      if (darkEl && diffEl) {
+        const darkTop = darkEl.getBoundingClientRect().top;
+        const diffTop = diffEl.getBoundingClientRect().top;
+        // Dark when past the dark sections start, light again at diff section
+        const pastDarkStart = darkTop <= NAVBAR_H;
+        const pastDiff = diffTop <= NAVBAR_H;
+        setNavTheme(pastDarkStart && !pastDiff ? "dark" : "light");
       }
     };
     window.addEventListener("scroll", update, { passive: true });
@@ -61,7 +67,7 @@ export default function EnterprisePage() {
       <SectionWithLabel label={sectionLabels[1]}>
         <EnterpriseHero />
       </SectionWithLabel>
-      <div className="relative" style={{ backgroundColor: "#060810" }}>
+      <div ref={darkStartRef} className="relative" style={{ backgroundColor: "#060810" }}>
         <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ zIndex: 1, opacity: 0.40, mixBlendMode: "multiply" }}>
           <filter id="b2cNoise">
             <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="4" stitchTiles="stitch" />

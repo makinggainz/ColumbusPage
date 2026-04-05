@@ -104,12 +104,9 @@ const features: {
       "Query any location on Earth in natural language. Ask questions, get maps and spatial answers instantly.",
     content: (
       <div>
-        <h2 className="text-[36px] md:text-[48px] font-medium text-white leading-[1.1] tracking-[-0.03em]">
+        <h2 className="text-[28px] md:text-[36px] lg:text-[45px] font-medium text-white leading-[1.1] tracking-[-0.03em]">
           Chat with Earth
         </h2>
-        <p className="mt-4 text-[18px] md:text-[22px] text-white/50 leading-[1.5] tracking-[-0.01em] max-w-[600px]">
-          Query any location in natural language. Ask questions, get maps and spatial answers instantly.
-        </p>
         <div
           className="mt-10 w-full rounded-[10px] border border-white/8 overflow-hidden flex items-center justify-center"
           style={{ aspectRatio: "16 / 9", background: "linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.06) 50%, rgba(255,255,255,0.03) 100%)" }}
@@ -126,12 +123,9 @@ const features: {
       "Generate full site-selection and due diligence reports from a single prompt. What took weeks now takes minutes.",
     content: (
       <div>
-        <h2 className="text-[36px] md:text-[48px] font-medium text-white leading-[1.1] tracking-[-0.03em]">
+        <h2 className="text-[28px] md:text-[36px] lg:text-[45px] font-medium text-white leading-[1.1] tracking-[-0.03em]">
           Research Reports
         </h2>
-        <p className="mt-4 text-[18px] md:text-[22px] text-white/50 leading-[1.5] tracking-[-0.01em] max-w-[600px]">
-          Generate full site-selection and due diligence reports from a single prompt.
-        </p>
         <div
           className="mt-10 w-full rounded-[10px] border border-white/8 overflow-hidden flex items-center justify-center"
           style={{ aspectRatio: "16 / 9", background: "linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.06) 50%, rgba(255,255,255,0.03) 100%)" }}
@@ -148,12 +142,9 @@ const features: {
       "AI-generated geospatial datasets that fill gaps where traditional surveying is too expensive or unavailable.",
     content: (
       <div>
-        <h2 className="text-[36px] md:text-[48px] font-medium text-white leading-[1.1] tracking-[-0.03em]">
+        <h2 className="text-[28px] md:text-[36px] lg:text-[45px] font-medium text-white leading-[1.1] tracking-[-0.03em]">
           Generative Geodata
         </h2>
-        <p className="mt-4 text-[18px] md:text-[22px] text-white/50 leading-[1.5] tracking-[-0.01em] max-w-[600px]">
-          AI-generated datasets that fill gaps where traditional surveying is too expensive or unavailable.
-        </p>
         <div
           className="mt-10 w-full rounded-[10px] border border-white/8 overflow-hidden flex items-center justify-center"
           style={{ aspectRatio: "16 / 9", background: "linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.06) 50%, rgba(255,255,255,0.03) 100%)" }}
@@ -170,12 +161,9 @@ const features: {
       "Real humans available around the clock — find datasets, get platform tips, or connect with a live agent instantly.",
     content: (
       <div>
-        <h2 className="text-[36px] md:text-[48px] font-medium text-white leading-[1.1] tracking-[-0.03em]">
+        <h2 className="text-[28px] md:text-[36px] lg:text-[45px] font-medium text-white leading-[1.1] tracking-[-0.03em]">
           24/7 Human Support
         </h2>
-        <p className="mt-4 text-[18px] md:text-[22px] text-white/50 leading-[1.5] tracking-[-0.01em] max-w-[600px]">
-          Real humans available around the clock — find datasets, get platform tips, or connect with a live agent.
-        </p>
         <div
           className="mt-10 w-full rounded-[10px] border border-white/8 overflow-hidden flex items-center justify-center"
           style={{ aspectRatio: "16 / 9", background: "linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.06) 50%, rgba(255,255,255,0.03) 100%)" }}
@@ -214,8 +202,11 @@ export default function StickyScrollSection() {
         }}
       >
         {rest.map((feature, i) => (
+          <div key={feature.id}>
+            {i > 0 && (
+              <div className="w-full" style={{ height: 1, backgroundColor: "var(--grid-line)" }} />
+            )}
           <div
-            key={feature.id}
             className="relative grid grid-cols-1 lg:grid-cols-[355px_1fr]"
           >
             <span className="absolute left-0 top-0 z-50 flex h-8 w-8 items-center justify-center rounded-br bg-black/80 text-sm font-bold text-white" aria-hidden>
@@ -245,6 +236,7 @@ export default function StickyScrollSection() {
               </div>
             )}
 
+          </div>
           </div>
         ))}
       </div>

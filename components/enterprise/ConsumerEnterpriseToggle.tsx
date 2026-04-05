@@ -35,13 +35,18 @@ export function ConsumerEnterpriseToggle({ variant = "dark", active = "enterpris
     : `${baseClass} text-[#0A1344]/45 hover:text-[#0A1344]/70`;
 
   const activePillStyle: React.CSSProperties = isDark
-    ? {
-        backgroundColor: "rgba(255, 255, 255, 0.14)",
-        boxShadow: "inset 0 1px 0 rgba(255,255,255,0.22), 0 1px 4px rgba(0,0,0,0.40)",
-      }
+    ? glass
+      ? {
+          backgroundColor: "rgba(255, 255, 255, 0.14)",
+          boxShadow: "inset 0 1px 0 rgba(255,255,255,0.22), 0 1px 4px rgba(0,0,0,0.40)",
+        }
+      : {
+          backgroundColor: "rgba(0, 0, 0, 0.10)",
+          boxShadow: "none",
+        }
     : {
-        backgroundColor: "#ffffff",
-        boxShadow: "0 1px 3px rgba(10,19,68,0.12), 0 1px 8px rgba(10,19,68,0.06)",
+        backgroundColor: "rgba(0, 0, 0, 0.05)",
+        boxShadow: "none",
       };
 
   const consumerActive = active === "consumer";

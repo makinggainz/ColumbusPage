@@ -4,270 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { ConsumerEnterpriseToggle } from "./ConsumerEnterpriseToggle";
-
-// ── Topographic contour map with 3D drawn effect ──
-// Height field + marching-squares extraction, computed once at module load
-
-const TOPO_W = 900;
-const TOPO_H = 700;
-const TOPO_CELL = 5;
-const TOPO_NX = Math.floor(TOPO_W / TOPO_CELL);
-const TOPO_NY = Math.floor(TOPO_H / TOPO_CELL);
-
-// Realistic map topography — mountain range, valleys, river drainage
-const MOUNTAINS = [
-  { x: 200, y: 180, h: 1.0, sx: 110, sy: 90 },    // main summit
-  { x: 340, y: 220, h: 0.85, sx: 95, sy: 75 },     // adjacent peak
-  { x: 130, y: 310, h: 0.72, sx: 80, sy: 100 },    // southern peak
-  { x: 450, y: 140, h: 0.60, sx: 70, sy: 65 },     // eastern knob
-  { x: 280, y: 100, h: 0.55, sx: 60, sy: 55 },     // northern shoulder
-  { x: 550, y: 280, h: 0.45, sx: 90, sy: 80 },     // distant foothill
-  { x: 100, y: 130, h: 0.50, sx: 75, sy: 60 },     // NW ridge
-  { x: 400, y: 350, h: 0.38, sx: 65, sy: 70 },     // SE outlier
-  { x: 680, y: 180, h: 0.30, sx: 80, sy: 55 },     // far east hill
-  { x: 250, y: 420, h: 0.42, sx: 70, sy: 90 },     // south basin rim
-];
-
-function topoHeight(x: number, y: number): number {
-  let h = 0;
-
-  // Mountain peaks — Gaussian summits
-  for (const m of MOUNTAINS) {
-    const dx = x - m.x, dy = y - m.y;
-    h += m.h * Math.exp(-(dx * dx) / (2 * m.sx * m.sx) - (dy * dy) / (2 * m.sy * m.sy));
-  }
-
-  // Mountain ridge connecting main peaks — NW to SE trending
-  const ridgeLine = 160 + 0.35 * (x - 150);
-  const ridgeDist = y - ridgeLine;
-  h += 0.35 * Math.exp(-ridgeDist * ridgeDist / 3600)
-     * Math.exp(-((x - 280) * (x - 280)) / 80000);
-
-  // Secondary spur ridge branching south
-  const spur = 240 + 0.8 * (x - 300);
-  const spurDist = y - spur;
-  h += 0.20 * Math.exp(-spurDist * spurDist / 2000)
-     * Math.exp(-((x - 350) * (x - 350)) / 20000);
-
-  // River valley carving through — sinuous drainage lowering elevation
-  const riverX = 320 + 60 * Math.sin(y * 0.008) + 25 * Math.sin(y * 0.022 + 1.5);
-  const riverDist = x - riverX;
-  h -= 0.25 * Math.exp(-riverDist * riverDist / 900);
-
-  // Tributary joining from the east
-  const tribY = 250 + 40 * Math.sin(x * 0.012);
-  const tribDist = y - tribY;
-  h -= 0.12 * Math.exp(-tribDist * tribDist / 600)
-     * (1 / (1 + Math.exp(-(x - 380) / 40)));
-
-  // Gentle base elevation so outer contours exist
-  h += 0.08 * Math.exp(-((x - 350) * (x - 350) + (y - 280) * (y - 280)) / 120000);
-
-  return Math.max(0, h);
-}
-
-const TOPO_GRID: number[][] = [];
-for (let iy = 0; iy <= TOPO_NY; iy++) {
-  const row: number[] = [];
-  for (let ix = 0; ix <= TOPO_NX; ix++) {
-    row.push(topoHeight(ix * TOPO_CELL, iy * TOPO_CELL));
-  }
-  TOPO_GRID.push(row);
-}
-
-function extractContour(level: number): string[] {
-  const segments: [number, number, number, number][] = [];
-
-  for (let iy = 0; iy < TOPO_NY; iy++) {
-    for (let ix = 0; ix < TOPO_NX; ix++) {
-      const tl = TOPO_GRID[iy][ix];
-      const tr = TOPO_GRID[iy][ix + 1];
-      const br = TOPO_GRID[iy + 1][ix + 1];
-      const bl = TOPO_GRID[iy + 1][ix];
-
-      const config =
-        (tl >= level ? 8 : 0) |
-        (tr >= level ? 4 : 0) |
-        (br >= level ? 2 : 0) |
-        (bl >= level ? 1 : 0);
-
-      if (config === 0 || config === 15) continue;
-
-      const x0 = ix * TOPO_CELL, y0 = iy * TOPO_CELL;
-      const x1 = x0 + TOPO_CELL, y1 = y0 + TOPO_CELL;
-
-      const lerp = (a: number, b: number, va: number, vb: number) => {
-        if (Math.abs(vb - va) < 1e-10) return (a + b) / 2;
-        const t = Math.max(0, Math.min(1, (level - va) / (vb - va)));
-        return a + t * (b - a);
-      };
-
-      const top: [number, number] = [lerp(x0, x1, tl, tr), y0];
-      const right: [number, number] = [x1, lerp(y0, y1, tr, br)];
-      const bottom: [number, number] = [lerp(x0, x1, bl, br), y1];
-      const left: [number, number] = [x0, lerp(y0, y1, tl, bl)];
-
-      const add = (a: [number, number], b: [number, number]) =>
-        segments.push([a[0], a[1], b[0], b[1]]);
-
-      const avg = (tl + tr + br + bl) / 4;
-
-      switch (config) {
-        case 1: add(left, bottom); break;
-        case 2: add(bottom, right); break;
-        case 3: add(left, right); break;
-        case 4: add(top, right); break;
-        case 5:
-          if (avg >= level) { add(left, top); add(bottom, right); }
-          else { add(left, bottom); add(top, right); }
-          break;
-        case 6: add(top, bottom); break;
-        case 7: add(left, top); break;
-        case 8: add(top, left); break;
-        case 9: add(top, bottom); break;
-        case 10:
-          if (avg >= level) { add(top, right); add(left, bottom); }
-          else { add(top, left); add(bottom, right); }
-          break;
-        case 11: add(top, right); break;
-        case 12: add(left, right); break;
-        case 13: add(bottom, right); break;
-        case 14: add(left, bottom); break;
-      }
-    }
-  }
-
-  // Join segments into polylines via endpoint hashing
-  const EPS = 0.5;
-  const k = (x: number, y: number) => `${Math.round(x / EPS)},${Math.round(y / EPS)}`;
-
-  type Seg = { s: [number, number]; e: [number, number]; used: boolean };
-  const segs: Seg[] = segments.map(([x1, y1, x2, y2]) => ({
-    s: [x1, y1], e: [x2, y2], used: false,
-  }));
-
-  const endMap = new Map<string, number[]>();
-  for (let i = 0; i < segs.length; i++) {
-    for (const pt of [segs[i].s, segs[i].e]) {
-      const key = k(pt[0], pt[1]);
-      if (!endMap.has(key)) endMap.set(key, []);
-      endMap.get(key)!.push(i);
-    }
-  }
-
-  const chains: [number, number][][] = [];
-
-  for (let i = 0; i < segs.length; i++) {
-    if (segs[i].used) continue;
-    segs[i].used = true;
-    const chain: [number, number][] = [segs[i].s, segs[i].e];
-
-    for (const pickHead of [false, true]) {
-      let grew = true;
-      while (grew) {
-        grew = false;
-        const tip = pickHead ? chain[0] : chain[chain.length - 1];
-        const key = k(tip[0], tip[1]);
-        const cands = endMap.get(key);
-        if (!cands) break;
-        for (const j of cands) {
-          if (segs[j].used) continue;
-          const match = k(segs[j].s[0], segs[j].s[1]) === key;
-          const pt = match ? segs[j].e : segs[j].s;
-          if (pickHead) chain.unshift(pt); else chain.push(pt);
-          segs[j].used = true;
-          grew = true;
-          break;
-        }
-      }
-    }
-
-    if (chain.length >= 3) chains.push(chain);
-  }
-
-  // Smooth with quadratic Bezier through midpoints
-  return chains.map(pts => {
-    if (pts.length < 2) return "";
-    if (pts.length === 2)
-      return `M${pts[0][0].toFixed(1)},${pts[0][1].toFixed(1)} L${pts[1][0].toFixed(1)},${pts[1][1].toFixed(1)}`;
-
-    const closed =
-      Math.abs(pts[0][0] - pts[pts.length - 1][0]) < EPS * 2 &&
-      Math.abs(pts[0][1] - pts[pts.length - 1][1]) < EPS * 2;
-
-    const mid = (a: [number, number], b: [number, number]): [number, number] =>
-      [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2];
-
-    if (closed) {
-      const m0 = mid(pts[pts.length - 1], pts[0]);
-      let d = `M${m0[0].toFixed(1)},${m0[1].toFixed(1)}`;
-      for (let i = 0; i < pts.length; i++) {
-        const m = mid(pts[i], pts[(i + 1) % pts.length]);
-        d += ` Q${pts[i][0].toFixed(1)},${pts[i][1].toFixed(1)} ${m[0].toFixed(1)},${m[1].toFixed(1)}`;
-      }
-      return d + "Z";
-    }
-
-    let d = `M${pts[0][0].toFixed(1)},${pts[0][1].toFixed(1)}`;
-    for (let i = 1; i < pts.length - 1; i++) {
-      const m = mid(pts[i], pts[i + 1]);
-      d += ` Q${pts[i][0].toFixed(1)},${pts[i][1].toFixed(1)} ${m[0].toFixed(1)},${m[1].toFixed(1)}`;
-    }
-    const last = pts[pts.length - 1];
-    d += ` L${last[0].toFixed(1)},${last[1].toFixed(1)}`;
-    return d;
-  }).filter(Boolean);
-}
-
-// Pre-compute contour paths
-const CONTOUR_DATA: { level: number; paths: string[]; isIndex: boolean }[] = [];
-{
-  let idx = 0;
-  for (let l = 0.03; l < 1.1; l += 0.025) {
-    CONTOUR_DATA.push({ level: l, paths: extractContour(l), isIndex: idx % 5 === 0 });
-    idx++;
-  }
-}
-
-function TopoMap3D() {
-  return (
-    <svg
-      viewBox={`0 0 ${TOPO_W} ${TOPO_H}`}
-      preserveAspectRatio="xMinYMin meet"
-      className="absolute"
-      style={{ top: 0, left: 0, width: "100%", height: "100%" }}
-    >
-      <defs>
-        {/* Fade edges so contours blend into the background */}
-        <radialGradient id="topoFade" cx="12%" cy="10%" r="42%" gradientUnits="objectBoundingBox">
-          <stop offset="0%" stopColor="white" stopOpacity="1" />
-          <stop offset="45%" stopColor="white" stopOpacity="0.7" />
-          <stop offset="75%" stopColor="white" stopOpacity="0.15" />
-          <stop offset="100%" stopColor="white" stopOpacity="0" />
-        </radialGradient>
-        <mask id="topoMask">
-          <rect x="0" y="0" width={TOPO_W} height={TOPO_H} fill="url(#topoFade)" />
-        </mask>
-      </defs>
-
-      <g mask="url(#topoMask)">
-        {CONTOUR_DATA.map(({ level, paths, isIndex }) =>
-          paths.map((d, j) => (
-            <path
-              key={`c${level.toFixed(2)}-${j}`}
-              d={d}
-              fill="none"
-              stroke={isIndex ? "rgba(140,130,115,0.35)" : "rgba(150,140,125,0.18)"}
-              strokeWidth={isIndex ? 1.5 : 0.7}
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          ))
-        )}
-      </g>
-    </svg>
-  );
-}
+import { HeroLineArt } from "./HeroLineArt";
 
 const QUESTION = "Where is the best place to purchase property for new company headquarters for our billion dollar company Manthano?";
 
@@ -349,36 +86,29 @@ export default function EnterpriseHero() {
     <section
       ref={sectionRef}
       className="relative w-full overflow-hidden"
-      style={{ backgroundColor: "#1a1a1a" }}
+      style={{ backgroundColor: "#F9F9F9" }}
     >
-      {/* Background image — aerial/landscape */}
-      <Image
-        src="/ProductBackgroundImageHome.png"
-        alt=""
-        fill
-        className="object-cover object-center"
-        style={{ opacity: 0.45 }}
-        priority
-      />
-      {/* Dark gradient overlay for text readability */}
+      {/* ── Blue gradient from bottom ── */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
-          background: "linear-gradient(180deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.25) 50%, rgba(0,0,0,0.45) 100%)",
-          zIndex: 1,
+          background: "linear-gradient(to bottom, rgba(0, 102, 204, 0.15) 0%, rgba(0, 102, 204, 0.10) 50%, rgba(0, 102, 204, 0.04) 80%, transparent 100%)",
+          zIndex: 0,
         }}
         aria-hidden
       />
 
+      <HeroLineArt />
+
       {/* ── Toggle ── */}
       <div className="relative z-10 flex justify-center pt-32 pb-10 px-6" style={reveal(visible, 0)}>
-        <ConsumerEnterpriseToggle variant="dark" active="enterprise" glass={false} />
+        <ConsumerEnterpriseToggle variant="light" active="enterprise" />
       </div>
 
       {/* ── Text block ── */}
       <div className="relative z-10 flex flex-col items-center text-center px-6" style={reveal(visible, 0.1)}>
         <h1
-          className="text-white leading-[1.1] text-[39px] md:text-[49px] lg:text-[76px]"
+          className="text-[#1D1D1F] leading-[1.1] text-[39px] md:text-[49px] lg:text-[76px]"
           style={{ fontWeight: 500, letterSpacing: "-0.02em", maxWidth: 900 }}
         >
           An Agentic GIS platform
@@ -386,20 +116,20 @@ export default function EnterpriseHero() {
 
         <p
           className="mt-5"
-          style={{ fontSize: 21, color: "rgba(255,255,255,0.55)", letterSpacing: "-0.01em", fontWeight: 400, maxWidth: 480 }}
+          style={{ fontSize: 21, color: "rgba(10,19,68,0.40)", letterSpacing: "-0.01em", fontWeight: 400, maxWidth: 480 }}
         >
           GIS so easy, the janitor could be your new researcher
         </p>
 
         <Link
           href="/contact"
-          className="group flex items-center gap-3 mt-8 text-[18px] lg:text-[20px] text-white font-semibold transition-opacity"
+          className="group flex items-center gap-3 mt-8 text-[18px] lg:text-[20px] text-[#1D1D1F] font-semibold transition-opacity"
         >
-          <span className="transition-colors duration-300 group-hover:text-[#6BA3FF]">Talk to Founders</span>
+          <span className="transition-colors duration-300 group-hover:text-[#2563EB]">Talk to Founders</span>
           <svg
             className="transition-transform duration-300 group-hover:translate-x-0.5"
             width="9" height="16" viewBox="0 0 7 12" fill="none"
-            stroke="#6BA3FF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"
+            stroke="#2563EB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"
           >
             <path d="M1 1l5 5-5 5" />
           </svg>
