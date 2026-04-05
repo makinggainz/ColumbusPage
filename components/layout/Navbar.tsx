@@ -260,7 +260,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
     const t = "500ms cubic-bezier(0.22, 1, 0.36, 1)";
 
     // ── Nav link style (Anthropic-style underline hover) ────────────────
-    const navLinkClass = "nav-link-underline px-3 py-1.5";
+    const navLinkClass = "group/nav flex items-center gap-2 px-3 py-1.5";
     const navLinkInline = (compact: boolean): React.CSSProperties => ({
         fontSize: compact ? 14 : 15,
         fontWeight: 400,
@@ -317,7 +317,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                         background: isDark ? "rgba(6, 8, 20, 0.85)" : "rgba(255, 255, 255, 0.82)",
                         backdropFilter: "blur(20px) saturate(1.2)",
                         WebkitBackdropFilter: "blur(20px) saturate(1.2)",
-                        borderBottom: isDark ? "1px solid rgba(255,255,255,0.06)" : "1px solid rgba(0,0,0,0.06)",
+                        borderBottom: isDark ? "1px solid rgba(255,255,255,0.06)" : pathname === "/" ? "1px solid rgba(37, 99, 235, 0.6)" : "1px solid rgba(0,0,0,0.06)",
                         opacity: (isProductsPage ? bgTriggerPassed : isCompact) && !isMenuOpen ? 1 : 0,
                         transition: `opacity ${t}`,
                     }}
@@ -404,6 +404,13 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                             onMouseEnter={handleNavMouseEnter}
                                         >
                                             {link.label}
+                                            <svg
+                                                className="transition-transform duration-300 group-hover/nav:translate-x-0.5"
+                                                width="7" height="12" viewBox="0 0 7 12" fill="none"
+                                                stroke="#0066CC" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"
+                                            >
+                                                <path d="M1 1l5 5-5 5" />
+                                            </svg>
                                         </Link>
                                     ))}
                                 </div>
@@ -426,7 +433,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                                 fontWeight: 500,
                                                 height: isProductsPage ? 45 : 36,
                                                 gap: isWideScreen ? 12 : 6,
-                                                width: ctaVisible ? 145 : 0,
+                                                width: ctaVisible ? (isProductsPage ? 145 : 131.28) : 0,
                                                 opacity: ctaVisible ? 1 : 0,
                                                 overflow: "hidden",
                                                 pointerEvents: ctaVisible ? "auto" : "none",
