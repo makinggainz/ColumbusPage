@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { ConsumerEnterpriseToggle } from "./ConsumerEnterpriseToggle";
-import { HeroLineArt } from "./HeroLineArt";
+
 
 const QUESTION = "Where is the best place to purchase property for new company headquarters for our billion dollar company Manthano?";
 
@@ -107,7 +107,61 @@ export default function EnterpriseHero() {
         <rect width="100%" height="100%" filter="url(#heroNoise)" />
       </svg>
 
-      <HeroLineArt />
+      {/* Wireframe globe — bottom-center, partially visible */}
+      <svg
+        className="absolute pointer-events-none"
+        style={{ top: "-15%", right: "-10%", width: "45%", height: "55%", zIndex: 0, opacity: 0.85 }}
+        viewBox="0 0 800 800"
+        fill="none"
+        aria-hidden
+      >
+        {(() => {
+          const cx = 400, cy = 400, R = 350;
+          const tiltX = 20 * (Math.PI / 180);
+          const tiltY = -15 * (Math.PI / 180);
+          const project = (lon: number, lat: number): [number, number] | null => {
+            const l = lon * (Math.PI / 180), p = lat * (Math.PI / 180);
+            const x = Math.cos(p) * Math.cos(l);
+            const y = Math.cos(p) * Math.sin(l);
+            const z = Math.sin(p);
+            const y1 = y * Math.cos(tiltX) - z * Math.sin(tiltX);
+            const z1 = y * Math.sin(tiltX) + z * Math.cos(tiltX);
+            const x2 = x * Math.cos(tiltY) + z1 * Math.sin(tiltY);
+            const z2 = -x * Math.sin(tiltY) + z1 * Math.cos(tiltY);
+            if (z2 < -0.1) return null;
+            return [cx + x2 * R, cy - y1 * R];
+          };
+          const buildLine = (pts: ([number, number] | null)[]): string => {
+            let d = "", pen = false;
+            for (const pt of pts) {
+              if (!pt) { pen = false; continue; }
+              d += pen ? `L${pt[0].toFixed(1)},${pt[1].toFixed(1)} ` : `M${pt[0].toFixed(1)},${pt[1].toFixed(1)} `;
+              pen = true;
+            }
+            return d;
+          };
+          const steps = 120;
+          const lines: React.ReactElement[] = [];
+          for (let lon = -180; lon < 180; lon += 20) {
+            const pts = Array.from({ length: steps + 1 }, (_, i) => project(lon, -90 + i * (180 / steps)));
+            const d = buildLine(pts);
+            if (d) lines.push(<path key={`m${lon}`} d={d} stroke="rgba(37,99,235,0.12)" strokeWidth={0.8} />);
+          }
+          for (let lat = -75; lat <= 75; lat += 15) {
+            const pts = Array.from({ length: steps + 1 }, (_, i) => project(-180 + i * (360 / steps), lat));
+            const d = buildLine(pts);
+            if (d) lines.push(<path key={`p${lat}`} d={d} stroke="rgba(37,99,235,0.10)" strokeWidth={0.6} />);
+          }
+          const eq = Array.from({ length: steps + 1 }, (_, i) => project(-180 + i * (360 / steps), 0));
+          const eqD = buildLine(eq);
+          if (eqD) lines.push(<path key="eq" d={eqD} stroke="rgba(37,99,235,0.20)" strokeWidth={1.2} />);
+          const pm = Array.from({ length: steps + 1 }, (_, i) => project(0, -90 + i * (180 / steps)));
+          const pmD = buildLine(pm);
+          if (pmD) lines.push(<path key="pm" d={pmD} stroke="rgba(37,99,235,0.18)" strokeWidth={1.0} />);
+          lines.push(<circle key="outline" cx={cx} cy={cy} r={R} stroke="rgba(37,99,235,0.08)" strokeWidth={1} />);
+          return lines;
+        })()}
+      </svg>
 
       {/* ── Toggle ── */}
       <div className="relative z-10 flex justify-center pt-32 pb-10 px-6" style={reveal(visible, 0)}>
