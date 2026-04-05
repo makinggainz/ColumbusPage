@@ -314,10 +314,10 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                 <div
                     className="absolute inset-0 pointer-events-none"
                     style={{
-                        background: isDark ? "rgba(6, 8, 20, 0.85)" : "rgba(255, 255, 255, 0.82)",
+                        background: isEnterprisePage && isDark ? "rgba(14, 16, 28, 0.95)" : isDark ? "rgba(6, 8, 20, 0.85)" : "rgba(255, 255, 255, 0.82)",
                         backdropFilter: "blur(20px) saturate(1.2)",
                         WebkitBackdropFilter: "blur(20px) saturate(1.2)",
-                        borderBottom: isDark ? "1px solid rgba(255,255,255,0.06)" : pathname === "/" ? "1px solid rgba(37, 99, 235, 0.6)" : "1px solid rgba(0,0,0,0.06)",
+                        borderBottom: isEnterprisePage ? "1px solid rgba(255,255,255,0.10)" : isDark ? "1px solid rgba(255,255,255,0.06)" : pathname === "/" ? "1px solid rgba(37, 99, 235, 0.6)" : "1px solid rgba(0,0,0,0.06)",
                         opacity: (isProductsPage ? bgTriggerPassed : isCompact) && !isMenuOpen ? 1 : 0,
                         transition: `opacity ${t}`,
                     }}
@@ -445,7 +445,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                                 ...(wide
                                                     ? { backdropFilter: "blur(6px)", WebkitBackdropFilter: "blur(6px)" }
                                                     : isEnterprisePage
-                                                    ? { backgroundColor: "rgba(0, 0, 0, 0.05)", color: "#0A1344", backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)" }
+                                                    ? { backgroundColor: isDark ? "rgba(255,255,255,0.95)" : "rgba(0, 0, 0, 0.05)", color: isDark ? "#0A1344" : "#0A1344", backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)" }
                                                     : isUseCasesPage
                                                     ? { backgroundColor: isDark ? "rgba(255, 255, 255, 0.10)" : "#000000", color: isDark ? "white" : "white" }
                                                     : { backgroundColor: "#000000", color: "white" }),
