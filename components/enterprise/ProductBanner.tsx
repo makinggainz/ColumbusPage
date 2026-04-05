@@ -34,7 +34,12 @@ export default function ProductBanner() {
       />
 
 
-{/* Dark overlay */}
+      {/* Vertical structure lines */}
+      <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 3 }} aria-hidden>
+        <div className="absolute top-0 bottom-0 left-1/2 -translate-x-1/2" style={{ width: "100%", maxWidth: 1287, borderLeft: "1px solid rgba(255,255,255,0.10)", borderRight: "1px solid rgba(255,255,255,0.10)" }} />
+      </div>
+
+      {/* Dark overlay */}
       <div
         className="absolute inset-0"
         style={{ backgroundColor: "rgba(0, 0, 0, 0.40)", zIndex: 2 }}
@@ -49,27 +54,6 @@ export default function ProductBanner() {
         <rect width="100%" height="100%" filter="url(#bannerNoise)" />
       </svg>
 
-      {/* Textured grid lines */}
-      <div
-        className="absolute inset-0 pointer-events-none overflow-hidden"
-        style={{ zIndex: 4 }}
-        aria-hidden
-      >
-        <div
-          className="absolute top-0 bottom-0 left-1/2 -translate-x-1/2"
-          style={{
-            width: "100%",
-            maxWidth: 1287,
-            borderLeft: "1px solid rgba(255,255,255,0.10)",
-            borderRight: "1px solid rgba(255,255,255,0.10)",
-            backgroundImage:
-              "linear-gradient(to right, rgba(255,255,255,0.12) 1px, transparent 1px), " +
-              "linear-gradient(to bottom, rgba(255,255,255,0.12) 1px, transparent 1px)",
-            backgroundSize: "80px 80px, 80px 80px",
-            backgroundPosition: "center top, center top",
-          }}
-        />
-      </div>
 
       <div
         className="relative z-10 flex flex-col items-center justify-center px-6 md:px-10"
