@@ -3,7 +3,7 @@
 export function HeroLineArt({ showIslands = true }: { showIslands?: boolean }) {
   return (
     <>
-      {/* ── Island topography contour lines ── */}
+      {/* ── Topographic contour lines — right side only ── */}
       {showIslands && (
       <svg
         className="absolute top-0 left-0 w-full pointer-events-none"
