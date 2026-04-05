@@ -240,42 +240,48 @@ export default function Hero() {
     mobileAnimatingRef.current = true;
     cancelAnimationFrame(mobileAnimRafRef.current);
 
+    const el = outerContainerRef.current;
+    if (!el) { mobileAnimatingRef.current = false; return; }
+    const rect = el.getBoundingClientRect();
+    const extraPx = window.innerHeight;
+    const elementDocTop = window.scrollY + rect.top;
+
+    if (!forward) {
+      // Reverse: instantly jump scroll back and reset — no animated transition needed
+      // because the phone position refs are stale after the scroll jump
+      window.scrollTo({ top: elementDocTop, behavior: "instant" as ScrollBehavior });
+      applyTransitionAtRaw(0);
+      mobileAnimatingRef.current = false;
+      return;
+    }
+
+    // Forward animation
     const DURATION = 600; // ms
-    const startRaw = forward ? 0 : 1;
-    const endRaw   = forward ? 1 : 0;
     const startTime = performance.now();
 
     // Pre-display showcase overlay so layout cost is paid before animation starts
-    if (forward) {
-      const so = showcaseOverlayRef.current;
-      if (so && so.style.display === "none") {
-        so.style.display = "block";
-        so.style.opacity = "0";
-      }
+    const so = showcaseOverlayRef.current;
+    if (so && so.style.display === "none") {
+      so.style.display = "block";
+      so.style.opacity = "0";
     }
 
     // Immediately jump scroll to end position so user can't interfere
-    const el = outerContainerRef.current;
-    if (el) {
-      const rect = el.getBoundingClientRect();
-      const extraPx = window.innerHeight;
-      const elementDocTop = window.scrollY + rect.top;
-      window.scrollTo({ top: forward ? elementDocTop + extraPx : elementDocTop, behavior: "instant" as ScrollBehavior });
-    }
+    window.scrollTo({ top: elementDocTop + extraPx, behavior: "instant" as ScrollBehavior });
 
     const tick = (now: number) => {
       const elapsed = now - startTime;
       const t = Math.min(1, elapsed / DURATION);
       // Ease-out cubic
       const eased = 1 - Math.pow(1 - t, 3);
-      const raw = startRaw + (endRaw - startRaw) * eased;
+      const raw = eased;
 
       applyTransitionAtRaw(raw);
 
       if (t < 1) {
         mobileAnimRafRef.current = requestAnimationFrame(tick);
       } else {
-        applyTransitionAtRaw(endRaw);
+        applyTransitionAtRaw(1);
         mobileAnimatingRef.current = false;
       }
     };

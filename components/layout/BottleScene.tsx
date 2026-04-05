@@ -69,21 +69,27 @@ function bottleProfile(p: number): number {
   return 0;
 }
 
-export const BottleScene = ({ onBottleClick, visible, dark, bg, waveRgb }: { onBottleClick?: () => void; visible?: boolean; dark?: boolean; bg?: string; waveRgb?: string }) => {
+export const BottleScene = ({ onBottleClick, visible, dark, bg, waveRgb, alreadyOpened }: { onBottleClick?: () => void; visible?: boolean; dark?: boolean; bg?: string; waveRgb?: string; alreadyOpened?: boolean }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animRef = useRef<number>(0);
   const [hoveringBottle, setHoveringBottle] = useState(false);
   const bottleBoundsRef = useRef<{ x: number; y: number; w: number; h: number } | null>(null);
 
-  // Bottle physics state
-  const bottleRef = useRef({
+  // Bottle physics state — if already opened, start grounded at shore
+  const bottleRef = useRef(alreadyOpened ? {
+    wx: 0, wz: 535, wy: -15,
+    vx: 0, vz: 0,
+    roll: 0, pitch: -0.2, heading: -0.4,
+    rollVel: 0, pitchVel: 0,
+    grounded: true,
+  } : {
     wx: 0, wz: 200, wy: 0,
     vx: 0, vz: 0,
     roll: 0, pitch: 0, heading: -0.4,
     rollVel: 0, pitchVel: 0,
     grounded: false,
   });
-  const startTimeRef = useRef(0);
+  const startTimeRef = useRef(alreadyOpened ? 1 : 0);
 
   const draw = useCallback(() => {
     const cvs = canvasRef.current;
@@ -276,9 +282,16 @@ export const BottleScene = ({ onBottleClick, visible, dark, bg, waveRgb }: { onB
     } else if (bottle.grounded) {
       // Resting on sand — very gentle rock from nearby waves
       const shoreH = getHeight(bottle.wx, bottle.wz);
-      bottle.wy += (shoreH + 3 - bottle.wy) * 0.02;
-      bottle.pitch += (-0.2 - bottle.pitch) * 0.01;
-      bottle.roll += (Math.sin(t * 0.8) * 0.03 - bottle.roll) * 0.02;
+      if (alreadyOpened) {
+        // Skip settling animation — snap to resting state
+        bottle.wy = shoreH + 3;
+        bottle.pitch = -0.2;
+        bottle.roll = Math.sin(t * 0.8) * 0.03;
+      } else {
+        bottle.wy += (shoreH + 3 - bottle.wy) * 0.02;
+        bottle.pitch += (-0.2 - bottle.pitch) * 0.01;
+        bottle.roll += (Math.sin(t * 0.8) * 0.03 - bottle.roll) * 0.02;
+      }
     } else {
       // Not visible yet — keep in starting position
       bottle.wx = 0;
@@ -487,7 +500,7 @@ export const BottleScene = ({ onBottleClick, visible, dark, bg, waveRgb }: { onB
     return () => cancelAnimationFrame(animRef.current);
   }, [draw]);
 
-  const clickedRef = useRef(false);
+  const clickedRef = useRef(!!alreadyOpened);
 
   useEffect(() => {
     const cvs = canvasRef.current;

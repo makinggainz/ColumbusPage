@@ -17,8 +17,19 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false, t
   const bgColor = theme === "dark" ? "#000000" : theme === "light-blue" ? "#F4F3EB" : "#F9F9F9";
   const [noteOpen, setNoteOpen] = useState(false);
   const [bottleOpened, setBottleOpened] = useState(false);
+  const [previouslyOpened, setPreviouslyOpened] = useState(false);
   const [footerVisible, setFooterVisible] = useState(false);
   const footerRef = useRef<HTMLElement>(null);
+
+  // Persist bottle state across pages via localStorage
+  useEffect(() => {
+    try {
+      if (localStorage.getItem("bottle-opened") === "true") {
+        setBottleOpened(true);
+        setPreviouslyOpened(true);
+      }
+    } catch {}
+  }, []);
 
   useEffect(() => {
     const el = footerRef.current;
@@ -59,7 +70,11 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false, t
         ...(reveal ? { position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 0 } as React.CSSProperties : {}),
       }}
       onClick={() => {
-        if (!bottleOpened) { setNoteOpen(true); setBottleOpened(true); }
+        if (!bottleOpened && !previouslyOpened) {
+          setNoteOpen(true);
+          setBottleOpened(true);
+          try { localStorage.setItem("bottle-opened", "true"); } catch {}
+        }
       }}
     >
       {/* Mission text — top center, above the bottle */}
@@ -73,8 +88,8 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false, t
             color: theme === "dark" ? "rgba(255,255,255,0.5)" : "rgba(29,29,31,0.6)",
             opacity: bottleOpened ? 1 : 0,
             transform: bottleOpened ? "translateY(0)" : "translateY(10px)",
-            transition: "opacity 600ms cubic-bezier(0.22, 1, 0.36, 1), transform 600ms cubic-bezier(0.22, 1, 0.36, 1)",
-            transitionDelay: bottleOpened ? "100ms" : "0ms",
+            transition: previouslyOpened ? "none" : "opacity 600ms cubic-bezier(0.22, 1, 0.36, 1), transform 600ms cubic-bezier(0.22, 1, 0.36, 1)",
+            transitionDelay: previouslyOpened ? "0ms" : bottleOpened ? "100ms" : "0ms",
           }}
         >
           We are a group of engineers, designers, and company builders developing
@@ -87,8 +102,8 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false, t
             color: theme === "dark" ? "rgba(255,255,255,0.5)" : "rgba(29,29,31,0.6)",
             opacity: bottleOpened ? 1 : 0,
             transform: bottleOpened ? "translateY(0)" : "translateY(10px)",
-            transition: "opacity 600ms cubic-bezier(0.22, 1, 0.36, 1), transform 600ms cubic-bezier(0.22, 1, 0.36, 1)",
-            transitionDelay: bottleOpened ? "250ms" : "0ms",
+            transition: previouslyOpened ? "none" : "opacity 600ms cubic-bezier(0.22, 1, 0.36, 1), transform 600ms cubic-bezier(0.22, 1, 0.36, 1)",
+            transitionDelay: previouslyOpened ? "0ms" : bottleOpened ? "250ms" : "0ms",
           }}
         >
           We&apos;re building foundation models that understand the physical world
@@ -100,7 +115,7 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false, t
       </div>
 
       {/* 3D Bottle scene */}
-      <BottleScene onBottleClick={() => { setNoteOpen(true); setBottleOpened(true); }} visible={footerVisible} dark={theme === "dark"} bg={theme === "light-blue" ? "#F4F3EB" : undefined} waveRgb={theme === "light-blue" ? "10,19,68" : undefined} />
+      <BottleScene onBottleClick={() => { if (!previouslyOpened) { setNoteOpen(true); } setBottleOpened(true); try { localStorage.setItem("bottle-opened", "true"); } catch {} }} visible={footerVisible} dark={theme === "dark"} bg={theme === "light-blue" ? "#F4F3EB" : undefined} waveRgb={theme === "light-blue" ? "10,19,68" : undefined} alreadyOpened={previouslyOpened} />
 
       {/* Note overlay — appears when bottle is clicked */}
       {noteOpen && (
@@ -141,11 +156,12 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false, t
 
       {/* Footer content — fades in after bottle is opened */}
       <div
-        className="relative z-10 w-full mt-auto transition-all duration-1000 ease-[cubic-bezier(0.22,1,0.36,1)]"
+        className="relative z-10 w-full mt-auto"
         style={{
           opacity: bottleOpened ? 1 : 0,
           transform: bottleOpened ? "translateY(0)" : "translateY(20px)",
           pointerEvents: bottleOpened ? "auto" : "none",
+          transition: previouslyOpened ? "none" : "all 1000ms cubic-bezier(0.22, 1, 0.36, 1)",
         }}
       >
         <div className="max-w-[1200px] mx-auto px-8 pb-6 pt-12">
@@ -162,9 +178,9 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false, t
                 </div>
               </div>,
               <FooterColumn key="product" theme={theme} title="Product" links={[
-                { label: "Columbus Pro", href: "/platform" },
+                { label: "Columbus Pro", href: "/products/enterprise" },
                 { label: "Use Cases", href: "/use-cases" },
-                { label: "MapsGPT", href: "/products/maps-gpt" },
+                { label: "MapsGPT", href: "/products/mapsgpt" },
               ]} />,
               <FooterColumn key="technology" theme={theme} title="Technology" links={[
                 { label: "LGM vs LLM", href: "/technology" },
@@ -173,8 +189,7 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false, t
               ]} />,
               <FooterColumn key="company" theme={theme} title="Company" links={[
                 { label: "Our Mission", href: "/our-mission" },
-                { label: "Careers", href: "/" },
-                { label: "Legal", href: "/" },
+                { label: "Contact", href: "/contact" },
               ]} />,
             ].map((col, i) => (
               <div
@@ -182,8 +197,8 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false, t
                 style={{
                   opacity: bottleOpened ? 1 : 0,
                   transform: bottleOpened ? "translateY(0)" : "translateY(12px)",
-                  transition: "opacity 600ms cubic-bezier(0.22, 1, 0.36, 1), transform 600ms cubic-bezier(0.22, 1, 0.36, 1)",
-                  transitionDelay: bottleOpened ? `${400 + i * 120}ms` : "0ms",
+                  transition: previouslyOpened ? "none" : "opacity 600ms cubic-bezier(0.22, 1, 0.36, 1), transform 600ms cubic-bezier(0.22, 1, 0.36, 1)",
+                  transitionDelay: previouslyOpened ? "0ms" : bottleOpened ? `${400 + i * 120}ms` : "0ms",
                 }}
               >
                 {col}
@@ -194,8 +209,8 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false, t
             className={`border-t pt-4 pb-2 flex items-center justify-between text-[13px] ${theme === "dark" ? "border-white/10 text-white/30" : "border-[#1D1D1F]/10 text-[#1D1D1F]/40"}`}
             style={{
               opacity: bottleOpened ? 1 : 0,
-              transition: "opacity 600ms cubic-bezier(0.22, 1, 0.36, 1)",
-              transitionDelay: bottleOpened ? "900ms" : "0ms",
+              transition: previouslyOpened ? "none" : "opacity 600ms cubic-bezier(0.22, 1, 0.36, 1)",
+              transitionDelay: previouslyOpened ? "0ms" : bottleOpened ? "900ms" : "0ms",
             }}
           >
             <span>Columbus Earth &copy; 2026</span>

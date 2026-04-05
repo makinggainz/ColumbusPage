@@ -388,19 +388,19 @@ export const Careers = ({ hideHeader, className = "" }: { hideHeader?: boolean; 
   }, [active]);
 
   return (
-    <section className={`py-[115px] md:py-[147px] lg:py-[179px] ${className}`} style={{ background: "linear-gradient(to bottom, rgba(37, 99, 235, 0.04) 0%, #F9F9F9 100%)" }}>
+    <section className={`py-[115px] md:py-[147px] lg:py-[179px] ${className}`} style={{ backgroundColor: "#F9F9F9" }}>
       <Container>
 
         {/* TOP CENTER */}
         {!hideHeader && (
           <div className="text-center mb-36 md:mb-44">
             <h2
-              className="font-medium tracking-[-0.02em] leading-[1.05] mb-5 text-[31px] md:text-[39px] lg:text-[49px]"
+              className="font-medium tracking-[-0.02em] leading-[1.12] mb-5 text-[25px] md:text-[31px] lg:text-[39px]"
               style={{ color: "#1D1D1F" }}
             >
               Hiring{" "}
               <span
-                style={{ color: "#2563EB", cursor: "default" }}
+                style={{ color: "#0066CC", cursor: "default" }}
                 onMouseEnter={() => {
                   if (hoverTimerRef.current) clearTimeout(hoverTimerRef.current);
                   hoverTimerRef.current = setTimeout(spawnFigures, 5000);
@@ -450,7 +450,7 @@ export const Careers = ({ hideHeader, className = "" }: { hideHeader?: boolean; 
         )}
 
         {/* FORM */}
-        <div className="max-w-xl mx-5 md:mx-auto">
+        <div className="max-w-[675px] mx-5 md:mx-auto">
           <form className="flex flex-col gap-2">
             {[
               { type: "text", placeholder: "Name", tag: "input" },
@@ -459,7 +459,7 @@ export const Careers = ({ hideHeader, className = "" }: { hideHeader?: boolean; 
             ].map(({ type, placeholder, tag }) => (
               <label
                 key={placeholder}
-                className="block cursor-text border-b border-[rgba(29,29,31,0.18)] focus-within:border-[#7B6FE8] transition-colors duration-300"
+                className="block cursor-text border-b border-[rgba(29,29,31,0.18)] focus-within:border-[#0066CC] transition-colors duration-300"
                 style={{ paddingTop: 20, paddingBottom: 20 }}
               >
                 {tag === "textarea" ? (
@@ -493,8 +493,8 @@ export const Careers = ({ hideHeader, className = "" }: { hideHeader?: boolean; 
               className="group px-10 flex items-center justify-between hover:opacity-90 transition-opacity cursor-pointer"
               style={{ height: 56, backgroundColor: "#000000", width: "100%" }}
             >
-              <span className="text-white text-[18px] lg:text-[20px] font-medium transition-colors duration-300 group-hover:text-[#2563EB]">Submit</span>
-              <svg width="10" height="18" viewBox="0 0 7 12" fill="none" stroke="#2563EB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+              <span className="text-white text-[18px] lg:text-[20px] font-medium transition-colors duration-300 group-hover:text-[#0066CC]">Submit</span>
+              <svg width="10" height="18" viewBox="0 0 7 12" fill="none" stroke="#0066CC" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M1 1l5 5-5 5" />
               </svg>
             </button>
@@ -543,9 +543,9 @@ export const Careers = ({ hideHeader, className = "" }: { hideHeader?: boolean; 
                 </p>
                 <p className="text-[17px] text-[#3a3020] leading-relaxed mb-6" style={{ fontFamily: "Georgia, serif" }}>
                   Hey I&apos;m Alexander R.B., co-founder. You found one of my easter eggs. If you would like to reach out to me personally you can find me on my Instagram at{" "}
-                  <a href="https://instagram.com/alexrb.1" target="_blank" rel="noopener noreferrer" className="underline hover:text-[#2563EB] transition-colors">alexrb.1</a>
+                  <a href="https://instagram.com/alexrb.1" target="_blank" rel="noopener noreferrer" className="underline hover:text-[#0066CC] transition-colors">alexrb.1</a>
                   {" "}or my LinkedIn at:{" "}
-                  <a href="https://www.linkedin.com/in/alexander-ramirez-blonski-a96121150" target="_blank" rel="noopener noreferrer" className="underline hover:text-[#2563EB] transition-colors">Alexander Ramirez Blonski</a>
+                  <a href="https://www.linkedin.com/in/alexander-ramirez-blonski-a96121150" target="_blank" rel="noopener noreferrer" className="underline hover:text-[#0066CC] transition-colors">Alexander Ramirez Blonski</a>
                 </p>
                 <p className="text-[17px] text-[#3a3020] leading-relaxed mb-8" style={{ fontFamily: "Georgia, serif" }}>
                   Enjoy your day ;)
@@ -562,7 +562,7 @@ export const Careers = ({ hideHeader, className = "" }: { hideHeader?: boolean; 
                 </p>
                 <p className="text-[17px] text-[#3a3020] leading-relaxed mb-4" style={{ fontFamily: "Georgia, serif" }}>
                   Check out my LinkedIn here:{" "}
-                  <a href="https://www.linkedin.com/in/erick-mollinedo-lara-889587224/" target="_blank" rel="noopener noreferrer" className="underline hover:text-[#2563EB] transition-colors">Erick Mollinedo Lara</a>
+                  <a href="https://www.linkedin.com/in/erick-mollinedo-lara-889587224/" target="_blank" rel="noopener noreferrer" className="underline hover:text-[#0066CC] transition-colors">Erick Mollinedo Lara</a>
                 </p>
                 <p className="text-[15px] text-[#8a7a5a] italic mb-8" style={{ fontFamily: "Georgia, serif" }}>
                   P.S. I did not write this, Alex did
@@ -579,9 +579,9 @@ export const Careers = ({ hideHeader, className = "" }: { hideHeader?: boolean; 
                 </p>
                 <p className="text-[17px] text-[#3a3020] leading-relaxed mb-4" style={{ fontFamily: "Georgia, serif" }}>
                   Check out my LinkedIn here:{" "}
-                  <a href="https://www.linkedin.com/in/davidramirezblonski/" target="_blank" rel="noopener noreferrer" className="underline hover:text-[#2563EB] transition-colors">David Ramirez Blonski</a>
+                  <a href="https://www.linkedin.com/in/davidramirezblonski/" target="_blank" rel="noopener noreferrer" className="underline hover:text-[#0066CC] transition-colors">David Ramirez Blonski</a>
                   , and my personal website here:{" "}
-                  <a href="https://www.gdsteel.co" target="_blank" rel="noopener noreferrer" className="underline hover:text-[#2563EB] transition-colors">gdsteel.co</a>
+                  <a href="https://www.gdsteel.co" target="_blank" rel="noopener noreferrer" className="underline hover:text-[#0066CC] transition-colors">gdsteel.co</a>
                 </p>
                 <p className="text-[17px] text-[#3a3020] leading-relaxed mb-4" style={{ fontFamily: "Georgia, serif" }}>
                   Hope you have a beautiful day.
@@ -688,7 +688,7 @@ const WorldMapDots = () => {
   const shadowsToBoxShadow = (shadows: number[], child: number) => {
     return shadows
       .map((offset, idx) => {
-        const color = isSpecial(child, idx) ? "#2563EB" : "#060606";
+        const color = isSpecial(child, idx) ? "#0066CC" : "#060606";
         return `0 ${offset}px 0 ${color}`;
       })
       .join(", ");
@@ -743,7 +743,7 @@ const WorldMapDots = () => {
                     width: 4,
                     height: 4,
                     borderRadius: "50%",
-                    backgroundColor: "#2563EB",
+                    backgroundColor: "#0066CC",
                     animation: "worldmap-pulse 2s ease-in-out infinite",
                   }}
                 />

@@ -105,11 +105,11 @@ export const SiteSelection = () => {
               style={{ background: "rgba(10,4,40,1)", opacity: 0, zIndex: 1 }}
             /> */}
 
-            {/* Background blur overlay — fades in with scroll expansion */}
+            {/* Background blur overlay */}
             <div
               ref={overlayRef}
               className="absolute inset-0 pointer-events-none"
-              style={{ backdropFilter: "blur(0px)", WebkitBackdropFilter: "blur(0px)", opacity: 1, zIndex: 1 }}
+              style={{ backdropFilter: "blur(6px)", WebkitBackdropFilter: "blur(6px)", opacity: 1, zIndex: 1 }}
             />
 
             {/* Content over image */}
