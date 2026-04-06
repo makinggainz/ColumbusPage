@@ -3,6 +3,8 @@
 import Image from "next/image";
 import glassStyles from "@/components/ui/GlassButton.module.css";
 import { useRef, useEffect } from "react";
+// @ts-expect-error — CSS side-effect import
+import "@/components/products/how-it-works-tokens.css";
 
 const EMOJIS = [
   { src: "/how/palm.png",  width: 92,  height: 85,  cls: "absolute left-[2%] top-[22%] w-[13%] h-auto" },
@@ -11,11 +13,10 @@ const EMOJIS = [
   { src: "/how/pane.png",  width: 134, height: 115, cls: "absolute right-[2%] top-[22%] w-[13%] h-auto" },
 ];
 
-// Weak magnetic attraction — pulls toward cursor, springs back to home
-const SPRING         = 0.04;   // restore force
-const DAMPING        = 0.82;   // velocity decay per frame
-const MOUSE_STRENGTH = 0.55;   // attraction impulse scale
-const MOUSE_RADIUS   = 320;    // px in section space
+const SPRING         = 0.04;
+const DAMPING        = 0.82;
+const MOUSE_STRENGTH = 0.55;
+const MOUSE_RADIUS   = 320;
 
 export default function InspirationStrip() {
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -29,7 +30,6 @@ export default function InspirationStrip() {
     const section = sectionRef.current;
     if (!section) return;
 
-    // Record home centers once (before any transforms)
     const sRect = section.getBoundingClientRect();
     homesRef.current = wrapRefs.current.map(el => {
       if (!el) return { x: 0, y: 0 };
@@ -54,11 +54,9 @@ export default function InspirationStrip() {
         const el = wrapRefs.current[i];
         if (!el || !homes[i]) return;
 
-        // Spring back to rest position
         s.vx += -s.x * SPRING;
         s.vy += -s.y * SPRING;
 
-        // Weak attraction toward mouse (from current displaced position)
         const cx   = homes[i].x + s.x;
         const cy   = homes[i].y + s.y;
         const dx   = mouse.x - cx;
@@ -90,50 +88,53 @@ export default function InspirationStrip() {
   }, []);
 
   return (
-    <section className="relative w-full overflow-visible pb-[100px] lg:pb-[210px]" style={{ background: "#F6F7F8" }}>
-      {/* Blending gradient — top, bleeds into section above */}
+    <section
+      className="hiw-scope relative w-full overflow-visible"
+      style={{
+        background: "var(--hiw-bg-subtle)",
+        paddingBottom: "var(--hiw-section-py)",
+      }}
+    >
+      {/* Top blend gradient */}
       <div
         className="absolute left-0 right-0 pointer-events-none z-10"
         style={{
           top: -120,
           height: 120,
-          background: "linear-gradient(to bottom, #F9F9F9 0%, rgba(249,249,249,0) 100%)",
+          background: "linear-gradient(to bottom, var(--hiw-bg-page) 0%, transparent 100%)",
         }}
       />
-      {/* Blending gradient — bottom, bleeds into section below (#F6F7F8) */}
+      {/* Bottom blend gradient */}
       <div
         className="absolute left-0 right-0 bottom-0 pointer-events-none z-10"
         style={{
           height: 160,
-          background: "linear-gradient(to bottom, rgba(246,247,248,0) 0%, #F6F7F8 100%)",
+          background: "linear-gradient(to bottom, transparent 0%, var(--hiw-bg-subtle) 100%)",
         }}
       />
 
       <div ref={sectionRef} className="relative w-full aspect-[1730/600]">
-
-        {/* Rectangle 2541: main gradient (270deg = right to left) */}
+        {/* Main color gradient */}
         <div
           className="absolute inset-0"
           style={{
             background: "linear-gradient(270deg, rgba(0, 255, 38, 0.2) 0%, rgba(33, 140, 206, 0.4) 51.15%, rgba(199, 32, 32, 0.3) 100%)",
           }}
         />
-
-        {/* Rectangle 2628: top edge fade to white */}
+        {/* Top fade */}
         <div
           className="absolute left-0 right-0 top-0 pointer-events-none"
           style={{
             height: "55%",
-            background: "linear-gradient(to bottom, #F9F9F9 0%, rgba(249,249,249,0) 100%)",
+            background: "linear-gradient(to bottom, var(--hiw-bg-page) 0%, transparent 100%)",
           }}
         />
-
-        {/* Rectangle 2629: bottom edge fade to section-h background */}
+        {/* Bottom fade */}
         <div
           className="absolute left-0 right-0 bottom-0 pointer-events-none"
           style={{
             height: "55%",
-            background: "linear-gradient(to bottom, rgba(246,247,248,0) 0%, #F6F7F8 100%)",
+            background: "linear-gradient(to bottom, transparent 0%, var(--hiw-bg-subtle) 100%)",
           }}
         />
 
@@ -148,17 +149,24 @@ export default function InspirationStrip() {
           </div>
         ))}
 
-        {/* Center Pill */}
+        {/* Center glass button */}
         <div className="absolute inset-0 flex items-center justify-center">
           <button
             className={glassStyles.btn}
-            style={{ width: "clamp(280px, 80vw, 567px)", height: "clamp(56px, 14vw, 101px)", padding: 0, flexShrink: 0, cursor: "pointer" }}
+            style={{
+              width: "clamp(280px, 80vw, 567px)",
+              height: "clamp(56px, 14vw, 101px)",
+              padding: 0,
+              flexShrink: 0,
+              cursor: "pointer",
+            }}
             onClick={() => document.getElementById("section-see-what-people")?.scrollIntoView({ behavior: "smooth" })}
           >
             <span
               style={{
-                fontSize: "clamp(20px, 5vw, 36px)",
-                fontWeight: 590,
+                fontFamily: "var(--hiw-font-sans)",
+                fontSize: "clamp(var(--hiw-text-lg), 5vw, var(--hiw-text-2xl))",
+                fontWeight: "var(--hiw-weight-semibold)" as unknown as number,
                 whiteSpace: "nowrap",
                 background: "linear-gradient(180deg, #063140 0%, #01A35D 100%)",
                 WebkitBackgroundClip: "text",
@@ -170,7 +178,6 @@ export default function InspirationStrip() {
             </span>
           </button>
         </div>
-
       </div>
     </section>
   );

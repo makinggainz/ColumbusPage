@@ -3,8 +3,12 @@
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { Heart, Star } from "lucide-react";
+// @ts-expect-error — CSS side-effect import
+import "@/components/products/how-it-works-tokens.css";
 
-// 8 particles radiating at different angles
+/* ═══════════════════════════════════════════════════════════════
+   Animated heart card — cycles through tap → fill → burst → settle
+   ═══════════════════════════════════════════════════════════════ */
 const PARTICLES = [
   { angle: -80,  dist: 38 },
   { angle: -40,  dist: 44 },
@@ -16,7 +20,6 @@ const PARTICLES = [
   { angle: 180,  dist: 36 },
 ];
 
-// idle → tapping → filled (burst+Saved!) → fading (fade out burst+Saved!) → settled (heart stays filled 4s) → idle
 type Phase = "idle" | "tapping" | "filled" | "fading" | "settled";
 
 function FavoriteSpotCard() {
@@ -35,10 +38,10 @@ function FavoriteSpotCard() {
       timers.current = [];
       setPhase("idle");
       after(1500, () => setPhase("tapping"));
-      after(1700, () => setPhase("filled"));   // burst + Saved! appear
-      after(2900, () => setPhase("fading"));   // burst + Saved! fade out
-      after(3700, () => setPhase("settled"));  // heart stays filled, quiet
-      after(7700, runCycle);                   // 4s settled → repeat
+      after(1700, () => setPhase("filled"));
+      after(2900, () => setPhase("fading"));
+      after(3700, () => setPhase("settled"));
+      after(7700, runCycle);
     };
 
     after(800, runCycle);
@@ -47,8 +50,6 @@ function FavoriteSpotCard() {
 
   const isFilled      = phase !== "idle" && phase !== "tapping";
   const showParticles = phase === "filled" || phase === "fading";
-  // Particles stay at their spread position throughout; only opacity changes on fading
-  const particlesSpread  = true; // always spread once mounted — fade handles disappearance
   const particleOpacity  = phase === "filled" ? 1 : 0;
   const showSaved     = isFilled;
   const heartScale    = phase === "tapping" ? 1.4 : phase === "filled" ? 1.15 : 1;
@@ -56,57 +57,62 @@ function FavoriteSpotCard() {
   return (
     <div
       style={{
-        background: "#FFFFFF",
-        borderRadius: 26,
-        boxShadow: "0 25px 50px -12px rgba(0,0,0,0.25)",
-        padding: "20px 20px 28px",
+        background: "var(--hiw-bg-card)",
+        borderRadius: "var(--hiw-radius-2xl)",
+        boxShadow: "var(--hiw-shadow-lg)",
+        padding: "var(--hiw-space-5)",
+        paddingBottom: "var(--hiw-space-8)",
         width: "100%",
         overflow: "visible",
       }}
     >
       {/* Header row */}
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16, overflow: "visible" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <span style={{ fontWeight: 700, fontSize: 15, letterSpacing: "0.07em", color: "#1D1D1F" }}>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "var(--hiw-space-4)", overflow: "visible" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "var(--hiw-space-3)" }}>
+          <span style={{
+            fontFamily: "var(--hiw-font-sans)",
+            fontWeight: "var(--hiw-weight-bold)" as unknown as number,
+            fontSize: "var(--hiw-text-sm)",
+            letterSpacing: "0.07em",
+            color: "var(--hiw-text-primary)",
+          }}>
             ZLATÁ PRAHA
           </span>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 4,
-              background: "#F5F5F7",
-              borderRadius: 6,
-              padding: "3px 9px",
-            }}
-          >
-            <Star size={12} fill="#E46962" color="#E46962" />
-            <span style={{ fontWeight: 600, fontSize: 13, color: "#1D1D1F" }}>5.0</span>
+          <div style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "var(--hiw-space-1)",
+            background: "var(--hiw-bg-subtle)",
+            borderRadius: "var(--hiw-radius-sm)",
+            padding: "3px 9px",
+          }}>
+            <Star size={12} fill="var(--hiw-accent-alt)" color="var(--hiw-accent-alt)" />
+            <span style={{
+              fontFamily: "var(--hiw-font-sans)",
+              fontWeight: "var(--hiw-weight-semibold)" as unknown as number,
+              fontSize: "var(--hiw-text-xs)",
+              color: "var(--hiw-text-primary)",
+            }}>5.0</span>
           </div>
         </div>
 
-        {/* Heart button + particles + Saved! label */}
-        <div style={{ position: "relative", display: "flex", alignItems: "center", gap: 8 }}>
-          {/* "Saved!" label */}
-          <span
-            style={{
-              fontSize: 15,
-              fontWeight: 600,
-              color: "#00B1D4",
-              whiteSpace: "nowrap",
-              opacity: showSaved ? 1 : 0,
-              transform: showSaved ? "translateX(0)" : "translateX(6px)",
-              transition: "opacity 0.25s ease, transform 0.25s ease",
-              pointerEvents: "none",
-              fontFamily: "'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif",
-            }}
-          >
+        {/* Heart + particles + Saved! */}
+        <div style={{ position: "relative", display: "flex", alignItems: "center", gap: "var(--hiw-space-2)" }}>
+          <span style={{
+            fontFamily: "var(--hiw-font-sans)",
+            fontSize: "var(--hiw-text-sm)",
+            fontWeight: "var(--hiw-weight-semibold)" as unknown as number,
+            color: "var(--hiw-accent)",
+            whiteSpace: "nowrap",
+            opacity: showSaved ? 1 : 0,
+            transform: showSaved ? "translateX(0)" : "translateX(6px)",
+            transition: `opacity var(--hiw-duration-normal) var(--hiw-easing-default), transform var(--hiw-duration-normal) var(--hiw-easing-default)`,
+            pointerEvents: "none",
+          }}>
             Saved!
           </span>
 
-          {/* Heart + particle container — overflow visible so particles escape card bounds */}
           <div style={{ position: "relative", width: 22, height: 22, overflow: "visible" }}>
-            {/* Burst particles — mount spread, fade out in place */}
             {showParticles && PARTICLES.map((p, i) => {
               const rad = (p.angle * Math.PI) / 180;
               const tx = Math.cos(rad) * p.dist;
@@ -122,7 +128,6 @@ function FavoriteSpotCard() {
                     fontSize: 9,
                     lineHeight: 1,
                     pointerEvents: "none",
-                    // Always at final spread position — never return to center
                     transform: `translate(calc(-50% + ${tx}px), calc(-50% + ${ty}px)) scale(1)`,
                     opacity: particleOpacity,
                     transition: `opacity 0.7s ease ${i * 25}ms`,
@@ -132,17 +137,15 @@ function FavoriteSpotCard() {
                 </span>
               );
             })}
-
-            {/* Main heart */}
             <Heart
               size={22}
-              fill={isFilled ? "#E46962" : "none"}
-              color={isFilled ? "#E46962" : "#000000"}
+              fill={isFilled ? "var(--hiw-accent-alt)" : "none"}
+              color={isFilled ? "var(--hiw-accent-alt)" : "var(--hiw-text-primary)"}
               style={{
                 position: "relative",
                 zIndex: 1,
                 transform: `scale(${heartScale})`,
-                transition: "transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1)",
+                transition: `transform var(--hiw-duration-fast) var(--hiw-easing-spring)`,
               }}
             />
           </div>
@@ -150,7 +153,13 @@ function FavoriteSpotCard() {
       </div>
 
       {/* Photo */}
-      <div style={{ width: "100%", aspectRatio: "4 / 3", borderRadius: 16, overflow: "hidden", marginBottom: 22 }}>
+      <div style={{
+        width: "100%",
+        aspectRatio: "4 / 3",
+        borderRadius: "var(--hiw-radius-lg)",
+        overflow: "hidden",
+        marginBottom: "var(--hiw-space-5)",
+      }}>
         <img
           src={`/FavoriteSpots/${encodeURIComponent("(20).jpeg")}`}
           alt=""
@@ -159,13 +168,26 @@ function FavoriteSpotCard() {
       </div>
 
       {/* Query text */}
-      <div style={{ display: "flex", alignItems: "flex-start", gap: 14 }}>
+      <div style={{ display: "flex", alignItems: "flex-start", gap: "var(--hiw-space-3)" }}>
         <img
           src="https://i.pravatar.cc/80?img=47"
           alt=""
-          style={{ width: 44, height: 44, borderRadius: "50%", objectFit: "cover", flexShrink: 0, marginTop: 4 }}
+          style={{
+            width: 44,
+            height: 44,
+            borderRadius: "var(--hiw-radius-full)",
+            objectFit: "cover",
+            flexShrink: 0,
+            marginTop: "var(--hiw-space-1)",
+          }}
         />
-        <p className="text-[20px] lg:text-[26px]" style={{ fontWeight: 500, color: "#1D1D1F", lineHeight: 1.35, margin: 0 }}>
+        <p className="text-[20px] lg:text-[26px]" style={{
+          fontFamily: "var(--hiw-font-sans)",
+          fontWeight: "var(--hiw-weight-medium)" as unknown as number,
+          lineHeight: "var(--hiw-leading-snug)" as unknown as number,
+          color: "var(--hiw-text-primary)",
+          margin: 0,
+        }}>
           Find me a cute romantic restaurant with views of the river
         </p>
       </div>
@@ -173,93 +195,86 @@ function FavoriteSpotCard() {
   );
 }
 
+/* ═══════════════════════════════════════════════════════════════
+   FavoritesSection — statement text + animated card
+   ═══════════════════════════════════════════════════════════════ */
 export default function FavoritesSection() {
   return (
-    <>
-      {/* ================= SECTION 1: Headline + 2 emojis ================= */}
-      <section className="bg-[#F9F9F9] w-full overflow-hidden min-h-[500px] lg:min-h-[1000px] flex items-center">
-        <div className="max-w-[1408px] mx-auto px-8 min-[1408px]:px-0 py-20 lg:py-32">
-          <div className="flex flex-col lg:flex-row items-center justify-center gap-6 lg:gap-12 text-center">
-            <span className="hover-bee inline-block cursor-default transition-transform">
-              <Image
-                src="/how/light.png"
-                alt=""
-                width={120}
-                height={100}
-                className="w-20 sm:w-24 lg:w-32 h-auto block"
-              />
-            </span>
-            <h2 className="text-[27px] sm:text-[36px] lg:text-[64px] font-semibold text-black leading-tight max-w-3xl">
-              Let our AI find you
-              <br className="hidden sm:block" />
-              the coolest place, faster.
-            </h2>
-            <span className="hover-bee inline-block cursor-default transition-transform">
-              <Image
-                src="/how/serach.png"
-                alt=""
-                width={120}
-                height={100}
-                className="w-20 sm:w-24 lg:w-32 h-auto block"
-              />
-            </span>
-          </div>
+    <section
+      className="hiw-scope"
+      style={{
+        background: "var(--hiw-bg-page)",
+        paddingTop: "var(--hiw-section-py)",
+        paddingBottom: "var(--hiw-section-py)",
+      }}
+    >
+      <div
+        style={{
+          maxWidth: "var(--hiw-max-width)",
+          marginInline: "auto",
+          paddingInline: "var(--hiw-content-px)",
+        }}
+      >
+        {/* Headline + emojis */}
+        <div className="flex flex-col lg:flex-row items-center justify-center gap-6 lg:gap-12 text-center" style={{ marginBottom: "var(--hiw-step-gap)" }}>
+          <span className="hover-bee inline-block cursor-default">
+            <Image
+              src="/how/light.png"
+              alt=""
+              width={120}
+              height={100}
+              className="w-20 sm:w-24 lg:w-32 h-auto block"
+            />
+          </span>
+          <h2 style={{
+            fontFamily: "var(--hiw-font-sans)",
+            fontWeight: "var(--hiw-weight-semibold)" as unknown as number,
+            fontSize: "clamp(var(--hiw-text-xl), 5vw, var(--hiw-text-4xl))",
+            lineHeight: "var(--hiw-leading-tight)" as unknown as number,
+            color: "var(--hiw-text-primary)",
+            margin: 0,
+          }}>
+            Let our AI find you
+            <br />
+            the coolest place, faster.
+          </h2>
+          <span className="hover-bee inline-block cursor-default">
+            <Image
+              src="/how/serach.png"
+              alt=""
+              width={120}
+              height={100}
+              className="w-20 sm:w-24 lg:w-32 h-auto block"
+            />
+          </span>
         </div>
-      </section>
 
-      {/* ================= SECTION 2: Save favorites + card + bottom text ================= */}
-      <section className="bg-[#F9F9F9] w-full relative min-h-0 lg:min-h-350 flex flex-col">
-        <span
-          className="absolute left-6 lg:left-12 top-6 lg:top-8 text-[#E5E5E5] font-semibold text-4xl sm:text-5xl lg:text-6xl leading-none select-none"
-          aria-hidden
-        >
-          2
-        </span>
-        <div className="max-w-[1408px] mx-auto px-8 min-[1408px]:px-0 pt-0 pb-0 flex flex-col flex-1 min-h-0">
-          <div className="grid lg:grid-cols-[1fr_auto] gap-12 lg:gap-32 items-center">
-            <div className="text-center lg:text-left order-2 lg:order-1">
-              <p
-                className="max-w-[560px] mx-auto lg:mx-0 text-[27px] sm:text-[36px] lg:text-[64px] leading-[140%]"
-                style={{
-                  fontFamily: "'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif",
-                  fontWeight: 590,
-                  background: "linear-gradient(90deg, #DE2F32 0%, #B00098 100%)",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                  backgroundClip: "text",
-                }}
-              >
-                Save your favorite spots, share with your friends.
-              </p>
-            </div>
-            <div className="relative flex justify-end order-1 lg:order-2">
-              <div className="w-full max-w-lg">
-                <FavoriteSpotCard />
-              </div>
-            </div>
-          </div>
-
-          <div className="mt-32 lg:mt-auto flex justify-center mb-20 lg:mb-25 relative z-20">
-            <p
-              className="text-center max-w-[837px] text-[27px] sm:text-[36px] lg:text-[48px] leading-[130%]"
-              style={{
-                fontFamily: "'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif",
-                fontWeight: 400,
-                background: "linear-gradient(180deg, #000000 0%, #666666 100%)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                backgroundClip: "text",
-              }}
-            >
-              MapsGPT remembers your preferences,
-              <br />
-              and continuously learns
-              <br />
-              your vibes.
+        {/* Card + text row */}
+        <div className="grid lg:grid-cols-[1fr_1fr] items-center" style={{ gap: "var(--hiw-space-16)" }}>
+          {/* Text */}
+          <div className="text-center lg:text-left order-2 lg:order-1">
+            <p style={{
+              fontFamily: "var(--hiw-font-sans)",
+              fontWeight: "var(--hiw-weight-medium)" as unknown as number,
+              fontSize: "clamp(var(--hiw-text-xl), 4vw, var(--hiw-text-3xl))",
+              lineHeight: "var(--hiw-leading-snug)" as unknown as number,
+              color: "var(--hiw-text-primary)",
+              margin: 0,
+              maxWidth: 560,
+              marginInline: "auto",
+            }}>
+              MapsGPT remembers your preferences and continuously learns your vibes.
             </p>
           </div>
+
+          {/* Card */}
+          <div className="order-1 lg:order-2 flex justify-center lg:justify-end">
+            <div className="w-full max-w-lg">
+              <FavoriteSpotCard />
+            </div>
+          </div>
         </div>
-      </section>
-    </>
+      </div>
+    </section>
   );
 }
