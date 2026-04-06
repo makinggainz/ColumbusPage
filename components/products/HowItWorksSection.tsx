@@ -26,7 +26,7 @@ const STEPS: Step[] = [
     title: "Chat to find what you need",
     titleGradient: "linear-gradient(90deg, #063140 0%, #5FBFF1 100%)",
     description:
-      "Ask MapsGPT for suggestions for any destination or ask for an entire itinerary. Be as specific as you want about the experiences you love — from street food to sunset spots — and our AI will curate results that match your travel style.",
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco.",
     image: "/how/center.png",
     imageAlt: "MapsGPT chat interface with destination suggestions",
     imageCluster: true,
@@ -44,7 +44,7 @@ const STEPS: Step[] = [
     title: "Save & share your favorites",
     titleGradient: "linear-gradient(90deg, #0A6E5C 0%, #2A8FC2 100%)",
     description:
-      "Bookmark the places you love, organize them into collections, and share your finds with friends and travel companions.",
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
     image: "",
     imageAlt: "",
     favoriteCard: true,
@@ -557,7 +557,7 @@ function FavoriteSpotCard() {
             <span style={{ fontFamily: "var(--hiw-font-sans)", fontWeight: "var(--hiw-weight-semibold)" as unknown as number, fontSize: "var(--hiw-text-xs)", color: "var(--hiw-text-primary)" }}>5.0</span>
           </div>
         </div>
-        <div style={{ position: "relative", display: "flex", alignItems: "center", gap: "var(--hiw-space-2)" }}>
+        <div style={{ position: "relative", display: "flex", alignItems: "center", gap: "var(--hiw-space-3)" }}>
           <span style={{
             fontFamily: "var(--hiw-font-sans)", fontSize: "var(--hiw-text-sm)", fontWeight: "var(--hiw-weight-semibold)" as unknown as number,
             color: "var(--hiw-accent)", whiteSpace: "nowrap", opacity: showSaved ? 1 : 0,
