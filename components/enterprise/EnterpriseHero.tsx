@@ -87,19 +87,32 @@ export default function EnterpriseHero() {
       className="relative w-full overflow-hidden"
       style={{ backgroundColor: "#F9F9F9" }}
     >
-      {/* Background image — desaturated */}
-      <Image
-        src="/vibegreen.png"
-        alt=""
-        fill
-        className="object-cover object-center"
-        style={{ filter: "grayscale(1) brightness(1.1)" }}
-        priority
-      />
-      {/* Blue tint overlay */}
+      {/* Background image — top-aligned, grayscale base */}
       <div
         className="absolute inset-0"
-        style={{ backgroundColor: "#0066CC", mixBlendMode: "color", opacity: 0.6, zIndex: 1 }}
+        style={{
+          backgroundImage: "url(/productbackground1.png)",
+          backgroundPosition: "top center",
+          backgroundSize: "100% auto",
+          backgroundRepeat: "no-repeat",
+          filter: "grayscale(1) blur(6px)",
+          transform: "scale(1.02)",
+          zIndex: 0,
+        }}
+      />
+      {/* Blue tint over the image */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{ backgroundColor: "#0066CC", mixBlendMode: "color", opacity: 0.5, zIndex: 0 }}
+      />
+      {/* Fade to white at bottom */}
+      <div
+        className="absolute bottom-0 left-0 right-0 pointer-events-none"
+        style={{
+          height: "40%",
+          background: "linear-gradient(to bottom, transparent 0%, #F9F9F9 100%)",
+          zIndex: 0,
+        }}
       />
 
       {/* ── Toggle ── */}
