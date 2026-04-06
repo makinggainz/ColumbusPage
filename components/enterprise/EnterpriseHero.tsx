@@ -91,7 +91,7 @@ export default function EnterpriseHero() {
       <div
         className="absolute inset-0"
         style={{
-          backgroundImage: "url(/productbackground1.png)",
+          backgroundImage: "url(/probackground.png)",
           backgroundPosition: "top center",
           backgroundSize: "100% auto",
           backgroundRepeat: "no-repeat",
