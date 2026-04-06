@@ -46,9 +46,8 @@ export default function Hero() {
   const phoneEndElRef           = useRef<HTMLElement | null>(null);
   const scrollStopTimerRef      = useRef<ReturnType<typeof setTimeout> | null>(null);
   const lastScrollDeltaRef      = useRef(0);
-  const peakRawRef              = useRef(0);
-  const mountedRef              = useRef(true);
   const isSnappingRef           = useRef(false);
+  const snapRafRef              = useRef(0);
   const mobileAnimatingRef      = useRef(false);
   const mobileAnimRafRef        = useRef(0);
   const transitionPhoneImgRef   = useRef<HTMLElement | null>(null);
@@ -111,7 +110,6 @@ export default function Hero() {
 
     // Reset when back to top
     if (nearZero) {
-      peakRawRef.current = 0;
       phoneStartCapturedRef.current = false;
       phoneEndCapturedRef.current   = false;
       if (phoneEndElRef.current) { phoneEndElRef.current.style.opacity = "0"; phoneEndElRef.current = null; }
@@ -309,9 +307,6 @@ export default function Hero() {
       const extraPx = window.innerHeight * (isMobile ? 1 : 2);
       const raw     = Math.max(0, Math.min(1, -rect.top / extraPx));
 
-      // Track peak transition progress for scroll-back intent detection
-      if (raw > peakRawRef.current) peakRawRef.current = raw;
-
       // ── Mobile: trigger time-driven animation, ignore scroll-driven updates ──
       if (isMobile) {
         if (mobileAnimatingRef.current) return; // animation in progress, ignore scroll
@@ -325,14 +320,16 @@ export default function Hero() {
       }
 
       // ── Desktop: scroll-driven animation ──
+      // During a snap, still update visuals but don't re-trigger snap logic
       applyTransitionAtRaw(raw);
 
-      // Desktop snap logic
+      if (isSnappingRef.current) return;
+
+      // Desktop snap logic — rAF-driven scroll (uninterruptible by user input)
       if (scrollStopTimerRef.current) clearTimeout(scrollStopTimerRef.current);
-      if (raw > 0.005 && raw < 0.995 && !isSnappingRef.current) {
+      if (raw > 0.005 && raw < 0.995) {
         scrollStopTimerRef.current = setTimeout(() => {
           scrollStopTimerRef.current = null;
-          if (!mountedRef.current) return;
           const container = outerContainerRef.current;
           if (!container) return;
           const r2     = container.getBoundingClientRect();
@@ -343,13 +340,27 @@ export default function Hero() {
           const snapForward = curRaw >= 0.20;
           isSnappingRef.current = true;
           const elementDocTop = window.scrollY + r2.top;
-          if (snapForward) {
-            window.scrollTo({ top: elementDocTop + extra, behavior: "smooth" });
-          } else {
-            window.scrollTo({ top: elementDocTop, behavior: "smooth" });
-          }
-          setTimeout(() => { isSnappingRef.current = false; }, 600);
-        }, 350);
+          const targetY = snapForward ? elementDocTop + extra : elementDocTop;
+
+          // Programmatic smooth scroll via rAF — can't be interrupted by user scroll
+          const startY = window.scrollY;
+          const dist = targetY - startY;
+          const DURATION = 600;
+          const startTime = performance.now();
+          cancelAnimationFrame(snapRafRef.current);
+
+          const step = (now: number) => {
+            const t = Math.min(1, (now - startTime) / DURATION);
+            const eased = 1 - Math.pow(1 - t, 3); // ease-out cubic
+            window.scrollTo({ top: startY + dist * eased, behavior: "instant" as ScrollBehavior });
+            if (t < 1) {
+              snapRafRef.current = requestAnimationFrame(step);
+            } else {
+              isSnappingRef.current = false;
+            }
+          };
+          snapRafRef.current = requestAnimationFrame(step);
+        }, 200);
       }
     };
 
@@ -367,11 +378,11 @@ export default function Hero() {
     window.addEventListener("resize", onResize);
 
     return () => {
-      mountedRef.current = false;
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onResize);
       clearTimeout(resizeTimer);
       if (scrollStopTimerRef.current) clearTimeout(scrollStopTimerRef.current);
+      cancelAnimationFrame(snapRafRef.current);
       cancelAnimationFrame(mobileAnimRafRef.current);
     };
   }, [applyTransitionAtRaw, runMobileAnimation]);
