@@ -301,18 +301,58 @@ function RecommendationCard() {
         startedRef.current = true;
         observer.disconnect();
 
-        // Typing with natural rhythm — faster base, pauses on punctuation
-        let idx = 0;
-        const BASE = 16;
-        const tick = () => {
-          idx++;
+        // ── Professional typing animation ──
+        // Pre-compute cumulative timestamps per character so rAF can
+        // binary-search the current index — no setTimeout drift.
+        // Timing: gentle ease-in (first few chars slower), natural
+        // word-boundary breathing, soft punctuation holds.
+        const len = REC_MSG.length;
+        const timestamps: number[] = [];
+        let t = 0;
+        for (let i = 0; i < len; i++) {
+          timestamps.push(t);
+          const ch = REC_MSG[i];
+          // Ease-in: first 8 chars ramp from 2× to 1× speed
+          const warmup = i < 8 ? 1 + (1 - i / 8) * 1 : 1;
+          // Base cadence per character
+          let delay = 18 * warmup;
+          // Contextual pauses
+          if (/[.!?]/.test(ch))      delay = 160 * warmup;   // sentence end — breathe
+          else if (ch === ",")        delay = 80 * warmup;    // clause pause
+          else if (ch === " ") {
+            // Word boundary — micro-pause, slightly longer before long words
+            const nextWord = REC_MSG.slice(i + 1).split(/\s/)[0] || "";
+            delay = (22 + Math.min(nextWord.length, 6) * 1.5) * warmup;
+          }
+          t += delay;
+        }
+        let raf: number;
+        const start = performance.now() + 200; // initial hold before first char
+
+        const frame = (now: number) => {
+          const elapsed = now - start;
+          if (elapsed < 0) { raf = requestAnimationFrame(frame); return; }
+
+          // Find how many characters should be visible at this moment
+          let idx = 0;
+          let lo = 0, hi = len;
+          while (lo < hi) {
+            const mid = (lo + hi + 1) >>> 1;
+            if (timestamps[mid] <= elapsed) lo = mid; else hi = mid - 1;
+          }
+          idx = Math.min(lo + 1, len);
+
           setTypedText(REC_MSG.slice(0, idx));
-          if (idx >= REC_MSG.length) { setTypingDone(true); return; }
-          const ch = REC_MSG[idx - 1];
-          const ms = /[.!?]/.test(ch) ? 240 : ch === "," ? 100 : ch === " " ? BASE + 6 : BASE + Math.random() * 10;
-          setTimeout(tick, ms);
+
+          if (idx >= len) {
+            setTypingDone(true);
+            return;
+          }
+          raf = requestAnimationFrame(frame);
         };
-        setTimeout(tick, 250);
+
+        raf = requestAnimationFrame(frame);
+        return () => cancelAnimationFrame(raf);
       },
       { threshold: 0.4 }
     );

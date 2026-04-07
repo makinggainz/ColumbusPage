@@ -4,6 +4,7 @@ import FavoritesSection from "@/components/products/FavoritesSection";
 import FinalCTASection from "@/components/products/FinalCTASection";
 import Hero from "@/components/products/Hero";
 import HowItWorksSection from "@/components/products/HowItWorksSection";
+import NewAtMapsGPTSection from "@/components/products/NewAtMapsGPTSection";
 import InspirationSection from "@/components/products/InspirationSection";
 // import QuestionsSection from "@/components/products/QuestionsSection";
 // import RecommendationsSection from "@/components/products/RecommendationsSection";
@@ -55,16 +56,18 @@ export default function ProductsPage() {
         <HowItWorksSection />
       </SectionWithLabel>
       <SectionWithLabel label={sectionLabels[5]}>
-        <FavoritesSection />
+        <NewAtMapsGPTSection />
       </SectionWithLabel>
       <SectionWithLabel label={sectionLabels[6]}>
-        <InspirationSection />
+        <FavoritesSection />
       </SectionWithLabel>
       <SectionWithLabel label={sectionLabels[7]}>
+        <InspirationSection />
+      </SectionWithLabel>
+      <SectionWithLabel label={sectionLabels[8]}>
         <div id="section-see-what-people" />
         <SeeWhatPeopleSection />
       </SectionWithLabel>
-      {/* Section I — RecommendationsSection (removed, CTA moved to section f) */}
       <SectionWithLabel label={sectionLabels[9]}>
         <FinalCTASection />
       </SectionWithLabel>
