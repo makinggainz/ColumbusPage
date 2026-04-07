@@ -503,6 +503,10 @@ export const BottleScene = ({ onBottleClick, visible, dark, bg, waveRgb, already
   const clickedRef = useRef(!!alreadyOpened);
 
   useEffect(() => {
+    if (alreadyOpened) clickedRef.current = true;
+  }, [alreadyOpened]);
+
+  useEffect(() => {
     const cvs = canvasRef.current;
     if (!cvs) return;
 

@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { useRef, useEffect, useState } from "react";
 import { Heart } from "lucide-react";
+// @ts-expect-error — CSS side-effect import
+import "@/components/products/how-it-works-tokens.css";
 
 const PHOTOS = [
   `/FavoriteSpots/${encodeURIComponent("(20).jpeg")}`,
@@ -24,10 +26,18 @@ type CardData = {
   avatar: string;
 };
 
-// 6 columns — 2 | 3 | 4 | 4 | 3 | 2 = inverted pyramid, outer columns shorter
+// 8 columns — wider pyramid with more cards in outer columns
 const COLUMNS: CardData[][] = [
-  // ── Col 1 — 2 cards ──────────────────────────────────────────────────────
+  // ── Col 1 — 3 cards ──
   [
+    {
+      place: "Blue Lagoon",
+      rating: "4.8",
+      photo: PHOTOS[6],
+      response: "Top match — iconic geothermal waters, dramatic lava field setting",
+      query: "Best natural hot spring experience in Iceland?",
+      avatar: "https://i.pravatar.cc/80?img=60",
+    },
     {
       place: "Café de Flore",
       rating: "4.7",
@@ -37,6 +47,17 @@ const COLUMNS: CardData[][] = [
       avatar: "https://i.pravatar.cc/80?img=47",
     },
     {
+      place: "Riad Yasmine",
+      rating: "4.6",
+      photo: PHOTOS[4],
+      response: "Great pick — hidden courtyard pool, traditional zellige tilework",
+      query: "Most charming riad in Marrakech with a pool?",
+      avatar: "https://i.pravatar.cc/80?img=41",
+    },
+  ],
+  // ── Col 2 — 3 cards ──
+  [
+    {
       place: "Noma",
       rating: "4.9",
       photo: PHOTOS[1],
@@ -44,9 +65,6 @@ const COLUMNS: CardData[][] = [
       query: "Where can I find the most creative tasting menu experience in Copenhagen?",
       avatar: "https://i.pravatar.cc/80?img=32",
     },
-  ],
-  // ── Col 2 — 3 cards ──────────────────────────────────────────────────────
-  [
     {
       place: "Amalfi Villa",
       rating: "4.8",
@@ -63,6 +81,9 @@ const COLUMNS: CardData[][] = [
       query: "Top observation deck in Tokyo for the best sunset views?",
       avatar: "https://i.pravatar.cc/80?img=11",
     },
+  ],
+  // ── Col 3 — 4 cards ──
+  [
     {
       place: "The Ned NYC",
       rating: "4.5",
@@ -71,15 +92,12 @@ const COLUMNS: CardData[][] = [
       query: "Coolest members club or rooftop lounge in New York for a summer evening?",
       avatar: "https://i.pravatar.cc/80?img=25",
     },
-  ],
-  // ── Col 3 — 4 cards ──────────────────────────────────────────────────────
-  [
     {
       place: "Four Seasons Bali",
       rating: "4.9",
       photo: PHOTOS[5],
       response: "Perfect fit — secluded villa compound, private pool, rice terrace views",
-      query: "Most secluded luxury resort in Bali with rice terrace views and a private villa pool, far from the tourist crowds?",
+      query: "Most secluded luxury resort in Bali with rice terrace views and a private villa pool?",
       avatar: "https://i.pravatar.cc/80?img=7",
     },
     {
@@ -98,6 +116,9 @@ const COLUMNS: CardData[][] = [
       query: "Best food market in Madrid?",
       avatar: "https://i.pravatar.cc/80?img=3",
     },
+  ],
+  // ── Col 4 — 4 cards ──
+  [
     {
       place: "Hôtel du Cap",
       rating: "4.8",
@@ -106,15 +127,12 @@ const COLUMNS: CardData[][] = [
       query: "Most glamorous hotel on the French Riviera with an infinity pool above the sea?",
       avatar: "https://i.pravatar.cc/80?img=16",
     },
-  ],
-  // ── Col 4 — 4 cards ──────────────────────────────────────────────────────
-  [
     {
       place: "Osteria Francescana",
       rating: "4.9",
       photo: PHOTOS[1],
       response: "Perfect fit — 3 Michelin stars, zero tourist energy, deeply local soul",
-      query: "Where can I experience authentic Italian fine dining in Modena that feels deeply local and not touristy?",
+      query: "Where can I experience authentic Italian fine dining in Modena?",
       avatar: "https://i.pravatar.cc/80?img=35",
     },
     {
@@ -130,9 +148,12 @@ const COLUMNS: CardData[][] = [
       rating: "4.9",
       photo: PHOTOS[3],
       response: "Perfect fit — private atoll, 35 villas, total seclusion guaranteed",
-      query: "Most exclusive private island resort for a honeymoon with total privacy, crystal-clear water, and absolutely no crowds anywhere?",
+      query: "Most exclusive private island resort for a honeymoon with total privacy?",
       avatar: "https://i.pravatar.cc/80?img=22",
     },
+  ],
+  // ── Col 5 — 4 cards ──
+  [
     {
       place: "Papaya Playa",
       rating: "4.5",
@@ -141,15 +162,12 @@ const COLUMNS: CardData[][] = [
       query: "Best beach club in Tulum for a relaxed day with good food and good music?",
       avatar: "https://i.pravatar.cc/80?img=38",
     },
-  ],
-  // ── Col 5 — 3 cards ──────────────────────────────────────────────────────
-  [
     {
       place: "Fushimi Inari",
       rating: "4.8",
       photo: PHOTOS[5],
       response: "Strong match — arrive before 7am for empty torii gates, zero crowds",
-      query: "Best time to visit Fushimi Inari in Kyoto to avoid the tourist crowds completely?",
+      query: "Best time to visit Fushimi Inari in Kyoto to avoid the tourist crowds?",
       avatar: "https://i.pravatar.cc/80?img=9",
     },
     {
@@ -169,14 +187,14 @@ const COLUMNS: CardData[][] = [
       avatar: "https://i.pravatar.cc/80?img=62",
     },
   ],
-  // ── Col 6 — 2 cards ──────────────────────────────────────────────────────
+  // ── Col 6 — 3 cards ──
   [
     {
       place: "Koh Lanta",
       rating: "4.7",
       photo: PHOTOS[0],
       response: "Perfect fit — quiet bay, house reef for snorkeling, west-facing sunsets",
-      query: "Find me a quiet beachfront resort in Thailand far from the party scene, with snorkeling and gorgeous sunsets every evening?",
+      query: "Find me a quiet beachfront resort in Thailand far from the party scene?",
       avatar: "https://i.pravatar.cc/80?img=57",
     },
     {
@@ -184,8 +202,70 @@ const COLUMNS: CardData[][] = [
       rating: "4.8",
       photo: PHOTOS[1],
       response: "Strong match — oceanfront deck, celebrity crowd, Black Cod worth the hype",
-      query: "Best oceanfront restaurant in Malibu with amazing views and food that actually lives up to the hype?",
+      query: "Best oceanfront restaurant in Malibu with amazing views and food?",
       avatar: "https://i.pravatar.cc/80?img=51",
+    },
+    {
+      place: "Sake no Hana",
+      rating: "4.7",
+      photo: PHOTOS[5],
+      response: "Great pick — sleek Japanese izakaya, hidden garden terrace in Mayfair",
+      query: "Best hidden Japanese restaurant in London with a garden terrace?",
+      avatar: "https://i.pravatar.cc/80?img=29",
+    },
+  ],
+  // ── Col 7 — 3 cards ──
+  [
+    {
+      place: "Soneva Fushi",
+      rating: "4.9",
+      photo: PHOTOS[3],
+      response: "Perfect fit — barefoot luxury, overwater cinema, private reef snorkeling",
+      query: "Best barefoot luxury resort in the Maldives?",
+      avatar: "https://i.pravatar.cc/80?img=14",
+    },
+    {
+      place: "Berghain",
+      rating: "4.6",
+      photo: PHOTOS[7],
+      response: "Top match — legendary sound system, industrial cathedral of techno",
+      query: "Most iconic nightclub in Berlin for techno?",
+      avatar: "https://i.pravatar.cc/80?img=19",
+    },
+    {
+      place: "Villa Cimbrone",
+      rating: "4.8",
+      photo: PHOTOS[2],
+      response: "Strong match — Terrace of Infinity, sweeping Amalfi views, secret garden",
+      query: "Most romantic garden in Ravello with panoramic sea views?",
+      avatar: "https://i.pravatar.cc/80?img=46",
+    },
+  ],
+  // ── Col 8 — 3 cards ──
+  [
+    {
+      place: "Tulum Ruins",
+      rating: "4.7",
+      photo: PHOTOS[6],
+      response: "Great pick — clifftop Mayan temple, turquoise cove below, best at sunrise",
+      query: "Best Mayan ruins near the beach in Mexico?",
+      avatar: "https://i.pravatar.cc/80?img=33",
+    },
+    {
+      place: "Aman Venice",
+      rating: "4.9",
+      photo: PHOTOS[0],
+      response: "Perfect fit — 16th century palazzo, Grand Canal views, total serenity",
+      query: "Most exclusive boutique hotel in Venice on the Grand Canal?",
+      avatar: "https://i.pravatar.cc/80?img=48",
+    },
+    {
+      place: "Cala Conta",
+      rating: "4.6",
+      photo: PHOTOS[4],
+      response: "Top match — crystal water, sunset views, best beach bar on the island",
+      query: "Best beach in Ibiza for sunset drinks with crystal clear water?",
+      avatar: "https://i.pravatar.cc/80?img=55",
     },
   ],
 ];
@@ -196,24 +276,24 @@ function QueryCard({ place, rating, photo, response, query, avatar }: CardData) 
       href="/maps-gpt"
       style={{
         width: 296,
-        background: "#FFFFFF",
-        borderRadius: 20,
-        boxShadow: "0 6px 24px rgba(0,0,0,0.10)",
+        background: "var(--hiw-bg-card)",
+        borderRadius: "var(--hiw-radius-xl)",
+        boxShadow: "var(--hiw-shadow-card)",
         overflow: "hidden",
         flexShrink: 0,
         display: "block",
         textDecoration: "none",
-        transition: "transform 0.22s cubic-bezier(0.25,1,0.5,1), box-shadow 0.22s cubic-bezier(0.25,1,0.5,1)",
+        transition: `box-shadow var(--hiw-duration-normal) var(--hiw-easing-default)`,
       }}
       onMouseEnter={e => {
         const el = e.currentTarget as HTMLElement;
-        el.style.boxShadow = "0 14px 40px rgba(0,0,0,0.16)";
+        el.style.boxShadow = "var(--hiw-shadow-card-hover)";
         const resp = el.querySelector<HTMLElement>("[data-maps-response]");
         if (resp) resp.style.opacity = "1";
       }}
       onMouseLeave={e => {
         const el = e.currentTarget as HTMLElement;
-        el.style.boxShadow = "0 6px 24px rgba(0,0,0,0.10)";
+        el.style.boxShadow = "var(--hiw-shadow-card)";
         const resp = el.querySelector<HTMLElement>("[data-maps-response]");
         if (resp) resp.style.opacity = "0";
       }}
@@ -226,118 +306,92 @@ function QueryCard({ place, rating, photo, response, query, avatar }: CardData) 
           draggable={false}
           style={{ width: "100%", height: "100%", objectFit: "cover" }}
         />
-        {/* Scrim for text legibility */}
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            background: "linear-gradient(to bottom, rgba(0,0,0,0.52) 0%, transparent 55%)",
-          }}
-        />
-        {/* Place name + rating badge */}
-        <div
-          style={{
-            position: "absolute",
-            top: 12,
-            left: 12,
-            display: "flex",
-            alignItems: "center",
-            gap: 6,
-          }}
-        >
-          <span
-            style={{
-              color: "#FFFFFF",
-              fontWeight: 600,
-              fontSize: 13,
-              letterSpacing: "-0.01em",
-              textShadow: "0 1px 4px rgba(0,0,0,0.35)",
-            }}
-          >
+        <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to bottom, rgba(0,0,0,0.52) 0%, transparent 55%)" }} />
+        {/* Place name + rating */}
+        <div style={{ position: "absolute", top: 12, left: 12, display: "flex", alignItems: "center", gap: "var(--hiw-space-2)" }}>
+          <span style={{
+            fontFamily: "var(--hiw-font-sans)",
+            color: "var(--hiw-text-on-accent)",
+            fontWeight: "var(--hiw-weight-semibold)" as unknown as number,
+            fontSize: "var(--hiw-text-xs)",
+            letterSpacing: "-0.01em",
+            textShadow: "0 1px 4px rgba(0,0,0,0.35)",
+          }}>
             {place}
           </span>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 3,
-              background: "rgba(255,255,255,0.18)",
-              backdropFilter: "blur(8px)",
-              WebkitBackdropFilter: "blur(8px)",
-              borderRadius: 6,
-              padding: "2px 6px",
-            }}
-          >
+          <div style={{
+            display: "flex", alignItems: "center", gap: 3,
+            background: "rgba(255,255,255,0.18)",
+            backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)",
+            borderRadius: "var(--hiw-radius-sm)", padding: "2px 6px",
+          }}>
             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" aria-hidden style={{ flexShrink: 0 }}>
-              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="#E46962" />
+              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="var(--hiw-accent-alt)" />
             </svg>
-            <span style={{ color: "#FFFFFF", fontWeight: 700, fontSize: 11 }}>{rating}</span>
+            <span style={{
+              fontFamily: "var(--hiw-font-sans)",
+              color: "var(--hiw-text-on-accent)",
+              fontWeight: "var(--hiw-weight-bold)" as unknown as number,
+              fontSize: 11,
+            }}>{rating}</span>
           </div>
         </div>
-        {/* Heart icon */}
+        {/* Heart */}
         <div style={{ position: "absolute", top: 12, right: 12 }}>
           <Heart size={16} color="white" fill="transparent" strokeWidth={2} />
         </div>
 
-        {/* MapsGPT response — overlaid at bottom of photo */}
+        {/* MapsGPT response overlay */}
         <div
           style={{
-            position: "absolute",
-            bottom: 10,
-            left: 10,
-            right: 10,
-            display: "flex",
-            alignItems: "flex-start",
-            gap: 7,
+            position: "absolute", bottom: 10, left: 10, right: 10,
+            display: "flex", alignItems: "flex-start", gap: "var(--hiw-space-2)",
             background: "rgba(0,0,0,0.05)",
-            backdropFilter: "blur(12px)",
-            WebkitBackdropFilter: "blur(12px)",
-            borderRadius: 10,
-            padding: "7px 9px",
+            backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)",
+            borderRadius: "var(--hiw-radius-md)", padding: "7px 9px",
             opacity: 0,
-            transition: "opacity 0.2s ease",
+            transition: `opacity var(--hiw-duration-fast) var(--hiw-easing-default)`,
           }}
           data-maps-response
         >
-          <div style={{ width: 20, height: 20, borderRadius: "50%", overflow: "hidden", flexShrink: 0, marginTop: 1 }}>
+          <div style={{ width: 20, height: 20, borderRadius: "var(--hiw-radius-full)", overflow: "hidden", flexShrink: 0, marginTop: 1 }}>
             <img src="/MapsGPT-logo.png" alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
           </div>
-          <p style={{ fontSize: 11, fontWeight: 500, color: "#FFFFFF", lineHeight: 1.45, margin: 0 }}>
+          <p style={{
+            fontFamily: "var(--hiw-font-sans)",
+            fontSize: 11,
+            fontWeight: "var(--hiw-weight-medium)" as unknown as number,
+            color: "var(--hiw-text-on-accent)",
+            lineHeight: "var(--hiw-leading-normal)" as unknown as number,
+            margin: 0,
+          }}>
             {response}
           </p>
         </div>
       </div>
 
       {/* Avatar + query */}
-      <div
-        style={{
-          padding: "13px 14px 18px",
-          display: "flex",
-          alignItems: "flex-start",
-          gap: 9,
-        }}
-      >
+      <div style={{
+        padding: "var(--hiw-space-3) var(--hiw-space-4) var(--hiw-space-5)",
+        display: "flex", alignItems: "flex-start", gap: "var(--hiw-space-2)",
+      }}>
         <img
           src={avatar}
           alt=""
           style={{
-            width: 32,
-            height: 32,
-            borderRadius: "50%",
-            objectFit: "cover",
-            flexShrink: 0,
-            marginTop: 2,
+            width: 32, height: 32,
+            borderRadius: "var(--hiw-radius-full)",
+            objectFit: "cover", flexShrink: 0, marginTop: 2,
           }}
         />
-        <p
-          style={{
-            fontSize: 14,
-            fontWeight: 500,
-            color: "#1D1D1F",
-            lineHeight: 1.45,
-            margin: 0,
-          }}
-        >
+        <p style={{
+          fontFamily: "var(--hiw-font-sans)",
+          fontSize: "var(--hiw-text-sm)",
+          fontWeight: "var(--hiw-weight-medium)" as unknown as number,
+          color: "var(--hiw-text-primary)",
+          lineHeight: "var(--hiw-leading-normal)" as unknown as number,
+          margin: 0,
+        }}>
           {query}
         </p>
       </div>
@@ -354,10 +408,7 @@ export default function SeeWhatPeopleSection() {
     if (!el) return;
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
-          setVisible(true);
-          observer.disconnect();
-        }
+        if (entry.isIntersecting) { setVisible(true); observer.disconnect(); }
       },
       { threshold: 0.1 },
     );
@@ -373,18 +424,34 @@ export default function SeeWhatPeopleSection() {
   });
 
   return (
-    <section ref={sectionRef} className="bg-[#FFFFFF] pt-28 lg:pt-36 pb-16 lg:pb-32 relative overflow-hidden">
-
+    <section
+      ref={sectionRef}
+      className="hiw-scope relative overflow-hidden"
+      style={{
+        background: "var(--hiw-bg-page)",
+        paddingTop: "var(--hiw-space-32)",
+        paddingBottom: "var(--hiw-space-16)",
+      }}
+    >
       {/* Title */}
       <h2
-        className="text-center text-[clamp(27px,4vw,48px)] font-semibold text-[#063140] mb-16 px-4 max-w-352 mx-auto"
-        style={fadeIn(0)}
+        style={{
+          fontFamily: "var(--hiw-font-sans)",
+          fontWeight: "var(--hiw-weight-bold)" as unknown as number,
+          fontSize: "clamp(var(--hiw-text-2xl), 5vw, var(--hiw-text-4xl))",
+          lineHeight: "var(--hiw-leading-tight)" as unknown as number,
+          color: "var(--hiw-text-primary)",
+          textAlign: "center",
+          margin: 0,
+          marginBottom: "var(--hiw-space-16)",
+          paddingInline: "var(--hiw-space-4)",
+          ...fadeIn(0),
+        }}
       >
         See what people are asking
       </h2>
 
-      {/* 6-column pyramid — outer cols have fewer cards so they end higher */}
-      {/* Wrapper clips the scaled cards so the layout height matches the visual height */}
+      {/* 8-column grid */}
       <div className="relative overflow-hidden" style={{ height: "clamp(500px, 120vw, 900px)" }}>
         <div
           className="lg:scale-100 scale-50 origin-top absolute inset-x-0 top-0"
@@ -392,7 +459,7 @@ export default function SeeWhatPeopleSection() {
             display: "flex",
             justifyContent: "center",
             alignItems: "flex-start",
-            gap: 20,
+            gap: "var(--hiw-space-5)",
             ...fadeIn(0.15),
           }}
         >
@@ -402,7 +469,7 @@ export default function SeeWhatPeopleSection() {
               style={{
                 display: "flex",
                 flexDirection: "column",
-                gap: 20,
+                gap: "var(--hiw-space-5)",
                 flexShrink: 0,
               }}
             >
@@ -416,28 +483,19 @@ export default function SeeWhatPeopleSection() {
         {/* Bottom fade */}
         <div
           className="absolute left-0 right-0 bottom-0 pointer-events-none"
-          style={{
-            height: "40%",
-            background: "linear-gradient(180deg, transparent 0%, #FFFFFF 80%)",
-          }}
+          style={{ height: "40%", background: "linear-gradient(180deg, transparent 0%, var(--hiw-bg-page) 80%)" }}
           aria-hidden
         />
         {/* Left fade */}
         <div
           className="absolute left-0 top-0 bottom-0 pointer-events-none"
-          style={{
-            width: "clamp(100px, 22vw, 350px)",
-            background: "linear-gradient(270deg, transparent 0%, #FFFFFF 90%)",
-          }}
+          style={{ width: "clamp(100px, 22vw, 350px)", background: "linear-gradient(270deg, transparent 0%, var(--hiw-bg-page) 90%)" }}
           aria-hidden
         />
         {/* Right fade */}
         <div
           className="absolute right-0 top-0 bottom-0 pointer-events-none"
-          style={{
-            width: "clamp(100px, 22vw, 350px)",
-            background: "linear-gradient(90deg, transparent 0%, #FFFFFF 90%)",
-          }}
+          style={{ width: "clamp(100px, 22vw, 350px)", background: "linear-gradient(90deg, transparent 0%, var(--hiw-bg-page) 90%)" }}
           aria-hidden
         />
       </div>
