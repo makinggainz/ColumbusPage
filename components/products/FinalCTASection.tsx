@@ -48,30 +48,38 @@ export default function FinalCTASection() {
         >
           <p style={{
             fontFamily: "var(--hiw-font-sans)",
-            fontWeight: "var(--hiw-weight-medium)" as unknown as number,
-            fontSize: "var(--hiw-text-lg)",
-            color: "var(--hiw-text-on-accent)",
+            fontWeight: "var(--hiw-weight-semibold)" as unknown as number,
+            fontSize: 40,
             letterSpacing: "-0.02em",
-            lineHeight: 1,
-            marginBottom: "var(--hiw-space-4)",
+            lineHeight: "140%",
+            marginBottom: "var(--hiw-space-2)",
           }}>
-            <span style={{ fontWeight: "var(--hiw-weight-semibold)" as unknown as number, color: "#8DF7FF" }}>MapsGPT</span>{" "}is browser based
+            <span style={{
+              fontWeight: "var(--hiw-weight-semibold)" as unknown as number,
+              background: "linear-gradient(180deg, #8DF7FF 0%, #00B1D4 40%, #0089A3 100%)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              backgroundClip: "text",
+              filter: "drop-shadow(0 1px 2px rgba(0,0,0,0.12)) drop-shadow(0 0.5px 1px rgba(0,0,0,0.08))",
+            }}>MapsGPT</span>
+            <span style={{ color: "var(--hiw-text-on-accent)" }}>{" "}is browser based</span>
           </p>
-          <h2 style={{
+          <h2 className="text-[36px] sm:text-[48px]" style={{
             fontFamily: "var(--hiw-font-sans)",
             fontWeight: "var(--hiw-weight-bold)" as unknown as number,
-            fontSize: "clamp(var(--hiw-text-2xl), 5vw, var(--hiw-text-4xl))",
             lineHeight: "var(--hiw-leading-tight)" as unknown as number,
-            marginBottom: "var(--hiw-space-4)",
+            letterSpacing: "-0.02em",
+            marginBottom: "var(--hiw-space-2)",
           }}>
             We&apos;re always<br />there for you.
           </h2>
           <p style={{
             fontFamily: "var(--hiw-font-sans)",
-            fontWeight: "var(--hiw-weight-medium)" as unknown as number,
-            fontSize: "var(--hiw-text-lg)",
+            fontWeight: "var(--hiw-weight-semibold)" as unknown as number,
+            fontSize: 20,
             color: "var(--hiw-text-on-accent)",
-            lineHeight: 1.2,
+            letterSpacing: "-0.02em",
+            lineHeight: "140%",
             marginBottom: "var(--hiw-space-6)",
           }}>
             Access your local AI travel pal<br />on any browser.
@@ -156,22 +164,30 @@ export default function FinalCTASection() {
             <div className="text-white" style={{ maxWidth: 680 }}>
               <p style={{
                 fontFamily: "var(--hiw-font-sans)",
-                fontWeight: "var(--hiw-weight-medium)" as unknown as number,
-                fontSize: "clamp(var(--hiw-text-lg), 2.5vw, var(--hiw-text-2xl))",
-                color: "var(--hiw-text-on-accent)",
+                fontWeight: "var(--hiw-weight-semibold)" as unknown as number,
+                fontSize: 40,
                 letterSpacing: "-0.02em",
-                lineHeight: 1,
-                marginBottom: "var(--hiw-space-8)",
+                lineHeight: "140%",
+                marginBottom: "var(--hiw-space-3)",
               }}>
-                <span style={{ fontWeight: "var(--hiw-weight-semibold)" as unknown as number, color: "#8DF7FF" }}>MapsGPT</span>{" "}is browser based
+                <span style={{
+                  fontWeight: "var(--hiw-weight-semibold)" as unknown as number,
+                  background: "linear-gradient(180deg, #8DF7FF 0%, #00B1D4 40%, #0089A3 100%)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  backgroundClip: "text",
+                  filter: "drop-shadow(0 1px 2px rgba(0,0,0,0.12)) drop-shadow(0 0.5px 1px rgba(0,0,0,0.08))",
+                }}>MapsGPT</span>
+                <span style={{ color: "var(--hiw-text-on-accent)" }}>{" "}is browser based</span>
               </p>
 
               <h2 style={{
                 fontFamily: "var(--hiw-font-sans)",
                 fontWeight: "var(--hiw-weight-bold)" as unknown as number,
-                fontSize: "clamp(var(--hiw-text-2xl), 5vw, var(--hiw-text-4xl))",
+                fontSize: "var(--hiw-text-5xl)",
                 lineHeight: "var(--hiw-leading-tight)" as unknown as number,
-                marginBottom: "var(--hiw-space-8)",
+                letterSpacing: "-0.02em",
+                marginBottom: "var(--hiw-space-3)",
               }}>
                 We&apos;re always
                 <br />
@@ -180,10 +196,11 @@ export default function FinalCTASection() {
 
               <p style={{
                 fontFamily: "var(--hiw-font-sans)",
-                fontWeight: "var(--hiw-weight-medium)" as unknown as number,
-                fontSize: "clamp(var(--hiw-text-lg), 2.5vw, var(--hiw-text-2xl))",
+                fontWeight: "var(--hiw-weight-semibold)" as unknown as number,
+                fontSize: 20,
                 color: "var(--hiw-text-on-accent)",
-                lineHeight: 1.2,
+                letterSpacing: "-0.02em",
+                lineHeight: "140%",
                 marginBottom: "var(--hiw-space-10)",
               }}>
                 Access your local AI travel pal
