@@ -95,20 +95,20 @@ export default function InspirationStrip() {
         paddingBottom: "var(--hiw-section-py)",
       }}
     >
-      {/* Top blend gradient */}
+      {/* Top blend — fades from section f's bg into this section */}
       <div
         className="absolute left-0 right-0 pointer-events-none z-10"
         style={{
-          top: -120,
-          height: 120,
+          top: "calc(-1 * var(--hiw-space-24))",
+          height: "var(--hiw-space-24)",
           background: "linear-gradient(to bottom, var(--hiw-bg-page) 0%, transparent 100%)",
         }}
       />
-      {/* Bottom blend gradient */}
+      {/* Bottom blend */}
       <div
         className="absolute left-0 right-0 bottom-0 pointer-events-none z-10"
         style={{
-          height: 160,
+          height: "var(--hiw-space-40)",
           background: "linear-gradient(to bottom, transparent 0%, var(--hiw-bg-subtle) 100%)",
         }}
       />
@@ -121,7 +121,7 @@ export default function InspirationStrip() {
             background: "linear-gradient(270deg, rgba(0, 255, 38, 0.2) 0%, rgba(33, 140, 206, 0.4) 51.15%, rgba(199, 32, 32, 0.3) 100%)",
           }}
         />
-        {/* Top fade */}
+        {/* Top fade overlay */}
         <div
           className="absolute left-0 right-0 top-0 pointer-events-none"
           style={{
@@ -129,7 +129,7 @@ export default function InspirationStrip() {
             background: "linear-gradient(to bottom, var(--hiw-bg-page) 0%, transparent 100%)",
           }}
         />
-        {/* Bottom fade */}
+        {/* Bottom fade overlay */}
         <div
           className="absolute left-0 right-0 bottom-0 pointer-events-none"
           style={{

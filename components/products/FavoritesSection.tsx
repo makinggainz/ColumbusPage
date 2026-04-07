@@ -33,6 +33,7 @@ export default function FavoritesSection() {
               width={120}
               height={100}
               className="w-20 sm:w-24 lg:w-32 h-auto block"
+              style={{ filter: "sepia(1) saturate(4) hue-rotate(165deg) brightness(0.85)" }}
             />
           </span>
           <h2 style={{
@@ -54,6 +55,7 @@ export default function FavoritesSection() {
               width={120}
               height={100}
               className="w-20 sm:w-24 lg:w-32 h-auto block"
+              style={{ filter: "sepia(1) saturate(4) hue-rotate(165deg) brightness(0.85)" }}
             />
           </span>
         </div>
@@ -66,7 +68,7 @@ export default function FavoritesSection() {
           <a
             href="https://mapsgpt.es"
             className={`group flex items-center justify-center gap-4 lg:gap-10 w-full max-w-214.25 h-14 lg:h-18.5 no-underline cursor-pointer active:scale-[0.98] select-none ${glassStyles.btn}`}
-            style={{ borderRadius: 14, padding: 0 }}
+            style={{ borderRadius: "var(--hiw-radius-full)", padding: 0 }}
           >
             <span
               style={{
