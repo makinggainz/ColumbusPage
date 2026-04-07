@@ -74,7 +74,7 @@ export default function FavoritesSection() {
               style={{
                 fontFamily: "var(--hiw-font-sans)",
                 fontWeight: 590,
-                fontSize: "clamp(15px, 2vw, 20px)",
+                fontSize: "clamp(var(--hiw-text-sm), 2vw, var(--hiw-text-lg))",
                 lineHeight: "140%",
                 letterSpacing: "-0.02em",
                 color: "#00B1D4",

@@ -46,13 +46,14 @@ export default function FinalCTASection() {
             width: "100%",
           }}
         >
+          {/* Label */}
           <p style={{
             fontFamily: "var(--hiw-font-sans)",
-            fontWeight: "var(--hiw-weight-semibold)" as unknown as number,
-            fontSize: 40,
-            letterSpacing: "-0.02em",
-            lineHeight: "140%",
-            marginBottom: "var(--hiw-space-2)",
+            fontWeight: "var(--hiw-weight-regular)" as unknown as number,
+            fontSize: "var(--hiw-text-xl)",
+            letterSpacing: "0.02em",
+            lineHeight: 1.4,
+            marginBottom: "var(--hiw-space-4)",
           }}>
             <span style={{
               fontWeight: "var(--hiw-weight-semibold)" as unknown as number,
@@ -64,23 +65,26 @@ export default function FinalCTASection() {
             }}>MapsGPT</span>
             <span style={{ color: "var(--hiw-text-on-accent)" }}>{" "}is browser based</span>
           </p>
-          <h2 className="text-[36px] sm:text-[48px]" style={{
+          {/* Title */}
+          <h2 style={{
             fontFamily: "var(--hiw-font-sans)",
             fontWeight: "var(--hiw-weight-bold)" as unknown as number,
-            lineHeight: "var(--hiw-leading-tight)" as unknown as number,
-            letterSpacing: "-0.02em",
-            marginBottom: "var(--hiw-space-2)",
+            fontSize: "clamp(var(--hiw-text-3xl), 10vw, var(--hiw-text-5xl))",
+            lineHeight: 1.1,
+            letterSpacing: "-0.03em",
+            marginBottom: "var(--hiw-space-4)",
           }}>
             We&apos;re always<br />there for you.
           </h2>
+          {/* Subtitle */}
           <p style={{
             fontFamily: "var(--hiw-font-sans)",
-            fontWeight: "var(--hiw-weight-semibold)" as unknown as number,
-            fontSize: 20,
-            color: "var(--hiw-text-on-accent)",
-            letterSpacing: "-0.02em",
-            lineHeight: "140%",
-            marginBottom: "var(--hiw-space-6)",
+            fontWeight: "var(--hiw-weight-regular)" as unknown as number,
+            fontSize: "var(--hiw-text-lg)",
+            color: "rgba(255, 255, 255, 0.8)",
+            letterSpacing: "-0.01em",
+            lineHeight: 1.4,
+            marginBottom: "var(--hiw-space-8)",
           }}>
             Access your local AI travel pal<br />on any browser.
           </p>
@@ -162,13 +166,14 @@ export default function FinalCTASection() {
         <div className="absolute inset-0 z-10 flex items-center">
           <div style={{ maxWidth: "var(--hiw-max-width)", marginInline: "auto", width: "100%", paddingInline: "var(--hiw-content-px)" }}>
             <div className="text-white" style={{ maxWidth: 680 }}>
+              {/* Label */}
               <p style={{
                 fontFamily: "var(--hiw-font-sans)",
-                fontWeight: "var(--hiw-weight-semibold)" as unknown as number,
-                fontSize: 40,
-                letterSpacing: "-0.02em",
-                lineHeight: "140%",
-                marginBottom: "var(--hiw-space-3)",
+                fontWeight: "var(--hiw-weight-regular)" as unknown as number,
+                fontSize: "var(--hiw-text-xl)",
+                letterSpacing: "0.02em",
+                lineHeight: 1.4,
+                marginBottom: "var(--hiw-space-4)",
               }}>
                 <span style={{
                   fontWeight: "var(--hiw-weight-semibold)" as unknown as number,
@@ -181,26 +186,28 @@ export default function FinalCTASection() {
                 <span style={{ color: "var(--hiw-text-on-accent)" }}>{" "}is browser based</span>
               </p>
 
+              {/* Title */}
               <h2 style={{
                 fontFamily: "var(--hiw-font-sans)",
                 fontWeight: "var(--hiw-weight-bold)" as unknown as number,
                 fontSize: "var(--hiw-text-5xl)",
-                lineHeight: "var(--hiw-leading-tight)" as unknown as number,
-                letterSpacing: "-0.02em",
-                marginBottom: "var(--hiw-space-3)",
+                lineHeight: 1.1,
+                letterSpacing: "-0.03em",
+                marginBottom: "var(--hiw-space-6)",
               }}>
                 We&apos;re always
                 <br />
                 there for you.
               </h2>
 
+              {/* Subtitle */}
               <p style={{
                 fontFamily: "var(--hiw-font-sans)",
-                fontWeight: "var(--hiw-weight-semibold)" as unknown as number,
-                fontSize: 20,
-                color: "var(--hiw-text-on-accent)",
-                letterSpacing: "-0.02em",
-                lineHeight: "140%",
+                fontWeight: "var(--hiw-weight-regular)" as unknown as number,
+                fontSize: "var(--hiw-text-xl)",
+                color: "rgba(255, 255, 255, 0.8)",
+                letterSpacing: "-0.01em",
+                lineHeight: 1.4,
                 marginBottom: "var(--hiw-space-10)",
               }}>
                 Access your local AI travel pal
