@@ -29,6 +29,8 @@ interface Feature {
   href: string;
   bgColorA: string;
   bgColorB: string;
+  bgColorC: string;
+  bgColorD: string;
   miniCards: [MiniCard, MiniCard, MiniCard];
   emojis: EmojiDeco[];
 }
@@ -40,6 +42,8 @@ const FEATURES: Feature[] = [
     href: "https://mapsgpt.es",
     bgColorA: "#5FBFF1",
     bgColorB: "#01A35D",
+    bgColorC: "#01A35D",
+    bgColorD: "#5FBFF1",
     miniCards: [
       { image: `/FavoriteSpots/${encodeURIComponent("(22).jpeg")}`, title: "Lorem Ipsum", subtitle: "Dolor sit amet consectetur" },
       { image: `/FavoriteSpots/${encodeURIComponent("(20).jpeg")}`, title: "Adipiscing Elit", subtitle: "Sed do eiusmod tempor" },
@@ -56,6 +60,8 @@ const FEATURES: Feature[] = [
     href: "https://mapsgpt.es",
     bgColorA: "#DE2F32",
     bgColorB: "#B00098",
+    bgColorC: "#B00098",
+    bgColorD: "#DE2F32",
     miniCards: [
       { image: `/FavoriteSpots/${encodeURIComponent("(23).jpeg")}`, title: "Consectetur", subtitle: "Adipiscing elit sed" },
       { image: `/FavoriteSpots/${encodeURIComponent("(14).jpeg")}`, title: "Eiusmod Tempor", subtitle: "Incididunt ut labore" },
@@ -72,6 +78,8 @@ const FEATURES: Feature[] = [
     href: "https://mapsgpt.es",
     bgColorA: "#0A6E5C",
     bgColorB: "#2A8FC2",
+    bgColorC: "#2A8FC2",
+    bgColorD: "#0A6E5C",
     miniCards: [
       { image: `/FavoriteSpots/${encodeURIComponent("(19).jpeg")}`, title: "Reprehenderit", subtitle: "In voluptate velit" },
       { image: `/FavoriteSpots/${encodeURIComponent("(21).jpeg")}`, title: "Esse Cillum", subtitle: "Dolore eu fugiat" },
@@ -88,6 +96,8 @@ const FEATURES: Feature[] = [
     href: "https://mapsgpt.es",
     bgColorA: "#00B1D4",
     bgColorB: "#5FBFF1",
+    bgColorC: "#5FBFF1",
+    bgColorD: "#00B1D4",
     miniCards: [
       { image: `/FavoriteSpots/${encodeURIComponent("(24).jpeg")}`, title: "???", subtitle: "Tap to reveal" },
       { image: `/FavoriteSpots/${encodeURIComponent("(17).jpeg")}`, title: "???", subtitle: "Tap to reveal" },
