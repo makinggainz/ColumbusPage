@@ -62,9 +62,6 @@ export default function ProductsPage() {
         <FavoritesSection />
       </SectionWithLabel>
       <SectionWithLabel label={sectionLabels[7]}>
-        <InspirationSection />
-      </SectionWithLabel>
-      <SectionWithLabel label={sectionLabels[8]}>
         <div id="section-see-what-people" />
         <SeeWhatPeopleSection />
       </SectionWithLabel>

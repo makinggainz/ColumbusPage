@@ -228,8 +228,8 @@ function FeatureCard({ feature }: { feature: Feature }) {
         overflow: "hidden",
         zIndex: 0,
         background: `
-          radial-gradient(ellipse at 0% 0%, ${feature.bgColorA}40 0%, transparent 60%),
-          radial-gradient(ellipse at 100% 0%, ${feature.bgColorB}40 0%, transparent 60%),
+          radial-gradient(ellipse 80% 45% at 0% 0%, ${feature.bgColorA}80 0%, transparent 100%),
+          radial-gradient(ellipse 80% 45% at 100% 0%, ${feature.bgColorB}80 0%, transparent 100%),
           #FFFFFF
         `,
       }} />

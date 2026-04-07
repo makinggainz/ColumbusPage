@@ -33,7 +33,7 @@ export default function FinalCTASection() {
 
       {/* ═══════════ MOBILE HERO (below lg:) ═══════════ */}
       <div className="lg:hidden relative w-full overflow-hidden min-h-dvh flex flex-col justify-end">
-        <Image src="/ConsumerPageCity.png" alt="City" fill className="object-cover" priority />
+        <Image src="/ConsumerPageCity3.png" alt="City" fill className="object-cover" priority />
         <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.2) 50%, transparent 100%)" }} />
         <div
           className="relative z-10 text-white text-center"
@@ -124,24 +124,32 @@ export default function FinalCTASection() {
         >
           <div className="relative w-[1728px] h-[1092px]">
             <div className="absolute left-0 top-0" style={{ width: FRAME_WIDTH, height: HERO_HEIGHT }}>
-              <Image src="/ConsumerPageCity.png" alt="City" fill className="object-cover" priority />
+              <Image src="/ConsumerPageCity3.png" alt="City" fill className="object-cover" priority />
               <div
                 className="absolute left-0 top-0"
                 style={{ width: 1018, height: 1091, background: "linear-gradient(261.31deg, rgba(0, 0, 0, 0) 5.79%, rgba(0, 0, 0, 0.6) 56.37%)" }}
               />
-              <a
-                href="https://mapsgpt.es"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="absolute overflow-hidden cursor-pointer"
-                style={{ left: 1151, top: 316, width: 234, height: 545, borderRadius: "var(--hiw-radius-2xl)" }}
+              {/* Hand holding phone mock */}
+              <div
+                className="absolute"
+                style={{
+                  right: 20,
+                  top: 180,
+                  width: 620,
+                  height: 1000,
+                  opacity: heartsVisible ? 1 : 0,
+                  transform: heartsVisible ? "translateY(0)" : "translateY(40px)",
+                  transition: `opacity 0.8s var(--hiw-easing-decel), transform 0.8s var(--hiw-easing-decel)`,
+                }}
               >
-                <Image src="/MapsGPTMobile.png" alt="Phone screen" fill className="object-cover" style={{ borderRadius: "var(--hiw-radius-2xl)" }} />
-              </a>
+                <Image src="/ConsumerPageCityMock2.png" alt="MapsGPT on phone" fill className="object-contain object-top" />
+              </div>
+
+              {/* Floating hearts */}
               <Image
                 src="/how/heart.png" alt="" width={180} height={180} className="absolute"
                 style={{
-                  left: FRAME_WIDTH * 0.75 - 300, top: 200,
+                  right: 480, top: 220,
                   opacity: heartsVisible ? 1 : 0,
                   transform: heartsVisible ? "translateY(0) scale(1)" : "translateY(40px) scale(0.3)",
                   transition: `opacity var(--hiw-duration-slow) var(--hiw-easing-spring), transform var(--hiw-duration-slow) var(--hiw-easing-spring)`,
@@ -149,9 +157,9 @@ export default function FinalCTASection() {
                 }}
               />
               <Image
-                src="/how/heart.png" alt="" width={160} height={160} className="absolute"
+                src="/how/heart.png" alt="" width={140} height={140} className="absolute"
                 style={{
-                  left: FRAME_WIDTH * 0.75 + 150, top: 300,
+                  right: 60, top: 180,
                   opacity: heartsVisible ? 1 : 0,
                   transform: heartsVisible ? "translateY(0) scale(1)" : "translateY(40px) scale(0.3)",
                   transition: `opacity var(--hiw-duration-slow) var(--hiw-easing-spring) 0.2s, transform var(--hiw-duration-slow) var(--hiw-easing-spring) 0.2s`,

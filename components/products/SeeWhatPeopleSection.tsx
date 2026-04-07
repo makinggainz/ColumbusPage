@@ -207,14 +207,12 @@ function QueryCard({ place, rating, photo, response, query, avatar }: CardData) 
       }}
       onMouseEnter={e => {
         const el = e.currentTarget as HTMLElement;
-        el.style.transform = "translateY(-4px)";
         el.style.boxShadow = "0 14px 40px rgba(0,0,0,0.16)";
         const resp = el.querySelector<HTMLElement>("[data-maps-response]");
         if (resp) resp.style.opacity = "1";
       }}
       onMouseLeave={e => {
         const el = e.currentTarget as HTMLElement;
-        el.style.transform = "translateY(0)";
         el.style.boxShadow = "0 6px 24px rgba(0,0,0,0.10)";
         const resp = el.querySelector<HTMLElement>("[data-maps-response]");
         if (resp) resp.style.opacity = "0";
@@ -375,7 +373,7 @@ export default function SeeWhatPeopleSection() {
   });
 
   return (
-    <section ref={sectionRef} className="bg-[#F6F7F8] pt-20 pb-16 lg:pb-32 relative overflow-hidden">
+    <section ref={sectionRef} className="bg-[#FFFFFF] pt-28 lg:pt-36 pb-16 lg:pb-32 relative overflow-hidden">
 
       {/* Title */}
       <h2
@@ -420,7 +418,7 @@ export default function SeeWhatPeopleSection() {
           className="absolute left-0 right-0 bottom-0 pointer-events-none"
           style={{
             height: "40%",
-            background: "linear-gradient(180deg, transparent 0%, #F6F7F8 80%)",
+            background: "linear-gradient(180deg, transparent 0%, #FFFFFF 80%)",
           }}
           aria-hidden
         />
@@ -429,7 +427,7 @@ export default function SeeWhatPeopleSection() {
           className="absolute left-0 top-0 bottom-0 pointer-events-none"
           style={{
             width: "clamp(100px, 22vw, 350px)",
-            background: "linear-gradient(270deg, transparent 0%, #F6F7F8 90%)",
+            background: "linear-gradient(270deg, transparent 0%, #FFFFFF 90%)",
           }}
           aria-hidden
         />
@@ -438,7 +436,7 @@ export default function SeeWhatPeopleSection() {
           className="absolute right-0 top-0 bottom-0 pointer-events-none"
           style={{
             width: "clamp(100px, 22vw, 350px)",
-            background: "linear-gradient(90deg, transparent 0%, #F6F7F8 90%)",
+            background: "linear-gradient(90deg, transparent 0%, #FFFFFF 90%)",
           }}
           aria-hidden
         />

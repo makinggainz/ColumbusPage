@@ -12,7 +12,7 @@ export default function FavoritesSection() {
       style={{
         background: "var(--hiw-bg-page)",
         paddingTop: "var(--hiw-section-py)",
-        paddingBottom: "var(--hiw-section-py)",
+        paddingBottom: "var(--hiw-space-48)",
       }}
     >
       <div
