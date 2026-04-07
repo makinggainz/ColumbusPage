@@ -6,7 +6,7 @@ import Hero from "@/components/products/Hero";
 import HowItWorksSection from "@/components/products/HowItWorksSection";
 import InspirationSection from "@/components/products/InspirationSection";
 // import QuestionsSection from "@/components/products/QuestionsSection";
-import RecommendationsSection from "@/components/products/RecommendationsSection";
+// import RecommendationsSection from "@/components/products/RecommendationsSection";
 import SeeWhatPeopleSection from "@/components/products/SeeWhatPeopleSection";
 import ShowcaseSection from "@/components/products/ShowcaseSection";
 
@@ -64,9 +64,7 @@ export default function ProductsPage() {
         <div id="section-see-what-people" />
         <SeeWhatPeopleSection />
       </SectionWithLabel>
-      <SectionWithLabel label={sectionLabels[8]}>
-        <RecommendationsSection />
-      </SectionWithLabel>
+      {/* Section I — RecommendationsSection (removed, CTA moved to section f) */}
       <SectionWithLabel label={sectionLabels[9]}>
         <FinalCTASection />
       </SectionWithLabel>
