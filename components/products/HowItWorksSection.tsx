@@ -320,6 +320,7 @@ function RecommendationCard() {
     return () => observer.disconnect();
   }, []);
 
+
   // Stagger place cards after typing finishes
   useEffect(() => {
     if (!typingDone) return;
