@@ -33,6 +33,9 @@ export default function ShowcaseSection({ compact = false, onInteraction }: { co
   const FRAME_HEIGHT = 1343;
 
   const phoneTiltRef = useRef<HTMLDivElement>(null);
+  const cardTiltRef = useRef<HTMLDivElement>(null);
+  const tiltRafRef = useRef(0);
+  const tiltMouseRef = useRef({ x: 0, y: 0 });
 
   const [phraseIndex, setPhraseIndex] = useState(0);
   const [suffix, setSuffix] = useState("");
@@ -223,7 +226,7 @@ export default function ShowcaseSection({ compact = false, onInteraction }: { co
           opacity: 0.75,
         }}
       >
-        <Image src="/Fern.png" alt="" width={650} height={910} className="w-full h-auto" />
+        <Image src="/Fern.png" alt="" width={650} height={910} loading="lazy" className="w-full h-auto" />
       </div>
 
       {/* Fern — bottom right, behind the desktop card */}
@@ -236,7 +239,7 @@ export default function ShowcaseSection({ compact = false, onInteraction }: { co
           opacity: 0.75,
         }}
       >
-        <Image src="/Fern.png" alt="" width={650} height={910} className="w-full h-auto" />
+        <Image src="/Fern.png" alt="" width={650} height={910} loading="lazy" className="w-full h-auto" />
       </div>
 
       {/* ═══ MOBILE: Flow layout (<lg) ═══ */}
@@ -360,20 +363,33 @@ export default function ShowcaseSection({ compact = false, onInteraction }: { co
                   transformStyle: "preserve-3d",
                   willChange: "transform",
                 }}
+                ref={cardTiltRef}
                 onMouseMove={(e) => {
                   if (window.innerWidth < 1024) return;
-                  const rect = e.currentTarget.getBoundingClientRect();
-                  const x = (e.clientX - rect.left) / rect.width;
-                  const y = (e.clientY - rect.top) / rect.height;
-                  const rotateX = (0.5 - y) * 16;
-                  const rotateY = (x - 0.5) * 16;
-                  const tilt = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-4px)`;
-                  e.currentTarget.style.transform = tilt;
-                  e.currentTarget.style.boxShadow = `${-rotateY * 2}px ${rotateX * 2 + 16}px 48px rgba(0, 50, 80, 0.14), 0 8px 16px rgba(0, 50, 80, 0.06)`;
-                  if (phoneTiltRef.current) phoneTiltRef.current.style.transform = tilt;
+                  tiltMouseRef.current = { x: e.clientX, y: e.clientY };
+                  if (!tiltRafRef.current) {
+                    tiltRafRef.current = requestAnimationFrame(() => {
+                      tiltRafRef.current = 0;
+                      const card = cardTiltRef.current;
+                      if (!card) return;
+                      const rect = card.getBoundingClientRect();
+                      const mx = tiltMouseRef.current.x;
+                      const my = tiltMouseRef.current.y;
+                      const x = (mx - rect.left) / rect.width;
+                      const y = (my - rect.top) / rect.height;
+                      const rotateX = (0.5 - y) * 16;
+                      const rotateY = (x - 0.5) * 16;
+                      const tilt = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-4px)`;
+                      card.style.transform = tilt;
+                      card.style.boxShadow = `${-rotateY * 2}px ${rotateX * 2 + 16}px 48px rgba(0, 50, 80, 0.14), 0 8px 16px rgba(0, 50, 80, 0.06)`;
+                      if (phoneTiltRef.current) phoneTiltRef.current.style.transform = tilt;
+                    });
+                  }
                 }}
                 onMouseLeave={(e) => {
                   if (window.innerWidth < 1024) return;
+                  cancelAnimationFrame(tiltRafRef.current);
+                  tiltRafRef.current = 0;
                   const reset = "rotateX(0deg) rotateY(0deg) translateY(0)";
                   e.currentTarget.style.transform = reset;
                   e.currentTarget.style.boxShadow = "0 4px 12px rgba(0, 0, 0, 0.06)";

@@ -83,14 +83,16 @@ export default function Hero() {
     window.scrollTo({ top: target, behavior: "smooth" });
   }, []);
 
-  // Phone floating spring loop
+  // Phone floating spring loop — pauses entirely when hero is offscreen
   useEffect(() => {
     const STIFFNESS = 0.055;
     const DAMPING   = 0.80;
-    let raf: number;
+    let raf = 0;
+    let running = false;
+
     const loop = () => {
-      // Skip spring physics on mobile — touch handler drives everything
-      if (heroVisibleRef.current && window.innerWidth >= 1024) {
+      if (!running) return;
+      if (window.innerWidth >= 1024) {
         const s = phoneSpringRef.current;
         s.velocity += (0 - s.offset) * STIFFNESS;
         s.velocity *= DAMPING;
@@ -101,8 +103,21 @@ export default function Hero() {
       }
       raf = requestAnimationFrame(loop);
     };
-    raf = requestAnimationFrame(loop);
-    return () => cancelAnimationFrame(raf);
+
+    const startLoop = () => { if (!running) { running = true; raf = requestAnimationFrame(loop); } };
+    const stopLoop  = () => { running = false; cancelAnimationFrame(raf); };
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        heroVisibleRef.current = entry.isIntersecting;
+        if (entry.isIntersecting) startLoop(); else stopLoop();
+      },
+      { threshold: 0 }
+    );
+    if (outerContainerRef.current) observer.observe(outerContainerRef.current);
+    startLoop(); // start initially
+
+    return () => { stopLoop(); observer.disconnect(); };
   }, []);
 
 
@@ -507,7 +522,6 @@ export default function Hero() {
             clipPath: bgExpanded
               ? "inset(0px 0% 0px 0% round 0px)"
               : "inset(clamp(0px, 5vw, 100px) clamp(0px, 2vw, 5%) clamp(0px, 5vw, 100px) clamp(0px, 2vw, 5%) round clamp(0px, 3vw, 55px))",
-            willChange: "clip-path, background-size",
             zIndex: 0,
             opacity: heroReady ? 1 : 0,
             transition: "opacity 0.8s ease-out, clip-path 0.9s cubic-bezier(0.4, 0, 0.2, 1), background-size 0.9s cubic-bezier(0.4, 0, 0.2, 1)",

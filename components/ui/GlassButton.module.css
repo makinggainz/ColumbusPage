@@ -484,3 +484,17 @@
     0 .15em .05em -.1em #00000040,
     inset 0 0 .05em .1em #ffffff80;
 }
+
+/* ── Mobile: reduce expensive backdrop-filter blur for performance ── */
+@media (max-width: 1023px) {
+  .navPill,
+  .togglePill {
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
+  }
+  .btn,
+  .featurePill {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}

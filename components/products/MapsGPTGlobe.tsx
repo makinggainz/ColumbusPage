@@ -154,6 +154,7 @@ export default function MapsGPTGlobe({ size = 67 }: MapsGPTGlobeProps) {
   const rotRef = useRef({ x: 0, y: 0 });         // target rotation (radians)
   const curRef = useRef({ x: 0, y: 0 });          // current (smoothed)
   const rafRef = useRef<number>(0);
+  const visibleRef = useRef(true);
   const glRef = useRef<WebGLRenderingContext | null>(null);
   const programRef = useRef<WebGLProgram | null>(null);
   const texLoadedRef = useRef(false);
@@ -245,10 +246,14 @@ export default function MapsGPTGlobe({ size = 67 }: MapsGPTGlobeProps) {
 
     const uMVP = gl.getUniformLocation(prog, "uMVP");
 
-    // Render loop
+    // Render loop — pauses when offscreen
     const lerp = 0.12;
     function frame() {
       if (!gl) return;
+      if (!visibleRef.current) {
+        rafRef.current = requestAnimationFrame(frame);
+        return;
+      }
       // Smooth interpolation toward target rotation
       curRef.current.x += (rotRef.current.x - curRef.current.x) * lerp;
       curRef.current.y += (rotRef.current.y - curRef.current.y) * lerp;
@@ -266,8 +271,16 @@ export default function MapsGPTGlobe({ size = 67 }: MapsGPTGlobeProps) {
     }
     rafRef.current = requestAnimationFrame(frame);
 
+    // Pause rendering when offscreen
+    const observer = new IntersectionObserver(
+      ([entry]) => { visibleRef.current = entry.isIntersecting; },
+      { threshold: 0 }
+    );
+    if (containerRef.current) observer.observe(containerRef.current);
+
     return () => {
       cancelAnimationFrame(rafRef.current);
+      observer.disconnect();
     };
   }, [size]);
 

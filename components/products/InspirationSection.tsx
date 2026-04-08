@@ -25,6 +25,7 @@ export default function InspirationStrip() {
   const homesRef   = useRef<{ x: number; y: number }[]>([]);
   const mouseRef   = useRef({ x: -9999, y: -9999 });
   const rafRef     = useRef<number>(0);
+  const visibleRef = useRef(false);
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -45,36 +46,44 @@ export default function InspirationStrip() {
     section.addEventListener("mousemove", onMove);
     section.addEventListener("mouseleave", onLeave);
 
+    const observer = new IntersectionObserver(
+      ([entry]) => { visibleRef.current = entry.isIntersecting; },
+      { threshold: 0 }
+    );
+    observer.observe(section);
+
     const loop = () => {
-      const mouse  = mouseRef.current;
-      const states = stateRef.current;
-      const homes  = homesRef.current;
+      if (visibleRef.current) {
+        const mouse  = mouseRef.current;
+        const states = stateRef.current;
+        const homes  = homesRef.current;
 
-      states.forEach((s, i) => {
-        const el = wrapRefs.current[i];
-        if (!el || !homes[i]) return;
+        states.forEach((s, i) => {
+          const el = wrapRefs.current[i];
+          if (!el || !homes[i]) return;
 
-        s.vx += -s.x * SPRING;
-        s.vy += -s.y * SPRING;
+          s.vx += -s.x * SPRING;
+          s.vy += -s.y * SPRING;
 
-        const cx   = homes[i].x + s.x;
-        const cy   = homes[i].y + s.y;
-        const dx   = mouse.x - cx;
-        const dy   = mouse.y - cy;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-        if (dist < MOUSE_RADIUS && dist > 1) {
-          const f = (1 - dist / MOUSE_RADIUS) * MOUSE_STRENGTH;
-          s.vx += (dx / dist) * f;
-          s.vy += (dy / dist) * f;
-        }
+          const cx   = homes[i].x + s.x;
+          const cy   = homes[i].y + s.y;
+          const dx   = mouse.x - cx;
+          const dy   = mouse.y - cy;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < MOUSE_RADIUS && dist > 1) {
+            const f = (1 - dist / MOUSE_RADIUS) * MOUSE_STRENGTH;
+            s.vx += (dx / dist) * f;
+            s.vy += (dy / dist) * f;
+          }
 
-        s.vx *= DAMPING;
-        s.vy *= DAMPING;
-        s.x  += s.vx;
-        s.y  += s.vy;
+          s.vx *= DAMPING;
+          s.vy *= DAMPING;
+          s.x  += s.vx;
+          s.y  += s.vy;
 
-        el.style.transform = `translate(${s.x}px, ${s.y}px)`;
-      });
+          el.style.transform = `translate(${s.x}px, ${s.y}px)`;
+        });
+      }
 
       rafRef.current = requestAnimationFrame(loop);
     };
@@ -84,6 +93,7 @@ export default function InspirationStrip() {
       section.removeEventListener("mousemove", onMove);
       section.removeEventListener("mouseleave", onLeave);
       cancelAnimationFrame(rafRef.current);
+      observer.disconnect();
     };
   }, []);
 
