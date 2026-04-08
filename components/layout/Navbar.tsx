@@ -143,7 +143,15 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
         let island2Obs: IntersectionObserver | undefined;
         if (island2) {
             island2Obs = new IntersectionObserver(
-                ([entry]) => setIsland2Reached(entry.isIntersecting),
+                ([entry]) => {
+                    // Show border when island 2 enters, keep it unless user scrolls back above it
+                    if (entry.isIntersecting) {
+                        setIsland2Reached(true);
+                    } else if (entry.boundingClientRect.top > 0) {
+                        // Only hide if island 2 is below the viewport (scrolled back up)
+                        setIsland2Reached(false);
+                    }
+                },
                 { threshold: 0, rootMargin: "-192px 0px 0px 0px" }
             );
             island2Obs.observe(island2);

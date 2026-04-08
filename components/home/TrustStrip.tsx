@@ -43,60 +43,6 @@ export const TrustStrip = () => {
   return (
     <GridSection style={{ borderTop: "none", overflow: "visible", position: "relative" }}>
       <div ref={ref} style={{ borderBottom: gl, position: "relative", overflow: "visible" }}>
-        {/* Fern — left side (mobile: angled inward, desktop: original) */}
-        <div
-          className="absolute z-20 pointer-events-none lg:hidden"
-          style={{
-            left: "clamp(-310px, -19vw, -110px)",
-            top: "clamp(-300px, -20vw, -100px)",
-            width: "clamp(322px, 52vw, 550px)",
-            opacity: visible ? 1 : 0,
-            transform: visible ? "translate(0, 0) scaleX(-1) rotate(12deg)" : "translate(-500px, -80px) scaleX(-1) rotate(12deg)",
-            transition: "opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.2s, transform 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.2s",
-          }}
-        >
-          <Image src="/Fern.png" alt="" width={650} height={910} className="w-full h-auto" />
-        </div>
-        <div
-          className="absolute z-20 pointer-events-none hidden lg:block"
-          style={{
-            left: -380,
-            top: -260,
-            width: 650,
-            opacity: visible ? 1 : 0,
-            transform: visible ? "translate(0, 0) scaleX(-1)" : "translate(-500px, -80px) scaleX(-1)",
-            transition: "opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.2s, transform 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.2s",
-          }}
-        >
-          <Image src="/Fern.png" alt="" width={650} height={910} />
-        </div>
-        {/* Fern — right side (mobile: angled inward, desktop: original) */}
-        <div
-          className="absolute z-20 pointer-events-none lg:hidden"
-          style={{
-            right: "clamp(-310px, -19vw, -110px)",
-            top: "clamp(-300px, -20vw, -100px)",
-            width: "clamp(322px, 52vw, 550px)",
-            opacity: visible ? 1 : 0,
-            transform: visible ? "translate(0, 0) rotate(12deg)" : "translate(500px, -80px) rotate(12deg)",
-            transition: "opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.3s, transform 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.3s",
-          }}
-        >
-          <Image src="/Fern.png" alt="" width={650} height={910} className="w-full h-auto" />
-        </div>
-        <div
-          className="absolute z-20 pointer-events-none hidden lg:block"
-          style={{
-            right: -380,
-            top: -260,
-            width: 650,
-            opacity: visible ? 1 : 0,
-            transform: visible ? "translate(0, 0)" : "translate(500px, -80px)",
-            transition: "opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.3s, transform 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.3s",
-          }}
-        >
-          <Image src="/Fern.png" alt="" width={650} height={910} />
-        </div>
         {/* Heading */}
         <div className="flex flex-col items-center text-center px-8 pt-24 pb-4" style={anim(0)}>
           <h2 className="text-[#1D1D1F] text-[25px] md:text-[31px] lg:text-[39px] font-medium tracking-[-0.02em] leading-[1.1]">
@@ -175,7 +121,7 @@ export const TrustStrip = () => {
                 style={{
                   fontSize: 14,
                   fontWeight: 500,
-                  height: 45,
+                  height: 36,
                   paddingLeft: 20,
                   paddingRight: 16,
                   backgroundColor: "#000000",

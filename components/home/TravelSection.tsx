@@ -188,7 +188,6 @@ export const TravelSection = () => {
   const bgImgRef = useRef<HTMLImageElement>(null);
   const [visible, setVisible] = useState(false);
   const [activeTab, setActiveTab] = useState(0);
-  const [plantsVisible, setPlantsVisible] = useState(false);
   const island3Ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -290,7 +289,7 @@ export const TravelSection = () => {
           className="absolute overflow-hidden right-[5%]"
           style={{
             bottom: 0,
-            height: "82%",
+            height: "68%",
             aspectRatio: "263 / 572",
             borderRadius: "16px 16px 0 0",
             boxShadow: "-4px 0 40px rgba(0,0,0,0.15)",
@@ -336,6 +335,7 @@ export const TravelSection = () => {
 
         </div>
       </div>
+      <div className="w-full" style={{ height: 1, backgroundColor: "var(--grid-line)" }} />
     </section>
   );
 };

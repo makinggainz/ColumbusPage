@@ -179,6 +179,7 @@ export const SiteSelection = () => {
 
       </div>
     </GridSection>
+    <div className="w-full" style={{ height: 1, backgroundColor: "var(--grid-line)" }} />
     </>
   );
 };

@@ -16,7 +16,7 @@ import { UniqueSpotsSection } from "@/components/home/UniqueSpotsSection";
 function IslandGap() {
   return (
     <div className="max-w-[1287px] mx-5 md:mx-auto relative pointer-events-none" style={{ height: 240 }}>
-      {/* Mesh pattern */}
+      {/* Mesh pattern
       <div
         className="absolute inset-0"
         style={{
@@ -27,7 +27,7 @@ function IslandGap() {
           backgroundSize: "48px 48px",
           backgroundPosition: "0 0",
         }}
-      />
+      /> */}
       {/* Side lines */}
       <div style={{ position: "absolute", top: 0, left: 0, width: 1, height: "100%", background: "var(--grid-line)" }} />
       <div style={{ position: "absolute", top: 0, right: 0, width: 1, height: "100%", background: "var(--grid-line)" }} />

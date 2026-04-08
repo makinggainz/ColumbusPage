@@ -96,7 +96,7 @@ export const PartnerStrip = () => {
               style={{
                 fontSize: 14,
                 fontWeight: 500,
-                height: 45,
+                height: 36,
                 paddingLeft: 20,
                 paddingRight: 16,
                 backgroundColor: "#000000",
