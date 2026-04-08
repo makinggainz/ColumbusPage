@@ -94,7 +94,6 @@ export const SiteSelection = () => {
               className="object-cover"
               style={{
                 transform: "scale(1.14)",
-                willChange: "transform",
               }}
             />
 
@@ -108,7 +107,7 @@ export const SiteSelection = () => {
             {/* Background blur overlay */}
             <div
               ref={overlayRef}
-              className="absolute inset-0 pointer-events-none"
+              className="absolute inset-0 pointer-events-none mobile-blur-reduce"
               style={{ backdropFilter: "blur(6px)", WebkitBackdropFilter: "blur(6px)", opacity: 1, zIndex: 1 }}
             />
 

@@ -132,6 +132,7 @@ export const Careers = ({ hideHeader, className = "" }: { hideHeader?: boolean; 
   const figuresRef   = useRef<Figure[]>([]);
   const animRef      = useRef(0);
   const hoveredIdRef = useRef<number | null>(null);
+  const careersVisibleRef = useRef(true);
   const hoverTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [active, setActive] = useState(false);
   const [note, setNote]     = useState<string | null>(null);
@@ -192,10 +193,21 @@ export const Careers = ({ hideHeader, className = "" }: { hideHeader?: boolean; 
   }, []);
 
   // Canvas mouse events
+  const cachedRectRef = useRef<DOMRect | null>(null);
+  const getCachedRect = useCallback(() => {
+    if (!cachedRectRef.current && canvasRef.current) cachedRectRef.current = canvasRef.current.getBoundingClientRect();
+    return cachedRectRef.current;
+  }, []);
+  // Invalidate cached rect on resize
+  useEffect(() => {
+    const invalidate = () => { cachedRectRef.current = null; };
+    window.addEventListener("resize", invalidate);
+    return () => window.removeEventListener("resize", invalidate);
+  }, []);
+
   const handleCanvasMove = useCallback((e: React.MouseEvent<HTMLCanvasElement>) => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const rect = canvas.getBoundingClientRect();
+    const rect = getCachedRect();
+    if (!rect) return;
     const mx = e.clientX - rect.left;
     const my = e.clientY - rect.top;
     const groundY = CANVAS_H - 8;
@@ -211,9 +223,8 @@ export const Careers = ({ hideHeader, className = "" }: { hideHeader?: boolean; 
   }, []);
 
   const handleCanvasClick = useCallback((e: React.MouseEvent<HTMLCanvasElement>) => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const rect = canvas.getBoundingClientRect();
+    const rect = getCachedRect();
+    if (!rect) return;
     const mx = e.clientX - rect.left;
     const my = e.clientY - rect.top;
     const groundY = CANVAS_H - 8;
@@ -372,7 +383,9 @@ export const Careers = ({ hideHeader, className = "" }: { hideHeader?: boolean; 
       }
 
       if (anyAlive) {
-        animRef.current = requestAnimationFrame(draw);
+        if (careersVisibleRef.current) {
+          animRef.current = requestAnimationFrame(draw);
+        }
       } else {
         setActive(false);
         setNote(null);
@@ -381,9 +394,22 @@ export const Careers = ({ hideHeader, className = "" }: { hideHeader?: boolean; 
 
     animRef.current = requestAnimationFrame(draw);
 
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        careersVisibleRef.current = entry.isIntersecting;
+        if (entry.isIntersecting && active) {
+          cancelAnimationFrame(animRef.current);
+          animRef.current = requestAnimationFrame(draw);
+        }
+      },
+      { threshold: 0 }
+    );
+    if (canvas) observer.observe(canvas);
+
     return () => {
       cancelAnimationFrame(animRef.current);
       window.removeEventListener("resize", resize);
+      observer.disconnect();
     };
   }, [active]);
 

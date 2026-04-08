@@ -912,3 +912,15 @@ video {
   transform: translateY(2px) scale(0.97);
   transition-duration: 0.12s;
 }
+
+/* ── Mobile: reduce expensive backdrop-filter blur for performance ── */
+@media (max-width: 1023px) {
+  .mobile-blur-reduce {
+    -webkit-backdrop-filter: blur(2px) !important;
+    backdrop-filter: blur(2px) !important;
+  }
+  .mobile-blur-none {
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+  }
+}

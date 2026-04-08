@@ -588,6 +588,7 @@ const WaveMesh = () => {
   const prevMouseRef = useRef({ x: -9999, y: -9999 });
   const ripplesRef = useRef<Ripple[]>([]);
   const animRef = useRef<number>(0);
+  const heroCanvasVisibleRef = useRef(true);
 
   // Boat physics — start on left 25%, facing right
   const boatRef = useRef<BoatPhysics>({
@@ -919,21 +920,40 @@ const WaveMesh = () => {
       else cvs.style.cursor = "";
     }
 
-    animRef.current = requestAnimationFrame(draw);
+    if (heroCanvasVisibleRef.current) {
+      animRef.current = requestAnimationFrame(draw);
+    }
   }, []);
 
   useEffect(() => {
     animRef.current = requestAnimationFrame(draw);
-    return () => cancelAnimationFrame(animRef.current);
+
+    const cvs = canvasRef.current;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        heroCanvasVisibleRef.current = entry.isIntersecting;
+        if (entry.isIntersecting) {
+          cancelAnimationFrame(animRef.current);
+          animRef.current = requestAnimationFrame(draw);
+        }
+      },
+      { threshold: 0 }
+    );
+    if (cvs) observer.observe(cvs);
+
+    return () => { cancelAnimationFrame(animRef.current); observer.disconnect(); };
   }, [draw]);
 
   useEffect(() => {
     const cvs = canvasRef.current;
     if (!cvs) return;
 
+    let cachedRect = cvs.getBoundingClientRect();
+    const onResize = () => { cachedRect = cvs.getBoundingClientRect(); };
+    window.addEventListener("resize", onResize);
+
     const onMove = (e: MouseEvent) => {
-      const rect = cvs.getBoundingClientRect();
-      mouseRef.current = { x: e.clientX - rect.left, y: e.clientY - rect.top };
+      mouseRef.current = { x: e.clientX - cachedRect.left, y: e.clientY - cachedRect.top };
     };
     const onDown = (e: MouseEvent) => {
       if (hoveringBoatRef.current) {
@@ -952,6 +972,7 @@ const WaveMesh = () => {
     cvs.addEventListener("mouseup", onUp);
     cvs.addEventListener("mouseleave", onLeave);
     return () => {
+      window.removeEventListener("resize", onResize);
       cvs.removeEventListener("mousemove", onMove);
       cvs.removeEventListener("mousedown", onDown);
       cvs.removeEventListener("mouseup", onUp);

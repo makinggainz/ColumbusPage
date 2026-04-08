@@ -162,12 +162,16 @@ export const Capabilities = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
+  const [inView, setInView] = useState(false);
 
   useEffect(() => {
     const el = sectionRef.current;
     if (!el) return;
     const obs = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) { setVisible(true); obs.disconnect(); } },
+      ([entry]) => {
+        setInView(entry.isIntersecting);
+        if (entry.isIntersecting) setVisible(true);
+      },
       { threshold: 0.05 }
     );
     obs.observe(el);
@@ -176,14 +180,14 @@ export const Capabilities = () => {
 
 
   useEffect(() => {
-    if (userHasTapped) return;
+    if (userHasTapped || !inView) return;
     const interval = setInterval(() => {
       const currentIndex = SIDEBAR_ITEMS.findIndex((item) => item.id === openId);
       const nextIndex = (currentIndex + 1) % SIDEBAR_ITEMS.length;
       setOpenId(SIDEBAR_ITEMS[nextIndex].id);
     }, 5000);
     return () => clearInterval(interval);
-  }, [openId, userHasTapped]);
+  }, [openId, userHasTapped, inView]);
 
   const FADE_DURATION_MS = 300;
 
@@ -378,7 +382,7 @@ export const Capabilities = () => {
               {/* More examples link */}
               <Link
                 href="/use-cases"
-                className="absolute right-8 top-1/2 -translate-y-1/2 flex items-center gap-2 text-[15px] font-semibold text-white hover:opacity-90 transition-opacity"
+                className="absolute right-8 top-1/2 -translate-y-1/2 flex items-center gap-2 text-[15px] font-semibold text-white hover:opacity-90 transition-opacity mobile-blur-none"
                 style={{ backgroundColor: "rgba(255,255,255,0.12)", backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)", border: "1px solid rgba(255,255,255,0.2)", padding: "10px 18px", borderRadius: 9999 }}
               >
                 More examples

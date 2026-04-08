@@ -258,7 +258,6 @@ export const TravelSection = () => {
           alt=""
           fill
           className="object-cover object-center"
-          style={{ willChange: "filter" }}
         />
 
         {/* Desktop mockup — direct child of beachRef so left/right resolves against full width */}

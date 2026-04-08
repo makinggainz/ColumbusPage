@@ -3,6 +3,7 @@
 import { Star, MapPin } from "lucide-react";
 import { useRef, useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { GridSection, gl } from "./ContentGrid";
 
 const FAVORITE_SPOTS_FILES = ["(20).jpeg", "(14).jpeg", "(17).jpeg", "(19).jpeg", "(21).jpeg", "(23).jpeg", "(24).jpeg", "(22).jpeg"];
@@ -123,10 +124,12 @@ function SpotCard({ spot }: { spot: (typeof SPOTS)[0] }) {
     >
       {/* Image with overlaid info */}
       <div className="relative w-full overflow-hidden" style={{ aspectRatio: "4 / 3" }}>
-        <img
+        <Image
           src={spotImageSrc(spot.image)}
           alt=""
-          className="absolute inset-0 w-full h-full object-cover"
+          fill
+          loading="lazy"
+          className="object-cover"
         />
         {/* Gradient scrim */}
         <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.18) 55%, transparent 100%)" }} />
@@ -152,7 +155,7 @@ function SpotCard({ spot }: { spot: (typeof SPOTS)[0] }) {
         {/* Response row — earth + bubble */}
         <div className="flex items-start gap-2">
           <div className="w-6 h-6 rounded-full shrink-0 overflow-hidden" style={{ marginTop: 1 }}>
-            <img src="/MapsGPT-logo.png" alt="" className="w-full h-full object-cover" />
+            <Image src="/MapsGPT-logo.png" alt="" width={24} height={24} className="w-full h-full object-cover" />
           </div>
           <div className="flex-1 rounded-lg px-2.5 py-1.5" style={{ background: "rgba(37,99,235,0.10)", border: "1px solid rgba(37,99,235,0.18)" }}>
             <p className="text-[11px] leading-[1.45] text-[#1D1D1F] line-clamp-2">{spot.response}</p>
