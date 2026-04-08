@@ -71,10 +71,10 @@ export default function FavoritesSection() {
             style={{ borderRadius: "var(--hiw-radius-full)", paddingInline: 48 }}
           >
             <span
+              className="text-[clamp(18px,2vw,22px)] lg:text-[20px]!"
               style={{
                 fontFamily: "var(--hiw-font-sans)",
                 fontWeight: 590,
-                fontSize: "clamp(var(--hiw-text-base), 2vw, var(--hiw-text-lg))",
                 lineHeight: "140%",
                 letterSpacing: "-0.02em",
                 color: "#00B1D4",

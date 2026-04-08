@@ -278,10 +278,9 @@ function FeatureCard({ feature }: { feature: Feature }) {
           className={`group flex items-center justify-center gap-6 w-full h-[52px] cursor-pointer no-underline ${glassStyles.btn}`}
           style={{ padding: 0 }}
         >
-          <span style={{
+          <span className="text-[clamp(18px,2vw,22px)] lg:text-[20px]!" style={{
             fontFamily: "var(--hiw-font-sans)",
             fontWeight: 590,
-            fontSize: "20px",
             letterSpacing: "-0.02em",
             color: "#00B1D4",
           }}>

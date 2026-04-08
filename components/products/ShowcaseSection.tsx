@@ -275,7 +275,7 @@ export default function ShowcaseSection({ compact = false, onInteraction }: { co
           className={`group flex items-center justify-center gap-6 h-14 cursor-pointer no-underline ${glassStyles.btn}`}
           style={{ paddingInline: 48 }}
         >
-          <span style={{ fontFamily: "'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif", fontWeight: 590, fontSize: "clamp(var(--hiw-text-base), 2vw, var(--hiw-text-lg))", lineHeight: "140%", letterSpacing: "-0.02em", color: "#00B1D4" }}>
+          <span className="text-[clamp(18px,2vw,22px)] lg:text-[20px]!" style={{ fontFamily: "'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif", fontWeight: 590, lineHeight: "140%", letterSpacing: "-0.02em", color: "#00B1D4" }}>
             Try MapsGPT
           </span>
           <svg width="13" height="13" viewBox="0 0 13 13" fill="none" className="shrink-0" aria-hidden>

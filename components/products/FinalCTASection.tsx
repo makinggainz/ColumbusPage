@@ -99,10 +99,9 @@ export default function FinalCTASection() {
             className={`group inline-flex items-center justify-center gap-4 h-14 no-underline cursor-pointer active:scale-[0.98] select-none ${glassStyles.btn}`}
             style={{ maxWidth: "fit-content", marginInline: "auto", backdropFilter: "blur(3px)", WebkitBackdropFilter: "blur(3px)" }}
           >
-            <span style={{
+            <span className="text-[clamp(18px,2vw,22px)] lg:text-[20px]!" style={{
               fontFamily: "var(--hiw-font-sans)",
               fontWeight: 590,
-              fontSize: "clamp(var(--hiw-text-base), 2vw, var(--hiw-text-lg))",
               lineHeight: "140%",
               letterSpacing: "-0.02em",
               color: "var(--hiw-text-on-accent)",
@@ -264,7 +263,7 @@ export default function FinalCTASection() {
                 <span style={{
                   fontFamily: "var(--hiw-font-sans)",
                   fontWeight: 590,
-                  fontSize: "var(--hiw-text-lg)",
+                  fontSize: "20px",
                   lineHeight: "var(--hiw-leading-normal)" as unknown as number,
                   letterSpacing: "-0.02em",
                   color: "var(--hiw-text-on-accent)",
@@ -400,12 +399,11 @@ export default function FinalCTASection() {
             <div className="flex flex-wrap" style={{ gap: "var(--hiw-space-4)" }}>
               <Link
                 href="/feedback"
-                className={`${glassStyles.btn} no-underline cursor-pointer`}
+                className={`${glassStyles.btn} no-underline cursor-pointer text-[clamp(18px,2vw,22px)] lg:text-[20px]!`}
                 style={{
                   padding: "var(--hiw-space-4) var(--hiw-space-8)",
                   fontFamily: "var(--hiw-font-sans)",
-                  fontSize: "var(--hiw-text-sm)",
-                  fontWeight: "var(--hiw-weight-semibold)" as unknown as number,
+                  fontWeight: 590,
                   letterSpacing: "-0.02em",
                   color: "var(--hiw-text-primary)",
                 }}
@@ -414,12 +412,11 @@ export default function FinalCTASection() {
               </Link>
               <Link
                 href="/feedback"
-                className={`${glassStyles.btn} no-underline cursor-pointer`}
+                className={`${glassStyles.btn} no-underline cursor-pointer text-[clamp(18px,2vw,22px)] lg:text-[20px]!`}
                 style={{
                   padding: "var(--hiw-space-4) var(--hiw-space-8)",
                   fontFamily: "var(--hiw-font-sans)",
-                  fontSize: "var(--hiw-text-sm)",
-                  fontWeight: "var(--hiw-weight-semibold)" as unknown as number,
+                  fontWeight: 590,
                   letterSpacing: "-0.02em",
                   color: "var(--hiw-text-primary)",
                 }}
