@@ -94,7 +94,7 @@ export default function ContactSection() {
             <br />
             Check out our{" "}
             <Link
-              href="/products/mapsgpt"
+              href="/products/enterprise"
               className="cursor-pointer hover:opacity-80 transition-opacity"
               style={{ borderBottom: "0.5px solid currentColor", paddingBottom: "1px" }}
             >
@@ -102,16 +102,16 @@ export default function ContactSection() {
             </Link>
           </p>
 
-          <button
-            type="button"
+          <Link
+            href="/contact"
             className="group flex items-center gap-3 leading-none whitespace-nowrap hover:opacity-90 transition-all duration-300"
-            style={{ fontSize: 14, fontWeight: 500, height: 45, paddingLeft: 20, paddingRight: 16, backgroundColor: "white", color: "#1D1D1F" }}
+            style={{ fontSize: 14, fontWeight: 500, height: 36, paddingLeft: 20, paddingRight: 16, backgroundColor: "white", color: "#1D1D1F" }}
           >
             <span className="transition-colors duration-300 group-hover:text-[#2563EB]">Talk to us</span>
             <svg className="transition-transform duration-300 group-hover:translate-x-0.5" width="10" height="18" viewBox="0 0 7 12" fill="none" stroke="#2563EB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
               <path d="M1 1l5 5-5 5" />
             </svg>
-          </button>
+          </Link>
         </div>
       </div>
 
