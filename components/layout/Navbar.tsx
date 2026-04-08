@@ -42,6 +42,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
     const showWordmarkOnMobile = pathname === "/" || pathname === "/our-mission" || pathname === "/contact";
     const navRef = useRef<HTMLElement>(null);
     const dropdownRef = useRef<HTMLDivElement>(null);
+    const navigationCooldownRef = useRef(false);
 
     // Sync scroll state before first paint to prevent navbar flash on reload
     useLayoutEffect(() => {
@@ -54,6 +55,15 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
         if (isUseCasesPage || isEnterprisePage) setHasScrolled(true);
         setIsCompact(window.scrollY > COMPACT_THRESHOLD);
     }, []);
+
+    // Close dropdown on route change and suppress hover reopening briefly
+    useEffect(() => {
+        setIsMenuOpen(false);
+        setIsManuallyToggled(false);
+        navigationCooldownRef.current = true;
+        const t = setTimeout(() => { navigationCooldownRef.current = false; }, 400);
+        return () => clearTimeout(t);
+    }, [pathname]);
 
     useEffect(() => {
         const handleReveal = () => setHasScrolled(true);
@@ -95,7 +105,11 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
         if (wide) {
             const heroOuter = document.querySelector<HTMLElement>("[data-hero-outer]");
             if (heroOuter) {
+                // Cache the scroll threshold beyond which hero is fully past
+                const heroBottom = heroOuter.offsetTop + heroOuter.offsetHeight;
                 heroTransitionHandler = () => {
+                    // Cheap check: skip expensive getBoundingClientRect when well past hero
+                    if (window.scrollY > heroBottom) return;
                     const rect = heroOuter.getBoundingClientRect();
                     const extraPx = window.innerHeight * 2;
                     const raw = Math.max(0, Math.min(1, -rect.top / extraPx));
@@ -204,7 +218,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
 
     // ── Handlers ────────────────────────────────────────────────────────
     const handleMouseEnter = () => {
-        if (!isManuallyToggled) setIsMenuOpen(true);
+        if (!isManuallyToggled && !navigationCooldownRef.current) setIsMenuOpen(true);
     };
     const handleMouseLeave = (e: React.MouseEvent) => {
         if (isManuallyToggled) return;
@@ -317,7 +331,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                         background: isEnterprisePage && isDark ? "rgba(14, 16, 28, 0.95)" : isDark ? "rgba(6, 8, 20, 0.85)" : "rgba(255, 255, 255, 0.82)",
                         backdropFilter: "blur(20px) saturate(1.2)",
                         WebkitBackdropFilter: "blur(20px) saturate(1.2)",
-                        borderBottom: isEnterprisePage ? "1px solid rgba(255,255,255,0.10)" : isDark ? "1px solid rgba(255,255,255,0.06)" : pathname === "/" ? "1px solid rgba(37, 99, 235, 0.6)" : "1px solid rgba(0,0,0,0.06)",
+                        borderBottom: isProductsPage ? "none" : isEnterprisePage ? "1px solid rgba(255,255,255,0.10)" : isDark ? "1px solid rgba(255,255,255,0.06)" : pathname === "/" ? "1px solid rgba(37, 99, 235, 0.6)" : "1px solid rgba(0,0,0,0.06)",
                         opacity: (isProductsPage ? bgTriggerPassed : isCompact) && !isMenuOpen ? 1 : 0,
                         transition: `opacity ${t}`,
                     }}

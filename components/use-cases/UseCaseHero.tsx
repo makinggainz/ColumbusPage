@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 
 const FADE_IN = 250;
@@ -9,6 +9,44 @@ const USE_CASES_IMAGES = [
   "comercial.png", "planning.png", "residentila.png", "geomarketing.png",
   "logistics.png", "security.png", "research.png", "tourism.png", "env.png",
 ];
+
+/**
+ * Build a grid assignment where no two cells sharing an edge or corner
+ * (8-neighbour radius-1 box) use the same image index.
+ * Uses a simple sequential scan with random pick from valid options.
+ */
+function buildConstrainedGrid(cols: number, rows: number, imageCount: number, seed = 42): number[] {
+  // Deterministic PRNG (mulberry32)
+  let s = seed | 0;
+  const rand = () => { s = (s + 0x6D2B79F5) | 0; let t = Math.imul(s ^ (s >>> 15), 1 | s); t ^= t + Math.imul(t ^ (t >>> 7), 61 | t); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+
+  const grid = new Array<number>(cols * rows).fill(-1);
+
+  for (let r = 0; r < rows; r++) {
+    for (let c = 0; c < cols; c++) {
+      const idx = r * cols + c;
+      // Collect image indices used by already-filled neighbours
+      const used = new Set<number>();
+      for (let dr = -1; dr <= 1; dr++) {
+        for (let dc = -1; dc <= 1; dc++) {
+          if (dr === 0 && dc === 0) continue;
+          const nr = r + dr, nc = c + dc;
+          if (nr >= 0 && nr < rows && nc >= 0 && nc < cols) {
+            const ni = nr * cols + nc;
+            if (grid[ni] !== -1) used.add(grid[ni]);
+          }
+        }
+      }
+      // Pick randomly from allowed images
+      const allowed = [];
+      for (let img = 0; img < imageCount; img++) {
+        if (!used.has(img)) allowed.push(img);
+      }
+      grid[idx] = allowed[Math.floor(rand() * allowed.length)];
+    }
+  }
+  return grid;
+}
 
 export default function UseCasesHero() {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
@@ -23,6 +61,10 @@ export default function UseCasesHero() {
   const cols = 27;
   const rows = 14;
   const totalCells = cols * rows;
+  const imageGrid = useMemo(
+    () => buildConstrainedGrid(cols, rows, USE_CASES_IMAGES.length),
+    [cols, rows],
+  );
 
   const activateCell = useCallback((i: number) => {
     const existing = timersRef.current.get(i);
@@ -126,7 +168,7 @@ export default function UseCasesHero() {
             style={{ width: cellSize, height: cellSize }}
           >
             <Image
-              src={`/use-cases/${USE_CASES_IMAGES[i % USE_CASES_IMAGES.length]}`}
+              src={`/use-cases/${USE_CASES_IMAGES[imageGrid[i]]}`}
               alt=""
               fill
               className="object-cover"

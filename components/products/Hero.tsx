@@ -53,6 +53,7 @@ export default function Hero() {
   const transitionPhoneImgRef   = useRef<HTMLElement | null>(null);
   const transitionPhoneGlassRef = useRef<HTMLElement | null>(null);
   const heroVisibleRef          = useRef(true);
+  const mobileCooldownRef       = useRef(false);
 
   // Responsive breakpoint — conditional render for mobile vs desktop
   useEffect(() => {
@@ -88,7 +89,8 @@ export default function Hero() {
     const DAMPING   = 0.80;
     let raf: number;
     const loop = () => {
-      if (heroVisibleRef.current) {
+      // Skip spring physics on mobile — touch handler drives everything
+      if (heroVisibleRef.current && window.innerWidth >= 1024) {
         const s = phoneSpringRef.current;
         s.velocity += (0 - s.offset) * STIFFNESS;
         s.velocity *= DAMPING;
@@ -116,7 +118,7 @@ export default function Hero() {
       if (phoneEndElRef.current) { phoneEndElRef.current.style.opacity = "0"; phoneEndElRef.current = null; }
       if (phoneSpringWrapperRef.current) phoneSpringWrapperRef.current.style.opacity = "1";
       const tp = transitionPhoneRef.current;
-      if (tp) tp.style.display = "none";
+      if (tp) { tp.style.display = "none"; tp.style.transform = "none"; }
       if (toggleRef.current)    toggleRef.current.style.opacity    = "1";
       if (badgeTitleRef.current) badgeTitleRef.current.style.opacity = "1";
       const so = showcaseOverlayRef.current;
@@ -202,20 +204,20 @@ export default function Hero() {
       }
 
       const phoneOpacity = raw >= 0.80 ? 0 : 1;
+      const scaleX = curW / startW;
+      const scaleY = curH / startH;
 
       tp.style.display   = "block";
-      tp.style.width     = `${curW}px`;
-      tp.style.height    = `${curH}px`;
-      tp.style.left      = `${curX}px`;
-      tp.style.top       = `${curY}px`;
+      tp.style.width     = `${startW}px`;
+      tp.style.height    = `${startH}px`;
       tp.style.opacity   = String(phoneOpacity);
-      tp.style.transform = "none";
+      tp.style.transform = `translate3d(${curX}px, ${curY}px, 0) scale(${scaleX}, ${scaleY})`;
 
       // Cache child elements on first access
       if (!transitionPhoneImgRef.current) transitionPhoneImgRef.current = tp.querySelector<HTMLElement>('img');
       if (!transitionPhoneGlassRef.current) transitionPhoneGlassRef.current = tp.querySelector<HTMLElement>(':scope > div');
-      if (transitionPhoneImgRef.current) transitionPhoneImgRef.current.style.borderRadius = `${curRadius}px`;
-      if (transitionPhoneGlassRef.current) transitionPhoneGlassRef.current.style.borderRadius = `${curRadius + 12}px`;
+      if (transitionPhoneImgRef.current) transitionPhoneImgRef.current.style.borderRadius = `${curRadius / scaleX}px`;
+      if (transitionPhoneGlassRef.current) transitionPhoneGlassRef.current.style.borderRadius = `${(curRadius + 12) / scaleX}px`;
     }
 
     // Showcase overlay fades in (60%–80%)
@@ -239,7 +241,6 @@ export default function Hero() {
 
   const runMobileAnimation = useCallback((forward: boolean) => {
     if (mobileAnimatingRef.current) return;
-    // Don't re-animate if already at the target state
     if (forward && mobileStateRef.current === 1) return;
     if (!forward && mobileStateRef.current === 0) return;
 
@@ -249,8 +250,6 @@ export default function Hero() {
     const el = outerContainerRef.current;
     if (!el) { mobileAnimatingRef.current = false; return; }
 
-    const extraPx = window.innerHeight;
-    const elementDocTop = el.offsetTop;
     const targetState = forward ? 1 : 0;
 
     // Pre-display showcase overlay for forward animation
@@ -262,19 +261,20 @@ export default function Hero() {
       }
     }
 
-    // Animate visuals over 1000ms
-    const DURATION = 1000;
+    const extraPx = window.innerHeight;
+    const elementDocTop = el.offsetTop;
+
+    const fromRaw = forward ? 0 : 1;
+    const toRaw = forward ? 1 : 0;
+
+    const DURATION = 750;
     const startTime = performance.now();
-    const fromRaw = mobileStateRef.current;
-    const toRaw = targetState;
 
     const tick = (now: number) => {
       const elapsed = now - startTime;
       const t = Math.min(1, elapsed / DURATION);
-      // Ease-in-out cubic for smooth feel
-      const eased = t < 0.5
-        ? 4 * t * t * t
-        : 1 - Math.pow(-2 * t + 2, 3) / 2;
+      // Aggressive ease-out: fast burst at start, gentle deceleration at end
+      const eased = 1 - Math.pow(1 - t, 4);
       const raw = fromRaw + (toRaw - fromRaw) * eased;
 
       applyTransitionAtRaw(raw);
@@ -284,49 +284,78 @@ export default function Hero() {
       } else {
         applyTransitionAtRaw(toRaw);
         mobileStateRef.current = targetState;
-        // Jump scroll to match the final visual state
+        // Set scroll position AFTER animation completes (no momentum to fight)
         window.scrollTo({ top: elementDocTop + extraPx * targetState, behavior: "instant" as ScrollBehavior });
         mobileAnimatingRef.current = false;
+        mobileCooldownRef.current = true;
+        setTimeout(() => { mobileCooldownRef.current = false; }, 200);
       }
     };
     mobileAnimRafRef.current = requestAnimationFrame(tick);
   }, [applyTransitionAtRaw]);
 
-  // ── Mobile: detect swipe via touch events (more reliable than scroll) ──
+  // ── Mobile: detect swipe via touch events on the sticky section only ──
   useEffect(() => {
     if (typeof window === "undefined") return;
     const isMobile = () => window.innerWidth < 1024;
+    const section = sectionRef.current;
+    if (!section) return;
+
     let touchStartY = 0;
+    let touchStartX = 0;
+    let touchActive = false;
+    let fired = false; // true once we've committed to an animation this gesture
 
     const onTouchStart = (e: TouchEvent) => {
       if (!isMobile()) return;
       touchStartY = e.touches[0].clientY;
+      touchStartX = e.touches[0].clientX;
+      touchActive = true;
+      fired = false;
     };
 
-    const onTouchEnd = (e: TouchEvent) => {
-      if (!isMobile()) return;
-      const el = outerContainerRef.current;
-      if (!el) return;
+    const onTouchMove = (e: TouchEvent) => {
+      if (!isMobile() || !touchActive) return;
+      if (mobileAnimatingRef.current || fired) { e.preventDefault(); return; }
 
-      // Only trigger if we're within the hero scroll zone
-      const rect = el.getBoundingClientRect();
-      if (rect.bottom < 0 || rect.top > window.innerHeight) return;
+      const rawDeltaY = touchStartY - e.touches[0].clientY; // positive = finger up = scroll down
+      const deltaY = Math.abs(rawDeltaY);
+      const deltaX = Math.abs(e.touches[0].clientX - touchStartX);
 
-      const touchEndY = e.changedTouches[0].clientY;
-      const swipeDelta = touchStartY - touchEndY;
-      const SWIPE_THRESHOLD = 30; // minimum px to count as intentional swipe
+      // Allow pass-through at boundary states so user can scroll to other content
+      if (mobileStateRef.current === 1 && rawDeltaY > 0) return;
+      if (mobileStateRef.current === 0 && rawDeltaY < 0) return;
 
-      if (Math.abs(swipeDelta) < SWIPE_THRESHOLD) return;
+      // Block native scroll for vertical swipes (low threshold)
+      if (deltaY > 3 && deltaY > deltaX) {
+        e.preventDefault();
+      }
 
-      const forward = swipeDelta > 0; // swipe up = scroll down = forward
-      runMobileAnimation(forward);
+      // Fire animation immediately on clear vertical intent — no holding allowed
+      if (!fired && deltaY > 12 && deltaY > deltaX * 1.5) {
+        fired = true;
+        const forward = rawDeltaY > 0;
+        if (!(forward && mobileStateRef.current === 1) && !(!forward && mobileStateRef.current === 0)) {
+          runMobileAnimation(forward);
+        }
+      }
     };
 
-    window.addEventListener("touchstart", onTouchStart, { passive: true });
-    window.addEventListener("touchend", onTouchEnd, { passive: true });
+    const onTouchEnd = () => {
+      if (!isMobile() || !touchActive) return;
+      touchActive = false;
+      fired = false;
+    };
+
+    // Attach to the sticky section element, not window —
+    // this way pills/carousels inside ShowcaseSection don't interfere
+    section.addEventListener("touchstart", onTouchStart, { passive: true });
+    section.addEventListener("touchmove", onTouchMove, { passive: false });
+    section.addEventListener("touchend", onTouchEnd, { passive: true });
     return () => {
-      window.removeEventListener("touchstart", onTouchStart);
-      window.removeEventListener("touchend", onTouchEnd);
+      section.removeEventListener("touchstart", onTouchStart);
+      section.removeEventListener("touchmove", onTouchMove);
+      section.removeEventListener("touchend", onTouchEnd);
     };
   }, [runMobileAnimation]);
 
@@ -353,17 +382,23 @@ export default function Hero() {
       heroVisibleRef.current = raw < 1;
       if (raw >= 1) return;
 
-      phoneSpringRef.current.velocity += delta * 0.28;
-
-      // ── Mobile: block scroll-driven updates during animation ──
+      // ── Mobile: sync state and handle momentum arrivals ──
       if (isMobile) {
-        if (mobileAnimatingRef.current) return;
-        // Only apply at true endpoints — the touch handler drives everything else
-        if (raw <= 0.005 || raw >= 0.995) {
-          applyTransitionAtRaw(raw <= 0.005 ? 0 : 1);
+        // Sync state from scroll position for momentum arrivals
+        if (raw <= 0.01) mobileStateRef.current = 0;
+        else if (raw >= 0.99) mobileStateRef.current = 1;
+
+        // During animation or cooldown, skip all scroll-driven updates
+        if (mobileAnimatingRef.current || mobileCooldownRef.current) return;
+
+        // Only snap if we somehow end up at a partial position (e.g., page restore)
+        if (raw > 0.05 && raw < 0.95) {
+          runMobileAnimation(raw >= 0.3);
         }
         return;
       }
+
+      phoneSpringRef.current.velocity += delta * 0.28;
 
       // ── Desktop: scroll-driven animation ──
       applyTransitionAtRaw(raw);
@@ -663,9 +698,13 @@ export default function Hero() {
         ref={transitionPhoneRef}
         style={{
           position: "fixed",
+          top: 0,
+          left: 0,
           display: "none",
           zIndex: 100,
           pointerEvents: "none",
+          transformOrigin: "0 0",
+          willChange: "transform, opacity",
         }}
       >
         {/* Glass border */}
