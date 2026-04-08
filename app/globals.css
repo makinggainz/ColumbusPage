@@ -117,6 +117,12 @@ html {
   background: linear-gradient(to bottom, transparent 0px, var(--grid-line) 192px, var(--grid-line) 100%);
 }
 
+/* Fade vertical lines at both top and bottom */
+.grid-section-fade-both::before,
+.grid-section-fade-both::after {
+  background: linear-gradient(to bottom, transparent 0px, var(--grid-line) 192px, var(--grid-line) calc(100% - 192px), transparent 100%);
+}
+
 @media (min-width: 940px) {
   :root {
     --container-padding: 1vw;

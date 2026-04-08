@@ -339,7 +339,8 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                     opacity: footerInView ? 0 : hasScrolled ? 1 : 0,
                     transform: footerInView ? "translateY(-12px)" : hasScrolled ? "translateY(0)" : "translateY(-8px)",
                     pointerEvents: footerInView ? "none" : undefined,
-                    transition: navMounted ? `opacity 600ms ease, transform 600ms ease, color ${t}` : "none",
+                    transition: navMounted ? `opacity 600ms ease, transform 600ms ease, color ${t}, border-color ${t}` : "none",
+                    borderBottom: pathname === "/use-cases" && !isCompact ? "1px solid rgba(255,255,255,0.25)" : "none",
                 }}
                 onMouseLeave={handleMouseLeave}
             >
@@ -350,7 +351,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                         background: isEnterprisePage && isDark ? "rgba(14, 16, 28, 0.95)" : isDark ? "rgba(6, 8, 20, 0.85)" : "rgba(255, 255, 255, 0.82)",
                         backdropFilter: "blur(20px) saturate(1.2)",
                         WebkitBackdropFilter: "blur(20px) saturate(1.2)",
-                        borderBottom: isProductsPage ? "none" : (isHomePage && !island2Reached) ? "none" : isEnterprisePage ? "1px solid rgba(255,255,255,0.10)" : isDark ? "1px solid rgba(255,255,255,0.06)" : isHomePage ? "1px solid rgba(37, 99, 235, 0.3)" : "1px solid rgba(0,0,0,0.06)",
+                        borderBottom: isProductsPage ? "none" : (isHomePage && !island2Reached) ? "none" : isEnterprisePage ? "1px solid rgba(255,255,255,0.10)" : (pathname === "/use-cases") ? (isDark ? "1px solid rgba(37, 99, 235, 0.15)" : "1px solid rgba(37, 99, 235, 0.3)") : isDark ? "1px solid rgba(255,255,255,0.06)" : isHomePage ? "1px solid rgba(37, 99, 235, 0.3)" : "1px solid rgba(0,0,0,0.06)",
                         opacity: (isProductsPage ? bgTriggerPassed : isCompact) && !isMenuOpen ? 1 : 0,
                         transition: `opacity ${t}`,
                     }}
