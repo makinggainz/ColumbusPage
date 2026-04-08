@@ -10,6 +10,7 @@ import "@/components/products/how-it-works-tokens.css";
 export default function FinalCTASection() {
   const sectionRef = useRef<HTMLElement>(null);
   const [heartsVisible, setHeartsVisible] = useState(false);
+  const [cardHovered, setCardHovered] = useState(false);
 
   useEffect(() => {
     const el = sectionRef.current;
@@ -252,61 +253,133 @@ export default function FinalCTASection() {
         </div>
       </div>
 
-      {/* ================= BOTTOM CTA ================= */}
+      {/* ================= BOTTOM CTA — creative card ================= */}
       <div
-        className="relative w-full flex flex-col items-center justify-center text-center"
         style={{
-          maxWidth: "var(--hiw-max-width)",
-          marginInline: "auto",
-          paddingInline: "var(--hiw-content-px)",
+          width: "100%",
           paddingTop: "var(--hiw-section-py)",
           paddingBottom: "var(--hiw-section-py)",
+          paddingInline: "var(--hiw-content-px)",
         }}
       >
-        <p style={{
-          fontFamily: "var(--hiw-font-sans)",
-          fontWeight: "var(--hiw-weight-semibold)" as unknown as number,
-          fontSize: "clamp(var(--hiw-text-xl), 4vw, var(--hiw-text-2xl))",
-          lineHeight: "var(--hiw-leading-normal)" as unknown as number,
-          color: "var(--hiw-text-primary)",
-          marginBottom: "var(--hiw-space-10)",
-          maxWidth: 600,
-        }}>
-          MapsGPT is updated regularly.
-          <br />
-          We&apos;d love to hear your thoughts.
-        </p>
+        <div
+          onMouseEnter={() => setCardHovered(true)}
+          onMouseLeave={() => setCardHovered(false)}
+          style={{
+            position: "relative",
+            borderRadius: "var(--hiw-radius-2xl)",
+            overflow: "hidden",
+            height: 698,
+            maxWidth: "var(--hiw-max-width)",
+            marginInline: "auto",
+            display: "flex",
+            alignItems: "center",
+            background: `
+              radial-gradient(ellipse 80% 80% at 0% 0%, rgba(95,191,241,0.25) 0%, transparent 100%),
+              radial-gradient(ellipse 80% 80% at 100% 100%, rgba(1,163,93,0.2) 0%, transparent 100%),
+              var(--hiw-bg-subtle)
+            `,
+          }}
+        >
+          {/* Floating travel images — right side */}
+          <div className="absolute right-0 top-0 bottom-0 hidden lg:flex items-center" style={{ width: "55%" }}>
+            <div style={{ position: "relative", width: "100%", height: "100%" }}>
+              {[
+                { src: "(22).jpeg", right: 60, top: 80, w: 220, h: 165, rot: 3, hoverRot: 6, hoverX: 10, hoverY: -12 },
+                { src: "(19).jpeg", right: 260, top: 200, w: 240, h: 180, rot: -2, hoverRot: -5, hoverX: -8, hoverY: -10, z: 1 },
+                { src: "(24).jpeg", right: 80, top: 380, w: 210, h: 155, rot: 4, hoverRot: 1, hoverX: 12, hoverY: 8 },
+                { src: "(17).jpeg", right: 320, top: 420, w: 190, h: 145, rot: -3, hoverRot: -6, hoverX: -10, hoverY: 6 },
+                { src: "(20).jpeg", right: 480, top: 120, w: 180, h: 135, rot: -4, hoverRot: -1, hoverX: -6, hoverY: -8 },
+              ].map((img, i) => (
+                <div
+                  key={i}
+                  style={{
+                    position: "absolute",
+                    right: img.right,
+                    top: img.top,
+                    width: img.w,
+                    height: img.h,
+                    borderRadius: "var(--hiw-radius-lg)",
+                    overflow: "hidden",
+                    boxShadow: cardHovered ? "var(--hiw-shadow-card-hover)" : "var(--hiw-shadow-card)",
+                    zIndex: img.z ?? 0,
+                    transform: cardHovered
+                      ? `rotate(${img.hoverRot}deg) translate(${img.hoverX}px, ${img.hoverY}px)`
+                      : `rotate(${img.rot}deg)`,
+                    transition: "transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.4s ease",
+                  }}
+                >
+                  <img src={`/FavoriteSpots/${encodeURIComponent(img.src)}`} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                </div>
+              ))}
+            </div>
+          </div>
 
-        <div className="flex flex-wrap justify-center" style={{ gap: "var(--hiw-space-8)" }}>
-          <Link
-            href="/feedback"
-            className={`${glassStyles.btn} no-underline cursor-pointer`}
-            style={{
-              padding: "var(--hiw-space-5) var(--hiw-space-10)",
+          {/* Text + buttons — left side */}
+          <div style={{
+            position: "relative",
+            zIndex: 2,
+            padding: "var(--hiw-space-16)",
+            paddingLeft: "var(--hiw-space-20)",
+            maxWidth: 560,
+          }}>
+            <h3 style={{
               fontFamily: "var(--hiw-font-sans)",
-              fontSize: "var(--hiw-text-lg)",
-              fontWeight: "var(--hiw-weight-semibold)" as unknown as number,
-              letterSpacing: "-0.02em",
+              fontWeight: "var(--hiw-weight-bold)" as unknown as number,
+              fontSize: "clamp(var(--hiw-text-2xl), 5vw, var(--hiw-text-4xl))",
+              lineHeight: 1.1,
               color: "var(--hiw-text-primary)",
-            }}
-          >
-            Request a feature
-          </Link>
+              margin: 0,
+              marginBottom: "var(--hiw-space-4)",
+            }}>
+              MapsGPT is updated
+              <br />
+              regularly.
+            </h3>
+            <p style={{
+              fontFamily: "var(--hiw-font-sans)",
+              fontWeight: "var(--hiw-weight-regular)" as unknown as number,
+              fontSize: "var(--hiw-text-lg)",
+              lineHeight: "var(--hiw-leading-relaxed)" as unknown as number,
+              color: "var(--hiw-text-secondary)",
+              margin: 0,
+              marginBottom: "var(--hiw-space-8)",
+              maxWidth: 440,
+            }}>
+              We&apos;d love to hear your thoughts. Help us shape the future of travel discovery.
+            </p>
 
-          <Link
-            href="/feedback"
-            className={`${glassStyles.btn} no-underline cursor-pointer`}
-            style={{
-              padding: "var(--hiw-space-5) var(--hiw-space-10)",
-              fontFamily: "var(--hiw-font-sans)",
-              fontSize: "var(--hiw-text-lg)",
-              fontWeight: "var(--hiw-weight-semibold)" as unknown as number,
-              letterSpacing: "-0.02em",
-              color: "var(--hiw-text-primary)",
-            }}
-          >
-            Report a bug
-          </Link>
+            <div className="flex flex-wrap" style={{ gap: "var(--hiw-space-4)" }}>
+              <Link
+                href="/feedback"
+                className={`${glassStyles.btn} no-underline cursor-pointer`}
+                style={{
+                  padding: "var(--hiw-space-4) var(--hiw-space-8)",
+                  fontFamily: "var(--hiw-font-sans)",
+                  fontSize: "var(--hiw-text-sm)",
+                  fontWeight: "var(--hiw-weight-semibold)" as unknown as number,
+                  letterSpacing: "-0.02em",
+                  color: "var(--hiw-text-primary)",
+                }}
+              >
+                Request a feature
+              </Link>
+              <Link
+                href="/feedback"
+                className={`${glassStyles.btn} no-underline cursor-pointer`}
+                style={{
+                  padding: "var(--hiw-space-4) var(--hiw-space-8)",
+                  fontFamily: "var(--hiw-font-sans)",
+                  fontSize: "var(--hiw-text-sm)",
+                  fontWeight: "var(--hiw-weight-semibold)" as unknown as number,
+                  letterSpacing: "-0.02em",
+                  color: "var(--hiw-text-primary)",
+                }}
+              >
+                Report a bug
+              </Link>
+            </div>
+          </div>
         </div>
       </div>
     </section>
