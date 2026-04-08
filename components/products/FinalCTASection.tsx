@@ -310,8 +310,8 @@ export default function FinalCTASection() {
       >
         <div
           className="cta-feedback-card"
-          onMouseEnter={() => setCardHovered(true)}
-          onMouseLeave={() => setCardHovered(false)}
+          onMouseEnter={() => { if (window.innerWidth >= 1024) setCardHovered(true); }}
+          onMouseLeave={() => { if (window.innerWidth >= 1024) setCardHovered(false); }}
           style={{
             position: "relative",
             borderRadius: "var(--hiw-radius-2xl)",

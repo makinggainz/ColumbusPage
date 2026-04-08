@@ -286,12 +286,14 @@ function QueryCard({ place, rating, photo, response, query, avatar }: CardData) 
         transition: `box-shadow var(--hiw-duration-normal) var(--hiw-easing-default)`,
       }}
       onMouseEnter={e => {
+        if (window.innerWidth < 1024) return;
         const el = e.currentTarget as HTMLElement;
         el.style.boxShadow = "var(--hiw-shadow-card-hover)";
         const resp = el.querySelector<HTMLElement>("[data-maps-response]");
         if (resp) resp.style.opacity = "1";
       }}
       onMouseLeave={e => {
+        if (window.innerWidth < 1024) return;
         const el = e.currentTarget as HTMLElement;
         el.style.boxShadow = "var(--hiw-shadow-card)";
         const resp = el.querySelector<HTMLElement>("[data-maps-response]");

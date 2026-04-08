@@ -133,8 +133,8 @@ export default function ShowcaseSection({ compact = false, onInteraction }: { co
         <div
           className="relative overflow-hidden"
           style={{ width: "1440px", maxWidth: "100vw" }}
-          onMouseEnter={() => setMarqueeHovered(true)}
-          onMouseLeave={() => setMarqueeHovered(false)}
+          onMouseEnter={() => { if (window.innerWidth >= 1024) setMarqueeHovered(true); }}
+          onMouseLeave={() => { if (window.innerWidth >= 1024) setMarqueeHovered(false); }}
         >
           <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-24" style={{ background: "linear-gradient(to right, #F9F9F9, transparent)" }} />
           <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-24" style={{ background: "linear-gradient(to left, #F9F9F9, transparent)" }} />
@@ -361,6 +361,7 @@ export default function ShowcaseSection({ compact = false, onInteraction }: { co
                   willChange: "transform",
                 }}
                 onMouseMove={(e) => {
+                  if (window.innerWidth < 1024) return;
                   const rect = e.currentTarget.getBoundingClientRect();
                   const x = (e.clientX - rect.left) / rect.width;
                   const y = (e.clientY - rect.top) / rect.height;
@@ -372,6 +373,7 @@ export default function ShowcaseSection({ compact = false, onInteraction }: { co
                   if (phoneTiltRef.current) phoneTiltRef.current.style.transform = tilt;
                 }}
                 onMouseLeave={(e) => {
+                  if (window.innerWidth < 1024) return;
                   const reset = "rotateX(0deg) rotateY(0deg) translateY(0)";
                   e.currentTarget.style.transform = reset;
                   e.currentTarget.style.boxShadow = "0 4px 12px rgba(0, 0, 0, 0.06)";
@@ -382,6 +384,7 @@ export default function ShowcaseSection({ compact = false, onInteraction }: { co
                   }
                 }}
                 onMouseEnter={(e) => {
+                  if (window.innerWidth < 1024) return;
                   e.currentTarget.style.transition = "transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.4s cubic-bezier(0.22, 1, 0.36, 1)";
                   if (phoneTiltRef.current) phoneTiltRef.current.style.transition = "transform 0.25s cubic-bezier(0.22, 1, 0.36, 1)";
                 }}
@@ -414,10 +417,12 @@ export default function ShowcaseSection({ compact = false, onInteraction }: { co
                   transition: "box-shadow 0.5s cubic-bezier(0.22, 1, 0.36, 1)",
                 }}
                 onMouseEnter={(e) => {
+                  if (window.innerWidth < 1024) return;
                   e.currentTarget.style.boxShadow = "0 32px 72px rgba(0, 40, 80, 0.35), 0 12px 24px rgba(0, 40, 80, 0.10), 0 0 0 1px rgba(255, 255, 255, 0.08)";
                   e.currentTarget.style.transition = "box-shadow 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.08s";
                 }}
                 onMouseLeave={(e) => {
+                  if (window.innerWidth < 1024) return;
                   e.currentTarget.style.boxShadow = "none";
                   e.currentTarget.style.transition = "box-shadow 0.6s cubic-bezier(0.22, 1, 0.36, 1)";
                 }}
@@ -450,7 +455,7 @@ export default function ShowcaseSection({ compact = false, onInteraction }: { co
                 padding: 0,
                 WebkitTapHighlightColor: "transparent",
               }}
-              onMouseEnter={() => setCtaShineKey((k) => k + 1)}
+              onMouseEnter={() => { if (window.innerWidth >= 1024) setCtaShineKey((k) => k + 1); }}
             >
               <span
                 className="flex items-center gap-1"
@@ -569,7 +574,7 @@ export default function ShowcaseSection({ compact = false, onInteraction }: { co
                       onClick={() => isExpanded && handleClosePill(index)}
                       className={`flex h-full w-[313px] cursor-pointer flex-col rounded-[28px] border-0 p-6 text-left touch-manipulation ${glassStyles.featurePill}`}
                       aria-label={isExpanded ? `Close ${label}` : undefined}
-                      onMouseEnter={() => setCtaShineKey((k) => k + 1)}
+                      onMouseEnter={() => { if (window.innerWidth >= 1024) setCtaShineKey((k) => k + 1); }}
                     >
                       <span
                         className="text-[20px] font-semibold leading-[140%] tracking-[-0.02em]"
@@ -611,7 +616,7 @@ export default function ShowcaseSection({ compact = false, onInteraction }: { co
                       type="button"
                       onClick={() => setExpandedPillIndex(index)}
                       className={`group relative flex h-[56px] min-w-[176px] w-max cursor-pointer items-center gap-3 rounded-[28px] border-0 px-4 text-left touch-manipulation overflow-hidden ${glassStyles.featurePill}`}
-                      onMouseEnter={() => setCtaShineKey((k) => k + 1)}
+                      onMouseEnter={() => { if (window.innerWidth >= 1024) setCtaShineKey((k) => k + 1); }}
                     >
                       <span
                         className="relative flex h-[11px] w-[11px] shrink-0 items-center justify-center"

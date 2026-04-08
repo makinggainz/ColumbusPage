@@ -204,8 +204,8 @@ function FeatureCard({ feature }: { feature: Feature }) {
 
   return (
     <div
-      onMouseEnter={() => setHovering(true)}
-      onMouseLeave={() => setHovering(false)}
+      onMouseEnter={() => { if (window.innerWidth >= 1024) setHovering(true); }}
+      onMouseLeave={() => { if (window.innerWidth >= 1024) setHovering(false); }}
       style={{
         flexShrink: 0,
         width: "clamp(280px, 78vw, 448px)",
