@@ -33,7 +33,7 @@ export default function ProblemCards() {
   }, []);
 
   return (
-    <div ref={sectionRef} style={{ "--grid-line": "rgba(255,255,255,0.10)", backgroundColor: "rgba(255,255,255,0.04)" } as React.CSSProperties}>
+    <div ref={sectionRef} style={{ "--grid-line": "var(--ent-border-dark-grid)", backgroundColor: "rgba(255,255,255,0.04)" } as React.CSSProperties}>
       <GridSection
         style={{
           backgroundColor: "transparent",
@@ -58,7 +58,7 @@ export default function ProblemCards() {
         className="w-full grid"
         style={{
           gridTemplateColumns: `repeat(${PAIN_POINTS.length}, 1fr)`,
-          backgroundColor: "#060810",
+          backgroundColor: "var(--ent-bg-dark)",
           borderTop: "1px solid var(--grid-line)",
           opacity: visible ? 1 : 0,
           transition: "opacity 0.7s ease 0.3s",
@@ -75,7 +75,7 @@ export default function ProblemCards() {
               fontSize: 15,
               fontWeight: 400,
               lineHeight: 1.5,
-              color: "rgba(255,255,255,0.75)",
+              color: "var(--ent-dark-text-high)",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",

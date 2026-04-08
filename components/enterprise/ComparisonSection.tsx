@@ -56,7 +56,7 @@ export default function ComparisonSection() {
               fontWeight: 500,
               letterSpacing: "0.06em",
               textTransform: "uppercase",
-              color: "rgba(255,255,255,0.25)",
+              color: "var(--ent-dark-text-low)",
             }}
           >
             The Solution. full video demo

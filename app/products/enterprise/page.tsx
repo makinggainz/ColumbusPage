@@ -1,5 +1,6 @@
 "use client";
 
+import "@/components/enterprise/enterprise-tokens.css";
 import { useEffect, useRef, useState } from "react";
 import EnterpriseHero from "@/components/enterprise/EnterpriseHero";
 import ProblemCards from "@/components/enterprise/ProblemCards";
@@ -60,7 +61,7 @@ export default function EnterprisePage() {
   }, []);
 
   return (
-    <main>
+    <main className="ent-scope">
       <SectionWithLabel label={sectionLabels[0]}>
         <Navbar theme={navTheme} />
       </SectionWithLabel>

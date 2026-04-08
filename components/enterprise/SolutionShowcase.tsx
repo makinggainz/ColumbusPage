@@ -45,7 +45,7 @@ export default function SolutionShowcase() {
             style={{
               marginTop: 24,
               fontSize: "clamp(16px, 1.4vw, 20px)",
-              color: "rgba(255,255,255,0.45)",
+              color: "var(--ent-dark-text-medium)",
               letterSpacing: "-0.01em",
               fontWeight: 400,
               maxWidth: 540,

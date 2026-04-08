@@ -14,7 +14,7 @@ const fadeIn = (visible: boolean, delay: number): React.CSSProperties => ({
 });
 
 const loadingTextStyle: React.CSSProperties = {
-  backgroundImage: "linear-gradient(90deg, #0A1344 0%, #0A1344 30%, #8A9BD4 50%, #0A1344 70%, #0A1344 100%)",
+  backgroundImage: "linear-gradient(90deg, var(--ent-text-navy) 0%, var(--ent-text-navy) 30%, var(--ent-blue-shimmer) 50%, var(--ent-text-navy) 70%, var(--ent-text-navy) 100%)",
   backgroundSize: "200% 100%",
   WebkitBackgroundClip: "text",
   backgroundClip: "text",
@@ -70,7 +70,7 @@ export default function DifferenceSection() {
   }, [columbusLoaded]);
 
   return (
-    <section ref={sectionRef} className="w-full py-28 lg:py-[180px]" style={{ backgroundColor: "#ffffff" }}>
+    <section ref={sectionRef} className="w-full py-28 lg:py-[180px]" style={{ backgroundColor: "var(--ent-bg-white)" }}>
       <style>{`
         @keyframes comparison-shimmer {
           0% { background-position: 100% 0; }
@@ -92,7 +92,7 @@ export default function DifferenceSection() {
         <div
           style={{
             ...fadeIn(visible, 0.15),
-            boxShadow: "0px 0px 30px 5px rgba(191, 197, 235, 0.25)",
+            boxShadow: "var(--ent-shadow-prompt-glow)",
           }}
           className="mt-8 w-full max-w-[759px] bg-white border-[1.5px] border-[#1B37CE]/25 rounded-[14px] px-6 py-5 flex items-center justify-between gap-6"
         >

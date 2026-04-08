@@ -64,7 +64,7 @@ export function ConsumerEnterpriseToggle({ variant = "dark", active = "enterpris
           ...(enterpriseActive ? {
             ...activePillStyle,
             transform: `translateX(${shift}px)`,
-            transition: "transform 0.3s cubic-bezier(0.25, 1, 0.5, 1)",
+            transition: "transform 0.3s var(--ent-easing-toggle)",
           } : {}),
         }}
         onMouseEnter={() => { if (!enterpriseActive) setHoveringInactive(true); }}
@@ -79,7 +79,7 @@ export function ConsumerEnterpriseToggle({ variant = "dark", active = "enterpris
           ...(consumerActive ? {
             ...(isDark ? activePillStyle : {}),
             transform: `translateX(${shift}px)`,
-            transition: "transform 0.3s cubic-bezier(0.25, 1, 0.5, 1)",
+            transition: "transform 0.3s var(--ent-easing-toggle)",
           } : {}),
         }}
         onMouseEnter={() => { if (!consumerActive) setHoveringInactive(true); }}

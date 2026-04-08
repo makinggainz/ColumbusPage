@@ -128,7 +128,7 @@ export default function PromptShowcase() {
   });
 
   return (
-    <section className="w-full py-32 md:py-40 overflow-hidden" style={{ backgroundColor: "#ffffff", paddingBottom: 120 }}>
+    <section className="w-full py-32 md:py-40 overflow-hidden" style={{ backgroundColor: "var(--ent-bg-white)", paddingBottom: 120 }}>
 
       {/* ═══ PART 1: See prompts you can ask ═══ */}
       <div data-prompt-area="part-1">
@@ -275,7 +275,7 @@ export default function PromptShowcase() {
           <h3
             className="font-medium text-[28px] md:text-[36px] leading-[1.1] tracking-[-0.03em] flex items-center whitespace-nowrap"
             style={{
-              background: "linear-gradient(90deg, #06096D 0%, #318BCA 100%)",
+              background: "linear-gradient(90deg, var(--ent-gradient-start) 0%, var(--ent-gradient-end) 100%)",
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
               backgroundClip: "text",
@@ -357,10 +357,10 @@ export default function PromptShowcase() {
             style={{
               width: 503.41,
               height: 213.14,
-              background: "#FDFDFD",
-              border: "1px solid #EDECED",
-              borderRight: "1px solid #EDECED",
-              boxShadow: "0px 0px 30px rgba(0, 0, 0, 0.2)",
+              background: "var(--ent-bg-card)",
+              border: "1px solid var(--ent-border-card)",
+              borderRight: "1px solid var(--ent-border-card)",
+              boxShadow: "var(--ent-shadow-card)",
               borderRadius: 19,
               ...popStyle(part2CardsVisible, 0.1),
             }}
@@ -408,7 +408,7 @@ export default function PromptShowcase() {
         <button
           type="button"
           className="group flex items-center gap-3 leading-none whitespace-nowrap hover:opacity-90 transition-all duration-300 cursor-pointer"
-          style={{ fontSize: 14, fontWeight: 500, height: 45, paddingLeft: 20, paddingRight: 16, backgroundColor: "#1D1D1F", color: "white" }}
+          style={{ fontSize: 14, fontWeight: 500, height: 45, paddingLeft: 20, paddingRight: 16, backgroundColor: "var(--ent-btn-dark)", color: "white" }}
         >
           <span className="transition-colors duration-300 group-hover:text-[#2563EB]">More use cases</span>
           <svg className="transition-transform duration-300 group-hover:translate-x-0.5" width="10" height="18" viewBox="0 0 7 12" fill="none" stroke="#2563EB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">

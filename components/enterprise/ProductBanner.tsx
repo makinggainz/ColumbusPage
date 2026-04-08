@@ -22,9 +22,9 @@ export default function ProductBanner() {
     <section
       ref={sectionRef}
       className="relative w-full overflow-hidden"
-      style={{ backgroundColor: "#F9F9F9" }}
+      style={{ backgroundColor: "var(--ent-bg-light)" }}
     >
-      {/* Blue gradient from top — same as hero */}
+      {/* Blue gradient from top — same as hero. Base color is --ent-blue-tint (#0066CC) at varying opacities */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
