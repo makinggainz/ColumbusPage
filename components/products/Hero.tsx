@@ -52,6 +52,7 @@ export default function Hero() {
   const mobileAnimRafRef        = useRef(0);
   const transitionPhoneImgRef   = useRef<HTMLElement | null>(null);
   const transitionPhoneGlassRef = useRef<HTMLElement | null>(null);
+  const heroVisibleRef          = useRef(true);
 
   // Responsive breakpoint — conditional render for mobile vs desktop
   useEffect(() => {
@@ -87,7 +88,7 @@ export default function Hero() {
     const DAMPING   = 0.80;
     let raf: number;
     const loop = () => {
-      if (!mobileAnimatingRef.current) {
+      if (heroVisibleRef.current) {
         const s = phoneSpringRef.current;
         s.velocity += (0 - s.offset) * STIFFNESS;
         s.velocity *= DAMPING;
@@ -232,60 +233,102 @@ export default function Hero() {
     }
   }, []);
 
-  // ── Mobile: time-driven animation (decoupled from scroll) ──
+
+  // ── Mobile: current animation state (0 = hero, 1 = product display) ──
+  const mobileStateRef = useRef(0); // 0 or 1
+
   const runMobileAnimation = useCallback((forward: boolean) => {
     if (mobileAnimatingRef.current) return;
+    // Don't re-animate if already at the target state
+    if (forward && mobileStateRef.current === 1) return;
+    if (!forward && mobileStateRef.current === 0) return;
+
     mobileAnimatingRef.current = true;
     cancelAnimationFrame(mobileAnimRafRef.current);
 
     const el = outerContainerRef.current;
     if (!el) { mobileAnimatingRef.current = false; return; }
-    const rect = el.getBoundingClientRect();
+
     const extraPx = window.innerHeight;
-    const elementDocTop = window.scrollY + rect.top;
+    const elementDocTop = el.offsetTop;
+    const targetState = forward ? 1 : 0;
 
-    if (!forward) {
-      // Reverse: instantly jump scroll back and reset — no animated transition needed
-      // because the phone position refs are stale after the scroll jump
-      window.scrollTo({ top: elementDocTop, behavior: "instant" as ScrollBehavior });
-      applyTransitionAtRaw(0);
-      mobileAnimatingRef.current = false;
-      return;
+    // Pre-display showcase overlay for forward animation
+    if (forward) {
+      const so = showcaseOverlayRef.current;
+      if (so && so.style.display === "none") {
+        so.style.display = "block";
+        so.style.opacity = "0";
+      }
     }
 
-    // Forward animation
-    const DURATION = 600; // ms
+    // Animate visuals over 1000ms
+    const DURATION = 1000;
     const startTime = performance.now();
-
-    // Pre-display showcase overlay so layout cost is paid before animation starts
-    const so = showcaseOverlayRef.current;
-    if (so && so.style.display === "none") {
-      so.style.display = "block";
-      so.style.opacity = "0";
-    }
-
-    // Immediately jump scroll to end position so user can't interfere
-    window.scrollTo({ top: elementDocTop + extraPx, behavior: "instant" as ScrollBehavior });
+    const fromRaw = mobileStateRef.current;
+    const toRaw = targetState;
 
     const tick = (now: number) => {
       const elapsed = now - startTime;
       const t = Math.min(1, elapsed / DURATION);
-      // Ease-out cubic
-      const eased = 1 - Math.pow(1 - t, 3);
-      const raw = eased;
+      // Ease-in-out cubic for smooth feel
+      const eased = t < 0.5
+        ? 4 * t * t * t
+        : 1 - Math.pow(-2 * t + 2, 3) / 2;
+      const raw = fromRaw + (toRaw - fromRaw) * eased;
 
       applyTransitionAtRaw(raw);
 
       if (t < 1) {
         mobileAnimRafRef.current = requestAnimationFrame(tick);
       } else {
-        applyTransitionAtRaw(1);
+        applyTransitionAtRaw(toRaw);
+        mobileStateRef.current = targetState;
+        // Jump scroll to match the final visual state
+        window.scrollTo({ top: elementDocTop + extraPx * targetState, behavior: "instant" as ScrollBehavior });
         mobileAnimatingRef.current = false;
       }
     };
-
     mobileAnimRafRef.current = requestAnimationFrame(tick);
   }, [applyTransitionAtRaw]);
+
+  // ── Mobile: detect swipe via touch events (more reliable than scroll) ──
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const isMobile = () => window.innerWidth < 1024;
+    let touchStartY = 0;
+
+    const onTouchStart = (e: TouchEvent) => {
+      if (!isMobile()) return;
+      touchStartY = e.touches[0].clientY;
+    };
+
+    const onTouchEnd = (e: TouchEvent) => {
+      if (!isMobile()) return;
+      const el = outerContainerRef.current;
+      if (!el) return;
+
+      // Only trigger if we're within the hero scroll zone
+      const rect = el.getBoundingClientRect();
+      if (rect.bottom < 0 || rect.top > window.innerHeight) return;
+
+      const touchEndY = e.changedTouches[0].clientY;
+      const swipeDelta = touchStartY - touchEndY;
+      const SWIPE_THRESHOLD = 30; // minimum px to count as intentional swipe
+
+      if (Math.abs(swipeDelta) < SWIPE_THRESHOLD) return;
+
+      const forward = swipeDelta > 0; // swipe up = scroll down = forward
+      runMobileAnimation(forward);
+    };
+
+    window.addEventListener("touchstart", onTouchStart, { passive: true });
+    window.addEventListener("touchend", onTouchEnd, { passive: true });
+    return () => {
+      window.removeEventListener("touchstart", onTouchStart);
+      window.removeEventListener("touchend", onTouchEnd);
+    };
+  }, [runMobileAnimation]);
 
   // Merged scroll handler: physics impulse + transition animation
   useEffect(() => {
@@ -297,7 +340,6 @@ export default function Hero() {
       lastScrollYRef.current      = y;
       scrollYRef.current          = y;
       lastScrollDeltaRef.current  = delta;
-      phoneSpringRef.current.velocity += delta * 0.28;
 
       // Transition progress
       const el = outerContainerRef.current;
@@ -307,20 +349,23 @@ export default function Hero() {
       const extraPx = window.innerHeight * (isMobile ? 1 : 2);
       const raw     = Math.max(0, Math.min(1, -rect.top / extraPx));
 
-      // ── Mobile: trigger time-driven animation, ignore scroll-driven updates ──
+      // Skip all expensive work when hero is fully scrolled past
+      heroVisibleRef.current = raw < 1;
+      if (raw >= 1) return;
+
+      phoneSpringRef.current.velocity += delta * 0.28;
+
+      // ── Mobile: block scroll-driven updates during animation ──
       if (isMobile) {
-        if (mobileAnimatingRef.current) return; // animation in progress, ignore scroll
-        if (raw > 0.005 && raw < 0.995) {
-          runMobileAnimation(delta >= 0);
-          return;
+        if (mobileAnimatingRef.current) return;
+        // Only apply at true endpoints — the touch handler drives everything else
+        if (raw <= 0.005 || raw >= 0.995) {
+          applyTransitionAtRaw(raw <= 0.005 ? 0 : 1);
         }
-        // At endpoints, apply directly (for reset at top)
-        applyTransitionAtRaw(raw);
         return;
       }
 
       // ── Desktop: scroll-driven animation ──
-      // During a snap, still update visuals but don't re-trigger snap logic
       applyTransitionAtRaw(raw);
 
       if (isSnappingRef.current) return;
