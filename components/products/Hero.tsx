@@ -553,7 +553,7 @@ export default function Hero() {
                   }}>MapsGPT</span>
                 </h1>
                 <h2
-                  className="text-[36px] sm:text-[48px] font-bold leading-[140%] tracking-[-0.02em]"
+                  className="text-[42px] sm:text-[48px] font-bold leading-[140%] tracking-[-0.02em]"
                   style={{
                     color: "#00B1D4",
                     filter: taglineVisible ? "drop-shadow(0 0 80px rgba(255,255,255,1)) blur(0px)" : "blur(8px)",

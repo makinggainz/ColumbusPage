@@ -247,7 +247,7 @@ export default function ShowcaseSection({ compact = false, onInteraction }: { co
           <div className="flex items-center gap-2">
             <Image src="/MapsGPT-logo.png" alt="MapsGPT Logo" width={36} height={36} style={{ filter: "drop-shadow(0 1px 2px rgba(0,0,0,0.1))" }} />
             <span
-              className="text-[27px] sm:text-[36px] font-semibold tracking-[-0.02em]"
+              className="text-[32px] sm:text-[36px] font-semibold tracking-[-0.02em]"
               style={{
                 background: "linear-gradient(180deg, rgba(255,255,255,0.9) 0%, rgba(11,11,11,0.75) 40%, rgba(11,11,11,0.6) 100%)",
                 WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text",
@@ -256,7 +256,7 @@ export default function ShowcaseSection({ compact = false, onInteraction }: { co
             >MapsGPT</span>
           </div>
           <div
-            className="text-[27px] sm:text-[36px] tracking-[-0.02em]"
+            className="text-[32px] sm:text-[36px] tracking-[-0.02em]"
             style={{
               fontWeight: 500,
               background: "linear-gradient(180deg, rgba(11,11,11,1) 0%, rgba(11,11,11,0.2) 100%)",
@@ -275,7 +275,7 @@ export default function ShowcaseSection({ compact = false, onInteraction }: { co
           className={`group flex items-center justify-center gap-6 h-14 cursor-pointer no-underline ${glassStyles.btn}`}
           style={{ paddingInline: 48 }}
         >
-          <span style={{ fontFamily: "'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif", fontWeight: 590, fontSize: "clamp(15px, 2vw, 20px)", lineHeight: "140%", letterSpacing: "-0.02em", color: "#00B1D4" }}>
+          <span style={{ fontFamily: "'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif", fontWeight: 590, fontSize: "clamp(var(--hiw-text-base), 2vw, var(--hiw-text-lg))", lineHeight: "140%", letterSpacing: "-0.02em", color: "#00B1D4" }}>
             Try MapsGPT
           </span>
           <svg width="13" height="13" viewBox="0 0 13 13" fill="none" className="shrink-0" aria-hidden>
