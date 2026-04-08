@@ -833,7 +833,7 @@ function StepCard({
           style={{
             fontFamily: "var(--hiw-font-sans)",
             fontWeight: "var(--hiw-weight-semibold)" as unknown as number,
-            fontSize: "clamp(var(--hiw-text-xl), 4vw, var(--hiw-text-3xl))",
+            fontSize: "clamp(32px, 4vw, var(--hiw-text-3xl))",
             lineHeight: "var(--hiw-leading-tight)" as unknown as number,
             background: step.titleGradient,
             WebkitBackgroundClip: "text",
@@ -849,7 +849,7 @@ function StepCard({
           style={{
             fontFamily: "var(--hiw-font-sans)",
             fontWeight: "var(--hiw-weight-regular)" as unknown as number,
-            fontSize: "var(--hiw-text-base)",
+            fontSize: "20px",
             lineHeight: "var(--hiw-leading-relaxed)" as unknown as number,
             color: "var(--hiw-text-secondary)",
             margin: 0,
@@ -889,7 +889,7 @@ export default function HowItWorksSection() {
             style={{
               fontFamily: "var(--hiw-font-sans)",
               fontWeight: "var(--hiw-weight-bold)" as unknown as number,
-              fontSize: "clamp(var(--hiw-text-2xl), 5vw, var(--hiw-text-4xl))",
+              fontSize: "clamp(42px, 5vw, var(--hiw-text-4xl))",
               lineHeight: "var(--hiw-leading-tight)" as unknown as number,
               color: "var(--hiw-text-primary)",
               margin: 0,

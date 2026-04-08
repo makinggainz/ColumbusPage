@@ -33,15 +33,20 @@ export default function FinalCTASection() {
     >
 
       {/* ═══════════ MOBILE HERO (below lg:) ═══════════ */}
-      <div className="lg:hidden relative w-full overflow-hidden min-h-dvh flex flex-col justify-end">
+      <div className="lg:hidden relative w-full overflow-hidden flex flex-col">
         <Image src="/ConsumerPageCity3.png" alt="City" fill className="object-cover" priority />
+        {/* Bottom-up gradient */}
         <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.2) 50%, transparent 100%)" }} />
+        {/* Top-down gradient for text readability */}
+        <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.3) 35%, transparent 65%)" }} />
+
+        {/* Text + CTA */}
         <div
           className="relative z-10 text-white text-center"
           style={{
             paddingInline: "var(--hiw-content-px)",
-            paddingBottom: "var(--hiw-space-12)",
-            paddingTop: "var(--hiw-space-16)",
+            paddingTop: "var(--hiw-space-32)",
+            paddingBottom: "var(--hiw-space-6)",
             maxWidth: "var(--hiw-max-width)",
             marginInline: "auto",
             width: "100%",
@@ -51,10 +56,10 @@ export default function FinalCTASection() {
           <p style={{
             fontFamily: "var(--hiw-font-sans)",
             fontWeight: "var(--hiw-weight-regular)" as unknown as number,
-            fontSize: "var(--hiw-text-xl)",
+            fontSize: "var(--hiw-text-lg)",
             letterSpacing: "0.02em",
             lineHeight: 1.4,
-            marginBottom: "var(--hiw-space-4)",
+            marginBottom: "var(--hiw-space-3)",
           }}>
             <span style={{
               fontWeight: "var(--hiw-weight-semibold)" as unknown as number,
@@ -70,10 +75,10 @@ export default function FinalCTASection() {
           <h2 style={{
             fontFamily: "var(--hiw-font-sans)",
             fontWeight: "var(--hiw-weight-bold)" as unknown as number,
-            fontSize: "clamp(var(--hiw-text-3xl), 10vw, var(--hiw-text-5xl))",
+            fontSize: "var(--hiw-text-3xl)",
             lineHeight: 1.1,
             letterSpacing: "-0.03em",
-            marginBottom: "var(--hiw-space-4)",
+            marginBottom: "var(--hiw-space-3)",
           }}>
             We&apos;re always<br />there for you.
           </h2>
@@ -85,28 +90,48 @@ export default function FinalCTASection() {
             color: "rgba(255, 255, 255, 0.8)",
             letterSpacing: "-0.01em",
             lineHeight: 1.4,
-            marginBottom: "var(--hiw-space-8)",
+            marginBottom: "var(--hiw-space-6)",
           }}>
             Access your local AI travel pal<br />on any browser.
           </p>
           <a
             href="https://mapsgpt.es"
-            className={`group flex items-center justify-center gap-6 w-full h-[52px] no-underline cursor-pointer active:scale-[0.98] select-none ${glassStyles.btn}`}
+            className={`group flex items-center justify-center gap-4 w-full h-[48px] no-underline cursor-pointer active:scale-[0.98] select-none ${glassStyles.btn}`}
             style={{ padding: 0, backdropFilter: "blur(3px)", WebkitBackdropFilter: "blur(3px)" }}
           >
             <span style={{
               fontFamily: "var(--hiw-font-sans)",
               fontWeight: 590,
-              fontSize: "var(--hiw-text-lg)",
+              fontSize: "var(--hiw-text-base)",
               letterSpacing: "-0.02em",
               color: "var(--hiw-text-on-accent)",
             }}>
               Try it out! It&apos;s completely free
             </span>
-            <svg width="13" height="13" viewBox="0 0 13 13" fill="none" className="shrink-0" aria-hidden>
+            <svg width="12" height="12" viewBox="0 0 13 13" fill="none" className="shrink-0" aria-hidden>
               <path d="M2 11L11 2M11 2H4M11 2V9" stroke="#ffffff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </a>
+        </div>
+
+        {/* Mock image below text on mobile */}
+        <div
+          className="relative z-10"
+          style={{
+            width: "70%",
+            maxWidth: 320,
+            marginInline: "auto",
+            paddingBottom: "var(--hiw-space-4)",
+          }}
+        >
+          <Image
+            src="/ConsumerPageCityMock2.png"
+            alt="MapsGPT on phone"
+            width={320}
+            height={600}
+            className="w-full h-auto"
+            style={{ objectFit: "contain" }}
+          />
         </div>
       </div>
 
