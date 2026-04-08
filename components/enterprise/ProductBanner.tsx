@@ -105,7 +105,7 @@ export default function ProductBanner() {
 
       {/* Vertical structure lines */}
       <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 1 }} aria-hidden>
-        <div className="absolute top-0 bottom-0 left-1/2 -translate-x-1/2" style={{ width: "100%", maxWidth: 1287, borderLeft: "1px solid var(--grid-line)", borderRight: "1px solid var(--grid-line)" }} />
+        <div className="absolute top-0 bottom-0 ent-content-bounds left-0 right-0" style={{ borderLeft: "1px solid var(--grid-line)", borderRight: "1px solid var(--grid-line)" }} />
       </div>
 
 

@@ -50,7 +50,7 @@ export default function ChatSection() {
         className="relative z-10 flex justify-center w-full"
         style={{ marginTop: 80, paddingLeft: 20, paddingRight: 20, height: 500, overflow: "hidden" }}
       >
-        <div style={{ width: "100%", maxWidth: 1287, position: "relative" }}>
+        <div className="ent-content-bounds" style={{ width: "100%", position: "relative" }}>
           {/* Monitor frame */}
           <div
             style={{

@@ -133,7 +133,7 @@ export default function PromptShowcase() {
       {/* ═══ PART 1: See prompts you can ask ═══ */}
       <div data-prompt-area="part-1">
       {/* Part 1 header */}
-      <div ref={headerRef} className="text-center mb-16 md:mb-20 px-8 md:px-10 max-w-[1287px] mx-auto">
+      <div ref={headerRef} className="text-center mb-16 md:mb-20 px-8 md:px-10 ent-content-bounds">
         <p
           className="text-[12px] md:text-[14px] tracking-[0.2em] text-[#6B7280] uppercase"
           style={fadeInStyle(headerVisible, 0)}

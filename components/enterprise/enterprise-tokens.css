@@ -171,3 +171,17 @@
     --ent-content-px:        48px;
   }
 }
+
+/* Content bounds — mirrors homepage GridSection: max-w-[1287px] mx-5 md:mx-auto */
+.ent-content-bounds {
+  max-width: 1287px;
+  margin-left: 1.25rem;
+  margin-right: 1.25rem;
+}
+@media (min-width: 768px) {
+  .ent-content-bounds {
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+

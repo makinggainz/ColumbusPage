@@ -51,37 +51,37 @@ const features: {
       "The most expansive geospatial data catalogue available — vetted, high-fidelity datasets that no one else has.",
     content: (
       <div>
-        <div className="mb-10">
-          <h2 className="text-[32px] md:text-[40px] font-light text-white leading-[1.1] tracking-[-0.03em] opacity-[0.62]">
+        <div className="mb-10 px-4 lg:px-0">
+          <h2 className="text-[28px] md:text-[39px] font-light leading-[1.1] tracking-[-0.02em]" style={{ color: "var(--ent-dark-text-medium)" }}>
             Can&apos;t find relevant datasets for your research?
           </h2>
-          <h3 className="text-[32px] md:text-[40px] font-medium text-white leading-[1.1] tracking-[-0.03em]">
+          <h3 className="text-[28px] md:text-[39px] font-medium text-white leading-[1.1] tracking-[-0.02em]">
             Columbus has it.
           </h3>
         </div>
 
         <div
           className="w-full rounded-none border border-white/8 border-l-0 border-r-0 overflow-hidden flex items-center justify-center"
-          style={{ aspectRatio: "16 / 9", background: "linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.06) 50%, rgba(255,255,255,0.03) 100%)", marginLeft: -48 , width: "calc(100% + 48px)" }}
+          style={{ aspectRatio: "16 / 9", background: "linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.06) 50%, rgba(255,255,255,0.03) 100%)" }}
         >
-          <span className="text-white/20 text-[14px] font-medium tracking-[0.06em] uppercase">Video Demo</span>
+          <span className="text-[14px] font-medium tracking-[0.12em] uppercase" style={{ color: "var(--ent-dark-text-low)" }}>Video Demo</span>
         </div>
 
-        <div className="max-w-[900px] mt-10 mb-10">
-          <p className="text-[24px] md:text-[28px] leading-[1.55] tracking-[-0.01em] text-white">
+        <div className="max-w-[900px] mt-10 mb-10 px-4 lg:px-0">
+          <p className="text-[22px] md:text-[28px] leading-[1.55] tracking-[-0.01em] text-white">
             The <span className="font-semibold">highest quality</span>, and most versatile
             data-sets for your critical research and decisions.
           </p>
-          <a className="text-[14px] text-white/70 mt-4 inline-flex items-center gap-2">
+          <a href="/technology" className="text-[14px] mt-4 inline-flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity" style={{ color: "var(--ent-dark-text-high)" }}>
             Learn about our Data Collection →
           </a>
         </div>
 
-        <div className="bg-white/5 border border-white/10 rounded-[10px] p-10">
-          <h3 className="text-center text-[24px] font-medium tracking-[-0.02em] text-white mb-2">
+        <div className="bg-white/5 border border-white/10 rounded-[10px] p-10 mx-4 lg:mx-0">
+          <h3 className="text-center text-[22px] font-medium tracking-[-0.02em] text-white mb-2">
             Vetted, high-fidelity, and smart datasets
           </h3>
-          <p className="text-center text-white/40 text-[14px] mb-8">
+          <p className="text-center text-[14px] mb-8" style={{ color: "var(--ent-dark-text-medium)" }}>
             We vet our data with partner organizations
           </p>
           <div className="flex flex-wrap justify-center items-center gap-10">
@@ -104,14 +104,14 @@ const features: {
       "Query any location on Earth in natural language. Ask questions, get maps and spatial answers instantly.",
     content: (
       <div>
-        <h2 className="text-[28px] md:text-[36px] lg:text-[45px] font-medium text-white leading-[1.1] tracking-[-0.03em]">
+        <h2 className="px-4 lg:px-0 text-[28px] md:text-[39px] lg:text-[49px] font-medium text-white leading-[1.1] tracking-[-0.02em]">
           Chat with Earth
         </h2>
         <div
           className="mt-10 w-full rounded-none border border-white/8 border-l-0 border-r-0 overflow-hidden flex items-center justify-center"
-          style={{ aspectRatio: "16 / 9", background: "linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.06) 50%, rgba(255,255,255,0.03) 100%)", marginLeft: -48, width: "calc(100% + 48px)" }}
+          style={{ aspectRatio: "16 / 9", background: "linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.06) 50%, rgba(255,255,255,0.03) 100%)" }}
         >
-          <span className="text-white/20 text-[14px] font-medium tracking-[0.06em] uppercase">Video Demo</span>
+          <span className="text-[14px] font-medium tracking-[0.12em] uppercase" style={{ color: "var(--ent-dark-text-low)" }}>Video Demo</span>
         </div>
       </div>
     ),
@@ -123,14 +123,14 @@ const features: {
       "Generate full site-selection and due diligence reports from a single prompt. What took weeks now takes minutes.",
     content: (
       <div>
-        <h2 className="text-[28px] md:text-[36px] lg:text-[45px] font-medium text-white leading-[1.1] tracking-[-0.03em]">
+        <h2 className="px-4 lg:px-0 text-[28px] md:text-[39px] lg:text-[49px] font-medium text-white leading-[1.1] tracking-[-0.02em]">
           Research Reports
         </h2>
         <div
           className="mt-10 w-full rounded-none border border-white/8 border-l-0 border-r-0 overflow-hidden flex items-center justify-center"
-          style={{ aspectRatio: "16 / 9", background: "linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.06) 50%, rgba(255,255,255,0.03) 100%)", marginLeft: -48, width: "calc(100% + 48px)" }}
+          style={{ aspectRatio: "16 / 9", background: "linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.06) 50%, rgba(255,255,255,0.03) 100%)" }}
         >
-          <span className="text-white/20 text-[14px] font-medium tracking-[0.06em] uppercase">Video Demo</span>
+          <span className="text-[14px] font-medium tracking-[0.12em] uppercase" style={{ color: "var(--ent-dark-text-low)" }}>Video Demo</span>
         </div>
       </div>
     ),
@@ -142,14 +142,14 @@ const features: {
       "AI-generated geospatial datasets that fill gaps where traditional surveying is too expensive or unavailable.",
     content: (
       <div>
-        <h2 className="text-[28px] md:text-[36px] lg:text-[45px] font-medium text-white leading-[1.1] tracking-[-0.03em]">
+        <h2 className="px-4 lg:px-0 text-[28px] md:text-[39px] lg:text-[49px] font-medium text-white leading-[1.1] tracking-[-0.02em]">
           Generative Geodata
         </h2>
         <div
           className="mt-10 w-full rounded-none border border-white/8 border-l-0 border-r-0 overflow-hidden flex items-center justify-center"
-          style={{ aspectRatio: "16 / 9", background: "linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.06) 50%, rgba(255,255,255,0.03) 100%)", marginLeft: -48, width: "calc(100% + 48px)" }}
+          style={{ aspectRatio: "16 / 9", background: "linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.06) 50%, rgba(255,255,255,0.03) 100%)" }}
         >
-          <span className="text-white/20 text-[14px] font-medium tracking-[0.06em] uppercase">Video Demo</span>
+          <span className="text-[14px] font-medium tracking-[0.12em] uppercase" style={{ color: "var(--ent-dark-text-low)" }}>Video Demo</span>
         </div>
       </div>
     ),
@@ -161,14 +161,14 @@ const features: {
       "Real humans available around the clock — find datasets, get platform tips, or connect with a live agent instantly.",
     content: (
       <div>
-        <h2 className="text-[28px] md:text-[36px] lg:text-[45px] font-medium text-white leading-[1.1] tracking-[-0.03em]">
+        <h2 className="px-4 lg:px-0 text-[28px] md:text-[39px] lg:text-[49px] font-medium text-white leading-[1.1] tracking-[-0.02em]">
           24/7 Human Support
         </h2>
         <div
           className="mt-10 w-full rounded-none border border-white/8 border-l-0 border-r-0 overflow-hidden flex items-center justify-center"
-          style={{ aspectRatio: "16 / 9", background: "linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.06) 50%, rgba(255,255,255,0.03) 100%)", marginLeft: -48, width: "calc(100% + 48px)" }}
+          style={{ aspectRatio: "16 / 9", background: "linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.06) 50%, rgba(255,255,255,0.03) 100%)" }}
         >
-          <span className="text-white/20 text-[14px] font-medium tracking-[0.06em] uppercase">Video Demo</span>
+          <span className="text-[14px] font-medium tracking-[0.12em] uppercase" style={{ color: "var(--ent-dark-text-low)" }}>Video Demo</span>
         </div>
       </div>
     ),
@@ -193,7 +193,7 @@ export default function StickyScrollSection() {
 
       {/* G2–G6 — inside constraint wrapper */}
       <div
-        className="relative z-10 w-full max-w-[1287px] mx-auto"
+        className="relative z-10 ent-content-bounds"
         style={{
           borderLeft: "1px solid var(--grid-line)",
           borderRight: "1px solid var(--grid-line)",
@@ -211,12 +211,17 @@ export default function StickyScrollSection() {
               g{i + 2}
             </span>
 
-            {/* Left column */}
-            <div className="bg-transparent">
+            {/* Mobile: label above content */}
+            <div className="lg:hidden px-4 pt-10 pb-4">
+              <p className="text-[11px] font-medium tracking-[0.12em] uppercase text-white/30 mb-0">{feature.label}</p>
+            </div>
+
+            {/* Desktop: Left column (label + description together, sticky) */}
+            <div className="hidden lg:block bg-transparent">
               <div className="sticky top-20 px-8 py-[94px]">
                 <div className="max-w-[270px]">
                   <p className="text-[11px] font-medium tracking-[0.12em] uppercase text-white/30 mb-3">{feature.label}</p>
-                  <p className="text-[22px] font-normal leading-[1.6] tracking-[-0.01em] text-white">
+                  <p className="text-[22px] font-normal leading-[1.55] tracking-[-0.01em] text-white">
                     {feature.description}
                   </p>
                 </div>
@@ -232,10 +237,17 @@ export default function StickyScrollSection() {
                 {feature.content}
               </div>
             ) : (
-              <div className="bg-transparent py-[74px] px-6 lg:pl-12 lg:pr-0 flex justify-center">
+              <div className="bg-transparent py-0 lg:py-[74px] px-0 lg:pl-12 lg:pr-8 flex justify-center">
                 <div className="w-full">{feature.content}</div>
               </div>
             )}
+
+            {/* Mobile: description below content */}
+            <div className="lg:hidden px-4 pt-4 pb-10">
+              <p className="text-[16px] font-normal leading-[1.6] tracking-[-0.01em] text-white/45">
+                {feature.description}
+              </p>
+            </div>
 
           </div>
           </div>

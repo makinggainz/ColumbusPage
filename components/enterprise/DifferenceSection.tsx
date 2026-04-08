@@ -78,7 +78,7 @@ export default function DifferenceSection() {
         }
       `}</style>
 
-      <div className="max-w-[1287px] mx-auto px-8 md:px-10 flex flex-col items-center">
+      <div className="ent-content-bounds px-8 md:px-10 flex flex-col items-center">
 
         {/* Title */}
         <h2

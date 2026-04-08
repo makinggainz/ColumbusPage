@@ -53,39 +53,48 @@ export default function ProblemCards() {
         </div>
       </GridSection>
 
-      {/* Full-width card strip — breaks out of the max-width container */}
+      {/* Full-width card strip — scrollable squares on mobile, grid on desktop */}
       <div
-        className="w-full grid"
+        className="w-full overflow-x-auto lg:overflow-x-visible"
         style={{
-          gridTemplateColumns: `repeat(${PAIN_POINTS.length}, 1fr)`,
           backgroundColor: "var(--ent-bg-dark)",
           borderTop: "1px solid var(--grid-line)",
           opacity: visible ? 1 : 0,
           transition: "opacity 0.7s ease 0.3s",
+          WebkitOverflowScrolling: "touch",
         }}
       >
-        {PAIN_POINTS.map((text, i) => (
-          <div
-            key={i}
-            style={{
-              padding: "48px 24px",
-              backgroundColor: "transparent",
-              borderRight: i < PAIN_POINTS.length - 1 ? "1px solid var(--grid-line)" : "none",
-              borderBottom: "1px solid var(--grid-line)",
-              fontSize: 15,
-              fontWeight: 400,
-              lineHeight: 1.5,
-              color: "var(--ent-dark-text-high)",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              textAlign: "center" as const,
-              letterSpacing: "-0.01em",
-            }}
-          >
-            {text}
-          </div>
-        ))}
+        <div
+          className="flex lg:grid"
+          style={{
+            gridTemplateColumns: `repeat(${PAIN_POINTS.length}, 1fr)`,
+          }}
+        >
+          {PAIN_POINTS.map((text, i) => (
+            <div
+              key={i}
+              className="shrink-0 lg:shrink lg:w-auto! lg:h-auto! px-9 py-5 lg:px-6 lg:py-12"
+              style={{
+                width: 210,
+                height: 210,
+                backgroundColor: "transparent",
+                borderRight: i < PAIN_POINTS.length - 1 ? "1px solid var(--grid-line)" : "none",
+                borderBottom: "1px solid var(--grid-line)",
+                fontSize: 15,
+                fontWeight: 400,
+                lineHeight: 1.5,
+                color: "var(--ent-dark-text-high)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                textAlign: "center" as const,
+                letterSpacing: "-0.01em",
+              }}
+            >
+              {text}
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

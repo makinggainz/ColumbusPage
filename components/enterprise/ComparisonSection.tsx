@@ -26,13 +26,13 @@ export default function ComparisonSection() {
     >
       {/* Brighter grid area */}
       <div
-        className="absolute top-0 bottom-0 left-1/2 -translate-x-1/2"
-        style={{ width: "100%", maxWidth: 1287, backgroundColor: "rgba(255,255,255,0.04)" }}
+        className="absolute top-0 bottom-0 ent-content-bounds left-0 right-0"
+        style={{ backgroundColor: "rgba(255,255,255,0.04)" }}
       />
       <StructureGrid lineColor="rgba(255,255,255,0.06)" />
 
       <div
-        className="relative z-10 max-w-[1287px] mx-auto px-4 md:px-6 flex items-center justify-center"
+        className="relative z-10 ent-content-bounds px-4 md:px-6 flex items-center justify-center"
       >
         {/* Video placeholder */}
         <div
