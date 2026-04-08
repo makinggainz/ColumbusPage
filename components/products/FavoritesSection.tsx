@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import glassStyles from "@/components/ui/GlassButton.module.css";
-// @ts-expect-error — CSS side-effect import
 import "@/components/products/how-it-works-tokens.css";
 
 export default function FavoritesSection() {

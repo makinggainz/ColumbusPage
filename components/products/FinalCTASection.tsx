@@ -4,7 +4,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 import glassStyles from "@/components/ui/GlassButton.module.css";
-// @ts-expect-error — CSS side-effect import
 import "@/components/products/how-it-works-tokens.css";
 
 export default function FinalCTASection() {

@@ -3,7 +3,6 @@
 import Image from "next/image";
 import glassStyles from "@/components/ui/GlassButton.module.css";
 import { useRef, useEffect } from "react";
-// @ts-expect-error — CSS side-effect import
 import "@/components/products/how-it-works-tokens.css";
 
 const EMOJIS = [

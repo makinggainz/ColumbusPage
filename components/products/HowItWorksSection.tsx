@@ -4,7 +4,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { Heart, Star, Share, X, Copy, Link2, MessageCircle, Info, Ban, Flag, MapPin } from "lucide-react";
-// @ts-expect-error — CSS side-effect import
 import "@/components/products/how-it-works-tokens.css";
 
 /* ═══════════════════════════════════════════════════════════════

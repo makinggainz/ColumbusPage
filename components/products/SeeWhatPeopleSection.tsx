@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { useRef, useEffect, useState } from "react";
 import { Heart } from "lucide-react";
-// @ts-expect-error — CSS side-effect import
 import "@/components/products/how-it-works-tokens.css";
 
 const PHOTOS = [

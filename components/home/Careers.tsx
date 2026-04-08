@@ -219,7 +219,7 @@ export const Careers = ({ hideHeader, className = "" }: { hideHeader?: boolean; 
       if (hitTest(fig, mx, my, groundY)) { found = fig.id; break; }
     }
     hoveredIdRef.current = found;
-    canvas.style.cursor = found !== null ? "pointer" : "default";
+    e.currentTarget.style.cursor = found !== null ? "pointer" : "default";
   }, []);
 
   const handleCanvasClick = useCallback((e: React.MouseEvent<HTMLCanvasElement>) => {
