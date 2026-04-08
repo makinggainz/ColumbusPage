@@ -133,24 +133,24 @@ export default function PromptShowcase() {
       {/* ═══ PART 1: See prompts you can ask ═══ */}
       <div data-prompt-area="part-1">
       {/* Part 1 header */}
-      <div ref={headerRef} className="text-center mb-16 md:mb-20 px-8 md:px-10 ent-content-bounds">
+      <div ref={headerRef} className="text-center mb-16 md:mb-20 px-4 md:px-10 ent-content-bounds">
         <p
-          className="text-[12px] md:text-[14px] tracking-[0.2em] text-[#6B7280] uppercase"
-          style={fadeInStyle(headerVisible, 0)}
+          className="text-[11px] md:text-[14px] tracking-[0.12em] uppercase"
+          style={{ color: "var(--ent-text-tertiary)", ...fadeInStyle(headerVisible, 0) }}
         >
           REAL USE CASE STORIES
         </p>
 
         <h2
-          className="font-medium text-[28px] md:text-[48px] lg:text-[64px] leading-[1.05] tracking-[-0.04em] mt-3"
-          style={fadeInStyle(headerVisible, 0.15)}
+          className="font-medium text-[28px] md:text-[39px] lg:text-[64px] leading-[1.05] mt-3"
+          style={{ letterSpacing: "-0.03em", ...fadeInStyle(headerVisible, 0.15) }}
         >
           See prompts you can ask
         </h2>
       </div>
 
       {/* Part 1 — MOBILE STACK */}
-      <div className="flex flex-col items-center gap-8 lg:hidden px-8 md:px-10">
+      <div className="flex flex-col items-center gap-6 lg:hidden px-4 md:px-10">
 
         <PromptCard
           image="/enterprise/citymap.png"
@@ -257,7 +257,7 @@ export default function PromptShowcase() {
       </div>
 
       {/* ═══ PART 2: Ask about a drawn area ═══ */}
-      <div ref={part2Ref} data-prompt-area="part-2" className="relative w-full h-[1036px] mt-16 md:mt-24 rounded-2xl overflow-hidden mx-auto max-w-[1235px]">
+      <div ref={part2Ref} data-prompt-area="part-2" className="hidden lg:block relative w-full h-[1036px] mt-16 md:mt-24 rounded-2xl overflow-hidden mx-auto max-w-[1235px]">
         {/* Part 2 — Map background */}
         <Image
           src="/enterprise/drawnAreaMap.png"
@@ -373,8 +373,8 @@ export default function PromptShowcase() {
                 style={{
                   fontFamily: "'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif",
                   fontStyle: "normal",
-                  fontWeight: 510,
-                  fontSize: 18,
+                  fontWeight: 500,
+                  fontSize: 16,
                   lineHeight: "140%",
                   color: "#A1A6B2",
                 }}
@@ -407,8 +407,8 @@ export default function PromptShowcase() {
       <div className="flex justify-center pt-8 pb-4">
         <button
           type="button"
-          className="group flex items-center gap-3 leading-none whitespace-nowrap hover:opacity-90 transition-all duration-300 cursor-pointer"
-          style={{ fontSize: 14, fontWeight: 500, height: 45, paddingLeft: 20, paddingRight: 16, backgroundColor: "var(--ent-btn-dark)", color: "white" }}
+          className="group flex items-center gap-3 leading-none whitespace-nowrap rounded-none hover:opacity-90 transition-all duration-300 cursor-pointer"
+          style={{ fontSize: 15, fontWeight: 500, height: 36, paddingLeft: 20, paddingRight: 16, backgroundColor: "var(--ent-btn-dark)", color: "white" }}
         >
           <span className="transition-colors duration-300 group-hover:text-[#2563EB]">More use cases</span>
           <svg className="transition-transform duration-300 group-hover:translate-x-0.5" width="10" height="18" viewBox="0 0 7 12" fill="none" stroke="#2563EB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">

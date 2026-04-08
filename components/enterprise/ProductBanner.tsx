@@ -110,20 +110,20 @@ export default function ProductBanner() {
 
 
       <div
-        className="relative z-10 flex flex-col items-center justify-center px-6 md:px-10"
+        className="relative z-10 flex flex-col items-center justify-center px-4 md:px-10"
         style={{
-          paddingTop: 230,
-          paddingBottom: 230,
+          paddingTop: "clamp(120px, 15vw, 230px)",
+          paddingBottom: "clamp(120px, 15vw, 230px)",
           opacity: visible ? 1 : 0,
           transform: visible ? "translateY(0)" : "translateY(10px)",
           transition: "opacity 0.6s ease, transform 0.6s ease",
         }}
       >
         <h2
-          className="text-center leading-[1.1] text-[28px] md:text-[36px] lg:text-[45px]"
+          className="text-center leading-[1.1] text-[28px] md:text-[39px] lg:text-[49px]"
           style={{
             fontWeight: 500,
-            letterSpacing: "-0.025em",
+            letterSpacing: "-0.02em",
             color: "transparent",
             backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='200' height='200' fill='%231D1D1F' /%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.35'/%3E%3C/svg%3E")`,
             backgroundSize: "200px 200px",
@@ -138,7 +138,8 @@ export default function ProductBanner() {
 
         <Link
           href="/contact"
-          className="group mt-10 flex items-center gap-3 text-[18px] lg:text-[20px] text-[#1D1D1F] font-semibold transition-opacity"
+          className="group mt-10 flex items-center gap-3 text-[15px] lg:text-[20px] font-medium transition-opacity"
+          style={{ color: "var(--ent-text-primary)" }}
         >
           <span className="transition-colors duration-300 group-hover:text-[#2563EB]">Try Demo</span>
           <svg className="transition-transform duration-300 group-hover:translate-x-0.5" width="10" height="18" viewBox="0 0 7 12" fill="none" stroke="#2563EB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">

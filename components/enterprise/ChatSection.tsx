@@ -5,16 +5,26 @@ import Image from "next/image";
 export default function ChatSection() {
   return (
     <section
-      className="relative w-full overflow-hidden flex flex-col items-center"
-      style={{ backgroundColor: "var(--ent-bg-dark-alt)", paddingTop: 280, paddingBottom: 0 }}
+      className="relative w-full overflow-hidden flex flex-col items-center pt-24 md:pt-40 lg:pt-[280px]"
+      style={{ backgroundColor: "var(--ent-bg-dark-alt)" }}
     >
-      {/* Background image — same as hero */}
-      <Image
-        src="/ProductBackgroundImageHome.png"
-        alt=""
-        fill
-        className="object-cover object-center"
-        style={{ opacity: 0.45 }}
+      {/* Background image — matches hero */}
+      <div
+        className="absolute inset-0"
+        style={{
+          backgroundImage: "url(/probackground.png)",
+          backgroundPosition: "top center",
+          backgroundSize: "cover",
+          backgroundRepeat: "no-repeat",
+          filter: "grayscale(1) blur(6px)",
+          transform: "scale(1.02)",
+          zIndex: 0,
+        }}
+      />
+      {/* Blue tint — matches hero */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{ backgroundColor: "var(--ent-blue-tint)", mixBlendMode: "color", opacity: 0.5, zIndex: 0 }}
       />
       {/* Dark gradient overlay */}
       <div
@@ -36,8 +46,8 @@ export default function ChatSection() {
       {/* Button */}
       <button
         type="button"
-        className="relative z-10 group mt-8 flex items-center gap-3 leading-none whitespace-nowrap hover:opacity-90 transition-all duration-300 cursor-pointer"
-        style={{ fontSize: 14, fontWeight: 500, height: 45, paddingLeft: 20, paddingRight: 16, backgroundColor: "var(--ent-btn-dark)", color: "white" }}
+        className="relative z-10 group mt-8 flex items-center gap-3 leading-none whitespace-nowrap rounded-none hover:opacity-90 transition-all duration-300 cursor-pointer"
+        style={{ fontSize: 15, fontWeight: 500, height: 36, paddingLeft: 20, paddingRight: 16, backgroundColor: "var(--ent-btn-dark)", color: "white" }}
       >
         <span className="transition-colors duration-300 group-hover:text-[#2563EB]">Talk to Founders</span>
         <svg className="transition-transform duration-300 group-hover:translate-x-0.5" width="10" height="18" viewBox="0 0 7 12" fill="none" stroke="#2563EB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
@@ -45,12 +55,11 @@ export default function ChatSection() {
         </svg>
       </button>
 
-      {/* Monitor — top 50% visible, popping from bottom */}
+      {/* Monitor — extends below section, clipped by section overflow:hidden */}
       <div
-        className="relative z-10 flex justify-center w-full"
-        style={{ marginTop: 80, paddingLeft: 20, paddingRight: 20, height: 500, overflow: "hidden" }}
+        className="relative z-10 flex justify-center w-full mt-10 md:mt-16 lg:mt-20 px-4 md:px-5"
       >
-        <div className="ent-content-bounds" style={{ width: "100%", position: "relative" }}>
+        <div className="ent-content-bounds" style={{ width: "100%", position: "relative", marginBottom: "-20%" }}>
           {/* Monitor frame */}
           <div
             style={{
