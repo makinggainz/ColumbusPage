@@ -7,7 +7,7 @@ import { ConsumerEnterpriseToggle } from "./ConsumerEnterpriseToggle";
 
 const QUESTION = "Where is the best place to purchase property for new company headquarters for our billion dollar company Manthano?";
 
-type Phase = "idle" | "opening" | "open" | "windowed" | "typing" | "done";
+type Phase = "idle" | "typing" | "done";
 
 const reveal = (visible: boolean, delay: number): React.CSSProperties => ({
   opacity: visible ? 1 : 0,
@@ -22,7 +22,7 @@ export default function EnterpriseHero() {
   const [typed, setTyped] = useState("");
   const [cursorOn, setCursorOn] = useState(true);
 
-  // Intersection observer — kick off animation when section enters view
+  // Intersection observer — kick off typing when section enters view
   useEffect(() => {
     const el = sectionRef.current;
     if (!el) return;
@@ -31,7 +31,7 @@ export default function EnterpriseHero() {
         if (e.isIntersecting) {
           setVisible(true);
           obs.disconnect();
-          setTimeout(() => setPhase("opening"), 400);
+          setTimeout(() => setPhase("typing"), 400);
         }
       },
       { threshold: 0 }
@@ -39,22 +39,6 @@ export default function EnterpriseHero() {
     obs.observe(el);
     return () => obs.disconnect();
   }, []);
-
-  // Phase sequencer
-  useEffect(() => {
-    if (phase === "opening") {
-      const t = setTimeout(() => setPhase("open"), 1100);
-      return () => clearTimeout(t);
-    }
-    if (phase === "open") {
-      const t = setTimeout(() => setPhase("windowed"), 600);
-      return () => clearTimeout(t);
-    }
-    if (phase === "windowed") {
-      const t = setTimeout(() => setPhase("typing"), 700);
-      return () => clearTimeout(t);
-    }
-  }, [phase]);
 
   // Typewriter
   useEffect(() => {
@@ -73,12 +57,11 @@ export default function EnterpriseHero() {
 
   // Cursor blink
   useEffect(() => {
-    if (phase === "idle" || phase === "opening" || phase === "open") return;
+    if (phase === "idle") return;
     const id = setInterval(() => setCursorOn(c => !c), 520);
     return () => clearInterval(id);
   }, [phase]);
 
-  const windowVisible = phase === "windowed" || phase === "typing" || phase === "done";
   const showTyped = phase === "typing" || phase === "done";
 
   return (
@@ -179,9 +162,8 @@ export default function EnterpriseHero() {
                 display: "flex",
                 flexDirection: "column",
                 backgroundColor: "#fff",
-                opacity: windowVisible ? 1 : 0,
-                transform: windowVisible ? "scale(1) translateY(0)" : "scale(0.97) translateY(8px)",
-                transition: "opacity 0.5s cubic-bezier(0.22,1,0.36,1), transform 0.5s cubic-bezier(0.22,1,0.36,1)",
+                opacity: 1,
+                transform: "scale(1) translateY(0)",
               }}
             >
 
