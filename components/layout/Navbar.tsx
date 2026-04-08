@@ -45,8 +45,8 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
             if (sessionStorage.getItem("navbar-scrolled") === "true") scrolled = true;
         } catch {}
         if (scrolled) setHasScrolled(true);
-        // Use-cases & enterprise page: navbar visible immediately (no hero entrance animation)
-        if (isUseCasesPage || isEnterprisePage) setHasScrolled(true);
+        // Pages without a hero entrance animation: navbar visible immediately
+        if (!isHomePage && !isProductsPage) setHasScrolled(true);
         setIsCompact(window.scrollY > COMPACT_THRESHOLD);
     }, []);
 
