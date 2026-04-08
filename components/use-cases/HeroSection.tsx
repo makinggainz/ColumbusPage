@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 
-const BOTTOM_TEXT = "[ We have just launched our technology in various sectors. ]";
+const BOTTOM_TEXT = "Find your use case";
 const TYPE_INTERVAL = 28; // ms per character
 
 export default function HeroSection() {
@@ -108,9 +108,19 @@ export default function HeroSection() {
             Why you should be excited<br /> about our LGM
           </h1>
 
+          {/* Divider line — fades out at edges */}
+          <div
+            className="mt-2 w-full"
+            style={{
+              height: 1,
+              background: "linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.5) 25%, rgba(255,255,255,0.5) 75%, rgba(255,255,255,0) 100%)",
+              ...fadeIn(0.08),
+            }}
+          />
+
           {/* SUBTITLE */}
           <p
-            className="text-white/70 mt-4 max-w-[760px] text-[20px] font-normal leading-[1.5] max-md:text-[16px]"
+            className="text-white/70 mt-6 max-w-[760px] text-[20px] font-normal leading-[1.5] max-md:text-[16px]"
             style={fadeIn(0.15)}
           >
             Our Geospatial Model — spatial reasoning at scale, without the hallucinations.
@@ -119,12 +129,33 @@ export default function HeroSection() {
         </div>
 
         {/* BOTTOM TEXT — typed in last */}
-        <p
-          className="mt-auto pb-[48px] text-white text-[16px] font-medium tracking-[0.04em] max-md:text-[14px]"
+        <div
+          className="mt-auto pb-[48px] flex items-center gap-2 text-white text-[16px] font-medium tracking-[0.04em] max-md:text-[14px]"
           style={{ minHeight: "1.4em" }}
         >
-          {typedText}
-        </p>
+          <span>{typedText}</span>
+          {typedText.length >= BOTTOM_TEXT.length && (
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 16 16"
+              fill="none"
+              style={{
+                opacity: 0,
+                animation: "fadeInArrow 0.4s ease-out forwards",
+              }}
+            >
+              <path
+                d="M8 3v8.5M4 8.5l4 4.5 4-4.5"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          )}
+          <style>{`@keyframes fadeInArrow { to { opacity: 1 } }`}</style>
+        </div>
 
       </div>
     </section>

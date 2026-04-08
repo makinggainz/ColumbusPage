@@ -39,7 +39,7 @@ export default function FavoritesSection() {
           <h2 style={{
             fontFamily: "var(--hiw-font-sans)",
             fontWeight: "var(--hiw-weight-semibold)" as unknown as number,
-            fontSize: "clamp(var(--hiw-text-xl), 5vw, var(--hiw-text-4xl))",
+            fontSize: "clamp(32px, 5vw, var(--hiw-text-4xl))",
             lineHeight: "var(--hiw-leading-tight)" as unknown as number,
             color: "var(--hiw-text-primary)",
             margin: 0,
@@ -67,21 +67,22 @@ export default function FavoritesSection() {
         >
           <a
             href="https://mapsgpt.es"
-            className={`group flex items-center justify-center gap-4 lg:gap-10 w-full max-w-214.25 h-14 lg:h-18.5 no-underline cursor-pointer active:scale-[0.98] select-none ${glassStyles.btn}`}
-            style={{ borderRadius: "var(--hiw-radius-full)", padding: 0 }}
+            className={`group flex items-center justify-center gap-4 lg:gap-6 h-14 lg:h-16 no-underline cursor-pointer active:scale-[0.98] select-none ${glassStyles.btn}`}
+            style={{ borderRadius: "var(--hiw-radius-full)", paddingInline: 48 }}
           >
             <span
               style={{
                 fontFamily: "var(--hiw-font-sans)",
                 fontWeight: 590,
-                fontSize: "clamp(var(--hiw-text-sm), 2vw, var(--hiw-text-lg))",
+                fontSize: "clamp(var(--hiw-text-base), 2vw, var(--hiw-text-lg))",
                 lineHeight: "140%",
                 letterSpacing: "-0.02em",
                 color: "#00B1D4",
                 whiteSpace: "nowrap",
               }}
             >
-              Find your own favourite spots now
+              <span className="lg:hidden">Find your Spots now</span>
+              <span className="hidden lg:inline">Find your favourite spots now</span>
             </span>
             <svg
               width="13"

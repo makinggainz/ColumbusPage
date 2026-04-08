@@ -272,10 +272,10 @@ export default function ShowcaseSection({ compact = false, onInteraction }: { co
         {/* CTA */}
         <Link
           href="/maps-gpt"
-          className={`group flex items-center justify-center gap-6 w-full h-[52px] cursor-pointer no-underline ${glassStyles.btn}`}
-          style={{ padding: 0 }}
+          className={`group flex items-center justify-center gap-6 h-14 cursor-pointer no-underline ${glassStyles.btn}`}
+          style={{ paddingInline: 48 }}
         >
-          <span style={{ fontFamily: "'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif", fontWeight: 590, fontSize: "20px", letterSpacing: "-0.02em", color: "#00B1D4" }}>
+          <span style={{ fontFamily: "'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif", fontWeight: 590, fontSize: "clamp(15px, 2vw, 20px)", lineHeight: "140%", letterSpacing: "-0.02em", color: "#00B1D4" }}>
             Try MapsGPT
           </span>
           <svg width="13" height="13" viewBox="0 0 13 13" fill="none" className="shrink-0" aria-hidden>
@@ -457,7 +457,7 @@ export default function ShowcaseSection({ compact = false, onInteraction }: { co
                 style={{
                   fontFamily: "'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif",
                   fontWeight: 590,
-                  fontSize: "22px",
+                  fontSize: "20px",
                   lineHeight: "140%",
                   letterSpacing: "-0.02em",
                   color: "#00B1D4",

@@ -438,7 +438,7 @@ export default function SeeWhatPeopleSection() {
         style={{
           fontFamily: "var(--hiw-font-sans)",
           fontWeight: "var(--hiw-weight-bold)" as unknown as number,
-          fontSize: "clamp(var(--hiw-text-2xl), 5vw, var(--hiw-text-4xl))",
+          fontSize: "clamp(32px, 5vw, var(--hiw-text-4xl))",
           lineHeight: "var(--hiw-leading-tight)" as unknown as number,
           color: "var(--hiw-text-primary)",
           textAlign: "center",

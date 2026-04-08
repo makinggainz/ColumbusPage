@@ -96,17 +96,19 @@ export default function FinalCTASection() {
           </p>
           <a
             href="https://mapsgpt.es"
-            className={`group flex items-center justify-center gap-4 w-full h-[48px] no-underline cursor-pointer active:scale-[0.98] select-none ${glassStyles.btn}`}
-            style={{ padding: 0, backdropFilter: "blur(3px)", WebkitBackdropFilter: "blur(3px)" }}
+            className={`group inline-flex items-center justify-center gap-4 h-14 no-underline cursor-pointer active:scale-[0.98] select-none ${glassStyles.btn}`}
+            style={{ maxWidth: "fit-content", marginInline: "auto", backdropFilter: "blur(3px)", WebkitBackdropFilter: "blur(3px)" }}
           >
             <span style={{
               fontFamily: "var(--hiw-font-sans)",
               fontWeight: 590,
-              fontSize: "var(--hiw-text-base)",
+              fontSize: "clamp(var(--hiw-text-base), 2vw, var(--hiw-text-lg))",
+              lineHeight: "140%",
               letterSpacing: "-0.02em",
               color: "var(--hiw-text-on-accent)",
+              whiteSpace: "nowrap",
             }}>
-              Try it out! It&apos;s completely free
+              Try MapsGPT it&apos;s free!
             </span>
             <svg width="12" height="12" viewBox="0 0 13 13" fill="none" className="shrink-0" aria-hidden>
               <path d="M2 11L11 2M11 2H4M11 2V9" stroke="#ffffff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
@@ -267,7 +269,7 @@ export default function FinalCTASection() {
                   letterSpacing: "-0.02em",
                   color: "var(--hiw-text-on-accent)",
                 }}>
-                  Try it out! It&apos;s completely free
+                  Try MapsGPT it&apos;s free!
                 </span>
                 <svg width="13" height="13" viewBox="0 0 13 13" fill="none" className="shrink-0 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" aria-hidden>
                   <path d="M2 11L11 2M11 2H4M11 2V9" stroke="#ffffff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
@@ -277,6 +279,26 @@ export default function FinalCTASection() {
           </div>
         </div>
       </div>
+
+      {/* Mobile overrides for bottom CTA card */}
+      <style>{`
+        @media (max-width: 1023px) {
+          .hiw-scope .cta-feedback-card {
+            height: auto !important;
+            min-height: 0 !important;
+          }
+          .hiw-scope .cta-feedback-card .cta-feedback-text {
+            padding: var(--hiw-space-12) var(--hiw-space-8) var(--hiw-space-10) !important;
+            align-items: flex-start !important;
+          }
+          .hiw-scope .cta-feedback-card .cta-feedback-text h3 {
+            font-size: 32px !important;
+          }
+          .hiw-scope .cta-feedback-card .cta-feedback-text p {
+            font-size: 20px !important;
+          }
+        }
+      `}</style>
 
       {/* ================= BOTTOM CTA — creative card ================= */}
       <div
@@ -288,6 +310,7 @@ export default function FinalCTASection() {
         }}
       >
         <div
+          className="cta-feedback-card"
           onMouseEnter={() => setCardHovered(true)}
           onMouseLeave={() => setCardHovered(false)}
           style={{
@@ -341,7 +364,7 @@ export default function FinalCTASection() {
           </div>
 
           {/* Text + buttons — left side */}
-          <div style={{
+          <div className="cta-feedback-text" style={{
             position: "relative",
             zIndex: 2,
             padding: "var(--hiw-space-16)",

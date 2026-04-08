@@ -208,7 +208,7 @@ function FeatureCard({ feature }: { feature: Feature }) {
       onMouseLeave={() => setHovering(false)}
       style={{
         flexShrink: 0,
-        width: 448,
+        width: "clamp(280px, 78vw, 448px)",
         scrollSnapAlign: "start",
         display: "flex",
         flexDirection: "column",
@@ -235,7 +235,7 @@ function FeatureCard({ feature }: { feature: Feature }) {
       }} />
 
       {/* Card fan visual */}
-      <div style={{ width: "100%", height: 400, position: "relative", zIndex: 1 }}>
+      <div style={{ width: "100%", height: "clamp(280px, 60vw, 400px)", position: "relative", zIndex: 1 }}>
         <CardFanVisual feature={feature} hovering={hovering} />
       </div>
 
@@ -251,7 +251,7 @@ function FeatureCard({ feature }: { feature: Feature }) {
         <h3 style={{
           fontFamily: "var(--hiw-font-sans)",
           fontWeight: "var(--hiw-weight-semibold)" as unknown as number,
-          fontSize: "var(--hiw-text-lg)",
+          fontSize: "24px",
           lineHeight: "var(--hiw-leading-snug)" as unknown as number,
           color: "var(--hiw-text-primary)",
           margin: 0,
@@ -262,7 +262,7 @@ function FeatureCard({ feature }: { feature: Feature }) {
         <p style={{
           fontFamily: "var(--hiw-font-sans)",
           fontWeight: "var(--hiw-weight-regular)" as unknown as number,
-          fontSize: "var(--hiw-text-sm)",
+          fontSize: "var(--hiw-text-base)",
           lineHeight: "var(--hiw-leading-relaxed)" as unknown as number,
           color: "var(--hiw-text-secondary)",
           margin: 0,
@@ -305,6 +305,29 @@ export default function NewAtMapsGPTSection() {
   const startX = useRef(0);
   const scrollStart = useRef(0);
   const didDrag = useRef(false);
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  // Track scroll position for dots
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+    const onScroll = () => {
+      const children = container.children;
+      if (!children.length) return;
+      const containerLeft = container.getBoundingClientRect().left;
+      let closest = 0;
+      let minDist = Infinity;
+      for (let i = 0; i < FEATURES.length; i++) {
+        const child = children[i] as HTMLElement;
+        if (!child) continue;
+        const dist = Math.abs(child.getBoundingClientRect().left - containerLeft);
+        if (dist < minDist) { minDist = dist; closest = i; }
+      }
+      setActiveIndex(closest);
+    };
+    container.addEventListener("scroll", onScroll, { passive: true });
+    return () => container.removeEventListener("scroll", onScroll);
+  }, []);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -356,7 +379,7 @@ export default function NewAtMapsGPTSection() {
         <h2 style={{
           fontFamily: "var(--hiw-font-sans)",
           fontWeight: "var(--hiw-weight-bold)" as unknown as number,
-          fontSize: "clamp(var(--hiw-text-2xl), 5vw, var(--hiw-text-4xl))",
+          fontSize: "clamp(42px, 5vw, var(--hiw-text-4xl))",
           lineHeight: "var(--hiw-leading-tight)" as unknown as number,
           color: "var(--hiw-text-primary)",
           margin: 0,
@@ -383,6 +406,36 @@ export default function NewAtMapsGPTSection() {
       >
         {FEATURES.map((feature) => (
           <FeatureCard key={feature.label} feature={feature} />
+        ))}
+      </div>
+
+      {/* Dots indicator — mobile only */}
+      <div className="flex lg:hidden" style={{
+        justifyContent: "center",
+        gap: "var(--hiw-space-2)",
+        marginTop: "var(--hiw-space-6)",
+      }}>
+        {FEATURES.map((_, i) => (
+          <button
+            key={i}
+            aria-label={`Go to card ${i + 1}`}
+            onClick={() => {
+              const container = containerRef.current;
+              if (!container) return;
+              const child = container.children[i] as HTMLElement;
+              if (child) child.scrollIntoView({ behavior: "smooth", inline: "start", block: "nearest" });
+            }}
+            style={{
+              width: activeIndex === i ? 24 : 8,
+              height: 8,
+              borderRadius: "var(--hiw-radius-full)",
+              background: activeIndex === i ? "var(--hiw-accent)" : "var(--hiw-border)",
+              border: "none",
+              padding: 0,
+              cursor: "pointer",
+              transition: "width 0.3s var(--hiw-easing-default), background 0.3s var(--hiw-easing-default)",
+            }}
+          />
         ))}
       </div>
 
