@@ -11,14 +11,6 @@ import glassStyles from "@/components/ui/GlassButton.module.css";
 const COMPACT_THRESHOLD = 10;
 const NAV_BREAKPOINT = 900;
 
-const menuItems = [
-    { label: "Our Mission", href: "/our-mission" },
-    { label: "Columbus Pro", href: "/products/enterprise" },
-    { label: "MapsGPT", href: "/products/mapsgpt" },
-    { label: "Use Cases", href: "/use-cases" },
-    { label: "Technology", href: "/technology" },
-];
-
 // ─────────────────────────────────────────────────────────────────────────────
 
 export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "dark"; wide?: boolean }) => {
@@ -191,9 +183,12 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
         return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
     }, []);
 
-    // Close dropdown when mouse leaves nav area
+    // Close dropdown when mouse leaves nav area (desktop only — touch-emulated mousemove must be ignored)
     useEffect(() => {
+        let lastTouchTime = 0;
+        const onTouch = () => { lastTouchTime = Date.now(); };
         const handleMouseMove = (e: MouseEvent) => {
+            if (Date.now() - lastTouchTime < 500) return; // ignore touch-emulated mouse events
             if (!navRef.current) return;
             const navBounds = navRef.current.getBoundingClientRect();
             if (e.clientY > navBounds.bottom && isMenuOpen && isManuallyToggled) {
@@ -208,9 +203,11 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                 setIsManuallyToggled(false);
             }
         };
+        window.addEventListener("touchstart", onTouch, { passive: true });
         window.addEventListener("mousemove", handleMouseMove);
         document.documentElement.addEventListener("mouseleave", handleMouseLeaveDocument);
         return () => {
+            window.removeEventListener("touchstart", onTouch);
             window.removeEventListener("mousemove", handleMouseMove);
             document.documentElement.removeEventListener("mouseleave", handleMouseLeaveDocument);
         };
@@ -400,9 +397,10 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                     }}
                                 >
                                     {[
-                                        { label: "Product", href: "/products/enterprise" },
+                                        { label: "Products", href: "/products/enterprise", hasDropdown: true },
                                         { label: "Use Cases", href: "/use-cases" },
                                         { label: "Technology", href: "/technology" },
+                                        { label: "Mission", href: "/our-mission" },
                                     ].map((link, i) => (
                                         <Link
                                             key={link.label}
@@ -416,7 +414,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                                 filter: linksVisible ? "blur(0px)" : "blur(4px)",
                                                 transition: `opacity 350ms ease ${i * 80}ms, transform 400ms cubic-bezier(0.22, 1, 0.36, 1) ${i * 80}ms, filter 350ms ease ${i * 80}ms, font-size ${t}`,
                                             }}
-                                            onMouseEnter={handleNavMouseEnter}
+                                            onMouseEnter={(link as { hasDropdown?: boolean }).hasDropdown ? handleNavMouseEnter : undefined}
                                         >
                                             {link.label}
                                             <svg
@@ -438,7 +436,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                         out of flex flow so it can't push the hamburger. On desktop, display:contents
                                         makes this wrapper invisible to layout so the Link flows normally. */}
                                     <div className="navbar-cta-wrapper" style={{
-                                        ["--cta-right" as string]: wide ? "52px" : "46px",
+                                        ["--cta-right" as string]: wide ? "52px" : "56px",
                                     }}>
                                         <Link
                                             href="/contact"
@@ -449,9 +447,9 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                                 height: isProductsPage ? 45 : 36,
                                                 gap: isWideScreen ? 12 : 6,
                                                 width: ctaVisible ? (isProductsPage ? 145 : 131.28) : 0,
-                                                opacity: ctaVisible ? 1 : 0,
+                                                opacity: (!isWideScreen && isMenuOpen) ? 0 : ctaVisible ? 1 : 0,
                                                 overflow: "hidden",
-                                                pointerEvents: ctaVisible ? "auto" : "none",
+                                                pointerEvents: (!isWideScreen && isMenuOpen) ? "none" : ctaVisible ? "auto" : "none",
                                                 paddingLeft: ctaVisible ? 20 : 0,
                                                 paddingRight: ctaVisible ? 16 : 0,
                                                 marginRight: 0,
@@ -563,7 +561,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
             {/* ── Dropdown (outside nav so fixed positioning isn't broken by nav's transform) ── */}
             <div
                 ref={dropdownRef}
-                className={`fixed left-0 right-0 max-md:bottom-0 overflow-hidden`}
+                className={`fixed left-0 right-0 max-md:bottom-0 overflow-hidden max-md:flex max-md:flex-col`}
                 style={{
                     ...dropdownBg,
                     zIndex: 45,
@@ -580,7 +578,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                 }}
                 onMouseLeave={handleDropdownMouseLeave}
             >
-                <div className={`mx-auto w-full px-6 md:px-8 ${wide ? "min-[1408px]:px-0" : "min-[1287px]:px-0"} py-8 md:py-12`} style={{ maxWidth: wide ? 1408 : 1287, paddingTop: isCompact ? 56 + 32 : 68 + 48 }}>
+                <div className={`mx-auto w-full px-6 md:px-8 ${wide ? "min-[1408px]:px-0" : "min-[1287px]:px-0"} py-4 md:py-12`} style={{ maxWidth: wide ? 1408 : 1287, paddingTop: isCompact ? 56 + 16 : 68 + 20 }}>
                     <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12">
                         <div
                             className="md:col-span-5 space-y-6 md:space-y-8"
@@ -621,49 +619,169 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                             </div>
                         </div>
                         <div className="hidden md:block md:col-span-3"></div>
-                        <div className="md:col-span-4 space-y-4 md:space-y-6">
-                            <h4
-                                className={`text-[13px] font-medium tracking-[0.08em] uppercase mb-4 ${dropdownSubheadClass}`}
-                                style={{
-                                    opacity: isMenuOpen ? 1 : 0,
-                                    transform: isMenuOpen ? "translateY(0)" : "translateY(8px)",
-                                    transition: isMenuOpen
-                                        ? "opacity 350ms ease 180ms, transform 400ms cubic-bezier(0.05, 0.7, 0.1, 1) 180ms"
-                                        : "opacity 150ms ease, transform 150ms ease",
-                                }}
-                            >
-                                <ScrambleText text="COMPANY" isActive={isMenuOpen} delay={250} />
-                            </h4>
-                            <ul className="space-y-4">
-                                {menuItems.map((item, index) => (
-                                    <li
-                                        key={item.href}
-                                        style={{
-                                            opacity: isMenuOpen ? 1 : 0,
-                                            transform: isMenuOpen
-                                                ? "translateY(0) scale(1)"
-                                                : "translateY(12px) scale(0.97)",
-                                            transition: isMenuOpen
-                                                ? `opacity 350ms cubic-bezier(0.05, 0.7, 0.1, 1) ${200 + index * 50}ms, transform 400ms cubic-bezier(0.05, 0.7, 0.1, 1) ${200 + index * 50}ms`
-                                                : `opacity 120ms ease ${(menuItems.length - 1 - index) * 25}ms, transform 120ms ease ${(menuItems.length - 1 - index) * 25}ms`,
-                                        }}
-                                    >
-                                        <Link
-                                            href={item.href}
-                                            onClick={closeMenu}
-                                            className={`group relative text-xl font-medium transition-all duration-300 flex items-center ${dropdownNavLinkClass}`}
+                        <div className="md:col-span-4 space-y-6 md:space-y-8">
+                            {/* ── Products group ── */}
+                            <div>
+                                <h4
+                                    className={`text-[13px] font-medium tracking-[0.08em] uppercase mb-4 ${dropdownSubheadClass}`}
+                                    style={{
+                                        opacity: isMenuOpen ? 1 : 0,
+                                        transform: isMenuOpen ? "translateY(0)" : "translateY(8px)",
+                                        transition: isMenuOpen
+                                            ? "opacity 350ms ease 180ms, transform 400ms cubic-bezier(0.05, 0.7, 0.1, 1) 180ms"
+                                            : "opacity 150ms ease, transform 150ms ease",
+                                    }}
+                                >
+                                    <ScrambleText text="PRODUCTS" isActive={isMenuOpen} delay={250} />
+                                </h4>
+                                <ul className="space-y-4">
+                                    {[
+                                        { label: "MapsGPT", href: "/products/mapsgpt" },
+                                        { label: "Columbus Pro", href: "/products/enterprise" },
+                                    ].map((item, index) => (
+                                        <li
+                                            key={item.href}
+                                            style={{
+                                                opacity: isMenuOpen ? 1 : 0,
+                                                transform: isMenuOpen
+                                                    ? "translateY(0) scale(1)"
+                                                    : "translateY(12px) scale(0.97)",
+                                                transition: isMenuOpen
+                                                    ? `opacity 350ms cubic-bezier(0.05, 0.7, 0.1, 1) ${200 + index * 50}ms, transform 400ms cubic-bezier(0.05, 0.7, 0.1, 1) ${200 + index * 50}ms`
+                                                    : `opacity 120ms ease ${(1 - index) * 25}ms, transform 120ms ease ${(1 - index) * 25}ms`,
+                                            }}
                                         >
-                                            <span className="transition-all duration-300 ease-in-out group-hover:translate-x-1">{item.label}</span>
-                                            <svg className={`ml-3 shrink-0 transition-all duration-300 ease-in-out group-hover:translate-x-1 group-hover:stroke-[#2563EB] ${isDark ? "stroke-white" : "stroke-[#0A1344]"}`} width="9" height="16" viewBox="0 0 7 12" fill="none" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                                                <path d="M1 1l5 5-5 5" />
-                                            </svg>
-                                        </Link>
-                                    </li>
-                                ))}
-                            </ul>
+                                            <Link
+                                                href={item.href}
+                                                onClick={closeMenu}
+                                                className={`group relative text-xl font-medium transition-all duration-300 flex items-center ${dropdownNavLinkClass}`}
+                                            >
+                                                <span className="transition-all duration-300 ease-in-out group-hover:translate-x-1">{item.label}</span>
+                                                <svg className={`ml-3 shrink-0 transition-all duration-300 ease-in-out group-hover:translate-x-1 group-hover:stroke-[#2563EB] ${isDark ? "stroke-white" : "stroke-[#0A1344]"}`} width="9" height="16" viewBox="0 0 7 12" fill="none" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                                                    <path d="M1 1l5 5-5 5" />
+                                                </svg>
+                                            </Link>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+
+                            {/* ── Company group — mobile only ── */}
+                            <div className="md:hidden">
+                                <h4
+                                    className={`text-[13px] font-medium tracking-[0.08em] uppercase mb-4 ${dropdownSubheadClass}`}
+                                    style={{
+                                        opacity: isMenuOpen ? 1 : 0,
+                                        transform: isMenuOpen ? "translateY(0)" : "translateY(8px)",
+                                        transition: isMenuOpen
+                                            ? "opacity 350ms ease 330ms, transform 400ms cubic-bezier(0.05, 0.7, 0.1, 1) 330ms"
+                                            : "opacity 150ms ease, transform 150ms ease",
+                                    }}
+                                >
+                                    <ScrambleText text="COMPANY" isActive={isMenuOpen} delay={400} />
+                                </h4>
+                                <ul className="space-y-4">
+                                    {[
+                                        { label: "Use Cases", href: "/use-cases" },
+                                        { label: "Technology", href: "/technology" },
+                                        { label: "Our Mission", href: "/our-mission" },
+                                    ].map((item, index) => (
+                                        <li
+                                            key={item.href}
+                                            style={{
+                                                opacity: isMenuOpen ? 1 : 0,
+                                                transform: isMenuOpen
+                                                    ? "translateY(0) scale(1)"
+                                                    : "translateY(12px) scale(0.97)",
+                                                transition: isMenuOpen
+                                                    ? `opacity 350ms cubic-bezier(0.05, 0.7, 0.1, 1) ${350 + index * 50}ms, transform 400ms cubic-bezier(0.05, 0.7, 0.1, 1) ${350 + index * 50}ms`
+                                                    : `opacity 120ms ease ${(2 - index) * 25}ms, transform 120ms ease ${(2 - index) * 25}ms`,
+                                            }}
+                                        >
+                                            <Link
+                                                href={item.href}
+                                                onClick={closeMenu}
+                                                className={`group relative text-xl font-medium transition-all duration-300 flex items-center ${dropdownNavLinkClass}`}
+                                            >
+                                                <span className="transition-all duration-300 ease-in-out group-hover:translate-x-1">{item.label}</span>
+                                                <svg className={`ml-3 shrink-0 transition-all duration-300 ease-in-out group-hover:translate-x-1 group-hover:stroke-[#2563EB] ${isDark ? "stroke-white" : "stroke-[#0A1344]"}`} width="9" height="16" viewBox="0 0 7 12" fill="none" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                                                    <path d="M1 1l5 5-5 5" />
+                                                </svg>
+                                            </Link>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
                         </div>
                     </div>
+
+                    {/* ── Mobile bottom CTA (mapsgpt — glass pill, content-width) ── */}
+                    {isProductsPage && (
+                        <div
+                            className="md:hidden pt-6"
+                            style={{
+                                opacity: isMenuOpen ? 1 : 0,
+                                transform: isMenuOpen ? "translateY(0)" : "translateY(12px)",
+                                transition: isMenuOpen
+                                    ? "opacity 350ms cubic-bezier(0.05, 0.7, 0.1, 1) 500ms, transform 400ms cubic-bezier(0.05, 0.7, 0.1, 1) 500ms"
+                                    : "opacity 120ms ease, transform 120ms ease",
+                            }}
+                        >
+                            <Link
+                                href="/maps-gpt"
+                                onClick={closeMenu}
+                                className={`flex items-center justify-center gap-3 w-full font-medium text-[16px] transition-colors duration-300 hover:opacity-90 ${glassStyles.btn}`}
+                                style={{
+                                    height: 60,
+                                    borderRadius: 999,
+                                    backdropFilter: "blur(6px)",
+                                    WebkitBackdropFilter: "blur(6px)",
+                                }}
+                            >
+                                <span className="text-black">Start Now</span>
+                                <svg
+                                    width="10" height="18" viewBox="0 0 7 12" fill="none"
+                                    stroke="#2563EB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"
+                                >
+                                    <path d="M1 1l5 5-5 5" />
+                                </svg>
+                            </Link>
+                        </div>
+                    )}
                 </div>
+
+                {/* ── Mobile bottom CTA (all other pages — full-width, viewport bottom) ── */}
+                {!isProductsPage && (
+                    <div
+                        className="md:hidden mt-auto"
+                        style={{
+                            opacity: isMenuOpen ? 1 : 0,
+                            transition: isMenuOpen
+                                ? "opacity 350ms cubic-bezier(0.05, 0.7, 0.1, 1) 500ms"
+                                : "opacity 120ms ease",
+                        }}
+                    >
+                        <Link
+                            href="/contact"
+                            onClick={closeMenu}
+                            className="flex items-center justify-center gap-3 w-full font-medium text-[16px] transition-colors duration-300 hover:opacity-90"
+                            style={{
+                                height: 60,
+                                backgroundColor: isDark ? "#FFFFFF" : "#000000",
+                                color: isDark ? "#000000" : "white",
+                                borderRadius: 0,
+                            }}
+                        >
+                            Start Now
+                            <svg
+                                width="10" height="18" viewBox="0 0 7 12" fill="none"
+                                stroke="#2563EB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"
+                            >
+                                <path d="M1 1l5 5-5 5" />
+                            </svg>
+                        </Link>
+                    </div>
+                )}
             </div>
         </>
     );
