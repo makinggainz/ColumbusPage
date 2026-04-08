@@ -27,7 +27,9 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
         typeof window !== "undefined" ? window.innerWidth >= NAV_BREAKPOINT : true
     );
     const [bgTriggerPassed, setBgTriggerPassed] = useState(false);
+    const [island2Reached, setIsland2Reached] = useState(false);
     const pathname = usePathname();
+    const isHomePage = pathname === "/";
     const isProductsPage = pathname === "/products/mapsgpt";
     const isUseCasesPage = pathname === "/use-cases" || pathname === "/products/enterprise";
     const isEnterprisePage = pathname === "/products/enterprise";
@@ -136,10 +138,22 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
             bgTriggerObs.observe(bgTrigger);
         }
 
+        // Homepage: show navbar border once vertical grid lines reach full opacity (~192px into Island 2)
+        const island2 = document.querySelector("[data-island-2]");
+        let island2Obs: IntersectionObserver | undefined;
+        if (island2) {
+            island2Obs = new IntersectionObserver(
+                ([entry]) => setIsland2Reached(entry.isIntersecting),
+                { threshold: 0, rootMargin: "-192px 0px 0px 0px" }
+            );
+            island2Obs.observe(island2);
+        }
+
         return () => {
             ctaObs?.disconnect();
             footerObs?.disconnect();
             bgTriggerObs?.disconnect();
+            island2Obs?.disconnect();
             if (heroTransitionHandler) window.removeEventListener("scroll", heroTransitionHandler);
             window.removeEventListener("scroll", handleScroll);
             window.removeEventListener("resize", handleResize);
@@ -328,7 +342,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                         background: isEnterprisePage && isDark ? "rgba(14, 16, 28, 0.95)" : isDark ? "rgba(6, 8, 20, 0.85)" : "rgba(255, 255, 255, 0.82)",
                         backdropFilter: "blur(20px) saturate(1.2)",
                         WebkitBackdropFilter: "blur(20px) saturate(1.2)",
-                        borderBottom: isProductsPage ? "none" : isEnterprisePage ? "1px solid rgba(255,255,255,0.10)" : isDark ? "1px solid rgba(255,255,255,0.06)" : pathname === "/" ? "1px solid rgba(37, 99, 235, 0.6)" : "1px solid rgba(0,0,0,0.06)",
+                        borderBottom: isProductsPage ? "none" : (isHomePage && !island2Reached) ? "none" : isEnterprisePage ? "1px solid rgba(255,255,255,0.10)" : isDark ? "1px solid rgba(255,255,255,0.06)" : isHomePage ? "1px solid rgba(37, 99, 235, 0.6)" : "1px solid rgba(0,0,0,0.06)",
                         opacity: (isProductsPage ? bgTriggerPassed : isCompact) && !isMenuOpen ? 1 : 0,
                         transition: `opacity ${t}`,
                     }}
@@ -474,15 +488,15 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                                 }}
                                             >Start Now</span>
                                             <svg
-                                                className="group-hover:translate-x-1"
+                                                className="transition-all duration-300 ease-in-out group-hover:translate-x-1"
                                                 width="10" height="18" viewBox="0 0 7 12" fill="none"
                                                 stroke="#2563EB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"
                                                 style={{
                                                     opacity: ctaVisible ? 1 : 0,
                                                     filter: ctaVisible ? "blur(0px)" : "blur(4px)",
                                                     transition: ctaVisible
-                                                        ? "opacity 200ms ease 500ms, transform 400ms cubic-bezier(0.22, 1, 0.36, 1), filter 300ms ease 500ms"
-                                                        : "opacity 80ms ease, transform 400ms cubic-bezier(0.22, 1, 0.36, 1), filter 80ms ease",
+                                                        ? "opacity 200ms ease 500ms, translate 300ms ease-in-out, filter 300ms ease 500ms"
+                                                        : "opacity 80ms ease, translate 300ms ease-in-out, filter 80ms ease",
                                                 }}
                                             >
                                                 <path d="M1 1l5 5-5 5" />
@@ -730,7 +744,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                             <Link
                                 href="/maps-gpt"
                                 onClick={closeMenu}
-                                className={`flex items-center justify-center gap-3 w-full font-medium text-[16px] transition-colors duration-300 hover:opacity-90 ${glassStyles.btn}`}
+                                className={`group flex items-center justify-center gap-3 w-full font-medium text-[16px] transition-colors duration-300 hover:opacity-90 ${glassStyles.btn}`}
                                 style={{
                                     height: 60,
                                     borderRadius: 999,
@@ -740,6 +754,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                             >
                                 <span className="text-black">Start Now</span>
                                 <svg
+                                    className="transition-all duration-300 ease-in-out group-hover:translate-x-1"
                                     width="10" height="18" viewBox="0 0 7 12" fill="none"
                                     stroke="#2563EB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"
                                 >
@@ -764,7 +779,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                         <Link
                             href="/contact"
                             onClick={closeMenu}
-                            className="flex items-center justify-center gap-3 w-full font-medium text-[16px] transition-colors duration-300 hover:opacity-90"
+                            className="group flex items-center justify-center gap-3 w-full font-medium text-[16px] transition-colors duration-300 hover:opacity-90"
                             style={{
                                 height: 60,
                                 backgroundColor: isDark ? "#FFFFFF" : "#000000",
@@ -774,6 +789,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                         >
                             Start Now
                             <svg
+                                className="transition-all duration-300 ease-in-out group-hover:translate-x-1"
                                 width="10" height="18" viewBox="0 0 7 12" fill="none"
                                 stroke="#2563EB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"
                             >

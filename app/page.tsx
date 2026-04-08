@@ -49,7 +49,7 @@ export default function Home() {
       <IslandGap />
 
       {/* Island 2: Columbus Pro */}
-      <div>
+      <div data-island-2>
         <SiteSelection />
         <Capabilities />
         <PartnerStrip />
