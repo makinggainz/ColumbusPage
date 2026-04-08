@@ -27,60 +27,6 @@ type CardData = {
 
 // 8 columns — wider pyramid with more cards in outer columns
 const COLUMNS: CardData[][] = [
-  // ── Col 1 — 3 cards ──
-  [
-    {
-      place: "Blue Lagoon",
-      rating: "4.8",
-      photo: PHOTOS[6],
-      response: "Top match — iconic geothermal waters, dramatic lava field setting",
-      query: "Best natural hot spring experience in Iceland?",
-      avatar: "https://i.pravatar.cc/80?img=60",
-    },
-    {
-      place: "Café de Flore",
-      rating: "4.7",
-      photo: PHOTOS[0],
-      response: "Top match — iconic terrace, legendary people-watching since 1887",
-      query: "Best iconic café in Paris for people-watching?",
-      avatar: "https://i.pravatar.cc/80?img=47",
-    },
-    {
-      place: "Riad Yasmine",
-      rating: "4.6",
-      photo: PHOTOS[4],
-      response: "Great pick — hidden courtyard pool, traditional zellige tilework",
-      query: "Most charming riad in Marrakech with a pool?",
-      avatar: "https://i.pravatar.cc/80?img=41",
-    },
-  ],
-  // ── Col 2 — 3 cards ──
-  [
-    {
-      place: "Noma",
-      rating: "4.9",
-      photo: PHOTOS[1],
-      response: "Perfect fit — 4× world's best, hyper-seasonal Nordic tasting menus",
-      query: "Where can I find the most creative tasting menu experience in Copenhagen?",
-      avatar: "https://i.pravatar.cc/80?img=32",
-    },
-    {
-      place: "Amalfi Villa",
-      rating: "4.8",
-      photo: PHOTOS[2],
-      response: "Strong match — private pool, unobstructed sea views, cliffside location",
-      query: "Best place to stay on the Amalfi Coast with a private pool and sea views?",
-      avatar: "https://i.pravatar.cc/80?img=5",
-    },
-    {
-      place: "Shibuya Sky",
-      rating: "4.6",
-      photo: PHOTOS[3],
-      response: "Great pick — highest outdoor deck in Tokyo, best at golden hour",
-      query: "Top observation deck in Tokyo for the best sunset views?",
-      avatar: "https://i.pravatar.cc/80?img=11",
-    },
-  ],
   // ── Col 3 — 4 cards ──
   [
     {
@@ -211,60 +157,6 @@ const COLUMNS: CardData[][] = [
       response: "Great pick — sleek Japanese izakaya, hidden garden terrace in Mayfair",
       query: "Best hidden Japanese restaurant in London with a garden terrace?",
       avatar: "https://i.pravatar.cc/80?img=29",
-    },
-  ],
-  // ── Col 7 — 3 cards ──
-  [
-    {
-      place: "Soneva Fushi",
-      rating: "4.9",
-      photo: PHOTOS[3],
-      response: "Perfect fit — barefoot luxury, overwater cinema, private reef snorkeling",
-      query: "Best barefoot luxury resort in the Maldives?",
-      avatar: "https://i.pravatar.cc/80?img=14",
-    },
-    {
-      place: "Berghain",
-      rating: "4.6",
-      photo: PHOTOS[7],
-      response: "Top match — legendary sound system, industrial cathedral of techno",
-      query: "Most iconic nightclub in Berlin for techno?",
-      avatar: "https://i.pravatar.cc/80?img=19",
-    },
-    {
-      place: "Villa Cimbrone",
-      rating: "4.8",
-      photo: PHOTOS[2],
-      response: "Strong match — Terrace of Infinity, sweeping Amalfi views, secret garden",
-      query: "Most romantic garden in Ravello with panoramic sea views?",
-      avatar: "https://i.pravatar.cc/80?img=46",
-    },
-  ],
-  // ── Col 8 — 3 cards ──
-  [
-    {
-      place: "Tulum Ruins",
-      rating: "4.7",
-      photo: PHOTOS[6],
-      response: "Great pick — clifftop Mayan temple, turquoise cove below, best at sunrise",
-      query: "Best Mayan ruins near the beach in Mexico?",
-      avatar: "https://i.pravatar.cc/80?img=33",
-    },
-    {
-      place: "Aman Venice",
-      rating: "4.9",
-      photo: PHOTOS[0],
-      response: "Perfect fit — 16th century palazzo, Grand Canal views, total serenity",
-      query: "Most exclusive boutique hotel in Venice on the Grand Canal?",
-      avatar: "https://i.pravatar.cc/80?img=48",
-    },
-    {
-      place: "Cala Conta",
-      rating: "4.6",
-      photo: PHOTOS[4],
-      response: "Top match — crystal water, sunset views, best beach bar on the island",
-      query: "Best beach in Ibiza for sunset drinks with crystal clear water?",
-      avatar: "https://i.pravatar.cc/80?img=55",
     },
   ],
 ];
@@ -485,18 +377,6 @@ export default function SeeWhatPeopleSection() {
         <div
           className="absolute left-0 right-0 bottom-0 pointer-events-none"
           style={{ height: "40%", background: "linear-gradient(180deg, transparent 0%, var(--hiw-bg-page) 80%)" }}
-          aria-hidden
-        />
-        {/* Left fade */}
-        <div
-          className="absolute left-0 top-0 bottom-0 pointer-events-none"
-          style={{ width: "clamp(100px, 22vw, 350px)", background: "linear-gradient(270deg, transparent 0%, var(--hiw-bg-page) 90%)" }}
-          aria-hidden
-        />
-        {/* Right fade */}
-        <div
-          className="absolute right-0 top-0 bottom-0 pointer-events-none"
-          style={{ width: "clamp(100px, 22vw, 350px)", background: "linear-gradient(90deg, transparent 0%, var(--hiw-bg-page) 90%)" }}
           aria-hidden
         />
       </div>
