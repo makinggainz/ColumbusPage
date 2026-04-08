@@ -116,13 +116,13 @@ export const GeneratedMaps = () => {
           style={{ scrollbarWidth: "none", ...anim(150) }}
         >
           {MAPS.map((item, i) => (
-            <Link key={i} href="/maps-gpt" className="group flex flex-col shrink-0 rounded-lg overflow-hidden transition-colors duration-300" style={{ width: 182, border: "1px solid var(--grid-line)", background: "rgba(37, 99, 235, 0.06)" }}
+            <Link key={i} href="/maps-gpt" className="group flex flex-col shrink-0 overflow-hidden transition-colors duration-300" style={{ width: 182, border: "1px solid var(--grid-line)", background: "rgba(37, 99, 235, 0.06)" }}
               onMouseEnter={e => (e.currentTarget.style.background = "rgba(37, 99, 235, 0.14)")}
               onMouseLeave={e => (e.currentTarget.style.background = "rgba(37, 99, 235, 0.06)")}
             >
               {/* Gradient visual */}
               <div
-                className="relative w-full flex items-center justify-center overflow-hidden rounded-lg"
+                className="relative w-full flex items-center justify-center overflow-hidden"
                 style={{ aspectRatio: "4 / 3", background: item.gradient }}
               >
                 {/* Street grid SVG */}
@@ -169,6 +169,12 @@ export const GeneratedMaps = () => {
                     <span className="font-semibold text-[12px] text-[#1D1D1F]">{item.downvotes}</span>
                   </div>
                 </div>
+
+                {/* Location badge */}
+                <div className="absolute bottom-3 left-3 flex items-center gap-1.5">
+                  <MapPin className="w-3.5 h-3.5 shrink-0 text-white" />
+                  <span className="text-[12px] text-white font-medium">{item.location}</span>
+                </div>
               </div>
 
               {/* Info */}
@@ -179,11 +185,7 @@ export const GeneratedMaps = () => {
                 <p className="text-[13px] leading-[1.5] text-[#6E6E73] line-clamp-2 mb-2">
                   {item.description}
                 </p>
-                <div className="flex items-center gap-1.5 mb-3">
-                  <MapPin className="w-3.5 h-3.5 shrink-0 text-[#6E6E73]" />
-                  <span className="text-[13px] text-[#6E6E73]">{item.location}</span>
-                </div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 mt-1">
                   <div className="flex -space-x-2">
                     {item.avatars.map((src, j) => (
                       <img

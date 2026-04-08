@@ -31,7 +31,7 @@ html {
   --accent: #0066CC;
   --container-padding: 24px;
   --page-padding: 24px; /* matches structure lines + navbar logo/hamburger edges */
-  --grid-line: rgba(37, 99, 235, 0.6);
+  --grid-line: rgba(37, 99, 235, 0.3);
 }
 
 /* Dark section lateral constraint lines — for use-cases dark sections */

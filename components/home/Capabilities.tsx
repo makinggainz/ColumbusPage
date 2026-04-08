@@ -195,6 +195,7 @@ export const Capabilities = () => {
   };
 
   return (
+    <>
     <GridSection style={{ borderTop: "none", position: "relative", zIndex: 1 }}>
       <D n={1} />
       <div ref={sectionRef} style={{ overflow: "visible", position: "relative" }}>
@@ -390,5 +391,7 @@ export const Capabilities = () => {
         </div>
       </div>
     </GridSection>
+    <div className="w-full" style={{ height: 1, backgroundColor: "var(--grid-line)" }} />
+    </>
   );
 };

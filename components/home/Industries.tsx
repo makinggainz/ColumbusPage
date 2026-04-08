@@ -58,7 +58,7 @@ export const Industries = () => {
             <Link
               key={card.label}
               href={card.href}
-              className="group flex flex-col rounded-lg overflow-hidden transition-colors duration-300 shrink-0"
+              className="group flex flex-col overflow-hidden transition-colors duration-300 shrink-0"
               style={{
                 width: card.label === "More" ? 110 : 200,
                 background: "rgba(37, 99, 235, 0.06)",
