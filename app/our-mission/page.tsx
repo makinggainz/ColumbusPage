@@ -97,10 +97,28 @@ export default function OurMissionPage() {
   const philosophy = useScrollReveal(0.1);
   const values = useScrollReveal(0.05);
 
+  const [bgOpacity, setBgOpacity] = useState(1);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollY = window.scrollY;
+      const fadeStart = 20;
+      const fadeEnd = 250;
+      if (scrollY <= fadeStart) setBgOpacity(1);
+      else if (scrollY >= fadeEnd) setBgOpacity(0);
+      else setBgOpacity(1 - (scrollY - fadeStart) / (fadeEnd - fadeStart));
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
     <main className="relative min-h-screen">
-      {/* Underwater scene — fixed fullscreen background */}
-      <UnderwaterScene />
+      {/* Underwater scene — fixed fullscreen background, fades on scroll */}
+      <div style={{ opacity: bgOpacity, transition: "opacity 0.15s ease", position: "fixed", inset: 0, zIndex: 0, pointerEvents: "none" }}>
+        <UnderwaterScene />
+      </div>
 
       <Navbar />
 

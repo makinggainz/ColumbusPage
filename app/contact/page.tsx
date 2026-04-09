@@ -8,7 +8,7 @@ import { Footer } from "@/components/layout/Footer";
 
 const BeachOceanScene = dynamic(() => import("@/components/contact/IslandScene"), { ssr: false });
 
-type Phase = "writing" | "fading" | "rolling" | "bottling" | "floating" | "done";
+type Phase = "writing" | "folding" | "bottling" | "dropping" | "floating" | "done";
 
 export default function ContactPage() {
   const [form, setForm] = useState({ firstName: "", lastName: "", email: "", role: "", message: "" });
@@ -21,15 +21,15 @@ export default function ContactPage() {
 
   const handleSend = (e: React.FormEvent) => {
     e.preventDefault();
-    setPhase("fading");
+    setPhase("folding");
   };
 
-  // Phase timer chain — extended floating duration so user watches bottle drift
+  // Phase timer chain
   useEffect(() => {
-    if (phase === "fading") { const t = setTimeout(() => setPhase("rolling"), 600); return () => clearTimeout(t); }
-    if (phase === "rolling") { const t = setTimeout(() => setPhase("bottling"), 1000); return () => clearTimeout(t); }
-    if (phase === "bottling") { const t = setTimeout(() => setPhase("floating"), 800); return () => clearTimeout(t); }
-    if (phase === "floating") { const t = setTimeout(() => setPhase("done"), 8000); return () => clearTimeout(t); }
+    if (phase === "folding")  { const t = setTimeout(() => setPhase("bottling"), 1200); return () => clearTimeout(t); }
+    if (phase === "bottling") { const t = setTimeout(() => setPhase("dropping"), 1200); return () => clearTimeout(t); }
+    if (phase === "dropping") { const t = setTimeout(() => setPhase("floating"), 1000); return () => clearTimeout(t); }
+    if (phase === "floating") { const t = setTimeout(() => setPhase("done"), 8000);    return () => clearTimeout(t); }
   }, [phase]);
 
   const inputClass = "bg-transparent border-b border-[rgba(140,120,80,0.25)] focus:border-[#8a7a5a] outline-none py-2 text-[16px] text-[#3a3020] transition-colors duration-300 w-full";
@@ -39,15 +39,53 @@ export default function ContactPage() {
       <style>{`
         @keyframes noteAppear {
           from { opacity: 0; transform: translateY(20px) scale(0.97); }
-          to { opacity: 1; transform: translateY(0) scale(1); }
+          to   { opacity: 1; transform: translateY(0) scale(1); }
         }
-        @keyframes formFadeOut {
-          from { opacity: 1; transform: translateY(0) scale(1); }
-          to { opacity: 0; transform: translateY(-30px) scale(0.95); }
+        @keyframes foldCard {
+          0% {
+            max-height: 600px;
+            width: 100%;
+            padding: 40px 36px;
+            opacity: 1;
+            border-radius: 0px;
+            transform: translateY(0) scale(1);
+          }
+          40% {
+            max-height: 120px;
+            width: 80%;
+            padding: 16px 28px;
+            opacity: 1;
+            border-radius: 8px;
+            transform: translateY(10px) scale(0.95);
+          }
+          70% {
+            max-height: 50px;
+            width: 50%;
+            padding: 10px 20px;
+            opacity: 0.85;
+            border-radius: 20px;
+            transform: translateY(30px) scale(0.7);
+          }
+          100% {
+            max-height: 30px;
+            width: 30%;
+            padding: 6px 16px;
+            opacity: 0;
+            border-radius: 24px;
+            transform: translateY(60px) scale(0.4);
+          }
         }
         @keyframes confirmFade {
-          from { opacity: 0; transform: translateY(20px); }
-          to { opacity: 1; transform: translateY(0); }
+          from { opacity: 0; transform: translateY(24px); filter: blur(2px); }
+          to   { opacity: 1; transform: translateY(0); filter: blur(0px); }
+        }
+        @keyframes subtleTextIn {
+          from { opacity: 0; transform: translateY(12px); filter: blur(1px); }
+          to   { opacity: 1; transform: translateY(0); filter: blur(0px); }
+        }
+        @keyframes footerFadeIn {
+          from { opacity: 0; }
+          to   { opacity: 1; }
         }
       `}</style>
 
@@ -63,21 +101,24 @@ export default function ContactPage() {
       {/* Content */}
       <div className="relative z-10">
 
-        {/* Heading */}
-        <div className="pt-36 md:pt-44 pb-6 md:pb-10 px-8 md:px-10 text-center">
-          <h1
-            className="font-light leading-[1.15] text-[#0A1344] text-[36px] md:text-[46px] lg:text-[56px]"
-            style={{ letterSpacing: "-0.02em", fontFamily: "Georgia, 'Times New Roman', serif" }}
-          >
-            Send us a message in a bottle.
-          </h1>
-          <p
-            className="mt-4 text-[16px] md:text-[18px]"
-            style={{ color: "rgba(58, 48, 32, 0.55)", fontFamily: "Georgia, serif", fontStyle: "italic" }}
-          >
-            Write your note, seal it, and send it to sea.
-          </p>
-        </div>
+        {/* Heading — hidden once send is pressed */}
+        {phase === "writing" && (
+          <div className="pt-36 md:pt-44 pb-6 md:pb-10 px-8 md:px-10 text-center">
+            <h1
+              className="font-light leading-[1.15] text-[#0A1344] text-[36px] md:text-[46px] lg:text-[56px]"
+              style={{ letterSpacing: "-0.02em", fontFamily: "Georgia, 'Times New Roman', serif" }}
+            >
+              Send us a message in a bottle.
+            </h1>
+            <p
+              className="mt-4 text-[16px] md:text-[18px]"
+              style={{ color: "rgba(58, 48, 32, 0.55)", fontFamily: "Georgia, serif", fontStyle: "italic" }}
+            >
+              Write your note, seal it, and send it to sea.
+            </p>
+          </div>
+        )}
+        {phase !== "writing" && <div className="pt-24 md:pt-32" />}
 
         {/* Note card / animation area */}
         <div className="flex justify-center px-5 md:px-10 pb-20 md:pb-32">
@@ -151,15 +192,15 @@ export default function ContactPage() {
               </div>
             )}
 
-            {/* ── Phase: Fading (form fades out, message remains briefly) ── */}
-            {phase === "fading" && (
+            {/* ── Phase: Folding (card shrinks, rolls up, moves forward) ── */}
+            {phase === "folding" && (
               <div
+                className="mx-auto overflow-hidden"
                 style={{
                   backgroundColor: "#faf5eb",
                   border: "1px solid rgba(160,140,100,0.2)",
                   boxShadow: "0 20px 60px rgba(0,0,0,0.08)",
-                  padding: "40px 36px",
-                  animation: "formFadeOut 0.55s cubic-bezier(0.4, 0, 0.2, 1) forwards",
+                  animation: "foldCard 1.15s cubic-bezier(0.4, 0, 0.2, 1) forwards",
                 }}
               >
                 <p style={{ fontFamily: "Georgia, serif", fontStyle: "italic", fontSize: 18, color: "#8a7a5a", marginBottom: 12 }}>
@@ -174,42 +215,24 @@ export default function ContactPage() {
               </div>
             )}
 
-            {/* ── Phases: Rolling / Bottling / Floating — canvas handles the animation ── */}
-            {(phase === "rolling" || phase === "bottling") && (
-              <div className="flex flex-col items-center text-center py-8">
-                <p
-                  style={{
-                    fontFamily: "Georgia, serif",
-                    fontStyle: "italic",
-                    fontSize: 17,
-                    color: "rgba(58, 48, 32, 0.6)",
-                    animation: "confirmFade 0.6s ease",
-                  }}
-                >
-                  {phase === "rolling" ? "Rolling up your note..." : "Sealing the bottle..."}
-                </p>
-              </div>
-            )}
-
-            {phase === "floating" && (
+            {/* ── Phases: Bottling / Dropping — canvas handles visuals, show subtle text ── */}
+            {(phase === "bottling" || phase === "dropping") && (
               <div
+                key={phase}
                 className="flex flex-col items-center text-center py-8"
-                style={{ animation: "confirmFade 0.8s ease" }}
+                style={{ animation: "subtleTextIn 0.7s cubic-bezier(0.22, 1, 0.36, 1)" }}
               >
-                <p style={{ fontFamily: "Georgia, serif", fontStyle: "italic", fontSize: 18, color: "rgba(58, 48, 32, 0.65)" }}>
-                  Bon voyage...
-                </p>
-                <p style={{ fontFamily: "Georgia, serif", fontSize: 14, color: "rgba(58, 48, 32, 0.35)", marginTop: 8 }}>
-                  Watch your bottle drift out to sea
+                <p style={{ fontFamily: "Georgia, serif", fontStyle: "italic", fontSize: 17, color: "rgba(58, 48, 32, 0.5)" }}>
+                  {phase === "bottling" ? "Sealing your message..." : "Into the waves..."}
                 </p>
               </div>
             )}
 
-            {/* ── Phase: Done (confirmation) ── */}
-            {phase === "done" && (
+            {/* ── Phase: Floating / Done — confirmation appears while bottle drifts ── */}
+            {(phase === "floating" || phase === "done") && (
               <div
                 className="flex flex-col items-center text-center py-12"
-                style={{ animation: "confirmFade 0.8s cubic-bezier(0.22, 1, 0.36, 1)" }}
+                style={{ animation: "confirmFade 1.2s cubic-bezier(0.16, 1, 0.3, 1)" }}
               >
                 <p style={{ fontFamily: "Georgia, serif", fontSize: 28, fontWeight: 600, color: "#3a3020", letterSpacing: "-0.02em", marginBottom: 12 }}>
                   Message sent.
@@ -218,7 +241,6 @@ export default function ContactPage() {
                   Your bottle is on its way. Like all good things, it may take a little time — but we&apos;ll be in touch.
                 </p>
 
-                {/* Small bottle icon */}
                 <svg className="mt-8" width="60" height="30" viewBox="0 0 200 80" fill="none" style={{ opacity: 0.3 }}>
                   <ellipse cx="90" cy="40" rx="70" ry="22" stroke="rgba(90,80,180,0.5)" strokeWidth="2" />
                   <rect x="175" y="27" width="15" height="26" rx="4" stroke="rgba(160,130,80,0.5)" strokeWidth="2" />
@@ -229,9 +251,17 @@ export default function ContactPage() {
           </div>
         </div>
 
-        <div style={{ mask: "linear-gradient(to bottom, transparent 0%, black 30%)", WebkitMask: "linear-gradient(to bottom, transparent 0%, black 30%)" }}>
-          <Footer />
-        </div>
+        {(phase === "writing" || phase === "done") && (
+          <div
+            style={{
+              mask: "linear-gradient(to bottom, transparent 0%, black 10%)",
+              WebkitMask: "linear-gradient(to bottom, transparent 0%, black 10%)",
+              animation: phase === "done" ? "footerFadeIn 1.4s cubic-bezier(0.16, 1, 0.3, 1)" : undefined,
+            }}
+          >
+            <Footer />
+          </div>
+        )}
       </div>
     </main>
   );
