@@ -48,9 +48,9 @@ export default function IslandScene() {
     if (startRef.current === 0) startRef.current = t;
     const elapsed = t - startRef.current;
 
-    // Camera — horizon at 45% so ocean fills bottom half of screen
+    // Camera
     const fov = 550;
-    const horizonY = H * 0.45;
+    const horizonY = H * 0.25;
     const camHeight = 380;
 
     const project = (wx: number, wy: number, wz: number): [number, number] | null => {

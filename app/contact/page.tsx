@@ -2,9 +2,11 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import dynamic from "next/dynamic";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
-import { BottleScene } from "@/components/layout/BottleScene";
+
+const IslandScene = dynamic(() => import("@/components/contact/IslandScene"), { ssr: false });
 
 export default function ContactPage() {
   const [form, setForm] = useState({ firstName: "", lastName: "", email: "", role: "", message: "" });
@@ -31,9 +33,7 @@ export default function ContactPage() {
   return (
     <main className="relative min-h-screen">
       {/* Ocean scene — fixed fullscreen background */}
-      <div className="fixed inset-0" style={{ zIndex: 0 }}>
-        <BottleScene visible bg="#F9F9F9" />
-      </div>
+      <IslandScene />
 
       <Navbar />
 
