@@ -3,9 +3,12 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+import dynamic from "next/dynamic";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { GridSection, GridCell, gl } from "@/components/home/ContentGrid";
+
+const ContactOceanScene = dynamic(() => import("@/components/contact/ContactOceanScene"), { ssr: false });
 
 /* ── Scroll fade-in hook ── */
 function useScrollReveal(threshold = 0.1) {
@@ -94,8 +97,43 @@ export default function OurMissionPage() {
   const philosophy = useScrollReveal(0.1);
   const values = useScrollReveal(0.05);
 
+  const [sceneOpacity, setSceneOpacity] = useState(1);
+  const [gridLineOpacity, setGridLineOpacity] = useState(0);
+  useEffect(() => {
+    const onScroll = () => {
+      const y = window.scrollY;
+      setSceneOpacity(Math.max(0, 1 - y / 100));
+      // Grid lines fade in as the scene fades out (0-100px scroll)
+      setGridLineOpacity(Math.min(1, y / 100));
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   return (
-    <main className="min-h-screen" style={{ backgroundColor: "#F9F9F9" }}>
+    <main className="mission-page min-h-screen" style={{ backgroundColor: "#F9F9F9" }}>
+      <style>{`
+        .mission-page .grid-section::before,
+        .mission-page .grid-section::after {
+          opacity: ${gridLineOpacity};
+          transition: opacity 0.1s ease;
+        }
+      `}</style>
+      {/* Ocean scene background — fades out on scroll */}
+      {sceneOpacity > 0 && (
+        <div style={{
+          position: "fixed", inset: 0, zIndex: 1,
+          opacity: sceneOpacity, willChange: "opacity", pointerEvents: "none",
+          transform: "translateY(-120px)",
+          mask: "linear-gradient(to bottom, transparent 0%, black 20%, black 75%, rgba(0,0,0,0.15) 100%), linear-gradient(to right, rgba(0,0,0,0.1) 0%, black 20%, black 80%, rgba(0,0,0,0.1) 100%)",
+          WebkitMask: "linear-gradient(to bottom, transparent 0%, black 20%, black 75%, rgba(0,0,0,0.15) 100%), linear-gradient(to right, rgba(0,0,0,0.1) 0%, black 20%, black 80%, rgba(0,0,0,0.1) 100%)",
+          maskComposite: "intersect" as unknown as string,
+          WebkitMaskComposite: "destination-in" as React.CSSProperties["WebkitMaskComposite"],
+        }}>
+          <ContactOceanScene camHeight={350} horizonPct={0.35} />
+        </div>
+      )}
+
       <Navbar />
 
       {/* ════════ 1. HERO ════════ */}
@@ -106,17 +144,19 @@ export default function OurMissionPage() {
           style={{ height: "100%", background: "linear-gradient(to bottom, rgba(0, 102, 204, 0.15) 0%, rgba(0, 102, 204, 0.08) 60%, transparent 100%)", zIndex: 1 }}
           aria-hidden
         />
-        {/* Grid pattern */}
-        <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 0 }}>
+        {/* Grid pattern — fades out before ocean mesh */}
+        <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 2 }}>
           <div className="max-w-[1287px] mx-auto h-full" style={{
             backgroundImage: `linear-gradient(to right, rgba(37,99,235,0.08) 1px, transparent 1px), linear-gradient(to bottom, rgba(37,99,235,0.08) 1px, transparent 1px)`,
             backgroundSize: "80px 80px",
-            mask: "linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%)",
-            WebkitMask: "linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%)",
+            mask: "linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%), linear-gradient(to bottom, black 0%, black 55%, transparent 75%)",
+            WebkitMask: "linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%), linear-gradient(to bottom, black 0%, black 55%, transparent 75%)",
+            maskComposite: "intersect",
+            WebkitMaskComposite: "destination-in" as React.CSSProperties["WebkitMaskComposite"],
           }} />
         </div>
 
-        <div ref={hero.ref} className="relative z-10 mx-auto w-full pt-40 md:pt-52 pb-24 md:pb-32 flex flex-col items-center text-center px-8 md:px-10" style={{ maxWidth: 1287 }}>
+        <div ref={hero.ref} className="relative z-10 mx-auto w-full pt-40 md:pt-52 pb-40 md:pb-56 flex flex-col items-center text-center px-8 md:px-10" style={{ maxWidth: 1287 }}>
           <h1
             className="font-light leading-[1.15] text-[#0A1344] text-[39px] md:text-[49px] lg:text-[61px]"
             style={{ letterSpacing: "-0.02em", ...hero.anim(0) }}
@@ -133,6 +173,11 @@ export default function OurMissionPage() {
       </div>
 
       {/* ════════ 2. MISSION & VISION ════════ */}
+      <div style={{
+        position: "relative",
+        zIndex: 2,
+        background: "linear-gradient(to bottom, transparent 0%, #F9F9F9 25%)",
+      }}>
       <GridSection className="bg-transparent! grid-section-fade-top">
         <div ref={mission.ref} style={{ borderBottom: gl }}>
 
@@ -165,6 +210,7 @@ export default function OurMissionPage() {
 
         </div>
       </GridSection>
+      </div>
 
       {/* ════════ 3. GLOBE CENTERPIECE ════════ */}
       <div ref={globe.ref} className="flex flex-col items-center py-20 md:py-32 px-8 overflow-hidden">
