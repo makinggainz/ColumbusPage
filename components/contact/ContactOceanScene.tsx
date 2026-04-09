@@ -15,52 +15,113 @@ function getWaveHeight(wx: number, wz: number, t: number, drift: number, driftZ:
   );
 }
 
-/* ── Curved island shoreline — returns how far inland a point is (>0 = on land) ── */
-function getInland(wx: number, wz: number, islandCx: number, islandCz: number, islandR: number) {
-  // Elliptical island centered at (islandCx, islandCz)
-  const dx = (wx - islandCx) / (islandR * 1.3); // wider than tall
-  const dz = (wz - islandCz) / islandR;
-  const dist = Math.sqrt(dx * dx + dz * dz);
-  // Add coastline variation for organic shape
-  const coastNoise = Math.sin(Math.atan2(dz, dx) * 5) * 0.08 + Math.sin(Math.atan2(dz, dx) * 3 + 1) * 0.05;
-  return (1 - dist + coastNoise) * islandR;
+/* ── Natural mountain island — multiple peaks, ridges, spurs ── */
+const PEAK_H = 300;
+const NUM_CONTOUR_LINES = 24;
+
+// Multiple peaks/sub-peaks that blend together to form a natural mountain mass
+// Each: [offsetX, offsetZ, radius, height, steepness]
+const PEAKS: [number, number, number, number, number][] = [
+  [0, 0, 450, 300, 0.9],          // main summit — steep walls
+  [-160, 100, 350, 220, 0.85],    // western shoulder
+  [200, -80, 320, 190, 0.8],      // eastern ridge
+  [-80, -250, 280, 140, 0.75],    // northern spur
+  [100, 280, 290, 120, 0.7],      // southern spur
+  [-350, -60, 240, 90, 0.7],      // far western foothill
+  [320, 160, 220, 80, 0.65],      // SE foothill
+  [-200, 300, 230, 70, 0.7],      // SW foothill
+  [50, -380, 200, 65, 0.65],      // far northern outlier
+  [-300, 200, 190, 55, 0.6],      // far SW outlier
+  [350, -120, 180, 50, 0.6],      // far NE outlier
+];
+
+// Ridgelines connecting peaks — adds height along linear features
+// Each: [x1, z1, x2, z2, width, height]
+const RIDGES: [number, number, number, number, number, number][] = [
+  [0, 0, -160, 100, 120, 100],      // summit to western shoulder
+  [0, 0, 200, -80, 110, 90],        // summit to eastern ridge
+  [0, 0, -80, -250, 100, 65],       // summit to north spur
+  [0, 0, 100, 280, 100, 60],        // summit to south spur
+  [-160, 100, -350, -60, 85, 45],   // western shoulder to far west
+  [200, -80, 320, 160, 80, 40],     // east ridge to SE foothill
+  [-80, -250, 50, -380, 70, 35],    // north spur to far north
+  [100, 280, -200, 300, 75, 30],    // south spur to SW
+  [200, -80, 350, -120, 70, 30],    // east ridge to NE outlier
+];
+
+function getIslandH(wx: number, wz: number, cx: number, cz: number, _R: number): number {
+  const dx = wx - cx, dz = wz - cz;
+  let maxH = 0;
+
+  // Blend peaks using smooth max
+  for (const [ox, oz, r, h] of PEAKS) {
+    const pdx = dx - ox, pdz = dz - oz;
+    const dist = Math.sqrt(pdx * pdx + pdz * pdz);
+    if (dist >= r) continue;
+    const t = 1 - dist / r;
+    // easeInOutCubic: gentle base, steep mid, gentle summit
+    const eased = t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+    const peakH = eased * h;
+    // Smooth-max blend: take the higher value but blend overlap areas
+    maxH = maxH + peakH - maxH * peakH / (PEAK_H * 1.2);
+  }
+
+  // Ridge contributions
+  for (const [x1, z1, x2, z2, w, h] of RIDGES) {
+    const rx1 = x1, rz1 = z1, rx2 = x2, rz2 = z2;
+    const rdx = rx2 - rx1, rdz = rz2 - rz1;
+    const len = Math.sqrt(rdx * rdx + rdz * rdz);
+    if (len === 0) continue;
+    // Project point onto ridge line
+    const t = Math.max(0, Math.min(1, ((dx - rx1) * rdx + (dz - rz1) * rdz) / (len * len)));
+    const closestX = rx1 + rdx * t;
+    const closestZ = rz1 + rdz * t;
+    const perpDist = Math.sqrt((dx - closestX) ** 2 + (dz - closestZ) ** 2);
+    if (perpDist >= w) continue;
+    const crossProfile = 1 - perpDist / w;
+    // Ridge tapers at ends
+    const endTaper = Math.min(1, Math.min(t, 1 - t) * 5);
+    const ridgeH = crossProfile * crossProfile * h * endTaper;
+    maxH = Math.max(maxH, maxH + ridgeH * 0.5);
+  }
+
+  // Terrain roughness — increases with elevation
+  if (maxH > 5) {
+    const roughness =
+      Math.sin(wx * 0.007 + wz * 0.005) * 5 +
+      Math.sin(wz * 0.013 + wx * 0.003) * 3 +
+      Math.sin(wx * 0.019 - wz * 0.011) * 2;
+    maxH += roughness * Math.min(1, maxH / 60);
+  }
+
+  return Math.max(0, maxH);
 }
 
-/* ── Shore height — progressive elevation inland ── */
-function getShoreHeight(wx: number, wz: number, t: number, drift: number, driftZ: number, islandCx: number, islandCz: number, islandR: number) {
-  const inland = getInland(wx, wz, islandCx, islandCz, islandR);
+function getInland(wx: number, wz: number, cx: number, cz: number, R: number) {
+  return getIslandH(wx, wz, cx, cz, R);
+}
 
-  // Directional bias: back-right side of island is taller
-  // (positive wx and negative wz relative to center = back-right)
-  const dirBias = 1 + Math.max(0, (wx - islandCx) / (islandR * 1.5)) * 0.6
-                    + Math.max(0, (islandCz - wz) / (islandR * 2)) * 0.3;
-
-  if (inland > islandR * 0.5) {
-    // Peak — tall central mountains
-    const peakFactor = Math.min(1, (inland - islandR * 0.5) / (islandR * 0.3));
-    const baseH = (35 + peakFactor * 70) * dirBias;
-    return baseH + Math.sin(wx * 0.004 + wz * 0.005) * 8 + Math.sin(wz * 0.008) * 5;
-  } else if (inland > islandR * 0.08) {
-    // Forested hills — steady climb, always higher than beach
-    const hillProgress = (inland - islandR * 0.08) / (islandR * 0.42);
-    const baseH = 6 + hillProgress * hillProgress * 50 * dirBias;
-    const noise = Math.sin(wx * 0.006 + wz * 0.005) * 6 * hillProgress
-                + Math.sin(wz * 0.012 + wx * 0.003) * 4 * hillProgress;
-    return baseH + noise;
-  } else if (inland > 0) {
-    // Beach — flat sandy strip, clearly distinct (stays low, ~0-4 units)
-    const beachProgress = inland / (islandR * 0.08);
-    return beachProgress * 4 + Math.sin(wz * 0.015 + wx * 0.008) * beachProgress * 0.8;
-  } else {
-    // Ocean — waves smoothly dampen toward shore
-    const waveH = getWaveHeight(wx, wz, t, drift, driftZ);
-    const distFromShore = -inland;
-    if (distFromShore < 120) {
-      const dampen = distFromShore / 120;
-      return waveH * dampen * dampen;
-    }
-    return waveH;
-  }
+function getShoreHeight(wx: number, wz: number, t: number, drift: number, driftZ: number, cx: number, cz: number, R: number) {
+  const h = getIslandH(wx, wz, cx, cz, R);
+  if (h > 0) return h;
+  // Ocean with dampening near shore — probe nearby to detect proximity to land
+  const waveH = getWaveHeight(wx, wz, t, drift, driftZ);
+  const probe = 40;
+  const nearH = Math.max(
+    getIslandH(wx + probe, wz, cx, cz, R),
+    getIslandH(wx - probe, wz, cx, cz, R),
+    getIslandH(wx, wz + probe, cx, cz, R),
+    getIslandH(wx, wz - probe, cx, cz, R),
+  );
+  if (nearH > 0) return waveH * 0.25;
+  const nearH2 = Math.max(
+    getIslandH(wx + 100, wz, cx, cz, R),
+    getIslandH(wx - 100, wz, cx, cz, R),
+    getIslandH(wx, wz + 100, cx, cz, R),
+    getIslandH(wx, wz - 100, cx, cz, R),
+  );
+  if (nearH2 > 0) return waveH * 0.6;
+  return waveH;
 }
 
 /* ── 3D rotation helpers (same as Hero) ── */
@@ -257,63 +318,126 @@ export default function ContactOceanScene({ camHeight, horizonPct, fieldOfView, 
     }
 
     const rgb = "20,60,160";
-    const landRgb = "90,65,30"; // warmer, more visible brown
-    const beachRgb = "140,120,70"; // sandy yellow-brown for beach
-    // Shore edge X for the facing side of the island (closest point to camera-left)
-    const SHORE_EDGE = ISLAND_CX - ISLAND_R * 1.3; // actual ellipse edge at center z
+    const SHORE_EDGE = ISLAND_CX - ISLAND_R * 1.3;
 
-    // Horizontal lines — style based on curved inland distance
+    // ── Ocean mesh (only water, skip land) ──
     for (let r = 0; r < ROWS; r++) {
       const depthT = r / ROWS;
+      const alpha = 0.06 + depthT * 0.18;
+      ctx.strokeStyle = `rgba(${rgb},${alpha.toFixed(3)})`;
+      ctx.lineWidth = 0.6 + depthT * 1.0;
       ctx.beginPath(); let started = false;
       for (let c = 0; c < COLS; c++) {
-        const p = grid[r][c]; if (!p) continue;
         const wx = (c - COLS/2) * CELL, wz = (r+2) * CELL;
-        const il = getIL(wx, wz);
-        const isBeach = il > 0 && il < ISLAND_R * 0.08;
-        const isForest = il >= ISLAND_R * 0.08 && il < ISLAND_R * 0.5;
-        const isPeak = il >= ISLAND_R * 0.5;
-        const isLand = il > 0;
-
-        let alpha: number, color: string;
-        if (isPeak) { alpha = 0.18 + depthT * 0.15; color = `rgba(50,80,50,${alpha.toFixed(3)})`; }
-        else if (isForest) { alpha = 0.14 + depthT * 0.12; color = `rgba(50,75,35,${alpha.toFixed(3)})`; }
-        else if (isBeach) { alpha = 0.15 + depthT * 0.1; color = `rgba(${beachRgb},${alpha.toFixed(3)})`; }
-        else { alpha = 0.06 + depthT * 0.18; color = `rgba(${rgb},${alpha.toFixed(3)})`; }
-        ctx.strokeStyle = color;
-        ctx.lineWidth = isLand ? 0.6 + depthT * 0.8 : 0.6 + depthT * 1.0;
+        const isLand = getIslandH(wx, wz, ISLAND_CX, ISLAND_CZ, ISLAND_R) > 0;
+        const p = grid[r][c];
+        if (!p || isLand) { started = false; continue; }
         if (!started) { ctx.moveTo(p.sx, p.sy); started = true; } else ctx.lineTo(p.sx, p.sy);
       }
       ctx.stroke();
     }
-
-    // Vertical lines
+    // Ocean vertical lines (skip land)
     for (let c = 0; c < COLS; c += 2) {
       ctx.beginPath(); let started = false;
       for (let r = 0; r < ROWS; r++) {
-        const p = grid[r][c]; if (!p) continue;
         const wx = (c - COLS/2) * CELL, wz = (r+2) * CELL;
-        const il = getIL(wx, wz);
-        const isLand = il > 0;
+        const isLand = getIslandH(wx, wz, ISLAND_CX, ISLAND_CZ, ISLAND_R) > 0;
+        const p = grid[r][c];
+        if (!p || isLand) { started = false; continue; }
         const depthT = r / ROWS;
-        const alpha = isLand ? 0.06 + depthT * 0.1 : 0.03 + depthT * 0.1;
-        ctx.strokeStyle = isLand ? `rgba(${landRgb},${alpha.toFixed(3)})` : `rgba(${rgb},${alpha.toFixed(3)})`;
+        const alpha = 0.03 + depthT * 0.1;
+        ctx.strokeStyle = `rgba(${rgb},${alpha.toFixed(3)})`;
         ctx.lineWidth = 0.4 + depthT * 0.5;
         if (!started) { ctx.moveTo(p.sx, p.sy); started = true; } else ctx.lineTo(p.sx, p.sy);
       }
       ctx.stroke();
     }
 
+    const contourLineColor = rgb; // same blue as ocean mesh
+
+    // ── Opaque island fill — solid background so ocean doesn't show through ──
+    for (let r = 0; r < ROWS - 1; r++) {
+      for (let c = 0; c < COLS - 1; c++) {
+        const wx = (c - COLS/2) * CELL, wz = (r+2) * CELL;
+        if (getIslandH(wx, wz, ISLAND_CX, ISLAND_CZ, ISLAND_R) <= 0) continue;
+        const p = grid[r][c], pR = grid[r][c+1], pB = grid[r+1][c], pBR = grid[r+1][c+1];
+        if (!p || !pR || !pB || !pBR) continue;
+        ctx.fillStyle = "#F9F9F9";
+        ctx.beginPath();
+        ctx.moveTo(p.sx, p.sy);
+        ctx.lineTo(pR.sx, pR.sy);
+        ctx.lineTo(pBR.sx, pBR.sy);
+        ctx.lineTo(pB.sx, pB.sy);
+        ctx.closePath();
+        ctx.fill();
+      }
+    }
+
+    // ── Contour lines — smooth closed curves traced radially from the peak ──
+    const peakWx = ISLAND_CX, peakWz = ISLAND_CZ;
+    for (let line = 1; line <= NUM_CONTOUR_LINES; line++) {
+      const targetH = (line / NUM_CONTOUR_LINES) * PEAK_H;
+      // Thicker lines every 5th contour (index lines on real topo maps)
+      const isIndex = line % 5 === 0;
+      const lineAlpha = isIndex ? 0.45 : 0.25;
+      const lineWidth = isIndex ? 1.6 : 0.8;
+
+      // Radial binary search: for each angle from peak, find where height = targetH
+      const points: { sx: number; sy: number }[] = [];
+      const segments = 140;
+      for (let s = 0; s < segments; s++) {
+        const angle = (s / segments) * Math.PI * 2;
+        const dirX = Math.cos(angle), dirZ = Math.sin(angle);
+
+        let lo = 0, hi = ISLAND_R * 1.6;
+        let found = false;
+        for (let iter = 0; iter < 22; iter++) {
+          const mid = (lo + hi) / 2;
+          const wx = peakWx + dirX * mid;
+          const wz = peakWz + dirZ * mid;
+          const h = getIslandH(wx, wz, ISLAND_CX, ISLAND_CZ, ISLAND_R);
+          if (h > targetH) lo = mid;
+          else { hi = mid; found = true; }
+        }
+        if (found && hi < ISLAND_R * 1.5) {
+          const r = (lo + hi) / 2;
+          const wx = peakWx + dirX * r;
+          const wz = peakWz + dirZ * r;
+          const p = project(wx, targetH, wz);
+          if (p) points.push(p);
+        }
+      }
+
+      if (points.length > 15) {
+        ctx.beginPath();
+        ctx.moveTo(points[0].sx, points[0].sy);
+        for (let i = 1; i < points.length; i++) {
+          ctx.lineTo(points[i].sx, points[i].sy);
+        }
+        ctx.closePath();
+        ctx.strokeStyle = `rgba(${contourLineColor},${lineAlpha.toFixed(3)})`;
+        ctx.lineWidth = lineWidth;
+        ctx.stroke();
+      }
+    }
+
 
     // ── Trees — many, scattered across island ──
     const treePositions = [
-      // Beach palms
-      { x: ISLAND_CX - 280, z: ISLAND_CZ - 100, h: 45, lean: -10 },
-      { x: ISLAND_CX - 250, z: ISLAND_CZ + 80, h: 50, lean: 8 },
-      { x: ISLAND_CX - 300, z: ISLAND_CZ + 200, h: 42, lean: -12 },
-      { x: ISLAND_CX - 260, z: ISLAND_CZ - 200, h: 48, lean: 6 },
-      { x: ISLAND_CX - 220, z: ISLAND_CZ, h: 52, lean: -8 },
-      // Mid-island forest
+      // Coastal palms — scattered around the perimeter
+      { x: ISLAND_CX - 320, z: ISLAND_CZ - 100, h: 45, lean: -10 },
+      { x: ISLAND_CX - 290, z: ISLAND_CZ + 80, h: 50, lean: 8 },
+      { x: ISLAND_CX - 340, z: ISLAND_CZ + 200, h: 42, lean: -12 },
+      { x: ISLAND_CX - 300, z: ISLAND_CZ - 200, h: 48, lean: 6 },
+      { x: ISLAND_CX - 260, z: ISLAND_CZ, h: 52, lean: -8 },
+      { x: ISLAND_CX - 280, z: ISLAND_CZ + 300, h: 40, lean: 10 },
+      { x: ISLAND_CX - 250, z: ISLAND_CZ - 300, h: 44, lean: -7 },
+      { x: ISLAND_CX + 200, z: ISLAND_CZ + 280, h: 42, lean: 9 },
+      { x: ISLAND_CX + 280, z: ISLAND_CZ + 100, h: 38, lean: -6 },
+      { x: ISLAND_CX + 250, z: ISLAND_CZ - 150, h: 40, lean: 5 },
+      { x: ISLAND_CX - 100, z: ISLAND_CZ + 350, h: 36, lean: 11 },
+      { x: ISLAND_CX + 50, z: ISLAND_CZ - 350, h: 38, lean: -9 },
+      // Mid-island forest — dense cluster
       { x: ISLAND_CX - 100, z: ISLAND_CZ - 150, h: 60, lean: -5 },
       { x: ISLAND_CX - 50, z: ISLAND_CZ + 50, h: 65, lean: 4 },
       { x: ISLAND_CX, z: ISLAND_CZ - 80, h: 58, lean: -8 },
@@ -321,13 +445,27 @@ export default function ContactOceanScene({ camHeight, horizonPct, fieldOfView, 
       { x: ISLAND_CX + 50, z: ISLAND_CZ + 100, h: 62, lean: -3 },
       { x: ISLAND_CX - 30, z: ISLAND_CZ - 250, h: 50, lean: 10 },
       { x: ISLAND_CX + 100, z: ISLAND_CZ - 50, h: 55, lean: -6 },
-      // Deep interior
+      { x: ISLAND_CX - 150, z: ISLAND_CZ + 120, h: 58, lean: 5 },
+      { x: ISLAND_CX + 30, z: ISLAND_CZ + 200, h: 52, lean: -4 },
+      { x: ISLAND_CX - 180, z: ISLAND_CZ - 60, h: 56, lean: 7 },
+      { x: ISLAND_CX + 120, z: ISLAND_CZ + 180, h: 50, lean: -8 },
+      { x: ISLAND_CX - 60, z: ISLAND_CZ - 120, h: 60, lean: 3 },
+      // Interior / ridgeline trees
       { x: ISLAND_CX + 150, z: ISLAND_CZ, h: 68, lean: -4 },
       { x: ISLAND_CX + 100, z: ISLAND_CZ + 150, h: 60, lean: 5 },
       { x: ISLAND_CX + 200, z: ISLAND_CZ - 100, h: 55, lean: -8 },
       { x: ISLAND_CX, z: ISLAND_CZ + 250, h: 50, lean: 10 },
       { x: ISLAND_CX + 50, z: ISLAND_CZ - 200, h: 58, lean: -5 },
       { x: ISLAND_CX + 250, z: ISLAND_CZ + 50, h: 50, lean: 6 },
+      { x: ISLAND_CX + 180, z: ISLAND_CZ - 200, h: 48, lean: -7 },
+      { x: ISLAND_CX - 200, z: ISLAND_CZ + 250, h: 45, lean: 8 },
+      { x: ISLAND_CX + 300, z: ISLAND_CZ - 50, h: 42, lean: -5 },
+      { x: ISLAND_CX - 250, z: ISLAND_CZ - 150, h: 46, lean: 6 },
+      // Distant outlier trees
+      { x: ISLAND_CX - 350, z: ISLAND_CZ + 100, h: 35, lean: -10 },
+      { x: ISLAND_CX + 320, z: ISLAND_CZ + 200, h: 34, lean: 8 },
+      { x: ISLAND_CX + 100, z: ISLAND_CZ - 320, h: 36, lean: -6 },
+      { x: ISLAND_CX - 200, z: ISLAND_CZ - 280, h: 38, lean: 9 },
     ];
     for (const tp of treePositions) {
       if (getIL(tp.x, tp.z) > 30) { // only draw trees clearly on land
