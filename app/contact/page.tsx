@@ -48,12 +48,35 @@ export default function ContactPage() {
     <main className="relative min-h-screen" style={{ backgroundColor: "#F9F9F9" }}>
       <Navbar />
 
-      {/* Accent gradient */}
+      {/* Animated accent gradient */}
+      <style>{`
+        @keyframes contact-aurora {
+          0%   { background-position: 0% 50%; }
+          50%  { background-position: 100% 50%; }
+          100% { background-position: 0% 50%; }
+        }
+      `}</style>
       <div
         className="absolute left-0 right-0 top-0 pointer-events-none"
-        style={{ height: "35%", background: "linear-gradient(to bottom, rgba(0, 102, 204, 0.15) 0%, rgba(0, 102, 204, 0.08) 60%, transparent 100%)", zIndex: 1 }}
+        style={{
+          height: "35%",
+          background: "radial-gradient(ellipse 60% 80% at 40% 30%, rgba(0, 102, 204, 0.18) 0%, rgba(0, 102, 204, 0.06) 50%, transparent 80%)",
+          backgroundSize: "200% 100%",
+          animation: "contact-aurora 25s ease-in-out infinite",
+          zIndex: 1,
+        }}
         aria-hidden
       />
+
+      {/* Grid pattern */}
+      <div className="absolute left-0 right-0 top-0 pointer-events-none" style={{ height: 350, zIndex: 0 }} aria-hidden>
+        <div className="max-w-[1287px] mx-auto h-full" style={{
+          backgroundImage: `linear-gradient(to right, rgba(37,99,235,0.08) 1px, transparent 1px), linear-gradient(to bottom, rgba(37,99,235,0.08) 1px, transparent 1px)`,
+          backgroundSize: "80px 80px",
+          mask: "linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%)",
+          WebkitMask: "linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%)",
+        }} />
+      </div>
 
       {/* Subtle side structure lines */}
       <div className="absolute top-0 bottom-0 left-0 right-0 pointer-events-none" style={{ zIndex: 0 }} aria-hidden>
