@@ -58,17 +58,17 @@ export default function ContactPage() {
         <div className="grid md:grid-cols-[1fr_2fr] gap-8 md:gap-10 items-start">
 
           {/* ──── Left column: How can we help? ──── */}
-          <div style={{ border: "1px solid rgba(0,0,0,0.08)" }}>
+          <div style={{ border: "1px solid rgba(0,0,0,0.06)", backgroundColor: "rgba(255,255,255,0.25)", backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)" }}>
 
             {/* Header */}
-            <div className="px-8 py-8" style={{ borderBottom: "1px solid rgba(0,0,0,0.08)" }}>
+            <div className="px-8 py-8" style={{ borderBottom: "1px solid rgba(0,0,0,0.06)" }}>
               <h2 className="text-[24px] md:text-[28px] font-medium text-[#1D1D1F]" style={{ letterSpacing: "-0.02em" }}>
                 How can we help?
               </h2>
             </div>
 
             {/* Support */}
-            <div className="px-8 py-8" style={{ borderBottom: "1px solid rgba(0,0,0,0.08)" }}>
+            <div className="px-8 py-8" style={{ borderBottom: "1px solid rgba(0,0,0,0.06)" }}>
               <div className="flex items-center gap-2 mb-4">
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                   <circle cx="10" cy="10" r="9" stroke="#2563EB" strokeWidth="1.2" />
@@ -88,7 +88,7 @@ export default function ContactPage() {
             </div>
 
             {/* Press and events */}
-            <div className="px-8 py-8" style={{ borderBottom: "1px solid rgba(0,0,0,0.08)" }}>
+            <div className="px-8 py-8" style={{ borderBottom: "1px solid rgba(0,0,0,0.06)" }}>
               <div className="flex items-center gap-2 mb-4">
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                   <rect x="2" y="2" width="16" height="16" rx="2" stroke="#2563EB" strokeWidth="1.2" />
@@ -105,7 +105,7 @@ export default function ContactPage() {
             </div>
 
             {/* Careers */}
-            <div className="px-8 py-8" style={{ borderBottom: "1px solid rgba(0,0,0,0.08)" }}>
+            <div className="px-8 py-8" style={{ borderBottom: "1px solid rgba(0,0,0,0.06)" }}>
               <div className="flex items-center gap-2 mb-4">
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                   <circle cx="10" cy="10" r="9" stroke="#2563EB" strokeWidth="1.2" />
@@ -140,7 +140,7 @@ export default function ContactPage() {
           </div>
 
           {/* ──── Right column: Contact sales form ──── */}
-          <div style={{ border: "1px solid rgba(0,0,0,0.08)", backgroundColor: "rgba(37, 99, 235, 0.03)" }}>
+          <div style={{ border: "1px solid rgba(0,0,0,0.06)", backgroundColor: "rgba(255,255,255,0.25)", backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)" }}>
             <div className="px-8 py-8 md:px-10 md:py-10">
               <h2 className="text-[24px] md:text-[28px] font-medium text-[#1D1D1F] mb-10" style={{ letterSpacing: "-0.02em" }}>
                 Contact sales.
