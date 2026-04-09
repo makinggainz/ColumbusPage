@@ -6,7 +6,7 @@ import dynamic from "next/dynamic";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 
-const IslandScene = dynamic(() => import("@/components/contact/IslandScene"), { ssr: false });
+const BeachOceanScene = dynamic(() => import("@/components/contact/IslandScene"), { ssr: false });
 
 type Phase = "writing" | "fading" | "rolling" | "bottling" | "floating" | "done";
 
@@ -24,12 +24,12 @@ export default function ContactPage() {
     setPhase("fading");
   };
 
-  // Phase timer chain
+  // Phase timer chain — extended floating duration so user watches bottle drift
   useEffect(() => {
     if (phase === "fading") { const t = setTimeout(() => setPhase("rolling"), 600); return () => clearTimeout(t); }
-    if (phase === "rolling") { const t = setTimeout(() => setPhase("bottling"), 800); return () => clearTimeout(t); }
-    if (phase === "bottling") { const t = setTimeout(() => setPhase("floating"), 700); return () => clearTimeout(t); }
-    if (phase === "floating") { const t = setTimeout(() => setPhase("done"), 1200); return () => clearTimeout(t); }
+    if (phase === "rolling") { const t = setTimeout(() => setPhase("bottling"), 1000); return () => clearTimeout(t); }
+    if (phase === "bottling") { const t = setTimeout(() => setPhase("floating"), 800); return () => clearTimeout(t); }
+    if (phase === "floating") { const t = setTimeout(() => setPhase("done"), 8000); return () => clearTimeout(t); }
   }, [phase]);
 
   const inputClass = "bg-transparent border-b border-[rgba(140,120,80,0.25)] focus:border-[#8a7a5a] outline-none py-2 text-[16px] text-[#3a3020] transition-colors duration-300 w-full";
@@ -41,13 +41,9 @@ export default function ContactPage() {
           from { opacity: 0; transform: translateY(20px) scale(0.97); }
           to { opacity: 1; transform: translateY(0) scale(1); }
         }
-        @keyframes bottleFadeIn {
-          from { opacity: 0; transform: scale(0.8); }
-          to { opacity: 1; transform: scale(1); }
-        }
-        @keyframes floatAway {
-          0% { opacity: 1; transform: translateY(0) scale(1); }
-          100% { opacity: 0; transform: translateY(200px) scale(0.3); }
+        @keyframes formFadeOut {
+          from { opacity: 1; transform: translateY(0) scale(1); }
+          to { opacity: 0; transform: translateY(-30px) scale(0.95); }
         }
         @keyframes confirmFade {
           from { opacity: 0; transform: translateY(20px); }
@@ -55,8 +51,12 @@ export default function ContactPage() {
         }
       `}</style>
 
-      {/* Underwater scene background */}
-      <IslandScene />
+      {/* Ocean scene background */}
+      <BeachOceanScene
+        phase={phase}
+        messageText={form.message}
+        senderName={form.firstName}
+      />
 
       <Navbar />
 
@@ -151,7 +151,7 @@ export default function ContactPage() {
               </div>
             )}
 
-            {/* ── Phase: Fading (fields disappear, message remains) ── */}
+            {/* ── Phase: Fading (form fades out, message remains briefly) ── */}
             {phase === "fading" && (
               <div
                 style={{
@@ -159,7 +159,7 @@ export default function ContactPage() {
                   border: "1px solid rgba(160,140,100,0.2)",
                   boxShadow: "0 20px 60px rgba(0,0,0,0.08)",
                   padding: "40px 36px",
-                  transition: "all 0.5s ease",
+                  animation: "formFadeOut 0.55s cubic-bezier(0.4, 0, 0.2, 1) forwards",
                 }}
               >
                 <p style={{ fontFamily: "Georgia, serif", fontStyle: "italic", fontSize: 18, color: "#8a7a5a", marginBottom: 12 }}>
@@ -174,65 +174,38 @@ export default function ContactPage() {
               </div>
             )}
 
-            {/* ── Phase: Rolling (note shrinks to a strip) ── */}
-            {phase === "rolling" && (
-              <div
-                style={{
-                  backgroundColor: "#faf5eb",
-                  border: "1px solid rgba(160,140,100,0.2)",
-                  boxShadow: "0 10px 30px rgba(0,0,0,0.06)",
-                  padding: "12px 36px",
-                  height: 40,
-                  overflow: "hidden",
-                  transition: "all 0.7s cubic-bezier(0.22, 1, 0.36, 1)",
-                  display: "flex", alignItems: "center", justifyContent: "center",
-                  borderRadius: 20,
-                }}
-              >
-                <p style={{ fontFamily: "Georgia, serif", fontStyle: "italic", fontSize: 13, color: "#8a7a5a", whiteSpace: "nowrap" }}>
-                  ✉ Your message
+            {/* ── Phases: Rolling / Bottling / Floating — canvas handles the animation ── */}
+            {(phase === "rolling" || phase === "bottling") && (
+              <div className="flex flex-col items-center text-center py-8">
+                <p
+                  style={{
+                    fontFamily: "Georgia, serif",
+                    fontStyle: "italic",
+                    fontSize: 17,
+                    color: "rgba(58, 48, 32, 0.6)",
+                    animation: "confirmFade 0.6s ease",
+                  }}
+                >
+                  {phase === "rolling" ? "Rolling up your note..." : "Sealing the bottle..."}
                 </p>
               </div>
             )}
 
-            {/* ── Phase: Bottling (SVG bottle wraps around the note) ── */}
-            {phase === "bottling" && (
-              <div className="flex justify-center" style={{ animation: "bottleFadeIn 0.6s cubic-bezier(0.22, 1, 0.36, 1)" }}>
-                <svg width="200" height="80" viewBox="0 0 200 80" fill="none">
-                  {/* Bottle body */}
-                  <ellipse cx="90" cy="40" rx="70" ry="22" stroke="rgba(90,80,180,0.35)" strokeWidth="1.5" />
-                  {/* Neck */}
-                  <line x1="160" y1="30" x2="175" y2="30" stroke="rgba(90,80,180,0.35)" strokeWidth="1.5" />
-                  <line x1="160" y1="50" x2="175" y2="50" stroke="rgba(90,80,180,0.35)" strokeWidth="1.5" />
-                  {/* Cork */}
-                  <rect x="175" y="27" width="15" height="26" rx="4" stroke="rgba(160,130,80,0.5)" strokeWidth="1.5" fill="rgba(160,130,80,0.1)" />
-                  {/* Scroll inside */}
-                  <line x1="40" y1="35" x2="140" y2="35" stroke="rgba(180,160,120,0.45)" strokeWidth="1" />
-                  <line x1="40" y1="40" x2="140" y2="40" stroke="rgba(180,160,120,0.45)" strokeWidth="1" />
-                  <line x1="40" y1="45" x2="140" y2="45" stroke="rgba(180,160,120,0.45)" strokeWidth="1" />
-                  {/* Glass highlight */}
-                  <line x1="50" y1="24" x2="130" y2="24" stroke="rgba(140,135,200,0.2)" strokeWidth="2" />
-                </svg>
-              </div>
-            )}
-
-            {/* ── Phase: Floating (bottle drops toward ocean) ── */}
             {phase === "floating" && (
-              <div className="flex justify-center" style={{ animation: "floatAway 1.1s cubic-bezier(0.4, 0, 0.2, 1) forwards" }}>
-                <svg width="200" height="80" viewBox="0 0 200 80" fill="none">
-                  <ellipse cx="90" cy="40" rx="70" ry="22" stroke="rgba(90,80,180,0.35)" strokeWidth="1.5" />
-                  <line x1="160" y1="30" x2="175" y2="30" stroke="rgba(90,80,180,0.35)" strokeWidth="1.5" />
-                  <line x1="160" y1="50" x2="175" y2="50" stroke="rgba(90,80,180,0.35)" strokeWidth="1.5" />
-                  <rect x="175" y="27" width="15" height="26" rx="4" stroke="rgba(160,130,80,0.5)" strokeWidth="1.5" fill="rgba(160,130,80,0.1)" />
-                  <line x1="40" y1="35" x2="140" y2="35" stroke="rgba(180,160,120,0.45)" strokeWidth="1" />
-                  <line x1="40" y1="40" x2="140" y2="40" stroke="rgba(180,160,120,0.45)" strokeWidth="1" />
-                  <line x1="40" y1="45" x2="140" y2="45" stroke="rgba(180,160,120,0.45)" strokeWidth="1" />
-                  <line x1="50" y1="24" x2="130" y2="24" stroke="rgba(140,135,200,0.2)" strokeWidth="2" />
-                </svg>
+              <div
+                className="flex flex-col items-center text-center py-8"
+                style={{ animation: "confirmFade 0.8s ease" }}
+              >
+                <p style={{ fontFamily: "Georgia, serif", fontStyle: "italic", fontSize: 18, color: "rgba(58, 48, 32, 0.65)" }}>
+                  Bon voyage...
+                </p>
+                <p style={{ fontFamily: "Georgia, serif", fontSize: 14, color: "rgba(58, 48, 32, 0.35)", marginTop: 8 }}>
+                  Watch your bottle drift out to sea
+                </p>
               </div>
             )}
 
-            {/* ── Phase: Done (confirmation message) ── */}
+            {/* ── Phase: Done (confirmation) ── */}
             {phase === "done" && (
               <div
                 className="flex flex-col items-center text-center py-12"
@@ -245,7 +218,7 @@ export default function ContactPage() {
                   Your bottle is on its way. Like all good things, it may take a little time — but we&apos;ll be in touch.
                 </p>
 
-                {/* Small bottle icon drifting */}
+                {/* Small bottle icon */}
                 <svg className="mt-8" width="60" height="30" viewBox="0 0 200 80" fill="none" style={{ opacity: 0.3 }}>
                   <ellipse cx="90" cy="40" rx="70" ry="22" stroke="rgba(90,80,180,0.5)" strokeWidth="2" />
                   <rect x="175" y="27" width="15" height="26" rx="4" stroke="rgba(160,130,80,0.5)" strokeWidth="2" />
