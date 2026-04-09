@@ -198,7 +198,7 @@ function drawPalmTree(ctx: CanvasRenderingContext2D, project: (wx: number, wy: n
 }
 
 /* ── Main scene component ── */
-export default function ContactOceanScene({ camHeight, horizonPct, fieldOfView }: { camHeight?: number; horizonPct?: number; fieldOfView?: number } = {}) {
+export default function ContactOceanScene({ camHeight, horizonPct, fieldOfView, boatStartX, boatSpeedMult }: { camHeight?: number; horizonPct?: number; fieldOfView?: number; boatStartX?: number; boatSpeedMult?: number } = {}) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animRef = useRef(0);
   const startRef = useRef(0);
@@ -210,7 +210,7 @@ export default function ContactOceanScene({ camHeight, horizonPct, fieldOfView }
     img.src = "/logobueno.png";
     img.onload = () => { logoRef.current = img; };
   }, []);
-  const boatRef = useRef<BoatPhysics>({ wx: -900, wz: 700, vx: 0, vz: 0, wy: 0, pitch: 0, roll: 0, heading: 0 });
+  const boatRef = useRef<BoatPhysics>({ wx: boatStartX ?? -900, wz: 700, vx: 0, vz: 0, wy: 0, pitch: 0, roll: 0, heading: 0 });
   const phaseRef = useRef<"sailing"|"anchored"|"rowboats"|"walking"|"planting"|"done">("sailing");
   const phaseStartRef = useRef(0);
 
@@ -342,7 +342,7 @@ export default function ContactOceanScene({ camHeight, horizonPct, fieldOfView }
     const anchorX = SHORE_EDGE - 80;
 
     if (phase === "sailing") {
-      boat.vx += 30 * 0.016;
+      boat.vx += 30 * (boatSpeedMult ?? 1) * 0.016;
       if (boat.wx > anchorX - 200) boat.vx *= 0.99;
       boat.vx *= 0.995;
       boat.wx += boat.vx * 0.016;
