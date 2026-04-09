@@ -121,15 +121,13 @@ export default function OurMissionPage() {
             className="font-light leading-[1.15] text-[#0A1344] text-[39px] md:text-[49px] lg:text-[61px]"
             style={{ letterSpacing: "-0.02em", ...hero.anim(0) }}
           >
-            Mapping the Future
-            <br />
-            of Our Planet
+            Building a thinking Earth
           </h1>
           <p
             className="mt-6 text-[16px] md:text-[20px] leading-[1.5] max-w-[600px]"
             style={{ color: "rgba(10, 19, 68, 0.45)", letterSpacing: "-0.015em", fontWeight: 400, ...hero.anim(100) }}
           >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt.
+            What if Earth had an API so you can query earth, talk to earth, and learn from earth? That&apos;s Columbus Earth.
           </p>
         </div>
       </div>
@@ -274,7 +272,7 @@ export default function OurMissionPage() {
       </div>
 
       {/* ════════ 6. VALUES GRID ════════ */}
-      <GridSection className="bg-transparent! grid-section-fade-top">
+      <GridSection className="bg-transparent!">
         <div ref={values.ref}>
           <div className="grid md:grid-cols-3">
             {[
