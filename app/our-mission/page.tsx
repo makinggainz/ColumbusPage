@@ -127,7 +127,7 @@ export default function OurMissionPage() {
             className="mt-6 text-[16px] md:text-[20px] leading-[1.5] max-w-[600px]"
             style={{ color: "rgba(10, 19, 68, 0.45)", letterSpacing: "-0.015em", fontWeight: 400, ...hero.anim(100) }}
           >
-            What if Earth had an API so you can query earth, talk to earth, and learn from earth? That&apos;s Columbus Earth.
+            What if you could ask the planet a question, and it understood?
           </p>
         </div>
       </div>
