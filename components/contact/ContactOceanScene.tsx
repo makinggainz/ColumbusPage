@@ -198,7 +198,7 @@ function drawPalmTree(ctx: CanvasRenderingContext2D, project: (wx: number, wy: n
 }
 
 /* ── Main scene component ── */
-export default function ContactOceanScene() {
+export default function ContactOceanScene({ camHeight, horizonPct, fieldOfView }: { camHeight?: number; horizonPct?: number; fieldOfView?: number } = {}) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animRef = useRef(0);
   const startRef = useRef(0);
@@ -231,7 +231,7 @@ export default function ContactOceanScene() {
     const drift = t * 40, driftZ = t * 12;
 
     // Camera
-    const fov = 600, horizonY = H * 0.24 + 100, camH = 500;
+    const fov = fieldOfView ?? 600, horizonY = H * (horizonPct ?? 0.24) + 100, camH = camHeight ?? 500;
     // Island: center and radius
     const ISLAND_CX = 700, ISLAND_CZ = 700, ISLAND_R = 500;
 
