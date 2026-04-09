@@ -8,10 +8,10 @@ type V3 = [number, number, number];
 function getWaveHeight(wx: number, wz: number, t: number, drift: number, driftZ: number) {
   const swx = wx + drift, swz = wz + driftZ;
   return (
-    Math.sin(swx * 0.003 + t * 0.6) * Math.cos(swz * 0.004 + t * 0.35) * 40 +
-    Math.sin(swx * 0.005 - t * 0.4 + 1.5) * Math.cos(swz * 0.006 + t * 0.25) * 25 +
-    Math.sin((swx + swz) * 0.002 + t * 0.45) * 18 +
-    Math.sin(swx * 0.01 + t * 1.0) * Math.cos(swz * 0.009 + t * 0.55) * 8
+    Math.sin(swx * 0.003 + t * 0.42) * Math.cos(swz * 0.004 + t * 0.25) * 30 +
+    Math.sin(swx * 0.005 - t * 0.28 + 1.5) * Math.cos(swz * 0.006 + t * 0.18) * 18 +
+    Math.sin((swx + swz) * 0.002 + t * 0.32) * 14 +
+    Math.sin(swx * 0.01 + t * 0.7) * Math.cos(swz * 0.009 + t * 0.39) * 6
   );
 }
 
@@ -30,37 +30,37 @@ function getInland(wx: number, wz: number, islandCx: number, islandCz: number, i
 function getShoreHeight(wx: number, wz: number, t: number, drift: number, driftZ: number, islandCx: number, islandCz: number, islandR: number) {
   const inland = getInland(wx, wz, islandCx, islandCz, islandR);
 
+  // Directional bias: back-right side of island is taller
+  // (positive wx and negative wz relative to center = back-right)
+  const dirBias = 1 + Math.max(0, (wx - islandCx) / (islandR * 1.5)) * 0.6
+                    + Math.max(0, (islandCz - wz) / (islandR * 2)) * 0.3;
+
   if (inland > islandR * 0.5) {
-    // Peak — tall central hills/mountains, steadily rising
+    // Peak — tall central mountains
     const peakFactor = Math.min(1, (inland - islandR * 0.5) / (islandR * 0.3));
-    const baseH = 30 + peakFactor * 60;
+    const baseH = (35 + peakFactor * 70) * dirBias;
     return baseH + Math.sin(wx * 0.004 + wz * 0.005) * 8 + Math.sin(wz * 0.008) * 5;
-  } else if (inland > islandR * 0.15) {
-    // Hills and forest — steadily rising
-    const hillProgress = (inland - islandR * 0.15) / (islandR * 0.35);
-    const baseH = 8 + hillProgress * 25;
-    return baseH + Math.sin(wx * 0.006 + wz * 0.005) * 8 + Math.sin(wz * 0.012 + wx * 0.003) * 5;
+  } else if (inland > islandR * 0.08) {
+    // Forested hills — steady climb, always higher than beach
+    const hillProgress = (inland - islandR * 0.08) / (islandR * 0.42);
+    const baseH = 6 + hillProgress * hillProgress * 50 * dirBias;
+    const noise = Math.sin(wx * 0.006 + wz * 0.005) * 6 * hillProgress
+                + Math.sin(wz * 0.012 + wx * 0.003) * 4 * hillProgress;
+    return baseH + noise;
   } else if (inland > 0) {
-    // Beach — gentle rise from sea level
-    const beachProgress = inland / (islandR * 0.15);
-    return beachProgress * 8 + Math.sin(wz * 0.02 + wx * 0.01) * 1.5;
-  } else if (inland > -80) {
-    // Shore transition — breaking waves
-    const blend = Math.max(0, (inland + 80) / 80);
-    const landH = blend * 3;
-    const waterH = getWaveHeight(wx, wz, t, drift, driftZ);
-    const breakH = inland > -50 && inland < 20
-      ? Math.sin(wz * 0.025 - t * 2) * (1 - Math.abs(inland / 50)) * 12
-      : 0;
-    return landH * blend + (waterH + breakH) * (1 - blend);
+    // Beach — flat sandy strip, clearly distinct (stays low, ~0-4 units)
+    const beachProgress = inland / (islandR * 0.08);
+    return beachProgress * 4 + Math.sin(wz * 0.015 + wx * 0.008) * beachProgress * 0.8;
+  } else {
+    // Ocean — waves smoothly dampen toward shore
+    const waveH = getWaveHeight(wx, wz, t, drift, driftZ);
+    const distFromShore = -inland;
+    if (distFromShore < 120) {
+      const dampen = distFromShore / 120;
+      return waveH * dampen * dampen;
+    }
+    return waveH;
   }
-  // Open ocean — dampen waves as they approach the island
-  const waveH = getWaveHeight(wx, wz, t, drift, driftZ);
-  if (inland > -300) {
-    const dampen = Math.max(0.15, (-inland) / 300); // 1.0 far away → 0.15 near shore
-    return waveH * dampen;
-  }
-  return waveH;
 }
 
 /* ── 3D rotation helpers (same as Hero) ── */
@@ -257,7 +257,8 @@ export default function ContactOceanScene() {
     }
 
     const rgb = "20,60,160";
-    const landRgb = "60,40,20";
+    const landRgb = "90,65,30"; // warmer, more visible brown
+    const beachRgb = "140,120,70"; // sandy yellow-brown for beach
     // Shore edge X for the facing side of the island (closest point to camera-left)
     const SHORE_EDGE = ISLAND_CX - ISLAND_R * 1.3; // actual ellipse edge at center z
 
@@ -269,15 +270,18 @@ export default function ContactOceanScene() {
         const p = grid[r][c]; if (!p) continue;
         const wx = (c - COLS/2) * CELL, wz = (r+2) * CELL;
         const il = getIL(wx, wz);
+        const isBeach = il > 0 && il < ISLAND_R * 0.08;
+        const isForest = il >= ISLAND_R * 0.08 && il < ISLAND_R * 0.5;
+        const isPeak = il >= ISLAND_R * 0.5;
         const isLand = il > 0;
-        const isPeak = il > ISLAND_R * 0.5;
 
         let alpha: number, color: string;
-        if (isPeak) { alpha = 0.12 + depthT * 0.15; color = `rgba(${rgb},${alpha.toFixed(3)})`; }
-        else if (isLand) { alpha = 0.08 + depthT * 0.12; color = `rgba(${landRgb},${alpha.toFixed(3)})`; }
+        if (isPeak) { alpha = 0.18 + depthT * 0.15; color = `rgba(50,80,50,${alpha.toFixed(3)})`; }
+        else if (isForest) { alpha = 0.14 + depthT * 0.12; color = `rgba(50,75,35,${alpha.toFixed(3)})`; }
+        else if (isBeach) { alpha = 0.15 + depthT * 0.1; color = `rgba(${beachRgb},${alpha.toFixed(3)})`; }
         else { alpha = 0.06 + depthT * 0.18; color = `rgba(${rgb},${alpha.toFixed(3)})`; }
         ctx.strokeStyle = color;
-        ctx.lineWidth = isLand ? 0.5 + depthT * 0.6 : 0.6 + depthT * 1.0;
+        ctx.lineWidth = isLand ? 0.6 + depthT * 0.8 : 0.6 + depthT * 1.0;
         if (!started) { ctx.moveTo(p.sx, p.sy); started = true; } else ctx.lineTo(p.sx, p.sy);
       }
       ctx.stroke();
@@ -292,7 +296,7 @@ export default function ContactOceanScene() {
         const il = getIL(wx, wz);
         const isLand = il > 0;
         const depthT = r / ROWS;
-        const alpha = isLand ? 0.02 + depthT * 0.06 : 0.03 + depthT * 0.1;
+        const alpha = isLand ? 0.06 + depthT * 0.1 : 0.03 + depthT * 0.1;
         ctx.strokeStyle = isLand ? `rgba(${landRgb},${alpha.toFixed(3)})` : `rgba(${rgb},${alpha.toFixed(3)})`;
         ctx.lineWidth = 0.4 + depthT * 0.5;
         if (!started) { ctx.moveTo(p.sx, p.sy); started = true; } else ctx.lineTo(p.sx, p.sy);
@@ -300,23 +304,6 @@ export default function ContactOceanScene() {
       ctx.stroke();
     }
 
-    // Land fills
-    for (let r = 1; r < ROWS; r++) {
-      for (let c = 1; c < COLS; c++) {
-        const wx = (c - COLS/2) * CELL, wz = (r+2) * CELL;
-        const il = getIL(wx, wz);
-        if (il < -30) continue;
-        const p00 = grid[r-1][c-1], p10 = grid[r-1][c], p01 = grid[r][c-1], p11 = grid[r][c];
-        if (!p00 || !p10 || !p01 || !p11) continue;
-        let fillColor: string;
-        if (il > ISLAND_R * 0.5) fillColor = `rgba(${rgb},0.06)`;
-        else if (il > ISLAND_R * 0.15) fillColor = `rgba(40,80,30,0.05)`;
-        else if (il > 0) fillColor = `rgba(${landRgb},0.06)`;
-        else fillColor = `rgba(${landRgb},0.03)`;
-        ctx.fillStyle = fillColor;
-        ctx.beginPath(); ctx.moveTo(p00.sx,p00.sy); ctx.lineTo(p10.sx,p10.sy); ctx.lineTo(p11.sx,p11.sy); ctx.lineTo(p01.sx,p01.sy); ctx.closePath(); ctx.fill();
-      }
-    }
 
     // ── Trees — many, scattered across island ──
     const treePositions = [
@@ -355,7 +342,7 @@ export default function ContactOceanScene() {
     const anchorX = SHORE_EDGE - 80;
 
     if (phase === "sailing") {
-      boat.vx += 45 * 0.016;
+      boat.vx += 30 * 0.016;
       if (boat.wx > anchorX - 200) boat.vx *= 0.99;
       boat.vx *= 0.995;
       boat.wx += boat.vx * 0.016;

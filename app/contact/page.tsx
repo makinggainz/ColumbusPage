@@ -35,6 +35,13 @@ export default function ContactPage() {
       {/* Ocean scene — fixed fullscreen background */}
       <ContactOceanScene />
 
+      {/* Accent gradient from top — same as homepage hero */}
+      <div
+        className="fixed left-0 right-0 top-0 pointer-events-none"
+        style={{ height: "50%", background: "linear-gradient(to bottom, rgba(0, 102, 204, 0.15) 0%, rgba(0, 102, 204, 0.08) 60%, transparent 100%)", zIndex: 1 }}
+        aria-hidden
+      />
+
       <Navbar />
 
       {/* All content floats above the canvas */}
