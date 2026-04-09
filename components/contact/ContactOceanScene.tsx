@@ -16,8 +16,8 @@ function getWaveHeight(wx: number, wz: number, t: number, drift: number, driftZ:
 }
 
 /* ── Natural mountain island — multiple peaks, ridges, spurs ── */
-const PEAK_H = 300;
-const NUM_CONTOUR_LINES = 24;
+const PEAK_H = 100;
+const NUM_CONTOUR_LINES = 14;
 
 // Multiple peaks/sub-peaks that blend together to form a natural mountain mass
 // Each: [offsetX, offsetZ, radius, height, steepness]
@@ -259,7 +259,7 @@ function drawPalmTree(ctx: CanvasRenderingContext2D, project: (wx: number, wy: n
 }
 
 /* ── Main scene component ── */
-export default function ContactOceanScene({ camHeight, horizonPct, fieldOfView, boatStartX, boatSpeedMult }: { camHeight?: number; horizonPct?: number; fieldOfView?: number; boatStartX?: number; boatSpeedMult?: number } = {}) {
+export default function ContactOceanScene({ camHeight, horizonPct, fieldOfView, boatStartX, boatSpeedMult, islandCenterX, islandCenterZ, islandScale, skipAnimation }: { camHeight?: number; horizonPct?: number; fieldOfView?: number; boatStartX?: number; boatSpeedMult?: number; islandCenterX?: number; islandCenterZ?: number; islandScale?: number; skipAnimation?: boolean } = {}) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animRef = useRef(0);
   const startRef = useRef(0);
@@ -271,8 +271,8 @@ export default function ContactOceanScene({ camHeight, horizonPct, fieldOfView, 
     img.src = "/logobueno.png";
     img.onload = () => { logoRef.current = img; };
   }, []);
-  const boatRef = useRef<BoatPhysics>({ wx: boatStartX ?? -900, wz: 700, vx: 0, vz: 0, wy: 0, pitch: 0, roll: 0, heading: 0 });
-  const phaseRef = useRef<"sailing"|"anchored"|"rowboats"|"walking"|"planting"|"done">("sailing");
+  const boatRef = useRef<BoatPhysics>({ wx: boatStartX ?? -900, wz: islandCenterZ ?? 700, vx: 0, vz: 0, wy: 0, pitch: 0, roll: 0, heading: 0 });
+  const phaseRef = useRef<"sailing"|"anchored"|"rowboats"|"walking"|"planting"|"done">(skipAnimation ? "done" : "sailing");
   const phaseStartRef = useRef(0);
 
   const draw = useCallback(() => {
@@ -294,18 +294,38 @@ export default function ContactOceanScene({ camHeight, horizonPct, fieldOfView, 
     // Camera
     const fov = fieldOfView ?? 600, horizonY = H * (horizonPct ?? 0.24) + 100, camH = camHeight ?? 500;
     // Island: center and radius
-    const ISLAND_CX = 700, ISLAND_CZ = 700, ISLAND_R = 500;
+    const iScale = islandScale ?? 1;
+    const ISLAND_CX = islandCenterX ?? 700, ISLAND_CZ = islandCenterZ ?? 700, ISLAND_R = 500 * iScale;
 
     const project = (wx: number, wy: number, wz: number): { sx: number; sy: number } | null => {
       if (wz <= 1) return null;
       return { sx: (wx * fov) / wz + W / 2, sy: ((-wy + camH) * fov) / wz + horizonY };
     };
 
-    const getH = (wx: number, wz: number) => getShoreHeight(wx, wz, t, drift, driftZ, ISLAND_CX, ISLAND_CZ, ISLAND_R);
-    const getIL = (wx: number, wz: number) => getInland(wx, wz, ISLAND_CX, ISLAND_CZ, ISLAND_R);
+    // When island is scaled, transform world coords so peak offsets are scaled too
+    const getScaledIslandH = (wx: number, wz: number) => {
+      // Map world coords to island-local, scale up (so smaller island uses same peak defs), then query
+      const lx = (wx - ISLAND_CX) / iScale + ISLAND_CX;
+      const lz = (wz - ISLAND_CZ) / iScale + ISLAND_CZ;
+      return getIslandH(lx, lz, ISLAND_CX, ISLAND_CZ, ISLAND_R / iScale) * iScale;
+    };
+    const getH = (wx: number, wz: number) => {
+      const h = getScaledIslandH(wx, wz);
+      if (h > 0) return h;
+      const waveH = getWaveHeight(wx, wz, t, drift, driftZ);
+      // Dampen near shore
+      const probe = 40 * iScale;
+      const nearH = Math.max(
+        getScaledIslandH(wx + probe, wz), getScaledIslandH(wx - probe, wz),
+        getScaledIslandH(wx, wz + probe), getScaledIslandH(wx, wz - probe),
+      );
+      if (nearH > 0) return waveH * 0.25;
+      return waveH;
+    };
+    const getIL = (wx: number, wz: number) => getScaledIslandH(wx, wz);
 
     // ── Draw ocean + land mesh ──
-    const COLS = 280, ROWS = 90, CELL = 24;
+    const COLS = 160, ROWS = 55, CELL = 24;
     const grid: ({sx:number;sy:number}|null)[][] = [];
     for (let r = 0; r < ROWS; r++) {
       grid[r] = [];
@@ -329,7 +349,7 @@ export default function ContactOceanScene({ camHeight, horizonPct, fieldOfView, 
       ctx.beginPath(); let started = false;
       for (let c = 0; c < COLS; c++) {
         const wx = (c - COLS/2) * CELL, wz = (r+2) * CELL;
-        const isLand = getIslandH(wx, wz, ISLAND_CX, ISLAND_CZ, ISLAND_R) > 0;
+        const isLand = getScaledIslandH(wx, wz) > 0;
         const p = grid[r][c];
         if (!p || isLand) { started = false; continue; }
         if (!started) { ctx.moveTo(p.sx, p.sy); started = true; } else ctx.lineTo(p.sx, p.sy);
@@ -341,7 +361,7 @@ export default function ContactOceanScene({ camHeight, horizonPct, fieldOfView, 
       ctx.beginPath(); let started = false;
       for (let r = 0; r < ROWS; r++) {
         const wx = (c - COLS/2) * CELL, wz = (r+2) * CELL;
-        const isLand = getIslandH(wx, wz, ISLAND_CX, ISLAND_CZ, ISLAND_R) > 0;
+        const isLand = getScaledIslandH(wx, wz) > 0;
         const p = grid[r][c];
         if (!p || isLand) { started = false; continue; }
         const depthT = r / ROWS;
@@ -359,7 +379,7 @@ export default function ContactOceanScene({ camHeight, horizonPct, fieldOfView, 
     for (let r = 0; r < ROWS - 1; r++) {
       for (let c = 0; c < COLS - 1; c++) {
         const wx = (c - COLS/2) * CELL, wz = (r+2) * CELL;
-        if (getIslandH(wx, wz, ISLAND_CX, ISLAND_CZ, ISLAND_R) <= 0) continue;
+        if (getScaledIslandH(wx, wz) <= 0) continue;
         const p = grid[r][c], pR = grid[r][c+1], pB = grid[r+1][c], pBR = grid[r+1][c+1];
         if (!p || !pR || !pB || !pBR) continue;
         ctx.fillStyle = "#F9F9F9";
@@ -373,33 +393,34 @@ export default function ContactOceanScene({ camHeight, horizonPct, fieldOfView, 
       }
     }
 
-    // ── Contour lines — smooth closed curves traced radially from the peak ──
+    // ── Contour lines — smooth closed curves traced radially using scaled height field ──
+    const scaledPeakH = PEAK_H * iScale;
     const peakWx = ISLAND_CX, peakWz = ISLAND_CZ;
     for (let line = 1; line <= NUM_CONTOUR_LINES; line++) {
-      const targetH = (line / NUM_CONTOUR_LINES) * PEAK_H;
-      // Thicker lines every 5th contour (index lines on real topo maps)
+      const targetH = (line / NUM_CONTOUR_LINES) * scaledPeakH;
       const isIndex = line % 5 === 0;
       const lineAlpha = isIndex ? 0.45 : 0.25;
       const lineWidth = isIndex ? 1.6 : 0.8;
 
-      // Radial binary search: for each angle from peak, find where height = targetH
+      // Radial binary search using the scaled height field
       const points: { sx: number; sy: number }[] = [];
       const segments = 140;
+      const searchR = ISLAND_R * 1.6;
       for (let s = 0; s < segments; s++) {
         const angle = (s / segments) * Math.PI * 2;
         const dirX = Math.cos(angle), dirZ = Math.sin(angle);
 
-        let lo = 0, hi = ISLAND_R * 1.6;
+        let lo = 0, hi = searchR;
         let found = false;
         for (let iter = 0; iter < 22; iter++) {
           const mid = (lo + hi) / 2;
           const wx = peakWx + dirX * mid;
           const wz = peakWz + dirZ * mid;
-          const h = getIslandH(wx, wz, ISLAND_CX, ISLAND_CZ, ISLAND_R);
+          const h = getScaledIslandH(wx, wz);
           if (h > targetH) lo = mid;
           else { hi = mid; found = true; }
         }
-        if (found && hi < ISLAND_R * 1.5) {
+        if (found && hi < searchR * 0.95) {
           const r = (lo + hi) / 2;
           const wx = peakWx + dirX * r;
           const wz = peakWz + dirZ * r;
@@ -422,62 +443,20 @@ export default function ContactOceanScene({ camHeight, horizonPct, fieldOfView, 
     }
 
 
-    // ── Trees — many, scattered across island ──
-    const treePositions = [
-      // Coastal palms — scattered around the perimeter
-      { x: ISLAND_CX - 320, z: ISLAND_CZ - 100, h: 45, lean: -10 },
-      { x: ISLAND_CX - 290, z: ISLAND_CZ + 80, h: 50, lean: 8 },
-      { x: ISLAND_CX - 340, z: ISLAND_CZ + 200, h: 42, lean: -12 },
-      { x: ISLAND_CX - 300, z: ISLAND_CZ - 200, h: 48, lean: 6 },
-      { x: ISLAND_CX - 260, z: ISLAND_CZ, h: 52, lean: -8 },
-      { x: ISLAND_CX - 280, z: ISLAND_CZ + 300, h: 40, lean: 10 },
-      { x: ISLAND_CX - 250, z: ISLAND_CZ - 300, h: 44, lean: -7 },
-      { x: ISLAND_CX + 200, z: ISLAND_CZ + 280, h: 42, lean: 9 },
-      { x: ISLAND_CX + 280, z: ISLAND_CZ + 100, h: 38, lean: -6 },
-      { x: ISLAND_CX + 250, z: ISLAND_CZ - 150, h: 40, lean: 5 },
-      { x: ISLAND_CX - 100, z: ISLAND_CZ + 350, h: 36, lean: 11 },
-      { x: ISLAND_CX + 50, z: ISLAND_CZ - 350, h: 38, lean: -9 },
-      // Mid-island forest — dense cluster
-      { x: ISLAND_CX - 100, z: ISLAND_CZ - 150, h: 60, lean: -5 },
-      { x: ISLAND_CX - 50, z: ISLAND_CZ + 50, h: 65, lean: 4 },
-      { x: ISLAND_CX, z: ISLAND_CZ - 80, h: 58, lean: -8 },
-      { x: ISLAND_CX - 80, z: ISLAND_CZ + 180, h: 55, lean: 7 },
-      { x: ISLAND_CX + 50, z: ISLAND_CZ + 100, h: 62, lean: -3 },
-      { x: ISLAND_CX - 30, z: ISLAND_CZ - 250, h: 50, lean: 10 },
-      { x: ISLAND_CX + 100, z: ISLAND_CZ - 50, h: 55, lean: -6 },
-      { x: ISLAND_CX - 150, z: ISLAND_CZ + 120, h: 58, lean: 5 },
-      { x: ISLAND_CX + 30, z: ISLAND_CZ + 200, h: 52, lean: -4 },
-      { x: ISLAND_CX - 180, z: ISLAND_CZ - 60, h: 56, lean: 7 },
-      { x: ISLAND_CX + 120, z: ISLAND_CZ + 180, h: 50, lean: -8 },
-      { x: ISLAND_CX - 60, z: ISLAND_CZ - 120, h: 60, lean: 3 },
-      // Interior / ridgeline trees
-      { x: ISLAND_CX + 150, z: ISLAND_CZ, h: 68, lean: -4 },
-      { x: ISLAND_CX + 100, z: ISLAND_CZ + 150, h: 60, lean: 5 },
-      { x: ISLAND_CX + 200, z: ISLAND_CZ - 100, h: 55, lean: -8 },
-      { x: ISLAND_CX, z: ISLAND_CZ + 250, h: 50, lean: 10 },
-      { x: ISLAND_CX + 50, z: ISLAND_CZ - 200, h: 58, lean: -5 },
-      { x: ISLAND_CX + 250, z: ISLAND_CZ + 50, h: 50, lean: 6 },
-      { x: ISLAND_CX + 180, z: ISLAND_CZ - 200, h: 48, lean: -7 },
-      { x: ISLAND_CX - 200, z: ISLAND_CZ + 250, h: 45, lean: 8 },
-      { x: ISLAND_CX + 300, z: ISLAND_CZ - 50, h: 42, lean: -5 },
-      { x: ISLAND_CX - 250, z: ISLAND_CZ - 150, h: 46, lean: 6 },
-      // Distant outlier trees
-      { x: ISLAND_CX - 350, z: ISLAND_CZ + 100, h: 35, lean: -10 },
-      { x: ISLAND_CX + 320, z: ISLAND_CZ + 200, h: 34, lean: 8 },
-      { x: ISLAND_CX + 100, z: ISLAND_CZ - 320, h: 36, lean: -6 },
-      { x: ISLAND_CX - 200, z: ISLAND_CZ - 280, h: 38, lean: 9 },
-    ];
-    for (const tp of treePositions) {
-      if (getIL(tp.x, tp.z) > 30) { // only draw trees clearly on land
-        drawPalmTree(ctx, project, tp.x, getH(tp.x, tp.z), tp.z, tp.h, tp.lean, t);
-      }
-    }
+    // Trees removed
 
     // ── Ship physics ──
     const boat = boatRef.current;
     const phase = phaseRef.current;
     // Ship anchors just offshore (SHORE_EDGE - 80)
-    const anchorX = SHORE_EDGE - 80;
+    const anchorX = SHORE_EDGE - 80 * iScale;
+
+    // When skipAnimation, snap boat to anchor position
+    if (skipAnimation && boat.wx < anchorX) {
+      boat.wx = anchorX;
+      boat.wz = ISLAND_CZ;
+      boat.vx = 0;
+    }
 
     if (phase === "sailing") {
       boat.vx += 30 * (boatSpeedMult ?? 1) * 0.016;
@@ -505,9 +484,9 @@ export default function ContactOceanScene({ camHeight, horizonPct, fieldOfView, 
     // ── Narrative phases ──
     const pt = phaseStartRef.current;
     // Beach landing point on island
-    const beachX = SHORE_EDGE + 40, beachZ = ISLAND_CZ;
+    const beachX = SHORE_EDGE + 40 * iScale, beachZ = ISLAND_CZ;
     // Flag position — further inland
-    const flagX = ISLAND_CX - 150, flagZ = ISLAND_CZ;
+    const flagX = ISLAND_CX - 150 * iScale, flagZ = ISLAND_CZ;
 
     if (phase === "anchored" && t - pt > 2) { phaseRef.current = "rowboats"; phaseStartRef.current = t; }
 

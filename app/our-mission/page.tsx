@@ -130,7 +130,7 @@ export default function OurMissionPage() {
           maskComposite: "intersect" as unknown as string,
           WebkitMaskComposite: "destination-in" as React.CSSProperties["WebkitMaskComposite"],
         }}>
-          <ContactOceanScene camHeight={350} horizonPct={0.35} boatStartX={-495} boatSpeedMult={0.85} />
+          <ContactOceanScene camHeight={180} horizonPct={0.38} fieldOfView={700} islandCenterX={0} islandCenterZ={650} islandScale={0.28} skipAnimation />
         </div>
       )}
 
