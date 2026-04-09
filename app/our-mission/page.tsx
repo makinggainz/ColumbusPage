@@ -8,7 +8,7 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { GridSection, GridCell, gl } from "@/components/home/ContentGrid";
 
-const ContactOceanScene = dynamic(() => import("@/components/contact/ContactOceanScene"), { ssr: false });
+const MissionWaveMesh = dynamic(() => import("@/components/contact/MissionWaveMesh"), { ssr: false });
 
 /* ── Scroll fade-in hook ── */
 function useScrollReveal(threshold = 0.1) {
@@ -123,14 +123,9 @@ export default function OurMissionPage() {
       {sceneOpacity > 0 && (
         <div style={{
           position: "fixed", inset: 0, zIndex: 1,
-          opacity: sceneOpacity, willChange: "opacity", pointerEvents: "none",
-          transform: "translateY(-120px)",
-          mask: "linear-gradient(to bottom, transparent 0%, black 20%, black 75%, rgba(0,0,0,0.15) 100%), linear-gradient(to right, rgba(0,0,0,0.1) 0%, black 20%, black 80%, rgba(0,0,0,0.1) 100%)",
-          WebkitMask: "linear-gradient(to bottom, transparent 0%, black 20%, black 75%, rgba(0,0,0,0.15) 100%), linear-gradient(to right, rgba(0,0,0,0.1) 0%, black 20%, black 80%, rgba(0,0,0,0.1) 100%)",
-          maskComposite: "intersect" as unknown as string,
-          WebkitMaskComposite: "destination-in" as React.CSSProperties["WebkitMaskComposite"],
+          opacity: sceneOpacity, willChange: "opacity",
         }}>
-          <ContactOceanScene camHeight={180} horizonPct={0.38} fieldOfView={700} islandCenterX={0} islandCenterZ={650} islandScale={0.28} skipAnimation />
+          <MissionWaveMesh />
         </div>
       )}
 
@@ -144,17 +139,6 @@ export default function OurMissionPage() {
           style={{ height: "100%", background: "linear-gradient(to bottom, rgba(0, 102, 204, 0.15) 0%, rgba(0, 102, 204, 0.08) 60%, transparent 100%)", zIndex: 1 }}
           aria-hidden
         />
-        {/* Grid pattern — fades out before ocean mesh */}
-        <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 2 }}>
-          <div className="max-w-[1287px] mx-auto h-full" style={{
-            backgroundImage: `linear-gradient(to right, rgba(37,99,235,0.08) 1px, transparent 1px), linear-gradient(to bottom, rgba(37,99,235,0.08) 1px, transparent 1px)`,
-            backgroundSize: "80px 80px",
-            mask: "linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%), linear-gradient(to bottom, black 0%, black 55%, transparent 75%)",
-            WebkitMask: "linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%), linear-gradient(to bottom, black 0%, black 55%, transparent 75%)",
-            maskComposite: "intersect",
-            WebkitMaskComposite: "destination-in" as React.CSSProperties["WebkitMaskComposite"],
-          }} />
-        </div>
 
         <div ref={hero.ref} className="relative z-10 mx-auto w-full pt-40 md:pt-52 pb-40 md:pb-56 flex flex-col items-center text-center px-8 md:px-10" style={{ maxWidth: 1287 }}>
           <h1
