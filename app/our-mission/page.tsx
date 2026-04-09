@@ -2,10 +2,13 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { useEffect, useRef, useState } from "react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
-import { GridSection, GridCell, gl } from "@/components/home/ContentGrid";
+import { GridSection, gl } from "@/components/home/ContentGrid";
+
+const UnderwaterScene = dynamic(() => import("@/components/home/UnderwaterScene"), { ssr: false });
 
 /* ── Scroll fade-in hook ── */
 function useScrollReveal(threshold = 0.1) {
@@ -95,8 +98,14 @@ export default function OurMissionPage() {
   const values = useScrollReveal(0.05);
 
   return (
-    <main className="min-h-screen" style={{ backgroundColor: "#F9F9F9" }}>
+    <main className="relative min-h-screen">
+      {/* Underwater scene — fixed fullscreen background */}
+      <UnderwaterScene />
+
       <Navbar />
+
+      {/* All content floats above */}
+      <div className="relative z-10">
 
       {/* ════════ 1. HERO ════════ */}
       <div className="relative overflow-hidden">
@@ -106,15 +115,6 @@ export default function OurMissionPage() {
           style={{ height: "100%", background: "linear-gradient(to bottom, rgba(0, 102, 204, 0.15) 0%, rgba(0, 102, 204, 0.08) 60%, transparent 100%)", zIndex: 1 }}
           aria-hidden
         />
-        {/* Grid pattern */}
-        <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 0 }}>
-          <div className="max-w-[1287px] mx-auto h-full" style={{
-            backgroundImage: `linear-gradient(to right, rgba(37,99,235,0.08) 1px, transparent 1px), linear-gradient(to bottom, rgba(37,99,235,0.08) 1px, transparent 1px)`,
-            backgroundSize: "80px 80px",
-            mask: "linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%)",
-            WebkitMask: "linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%)",
-          }} />
-        </div>
 
         <div ref={hero.ref} className="relative z-10 mx-auto w-full pt-40 md:pt-52 pb-24 md:pb-32 flex flex-col items-center text-center px-8 md:px-10" style={{ maxWidth: 1287 }}>
           <h1
@@ -308,6 +308,7 @@ export default function OurMissionPage() {
       </div>
 
       <Footer />
+      </div>
     </main>
   );
 }

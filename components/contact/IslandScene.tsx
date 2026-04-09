@@ -13,18 +13,6 @@ function waveHeight(wx: number, wz: number, t: number, drift: number, driftZ: nu
   );
 }
 
-/* ── Shore wave ── */
-function shoreWave(wz: number, t: number, shoreZ: number): number {
-  const dist = shoreZ - wz;
-  if (dist < -60 || dist > 300) return 0;
-  const depthFactor = Math.max(0.1, dist / 200);
-  const steepness = 1 / Math.max(0.3, depthFactor);
-  let wave = Math.sin(wz * 0.025 - t * 1.6) * 12 * steepness;
-  if (dist < 60 && dist > 0) { const bk = 1 - dist / 60; wave += Math.sin(t * 6) * bk * 4; wave *= 1 - bk * 0.5; }
-  if (dist < 0 && dist > -60) { const sw = -dist / 60; wave = Math.max(0, Math.sin(t * 1.2 - sw * 3)) * (1 - sw) * 6; }
-  return wave;
-}
-
 /* ── Bottle 3D profile ── */
 function bottleProfile(p: number): number {
   if (p < 0) return 0;
@@ -52,7 +40,6 @@ interface BottleState {
   launched: boolean;
 }
 
-/* ── Smooth easing helpers ── */
 function easeOutCubic(t: number) { return 1 - Math.pow(1 - t, 3); }
 function easeInOutQuad(t: number) { return t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2; }
 
@@ -69,11 +56,12 @@ export default function BeachOceanScene({
   const animRef = useRef(0);
   const bgImgRef = useRef<HTMLImageElement | null>(null);
   const bottleRef = useRef<BottleState>({
-    wx: 0, wz: 420, wy: 0, vx: 0, vz: 0,
-    roll: 0, pitch: 0, heading: -0.3, active: false, launched: false,
+    wx: 0, wz: 150, wy: 0, vx: 0, vz: 0,
+    roll: 0, pitch: 0, heading: 0, active: false, launched: false,
   });
   const phaseStartRef = useRef(0);
   const lastPhaseRef = useRef<Phase>("writing");
+  const floatStartRef = useRef(0);
   const [, forceRender] = useState(0);
 
   // Load background image
@@ -83,7 +71,7 @@ export default function BeachOceanScene({
     img.onload = () => { bgImgRef.current = img; forceRender(n => n + 1); };
   }, []);
 
-  // Activate bottle when entering rolling phase
+  // Phase transitions
   useEffect(() => {
     if (phase !== lastPhaseRef.current) {
       lastPhaseRef.current = phase;
@@ -92,7 +80,8 @@ export default function BeachOceanScene({
         bottleRef.current.active = true;
         forceRender(n => n + 1);
       }
-      if (phase === "floating" && !bottleRef.current.launched) {
+      if (phase === "floating") {
+        floatStartRef.current = performance.now() * 0.001;
         bottleRef.current.launched = true;
       }
     }
@@ -122,7 +111,7 @@ export default function BeachOceanScene({
         drawW = W;
         drawH = W / imgAspect;
         drawX = 0;
-        drawY = (H - drawH) * 0.3; // bias toward top
+        drawY = (H - drawH) * 0.3;
       } else {
         drawH = H;
         drawW = H * imgAspect;
@@ -130,7 +119,6 @@ export default function BeachOceanScene({
         drawY = 0;
       }
       ctx.drawImage(img, drawX, drawY, drawW, drawH);
-      // Soft warm overlay
       ctx.fillStyle = "rgba(240,244,250,0.15)";
       ctx.fillRect(0, 0, W, H);
     } else {
@@ -142,42 +130,32 @@ export default function BeachOceanScene({
     }
 
     // ── Camera ──
+    // Viewer is on land/dock. +z goes out to sea (toward horizon).
+    // Low wz = close to viewer (bottom of screen), high wz = far away (horizon).
     const fov = 550;
     const horizonY = H * 0.38;
     const camHeight = 380;
-    const shoreZ = 500;
 
     const project = (wx: number, wy: number, wz: number): { sx: number; sy: number } | null => {
       if (wz <= 5) return null;
       return { sx: (wx * fov) / wz + W / 2, sy: ((-wy + camHeight) * fov) / wz + horizonY };
     };
 
+    // Pure ocean waves everywhere — no shore transition, viewer is looking out to open sea
     const getHeight = (wx: number, wz: number): number => {
-      if (wz > shoreZ + 60) return Math.sin(wx * 0.006) * 2 - 18;
-      if (wz > shoreZ - 80) {
-        const blend = Math.max(0, Math.min(1, (wz - (shoreZ - 80)) / 140));
-        return (Math.sin(wx * 0.006) * 2 - 18) * blend + (waveHeight(wx, wz, t, drift, driftZ) + shoreWave(wz, t, shoreZ)) * (1 - blend);
-      }
-      return waveHeight(wx, wz, t, drift, driftZ) + shoreWave(wz, t, shoreZ);
+      return waveHeight(wx, wz, t, drift, driftZ);
     };
 
-    // ── Ocean mesh ──
+    // ── Ocean mesh — extends from near viewer out to horizon ──
     const rgb = "20,60,160";
-    const COLS = 220, ROWS = 70, CELL = 20;
+    const COLS = 220, ROWS = 90, CELL = 20;
     for (let r = 0; r < ROWS; r++) {
       const wz = (r + 4) * CELL;
-      if (wz > shoreZ + 30) continue;
       const depthT = r / ROWS;
-      let alpha: number;
-      if (wz > shoreZ - 80) {
-        const shoreT = (wz - (shoreZ - 80)) / 110;
-        alpha = 0.1 + (1 - Math.abs(shoreT - 0.4) * 2) * 0.25;
-        alpha *= 0.5 + Math.sin(wz * 0.06 - t * 1.8) * 0.3;
-      } else {
-        alpha = 0.08 + depthT * 0.22;
-      }
+      // Opacity: faint near horizon, stronger close up
+      const alpha = 0.06 + (1 - depthT) * 0.08 + depthT * 0.2;
       ctx.strokeStyle = `rgba(${rgb},${Math.max(0, alpha).toFixed(3)})`;
-      ctx.lineWidth = wz > shoreZ - 80 ? 1.3 : 0.7 + depthT * 1.0;
+      ctx.lineWidth = 0.7 + depthT * 0.8;
       ctx.beginPath(); let started = false;
       for (let c = 0; c < COLS; c++) {
         const wx = (c - COLS / 2) * CELL;
@@ -187,14 +165,14 @@ export default function BeachOceanScene({
       }
       ctx.stroke();
 
+      // Vertical cross-lines
       if (r % 2 === 0) {
-        const vAlpha = Math.max(0, 0.03 + depthT * 0.12);
+        const vAlpha = Math.max(0, 0.03 + depthT * 0.1);
         ctx.strokeStyle = `rgba(${rgb},${vAlpha.toFixed(3)})`;
-        ctx.lineWidth = 0.5 + depthT * 0.5;
+        ctx.lineWidth = 0.5 + depthT * 0.4;
         for (let c = 0; c < COLS; c += 2) {
           const wx = (c - COLS / 2) * CELL;
           const wz2 = wz, wz1 = wz - CELL;
-          if (wz1 > shoreZ + 30) continue;
           const p1 = project(wx, getHeight(wx, wz1), wz1);
           const p2 = project(wx, getHeight(wx, wz2), wz2);
           if (p1 && p2) { ctx.beginPath(); ctx.moveTo(p1.sx, p1.sy); ctx.lineTo(p2.sx, p2.sy); ctx.stroke(); }
@@ -202,23 +180,21 @@ export default function BeachOceanScene({
       }
     }
 
-    // ── Foam / whitecaps near shore ──
-    if (true) {
-      ctx.save();
-      for (let i = 0; i < 18; i++) {
-        const foamWz = shoreZ - 40 + Math.sin(i * 1.7 + t * 0.3) * 30;
-        const foamWx = (i - 9) * 180 + Math.sin(t * 0.5 + i) * 30;
-        const foamH = getHeight(foamWx, foamWz);
-        const p = project(foamWx, foamH + 3, foamWz);
-        if (!p) continue;
-        const foamAlpha = 0.08 + Math.sin(t * 2 + i * 0.8) * 0.04;
-        ctx.beginPath();
-        ctx.ellipse(p.sx, p.sy, 25 + Math.sin(t + i) * 8, 4, 0, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(255,255,255,${foamAlpha.toFixed(3)})`;
-        ctx.fill();
-      }
-      ctx.restore();
+    // ── Foam / whitecaps scattered on the water ──
+    ctx.save();
+    for (let i = 0; i < 22; i++) {
+      const foamWz = 100 + i * 60 + Math.sin(i * 2.1 + t * 0.3) * 30;
+      const foamWx = (i - 11) * 160 + Math.sin(t * 0.5 + i * 1.3) * 40;
+      const foamH = getHeight(foamWx, foamWz);
+      const p = project(foamWx, foamH + 3, foamWz);
+      if (!p) continue;
+      const foamAlpha = 0.06 + Math.sin(t * 2 + i * 0.8) * 0.03;
+      ctx.beginPath();
+      ctx.ellipse(p.sx, p.sy, 20 + Math.sin(t + i) * 6, 3, 0, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(255,255,255,${foamAlpha.toFixed(3)})`;
+      ctx.fill();
     }
+    ctx.restore();
 
     // ── 3D Bottle ──
     const bottle = bottleRef.current;
@@ -226,37 +202,31 @@ export default function BeachOceanScene({
       const elapsed = t - phaseStartRef.current;
       const currentPhase = lastPhaseRef.current;
 
-      // Position bottle based on phase
       if (currentPhase === "rolling" || currentPhase === "bottling") {
-        // Bottle appears at the shore, bobbing gently
-        bottle.wz = shoreZ - 50;
+        // Bottle appears close to the viewer, bobbing at the water's edge
+        bottle.wz = 150;
         bottle.wx = 0;
-        bottle.wy = getHeight(0, shoreZ - 50) + 8;
+        bottle.wy = getHeight(0, 150) + 8;
         bottle.vx = 0;
         bottle.vz = 0;
       } else if (currentPhase === "floating" || currentPhase === "done") {
-        if (!bottle.launched) {
-          // Just started floating
-          bottle.launched = true;
-        }
-        const floatElapsed = t - phaseStartRef.current;
+        const floatElapsed = t - floatStartRef.current;
 
-        // Gradually accelerate outward — slow start, then picks up current
-        const speedRamp = easeOutCubic(Math.min(1, floatElapsed / 8));
-        const baseSpeed = 18 + speedRamp * 55;
+        // Accelerate outward — bottle picks up the ocean current heading to the horizon
+        const speedRamp = easeOutCubic(Math.min(1, floatElapsed / 6));
+        const baseSpeed = 20 + speedRamp * 80; // increasing speed outward
 
-        // Drift slightly to the right with ocean current
-        const lateralDrift = Math.sin(t * 0.35) * 8 + floatElapsed * 2.5;
+        // Gentle lateral drift with ocean current
+        const lateralDrift = Math.sin(t * 0.4) * 6 + floatElapsed * 1.5;
 
-        bottle.vz = -baseSpeed;
-        bottle.vx = lateralDrift * 0.3;
+        bottle.vz = baseSpeed; // +z = toward horizon = away from viewer
+        bottle.vx = lateralDrift * 0.25;
 
         bottle.wz += bottle.vz * 0.016;
         bottle.wx += bottle.vx * 0.016;
-        bottle.wz = Math.max(40, bottle.wz);
       }
 
-      // Buoyancy — sample wave heights around bottle
+      // Buoyancy — sample wave heights around the bottle
       const sd = 40;
       const h0 = getHeight(bottle.wx, bottle.wz);
       const hF = getHeight(bottle.wx + sd * Math.cos(bottle.heading), bottle.wz + sd * Math.sin(bottle.heading));
@@ -281,18 +251,17 @@ export default function BeachOceanScene({
       const bottleLen = 140;
       const sections = 20;
 
-      // Fade in during rolling, stay visible until far away
+      // Fade in during rolling, fade when very far away
       let bottleAlpha = 1;
       if (currentPhase === "rolling") {
         bottleAlpha = Math.min(1, elapsed * 2);
       }
-      if (currentPhase === "done") {
-        // Fade out gently in the distance
-        const dist = Math.max(0, bottle.wz);
-        bottleAlpha = Math.max(0, dist / 200);
+      // As the bottle recedes, it naturally gets smaller via perspective.
+      // Add a gentle fade for very far distances.
+      if (bottle.wz > 1200) {
+        bottleAlpha = Math.max(0, 1 - (bottle.wz - 1200) / 600);
       }
 
-      // Scale factor: bottle appears larger when close, smaller far away — natural perspective
       const bottleScale = 1.8;
 
       const bottlePoint = (along: number, angle: number, radius: number): V3 => {
@@ -311,7 +280,7 @@ export default function BeachOceanScene({
       const scrollColor = `rgba(180,160,120,${(0.5 * bottleAlpha).toFixed(2)})`;
       const highlightColor = `rgba(140,135,200,${(0.25 * bottleAlpha).toFixed(2)})`;
 
-      // Bottle rings
+      // Bottle rings (cross-sections)
       const ringTs = [0, 0.06, 0.12, 0.2, 0.3, 0.4, 0.5, 0.55, 0.58, 0.62, 0.65, 0.72, 0.8, 0.88, 0.91, 0.93, 0.97, 1.0];
       for (const rt of ringTs) {
         const along = rt * bottleLen;
@@ -362,7 +331,7 @@ export default function BeachOceanScene({
       }
       ctx.strokeStyle = highlightColor; ctx.lineWidth = 2; ctx.stroke();
 
-      // Scroll inside
+      // Scroll inside the bottle
       for (const offset of [-0.25, 0, 0.25]) {
         ctx.beginPath(); let started = false;
         for (let i = 0; i <= 16; i++) {
@@ -376,39 +345,44 @@ export default function BeachOceanScene({
         ctx.strokeStyle = scrollColor; ctx.lineWidth = 1; ctx.stroke();
       }
 
-      // Text on scroll
-      const textAlong = 0.25 * bottleLen;
-      const [twx, twy, twz] = bottlePoint(textAlong, 0, 15 * 0.2);
-      const tp = project(twx, twy, twz);
-      if (tp && bottleAlpha > 0.3) {
-        const scale = fov / twz;
-        const fs = Math.max(8, Math.min(22, scale * 0.8));
-        ctx.save();
-        ctx.translate(tp.sx, tp.sy);
-        ctx.rotate(bottle.heading * 0.3 + bottle.pitch * 0.2);
-        ctx.font = `italic 600 ${fs}px Georgia, "Times New Roman", serif`;
-        ctx.fillStyle = `rgba(90,70,40,${(0.6 * bottleAlpha).toFixed(2)})`;
-        ctx.textAlign = "center";
-        const displayText = (messageText && messageText.length > 20) ? messageText.slice(0, 20) + "..." : (messageText || "Your message");
-        ctx.fillText(displayText, 0, 0);
-        ctx.font = `italic ${fs * 0.6}px Georgia, "Times New Roman", serif`;
-        ctx.fillStyle = `rgba(90,70,40,${(0.4 * bottleAlpha).toFixed(2)})`;
-        ctx.fillText(`— ${senderName || "A fellow explorer"}`, 0, fs * 1.3);
-        ctx.restore();
+      // Text on scroll (visible when close enough)
+      if (bottleAlpha > 0.3 && bottle.wz < 800) {
+        const textAlong = 0.25 * bottleLen;
+        const [twx, twy, twz] = bottlePoint(textAlong, 0, 15 * 0.2);
+        const tp = project(twx, twy, twz);
+        if (tp) {
+          const scale = fov / twz;
+          const fs = Math.max(8, Math.min(22, scale * 0.8));
+          if (fs > 6) {
+            ctx.save();
+            ctx.translate(tp.sx, tp.sy);
+            ctx.rotate(bottle.heading * 0.3 + bottle.pitch * 0.2);
+            ctx.font = `italic 600 ${fs}px Georgia, "Times New Roman", serif`;
+            ctx.fillStyle = `rgba(90,70,40,${(0.6 * bottleAlpha).toFixed(2)})`;
+            ctx.textAlign = "center";
+            const displayText = (messageText && messageText.length > 20) ? messageText.slice(0, 20) + "..." : (messageText || "Your message");
+            ctx.fillText(displayText, 0, 0);
+            ctx.font = `italic ${fs * 0.6}px Georgia, "Times New Roman", serif`;
+            ctx.fillStyle = `rgba(90,70,40,${(0.4 * bottleAlpha).toFixed(2)})`;
+            ctx.fillText(`— ${senderName || "A fellow explorer"}`, 0, fs * 1.3);
+            ctx.restore();
+          }
+        }
       }
 
-      // Wake / trail behind bottle when floating
-      if (currentPhase === "floating" || currentPhase === "done") {
+      // Wake trail behind the bottle (when floating)
+      if ((currentPhase === "floating" || currentPhase === "done") && bottleAlpha > 0.05) {
         ctx.save();
-        for (let w = 1; w <= 6; w++) {
-          const trailWz = bottle.wz + w * 25;
-          const trailWx = bottle.wx - w * bottle.vx * 0.02;
+        for (let w = 1; w <= 8; w++) {
+          const trailWz = bottle.wz - w * 20; // behind = closer to viewer = smaller z
+          const trailWx = bottle.wx - w * bottle.vx * 0.015;
+          if (trailWz < 60) continue;
           const trailH = getHeight(trailWx, trailWz);
           const tp = project(trailWx, trailH + 2, trailWz);
           if (!tp) continue;
-          const wakeAlpha = Math.max(0, 0.08 - w * 0.012) * bottleAlpha;
+          const wakeAlpha = Math.max(0, 0.1 - w * 0.012) * bottleAlpha;
           ctx.beginPath();
-          ctx.ellipse(tp.sx, tp.sy, 18 - w * 2, 3, bottle.heading * 0.3, 0, Math.PI * 2);
+          ctx.ellipse(tp.sx, tp.sy, 20 - w * 1.5, 3, 0, 0, Math.PI * 2);
           ctx.strokeStyle = `rgba(200,210,240,${wakeAlpha.toFixed(3)})`;
           ctx.lineWidth = 1;
           ctx.stroke();
@@ -417,23 +391,20 @@ export default function BeachOceanScene({
       }
     }
 
-    // ── Note scroll animation (during rolling phase, before bottle) ──
-    // This draws a note that appears to float down from the form area into the bottle
-    if (phase === "rolling" || phase === "bottling") {
+    // ── Note scroll animation (during rolling/bottling phases) ──
+    if (lastPhaseRef.current === "rolling" || lastPhaseRef.current === "bottling") {
       const noteElapsed = t - phaseStartRef.current;
       const notePhaseT = Math.min(1, noteElapsed / 0.8);
 
-      // Note position: starts center-high, drops down toward bottle
       const noteStartY = H * 0.25;
       const noteEndY = H * 0.55;
       const noteY = noteStartY + (noteEndY - noteStartY) * easeInOutQuad(notePhaseT);
       const noteX = W / 2;
 
-      // Note shrinks and rolls as it descends
       const noteScale = 1 - notePhaseT * 0.7;
       const noteWidth = 200 * noteScale;
       const noteHeight = 120 * noteScale;
-      const noteAlpha = phase === "bottling" ? Math.max(0, 1 - noteElapsed * 3) : 1;
+      const noteAlpha = lastPhaseRef.current === "bottling" ? Math.max(0, 1 - noteElapsed * 3) : 1;
 
       if (noteAlpha > 0) {
         ctx.save();
@@ -441,19 +412,16 @@ export default function BeachOceanScene({
         ctx.translate(noteX, noteY);
         ctx.rotate(notePhaseT * 0.3);
 
-        // Parchment note
         ctx.fillStyle = "#faf5eb";
         ctx.shadowColor = "rgba(0,0,0,0.1)";
         ctx.shadowBlur = 15;
         ctx.fillRect(-noteWidth / 2, -noteHeight / 2, noteWidth, noteHeight);
         ctx.shadowBlur = 0;
 
-        // Border
         ctx.strokeStyle = "rgba(160,140,100,0.25)";
         ctx.lineWidth = 1;
         ctx.strokeRect(-noteWidth / 2, -noteHeight / 2, noteWidth, noteHeight);
 
-        // Text on note
         if (noteScale > 0.5) {
           const textFs = Math.max(8, 13 * noteScale);
           ctx.font = `italic ${textFs}px Georgia, serif`;
