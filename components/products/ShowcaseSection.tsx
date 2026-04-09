@@ -119,7 +119,7 @@ export default function ShowcaseSection({ compact = false, onInteraction }: { co
 
   if (compact) {
     return (
-      <section className="relative overflow-hidden flex flex-col items-center py-16 bg-[#F9F9F9]">
+      <section className="relative overflow-hidden flex flex-col items-center py-16 bg-white">
         <p
           className="mb-6 flex h-[40px] w-[303px] items-center justify-center text-center"
           style={{
@@ -139,8 +139,8 @@ export default function ShowcaseSection({ compact = false, onInteraction }: { co
           onMouseEnter={() => { if (window.innerWidth >= 1024) setMarqueeHovered(true); }}
           onMouseLeave={() => { if (window.innerWidth >= 1024) setMarqueeHovered(false); }}
         >
-          <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-24" style={{ background: "linear-gradient(to right, #F9F9F9, transparent)" }} />
-          <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-24" style={{ background: "linear-gradient(to left, #F9F9F9, transparent)" }} />
+          <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-24" style={{ background: "linear-gradient(to right, #FFFFFF, transparent)" }} />
+          <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-24" style={{ background: "linear-gradient(to left, #FFFFFF, transparent)" }} />
           <div
             className="trusted-marquee flex w-max items-center gap-[72px]"
             style={{ animationPlayState: marqueeHovered ? "paused" : "running" }}

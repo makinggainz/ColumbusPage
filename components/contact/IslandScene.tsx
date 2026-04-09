@@ -358,8 +358,7 @@ export default function IslandScene() {
   return (
     <canvas
       ref={canvasRef}
-      className="w-full"
-      style={{ height: "50vh", minHeight: 350 }}
+      style={{ position: "fixed", top: 0, left: 0, width: "100%", height: "100%", zIndex: 0 }}
     />
   );
 }
