@@ -3,9 +3,12 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+import dynamic from "next/dynamic";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { GridSection, GridCell, gl } from "@/components/home/ContentGrid";
+
+const ContactOceanScene = dynamic(() => import("@/components/contact/ContactOceanScene"), { ssr: false });
 
 /* ── Scroll fade-in hook ── */
 function useScrollReveal(threshold = 0.1) {
@@ -94,8 +97,24 @@ export default function OurMissionPage() {
   const philosophy = useScrollReveal(0.1);
   const values = useScrollReveal(0.05);
 
+  const [sceneOpacity, setSceneOpacity] = useState(1);
+  useEffect(() => {
+    const onScroll = () => {
+      setSceneOpacity(Math.max(0, 1 - window.scrollY / 100));
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   return (
     <main className="min-h-screen" style={{ backgroundColor: "#F9F9F9" }}>
+      {/* Ocean scene background — fades out on scroll */}
+      {sceneOpacity > 0 && (
+        <div style={{ position: "fixed", inset: 0, zIndex: 0, opacity: sceneOpacity, willChange: "opacity", pointerEvents: "none" }}>
+          <ContactOceanScene />
+        </div>
+      )}
+
       <Navbar />
 
       {/* ════════ 1. HERO ════════ */}
