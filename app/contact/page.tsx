@@ -32,7 +32,7 @@ export default function ContactPage() {
 
   return (
     <main className="relative min-h-screen">
-      {/* Ocean scene — fixed fullscreen background */}
+      {/* Underwater scene — fixed fullscreen background */}
       <IslandScene />
 
       <Navbar />
@@ -154,7 +154,9 @@ export default function ContactPage() {
           </div>
         </div>
 
-        <Footer />
+        <div style={{ mask: "linear-gradient(to bottom, transparent 0%, black 30%)", WebkitMask: "linear-gradient(to bottom, transparent 0%, black 30%)" }}>
+          <Footer />
+        </div>
       </div>
     </main>
   );
