@@ -129,13 +129,13 @@ export default function OurMissionPage() {
             className="mt-6 text-[16px] md:text-[20px] leading-[1.5] max-w-[600px]"
             style={{ color: "rgba(10, 19, 68, 0.45)", letterSpacing: "-0.015em", fontWeight: 400, ...hero.anim(100) }}
           >
-            Building spatial intelligence to help humanity understand and navigate the physical world.
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt.
           </p>
         </div>
       </div>
 
       {/* ════════ 2. MISSION & VISION ════════ */}
-      <GridSection className="bg-transparent!">
+      <GridSection className="bg-transparent! grid-section-fade-top">
         <div ref={mission.ref} style={{ borderBottom: gl }}>
 
           <div className="flex flex-col items-center text-center px-8 md:px-10 py-20 md:py-28">
@@ -182,7 +182,7 @@ export default function OurMissionPage() {
       </div>
 
       {/* ════════ 4. HOW WE DIFFER ════════ */}
-      <GridSection className="bg-transparent!">
+      <GridSection className="bg-transparent! grid-section-fade-top">
         <div ref={differ.ref} style={{ borderBottom: gl }}>
           <div className="px-8 md:px-10 py-20 md:py-28">
 
@@ -274,13 +274,13 @@ export default function OurMissionPage() {
       </div>
 
       {/* ════════ 6. VALUES GRID ════════ */}
-      <GridSection className="bg-transparent!">
+      <GridSection className="bg-transparent! grid-section-fade-top">
         <div ref={values.ref}>
           <div className="grid md:grid-cols-3">
             {[
-              { label: "Real Data", desc: "We survey the physical world — we don't scrape. Every dataset is vetted, high-fidelity, and fresh." },
-              { label: "Spatial Intelligence", desc: "Understanding humans' relation to geography. Contextual reasoning that generic AI simply cannot do." },
-              { label: "Accessible", desc: "GIS made effortless for everyone. What took weeks now takes minutes — no expertise required." },
+              { label: "Real Data", desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore." },
+              { label: "Spatial Intelligence", desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut enim ad minim veniam, quis nostrud." },
+              { label: "Accessible", desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis aute irure dolor in reprehenderit." },
             ].map((v, i) => (
               <div
                 key={v.label}
@@ -309,7 +309,7 @@ export default function OurMissionPage() {
         </Link>
       </div>
 
-      <Footer variant={"compact"} />
+      <Footer />
     </main>
   );
 }
