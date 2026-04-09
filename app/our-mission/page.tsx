@@ -98,24 +98,37 @@ export default function OurMissionPage() {
   const values = useScrollReveal(0.05);
 
   const [sceneOpacity, setSceneOpacity] = useState(1);
+  const [gridLineOpacity, setGridLineOpacity] = useState(0);
   useEffect(() => {
     const onScroll = () => {
-      setSceneOpacity(Math.max(0, 1 - window.scrollY / 100));
+      const y = window.scrollY;
+      setSceneOpacity(Math.max(0, 1 - y / 100));
+      // Grid lines fade in as the scene fades out (0-100px scroll)
+      setGridLineOpacity(Math.min(1, y / 100));
     };
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   return (
-    <main className="min-h-screen" style={{ backgroundColor: "#F9F9F9" }}>
+    <main className="mission-page min-h-screen" style={{ backgroundColor: "#F9F9F9" }}>
+      <style>{`
+        .mission-page .grid-section::before,
+        .mission-page .grid-section::after {
+          opacity: ${gridLineOpacity};
+          transition: opacity 0.1s ease;
+        }
+      `}</style>
       {/* Ocean scene background — fades out on scroll */}
       {sceneOpacity > 0 && (
         <div style={{
           position: "fixed", inset: 0, zIndex: 1,
           opacity: sceneOpacity, willChange: "opacity", pointerEvents: "none",
           transform: "translateY(-120px)",
-          mask: "linear-gradient(to bottom, transparent 0%, black 25%)",
-          WebkitMask: "linear-gradient(to bottom, transparent 0%, black 25%)",
+          mask: "linear-gradient(to bottom, transparent 0%, black 20%, black 75%, rgba(0,0,0,0.15) 100%), linear-gradient(to right, rgba(0,0,0,0.1) 0%, black 20%, black 80%, rgba(0,0,0,0.1) 100%)",
+          WebkitMask: "linear-gradient(to bottom, transparent 0%, black 20%, black 75%, rgba(0,0,0,0.15) 100%), linear-gradient(to right, rgba(0,0,0,0.1) 0%, black 20%, black 80%, rgba(0,0,0,0.1) 100%)",
+          maskComposite: "intersect" as unknown as string,
+          WebkitMaskComposite: "destination-in" as React.CSSProperties["WebkitMaskComposite"],
         }}>
           <ContactOceanScene camHeight={350} horizonPct={0.35} />
         </div>
