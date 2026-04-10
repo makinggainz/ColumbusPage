@@ -1,9 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
-import { GridSection } from "./ContentGrid";
+import { GridSection, GridHeader, GridCell, gl } from "./ContentGrid";
 
 const LOGOS = [
   "/Icon/logo1.png",
@@ -15,119 +14,55 @@ const LOGOS = [
   "/Icon/logo7.png",
 ];
 
-const SCROLL_LOGOS = [...LOGOS, ...LOGOS];
 const TINT = "grayscale(100%) sepia(40%) hue-rotate(190deg) saturate(120%)";
 
 export const PartnerStrip = () => {
-  const [hovered, setHovered] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) { setVisible(true); obs.disconnect(); } },
+      { threshold: 0.05 }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+
+  const anim = (delay = 0): React.CSSProperties => ({
+    opacity: visible ? 1 : 0,
+    transform: visible ? "translateY(0)" : "translateY(12px)",
+    transition: `opacity 0.7s ease ${delay}ms, transform 0.7s ease ${delay}ms`,
+  });
 
   return (
-    <GridSection style={{ borderTop: "none", paddingTop: 100 }}>
-      <div className="flex flex-col items-center px-8 md:px-10 pt-32">
-        <h2 className="font-medium tracking-[-0.02em] text-[#1D1D1F] text-center text-[25px] md:text-[31px] lg:text-[39px]">
-          High-fidelity and smart datasets
-        </h2>
-        <p className="text-[16px] lg:text-[20px] mt-3 text-center font-medium" style={{ color: "#6E6E73" }}>
-          We vet our data with reputable partner organizations
-        </p>
-      </div>
+    <GridSection>
+      <div ref={ref}>
+        <GridHeader
+          label="DATA PARTNERS"
+          title="High-fidelity and smart datasets"
+          subtitle="We vet our data with reputable partner organizations"
+        />
 
-      {/* Carousel with edge fade + hover overlay */}
-      <div
-        className="relative pt-20 pb-28 mx-auto"
-        style={{ width: 958, maxWidth: "100%" }}
-      >
-        <div
-          className="relative"
-          onMouseEnter={() => setHovered(true)}
-          onMouseLeave={() => setHovered(false)}
-        >
-          <div className="overflow-hidden">
-            {/* Left fade */}
-            <div
-              className="absolute left-0 top-0 bottom-0 z-10 pointer-events-none"
-              style={{ width: 100, background: "linear-gradient(to right, white, transparent)" }}
-            />
-            {/* Right fade */}
-            <div
-              className="absolute right-0 top-0 bottom-0 z-10 pointer-events-none"
-              style={{ width: 100, background: "linear-gradient(to left, white, transparent)" }}
-            />
-
-            <div
-              className="flex items-center gap-14 w-max"
-              style={{
-                animation: "partner-scroll 30s linear infinite",
-                animationPlayState: hovered ? "paused" : "running",
-              }}
-            >
-              {SCROLL_LOGOS.map((src, i) => (
+        <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-7">
+          {LOGOS.map((src, i) => (
+            <GridCell key={i} style={anim(i * 50 + 100)}>
+              <div className="flex items-center justify-center h-16">
                 <Image
-                  key={i}
                   src={src}
                   alt=""
                   width={175}
                   height={62}
-                  className="object-contain h-[48px] w-auto shrink-0"
+                  className="object-contain h-8 w-auto"
                   style={{ filter: TINT, opacity: 0.5 }}
                 />
-              ))}
-            </div>
-          </div>
-
-          {/* Hover overlay + button */}
-          <div
-            className="absolute z-20 flex items-center justify-center transition-opacity duration-300"
-            style={{
-              top: -28,
-              bottom: -28,
-              left: 0,
-              right: 0,
-              opacity: hovered ? 1 : 0,
-              pointerEvents: hovered ? "auto" : "none",
-              backdropFilter: "blur(3px)",
-              WebkitBackdropFilter: "blur(3px)",
-              backgroundColor: "rgba(255,255,255,0.4)",
-            }}
-          >
-            <Link
-              href="/technology"
-              className="group flex items-center justify-between gap-3 leading-none whitespace-nowrap hover:opacity-90 transition-all duration-300"
-              style={{
-                fontSize: 14,
-                fontWeight: 500,
-                height: 36,
-                paddingLeft: 20,
-                paddingRight: 16,
-                backgroundColor: "#000000",
-                color: "white",
-                transform: hovered ? "translateY(0)" : "translateY(6px)",
-                transition: "opacity 0.3s, transform 0.3s",
-              }}
-            >
-              <span className="transition-colors duration-300 group-hover:text-[#2563EB]">Learn more</span>
-              <svg
-                className="transition-transform duration-300 group-hover:translate-x-0.5"
-                width="10" height="18" viewBox="0 0 7 12" fill="none"
-                stroke="#2563EB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"
-              >
-                <path d="M1 1l5 5-5 5" />
-              </svg>
-            </Link>
-          </div>
+              </div>
+            </GridCell>
+          ))}
         </div>
       </div>
-
-      <div className="flex justify-center px-8 min-[1287px]:px-10 pb-20">
-        <div style={{ width: 958, maxWidth: "100%", height: 1, background: "var(--grid-line)" }} />
-      </div>
-
-      <style jsx global>{`
-        @keyframes partner-scroll {
-          0%   { transform: translateX(0); }
-          100% { transform: translateX(-50%); }
-        }
-      `}</style>
     </GridSection>
   );
 };

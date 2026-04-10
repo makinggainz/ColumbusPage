@@ -1,10 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
-import Link from "next/link";
-import { useEffect, useRef } from "react";
-import { GridSection, gl } from "./ContentGrid";
+import { GridSection, GridHeader, GridCell, gl } from "./ContentGrid";
 
 const LOGOS = [
   "/MapsGPTLogos/Logo1.png",
@@ -15,13 +13,19 @@ const LOGOS = [
   "/MapsGPTLogos/Logo6.png",
 ];
 
-const SCROLL_LOGOS = [...LOGOS, ...LOGOS];
 const TINT = "grayscale(100%) sepia(40%) hue-rotate(190deg) saturate(120%)";
+
+const FAQ = [
+  { q: "How does Columbus handle data privacy?", a: "All data is processed securely in compliance with GDPR and SOC 2 standards. We never sell or share your data with third parties." },
+  { q: "What datasets are available?", a: "Columbus aggregates hundreds of geospatial datasets including demographics, mobility, environmental, infrastructure, and real estate data from vetted partner organizations." },
+  { q: "Can I bring my own data?", a: "Yes. You can upload proprietary datasets and overlay them with Columbus data for combined analysis and AI-powered insights." },
+  { q: "What industries do you serve?", a: "Columbus serves real estate, urban planning, logistics, government, security, and environmental sectors with tailored geospatial intelligence." },
+];
 
 export const TrustStrip = () => {
   const ref = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
-  const [hovered, setHovered] = useState(false);
+  const [openFaq, setOpenFaq] = useState<number | null>(null);
 
   useEffect(() => {
     const el = ref.current;
@@ -34,126 +38,76 @@ export const TrustStrip = () => {
     return () => obs.disconnect();
   }, []);
 
-  const anim = (delay = 0) => ({
+  const anim = (delay = 0): React.CSSProperties => ({
     opacity: visible ? 1 : 0,
-    transform: visible ? "translateY(0)" : "translateY(14px)",
+    transform: visible ? "translateY(0)" : "translateY(12px)",
     transition: `opacity 0.7s ease ${delay}ms, transform 0.7s ease ${delay}ms`,
   });
 
   return (
-    <GridSection style={{ borderTop: "none", overflow: "visible", position: "relative" }}>
-      <div ref={ref} style={{ borderBottom: gl, position: "relative", overflow: "visible" }}>
-        {/* Heading */}
-        <div className="flex flex-col items-center text-center px-8 pt-24 pb-4" style={anim(0)}>
-          <h2 className="text-[#1D1D1F] text-[25px] md:text-[31px] lg:text-[39px] font-medium tracking-[-0.02em] leading-[1.1]">
-            Your plans are in good hands
-          </h2>
+    <GridSection>
+      <div ref={ref}>
+        <GridHeader
+          label="TRUST"
+          title="Your plans are in good hands"
+          subtitle="We work with data from reputable brands"
+        />
+
+        {/* Logo grid */}
+        <div className="grid grid-cols-3 md:grid-cols-6">
+          {LOGOS.map((src, i) => (
+            <GridCell key={i} style={anim(i * 40 + 150)}>
+              <div className="flex items-center justify-center h-14">
+                <Image
+                  src={src}
+                  alt=""
+                  width={120}
+                  height={36}
+                  className="object-contain h-6 w-auto"
+                  style={{ filter: TINT, opacity: 0.5 }}
+                />
+              </div>
+            </GridCell>
+          ))}
         </div>
 
-        {/* Subtitle */}
-        <div className="flex items-center justify-center px-8 pb-6" style={anim(100)}>
-          <p className="text-[#6E6E73] text-[16px] lg:text-[20px] font-medium">
-            We work with data from reputable brands
-          </p>
-        </div>
-
-        {/* Logo carousel with edge fade + hover overlay */}
-        <div style={anim(200)}>
-        <div
-          className="relative py-12 mx-auto w-[92%] md:w-[85%]"
-        >
-          <div
-            className="relative"
-            onMouseEnter={() => setHovered(true)}
-            onMouseLeave={() => setHovered(false)}
-          >
-            <div className="overflow-hidden">
-              {/* Left fade */}
+        {/* FAQ accordion */}
+        <div style={{ borderTop: gl }}>
+          {FAQ.map((item, i) => (
+            <div key={i} style={{ borderBottom: gl, ...anim(i * 60 + 250) }}>
+              <button
+                type="button"
+                onClick={() => setOpenFaq(openFaq === i ? null : i)}
+                className="w-full flex items-center justify-between px-6 md:px-10 py-5 text-left hover:bg-[rgba(120,120,200,0.04)] transition-colors duration-200"
+              >
+                <span className="text-[17px] font-semibold text-[#1D1D1F]">{item.q}</span>
+                <svg
+                  width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#1D1D1F" strokeWidth="1.5" strokeLinecap="round"
+                  style={{
+                    transform: openFaq === i ? "rotate(45deg)" : "rotate(0deg)",
+                    transition: "transform 0.3s cubic-bezier(0.22, 1, 0.36, 1)",
+                    flexShrink: 0,
+                    marginLeft: 16,
+                  }}
+                >
+                  <path d="M7 1v12M1 7h12" />
+                </svg>
+              </button>
               <div
-                className="absolute left-0 top-0 bottom-0 z-10 pointer-events-none w-10 md:w-25"
-                style={{ background: "linear-gradient(to right, white, transparent)" }}
-              />
-              {/* Right fade */}
-              <div
-                className="absolute right-0 top-0 bottom-0 z-10 pointer-events-none w-10 md:w-25"
-                style={{ background: "linear-gradient(to left, white, transparent)" }}
-              />
-
-              <div
-                className="flex items-center gap-8 md:gap-16 w-max"
                 style={{
-                  animation: "trust-scroll 25s linear infinite",
-                  animationPlayState: hovered ? "paused" : "running",
+                  maxHeight: openFaq === i ? 200 : 0,
+                  overflow: "hidden",
+                  transition: "max-height 0.3s cubic-bezier(0.22, 1, 0.36, 1)",
                 }}
               >
-                {SCROLL_LOGOS.map((src, i) => (
-                  <Image
-                    key={i}
-                    src={src}
-                    alt=""
-                    width={120}
-                    height={36}
-                    className="object-contain h-5.5 md:h-6.5 w-auto shrink-0"
-                    style={{ filter: TINT, opacity: 0.5 }}
-                  />
-                ))}
+                <p className="px-6 md:px-10 pb-5 text-[15px] leading-[1.6] text-[#6E6E73]">
+                  {item.a}
+                </p>
               </div>
             </div>
-
-            {/* Hover overlay + button */}
-            <div
-              className="absolute z-20 flex items-center justify-center transition-opacity duration-300"
-              style={{
-                top: -28,
-                bottom: -28,
-                left: 0,
-                right: 0,
-                opacity: hovered ? 1 : 0,
-                pointerEvents: hovered ? "auto" : "none",
-                backdropFilter: "blur(3px)",
-                WebkitBackdropFilter: "blur(3px)",
-                backgroundColor: "rgba(255,255,255,0.4)",
-              }}
-            >
-              <Link
-                href="/maps-gpt"
-                className="group flex items-center justify-between gap-3 leading-none whitespace-nowrap hover:opacity-90 transition-all duration-300"
-                style={{
-                  fontSize: 14,
-                  fontWeight: 500,
-                  height: 36,
-                  paddingLeft: 20,
-                  paddingRight: 16,
-                  backgroundColor: "#000000",
-                  color: "white",
-                  transform: hovered ? "translateY(0)" : "translateY(6px)",
-                  transition: "opacity 0.3s, transform 0.3s",
-                }}
-              >
-                <span className="transition-colors duration-300 group-hover:text-[#2563EB]">Learn more</span>
-                <svg
-                  className="transition-transform duration-300 group-hover:translate-x-0.5"
-                  width="10" height="18" viewBox="0 0 7 12" fill="none"
-                  stroke="#2563EB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"
-                >
-                  <path d="M1 1l5 5-5 5" />
-                </svg>
-              </Link>
-            </div>
-          </div>
+          ))}
         </div>
-        </div>
-
-        {/* Bottom spacing */}
-        <div className="h-12" />
       </div>
-
-      <style jsx global>{`
-        @keyframes trust-scroll {
-          0%   { transform: translateX(0); }
-          100% { transform: translateX(-50%); }
-        }
-      `}</style>
     </GridSection>
   );
 };
