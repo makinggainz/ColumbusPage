@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
@@ -99,15 +99,32 @@ export default function OurMissionPage() {
 
   const [sceneOpacity, setSceneOpacity] = useState(1);
   const [gridLineOpacity, setGridLineOpacity] = useState(0);
-  useEffect(() => {
-    const onScroll = () => {
+  useLayoutEffect(() => {
+    const syncFromScrollPosition = () => {
       const y = window.scrollY;
       setSceneOpacity(Math.max(0, 1 - y / 100));
       // Grid lines fade in as the scene fades out (0-100px scroll)
       setGridLineOpacity(Math.min(1, y / 100));
     };
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+
+    syncFromScrollPosition();
+    window.addEventListener("scroll", syncFromScrollPosition, { passive: true });
+
+    // Reload + scroll restoration often applies after first paint; no scroll event fires.
+    let raf1 = 0;
+    let raf2 = 0;
+    raf1 = requestAnimationFrame(() => {
+      raf2 = requestAnimationFrame(syncFromScrollPosition);
+    });
+    const onLoad = () => syncFromScrollPosition();
+    window.addEventListener("load", onLoad);
+
+    return () => {
+      cancelAnimationFrame(raf1);
+      cancelAnimationFrame(raf2);
+      window.removeEventListener("scroll", syncFromScrollPosition);
+      window.removeEventListener("load", onLoad);
+    };
   }, []);
 
   return (
