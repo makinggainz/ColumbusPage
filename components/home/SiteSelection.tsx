@@ -7,7 +7,6 @@ import { GridSection, gl } from "./ContentGrid";
 import glassStyles from "@/components/ui/GlassButton.module.css";
 
 const PILLS = ["Map Chat", "Agentic Audits", "Agentic Research", "Data Catalogue"];
-const INSET = 4;
 
 export const SiteSelection = () => {
   const ref = useRef<HTMLDivElement>(null);
@@ -184,159 +183,41 @@ export const SiteSelection = () => {
   );
 };
 
-/* ── Pill Toggle ── */
+/* ── Feature Tab Bar — structural, no rounding ── */
 function PillToggle() {
   const [active, setActive] = useState(0);
-  const [hovered, setHovered] = useState<number | null>(null);
-  const [pressed, setPressed] = useState<number | null>(null);
-  const [indicator, setIndicator] = useState({ left: 0, width: 0, ready: false });
-  const [hoverIndicator, setHoverIndicator] = useState({ left: 0, width: 0 });
-  const containerRef = useRef<HTMLDivElement>(null);
-  const buttonRefs = useRef<(HTMLButtonElement | null)[]>([]);
-
-  const measure = (idx: number) => {
-    const btn = buttonRefs.current[idx];
-    const container = containerRef.current;
-    if (!btn || !container) return;
-    const bRect = btn.getBoundingClientRect();
-    const cRect = container.getBoundingClientRect();
-    setIndicator({
-      left: bRect.left - cRect.left + INSET,
-      width: bRect.width - INSET * 2,
-      ready: true,
-    });
-  };
-
-  const measureHover = (idx: number) => {
-    const btn = buttonRefs.current[idx];
-    const container = containerRef.current;
-    if (!btn || !container) return;
-    const bRect = btn.getBoundingClientRect();
-    const cRect = container.getBoundingClientRect();
-    setHoverIndicator({
-      left: bRect.left - cRect.left + INSET,
-      width: bRect.width - INSET * 2,
-    });
-  };
-
-  const handleClick = (i: number) => {
-    if (i === active) return;
-    setActive(i);
-    measure(i);
-  };
-
-  useEffect(() => { measure(0); }, []);
 
   return (
-    <>
-      {/* ── Desktop: horizontal pill bar with sliding indicator (≥684px) ── */}
-      <div
-        ref={containerRef}
-        className="hidden min-[684px]:inline-flex items-center relative mt-8 md:mt-10 lg:mt-14"
-        style={{
-          height: 56,
-          borderRadius: 28,
-          overflow: "hidden",
-          backgroundColor: "#ffffff",
-          boxShadow: "0 4px 20px rgba(0,0,0,0.12)",
-        }}
-      >
-        {/* Hover highlight */}
-        <div
-          aria-hidden
+    <div
+      className="flex mt-8 md:mt-10 lg:mt-14 w-full max-w-[560px]"
+      style={{ borderBottom: "1px solid rgba(0,0,0,0.08)", backgroundColor: "rgba(255,255,255,0.85)", backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)" }}
+    >
+      {PILLS.map((label, i) => (
+        <button
+          key={label}
+          type="button"
+          onClick={() => setActive(i)}
+          className="flex-1 py-3.5 text-[14px] font-medium relative overflow-hidden"
           style={{
-            position: "absolute",
-            top: INSET,
-            left: hoverIndicator.left,
-            width: hoverIndicator.width,
-            height: `calc(100% - ${INSET * 2}px)`,
-            borderRadius: 24,
-            backgroundColor: pressed !== null && pressed !== active
-              ? "rgba(37,99,235,0.12)"
-              : "rgba(37,99,235,0.05)",
-            opacity: hovered !== null && hovered !== active ? 1 : 0,
-            transition: [
-              "left 0.3s cubic-bezier(0.25, 1, 0.5, 1)",
-              "width 0.3s cubic-bezier(0.25, 1, 0.5, 1)",
-              "opacity 0.2s ease",
-              "background-color 0.1s ease",
-            ].join(", "),
-            pointerEvents: "none",
-            zIndex: 1,
+            color: active === i ? "#0A1344" : "rgba(29,29,31,0.4)",
+            borderRight: i < PILLS.length - 1 ? "1px solid rgba(0,0,0,0.06)" : "none",
+            transition: "color 0.3s ease",
           }}
-        />
-
-        {/* Active sliding indicator */}
-        <div
-          aria-hidden
-          style={{
-            position: "absolute",
-            top: INSET,
-            left: indicator.left,
-            width: indicator.width,
-            height: `calc(100% - ${INSET * 2}px)`,
-            borderRadius: 24,
-            backgroundColor: "#0A1344",
-            boxShadow: "0 1px 4px rgba(0,0,0,0.08)",
-            opacity: indicator.ready ? 1 : 0,
-            transition: [
-              "left 0.35s cubic-bezier(0.34, 1.15, 0.64, 1)",
-              "width 0.35s cubic-bezier(0.34, 1.15, 0.64, 1)",
-              "opacity 0.15s ease",
-            ].join(", "),
-            pointerEvents: "none",
-            zIndex: 2,
-          }}
-        />
-
-        {PILLS.map((label, i) => (
-          <button
-            key={label}
-            ref={el => { buttonRefs.current[i] = el; }}
-            type="button"
-            className="h-full flex items-center justify-center whitespace-nowrap relative cursor-pointer"
+        >
+          {/* Active gradient — slides up from bottom */}
+          <div
             style={{
-              fontSize: 16,
-              fontWeight: 500,
-              letterSpacing: "-0.01em",
-              padding: "0 24px",
-              zIndex: 3,
-              color: active === i ? "#ffffff" : hovered === i ? "#1D1D1F" : "rgba(29,29,31,0.6)",
-              transition: "color 0.25s ease",
+              position: "absolute",
+              inset: 0,
+              background: "linear-gradient(to top, rgba(0,102,204,0.12) 0%, rgba(0,102,204,0.04) 60%, transparent 100%)",
+              opacity: active === i ? 1 : 0,
+              transform: active === i ? "translateY(0%)" : "translateY(100%)",
+              transition: "opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1)",
             }}
-            onClick={() => handleClick(i)}
-            onMouseEnter={() => { setHovered(i); measureHover(i); }}
-            onMouseLeave={() => { setHovered(null); setPressed(null); }}
-            onMouseDown={() => { if (i !== active) setPressed(i); }}
-            onMouseUp={() => setPressed(null)}
-          >
-            {label}
-          </button>
-        ))}
-      </div>
-
-      {/* ── Mobile: 2×2 grid of pill buttons (<684px) ── */}
-      <div className="min-[684px]:hidden grid grid-cols-2 gap-2 mt-8 w-full max-w-100 px-4">
-        {PILLS.map((label, i) => (
-          <button
-            key={label}
-            type="button"
-            onClick={() => { setActive(i); measure(i); }}
-            className="flex items-center justify-center rounded-full cursor-pointer transition-all duration-300"
-            style={{
-              height: 44,
-              fontSize: 13,
-              fontWeight: 500,
-              letterSpacing: "-0.01em",
-              backgroundColor: active === i ? "rgba(255,255,255,0.9)" : "rgba(255,255,255,0.3)",
-              color: active === i ? "#1D1D1F" : "rgba(29,29,31,0.5)",
-              boxShadow: active === i ? "0 1px 4px rgba(0,0,0,0.08)" : "none",
-            }}
-          >
-            {label}
-          </button>
-        ))}
-      </div>
-    </>
+          />
+          <span className="relative z-10">{label}</span>
+        </button>
+      ))}
+    </div>
   );
 }
