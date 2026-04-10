@@ -149,7 +149,7 @@ export default function OurMissionPage() {
       <Navbar />
 
       {/* ════════ 1. HERO ════════ */}
-      <div className="relative overflow-hidden">
+      <GridSection className="bg-transparent! relative overflow-hidden">
         {/* Accent gradient */}
         <div
           className="absolute left-0 right-0 top-0 pointer-events-none"
@@ -157,7 +157,7 @@ export default function OurMissionPage() {
           aria-hidden
         />
 
-        <div ref={hero.ref} className="relative z-10 mx-auto w-full pt-40 md:pt-52 pb-40 md:pb-56 flex flex-col items-center text-center px-8 md:px-10" style={{ maxWidth: 1287 }}>
+        <div ref={hero.ref} className="relative z-10 w-full pt-40 md:pt-52 pb-40 md:pb-56 flex flex-col items-center text-center px-8 md:px-10">
           <h1
             className="font-light leading-[1.15] text-[#0A1344] text-[39px] md:text-[49px] lg:text-[61px]"
             style={{ letterSpacing: "-0.02em", ...hero.anim(0) }}
@@ -171,7 +171,7 @@ export default function OurMissionPage() {
             What if you could ask the planet a question, and it understood?
           </p>
         </div>
-      </div>
+      </GridSection>
 
       {/* ════════ 2. MISSION & VISION ════════ */}
       <div style={{

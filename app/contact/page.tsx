@@ -93,7 +93,7 @@ export default function ContactPage() {
           content: "";
           position: absolute;
           inset: 0;
-          background: linear-gradient(to top, rgba(0,102,204,0.40) 0%, rgba(0,102,204,0.18) 50%, transparent 100%);
+          background: linear-gradient(to top, rgba(0,102,204,0.12) 0%, rgba(0,102,204,0.04) 60%, transparent 100%);
           opacity: 0;
           transform: translateY(100%);
           transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
@@ -305,7 +305,7 @@ export default function ContactPage() {
                 </svg>
               </button>
               <div id="support-content" style={{ maxHeight: "0px", overflow: "hidden", transition: "max-height 0.4s cubic-bezier(0.22, 1, 0.36, 1)" }}>
-                <div className="px-8 pb-6" style={{ borderTop: fadeLine.background ? undefined : undefined }}>
+                <div className="px-8 pb-6">
                   <div style={fadeLine} className="mb-5" />
                   <ul className="space-y-2 text-[15px] leading-[1.6]" style={{ color: "rgba(10,19,68,0.65)" }}>
                     <li>• Visit our <Link href="/help" className="underline hover:opacity-70 transition-opacity">Help center</Link></li>
