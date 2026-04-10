@@ -70,7 +70,7 @@ export const Capabilities = () => {
     <GridSection>
       <div ref={ref}>
         <GridHeader
-          label="CAPABILITIES"
+          label=""
           title="What Columbus can do for you"
           subtitle="Powerful tools that transform how you research, analyze, and select sites."
         />

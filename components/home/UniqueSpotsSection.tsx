@@ -43,7 +43,7 @@ export const UniqueSpotsSection = () => {
       <GridSection>
         <div ref={ref}>
           <GridHeader
-            label="DISCOVERY"
+            label=""
             title="Spots found faster on MapsGPT"
             subtitle="AI-powered recommendations from real traveler questions."
           />
@@ -82,25 +82,46 @@ export const UniqueSpotsSection = () => {
                   </div>
 
                   {/* Chat UI */}
-                  <div className="p-6 flex flex-col gap-2.5">
-                    <div className="flex items-start gap-2">
-                      <div className="w-6 h-6 rounded-full shrink-0 overflow-hidden" style={{ marginTop: 1 }}>
-                        <Image src="/MapsGPT-logo.png" alt="" width={24} height={24} className="w-full h-full object-cover" />
+                  <div className="px-6 pt-5 pb-6 flex flex-col gap-4">
+                    {/* AI response */}
+                    <div className="flex items-start gap-3">
+                      <div className="w-8 h-8 rounded-full shrink-0 overflow-hidden border border-[rgba(37,99,235,0.15)]">
+                        <Image src="/MapsGPT-logo.png" alt="" width={32} height={32} className="w-full h-full object-cover" />
                       </div>
-                      <div className="flex-1 px-3 py-2" style={{ background: "rgba(37,99,235,0.08)", border: "1px solid rgba(37,99,235,0.15)" }}>
+                      <div className="flex-1">
+                        <span className="text-[11px] font-medium mb-1 block" style={{ color: "#0066CC" }}>MapsGPT</span>
                         <p className="text-[13px] leading-[1.5] text-[#1D1D1F]">{spot.response}</p>
                       </div>
                     </div>
-                    <div className="flex items-start gap-2 flex-row-reverse">
-                      <img src={spot.avatar} alt="" className="w-6 h-6 rounded-full shrink-0 object-cover border border-white" style={{ marginTop: 1 }} />
-                      <div className="flex-1 px-3 py-2" style={{ background: "rgba(0,0,0,0.04)", border: "1px solid rgba(0,0,0,0.06)" }}>
-                        <p className="text-[13px] leading-[1.5] text-[#6E6E73]">{spot.query}</p>
+                    {/* Divider */}
+                    <div style={{ height: 1, background: "linear-gradient(to right, rgba(0,0,0,0.06) 0%, rgba(0,0,0,0.06) 60%, transparent 100%)" }} />
+                    {/* User query */}
+                    <div className="flex items-start gap-3">
+                      <img src={spot.avatar} alt="" className="w-8 h-8 rounded-full shrink-0 object-cover border border-[rgba(0,0,0,0.06)]" />
+                      <div className="flex-1">
+                        <span className="text-[11px] font-medium text-[#6E6E73] mb-1 block">You asked</span>
+                        <p className="text-[13px] leading-[1.5] text-[#1D1D1F]">{spot.query}</p>
                       </div>
                     </div>
                   </div>
                 </Link>
               </GridCell>
             ))}
+
+            {/* See more CTA cell */}
+            <GridCell style={anim(SPOTS.length * 60 + 150)}>
+              <div className="flex flex-col items-center justify-center h-full py-16">
+                <a
+                  href="/maps-gpt"
+                  className="group flex items-center gap-3 text-[15px] font-medium text-[#0A1344] transition-opacity hover:opacity-60"
+                >
+                  See more
+                  <svg className="transition-transform duration-300 group-hover:translate-x-0.5" width="7" height="12" viewBox="0 0 7 12" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M1 1l5 5-5 5" />
+                  </svg>
+                </a>
+              </div>
+            </GridCell>
           </div>
         </div>
       </GridSection>

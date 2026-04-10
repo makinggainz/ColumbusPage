@@ -128,6 +128,9 @@ export const Applications = () => {
         </div>
       </div>
     </GridSection>
+
+    {/* Full-width horizontal line */}
+    <div style={{ width: "100%", height: 1, background: "var(--grid-line)" }} />
     </>
   );
 };

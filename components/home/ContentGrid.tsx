@@ -16,7 +16,7 @@ export function GridSection({
   return (
     <section
       className={`grid-section max-w-[1287px] mx-5 md:mx-auto bg-white ${className}`}
-      style={style}
+      style={{ borderTop: gl, ...style }}
     >
       {children}
     </section>
@@ -37,11 +37,13 @@ export function GridHeader({
       className="py-6 px-6 md:px-10"
       style={{ borderRight: gl, borderBottom: gl }}
     >
-      <span className="text-[11px] font-semibold tracking-[0.2em] uppercase text-[#0A1344]/30 font-mono block">
-        {label}
-      </span>
+      {label && (
+        <span className="text-[11px] font-semibold tracking-[0.2em] uppercase text-[#0A1344]/30 font-mono block">
+          {label}
+        </span>
+      )}
       {title && (
-        <h2 className="text-[32px] md:text-[40px] font-semibold tracking-[-0.02em] leading-[1.1] text-[#1D1D1F] mt-3">
+        <h2 className="text-[32px] md:text-[40px] font-medium tracking-[-0.02em] leading-[1.1] text-[#1D1D1F] mt-3">
           {title}
         </h2>
       )}

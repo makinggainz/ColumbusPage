@@ -2,6 +2,7 @@
 
 import { ThumbsUp, ThumbsDown, MapPin } from "lucide-react";
 import { useRef, useState, useEffect } from "react";
+import Image from "next/image";
 import { GridSection, GridHeader, GridCell, gl } from "./ContentGrid";
 
 const AVATARS = [
@@ -32,8 +33,7 @@ const MAPS = [
     location: "Philadelphia, PA",
     upvotes: 842, downvotes: 67,
     emoji: "🕯️",
-    gradient: "linear-gradient(135deg, #020617 0%, #1E3A8A 55%, #2563EB 100%)",
-    accent: "#2563EB",
+    image: "/FavoriteSpots/(20).jpeg",
     avatars: [AVATARS[0], AVATARS[1], AVATARS[2]],
   },
   {
@@ -42,8 +42,7 @@ const MAPS = [
     location: "New York, NY",
     upvotes: 1247, downvotes: 89,
     emoji: "🌹",
-    gradient: "linear-gradient(135deg, #0A1628 0%, #1D4ED8 55%, #60A5FA 100%)",
-    accent: "#60A5FA",
+    image: "/FavoriteSpots/(14).jpeg",
     avatars: [AVATARS[3], AVATARS[4], AVATARS[5]],
   },
   {
@@ -52,8 +51,7 @@ const MAPS = [
     location: "Washington, DC",
     upvotes: 384, downvotes: 41,
     emoji: "💰",
-    gradient: "linear-gradient(135deg, #030712 0%, #0A1344 55%, #3B82F6 100%)",
-    accent: "#3B82F6",
+    image: "/FavoriteSpots/(17).jpeg",
     avatars: [AVATARS[6], AVATARS[7], AVATARS[8]],
   },
   {
@@ -62,8 +60,7 @@ const MAPS = [
     location: "Los Angeles, CA",
     upvotes: 2103, downvotes: 154,
     emoji: "🎵",
-    gradient: "linear-gradient(135deg, #020617 0%, #172554 45%, #2563EB 80%, #93C5FD 100%)",
-    accent: "#93C5FD",
+    image: "/FavoriteSpots/(19).jpeg",
     avatars: [AVATARS[9], AVATARS[10], AVATARS[11]],
   },
   {
@@ -72,8 +69,7 @@ const MAPS = [
     location: "Washington, DC",
     upvotes: 679, downvotes: 28,
     emoji: "🏳️‍🌈",
-    gradient: "linear-gradient(135deg, #0A1628 0%, #1E40AF 50%, #3B82F6 80%, #93C5FD 100%)",
-    accent: "#93C5FD",
+    image: "/FavoriteSpots/(21).jpeg",
     avatars: [AVATARS[12], AVATARS[13], AVATARS[14]],
   },
 ];
@@ -103,7 +99,7 @@ export const GeneratedMaps = () => {
     <GridSection>
       <div ref={ref}>
         <GridHeader
-          label="GENERATED MAPS"
+          label=""
           title="Community-curated maps"
           subtitle="Discover maps made by real people about the places they love."
         />
@@ -112,35 +108,22 @@ export const GeneratedMaps = () => {
           {MAPS.map((item, i) => (
             <GridCell key={i} flush hoverable={false} style={anim(i * 60 + 150)}>
               <a href="/maps-gpt" className="group block">
-                {/* Gradient visual */}
+                {/* Blurred image visual */}
                 <div
                   className="relative w-full flex items-center justify-center overflow-hidden"
-                  style={{ aspectRatio: "16 / 10", background: item.gradient }}
+                  style={{ aspectRatio: "16 / 10" }}
                 >
-                  <svg className="absolute inset-0 w-full h-full" viewBox="0 0 320 200" preserveAspectRatio="xMidYMid slice" fill="none">
-                    <line x1="48" y1="0" x2="48" y2="200" stroke={item.accent} strokeOpacity="0.25" strokeWidth="1.5"/>
-                    <line x1="96" y1="0" x2="96" y2="200" stroke={item.accent} strokeOpacity="0.15" strokeWidth="0.75"/>
-                    <line x1="152" y1="0" x2="152" y2="200" stroke={item.accent} strokeOpacity="0.25" strokeWidth="1.5"/>
-                    <line x1="210" y1="0" x2="210" y2="200" stroke={item.accent} strokeOpacity="0.15" strokeWidth="0.75"/>
-                    <line x1="268" y1="0" x2="268" y2="200" stroke={item.accent} strokeOpacity="0.25" strokeWidth="1.5"/>
-                    <line x1="0" y1="42" x2="320" y2="42" stroke={item.accent} strokeOpacity="0.25" strokeWidth="1.5"/>
-                    <line x1="0" y1="80" x2="320" y2="80" stroke={item.accent} strokeOpacity="0.15" strokeWidth="0.75"/>
-                    <line x1="0" y1="118" x2="320" y2="118" stroke={item.accent} strokeOpacity="0.25" strokeWidth="1.5"/>
-                    <line x1="0" y1="158" x2="320" y2="158" stroke={item.accent} strokeOpacity="0.15" strokeWidth="0.75"/>
-                    <line x1="0" y1="200" x2="320" y2="0" stroke={item.accent} strokeOpacity="0.12" strokeWidth="1.5"/>
-                    <path d="M 0 100 Q 160 20 320 100" stroke={item.accent} strokeOpacity="0.18" strokeWidth="1.5"/>
-                    <circle cx="152" cy="80" r="5" fill={item.accent} fillOpacity="0.9"/>
-                    <circle cx="152" cy="80" r="9" fill={item.accent} fillOpacity="0.2"/>
-                    <circle cx="96" cy="118" r="3.5" fill={item.accent} fillOpacity="0.7"/>
-                    <circle cx="268" cy="42" r="3.5" fill={item.accent} fillOpacity="0.7"/>
-                    <rect x="49" y="43" width="46" height="36" fill={item.accent} fillOpacity="0.06" rx="1"/>
-                    <rect x="153" y="119" width="56" height="38" fill={item.accent} fillOpacity="0.06" rx="1"/>
-                    <rect x="211" y="43" width="56" height="36" fill={item.accent} fillOpacity="0.08" rx="1"/>
-                  </svg>
+                  <Image
+                    src={item.image}
+                    alt=""
+                    fill
+                    className="object-cover"
+                    style={{ filter: "blur(8px) brightness(0.7)", transform: "scale(1.1)" }}
+                  />
 
                   <span className="relative z-10 select-none drop-shadow-lg" style={{ fontSize: 40 }}>{item.emoji}</span>
 
-                  <div className="absolute top-3 right-3 flex items-center gap-2">
+                  <div className="absolute top-3 right-3 flex items-center gap-2 z-10">
                     <div className="h-7 px-2.5 flex items-center gap-1.5 bg-white/90 backdrop-blur-md">
                       <ThumbsUp className="w-3 h-3 shrink-0 text-[#22C55E]" />
                       <span className="font-semibold text-[12px] text-[#1D1D1F]">{item.upvotes}</span>
@@ -151,7 +134,7 @@ export const GeneratedMaps = () => {
                     </div>
                   </div>
 
-                  <div className="absolute bottom-3 left-3 flex items-center gap-1.5">
+                  <div className="absolute bottom-3 left-3 flex items-center gap-1.5 z-10">
                     <MapPin className="w-3.5 h-3.5 shrink-0 text-white" />
                     <span className="text-[12px] text-white font-medium">{item.location}</span>
                   </div>
@@ -168,7 +151,7 @@ export const GeneratedMaps = () => {
                   <div className="flex items-center gap-2">
                     <div className="flex -space-x-2">
                       {item.avatars.map((src, j) => (
-                        <img key={j} src={src} alt="" className="w-7 h-7 rounded-full object-cover border border-white" />
+                        <img key={j} src={src} alt="" className="w-9 h-9 rounded-full object-cover border-2 border-white" />
                       ))}
                     </div>
                     <span className="text-[13px] text-[#6E6E73] font-medium">{item.upvotes + item.downvotes} votes</span>
@@ -177,6 +160,21 @@ export const GeneratedMaps = () => {
               </a>
             </GridCell>
           ))}
+
+          {/* Find more CTA cell */}
+          <GridCell style={anim(MAPS.length * 60 + 150)}>
+            <div className="flex flex-col items-center justify-center h-full py-16">
+              <a
+                href="/maps-gpt"
+                className="group flex items-center gap-3 text-[15px] font-medium text-[#0A1344] transition-opacity hover:opacity-60"
+              >
+                Find more
+                <svg className="transition-transform duration-300 group-hover:translate-x-0.5" width="7" height="12" viewBox="0 0 7 12" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M1 1l5 5-5 5" />
+                </svg>
+              </a>
+            </div>
+          </GridCell>
         </div>
       </div>
     </GridSection>

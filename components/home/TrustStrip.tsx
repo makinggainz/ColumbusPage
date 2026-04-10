@@ -48,7 +48,7 @@ export const TrustStrip = () => {
     <GridSection>
       <div ref={ref}>
         <GridHeader
-          label="TRUST"
+          label=""
           title="Your plans are in good hands"
           subtitle="We work with data from reputable brands"
         />

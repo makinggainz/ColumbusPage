@@ -41,7 +41,7 @@ export const PartnerStrip = () => {
     <GridSection>
       <div ref={ref}>
         <GridHeader
-          label="DATA PARTNERS"
+          label=""
           title="High-fidelity and smart datasets"
           subtitle="We vet our data with reputable partner organizations"
         />
