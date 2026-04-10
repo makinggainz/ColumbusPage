@@ -148,15 +148,20 @@ export default function OurMissionPage() {
 
       <Navbar />
 
-      {/* ════════ 1. HERO ════════ */}
-      <GridSection className="bg-transparent! relative overflow-hidden">
-        {/* Accent gradient */}
+      {/* Accent gradient — width matches navbar content bounds */}
+      <div
+        className="absolute top-0 left-1/2 -translate-x-1/2 pointer-events-none w-full px-6 min-[1287px]:px-0"
+        style={{ height: "80vh", maxWidth: 1287, zIndex: 1 }}
+        aria-hidden
+      >
         <div
-          className="absolute left-0 right-0 top-0 pointer-events-none"
-          style={{ height: "100%", background: "linear-gradient(to bottom, rgba(0, 102, 204, 0.15) 0%, rgba(0, 102, 204, 0.08) 50%, transparent 80%)", zIndex: 1 }}
-          aria-hidden
+          className="w-full h-full"
+          style={{ background: "linear-gradient(to bottom, rgba(0, 102, 204, 0.15) 0%, rgba(0, 102, 204, 0.08) 50%, transparent 100%)" }}
         />
+      </div>
 
+      {/* ════════ 1. HERO ════════ */}
+      <GridSection className="bg-transparent! relative">
         <div ref={hero.ref} className="relative z-10 w-full pt-40 md:pt-52 pb-40 md:pb-56 flex flex-col items-center text-center px-8 md:px-10">
           <h1
             className="font-light leading-[1.15] text-[#0A1344] text-[39px] md:text-[49px] lg:text-[61px]"
