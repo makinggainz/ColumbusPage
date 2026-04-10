@@ -120,9 +120,56 @@ export default function ContactPage() {
         )}
         {phase !== "writing" && <div className="pt-24 md:pt-32" />}
 
-        {/* Note card / animation area */}
-        <div className="flex justify-center px-5 md:px-10 pb-20 md:pb-32">
-          <div className="w-full max-w-[600px]">
+        {/* Two-column layout */}
+        <div className="max-w-[1287px] mx-auto px-5 md:px-10 pb-20 md:pb-32">
+          <div className="grid md:grid-cols-[1fr_2fr] gap-6 md:gap-8 items-start">
+
+            {/* ──── Left column: How can we help? ──── */}
+            {phase === "writing" && (
+              <div
+                style={{
+                  backgroundColor: "#faf5eb",
+                  border: "1px solid rgba(160,140,100,0.2)",
+                  boxShadow: "0 20px 60px rgba(0,0,0,0.08)",
+                  animation: "noteAppear 0.6s cubic-bezier(0.22, 1, 0.36, 1)",
+                }}
+              >
+                <div className="px-8 py-8" style={{ borderBottom: "1px solid rgba(160,140,100,0.15)" }}>
+                  <h2 className="text-[22px] md:text-[26px] font-medium" style={{ color: "#3a3020", letterSpacing: "-0.02em", fontFamily: "Georgia, serif" }}>
+                    How can we help?
+                  </h2>
+                </div>
+
+                <div className="px-8 py-7" style={{ borderBottom: "1px solid rgba(160,140,100,0.15)" }}>
+                  <h3 className="text-[16px] font-semibold mb-3" style={{ color: "#3a3020", fontFamily: "Georgia, serif" }}>Support</h3>
+                  <ul className="space-y-2 text-[14px] leading-[1.6]" style={{ color: "#3a3020", fontFamily: "Georgia, serif" }}>
+                    <li>• Visit our <Link href="/help" className="underline hover:opacity-70 transition-opacity">Help center</Link></li>
+                    <li>• <Link href="/login" className="underline hover:opacity-70 transition-opacity">Login</Link> to chat with support</li>
+                    <li>• Join our <Link href="https://discord.gg/columbus" className="underline hover:opacity-70 transition-opacity">Discord</Link> for community support</li>
+                  </ul>
+                </div>
+
+                <div className="px-8 py-7" style={{ borderBottom: "1px solid rgba(160,140,100,0.15)" }}>
+                  <h3 className="text-[16px] font-semibold mb-3" style={{ color: "#3a3020", fontFamily: "Georgia, serif" }}>Press and events</h3>
+                  <p className="text-[14px] leading-[1.6]" style={{ color: "#3a3020", fontFamily: "Georgia, serif" }}>Email us at<br /><a href="mailto:press@columbus.earth" className="underline hover:opacity-70 transition-opacity font-medium">press@columbus.earth</a></p>
+                </div>
+
+                <div className="px-8 py-7" style={{ borderBottom: "1px solid rgba(160,140,100,0.15)" }}>
+                  <h3 className="text-[16px] font-semibold mb-3" style={{ color: "#3a3020", fontFamily: "Georgia, serif" }}>Careers</h3>
+                  <p className="text-[14px] leading-[1.6] mb-3" style={{ color: "#3a3020", fontFamily: "Georgia, serif" }}>If you&apos;re excited about creating paradigm shifts in physical world understanding. Join us now.</p>
+                  <Link href="/careers" className="text-[14px] font-medium underline hover:opacity-70 transition-opacity" style={{ color: "#3a3020", fontFamily: "Georgia, serif" }}>View open positions ↗</Link>
+                </div>
+
+                <div className="px-8 py-7">
+                  <h3 className="text-[16px] font-semibold mb-3" style={{ color: "#3a3020", fontFamily: "Georgia, serif" }}>Investment queries</h3>
+                  <p className="text-[14px] leading-[1.6] mb-3" style={{ color: "#3a3020", fontFamily: "Georgia, serif" }}>For partnership, investment, or general business inquiries.</p>
+                  <a href="mailto:invest@columbus.earth" className="text-[14px] font-medium underline hover:opacity-70 transition-opacity" style={{ color: "#3a3020", fontFamily: "Georgia, serif" }}>invest@columbus.earth ↗</a>
+                </div>
+              </div>
+            )}
+
+            {/* ──── Right column: Contact form ──── */}
+            <div className="w-full max-w-[600px]">
 
             {/* ── Phase: Writing (the form) ── */}
             {phase === "writing" && (
@@ -248,6 +295,7 @@ export default function ContactPage() {
               </div>
             )}
 
+          </div>
           </div>
         </div>
 
