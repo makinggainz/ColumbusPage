@@ -33,7 +33,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
     const isProductsPage = pathname === "/products/mapsgpt";
     const isUseCasesPage = pathname === "/use-cases" || pathname === "/products/enterprise";
     const isEnterprisePage = pathname === "/products/enterprise";
-    const showWordmarkOnMobile = pathname === "/" || pathname === "/our-mission" || pathname === "/contact";
+    const showWordmarkOnMobile = pathname === "/" || pathname === "/mission" || pathname === "/contact";
     const navRef = useRef<HTMLElement>(null);
     const dropdownRef = useRef<HTMLDivElement>(null);
     const navigationCooldownRef = useRef(false);
@@ -422,7 +422,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                         { label: "Products", href: "/products/enterprise", hasDropdown: true },
                                         { label: "Use Cases", href: "/use-cases" },
                                         { label: "Technology", href: "/technology" },
-                                        { label: "Mission", href: "/our-mission" },
+                                        { label: "Mission", href: "/mission" },
                                     ].map((link, i) => (
                                         <Link
                                             key={link.label}
@@ -706,7 +706,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                     {[
                                         { label: "Use Cases", href: "/use-cases" },
                                         { label: "Technology", href: "/technology" },
-                                        { label: "Our Mission", href: "/our-mission" },
+                                        { label: "Our Mission", href: "/mission" },
                                     ].map((item, index) => (
                                         <li
                                             key={item.href}

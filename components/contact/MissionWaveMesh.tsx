@@ -31,11 +31,11 @@ function drawBoat3D(ctx: CanvasRenderingContext2D, project: (wx: number, wy: num
   const drawEdge = (from: V3, to: V3, color: string, lw: number) => { const a2 = xf(from), b = xf(to); if (!a2 || !b) return; ctx.beginPath(); ctx.moveTo(a2.sx, a2.sy); ctx.lineTo(b.sx, b.sy); ctx.strokeStyle = color; ctx.lineWidth = lw; ctx.stroke(); };
   const drawFace = (pts: V3[], fillColor: string, strokeColor?: string, lw = 0.8) => { const projected = pts.map(xf); const valid = projected.filter(Boolean) as { sx: number; sy: number }[]; if (valid.length < 3) return; ctx.beginPath(); ctx.moveTo(valid[0].sx, valid[0].sy); for (let i = 1; i < valid.length; i++) ctx.lineTo(valid[i].sx, valid[i].sy); ctx.closePath(); ctx.fillStyle = fillColor; ctx.fill(); if (strokeColor) { ctx.strokeStyle = strokeColor; ctx.lineWidth = lw; ctx.stroke(); } };
   const drawPolyline = (pts: V3[], color: string, lw: number) => { const projected = pts.map(xf); ctx.beginPath(); ctx.strokeStyle = color; ctx.lineWidth = lw; let started = false; for (const p of projected) { if (!p) continue; if (!started) { ctx.moveTo(p.sx, p.sy); started = true; } else ctx.lineTo(p.sx, p.sy); } ctx.stroke(); };
-  const hs = `rgba(20,60,160,${(0.5*a).toFixed(3)})`, hf = `rgba(20,60,160,${(0.06*a).toFixed(3)})`, hfd = `rgba(20,60,160,${(0.1*a).toFixed(3)})`;
-  const rs = `rgba(20,60,160,${(0.25*a).toFixed(3)})`, ms = `rgba(20,60,160,${(0.45*a).toFixed(3)})`;
-  const sf = `rgba(20,60,160,${(0.05*a).toFixed(3)})`, ss = `rgba(20,60,160,${(0.25*a).toFixed(3)})`;
-  const rg = `rgba(20,60,160,${(0.15*a).toFixed(3)})`, ff = `rgba(20,60,160,${(0.3*a).toFixed(3)})`;
-  const scs = `rgba(20,60,160,${(0.4*a).toFixed(3)})`, scf = `rgba(20,60,160,${(0.08*a).toFixed(3)})`;
+  const hs = `rgba(37,99,235,${(0.5*a).toFixed(3)})`, hf = `rgba(37,99,235,${(0.06*a).toFixed(3)})`, hfd = `rgba(37,99,235,${(0.1*a).toFixed(3)})`;
+  const rs = `rgba(37,99,235,${(0.25*a).toFixed(3)})`, ms = `rgba(37,99,235,${(0.45*a).toFixed(3)})`;
+  const sf = `rgba(37,99,235,${(0.05*a).toFixed(3)})`, ss = `rgba(37,99,235,${(0.25*a).toFixed(3)})`;
+  const rg = `rgba(37,99,235,${(0.15*a).toFixed(3)})`, ff = `rgba(37,99,235,${(0.3*a).toFixed(3)})`;
+  const scs = `rgba(37,99,235,${(0.4*a).toFixed(3)})`, scf = `rgba(37,99,235,${(0.08*a).toFixed(3)})`;
   for (let i = 0; i < STATIONS.length - 1; i++) { drawFace([HULL.deckP[i],HULL.deckP[i+1],HULL.keelP[i+1],HULL.keelP[i]], hf, hs, 0.8); drawFace([HULL.deckS[i],HULL.deckS[i+1],HULL.keelS[i+1],HULL.keelS[i]], hfd, hs, 0.8); drawFace([HULL.keelP[i],HULL.keelP[i+1],HULL.keelS[i+1],HULL.keelS[i]], hfd); }
   drawPolyline(HULL.deckP, hs, 1); drawPolyline(HULL.deckS, hs, 1);
   drawPolyline(HULL.keelP, rs, 0.6); drawPolyline(HULL.keelS, rs, 0.6);
@@ -64,8 +64,8 @@ function drawBoat3D(ctx: CanvasRenderingContext2D, project: (wx: number, wy: num
 /* ── Rowboat ── */
 function drawRowboat(ctx: CanvasRenderingContext2D, project: (wx: number, wy: number, wz: number) => { sx: number; sy: number } | null, bwx: number, bwy: number, bwz: number, a: number) {
   const p = (wx: number, wy: number, wz: number) => project(wx, wy, wz);
-  const s = `rgba(20,60,160,${(0.35*a).toFixed(3)})`;
-  const f = `rgba(20,60,160,${(0.04*a).toFixed(3)})`;
+  const s = `rgba(37,99,235,${(0.35*a).toFixed(3)})`;
+  const f = `rgba(37,99,235,${(0.04*a).toFixed(3)})`;
   const pts = [p(bwx-12,bwy,bwz-4), p(bwx+12,bwy,bwz-4), p(bwx+10,bwy-3,bwz-3), p(bwx-10,bwy-3,bwz-3)].filter(Boolean) as {sx:number;sy:number}[];
   if (pts.length >= 3) { ctx.beginPath(); ctx.moveTo(pts[0].sx,pts[0].sy); pts.slice(1).forEach(pp=>ctx.lineTo(pp.sx,pp.sy)); ctx.closePath(); ctx.fillStyle=f; ctx.fill(); ctx.strokeStyle=s; ctx.lineWidth=1; ctx.stroke(); }
 }
@@ -171,7 +171,7 @@ export default function MissionWaveMesh() {
       }
     }
 
-    const rgb = "20,60,160"; // blue — matches homepage mesh
+    const rgb = "37,99,235"; // blue — matches homepage mesh
 
     // ── Full mesh — ocean AND land drawn together ──
     // Depth lines (along Z)
@@ -346,7 +346,7 @@ export default function MissionWaveMesh() {
   return (
     <canvas
       ref={canvasRef}
-      style={{ position: "fixed", top: 0, left: 0, width: "100%", height: "100%", zIndex: 0 }}
+      style={{ position: "fixed", top: 0, left: 0, width: "100%", height: "100%", zIndex: 0, opacity: 0.65 }}
       aria-hidden
     />
   );

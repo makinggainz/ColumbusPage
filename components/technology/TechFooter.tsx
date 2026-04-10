@@ -128,7 +128,7 @@ export function TechFooter() {
           <div className="space-y-4 text-[15px]">
             <p className="text-xs uppercase tracking-wide text-white/65">Company</p>
             <div className="space-y-3 text-[13px]">
-              <Link href="/our-mission" className="block transition-opacity hover:opacity-80">
+              <Link href="/mission" className="block transition-opacity hover:opacity-80">
                 + Our Mission
               </Link>
               <Link href="#careers" className="block transition-opacity hover:opacity-80">

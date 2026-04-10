@@ -72,7 +72,7 @@
 - Sits to the right of the logo image inside the left-side `<Link href="/">`.
 - **Hidden** (opacity 0) on mobile (`< 900px`) on all pages **except**:
   - `/` (homepage)
-  - `/our-mission`
+  - `/mission`
   - `/contact` (contact us)
 - On desktop, hidden while the CTA is visible (nav links phase) so the wordmark and CTA don't compete for space.
 - On the products page, uses `glassStyles.glassTextStatic` for the frosted glass text effect.
@@ -141,7 +141,7 @@ The navbar adapts its behaviour per page via props, pathname checks, and DOM mar
 |------|-------|-------|--------------------|-------------------|-------------------|
 | `/` (homepage) | `<Navbar />` | light | **Visible** | Hero CTA (`#hero-cta`) scrolls out of viewport | Standard behaviour — frosted glass appears on compact scroll |
 | `/products` | `<Navbar wide />` | light (glass) | **Hidden** | `[data-navbar-bg-trigger]` passes viewport top + hero transition complete | Glass CTA button, glass wordmark text, hero-transition tracking hides links/CTA mid-scroll, `hasScrolled` forced true after 1700ms entrance animation, hamburger always visible with 12px left margin from CTA |
-| `/our-mission` | `<Navbar theme="dark" />` | dark | **Visible** | Immediate (no hero CTA) | Dark frosted glass, inverted logo via `brightness(0) invert(1)` |
+| `/mission` | `<Navbar theme="dark" />` | dark | **Visible** | Immediate (no hero CTA) | Dark frosted glass, inverted logo via `brightness(0) invert(1)` |
 | `/contact` | `<Navbar />` | light | **Visible** | Immediate (no hero CTA) | Standard behaviour |
 | `/enterprise` | `<Navbar theme="light" />` | light | **Hidden** | Immediate (no hero CTA) | Standard light navbar — hero background is `#E8EEF8` |
 | `/maps-gpt` | `<Navbar theme="dark" />` | dark | **Hidden** | Immediate (no hero CTA) | Dark frosted glass |
@@ -167,7 +167,7 @@ The `/use-cases` page has unique navbar requirements driven by its dark hero and
 
 - **`isProductsPage`** — `pathname === "/mapsgpt"`. Controls: glass CTA style, `bgTriggerPassed` bg logic, Start Now text colour (always black), hero-transition tracking.
 - **`isUseCasesPage`** — `pathname === "/use-cases"`. Controls: immediate navbar visibility, CTA light/dark variants, nav link theme-aware colouring, dark-aware dropdown (logo, wordmark, arrows stay white when menu opens on dark sections).
-- **`showWordmarkOnMobile`** — `pathname === "/" || "/our-mission" || "/contact"`. Controls: wordmark opacity on mobile.
+- **`showWordmarkOnMobile`** — `pathname === "/" || "/mission" || "/contact"`. Controls: wordmark opacity on mobile.
 - **`wide`** — Prop. Controls: glass text effects (`glassTextStatic`), wider max-width (1408px vs 1287px), hero-outer scroll tracking, `[data-navbar-bg-trigger]` usage, hamburger always showing on desktop.
 
 ### DOM markers by page
@@ -215,7 +215,7 @@ Each route has a pool of 2–3 unique quotes that are randomly selected per navi
 
 When adding a new page to the site, decide:
 
-1. Should the **Columbus Earth wordmark** be visible on mobile? If yes, add the pathname to the allowlist in `Navbar.tsx` (currently: `/`, `/our-mission`, `/contact`).
+1. Should the **Columbus Earth wordmark** be visible on mobile? If yes, add the pathname to the allowlist in `Navbar.tsx` (currently: `/`, `/mission`, `/contact`).
 2. Does the page have a **hero CTA** (`id="hero-cta"`)? If yes, nav links will auto-appear once it scrolls out — no extra work needed.
 3. Does the page need the **products glass navbar** (`wide` mode)? Only `/products` uses this. Do not apply `wide` to other pages.
 4. Does the page need a **`[data-navbar-bg-trigger]`** element? Only needed on pages using `wide` mode.
