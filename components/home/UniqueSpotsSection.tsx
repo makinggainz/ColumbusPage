@@ -4,12 +4,12 @@ import { Star, MapPin } from "lucide-react";
 import { useRef, useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { GridSection, gl } from "./ContentGrid";
+import { GridSection, GridHeader, GridCell, gl } from "./ContentGrid";
 
 const FAVORITE_SPOTS_FILES = ["(20).jpeg", "(14).jpeg", "(17).jpeg", "(19).jpeg", "(21).jpeg", "(23).jpeg", "(24).jpeg", "(22).jpeg"];
 const spotImageSrc = (filename: string) => `/FavoriteSpots/${encodeURIComponent(filename)}`;
 
-const SPOTS: { title: string; location: string; rating: string; image: string; query: string; response: string; avatar: string }[] = [
+const SPOTS = [
   { title: "The Palm Hotel", location: "Dubai, UAE", rating: "4.2", image: FAVORITE_SPOTS_FILES[0], query: "Best luxury hotel with a view in Dubai?", response: "Top match — iconic palm location, aquarium dining, 4.2★", avatar: "https://i.pravatar.cc/32?img=3" },
   { title: "Sky Garden Lounge", location: "London, UK", rating: "4.5", image: FAVORITE_SPOTS_FILES[1], query: "Rooftop bar with sunset views in London?", response: "Great pick — panoramic skyline, relaxed vibe, 4.5★", avatar: "https://i.pravatar.cc/32?img=7" },
   { title: "Casa del Mar", location: "Barcelona, Spain", rating: "4.8", image: FAVORITE_SPOTS_FILES[2], query: "Most romantic restaurant in Barcelona for a date?", response: "Strong match — beachfront, fresh seafood, 4.8★", avatar: "https://i.pravatar.cc/32?img=11" },
@@ -18,11 +18,7 @@ const SPOTS: { title: string; location: string; rating: string; image: string; q
 ];
 
 export const UniqueSpotsSection = () => {
-  const scrollRef = useRef<HTMLDivElement>(null);
   const ref = useRef<HTMLDivElement>(null);
-  const [isDragging, setIsDragging] = useState(false);
-  const [startX, setStartX] = useState(0);
-  const [scrollLeft, setScrollLeft] = useState(0);
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -36,64 +32,81 @@ export const UniqueSpotsSection = () => {
     return () => obs.disconnect();
   }, []);
 
-  const anim = (delay = 0) => ({
+  const anim = (delay = 0): React.CSSProperties => ({
     opacity: visible ? 1 : 0,
-    transform: visible ? "translateY(0)" : "translateY(14px)",
-    transition: `opacity 0.7s ease ${delay}ms, transform 0.7s ease ${delay}ms`,
+    transform: visible ? "translateY(0)" : "translateY(12px)",
+    transition: `opacity 0.6s ease ${delay}ms, transform 0.6s ease ${delay}ms`,
   });
-
-  const onMouseDown = (e: React.MouseEvent) => {
-    setIsDragging(true);
-    setStartX(e.pageX - (scrollRef.current?.offsetLeft ?? 0));
-    setScrollLeft(scrollRef.current?.scrollLeft ?? 0);
-  };
-  const onMouseLeave = () => setIsDragging(false);
-  const onMouseUp = () => setIsDragging(false);
-  const onMouseMove = (e: React.MouseEvent) => {
-    if (!isDragging) return;
-    e.preventDefault();
-    const x = e.pageX - (scrollRef.current?.offsetLeft ?? 0);
-    const walk = (x - startX) * 1.5;
-    if (scrollRef.current) scrollRef.current.scrollLeft = scrollLeft - walk;
-  };
 
   return (
     <>
-      <GridSection style={{ borderTop: "none" }}>
+      <GridSection>
         <div ref={ref}>
-          {/* Heading */}
-          <div className="flex items-center justify-center px-8 pt-14 pb-10" style={anim(0)}>
-            <h2 className="font-medium tracking-[-0.02em] text-[20px] lg:text-[25px] text-[#6E6E73]">
-              Spots found faster on MapsGPT
-            </h2>
-          </div>
+          <GridHeader
+            label="DISCOVERY"
+            title="Spots found faster on MapsGPT"
+            subtitle="AI-powered recommendations from real traveler questions."
+          />
 
-          {/* Scrollable cards */}
-          <div
-            ref={scrollRef}
-            className="flex overflow-x-auto px-8 min-[1287px]:px-10 pb-12 gap-3 select-none min-[1010px]:justify-center"
-            style={{
-              scrollbarWidth: "none",
-              cursor: isDragging ? "grabbing" : "grab",
-              ...anim(200),
-            }}
-            onMouseDown={onMouseDown}
-            onMouseLeave={onMouseLeave}
-            onMouseUp={onMouseUp}
-            onMouseMove={onMouseMove}
-          >
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
             {SPOTS.map((spot, i) => (
-              <SpotCard key={i} spot={spot} />
+              <GridCell key={i} flush hoverable={false} style={anim(i * 60 + 150)}>
+                <Link href="/maps-gpt" className="group block">
+                  {/* Image with overlaid info */}
+                  <div className="relative w-full overflow-hidden" style={{ aspectRatio: "16 / 10" }}>
+                    <Image
+                      src={spotImageSrc(spot.image)}
+                      alt={spot.title}
+                      fill
+                      loading="lazy"
+                      className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.02]"
+                    />
+                    <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.18) 55%, transparent 100%)" }} />
+
+                    {/* Rating badge */}
+                    <div className="absolute top-3 right-3 h-6 px-2 flex items-center gap-1 bg-white/90 backdrop-blur-md">
+                      <Star className="w-3 h-3 shrink-0 text-[#E46962]" fill="#E46962" />
+                      <span className="font-semibold text-[12px] text-[#1D1D1F]">{spot.rating}</span>
+                    </div>
+
+                    {/* Title + location */}
+                    <div className="absolute bottom-0 inset-x-0 px-6 pb-4">
+                      <h3 className="font-semibold text-[17px] text-white tracking-[-0.01em] leading-tight mb-1">
+                        {spot.title}
+                      </h3>
+                      <div className="flex items-center gap-1">
+                        <MapPin className="w-3 h-3 shrink-0 text-white/70" />
+                        <span className="text-[12px] text-white/70">{spot.location}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Chat UI */}
+                  <div className="p-6 flex flex-col gap-2.5">
+                    <div className="flex items-start gap-2">
+                      <div className="w-6 h-6 rounded-full shrink-0 overflow-hidden" style={{ marginTop: 1 }}>
+                        <Image src="/MapsGPT-logo.png" alt="" width={24} height={24} className="w-full h-full object-cover" />
+                      </div>
+                      <div className="flex-1 px-3 py-2" style={{ background: "rgba(37,99,235,0.08)", border: "1px solid rgba(37,99,235,0.15)" }}>
+                        <p className="text-[13px] leading-[1.5] text-[#1D1D1F]">{spot.response}</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-2 flex-row-reverse">
+                      <img src={spot.avatar} alt="" className="w-6 h-6 rounded-full shrink-0 object-cover border border-white" style={{ marginTop: 1 }} />
+                      <div className="flex-1 px-3 py-2" style={{ background: "rgba(0,0,0,0.04)", border: "1px solid rgba(0,0,0,0.06)" }}>
+                        <p className="text-[13px] leading-[1.5] text-[#6E6E73]">{spot.query}</p>
+                      </div>
+                    </div>
+                  </div>
+                </Link>
+              </GridCell>
             ))}
           </div>
         </div>
       </GridSection>
 
-      {/* Bottom CTA bar — full width with grid lines */}
-      <div style={{
-        borderTop: "1px solid var(--grid-line)",
-        borderBottom: "1px solid var(--grid-line)"
-      }}>
+      {/* Bottom CTA bar */}
+      <div style={{ borderTop: "1px solid var(--grid-line)", borderBottom: "1px solid var(--grid-line)" }}>
         <div className="grid-section relative flex flex-wrap max-w-[1287px] mx-5 md:mx-auto">
           <div className="px-8 min-[1287px]:px-10 py-5 flex items-center flex-1 min-w-70" style={{ minHeight: 76, borderRight: gl, backgroundColor: "rgba(20, 41, 148, 0.07)" }}>
             <p className="text-[18px] lg:text-[20px] font-medium text-[#1D1D1F] tracking-[-0.01em]">
@@ -115,60 +128,3 @@ export const UniqueSpotsSection = () => {
     </>
   );
 };
-
-function SpotCard({ spot }: { spot: (typeof SPOTS)[0] }) {
-  return (
-    <Link href="/maps-gpt" className="flex flex-col shrink-0 overflow-hidden transition-colors duration-300" style={{ width: 182, border: "1px solid var(--grid-line)", background: "rgba(37, 99, 235, 0.06)" }}
-      onMouseEnter={e => (e.currentTarget.style.background = "rgba(37, 99, 235, 0.14)")}
-      onMouseLeave={e => (e.currentTarget.style.background = "rgba(37, 99, 235, 0.06)")}
-    >
-      {/* Image with overlaid info */}
-      <div className="relative w-full overflow-hidden" style={{ aspectRatio: "4 / 3" }}>
-        <Image
-          src={spotImageSrc(spot.image)}
-          alt=""
-          fill
-          loading="lazy"
-          className="object-cover"
-        />
-        {/* Gradient scrim */}
-        <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.18) 55%, transparent 100%)" }} />
-        {/* Rating badge */}
-        <div className="absolute top-3 right-3 h-6 px-2 flex items-center gap-1 bg-white/90 backdrop-blur-md rounded-sm">
-          <Star className="w-3 h-3 shrink-0 text-[#E46962]" fill="#E46962" />
-          <span className="font-semibold text-[12px] text-[#1D1D1F]">{spot.rating}</span>
-        </div>
-        {/* Title + location over image */}
-        <div className="absolute bottom-0 inset-x-0 px-3 pb-3">
-          <h3 className="font-semibold text-[14px] text-white tracking-[-0.01em] leading-tight mb-1">
-            {spot.title}
-          </h3>
-          <div className="flex items-center gap-1">
-            <MapPin className="w-3 h-3 shrink-0 text-white/70" />
-            <span className="text-[11px] text-white/70">{spot.location}</span>
-          </div>
-        </div>
-      </div>
-
-      {/* Chat UI */}
-      <div className="px-3 pt-3 pb-3 flex flex-col gap-2">
-        {/* Response row — earth + bubble */}
-        <div className="flex items-start gap-2">
-          <div className="w-6 h-6 rounded-full shrink-0 overflow-hidden" style={{ marginTop: 1 }}>
-            <Image src="/MapsGPT-logo.png" alt="" width={24} height={24} className="w-full h-full object-cover" />
-          </div>
-          <div className="flex-1 rounded-lg px-2.5 py-1.5" style={{ background: "rgba(37,99,235,0.10)", border: "1px solid rgba(37,99,235,0.18)" }}>
-            <p className="text-[11px] leading-[1.45] text-[#1D1D1F] line-clamp-2">{spot.response}</p>
-          </div>
-        </div>
-        {/* Query row — avatar + bubble */}
-        <div className="flex items-start gap-2 flex-row-reverse">
-          <img src={spot.avatar} alt="" className="w-6 h-6 rounded-full shrink-0 object-cover border border-white" style={{ marginTop: 1 }} />
-          <div className="flex-1 rounded-lg px-2.5 py-1.5" style={{ background: "rgba(0,0,0,0.05)", border: "1px solid rgba(0,0,0,0.08)" }}>
-            <p className="text-[11px] leading-[1.45] text-[#3C3C43] line-clamp-2">{spot.query}</p>
-          </div>
-        </div>
-      </div>
-    </Link>
-  );
-}

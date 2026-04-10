@@ -47,11 +47,12 @@ export const SiteSelection = () => {
             <span className="text-[18px] lg:text-[20px] text-[#1D1D1F] font-bold">
               Columbus Pro
             </span>
-            <div className={`hidden min-[640px]:block ${glassStyles.wrapNew}`} style={{ filter: "drop-shadow(0 0 8px rgba(37, 99, 235, 0.5)) drop-shadow(0 0 20px rgba(37, 99, 235, 0.25))" }}>
-              <div className={`${glassStyles.btn} ${glassStyles.btnNew}`}>
-                <span>New</span>
-              </div>
-            </div>
+            <span
+              className="hidden min-[640px]:inline-flex items-center px-2 py-0.5 text-[10px] font-medium tracking-[0.08em] uppercase"
+              style={{ border: "1px solid rgba(0,102,204,0.3)", color: "#0066CC" }}
+            >
+              NEW
+            </span>
           </div>
           <Link
             href="/maps-gpt"

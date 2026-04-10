@@ -2,8 +2,7 @@
 
 import { ThumbsUp, ThumbsDown, MapPin } from "lucide-react";
 import { useRef, useState, useEffect } from "react";
-import Link from "next/link";
-import { GridSection, gl } from "./ContentGrid";
+import { GridSection, GridHeader, GridCell, gl } from "./ContentGrid";
 
 const AVATARS = [
   "https://i.pravatar.cc/64?img=1",
@@ -94,112 +93,89 @@ export const GeneratedMaps = () => {
     return () => obs.disconnect();
   }, []);
 
-  const anim = (delay = 0) => ({
+  const anim = (delay = 0): React.CSSProperties => ({
     opacity: visible ? 1 : 0,
-    transform: visible ? "translateY(0)" : "translateY(14px)",
-    transition: `opacity 0.7s ease ${delay}ms, transform 0.7s ease ${delay}ms`,
+    transform: visible ? "translateY(0)" : "translateY(12px)",
+    transition: `opacity 0.6s ease ${delay}ms, transform 0.6s ease ${delay}ms`,
   });
 
   return (
-    <GridSection style={{ borderTop: "none" }}>
-      <div ref={ref} style={{ borderBottom: gl }}>
-        {/* Heading */}
-        <div className="flex items-center justify-center px-8 pt-14 pb-10" style={anim(0)}>
-          <h2 className="font-medium tracking-[-0.02em] text-[20px] lg:text-[25px] text-[#6E6E73]">
-            Generated Maps
-          </h2>
-        </div>
+    <GridSection>
+      <div ref={ref}>
+        <GridHeader
+          label="GENERATED MAPS"
+          title="Community-curated maps"
+          subtitle="Discover maps made by real people about the places they love."
+        />
 
-        {/* Scrollable row */}
-        <div
-          className="flex overflow-x-auto px-8 min-[1287px]:px-10 pb-12 gap-3 select-none min-[1010px]:justify-center"
-          style={{ scrollbarWidth: "none", ...anim(150) }}
-        >
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
           {MAPS.map((item, i) => (
-            <Link key={i} href="/maps-gpt" className="group flex flex-col shrink-0 overflow-hidden transition-colors duration-300" style={{ width: 182, border: "1px solid var(--grid-line)", background: "rgba(37, 99, 235, 0.06)" }}
-              onMouseEnter={e => (e.currentTarget.style.background = "rgba(37, 99, 235, 0.14)")}
-              onMouseLeave={e => (e.currentTarget.style.background = "rgba(37, 99, 235, 0.06)")}
-            >
-              {/* Gradient visual */}
-              <div
-                className="relative w-full flex items-center justify-center overflow-hidden"
-                style={{ aspectRatio: "4 / 3", background: item.gradient }}
-              >
-                {/* Street grid SVG */}
-                <svg className="absolute inset-0 w-full h-full" viewBox="0 0 320 200" preserveAspectRatio="xMidYMid slice" fill="none">
-                  {/* City blocks — vertical streets */}
-                  <line x1="48" y1="0" x2="48" y2="200" stroke={item.accent} strokeOpacity="0.25" strokeWidth="1.5"/>
-                  <line x1="96" y1="0" x2="96" y2="200" stroke={item.accent} strokeOpacity="0.15" strokeWidth="0.75"/>
-                  <line x1="152" y1="0" x2="152" y2="200" stroke={item.accent} strokeOpacity="0.25" strokeWidth="1.5"/>
-                  <line x1="210" y1="0" x2="210" y2="200" stroke={item.accent} strokeOpacity="0.15" strokeWidth="0.75"/>
-                  <line x1="268" y1="0" x2="268" y2="200" stroke={item.accent} strokeOpacity="0.25" strokeWidth="1.5"/>
-                  {/* City blocks — horizontal streets */}
-                  <line x1="0" y1="42" x2="320" y2="42" stroke={item.accent} strokeOpacity="0.25" strokeWidth="1.5"/>
-                  <line x1="0" y1="80" x2="320" y2="80" stroke={item.accent} strokeOpacity="0.15" strokeWidth="0.75"/>
-                  <line x1="0" y1="118" x2="320" y2="118" stroke={item.accent} strokeOpacity="0.25" strokeWidth="1.5"/>
-                  <line x1="0" y1="158" x2="320" y2="158" stroke={item.accent} strokeOpacity="0.15" strokeWidth="0.75"/>
-                  {/* Diagonal road */}
-                  <line x1="0" y1="200" x2="320" y2="0" stroke={item.accent} strokeOpacity="0.12" strokeWidth="1.5"/>
-                  {/* Curved road */}
-                  <path d="M 0 100 Q 160 20 320 100" stroke={item.accent} strokeOpacity="0.18" strokeWidth="1.5"/>
-                  {/* Map pins */}
-                  <circle cx="152" cy="80" r="5" fill={item.accent} fillOpacity="0.9"/>
-                  <circle cx="152" cy="80" r="9" fill={item.accent} fillOpacity="0.2"/>
-                  <circle cx="96" cy="118" r="3.5" fill={item.accent} fillOpacity="0.7"/>
-                  <circle cx="96" cy="118" r="6.5" fill={item.accent} fillOpacity="0.15"/>
-                  <circle cx="268" cy="42" r="3.5" fill={item.accent} fillOpacity="0.7"/>
-                  <circle cx="268" cy="42" r="6.5" fill={item.accent} fillOpacity="0.15"/>
-                  {/* Block fills */}
-                  <rect x="49" y="43" width="46" height="36" fill={item.accent} fillOpacity="0.06" rx="1"/>
-                  <rect x="153" y="119" width="56" height="38" fill={item.accent} fillOpacity="0.06" rx="1"/>
-                  <rect x="211" y="43" width="56" height="36" fill={item.accent} fillOpacity="0.08" rx="1"/>
-                </svg>
+            <GridCell key={i} flush hoverable={false} style={anim(i * 60 + 150)}>
+              <a href="/maps-gpt" className="group block">
+                {/* Gradient visual */}
+                <div
+                  className="relative w-full flex items-center justify-center overflow-hidden"
+                  style={{ aspectRatio: "16 / 10", background: item.gradient }}
+                >
+                  <svg className="absolute inset-0 w-full h-full" viewBox="0 0 320 200" preserveAspectRatio="xMidYMid slice" fill="none">
+                    <line x1="48" y1="0" x2="48" y2="200" stroke={item.accent} strokeOpacity="0.25" strokeWidth="1.5"/>
+                    <line x1="96" y1="0" x2="96" y2="200" stroke={item.accent} strokeOpacity="0.15" strokeWidth="0.75"/>
+                    <line x1="152" y1="0" x2="152" y2="200" stroke={item.accent} strokeOpacity="0.25" strokeWidth="1.5"/>
+                    <line x1="210" y1="0" x2="210" y2="200" stroke={item.accent} strokeOpacity="0.15" strokeWidth="0.75"/>
+                    <line x1="268" y1="0" x2="268" y2="200" stroke={item.accent} strokeOpacity="0.25" strokeWidth="1.5"/>
+                    <line x1="0" y1="42" x2="320" y2="42" stroke={item.accent} strokeOpacity="0.25" strokeWidth="1.5"/>
+                    <line x1="0" y1="80" x2="320" y2="80" stroke={item.accent} strokeOpacity="0.15" strokeWidth="0.75"/>
+                    <line x1="0" y1="118" x2="320" y2="118" stroke={item.accent} strokeOpacity="0.25" strokeWidth="1.5"/>
+                    <line x1="0" y1="158" x2="320" y2="158" stroke={item.accent} strokeOpacity="0.15" strokeWidth="0.75"/>
+                    <line x1="0" y1="200" x2="320" y2="0" stroke={item.accent} strokeOpacity="0.12" strokeWidth="1.5"/>
+                    <path d="M 0 100 Q 160 20 320 100" stroke={item.accent} strokeOpacity="0.18" strokeWidth="1.5"/>
+                    <circle cx="152" cy="80" r="5" fill={item.accent} fillOpacity="0.9"/>
+                    <circle cx="152" cy="80" r="9" fill={item.accent} fillOpacity="0.2"/>
+                    <circle cx="96" cy="118" r="3.5" fill={item.accent} fillOpacity="0.7"/>
+                    <circle cx="268" cy="42" r="3.5" fill={item.accent} fillOpacity="0.7"/>
+                    <rect x="49" y="43" width="46" height="36" fill={item.accent} fillOpacity="0.06" rx="1"/>
+                    <rect x="153" y="119" width="56" height="38" fill={item.accent} fillOpacity="0.06" rx="1"/>
+                    <rect x="211" y="43" width="56" height="36" fill={item.accent} fillOpacity="0.08" rx="1"/>
+                  </svg>
 
-                {/* Emoji */}
-                <span className="relative z-10 select-none drop-shadow-lg" style={{ fontSize: 36 }}>{item.emoji}</span>
+                  <span className="relative z-10 select-none drop-shadow-lg" style={{ fontSize: 40 }}>{item.emoji}</span>
 
-                {/* Upvote / Downvote badge */}
-                <div className="absolute top-3 right-3 flex items-center gap-2">
-                  <div className="h-7 px-2.5 flex items-center gap-1.5 bg-white/90 backdrop-blur-md rounded-sm">
-                    <ThumbsUp className="w-3 h-3 shrink-0 text-[#22C55E]" />
-                    <span className="font-semibold text-[12px] text-[#1D1D1F]">{item.upvotes}</span>
+                  <div className="absolute top-3 right-3 flex items-center gap-2">
+                    <div className="h-7 px-2.5 flex items-center gap-1.5 bg-white/90 backdrop-blur-md">
+                      <ThumbsUp className="w-3 h-3 shrink-0 text-[#22C55E]" />
+                      <span className="font-semibold text-[12px] text-[#1D1D1F]">{item.upvotes}</span>
+                    </div>
+                    <div className="h-7 px-2.5 flex items-center gap-1.5 bg-white/90 backdrop-blur-md">
+                      <ThumbsDown className="w-3 h-3 shrink-0 text-[#EF4444]" />
+                      <span className="font-semibold text-[12px] text-[#1D1D1F]">{item.downvotes}</span>
+                    </div>
                   </div>
-                  <div className="h-7 px-2.5 flex items-center gap-1.5 bg-white/90 backdrop-blur-md rounded-sm">
-                    <ThumbsDown className="w-3 h-3 shrink-0 text-[#EF4444]" />
-                    <span className="font-semibold text-[12px] text-[#1D1D1F]">{item.downvotes}</span>
+
+                  <div className="absolute bottom-3 left-3 flex items-center gap-1.5">
+                    <MapPin className="w-3.5 h-3.5 shrink-0 text-white" />
+                    <span className="text-[12px] text-white font-medium">{item.location}</span>
                   </div>
                 </div>
 
-                {/* Location badge */}
-                <div className="absolute bottom-3 left-3 flex items-center gap-1.5">
-                  <MapPin className="w-3.5 h-3.5 shrink-0 text-white" />
-                  <span className="text-[12px] text-white font-medium">{item.location}</span>
-                </div>
-              </div>
-
-              {/* Info */}
-              <div className="pt-4 pb-3 px-3 flex flex-col">
-                <h3 className="font-semibold text-[15px] text-[#1D1D1F] tracking-[-0.01em] mb-1">
-                  {item.title}
-                </h3>
-                <p className="text-[13px] leading-[1.5] text-[#6E6E73] line-clamp-2 mb-2">
-                  {item.description}
-                </p>
-                <div className="flex items-center gap-2 mt-1">
-                  <div className="flex -space-x-2">
-                    {item.avatars.map((src, j) => (
-                      <img
-                        key={j}
-                        src={src}
-                        alt=""
-                        className="w-8 h-8 rounded-full object-cover border border-white"
-                      />
-                    ))}
+                {/* Info */}
+                <div className="p-6 md:p-8">
+                  <h3 className="font-semibold text-[17px] text-[#1D1D1F] tracking-[-0.01em] mb-2">
+                    {item.title}
+                  </h3>
+                  <p className="text-[15px] leading-[1.5] text-[#6E6E73] mb-4">
+                    {item.description}
+                  </p>
+                  <div className="flex items-center gap-2">
+                    <div className="flex -space-x-2">
+                      {item.avatars.map((src, j) => (
+                        <img key={j} src={src} alt="" className="w-7 h-7 rounded-full object-cover border border-white" />
+                      ))}
+                    </div>
+                    <span className="text-[13px] text-[#6E6E73] font-medium">{item.upvotes + item.downvotes} votes</span>
                   </div>
-                  <span className="text-[12px] text-[#6E6E73] font-medium">{item.upvotes + item.downvotes} votes</span>
                 </div>
-              </div>
-            </Link>
+              </a>
+            </GridCell>
           ))}
         </div>
       </div>
