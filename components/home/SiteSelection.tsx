@@ -88,7 +88,7 @@ export const SiteSelection = () => {
           <div className="relative flex flex-col h-137.5 md:h-200 lg:h-250">
             <Image
               ref={imgRef}
-              src="/ProductBackgroundImageHome.png"
+              src="/probackground.png"
               alt=""
               fill
               className="object-cover"

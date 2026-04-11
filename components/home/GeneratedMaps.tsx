@@ -153,7 +153,6 @@ export const GeneratedMaps = () => {
               </a>
             </div>
           </div>
-          <div className="absolute right-0 top-0 bottom-0 w-16 pointer-events-none" style={{ background: "linear-gradient(to left, white, transparent)" }} />
         </div>
       </div>
     </GridSection>
