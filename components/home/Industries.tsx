@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { GridSection, GridHeader, GridCell, gl } from "./ContentGrid";
+import { GridSection, GridHeader, gl } from "./ContentGrid";
 
 const CARDS = [
   { src: "/Icon/gen.png", label: "City Security", href: "/use-cases" },
@@ -43,48 +43,43 @@ export const Industries = () => {
             title="Find your industry"
           />
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-            {CARDS.map((card, i) => (
-              <GridCell key={card.label} flush hoverable={false} style={anim(i * 70 + 150)}>
-                <Link href={card.href} className="group relative block overflow-hidden" style={{ minHeight: 280 }}>
-                  <Image
-                    src={card.src}
-                    alt={card.label}
-                    fill
-                    className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.02]"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
-                  <span className="absolute bottom-0 left-0 px-8 pb-8 text-white text-[17px] font-semibold z-10">
-                    {card.label}
-                  </span>
-                </Link>
-              </GridCell>
-            ))}
+          <div className="relative">
+            <div
+              className="flex overflow-x-auto"
+              style={{ scrollbarWidth: "none", borderBottom: gl }}
+            >
+              {CARDS.map((card, i) => (
+                <div key={card.label} className="shrink-0" style={{ width: 300, borderRight: gl, ...anim(i * 70 + 150) }}>
+                  <Link href={card.href} className="group relative block overflow-hidden" style={{ height: 280 }}>
+                    <Image
+                      src={card.src}
+                      alt={card.label}
+                      fill
+                      className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.02]"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
+                    <span className="absolute bottom-0 left-0 px-6 pb-6 text-white text-[17px] font-semibold z-10">
+                      {card.label}
+                    </span>
+                  </Link>
+                </div>
+              ))}
 
-            {/* CTA cell */}
-            <GridCell style={anim(CARDS.length * 70 + 150)}>
-              <div className="flex flex-col items-center justify-center h-full gap-5 py-12">
+              {/* CTA cell */}
+              <div className="shrink-0 flex flex-col items-center justify-center gap-5 py-12" style={{ width: 260, ...anim(CARDS.length * 70 + 150) }}>
                 <Link
                   href="/use-cases"
                   className="group flex items-center gap-3 text-[15px] font-medium text-[#0A1344] transition-opacity hover:opacity-60"
                 >
-                  Explore all industries
+                  Explore all
                   <svg className="transition-transform duration-300 group-hover:translate-x-0.5" width="7" height="12" viewBox="0 0 7 12" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M1 1l5 5-5 5" />
                   </svg>
                 </Link>
-                <Link
-                  href="/contact"
-                  className="group flex items-center justify-between gap-5 leading-none hover:opacity-90 transition-opacity"
-                  style={{ height: 36, paddingLeft: 20, paddingRight: 16, fontSize: 15, fontWeight: 500, backgroundColor: "#000000", color: "white" }}
-                >
-                  <span className="transition-colors duration-300 group-hover:text-[#2563EB]">Start now</span>
-                  <svg className="transition-transform duration-300 group-hover:translate-x-0.5" width="10" height="18" viewBox="0 0 7 12" fill="none" stroke="#2563EB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M1 1l5 5-5 5" />
-                  </svg>
-                </Link>
               </div>
-            </GridCell>
+            </div>
+            {/* Right fade hint */}
+            <div className="absolute right-0 top-0 bottom-0 w-16 pointer-events-none" style={{ background: "linear-gradient(to left, white, transparent)" }} />
           </div>
         </div>
       </GridSection>

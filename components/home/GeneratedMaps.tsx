@@ -3,7 +3,7 @@
 import { ThumbsUp, ThumbsDown, MapPin } from "lucide-react";
 import { useRef, useState, useEffect } from "react";
 import Image from "next/image";
-import { GridSection, GridHeader, GridCell, gl } from "./ContentGrid";
+import { GridSection, GridHeader, gl } from "./ContentGrid";
 
 const AVATARS = [
   "https://i.pravatar.cc/64?img=1",
@@ -104,77 +104,56 @@ export const GeneratedMaps = () => {
           subtitle="Discover maps made by real people about the places they love."
         />
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-          {MAPS.map((item, i) => (
-            <GridCell key={i} flush hoverable={false} style={anim(i * 60 + 150)}>
-              <a href="/maps-gpt" className="group block">
-                {/* Blurred image visual */}
-                <div
-                  className="relative w-full flex items-center justify-center overflow-hidden"
-                  style={{ aspectRatio: "16 / 10" }}
-                >
-                  <Image
-                    src={item.image}
-                    alt=""
-                    fill
-                    className="object-cover"
-                    style={{ filter: "blur(8px) brightness(0.7)", transform: "scale(1.1)" }}
-                  />
-
-                  <span className="relative z-10 select-none drop-shadow-lg" style={{ fontSize: 40 }}>{item.emoji}</span>
-
-                  <div className="absolute top-3 right-3 flex items-center gap-2 z-10">
-                    <div className="h-7 px-2.5 flex items-center gap-1.5 bg-white/90 backdrop-blur-md">
-                      <ThumbsUp className="w-3 h-3 shrink-0 text-[#22C55E]" />
-                      <span className="font-semibold text-[12px] text-[#1D1D1F]">{item.upvotes}</span>
+        <div className="relative">
+          <div className="flex overflow-x-auto" style={{ scrollbarWidth: "none", borderBottom: gl }}>
+            {MAPS.map((item, i) => (
+              <div key={i} className="shrink-0" style={{ width: 300, borderRight: gl, ...anim(i * 60 + 150) }}>
+                <a href="/maps-gpt" className="group block">
+                  <div className="relative w-full flex items-center justify-center overflow-hidden" style={{ aspectRatio: "16 / 10" }}>
+                    <Image src={item.image} alt="" fill className="object-cover" style={{ filter: "blur(8px) brightness(0.7)", transform: "scale(1.1)" }} />
+                    <span className="relative z-10 select-none drop-shadow-lg" style={{ fontSize: 40 }}>{item.emoji}</span>
+                    <div className="absolute top-3 right-3 flex items-center gap-2 z-10">
+                      <div className="h-7 px-2.5 flex items-center gap-1.5 bg-white/90 backdrop-blur-md">
+                        <ThumbsUp className="w-3 h-3 shrink-0 text-[#22C55E]" />
+                        <span className="font-semibold text-[12px] text-[#1D1D1F]">{item.upvotes}</span>
+                      </div>
+                      <div className="h-7 px-2.5 flex items-center gap-1.5 bg-white/90 backdrop-blur-md">
+                        <ThumbsDown className="w-3 h-3 shrink-0 text-[#EF4444]" />
+                        <span className="font-semibold text-[12px] text-[#1D1D1F]">{item.downvotes}</span>
+                      </div>
                     </div>
-                    <div className="h-7 px-2.5 flex items-center gap-1.5 bg-white/90 backdrop-blur-md">
-                      <ThumbsDown className="w-3 h-3 shrink-0 text-[#EF4444]" />
-                      <span className="font-semibold text-[12px] text-[#1D1D1F]">{item.downvotes}</span>
+                    <div className="absolute bottom-3 left-3 flex items-center gap-1.5 z-10">
+                      <MapPin className="w-3.5 h-3.5 shrink-0 text-white" />
+                      <span className="text-[12px] text-white font-medium">{item.location}</span>
                     </div>
                   </div>
-
-                  <div className="absolute bottom-3 left-3 flex items-center gap-1.5 z-10">
-                    <MapPin className="w-3.5 h-3.5 shrink-0 text-white" />
-                    <span className="text-[12px] text-white font-medium">{item.location}</span>
-                  </div>
-                </div>
-
-                {/* Info */}
-                <div className="p-6 md:p-8">
-                  <h3 className="font-semibold text-[17px] text-[#1D1D1F] tracking-[-0.01em] mb-2">
-                    {item.title}
-                  </h3>
-                  <p className="text-[15px] leading-[1.5] text-[#6E6E73] mb-4">
-                    {item.description}
-                  </p>
-                  <div className="flex items-center gap-2">
-                    <div className="flex -space-x-2">
-                      {item.avatars.map((src, j) => (
-                        <img key={j} src={src} alt="" className="w-9 h-9 rounded-full object-cover border-2 border-white" />
-                      ))}
+                  <div className="p-5">
+                    <h3 className="font-semibold text-[17px] text-[#1D1D1F] tracking-[-0.01em] mb-2">{item.title}</h3>
+                    <p className="text-[15px] leading-[1.5] text-[#6E6E73] mb-4 line-clamp-2">{item.description}</p>
+                    <div className="flex items-center gap-2">
+                      <div className="flex -space-x-2">
+                        {item.avatars.map((src, j) => (
+                          <img key={j} src={src} alt="" className="w-9 h-9 rounded-full object-cover border-2 border-white" />
+                        ))}
+                      </div>
+                      <span className="text-[13px] text-[#6E6E73] font-medium">{item.upvotes + item.downvotes} votes</span>
                     </div>
-                    <span className="text-[13px] text-[#6E6E73] font-medium">{item.upvotes + item.downvotes} votes</span>
                   </div>
-                </div>
-              </a>
-            </GridCell>
-          ))}
+                </a>
+              </div>
+            ))}
 
-          {/* Find more CTA cell */}
-          <GridCell style={anim(MAPS.length * 60 + 150)}>
-            <div className="flex flex-col items-center justify-center h-full py-16">
-              <a
-                href="/maps-gpt"
-                className="group flex items-center gap-3 text-[15px] font-medium text-[#0A1344] transition-opacity hover:opacity-60"
-              >
+            {/* Find more CTA */}
+            <div className="shrink-0 flex flex-col items-center justify-center" style={{ width: 200, ...anim(MAPS.length * 60 + 150) }}>
+              <a href="/maps-gpt" className="group flex items-center gap-3 text-[15px] font-medium text-[#0A1344] transition-opacity hover:opacity-60">
                 Find more
                 <svg className="transition-transform duration-300 group-hover:translate-x-0.5" width="7" height="12" viewBox="0 0 7 12" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M1 1l5 5-5 5" />
                 </svg>
               </a>
             </div>
-          </GridCell>
+          </div>
+          <div className="absolute right-0 top-0 bottom-0 w-16 pointer-events-none" style={{ background: "linear-gradient(to left, white, transparent)" }} />
         </div>
       </div>
     </GridSection>
