@@ -130,7 +130,7 @@ export const Applications = () => {
     </GridSection>
 
     {/* Full-width horizontal line */}
-    <div style={{ width: "100%", height: 1, background: "var(--grid-line)" }} />
+    <div className="max-w-[1287px] mx-5 md:mx-auto" style={{ height: 1, background: "linear-gradient(to right, var(--grid-line) 0%, var(--grid-line) 60%, transparent 100%)" }} />
     </>
   );
 };

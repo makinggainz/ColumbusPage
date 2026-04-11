@@ -14,10 +14,8 @@ import { GeneratedMaps } from "@/components/home/GeneratedMaps";
 import { UniqueSpotsSection } from "@/components/home/UniqueSpotsSection";
 function SectionGap() {
   return (
-    <div className="max-w-[1287px] mx-5 md:mx-auto relative" style={{ height: 140 }}>
-      {/* Vertical structure lines */}
-      <div style={{ position: "absolute", top: 0, left: 0, width: 1, height: "100%", background: "var(--grid-line)" }} />
-      <div style={{ position: "absolute", top: 0, right: 0, width: 1, height: "100%", background: "var(--grid-line)" }} />
+    <div className="max-w-[1287px] mx-5 md:mx-auto" style={{ paddingTop: 60, paddingBottom: 60 }}>
+      <div style={{ height: 1, background: "linear-gradient(to right, var(--grid-line) 0%, var(--grid-line) 60%, transparent 100%)" }} />
     </div>
   );
 }

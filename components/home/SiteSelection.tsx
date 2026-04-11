@@ -178,7 +178,7 @@ export const SiteSelection = () => {
 
       </div>
     </GridSection>
-    <div className="w-full" style={{ height: 1, backgroundColor: "var(--grid-line)" }} />
+    <div className="max-w-[1287px] mx-5 md:mx-auto" style={{ height: 1, background: "linear-gradient(to right, var(--grid-line) 0%, var(--grid-line) 60%, transparent 100%)" }} />
     </>
   );
 };

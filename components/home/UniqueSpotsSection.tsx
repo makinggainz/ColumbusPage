@@ -4,7 +4,7 @@ import { Star, MapPin } from "lucide-react";
 import { useRef, useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { GridSection, GridHeader, gl } from "./ContentGrid";
+import { GridSection, GridHeader } from "./ContentGrid";
 
 const FAVORITE_SPOTS_FILES = ["(20).jpeg", "(14).jpeg", "(17).jpeg", "(19).jpeg", "(21).jpeg", "(23).jpeg", "(24).jpeg", "(22).jpeg"];
 const spotImageSrc = (filename: string) => `/FavoriteSpots/${encodeURIComponent(filename)}`;
@@ -49,9 +49,9 @@ export const UniqueSpotsSection = () => {
           />
 
           <div className="relative">
-            <div className="flex overflow-x-auto" style={{ scrollbarWidth: "none", borderBottom: gl }}>
+            <div className="flex overflow-x-auto" style={{ scrollbarWidth: "none" }}>
               {SPOTS.map((spot, i) => (
-                <div key={i} className="shrink-0" style={{ width: 320, borderRight: gl, ...anim(i * 60 + 150) }}>
+                <div key={i} className="shrink-0" style={{ width: 320, ...anim(i * 60 + 150) }}>
                   <Link href="/maps-gpt" className="group block">
                     <div className="relative w-full overflow-hidden" style={{ aspectRatio: "16 / 10" }}>
                       <Image src={spotImageSrc(spot.image)} alt={spot.title} fill loading="lazy" className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.02]" />
@@ -106,9 +106,9 @@ export const UniqueSpotsSection = () => {
       </GridSection>
 
       {/* Bottom CTA bar */}
-      <div style={{ borderTop: "1px solid var(--grid-line)", borderBottom: "1px solid var(--grid-line)" }}>
+      <div>
         <div className="grid-section relative flex flex-wrap max-w-[1287px] mx-5 md:mx-auto">
-          <div className="px-8 min-[1287px]:px-10 py-5 flex items-center flex-1 min-w-70" style={{ minHeight: 76, borderRight: gl, backgroundColor: "rgba(20, 41, 148, 0.07)" }}>
+          <div className="px-8 min-[1287px]:px-10 py-5 flex items-center flex-1 min-w-70" style={{ minHeight: 76, backgroundColor: "rgba(20, 41, 148, 0.07)" }}>
             <p className="text-[18px] lg:text-[20px] font-medium text-[#1D1D1F] tracking-[-0.01em]">
               MapsGPT is a local guide in your pocket
             </p>

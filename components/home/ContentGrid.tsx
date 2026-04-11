@@ -4,6 +4,12 @@ import { type ReactNode, type CSSProperties } from "react";
 
 const gl = "1px solid var(--grid-line)";
 
+// Horizontal fade line — fades out to the right
+const fadeLine: CSSProperties = {
+  height: 1,
+  background: "linear-gradient(to right, var(--grid-line) 0%, var(--grid-line) 60%, transparent 100%)",
+};
+
 export function GridSection({
   children,
   className = "",
@@ -16,7 +22,7 @@ export function GridSection({
   return (
     <section
       className={`grid-section max-w-[1287px] mx-5 md:mx-auto bg-white ${className}`}
-      style={{ borderTop: gl, ...style }}
+      style={style}
     >
       {children}
     </section>
@@ -33,10 +39,7 @@ export function GridHeader({
   subtitle?: string;
 }) {
   return (
-    <div
-      className="py-6 px-6 md:px-10"
-      style={{ borderRight: gl, borderBottom: gl }}
-    >
+    <div className="py-6 px-6 md:px-10">
       {label && (
         <span className="text-[11px] font-semibold tracking-[0.2em] uppercase text-[#0A1344]/30 font-mono block">
           {label}
@@ -72,15 +75,11 @@ export function GridCell({
   return (
     <div
       className={`${flush ? "" : "p-6 md:p-10"} ${hoverable ? "transition-colors duration-200 hover:bg-[rgba(120,120,200,0.04)]" : ""} ${className}`}
-      style={{
-        borderRight: gl,
-        borderBottom: gl,
-        ...style,
-      }}
+      style={style}
     >
       {children}
     </div>
   );
 }
 
-export { gl };
+export { gl, fadeLine };

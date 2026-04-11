@@ -3,7 +3,7 @@
 import { ThumbsUp, ThumbsDown, MapPin } from "lucide-react";
 import { useRef, useState, useEffect } from "react";
 import Image from "next/image";
-import { GridSection, GridHeader, gl } from "./ContentGrid";
+import { GridSection, GridHeader } from "./ContentGrid";
 
 const AVATARS = [
   "https://i.pravatar.cc/64?img=1",
@@ -105,9 +105,9 @@ export const GeneratedMaps = () => {
         />
 
         <div className="relative">
-          <div className="flex overflow-x-auto" style={{ scrollbarWidth: "none", borderBottom: gl }}>
+          <div className="flex overflow-x-auto" style={{ scrollbarWidth: "none" }}>
             {MAPS.map((item, i) => (
-              <div key={i} className="shrink-0" style={{ width: 300, borderRight: gl, ...anim(i * 60 + 150) }}>
+              <div key={i} className="shrink-0" style={{ width: 300, ...anim(i * 60 + 150) }}>
                 <a href="/maps-gpt" className="group block">
                   <div className="relative w-full flex items-center justify-center overflow-hidden" style={{ aspectRatio: "16 / 10" }}>
                     <Image src={item.image} alt="" fill className="object-cover" style={{ filter: "blur(8px) brightness(0.7)", transform: "scale(1.1)" }} />
