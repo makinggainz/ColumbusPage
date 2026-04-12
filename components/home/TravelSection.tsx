@@ -254,7 +254,7 @@ export const TravelSection = () => {
         {/* Background image — blurred via ref on scroll */}
         <Image
           ref={bgImgRef}
-          src="/beach.png"
+          src="/Gtestlast.jpeg"
           alt=""
           fill
           className="object-cover object-center"
