@@ -188,7 +188,7 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false, t
                 { label: "Core Reasoning", href: "/technology" },
               ]} />,
               <FooterColumn key="company" theme={theme} title="Company" links={[
-                { label: "Our Mission", href: "/our-mission" },
+                { label: "Our Mission", href: "/mission" },
                 { label: "Contact", href: "/contact" },
               ]} />,
             ].map((col, i) => (

@@ -9,6 +9,7 @@ const nextConfig: NextConfig = {
       { source: "/enterprise",  destination: "/products/enterprise", permanent: true },
       { source: "/mapsgpt",     destination: "/products/mapsgpt",    permanent: true },
       { source: "/maps-gpt",    destination: "/products/maps-gpt",   permanent: true },
+      { source: "/our-mission", destination: "/mission",             permanent: true },
     ];
   },
   images: {
