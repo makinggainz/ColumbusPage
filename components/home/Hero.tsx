@@ -807,7 +807,9 @@ export const Hero = () => {
       const rect = el.getBoundingClientRect();
       const scrolled = -rect.top;
       const total = el.offsetHeight - window.innerHeight;
-      setVignetteOpacity(Math.max(0, Math.min(1, scrolled / total)));
+      const progress = Math.max(0, Math.min(1, scrolled / total));
+      // Ease-in curve: barely visible at top, ramps up strongly further down
+      setVignetteOpacity(progress * progress * progress);
     };
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
