@@ -33,6 +33,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
     const isProductsPage = pathname === "/products/mapsgpt";
     const isUseCasesPage = pathname === "/use-cases" || pathname === "/products/enterprise";
     const isEnterprisePage = pathname === "/products/enterprise";
+    const isContactPage = pathname === "/contact";
     const showWordmarkOnMobile = pathname === "/" || pathname === "/mission" || pathname === "/contact";
     const navRef = useRef<HTMLElement>(null);
     const dropdownRef = useRef<HTMLDivElement>(null);
@@ -293,7 +294,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
     const t = "500ms cubic-bezier(0.22, 1, 0.36, 1)";
 
     // ── Nav link style (Anthropic-style underline hover) ────────────────
-    const navLinkClass = "group/nav flex items-center gap-2 px-3 py-1.5";
+    const navLinkClass = "group/nav flex items-center gap-2 px-3 py-1.5 cursor-pointer";
     const navLinkInline = (compact: boolean): React.CSSProperties => ({
         fontSize: compact ? 14 : 15,
         fontWeight: 400,
@@ -306,7 +307,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
     const linksVisible = wide
         ? hasScrolled && (!heroTransitionStarted || bgTriggerPassed)
         : showLinks;
-    const ctaVisible = wide
+    const ctaVisible = isContactPage ? false : wide
         ? hasScrolled && (!heroTransitionStarted || !inHeroTransition || bgTriggerPassed)
         : showLinks;
 
@@ -370,7 +371,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                         >
                             {/* ── Left: Logo ── */}
                             <div className="flex items-center">
-                                <Link href="/" className="flex w-fit shrink-0 items-center gap-2" onMouseEnter={isWideScreen ? handleNavMouseEnter : undefined}>
+                                <Link href="/" className="flex w-fit shrink-0 items-center gap-2 cursor-pointer" onMouseEnter={isWideScreen ? handleNavMouseEnter : undefined}>
                                     <div
                                         data-navbar-logo
                                         className="relative shrink-0"
@@ -462,7 +463,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                     }}>
                                         <Link
                                             href="/contact"
-                                            className={`group flex items-center justify-between leading-none whitespace-nowrap transition-all duration-300 ${isUseCasesPage ? (isDark ? "hover:bg-white!" : "hover:opacity-90") : "hover:opacity-90"} ${wide ? glassStyles.btn : ""}`}
+                                            className={`group flex items-center justify-between leading-none whitespace-nowrap transition-all duration-300 cursor-pointer ${isUseCasesPage ? (isDark ? "hover:bg-white!" : "hover:opacity-90") : "hover:opacity-90"} ${wide ? glassStyles.btn : ""}`}
                                             style={{
                                                 fontSize: 14,
                                                 fontWeight: 500,
@@ -516,7 +517,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                     <button
                                         onClick={handleHamburgerClick}
                                         onMouseEnter={handleNavMouseEnter}
-                                        className={`relative flex items-center justify-center transition-all duration-300 ${wide ? glassStyles.togglePill : "rounded-none"}`}
+                                        className={`relative flex items-center justify-center transition-all duration-300 cursor-pointer ${wide ? glassStyles.togglePill : "rounded-none"}`}
                                         style={{
                                             flexShrink: 0,
                                             ...(wide
@@ -676,7 +677,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                             <Link
                                                 href={item.href}
                                                 onClick={closeMenu}
-                                                className={`group relative text-xl font-medium transition-all duration-300 flex items-center ${dropdownNavLinkClass}`}
+                                                className={`group relative text-xl font-medium transition-all duration-300 flex items-center cursor-pointer ${dropdownNavLinkClass}`}
                                             >
                                                 <span className="transition-all duration-300 ease-in-out group-hover:translate-x-1">{item.label}</span>
                                                 <svg className={`ml-3 shrink-0 transition-all duration-300 ease-in-out group-hover:translate-x-1 group-hover:stroke-[#2563EB] ${isDark ? "stroke-white" : "stroke-[#0A1344]"}`} width="9" height="16" viewBox="0 0 7 12" fill="none" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
@@ -723,7 +724,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                             <Link
                                                 href={item.href}
                                                 onClick={closeMenu}
-                                                className={`group relative text-xl font-medium transition-all duration-300 flex items-center ${dropdownNavLinkClass}`}
+                                                className={`group relative text-xl font-medium transition-all duration-300 flex items-center cursor-pointer ${dropdownNavLinkClass}`}
                                             >
                                                 <span className="transition-all duration-300 ease-in-out group-hover:translate-x-1">{item.label}</span>
                                                 <svg className={`ml-3 shrink-0 transition-all duration-300 ease-in-out group-hover:translate-x-1 group-hover:stroke-[#2563EB] ${isDark ? "stroke-white" : "stroke-[#0A1344]"}`} width="9" height="16" viewBox="0 0 7 12" fill="none" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
@@ -752,7 +753,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                             <Link
                                 href="/maps-gpt"
                                 onClick={closeMenu}
-                                className={`group flex items-center justify-center gap-3 w-full font-medium text-[16px] transition-colors duration-300 hover:opacity-90 ${glassStyles.btn}`}
+                                className={`group flex items-center justify-center gap-3 w-full font-medium text-[16px] transition-colors duration-300 cursor-pointer hover:opacity-90 ${glassStyles.btn}`}
                                 style={{
                                     height: 60,
                                     borderRadius: 999,
@@ -787,7 +788,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                         <Link
                             href="/contact"
                             onClick={closeMenu}
-                            className="group flex items-center justify-center gap-3 w-full font-medium text-[16px] transition-colors duration-300 hover:opacity-90"
+                            className="group flex items-center justify-center gap-3 w-full font-medium text-[16px] transition-colors duration-300 cursor-pointer hover:opacity-90"
                             style={{
                                 height: 60,
                                 backgroundColor: isDark ? "#FFFFFF" : "#000000",

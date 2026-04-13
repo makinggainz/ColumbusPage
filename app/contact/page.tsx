@@ -19,13 +19,13 @@ const TABS: { value: InquiryType; label: string }[] = [
 ];
 
 export default function ContactPage() {
-  const [form, setForm] = useState({ firstName: "", lastName: "", email: "", role: "", message: "" });
+  const [form, setForm] = useState({ firstName: "", lastName: "", email: "", role: "", message: "", companySize: "", industry: "", heardFrom: "" });
   const [phase, setPhase] = useState<Phase>("writing");
   const [tab, setTab] = useState<InquiryType>("columbus-pro");
   const [updates, setUpdates] = useState(false);
   const [charCount, setCharCount] = useState(0);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setForm(prev => ({ ...prev, [name]: value }));
     if (name === "message") setCharCount(value.length);
@@ -98,12 +98,17 @@ export default function ContactPage() {
           transform: translateY(100%);
           transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
         }
+        .contact-tab:hover::before {
+          opacity: 0.4;
+          transform: translateY(0%);
+        }
         .contact-tab[data-active="true"]::before {
           opacity: 1;
           transform: translateY(0%);
         }
         .contact-tab span { position: relative; z-index: 1; }
         /* Button hover */
+        .contact-btn { cursor: pointer; }
         .contact-btn:hover span { color: #0066CC; }
         .contact-btn:hover svg { transform: translate(2px, -2px); }
         .contact-btn svg { transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1); }
@@ -150,7 +155,7 @@ export default function ContactPage() {
                     type="button"
                     onClick={() => setTab(opt.value)}
                     data-active={tab === opt.value}
-                    className="contact-tab flex-1 py-4 text-[14px] font-medium"
+                    className="contact-tab flex-1 py-4 text-[14px] font-medium cursor-pointer"
                     style={{
                       color: tab === opt.value ? "#0A1344" : "rgba(10,19,68,0.35)",
                       borderRight: "1px solid rgba(10,19,68,0.06)",
@@ -165,44 +170,134 @@ export default function ContactPage() {
               {/* ── Tab content ── */}
               <div className="px-8 py-8 md:px-10 md:py-10">
 
-                {/* ── Columbus Pro / Investment / Support → form ── */}
-                {tab !== "careers" && (
+                {/* ── Columbus Pro — Book a demo style form ── */}
+                {tab === "columbus-pro" && (
+                  <form className="flex flex-col gap-7" onSubmit={handleSend}>
+                    <div className="mb-2">
+                      <h3 className="text-[22px] font-medium text-[#0A1344] tracking-[-0.02em]">Book a Demo</h3>
+                    </div>
+
+                    <label className="flex flex-col gap-1">
+                      <span className="text-[14px]" style={{ color: "rgba(10,19,68,0.65)" }}>Company email</span>
+                      <div className="contact-input-wrap">
+                        <input type="email" name="email" required value={form.email} onChange={handleChange} className={inputClass} placeholder="name@company.com" />
+                        <div className="input-fill" />
+                      </div>
+                    </label>
+
+                    <label className="flex flex-col gap-1">
+                      <span className="text-[14px]" style={{ color: "rgba(10,19,68,0.65)" }}>Company size</span>
+                      <div className="contact-input-wrap">
+                        <input type="text" name="companySize" required value={form.companySize} onChange={handleChange} className={inputClass} placeholder="Enter the number of employees" />
+                        <div className="input-fill" />
+                      </div>
+                    </label>
+
+                    <label className="flex flex-col gap-1">
+                      <span className="text-[14px]" style={{ color: "rgba(10,19,68,0.65)" }}>Industry</span>
+                      <select
+                        name="industry"
+                        required
+                        value={form.industry}
+                        onChange={handleChange}
+                        className="bg-transparent outline-none py-3 text-[15px] text-[#0A1344] w-full appearance-none cursor-pointer"
+                        style={{ borderBottom: "1px solid rgba(10,19,68,0.12)", backgroundImage: `url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%230A1344' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")`, backgroundRepeat: "no-repeat", backgroundPosition: "right center" }}
+                      >
+                        <option value="" disabled>Please Select</option>
+                        <option value="real-estate">Real Estate</option>
+                        <option value="government">Government</option>
+                        <option value="logistics">Logistics &amp; Supply Chain</option>
+                        <option value="urban-planning">Urban Planning</option>
+                        <option value="environmental">Environmental</option>
+                        <option value="security">Security &amp; Defense</option>
+                        <option value="insurance">Insurance</option>
+                        <option value="consulting">Consulting</option>
+                        <option value="other">Other</option>
+                      </select>
+                    </label>
+
+                    <label className="flex flex-col gap-1">
+                      <span className="text-[14px]" style={{ color: "rgba(10,19,68,0.65)" }}>What are you hoping to get out of Columbus?</span>
+                      <textarea
+                        name="message" required maxLength={500} rows={4} value={form.message} onChange={handleChange}
+                        placeholder=""
+                        className="bg-transparent border border-[rgba(10,19,68,0.08)] focus:border-[rgba(0,102,204,0.5)] outline-none p-3 text-[15px] text-[#0A1344] placeholder:text-[rgba(10,19,68,0.25)] transition-colors duration-300 resize-y mt-1"
+                        style={{ borderRadius: 0 }}
+                      />
+                      <span className="text-[13px] text-right" style={{ color: "rgba(10,19,68,0.3)" }}>{charCount}/500</span>
+                    </label>
+
+                    <label className="flex flex-col gap-1">
+                      <span className="text-[14px]" style={{ color: "rgba(10,19,68,0.65)" }}>How did you hear about us?</span>
+                      <select
+                        name="heardFrom"
+                        value={form.heardFrom}
+                        onChange={handleChange}
+                        className="bg-transparent outline-none py-3 text-[15px] text-[#0A1344] w-full appearance-none cursor-pointer"
+                        style={{ borderBottom: "1px solid rgba(10,19,68,0.12)", backgroundImage: `url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%230A1344' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")`, backgroundRepeat: "no-repeat", backgroundPosition: "right center" }}
+                      >
+                        <option value="" disabled>Please Select</option>
+                        <option value="linkedin">LinkedIn</option>
+                        <option value="twitter">Twitter / X</option>
+                        <option value="facebook-instagram">Facebook / Instagram</option>
+                        <option value="reddit">Reddit</option>
+                        <option value="other-social">Other Social Media</option>
+                        <option value="google">Google</option>
+                        <option value="chatgpt-llm">ChatGPT / Claude / Grok / Other LLM</option>
+                        <option value="other-search">Other Search / Research</option>
+                        <option value="word-of-mouth">Word of Mouth / Referral</option>
+                        <option value="events">Events / Conferences / Webinars</option>
+                        <option value="news-press">News / Press / Articles / Newsletters / Podcast</option>
+                        <option value="short-squeeze">Short Squeeze Newsletter</option>
+                        <option value="ooh-billboards">Out of Home / Billboards</option>
+                        <option value="product-hunt">Product Hunt / Forums</option>
+                        <option value="direct-outreach">Direct Outreach</option>
+                        <option value="partnership">Partnership / Integration</option>
+                        <option value="existing-customer">Existing Customer / Prior Experience</option>
+                        <option value="other-ad">Other Advertisement</option>
+                        <option value="other">Other</option>
+                      </select>
+                    </label>
+
+                    <p className="text-[13px] leading-[1.5]" style={{ color: "rgba(10,19,68,0.35)" }}>
+                      By submitting, you agree with our <Link href="/terms" className="underline cursor-pointer">Terms</Link> and <Link href="/privacy" className="underline cursor-pointer">Privacy Policy</Link>.
+                    </p>
+
+                    <button
+                      type="submit"
+                      className="contact-btn flex items-center gap-4 self-start"
+                      style={{ height: 40, paddingLeft: 20, paddingRight: 16, fontSize: 14, fontWeight: 500, backgroundColor: "#000000", color: "white", borderRadius: 0 }}
+                    >
+                      <span>Submit</span>
+                      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#0066CC" strokeWidth="1.2" strokeLinecap="round">
+                        <path d="M1 13L13 1M13 1H5M13 1V9" />
+                      </svg>
+                    </button>
+                  </form>
+                )}
+
+                {/* ── Investment / Elio / Support → standard form ── */}
+                {(tab === "investment" || tab === "elio") && (
                   <form className="flex flex-col gap-7" onSubmit={handleSend}>
 
-                    {tab === "columbus-pro" && (
-                      <p className="text-[16px] leading-[1.6]" style={{ color: "rgba(10, 19, 68, 0.45)", fontWeight: 400 }}>
-                        Tell us about your enterprise needs and we&apos;ll connect you with the right team.
-                      </p>
-                    )}
                     {tab === "investment" && (
-                      <p className="text-[16px] leading-[1.6]" style={{ color: "rgba(10, 19, 68, 0.45)", fontWeight: 400 }}>
-                        For partnership, funding, or business development inquiries.
-                      </p>
+                      <div className="mb-2">
+                        <h3 className="text-[22px] font-medium text-[#0A1344] tracking-[-0.02em]">Investment Inquiry</h3>
+                      </div>
                     )}
                     {tab === "elio" && (
-                      <p className="text-[16px] leading-[1.6]" style={{ color: "rgba(10, 19, 68, 0.45)", fontWeight: 400 }}>
-                        Tell us about your interest in Elio (MapsGPT) and how we can help.
-                      </p>
+                      <div className="mb-2">
+                        <h3 className="text-[22px] font-medium text-[#0A1344] tracking-[-0.02em]">Elio / MapsGPT</h3>
+                      </div>
                     )}
 
-                    <div style={fadeLine} />
-
-                    <div className="grid grid-cols-2 gap-6">
-                      <label className="flex flex-col gap-1">
-                        <span className="text-[14px]" style={{ color: "rgba(10,19,68,0.65)" }}>First name</span>
-                        <div className="contact-input-wrap">
-                          <input type="text" name="firstName" required value={form.firstName} onChange={handleChange} className={inputClass} />
-                          <div className="input-fill" />
-                        </div>
-                      </label>
-                      <label className="flex flex-col gap-1">
-                        <span className="text-[14px]" style={{ color: "rgba(10,19,68,0.65)" }}>Last name</span>
-                        <div className="contact-input-wrap">
-                          <input type="text" name="lastName" required value={form.lastName} onChange={handleChange} className={inputClass} />
-                          <div className="input-fill" />
-                        </div>
-                      </label>
-                    </div>
+                    <label className="flex flex-col gap-1">
+                      <span className="text-[14px]" style={{ color: "rgba(10,19,68,0.65)" }}>Name</span>
+                      <div className="contact-input-wrap">
+                        <input type="text" name="firstName" required value={form.firstName} onChange={handleChange} className={inputClass} />
+                        <div className="input-fill" />
+                      </div>
+                    </label>
 
                     <label className="flex flex-col gap-1">
                       <span className="text-[14px]" style={{ color: "rgba(10,19,68,0.65)" }}>Email</span>
@@ -236,11 +331,81 @@ export default function ContactPage() {
                       <span className="text-[13px] text-right" style={{ color: "rgba(10,19,68,0.3)" }}>{charCount}/500</span>
                     </label>
 
-                    <div style={fadeLine} />
-
                     <label className="flex items-start gap-3 cursor-pointer">
                       <input type="checkbox" checked={updates} onChange={e => setUpdates(e.target.checked)} className="mt-0.5 w-4 h-4 accent-[#0066CC]" style={{ borderRadius: 0 }} />
                       <span className="text-[14px] leading-[1.5]" style={{ color: "rgba(10,19,68,0.65)" }}>I want to receive product updates from Columbus Earth.</span>
+                    </label>
+
+                    <p className="text-[13px] leading-[1.5]" style={{ color: "rgba(10,19,68,0.35)" }}>
+                      By submitting, you agree with our <Link href="/terms" className="underline cursor-pointer">Terms</Link> and <Link href="/privacy" className="underline cursor-pointer">Privacy Policy</Link>.
+                    </p>
+
+                    <button
+                      type="submit"
+                      className="contact-btn flex items-center gap-4 self-start"
+                      style={{ height: 40, paddingLeft: 20, paddingRight: 16, fontSize: 14, fontWeight: 500, backgroundColor: "#000000", color: "white", borderRadius: 0 }}
+                    >
+                      <span>Submit</span>
+                      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#0066CC" strokeWidth="1.2" strokeLinecap="round">
+                        <path d="M1 13L13 1M13 1H5M13 1V9" />
+                      </svg>
+                    </button>
+                  </form>
+                )}
+
+                {/* ── Careers tab ── */}
+                {tab === "careers" && (
+                  <form className="flex flex-col gap-7" onSubmit={handleSend}>
+                    <div className="mb-2">
+                      <h3 className="text-[22px] font-medium text-[#0A1344] tracking-[-0.02em]">Join Our Team</h3>
+                    </div>
+
+                    <label className="flex flex-col gap-1">
+                      <span className="text-[14px]" style={{ color: "rgba(10,19,68,0.65)" }}>Name</span>
+                      <div className="contact-input-wrap">
+                        <input type="text" name="firstName" required value={form.firstName} onChange={handleChange} className={inputClass} />
+                        <div className="input-fill" />
+                      </div>
+                    </label>
+
+                    <label className="flex flex-col gap-1">
+                      <span className="text-[14px]" style={{ color: "rgba(10,19,68,0.65)" }}>Email</span>
+                      <div className="contact-input-wrap">
+                        <input type="email" name="email" required value={form.email} onChange={handleChange} className={inputClass} />
+                        <div className="input-fill" />
+                      </div>
+                    </label>
+
+                    <label className="flex flex-col gap-1">
+                      <span className="text-[14px]" style={{ color: "rgba(10,19,68,0.65)" }}>Role you&apos;re interested in</span>
+                      <div className="contact-input-wrap">
+                        <input type="text" name="role" required value={form.role} onChange={handleChange} className={inputClass} placeholder="e.g. Software Engineer, Data Scientist..." />
+                        <div className="input-fill" />
+                      </div>
+                    </label>
+
+                    <label className="flex flex-col gap-1">
+                      <span className="text-[14px]" style={{ color: "rgba(10,19,68,0.65)" }}>Tell us about yourself</span>
+                      <textarea
+                        name="message" required maxLength={500} rows={4} value={form.message} onChange={handleChange}
+                        placeholder="What excites you about geospatial intelligence? What would you bring to the team?"
+                        className="bg-transparent border border-[rgba(10,19,68,0.08)] focus:border-[rgba(0,102,204,0.5)] outline-none p-3 text-[15px] text-[#0A1344] placeholder:text-[rgba(10,19,68,0.25)] transition-colors duration-300 resize-y mt-1"
+                        style={{ borderRadius: 0 }}
+                      />
+                      <span className="text-[13px] text-right" style={{ color: "rgba(10,19,68,0.3)" }}>{charCount}/500</span>
+                    </label>
+
+                    {/* Resume upload (optional) */}
+                    <label className="flex flex-col gap-2">
+                      <span className="text-[14px]" style={{ color: "rgba(10,19,68,0.65)" }}>
+                        Resume <span className="text-[12px]" style={{ color: "rgba(10,19,68,0.35)" }}>(optional — PDF or DOC)</span>
+                      </span>
+                      <input
+                        type="file"
+                        accept=".pdf,.doc,.docx"
+                        className="text-[14px] text-[#0A1344] file:mr-4 file:py-2 file:px-4 file:border-0 file:text-[13px] file:font-medium file:bg-[rgba(10,19,68,0.06)] file:text-[#0A1344] hover:file:bg-[rgba(10,19,68,0.1)] file:cursor-pointer file:transition-colors file:duration-200"
+                        style={{ borderRadius: 0 }}
+                      />
                     </label>
 
                     <p className="text-[13px] leading-[1.5]" style={{ color: "rgba(10,19,68,0.35)" }}>
@@ -260,29 +425,6 @@ export default function ContactPage() {
                   </form>
                 )}
 
-                {/* ── Careers tab ── */}
-                {tab === "careers" && (
-                  <div className="py-4">
-                    <p className="text-[16px] leading-[1.6] mb-6" style={{ color: "rgba(10,19,68,0.65)", fontWeight: 400 }}>
-                      We&apos;re building the future of geospatial intelligence. If you want to work on problems that matter — understanding our planet at scale — we&apos;d love to hear from you.
-                    </p>
-                    <div style={fadeLine} className="mb-6" />
-                    <Link
-                      href="/careers"
-                      className="contact-btn inline-flex items-center gap-4"
-                      style={{ height: 40, paddingLeft: 20, paddingRight: 16, fontSize: 14, fontWeight: 500, backgroundColor: "#000000", color: "white", borderRadius: 0 }}
-                    >
-                      <span>View open positions</span>
-                      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#0066CC" strokeWidth="1.2" strokeLinecap="round">
-                        <path d="M1 13L13 1M13 1H5M13 1V9" />
-                      </svg>
-                    </Link>
-                    <p className="mt-6 text-[14px] leading-[1.6]" style={{ color: "rgba(10,19,68,0.45)" }}>
-                      Or email us directly at <a href="mailto:careers@columbus.earth" className="underline hover:opacity-70 transition-opacity">careers@columbus.earth</a>
-                    </p>
-                  </div>
-                )}
-
               </div>
             </div>
 
@@ -296,7 +438,7 @@ export default function ContactPage() {
                   const arrow = document.getElementById("support-arrow");
                   if (arrow) arrow.style.transform = arrow.style.transform === "rotate(180deg)" ? "rotate(0deg)" : "rotate(180deg)";
                 }}
-                className="w-full flex items-center justify-between px-8 py-5 text-left"
+                className="w-full flex items-center justify-between px-8 py-5 text-left cursor-pointer"
               >
                 <span className="text-[15px] font-medium" style={{ color: "#0A1344" }}>Need support?</span>
                 <svg id="support-arrow" width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#0A1344" strokeWidth="1.5" strokeLinecap="round"
@@ -308,10 +450,10 @@ export default function ContactPage() {
                 <div className="px-8 pb-6">
                   <div style={fadeLine} className="mb-5" />
                   <ul className="space-y-2 text-[15px] leading-[1.6]" style={{ color: "rgba(10,19,68,0.65)" }}>
-                    <li>• Visit our <Link href="/help" className="underline hover:opacity-70 transition-opacity">Help center</Link></li>
-                    <li>• <Link href="/login" className="underline hover:opacity-70 transition-opacity">Login</Link> to chat with support</li>
-                    <li>• Join our <Link href="https://discord.gg/columbus" className="underline hover:opacity-70 transition-opacity">Discord</Link> for community support</li>
-                    <li>• Email <a href="mailto:support@columbus.earth" className="underline hover:opacity-70 transition-opacity">support@columbus.earth</a></li>
+                    <li>• Visit our <Link href="/help" className="underline hover:opacity-70 transition-opacity cursor-pointer">Help center</Link></li>
+                    <li>• <Link href="/login" className="underline hover:opacity-70 transition-opacity cursor-pointer">Login</Link> to chat with support</li>
+                    <li>• Join our <Link href="https://discord.gg/columbus" className="underline hover:opacity-70 transition-opacity cursor-pointer">Discord</Link> for community support</li>
+                    <li>• Email <a href="mailto:support@columbus.earth" className="underline hover:opacity-70 transition-opacity cursor-pointer">support@columbus.earth</a></li>
                   </ul>
                 </div>
               </div>
@@ -332,7 +474,7 @@ export default function ContactPage() {
 
           {(phase === "bottling" || phase === "dropping") && (
             <div key={phase} className="flex flex-col items-center text-center py-8" style={{ animation: "subtleTextIn 0.7s cubic-bezier(0.22, 1, 0.36, 1)" }}>
-              <p className="text-[17px]" style={{ color: "rgba(10, 19, 68, 0.45)", fontWeight: 400 }}>
+              <p className="text-[17px]" style={{ color: "rgba(10, 19, 68, 0.85)", fontWeight: 400 }}>
                 {phase === "bottling" ? "Sealing your message..." : "Into the waves..."}
               </p>
             </div>
@@ -342,7 +484,7 @@ export default function ContactPage() {
             <div className="flex flex-col items-center text-center py-12" style={{ animation: "confirmFade 1.2s cubic-bezier(0.16, 1, 0.3, 1)" }}>
               <p className="text-[28px] font-semibold mb-3" style={{ color: "#0A1344", letterSpacing: "-0.02em" }}>Message sent.</p>
               <p className="text-[17px] leading-[1.6] max-w-[400px]" style={{ color: "rgba(10,19,68,0.45)", fontWeight: 400 }}>
-                Your bottle is on its way. Like all good things, it may take a little time — but we&apos;ll be in touch.
+                Your bottle has landed. We respond fast.
               </p>
               {phase === "done" && (
                 <button
