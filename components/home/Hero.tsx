@@ -3,120 +3,6 @@
 import { useEffect, useState, useRef, useCallback } from "react";
 import { Container } from "@/components/layout/Container";
 
-/* ── Madrid locations (world-space positions on the mesh grid) ── */
-const MADRID_LOCATIONS = [
-  // ─ Near field (wz 150–350) — visible wx ≈ ±400 ─
-  { name: "Plaza de Castilla", wx: 96, wz: 168 },
-  { name: "Cuatro Torres", wx: -168, wz: 150 },
-  { name: "Torres KIO", wx: 288, wz: 180 },
-  { name: "Chamartín Station", wx: -48, wz: 192 },
-  { name: "Santiago Bernabéu", wx: 168, wz: 216 },
-  { name: "Tetuán", wx: -240, wz: 200 },
-  { name: "Nuevos Ministerios", wx: 48, wz: 240 },
-  { name: "Chamberí", wx: -144, wz: 264 },
-  { name: "Hortaleza", wx: 360, wz: 192 },
-  { name: "Paseo de la Castellana", wx: 0, wz: 288 },
-  { name: "Glorieta de Bilbao", wx: -216, wz: 312 },
-  { name: "Calle Fuencarral", wx: -96, wz: 300 },
-  { name: "Malasaña", wx: -312, wz: 336 },
-  { name: "Chueca", wx: 120, wz: 324 },
-  { name: "Plaza de Colón", wx: 288, wz: 312 },
-  { name: "Dehesa de la Villa", wx: -384, wz: 240 },
-  // ─ Mid-near field (wz 350–550) — visible wx ≈ ±700 ─
-  { name: "Gran Vía", wx: -168, wz: 384 },
-  { name: "Plaza de España", wx: -408, wz: 396 },
-  { name: "Fundación Telefónica", wx: -72, wz: 360 },
-  { name: "Círculo de Bellas Artes", wx: 144, wz: 408 },
-  { name: "Puerta del Sol", wx: 0, wz: 432 },
-  { name: "Plaza Mayor", wx: -192, wz: 480 },
-  { name: "Puerta de Alcalá", wx: 384, wz: 420 },
-  { name: "Plaza de Cibeles", wx: 264, wz: 408 },
-  { name: "Plaza de Oriente", wx: -360, wz: 432 },
-  { name: "Teatro Real", wx: -312, wz: 456 },
-  { name: "Palacio Real", wx: -480, wz: 432 },
-  { name: "Catedral de la Almudena", wx: -432, wz: 468 },
-  { name: "Calle de Alcalá", wx: 96, wz: 444 },
-  { name: "Congreso de los Diputados", wx: 192, wz: 480 },
-  { name: "Museo Thyssen", wx: 336, wz: 480 },
-  { name: "Salamanca", wx: 528, wz: 384 },
-  { name: "Calle Serrano", wx: 504, wz: 360 },
-  { name: "Argüelles", wx: -504, wz: 348 },
-  { name: "Parque del Oeste", wx: -600, wz: 360 },
-  { name: "Templo de Debod", wx: -552, wz: 396 },
-  { name: "Jardines de Sabatini", wx: -456, wz: 408 },
-  { name: "Calle Princesa", wx: -480, wz: 372 },
-  { name: "Moncloa", wx: -624, wz: 312 },
-  { name: "Faro de Moncloa", wx: -672, wz: 336 },
-  { name: "Ciudad Lineal", wx: 624, wz: 408 },
-  { name: "San Blas", wx: 696, wz: 360 },
-  { name: "Parque de Berlín", wx: 576, wz: 336 },
-  { name: "Mercado de San Miguel", wx: -144, wz: 468 },
-  { name: "Plaza de la Villa", wx: -120, wz: 456 },
-  { name: "Museo del Prado", wx: 360, wz: 504 },
-  { name: "Jardín Botánico", wx: 432, wz: 540 },
-  { name: "El Corte Inglés Castellana", wx: 216, wz: 312 },
-  { name: "Mercado de la Paz", wx: 480, wz: 408 },
-  { name: "Retiro Park", wx: 504, wz: 528 },
-  // ─ Mid field (wz 550–850) — visible wx ≈ ±1000 ─
-  { name: "Lavapiés", wx: -72, wz: 576 },
-  { name: "La Latina", wx: -264, wz: 552 },
-  { name: "Atocha Station", wx: 192, wz: 600 },
-  { name: "Museo Reina Sofía", wx: 240, wz: 576 },
-  { name: "CaixaForum", wx: 312, wz: 564 },
-  { name: "Paseo del Prado", wx: 336, wz: 540 },
-  { name: "El Rastro", wx: -168, wz: 564 },
-  { name: "Mercado de Antón Martín", wx: 48, wz: 540 },
-  { name: "Príncipe Pío", wx: -552, wz: 480 },
-  { name: "Casa de Campo", wx: -816, wz: 624 },
-  { name: "Madrid Río", wx: -576, wz: 696 },
-  { name: "Matadero Madrid", wx: -384, wz: 768 },
-  { name: "Méndez Álvaro", wx: 336, wz: 696 },
-  { name: "Moratalaz", wx: 720, wz: 648 },
-  { name: "WiZink Center", wx: 576, wz: 528 },
-  { name: "Las Ventas", wx: 648, wz: 456 },
-  { name: "Moncloa Bus Station", wx: -648, wz: 348 },
-  { name: "Aluche", wx: -792, wz: 744 },
-  { name: "Wanda Metropolitano", wx: 840, wz: 576 },
-  { name: "Pozuelo", wx: -888, wz: 528 },
-  { name: "Usera", wx: -216, wz: 840 },
-  { name: "Carabanchel", wx: -624, wz: 816 },
-  { name: "Vallecas", wx: 576, wz: 840 },
-  { name: "Coslada", wx: 864, wz: 456 },
-  { name: "Barajas", wx: 912, wz: 288 },
-  { name: "IFEMA", wx: 840, wz: 240 },
-  { name: "Aeropuerto T4", wx: 984, wz: 264 },
-  // ─ Far field (wz 850–1350) — visible wx ≈ ±1600 ─
-  { name: "Villaverde", wx: -360, wz: 984 },
-  { name: "Getafe", wx: -552, wz: 1080 },
-  { name: "Leganés", wx: -888, wz: 1008 },
-  { name: "Alcorcón", wx: -960, wz: 912 },
-  { name: "Parque Warner", wx: 672, wz: 1176 },
-  { name: "Fuenlabrada", wx: -744, wz: 1152 },
-  { name: "Móstoles", wx: -1104, wz: 1056 },
-  { name: "Alcobendas", wx: 360, wz: 168 },
-  { name: "San Sebastián de los Reyes", wx: -312, wz: 156 },
-  { name: "Torrejón de Ardoz", wx: 1128, wz: 384 },
-  { name: "Rivas-Vaciamadrid", wx: 840, wz: 888 },
-  { name: "Arganda del Rey", wx: 1056, wz: 960 },
-  { name: "San Fernando de Henares", wx: 1008, wz: 528 },
-  { name: "Majadahonda", wx: -1056, wz: 480 },
-  { name: "Las Rozas", wx: -1200, wz: 432 },
-  { name: "Boadilla del Monte", wx: -1128, wz: 720 },
-  // ─ Very far field (wz 1350–1900) — visible wx ≈ ±2200 ─
-  { name: "Parla", wx: -624, wz: 1368 },
-  { name: "Pinto", wx: -408, wz: 1464 },
-  { name: "Valdemoro", wx: -216, wz: 1560 },
-  { name: "Aranjuez", wx: 96, wz: 1848 },
-  { name: "Navalcarnero", wx: -1440, wz: 1200 },
-  { name: "Villanueva de la Cañada", wx: -1536, wz: 648 },
-  { name: "Tres Cantos", wx: -504, wz: 168 },
-  { name: "Colmenar Viejo", wx: -648, wz: 150 },
-  { name: "Alcalá de Henares", wx: 1440, wz: 600 },
-  { name: "Guadalajara", wx: 1800, wz: 720 },
-  { name: "Toledo (dir.)", wx: -384, wz: 1920 },
-  { name: "Segovia (dir.)", wx: -1680, wz: 384 },
-];
-
 /* ── Types ── */
 interface Ripple { wx: number; wz: number; t: number; strength: number }
 type V3 = [number, number, number];
@@ -133,10 +19,10 @@ interface BoatPhysics {
 function getWaveHeight(wx: number, wz: number, t: number, drift: number, driftZ: number) {
   const swx = wx + drift, swz = wz + driftZ;
   return (
-    Math.sin(swx * 0.003 + t * 0.6) * Math.cos(swz * 0.004 + t * 0.35) * 40 +
-    Math.sin(swx * 0.005 - t * 0.4 + 1.5) * Math.cos(swz * 0.006 + t * 0.25) * 25 +
-    Math.sin((swx + swz) * 0.002 + t * 0.45) * 18 +
-    Math.sin(swx * 0.01 + t * 1.0) * Math.cos(swz * 0.009 + t * 0.55) * 8
+    Math.sin(swz * 0.004 + swx * 0.0005 + t * 0.25) * 160 +
+    Math.sin(swz * 0.008 + swx * 0.001 + t * 0.4) * 100 +
+    Math.sin(swz * 0.015 + swx * 0.002 - t * 0.3) * 55 +
+    Math.sin(swz * 0.025 + swx * 0.003 + t * 0.6) * 25
   );
 }
 
@@ -218,7 +104,7 @@ const MAIN_MAST_H = 48;
 const FORE_MAST_X = 22;
 const FORE_MAST_H = 38;
 
-const MODEL_SCALE = 2.0;
+const MODEL_SCALE = 5.0;
 
 /* ── Draw the 3D boat ── */
 function drawBoat3D(
@@ -625,11 +511,11 @@ const WaveMesh = () => {
 
     // ── 3D Projection ──
     const fov = 600;
-    const horizonY = H * 0.24 + 100;
-    const cameraHeight = 500;
-    const cellSize = 24;
-    const gridCols = 280;
-    const gridRows = 90;
+    const horizonY = H * 0.42;
+    const cameraHeight = 200;
+    const cellSize = 18;
+    const gridCols = 400;
+    const gridRows = 100;
 
     const project = (wx: number, wy: number, wz: number): { sx: number; sy: number } | null => {
       if (wz <= 1) return null;
@@ -819,7 +705,31 @@ const WaveMesh = () => {
       }
     }
 
-    // ── Draw grid ──
+    // ── Fill wave faces (shading on back-faces of crests) ──
+    for (let r = 0; r < gridRows - 1; r++) {
+      for (let c = 0; c < gridCols - 1; c++) {
+        const p00 = grid[r][c];
+        const p10 = grid[r + 1][c];
+        const p01 = grid[r][c + 1];
+        const p11 = grid[r + 1][c + 1];
+        if (!p00 || !p10 || !p01 || !p11) continue;
+        const slope = (p00.wy + p01.wy) - (p10.wy + p11.wy);
+        if (slope > 0) {
+          const depthT = r / gridRows;
+          const alpha = Math.min(0.35, slope * 0.008) * (0.3 + depthT * 0.7);
+          ctx.beginPath();
+          ctx.moveTo(p00.sx, p00.sy);
+          ctx.lineTo(p01.sx, p01.sy);
+          ctx.lineTo(p11.sx, p11.sy);
+          ctx.lineTo(p10.sx, p10.sy);
+          ctx.closePath();
+          ctx.fillStyle = `rgba(20,60,160,${alpha.toFixed(4)})`;
+          ctx.fill();
+        }
+      }
+    }
+
+    // ── Draw grid lines ──
     for (let c = 0; c < gridCols; c++) {
       ctx.beginPath();
       let started = false;
@@ -827,8 +737,8 @@ const WaveMesh = () => {
         const p = grid[r][c];
         if (!p) continue;
         const depthT = r / gridRows;
-        ctx.strokeStyle = `rgba(20,60,160,${(0.08 + depthT * 0.22).toFixed(3)})`;
-        ctx.lineWidth = 0.8 + depthT * 1.2;
+        ctx.strokeStyle = `rgba(20,60,160,${(0.06 + depthT * 0.18).toFixed(3)})`;
+        ctx.lineWidth = 0.5 + depthT * 0.5;
         if (!started) { ctx.moveTo(p.sx, p.sy); started = true; }
         else ctx.lineTo(p.sx, p.sy);
       }
@@ -837,8 +747,8 @@ const WaveMesh = () => {
 
     for (let r = 0; r < gridRows; r++) {
       const depthT = r / gridRows;
-      ctx.strokeStyle = `rgba(20,60,160,${(0.08 + depthT * 0.22).toFixed(3)})`;
-      ctx.lineWidth = 0.8 + depthT * 1.2;
+      ctx.strokeStyle = `rgba(20,60,160,${(0.06 + depthT * 0.18).toFixed(3)})`;
+      ctx.lineWidth = 0.5 + depthT * 0.5;
       ctx.beginPath();
       let started = false;
       for (let c = 0; c < gridCols; c++) {
@@ -848,54 +758,6 @@ const WaveMesh = () => {
         else ctx.lineTo(p.sx, p.sy);
       }
       ctx.stroke();
-    }
-
-    for (let r = Math.floor(gridRows * 0.6); r < gridRows; r++) {
-      const depthT = r / gridRows;
-      ctx.fillStyle = `rgba(20,60,160,${(0.05 + depthT * 0.15).toFixed(3)})`;
-      for (let c = 0; c < gridCols; c++) {
-        const p = grid[r][c];
-        if (!p) continue;
-        ctx.beginPath();
-        ctx.arc(p.sx, p.sy, 0.4 + depthT * 0.6, 0, Math.PI * 2);
-        ctx.fill();
-      }
-    }
-
-    // ── Madrid location dots ──
-    for (let i = 0; i < MADRID_LOCATIONS.length; i++) {
-      const loc = MADRID_LOCATIONS[i];
-      const wy = getFullWaveHeight(loc.wx, loc.wz);
-      const p = project(loc.wx, wy, loc.wz);
-      if (!p) continue;
-
-      const { sx, sy } = p;
-      const depthScale = Math.min(1, fov / loc.wz * 0.45);
-
-      const pulse = Math.sin(t * 1.2 + i * 0.9) * 0.12;
-      const baseR = (2.5 + pulse) * depthScale;
-
-      // Outer glow
-      const glowR = baseR + 10 * depthScale;
-      const g = ctx.createRadialGradient(sx, sy, baseR * 0.3, sx, sy, glowR);
-      g.addColorStop(0, `rgba(37,99,235,${(0.18 + pulse * 0.3).toFixed(3)})`);
-      g.addColorStop(1, "rgba(37,99,235,0)");
-      ctx.beginPath();
-      ctx.arc(sx, sy, glowR, 0, Math.PI * 2);
-      ctx.fillStyle = g;
-      ctx.fill();
-
-      // Core dot
-      ctx.beginPath();
-      ctx.arc(sx, sy, baseR, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(37,99,235,${(0.55 + pulse * 0.2).toFixed(3)})`;
-      ctx.fill();
-
-      // Bright center
-      ctx.beginPath();
-      ctx.arc(sx, sy, baseR * 0.4, 0, Math.PI * 2);
-      ctx.fillStyle = "rgba(147,197,253,0.35)";
-      ctx.fill();
     }
 
     // ── Draw boat ──
