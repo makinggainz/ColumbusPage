@@ -126,11 +126,16 @@ export default function OurMissionPage() {
   }, []);
 
   return (
-    <main className="mission-page min-h-screen relative" style={{ backgroundColor: "#F9F9F9" }}>
+    <main className="mission-page min-h-screen relative" style={{ backgroundColor: "#F9F9F9", ["--grid-line-opacity" as string]: 1 - sceneOpacity }}>
       <style>{`
         .mission-hero-section.grid-section::before,
         .mission-hero-section.grid-section::after {
           display: none;
+        }
+        .mission-page .grid-section::before,
+        .mission-page .grid-section::after {
+          opacity: var(--grid-line-opacity, 1);
+          transition: opacity 0.3s ease;
         }
       `}</style>
       {/* Ocean scene background — fades out on scroll */}
