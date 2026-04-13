@@ -19,10 +19,10 @@ interface BoatPhysics {
 function getWaveHeight(wx: number, wz: number, t: number, drift: number, driftZ: number) {
   const swx = wx + drift, swz = wz + driftZ;
   return (
-    Math.sin(swz * 0.004 + swx * 0.0005 + t * 0.25) * 160 +
-    Math.sin(swz * 0.008 + swx * 0.001 + t * 0.4) * 100 +
-    Math.sin(swz * 0.015 + swx * 0.002 - t * 0.3) * 55 +
-    Math.sin(swz * 0.025 + swx * 0.003 + t * 0.6) * 25
+    Math.sin(swz * 0.003 + swx * 0.0008 + t * 0.2) * 80 +
+    Math.sin(swz * 0.006 + swx * 0.0015 - t * 0.15 + 1.2) * 50 +
+    Math.sin(swx * 0.004 + swz * 0.002 + t * 0.25) * 35 +
+    Math.sin(swz * 0.012 + swx * 0.003 + t * 0.35) * 18
   );
 }
 
@@ -509,13 +509,13 @@ const WaveMesh = () => {
     const smx = mouseRef.current.x;
     const smy = mouseRef.current.y;
 
-    // ── 3D Projection ──
-    const fov = 600;
-    const horizonY = H * 0.42;
-    const cameraHeight = 200;
+    // ── 3D Projection (high oblique, looking down) ──
+    const fov = 280;
+    const horizonY = H * 0.18;
+    const cameraHeight = 1800;
     const cellSize = 18;
-    const gridCols = 400;
-    const gridRows = 100;
+    const gridCols = 420;
+    const gridRows = 90;
 
     const project = (wx: number, wy: number, wz: number): { sx: number; sy: number } | null => {
       if (wz <= 1) return null;
@@ -577,8 +577,8 @@ const WaveMesh = () => {
       boat.wz = Math.max(150, Math.min(1600, boat.wz));
     }
 
-    const drift = t * 40;
-    const driftZ = t * 12;
+    const drift = t * 25;
+    const driftZ = t * 10;
 
     // Full wave height including ripples + mouse push
     const getFullWaveHeight = (wx: number, wz: number) => {
@@ -589,8 +589,8 @@ const WaveMesh = () => {
         const dx = wx - mouseWorld.wx;
         const dz = wz - mouseWorld.wz;
         const dist = Math.sqrt(dx * dx + dz * dz);
-        const influence = Math.max(0, 1 - dist / 250);
-        if (influence > 0) wy += influence * influence * 35;
+        const influence = Math.max(0, 1 - dist / 400);
+        if (influence > 0) wy += influence * influence * 25;
       }
 
       // Ripple contributions
@@ -705,7 +705,7 @@ const WaveMesh = () => {
       }
     }
 
-    // ── Fill wave faces (shading on back-faces of crests) ──
+    // ── Subtle wave face shading ──
     for (let r = 0; r < gridRows - 1; r++) {
       for (let c = 0; c < gridCols - 1; c++) {
         const p00 = grid[r][c];
@@ -716,39 +716,46 @@ const WaveMesh = () => {
         const slope = (p00.wy + p01.wy) - (p10.wy + p11.wy);
         if (slope > 0) {
           const depthT = r / gridRows;
-          const alpha = Math.min(0.35, slope * 0.008) * (0.3 + depthT * 0.7);
+          const bottomFade = r > gridRows * 0.85 ? 1 - (r - gridRows * 0.85) / (gridRows * 0.15) : 1;
+          const alpha = Math.min(0.14, slope * 0.003) * (0.25 + depthT * 0.75) * bottomFade;
           ctx.beginPath();
           ctx.moveTo(p00.sx, p00.sy);
           ctx.lineTo(p01.sx, p01.sy);
           ctx.lineTo(p11.sx, p11.sy);
           ctx.lineTo(p10.sx, p10.sy);
           ctx.closePath();
-          ctx.fillStyle = `rgba(20,60,160,${alpha.toFixed(4)})`;
+          ctx.fillStyle = `rgba(140,150,200,${alpha.toFixed(4)})`;
           ctx.fill();
         }
       }
     }
 
     // ── Draw grid lines ──
+    // Vertical lines (columns — converge toward center with distance)
     for (let c = 0; c < gridCols; c++) {
       ctx.beginPath();
       let started = false;
-      for (let r = gridRows - 1; r >= 0; r--) {
+      for (let r = 0; r < gridRows; r++) {
         const p = grid[r][c];
         if (!p) continue;
         const depthT = r / gridRows;
-        ctx.strokeStyle = `rgba(20,60,160,${(0.06 + depthT * 0.18).toFixed(3)})`;
-        ctx.lineWidth = 0.5 + depthT * 0.5;
+        const bottomFade = r > gridRows * 0.85 ? 1 - (r - gridRows * 0.85) / (gridRows * 0.15) : 1;
+        const alpha = (0.15 + depthT * 0.25) * bottomFade;
+        ctx.strokeStyle = `rgba(160,168,210,${alpha.toFixed(3)})`;
+        ctx.lineWidth = 0.4 + depthT * 0.3;
         if (!started) { ctx.moveTo(p.sx, p.sy); started = true; }
         else ctx.lineTo(p.sx, p.sy);
       }
       ctx.stroke();
     }
 
+    // Horizontal lines (rows — flow with terrain)
     for (let r = 0; r < gridRows; r++) {
       const depthT = r / gridRows;
-      ctx.strokeStyle = `rgba(20,60,160,${(0.06 + depthT * 0.18).toFixed(3)})`;
-      ctx.lineWidth = 0.5 + depthT * 0.5;
+      const bottomFade = r > gridRows * 0.85 ? 1 - (r - gridRows * 0.85) / (gridRows * 0.15) : 1;
+      const alpha = (0.15 + depthT * 0.25) * bottomFade;
+      ctx.strokeStyle = `rgba(160,168,210,${alpha.toFixed(3)})`;
+      ctx.lineWidth = 0.4 + depthT * 0.3;
       ctx.beginPath();
       let started = false;
       for (let c = 0; c < gridCols; c++) {
