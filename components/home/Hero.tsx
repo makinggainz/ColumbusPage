@@ -513,9 +513,9 @@ const WaveMesh = () => {
     const fov = 280;
     const horizonY = H * 0.18;
     const cameraHeight = 1800;
-    const cellSize = 18;
-    const gridCols = 420;
-    const gridRows = 90;
+    const cellSize = 40;
+    const gridCols = 190;
+    const gridRows = 50;
 
     const project = (wx: number, wy: number, wz: number): { sx: number; sy: number } | null => {
       if (wz <= 1) return null;
@@ -740,9 +740,9 @@ const WaveMesh = () => {
         if (!p) continue;
         const depthT = r / gridRows;
         const bottomFade = r > gridRows * 0.85 ? 1 - (r - gridRows * 0.85) / (gridRows * 0.15) : 1;
-        const alpha = (0.15 + depthT * 0.25) * bottomFade;
-        ctx.strokeStyle = `rgba(160,168,210,${alpha.toFixed(3)})`;
-        ctx.lineWidth = 0.4 + depthT * 0.3;
+        const alpha = (0.25 + depthT * 0.35) * bottomFade;
+        ctx.strokeStyle = `rgba(60,80,170,${alpha.toFixed(3)})`;
+        ctx.lineWidth = 1.2 + depthT * 1.2;
         if (!started) { ctx.moveTo(p.sx, p.sy); started = true; }
         else ctx.lineTo(p.sx, p.sy);
       }
