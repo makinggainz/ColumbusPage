@@ -1000,6 +1000,7 @@ export const Hero = () => {
   const [mounted, setMounted] = useState(false);
   const [vignetteOpacity, setVignetteOpacity] = useState(0);
   const sectionRef = useRef<HTMLElement>(null);
+  const textRef = useRef<HTMLDivElement>(null);
 
   // Trigger fade-in on mount
   useEffect(() => {
@@ -1012,7 +1013,7 @@ export const Hero = () => {
     window.dispatchEvent(new CustomEvent("hero-reveal"));
   }, []);
 
-  // Scroll-driven vignette
+  // Scroll-driven vignette + sticky text clip
   useEffect(() => {
     const onScroll = () => {
       const el = sectionRef.current;
@@ -1021,6 +1022,16 @@ export const Hero = () => {
       const scrolled = -rect.top;
       const total = el.offsetHeight - window.innerHeight;
       setVignetteOpacity(Math.max(0, Math.min(1, scrolled / total)));
+
+      // Clip hero text from bottom as ocean mesh scrolls over it
+      const textEl = textRef.current;
+      if (textEl) {
+        const textRect = textEl.getBoundingClientRect();
+        // Ocean becomes visible below the top gradient (~45% of viewport from section top)
+        const oceanScreenY = rect.top + window.innerHeight * 0.45;
+        const clip = Math.max(0, textRect.bottom - oceanScreenY);
+        textEl.style.clipPath = clip > 0 ? `inset(0 0 ${clip}px 0)` : "none";
+      }
     };
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
@@ -1036,11 +1047,11 @@ export const Hero = () => {
   return (
     <section
       ref={sectionRef}
-      className="relative overflow-hidden flex flex-col"
+      className="relative flex flex-col"
       style={{ background: "#F9F9F9", minHeight: "calc(100vh + 300px)" }}
     >
       {/* Mesh */}
-      <div className="absolute inset-0">
+      <div className="absolute inset-0 overflow-hidden">
         <WaveMesh />
       </div>
 
@@ -1080,52 +1091,57 @@ export const Hero = () => {
       <div className="absolute top-0 bottom-0 left-0 pointer-events-none" style={{ width: "30%", background: "linear-gradient(to right, #F9F9F9 0%, transparent 100%)", zIndex: 1, opacity: vignetteOpacity }} aria-hidden />
       <div className="absolute top-0 bottom-0 right-0 pointer-events-none" style={{ width: "30%", background: "linear-gradient(to left, #F9F9F9 0%, transparent 100%)", zIndex: 1, opacity: vignetteOpacity }} aria-hidden />
 
-      {/* Hero text */}
-      <Container className="relative z-10 pt-24 md:pt-32" style={{ maxWidth: 1287 }}>
-        <div className="max-w-292">
-          {/* Eyebrow */}
-          <p className="text-sm md:text-base font-medium tracking-tight text-[#0A1344] uppercase mb-4 mt-15" style={{ minHeight: "1.5em", ...fadeIn(0) }}>
-            {EYEBROW_TEXT}
-          </p>
+      {/* Hero text — sticky so it holds position while ocean scrolls over it */}
+      <div
+        ref={textRef}
+        style={{ position: "sticky", top: 0, zIndex: 10 }}
+      >
+        <Container className="relative pt-24 md:pt-32" style={{ maxWidth: 1287 }}>
+          <div className="max-w-292">
+            {/* Eyebrow */}
+            <p className="text-sm md:text-base font-medium tracking-tight text-[#0A1344] uppercase mb-4 mt-15" style={{ minHeight: "1.5em", ...fadeIn(0) }}>
+              {EYEBROW_TEXT}
+            </p>
 
-          {/* Heading */}
-          <h1 className="font-light leading-[1.2] text-[#0A1344] text-[39px] md:text-[49px] lg:text-[61px]" style={{ letterSpacing: "-0.02em", ...fadeIn(80) }}>
-            {HEADING_LINE1}
-            <br />
-            {HEADING_LINE2}
-          </h1>
+            {/* Heading */}
+            <h1 className="font-light leading-[1.2] text-[#0A1344] text-[39px] md:text-[49px] lg:text-[61px]" style={{ letterSpacing: "-0.02em", ...fadeIn(80) }}>
+              {HEADING_LINE1}
+              <br />
+              {HEADING_LINE2}
+            </h1>
 
-          {/* CTA + Nav links */}
-          <div id="hero-cta" className="flex items-center gap-8 mt-7" style={fadeIn(200)}>
-            <a
-              href="/contact"
-              className="group flex items-center justify-between gap-5 leading-none rounded-none hover:opacity-90 transition-opacity"
-              style={{ height: 36, marginRight: 16, paddingLeft: 20, paddingRight: 16, fontSize: 15, fontWeight: 500, borderRadius: 0, backgroundColor: "#000000", color: "white" }}
-            >
-              <span className="transition-colors duration-300 group-hover:text-[#2563EB]">Contact</span>
-              <svg className="transition-transform duration-300 group-hover:translate-x-0.5" width="10" height="18" viewBox="0 0 7 12" fill="none" stroke="#2563EB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M1 1l5 5-5 5" />
-              </svg>
-            </a>
-            {[
-              { label: "Technology", href: "/technology" },
-              { label: "Products", href: "/products/enterprise" },
-              { label: "Use Cases", href: "/use-cases" },
-            ].map((link) => (
+            {/* CTA + Nav links */}
+            <div id="hero-cta" className="flex items-center gap-8 mt-7" style={fadeIn(200)}>
               <a
-                key={link.label}
-                href={link.href}
-                className="group hidden min-[642px]:flex items-center gap-1 text-md font-medium text-[#0A1344] transition-opacity duration-300 hover:opacity-60"
+                href="/contact"
+                className="group flex items-center justify-between gap-5 leading-none rounded-none hover:opacity-90 transition-opacity"
+                style={{ height: 36, marginRight: 16, paddingLeft: 20, paddingRight: 16, fontSize: 15, fontWeight: 500, borderRadius: 0, backgroundColor: "#000000", color: "white" }}
               >
-                {link.label}
-                <svg className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-0.5" fill="none" viewBox="0 0 16 16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M6 4l4 4-4 4" />
+                <span className="transition-colors duration-300 group-hover:text-[#2563EB]">Contact</span>
+                <svg className="transition-transform duration-300 group-hover:translate-x-0.5" width="10" height="18" viewBox="0 0 7 12" fill="none" stroke="#2563EB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M1 1l5 5-5 5" />
                 </svg>
               </a>
-            ))}
+              {[
+                { label: "Technology", href: "/technology" },
+                { label: "Products", href: "/products/enterprise" },
+                { label: "Use Cases", href: "/use-cases" },
+              ].map((link) => (
+                <a
+                  key={link.label}
+                  href={link.href}
+                  className="group hidden min-[642px]:flex items-center gap-1 text-md font-medium text-[#0A1344] transition-opacity duration-300 hover:opacity-60"
+                >
+                  {link.label}
+                  <svg className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-0.5" fill="none" viewBox="0 0 16 16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M6 4l4 4-4 4" />
+                  </svg>
+                </a>
+              ))}
+            </div>
           </div>
-        </div>
-      </Container>
+        </Container>
+      </div>
     </section>
   );
 };
