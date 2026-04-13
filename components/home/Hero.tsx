@@ -625,7 +625,7 @@ const WaveMesh = () => {
 
     // ── 3D Projection ──
     const fov = 600;
-    const horizonY = H * 0.24 + 100;
+    const horizonY = H * 0.50;
     const cameraHeight = 500;
     const cellSize = 24;
     const gridCols = 280;
