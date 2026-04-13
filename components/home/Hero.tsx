@@ -19,10 +19,10 @@ interface BoatPhysics {
 function getWaveHeight(wx: number, wz: number, t: number, drift: number, driftZ: number) {
   const swx = wx + drift, swz = wz + driftZ;
   return (
-    Math.sin(swz * 0.003 + swx * 0.0008 + t * 0.2) * 80 +
-    Math.sin(swz * 0.006 + swx * 0.0015 - t * 0.15 + 1.2) * 50 +
-    Math.sin(swx * 0.004 + swz * 0.002 + t * 0.25) * 35 +
-    Math.sin(swz * 0.012 + swx * 0.003 + t * 0.35) * 18
+    Math.sin(swx * 0.0036 + swz * 0.001 + t * 0.18) * 65 +
+    Math.sin(swx * 0.007 + swz * 0.002 - t * 0.12 + 1.2) * 40 +
+    Math.sin(swx * 0.005 + swz * 0.0024 + t * 0.2) * 25 +
+    Math.sin(swx * 0.014 + swz * 0.004 + t * 0.3) * 12
   );
 }
 
@@ -510,11 +510,11 @@ const WaveMesh = () => {
     const smy = mouseRef.current.y;
 
     // ── 3D Projection (high oblique, looking down) ──
-    const fov = 280;
+    const fov = 600;
     const horizonY = H * 0.18;
-    const cameraHeight = 1800;
+    const cameraHeight = 840;
     const cellSize = 40;
-    const gridCols = 190;
+    const gridCols = 140;
     const gridRows = 50;
 
     const project = (wx: number, wy: number, wz: number): { sx: number; sy: number } | null => {
@@ -731,7 +731,10 @@ const WaveMesh = () => {
     }
 
     // ── Draw grid lines ──
-    // Vertical lines (columns — converge toward center with distance)
+    // Top 15% of rows use strong settings near hero text, rest use original subtle style
+    const strongZone = 0.15;
+
+    // Vertical lines (columns)
     for (let c = 0; c < gridCols; c++) {
       ctx.beginPath();
       let started = false;
@@ -739,23 +742,32 @@ const WaveMesh = () => {
         const p = grid[r][c];
         if (!p) continue;
         const depthT = r / gridRows;
-        const bottomFade = r > gridRows * 0.85 ? 1 - (r - gridRows * 0.85) / (gridRows * 0.15) : 1;
-        const alpha = (0.25 + depthT * 0.35) * bottomFade;
-        ctx.strokeStyle = `rgba(60,80,170,${alpha.toFixed(3)})`;
-        ctx.lineWidth = 1.2 + depthT * 1.2;
+        const heroProx = depthT < strongZone ? 1 - depthT / strongZone : 0; // 1 at top, 0 after strongZone
+        // Blend: original subtle → strong near hero
+        const alpha = (0.08 + depthT * 0.22) + heroProx * 0.45;
+        const lw = (0.8 + depthT * 1.2) + heroProx * 0.6;
+        const r_ = Math.round(160 - heroProx * 130);
+        const g_ = Math.round(168 - heroProx * 113);
+        const b_ = Math.round(210 - heroProx * 60);
+        ctx.strokeStyle = `rgba(${r_},${g_},${b_},${alpha.toFixed(3)})`;
+        ctx.lineWidth = lw;
         if (!started) { ctx.moveTo(p.sx, p.sy); started = true; }
         else ctx.lineTo(p.sx, p.sy);
       }
       ctx.stroke();
     }
 
-    // Horizontal lines (rows — flow with terrain)
+    // Horizontal lines (rows)
     for (let r = 0; r < gridRows; r++) {
       const depthT = r / gridRows;
-      const bottomFade = r > gridRows * 0.85 ? 1 - (r - gridRows * 0.85) / (gridRows * 0.15) : 1;
-      const alpha = (0.15 + depthT * 0.25) * bottomFade;
-      ctx.strokeStyle = `rgba(160,168,210,${alpha.toFixed(3)})`;
-      ctx.lineWidth = 0.4 + depthT * 0.3;
+      const heroProx = depthT < strongZone ? 1 - depthT / strongZone : 0;
+      const alpha = (0.08 + depthT * 0.22) + heroProx * 0.45;
+      const lw = (0.8 + depthT * 1.2) + heroProx * 0.6;
+      const r_ = Math.round(160 - heroProx * 130);
+      const g_ = Math.round(168 - heroProx * 113);
+      const b_ = Math.round(210 - heroProx * 60);
+      ctx.strokeStyle = `rgba(${r_},${g_},${b_},${alpha.toFixed(3)})`;
+      ctx.lineWidth = lw;
       ctx.beginPath();
       let started = false;
       for (let c = 0; c < gridCols; c++) {
