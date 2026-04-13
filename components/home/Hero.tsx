@@ -517,11 +517,47 @@ const WaveMesh = () => {
     const gridCols = 190;
     const gridRows = 50;
 
+    // ── Sphere parameters ──
+    // Full sphere, only render top hemisphere
+    const sphereR = 6000;
+    const sphereCenterZ = 1200;  // push sphere center into the scene
+
+    // Map grid (c, r) to a point on the upper hemisphere
+    // c maps to longitude (-π to +π), r maps to latitude (π/2 at top → 0 at equator)
+    const flatToSphere = (flatX: number, flatZ: number, waveH: number): { wx: number; wy: number; wz: number } => {
+      // Use flat coords to derive angular position
+      const lon = (flatX / ((gridCols / 2) * cellSize)) * Math.PI;
+      const lat = (1 - flatZ / (gridRows * cellSize)) * (Math.PI / 2); // top=π/2, bottom=0 (equator)
+
+      const cosLat = Math.cos(lat);
+      const sinLat = Math.sin(lat);
+      const cosLon = Math.cos(lon);
+      const sinLon = Math.sin(lon);
+
+      // Point on sphere surface (sphere center at origin, north pole at +Y)
+      const sx = sphereR * cosLat * sinLon;
+      const sy = sphereR * sinLat;
+      const sz = sphereR * cosLat * cosLon;
+
+      // Normal (outward from sphere center)
+      const nx = cosLat * sinLon;
+      const ny = sinLat;
+      const nz = cosLat * cosLon;
+
+      // Map to world coords: sphere Y → world Y (up), sphere Z → world Z (depth)
+      return {
+        wx: sx + nx * waveH,
+        wy: (sy + ny * waveH),
+        wz: (sz + nz * waveH) + sphereCenterZ,
+      };
+    };
+
     const project = (wx: number, wy: number, wz: number): { sx: number; sy: number } | null => {
       if (wz <= 1) return null;
       return { sx: (wx * fov) / wz + W / 2, sy: ((-wy + cameraHeight) * fov) / wz + horizonY };
     };
 
+    // Unproject uses flat-space approximation (for mouse → flat coords used by waves/boat)
     const unproject = (screenX: number, screenY: number): { wx: number; wz: number } | null => {
       const wz = (cameraHeight * fov) / (screenY - horizonY);
       if (wz <= 1 || wz > 5000) return null;
@@ -673,22 +709,23 @@ const WaveMesh = () => {
     for (let r = 0; r < gridRows; r++) {
       grid[r] = [];
       for (let c = 0; c < gridCols; c++) {
-        const wx = (c - gridCols / 2) * cellSize;
-        const wz = (r + 2) * cellSize;
+        // Flat coordinates (used by wave function, mouse, ripples)
+        const flatX = (c - gridCols / 2) * cellSize;
+        const flatZ = (r + 2) * cellSize;
 
-        let wy = getWaveHeight(wx, wz, t, drift, driftZ);
+        let wy = getWaveHeight(flatX, flatZ, t, drift, driftZ);
 
         if (mouseWorld) {
-          const dx = wx - mouseWorld.wx;
-          const dz = wz - mouseWorld.wz;
+          const dx = flatX - mouseWorld.wx;
+          const dz = flatZ - mouseWorld.wz;
           const dist = Math.sqrt(dx * dx + dz * dz);
           const influence = Math.max(0, 1 - dist / 250);
           if (influence > 0) wy += influence * influence * 35;
         }
 
         for (const rip of ripplesRef.current) {
-          const rdx = wx - rip.wx;
-          const rdz = wz - rip.wz;
+          const rdx = flatX - rip.wx;
+          const rdz = flatZ - rip.wz;
           const rdist = Math.sqrt(rdx * rdx + rdz * rdz);
           const age = t - rip.t;
           const waveRadius = age * 200;
@@ -700,7 +737,9 @@ const WaveMesh = () => {
           }
         }
 
-        const p = project(wx, wy, wz);
+        // Map flat coords + wave height onto sphere surface
+        const sp = flatToSphere(flatX, flatZ, wy);
+        const p = project(sp.wx, sp.wy, sp.wz);
         grid[r][c] = p ? { sx: p.sx, sy: p.sy, wy } : null;
       }
     }
@@ -767,14 +806,22 @@ const WaveMesh = () => {
       ctx.stroke();
     }
 
-    // ── Draw boat ──
-    const boatDepthAlpha = Math.min(1, Math.max(0.2, fov / boat.wz * 0.5));
-    drawBoat3D(ctx, project, boat, t, boatDepthAlpha);
+    // ── Draw boat (on sphere surface) ──
+    // Map the boat's flat position onto the sphere for rendering
+    const boatSphere = flatToSphere(boat.wx, boat.wz, boat.wy);
+    const boatPhysSphere: BoatPhysics = {
+      ...boat,
+      wx: boatSphere.wx,
+      wy: boatSphere.wy,
+      wz: boatSphere.wz,
+    };
+    const boatDepthAlpha = Math.min(1, Math.max(0.2, fov / boatSphere.wz * 0.5));
+    drawBoat3D(ctx, project, boatPhysSphere, t, boatDepthAlpha);
 
     // ── Hit test ──
-    const boatScreen = project(boat.wx, boat.wy, boat.wz);
+    const boatScreen = project(boatSphere.wx, boatSphere.wy, boatSphere.wz);
     if (boatScreen) {
-      const hitR = 50 * (fov / boat.wz) * MODEL_SCALE * 0.15;
+      const hitR = 50 * (fov / boatSphere.wz) * MODEL_SCALE * 0.15;
       const dx = smx - boatScreen.sx;
       const dy = smy - (boatScreen.sy - hitR * 0.5);
       hoveringBoatRef.current = Math.sqrt(dx * dx + dy * dy) < hitR;
