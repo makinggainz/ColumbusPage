@@ -42,26 +42,6 @@
   padding: 0 clamp(32px, 5vw, 80px);
 }
 
-/* Signature thin blue fading lines on content edges */
-.contentColumn::before,
-.contentColumn::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  width: 1px;
-  height: 100%;
-  pointer-events: none;
-  z-index: 1;
-  background: linear-gradient(to bottom, transparent 0px, var(--grid-line, rgba(37, 99, 235, 0.3)) 300px, var(--grid-line, rgba(37, 99, 235, 0.3)) 100%);
-}
-
-.contentColumn::before {
-  left: 0;
-}
-
-.contentColumn::after {
-  right: 0;
-}
 
 .section {
   min-height: auto;
