@@ -8,13 +8,10 @@ import { HERO_SCROLL_INDEX_ITEMS } from "./redesign/content";
 
 export function TechScrollIndex() {
   const [activeIdx, setActiveIdx] = useState(0);
-  const [isDark, setIsDark] = useState(false);
-  const [isHovered, setIsHovered] = useState(false);
   const itemRefs = useRef<(HTMLAnchorElement | null)[]>([]);
   const trackRef = useRef<HTMLDivElement>(null);
   const [segmentStyle, setSegmentStyle] = useState<React.CSSProperties>({});
 
-  // Measure the active item and position the thick bar to match
   const updateSegment = useCallback(() => {
     const track = trackRef.current;
     const item = itemRefs.current[activeIdx];
@@ -36,18 +33,6 @@ export function TechScrollIndex() {
     if (!pageBody) return;
 
     const probeY = window.innerHeight * 0.42;
-
-    const hero = document.querySelector<HTMLElement>(`.${styles.techHero}`);
-    if (hero) {
-      const heroRect = hero.getBoundingClientRect();
-      if (heroRect.bottom > probeY) {
-        setActiveIdx(0);
-        setIsDark(false);
-        return;
-      }
-    }
-
-    setIsDark(true);
 
     for (let i = HERO_SCROLL_INDEX_ITEMS.length - 1; i >= 0; i--) {
       const item = HERO_SCROLL_INDEX_ITEMS[i];
@@ -82,34 +67,17 @@ export function TechScrollIndex() {
     };
   }, [updateActive]);
 
-  // Update segment position whenever activeIdx changes
   useEffect(() => {
     updateSegment();
   }, [updateSegment]);
 
-  // Also update on resize
   useEffect(() => {
     window.addEventListener("resize", updateSegment);
     return () => window.removeEventListener("resize", updateSegment);
   }, [updateSegment]);
 
-  // Labels are visible when hovered OR when past the hero
-  const labelsVisible = isHovered || isDark;
-
   return (
-    <div
-      className={[
-        styles.scrollIndex,
-        styles.scrollIndexDark,
-        isDark ? styles.scrollIndexVisible : "",
-      ]
-        .filter(Boolean)
-        .join(" ")}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      aria-label="Page section index"
-    >
-      {/* Vertical track with thin line + thick active segment */}
+    <div className={styles.scrollIndex} aria-label="Page section index">
       <div className={styles.scrollIndexTrack} ref={trackRef}>
         <div className={styles.scrollIndexLine} />
         <div
@@ -118,15 +86,7 @@ export function TechScrollIndex() {
         />
       </div>
 
-      {/* Labels column */}
-      <div
-        className={[
-          styles.scrollIndexLabels,
-          labelsVisible ? styles.scrollIndexLabelsVisible : "",
-        ]
-          .filter(Boolean)
-          .join(" ")}
-      >
+      <div className={styles.scrollIndexLabels}>
         {HERO_SCROLL_INDEX_ITEMS.map((item, i) => {
           const isActive = i === activeIdx;
           return (

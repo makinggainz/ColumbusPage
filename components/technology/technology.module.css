@@ -35,11 +35,51 @@
   background: #fff;
 }
 
+/*
+  Layout: sidebar flush to viewport left, right edge aligns with navbar logo.
+  Navbar: max-width 1287px centered, px-6 (24px) below 1287px, px-0 at >=1287px.
+  Logo left from viewport = max((100vw - 1287px) / 2, 24px).
+*/
 .contentColumn {
   position: relative;
+  display: grid;
+  grid-template-columns: max(calc((100vw - 1287px) / 2), 24px) 1fr;
+  gap: 0;
+}
+
+.sidebarPanel {
+  position: relative;
+  background: rgba(37, 99, 235, 0.04);
+  border-right: 1px solid rgba(37, 99, 235, 0.08);
+}
+
+.sidebarPanelSticky {
+  position: sticky;
+  top: 100px;
+  padding: 24px 0;
+  margin-left: 12px;
+  padding-top: clamp(80px, 12vh, 160px);
+}
+
+/* Content area */
+.contentColumn > div:last-child {
   max-width: 1287px;
-  margin: 0 auto;
-  padding: 0 clamp(32px, 5vw, 80px);
+  padding: 0 clamp(32px, 5vw, 80px) 0 clamp(24px, 3vw, 48px);
+}
+
+@media (max-width: 768px) {
+  .contentColumn {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebarPanel {
+    display: none;
+  }
+
+  .contentColumn > div:last-child {
+    max-width: none;
+    padding: 0 24px;
+  }
 }
 
 
@@ -2333,28 +2373,15 @@
 }
 
 /* ───────────────────────────────────────────────
-   SCROLL INDEX (fixed left sidebar)
+   SCROLL INDEX (inline sidebar nav)
    Thin vertical line + thick active segment.
-   Labels hidden on hero, shown once past hero.
    ─────────────────────────────────────────────── */
 .scrollIndex {
-  position: fixed;
-  left: 20px;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 40;
   display: flex;
   align-items: stretch;
   gap: 0;
   cursor: pointer;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 350ms ease;
-}
-
-.scrollIndexVisible {
-  opacity: 1;
-  pointer-events: auto;
+  padding-left: 16px;
 }
 
 /* Track column — holds the thin line + thick segment */
@@ -2376,10 +2403,6 @@
   transition: background 300ms ease;
 }
 
-.scrollIndex:not(.scrollIndexDark) .scrollIndexLine {
-  background: rgba(255, 255, 255, 0.25);
-}
-
 /* Thick active segment — dark navy */
 .scrollIndexActiveSegment {
   position: absolute;
@@ -2388,28 +2411,14 @@
   width: 3px;
   background: #0A1344;
   border-radius: 2px;
-  transition: top 300ms ease, height 300ms ease, background 300ms ease;
+  transition: top 300ms ease, height 300ms ease;
 }
 
-.scrollIndex:not(.scrollIndexDark) .scrollIndexActiveSegment {
-  background: rgba(255, 255, 255, 0.7);
-}
-
-/* Labels column — hidden by default, shown on hover or once past hero */
+/* Labels column — always visible */
 .scrollIndexLabels {
   display: flex;
   flex-direction: column;
-  padding-left: 16px;
-  opacity: 0;
-  transform: translateX(-4px);
-  transition: opacity 240ms ease, transform 240ms ease;
-  pointer-events: none;
-}
-
-.scrollIndexLabelsVisible {
-  opacity: 1;
-  transform: translateX(0);
-  pointer-events: auto;
+  padding-left: 12px;
 }
 
 /* Individual label — serves as anchor link */
@@ -2428,10 +2437,6 @@
   overflow: visible;
 }
 
-.scrollIndex:not(.scrollIndexDark) .scrollIndexLabel {
-  color: rgba(255, 255, 255, 0.4);
-}
-
 .scrollIndexLabelText {
   position: relative;
   z-index: 1;
@@ -2442,17 +2447,13 @@
   position: absolute;
   top: 0;
   bottom: 0;
-  left: -16px;
+  left: -12px;
   right: 0;
   opacity: 0;
   background: linear-gradient(to right, rgba(10, 19, 68, 0.06) 0%, rgba(10, 19, 68, 0) 100%);
   border-radius: 0;
   transition: opacity 280ms ease;
   pointer-events: none;
-}
-
-.scrollIndex:not(.scrollIndexDark) .scrollIndexHoverGlow {
-  background: linear-gradient(to right, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0) 100%);
 }
 
 .scrollIndexLabel:hover .scrollIndexHoverGlow {
@@ -2463,14 +2464,4 @@
 .scrollIndexLabelActive {
   font-weight: 600;
   color: #0A1344;
-}
-
-.scrollIndex:not(.scrollIndexDark) .scrollIndexLabelActive {
-  color: rgba(255, 255, 255, 0.75);
-}
-
-@media (max-width: 768px) {
-  .scrollIndex {
-    display: none;
-  }
 }

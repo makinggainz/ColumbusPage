@@ -5,6 +5,7 @@ export type TechnologySectionId =
   | "lgm-vs-llm"
   | "data-collection"
   | "core-reasoning"
+  | "new-category"
   | "research-blog"
   | "careers"
   | "hiring-humans";

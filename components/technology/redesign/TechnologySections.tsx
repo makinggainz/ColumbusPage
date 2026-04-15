@@ -1,4 +1,5 @@
 import styles from "../technology.module.css";
+import { TechScrollIndex } from "../TechScrollIndex";
 import {
   RESEARCH_ARTICLES,
   RESEARCH_CARDS,
@@ -26,35 +27,44 @@ function Slide({
 export function TechnologySections() {
   return (
     <>
+      {/* Sidebar panel with scroll index */}
+      <div className={styles.sidebarPanel}>
+        <div className={styles.sidebarPanelSticky}>
+          <TechScrollIndex />
+        </div>
+      </div>
+
+      {/* Main content column */}
+      <div>
       {/* ── 1. Why an LGM ── */}
       <Slide id="index">
         <div className={styles.slideFrame}>
           <RevealOnView className={styles.editorialSlide}>
 
-            <h2 className={styles.sectionTitle}>Why an LGM</h2>
+            <h2 className={styles.sectionTitle}>Why an LGM is needed</h2>
             <div className={styles.editorialBody}>
               <p>
-                The physical world has been largely ignored by modern AI. While
-                large language models have transformed how we process text, no
-                equivalent breakthrough exists for understanding geography,
-                space, and the built environment. An LGM — a Large Geospatial
-                Model — fills that gap.
+                AI has made extraordinary progress in understanding language, but
+                the physical world remains largely uncharted territory for
+                machine intelligence. There is no foundational model that truly
+                comprehends geography, spatial relationships, and the built
+                environment at scale.
               </p>
               <p>
-                At Columbus, we believe the next frontier of intelligence lies
-                not in more text, but in comprehending the Earth itself:
-                its terrain, its infrastructure, the patterns that emerge when
-                billions of spatial data points converge. Lorem ipsum dolor sit
-                amet, consectetur adipiscing elit. Sed do eiusmod tempor
-                incididunt ut labore et dolore magna aliqua.
+                The decisions that shape our cities, infrastructure, and natural
+                resources are still made without the benefit of deep spatial
+                reasoning. Lorem ipsum dolor sit amet, consectetur adipiscing
+                elit. Sed do eiusmod tempor incididunt ut labore et dolore magna
+                aliqua. Ut enim ad minim veniam, quis nostrud exercitation
+                ullamco laboris.
               </p>
               <p>
-                Ut enim ad minim veniam, quis nostrud exercitation ullamco
-                laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure
-                dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-                proident, sunt in culpa qui officia deserunt mollit anim id est
-                laborum.
+                A Large Geospatial Model fills this gap — a foundational model
+                purpose-built to reason about Earth, its terrain, its
+                infrastructure, and the patterns that emerge when billions of
+                spatial data points converge. Duis aute irure dolor in
+                reprehenderit in voluptate velit esse cillum dolore eu fugiat
+                nulla pariatur.
               </p>
             </div>
           </RevealOnView>
@@ -66,25 +76,27 @@ export function TechnologySections() {
         <div className={styles.slideFrame}>
           <RevealOnView className={styles.editorialSlide}>
             <h2 className={styles.sectionTitle}>
-              Large Geospatial Model vs Large Language Model
+              An LGM vs LLM
             </h2>
             <p className={styles.sectionLead}>
-              If an LLM is for the digital world, our LGM is for the physical
-              world. Earth, understood.
+              The differences between a Large Language Model and a Large
+              Geospatial Model.
             </p>
             <div className={styles.editorialBody}>
               <p>
-                A Large Language Model processes text — tokens, sentences,
-                documents. A Large Geospatial Model processes the physical world
-                — coordinates, terrain, infrastructure, spatial relationships.
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                An LLM is trained on text — billions of tokens from the
+                internet — and learns to predict the next word. An LGM is
+                trained on the physical world — satellite imagery, geospatial
+                databases, coordinate systems — and learns to reason about
+                space, terrain, and the fabric of cities.
               </p>
               <p>
-                Ut enim ad minim veniam, quis nostrud exercitation ullamco
-                laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure
-                dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                fugiat nulla pariatur.
+                Where an LLM hallucinates facts it never observed, an LGM is
+                grounded in real-world coordinates. It doesn&apos;t guess where
+                a building is — it knows, because it was trained on the actual
+                geometry of the Earth. Lorem ipsum dolor sit amet, consectetur
+                adipiscing elit. Integer nec odio praesent libero sed cursus ante
+                dapibus diam.
               </p>
             </div>
           </RevealOnView>
@@ -154,10 +166,7 @@ export function TechnologySections() {
               </div>
             </div>
 
-            <div className={styles.comparisonBottom}>
-              <p className={styles.comparisonBottomLabel}>What we&apos;re doing now</p>
-              <p className={styles.comparisonBottomSub}>make it clear</p>
-            </div>
+            <div className={styles.comparisonBottom} />
           </RevealOnView>
         </div>
       </Slide>
@@ -168,20 +177,24 @@ export function TechnologySections() {
           <RevealOnView className={styles.editorialSlide}>
 
             <h2 className={styles.sectionTitle}>Results of an LGM</h2>
+            <p className={styles.sectionLead}>
+              The products of an LGM — what it produces, how it performs, and
+              how it compares.
+            </p>
             <div className={styles.editorialBody}>
               <p>
-                A Large Geospatial Model produces spatial understanding at a
-                scale and resolution previously impossible. It enables real-time
-                analysis of terrain, infrastructure density, environmental risk,
-                and human activity patterns — all from coordinate-level
-                reasoning.
+                An LGM generates high-resolution spatial intelligence: land-use
+                classification, infrastructure density scoring, environmental
+                risk assessment, and real-time pattern detection across entire
+                regions. These are outputs that previously required expensive
+                manual surveying or fragmented datasets.
               </p>
               <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer
-                nec odio praesent libero sed cursus ante dapibus diam. Sed nisi
-                nulla, sagittis eget nunc sed, faucibus a purus. Etiam
-                ullamcorper condimentum magna, sit amet hendrerit ipsum
-                fermentum.
+                When benchmarked against traditional geospatial pipelines, our
+                model achieves superior accuracy at a fraction of the cost and
+                time. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                Sed nisi nulla, sagittis eget nunc sed, faucibus a purus. Etiam
+                ullamcorper condimentum magna.
               </p>
             </div>
 
@@ -203,7 +216,45 @@ export function TechnologySections() {
         </div>
       </Slide>
 
-      {/* ── 5. Research ── */}
+      {/* ── 5. A New Category ── */}
+      <Slide id="new-category">
+        <div className={styles.slideFrame}>
+          <RevealOnView className={styles.editorialSlide}>
+
+            <h2 className={styles.sectionTitle}>A New Category</h2>
+            <p className={styles.sectionLead}>
+              We believe there needs to be a new category — with new benchmarks
+              that the industry can compete on.
+            </p>
+            <div className={styles.editorialBody}>
+              <p>
+                Today, geospatial AI has no standard benchmarks. Companies
+                operate in silos, measuring progress against internal metrics
+                that are impossible to compare. This fragmentation slows the
+                entire field.
+              </p>
+              <p>
+                We&apos;re building the benchmarks ourselves — open-source
+                evaluation frameworks for spatial reasoning, coordinate-level
+                accuracy, and real-world prediction tasks. The goal is to create
+                a shared standard that any company can compete on, accelerating
+                progress for everyone. Lorem ipsum dolor sit amet, consectetur
+                adipiscing elit. Sed do eiusmod tempor incididunt ut labore et
+                dolore magna aliqua.
+              </p>
+              <p>
+                This is something we intend to invent and open-source as part of
+                our research program — a contribution to the field that goes
+                beyond our own products. Ut enim ad minim veniam, quis nostrud
+                exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                consequat.
+              </p>
+            </div>
+          </RevealOnView>
+        </div>
+      </Slide>
+
+      {/* ── 6. Research ── */}
       <Slide id="research-blog">
         <div className={styles.slideFrame}>
           <RevealOnView className={styles.editorialSlide}>
@@ -297,6 +348,7 @@ export function TechnologySections() {
           </div>
         </div>
       </Slide>
+      </div>
     </>
   );
 }

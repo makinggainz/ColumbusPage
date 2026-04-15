@@ -11,6 +11,7 @@ export const TECHNOLOGY_NAV_ITEMS: NavItem[] = [
   { id: "lgm-vs-llm", label: "An LGM vs LLM" },
   { id: "data-collection", label: "Timeline" },
   { id: "core-reasoning", label: "Results" },
+  { id: "new-category", label: "A New Category" },
   { id: "research-blog", label: "Research Blog" },
   { id: "careers", label: "Careers" },
 ];
@@ -20,6 +21,7 @@ export const OBSERVED_SECTION_IDS: TechnologySectionId[] = [
   "lgm-vs-llm",
   "data-collection",
   "core-reasoning",
+  "new-category",
   "research-blog",
   "careers",
   "hiring-humans",
@@ -30,6 +32,7 @@ export const SECTION_TO_NAV_ID: Record<TechnologySectionId, TechnologySectionId>
   "lgm-vs-llm": "lgm-vs-llm",
   "data-collection": "data-collection",
   "core-reasoning": "core-reasoning",
+  "new-category": "new-category",
   "research-blog": "research-blog",
   careers: "careers",
   "hiring-humans": "careers",
@@ -77,6 +80,7 @@ export const HERO_SCROLL_INDEX_ITEMS = [
   { label: "An LGM vs LLM", sectionIds: ["lgm-vs-llm"] },
   { label: "Timeline", sectionIds: ["data-collection"] },
   { label: "Results of an LGM", sectionIds: ["core-reasoning"] },
+  { label: "A New Category", sectionIds: ["new-category"] },
   { label: "Research Blog", sectionIds: ["research-blog"] },
   { label: "Careers & inquiry", sectionIds: ["careers", "hiring-humans"] },
 ];

@@ -6,7 +6,6 @@ import { Navbar } from "@/components/layout/Navbar";
 import styles from "./technology.module.css";
 import { TechFooter } from "./TechFooter";
 import { TechHeroSection } from "./TechHeroSection";
-import { TechScrollIndex } from "./TechScrollIndex";
 import { TechnologySections } from "./redesign/TechnologySections";
 import { VantorScrollFeel } from "./redesign/VantorScrollFeel";
 
@@ -52,8 +51,6 @@ export function TechnologyPage() {
     <main className={styles.page}>
       <Navbar theme={navTheme} />
       <VantorScrollFeel />
-      <TechScrollIndex />
-
       <div className={styles.pageBody}>
         <div className={styles.pageBodyInner}>
           <TechHeroSection />
