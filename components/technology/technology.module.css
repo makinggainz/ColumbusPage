@@ -6,7 +6,7 @@
   --tech-shell-inline: clamp(14px, 2.3vw, 40px);
   --tech-content-gutter: clamp(18px, 2.05vw, 32px);
   min-height: 100vh;
-  background-color: #fff;
+  background-color: #000;
   color: #0a1628;
   overflow-x: clip;
 }
@@ -20,8 +20,8 @@
 
 .pageBody {
   position: relative;
-  margin-top: var(--tech-header-height);
-  height: calc(100vh - var(--tech-header-height));
+  margin-top: 0;
+  height: 100vh;
   overflow-x: hidden;
   overflow-y: auto;
   scroll-behavior: auto;
@@ -1809,5 +1809,256 @@
   .gridSequenceHint {
     opacity: 1;
     transform: none;
+  }
+}
+
+/* ───────────────────────────────────────────────
+   WRAPPER for Lenis content (hero + shell)
+   ─────────────────────────────────────────────── */
+.pageBodyInner {
+  width: 100%;
+}
+
+/* ───────────────────────────────────────────────
+   TECH HERO SECTION
+   ─────────────────────────────────────────────── */
+.techHero {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  background: #000;
+}
+
+.techHeroVideo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.techHeroOverlay {
+  position: absolute;
+  inset: 0;
+}
+
+.techHeroGradient {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 180px;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.techHeroContent {
+  position: relative;
+  z-index: 20;
+  width: 100%;
+  max-width: 1287px;
+  margin: 0 auto;
+  padding: 0 40px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.techHeroTextBlock {
+  margin-top: 295px;
+}
+
+.techHeroTitle {
+  margin: 0;
+  font-size: 78px;
+  font-weight: 300;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  color: #fff;
+}
+
+.techHeroDivider {
+  margin-top: 8px;
+  width: 100%;
+  height: 1px;
+}
+
+.techHeroSubtitle {
+  margin-top: 24px;
+  max-width: 760px;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.techHeroBottom {
+  margin-top: auto;
+  padding-bottom: 48px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  min-height: 1.4em;
+}
+
+@media (max-width: 768px) {
+  .techHeroTextBlock {
+    margin-top: 180px;
+  }
+
+  .techHeroTitle {
+    font-size: 39px;
+  }
+
+  .techHeroSubtitle {
+    font-size: 16px;
+  }
+
+  .techHeroBottom {
+    font-size: 14px;
+  }
+
+  .techHeroContent {
+    padding: 0 32px;
+  }
+}
+
+/* ───────────────────────────────────────────────
+   SCROLL INDEX (fixed left sidebar)
+   Thin vertical line + thick active segment.
+   Labels hidden on hero, shown once past hero.
+   ─────────────────────────────────────────────── */
+.scrollIndex {
+  position: fixed;
+  left: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 40;
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  cursor: pointer;
+}
+
+/* Track column — holds the thin line + thick segment */
+.scrollIndexTrack {
+  position: relative;
+  width: 3px;
+  flex-shrink: 0;
+  align-self: stretch;
+}
+
+/* Thin background line — full height */
+.scrollIndexLine {
+  position: absolute;
+  inset: 0;
+  width: 1px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(10, 22, 40, 0.18);
+  transition: background 300ms ease;
+}
+
+.scrollIndex:not(.scrollIndexDark) .scrollIndexLine {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* Thick active segment — positioned via JS to match active item height */
+.scrollIndexActiveSegment {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 3px;
+  background: #0a1628;
+  border-radius: 2px;
+  transition: top 300ms ease, height 300ms ease, background 300ms ease;
+}
+
+.scrollIndex:not(.scrollIndexDark) .scrollIndexActiveSegment {
+  background: #fff;
+}
+
+/* Labels column — hidden by default, shown on hover or once past hero */
+.scrollIndexLabels {
+  display: flex;
+  flex-direction: column;
+  padding-left: 16px;
+  opacity: 0;
+  transform: translateX(-4px);
+  transition: opacity 240ms ease, transform 240ms ease;
+  pointer-events: none;
+}
+
+.scrollIndexLabelsVisible {
+  opacity: 1;
+  transform: translateX(0);
+  pointer-events: auto;
+}
+
+/* Individual label — serves as anchor link */
+.scrollIndexLabel {
+  position: relative;
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  font-size: clamp(0.97rem, 1vw, 1.05rem);
+  font-weight: 400;
+  letter-spacing: 0;
+  color: rgba(10, 22, 40, 0.38);
+  text-decoration: none;
+  padding: 12px 16px 12px 0;
+  transition: color 220ms ease;
+  overflow: hidden;
+}
+
+.scrollIndex:not(.scrollIndexDark) .scrollIndexLabel {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.scrollIndexLabelText {
+  position: relative;
+  z-index: 1;
+}
+
+/* Hover gradient glow — starts flush from the line edge, no left rounding */
+.scrollIndexHoverGlow {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -16px;
+  right: 0;
+  opacity: 0;
+  background: linear-gradient(to right, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0) 100%);
+  border-radius: 0;
+  transition: opacity 280ms ease;
+  pointer-events: none;
+}
+
+.scrollIndexDark .scrollIndexHoverGlow {
+  background: linear-gradient(to right, rgba(10, 22, 40, 0.06) 0%, rgba(10, 22, 40, 0) 100%);
+}
+
+.scrollIndexLabel:hover .scrollIndexHoverGlow {
+  opacity: 1;
+}
+
+/* Active label — bolder, slightly more visible */
+.scrollIndexLabelActive {
+  font-weight: 600;
+  color: rgba(10, 22, 40, 0.7);
+}
+
+.scrollIndex:not(.scrollIndexDark) .scrollIndexLabelActive {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+@media (max-width: 768px) {
+  .scrollIndex {
+    display: none;
   }
 }

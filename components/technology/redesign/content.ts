@@ -136,6 +136,16 @@ export const GENLAYERS_OVERLAYS: GeoOverlayItem[] = [
   },
 ];
 
+export const HERO_SCROLL_INDEX_ITEMS = [
+  { label: "Why an LGM", sectionIds: ["index"] },
+  { label: "An LGM vs LLM", sectionIds: ["lgm-vs-llm"] },
+  { label: "Timeline", sectionIds: ["data-collection", "fusing", "grid-intro"] },
+  { label: "Results of an LGM", sectionIds: ["core-reasoning", "genlayers"] },
+  { label: "A New Category", sectionIds: ["dynamic-layers"] },
+  { label: "Research Blog", sectionIds: ["research-blog"] },
+  { label: "Careers & inquiry", sectionIds: ["careers", "hiring-humans"] },
+];
+
 export const DYNAMIC_LAYER_CAPTIONS = [
   "Solar roof possibility",
   "Resident vibes",
