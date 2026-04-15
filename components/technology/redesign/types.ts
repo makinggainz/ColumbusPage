@@ -29,6 +29,7 @@ export type TimelineEntry = {
 export type ResearchArticle = {
   title: string;
   href: string;
+  date: string;
 };
 
 export type RevealOnViewProps = {

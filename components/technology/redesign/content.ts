@@ -55,24 +55,24 @@ export const TIMELINE_ENTRIES: TimelineEntry[] = [
 export const RESEARCH_CARDS: ResearchCard[] = [
   {
     featured: true,
-    title: "Philosophy behind a Universal Geospatial Model",
+    title: "Philosphy of a Universal LGM",
     href: "#",
   },
   {
-    title: "MapsGPT Version 2.5. Architecture improvements.",
+    title: "Mimicing a adult brain",
     href: "#",
   },
   {
-    title: "Mimicking the adult brain.",
+    title: "Earth recipes",
     href: "#",
   },
 ];
 
 export const RESEARCH_ARTICLES: ResearchArticle[] = [
-  { title: "Earth recipes.", href: "#" },
-  { title: "Research, creating a fire prediction model.", href: "#" },
-  { title: "Geospatial data fusion at scale.", href: "#" },
-  { title: "Coordinate-based reasoning in neural networks.", href: "#" },
+  { title: "Research Paper -- Erick fire prediction", href: "#", date: "Mar 2026" },
+  { title: "MapsGPT. Building a consumer product", href: "#", date: "Feb 2026" },
+  { title: "Why LLMs dont cut it. Issues in LLM architecture for Geosaptial queries.", href: "#", date: "Jan 2026" },
+  { title: "A paper on Generative geospatial layers.", href: "#", date: "Dec 2025" },
 ];
 
 export const HERO_SCROLL_INDEX_ITEMS = [

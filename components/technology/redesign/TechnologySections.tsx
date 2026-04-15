@@ -37,7 +37,7 @@ export function TechnologySections() {
       {/* Main content column */}
       <div>
       {/* ── 1. Why an LGM ── */}
-      <Slide id="index">
+      <Slide id="index" className={styles.dotGrid}>
         <div className={styles.slideFrame}>
           <RevealOnView className={styles.editorialSlide}>
 
@@ -72,7 +72,7 @@ export function TechnologySections() {
       </Slide>
 
       {/* ── 2. An LGM vs LLM ── */}
-      <Slide id="lgm-vs-llm">
+      <Slide id="lgm-vs-llm" className={styles.lgmSlide}>
         <div className={styles.slideFrame}>
           <RevealOnView className={styles.editorialSlide}>
             <h2 className={styles.sectionTitle}>
@@ -104,7 +104,7 @@ export function TechnologySections() {
       </Slide>
 
       {/* ── 3. Timeline ── */}
-      <Slide id="data-collection">
+      <Slide id="data-collection" className={styles.dataCollectionSection}>
         <div className={styles.slideFrame}>
           <RevealOnView className={styles.editorialSlide}>
             <p className={styles.comparisonSuper}>A New Foundational Model</p>
@@ -172,7 +172,8 @@ export function TechnologySections() {
       </Slide>
 
       {/* ── 4. Results of an LGM ── */}
-      <Slide id="core-reasoning">
+      <Slide id="core-reasoning" className={styles.coreReasoningSlide}>
+        <div className={styles.verticalLineOverlay} aria-hidden="true" />
         <div className={styles.slideFrame}>
           <RevealOnView className={styles.editorialSlide}>
 
@@ -217,7 +218,7 @@ export function TechnologySections() {
       </Slide>
 
       {/* ── 5. A New Category ── */}
-      <Slide id="new-category">
+      <Slide id="new-category" className={styles.dotGrid}>
         <div className={styles.slideFrame}>
           <RevealOnView className={styles.editorialSlide}>
 
@@ -257,7 +258,7 @@ export function TechnologySections() {
       {/* ── 6. Research ── */}
       <Slide id="research-blog">
         <div className={styles.slideFrame}>
-          <RevealOnView className={styles.editorialSlide}>
+          <RevealOnView className={`${styles.editorialSlide} ${styles.researchEditorial}`}>
 
             <h2 className={styles.sectionTitle}>Read our latest releases</h2>
             <p className={styles.sectionLead}>
@@ -266,16 +267,81 @@ export function TechnologySections() {
 
             {/* Featured papers — rectangular card grid */}
             <div className={styles.researchCardGrid}>
-              {RESEARCH_CARDS.map((card) => (
-                <a
-                  key={card.title}
-                  href={card.href}
-                  className={styles.researchCard}
-                >
-                  <span className={styles.researchCardTitle}>{card.title}</span>
-                  <span className={styles.researchCardArrow}>&#8599;</span>
-                </a>
-              ))}
+              {/* Card 1: Philosophy — wireframe globe */}
+              <a href={RESEARCH_CARDS[0].href} className={styles.researchCard}>
+                <svg className={styles.researchCardArt} viewBox="0 0 200 200" fill="none" aria-hidden>
+                  <circle cx="100" cy="100" r="70" stroke="rgba(37,99,235,0.3)" strokeWidth="1" />
+                  <ellipse cx="100" cy="100" rx="70" ry="30" stroke="rgba(37,99,235,0.22)" strokeWidth="0.8" />
+                  <ellipse cx="100" cy="100" rx="70" ry="50" stroke="rgba(37,99,235,0.22)" strokeWidth="0.8" />
+                  <ellipse cx="100" cy="100" rx="30" ry="70" stroke="rgba(37,99,235,0.22)" strokeWidth="0.8" />
+                  <ellipse cx="100" cy="100" rx="50" ry="70" stroke="rgba(37,99,235,0.22)" strokeWidth="0.8" />
+                  <line x1="30" y1="100" x2="170" y2="100" stroke="rgba(37,99,235,0.35)" strokeWidth="1" />
+                  <line x1="100" y1="30" x2="100" y2="170" stroke="rgba(37,99,235,0.35)" strokeWidth="1" />
+                  <line x1="30" y1="80" x2="170" y2="80" stroke="rgba(37,99,235,0.15)" strokeWidth="0.6" />
+                  <line x1="30" y1="120" x2="170" y2="120" stroke="rgba(37,99,235,0.15)" strokeWidth="0.6" />
+                </svg>
+                <span className={styles.researchCardTitle}>{RESEARCH_CARDS[0].title}</span>
+                <span className={styles.researchCardArrow}>&#8599;</span>
+              </a>
+
+              {/* Card 2: Architecture — grid/network diagram */}
+              <a href={RESEARCH_CARDS[1].href} className={styles.researchCard}>
+                <svg className={styles.researchCardArt} viewBox="0 0 200 200" fill="none" aria-hidden>
+                  {/* Grid lines */}
+                  {[40, 80, 120, 160].map(x => (
+                    <line key={`v${x}`} x1={x} y1="30" x2={x} y2="170" stroke="rgba(37,99,235,0.18)" strokeWidth="0.6" />
+                  ))}
+                  {[40, 80, 120, 160].map(y => (
+                    <line key={`h${y}`} x1="30" y1={y} x2="170" y2={y} stroke="rgba(37,99,235,0.18)" strokeWidth="0.6" />
+                  ))}
+                  {/* Nodes */}
+                  {[[40,40],[80,80],[120,40],[160,80],[80,120],[120,120],[160,160],[40,160]].map(([x,y]) => (
+                    <circle key={`n${x}${y}`} cx={x} cy={y} r="3.5" fill="rgba(37,99,235,0.35)" />
+                  ))}
+                  {/* Connections */}
+                  <path d="M40 40 L80 80 L120 40 L160 80" stroke="rgba(37,99,235,0.3)" strokeWidth="1" />
+                  <path d="M80 80 L80 120 L120 120 L160 160" stroke="rgba(37,99,235,0.3)" strokeWidth="1" />
+                  <path d="M40 160 L80 120" stroke="rgba(37,99,235,0.25)" strokeWidth="1" />
+                  <path d="M120 40 L120 120" stroke="rgba(37,99,235,0.2)" strokeWidth="0.8" strokeDasharray="4 3" />
+                </svg>
+                <span className={styles.researchCardTitle}>{RESEARCH_CARDS[1].title}</span>
+                <span className={styles.researchCardArrow}>&#8599;</span>
+              </a>
+
+              {/* Card 3: Brain — neural network pattern */}
+              <a href={RESEARCH_CARDS[2].href} className={styles.researchCard}>
+                <svg className={styles.researchCardArt} viewBox="0 0 200 200" fill="none" aria-hidden>
+                  {/* Input layer */}
+                  {[60, 100, 140].map(y => (
+                    <circle key={`i${y}`} cx="40" cy={y} r="5" stroke="rgba(37,99,235,0.35)" strokeWidth="1" fill="none" />
+                  ))}
+                  {/* Hidden layer 1 */}
+                  {[50, 85, 115, 150].map(y => (
+                    <circle key={`h1${y}`} cx="100" cy={y} r="5" stroke="rgba(37,99,235,0.35)" strokeWidth="1" fill="none" />
+                  ))}
+                  {/* Output layer */}
+                  {[75, 125].map(y => (
+                    <circle key={`o${y}`} cx="160" cy={y} r="5" stroke="rgba(37,99,235,0.35)" strokeWidth="1" fill="none" />
+                  ))}
+                  {/* Connections: input → hidden */}
+                  {[60, 100, 140].flatMap(iy =>
+                    [50, 85, 115, 150].map(hy => (
+                      <line key={`ih${iy}${hy}`} x1="45" y1={iy} x2="95" y2={hy} stroke="rgba(37,99,235,0.15)" strokeWidth="0.6" />
+                    ))
+                  )}
+                  {/* Connections: hidden → output */}
+                  {[50, 85, 115, 150].flatMap(hy =>
+                    [75, 125].map(oy => (
+                      <line key={`ho${hy}${oy}`} x1="105" y1={hy} x2="155" y2={oy} stroke="rgba(37,99,235,0.15)" strokeWidth="0.6" />
+                    ))
+                  )}
+                  {/* Highlight a couple connections */}
+                  <line x1="45" y1="100" x2="95" y2="85" stroke="rgba(37,99,235,0.4)" strokeWidth="1.2" />
+                  <line x1="105" y1="85" x2="155" y2="75" stroke="rgba(37,99,235,0.4)" strokeWidth="1.2" />
+                </svg>
+                <span className={styles.researchCardTitle}>{RESEARCH_CARDS[2].title}</span>
+                <span className={styles.researchCardArrow}>&#8599;</span>
+              </a>
             </div>
 
             {/* All articles — clean list rows */}
@@ -287,7 +353,10 @@ export function TechnologySections() {
                   className={styles.articleRow}
                 >
                   <span className={styles.articleRowTitle}>{article.title}</span>
-                  <span className={styles.articleRowArrow}>&rarr;</span>
+                  <div className={styles.articleRowRight}>
+                    <span className={styles.articleRowDate}>{article.date}</span>
+                    <span className={styles.articleRowArrow}>&rarr;</span>
+                  </div>
                 </a>
               ))}
             </div>

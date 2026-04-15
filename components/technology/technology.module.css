@@ -13,7 +13,7 @@
 }
 
 .dotGrid {
-  background-image: radial-gradient(circle, rgba(189, 193, 201, 0.52) 1.1px, transparent 1.6px);
+  background-image: radial-gradient(circle, rgba(37, 99, 235, 0.15) 1.1px, transparent 1.6px);
   background-repeat: repeat;
   background-size: 16px 16px;
   background-position: 0 0;
@@ -43,7 +43,7 @@
 .contentColumn {
   position: relative;
   display: grid;
-  grid-template-columns: max(calc((100% - 1287px) / 2 + 50px), 74px) 1fr;
+  grid-template-columns: max(calc((100vw - 1287px) / 2 + 50px), 74px) 1fr;
   gap: 0;
 }
 
@@ -61,9 +61,10 @@
   padding-top: clamp(80px, 12vh, 160px);
 }
 
-/* Content area — 10px additional inset from hero alignment */
+/* Content area — right edge aligns with navbar Start Now button.
+   Sidebar is 50px wider than the navbar's left edge, so subtract that. */
 .contentColumn > div:last-child {
-  max-width: 1287px;
+  max-width: calc(1287px - 50px);
   margin: 0 auto 0 0;
   padding: 0 40px 0 50px;
 }
@@ -85,7 +86,7 @@
 
 
 .section {
-  min-height: auto;
+  min-height: 100vh;
   scroll-margin-top: 0;
   display: flex;
   align-items: stretch;
@@ -116,8 +117,9 @@
 
 .slideFrame {
   width: 100%;
+  min-height: 100vh;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
 }
 
 .section:not(.fullBleedSection):not(.lgmSlide) .slideFrame {
@@ -568,7 +570,7 @@
 .editorialSlide {
   width: 100%;
   max-width: 100%;
-  padding: clamp(48px, 6vw, 80px) 0 clamp(48px, 6vw, 80px) clamp(32px, 4vw, 56px);
+  padding: clamp(48px, 6vw, 80px) clamp(32px, 4vw, 56px) clamp(48px, 6vw, 80px) clamp(32px, 4vw, 56px);
 }
 
 .editorialBody {
@@ -813,14 +815,32 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  min-height: 260px;
-  padding: 24px;
-  border-radius: 8px;
-  border: 1px solid rgba(37, 99, 235, 0.12);
-  background: rgba(37, 99, 235, 0.03);
+  min-height: 280px;
+  padding: 28px;
+  border-radius: 0;
+  border: none;
+  background: rgba(37, 99, 235, 0.06);
   text-decoration: none;
   color: #1D1D1F;
+  transition: color 300ms ease;
+}
 
+.researchCard:hover {
+  color: #0A1344;
+}
+
+.researchCard:hover .researchCardTitle {
+  color: rgba(37, 99, 235, 0.85);
+}
+
+.researchCardArt {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  width: 140px;
+  height: 140px;
+  opacity: 1;
+  pointer-events: none;
 }
 
 .researchCardTitle {
@@ -828,14 +848,23 @@
   font-weight: 500;
   letter-spacing: -0.01em;
   line-height: 1.35;
+  transition: color 300ms ease;
+  position: relative;
+  z-index: 1;
 }
 
 .researchCardArrow {
   position: absolute;
-  top: 20px;
-  right: 20px;
+  top: 22px;
+  right: 24px;
   font-size: 1.2rem;
-  color: #6E6E73;
+  color: rgba(37, 99, 235, 0.35);
+  transition: transform 300ms ease, color 300ms ease;
+}
+
+.researchCard:hover .researchCardArrow {
+  transform: translate(3px, -3px);
+  color: rgba(37, 99, 235, 0.7);
 }
 
 @media (max-width: 768px) {
@@ -844,44 +873,82 @@
   }
 }
 
-/* ── Article list (smaller items) ── */
+/* ── Article list ── */
 .articleList {
   margin-top: 48px;
 }
 
 .articleRow {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
-  padding: 20px 0;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  gap: 24px;
+  padding: 24px 0;
+  border-bottom: 1px solid rgba(37, 99, 235, 0.1);
   text-decoration: none;
   color: #6E6E73;
   transition: color 200ms ease;
 }
 
 .articleRow:first-child {
-  border-top: 1px solid rgba(0, 0, 0, 0.06);
+  border-top: 1px solid rgba(37, 99, 235, 0.1);
+}
+
+/* Animated underline on hover — fills left to right */
+.articleRow::after {
+  content: "";
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  height: 1px;
+  width: 0;
+  background: rgba(0, 102, 204, 0.7);
+  transition: width 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.articleRow:hover::after {
+  width: 100%;
 }
 
 .articleRow:hover {
-  color: #1D1D1F;
+  color: rgba(37, 99, 235, 0.85);
 }
 
 .articleRowTitle {
-  font-size: clamp(0.95rem, 1.1vw, 1.05rem);
+  font-size: clamp(1.1rem, 1.4vw, 1.25rem);
+  font-weight: 400;
   line-height: 1.4;
+  letter-spacing: -0.01em;
+}
+
+.articleRowRight {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-shrink: 0;
+}
+
+.articleRowDate {
+  font-size: 13px;
+  color: #6E6E73;
+  white-space: nowrap;
+  transition: color 200ms ease;
+}
+
+.articleRow:hover .articleRowDate {
+  color: rgba(37, 99, 235, 0.85);
 }
 
 .articleRowArrow {
-  flex-shrink: 0;
   font-size: 1.1rem;
-  transition: transform 200ms ease;
+  color: #6E6E73;
+  transition: transform 200ms ease, color 200ms ease;
 }
 
 .articleRow:hover .articleRowArrow {
   transform: translateX(4px);
+  color: rgba(37, 99, 235, 0.85);
 }
 
 @media (max-width: 768px) {
@@ -1359,9 +1426,9 @@
   position: absolute;
   inset: 0;
   pointer-events: none;
-  background-image: linear-gradient(to right, rgba(255, 178, 178, 0.42) 1px, transparent 1px);
+  background-image: linear-gradient(to right, rgba(37, 99, 235, 0.18) 1px, transparent 1px);
   background-size: 140px 100%;
-  opacity: 0.56;
+  opacity: 0.7;
 }
 
 .coreReasoningBody {
@@ -1541,22 +1608,7 @@
   padding-bottom: 8px;
 }
 
-.researchCard {
-  position: relative;
-  flex-shrink: 0;
-  border-radius: 10px;
-  border: 1px solid rgba(10, 22, 40, 0.1);
-  background: rgba(14, 22, 42, 0.06);
-  text-decoration: none;
-  color: inherit;
-  transition: transform 280ms ease, box-shadow 280ms ease, background-color 280ms ease;
-}
 
-.researchCard:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 16px 26px rgba(25, 42, 72, 0.14);
-  background: rgba(14, 22, 42, 0.08);
-}
 
 .researchCard span {
   display: block;
@@ -2454,4 +2506,15 @@
 .scrollIndexLabelActive {
   font-weight: 600;
   color: #0A1344;
+}
+
+/* ── Research blog: right edge flush with navbar CTA ──
+   Extend editorialSlide through slideFrame padding + contentColumn padding
+   so the content right edge aligns with the 1287px navbar container edge. */
+@media (min-width: 1288px) {
+  .researchEditorial {
+    padding-right: 0;
+    width: calc(100% + var(--tech-content-gutter) + 40px);
+    max-width: none;
+  }
 }
