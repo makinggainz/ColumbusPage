@@ -5,7 +5,8 @@
   --tech-shell-gap: clamp(18px, 2.3vw, 32px);
   --tech-shell-inline: clamp(14px, 2.3vw, 40px);
   --tech-content-gutter: clamp(18px, 2.05vw, 32px);
-  min-height: 100vh;
+  /* Extra 12px lets window.scrollTo(0,11) work for navbar compact detection */
+  min-height: calc(100vh + 12px);
   background-color: #000;
   color: #0a1628;
   overflow-x: clip;
@@ -1884,26 +1885,65 @@
   height: 1px;
 }
 
-.techHeroSubtitle {
+/* Hero nav — index items displayed under the title */
+.techHeroNav {
   margin-top: 24px;
-  max-width: 760px;
-  font-size: 20px;
-  font-weight: 400;
-  line-height: 1.5;
-  color: rgba(255, 255, 255, 0.7);
+  display: flex;
+  flex-direction: column;
+  gap: 0;
 }
 
-.techHeroBottom {
-  margin-top: auto;
-  padding-bottom: 48px;
+.techHeroNavItem {
+  position: relative;
   display: flex;
   align-items: center;
-  gap: 8px;
-  color: #fff;
-  font-size: 16px;
-  font-weight: 500;
-  letter-spacing: 0.04em;
-  min-height: 1.4em;
+  padding: 10px 20px 10px 0;
+  font-size: clamp(0.97rem, 1vw, 1.05rem);
+  font-weight: 400;
+  letter-spacing: 0;
+  color: rgba(255, 255, 255, 0.45);
+  text-decoration: none;
+  overflow: hidden;
+  transition: color 220ms ease;
+}
+
+.techHeroNavItem:hover {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.techHeroNavText {
+  position: relative;
+  z-index: 1;
+}
+
+.techHeroNavGlow {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  opacity: 0;
+  background: linear-gradient(to right, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0) 100%);
+  border-radius: 0;
+  transition: opacity 280ms ease;
+  pointer-events: none;
+}
+
+.techHeroNavArrow {
+  margin-left: 8px;
+  opacity: 0;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+  transition: opacity 220ms ease;
+}
+
+.techHeroNavItem:hover .techHeroNavArrow {
+  opacity: 0.9;
+}
+
+.techHeroNavItem:hover .techHeroNavGlow {
+  opacity: 1;
 }
 
 @media (max-width: 768px) {
@@ -1915,11 +1955,7 @@
     font-size: 39px;
   }
 
-  .techHeroSubtitle {
-    font-size: 16px;
-  }
-
-  .techHeroBottom {
+  .techHeroNavItem {
     font-size: 14px;
   }
 
@@ -1943,6 +1979,14 @@
   align-items: stretch;
   gap: 0;
   cursor: pointer;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 350ms ease;
+}
+
+.scrollIndexVisible {
+  opacity: 1;
+  pointer-events: auto;
 }
 
 /* Track column — holds the thin line + thick segment */
@@ -2013,7 +2057,7 @@
   text-decoration: none;
   padding: 12px 16px 12px 0;
   transition: color 220ms ease;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .scrollIndex:not(.scrollIndexDark) .scrollIndexLabel {

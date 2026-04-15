@@ -13,28 +13,40 @@ import { VantorScrollFeel } from "./redesign/VantorScrollFeel";
 export function TechnologyPage() {
   const [navTheme, setNavTheme] = useState<"light" | "dark">("dark");
 
-  const updateNavTheme = useCallback(() => {
+  const updateNavState = useCallback(() => {
     const hero = document.querySelector<HTMLElement>(`.${styles.techHero}`);
     if (!hero) return;
     const heroBottom = hero.getBoundingClientRect().bottom;
-    // Switch to light when hero scrolls past navbar area (~80px)
-    setNavTheme(heroBottom > 80 ? "dark" : "light");
+    const pastHero = heroBottom <= 80;
+
+    setNavTheme(pastHero ? "light" : "dark");
+
+    // Sync window.scrollY so the Navbar detects compact mode (frosted glass).
+    // The tech page uses a custom scroll container, so window never scrolls
+    // naturally. We nudge documentElement.scrollTop to trigger isCompact.
+    const target = pastHero ? 11 : 0;
+    if (Math.round(window.scrollY) !== target) {
+      window.scrollTo({ top: target, behavior: "instant" as ScrollBehavior });
+    }
   }, []);
 
   useEffect(() => {
+    // Fire hero-reveal so the Navbar sets hasScrolled = true immediately
+    window.dispatchEvent(new Event("hero-reveal"));
+
     const pageBody = document.querySelector<HTMLElement>(`.${styles.pageBody}`);
     if (!pageBody) return;
 
-    updateNavTheme();
+    updateNavState();
 
-    pageBody.addEventListener("scroll", updateNavTheme, { passive: true });
-    window.addEventListener("resize", updateNavTheme);
+    pageBody.addEventListener("scroll", updateNavState, { passive: true });
+    window.addEventListener("resize", updateNavState);
 
     return () => {
-      pageBody.removeEventListener("scroll", updateNavTheme);
-      window.removeEventListener("resize", updateNavTheme);
+      pageBody.removeEventListener("scroll", updateNavState);
+      window.removeEventListener("resize", updateNavState);
     };
-  }, [updateNavTheme]);
+  }, [updateNavState]);
 
   return (
     <main className={styles.page}>

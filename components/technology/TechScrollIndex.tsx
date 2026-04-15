@@ -98,7 +98,11 @@ export function TechScrollIndex() {
 
   return (
     <div
-      className={[styles.scrollIndex, isDark ? styles.scrollIndexDark : ""]
+      className={[
+        styles.scrollIndex,
+        styles.scrollIndexDark,
+        isDark ? styles.scrollIndexVisible : "",
+      ]
         .filter(Boolean)
         .join(" ")}
       onMouseEnter={() => setIsHovered(true)}
