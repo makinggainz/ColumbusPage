@@ -24,6 +24,20 @@ export default function ContactPage() {
   const [tab, setTab] = useState<InquiryType>("columbus-pro");
   const [updates, setUpdates] = useState(false);
   const [charCount, setCharCount] = useState(0);
+  const [mounted, setMounted] = useState(false);
+  const [tabKey, setTabKey] = useState(0);
+
+  useEffect(() => {
+    const t = setTimeout(() => setMounted(true), 120);
+    return () => clearTimeout(t);
+  }, []);
+
+  const heroFadeIn = (delay: number): React.CSSProperties => ({
+    opacity: mounted ? 1 : 0,
+    filter: mounted ? "blur(0px)" : "blur(8px)",
+    transform: mounted ? "translateY(0px)" : "translateY(18px)",
+    transition: `opacity 1000ms ease ${delay}ms, filter 1000ms ease ${delay}ms, transform 1000ms ease ${delay}ms`,
+  });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -114,6 +128,7 @@ export default function ContactPage() {
         .contact-btn svg { transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1); }
         .contact-btn span { transition: color 0.3s ease; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes tabContentIn { from { opacity: 0; filter: blur(6px); transform: translateY(12px); } to { opacity: 1; filter: blur(0px); transform: translateY(0); } }
         @keyframes foldCard {
           0% { max-height: 600px; width: 100%; opacity: 1; transform: translateY(0) scale(1); }
           50% { max-height: 80px; width: 60%; opacity: 0.8; transform: translateY(20px) scale(0.85); }
@@ -131,10 +146,10 @@ export default function ContactPage() {
 
         {phase === "writing" && (
           <div className="pt-36 md:pt-44 pb-10 md:pb-14 px-8 md:px-10 text-center">
-            <h1 className="font-light leading-[1.15] text-[#0A1344] text-[39px] md:text-[49px] lg:text-[61px]" style={{ letterSpacing: "-0.02em" }}>
+            <h1 className="font-light leading-[1.15] text-[#0A1344] text-[39px] md:text-[49px] lg:text-[61px]" style={{ letterSpacing: "-0.02em", ...heroFadeIn(0) }}>
               Get in touch.
             </h1>
-            <p className="mt-4 text-[16px] md:text-[20px] leading-[1.5]" style={{ color: "rgba(10, 19, 68, 0.55)", letterSpacing: "-0.015em", fontWeight: 400 }}>
+            <p className="mt-4 text-[16px] md:text-[20px] leading-[1.5]" style={{ color: "rgba(10, 19, 68, 0.55)", letterSpacing: "-0.015em", fontWeight: 400, ...heroFadeIn(80) }}>
               Let&apos;s start your journey.
             </p>
           </div>
@@ -144,7 +159,7 @@ export default function ContactPage() {
         <div className="max-w-[640px] mx-auto px-5 md:px-10 pb-16 md:pb-24">
 
           {phase === "writing" && (
-            <div style={{ animation: "fadeIn 0.6s cubic-bezier(0.22, 1, 0.36, 1)" }}>
+            <div style={heroFadeIn(200)}>
             <div style={cardStyle}>
 
               {/* ── Tab bar — structural, accent gradient on active ── */}
@@ -153,7 +168,7 @@ export default function ContactPage() {
                   <button
                     key={opt.value}
                     type="button"
-                    onClick={() => setTab(opt.value)}
+                    onClick={() => { setTab(opt.value); setTabKey(k => k + 1); }}
                     data-active={tab === opt.value}
                     className="contact-tab flex-1 py-4 text-[14px] font-medium cursor-pointer"
                     style={{
@@ -168,7 +183,7 @@ export default function ContactPage() {
               </div>
 
               {/* ── Tab content ── */}
-              <div className="px-8 py-8 md:px-10 md:py-10">
+              <div key={tabKey} className="px-8 py-8 md:px-10 md:py-10" style={{ animation: "tabContentIn 0.5s cubic-bezier(0.22, 1, 0.36, 1)" }}>
 
                 {/* ── Columbus Pro — Book a demo style form ── */}
                 {tab === "columbus-pro" && (
