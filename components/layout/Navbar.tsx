@@ -31,7 +31,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
     const pathname = usePathname();
     const isHomePage = pathname === "/";
     const isProductsPage = pathname === "/products/mapsgpt";
-    const isUseCasesPage = pathname === "/use-cases" || pathname === "/products/enterprise";
+    const isUseCasesPage = pathname === "/use-cases" || pathname === "/products/enterprise" || pathname === "/technology";
     const isEnterprisePage = pathname === "/products/enterprise";
     const isContactPage = pathname === "/contact";
     const showWordmarkOnMobile = pathname === "/" || pathname === "/mission" || pathname === "/contact";
