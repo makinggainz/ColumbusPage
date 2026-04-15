@@ -32,32 +32,56 @@
 
 .pageShell {
   width: 100%;
-  margin: 0 auto;
-  padding: 0;
-  display: grid;
-  grid-template-columns: var(--tech-sidebar-width) minmax(0, 1fr);
-  gap: 0;
-}
-
-.sidebarColumn {
-  position: relative;
-  min-height: calc(100vh - var(--tech-header-height));
   background: #fff;
-  border-right: none;
-  padding-inline: 14px;
 }
 
 .contentColumn {
-  min-width: 0;
-  background: #fff;
+  position: relative;
+  max-width: 1287px;
+  margin: 0 auto;
+  padding: 0 clamp(32px, 5vw, 80px);
+}
+
+/* Signature thin blue fading lines on content edges */
+.contentColumn::before,
+.contentColumn::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  width: 1px;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+  background: linear-gradient(to bottom, transparent 0px, var(--grid-line, rgba(37, 99, 235, 0.3)) 300px, var(--grid-line, rgba(37, 99, 235, 0.3)) 100%);
+}
+
+.contentColumn::before {
+  left: 0;
+}
+
+.contentColumn::after {
+  right: 0;
 }
 
 .section {
-  min-height: calc(100vh - var(--tech-header-height));
+  min-height: auto;
   scroll-margin-top: 0;
   display: flex;
   align-items: stretch;
   padding: 0;
+  border-bottom: none;
+  position: relative;
+}
+
+.section::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(to right, var(--grid-line, rgba(37, 99, 235, 0.3)) 0%, var(--grid-line, rgba(37, 99, 235, 0.3)) 60%, transparent 100%);
+  pointer-events: none;
 }
 
 /* First slide only: center "Building a brain for Earth" + diagram vertically */
@@ -71,9 +95,8 @@
 
 .slideFrame {
   width: 100%;
-  min-height: calc(100vh - var(--tech-header-height));
   display: flex;
-  align-items: center;
+  align-items: flex-start;
 }
 
 .section:not(.fullBleedSection):not(.lgmSlide) .slideFrame {
@@ -86,14 +109,14 @@
 
 .fullBleedSection {
   position: relative;
-  left: calc(-1 * var(--tech-sidebar-width));
-  width: calc(100% + var(--tech-sidebar-width));
+  left: 0;
+  width: 100%;
 }
 
 .footerBleedWrap {
   position: relative;
-  left: calc(-1 * var(--tech-sidebar-width));
-  width: calc(100% + var(--tech-sidebar-width));
+  left: 0;
+  width: 100%;
   margin-top: 0;
   border-top: 1px solid rgba(255, 255, 255, 0.56);
 }
@@ -478,9 +501,11 @@
 
 .kicker {
   margin: 0;
-  font-size: clamp(1.25rem, 1.8vw, 1.7rem);
-  letter-spacing: -0.02em;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
+  color: #1D1D1F;
 }
 
 .dataSlide {
@@ -501,12 +526,375 @@
 }
 
 .sectionTitle {
-  margin: 18px 0 0;
+  margin: 12px 0 0;
   max-width: 920px;
-  font-size: clamp(2.1rem, 3.75vw, 3.9rem);
+  font-size: clamp(1.7rem, 2.8vw, 2.4rem);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  color: #1D1D1F;
+}
+
+.sectionLead {
+  margin: 16px 0 0;
+  max-width: 700px;
+  font-size: clamp(1rem, 1.2vw, 1.12rem);
+  line-height: 1.6;
+  color: #6E6E73;
+}
+
+/* ── Editorial section (Why an LGM, Results, Research) ── */
+.editorialSlide {
+  width: 100%;
+  max-width: 100%;
+  padding: clamp(48px, 6vw, 80px) 0;
+}
+
+.editorialBody {
+  margin-top: 28px;
+  max-width: 700px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.editorialBody p {
+  margin: 0;
+  font-size: clamp(1rem, 1.15vw, 1.1rem);
+  line-height: 1.65;
+  color: #6E6E73;
+}
+
+/* ── LGM vs LLM comparison (4-column) ── */
+.comparisonSuper {
+  margin: 0 0 4px;
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: #6E6E73;
+}
+
+.comparisonTrack {
+  margin-top: 40px;
+  height: 1px;
+  background: linear-gradient(to right, var(--grid-line, rgba(37, 99, 235, 0.3)) 0%, var(--grid-line, rgba(37, 99, 235, 0.3)) 60%, transparent 100%);
+}
+
+.comparisonGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+}
+
+.comparisonColumn {
+  display: flex;
+  flex-direction: column;
+  padding: 24px 20px 24px 0;
+  border-right: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.comparisonColumn:last-child {
+  border-right: none;
+}
+
+.comparisonColumn:not(:first-child) {
+  padding-left: 20px;
+}
+
+.comparisonHeading {
+  margin: 0;
+  font-size: clamp(0.95rem, 1.2vw, 1.1rem);
   font-weight: 600;
-  letter-spacing: -0.03em;
-  line-height: 1.08;
+  letter-spacing: -0.01em;
+  color: #1D1D1F;
+  line-height: 1.3;
+}
+
+.comparisonBody {
+  margin-top: 16px;
+  flex: 1;
+}
+
+.comparisonBody p {
+  margin: 0 0 10px;
+  font-size: clamp(0.82rem, 0.95vw, 0.9rem);
+  line-height: 1.55;
+  color: #6E6E73;
+}
+
+.comparisonMono {
+  font-family: monospace;
+  font-size: 0.78rem !important;
+  color: #6E6E73;
+  word-break: break-all;
+}
+
+.comparisonFooter {
+  margin-top: auto;
+  padding-top: 16px;
+}
+
+.comparisonFooter span {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #1D1D1F;
+  margin-bottom: 4px;
+}
+
+.comparisonFooter p {
+  margin: 0;
+  font-size: 0.78rem;
+  color: #6E6E73;
+}
+
+.comparisonLink {
+  display: inline-block;
+  margin-top: 16px;
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: #0A1344;
+  text-decoration: none;
+  transition: color 200ms ease;
+}
+
+.comparisonLink:hover {
+  color: #2563EB;
+}
+
+.comparisonBottom {
+  margin-top: 32px;
+  text-align: center;
+}
+
+.comparisonBottomLabel {
+  margin: 0;
+  font-size: clamp(0.9rem, 1.1vw, 1rem);
+  font-weight: 500;
+  color: #1D1D1F;
+}
+
+.comparisonBottomSub {
+  margin: 4px 0 0;
+  font-size: 0.85rem;
+  color: #6E6E73;
+}
+
+/* ── Timeline (horizontal) ── */
+.timeline {
+  margin-top: 56px;
+  position: relative;
+  width: 100%;
+  padding: 0;
+}
+
+.timelineTrack {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(to right, var(--grid-line, rgba(37, 99, 235, 0.3)) 0%, var(--grid-line, rgba(37, 99, 235, 0.3)) 60%, transparent 100%);
+  transform: translateY(-50%);
+}
+
+.timelineMarkers {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.timelineMilestone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  text-align: center;
+}
+
+.timelineName {
+  font-size: clamp(0.8rem, 1vw, 0.92rem);
+  font-weight: 500;
+  color: #1D1D1F;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+
+.timelineDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #0A1344;
+  flex-shrink: 0;
+}
+
+.timelineYear {
+  font-size: clamp(0.75rem, 0.9vw, 0.85rem);
+  font-weight: 400;
+  color: #6E6E73;
+}
+
+@media (max-width: 768px) {
+  .timelineMarkers {
+    gap: 4px;
+  }
+
+  .timelineName {
+    font-size: 0.7rem;
+  }
+
+  .timelineYear {
+    font-size: 0.65rem;
+  }
+}
+
+/* ── Result Metrics ── */
+.resultMetrics {
+  margin-top: 48px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+  max-width: 680px;
+}
+
+.resultMetric {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.resultNumber {
+  font-size: clamp(2rem, 3vw, 2.8rem);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: #1D1D1F;
+  line-height: 1.1;
+}
+
+.resultLabel {
+  font-size: 13px;
+  color: #6E6E73;
+  letter-spacing: 0.02em;
+}
+
+/* ── Research card grid (rectangular divs) ── */
+.researchCardGrid {
+  margin-top: 40px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.researchCard {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-height: 260px;
+  padding: 24px;
+  border-radius: 8px;
+  border: 1px solid rgba(37, 99, 235, 0.12);
+  background: rgba(37, 99, 235, 0.03);
+  text-decoration: none;
+  color: #1D1D1F;
+  transition: transform 280ms ease, box-shadow 280ms ease, background-color 280ms ease;
+}
+
+.researchCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px rgba(37, 99, 235, 0.1);
+  background: rgba(37, 99, 235, 0.06);
+}
+
+.researchCardTitle {
+  font-size: clamp(1.05rem, 1.4vw, 1.25rem);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  line-height: 1.35;
+}
+
+.researchCardArrow {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  font-size: 1.2rem;
+  color: #6E6E73;
+  transition: color 200ms ease;
+}
+
+.researchCard:hover .researchCardArrow {
+  color: #1D1D1F;
+}
+
+@media (max-width: 768px) {
+  .researchCardGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── Article list (smaller items) ── */
+.articleList {
+  margin-top: 48px;
+}
+
+.articleRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 20px 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  text-decoration: none;
+  color: #6E6E73;
+  transition: color 200ms ease;
+}
+
+.articleRow:first-child {
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.articleRow:hover {
+  color: #1D1D1F;
+}
+
+.articleRowTitle {
+  font-size: clamp(0.95rem, 1.1vw, 1.05rem);
+  line-height: 1.4;
+}
+
+.articleRowArrow {
+  flex-shrink: 0;
+  font-size: 1.1rem;
+  transition: transform 200ms ease;
+}
+
+.articleRow:hover .articleRowArrow {
+  transform: translateX(4px);
+}
+
+@media (max-width: 768px) {
+  .comparisonGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px 0;
+  }
+
+  .comparisonColumn {
+    border-right: none;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    padding: 16px 12px 16px 0;
+  }
+
+  .comparisonColumn:nth-child(even) {
+    padding-left: 12px;
+    border-left: 1px solid rgba(0, 0, 0, 0.06);
+  }
+
+  .resultMetrics {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
 }
 
 .dataCards {
@@ -1997,14 +2385,14 @@
   align-self: stretch;
 }
 
-/* Thin background line — full height */
+/* Thin background line — dark navy */
 .scrollIndexLine {
   position: absolute;
   inset: 0;
   width: 1px;
   left: 50%;
   transform: translateX(-50%);
-  background: rgba(10, 22, 40, 0.18);
+  background: rgba(10, 19, 68, 0.25);
   transition: background 300ms ease;
 }
 
@@ -2012,19 +2400,19 @@
   background: rgba(255, 255, 255, 0.25);
 }
 
-/* Thick active segment — positioned via JS to match active item height */
+/* Thick active segment — dark navy */
 .scrollIndexActiveSegment {
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
   width: 3px;
-  background: #0a1628;
+  background: #0A1344;
   border-radius: 2px;
   transition: top 300ms ease, height 300ms ease, background 300ms ease;
 }
 
 .scrollIndex:not(.scrollIndexDark) .scrollIndexActiveSegment {
-  background: #fff;
+  background: rgba(255, 255, 255, 0.7);
 }
 
 /* Labels column — hidden by default, shown on hover or once past hero */
@@ -2053,7 +2441,7 @@
   font-size: clamp(0.97rem, 1vw, 1.05rem);
   font-weight: 400;
   letter-spacing: 0;
-  color: rgba(10, 22, 40, 0.38);
+  color: rgba(10, 19, 68, 0.45);
   text-decoration: none;
   padding: 12px 16px 12px 0;
   transition: color 220ms ease;
@@ -2069,7 +2457,7 @@
   z-index: 1;
 }
 
-/* Hover gradient glow — starts flush from the line edge, no left rounding */
+/* Hover gradient glow — dark navy, starts flush from line */
 .scrollIndexHoverGlow {
   position: absolute;
   top: 0;
@@ -2077,24 +2465,24 @@
   left: -16px;
   right: 0;
   opacity: 0;
-  background: linear-gradient(to right, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0) 100%);
+  background: linear-gradient(to right, rgba(10, 19, 68, 0.06) 0%, rgba(10, 19, 68, 0) 100%);
   border-radius: 0;
   transition: opacity 280ms ease;
   pointer-events: none;
 }
 
-.scrollIndexDark .scrollIndexHoverGlow {
-  background: linear-gradient(to right, rgba(10, 22, 40, 0.06) 0%, rgba(10, 22, 40, 0) 100%);
+.scrollIndex:not(.scrollIndexDark) .scrollIndexHoverGlow {
+  background: linear-gradient(to right, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0) 100%);
 }
 
 .scrollIndexLabel:hover .scrollIndexHoverGlow {
   opacity: 1;
 }
 
-/* Active label — bolder, slightly more visible */
+/* Active label — dark navy, stronger */
 .scrollIndexLabelActive {
   font-weight: 600;
-  color: rgba(10, 22, 40, 0.7);
+  color: #0A1344;
 }
 
 .scrollIndex:not(.scrollIndexDark) .scrollIndexLabelActive {

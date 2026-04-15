@@ -4,12 +4,8 @@ export type TechnologySectionId =
   | "index"
   | "lgm-vs-llm"
   | "data-collection"
-  | "fusing"
-  | "grid-intro"
   | "core-reasoning"
-  | "genlayers"
   | "research-blog"
-  | "dynamic-layers"
   | "careers"
   | "hiring-humans";
 
@@ -24,10 +20,14 @@ export type ResearchCard = {
   featured?: boolean;
 };
 
-export type GeoOverlayItem = {
-  id: string;
+export type TimelineEntry = {
+  name: string;
+  year: string;
+};
+
+export type ResearchArticle = {
   title: string;
-  items: string[];
+  href: string;
 };
 
 export type RevealOnViewProps = {

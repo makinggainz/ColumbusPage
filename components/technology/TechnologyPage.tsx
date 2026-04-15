@@ -59,8 +59,6 @@ export function TechnologyPage() {
           <TechHeroSection />
 
           <div className={styles.pageShell}>
-            <div className={styles.sidebarColumn} />
-
             <div className={styles.contentColumn}>
               <TechnologySections />
               <div className={styles.footerBleedWrap}>

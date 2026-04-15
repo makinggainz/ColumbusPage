@@ -1,15 +1,8 @@
-import Image from "next/image";
-
 import styles from "../technology.module.css";
 import {
-  DYNAMIC_LAYER_CAPTIONS,
-  FUSING_STEPS,
-  GENLAYERS_OVERLAYS,
-  LGM_COLUMNS,
-  LLM_TOKEN_LINES,
+  RESEARCH_ARTICLES,
   RESEARCH_CARDS,
 } from "./content";
-import { GridScrollSequence } from "./GridScrollSequence";
 import { RevealOnView } from "./RevealOnView";
 import type { TechnologySectionId } from "./types";
 
@@ -29,329 +22,221 @@ function Slide({
   );
 }
 
-function UgmGlyph() {
-  return (
-    <svg className={styles.ugmGlyph} viewBox="0 0 138 138" fill="none" aria-hidden="true">
-      <path d="M15 69 L118 23" stroke="currentColor" strokeWidth="2" />
-      <path d="M20 31 L110 112" stroke="currentColor" strokeWidth="2" />
-      <path d="M36 17 L56 119" stroke="currentColor" strokeWidth="2" />
-      <path d="M95 18 C108 40 118 66 110 91" stroke="#f8d657" strokeWidth="2.5" />
-      {[
-        [36, 58],
-        [65, 51],
-        [79, 74],
-        [57, 86],
-      ].map(([x, y]) => (
-        <circle key={`${x}-${y}`} cx={x} cy={y} r="2.2" fill="currentColor" />
-      ))}
-    </svg>
-  );
-}
-
-function PremiumDatabaseModel() {
-  return (
-    <div className={styles.databaseModel} aria-hidden="true">
-      <div className={styles.databaseHalo} />
-      <div className={[styles.databaseTier, styles.databaseTierTop].join(" ")} />
-      <div className={styles.databaseTier} />
-      <div className={[styles.databaseTier, styles.databaseTierBottom].join(" ")} />
-      <div className={styles.databaseCoreRing} />
-      <div className={styles.databasePulse} />
-    </div>
-  );
-}
-
-function DynamicPins({ right = false }: { right?: boolean }) {
-  return (
-    <>
-      {Array.from({ length: right ? 18 : 28 }).map((_, index) => {
-        const width = 8 + (index % 5) * 7;
-        const colorClass = index % 3;
-
-        return (
-          <span
-            key={`pin-${index}`}
-            className={[
-              styles.pin,
-              colorClass === 0 ? styles.pinBlue : "",
-              colorClass === 1 ? styles.pinRed : "",
-              colorClass === 2 ? styles.pinGreen : "",
-            ]
-              .filter(Boolean)
-              .join(" ")}
-            style={{
-              width: `${width}px`,
-              left: `${(index * (right ? 5.8 : 3.2)) % 95}%`,
-              top: `${8 + ((index * 13) % 82)}%`,
-              transform: `rotate(${(index % 9) * 8 - 18}deg)`,
-            }}
-          />
-        );
-      })}
-    </>
-  );
-}
 
 export function TechnologySections() {
   return (
     <>
-      <Slide id="index" className={styles.dotGrid}>
+      {/* ── 1. Why an LGM ── */}
+      <Slide id="index">
         <div className={styles.slideFrame}>
-          <div className={styles.indexSlide}>
-            <RevealOnView className={styles.indexCopy}>
-              <h1>Building a brain for Earth.</h1>
-              <p className={styles.indexCopyLead}>
-                At Columbus, we want to collect the world&apos;s data, and
-                <br />
-                build a brain that comprehends it all.
-              </p>
-              <p className={styles.indexCopyLead}>
-                We&apos;re building frontier geospatial intelligence.
-                <br />
-                <span className={styles.indexHandwritten}>It&apos;s pretty cool.</span>
-              </p>
-            </RevealOnView>
+          <RevealOnView className={styles.editorialSlide}>
 
-            <RevealOnView className={styles.indexDiagram} delayMs={120}>
-              <div className={styles.pipelineCardWide}>
-                <div className={styles.pipelineLabel}>Data Collection &amp; Labeling</div>
-                <div className={styles.pipelineTiles}>
-                  {Array.from({ length: 5 }).map((_, index) => (
-                    <div key={`tile-${index}`} className={styles.pipelineTile} />
-                  ))}
-                </div>
-              </div>
-
-              <svg className={styles.pipelineDashedTop} viewBox="0 0 520 120" fill="none" aria-hidden="true">
-                {[120, 190, 260, 330, 400].map((x) => (
-                  <path
-                    key={x}
-                    d={`M${x} 0 C${x + (260 - x) * 0.5} 42 ${x + (260 - x) * 0.8} 76 260 94`}
-                    className={styles.dashedPathRed}
-                  />
-                ))}
-                <path d="M260 94 L260 118" className={styles.dashedPathRed} />
-              </svg>
-
-              <div className={styles.pipelineCenterCard}>
-                <div className={styles.pipelineLabel}>Columbus Database</div>
-                <div className={styles.pipelineNode} />
-              </div>
-
-              <svg className={styles.pipelineDashedBottom} viewBox="0 0 520 88" fill="none" aria-hidden="true">
-                <path d="M260 0 L260 18 L160 18 L160 88" className={styles.dashedPathRed} />
-                <path d="M260 0 L260 18 L360 18 L360 88" className={styles.dashedPathRed} />
-              </svg>
-
-              <div className={styles.pipelineBottomGrid}>
-                <div className={styles.pipelineCardSmall}>
-                  <div className={styles.pipelineLabel}>Brain Model</div>
-                  <div className={styles.pipelineBlob} />
-                </div>
-                <div className={styles.pipelineCardSmall}>
-                  <div className={styles.pipelineLabel}>Earth Grid</div>
-                  <div className={styles.pipelineGridIcon} />
-                </div>
-              </div>
-
-              <div className={styles.pipelineFooter}>Insights, Patterns, Answers.</div>
-            </RevealOnView>
-          </div>
-        </div>
-      </Slide>
-
-      <Slide id="lgm-vs-llm" className={styles.lgmSlide}>
-        <div className={styles.slideFrame}>
-          <RevealOnView className={styles.lgmWrap}>
-            <h2 className={styles.lgmTitle}>
-              Large Language Model vs Large Geospatial Model. A new foundational
-              model.
-            </h2>
-            <p className={styles.lgmLead}>
-              If an LLM is for language in the digital world, we&apos;re for the
-              physical world. An IRL AI.
-            </p>
-            <div className={styles.lgmTagline}>Think about it like AGI for the physical world</div>
-
-            <div className={styles.lgmColumns}>
-              <article className={styles.lgmColumn}>
-                <h3>LLM</h3>
-                <div className={styles.llmTokens}>
-                  {LLM_TOKEN_LINES.map((line) => (
-                    <p key={line}>{line}</p>
-                  ))}
-                </div>
-                <p className={styles.lgmFoot}>Transformer Attention</p>
-                <a href="#" className={styles.articleLink}>
-                  Read our article ↗
-                </a>
-              </article>
-
-              {LGM_COLUMNS.map((column) => (
-                <article key={column.title} className={styles.lgmColumn}>
-                  <h3>{column.title}</h3>
-                  <div className={styles.lgmBody}>
-                    {column.lines.map((line) => (
-                      <p key={line}>{line}</p>
-                    ))}
-                  </div>
-                  {column.footer ? <p className={styles.lgmFoot}>{column.footer}</p> : null}
-                </article>
-              ))}
-
-              <article className={styles.lgmColumn}>
-                <h3>UGM</h3>
-                <UgmGlyph />
-                <p className={styles.lgmFoot}>We&apos;re different</p>
-                <div className={styles.lgmBody}>
-                  <p>Intuition eyes on an Earth grid.</p>
-                  <p>Not needing as much pre-training.</p>
-                </div>
-              </article>
-            </div>
-          </RevealOnView>
-        </div>
-      </Slide>
-
-      <Slide id="data-collection" className={styles.dataCollectionSection}>
-        <div className={styles.slideFrame}>
-          <RevealOnView className={styles.dataSlide}>
-            <p className={styles.kicker}>Data Collection</p>
-            <h2 className={styles.sectionTitle}>
-              The more you know, the smarter you are. We collect vast amounts of
-              data.
-            </h2>
-
-            <div className={styles.dataCards}>
-              {Array.from({ length: 5 }).map((_, index) => (
-                <div key={`data-box-${index}`} className={styles.dataCard} />
-              ))}
-            </div>
-
-            <div className={styles.dataList}>
-              <p>Data Collection</p>
-              <ul>
-                <li>· our collection methods</li>
-                <li>· dormant data</li>
-                <li>· broken data</li>
-              </ul>
-            </div>
-          </RevealOnView>
-        </div>
-      </Slide>
-
-      <Slide id="fusing" className={styles.fusingSection}>
-        <div className={styles.slideFrame}>
-          <div className={styles.fusingSlide}>
-            <RevealOnView className={styles.fusingCopy}>
-              <h2 className={styles.fusingTitle}>Fusing...</h2>
-              <ul className={styles.fusingList}>
-                {FUSING_STEPS.map((step) => (
-                  <li key={step}>{step}</li>
-                ))}
-              </ul>
-            </RevealOnView>
-
-            <RevealOnView className={styles.fusingTransitionStage} delayMs={120}>
-              <svg className={styles.fusingFanLines} viewBox="0 0 520 580" fill="none" aria-hidden="true">
-                {[
-                  [32, 10, 212, 560],
-                  [150, 0, 280, 560],
-                  [260, 0, 260, 560],
-                  [372, 0, 240, 560],
-                  [488, 10, 310, 560],
-                ].map(([x1, y1, x2, y2]) => (
-                  <line key={`${x1}-${x2}`} x1={x1} y1={y1} x2={x2} y2={y2} className={styles.dashedPathGray} />
-                ))}
-              </svg>
-
-              <div className={styles.fusingConnector} />
-              <PremiumDatabaseModel />
-            </RevealOnView>
-          </div>
-        </div>
-      </Slide>
-
-      <GridScrollSequence />
-
-      <Slide id="core-reasoning" className={styles.coreReasoningSlide}>
-        <div className={styles.verticalLineOverlay} aria-hidden="true" />
-        <div className={styles.slideFrame}>
-          <RevealOnView className={styles.coreReasoningBody}>
-            <p className={styles.kicker}>Core Reasoning</p>
-            <h2 className={styles.sectionTitleNarrow}>Reasoning with Space and Geography</h2>
-            <p className={styles.coreReasoningText}>
-              Building an artificial intelligence to comprehend, and critically
-              think in coordinate spaces.
-            </p>
-          </RevealOnView>
-        </div>
-      </Slide>
-
-      <Slide id="genlayers" className={styles.fullBleedSection}>
-        <div className={styles.slideFrame}>
-          <div className={styles.genlayersSlide}>
-            <Image src="/forest.png" alt="Mapping the unknown with GenLayers" fill sizes="100vw" className={styles.coverImage} />
-            <div className={styles.imageShadeStrong} />
-
-            <RevealOnView className={styles.genlayersHeader}>
-              <h2>Mapping the unknown with GenLayers.</h2>
+            <h2 className={styles.sectionTitle}>Why an LGM</h2>
+            <div className={styles.editorialBody}>
               <p>
-                How we generate new layers of geospatial intelligence, using big
-                data and sophisticated reasoning to extrapolate.
+                The physical world has been largely ignored by modern AI. While
+                large language models have transformed how we process text, no
+                equivalent breakthrough exists for understanding geography,
+                space, and the built environment. An LGM — a Large Geospatial
+                Model — fills that gap.
               </p>
-            </RevealOnView>
-
-            <div className={styles.genlayersShapes} aria-hidden="true">
-              <div className={styles.genShapeLeft} />
-              <div className={styles.genShapeRight} />
+              <p>
+                At Columbus, we believe the next frontier of intelligence lies
+                not in more text, but in comprehending the Earth itself:
+                its terrain, its infrastructure, the patterns that emerge when
+                billions of spatial data points converge. Lorem ipsum dolor sit
+                amet, consectetur adipiscing elit. Sed do eiusmod tempor
+                incididunt ut labore et dolore magna aliqua.
+              </p>
+              <p>
+                Ut enim ad minim veniam, quis nostrud exercitation ullamco
+                laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure
+                dolor in reprehenderit in voluptate velit esse cillum dolore eu
+                fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+                proident, sunt in culpa qui officia deserunt mollit anim id est
+                laborum.
+              </p>
             </div>
-
-            <div className={styles.calloutConnectorLeft} aria-hidden="true" />
-            <div className={styles.calloutConnectorRight} aria-hidden="true" />
-
-            <div className={styles.genlayersCallouts}>
-              {GENLAYERS_OVERLAYS.map((overlay, index) => (
-                <RevealOnView
-                  key={overlay.id}
-                  className={[
-                    styles.genlayersCallout,
-                    index === 0 ? styles.genlayersCalloutLeft : styles.genlayersCalloutRight,
-                  ].join(" ")}
-                  delayMs={120 + index * 80}
-                >
-                  {overlay.items.map((item) => (
-                    <p key={item}>{item}</p>
-                  ))}
-                </RevealOnView>
-              ))}
-            </div>
-          </div>
+          </RevealOnView>
         </div>
       </Slide>
 
+      {/* ── 2. An LGM vs LLM ── */}
+      <Slide id="lgm-vs-llm">
+        <div className={styles.slideFrame}>
+          <RevealOnView className={styles.editorialSlide}>
+            <h2 className={styles.sectionTitle}>
+              Large Geospatial Model vs Large Language Model
+            </h2>
+            <p className={styles.sectionLead}>
+              If an LLM is for the digital world, our LGM is for the physical
+              world. Earth, understood.
+            </p>
+            <div className={styles.editorialBody}>
+              <p>
+                A Large Language Model processes text — tokens, sentences,
+                documents. A Large Geospatial Model processes the physical world
+                — coordinates, terrain, infrastructure, spatial relationships.
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
+                eiusmod tempor incididunt ut labore et dolore magna aliqua.
+              </p>
+              <p>
+                Ut enim ad minim veniam, quis nostrud exercitation ullamco
+                laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure
+                dolor in reprehenderit in voluptate velit esse cillum dolore eu
+                fugiat nulla pariatur.
+              </p>
+            </div>
+          </RevealOnView>
+        </div>
+      </Slide>
+
+      {/* ── 3. Timeline ── */}
+      <Slide id="data-collection">
+        <div className={styles.slideFrame}>
+          <RevealOnView className={styles.editorialSlide}>
+            <p className={styles.comparisonSuper}>A New Foundational Model</p>
+            <h2 className={styles.sectionTitle}>
+              Large Geospatial Model vs Large Language Model.
+            </h2>
+            <p className={styles.sectionLead}>
+              If an LLM is for the digital world, our LGM is for the physical
+              world. Earth, understood.
+            </p>
+
+            {/* Horizontal divider line */}
+            <div className={styles.comparisonTrack} />
+
+            <div className={styles.comparisonGrid}>
+              {/* Column 1: LLM */}
+              <div className={styles.comparisonColumn}>
+                <h3 className={styles.comparisonHeading}>LLM</h3>
+                <div className={styles.comparisonBody}>
+                  <p>A large language model is trained on huge sets of text data for tokenization</p>
+                  <p className={styles.comparisonMono}>280, 1170, 296, 4088, 30773, 4012, 5079, 2534, 3883, 263, 29072, 268, 64696</p>
+                </div>
+                <div className={styles.comparisonFooter}>
+                  <span>[ Transformer Attention ]</span>
+                  <p>Drawbacks: hallucination</p>
+                </div>
+                <a href="#" className={styles.comparisonLink}>Read our in-depth article &#8250;</a>
+              </div>
+
+              {/* Column 2: Geo-tuned LLM + Vision Models */}
+              <div className={styles.comparisonColumn}>
+                <h3 className={styles.comparisonHeading}>Geo-tuned LLM + Vision Models</h3>
+                <div className={styles.comparisonBody}>
+                  <p>Comprehending images, and predicting certain things like size from Earth imagery and context.</p>
+                  <p>use; clay and other ai satellite website for inspo</p>
+                </div>
+                <div className={styles.comparisonFooter}>
+                  <span>[ Reverse Diffusion ]</span>
+                </div>
+              </div>
+
+              {/* Column 3: Generalist LGM */}
+              <div className={styles.comparisonColumn}>
+                <h3 className={styles.comparisonHeading}>Generalist LGM</h3>
+                <div className={styles.comparisonBody}>
+                  <p>Big Data pre-trained Large Geospatial Model</p>
+                  <p>requiring fine-tuned labeling for each earth topic (e.g. physics etc)</p>
+                </div>
+                <a href="#" className={styles.comparisonLink}>Read our Paper &#8250;</a>
+              </div>
+
+              {/* Column 4: Universal Geospatial Model */}
+              <div className={styles.comparisonColumn}>
+                <h3 className={styles.comparisonHeading}>Universal Geospatial Model</h3>
+                <div className={styles.comparisonBody}>
+                  <p>An AGI for the physical world</p>
+                </div>
+                <a href="#" className={styles.comparisonLink}>Our Game Plan &#8250;</a>
+              </div>
+            </div>
+
+            <div className={styles.comparisonBottom}>
+              <p className={styles.comparisonBottomLabel}>What we&apos;re doing now</p>
+              <p className={styles.comparisonBottomSub}>make it clear</p>
+            </div>
+          </RevealOnView>
+        </div>
+      </Slide>
+
+      {/* ── 4. Results of an LGM ── */}
+      <Slide id="core-reasoning">
+        <div className={styles.slideFrame}>
+          <RevealOnView className={styles.editorialSlide}>
+
+            <h2 className={styles.sectionTitle}>Results of an LGM</h2>
+            <div className={styles.editorialBody}>
+              <p>
+                A Large Geospatial Model produces spatial understanding at a
+                scale and resolution previously impossible. It enables real-time
+                analysis of terrain, infrastructure density, environmental risk,
+                and human activity patterns — all from coordinate-level
+                reasoning.
+              </p>
+              <p>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer
+                nec odio praesent libero sed cursus ante dapibus diam. Sed nisi
+                nulla, sagittis eget nunc sed, faucibus a purus. Etiam
+                ullamcorper condimentum magna, sit amet hendrerit ipsum
+                fermentum.
+              </p>
+            </div>
+
+            <div className={styles.resultMetrics}>
+              <div className={styles.resultMetric}>
+                <span className={styles.resultNumber}>13T+</span>
+                <span className={styles.resultLabel}>Grid cells</span>
+              </div>
+              <div className={styles.resultMetric}>
+                <span className={styles.resultNumber}>100m</span>
+                <span className={styles.resultLabel}>Resolution</span>
+              </div>
+              <div className={styles.resultMetric}>
+                <span className={styles.resultNumber}>Global</span>
+                <span className={styles.resultLabel}>Coverage</span>
+              </div>
+            </div>
+          </RevealOnView>
+        </div>
+      </Slide>
+
+      {/* ── 5. Research ── */}
       <Slide id="research-blog">
         <div className={styles.slideFrame}>
-          <RevealOnView className={styles.researchSlide}>
-            <div className={styles.researchHead}>
-              <h2>Columbus Research</h2>
-              <p>Explore the innovative research and recent papers from our team</p>
-            </div>
-            <div className={styles.researchDivider} />
-            <h3 className={styles.researchSubhead}>Read our latest releases</h3>
+          <RevealOnView className={styles.editorialSlide}>
 
-            <div className={styles.researchScroller}>
+            <h2 className={styles.sectionTitle}>Read our latest releases</h2>
+            <p className={styles.sectionLead}>
+              Explore the innovative research and recent papers from our team.
+            </p>
+
+            {/* Featured papers — rectangular card grid */}
+            <div className={styles.researchCardGrid}>
               {RESEARCH_CARDS.map((card) => (
                 <a
                   key={card.title}
                   href={card.href}
-                  className={[
-                    styles.researchCard,
-                    card.featured ? styles.researchCardFeatured : styles.researchCardThin,
-                  ].join(" ")}
+                  className={styles.researchCard}
                 >
-                  {card.featured ? <span className={styles.researchArrow}>↗</span> : null}
-                  <span>{card.title}</span>
+                  <span className={styles.researchCardTitle}>{card.title}</span>
+                  <span className={styles.researchCardArrow}>&#8599;</span>
+                </a>
+              ))}
+            </div>
+
+            {/* All articles — clean list rows */}
+            <div className={styles.articleList}>
+              {RESEARCH_ARTICLES.map((article) => (
+                <a
+                  key={article.title}
+                  href={article.href}
+                  className={styles.articleRow}
+                >
+                  <span className={styles.articleRowTitle}>{article.title}</span>
+                  <span className={styles.articleRowArrow}>&rarr;</span>
                 </a>
               ))}
             </div>
@@ -359,71 +244,16 @@ export function TechnologySections() {
         </div>
       </Slide>
 
-      <Slide id="dynamic-layers" className={styles.fullBleedSection}>
-        <div className={styles.slideFrame}>
-          <div className={styles.dynamicSlide}>
-            <div className={styles.dynamicTopBlur} aria-hidden="true" />
-            <div className={styles.dynamicBottomBlur} aria-hidden="true" />
-
-            <RevealOnView className={styles.dynamicHeading}>
-              <h2>
-                Dynamically creating geodata layers, without complex and expensive
-                surveying.
-              </h2>
-              <a href="#" className={styles.dynamicPill}>
-                Explore more maps we&apos;ve made ↗
-              </a>
-            </RevealOnView>
-
-            <div className={styles.dynamicColumns}>
-              <article className={styles.dynamicColumn}>
-                <Image src="/tokyo.png" alt="Solar roof possibility layer" fill sizes="33vw" className={styles.coverImage} />
-                <div className={styles.dynamicShadeLeft} />
-                <div className={styles.dynamicPinLayer}>
-                  <DynamicPins />
-                </div>
-                <div className={styles.dynamicCaption}>
-                  <small>Columbus GenLayer</small>
-                  <p>{DYNAMIC_LAYER_CAPTIONS[0]}</p>
-                </div>
-              </article>
-
-              <article className={styles.dynamicColumn}>
-                <Image src="/heropage.png" alt="Resident vibes layer" fill sizes="33vw" className={styles.coverImage} />
-                <div className={styles.dynamicShadeMid} />
-                <div className={styles.dynamicCaption}>
-                  <small>Columbus GenLayer</small>
-                  <p>{DYNAMIC_LAYER_CAPTIONS[1]}</p>
-                </div>
-              </article>
-
-              <article className={styles.dynamicColumn}>
-                <Image src="/heropage.png" alt="Safety score layer" fill sizes="33vw" className={styles.coverImageRight} />
-                <div className={styles.dynamicShadeRight} />
-                <div className={styles.dynamicPinLayer}>
-                  <DynamicPins right />
-                </div>
-                <div className={styles.dynamicCaption}>
-                  <small>Columbus GenLayer</small>
-                  <p>{DYNAMIC_LAYER_CAPTIONS[2]}</p>
-                </div>
-              </article>
-            </div>
-          </div>
-        </div>
-      </Slide>
-
+      {/* ── 6. Careers ── */}
       <Slide id="careers" className={styles.noSnapSection}>
         <div className={styles.slideFrame}>
-          <RevealOnView className={styles.careersSlide}>
-            <div className={styles.careersHead}>
-              <h2>Careers</h2>
-              <p>
-                If you&apos;re excited about creating paradigm shifts in physical
-                world understanding. <strong>Join us now.</strong>
-              </p>
-            </div>
-            <div className={styles.researchDivider} />
+          <RevealOnView className={styles.editorialSlide}>
+
+            <h2 className={styles.sectionTitle}>Careers</h2>
+            <p className={styles.sectionLead}>
+              If you&apos;re excited about creating paradigm shifts in physical
+              world understanding. <strong>Join us now.</strong>
+            </p>
 
             <form
               action="mailto:contact@columbus.earth?subject=Careers%20Application"
@@ -452,6 +282,7 @@ export function TechnologySections() {
         </div>
       </Slide>
 
+      {/* ── 7. Hiring Humans ── */}
       <Slide
         id="hiring-humans"
         className={[styles.hiringSection, styles.fullBleedSection, styles.noSnapSection].join(" ")}
