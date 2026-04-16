@@ -49,7 +49,9 @@
 
 .sidebarPanel {
   position: relative;
-  background: rgba(37, 99, 235, 0.04);
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(20px) saturate(1.2);
+  -webkit-backdrop-filter: blur(20px) saturate(1.2);
   border-right: 1px solid rgba(37, 99, 235, 0.08);
 }
 
@@ -871,7 +873,25 @@
   padding: 24px 0;
 }
 
-/* Override card styles for horizontal layout */
+/* Raw input — no box, tiles float freely */
+.pipelineInput {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.pipelineLabelFree {
+  text-align: center;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 500;
+  color: rgba(10, 19, 68, 0.4);
+}
+
+/* Built systems — glass box */
 .pipelineStage {
   display: flex;
   flex-direction: column;

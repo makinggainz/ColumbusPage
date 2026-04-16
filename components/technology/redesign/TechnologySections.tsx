@@ -234,7 +234,7 @@ export function TechnologySections() {
             {/* Horizontal pipeline diagram:
                 Many sources → converge → Database → split → Brain Model + Earth Grid → Insights */}
             <div className={styles.pipelineHorizontal}>
-              {/* Stage 1: Data Collection — 5 tiles stacked vertically */}
+              {/* Stage 1: Data Collection */}
               <div className={styles.pipelineStage}>
                 <div className={styles.pipelineLabel}>Data Collection &amp; Labeling</div>
                 <div className={styles.pipelineTilesV}>
