@@ -8,10 +8,9 @@ import type {
 
 export const TECHNOLOGY_NAV_ITEMS: NavItem[] = [
   { id: "index", label: "Index" },
-  { id: "lgm-vs-llm", label: "An LGM vs LLM" },
-  { id: "data-collection", label: "Timeline" },
-  { id: "core-reasoning", label: "Results" },
-  { id: "new-category", label: "A New Category" },
+  { id: "lgm-vs-llm", label: "Our Research" },
+  { id: "core-reasoning", label: "Under the hood" },
+  { id: "data-collection", label: "Results" },
   { id: "research-blog", label: "Research Blog" },
   { id: "careers", label: "Careers" },
 ];
@@ -19,9 +18,8 @@ export const TECHNOLOGY_NAV_ITEMS: NavItem[] = [
 export const OBSERVED_SECTION_IDS: TechnologySectionId[] = [
   "index",
   "lgm-vs-llm",
-  "data-collection",
   "core-reasoning",
-  "new-category",
+  "data-collection",
   "research-blog",
   "careers",
   "hiring-humans",
@@ -30,9 +28,8 @@ export const OBSERVED_SECTION_IDS: TechnologySectionId[] = [
 export const SECTION_TO_NAV_ID: Record<TechnologySectionId, TechnologySectionId> = {
   index: "index",
   "lgm-vs-llm": "lgm-vs-llm",
-  "data-collection": "data-collection",
   "core-reasoning": "core-reasoning",
-  "new-category": "new-category",
+  "data-collection": "data-collection",
   "research-blog": "research-blog",
   careers: "careers",
   "hiring-humans": "careers",
@@ -77,10 +74,9 @@ export const RESEARCH_ARTICLES: ResearchArticle[] = [
 
 export const HERO_SCROLL_INDEX_ITEMS = [
   { label: "Why an LGM", sectionIds: ["index"] },
-  { label: "An LGM vs LLM", sectionIds: ["lgm-vs-llm"] },
-  { label: "Timeline", sectionIds: ["data-collection"] },
-  { label: "Results of an LGM", sectionIds: ["core-reasoning"] },
-  { label: "A New Category", sectionIds: ["new-category"] },
+  { label: "Our Research", sectionIds: ["lgm-vs-llm"] },
+  { label: "Under the hood", sectionIds: ["core-reasoning"] },
+  { label: "Results", sectionIds: ["data-collection"] },
   { label: "Research Blog", sectionIds: ["research-blog"] },
   { label: "Careers & inquiry", sectionIds: ["careers", "hiring-humans"] },
 ];

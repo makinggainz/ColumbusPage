@@ -1,4 +1,3 @@
-import Image from "next/image";
 import styles from "../technology.module.css";
 import { TechScrollIndex } from "../TechScrollIndex";
 import {
@@ -68,6 +67,70 @@ export function TechnologySections() {
                 nulla pariatur.
               </p>
             </div>
+            <a href="/use-cases" className={styles.sectionCta}>
+              <span>Explore use cases</span>
+              <svg width="10" height="18" viewBox="0 0 10 18" fill="none" aria-hidden>
+                <path d="M1 1l8 8-8 8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </a>
+          </RevealOnView>
+        </div>
+      </Slide>
+
+      {/* ── 2. Our Research (Synopsis) ── */}
+      <Slide id="lgm-vs-llm" className={styles.lgmSlide}>
+        <div className={styles.slideFrame}>
+          <RevealOnView className={styles.editorialSlide}>
+            <h2 className={styles.sectionTitle}>Our Research</h2>
+            <p className={styles.sectionLead}>
+              We&apos;ve come up with several innovations within data collection,
+              fusion, and reasoning, which we combine in unique ways in our
+              research.
+            </p>
+            <div className={styles.editorialBody}>
+              <p>
+                <strong>Proprietary Data Collection.</strong> Our collection
+                methodology goes beyond conventional satellite imagery and public
+                datasets. We&apos;ve developed autonomous ingestion pipelines
+                that harvest geospatial signals from dormant data sources —
+                infrastructure telemetry, environmental sensors, commercial
+                transaction patterns — and normalize them into a unified
+                coordinate fabric. Lorem ipsum dolor sit amet, consectetur
+                adipiscing elit.
+              </p>
+              <p>
+                <strong>Data Digestion &amp; Fusion.</strong> Raw geospatial data
+                is inherently fragmented, contradictory, and incomplete. Our
+                fusion engine spatially pairs unformatted data, resolves
+                geocoding conflicts, and structures broken datasets into coherent
+                layers. Sed do eiusmod tempor incididunt ut labore et dolore
+                magna aliqua. Ut enim ad minim veniam.
+              </p>
+              <p>
+                <strong>Comprehension &amp; Extrapolation.</strong> Where
+                traditional systems store and retrieve, our model comprehends —
+                understanding the semantic nature of a city&apos;s fabric, the
+                relationship between terrain and infrastructure, and the patterns
+                that predict what should exist where it doesn&apos;t yet. Duis
+                aute irure dolor in reprehenderit in voluptate velit esse cillum
+                dolore eu fugiat nulla pariatur.
+              </p>
+              <p>
+                <strong>Generative Layer Synthesis.</strong> From comprehension,
+                the model generates entirely new geospatial layers — predictions
+                about solar roof viability, resident behavior patterns, safety
+                scoring — without expensive manual surveying. Excepteur sint
+                occaecat cupidatat non proident.
+              </p>
+              <p>
+                <strong>Coordinate-level Reasoning.</strong> The final stage
+                combines all upstream innovations into a reasoning engine that
+                operates at the coordinate level, drawing inferences across
+                billions of spatial data points simultaneously. This is the core
+                of the Universal Geospatial Model. Lorem ipsum dolor sit amet
+                consectetur adipiscing elit integer nec odio.
+              </p>
+            </div>
 
             {/* Timeline labels above the line */}
             <div className={styles.timelineLabels}>
@@ -89,7 +152,6 @@ export function TechnologySections() {
               </div>
             </div>
 
-            {/* Horizontal timeline line */}
             <div className={styles.comparisonTrack} />
 
             <div className={styles.comparisonGrid}>
@@ -108,7 +170,6 @@ export function TechnologySections() {
               <div className={styles.comparisonColumn}>
                 <div className={styles.comparisonBody}>
                   <p>Comprehending images, and predicting certain things like size from Earth imagery and context.</p>
-                  <p>use; clay and other ai satellite website for inspo</p>
                 </div>
                 <div className={styles.comparisonFooter}>
                   <span>[ Reverse Diffusion ]</span>
@@ -130,137 +191,159 @@ export function TechnologySections() {
                 <a href="#" className={styles.comparisonLink}>Our Game Plan &#8250;</a>
               </div>
             </div>
-
-            <div className={styles.comparisonBottom} />
+            <a href="#" className={styles.sectionCta}>
+              <span>Read our research papers</span>
+              <svg width="10" height="18" viewBox="0 0 10 18" fill="none" aria-hidden>
+                <path d="M1 1l8 8-8 8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </a>
           </RevealOnView>
         </div>
       </Slide>
 
-      {/* ── 2. An LGM vs LLM ── */}
-      <Slide id="lgm-vs-llm" className={styles.lgmSlide}>
-        <div className={styles.slideFrame}>
-          <RevealOnView className={styles.editorialSlide}>
-            <h2 className={styles.sectionTitle}>
-              An LGM vs LLM
-            </h2>
-            <p className={styles.sectionLead}>
-              The differences between a Large Language Model and a Large
-              Geospatial Model.
-            </p>
-            <div className={styles.editorialBody}>
-              <p>
-                An LLM is trained on text — billions of tokens from the
-                internet — and learns to predict the next word. An LGM is
-                trained on the physical world — satellite imagery, geospatial
-                databases, coordinate systems — and learns to reason about
-                space, terrain, and the fabric of cities.
-              </p>
-              <p>
-                Where an LLM hallucinates facts it never observed, an LGM is
-                grounded in real-world coordinates. It doesn&apos;t guess where
-                a building is — it knows, because it was trained on the actual
-                geometry of the Earth. Lorem ipsum dolor sit amet, consectetur
-                adipiscing elit. Integer nec odio praesent libero sed cursus ante
-                dapibus diam.
-              </p>
-            </div>
-          </RevealOnView>
-        </div>
-      </Slide>
-
-      {/* ── 4. Results of an LGM ── */}
+      {/* ── 3. Glimpse under the hood ── */}
       <Slide id="core-reasoning" className={styles.coreReasoningSlide}>
         <div className={styles.verticalLineOverlay} aria-hidden="true" />
         <div className={styles.slideFrame}>
           <RevealOnView className={styles.editorialSlide}>
+            <h2 className={styles.sectionTitle}>Glimpse under the hood</h2>
+            <p className={styles.sectionLead}>
+              Three stages — collect, fuse, reason — working together to
+              produce spatial intelligence at scale.
+            </p>
+            <div className={styles.editorialBody}>
+              <p>
+                <strong>Data Collection.</strong> We ingest geospatial data from
+                hundreds of sources — satellite imagery, sensor networks, public
+                records, and proprietary feeds — normalizing them into a unified
+                coordinate system.
+              </p>
+              <p>
+                <strong>Fusion.</strong> Fragmented, broken, and unlabeled data
+                is spatially paired, geocoded, and structured. Our pipeline
+                resolves conflicts between overlapping datasets and fills gaps
+                through intelligent interpolation.
+              </p>
+              <p>
+                <strong>Reasoning.</strong> The model reasons over fused data
+                using coordinate-level attention — understanding not just what
+                exists at a location, but how it relates to everything around it.
+              </p>
+            </div>
 
-            <h2 className={styles.sectionTitle}>Results of an LGM</h2>
+            {/* Horizontal pipeline diagram:
+                Many sources → converge → Database → split → Brain Model + Earth Grid → Insights */}
+            <div className={styles.pipelineHorizontal}>
+              {/* Stage 1: Data Collection — 5 tiles stacked vertically */}
+              <div className={styles.pipelineStage}>
+                <div className={styles.pipelineLabel}>Data Collection &amp; Labeling</div>
+                <div className={styles.pipelineTilesV}>
+                  {Array.from({ length: 5 }).map((_, index) => (
+                    <div key={`tile-${index}`} className={styles.pipelineTile} />
+                  ))}
+                </div>
+              </div>
+
+              {/* Converging lines: 5 sources → 1 */}
+              <svg className={styles.pipelineConverge} viewBox="0 0 80 100" fill="none" aria-hidden>
+                {[10, 30, 50, 70, 90].map((y) => (
+                  <path key={y} d={`M0 ${y} C40 ${y} 60 50 80 50`} className={styles.dashedPathRed} />
+                ))}
+              </svg>
+
+              {/* Stage 2: Columbus Database */}
+              <div className={styles.pipelineStage}>
+                <div className={styles.pipelineLabel}>Columbus Database</div>
+                <div className={styles.pipelineNode} />
+              </div>
+
+              {/* Splitting lines: 1 → 2 */}
+              <svg className={styles.pipelineSplit} viewBox="0 0 80 80" fill="none" aria-hidden>
+                <path d="M0 40 C20 40 40 20 80 20" className={styles.dashedPathRed} />
+                <path d="M0 40 C20 40 40 60 80 60" className={styles.dashedPathRed} />
+              </svg>
+
+              {/* Stage 3: Brain Model + Earth Grid stacked */}
+              <div className={styles.pipelineOutputs}>
+                <div className={styles.pipelineStageSmall}>
+                  <div className={styles.pipelineLabel}>Brain Model</div>
+                  <div className={styles.pipelineBlob} />
+                </div>
+                <div className={styles.pipelineStageSmall}>
+                  <div className={styles.pipelineLabel}>Earth Grid</div>
+                  <div className={styles.pipelineGridIcon} />
+                </div>
+              </div>
+
+              {/* Final arrow */}
+              <svg className={styles.pipelineArrowH} viewBox="0 0 60 24" fill="none" aria-hidden>
+                <path d="M0 12 L48 12 M40 4 L48 12 L40 20" className={styles.dashedPathRed} />
+              </svg>
+
+              {/* Result */}
+              <div className={styles.pipelineResult}>
+                <span>Insights, Patterns, Answers.</span>
+              </div>
+            </div>
+
+            <a href="/maps-gpt" className={styles.sectionCta}>
+              <span>Try it yourself</span>
+              <svg width="10" height="18" viewBox="0 0 10 18" fill="none" aria-hidden>
+                <path d="M1 1l8 8-8 8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </a>
+          </RevealOnView>
+        </div>
+      </Slide>
+
+      {/* ── 4. Results ── */}
+      <Slide id="data-collection" className={styles.dataCollectionSection}>
+        <div className={styles.slideFrame}>
+          <RevealOnView className={styles.editorialSlide}>
+            <h2 className={styles.sectionTitle}>Results</h2>
             <p className={styles.sectionLead}>
               The products of an LGM — what it produces, how it performs, and
               how it compares.
             </p>
-            <div className={styles.editorialBody}>
-              <p>
-                An LGM generates high-resolution spatial intelligence: land-use
-                classification, infrastructure density scoring, environmental
-                risk assessment, and real-time pattern detection across entire
-                regions. These are outputs that previously required expensive
-                manual surveying or fragmented datasets.
-              </p>
-              <p>
-                When benchmarked against traditional geospatial pipelines, our
-                model achieves superior accuracy at a fraction of the cost and
-                time. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                Sed nisi nulla, sagittis eget nunc sed, faucibus a purus. Etiam
-                ullamcorper condimentum magna.
-              </p>
+
+            <div className={styles.metricGrid}>
+              <div className={styles.metricCard}>
+                <span className={styles.metricNumber}>13T+</span>
+                <span className={styles.metricLabel}>Grid cells indexed</span>
+              </div>
+              <div className={styles.metricCard}>
+                <span className={styles.metricNumber}>100m</span>
+                <span className={styles.metricLabel}>Resolution per cell</span>
+              </div>
+              <div className={styles.metricCard}>
+                <span className={styles.metricNumber}>Global</span>
+                <span className={styles.metricLabel}>Earth coverage</span>
+              </div>
+              <div className={styles.metricCard}>
+                <span className={styles.metricNumber}>3&times;</span>
+                <span className={styles.metricLabel}>Accuracy vs traditional</span>
+              </div>
+              <div className={styles.metricCard}>
+                <span className={styles.metricNumber}>Real-time</span>
+                <span className={styles.metricLabel}>Processing speed</span>
+              </div>
+              <div className={styles.metricCard}>
+                <span className={styles.metricNumber}>500+</span>
+                <span className={styles.metricLabel}>Data sources fused</span>
+              </div>
             </div>
 
-            <div className={styles.resultMetrics}>
-              <div className={styles.resultMetric}>
-                <span className={styles.resultNumber}>13T+</span>
-                <span className={styles.resultLabel}>Grid cells</span>
-              </div>
-              <div className={styles.resultMetric}>
-                <span className={styles.resultNumber}>100m</span>
-                <span className={styles.resultLabel}>Resolution</span>
-              </div>
-              <div className={styles.resultMetric}>
-                <span className={styles.resultNumber}>Global</span>
-                <span className={styles.resultLabel}>Coverage</span>
-              </div>
-            </div>
+            <a href="/use-cases" className={styles.sectionCta}>
+              <span>See it in action</span>
+              <svg width="10" height="18" viewBox="0 0 10 18" fill="none" aria-hidden>
+                <path d="M1 1l8 8-8 8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </a>
           </RevealOnView>
         </div>
       </Slide>
 
-      {/* ── 5. A New Category ── */}
-      <Slide id="new-category" className={styles.newCategorySlide}>
-        <div className={styles.slideFrame}>
-          <RevealOnView className={styles.newCategoryInner}>
-            {/* Section title + subtitle */}
-            <div className={styles.newCategoryHeader}>
-              <h2 className={styles.sectionTitle}>A New Category</h2>
-              <p className={styles.sectionLead}>
-                We believe geospatial intelligence deserves its own category —
-                with open benchmarks that the entire industry can compete on.
-                Today there is no standard way to measure spatial reasoning.
-                We&apos;re building one.
-              </p>
-            </div>
-
-            {/* Visual statement */}
-            <div className={styles.newCategoryVisual}>
-              <div className={styles.newCategoryText}>
-                <h3 className={styles.newCategoryTitle}>We want to be here.</h3>
-                <p className={styles.newCategorySubtitle}>
-                  Chart on{" "}
-                  <span className={styles.newCategoryBrand}>LMArena</span>
-                </p>
-              </div>
-
-              <div className={styles.newCategoryImageWrap}>
-                <div className={styles.newCategoryLabel}>
-                  <span>Geospatial</span>
-                  <svg width="20" height="36" viewBox="0 0 20 36" fill="none" aria-hidden>
-                    <path d="M10 0 L10 28 M4 22 L10 28 L16 22" stroke="#0A1344" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                </div>
-              <Image
-                src="/LMArena.png"
-                alt="LMArena Leaderboard showing AI model rankings"
-                width={960}
-                height={540}
-                className={styles.newCategoryImage}
-              />
-              <div className={styles.newCategoryImageFade} aria-hidden />
-              </div>
-            </div>
-          </RevealOnView>
-        </div>
-      </Slide>
-
-      {/* ── 6. Research ── */}
+      {/* ── 5. Research ── */}
       <Slide id="research-blog">
         <div className={styles.slideFrame}>
           <RevealOnView className={`${styles.editorialSlide} ${styles.researchEditorial}`}>
