@@ -68,6 +68,70 @@ export function TechnologySections() {
                 nulla pariatur.
               </p>
             </div>
+
+            {/* Timeline labels above the line */}
+            <div className={styles.timelineLabels}>
+              <div className={styles.timelineLabel}>
+                <span>LLM</span>
+                <div className={styles.timelineLabelStick} />
+              </div>
+              <div className={styles.timelineLabel}>
+                <span>Geo-tuned LLM<br />+ Vision Models</span>
+                <div className={styles.timelineLabelStick} />
+              </div>
+              <div className={styles.timelineLabel}>
+                <span>Generalist<br />LGM</span>
+                <div className={styles.timelineLabelStick} />
+              </div>
+              <div className={styles.timelineLabel}>
+                <span>Universal<br />Geospatial<br />Model</span>
+                <div className={styles.timelineLabelStick} />
+              </div>
+            </div>
+
+            {/* Horizontal timeline line */}
+            <div className={styles.comparisonTrack} />
+
+            <div className={styles.comparisonGrid}>
+              <div className={styles.comparisonColumn}>
+                <div className={styles.comparisonBody}>
+                  <p>A large language model is trained on huge sets of text data for tokenization</p>
+                  <p className={styles.comparisonMono}>280, 1170, 296, 4088, 30773, 4012, 5079, 2534, 3883, 263, 29072, 268, 64696</p>
+                </div>
+                <div className={styles.comparisonFooter}>
+                  <span>[ Transformer Attention ]</span>
+                  <p>Drawbacks: hallucination</p>
+                </div>
+                <a href="#" className={styles.comparisonLink}>Read our in-depth article &#8250;</a>
+              </div>
+
+              <div className={styles.comparisonColumn}>
+                <div className={styles.comparisonBody}>
+                  <p>Comprehending images, and predicting certain things like size from Earth imagery and context.</p>
+                  <p>use; clay and other ai satellite website for inspo</p>
+                </div>
+                <div className={styles.comparisonFooter}>
+                  <span>[ Reverse Diffusion ]</span>
+                </div>
+              </div>
+
+              <div className={styles.comparisonColumn}>
+                <div className={styles.comparisonBody}>
+                  <p>Big Data pre-trained Large Geospatial Model</p>
+                  <p>requiring fine-tuned labeling for each earth topic (e.g. physics etc)</p>
+                </div>
+                <a href="#" className={styles.comparisonLink}>Read our Paper &#8250;</a>
+              </div>
+
+              <div className={styles.comparisonColumn}>
+                <div className={styles.comparisonBody}>
+                  <p>An AGI for the physical world</p>
+                </div>
+                <a href="#" className={styles.comparisonLink}>Our Game Plan &#8250;</a>
+              </div>
+            </div>
+
+            <div className={styles.comparisonBottom} />
           </RevealOnView>
         </div>
       </Slide>
@@ -100,69 +164,6 @@ export function TechnologySections() {
                 dapibus diam.
               </p>
             </div>
-          </RevealOnView>
-        </div>
-      </Slide>
-
-      {/* ── 3. Timeline ── */}
-      <Slide id="data-collection" className={styles.dataCollectionSection}>
-        <div className={styles.slideFrame}>
-          <RevealOnView className={styles.editorialSlide}>
-            <h2 className={styles.sectionTitle}>
-              A timeline of the LGM
-            </h2>
-
-            {/* Horizontal divider line */}
-            <div className={styles.comparisonTrack} />
-
-            <div className={styles.comparisonGrid}>
-              {/* Column 1: LLM */}
-              <div className={styles.comparisonColumn}>
-                <h3 className={styles.comparisonHeading}>LLM</h3>
-                <div className={styles.comparisonBody}>
-                  <p>A large language model is trained on huge sets of text data for tokenization</p>
-                  <p className={styles.comparisonMono}>280, 1170, 296, 4088, 30773, 4012, 5079, 2534, 3883, 263, 29072, 268, 64696</p>
-                </div>
-                <div className={styles.comparisonFooter}>
-                  <span>[ Transformer Attention ]</span>
-                  <p>Drawbacks: hallucination</p>
-                </div>
-                <a href="#" className={styles.comparisonLink}>Read our in-depth article &#8250;</a>
-              </div>
-
-              {/* Column 2: Geo-tuned LLM + Vision Models */}
-              <div className={styles.comparisonColumn}>
-                <h3 className={styles.comparisonHeading}>Geo-tuned LLM + Vision Models</h3>
-                <div className={styles.comparisonBody}>
-                  <p>Comprehending images, and predicting certain things like size from Earth imagery and context.</p>
-                  <p>use; clay and other ai satellite website for inspo</p>
-                </div>
-                <div className={styles.comparisonFooter}>
-                  <span>[ Reverse Diffusion ]</span>
-                </div>
-              </div>
-
-              {/* Column 3: Generalist LGM */}
-              <div className={styles.comparisonColumn}>
-                <h3 className={styles.comparisonHeading}>Generalist LGM</h3>
-                <div className={styles.comparisonBody}>
-                  <p>Big Data pre-trained Large Geospatial Model</p>
-                  <p>requiring fine-tuned labeling for each earth topic (e.g. physics etc)</p>
-                </div>
-                <a href="#" className={styles.comparisonLink}>Read our Paper &#8250;</a>
-              </div>
-
-              {/* Column 4: Universal Geospatial Model */}
-              <div className={styles.comparisonColumn}>
-                <h3 className={styles.comparisonHeading}>Universal Geospatial Model</h3>
-                <div className={styles.comparisonBody}>
-                  <p>An AGI for the physical world</p>
-                </div>
-                <a href="#" className={styles.comparisonLink}>Our Game Plan &#8250;</a>
-              </div>
-            </div>
-
-            <div className={styles.comparisonBottom} />
           </RevealOnView>
         </div>
       </Slide>
