@@ -1,3 +1,4 @@
+import Image from "next/image";
 import styles from "../technology.module.css";
 import { TechScrollIndex } from "../TechScrollIndex";
 import {
@@ -218,38 +219,46 @@ export function TechnologySections() {
       </Slide>
 
       {/* ── 5. A New Category ── */}
-      <Slide id="new-category" className={styles.dotGrid}>
+      <Slide id="new-category" className={styles.newCategorySlide}>
         <div className={styles.slideFrame}>
-          <RevealOnView className={styles.editorialSlide}>
+          <RevealOnView className={styles.newCategoryInner}>
+            {/* Section title + subtitle */}
+            <div className={styles.newCategoryHeader}>
+              <h2 className={styles.sectionTitle}>A New Category</h2>
+              <p className={styles.sectionLead}>
+                We believe geospatial intelligence deserves its own category —
+                with open benchmarks that the entire industry can compete on.
+                Today there is no standard way to measure spatial reasoning.
+                We&apos;re building one.
+              </p>
+            </div>
 
-            <h2 className={styles.sectionTitle}>A New Category</h2>
-            <p className={styles.sectionLead}>
-              We believe there needs to be a new category — with new benchmarks
-              that the industry can compete on.
-            </p>
-            <div className={styles.editorialBody}>
-              <p>
-                Today, geospatial AI has no standard benchmarks. Companies
-                operate in silos, measuring progress against internal metrics
-                that are impossible to compare. This fragmentation slows the
-                entire field.
-              </p>
-              <p>
-                We&apos;re building the benchmarks ourselves — open-source
-                evaluation frameworks for spatial reasoning, coordinate-level
-                accuracy, and real-world prediction tasks. The goal is to create
-                a shared standard that any company can compete on, accelerating
-                progress for everyone. Lorem ipsum dolor sit amet, consectetur
-                adipiscing elit. Sed do eiusmod tempor incididunt ut labore et
-                dolore magna aliqua.
-              </p>
-              <p>
-                This is something we intend to invent and open-source as part of
-                our research program — a contribution to the field that goes
-                beyond our own products. Ut enim ad minim veniam, quis nostrud
-                exercitation ullamco laboris nisi ut aliquip ex ea commodo
-                consequat.
-              </p>
+            {/* Visual statement */}
+            <div className={styles.newCategoryVisual}>
+              <div className={styles.newCategoryText}>
+                <h3 className={styles.newCategoryTitle}>We want to be here.</h3>
+                <p className={styles.newCategorySubtitle}>
+                  Chart on{" "}
+                  <span className={styles.newCategoryBrand}>LMArena</span>
+                </p>
+              </div>
+
+              <div className={styles.newCategoryImageWrap}>
+                <div className={styles.newCategoryLabel}>
+                  <span>Geospatial</span>
+                  <svg width="20" height="36" viewBox="0 0 20 36" fill="none" aria-hidden>
+                    <path d="M10 0 L10 28 M4 22 L10 28 L16 22" stroke="#0A1344" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </div>
+              <Image
+                src="/LMArena.png"
+                alt="LMArena Leaderboard showing AI model rankings"
+                width={960}
+                height={540}
+                className={styles.newCategoryImage}
+              />
+              <div className={styles.newCategoryImageFade} aria-hidden />
+              </div>
             </div>
           </RevealOnView>
         </div>
@@ -357,6 +366,7 @@ export function TechnologySections() {
                     <span className={styles.articleRowDate}>{article.date}</span>
                     <span className={styles.articleRowArrow}>&rarr;</span>
                   </div>
+                  <span className={styles.articleRowHoverLine} />
                 </a>
               ))}
             </div>

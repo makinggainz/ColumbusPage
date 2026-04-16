@@ -802,6 +802,103 @@
   letter-spacing: 0.02em;
 }
 
+/* ── A New Category section ── */
+.newCategorySlide {
+  background: linear-gradient(180deg, #dde8f5 0%, #9ec9e9 30%, #5a9fd4 60%, #1a2a44 85%, #0a1628 100%);
+}
+
+.newCategorySlide .slideFrame {
+  align-items: flex-start;
+}
+
+.newCategoryInner {
+  width: 100%;
+  padding: clamp(48px, 6vw, 80px) clamp(32px, 4vw, 56px);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.newCategoryHeader {
+  margin-bottom: 48px;
+}
+
+.newCategoryVisual {
+  width: 100%;
+  position: relative;
+}
+
+.newCategoryTextRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 24px;
+}
+
+.newCategoryText {
+}
+
+.newCategoryTitle {
+  margin: 0;
+  font-size: clamp(1.5rem, 2.2vw, 2rem);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  color: #0A1344;
+  font-style: italic;
+}
+
+.newCategorySubtitle {
+  margin: 8px 0 0;
+  font-size: clamp(0.85rem, 1vw, 0.95rem);
+  color: rgba(10, 19, 68, 0.6);
+}
+
+.newCategoryBrand {
+  font-weight: 600;
+}
+
+.newCategoryLabel {
+  position: absolute;
+  top: -58px;
+  left: 67%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #0A1344;
+  z-index: 3;
+}
+
+.newCategoryImageWrap {
+  position: relative;
+  width: 100%;
+  margin-top: 24px;
+  border-radius: 8px;
+  overflow: visible;
+  box-shadow: 0 24px 64px rgba(10, 22, 40, 0.25), 0 8px 24px rgba(10, 22, 40, 0.15);
+}
+
+.newCategoryImage {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 8px;
+}
+
+.newCategoryImageFade {
+  border-radius: 8px;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 40%;
+  background: linear-gradient(to bottom, transparent 0%, rgba(10, 22, 40, 0.6) 60%, rgba(10, 22, 40, 0.85) 100%);
+  pointer-events: none;
+}
+
 /* ── Research card grid (rectangular divs) ── */
 .researchCardGrid {
   margin-top: 40px;
@@ -885,29 +982,50 @@
   justify-content: space-between;
   gap: 24px;
   padding: 24px 0;
-  border-bottom: 1px solid rgba(37, 99, 235, 0.1);
+  border-bottom: none;
   text-decoration: none;
   color: #6E6E73;
   transition: color 200ms ease;
 }
 
-.articleRow:first-child {
-  border-top: 1px solid rgba(37, 99, 235, 0.1);
-}
-
-/* Animated underline on hover — fills left to right */
-.articleRow::after {
+/* Bottom line with right fade */
+.articleRow::before {
   content: "";
   position: absolute;
-  bottom: -1px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(to right, rgba(37, 99, 235, 0.1) 0%, rgba(37, 99, 235, 0.1) 60%, transparent 100%);
+  pointer-events: none;
+}
+
+/* Top line on first item with right fade */
+.articleRow:first-child::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(to right, rgba(37, 99, 235, 0.1) 0%, rgba(37, 99, 235, 0.1) 60%, transparent 100%);
+  pointer-events: none;
+}
+
+
+/* Animated hover underline — fills left to right over the faded line */
+.articleRow .articleRowHoverLine {
+  position: absolute;
+  bottom: 0;
   left: 0;
   height: 1px;
   width: 0;
   background: rgba(0, 102, 204, 0.7);
   transition: width 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  z-index: 1;
 }
 
-.articleRow:hover::after {
+.articleRow:hover .articleRowHoverLine {
   width: 100%;
 }
 
@@ -2508,13 +2626,7 @@
   color: #0A1344;
 }
 
-/* ── Research blog: right edge flush with navbar CTA ──
-   Extend editorialSlide through slideFrame padding + contentColumn padding
-   so the content right edge aligns with the 1287px navbar container edge. */
-@media (min-width: 1288px) {
-  .researchEditorial {
-    padding-right: 0;
-    width: calc(100% + var(--tech-content-gutter) + 40px);
-    max-width: none;
-  }
+/* ── Research blog: reduce right inset to match homepage right boundary ── */
+.researchEditorial {
+  padding-right: 0;
 }
