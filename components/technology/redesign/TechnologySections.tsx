@@ -108,14 +108,9 @@ export function TechnologySections() {
       <Slide id="data-collection" className={styles.dataCollectionSection}>
         <div className={styles.slideFrame}>
           <RevealOnView className={styles.editorialSlide}>
-            <p className={styles.comparisonSuper}>A New Foundational Model</p>
             <h2 className={styles.sectionTitle}>
-              Large Geospatial Model vs Large Language Model.
+              A timeline of the LGM
             </h2>
-            <p className={styles.sectionLead}>
-              If an LLM is for the digital world, our LGM is for the physical
-              world. Earth, understood.
-            </p>
 
             {/* Horizontal divider line */}
             <div className={styles.comparisonTrack} />
