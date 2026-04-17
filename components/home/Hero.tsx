@@ -867,7 +867,7 @@ export const Hero = () => {
   const fadeIn = (delay: number): React.CSSProperties => ({
     opacity: mounted ? 1 : 0,
     filter: mounted ? "blur(0px)" : "blur(8px)",
-    transform: mounted ? "translateY(0px)" : "translateY(18px)",
+    transform: mounted ? "translateX(0px)" : "translateX(-24px)",
     transition: `opacity 1000ms ease ${delay}ms, filter 1000ms ease ${delay}ms, transform 1000ms ease ${delay}ms`,
   });
 

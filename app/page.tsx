@@ -3,6 +3,7 @@ import { Hero } from "@/components/home/Hero";
 import { Vision } from "@/components/home/VisionSection";
 import { Footer } from "@/components/layout/Footer";
 import { ProductShowcase } from "@/components/home/ProductShowcase";
+import { MonitorDisplay } from "@/components/home/MonitorDisplay";
 import { UseCaseCards } from "@/components/home/UseCaseCards";
 import { Careers } from "@/components/home/Careers";
 
@@ -30,19 +31,18 @@ export default function Home() {
       {/* Columbus Pro — image left, text right */}
       <ProductShowcase
         title="Columbus Pro"
-        tagline="Enterprise geospatial intelligence"
-        description="A comprehensive platform for organizations that need to understand the physical world at scale. Analyze any location on Earth with AI-powered spatial reasoning — from site selection to risk assessment."
+        tagline="An Agentic GIS platform"
+        description="Columbus turns you into a super-explorer. Powerful tools that transform how you research, analyze, and select sites."
         features={[
-          "Real-time geospatial analysis across any region",
-          "AI-generated data layers without manual surveying",
-          "Coordinate-level reasoning for precise decision making",
-          "Integration with existing enterprise workflows",
+          "Generative Geodata — our proprietary model creates predictive data tailored to your exact preferences",
+          "Map Chat — research like you're talking to an expert, answer any question or visualize data your own way",
+          "Generative Due Diligence — cheaper, faster audits on neighbourhoods, sites, parcels, businesses and cities",
+          "Data Catalogue — find rich and relevant datasets faster with our simple interface",
         ]}
-        cta={{ label: "Learn more", href: "/products/enterprise" }}
-        image="/enterprise/HeroImage.png"
-        imageAlt="Columbus Pro enterprise platform interface"
+        cta={{ label: "Start Now", href: "/products/enterprise" }}
+        visual={<MonitorDisplay />}
         imagePosition="left"
-        background="#F9F9F9"
+        background="linear-gradient(to bottom, rgba(0, 102, 204, 0.12) 0%, rgba(0, 102, 204, 0.05) 50%, #ffffff 100%)"
       />
 
       <SectionGap />
@@ -50,17 +50,17 @@ export default function Home() {
       {/* MapsGPT — text left, image right */}
       <ProductShowcase
         title="MapsGPT"
-        tagline="Maps that understand you"
-        description="A consumer-grade geospatial product that makes spatial intelligence accessible to everyone. Ask questions about any place, get instant answers backed by our Large Geospatial Model."
+        tagline="Travel like a boss"
+        description="Find your next hang out spot, easier. An AI-powered social map that helps you plan cool trips, find spots, and create custom maps with friends."
         features={[
-          "Natural language queries about any location",
-          "Personalized travel and exploration recommendations",
-          "Real-time local insights and hidden gems",
-          "Powered by the same LGM as Columbus Pro",
+          "Plan cool trips with AI-powered recommendations",
+          "Group planning — collaborate with friends in real time",
+          "Find hidden gems and local spots anywhere",
+          "Custom maps tailored to your interests",
         ]}
-        cta={{ label: "Try MapsGPT", href: "/maps-gpt" }}
+        cta={{ label: "Try it now", href: "/maps-gpt" }}
         image="/MapsGPTDesktop.png"
-        imageAlt="MapsGPT consumer product interface"
+        imageAlt="MapsGPT AI-powered social map"
         imagePosition="right"
       />
 

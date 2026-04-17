@@ -7,10 +7,11 @@ interface ProductShowcaseProps {
   description: string;
   features: string[];
   cta: { label: string; href: string };
-  image: string;
-  imageAlt: string;
+  image?: string;
+  imageAlt?: string;
   imagePosition?: "left" | "right";
   background?: string;
+  visual?: React.ReactNode;
 }
 
 export function ProductShowcase({
@@ -20,14 +21,15 @@ export function ProductShowcase({
   features,
   cta,
   image,
-  imageAlt,
+  imageAlt = "",
   imagePosition = "left",
   background = "#ffffff",
+  visual,
 }: ProductShowcaseProps) {
   const textBlock = (
     <div className="flex flex-col justify-center py-16 md:py-24">
       <h2
-        className="text-[32px] md:text-[40px] lg:text-[48px] font-medium leading-[1.1] text-[#1D1D1F]"
+        className="text-[32px] md:text-[40px] lg:text-[48px] font-medium leading-[1.1] text-[#0A1344]"
         style={{ letterSpacing: "-0.02em" }}
       >
         {title}
@@ -38,14 +40,14 @@ export function ProductShowcase({
       >
         {tagline}
       </p>
-      <p className="mt-6 text-[16px] md:text-[17px] leading-[1.65] text-[#6E6E73] max-w-[520px]">
+      <p className="mt-6 text-[16px] md:text-[17px] leading-[1.65] text-[rgba(10,19,68,0.55)] max-w-[520px]">
         {description}
       </p>
       <ul className="mt-8 flex flex-col gap-3">
         {features.map((feature) => (
           <li
             key={feature}
-            className="flex items-start gap-3 text-[15px] md:text-[16px] text-[#1D1D1F] leading-[1.5]"
+            className="flex items-start gap-3 text-[15px] md:text-[16px] text-[#0A1344] leading-[1.5]"
           >
             <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-[rgba(37,99,235,0.5)] flex-shrink-0" />
             {feature}
@@ -76,7 +78,11 @@ export function ProductShowcase({
     </div>
   );
 
-  const imageBlock = (
+  const imageBlock = visual ? (
+    <div className="relative flex items-center justify-center py-8 md:py-16">
+      {visual}
+    </div>
+  ) : image ? (
     <div className="relative flex items-center justify-center py-8 md:py-16">
       <div className="relative w-full max-w-[560px] rounded-lg overflow-hidden shadow-[0_24px_64px_rgba(10,22,40,0.12)]">
         <Image
@@ -88,10 +94,10 @@ export function ProductShowcase({
         />
       </div>
     </div>
-  );
+  ) : null;
 
   return (
-    <section style={{ backgroundColor: background }}>
+    <section style={{ background }}>
       <div className="max-w-[1287px] mx-auto px-8 md:px-10">
         <div className="grid md:grid-cols-2 gap-12 md:gap-16 lg:gap-24 items-center">
           {imagePosition === "left" ? (

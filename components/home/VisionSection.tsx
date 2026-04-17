@@ -30,19 +30,22 @@ export const Vision = () => {
     <section>
       <div ref={ref} className="max-w-[1287px] mx-auto px-8 md:px-10 py-20 md:py-32 flex flex-col items-center text-center">
         <h2
-          className="text-[#1D1D1F] leading-[1.15] tracking-[-0.02em] text-[32px] md:text-[40px] lg:text-[48px] max-w-[700px]"
+          className="text-[#0A1344] leading-[1.15] tracking-[-0.02em] text-[32px] md:text-[40px] lg:text-[48px] max-w-[700px]"
           style={{ fontWeight: 500, ...anim(0) }}
         >
-          A new kind of AI for the physical world
+          Introducing a new kind of AI for the physical world — COLUMBUS-01
         </h2>
 
         <p
-          className="mt-6 text-[16px] md:text-[18px] leading-[1.65] text-[#6E6E73] max-w-[600px]"
+          className="mt-6 text-[16px] md:text-[18px] leading-[1.65] text-[rgba(10,19,68,0.55)] max-w-[600px]"
           style={anim(100)}
         >
           We&apos;re building foundational geospatial models that understand the
-          physical world the way language models understand text. Trained on the
-          largest curated collection of geospatial data ever assembled.
+          physical world the way language models understand text. Columbus-01 is
+          trained on the largest curated collection of geospatial data ever
+          assembled — satellite imagery, mobility patterns, environmental
+          sensors, infrastructure records, and demographic signals across every
+          continent.
         </p>
 
         <Link
