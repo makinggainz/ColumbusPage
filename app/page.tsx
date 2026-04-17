@@ -26,8 +26,6 @@ export default function Home() {
         <Vision />
       </div>
 
-      <SectionGap />
-
       {/* Columbus Pro — image left, text right */}
       <ProductShowcase
         title="Columbus Pro"
@@ -64,7 +62,7 @@ export default function Home() {
         imagePosition="right"
       />
 
-      <SectionGap />
+      <div style={{ height: 80 }} />
 
       {/* Use cases */}
       <UseCaseCards />
