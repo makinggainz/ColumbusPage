@@ -28,7 +28,7 @@ export default function Home() {
 
       {/* Columbus Pro — image left, text right */}
       <ProductShowcase
-        title="Columbus Pro"
+        title="Columbus"
         tagline="An Agentic GIS platform"
         description="Columbus turns you into a super-explorer. Powerful tools that transform how you research, analyze, and select sites."
         features={[
