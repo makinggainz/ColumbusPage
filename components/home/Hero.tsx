@@ -19,10 +19,10 @@ interface BoatPhysics {
 function getWaveHeight(wx: number, wz: number, t: number, drift: number, driftZ: number) {
   const swx = wx + drift, swz = wz + driftZ;
   return (
-    Math.sin(swx * 0.003 + t * 0.6) * Math.cos(swz * 0.004 + t * 0.35) * 40 +
-    Math.sin(swx * 0.005 - t * 0.4 + 1.5) * Math.cos(swz * 0.006 + t * 0.25) * 25 +
-    Math.sin((swx + swz) * 0.002 + t * 0.45) * 18 +
-    Math.sin(swx * 0.01 + t * 1.0) * Math.cos(swz * 0.009 + t * 0.55) * 8
+    Math.sin(swz * 0.003 + swx * 0.0008 + t * 0.2) * 40 +
+    Math.sin(swz * 0.006 + swx * 0.0015 - t * 0.15 + 1.2) * 25 +
+    Math.sin(swx * 0.004 + swz * 0.002 + t * 0.25) * 15 +
+    Math.sin(swz * 0.012 + swx * 0.003 + t * 0.35) * 8
   );
 }
 
@@ -509,13 +509,14 @@ const WaveMesh = () => {
     const smx = mouseRef.current.x;
     const smy = mouseRef.current.y;
 
-    // ── 3D Projection ──
+    // ── 3D Projection (original mesh style + sphere curvature) ──
     const fov = 600;
-    const horizonY = H * 0.24 + 100;
+    const horizonY = H * 0.35;
     const cameraHeight = 500;
     const cellSize = 24;
     const gridCols = 280;
     const gridRows = 90;
+    const R_CURVE = 6000; // sphere curvature radius — lower = more curve
 
     const project = (wx: number, wy: number, wz: number): { sx: number; sy: number } | null => {
       if (wz <= 1) return null;
@@ -528,7 +529,7 @@ const WaveMesh = () => {
       return { wx: ((screenX - W / 2) * wz) / fov, wz };
     };
 
-    // Mouse world position (needed for boat wave sampling + grid)
+    // Mouse world position
     let mouseWorld: { wx: number; wz: number } | null = null;
     if (smx > -999 && smy > horizonY && !draggingRef.current) {
       mouseWorld = unproject(smx, smy);
@@ -543,48 +544,41 @@ const WaveMesh = () => {
       const clampedY = Math.max(horizonY + 10, smy);
       const wp = unproject(smx, clampedY);
       if (wp) {
-        const newWx = Math.max(-1000, Math.min(1000, wp.wx));
-        const newWz = Math.max(150, Math.min(1600, wp.wz));
-        // Compute velocity from position change
-        boat.vx = (newWx - boat.wx) / Math.max(dt, 0.001);
-        boat.vz = (newWz - boat.wz) / Math.max(dt, 0.001);
-        boat.wx = newWx;
-        boat.wz = newWz;
+        boat.vx = (Math.max(-1000, Math.min(1000, wp.wx)) - boat.wx) / Math.max(dt, 0.001);
+        boat.vz = (Math.max(150, Math.min(1600, wp.wz)) - boat.wz) / Math.max(dt, 0.001);
+        boat.wx = Math.max(-1000, Math.min(1000, wp.wx));
+        boat.wz = Math.max(150, Math.min(1600, wp.wz));
       }
     } else {
-      // Apply momentum with damping
       const damping = Math.exp(-2.5 * dt);
       boat.vx *= damping;
       boat.vz *= damping;
-
-      // Auto-sail rightward when momentum is low
-      const SAIL_SPEED = 30; // world units per second
-      const currentSpeed = Math.sqrt(boat.vx * boat.vx + boat.vz * boat.vz);
-      if (currentSpeed < SAIL_SPEED * 1.5) {
+      const SAIL_SPEED = 30;
+      if (Math.sqrt(boat.vx * boat.vx + boat.vz * boat.vz) < SAIL_SPEED * 1.5) {
         boat.vx += (SAIL_SPEED - boat.vx) * dt * 0.8;
       }
-
       boat.wx += boat.vx * dt;
       boat.wz += boat.vz * dt;
-
-      // Wrap around when sailing off the right edge
-      if (boat.wx > 1100) {
-        boat.wx = -1100;
-        prevBoatPosRef.current = { wx: boat.wx, wz: boat.wz };
-      }
-
-      // Clamp Z
+      if (boat.wx > 1100) { boat.wx = -1100; prevBoatPosRef.current = { wx: boat.wx, wz: boat.wz }; }
       boat.wz = Math.max(150, Math.min(1600, boat.wz));
     }
 
     const drift = t * 40;
     const driftZ = t * 12;
 
-    // Full wave height including ripples + mouse push
+    // Sphere curvature: pushes points downward based on distance from grid center
+    const zCenter = (gridRows / 2 + 2) * cellSize;
+    const applyCurvature = (wx: number, wz: number): number => {
+      const dz = wz - zCenter;
+      const d2 = wx * wx + dz * dz;
+      if (d2 >= R_CURVE * R_CURVE) return -(R_CURVE * 0.5);
+      return -(R_CURVE - Math.sqrt(R_CURVE * R_CURVE - d2));
+    };
+
+    // Full wave height including ripples + mouse push + curvature
     const getFullWaveHeight = (wx: number, wz: number) => {
       let wy = getWaveHeight(wx, wz, t, drift, driftZ);
-
-      // Mouse proximity push
+      wy += applyCurvature(wx, wz);
       if (mouseWorld) {
         const dx = wx - mouseWorld.wx;
         const dz = wz - mouseWorld.wz;
@@ -592,8 +586,6 @@ const WaveMesh = () => {
         const influence = Math.max(0, 1 - dist / 250);
         if (influence > 0) wy += influence * influence * 35;
       }
-
-      // Ripple contributions
       for (const rip of ripplesRef.current) {
         const rdx = wx - rip.wx;
         const rdz = wz - rip.wz;
@@ -607,99 +599,57 @@ const WaveMesh = () => {
           wy += Math.sin((rdist - waveRadius) * 0.05) * rip.strength * fade * ringFade * ringFade;
         }
       }
-
       return wy;
     };
 
-    // Sample wave at boat + nearby points for buoyancy
+    // ── Boat buoyancy ──
     const sampleDist = 25 * MODEL_SCALE;
     const wyCenter = getFullWaveHeight(boat.wx, boat.wz);
     const wyBow = getFullWaveHeight(boat.wx + sampleDist * Math.cos(boat.heading), boat.wz + sampleDist * Math.sin(boat.heading));
     const wyStern = getFullWaveHeight(boat.wx - sampleDist * Math.cos(boat.heading), boat.wz - sampleDist * Math.sin(boat.heading));
     const wyPort = getFullWaveHeight(boat.wx - sampleDist * Math.sin(boat.heading), boat.wz + sampleDist * Math.cos(boat.heading));
     const wyStarboard = getFullWaveHeight(boat.wx + sampleDist * Math.sin(boat.heading), boat.wz - sampleDist * Math.cos(boat.heading));
-
-    const targetWy = (wyCenter + wyBow + wyStern + wyPort + wyStarboard) / 5;
-    const targetPitch = Math.atan2(wyBow - wyStern, sampleDist * 2) * 0.7;
-    const targetRoll = Math.atan2(wyPort - wyStarboard, sampleDist * 2) * 0.7;
-
-    // Smooth interpolation
     const smoothSpeed = 4;
     const lerpAmt = 1 - Math.exp(-smoothSpeed * dt);
-    boat.wy += (targetWy - boat.wy) * lerpAmt;
-    boat.pitch += (targetPitch - boat.pitch) * lerpAmt;
-    boat.roll += (targetRoll - boat.roll) * lerpAmt;
-
-    // Heading follows movement direction
+    boat.wy += (((wyCenter + wyBow + wyStern + wyPort + wyStarboard) / 5) - boat.wy) * lerpAmt;
+    boat.pitch += (Math.atan2(wyBow - wyStern, sampleDist * 2) * 0.7 - boat.pitch) * lerpAmt;
+    boat.roll += (Math.atan2(wyPort - wyStarboard, sampleDist * 2) * 0.7 - boat.roll) * lerpAmt;
     const speed = Math.sqrt(boat.vx * boat.vx + boat.vz * boat.vz);
     if (speed > 5) {
-      const targetHeading = Math.atan2(boat.vz, boat.vx);
-      let headingDiff = targetHeading - boat.heading;
-      while (headingDiff > Math.PI) headingDiff -= 2 * Math.PI;
-      while (headingDiff < -Math.PI) headingDiff += 2 * Math.PI;
-      boat.heading += headingDiff * lerpAmt * 0.5;
+      const th = Math.atan2(boat.vz, boat.vx);
+      let hd = th - boat.heading;
+      while (hd > Math.PI) hd -= 2 * Math.PI;
+      while (hd < -Math.PI) hd += 2 * Math.PI;
+      boat.heading += hd * lerpAmt * 0.5;
     }
 
-    // Boat wake ripples when moving
-    const boatMoved = Math.sqrt(
-      (boat.wx - prevBoatPosRef.current.wx) ** 2 +
-      (boat.wz - prevBoatPosRef.current.wz) ** 2
-    );
+    // Wake ripples
+    const boatMoved = Math.sqrt((boat.wx - prevBoatPosRef.current.wx) ** 2 + (boat.wz - prevBoatPosRef.current.wz) ** 2);
     if (boatMoved > 8) {
-      // Stern wake
-      const sternX = boat.wx - Math.cos(boat.heading) * sampleDist;
-      const sternZ = boat.wz - Math.sin(boat.heading) * sampleDist;
-      ripplesRef.current.push({ wx: sternX, wz: sternZ, t, strength: Math.min(boatMoved * 0.5, 20) });
+      const sx = boat.wx - Math.cos(boat.heading) * sampleDist;
+      const sz = boat.wz - Math.sin(boat.heading) * sampleDist;
+      ripplesRef.current.push({ wx: sx, wz: sz, t, strength: Math.min(boatMoved * 0.5, 20) });
       prevBoatPosRef.current = { wx: boat.wx, wz: boat.wz };
     }
 
-    // Spawn ripples from mouse (skip if dragging boat)
-    const pmx = prevMouseRef.current.x;
-    const pmy = prevMouseRef.current.y;
+    // Mouse ripples
+    const pmx = prevMouseRef.current.x, pmy = prevMouseRef.current.y;
     const screenDist = Math.sqrt((smx - pmx) ** 2 + (smy - pmy) ** 2);
     if (!draggingRef.current && smx > -999 && smy > horizonY && screenDist > 15) {
       const wp = unproject(smx, smy);
-      if (wp) {
-        ripplesRef.current.push({ wx: wp.wx, wz: wp.wz, t, strength: Math.min(screenDist * 0.3, 25) });
-      }
+      if (wp) ripplesRef.current.push({ wx: wp.wx, wz: wp.wz, t, strength: Math.min(screenDist * 0.3, 25) });
       prevMouseRef.current = { x: smx, y: smy };
     }
-
     ripplesRef.current = ripplesRef.current.filter((r) => t - r.t < 4);
 
     // ── Build grid ──
     const grid: ({ sx: number; sy: number; wy: number } | null)[][] = [];
-
     for (let r = 0; r < gridRows; r++) {
       grid[r] = [];
       for (let c = 0; c < gridCols; c++) {
         const wx = (c - gridCols / 2) * cellSize;
         const wz = (r + 2) * cellSize;
-
-        let wy = getWaveHeight(wx, wz, t, drift, driftZ);
-
-        if (mouseWorld) {
-          const dx = wx - mouseWorld.wx;
-          const dz = wz - mouseWorld.wz;
-          const dist = Math.sqrt(dx * dx + dz * dz);
-          const influence = Math.max(0, 1 - dist / 250);
-          if (influence > 0) wy += influence * influence * 35;
-        }
-
-        for (const rip of ripplesRef.current) {
-          const rdx = wx - rip.wx;
-          const rdz = wz - rip.wz;
-          const rdist = Math.sqrt(rdx * rdx + rdz * rdz);
-          const age = t - rip.t;
-          const waveRadius = age * 200;
-          const ringDist = Math.abs(rdist - waveRadius);
-          if (ringDist < 140) {
-            const fade = Math.max(0, 1 - age / 4);
-            const ringFade = 1 - ringDist / 140;
-            wy += Math.sin((rdist - waveRadius) * 0.05) * rip.strength * fade * ringFade * ringFade;
-          }
-        }
-
+        const wy = getFullWaveHeight(wx, wz);
         const p = project(wx, wy, wz);
         grid[r][c] = p ? { sx: p.sx, sy: p.sy, wy } : null;
       }
@@ -720,7 +670,6 @@ const WaveMesh = () => {
       }
       ctx.stroke();
     }
-
     for (let r = 0; r < gridRows; r++) {
       const depthT = r / gridRows;
       ctx.strokeStyle = `rgba(20,60,160,${(0.08 + depthT * 0.22).toFixed(3)})`;
@@ -858,7 +807,9 @@ export const Hero = () => {
       const rect = el.getBoundingClientRect();
       const scrolled = -rect.top;
       const total = el.offsetHeight - window.innerHeight;
-      setVignetteOpacity(Math.max(0, Math.min(1, scrolled / total)));
+      const progress = Math.max(0, Math.min(1, scrolled / total));
+      // Ease-in curve: barely visible at top, ramps up strongly further down
+      setVignetteOpacity(progress * progress * progress);
     };
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
@@ -867,7 +818,7 @@ export const Hero = () => {
   const fadeIn = (delay: number): React.CSSProperties => ({
     opacity: mounted ? 1 : 0,
     filter: mounted ? "blur(0px)" : "blur(8px)",
-    transform: mounted ? "translateX(0px)" : "translateX(-24px)",
+    transform: mounted ? "translateY(0px)" : "translateY(18px)",
     transition: `opacity 1000ms ease ${delay}ms, filter 1000ms ease ${delay}ms, transform 1000ms ease ${delay}ms`,
   });
 

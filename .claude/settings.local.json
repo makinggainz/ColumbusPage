@@ -30,7 +30,8 @@
       "Bash(gh auth logout:*)",
       "Bash(gh auth setup-git)",
       "Bash(npm run build:*)",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "Bash(git checkout:*)"
     ]
   }
 }

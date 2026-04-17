@@ -22,7 +22,7 @@ export default function Home() {
       <Hero />
 
       {/* Vision statement */}
-      <div className="mt-16">
+      <div className="mt-16" style={{ background: "rgba(0,255,255,0.3)" }}>
         <Vision />
       </div>
 

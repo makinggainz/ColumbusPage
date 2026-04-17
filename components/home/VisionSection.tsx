@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+import { ScrollRevealQuote } from "@/components/ScrollRevealQuote";
 
 const Tile = ({ src, className = "" }: { src: string; className?: string }) => (
   <div className={`relative w-full h-full overflow-hidden ${className}`}>
@@ -39,6 +40,9 @@ export const Vision = () => {
   return (
     <section>
       <div className="py-20 md:py-32">
+
+        {/* Scroll-reveal quote */}
+        <ScrollRevealQuote />
 
         {/* Image grid — full navbar width */}
         <div
@@ -83,9 +87,6 @@ export const Vision = () => {
             className="text-[16px] md:text-[18px] leading-[1.65] text-[rgba(10,19,68,0.55)]"
             style={anim(150)}
           >
-            We&apos;re building foundation models that{" "}
-            <span className="text-[#0A1344]">understand the physical
-            world through geospatial core reasoning</span>.{" "}
             <span className="text-[#0A1344]">Columbus-01</span> processes
             satellite imagery, terrain data, human activity, and temporal
             patterns to generate{" "}
