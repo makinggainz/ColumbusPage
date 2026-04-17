@@ -83,27 +83,20 @@ export const Vision = () => {
             className="text-[16px] md:text-[18px] leading-[1.65] text-[rgba(10,19,68,0.55)]"
             style={anim(150)}
           >
-            We&apos;re building foundation models that{" "}
-            <span className="text-[#0A1344]">understand the physical
-            world through geospatial core reasoning</span>.{" "}
-            <span className="text-[#0A1344]">Columbus-01</span> processes
+            We&apos;re building foundation models that understand the physical
+            world through{" "}
+            <span className="text-[#0A1344]">geospatial core reasoning</span>. Columbus-01 processes
             satellite imagery, terrain data, human activity, and temporal
             patterns to generate{" "}
             <span className="text-[#0A1344]">actionable intelligence</span>{" "}
-            across real estate, research, and consumer domains.
-          </p>
-
-          <p
-            className="text-[16px] md:text-[18px] font-medium text-[#0A1344] mt-6"
-            style={anim(200)}
-          >
-            Think of us like the OpenAI for maps.
+            across real estate, research, and consumer domains.{" "}
+            <span className="text-[#0A1344] font-medium">Think of us like the OpenAI for maps.</span>
           </p>
 
           <Link
             href="/technology"
             className="mt-10 inline-flex items-center gap-2 text-[15px] font-medium text-[#0A1344] hover:text-[#2563EB] transition-colors duration-300 group"
-            style={anim(250)}
+            style={anim(150)}
           >
             <span>Our research &amp; technology</span>
             <svg
