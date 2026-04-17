@@ -3,7 +3,7 @@ import { Hero } from "@/components/home/Hero";
 import { Vision } from "@/components/home/VisionSection";
 import { Footer } from "@/components/layout/Footer";
 import { ProductShowcase } from "@/components/home/ProductShowcase";
-import { MonitorDisplay } from "@/components/home/MonitorDisplay";
+import { ColumbusSection } from "@/components/home/ColumbusSection";
 import { UseCaseCards } from "@/components/home/UseCaseCards";
 import { Careers } from "@/components/home/Careers";
 
@@ -26,22 +26,8 @@ export default function Home() {
         <Vision />
       </div>
 
-      {/* Columbus Pro — image left, text right */}
-      <ProductShowcase
-        title="Columbus"
-        tagline="An Agentic GIS platform"
-        description="Columbus turns you into a super-explorer. Powerful tools that transform how you research, analyze, and select sites."
-        features={[
-          "Generative Geodata — our proprietary model creates predictive data tailored to your exact preferences",
-          "Map Chat — research like you're talking to an expert, answer any question or visualize data your own way",
-          "Generative Due Diligence — cheaper, faster audits on neighbourhoods, sites, parcels, businesses and cities",
-          "Data Catalogue — find rich and relevant datasets faster with our simple interface",
-        ]}
-        cta={{ label: "Start Now", href: "/products/enterprise" }}
-        visual={<MonitorDisplay />}
-        imagePosition="left"
-        background="linear-gradient(to bottom, rgba(0, 102, 204, 0.12) 0%, rgba(0, 102, 204, 0.05) 50%, #ffffff 100%)"
-      />
+      {/* Columbus — Palantir Foundry style */}
+      <ColumbusSection />
 
       <SectionGap />
 
