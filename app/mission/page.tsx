@@ -98,13 +98,11 @@ export default function OurMissionPage() {
   const values = useScrollReveal(0.05);
 
   const [sceneOpacity, setSceneOpacity] = useState(1);
-  const [gridLineOpacity, setGridLineOpacity] = useState(0);
   useLayoutEffect(() => {
     const syncFromScrollPosition = () => {
       const y = window.scrollY;
       setSceneOpacity(Math.max(0, 1 - y / 100));
       // Grid lines fade in as the scene fades out (0-100px scroll)
-      setGridLineOpacity(Math.min(1, y / 100));
     };
 
     syncFromScrollPosition();
@@ -128,12 +126,16 @@ export default function OurMissionPage() {
   }, []);
 
   return (
-    <main className="mission-page min-h-screen" style={{ backgroundColor: "#F9F9F9" }}>
+    <main className="mission-page min-h-screen relative" style={{ backgroundColor: "#F9F9F9", ["--grid-line-opacity" as string]: 1 - sceneOpacity }}>
       <style>{`
+        .mission-hero-section.grid-section::before,
+        .mission-hero-section.grid-section::after {
+          display: none;
+        }
         .mission-page .grid-section::before,
         .mission-page .grid-section::after {
-          opacity: ${gridLineOpacity};
-          transition: opacity 0.1s ease;
+          opacity: var(--grid-line-opacity, 1);
+          transition: opacity 0.3s ease;
         }
       `}</style>
       {/* Ocean scene background — fades out on scroll */}
@@ -149,13 +151,13 @@ export default function OurMissionPage() {
       <Navbar />
 
       {/* ════════ 1. HERO ════════ */}
-      <GridSection className="bg-transparent! relative overflow-hidden">
-        {/* Accent gradient */}
-        <div
-          className="absolute left-0 right-0 top-0 pointer-events-none"
-          style={{ height: "100%", background: "linear-gradient(to bottom, rgba(0, 102, 204, 0.15) 0%, rgba(0, 102, 204, 0.08) 50%, transparent 80%)", zIndex: 1 }}
-          aria-hidden
-        />
+      {/* Accent gradient — full width, behind everything */}
+      <div
+        className="absolute left-0 right-0 top-0 pointer-events-none"
+        style={{ height: 400, background: "linear-gradient(to bottom, rgba(0, 102, 204, 0.15) 0%, rgba(0, 102, 204, 0.08) 50%, transparent 100%)", zIndex: 0 }}
+        aria-hidden
+      />
+      <GridSection className="mission-hero-section bg-transparent! relative overflow-hidden" style={{ zIndex: 2 }}>
 
         <div ref={hero.ref} className="relative z-10 w-full pt-40 md:pt-52 pb-40 md:pb-56 flex flex-col items-center text-center px-8 md:px-10">
           <h1
