@@ -105,7 +105,44 @@ export function UseCaseCards() {
           className="mt-12 flex gap-5 overflow-x-auto pb-4"
           style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
         >
-          <style>{`.use-case-scroller::-webkit-scrollbar { display: none; }`}</style>
+          <style>{`
+            .use-case-scroller::-webkit-scrollbar { display: none; }
+            .uc-card-img {
+              transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+            }
+            .group:hover .uc-card-img {
+              transform: scale(1.05);
+            }
+            /* Color overlay — gradient stays dark at bottom for legibility */
+            .uc-card-color {
+              background: linear-gradient(to top, rgba(8, 15, 40, 0.72) 0%, rgba(8, 15, 40, 0.52) 35%, rgba(8, 15, 40, 0.48) 100%);
+              transition: background 1s cubic-bezier(0.16, 1, 0.3, 1);
+            }
+            .group:hover .uc-card-color {
+              background: linear-gradient(to top, rgba(8, 15, 40, 0.68) 0%, rgba(8, 15, 40, 0.42) 40%, rgba(8, 15, 40, 0.38) 100%);
+            }
+            /* No blur by default */
+            .uc-card-blur-full {
+              backdrop-filter: blur(2px);
+              -webkit-backdrop-filter: blur(2px);
+              opacity: 0;
+              transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+            }
+            .group:hover .uc-card-blur-full {
+              opacity: 1;
+            }
+            /* Bottom blur placeholder — not needed in this direction */
+            .uc-card-blur-bottom {
+              opacity: 0;
+            }
+            .uc-card-arrow {
+              transition: transform 800ms cubic-bezier(0.16, 1, 0.3, 1), color 600ms ease;
+            }
+            .group:hover .uc-card-arrow {
+              transform: translateX(4px);
+              color: #2563EB;
+            }
+          `}</style>
           {USE_CASES.map((uc) => (
             <Link
               key={uc.title}
@@ -117,47 +154,25 @@ export function UseCaseCards() {
                 src={uc.image}
                 alt={uc.title}
                 fill
-                className="object-cover transition-transform duration-500 group-hover:scale-105"
+                className="object-cover uc-card-img"
                 sizes="320px"
               />
 
-              {/* Bottom gradient — dark at bottom, fading up */}
-              <div
-                className="absolute inset-0 pointer-events-none"
-                style={{
-                  background: "linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.35) 40%, transparent 70%)",
-                }}
-              />
-
-              {/* Bottom blur gradient — stronger blur at bottom */}
-              <div
-                className="absolute inset-0 pointer-events-none"
-                style={{
-                  backdropFilter: "blur(0px)",
-                  WebkitBackdropFilter: "blur(0px)",
-                  maskImage: "linear-gradient(to top, black 0%, black 20%, transparent 50%)",
-                  WebkitMaskImage: "linear-gradient(to top, black 0%, black 20%, transparent 50%)",
-                }}
-              />
-
-              {/* Hover blur overlay — full card blur on hover */}
-              <div
-                className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                style={{
-                  backdropFilter: "blur(4px)",
-                  WebkitBackdropFilter: "blur(4px)",
-                  background: "rgba(0,0,0,0.15)",
-                }}
-              />
+              {/* Dark navy color overlay */}
+              <div className="absolute inset-0 pointer-events-none uc-card-color" />
+              {/* Full blur — fades out on hover */}
+              <div className="absolute inset-0 pointer-events-none uc-card-blur-full" />
+              {/* Bottom-only blur — fades in on hover */}
+              <div className="absolute inset-0 pointer-events-none uc-card-blur-bottom" />
 
               {/* Text content — positioned at bottom */}
               <div className="absolute bottom-0 left-0 right-0 p-5 z-10">
                 <h3 className="text-[16px] font-medium text-white leading-[1.3]">
                   {uc.title}
                 </h3>
-                <span className="mt-2 inline-flex items-center gap-1.5 text-[13px] font-medium text-white/70 group-hover:text-white transition-colors duration-300">
+                <span className="mt-2 inline-flex items-center gap-1.5 text-[13px] font-medium text-white/70 uc-card-cta">
                   Learn more
-                  <svg width="8" height="14" viewBox="0 0 10 18" fill="none">
+                  <svg width="8" height="14" viewBox="0 0 10 18" fill="none" className="uc-card-arrow">
                     <path d="M1 1l8 8-8 8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
                 </span>
