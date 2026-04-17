@@ -72,9 +72,9 @@ export const TrustStrip = () => {
         </div>
 
         {/* FAQ accordion */}
-        <div style={{ borderTop: gl }}>
+        <div style={{ borderTop: "1px solid rgba(0,0,0,0.06)" }}>
           {FAQ.map((item, i) => (
-            <div key={i} style={{ borderBottom: gl, ...anim(i * 60 + 250) }}>
+            <div key={i} style={{ borderBottom: "1px solid rgba(0,0,0,0.06)", ...anim(i * 60 + 250) }}>
               <button
                 type="button"
                 onClick={() => setOpenFaq(openFaq === i ? null : i)}

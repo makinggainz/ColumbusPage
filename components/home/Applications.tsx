@@ -40,11 +40,8 @@ export const Applications = () => {
 
   return (
     <>
-      {/* Top bar — full width with grid lines */}
-      <div style={{
-        borderTop: "1px solid var(--grid-line)",
-        borderBottom: "1px solid var(--grid-line)"
-      }}>
+      {/* Top bar */}
+      <div>
         <div className="grid-section relative flex items-center justify-between max-w-[1287px] mx-5 md:mx-auto px-8 min-[1287px]:px-10 py-6" style={anim(0)}>
           <span className="text-[18px] lg:text-[20px] text-[#1D1D1F] font-bold" style={{ letterSpacing: "-0.02em" }}>
             Applications <span className="hidden min-[640px]:inline font-normal">– across industries</span>
@@ -66,7 +63,7 @@ export const Applications = () => {
       </div>
 
     <GridSection>
-      <div ref={ref} style={{ borderBottom: gl }}>
+      <div ref={ref}>
         {/* Header area */}
         <div className="px-8 min-[1287px]:px-10 pt-14 pb-4">
           <h2

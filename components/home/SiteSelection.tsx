@@ -36,11 +36,8 @@ export const SiteSelection = () => {
 
   return (
     <>
-      {/* Top bar — full width with grid lines */}
-      <div style={{
-        borderTop: "1px solid var(--grid-line)",
-        borderBottom: "1px solid var(--grid-line)"
-      }}>
+      {/* Top bar */}
+      <div>
         <div className="grid-section relative flex items-center justify-between max-w-[1287px] mx-5 md:mx-auto px-8 min-[1287px]:px-10 py-6" style={anim(0)}>
           <div className="flex items-center gap-3">
             <span className="text-[18px] lg:text-[20px] text-[#1D1D1F] font-bold">
@@ -71,7 +68,7 @@ export const SiteSelection = () => {
 
       {/* Rest wrapped in GridSection — hide vertical lines so they don't overlay the hero image */}
       <GridSection className="[&::before]:hidden [&::after]:hidden">
-      <div ref={ref} style={{ borderBottom: gl }}>
+      <div ref={ref}>
 
         {/* Hero card */}
         <div

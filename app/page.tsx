@@ -22,7 +22,7 @@ function SectionGap() {
 
 export default function Home() {
   return (
-    <main className="min-h-screen" style={{ backgroundColor: "#ffffff", "--grid-line": "transparent" } as React.CSSProperties}>
+    <main className="min-h-screen" style={{ backgroundColor: "#ffffff" }}>
       <Navbar />
       <Hero />
 
