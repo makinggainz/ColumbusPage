@@ -157,9 +157,11 @@ export function UseCaseCards() {
                 </h3>
                 <span className="mt-2 inline-flex items-center gap-1.5 text-[13px] font-medium text-white/70 group-hover:text-white transition-colors duration-300">
                   Learn more
-                  <svg width="8" height="14" viewBox="0 0 10 18" fill="none">
-                    <path d="M1 1l8 8-8 8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
+                  <span className="inline-flex transition-all duration-300 group-hover:translate-x-1 group-hover:text-[#2563EB]">
+                    <svg width="8" height="14" viewBox="0 0 10 18" fill="none">
+                      <path d="M1 1l8 8-8 8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </span>
                 </span>
               </div>
             </Link>
