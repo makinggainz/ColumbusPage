@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { GridSection, fadeLine } from "./ContentGrid";
 
 export const Vision = () => {
   const ref = useRef<HTMLDivElement>(null);
@@ -28,48 +27,47 @@ export const Vision = () => {
   });
 
   return (
-    <GridSection>
-      <div ref={ref} className="px-6 md:px-10 py-16 md:py-24">
-        {/* Heading */}
+    <section>
+      <div ref={ref} className="max-w-[1287px] mx-auto px-8 md:px-10 py-20 md:py-32 flex flex-col items-center text-center">
         <h2
-          className="text-[#1D1D1F] leading-[1.2] tracking-[-0.02em] text-[28px] md:text-[36px] lg:text-[44px] max-w-[700px]"
+          className="text-[#1D1D1F] leading-[1.15] tracking-[-0.02em] text-[32px] md:text-[40px] lg:text-[48px] max-w-[700px]"
           style={{ fontWeight: 500, ...anim(0) }}
         >
-          Introducing a new kind of AI for the physical world — COLUMBUS-01
+          A new kind of AI for the physical world
         </h2>
 
-        {/* Body text */}
-        <div className="mt-8 max-w-[600px]" style={anim(100)}>
-          <p className="text-[16px] md:text-[18px] leading-[1.65] text-[#6E6E73]">
-            We&apos;re building foundational geospatial models that understand the physical world the way language models understand text. Columbus-01 is trained on the largest curated collection of geospatial data ever assembled — satellite imagery, mobility patterns, environmental sensors, infrastructure records, and demographic signals across every continent.
-          </p>
-          <p className="text-[16px] md:text-[18px] leading-[1.65] text-[#6E6E73] mt-5">
-            The result is a model that can reason spatially — answering questions about places, predicting patterns, and generating insights that were previously impossible without teams of analysts and months of manual research.
-          </p>
-        </div>
+        <p
+          className="mt-6 text-[16px] md:text-[18px] leading-[1.65] text-[#6E6E73] max-w-[600px]"
+          style={anim(100)}
+        >
+          We&apos;re building foundational geospatial models that understand the
+          physical world the way language models understand text. Trained on the
+          largest curated collection of geospatial data ever assembled.
+        </p>
 
-        {/* Separator */}
-        <div className="mt-12 mb-8 max-w-[500px]" style={anim(180)}>
-          <div style={fadeLine} />
-        </div>
-
-        {/* CTA */}
-        <div className="flex items-center gap-8" style={anim(220)}>
-          <Link
-            href="/technology"
-            className="group flex items-center gap-4 hover:opacity-90 transition-opacity"
-            style={{ height: 36, paddingLeft: 20, paddingRight: 16, fontSize: 15, fontWeight: 500, backgroundColor: "#000000", color: "white" }}
+        <Link
+          href="/technology"
+          className="mt-10 inline-flex items-center gap-2 text-[15px] font-medium text-[#0A1344] hover:text-[#2563EB] transition-colors duration-300 group"
+          style={anim(200)}
+        >
+          <span>Our research &amp; technology</span>
+          <svg
+            width="10"
+            height="18"
+            viewBox="0 0 10 18"
+            fill="none"
+            className="transition-transform duration-300 group-hover:translate-x-1"
           >
-            <span className="transition-colors duration-300 group-hover:text-[#2563EB]">Our research &amp; technology</span>
-            <svg className="transition-transform duration-300 group-hover:translate-x-0.5" width="10" height="18" viewBox="0 0 7 12" fill="none" stroke="#2563EB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M1 1l5 5-5 5" />
-            </svg>
-          </Link>
-          <span className="text-[15px] text-[#6E6E73]">
-            Think of us like the OpenAI for maps.
-          </span>
-        </div>
+            <path
+              d="M1 1l8 8-8 8"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </Link>
       </div>
-    </GridSection>
+    </section>
   );
 };
