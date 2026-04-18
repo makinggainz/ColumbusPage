@@ -57,17 +57,19 @@ export function ColumbusSection() {
 
   return (
     <section style={{ position: "relative" }}>
-      <Image
-        src="/fel-background.avif"
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/fel-background-lines.svg?v=5"
         alt=""
-        fill
-        priority={false}
-        sizes="100vw"
-        className="object-cover"
+        aria-hidden
         style={{
+          position: "absolute",
+          inset: 0,
+          width: "100%",
+          height: "100%",
+          objectFit: "cover",
           zIndex: 0,
           pointerEvents: "none",
-          filter: "sepia(1) saturate(6) hue-rotate(175deg) brightness(0.9)",
         }}
       />
       <div
