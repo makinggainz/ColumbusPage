@@ -26,6 +26,31 @@ export default function Home() {
   return (
     <main className="min-h-screen" style={{ backgroundColor: "#ffffff" }}>
       <Navbar />
+
+      {/* Side blur overlays — blur the areas outside the 1287px content column */}
+      <div
+        aria-hidden
+        className="pointer-events-none fixed top-0 bottom-0 left-0 hidden min-[1287px]:block"
+        style={{
+          width: "calc((100vw - 1287px) / 2)",
+          backdropFilter: "blur(12px) saturate(1.1)",
+          WebkitBackdropFilter: "blur(12px) saturate(1.1)",
+          background: "rgba(255, 255, 255, 0.35)",
+          zIndex: 30,
+        }}
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none fixed top-0 bottom-0 right-0 hidden min-[1287px]:block"
+        style={{
+          width: "calc((100vw - 1287px) / 2)",
+          backdropFilter: "blur(12px) saturate(1.1)",
+          WebkitBackdropFilter: "blur(12px) saturate(1.1)",
+          background: "rgba(255, 255, 255, 0.35)",
+          zIndex: 30,
+        }}
+      />
+
       <Hero />
 
       {/* Hero → Vision gap with vertical structure lines */}

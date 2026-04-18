@@ -903,12 +903,51 @@ export const Hero = () => {
         aria-hidden
       />
 
-      {/* Bottom gradient — fade to white */}
+      {/* Bottom progressive blur — replaces the former white-fade gradient */}
       <div
         className="absolute left-0 right-0 bottom-0 pointer-events-none"
         style={{
-          height: 300, background: "linear-gradient(to bottom, transparent, #ffffff)",
+          height: 300,
+          backdropFilter: "blur(4px)",
+          WebkitBackdropFilter: "blur(4px)",
+          maskImage: "linear-gradient(to top, black 0%, black 30%, transparent 100%)",
+          WebkitMaskImage: "linear-gradient(to top, black 0%, black 30%, transparent 100%)",
           zIndex: 3,
+        }}
+        aria-hidden
+      />
+      <div
+        className="absolute left-0 right-0 bottom-0 pointer-events-none"
+        style={{
+          height: 220,
+          backdropFilter: "blur(10px)",
+          WebkitBackdropFilter: "blur(10px)",
+          maskImage: "linear-gradient(to top, black 0%, black 40%, transparent 100%)",
+          WebkitMaskImage: "linear-gradient(to top, black 0%, black 40%, transparent 100%)",
+          zIndex: 3,
+        }}
+        aria-hidden
+      />
+      <div
+        className="absolute left-0 right-0 bottom-0 pointer-events-none"
+        style={{
+          height: 140,
+          backdropFilter: "blur(24px)",
+          WebkitBackdropFilter: "blur(24px)",
+          maskImage: "linear-gradient(to top, black 0%, black 50%, transparent 100%)",
+          WebkitMaskImage: "linear-gradient(to top, black 0%, black 50%, transparent 100%)",
+          zIndex: 3,
+        }}
+        aria-hidden
+      />
+
+      {/* Soft white fade at the very bottom — blends blur zone into the white section below */}
+      <div
+        className="absolute left-0 right-0 bottom-0 pointer-events-none"
+        style={{
+          height: 180,
+          background: "linear-gradient(to top, #ffffff 0%, rgba(255,255,255,0.85) 35%, rgba(255,255,255,0) 100%)",
+          zIndex: 4,
         }}
         aria-hidden
       />

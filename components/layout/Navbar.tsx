@@ -323,13 +323,24 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                 }}
                 onMouseLeave={handleMouseLeave}
             >
-                {/* Frosted glass background — fades in on compact */}
+                {/* Always-on blur layer — visible even before compact state */}
+                <div
+                    className="absolute inset-0 pointer-events-none"
+                    style={{
+                        backdropFilter: "blur(20px) saturate(1.2)",
+                        WebkitBackdropFilter: "blur(20px) saturate(1.2)",
+                        background: isHomePage ? "rgba(255, 255, 255, 0.35)" : "transparent",
+                        opacity: isMenuOpen ? 0 : 1,
+                        transition: `opacity ${t}`,
+                    }}
+                    aria-hidden
+                />
+
+                {/* Frosted glass background tint + border — fades in on compact */}
                 <div
                     className="absolute inset-0 pointer-events-none"
                     style={{
                         background: isEnterprisePage && isDark ? "rgba(14, 16, 28, 0.95)" : isDark ? "rgba(6, 8, 20, 0.85)" : "rgba(255, 255, 255, 0.82)",
-                        backdropFilter: "blur(20px) saturate(1.2)",
-                        WebkitBackdropFilter: "blur(20px) saturate(1.2)",
                         borderBottom: isProductsPage ? "none" : isEnterprisePage ? "1px solid rgba(255,255,255,0.10)" : isDark ? "1px solid rgba(255,255,255,0.06)" : isHomePage ? "1px solid rgba(37, 99, 235, 0.3)" : "1px solid rgba(0,0,0,0.06)",
                         opacity: (isProductsPage ? bgTriggerPassed : isCompact) && !isMenuOpen ? 1 : 0,
                         transition: `opacity ${t}`,
