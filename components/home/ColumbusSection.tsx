@@ -56,8 +56,31 @@ export function ColumbusSection() {
   const [activeTab, setActiveTab] = useState(0);
 
   return (
-    <section style={{ background: "linear-gradient(to bottom, rgba(0, 102, 204, 0.10) 0%, rgba(0, 102, 204, 0.03) 40%, #ffffff 100%)" }}>
-      <div className="max-w-[1287px] mx-auto px-6 min-[1287px]:px-0">
+    <section style={{ position: "relative" }}>
+      <Image
+        src="/fel-background.avif"
+        alt=""
+        fill
+        priority={false}
+        sizes="100vw"
+        className="object-cover"
+        style={{
+          zIndex: 0,
+          pointerEvents: "none",
+          filter: "sepia(1) saturate(6) hue-rotate(175deg) brightness(0.9)",
+        }}
+      />
+      <div
+        aria-hidden
+        style={{
+          position: "absolute",
+          inset: 0,
+          zIndex: 1,
+          pointerEvents: "none",
+          background: "linear-gradient(to bottom, rgba(0, 102, 204, 0.10) 0%, rgba(0, 102, 204, 0.03) 40%, #ffffff 100%)",
+        }}
+      />
+      <div className="max-w-[1287px] mx-auto px-6 min-[1287px]:px-0" style={{ position: "relative", zIndex: 2 }}>
 
         {/* ── Header ── */}
         <div className="pt-24 md:pt-32 flex flex-col md:flex-row md:items-start md:justify-between gap-6 md:gap-20 mb-16">
