@@ -10,7 +10,7 @@ import { TechnologySections } from "./redesign/TechnologySections";
 import { VantorScrollFeel } from "./redesign/VantorScrollFeel";
 
 export function TechnologyPage() {
-  const [navTheme, setNavTheme] = useState<"light" | "dark">("dark");
+  const [navTheme, setNavTheme] = useState<"light" | "dark">("light");
 
   const updateNavState = useCallback(() => {
     const hero = document.querySelector<HTMLElement>(`.${styles.techHero}`);
@@ -18,7 +18,8 @@ export function TechnologyPage() {
     const heroBottom = hero.getBoundingClientRect().bottom;
     const pastHero = heroBottom <= 80;
 
-    setNavTheme(pastHero ? "light" : "dark");
+    // Hero now has a light background, so navbar stays in "light" mode throughout.
+    setNavTheme("light");
 
     // Sync window.scrollY so the Navbar detects compact mode (frosted glass).
     // The tech page uses a custom scroll container, so window never scrolls

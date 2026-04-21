@@ -27,7 +27,6 @@
   overflow-y: auto;
   scroll-behavior: auto;
   overscroll-behavior-y: none;
-  will-change: scroll-position;
 }
 
 .pageShell {
@@ -2676,7 +2675,6 @@
 
 .techHeroContent {
   position: relative;
-  z-index: 20;
   width: 100%;
   max-width: 1287px;
   margin: 0 auto;
@@ -2687,7 +2685,7 @@
 }
 
 .techHeroTextBlock {
-  margin-top: 295px;
+  margin-top: 235px;
 }
 
 .techHeroTitle {
@@ -2696,39 +2694,64 @@
   font-weight: 300;
   line-height: 1.2;
   letter-spacing: -0.02em;
-  color: #fff;
+  color: #000;
+}
+
+.techHeroSubtitle {
+  margin: 20px 0 0;
+  max-width: 860px;
+  font-size: clamp(1.05rem, 1.15vw, 1.2rem);
+  font-weight: 300;
+  line-height: 1.55;
+  letter-spacing: -0.005em;
+  color: #000;
+  white-space: normal;
 }
 
 .techHeroDivider {
-  margin-top: 8px;
+  margin-top: 28px;
   width: 100%;
   height: 1px;
 }
 
-/* Hero nav — index items displayed under the title */
+/* Hero nav — index items displayed under the title (glass-button inspired) */
 .techHeroNav {
   margin-top: 24px;
   display: flex;
   flex-direction: column;
-  gap: 0;
+  gap: 4px;
+  width: 100%;
+  max-width: 860px;
 }
 
 .techHeroNavItem {
+  -webkit-appearance: none;
+  appearance: none;
   position: relative;
   display: flex;
   align-items: center;
-  padding: 10px 20px 10px 0;
-  font-size: clamp(0.97rem, 1vw, 1.05rem);
-  font-weight: 400;
-  letter-spacing: 0;
-  color: rgba(255, 255, 255, 0.45);
+  justify-content: space-between;
+  width: 100%;
+  padding: 10px 22px;
+  font-size: clamp(0.95rem, 1vw, 1.05rem);
+  font-weight: 500;
+  letter-spacing: -0.18px;
+  color: rgba(0, 0, 0, 0.82);
   text-decoration: none;
-  overflow: hidden;
-  transition: color 220ms ease;
+  -webkit-tap-highlight-color: transparent;
+  background: rgba(255, 255, 255, 0.22);
+  -webkit-backdrop-filter: blur(18px) saturate(1.35);
+  backdrop-filter: blur(18px) saturate(1.35);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: color 0.3s ease, background 0.3s ease;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.08);
 }
 
 .techHeroNavItem:hover {
-  color: rgba(255, 255, 255, 0.9);
+  color: #000;
+  background: rgba(255, 255, 255, 0.32);
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.14);
 }
 
 .techHeroNavText {
@@ -2736,35 +2759,19 @@
   z-index: 1;
 }
 
-.techHeroNavGlow {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  opacity: 0;
-  background: linear-gradient(to right, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0) 100%);
-  border-radius: 0;
-  transition: opacity 280ms ease;
-  pointer-events: none;
-}
-
 .techHeroNavArrow {
-  margin-left: 8px;
-  opacity: 0;
-  flex-shrink: 0;
   position: relative;
   z-index: 1;
-  transition: opacity 220ms ease;
+  flex-shrink: 0;
+  opacity: 0;
+  transition: opacity 0.22s ease, transform 0.22s ease;
 }
 
 .techHeroNavItem:hover .techHeroNavArrow {
-  opacity: 0.9;
+  opacity: 1;
+  transform: translateY(1px);
 }
 
-.techHeroNavItem:hover .techHeroNavGlow {
-  opacity: 1;
-}
 
 @media (max-width: 768px) {
   .techHeroTextBlock {

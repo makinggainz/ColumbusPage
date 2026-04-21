@@ -17,8 +17,8 @@ export function TechHeroSection() {
 
   const fadeIn = (delay = 0): React.CSSProperties => ({
     opacity: visible ? 1 : 0,
-    filter: visible ? "blur(0px)" : "blur(8px)",
-    transform: visible ? "translateY(0)" : "translateY(16px)",
+    filter: visible ? "none" : "blur(8px)",
+    transform: visible ? "none" : "translateY(16px)",
     transition: `opacity 0.7s ease-out ${delay}s, filter 0.7s ease-out ${delay}s, transform 0.7s ease-out ${delay}s`,
   });
 
@@ -33,45 +33,30 @@ export function TechHeroSection() {
         className={styles.techHeroVideo}
       />
 
-      <div
-        className={styles.techHeroOverlay}
-        style={{
-          background:
-            "radial-gradient(ellipse 75% 60% at 28% 50%, rgba(0,0,0,0.58) 0%, rgba(0,0,0,0.20) 100%)",
-          opacity: visible ? 1 : 0,
-          transition: "opacity 1.2s ease-out 0s",
-        }}
-      />
-
-      <div
-        className={styles.techHeroGradient}
-        style={{
-          background:
-            "linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 100%)",
-          opacity: visible ? 1 : 0,
-          transition: "opacity 1.2s ease-out 0s",
-        }}
-        aria-hidden
-      />
-
       <div className={styles.techHeroContent}>
         <div className={styles.techHeroTextBlock}>
           <h1 className={styles.techHeroTitle} style={fadeIn(0)}>
-            Why you should be excited
-            <br /> about our LGM
+            Building a brain for earth
           </h1>
+
+          <p className={styles.techHeroSubtitle} style={fadeIn(0.06)}>
+            At Columbus, we collect the world&rsquo;s data, and build a brain
+            that comprehends it all.
+            <br />
+            We&rsquo;re building frontier geospatial intelligence.
+          </p>
 
           <div
             className={styles.techHeroDivider}
             style={{
               background:
-                "linear-gradient(to right, rgba(255,255,255,0.75) 0%, rgba(255,255,255,0.5) 50%, rgba(255,255,255,0) 100%)",
-              ...fadeIn(0.08),
+                "linear-gradient(to right, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0) 100%)",
+              ...fadeIn(0.12),
             }}
           />
 
           {/* Index items as selectable navigation under the title */}
-          <nav className={styles.techHeroNav} style={fadeIn(0.15)}>
+          <nav className={styles.techHeroNav} style={fadeIn(0.18)}>
             {HERO_SCROLL_INDEX_ITEMS.map((item) => (
               <Link
                 key={item.sectionIds[0]}
@@ -95,7 +80,6 @@ export function TechHeroSection() {
                     strokeLinejoin="round"
                   />
                 </svg>
-                <span className={styles.techHeroNavGlow} />
               </Link>
             ))}
           </nav>
