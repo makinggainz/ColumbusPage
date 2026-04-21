@@ -13,12 +13,12 @@ export function VantorScrollFeel() {
     if (reducedMotion) return;
 
     const pageBody = document.querySelector<HTMLElement>(`.${styles.pageBody}`);
-    const pageShell = document.querySelector<HTMLElement>(`.${styles.pageShell}`);
-    if (!pageBody || !pageShell) return;
+    const pageBodyInner = document.querySelector<HTMLElement>(`.${styles.pageBodyInner}`);
+    if (!pageBody || !pageBodyInner) return;
 
     const lenis = new Lenis({
       wrapper: pageBody,
-      content: pageShell,
+      content: pageBodyInner,
       autoRaf: false,
       orientation: "vertical",
       gestureOrientation: "vertical",

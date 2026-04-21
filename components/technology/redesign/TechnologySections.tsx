@@ -1,15 +1,9 @@
-import Image from "next/image";
-
 import styles from "../technology.module.css";
+import { TechScrollIndex } from "../TechScrollIndex";
 import {
-  DYNAMIC_LAYER_CAPTIONS,
-  FUSING_STEPS,
-  GENLAYERS_OVERLAYS,
-  LGM_COLUMNS,
-  LLM_TOKEN_LINES,
+  RESEARCH_ARTICLES,
   RESEARCH_CARDS,
 } from "./content";
-import { GridScrollSequence } from "./GridScrollSequence";
 import { RevealOnView } from "./RevealOnView";
 import type { TechnologySectionId } from "./types";
 
@@ -29,329 +23,429 @@ function Slide({
   );
 }
 
-function UgmGlyph() {
-  return (
-    <svg className={styles.ugmGlyph} viewBox="0 0 138 138" fill="none" aria-hidden="true">
-      <path d="M15 69 L118 23" stroke="currentColor" strokeWidth="2" />
-      <path d="M20 31 L110 112" stroke="currentColor" strokeWidth="2" />
-      <path d="M36 17 L56 119" stroke="currentColor" strokeWidth="2" />
-      <path d="M95 18 C108 40 118 66 110 91" stroke="#f8d657" strokeWidth="2.5" />
-      {[
-        [36, 58],
-        [65, 51],
-        [79, 74],
-        [57, 86],
-      ].map(([x, y]) => (
-        <circle key={`${x}-${y}`} cx={x} cy={y} r="2.2" fill="currentColor" />
-      ))}
-    </svg>
-  );
-}
-
-function PremiumDatabaseModel() {
-  return (
-    <div className={styles.databaseModel} aria-hidden="true">
-      <div className={styles.databaseHalo} />
-      <div className={[styles.databaseTier, styles.databaseTierTop].join(" ")} />
-      <div className={styles.databaseTier} />
-      <div className={[styles.databaseTier, styles.databaseTierBottom].join(" ")} />
-      <div className={styles.databaseCoreRing} />
-      <div className={styles.databasePulse} />
-    </div>
-  );
-}
-
-function DynamicPins({ right = false }: { right?: boolean }) {
-  return (
-    <>
-      {Array.from({ length: right ? 18 : 28 }).map((_, index) => {
-        const width = 8 + (index % 5) * 7;
-        const colorClass = index % 3;
-
-        return (
-          <span
-            key={`pin-${index}`}
-            className={[
-              styles.pin,
-              colorClass === 0 ? styles.pinBlue : "",
-              colorClass === 1 ? styles.pinRed : "",
-              colorClass === 2 ? styles.pinGreen : "",
-            ]
-              .filter(Boolean)
-              .join(" ")}
-            style={{
-              width: `${width}px`,
-              left: `${(index * (right ? 5.8 : 3.2)) % 95}%`,
-              top: `${8 + ((index * 13) % 82)}%`,
-              transform: `rotate(${(index % 9) * 8 - 18}deg)`,
-            }}
-          />
-        );
-      })}
-    </>
-  );
-}
 
 export function TechnologySections() {
   return (
     <>
+      {/* Sidebar panel with scroll index */}
+      <div className={styles.sidebarPanel}>
+        <div className={styles.sidebarPanelSticky}>
+          <TechScrollIndex />
+        </div>
+      </div>
+
+      {/* Main content column */}
+      <div>
+      {/* ── 1. Why an LGM ── */}
       <Slide id="index" className={styles.dotGrid}>
         <div className={styles.slideFrame}>
-          <div className={styles.indexSlide}>
-            <RevealOnView className={styles.indexCopy}>
-              <h1>Building a brain for Earth.</h1>
-              <p className={styles.indexCopyLead}>
-                At Columbus, we want to collect the world&apos;s data, and
-                <br />
-                build a brain that comprehends it all.
-              </p>
-              <p className={styles.indexCopyLead}>
-                We&apos;re building frontier geospatial intelligence.
-                <br />
-                <span className={styles.indexHandwritten}>It&apos;s pretty cool.</span>
-              </p>
-            </RevealOnView>
+          <RevealOnView className={styles.editorialSlide}>
 
-            <RevealOnView className={styles.indexDiagram} delayMs={120}>
-              <div className={styles.pipelineCardWide}>
+            <h2 className={styles.sectionTitle}>Why an LGM is needed</h2>
+            <div className={styles.editorialBody}>
+              <p>
+                AI has made extraordinary progress in understanding language, but
+                the physical world remains largely uncharted territory for
+                machine intelligence. There is no foundational model that truly
+                comprehends geography, spatial relationships, and the built
+                environment at scale.
+              </p>
+              <p>
+                The decisions that shape our cities, infrastructure, and natural
+                resources are still made without the benefit of deep spatial
+                reasoning. Lorem ipsum dolor sit amet, consectetur adipiscing
+                elit. Sed do eiusmod tempor incididunt ut labore et dolore magna
+                aliqua. Ut enim ad minim veniam, quis nostrud exercitation
+                ullamco laboris.
+              </p>
+              <p>
+                A Large Geospatial Model fills this gap — a foundational model
+                purpose-built to reason about Earth, its terrain, its
+                infrastructure, and the patterns that emerge when billions of
+                spatial data points converge. Duis aute irure dolor in
+                reprehenderit in voluptate velit esse cillum dolore eu fugiat
+                nulla pariatur.
+              </p>
+            </div>
+            <a href="/use-cases" className={styles.sectionCta}>
+              <span>Explore use cases</span>
+              <svg width="10" height="18" viewBox="0 0 10 18" fill="none" aria-hidden>
+                <path d="M1 1l8 8-8 8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </a>
+          </RevealOnView>
+        </div>
+      </Slide>
+
+      {/* ── 2. Our Research (Synopsis) ── */}
+      <Slide id="lgm-vs-llm" className={styles.lgmSlide}>
+        <div className={styles.slideFrame}>
+          <RevealOnView className={styles.editorialSlide}>
+            <h2 className={styles.sectionTitle}>Our Research</h2>
+            <p className={styles.sectionLead}>
+              We&apos;ve come up with several innovations within data collection,
+              fusion, and reasoning, which we combine in unique ways in our
+              research.
+            </p>
+            <div className={styles.editorialBody}>
+              <p>
+                <strong>Proprietary Data Collection.</strong> Our collection
+                methodology goes beyond conventional satellite imagery and public
+                datasets. We&apos;ve developed autonomous ingestion pipelines
+                that harvest geospatial signals from dormant data sources —
+                infrastructure telemetry, environmental sensors, commercial
+                transaction patterns — and normalize them into a unified
+                coordinate fabric. Lorem ipsum dolor sit amet, consectetur
+                adipiscing elit.
+              </p>
+              <p>
+                <strong>Data Digestion &amp; Fusion.</strong> Raw geospatial data
+                is inherently fragmented, contradictory, and incomplete. Our
+                fusion engine spatially pairs unformatted data, resolves
+                geocoding conflicts, and structures broken datasets into coherent
+                layers. Sed do eiusmod tempor incididunt ut labore et dolore
+                magna aliqua. Ut enim ad minim veniam.
+              </p>
+              <p>
+                <strong>Comprehension &amp; Extrapolation.</strong> Where
+                traditional systems store and retrieve, our model comprehends —
+                understanding the semantic nature of a city&apos;s fabric, the
+                relationship between terrain and infrastructure, and the patterns
+                that predict what should exist where it doesn&apos;t yet. Duis
+                aute irure dolor in reprehenderit in voluptate velit esse cillum
+                dolore eu fugiat nulla pariatur.
+              </p>
+              <p>
+                <strong>Generative Layer Synthesis.</strong> From comprehension,
+                the model generates entirely new geospatial layers — predictions
+                about solar roof viability, resident behavior patterns, safety
+                scoring — without expensive manual surveying. Excepteur sint
+                occaecat cupidatat non proident.
+              </p>
+              <p>
+                <strong>Coordinate-level Reasoning.</strong> The final stage
+                combines all upstream innovations into a reasoning engine that
+                operates at the coordinate level, drawing inferences across
+                billions of spatial data points simultaneously. This is the core
+                of the Universal Geospatial Model. Lorem ipsum dolor sit amet
+                consectetur adipiscing elit integer nec odio.
+              </p>
+            </div>
+
+            {/* Timeline labels above the line */}
+            <div className={styles.timelineLabels}>
+              <div className={styles.timelineLabel}>
+                <span>LLM</span>
+                <div className={styles.timelineLabelStick} />
+              </div>
+              <div className={styles.timelineLabel}>
+                <span>Geo-tuned LLM<br />+ Vision Models</span>
+                <div className={styles.timelineLabelStick} />
+              </div>
+              <div className={styles.timelineLabel}>
+                <span>Generalist<br />LGM</span>
+                <div className={styles.timelineLabelStick} />
+              </div>
+              <div className={styles.timelineLabel}>
+                <span>Universal<br />Geospatial<br />Model</span>
+                <div className={styles.timelineLabelStick} />
+              </div>
+            </div>
+
+            <div className={styles.comparisonTrack} />
+
+            <div className={styles.comparisonGrid}>
+              <div className={styles.comparisonColumn}>
+                <div className={styles.comparisonBody}>
+                  <p>A large language model is trained on huge sets of text data for tokenization</p>
+                  <p className={styles.comparisonMono}>280, 1170, 296, 4088, 30773, 4012, 5079, 2534, 3883, 263, 29072, 268, 64696</p>
+                </div>
+                <div className={styles.comparisonFooter}>
+                  <span>[ Transformer Attention ]</span>
+                  <p>Drawbacks: hallucination</p>
+                </div>
+                <a href="#" className={styles.comparisonLink}>Read our in-depth article &#8250;</a>
+              </div>
+
+              <div className={styles.comparisonColumn}>
+                <div className={styles.comparisonBody}>
+                  <p>Comprehending images, and predicting certain things like size from Earth imagery and context.</p>
+                </div>
+                <div className={styles.comparisonFooter}>
+                  <span>[ Reverse Diffusion ]</span>
+                </div>
+              </div>
+
+              <div className={styles.comparisonColumn}>
+                <div className={styles.comparisonBody}>
+                  <p>Big Data pre-trained Large Geospatial Model</p>
+                  <p>requiring fine-tuned labeling for each earth topic (e.g. physics etc)</p>
+                </div>
+                <a href="#" className={styles.comparisonLink}>Read our Paper &#8250;</a>
+              </div>
+
+              <div className={styles.comparisonColumn}>
+                <div className={styles.comparisonBody}>
+                  <p>An AGI for the physical world</p>
+                </div>
+                <a href="#" className={styles.comparisonLink}>Our Game Plan &#8250;</a>
+              </div>
+            </div>
+            <a href="#" className={styles.sectionCta}>
+              <span>Read our research papers</span>
+              <svg width="10" height="18" viewBox="0 0 10 18" fill="none" aria-hidden>
+                <path d="M1 1l8 8-8 8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </a>
+          </RevealOnView>
+        </div>
+      </Slide>
+
+      {/* ── 3. Glimpse under the hood ── */}
+      <Slide id="core-reasoning" className={styles.coreReasoningSlide}>
+        <div className={styles.verticalLineOverlay} aria-hidden="true" />
+        <div className={styles.slideFrame}>
+          <RevealOnView className={styles.editorialSlide}>
+            <h2 className={styles.sectionTitle}>Glimpse under the hood</h2>
+            <p className={styles.sectionLead}>
+              Three stages — collect, fuse, reason — working together to
+              produce spatial intelligence at scale.
+            </p>
+            <div className={styles.editorialBody}>
+              <p>
+                <strong>Data Collection.</strong> We ingest geospatial data from
+                hundreds of sources — satellite imagery, sensor networks, public
+                records, and proprietary feeds — normalizing them into a unified
+                coordinate system.
+              </p>
+              <p>
+                <strong>Fusion.</strong> Fragmented, broken, and unlabeled data
+                is spatially paired, geocoded, and structured. Our pipeline
+                resolves conflicts between overlapping datasets and fills gaps
+                through intelligent interpolation.
+              </p>
+              <p>
+                <strong>Reasoning.</strong> The model reasons over fused data
+                using coordinate-level attention — understanding not just what
+                exists at a location, but how it relates to everything around it.
+              </p>
+            </div>
+
+            {/* Horizontal pipeline diagram:
+                Many sources → converge → Database → split → Brain Model + Earth Grid → Insights */}
+            <div className={styles.pipelineHorizontal}>
+              {/* Stage 1: Data Collection */}
+              <div className={styles.pipelineStage}>
                 <div className={styles.pipelineLabel}>Data Collection &amp; Labeling</div>
-                <div className={styles.pipelineTiles}>
+                <div className={styles.pipelineTilesV}>
                   {Array.from({ length: 5 }).map((_, index) => (
                     <div key={`tile-${index}`} className={styles.pipelineTile} />
                   ))}
                 </div>
               </div>
 
-              <svg className={styles.pipelineDashedTop} viewBox="0 0 520 120" fill="none" aria-hidden="true">
-                {[120, 190, 260, 330, 400].map((x) => (
-                  <path
-                    key={x}
-                    d={`M${x} 0 C${x + (260 - x) * 0.5} 42 ${x + (260 - x) * 0.8} 76 260 94`}
-                    className={styles.dashedPathRed}
-                  />
+              {/* Converging lines: 5 sources → 1 */}
+              <svg className={styles.pipelineConverge} viewBox="0 0 80 100" fill="none" aria-hidden>
+                {[10, 30, 50, 70, 90].map((y) => (
+                  <path key={y} d={`M0 ${y} C40 ${y} 60 50 80 50`} className={styles.dashedPathRed} />
                 ))}
-                <path d="M260 94 L260 118" className={styles.dashedPathRed} />
               </svg>
 
-              <div className={styles.pipelineCenterCard}>
+              {/* Stage 2: Columbus Database */}
+              <div className={styles.pipelineStage}>
                 <div className={styles.pipelineLabel}>Columbus Database</div>
                 <div className={styles.pipelineNode} />
               </div>
 
-              <svg className={styles.pipelineDashedBottom} viewBox="0 0 520 88" fill="none" aria-hidden="true">
-                <path d="M260 0 L260 18 L160 18 L160 88" className={styles.dashedPathRed} />
-                <path d="M260 0 L260 18 L360 18 L360 88" className={styles.dashedPathRed} />
+              {/* Splitting lines: 1 → 2 */}
+              <svg className={styles.pipelineSplit} viewBox="0 0 80 80" fill="none" aria-hidden>
+                <path d="M0 40 C20 40 40 20 80 20" className={styles.dashedPathRed} />
+                <path d="M0 40 C20 40 40 60 80 60" className={styles.dashedPathRed} />
               </svg>
 
-              <div className={styles.pipelineBottomGrid}>
-                <div className={styles.pipelineCardSmall}>
+              {/* Stage 3: Brain Model + Earth Grid stacked */}
+              <div className={styles.pipelineOutputs}>
+                <div className={styles.pipelineStageSmall}>
                   <div className={styles.pipelineLabel}>Brain Model</div>
                   <div className={styles.pipelineBlob} />
                 </div>
-                <div className={styles.pipelineCardSmall}>
+                <div className={styles.pipelineStageSmall}>
                   <div className={styles.pipelineLabel}>Earth Grid</div>
                   <div className={styles.pipelineGridIcon} />
                 </div>
               </div>
 
-              <div className={styles.pipelineFooter}>Insights, Patterns, Answers.</div>
-            </RevealOnView>
-          </div>
-        </div>
-      </Slide>
-
-      <Slide id="lgm-vs-llm" className={styles.lgmSlide}>
-        <div className={styles.slideFrame}>
-          <RevealOnView className={styles.lgmWrap}>
-            <h2 className={styles.lgmTitle}>
-              Large Language Model vs Large Geospatial Model. A new foundational
-              model.
-            </h2>
-            <p className={styles.lgmLead}>
-              If an LLM is for language in the digital world, we&apos;re for the
-              physical world. An IRL AI.
-            </p>
-            <div className={styles.lgmTagline}>Think about it like AGI for the physical world</div>
-
-            <div className={styles.lgmColumns}>
-              <article className={styles.lgmColumn}>
-                <h3>LLM</h3>
-                <div className={styles.llmTokens}>
-                  {LLM_TOKEN_LINES.map((line) => (
-                    <p key={line}>{line}</p>
-                  ))}
-                </div>
-                <p className={styles.lgmFoot}>Transformer Attention</p>
-                <a href="#" className={styles.articleLink}>
-                  Read our article ↗
-                </a>
-              </article>
-
-              {LGM_COLUMNS.map((column) => (
-                <article key={column.title} className={styles.lgmColumn}>
-                  <h3>{column.title}</h3>
-                  <div className={styles.lgmBody}>
-                    {column.lines.map((line) => (
-                      <p key={line}>{line}</p>
-                    ))}
-                  </div>
-                  {column.footer ? <p className={styles.lgmFoot}>{column.footer}</p> : null}
-                </article>
-              ))}
-
-              <article className={styles.lgmColumn}>
-                <h3>UGM</h3>
-                <UgmGlyph />
-                <p className={styles.lgmFoot}>We&apos;re different</p>
-                <div className={styles.lgmBody}>
-                  <p>Intuition eyes on an Earth grid.</p>
-                  <p>Not needing as much pre-training.</p>
-                </div>
-              </article>
-            </div>
-          </RevealOnView>
-        </div>
-      </Slide>
-
-      <Slide id="data-collection" className={styles.dataCollectionSection}>
-        <div className={styles.slideFrame}>
-          <RevealOnView className={styles.dataSlide}>
-            <p className={styles.kicker}>Data Collection</p>
-            <h2 className={styles.sectionTitle}>
-              The more you know, the smarter you are. We collect vast amounts of
-              data.
-            </h2>
-
-            <div className={styles.dataCards}>
-              {Array.from({ length: 5 }).map((_, index) => (
-                <div key={`data-box-${index}`} className={styles.dataCard} />
-              ))}
-            </div>
-
-            <div className={styles.dataList}>
-              <p>Data Collection</p>
-              <ul>
-                <li>· our collection methods</li>
-                <li>· dormant data</li>
-                <li>· broken data</li>
-              </ul>
-            </div>
-          </RevealOnView>
-        </div>
-      </Slide>
-
-      <Slide id="fusing" className={styles.fusingSection}>
-        <div className={styles.slideFrame}>
-          <div className={styles.fusingSlide}>
-            <RevealOnView className={styles.fusingCopy}>
-              <h2 className={styles.fusingTitle}>Fusing...</h2>
-              <ul className={styles.fusingList}>
-                {FUSING_STEPS.map((step) => (
-                  <li key={step}>{step}</li>
-                ))}
-              </ul>
-            </RevealOnView>
-
-            <RevealOnView className={styles.fusingTransitionStage} delayMs={120}>
-              <svg className={styles.fusingFanLines} viewBox="0 0 520 580" fill="none" aria-hidden="true">
-                {[
-                  [32, 10, 212, 560],
-                  [150, 0, 280, 560],
-                  [260, 0, 260, 560],
-                  [372, 0, 240, 560],
-                  [488, 10, 310, 560],
-                ].map(([x1, y1, x2, y2]) => (
-                  <line key={`${x1}-${x2}`} x1={x1} y1={y1} x2={x2} y2={y2} className={styles.dashedPathGray} />
-                ))}
+              {/* Final arrow */}
+              <svg className={styles.pipelineArrowH} viewBox="0 0 60 24" fill="none" aria-hidden>
+                <path d="M0 12 L48 12 M40 4 L48 12 L40 20" className={styles.dashedPathRed} />
               </svg>
 
-              <div className={styles.fusingConnector} />
-              <PremiumDatabaseModel />
-            </RevealOnView>
-          </div>
-        </div>
-      </Slide>
+              {/* Result */}
+              <div className={styles.pipelineResult}>
+                <span>Insights, Patterns, Answers.</span>
+              </div>
+            </div>
 
-      <GridScrollSequence />
-
-      <Slide id="core-reasoning" className={styles.coreReasoningSlide}>
-        <div className={styles.verticalLineOverlay} aria-hidden="true" />
-        <div className={styles.slideFrame}>
-          <RevealOnView className={styles.coreReasoningBody}>
-            <p className={styles.kicker}>Core Reasoning</p>
-            <h2 className={styles.sectionTitleNarrow}>Reasoning with Space and Geography</h2>
-            <p className={styles.coreReasoningText}>
-              Building an artificial intelligence to comprehend, and critically
-              think in coordinate spaces.
-            </p>
+            <a href="/maps-gpt" className={styles.sectionCta}>
+              <span>Try it yourself</span>
+              <svg width="10" height="18" viewBox="0 0 10 18" fill="none" aria-hidden>
+                <path d="M1 1l8 8-8 8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </a>
           </RevealOnView>
         </div>
       </Slide>
 
-      <Slide id="genlayers" className={styles.fullBleedSection}>
+      {/* ── 4. Results ── */}
+      <Slide id="data-collection" className={styles.dataCollectionSection}>
         <div className={styles.slideFrame}>
-          <div className={styles.genlayersSlide}>
-            <Image src="/forest.png" alt="Mapping the unknown with GenLayers" fill sizes="100vw" className={styles.coverImage} />
-            <div className={styles.imageShadeStrong} />
+          <RevealOnView className={styles.editorialSlide}>
+            <h2 className={styles.sectionTitle}>Results</h2>
+            <p className={styles.sectionLead}>
+              The products of an LGM — what it produces, how it performs, and
+              how it compares.
+            </p>
 
-            <RevealOnView className={styles.genlayersHeader}>
-              <h2>Mapping the unknown with GenLayers.</h2>
-              <p>
-                How we generate new layers of geospatial intelligence, using big
-                data and sophisticated reasoning to extrapolate.
-              </p>
-            </RevealOnView>
-
-            <div className={styles.genlayersShapes} aria-hidden="true">
-              <div className={styles.genShapeLeft} />
-              <div className={styles.genShapeRight} />
+            <div className={styles.metricGrid}>
+              <div className={styles.metricCard}>
+                <span className={styles.metricNumber}>13T+</span>
+                <span className={styles.metricLabel}>Grid cells indexed</span>
+              </div>
+              <div className={styles.metricCard}>
+                <span className={styles.metricNumber}>100m</span>
+                <span className={styles.metricLabel}>Resolution per cell</span>
+              </div>
+              <div className={styles.metricCard}>
+                <span className={styles.metricNumber}>Global</span>
+                <span className={styles.metricLabel}>Earth coverage</span>
+              </div>
+              <div className={styles.metricCard}>
+                <span className={styles.metricNumber}>3&times;</span>
+                <span className={styles.metricLabel}>Accuracy vs traditional</span>
+              </div>
+              <div className={styles.metricCard}>
+                <span className={styles.metricNumber}>Real-time</span>
+                <span className={styles.metricLabel}>Processing speed</span>
+              </div>
+              <div className={styles.metricCard}>
+                <span className={styles.metricNumber}>500+</span>
+                <span className={styles.metricLabel}>Data sources fused</span>
+              </div>
             </div>
 
-            <div className={styles.calloutConnectorLeft} aria-hidden="true" />
-            <div className={styles.calloutConnectorRight} aria-hidden="true" />
-
-            <div className={styles.genlayersCallouts}>
-              {GENLAYERS_OVERLAYS.map((overlay, index) => (
-                <RevealOnView
-                  key={overlay.id}
-                  className={[
-                    styles.genlayersCallout,
-                    index === 0 ? styles.genlayersCalloutLeft : styles.genlayersCalloutRight,
-                  ].join(" ")}
-                  delayMs={120 + index * 80}
-                >
-                  {overlay.items.map((item) => (
-                    <p key={item}>{item}</p>
-                  ))}
-                </RevealOnView>
-              ))}
-            </div>
-          </div>
+            <a href="/use-cases" className={styles.sectionCta}>
+              <span>See it in action</span>
+              <svg width="10" height="18" viewBox="0 0 10 18" fill="none" aria-hidden>
+                <path d="M1 1l8 8-8 8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </a>
+          </RevealOnView>
         </div>
       </Slide>
 
+      {/* ── 5. Research ── */}
       <Slide id="research-blog">
         <div className={styles.slideFrame}>
-          <RevealOnView className={styles.researchSlide}>
-            <div className={styles.researchHead}>
-              <h2>Columbus Research</h2>
-              <p>Explore the innovative research and recent papers from our team</p>
-            </div>
-            <div className={styles.researchDivider} />
-            <h3 className={styles.researchSubhead}>Read our latest releases</h3>
+          <RevealOnView className={`${styles.editorialSlide} ${styles.researchEditorial}`}>
 
-            <div className={styles.researchScroller}>
-              {RESEARCH_CARDS.map((card) => (
+            <h2 className={styles.sectionTitle}>Read our latest releases</h2>
+            <p className={styles.sectionLead}>
+              Explore the innovative research and recent papers from our team.
+            </p>
+
+            {/* Featured papers — rectangular card grid */}
+            <div className={styles.researchCardGrid}>
+              {/* Card 1: Philosophy — wireframe globe */}
+              <a href={RESEARCH_CARDS[0].href} className={styles.researchCard}>
+                <svg className={styles.researchCardArt} viewBox="0 0 200 200" fill="none" aria-hidden>
+                  <circle cx="100" cy="100" r="70" stroke="rgba(37,99,235,0.3)" strokeWidth="1" />
+                  <ellipse cx="100" cy="100" rx="70" ry="30" stroke="rgba(37,99,235,0.22)" strokeWidth="0.8" />
+                  <ellipse cx="100" cy="100" rx="70" ry="50" stroke="rgba(37,99,235,0.22)" strokeWidth="0.8" />
+                  <ellipse cx="100" cy="100" rx="30" ry="70" stroke="rgba(37,99,235,0.22)" strokeWidth="0.8" />
+                  <ellipse cx="100" cy="100" rx="50" ry="70" stroke="rgba(37,99,235,0.22)" strokeWidth="0.8" />
+                  <line x1="30" y1="100" x2="170" y2="100" stroke="rgba(37,99,235,0.35)" strokeWidth="1" />
+                  <line x1="100" y1="30" x2="100" y2="170" stroke="rgba(37,99,235,0.35)" strokeWidth="1" />
+                  <line x1="30" y1="80" x2="170" y2="80" stroke="rgba(37,99,235,0.15)" strokeWidth="0.6" />
+                  <line x1="30" y1="120" x2="170" y2="120" stroke="rgba(37,99,235,0.15)" strokeWidth="0.6" />
+                </svg>
+                <span className={styles.researchCardTitle}>{RESEARCH_CARDS[0].title}</span>
+                <span className={styles.researchCardArrow}>&#8599;</span>
+              </a>
+
+              {/* Card 2: Architecture — grid/network diagram */}
+              <a href={RESEARCH_CARDS[1].href} className={styles.researchCard}>
+                <svg className={styles.researchCardArt} viewBox="0 0 200 200" fill="none" aria-hidden>
+                  {/* Grid lines */}
+                  {[40, 80, 120, 160].map(x => (
+                    <line key={`v${x}`} x1={x} y1="30" x2={x} y2="170" stroke="rgba(37,99,235,0.18)" strokeWidth="0.6" />
+                  ))}
+                  {[40, 80, 120, 160].map(y => (
+                    <line key={`h${y}`} x1="30" y1={y} x2="170" y2={y} stroke="rgba(37,99,235,0.18)" strokeWidth="0.6" />
+                  ))}
+                  {/* Nodes */}
+                  {[[40,40],[80,80],[120,40],[160,80],[80,120],[120,120],[160,160],[40,160]].map(([x,y]) => (
+                    <circle key={`n${x}${y}`} cx={x} cy={y} r="3.5" fill="rgba(37,99,235,0.35)" />
+                  ))}
+                  {/* Connections */}
+                  <path d="M40 40 L80 80 L120 40 L160 80" stroke="rgba(37,99,235,0.3)" strokeWidth="1" />
+                  <path d="M80 80 L80 120 L120 120 L160 160" stroke="rgba(37,99,235,0.3)" strokeWidth="1" />
+                  <path d="M40 160 L80 120" stroke="rgba(37,99,235,0.25)" strokeWidth="1" />
+                  <path d="M120 40 L120 120" stroke="rgba(37,99,235,0.2)" strokeWidth="0.8" strokeDasharray="4 3" />
+                </svg>
+                <span className={styles.researchCardTitle}>{RESEARCH_CARDS[1].title}</span>
+                <span className={styles.researchCardArrow}>&#8599;</span>
+              </a>
+
+              {/* Card 3: Brain — neural network pattern */}
+              <a href={RESEARCH_CARDS[2].href} className={styles.researchCard}>
+                <svg className={styles.researchCardArt} viewBox="0 0 200 200" fill="none" aria-hidden>
+                  {/* Input layer */}
+                  {[60, 100, 140].map(y => (
+                    <circle key={`i${y}`} cx="40" cy={y} r="5" stroke="rgba(37,99,235,0.35)" strokeWidth="1" fill="none" />
+                  ))}
+                  {/* Hidden layer 1 */}
+                  {[50, 85, 115, 150].map(y => (
+                    <circle key={`h1${y}`} cx="100" cy={y} r="5" stroke="rgba(37,99,235,0.35)" strokeWidth="1" fill="none" />
+                  ))}
+                  {/* Output layer */}
+                  {[75, 125].map(y => (
+                    <circle key={`o${y}`} cx="160" cy={y} r="5" stroke="rgba(37,99,235,0.35)" strokeWidth="1" fill="none" />
+                  ))}
+                  {/* Connections: input → hidden */}
+                  {[60, 100, 140].flatMap(iy =>
+                    [50, 85, 115, 150].map(hy => (
+                      <line key={`ih${iy}${hy}`} x1="45" y1={iy} x2="95" y2={hy} stroke="rgba(37,99,235,0.15)" strokeWidth="0.6" />
+                    ))
+                  )}
+                  {/* Connections: hidden → output */}
+                  {[50, 85, 115, 150].flatMap(hy =>
+                    [75, 125].map(oy => (
+                      <line key={`ho${hy}${oy}`} x1="105" y1={hy} x2="155" y2={oy} stroke="rgba(37,99,235,0.15)" strokeWidth="0.6" />
+                    ))
+                  )}
+                  {/* Highlight a couple connections */}
+                  <line x1="45" y1="100" x2="95" y2="85" stroke="rgba(37,99,235,0.4)" strokeWidth="1.2" />
+                  <line x1="105" y1="85" x2="155" y2="75" stroke="rgba(37,99,235,0.4)" strokeWidth="1.2" />
+                </svg>
+                <span className={styles.researchCardTitle}>{RESEARCH_CARDS[2].title}</span>
+                <span className={styles.researchCardArrow}>&#8599;</span>
+              </a>
+            </div>
+
+            {/* All articles — clean list rows */}
+            <div className={styles.articleList}>
+              {RESEARCH_ARTICLES.map((article) => (
                 <a
-                  key={card.title}
-                  href={card.href}
-                  className={[
-                    styles.researchCard,
-                    card.featured ? styles.researchCardFeatured : styles.researchCardThin,
-                  ].join(" ")}
+                  key={article.title}
+                  href={article.href}
+                  className={styles.articleRow}
                 >
-                  {card.featured ? <span className={styles.researchArrow}>↗</span> : null}
-                  <span>{card.title}</span>
+                  <span className={styles.articleRowTitle}>{article.title}</span>
+                  <div className={styles.articleRowRight}>
+                    <span className={styles.articleRowDate}>{article.date}</span>
+                    <span className={styles.articleRowArrow}>&rarr;</span>
+                  </div>
+                  <span className={styles.articleRowHoverLine} />
                 </a>
               ))}
             </div>
@@ -359,71 +453,16 @@ export function TechnologySections() {
         </div>
       </Slide>
 
-      <Slide id="dynamic-layers" className={styles.fullBleedSection}>
-        <div className={styles.slideFrame}>
-          <div className={styles.dynamicSlide}>
-            <div className={styles.dynamicTopBlur} aria-hidden="true" />
-            <div className={styles.dynamicBottomBlur} aria-hidden="true" />
-
-            <RevealOnView className={styles.dynamicHeading}>
-              <h2>
-                Dynamically creating geodata layers, without complex and expensive
-                surveying.
-              </h2>
-              <a href="#" className={styles.dynamicPill}>
-                Explore more maps we&apos;ve made ↗
-              </a>
-            </RevealOnView>
-
-            <div className={styles.dynamicColumns}>
-              <article className={styles.dynamicColumn}>
-                <Image src="/tokyo.png" alt="Solar roof possibility layer" fill sizes="33vw" className={styles.coverImage} />
-                <div className={styles.dynamicShadeLeft} />
-                <div className={styles.dynamicPinLayer}>
-                  <DynamicPins />
-                </div>
-                <div className={styles.dynamicCaption}>
-                  <small>Columbus GenLayer</small>
-                  <p>{DYNAMIC_LAYER_CAPTIONS[0]}</p>
-                </div>
-              </article>
-
-              <article className={styles.dynamicColumn}>
-                <Image src="/heropage.png" alt="Resident vibes layer" fill sizes="33vw" className={styles.coverImage} />
-                <div className={styles.dynamicShadeMid} />
-                <div className={styles.dynamicCaption}>
-                  <small>Columbus GenLayer</small>
-                  <p>{DYNAMIC_LAYER_CAPTIONS[1]}</p>
-                </div>
-              </article>
-
-              <article className={styles.dynamicColumn}>
-                <Image src="/heropage.png" alt="Safety score layer" fill sizes="33vw" className={styles.coverImageRight} />
-                <div className={styles.dynamicShadeRight} />
-                <div className={styles.dynamicPinLayer}>
-                  <DynamicPins right />
-                </div>
-                <div className={styles.dynamicCaption}>
-                  <small>Columbus GenLayer</small>
-                  <p>{DYNAMIC_LAYER_CAPTIONS[2]}</p>
-                </div>
-              </article>
-            </div>
-          </div>
-        </div>
-      </Slide>
-
+      {/* ── 6. Careers ── */}
       <Slide id="careers" className={styles.noSnapSection}>
         <div className={styles.slideFrame}>
-          <RevealOnView className={styles.careersSlide}>
-            <div className={styles.careersHead}>
-              <h2>Careers</h2>
-              <p>
-                If you&apos;re excited about creating paradigm shifts in physical
-                world understanding. <strong>Join us now.</strong>
-              </p>
-            </div>
-            <div className={styles.researchDivider} />
+          <RevealOnView className={styles.editorialSlide}>
+
+            <h2 className={styles.sectionTitle}>Careers</h2>
+            <p className={styles.sectionLead}>
+              If you&apos;re excited about creating paradigm shifts in physical
+              world understanding. <strong>Join us now.</strong>
+            </p>
 
             <form
               action="mailto:contact@columbus.earth?subject=Careers%20Application"
@@ -452,6 +491,7 @@ export function TechnologySections() {
         </div>
       </Slide>
 
+      {/* ── 7. Hiring Humans ── */}
       <Slide
         id="hiring-humans"
         className={[styles.hiringSection, styles.fullBleedSection, styles.noSnapSection].join(" ")}
@@ -466,6 +506,7 @@ export function TechnologySections() {
           </div>
         </div>
       </Slide>
+      </div>
     </>
   );
 }
