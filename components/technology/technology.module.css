@@ -146,13 +146,14 @@
   left: 0;
   top: 0;
   bottom: 0;
-  width: 180px;
+  /* Width tracks the navbar's left gutter, so the border-right divider
+     line lands exactly at the navbar logo's left edge x-position
+     (max((100vw - 1287px)/2, 24px) — same formula the navbar uses). */
+  width: max(24px, calc((100vw - 1287px) / 2));
   pointer-events: none;
   z-index: 5;
   background: transparent;
   border: none;
-  /* Vertical divider line at the right edge of the sidebar zone,
-     visually separating the index column from the content area. */
   border-right: 1px solid rgba(10, 19, 68, 0.12);
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
@@ -231,30 +232,20 @@
   min-height: 100vh;
   display: flex;
   align-items: center;
-  /* V2: Center the section's CONTENT to the navbar's 1287px max-width
-     while the section element (and its background) extends edge-to-edge
-     across the viewport. */
+  /* V2: Section CONTENT centered to navbar's 1287px band with the
+     same 40px horizontal padding the hero uses (.techHeroContent
+     has padding: 0 40px), so section text starts and ends at the
+     same x as the hero title. The section element + background
+     above this still spans the full viewport. */
   max-width: 1287px;
   margin: 0 auto;
-  padding-inline: 24px;
+  padding-inline: 40px;
   box-sizing: border-box;
-}
-
-@media (min-width: 1287px) {
-  .slideFrame {
-    padding-inline: 0;
-  }
 }
 
 .section:not(.fullBleedSection):not(.lgmSlide) .slideFrame {
   /* Padding-inline already handled in the base .slideFrame rule. */
-  padding-inline: 24px;
-}
-
-@media (min-width: 1287px) {
-  .section:not(.fullBleedSection):not(.lgmSlide) .slideFrame {
-    padding-inline: 0;
-  }
+  padding-inline: 40px;
 }
 
 .fullBleedSection .slideFrame {
