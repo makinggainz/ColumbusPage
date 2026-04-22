@@ -148,12 +148,24 @@
   left: 0;
   top: 0;
   bottom: 0;
+  width: 180px;
   pointer-events: none;
   z-index: 5;
   background: transparent;
   border: none;
+  /* Vertical divider line at the right edge of the sidebar zone,
+     visually separating the index column from the content area. */
+  border-right: 1px solid rgba(10, 19, 68, 0.12);
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
+  /* Visibility gated by the index's pastHero state via :has(). The
+     line + labels fade in together once the user scrolls past hero. */
+  opacity: 0;
+  transition: opacity 320ms ease;
+}
+
+.sidebarPanel:has(.scrollIndexVisible) {
+  opacity: 1;
 }
 
 .sidebarPanelSticky {
