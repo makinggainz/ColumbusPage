@@ -141,10 +141,12 @@
 
 .sidebarPanelSticky {
   position: sticky;
-  top: 100px;
+  /* Pin the sidebar's vertical center at the viewport midpoint so the
+     index bar sits centered on the user's screen while scrolling. */
+  top: 50vh;
+  transform: translateY(-50%);
   padding: 24px 0;
   margin-left: 12px;
-  padding-top: clamp(80px, 12vh, 160px);
 }
 
 /* Content area — right edge aligns with navbar Start Now button.
@@ -3096,13 +3098,12 @@
 }
 
 /* ── Research blog: reduce right inset to match homepage right boundary ── */
+/* Research Blog block — now inherits the same symmetric .editorialSlide
+   padding as every other section so its left + right edges line up with
+   the rest of the page. (Previous version pinned the right edge to the
+   navbar CTA via a margin-right formula; that made it the one outlier.) */
 .researchEditorial {
-  /* Right edge aligned with the navbar Start Now CTA's right border
-     (navbar max-width 1287px centered with a 24px min gutter). Subtract
-     the slideFrame's content gutter since this lives inside .slideFrame. */
-  margin-left: 0;
-  margin-right: max(0px, calc(max(24px, calc((100vw - 1287px) / 2)) - var(--tech-content-gutter)));
-  padding-right: 0;
+  /* intentionally empty */
 }
 
 /* ═══════════════════════════════════════════════════════════════
