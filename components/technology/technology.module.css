@@ -5,11 +5,80 @@
   --tech-shell-gap: clamp(18px, 2.3vw, 32px);
   --tech-shell-inline: clamp(14px, 2.3vw, 40px);
   --tech-content-gutter: clamp(18px, 2.05vw, 32px);
+
+  /* ────────────────────────────────────────────────────────────────
+     DESIGN TOKENS — see design-system/technology-page.md
+     ──────────────────────────────────────────────────────────────── */
+
+  /* Type scale (px, mirrors Mission) */
+  --tech-fs-h1: 61px;
+  --tech-fs-h2: 49px;
+  --tech-fs-h3: 39px;
+  --tech-fs-h4: 28px;
+  --tech-fs-h5: 22px;
+  --tech-fs-body-lg: 20px;
+  --tech-fs-body: 18px;
+  --tech-fs-body-sm: 16px;
+  --tech-fs-caption: 13px;
+
+  /* Color — light surface defaults */
+  --tech-color-text: #1D1D1F;
+  --tech-color-text-brand: #0A1344;
+  --tech-color-text-secondary: #6E6E73;
+  --tech-color-text-muted: rgba(10, 19, 68, 0.45);
+  --tech-color-bg: #F9F9F9;
+  --tech-color-bg-card: #FFFFFF;
+  --tech-color-accent: #2563EB;
+  --tech-color-border: rgba(37, 99, 235, 0.3);
+  --tech-color-divider: rgba(0, 0, 0, 0.07);
+  --tech-color-card-border: rgba(10, 19, 68, 0.10);
+
+  /* Spacing (4px multiples only) */
+  --tech-space-section-sm: 96px;
+  --tech-space-section: 112px;
+  --tech-space-section-lg: 128px;
+  --tech-space-section-xl: 160px;
+  --tech-space-section-hero: 192px;
+
+  /* Radius */
+  --tech-radius-sm: 3px;
+  --tech-radius-base: 6px;
+  --tech-radius-md: 10px;
+  --tech-radius-lg: 14px;
+  --tech-radius-xl: 18px;
+  --tech-radius-2xl: 24px;
+  --tech-radius-full: 9999px;
+
+  /* Letter spacing */
+  --tech-tracking-tight: -0.02em;
+  --tech-tracking-snug: -0.01em;
+  --tech-tracking-wide: 0.08em;
+
+  font-family: var(--font-geist-sans), 'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif;
+
   /* Extra 12px lets window.scrollTo(0,11) work for navbar compact detection */
   min-height: calc(100vh + 12px);
-  background-color: #000;
-  color: #0a1628;
+  background-color: var(--tech-color-bg);
+  color: var(--tech-color-text);
   overflow-x: clip;
+}
+
+/* Dark surface modifier — flips text/border/bg tokens within its subtree.
+   Apply this className to any wrapper that should render on a dark background
+   (e.g. .genLayersBand). All descendants using var(--tech-color-*) auto-flip. */
+.darkSurface {
+  --tech-color-text: rgba(255, 255, 255, 1);
+  --tech-color-text-brand: rgba(255, 255, 255, 1);
+  --tech-color-text-secondary: rgba(255, 255, 255, 0.75);
+  --tech-color-text-muted: rgba(255, 255, 255, 0.45);
+  --tech-color-bg: #060810;
+  --tech-color-bg-card: rgba(255, 255, 255, 0.06);
+  --tech-color-border: rgba(255, 255, 255, 0.10);
+  --tech-color-divider: rgba(255, 255, 255, 0.06);
+  --tech-color-card-border: rgba(255, 255, 255, 0.10);
+
+  background: var(--tech-color-bg);
+  color: var(--tech-color-text);
 }
 
 .dotGrid {
@@ -419,9 +488,7 @@
 }
 
 .lgmSlide {
-  background:
-    radial-gradient(circle at 26% 92%, rgba(123, 144, 213, 0.35) 0%, transparent 38%),
-    linear-gradient(105deg, #f4f5f8 0%, #dde8f5 48%, #9ec9e9 100%);
+  background: var(--tech-color-bg);
 }
 
 .lgmWrap {
@@ -525,11 +592,11 @@
 
 .kicker {
   margin: 0;
-  font-size: 13px;
+  font-size: var(--tech-fs-caption);
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: var(--tech-tracking-wide);
   text-transform: uppercase;
-  color: #1D1D1F;
+  color: var(--tech-color-text);
 }
 
 .dataSlide {
@@ -538,8 +605,7 @@
 
 .dataCollectionSection {
   min-height: auto;
-  /* Match LGM section gradient end so no white block appears below it */
-  background: linear-gradient(180deg, #9ec9e9 0%, #ffffff 12%);
+  background: var(--tech-color-bg);
 }
 
 .dataCollectionSection .slideFrame {
@@ -552,19 +618,19 @@
 .sectionTitle {
   margin: 12px 0 0;
   max-width: 920px;
-  font-size: clamp(1.7rem, 2.8vw, 2.4rem);
+  font-size: var(--tech-fs-h3);
   font-weight: 500;
-  letter-spacing: -0.02em;
+  letter-spacing: var(--tech-tracking-tight);
   line-height: 1.2;
-  color: #1D1D1F;
+  color: var(--tech-color-text);
 }
 
 .sectionLead {
   margin: 16px 0 0;
   max-width: 700px;
-  font-size: clamp(1rem, 1.2vw, 1.12rem);
+  font-size: var(--tech-fs-body-lg);
   line-height: 1.6;
-  color: #6E6E73;
+  color: var(--tech-color-text-secondary);
 }
 
 /* ── Editorial section (Why an LGM, Results, Research) ── */
@@ -584,9 +650,9 @@
 
 .editorialBody p {
   margin: 0;
-  font-size: clamp(1rem, 1.15vw, 1.1rem);
-  line-height: 1.65;
-  color: #6E6E73;
+  font-size: var(--tech-fs-body);
+  line-height: 1.6;
+  color: var(--tech-color-text-secondary);
 }
 
 /* ── LGM vs LLM comparison (4-column) ── */
@@ -2896,11 +2962,12 @@
 
 .sectionEyebrow {
   display: block;
-  font-size: 13px;
-  font-weight: 400;
-  letter-spacing: 0.01em;
-  color: #6E6E73;
-  margin-bottom: 6px;
+  font-size: var(--tech-fs-caption);
+  font-weight: 700;
+  letter-spacing: var(--tech-tracking-wide);
+  text-transform: uppercase;
+  color: var(--tech-color-text);
+  margin-bottom: 8px;
 }
 
 .lgmCompareLayout {
@@ -3111,29 +3178,29 @@
 
 .lgmKicker {
   margin: 0 0 16px;
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.14em;
+  font-size: var(--tech-fs-caption);
+  font-weight: 700;
+  letter-spacing: var(--tech-tracking-wide);
   text-transform: uppercase;
-  color: #6E6E73;
+  color: var(--tech-color-text);
 }
 
 .lgmFoundationalTitle {
   margin: 0;
   max-width: 980px;
-  font-size: clamp(1.9rem, 3.2vw, 2.9rem);
+  font-size: var(--tech-fs-h3);
   font-weight: 500;
-  letter-spacing: -0.02em;
-  line-height: 1.15;
-  color: #1D1D1F;
+  letter-spacing: var(--tech-tracking-tight);
+  line-height: 1.2;
+  color: var(--tech-color-text);
 }
 
 .lgmFoundationalLead {
-  margin: 14px 0 0;
+  margin: 16px 0 0;
   max-width: 700px;
-  font-size: clamp(1rem, 1.15vw, 1.1rem);
+  font-size: var(--tech-fs-body-lg);
   line-height: 1.55;
-  color: #1D1D1F;
+  color: var(--tech-color-text);
 }
 
 .lgmTimeline {
@@ -3167,9 +3234,9 @@
 }
 
 .lgmTimelineYear {
-  font-size: 13px;
+  font-size: var(--tech-fs-caption);
   font-weight: 400;
-  color: #6E6E73;
+  color: var(--tech-color-text-secondary);
   letter-spacing: 0.01em;
 }
 
@@ -3188,7 +3255,7 @@
 .lgmTimelineLine {
   position: relative;
   height: 1px;
-  background: linear-gradient(to right, rgba(10, 19, 68, 0.28) 0%, rgba(10, 19, 68, 0.12) 100%);
+  background: var(--tech-color-border);
   display: grid;
   grid-template-columns: repeat(4, 1fr);
 }
@@ -3196,27 +3263,28 @@
 .lgmTimelineTick {
   width: 1px;
   height: 12px;
-  background: rgba(10, 19, 68, 0.45);
+  background: var(--tech-color-text);
+  opacity: 0.45;
   margin-top: -6px;
   justify-self: start;
 }
 
 .lgmTimelineLabel {
-  font-size: clamp(1.1rem, 1.4vw, 1.35rem);
+  font-size: var(--tech-fs-h5);
   font-weight: 500;
-  color: #1D1D1F;
-  line-height: 1.22;
-  letter-spacing: -0.01em;
+  color: var(--tech-color-text);
+  line-height: 1.3;
+  letter-spacing: var(--tech-tracking-snug);
 }
 
 .lgmTimelineLink {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  margin-top: 10px;
-  font-size: 13px;
+  margin-top: 12px;
+  font-size: var(--tech-fs-caption);
   font-weight: 500;
-  color: #2563EB;
+  color: var(--tech-color-accent);
   text-decoration: none;
   width: fit-content;
   transition: opacity 200ms ease;
@@ -3277,11 +3345,13 @@
 
 .lgmArticleCard p {
   margin: 0;
-  font-size: clamp(1.1rem, 1.35vw, 1.3rem);
+  font-size: var(--tech-fs-body-lg);
   font-weight: 400;
   line-height: 1.55;
+  /* Article cards are a self-contained light surface — pin to dark text
+     even when nested inside a .darkSurface block (per design spec). */
   color: #1D1D1F;
-  letter-spacing: -0.01em;
+  letter-spacing: var(--tech-tracking-snug);
 }
 
 .lgmArticleCard p strong {
@@ -3318,19 +3388,19 @@
 
 .coreResearchTitle {
   margin: 4px 0 0;
-  font-size: clamp(1.6rem, 2.4vw, 2.1rem);
-  font-weight: 600;
-  letter-spacing: -0.02em;
-  color: #1D1D1F;
-  line-height: 1.15;
+  font-size: var(--tech-fs-h4);
+  font-weight: 500;
+  letter-spacing: var(--tech-tracking-tight);
+  color: var(--tech-color-text);
+  line-height: 1.25;
 }
 
 .coreResearchLead {
   margin: 20px 0 0;
   max-width: 420px;
-  font-size: clamp(0.98rem, 1.1vw, 1.05rem);
+  font-size: var(--tech-fs-body-lg);
   line-height: 1.55;
-  color: #1D1D1F;
+  color: var(--tech-color-text);
 }
 
 .coreResearchStarburst {
@@ -3353,9 +3423,9 @@
 
 .coreResearchAside p {
   margin: 0;
-  font-size: clamp(0.98rem, 1.1vw, 1.05rem);
-  line-height: 1.55;
-  color: #1D1D1F;
+  font-size: var(--tech-fs-body);
+  line-height: 1.6;
+  color: var(--tech-color-text);
 }
 
 .coreResearchAsideLink {
@@ -3363,9 +3433,9 @@
   align-items: center;
   gap: 4px;
   margin-top: 20px;
-  font-size: 14px;
+  font-size: var(--tech-fs-caption);
   font-weight: 500;
-  color: #2563EB;
+  color: var(--tech-color-accent);
   text-decoration: none;
   transition: opacity 200ms ease;
 }
@@ -3375,12 +3445,12 @@
 }
 
 .coreResearchIntroLine {
-  margin: clamp(60px, 8vw, 96px) auto clamp(28px, 4vw, 48px);
+  margin: clamp(64px, 8vw, 96px) auto clamp(32px, 4vw, 48px);
   max-width: 620px;
   text-align: center;
-  font-size: clamp(0.98rem, 1.12vw, 1.08rem);
-  line-height: 1.55;
-  color: #1D1D1F;
+  font-size: var(--tech-fs-body);
+  line-height: 1.6;
+  color: var(--tech-color-text);
 }
 
 .coreResearchGrid {
@@ -3409,53 +3479,54 @@
 }
 
 .coreResearchGroup p {
-  margin: 10px 0 0;
-  font-size: clamp(0.95rem, 1.05vw, 1rem);
-  line-height: 1.55;
-  color: #1D1D1F;
+  margin: 12px 0 0;
+  font-size: var(--tech-fs-body);
+  line-height: 1.6;
+  color: var(--tech-color-text);
 }
 
 .coreResearchGroup mark {
   background: rgba(180, 210, 240, 0.55);
   color: inherit;
   padding: 1px 3px;
-  border-radius: 3px;
+  border-radius: var(--tech-radius-sm);
 }
 
 .coreResearchGroupHead {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
 }
 
 .coreResearchGroupDash {
   width: 36px;
   height: 1px;
-  background: rgba(10, 19, 68, 0.55);
+  background: var(--tech-color-text);
+  opacity: 0.55;
 }
 
 .coreResearchGroupHead h3 {
   margin: 0;
-  font-size: clamp(1rem, 1.15vw, 1.1rem);
-  font-weight: 600;
-  letter-spacing: -0.01em;
-  color: #1D1D1F;
+  font-size: var(--tech-fs-h5);
+  font-weight: 500;
+  letter-spacing: var(--tech-tracking-snug);
+  color: var(--tech-color-text);
 }
 
 .coreResearchGroupPlus {
   margin-left: 2px;
-  font-size: 15px;
-  color: #1D1D1F;
+  font-size: var(--tech-fs-body-sm);
+  color: var(--tech-color-text);
 }
 
 .coreResearchGroupLink {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  margin-top: 14px;
-  font-size: 14px;
+  margin-top: 16px;
+  font-size: var(--tech-fs-caption);
   font-weight: 500;
-  color: #2563EB;
+  color: var(--tech-color-accent);
   text-decoration: none;
   transition: opacity 200ms ease;
 }
@@ -3476,12 +3547,12 @@
   align-items: center;
   gap: 8px;
   padding: 8px 16px;
-  border-radius: 999px;
-  background: #fff;
-  box-shadow: inset 0 0 0 1px rgba(10, 19, 68, 0.1), 0 1px 2px rgba(10, 19, 68, 0.04);
-  font-size: 0.95rem;
+  border-radius: var(--tech-radius-full);
+  background: var(--tech-color-bg-card);
+  box-shadow: inset 0 0 0 1px var(--tech-color-card-border), 0 1px 2px rgba(10, 19, 68, 0.04);
+  font-size: var(--tech-fs-body-sm);
   font-weight: 500;
-  color: #1D1D1F;
+  color: var(--tech-color-text);
 }
 
 .coreResearchProductGlyph {
@@ -3529,20 +3600,20 @@
 }
 
 .resultsTitle {
-  margin: 6px 0 0;
-  font-size: clamp(1.8rem, 2.8vw, 2.5rem);
-  font-weight: 600;
-  letter-spacing: -0.01em;
-  color: #1D1D1F;
-  line-height: 1.15;
+  margin: 8px 0 0;
+  font-size: var(--tech-fs-h3);
+  font-weight: 500;
+  letter-spacing: var(--tech-tracking-tight);
+  color: var(--tech-color-text);
+  line-height: 1.2;
 }
 
 .resultsLead {
   margin: 16px 0 0;
   max-width: 640px;
-  font-size: clamp(0.98rem, 1.1vw, 1.05rem);
+  font-size: var(--tech-fs-body-lg);
   line-height: 1.55;
-  color: #1D1D1F;
+  color: var(--tech-color-text);
 }
 
 .resultsGrid {
@@ -3556,10 +3627,10 @@
 .resultsCard {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
-  gap: 20px;
+  gap: 24px;
   align-items: center;
-  padding-bottom: clamp(24px, 3vw, 36px);
-  border-bottom: 1px solid rgba(10, 19, 68, 0.1);
+  padding-bottom: clamp(24px, 3vw, 40px);
+  border-bottom: 1px solid var(--tech-color-card-border);
 }
 
 .resultsCard:nth-last-child(-n+2) {
@@ -3580,27 +3651,28 @@
   justify-content: center;
   width: 28px;
   height: 28px;
-  border-radius: 4px;
-  background: #2e5ce0;
+  border-radius: var(--tech-radius-sm);
+  background: var(--tech-color-accent);
   color: #fff;
-  font-size: 13px;
+  font-size: var(--tech-fs-caption);
   font-weight: 600;
 }
 
 .resultsCardText {
   margin: 0;
-  font-size: clamp(1.05rem, 1.35vw, 1.3rem);
+  font-size: var(--tech-fs-h5);
   font-weight: 500;
-  line-height: 1.25;
-  letter-spacing: -0.01em;
-  color: #1D1D1F;
+  line-height: 1.3;
+  letter-spacing: var(--tech-tracking-snug);
+  color: var(--tech-color-text);
 }
 
 .resultsCardArt {
   position: relative;
   aspect-ratio: 16 / 11;
-  border-radius: 14px;
+  border-radius: var(--tech-radius-lg);
   overflow: hidden;
+  /* Intentional brand-blue map-art surface — kept bespoke per design spec */
   background: #1d3fa6;
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
 }
@@ -3649,44 +3721,38 @@
 }
 
 .genLayersBand {
-  width: 100%;
+  /* The band itself uses the .darkSurface modifier (applied in the TSX),
+     which overrides --tech-color-bg to #060810 and flips text tokens to
+     white opacity tiers per the design spec. */
   margin-inline: calc(var(--tech-content-gutter) * -1);
   width: calc(100% + (var(--tech-content-gutter) * 2));
-  background: linear-gradient(180deg, #2e3ea8 0%, #243293 100%);
-  color: #fff;
-}
-
-.genLayersSection {
-  background: linear-gradient(180deg, #2e3ea8 0%, #243293 100%);
-  color: #fff;
 }
 
 .genLayersInner {
   width: 100%;
-  padding: clamp(56px, 7vw, 96px) clamp(24px, 4vw, 64px);
-  color: #fff;
+  padding: var(--tech-space-section) clamp(24px, 4vw, 64px);
+  color: var(--tech-color-text);
 }
 
 .genLayersHead {
   display: flex;
   align-items: center;
   gap: 12px;
-  color: rgba(255, 255, 255, 0.85);
-  margin-bottom: clamp(28px, 4vw, 48px);
+  margin-bottom: clamp(32px, 4vw, 48px);
 }
 
 .genLayersHeadLine {
   flex: 1;
   height: 1px;
-  background: rgba(255, 255, 255, 0.35);
+  background: var(--tech-color-border);
   max-width: 520px;
 }
 
 .genLayersHeadLabel {
-  font-size: 14px;
+  font-size: var(--tech-fs-caption);
   font-weight: 500;
-  letter-spacing: 0.01em;
-  color: #fff;
+  letter-spacing: var(--tech-tracking-snug);
+  color: var(--tech-color-text);
 }
 
 .genLayersHeadBurst {
@@ -3694,7 +3760,7 @@
   display: inline-flex;
   width: 56px;
   height: 56px;
-  color: #fff;
+  color: var(--tech-color-text);
 }
 
 .genLayersHeadBurst svg {
@@ -3712,14 +3778,14 @@
 .genLayersHeadline {
   margin: 0;
   max-width: 720px;
-  font-size: clamp(1.3rem, 1.9vw, 1.75rem);
+  font-size: var(--tech-fs-h4);
   font-weight: 500;
-  letter-spacing: -0.01em;
+  letter-spacing: var(--tech-tracking-tight);
   line-height: 1.25;
-  color: #fff;
+  color: var(--tech-color-text);
   position: relative;
   z-index: 2;
-  padding-bottom: clamp(20px, 3vw, 32px);
+  padding-bottom: clamp(24px, 3vw, 32px);
 }
 
 .genLayersTilesRow {
@@ -3770,8 +3836,10 @@
 .genLayersTileKicker {
   position: relative;
   z-index: 2;
-  font-size: 11px;
-  letter-spacing: 0.01em;
+  font-size: var(--tech-fs-caption);
+  letter-spacing: var(--tech-tracking-snug);
+  /* Tiles always show on photo content — keep text on white opacity tiers
+     regardless of parent surface flip */
   color: rgba(255, 255, 255, 0.72);
   margin-bottom: 4px;
 }
@@ -3779,10 +3847,10 @@
 .genLayersTileTitle {
   position: relative;
   z-index: 2;
-  font-size: clamp(1rem, 1.2vw, 1.2rem);
+  font-size: var(--tech-fs-body-lg);
   font-weight: 500;
-  color: #fff;
-  letter-spacing: -0.01em;
+  color: rgba(255, 255, 255, 1);
+  letter-spacing: var(--tech-tracking-snug);
   margin-bottom: 8px;
 }
 
@@ -3793,12 +3861,12 @@
   align-items: center;
   gap: 8px;
   padding: 12px 24px;
-  border-radius: 999px;
+  border-radius: var(--tech-radius-full);
   background: rgba(255, 255, 255, 0.12);
   backdrop-filter: blur(14px) saturate(1.4);
   -webkit-backdrop-filter: blur(14px) saturate(1.4);
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.25);
-  font-size: 14px;
+  font-size: var(--tech-fs-caption);
   font-weight: 500;
   color: #fff;
   text-decoration: none;
@@ -3817,10 +3885,11 @@
 
 .genLayersGridKicker {
   display: block;
-  font-size: 11px;
-  letter-spacing: 0.12em;
+  font-size: var(--tech-fs-caption);
+  font-weight: 700;
+  letter-spacing: var(--tech-tracking-wide);
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.7);
+  color: var(--tech-color-text-muted);
   margin-bottom: 16px;
 }
 
@@ -3844,9 +3913,10 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  font-size: clamp(1.4rem, 2.2vw, 2rem);
+  font-size: var(--tech-fs-h4);
   font-weight: 400;
   letter-spacing: 0.04em;
+  /* Caption sits over photo content — pin to white regardless of token flips */
   color: #fff;
   text-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
   pointer-events: none;

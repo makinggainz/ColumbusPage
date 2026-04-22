@@ -653,7 +653,7 @@ export function TechnologySections() {
               </div>
             </RevealOnView>
 
-            <div className={styles.genLayersBand}>
+            <div className={`${styles.genLayersBand} ${styles.darkSurface}`}>
               <RevealOnView className={styles.genLayersInner}>
                 <div className={styles.genLayersHead}>
               <span className={styles.genLayersHeadLine} aria-hidden />
