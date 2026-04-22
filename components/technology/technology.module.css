@@ -6,6 +6,10 @@
   --tech-shell-inline: clamp(14px, 2.3vw, 40px);
   --tech-content-gutter: clamp(18px, 2.05vw, 32px);
 
+  /* V2 — x-position of the fixed left sidebar's right edge / divider line.
+     Same formula the navbar uses for its left gutter so things line up. */
+  --tech-sidebar-x: max(24px, calc((100vw - 1287px) / 2));
+
   /* ────────────────────────────────────────────────────────────────
      DESIGN TOKENS — see design-system/technology-page.md
      ──────────────────────────────────────────────────────────────── */
@@ -146,10 +150,9 @@
   left: 0;
   top: 0;
   bottom: 0;
-  /* Width tracks the navbar's left gutter, so the border-right divider
-     line lands exactly at the navbar logo's left edge x-position
-     (max((100vw - 1287px)/2, 24px) — same formula the navbar uses). */
-  width: max(24px, calc((100vw - 1287px) / 2));
+  /* Width tracks the navbar's left gutter — the border-right divider
+     line lands exactly at the navbar logo's left edge x-position. */
+  width: var(--tech-sidebar-x);
   pointer-events: none;
   z-index: 5;
   background: transparent;
@@ -211,7 +214,10 @@
   content: "";
   position: absolute;
   bottom: 0;
-  left: 0;
+  /* V2: the fading blue divider line starts at the sidebar's vertical
+     line on the left (not at viewport edge) so it visually springs
+     from the index column. */
+  left: var(--tech-sidebar-x);
   right: 0;
   height: 1px;
   background: linear-gradient(to right, var(--grid-line, rgba(0, 102, 204, 0.3)) 0%, var(--grid-line, rgba(0, 102, 204, 0.3)) 60%, transparent 100%);
@@ -540,7 +546,13 @@
 }
 
 .lgmSlide {
-  background-color: var(--tech-color-bg);
+  /* V2: bg paints only from the sidebar's right edge to the viewport
+     right, so the left strip (where the sidebar sits) shows the
+     underlying page surface. */
+  background-image: linear-gradient(var(--tech-color-bg), var(--tech-color-bg));
+  background-position: var(--tech-sidebar-x) 0;
+  background-size: calc(100% - var(--tech-sidebar-x)) 100%;
+  background-repeat: no-repeat;
 }
 
 .lgmWrap {
@@ -659,7 +671,11 @@
 
 .dataCollectionSection {
   min-height: auto;
-  background: var(--tech-color-bg);
+  /* V2: bg paints only from the sidebar's right edge to the viewport right. */
+  background-image: linear-gradient(var(--tech-color-bg), var(--tech-color-bg));
+  background-position: var(--tech-sidebar-x) 0;
+  background-size: calc(100% - var(--tech-sidebar-x)) 100%;
+  background-repeat: no-repeat;
 }
 
 .dataCollectionSection .slideFrame {
@@ -2049,12 +2065,17 @@
 
 .coreReasoningSlide {
   position: relative;
-  background: linear-gradient(to bottom,
+  /* V2: vertical gradient bg painted only from the sidebar's right edge
+     to the viewport right (background-position + background-size). */
+  background-image: linear-gradient(to bottom,
     #EEF5FF 0%,
     rgba(133, 180, 234, 0.69) 19%,
     #B5D5FA 31%,
     #E1EFFE 92%,
     #F9F9F9 100%);
+  background-position: var(--tech-sidebar-x) 0;
+  background-size: calc(100% - var(--tech-sidebar-x)) 100%;
+  background-repeat: no-repeat;
 }
 
 /* Section-wide plus-sign pattern overlay (behind all content).
@@ -2062,7 +2083,13 @@
 .coreReasoningSlide::before {
   content: "";
   position: absolute;
-  inset: 0;
+  /* V2: pattern overlay also lives only in the right zone (from the
+     sidebar's right edge to the viewport right), matching the section
+     background. */
+  top: 0;
+  bottom: 0;
+  left: var(--tech-sidebar-x);
+  right: 0;
   pointer-events: none;
   z-index: 0;
   background-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M12 11.5v1M11.5 12h1' stroke='rgba(255,255,255,0.5)' stroke-width='1.6' stroke-linecap='square'/%3E%3C/svg%3E");
