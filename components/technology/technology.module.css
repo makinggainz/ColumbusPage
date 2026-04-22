@@ -2001,6 +2001,19 @@
     #F9F9F9 100%);
 }
 
+/* Section-wide plus-sign pattern overlay (behind all content).
+   Uses ::before because .section::after already defines a 1px bottom divider. */
+.coreReasoningSlide::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M12 11.5v1M11.5 12h1' stroke='rgba(255,255,255,0.5)' stroke-width='1.6' stroke-linecap='square'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 24px 24px;
+}
+
 .verticalLineOverlay {
   position: absolute;
   inset: 0;
@@ -3718,6 +3731,18 @@
   color: #0A1344;
 }
 
+/* Subdued variant — keeps the same 1px white border as the other glass card,
+   but drops the heavy outer "page-bg cutout" ring shadows so the card doesn't
+   read as framed/cut out. */
+.lgmArticleCardFlush {
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  box-shadow: none;
+}
+
+.lgmArticleCardFlush:hover {
+  box-shadow: none;
+}
+
 @media (max-width: 900px) {
   .lgmTimelineLabel {
     font-size: 0.95rem;
@@ -3742,29 +3767,12 @@
 .coreResearchHero {
   position: relative;
   min-height: 480px;
+  z-index: 1;
 }
 
-/* Plus-sign pattern — fades out at bottom (right above the architecture intro line) */
-.coreResearchHero::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
-  background-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M12 11.5v1M11.5 12h1' stroke='rgba(255,255,255,0.5)' stroke-width='1.6' stroke-linecap='square'/%3E%3C/svg%3E");
-  background-repeat: repeat;
-  background-size: 24px 24px;
-  -webkit-mask-image:
-    radial-gradient(ellipse 45% 30% at 25% 22%, transparent 35%, black 90%),
-    radial-gradient(ellipse 38% 22% at 22% 78%, transparent 35%, black 90%),
-    linear-gradient(to bottom, black 0%, black 92%, transparent 100%);
-  -webkit-mask-composite: source-in;
-  mask-image:
-    radial-gradient(ellipse 45% 30% at 25% 22%, transparent 35%, black 90%),
-    radial-gradient(ellipse 38% 22% at 22% 78%, transparent 35%, black 90%),
-    linear-gradient(to bottom, black 0%, black 92%, transparent 100%);
-  mask-composite: intersect;
-}
+/* Plus-sign pattern is applied section-wide on .coreReasoningSlide::after.
+   Per-element backdrop-filter "windows" below provide legibility for text and
+   the diagram by softening pluses behind each element. */
 
 .coreResearchIntroRow {
   position: relative;
@@ -3772,8 +3780,26 @@
 }
 
 .coreResearchIntroText {
+  position: relative;
   min-width: 0;
   max-width: 540px;
+  z-index: 1;
+}
+
+/* Backdrop-blur "legibility window" — softens the section pattern behind text */
+.coreResearchIntroText::before,
+.coreResearchAside::before,
+.coreResearchIntroLine::before,
+.coreResearchArt::before,
+.coreResearchGroup::before {
+  content: "";
+  position: absolute;
+  inset: -16px -32px;
+  z-index: -1;
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  border-radius: 24px;
+  pointer-events: none;
 }
 
 .coreResearchTitle {
@@ -3804,6 +3830,10 @@
   height: 100%;
   pointer-events: none;
   z-index: 0;
+  /* Scaled up 25%, anchored to the right so it still reads as the right-side graphic.
+     Small translate nudges the graphic slightly right and down. */
+  transform: translate(80px, 40px) scale(1.25);
+  transform-origin: right center;
 }
 
 .coreResearchStarburst svg {
@@ -3816,8 +3846,8 @@
 .coreResearchAside {
   position: relative;
   z-index: 1;
-  margin-top: clamp(72px, 10vw, 140px);
-  max-width: 420px;
+  margin-top: clamp(48px, 6vw, 88px);
+  max-width: 540px;
 }
 
 .coreResearchAside p {
@@ -3844,7 +3874,8 @@
 }
 
 .coreResearchIntroLine {
-  margin: clamp(64px, 8vw, 96px) auto clamp(32px, 4vw, 48px);
+  position: relative;
+  margin: clamp(140px, 15vw, 220px) auto clamp(80px, 9vw, 128px);
   max-width: 620px;
   text-align: center;
   font-size: var(--tech-fs-body);
@@ -3853,16 +3884,20 @@
 }
 
 .coreResearchGrid {
+  position: relative;
   display: grid;
   grid-template-columns: minmax(220px, 0.8fr) minmax(0, 1.2fr);
   gap: clamp(32px, 5vw, 72px);
-  align-items: start;
+  align-items: center;
+  z-index: 1;
 }
 
 .coreResearchArt {
+  position: relative;
   width: 100%;
   max-width: 320px;
   color: #0A1344;
+  z-index: 1;
 }
 
 .coreResearchArt svg {
@@ -3877,61 +3912,282 @@
   min-width: 0;
 }
 
+.coreResearchGroup {
+  position: relative;
+  z-index: 1;
+}
+
+/* Hairline divider that fades to transparent on the right.
+   Pseudo-element (rather than border-bottom or background-image) so the
+   gradient renders reliably regardless of the group's content state, and
+   stacks predictably against the section's blue background. */
+.coreResearchGroup::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    color-mix(in srgb, var(--tech-color-text) 15%, transparent) 0%,
+    color-mix(in srgb, var(--tech-color-text) 15%, transparent) 55%,
+    transparent 100%
+  );
+  pointer-events: none;
+}
+
+.coreResearchGroup:last-child::after {
+  display: none;
+}
+
 .coreResearchGroup p {
-  margin: 12px 0 0;
+  margin: 16px 0 0;
   font-size: var(--tech-fs-body);
   line-height: 1.6;
   color: var(--tech-color-text);
 }
 
 .coreResearchGroup mark {
-  background: rgba(180, 210, 240, 0.55);
+  background: rgba(0, 102, 204, 0.12);
   color: inherit;
   padding: 1px 3px;
   border-radius: var(--tech-radius-sm);
 }
 
+/* ═══════════════════════════════════════════════════════════════
+   Definition tooltip — on-brand glass popup over highlighted terms
+   ═══════════════════════════════════════════════════════════════ */
+
+.definitionWrap {
+  position: relative;
+  display: inline;
+}
+
+.definitionTerm {
+  background: rgba(0, 102, 204, 0.12);
+  color: inherit;
+  padding: 1px 4px;
+  border-radius: var(--tech-radius-sm);
+  cursor: help;
+  transition: background 200ms ease, color 200ms ease;
+}
+
+.definitionTerm:hover,
+.definitionTerm:focus-visible {
+  background: rgba(0, 102, 204, 0.28);
+  color: #0A1344;
+  outline: none;
+}
+
+/* The popup itself */
+.definitionPopup {
+  position: absolute;
+  bottom: calc(100% + 10px);
+  left: 50%;
+  transform: translateX(-50%) translateY(6px);
+  min-width: 280px;
+  max-width: 340px;
+  padding: 16px 18px;
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  border-radius: 12px;
+  -webkit-backdrop-filter: blur(20px) saturate(1.3);
+  backdrop-filter: blur(20px) saturate(1.3);
+  box-shadow:
+    0 1px 2px rgba(10, 19, 68, 0.04),
+    0 8px 28px rgba(0, 102, 204, 0.12),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.5);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 180ms ease, transform 220ms cubic-bezier(0.22, 1, 0.36, 1),
+              visibility 0s linear 180ms;
+  z-index: 20;
+}
+
+.definitionPopupOpen {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+  transition: opacity 180ms ease, transform 220ms cubic-bezier(0.22, 1, 0.36, 1),
+              visibility 0s linear 0s;
+}
+
+/* Little tail under the popup pointing at the term */
+.definitionPopup::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%) rotate(45deg);
+  width: 10px;
+  height: 10px;
+  margin-top: -6px;
+  background: rgba(255, 255, 255, 0.72);
+  border-right: 1px solid rgba(255, 255, 255, 0.8);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.8);
+  -webkit-backdrop-filter: blur(20px) saturate(1.3);
+  backdrop-filter: blur(20px) saturate(1.3);
+}
+
+.definitionPopupTitle {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  color: #0A1344;
+}
+
+.definitionPopupBody {
+  display: block;
+  font-size: 0.9rem;
+  font-style: italic;
+  line-height: 1.55;
+  color: #1D1D1F;
+}
+
+/* Small-viewport guard: if the popup would clip off-screen, pin it inside
+   the content column by loosening the centering and allowing wrap. */
+@media (max-width: 640px) {
+  .definitionPopup {
+    min-width: 240px;
+    max-width: min(320px, calc(100vw - 48px));
+  }
+}
+
+/* The header is now a button — reset native button styling. Standard
+   accordion convention: title flush left, toggle flush right via
+   space-between + flex:1 on the title. Generous vertical padding makes
+   the click target ~64px tall. */
 .coreResearchGroupHead {
   display: flex;
   align-items: center;
-  gap: 12px;
+  justify-content: space-between;
+  gap: 16px;
+  width: 100%;
+  padding: 20px 0;
+  background: transparent;
+  border: 0;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
 }
 
+.coreResearchGroupHead:hover h3 {
+  color: var(--tech-color-accent);
+}
+
+.coreResearchGroupHead:focus-visible {
+  outline: 2px solid var(--tech-color-accent);
+  outline-offset: 4px;
+  border-radius: var(--tech-radius-sm);
+}
+
+/* Decorative leading dash removed — the row's hairline border-bottom and
+   the right-anchored toggle handle hierarchy and grouping. */
 .coreResearchGroupDash {
-  width: 36px;
-  height: 1px;
-  background: var(--tech-color-text);
-  opacity: 0.55;
+  display: none;
 }
 
 .coreResearchGroupHead h3 {
+  flex: 1;
   margin: 0;
   font-size: var(--tech-fs-h5);
   font-weight: 500;
   letter-spacing: var(--tech-tracking-snug);
   color: var(--tech-color-text);
+  text-align: left;
+  transition: color 200ms ease;
 }
 
+/* Plus icon — anchored flush right, sized to peer with the 22px heading.
+   Rotates 45° to become an × when the group is open. */
 .coreResearchGroupPlus {
-  margin-left: 2px;
-  font-size: var(--tech-fs-body-sm);
-  color: var(--tech-color-text);
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  margin-left: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: color-mix(in srgb, var(--tech-color-text) 60%, transparent);
+  transition: transform 280ms cubic-bezier(0.22, 1, 0.36, 1),
+              color 200ms ease;
 }
 
+.coreResearchGroupPlus svg {
+  width: 100%;
+  height: 100%;
+}
+
+.coreResearchGroupOpen .coreResearchGroupPlus {
+  transform: rotate(45deg);
+}
+
+.coreResearchGroupHead:hover .coreResearchGroupPlus {
+  color: var(--tech-color-accent);
+}
+
+/* Collapsible content region — animates height via grid-template-rows */
+.coreResearchGroupContent {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 320ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.coreResearchGroupOpen .coreResearchGroupContent {
+  grid-template-rows: 1fr;
+}
+
+.coreResearchGroupInner {
+  min-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(-4px);
+  /* Breathing room before the next group's hairline border. */
+  padding-bottom: 24px;
+  transition: opacity 240ms ease, transform 320ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* When the group is open, release the overflow clip so absolutely-positioned
+   children (e.g. the Definition popup) can escape above the group header. */
+.coreResearchGroupOpen .coreResearchGroupInner {
+  overflow: visible;
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 80ms;
+}
+
+/* Blue inline links — aligned with .lgmInlineCta so every CTA on the page
+   reads with the same size, weight, color, and arrow-slide hover. */
 .coreResearchGroupLink {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  margin-top: 16px;
-  font-size: var(--tech-fs-caption);
+  gap: 10px;
+  margin-top: 20px;
+  font-size: clamp(1rem, 1.15vw, 1.1rem);
   font-weight: 500;
   color: var(--tech-color-accent);
   text-decoration: none;
-  transition: opacity 200ms ease;
+  transition: color 200ms ease;
+}
+
+.coreResearchGroupLink svg {
+  width: 14px;
+  height: 14px;
+  transition: transform 200ms ease;
 }
 
 .coreResearchGroupLink:hover {
-  opacity: 0.7;
+  color: #1B37CE;
+}
+
+.coreResearchGroupLink:hover svg {
+  transform: translate(2px, -2px);
 }
 
 .coreResearchProducts {
@@ -3941,26 +4197,76 @@
   margin-top: 16px;
 }
 
+/* Glass-button pill — ported from /components/ui/GlassButton.module.css (.btn)
+   used on the /products/mapsgpt page. Frosted glass with a 4-layer inset-shadow
+   shine, fully-rounded pill shape, 500-weight label. */
 .coreResearchProduct {
+  -webkit-appearance: none;
+  appearance: none;
+  position: relative;
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 8px 16px;
-  border-radius: var(--tech-radius-full);
-  background: var(--tech-color-bg-card);
-  box-shadow: inset 0 0 0 1px var(--tech-color-card-border), 0 1px 2px rgba(10, 19, 68, 0.04);
-  font-size: var(--tech-fs-body-sm);
+  justify-content: center;
+  gap: 6px;
+  padding: 0.85rem 1.6rem;
+  font-size: clamp(1rem, 1.15vw, 1.1rem);
   font-weight: 500;
-  color: var(--tech-color-text);
+  letter-spacing: -0.18px;
+  color: #0A1344;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-backdrop-filter: blur(clamp(1px, 0.125em, 4px));
+  backdrop-filter: blur(clamp(1px, 0.125em, 4px));
+  background: linear-gradient(
+    -75deg,
+    rgba(255, 255, 255, 0.05),
+    rgba(255, 255, 255, 0.2),
+    rgba(255, 255, 255, 0.05)
+  );
+  border: none;
+  border-radius: 999vw;
+  transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1),
+              box-shadow 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+  box-shadow:
+    inset 0 0.125em 0.125em rgba(0, 0, 0, 0.05),
+    inset 0 -0.125em 0.125em rgba(255, 255, 255, 0.5),
+    0 0.25em 0.125em -0.125em rgba(0, 0, 0, 0.2),
+    inset 0 0 0.1em 0.25em rgba(255, 255, 255, 0.2);
+  text-shadow: 0 0.05em 0.05em rgba(0, 0, 0, 0.05);
+}
+
+.coreResearchProduct:hover {
+  transform: scale(0.975);
+  box-shadow:
+    inset 0 0.125em 0.125em rgba(0, 0, 0, 0.05),
+    inset 0 -0.125em 0.125em rgba(255, 255, 255, 0.5),
+    0 0.15em 0.05em -0.1em rgba(0, 0, 0, 0.25),
+    inset 0 0 0.05em 0.1em rgba(255, 255, 255, 0.5);
+}
+
+/* Disable backdrop-filter on mobile to match the mapsgpt GlassButton behavior. */
+@media (max-width: 1023px) {
+  .coreResearchProduct {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
 }
 
 .coreResearchProductGlyph {
   display: inline-flex;
-  width: 20px;
-  height: 20px;
+  width: 26px;
+  height: 26px;
   align-items: center;
   justify-content: center;
   color: #0A1344;
+  flex-shrink: 0;
+}
+
+.coreResearchProductGlyph img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 .coreResearchProductGlyph svg {
@@ -3968,9 +4274,11 @@
   height: 100%;
 }
 
+/* "More Soon" variant — visually identical to the other product pills.
+   Kept as a class hook so future tweaks (e.g. disabling hover on placeholder
+   pills) can target it without touching the others. */
 .coreResearchProductSoon {
-  background: rgba(240, 240, 242, 0.8);
-  color: #6E6E73;
+  /* intentionally empty — inherits full glass-pill treatment */
 }
 
 @media (max-width: 900px) {
@@ -3982,6 +4290,7 @@
   .coreResearchStarburst {
     max-width: 280px;
     margin: 0 auto;
+    transform: none;
   }
 
   .coreResearchArt {
@@ -4015,21 +4324,29 @@
   color: var(--tech-color-text);
 }
 
+/* Editorial findings catalogue — no card chrome, just refined typography on a
+   hairline grid. Mirrors the research-group + comparison-table aesthetic. */
 .resultsGrid {
   margin-top: clamp(48px, 6vw, 72px);
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: clamp(24px, 3vw, 40px) clamp(32px, 4vw, 56px);
-  align-items: start;
+  gap: 0;
+  border-top: 1px solid var(--tech-color-divider);
 }
 
 .resultsCard {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
-  gap: 24px;
-  align-items: center;
-  padding-bottom: clamp(24px, 3vw, 40px);
-  border-bottom: 1px solid var(--tech-color-card-border);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(20px, 2.4vw, 32px);
+  align-items: stretch;
+  padding: clamp(36px, 4.5vw, 56px) clamp(28px, 3.5vw, 48px);
+  border-bottom: 1px solid var(--tech-color-divider);
+  border-right: 1px solid var(--tech-color-divider);
+  background: transparent;
+}
+
+.resultsCard:nth-child(2n) {
+  border-right: none;
 }
 
 .resultsCard:nth-last-child(-n+2) {
@@ -4039,41 +4356,47 @@
 .resultsCardCopy {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 16px;
   align-items: flex-start;
   min-width: 0;
 }
 
+/* Refined large outlined numeral — light-weight, brand blue, editorial */
 .resultsCardNumber {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 28px;
-  height: 28px;
-  border-radius: var(--tech-radius-sm);
-  background: var(--tech-color-accent);
-  color: #fff;
-  font-size: var(--tech-fs-caption);
-  font-weight: 600;
+  display: inline-block;
+  width: auto;
+  height: auto;
+  padding: 0;
+  background: transparent;
+  border-radius: 0;
+  color: rgba(0, 102, 204, 0.80);
+  font-size: clamp(28px, 3.2vw, 40px);
+  font-weight: 200;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  font-feature-settings: "tnum";
+  font-variant-numeric: tabular-nums;
 }
 
 .resultsCardText {
   margin: 0;
   font-size: var(--tech-fs-h5);
-  font-weight: 500;
-  line-height: 1.3;
+  font-weight: 400;
+  line-height: 1.4;
   letter-spacing: var(--tech-tracking-snug);
   color: var(--tech-color-text);
+  max-width: 360px;
 }
 
+/* Refined art panel — slim, sharp-cornered, sits at the bottom of each cell */
 .resultsCardArt {
   position: relative;
-  aspect-ratio: 16 / 11;
-  border-radius: var(--tech-radius-lg);
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: linear-gradient(135deg, #1d3fa6 0%, #0f266b 100%);
   overflow: hidden;
-  /* Intentional brand-blue map-art surface — kept bespoke per design spec */
-  background: #1d3fa6;
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+  border-radius: 4px;
+  margin-top: auto;
 }
 
 .resultsCardArt svg {
@@ -4092,15 +4415,10 @@
 
 .resultsArticlesRow .lgmArticleCard {
   margin-top: 0;
-  min-height: 260px;
 }
 
 @media (max-width: 900px) {
   .resultsGrid {
-    grid-template-columns: 1fr;
-  }
-
-  .resultsCard {
     grid-template-columns: 1fr;
   }
 

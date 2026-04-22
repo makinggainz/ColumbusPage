@@ -6,6 +6,8 @@ import {
   RESEARCH_ARTICLES,
   RESEARCH_CARDS,
 } from "./content";
+import { Definition } from "./Definition";
+import { ResearchGroup } from "./ResearchGroup";
 import { RevealOnView } from "./RevealOnView";
 import type { TechnologySectionId } from "./types";
 
@@ -329,19 +331,22 @@ export function TechnologySections() {
               </div>
 
               <div className={styles.coreResearchBody}>
-                <div className={styles.coreResearchGroup}>
-                  <div className={styles.coreResearchGroupHead}>
-                    <span className={styles.coreResearchGroupDash} aria-hidden />
-                    <h3>Data Collection</h3>
-                    <span className={styles.coreResearchGroupPlus}>+</span>
-                  </div>
+                <ResearchGroup title="Data Collection" autoOpenOnView>
                   <p>
                     The most extensive data collection in the industry. Versatile
                     methods ranging from drones, car data, human data, public data
                     and more.
                   </p>
                   <p>
-                    We&apos;ve achieved the cheapest <mark>P/POI.</mark>
+                    We&apos;ve achieved the cheapest{" "}
+                    <Definition
+                      term="P/POI."
+                      title="P/POI — Price per Point of Interest"
+                    >
+                      The cost to capture a single geospatial data point. Lower
+                      P/POI means richer, more affordable training data — a key
+                      economic metric for any geospatial foundation model.
+                    </Definition>
                   </p>
                   <a href="#" className={styles.coreResearchGroupLink}>
                     Read our blog
@@ -349,40 +354,47 @@ export function TechnologySections() {
                       <path d="M2 8l6-6M3.5 2H8v4.5" stroke="currentColor" strokeWidth="1.3" fill="none" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                   </a>
-                </div>
+                </ResearchGroup>
 
-                <div className={styles.coreResearchGroup}>
-                  <div className={styles.coreResearchGroupHead}>
-                    <span className={styles.coreResearchGroupDash} aria-hidden />
-                    <h3>Fusion</h3>
-                    <span className={styles.coreResearchGroupPlus}>+</span>
-                  </div>
+                <ResearchGroup title="Fusion">
                   <p>
-                    Accurate, automatic data filtering <mark>&amp; labeling.</mark>
+                    Accurate, automatic data filtering{" "}
+                    <Definition
+                      term="& labeling."
+                      title="Automatic labeling"
+                    >
+                      The process of tagging raw, unstructured geospatial data
+                      with structured metadata so a model can reason about it.
+                      Our pipeline does this without human annotation.
+                    </Definition>
                   </p>
                   <p>
-                    We care about <mark>Ground Truths.</mark> We make sure each
-                    data point is the truth at that specific X,Y,Z point at that
-                    given time.
+                    We care about{" "}
+                    <Definition
+                      term="Ground Truths."
+                      title="Ground truth"
+                    >
+                      A verified, real-world observation confirmed at a specific
+                      X, Y, Z coordinate and time. Ground truths are the
+                      reference signal we use to validate every layer of the
+                      model.
+                    </Definition>{" "}
+                    We make sure each data point is the truth at that specific
+                    X,Y,Z point at that given time.
                   </p>
                   <p>
                     Data scarcity is one of the hardest parts about the LGM
                     endeavor. To solve this, we have built innovative methods to
                     universally digest data. Meaning we are able to fuse data
                     together that our model then trains on. Cheaper and more
-                    data → smarter model.
+                    data &rarr; smarter model.
                   </p>
-                </div>
+                </ResearchGroup>
 
-                <div className={styles.coreResearchGroup}>
-                  <div className={styles.coreResearchGroupHead}>
-                    <span className={styles.coreResearchGroupDash} aria-hidden />
-                    <h3>Core Reasoning</h3>
-                    <span className={styles.coreResearchGroupPlus}>+</span>
-                  </div>
+                <ResearchGroup title="Core Reasoning">
                   <p>
                     Our reasoning model considers temporal data, and sifts
-                    through vast amounts of aggregated geospatial data —
+                    through vast amounts of aggregated geospatial data &mdash;
                     including anthropologic data.
                   </p>
                   <p>
@@ -399,32 +411,28 @@ export function TechnologySections() {
                       <path d="M2 8l6-6M3.5 2H8v4.5" stroke="currentColor" strokeWidth="1.3" fill="none" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                   </a>
-                </div>
+                </ResearchGroup>
 
-                <div className={styles.coreResearchGroup}>
-                  <div className={styles.coreResearchGroupHead}>
-                    <span className={styles.coreResearchGroupDash} aria-hidden />
-                    <h3>Answers, insights, patterns</h3>
-                    <span className={styles.coreResearchGroupPlus}>+</span>
-                  </div>
+                <ResearchGroup title="Answers, insights, patterns">
                   <p>One model. Two products.</p>
                   <div className={styles.coreResearchProducts}>
-                    <div className={styles.coreResearchProduct}>
+                    <a href="/" className={styles.coreResearchProduct}>
                       <span className={styles.coreResearchProductGlyph} aria-hidden>
-                        <svg viewBox="0 0 20 20" fill="none">
-                          <circle cx="10" cy="10" r="8" stroke="currentColor" strokeWidth="1.1" />
-                          <path d="M2 10h16M10 2a12 12 0 010 16M10 2a12 12 0 000 16" stroke="currentColor" strokeWidth="0.8" />
-                        </svg>
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img src="/logobueno.png" alt="" />
                       </span>
                       <span>Columbus</span>
-                    </div>
-                    <div className={styles.coreResearchProduct}>
-                      <span className={styles.coreResearchProductGlyph} aria-hidden>🐧</span>
-                      <span>Pinguin</span>
-                    </div>
-                    <div className={`${styles.coreResearchProduct} ${styles.coreResearchProductSoon}`}>
-                      <span>More soon</span>
-                    </div>
+                    </a>
+                    <a href="/products/mapsgpt" className={styles.coreResearchProduct}>
+                      <span className={styles.coreResearchProductGlyph} aria-hidden>
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img src="/MapsGPT-logo.png" alt="" />
+                      </span>
+                      <span>Elio</span>
+                    </a>
+                    <a href="#" className={`${styles.coreResearchProduct} ${styles.coreResearchProductSoon}`}>
+                      <span>More Soon</span>
+                    </a>
                   </div>
                   <a href="/use-cases" className={styles.coreResearchGroupLink}>
                     Other use cases
@@ -432,14 +440,17 @@ export function TechnologySections() {
                       <path d="M2 8l6-6M3.5 2H8v4.5" stroke="currentColor" strokeWidth="1.3" fill="none" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                   </a>
-                </div>
+                </ResearchGroup>
               </div>
             </div>
 
-            <a href="#" className={styles.lgmArticleCard}>
-              <p>
-                Read our articles on<br />
-                <strong>our foundational model research</strong>
+            <a
+              href="#"
+              className={`${styles.lgmArticleCard} ${styles.lgmArticleCardGlass} ${styles.lgmArticleCardFlush}`}
+            >
+              <span className={styles.lgmArticleKicker}>Read our articles on</span>
+              <p className={styles.lgmArticleHeadlineStrong}>
+                our foundational model research
               </p>
             </a>
           </RevealOnView>
@@ -558,7 +569,10 @@ export function TechnologySections() {
                 </p>
               </a>
               <a href="#" className={styles.lgmArticleCard}>
-                <p>Read our article on</p>
+                <p>
+                  Read our article on<br />
+                  <strong>deep spatial reasoning</strong>
+                </p>
               </a>
             </div>
           </RevealOnView>
