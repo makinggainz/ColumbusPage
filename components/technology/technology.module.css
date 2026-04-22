@@ -120,34 +120,23 @@
 }
 
 /*
-  Unified layout:
-  - .contentColumn is ONE container constrained to navbar's max-width (1287px)
-    and centered, so every section inside shares the same left + right bounds
-    as the navbar.
-  - .sidebarPanel is absolutely positioned inside at the container's left edge,
-    so the sidebar's left edge sits on the same vertical line as every
-    section's left edge.
-  - .contentColumn > div:last-child is the sections wrapper; it gets a
-    padding-left equal to sidebar-width + gap so section CONTENT (text, cards)
-    starts clear of the sidebar's column.
+  Layout: sidebar flush to viewport left, right edge aligns with navbar logo.
+  Navbar: max-width 1287px centered, px-6 (24px) below 1287px, px-0 at >=1287px.
+  Logo left from viewport = max((100vw - 1287px) / 2, 24px).
 */
 .contentColumn {
   position: relative;
-  max-width: 1287px;
-  margin: 0 auto;
-  padding: 0 clamp(16px, 2vw, 32px);
+  display: grid;
+  grid-template-columns: max(calc((100vw - 1287px) / 2 + 50px), 74px) 1fr;
+  gap: 0;
 }
 
 .sidebarPanel {
-  position: absolute;
-  left: clamp(16px, 2vw, 32px);
-  top: 0;
-  bottom: 0;
-  width: 180px;
-  pointer-events: none;
-  z-index: 5;
-  background: transparent;
-  border: none;
+  position: relative;
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(20px) saturate(1.2);
+  -webkit-backdrop-filter: blur(20px) saturate(1.2);
+  border-right: 1px solid rgba(0, 102, 204, 0.08);
 }
 
 .sidebarPanelSticky {
@@ -157,26 +146,29 @@
   top: 50vh;
   transform: translateY(-50%);
   padding: 24px 0;
-  margin: 0;
-  pointer-events: auto;
+  margin-left: 12px;
 }
 
+/* Content area — right edge aligns with navbar Start Now button.
+   Sidebar is 50px wider than the navbar's left edge, so subtract that. */
 .contentColumn > div:last-child {
-  max-width: none;
-  margin: 0;
-  /* Clear the 180px sidebar + 24px gap = 204px of reserved space on the
-     left; sections use the remaining width, so their content text starts
-     at a consistent x-position across every section. */
-  padding: 0 0 0 204px;
+  max-width: calc(1287px - 50px);
+  margin: 0 auto 0 0;
+  padding: 0 40px 0 50px;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 768px) {
+  .contentColumn {
+    grid-template-columns: 1fr;
+  }
+
   .sidebarPanel {
     display: none;
   }
 
   .contentColumn > div:last-child {
-    padding: 0;
+    max-width: none;
+    padding: 0 24px;
   }
 }
 
