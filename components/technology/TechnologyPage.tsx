@@ -20,12 +20,21 @@ export function TechnologyPage() {
     // Fire hero-reveal so the Navbar sets hasScrolled = true immediately
     window.dispatchEvent(new Event("hero-reveal"));
 
+    // Enable smooth scrolling for anchor links and programmatic scrollTo
+    // calls scoped to the technology page only. Does NOT affect mouse-wheel
+    // or trackpad scrolling — those stay native. Restored to the original
+    // value on unmount so other pages aren't impacted.
+    const html = document.documentElement;
+    const prevScrollBehavior = html.style.scrollBehavior;
+    html.style.scrollBehavior = "smooth";
+
     updateNavState();
 
     window.addEventListener("scroll", updateNavState, { passive: true });
     window.addEventListener("resize", updateNavState);
 
     return () => {
+      html.style.scrollBehavior = prevScrollBehavior;
       window.removeEventListener("scroll", updateNavState);
       window.removeEventListener("resize", updateNavState);
     };
