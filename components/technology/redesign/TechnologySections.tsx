@@ -41,7 +41,7 @@ export function TechnologySections() {
       {/* Main content column */}
       <div>
       {/* ── 1. What's an LGM ── */}
-      <Slide id="index" className={styles.dotGrid}>
+      <Slide id="index">
         <div className={styles.slideFrame}>
           <RevealOnView className={styles.editorialSlide}>
 
