@@ -27,11 +27,6 @@ export function TechScrollIndex() {
   }, [activeIdx]);
 
   const updateActive = useCallback(() => {
-    const pageBody = document.querySelector<HTMLElement>(
-      `.${styles.pageBody}`
-    );
-    if (!pageBody) return;
-
     const probeY = window.innerHeight * 0.42;
 
     for (let i = HERO_SCROLL_INDEX_ITEMS.length - 1; i >= 0; i--) {
@@ -51,18 +46,13 @@ export function TechScrollIndex() {
   }, []);
 
   useEffect(() => {
-    const pageBody = document.querySelector<HTMLElement>(
-      `.${styles.pageBody}`
-    );
-    if (!pageBody) return;
-
     updateActive();
 
-    pageBody.addEventListener("scroll", updateActive, { passive: true });
+    window.addEventListener("scroll", updateActive, { passive: true });
     window.addEventListener("resize", updateActive);
 
     return () => {
-      pageBody.removeEventListener("scroll", updateActive);
+      window.removeEventListener("scroll", updateActive);
       window.removeEventListener("resize", updateActive);
     };
   }, [updateActive]);

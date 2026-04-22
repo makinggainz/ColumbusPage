@@ -7,7 +7,6 @@ import {
   RESEARCH_CARDS,
 } from "./content";
 import { Definition } from "./Definition";
-import { GenLayersStickyTiles } from "./GenLayersStickyTiles";
 import { ResearchGroup } from "./ResearchGroup";
 import { RevealOnView } from "./RevealOnView";
 import type { TechnologySectionId } from "./types";
@@ -674,51 +673,49 @@ export function TechnologySections() {
                   expensive surveying.
                 </h3>
 
-                <GenLayersStickyTiles>
-                  <div className={styles.genLayersTilesRow}>
-                    <div className={styles.genLayersTile}>
-                      <div className={styles.genLayersTileArt} aria-hidden>
-                        <svg viewBox="0 0 240 280" fill="none" preserveAspectRatio="xMidYMid slice">
-                          <rect width="240" height="280" fill="rgba(40, 70, 40, 0.35)" />
-                          {Array.from({ length: 40 }).map((_, i) => (
-                            <rect key={i} x={(i * 37) % 220} y={(i * 53) % 260} width={(i % 3) + 4} height={(i % 4) + 4} fill={i % 5 === 0 ? "rgba(37,99,235,0.75)" : i % 3 === 0 ? "rgba(220, 110, 80, 0.7)" : "rgba(255,255,255,0.15)"} />
-                          ))}
-                        </svg>
-                      </div>
-                      <span className={styles.genLayersTileKicker}>Columbus GenLayer</span>
-                      <span className={styles.genLayersTileTitle}>Solar roof possibility</span>
+                <div className={styles.genLayersTilesRow}>
+                  <div className={styles.genLayersTile}>
+                    <div className={styles.genLayersTileArt} aria-hidden>
+                      <svg viewBox="0 0 240 280" fill="none" preserveAspectRatio="xMidYMid slice">
+                        <rect width="240" height="280" fill="rgba(40, 70, 40, 0.35)" />
+                        {Array.from({ length: 40 }).map((_, i) => (
+                          <rect key={i} x={(i * 37) % 220} y={(i * 53) % 260} width={(i % 3) + 4} height={(i % 4) + 4} fill={i % 5 === 0 ? "rgba(37,99,235,0.75)" : i % 3 === 0 ? "rgba(220, 110, 80, 0.7)" : "rgba(255,255,255,0.15)"} />
+                        ))}
+                      </svg>
                     </div>
-
-                    <div className={styles.genLayersTile}>
-                      <div className={styles.genLayersTileArt} aria-hidden>
-                        <svg viewBox="0 0 240 280" fill="none" preserveAspectRatio="xMidYMid slice">
-                          <rect width="240" height="280" fill="rgba(130, 70, 50, 0.65)" />
-                          {Array.from({ length: 60 }).map((_, i) => (
-                            <path key={i} d={`M${(i * 17) % 230} ${(i * 31) % 270} l${(i % 6) + 4} ${(i % 5) + 2}`} stroke="rgba(60, 40, 30, 0.7)" strokeWidth="0.8" />
-                          ))}
-                          <path d="M40 140 Q130 130 200 155" stroke="rgba(80, 130, 80, 0.85)" strokeWidth="8" fill="none" />
-                        </svg>
-                      </div>
-                      <span className={styles.genLayersTileKicker}>Columbus GenLayer</span>
-                      <span className={styles.genLayersTileTitle}>Resident Vibes</span>
-                    </div>
-
-                    <div className={styles.genLayersTile}>
-                      <div className={styles.genLayersTileArt} aria-hidden>
-                        <svg viewBox="0 0 240 280" fill="none" preserveAspectRatio="xMidYMid slice">
-                          <rect width="240" height="280" fill="rgba(120, 120, 120, 0.45)" />
-                          {Array.from({ length: 40 }).map((_, i) => {
-                            const colors = ["rgba(220, 60, 60, 0.85)", "rgba(230, 200, 60, 0.85)", "rgba(80, 200, 120, 0.85)"];
-                            const color = colors[i % 3];
-                            return <rect key={i} x={(i * 29) % 220} y={(i * 41) % 260} width={(i % 4) + 6} height={(i % 2) + 3} fill={color} />;
-                          })}
-                        </svg>
-                      </div>
-                      <span className={styles.genLayersTileKicker}>Columbus GenLayer</span>
-                      <span className={styles.genLayersTileTitle}>Safety Score</span>
-                    </div>
+                    <span className={styles.genLayersTileKicker}>Columbus GenLayer</span>
+                    <span className={styles.genLayersTileTitle}>Solar roof possibility</span>
                   </div>
-                </GenLayersStickyTiles>
+
+                  <div className={styles.genLayersTile}>
+                    <div className={styles.genLayersTileArt} aria-hidden>
+                      <svg viewBox="0 0 240 280" fill="none" preserveAspectRatio="xMidYMid slice">
+                        <rect width="240" height="280" fill="rgba(130, 70, 50, 0.65)" />
+                        {Array.from({ length: 60 }).map((_, i) => (
+                          <path key={i} d={`M${(i * 17) % 230} ${(i * 31) % 270} l${(i % 6) + 4} ${(i % 5) + 2}`} stroke="rgba(60, 40, 30, 0.7)" strokeWidth="0.8" />
+                        ))}
+                        <path d="M40 140 Q130 130 200 155" stroke="rgba(80, 130, 80, 0.85)" strokeWidth="8" fill="none" />
+                      </svg>
+                    </div>
+                    <span className={styles.genLayersTileKicker}>Columbus GenLayer</span>
+                    <span className={styles.genLayersTileTitle}>Resident Vibes</span>
+                  </div>
+
+                  <div className={styles.genLayersTile}>
+                    <div className={styles.genLayersTileArt} aria-hidden>
+                      <svg viewBox="0 0 240 280" fill="none" preserveAspectRatio="xMidYMid slice">
+                        <rect width="240" height="280" fill="rgba(120, 120, 120, 0.45)" />
+                        {Array.from({ length: 40 }).map((_, i) => {
+                          const colors = ["rgba(220, 60, 60, 0.85)", "rgba(230, 200, 60, 0.85)", "rgba(80, 200, 120, 0.85)"];
+                          const color = colors[i % 3];
+                          return <rect key={i} x={(i * 29) % 220} y={(i * 41) % 260} width={(i % 4) + 6} height={(i % 2) + 3} fill={color} />;
+                        })}
+                      </svg>
+                    </div>
+                    <span className={styles.genLayersTileKicker}>Columbus GenLayer</span>
+                    <span className={styles.genLayersTileTitle}>Safety Score</span>
+                  </div>
+                </div>
 
                 <a href="/use-cases" className={styles.genLayersExploreBtn}>
                   <span>Explore more maps we&apos;ve made</span>

@@ -88,14 +88,14 @@
   background-position: 0 0;
 }
 
+/* Native document scroll — .pageBody is just a normal flow container.
+   Uses overflow-x: clip (not hidden) so it doesn't create a scrollport,
+   which would otherwise capture any position:sticky descendants and
+   prevent them from sticking to the document scroll. */
 .pageBody {
   position: relative;
   margin-top: 0;
-  height: 100vh;
-  overflow-x: hidden;
-  overflow-y: auto;
-  scroll-behavior: auto;
-  overscroll-behavior-y: none;
+  overflow-x: clip;
 }
 
 .pageShell {
@@ -2611,12 +2611,6 @@
 }
 
 @media (max-width: 1279px) {
-  .pageBody {
-    height: auto;
-    overflow: visible;
-    overscroll-behavior-y: auto;
-  }
-
   .pageShell {
     grid-template-columns: minmax(0, 1fr);
     gap: 0;
@@ -4550,30 +4544,6 @@
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.18);
 }
 
-/* Pinned-section scroll effect: outer wrapper provides scroll-room while
-   the inner panel sticks to the viewport top. Tile content scales up as
-   the user scrolls into the wrapper, peaks at the midpoint, and scales
-   back down before the wrapper exits — driven by GenLayersStickyTiles.tsx. */
-.genLayersStickyWrapper {
-  position: relative;
-  width: 100%;
-  height: 180vh;
-}
-
-.genLayersStickyInner {
-  position: sticky;
-  top: 0;
-  width: 100%;
-  height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.genLayersStickyContent {
-  width: 100%;
-  will-change: transform;
-}
 
 .genLayersTile {
   position: relative;
