@@ -3044,24 +3044,29 @@
   transform: translateX(0);
 }
 
-/* Track column — holds the thin line + thick active segment */
+/* Track column — holds the thin line + thick active segment.
+   Explicit min-height guarantees the line still has visible height
+   even before the labels paint. */
 .scrollIndexTrack {
   position: relative;
   width: 3px;
   flex-shrink: 0;
   align-self: stretch;
-  min-height: 100%;
+  min-height: 220px;
 }
 
-/* Thin background line — dark navy */
+/* Thin background line — dark navy. Higher opacity so it remains
+   visible against any underlying section bg (the sidebar is fixed
+   position and can pass over dark sections like the gen-layers band). */
 .scrollIndexLine {
   position: absolute;
   top: 0;
   bottom: 0;
   left: 50%;
-  width: 1px;
+  width: 2px;
   transform: translateX(-50%);
-  background: rgba(10, 19, 68, 0.45);
+  background: #0A1344;
+  border-radius: 1px;
   transition: background 300ms ease;
 }
 
