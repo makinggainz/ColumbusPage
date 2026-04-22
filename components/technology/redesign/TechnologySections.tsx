@@ -190,7 +190,7 @@ export function TechnologySections() {
       </Slide>
 
       {/* ── 2. A New Foundational Model ── */}
-      <Slide id="lgm-vs-llm" className={styles.lgmSlide}>
+      <Slide id="lgm-vs-llm" className={`${styles.lgmSlide} ${styles.dotGrid}`}>
         <div className={styles.slideFrame}>
           <RevealOnView className={`${styles.editorialSlide} ${styles.lgmFoundationalSlide}`}>
             <p className={styles.lgmKicker}>A NEW FOUNDATIONAL MODEL</p>
@@ -206,28 +206,49 @@ export function TechnologySections() {
                 alt="Timeline of foundational AI models from 2022 to 2028: LLM, Geo-tuned LLM and Vision Models, Generalist LGM (Large Geospatial Model), UGM (Universal Geospatial Model)"
                 className={styles.lgmTimelineImage}
               />
+
+              {/* Real text+arrow CTAs positioned where the blue labels used to be in the image.
+                  Styled like .lgmInlineCta with an arrow-hover animation. */}
+              <a
+                href="#"
+                className={`${styles.lgmTimelineCta} ${styles.lgmTimelineCtaPaper}`}
+              >
+                <span>Read our Paper</span>
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden>
+                  <path d="M2.5 9.5L9.5 2.5M9.5 2.5H4M9.5 2.5V8" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </a>
+              <a
+                href="#"
+                className={`${styles.lgmTimelineCta} ${styles.lgmTimelineCtaPlan}`}
+              >
+                <span>Our Game Plan</span>
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden>
+                  <path d="M2.5 9.5L9.5 2.5M9.5 2.5H4M9.5 2.5V8" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </a>
+
               {/* Keyword text inside the image — kept in the DOM for crawlers + screen readers, visually hidden */}
               <div className={styles.srOnly}>
                 <h3>Timeline of foundational AI models</h3>
                 <ul>
                   <li>2022 — LLM (Large Language Model)</li>
                   <li>2025 — Geo-tuned LLM &amp; Vision Models</li>
-                  <li>
-                    2026 — Generalist LGM (Large Geospatial Model).
-                    <a href="#">Read our Paper</a>
-                  </li>
-                  <li>
-                    2028 — UGM (Universal Geospatial Model).
-                    <a href="#">Our Game Plan</a>
-                  </li>
+                  <li>2026 — Generalist LGM (Large Geospatial Model)</li>
+                  <li>2028 — UGM (Universal Geospatial Model)</li>
                 </ul>
               </div>
             </div>
 
-            <a href="#" className={styles.lgmArticleCard}>
-              <p>
-                Read our article on<br />
-                the drawbacks of LLMs &amp; vision models.<br />
+            <a
+              href="#"
+              className={`${styles.lgmArticleCard} ${styles.lgmArticleCardGlass}`}
+            >
+              <span className={styles.lgmArticleKicker}>Read our article on</span>
+              <p className={styles.lgmArticleHeadline}>
+                the drawbacks of LLMs &amp; vision models.
+              </p>
+              <p className={styles.lgmArticleHeadlineStrong}>
                 How the LGM innovates.
               </p>
             </a>

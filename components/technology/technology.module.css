@@ -82,9 +82,9 @@
 }
 
 .dotGrid {
-  background-image: radial-gradient(circle, rgba(0, 102, 204, 0.06) 1.1px, transparent 1.6px);
+  background-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M12 11.5v1M11.5 12h1' stroke='rgba(0,102,204,0.12)' stroke-width='1.6' stroke-linecap='square'/%3E%3C/svg%3E");
   background-repeat: repeat;
-  background-size: 16px 16px;
+  background-size: 24px 24px;
   background-position: 0 0;
 }
 
@@ -488,7 +488,7 @@
 }
 
 .lgmSlide {
-  background: var(--tech-color-bg);
+  background-color: var(--tech-color-bg);
 }
 
 .lgmWrap {
@@ -3161,6 +3161,9 @@
     radial-gradient(ellipse 60% 55% at 82% 88%, rgba(0, 102, 204, 0.12) 0%, transparent 70%),
     radial-gradient(ellipse 115% 95% at 22% 14%, #F0F6FF 0%, #D8E7F7 35%, #B5D5FA 70%, #9DC2E5 100%);
   border-radius: 9px;
+  box-shadow:
+    0 0 0 12px var(--tech-color-bg),
+    0 0 60px 36px var(--tech-color-bg);
 }
 
 .lgmCompareTableTitle {
@@ -3409,7 +3412,8 @@
 }
 
 .lgmTimeline {
-  margin-top: clamp(70px, 9vw, 120px);
+  position: relative;
+  margin-top: clamp(28px, 3vw, 48px);
   /* Break out of .editorialSlide's horizontal padding so the image spans
      the full width of the content column */
   margin-left: calc(-1 * clamp(32px, 4vw, 56px));
@@ -3425,6 +3429,54 @@
   max-width: 100%;
   height: auto;
   object-fit: contain;
+}
+
+/* Real CTA links rendered where the blue labels used to be baked into the image.
+   Positioning uses percentages so they scale with the image across viewport sizes. */
+.lgmTimelineCta {
+  position: absolute;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  font-size: clamp(0.9rem, 1vw, 1rem);
+  font-weight: 500;
+  color: #0066CC;
+  text-decoration: none;
+  white-space: nowrap;
+  transform: translate(-50%, -50%);
+  transition: color 200ms ease;
+  z-index: 2;
+}
+
+.lgmTimelineCta svg {
+  transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.lgmTimelineCta:hover {
+  color: #1B37CE;
+}
+
+.lgmTimelineCta:hover svg {
+  transform: translate(2px, -2px);
+}
+
+.lgmTimelineCta:focus-visible {
+  outline: 2px solid #0066CC;
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* "Read our Paper" — centered under the Generalist LGM column */
+.lgmTimelineCtaPaper {
+  left: 61%;
+  top: 70%;
+}
+
+/* "Our Game Plan" — centered under the UGM column */
+.lgmTimelineCtaPlan {
+  left: 87%;
+  top: 70%;
 }
 
 .lgmTimelineAbove,
@@ -3531,7 +3583,9 @@
   background-color: #fff;
   box-shadow:
     inset 0 0 0 1px rgba(255, 255, 255, 0.55),
-    0 6px 28px rgba(0, 102, 204, 0.08);
+    0 6px 28px rgba(0, 102, 204, 0.08),
+    0 0 0 12px var(--tech-color-bg),
+    0 0 60px 36px var(--tech-color-bg);
   overflow: hidden;
   transition: transform 320ms ease, box-shadow 320ms ease;
 }
@@ -3559,7 +3613,9 @@
   transform: translateY(-2px);
   box-shadow:
     inset 0 0 0 1px rgba(255, 255, 255, 0.6),
-    0 10px 32px rgba(0, 102, 204, 0.12);
+    0 10px 32px rgba(0, 102, 204, 0.12),
+    0 0 0 12px var(--tech-color-bg),
+    0 0 60px 36px var(--tech-color-bg);
 }
 
 .lgmArticleCard p {
@@ -3575,6 +3631,91 @@
 
 .lgmArticleCard p strong {
   font-weight: 600;
+}
+
+/* ── Glass variant: frosted-blur, no hover lift, tiered typography ── */
+.lgmArticleCardGlass {
+  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
+  background-color: rgba(255, 255, 255, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  /* The radial blur is applied via ::after below, not uniformly on the card */
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.6),
+    0 6px 28px rgba(0, 102, 204, 0.08),
+    0 0 0 12px var(--tech-color-bg),
+    0 0 60px 36px var(--tech-color-bg);
+  transition: none;
+}
+
+/* Radial blur layer: strongest at the center, fades to no-blur at the edges.
+   Achieved by masking a backdrop-filtered pseudo-element with a radial gradient
+   so the blur is only present where the mask is opaque. */
+.lgmArticleCardGlass::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  -webkit-backdrop-filter: blur(28px) saturate(1.2);
+  backdrop-filter: blur(28px) saturate(1.2);
+  -webkit-mask-image: radial-gradient(
+    ellipse 70% 70% at 50% 50%,
+    #000 0%,
+    rgba(0, 0, 0, 0.85) 35%,
+    rgba(0, 0, 0, 0.4) 70%,
+    transparent 100%
+  );
+  mask-image: radial-gradient(
+    ellipse 70% 70% at 50% 50%,
+    #000 0%,
+    rgba(0, 0, 0, 0.85) 35%,
+    rgba(0, 0, 0, 0.4) 70%,
+    transparent 100%
+  );
+  z-index: 0;
+}
+
+.lgmArticleCardGlass:hover {
+  transform: none;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.6),
+    0 6px 28px rgba(0, 102, 204, 0.08),
+    0 0 0 12px var(--tech-color-bg),
+    0 0 60px 36px var(--tech-color-bg);
+}
+
+.lgmArticleCardGlass::before {
+  opacity: 0.55;
+}
+
+/* Tiered typography inside the glass card:
+   kicker (regular) → headline (medium) → conclusion (bold) */
+.lgmArticleKicker {
+  font-size: clamp(0.95rem, 1.05vw, 1.05rem);
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  line-height: 1.4;
+  color: rgba(29, 29, 31, 0.65);
+}
+
+.lgmArticleCardGlass .lgmArticleHeadline {
+  margin: 0;
+  font-size: clamp(1.35rem, 1.9vw, 1.75rem);
+  font-weight: 500;
+  line-height: 1.25;
+  letter-spacing: -0.015em;
+  color: #1D1D1F;
+}
+
+.lgmArticleCardGlass .lgmArticleHeadlineStrong {
+  margin: 0;
+  font-size: clamp(1.35rem, 1.9vw, 1.75rem);
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.015em;
+  color: #0A1344;
 }
 
 @media (max-width: 900px) {
