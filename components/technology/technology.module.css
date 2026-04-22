@@ -127,17 +127,15 @@
   pin their left + right edges to the navbar's logo-left and
   Start-Now-CTA-right vertical lines.
 */
+/*
+  V2: contentColumn is now full-width so each section's background can
+  extend edge-to-edge across the viewport. The 1287px navbar-aligned
+  constraint moves DOWN to .slideFrame, which centers the actual
+  content inside each section while the section element itself (and
+  its background) spans the screen.
+*/
 .contentColumn {
   position: relative;
-  max-width: 1287px;
-  margin: 0 auto;
-  padding: 0 24px;
-}
-
-@media (min-width: 1287px) {
-  .contentColumn {
-    padding: 0;
-  }
 }
 
 /* Sidebar index is FIXED to the left edge of the viewport — outside
@@ -233,12 +231,30 @@
   min-height: 100vh;
   display: flex;
   align-items: center;
+  /* V2: Center the section's CONTENT to the navbar's 1287px max-width
+     while the section element (and its background) extends edge-to-edge
+     across the viewport. */
+  max-width: 1287px;
+  margin: 0 auto;
+  padding-inline: 24px;
+  box-sizing: border-box;
+}
+
+@media (min-width: 1287px) {
+  .slideFrame {
+    padding-inline: 0;
+  }
 }
 
 .section:not(.fullBleedSection):not(.lgmSlide) .slideFrame {
-  /* Horizontal padding handled by .contentColumn (40px) — keep slideFrame
-     edge-to-edge so section content aligns with the hero exactly. */
-  padding-inline: 0;
+  /* Padding-inline already handled in the base .slideFrame rule. */
+  padding-inline: 24px;
+}
+
+@media (min-width: 1287px) {
+  .section:not(.fullBleedSection):not(.lgmSlide) .slideFrame {
+    padding-inline: 0;
+  }
 }
 
 .fullBleedSection .slideFrame {
