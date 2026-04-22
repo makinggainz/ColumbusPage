@@ -66,6 +66,7 @@ export const RESEARCH_CARDS: ResearchCard[] = [
 ];
 
 export const RESEARCH_ARTICLES: ResearchArticle[] = [
+  { title: "MapsGPT Version 2.5. Architecture improvements.", href: "#", date: "Apr 2026" },
   { title: "Research Paper -- Erick fire prediction", href: "#", date: "Mar 2026" },
   { title: "MapsGPT. Building a consumer product", href: "#", date: "Feb 2026" },
   { title: "Why LLMs dont cut it. Issues in LLM architecture for Geosaptial queries.", href: "#", date: "Jan 2026" },

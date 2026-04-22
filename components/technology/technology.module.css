@@ -1219,24 +1219,65 @@
 /* ── Research card grid (rectangular divs) ── */
 .researchCardGrid {
   margin-top: 40px;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  display: flex;
   gap: 16px;
+  align-items: stretch;
+  justify-content: flex-start;
 }
 
 .researchCard {
   position: relative;
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
-  min-height: 280px;
-  padding: 28px;
-  border-radius: 0;
+  flex: 1.5 1 0;
+  min-width: 0;
+  /* Cap the upper end so cards don't balloon on very wide viewports */
+  max-width: 280px;
+  min-height: 320px;
+  padding: 20px;
+  border-radius: var(--tech-radius-md);
   border: none;
-  background: rgba(37, 99, 235, 0.06);
+  overflow: hidden;
   text-decoration: none;
-  color: #1D1D1F;
-  transition: color 300ms ease;
+  color: var(--tech-color-text);
+  cursor: pointer;
+  transition: flex-grow 420ms cubic-bezier(0.4, 0, 0.2, 1), max-width 420ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Blurred image layer beneath the title.
+   Uses filter:blur on a pseudo (not backdrop-filter) so it survives ancestor
+   transforms — RevealOnView applies translateY(0) on .revealVisible, which
+   would create a backdrop-root and break backdrop-filter on descendants.
+   Negative inset hides the blur's soft edge fade. */
+.researchCard::before {
+  content: "";
+  position: absolute;
+  /* Extend beyond the card so the blur's soft edge fade lives outside the
+     visible area (clipped by .researchCard overflow:hidden). The image
+     still stretches to fill (100% 100%) so it reads as full-bleed top to
+     bottom and side to side with no fading halo. */
+  inset: -16px;
+  background-image: url("/TechnologyPageImages/techpg-radiance.png");
+  background-size: 100% 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  filter: blur(2px);
+  z-index: 0;
+  transition: filter 300ms ease;
+}
+
+/* The featured card (and any card on hover) gets the strong blur — same
+   visual treatment as the hover state, so the "active" card always reads
+   as the foggy one. */
+.researchCardFeatured::before,
+.researchCard:hover::before {
+  filter: blur(10px);
+}
+
+/* When a small card is hovered, the original featured loses the strong
+   blur so the swap matches the arrow + size swap. */
+.researchCardGrid:has(.researchCard:not(.researchCardFeatured):hover) .researchCardFeatured::before {
+  filter: blur(2px);
 }
 
 .researchCard:hover {
@@ -1248,42 +1289,129 @@
 }
 
 .researchCardArt {
-  position: absolute;
-  top: 16px;
-  left: 16px;
-  width: 140px;
-  height: 140px;
-  opacity: 1;
-  pointer-events: none;
+  /* Legacy SVG art slot — hidden in the new image-bg layout */
+  display: none;
 }
 
 .researchCardTitle {
-  font-size: clamp(1.05rem, 1.4vw, 1.25rem);
-  font-weight: 500;
-  letter-spacing: -0.01em;
-  line-height: 1.35;
-  transition: color 300ms ease;
   position: relative;
   z-index: 1;
+  /* Scales fluidly: 16px at narrow viewports up to 22px at large. */
+  font-size: clamp(16px, 1.8vw, 22px);
+  font-weight: 500;
+  letter-spacing: var(--tech-tracking-snug);
+  line-height: 1.3;
+  color: var(--tech-color-text);
+  max-width: 18ch;
+  /* Distributes wrapped lines evenly so they re-balance gracefully as the
+     card width changes, rather than the last line being a stranded word. */
+  text-wrap: balance;
+  /* max-width animates so the title's wrap point slides as the card resizes;
+     individual words still hop lines at discrete thresholds, but the hops
+     happen progressively over the transition instead of all at once. */
+  transition: color 300ms ease, max-width 420ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* When the card is in featured/expanded state, give the title room to
+   re-flow into fewer lines as the card grows. */
+.researchCardFeatured .researchCardTitle,
+.researchCard:not(.researchCardFeatured):hover .researchCardTitle {
+  max-width: 32ch;
+}
+
+/* Reciprocal: when a small is hovered, the previously-featured shrinks and
+   its title wrap measure tightens too. */
+.researchCardGrid:has(.researchCard:not(.researchCardFeatured):hover) .researchCardFeatured .researchCardTitle {
+  max-width: 18ch;
+}
+
+/* Featured card — much wider than the small cards (~3.2x flex share). */
+.researchCardFeatured {
+  flex: 3.2 1 0;
+  max-width: 880px;
+}
+
+/* On hover, a small card expands to take on the featured card's full
+   dimensions (flex share + width cap). */
+.researchCard:not(.researchCardFeatured):hover {
+  flex: 3.2 1 0;
+  max-width: 880px;
+}
+
+/* Reciprocal: when any small card is being hovered, the featured card
+   shrinks back to a small-card's dimensions — they effectively swap. */
+.researchCardGrid:has(.researchCard:not(.researchCardFeatured):hover) .researchCardFeatured {
+  flex: 1.5 1 0;
+  max-width: 280px;
+}
+
+/* Flex spacer above the title. With flex-grow:0 the title sits at the top
+   of the card (small/default state). With flex-grow:1 the spacer expands
+   and pushes the title to the bottom (featured/hovered state). flex-grow
+   IS transitionable, so the title slides smoothly between the two states
+   instead of teleporting (justify-content can't transition). */
+.researchCardSpacer {
+  flex-grow: 0;
+  transition: flex-grow 420ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.researchCardFeatured .researchCardSpacer,
+.researchCard:not(.researchCardFeatured):hover .researchCardSpacer {
+  flex-grow: 1;
+}
+
+/* When a small is hovered, featured's spacer collapses → title slides up. */
+.researchCardGrid:has(.researchCard:not(.researchCardFeatured):hover) .researchCardFeatured .researchCardSpacer {
+  flex-grow: 0;
 }
 
 .researchCardArrow {
   position: absolute;
-  top: 22px;
-  right: 24px;
-  font-size: 1.2rem;
-  color: rgba(37, 99, 235, 0.35);
-  transition: transform 300ms ease, color 300ms ease;
+  bottom: 16px;
+  right: 18px;
+  z-index: 1;
+  font-size: 1.4rem;
+  color: var(--tech-color-text);
+  /* Hidden by default; only the currently-featured card shows the arrow. */
+  opacity: 0;
+  transition: transform 300ms ease, opacity 300ms ease, color 300ms ease;
 }
 
-.researchCard:hover .researchCardArrow {
+/* Featured (the wide card) shows the arrow at rest. */
+.researchCardFeatured .researchCardArrow {
+  opacity: 1;
+}
+
+/* When a small card is hovered it becomes the "featured" — show its arrow. */
+.researchCard:not(.researchCardFeatured):hover .researchCardArrow {
+  opacity: 1;
   transform: translate(3px, -3px);
-  color: rgba(37, 99, 235, 0.7);
+  color: var(--tech-color-accent);
 }
 
-@media (max-width: 768px) {
+/* …and the original featured loses its arrow at the same time. */
+.researchCardGrid:has(.researchCard:not(.researchCardFeatured):hover) .researchCardFeatured .researchCardArrow {
+  opacity: 0;
+}
+
+@media (max-width: 900px) {
   .researchCardGrid {
-    grid-template-columns: 1fr;
+    flex-wrap: wrap;
+  }
+
+  .researchCard {
+    flex: 1 1 calc(50% - 8px);
+  }
+
+  .researchCardFeatured {
+    flex: 1 1 100%;
+  }
+}
+
+@media (max-width: 600px) {
+  .researchCard,
+  .researchCardFeatured {
+    flex: 1 1 100%;
   }
 }
 
@@ -1351,10 +1479,15 @@
 }
 
 .articleRowTitle {
-  font-size: clamp(1.1rem, 1.4vw, 1.25rem);
+  font-size: var(--tech-fs-body-lg);
   font-weight: 400;
-  line-height: 1.4;
-  letter-spacing: -0.01em;
+  line-height: 1.6;
+  color: var(--tech-color-text-secondary);
+  transition: color 200ms ease;
+}
+
+.articleRow:hover .articleRowTitle {
+  color: rgba(37, 99, 235, 0.85);
 }
 
 .articleRowRight {
@@ -1365,8 +1498,10 @@
 }
 
 .articleRowDate {
-  font-size: 13px;
-  color: #6E6E73;
+  font-size: var(--tech-fs-body-lg);
+  font-weight: 400;
+  line-height: 1.6;
+  color: var(--tech-color-text-secondary);
   white-space: nowrap;
   transition: color 200ms ease;
 }
@@ -1376,8 +1511,9 @@
 }
 
 .articleRowArrow {
-  font-size: 1.1rem;
-  color: #6E6E73;
+  font-size: var(--tech-fs-body-lg);
+  line-height: 1.6;
+  color: var(--tech-color-text-secondary);
   transition: transform 200ms ease, color 200ms ease;
 }
 
@@ -2045,32 +2181,12 @@
 
 
 
-.researchCard span {
-  display: block;
-  font-size: clamp(1.28rem, 1.7vw, 1.8rem);
-  line-height: 1.28;
-}
-
-.researchCardFeatured {
-  width: min(540px, 68vw);
-  min-height: 300px;
-  padding: 22px 20px;
-  display: flex;
-  align-items: flex-end;
-}
-
 .researchArrow {
   position: absolute;
   right: 14px;
   bottom: 12px;
   font-size: 2.1rem;
   color: #0a1628;
-}
-
-.researchCardThin {
-  width: min(220px, 44vw);
-  min-height: 300px;
-  padding: 18px 12px;
 }
 
 .dynamicSlide {
@@ -2645,11 +2761,6 @@
     padding: 9px 12px;
   }
 
-  .researchCardFeatured,
-  .researchCardThin {
-    min-height: 250px;
-  }
-
   .hiringArcWrap {
     min-height: 480px;
   }
@@ -2953,6 +3064,11 @@
 
 /* ── Research blog: reduce right inset to match homepage right boundary ── */
 .researchEditorial {
+  /* Right edge aligned with the navbar Start Now CTA's right border
+     (navbar max-width 1287px centered with a 24px min gutter). Subtract
+     the slideFrame's content gutter since this lives inside .slideFrame. */
+  margin-left: 0;
+  margin-right: max(0px, calc(max(24px, calc((100vw - 1287px) / 2)) - var(--tech-content-gutter)));
   padding-right: 0;
 }
 
@@ -3323,7 +3439,7 @@
   inset: 0;
   width: 100%;
   height: 100%;
-  background-image: url("/techpg-radiance.png");
+  background-image: url("/TechnologyPageImages/techpg-radiance.png");
   background-size: 100% 100%;
   background-position: center;
   background-repeat: no-repeat;

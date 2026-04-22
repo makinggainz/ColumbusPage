@@ -436,9 +436,10 @@ export function TechnologySections() {
         </div>
       </Slide>
 
-      {/* ── 4. Results / Model Columbus-01 ── */}
+      {/* ── 4. Results / Model Columbus-01 + Gen Layers + The Grid ── */}
       <Slide id="data-collection" className={styles.dataCollectionSection}>
         <div className={styles.slideFrame}>
+          <div className={styles.researchBlogWrap}>
           <RevealOnView className={`${styles.editorialSlide} ${styles.resultsSlide}`}>
             <p className={styles.lgmKicker}>RESULTS</p>
             <h2 className={styles.resultsTitle}>MODEL COLUMBUS-01</h2>
@@ -551,10 +552,114 @@ export function TechnologySections() {
               </a>
             </div>
           </RevealOnView>
+
+          {/* Gen Layers + The Grid — moved here from section 5 so it sits
+              alongside the Results / "A New Category" content. */}
+          <div className={`${styles.genLayersBand} ${styles.darkSurface}`}>
+            <RevealOnView className={styles.genLayersInner}>
+              <div className={styles.genLayersHead}>
+                <span className={styles.genLayersHeadLine} aria-hidden />
+                <span className={styles.genLayersHeadLabel}>Gen Layers</span>
+                <span className={styles.genLayersHeadBurst} aria-hidden>
+                  <svg viewBox="0 0 80 80" fill="none">
+                    {Array.from({ length: 12 }).map((_, i) => {
+                      const angle = (i * 360) / 12;
+                      const rad = (angle * Math.PI) / 180;
+                      return <line key={i} x1="40" y1="40" x2={40 + Math.cos(rad) * 36} y2={40 + Math.sin(rad) * 36} stroke="rgba(255,255,255,0.8)" strokeWidth="0.8" />;
+                    })}
+                    <circle cx="40" cy="40" r="2" fill="rgba(255,255,255,0.9)" />
+                  </svg>
+                </span>
+              </div>
+
+              <div className={styles.genLayersTriptych}>
+                <h3 className={styles.genLayersHeadline}>
+                  Dynamically creating geodata layers, without complex and
+                  expensive surveying.
+                </h3>
+
+                <div className={styles.genLayersTilesRow}>
+                  <div className={styles.genLayersTile}>
+                    <div className={styles.genLayersTileArt} aria-hidden>
+                      <svg viewBox="0 0 240 280" fill="none" preserveAspectRatio="xMidYMid slice">
+                        <rect width="240" height="280" fill="rgba(40, 70, 40, 0.35)" />
+                        {Array.from({ length: 40 }).map((_, i) => (
+                          <rect key={i} x={(i * 37) % 220} y={(i * 53) % 260} width={(i % 3) + 4} height={(i % 4) + 4} fill={i % 5 === 0 ? "rgba(37,99,235,0.75)" : i % 3 === 0 ? "rgba(220, 110, 80, 0.7)" : "rgba(255,255,255,0.15)"} />
+                        ))}
+                      </svg>
+                    </div>
+                    <span className={styles.genLayersTileKicker}>Columbus GenLayer</span>
+                    <span className={styles.genLayersTileTitle}>Solar roof possibility</span>
+                  </div>
+
+                  <div className={styles.genLayersTile}>
+                    <div className={styles.genLayersTileArt} aria-hidden>
+                      <svg viewBox="0 0 240 280" fill="none" preserveAspectRatio="xMidYMid slice">
+                        <rect width="240" height="280" fill="rgba(130, 70, 50, 0.65)" />
+                        {Array.from({ length: 60 }).map((_, i) => (
+                          <path key={i} d={`M${(i * 17) % 230} ${(i * 31) % 270} l${(i % 6) + 4} ${(i % 5) + 2}`} stroke="rgba(60, 40, 30, 0.7)" strokeWidth="0.8" />
+                        ))}
+                        <path d="M40 140 Q130 130 200 155" stroke="rgba(80, 130, 80, 0.85)" strokeWidth="8" fill="none" />
+                      </svg>
+                    </div>
+                    <span className={styles.genLayersTileKicker}>Columbus GenLayer</span>
+                    <span className={styles.genLayersTileTitle}>Resident Vibes</span>
+                  </div>
+
+                  <div className={styles.genLayersTile}>
+                    <div className={styles.genLayersTileArt} aria-hidden>
+                      <svg viewBox="0 0 240 280" fill="none" preserveAspectRatio="xMidYMid slice">
+                        <rect width="240" height="280" fill="rgba(120, 120, 120, 0.45)" />
+                        {Array.from({ length: 40 }).map((_, i) => {
+                          const colors = ["rgba(220, 60, 60, 0.85)", "rgba(230, 200, 60, 0.85)", "rgba(80, 200, 120, 0.85)"];
+                          const color = colors[i % 3];
+                          return <rect key={i} x={(i * 29) % 220} y={(i * 41) % 260} width={(i % 4) + 6} height={(i % 2) + 3} fill={color} />;
+                        })}
+                      </svg>
+                    </div>
+                    <span className={styles.genLayersTileKicker}>Columbus GenLayer</span>
+                    <span className={styles.genLayersTileTitle}>Safety Score</span>
+                  </div>
+                </div>
+
+                <a href="/use-cases" className={styles.genLayersExploreBtn}>
+                  <span>Explore more maps we&apos;ve made</span>
+                  <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden>
+                    <path d="M5 3l4 4-4 4" stroke="currentColor" strokeWidth="1.4" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </a>
+              </div>
+
+              <div className={styles.genLayersGrid}>
+                <span className={styles.genLayersGridKicker}>THE GRID</span>
+                <div className={styles.genLayersGridArt} aria-hidden>
+                  <svg viewBox="0 0 900 520" fill="none" preserveAspectRatio="xMidYMid slice">
+                    <rect width="900" height="520" fill="rgba(18, 25, 40, 0.85)" />
+                    {Array.from({ length: 28 }).map((_, i) => (
+                      <line key={`vx${i}`} x1={i * 34} y1="0" x2={i * 34 - 80} y2="520" stroke="rgba(180, 180, 190, 0.12)" strokeWidth="0.6" />
+                    ))}
+                    {Array.from({ length: 16 }).map((_, i) => (
+                      <line key={`hz${i}`} x1="0" y1={i * 34} x2="900" y2={i * 34 - 30} stroke="rgba(180, 180, 190, 0.12)" strokeWidth="0.6" />
+                    ))}
+                    <polygon points="360,180 540,180 560,280 340,280" fill="rgba(240, 240, 240, 0.75)" stroke="rgba(220, 220, 220, 0.85)" />
+                    <polygon points="340,280 560,280 580,340 320,340" fill="rgba(230, 230, 230, 0.55)" />
+                    {[[150, 150, 80, 60], [680, 140, 100, 70], [140, 370, 110, 70], [700, 370, 90, 80]].map(([x, y, w, h], idx) => (
+                      <g key={idx}>
+                        <rect x={x} y={y} width={w} height={h} fill="rgba(60, 70, 85, 0.85)" stroke="rgba(140, 150, 170, 0.6)" />
+                        <rect x={x + 10} y={y + 10} width={w - 20} height={h - 20} fill="rgba(90, 100, 115, 0.55)" />
+                      </g>
+                    ))}
+                  </svg>
+                  <span className={styles.genLayersGridCaption}>SHIBUYA, TOKYO</span>
+                </div>
+              </div>
+            </RevealOnView>
+          </div>
+          </div>
         </div>
       </Slide>
 
-      {/* ── 5. Research Blog + Gen Layers + The Grid ── */}
+      {/* ── 5. Research Blog ── */}
       <Slide id="research-blog">
         <div className={styles.slideFrame}>
           <div className={styles.researchBlogWrap}>
@@ -564,72 +669,43 @@ export function TechnologySections() {
                 Explore the innovative research and recent papers from our team.
               </p>
 
-              {/* Featured papers — rectangular card grid */}
+              {/* Featured papers — 1 wide + 4 narrow.
+                  Hovering a narrow card swaps it with the featured card:
+                  the hovered card grows to featured dimensions and its title
+                  slides to the bottom (via the .researchCardSpacer flex-grow
+                  transition); the featured shrinks and its title slides to
+                  the top. */}
               <div className={styles.researchCardGrid}>
-                {/* Card 1: Philosophy — wireframe globe */}
-                <a href={RESEARCH_CARDS[0].href} className={styles.researchCard}>
-                  <svg className={styles.researchCardArt} viewBox="0 0 200 200" fill="none" aria-hidden>
-                    <circle cx="100" cy="100" r="70" stroke="rgba(37,99,235,0.3)" strokeWidth="1" />
-                    <ellipse cx="100" cy="100" rx="70" ry="30" stroke="rgba(37,99,235,0.22)" strokeWidth="0.8" />
-                    <ellipse cx="100" cy="100" rx="70" ry="50" stroke="rgba(37,99,235,0.22)" strokeWidth="0.8" />
-                    <ellipse cx="100" cy="100" rx="30" ry="70" stroke="rgba(37,99,235,0.22)" strokeWidth="0.8" />
-                    <ellipse cx="100" cy="100" rx="50" ry="70" stroke="rgba(37,99,235,0.22)" strokeWidth="0.8" />
-                    <line x1="30" y1="100" x2="170" y2="100" stroke="rgba(37,99,235,0.35)" strokeWidth="1" />
-                    <line x1="100" y1="30" x2="100" y2="170" stroke="rgba(37,99,235,0.35)" strokeWidth="1" />
-                    <line x1="30" y1="80" x2="170" y2="80" stroke="rgba(37,99,235,0.15)" strokeWidth="0.6" />
-                    <line x1="30" y1="120" x2="170" y2="120" stroke="rgba(37,99,235,0.15)" strokeWidth="0.6" />
-                  </svg>
-                  <span className={styles.researchCardTitle}>{RESEARCH_CARDS[0].title}</span>
+                <a
+                  href={RESEARCH_CARDS[0].href}
+                  className={`${styles.researchCard} ${styles.researchCardFeatured}`}
+                >
+                  <div className={styles.researchCardSpacer} aria-hidden="true" />
+                  <span className={styles.researchCardTitle}>
+                    Philosophy behind a Universal Geospatial Model
+                  </span>
                   <span className={styles.researchCardArrow}>&#8599;</span>
                 </a>
 
-                {/* Card 2: Architecture — grid/network diagram */}
                 <a href={RESEARCH_CARDS[1].href} className={styles.researchCard}>
-                  <svg className={styles.researchCardArt} viewBox="0 0 200 200" fill="none" aria-hidden>
-                    {[40, 80, 120, 160].map(x => (
-                      <line key={`v${x}`} x1={x} y1="30" x2={x} y2="170" stroke="rgba(37,99,235,0.18)" strokeWidth="0.6" />
-                    ))}
-                    {[40, 80, 120, 160].map(y => (
-                      <line key={`h${y}`} x1="30" y1={y} x2="170" y2={y} stroke="rgba(37,99,235,0.18)" strokeWidth="0.6" />
-                    ))}
-                    {[[40,40],[80,80],[120,40],[160,80],[80,120],[120,120],[160,160],[40,160]].map(([x,y]) => (
-                      <circle key={`n${x}${y}`} cx={x} cy={y} r="3.5" fill="rgba(37,99,235,0.35)" />
-                    ))}
-                    <path d="M40 40 L80 80 L120 40 L160 80" stroke="rgba(37,99,235,0.3)" strokeWidth="1" />
-                    <path d="M80 80 L80 120 L120 120 L160 160" stroke="rgba(37,99,235,0.3)" strokeWidth="1" />
-                    <path d="M40 160 L80 120" stroke="rgba(37,99,235,0.25)" strokeWidth="1" />
-                    <path d="M120 40 L120 120" stroke="rgba(37,99,235,0.2)" strokeWidth="0.8" strokeDasharray="4 3" />
-                  </svg>
-                  <span className={styles.researchCardTitle}>{RESEARCH_CARDS[1].title}</span>
+                  <div className={styles.researchCardSpacer} aria-hidden="true" />
+                  <span className={styles.researchCardTitle}>
+                    Mimicking the adult brain.
+                  </span>
                   <span className={styles.researchCardArrow}>&#8599;</span>
                 </a>
-
-                {/* Card 3: Brain — neural network pattern */}
                 <a href={RESEARCH_CARDS[2].href} className={styles.researchCard}>
-                  <svg className={styles.researchCardArt} viewBox="0 0 200 200" fill="none" aria-hidden>
-                    {[60, 100, 140].map(y => (
-                      <circle key={`i${y}`} cx="40" cy={y} r="5" stroke="rgba(37,99,235,0.35)" strokeWidth="1" fill="none" />
-                    ))}
-                    {[50, 85, 115, 150].map(y => (
-                      <circle key={`h1${y}`} cx="100" cy={y} r="5" stroke="rgba(37,99,235,0.35)" strokeWidth="1" fill="none" />
-                    ))}
-                    {[75, 125].map(y => (
-                      <circle key={`o${y}`} cx="160" cy={y} r="5" stroke="rgba(37,99,235,0.35)" strokeWidth="1" fill="none" />
-                    ))}
-                    {[60, 100, 140].flatMap(iy =>
-                      [50, 85, 115, 150].map(hy => (
-                        <line key={`ih${iy}${hy}`} x1="45" y1={iy} x2="95" y2={hy} stroke="rgba(37,99,235,0.15)" strokeWidth="0.6" />
-                      ))
-                    )}
-                    {[50, 85, 115, 150].flatMap(hy =>
-                      [75, 125].map(oy => (
-                        <line key={`ho${hy}${oy}`} x1="105" y1={hy} x2="155" y2={oy} stroke="rgba(37,99,235,0.15)" strokeWidth="0.6" />
-                      ))
-                    )}
-                    <line x1="45" y1="100" x2="95" y2="85" stroke="rgba(37,99,235,0.4)" strokeWidth="1.2" />
-                    <line x1="105" y1="85" x2="155" y2="75" stroke="rgba(37,99,235,0.4)" strokeWidth="1.2" />
-                  </svg>
-                  <span className={styles.researchCardTitle}>{RESEARCH_CARDS[2].title}</span>
+                  <div className={styles.researchCardSpacer} aria-hidden="true" />
+                  <span className={styles.researchCardTitle}>
+                    Earth recipes.
+                  </span>
+                  <span className={styles.researchCardArrow}>&#8599;</span>
+                </a>
+                <a href="#" className={styles.researchCard}>
+                  <div className={styles.researchCardSpacer} aria-hidden="true" />
+                  <span className={styles.researchCardTitle}>
+                    Research, creating a fire prediction model.
+                  </span>
                   <span className={styles.researchCardArrow}>&#8599;</span>
                 </a>
               </div>
@@ -652,107 +728,6 @@ export function TechnologySections() {
                 ))}
               </div>
             </RevealOnView>
-
-            <div className={`${styles.genLayersBand} ${styles.darkSurface}`}>
-              <RevealOnView className={styles.genLayersInner}>
-                <div className={styles.genLayersHead}>
-              <span className={styles.genLayersHeadLine} aria-hidden />
-              <span className={styles.genLayersHeadLabel}>Gen Layers</span>
-              <span className={styles.genLayersHeadBurst} aria-hidden>
-                <svg viewBox="0 0 80 80" fill="none">
-                  {Array.from({ length: 12 }).map((_, i) => {
-                    const angle = (i * 360) / 12;
-                    const rad = (angle * Math.PI) / 180;
-                    return <line key={i} x1="40" y1="40" x2={40 + Math.cos(rad) * 36} y2={40 + Math.sin(rad) * 36} stroke="rgba(255,255,255,0.8)" strokeWidth="0.8" />;
-                  })}
-                  <circle cx="40" cy="40" r="2" fill="rgba(255,255,255,0.9)" />
-                </svg>
-              </span>
-            </div>
-
-            <div className={styles.genLayersTriptych}>
-              <h3 className={styles.genLayersHeadline}>
-                Dynamically creating geodata layers, without complex and
-                expensive surveying.
-              </h3>
-
-              <div className={styles.genLayersTilesRow}>
-                <div className={styles.genLayersTile}>
-                  <div className={styles.genLayersTileArt} aria-hidden>
-                    <svg viewBox="0 0 240 280" fill="none" preserveAspectRatio="xMidYMid slice">
-                      <rect width="240" height="280" fill="rgba(40, 70, 40, 0.35)" />
-                      {Array.from({ length: 40 }).map((_, i) => (
-                        <rect key={i} x={(i * 37) % 220} y={(i * 53) % 260} width={(i % 3) + 4} height={(i % 4) + 4} fill={i % 5 === 0 ? "rgba(37,99,235,0.75)" : i % 3 === 0 ? "rgba(220, 110, 80, 0.7)" : "rgba(255,255,255,0.15)"} />
-                      ))}
-                    </svg>
-                  </div>
-                  <span className={styles.genLayersTileKicker}>Columbus GenLayer</span>
-                  <span className={styles.genLayersTileTitle}>Solar roof possibility</span>
-                </div>
-
-                <div className={styles.genLayersTile}>
-                  <div className={styles.genLayersTileArt} aria-hidden>
-                    <svg viewBox="0 0 240 280" fill="none" preserveAspectRatio="xMidYMid slice">
-                      <rect width="240" height="280" fill="rgba(130, 70, 50, 0.65)" />
-                      {Array.from({ length: 60 }).map((_, i) => (
-                        <path key={i} d={`M${(i * 17) % 230} ${(i * 31) % 270} l${(i % 6) + 4} ${(i % 5) + 2}`} stroke="rgba(60, 40, 30, 0.7)" strokeWidth="0.8" />
-                      ))}
-                      <path d="M40 140 Q130 130 200 155" stroke="rgba(80, 130, 80, 0.85)" strokeWidth="8" fill="none" />
-                    </svg>
-                  </div>
-                  <span className={styles.genLayersTileKicker}>Columbus GenLayer</span>
-                  <span className={styles.genLayersTileTitle}>Resident Vibes</span>
-                </div>
-
-                <div className={styles.genLayersTile}>
-                  <div className={styles.genLayersTileArt} aria-hidden>
-                    <svg viewBox="0 0 240 280" fill="none" preserveAspectRatio="xMidYMid slice">
-                      <rect width="240" height="280" fill="rgba(120, 120, 120, 0.45)" />
-                      {Array.from({ length: 40 }).map((_, i) => {
-                        const colors = ["rgba(220, 60, 60, 0.85)", "rgba(230, 200, 60, 0.85)", "rgba(80, 200, 120, 0.85)"];
-                        const color = colors[i % 3];
-                        return <rect key={i} x={(i * 29) % 220} y={(i * 41) % 260} width={(i % 4) + 6} height={(i % 2) + 3} fill={color} />;
-                      })}
-                    </svg>
-                  </div>
-                  <span className={styles.genLayersTileKicker}>Columbus GenLayer</span>
-                  <span className={styles.genLayersTileTitle}>Safety Score</span>
-                </div>
-              </div>
-
-              <a href="/use-cases" className={styles.genLayersExploreBtn}>
-                <span>Explore more maps we&apos;ve made</span>
-                <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden>
-                  <path d="M5 3l4 4-4 4" stroke="currentColor" strokeWidth="1.4" fill="none" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </a>
-            </div>
-
-            <div className={styles.genLayersGrid}>
-              <span className={styles.genLayersGridKicker}>THE GRID</span>
-              <div className={styles.genLayersGridArt} aria-hidden>
-                <svg viewBox="0 0 900 520" fill="none" preserveAspectRatio="xMidYMid slice">
-                  <rect width="900" height="520" fill="rgba(18, 25, 40, 0.85)" />
-                  {Array.from({ length: 28 }).map((_, i) => (
-                    <line key={`vx${i}`} x1={i * 34} y1="0" x2={i * 34 - 80} y2="520" stroke="rgba(180, 180, 190, 0.12)" strokeWidth="0.6" />
-                  ))}
-                  {Array.from({ length: 16 }).map((_, i) => (
-                    <line key={`hz${i}`} x1="0" y1={i * 34} x2="900" y2={i * 34 - 30} stroke="rgba(180, 180, 190, 0.12)" strokeWidth="0.6" />
-                  ))}
-                  <polygon points="360,180 540,180 560,280 340,280" fill="rgba(240, 240, 240, 0.75)" stroke="rgba(220, 220, 220, 0.85)" />
-                  <polygon points="340,280 560,280 580,340 320,340" fill="rgba(230, 230, 230, 0.55)" />
-                  {[[150, 150, 80, 60], [680, 140, 100, 70], [140, 370, 110, 70], [700, 370, 90, 80]].map(([x, y, w, h], idx) => (
-                    <g key={idx}>
-                      <rect x={x} y={y} width={w} height={h} fill="rgba(60, 70, 85, 0.85)" stroke="rgba(140, 150, 170, 0.6)" />
-                      <rect x={x + 10} y={y + 10} width={w - 20} height={h - 20} fill="rgba(90, 100, 115, 0.55)" />
-                    </g>
-                  ))}
-                </svg>
-                <span className={styles.genLayersGridCaption}>SHIBUYA, TOKYO</span>
-              </div>
-            </div>
-              </RevealOnView>
-            </div>
           </div>
         </div>
       </Slide>

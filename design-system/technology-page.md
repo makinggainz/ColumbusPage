@@ -310,4 +310,4 @@ All sections use the existing `RevealOnView` component (`components/technology/r
 
 - Section 6 (Careers form) and Section 7 (Hiring Humans) were not part of the recent redesign and may have their own conventions. Leave them alone unless they conflict with the page-root tokens.
 - The result-card map-art tiles in Section 4 (`.resultsCardArt` — `#1d3fa6` background) intentionally use a deeper saturated blue to host SVG wireframe illustrations. They are content surfaces, not chrome — keep their bespoke color.
-- The radiance image (`/techpg-radiance.png`) on `.lgmArticleCard` is a content asset, not a token. Keep it at `0.75` opacity, full-bleed.
+- The radiance image (`/TechnologyPageImages/techpg-radiance.png`) on `.lgmArticleCard` is a content asset, not a token. Keep it at `0.75` opacity, full-bleed.
