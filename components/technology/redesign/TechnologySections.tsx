@@ -7,6 +7,7 @@ import {
   RESEARCH_CARDS,
 } from "./content";
 import { Definition } from "./Definition";
+import { GenLayersStickyTiles } from "./GenLayersStickyTiles";
 import { ResearchGroup } from "./ResearchGroup";
 import { RevealOnView } from "./RevealOnView";
 import type { TechnologySectionId } from "./types";
@@ -582,18 +583,89 @@ export function TechnologySections() {
           <div className={`${styles.genLayersBand} ${styles.darkSurface}`}>
             <RevealOnView className={styles.genLayersInner}>
               <div className={styles.genLayersHead}>
-                <span className={styles.genLayersHeadLine} aria-hidden />
+                {/* Voyager-style starburst on the right, white strokes on the
+                    dark band. The long horizontal arm extends across the row
+                    and the "Gen Layers" label sits at its left end (with a
+                    matching dark background to mask the line behind the text). */}
+                <svg
+                  className={styles.genLayersHeadStarburst}
+                  viewBox="0 0 1600 220"
+                  preserveAspectRatio="xMidYMid meet"
+                  aria-hidden
+                >
+                  {(() => {
+                    const cx = 1500;
+                    const cy = 110;
+                    const stroke = "rgba(255, 255, 255, 0.92)";
+                    type TickStyle = "even" | "end" | "none";
+                    type Arm = { angle: number; len: number; ticks: TickStyle };
+                    const arms: Arm[] = [
+                      { angle: 180.4, len: 1460, ticks: "end" },
+                      { angle: 187, len: 200, ticks: "even" },
+                      { angle: 226, len: 90, ticks: "even" },
+                      { angle: 252, len: 100, ticks: "none" },
+                      { angle: 267, len: 105, ticks: "none" },
+                      { angle: 282, len: 100, ticks: "none" },
+                      { angle: 317, len: 80, ticks: "end" },
+                      { angle: 350, len: 85, ticks: "even" },
+                      { angle: 4, len: 85, ticks: "even" },
+                      { angle: 31, len: 95, ticks: "even" },
+                      { angle: 66, len: 100, ticks: "even" },
+                      { angle: 90, len: 105, ticks: "even" },
+                      { angle: 113, len: 105, ticks: "none" },
+                      { angle: 147, len: 95, ticks: "even" },
+                    ];
+                    return arms.map((arm, i) => {
+                      const rad = (arm.angle * Math.PI) / 180;
+                      const x2 = cx + Math.cos(rad) * arm.len;
+                      const y2 = cy + Math.sin(rad) * arm.len;
+                      const perp = rad + Math.PI / 2;
+                      const tickHalf = 3.6;
+                      const buildTicks = () => {
+                        if (arm.ticks === "none") return [] as number[];
+                        const spacing = 9;
+                        if (arm.ticks === "even") {
+                          const out: number[] = [];
+                          for (let d = 18; d <= arm.len - 14; d += spacing) out.push(d);
+                          return out;
+                        }
+                        const count = Math.min(8, Math.floor(arm.len / 14));
+                        return Array.from({ length: count }, (_, k) => arm.len - 14 - k * spacing);
+                      };
+                      const ticks = buildTicks();
+                      return (
+                        <g key={i}>
+                          <line
+                            x1={cx}
+                            y1={cy}
+                            x2={x2}
+                            y2={y2}
+                            stroke={stroke}
+                            strokeWidth="1.4"
+                            strokeLinecap="round"
+                          />
+                          {ticks.map((d, t) => {
+                            const tx = cx + Math.cos(rad) * d;
+                            const ty = cy + Math.sin(rad) * d;
+                            return (
+                              <line
+                                key={t}
+                                x1={tx - Math.cos(perp) * tickHalf}
+                                y1={ty - Math.sin(perp) * tickHalf}
+                                x2={tx + Math.cos(perp) * tickHalf}
+                                y2={ty + Math.sin(perp) * tickHalf}
+                                stroke={stroke}
+                                strokeWidth="1"
+                                strokeLinecap="round"
+                              />
+                            );
+                          })}
+                        </g>
+                      );
+                    });
+                  })()}
+                </svg>
                 <span className={styles.genLayersHeadLabel}>Gen Layers</span>
-                <span className={styles.genLayersHeadBurst} aria-hidden>
-                  <svg viewBox="0 0 80 80" fill="none">
-                    {Array.from({ length: 12 }).map((_, i) => {
-                      const angle = (i * 360) / 12;
-                      const rad = (angle * Math.PI) / 180;
-                      return <line key={i} x1="40" y1="40" x2={40 + Math.cos(rad) * 36} y2={40 + Math.sin(rad) * 36} stroke="rgba(255,255,255,0.8)" strokeWidth="0.8" />;
-                    })}
-                    <circle cx="40" cy="40" r="2" fill="rgba(255,255,255,0.9)" />
-                  </svg>
-                </span>
               </div>
 
               <div className={styles.genLayersTriptych}>
@@ -602,49 +674,51 @@ export function TechnologySections() {
                   expensive surveying.
                 </h3>
 
-                <div className={styles.genLayersTilesRow}>
-                  <div className={styles.genLayersTile}>
-                    <div className={styles.genLayersTileArt} aria-hidden>
-                      <svg viewBox="0 0 240 280" fill="none" preserveAspectRatio="xMidYMid slice">
-                        <rect width="240" height="280" fill="rgba(40, 70, 40, 0.35)" />
-                        {Array.from({ length: 40 }).map((_, i) => (
-                          <rect key={i} x={(i * 37) % 220} y={(i * 53) % 260} width={(i % 3) + 4} height={(i % 4) + 4} fill={i % 5 === 0 ? "rgba(37,99,235,0.75)" : i % 3 === 0 ? "rgba(220, 110, 80, 0.7)" : "rgba(255,255,255,0.15)"} />
-                        ))}
-                      </svg>
+                <GenLayersStickyTiles>
+                  <div className={styles.genLayersTilesRow}>
+                    <div className={styles.genLayersTile}>
+                      <div className={styles.genLayersTileArt} aria-hidden>
+                        <svg viewBox="0 0 240 280" fill="none" preserveAspectRatio="xMidYMid slice">
+                          <rect width="240" height="280" fill="rgba(40, 70, 40, 0.35)" />
+                          {Array.from({ length: 40 }).map((_, i) => (
+                            <rect key={i} x={(i * 37) % 220} y={(i * 53) % 260} width={(i % 3) + 4} height={(i % 4) + 4} fill={i % 5 === 0 ? "rgba(37,99,235,0.75)" : i % 3 === 0 ? "rgba(220, 110, 80, 0.7)" : "rgba(255,255,255,0.15)"} />
+                          ))}
+                        </svg>
+                      </div>
+                      <span className={styles.genLayersTileKicker}>Columbus GenLayer</span>
+                      <span className={styles.genLayersTileTitle}>Solar roof possibility</span>
                     </div>
-                    <span className={styles.genLayersTileKicker}>Columbus GenLayer</span>
-                    <span className={styles.genLayersTileTitle}>Solar roof possibility</span>
-                  </div>
 
-                  <div className={styles.genLayersTile}>
-                    <div className={styles.genLayersTileArt} aria-hidden>
-                      <svg viewBox="0 0 240 280" fill="none" preserveAspectRatio="xMidYMid slice">
-                        <rect width="240" height="280" fill="rgba(130, 70, 50, 0.65)" />
-                        {Array.from({ length: 60 }).map((_, i) => (
-                          <path key={i} d={`M${(i * 17) % 230} ${(i * 31) % 270} l${(i % 6) + 4} ${(i % 5) + 2}`} stroke="rgba(60, 40, 30, 0.7)" strokeWidth="0.8" />
-                        ))}
-                        <path d="M40 140 Q130 130 200 155" stroke="rgba(80, 130, 80, 0.85)" strokeWidth="8" fill="none" />
-                      </svg>
+                    <div className={styles.genLayersTile}>
+                      <div className={styles.genLayersTileArt} aria-hidden>
+                        <svg viewBox="0 0 240 280" fill="none" preserveAspectRatio="xMidYMid slice">
+                          <rect width="240" height="280" fill="rgba(130, 70, 50, 0.65)" />
+                          {Array.from({ length: 60 }).map((_, i) => (
+                            <path key={i} d={`M${(i * 17) % 230} ${(i * 31) % 270} l${(i % 6) + 4} ${(i % 5) + 2}`} stroke="rgba(60, 40, 30, 0.7)" strokeWidth="0.8" />
+                          ))}
+                          <path d="M40 140 Q130 130 200 155" stroke="rgba(80, 130, 80, 0.85)" strokeWidth="8" fill="none" />
+                        </svg>
+                      </div>
+                      <span className={styles.genLayersTileKicker}>Columbus GenLayer</span>
+                      <span className={styles.genLayersTileTitle}>Resident Vibes</span>
                     </div>
-                    <span className={styles.genLayersTileKicker}>Columbus GenLayer</span>
-                    <span className={styles.genLayersTileTitle}>Resident Vibes</span>
-                  </div>
 
-                  <div className={styles.genLayersTile}>
-                    <div className={styles.genLayersTileArt} aria-hidden>
-                      <svg viewBox="0 0 240 280" fill="none" preserveAspectRatio="xMidYMid slice">
-                        <rect width="240" height="280" fill="rgba(120, 120, 120, 0.45)" />
-                        {Array.from({ length: 40 }).map((_, i) => {
-                          const colors = ["rgba(220, 60, 60, 0.85)", "rgba(230, 200, 60, 0.85)", "rgba(80, 200, 120, 0.85)"];
-                          const color = colors[i % 3];
-                          return <rect key={i} x={(i * 29) % 220} y={(i * 41) % 260} width={(i % 4) + 6} height={(i % 2) + 3} fill={color} />;
-                        })}
-                      </svg>
+                    <div className={styles.genLayersTile}>
+                      <div className={styles.genLayersTileArt} aria-hidden>
+                        <svg viewBox="0 0 240 280" fill="none" preserveAspectRatio="xMidYMid slice">
+                          <rect width="240" height="280" fill="rgba(120, 120, 120, 0.45)" />
+                          {Array.from({ length: 40 }).map((_, i) => {
+                            const colors = ["rgba(220, 60, 60, 0.85)", "rgba(230, 200, 60, 0.85)", "rgba(80, 200, 120, 0.85)"];
+                            const color = colors[i % 3];
+                            return <rect key={i} x={(i * 29) % 220} y={(i * 41) % 260} width={(i % 4) + 6} height={(i % 2) + 3} fill={color} />;
+                          })}
+                        </svg>
+                      </div>
+                      <span className={styles.genLayersTileKicker}>Columbus GenLayer</span>
+                      <span className={styles.genLayersTileTitle}>Safety Score</span>
                     </div>
-                    <span className={styles.genLayersTileKicker}>Columbus GenLayer</span>
-                    <span className={styles.genLayersTileTitle}>Safety Score</span>
                   </div>
-                </div>
+                </GenLayersStickyTiles>
 
                 <a href="/use-cases" className={styles.genLayersExploreBtn}>
                   <span>Explore more maps we&apos;ve made</span>
