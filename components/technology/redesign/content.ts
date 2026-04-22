@@ -7,12 +7,12 @@ import type {
 } from "./types";
 
 export const TECHNOLOGY_NAV_ITEMS: NavItem[] = [
-  { id: "index", label: "Index" },
-  { id: "lgm-vs-llm", label: "Our Research" },
-  { id: "core-reasoning", label: "Under the hood" },
-  { id: "data-collection", label: "Results" },
+  { id: "index", label: "What's an LGM" },
+  { id: "lgm-vs-llm", label: "Timeline" },
+  { id: "core-reasoning", label: "Development" },
+  { id: "data-collection", label: "A New Category" },
   { id: "research-blog", label: "Research Blog" },
-  { id: "careers", label: "Careers" },
+  { id: "careers", label: "Careers & inquiry" },
 ];
 
 export const OBSERVED_SECTION_IDS: TechnologySectionId[] = [
@@ -73,10 +73,10 @@ export const RESEARCH_ARTICLES: ResearchArticle[] = [
 ];
 
 export const HERO_SCROLL_INDEX_ITEMS = [
-  { label: "Why an LGM", sectionIds: ["index"] },
-  { label: "Our Research", sectionIds: ["lgm-vs-llm"] },
-  { label: "Under the hood", sectionIds: ["core-reasoning"] },
-  { label: "Results", sectionIds: ["data-collection"] },
+  { label: "What's an LGM", sectionIds: ["index"] },
+  { label: "Timeline", sectionIds: ["lgm-vs-llm"] },
+  { label: "Development", sectionIds: ["core-reasoning"] },
+  { label: "A New Category", sectionIds: ["data-collection"] },
   { label: "Research Blog", sectionIds: ["research-blog"] },
   { label: "Careers & inquiry", sectionIds: ["careers", "hiring-humans"] },
 ];

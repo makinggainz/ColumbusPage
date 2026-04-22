@@ -50,7 +50,7 @@ export function TechHeroSection() {
             className={styles.techHeroDivider}
             style={{
               background:
-                "linear-gradient(to right, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0) 100%)",
+                "linear-gradient(to right, rgba(10,19,68,0.45) 0%, rgba(10,19,68,0.22) 50%, rgba(10,19,68,0) 100%)",
               ...fadeIn(0.12),
             }}
           />

@@ -36,420 +36,724 @@ export function TechnologySections() {
 
       {/* Main content column */}
       <div>
-      {/* ── 1. Why an LGM ── */}
+      {/* ── 1. What's an LGM ── */}
       <Slide id="index" className={styles.dotGrid}>
         <div className={styles.slideFrame}>
           <RevealOnView className={styles.editorialSlide}>
 
-            <h2 className={styles.sectionTitle}>Why an LGM is needed</h2>
-            <div className={styles.editorialBody}>
-              <p>
-                AI has made extraordinary progress in understanding language, but
-                the physical world remains largely uncharted territory for
-                machine intelligence. There is no foundational model that truly
-                comprehends geography, spatial relationships, and the built
-                environment at scale.
-              </p>
-              <p>
-                The decisions that shape our cities, infrastructure, and natural
-                resources are still made without the benefit of deep spatial
-                reasoning. Lorem ipsum dolor sit amet, consectetur adipiscing
-                elit. Sed do eiusmod tempor incididunt ut labore et dolore magna
-                aliqua. Ut enim ad minim veniam, quis nostrud exercitation
-                ullamco laboris.
-              </p>
-              <p>
-                A Large Geospatial Model fills this gap — a foundational model
-                purpose-built to reason about Earth, its terrain, its
-                infrastructure, and the patterns that emerge when billions of
-                spatial data points converge. Duis aute irure dolor in
-                reprehenderit in voluptate velit esse cillum dolore eu fugiat
-                nulla pariatur.
-              </p>
+            <div className={styles.lgmCompareLayout}>
+              <div className={styles.lgmCompareText}>
+                <span className={styles.sectionEyebrow}>What&rsquo;s an LGM</span>
+                <h2 className={styles.sectionTitle}>
+                  Large Geospatial Model vs Large Language Model.
+                </h2>
+                <div className={styles.editorialBody}>
+                  <p>
+                    If an LLM is for the digital world, our LGM is for the
+                    physical world.
+                    <br />
+                    We&rsquo;re personifying earth with physical AI. Instead of
+                    words, we process data about our surroundings and the
+                    anthropology in them.
+                  </p>
+                  <p>
+                    A new foundational model is needed.
+                    <br />
+                    Lorem Ipsum is simply dummy text of the printing and
+                    typesetting industry. Lorem Ipsum has been the industry&rsquo;s
+                    standard dummy text ever since the 1500s, when an unknown
+                    printer took a galley of type and scrambled it to make a type
+                    specimen book. It has survived not only five centuries, but
+                    also the leap into electronic typesetting, remaining
+                    essentially unchanged. It was popularised in the 1960s with
+                    the release of Letraset sheets containing Lorem Ipsum
+                    passages, and more recently with desktop publishing software
+                    like Aldus PageMaker including versions of Lorem Ipsum.
+                  </p>
+                </div>
+                <a href="#" className={styles.lgmInlineCta}>
+                  <span>Read our in-depth article</span>
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden>
+                    <path d="M2.5 9.5L9.5 2.5M9.5 2.5H4M9.5 2.5V8" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </a>
+              </div>
+
+              <div className={styles.lgmCompareArt} aria-hidden>
+                <svg viewBox="0 0 240 320" fill="none" preserveAspectRatio="xMidYMid meet">
+                  {/* Back edges (dashed, further from viewer) */}
+                  <path d="M90 40 L175 60" stroke="rgba(37,99,235,0.35)" strokeWidth="0.9" strokeDasharray="3 3" />
+                  <path d="M90 40 L60 230" stroke="rgba(37,99,235,0.35)" strokeWidth="0.9" strokeDasharray="3 3" />
+                  {/* Top face */}
+                  <path d="M30 50 L90 40 L175 60 L120 80 Z" stroke="rgba(37,99,235,0.75)" strokeWidth="1.1" fill="none" />
+                  {/* Front vertical edges */}
+                  <path d="M30 50 L60 230" stroke="rgba(37,99,235,0.75)" strokeWidth="1.1" fill="none" />
+                  <path d="M120 80 L150 270" stroke="rgba(37,99,235,0.75)" strokeWidth="1.1" fill="none" />
+                  <path d="M175 60 L205 250" stroke="rgba(37,99,235,0.75)" strokeWidth="1.1" fill="none" />
+                  {/* Bottom face */}
+                  <path d="M60 230 L150 270 L205 250" stroke="rgba(37,99,235,0.75)" strokeWidth="1.1" fill="none" />
+                  {/* Mid-section cross edge (dashed far) */}
+                  <path d="M60 230 L175 60" stroke="rgba(37,99,235,0.3)" strokeWidth="0.7" strokeDasharray="2 3" />
+                  {/* Mid-band horizontal */}
+                  <path d="M40 150 L195 175" stroke="rgba(37,99,235,0.55)" strokeWidth="0.9" fill="none" />
+                </svg>
+              </div>
             </div>
-            <a href="/use-cases" className={styles.sectionCta}>
-              <span>Explore use cases</span>
-              <svg width="10" height="18" viewBox="0 0 10 18" fill="none" aria-hidden>
-                <path d="M1 1l8 8-8 8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </a>
+
+            {/* ── Comparison table ── */}
+            <div className={styles.lgmCompareTable} aria-hidden={false}>
+              <h3 className={styles.lgmCompareTableTitle}>Whats the difference?</h3>
+
+              <div className={styles.lgmCompareTableHead}>
+                <div />
+                <div className={styles.lgmCompareColHead}>LLM</div>
+                <div className={styles.lgmCompareColHead}>Vision Model</div>
+                <div className={styles.lgmCompareColHead}>LGM</div>
+              </div>
+
+              <div className={styles.lgmCompareTableBody}>
+                <div className={styles.lgmCompareRowLabel}>
+                  <div>Input</div>
+                  <div>Output</div>
+                </div>
+                <div className={styles.lgmCompareCell}>
+                  <p className={styles.lgmCompareCellText}>
+                    alargelanguagelearningmodelistrainedonhugesetsoftextdatafortokenizationofmanywordsoftenfromarticleslargetextbookset
+                    280, 1170, 296, 4088, 30773, 4012, 5079, 2534, 3883, 263,
+                  </p>
+                </div>
+                <div className={styles.lgmCompareCell} />
+                <div className={styles.lgmCompareCell} />
+              </div>
+
+              <div className={styles.lgmCompareTableExamples}>
+                <div className={styles.lgmCompareRowLabel}>Examples</div>
+                <div className={styles.lgmCompareExampleCell}>
+                  <ul className={styles.lgmCompareExampleList}>
+                    <li>ChatGPT</li>
+                    <li>Claude</li>
+                    <li>Grok</li>
+                    <li>perplexity</li>
+                  </ul>
+                </div>
+                <div className={styles.lgmCompareExampleCell}>
+                  <ul className={styles.lgmCompareExampleList}>
+                    <li>Clay</li>
+                    <li>Google Deepmind</li>
+                    <li>Maxar</li>
+                  </ul>
+                </div>
+                <div className={styles.lgmCompareExampleCell}>
+                  <div className={styles.lgmCompareBrandMark}>
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden>
+                      <circle cx="12" cy="12" r="10" stroke="#0A1344" strokeWidth="1.5" />
+                      <path d="M2 12h20M12 2a14 14 0 010 20M12 2a14 14 0 000 20" stroke="#0A1344" strokeWidth="1" />
+                    </svg>
+                    <span>Columbus Earth</span>
+                  </div>
+                </div>
+              </div>
+            </div>
           </RevealOnView>
         </div>
       </Slide>
 
-      {/* ── 2. Our Research (Synopsis) ── */}
+      {/* ── 2. A New Foundational Model ── */}
       <Slide id="lgm-vs-llm" className={styles.lgmSlide}>
         <div className={styles.slideFrame}>
-          <RevealOnView className={styles.editorialSlide}>
-            <h2 className={styles.sectionTitle}>Our Research</h2>
-            <p className={styles.sectionLead}>
-              We&apos;ve come up with several innovations within data collection,
-              fusion, and reasoning, which we combine in unique ways in our
-              research.
-            </p>
-            <div className={styles.editorialBody}>
-              <p>
-                <strong>Proprietary Data Collection.</strong> Our collection
-                methodology goes beyond conventional satellite imagery and public
-                datasets. We&apos;ve developed autonomous ingestion pipelines
-                that harvest geospatial signals from dormant data sources —
-                infrastructure telemetry, environmental sensors, commercial
-                transaction patterns — and normalize them into a unified
-                coordinate fabric. Lorem ipsum dolor sit amet, consectetur
-                adipiscing elit.
-              </p>
-              <p>
-                <strong>Data Digestion &amp; Fusion.</strong> Raw geospatial data
-                is inherently fragmented, contradictory, and incomplete. Our
-                fusion engine spatially pairs unformatted data, resolves
-                geocoding conflicts, and structures broken datasets into coherent
-                layers. Sed do eiusmod tempor incididunt ut labore et dolore
-                magna aliqua. Ut enim ad minim veniam.
-              </p>
-              <p>
-                <strong>Comprehension &amp; Extrapolation.</strong> Where
-                traditional systems store and retrieve, our model comprehends —
-                understanding the semantic nature of a city&apos;s fabric, the
-                relationship between terrain and infrastructure, and the patterns
-                that predict what should exist where it doesn&apos;t yet. Duis
-                aute irure dolor in reprehenderit in voluptate velit esse cillum
-                dolore eu fugiat nulla pariatur.
-              </p>
-              <p>
-                <strong>Generative Layer Synthesis.</strong> From comprehension,
-                the model generates entirely new geospatial layers — predictions
-                about solar roof viability, resident behavior patterns, safety
-                scoring — without expensive manual surveying. Excepteur sint
-                occaecat cupidatat non proident.
-              </p>
-              <p>
-                <strong>Coordinate-level Reasoning.</strong> The final stage
-                combines all upstream innovations into a reasoning engine that
-                operates at the coordinate level, drawing inferences across
-                billions of spatial data points simultaneously. This is the core
-                of the Universal Geospatial Model. Lorem ipsum dolor sit amet
-                consectetur adipiscing elit integer nec odio.
-              </p>
-            </div>
+          <RevealOnView className={`${styles.editorialSlide} ${styles.lgmFoundationalSlide}`}>
+            <p className={styles.lgmKicker}>A NEW FOUNDATIONAL MODEL</p>
+            <h2 className={styles.lgmFoundationalTitle}>
+              A Large Geospatial Model is the next frontier in AI
+            </h2>
+            <p className={styles.lgmFoundationalLead}>And we&apos;ve already flown off the edge.</p>
 
-            {/* Timeline labels above the line */}
-            <div className={styles.timelineLabels}>
-              <div className={styles.timelineLabel}>
-                <span>LLM</span>
-                <div className={styles.timelineLabelStick} />
+            <div className={styles.lgmTimeline}>
+              <div className={styles.lgmTimelineAbove}>
+                <div className={styles.lgmTimelineCol}><span className={styles.lgmTimelineYear}>2022</span></div>
+                <div className={styles.lgmTimelineCol}><span className={styles.lgmTimelineYear}>2025</span></div>
+                <div className={styles.lgmTimelineCol}>
+                  <span className={styles.lgmTimelineYear}>2026</span>
+                  <span className={styles.lgmTimelineIcon} aria-hidden>
+                    <svg viewBox="0 0 40 40" fill="none">
+                      <circle cx="20" cy="20" r="17" stroke="currentColor" strokeWidth="1.2" />
+                      <ellipse cx="20" cy="20" rx="17" ry="8" stroke="currentColor" strokeWidth="1" />
+                      <ellipse cx="20" cy="20" rx="8" ry="17" stroke="currentColor" strokeWidth="1" />
+                      <line x1="3" y1="20" x2="37" y2="20" stroke="currentColor" strokeWidth="1" />
+                      <line x1="20" y1="3" x2="20" y2="37" stroke="currentColor" strokeWidth="1" />
+                    </svg>
+                  </span>
+                </div>
+                <div className={styles.lgmTimelineCol}><span className={styles.lgmTimelineYear}>2028</span></div>
               </div>
-              <div className={styles.timelineLabel}>
-                <span>Geo-tuned LLM<br />+ Vision Models</span>
-                <div className={styles.timelineLabelStick} />
+
+              <div className={styles.lgmTimelineLine}>
+                <span className={styles.lgmTimelineTick} />
+                <span className={styles.lgmTimelineTick} />
+                <span className={styles.lgmTimelineTick} />
+                <span className={styles.lgmTimelineTick} />
               </div>
-              <div className={styles.timelineLabel}>
-                <span>Generalist<br />LGM</span>
-                <div className={styles.timelineLabelStick} />
-              </div>
-              <div className={styles.timelineLabel}>
-                <span>Universal<br />Geospatial<br />Model</span>
-                <div className={styles.timelineLabelStick} />
+
+              <div className={styles.lgmTimelineBelow}>
+                <div className={styles.lgmTimelineCol}>
+                  <span className={styles.lgmTimelineLabel}>LLM</span>
+                </div>
+                <div className={styles.lgmTimelineCol}>
+                  <span className={styles.lgmTimelineLabel}>
+                    Geo-tuned LLM<br />&amp; Vision Models
+                  </span>
+                </div>
+                <div className={styles.lgmTimelineCol}>
+                  <span className={styles.lgmTimelineLabel}>Generalist<br />LGM</span>
+                  <a href="#" className={styles.lgmTimelineLink}>
+                    Read our Paper
+                    <svg width="10" height="10" viewBox="0 0 10 10" aria-hidden>
+                      <path d="M2 8l6-6M3.5 2H8v4.5" stroke="currentColor" strokeWidth="1.3" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </a>
+                </div>
+                <div className={styles.lgmTimelineCol}>
+                  <span className={styles.lgmTimelineLabel}>UGM</span>
+                  <a href="#" className={styles.lgmTimelineLink}>
+                    Our Game Plan
+                    <svg width="10" height="10" viewBox="0 0 10 10" aria-hidden>
+                      <path d="M2 8l6-6M3.5 2H8v4.5" stroke="currentColor" strokeWidth="1.3" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </a>
+                </div>
               </div>
             </div>
 
-            <div className={styles.comparisonTrack} />
-
-            <div className={styles.comparisonGrid}>
-              <div className={styles.comparisonColumn}>
-                <div className={styles.comparisonBody}>
-                  <p>A large language model is trained on huge sets of text data for tokenization</p>
-                  <p className={styles.comparisonMono}>280, 1170, 296, 4088, 30773, 4012, 5079, 2534, 3883, 263, 29072, 268, 64696</p>
-                </div>
-                <div className={styles.comparisonFooter}>
-                  <span>[ Transformer Attention ]</span>
-                  <p>Drawbacks: hallucination</p>
-                </div>
-                <a href="#" className={styles.comparisonLink}>Read our in-depth article &#8250;</a>
-              </div>
-
-              <div className={styles.comparisonColumn}>
-                <div className={styles.comparisonBody}>
-                  <p>Comprehending images, and predicting certain things like size from Earth imagery and context.</p>
-                </div>
-                <div className={styles.comparisonFooter}>
-                  <span>[ Reverse Diffusion ]</span>
-                </div>
-              </div>
-
-              <div className={styles.comparisonColumn}>
-                <div className={styles.comparisonBody}>
-                  <p>Big Data pre-trained Large Geospatial Model</p>
-                  <p>requiring fine-tuned labeling for each earth topic (e.g. physics etc)</p>
-                </div>
-                <a href="#" className={styles.comparisonLink}>Read our Paper &#8250;</a>
-              </div>
-
-              <div className={styles.comparisonColumn}>
-                <div className={styles.comparisonBody}>
-                  <p>An AGI for the physical world</p>
-                </div>
-                <a href="#" className={styles.comparisonLink}>Our Game Plan &#8250;</a>
-              </div>
-            </div>
-            <a href="#" className={styles.sectionCta}>
-              <span>Read our research papers</span>
-              <svg width="10" height="18" viewBox="0 0 10 18" fill="none" aria-hidden>
-                <path d="M1 1l8 8-8 8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
+            <a href="#" className={styles.lgmArticleCard}>
+              <p>
+                Read our article on<br />
+                the drawbacks of LLMs &amp; vision models.<br />
+                How the LGM innovates.
+              </p>
             </a>
           </RevealOnView>
         </div>
       </Slide>
 
-      {/* ── 3. Glimpse under the hood ── */}
+      {/* ── 3. Core Reasoning / Our Research ── */}
       <Slide id="core-reasoning" className={styles.coreReasoningSlide}>
-        <div className={styles.verticalLineOverlay} aria-hidden="true" />
         <div className={styles.slideFrame}>
-          <RevealOnView className={styles.editorialSlide}>
-            <h2 className={styles.sectionTitle}>Glimpse under the hood</h2>
-            <p className={styles.sectionLead}>
-              Three stages — collect, fuse, reason — working together to
-              produce spatial intelligence at scale.
+          <RevealOnView className={`${styles.editorialSlide} ${styles.coreResearchSlide}`}>
+            <div className={styles.coreResearchIntroRow}>
+              <div className={styles.coreResearchIntroText}>
+                <p className={styles.lgmKicker}>CORE REASONING</p>
+                <h2 className={styles.coreResearchTitle}>Our research</h2>
+                <p className={styles.coreResearchLead}>
+                  We&apos;ve come up with several innovations within data
+                  collection, fusion, and core reasoning. We combine several
+                  innovations in unique ways in our research.
+                </p>
+              </div>
+              <div className={styles.coreResearchStarburst} aria-hidden>
+                <svg viewBox="0 0 400 400" fill="none" preserveAspectRatio="xMidYMid meet">
+                  {Array.from({ length: 14 }).map((_, i) => {
+                    const angle = (i * 360) / 14 + (i % 2 === 0 ? 6 : -10);
+                    const rad = (angle * Math.PI) / 180;
+                    const len = 120 + (i % 3) * 40;
+                    const x2 = 200 + Math.cos(rad) * len;
+                    const y2 = 200 + Math.sin(rad) * len;
+                    return (
+                      <g key={i}>
+                        <line x1="200" y1="200" x2={x2} y2={y2} stroke="rgba(10, 19, 68, 0.85)" strokeWidth="1" />
+                        {Array.from({ length: Math.max(6, Math.floor(len / 14)) }).map((_, t) => {
+                          const tx = 200 + Math.cos(rad) * (14 + t * 12);
+                          const ty = 200 + Math.sin(rad) * (14 + t * 12);
+                          const perp = rad + Math.PI / 2;
+                          return (
+                            <line
+                              key={t}
+                              x1={tx - Math.cos(perp) * 3}
+                              y1={ty - Math.sin(perp) * 3}
+                              x2={tx + Math.cos(perp) * 3}
+                              y2={ty + Math.sin(perp) * 3}
+                              stroke="rgba(10, 19, 68, 0.75)"
+                              strokeWidth="0.8"
+                            />
+                          );
+                        })}
+                      </g>
+                    );
+                  })}
+                </svg>
+              </div>
+            </div>
+
+            <div className={styles.coreResearchAside}>
+              <p>
+                We learned first-hand how LLMs are not built for geospatial
+                needs. We set out to fix every technical issue that came with
+                GPT architecture and it converged into a new foundational
+                model, the LGM.
+              </p>
+              <a href="#" className={styles.coreResearchAsideLink}>
+                Why LLMs didn&apos;t work
+                <svg width="10" height="10" viewBox="0 0 10 10" aria-hidden>
+                  <path d="M2 8l6-6M3.5 2H8v4.5" stroke="currentColor" strokeWidth="1.3" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </a>
+            </div>
+
+            <p className={styles.coreResearchIntroLine}>
+              Our proprietary architecture is comprised of 3 parts. Within each
+              are several innovations built during our practical research.
             </p>
-            <div className={styles.editorialBody}>
-              <p>
-                <strong>Data Collection.</strong> We ingest geospatial data from
-                hundreds of sources — satellite imagery, sensor networks, public
-                records, and proprietary feeds — normalizing them into a unified
-                coordinate system.
-              </p>
-              <p>
-                <strong>Fusion.</strong> Fragmented, broken, and unlabeled data
-                is spatially paired, geocoded, and structured. Our pipeline
-                resolves conflicts between overlapping datasets and fills gaps
-                through intelligent interpolation.
-              </p>
-              <p>
-                <strong>Reasoning.</strong> The model reasons over fused data
-                using coordinate-level attention — understanding not just what
-                exists at a location, but how it relates to everything around it.
-              </p>
+
+            <div className={styles.coreResearchGrid}>
+              <div className={styles.coreResearchArt} aria-hidden>
+                <svg viewBox="0 0 300 420" fill="none" preserveAspectRatio="xMidYMid meet">
+                  <path d="M40 60 L260 60 L230 130 L70 130 Z" stroke="rgba(10,19,68,0.7)" strokeWidth="1" fill="none" />
+                  <path d="M40 60 L70 130" stroke="rgba(10,19,68,0.7)" strokeWidth="1" />
+                  <path d="M260 60 L230 130" stroke="rgba(10,19,68,0.7)" strokeWidth="1" />
+                  <path d="M70 180 L230 180 L210 250 L90 250 Z" stroke="rgba(10,19,68,0.7)" strokeWidth="1" fill="none" />
+                  <path d="M70 180 L90 250" stroke="rgba(10,19,68,0.7)" strokeWidth="1" />
+                  <path d="M230 180 L210 250" stroke="rgba(10,19,68,0.7)" strokeWidth="1" />
+                  <path d="M30 290 L270 290 L245 380 L55 380 Z" stroke="rgba(10,19,68,0.7)" strokeWidth="1" fill="none" />
+                  <path d="M30 290 L55 380" stroke="rgba(10,19,68,0.7)" strokeWidth="1" />
+                  <path d="M270 290 L245 380" stroke="rgba(10,19,68,0.7)" strokeWidth="1" />
+                </svg>
+              </div>
+
+              <div className={styles.coreResearchBody}>
+                <div className={styles.coreResearchGroup}>
+                  <div className={styles.coreResearchGroupHead}>
+                    <span className={styles.coreResearchGroupDash} aria-hidden />
+                    <h3>Data Collection</h3>
+                    <span className={styles.coreResearchGroupPlus}>+</span>
+                  </div>
+                  <p>
+                    The most extensive data collection in the industry. Versatile
+                    methods ranging from drones, car data, human data, public data
+                    and more.
+                  </p>
+                  <p>
+                    We&apos;ve achieved the cheapest <mark>P/POI.</mark>
+                  </p>
+                  <a href="#" className={styles.coreResearchGroupLink}>
+                    Read our blog
+                    <svg width="10" height="10" viewBox="0 0 10 10" aria-hidden>
+                      <path d="M2 8l6-6M3.5 2H8v4.5" stroke="currentColor" strokeWidth="1.3" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </a>
+                </div>
+
+                <div className={styles.coreResearchGroup}>
+                  <div className={styles.coreResearchGroupHead}>
+                    <span className={styles.coreResearchGroupDash} aria-hidden />
+                    <h3>Fusion</h3>
+                    <span className={styles.coreResearchGroupPlus}>+</span>
+                  </div>
+                  <p>
+                    Accurate, automatic data filtering <mark>&amp; labeling.</mark>
+                  </p>
+                  <p>
+                    We care about <mark>Ground Truths.</mark> We make sure each
+                    data point is the truth at that specific X,Y,Z point at that
+                    given time.
+                  </p>
+                  <p>
+                    Data scarcity is one of the hardest parts about the LGM
+                    endeavor. To solve this, we have built innovative methods to
+                    universally digest data. Meaning we are able to fuse data
+                    together that our model then trains on. Cheaper and more
+                    data → smarter model.
+                  </p>
+                </div>
+
+                <div className={styles.coreResearchGroup}>
+                  <div className={styles.coreResearchGroupHead}>
+                    <span className={styles.coreResearchGroupDash} aria-hidden />
+                    <h3>Core Reasoning</h3>
+                    <span className={styles.coreResearchGroupPlus}>+</span>
+                  </div>
+                  <p>
+                    Our reasoning model considers temporal data, and sifts
+                    through vast amounts of aggregated geospatial data —
+                    including anthropologic data.
+                  </p>
+                  <p>
+                    It continuously learns and creates new patterns through our
+                    relational architecture.
+                  </p>
+                  <p>
+                    Our core reasoning is comprised of a new permutation of
+                    Reverse Diffusion and RAG architecture.
+                  </p>
+                  <a href="#" className={styles.coreResearchGroupLink}>
+                    Read our Paper
+                    <svg width="10" height="10" viewBox="0 0 10 10" aria-hidden>
+                      <path d="M2 8l6-6M3.5 2H8v4.5" stroke="currentColor" strokeWidth="1.3" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </a>
+                </div>
+
+                <div className={styles.coreResearchGroup}>
+                  <div className={styles.coreResearchGroupHead}>
+                    <span className={styles.coreResearchGroupDash} aria-hidden />
+                    <h3>Answers, insights, patterns</h3>
+                    <span className={styles.coreResearchGroupPlus}>+</span>
+                  </div>
+                  <p>One model. Two products.</p>
+                  <div className={styles.coreResearchProducts}>
+                    <div className={styles.coreResearchProduct}>
+                      <span className={styles.coreResearchProductGlyph} aria-hidden>
+                        <svg viewBox="0 0 20 20" fill="none">
+                          <circle cx="10" cy="10" r="8" stroke="currentColor" strokeWidth="1.1" />
+                          <path d="M2 10h16M10 2a12 12 0 010 16M10 2a12 12 0 000 16" stroke="currentColor" strokeWidth="0.8" />
+                        </svg>
+                      </span>
+                      <span>Columbus</span>
+                    </div>
+                    <div className={styles.coreResearchProduct}>
+                      <span className={styles.coreResearchProductGlyph} aria-hidden>🐧</span>
+                      <span>Pinguin</span>
+                    </div>
+                    <div className={`${styles.coreResearchProduct} ${styles.coreResearchProductSoon}`}>
+                      <span>More soon</span>
+                    </div>
+                  </div>
+                  <a href="/use-cases" className={styles.coreResearchGroupLink}>
+                    Other use cases
+                    <svg width="10" height="10" viewBox="0 0 10 10" aria-hidden>
+                      <path d="M2 8l6-6M3.5 2H8v4.5" stroke="currentColor" strokeWidth="1.3" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </a>
+                </div>
+              </div>
             </div>
 
-            {/* Horizontal pipeline diagram:
-                Many sources → converge → Database → split → Brain Model + Earth Grid → Insights */}
-            <div className={styles.pipelineHorizontal}>
-              {/* Stage 1: Data Collection */}
-              <div className={styles.pipelineStage}>
-                <div className={styles.pipelineLabel}>Data Collection &amp; Labeling</div>
-                <div className={styles.pipelineTilesV}>
-                  {Array.from({ length: 5 }).map((_, index) => (
-                    <div key={`tile-${index}`} className={styles.pipelineTile} />
-                  ))}
-                </div>
-              </div>
-
-              {/* Converging lines: 5 sources → 1 */}
-              <svg className={styles.pipelineConverge} viewBox="0 0 80 100" fill="none" aria-hidden>
-                {[10, 30, 50, 70, 90].map((y) => (
-                  <path key={y} d={`M0 ${y} C40 ${y} 60 50 80 50`} className={styles.dashedPathRed} />
-                ))}
-              </svg>
-
-              {/* Stage 2: Columbus Database */}
-              <div className={styles.pipelineStage}>
-                <div className={styles.pipelineLabel}>Columbus Database</div>
-                <div className={styles.pipelineNode} />
-              </div>
-
-              {/* Splitting lines: 1 → 2 */}
-              <svg className={styles.pipelineSplit} viewBox="0 0 80 80" fill="none" aria-hidden>
-                <path d="M0 40 C20 40 40 20 80 20" className={styles.dashedPathRed} />
-                <path d="M0 40 C20 40 40 60 80 60" className={styles.dashedPathRed} />
-              </svg>
-
-              {/* Stage 3: Brain Model + Earth Grid stacked */}
-              <div className={styles.pipelineOutputs}>
-                <div className={styles.pipelineStageSmall}>
-                  <div className={styles.pipelineLabel}>Brain Model</div>
-                  <div className={styles.pipelineBlob} />
-                </div>
-                <div className={styles.pipelineStageSmall}>
-                  <div className={styles.pipelineLabel}>Earth Grid</div>
-                  <div className={styles.pipelineGridIcon} />
-                </div>
-              </div>
-
-              {/* Final arrow */}
-              <svg className={styles.pipelineArrowH} viewBox="0 0 60 24" fill="none" aria-hidden>
-                <path d="M0 12 L48 12 M40 4 L48 12 L40 20" className={styles.dashedPathRed} />
-              </svg>
-
-              {/* Result */}
-              <div className={styles.pipelineResult}>
-                <span>Insights, Patterns, Answers.</span>
-              </div>
-            </div>
-
-            <a href="/maps-gpt" className={styles.sectionCta}>
-              <span>Try it yourself</span>
-              <svg width="10" height="18" viewBox="0 0 10 18" fill="none" aria-hidden>
-                <path d="M1 1l8 8-8 8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
+            <a href="#" className={styles.lgmArticleCard}>
+              <p>
+                Read our articles on<br />
+                <strong>our foundational model research</strong>
+              </p>
             </a>
           </RevealOnView>
         </div>
       </Slide>
 
-      {/* ── 4. Results ── */}
+      {/* ── 4. Results / Model Columbus-01 ── */}
       <Slide id="data-collection" className={styles.dataCollectionSection}>
         <div className={styles.slideFrame}>
-          <RevealOnView className={styles.editorialSlide}>
-            <h2 className={styles.sectionTitle}>Results</h2>
-            <p className={styles.sectionLead}>
-              The products of an LGM — what it produces, how it performs, and
-              how it compares.
-            </p>
+          <RevealOnView className={`${styles.editorialSlide} ${styles.resultsSlide}`}>
+            <p className={styles.lgmKicker}>RESULTS</p>
+            <h2 className={styles.resultsTitle}>MODEL COLUMBUS-01</h2>
+            <p className={styles.resultsLead}>The latest results from our development of the LGM.</p>
 
-            <div className={styles.metricGrid}>
-              <div className={styles.metricCard}>
-                <span className={styles.metricNumber}>13T+</span>
-                <span className={styles.metricLabel}>Grid cells indexed</span>
+            <div className={styles.resultsGrid}>
+              <div className={styles.resultsCard}>
+                <div className={styles.resultsCardCopy}>
+                  <span className={styles.resultsCardNumber}>1</span>
+                  <p className={styles.resultsCardText}>
+                    Fast semantic reasoning in cities.<br />Contextual enrichment.
+                  </p>
+                </div>
+                <div className={styles.resultsCardArt} aria-hidden>
+                  <svg viewBox="0 0 320 220" fill="none" preserveAspectRatio="xMidYMid slice">
+                    {Array.from({ length: 9 }).map((_, i) => (
+                      <line key={`vx${i}`} x1={40 + i * 32} y1="20" x2={-40 + i * 32} y2="200" stroke="rgba(255,255,255,0.3)" strokeWidth="0.6" />
+                    ))}
+                    {Array.from({ length: 7 }).map((_, i) => (
+                      <line key={`hy${i}`} x1="0" y1={40 + i * 28} x2="320" y2={20 + i * 28} stroke="rgba(255,255,255,0.3)" strokeWidth="0.6" />
+                    ))}
+                    {[[80,70],[150,60],[220,75],[100,120],[175,110],[250,130],[120,170],[200,165]].map(([x,y], idx) => (
+                      <g key={idx}>
+                        <path d={`M${x} ${y} L${x+24} ${y-8} L${x+34} ${y+4} L${x+18} ${y+18} L${x} ${y+12} Z`} stroke="rgba(255,255,255,0.8)" strokeWidth="0.9" fill="none" />
+                        <path d={`M${x+4} ${y-2} L${x+18} ${y-8}`} stroke="rgba(255,255,255,0.55)" strokeWidth="0.6" />
+                      </g>
+                    ))}
+                  </svg>
+                </div>
               </div>
-              <div className={styles.metricCard}>
-                <span className={styles.metricNumber}>100m</span>
-                <span className={styles.metricLabel}>Resolution per cell</span>
+
+              <div className={styles.resultsCard}>
+                <div className={styles.resultsCardCopy}>
+                  <span className={styles.resultsCardNumber}>2</span>
+                  <p className={styles.resultsCardText}>
+                    Generalist model,<br />with access to<br />wide catalogue
+                  </p>
+                </div>
+                <div className={styles.resultsCardArt} aria-hidden>
+                  <svg viewBox="0 0 320 220" fill="none" preserveAspectRatio="xMidYMid slice">
+                    {Array.from({ length: 18 }).map((_, i) => (
+                      <line key={`g1-${i}`} x1={20 + i * 16} y1="120" x2={20 + i * 16} y2={120 + 40 * Math.sin((i / 18) * Math.PI * 2)} stroke="rgba(255,255,255,0.4)" strokeWidth="0.6" />
+                    ))}
+                    <ellipse cx="160" cy="115" rx="100" ry="18" stroke="rgba(255,255,255,0.5)" strokeWidth="0.8" />
+                    {Array.from({ length: 10 }).map((_, i) => (
+                      <ellipse key={`r${i}`} cx="160" cy="115" rx={10 + i * 10} ry={2 + i * 1.8} stroke="rgba(255,255,255,0.2)" strokeWidth="0.4" />
+                    ))}
+                    <circle cx="160" cy="115" r="14" stroke="rgba(255,255,255,0.9)" strokeWidth="0.8" fill="rgba(255,255,255,0.12)" />
+                  </svg>
+                </div>
               </div>
-              <div className={styles.metricCard}>
-                <span className={styles.metricNumber}>Global</span>
-                <span className={styles.metricLabel}>Earth coverage</span>
+
+              <div className={styles.resultsCard}>
+                <div className={styles.resultsCardCopy}>
+                  <span className={styles.resultsCardNumber}>3</span>
+                  <p className={styles.resultsCardText}>
+                    Generative<br />geospatial data
+                  </p>
+                </div>
+                <div className={styles.resultsCardArt} aria-hidden>
+                  <svg viewBox="0 0 320 220" fill="none" preserveAspectRatio="xMidYMid slice">
+                    {[0, 1, 2].map((layer) => {
+                      const yBase = 60 + layer * 50;
+                      return (
+                        <g key={layer}>
+                          {Array.from({ length: 14 }).map((_, i) => (
+                            <line key={`vx${layer}-${i}`} x1={30 + i * 20} y1={yBase - 18} x2={10 + i * 20} y2={yBase + 18} stroke="rgba(255,255,255,0.35)" strokeWidth="0.5" />
+                          ))}
+                          {Array.from({ length: 4 }).map((_, i) => (
+                            <line key={`hz${layer}-${i}`} x1="30" y1={yBase - 18 + i * 12} x2="290" y2={yBase - 18 + i * 12 - 6} stroke="rgba(255,255,255,0.3)" strokeWidth="0.5" />
+                          ))}
+                        </g>
+                      );
+                    })}
+                  </svg>
+                </div>
               </div>
-              <div className={styles.metricCard}>
-                <span className={styles.metricNumber}>3&times;</span>
-                <span className={styles.metricLabel}>Accuracy vs traditional</span>
-              </div>
-              <div className={styles.metricCard}>
-                <span className={styles.metricNumber}>Real-time</span>
-                <span className={styles.metricLabel}>Processing speed</span>
-              </div>
-              <div className={styles.metricCard}>
-                <span className={styles.metricNumber}>500+</span>
-                <span className={styles.metricLabel}>Data sources fused</span>
+
+              <div className={styles.resultsCard}>
+                <div className={styles.resultsCardCopy}>
+                  <span className={styles.resultsCardNumber}>4</span>
+                  <p className={styles.resultsCardText}>
+                    Deep spatial<br />reasoning at<br />scale
+                  </p>
+                </div>
+                <div className={styles.resultsCardArt} aria-hidden>
+                  <svg viewBox="0 0 320 220" fill="none" preserveAspectRatio="xMidYMid slice">
+                    <ellipse cx="160" cy="70" rx="110" ry="22" stroke="rgba(255,255,255,0.45)" strokeWidth="0.7" />
+                    <ellipse cx="160" cy="170" rx="120" ry="24" stroke="rgba(255,255,255,0.45)" strokeWidth="0.7" />
+                    {Array.from({ length: 14 }).map((_, i) => {
+                      const a = (i / 14) * Math.PI * 2;
+                      return <line key={`s${i}`} x1={160 + Math.cos(a) * 8} y1="110" x2={160 + Math.cos(a) * 50} y2={120 + Math.sin(a) * 4} stroke="rgba(255,255,255,0.4)" strokeWidth="0.5" />;
+                    })}
+                    <path d="M150 30 L160 100 L170 30 M155 30 L165 95" stroke="rgba(255,255,255,0.75)" strokeWidth="0.8" fill="none" />
+                    <path d="M160 110 L140 160 M160 110 L180 160 M160 110 L155 170 M160 110 L165 170" stroke="rgba(255,255,255,0.5)" strokeWidth="0.6" />
+                  </svg>
+                </div>
               </div>
             </div>
 
-            <a href="/use-cases" className={styles.sectionCta}>
-              <span>See it in action</span>
-              <svg width="10" height="18" viewBox="0 0 10 18" fill="none" aria-hidden>
-                <path d="M1 1l8 8-8 8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </a>
+            <div className={styles.resultsArticlesRow}>
+              <a href="#" className={styles.lgmArticleCard}>
+                <p>
+                  Read our article on Mapping the<br />
+                  <strong>unknown with Gen Layers</strong>
+                </p>
+              </a>
+              <a href="#" className={styles.lgmArticleCard}>
+                <p>Read our article on</p>
+              </a>
+            </div>
           </RevealOnView>
         </div>
       </Slide>
 
-      {/* ── 5. Research ── */}
+      {/* ── 5. Research Blog + Gen Layers + The Grid ── */}
       <Slide id="research-blog">
         <div className={styles.slideFrame}>
-          <RevealOnView className={`${styles.editorialSlide} ${styles.researchEditorial}`}>
+          <div className={styles.researchBlogWrap}>
+            <RevealOnView className={`${styles.editorialSlide} ${styles.researchEditorial}`}>
+              <h2 className={styles.sectionTitle}>Read our latest releases</h2>
+              <p className={styles.sectionLead}>
+                Explore the innovative research and recent papers from our team.
+              </p>
 
-            <h2 className={styles.sectionTitle}>Read our latest releases</h2>
-            <p className={styles.sectionLead}>
-              Explore the innovative research and recent papers from our team.
-            </p>
-
-            {/* Featured papers — rectangular card grid */}
-            <div className={styles.researchCardGrid}>
-              {/* Card 1: Philosophy — wireframe globe */}
-              <a href={RESEARCH_CARDS[0].href} className={styles.researchCard}>
-                <svg className={styles.researchCardArt} viewBox="0 0 200 200" fill="none" aria-hidden>
-                  <circle cx="100" cy="100" r="70" stroke="rgba(37,99,235,0.3)" strokeWidth="1" />
-                  <ellipse cx="100" cy="100" rx="70" ry="30" stroke="rgba(37,99,235,0.22)" strokeWidth="0.8" />
-                  <ellipse cx="100" cy="100" rx="70" ry="50" stroke="rgba(37,99,235,0.22)" strokeWidth="0.8" />
-                  <ellipse cx="100" cy="100" rx="30" ry="70" stroke="rgba(37,99,235,0.22)" strokeWidth="0.8" />
-                  <ellipse cx="100" cy="100" rx="50" ry="70" stroke="rgba(37,99,235,0.22)" strokeWidth="0.8" />
-                  <line x1="30" y1="100" x2="170" y2="100" stroke="rgba(37,99,235,0.35)" strokeWidth="1" />
-                  <line x1="100" y1="30" x2="100" y2="170" stroke="rgba(37,99,235,0.35)" strokeWidth="1" />
-                  <line x1="30" y1="80" x2="170" y2="80" stroke="rgba(37,99,235,0.15)" strokeWidth="0.6" />
-                  <line x1="30" y1="120" x2="170" y2="120" stroke="rgba(37,99,235,0.15)" strokeWidth="0.6" />
-                </svg>
-                <span className={styles.researchCardTitle}>{RESEARCH_CARDS[0].title}</span>
-                <span className={styles.researchCardArrow}>&#8599;</span>
-              </a>
-
-              {/* Card 2: Architecture — grid/network diagram */}
-              <a href={RESEARCH_CARDS[1].href} className={styles.researchCard}>
-                <svg className={styles.researchCardArt} viewBox="0 0 200 200" fill="none" aria-hidden>
-                  {/* Grid lines */}
-                  {[40, 80, 120, 160].map(x => (
-                    <line key={`v${x}`} x1={x} y1="30" x2={x} y2="170" stroke="rgba(37,99,235,0.18)" strokeWidth="0.6" />
-                  ))}
-                  {[40, 80, 120, 160].map(y => (
-                    <line key={`h${y}`} x1="30" y1={y} x2="170" y2={y} stroke="rgba(37,99,235,0.18)" strokeWidth="0.6" />
-                  ))}
-                  {/* Nodes */}
-                  {[[40,40],[80,80],[120,40],[160,80],[80,120],[120,120],[160,160],[40,160]].map(([x,y]) => (
-                    <circle key={`n${x}${y}`} cx={x} cy={y} r="3.5" fill="rgba(37,99,235,0.35)" />
-                  ))}
-                  {/* Connections */}
-                  <path d="M40 40 L80 80 L120 40 L160 80" stroke="rgba(37,99,235,0.3)" strokeWidth="1" />
-                  <path d="M80 80 L80 120 L120 120 L160 160" stroke="rgba(37,99,235,0.3)" strokeWidth="1" />
-                  <path d="M40 160 L80 120" stroke="rgba(37,99,235,0.25)" strokeWidth="1" />
-                  <path d="M120 40 L120 120" stroke="rgba(37,99,235,0.2)" strokeWidth="0.8" strokeDasharray="4 3" />
-                </svg>
-                <span className={styles.researchCardTitle}>{RESEARCH_CARDS[1].title}</span>
-                <span className={styles.researchCardArrow}>&#8599;</span>
-              </a>
-
-              {/* Card 3: Brain — neural network pattern */}
-              <a href={RESEARCH_CARDS[2].href} className={styles.researchCard}>
-                <svg className={styles.researchCardArt} viewBox="0 0 200 200" fill="none" aria-hidden>
-                  {/* Input layer */}
-                  {[60, 100, 140].map(y => (
-                    <circle key={`i${y}`} cx="40" cy={y} r="5" stroke="rgba(37,99,235,0.35)" strokeWidth="1" fill="none" />
-                  ))}
-                  {/* Hidden layer 1 */}
-                  {[50, 85, 115, 150].map(y => (
-                    <circle key={`h1${y}`} cx="100" cy={y} r="5" stroke="rgba(37,99,235,0.35)" strokeWidth="1" fill="none" />
-                  ))}
-                  {/* Output layer */}
-                  {[75, 125].map(y => (
-                    <circle key={`o${y}`} cx="160" cy={y} r="5" stroke="rgba(37,99,235,0.35)" strokeWidth="1" fill="none" />
-                  ))}
-                  {/* Connections: input → hidden */}
-                  {[60, 100, 140].flatMap(iy =>
-                    [50, 85, 115, 150].map(hy => (
-                      <line key={`ih${iy}${hy}`} x1="45" y1={iy} x2="95" y2={hy} stroke="rgba(37,99,235,0.15)" strokeWidth="0.6" />
-                    ))
-                  )}
-                  {/* Connections: hidden → output */}
-                  {[50, 85, 115, 150].flatMap(hy =>
-                    [75, 125].map(oy => (
-                      <line key={`ho${hy}${oy}`} x1="105" y1={hy} x2="155" y2={oy} stroke="rgba(37,99,235,0.15)" strokeWidth="0.6" />
-                    ))
-                  )}
-                  {/* Highlight a couple connections */}
-                  <line x1="45" y1="100" x2="95" y2="85" stroke="rgba(37,99,235,0.4)" strokeWidth="1.2" />
-                  <line x1="105" y1="85" x2="155" y2="75" stroke="rgba(37,99,235,0.4)" strokeWidth="1.2" />
-                </svg>
-                <span className={styles.researchCardTitle}>{RESEARCH_CARDS[2].title}</span>
-                <span className={styles.researchCardArrow}>&#8599;</span>
-              </a>
-            </div>
-
-            {/* All articles — clean list rows */}
-            <div className={styles.articleList}>
-              {RESEARCH_ARTICLES.map((article) => (
-                <a
-                  key={article.title}
-                  href={article.href}
-                  className={styles.articleRow}
-                >
-                  <span className={styles.articleRowTitle}>{article.title}</span>
-                  <div className={styles.articleRowRight}>
-                    <span className={styles.articleRowDate}>{article.date}</span>
-                    <span className={styles.articleRowArrow}>&rarr;</span>
-                  </div>
-                  <span className={styles.articleRowHoverLine} />
+              {/* Featured papers — rectangular card grid */}
+              <div className={styles.researchCardGrid}>
+                {/* Card 1: Philosophy — wireframe globe */}
+                <a href={RESEARCH_CARDS[0].href} className={styles.researchCard}>
+                  <svg className={styles.researchCardArt} viewBox="0 0 200 200" fill="none" aria-hidden>
+                    <circle cx="100" cy="100" r="70" stroke="rgba(37,99,235,0.3)" strokeWidth="1" />
+                    <ellipse cx="100" cy="100" rx="70" ry="30" stroke="rgba(37,99,235,0.22)" strokeWidth="0.8" />
+                    <ellipse cx="100" cy="100" rx="70" ry="50" stroke="rgba(37,99,235,0.22)" strokeWidth="0.8" />
+                    <ellipse cx="100" cy="100" rx="30" ry="70" stroke="rgba(37,99,235,0.22)" strokeWidth="0.8" />
+                    <ellipse cx="100" cy="100" rx="50" ry="70" stroke="rgba(37,99,235,0.22)" strokeWidth="0.8" />
+                    <line x1="30" y1="100" x2="170" y2="100" stroke="rgba(37,99,235,0.35)" strokeWidth="1" />
+                    <line x1="100" y1="30" x2="100" y2="170" stroke="rgba(37,99,235,0.35)" strokeWidth="1" />
+                    <line x1="30" y1="80" x2="170" y2="80" stroke="rgba(37,99,235,0.15)" strokeWidth="0.6" />
+                    <line x1="30" y1="120" x2="170" y2="120" stroke="rgba(37,99,235,0.15)" strokeWidth="0.6" />
+                  </svg>
+                  <span className={styles.researchCardTitle}>{RESEARCH_CARDS[0].title}</span>
+                  <span className={styles.researchCardArrow}>&#8599;</span>
                 </a>
-              ))}
+
+                {/* Card 2: Architecture — grid/network diagram */}
+                <a href={RESEARCH_CARDS[1].href} className={styles.researchCard}>
+                  <svg className={styles.researchCardArt} viewBox="0 0 200 200" fill="none" aria-hidden>
+                    {[40, 80, 120, 160].map(x => (
+                      <line key={`v${x}`} x1={x} y1="30" x2={x} y2="170" stroke="rgba(37,99,235,0.18)" strokeWidth="0.6" />
+                    ))}
+                    {[40, 80, 120, 160].map(y => (
+                      <line key={`h${y}`} x1="30" y1={y} x2="170" y2={y} stroke="rgba(37,99,235,0.18)" strokeWidth="0.6" />
+                    ))}
+                    {[[40,40],[80,80],[120,40],[160,80],[80,120],[120,120],[160,160],[40,160]].map(([x,y]) => (
+                      <circle key={`n${x}${y}`} cx={x} cy={y} r="3.5" fill="rgba(37,99,235,0.35)" />
+                    ))}
+                    <path d="M40 40 L80 80 L120 40 L160 80" stroke="rgba(37,99,235,0.3)" strokeWidth="1" />
+                    <path d="M80 80 L80 120 L120 120 L160 160" stroke="rgba(37,99,235,0.3)" strokeWidth="1" />
+                    <path d="M40 160 L80 120" stroke="rgba(37,99,235,0.25)" strokeWidth="1" />
+                    <path d="M120 40 L120 120" stroke="rgba(37,99,235,0.2)" strokeWidth="0.8" strokeDasharray="4 3" />
+                  </svg>
+                  <span className={styles.researchCardTitle}>{RESEARCH_CARDS[1].title}</span>
+                  <span className={styles.researchCardArrow}>&#8599;</span>
+                </a>
+
+                {/* Card 3: Brain — neural network pattern */}
+                <a href={RESEARCH_CARDS[2].href} className={styles.researchCard}>
+                  <svg className={styles.researchCardArt} viewBox="0 0 200 200" fill="none" aria-hidden>
+                    {[60, 100, 140].map(y => (
+                      <circle key={`i${y}`} cx="40" cy={y} r="5" stroke="rgba(37,99,235,0.35)" strokeWidth="1" fill="none" />
+                    ))}
+                    {[50, 85, 115, 150].map(y => (
+                      <circle key={`h1${y}`} cx="100" cy={y} r="5" stroke="rgba(37,99,235,0.35)" strokeWidth="1" fill="none" />
+                    ))}
+                    {[75, 125].map(y => (
+                      <circle key={`o${y}`} cx="160" cy={y} r="5" stroke="rgba(37,99,235,0.35)" strokeWidth="1" fill="none" />
+                    ))}
+                    {[60, 100, 140].flatMap(iy =>
+                      [50, 85, 115, 150].map(hy => (
+                        <line key={`ih${iy}${hy}`} x1="45" y1={iy} x2="95" y2={hy} stroke="rgba(37,99,235,0.15)" strokeWidth="0.6" />
+                      ))
+                    )}
+                    {[50, 85, 115, 150].flatMap(hy =>
+                      [75, 125].map(oy => (
+                        <line key={`ho${hy}${oy}`} x1="105" y1={hy} x2="155" y2={oy} stroke="rgba(37,99,235,0.15)" strokeWidth="0.6" />
+                      ))
+                    )}
+                    <line x1="45" y1="100" x2="95" y2="85" stroke="rgba(37,99,235,0.4)" strokeWidth="1.2" />
+                    <line x1="105" y1="85" x2="155" y2="75" stroke="rgba(37,99,235,0.4)" strokeWidth="1.2" />
+                  </svg>
+                  <span className={styles.researchCardTitle}>{RESEARCH_CARDS[2].title}</span>
+                  <span className={styles.researchCardArrow}>&#8599;</span>
+                </a>
+              </div>
+
+              {/* All articles — clean list rows */}
+              <div className={styles.articleList}>
+                {RESEARCH_ARTICLES.map((article) => (
+                  <a
+                    key={article.title}
+                    href={article.href}
+                    className={styles.articleRow}
+                  >
+                    <span className={styles.articleRowTitle}>{article.title}</span>
+                    <div className={styles.articleRowRight}>
+                      <span className={styles.articleRowDate}>{article.date}</span>
+                      <span className={styles.articleRowArrow}>&rarr;</span>
+                    </div>
+                    <span className={styles.articleRowHoverLine} />
+                  </a>
+                ))}
+              </div>
+            </RevealOnView>
+
+            <div className={styles.genLayersBand}>
+              <RevealOnView className={styles.genLayersInner}>
+                <div className={styles.genLayersHead}>
+              <span className={styles.genLayersHeadLine} aria-hidden />
+              <span className={styles.genLayersHeadLabel}>Gen Layers</span>
+              <span className={styles.genLayersHeadBurst} aria-hidden>
+                <svg viewBox="0 0 80 80" fill="none">
+                  {Array.from({ length: 12 }).map((_, i) => {
+                    const angle = (i * 360) / 12;
+                    const rad = (angle * Math.PI) / 180;
+                    return <line key={i} x1="40" y1="40" x2={40 + Math.cos(rad) * 36} y2={40 + Math.sin(rad) * 36} stroke="rgba(255,255,255,0.8)" strokeWidth="0.8" />;
+                  })}
+                  <circle cx="40" cy="40" r="2" fill="rgba(255,255,255,0.9)" />
+                </svg>
+              </span>
             </div>
-          </RevealOnView>
+
+            <div className={styles.genLayersTriptych}>
+              <h3 className={styles.genLayersHeadline}>
+                Dynamically creating geodata layers, without complex and
+                expensive surveying.
+              </h3>
+
+              <div className={styles.genLayersTilesRow}>
+                <div className={styles.genLayersTile}>
+                  <div className={styles.genLayersTileArt} aria-hidden>
+                    <svg viewBox="0 0 240 280" fill="none" preserveAspectRatio="xMidYMid slice">
+                      <rect width="240" height="280" fill="rgba(40, 70, 40, 0.35)" />
+                      {Array.from({ length: 40 }).map((_, i) => (
+                        <rect key={i} x={(i * 37) % 220} y={(i * 53) % 260} width={(i % 3) + 4} height={(i % 4) + 4} fill={i % 5 === 0 ? "rgba(37,99,235,0.75)" : i % 3 === 0 ? "rgba(220, 110, 80, 0.7)" : "rgba(255,255,255,0.15)"} />
+                      ))}
+                    </svg>
+                  </div>
+                  <span className={styles.genLayersTileKicker}>Columbus GenLayer</span>
+                  <span className={styles.genLayersTileTitle}>Solar roof possibility</span>
+                </div>
+
+                <div className={styles.genLayersTile}>
+                  <div className={styles.genLayersTileArt} aria-hidden>
+                    <svg viewBox="0 0 240 280" fill="none" preserveAspectRatio="xMidYMid slice">
+                      <rect width="240" height="280" fill="rgba(130, 70, 50, 0.65)" />
+                      {Array.from({ length: 60 }).map((_, i) => (
+                        <path key={i} d={`M${(i * 17) % 230} ${(i * 31) % 270} l${(i % 6) + 4} ${(i % 5) + 2}`} stroke="rgba(60, 40, 30, 0.7)" strokeWidth="0.8" />
+                      ))}
+                      <path d="M40 140 Q130 130 200 155" stroke="rgba(80, 130, 80, 0.85)" strokeWidth="8" fill="none" />
+                    </svg>
+                  </div>
+                  <span className={styles.genLayersTileKicker}>Columbus GenLayer</span>
+                  <span className={styles.genLayersTileTitle}>Resident Vibes</span>
+                </div>
+
+                <div className={styles.genLayersTile}>
+                  <div className={styles.genLayersTileArt} aria-hidden>
+                    <svg viewBox="0 0 240 280" fill="none" preserveAspectRatio="xMidYMid slice">
+                      <rect width="240" height="280" fill="rgba(120, 120, 120, 0.45)" />
+                      {Array.from({ length: 40 }).map((_, i) => {
+                        const colors = ["rgba(220, 60, 60, 0.85)", "rgba(230, 200, 60, 0.85)", "rgba(80, 200, 120, 0.85)"];
+                        const color = colors[i % 3];
+                        return <rect key={i} x={(i * 29) % 220} y={(i * 41) % 260} width={(i % 4) + 6} height={(i % 2) + 3} fill={color} />;
+                      })}
+                    </svg>
+                  </div>
+                  <span className={styles.genLayersTileKicker}>Columbus GenLayer</span>
+                  <span className={styles.genLayersTileTitle}>Safety Score</span>
+                </div>
+              </div>
+
+              <a href="/use-cases" className={styles.genLayersExploreBtn}>
+                <span>Explore more maps we&apos;ve made</span>
+                <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden>
+                  <path d="M5 3l4 4-4 4" stroke="currentColor" strokeWidth="1.4" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </a>
+            </div>
+
+            <div className={styles.genLayersGrid}>
+              <span className={styles.genLayersGridKicker}>THE GRID</span>
+              <div className={styles.genLayersGridArt} aria-hidden>
+                <svg viewBox="0 0 900 520" fill="none" preserveAspectRatio="xMidYMid slice">
+                  <rect width="900" height="520" fill="rgba(18, 25, 40, 0.85)" />
+                  {Array.from({ length: 28 }).map((_, i) => (
+                    <line key={`vx${i}`} x1={i * 34} y1="0" x2={i * 34 - 80} y2="520" stroke="rgba(180, 180, 190, 0.12)" strokeWidth="0.6" />
+                  ))}
+                  {Array.from({ length: 16 }).map((_, i) => (
+                    <line key={`hz${i}`} x1="0" y1={i * 34} x2="900" y2={i * 34 - 30} stroke="rgba(180, 180, 190, 0.12)" strokeWidth="0.6" />
+                  ))}
+                  <polygon points="360,180 540,180 560,280 340,280" fill="rgba(240, 240, 240, 0.75)" stroke="rgba(220, 220, 220, 0.85)" />
+                  <polygon points="340,280 560,280 580,340 320,340" fill="rgba(230, 230, 230, 0.55)" />
+                  {[[150, 150, 80, 60], [680, 140, 100, 70], [140, 370, 110, 70], [700, 370, 90, 80]].map(([x, y, w, h], idx) => (
+                    <g key={idx}>
+                      <rect x={x} y={y} width={w} height={h} fill="rgba(60, 70, 85, 0.85)" stroke="rgba(140, 150, 170, 0.6)" />
+                      <rect x={x + 10} y={y + 10} width={w - 20} height={h - 20} fill="rgba(90, 100, 115, 0.55)" />
+                    </g>
+                  ))}
+                </svg>
+                <span className={styles.genLayersGridCaption}>SHIBUYA, TOKYO</span>
+              </div>
+            </div>
+              </RevealOnView>
+            </div>
+          </div>
         </div>
       </Slide>
 

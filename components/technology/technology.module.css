@@ -13,7 +13,7 @@
 }
 
 .dotGrid {
-  background-image: radial-gradient(circle, rgba(37, 99, 235, 0.15) 1.1px, transparent 1.6px);
+  background-image: radial-gradient(circle, rgba(37, 99, 235, 0.06) 1.1px, transparent 1.6px);
   background-repeat: repeat;
   background-size: 16px 16px;
   background-position: 0 0;
@@ -2694,7 +2694,7 @@
   font-weight: 300;
   line-height: 1.2;
   letter-spacing: -0.02em;
-  color: #000;
+  color: #0A1344;
 }
 
 .techHeroSubtitle {
@@ -2704,7 +2704,7 @@
   font-weight: 300;
   line-height: 1.55;
   letter-spacing: -0.005em;
-  color: #000;
+  color: rgba(10, 19, 68, 0.85);
   white-space: normal;
 }
 
@@ -2736,7 +2736,7 @@
   font-size: clamp(0.95rem, 1vw, 1.05rem);
   font-weight: 500;
   letter-spacing: -0.18px;
-  color: rgba(0, 0, 0, 0.82);
+  color: rgba(10, 19, 68, 0.85);
   text-decoration: none;
   -webkit-tap-highlight-color: transparent;
   background: rgba(255, 255, 255, 0.22);
@@ -2745,13 +2745,13 @@
   border-radius: 4px;
   cursor: pointer;
   transition: color 0.3s ease, background 0.3s ease;
-  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.08);
+  box-shadow: inset 0 0 0 1px rgba(10, 19, 68, 0.12);
 }
 
 .techHeroNavItem:hover {
-  color: #000;
+  color: #0A1344;
   background: rgba(255, 255, 255, 0.32);
-  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.14);
+  box-shadow: inset 0 0 0 1px rgba(10, 19, 68, 0.2);
 }
 
 .techHeroNavText {
@@ -2888,4 +2888,978 @@
 /* ── Research blog: reduce right inset to match homepage right boundary ── */
 .researchEditorial {
   padding-right: 0;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Section 1 — "What's an LGM" comparison layout
+   ═══════════════════════════════════════════════════════════════ */
+
+.sectionEyebrow {
+  display: block;
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  color: #6E6E73;
+  margin-bottom: 6px;
+}
+
+.lgmCompareLayout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(240px, 0.9fr);
+  gap: clamp(32px, 5vw, 80px);
+  align-items: start;
+}
+
+.lgmCompareText {
+  min-width: 0;
+}
+
+.lgmCompareArt {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 12px;
+}
+
+.lgmCompareArt svg {
+  width: 100%;
+  max-width: 300px;
+  height: auto;
+}
+
+/* "Read our in-depth article" inline link */
+.lgmInlineCta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 32px;
+  font-size: 15px;
+  font-weight: 500;
+  color: #2563EB;
+  text-decoration: none;
+  transition: color 200ms ease;
+}
+
+.lgmInlineCta:hover {
+  color: #1B37CE;
+}
+
+.lgmInlineCta svg {
+  transition: transform 200ms ease;
+}
+
+.lgmInlineCta:hover svg {
+  transform: translate(2px, -2px);
+}
+
+/* ── Comparison table ── */
+.lgmCompareTable {
+  margin-top: 60px;
+  padding: clamp(28px, 3vw, 48px) clamp(24px, 3vw, 40px) clamp(36px, 4vw, 56px);
+  background: radial-gradient(ellipse at center, #9ACCFF 0%, rgba(84, 144, 206, 0.25) 100%);
+  border-radius: 4px;
+}
+
+.lgmCompareTableTitle {
+  margin: 0 0 clamp(32px, 4vw, 56px);
+  text-align: center;
+  font-size: clamp(1.1rem, 1.5vw, 1.35rem);
+  font-weight: 500;
+  color: #0A1344;
+  letter-spacing: -0.01em;
+}
+
+.lgmCompareTableHead {
+  display: grid;
+  grid-template-columns: 120px repeat(3, minmax(0, 1fr));
+  gap: 0;
+  padding-bottom: 18px;
+}
+
+.lgmCompareColHead {
+  text-align: left;
+  padding: 0 0 0 20px;
+  font-size: clamp(1.1rem, 1.3vw, 1.25rem);
+  font-weight: 600;
+  color: #0A1344;
+  letter-spacing: -0.01em;
+}
+
+.lgmCompareTableBody {
+  display: grid;
+  grid-template-columns: 120px repeat(3, minmax(0, 1fr));
+  gap: 0;
+  min-height: 200px;
+  border-bottom: 1px solid rgba(10, 19, 68, 0.2);
+  padding-bottom: 28px;
+}
+
+.lgmCompareRowLabel {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 70px;
+  padding-right: 16px;
+  font-size: clamp(1.05rem, 1.2vw, 1.15rem);
+  font-weight: 500;
+  color: #0A1344;
+}
+
+.lgmCompareCell {
+  position: relative;
+  padding: 0 16px 0 20px;
+  border-left: 1px solid rgba(10, 19, 68, 0.2);
+  font-size: 14px;
+  line-height: 1.5;
+  color: #0A1344;
+}
+
+.lgmCompareCellText {
+  margin: 0;
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 13px;
+  line-height: 1.45;
+  letter-spacing: 0;
+  color: #0A1344;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 8;
+  -webkit-box-orient: vertical;
+  /* fade bottom lines */
+  mask-image: linear-gradient(to bottom, #000 60%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, #000 60%, transparent 100%);
+}
+
+.lgmCompareTableExamples {
+  display: grid;
+  grid-template-columns: 120px repeat(3, minmax(0, 1fr));
+  gap: 0;
+  padding-top: 22px;
+}
+
+.lgmCompareTableExamples .lgmCompareRowLabel {
+  flex-direction: row;
+  align-items: center;
+  gap: 0;
+}
+
+.lgmCompareExampleCell {
+  padding: 0 16px 0 20px;
+  border-left: 1px solid rgba(10, 19, 68, 0.2);
+  font-size: 14px;
+  line-height: 1.7;
+  color: #0A1344;
+}
+
+.lgmCompareExampleList {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.lgmCompareExampleList li {
+  font-size: 14px;
+  color: #0A1344;
+}
+
+.lgmCompareBrandMark {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #0A1344;
+}
+
+/* Responsive — stack on small screens */
+@media (max-width: 900px) {
+  .lgmCompareLayout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 32px;
+  }
+
+  .lgmCompareArt {
+    order: -1;
+    padding-top: 0;
+  }
+
+  .lgmCompareArt svg {
+    max-width: 220px;
+  }
+
+  .lgmCompareTableHead,
+  .lgmCompareTableBody,
+  .lgmCompareTableExamples {
+    grid-template-columns: 90px repeat(3, minmax(0, 1fr));
+  }
+
+  .lgmCompareColHead {
+    font-size: 0.95rem;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Section 2 — "A New Foundational Model" (lgm-vs-llm)
+   ═══════════════════════════════════════════════════════════════ */
+
+.lgmFoundationalSlide {
+  padding-bottom: clamp(56px, 7vw, 96px);
+}
+
+.lgmKicker {
+  margin: 0 0 16px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #6E6E73;
+}
+
+.lgmFoundationalTitle {
+  margin: 0;
+  max-width: 980px;
+  font-size: clamp(1.9rem, 3.2vw, 2.9rem);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  color: #1D1D1F;
+}
+
+.lgmFoundationalLead {
+  margin: 14px 0 0;
+  max-width: 700px;
+  font-size: clamp(1rem, 1.15vw, 1.1rem);
+  line-height: 1.55;
+  color: #1D1D1F;
+}
+
+.lgmTimeline {
+  margin-top: clamp(70px, 9vw, 120px);
+  width: 100%;
+}
+
+.lgmTimelineAbove,
+.lgmTimelineBelow {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+}
+
+.lgmTimelineAbove {
+  align-items: flex-end;
+  min-height: 72px;
+  padding-bottom: 10px;
+}
+
+.lgmTimelineBelow {
+  padding-top: 20px;
+}
+
+.lgmTimelineCol {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  padding-right: 16px;
+}
+
+.lgmTimelineYear {
+  font-size: 13px;
+  font-weight: 400;
+  color: #6E6E73;
+  letter-spacing: 0.01em;
+}
+
+.lgmTimelineIcon {
+  display: inline-flex;
+  width: 32px;
+  height: 32px;
+  color: rgba(10, 19, 68, 0.78);
+}
+
+.lgmTimelineIcon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.lgmTimelineLine {
+  position: relative;
+  height: 1px;
+  background: linear-gradient(to right, rgba(10, 19, 68, 0.28) 0%, rgba(10, 19, 68, 0.12) 100%);
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.lgmTimelineTick {
+  width: 1px;
+  height: 12px;
+  background: rgba(10, 19, 68, 0.45);
+  margin-top: -6px;
+  justify-self: start;
+}
+
+.lgmTimelineLabel {
+  font-size: clamp(1.1rem, 1.4vw, 1.35rem);
+  font-weight: 500;
+  color: #1D1D1F;
+  line-height: 1.22;
+  letter-spacing: -0.01em;
+}
+
+.lgmTimelineLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 10px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #2563EB;
+  text-decoration: none;
+  width: fit-content;
+  transition: opacity 200ms ease;
+}
+
+.lgmTimelineLink svg {
+  margin-top: -1px;
+}
+
+.lgmTimelineLink:hover {
+  opacity: 0.7;
+}
+
+.lgmArticleCard {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: clamp(48px, 6vw, 80px);
+  min-height: 320px;
+  padding: 64px 40px;
+  border-radius: 20px;
+  text-align: center;
+  text-decoration: none;
+  background-color: #fff;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.55),
+    0 6px 28px rgba(37, 99, 235, 0.08);
+  overflow: hidden;
+  transition: transform 320ms ease, box-shadow 320ms ease;
+}
+
+.lgmArticleCard::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("/techpg-radiance.png");
+  background-size: 100% 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: 0.75;
+  pointer-events: none;
+}
+
+.lgmArticleCard > * {
+  position: relative;
+  z-index: 1;
+}
+
+.lgmArticleCard:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.6),
+    0 10px 32px rgba(37, 99, 235, 0.12);
+}
+
+.lgmArticleCard p {
+  margin: 0;
+  font-size: clamp(1.1rem, 1.35vw, 1.3rem);
+  font-weight: 400;
+  line-height: 1.55;
+  color: #1D1D1F;
+  letter-spacing: -0.01em;
+}
+
+.lgmArticleCard p strong {
+  font-weight: 600;
+}
+
+@media (max-width: 900px) {
+  .lgmTimelineLabel {
+    font-size: 0.95rem;
+  }
+  .lgmTimelineCol {
+    padding-right: 8px;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Section 3 — Core Reasoning / Our Research
+   ═══════════════════════════════════════════════════════════════ */
+
+.coreResearchSlide {
+  padding-bottom: clamp(56px, 7vw, 96px);
+}
+
+.coreResearchIntroRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(260px, 0.95fr);
+  gap: clamp(32px, 5vw, 72px);
+  align-items: start;
+}
+
+.coreResearchIntroText {
+  min-width: 0;
+}
+
+.coreResearchTitle {
+  margin: 4px 0 0;
+  font-size: clamp(1.6rem, 2.4vw, 2.1rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: #1D1D1F;
+  line-height: 1.15;
+}
+
+.coreResearchLead {
+  margin: 20px 0 0;
+  max-width: 420px;
+  font-size: clamp(0.98rem, 1.1vw, 1.05rem);
+  line-height: 1.55;
+  color: #1D1D1F;
+}
+
+.coreResearchStarburst {
+  width: 100%;
+  max-width: 440px;
+  aspect-ratio: 1 / 1;
+  margin-left: auto;
+  color: #0A1344;
+}
+
+.coreResearchStarburst svg {
+  width: 100%;
+  height: 100%;
+}
+
+.coreResearchAside {
+  margin-top: clamp(36px, 5vw, 64px);
+  max-width: 420px;
+}
+
+.coreResearchAside p {
+  margin: 0;
+  font-size: clamp(0.98rem, 1.1vw, 1.05rem);
+  line-height: 1.55;
+  color: #1D1D1F;
+}
+
+.coreResearchAsideLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 20px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #2563EB;
+  text-decoration: none;
+  transition: opacity 200ms ease;
+}
+
+.coreResearchAsideLink:hover {
+  opacity: 0.7;
+}
+
+.coreResearchIntroLine {
+  margin: clamp(60px, 8vw, 96px) auto clamp(28px, 4vw, 48px);
+  max-width: 620px;
+  text-align: center;
+  font-size: clamp(0.98rem, 1.12vw, 1.08rem);
+  line-height: 1.55;
+  color: #1D1D1F;
+}
+
+.coreResearchGrid {
+  display: grid;
+  grid-template-columns: minmax(220px, 0.8fr) minmax(0, 1.2fr);
+  gap: clamp(32px, 5vw, 72px);
+  align-items: start;
+}
+
+.coreResearchArt {
+  width: 100%;
+  max-width: 320px;
+  color: #0A1344;
+}
+
+.coreResearchArt svg {
+  width: 100%;
+  height: auto;
+}
+
+.coreResearchBody {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  min-width: 0;
+}
+
+.coreResearchGroup p {
+  margin: 10px 0 0;
+  font-size: clamp(0.95rem, 1.05vw, 1rem);
+  line-height: 1.55;
+  color: #1D1D1F;
+}
+
+.coreResearchGroup mark {
+  background: rgba(180, 210, 240, 0.55);
+  color: inherit;
+  padding: 1px 3px;
+  border-radius: 3px;
+}
+
+.coreResearchGroupHead {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.coreResearchGroupDash {
+  width: 36px;
+  height: 1px;
+  background: rgba(10, 19, 68, 0.55);
+}
+
+.coreResearchGroupHead h3 {
+  margin: 0;
+  font-size: clamp(1rem, 1.15vw, 1.1rem);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: #1D1D1F;
+}
+
+.coreResearchGroupPlus {
+  margin-left: 2px;
+  font-size: 15px;
+  color: #1D1D1F;
+}
+
+.coreResearchGroupLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 14px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #2563EB;
+  text-decoration: none;
+  transition: opacity 200ms ease;
+}
+
+.coreResearchGroupLink:hover {
+  opacity: 0.7;
+}
+
+.coreResearchProducts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.coreResearchProduct {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  background: #fff;
+  box-shadow: inset 0 0 0 1px rgba(10, 19, 68, 0.1), 0 1px 2px rgba(10, 19, 68, 0.04);
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #1D1D1F;
+}
+
+.coreResearchProductGlyph {
+  display: inline-flex;
+  width: 20px;
+  height: 20px;
+  align-items: center;
+  justify-content: center;
+  color: #0A1344;
+}
+
+.coreResearchProductGlyph svg {
+  width: 100%;
+  height: 100%;
+}
+
+.coreResearchProductSoon {
+  background: rgba(240, 240, 242, 0.8);
+  color: #6E6E73;
+}
+
+@media (max-width: 900px) {
+  .coreResearchIntroRow,
+  .coreResearchGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .coreResearchStarburst {
+    max-width: 280px;
+    margin: 0 auto;
+  }
+
+  .coreResearchArt {
+    max-width: 220px;
+    margin: 0 auto;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Section 4 — Results / Model Columbus-01
+   ═══════════════════════════════════════════════════════════════ */
+
+.resultsSlide {
+  padding-bottom: clamp(56px, 7vw, 96px);
+}
+
+.resultsTitle {
+  margin: 6px 0 0;
+  font-size: clamp(1.8rem, 2.8vw, 2.5rem);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: #1D1D1F;
+  line-height: 1.15;
+}
+
+.resultsLead {
+  margin: 16px 0 0;
+  max-width: 640px;
+  font-size: clamp(0.98rem, 1.1vw, 1.05rem);
+  line-height: 1.55;
+  color: #1D1D1F;
+}
+
+.resultsGrid {
+  margin-top: clamp(48px, 6vw, 72px);
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(24px, 3vw, 40px) clamp(32px, 4vw, 56px);
+  align-items: start;
+}
+
+.resultsCard {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+  gap: 20px;
+  align-items: center;
+  padding-bottom: clamp(24px, 3vw, 36px);
+  border-bottom: 1px solid rgba(10, 19, 68, 0.1);
+}
+
+.resultsCard:nth-last-child(-n+2) {
+  border-bottom: none;
+}
+
+.resultsCardCopy {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  align-items: flex-start;
+  min-width: 0;
+}
+
+.resultsCardNumber {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 4px;
+  background: #2e5ce0;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.resultsCardText {
+  margin: 0;
+  font-size: clamp(1.05rem, 1.35vw, 1.3rem);
+  font-weight: 500;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  color: #1D1D1F;
+}
+
+.resultsCardArt {
+  position: relative;
+  aspect-ratio: 16 / 11;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #1d3fa6;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+.resultsCardArt svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.resultsArticlesRow {
+  margin-top: clamp(48px, 6vw, 80px);
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(20px, 2.5vw, 32px);
+}
+
+.resultsArticlesRow .lgmArticleCard {
+  margin-top: 0;
+  min-height: 260px;
+}
+
+@media (max-width: 900px) {
+  .resultsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .resultsCard {
+    grid-template-columns: 1fr;
+  }
+
+  .resultsArticlesRow {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Section 5 — Gen Layers + The Grid
+   ═══════════════════════════════════════════════════════════════ */
+
+.researchBlogWrap {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.genLayersBand {
+  width: 100%;
+  margin-inline: calc(var(--tech-content-gutter) * -1);
+  width: calc(100% + (var(--tech-content-gutter) * 2));
+  background: linear-gradient(180deg, #2e3ea8 0%, #243293 100%);
+  color: #fff;
+}
+
+.genLayersSection {
+  background: linear-gradient(180deg, #2e3ea8 0%, #243293 100%);
+  color: #fff;
+}
+
+.genLayersInner {
+  width: 100%;
+  padding: clamp(56px, 7vw, 96px) clamp(24px, 4vw, 64px);
+  color: #fff;
+}
+
+.genLayersHead {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: rgba(255, 255, 255, 0.85);
+  margin-bottom: clamp(28px, 4vw, 48px);
+}
+
+.genLayersHeadLine {
+  flex: 1;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.35);
+  max-width: 520px;
+}
+
+.genLayersHeadLabel {
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  color: #fff;
+}
+
+.genLayersHeadBurst {
+  margin-left: auto;
+  display: inline-flex;
+  width: 56px;
+  height: 56px;
+  color: #fff;
+}
+
+.genLayersHeadBurst svg {
+  width: 100%;
+  height: 100%;
+}
+
+.genLayersTriptych {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(24px, 3vw, 40px);
+}
+
+.genLayersHeadline {
+  margin: 0;
+  max-width: 720px;
+  font-size: clamp(1.3rem, 1.9vw, 1.75rem);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  line-height: 1.25;
+  color: #fff;
+  position: relative;
+  z-index: 2;
+  padding-bottom: clamp(20px, 3vw, 32px);
+}
+
+.genLayersTilesRow {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.18);
+  margin-top: -140px;
+}
+
+.genLayersTile {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  aspect-ratio: 3 / 3.4;
+  padding: 16px;
+  color: #fff;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.genLayersTile:not(:last-child) {
+  border-right: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.genLayersTileArt {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.genLayersTileArt svg {
+  width: 100%;
+  height: 100%;
+}
+
+.genLayersTileArt::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0) 55%, rgba(0, 0, 0, 0.55) 100%);
+}
+
+.genLayersTileKicker {
+  position: relative;
+  z-index: 2;
+  font-size: 11px;
+  letter-spacing: 0.01em;
+  color: rgba(255, 255, 255, 0.72);
+  margin-bottom: 4px;
+}
+
+.genLayersTileTitle {
+  position: relative;
+  z-index: 2;
+  font-size: clamp(1rem, 1.2vw, 1.2rem);
+  font-weight: 500;
+  color: #fff;
+  letter-spacing: -0.01em;
+  margin-bottom: 8px;
+}
+
+.genLayersExploreBtn {
+  align-self: center;
+  margin-top: clamp(24px, 3vw, 40px);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(14px) saturate(1.4);
+  -webkit-backdrop-filter: blur(14px) saturate(1.4);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.25);
+  font-size: 14px;
+  font-weight: 500;
+  color: #fff;
+  text-decoration: none;
+  transition: background 200ms ease, transform 200ms ease;
+}
+
+.genLayersExploreBtn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-1px);
+}
+
+.genLayersGrid {
+  margin-top: clamp(80px, 10vw, 140px);
+  position: relative;
+}
+
+.genLayersGridKicker {
+  display: block;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 16px;
+}
+
+.genLayersGridArt {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.28);
+}
+
+.genLayersGridArt svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.genLayersGridCaption {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: clamp(1.4rem, 2.2vw, 2rem);
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  color: #fff;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+  pointer-events: none;
+}
+
+@media (max-width: 900px) {
+  .genLayersTilesRow {
+    grid-template-columns: 1fr;
+    margin-top: 24px;
+  }
+
+  .genLayersTile:not(:last-child) {
+    border-right: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  }
 }
