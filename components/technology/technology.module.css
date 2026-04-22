@@ -28,8 +28,8 @@
   --tech-color-text-muted: rgba(10, 19, 68, 0.45);
   --tech-color-bg: #F9F9F9;
   --tech-color-bg-card: #FFFFFF;
-  --tech-color-accent: #2563EB;
-  --tech-color-border: rgba(37, 99, 235, 0.3);
+  --tech-color-accent: #0066CC;
+  --tech-color-border: rgba(0, 102, 204, 0.3);
   --tech-color-divider: rgba(0, 0, 0, 0.07);
   --tech-color-card-border: rgba(10, 19, 68, 0.10);
 
@@ -82,7 +82,7 @@
 }
 
 .dotGrid {
-  background-image: radial-gradient(circle, rgba(37, 99, 235, 0.06) 1.1px, transparent 1.6px);
+  background-image: radial-gradient(circle, rgba(0, 102, 204, 0.06) 1.1px, transparent 1.6px);
   background-repeat: repeat;
   background-size: 16px 16px;
   background-position: 0 0;
@@ -120,7 +120,7 @@
   background: rgba(255, 255, 255, 0.82);
   backdrop-filter: blur(20px) saturate(1.2);
   -webkit-backdrop-filter: blur(20px) saturate(1.2);
-  border-right: 1px solid rgba(37, 99, 235, 0.08);
+  border-right: 1px solid rgba(0, 102, 204, 0.08);
 }
 
 .sidebarPanelSticky {
@@ -172,7 +172,7 @@
   left: 0;
   right: 0;
   height: 1px;
-  background: linear-gradient(to right, var(--grid-line, rgba(37, 99, 235, 0.3)) 0%, var(--grid-line, rgba(37, 99, 235, 0.3)) 60%, transparent 100%);
+  background: linear-gradient(to right, var(--grid-line, rgba(0, 102, 204, 0.3)) 0%, var(--grid-line, rgba(0, 102, 204, 0.3)) 60%, transparent 100%);
   pointer-events: none;
 }
 
@@ -596,7 +596,9 @@
   font-weight: 700;
   letter-spacing: var(--tech-tracking-wide);
   text-transform: uppercase;
-  color: var(--tech-color-text);
+  /* Title color at 35% opacity — auto-flips to white-on-dark via the
+     --tech-color-text token override in .darkSurface. */
+  color: color-mix(in srgb, var(--tech-color-text) 35%, transparent);
 }
 
 .dataSlide {
@@ -652,7 +654,7 @@
   margin: 0;
   font-size: var(--tech-fs-body);
   line-height: 1.6;
-  color: var(--tech-color-text-secondary);
+  color: var(--tech-color-text);
 }
 
 /* ── LGM vs LLM comparison (4-column) ── */
@@ -699,7 +701,7 @@
 .comparisonTrack {
   margin-top: 0;
   height: 1px;
-  background: linear-gradient(to right, var(--grid-line, rgba(37, 99, 235, 0.3)) 0%, var(--grid-line, rgba(37, 99, 235, 0.3)) 60%, transparent 100%);
+  background: linear-gradient(to right, var(--grid-line, rgba(0, 102, 204, 0.3)) 0%, var(--grid-line, rgba(0, 102, 204, 0.3)) 60%, transparent 100%);
 }
 
 .comparisonGrid {
@@ -781,7 +783,7 @@
 }
 
 .comparisonLink:hover {
-  color: #2563EB;
+  color: #0066CC;
 }
 
 .comparisonBottom {
@@ -816,7 +818,7 @@
   left: 0;
   right: 0;
   height: 1px;
-  background: linear-gradient(to right, var(--grid-line, rgba(37, 99, 235, 0.3)) 0%, var(--grid-line, rgba(37, 99, 235, 0.3)) 60%, transparent 100%);
+  background: linear-gradient(to right, var(--grid-line, rgba(0, 102, 204, 0.3)) 0%, var(--grid-line, rgba(0, 102, 204, 0.3)) 60%, transparent 100%);
   transform: translateY(-50%);
 }
 
@@ -918,7 +920,7 @@
 }
 
 .sectionCta:hover {
-  color: #2563EB;
+  color: #0066CC;
 }
 
 .sectionCta svg {
@@ -963,7 +965,7 @@
   align-items: center;
   gap: 8px;
   flex-shrink: 0;
-  border: 1px solid rgba(37, 99, 235, 0.12);
+  border: 1px solid rgba(0, 102, 204, 0.12);
   background: rgba(255, 255, 255, 0.72);
   backdrop-filter: blur(3px);
   border-radius: 10px;
@@ -975,7 +977,7 @@
   flex-direction: column;
   align-items: center;
   gap: 6px;
-  border: 1px solid rgba(37, 99, 235, 0.12);
+  border: 1px solid rgba(0, 102, 204, 0.12);
   background: rgba(255, 255, 255, 0.72);
   backdrop-filter: blur(3px);
   border-radius: 10px;
@@ -1030,7 +1032,7 @@
 
 /* Brand blue dashed lines inside the horizontal diagram */
 .pipelineHorizontal .dashedPathRed {
-  stroke: rgba(37, 99, 235, 0.4);
+  stroke: rgba(0, 102, 204, 0.4);
 }
 
 .pipelineConverge {
@@ -1094,7 +1096,7 @@
   flex-direction: column;
   gap: 8px;
   padding: 28px 24px;
-  background: rgba(37, 99, 235, 0.05);
+  background: rgba(0, 102, 204, 0.05);
   border-radius: 0;
 }
 
@@ -1285,7 +1287,7 @@
 }
 
 .researchCard:hover .researchCardTitle {
-  color: rgba(37, 99, 235, 0.85);
+  color: rgba(0, 102, 204, 0.85);
 }
 
 .researchCardArt {
@@ -1441,7 +1443,7 @@
   left: 0;
   right: 0;
   height: 1px;
-  background: linear-gradient(to right, rgba(37, 99, 235, 0.1) 0%, rgba(37, 99, 235, 0.1) 60%, transparent 100%);
+  background: linear-gradient(to right, rgba(0, 102, 204, 0.1) 0%, rgba(0, 102, 204, 0.1) 60%, transparent 100%);
   pointer-events: none;
 }
 
@@ -1453,7 +1455,7 @@
   left: 0;
   right: 0;
   height: 1px;
-  background: linear-gradient(to right, rgba(37, 99, 235, 0.1) 0%, rgba(37, 99, 235, 0.1) 60%, transparent 100%);
+  background: linear-gradient(to right, rgba(0, 102, 204, 0.1) 0%, rgba(0, 102, 204, 0.1) 60%, transparent 100%);
   pointer-events: none;
 }
 
@@ -1475,7 +1477,7 @@
 }
 
 .articleRow:hover {
-  color: rgba(37, 99, 235, 0.85);
+  color: rgba(0, 102, 204, 0.85);
 }
 
 .articleRowTitle {
@@ -1487,7 +1489,7 @@
 }
 
 .articleRow:hover .articleRowTitle {
-  color: rgba(37, 99, 235, 0.85);
+  color: rgba(0, 102, 204, 0.85);
 }
 
 .articleRowRight {
@@ -1507,7 +1509,7 @@
 }
 
 .articleRow:hover .articleRowDate {
-  color: rgba(37, 99, 235, 0.85);
+  color: rgba(0, 102, 204, 0.85);
 }
 
 .articleRowArrow {
@@ -1519,7 +1521,7 @@
 
 .articleRow:hover .articleRowArrow {
   transform: translateX(4px);
-  color: rgba(37, 99, 235, 0.85);
+  color: rgba(0, 102, 204, 0.85);
 }
 
 @media (max-width: 768px) {
@@ -1991,13 +1993,19 @@
 
 .coreReasoningSlide {
   position: relative;
+  background: linear-gradient(to bottom,
+    #EEF5FF 0%,
+    rgba(133, 180, 234, 0.69) 19%,
+    #B5D5FA 31%,
+    #E1EFFE 92%,
+    #F9F9F9 100%);
 }
 
 .verticalLineOverlay {
   position: absolute;
   inset: 0;
   pointer-events: none;
-  background-image: linear-gradient(to right, rgba(37, 99, 235, 0.18) 1px, transparent 1px);
+  background-image: linear-gradient(to right, rgba(0, 102, 204, 0.18) 1px, transparent 1px);
   background-size: 140px 100%;
   opacity: 0.7;
 }
@@ -3082,7 +3090,7 @@
   font-weight: 700;
   letter-spacing: var(--tech-tracking-wide);
   text-transform: uppercase;
-  color: var(--tech-color-text);
+  color: color-mix(in srgb, var(--tech-color-text) 35%, transparent);
   margin-bottom: 8px;
 }
 
@@ -3097,38 +3105,48 @@
   min-width: 0;
 }
 
+/* Darken body paragraphs in this section */
+.lgmCompareText .editorialBody p {
+  color: #1D1D1F;
+}
+
 .lgmCompareArt {
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  padding-top: 12px;
+  padding-top: 40px;
 }
 
-.lgmCompareArt svg {
+.lgmCompareArt svg,
+.lgmCompareArtImg {
   width: 100%;
-  max-width: 300px;
+  max-width: 420px;
   height: auto;
+  display: block;
+  object-fit: contain;
 }
 
 /* "Read our in-depth article" inline link */
 .lgmInlineCta {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   margin-top: 32px;
-  font-size: 15px;
+  font-size: clamp(1rem, 1.15vw, 1.1rem);
   font-weight: 500;
-  color: #2563EB;
+  color: #0066CC;
   text-decoration: none;
   transition: color 200ms ease;
 }
 
-.lgmInlineCta:hover {
-  color: #1B37CE;
+.lgmInlineCta svg {
+  width: 14px;
+  height: 14px;
+  transition: transform 200ms ease;
 }
 
-.lgmInlineCta svg {
-  transition: transform 200ms ease;
+.lgmInlineCta:hover {
+  color: #1B37CE;
 }
 
 .lgmInlineCta:hover svg {
@@ -3138,100 +3156,119 @@
 /* ── Comparison table ── */
 .lgmCompareTable {
   margin-top: 60px;
-  padding: clamp(28px, 3vw, 48px) clamp(24px, 3vw, 40px) clamp(36px, 4vw, 56px);
-  background: radial-gradient(ellipse at center, #9ACCFF 0%, rgba(84, 144, 206, 0.25) 100%);
-  border-radius: 4px;
+  padding: clamp(32px, 3.5vw, 56px) clamp(28px, 3vw, 48px) clamp(36px, 4vw, 56px);
+  background:
+    radial-gradient(ellipse 60% 55% at 82% 88%, rgba(0, 102, 204, 0.12) 0%, transparent 70%),
+    radial-gradient(ellipse 115% 95% at 22% 14%, #F0F6FF 0%, #D8E7F7 35%, #B5D5FA 70%, #9DC2E5 100%);
+  border-radius: 9px;
 }
 
 .lgmCompareTableTitle {
-  margin: 0 0 clamp(32px, 4vw, 56px);
+  margin: 0 0 clamp(48px, 5vw, 72px);
   text-align: center;
-  font-size: clamp(1.1rem, 1.5vw, 1.35rem);
-  font-weight: 500;
+  font-size: clamp(1.5rem, 2.2vw, 2rem);
+  font-weight: 400;
   color: #0A1344;
   letter-spacing: -0.01em;
 }
 
 .lgmCompareTableHead {
   display: grid;
-  grid-template-columns: 120px repeat(3, minmax(0, 1fr));
+  grid-template-columns: 150px repeat(3, minmax(0, 1fr));
   gap: 0;
-  padding-bottom: 18px;
+  padding-bottom: 24px;
 }
 
 .lgmCompareColHead {
-  text-align: left;
-  padding: 0 0 0 20px;
-  font-size: clamp(1.1rem, 1.3vw, 1.25rem);
-  font-weight: 600;
+  text-align: center;
+  padding: 0 16px;
+  font-size: clamp(1.7rem, 2.6vw, 2.3rem);
+  font-weight: 700;
   color: #0A1344;
   letter-spacing: -0.01em;
 }
 
 .lgmCompareTableBody {
   display: grid;
-  grid-template-columns: 120px repeat(3, minmax(0, 1fr));
+  grid-template-columns: 150px repeat(3, minmax(0, 1fr));
   gap: 0;
-  min-height: 200px;
-  border-bottom: 1px solid rgba(10, 19, 68, 0.2);
-  padding-bottom: 28px;
+  min-height: 280px;
+  border-bottom: 1px solid rgba(10, 19, 68, 0.45);
+  /* padding-bottom removed so cell border-lefts extend all the way down to the horizontal line */
 }
 
 .lgmCompareRowLabel {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  gap: 70px;
+  justify-content: flex-start;
+  gap: 120px;
+  padding-top: 2px;
   padding-right: 16px;
-  font-size: clamp(1.05rem, 1.2vw, 1.15rem);
-  font-weight: 500;
+  font-size: clamp(1.1rem, 1.35vw, 1.25rem);
+  font-weight: 400;
   color: #0A1344;
+}
+
+/* Push body-row spacing INTO the cells so their border-left reaches the horizontal divider */
+.lgmCompareTableBody .lgmCompareRowLabel {
+  padding-bottom: 34px;
 }
 
 .lgmCompareCell {
   position: relative;
-  padding: 0 16px 0 20px;
-  border-left: 1px solid rgba(10, 19, 68, 0.2);
-  font-size: 14px;
-  line-height: 1.5;
+  padding: 0 20px 34px;
+  border-left: 1px solid rgba(10, 19, 68, 0.45);
+  font-size: clamp(1rem, 1.2vw, 1.15rem);
+  line-height: 1.55;
   color: #0A1344;
 }
 
 .lgmCompareCellText {
   margin: 0;
-  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
-  font-size: 13px;
-  line-height: 1.45;
+  font-size: clamp(1rem, 1.2vw, 1.15rem);
+  font-weight: 300;
+  line-height: 1.5;
   letter-spacing: 0;
   color: #0A1344;
   overflow: hidden;
+  word-break: break-word;
   display: -webkit-box;
-  -webkit-line-clamp: 8;
+  -webkit-line-clamp: 10;
   -webkit-box-orient: vertical;
-  /* fade bottom lines */
-  mask-image: linear-gradient(to bottom, #000 60%, transparent 100%);
-  -webkit-mask-image: linear-gradient(to bottom, #000 60%, transparent 100%);
+  /* fade the last 30% of the text to transparent */
+  mask-image: linear-gradient(to bottom, #000 70%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, #000 70%, transparent 100%);
 }
 
 .lgmCompareTableExamples {
   display: grid;
-  grid-template-columns: 120px repeat(3, minmax(0, 1fr));
+  grid-template-columns: 150px repeat(3, minmax(0, 1fr));
   gap: 0;
-  padding-top: 22px;
+  /* padding-top removed so cell border-lefts start from the horizontal line.
+     align-items defaults to `stretch` so every cell shares the row height,
+     which keeps all vertical border-lefts the same length. */
 }
 
 .lgmCompareTableExamples .lgmCompareRowLabel {
   flex-direction: row;
   align-items: center;
   gap: 0;
+  padding-top: 24px;
+  padding-bottom: 24px;
+  font-size: clamp(0.95rem, 1.1vw, 1.05rem);
 }
 
 .lgmCompareExampleCell {
-  padding: 0 16px 0 20px;
-  border-left: 1px solid rgba(10, 19, 68, 0.2);
-  font-size: 14px;
-  line-height: 1.7;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 20px;
+  border-left: 1px solid rgba(10, 19, 68, 0.45);
+  font-size: clamp(0.92rem, 1vw, 1rem);
+  line-height: 1.55;
   color: #0A1344;
+  text-align: center;
 }
 
 .lgmCompareExampleList {
@@ -3240,21 +3277,72 @@
   list-style: none;
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 4px;
 }
 
 .lgmCompareExampleList li {
-  font-size: 14px;
+  font-size: clamp(0.92rem, 1vw, 1rem);
+  line-height: 1.5;
   color: #0A1344;
+  text-align: center;
 }
 
 .lgmCompareBrandMark {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: 15px;
-  font-weight: 600;
+  justify-content: center;
+  gap: 12px;
+  font-size: clamp(1.25rem, 1.55vw, 1.45rem);
+  font-weight: 700;
   color: #0A1344;
+  letter-spacing: -0.01em;
+}
+
+.lgmBrandMarkLogo {
+  width: clamp(38px, 2.8vw, 46px);
+  height: clamp(38px, 2.8vw, 46px);
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+/* LLM column: 2×2 logo grid — logo images include brand wordmark */
+.lgmLogoGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-rows: repeat(2, auto);
+  column-gap: clamp(12px, 1.6vw, 22px);
+  row-gap: clamp(12px, 1.6vw, 20px);
+  justify-items: start;
+  align-items: center;
+}
+
+.lgmLogoItem {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  min-height: clamp(28px, 2.6vw, 36px);
+}
+
+.lgmLogoMark {
+  width: auto;
+  height: clamp(22px, 2.1vw, 30px);
+  max-width: 100%;
+  object-fit: contain;
+}
+
+/* Screen-reader-only: keeps text in the DOM for SEO/indexing + a11y */
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 /* Responsive — stack on small screens */
@@ -3269,14 +3357,15 @@
     padding-top: 0;
   }
 
-  .lgmCompareArt svg {
+  .lgmCompareArt svg,
+  .lgmCompareArtImg {
     max-width: 220px;
   }
 
   .lgmCompareTableHead,
   .lgmCompareTableBody,
   .lgmCompareTableExamples {
-    grid-template-columns: 90px repeat(3, minmax(0, 1fr));
+    grid-template-columns: 100px repeat(3, minmax(0, 1fr));
   }
 
   .lgmCompareColHead {
@@ -3298,7 +3387,7 @@
   font-weight: 700;
   letter-spacing: var(--tech-tracking-wide);
   text-transform: uppercase;
-  color: var(--tech-color-text);
+  color: color-mix(in srgb, var(--tech-color-text) 35%, transparent);
 }
 
 .lgmFoundationalTitle {
@@ -3321,7 +3410,21 @@
 
 .lgmTimeline {
   margin-top: clamp(70px, 9vw, 120px);
+  /* Break out of .editorialSlide's horizontal padding so the image spans
+     the full width of the content column */
+  margin-left: calc(-1 * clamp(32px, 4vw, 56px));
+  margin-right: calc(-1 * clamp(32px, 4vw, 56px));
+  width: auto;
+  display: flex;
+  justify-content: center;
+}
+
+.lgmTimelineImage {
+  display: block;
   width: 100%;
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
 }
 
 .lgmTimelineAbove,
@@ -3428,7 +3531,7 @@
   background-color: #fff;
   box-shadow:
     inset 0 0 0 1px rgba(255, 255, 255, 0.55),
-    0 6px 28px rgba(37, 99, 235, 0.08);
+    0 6px 28px rgba(0, 102, 204, 0.08);
   overflow: hidden;
   transition: transform 320ms ease, box-shadow 320ms ease;
 }
@@ -3456,7 +3559,7 @@
   transform: translateY(-2px);
   box-shadow:
     inset 0 0 0 1px rgba(255, 255, 255, 0.6),
-    0 10px 32px rgba(37, 99, 235, 0.12);
+    0 10px 32px rgba(0, 102, 204, 0.12);
 }
 
 .lgmArticleCard p {
@@ -3491,15 +3594,45 @@
   padding-bottom: clamp(56px, 7vw, 96px);
 }
 
+/* Wrapper holding the intro text, the aside, AND the absolutely positioned
+   Voyager starburst SVG. Position relative so the SVG can size to the full
+   hero area, with its long horizontal arm extending across the gap between
+   the two text blocks. */
+.coreResearchHero {
+  position: relative;
+  min-height: 480px;
+}
+
+/* Plus-sign pattern — fades out at bottom (right above the architecture intro line) */
+.coreResearchHero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M12 11.5v1M11.5 12h1' stroke='rgba(255,255,255,0.5)' stroke-width='1.6' stroke-linecap='square'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 24px 24px;
+  -webkit-mask-image:
+    radial-gradient(ellipse 45% 30% at 25% 22%, transparent 35%, black 90%),
+    radial-gradient(ellipse 38% 22% at 22% 78%, transparent 35%, black 90%),
+    linear-gradient(to bottom, black 0%, black 92%, transparent 100%);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    radial-gradient(ellipse 45% 30% at 25% 22%, transparent 35%, black 90%),
+    radial-gradient(ellipse 38% 22% at 22% 78%, transparent 35%, black 90%),
+    linear-gradient(to bottom, black 0%, black 92%, transparent 100%);
+  mask-composite: intersect;
+}
+
 .coreResearchIntroRow {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(260px, 0.95fr);
-  gap: clamp(32px, 5vw, 72px);
-  align-items: start;
+  position: relative;
+  z-index: 1;
 }
 
 .coreResearchIntroText {
   min-width: 0;
+  max-width: 540px;
 }
 
 .coreResearchTitle {
@@ -3519,21 +3652,30 @@
   color: var(--tech-color-text);
 }
 
+/* Inline-SVG Voyager pulsar map. Positioned absolutely across the entire
+   .coreResearchHero so the long horizontal arm extends across the gap
+   between the intro text (top) and the aside text (bottom), splitting the
+   two paragraph blocks. The radiating-line center sits on the right side. */
 .coreResearchStarburst {
+  position: absolute;
+  inset: 0;
   width: 100%;
-  max-width: 440px;
-  aspect-ratio: 1 / 1;
-  margin-left: auto;
-  color: #0A1344;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
 }
 
 .coreResearchStarburst svg {
   width: 100%;
   height: 100%;
+  display: block;
+  overflow: visible;
 }
 
 .coreResearchAside {
-  margin-top: clamp(36px, 5vw, 64px);
+  position: relative;
+  z-index: 1;
+  margin-top: clamp(72px, 10vw, 140px);
   max-width: 420px;
 }
 
@@ -3868,7 +4010,7 @@
   font-size: var(--tech-fs-caption);
   font-weight: 500;
   letter-spacing: var(--tech-tracking-snug);
-  color: var(--tech-color-text);
+  color: color-mix(in srgb, var(--tech-color-text) 35%, transparent);
 }
 
 .genLayersHeadBurst {
@@ -4005,7 +4147,7 @@
   font-weight: 700;
   letter-spacing: var(--tech-tracking-wide);
   text-transform: uppercase;
-  color: var(--tech-color-text-muted);
+  color: color-mix(in srgb, var(--tech-color-text) 35%, transparent);
   margin-bottom: 16px;
 }
 

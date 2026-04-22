@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 import styles from "../technology.module.css";
 import { TechScrollIndex } from "../TechScrollIndex";
 import {
@@ -80,23 +82,12 @@ export function TechnologySections() {
               </div>
 
               <div className={styles.lgmCompareArt} aria-hidden>
-                <svg viewBox="0 0 240 320" fill="none" preserveAspectRatio="xMidYMid meet">
-                  {/* Back edges (dashed, further from viewer) */}
-                  <path d="M90 40 L175 60" stroke="rgba(37,99,235,0.35)" strokeWidth="0.9" strokeDasharray="3 3" />
-                  <path d="M90 40 L60 230" stroke="rgba(37,99,235,0.35)" strokeWidth="0.9" strokeDasharray="3 3" />
-                  {/* Top face */}
-                  <path d="M30 50 L90 40 L175 60 L120 80 Z" stroke="rgba(37,99,235,0.75)" strokeWidth="1.1" fill="none" />
-                  {/* Front vertical edges */}
-                  <path d="M30 50 L60 230" stroke="rgba(37,99,235,0.75)" strokeWidth="1.1" fill="none" />
-                  <path d="M120 80 L150 270" stroke="rgba(37,99,235,0.75)" strokeWidth="1.1" fill="none" />
-                  <path d="M175 60 L205 250" stroke="rgba(37,99,235,0.75)" strokeWidth="1.1" fill="none" />
-                  {/* Bottom face */}
-                  <path d="M60 230 L150 270 L205 250" stroke="rgba(37,99,235,0.75)" strokeWidth="1.1" fill="none" />
-                  {/* Mid-section cross edge (dashed far) */}
-                  <path d="M60 230 L175 60" stroke="rgba(37,99,235,0.3)" strokeWidth="0.7" strokeDasharray="2 3" />
-                  {/* Mid-band horizontal */}
-                  <path d="M40 150 L195 175" stroke="rgba(37,99,235,0.55)" strokeWidth="0.9" fill="none" />
-                </svg>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/TechnologyPageImages/LGMsummaryGraphic.svg"
+                  alt=""
+                  className={styles.lgmCompareArtImg}
+                />
               </div>
             </div>
 
@@ -128,14 +119,50 @@ export function TechnologySections() {
 
               <div className={styles.lgmCompareTableExamples}>
                 <div className={styles.lgmCompareRowLabel}>Examples</div>
+
+                {/* LLM — 2×2 logo grid (names kept in alt + sr-only for a11y/SEO) */}
                 <div className={styles.lgmCompareExampleCell}>
-                  <ul className={styles.lgmCompareExampleList}>
-                    <li>ChatGPT</li>
-                    <li>Claude</li>
-                    <li>Grok</li>
-                    <li>perplexity</li>
-                  </ul>
+                  <div className={styles.lgmLogoGrid}>
+                    <div className={styles.lgmLogoItem} title="ChatGPT">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src="/TechnologyPageImages/LogosTable/ChatGPT-Vertical-Logo-Vector.svg-.png"
+                        alt="ChatGPT"
+                        className={styles.lgmLogoMark}
+                      />
+                      <span className={styles.srOnly}>ChatGPT</span>
+                    </div>
+                    <div className={styles.lgmLogoItem} title="Claude">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src="/TechnologyPageImages/LogosTable/Claude_AI_logo.svg.png"
+                        alt="Claude"
+                        className={styles.lgmLogoMark}
+                      />
+                      <span className={styles.srOnly}>Claude</span>
+                    </div>
+                    <div className={styles.lgmLogoItem} title="Grok">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src="/TechnologyPageImages/LogosTable/Grok-feb-2025-logo.svg.png"
+                        alt="Grok"
+                        className={styles.lgmLogoMark}
+                      />
+                      <span className={styles.srOnly}>Grok</span>
+                    </div>
+                    <div className={styles.lgmLogoItem} title="Perplexity">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src="/TechnologyPageImages/LogosTable/Perplexity_AI_logo.svg.png"
+                        alt="Perplexity"
+                        className={styles.lgmLogoMark}
+                      />
+                      <span className={styles.srOnly}>perplexity</span>
+                    </div>
+                  </div>
                 </div>
+
+                {/* Vision Model — text list */}
                 <div className={styles.lgmCompareExampleCell}>
                   <ul className={styles.lgmCompareExampleList}>
                     <li>Clay</li>
@@ -143,12 +170,16 @@ export function TechnologySections() {
                     <li>Maxar</li>
                   </ul>
                 </div>
+
+                {/* LGM — Columbus Earth */}
                 <div className={styles.lgmCompareExampleCell}>
                   <div className={styles.lgmCompareBrandMark}>
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden>
-                      <circle cx="12" cy="12" r="10" stroke="#0A1344" strokeWidth="1.5" />
-                      <path d="M2 12h20M12 2a14 14 0 010 20M12 2a14 14 0 000 20" stroke="#0A1344" strokeWidth="1" />
-                    </svg>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src="/logobueno.png"
+                      alt=""
+                      className={styles.lgmBrandMarkLogo}
+                    />
                     <span>Columbus Earth</span>
                   </div>
                 </div>
@@ -169,58 +200,27 @@ export function TechnologySections() {
             <p className={styles.lgmFoundationalLead}>And we&apos;ve already flown off the edge.</p>
 
             <div className={styles.lgmTimeline}>
-              <div className={styles.lgmTimelineAbove}>
-                <div className={styles.lgmTimelineCol}><span className={styles.lgmTimelineYear}>2022</span></div>
-                <div className={styles.lgmTimelineCol}><span className={styles.lgmTimelineYear}>2025</span></div>
-                <div className={styles.lgmTimelineCol}>
-                  <span className={styles.lgmTimelineYear}>2026</span>
-                  <span className={styles.lgmTimelineIcon} aria-hidden>
-                    <svg viewBox="0 0 40 40" fill="none">
-                      <circle cx="20" cy="20" r="17" stroke="currentColor" strokeWidth="1.2" />
-                      <ellipse cx="20" cy="20" rx="17" ry="8" stroke="currentColor" strokeWidth="1" />
-                      <ellipse cx="20" cy="20" rx="8" ry="17" stroke="currentColor" strokeWidth="1" />
-                      <line x1="3" y1="20" x2="37" y2="20" stroke="currentColor" strokeWidth="1" />
-                      <line x1="20" y1="3" x2="20" y2="37" stroke="currentColor" strokeWidth="1" />
-                    </svg>
-                  </span>
-                </div>
-                <div className={styles.lgmTimelineCol}><span className={styles.lgmTimelineYear}>2028</span></div>
-              </div>
-
-              <div className={styles.lgmTimelineLine}>
-                <span className={styles.lgmTimelineTick} />
-                <span className={styles.lgmTimelineTick} />
-                <span className={styles.lgmTimelineTick} />
-                <span className={styles.lgmTimelineTick} />
-              </div>
-
-              <div className={styles.lgmTimelineBelow}>
-                <div className={styles.lgmTimelineCol}>
-                  <span className={styles.lgmTimelineLabel}>LLM</span>
-                </div>
-                <div className={styles.lgmTimelineCol}>
-                  <span className={styles.lgmTimelineLabel}>
-                    Geo-tuned LLM<br />&amp; Vision Models
-                  </span>
-                </div>
-                <div className={styles.lgmTimelineCol}>
-                  <span className={styles.lgmTimelineLabel}>Generalist<br />LGM</span>
-                  <a href="#" className={styles.lgmTimelineLink}>
-                    Read our Paper
-                    <svg width="10" height="10" viewBox="0 0 10 10" aria-hidden>
-                      <path d="M2 8l6-6M3.5 2H8v4.5" stroke="currentColor" strokeWidth="1.3" fill="none" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                  </a>
-                </div>
-                <div className={styles.lgmTimelineCol}>
-                  <span className={styles.lgmTimelineLabel}>UGM</span>
-                  <a href="#" className={styles.lgmTimelineLink}>
-                    Our Game Plan
-                    <svg width="10" height="10" viewBox="0 0 10 10" aria-hidden>
-                      <path d="M2 8l6-6M3.5 2H8v4.5" stroke="currentColor" strokeWidth="1.3" fill="none" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                  </a>
-                </div>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/TechnologyPageImages/Timeline.png"
+                alt="Timeline of foundational AI models from 2022 to 2028: LLM, Geo-tuned LLM and Vision Models, Generalist LGM (Large Geospatial Model), UGM (Universal Geospatial Model)"
+                className={styles.lgmTimelineImage}
+              />
+              {/* Keyword text inside the image — kept in the DOM for crawlers + screen readers, visually hidden */}
+              <div className={styles.srOnly}>
+                <h3>Timeline of foundational AI models</h3>
+                <ul>
+                  <li>2022 — LLM (Large Language Model)</li>
+                  <li>2025 — Geo-tuned LLM &amp; Vision Models</li>
+                  <li>
+                    2026 — Generalist LGM (Large Geospatial Model).
+                    <a href="#">Read our Paper</a>
+                  </li>
+                  <li>
+                    2028 — UGM (Universal Geospatial Model).
+                    <a href="#">Our Game Plan</a>
+                  </li>
+                </ul>
               </div>
             </div>
 
@@ -239,63 +239,52 @@ export function TechnologySections() {
       <Slide id="core-reasoning" className={styles.coreReasoningSlide}>
         <div className={styles.slideFrame}>
           <RevealOnView className={`${styles.editorialSlide} ${styles.coreResearchSlide}`}>
-            <div className={styles.coreResearchIntroRow}>
-              <div className={styles.coreResearchIntroText}>
-                <p className={styles.lgmKicker}>CORE REASONING</p>
-                <h2 className={styles.coreResearchTitle}>Our research</h2>
-                <p className={styles.coreResearchLead}>
-                  We&apos;ve come up with several innovations within data
-                  collection, fusion, and core reasoning. We combine several
-                  innovations in unique ways in our research.
-                </p>
-              </div>
+            <div className={styles.coreResearchHero}>
+              {/* Voyager pulsar-map starburst — traced as inline SVG.
+                  Spans the full hero so the long horizontal arm extends across
+                  the gap between the intro paragraph and the aside, visually
+                  splitting them. Center sits on the right side of the layout. */}
               <div className={styles.coreResearchStarburst} aria-hidden>
-                <svg viewBox="0 0 400 400" fill="none" preserveAspectRatio="xMidYMid meet">
-                  {Array.from({ length: 14 }).map((_, i) => {
-                    const angle = (i * 360) / 14 + (i % 2 === 0 ? 6 : -10);
-                    const rad = (angle * Math.PI) / 180;
-                    const len = 120 + (i % 3) * 40;
-                    const x2 = 200 + Math.cos(rad) * len;
-                    const y2 = 200 + Math.sin(rad) * len;
-                    return (
-                      <g key={i}>
-                        <line x1="200" y1="200" x2={x2} y2={y2} stroke="rgba(10, 19, 68, 0.85)" strokeWidth="1" />
-                        {Array.from({ length: Math.max(6, Math.floor(len / 14)) }).map((_, t) => {
-                          const tx = 200 + Math.cos(rad) * (14 + t * 12);
-                          const ty = 200 + Math.sin(rad) * (14 + t * 12);
-                          const perp = rad + Math.PI / 2;
-                          return (
-                            <line
-                              key={t}
-                              x1={tx - Math.cos(perp) * 3}
-                              y1={ty - Math.sin(perp) * 3}
-                              x2={tx + Math.cos(perp) * 3}
-                              y2={ty + Math.sin(perp) * 3}
-                              stroke="rgba(10, 19, 68, 0.75)"
-                              strokeWidth="0.8"
-                            />
-                          );
-                        })}
-                      </g>
-                    );
-                  })}
-                </svg>
+                <Image
+                  src="/TechnologyPageImages/VoyagerGraphic.png"
+                  alt=""
+                  fill
+                  sizes="100vw"
+                  style={{ objectFit: "contain", objectPosition: "right center" }}
+                  priority={false}
+                />
               </div>
-            </div>
 
-            <div className={styles.coreResearchAside}>
-              <p>
-                We learned first-hand how LLMs are not built for geospatial
-                needs. We set out to fix every technical issue that came with
-                GPT architecture and it converged into a new foundational
-                model, the LGM.
-              </p>
-              <a href="#" className={styles.coreResearchAsideLink}>
-                Why LLMs didn&apos;t work
-                <svg width="10" height="10" viewBox="0 0 10 10" aria-hidden>
-                  <path d="M2 8l6-6M3.5 2H8v4.5" stroke="currentColor" strokeWidth="1.3" fill="none" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </a>
+              <div className={styles.coreResearchIntroRow}>
+                <div className={styles.coreResearchIntroText}>
+                  <span className={styles.sectionEyebrow}>Core Reasoning</span>
+                  <h2 className={styles.sectionTitle}>Our research</h2>
+                  <div className={styles.editorialBody}>
+                    <p>
+                      We&apos;ve come up with several innovations within data
+                      collection, fusion, and core reasoning. We combine several
+                      innovations in unique ways in our research.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className={styles.coreResearchAside}>
+                <div className={styles.editorialBody}>
+                  <p>
+                    We learned first-hand how LLMs are not built for geospatial
+                    needs. We set out to fix every technical issue that came with
+                    GPT architecture and it converged into a new foundational
+                    model, the LGM.
+                  </p>
+                </div>
+                <a href="#" className={styles.lgmInlineCta}>
+                  <span>Why LLMs didn&apos;t work</span>
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden>
+                    <path d="M2.5 9.5L9.5 2.5M9.5 2.5H4M9.5 2.5V8" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </a>
+              </div>
             </div>
 
             <p className={styles.coreResearchIntroLine}>
