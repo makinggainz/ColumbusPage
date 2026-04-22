@@ -8,6 +8,7 @@ import { HERO_SCROLL_INDEX_ITEMS } from "./redesign/content";
 
 export function TechScrollIndex() {
   const [activeIdx, setActiveIdx] = useState(0);
+  const [pastHero, setPastHero] = useState(false);
   const itemRefs = useRef<(HTMLAnchorElement | null)[]>([]);
   const trackRef = useRef<HTMLDivElement>(null);
   const [segmentStyle, setSegmentStyle] = useState<React.CSSProperties>({});
@@ -45,17 +46,35 @@ export function TechScrollIndex() {
     setActiveIdx(0);
   }, []);
 
+  // Track whether the hero has scrolled out of view. The index only
+  // renders once the user enters the body content area.
+  const updatePastHero = useCallback(() => {
+    const hero = document.querySelector<HTMLElement>('[class*="techHero"]');
+    if (!hero) {
+      setPastHero(true);
+      return;
+    }
+    const rect = hero.getBoundingClientRect();
+    setPastHero(rect.bottom <= 80);
+  }, []);
+
   useEffect(() => {
     updateActive();
+    updatePastHero();
 
-    window.addEventListener("scroll", updateActive, { passive: true });
-    window.addEventListener("resize", updateActive);
+    const handler = () => {
+      updateActive();
+      updatePastHero();
+    };
+
+    window.addEventListener("scroll", handler, { passive: true });
+    window.addEventListener("resize", handler);
 
     return () => {
-      window.removeEventListener("scroll", updateActive);
-      window.removeEventListener("resize", updateActive);
+      window.removeEventListener("scroll", handler);
+      window.removeEventListener("resize", handler);
     };
-  }, [updateActive]);
+  }, [updateActive, updatePastHero]);
 
   useEffect(() => {
     updateSegment();
@@ -67,7 +86,16 @@ export function TechScrollIndex() {
   }, [updateSegment]);
 
   return (
-    <div className={styles.scrollIndex} aria-label="Page section index">
+    <div
+      className={[
+        styles.scrollIndex,
+        pastHero ? styles.scrollIndexVisible : "",
+      ]
+        .filter(Boolean)
+        .join(" ")}
+      aria-label="Page section index"
+      aria-hidden={!pastHero}
+    >
       <div className={styles.scrollIndexTrack} ref={trackRef}>
         <div className={styles.scrollIndexLine} />
         <div

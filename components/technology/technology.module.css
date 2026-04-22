@@ -3030,24 +3030,38 @@
   gap: 0;
   cursor: pointer;
   padding-left: 16px;
+  /* Hidden until the user scrolls past the hero (.scrollIndexVisible
+     class is added by TechScrollIndex.tsx based on hero position). */
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(-8px);
+  transition: opacity 320ms ease, transform 320ms ease;
 }
 
-/* Track column — holds the thin line + thick segment */
+.scrollIndexVisible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateX(0);
+}
+
+/* Track column — holds the thin line + thick active segment */
 .scrollIndexTrack {
   position: relative;
   width: 3px;
   flex-shrink: 0;
   align-self: stretch;
+  min-height: 100%;
 }
 
 /* Thin background line — dark navy */
 .scrollIndexLine {
   position: absolute;
-  inset: 0;
-  width: 1px;
+  top: 0;
+  bottom: 0;
   left: 50%;
+  width: 1px;
   transform: translateX(-50%);
-  background: rgba(10, 19, 68, 0.25);
+  background: rgba(10, 19, 68, 0.45);
   transition: background 300ms ease;
 }
 
