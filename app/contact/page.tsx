@@ -503,7 +503,7 @@ export default function ContactPage() {
               </p>
               {phase === "done" && (
                 <button
-                  onClick={() => { setPhase("writing"); setForm({ firstName: "", lastName: "", email: "", role: "", message: "" }); setCharCount(0); }}
+                  onClick={() => { setPhase("writing"); setForm({ firstName: "", lastName: "", email: "", role: "", message: "", companySize: "", industry: "", heardFrom: "" }); setCharCount(0); }}
                   className="contact-btn mt-8 flex items-center gap-4"
                   style={{ height: 40, paddingLeft: 20, paddingRight: 16, fontSize: 14, fontWeight: 500, backgroundColor: "#000000", color: "white", borderRadius: 0 }}
                 >
