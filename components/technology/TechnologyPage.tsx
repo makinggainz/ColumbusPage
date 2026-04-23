@@ -54,7 +54,7 @@ export function TechnologyPage() {
           </div>
         </div>
       </div>
-      <Footer />
+      <Footer theme="technology" />
     </main>
   );
 }

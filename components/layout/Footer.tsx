@@ -9,12 +9,13 @@ import { BottleScene } from "@/components/layout/BottleScene";
 export type FooterProps = {
   variant?: "default" | "compact";
   reveal?: boolean;
-  theme?: "light" | "dark" | "light-blue";
+  theme?: "light" | "dark" | "light-blue" | "technology";
 };
 
 export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false, theme = "light" }) => {
-  const isLight = theme === "light" || theme === "light-blue";
-  const bgColor = theme === "dark" ? "#000000" : theme === "light-blue" ? "#F4F3EB" : "#F9F9F9";
+  const isLight = theme === "light" || theme === "light-blue" || theme === "technology";
+  const isTech = theme === "technology";
+  const bgColor = theme === "dark" ? "#000000" : theme === "light-blue" ? "#F4F3EB" : isTech ? "#FFFFFF" : "#F9F9F9";
   const [noteOpen, setNoteOpen] = useState(false);
   const [bottleOpened, setBottleOpened] = useState(false);
   const [previouslyOpened, setPreviouslyOpened] = useState(false);
@@ -63,7 +64,7 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false, t
       ref={footerRef}
       data-footer
       data-navbar-theme={theme === "dark" ? "dark" : "light"}
-      className={`overflow-hidden flex flex-col relative ${theme === "dark" ? "text-white" : "text-[#1D1D1F]"} ${reveal ? "h-screen" : "min-h-screen"}`}
+      className={`overflow-hidden flex flex-col relative ${theme === "dark" ? "text-white" : isTech ? "text-[#0A1344]" : "text-[#1D1D1F]"} ${reveal ? "h-screen" : "min-h-screen"}`}
       style={{
         background: bgColor,
         cursor: !bottleOpened ? "default" : undefined,
@@ -85,7 +86,7 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false, t
         <p
           className="text-[15px] leading-relaxed mb-6"
           style={{
-            color: theme === "dark" ? "rgba(255,255,255,0.5)" : "rgba(29,29,31,0.6)",
+            color: theme === "dark" ? "rgba(255,255,255,0.5)" : isTech ? "rgba(10,19,68,0.6)" : "rgba(29,29,31,0.6)",
             opacity: bottleOpened ? 1 : 0,
             transform: bottleOpened ? "translateY(0)" : "translateY(10px)",
             transition: previouslyOpened ? "none" : "opacity 600ms cubic-bezier(0.22, 1, 0.36, 1), transform 600ms cubic-bezier(0.22, 1, 0.36, 1)",
@@ -99,7 +100,7 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false, t
         <p
           className="text-[15px] leading-relaxed mb-12"
           style={{
-            color: theme === "dark" ? "rgba(255,255,255,0.5)" : "rgba(29,29,31,0.6)",
+            color: theme === "dark" ? "rgba(255,255,255,0.5)" : isTech ? "rgba(10,19,68,0.6)" : "rgba(29,29,31,0.6)",
             opacity: bottleOpened ? 1 : 0,
             transform: bottleOpened ? "translateY(0)" : "translateY(10px)",
             transition: previouslyOpened ? "none" : "opacity 600ms cubic-bezier(0.22, 1, 0.36, 1), transform 600ms cubic-bezier(0.22, 1, 0.36, 1)",
@@ -115,7 +116,7 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false, t
       </div>
 
       {/* 3D Bottle scene */}
-      <BottleScene onBottleClick={() => { if (!previouslyOpened) { setNoteOpen(true); } setBottleOpened(true); try { localStorage.setItem("bottle-opened", "true"); } catch {} }} visible={footerVisible} dark={theme === "dark"} bg={theme === "light-blue" ? "#F4F3EB" : undefined} waveRgb={theme === "light-blue" ? "10,19,68" : undefined} alreadyOpened={previouslyOpened} />
+      <BottleScene onBottleClick={() => { if (!previouslyOpened) { setNoteOpen(true); } setBottleOpened(true); try { localStorage.setItem("bottle-opened", "true"); } catch {} }} visible={footerVisible} dark={theme === "dark"} bg={theme === "light-blue" ? "#F4F3EB" : isTech ? "#FFFFFF" : undefined} waveRgb={theme === "light-blue" || isTech ? "10,19,68" : undefined} alreadyOpened={previouslyOpened} />
 
       {/* Note overlay — appears when bottle is clicked */}
       {noteOpen && (
@@ -168,13 +169,13 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false, t
           <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12 items-start mb-12">
             {[
               <div key="brand">
-                <h3 className={`text-[24px] font-semibold mb-3 ${theme === "dark" ? "text-white" : "text-[#1D1D1F]"}`}>Columbus Earth</h3>
-                <p className={`text-[14px] leading-relaxed mb-4 max-w-[260px] ${theme === "dark" ? "text-white/50" : "text-[#1D1D1F]/50"}`}>
+                <h3 className={`text-[24px] font-semibold mb-3 ${theme === "dark" ? "text-white" : isTech ? "text-[#0A1344]" : "text-[#1D1D1F]"}`}>Columbus Earth</h3>
+                <p className={`text-[14px] leading-relaxed mb-4 max-w-[260px] ${theme === "dark" ? "text-white/50" : isTech ? "text-[#0A1344]/50" : "text-[#1D1D1F]/50"}`}>
                   The frontier AI lab building the first production Universal Geospatial Model.
                 </p>
                 <div className="flex gap-4">
-                  <a href="mailto:contact@columbus.earth"><Mail size={18} className={`transition-colors ${theme === "dark" ? "text-white/40 hover:text-white" : "text-[#1D1D1F]/40 hover:text-[#1D1D1F]"}`} /></a>
-                  <a href="https://www.linkedin.com/company/columbusearth/about/" target="_blank" rel="noopener noreferrer"><Linkedin size={18} className={`transition-colors ${theme === "dark" ? "text-white/40 hover:text-white" : "text-[#1D1D1F]/40 hover:text-[#1D1D1F]"}`} /></a>
+                  <a href="mailto:contact@columbus.earth"><Mail size={18} className={`transition-colors ${theme === "dark" ? "text-white/40 hover:text-white" : isTech ? "text-[#0A1344]/40 hover:text-[#0066CC]" : "text-[#1D1D1F]/40 hover:text-[#1D1D1F]"}`} /></a>
+                  <a href="https://www.linkedin.com/company/columbusearth/about/" target="_blank" rel="noopener noreferrer"><Linkedin size={18} className={`transition-colors ${theme === "dark" ? "text-white/40 hover:text-white" : isTech ? "text-[#0A1344]/40 hover:text-[#0066CC]" : "text-[#1D1D1F]/40 hover:text-[#1D1D1F]"}`} /></a>
                 </div>
               </div>,
               <FooterColumn key="product" theme={theme} title="Product" links={[
@@ -206,7 +207,7 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false, t
             ))}
           </div>
           <div
-            className={`border-t pt-4 pb-2 flex items-center justify-between text-[13px] ${theme === "dark" ? "border-white/10 text-white/30" : "border-[#1D1D1F]/10 text-[#1D1D1F]/40"}`}
+            className={`border-t pt-4 pb-2 flex items-center justify-between text-[13px] ${theme === "dark" ? "border-white/10 text-white/30" : isTech ? "border-[rgba(37,99,235,0.3)] text-[#0A1344]/40" : "border-[#1D1D1F]/10 text-[#1D1D1F]/40"}`}
             style={{
               opacity: bottleOpened ? 1 : 0,
               transition: previouslyOpened ? "none" : "opacity 600ms cubic-bezier(0.22, 1, 0.36, 1)",
@@ -230,23 +231,26 @@ const FooterColumn = ({
 }: {
   title: string;
   links: { label: string; href: string }[];
-  theme?: "light" | "dark" | "light-blue";
-}) => (
-  <div>
-    <p className={`mb-4 font-medium text-[17.5px] tracking-wide ${theme === "dark" ? "text-white" : "text-[#1D1D1F]"}`}>
-      {title}
-    </p>
-    <ul className={`space-y-2 text-[17.5px] ${theme === "dark" ? "text-white/60" : "text-[#1D1D1F]/60"}`}>
-      {links.map((link, i) => (
-        <li key={i}>
-          <Link
-            href={link.href}
-            className={`cursor-pointer transition-colors ${theme === "dark" ? "hover:text-white" : "hover:text-[#0A1344]"}`}
-          >
-            {link.label}
-          </Link>
-        </li>
-      ))}
-    </ul>
-  </div>
-);
+  theme?: "light" | "dark" | "light-blue" | "technology";
+}) => {
+  const isTech = theme === "technology";
+  return (
+    <div>
+      <p className={`mb-4 font-medium text-[17.5px] tracking-wide ${theme === "dark" ? "text-white" : isTech ? "text-[#0A1344]" : "text-[#1D1D1F]"}`}>
+        {title}
+      </p>
+      <ul className={`space-y-2 text-[17.5px] ${theme === "dark" ? "text-white/60" : isTech ? "text-[#0A1344]/60" : "text-[#1D1D1F]/60"}`}>
+        {links.map((link, i) => (
+          <li key={i}>
+            <Link
+              href={link.href}
+              className={`cursor-pointer transition-colors ${theme === "dark" ? "hover:text-white" : isTech ? "hover:text-[#0066CC]" : "hover:text-[#0A1344]"}`}
+            >
+              {link.label}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+};
