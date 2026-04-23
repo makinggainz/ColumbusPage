@@ -288,14 +288,6 @@
   width: 100%;
 }
 
-.footerBleedWrap {
-  position: relative;
-  left: 0;
-  width: 100%;
-  margin-top: 0;
-  border-top: 1px solid rgba(255, 255, 255, 0.56);
-}
-
 .sidebar {
   position: sticky;
   top: 0;
@@ -2518,58 +2510,6 @@
   width: 100%;
 }
 
-.hiringSection {
-  padding-top: 0;
-  padding-bottom: 0;
-}
-
-.hiringSection .slideFrame {
-  align-items: stretch;
-  min-height: calc(100vh - var(--tech-header-height));
-}
-
-.hiringArcWrap {
-  position: relative;
-  width: 100%;
-  min-height: 100%;
-  border-top-left-radius: 2000px 280px;
-  border-top-right-radius: 2000px 280px;
-  background: radial-gradient(circle at 56% 16%, #4faff2 0%, #2f4c9e 34%, #263785 56%, #2f4fb8 100%);
-  overflow: hidden;
-  display: flex;
-  justify-content: center;
-}
-
-.hiringArcHighlight {
-  position: absolute;
-  inset: 0;
-  border-top-left-radius: 2000px 280px;
-  border-top-right-radius: 2000px 280px;
-  border-top: 3px solid rgba(255, 255, 255, 0.44);
-  box-shadow: inset 0 14px 28px rgba(255, 255, 255, 0.24);
-  pointer-events: none;
-}
-
-.hiringCopy {
-  position: relative;
-  margin-top: clamp(1.3rem, 5vw, 3.2rem);
-  width: min(760px, 90vw);
-  text-align: center;
-  color: rgba(246, 249, 255, 0.95);
-}
-
-.hiringCopy h2 {
-  margin: 0;
-  font-size: clamp(2.6rem, 4vw, 4.3rem);
-  letter-spacing: -0.03em;
-}
-
-.hiringCopy p {
-  margin: 10px 0 0;
-  font-size: clamp(1.15rem, 1.5vw, 1.45rem);
-  color: rgba(231, 238, 255, 0.85);
-}
-
 .reveal {
   opacity: 0;
   transform: translateY(18px);
@@ -2693,8 +2633,7 @@
     display: none;
   }
 
-  .fullBleedSection,
-  .footerBleedWrap {
+  .fullBleedSection {
     left: 0;
     width: 100%;
   }
@@ -2843,10 +2782,6 @@
     min-width: 188px;
     max-width: 62%;
     padding: 9px 12px;
-  }
-
-  .hiringArcWrap {
-    min-height: 480px;
   }
 }
 
@@ -3060,13 +2995,15 @@
    SCROLL INDEX (inline sidebar nav)
    Thin vertical line + thick active segment.
    ─────────────────────────────────────────────── */
-/* Glass-pill scroll index — mirrors the hero nav's glassmorphism vocabulary
-   (rgba-white 0.22 + 18px backdrop-blur + 4px radius + navy 0.12 inset hairline)
-   so the index reads as a continuation of the hero nav strip. */
+/* Gradient-breathing scroll index — keeps today's structure (track + labels)
+   but re-tunes the state vocabulary to sit inside the hero's language. The
+   active segment is a vertical gradient that fades at both ends (echoing
+   the hero's 1px horizontal divider). Labels are Geist 300/500 — matching
+   the hero title's weight hierarchy — with slightly wider tracking. */
 .scrollIndex {
   display: flex;
   align-items: stretch;
-  gap: 12px;
+  gap: 0;
   padding-left: 16px;
   opacity: 1;
   pointer-events: auto;
@@ -3077,64 +3014,84 @@
   /* No-op — index is always visible once gated by pastHero. */
 }
 
-/* 1px spine — same token the right-edge line and Mission/Home dividers use. */
-.scrollIndexLine {
-  width: 1px;
-  align-self: stretch;
+/* 3px-wide column holding the 1px background line + 3px gradient segment. */
+.scrollIndexTrack {
+  position: relative;
+  width: 3px;
   flex-shrink: 0;
+  align-self: stretch;
+  min-height: 100%;
+}
+
+/* 1px background line — shared token used on the right-edge line and
+   Mission / Homepage dividers. */
+.scrollIndexLine {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 1px;
+  transform: translateX(-50%);
   background: var(--grid-line);
 }
 
-/* Vertical stack of pills. */
-.scrollIndexPills {
+/* Active segment — 3px wide gradient that ramps from transparent at both
+   ends through var(--grid-line) to solid navy at its midpoint. Animates
+   vertically as the active section changes. */
+.scrollIndexActiveSegment {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 3px;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    var(--grid-line) 15%,
+    #0A1344 50%,
+    var(--grid-line) 85%,
+    transparent 100%
+  );
+  transition: top 300ms cubic-bezier(0.22, 1, 0.36, 1),
+              height 300ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Label column — vertical stack of anchor links. */
+.scrollIndexLabels {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  align-items: flex-start;
-  list-style: none;
-  margin: 0;
-  padding: 0;
+  padding-left: 12px;
 }
 
-.scrollIndexPills li {
-  display: block;
-}
-
-/* Individual pill — glass background, navy text. Directly mirrors .techHeroNavItem. */
-.scrollIndexPill {
-  display: inline-flex;
+/* Individual label — Geist 300 inactive, darkens + weight 500 on active.
+   Sizing drops from the prior 13px to 12px with a slight tracking increase
+   to match the hero title's editorial feel. */
+.scrollIndexLabel {
+  position: relative;
+  display: flex;
   align-items: center;
-  padding: 6px 12px;
-  border-radius: 4px;
-  background: rgba(255, 255, 255, 0.18);
-  -webkit-backdrop-filter: blur(18px);
-  backdrop-filter: blur(18px);
-  box-shadow: inset 0 0 0 1px rgba(10, 19, 68, 0.05);
-  color: rgba(10, 19, 68, 0.55);
-  font-size: 12.5px;
-  font-weight: 400;
-  letter-spacing: 0;
-  text-decoration: none;
   white-space: nowrap;
-  transition: background-color 180ms ease, color 180ms ease, box-shadow 180ms ease;
+  font-size: 12px;
+  font-weight: 300;
+  letter-spacing: 0.02em;
+  color: rgba(10, 19, 68, 0.45);
+  text-decoration: none;
+  padding: 10px 16px 10px 0;
+  transition: color 220ms ease, font-weight 220ms ease;
 }
 
-.scrollIndexPill:hover {
-  background: rgba(255, 255, 255, 0.28);
+.scrollIndexLabel:hover {
   color: rgba(10, 19, 68, 0.85);
 }
 
-.scrollIndexPill:focus-visible {
+.scrollIndexLabel:focus-visible {
   outline: 2px solid #0A1344;
   outline-offset: 2px;
 }
 
-.scrollIndexPillActive,
-.scrollIndexPillActive:hover {
-  background: #0A1344;
-  color: #ffffff;
+.scrollIndexLabelActive,
+.scrollIndexLabelActive:hover {
+  color: #0A1344;
   font-weight: 500;
-  box-shadow: inset 0 0 0 1px rgba(10, 19, 68, 0);
 }
 
 /* ── Research blog: reduce right inset to match homepage right boundary ── */

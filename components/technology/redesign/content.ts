@@ -79,5 +79,5 @@ export const HERO_SCROLL_INDEX_ITEMS = [
   { label: "Development", sectionIds: ["core-reasoning"] },
   { label: "A New Category", sectionIds: ["data-collection"] },
   { label: "Research Blog", sectionIds: ["research-blog"] },
-  { label: "Careers & inquiry", sectionIds: ["careers", "hiring-humans"] },
+  { label: "Careers & inquiry", sectionIds: ["careers"] },
 ];

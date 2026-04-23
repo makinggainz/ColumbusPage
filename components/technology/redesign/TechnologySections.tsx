@@ -991,22 +991,6 @@ export function TechnologySections() {
           </RevealOnView>
         </div>
       </Slide>
-
-      {/* ── 7. Hiring Humans ── */}
-      <Slide
-        id="hiring-humans"
-        className={[styles.hiringSection, styles.fullBleedSection, styles.noSnapSection].join(" ")}
-      >
-        <div className={styles.slideFrame}>
-          <div className={styles.hiringArcWrap}>
-            <div className={styles.hiringArcHighlight} aria-hidden="true" />
-            <RevealOnView className={styles.hiringCopy}>
-              <h2>Hiring Humans.</h2>
-              <p>Our team is based in Washington DC and Madrid.</p>
-            </RevealOnView>
-          </div>
-        </div>
-      </Slide>
       </div>
     </>
   );

@@ -2,9 +2,9 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { Navbar } from "@/components/layout/Navbar";
+import { Footer } from "@/components/layout/Footer";
 
 import styles from "./technology.module.css";
-import { TechFooter } from "./TechFooter";
 import { TechHeroSection } from "./TechHeroSection";
 import { TechnologySections } from "./redesign/TechnologySections";
 
@@ -50,13 +50,11 @@ export function TechnologyPage() {
           <div className={styles.pageShell}>
             <div className={styles.contentColumn}>
               <TechnologySections />
-              <div className={styles.footerBleedWrap}>
-                <TechFooter />
-              </div>
             </div>
           </div>
         </div>
       </div>
+      <Footer />
     </main>
   );
 }
