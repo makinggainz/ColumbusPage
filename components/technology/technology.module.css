@@ -550,12 +550,12 @@
 }
 
 .lgmSlide {
-  /* V2: bg paints only from the sidebar's right edge to the viewport
-     right, so the left strip (where the sidebar sits) shows the
-     underlying page surface. */
+  /* V3.1: bg is confined BETWEEN the left + right sidebar lines — starts
+     at the left sidebar line and ends at the right sidebar line. Gutter
+     strips on both sides show the underlying page surface. */
   background-image: linear-gradient(var(--tech-color-bg), var(--tech-color-bg));
   background-position: var(--tech-sidebar-x) 0;
-  background-size: calc(100% - var(--tech-sidebar-x)) 100%;
+  background-size: calc(100% - 2 * var(--tech-sidebar-x)) 100%;
   background-repeat: no-repeat;
 }
 
@@ -675,10 +675,10 @@
 
 .dataCollectionSection {
   min-height: auto;
-  /* V2: bg paints only from the sidebar's right edge to the viewport right. */
+  /* V3.1: bg confined within the left + right sidebar lines. */
   background-image: linear-gradient(var(--tech-color-bg), var(--tech-color-bg));
   background-position: var(--tech-sidebar-x) 0;
-  background-size: calc(100% - var(--tech-sidebar-x)) 100%;
+  background-size: calc(100% - 2 * var(--tech-sidebar-x)) 100%;
   background-repeat: no-repeat;
 }
 
@@ -2069,8 +2069,7 @@
 
 .coreReasoningSlide {
   position: relative;
-  /* V2: vertical gradient bg painted only from the sidebar's right edge
-     to the viewport right (background-position + background-size). */
+  /* V3.1: vertical gradient bg confined within the left + right sidebar lines. */
   background-image: linear-gradient(to bottom,
     #EEF5FF 0%,
     rgba(133, 180, 234, 0.69) 19%,
@@ -2078,7 +2077,7 @@
     #E1EFFE 92%,
     #F9F9F9 100%);
   background-position: var(--tech-sidebar-x) 0;
-  background-size: calc(100% - var(--tech-sidebar-x)) 100%;
+  background-size: calc(100% - 2 * var(--tech-sidebar-x)) 100%;
   background-repeat: no-repeat;
 }
 
@@ -2087,13 +2086,12 @@
 .coreReasoningSlide::before {
   content: "";
   position: absolute;
-  /* V2: pattern overlay also lives only in the right zone (from the
-     sidebar's right edge to the viewport right), matching the section
-     background. */
+  /* V3.1: pattern overlay confined within the left + right sidebar lines,
+     matching the section background. */
   top: 0;
   bottom: 0;
   left: var(--tech-sidebar-x);
-  right: 0;
+  right: var(--tech-sidebar-x);
   pointer-events: none;
   z-index: 0;
   background-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M12 11.5v1M11.5 12h1' stroke='%23E3DFCE' stroke-width='1.6' stroke-linecap='square'/%3E%3C/svg%3E");
