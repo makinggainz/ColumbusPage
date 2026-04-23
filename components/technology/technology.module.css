@@ -3523,42 +3523,135 @@
   color: var(--tech-color-text);
 }
 
+/* Live HTML/CSS timeline — replaces the baked Timeline.png. 4 milestones
+   alternate above/below the horizontal track. A soft brand-blue halo
+   emanates from the centerline (top + bottom layers fading to transparent). */
 .lgmTimeline {
   position: relative;
-  margin-top: clamp(28px, 3vw, 48px);
-  /* Break out of .editorialSlide's horizontal padding so the image spans
-     the full width of the content column */
-  margin-left: calc(-1 * clamp(32px, 4vw, 56px));
-  margin-right: calc(-1 * clamp(32px, 4vw, 56px));
-  width: auto;
-  display: flex;
-  justify-content: center;
-}
-
-.lgmTimelineImage {
-  display: block;
+  margin-top: clamp(40px, 5vw, 72px);
   width: 100%;
-  max-width: 100%;
-  height: auto;
-  object-fit: contain;
+  height: clamp(280px, 32vw, 360px);
+  isolation: isolate;
 }
 
-/* Real CTA links rendered where the blue labels used to be baked into the image.
-   Positioning uses percentages so they scale with the image across viewport sizes. */
-.lgmTimelineCta {
+/* Soft brand-blue glow above + below the horizontal track. Two stacked
+   linear-gradients, each anchored at the vertical center and fading
+   outward to transparent. */
+.lgmTimelineHalo {
   position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    linear-gradient(to top,    rgba(0, 102, 204, 0.18) 0%, transparent 65%),
+    linear-gradient(to bottom, rgba(0, 102, 204, 0.18) 0%, transparent 65%);
+  background-position: 0 50%, 0 50%;
+  background-size: 100% 50%, 100% 50%;
+  background-repeat: no-repeat;
+}
+
+/* Horizontal track + dots at each milestone year */
+.lgmTimelineTrack {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--tech-color-text-brand);
+  z-index: 1;
+}
+
+.lgmTimelineDot {
+  position: absolute;
+  top: 50%;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--tech-color-text-brand);
+  transform: translate(-50%, -50%);
+}
+
+/* A milestone column — anchored to a percentage left position, holds the
+   year, the stem, and the label (and optionally a CTA). */
+.lgmTimelineMilestone {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  z-index: 2;
+  transform: translateX(-50%);
+}
+
+.lgmTimelineMilestoneTop {
+  bottom: 50%;
+  padding-bottom: 4px; /* clearance from the dot */
+}
+
+.lgmTimelineMilestoneBottom {
+  top: 50%;
+  padding-top: 4px;
+}
+
+.lgmTimelineStem {
+  width: 1px;
+  height: clamp(28px, 4vw, 56px);
+  background: var(--tech-color-text-brand);
+  opacity: 0.45;
+}
+
+.lgmTimelineLabel {
+  font-size: var(--tech-fs-h5);
+  font-weight: 500;
+  color: var(--tech-color-text-brand);
+  line-height: 1.25;
+  letter-spacing: var(--tech-tracking-snug);
+  /* Year sits adjacent to the dot, label at the outer end of the stem.
+     The 8px gap pads label away from the stem in either direction. */
+}
+
+.lgmTimelineMilestoneTop .lgmTimelineLabel {
+  margin-bottom: 8px;
+}
+
+.lgmTimelineMilestoneBottom .lgmTimelineLabel {
+  margin-top: 8px;
+}
+
+.lgmTimelineYear {
+  font-size: var(--tech-fs-caption);
+  font-weight: 500;
+  color: var(--tech-color-text-secondary);
+  letter-spacing: 0.04em;
+}
+
+.lgmTimelineMilestoneTop .lgmTimelineYear {
+  margin-top: 6px; /* sits between stem and dot */
+}
+
+.lgmTimelineMilestoneBottom .lgmTimelineYear {
+  margin-bottom: 6px;
+}
+
+/* Inline-style CTA link inside a milestone column. Mirrors .lgmInlineCta. */
+.lgmTimelineCta {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 6px 10px;
-  font-size: clamp(0.9rem, 1vw, 1rem);
+  gap: 6px;
+  font-size: 15px;
   font-weight: 500;
   color: #0066CC;
   text-decoration: none;
   white-space: nowrap;
-  transform: translate(-50%, -50%);
   transition: color 200ms ease;
-  z-index: 2;
+}
+
+.lgmTimelineMilestoneTop .lgmTimelineCta {
+  margin-bottom: 8px;
+}
+
+.lgmTimelineMilestoneBottom .lgmTimelineCta {
+  margin-top: 8px;
 }
 
 .lgmTimelineCta svg {
@@ -3577,108 +3670,6 @@
   outline: 2px solid #0066CC;
   outline-offset: 3px;
   border-radius: 4px;
-}
-
-/* "Read our Paper" — centered under the Generalist LGM column */
-.lgmTimelineCtaPaper {
-  left: 61%;
-  top: 70%;
-}
-
-/* "Our Game Plan" — centered under the UGM column */
-.lgmTimelineCtaPlan {
-  left: 87%;
-  top: 70%;
-}
-
-.lgmTimelineAbove,
-.lgmTimelineBelow {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 0;
-}
-
-.lgmTimelineAbove {
-  align-items: flex-end;
-  min-height: 72px;
-  padding-bottom: 10px;
-}
-
-.lgmTimelineBelow {
-  padding-top: 20px;
-}
-
-.lgmTimelineCol {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 8px;
-  padding-right: 16px;
-}
-
-.lgmTimelineYear {
-  font-size: var(--tech-fs-caption);
-  font-weight: 400;
-  color: var(--tech-color-text-secondary);
-  letter-spacing: 0.01em;
-}
-
-.lgmTimelineIcon {
-  display: inline-flex;
-  width: 32px;
-  height: 32px;
-  color: rgba(10, 19, 68, 0.78);
-}
-
-.lgmTimelineIcon svg {
-  width: 100%;
-  height: 100%;
-}
-
-.lgmTimelineLine {
-  position: relative;
-  height: 1px;
-  background: var(--tech-color-border);
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-}
-
-.lgmTimelineTick {
-  width: 1px;
-  height: 12px;
-  background: var(--tech-color-text);
-  opacity: 0.45;
-  margin-top: -6px;
-  justify-self: start;
-}
-
-.lgmTimelineLabel {
-  font-size: var(--tech-fs-h5);
-  font-weight: 500;
-  color: var(--tech-color-text);
-  line-height: 1.3;
-  letter-spacing: var(--tech-tracking-snug);
-}
-
-.lgmTimelineLink {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  margin-top: 12px;
-  font-size: var(--tech-fs-caption);
-  font-weight: 500;
-  color: var(--tech-color-accent);
-  text-decoration: none;
-  width: fit-content;
-  transition: opacity 200ms ease;
-}
-
-.lgmTimelineLink svg {
-  margin-top: -1px;
-}
-
-.lgmTimelineLink:hover {
-  opacity: 0.7;
 }
 
 .lgmArticleCard {

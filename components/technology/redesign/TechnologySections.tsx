@@ -202,35 +202,69 @@ export function TechnologySections() {
             <p className={styles.lgmFoundationalLead}>And we&apos;ve already flown off the edge.</p>
 
             <div className={styles.lgmTimeline}>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src="/TechnologyPageImages/Timeline.png"
-                alt="Timeline of foundational AI models from 2022 to 2028: LLM, Geo-tuned LLM and Vision Models, Generalist LGM (Large Geospatial Model), UGM (Universal Geospatial Model)"
-                className={styles.lgmTimelineImage}
-              />
+              {/* Soft brand-blue halo above + below the horizontal track */}
+              <div className={styles.lgmTimelineHalo} aria-hidden />
 
-              {/* Real text+arrow CTAs positioned where the blue labels used to be in the image.
-                  Styled like .lgmInlineCta with an arrow-hover animation. */}
-              <a
-                href="#"
-                className={`${styles.lgmTimelineCta} ${styles.lgmTimelineCtaPaper}`}
-              >
-                <span>Read our Paper</span>
-                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden>
-                  <path d="M2.5 9.5L9.5 2.5M9.5 2.5H4M9.5 2.5V8" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </a>
-              <a
-                href="#"
-                className={`${styles.lgmTimelineCta} ${styles.lgmTimelineCtaPlan}`}
-              >
-                <span>Our Game Plan</span>
-                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden>
-                  <path d="M2.5 9.5L9.5 2.5M9.5 2.5H4M9.5 2.5V8" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </a>
+              {/* Horizontal track + dots at each milestone year */}
+              <div className={styles.lgmTimelineTrack} aria-hidden>
+                <span className={styles.lgmTimelineDot} style={{ left: "8%" }} />
+                <span className={styles.lgmTimelineDot} style={{ left: "50%" }} />
+                <span className={styles.lgmTimelineDot} style={{ left: "64%" }} />
+                <span className={styles.lgmTimelineDot} style={{ left: "92%" }} />
+              </div>
 
-              {/* Keyword text inside the image — kept in the DOM for crawlers + screen readers, visually hidden */}
+              {/* Milestones — alternating above / below the track */}
+              <div
+                className={`${styles.lgmTimelineMilestone} ${styles.lgmTimelineMilestoneTop}`}
+                style={{ left: "8%" }}
+              >
+                <span className={styles.lgmTimelineLabel}>LLM</span>
+                <span className={styles.lgmTimelineStem} aria-hidden />
+                <span className={styles.lgmTimelineYear}>2022</span>
+              </div>
+
+              <div
+                className={`${styles.lgmTimelineMilestone} ${styles.lgmTimelineMilestoneBottom}`}
+                style={{ left: "50%" }}
+              >
+                <span className={styles.lgmTimelineYear}>2025</span>
+                <span className={styles.lgmTimelineStem} aria-hidden />
+                <span className={styles.lgmTimelineLabel}>
+                  Geo-tuned LLM<br />&amp; Vision Models
+                </span>
+              </div>
+
+              <div
+                className={`${styles.lgmTimelineMilestone} ${styles.lgmTimelineMilestoneTop}`}
+                style={{ left: "64%" }}
+              >
+                <a href="#" className={styles.lgmTimelineCta}>
+                  <span>Read our Paper</span>
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden>
+                    <path d="M2.5 9.5L9.5 2.5M9.5 2.5H4M9.5 2.5V8" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </a>
+                <span className={styles.lgmTimelineLabel}>Generalist LGM</span>
+                <span className={styles.lgmTimelineStem} aria-hidden />
+                <span className={styles.lgmTimelineYear}>2026</span>
+              </div>
+
+              <div
+                className={`${styles.lgmTimelineMilestone} ${styles.lgmTimelineMilestoneBottom}`}
+                style={{ left: "92%" }}
+              >
+                <span className={styles.lgmTimelineYear}>2028</span>
+                <span className={styles.lgmTimelineStem} aria-hidden />
+                <span className={styles.lgmTimelineLabel}>UGM</span>
+                <a href="#" className={styles.lgmTimelineCta}>
+                  <span>Our Game Plan</span>
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden>
+                    <path d="M2.5 9.5L9.5 2.5M9.5 2.5H4M9.5 2.5V8" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </a>
+              </div>
+
+              {/* Keyword text — kept in the DOM for crawlers + screen readers, visually hidden */}
               <div className={styles.srOnly}>
                 <h3>Timeline of foundational AI models</h3>
                 <ul>
