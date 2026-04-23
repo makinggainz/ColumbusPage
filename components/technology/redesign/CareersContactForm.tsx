@@ -87,16 +87,17 @@ export function CareersContactForm({ intro }: Props = {}) {
           display: grid;
           grid-template-rows: 1fr;
           opacity: 1;
+          margin-bottom: 40px;
           transition: grid-template-rows 500ms cubic-bezier(0.22, 1, 0.36, 1),
                       opacity 300ms ease,
                       transform 500ms cubic-bezier(0.22, 1, 0.36, 1),
-                      margin 500ms cubic-bezier(0.22, 1, 0.36, 1);
+                      margin-bottom 500ms cubic-bezier(0.22, 1, 0.36, 1);
         }
         .ccf-intro-wrap[data-hidden="true"] {
           grid-template-rows: 0fr;
           opacity: 0;
           transform: translateY(-12px);
-          margin: 0;
+          margin-bottom: 0;
           pointer-events: none;
         }
         .ccf-intro-wrap > * {

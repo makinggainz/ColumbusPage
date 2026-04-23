@@ -711,11 +711,11 @@
 .editorialSlide {
   width: 100%;
   max-width: 100%;
-  /* Vertical padding only. Horizontal padding is inherited from
-     .contentColumn (0 40px), which matches the hero exactly, so section
-     content text lands on the same left + right x-positions as the
-     hero title. */
-  padding: clamp(48px, 6vw, 80px) 0;
+  /* Vertical padding for section rhythm. Horizontal padding-inline: 16px
+     mirrors the homepage's GridCell `p-10` extra inset (40px) on top of
+     the slideFrame's own 24px page-padding — total 40px on each side,
+     matching homepage body content's horizontal alignment. */
+  padding: clamp(48px, 6vw, 80px) 16px;
 }
 
 .editorialBody {
@@ -2877,6 +2877,11 @@
 }
 
 .techHeroTextBlock {
+  /* Cap content to 1168px (=292 * 4px in Tailwind v4 spacing scale) to
+     match the homepage Hero's `max-w-292` inner wrapper. Keeps the tech
+     hero title + subtitle at the same horizontal extent as the homepage
+     hero so titles align across pages. */
+  max-width: 1168px;
   margin-top: 235px;
 }
 
@@ -3432,7 +3437,13 @@
 .lgmTimeline {
   position: relative;
   margin-top: clamp(40px, 5vw, 72px);
-  width: 100%;
+  /* Bleed horizontally through .editorialSlide's 16px padding-inline via
+     negative margin-inline, so the timeline's left edge still starts at
+     the slideFrame's content-left bound (same as before padding was
+     added to .editorialSlide). The track's own negative offsets then
+     continue to reach the sidebar line / viewport-right unchanged. */
+  margin-inline: -16px;
+  width: auto;
   height: clamp(320px, 36vw, 420px);
   /* No `isolation: isolate` — let z-index: -1 on the halo go behind the
      timeline so it can encompass content via negative inset without being
