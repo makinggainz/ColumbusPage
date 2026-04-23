@@ -172,8 +172,10 @@
 
 .sidebarPanelSticky {
   position: absolute;
-  /* Pin the sidebar's vertical center at the viewport midpoint. */
-  top: 50vh;
+  /* Pin the sidebar's vertical center at the midpoint of the area
+     BELOW the navbar (not the full viewport). Center of (navbar_bottom
+     to viewport_bottom) = 50vh + navbar_height / 2. */
+  top: calc(50vh + var(--tech-header-height) / 2);
   left: 0;
   transform: translateY(-50%);
   padding: 0 16px;
@@ -2953,7 +2955,11 @@
   width: 100%;
   max-width: 1287px;
   margin: 0 auto;
-  padding: 0 40px;
+  /* Match the homepage hero's left/right padding so the title starts
+     and ends at the same x as the homepage. Homepage's <Container>
+     uses padding-inline: var(--page-padding) (24px below 940px,
+     1vw above) defined in app/globals.css. */
+  padding: 0 var(--page-padding);
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -3107,7 +3113,8 @@
   left: 50%;
   width: 1px;
   transform: translateX(-50%);
-  background: rgba(10, 19, 68, 0.45);
+  /* Lighter / more subtle line — was 0.45, back to the softer original. */
+  background: rgba(10, 19, 68, 0.22);
   transition: background 300ms ease;
 }
 
