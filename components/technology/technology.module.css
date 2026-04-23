@@ -222,9 +222,10 @@
 
 .section {
   min-height: 100vh;
-  /* Anchor scrolls land with clearance below the compact navbar instead of
-     sliding behind it. */
-  scroll-margin-top: 80px;
+  /* Anchor scrolls land flush with the compact navbar's bottom edge. The
+     compact navbar is 56px tall, so the last 56px of any preceding content
+     (e.g. the hero) sits behind the navbar with 0 visible bleed below it. */
+  scroll-margin-top: 56px;
   display: flex;
   align-items: stretch;
   padding: 0;
@@ -253,7 +254,7 @@
 }
 
 .noSnapSection {
-  scroll-margin-top: 80px;
+  scroll-margin-top: 56px;
 }
 
 .slideFrame {
@@ -3097,106 +3098,81 @@
    SCROLL INDEX (inline sidebar nav)
    Thin vertical line + thick active segment.
    ─────────────────────────────────────────────── */
+/* Glass-pill scroll index — mirrors the hero nav's glassmorphism vocabulary
+   (rgba-white 0.22 + 18px backdrop-blur + 4px radius + navy 0.12 inset hairline)
+   so the index reads as a continuation of the hero nav strip. */
 .scrollIndex {
   display: flex;
   align-items: stretch;
-  gap: 0;
-  cursor: pointer;
+  gap: 12px;
   padding-left: 16px;
-  /* Always visible — no fade-in, no transform animation */
   opacity: 1;
   pointer-events: auto;
   transform: none;
 }
 
 .scrollIndexVisible {
-  /* No-op — index is always visible. Class is still applied by JS but
-     has no visual effect since the base state is already shown. */
+  /* No-op — index is always visible once gated by pastHero. */
 }
 
-/* Track column — holds the thin line + thick active segment */
-.scrollIndexTrack {
-  position: relative;
-  width: 3px;
-  flex-shrink: 0;
-  align-self: stretch;
-  min-height: 100%;
-}
-
-/* Thin background line — dark navy */
+/* 1px spine — same token the right-edge line and Mission/Home dividers use. */
 .scrollIndexLine {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 50%;
   width: 1px;
-  transform: translateX(-50%);
-  /* Lighter / more subtle line — was 0.45, back to the softer original. */
-  background: rgba(10, 19, 68, 0.22);
-  transition: background 300ms ease;
+  align-self: stretch;
+  flex-shrink: 0;
+  background: var(--grid-line);
 }
 
-/* Thick active segment — dark navy */
-.scrollIndexActiveSegment {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 3px;
-  background: #0A1344;
-  border-radius: 2px;
-  transition: top 300ms ease, height 300ms ease;
-}
-
-/* Labels column — always visible */
-.scrollIndexLabels {
+/* Vertical stack of pills. */
+.scrollIndexPills {
   display: flex;
   flex-direction: column;
-  padding-left: 12px;
+  gap: 6px;
+  align-items: flex-start;
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
 
-/* Individual label — serves as anchor link */
-.scrollIndexLabel {
-  position: relative;
-  display: flex;
+.scrollIndexPills li {
+  display: block;
+}
+
+/* Individual pill — glass background, navy text. Directly mirrors .techHeroNavItem. */
+.scrollIndexPill {
+  display: inline-flex;
   align-items: center;
-  white-space: nowrap;
-  font-size: 13px;
+  padding: 6px 12px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.18);
+  -webkit-backdrop-filter: blur(18px);
+  backdrop-filter: blur(18px);
+  box-shadow: inset 0 0 0 1px rgba(10, 19, 68, 0.05);
+  color: rgba(10, 19, 68, 0.55);
+  font-size: 12.5px;
   font-weight: 400;
-  letter-spacing: 0.01em;
-  color: rgba(10, 19, 68, 0.45);
+  letter-spacing: 0;
   text-decoration: none;
-  padding: 10px 16px 10px 0;
-  transition: color 220ms ease;
-  overflow: visible;
+  white-space: nowrap;
+  transition: background-color 180ms ease, color 180ms ease, box-shadow 180ms ease;
 }
 
-.scrollIndexLabelText {
-  position: relative;
-  z-index: 1;
+.scrollIndexPill:hover {
+  background: rgba(255, 255, 255, 0.28);
+  color: rgba(10, 19, 68, 0.85);
 }
 
-/* Hover gradient glow — dark navy, starts flush from line */
-.scrollIndexHoverGlow {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: -12px;
-  right: 0;
-  opacity: 0;
-  background: linear-gradient(to right, rgba(10, 19, 68, 0.06) 0%, rgba(10, 19, 68, 0) 100%);
-  border-radius: 0;
-  transition: opacity 280ms ease;
-  pointer-events: none;
+.scrollIndexPill:focus-visible {
+  outline: 2px solid #0A1344;
+  outline-offset: 2px;
 }
 
-.scrollIndexLabel:hover .scrollIndexHoverGlow {
-  opacity: 1;
-}
-
-/* Active label — dark navy, stronger */
-.scrollIndexLabelActive {
-  font-weight: 600;
-  color: #0A1344;
+.scrollIndexPillActive,
+.scrollIndexPillActive:hover {
+  background: #0A1344;
+  color: #ffffff;
+  font-weight: 500;
+  box-shadow: inset 0 0 0 1px rgba(10, 19, 68, 0);
 }
 
 /* ── Research blog: reduce right inset to match homepage right boundary ── */

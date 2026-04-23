@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import styles from "./technology.module.css";
 import { HERO_SCROLL_INDEX_ITEMS } from "./redesign/content";
@@ -9,23 +9,6 @@ import { HERO_SCROLL_INDEX_ITEMS } from "./redesign/content";
 export function TechScrollIndex() {
   const [activeIdx, setActiveIdx] = useState(0);
   const [pastHero, setPastHero] = useState(false);
-  const itemRefs = useRef<(HTMLAnchorElement | null)[]>([]);
-  const trackRef = useRef<HTMLDivElement>(null);
-  const [segmentStyle, setSegmentStyle] = useState<React.CSSProperties>({});
-
-  const updateSegment = useCallback(() => {
-    const track = trackRef.current;
-    const item = itemRefs.current[activeIdx];
-    if (!track || !item) return;
-
-    const trackRect = track.getBoundingClientRect();
-    const itemRect = item.getBoundingClientRect();
-
-    setSegmentStyle({
-      top: itemRect.top - trackRect.top,
-      height: itemRect.height,
-    });
-  }, [activeIdx]);
 
   const updateActive = useCallback(() => {
     const probeY = window.innerHeight * 0.42;
@@ -46,8 +29,6 @@ export function TechScrollIndex() {
     setActiveIdx(0);
   }, []);
 
-  // Track whether the hero has scrolled out of view. The index only
-  // renders once the user enters the body content area.
   const updatePastHero = useCallback(() => {
     const hero = document.querySelector<HTMLElement>('[class*="techHero"]');
     if (!hero) {
@@ -76,17 +57,8 @@ export function TechScrollIndex() {
     };
   }, [updateActive, updatePastHero]);
 
-  useEffect(() => {
-    updateSegment();
-  }, [updateSegment]);
-
-  useEffect(() => {
-    window.addEventListener("resize", updateSegment);
-    return () => window.removeEventListener("resize", updateSegment);
-  }, [updateSegment]);
-
   return (
-    <div
+    <nav
       className={[
         styles.scrollIndex,
         pastHero ? styles.scrollIndexVisible : "",
@@ -96,36 +68,28 @@ export function TechScrollIndex() {
       aria-label="Page section index"
       aria-hidden={!pastHero}
     >
-      <div className={styles.scrollIndexTrack} ref={trackRef}>
-        <div className={styles.scrollIndexLine} />
-        <div
-          className={styles.scrollIndexActiveSegment}
-          style={segmentStyle}
-        />
-      </div>
-
-      <div className={styles.scrollIndexLabels}>
+      <span className={styles.scrollIndexLine} aria-hidden />
+      <ol className={styles.scrollIndexPills}>
         {HERO_SCROLL_INDEX_ITEMS.map((item, i) => {
           const isActive = i === activeIdx;
           return (
-            <Link
-              key={item.sectionIds[0]}
-              ref={(el) => { itemRefs.current[i] = el; }}
-              href={`#${item.sectionIds[0]}`}
-              className={[
-                styles.scrollIndexLabel,
-                isActive ? styles.scrollIndexLabelActive : "",
-              ]
-                .filter(Boolean)
-                .join(" ")}
-              aria-current={isActive ? "true" : undefined}
-            >
-              <span className={styles.scrollIndexLabelText}>{item.label}</span>
-              <span className={styles.scrollIndexHoverGlow} />
-            </Link>
+            <li key={item.sectionIds[0]}>
+              <Link
+                href={`#${item.sectionIds[0]}`}
+                className={[
+                  styles.scrollIndexPill,
+                  isActive ? styles.scrollIndexPillActive : "",
+                ]
+                  .filter(Boolean)
+                  .join(" ")}
+                aria-current={isActive ? "true" : undefined}
+              >
+                {item.label}
+              </Link>
+            </li>
           );
         })}
-      </div>
-    </div>
+      </ol>
+    </nav>
   );
 }
