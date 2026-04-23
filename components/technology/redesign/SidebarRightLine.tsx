@@ -7,7 +7,7 @@ import styles from "../technology.module.css";
 const BOW = 140;        // horizontal distance the curve bows to the right
 const CURVE_VERT = 200; // vertical tangent length on each side of the gap
 const GAP_HALF = 80;    // half-height of the open gap at the timeline crossing
-const STROKE = "var(--grid-line)";
+const STROKE = "rgba(0, 102, 204, 0.3)";
 
 export function SidebarRightLine({ timelineId }: { timelineId: string }) {
   const containerRef = useRef<HTMLDivElement | null>(null);
