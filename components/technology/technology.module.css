@@ -242,20 +242,20 @@
   min-height: 100vh;
   display: flex;
   align-items: center;
-  /* V2: Section CONTENT centered to navbar's 1287px band with the
-     same 40px horizontal padding the hero uses (.techHeroContent
-     has padding: 0 40px), so section text starts and ends at the
-     same x as the hero title. The section element + background
-     above this still spans the full viewport. */
+  /* V2: Section content centered to the homepage / Mission page's
+     standard <Container> bounds — max-width 1287 + horizontal padding
+     of var(--page-padding) (defined in app/globals.css: 24px below
+     940px, 1vw above). Section text now starts + ends at the exact
+     same x as homepage / Mission / hero content. The section element
+     + background above this still spans the full viewport. */
   max-width: 1287px;
   margin: 0 auto;
-  padding-inline: 40px;
+  padding-inline: var(--page-padding);
   box-sizing: border-box;
 }
 
 .section:not(.fullBleedSection):not(.lgmSlide) .slideFrame {
-  /* Padding-inline already handled in the base .slideFrame rule. */
-  padding-inline: 40px;
+  padding-inline: var(--page-padding);
 }
 
 .fullBleedSection .slideFrame {
