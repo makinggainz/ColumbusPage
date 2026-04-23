@@ -3091,6 +3091,37 @@
   font-weight: 500;
 }
 
+/* White-mode — applied when the index's sticky Y overlaps the Gen Layers
+   dark-navy full-width band. Flips the track, segment, and label colors
+   to white opacity tiers so the index remains legible against the band. */
+.scrollIndexOnDark .scrollIndexLine {
+  background: rgba(255, 255, 255, 0.28);
+}
+
+.scrollIndexOnDark .scrollIndexActiveSegment {
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(255, 255, 255, 0.4) 15%,
+    #ffffff 50%,
+    rgba(255, 255, 255, 0.4) 85%,
+    transparent 100%
+  );
+}
+
+.scrollIndexOnDark .scrollIndexLabel {
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.scrollIndexOnDark .scrollIndexLabel:hover {
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.scrollIndexOnDark .scrollIndexLabelActive,
+.scrollIndexOnDark .scrollIndexLabelActive:hover {
+  color: #ffffff;
+}
+
 /* ── Research blog: reduce right inset to match homepage right boundary ── */
 /* Research Blog block — now inherits the same symmetric .editorialSlide
    padding as every other section so its left + right edges line up with
@@ -4600,18 +4631,25 @@
   flex-direction: column;
 }
 
+/* Full-viewport-width band — breaks out of any parent's max-width.
+   Background is #284394 (user-specified). Full-bleed at all times; the
+   reveal animation below lives on .genLayersDisplay, not this container. */
 .genLayersBand {
-  /* The band itself uses the .darkSurface modifier (applied in the TSX),
-     which overrides --tech-color-bg to #060810 and flips text tokens to
-     white opacity tiers per the design spec. */
-  margin-inline: calc(var(--tech-content-gutter) * -1);
-  width: calc(100% + (var(--tech-content-gutter) * 2));
+  position: relative;
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  background: #284394;
+  color: #ffffff;
+  overflow: hidden;
 }
 
 .genLayersInner {
   width: 100%;
-  padding: var(--tech-space-section) clamp(24px, 4vw, 64px);
-  color: var(--tech-color-text);
+  max-width: 1287px;
+  margin: 0 auto;
+  padding: clamp(80px, 10vw, 140px) clamp(24px, 4vw, 64px);
+  color: #ffffff;
 }
 
 /* Voyager-style starburst head: SVG fills the row absolutely, label sits
@@ -4633,75 +4671,133 @@
   display: block;
 }
 
+/* Label background now matches the new band bg (#284394) so the line
+   behind it is cleanly masked. */
 .genLayersHeadLabel {
   position: absolute;
   left: 0;
   top: 50%;
   transform: translateY(-50%);
   z-index: 2;
-  background: var(--tech-color-bg);
+  background: #284394;
   padding-right: 16px;
   font-size: clamp(1.4rem, 1.8vw, 1.8rem);
   font-weight: 500;
   letter-spacing: var(--tech-tracking-snug);
-  color: var(--tech-color-text);
+  color: #ffffff;
 }
 
-.genLayersTriptych {
+/* Image-backed display panel — holds the headline (top-left) and the 3
+   Columbus GenLayer tile labels. Has a reveal animation that expands the
+   panel from a smaller rounded card to (nearly) full-screen when it comes
+   into view. Top + bottom edges have subtle blur-gradient overlays that
+   extend across a larger area than before. */
+.genLayersDisplay {
   position: relative;
+  padding: clamp(32px, 4vw, 64px);
+  border-radius: 12px;
+  overflow: hidden;
+  background-image: url("/TechnologyPageImages/GenLayersimage.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: clamp(520px, 72vh, 780px);
   display: flex;
   flex-direction: column;
-  gap: clamp(24px, 3vw, 40px);
+  gap: clamp(32px, 4vw, 56px);
+
+  /* Reveal — starts inset from the band edges as a smaller card, expands
+     to nearly full screen when in view. transform-origin keeps the
+     expansion anchored to the section's visual center so the motion feels
+     grounded, not jittery. */
+  clip-path: inset(5% 6% 5% 6% round 24px);
+  transform: scale(0.96);
+  transform-origin: center center;
+  transition:
+    clip-path 1.4s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 1.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.genLayersDisplayRevealed {
+  clip-path: inset(0% 0% 0% 0% round 0px);
+  transform: scale(1);
+}
+
+/* Top + bottom blur-gradient overlays — weaker & more extended than before.
+   Covers ~30% of the panel height each; gentle mask fades both the blur
+   and the color tint away toward the center. */
+.genLayersDisplayFadeTop,
+.genLayersDisplayFadeBottom {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: clamp(180px, 32%, 360px);
+  pointer-events: none;
+  z-index: 1;
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+}
+
+.genLayersDisplayFadeTop {
+  top: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(40, 67, 148, 0.18) 0%,
+    rgba(40, 67, 148, 0) 100%
+  );
+  -webkit-mask-image: linear-gradient(to bottom, black 0%, black 20%, transparent 100%);
+  mask-image: linear-gradient(to bottom, black 0%, black 20%, transparent 100%);
+}
+
+.genLayersDisplayFadeBottom {
+  bottom: 0;
+  background: linear-gradient(
+    to top,
+    rgba(40, 67, 148, 0.18) 0%,
+    rgba(40, 67, 148, 0) 100%
+  );
+  -webkit-mask-image: linear-gradient(to top, black 0%, black 20%, transparent 100%);
+  mask-image: linear-gradient(to top, black 0%, black 20%, transparent 100%);
 }
 
 .genLayersHeadline {
+  position: relative;
+  z-index: 2;
   margin: 0;
-  max-width: 720px;
+  max-width: 560px;
   font-size: var(--tech-fs-h4);
   font-weight: 500;
   letter-spacing: var(--tech-tracking-tight);
   line-height: 1.25;
-  color: var(--tech-color-text);
-  position: relative;
-  z-index: 2;
-  padding-top: clamp(32px, 5vw, 72px);
-  padding-left: clamp(16px, 2.5vw, 40px);
-  padding-bottom: clamp(24px, 3vw, 32px);
+  color: #ffffff;
+  /* Sits in the top-left of the image-backed display */
+  align-self: flex-start;
 }
 
 .genLayersTilesRow {
+  position: relative;
+  z-index: 2;
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0;
-  border-radius: 10px;
-  overflow: hidden;
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.18);
+  gap: clamp(24px, 3vw, 48px);
+  /* Pin tile labels to the bottom of the image-backed display. */
+  margin-top: auto;
 }
 
-
+/* Tile — now a simple text block layered on top of the display's image.
+   No more SVG art backdrop or tall aspect-ratio container. */
 .genLayersTile {
   position: relative;
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
-  align-items: center;
-  /* Taller aspect so the three tiles together read as one tall band. */
-  aspect-ratio: 3 / 4.4;
-  min-height: 540px;
-  padding: 16px;
+  align-items: flex-start;
   color: #fff;
-  overflow: hidden;
-  background: rgba(0, 0, 0, 0.4);
 }
 
-.genLayersTile:not(:last-child) {
-  border-right: 1px solid rgba(255, 255, 255, 0.12);
-}
-
+/* Legacy tile-art classes preserved for potential re-use but hidden when
+   stripped from the JSX. */
 .genLayersTileArt {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
+  display: none;
 }
 
 .genLayersTileArt svg {
@@ -4737,28 +4833,28 @@
   margin-bottom: 8px;
 }
 
-.genLayersExploreBtn {
-  align-self: center;
-  margin-top: clamp(24px, 3vw, 40px);
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 12px 24px;
-  border-radius: var(--tech-radius-full);
-  background: rgba(255, 255, 255, 0.12);
-  backdrop-filter: blur(14px) saturate(1.4);
-  -webkit-backdrop-filter: blur(14px) saturate(1.4);
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.25);
-  font-size: var(--tech-fs-caption);
-  font-weight: 500;
-  color: #fff;
-  text-decoration: none;
-  transition: background 200ms ease, transform 200ms ease;
+/* Wrap around the explore CTA — centers the glass pill horizontally. */
+.genLayersExploreWrap {
+  display: flex;
+  justify-content: center;
+  margin-top: clamp(40px, 5vw, 64px);
 }
 
-.genLayersExploreBtn:hover {
-  background: rgba(255, 255, 255, 0.2);
-  transform: translateY(-1px);
+/* Positioning + color only — pill appearance comes from glassStyles.btn
+   applied alongside this class in the JSX. */
+.genLayersExploreBtn {
+  color: #ffffff;
+  font-size: var(--tech-fs-caption);
+  gap: 8px;
+  text-decoration: none;
+}
+
+.genLayersExploreBtn svg {
+  transition: transform 280ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.genLayersExploreBtn:hover svg {
+  transform: translateX(2px);
 }
 
 .genLayersGrid {

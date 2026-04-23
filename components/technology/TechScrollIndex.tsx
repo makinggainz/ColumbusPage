@@ -9,6 +9,7 @@ import { HERO_SCROLL_INDEX_ITEMS } from "./redesign/content";
 export function TechScrollIndex() {
   const [activeIdx, setActiveIdx] = useState(0);
   const [pastHero, setPastHero] = useState(false);
+  const [onDark, setOnDark] = useState(false);
   const itemRefs = useRef<(HTMLAnchorElement | null)[]>([]);
   const trackRef = useRef<HTMLDivElement>(null);
   const [segmentStyle, setSegmentStyle] = useState<React.CSSProperties>({});
@@ -54,13 +55,30 @@ export function TechScrollIndex() {
     setPastHero(rect.bottom <= 80);
   }, []);
 
+  /* Flip to white-text mode when the index's own Y-range overlaps with the
+     full-viewport-width Gen Layers band (dark navy bg). */
+  const updateOnDark = useCallback(() => {
+    const band = document.getElementById("gen-layers-band");
+    if (!band) {
+      setOnDark(false);
+      return;
+    }
+    const bandRect = band.getBoundingClientRect();
+    // Probe Y = roughly where the sticky index sits on screen.
+    const probeY = window.innerHeight * 0.42;
+    const overlap = bandRect.top <= probeY && bandRect.bottom >= probeY;
+    setOnDark(overlap);
+  }, []);
+
   useEffect(() => {
     updateActive();
     updatePastHero();
+    updateOnDark();
 
     const handler = () => {
       updateActive();
       updatePastHero();
+      updateOnDark();
     };
 
     window.addEventListener("scroll", handler, { passive: true });
@@ -70,7 +88,7 @@ export function TechScrollIndex() {
       window.removeEventListener("scroll", handler);
       window.removeEventListener("resize", handler);
     };
-  }, [updateActive, updatePastHero]);
+  }, [updateActive, updatePastHero, updateOnDark]);
 
   useEffect(() => {
     updateSegment();
@@ -86,6 +104,7 @@ export function TechScrollIndex() {
       className={[
         styles.scrollIndex,
         pastHero ? styles.scrollIndexVisible : "",
+        onDark ? styles.scrollIndexOnDark : "",
       ]
         .filter(Boolean)
         .join(" ")}
