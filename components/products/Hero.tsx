@@ -3,7 +3,6 @@
 import Image from "next/image";
 import { useRef, useEffect, useState, useCallback } from "react";
 import glassStyles from "@/components/ui/GlassButton.module.css";
-import { ConsumerEnterpriseToggle } from "@/components/enterprise/ConsumerEnterpriseToggle";
 import ShowcaseSection from "@/components/products/ShowcaseSection";
 import MapsGPTGlobe from "@/components/products/MapsGPTGlobe";
 
@@ -29,7 +28,6 @@ export default function Hero() {
   const outerContainerRef       = useRef<HTMLDivElement>(null);
   const sectionRef              = useRef<HTMLElement>(null);
   const bgRef                   = useRef<HTMLDivElement>(null);
-  const toggleRef               = useRef<HTMLDivElement>(null);
   const badgeTitleRef           = useRef<HTMLDivElement>(null);
   const transitionPhoneRef      = useRef<HTMLDivElement>(null);
   const showcaseOverlayRef      = useRef<HTMLDivElement>(null);
@@ -134,7 +132,6 @@ export default function Hero() {
       if (phoneSpringWrapperRef.current) phoneSpringWrapperRef.current.style.opacity = "1";
       const tp = transitionPhoneRef.current;
       if (tp) { tp.style.display = "none"; tp.style.transform = "none"; }
-      if (toggleRef.current)    toggleRef.current.style.opacity    = "1";
       if (badgeTitleRef.current) badgeTitleRef.current.style.opacity = "1";
       const so = showcaseOverlayRef.current;
       if (so) { so.style.opacity = "0"; so.style.display = "none"; }
@@ -151,9 +148,8 @@ export default function Hero() {
       phoneStartCapturedRef.current = true;
     }
 
-    // Fade out toggle + title
+    // Fade out title block
     const contentFade = Math.max(0, 1 - raw * 3.5);
-    if (toggleRef.current)     toggleRef.current.style.opacity     = String(contentFade);
     if (badgeTitleRef.current) badgeTitleRef.current.style.opacity  = String(contentFade);
 
     // Hide original phone spring wrapper
@@ -545,13 +541,6 @@ export default function Hero() {
               className="absolute top-[100px] left-1/2 -translate-x-1/2 flex flex-col items-center gap-[200px]"
               style={{ zIndex: 2 }}
             >
-              <div ref={toggleRef} style={{
-                opacity:   bgExpanded ? 1 : 0,
-                transform: bgExpanded ? "translateY(0)" : "translateY(16px)",
-                transition: "opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1), transform 0.5s cubic-bezier(0.4, 0, 0.2, 1)",
-              }}>
-                <ConsumerEnterpriseToggle variant="light" active="consumer" />
-              </div>
               <div ref={badgeTitleRef} className="flex flex-col items-center gap-[21px]">
                 <div className={glassStyles.btn} style={{
                   width: 266, height: 43, padding: 0,
@@ -615,14 +604,6 @@ export default function Hero() {
         {/* ═══ MOBILE: Flow layout (<lg) ═══ */}
         {!isLg && (
         <div className="relative z-[2] flex flex-col items-center text-center w-full h-full px-6" style={{ overflow: "visible" }}>
-          {/* Toggle — pinned near top */}
-          <div className="pt-24" ref={toggleRef} style={{
-            opacity: bgExpanded ? 1 : 0,
-            transform: bgExpanded ? "translateY(0)" : "translateY(16px)",
-            transition: "opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1), transform 0.5s cubic-bezier(0.4, 0, 0.2, 1)",
-          }}>
-            <ConsumerEnterpriseToggle variant="light" active="consumer" />
-          </div>
           {/* Logo + tagline — positioned ~25% from top */}
           <div className="absolute left-0 right-0 flex flex-col items-center" style={{ top: "25%" }}>
             <div ref={badgeTitleRef} className="flex flex-col items-center gap-4">

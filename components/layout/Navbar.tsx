@@ -15,6 +15,12 @@ const NAV_BREAKPOINT = 900;
 
 export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "dark"; wide?: boolean }) => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    /* Tracks what triggered the dropdown. "products" means the user
+       hovered the Products nav link — in that case the dropdown hides
+       the COLUMBUS EARTH / CONTACT / SOCIAL column and shows the product
+       cards left-aligned in its place. Any other trigger (logo hover,
+       hamburger, etc.) falls back to the default dropdown layout. */
+    const [hoverKind, setHoverKind] = useState<"products" | null>(null);
     const [isManuallyToggled, setIsManuallyToggled] = useState(false);
     const [hasScrolled, setHasScrolled] = useState(false);
     const [isCompact, setIsCompact] = useState(false);
@@ -266,6 +272,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
     const closeMenu = () => {
         setIsMenuOpen(false);
         setIsManuallyToggled(false);
+        setHoverKind(null);
     };
 
     // ── Theme ───────────────────────────────────────────────────────────
@@ -281,8 +288,8 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
 
     // ── Dropdown tokens ─────────────────────────────────────────────────
     const dropdownBg = isDark
-        ? { background: "rgba(6, 8, 20, 0.96)", backdropFilter: "blur(24px)", WebkitBackdropFilter: "blur(24px)", boxShadow: "0 8px 40px rgba(0,0,0,0.5)" }
-        : { background: "rgba(248, 249, 252, 0.92)", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)", boxShadow: "0 8px 32px rgba(0,0,0,0.08)" };
+        ? { background: "rgba(6, 8, 20, 0.96)", backdropFilter: "blur(24px)", WebkitBackdropFilter: "blur(24px)" }
+        : { background: "rgba(248, 249, 252, 0.92)", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)" };
 
     const dropdownHeadingClass = isDark ? "text-white/40" : "text-[#0A1344]/50";
     const dropdownBodyClass    = isDark ? "text-white/65" : "text-[#0A1344]/70";
@@ -371,7 +378,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                         >
                             {/* ── Left: Logo ── */}
                             <div className="flex items-center">
-                                <Link href="/" className="flex w-fit shrink-0 items-center gap-2 cursor-pointer" onMouseEnter={isWideScreen ? handleNavMouseEnter : undefined}>
+                                <Link href="/" className="flex w-fit shrink-0 items-center gap-2 cursor-pointer" onMouseEnter={isWideScreen ? () => { setHoverKind(null); handleNavMouseEnter(); } : undefined}>
                                     <div
                                         data-navbar-logo
                                         className="relative shrink-0"
@@ -437,16 +444,69 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                                 filter: linksVisible ? "blur(0px)" : "blur(4px)",
                                                 transition: `opacity 350ms ease ${i * 80}ms, transform 400ms cubic-bezier(0.22, 1, 0.36, 1) ${i * 80}ms, filter 350ms ease ${i * 80}ms, font-size ${t}`,
                                             }}
-                                            onMouseEnter={(link as { hasDropdown?: boolean }).hasDropdown ? handleNavMouseEnter : undefined}
+                                            onMouseEnter={(link as { hasDropdown?: boolean }).hasDropdown ? () => { setHoverKind("products"); handleNavMouseEnter(); } : undefined}
                                         >
-                                            {link.label}
-                                            <svg
-                                                className="transition-transform duration-300 group-hover/nav:translate-x-0.5"
-                                                width="7" height="12" viewBox="0 0 7 12" fill="none"
-                                                stroke="#0066CC" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"
-                                            >
-                                                <path d="M1 1l5 5-5 5" />
-                                            </svg>
+                                            {/* Wrap the label so the hover-underline is positioned
+                                                relative to the text itself (not the px-3 padded link
+                                                area). Underline animates width 0 → 100% on hover,
+                                                same easing + duration as the research-blog row line
+                                                in the /technology page. */}
+                                            <span className="relative inline-block">
+                                                {link.label}
+                                                <span
+                                                    aria-hidden
+                                                    className="pointer-events-none absolute left-0 -bottom-1 h-px w-0 bg-[#0066CC] group-hover/nav:w-full"
+                                                    style={{ transition: "width 500ms cubic-bezier(0.22, 1, 0.36, 1)" }}
+                                                />
+                                            </span>
+                                            {/* Arrow — Products chevron. Swaps between down and up
+                                                via a brief opacity crossfade (no rotation, no
+                                                overshoot). Down → up swap is instant the moment
+                                                the dropdown commits open; close is a quick fade
+                                                back. Restrained and serious. */}
+                                            {(link as { hasDropdown?: boolean }).hasDropdown && (() => {
+                                                const flipped = isMenuOpen && hoverKind === "products";
+                                                const crossfade = "opacity 140ms ease-out";
+                                                return (
+                                                    <span
+                                                        aria-hidden
+                                                        style={{
+                                                            position: "relative",
+                                                            display: "inline-block",
+                                                            width: 12,
+                                                            height: 7,
+                                                            lineHeight: 0,
+                                                        }}
+                                                    >
+                                                        {/* Down chevron — visible when closed */}
+                                                        <svg
+                                                            width="12" height="7" viewBox="0 0 12 7" fill="none"
+                                                            stroke="#0066CC" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"
+                                                            style={{
+                                                                position: "absolute",
+                                                                inset: 0,
+                                                                opacity: flipped ? 0 : 1,
+                                                                transition: crossfade,
+                                                            }}
+                                                        >
+                                                            <path d="M1 1l5 5 5-5" />
+                                                        </svg>
+                                                        {/* Up chevron — visible when the dropdown is open */}
+                                                        <svg
+                                                            width="12" height="7" viewBox="0 0 12 7" fill="none"
+                                                            stroke="#0066CC" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"
+                                                            style={{
+                                                                position: "absolute",
+                                                                inset: 0,
+                                                                opacity: flipped ? 1 : 0,
+                                                                transition: crossfade,
+                                                            }}
+                                                        >
+                                                            <path d="M1 6l5-5 5 5" />
+                                                        </svg>
+                                                    </span>
+                                                );
+                                            })()}
                                         </Link>
                                     ))}
                                 </div>
@@ -601,10 +661,10 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                 }}
                 onMouseLeave={handleDropdownMouseLeave}
             >
-                <div className={`mx-auto w-full px-6 md:px-8 ${wide ? "min-[1408px]:px-0" : "min-[1287px]:px-0"} py-4 md:py-12`} style={{ maxWidth: wide ? 1408 : 1287, paddingTop: isCompact ? 56 + 16 : 68 + 20 }}>
-                    <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12">
+                <div className={`mx-auto w-full px-6 md:px-8 ${wide ? "min-[1408px]:px-0" : "min-[1287px]:px-0"} py-4 md:py-6`} style={{ maxWidth: wide ? 1408 : 1287, paddingTop: isCompact ? 56 + 8 : 68 + 12 }}>
+                    <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-8 md:min-h-[320px]">
                         <div
-                            className="md:col-span-5 space-y-6 md:space-y-8"
+                            className={`md:col-span-5 space-y-6 md:space-y-8 ${hoverKind === "products" ? "md:hidden" : ""}`}
                             style={{
                                 opacity: isMenuOpen ? 1 : 0,
                                 transform: isMenuOpen ? "translateY(0) scale(1)" : "translateY(8px) scale(0.99)",
@@ -641,26 +701,123 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                 </div>
                             </div>
                         </div>
-                        <div className="hidden md:block md:col-span-3"></div>
-                        <div className="md:col-span-4 space-y-6 md:space-y-8">
+                        <div className={`hidden md:block md:col-span-1 ${hoverKind === "products" ? "md:hidden" : ""}`}></div>
+                        <div className={`md:col-span-6 space-y-6 md:space-y-8 ${hoverKind === "products" ? "md:col-start-1 md:col-span-12" : ""}`}>
                             {/* ── Products group ── */}
                             <div>
-                                <h4
-                                    className={`text-[13px] font-medium tracking-[0.08em] uppercase mb-4 ${dropdownSubheadClass}`}
-                                    style={{
-                                        opacity: isMenuOpen ? 1 : 0,
-                                        transform: isMenuOpen ? "translateY(0)" : "translateY(8px)",
-                                        transition: isMenuOpen
-                                            ? "opacity 350ms ease 180ms, transform 400ms cubic-bezier(0.05, 0.7, 0.1, 1) 180ms"
-                                            : "opacity 150ms ease, transform 150ms ease",
-                                    }}
-                                >
-                                    <ScrambleText text="PRODUCTS" isActive={isMenuOpen} delay={250} />
-                                </h4>
-                                <ul className="space-y-4">
+                                {/* Eyebrow — shown only in default (non-products-hover) layout.
+                                    In products-hover mode the cards stand on their own, ai21-style. */}
+                                {hoverKind !== "products" && (
+                                    <h4
+                                        className={`text-[13px] font-medium tracking-[0.08em] uppercase mb-4 ${dropdownSubheadClass}`}
+                                        style={{
+                                            opacity: isMenuOpen ? 1 : 0,
+                                            transform: isMenuOpen ? "translateY(0)" : "translateY(8px)",
+                                            transition: isMenuOpen
+                                                ? "opacity 350ms ease 180ms, transform 400ms cubic-bezier(0.05, 0.7, 0.1, 1) 180ms"
+                                                : "opacity 150ms ease, transform 150ms ease",
+                                        }}
+                                    >
+                                        <ScrambleText text="PRODUCTS" isActive={isMenuOpen} delay={250} />
+                                    </h4>
+                                )}
+
+                                {/* Desktop row — 2-card image grid, with a "Ready to experience…"
+                                    CTA block to the right when products-hover is active. */}
+                                <div className={hoverKind === "products" ? "hidden md:flex md:items-start md:justify-between md:gap-10" : ""}>
+                                <div className={`hidden md:grid grid-cols-2 gap-6 ${hoverKind === "products" ? "md:flex-1 md:max-w-[760px]" : ""}`}>
+                                    {[
+                                        {
+                                            title: "Columbus",
+                                            subtitle: "An agentic GIS",
+                                            href: "/products/enterprise",
+                                            img: "/navbardropColumbus.png",
+                                        },
+                                        {
+                                            title: "Elio",
+                                            subtitle: "The smart social map",
+                                            href: "/products/mapsgpt",
+                                            img: "/navbardropElio.png",
+                                        },
+                                    ].map((item, index) => (
+                                        <Link
+                                            key={item.href}
+                                            href={item.href}
+                                            onClick={closeMenu}
+                                            className="flex flex-col cursor-pointer"
+                                            style={{
+                                                opacity: isMenuOpen ? 1 : 0,
+                                                transform: isMenuOpen
+                                                    ? "translateY(0) scale(1)"
+                                                    : "translateY(12px) scale(0.98)",
+                                                transition: isMenuOpen
+                                                    ? `opacity 400ms cubic-bezier(0.05, 0.7, 0.1, 1) ${200 + index * 60}ms, transform 450ms cubic-bezier(0.05, 0.7, 0.1, 1) ${200 + index * 60}ms`
+                                                    : `opacity 120ms ease ${(1 - index) * 25}ms, transform 120ms ease ${(1 - index) * 25}ms`,
+                                            }}
+                                        >
+                                            <div className={`relative overflow-hidden aspect-[16/10] ${isDark ? "bg-white/5" : "bg-[#F5F5F5]"}`}>
+                                                <Image
+                                                    src={item.img}
+                                                    alt={item.title}
+                                                    fill
+                                                    sizes="(min-width: 768px) 360px, 100vw"
+                                                    className="object-cover object-left-top"
+                                                />
+                                            </div>
+                                            <h5 className={`mt-5 text-[20px] font-medium tracking-[-0.005em] leading-[1.2] ${dropdownNavLinkClass}`}>
+                                                {item.title}
+                                            </h5>
+                                            <p className={`mt-1.5 text-[15px] leading-[1.5] ${isDark ? "text-white/55" : "text-[#0A1344]/55"}`}>
+                                                {item.subtitle}
+                                            </p>
+                                        </Link>
+                                    ))}
+                                </div>
+                                {/* CTA block on the right — only renders in products-hover mode */}
+                                {hoverKind === "products" && (
+                                    <div
+                                        className="hidden md:block md:shrink-0 md:max-w-[300px] md:pt-2"
+                                        style={{
+                                            opacity: isMenuOpen ? 1 : 0,
+                                            transform: isMenuOpen ? "translateY(0)" : "translateY(8px)",
+                                            transition: isMenuOpen
+                                                ? "opacity 400ms cubic-bezier(0.05, 0.7, 0.1, 1) 320ms, transform 450ms cubic-bezier(0.05, 0.7, 0.1, 1) 320ms"
+                                                : "opacity 120ms ease, transform 120ms ease",
+                                        }}
+                                    >
+                                        <p className={`text-[22px] font-medium tracking-[-0.01em] leading-[1.25] ${dropdownNavLinkClass}`}>
+                                            Ready to experience the future of GIS?
+                                        </p>
+                                        <Link
+                                            href="/contact"
+                                            onClick={closeMenu}
+                                            className={`mt-6 inline-flex items-center gap-2 text-[15px] font-medium underline underline-offset-4 transition-colors duration-300 hover:text-[#2563EB] ${dropdownNavLinkClass}`}
+                                        >
+                                            <svg
+                                                width="16"
+                                                height="16"
+                                                viewBox="0 0 16 16"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                strokeWidth="1.5"
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                aria-hidden
+                                            >
+                                                <path d="M3 3v5a2 2 0 0 0 2 2h8" />
+                                                <path d="M10 6l3 4-3 4" />
+                                            </svg>
+                                            Get a Demo
+                                        </Link>
+                                    </div>
+                                )}
+                                </div>
+
+                                {/* Mobile — text list (unchanged) */}
+                                <ul className="space-y-4 md:hidden">
                                     {[
                                         { label: "MapsGPT", href: "/products/mapsgpt" },
-                                        { label: "Columbus Pro", href: "/products/enterprise" },
+                                        { label: "Columbus", href: "/products/enterprise" },
                                     ].map((item, index) => (
                                         <li
                                             key={item.href}

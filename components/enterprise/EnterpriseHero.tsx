@@ -3,7 +3,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { ConsumerEnterpriseToggle } from "./ConsumerEnterpriseToggle";
 
 const QUESTION = "Where is the best place to purchase property for new company headquarters for our billion dollar company Manthano?";
 
@@ -97,11 +96,6 @@ export default function EnterpriseHero() {
           zIndex: 0,
         }}
       />
-
-      {/* ── Toggle ── */}
-      <div className="relative z-10 flex justify-center pt-32 pb-10 px-6" style={reveal(visible, 0)}>
-        <ConsumerEnterpriseToggle variant="light" active="enterprise" />
-      </div>
 
       {/* ── Text block ── */}
       <div className="relative z-10 flex flex-col items-center text-center px-6" style={reveal(visible, 0.1)}>
