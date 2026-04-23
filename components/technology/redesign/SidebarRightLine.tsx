@@ -9,10 +9,10 @@ const CURVE_VERT = 200; // vertical tangent length on each side of the gap
 const GAP_HALF = 80;    // half-height of the open gap at the timeline crossing
 const STROKE = "rgba(0, 102, 204, 0.3)";
 
-// Section bg color — the LGM timeline section (.lgmSlide) sits behind the
-// left side of the right sidebar line. At the curve opening, this color
-// "bleeds" through into the gutter to the right of the line.
-const SECTION_BG = "#F9F9F9";
+// The section's bg color "bleeds out" of the line through the curve opening
+// — the filled shape lives in the gutter (x > 0 in SVG coords) so the
+// effect visibly flows AWAY from the content area, not into it.
+const BLEED_COLOR = "#F9F9F9";
 
 export function SidebarRightLine({ timelineId }: { timelineId: string }) {
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -98,25 +98,22 @@ function CurveSvg({ height, timelineY }: { height: number; timelineY: number }) 
     `L 0 ${height}`,
   ].join(" ");
 
-  // Bleed — a closed path that traces the two curve interiors (so the
-  // liquid is shaped BY the structure lines), then bulges past the gap
-  // tips with a quadratic arc to form a "jet" flowing into the gutter.
-  // A horizontal linear gradient fades the section-bg fill from solid at
-  // the section side (x=0) to fully transparent at the jet tip, so it
-  // reads as liquid emanating outward and dissipating.
+  // Bleed — a closed path that traces the two curve interiors exactly
+  // (so the shape is literally bounded BY the structure lines) and
+  // bulges past the gap tips with a quadratic jet arc. Lives in the
+  // gutter (x > 0), flowing OUTWARD through the opening.
   const JET = 70;
   const bleedPath = [
     `M 0 ${y1}`,
-    // Follows the top stroke curve exactly (same control points) from
-    // the upper attachment at (0, y1) down to the upper gap tip (BOW, y4).
+    // Follows the top stroke curve down-right to the upper gap tip (BOW, y4).
     `C 0 ${y1 + topDy * TANGENT_V} ${BOW * (1 - TANGENT_H)} ${y4} ${BOW} ${y4}`,
-    // Jet — quadratic arc from upper gap tip → peak at (BOW+JET, timelineY) → lower gap tip.
+    // Jet — quadratic arc peaking at (BOW+JET, timelineY) → gap bottom tip.
     `Q ${BOW + JET} ${timelineY} ${BOW} ${y5}`,
-    // Follows the bottom stroke curve exactly back to (0, y8).
+    // Follows the bottom stroke curve back to (0, y8).
     `C ${BOW * (1 - TANGENT_H)} ${y5} 0 ${y8 - botDy * TANGENT_V} 0 ${y8}`,
-    // Close the shape along the line (x=0) — this edge sits inside the
-    // section, so no visible boundary appears against section-bg-colored
-    // content to the left.
+    // Close along the line (x=0). This edge sits at the boundary between
+    // the section bg (same color as the fill) and the gutter — no visible
+    // seam since section bg and BLEED_COLOR match.
     `L 0 ${y1}`,
     `Z`,
   ].join(" ");
@@ -132,29 +129,80 @@ function CurveSvg({ height, timelineY }: { height: number; timelineY: number }) 
       preserveAspectRatio="none"
     >
       <defs>
+        {/* Pattern matching the .lgmSlide section background's base layers:
+            #F9F9F9 base + the dot-grid plus-pattern (24×24 tile). */}
+        <pattern
+          id={`${gradientId}-pat`}
+          width="24"
+          height="24"
+          patternUnits="userSpaceOnUse"
+        >
+          <rect width="24" height="24" fill={BLEED_COLOR} />
+          <path
+            d="M12 11.5v1M11.5 12h1"
+            stroke="rgba(0,102,204,0.12)"
+            strokeWidth="1.6"
+            strokeLinecap="square"
+          />
+        </pattern>
+
+        {/* Halo — matches .lgmTimelineHalo's vertical linear gradient.
+            Peaks at the timeline centerline (rgba(0,102,204,0.16)) and
+            fades symmetrically up/down. Spans ±230px which approximates
+            the actual halo's height (clamp(360–460px) timeline + 30px
+            overflow on each side). This is what creates the perceptual
+            grey-blue tint at the timeline's Y position. */}
         <linearGradient
-          id={gradientId}
+          id={`${gradientId}-halo`}
+          gradientUnits="userSpaceOnUse"
+          x1={0}
+          y1={timelineY - 230}
+          x2={0}
+          y2={timelineY + 230}
+        >
+          <stop offset="0%"   stopColor="#0066cc" stopOpacity="0"    />
+          <stop offset="25%"  stopColor="#0066cc" stopOpacity="0.04" />
+          <stop offset="50%"  stopColor="#0066cc" stopOpacity="0.16" />
+          <stop offset="75%"  stopColor="#0066cc" stopOpacity="0.04" />
+          <stop offset="100%" stopColor="#0066cc" stopOpacity="0"    />
+        </linearGradient>
+
+        {/* Mask gradient — same opacity profile as before, fades both
+            the base pattern and the halo overlay together at the gap
+            edges and jet tip. */}
+        <linearGradient
+          id={`${gradientId}-mask`}
           gradientUnits="userSpaceOnUse"
           x1={0}
           y1={timelineY}
           x2={BOW + JET}
           y2={timelineY}
         >
-          {/* Gradient focused at the gap — invisible at the section side
-              (x=0, offset 0%), peaks near the gap opening (x≈BOW, offset
-              ~70%), then fades back to transparent at the jet tip. Visual
-              weight concentrates where the liquid is "squeezing through"
-              the narrow opening rather than flooding the whole lens. */}
-          <stop offset="0%"   stopColor={SECTION_BG} stopOpacity="0"    />
-          <stop offset="35%"  stopColor={SECTION_BG} stopOpacity="0.3"  />
-          <stop offset="70%"  stopColor={SECTION_BG} stopOpacity="0.95" />
-          <stop offset="90%"  stopColor={SECTION_BG} stopOpacity="0.6"  />
-          <stop offset="100%" stopColor={SECTION_BG} stopOpacity="0"    />
+          <stop offset="0%"   stopColor="#ffffff" stopOpacity="0"    />
+          <stop offset="35%"  stopColor="#ffffff" stopOpacity="0.3"  />
+          <stop offset="70%"  stopColor="#ffffff" stopOpacity="0.95" />
+          <stop offset="90%"  stopColor="#ffffff" stopOpacity="0.6"  />
+          <stop offset="100%" stopColor="#ffffff" stopOpacity="0"    />
         </linearGradient>
+        <mask id={`${gradientId}-m`}>
+          <rect
+            x={-10}
+            y={0}
+            width={BOW + JET + 20}
+            height={height}
+            fill={`url(#${gradientId}-mask)`}
+          />
+        </mask>
       </defs>
 
-      {/* Bleed — rendered BEFORE the curves so the strokes land on top. */}
-      <path d={bleedPath} fill={`url(#${gradientId})`} stroke="none" />
+      {/* Bleed — rendered BEFORE the curves so strokes land on top.
+          Two path layers masked together: first the base-plus-pattern
+          (#F9F9F9 + plus dots), then the halo (blue vertical gradient).
+          Both fade together at the gap edges via the shared mask. */}
+      <g mask={`url(#${gradientId}-m)`}>
+        <path d={bleedPath} fill={`url(#${gradientId}-pat)`} stroke="none" />
+        <path d={bleedPath} fill={`url(#${gradientId}-halo)`} stroke="none" />
+      </g>
 
       <path d={path} fill="none" stroke={STROKE} strokeWidth="1" />
     </svg>

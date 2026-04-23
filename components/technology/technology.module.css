@@ -97,12 +97,12 @@
 .dotGrid::before {
   content: "";
   position: absolute;
-  /* V2: pattern lives only in the right zone (from the sidebar's right
-     edge to the viewport right), matching the section background clip. */
+  /* V3.1: pattern bounded between the left + right sidebar lines, matching
+     the section-bg clip. Does not leak into the gutters. */
   top: 0;
   bottom: 0;
   left: var(--tech-sidebar-x);
-  right: 0;
+  right: var(--tech-sidebar-x);
   z-index: 0;
   pointer-events: none;
   background-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M12 11.5v1M11.5 12h1' stroke='rgba(0,102,204,0.12)' stroke-width='1.6' stroke-linecap='square'/%3E%3C/svg%3E");
@@ -4393,7 +4393,8 @@
   justify-content: center;
   gap: 6px;
   padding: 0.85rem 1.6rem;
-  font-size: clamp(1rem, 1.15vw, 1.1rem);
+  font-size: clamp(1.15rem, 1.35vw, 1.3rem);
+  line-height: 1;
   font-weight: 500;
   letter-spacing: -0.18px;
   color: #0A1344;
@@ -4409,7 +4410,7 @@
     rgba(255, 255, 255, 0.05)
   );
   border: none;
-  border-radius: 999vw;
+  border-radius: 10px;
   transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1),
               box-shadow 0.4s cubic-bezier(0.25, 1, 0.5, 1);
   box-shadow:
@@ -4439,8 +4440,8 @@
 
 .coreResearchProductGlyph {
   display: inline-flex;
-  width: 26px;
-  height: 26px;
+  width: 36px;
+  height: 36px;
   align-items: center;
   justify-content: center;
   color: #0A1344;
@@ -4664,7 +4665,7 @@
   width: 100vw;
   margin-left: calc(50% - 50vw);
   margin-right: calc(50% - 50vw);
-  background: #284394;
+  background: #0A1344;
   color: #ffffff;
   overflow: hidden;
 }
@@ -4696,15 +4697,15 @@
   display: block;
 }
 
-/* Label background now matches the new band bg (#284394) so the line
-   behind it is cleanly masked. */
+/* Label background matches the band bg (#0A1344) so the line behind
+   it is cleanly masked. */
 .genLayersHeadLabel {
   position: absolute;
   left: 0;
   top: 50%;
   transform: translateY(-50%);
   z-index: 2;
-  background: #284394;
+  background: #0A1344;
   padding-right: 16px;
   font-size: clamp(1.4rem, 1.8vw, 1.8rem);
   font-weight: 500;

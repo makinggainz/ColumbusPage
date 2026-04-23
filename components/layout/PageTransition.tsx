@@ -58,6 +58,18 @@ export function PageTransitionProvider({ children }: { children: React.ReactNode
     if (phase === "holding") {
       // Push the route during hold
       if (pendingHref.current) {
+        // Reset scroll BEFORE router.push. Next.js's own scroll-to-top
+        // on router.push defers to CSS `scroll-behavior`, and /technology
+        // sets that to "smooth" on <html>, which would otherwise animate
+        // the scroll-to-top visibly after the overlay retreats. Locking
+        // to "auto" and zeroing scroll first makes Next.js's reset a
+        // no-op (already at 0), so no animation can fire.
+        const html = document.documentElement;
+        html.style.scrollBehavior = "auto";
+        window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+        html.scrollTop = 0;
+        document.body.scrollTop = 0;
+
         router.push(pendingHref.current);
         pendingHref.current = null;
       }
@@ -77,12 +89,41 @@ export function PageTransitionProvider({ children }: { children: React.ReactNode
   }, [phase, router]);
 
   // ── Scroll to top on route change ──
+  // Forces an INSTANT jump to the top, bypassing any CSS
+  // `scroll-behavior: smooth` (set by /technology and similar) AND any
+  // active Lenis smooth-scroll instance. Reset the documentElement /
+  // body scrollTop directly as a belt-and-suspenders measure.
   useEffect(() => {
     if (pathname !== prevPathname.current) {
       prevPathname.current = pathname;
-      window.scrollTo(0, 0);
+      const html = document.documentElement;
+      const prevBehavior = html.style.scrollBehavior;
+      html.style.scrollBehavior = "auto";
+      window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+      html.scrollTop = 0;
+      document.body.scrollTop = 0;
+      // Restore any prior scroll-behavior after the jump settles.
+      window.requestAnimationFrame(() => {
+        html.style.scrollBehavior = prevBehavior;
+      });
     }
   }, [pathname]);
+
+  // Also reset scroll during the "holding" phase, where the overlay is
+  // fully covering the screen — this catches any smooth-scroll or Lenis
+  // animation that managed to start between wipe-in and route commit.
+  useEffect(() => {
+    if (phase !== "holding") return;
+    const html = document.documentElement;
+    const prevBehavior = html.style.scrollBehavior;
+    html.style.scrollBehavior = "auto";
+    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+    html.scrollTop = 0;
+    document.body.scrollTop = 0;
+    window.requestAnimationFrame(() => {
+      html.style.scrollBehavior = prevBehavior;
+    });
+  }, [phase]);
 
   // ── Intercept all internal link clicks ──
   useEffect(() => {

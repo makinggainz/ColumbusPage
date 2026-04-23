@@ -510,7 +510,7 @@ export function TechnologySections() {
                 </ResearchGroup>
 
                 <ResearchGroup title="Answers, insights, patterns">
-                  <p>One model. Two products.</p>
+                  <p>One model, innumerable granular ground truths.</p>
                   <div className={styles.coreResearchProducts}>
                     <a href="/" className={styles.coreResearchProduct}>
                       <span className={styles.coreResearchProductGlyph} aria-hidden>
