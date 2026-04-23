@@ -2844,6 +2844,32 @@
   object-fit: cover;
 }
 
+/* Scroll-driven blur overlay. Sits above the hero image AND text inside
+   .techHero so backdrop-filter blurs both as the user scrolls past the
+   hero section. z-index is high enough to cover .techHeroContent, but
+   pointer-events: none keeps nav links clickable. */
+.techHeroBlurOverlay {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  pointer-events: none;
+  transition: opacity 60ms linear;
+}
+
+/* Scroll-driven fade-to-black overlay — mirrors the use-cases page's
+   hero overlay ([app/use-cases/page.tsx:60-63]). Layered ABOVE the
+   blur overlay so it fully darkens the hero at the end of the scroll
+   window, even while the blur is still active. */
+.techHeroBlackOverlay {
+  position: absolute;
+  inset: 0;
+  z-index: 30;
+  background: #000000;
+  pointer-events: none;
+  transition: opacity 60ms linear;
+}
+
+
 .techHeroOverlay {
   position: absolute;
   inset: 0;
@@ -3982,14 +4008,15 @@
    two paragraph blocks. The radiating-line center sits on the right side. */
 .coreResearchStarburst {
   position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
+  top: 0;
+  right: 0;
+  width: 1186.26px;
+  height: 692px;
   pointer-events: none;
   z-index: 0;
-  /* Scaled up 25%, anchored to the right so it still reads as the right-side graphic.
+  /* Anchored to the right so it still reads as the right-side graphic.
      Small translate nudges the graphic slightly right and down. */
-  transform: translate(80px, 40px) scale(1.25);
+  transform: translate(220px, -48px);
   transform-origin: right center;
 }
 
