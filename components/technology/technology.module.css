@@ -233,20 +233,8 @@
   position: relative;
 }
 
-.section::after {
-  content: "";
-  position: absolute;
-  bottom: 0;
-  /* Confine the divider to the slideFrame's inner bounds — the same x
-     range as the section's text content. Each side equals the gutter
-     from viewport edge to slideFrame inner edge:
-     max(page-padding, (100vw - 1287px) / 2 + page-padding). */
-  left: max(var(--page-padding), calc((100vw - 1287px) / 2 + var(--page-padding)));
-  right: max(var(--page-padding), calc((100vw - 1287px) / 2 + var(--page-padding)));
-  height: 1px;
-  background: linear-gradient(to right, var(--grid-line, rgba(0, 102, 204, 0.3)) 0%, var(--grid-line, rgba(0, 102, 204, 0.3)) 60%, transparent 100%);
-  pointer-events: none;
-}
+/* Per-section bottom divider removed — sections now meet without a
+   horizontal line between them. */
 
 /* First slide only: center "Building a brain for Earth" + diagram vertically */
 .section:has(.indexSlide) {
@@ -673,7 +661,7 @@
 .kicker {
   margin: 0;
   font-size: var(--tech-fs-caption);
-  font-weight: 700;
+  font-weight: 400;
   letter-spacing: var(--tech-tracking-wide);
   text-transform: uppercase;
   /* Title color at 35% opacity — auto-flips to white-on-dark via the
@@ -1572,7 +1560,7 @@
   font-size: var(--tech-fs-body-lg);
   font-weight: 400;
   line-height: 1.6;
-  color: var(--tech-color-text-secondary);
+  color: var(--tech-color-text-brand);
   transition: color 200ms ease;
 }
 
@@ -1591,7 +1579,7 @@
   font-size: var(--tech-fs-body-lg);
   font-weight: 400;
   line-height: 1.6;
-  color: var(--tech-color-text-secondary);
+  color: var(--tech-color-text-brand);
   white-space: nowrap;
   transition: color 200ms ease;
 }
@@ -1603,7 +1591,7 @@
 .articleRowArrow {
   font-size: var(--tech-fs-body-lg);
   line-height: 1.6;
-  color: var(--tech-color-text-secondary);
+  color: var(--tech-color-text-brand);
   transition: transform 200ms ease, color 200ms ease;
 }
 
@@ -2108,9 +2096,13 @@
   right: 0;
   pointer-events: none;
   z-index: 0;
-  background-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M12 11.5v1M11.5 12h1' stroke='rgba(255,255,255,0.5)' stroke-width='1.6' stroke-linecap='square'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M12 11.5v1M11.5 12h1' stroke='%23E3DFCE' stroke-width='1.6' stroke-linecap='square'/%3E%3C/svg%3E");
   background-repeat: repeat;
   background-size: 24px 24px;
+  /* Fade the pattern out as it approaches the "Our proprietary
+     architecture..." intro line (~30-38% down the section). */
+  -webkit-mask-image: linear-gradient(to bottom, black 0%, black 25%, transparent 38%);
+  mask-image: linear-gradient(to bottom, black 0%, black 25%, transparent 38%);
 }
 
 .verticalLineOverlay {
@@ -3110,7 +3102,7 @@
 .sectionEyebrow {
   display: block;
   font-size: var(--tech-fs-caption);
-  font-weight: 700;
+  font-weight: 400;
   letter-spacing: var(--tech-tracking-wide);
   text-transform: uppercase;
   color: color-mix(in srgb, var(--tech-color-text) 35%, transparent);
@@ -3410,7 +3402,7 @@
 .lgmKicker {
   margin: 0 0 16px;
   font-size: var(--tech-fs-caption);
-  font-weight: 700;
+  font-weight: 400;
   letter-spacing: var(--tech-tracking-wide);
   text-transform: uppercase;
   color: color-mix(in srgb, var(--tech-color-text) 35%, transparent);
@@ -3441,7 +3433,7 @@
   position: relative;
   margin-top: clamp(40px, 5vw, 72px);
   width: 100%;
-  height: clamp(280px, 32vw, 360px);
+  height: clamp(320px, 36vw, 420px);
   /* No `isolation: isolate` — let z-index: -1 on the halo go behind the
      timeline so it can encompass content via negative inset without being
      clipped by a stacking context. */
@@ -3454,8 +3446,10 @@
    z-index: -1. */
 .lgmTimelineHalo {
   position: absolute;
-  top: -120px;
-  bottom: -120px;
+  /* Vertical extent halved again (was -60px, originally -120px) so the
+     gradient hugs the line as a tight band instead of spreading wide. */
+  top: -30px;
+  bottom: -30px;
   /* Halo bounds match the section background exactly: from the sidebar's
      right edge (var(--tech-sidebar-x) from viewport left) to the viewport
      right edge. The timeline element sits var(--page-padding) inside the
@@ -3466,26 +3460,27 @@
   right: calc(-1 * (var(--tech-sidebar-x) + var(--page-padding)));
   pointer-events: none;
   z-index: -1;
-  background: radial-gradient(
-    /* Keep the brightest point anchored to the TIMELINE's visual center
-       (not the box center). The box now extends past the timeline by
-       page-padding on the left and by sidebar-x + page-padding on the
-       right — net rightward shift of sidebar-x. Counter that by shifting
-       the radial origin LEFT by sidebar-x / 2. */
-    ellipse 80% 55% at calc(50% - var(--tech-sidebar-x) / 2) 50%,
-    rgba(0, 102, 204, 0.28) 0%,
-    rgba(0, 102, 204, 0.12) 35%,
-    transparent 75%
+  /* Vertical linear gradient — uniform along the x-axis, strongest at
+     the centerline (where the track sits) and fading symmetrically up
+     and down. NOT a radial gradient: every x position along the line
+     gets the same vertical fade. */
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(0, 102, 204, 0.04) 25%,
+    rgba(0, 102, 204, 0.16) 50%,
+    rgba(0, 102, 204, 0.04) 75%,
+    transparent 100%
   );
 }
 
-/* Horizontal track — solid line that runs the full distance from the
-   start dot (at slideFrame inner left) all the way to the viewport's
-   right edge, matching the halo's right bound. */
+/* Horizontal track — solid line that runs from the section's left
+   content bound (at the sidebar line) all the way to the viewport's
+   right edge, matching the halo's bounds on both sides. */
 .lgmTimelineTrack {
   position: absolute;
   top: 50%;
-  left: 0;
+  left: calc(-1 * var(--page-padding));
   right: calc(-1 * (var(--tech-sidebar-x) + var(--page-padding)));
   height: 1px;
   background: var(--tech-color-text-brand);
@@ -3509,7 +3504,7 @@
   width: 5px;
   height: 5px;
   background: var(--tech-color-text-brand);
-  opacity: 0.35;
+  opacity: 0.22;
 }
 
 /* Trailing decorative dots — sit on the right extension of the track
@@ -3519,13 +3514,11 @@
   width: 4px;
   height: 4px;
   background: var(--tech-color-text-brand);
-  opacity: 0.2;
+  opacity: 0.12;
 }
 
-/* The Columbus "you are here" marker — accent-blue dot on the track
-   with a soft halo, anchored to today's date via the same yearX rule
-   the milestones use. The marker column sits on the BOTTOM side of
-   the track so it doesn't collide with the 2026 milestone column. */
+/* Columbus "you are here" dot — bigger than a milestone dot, accent
+   blue with a soft halo so it visually anchors the now-marker. */
 .lgmTimelineDotColumbus {
   width: 12px;
   height: 12px;
@@ -3534,147 +3527,155 @@
   z-index: 3;
 }
 
-.lgmTimelineColumbus {
-  /* Sits below the dot. Date sits closest to the track, then the stem,
-     then the logo at the bottom. Pointer-events disabled so the logo +
-     date can't intercept hover on neighboring milestone CTAs. */
-  pointer-events: none;
-  align-items: center;
-  gap: 8px;
-  z-index: 3;
-}
-
-.lgmTimelineColumbusDate {
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--tech-color-accent);
-  white-space: nowrap;
-}
-
-/* Identity label — sits between the logo and the stem, matching the
-   weight + uppercase treatment of the date but in brand navy so the
-   accent-blue accents (dot, date, logo halo) remain the focal points. */
-.lgmTimelineColumbusName {
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--tech-color-text-brand);
-  white-space: nowrap;
-}
-
-.lgmTimelineColumbusLogo {
-  width: clamp(48px, 5vw, 64px);
-  height: auto;
-  object-fit: contain;
-  filter: drop-shadow(0 2px 6px rgba(0, 102, 204, 0.18));
-}
-
-/* A milestone column — anchored to a percentage left position, holds the
-   year, the stem, and the label (and optionally a CTA). */
+/* A milestone column — anchored to a percentage left position. Columns
+   span the full top-half (above the line) or bottom-half (below the line)
+   so their contents (year, label, CTA) can be aligned to the far end or
+   pinned next to the line via margin:auto flex-spacing tricks.
+   Content is LEFT-ALIGNED at the dot's x-position (column's left edge
+   sits on the dot; stem, year, label all flow from that edge). */
 .lgmTimelineMilestone {
+  /* Column is centered horizontally on its `left` (the dot's x) via
+     translateX(-50%). Children stack as a centered column so each label
+     sits directly under (or above) its stem and dot. */
   position: absolute;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  z-index: 2;
   transform: translateX(-50%);
+  z-index: 2;
 }
 
 .lgmTimelineMilestoneTop {
+  /* Anchored at the centerline. min-height keeps the 2026/2028/Columbus
+     columns tall enough that their stems fully extend to the line via
+     margin-top: auto / flex-grow. The 2022 + 2025 columns opt out via
+     .lgmTimelineMilestoneCompact so their year markers sit close to
+     the line instead of floating high. */
   bottom: 50%;
-  padding-bottom: 4px; /* clearance from the dot */
+  min-height: clamp(120px, 14vw, 160px);
+}
+
+.lgmTimelineMilestoneCompact {
+  /* Year-only TOP column — min-height is roughly half of the full
+     milestone min-height, so the year markers (2022, 2025) sit at the
+     midpoint between the line and the taller 2026/2028 year markers. */
+  min-height: clamp(60px, 7vw, 80px);
 }
 
 .lgmTimelineMilestoneBottom {
+  /* Mirror of TOP. No padding-top so the stem (first DOM child) starts
+     directly at the centerline / track. */
   top: 50%;
-  padding-top: 4px;
 }
 
+/* Year — small, muted navy. Brand body-sm scale (16px). 16px gap below
+   so the year visually breathes from any label that follows it in the
+   same TOP column. */
+.lgmTimelineYear {
+  font-size: var(--tech-fs-body-sm);
+  font-weight: 500;
+  color: rgba(10, 19, 68, 0.4);
+  letter-spacing: 0;
+  line-height: 1;
+  margin-bottom: 16px;
+}
+
+/* Label — milestone heading. 36px / 140% line-height / -2% tracking. */
+.lgmTimelineLabel {
+  font-size: 36px;
+  font-weight: 600;
+  color: #000000;
+  line-height: 1.4;
+  letter-spacing: -0.02em;
+}
+
+/* Columbus "now" marker column — inherits the milestone min-height so
+   its logo sits at the same y as the Generalist LGM / UGM labels (one
+   year-block down from the very top of the column). The stem then
+   stretches the remaining distance back down to the line via the
+   shared margin-top: auto on TOP-column stems. */
+.lgmTimelineColumbus {
+  pointer-events: none;
+  z-index: 3;
+}
+
+/* Push the Columbus logo down by the height of a year marker (16px line
+   + 16px margin-bottom) so it sits in line with the milestone labels
+   (Generalist LGM, UGM) which themselves sit just below their year. */
+.lgmTimelineColumbus .lgmTimelineColumbusLogo {
+  margin-top: 32px;
+}
+
+/* Columbus stem stretches to fill the column from logo bottom down to
+   the centerline, so the gap between stem-top and logo equals the gap
+   between the Generalist LGM stem-top and its label (essentially zero,
+   since flex-grow consumes any spare vertical space). */
+.lgmTimelineColumbus .lgmTimelineStem {
+  flex-grow: 1;
+  height: auto;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.lgmTimelineColumbusDate {
+  font-size: var(--tech-fs-caption);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--tech-color-accent);
+  white-space: nowrap;
+  margin-bottom: 8px;
+}
+
+.lgmTimelineColumbusLogo {
+  width: 65px;
+  height: 65px;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 6px rgba(0, 102, 204, 0.18));
+}
+
+/* Stem — small vertical line connecting a dot to its label / CTA. Used
+   in both TOP and BOTTOM columns for every milestone (LLM, Geo-tuned,
+   Generalist LGM, UGM, Read our Paper, Our Game Plan). The 8px gap
+   between stem and adjacent text keeps the line from visually butting
+   into the label or the dot. */
 .lgmTimelineStem {
   width: 1px;
-  height: clamp(28px, 4vw, 56px);
+  height: 24px;
   background: var(--tech-color-text-brand);
   opacity: 0.45;
 }
 
-.lgmTimelineLabel {
-  font-size: var(--tech-fs-h5);
-  font-weight: 500;
-  color: var(--tech-color-text-brand);
-  line-height: 1.25;
-  letter-spacing: var(--tech-tracking-snug);
-  /* Year sits adjacent to the dot, label at the outer end of the stem.
-     The 8px gap pads label away from the stem in either direction. */
+/* TOP stem: margin-top: auto pushes the stem to the very bottom of the
+   column (which is at the centerline, since the column is anchored
+   `bottom: 50%`). This way the stem visibly extends FROM the line up to
+   the label, regardless of how tall the column is via min-height. */
+.lgmTimelineMilestoneTop .lgmTimelineStem {
+  margin-top: auto;
+  margin-bottom: 0;
 }
 
-.lgmTimelineMilestoneTop .lgmTimelineLabel {
+/* BOTTOM stem: top touches the centerline; 8px gap to the label below. */
+.lgmTimelineMilestoneBottom .lgmTimelineStem {
+  margin-top: 0;
   margin-bottom: 8px;
 }
 
-.lgmTimelineMilestoneBottom .lgmTimelineLabel {
-  margin-top: 8px;
-}
-
-/* For tightly-spaced milestones (e.g. 2025 + 2026, only one year apart),
-   the labels would overlap if both centered under their dots. Anchor
-   them to opposite sides of their respective dots so they extend outward
-   and create breathing room in the gap.
-
-   AnchorEnd:  label's right edge sits at the dot. Text right-aligned so
-               multi-line labels read as a clean column flush to the dot.
-   AnchorStart: label's left edge sits at the dot. */
-.lgmTimelineLabelAnchorEnd {
-  /* Push the label well to the LEFT of the dot — beyond the natural
-     "right edge at dot" position — so it visually clears the next
-     milestone column to the right. The extra clamp scales with viewport
-     so the offset stays generous on wide screens and tightens on narrow. */
-  transform: translateX(calc(-50% - clamp(72px, 9vw, 140px)));
-  text-align: right;
-}
-
-.lgmTimelineLabelAnchorStart {
-  transform: translateX(calc(50% + clamp(72px, 9vw, 140px)));
-  text-align: left;
-}
-
-.lgmTimelineYear {
-  font-size: var(--tech-fs-caption);
-  font-weight: 500;
-  color: var(--tech-color-text-secondary);
-  letter-spacing: 0.04em;
-}
-
-.lgmTimelineMilestoneTop .lgmTimelineYear {
-  margin-top: 6px; /* sits between stem and dot */
-}
-
-.lgmTimelineMilestoneBottom .lgmTimelineYear {
-  margin-bottom: 6px;
-}
-
-/* Inline-style CTA link inside a milestone column. Mirrors .lgmInlineCta. */
+/* CTA link inside BOTTOM columns for 2026/2028. Matches .lgmInlineCta.
+   margin-top pushes the CTA down so it visually clears the timeline
+   instead of butting up against it. */
 .lgmTimelineCta {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-size: 15px;
+  font-size: var(--tech-fs-body-sm);
   font-weight: 500;
   color: #0066CC;
   text-decoration: none;
   white-space: nowrap;
   transition: color 200ms ease;
-}
-
-.lgmTimelineMilestoneTop .lgmTimelineCta {
-  margin-bottom: 8px;
-}
-
-.lgmTimelineMilestoneBottom .lgmTimelineCta {
-  margin-top: 8px;
+  margin-top: 28px;
 }
 
 .lgmTimelineCta svg {
@@ -3723,7 +3724,7 @@
   width: 100%;
   height: 100%;
   background-image: url("/TechnologyPageImages/techpg-radiance.png");
-  background-size: 100% 100%;
+  background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   opacity: 0.75;
@@ -4757,7 +4758,7 @@
 .genLayersGridKicker {
   display: block;
   font-size: var(--tech-fs-caption);
-  font-weight: 700;
+  font-weight: 400;
   letter-spacing: var(--tech-tracking-wide);
   text-transform: uppercase;
   color: color-mix(in srgb, var(--tech-color-text) 35%, transparent);

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 type InquiryType = "columbus-pro" | "elio" | "investment" | "careers";
 
@@ -25,7 +25,13 @@ const fadeLine: React.CSSProperties = {
     "linear-gradient(to right, rgba(0,0,0,0.08) 0%, rgba(0,0,0,0.08) 60%, transparent 100%)",
 };
 
-export function CareersContactForm() {
+type Props = {
+  /** Optional intro block (e.g. section heading + lead) rendered above
+      the form card. Fades + collapses gracefully on submit. */
+  intro?: React.ReactNode;
+};
+
+export function CareersContactForm({ intro }: Props = {}) {
   const [form, setForm] = useState({
     firstName: "",
     lastName: "",
@@ -71,15 +77,38 @@ export function CareersContactForm() {
     setSubmitted(false);
   };
 
-  useEffect(() => {
-    if (!submitted) return;
-    // Auto-reset after 8s so the user can send another message.
-    const t = window.setTimeout(() => setSubmitted(false), 8000);
-    return () => window.clearTimeout(t);
-  }, [submitted]);
-
   return (
     <div className="w-full max-w-[640px] mx-auto">
+      <style>{`
+        /* Intro wrapper collapses to zero height when the form has been
+           submitted. grid-template-rows animation is the modern way to
+           animate an auto-height element to zero smoothly. */
+        .ccf-intro-wrap {
+          display: grid;
+          grid-template-rows: 1fr;
+          opacity: 1;
+          transition: grid-template-rows 500ms cubic-bezier(0.22, 1, 0.36, 1),
+                      opacity 300ms ease,
+                      transform 500ms cubic-bezier(0.22, 1, 0.36, 1),
+                      margin 500ms cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .ccf-intro-wrap[data-hidden="true"] {
+          grid-template-rows: 0fr;
+          opacity: 0;
+          transform: translateY(-12px);
+          margin: 0;
+          pointer-events: none;
+        }
+        .ccf-intro-wrap > * {
+          overflow: hidden;
+          min-height: 0;
+        }
+      `}</style>
+      {intro && (
+        <div className="ccf-intro-wrap" data-hidden={submitted} aria-hidden={submitted}>
+          <div>{intro}</div>
+        </div>
+      )}
       <style>{`
         .ccf-input-wrap { position: relative; }
         .ccf-input-wrap::after {
