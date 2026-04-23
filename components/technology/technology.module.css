@@ -2495,65 +2495,27 @@
   line-height: 1.35;
 }
 
-.careersForm {
-  margin: 26px auto 0;
-  width: min(560px, 100%);
-  display: grid;
-  gap: 16px;
+/* Centers the careers section's heading + lead paragraph above the form
+   card. The .sectionTitle / .sectionLead classes are shared across the page
+   and are normally left-aligned with max-widths; inside this wrapper their
+   text is centered and their max-width boxes auto-centered horizontally. */
+.careersIntro {
+  text-align: center;
 }
 
-.careersForm label {
-  display: grid;
-  gap: 8px;
+.careersIntro .sectionTitle,
+.careersIntro .sectionLead {
+  margin-left: auto;
+  margin-right: auto;
 }
 
-.careersForm label span {
-  font-size: 0.95rem;
-  color: rgba(0, 0, 0, 0.45);
-}
-
-.careersForm input {
+/* Shell around the careers contact form card — centers the 640px card below
+   the section title + lead. The form itself (tabs, inputs, submit button) is
+   fully self-contained in <CareersContactForm> with styling that mirrors
+   /app/contact/page.tsx exactly. */
+.careersFormShell {
+  margin: 40px auto 0;
   width: 100%;
-  border: 0;
-  border-bottom: 2px solid rgba(0, 0, 0, 0.45);
-  background: transparent;
-  padding: 4px 0 8px;
-  font-size: 1rem;
-  color: #0a1628;
-  outline: none;
-  transition: border-color 220ms ease;
-}
-
-.careersForm input:focus {
-  border-color: rgba(25, 41, 87, 0.9);
-}
-
-.careersFormMeta {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
-}
-
-.careersFormMeta p {
-  margin: 0;
-  font-size: 0.95rem;
-  color: rgba(0, 0, 0, 0.4);
-}
-
-.careersSend {
-  border: 0;
-  background: transparent;
-  color: rgba(25, 41, 87, 0.86);
-  font-size: 0.92rem;
-  text-decoration: underline;
-  text-underline-offset: 3px;
-  cursor: pointer;
-  transition: color 220ms ease;
-}
-
-.careersSend:hover {
-  color: rgba(25, 41, 87, 1);
 }
 
 .hiringSection {

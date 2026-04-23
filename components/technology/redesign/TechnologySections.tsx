@@ -10,6 +10,7 @@ import { Definition } from "./Definition";
 import { ResearchGroup } from "./ResearchGroup";
 import { RevealOnView } from "./RevealOnView";
 import { SidebarRightLine } from "./SidebarRightLine";
+import { CareersContactForm } from "./CareersContactForm";
 import type { TechnologySectionId } from "./types";
 
 function Slide({
@@ -976,35 +977,17 @@ export function TechnologySections() {
         <div className={styles.slideFrame}>
           <RevealOnView className={styles.editorialSlide}>
 
-            <h2 className={styles.sectionTitle}>Careers</h2>
-            <p className={styles.sectionLead}>
-              If you&apos;re excited about creating paradigm shifts in physical
-              world understanding. <strong>Join us now.</strong>
-            </p>
+            <div className={styles.careersIntro}>
+              <h2 className={styles.sectionTitle}>Careers</h2>
+              <p className={styles.sectionLead}>
+                If you&apos;re excited about creating paradigm shifts in physical
+                world understanding.
+              </p>
+            </div>
 
-            <form
-              action="mailto:contact@columbus.earth?subject=Careers%20Application"
-              method="post"
-              encType="text/plain"
-              className={styles.careersForm}
-            >
-              <label>
-                <span>Name</span>
-                <input type="text" name="name" autoComplete="name" required />
-              </label>
-
-              <label>
-                <span>Enter email</span>
-                <input type="email" name="email" autoComplete="email" required />
-              </label>
-
-              <div className={styles.careersFormMeta}>
-                <button type="submit" className={styles.careersSend}>
-                  Send application
-                </button>
-                <p>We accept interns.</p>
-              </div>
-            </form>
+            <div className={styles.careersFormShell}>
+              <CareersContactForm />
+            </div>
           </RevealOnView>
         </div>
       </Slide>
