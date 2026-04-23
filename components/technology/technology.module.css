@@ -172,12 +172,14 @@
 
 .sidebarPanelSticky {
   position: absolute;
-  /* Pin the sidebar's vertical center at the midpoint of the area
-     BELOW the navbar (not the full viewport). Center of (navbar_bottom
-     to viewport_bottom) = 50vh + navbar_height / 2. */
-  top: calc(50vh + var(--tech-header-height) / 2);
+  /* Anchored near the top — pinned 48px below the navbar's bottom edge.
+     This is the conventional sticky-index offset on docs-style layouts
+     (Stripe, Linear, Apple developer docs): clears the navbar with
+     deliberate breathing room, sits high enough to read as a
+     persistent navigation rail without floating in the middle of the
+     viewport. */
+  top: calc(var(--tech-header-height) + 48px);
   left: 0;
-  transform: translateY(-50%);
   padding: 0 16px;
   margin: 0;
   pointer-events: auto;
