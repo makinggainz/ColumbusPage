@@ -97,7 +97,12 @@
 .dotGrid::before {
   content: "";
   position: absolute;
-  inset: 0;
+  /* V2: pattern lives only in the right zone (from the sidebar's right
+     edge to the viewport right), matching the section background clip. */
+  top: 0;
+  bottom: 0;
+  left: var(--tech-sidebar-x);
+  right: 0;
   z-index: 0;
   pointer-events: none;
   background-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M12 11.5v1M11.5 12h1' stroke='rgba(0,102,204,0.12)' stroke-width='1.6' stroke-linecap='square'/%3E%3C/svg%3E");
@@ -142,11 +147,11 @@
   position: relative;
 }
 
-/* Sidebar index is FIXED to the left edge of the viewport — outside
-   .contentColumn entirely — so it sits flush against the screen edge
-   while the content area uses the full hero/navbar-aligned width. */
+/* Sidebar index is ABSOLUTELY positioned inside .contentColumn — anchored
+   at the top of the first section ("What's an LGM"). Out of normal flow
+   so the slides stay centered in the viewport. */
 .sidebarPanel {
-  position: fixed;
+  position: absolute;
   left: 0;
   top: 0;
   bottom: 0;
@@ -157,31 +162,22 @@
   z-index: 5;
   background: transparent;
   border: none;
-  border-right: 1px solid rgba(10, 19, 68, 0.12);
+  border-right: 1px solid var(--grid-line);
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
-  /* Visibility gated by the index's pastHero state via :has(). The
-     line + labels fade in together once the user scrolls past hero. */
-  opacity: 0;
-  transition: opacity 320ms ease;
-}
-
-.sidebarPanel:has(.scrollIndexVisible) {
   opacity: 1;
 }
 
+/* The inner index is STICKY — initially aligned with the "What's an LGM"
+   kicker (via margin-top matching .editorialSlide's padding-top), then
+   sticks at navbar+padding-top once it reaches that viewport position,
+   following the user as they scroll through subsequent sections. */
 .sidebarPanelSticky {
-  position: absolute;
-  /* Anchored near the top — pinned 48px below the navbar's bottom edge.
-     This is the conventional sticky-index offset on docs-style layouts
-     (Stripe, Linear, Apple developer docs): clears the navbar with
-     deliberate breathing room, sits high enough to read as a
-     persistent navigation rail without floating in the middle of the
-     viewport. */
-  top: calc(var(--tech-header-height) + 48px);
+  position: sticky;
+  top: calc(var(--tech-header-height) + clamp(48px, 6vw, 80px));
+  margin-top: clamp(48px, 6vw, 80px);
   left: 0;
   padding: 0 16px;
-  margin: 0;
   pointer-events: auto;
 }
 
@@ -193,10 +189,32 @@
   padding: 0;
 }
 
+/* Right-edge divider line — mirrors .sidebarPanel on the opposite side
+   of the content. Runs top-to-bottom of .contentColumn. The line itself
+   (and its curved break at the LGM timeline) is drawn by an inline SVG
+   rendered by <SidebarRightLine>. */
+.sidebarPanelRight {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: var(--tech-sidebar-x);
+  pointer-events: none;
+  z-index: 5;
+}
+
+.sidebarRightLineSvg {
+  position: absolute;
+  left: 0;
+  top: 0;
+  overflow: visible;
+}
+
 /* Hide the fixed sidebar at narrower viewports where the navbar itself
    is in compact mode and the sidebar would visually crowd the content. */
 @media (max-width: 1100px) {
-  .sidebarPanel {
+  .sidebarPanel,
+  .sidebarPanelRight {
     display: none;
   }
 }
@@ -218,11 +236,12 @@
   content: "";
   position: absolute;
   bottom: 0;
-  /* V2: the fading blue divider line starts at the sidebar's vertical
-     line on the left (not at viewport edge) so it visually springs
-     from the index column. */
-  left: var(--tech-sidebar-x);
-  right: 0;
+  /* Confine the divider to the slideFrame's inner bounds — the same x
+     range as the section's text content. Each side equals the gutter
+     from viewport edge to slideFrame inner edge:
+     max(page-padding, (100vw - 1287px) / 2 + page-padding). */
+  left: max(var(--page-padding), calc((100vw - 1287px) / 2 + var(--page-padding)));
+  right: max(var(--page-padding), calc((100vw - 1287px) / 2 + var(--page-padding)));
   height: 1px;
   background: linear-gradient(to right, var(--grid-line, rgba(0, 102, 204, 0.3)) 0%, var(--grid-line, rgba(0, 102, 204, 0.3)) 60%, transparent 100%);
   pointer-events: none;
@@ -3084,18 +3103,15 @@
   gap: 0;
   cursor: pointer;
   padding-left: 16px;
-  /* Hidden until the user scrolls past the hero (.scrollIndexVisible
-     class is added by TechScrollIndex.tsx based on hero position). */
-  opacity: 0;
-  pointer-events: none;
-  transform: translateX(-8px);
-  transition: opacity 320ms ease, transform 320ms ease;
+  /* Always visible — no fade-in, no transform animation */
+  opacity: 1;
+  pointer-events: auto;
+  transform: none;
 }
 
 .scrollIndexVisible {
-  opacity: 1;
-  pointer-events: auto;
-  transform: translateX(0);
+  /* No-op — index is always visible. Class is still applied by JS but
+     has no visual effect since the base state is already shown. */
 }
 
 /* Track column — holds the thin line + thick active segment */
@@ -3531,31 +3547,51 @@
   margin-top: clamp(40px, 5vw, 72px);
   width: 100%;
   height: clamp(280px, 32vw, 360px);
-  isolation: isolate;
+  /* No `isolation: isolate` — let z-index: -1 on the halo go behind the
+     timeline so it can encompass content via negative inset without being
+     clipped by a stacking context. */
 }
 
-/* Soft brand-blue glow above + below the horizontal track. Two stacked
-   linear-gradients, each anchored at the vertical center and fading
-   outward to transparent. */
+/* Single soft brand-blue halo — strongest at the centerline, fading to
+   transparent in every direction. Negative inset so the halo extends
+   beyond the timeline box and visually wraps the milestone labels +
+   CTAs that sit above and below the track. Sits behind everything via
+   z-index: -1. */
 .lgmTimelineHalo {
   position: absolute;
-  inset: 0;
+  top: -120px;
+  bottom: -120px;
+  /* Halo bounds match the section background exactly: from the sidebar's
+     right edge (var(--tech-sidebar-x) from viewport left) to the viewport
+     right edge. The timeline element sits var(--page-padding) inside the
+     sidebar line (slideFrame's inner padding), so the halo overflows its
+     parent by -page-padding on the left and by -(sidebar-x + page-padding)
+     on the right. */
+  left: calc(-1 * var(--page-padding));
+  right: calc(-1 * (var(--tech-sidebar-x) + var(--page-padding)));
   pointer-events: none;
-  z-index: 0;
-  background:
-    linear-gradient(to top,    rgba(0, 102, 204, 0.18) 0%, transparent 65%),
-    linear-gradient(to bottom, rgba(0, 102, 204, 0.18) 0%, transparent 65%);
-  background-position: 0 50%, 0 50%;
-  background-size: 100% 50%, 100% 50%;
-  background-repeat: no-repeat;
+  z-index: -1;
+  background: radial-gradient(
+    /* Keep the brightest point anchored to the TIMELINE's visual center
+       (not the box center). The box now extends past the timeline by
+       page-padding on the left and by sidebar-x + page-padding on the
+       right — net rightward shift of sidebar-x. Counter that by shifting
+       the radial origin LEFT by sidebar-x / 2. */
+    ellipse 80% 55% at calc(50% - var(--tech-sidebar-x) / 2) 50%,
+    rgba(0, 102, 204, 0.28) 0%,
+    rgba(0, 102, 204, 0.12) 35%,
+    transparent 75%
+  );
 }
 
-/* Horizontal track + dots at each milestone year */
+/* Horizontal track — solid line that runs the full distance from the
+   start dot (at slideFrame inner left) all the way to the viewport's
+   right edge, matching the halo's right bound. */
 .lgmTimelineTrack {
   position: absolute;
   top: 50%;
   left: 0;
-  right: 0;
+  right: calc(-1 * (var(--tech-sidebar-x) + var(--page-padding)));
   height: 1px;
   background: var(--tech-color-text-brand);
   z-index: 1;
@@ -3569,6 +3605,76 @@
   border-radius: 50%;
   background: var(--tech-color-text-brand);
   transform: translate(-50%, -50%);
+  z-index: 2;
+}
+
+/* Decorative minor dots at the in-between years (2023, 2024, 2027) —
+   smaller and softer to read as rhythm marks, not milestones. */
+.lgmTimelineDotMinor {
+  width: 5px;
+  height: 5px;
+  background: var(--tech-color-text-brand);
+  opacity: 0.35;
+}
+
+/* Trailing decorative dots — sit on the right extension of the track
+   (past the last milestone). Smaller and dimmer than the regular minor
+   dots so they read as soft texture trailing off into the distance. */
+.lgmTimelineDotTrailing {
+  width: 4px;
+  height: 4px;
+  background: var(--tech-color-text-brand);
+  opacity: 0.2;
+}
+
+/* The Columbus "you are here" marker — accent-blue dot on the track
+   with a soft halo, anchored to today's date via the same yearX rule
+   the milestones use. The marker column sits on the BOTTOM side of
+   the track so it doesn't collide with the 2026 milestone column. */
+.lgmTimelineDotColumbus {
+  width: 12px;
+  height: 12px;
+  background: var(--tech-color-accent);
+  box-shadow: 0 0 0 4px rgba(0, 102, 204, 0.18);
+  z-index: 3;
+}
+
+.lgmTimelineColumbus {
+  /* Sits below the dot. Date sits closest to the track, then the stem,
+     then the logo at the bottom. Pointer-events disabled so the logo +
+     date can't intercept hover on neighboring milestone CTAs. */
+  pointer-events: none;
+  align-items: center;
+  gap: 8px;
+  z-index: 3;
+}
+
+.lgmTimelineColumbusDate {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--tech-color-accent);
+  white-space: nowrap;
+}
+
+/* Identity label — sits between the logo and the stem, matching the
+   weight + uppercase treatment of the date but in brand navy so the
+   accent-blue accents (dot, date, logo halo) remain the focal points. */
+.lgmTimelineColumbusName {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--tech-color-text-brand);
+  white-space: nowrap;
+}
+
+.lgmTimelineColumbusLogo {
+  width: clamp(48px, 5vw, 64px);
+  height: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 6px rgba(0, 102, 204, 0.18));
 }
 
 /* A milestone column — anchored to a percentage left position, holds the
@@ -3616,6 +3722,28 @@
 
 .lgmTimelineMilestoneBottom .lgmTimelineLabel {
   margin-top: 8px;
+}
+
+/* For tightly-spaced milestones (e.g. 2025 + 2026, only one year apart),
+   the labels would overlap if both centered under their dots. Anchor
+   them to opposite sides of their respective dots so they extend outward
+   and create breathing room in the gap.
+
+   AnchorEnd:  label's right edge sits at the dot. Text right-aligned so
+               multi-line labels read as a clean column flush to the dot.
+   AnchorStart: label's left edge sits at the dot. */
+.lgmTimelineLabelAnchorEnd {
+  /* Push the label well to the LEFT of the dot — beyond the natural
+     "right edge at dot" position — so it visually clears the next
+     milestone column to the right. The extra clamp scales with viewport
+     so the offset stays generous on wide screens and tightens on narrow. */
+  transform: translateX(calc(-50% - clamp(72px, 9vw, 140px)));
+  text-align: right;
+}
+
+.lgmTimelineLabelAnchorStart {
+  transform: translateX(calc(50% + clamp(72px, 9vw, 140px)));
+  text-align: left;
 }
 
 .lgmTimelineYear {

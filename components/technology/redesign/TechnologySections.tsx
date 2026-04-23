@@ -9,6 +9,7 @@ import {
 import { Definition } from "./Definition";
 import { ResearchGroup } from "./ResearchGroup";
 import { RevealOnView } from "./RevealOnView";
+import { SidebarRightLine } from "./SidebarRightLine";
 import type { TechnologySectionId } from "./types";
 
 function Slide({
@@ -37,6 +38,9 @@ export function TechnologySections() {
           <TechScrollIndex />
         </div>
       </div>
+
+      {/* Right-edge divider line — mirrors sidebarPanel, bends outward at the LGM timeline with a gap */}
+      <SidebarRightLine timelineId="lgm-timeline-track" />
 
       {/* Main content column */}
       <div>
@@ -201,22 +205,89 @@ export function TechnologySections() {
             </h2>
             <p className={styles.lgmFoundationalLead}>And we&apos;ve already flown off the edge.</p>
 
+            {(() => {
+              // ── Timeline positioning rule ──────────────────────────
+              // The timeline spans 7 years (2022 → 2028 inclusive),
+              // each year occupying an equal slot of width 92/7 = 13.14%.
+              // 4% gutter on each side.
+              //
+              //   yearAt(y)  → exact fractional position of any moment.
+              //                Used for the "now" marker (today's date).
+              //   yearMid(y) → mid-year position (e.g. July 1 of year y).
+              //                Used for the milestone year LABELS, since
+              //                "2026" semantically means "throughout 2026"
+              //                and visually anchors at mid-year.
+              //
+              // Consequence: today (April 2026) maps to a position
+              // BEFORE yearMid(2026), correctly placing the Columbus
+              // "you are here" marker before the upcoming LGM milestone.
+              // ───────────────────────────────────────────────────────
+              const yearAt = (y: number) =>
+                `${(4 + ((y - 2022) / 7) * 92).toFixed(2)}%`;
+              const yearMid = (y: number) => yearAt(y + 0.5);
+
+              // 2025 + 2026 sit only one year apart, too close for their
+              // descriptive labels to fit cleanly between the dots. Override
+              // the strict yearMid positions with opposing shifts — 2025's
+              // entire column moves left, 2026's entire column moves right.
+              // Each is a single anchor so dot, stem, year, label (and CTA)
+              // always move together as a unit. Scales with viewport.
+              const x2025 = `calc(${yearMid(2025)} - clamp(72px, 9vw, 140px))`;
+              const x2026 = `calc(${yearMid(2026)} + clamp(40px, 5vw, 80px))`;
+
+              const now = new Date();
+              const nowFrac =
+                now.getFullYear() +
+                now.getMonth() / 12 +
+                (now.getDate() - 1) / (12 * 30);
+              const nowLabel = now.toLocaleDateString("en-US", {
+                month: "long",
+                year: "numeric",
+              });
+
+              return (
             <div className={styles.lgmTimeline}>
-              {/* Soft brand-blue halo above + below the horizontal track */}
+              {/* Single soft brand-blue halo — strongest at the centerline,
+                  fading to transparent in every direction. Extends beyond
+                  the timeline box (negative inset) so it encompasses all
+                  the milestone content above + below. */}
               <div className={styles.lgmTimelineHalo} aria-hidden />
 
-              {/* Horizontal track + dots at each milestone year */}
-              <div className={styles.lgmTimelineTrack} aria-hidden>
-                <span className={styles.lgmTimelineDot} style={{ left: "8%" }} />
-                <span className={styles.lgmTimelineDot} style={{ left: "50%" }} />
-                <span className={styles.lgmTimelineDot} style={{ left: "64%" }} />
-                <span className={styles.lgmTimelineDot} style={{ left: "92%" }} />
-              </div>
+              {/* Horizontal track — fades out past the last milestone */}
+              <div id="lgm-timeline-track" className={styles.lgmTimelineTrack} aria-hidden />
 
-              {/* Milestones — alternating above / below the track */}
+              {/* Faint leading dot — sits a touch to the right of the
+                  line's start, mirroring the trailing dots on the right
+                  for visual symmetry without acting as a real milestone. */}
+              <span className={`${styles.lgmTimelineDot} ${styles.lgmTimelineDotTrailing}`} style={{ left: "1.5%" }} aria-hidden />
+
+              {/* Major dots — anchored at each milestone year's mid-point */}
+              <span className={styles.lgmTimelineDot} style={{ left: yearMid(2022) }} aria-hidden />
+              <span className={styles.lgmTimelineDot} style={{ left: x2025 }} aria-hidden />
+              <span className={styles.lgmTimelineDot} style={{ left: x2026 }} aria-hidden />
+              <span className={styles.lgmTimelineDot} style={{ left: yearMid(2028) }} aria-hidden />
+
+              {/* Minor decorative dots — fill the multi-year gaps so the
+                  user perceives a continuous, regular cadence of years */}
+              <span className={`${styles.lgmTimelineDot} ${styles.lgmTimelineDotMinor}`} style={{ left: yearMid(2023) }} aria-hidden />
+              <span className={`${styles.lgmTimelineDot} ${styles.lgmTimelineDotMinor}`} style={{ left: yearMid(2024) }} aria-hidden />
+              <span className={`${styles.lgmTimelineDot} ${styles.lgmTimelineDotMinor}`} style={{ left: yearMid(2027) }} aria-hidden />
+
+              {/* Trailing dots — continue the year cadence past UGM, out
+                  along the extended track. Each successive dot is more
+                  likely to fall outside the viewport on smaller screens
+                  and is gracefully clipped — on wider viewports more of
+                  them stay visible. */}
+              <span className={`${styles.lgmTimelineDot} ${styles.lgmTimelineDotTrailing}`} style={{ left: yearMid(2029) }} aria-hidden />
+              <span className={`${styles.lgmTimelineDot} ${styles.lgmTimelineDotTrailing}`} style={{ left: yearMid(2030) }} aria-hidden />
+              <span className={`${styles.lgmTimelineDot} ${styles.lgmTimelineDotTrailing}`} style={{ left: yearMid(2031) }} aria-hidden />
+              <span className={`${styles.lgmTimelineDot} ${styles.lgmTimelineDotTrailing}`} style={{ left: yearMid(2032) }} aria-hidden />
+
+              {/* Milestones — strict TOP / BOTTOM alternation in time order:
+                  2022(T) → 2025(B) → NOW(T) → 2026(B) → 2028(T) */}
               <div
                 className={`${styles.lgmTimelineMilestone} ${styles.lgmTimelineMilestoneTop}`}
-                style={{ left: "8%" }}
+                style={{ left: yearMid(2022) }}
               >
                 <span className={styles.lgmTimelineLabel}>LLM</span>
                 <span className={styles.lgmTimelineStem} aria-hidden />
@@ -225,7 +296,7 @@ export function TechnologySections() {
 
               <div
                 className={`${styles.lgmTimelineMilestone} ${styles.lgmTimelineMilestoneBottom}`}
-                style={{ left: "50%" }}
+                style={{ left: x2025 }}
               >
                 <span className={styles.lgmTimelineYear}>2025</span>
                 <span className={styles.lgmTimelineStem} aria-hidden />
@@ -234,34 +305,71 @@ export function TechnologySections() {
                 </span>
               </div>
 
+              {/* Columbus "you are here" marker — anchored at today's
+                  exact position via yearAt(nowFrac). Sits on the TOP of
+                  the track, in the gap between the most recent completed
+                  milestone (2025 Geo-tuned, BOTTOM) and the next upcoming
+                  milestone (2026 LGM, BOTTOM). */}
+              <span
+                className={`${styles.lgmTimelineDot} ${styles.lgmTimelineDotColumbus}`}
+                style={{ left: yearAt(nowFrac) }}
+                aria-hidden
+              />
+              {/* TOP column: stem rises from the dot up to "Columbus Earth
+                  Founded" label, then the logo crowns the column. */}
               <div
-                className={`${styles.lgmTimelineMilestone} ${styles.lgmTimelineMilestoneTop}`}
-                style={{ left: "64%" }}
+                className={`${styles.lgmTimelineMilestone} ${styles.lgmTimelineMilestoneTop} ${styles.lgmTimelineColumbus}`}
+                style={{ left: yearAt(nowFrac) }}
               >
+                <Image
+                  src="/logobueno.png"
+                  alt="Columbus — current position"
+                  width={96}
+                  height={96}
+                  className={styles.lgmTimelineColumbusLogo}
+                />
+                <span className={styles.lgmTimelineColumbusName}>
+                  Columbus Earth Founded
+                </span>
+                <span className={styles.lgmTimelineStem} aria-hidden />
+              </div>
+              {/* BOTTOM column: date sits directly under the dot, mirroring
+                  how year markers sit under milestone dots. */}
+              <div
+                className={`${styles.lgmTimelineMilestone} ${styles.lgmTimelineMilestoneBottom} ${styles.lgmTimelineColumbus}`}
+                style={{ left: yearAt(nowFrac) }}
+              >
+                <span className={styles.lgmTimelineColumbusDate}>{nowLabel}</span>
+              </div>
+
+              <div
+                className={`${styles.lgmTimelineMilestone} ${styles.lgmTimelineMilestoneBottom}`}
+                style={{ left: x2026 }}
+              >
+                <span className={styles.lgmTimelineYear}>2026</span>
+                <span className={styles.lgmTimelineStem} aria-hidden />
+                <span className={styles.lgmTimelineLabel}>Generalist LGM</span>
                 <a href="#" className={styles.lgmTimelineCta}>
                   <span>Read our Paper</span>
                   <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden>
                     <path d="M2.5 9.5L9.5 2.5M9.5 2.5H4M9.5 2.5V8" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
                 </a>
-                <span className={styles.lgmTimelineLabel}>Generalist LGM</span>
-                <span className={styles.lgmTimelineStem} aria-hidden />
-                <span className={styles.lgmTimelineYear}>2026</span>
               </div>
 
               <div
-                className={`${styles.lgmTimelineMilestone} ${styles.lgmTimelineMilestoneBottom}`}
-                style={{ left: "92%" }}
+                className={`${styles.lgmTimelineMilestone} ${styles.lgmTimelineMilestoneTop}`}
+                style={{ left: yearMid(2028) }}
               >
-                <span className={styles.lgmTimelineYear}>2028</span>
-                <span className={styles.lgmTimelineStem} aria-hidden />
-                <span className={styles.lgmTimelineLabel}>UGM</span>
                 <a href="#" className={styles.lgmTimelineCta}>
                   <span>Our Game Plan</span>
                   <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden>
                     <path d="M2.5 9.5L9.5 2.5M9.5 2.5H4M9.5 2.5V8" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
                 </a>
+                <span className={styles.lgmTimelineLabel}>UGM</span>
+                <span className={styles.lgmTimelineStem} aria-hidden />
+                <span className={styles.lgmTimelineYear}>2028</span>
               </div>
 
               {/* Keyword text — kept in the DOM for crawlers + screen readers, visually hidden */}
@@ -275,6 +383,8 @@ export function TechnologySections() {
                 </ul>
               </div>
             </div>
+              );
+            })()}
 
             <a
               href="#"
