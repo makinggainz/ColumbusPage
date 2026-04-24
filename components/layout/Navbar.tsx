@@ -487,6 +487,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                         { label: "Products", href: "/products/enterprise", hasDropdown: true, kind: "products" as const },
                                         { label: "Use Cases", href: "/use-cases" },
                                         { label: "Technology", href: "/technology" },
+                                        { label: "Blog", href: "/blog" },
                                         { label: "Company", href: "/mission", hasDropdown: true, kind: "company" as const },
                                     ] as const).map((link, i) => (
                                         <Link
@@ -814,14 +815,14 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                         >
                             {/* ── Right-side content group ── */}
                             <div className="relative">
-                                {/* Eyebrow — shown only in the default (logo/hamburger) layout.
-                                    Hides for both Products and Company hovers via a maxHeight
-                                    + opacity collapse so the content below doesn't snap up. */}
+                                {/* Eyebrow — visible only when hoverKind is null (logo / default).
+                                    Uses opacity only (no max-height collapse) so the reserved
+                                    row height matches Company / Products hovers — dropdown
+                                    panel height stays consistent across triggers. */}
                                 <div
                                     className="hidden md:block overflow-hidden"
                                     aria-hidden={hoverKind !== null}
                                     style={{
-                                        maxHeight: hoverKind !== null ? 0 : 40,
                                         opacity: !isMenuOpen ? 0 : hoverKind !== null ? 0 : 1,
                                         transform: !isMenuOpen
                                             ? "translateY(8px)"
@@ -829,8 +830,8 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                             ? "translateY(-4px)"
                                             : "translateY(0)",
                                         transition: !isMenuOpen
-                                            ? "opacity 150ms ease, transform 150ms ease, max-height 150ms ease"
-                                            : "opacity 300ms cubic-bezier(0.05, 0.7, 0.1, 1), transform 400ms cubic-bezier(0.05, 0.7, 0.1, 1), max-height 450ms cubic-bezier(0.05, 0.7, 0.1, 1)",
+                                            ? "opacity 150ms ease, transform 150ms ease"
+                                            : "opacity 300ms cubic-bezier(0.05, 0.7, 0.1, 1), transform 400ms cubic-bezier(0.05, 0.7, 0.1, 1)",
                                     }}
                                 >
                                     <h4 className={`text-[13px] font-medium tracking-[0.08em] uppercase mb-4 ${dropdownSubheadClass}`}>
@@ -1000,6 +1001,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                     {[
                                         { label: "Use Cases", href: "/use-cases" },
                                         { label: "Technology", href: "/technology" },
+                                        { label: "Blog", href: "/blog" },
                                         { label: "Company", href: "/mission" },
                                     ].map((item, index) => (
                                         <li
@@ -1011,7 +1013,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                                     : "translateY(12px) scale(0.97)",
                                                 transition: isMenuOpen
                                                     ? `opacity 350ms cubic-bezier(0.05, 0.7, 0.1, 1) ${350 + index * 50}ms, transform 400ms cubic-bezier(0.05, 0.7, 0.1, 1) ${350 + index * 50}ms`
-                                                    : `opacity 120ms ease ${(2 - index) * 25}ms, transform 120ms ease ${(2 - index) * 25}ms`,
+                                                    : `opacity 120ms ease ${(3 - index) * 25}ms, transform 120ms ease ${(3 - index) * 25}ms`,
                                             }}
                                         >
                                             <Link

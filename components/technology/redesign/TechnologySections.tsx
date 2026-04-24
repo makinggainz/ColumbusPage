@@ -1,5 +1,7 @@
 import Image from "next/image";
+import Link from "next/link";
 
+import { blogHref, BLOG_SLUG } from "@/lib/blog-posts";
 import styles from "../technology.module.css";
 import { TechScrollIndex } from "../TechScrollIndex";
 import {
@@ -81,12 +83,12 @@ export function TechnologySections() {
                     like Aldus PageMaker including versions of Lorem Ipsum.
                   </p>
                 </div>
-                <a href="#" className={styles.lgmInlineCta}>
+                <Link href={blogHref(BLOG_SLUG.foundingLgmsInDepth)} className={styles.lgmInlineCta}>
                   <span>Read our in-depth article</span>
                   <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden>
                     <path d="M2.5 9.5L9.5 2.5M9.5 2.5H4M9.5 2.5V8" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
-                </a>
+                </Link>
               </div>
 
               <div className={styles.lgmCompareArt} aria-hidden>
@@ -301,12 +303,12 @@ export function TechnologySections() {
                 <span className={styles.lgmTimelineStem} aria-hidden />
               </div>
               <div className={`${styles.lgmTimelineMilestone} ${styles.lgmTimelineMilestoneBottom}`} style={{ left: x2026 }}>
-                <a href="#" className={styles.lgmTimelineCta}>
+                <Link href={blogHref(BLOG_SLUG.timelineGeneralistLgm)} className={styles.lgmTimelineCta}>
                   <span>Read our Paper</span>
                   <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden>
                     <path d="M2.5 9.5L9.5 2.5M9.5 2.5H4M9.5 2.5V8" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
-                </a>
+                </Link>
               </div>
 
               {/* ─── 2028 — year floats above UGM, stem to dot, CTA below (no stem above CTA) ─── */}
@@ -316,12 +318,12 @@ export function TechnologySections() {
                 <span className={styles.lgmTimelineStem} aria-hidden />
               </div>
               <div className={`${styles.lgmTimelineMilestone} ${styles.lgmTimelineMilestoneBottom}`} style={{ left: yearMid(2028) }}>
-                <a href="#" className={styles.lgmTimelineCta}>
+                <Link href={blogHref(BLOG_SLUG.ugmRoadmapGamePlan)} className={styles.lgmTimelineCta}>
                   <span>Our Game Plan</span>
                   <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden>
                     <path d="M2.5 9.5L9.5 2.5M9.5 2.5H4M9.5 2.5V8" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
-                </a>
+                </Link>
               </div>
 
               {/* SEO / a11y — crawler-friendly outline of the timeline */}
@@ -338,8 +340,8 @@ export function TechnologySections() {
               );
             })()}
 
-            <a
-              href="#"
+            <Link
+              href={blogHref(BLOG_SLUG.lgmVsLlmVision)}
               className={`${styles.lgmArticleCard} ${styles.lgmArticleCardGlass}`}
             >
               <span className={styles.lgmArticleKicker}>Read our article on</span>
@@ -349,7 +351,7 @@ export function TechnologySections() {
               <p className={styles.lgmArticleHeadlineStrong}>
                 How the LGM innovates.
               </p>
-            </a>
+            </Link>
           </RevealOnView>
         </div>
       </Slide>
@@ -397,12 +399,12 @@ export function TechnologySections() {
                     model, the LGM.
                   </p>
                 </div>
-                <a href="#" className={styles.lgmInlineCta}>
+                <Link href={blogHref(BLOG_SLUG.llmsGeospatialQueries)} className={styles.lgmInlineCta}>
                   <span>Why LLMs didn&apos;t work</span>
                   <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden>
                     <path d="M2.5 9.5L9.5 2.5M9.5 2.5H4M9.5 2.5V8" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
-                </a>
+                </Link>
               </div>
             </div>
 
@@ -444,12 +446,12 @@ export function TechnologySections() {
                       economic metric for any geospatial foundation model.
                     </Definition>
                   </p>
-                  <a href="#" className={styles.coreResearchGroupLink}>
+                  <Link href="/blog" className={styles.coreResearchGroupLink}>
                     Read our blog
                     <svg width="10" height="10" viewBox="0 0 10 10" aria-hidden>
                       <path d="M2 8l6-6M3.5 2H8v4.5" stroke="currentColor" strokeWidth="1.3" fill="none" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
-                  </a>
+                  </Link>
                 </ResearchGroup>
 
                 <ResearchGroup title="Fusion">
@@ -501,12 +503,12 @@ export function TechnologySections() {
                     Our core reasoning is comprised of a new permutation of
                     Reverse Diffusion and RAG architecture.
                   </p>
-                  <a href="#" className={styles.coreResearchGroupLink}>
+                  <Link href={blogHref(BLOG_SLUG.generativeGeospatialLayers)} className={styles.coreResearchGroupLink}>
                     Read our Paper
                     <svg width="10" height="10" viewBox="0 0 10 10" aria-hidden>
                       <path d="M2 8l6-6M3.5 2H8v4.5" stroke="currentColor" strokeWidth="1.3" fill="none" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
-                  </a>
+                  </Link>
                 </ResearchGroup>
 
                 <ResearchGroup title="Answers, insights, patterns">
@@ -658,18 +660,18 @@ export function TechnologySections() {
             </div>
 
             <div className={styles.resultsArticlesRow}>
-              <a href="#" className={styles.lgmArticleCard}>
+              <Link href={blogHref(BLOG_SLUG.mappingUnknownGenLayers)} className={styles.lgmArticleCard}>
                 <p>
                   Read our article on Mapping the<br />
                   <strong>unknown with Gen Layers</strong>
                 </p>
-              </a>
-              <a href="#" className={styles.lgmArticleCard}>
+              </Link>
+              <Link href={blogHref(BLOG_SLUG.deepSpatialReasoningScale)} className={styles.lgmArticleCard}>
                 <p>
                   Read our article on<br />
                   <strong>deep spatial reasoning</strong>
                 </p>
-              </a>
+              </Link>
             </div>
           </RevealOnView>
 
@@ -699,44 +701,27 @@ export function TechnologySections() {
                   transition); the featured shrinks and its title slides to
                   the top. */}
               <div className={styles.researchCardGrid}>
-                <a
-                  href={RESEARCH_CARDS[0].href}
-                  className={`${styles.researchCard} ${styles.researchCardFeatured}`}
-                >
-                  <div className={styles.researchCardSpacer} aria-hidden="true" />
-                  <span className={styles.researchCardTitle}>
-                    Philosophy behind a Universal Geospatial Model
-                  </span>
-                  <span className={styles.researchCardArrow}>&#8599;</span>
-                </a>
-
-                <a href={RESEARCH_CARDS[1].href} className={styles.researchCard}>
-                  <div className={styles.researchCardSpacer} aria-hidden="true" />
-                  <span className={styles.researchCardTitle}>
-                    Mimicking the adult brain.
-                  </span>
-                  <span className={styles.researchCardArrow}>&#8599;</span>
-                </a>
-                <a href={RESEARCH_CARDS[2].href} className={styles.researchCard}>
-                  <div className={styles.researchCardSpacer} aria-hidden="true" />
-                  <span className={styles.researchCardTitle}>
-                    Earth recipes.
-                  </span>
-                  <span className={styles.researchCardArrow}>&#8599;</span>
-                </a>
-                <a href="#" className={styles.researchCard}>
-                  <div className={styles.researchCardSpacer} aria-hidden="true" />
-                  <span className={styles.researchCardTitle}>
-                    Research, creating a fire prediction model.
-                  </span>
-                  <span className={styles.researchCardArrow}>&#8599;</span>
-                </a>
+                {RESEARCH_CARDS.map((card, index) => (
+                  <Link
+                    key={card.title}
+                    href={card.href}
+                    className={
+                      index === 0
+                        ? `${styles.researchCard} ${styles.researchCardFeatured}`
+                        : styles.researchCard
+                    }
+                  >
+                    <div className={styles.researchCardSpacer} aria-hidden="true" />
+                    <span className={styles.researchCardTitle}>{card.title}</span>
+                    <span className={styles.researchCardArrow}>&#8599;</span>
+                  </Link>
+                ))}
               </div>
 
               {/* All articles — clean list rows */}
               <div className={styles.articleList}>
                 {RESEARCH_ARTICLES.map((article) => (
-                  <a
+                  <Link
                     key={article.title}
                     href={article.href}
                     className={styles.articleRow}
@@ -747,7 +732,7 @@ export function TechnologySections() {
                       <span className={styles.articleRowArrow}>&rarr;</span>
                     </div>
                     <span className={styles.articleRowHoverLine} />
-                  </a>
+                  </Link>
                 ))}
               </div>
             </RevealOnView>

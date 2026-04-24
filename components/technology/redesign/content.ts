@@ -1,3 +1,5 @@
+import { blogHref, BLOG_SLUG } from "@/lib/blog-posts";
+
 import type {
   NavItem,
   ResearchArticle,
@@ -52,25 +54,49 @@ export const TIMELINE_ENTRIES: TimelineEntry[] = [
 export const RESEARCH_CARDS: ResearchCard[] = [
   {
     featured: true,
-    title: "Philosphy of a Universal LGM",
-    href: "#",
+    title: "Philosophy behind a Universal Geospatial Model",
+    href: blogHref(BLOG_SLUG.philosophyUniversalLgm),
   },
   {
-    title: "Mimicing a adult brain",
-    href: "#",
+    title: "Mimicking the adult brain.",
+    href: blogHref(BLOG_SLUG.mimickingAdultBrain),
   },
   {
-    title: "Earth recipes",
-    href: "#",
+    title: "Earth recipes.",
+    href: blogHref(BLOG_SLUG.earthRecipes),
+  },
+  {
+    title: "Research: creating a fire prediction model.",
+    href: blogHref(BLOG_SLUG.erickFirePrediction),
   },
 ];
 
 export const RESEARCH_ARTICLES: ResearchArticle[] = [
-  { title: "MapsGPT Version 2.5. Architecture improvements.", href: "#", date: "Apr 2026" },
-  { title: "Research Paper -- Erick fire prediction", href: "#", date: "Mar 2026" },
-  { title: "MapsGPT. Building a consumer product", href: "#", date: "Feb 2026" },
-  { title: "Why LLMs dont cut it. Issues in LLM architecture for Geosaptial queries.", href: "#", date: "Jan 2026" },
-  { title: "A paper on Generative geospatial layers.", href: "#", date: "Dec 2025" },
+  {
+    title: "MapsGPT Version 2.5. Architecture improvements.",
+    href: blogHref(BLOG_SLUG.mapsgptV25Architecture),
+    date: "Apr 2026",
+  },
+  {
+    title: "Research Paper -- Erick fire prediction",
+    href: blogHref(BLOG_SLUG.erickFirePrediction),
+    date: "Mar 2026",
+  },
+  {
+    title: "MapsGPT. Building a consumer product",
+    href: blogHref(BLOG_SLUG.mapsgptConsumerProduct),
+    date: "Feb 2026",
+  },
+  {
+    title: "Why LLMs dont cut it. Issues in LLM architecture for Geosaptial queries.",
+    href: blogHref(BLOG_SLUG.llmsGeospatialQueries),
+    date: "Jan 2026",
+  },
+  {
+    title: "A paper on Generative geospatial layers.",
+    href: blogHref(BLOG_SLUG.generativeGeospatialLayers),
+    date: "Dec 2025",
+  },
 ];
 
 export const HERO_SCROLL_INDEX_ITEMS = [
