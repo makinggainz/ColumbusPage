@@ -7,9 +7,12 @@ import { usePathname } from "next/navigation";
 
 import { ScrambleText } from "@/components/ui/ScrambleText";
 import glassStyles from "@/components/ui/GlassButton.module.css";
+import { AccessibilityMenu } from "@/components/layout/AccessibilityMenu";
 
 const COMPACT_THRESHOLD = 10;
 const NAV_BREAKPOINT = 900;
+/** Tighter end of the range: column width is midpoint between full measured width and this (px). */
+const DROPDOWN_LEFT_COL_MAX_WIDTH_PX = 352;
 
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -43,6 +46,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
     const isUseCasesPage = pathname === "/use-cases" || pathname === "/products/enterprise";
     const isEnterprisePage = pathname === "/products/enterprise";
     const isContactPage = pathname === "/contact";
+    const isBlogPage = pathname.startsWith("/blog");
     const showWordmarkOnMobile = pathname === "/" || pathname === "/mission" || pathname === "/contact";
     const navRef = useRef<HTMLElement>(null);
     const dropdownRef = useRef<HTMLDivElement>(null);
@@ -472,9 +476,14 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
 
                             {/* ── Right: Nav Links + CTA + Hamburger ── */}
                             <div className="flex items-center">
-
-                                {/* Desktop nav links — appear after hero CTA leaves viewport */}
-                                <div
+                                {isBlogPage ? (
+                                    <div className="flex items-center pr-2 md:pr-0">
+                                        <AccessibilityMenu isDark={isDark} />
+                                    </div>
+                                ) : (
+                                    <>
+                                        {/* Desktop nav links — appear after hero CTA leaves viewport */}
+                                        <div
                                     className="hidden min-[900px]:flex items-center gap-5"
                                     style={{
                                         pointerEvents: linksVisible ? "auto" : "none",
@@ -487,7 +496,6 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                         { label: "Products", href: "/products/enterprise", hasDropdown: true, kind: "products" as const },
                                         { label: "Use Cases", href: "/use-cases" },
                                         { label: "Technology", href: "/technology" },
-                                        { label: "Blog", href: "/blog" },
                                         { label: "Company", href: "/mission", hasDropdown: true, kind: "company" as const },
                                     ] as const).map((link, i) => (
                                         <Link
@@ -544,11 +552,8 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                                     );
                                                 })()}
                                             </span>
-                                            {/* Arrow chevron — shown on any dropdown-trigger link.
-                                                Swaps between down and up via a brief opacity
-                                                crossfade when the dropdown triggered by THIS link
-                                                opens. */}
-                                            {(link as { hasDropdown?: boolean }).hasDropdown && (() => {
+                                            {/* Arrow chevron — Products only (Company keeps dropdown hover, no arrow). */}
+                                            {(link as { kind?: "products" | "company" }).kind === "products" && (() => {
                                                 const linkKind = (link as { kind?: "products" | "company" }).kind;
                                                 const flipped = isMenuOpen && !!linkKind && hoverKind === linkKind;
                                                 const crossfade = "opacity 140ms ease-out";
@@ -720,16 +725,19 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                         })()}
                                     </button>
                                 </div>
-                            </div>
+                                </>
+                            )}
                         </div>
+                    </div>
                     </div>
 
                 </div>
             </nav>
 
             {/* ── Dropdown (outside nav so fixed positioning isn't broken by nav's transform) ── */}
-            <div
-                ref={dropdownRef}
+            {!isBlogPage && (
+                <div
+                    ref={dropdownRef}
                 className={`fixed left-0 right-0 max-md:bottom-0 overflow-hidden max-md:flex max-md:flex-col`}
                 style={{
                     ...dropdownBg,
@@ -747,8 +755,9 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                 }}
                 onMouseLeave={handleDropdownMouseLeave}
             >
-                <div className={`mx-auto w-full px-6 md:px-8 ${wide ? "min-[1408px]:px-0" : "min-[1287px]:px-0"} py-4 md:py-8`} style={{ maxWidth: wide ? 1408 : 1287, paddingTop: isCompact ? 56 + 48 : 68 + 48 }}>
-                    <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-8 md:min-h-[320px]">
+                {/* Desktop vertical rhythm matches main; mobile layout uses max-md:flex below. */}
+                <div className={`mx-auto w-full px-6 md:px-8 ${wide ? "min-[1408px]:px-0" : "min-[1287px]:px-0"} py-4 md:py-12`} style={{ maxWidth: wide ? 1408 : 1287, paddingTop: isCompact ? 56 + 16 : 68 + 20 }}>
+                    <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12">
                         <div
                             ref={leftColRef}
                             className="md:col-start-1 md:col-span-5 md:row-start-1 flex flex-col relative z-10"
@@ -764,7 +773,18 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                     : "opacity 350ms cubic-bezier(0.05, 0.7, 0.1, 1), transform 400ms cubic-bezier(0.05, 0.7, 0.1, 1)",
                                 pointerEvents: hoverKind === "products" ? "none" : "auto",
                                 ...(hoverKind !== "products" && productsAlign && isWideScreen
-                                    ? { maxWidth: productsAlign.leftMaxWidth }
+                                    ? {
+                                        maxWidth: Math.round(
+                                            (productsAlign.leftMaxWidth
+                                                + Math.min(
+                                                    productsAlign.leftMaxWidth,
+                                                    DROPDOWN_LEFT_COL_MAX_WIDTH_PX
+                                                ))
+                                                / 2
+                                        ),
+                                        justifySelf: "start",
+                                        minWidth: 0,
+                                    }
                                     : {}),
                             }}
                         >
@@ -775,8 +795,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                 Columbus Earth Inc. is a spatial frontier AI company building the first production
                                 Large Geospatial Model to answer the most difficult questions about our planet.
                             </p>
-                            <div className={`mt-7 mb-6 h-px ${isDark ? "bg-white/10" : "bg-[#0A1344]/10"}`} />
-                            <dl className="flex flex-wrap gap-x-12 gap-y-4">
+                            <dl className="mt-7 flex flex-wrap gap-x-12 gap-y-4">
                                 <div>
                                     <dt className={`text-[11px] font-medium tracking-[0.1em] uppercase mb-1.5 ${dropdownSubheadClass}`}>
                                         <ScrambleText text="CONTACT" isActive={isMenuOpen} delay={300} />
@@ -802,7 +821,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                         <div className="hidden md:block md:col-span-1"></div>
                         <div
                             ref={productsColRef}
-                            className="md:col-start-1 md:col-span-12 md:row-start-1 space-y-6 md:space-y-8 md:pointer-events-none [&_h4]:md:pointer-events-auto [&_a]:md:pointer-events-auto"
+                            className="md:col-start-1 md:col-span-12 md:row-start-1 space-y-6 md:space-y-6 md:pointer-events-none [&_h4]:md:pointer-events-auto [&_a]:md:pointer-events-auto"
                             style={{
                                 ...(productsAlign && isWideScreen
                                     ? {
@@ -857,21 +876,23 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                         transition: "opacity 350ms cubic-bezier(0.05, 0.7, 0.1, 1), transform 400ms cubic-bezier(0.05, 0.7, 0.1, 1)",
                                     }}
                                 >
-                                    <div className={`relative overflow-hidden aspect-[16/10] flex-1 max-w-[480px] ${isDark ? "bg-white/5" : "bg-[#F5F5F5]"}`}>
+                                    {/* Width matches one product-card column: (720 − gap-5) / 2 ≈ 350px */}
+                                    <div className={`relative aspect-[16/10] w-full max-w-[350px] shrink-0 overflow-hidden ${isDark ? "bg-white/5" : "bg-[#F5F5F5]"}`}>
                                         <Image
                                             src="/CEHQ.png"
                                             alt="Columbus Earth HQ"
                                             fill
-                                            sizes="(min-width: 768px) 480px, 100vw"
+                                            sizes="(min-width: 768px) 350px, 100vw"
                                             className="object-cover"
                                         />
                                     </div>
                                     <ul className="flex flex-col gap-5 pt-2 min-w-[120px]">
                                         {[
+                                            { label: "Mission", href: "/mission" },
+                                            { label: "Vision", href: "/mission" },
                                             { label: "Blog", href: "/blog" },
-                                            { label: "Company", href: "/mission" },
                                         ].map((item) => (
-                                            <li key={item.href}>
+                                            <li key={item.label}>
                                                 <Link
                                                     href={item.href}
                                                     onClick={closeMenu}
@@ -1001,8 +1022,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                     {[
                                         { label: "Use Cases", href: "/use-cases" },
                                         { label: "Technology", href: "/technology" },
-                                        { label: "Blog", href: "/blog" },
-                                        { label: "Company", href: "/mission" },
+                                        { label: "Our Mission", href: "/mission" },
                                     ].map((item, index) => (
                                         <li
                                             key={item.href}
@@ -1013,7 +1033,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                                     : "translateY(12px) scale(0.97)",
                                                 transition: isMenuOpen
                                                     ? `opacity 350ms cubic-bezier(0.05, 0.7, 0.1, 1) ${350 + index * 50}ms, transform 400ms cubic-bezier(0.05, 0.7, 0.1, 1) ${350 + index * 50}ms`
-                                                    : `opacity 120ms ease ${(3 - index) * 25}ms, transform 120ms ease ${(3 - index) * 25}ms`,
+                                                    : `opacity 120ms ease ${(2 - index) * 25}ms, transform 120ms ease ${(2 - index) * 25}ms`,
                                             }}
                                         >
                                             <Link
@@ -1103,6 +1123,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                     </div>
                 )}
             </div>
+            )}
         </>
     );
 };
