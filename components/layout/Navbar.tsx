@@ -18,9 +18,12 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
     /* Tracks what triggered the dropdown. "products" means the user
        hovered the Products nav link — in that case the dropdown hides
        the COLUMBUS EARTH / CONTACT / SOCIAL column and shows the product
-       cards left-aligned in its place. Any other trigger (logo hover,
-       hamburger, etc.) falls back to the default dropdown layout. */
-    const [hoverKind, setHoverKind] = useState<"products" | null>(null);
+       cards centered in its place. "company" means the user hovered the
+       Company nav link — the left column stays visible and the right
+       area shows a company image plus Blog/Company links. Any other
+       trigger (logo hover, hamburger, etc.) falls back to the default
+       dropdown layout. */
+    const [hoverKind, setHoverKind] = useState<"products" | "company" | null>(null);
     const [isManuallyToggled, setIsManuallyToggled] = useState(false);
     const [hasScrolled, setHasScrolled] = useState(false);
     const [isCompact, setIsCompact] = useState(false);
@@ -44,6 +47,18 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
     const navRef = useRef<HTMLElement>(null);
     const dropdownRef = useRef<HTMLDivElement>(null);
     const navigationCooldownRef = useRef(false);
+    /* Refs used to compute dropdown column alignment. The dropdown mirrors
+       the navbar's x-structure — left column ends at PRODUCTS_LEFT − GAP,
+       right column spans PRODUCTS_LEFT → CTA_RIGHT. See
+       design-system/navbar-dropdown.md for the full spec. */
+    const productsLinkRef = useRef<HTMLAnchorElement | null>(null);
+    const companyLinkRef = useRef<HTMLAnchorElement | null>(null);
+    const ctaRef = useRef<HTMLAnchorElement | null>(null);
+    const productsColRef = useRef<HTMLDivElement | null>(null);
+    const leftColRef = useRef<HTMLDivElement | null>(null);
+    const [productsAlign, setProductsAlign] = useState<
+        { padLeft: number; padRight: number; leftMaxWidth: number } | null
+    >(null);
 
     // Sync scroll state before first paint to prevent navbar flash on reload
     useLayoutEffect(() => {
@@ -242,6 +257,48 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
         };
     }, [isMenuOpen, isManuallyToggled]);
 
+    /* Measure the navbar's x-anchors and compute padding/width values.
+       The right column spans col-start-1 / col-span-12 (full grid width);
+       its inline paddings push content to align with navbar anchors:
+         - left column max-width  = PRODUCTS_LEFT − GRID_LEFT − GAP
+         - right column padLeft   = PRODUCTS_LEFT − GRID_LEFT
+         - right column padRight  = GRID_RIGHT − CTA_RIGHT
+       See design-system/navbar-dropdown.md for the full zone model. */
+    useEffect(() => {
+        const GAP = 40; // minimum gap between left-zone end and right-zone start
+        const compute = () => {
+            const link = productsLinkRef.current;
+            const cta = ctaRef.current;
+            const col = productsColRef.current;
+            const leftCol = leftColRef.current;
+            if (!link || !cta || !col || !leftCol) return;
+            const l = link.getBoundingClientRect();
+            const c = cta.getBoundingClientRect();
+            const k = col.getBoundingClientRect();
+            const lc = leftCol.getBoundingClientRect();
+            const padLeft = Math.max(0, l.left - k.left);
+            const padRight = Math.max(0, k.right - c.right);
+            const leftMaxWidth = Math.max(0, l.left - lc.left - GAP);
+            setProductsAlign((prev) => {
+                if (
+                    prev
+                    && Math.abs(prev.padLeft - padLeft) < 0.5
+                    && Math.abs(prev.padRight - padRight) < 0.5
+                    && Math.abs(prev.leftMaxWidth - leftMaxWidth) < 0.5
+                ) return prev;
+                return { padLeft, padRight, leftMaxWidth };
+            });
+        };
+        compute();
+        // Re-measure after the dropdown's open animation (refs need to be mounted).
+        const t = window.setTimeout(compute, 50);
+        window.addEventListener("resize", compute);
+        return () => {
+            window.clearTimeout(t);
+            window.removeEventListener("resize", compute);
+        };
+    }, [isMenuOpen, isCompact, isWideScreen]);
+
     // ── Handlers ────────────────────────────────────────────────────────
     const handleMouseEnter = () => {
         if (!isManuallyToggled && !navigationCooldownRef.current) setIsMenuOpen(true);
@@ -426,16 +483,23 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                         transition: `padding-right 400ms cubic-bezier(0.22, 1, 0.36, 1), margin-right 400ms cubic-bezier(0.22, 1, 0.36, 1)`,
                                     }}
                                 >
-                                    {[
-                                        { label: "Products", href: "/products/enterprise", hasDropdown: true },
+                                    {([
+                                        { label: "Products", href: "/products/enterprise", hasDropdown: true, kind: "products" as const },
                                         { label: "Use Cases", href: "/use-cases" },
                                         { label: "Technology", href: "/technology" },
-                                        { label: "Mission", href: "/mission" },
-                                    ].map((link, i) => (
+                                        { label: "Company", href: "/mission", hasDropdown: true, kind: "company" as const },
+                                    ] as const).map((link, i) => (
                                         <Link
                                             key={link.label}
                                             href={link.href}
-                                            className={`${navLinkClass} ${wide ? glassStyles.glassTextStatic : ""}`}
+                                            ref={
+                                                (link as { kind?: "products" | "company" }).kind === "products"
+                                                    ? productsLinkRef
+                                                    : (link as { kind?: "products" | "company" }).kind === "company"
+                                                    ? companyLinkRef
+                                                    : undefined
+                                            }
+                                            className={navLinkClass}
                                             style={{
                                                 ...navLinkInline(isCompact),
                                                 whiteSpace: "nowrap",
@@ -444,28 +508,48 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                                 filter: linksVisible ? "blur(0px)" : "blur(4px)",
                                                 transition: `opacity 350ms ease ${i * 80}ms, transform 400ms cubic-bezier(0.22, 1, 0.36, 1) ${i * 80}ms, filter 350ms ease ${i * 80}ms, font-size ${t}`,
                                             }}
-                                            onMouseEnter={(link as { hasDropdown?: boolean }).hasDropdown ? () => { setHoverKind("products"); handleNavMouseEnter(); } : undefined}
+                                            onMouseEnter={
+                                                (link as { hasDropdown?: boolean }).hasDropdown
+                                                    ? () => {
+                                                          setHoverKind((link as { kind?: "products" | "company" }).kind ?? null);
+                                                          handleNavMouseEnter();
+                                                      }
+                                                    : undefined
+                                            }
                                         >
                                             {/* Wrap the label so the hover-underline is positioned
                                                 relative to the text itself (not the px-3 padded link
                                                 area). Underline animates width 0 → 100% on hover,
                                                 same easing + duration as the research-blog row line
                                                 in the /technology page. */}
-                                            <span className="relative inline-block">
+                                            <span className={`relative inline-block ${wide && !bgTriggerPassed ? glassStyles.glassTextStatic : ""}`}>
                                                 {link.label}
-                                                <span
-                                                    aria-hidden
-                                                    className="pointer-events-none absolute left-0 -bottom-1 h-px w-0 bg-[#0066CC] group-hover/nav:w-full"
-                                                    style={{ transition: "width 500ms cubic-bezier(0.22, 1, 0.36, 1)" }}
-                                                />
+                                                {/* Underline stays at full width while the dropdown
+                                                    triggered by THIS link is open — so moving the
+                                                    mouse from the link into the dropdown keeps the
+                                                    visual link "active". */}
+                                                {(() => {
+                                                    const linkKind = (link as { kind?: "products" | "company" }).kind;
+                                                    const linkIsActive =
+                                                        isMenuOpen &&
+                                                        !!linkKind &&
+                                                        hoverKind === linkKind;
+                                                    return (
+                                                        <span
+                                                            aria-hidden
+                                                            className={`pointer-events-none absolute left-0 -bottom-1 h-px ${linkIsActive ? "w-full" : "w-0 group-hover/nav:w-full"} bg-[#0066CC]`}
+                                                            style={{ transition: "width 500ms cubic-bezier(0.22, 1, 0.36, 1)" }}
+                                                        />
+                                                    );
+                                                })()}
                                             </span>
-                                            {/* Arrow — Products chevron. Swaps between down and up
-                                                via a brief opacity crossfade (no rotation, no
-                                                overshoot). Down → up swap is instant the moment
-                                                the dropdown commits open; close is a quick fade
-                                                back. Restrained and serious. */}
+                                            {/* Arrow chevron — shown on any dropdown-trigger link.
+                                                Swaps between down and up via a brief opacity
+                                                crossfade when the dropdown triggered by THIS link
+                                                opens. */}
                                             {(link as { hasDropdown?: boolean }).hasDropdown && (() => {
-                                                const flipped = isMenuOpen && hoverKind === "products";
+                                                const linkKind = (link as { kind?: "products" | "company" }).kind;
+                                                const flipped = isMenuOpen && !!linkKind && hoverKind === linkKind;
                                                 const crossfade = "opacity 140ms ease-out";
                                                 return (
                                                     <span
@@ -523,6 +607,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                     }}>
                                         <Link
                                             href="/contact"
+                                            ref={ctaRef}
                                             className={`group flex items-center justify-between leading-none whitespace-nowrap transition-all duration-300 cursor-pointer ${isUseCasesPage ? (isDark ? "hover:bg-white!" : "hover:opacity-90") : "hover:opacity-90"} ${wide ? glassStyles.btn : ""}`}
                                             style={{
                                                 fontSize: 14,
@@ -661,77 +746,167 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                 }}
                 onMouseLeave={handleDropdownMouseLeave}
             >
-                <div className={`mx-auto w-full px-6 md:px-8 ${wide ? "min-[1408px]:px-0" : "min-[1287px]:px-0"} py-4 md:py-6`} style={{ maxWidth: wide ? 1408 : 1287, paddingTop: isCompact ? 56 + 8 : 68 + 12 }}>
+                <div className={`mx-auto w-full px-6 md:px-8 ${wide ? "min-[1408px]:px-0" : "min-[1287px]:px-0"} py-4 md:py-8`} style={{ maxWidth: wide ? 1408 : 1287, paddingTop: isCompact ? 56 + 48 : 68 + 48 }}>
                     <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-8 md:min-h-[320px]">
                         <div
-                            className={`md:col-span-5 space-y-6 md:space-y-8 ${hoverKind === "products" ? "md:hidden" : ""}`}
+                            ref={leftColRef}
+                            className="md:col-start-1 md:col-span-5 md:row-start-1 flex flex-col relative z-10"
                             style={{
-                                opacity: isMenuOpen ? 1 : 0,
-                                transform: isMenuOpen ? "translateY(0) scale(1)" : "translateY(8px) scale(0.99)",
-                                transition: isMenuOpen
-                                    ? "opacity 350ms cubic-bezier(0.05, 0.7, 0.1, 1) 150ms, transform 400ms cubic-bezier(0.05, 0.7, 0.1, 1) 150ms"
-                                    : "opacity 150ms ease, transform 150ms ease",
+                                opacity: !isMenuOpen ? 0 : hoverKind === "products" ? 0 : 1,
+                                transform: !isMenuOpen
+                                    ? "translateY(8px) scale(0.99)"
+                                    : hoverKind === "products"
+                                    ? "translateX(-12px)"
+                                    : "translateY(0) translateX(0) scale(1)",
+                                transition: !isMenuOpen
+                                    ? "opacity 150ms ease, transform 150ms ease"
+                                    : "opacity 350ms cubic-bezier(0.05, 0.7, 0.1, 1), transform 400ms cubic-bezier(0.05, 0.7, 0.1, 1)",
+                                pointerEvents: hoverKind === "products" ? "none" : "auto",
+                                ...(hoverKind !== "products" && productsAlign && isWideScreen
+                                    ? { maxWidth: productsAlign.leftMaxWidth }
+                                    : {}),
                             }}
                         >
-                            <div>
-                                <h4 className={`text-[13px] font-medium tracking-[0.08em] uppercase mb-3 md:mb-4 ${dropdownHeadingClass}`}>
-                                    <ScrambleText text="COLUMBUS EARTH" isActive={isMenuOpen} delay={200} />
-                                </h4>
-                                <p className={`text-[16px] leading-[1.6] max-w-md ${dropdownBodyClass}`}>
-                                    Columbus Earth Inc. is a spatial frontier AI company building the first production
-                                    Large Geospatial Model to answer the most difficult questions about our planet.
-                                </p>
-                            </div>
-                            <div className="grid grid-cols-2 gap-6 md:gap-8">
+                            <h4 className={`text-[12px] font-medium tracking-[0.1em] uppercase mb-4 ${dropdownHeadingClass}`}>
+                                <ScrambleText text="COLUMBUS EARTH" isActive={isMenuOpen} delay={200} />
+                            </h4>
+                            <p className={`text-[15px] leading-[1.55] ${dropdownBodyClass}`}>
+                                Columbus Earth Inc. is a spatial frontier AI company building the first production
+                                Large Geospatial Model to answer the most difficult questions about our planet.
+                            </p>
+                            <div className={`mt-7 mb-6 h-px ${isDark ? "bg-white/10" : "bg-[#0A1344]/10"}`} />
+                            <dl className="flex flex-wrap gap-x-12 gap-y-4">
                                 <div>
-                                    <h4 className={`text-[13px] font-medium tracking-[0.08em] uppercase mb-2 ${dropdownSubheadClass}`}>
+                                    <dt className={`text-[11px] font-medium tracking-[0.1em] uppercase mb-1.5 ${dropdownSubheadClass}`}>
                                         <ScrambleText text="CONTACT" isActive={isMenuOpen} delay={300} />
-                                    </h4>
-                                    <a href="mailto:contact@columbus.earth" className={`text-[16px] font-medium block transition-colors duration-300 break-all hover:text-[#2563EB] ${dropdownLinkClass}`}>
-                                        contact@columbus.earth
-                                    </a>
+                                    </dt>
+                                    <dd>
+                                        <a href="mailto:contact@columbus.earth" className={`text-[15px] font-medium block transition-colors duration-300 break-all hover:text-[#2563EB] ${dropdownLinkClass}`}>
+                                            contact@columbus.earth
+                                        </a>
+                                    </dd>
                                 </div>
                                 <div>
-                                    <h4 className={`text-[13px] font-medium tracking-[0.08em] uppercase mb-2 ${dropdownSubheadClass}`}>
+                                    <dt className={`text-[11px] font-medium tracking-[0.1em] uppercase mb-1.5 ${dropdownSubheadClass}`}>
                                         <ScrambleText text="SOCIAL" isActive={isMenuOpen} delay={350} />
-                                    </h4>
-                                    <a href="https://www.linkedin.com/company/columbusearth/about/?viewAsMember=true" target="_blank" rel="noopener noreferrer" className={`text-[16px] font-medium block transition-colors duration-300 hover:text-[#2563EB] ${dropdownSocialClass}`}>
-                                        LinkedIn
-                                    </a>
+                                    </dt>
+                                    <dd>
+                                        <a href="https://www.linkedin.com/company/columbusearth/about/?viewAsMember=true" target="_blank" rel="noopener noreferrer" className={`text-[15px] font-medium block transition-colors duration-300 hover:text-[#2563EB] ${dropdownSocialClass}`}>
+                                            LinkedIn
+                                        </a>
+                                    </dd>
                                 </div>
-                            </div>
+                            </dl>
                         </div>
-                        <div className={`hidden md:block md:col-span-1 ${hoverKind === "products" ? "md:hidden" : ""}`}></div>
-                        <div className={`md:col-span-6 space-y-6 md:space-y-8 ${hoverKind === "products" ? "md:col-start-1 md:col-span-12" : ""}`}>
-                            {/* ── Products group ── */}
-                            <div>
-                                {/* Eyebrow — shown only in default (non-products-hover) layout.
-                                    In products-hover mode the cards stand on their own, ai21-style. */}
-                                {hoverKind !== "products" && (
-                                    <h4
-                                        className={`text-[13px] font-medium tracking-[0.08em] uppercase mb-4 ${dropdownSubheadClass}`}
-                                        style={{
-                                            opacity: isMenuOpen ? 1 : 0,
-                                            transform: isMenuOpen ? "translateY(0)" : "translateY(8px)",
-                                            transition: isMenuOpen
-                                                ? "opacity 350ms ease 180ms, transform 400ms cubic-bezier(0.05, 0.7, 0.1, 1) 180ms"
-                                                : "opacity 150ms ease, transform 150ms ease",
-                                        }}
-                                    >
-                                        <ScrambleText text="PRODUCTS" isActive={isMenuOpen} delay={250} />
+                        <div className="hidden md:block md:col-span-1"></div>
+                        <div
+                            ref={productsColRef}
+                            className="md:col-start-1 md:col-span-12 md:row-start-1 space-y-6 md:space-y-8 md:pointer-events-none [&_h4]:md:pointer-events-auto [&_a]:md:pointer-events-auto"
+                            style={{
+                                ...(productsAlign && isWideScreen
+                                    ? {
+                                        paddingLeft: hoverKind === "products" ? 0 : productsAlign.padLeft,
+                                        paddingRight: hoverKind === "products" ? 0 : productsAlign.padRight,
+                                    }
+                                    : {}),
+                                transition: "padding 450ms cubic-bezier(0.05, 0.7, 0.1, 1)",
+                            }}
+                        >
+                            {/* ── Right-side content group ── */}
+                            <div className="relative">
+                                {/* Eyebrow — shown only in the default (logo/hamburger) layout.
+                                    Hides for both Products and Company hovers via a maxHeight
+                                    + opacity collapse so the content below doesn't snap up. */}
+                                <div
+                                    className="hidden md:block overflow-hidden"
+                                    aria-hidden={hoverKind !== null}
+                                    style={{
+                                        maxHeight: hoverKind !== null ? 0 : 40,
+                                        opacity: !isMenuOpen ? 0 : hoverKind !== null ? 0 : 1,
+                                        transform: !isMenuOpen
+                                            ? "translateY(8px)"
+                                            : hoverKind !== null
+                                            ? "translateY(-4px)"
+                                            : "translateY(0)",
+                                        transition: !isMenuOpen
+                                            ? "opacity 150ms ease, transform 150ms ease, max-height 150ms ease"
+                                            : "opacity 300ms cubic-bezier(0.05, 0.7, 0.1, 1), transform 400ms cubic-bezier(0.05, 0.7, 0.1, 1), max-height 450ms cubic-bezier(0.05, 0.7, 0.1, 1)",
+                                    }}
+                                >
+                                    <h4 className={`text-[13px] font-medium tracking-[0.08em] uppercase mb-4 ${dropdownSubheadClass}`}>
+                                        <ScrambleText text="PRODUCTS" isActive={isMenuOpen && hoverKind === null} delay={250} />
                                     </h4>
-                                )}
+                                </div>
+                                {/* Mobile-only eyebrow kept separate (no collapse needed) */}
+                                <h4 className={`md:hidden text-[13px] font-medium tracking-[0.08em] uppercase mb-4 ${dropdownSubheadClass}`}>
+                                    <ScrambleText text="PRODUCTS" isActive={isMenuOpen} delay={250} />
+                                </h4>
 
-                                {/* Desktop row — 2-card image grid, with a "Ready to experience…"
-                                    CTA block to the right when products-hover is active. */}
-                                <div className={hoverKind === "products" ? "hidden md:flex md:items-start md:justify-between md:gap-10" : ""}>
-                                <div className={`hidden md:grid grid-cols-2 gap-6 ${hoverKind === "products" ? "md:flex-1 md:max-w-[760px]" : ""}`}>
+                                {/* ── Company-hover layout (desktop) ── image on the left of
+                                    the padded content area, two stacked links on the right.
+                                    Absolutely positioned on top of the cards grid so the two
+                                    variants can crossfade. Occupies only when hovered. */}
+                                <div
+                                    className="hidden md:flex absolute inset-0 items-start gap-10"
+                                    aria-hidden={hoverKind !== "company"}
+                                    style={{
+                                        opacity: hoverKind === "company" && isMenuOpen ? 1 : 0,
+                                        pointerEvents: hoverKind === "company" && isMenuOpen ? "auto" : "none",
+                                        transform: hoverKind === "company" && isMenuOpen ? "translateY(0)" : "translateY(6px)",
+                                        transition: "opacity 350ms cubic-bezier(0.05, 0.7, 0.1, 1), transform 400ms cubic-bezier(0.05, 0.7, 0.1, 1)",
+                                    }}
+                                >
+                                    <div className={`relative overflow-hidden aspect-[16/10] flex-1 max-w-[480px] ${isDark ? "bg-white/5" : "bg-[#F5F5F5]"}`}>
+                                        <Image
+                                            src="/CEHQ.png"
+                                            alt="Columbus Earth HQ"
+                                            fill
+                                            sizes="(min-width: 768px) 480px, 100vw"
+                                            className="object-cover"
+                                        />
+                                    </div>
+                                    <ul className="flex flex-col gap-5 pt-2 min-w-[120px]">
+                                        {[
+                                            { label: "Blog", href: "/blog" },
+                                            { label: "Company", href: "/mission" },
+                                        ].map((item) => (
+                                            <li key={item.href}>
+                                                <Link
+                                                    href={item.href}
+                                                    onClick={closeMenu}
+                                                    className={`group inline-flex items-center gap-3 text-[20px] font-medium tracking-[-0.005em] transition-colors duration-300 hover:text-[#2563EB] ${dropdownNavLinkClass}`}
+                                                >
+                                                    <span className="transition-transform duration-300 group-hover:translate-x-1">{item.label}</span>
+                                                    <svg
+                                                        className="shrink-0 transition-transform duration-300 group-hover:translate-x-1"
+                                                        width="9" height="16" viewBox="0 0 7 12" fill="none"
+                                                        stroke="#2563EB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"
+                                                    >
+                                                        <path d="M1 1l5 5-5 5" />
+                                                    </svg>
+                                                </Link>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+
+                                {/* ── Products cards (desktop) — shown in default + products
+                                    modes; crossfades out when company mode engages. Cards
+                                    are capped at 760px and centred via mx-auto. */}
+                                <div
+                                    className="hidden md:grid grid-cols-2 gap-6 mx-auto md:max-w-[760px]"
+                                    style={{
+                                        opacity: hoverKind === "company" ? 0 : 1,
+                                        pointerEvents: hoverKind === "company" ? "none" : "auto",
+                                        transition: "opacity 350ms cubic-bezier(0.05, 0.7, 0.1, 1)",
+                                    }}
+                                >
                                     {[
                                         {
                                             title: "Columbus",
                                             subtitle: "An agentic GIS",
                                             href: "/products/enterprise",
-                                            img: "/navbardropColumbus.png",
+                                            img: "/ColumbusNavbarDropdownmenu.png",
                                         },
                                         {
                                             title: "Elio",
@@ -772,45 +947,6 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                             </p>
                                         </Link>
                                     ))}
-                                </div>
-                                {/* CTA block on the right — only renders in products-hover mode */}
-                                {hoverKind === "products" && (
-                                    <div
-                                        className="hidden md:block md:shrink-0 md:max-w-[300px] md:pt-2"
-                                        style={{
-                                            opacity: isMenuOpen ? 1 : 0,
-                                            transform: isMenuOpen ? "translateY(0)" : "translateY(8px)",
-                                            transition: isMenuOpen
-                                                ? "opacity 400ms cubic-bezier(0.05, 0.7, 0.1, 1) 320ms, transform 450ms cubic-bezier(0.05, 0.7, 0.1, 1) 320ms"
-                                                : "opacity 120ms ease, transform 120ms ease",
-                                        }}
-                                    >
-                                        <p className={`text-[22px] font-medium tracking-[-0.01em] leading-[1.25] ${dropdownNavLinkClass}`}>
-                                            Ready to experience the future of GIS?
-                                        </p>
-                                        <Link
-                                            href="/contact"
-                                            onClick={closeMenu}
-                                            className={`mt-6 inline-flex items-center gap-2 text-[15px] font-medium underline underline-offset-4 transition-colors duration-300 hover:text-[#2563EB] ${dropdownNavLinkClass}`}
-                                        >
-                                            <svg
-                                                width="16"
-                                                height="16"
-                                                viewBox="0 0 16 16"
-                                                fill="none"
-                                                stroke="currentColor"
-                                                strokeWidth="1.5"
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                                aria-hidden
-                                            >
-                                                <path d="M3 3v5a2 2 0 0 0 2 2h8" />
-                                                <path d="M10 6l3 4-3 4" />
-                                            </svg>
-                                            Get a Demo
-                                        </Link>
-                                    </div>
-                                )}
                                 </div>
 
                                 {/* Mobile — text list (unchanged) */}
@@ -864,7 +1000,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                     {[
                                         { label: "Use Cases", href: "/use-cases" },
                                         { label: "Technology", href: "/technology" },
-                                        { label: "Our Mission", href: "/mission" },
+                                        { label: "Company", href: "/mission" },
                                     ].map((item, index) => (
                                         <li
                                             key={item.href}

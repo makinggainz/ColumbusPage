@@ -541,6 +541,13 @@ export default function Hero() {
               className="absolute top-[100px] left-1/2 -translate-x-1/2 flex flex-col items-center gap-[200px]"
               style={{ zIndex: 2 }}
             >
+              {/* Spacer — preserves the vertical rhythm previously occupied
+                  by the now-removed ConsumerEnterpriseToggle. Keeps
+                  badgeTitleRef at its original y-position so the parent
+                  flex-column gap-[200px] reproduces the same head clearance
+                  above the phone mockup below. */}
+              <div aria-hidden style={{ height: 43 }} />
+
               <div ref={badgeTitleRef} className="flex flex-col items-center gap-[21px]">
                 <div className={glassStyles.btn} style={{
                   width: 266, height: 43, padding: 0,

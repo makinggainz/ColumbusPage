@@ -98,7 +98,10 @@ export default function EnterpriseHero() {
       />
 
       {/* ── Text block ── */}
-      <div className="relative z-10 flex flex-col items-center text-center px-6" style={reveal(visible, 0.1)}>
+      {/* pt-[200px] restores the vertical breathing room previously
+          provided by the removed ConsumerEnterpriseToggle wrapper
+          (pt-32 + pill height ~43px + pb-10 ≈ 211px). */}
+      <div className="relative z-10 flex flex-col items-center text-center px-6 pt-[200px]" style={reveal(visible, 0.1)}>
         <h1
           className="text-[#1D1D1F] leading-[1.1] text-[39px] md:text-[49px] lg:text-[76px]"
           style={{ fontWeight: 500, letterSpacing: "-0.02em", maxWidth: 900 }}
