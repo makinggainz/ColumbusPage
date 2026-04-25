@@ -415,12 +415,12 @@ export function TechnologySections() {
               are several innovations built during our practical research.
             </p>
 
-            <ResearchAccordionProvider initialOpen="Data Collection">
+            <ResearchAccordionProvider>
             <div className={styles.coreResearchGrid}>
               <CoreResearchArt />
 
               <div className={styles.coreResearchBody}>
-                <ResearchGroup title="Data Collection" autoOpenOnView>
+                <ResearchGroup title="Data Collection">
                   <p>
                     The most extensive data collection in the industry. Versatile
                     methods ranging from drones, car data, human data, public data

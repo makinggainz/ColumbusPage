@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useRef, useCallback } from "react";
 import { Container } from "@/components/layout/Container";
+import { HeroProductsPopup } from "@/components/home/HeroProductsPopup";
 
 interface Ripple { wx: number; wz: number; t: number; strength: number }
 type V3 = [number, number, number];
@@ -836,7 +837,11 @@ const HEADING_LINE2 = "Large Geospatial Model.";
 export const Hero = () => {
   const [mounted, setMounted] = useState(false);
   const [vignetteOpacity, setVignetteOpacity] = useState(0);
+  const [productsOpen, setProductsOpen] = useState(false);
+  const [isTouch, setIsTouch] = useState(false);
+  const [pastHeroCta, setPastHeroCta] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
+  const productsCloseTimerRef = useRef<number | undefined>(undefined);
 
   // Trigger fade-in on mount
   useEffect(() => {
@@ -848,6 +853,77 @@ export const Hero = () => {
   useEffect(() => {
     window.dispatchEvent(new CustomEvent("hero-reveal"));
   }, []);
+
+  // Touch detection — controls tap-to-open vs hover-to-open behavior on the
+  // Products popup. Resolved after mount so SSR matches default desktop.
+  useEffect(() => {
+    setIsTouch(window.matchMedia("(hover: none)").matches);
+  }, []);
+
+  // Hide the hero Products popup once #hero-cta scrolls out of view (the
+  // navbar's own Products dropdown takes over from there).
+  useEffect(() => {
+    const cta = document.getElementById("hero-cta");
+    if (!cta) return;
+    const obs = new IntersectionObserver(
+      ([entry]) => {
+        const past = !entry.isIntersecting;
+        setPastHeroCta(past);
+        if (past) setProductsOpen(false);
+      },
+      { threshold: 0 },
+    );
+    obs.observe(cta);
+    return () => obs.disconnect();
+  }, []);
+
+  // Cancel any pending close timer on unmount.
+  useEffect(() => {
+    return () => {
+      if (productsCloseTimerRef.current !== undefined) {
+        window.clearTimeout(productsCloseTimerRef.current);
+      }
+    };
+  }, []);
+
+  const openProducts = useCallback(() => {
+    if (productsCloseTimerRef.current !== undefined) {
+      window.clearTimeout(productsCloseTimerRef.current);
+      productsCloseTimerRef.current = undefined;
+    }
+    setProductsOpen(true);
+  }, []);
+
+  const scheduleCloseProducts = useCallback(() => {
+    if (productsCloseTimerRef.current !== undefined) {
+      window.clearTimeout(productsCloseTimerRef.current);
+    }
+    productsCloseTimerRef.current = window.setTimeout(() => {
+      setProductsOpen(false);
+      productsCloseTimerRef.current = undefined;
+    }, 120);
+  }, []);
+
+  const closeProducts = useCallback(() => {
+    if (productsCloseTimerRef.current !== undefined) {
+      window.clearTimeout(productsCloseTimerRef.current);
+      productsCloseTimerRef.current = undefined;
+    }
+    setProductsOpen(false);
+  }, []);
+
+  // Touch: outside-click closes the popup.
+  useEffect(() => {
+    if (!productsOpen || !isTouch) return;
+    const onPointerDown = (e: PointerEvent) => {
+      const target = e.target as Element | null;
+      if (!target?.closest("[data-hero-products-anchor]")) {
+        setProductsOpen(false);
+      }
+    };
+    document.addEventListener("pointerdown", onPointerDown);
+    return () => document.removeEventListener("pointerdown", onPointerDown);
+  }, [productsOpen, isTouch]);
 
   // Scroll-driven vignette
   useEffect(() => {
@@ -945,21 +1021,53 @@ export const Hero = () => {
               </svg>
             </a>
             {[
-              { label: "Technology", href: "/technology" },
-              { label: "Products", href: "/products/enterprise" },
-              { label: "Use Cases", href: "/use-cases" },
-            ].map((link) => (
-              <a
-                key={link.label}
-                href={link.href}
-                className="group hidden min-[642px]:flex items-center gap-1 text-md font-medium text-[#0A1344] transition-opacity duration-300 hover:opacity-60"
-              >
-                {link.label}
-                <svg className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-0.5" fill="none" viewBox="0 0 16 16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M6 4l4 4-4 4" />
-                </svg>
-              </a>
-            ))}
+              { label: "Technology", href: "/technology", hasPopup: false },
+              { label: "Products", href: "/products/enterprise", hasPopup: true },
+              { label: "Use Cases", href: "/use-cases", hasPopup: false },
+            ].map((link) => {
+              const linkEl = (
+                <a
+                  key={link.label}
+                  href={link.href}
+                  onMouseEnter={link.hasPopup && !isTouch ? openProducts : undefined}
+                  onMouseLeave={link.hasPopup && !isTouch ? scheduleCloseProducts : undefined}
+                  onFocus={link.hasPopup && !isTouch ? openProducts : undefined}
+                  onClick={link.hasPopup && isTouch ? (e) => {
+                    if (!productsOpen) {
+                      e.preventDefault();
+                      openProducts();
+                    }
+                  } : undefined}
+                  aria-haspopup={link.hasPopup ? "menu" : undefined}
+                  aria-expanded={link.hasPopup ? productsOpen : undefined}
+                  className="group hidden min-[642px]:flex items-center gap-1 text-md font-medium text-[#0A1344] transition-opacity duration-300 hover:opacity-60"
+                >
+                  {link.label}
+                  <svg className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-0.5" fill="none" viewBox="0 0 16 16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M6 4l4 4-4 4" />
+                  </svg>
+                </a>
+              );
+              if (!link.hasPopup) return linkEl;
+              return (
+                <div
+                  key={link.label}
+                  data-hero-products-anchor
+                  style={{ position: "relative" }}
+                  className="hidden min-[642px]:block"
+                >
+                  {linkEl}
+                  {!pastHeroCta && (
+                    <HeroProductsPopup
+                      open={productsOpen}
+                      onClose={closeProducts}
+                      onMouseEnter={!isTouch ? openProducts : undefined}
+                      onMouseLeave={!isTouch ? scheduleCloseProducts : undefined}
+                    />
+                  )}
+                </div>
+              );
+            })}
           </div>
         </div>
       </Container>

@@ -123,9 +123,20 @@ When `hoverKind === "company"`, the right-column layout switches from "image lef
 | **Mission/Vision/Blog ul** | In flex flow after image with `gap-10` (40px) | `position: absolute`, `left: companyAlign.ulLeft` — the ul's left edge aligns with the Company nav link's **text** (`companyLink.box.left + 12px` for the link's `px-3` padding). |
 | **CONTACT/SOCIAL dl** (left col) | `marginBottom: 28px` (lifted 28px above leftCol bottom) | `marginBottom: companyAlign.dlMb` — dynamically computed as `leftCol.bottom - image.bottom`, so the dl's bottom edge aligns with the image's bottom edge. |
 
-`companyAlign` is recomputed on `[isMenuOpen, isCompact, isWideScreen]` and on window resize. `companyImageRef` is the ref on the image wrapper used to measure image.bottom for the dl alignment.
+`companyAlign` is recomputed on `[isMenuOpen, isCompact, isWideScreen]` and on window resize.
 
-**extraMb formula:** `extraMb = max(0, leftCol.bottom − image.bottom − 20)`. The `−20` corrects for the base `−10` already in the inner-wrapper `marginBottom` formula and the desired `+10` gap below the image, so the final `marginBottom = −10 − extraMb` positions the visible dropdown bottom exactly 10px below the image — matching the 10px gap in the default state.
+**Both image bottom and grid row bottom are calculated, not measured.** Two layout invariants force this:
+
+1. The overlay containing the image has a `translateY(6px → 0)` entrance animation. A `getBoundingClientRect()` on the image while `hoverKind !== "company"` returns a position 6px low.
+2. ProductsCol's padding is `0` during products-hover and `padLeft + padRight` during company-hover. That padding controls the products cards' content width; cards are `aspect-[16/10]` so their rendered height (and therefore `productsCol.height` and `leftCol.bottom`) depends on hoverKind. At narrow viewports the cards visibly shrink under company-hover padding. Measuring during products-hover captures the taller layout, bakes that into `extraMb`, and clips the company image when the user transitions Products → Company.
+
+So we calculate both:
+- `imBottomAtRest = productsCol.top + 219` (image height = `350 × 10/16`)
+- `expectedLcBottom = productsCol.top + EYEBROW_BLOCK + cardImageHeight + CARDS_TEXT_BLOCK`, where `cardImageHeight` is derived from the cards grid width that *will apply* in company hover (`min(productsCol.outer − padLeft − padRight, 760)`)
+
+The constants — `CARDS_GAP=24`, `CARDS_MAX_WIDTH=760`, `CARDS_TEXT_BLOCK=72.5`, `EYEBROW_BLOCK=35.5` — are pinned to the cards/eyebrow CSS classes; if those change, the constants must move with them.
+
+**extraMb formula:** `extraMb = max(0, expectedLcBottom − imBottomAtRest − 20)`. The `−20` corrects for the base `−10` already in the inner-wrapper `marginBottom` formula and the desired `+10` gap below the image, so the final `marginBottom = −10 − extraMb` positions the visible dropdown bottom exactly 10px below the image — matching the 10px gap in the default state.
 
 ---
 

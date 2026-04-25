@@ -8,6 +8,8 @@ import { usePathname } from "next/navigation";
 import { ScrambleText } from "@/components/ui/ScrambleText";
 import glassStyles from "@/components/ui/GlassButton.module.css";
 import { AccessibilityMenu } from "@/components/layout/AccessibilityMenu";
+import { PRODUCTS } from "@/lib/products";
+import { useDeferredVideoLoad } from "@/lib/useDeferredVideoLoad";
 
 const COMPACT_THRESHOLD = 10;
 const NAV_BREAKPOINT = 900;
@@ -61,7 +63,6 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
     const productsColRef = useRef<HTMLDivElement | null>(null);
     const leftColRef = useRef<HTMLDivElement | null>(null);
     const elioVideoRef = useRef<HTMLVideoElement | null>(null);
-    const companyImageRef = useRef<HTMLDivElement | null>(null);
     const [elioHovered, setElioHovered] = useState(false);
     const [productsAlign, setProductsAlign] = useState<
         { padLeft: number; padRight: number; leftMaxWidth: number } | null
@@ -309,21 +310,41 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                and lifts the CONTACT/SOCIAL dl up so its bottom matches the
                image bottom. */
             const company = companyLinkRef.current;
-            const companyImage = companyImageRef.current;
             if (company) {
                 const cl = company.getBoundingClientRect();
                 const NAV_LINK_PX = 12; // matches navLinkClass's `px-3`
                 const COMPANY_IMAGE_WIDTH = 350; // matches image's max-w-[350px]
                 const COMPANY_IMAGE_GAP_TO_UL = 24; // small gap between image and the Mission/Vision/Blog ul
+                // Image rendered height: 350 * (10/16) = 218.75 ≈ 219px (max-w-[350px] aspect-[16/10]).
+                const COMPANY_IMAGE_HEIGHT = 219;
                 const ulLeft = cl.left - (k.left + padLeft) + NAV_LINK_PX;
                 const imageMl = ulLeft - COMPANY_IMAGE_GAP_TO_UL - COMPANY_IMAGE_WIDTH;
-                let dlMb = 28;
-                let extraMb = 0;
-                if (companyImage) {
-                    const im = companyImage.getBoundingClientRect();
-                    dlMb = Math.max(0, lc.bottom - im.bottom);
-                    extraMb = Math.max(0, lc.bottom - im.bottom - 20);
-                }
+                // Predict the leftCol bottom (= grid row bottom = productsCol bottom)
+                // in the company-hover state instead of measuring it. Direct measurement
+                // is unreliable because productsCol's padding is 0 in products-hover and
+                // padLeft+padRight in company-hover. That padding controls the cards
+                // content width, the cards have aspect-[16/10] images, so the cards'
+                // rendered height — and therefore productsCol.height and lc.bottom —
+                // depend on hoverKind. If we measure during products-hover at a narrow
+                // viewport we capture the taller layout (cards at full 760), bake that
+                // into extraMb, and the dropdown clips the company image when the user
+                // transitions to company. Calculating from padLeft/padRight (which are
+                // independent of current hoverKind) avoids that.
+                const CARDS_GAP = 24;            // gap-6 between the two product cards
+                const CARDS_MAX_WIDTH = 760;     // md:max-w-[760px] on the cards grid
+                const CARDS_TEXT_BLOCK = 72.5;   // mt-5 (20) + h5 leading-[1.2]@20px (24) + mt-1.5 (6) + p leading-[1.5]@15px (22.5)
+                const EYEBROW_BLOCK = 35.5;      // h4 (line-height 1.5 inherited @ 13px = 19.5) + mb-4 (16)
+                const productsColOuter = k.right - k.left;
+                const productsColContentInCompany = productsColOuter - padLeft - padRight;
+                const cardsGridWidth = Math.min(productsColContentInCompany, CARDS_MAX_WIDTH);
+                const cardWidth = (cardsGridWidth - CARDS_GAP) / 2;
+                const cardImageHeight = cardWidth * (10 / 16);
+                const cardHeight = cardImageHeight + CARDS_TEXT_BLOCK;
+                const productsColHeightInCompany = EYEBROW_BLOCK + cardHeight;
+                const expectedLcBottom = k.top + productsColHeightInCompany;
+                const imBottomAtRest = k.top + COMPANY_IMAGE_HEIGHT;
+                const dlMb = Math.max(0, expectedLcBottom - imBottomAtRest);
+                const extraMb = Math.max(0, expectedLcBottom - imBottomAtRest - 20);
                 setCompanyAlign((prev) => {
                     if (
                         prev
@@ -346,44 +367,10 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
         };
     }, [isMenuOpen, isCompact, isWideScreen]);
 
-    /* Deferred preload of the Elio hover video.
-       preload="none" keeps the video out of the network path while the
-       dropdown is closed. Once the dropdown opens we wait for the entrance
-       animation to finish (~500ms) and then ask the browser to buffer the
-       video during idle time — by the time the user reaches the Elio card
-       playback is instant, and we never pay the cost if the dropdown was
-       never opened. */
-    useEffect(() => {
-        if (!isMenuOpen) return;
-        const video = elioVideoRef.current;
-        if (!video) return;
-        if (video.readyState >= 2) return; // already buffered
-
-        type IdleHandle = number;
-        type RICWindow = Window & {
-            requestIdleCallback?: (cb: () => void, opts?: { timeout: number }) => IdleHandle;
-            cancelIdleCallback?: (h: IdleHandle) => void;
-        };
-        const w = window as RICWindow;
-
-        let idleHandle: IdleHandle | undefined;
-        const schedule = () => {
-            if (w.requestIdleCallback) {
-                idleHandle = w.requestIdleCallback(() => { video.load(); }, { timeout: 1500 });
-            } else {
-                idleHandle = window.setTimeout(() => { video.load(); }, 0);
-            }
-        };
-
-        const t = window.setTimeout(schedule, 600);
-        return () => {
-            window.clearTimeout(t);
-            if (idleHandle !== undefined) {
-                if (w.cancelIdleCallback) w.cancelIdleCallback(idleHandle);
-                else clearTimeout(idleHandle);
-            }
-        };
-    }, [isMenuOpen]);
+    /* Deferred Elio video preload — shared with the hero Products popup.
+       Keeps preload="none" until the menu opens, then schedules .load()
+       during the next idle window after the entrance animation. */
+    useDeferredVideoLoad(elioVideoRef, isMenuOpen);
 
     // ── Handlers ────────────────────────────────────────────────────────
     const handleMouseEnter = () => {
@@ -968,7 +955,6 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                 >
                                     {/* Width matches one product-card column: (720 − gap-5) / 2 ≈ 350px */}
                                     <div
-                                        ref={companyImageRef}
                                         className={`relative aspect-[16/10] w-full max-w-[350px] shrink-0 overflow-hidden ${isDark ? "bg-white/5" : "bg-[#F5F5F5]"}`}
                                         style={{
                                             marginLeft: hoverKind === "company" && companyAlign ? companyAlign.imageMl : 0,
@@ -1030,22 +1016,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                         transition: "opacity 350ms cubic-bezier(0.05, 0.7, 0.1, 1)",
                                     }}
                                 >
-                                    {[
-                                        {
-                                            title: "Columbus",
-                                            subtitle: "An agentic GIS",
-                                            href: "/products/enterprise",
-                                            img: "/ColumbusNavbarDropdownmenu.png",
-                                            video: null,
-                                        },
-                                        {
-                                            title: "Elio",
-                                            subtitle: "The smart social map",
-                                            href: "/products/mapsgpt",
-                                            img: "/navbardropElio.png",
-                                            video: "/Eliodropdownmenuvid.mp4",
-                                        },
-                                    ].map((item, index) => (
+                                    {PRODUCTS.map((item, index) => (
                                         <Link
                                             key={item.href}
                                             href={item.href}
