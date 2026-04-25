@@ -166,49 +166,60 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false, t
         }}
       >
         <div className="max-w-[1200px] mx-auto px-8 pb-6 pt-12">
-          <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12 items-start mb-12">
-            {[
-              <div key="brand">
-                <h3 className={`text-[24px] font-semibold mb-3 ${theme === "dark" ? "text-white" : isTech ? "text-[#0A1344]" : "text-[#1D1D1F]"}`}>Columbus Earth</h3>
-                <p className={`text-[14px] leading-relaxed mb-4 max-w-[260px] ${theme === "dark" ? "text-white/50" : isTech ? "text-[#0A1344]/50" : "text-[#1D1D1F]/50"}`}>
-                  The frontier AI lab building the first production Universal Geospatial Model.
-                </p>
-                <div className="flex gap-4">
-                  <a href="mailto:contact@columbus.earth"><Mail size={18} className={`transition-colors ${theme === "dark" ? "text-white/40 hover:text-white" : isTech ? "text-[#0A1344]/40 hover:text-[#0066CC]" : "text-[#1D1D1F]/40 hover:text-[#1D1D1F]"}`} /></a>
-                  <a href="https://www.linkedin.com/company/columbusearth/about/" target="_blank" rel="noopener noreferrer"><Linkedin size={18} className={`transition-colors ${theme === "dark" ? "text-white/40 hover:text-white" : isTech ? "text-[#0A1344]/40 hover:text-[#0066CC]" : "text-[#1D1D1F]/40 hover:text-[#1D1D1F]"}`} /></a>
-                </div>
-              </div>,
-              <FooterColumn key="product" theme={theme} title="Product" links={[
-                { label: "Columbus Pro", href: "/products/enterprise" },
-                { label: "Use Cases", href: "/use-cases" },
-                { label: "MapsGPT", href: "/products/mapsgpt" },
-              ]} />,
-              <FooterColumn key="technology" theme={theme} title="Technology" links={[
-                { label: "LGM vs LLM", href: "/technology" },
-                { label: "Data Collection", href: "/technology" },
-                { label: "Core Reasoning", href: "/technology" },
-              ]} />,
-              <FooterColumn key="company" theme={theme} title="Company" links={[
-                { label: "Our Mission", href: "/mission" },
-                { label: "Blog", href: "/blog" },
-                { label: "Contact", href: "/contact" },
-              ]} />,
-            ].map((col, i) => (
-              <div
-                key={i}
-                style={{
-                  opacity: bottleOpened ? 1 : 0,
-                  transform: bottleOpened ? "translateY(0)" : "translateY(12px)",
-                  transition: previouslyOpened ? "none" : "opacity 600ms cubic-bezier(0.22, 1, 0.36, 1), transform 600ms cubic-bezier(0.22, 1, 0.36, 1)",
-                  transitionDelay: previouslyOpened ? "0ms" : bottleOpened ? `${400 + i * 120}ms` : "0ms",
-                }}
-              >
-                {col}
+          <div className="flex items-start justify-between mb-12">
+            <div
+              style={{
+                opacity: bottleOpened ? 1 : 0,
+                transform: bottleOpened ? "translateY(0)" : "translateY(12px)",
+                transition: previouslyOpened ? "none" : "opacity 600ms cubic-bezier(0.22, 1, 0.36, 1), transform 600ms cubic-bezier(0.22, 1, 0.36, 1)",
+                transitionDelay: previouslyOpened ? "0ms" : bottleOpened ? "400ms" : "0ms",
+              }}
+            >
+              <h3 className="text-[70px] font-semibold mb-3" style={{ color: '#091344' }}>Columbus Earth</h3>
+              <p className={`text-[17.5px] leading-snug mb-4 max-w-[400px] ${theme === "dark" ? "text-white/50" : isTech ? "text-[#0A1344]/50" : "text-[#1D1D1F]/50"}`}>
+                The frontier AI lab building the first production Universal Geospatial Model.
+              </p>
+              <div className="flex gap-4">
+                <a href="mailto:contact@columbus.earth"><Mail size={18} className={`transition-colors ${theme === "dark" ? "text-white/40 hover:text-white" : isTech ? "text-[#0A1344]/40 hover:text-[#0066CC]" : "text-[#1D1D1F]/40 hover:text-[#1D1D1F]"}`} /></a>
+                <a href="https://www.linkedin.com/company/columbusearth/about/" target="_blank" rel="noopener noreferrer"><Linkedin size={18} className={`transition-colors ${theme === "dark" ? "text-white/40 hover:text-white" : isTech ? "text-[#0A1344]/40 hover:text-[#0066CC]" : "text-[#1D1D1F]/40 hover:text-[#1D1D1F]"}`} /></a>
               </div>
-            ))}
+            </div>
+            <div className="flex gap-8 md:gap-12 mt-[30px]">
+              {[
+                <FooterColumn key="product" theme={theme} title="Product" links={[
+                  { label: "Columbus Pro", href: "/products/enterprise" },
+                  { label: "Elio", href: "/" },
+                  { label: "Use Cases", href: "/use-cases" },
+                ]} />,
+                <FooterColumn key="technology" theme={theme} title="Technology" links={[
+                  { label: "Foundation Model", href: "/technology" },
+                  { label: "Timeline", href: "/technology" },
+                  { label: "Research", href: "/technology" },
+                  { label: "Results", href: "/technology" },
+                  { label: "Blog", href: "/blog" },
+                ]} />,
+                <FooterColumn key="company" theme={theme} title="Company" links={[
+                  { label: "Our mission", href: "/mission" },
+                  { label: "Our vision", href: "/mission" },
+                  { label: "Blog", href: "/blog" },
+                ]} />,
+              ].map((col, i) => (
+                <div
+                  key={i}
+                  style={{
+                    opacity: bottleOpened ? 1 : 0,
+                    transform: bottleOpened ? "translateY(0)" : "translateY(12px)",
+                    transition: previouslyOpened ? "none" : "opacity 600ms cubic-bezier(0.22, 1, 0.36, 1), transform 600ms cubic-bezier(0.22, 1, 0.36, 1)",
+                    transitionDelay: previouslyOpened ? "0ms" : bottleOpened ? `${520 + i * 120}ms` : "0ms",
+                  }}
+                >
+                  {col}
+                </div>
+              ))}
+            </div>
           </div>
           <div
-            className={`border-t pt-4 pb-2 flex items-center justify-between text-[13px] ${theme === "dark" ? "border-white/10 text-white/30" : isTech ? "border-[rgba(37,99,235,0.3)] text-[#0A1344]/40" : "border-[#1D1D1F]/10 text-[#1D1D1F]/40"}`}
+            className={`pt-4 pb-2 flex items-center justify-between text-[13px] ${theme === "dark" ? "text-white/30" : isTech ? "text-[#0A1344]/40" : "text-[#1D1D1F]/40"}`}
             style={{
               opacity: bottleOpened ? 1 : 0,
               transition: previouslyOpened ? "none" : "opacity 600ms cubic-bezier(0.22, 1, 0.36, 1)",
@@ -216,7 +227,10 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false, t
             }}
           >
             <span>Columbus Earth &copy; 2026</span>
-            <span>www.columbus.earth</span>
+            <div className="flex items-center gap-6">
+              <span>Website made by hand, no AI.</span>
+              <span>www.columbus.earth</span>
+            </div>
           </div>
         </div>
       </div>
