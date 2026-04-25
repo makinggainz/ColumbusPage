@@ -55,9 +55,9 @@ export function HeroProductsPopup({ open, onClose, onMouseEnter, onMouseLeave }:
           margin: 0,
           padding: 8,
           width: 280,
-          background: "rgba(248, 249, 252, 0.92)",
-          backdropFilter: "blur(20px)",
-          WebkitBackdropFilter: "blur(20px)",
+          background: "rgba(255, 255, 255, 0.72)",
+          backdropFilter: "blur(24px) saturate(0.55)",
+          WebkitBackdropFilter: "blur(24px) saturate(0.55)",
           border: "1px solid rgba(10, 19, 68, 0.08)",
           boxShadow: "0 12px 40px rgba(10, 19, 68, 0.08), 0 2px 6px rgba(10, 19, 68, 0.04)",
         }}
