@@ -3080,13 +3080,21 @@
   background: var(--grid-line);
 }
 
-/* Active segment — solid 2px navy bar that slides between sections. */
+/* Active segment — 3px wide gradient that fades at both ends and peaks
+   at the midpoint, echoing the section divider language. */
 .scrollIndexActiveSegment {
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  width: 2px;
-  background: #13234A;
+  width: 3px;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    var(--grid-line) 15%,
+    #13234A 50%,
+    var(--grid-line) 85%,
+    transparent 100%
+  );
   transition: top 300ms cubic-bezier(0.22, 1, 0.36, 1),
               height 300ms cubic-bezier(0.22, 1, 0.36, 1);
 }
@@ -3138,7 +3146,14 @@
 }
 
 .scrollIndexOnDark .scrollIndexActiveSegment {
-  background: #ffffff;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(255, 255, 255, 0.4) 15%,
+    #ffffff 50%,
+    rgba(255, 255, 255, 0.4) 85%,
+    transparent 100%
+  );
 }
 
 .scrollIndexOnDark .scrollIndexLabel {

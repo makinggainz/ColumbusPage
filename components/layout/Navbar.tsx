@@ -322,7 +322,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                 if (companyImage) {
                     const im = companyImage.getBoundingClientRect();
                     dlMb = Math.max(0, lc.bottom - im.bottom);
-                    extraMb = Math.max(0, lc.bottom - im.bottom);
+                    extraMb = Math.max(0, lc.bottom - im.bottom - 20);
                 }
                 setCompanyAlign((prev) => {
                     if (

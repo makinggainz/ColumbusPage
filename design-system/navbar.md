@@ -125,6 +125,8 @@ When `hoverKind === "company"`, the right-column layout switches from "image lef
 
 `companyAlign` is recomputed on `[isMenuOpen, isCompact, isWideScreen]` and on window resize. `companyImageRef` is the ref on the image wrapper used to measure image.bottom for the dl alignment.
 
+**extraMb formula:** `extraMb = max(0, leftCol.bottom − image.bottom − 20)`. The `−20` corrects for the base `−10` already in the inner-wrapper `marginBottom` formula and the desired `+10` gap below the image, so the final `marginBottom = −10 − extraMb` positions the visible dropdown bottom exactly 10px below the image — matching the 10px gap in the default state.
+
 ---
 
 ## Hero Transition Tracking (products page only)
