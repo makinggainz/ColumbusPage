@@ -1,0 +1,76 @@
+/* Floating sticky rail for blog articles — Material 3 tokens (layout imports tokens.css). */
+
+.dock {
+  display: none;
+}
+
+@media (min-width: 1100px) {
+  .dock {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    position: fixed;
+    z-index: 20;
+    left: 16px;
+    top: 112px;
+    max-width: 200px;
+    padding: 16px;
+    border-radius: var(--md-sys-shape-corner-large);
+    background-color: color-mix(in srgb, var(--md-sys-color-surface-container-high) 92%, transparent);
+    backdrop-filter: blur(12px);
+    box-shadow: var(--md-sys-elevation-level2);
+  }
+}
+
+.back {
+  font-family: var(--md-sys-typescale-label-large-font);
+  font-size: var(--md-sys-typescale-label-large-size);
+  line-height: var(--md-sys-typescale-label-large-line-height);
+  font-weight: var(--md-sys-typescale-label-large-weight);
+  letter-spacing: var(--md-sys-typescale-label-large-tracking);
+  color: var(--md-sys-color-primary);
+  text-decoration: none;
+  padding: 8px;
+  margin: -8px;
+  border-radius: var(--md-sys-shape-corner-full);
+  outline: none;
+  transition: opacity var(--md-sys-motion-duration-medium2) var(--md-sys-motion-easing-emphasized-decelerate);
+}
+
+.back:hover {
+  opacity: 0.88;
+}
+
+.sectionList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  border-top: 1px solid var(--md-sys-color-outline-variant);
+  padding-top: 12px;
+}
+
+.sectionLink {
+  font-family: var(--md-sys-typescale-label-medium-font);
+  font-size: var(--md-sys-typescale-label-medium-size);
+  line-height: 1.35;
+  font-weight: var(--md-sys-typescale-label-medium-weight);
+  letter-spacing: var(--md-sys-typescale-label-medium-tracking);
+  color: var(--md-sys-color-on-surface-variant);
+  text-decoration: none;
+  padding: 8px;
+  margin: 0 -8px;
+  border-radius: var(--md-sys-shape-corner-small);
+  outline: none;
+  display: block;
+  transition:
+    color var(--md-sys-motion-duration-medium2) var(--md-sys-motion-easing-emphasized-decelerate),
+    background-color var(--md-sys-motion-duration-medium2) var(--md-sys-motion-easing-emphasized-decelerate);
+}
+
+.sectionLink:hover {
+  color: var(--md-sys-color-on-surface);
+  background-color: color-mix(in srgb, var(--md-sys-color-on-surface) 6%, transparent);
+}

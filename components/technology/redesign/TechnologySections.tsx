@@ -8,7 +8,9 @@ import {
   RESEARCH_ARTICLES,
   RESEARCH_CARDS,
 } from "./content";
+import { CoreResearchArt } from "./CoreResearchArt";
 import { Definition } from "./Definition";
+import { ResearchAccordionProvider } from "./ResearchAccordionContext";
 import { ResearchGroup } from "./ResearchGroup";
 import { RevealOnView } from "./RevealOnView";
 import { SidebarRightLine } from "./SidebarRightLine";
@@ -94,7 +96,7 @@ export function TechnologySections() {
               <div className={styles.lgmCompareArt} aria-hidden>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src="/TechnologyPageImages/LGMsummaryGraphic.svg"
+                  src="/TechnologyPageImages/techDiagram.png"
                   alt=""
                   className={styles.lgmCompareArtImg}
                 />
@@ -342,7 +344,7 @@ export function TechnologySections() {
 
             <Link
               href={blogHref(BLOG_SLUG.lgmVsLlmVision)}
-              className={`${styles.lgmArticleCard} ${styles.lgmArticleCardGlass}`}
+              className={`${styles.lgmArticleCard} ${styles.lgmArticleCardGlass} ${styles.lgmArticleCardBgRadiance}`}
             >
               <span className={styles.lgmArticleKicker}>Read our article on</span>
               <p className={styles.lgmArticleHeadline}>
@@ -413,20 +415,9 @@ export function TechnologySections() {
               are several innovations built during our practical research.
             </p>
 
+            <ResearchAccordionProvider initialOpen="Data Collection">
             <div className={styles.coreResearchGrid}>
-              <div className={styles.coreResearchArt} aria-hidden>
-                <svg viewBox="0 0 300 420" fill="none" preserveAspectRatio="xMidYMid meet">
-                  <path d="M40 60 L260 60 L230 130 L70 130 Z" stroke="rgba(10,19,68,0.7)" strokeWidth="1" fill="none" />
-                  <path d="M40 60 L70 130" stroke="rgba(10,19,68,0.7)" strokeWidth="1" />
-                  <path d="M260 60 L230 130" stroke="rgba(10,19,68,0.7)" strokeWidth="1" />
-                  <path d="M70 180 L230 180 L210 250 L90 250 Z" stroke="rgba(10,19,68,0.7)" strokeWidth="1" fill="none" />
-                  <path d="M70 180 L90 250" stroke="rgba(10,19,68,0.7)" strokeWidth="1" />
-                  <path d="M230 180 L210 250" stroke="rgba(10,19,68,0.7)" strokeWidth="1" />
-                  <path d="M30 290 L270 290 L245 380 L55 380 Z" stroke="rgba(10,19,68,0.7)" strokeWidth="1" fill="none" />
-                  <path d="M30 290 L55 380" stroke="rgba(10,19,68,0.7)" strokeWidth="1" />
-                  <path d="M270 290 L245 380" stroke="rgba(10,19,68,0.7)" strokeWidth="1" />
-                </svg>
-              </div>
+              <CoreResearchArt />
 
               <div className={styles.coreResearchBody}>
                 <ResearchGroup title="Data Collection" autoOpenOnView>
@@ -541,10 +532,11 @@ export function TechnologySections() {
                 </ResearchGroup>
               </div>
             </div>
+            </ResearchAccordionProvider>
 
             <a
               href="#"
-              className={`${styles.lgmArticleCard} ${styles.lgmArticleCardGlass} ${styles.lgmArticleCardFlush}`}
+              className={`${styles.lgmArticleCard} ${styles.lgmArticleCardGlass} ${styles.lgmArticleCardFlush} ${styles.lgmArticleCardBgWave}`}
             >
               <span className={styles.lgmArticleKicker}>Read our articles on</span>
               <p className={styles.lgmArticleHeadlineStrong}>
@@ -660,13 +652,13 @@ export function TechnologySections() {
             </div>
 
             <div className={styles.resultsArticlesRow}>
-              <Link href={blogHref(BLOG_SLUG.mappingUnknownGenLayers)} className={styles.lgmArticleCard}>
+              <Link href={blogHref(BLOG_SLUG.mappingUnknownGenLayers)} className={`${styles.lgmArticleCard} ${styles.lgmArticleCardBgUnknownLayers}`}>
                 <p>
                   Read our article on Mapping the<br />
                   <strong>unknown with Gen Layers</strong>
                 </p>
               </Link>
-              <Link href={blogHref(BLOG_SLUG.deepSpatialReasoningScale)} className={styles.lgmArticleCard}>
+              <Link href={blogHref(BLOG_SLUG.deepSpatialReasoningScale)} className={`${styles.lgmArticleCard} ${styles.lgmArticleCardBgDeepLayers}`}>
                 <p>
                   Read our article on<br />
                   <strong>deep spatial reasoning</strong>
@@ -710,6 +702,7 @@ export function TechnologySections() {
                         ? `${styles.researchCard} ${styles.researchCardFeatured}`
                         : styles.researchCard
                     }
+                    style={card.image ? { "--card-bg": `url(${card.image})` } as Record<string, string> : undefined}
                   >
                     <div className={styles.researchCardSpacer} aria-hidden="true" />
                     <span className={styles.researchCardTitle}>{card.title}</span>

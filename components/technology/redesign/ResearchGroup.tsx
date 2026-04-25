@@ -2,14 +2,13 @@
 
 import { ReactNode, useEffect, useId, useRef, useState } from "react";
 import styles from "../technology.module.css";
+import { useAccordion } from "./ResearchAccordionContext";
 
 type Props = {
   title: string;
   children: ReactNode;
   defaultOpen?: boolean;
-  /** Auto-open once this group scrolls into view (fires once). */
   autoOpenOnView?: boolean;
-  /** Delay in ms after the group enters the viewport before it opens. */
   autoOpenDelayMs?: number;
 };
 
@@ -20,7 +19,21 @@ export function ResearchGroup({
   autoOpenOnView = false,
   autoOpenDelayMs = 500,
 }: Props) {
-  const [isOpen, setIsOpen] = useState(defaultOpen);
+  const accordion = useAccordion();
+
+  // Controlled mode: accordion context is present — use shared open state.
+  // Uncontrolled mode: no context — manage own state as before.
+  const [localOpen, setLocalOpen] = useState(defaultOpen);
+  const isOpen = accordion ? accordion.openTitle === title : localOpen;
+
+  function handleToggle() {
+    if (accordion) {
+      accordion.toggle(title);
+    } else {
+      setLocalOpen((v) => !v);
+    }
+  }
+
   const contentId = useId();
   const rootRef = useRef<HTMLDivElement>(null);
   const hasAutoOpenedRef = useRef(false);
@@ -35,7 +48,13 @@ export function ResearchGroup({
       ([entry]) => {
         if (entry.isIntersecting && !hasAutoOpenedRef.current) {
           hasAutoOpenedRef.current = true;
-          timeoutId = setTimeout(() => setIsOpen(true), autoOpenDelayMs);
+          timeoutId = setTimeout(() => {
+            if (accordion) {
+              accordion.toggle(title);
+            } else {
+              setLocalOpen(true);
+            }
+          }, autoOpenDelayMs);
           observer.disconnect();
         }
       },
@@ -47,21 +66,20 @@ export function ResearchGroup({
       observer.disconnect();
       if (timeoutId) clearTimeout(timeoutId);
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [autoOpenOnView, autoOpenDelayMs]);
 
   return (
     <div
       ref={rootRef}
-      className={`${styles.coreResearchGroup} ${
-        isOpen ? styles.coreResearchGroupOpen : ""
-      }`}
+      className={`${styles.coreResearchGroup} ${isOpen ? styles.coreResearchGroupOpen : ""}`}
     >
       <button
         type="button"
         className={styles.coreResearchGroupHead}
         aria-expanded={isOpen}
         aria-controls={contentId}
-        onClick={() => setIsOpen((v) => !v)}
+        onClick={handleToggle}
       >
         <span className={styles.coreResearchGroupDash} aria-hidden />
         <h3>{title}</h3>

@@ -924,3 +924,46 @@ video {
     backdrop-filter: none !important;
   }
 }
+
+/* Accessibility Options */
+body.dyslexia-mode, 
+body.dyslexia-mode * {
+  font-family: 'OpenDyslexic', 'Comic Sans MS', sans-serif !important;
+}
+
+body.bg-mode-sepia {
+  background-color: #f4ecd8 !important;
+  color: #433422 !important;
+}
+body.bg-mode-sepia main, 
+body.bg-mode-sepia article {
+  background-color: transparent !important;
+  color: inherit !important;
+}
+body.bg-mode-sepia * {
+  border-color: #d1c5b0 !important;
+}
+
+body.bg-mode-dark {
+  /* Override design-system tokens so all token-driven CSS (blog prose,
+     sticky nav, etc.) reads correctly against a dark background. These
+     mirror the [data-theme="dark"] values in tokens.css. */
+  --md-sys-color-primary:              #a8c8ff;
+  --md-sys-color-on-primary:           #003062;
+  --md-sys-color-background:           #111318;
+  --md-sys-color-on-background:        #e2e2e9;
+  --md-sys-color-surface:              #111318;
+  --md-sys-color-on-surface:           #e2e2e9;
+  --md-sys-color-surface-variant:      #44464f;
+  --md-sys-color-on-surface-variant:   #c4c6d0;
+  --md-sys-color-surface-container-high:    #2b2d36;
+  --md-sys-color-surface-container-highest: #353740;
+  --md-sys-color-outline:         #8e9099;
+  --md-sys-color-outline-variant: #44464f;
+  background-color: #111318 !important;
+  color: #e2e2e9 !important;
+}
+body.bg-mode-dark main,
+body.bg-mode-dark article {
+  background-color: transparent !important;
+}

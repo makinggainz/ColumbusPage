@@ -1,7 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { Navbar } from "@/components/layout/Navbar";
-import { Footer } from "@/components/layout/Footer";
 import { getAllBlogPostsSorted } from "@/lib/blog-posts";
 import blogStyles from "./blog.module.css";
 
@@ -18,9 +17,7 @@ export default function BlogIndexPage() {
       <Navbar />
 
       <div className="mx-auto w-full max-w-[1287px] px-4 pt-28 pb-12 md:px-6">
-        <p className={`${blogStyles.labelMediumUpper} ${blogStyles.colorPrimary} mb-4`}>
-          Blog
-        </p>
+        <p className={`${blogStyles.labelMediumUpper} ${blogStyles.colorPrimary} mb-4`}>Blog</p>
         <h1 className={`${blogStyles.headlineLarge} mb-4`}>Latest from our team</h1>
         <p className={`${blogStyles.bodyLarge} ${blogStyles.colorOnSurfaceVariant} mb-12 max-w-2xl`}>
           Research updates, product notes, and longer-form writing on geospatial intelligence.
@@ -34,9 +31,7 @@ export default function BlogIndexPage() {
                 className={`group flex flex-col gap-2 md:flex-row md:items-baseline md:justify-between md:gap-8 ${blogStyles.listRow}`}
               >
                 <div className="min-w-0 flex-1">
-                  <span className={`${blogStyles.titleLarge} block group-hover:underline`}>
-                    {post.title}
-                  </span>
+                  <span className={`${blogStyles.titleLarge} block group-hover:underline`}>{post.title}</span>
                   <span className={`${blogStyles.bodyMedium} ${blogStyles.colorOnSurfaceVariant} mt-2 block`}>
                     {post.description}
                   </span>
@@ -49,8 +44,6 @@ export default function BlogIndexPage() {
           ))}
         </ul>
       </div>
-
-      <Footer />
     </main>
   );
 }

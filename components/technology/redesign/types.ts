@@ -18,6 +18,7 @@ export type ResearchCard = {
   title: string;
   href: string;
   featured?: boolean;
+  image?: string;
 };
 
 export type TimelineEntry = {

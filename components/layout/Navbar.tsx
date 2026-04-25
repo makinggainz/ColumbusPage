@@ -60,8 +60,19 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
     const ctaRef = useRef<HTMLAnchorElement | null>(null);
     const productsColRef = useRef<HTMLDivElement | null>(null);
     const leftColRef = useRef<HTMLDivElement | null>(null);
+    const elioVideoRef = useRef<HTMLVideoElement | null>(null);
+    const companyImageRef = useRef<HTMLDivElement | null>(null);
+    const [elioHovered, setElioHovered] = useState(false);
     const [productsAlign, setProductsAlign] = useState<
         { padLeft: number; padRight: number; leftMaxWidth: number } | null
+    >(null);
+    /* Company-hover only: image is shifted left (anchored to the Mission/Vision/Blog ul),
+       Mission/Vision/Blog ul is absolute-positioned to align with the Company nav link,
+       the CONTACT/SOCIAL dl's bottom is pulled up to match the image bottom,
+       and extraMb shrinks the dropdown further so the image-bottom-to-dropdown-bottom
+       gap matches the default (cards-bottom-to-dropdown-bottom) gap. */
+    const [companyAlign, setCompanyAlign] = useState<
+        { imageMl: number; ulLeft: number; dlMb: number; extraMb: number } | null
     >(null);
 
     // Sync scroll state before first paint to prevent navbar flash on reload
@@ -292,6 +303,38 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                 ) return prev;
                 return { padLeft, padRight, leftMaxWidth };
             });
+            /* Company-hover alignment. Pulls the image left to the dropdown's
+               left content edge (image.left = leftCol.left), absolute-positions
+               the Mission/Vision/Blog ul to align with the Company nav link,
+               and lifts the CONTACT/SOCIAL dl up so its bottom matches the
+               image bottom. */
+            const company = companyLinkRef.current;
+            const companyImage = companyImageRef.current;
+            if (company) {
+                const cl = company.getBoundingClientRect();
+                const NAV_LINK_PX = 12; // matches navLinkClass's `px-3`
+                const COMPANY_IMAGE_WIDTH = 350; // matches image's max-w-[350px]
+                const COMPANY_IMAGE_GAP_TO_UL = 24; // small gap between image and the Mission/Vision/Blog ul
+                const ulLeft = cl.left - (k.left + padLeft) + NAV_LINK_PX;
+                const imageMl = ulLeft - COMPANY_IMAGE_GAP_TO_UL - COMPANY_IMAGE_WIDTH;
+                let dlMb = 28;
+                let extraMb = 0;
+                if (companyImage) {
+                    const im = companyImage.getBoundingClientRect();
+                    dlMb = Math.max(0, lc.bottom - im.bottom);
+                    extraMb = Math.max(0, lc.bottom - im.bottom);
+                }
+                setCompanyAlign((prev) => {
+                    if (
+                        prev
+                        && Math.abs(prev.imageMl - imageMl) < 0.5
+                        && Math.abs(prev.ulLeft - ulLeft) < 0.5
+                        && Math.abs(prev.dlMb - dlMb) < 0.5
+                        && Math.abs(prev.extraMb - extraMb) < 0.5
+                    ) return prev;
+                    return { imageMl, ulLeft, dlMb, extraMb };
+                });
+            }
         };
         compute();
         // Re-measure after the dropdown's open animation (refs need to be mounted).
@@ -302,6 +345,45 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
             window.removeEventListener("resize", compute);
         };
     }, [isMenuOpen, isCompact, isWideScreen]);
+
+    /* Deferred preload of the Elio hover video.
+       preload="none" keeps the video out of the network path while the
+       dropdown is closed. Once the dropdown opens we wait for the entrance
+       animation to finish (~500ms) and then ask the browser to buffer the
+       video during idle time — by the time the user reaches the Elio card
+       playback is instant, and we never pay the cost if the dropdown was
+       never opened. */
+    useEffect(() => {
+        if (!isMenuOpen) return;
+        const video = elioVideoRef.current;
+        if (!video) return;
+        if (video.readyState >= 2) return; // already buffered
+
+        type IdleHandle = number;
+        type RICWindow = Window & {
+            requestIdleCallback?: (cb: () => void, opts?: { timeout: number }) => IdleHandle;
+            cancelIdleCallback?: (h: IdleHandle) => void;
+        };
+        const w = window as RICWindow;
+
+        let idleHandle: IdleHandle | undefined;
+        const schedule = () => {
+            if (w.requestIdleCallback) {
+                idleHandle = w.requestIdleCallback(() => { video.load(); }, { timeout: 1500 });
+            } else {
+                idleHandle = window.setTimeout(() => { video.load(); }, 0);
+            }
+        };
+
+        const t = window.setTimeout(schedule, 600);
+        return () => {
+            window.clearTimeout(t);
+            if (idleHandle !== undefined) {
+                if (w.cancelIdleCallback) w.cancelIdleCallback(idleHandle);
+                else clearTimeout(idleHandle);
+            }
+        };
+    }, [isMenuOpen]);
 
     // ── Handlers ────────────────────────────────────────────────────────
     const handleMouseEnter = () => {
@@ -756,7 +838,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                 onMouseLeave={handleDropdownMouseLeave}
             >
                 {/* Desktop vertical rhythm matches main; mobile layout uses max-md:flex below. */}
-                <div className={`mx-auto w-full px-6 md:px-8 ${wide ? "min-[1408px]:px-0" : "min-[1287px]:px-0"} py-4 md:py-12`} style={{ maxWidth: wide ? 1408 : 1287, paddingTop: isCompact ? 56 + 16 : 68 + 20 }}>
+                <div className={`mx-auto w-full px-6 md:px-8 ${wide ? "min-[1408px]:px-0" : "min-[1287px]:px-0"} pt-4 pb-4 md:pb-0`} style={{ maxWidth: wide ? 1408 : 1287, paddingTop: isWideScreen ? (isCompact ? 84 : 96) : (isCompact ? 72 : 88), ...(isWideScreen && { marginBottom: -10 - (hoverKind === "company" && companyAlign ? companyAlign.extraMb : 0) }), transition: "margin-bottom 350ms cubic-bezier(0.05, 0.7, 0.1, 1)" }}>
                     <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12">
                         <div
                             ref={leftColRef}
@@ -795,7 +877,15 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                 Columbus Earth Inc. is a spatial frontier AI company building the first production
                                 Large Geospatial Model to answer the most difficult questions about our planet.
                             </p>
-                            <dl className="mt-7 flex flex-wrap gap-x-12 gap-y-4">
+                            <dl
+                                className="mt-7 md:mt-auto flex flex-wrap gap-x-12 gap-y-4"
+                                style={{
+                                    ...(isWideScreen && {
+                                        marginBottom: hoverKind === "company" && companyAlign ? companyAlign.dlMb : 28,
+                                    }),
+                                    transition: "margin-bottom 350ms cubic-bezier(0.05, 0.7, 0.1, 1)",
+                                }}
+                            >
                                 <div>
                                     <dt className={`text-[11px] font-medium tracking-[0.1em] uppercase mb-1.5 ${dropdownSubheadClass}`}>
                                         <ScrambleText text="CONTACT" isActive={isMenuOpen} delay={300} />
@@ -877,7 +967,14 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                     }}
                                 >
                                     {/* Width matches one product-card column: (720 − gap-5) / 2 ≈ 350px */}
-                                    <div className={`relative aspect-[16/10] w-full max-w-[350px] shrink-0 overflow-hidden ${isDark ? "bg-white/5" : "bg-[#F5F5F5]"}`}>
+                                    <div
+                                        ref={companyImageRef}
+                                        className={`relative aspect-[16/10] w-full max-w-[350px] shrink-0 overflow-hidden ${isDark ? "bg-white/5" : "bg-[#F5F5F5]"}`}
+                                        style={{
+                                            marginLeft: hoverKind === "company" && companyAlign ? companyAlign.imageMl : 0,
+                                            transition: "margin-left 350ms cubic-bezier(0.05, 0.7, 0.1, 1)",
+                                        }}
+                                    >
                                         <Image
                                             src="/CEHQ.png"
                                             alt="Columbus Earth HQ"
@@ -886,21 +983,31 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                             className="object-cover"
                                         />
                                     </div>
-                                    <ul className="flex flex-col gap-5 pt-2 min-w-[120px]">
+                                    <ul
+                                        className="flex flex-col gap-5 pt-2 min-w-[120px]"
+                                        style={{
+                                            ...(hoverKind === "company" && companyAlign && isWideScreen && {
+                                                position: "absolute",
+                                                left: companyAlign.ulLeft,
+                                                top: 0,
+                                            }),
+                                            transition: "left 350ms cubic-bezier(0.05, 0.7, 0.1, 1)",
+                                        }}
+                                    >
                                         {[
                                             { label: "Mission", href: "/mission" },
                                             { label: "Vision", href: "/mission" },
                                             { label: "Blog", href: "/blog" },
                                         ].map((item) => (
-                                            <li key={item.label}>
+                                            <li key={item.label} className="pointer-events-auto">
                                                 <Link
                                                     href={item.href}
                                                     onClick={closeMenu}
-                                                    className={`group inline-flex items-center gap-3 text-[20px] font-medium tracking-[-0.005em] transition-colors duration-300 hover:text-[#2563EB] ${dropdownNavLinkClass}`}
+                                                    className={`group inline-flex items-center gap-3 text-[20px] font-medium tracking-[-0.005em] cursor-pointer ${dropdownNavLinkClass}`}
                                                 >
-                                                    <span className="transition-transform duration-300 group-hover:translate-x-1">{item.label}</span>
+                                                    <span className="transition-colors duration-300 group-hover:text-[#2563EB]">{item.label}</span>
                                                     <svg
-                                                        className="shrink-0 transition-transform duration-300 group-hover:translate-x-1"
+                                                        className="shrink-0 transition-all duration-300 ease-in-out group-hover:translate-x-1"
                                                         width="9" height="16" viewBox="0 0 7 12" fill="none"
                                                         stroke="#2563EB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"
                                                     >
@@ -916,7 +1023,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                     modes; crossfades out when company mode engages. Cards
                                     are capped at 760px and centred via mx-auto. */}
                                 <div
-                                    className="hidden md:grid grid-cols-2 gap-6 mx-auto md:max-w-[760px]"
+                                    className={`hidden md:grid grid-cols-2 gap-6 mx-auto md:max-w-[760px] ${hoverKind === "company" ? "[&_a]:pointer-events-none!" : ""}`}
                                     style={{
                                         opacity: hoverKind === "company" ? 0 : 1,
                                         pointerEvents: hoverKind === "company" ? "none" : "auto",
@@ -929,12 +1036,14 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                             subtitle: "An agentic GIS",
                                             href: "/products/enterprise",
                                             img: "/ColumbusNavbarDropdownmenu.png",
+                                            video: null,
                                         },
                                         {
                                             title: "Elio",
                                             subtitle: "The smart social map",
                                             href: "/products/mapsgpt",
                                             img: "/navbardropElio.png",
+                                            video: "/Eliodropdownmenuvid.mp4",
                                         },
                                     ].map((item, index) => (
                                         <Link
@@ -942,6 +1051,17 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                             href={item.href}
                                             onClick={closeMenu}
                                             className="flex flex-col cursor-pointer"
+                                            onMouseEnter={item.video ? () => {
+                                                setElioHovered(true);
+                                                elioVideoRef.current?.play();
+                                            } : undefined}
+                                            onMouseLeave={item.video ? () => {
+                                                setElioHovered(false);
+                                                if (elioVideoRef.current) {
+                                                    elioVideoRef.current.pause();
+                                                    elioVideoRef.current.currentTime = 0;
+                                                }
+                                            } : undefined}
                                             style={{
                                                 opacity: isMenuOpen ? 1 : 0,
                                                 transform: isMenuOpen
@@ -958,8 +1078,27 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                                     alt={item.title}
                                                     fill
                                                     sizes="(min-width: 768px) 360px, 100vw"
-                                                    className="object-cover object-left-top"
+                                                    className="object-cover object-top-left"
+                                                    style={{
+                                                        opacity: item.video && elioHovered ? 0 : 1,
+                                                        transition: "opacity 250ms ease",
+                                                    }}
                                                 />
+                                                {item.video && (
+                                                    <video
+                                                        ref={elioVideoRef}
+                                                        src={item.video}
+                                                        loop
+                                                        muted
+                                                        playsInline
+                                                        preload="none"
+                                                        className="absolute inset-0 w-full h-full object-cover object-top-left"
+                                                        style={{
+                                                            opacity: elioHovered ? 1 : 0,
+                                                            transition: "opacity 250ms ease",
+                                                        }}
+                                                    />
+                                                )}
                                             </div>
                                             <h5 className={`mt-5 text-[20px] font-medium tracking-[-0.005em] leading-[1.2] ${dropdownNavLinkClass}`}>
                                                 {item.title}
@@ -1023,9 +1162,12 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                         { label: "Use Cases", href: "/use-cases" },
                                         { label: "Technology", href: "/technology" },
                                         { label: "Our Mission", href: "/mission" },
-                                    ].map((item, index) => (
+                                        { label: "Vision", href: "/mission" },
+                                        { label: "Blog", href: "/blog" },
+                                    ].map((item, index, arr) => (
                                         <li
-                                            key={item.href}
+                                            key={item.href + item.label}
+                                            className="pointer-events-auto"
                                             style={{
                                                 opacity: isMenuOpen ? 1 : 0,
                                                 transform: isMenuOpen
@@ -1033,16 +1175,16 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                                     : "translateY(12px) scale(0.97)",
                                                 transition: isMenuOpen
                                                     ? `opacity 350ms cubic-bezier(0.05, 0.7, 0.1, 1) ${350 + index * 50}ms, transform 400ms cubic-bezier(0.05, 0.7, 0.1, 1) ${350 + index * 50}ms`
-                                                    : `opacity 120ms ease ${(2 - index) * 25}ms, transform 120ms ease ${(2 - index) * 25}ms`,
+                                                    : `opacity 120ms ease ${(arr.length - 1 - index) * 25}ms, transform 120ms ease ${(arr.length - 1 - index) * 25}ms`,
                                             }}
                                         >
                                             <Link
                                                 href={item.href}
                                                 onClick={closeMenu}
-                                                className={`group relative text-xl font-medium transition-all duration-300 flex items-center cursor-pointer ${dropdownNavLinkClass}`}
+                                                className={`group relative text-xl font-medium flex items-center cursor-pointer ${dropdownNavLinkClass}`}
                                             >
-                                                <span className="transition-all duration-300 ease-in-out group-hover:translate-x-1">{item.label}</span>
-                                                <svg className={`ml-3 shrink-0 transition-all duration-300 ease-in-out group-hover:translate-x-1 group-hover:stroke-[#2563EB] ${isDark ? "stroke-white" : "stroke-[#0A1344]"}`} width="9" height="16" viewBox="0 0 7 12" fill="none" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                                                <span className="transition-colors duration-300 group-hover:text-[#2563EB]">{item.label}</span>
+                                                <svg className="ml-3 shrink-0 transition-all duration-300 ease-in-out group-hover:translate-x-1" width="9" height="16" viewBox="0 0 7 12" fill="none" stroke="#2563EB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                                                     <path d="M1 1l5 5-5 5" />
                                                 </svg>
                                             </Link>

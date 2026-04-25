@@ -100,6 +100,31 @@
   - Light theme: `rgba(248, 249, 252, 0.92)` with `blur(20px)`
   - Dark theme: `rgba(6, 8, 20, 0.96)` with `blur(24px)`
 
+### Mobile vs Desktop height treatment
+
+**Mobile and desktop receive completely different treatments — always confirm before changing dropdown height.**
+
+| | Desktop (≥ 900px) | Mobile (< 900px) |
+|-|-------------------|------------------|
+| Max height | Content-driven (padding + content) | `100dvh` (always full screen) |
+| Top padding | `isCompact ? 84 : 96` (px) — inline style, navbar height + 28px visual gap | `isCompact ? 72 : 88` (px) — more breathing room |
+| Bottom padding | `0px` padding + `-10px` margin-bottom (default / products hover) or `-(10 + (cards.bottom - image.bottom))` (company hover) — inline style on the inner content wrapper. Clips below the current visible content's bottom by 10px via `overflow-hidden` on the outer dropdown. Company hover adds extra clip so the image-bottom-to-dropdown-bottom gap matches the default cards-bottom-to-dropdown-bottom gap (`companyAlign.extraMb = lc.bottom - im.bottom`). | `16px` (from `pb-4`, applies below 768px) |
+| Left-column footer alignment | `<dl>` (CONTACT/SOCIAL block) uses `md:mt-auto md:mb-2` — `mt-auto` pushes it to the bottom of the column; `mb-2` (8px) lifts it back up so the CONTACT/SOCIAL eyebrow row aligns with the Columbus/Elio title row in the right column (compensates for h5 being ~8px taller than dt) | `mt-7` — sits naturally below the description |
+
+If you are unsure whether a height/padding change affects mobile or desktop, **ask before making the change.**
+
+### Company-hover layout overrides (desktop only)
+
+When `hoverKind === "company"`, the right-column layout switches from "image left, ul right (flexed, 40px gap)" to a measured layout that pulls the image to the dropdown's left content edge and aligns the ul with the Company nav link. Driven by the `companyAlign` state, computed in the same `useEffect` as `productsAlign`.
+
+| Element | Default (no hover / products hover) | Company hover |
+|--------|-------------------------------------|---------------|
+| **Image** (CEHQ.png) | Sits at `productsCol.content.left` (Products link x) via flex flow, `marginLeft: 0` | `marginLeft: ulLeft - 24 - 350` — image's right edge sits 24px before the ul's left edge, so it's slightly padded from the Mission/Vision/Blog buttons. (350 = image max-w; 24 = gap to ul.) |
+| **Mission/Vision/Blog ul** | In flex flow after image with `gap-10` (40px) | `position: absolute`, `left: companyAlign.ulLeft` — the ul's left edge aligns with the Company nav link's **text** (`companyLink.box.left + 12px` for the link's `px-3` padding). |
+| **CONTACT/SOCIAL dl** (left col) | `marginBottom: 28px` (lifted 28px above leftCol bottom) | `marginBottom: companyAlign.dlMb` — dynamically computed as `leftCol.bottom - image.bottom`, so the dl's bottom edge aligns with the image's bottom edge. |
+
+`companyAlign` is recomputed on `[isMenuOpen, isCompact, isWideScreen]` and on window resize. `companyImageRef` is the ref on the image wrapper used to measure image.bottom for the dl alignment.
+
 ---
 
 ## Hero Transition Tracking (products page only)
@@ -148,6 +173,7 @@ The navbar adapts its behaviour per page via props, pathname checks, and DOM mar
 | `/use-cases` | `<Navbar theme={navTheme} />` | dynamic | **Hidden** | Immediate (no hero CTA) | See **Use-Cases-Specific Behaviour** section below |
 | `/mission` | `<Navbar />` | light | **Hidden** | Immediate (no hero CTA) | Standard behaviour |
 | `/market-spy` | `<Navbar />` | light | **Hidden** | Immediate (no hero CTA) | Standard behaviour |
+| `/blog` | `<Navbar />` | light | **Hidden** | Immediate (no hero CTA) | **Blog-Specific Behaviour:** All standard desktop nav links, CTA, and hamburger menu are hidden. Replaced by a dedicated `<AccessibilityMenu />` containing read-aloud, dyslexia font, and background color options. |
 
 ### Use-Cases-Specific Behaviour
 
@@ -165,6 +191,7 @@ The `/use-cases` page has unique navbar requirements driven by its dark hero and
 
 ### Key per-page variables in code
 
+- **`isBlogPage`** — `pathname.startsWith("/blog")`. Controls: hiding standard links, CTA, and hamburger; showing the accessibility menu.
 - **`isProductsPage`** — `pathname === "/mapsgpt"`. Controls: glass CTA style, `bgTriggerPassed` bg logic, Start Now text colour (always black), hero-transition tracking.
 - **`isUseCasesPage`** — `pathname === "/use-cases"`. Controls: immediate navbar visibility, CTA light/dark variants, nav link theme-aware colouring, dark-aware dropdown (logo, wordmark, arrows stay white when menu opens on dark sections).
 - **`showWordmarkOnMobile`** — `pathname === "/" || "/mission" || "/contact"`. Controls: wordmark opacity on mobile.

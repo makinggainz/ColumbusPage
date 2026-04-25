@@ -88,3 +88,25 @@
 .backLink:hover {
   opacity: 0.88;
 }
+
+.sectionHeading {
+  font-family: var(--md-sys-typescale-headline-small-font);
+  font-size: var(--md-sys-typescale-headline-small-size);
+  line-height: var(--md-sys-typescale-headline-small-line-height);
+  font-weight: var(--md-sys-typescale-headline-small-weight);
+  letter-spacing: var(--md-sys-typescale-headline-small-tracking);
+  color: var(--md-sys-color-on-surface);
+  margin-top: 40px;
+  margin-bottom: 16px;
+  scroll-margin-top: 96px;
+}
+
+.proseParagraph {
+  font-family: var(--md-sys-typescale-body-large-font);
+  font-size: var(--md-sys-typescale-body-large-size);
+  line-height: 1.75rem;
+  font-weight: var(--md-sys-typescale-body-large-weight);
+  letter-spacing: var(--md-sys-typescale-body-large-tracking);
+  color: var(--md-sys-color-on-surface);
+  margin: 0 0 24px;
+}

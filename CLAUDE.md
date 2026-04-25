@@ -58,3 +58,11 @@ Import tokens at the top of your stylesheet or in your root layout:
 ```html
 <link rel="stylesheet" href="/design-system/tokens.css">
 ```
+
+---
+
+## Current Scope
+
+**All changes in this session are scoped to the Technology page only.**
+
+Do not modify any other page, route, or shared component unless a technology-page change strictly requires it. If a change would affect a shared component (Navbar, Footer, globals.css, tokens.css), ask before proceeding.

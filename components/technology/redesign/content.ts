@@ -9,12 +9,12 @@ import type {
 } from "./types";
 
 export const TECHNOLOGY_NAV_ITEMS: NavItem[] = [
-  { id: "index", label: "What's an LGM" },
+  { id: "index", label: "Foundation Model" },
   { id: "lgm-vs-llm", label: "Timeline" },
-  { id: "core-reasoning", label: "Development" },
-  { id: "data-collection", label: "A New Category" },
-  { id: "research-blog", label: "Research Blog" },
-  { id: "careers", label: "Careers & inquiry" },
+  { id: "core-reasoning", label: "Research" },
+  { id: "data-collection", label: "Results" },
+  { id: "research-blog", label: "Blog" },
+  { id: "careers", label: "Inquiries" },
 ];
 
 export const OBSERVED_SECTION_IDS: TechnologySectionId[] = [
@@ -56,18 +56,22 @@ export const RESEARCH_CARDS: ResearchCard[] = [
     featured: true,
     title: "Philosophy behind a Universal Geospatial Model",
     href: blogHref(BLOG_SLUG.philosophyUniversalLgm),
+    image: "/TechnologyPageImages/multieWaveEminations.jpeg",
   },
   {
     title: "Mimicking the adult brain.",
     href: blogHref(BLOG_SLUG.mimickingAdultBrain),
+    image: "/TechnologyPageImages/deep-layers.jpeg",
   },
   {
     title: "Earth recipes.",
     href: blogHref(BLOG_SLUG.earthRecipes),
+    image: "/TechnologyPageImages/unkown-layers.jpeg",
   },
   {
     title: "Research: creating a fire prediction model.",
     href: blogHref(BLOG_SLUG.erickFirePrediction),
+    image: "/TechnologyPageImages/techpg-radiance.png",
   },
 ];
 
@@ -100,10 +104,10 @@ export const RESEARCH_ARTICLES: ResearchArticle[] = [
 ];
 
 export const HERO_SCROLL_INDEX_ITEMS = [
-  { label: "What's an LGM", sectionIds: ["index"] },
+  { label: "Foundation Model", sectionIds: ["index"] },
   { label: "Timeline", sectionIds: ["lgm-vs-llm"] },
-  { label: "Development", sectionIds: ["core-reasoning"] },
-  { label: "A New Category", sectionIds: ["data-collection"] },
-  { label: "Research Blog", sectionIds: ["research-blog"] },
-  { label: "Careers & inquiry", sectionIds: ["careers"] },
+  { label: "Research", sectionIds: ["core-reasoning"] },
+  { label: "Results", sectionIds: ["data-collection"] },
+  { label: "Blog", sectionIds: ["research-blog"] },
+  { label: "Inquiries", sectionIds: ["careers"] },
 ];
