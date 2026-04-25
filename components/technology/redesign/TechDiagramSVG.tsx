@@ -62,38 +62,47 @@ const AnimatedShapes = ({ bubbles, isVisible, border }: { bubbles: any[], isVisi
 };
 
 const FusionLines = ({ isVisible, offsetL2 }: { isVisible: boolean, offsetL2: number }) => {
-  const dur = 4;
-  const dash = 760;
+  const dur = 5;
 
-  // Lines follow the isometric bottom face of layer 2 and extend off both sides of the SVG.
-  // Bottom face vertices: left(118,388) → front-bottom(300,486) → right(482,388)
-  // Extension slope matches the isometric grid: Δy/Δx ≈ 98/182 ≈ 0.538
-  //   → at x=0: y ≈ 388 − 118×0.538 ≈ 325   → at x=600: y ≈ 388 + 118×0.538 ≈ 452
-  // Three lines offset by 8px in y each (yellow closest, green furthest from box).
-  const mkLine = (color: string, yOff: number, delay: string) => {
-    const d = [
-      `M 0 ${325 + yOff}`,
-      `C 60 ${355 + yOff} 100 ${381 + yOff} 118 ${388 + yOff}`,
-      `L 300 ${486 + yOff}`,
-      `C 380 ${486 + yOff} 460 ${392 + yOff} 482 ${388 + yOff}`,
-      `C 530 ${380 + yOff} 565 ${432 + yOff} 600 ${452 + yOff}`,
-    ].join(" ");
-    return (
-      <path key={color} d={d} fill="none" stroke={color} strokeWidth="2.5"
-        strokeDasharray={dash} strokeDashoffset={dash}
-        strokeLinecap="round" strokeLinejoin="round" opacity="0"
-      >
-        <animate attributeName="stroke-dashoffset" values={`${dash}; ${dash}; 0; 0`} keyTimes="0; 0.05; 0.75; 1" dur={`${dur}s`} repeatCount="indefinite" begin={delay} />
-        <animate attributeName="opacity" values="0; 0.9; 0.9; 0" keyTimes="0; 0.05; 0.85; 1" dur={`${dur}s`} repeatCount="indefinite" begin={delay} />
-      </path>
-    );
-  };
+  // Colored lines: wide sweeping beziers, converge at ~75% of the track (x≈390).
+  // At x=390 the box right face is at y≈438; floating 12px below → y≈450.
+  // Control points are spread far apart so the arc is gradual with no deceleration at the curve.
+  // C1 continuity at convergence (390,450):
+  //   last cp of colored lines ≈ (340,504) → reflected first cp of blue = (440,396).
+  // Linear timing (no calcMode/keySplines) keeps constant speed through the corner.
+  // Straight L segments on both sides, single Q bezier for the corner turn.
+  // All 3 colored lines converge at (390, 450) — 75% of the track.
+  // Blue continues straight from there. Linear timing = no slowdown at corner.
+  const coloredDash = 330;
+  const blueDash = 115;
+  const leftPaths: { color: string; d: string; qY: number; exitY: number }[] = [
+    { color: "#e9c46a", qY: 498, exitY: 488, d: "" },
+    { color: "#e63946", qY: 506, exitY: 496, d: "" },
+    { color: "#2a9d8f", qY: 514, exitY: 504, d: "" },
+  ].map((l, i) => ({
+    ...l,
+    d: `M 118 ${400 + i * 8} L 280 ${l.exitY} Q 300 ${l.qY} 325 ${l.exitY} L 390 450`,
+  }));
 
   return (
     <g style={{ opacity: isVisible ? 1 : 0, transition: "opacity 0.4s ease", pointerEvents: "none" }} transform={`translate(0, ${offsetL2})`}>
-      {mkLine("#e9c46a", 0,  "0s")}
-      {mkLine("#e63946", 8,  "0.35s")}
-      {mkLine("#2a9d8f", 16, "0.7s")}
+      {leftPaths.map(({ color, d }) => (
+        <path key={color} d={d} fill="none" stroke={color} strokeWidth="2.5"
+          strokeDasharray={coloredDash} strokeDashoffset={coloredDash}
+          strokeLinecap="round" strokeLinejoin="round" opacity="0"
+        >
+          <animate attributeName="stroke-dashoffset" values={`${coloredDash}; ${coloredDash}; 0; 0`} keyTimes="0; 0.05; 0.75; 1" dur={`${dur}s`} repeatCount="indefinite" />
+          <animate attributeName="opacity" values="0; 0.92; 0.92; 0" keyTimes="0; 0.05; 0.88; 1" dur={`${dur}s`} repeatCount="indefinite" />
+        </path>
+      ))}
+
+      <path d="M 390 450 L 482 400" fill="none" stroke="#1e2e7a" strokeWidth="2.5"
+        strokeDasharray={blueDash} strokeDashoffset={blueDash}
+        strokeLinecap="round" strokeLinejoin="round" opacity="0"
+      >
+        <animate attributeName="stroke-dashoffset" values={`${blueDash}; ${blueDash}; 0; 0`} keyTimes="0; 0.72; 0.88; 1" dur={`${dur}s`} repeatCount="indefinite" />
+        <animate attributeName="opacity" values="0; 0.92; 0.92; 0" keyTimes="0; 0.72; 0.88; 1" dur={`${dur}s`} repeatCount="indefinite" />
+      </path>
     </g>
   );
 };
