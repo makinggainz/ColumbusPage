@@ -69,7 +69,7 @@
 
 ## Columbus Earth Wordmark
 
-- Sits to the right of the logo image inside the left-side `<Link href="/">`.
+- Sits to the right of the logo image inside the left-side `<Link href="/">`, wrapped in a clipping `<div>` (`overflow: hidden`) so its `max-width` can collapse to 0 for the blog-article slide-out animation.
 - **Hidden** (opacity 0) on mobile (`< 900px`) on all pages **except**:
   - `/` (homepage)
   - `/mission`
@@ -77,6 +77,7 @@
 - On desktop, hidden while the CTA is visible (nav links phase) so the wordmark and CTA don't compete for space.
 - On the products page, uses `glassStyles.glassTextStatic` for the frosted glass text effect.
 - Font size transitions: 24px (tall) → 20px (compact).
+- **Blog article (`/blog/<slug>`) hover-reveal:** wordmark is hidden by default (`max-width: 0` on the wrapper, `opacity: 0` on the span). On logo hover, wrapper expands to `max-width: 280px` and the span fades in + translates from `-12px` to `0` on the X axis, giving a "slide out from under the logo" feel. Easing: `cubic-bezier(0.05, 0.7, 0.1, 1)`, durations 520ms (wrapper) / 420ms (opacity + transform). Logo glyph carries `z-index: 1` so it renders above any cross-fade overlap during the animation.
 
 ---
 
@@ -187,6 +188,7 @@ The navbar adapts its behaviour per page via props, pathname checks, and DOM mar
 | `/mission` | `<Navbar />` | light | **Hidden** | Immediate (no hero CTA) | Standard behaviour |
 | `/market-spy` | `<Navbar />` | light | **Hidden** | Immediate (no hero CTA) | Standard behaviour |
 | `/blog` | `<Navbar />` | light | **Hidden** | Immediate (no hero CTA) | **Blog-Specific Behaviour:** All standard desktop nav links, CTA, and hamburger menu are hidden. Replaced by a dedicated `<AccessibilityMenu />` containing read-aloud, dyslexia font, and background color options. |
+| `/blog/<slug>` | `<Navbar />` | light | **Hidden** | n/a | **Blog Article (extends `/blog`):** Frosted-bar background opacity is forced to `0` and the wordmark is hidden by default — only the logo glyph and `<AccessibilityMenu />` render against the page. **Logo hover reveals the wordmark:** when the user hovers the logo, "Columbus Earth" slides out to the right from beneath the logo (max-width 0 → 280px on a clipping wrapper, plus opacity 0 → 1 and translateX(-12px) → 0 on the span). All transitions use `520ms cubic-bezier(0.05, 0.7, 0.1, 1)` (wrapper) and `420ms` (opacity/transform). |
 
 ### Use-Cases-Specific Behaviour
 
@@ -205,6 +207,8 @@ The `/use-cases` page has unique navbar requirements driven by its dark hero and
 ### Key per-page variables in code
 
 - **`isBlogPage`** — `pathname.startsWith("/blog")`. Controls: hiding standard links, CTA, and hamburger; showing the accessibility menu.
+- **`isBlogArticle`** — `pathname.startsWith("/blog/")`. Stricter form of `isBlogPage` that excludes the `/blog` index. Controls: forcing the frosted-bar background opacity to 0, hiding the wordmark by default (only revealed on logo hover via the slide-out animation).
+- **`logoHovered`** — Local navbar state. Set to `true` when the logo `<Link>` receives `mouseenter` while `isBlogArticle` is true; reset to `false` on `mouseleave`. Drives the wordmark wrapper's `max-width` and the inner span's `opacity` + `translateX`.
 - **`isProductsPage`** — `pathname === "/mapsgpt"`. Controls: glass CTA style, `bgTriggerPassed` bg logic, Start Now text colour (always black), hero-transition tracking.
 - **`isUseCasesPage`** — `pathname === "/use-cases"`. Controls: immediate navbar visibility, CTA light/dark variants, nav link theme-aware colouring, dark-aware dropdown (logo, wordmark, arrows stay white when menu opens on dark sections).
 - **`showWordmarkOnMobile`** — `pathname === "/" || "/mission" || "/contact"`. Controls: wordmark opacity on mobile.

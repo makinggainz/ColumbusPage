@@ -932,16 +932,28 @@ body.dyslexia-mode * {
 }
 
 body.bg-mode-sepia {
+  /* Override design-system tokens so token-driven elements (the blog
+     layout wrapper, prose, sticky nav) actually paint sepia instead
+     of covering the body sepia bg with the default surface white. */
+  --md-sys-color-primary:              #8a5a2b;
+  --md-sys-color-on-primary:           #f4ecd8;
+  --md-sys-color-background:           #f4ecd8;
+  --md-sys-color-on-background:        #433422;
+  --md-sys-color-surface:              #f4ecd8;
+  --md-sys-color-on-surface:           #433422;
+  --md-sys-color-surface-variant:      #e8dcc0;
+  --md-sys-color-on-surface-variant:   #6b5640;
+  --md-sys-color-surface-container-high:    #ebe0c5;
+  --md-sys-color-surface-container-highest: #e2d4b3;
+  --md-sys-color-outline:         #a08a6b;
+  --md-sys-color-outline-variant: #d1c5b0;
   background-color: #f4ecd8 !important;
   color: #433422 !important;
 }
-body.bg-mode-sepia main, 
+body.bg-mode-sepia main,
 body.bg-mode-sepia article {
   background-color: transparent !important;
   color: inherit !important;
-}
-body.bg-mode-sepia * {
-  border-color: #d1c5b0 !important;
 }
 
 body.bg-mode-dark {

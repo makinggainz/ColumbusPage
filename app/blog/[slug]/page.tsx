@@ -1,4 +1,3 @@
-import Link from "next/link";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Navbar } from "@/components/layout/Navbar";
@@ -40,17 +39,10 @@ export default async function BlogPostPage({ params }: Props) {
       <BlogArticleStickyNav sections={stickySections} />
 
       <article className="mx-auto w-full max-w-[720px] px-4 pt-28 pb-12 md:px-6">
-        <Link
-          href="/blog"
-          className={`xl:hidden ${blogStyles.labelLarge} ${blogStyles.colorPrimary} ${blogStyles.backLink}`}
-        >
-          ← All posts
-        </Link>
-
-        <p className={`${blogStyles.labelLarge} ${blogStyles.colorPrimary} mb-4 mt-8 xl:mt-0`}>{post.date}</p>
+        <p className={`${blogStyles.labelLarge} ${blogStyles.dateLine} mb-4`}>{post.date}</p>
         <h1 className={`${blogStyles.headlineLarge} mb-6`}>{post.title}</h1>
         <p
-          className={`${blogStyles.bodyLarge} ${blogStyles.colorOnSurfaceVariant} mb-12 border-b border-[var(--md-sys-color-outline-variant)] pb-12`}
+          className={`${blogStyles.bodyLarge} ${blogStyles.colorOnSurfaceVariant} ${blogStyles.descriptionDivider} mb-12`}
         >
           {post.description}
         </p>

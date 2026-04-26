@@ -110,3 +110,35 @@
   color: var(--md-sys-color-on-surface);
   margin: 0 0 24px;
 }
+
+/* Date eyebrow above the article title — on-brand blue, kept subtle so
+   it doesn't compete with the headline. */
+.dateLine {
+  color: rgba(0, 102, 204, 0.7);
+}
+
+:global(body.bg-mode-dark) .dateLine {
+  color: rgba(75, 156, 255, 0.7);
+}
+
+:global(body.bg-mode-sepia) .dateLine {
+  color: rgba(138, 90, 43, 0.7);
+}
+
+/* Hairline below the description, fading from on-brand blue (left)
+   to transparent (right). Replaces the flat outline-variant border. */
+.descriptionDivider {
+  padding-bottom: 48px;
+  background-image: linear-gradient(to right, rgba(0, 102, 204, 0.3), transparent);
+  background-size: 100% 1px;
+  background-position: bottom left;
+  background-repeat: no-repeat;
+}
+
+:global(body.bg-mode-dark) .descriptionDivider {
+  background-image: linear-gradient(to right, rgba(75, 156, 255, 0.3), transparent);
+}
+
+:global(body.bg-mode-sepia) .descriptionDivider {
+  background-image: linear-gradient(to right, rgba(138, 90, 43, 0.3), transparent);
+}
