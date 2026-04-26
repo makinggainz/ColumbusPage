@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { Navbar } from "@/components/layout/Navbar";
 import { BlogArticleStickyNav } from "@/components/blog/BlogArticleStickyNav";
 import { getAllBlogSlugs, getBlogPost } from "@/lib/blog-posts";
 import { blogBodyWithSectionIds, mergeBlogBody } from "@/lib/blog-lorem-body";
@@ -34,11 +33,9 @@ export default async function BlogPostPage({ params }: Props) {
 
   return (
     <main className="min-h-screen">
-      <Navbar />
-
       <BlogArticleStickyNav sections={stickySections} />
 
-      <article className="mx-auto w-full max-w-[720px] px-4 pt-28 pb-12 md:px-6">
+      <article className="mx-auto w-full max-w-[720px] px-4 pt-[162px] pb-12 md:px-6">
         <p className={`${blogStyles.labelLarge} ${blogStyles.dateLine} mb-4`}>{post.date}</p>
         <h1 className={`${blogStyles.headlineLarge} mb-6`}>{post.title}</h1>
         <p

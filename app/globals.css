@@ -931,10 +931,12 @@ body.dyslexia-mode * {
   font-family: 'OpenDyslexic', 'Comic Sans MS', sans-serif !important;
 }
 
-body.bg-mode-sepia {
-  /* Override design-system tokens so token-driven elements (the blog
-     layout wrapper, prose, sticky nav) actually paint sepia instead
-     of covering the body sepia bg with the default surface white. */
+/* The dual selector matters: child `[data-theme="light"]` (used by the
+   blog layout) re-defines these tokens at higher specificity than `body`,
+   which would otherwise erase the sepia override. Pinning the same token
+   values on `body.bg-mode-sepia [data-theme]` wins (0,2,1 specificity). */
+body.bg-mode-sepia,
+body.bg-mode-sepia [data-theme] {
   --md-sys-color-primary:              #8a5a2b;
   --md-sys-color-on-primary:           #f4ecd8;
   --md-sys-color-background:           #f4ecd8;
@@ -947,8 +949,27 @@ body.bg-mode-sepia {
   --md-sys-color-surface-container-highest: #e2d4b3;
   --md-sys-color-outline:         #a08a6b;
   --md-sys-color-outline-variant: #d1c5b0;
+}
+body.bg-mode-sepia {
   background-color: #f4ecd8 !important;
   color: #433422 !important;
+}
+
+/* AccessibilityMenu trigger icon colour follows the active body theme.
+   Without these, the icon stays at `text-[#0A1344]` (light navy) and
+   reads as nearly invisible against the dark surface, or as too-dark
+   on sepia. */
+body.bg-mode-dark [data-accessibility-trigger] {
+  color: rgba(255, 255, 255, 0.85) !important;
+}
+body.bg-mode-dark [data-accessibility-trigger]:hover {
+  background-color: rgba(255, 255, 255, 0.10) !important;
+}
+body.bg-mode-sepia [data-accessibility-trigger] {
+  color: #433422 !important;
+}
+body.bg-mode-sepia [data-accessibility-trigger]:hover {
+  background-color: rgba(67, 52, 34, 0.08) !important;
 }
 body.bg-mode-sepia main,
 body.bg-mode-sepia article {

@@ -7,7 +7,6 @@ import { usePathname } from "next/navigation";
 
 import { ScrambleText } from "@/components/ui/ScrambleText";
 import glassStyles from "@/components/ui/GlassButton.module.css";
-import { AccessibilityMenu } from "@/components/layout/AccessibilityMenu";
 import { PRODUCTS } from "@/lib/products";
 import { useDeferredVideoLoad } from "@/lib/useDeferredVideoLoad";
 
@@ -48,11 +47,6 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
     const isUseCasesPage = pathname === "/use-cases" || pathname === "/products/enterprise";
     const isEnterprisePage = pathname === "/products/enterprise";
     const isContactPage = pathname === "/contact";
-    const isBlogPage = pathname.startsWith("/blog");
-    /* Article reading view (/blog/<slug>) — distinct from the /blog index.
-       On these pages we drop the navbar's frosted bar entirely so only the
-       logo and accessibility button remain visible as floating elements. */
-    const isBlogArticle = pathname.startsWith("/blog/");
     const showWordmarkOnMobile = pathname === "/" || pathname === "/mission" || pathname === "/contact";
     const navRef = useRef<HTMLElement>(null);
     const dropdownRef = useRef<HTMLDivElement>(null);
@@ -68,12 +62,6 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
     const leftColRef = useRef<HTMLDivElement | null>(null);
     const elioVideoRef = useRef<HTMLVideoElement | null>(null);
     const [elioHovered, setElioHovered] = useState(false);
-    /* Blog article logo-hover animation — when the user hovers the logo on
-       /blog/<slug>, the "Columbus Earth" wordmark slides out to the right
-       from beneath the logo. State is local to the navbar, only consumed
-       when isBlogArticle is true; other pages remain on their existing
-       wordmark visibility logic. */
-    const [logoHovered, setLogoHovered] = useState(false);
     const [productsAlign, setProductsAlign] = useState<
         { padLeft: number; padRight: number; leftMaxWidth: number } | null
     >(null);
@@ -499,7 +487,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                         backdropFilter: "blur(20px) saturate(1.2)",
                         WebkitBackdropFilter: "blur(20px) saturate(1.2)",
                         borderBottom: isProductsPage ? "none" : (isHomePage && !island2Reached) ? "none" : isEnterprisePage ? "1px solid rgba(255,255,255,0.10)" : isDark ? "1px solid rgba(255,255,255,0.06)" : isHomePage ? "1px solid rgba(37, 99, 235, 0.3)" : "1px solid rgba(0,0,0,0.06)",
-                        opacity: isBlogArticle ? 0 : (isProductsPage ? bgTriggerPassed : isCompact) && !isMenuOpen ? 1 : 0,
+                        opacity: (isProductsPage ? bgTriggerPassed : isCompact) && !isMenuOpen ? 1 : 0,
                         transition: `opacity ${t}`,
                     }}
                 />
@@ -518,15 +506,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                         >
                             {/* ── Left: Logo ── */}
                             <div className="flex items-center">
-                                <Link
-                                    href="/"
-                                    className="flex w-fit shrink-0 items-center gap-2 cursor-pointer"
-                                    onMouseEnter={() => {
-                                        if (isWideScreen) { setHoverKind(null); handleNavMouseEnter(); }
-                                        if (isBlogArticle) setLogoHovered(true);
-                                    }}
-                                    onMouseLeave={isBlogArticle ? () => setLogoHovered(false) : undefined}
-                                >
+                                <Link href="/" className="flex w-fit shrink-0 items-center gap-2 cursor-pointer" onMouseEnter={isWideScreen ? () => { setHoverKind(null); handleNavMouseEnter(); } : undefined}>
                                     <div
                                         data-navbar-logo
                                         className="relative shrink-0"
@@ -536,7 +516,6 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                             transition: `width ${t}, height ${t}, filter ${t}, opacity 0.4s ease`,
                                             filter: (isDark && (!isMenuOpen || isUseCasesPage)) ? "brightness(0) invert(1)" : "none",
                                             opacity: hasScrolled ? 1 : 0,
-                                            zIndex: 1,
                                         }}
                                     >
                                         <Image
@@ -548,46 +527,24 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                             priority
                                         />
                                     </div>
-                                    {/* Wordmark wrapper — clips the wordmark when collapsed
-                                        so it appears to slide out from under the logo. On
-                                        non-blog-article pages, max-width stays expanded and
-                                        the existing visibility logic governs the wordmark. */}
-                                    <div
+                                    <span
+                                        className={`brand-wordmark font-medium leading-none whitespace-nowrap ${wide && !bgTriggerPassed ? glassStyles.glassTextStatic : ""}`}
                                         style={{
-                                            overflow: "hidden",
-                                            maxWidth: isBlogArticle ? (logoHovered ? 280 : 0) : 280,
-                                            transition: "max-width 520ms cubic-bezier(0.05, 0.7, 0.1, 1)",
+                                            fontSize: isCompact ? 20 : 24,
+                                            letterSpacing: "-0.02em",
+                                            transition: `font-size ${t}, opacity 0.4s ease`,
+                                            opacity: (!isWideScreen && !showWordmarkOnMobile) ? 0 : hasScrolled && (!ctaVisible || isWideScreen) ? 1 : 0,
                                         }}
                                     >
-                                        <span
-                                            className={`brand-wordmark font-medium leading-none whitespace-nowrap ${wide && !bgTriggerPassed ? glassStyles.glassTextStatic : ""}`}
-                                            style={{
-                                                display: "inline-block",
-                                                fontSize: isCompact ? 20 : 24,
-                                                letterSpacing: "-0.02em",
-                                                transition: `font-size ${t}, opacity 420ms cubic-bezier(0.05, 0.7, 0.1, 1), transform 520ms cubic-bezier(0.05, 0.7, 0.1, 1)`,
-                                                opacity: isBlogArticle
-                                                    ? (logoHovered ? 1 : 0)
-                                                    : (!isWideScreen && !showWordmarkOnMobile) ? 0 : hasScrolled && (!ctaVisible || isWideScreen) ? 1 : 0,
-                                                transform: isBlogArticle && !logoHovered ? "translateX(-12px)" : "translateX(0)",
-                                            }}
-                                        >
-                                            Columbus Earth
-                                        </span>
-                                    </div>
+                                        Columbus Earth
+                                    </span>
                                 </Link>
                             </div>
 
                             {/* ── Right: Nav Links + CTA + Hamburger ── */}
                             <div className="flex items-center">
-                                {isBlogPage ? (
-                                    <div className="flex items-center pr-2 md:pr-0">
-                                        <AccessibilityMenu isDark={isDark} />
-                                    </div>
-                                ) : (
-                                    <>
-                                        {/* Desktop nav links — appear after hero CTA leaves viewport */}
-                                        <div
+                                {/* Desktop nav links — appear after hero CTA leaves viewport */}
+                                <div
                                     className="hidden min-[900px]:flex items-center gap-5"
                                     style={{
                                         pointerEvents: linksVisible ? "auto" : "none",
@@ -829,18 +786,15 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                         })()}
                                     </button>
                                 </div>
-                                </>
-                            )}
+                            </div>
                         </div>
                     </div>
                     </div>
 
-                </div>
             </nav>
 
             {/* ── Dropdown (outside nav so fixed positioning isn't broken by nav's transform) ── */}
-            {!isBlogPage && (
-                <div
+            <div
                     ref={dropdownRef}
                 className={`fixed left-0 right-0 max-md:bottom-0 overflow-hidden max-md:flex max-md:flex-col`}
                 style={{
@@ -1271,7 +1225,6 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                     </div>
                 )}
             </div>
-            )}
         </>
     );
 };

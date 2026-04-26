@@ -1,7 +1,7 @@
-/* Blog article sticky rail.
-   Two visual modes — recessed (rest) and revealed (hover/focus-within).
-   At rest the dock fades back so the article is the focus; on hover or
-   keyboard focus it returns to the full frosted-glass card design. */
+/* Blog article sticky rail — replaces the navbar entirely on /blog/<slug>.
+   Hosts (top-down): the Columbus home link + wordmark slide-out, the back
+   link, the article section index, and the accessibility menu trigger.
+   Two visual modes: recessed (rest) and revealed (hover/focus-within). */
 
 .dock {
   display: none;
@@ -11,14 +11,18 @@
   .dock {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 16px;
     position: fixed;
     z-index: 20;
     /* Mirror the navbar's logo x-position. */
     left: max(24px, calc((100vw - 1287px) / 2));
-    top: 112px;
+    /* Align the dock's top edge with the article's top edge — the
+       <article> uses pt-[162px], and the dock has 14px of internal
+       padding, so 162 − 14 = 148 places its first child (the home link)
+       at the same Y as the article's first child (the date eyebrow). */
+    top: 148px;
     max-width: 220px;
-    padding: 12px;
+    padding: 14px;
     /* Resting state — invisible surface so the rail recedes into the
        page; only the (faded) text is perceptible. */
     background: rgba(255, 255, 255, 0);
@@ -46,6 +50,44 @@
   }
 }
 
+/* ── Home link + wordmark slide-out ─────────────────────────────────── */
+.homeLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: inherit;
+  margin-bottom: 4px;
+}
+
+.logoGlyph {
+  position: relative;
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  z-index: 1;
+}
+
+.wordmarkClip {
+  display: inline-block;
+  overflow: hidden;
+  transition: max-width 520ms cubic-bezier(0.05, 0.7, 0.1, 1);
+}
+
+.wordmarkText {
+  display: inline-block;
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  white-space: nowrap;
+  color: #0A1344;
+  transition:
+    opacity 420ms cubic-bezier(0.05, 0.7, 0.1, 1),
+    transform 520ms cubic-bezier(0.05, 0.7, 0.1, 1);
+}
+
+/* ── Back link ──────────────────────────────────────────────────────── */
 .back {
   display: inline-flex;
   align-items: center;
@@ -53,8 +95,7 @@
   font-size: 13px;
   font-weight: 500;
   letter-spacing: -0.005em;
-  /* The back link is the rail's primary CTA — keep it on-brand blue at
-     rest even when the rest of the dock has receded. */
+  /* Primary CTA — stays on-brand blue at rest. */
   color: #0066CC;
   text-decoration: none;
   padding: 6px 8px;
@@ -68,6 +109,7 @@
   color: #0A1344;
 }
 
+/* ── Section index ──────────────────────────────────────────────────── */
 .sectionList {
   list-style: none;
   margin: 0;
@@ -113,6 +155,28 @@
   background-color: rgba(0, 102, 204, 0.06);
 }
 
+/* ── A11y row at the bottom ─────────────────────────────────────────── */
+.a11yRow {
+  margin-top: 4px;
+  padding-top: 10px;
+  /* Hairline above the a11y row, mirroring the section divider. */
+  background-image: linear-gradient(to right, rgba(0, 102, 204, 0.18), transparent);
+  background-size: 100% 1px;
+  background-position: top left;
+  background-repeat: no-repeat;
+  transition: background-image 280ms ease;
+  display: flex;
+  align-items: center;
+  /* Push the AccessibilityMenu wrapper to align with the dock's left
+     gutter rather than the icon's center, matching the section links. */
+  margin-left: -2px;
+}
+
+.dock:hover .a11yRow,
+.dock:focus-within .a11yRow {
+  background-image: linear-gradient(to right, rgba(0, 102, 204, 0.3), transparent);
+}
+
 /* ─────────────────────────────────────────────────────────────────────
    Dark mode (AccessibilityMenu's body.bg-mode-dark)
    ───────────────────────────────────────────────────────────────────── */
@@ -129,6 +193,13 @@
   }
 }
 
+:global(body.bg-mode-dark) .wordmarkText {
+  color: rgba(255, 255, 255, 0.95);
+}
+:global(body.bg-mode-dark) .logoGlyph img {
+  filter: brightness(0) invert(1);
+}
+
 :global(body.bg-mode-dark) .back {
   color: #4B9CFF;
 }
@@ -137,11 +208,14 @@
   color: #FFFFFF;
 }
 
-:global(body.bg-mode-dark) .sectionList {
+:global(body.bg-mode-dark) .sectionList,
+:global(body.bg-mode-dark) .a11yRow {
   background-image: linear-gradient(to right, rgba(75, 156, 255, 0.18), transparent);
 }
 :global(body.bg-mode-dark) .dock:hover .sectionList,
-:global(body.bg-mode-dark) .dock:focus-within .sectionList {
+:global(body.bg-mode-dark) .dock:focus-within .sectionList,
+:global(body.bg-mode-dark) .dock:hover .a11yRow,
+:global(body.bg-mode-dark) .dock:focus-within .a11yRow {
   background-image: linear-gradient(to right, rgba(75, 156, 255, 0.32), transparent);
 }
 
@@ -172,6 +246,10 @@
   }
 }
 
+:global(body.bg-mode-sepia) .wordmarkText {
+  color: #433422;
+}
+
 :global(body.bg-mode-sepia) .back {
   color: #8a5a2b;
 }
@@ -180,11 +258,14 @@
   color: #433422;
 }
 
-:global(body.bg-mode-sepia) .sectionList {
+:global(body.bg-mode-sepia) .sectionList,
+:global(body.bg-mode-sepia) .a11yRow {
   background-image: linear-gradient(to right, rgba(138, 90, 43, 0.18), transparent);
 }
 :global(body.bg-mode-sepia) .dock:hover .sectionList,
-:global(body.bg-mode-sepia) .dock:focus-within .sectionList {
+:global(body.bg-mode-sepia) .dock:focus-within .sectionList,
+:global(body.bg-mode-sepia) .dock:hover .a11yRow,
+:global(body.bg-mode-sepia) .dock:focus-within .a11yRow {
   background-image: linear-gradient(to right, rgba(138, 90, 43, 0.3), transparent);
 }
 

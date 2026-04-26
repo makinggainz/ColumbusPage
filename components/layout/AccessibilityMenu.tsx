@@ -3,7 +3,25 @@
 import { useState, useEffect, useRef } from "react";
 import glassStyles from "@/components/ui/GlassButton.module.css";
 
-export const AccessibilityMenu = ({ isDark = false }: { isDark?: boolean }) => {
+type PanelPlacement = "below-right" | "below-left" | "above-right" | "above-left";
+
+export const AccessibilityMenu = ({
+  isDark = false,
+  placement = "below-right",
+  triggerSize = 24,
+}: {
+  isDark?: boolean;
+  /* Where the panel opens relative to the trigger button.
+     - "below-*" anchors top of panel to bottom of trigger
+     - "above-*" anchors bottom of panel to top of trigger
+     - "*-right" right-aligns panel to trigger
+     - "*-left" left-aligns panel to trigger
+     The dock variant uses "above-left" so the panel pops up + extends
+     rightward from a bottom-of-dock trigger without leaving the screen. */
+  placement?: PanelPlacement;
+  /* Size of the trigger icon (px). Defaults to 24px to match the navbar. */
+  triggerSize?: number;
+}) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [dyslexiaMode, setDyslexiaMode] = useState(false);
@@ -91,6 +109,8 @@ export const AccessibilityMenu = ({ isDark = false }: { isDark?: boolean }) => {
   return (
     <div className="relative" ref={menuRef}>
       <button
+        type="button"
+        data-accessibility-trigger
         onClick={() => setIsOpen(!isOpen)}
         className={`flex items-center justify-center p-2 rounded-full transition-colors ${
           isDark ? "hover:bg-white/10 text-white" : "hover:bg-black/5 text-[#0A1344]"
@@ -100,8 +120,8 @@ export const AccessibilityMenu = ({ isDark = false }: { isDark?: boolean }) => {
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
+          width={triggerSize}
+          height={triggerSize}
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"
@@ -118,7 +138,12 @@ export const AccessibilityMenu = ({ isDark = false }: { isDark?: boolean }) => {
 
       {isOpen && (
         <div
-          className="absolute right-0 top-full mt-2 w-60 overflow-hidden z-50"
+          className={`absolute w-60 overflow-hidden z-50 ${
+            placement === "below-right" ? "right-0 top-full mt-2" :
+            placement === "below-left"  ? "left-0 top-full mt-2"  :
+            placement === "above-right" ? "right-0 bottom-full mb-2" :
+            "left-0 bottom-full mb-2"
+          }`}
           style={{
             background: "rgba(255, 255, 255, 0.72)",
             backdropFilter: "blur(24px) saturate(0.55)",

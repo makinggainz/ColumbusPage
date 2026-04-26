@@ -2,7 +2,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { Navbar } from "@/components/layout/Navbar";
 import { getAllBlogPostsSorted } from "@/lib/blog-posts";
-import blogStyles from "./blog.module.css";
+import styles from "./blog-index.module.css";
 
 export const metadata: Metadata = {
   title: "Blog | Columbus",
@@ -13,32 +13,25 @@ export default function BlogIndexPage() {
   const posts = getAllBlogPostsSorted();
 
   return (
-    <main className="min-h-screen">
+    <main className={styles.page}>
       <Navbar />
 
-      <div className="mx-auto w-full max-w-[1287px] px-4 pt-28 pb-12 md:px-6">
-        <p className={`${blogStyles.labelMediumUpper} ${blogStyles.colorPrimary} mb-4`}>Blog</p>
-        <h1 className={`${blogStyles.headlineLarge} mb-4`}>Latest from our team</h1>
-        <p className={`${blogStyles.bodyLarge} ${blogStyles.colorOnSurfaceVariant} mb-12 max-w-2xl`}>
+      <div className={styles.container}>
+        <h1 className={styles.headline}>Blog</h1>
+        <p className={styles.lead}>
           Research updates, product notes, and longer-form writing on geospatial intelligence.
         </p>
 
-        <ul className="flex flex-col gap-0 border-t border-[var(--md-sys-color-outline-variant)]">
+        <ul className={styles.list}>
           {posts.map((post) => (
-            <li key={post.slug} className="border-b border-[var(--md-sys-color-outline-variant)]">
-              <Link
-                href={`/blog/${post.slug}`}
-                className={`group flex flex-col gap-2 md:flex-row md:items-baseline md:justify-between md:gap-8 ${blogStyles.listRow}`}
-              >
-                <div className="min-w-0 flex-1">
-                  <span className={`${blogStyles.titleLarge} block group-hover:underline`}>{post.title}</span>
-                  <span className={`${blogStyles.bodyMedium} ${blogStyles.colorOnSurfaceVariant} mt-2 block`}>
-                    {post.description}
-                  </span>
+            <li key={post.slug} className={styles.row}>
+              <Link href={`/blog/${post.slug}`} className={styles.rowLink}>
+                <div className={styles.rowText}>
+                  <span className={styles.rowTitle}>{post.title}</span>
+                  <span className={styles.rowDescription}>{post.description}</span>
                 </div>
-                <span className={`${blogStyles.labelLarge} ${blogStyles.colorOnSurfaceVariant} shrink-0 tabular-nums`}>
-                  {post.date}
-                </span>
+                <span className={styles.rowDate}>{post.date}</span>
+                <span className={styles.rowHoverLine} />
               </Link>
             </li>
           ))}
