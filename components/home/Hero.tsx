@@ -1039,12 +1039,9 @@ export const Hero = () => {
                   </a>
                 );
               }
-              /* Products: the popup wraps around the link's position so
-                 its internal "Products >" header sits exactly where the
-                 inline trigger sat. The trigger fades out when the popup
-                 is open so the popup's header takes its place visually.
-                 Hover/tap events live on the wrapper so they keep firing
-                 when the link is faded out. */
+              /* Products: hover/tap events on the wrapper so they keep
+                 firing while the popup overlays the area. The original
+                 link is z-index'd above the popup so it stays put. */
               return (
                 <div
                   key={link.label}
@@ -1066,13 +1063,7 @@ export const Hero = () => {
                     aria-haspopup="menu"
                     aria-expanded={productsOpen}
                     className="group flex items-center gap-1 text-md font-medium text-[#0A1344] transition-opacity duration-300 hover:opacity-60"
-                    style={{
-                      /* Sits above the popup so it stays put when the box
-                         appears around it — no duplicate header inside
-                         the popup, no fade swap. Popup is at z-index 40. */
-                      position: "relative",
-                      zIndex: 41,
-                    }}
+                    style={{ position: "relative", zIndex: 41 }}
                   >
                     {link.label}
                     <svg className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-0.5" fill="none" viewBox="0 0 16 16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

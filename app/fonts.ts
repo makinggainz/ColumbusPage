@@ -20,4 +20,5 @@ export const instrumentSerif = Instrument_Serif({
 export const geist = Geist({
   subsets: ["latin"],
   display: "swap",
+  variable: "--font-geist-sans",
 });

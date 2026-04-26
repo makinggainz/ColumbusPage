@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 
-import { cormorant, cambo } from "@/app/fonts";
+import { cormorant, cambo, geist } from "@/app/fonts";
 import { inter } from "@/lib/typography";
 import { LenisProvider } from "@/components/home/LenisContext";
 
@@ -21,7 +21,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" className={geist.variable}>
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
       </head>

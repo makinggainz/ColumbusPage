@@ -51,19 +51,24 @@ export function HeroProductsPopup({ open, onClose }: Props) {
       aria-hidden={!open}
       style={{
         /* Wraps around the trigger: with padding=24px and offsets of -24,
-           the popup's "Products >" header lands at exactly the same x/y
-           the trigger occupies — when the trigger fades to 0 the popup's
-           internal label takes its place visually. */
+           the trigger sits in the top-left corner of the popup. The
+           original Products link is rendered above this popup via z-index
+           so it stays put when the popup appears around it. */
         position: "absolute",
         top: -24,
         left: -24,
         zIndex: 40,
+        /* Mirrors the navbar dropdown's open/close motion: maxHeight
+           unrolls vertically while opacity fades. Different easings on
+           open (decelerate) vs close (accelerate-then-fade-out). */
+        overflow: "hidden",
+        maxHeight: open ? "80vh" : "0px",
         opacity: open ? 1 : 0,
-        transform: open ? "translateY(0)" : "translateY(-4px)",
-        transition: open
-          ? "opacity 220ms cubic-bezier(0.05, 0.7, 0.1, 1), transform 220ms cubic-bezier(0.05, 0.7, 0.1, 1)"
-          : "opacity 150ms ease, transform 150ms ease",
         pointerEvents: open ? "auto" : "none",
+        willChange: "max-height, opacity",
+        transition: open
+          ? "max-height 500ms cubic-bezier(0.05, 0.7, 0.1, 1), opacity 200ms ease"
+          : "max-height 400ms cubic-bezier(0.3, 0, 0.8, 0.15), opacity 250ms ease 200ms",
       }}
     >
       <div
