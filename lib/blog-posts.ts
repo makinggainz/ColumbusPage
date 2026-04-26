@@ -2,6 +2,9 @@
  * Blog post content and metadata. Single source of truth for /blog and /blog/[slug].
  */
 
+export const BLOG_CATEGORIES = ["PRODUCT", "ENGINEERING", "COMPANY NEWS"] as const;
+export type BlogCategory = (typeof BLOG_CATEGORIES)[number];
+
 export type BlogPost = {
   slug: string;
   title: string;
@@ -10,6 +13,9 @@ export type BlogPost = {
   publishedAt: string;
   description: string;
   paragraphs: string[];
+  /** Optional hero image path shown at the top of the article. */
+  image?: string;
+  category: BlogCategory;
 };
 
 export function blogHref(slug: string): string {
@@ -39,6 +45,8 @@ export const BLOG_POSTS: BlogPost[] = [
     title: "Earth recipes",
     date: "Apr 2026",
     publishedAt: "2026-04-01",
+    image: "/TechnologyPageImages/unkown-layers.jpeg",
+    category: "ENGINEERING",
     description: "How we compose geospatial signals into trainable recipes for the LGM.",
     paragraphs: [
       "Training a Large Geospatial Model is less like scraping the web and more like composing ingredients: satellite passes, street-level captures, administrative boundaries, and human activity layers must be normalized, aligned in space and time, and weighted so the model learns stable physical priors.",
@@ -50,6 +58,8 @@ export const BLOG_POSTS: BlogPost[] = [
     title: "Philosophy behind a Universal Geospatial Model",
     date: "Mar 2026",
     publishedAt: "2026-03-01",
+    image: "/TechnologyPageImages/multieWaveEminations.jpeg",
+    category: "COMPANY NEWS",
     description: "Why we believe maps are the path toward a universal model of the planet.",
     paragraphs: [
       "A Universal Geospatial Model is not a single dataset; it is a commitment to represent the world as it is observed, updated, and questioned. Our philosophy centers on verifiable coordinates, temporal consistency, and interfaces that let analysts and software ask the same questions in the same language.",
@@ -61,6 +71,8 @@ export const BLOG_POSTS: BlogPost[] = [
     title: "Mimicking the adult brain",
     date: "Feb 2026",
     publishedAt: "2026-02-01",
+    image: "/TechnologyPageImages/deep-layers.jpeg",
+    category: "ENGINEERING",
     description: "Analogies between spatial cognition and model architecture choices.",
     paragraphs: [
       "Human spatial reasoning blends episodic memory, hierarchical maps, and continuous refinement as new evidence arrives. Our architecture borrows metaphors—not literal neuroscience—from these processes to structure attention, memory, and retrieval for geospatial tasks.",
@@ -72,6 +84,7 @@ export const BLOG_POSTS: BlogPost[] = [
     title: "MapsGPT Version 2.5: architecture improvements",
     date: "Apr 2026",
     publishedAt: "2026-04-08",
+    category: "PRODUCT",
     description: "Release notes focused on reliability, latency, and map fidelity.",
     paragraphs: [
       "MapsGPT 2.5 tightens the path from natural language intent to rendered map products. We improved caching for tile-heavy previews, hardened coordinate parsing, and refined how the model proposes layers when the user is underspecified.",
@@ -83,6 +96,8 @@ export const BLOG_POSTS: BlogPost[] = [
     title: "Research paper: Erick fire prediction",
     date: "Mar 2026",
     publishedAt: "2026-03-15",
+    image: "/TechnologyPageImages/techpg-radiance.png",
+    category: "ENGINEERING",
     description: "Building a fire-risk signal from heterogeneous environmental inputs.",
     paragraphs: [
       "This research thread documents how we combined fuel moisture proxies, terrain, weather windows, and historical ignition points into a model that surfaces early warnings without overfitting to a single geography.",
@@ -94,6 +109,7 @@ export const BLOG_POSTS: BlogPost[] = [
     title: "MapsGPT: building a consumer product",
     date: "Feb 2026",
     publishedAt: "2026-02-12",
+    category: "PRODUCT",
     description: "Product decisions that keep spatial intelligence approachable.",
     paragraphs: [
       "Shipping a consumer geospatial assistant means constraining complexity: sensible defaults for projections, legible legends, and guardrails when users ask for impossible geometry. We walk through the product surface and how it maps to model capabilities.",
@@ -104,6 +120,7 @@ export const BLOG_POSTS: BlogPost[] = [
     title: "Why LLMs do not cut it for geospatial queries",
     date: "Jan 2026",
     publishedAt: "2026-01-10",
+    category: "ENGINEERING",
     description: "Architectural gaps when text-first models face coordinates and maps.",
     paragraphs: [
       "Large language models excel at language patterns but are not grounded in continuous space by default. Hallucinated coordinates, stale corpora, and ambiguous units are predictable failure modes when users expect map-grade answers.",
@@ -115,6 +132,7 @@ export const BLOG_POSTS: BlogPost[] = [
     title: "Generative geospatial layers",
     date: "Dec 2025",
     publishedAt: "2025-12-01",
+    category: "ENGINEERING",
     description: "Notes on learned layers that augment basemaps and feature stores.",
     paragraphs: [
       "Generative layers are not replacements for survey data; they are structured hypotheses that must be validated against ground truth. We describe how we train and blend them with classical GIS layers so downstream agents can reason safely.",
@@ -125,6 +143,7 @@ export const BLOG_POSTS: BlogPost[] = [
     title: "Founding large geospatial models: an in-depth primer",
     date: "Nov 2025",
     publishedAt: "2025-11-01",
+    category: "COMPANY NEWS",
     description: "From first principles to the Columbus Earth research stack.",
     paragraphs: [
       "This long-form primer introduces the data, fusion, and reasoning pillars that define an LGM at Columbus Earth. It is meant for technical readers who want the narrative behind our public roadmap.",
@@ -135,6 +154,7 @@ export const BLOG_POSTS: BlogPost[] = [
     title: "Drawbacks of LLMs and vision models—and how the LGM innovates",
     date: "Oct 2025",
     publishedAt: "2025-10-01",
+    category: "ENGINEERING",
     description: "A concise comparison across inputs, outputs, and evaluation.",
     paragraphs: [
       "Text and vision backbones brought step-function gains to general AI, but geospatial workloads need stable frames of reference, scale-aware features, and tooling that emits maps—not paragraphs alone.",
@@ -146,6 +166,7 @@ export const BLOG_POSTS: BlogPost[] = [
     title: "Our game plan toward UGM",
     date: "Sep 2025",
     publishedAt: "2025-09-01",
+    category: "COMPANY NEWS",
     description: "Milestones from generalist LGM to a universal geospatial model.",
     paragraphs: [
       "Universal Geospatial Model (UGM) is the horizon: one reasoning stack that can ingest planetary-scale evidence and support enterprise, scientific, and civic use cases. This roadmap highlights dependencies on data coverage, evaluation harnesses, and partner feedback.",
@@ -156,6 +177,7 @@ export const BLOG_POSTS: BlogPost[] = [
     title: "Generalist LGM: research paper companion",
     date: "Aug 2025",
     publishedAt: "2025-08-01",
+    category: "ENGINEERING",
     description: "Context for the timeline milestone and what shipped in the lab.",
     paragraphs: [
       "As generalist LGM capabilities crossed internal quality bars, we consolidated findings into a paper-style writeup. This companion piece summarizes hypotheses, ablations, and what we deferred to future releases.",
@@ -166,6 +188,7 @@ export const BLOG_POSTS: BlogPost[] = [
     title: "Mapping the unknown with Gen Layers",
     date: "Jul 2025",
     publishedAt: "2025-07-01",
+    category: "ENGINEERING",
     description: "Exploration workflows when base coverage is thin or uneven.",
     paragraphs: [
       "Gen Layers help analysts propose intermediate surfaces—hypothetical contours, likely corridors, or candidate regions—when direct observation is sparse. We explain how we keep those proposals auditable and reversible.",
@@ -176,6 +199,7 @@ export const BLOG_POSTS: BlogPost[] = [
     title: "Deep spatial reasoning at scale",
     date: "Jun 2025",
     publishedAt: "2025-06-01",
+    category: "ENGINEERING",
     description: "Throughput, tiling, and memory when reasoning spans large extents.",
     paragraphs: [
       "Spatial reasoning at scale is as much an systems problem as a modeling one. We outline how we shard work across tiles, reuse embeddings, and maintain consistent topology at boundaries so answers stay coherent across a continent-sized viewport.",

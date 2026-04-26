@@ -59,19 +59,36 @@ export function BlogArticleStickyNav({ sections }: Props) {
       </Link>
 
       <Link href="/blog" className={styles.back}>
-        All posts
+        <svg
+          className={styles.backArrow}
+          width="14"
+          height="14"
+          viewBox="0 0 16 16"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          aria-hidden
+        >
+          <path d="M10 4l-4 4 4 4" />
+        </svg>
+        Back to Blog
       </Link>
 
       {sections.length > 0 ? (
-        <ul className={styles.sectionList}>
-          {sections.map((s) => (
-            <li key={s.id}>
-              <a href={`#${s.id}`} className={styles.sectionLink}>
-                {s.label}
-              </a>
-            </li>
-          ))}
-        </ul>
+        <div className={styles.tocBlock}>
+          <p className={styles.tocLabel}>Table of Contents</p>
+          <ul className={styles.sectionList}>
+            {sections.map((s) => (
+              <li key={s.id}>
+                <a href={`#${s.id}`} className={styles.sectionLink}>
+                  {s.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
       ) : null}
 
       <div className={styles.a11yRow}>

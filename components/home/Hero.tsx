@@ -1025,44 +1025,64 @@ export const Hero = () => {
               { label: "Products", href: "/products/enterprise", hasPopup: true },
               { label: "Use Cases", href: "/use-cases", hasPopup: false },
             ].map((link) => {
-              const linkEl = (
-                <a
-                  key={link.label}
-                  href={link.href}
-                  onMouseEnter={link.hasPopup && !isTouch ? openProducts : undefined}
-                  onMouseLeave={link.hasPopup && !isTouch ? scheduleCloseProducts : undefined}
-                  onFocus={link.hasPopup && !isTouch ? openProducts : undefined}
-                  onClick={link.hasPopup && isTouch ? (e) => {
-                    if (!productsOpen) {
-                      e.preventDefault();
-                      openProducts();
-                    }
-                  } : undefined}
-                  aria-haspopup={link.hasPopup ? "menu" : undefined}
-                  aria-expanded={link.hasPopup ? productsOpen : undefined}
-                  className="group hidden min-[642px]:flex items-center gap-1 text-md font-medium text-[#0A1344] transition-opacity duration-300 hover:opacity-60"
-                >
-                  {link.label}
-                  <svg className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-0.5" fill="none" viewBox="0 0 16 16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M6 4l4 4-4 4" />
-                  </svg>
-                </a>
-              );
-              if (!link.hasPopup) return linkEl;
+              if (!link.hasPopup) {
+                return (
+                  <a
+                    key={link.label}
+                    href={link.href}
+                    className="group hidden min-[642px]:flex items-center gap-1 text-md font-medium text-[#0A1344] transition-opacity duration-300 hover:opacity-60"
+                  >
+                    {link.label}
+                    <svg className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-0.5" fill="none" viewBox="0 0 16 16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M6 4l4 4-4 4" />
+                    </svg>
+                  </a>
+                );
+              }
+              /* Products: the popup wraps around the link's position so
+                 its internal "Products >" header sits exactly where the
+                 inline trigger sat. The trigger fades out when the popup
+                 is open so the popup's header takes its place visually.
+                 Hover/tap events live on the wrapper so they keep firing
+                 when the link is faded out. */
               return (
                 <div
                   key={link.label}
                   data-hero-products-anchor
                   style={{ position: "relative" }}
                   className="hidden min-[642px]:block"
+                  onMouseEnter={!isTouch ? openProducts : undefined}
+                  onMouseLeave={!isTouch ? scheduleCloseProducts : undefined}
+                  onFocus={!isTouch ? openProducts : undefined}
                 >
-                  {linkEl}
+                  <a
+                    href={link.href}
+                    onClick={isTouch ? (e) => {
+                      if (!productsOpen) {
+                        e.preventDefault();
+                        openProducts();
+                      }
+                    } : undefined}
+                    aria-haspopup="menu"
+                    aria-expanded={productsOpen}
+                    className="group flex items-center gap-1 text-md font-medium text-[#0A1344] transition-opacity duration-300 hover:opacity-60"
+                    style={{
+                      /* Sits above the popup so it stays put when the box
+                         appears around it — no duplicate header inside
+                         the popup, no fade swap. Popup is at z-index 40. */
+                      position: "relative",
+                      zIndex: 41,
+                    }}
+                  >
+                    {link.label}
+                    <svg className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-0.5" fill="none" viewBox="0 0 16 16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M6 4l4 4-4 4" />
+                    </svg>
+                  </a>
                   {!pastHeroCta && (
                     <HeroProductsPopup
                       open={productsOpen}
                       onClose={closeProducts}
-                      onMouseEnter={!isTouch ? openProducts : undefined}
-                      onMouseLeave={!isTouch ? scheduleCloseProducts : undefined}
                     />
                   )}
                 </div>

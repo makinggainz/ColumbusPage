@@ -5,17 +5,32 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
 import { PRODUCTS } from "@/lib/products";
+import { useDeferredVideoLoad } from "@/lib/useDeferredVideoLoad";
 
 type Props = {
   open: boolean;
   onClose: () => void;
-  onMouseEnter?: () => void;
-  onMouseLeave?: () => void;
 };
 
-export function HeroProductsPopup({ open, onClose, onMouseEnter, onMouseLeave }: Props) {
+export function HeroProductsPopup({ open, onClose }: Props) {
   const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
   const linkRefs = useRef<Array<HTMLAnchorElement | null>>([]);
+
+  useDeferredVideoLoad(videoRef, open);
+
+  // Sync Elio video playback to its card hover.
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+    const elioActive = open && hoveredIdx === 1;
+    if (elioActive) {
+      video.play().catch(() => {});
+    } else {
+      video.pause();
+      if (!open || hoveredIdx !== 1) video.currentTime = 0;
+    }
+  }, [open, hoveredIdx]);
 
   useEffect(() => {
     if (!open) setHoveredIdx(null);
@@ -34,40 +49,50 @@ export function HeroProductsPopup({ open, onClose, onMouseEnter, onMouseLeave }:
     <div
       role="menu"
       aria-hidden={!open}
-      onMouseEnter={onMouseEnter}
-      onMouseLeave={onMouseLeave}
       style={{
+        /* Wraps around the trigger: with padding=24px and offsets of -24,
+           the popup's "Products >" header lands at exactly the same x/y
+           the trigger occupies — when the trigger fades to 0 the popup's
+           internal label takes its place visually. */
         position: "absolute",
-        top: "calc(100% + 12px)",
-        left: -16,
+        top: -24,
+        left: -24,
         zIndex: 40,
         opacity: open ? 1 : 0,
-        transform: open ? "translateY(0)" : "translateY(-8px)",
+        transform: open ? "translateY(0)" : "translateY(-4px)",
         transition: open
           ? "opacity 220ms cubic-bezier(0.05, 0.7, 0.1, 1), transform 220ms cubic-bezier(0.05, 0.7, 0.1, 1)"
           : "opacity 150ms ease, transform 150ms ease",
         pointerEvents: open ? "auto" : "none",
       }}
     >
-      <ul
+      <div
         style={{
-          listStyle: "none",
-          margin: 0,
-          padding: 8,
-          width: 280,
-          background: "rgba(255, 255, 255, 0.72)",
-          backdropFilter: "blur(24px) saturate(0.55)",
-          WebkitBackdropFilter: "blur(24px) saturate(0.55)",
+          width: 520,
+          padding: 24,
+          background: "#FFFFFF",
           border: "1px solid rgba(10, 19, 68, 0.08)",
           boxShadow: "0 12px 40px rgba(10, 19, 68, 0.08), 0 2px 6px rgba(10, 19, 68, 0.04)",
         }}
       >
-        {PRODUCTS.map((p, i) => {
-          const isHovered = hoveredIdx === i;
-          const showDivider = i < PRODUCTS.length - 1;
-          return (
-            <li key={p.href}>
+        {/* 2-up cards — same style as the navbar dropdown's product cards
+            (16:10 image, 18px title, 14px subtitle, navy on light bg).
+            The cards leave ~44px of clearance at the top of the popup so
+            the actual hero "Products" trigger (raised via z-index above
+            this popup) sits in that empty space without overlapping. */}
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr",
+            gap: 24,
+            marginTop: 44,
+          }}
+        >
+          {PRODUCTS.map((p, i) => {
+            const isElio = i === 1;
+            return (
               <Link
+                key={p.href}
                 href={p.href}
                 ref={(el) => { linkRefs.current[i] = el; }}
                 tabIndex={open ? 0 : -1}
@@ -78,20 +103,15 @@ export function HeroProductsPopup({ open, onClose, onMouseEnter, onMouseLeave }:
                 onClick={onClose}
                 style={{
                   display: "flex",
-                  alignItems: "center",
-                  gap: 12,
-                  padding: "12px 12px",
+                  flexDirection: "column",
                   textDecoration: "none",
-                  background: isHovered ? "rgba(10, 19, 68, 0.04)" : "transparent",
-                  transition: "background 200ms ease",
+                  cursor: "pointer",
                 }}
               >
                 <div
                   style={{
                     position: "relative",
-                    width: 40,
-                    height: 40,
-                    flexShrink: 0,
+                    aspectRatio: "16 / 10",
                     overflow: "hidden",
                     background: "#F5F5F5",
                   }}
@@ -101,67 +121,56 @@ export function HeroProductsPopup({ open, onClose, onMouseEnter, onMouseLeave }:
                     src={p.img}
                     alt=""
                     fill
-                    sizes="40px"
+                    sizes="(min-width: 642px) 240px, 50vw"
                     className="object-cover object-top-left"
+                    style={{
+                      opacity: isElio && hoveredIdx === 1 ? 0 : 1,
+                      transition: "opacity 250ms ease",
+                    }}
                   />
+                  {isElio && p.video && (
+                    <video
+                      ref={videoRef}
+                      src={p.video}
+                      loop
+                      muted
+                      playsInline
+                      preload="none"
+                      className="absolute inset-0 w-full h-full object-cover object-top-left"
+                      style={{
+                        opacity: hoveredIdx === 1 ? 1 : 0,
+                        transition: "opacity 250ms ease",
+                      }}
+                    />
+                  )}
                 </div>
-                <div style={{ display: "flex", flexDirection: "column", minWidth: 0, flex: 1 }}>
-                  <span
-                    style={{
-                      fontSize: 15,
-                      fontWeight: 500,
-                      letterSpacing: "-0.005em",
-                      lineHeight: 1.2,
-                      color: isHovered ? "#2563EB" : "#0A1344",
-                      transition: "color 200ms ease",
-                    }}
-                  >
-                    {p.title}
-                  </span>
-                  <span
-                    style={{
-                      marginTop: 2,
-                      fontSize: 12,
-                      lineHeight: 1.4,
-                      color: isHovered ? "rgba(37, 99, 235, 0.75)" : "rgba(10, 19, 68, 0.55)",
-                      whiteSpace: "nowrap",
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                      transition: "color 200ms ease",
-                    }}
-                  >
-                    {p.subtitle}
-                  </span>
-                </div>
-                <svg
-                  width="10"
-                  height="10"
-                  viewBox="0 0 10 10"
-                  fill="none"
-                  aria-hidden
+                <h5
                   style={{
-                    flexShrink: 0,
-                    opacity: isHovered ? 1 : 0,
-                    transform: isHovered ? "translateX(0)" : "translateX(-4px)",
-                    transition: "opacity 200ms ease, transform 200ms ease",
+                    marginTop: 16,
+                    fontSize: 18,
+                    fontWeight: 500,
+                    letterSpacing: "-0.005em",
+                    lineHeight: 1.2,
+                    color: "#0A1344",
                   }}
                 >
-                  <path d="M3 1l4 4-4 4" stroke="#2563EB" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </Link>
-              {showDivider && (
-                <div
-                  aria-hidden
+                  {p.title}
+                </h5>
+                <p
                   style={{
-                    height: 1,
-                    background: "linear-gradient(to right, var(--grid-line), transparent)",
+                    marginTop: 4,
+                    fontSize: 14,
+                    lineHeight: 1.5,
+                    color: "rgba(10, 19, 68, 0.55)",
                   }}
-                />
-              )}
-            </li>
-          );
-        })}
-      </ul>
+                >
+                  {p.subtitle}
+                </p>
+              </Link>
+            );
+          })}
+        </div>
+      </div>
     </div>
   );
 }

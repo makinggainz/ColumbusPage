@@ -95,15 +95,16 @@
 }
 
 /* ── Back link ──────────────────────────────────────────────────────────
-   Minimal — text only, on-brand blue at rest. The only hover affordance
-   is a colour shift; no underline, arrow, or motion. */
+   Minimal — text + left-pointing chevron (mirrors the homepage hero CTA
+   arrow), on-brand navy at rest. */
 .back {
   display: inline-flex;
   align-items: center;
+  gap: 6px;
   font-size: 13px;
   font-weight: 500;
   letter-spacing: -0.005em;
-  color: #0066CC;
+  color: #101144;
   text-decoration: none;
   padding: 6px 8px;
   margin: -6px -8px;
@@ -111,12 +112,43 @@
   transition: color 220ms ease;
 }
 
+.backArrow {
+  flex-shrink: 0;
+  transition: transform 300ms ease;
+}
+
 .back:hover,
 .back:focus-visible {
   color: #0A1344;
 }
 
+.back:hover .backArrow,
+.back:focus-visible .backArrow {
+  transform: translateX(-2px);
+}
+
 /* ── Section index ──────────────────────────────────────────────────── */
+.tocBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.tocLabel {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(10, 19, 68, 0.35);
+  margin-bottom: 6px;
+  transition: color 280ms ease;
+}
+
+.dock:hover .tocLabel,
+.dock:focus-within .tocLabel {
+  color: rgba(10, 19, 68, 0.55);
+}
+
 .sectionList {
   list-style: none;
   margin: 0;
@@ -125,7 +157,7 @@
   flex-direction: column;
   gap: 2px;
   border-top: 0;
-  background-image: linear-gradient(to right, rgba(0, 102, 204, 0.18), transparent);
+  background-image: linear-gradient(to right, rgba(16, 17, 68, 0.18), transparent);
   background-size: 100% 1px;
   background-position: top left;
   background-repeat: no-repeat;
@@ -134,7 +166,7 @@
 
 .dock:hover .sectionList,
 .dock:focus-within .sectionList {
-  background-image: linear-gradient(to right, rgba(0, 102, 204, 0.3), transparent);
+  background-image: linear-gradient(to right, rgba(16, 17, 68, 0.3), transparent);
 }
 
 .sectionLink {
@@ -148,7 +180,7 @@
   padding: 6px 8px;
   margin: 0 -8px;
   outline: none;
-  transition: color 220ms ease, background-color 220ms ease;
+  transition: color 220ms ease, filter 220ms ease, opacity 220ms ease;
 }
 
 .dock:hover .sectionLink,
@@ -158,30 +190,34 @@
 
 .sectionLink:hover,
 .sectionLink:focus-visible {
-  color: #0066CC;
-  background-color: rgba(0, 102, 204, 0.06);
+  color: #101144;
+}
+
+/* When any section link is being hovered/focused, blur the *other* links so
+   the hovered one reads as the focus point. The hovered link itself stays
+   crisp via :not(). */
+.sectionList:has(.sectionLink:hover) .sectionLink:not(:hover),
+.sectionList:has(.sectionLink:focus-visible) .sectionLink:not(:focus-visible) {
+  filter: blur(1.5px);
+  opacity: 0.65;
 }
 
 /* ── A11y row at the bottom ─────────────────────────────────────────── */
 .a11yRow {
   margin-top: 4px;
   padding-top: 10px;
-  /* Hairline above the a11y row, mirroring the section divider. */
-  background-image: linear-gradient(to right, rgba(0, 102, 204, 0.18), transparent);
+  background-image: linear-gradient(to right, rgba(16, 17, 68, 0.18), transparent);
   background-size: 100% 1px;
   background-position: top left;
   background-repeat: no-repeat;
   transition: background-image 280ms ease;
-  /* Block (not flex) so the AccessibilityMenu's inner wrapper can grow
-     downward inline when its panel opens — the dock's column flex
-     accommodates the height change naturally. */
   display: block;
   margin-left: -2px;
 }
 
 .dock:hover .a11yRow,
 .dock:focus-within .a11yRow {
-  background-image: linear-gradient(to right, rgba(0, 102, 204, 0.3), transparent);
+  background-image: linear-gradient(to right, rgba(16, 17, 68, 0.3), transparent);
 }
 
 /* ─────────────────────────────────────────────────────────────────────
@@ -213,6 +249,14 @@
 :global(body.bg-mode-dark) .back:hover,
 :global(body.bg-mode-dark) .back:focus-visible {
   color: #FFFFFF;
+}
+
+:global(body.bg-mode-dark) .tocLabel {
+  color: rgba(255, 255, 255, 0.28);
+}
+:global(body.bg-mode-dark) .dock:hover .tocLabel,
+:global(body.bg-mode-dark) .dock:focus-within .tocLabel {
+  color: rgba(255, 255, 255, 0.50);
 }
 
 :global(body.bg-mode-dark) .sectionList,
@@ -263,6 +307,14 @@
 :global(body.bg-mode-sepia) .back:hover,
 :global(body.bg-mode-sepia) .back:focus-visible {
   color: #433422;
+}
+
+:global(body.bg-mode-sepia) .tocLabel {
+  color: rgba(67, 52, 34, 0.35);
+}
+:global(body.bg-mode-sepia) .dock:hover .tocLabel,
+:global(body.bg-mode-sepia) .dock:focus-within .tocLabel {
+  color: rgba(67, 52, 34, 0.55);
 }
 
 :global(body.bg-mode-sepia) .sectionList,

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { BlogArticleStickyNav } from "@/components/blog/BlogArticleStickyNav";
+import { ShareButtons } from "@/components/blog/ShareButtons";
 import { getAllBlogSlugs, getBlogPost } from "@/lib/blog-posts";
 import { blogBodyWithSectionIds, mergeBlogBody } from "@/lib/blog-lorem-body";
 import blogStyles from "../blog.module.css";
@@ -37,13 +38,22 @@ export default async function BlogPostPage({ params }: Props) {
       <BlogArticleStickyNav sections={stickySections} />
 
       <article className="relative z-[1] mx-auto w-full max-w-[720px] px-4 pt-[162px] pb-12 md:px-6">
-        <p className={`${blogStyles.labelLarge} ${blogStyles.dateLine} mb-4`}>{post.date}</p>
         <h1 className={`${blogStyles.headlineLarge} mb-6`}>{post.title}</h1>
         <p
-          className={`${blogStyles.bodyLarge} ${blogStyles.colorOnSurfaceVariant} ${blogStyles.descriptionDivider} mb-12`}
+          className={`${blogStyles.bodyLarge} ${blogStyles.colorOnSurfaceVariant} ${blogStyles.descriptionDivider} mb-3`}
         >
           {post.description}
         </p>
+        <div className="flex items-center gap-1">
+          <p className={`${blogStyles.labelLarge} ${blogStyles.dateLine}`}>{post.date}</p>
+          <ShareButtons title={post.title} size={18} />
+        </div>
+
+        <div
+          className={blogStyles.articleImagePlaceholder}
+          style={post.image ? { backgroundImage: `url(${post.image})`, backgroundSize: "cover", backgroundPosition: "center" } : undefined}
+          aria-hidden
+        />
 
         <div>
           {body.map((block, i) =>
