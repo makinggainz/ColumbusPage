@@ -3,7 +3,16 @@
 import { useState, useEffect, useRef } from "react";
 import glassStyles from "@/components/ui/GlassButton.module.css";
 
-type PanelPlacement = "below-right" | "below-left" | "above-right" | "above-left";
+type PanelPlacement =
+  | "below-right"
+  | "below-left"
+  | "above-right"
+  | "above-left"
+  /* Inline mode: panel renders in normal flow directly below the trigger
+     (no absolute positioning, no own backdrop). Use when the surrounding
+     container should expand to contain the panel — e.g. inside the blog
+     article dock. */
+  | "inline-below";
 
 export const AccessibilityMenu = ({
   isDark = false,
@@ -11,13 +20,6 @@ export const AccessibilityMenu = ({
   triggerSize = 24,
 }: {
   isDark?: boolean;
-  /* Where the panel opens relative to the trigger button.
-     - "below-*" anchors top of panel to bottom of trigger
-     - "above-*" anchors bottom of panel to top of trigger
-     - "*-right" right-aligns panel to trigger
-     - "*-left" left-aligns panel to trigger
-     The dock variant uses "above-left" so the panel pops up + extends
-     rightward from a bottom-of-dock trigger without leaving the screen. */
   placement?: PanelPlacement;
   /* Size of the trigger icon (px). Defaults to 24px to match the navbar. */
   triggerSize?: number;
@@ -138,20 +140,28 @@ export const AccessibilityMenu = ({
 
       {isOpen && (
         <div
-          className={`absolute w-60 overflow-hidden z-50 ${
-            placement === "below-right" ? "right-0 top-full mt-2" :
-            placement === "below-left"  ? "left-0 top-full mt-2"  :
-            placement === "above-right" ? "right-0 bottom-full mb-2" :
-            "left-0 bottom-full mb-2"
-          }`}
-          style={{
-            background: "rgba(255, 255, 255, 0.72)",
-            backdropFilter: "blur(24px) saturate(0.55)",
-            WebkitBackdropFilter: "blur(24px) saturate(0.55)",
-            border: "1px solid rgba(10, 19, 68, 0.08)",
-            boxShadow: "0 12px 40px rgba(10, 19, 68, 0.08), 0 2px 6px rgba(10, 19, 68, 0.04)",
-            color: "#0A1344",
-          }}
+          className={
+            placement === "inline-below"
+              ? "w-full overflow-hidden mt-2 z-10"
+              : `absolute w-60 overflow-hidden z-50 ${
+                  placement === "below-right" ? "right-0 top-full mt-2" :
+                  placement === "below-left"  ? "left-0 top-full mt-2"  :
+                  placement === "above-right" ? "right-0 bottom-full mb-2" :
+                  "left-0 bottom-full mb-2"
+                }`
+          }
+          style={
+            placement === "inline-below"
+              ? { color: "#0A1344" }
+              : {
+                  background: "rgba(255, 255, 255, 0.72)",
+                  backdropFilter: "blur(24px) saturate(0.55)",
+                  WebkitBackdropFilter: "blur(24px) saturate(0.55)",
+                  border: "1px solid rgba(10, 19, 68, 0.08)",
+                  boxShadow: "0 12px 40px rgba(10, 19, 68, 0.08), 0 2px 6px rgba(10, 19, 68, 0.04)",
+                  color: "#0A1344",
+                }
+          }
         >
           <div className="p-2">
             {/* Dark Mode */}

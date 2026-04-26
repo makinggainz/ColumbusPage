@@ -59,7 +59,7 @@ export function BlogArticleStickyNav({ sections }: Props) {
       </Link>
 
       <Link href="/blog" className={styles.back}>
-        ← All posts
+        All posts
       </Link>
 
       {sections.length > 0 ? (
@@ -75,7 +75,7 @@ export function BlogArticleStickyNav({ sections }: Props) {
       ) : null}
 
       <div className={styles.a11yRow}>
-        <AccessibilityMenu placement="above-left" triggerSize={18} />
+        <AccessibilityMenu placement="inline-below" triggerSize={18} />
       </div>
     </nav>
   );

@@ -111,6 +111,54 @@
   margin: 0 0 24px;
 }
 
+/* Article-page <main> — explicit white in default light mode so the
+   right column reads as pure white (the M3 surface is slightly tinted).
+   Dark + sepia let the layout's tokenised surface paint through so the
+   chosen reading theme covers the whole page. */
+.articlePage {
+  background: #FFFFFF;
+}
+
+:global(body.bg-mode-dark) .articlePage,
+:global(body.bg-mode-sepia) .articlePage {
+  background: transparent;
+}
+
+/* Article-page split background — left half grey (matches the footer's
+   #F5F5F7), right half white (the article column). The grey panel is a
+   fixed-position element that sits behind the article + dock; its right
+   edge lands at the article's left edge (the article is centered with
+   max-width 720, so its left edge is at calc(50% - 360px)).
+
+   Only shown at viewports where the dock is visible (>= 1100px) and only
+   in default light mode — dark + sepia let the body background take over
+   so the chosen reading theme reads cleanly across the whole page. */
+.greyPanel {
+  display: none;
+}
+
+@media (min-width: 1100px) {
+  .greyPanel {
+    display: block;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    /* Pulled back from the article's left edge so the grey panel breathes
+       and the article sits clearly on white space, not pressed against the
+       boundary. Width = (article-left-edge) − 96px breathing gap. */
+    width: max(0px, calc(50% - 360px - 96px));
+    background: #F5F5F7;
+    pointer-events: none;
+    z-index: 0;
+  }
+}
+
+:global(body.bg-mode-dark) .greyPanel,
+:global(body.bg-mode-sepia) .greyPanel {
+  display: none;
+}
+
 /* Date eyebrow above the article title — on-brand blue, kept subtle so
    it doesn't compete with the headline. */
 .dateLine {

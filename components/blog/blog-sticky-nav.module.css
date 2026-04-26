@@ -14,14 +14,21 @@
     gap: 16px;
     position: fixed;
     z-index: 20;
-    /* Mirror the navbar's logo x-position. */
-    left: max(24px, calc((100vw - 1287px) / 2));
+    /* Midpoint anchor between the prior navbar-logo-aligned position
+       (max(24px, (100vw − 1287px) / 2)) and the viewport-edge position
+       (16px). Quarter of the navbar's gutter places the dock comfortably
+       within the grey panel without hugging either side. */
+    left: max(20px, calc((100vw - 1287px) / 4));
     /* Align the dock's top edge with the article's top edge — the
        <article> uses pt-[162px], and the dock has 14px of internal
        padding, so 162 − 14 = 148 places its first child (the home link)
        at the same Y as the article's first child (the date eyebrow). */
     top: 148px;
-    max-width: 220px;
+    /* Cap so the dock's right edge stays comfortably within the grey
+       panel: grey-right = 50vw − 456, dock-right = 16 + max-width.
+       clamp(180, 50vw − 488, 240) keeps a 16px buffer at wide widths
+       and a sensible minimum at narrower ones. */
+    max-width: clamp(180px, calc(50vw - 488px), 240px);
     padding: 14px;
     /* Resting state — invisible surface so the rail recedes into the
        page; only the (faded) text is perceptible. */
@@ -87,15 +94,15 @@
     transform 520ms cubic-bezier(0.05, 0.7, 0.1, 1);
 }
 
-/* ── Back link ──────────────────────────────────────────────────────── */
+/* ── Back link ──────────────────────────────────────────────────────────
+   Minimal — text only, on-brand blue at rest. The only hover affordance
+   is a colour shift; no underline, arrow, or motion. */
 .back {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
   font-size: 13px;
   font-weight: 500;
   letter-spacing: -0.005em;
-  /* Primary CTA — stays on-brand blue at rest. */
   color: #0066CC;
   text-decoration: none;
   padding: 6px 8px;
@@ -165,10 +172,10 @@
   background-position: top left;
   background-repeat: no-repeat;
   transition: background-image 280ms ease;
-  display: flex;
-  align-items: center;
-  /* Push the AccessibilityMenu wrapper to align with the dock's left
-     gutter rather than the icon's center, matching the section links. */
+  /* Block (not flex) so the AccessibilityMenu's inner wrapper can grow
+     downward inline when its panel opens — the dock's column flex
+     accommodates the height change naturally. */
+  display: block;
   margin-left: -2px;
 }
 

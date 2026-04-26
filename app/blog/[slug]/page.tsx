@@ -32,10 +32,11 @@ export default async function BlogPostPage({ params }: Props) {
     .map((b) => ({ id: b.id, label: b.text }));
 
   return (
-    <main className="min-h-screen">
+    <main className={`min-h-screen ${blogStyles.articlePage}`}>
+      <div className={blogStyles.greyPanel} aria-hidden />
       <BlogArticleStickyNav sections={stickySections} />
 
-      <article className="mx-auto w-full max-w-[720px] px-4 pt-[162px] pb-12 md:px-6">
+      <article className="relative z-[1] mx-auto w-full max-w-[720px] px-4 pt-[162px] pb-12 md:px-6">
         <p className={`${blogStyles.labelLarge} ${blogStyles.dateLine} mb-4`}>{post.date}</p>
         <h1 className={`${blogStyles.headlineLarge} mb-6`}>{post.title}</h1>
         <p
