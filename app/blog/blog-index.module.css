@@ -5,7 +5,7 @@
   min-height: 100vh;
   background: #F9F9F9;
   color: #0A1344;
-  font-family: var(--font-geist-sans), 'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: var(--font-dm-sans), 'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 .container {

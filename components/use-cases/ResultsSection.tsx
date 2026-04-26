@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
-import { geist } from "@/app/fonts";
+import { dmSans } from "@/app/fonts";
 
 export default function ResultsSection() {
   const ref = useRef<HTMLDivElement>(null);
@@ -86,13 +86,13 @@ function FeatureText({ number, text, anim, padLeft }: { number: string; text: st
     <div className="relative p-4 rounded-lg" style={{ ...anim, paddingLeft: padLeft ? 40 : undefined }}>
       <span
         className="absolute left-4 top-4 text-white w-9 h-9 flex items-center justify-center"
-        style={{ fontFamily: geist.style.fontFamily, fontSize: 24, fontWeight: 500, backgroundColor: "#2563EB", marginLeft: padLeft ? 24 : undefined }}
+        style={{ fontFamily: dmSans.style.fontFamily, fontSize: 24, fontWeight: 500, backgroundColor: "#2563EB", marginLeft: padLeft ? 24 : undefined }}
       >
         {number}
       </span>
       <div
         className="leading-[140%] text-[#1D1D1F]"
-        style={{ fontFamily: geist.style.fontFamily, fontSize: 24, fontWeight: 500 }}
+        style={{ fontFamily: dmSans.style.fontFamily, fontSize: 24, fontWeight: 500 }}
       >
         <span style={{ display: "block", textIndent: "48px" }}>{head}</span>
         {tail && (

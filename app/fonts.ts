@@ -1,4 +1,4 @@
-import { Cormorant_Garamond, Cambo, Instrument_Serif, Geist } from "next/font/google";
+import { Cormorant_Garamond, Cambo, Instrument_Serif, Geist, DM_Sans } from "next/font/google";
 
 export const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
@@ -21,4 +21,10 @@ export const geist = Geist({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-geist-sans",
+});
+
+export const dmSans = DM_Sans({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-dm-sans",
 });

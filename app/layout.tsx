@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 
-import { cormorant, cambo, geist } from "@/app/fonts";
+import { cormorant, cambo, geist, dmSans } from "@/app/fonts";
 import { LenisProvider } from "@/components/home/LenisContext";
 
 export { cormorant, cambo };
@@ -20,13 +20,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={geist.variable}>
+    <html lang="en" className={`${dmSans.variable} ${geist.variable}`}>
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
       </head>
 
-      {/* Keep global styles simple - match GFrontEndWork: no Navbar/Footer here, no font on body */}
-      <body className={`${geist.className} antialiased bg-white min-h-screen`}>
+      {/* DM Sans is the project-wide body font; Geist remains registered as a
+          variable for the few legacy spots that still reference it directly. */}
+      <body className={`${dmSans.className} antialiased bg-white min-h-screen`}>
         <LenisProvider>{children}</LenisProvider>
       </body>
     </html>
