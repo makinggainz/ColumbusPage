@@ -528,8 +528,9 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                         />
                                     </div>
                                     <span
-                                        className={`brand-wordmark font-medium leading-none whitespace-nowrap ${wide && !bgTriggerPassed ? glassStyles.glassTextStatic : ""}`}
+                                        className={`brand-wordmark font-semibold leading-none whitespace-nowrap ${wide && !bgTriggerPassed ? glassStyles.glassTextStatic : ""}`}
                                         style={{
+                                            fontFamily: "var(--font-hero)",
                                             fontSize: isCompact ? 20 : 24,
                                             letterSpacing: "-0.02em",
                                             transition: `font-size ${t}, opacity 0.4s ease`,

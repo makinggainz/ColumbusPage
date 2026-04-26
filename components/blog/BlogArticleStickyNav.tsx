@@ -49,6 +49,7 @@ export function BlogArticleStickyNav({ sections }: Props) {
           <span
             className={styles.wordmarkText}
             style={{
+              fontFamily: "var(--font-hero)",
               opacity: logoHovered ? 1 : 0,
               transform: logoHovered ? "translateX(0)" : "translateX(-12px)",
             }}
