@@ -106,9 +106,10 @@
   --md-ref-palette-neutral-variant99:  #fffbfe;
   --md-ref-palette-neutral-variant100: #ffffff;
 
-  /* Typeface */
-  --md-ref-typeface-brand:          'Google Sans', 'Roboto', sans-serif;
-  --md-ref-typeface-plain:          'Roboto', sans-serif;
+  /* Typeface — Geist is the project-wide sans (loaded via next/font in app/layout.tsx).
+     Falls through to system sans if the variable hasn't registered yet. */
+  --md-ref-typeface-brand:          var(--font-geist-sans), 'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif;
+  --md-ref-typeface-plain:          var(--font-geist-sans), 'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif;
   --md-ref-typeface-weight-regular: 400;
   --md-ref-typeface-weight-medium:  500;
   --md-ref-typeface-weight-bold:    700;
