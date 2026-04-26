@@ -1002,7 +1002,10 @@ export const Hero = () => {
           </p>
 
           {/* Heading */}
-          <h1 className="font-light leading-[1.2] text-[#0A1344] text-[39px] md:text-[49px] lg:text-[61px]" style={{ letterSpacing: "-0.02em", ...fadeIn(80) }}>
+          <h1
+            className="font-light leading-[1.2] text-[#0A1344] text-[39px] md:text-[49px] lg:text-[61px]"
+            style={{ fontFamily: "var(--font-hero)", letterSpacing: "-0.02em", ...fadeIn(80) }}
+          >
             {HEADING_LINE1}
             <br />
             {HEADING_LINE2}

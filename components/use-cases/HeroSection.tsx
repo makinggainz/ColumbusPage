@@ -100,6 +100,7 @@ export default function HeroSection() {
           <h1
             className="text-white text-[61px] md:text-[78px] max-md:text-[39px] leading-[1.2]"
             style={{
+              fontFamily: "var(--font-hero)",
               fontWeight: 300,
               letterSpacing: "-0.02em",
               ...fadeIn(0),

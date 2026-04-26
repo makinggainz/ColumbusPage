@@ -104,7 +104,7 @@ export default function EnterpriseHero() {
       <div className="relative z-10 flex flex-col items-center text-center px-6 pt-[200px]" style={reveal(visible, 0.1)}>
         <h1
           className="text-[#1D1D1F] leading-[1.1] text-[39px] md:text-[49px] lg:text-[76px]"
-          style={{ fontWeight: 500, letterSpacing: "-0.02em", maxWidth: 900 }}
+          style={{ fontFamily: "var(--font-hero)", fontWeight: 500, letterSpacing: "-0.02em", maxWidth: 900 }}
         >
           An Agentic GIS platform
         </h1>

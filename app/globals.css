@@ -1,6 +1,53 @@
 @import "tailwindcss";
 @import "mapbox-gl/dist/mapbox-gl.css";
 
+/* Axiforma — commercial display sans (Kastelov). The .woff2 files are NOT
+   in the repo (license required). Drop them at the paths below and every
+   hero <h1> renders in Axiforma; until then the browser silently falls back
+   to DM Sans (the body default). */
+@font-face {
+  font-family: "Axiforma";
+  src: url("/fonts/Axiforma-Light.woff2") format("woff2");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Axiforma";
+  src: url("/fonts/Axiforma-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Axiforma";
+  src: url("/fonts/Axiforma-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Axiforma";
+  src: url("/fonts/Axiforma-SemiBold.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Axiforma";
+  src: url("/fonts/Axiforma-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Single source of truth for hero title typography. Each hero <h1> across
+   the site sets `font-family: var(--font-hero)` (inline or via its module
+   CSS) so swapping the display face is a one-line change here. */
+:root {
+  --font-hero: "Axiforma", var(--font-dm-sans), "SF Pro", -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
 /* Base reset — use overflow-x: clip (not hidden) so position:sticky works on enterprise Section C */
 html,
 body {

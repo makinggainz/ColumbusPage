@@ -146,7 +146,7 @@ export default function ContactPage() {
 
         {phase === "writing" && (
           <div className="pt-36 md:pt-44 pb-10 md:pb-14 px-8 md:px-10 text-center">
-            <h1 className="font-light leading-[1.15] text-[#0A1344] text-[39px] md:text-[49px] lg:text-[61px]" style={{ letterSpacing: "-0.02em", ...heroFadeIn(0) }}>
+            <h1 className="font-light leading-[1.15] text-[#0A1344] text-[39px] md:text-[49px] lg:text-[61px]" style={{ fontFamily: "var(--font-hero)", letterSpacing: "-0.02em", ...heroFadeIn(0) }}>
               Get in touch.
             </h1>
             <p className="mt-4 text-[16px] md:text-[20px] leading-[1.5]" style={{ color: "rgba(10, 19, 68, 0.55)", letterSpacing: "-0.015em", fontWeight: 400, ...heroFadeIn(80) }}>

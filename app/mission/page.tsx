@@ -162,7 +162,7 @@ export default function OurMissionPage() {
         <div ref={hero.ref} className="relative z-10 w-full pt-40 md:pt-52 pb-40 md:pb-56 flex flex-col items-center text-center px-8 md:px-10">
           <h1
             className="font-light leading-[1.15] text-[#0A1344] text-[39px] md:text-[49px] lg:text-[61px]"
-            style={{ letterSpacing: "-0.02em", ...hero.anim(0) }}
+            style={{ fontFamily: "var(--font-hero)", letterSpacing: "-0.02em", ...hero.anim(0) }}
           >
             Building a thinking Earth
           </h1>

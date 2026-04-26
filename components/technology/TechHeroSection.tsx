@@ -101,7 +101,7 @@ export function TechHeroSection() {
 
       <div className={styles.techHeroContent}>
         <div className={styles.techHeroTextBlock}>
-          <h1 className={styles.techHeroTitle} style={fadeIn(0)}>
+          <h1 className={styles.techHeroTitle} style={{ fontFamily: "var(--font-hero)", ...fadeIn(0) }}>
             Building a brain for earth
           </h1>
 

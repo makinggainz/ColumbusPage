@@ -226,7 +226,7 @@ export default function UseCasesHero() {
 
         <h1
           className="font-semibold text-[64px] leading-[140%] max-md:text-[36px] bg-clip-text text-transparent"
-          style={{ backgroundImage: "linear-gradient(to right, #ffffff 0%, #B0B0B0 100%)", fontWeight: 600 }}
+          style={{ fontFamily: "var(--font-hero)", backgroundImage: "linear-gradient(to right, #ffffff 0%, #B0B0B0 100%)", fontWeight: 600 }}
         >
           More than Site Selection
         </h1>
