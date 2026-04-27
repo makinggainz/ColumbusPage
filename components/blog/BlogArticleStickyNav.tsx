@@ -18,6 +18,7 @@ type Props = {
 
 export function BlogArticleStickyNav({ sections }: Props) {
   const [logoHovered, setLogoHovered] = useState(false);
+  const [a11yOpen, setA11yOpen] = useState(false);
 
   return (
     <nav className={styles.dock} aria-label="Article navigation">
@@ -52,6 +53,7 @@ export function BlogArticleStickyNav({ sections }: Props) {
               fontFamily: "var(--font-hero)",
               opacity: logoHovered ? 1 : 0,
               transform: logoHovered ? "translateX(0)" : "translateX(-12px)",
+              filter: logoHovered ? "blur(0px)" : "blur(8px)",
             }}
           >
             Columbus Earth
@@ -93,7 +95,29 @@ export function BlogArticleStickyNav({ sections }: Props) {
       ) : null}
 
       <div className={styles.a11yRow}>
-        <AccessibilityMenu placement="inline-below" triggerSize={18} />
+        <button
+          type="button"
+          className={styles.a11yToggle}
+          onClick={() => setA11yOpen(!a11yOpen)}
+          aria-expanded={a11yOpen}
+        >
+          <span className={styles.tocLabel}>Accessibility</span>
+          <svg
+            width="10"
+            height="10"
+            viewBox="0 0 10 10"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className={a11yOpen ? styles.chevronOpen : styles.chevron}
+            aria-hidden
+          >
+            <path d="M2 3.5l3 3 3-3" />
+          </svg>
+        </button>
+        {a11yOpen && <AccessibilityMenu />}
       </div>
     </nav>
   );

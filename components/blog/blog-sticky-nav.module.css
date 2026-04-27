@@ -14,46 +14,10 @@
     gap: 16px;
     position: fixed;
     z-index: 20;
-    /* Midpoint anchor between the prior navbar-logo-aligned position
-       (max(24px, (100vw − 1287px) / 2)) and the viewport-edge position
-       (16px). Quarter of the navbar's gutter places the dock comfortably
-       within the grey panel without hugging either side. */
     left: max(20px, calc((100vw - 1287px) / 4));
-    /* Align the dock's top edge with the article's top edge — the
-       <article> uses pt-[162px], and the dock has 14px of internal
-       padding, so 162 − 14 = 148 places its first child (the home link)
-       at the same Y as the article's first child (the date eyebrow). */
     top: 148px;
-    /* Cap so the dock's right edge stays comfortably within the grey
-       panel: grey-right = 50vw − 456, dock-right = 16 + max-width.
-       clamp(180, 50vw − 488, 240) keeps a 16px buffer at wide widths
-       and a sensible minimum at narrower ones. */
     max-width: clamp(180px, calc(50vw - 488px), 240px);
     padding: 14px;
-    /* Resting state — invisible surface so the rail recedes into the
-       page; only the (faded) text is perceptible. */
-    background: rgba(255, 255, 255, 0);
-    backdrop-filter: blur(0px) saturate(1);
-    -webkit-backdrop-filter: blur(0px) saturate(1);
-    border: 1px solid transparent;
-    box-shadow: none;
-    transition:
-      background-color 280ms cubic-bezier(0.05, 0.7, 0.1, 1),
-      backdrop-filter 280ms cubic-bezier(0.05, 0.7, 0.1, 1),
-      -webkit-backdrop-filter 280ms cubic-bezier(0.05, 0.7, 0.1, 1),
-      border-color 280ms cubic-bezier(0.05, 0.7, 0.1, 1),
-      box-shadow 280ms cubic-bezier(0.05, 0.7, 0.1, 1);
-  }
-
-  .dock:hover,
-  .dock:focus-within {
-    background: rgba(255, 255, 255, 0.72);
-    backdrop-filter: blur(24px) saturate(0.55);
-    -webkit-backdrop-filter: blur(24px) saturate(0.55);
-    border-color: rgba(10, 19, 68, 0.08);
-    box-shadow:
-      0 12px 40px rgba(10, 19, 68, 0.08),
-      0 2px 6px rgba(10, 19, 68, 0.04);
   }
 }
 
@@ -91,7 +55,8 @@
   color: #0A1344;
   transition:
     opacity 420ms cubic-bezier(0.05, 0.7, 0.1, 1),
-    transform 520ms cubic-bezier(0.05, 0.7, 0.1, 1);
+    transform 520ms cubic-bezier(0.05, 0.7, 0.1, 1),
+    filter 420ms cubic-bezier(0.05, 0.7, 0.1, 1);
 }
 
 /* ── Back link ──────────────────────────────────────────────────────────
@@ -202,17 +167,17 @@
   opacity: 0.65;
 }
 
-/* ── A11y row at the bottom ─────────────────────────────────────────── */
+/* ── A11y row at the bottom — mirrors .tocBlock ─────────────────────── */
 .a11yRow {
-  margin-top: 4px;
-  padding-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding-top: 8px;
   background-image: linear-gradient(to right, rgba(16, 17, 68, 0.18), transparent);
   background-size: 100% 1px;
   background-position: top left;
   background-repeat: no-repeat;
   transition: background-image 280ms ease;
-  display: block;
-  margin-left: -2px;
 }
 
 .dock:hover .a11yRow,
@@ -220,22 +185,50 @@
   background-image: linear-gradient(to right, rgba(16, 17, 68, 0.3), transparent);
 }
 
+/* Toggle button — spreads label and chevron across the full row width */
+.a11yToggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  background: none;
+  border: none;
+  padding: 0;
+  margin-bottom: 6px;
+  cursor: pointer;
+  color: inherit;
+}
+
+/* Chevron inherits color from tocLabel via parent */
+.chevron {
+  color: rgba(10, 19, 68, 0.35);
+  transition: transform 220ms ease, color 280ms ease;
+  flex-shrink: 0;
+}
+
+.chevronOpen {
+  color: rgba(10, 19, 68, 0.35);
+  transform: rotate(180deg);
+  transition: transform 220ms ease, color 280ms ease;
+  flex-shrink: 0;
+}
+
+.dock:hover .chevron,
+.dock:focus-within .chevron,
+.dock:hover .chevronOpen,
+.dock:focus-within .chevronOpen {
+  color: rgba(10, 19, 68, 0.55);
+}
+
+/* Dock-hover brightens a11y options the same way it brightens TOC links */
+.dock:hover .a11yRow :global(.option),
+.dock:focus-within .a11yRow :global(.option) {
+  color: rgba(10, 19, 68, 0.6);
+}
+
 /* ─────────────────────────────────────────────────────────────────────
    Dark mode (AccessibilityMenu's body.bg-mode-dark)
    ───────────────────────────────────────────────────────────────────── */
-@media (min-width: 1100px) {
-  :global(body.bg-mode-dark) .dock:hover,
-  :global(body.bg-mode-dark) .dock:focus-within {
-    background: rgba(20, 22, 30, 0.65);
-    backdrop-filter: blur(24px) saturate(0.55);
-    -webkit-backdrop-filter: blur(24px) saturate(0.55);
-    border-color: rgba(255, 255, 255, 0.10);
-    box-shadow:
-      0 12px 40px rgba(0, 0, 0, 0.35),
-      0 2px 6px rgba(0, 0, 0, 0.20);
-  }
-}
-
 :global(body.bg-mode-dark) .wordmarkText {
   color: rgba(255, 255, 255, 0.95);
 }
@@ -286,17 +279,6 @@
 /* ─────────────────────────────────────────────────────────────────────
    Sepia mode
    ───────────────────────────────────────────────────────────────────── */
-@media (min-width: 1100px) {
-  :global(body.bg-mode-sepia) .dock:hover,
-  :global(body.bg-mode-sepia) .dock:focus-within {
-    background: rgba(244, 236, 216, 0.78);
-    border-color: rgba(67, 52, 34, 0.12);
-    box-shadow:
-      0 12px 40px rgba(67, 52, 34, 0.10),
-      0 2px 6px rgba(67, 52, 34, 0.05);
-  }
-}
-
 :global(body.bg-mode-sepia) .wordmarkText {
   color: #433422;
 }
@@ -339,4 +321,26 @@
 :global(body.bg-mode-sepia) .sectionLink:focus-visible {
   color: #8a5a2b;
   background-color: rgba(138, 90, 43, 0.08);
+}
+
+:global(body.bg-mode-dark) .chevron,
+:global(body.bg-mode-dark) .chevronOpen {
+  color: rgba(255, 255, 255, 0.28);
+}
+:global(body.bg-mode-dark) .dock:hover .chevron,
+:global(body.bg-mode-dark) .dock:focus-within .chevron,
+:global(body.bg-mode-dark) .dock:hover .chevronOpen,
+:global(body.bg-mode-dark) .dock:focus-within .chevronOpen {
+  color: rgba(255, 255, 255, 0.50);
+}
+
+:global(body.bg-mode-sepia) .chevron,
+:global(body.bg-mode-sepia) .chevronOpen {
+  color: rgba(67, 52, 34, 0.35);
+}
+:global(body.bg-mode-sepia) .dock:hover .chevron,
+:global(body.bg-mode-sepia) .dock:focus-within .chevron,
+:global(body.bg-mode-sepia) .dock:hover .chevronOpen,
+:global(body.bg-mode-sepia) .dock:focus-within .chevronOpen {
+  color: rgba(67, 52, 34, 0.55);
 }
