@@ -2774,12 +2774,8 @@
 }
 
 @media (max-width: 767px) {
-  .pageShell {
-    padding: 0 12px;
-  }
-
   .section:not(.fullBleedSection):not(.lgmSlide) .slideFrame {
-    padding-inline: 0;
+    padding-inline: var(--page-padding);
   }
 
   .section {
@@ -5114,18 +5110,18 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  background: rgba(10, 19, 68, 0.15);
+  background: transparent;
   border: none;
   padding: 0;
-  transition: background 200ms ease, opacity 200ms ease;
+  transition: opacity 200ms ease;
 }
 
 .carouselArrow:hover:not(:disabled) {
-  background: rgba(10, 19, 68, 0.25);
+  opacity: 0.7;
 }
 
 .carouselArrow:disabled {
-  opacity: 0.4;
+  opacity: 0.3;
   cursor: default;
 }
 
