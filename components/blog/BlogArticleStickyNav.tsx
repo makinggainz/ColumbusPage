@@ -19,6 +19,18 @@ type Props = {
 export function BlogArticleStickyNav({ sections, postTitle = "" }: Props) {
   const [logoHovered, setLogoHovered] = useState(false);
   const [activeId, setActiveId] = useState<string>("");
+  const [pastEnd, setPastEnd] = useState(false);
+
+  useEffect(() => {
+    const footer = document.querySelector("footer");
+    if (!footer) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => setPastEnd(entry.isIntersecting),
+      { threshold: 0 }
+    );
+    observer.observe(footer);
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     if (sections.length === 0) return;
@@ -38,7 +50,7 @@ export function BlogArticleStickyNav({ sections, postTitle = "" }: Props) {
   }, [sections]);
 
   return (
-    <nav className={styles.dock} aria-label="Article navigation">
+    <nav className={`${styles.dock} ${pastEnd ? styles.dockHidden : ""}`} aria-label="Article navigation">
 
       {/* Logo */}
       <Link
