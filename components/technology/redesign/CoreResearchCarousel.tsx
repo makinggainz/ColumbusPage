@@ -68,7 +68,9 @@ export function CoreResearchCarousel() {
           disabled={activeIndex === 0}
           aria-label="Previous slide"
         >
-          ←
+          <svg width="7" height="12" viewBox="0 0 7 12" fill="none" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M6 1L1 6l5 5" />
+          </svg>
         </button>
 
         <div className={styles.carouselDiagramWrap}>
@@ -81,7 +83,9 @@ export function CoreResearchCarousel() {
           disabled={activeIndex === 3}
           aria-label="Next slide"
         >
-          →
+          <svg width="7" height="12" viewBox="0 0 7 12" fill="none" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M1 1l5 5-5 5" />
+          </svg>
         </button>
       </div>
 
