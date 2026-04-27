@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 
 import { AccessibilityMenu } from "@/components/layout/AccessibilityMenu";
 import styles from "./blog-sticky-nav.module.css";
@@ -19,9 +19,46 @@ type Props = {
 export function BlogArticleStickyNav({ sections }: Props) {
   const [logoHovered, setLogoHovered] = useState(false);
   const [a11yOpen, setA11yOpen] = useState(false);
+  const navRef = useRef<HTMLDivElement>(null);
+  const [transform, setTransform] = useState("translateY(0)");
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!navRef.current) return;
+
+      const article = document.querySelector("article");
+      if (!article) return;
+
+      const articleRect = article.getBoundingClientRect();
+      const navHeight = navRef.current.offsetHeight;
+      const navTop = 148; // initial top position
+
+      // When article bottom is above the nav's resting position + nav height,
+      // constrain the nav so it stops at the article end
+      const articleBottom = articleRect.bottom;
+      const navBottom = window.innerHeight - (window.innerHeight - articleBottom);
+
+      if (articleBottom < navTop + navHeight) {
+        // Article is scrolling past, constrain nav
+        const overflow = navTop + navHeight - articleBottom;
+        setTransform(`translateY(-${Math.max(0, overflow)}px)`);
+      } else {
+        // Article is still in view, no constraint
+        setTransform("translateY(0)");
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
-    <nav className={styles.dock} aria-label="Article navigation">
+    <nav
+      ref={navRef}
+      className={styles.dock}
+      style={{ transform, transition: "transform 100ms ease-out" }}
+      aria-label="Article navigation"
+    >
       {/* Home / wordmark — hovering the logo slides "Columbus Earth" out
           to the right from beneath the glyph (same motion language as the
           homepage hero popup). */}
