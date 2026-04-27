@@ -9,6 +9,7 @@ import {
   RESEARCH_CARDS,
 } from "./content";
 import { CoreResearchArt } from "./CoreResearchArt";
+import { CoreResearchCarousel } from "./CoreResearchCarousel";
 import { Definition } from "./Definition";
 import { ResearchAccordionProvider } from "./ResearchAccordionContext";
 import { ResearchGroup } from "./ResearchGroup";
@@ -533,6 +534,10 @@ export function TechnologySections() {
               </div>
             </div>
             </ResearchAccordionProvider>
+
+            <div className={styles.coreResearchCarousel}>
+              <CoreResearchCarousel />
+            </div>
 
             <a
               href="#"
