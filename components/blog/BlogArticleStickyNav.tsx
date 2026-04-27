@@ -4,8 +4,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 
-import { AccessibilityMenu } from "@/components/layout/AccessibilityMenu";
-import { ShareButtons } from "./ShareButtons";
 import styles from "./blog-sticky-nav.module.css";
 
 export type BlogStickySection = {
@@ -20,7 +18,6 @@ type Props = {
 
 export function BlogArticleStickyNav({ sections, postTitle = "" }: Props) {
   const [logoHovered, setLogoHovered] = useState(false);
-  const [a11yOpen, setA11yOpen] = useState(false);
   const [activeId, setActiveId] = useState<string>("");
 
   useEffect(() => {
@@ -80,7 +77,58 @@ export function BlogArticleStickyNav({ sections, postTitle = "" }: Props) {
       {/* TOC */}
       {sections.length > 0 && (
         <div className={styles.tocSection}>
-          <p className={styles.tocHeading}>In this Article</p>
+          <div className={styles.tocHeader}>
+            <p className={styles.tocHeading}>In this Article</p>
+            <div className={styles.a11yIcons}>
+              <button
+                type="button"
+                aria-label="Toggle dark mode"
+                aria-pressed={bgColor === "dark"}
+                className={`${styles.a11yIcon} ${bgColor === "dark" ? styles.a11yIconActive : ""}`}
+                onClick={() => setBgColor(bgColor === "dark" ? "default" : "dark")}
+              >
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+                </svg>
+              </button>
+              <button
+                type="button"
+                aria-label="Toggle sepia mode"
+                aria-pressed={bgColor === "sepia"}
+                className={`${styles.a11yIcon} ${bgColor === "sepia" ? styles.a11yIconActive : ""}`}
+                onClick={() => setBgColor(bgColor === "sepia" ? "default" : "sepia")}
+              >
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="12" cy="12" r="5" />
+                  <line x1="12" y1="1" x2="12" y2="3" /><line x1="12" y1="21" x2="12" y2="23" />
+                  <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" /><line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+                  <line x1="1" y1="12" x2="3" y2="12" /><line x1="21" y1="12" x2="23" y2="12" />
+                  <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" /><line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+                </svg>
+              </button>
+              <button
+                type="button"
+                aria-label="Toggle dyslexia font"
+                aria-pressed={dyslexiaMode}
+                className={`${styles.a11yIcon} ${styles.a11yIconAa} ${dyslexiaMode ? styles.a11yIconActive : ""}`}
+                onClick={() => setDyslexiaMode(!dyslexiaMode)}
+              >
+                Aa
+              </button>
+              <button
+                type="button"
+                aria-label={isSpeaking ? "Stop reading aloud" : "Read article aloud"}
+                aria-pressed={isSpeaking}
+                className={`${styles.a11yIcon} ${isSpeaking ? styles.a11yIconActive : ""}`}
+                onClick={toggleSpeech}
+              >
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                  <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                </svg>
+              </button>
+            </div>
+          </div>
           <ul className={styles.tocList}>
             {sections.map((s, i) => {
               const isActive = activeId === s.id;
@@ -88,11 +136,9 @@ export function BlogArticleStickyNav({ sections, postTitle = "" }: Props) {
                 <li key={s.id}>
                   <a href={`#${s.id}`} className={`${styles.tocItem} ${isActive ? styles.tocItemActive : ""}`}>
                     <span className={styles.tocBullet} aria-hidden>
-                      {isActive && (
-                        <svg width="4" height="4" viewBox="0 0 4 4" fill="none">
-                          <circle cx="2" cy="2" r="2" fill="#101144" />
-                        </svg>
-                      )}
+                      <svg width="4" height="4" viewBox="0 0 4 4" fill="none">
+                        <circle cx="2" cy="2" r="2" fill="#101144" />
+                      </svg>
                     </span>
                     <span>{i + 1}. {s.label}</span>
                   </a>
@@ -102,27 +148,6 @@ export function BlogArticleStickyNav({ sections, postTitle = "" }: Props) {
           </ul>
         </div>
       )}
-
-      {/* Accessibility */}
-      <div className={styles.a11yRow}>
-        <button
-          type="button"
-          className={styles.a11yToggle}
-          onClick={() => setA11yOpen(!a11yOpen)}
-          aria-expanded={a11yOpen}
-        >
-          <span className={styles.tocHeading} style={{ marginBottom: 0 }}>Accessibility</span>
-          <svg
-            width="10" height="10" viewBox="0 0 10 10" fill="none"
-            stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"
-            className={a11yOpen ? styles.chevronOpen : styles.chevron}
-            aria-hidden
-          >
-            <path d="M2 3.5l3 3 3-3" />
-          </svg>
-        </button>
-        {a11yOpen && <AccessibilityMenu />}
-      </div>
 
     </nav>
   );

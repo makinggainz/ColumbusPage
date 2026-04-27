@@ -113,7 +113,7 @@
   text-decoration: none;
   padding: 4px 0;
   outline: none;
-  transition: color 200ms ease;
+  transition: color 350ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .tocItem:hover { color: rgba(10, 19, 68, 0.75); }
@@ -132,44 +132,67 @@
   justify-content: center;
 }
 
-/* ── Accessibility section ───────────────────────────────────────────── */
-.a11yRow {
+.tocBullet svg {
+  opacity: 0;
+  transform: translateX(-4px) scale(0.6);
+  transition:
+    opacity 300ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 400ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.tocItemActive .tocBullet svg {
+  opacity: 1;
+  transform: translateX(0) scale(1);
+}
+
+/* ── TOC header row with inline a11y icons ───────────────────────────── */
+.tocHeader {
   display: flex;
-  flex-direction: column;
-  gap: 0;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
 }
 
-.tocLabel {
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: rgba(10, 19, 68, 0.35);
+.tocHeader .tocHeading {
+  margin-bottom: 0;
 }
 
-.a11yToggle {
+.a11yIcons {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.a11yIcon {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  background: none;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 5px;
   border: none;
-  padding: 0;
-  margin-bottom: 6px;
+  background: none;
   cursor: pointer;
-  color: inherit;
+  color: rgba(10, 19, 68, 0.3);
+  transition: color 180ms ease, background 180ms ease;
+  padding: 0;
 }
 
-.chevron {
-  color: rgba(10, 19, 68, 0.35);
-  transition: transform 220ms ease;
-  flex-shrink: 0;
+.a11yIcon:hover {
+  color: #0A1344;
+  background: rgba(10, 19, 68, 0.06);
 }
 
-.chevronOpen {
-  color: rgba(10, 19, 68, 0.35);
-  transform: rotate(180deg);
-  transition: transform 220ms ease;
-  flex-shrink: 0;
+.a11yIconActive {
+  color: #0A1344 !important;
+  background: rgba(10, 19, 68, 0.08);
+}
+
+.a11yIconAa {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  font-family: inherit;
 }
 
 /* ── Dark mode ───────────────────────────────────────────────────────── */
@@ -189,9 +212,9 @@
 :global(body.bg-mode-dark) .tocItemActive circle { fill: rgba(255,255,255,0.92); }
 :global(body.bg-mode-dark) .tocItemActive path { stroke: #111318; }
 
-:global(body.bg-mode-dark) .tocLabel { color: rgba(255,255,255,0.28); }
-:global(body.bg-mode-dark) .chevron,
-:global(body.bg-mode-dark) .chevronOpen { color: rgba(255,255,255,0.28); }
+:global(body.bg-mode-dark) .a11yIcon { color: rgba(255,255,255,0.28); }
+:global(body.bg-mode-dark) .a11yIcon:hover { color: rgba(255,255,255,0.9); background: rgba(255,255,255,0.08); }
+:global(body.bg-mode-dark) .a11yIconActive { color: rgba(255,255,255,0.92) !important; background: rgba(255,255,255,0.12); }
 
 /* ── Sepia mode ──────────────────────────────────────────────────────── */
 :global(body.bg-mode-sepia) .wordmarkText { color: #433422; }
@@ -208,6 +231,6 @@
 :global(body.bg-mode-sepia) .tocItemActive { color: #433422; }
 :global(body.bg-mode-sepia) .tocItemActive circle { fill: #433422; }
 
-:global(body.bg-mode-sepia) .tocLabel { color: rgba(67,52,34,0.35); }
-:global(body.bg-mode-sepia) .chevron,
-:global(body.bg-mode-sepia) .chevronOpen { color: rgba(67,52,34,0.35); }
+:global(body.bg-mode-sepia) .a11yIcon { color: rgba(67,52,34,0.35); }
+:global(body.bg-mode-sepia) .a11yIcon:hover { color: #433422; background: rgba(67,52,34,0.06); }
+:global(body.bg-mode-sepia) .a11yIconActive { color: #433422 !important; background: rgba(67,52,34,0.1); }
