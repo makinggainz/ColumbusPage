@@ -88,16 +88,10 @@
 .tocSection {
   display: flex;
   flex-direction: column;
-  gap: 0;
+  gap: 8px;
+  margin-top: 8px;
 }
 
-.tocHeading {
-  font-size: 14px;
-  font-weight: 600;
-  letter-spacing: -0.01em;
-  color: #0A1344;
-  margin-bottom: 10px;
-}
 
 .tocList {
   list-style: none;
@@ -105,25 +99,24 @@
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 1px;
 }
 
 .tocItem {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 8px;
   font-size: 13px;
   font-weight: 400;
   letter-spacing: -0.005em;
   line-height: 1.4;
   color: rgba(10, 19, 68, 0.38);
   text-decoration: none;
-  padding: 4px 0;
+  padding: 3px 0;
   outline: none;
   transition: color 350ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.tocItem:hover { color: rgba(10, 19, 68, 0.75); }
+.tocItem:hover { color: rgba(10, 19, 68, 0.62); }
 
 .tocItemActive {
   color: #0A1344;
@@ -146,77 +139,6 @@
   pointer-events: none;
 }
 
-.tocBullet {
-  width: 8px;
-  height: 8px;
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.tocBullet svg {
-  opacity: 0;
-  transform: translateX(-4px) scale(0.6);
-  transition:
-    opacity 300ms cubic-bezier(0.22, 1, 0.36, 1),
-    transform 400ms cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.tocItemActive .tocBullet svg {
-  opacity: 1;
-  transform: translateX(0) scale(1);
-}
-
-/* ── TOC header row with inline a11y icons ───────────────────────────── */
-.tocHeader {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 10px;
-}
-
-.tocHeader .tocHeading {
-  margin-bottom: 0;
-}
-
-.a11yIcons {
-  display: flex;
-  align-items: center;
-  gap: 2px;
-}
-
-.a11yIcon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 24px;
-  height: 24px;
-  border-radius: 5px;
-  border: none;
-  background: none;
-  cursor: pointer;
-  color: rgba(10, 19, 68, 0.3);
-  transition: color 180ms ease, background 180ms ease;
-  padding: 0;
-}
-
-.a11yIcon:hover {
-  color: #0A1344;
-  background: rgba(10, 19, 68, 0.06);
-}
-
-.a11yIconActive {
-  color: #0A1344 !important;
-  background: rgba(10, 19, 68, 0.08);
-}
-
-.a11yIconAa {
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: -0.02em;
-  font-family: inherit;
-}
 
 /* ── Dark mode ───────────────────────────────────────────────────────── */
 :global(body.bg-mode-dark) .wordmarkText { color: rgba(255,255,255,0.92); }
@@ -227,17 +149,10 @@
 
 :global(body.bg-mode-dark) .shareLabel { color: rgba(255,255,255,0.35); }
 
-:global(body.bg-mode-dark) .tocHeading { color: rgba(255,255,255,0.90); }
 
 :global(body.bg-mode-dark) .tocItem { color: rgba(255,255,255,0.32); }
 :global(body.bg-mode-dark) .tocItem:hover { color: rgba(255,255,255,0.72); }
 :global(body.bg-mode-dark) .tocItemActive { color: rgba(255,255,255,0.92); }
-:global(body.bg-mode-dark) .tocItemActive circle { fill: rgba(255,255,255,0.92); }
-:global(body.bg-mode-dark) .tocItemActive path { stroke: #111318; }
-
-:global(body.bg-mode-dark) .a11yIcon { color: rgba(255,255,255,0.28); }
-:global(body.bg-mode-dark) .a11yIcon:hover { color: rgba(255,255,255,0.9); background: rgba(255,255,255,0.08); }
-:global(body.bg-mode-dark) .a11yIconActive { color: rgba(255,255,255,0.92) !important; background: rgba(255,255,255,0.12); }
 
 /* ── Sepia mode ──────────────────────────────────────────────────────── */
 :global(body.bg-mode-sepia) .wordmarkText { color: #433422; }
@@ -247,13 +162,7 @@
 
 :global(body.bg-mode-sepia) .shareLabel { color: rgba(67,52,34,0.40); }
 
-:global(body.bg-mode-sepia) .tocHeading { color: #433422; }
 
 :global(body.bg-mode-sepia) .tocItem { color: rgba(67,52,34,0.38); }
 :global(body.bg-mode-sepia) .tocItem:hover { color: rgba(67,52,34,0.75); }
 :global(body.bg-mode-sepia) .tocItemActive { color: #433422; }
-:global(body.bg-mode-sepia) .tocItemActive circle { fill: #433422; }
-
-:global(body.bg-mode-sepia) .a11yIcon { color: rgba(67,52,34,0.35); }
-:global(body.bg-mode-sepia) .a11yIcon:hover { color: #433422; background: rgba(67,52,34,0.06); }
-:global(body.bg-mode-sepia) .a11yIconActive { color: #433422 !important; background: rgba(67,52,34,0.1); }

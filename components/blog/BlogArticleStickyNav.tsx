@@ -89,18 +89,12 @@ export function BlogArticleStickyNav({ sections, postTitle = "" }: Props) {
       {/* TOC */}
       {sections.length > 0 && (
         <div className={styles.tocSection}>
-          <p className={styles.tocHeading}>In this Article</p>
           <ul className={styles.tocList}>
             {sections.map((s, i) => {
               const isActive = activeId === s.id;
               return (
                 <li key={s.id}>
                   <a href={`#${s.id}`} className={`${styles.tocItem} ${isActive ? styles.tocItemActive : ""}`}>
-                    <span className={styles.tocBullet} aria-hidden>
-                      <svg width="4" height="4" viewBox="0 0 4 4" fill="none">
-                        <circle cx="2" cy="2" r="2" fill="#101144" />
-                      </svg>
-                    </span>
                     <span className={styles.tocItemLabel} data-label={`${i + 1}. ${s.label}`}>{i + 1}. {s.label}</span>
                   </a>
                 </li>

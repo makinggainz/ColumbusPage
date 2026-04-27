@@ -268,3 +268,16 @@
 :global(body.bg-mode-sepia) .relatedHeading {
   color: #433422;
 }
+
+/* ── Footer fade transition ──────────────────────────────────────────── */
+.footerTransition {
+  height: 200px;
+  margin-top: -96px;
+  background: linear-gradient(to bottom, transparent, #F9F9F9);
+  pointer-events: none;
+}
+
+:global(body.bg-mode-dark) .footerTransition,
+:global(body.bg-mode-sepia) .footerTransition {
+  display: none;
+}
