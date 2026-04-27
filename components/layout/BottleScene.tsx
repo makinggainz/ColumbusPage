@@ -90,6 +90,14 @@ export const BottleScene = ({ onBottleClick, visible, dark, bg, waveRgb, already
     grounded: false,
   });
   const startTimeRef = useRef(alreadyOpened ? 1 : 0);
+  const onBottleClickRef = useRef(onBottleClick);
+  useEffect(() => { onBottleClickRef.current = onBottleClick; }, [onBottleClick]);
+  const autoClickTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const hasScheduledAutoClickRef = useRef(alreadyOpened ?? false);
+
+  useEffect(() => {
+    return () => { if (autoClickTimerRef.current) clearTimeout(autoClickTimerRef.current); };
+  }, []);
 
   const draw = useCallback(() => {
     const cvs = canvasRef.current;
@@ -278,6 +286,12 @@ export const BottleScene = ({ onBottleClick, visible, dark, bg, waveRgb, already
         bottle.grounded = true;
         bottle.vx = 0;
         bottle.vz = 0;
+        if (!hasScheduledAutoClickRef.current) {
+          hasScheduledAutoClickRef.current = true;
+          autoClickTimerRef.current = setTimeout(() => {
+            onBottleClickRef.current?.();
+          }, 3000);
+        }
       }
     } else if (bottle.grounded) {
       // Resting on sand — very gentle rock from nearby waves
@@ -507,6 +521,7 @@ export const BottleScene = ({ onBottleClick, visible, dark, bg, waveRgb, already
     const onClick = () => {
       if (clickedRef.current) return;
       clickedRef.current = true;
+      if (autoClickTimerRef.current) { clearTimeout(autoClickTimerRef.current); autoClickTimerRef.current = null; }
       setHoveringBottle(false);
       cvs.style.cursor = "default";
       onBottleClick?.();
