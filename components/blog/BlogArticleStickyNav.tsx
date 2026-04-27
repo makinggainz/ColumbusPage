@@ -95,9 +95,8 @@ export function BlogArticleStickyNav({ sections, postTitle = "" }: Props) {
                   <a href={`#${s.id}`} className={`${styles.tocItem} ${isActive ? styles.tocItemActive : ""}`}>
                     <span className={styles.tocBullet} aria-hidden>
                       {isActive && (
-                        <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-                          <circle cx="9" cy="9" r="9" fill="#101144" />
-                          <path d="M6 9h6M10 7l2 2-2 2" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                        <svg width="4" height="4" viewBox="0 0 4 4" fill="none">
+                          <circle cx="2" cy="2" r="2" fill="#101144" />
                         </svg>
                       )}
                     </span>
