@@ -140,18 +140,7 @@
 
 @media (min-width: 1315px) {
   .greyPanel {
-    display: block;
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    /* Pulled back from the article's left edge so the grey panel breathes
-       and the article sits clearly on white space, not pressed against the
-       boundary. Width = (article-left-edge) − 96px breathing gap. */
-    width: max(0px, calc(50% - 360px - 96px));
-    background: #F5F5F7;
-    pointer-events: none;
-    z-index: 0;
+    display: none;
   }
 }
 
