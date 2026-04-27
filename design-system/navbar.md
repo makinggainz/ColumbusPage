@@ -110,8 +110,8 @@
 |-|-------------------|------------------|
 | Max height | Content-driven (padding + content) | `100dvh` (always full screen) |
 | Top padding | `isCompact ? 84 : 96` (px) — inline style, navbar height + 28px visual gap | `isCompact ? 72 : 88` (px) — more breathing room |
-| Bottom padding | `0px` padding + `-10px` margin-bottom (default / products hover) or `-(10 + (cards.bottom - image.bottom))` (company hover) — inline style on the inner content wrapper. Clips below the current visible content's bottom by 10px via `overflow-hidden` on the outer dropdown. Company hover adds extra clip so the image-bottom-to-dropdown-bottom gap matches the default cards-bottom-to-dropdown-bottom gap (`companyAlign.extraMb = lc.bottom - im.bottom`). | `16px` (from `pb-4`, applies below 768px) |
-| Left-column footer alignment | `<dl>` (CONTACT/SOCIAL block) uses `md:mt-auto md:mb-2` — `mt-auto` pushes it to the bottom of the column; `mb-2` (8px) lifts it back up so the CONTACT/SOCIAL eyebrow row aligns with the Columbus/Elio title row in the right column (compensates for h5 being ~8px taller than dt) | `mt-7` — sits naturally below the description |
+| Bottom padding | `0px` padding + `-24px` margin-bottom (default / products hover) or `-(24 + (cards.bottom - image.bottom))` (company hover) — inline style on the inner content wrapper. Halved from the prior `-10` to reduce visible bottom whitespace by 50% across all hover states. Company hover adds extra clip so the image-bottom-to-dropdown-bottom gap matches the default cards-bottom-to-dropdown-bottom gap (`companyAlign.extraMb = lc.bottom - im.bottom`). | `8px` (from `pb-2`, applies below 768px) |
+| Left-column footer alignment | `<dl>` (CONTACT/SOCIAL block) — `marginBottom: 14` (halved from 28) keeps the dl close to the column's bottom while preserving alignment with the right column's title row. Company-hover overrides this with `companyAlign.dlMb`. | `mt-7` — sits naturally below the description |
 
 If you are unsure whether a height/padding change affects mobile or desktop, **ask before making the change.**
 

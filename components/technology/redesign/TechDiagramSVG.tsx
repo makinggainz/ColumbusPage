@@ -2,6 +2,7 @@ import React from "react";
 
 export interface TechDiagramSVGProps extends React.SVGProps<SVGSVGElement> {
   activeTitle?: string | null;
+  onLayerClick?: (title: string) => void;
 }
 
 const pathCircle_iso  = "M 0 -6 L 8 -4 L 12 0 L 8 4 L 0 6 L -8 4 L -12 0 L -8 -4 Z";
@@ -251,12 +252,14 @@ const TetrisBlocks = ({ isVisible }: { isVisible: boolean }) => {
   );
 };
 
-export function TechDiagramSVG({ activeTitle, ...props }: TechDiagramSVGProps) {
+export function TechDiagramSVG({ activeTitle, onLayerClick, ...props }: TechDiagramSVGProps) {
   const border = "#1e2e7a";
   const bgFill = "transparent";
   const leftFace = bgFill;
   const rightFace = bgFill;
   const strokeWidth = 1.5;
+
+  const layerTitles = ["Data Collection", "Fusion", "Core Reasoning", "Answers, insights, patterns"];
 
   const dataCollectionProps = { href: "/TechnologyPageImages/DataCollectionLayer.png", preserveAspectRatio: "none" };
   const fusionLayerProps = { href: "/TechnologyPageImages/FusionLayer.png", preserveAspectRatio: "none" };
@@ -321,8 +324,8 @@ export function TechDiagramSVG({ activeTitle, ...props }: TechDiagramSVGProps) {
       </g>
 
       {/* Ground Plane (Layer 4) */}
-      <g id="layer4" style={{ transform: `translateY(${offsetL4}px)`, opacity: getOpacity(3), transition: "transform 0.4s ease, opacity 0.4s ease" }}>
-        <polygon points="300,671 586,825 300,979 14,825" fill={bgFill} stroke={border} strokeWidth={strokeWidth} />
+      <g id="layer4" style={{ transform: `translateY(${offsetL4}px)`, opacity: getOpacity(3), transition: "transform 0.4s ease, opacity 0.4s ease", cursor: "pointer" }} onClick={() => onLayerClick?.("Answers, insights, patterns")}>
+        <polygon points="300,671 586,825 300,979 14,825" fill={bgFill} stroke={border} strokeWidth={strokeWidth} style={{ pointerEvents: "auto" }} />
         <g stroke={border} strokeWidth={0.5}>
           {[...Array(12)].map((_, i) => {
             const t = i / 11;
@@ -346,18 +349,18 @@ export function TechDiagramSVG({ activeTitle, ...props }: TechDiagramSVGProps) {
       </g>
 
       {/* Layer 3 */}
-      <g id="layer3" style={{ transform: `translateY(${offsetL3}px)`, opacity: getOpacity(2), transition: "transform 0.4s ease, opacity 0.4s ease" }}>
+      <g id="layer3" style={{ transform: `translateY(${offsetL3}px)`, opacity: getOpacity(2), transition: "transform 0.4s ease, opacity 0.4s ease", cursor: "pointer" }} onClick={() => onLayerClick?.("Core Reasoning")}>
         <polygon points="118,598 300,696 300,716 118,618" fill={leftFace} stroke={border} strokeWidth={strokeWidth} />
         <polygon points="300,696 482,598 482,618 300,716" fill={rightFace} stroke={border} strokeWidth={strokeWidth} />
-        <polygon points="300,500 482,598 300,696 118,598" fill={bgFill} stroke={border} strokeWidth={strokeWidth} />
+        <polygon points="300,500 482,598 300,696 118,598" fill={bgFill} stroke={border} strokeWidth={strokeWidth} style={{ pointerEvents: "auto" }} />
         <PuzzleLayer isVisible={isCoreReasoning} />
       </g>
 
       {/* Layer 2 */}
-      <g id="layer2" style={{ transform: `translateY(${offsetL2}px)`, opacity: getOpacity(1), transition: "transform 0.4s ease, opacity 0.4s ease" }}>
+      <g id="layer2" style={{ transform: `translateY(${offsetL2}px)`, opacity: getOpacity(1), transition: "transform 0.4s ease, opacity 0.4s ease", cursor: "pointer" }} onClick={() => onLayerClick?.("Fusion")}>
         <polygon points="118,368 300,466 300,486 118,388" fill={leftFace} stroke={border} strokeWidth={strokeWidth} />
         <polygon points="300,466 482,368 482,388 300,486" fill={rightFace} stroke={border} strokeWidth={strokeWidth} />
-        <polygon points="300,270 482,368 300,466 118,368" fill={bgFill} stroke={border} strokeWidth={strokeWidth} />
+        <polygon points="300,270 482,368 300,466 118,368" fill={bgFill} stroke={border} strokeWidth={strokeWidth} style={{ pointerEvents: "auto" }} />
         <image {...fusionLayerProps} x="118" y="270" width="364" height="196" clipPath="url(#clip-l2)" />
       </g>
 
@@ -369,10 +372,10 @@ export function TechDiagramSVG({ activeTitle, ...props }: TechDiagramSVGProps) {
       <TetrisBlocks isVisible={isAnswers} />
 
       {/* Layer 1 */}
-      <g id="layer1" style={{ opacity: getOpacity(0), transition: "opacity 0.4s ease" }}>
+      <g id="layer1" style={{ opacity: getOpacity(0), transition: "opacity 0.4s ease", cursor: "pointer" }} onClick={() => onLayerClick?.("Data Collection")}>
         <polygon points="50,138 300,270 300,290 50,158" fill={leftFace} stroke={border} strokeWidth={strokeWidth} />
         <polygon points="300,270 550,138 550,158 300,290" fill={rightFace} stroke={border} strokeWidth={strokeWidth} />
-        <polygon points="300,6 550,138 300,270 50,138" fill={bgFill} stroke={border} strokeWidth={strokeWidth} />
+        <polygon points="300,6 550,138 300,270 50,138" fill={bgFill} stroke={border} strokeWidth={strokeWidth} style={{ pointerEvents: "auto" }} />
         <image {...dataCollectionProps} x="50" y="6" width="500" height="264" clipPath="url(#clip-l1)" />
       </g>
     </svg>

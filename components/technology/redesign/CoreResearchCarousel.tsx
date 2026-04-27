@@ -74,7 +74,13 @@ export function CoreResearchCarousel() {
         </button>
 
         <div className={styles.carouselDiagramWrap}>
-          <TechDiagramSVG activeTitle={slide.title} />
+          <TechDiagramSVG
+            activeTitle={slide.title}
+            onLayerClick={(title) => {
+              const newIndex = SLIDES.findIndex(s => s.title === title);
+              if (newIndex !== -1) setActiveIndex(newIndex);
+            }}
+          />
         </div>
 
         <button

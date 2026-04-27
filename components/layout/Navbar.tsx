@@ -797,7 +797,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
             {/* ── Dropdown (outside nav so fixed positioning isn't broken by nav's transform) ── */}
             <div
                     ref={dropdownRef}
-                className={`fixed left-0 right-0 max-md:bottom-0 overflow-hidden max-md:flex max-md:flex-col`}
+                className={`fixed left-0 right-0 max-[899px]:bottom-0 overflow-hidden max-[899px]:flex max-[899px]:flex-col`}
                 style={{
                     ...dropdownBg,
                     zIndex: 45,
@@ -814,12 +814,15 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                 }}
                 onMouseLeave={handleDropdownMouseLeave}
             >
-                {/* Desktop vertical rhythm matches main; mobile layout uses max-md:flex below. */}
-                <div className={`mx-auto w-full px-6 md:px-8 ${wide ? "min-[1408px]:px-0" : "min-[1287px]:px-0"} pt-4 pb-4 md:pb-0`} style={{ maxWidth: wide ? 1408 : 1287, paddingTop: isWideScreen ? (isCompact ? 84 : 96) : (isCompact ? 72 : 88), ...(isWideScreen && { marginBottom: -10 - (hoverKind === "company" && companyAlign ? companyAlign.extraMb : 0) }), transition: "margin-bottom 350ms cubic-bezier(0.05, 0.7, 0.1, 1)" }}>
-                    <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12">
+                {/* Desktop layout kicks in at the navbar's 900px breakpoint
+                    (NAV_BREAKPOINT). Below that, the navbar is in hamburger
+                    mode and the dropdown stacks single-column with max-[899px]
+                    classes — keeping both surfaces in lockstep. */}
+                <div className={`mx-auto w-full px-6 min-[900px]:px-8 ${wide ? "min-[1408px]:px-0" : "min-[1287px]:px-0"} pt-4 pb-2 min-[900px]:pb-0`} style={{ maxWidth: wide ? 1408 : 1287, paddingTop: isWideScreen ? (isCompact ? 84 : 96) : (isCompact ? 72 : 88), ...(isWideScreen && { marginBottom: -24 - (hoverKind === "company" && companyAlign ? companyAlign.extraMb : 0) }), transition: "margin-bottom 350ms cubic-bezier(0.05, 0.7, 0.1, 1)" }}>
+                    <div className="grid grid-cols-1 min-[900px]:grid-cols-12 gap-8 min-[900px]:gap-12">
                         <div
                             ref={leftColRef}
-                            className="md:col-start-1 md:col-span-5 md:row-start-1 flex flex-col relative z-10"
+                            className="min-[900px]:col-start-1 min-[900px]:col-span-5 min-[900px]:row-start-1 flex flex-col relative z-10"
                             style={{
                                 opacity: !isMenuOpen ? 0 : hoverKind === "products" ? 0 : 1,
                                 transform: !isMenuOpen
@@ -855,10 +858,10 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                 Large Geospatial Model to answer the most difficult questions about our planet.
                             </p>
                             <dl
-                                className="mt-7 md:mt-auto flex flex-wrap gap-x-12 gap-y-4"
+                                className="mt-7 min-[900px]:mt-auto flex flex-wrap gap-x-12 gap-y-4"
                                 style={{
                                     ...(isWideScreen && {
-                                        marginBottom: hoverKind === "company" && companyAlign ? companyAlign.dlMb : 28,
+                                        marginBottom: hoverKind === "company" && companyAlign ? companyAlign.dlMb : 14,
                                     }),
                                     transition: "margin-bottom 350ms cubic-bezier(0.05, 0.7, 0.1, 1)",
                                 }}
@@ -885,10 +888,10 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                 </div>
                             </dl>
                         </div>
-                        <div className="hidden md:block md:col-span-1"></div>
+                        <div className="hidden min-[900px]:block min-[900px]:col-span-1"></div>
                         <div
                             ref={productsColRef}
-                            className="md:col-start-1 md:col-span-12 md:row-start-1 space-y-6 md:space-y-6 md:pointer-events-none [&_h4]:md:pointer-events-auto [&_a]:md:pointer-events-auto"
+                            className="min-[900px]:col-start-1 min-[900px]:col-span-12 min-[900px]:row-start-1 space-y-6 min-[900px]:space-y-6 min-[900px]:pointer-events-none [&_h4]:min-[900px]:pointer-events-auto [&_a]:min-[900px]:pointer-events-auto"
                             style={{
                                 ...(productsAlign && isWideScreen
                                     ? {
@@ -906,7 +909,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                     row height matches Company / Products hovers — dropdown
                                     panel height stays consistent across triggers. */}
                                 <div
-                                    className="hidden md:block overflow-hidden"
+                                    className="hidden min-[900px]:block overflow-hidden"
                                     aria-hidden={hoverKind !== null}
                                     style={{
                                         opacity: !isMenuOpen ? 0 : hoverKind !== null ? 0 : 1,
@@ -925,7 +928,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                     </h4>
                                 </div>
                                 {/* Mobile-only eyebrow kept separate (no collapse needed) */}
-                                <h4 className={`md:hidden text-[13px] font-medium tracking-[0.08em] uppercase mb-4 ${dropdownSubheadClass}`}>
+                                <h4 className={`min-[900px]:hidden text-[13px] font-medium tracking-[0.08em] uppercase mb-4 ${dropdownSubheadClass}`}>
                                     <ScrambleText text="PRODUCTS" isActive={isMenuOpen} delay={250} />
                                 </h4>
 
@@ -934,7 +937,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                     Absolutely positioned on top of the cards grid so the two
                                     variants can crossfade. Occupies only when hovered. */}
                                 <div
-                                    className="hidden md:flex absolute inset-0 items-start gap-10"
+                                    className="hidden min-[900px]:flex absolute inset-0 items-start gap-10"
                                     aria-hidden={hoverKind !== "company"}
                                     style={{
                                         opacity: hoverKind === "company" && isMenuOpen ? 1 : 0,
@@ -999,7 +1002,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                     modes; crossfades out when company mode engages. Cards
                                     are capped at 760px and centred via mx-auto. */}
                                 <div
-                                    className={`hidden md:grid grid-cols-2 gap-6 mx-auto md:max-w-[760px] ${hoverKind === "company" ? "[&_a]:pointer-events-none!" : ""}`}
+                                    className={`hidden min-[900px]:grid grid-cols-2 gap-6 mx-auto min-[900px]:max-w-[760px] ${hoverKind === "company" ? "[&_a]:pointer-events-none!" : ""}`}
                                     style={{
                                         opacity: hoverKind === "company" ? 0 : 1,
                                         pointerEvents: hoverKind === "company" ? "none" : "auto",
@@ -1072,7 +1075,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                 </div>
 
                                 {/* Mobile — text list (unchanged) */}
-                                <ul className="space-y-4 md:hidden">
+                                <ul className="space-y-4 min-[900px]:hidden">
                                     {[
                                         { label: "MapsGPT", href: "/products/mapsgpt" },
                                         { label: "Columbus", href: "/products/enterprise" },
@@ -1095,7 +1098,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                                 className={`group relative text-xl font-medium transition-all duration-300 flex items-center cursor-pointer ${dropdownNavLinkClass}`}
                                             >
                                                 <span className="transition-all duration-300 ease-in-out group-hover:translate-x-1">{item.label}</span>
-                                                <svg className={`ml-3 shrink-0 transition-all duration-300 ease-in-out group-hover:translate-x-1 group-hover:stroke-[#2563EB] ${isDark ? "stroke-white" : "stroke-[#0A1344]"}`} width="9" height="16" viewBox="0 0 7 12" fill="none" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                                                <svg className="ml-3 shrink-0 transition-all duration-300 ease-in-out group-hover:translate-x-1" width="9" height="16" viewBox="0 0 7 12" fill="none" stroke="#2563EB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                                                     <path d="M1 1l5 5-5 5" />
                                                 </svg>
                                             </Link>
@@ -1105,7 +1108,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                             </div>
 
                             {/* ── Company group — mobile only ── */}
-                            <div className="md:hidden">
+                            <div className="min-[900px]:hidden">
                                 <h4
                                     className={`text-[13px] font-medium tracking-[0.08em] uppercase mb-4 ${dropdownSubheadClass}`}
                                     style={{
@@ -1159,7 +1162,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                     {/* ── Mobile bottom CTA (mapsgpt — glass pill, content-width) ── */}
                     {isProductsPage && (
                         <div
-                            className="md:hidden pt-6"
+                            className="min-[900px]:hidden pt-6"
                             style={{
                                 opacity: isMenuOpen ? 1 : 0,
                                 transform: isMenuOpen ? "translateY(0)" : "translateY(12px)",
@@ -1195,7 +1198,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                 {/* ── Mobile bottom CTA (all other pages — full-width, viewport bottom) ── */}
                 {!isProductsPage && (
                     <div
-                        className="md:hidden mt-auto"
+                        className="min-[900px]:hidden mt-auto"
                         style={{
                             opacity: isMenuOpen ? 1 : 0,
                             transition: isMenuOpen
