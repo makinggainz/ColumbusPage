@@ -77,12 +77,6 @@ export function BlogArticleStickyNav({ sections, postTitle = "" }: Props) {
         Back to Blog
       </Link>
 
-      {/* Share */}
-      <div className={styles.shareSection}>
-        <p className={styles.shareLabel}>Share this Article</p>
-        <ShareButtons title={postTitle} size={18} />
-      </div>
-
       {/* TOC */}
       {sections.length > 0 && (
         <div className={styles.tocSection}>
@@ -117,7 +111,7 @@ export function BlogArticleStickyNav({ sections, postTitle = "" }: Props) {
           onClick={() => setA11yOpen(!a11yOpen)}
           aria-expanded={a11yOpen}
         >
-          <span className={styles.tocLabel}>Accessibility</span>
+          <span className={styles.tocHeading} style={{ marginBottom: 0 }}>Accessibility</span>
           <svg
             width="10" height="10" viewBox="0 0 10 10" fill="none"
             stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"

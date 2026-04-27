@@ -50,7 +50,10 @@ export default async function BlogPostPage({ params }: Props) {
         >
           {post.description}
         </p>
-        <p className={`${blogStyles.labelLarge} ${blogStyles.dateLine}`}>{post.date}</p>
+        <div className="flex items-center gap-1">
+          <p className={`${blogStyles.labelLarge} ${blogStyles.dateLine}`}>{post.date}</p>
+          <ShareButtons title={post.title} size={18} />
+        </div>
 
         <div
           className={blogStyles.articleImagePlaceholder}
