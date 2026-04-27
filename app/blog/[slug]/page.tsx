@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { BlogArticleStickyNav } from "@/components/blog/BlogArticleStickyNav";
+import { ArticleReadingOptions } from "@/components/blog/ArticleReadingOptions";
 import { RelatedPosts } from "@/components/blog/RelatedPosts";
 import { ShareButtons } from "@/components/blog/ShareButtons";
 import { Navbar } from "@/components/layout/Navbar";
@@ -50,9 +51,12 @@ export default async function BlogPostPage({ params }: Props) {
         >
           {post.description}
         </p>
-        <div className="flex items-center gap-1">
-          <p className={`${blogStyles.labelLarge} ${blogStyles.dateLine}`}>{post.date}</p>
-          <ShareButtons title={post.title} size={18} />
+        <div className="flex items-center justify-between gap-4 mt-4">
+          <div className="flex items-center gap-1">
+            <p className={`${blogStyles.labelLarge} ${blogStyles.dateLine}`}>{post.date}</p>
+            <ShareButtons title={post.title} size={18} />
+          </div>
+          <ArticleReadingOptions />
         </div>
 
         <div
