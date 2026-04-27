@@ -77,32 +77,6 @@ export function BlogArticleStickyNav({ sections, postTitle = "" }: Props) {
         Back to Blog
       </Link>
 
-      {/* TOC */}
-      {sections.length > 0 && (
-        <div className={styles.tocSection}>
-          <p className={styles.tocHeading}>In this Article</p>
-          <ul className={styles.tocList}>
-            {sections.map((s, i) => {
-              const isActive = activeId === s.id;
-              return (
-                <li key={s.id}>
-                  <a href={`#${s.id}`} className={`${styles.tocItem} ${isActive ? styles.tocItemActive : ""}`}>
-                    <span className={styles.tocBullet} aria-hidden>
-                      {isActive && (
-                        <svg width="4" height="4" viewBox="0 0 4 4" fill="none">
-                          <circle cx="2" cy="2" r="2" fill="#101144" />
-                        </svg>
-                      )}
-                    </span>
-                    <span>{i + 1}. {s.label}</span>
-                  </a>
-                </li>
-              );
-            })}
-          </ul>
-        </div>
-      )}
-
       {/* Accessibility */}
       <div className={styles.a11yRow}>
         <button
@@ -111,7 +85,22 @@ export function BlogArticleStickyNav({ sections, postTitle = "" }: Props) {
           onClick={() => setA11yOpen(!a11yOpen)}
           aria-expanded={a11yOpen}
         >
-          <span className={styles.tocHeading} style={{ marginBottom: 0 }}>Accessibility</span>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width={18} height={18}
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-label="Accessibility options"
+          >
+            <circle cx="12" cy="12" r="10" />
+            <path d="M8 9.5a4 4 0 1 0 8 0" />
+            <line x1="12" y1="14" x2="12" y2="22" />
+            <line x1="8" y1="18" x2="16" y2="18" />
+          </svg>
           <svg
             width="10" height="10" viewBox="0 0 10 10" fill="none"
             stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"
@@ -123,6 +112,26 @@ export function BlogArticleStickyNav({ sections, postTitle = "" }: Props) {
         </button>
         {a11yOpen && <AccessibilityMenu />}
       </div>
+
+      {/* TOC */}
+      {sections.length > 0 && (
+        <div className={styles.tocSection}>
+          <p className={styles.tocHeading}>In this Article</p>
+          <ul className={styles.tocList}>
+            {sections.map((s) => {
+              const isActive = activeId === s.id;
+              return (
+                <li key={s.id}>
+                  <a href={`#${s.id}`} className={`${styles.tocItem} ${isActive ? styles.tocItemActive : ""}`}>
+                    <span className={styles.sidebarMarker} aria-hidden>{isActive ? "+" : ""}</span>
+                    <span>{s.label}</span>
+                  </a>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      )}
 
     </nav>
   );
