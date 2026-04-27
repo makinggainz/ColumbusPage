@@ -5245,8 +5245,9 @@
   .lgmTimeline {
     height: clamp(160px, 40vw, 300px);
     margin-top: clamp(20px, 2vw, 40px);
-    margin-inline: calc(-1 * var(--page-padding));
-    width: calc(100% + 2 * var(--page-padding));
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+    margin-right: calc(-50vw + 50%);
   }
 
   .lgmTimelineLabel {
