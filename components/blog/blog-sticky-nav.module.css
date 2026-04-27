@@ -18,6 +18,7 @@
     top: 148px;
     max-width: clamp(180px, calc(50vw - 488px), 240px);
     padding: 14px;
+    background: #F5F5F7;
   }
 }
 
