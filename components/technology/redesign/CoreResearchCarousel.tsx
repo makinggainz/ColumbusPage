@@ -61,13 +61,9 @@ export function CoreResearchCarousel() {
     <div className={styles.carouselSlide} onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
       <h3 className={styles.carouselTitle}>{slide.title}</h3>
 
-      <div className={styles.carouselDiagramWrap}>
-        <TechDiagramSVG activeTitle={slide.title} />
-      </div>
-
-      <div className={styles.carouselControls}>
+      <div className={styles.carouselDiagramContainer}>
         <button
-          className={styles.carouselArrow}
+          className={`${styles.carouselArrow} ${styles.carouselArrowLeft}`}
           onClick={prev}
           disabled={activeIndex === 0}
           aria-label="Previous slide"
@@ -75,26 +71,30 @@ export function CoreResearchCarousel() {
           ←
         </button>
 
-        <div className={styles.carouselDots}>
-          {SLIDES.map((_, i) => (
-            <button
-              key={i}
-              className={`${styles.carouselDot} ${i === activeIndex ? styles.carouselDotActive : ""}`}
-              onClick={() => setActiveIndex(i)}
-              aria-label={`Go to slide ${i + 1}`}
-              aria-current={i === activeIndex ? "true" : undefined}
-            />
-          ))}
+        <div className={styles.carouselDiagramWrap}>
+          <TechDiagramSVG activeTitle={slide.title} />
         </div>
 
         <button
-          className={styles.carouselArrow}
+          className={`${styles.carouselArrow} ${styles.carouselArrowRight}`}
           onClick={next}
           disabled={activeIndex === 3}
           aria-label="Next slide"
         >
           →
         </button>
+      </div>
+
+      <div className={styles.carouselDots}>
+        {SLIDES.map((_, i) => (
+          <button
+            key={i}
+            className={`${styles.carouselDot} ${i === activeIndex ? styles.carouselDotActive : ""}`}
+            onClick={() => setActiveIndex(i)}
+            aria-label={`Go to slide ${i + 1}`}
+            aria-current={i === activeIndex ? "true" : undefined}
+          />
+        ))}
       </div>
 
       <div className={styles.carouselDivider} />
