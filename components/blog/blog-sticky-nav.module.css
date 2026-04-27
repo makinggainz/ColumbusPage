@@ -123,6 +123,23 @@
   color: #0A1344;
 }
 
+/* Reserve bold width so activating an item never causes text to wrap.
+   The ::after holds a hidden copy of the label at bold weight; the
+   container stays the same width whether active or not. */
+.tocItemLabel {
+  display: block;
+}
+
+.tocItemLabel::after {
+  content: attr(data-label);
+  display: block;
+  font-weight: 600;
+  visibility: hidden;
+  height: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
 .tocBullet {
   width: 8px;
   height: 8px;
