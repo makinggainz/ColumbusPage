@@ -109,7 +109,6 @@
   font-weight: 400;
   letter-spacing: -0.005em;
   line-height: 1.4;
-  white-space: nowrap;
   color: rgba(10, 19, 68, 0.38);
   text-decoration: none;
   padding: 4px 0;
@@ -120,7 +119,6 @@
 .tocItem:hover { color: rgba(10, 19, 68, 0.75); }
 
 .tocItemActive {
-  font-weight: 600;
   color: #0A1344;
 }
 
