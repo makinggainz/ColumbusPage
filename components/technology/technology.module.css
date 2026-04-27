@@ -5240,6 +5240,53 @@
   .lgmTimelineTrack {
     right: calc(-1 * var(--page-padding));
   }
+
+  /* ── Timeline responsive scaling at ≤1500px ── */
+  .lgmTimeline {
+    height: clamp(180px, 45vw, 320px);
+    margin-top: clamp(24px, 3vw, 40px);
+  }
+
+  .lgmTimelineLabel {
+    font-size: clamp(18px, 4vw, 36px);
+  }
+
+  .lgmTimelineMilestoneTop {
+    min-height: clamp(60px, 12vw, 120px);
+  }
+
+  .lgmTimelineMilestoneCompact {
+    min-height: clamp(40px, 6vw, 60px);
+  }
+
+  .lgmTimelineYear {
+    margin-bottom: clamp(8px, 1.5vw, 16px);
+    font-size: clamp(12px, 2vw, 16px);
+  }
+
+  .lgmTimelineColumbus .lgmTimelineColumbusLogo {
+    width: clamp(40px, 10vw, 65px);
+    height: clamp(40px, 10vw, 65px);
+    margin-top: clamp(16px, 3vw, 32px);
+  }
+
+  .lgmTimelineCta {
+    margin-top: clamp(16px, 3vw, 28px);
+    font-size: clamp(13px, 2vw, 16px);
+  }
+
+  .lgmTimelineHalo {
+    top: clamp(-20px, -3vw, -30px);
+    bottom: clamp(-20px, -3vw, -30px);
+  }
+
+  .lgmTimelineStem {
+    height: clamp(12px, 2vw, 24px);
+  }
+
+  .lgmTimelineMilestoneBottom .lgmTimelineStem {
+    margin-bottom: clamp(4px, 1vw, 8px);
+  }
 }
 
 /* ── LGM Compare Table mobile scroll ── */
