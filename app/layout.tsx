@@ -3,7 +3,7 @@ import "./globals.css";
 
 import { cormorant, cambo, geist, dmSans } from "@/app/fonts";
 import { LenisProvider } from "@/components/home/LenisContext";
-import { PageTransitionProvider } from "@/components/layout/PageTransition";
+import { ScrollRestorer } from "@/components/layout/ScrollRestorer";
 
 export { cormorant, cambo };
 
@@ -30,7 +30,8 @@ export default function RootLayout({
           variable for the few legacy spots that still reference it directly. */}
       <body className={`${dmSans.className} antialiased bg-white min-h-screen`}>
         <LenisProvider>
-          <PageTransitionProvider>{children}</PageTransitionProvider>
+          <ScrollRestorer />
+          {children}
         </LenisProvider>
       </body>
     </html>
