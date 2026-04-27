@@ -229,6 +229,7 @@
 
 
 .section {
+  width: 100%;
   min-height: 100vh;
   /* Anchor scrolls land flush with the compact navbar's bottom edge. The
      compact navbar is 56px tall, so the last 56px of any preceding content
