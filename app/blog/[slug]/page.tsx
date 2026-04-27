@@ -41,7 +41,7 @@ export default async function BlogPostPage({ params }: Props) {
       <div className="max-[1314px]:block hidden">
         <Navbar />
       </div>
-      <BlogArticleStickyNav sections={stickySections} />
+      <BlogArticleStickyNav sections={stickySections} postTitle={post.title} />
 
       <article className="relative z-[1] mx-auto w-full max-w-[720px] px-4 pt-[175px] min-[1315px]:pt-[162px] pb-12 md:px-6">
         <h1 className={`${blogStyles.headlineLarge} mb-6`}>{post.title}</h1>
@@ -50,10 +50,7 @@ export default async function BlogPostPage({ params }: Props) {
         >
           {post.description}
         </p>
-        <div className="flex items-center gap-1">
-          <p className={`${blogStyles.labelLarge} ${blogStyles.dateLine}`}>{post.date}</p>
-          <ShareButtons title={post.title} size={18} />
-        </div>
+        <p className={`${blogStyles.labelLarge} ${blogStyles.dateLine}`}>{post.date}</p>
 
         <div
           className={blogStyles.articleImagePlaceholder}

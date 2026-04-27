@@ -1,7 +1,4 @@
-/* Blog article sticky rail — replaces the navbar entirely on /blog/<slug>.
-   Hosts (top-down): the Columbus home link + wordmark slide-out, the back
-   link, the article section index, and the accessibility menu trigger.
-   Two visual modes: recessed (rest) and revealed (hover/focus-within). */
+/* Blog article sticky rail */
 
 .dock {
   display: none;
@@ -11,25 +8,23 @@
   .dock {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 24px;
     position: fixed;
     z-index: 20;
     left: max(20px, calc((100vw - 1287px) / 4));
     top: 148px;
     max-width: clamp(180px, calc(50vw - 488px), 240px);
     padding: 14px;
-    background: #F5F5F7;
   }
 }
 
-/* ── Home link + wordmark slide-out ─────────────────────────────────── */
+/* ── Home link ───────────────────────────────────────────────────────── */
 .homeLink {
   display: inline-flex;
   align-items: center;
   gap: 8px;
   text-decoration: none;
   color: inherit;
-  margin-bottom: 4px;
 }
 
 .logoGlyph {
@@ -60,9 +55,7 @@
     filter 420ms cubic-bezier(0.05, 0.7, 0.1, 1);
 }
 
-/* ── Back link ──────────────────────────────────────────────────────────
-   Minimal — text + left-pointing chevron (mirrors the homepage hero CTA
-   arrow), on-brand navy at rest. */
+/* ── Back link ───────────────────────────────────────────────────────── */
 .back {
   display: inline-flex;
   align-items: center;
@@ -70,10 +63,8 @@
   font-size: 13px;
   font-weight: 500;
   letter-spacing: -0.005em;
-  color: #101144;
+  color: rgba(10, 19, 68, 0.55);
   text-decoration: none;
-  padding: 6px 8px;
-  margin: -6px -8px;
   outline: none;
   transition: color 220ms ease;
 }
@@ -83,18 +74,81 @@
   transition: transform 300ms ease;
 }
 
-.back:hover,
-.back:focus-visible {
+.back:hover { color: #0A1344; }
+.back:hover .backArrow { transform: translateX(-2px); }
+
+/* ── Share section ───────────────────────────────────────────────────── */
+.shareSection {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.shareLabel {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: rgba(10, 19, 68, 0.45);
+  text-transform: uppercase;
+}
+
+/* ── TOC section ─────────────────────────────────────────────────────── */
+.tocSection {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.tocHeading {
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: #0A1344;
+  margin-bottom: 10px;
+}
+
+.tocList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.tocItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: -0.005em;
+  line-height: 1.4;
+  color: rgba(10, 19, 68, 0.38);
+  text-decoration: none;
+  padding: 4px 0;
+  outline: none;
+  transition: color 200ms ease;
+}
+
+.tocItem:hover { color: rgba(10, 19, 68, 0.75); }
+
+.tocItemActive {
+  font-weight: 600;
   color: #0A1344;
 }
 
-.back:hover .backArrow,
-.back:focus-visible .backArrow {
-  transform: translateX(-2px);
+.tocBullet {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-/* ── Section index ──────────────────────────────────────────────────── */
-.tocBlock {
+/* ── Accessibility section ───────────────────────────────────────────── */
+.a11yRow {
   display: flex;
   flex-direction: column;
   gap: 0;
@@ -106,87 +160,8 @@
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: rgba(10, 19, 68, 0.35);
-  margin-bottom: 6px;
-  transition: color 280ms ease;
 }
 
-.dock:hover .tocLabel,
-.dock:focus-within .tocLabel {
-  color: rgba(10, 19, 68, 0.55);
-}
-
-.sectionList {
-  list-style: none;
-  margin: 0;
-  padding-top: 8px;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  border-top: 0;
-  background-image: linear-gradient(to right, rgba(16, 17, 68, 0.18), transparent);
-  background-size: 100% 1px;
-  background-position: top left;
-  background-repeat: no-repeat;
-  transition: background-image 280ms ease;
-}
-
-.dock:hover .sectionList,
-.dock:focus-within .sectionList {
-  background-image: linear-gradient(to right, rgba(16, 17, 68, 0.3), transparent);
-}
-
-.sectionLink {
-  display: block;
-  font-size: 12px;
-  font-weight: 400;
-  letter-spacing: -0.005em;
-  line-height: 1.4;
-  color: rgba(10, 19, 68, 0.32);
-  text-decoration: none;
-  padding: 6px 8px;
-  margin: 0 -8px;
-  outline: none;
-  transition: color 220ms ease, filter 220ms ease, opacity 220ms ease;
-}
-
-.dock:hover .sectionLink,
-.dock:focus-within .sectionLink {
-  color: rgba(10, 19, 68, 0.6);
-}
-
-.sectionLink:hover,
-.sectionLink:focus-visible {
-  color: #101144;
-}
-
-/* When any section link is being hovered/focused, blur the *other* links so
-   the hovered one reads as the focus point. The hovered link itself stays
-   crisp via :not(). */
-.sectionList:has(.sectionLink:hover) .sectionLink:not(:hover),
-.sectionList:has(.sectionLink:focus-visible) .sectionLink:not(:focus-visible) {
-  filter: blur(1.5px);
-  opacity: 0.65;
-}
-
-/* ── A11y row at the bottom — mirrors .tocBlock ─────────────────────── */
-.a11yRow {
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-  padding-top: 8px;
-  background-image: linear-gradient(to right, rgba(16, 17, 68, 0.18), transparent);
-  background-size: 100% 1px;
-  background-position: top left;
-  background-repeat: no-repeat;
-  transition: background-image 280ms ease;
-}
-
-.dock:hover .a11yRow,
-.dock:focus-within .a11yRow {
-  background-image: linear-gradient(to right, rgba(16, 17, 68, 0.3), transparent);
-}
-
-/* Toggle button — spreads label and chevron across the full row width */
 .a11yToggle {
   display: flex;
   align-items: center;
@@ -200,148 +175,55 @@
   color: inherit;
 }
 
-/* Chevron inherits color from tocLabel via parent */
 .chevron {
   color: rgba(10, 19, 68, 0.35);
-  transition: transform 220ms ease, color 280ms ease;
+  transition: transform 220ms ease;
   flex-shrink: 0;
 }
 
 .chevronOpen {
   color: rgba(10, 19, 68, 0.35);
   transform: rotate(180deg);
-  transition: transform 220ms ease, color 280ms ease;
+  transition: transform 220ms ease;
   flex-shrink: 0;
 }
 
-.dock:hover .chevron,
-.dock:focus-within .chevron,
-.dock:hover .chevronOpen,
-.dock:focus-within .chevronOpen {
-  color: rgba(10, 19, 68, 0.55);
-}
+/* ── Dark mode ───────────────────────────────────────────────────────── */
+:global(body.bg-mode-dark) .wordmarkText { color: rgba(255,255,255,0.92); }
+:global(body.bg-mode-dark) .logoGlyph img { filter: brightness(0) invert(1); }
 
-/* Dock-hover brightens a11y options the same way it brightens TOC links */
-.dock:hover .a11yRow :global(.option),
-.dock:focus-within .a11yRow :global(.option) {
-  color: rgba(10, 19, 68, 0.6);
-}
+:global(body.bg-mode-dark) .back { color: rgba(255,255,255,0.55); }
+:global(body.bg-mode-dark) .back:hover { color: rgba(255,255,255,0.90); }
 
-/* ─────────────────────────────────────────────────────────────────────
-   Dark mode (AccessibilityMenu's body.bg-mode-dark)
-   ───────────────────────────────────────────────────────────────────── */
-:global(body.bg-mode-dark) .wordmarkText {
-  color: rgba(255, 255, 255, 0.95);
-}
-:global(body.bg-mode-dark) .logoGlyph img {
-  filter: brightness(0) invert(1);
-}
+:global(body.bg-mode-dark) .shareLabel { color: rgba(255,255,255,0.35); }
 
-:global(body.bg-mode-dark) .back {
-  color: #4B9CFF;
-}
-:global(body.bg-mode-dark) .back:hover,
-:global(body.bg-mode-dark) .back:focus-visible {
-  color: #FFFFFF;
-}
+:global(body.bg-mode-dark) .tocHeading { color: rgba(255,255,255,0.90); }
 
-:global(body.bg-mode-dark) .tocLabel {
-  color: rgba(255, 255, 255, 0.28);
-}
-:global(body.bg-mode-dark) .dock:hover .tocLabel,
-:global(body.bg-mode-dark) .dock:focus-within .tocLabel {
-  color: rgba(255, 255, 255, 0.50);
-}
+:global(body.bg-mode-dark) .tocItem { color: rgba(255,255,255,0.32); }
+:global(body.bg-mode-dark) .tocItem:hover { color: rgba(255,255,255,0.72); }
+:global(body.bg-mode-dark) .tocItemActive { color: rgba(255,255,255,0.92); }
+:global(body.bg-mode-dark) .tocItemActive circle { fill: rgba(255,255,255,0.92); }
+:global(body.bg-mode-dark) .tocItemActive path { stroke: #111318; }
 
-:global(body.bg-mode-dark) .sectionList,
-:global(body.bg-mode-dark) .a11yRow {
-  background-image: linear-gradient(to right, rgba(75, 156, 255, 0.18), transparent);
-}
-:global(body.bg-mode-dark) .dock:hover .sectionList,
-:global(body.bg-mode-dark) .dock:focus-within .sectionList,
-:global(body.bg-mode-dark) .dock:hover .a11yRow,
-:global(body.bg-mode-dark) .dock:focus-within .a11yRow {
-  background-image: linear-gradient(to right, rgba(75, 156, 255, 0.32), transparent);
-}
-
-:global(body.bg-mode-dark) .sectionLink {
-  color: rgba(255, 255, 255, 0.32);
-}
-:global(body.bg-mode-dark) .dock:hover .sectionLink,
-:global(body.bg-mode-dark) .dock:focus-within .sectionLink {
-  color: rgba(255, 255, 255, 0.65);
-}
-:global(body.bg-mode-dark) .sectionLink:hover,
-:global(body.bg-mode-dark) .sectionLink:focus-visible {
-  color: #4B9CFF;
-  background-color: rgba(75, 156, 255, 0.10);
-}
-
-/* ─────────────────────────────────────────────────────────────────────
-   Sepia mode
-   ───────────────────────────────────────────────────────────────────── */
-:global(body.bg-mode-sepia) .wordmarkText {
-  color: #433422;
-}
-
-:global(body.bg-mode-sepia) .back {
-  color: #8a5a2b;
-}
-:global(body.bg-mode-sepia) .back:hover,
-:global(body.bg-mode-sepia) .back:focus-visible {
-  color: #433422;
-}
-
-:global(body.bg-mode-sepia) .tocLabel {
-  color: rgba(67, 52, 34, 0.35);
-}
-:global(body.bg-mode-sepia) .dock:hover .tocLabel,
-:global(body.bg-mode-sepia) .dock:focus-within .tocLabel {
-  color: rgba(67, 52, 34, 0.55);
-}
-
-:global(body.bg-mode-sepia) .sectionList,
-:global(body.bg-mode-sepia) .a11yRow {
-  background-image: linear-gradient(to right, rgba(138, 90, 43, 0.18), transparent);
-}
-:global(body.bg-mode-sepia) .dock:hover .sectionList,
-:global(body.bg-mode-sepia) .dock:focus-within .sectionList,
-:global(body.bg-mode-sepia) .dock:hover .a11yRow,
-:global(body.bg-mode-sepia) .dock:focus-within .a11yRow {
-  background-image: linear-gradient(to right, rgba(138, 90, 43, 0.3), transparent);
-}
-
-:global(body.bg-mode-sepia) .sectionLink {
-  color: rgba(67, 52, 34, 0.32);
-}
-:global(body.bg-mode-sepia) .dock:hover .sectionLink,
-:global(body.bg-mode-sepia) .dock:focus-within .sectionLink {
-  color: rgba(67, 52, 34, 0.6);
-}
-:global(body.bg-mode-sepia) .sectionLink:hover,
-:global(body.bg-mode-sepia) .sectionLink:focus-visible {
-  color: #8a5a2b;
-  background-color: rgba(138, 90, 43, 0.08);
-}
-
+:global(body.bg-mode-dark) .tocLabel { color: rgba(255,255,255,0.28); }
 :global(body.bg-mode-dark) .chevron,
-:global(body.bg-mode-dark) .chevronOpen {
-  color: rgba(255, 255, 255, 0.28);
-}
-:global(body.bg-mode-dark) .dock:hover .chevron,
-:global(body.bg-mode-dark) .dock:focus-within .chevron,
-:global(body.bg-mode-dark) .dock:hover .chevronOpen,
-:global(body.bg-mode-dark) .dock:focus-within .chevronOpen {
-  color: rgba(255, 255, 255, 0.50);
-}
+:global(body.bg-mode-dark) .chevronOpen { color: rgba(255,255,255,0.28); }
 
+/* ── Sepia mode ──────────────────────────────────────────────────────── */
+:global(body.bg-mode-sepia) .wordmarkText { color: #433422; }
+
+:global(body.bg-mode-sepia) .back { color: rgba(67,52,34,0.55); }
+:global(body.bg-mode-sepia) .back:hover { color: #433422; }
+
+:global(body.bg-mode-sepia) .shareLabel { color: rgba(67,52,34,0.40); }
+
+:global(body.bg-mode-sepia) .tocHeading { color: #433422; }
+
+:global(body.bg-mode-sepia) .tocItem { color: rgba(67,52,34,0.38); }
+:global(body.bg-mode-sepia) .tocItem:hover { color: rgba(67,52,34,0.75); }
+:global(body.bg-mode-sepia) .tocItemActive { color: #433422; }
+:global(body.bg-mode-sepia) .tocItemActive circle { fill: #433422; }
+
+:global(body.bg-mode-sepia) .tocLabel { color: rgba(67,52,34,0.35); }
 :global(body.bg-mode-sepia) .chevron,
-:global(body.bg-mode-sepia) .chevronOpen {
-  color: rgba(67, 52, 34, 0.35);
-}
-:global(body.bg-mode-sepia) .dock:hover .chevron,
-:global(body.bg-mode-sepia) .dock:focus-within .chevron,
-:global(body.bg-mode-sepia) .dock:hover .chevronOpen,
-:global(body.bg-mode-sepia) .dock:focus-within .chevronOpen {
-  color: rgba(67, 52, 34, 0.55);
-}
+:global(body.bg-mode-sepia) .chevronOpen { color: rgba(67,52,34,0.35); }
