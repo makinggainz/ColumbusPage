@@ -43,7 +43,7 @@ export default async function BlogPostPage({ params }: Props) {
       </div>
       <BlogArticleStickyNav sections={stickySections} />
 
-      <article className="relative z-[1] mx-auto w-full max-w-[720px] px-4 pt-[100px] min-[1315px]:pt-[162px] pb-12 md:px-6">
+      <article className="relative z-[1] mx-auto w-full max-w-[720px] px-4 pt-[125px] min-[1315px]:pt-[162px] pb-12 md:px-6">
         <h1 className={`${blogStyles.headlineLarge} mb-6`}>{post.title}</h1>
         <p
           className={`${blogStyles.bodyLarge} ${blogStyles.colorOnSurfaceVariant} ${blogStyles.descriptionDivider} mb-3`}
