@@ -5215,6 +5215,18 @@
     left: 0;
     right: 0;
   }
+
+  .verticalLineOverlay {
+    display: none;
+  }
+
+  .lgmTimelineHalo {
+    right: calc(-1 * var(--page-padding));
+  }
+
+  .lgmTimelineTrack {
+    right: calc(-1 * var(--page-padding));
+  }
 }
 
 /* ── LGM Compare Table mobile scroll ── */
