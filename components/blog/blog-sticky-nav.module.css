@@ -1,72 +1,24 @@
 /* Blog article sticky rail — replaces the navbar entirely on /blog/<slug>.
-   Now collapsible with a toggle button. Header always visible; body animates
-   in/out using max-height + opacity, matching navbar dropdown motion. */
+   Hosts (top-down): the Columbus home link + wordmark slide-out, the back
+   link, the article section index, and the accessibility menu trigger.
+   Two visual modes: recessed (rest) and revealed (hover/focus-within). */
 
-.dockOuter {
+.dock {
   display: none;
 }
 
 @media (min-width: 1100px) {
-  .dockOuter {
-    position: fixed;
-    z-index: 25;
-    top: 148px;
-    left: max(20px, calc((100vw - 1287px) / 4));
-    max-width: clamp(180px, calc(50vw - 488px), 240px);
-    width: 100%;
+  .dock {
     display: flex;
     flex-direction: column;
-    /* Frosted glass background — visible when overlaying article */
-    background: rgba(245, 245, 247, 0.96);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border-radius: 6px;
-    box-shadow: 0 2px 16px rgba(10, 19, 68, 0.07), 0 0 0 1px rgba(10, 19, 68, 0.06);
+    gap: 16px;
+    position: fixed;
+    z-index: 20;
+    left: max(20px, calc((100vw - 1287px) / 4));
+    top: 148px;
+    max-width: clamp(180px, calc(50vw - 488px), 240px);
+    padding: 14px;
   }
-}
-
-/* Header row — always visible */
-.dockHeader {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  padding: 14px 10px 10px 14px;
-}
-
-/* Toggle button — minimize/maximize the sidebar */
-.dockToggle {
-  flex-shrink: 0;
-  width: 26px;
-  height: 26px;
-  border-radius: 4px;
-  border: none;
-  background: rgba(10, 19, 68, 0.05);
-  color: rgba(10, 19, 68, 0.45);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: background-color 200ms ease, color 200ms ease;
-}
-
-.dockToggle:hover {
-  background: rgba(10, 19, 68, 0.10);
-  color: #0A1344;
-}
-
-.dockToggle:focus-visible {
-  outline: 2px solid rgba(10, 19, 68, 0.2);
-  outline-offset: 2px;
-}
-
-.toggleIcon {
-  flex-shrink: 0;
-  transition: transform 350ms cubic-bezier(0.05, 0.7, 0.1, 1);
-}
-
-.toggleIconClosed {
-  transform: rotate(180deg);
 }
 
 /* ── Home link + wordmark slide-out ─────────────────────────────────── */
@@ -76,8 +28,7 @@
   gap: 8px;
   text-decoration: none;
   color: inherit;
-  margin: 0;
-  flex: 1;
+  margin-bottom: 4px;
 }
 
 .logoGlyph {
@@ -139,19 +90,6 @@
 .back:hover .backArrow,
 .back:focus-visible .backArrow {
   transform: translateX(-2px);
-}
-
-/* Collapsible body container */
-.dockBody {
-  overflow: hidden;
-}
-
-/* Body inner — receives translateY + opacity animation */
-.dockBodyInner {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  padding: 4px 14px 14px;
 }
 
 /* ── Section index ──────────────────────────────────────────────────── */
@@ -291,25 +229,8 @@
 /* ─────────────────────────────────────────────────────────────────────
    Dark mode (AccessibilityMenu's body.bg-mode-dark)
    ───────────────────────────────────────────────────────────────────── */
-@media (min-width: 1100px) {
-  :global(body.bg-mode-dark) .dockOuter {
-    background: rgba(10, 19, 68, 0.96);
-    box-shadow: 0 2px 16px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(75, 156, 255, 0.2);
-  }
-}
-
 :global(body.bg-mode-dark) .wordmarkText {
   color: rgba(255, 255, 255, 0.95);
-}
-
-:global(body.bg-mode-dark) .dockToggle {
-  background: rgba(75, 156, 255, 0.10);
-  color: rgba(75, 156, 255, 0.45);
-}
-
-:global(body.bg-mode-dark) .dockToggle:hover {
-  background: rgba(75, 156, 255, 0.20);
-  color: #4B9CFF;
 }
 :global(body.bg-mode-dark) .logoGlyph img {
   filter: brightness(0) invert(1);
@@ -358,25 +279,8 @@
 /* ─────────────────────────────────────────────────────────────────────
    Sepia mode
    ───────────────────────────────────────────────────────────────────── */
-@media (min-width: 1100px) {
-  :global(body.bg-mode-sepia) .dockOuter {
-    background: rgba(244, 236, 216, 0.96);
-    box-shadow: 0 2px 16px rgba(138, 90, 43, 0.10), 0 0 0 1px rgba(138, 90, 43, 0.12);
-  }
-}
-
 :global(body.bg-mode-sepia) .wordmarkText {
   color: #433422;
-}
-
-:global(body.bg-mode-sepia) .dockToggle {
-  background: rgba(138, 90, 43, 0.08);
-  color: rgba(138, 90, 43, 0.45);
-}
-
-:global(body.bg-mode-sepia) .dockToggle:hover {
-  background: rgba(138, 90, 43, 0.16);
-  color: #8a5a2b;
 }
 
 :global(body.bg-mode-sepia) .back {
