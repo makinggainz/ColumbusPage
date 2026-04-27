@@ -33,22 +33,21 @@ export function BlogArticleStickyNav({ sections }: Props) {
       const navHeight = navRef.current.offsetHeight;
       const navTop = 148; // initial top position
 
-      // When article bottom is above the nav's resting position + nav height,
-      // constrain the nav so it stops at the article end
+      // Calculate the max offset: when article bottom reaches nav bottom position
       const articleBottom = articleRect.bottom;
-      const navBottom = window.innerHeight - (window.innerHeight - articleBottom);
+      const navViewportEnd = navTop + navHeight;
 
-      if (articleBottom < navTop + navHeight) {
-        // Article is scrolling past, constrain nav
-        const overflow = navTop + navHeight - articleBottom;
-        setTransform(`translateY(-${Math.max(0, overflow)}px)`);
+      // Only constrain when article is actually ending (bottom within viewport)
+      if (articleBottom <= navViewportEnd) {
+        const overflow = navViewportEnd - articleBottom;
+        setTransform(`translateY(-${overflow}px)`);
       } else {
-        // Article is still in view, no constraint
         setTransform("translateY(0)");
       }
     };
 
-    window.addEventListener("scroll", handleScroll);
+    // Use passive listener for better scroll performance
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
@@ -56,7 +55,7 @@ export function BlogArticleStickyNav({ sections }: Props) {
     <nav
       ref={navRef}
       className={styles.dock}
-      style={{ transform, transition: "transform 100ms ease-out" }}
+      style={{ transform }}
       aria-label="Article navigation"
     >
       {/* Home / wordmark — hovering the logo slides "Columbus Earth" out
