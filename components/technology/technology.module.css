@@ -5192,18 +5192,26 @@
 
 @media (max-width: 1500px) {
   .lgmSlide {
-    background-position: 0 0 !important;
-    background-size: 100% 100% !important;
+    background-position: unset !important;
+    background-size: unset !important;
+    background: var(--tech-color-bg);
   }
 
   .dataCollectionSection {
-    background-position: 0 0 !important;
-    background-size: 100% 100% !important;
+    background-position: unset !important;
+    background-size: unset !important;
+    background: var(--tech-color-bg);
   }
 
   .coreReasoningSlide {
-    background-position: 0 0 !important;
-    background-size: 100% 100% !important;
+    background-position: unset !important;
+    background-size: unset !important;
+    background: linear-gradient(to bottom,
+      #EEF5FF 0%,
+      rgba(133, 180, 234, 0.69) 19%,
+      #B5D5FA 31%,
+      #E1EFFE 92%,
+      #F9F9F9 100%);
   }
 
   .coreReasoningSlide::before {
