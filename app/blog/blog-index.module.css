@@ -48,7 +48,8 @@
 
 /* ── Filter bar ────────────────────────────────────────────────────────────
    Square-cornered active highlight (no border-radius); plain text for
-   inactive. Each filter is a navigation link to its own route. */
+   inactive. Each filter is a navigation link to its own route.
+   On smaller screens: horizontal scrollable carousel (no wrap). */
 .filterBar {
   display: flex;
   flex-wrap: wrap;
@@ -56,6 +57,21 @@
   gap: 4px;
   margin: 0 0 56px;
   padding: 0;
+}
+
+@media (max-width: 600px) {
+  .filterBar {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-bottom: 8px;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    gap: 8px;
+    margin: 0 -24px 56px -24px;
+    padding-left: 24px;
+    padding-right: 24px;
+  }
 }
 
 .filterButton {
@@ -69,6 +85,8 @@
   border-radius: 0;
   cursor: pointer;
   transition: color 220ms ease, background-color 220ms ease;
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 
 .filterButton:hover {
