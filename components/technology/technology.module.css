@@ -5192,18 +5192,18 @@
 
 @media (max-width: 1500px) {
   .lgmSlide {
-    background-position: 0 0;
-    background-size: 100% 100%;
+    background-position: 0 0 !important;
+    background-size: 100% 100% !important;
   }
 
   .dataCollectionSection {
-    background-position: 0 0;
-    background-size: 100% 100%;
+    background-position: 0 0 !important;
+    background-size: 100% 100% !important;
   }
 
   .coreReasoningSlide {
-    background-position: 0 0;
-    background-size: 100% 100%;
+    background-position: 0 0 !important;
+    background-size: 100% 100% !important;
   }
 
   .coreReasoningSlide::before {
