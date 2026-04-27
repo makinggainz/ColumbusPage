@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { BlogArticleStickyNav } from "@/components/blog/BlogArticleStickyNav";
+import { RelatedPosts } from "@/components/blog/RelatedPosts";
 import { ShareButtons } from "@/components/blog/ShareButtons";
+import { Navbar } from "@/components/layout/Navbar";
+import { Footer } from "@/components/layout/Footer";
 import { getAllBlogSlugs, getBlogPost } from "@/lib/blog-posts";
 import { blogBodyWithSectionIds, mergeBlogBody } from "@/lib/blog-lorem-body";
 import blogStyles from "../blog.module.css";
@@ -35,9 +38,12 @@ export default async function BlogPostPage({ params }: Props) {
   return (
     <main className={`min-h-screen ${blogStyles.articlePage}`}>
       <div className={blogStyles.greyPanel} aria-hidden />
+      <div className="min-[1100px]:hidden">
+        <Navbar />
+      </div>
       <BlogArticleStickyNav sections={stickySections} />
 
-      <article className="relative z-[1] mx-auto w-full max-w-[720px] px-4 pt-[162px] pb-12 md:px-6">
+      <article className="relative z-[1] mx-auto w-full max-w-[720px] px-4 pt-[100px] min-[1100px]:pt-[162px] pb-12 md:px-6">
         <h1 className={`${blogStyles.headlineLarge} mb-6`}>{post.title}</h1>
         <p
           className={`${blogStyles.bodyLarge} ${blogStyles.colorOnSurfaceVariant} ${blogStyles.descriptionDivider} mb-3`}
@@ -68,7 +74,15 @@ export default async function BlogPostPage({ params }: Props) {
             )
           )}
         </div>
+
+        <div className={blogStyles.articleShareEnd}>
+          <span className={blogStyles.shareEndLabel}>Share this article</span>
+          <ShareButtons title={post.title} size={22} />
+        </div>
       </article>
+
+      <RelatedPosts currentSlug={post.slug} currentCategory={post.category} />
+      <Footer theme="light" />
     </main>
   );
 }

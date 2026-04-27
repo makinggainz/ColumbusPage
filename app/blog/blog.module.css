@@ -117,6 +117,7 @@
    chosen reading theme covers the whole page. */
 .articlePage {
   background: #FFFFFF;
+  overflow-x: hidden;
 }
 
 :global(body.bg-mode-dark) .articlePage,
@@ -180,8 +181,92 @@
 /* Placeholder rectangle for future hero image */
 .articleImagePlaceholder {
   width: 100%;
-  height: 360px;
+  height: 220px;
   background: linear-gradient(145deg, #060d28 0%, #0a1344 40%, #1e2e7a 100%);
   margin-top: 40px;
   margin-bottom: 48px;
+}
+
+@media (min-width: 640px) {
+  .articleImagePlaceholder {
+    height: 360px;
+  }
+}
+
+/* Share buttons at end of article */
+.articleShareEnd {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 48px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(16, 17, 68, 0.10);
+}
+
+.shareEndLabel {
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: -0.005em;
+  color: rgba(16, 17, 68, 0.45);
+}
+
+:global(body.bg-mode-dark) .articleShareEnd {
+  border-top-color: rgba(75, 156, 255, 0.18);
+}
+
+:global(body.bg-mode-dark) .shareEndLabel {
+  color: rgba(75, 156, 255, 0.45);
+}
+
+:global(body.bg-mode-sepia) .articleShareEnd {
+  border-top-color: rgba(138, 90, 43, 0.12);
+}
+
+:global(body.bg-mode-sepia) .shareEndLabel {
+  color: rgba(138, 90, 43, 0.45);
+}
+
+/* "Don't miss these" related posts section */
+.relatedSection {
+  max-width: 1287px;
+  margin: 0 auto;
+  padding: 80px 32px 96px;
+}
+
+.relatedHeading {
+  font-size: 28px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: #1D1D1F;
+  margin-bottom: 40px;
+}
+
+.relatedGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+@media (max-width: 900px) {
+  .relatedGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 580px) {
+  .relatedGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .relatedSection {
+    padding: 48px 16px 64px;
+  }
+}
+
+:global(body.bg-mode-dark) .relatedHeading {
+  color: rgba(255, 255, 255, 0.95);
+}
+
+:global(body.bg-mode-sepia) .relatedHeading {
+  color: #433422;
 }
