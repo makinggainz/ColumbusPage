@@ -3234,7 +3234,7 @@
   height: auto;
   display: block;
   object-fit: contain;
-  transform: translate(clamp(30px, 5vw, 80px), clamp(-25px, -5vw, -65px));
+  transform: translate(80px, -65px);
 }
 
 /* "Read our in-depth article" inline link */
@@ -3549,9 +3549,10 @@
    z-index: -1. */
 .lgmTimelineHalo {
   position: absolute;
-  /* Vertical extent scales with viewport — tighter on mobile, wider on desktop */
-  top: clamp(-20px, -3vw, -30px);
-  bottom: clamp(-20px, -3vw, -30px);
+  /* Vertical extent halved again (was -60px, originally -120px) so the
+     gradient hugs the line as a tight band instead of spreading wide. */
+  top: -30px;
+  bottom: -30px;
   /* Halo bounds match the section background exactly: from the sidebar's
      right edge (var(--tech-sidebar-x) from viewport left) to the viewport
      right edge. The timeline element sits var(--page-padding) inside the
@@ -3671,19 +3672,21 @@
   top: 50%;
 }
 
-/* Year — small, muted navy. Brand body-sm scale. Margin scales responsively. */
+/* Year — small, muted navy. Brand body-sm scale (16px). 16px gap below
+   so the year visually breathes from any label that follows it in the
+   same TOP column. */
 .lgmTimelineYear {
   font-size: var(--tech-fs-body-sm);
   font-weight: 500;
   color: rgba(10, 19, 68, 0.4);
   letter-spacing: 0;
   line-height: 1;
-  margin-bottom: clamp(8px, 1.5vw, 16px);
+  margin-bottom: 16px;
 }
 
-/* Label — milestone heading. Responsive font size from 20px to 36px. */
+/* Label — milestone heading. 36px / 140% line-height / -2% tracking. */
 .lgmTimelineLabel {
-  font-size: clamp(20px, 4vw, 36px);
+  font-size: 36px;
   font-weight: 600;
   color: #000000;
   line-height: 1.4;
@@ -3700,10 +3703,11 @@
   z-index: 3;
 }
 
-/* Push the Columbus logo down by the height of a year marker so it sits
-   in line with the milestone labels. Margin scales with year margin-bottom. */
+/* Push the Columbus logo down by the height of a year marker (16px line
+   + 16px margin-bottom) so it sits in line with the milestone labels
+   (Generalist LGM, UGM) which themselves sit just below their year. */
 .lgmTimelineColumbus .lgmTimelineColumbusLogo {
-  margin-top: clamp(16px, 3vw, 32px);
+  margin-top: 32px;
 }
 
 /* Columbus stem stretches to fill the column from logo bottom down to
@@ -3728,19 +3732,20 @@
 }
 
 .lgmTimelineColumbusLogo {
-  width: clamp(40px, 6vw, 65px);
-  height: clamp(40px, 6vw, 65px);
+  width: 65px;
+  height: 65px;
   object-fit: contain;
   filter: drop-shadow(0 2px 6px rgba(0, 102, 204, 0.18));
 }
 
 /* Stem — small vertical line connecting a dot to its label / CTA. Used
    in both TOP and BOTTOM columns for every milestone (LLM, Geo-tuned,
-   Generalist LGM, UGM, Read our Paper, Our Game Plan). Height scales
-   responsively from 16px to 24px. */
+   Generalist LGM, UGM, Read our Paper, Our Game Plan). The 8px gap
+   between stem and adjacent text keeps the line from visually butting
+   into the label or the dot. */
 .lgmTimelineStem {
   width: 1px;
-  height: clamp(16px, 2vw, 24px);
+  height: 24px;
   background: var(--tech-color-text-brand);
   opacity: 0.45;
 }
@@ -3754,14 +3759,15 @@
   margin-bottom: 0;
 }
 
-/* BOTTOM stem: top touches the centerline; responsive gap to label below. */
+/* BOTTOM stem: top touches the centerline; 8px gap to the label below. */
 .lgmTimelineMilestoneBottom .lgmTimelineStem {
   margin-top: 0;
-  margin-bottom: clamp(4px, 1vw, 8px);
+  margin-bottom: 8px;
 }
 
 /* CTA link inside BOTTOM columns for 2026/2028. Matches .lgmInlineCta.
-   margin-top pushes the CTA down so it visually clears the timeline. */
+   margin-top pushes the CTA down so it visually clears the timeline
+   instead of butting up against it. */
 .lgmTimelineCta {
   display: inline-flex;
   align-items: center;
@@ -3772,7 +3778,7 @@
   text-decoration: none;
   white-space: nowrap;
   transition: color 200ms ease;
-  margin-top: clamp(16px, 3vw, 28px);
+  margin-top: 28px;
 }
 
 .lgmTimelineCta svg {
@@ -5179,6 +5185,35 @@
 
   .lgmTimelineTrack {
     min-width: 900px;
+  }
+}
+
+/* ── Full-width backgrounds when sidebars hide (≤1500px) ── */
+
+@media (max-width: 1500px) {
+  .lgmSlide {
+    background-position: 0 0;
+    background-size: 100% 100%;
+  }
+
+  .dataCollectionSection {
+    background-position: 0 0;
+    background-size: 100% 100%;
+  }
+
+  .coreReasoningSlide {
+    background-position: 0 0;
+    background-size: 100% 100%;
+  }
+
+  .coreReasoningSlide::before {
+    left: 0;
+    right: 0;
+  }
+
+  .dotGrid::before {
+    left: 0;
+    right: 0;
   }
 }
 
