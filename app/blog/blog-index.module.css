@@ -71,6 +71,13 @@
     margin: 0 -24px 56px -24px;
     padding-left: 24px;
     padding-right: 24px;
+    /* Hide scrollbar while keeping scrolling functional */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .filterBar::-webkit-scrollbar {
+    display: none;
   }
 }
 
