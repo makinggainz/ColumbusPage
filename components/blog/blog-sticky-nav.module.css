@@ -17,22 +17,6 @@
   }
 }
 
-/* ── Card — wraps each section ───────────────────────────────────────── */
-.card {
-  background: rgba(10, 19, 68, 0.05);
-  border: 1px solid rgba(10, 19, 68, 0.08);
-  padding: 14px 16px;
-}
-
-:global(body.bg-mode-dark) .card {
-  background: rgba(255, 255, 255, 0.05);
-  border-color: rgba(255, 255, 255, 0.08);
-}
-
-:global(body.bg-mode-sepia) .card {
-  background: rgba(67, 52, 34, 0.05);
-  border-color: rgba(67, 52, 34, 0.08);
-}
 
 /* ── Home link ───────────────────────────────────────────────────────── */
 .homeLink {

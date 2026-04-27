@@ -78,14 +78,14 @@ export function BlogArticleStickyNav({ sections, postTitle = "" }: Props) {
       </Link>
 
       {/* Share */}
-      <div className={`${styles.shareSection} ${styles.card}`}>
+      <div className={styles.shareSection}>
         <p className={styles.shareLabel}>Share this Article</p>
         <ShareButtons title={postTitle} size={18} />
       </div>
 
       {/* TOC */}
       {sections.length > 0 && (
-        <div className={`${styles.tocSection} ${styles.card}`}>
+        <div className={styles.tocSection}>
           <p className={styles.tocHeading}>In this Article</p>
           <ul className={styles.tocList}>
             {sections.map((s, i) => {
@@ -110,7 +110,7 @@ export function BlogArticleStickyNav({ sections, postTitle = "" }: Props) {
       )}
 
       {/* Accessibility */}
-      <div className={`${styles.a11yRow} ${styles.card}`}>
+      <div className={styles.a11yRow}>
         <button
           type="button"
           className={styles.a11yToggle}
