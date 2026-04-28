@@ -3408,7 +3408,7 @@
 .dimLogos {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 6px 8px;
+  gap: 0px 4px;
   margin-top: auto;
 }
 
