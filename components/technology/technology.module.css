@@ -3276,11 +3276,9 @@
 .lgmCompareTable {
   margin-top: 60px;
   padding: clamp(32px, 3.5vw, 52px) clamp(28px, 3vw, 44px) clamp(36px, 4vw, 52px);
-  background: radial-gradient(ellipse at center, #9ACCFF 0%, #5490CE 100%);
+  background: transparent;
+  border: 1.5px solid #0A1344;
   border-radius: 16px;
-  box-shadow:
-    0 0 0 12px var(--tech-color-bg),
-    0 0 60px 36px var(--tech-color-bg);
 }
 
 /* ── Dimension diagram — flat three-column layout ─────────────────────── */
