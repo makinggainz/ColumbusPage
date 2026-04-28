@@ -3277,7 +3277,7 @@
   margin-top: 60px;
   padding: clamp(32px, 3.5vw, 52px) clamp(28px, 3vw, 44px) clamp(36px, 4vw, 52px);
   background: transparent;
-  border: 1.5px solid #0A1344;
+  border: 1.5px solid rgba(10, 19, 68, 0.05);
   border-radius: 16px;
 }
 
