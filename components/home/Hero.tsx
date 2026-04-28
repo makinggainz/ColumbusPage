@@ -1024,9 +1024,9 @@ export const Hero = () => {
               </svg>
             </a>
             {[
-              { label: "Technology", href: "/technology", hasPopup: false },
               { label: "Products", href: "/products/enterprise", hasPopup: true },
               { label: "Use Cases", href: "/use-cases", hasPopup: false },
+              { label: "Technology", href: "/technology", hasPopup: false },
             ].map((link) => {
               if (!link.hasPopup) {
                 return (
