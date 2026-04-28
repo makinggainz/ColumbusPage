@@ -195,13 +195,9 @@ function CurveSvg({ height, timelineY }: { height: number; timelineY: number }) 
         </mask>
       </defs>
 
-      {/* Bleed — rendered BEFORE the curves so strokes land on top.
-          Two path layers masked together: first the base-plus-pattern
-          (#F9F9F9 + plus dots), then the halo (blue vertical gradient).
-          Both fade together at the gap edges via the shared mask. */}
+      {/* Bleed — base pattern only, no halo, so it matches the section bg exactly. */}
       <g mask={`url(#${gradientId}-m)`}>
         <path d={bleedPath} fill={`url(#${gradientId}-pat)`} stroke="none" />
-        <path d={bleedPath} fill={`url(#${gradientId}-halo)`} stroke="none" />
       </g>
 
       <path d={path} fill="none" stroke={STROKE} strokeWidth="1" />
