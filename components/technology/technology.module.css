@@ -3294,7 +3294,7 @@
   border: 1.5px solid rgba(10, 19, 68, 0.22);
   border-radius: 20px;
   padding: 20px;
-  background: rgba(183, 215, 247, 0.72); /* LGM — lightest */
+  background: #D6ECFF; /* LGM — lightest */
 }
 
 /* VLM bordered rect — contains LLM inner box + VLM content */
@@ -3304,7 +3304,7 @@
   flex-direction: row;
   align-items: stretch;
   gap: 20px;
-  background: rgba(183, 215, 247, 0.50); /* VLM — medium */
+  background: #9DC2E8; /* VLM — medium */
   border: 1.5px solid rgba(10, 19, 68, 0.18);
   border-radius: 20px;
   padding: 24px;
@@ -3316,7 +3316,7 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
-  background: rgba(183, 215, 247, 0.28); /* LLM — darkest */
+  background: #6FA5D4; /* LLM — darkest */
   border: 1.5px solid rgba(10, 19, 68, 0.18);
   border-radius: 14px;
   padding: 20px;
