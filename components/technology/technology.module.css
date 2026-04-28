@@ -3421,9 +3421,9 @@
 
 .dimLogoImg {
   flex-shrink: 0;
-  height: 48px;
+  height: 80px;
   width: auto;
-  max-width: 60px;
+  max-width: 100px;
   object-fit: contain;
 }
 
