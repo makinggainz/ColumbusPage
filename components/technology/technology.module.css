@@ -3357,7 +3357,7 @@
 
 .dimModelSubtitle {
   margin: 0;
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 400;
   color: rgba(10, 19, 68, 0.50);
   letter-spacing: -0.01em;
@@ -3375,7 +3375,7 @@
 
 .dimPill p {
   margin: 0;
-  font-size: 15px;
+  font-size: 17px;
   font-weight: 400;
   letter-spacing: -0.01em;
   color: #0A1344;
