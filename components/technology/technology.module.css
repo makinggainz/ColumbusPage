@@ -3276,7 +3276,7 @@
 .lgmCompareTable {
   margin-top: 60px;
   padding: clamp(32px, 3.5vw, 52px) clamp(28px, 3vw, 44px) clamp(36px, 4vw, 52px);
-  background: linear-gradient(135deg, #EFF6FF 0%, #B7D7F7 100%);
+  background: radial-gradient(ellipse at center, #9ACCFF 0%, #5490CE 100%);
   border-radius: 16px;
   box-shadow:
     0 0 0 12px var(--tech-color-bg),
