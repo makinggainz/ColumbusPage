@@ -3288,7 +3288,6 @@
   flex-direction: row;
   align-items: stretch;
   gap: 28px;
-  border: 1.5px solid rgba(10, 19, 68, 0.22);
   border-radius: 20px;
   padding: 20px;
   background: #D4E8F8; /* LGM — lightest */
@@ -3302,7 +3301,6 @@
   align-items: stretch;
   gap: 20px;
   background: #BDDAF5; /* VLM — medium */
-  border: 1.5px solid rgba(10, 19, 68, 0.18);
   border-radius: 20px;
   padding: 24px;
 }
@@ -3314,7 +3312,6 @@
   flex-direction: column;
   gap: 16px;
   background: #A8CCF0; /* LLM — darkest */
-  border: 1.5px solid rgba(10, 19, 68, 0.18);
   border-radius: 14px;
   padding: 20px;
 }
