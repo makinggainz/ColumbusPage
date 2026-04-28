@@ -195,10 +195,8 @@ function CurveSvg({ height, timelineY }: { height: number; timelineY: number }) 
         </mask>
       </defs>
 
-      {/* Bleed — base pattern only, no halo, so it matches the section bg exactly. */}
-      <g mask={`url(#${gradientId}-m)`}>
-        <path d={bleedPath} fill={`url(#${gradientId}-pat)`} stroke="none" />
-      </g>
+      {/* Bleed — plain solid fill matching the section background, no pattern or halo. */}
+      <path d={bleedPath} fill={BLEED_COLOR} stroke="none" />
 
       <path d={path} fill="none" stroke={STROKE} strokeWidth="1" />
     </svg>
