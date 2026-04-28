@@ -3276,7 +3276,7 @@
 .lgmCompareTable {
   margin-top: 60px;
   padding: clamp(32px, 3.5vw, 52px) clamp(28px, 3vw, 44px) clamp(36px, 4vw, 52px);
-  background: #2E5593;
+  background: linear-gradient(135deg, #EFF6FF 0%, #B7D7F7 100%);
   border-radius: 16px;
   box-shadow:
     0 0 0 12px var(--tech-color-bg),
@@ -3284,16 +3284,25 @@
 }
 
 /* ── Dimension diagram (nested-rectangles layout) ───────────────────── */
-/* ── Outer LGM rect (transparent — card IS the LGM bg) ──────────────── */
+/* Outer flex row — transparent, just a layout container */
 .dimLgmOuter {
   display: flex;
   flex-direction: row;
   align-items: stretch;
   gap: 28px;
   width: 100%;
-  background: #B7D7F7;
-  border: 2px solid rgba(10, 19, 68, 0.45);
-  border-radius: 20px;
+}
+
+/* VLM bordered rect — contains LLM + VLM content side by side */
+.dimVlm {
+  flex: 1 1 68%;
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  gap: 20px;
+  background: rgba(183, 215, 247, 0.6);
+  border: 1.5px solid rgba(10, 19, 68, 0.25);
+  border-radius: 16px;
   padding: 24px;
 }
 
@@ -3315,20 +3324,15 @@
   display: flex;
   flex-direction: column;
   gap: 18px;
-  border: 1.5px solid rgba(10, 19, 68, 0.4);
-  border-radius: 12px;
-  padding: 20px;
 }
 
-/* LGM content column — same treatment as VLM/LLM */
+/* LGM content column — no box, floats on card background */
 .dimLgm {
   flex: 0 0 28%;
   display: flex;
   flex-direction: column;
   gap: 18px;
-  background: #B7D7F7;
-  border-radius: 16px;
-  padding: 24px;
+  padding: 8px 4px;
 }
 
 /* Model titles — LLM & VLM: 500, LGM: 700 */
@@ -3398,7 +3402,7 @@
 .dimLogos {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 14px 12px;
+  gap: 8px;
   margin-top: auto;
 }
 
@@ -3469,8 +3473,32 @@
   text-align: center;
   font-size: 30px;
   font-weight: 500;
-  color: #ffffff;
+  color: #0A1344;
   letter-spacing: -0.02em;
+}
+
+/* Placeholder slots — swap for real assets later */
+.dimPatternPlaceholder {
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  background: rgba(10, 19, 68, 0.12);
+}
+
+.dimLogoPlaceholder {
+  width: 100%;
+  height: 52px;
+  border-radius: 8px;
+  background: rgba(10, 19, 68, 0.10);
+}
+
+.dimBrandLogoPlaceholder {
+  flex-shrink: 0;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: rgba(10, 19, 68, 0.12);
 }
 
 .lgmCompareTableHead {
@@ -3634,10 +3662,16 @@
 }
 
 /* Dimension diagram — responsive stack */
-@media (max-width: 960px) {
+@media (max-width: 900px) {
   .dimLgmOuter {
     flex-direction: column;
     gap: 20px;
+  }
+
+  .dimVlm {
+    flex-direction: column;
+    flex: none;
+    gap: 16px;
   }
 
   .dimLlm,
