@@ -3421,9 +3421,9 @@
 
 .dimLogoImg {
   flex-shrink: 0;
-  height: 32px;
+  height: 48px;
   width: auto;
-  max-width: 40px;
+  max-width: 60px;
   object-fit: contain;
 }
 
@@ -3432,11 +3432,11 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 32px;
-  border-radius: 5px;
+  width: 80px;
+  height: 48px;
+  border-radius: 6px;
   background: rgba(10, 19, 68, 0.12);
-  font-size: 14px;
+  font-size: 17px;
   font-weight: 700;
   color: #0A1344;
   letter-spacing: -0.02em;
@@ -3456,19 +3456,19 @@
 .dimBrand {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 6px;
   margin-top: auto;
 }
 
 .dimBrandLogo {
   flex-shrink: 0;
-  width: 36px;
-  height: 36px;
+  width: 64px;
+  height: 64px;
   object-fit: contain;
 }
 
 .dimBrandName {
-  font-size: 18px;
+  font-size: 28px;
   font-weight: 600;
   letter-spacing: -0.02em;
   color: #0A1344;
