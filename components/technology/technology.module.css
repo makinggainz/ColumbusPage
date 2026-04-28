@@ -3322,21 +3322,22 @@
   padding: 20px;
 }
 
-/* VLM content — no box, sits directly in VLM rect */
+/* VLM content — push title down to align with LLM title (LLM: +20px from dimLlm padding) */
 .dimVlmContent {
   flex: 1;
   display: flex;
   flex-direction: column;
   gap: 16px;
+  padding-top: 20px;
 }
 
-/* LGM — right column, no box, on card background */
+/* LGM — push title down to align with LLM title (dimRow 20px + dimVlmRect 24px + dimLlm 20px = 64px; LGM offset = 64 - 20 = 44px) */
 .dimLgm {
   flex: 0 0 30%;
   display: flex;
   flex-direction: column;
   gap: 16px;
-  padding: 4px 0;
+  padding-top: 44px;
 }
 
 /* Model titles */
