@@ -104,98 +104,80 @@ export function TechnologySections() {
               </div>
             </div>
 
-            {/* ── Comparison table ── */}
-            <div className={styles.lgmCompareTable} aria-hidden={false}>
-              <h3 className={styles.lgmCompareTableTitle}>Whats the difference?</h3>
+            {/* ── Nested-rectangles diagram ── */}
+            <div className={styles.lgmCompareTable}>
+              <h3 className={styles.lgmCompareTableTitle}>Our LGM adds a new dimension</h3>
 
-              <div className={styles.lgmCompareTableHead}>
-                <div />
-                <div className={styles.lgmCompareColHead}>LLM</div>
-                <div className={styles.lgmCompareColHead}>Vision Model</div>
-                <div className={styles.lgmCompareColHead}>LGM</div>
-              </div>
+              <div className={styles.lgmDimensionDiagram}>
 
-              <div className={styles.lgmCompareTableBody}>
-                <div className={styles.lgmCompareRowLabel}>
-                  <div>Input</div>
-                  <div>Output</div>
-                </div>
-                <div className={styles.lgmCompareCell}>
-                  <p className={styles.lgmCompareCellText}>
-                    alargelanguagelearningmodelistrainedonhugesetsoftextdatafortokenizationofmanywordsoftenfromarticleslargetextbookset
-                    280, 1170, 296, 4088, 30773, 4012, 5079, 2534, 3883, 263,
-                  </p>
-                </div>
-                <div className={styles.lgmCompareCell} />
-                <div className={styles.lgmCompareCell} />
-              </div>
+                {/* VLM outer rect — contains LLM on the left */}
+                <div className={styles.dimVlm}>
 
-              <div className={styles.lgmCompareTableExamples}>
-                <div className={styles.lgmCompareRowLabel}>Examples</div>
-
-                {/* LLM — 2×2 logo grid (names kept in alt + sr-only for a11y/SEO) */}
-                <div className={styles.lgmCompareExampleCell}>
-                  <div className={styles.lgmLogoGrid}>
-                    <div className={styles.lgmLogoItem} title="ChatGPT">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src="/TechnologyPageImages/LogosTable/ChatGPT-Vertical-Logo-Vector.svg-.png"
-                        alt="ChatGPT"
-                        className={styles.lgmLogoMark}
-                      />
-                      <span className={styles.srOnly}>ChatGPT</span>
+                  {/* LLM inner rect */}
+                  <div className={styles.dimLlm}>
+                    <div>
+                      <h4 className={styles.dimModelTitle}>LLM</h4>
+                      <p className={styles.dimModelSubtitle}>Large-Language-model</p>
                     </div>
-                    <div className={styles.lgmLogoItem} title="Claude">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src="/TechnologyPageImages/LogosTable/Claude_AI_logo.svg.png"
-                        alt="Claude"
-                        className={styles.lgmLogoMark}
-                      />
-                      <span className={styles.srOnly}>Claude</span>
+                    <div className={styles.dimPill}>
+                      <p><strong>Captures:</strong> text</p>
+                      <p><strong>Predicts:</strong> next word</p>
                     </div>
-                    <div className={styles.lgmLogoItem} title="Grok">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src="/TechnologyPageImages/LogosTable/Grok-feb-2025-logo.svg.png"
-                        alt="Grok"
-                        className={styles.lgmLogoMark}
-                      />
-                      <span className={styles.srOnly}>Grok</span>
+                    <div className={styles.dimPattern}>
+                      <div className={styles.dimPatternIcon} aria-hidden />
+                      <span className={styles.dimPatternLabel}>language<br />patterns</span>
                     </div>
-                    <div className={styles.lgmLogoItem} title="Perplexity">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src="/TechnologyPageImages/LogosTable/Perplexity_AI_logo.svg.png"
-                        alt="Perplexity"
-                        className={styles.lgmLogoMark}
-                      />
-                      <span className={styles.srOnly}>perplexity</span>
+                    <div className={styles.dimLogos}>
+                      <div className={styles.dimLogoSlot} aria-hidden />
+                      <div className={styles.dimLogoSlot} aria-hidden />
+                      <div className={styles.dimLogoSlot} aria-hidden />
+                      <div className={styles.dimLogoSlot} aria-hidden />
+                    </div>
+                  </div>
+
+                  {/* VLM-only content — right of LLM, inside VLM rect */}
+                  <div className={styles.dimVlmContent}>
+                    <div>
+                      <h4 className={styles.dimModelTitle}>VLM</h4>
+                      <p className={styles.dimModelSubtitle}>Vision-Language-model</p>
+                    </div>
+                    <div className={styles.dimPill}>
+                      <p><strong>Captures:</strong> text &amp; image</p>
+                      <p><strong>Predicts:</strong> visual reasoning</p>
+                    </div>
+                    <div className={styles.dimPattern}>
+                      <div className={styles.dimPatternIcon} aria-hidden />
+                      <span className={styles.dimPatternLabel}>image<br />patterns</span>
+                    </div>
+                    <div className={styles.dimLogos}>
+                      <div className={styles.dimLogoSlot} aria-hidden />
+                      <div className={styles.dimLogoSlot} aria-hidden />
+                      <div className={styles.dimLogoSlot} aria-hidden />
+                      <div className={styles.dimLogoSlot} aria-hidden />
                     </div>
                   </div>
                 </div>
 
-                {/* Vision Model — text list */}
-                <div className={styles.lgmCompareExampleCell}>
-                  <ul className={styles.lgmCompareExampleList}>
-                    <li>Clay</li>
-                    <li>Google Deepmind</li>
-                    <li>Maxar</li>
-                  </ul>
-                </div>
-
-                {/* LGM — Columbus Earth */}
-                <div className={styles.lgmCompareExampleCell}>
-                  <div className={styles.lgmCompareBrandMark}>
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src="/logobueno.png"
-                      alt=""
-                      className={styles.lgmBrandMarkLogo}
-                    />
-                    <span>Columbus Earth</span>
+                {/* LGM — outside the VLM rect, rightmost column */}
+                <div className={styles.dimLgm}>
+                  <div>
+                    <h4 className={styles.dimModelTitle}>LGM - IRL AI</h4>
+                    <p className={styles.dimModelSubtitle}>Large-Geospatial-model</p>
+                  </div>
+                  <div className={styles.dimPill}>
+                    <p><strong>Captures:</strong> physical (geospatial) reality</p>
+                    <p><strong>Predicts:</strong> ground truth</p>
+                  </div>
+                  <div className={styles.dimPattern}>
+                    <div className={styles.dimPatternIcon} aria-hidden />
+                    <span className={styles.dimPatternLabel}>physical<br />patterns</span>
+                  </div>
+                  <div className={styles.dimBrand}>
+                    <div className={styles.dimBrandLogo} aria-hidden />
+                    <span className={styles.dimBrandName}>Columbus Earth</span>
                   </div>
                 </div>
+
               </div>
             </div>
           </RevealOnView>
