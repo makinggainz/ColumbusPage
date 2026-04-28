@@ -3283,99 +3283,101 @@
     0 0 60px 36px var(--tech-color-bg);
 }
 
-/* ── Dimension diagram (nested-rectangles layout) ───────────────────── */
-/* Outer flex row — transparent, just a layout container */
-.dimLgmOuter {
+/* ── Dimension diagram — flat three-column layout ─────────────────────── */
+
+/* Outer flex row */
+.dimRow {
   display: flex;
   flex-direction: row;
   align-items: stretch;
   gap: 28px;
-  width: 100%;
 }
 
-/* VLM bordered rect — contains LLM + VLM content side by side */
-.dimVlm {
-  flex: 1 1 68%;
+/* VLM bordered rect — contains LLM inner box + VLM content */
+.dimVlmRect {
+  flex: 1 1 66%;
   display: flex;
   flex-direction: row;
   align-items: stretch;
   gap: 20px;
-  background: rgba(183, 215, 247, 0.6);
-  border: 1.5px solid rgba(10, 19, 68, 0.25);
-  border-radius: 16px;
+  background: rgba(183, 215, 247, 0.45);
+  border: 1.5px solid rgba(10, 19, 68, 0.18);
+  border-radius: 20px;
   padding: 24px;
 }
 
-/* LLM inner rect */
+/* LLM — white inner box */
 .dimLlm {
-  flex: 0 0 43%;
+  flex: 0 0 42%;
   display: flex;
   flex-direction: column;
-  gap: 18px;
-  background: #B7D7F7;
-  border: 1.5px solid rgba(10, 19, 68, 0.4);
-  border-radius: 12px;
+  gap: 16px;
+  background: #ffffff;
+  border: 1px solid rgba(10, 19, 68, 0.10);
+  border-radius: 14px;
   padding: 20px;
 }
 
-/* VLM-only content column */
+/* VLM content — no box, sits directly in VLM rect */
 .dimVlmContent {
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 16px;
 }
 
-/* LGM content column — no box, floats on card background */
+/* LGM — right column, no box, on card background */
 .dimLgm {
-  flex: 0 0 28%;
+  flex: 0 0 30%;
   display: flex;
   flex-direction: column;
-  gap: 18px;
-  padding: 8px 4px;
+  gap: 16px;
+  padding: 4px 0;
 }
 
-/* Model titles — LLM & VLM: 500, LGM: 700 */
+/* Model titles */
 .dimModelTitle {
-  margin: 0 0 5px;
-  font-size: 30px;
+  margin: 0 0 4px;
+  font-size: 26px;
   font-weight: 500;
   letter-spacing: -0.02em;
   color: #0A1344;
   line-height: 1;
 }
 
-.dimModelSubtitle {
-  margin: 0;
-  font-size: 14px;
-  font-weight: 400;
-  color: rgba(10, 19, 68, 0.55);
-  letter-spacing: -0.01em;
+.dimModelTitleLgm {
+  font-weight: 700;
+  font-size: 28px;
 }
 
-/* LGM column — bold title, same dark text as LLM/VLM */
-.dimLgm .dimModelTitle { font-weight: 700; }
+.dimModelSubtitle {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 400;
+  color: rgba(10, 19, 68, 0.50);
+  letter-spacing: -0.01em;
+}
 
 /* Pill */
 .dimPill {
   display: flex;
   flex-direction: column;
   gap: 4px;
-  background: #8FC0F1;
+  background: rgba(10, 19, 68, 0.07);
   border-radius: 10px;
-  padding: 12px 16px;
+  padding: 12px 14px;
 }
 
 .dimPill p {
   margin: 0;
-  font-size: 18px;
-  font-weight: 500;
-  letter-spacing: -0.02em;
+  font-size: 15px;
+  font-weight: 400;
+  letter-spacing: -0.01em;
   color: #0A1344;
-  line-height: 1.35;
+  line-height: 1.4;
 }
 
-.dimPill p strong { font-weight: 600; }
+.dimPill p strong { font-weight: 700; }
 
 /* Pattern row */
 .dimPattern {
@@ -3386,14 +3388,14 @@
 
 .dimPatternSvg {
   flex-shrink: 0;
-  width: 42px;
-  height: 42px;
+  width: 44px;
+  height: 44px;
 }
 
 .dimPatternLabel {
-  font-size: 17px;
-  font-weight: 500;
-  letter-spacing: -0.02em;
+  font-size: 15px;
+  font-weight: 400;
+  letter-spacing: -0.01em;
   color: #0A1344;
   line-height: 1.35;
 }
@@ -3402,22 +3404,22 @@
 .dimLogos {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 8px;
+  gap: 10px 8px;
   margin-top: auto;
 }
 
 .dimLogoItem {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 6px;
   min-width: 0;
 }
 
 .dimLogoImg {
   flex-shrink: 0;
-  height: 32px;
+  height: 20px;
   width: auto;
-  max-width: 40px;
+  max-width: 28px;
   object-fit: contain;
 }
 
@@ -3426,18 +3428,18 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 32px;
-  border-radius: 5px;
-  background: rgba(10, 19, 68, 0.12);
-  font-size: 14px;
+  width: 28px;
+  height: 20px;
+  border-radius: 4px;
+  background: rgba(10, 19, 68, 0.10);
+  font-size: 11px;
   font-weight: 700;
   color: #0A1344;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.01em;
 }
 
 .dimLogoName {
-  font-size: 15px;
+  font-size: 13px;
   font-weight: 400;
   color: #0A1344;
   line-height: 1.2;
@@ -3450,22 +3452,66 @@
 .dimBrand {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   margin-top: auto;
 }
 
 .dimBrandLogo {
   flex-shrink: 0;
-  width: 36px;
-  height: 36px;
+  width: 44px;
+  height: 44px;
   object-fit: contain;
 }
 
 .dimBrandName {
-  font-size: 18px;
-  font-weight: 600;
+  font-size: 20px;
+  font-weight: 700;
   letter-spacing: -0.02em;
   color: #0A1344;
+}
+
+/* Placeholder slots (unused but kept for compatibility) */
+.dimPatternPlaceholder {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  background: rgba(10, 19, 68, 0.10);
+}
+
+.dimLogoPlaceholder {
+  width: 100%;
+  height: 40px;
+  border-radius: 6px;
+  background: rgba(10, 19, 68, 0.08);
+}
+
+.dimBrandLogoPlaceholder {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(10, 19, 68, 0.10);
+}
+
+/* Responsive stack */
+@media (max-width: 900px) {
+  .dimRow {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .dimVlmRect {
+    flex-direction: column;
+    gap: 16px;
+    flex: none;
+  }
+
+  .dimLlm,
+  .dimVlmContent,
+  .dimLgm {
+    flex: none;
+  }
 }
 
 .lgmCompareTableTitle {
@@ -3475,30 +3521,6 @@
   font-weight: 500;
   color: #0A1344;
   letter-spacing: -0.02em;
-}
-
-/* Placeholder slots — swap for real assets later */
-.dimPatternPlaceholder {
-  flex-shrink: 0;
-  width: 48px;
-  height: 48px;
-  border-radius: 10px;
-  background: rgba(10, 19, 68, 0.12);
-}
-
-.dimLogoPlaceholder {
-  width: 100%;
-  height: 52px;
-  border-radius: 8px;
-  background: rgba(10, 19, 68, 0.10);
-}
-
-.dimBrandLogoPlaceholder {
-  flex-shrink: 0;
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
-  background: rgba(10, 19, 68, 0.12);
 }
 
 .lgmCompareTableHead {

@@ -108,13 +108,13 @@ export function TechnologySections() {
             <div className={styles.lgmCompareTable}>
               <h3 className={styles.lgmCompareTableTitle}>Our LGM adds a new dimension</h3>
 
-              {/* Outer flex row — VLM bordered rect + LGM column */}
-              <div className={styles.dimLgmOuter}>
+              {/* Three-column row: [VLM rect [LLM box | VLM content]] | [LGM column] */}
+              <div className={styles.dimRow}>
 
-                {/* VLM rect — bordered, contains LLM inner rect + VLM content */}
-                <div className={styles.dimVlm}>
+                {/* VLM bordered rect — contains LLM inner box + VLM content */}
+                <div className={styles.dimVlmRect}>
 
-                  {/* LLM — bordered inner box */}
+                  {/* LLM — white inner box */}
                   <div className={styles.dimLlm}>
                     <div>
                       <h4 className={styles.dimModelTitle}>LLM</h4>
@@ -125,18 +125,40 @@ export function TechnologySections() {
                       <p><strong>Predicts:</strong> next word</p>
                     </div>
                     <div className={styles.dimPattern}>
-                      <div className={styles.dimPatternPlaceholder} aria-hidden />
+                      <svg className={styles.dimPatternSvg} viewBox="0 0 52 52" fill="none" aria-hidden>
+                        <rect x="1" y="1" width="50" height="50" rx="8" stroke="#0A1344" strokeWidth="1.5"/>
+                        <text x="26" y="22" textAnchor="middle" fontFamily="Georgia, serif" fontSize="17" fontWeight="700" fill="#0A1344">T</text>
+                        <line x1="10" y1="30" x2="42" y2="30" stroke="#0A1344" strokeWidth="1.5" strokeLinecap="round"/>
+                        <line x1="10" y1="36" x2="38" y2="36" stroke="#0A1344" strokeWidth="1.5" strokeLinecap="round"/>
+                        <line x1="10" y1="42" x2="30" y2="42" stroke="#0A1344" strokeWidth="1.5" strokeLinecap="round"/>
+                      </svg>
                       <span className={styles.dimPatternLabel}>language<br />patterns</span>
                     </div>
                     <div className={styles.dimLogos}>
-                      <div className={styles.dimLogoPlaceholder} aria-hidden />
-                      <div className={styles.dimLogoPlaceholder} aria-hidden />
-                      <div className={styles.dimLogoPlaceholder} aria-hidden />
-                      <div className={styles.dimLogoPlaceholder} aria-hidden />
+                      <div className={styles.dimLogoItem}>
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img src="/TechnologyPageImages/LogosTable/ChatGPT-Vertical-Logo-Vector.svg-.png" alt="" className={styles.dimLogoImg} aria-hidden />
+                        <span className={styles.dimLogoName}>ChatGPT</span>
+                      </div>
+                      <div className={styles.dimLogoItem}>
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img src="/TechnologyPageImages/LogosTable/Claude_AI_logo.svg.png" alt="" className={styles.dimLogoImg} aria-hidden />
+                        <span className={styles.dimLogoName}>Claude</span>
+                      </div>
+                      <div className={styles.dimLogoItem}>
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img src="/TechnologyPageImages/LogosTable/Grok-feb-2025-logo.svg.png" alt="" className={styles.dimLogoImg} aria-hidden />
+                        <span className={styles.dimLogoName}>Grok</span>
+                      </div>
+                      <div className={styles.dimLogoItem}>
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img src="/TechnologyPageImages/LogosTable/Perplexity_AI_logo.svg.png" alt="" className={styles.dimLogoImg} aria-hidden />
+                        <span className={styles.dimLogoName}>perplexity</span>
+                      </div>
                     </div>
                   </div>
 
-                  {/* VLM content — right side inside VLM rect */}
+                  {/* VLM content — no inner box, sits in VLM rect */}
                   <div className={styles.dimVlmContent}>
                     <div>
                       <h4 className={styles.dimModelTitle}>VLM</h4>
@@ -147,14 +169,30 @@ export function TechnologySections() {
                       <p><strong>Predicts:</strong> visual reasoning</p>
                     </div>
                     <div className={styles.dimPattern}>
-                      <div className={styles.dimPatternPlaceholder} aria-hidden />
+                      <svg className={styles.dimPatternSvg} viewBox="0 0 52 52" fill="none" aria-hidden>
+                        <rect x="1" y="1" width="50" height="50" rx="8" stroke="#0A1344" strokeWidth="1.5"/>
+                        <circle cx="37" cy="16" r="5" stroke="#0A1344" strokeWidth="1.5"/>
+                        <path d="M6 43 L18 25 L26 35 L34 23 L46 43Z" stroke="#0A1344" strokeWidth="1.5" strokeLinejoin="round"/>
+                      </svg>
                       <span className={styles.dimPatternLabel}>image<br />patterns</span>
                     </div>
                     <div className={styles.dimLogos}>
-                      <div className={styles.dimLogoPlaceholder} aria-hidden />
-                      <div className={styles.dimLogoPlaceholder} aria-hidden />
-                      <div className={styles.dimLogoPlaceholder} aria-hidden />
-                      <div className={styles.dimLogoPlaceholder} aria-hidden />
+                      <div className={styles.dimLogoItem}>
+                        <span className={styles.dimLogoMonogram}>π</span>
+                        <span className={styles.dimLogoName}>Physical Intelligence</span>
+                      </div>
+                      <div className={styles.dimLogoItem}>
+                        <span className={styles.dimLogoMonogram}>AMI</span>
+                        <span className={styles.dimLogoName}>Adv. Machine Intelligence</span>
+                      </div>
+                      <div className={styles.dimLogoItem}>
+                        <span className={styles.dimLogoMonogram}>W</span>
+                        <span className={styles.dimLogoName}>World Labs</span>
+                      </div>
+                      <div className={styles.dimLogoItem}>
+                        <span className={styles.dimLogoMonogram}>G</span>
+                        <span className={styles.dimLogoName}>Google DeepMind</span>
+                      </div>
                     </div>
                   </div>
 
@@ -163,7 +201,7 @@ export function TechnologySections() {
                 {/* LGM — right column, no box */}
                 <div className={styles.dimLgm}>
                   <div>
-                    <h4 className={styles.dimModelTitle}>LGM - IRL AI</h4>
+                    <h4 className={`${styles.dimModelTitle} ${styles.dimModelTitleLgm}`}>LGM - IRL AI</h4>
                     <p className={styles.dimModelSubtitle}>Large-Geospatial-model</p>
                   </div>
                   <div className={styles.dimPill}>
@@ -171,11 +209,18 @@ export function TechnologySections() {
                     <p><strong>Predicts:</strong> ground truth</p>
                   </div>
                   <div className={styles.dimPattern}>
-                    <div className={styles.dimPatternPlaceholder} aria-hidden />
+                    <svg className={styles.dimPatternSvg} viewBox="0 0 52 52" fill="none" aria-hidden>
+                      <circle cx="26" cy="26" r="20" stroke="#0A1344" strokeWidth="1.5"/>
+                      <ellipse cx="26" cy="26" rx="9" ry="20" stroke="#0A1344" strokeWidth="1"/>
+                      <line x1="6" y1="26" x2="46" y2="26" stroke="#0A1344" strokeWidth="1"/>
+                      <path d="M8 18 Q26 23 44 18" stroke="#0A1344" strokeWidth="1" fill="none"/>
+                      <path d="M8 34 Q26 29 44 34" stroke="#0A1344" strokeWidth="1" fill="none"/>
+                    </svg>
                     <span className={styles.dimPatternLabel}>physical<br />patterns</span>
                   </div>
                   <div className={styles.dimBrand}>
-                    <div className={styles.dimBrandLogoPlaceholder} aria-hidden />
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src="/logobueno.png" alt="" className={styles.dimBrandLogo} aria-hidden />
                     <span className={styles.dimBrandName}>Columbus Earth</span>
                   </div>
                 </div>
