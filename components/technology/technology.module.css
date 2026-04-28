@@ -3274,13 +3274,206 @@
 
 /* ── Comparison table ── */
 .lgmCompareTable {
+  position: relative;
   margin-top: 60px;
-  padding: clamp(32px, 3.5vw, 52px) clamp(28px, 3vw, 44px) clamp(36px, 4vw, 52px);
-  background: #2E5593;
+  padding: clamp(88px, 9vw, 120px) clamp(28px, 3vw, 44px) clamp(36px, 4vw, 52px);
+  background: radial-gradient(circle at 95% 8%, #E2F0FF 0%, #E2F0FF 55%, #EDF7FF 100%);
   border-radius: 16px;
   box-shadow:
     0 0 0 12px var(--tech-color-bg),
     0 0 60px 36px var(--tech-color-bg);
+}
+
+/* Branding mark in the top-left corner of the comparison table */
+.dimBranding {
+  position: absolute;
+  top: clamp(20px, 2vw, 28px);
+  left: clamp(20px, 2vw, 28px);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 18px;
+  font-weight: 500;
+  color: #000000;
+  letter-spacing: -0.01em;
+  opacity: 0.5;
+}
+
+.dimBrandingLogo {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+}
+
+/* ── Table grid: row labels (col 1) + 3 model columns (cols 2-4) ── */
+.dimTableGrid {
+  display: grid;
+  grid-template-columns: minmax(110px, max-content) repeat(3, minmax(0, 1fr));
+  column-gap: 18px;
+  row-gap: 0;
+  margin-top: 28px;
+}
+
+.dimModelHeader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  padding-bottom: 16px;
+}
+
+.dimModelHeaderIcon {
+  width: 64px;
+  height: 64px;
+  margin-bottom: 13px;
+  object-fit: contain;
+}
+
+.dimModelHeaderName {
+  margin: 0 0 4px;
+  font-size: 32px;
+  font-weight: 600;
+  color: #000000;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.dimModelHeaderNameLgm {
+  font-weight: 800;
+  -webkit-text-stroke: 0.5px currentColor;
+}
+
+.dimModelHeaderSubtitle {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 400;
+  color: rgba(0, 0, 0, 0.5);
+}
+
+.dimRowLabel {
+  display: flex;
+  align-items: center;
+  font-size: 20px;
+  font-weight: 600;
+  color: #000000;
+  letter-spacing: -0.01em;
+  padding-right: 8px;
+  line-height: 1.3;
+}
+
+.dimGridCell {
+  background: #DCEAF8;
+  padding: 28px 22px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 4px;
+  border-left: 1.5px solid #000000;
+  border-right: 1.5px solid #000000;
+}
+
+.dimGridCellTop {
+  border-top: 1.5px solid #000000;
+  border-radius: 12px 12px 0 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.25);
+}
+
+.dimGridCellMid {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.25);
+}
+
+.dimGridCellBottom {
+  border-bottom: 1.5px solid #000000;
+  border-radius: 0 0 12px 12px;
+}
+
+.dimGridCellLgm {
+  background: #B7D7F7;
+}
+
+/* Logo grid sits centered inside building-it cells (override legacy margin-top: auto) */
+.dimGridCell .dimLogos {
+  margin-top: 0;
+  align-items: center;
+  justify-items: center;
+}
+
+/* Smaller logo sizing inside the new grid cells — black & white treatment */
+.dimGridCell .dimLogoImg {
+  height: 36px;
+  max-width: 90px;
+  filter: grayscale(100%);
+}
+
+.dimGridCell .dimLogoMonogram {
+  width: auto;
+  height: auto;
+  background: transparent;
+  padding: 0;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.dimGridCell .dimLogoItem {
+  justify-content: center;
+}
+
+/* Columbus Earth brand — used in the LGM "Who's building it" cell */
+.dimGridCell .dimBrand {
+  margin-top: 0;
+  flex-direction: column;
+  gap: 8px;
+  text-align: center;
+}
+
+.dimGridCell .dimBrandLogo {
+  width: 56px;
+  height: 56px;
+}
+
+.dimGridCell .dimBrandName {
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.dimCellHeading {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: #000000;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+
+.dimCellNote {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 400;
+  color: rgba(0, 0, 0, 0.5);
+  line-height: 1.45;
+}
+
+/* ── Responsive: stack the table at small screens ── */
+@media (max-width: 900px) {
+  .dimTableGrid {
+    grid-template-columns: 1fr;
+    row-gap: 12px;
+  }
+
+  .dimRowLabel,
+  .dimModelHeader,
+  .dimGridCell {
+    grid-column: 1 / -1;
+  }
+
+  .dimGridCellTop,
+  .dimGridCellMid,
+  .dimGridCellBottom {
+    border: 1.5px solid rgba(10, 19, 68, 0.3);
+    border-radius: 12px;
+  }
 }
 
 /* ── Dimension diagram (nested-rectangles layout) ───────────────────── */
@@ -3289,12 +3482,13 @@
   display: flex;
   flex-direction: row;
   align-items: stretch;
-  gap: 28px;
+  justify-content: space-between;
+  gap: 12px;
   width: 100%;
   background: #B7D7F7;
-  border: 2px solid rgba(10, 19, 68, 0.45);
+  border: 0;
   border-radius: 20px;
-  padding: 24px;
+  padding: 28px 20px;
 }
 
 /* VLM middle rect */
@@ -3330,7 +3524,7 @@
   gap: 18px;
 }
 
-/* LGM content column — same treatment as VLM/LLM */
+/* LGM content column — title at top edge of VLM rect for staircase effect */
 .dimLgm {
   flex: 0 0 28%;
   display: flex;
@@ -3338,7 +3532,7 @@
   gap: 18px;
   background: #B7D7F7;
   border-radius: 16px;
-  padding: 24px;
+  padding: 0 24px 24px;
 }
 
 /* Model titles — LLM & VLM: 500, LGM: 700 */
@@ -3362,6 +3556,94 @@
 /* LGM column — bold title, same dark text as LLM/VLM */
 .dimLgm .dimModelTitle { font-weight: 700; }
 
+/* ── Three-box layout (LLM | → | VLM | → | LGM) ── */
+.dimBox {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  background: #B7D7F7;
+  border: 1.5px solid rgba(10, 19, 68, 0.4);
+  border-radius: 12px;
+  padding: 22px 20px;
+}
+
+.dimBoxHeader {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.dimBoxIcon {
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+}
+
+.dimReasons {
+  margin: 6px 0 0;
+  font-size: 16px;
+  font-style: italic;
+  font-weight: 500;
+  color: #0A1344;
+  letter-spacing: -0.01em;
+  line-height: 1.7;
+}
+
+/* Highlight chip for individual data-type tokens inside .dimReasons */
+.dimDataType {
+  background: #8FC0F1;
+  padding: 1px 7px;
+  border-radius: 4px;
+  font-style: normal;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  margin: 0 1px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+.dimDivider {
+  border: 0;
+  border-top: 1px solid rgba(10, 19, 68, 0.25);
+  width: 100%;
+  margin: 0;
+}
+
+.dimQuestion {
+  margin: 0;
+  font-size: 16px;
+  font-style: italic;
+  font-weight: 500;
+  color: #0A1344;
+  letter-spacing: -0.01em;
+  line-height: 1.45;
+}
+
+.dimBoxArrow {
+  align-self: center;
+  flex-shrink: 0;
+  width: 28px;
+  height: 18px;
+  color: rgba(10, 19, 68, 0.7);
+}
+
+.dimBuiltBy {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-top: 8px;
+}
+
+.dimBuiltByLabel {
+  font-size: 14px;
+  font-weight: 500;
+  color: rgba(10, 19, 68, 0.6);
+  letter-spacing: -0.01em;
+}
+
 /* Pill */
 .dimPill {
   display: flex;
@@ -3379,9 +3661,54 @@
   letter-spacing: -0.02em;
   color: #0A1344;
   line-height: 1.35;
+  text-align: center;
 }
 
 .dimPill p strong { font-weight: 600; }
+
+/* Stacks the Input pill and Output pill tightly together */
+.dimPillStack {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: stretch;
+}
+
+/* Down-arrow connector between the Input and Output pills */
+.dimPillArrow {
+  align-self: center;
+  width: 14px;
+  height: 18px;
+  color: rgba(10, 19, 68, 0.55);
+  margin: 2px 0;
+}
+
+/* Example row beneath the pill — concrete input → output illustration */
+.dimExample {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 0 4px;
+  margin-top: -6px;
+}
+
+.dimExampleIcon {
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  color: rgba(10, 19, 68, 0.6);
+  margin-top: 1px;
+}
+
+.dimExampleText {
+  margin: 0;
+  font-size: 13px;
+  font-style: italic;
+  font-weight: 400;
+  color: rgba(10, 19, 68, 0.72);
+  line-height: 1.4;
+  letter-spacing: -0.01em;
+}
 
 /* Pattern row */
 .dimPattern {
@@ -3475,12 +3802,21 @@
 }
 
 .lgmCompareTableTitle {
-  margin: 0 0 clamp(24px, 3vw, 36px);
+  position: absolute;
+  top: clamp(20px, 2vw, 28px);
+  left: 0;
+  right: 0;
+  margin: 0;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   text-align: center;
-  font-size: 30px;
-  font-weight: 500;
-  color: #ffffff;
+  font-size: 26px;
+  font-weight: 600;
+  color: #0A1344;
   letter-spacing: -0.02em;
+  pointer-events: none;
 }
 
 .lgmCompareTableHead {
@@ -3662,6 +3998,15 @@
 
   .dimLgm {
     flex: none;
+  }
+
+  .dimBox {
+    flex: none;
+  }
+
+  .dimBoxArrow {
+    transform: rotate(90deg);
+    margin: 4px 0;
   }
 }
 
