@@ -194,6 +194,7 @@
   left: 0;
   padding: 0 16px;
   pointer-events: auto;
+  transition: opacity 400ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 /* Sections wrapper: no padding/margin override — sections inherit the
@@ -5391,66 +5392,55 @@
   color: #ffffff;
 }
 
-/* Sticky-pin scroll experience — the outer is 4 viewports tall (1 sticky
-   pin + 3 of scroll travel), the inner pins to the top of the viewport
-   for the duration. State (intro, tile 1, tile 2, tile 3) is driven by
-   continuous scroll progress, not discrete steps. */
+/* Sticky-pin scroll experience — sized to fit within the page's content
+   bounds (no longer breaks out to 100vw). The inner pin is 70vh; the outer
+   is 70vh + 200vh of scroll travel = 270vh.
+     • top: 15vh on the inner pins it vertically centered in the viewport
+       (15vh top + 70vh height + 15vh bottom = 100vh), so the section
+       "sticks" when the panel reaches the middle of the screen — not
+       when it hits the top.
+     • The JS scroll-progress math in GenLayersSection.tsx accounts for
+       this offset (STICKY_TOP_VH = 0.15). */
 .genLayersStickyOuter {
   position: relative;
-  width: 100vw;
-  height: calc(100vh + 300vh);
-  /* Break out of every centered ancestor (genLayersInner, page max-width)
-     so the panel reaches edge-to-edge of the viewport, matching the band. */
-  margin-left: calc(50% - 50vw);
-  margin-right: calc(50% - 50vw);
+  width: 100%;
+  height: calc(70vh + 200vh);
 }
 
 .genLayersStickyInner {
   position: sticky;
-  top: 0;
+  top: 15vh;
   width: 100%;
-  height: 100vh;
+  height: 70vh;
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  border-radius: 16px;
 }
 
-/* Top-edge blur — frosted gradient strongest at the top of the sticky
-   panel, fading downward. Sits above the tiles (z-index 4) but below the
-   intro overlay (z-index 5), so during the intro it's hidden under the
-   blur veil; once the intro fades, this provides a soft frosted strip at
-   the top where the (now transparent) navbar lives, keeping the navbar
-   text readable against the satellite imagery. */
-.genLayersTopBlur {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 28%;
-  pointer-events: none;
-  z-index: 4;
-  background: linear-gradient(
-    to bottom,
-    rgba(0, 0, 0, 0.55) 0%,
-    rgba(0, 0, 0, 0.30) 40%,
-    rgba(0, 0, 0, 0) 100%
-  );
-  -webkit-backdrop-filter: blur(12px);
-  backdrop-filter: blur(12px);
-  /* Mask fades the blur layer itself so the bottom edge is invisible —
-     no hard cut where the blur ends. */
-  -webkit-mask-image: linear-gradient(to bottom, black 0%, black 55%, transparent 100%);
-  mask-image: linear-gradient(to bottom, black 0%, black 55%, transparent 100%);
-}
-
-/* Navbar transparency override — while body.gen-layers-active is set
-   (toggled by TechnologyPage when the band overlaps the navbar Y), the
-   Navbar's frosted-glass background div (the first child of its <nav>)
-   is forced to opacity: 0 so the section bleeds through. The navbar's
-   text/icon colors are still driven by the existing dark `theme` prop;
-   only the bg layer changes. Documented in design-system/navbar.md. */
+/* Navbar blur-gradient override — while body.gen-layers-active is set
+   (toggled by TechnologyPage when the Gen Layers band overlaps the navbar
+   Y), the navbar's frosted-glass background div (the first child of its
+   <nav>) gets a top-down mask: fully opaque at the top edge, fading to
+   transparent at the bottom. The bg's existing backdrop-filter blur is
+   therefore strongest at the top of the navbar and tapers off downward.
+   Border-bottom is suppressed since it would only render along the masked
+   edge. Text/icon colors continue to be driven by the standard dark
+   `theme` prop. Documented in design-system/navbar.md. */
 :global(body.gen-layers-active nav.header-font > div:first-child) {
-  opacity: 0 !important;
+  -webkit-mask-image: linear-gradient(to bottom, black 0%, black 30%, transparent 100%) !important;
+  mask-image: linear-gradient(to bottom, black 0%, black 30%, transparent 100%) !important;
+  border-bottom: none !important;
+}
+
+/* Left-side scroll index fade — while the gen-layers band overlaps the
+   navbar, fade out the scroll-index labels so they don't compete with
+   the section. The decorative gutter line stays (it's on .sidebarPanel,
+   not .sidebarPanelSticky). Restored when the body class clears. The
+   opacity transition lives on the canonical .sidebarPanelSticky rule. */
+:global(body.gen-layers-active) .sidebarPanelSticky {
+  opacity: 0;
+  pointer-events: none;
 }
 
 /* Intro overlay — heavy backdrop-blur + dark veil over the tiles plus
@@ -5482,11 +5472,18 @@
 
 /* Progress bar sitting below the sticky outer — fills left-to-right
    as the user scrolls through the experience. */
+/* Progress bar — sibling of .genLayersStickyInner (not nested inside it),
+   sticky-pinned just below the panel so it floats below as its own bar.
+   Both pin and release together because their pin positions inside the
+   shared outer line up: inner's top: 15vh + height 70vh = 85vh, plus
+   12px gap = 97vh sticky top for the bar. */
 .genLayersProgressBar {
+  position: sticky;
+  top: calc(15vh + 70vh + 12px);
   width: 100%;
   height: 4px;
-  margin-top: clamp(40px, 5vw, 64px);
-  background: rgba(255, 255, 255, 0.12);
+  margin-top: 12px;
+  background: rgba(255, 255, 255, 0.18);
   border-radius: 2px;
   overflow: hidden;
 }
@@ -5494,7 +5491,9 @@
 .genLayersProgressFill {
   height: 100%;
   background: #ffffff;
-  transition: width 90ms linear;
+  /* No CSS transition — width is written every rAF tick directly via
+     progressFillRef so the bar tracks scroll position with no perceptible
+     lag. A transition would visibly trail the scroll. */
 }
 
 .genLayersHeadline {
@@ -5559,11 +5558,10 @@
   background-image: url("/UseCases/SiteSelection.jpg");
 }
 
-/* Gradient over the lower portion of each tile so the text reads cleanly
-   against the satellite imagery. Strong at the bottom edge, tapering to
-   fully transparent toward the top. No backdrop-filter — it interacts
-   poorly with the rounded outer corners on the first/last tiles, which
-   was producing the "messed up" gradient on the side tiles. */
+/* Backdrop-blur gradient over the lower portion of each tile so the text
+   reads cleanly against the satellite imagery — strongest blur at the
+   bottom edge, tapering to no blur at the top. The mask-image fades the
+   filter layer itself so there's no hard cut where the blur ends. */
 .genLayersTile::before {
   content: "";
   position: absolute;
@@ -5571,13 +5569,11 @@
   right: 0;
   bottom: 0;
   height: 65%;
-  background: linear-gradient(
-    to top,
-    rgba(0, 0, 0, 0.92) 0%,
-    rgba(0, 0, 0, 0.65) 30%,
-    rgba(0, 0, 0, 0.3) 65%,
-    rgba(0, 0, 0, 0) 100%
-  );
+  background: transparent;
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  -webkit-mask-image: linear-gradient(to top, black 0%, black 25%, transparent 100%);
+  mask-image: linear-gradient(to top, black 0%, black 25%, transparent 100%);
   pointer-events: none;
   z-index: 1;
 }
@@ -5607,44 +5603,11 @@
   transition: flex 600ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-/* Per-state tile widths — each active tile occupies the content area
-   plus the adjacent gutter, while the other two tuck into the opposite
-   gutter as slivers. The structure lines (sidebar dividers at z-index
-   300) paint cleanly over the resulting tile boundaries.
-     • State 1: tile 1 spans [0, right line]; tiles 2 & 3 split the
-       right gutter (var(--tech-sidebar-x) / 2 each).
-     • State 2: tile 2 spans the full content area [left line, right
-       line]; tiles 1 & 3 each fill one gutter.
-     • State 3: tile 3 spans [left line, right edge]; tiles 1 & 2 split
-       the left gutter.
-   Only applied where the gutters are visible (>1500px); below that the
-   sidebars are hidden and --tech-sidebar-x is 0, so the flex-grow
-   fallback above takes over. */
-@media (min-width: 1501px) {
-  .genLayersTilesRowState1 .genLayersTile:nth-child(1) {
-    flex: 0 0 calc(100vw - var(--tech-sidebar-x));
-  }
-  .genLayersTilesRowState1 .genLayersTile:nth-child(2),
-  .genLayersTilesRowState1 .genLayersTile:nth-child(3) {
-    flex: 0 0 calc(var(--tech-sidebar-x) / 2);
-  }
-
-  .genLayersTilesRowState2 .genLayersTile:nth-child(1),
-  .genLayersTilesRowState2 .genLayersTile:nth-child(3) {
-    flex: 0 0 var(--tech-sidebar-x);
-  }
-  .genLayersTilesRowState2 .genLayersTile:nth-child(2) {
-    flex: 0 0 calc(100vw - 2 * var(--tech-sidebar-x));
-  }
-
-  .genLayersTilesRowState3 .genLayersTile:nth-child(1),
-  .genLayersTilesRowState3 .genLayersTile:nth-child(2) {
-    flex: 0 0 calc(var(--tech-sidebar-x) / 2);
-  }
-  .genLayersTilesRowState3 .genLayersTile:nth-child(3) {
-    flex: 0 0 calc(100vw - var(--tech-sidebar-x));
-  }
-}
+/* The section now lives within the page's content bounds (no longer
+   100vw with negative margins), so the gutter-based per-state widths
+   no longer apply. Sizing is driven entirely by .genLayersTileActive
+   { flex-grow: 18 } above — active tile takes ~90%, inactive tiles
+   share the remaining 10% as thin slivers. */
 
 /* Inactive tiles get a dark veil and hide all text content. */
 .genLayersTileInactive::after {
@@ -5748,21 +5711,38 @@
   margin-top: clamp(40px, 5vw, 64px);
 }
 
-/* Positioning + color only — pill appearance comes from glassStyles.btn
-   applied alongside this class in the JSX. */
+/* Mirrors the navbar's "Start Now" CTA but inverted — solid white pill
+   with black text. The arrow stays #2563EB (matches the navbar's blue
+   accent) and translates on hover; text turns blue on hover. */
 .genLayersExploreBtn {
-  color: #ffffff;
-  font-size: var(--tech-fs-caption);
-  gap: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  height: 36px;
+  padding: 0 20px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1;
+  color: #000000;
+  background-color: #FFFFFF;
   text-decoration: none;
+  white-space: nowrap;
+  transition: color 300ms ease, background-color 300ms ease, opacity 300ms ease;
+}
+
+.genLayersExploreBtn:hover {
+  color: #2563EB;
+  opacity: 0.9;
 }
 
 .genLayersExploreBtn svg {
-  transition: transform 280ms cubic-bezier(0.22, 1, 0.36, 1);
+  stroke: #2563EB;
+  transition: transform 300ms ease-in-out;
 }
 
 .genLayersExploreBtn:hover svg {
-  transform: translateX(2px);
+  transform: translateX(4px);
 }
 
 .genLayersGrid {

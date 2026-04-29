@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from "react";
 
-import glassStyles from "@/components/ui/GlassButton.module.css";
 import styles from "../technology.module.css";
 
 type Tile = { kicker: string; title: string; prompt: string };
@@ -25,7 +24,12 @@ const TILES: Tile[] = [
   },
 ];
 
-// Total scroll distance is 100vh sticky pin + 300vh of travel = 400vh.
+// Total scroll distance is 70vh sticky pin + 200vh of travel = 270vh.
+// The pin is centered in the viewport (CSS top: 15vh on .genLayersStickyInner),
+// so raw = 0 when outerRect.top hits 15vh (sticky starts) and raw = 1 when
+// outerRect.top hits -185vh (sticky releases — outer.bottom reaches inner
+// bottom at 85vh from viewport top). Travel distance is 200vh.
+//
 // Tile-state buckets across the 0..1 progress range:
 //   [0,    0.46) tile 1 active (intro overlay covers it for the first
 //                ~20% — tile 1 is already in its expanded layout
@@ -33,11 +37,15 @@ const TILES: Tile[] = [
 //                "expand from collapsed" transition).
 //   [0.46, 0.73) tile 2
 //   [0.73, 1.00] tile 3
-const TRAVEL_VH = 3;
+const TRAVEL_VH = 2;
+const STICKY_TOP_VH = 0.15;
 
 export function GenLayersSection() {
   const sectionRef = useRef<HTMLDivElement | null>(null);
-  const [progress, setProgress] = useState(0);
+  // Refs for the elements whose styles we update on every scroll frame.
+  // Bypasses React state/re-renders so the visuals track scroll instantly.
+  const progressFillRef = useRef<HTMLDivElement | null>(null);
+  const introRef = useRef<HTMLDivElement | null>(null);
   // 0/1/2 = active tile. Tile 1 is active from the start so it sits in
   // its expanded form behind the intro overlay.
   const [activeTile, setActiveTile] = useState(0);
@@ -47,16 +55,34 @@ export function GenLayersSection() {
     if (!node) return;
 
     let rafId = 0;
+    let lastTile = 0;
     const update = () => {
       rafId = 0;
       const rect = node.getBoundingClientRect();
+      const stickyTopPx = window.innerHeight * STICKY_TOP_VH;
       const extraPx = window.innerHeight * TRAVEL_VH;
-      const raw = Math.max(0, Math.min(1, -rect.top / extraPx));
-      setProgress(raw);
+      // raw = 0 when outer.top hits the sticky offset (sticky starts).
+      // raw = 1 after travel distance (sticky releases).
+      const raw = Math.max(0, Math.min(1, (stickyTopPx - rect.top) / extraPx));
+
+      // Direct DOM writes — no React re-render, no CSS transition lag.
+      if (progressFillRef.current) {
+        progressFillRef.current.style.width = `${(raw * 100).toFixed(2)}%`;
+      }
+      if (introRef.current) {
+        const introOpacity = Math.max(0, Math.min(1, 1 - (raw - 0.10) / 0.10));
+        introRef.current.style.opacity = introOpacity.toString();
+      }
+
+      // Active tile only changes at threshold crossings — gate the React
+      // state update so we don't trigger pointless re-renders every frame.
       let next = 0;
       if (raw >= 0.73) next = 2;
       else if (raw >= 0.46) next = 1;
-      setActiveTile(next);
+      if (next !== lastTile) {
+        lastTile = next;
+        setActiveTile(next);
+      }
     };
 
     const onScroll = () => {
@@ -73,10 +99,6 @@ export function GenLayersSection() {
       if (rafId !== 0) window.cancelAnimationFrame(rafId);
     };
   }, []);
-
-  // Intro overlay opacity: 1 until raw=0.10, fades to 0 by raw=0.20. Continuous
-  // — driven directly by scroll progress rather than discrete step transitions.
-  const introOpacity = Math.max(0, Math.min(1, 1 - (progress - 0.10) / 0.10));
 
   return (
     <div
@@ -207,17 +229,14 @@ export function GenLayersSection() {
               })}
             </div>
 
-            {/* Top-edge blur — frosted gradient strongest at the top, fades
-                downward. Provides visual continuity with the (now transparent)
-                navbar so its text stays readable over the satellite imagery. */}
-            <div className={styles.genLayersTopBlur} aria-hidden />
-
             {/* Intro overlay — heavy blur + headline + scroll hint. Sits on
-                top of the tiles; opacity is driven by scroll progress. */}
+                top of the tiles; opacity is updated directly via introRef
+                in the rAF tick (see useEffect) — no React state, no
+                re-render-per-frame. */}
             <div
+              ref={introRef}
               className={styles.genLayersIntro}
-              style={{ opacity: introOpacity }}
-              aria-hidden={introOpacity === 0}
+              aria-hidden
             >
               <h3 className={styles.genLayersHeadline}>
                 Columbus-01 can dynamically creating geodata layers, without
@@ -228,23 +247,26 @@ export function GenLayersSection() {
               </span>
             </div>
           </div>
-        </div>
 
-        {/* Progress bar — sits below the sticky outer so it appears in
-            normal flow once the user has scrolled past the experience. */}
-        <div className={styles.genLayersProgressBar} aria-hidden>
-          <div
-            className={styles.genLayersProgressFill}
-            style={{ width: `${progress * 100}%` }}
-          />
+          {/* Progress bar — sibling of the sticky panel inside the same
+              outer, sticky-pinned just below it so it floats as its own
+              bar. The fill width is updated via a ref directly in the
+              rAF tick (see useEffect) — no React state, no CSS
+              transition — so it tracks scroll instantly. */}
+          <div className={styles.genLayersProgressBar} aria-hidden>
+            <div
+              ref={progressFillRef}
+              className={styles.genLayersProgressFill}
+            />
+          </div>
         </div>
 
         {/* Glass CTA — MapsGPT page style */}
         <div className={styles.genLayersExploreWrap}>
-          <a href="/use-cases" className={`${glassStyles.btn} ${styles.genLayersExploreBtn}`}>
+          <a href="/use-cases" className={styles.genLayersExploreBtn}>
             <span>Explore more maps we&apos;ve made</span>
-            <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden>
-              <path d="M5 3l4 4-4 4" stroke="currentColor" strokeWidth="1.4" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+            <svg width="10" height="18" viewBox="0 0 7 12" fill="none" aria-hidden>
+              <path d="M1 1l5 5-5 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </a>
         </div>
