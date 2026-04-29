@@ -58,7 +58,7 @@ export function TechnologySections() {
 
             <div className={styles.lgmCompareLayout}>
               <div className={styles.lgmCompareText}>
-                <span className={styles.sectionEyebrow}>What&rsquo;s an LGM</span>
+                <span className={styles.sectionEyebrow}>A new foundation model</span>
                 <h2 className={styles.sectionTitle}>
                   Large Geospatial Model vs Large Language Model.
                 </h2>
@@ -194,7 +194,7 @@ export function TechnologySections() {
                   <div className={styles.dimLogos} style={{ gridTemplateColumns: "1fr" }}>
                     <div className={styles.dimLogoItem}>
                       {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src="/TechnologyPageImages/physical-intelligence-logo.jpeg" alt="Physical Intelligence" className={styles.dimLogoImg} style={{ height: 108, maxWidth: 270 }} />
+                      <img src="/TechnologyPageImages/physical-intelligence-logo.jpeg" alt="Physical Intelligence" className={styles.dimLogoImg} style={{ maxWidth: 135 }} />
                     </div>
                     <div className={styles.dimLogoItem}>
                       {/* eslint-disable-next-line @next/next/no-img-element */}
