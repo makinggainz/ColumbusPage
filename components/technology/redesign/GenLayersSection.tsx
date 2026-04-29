@@ -5,42 +5,78 @@ import { useEffect, useRef, useState } from "react";
 import glassStyles from "@/components/ui/GlassButton.module.css";
 import styles from "../technology.module.css";
 
-const TILES = [
-  { kicker: "Columbus GenLayer", title: "Solar roof possibility" },
-  { kicker: "Columbus GenLayer", title: "Resident Vibes" },
-  { kicker: "Columbus GenLayer", title: "Safety Score" },
+type Tile = { kicker: string; title: string; prompt: string };
+
+const TILES: Tile[] = [
+  {
+    kicker: "Columbus GenLayer",
+    title: "Solar roof possibility",
+    prompt: "rank the possibility of solar roof panel installation in this neighborhood",
+  },
+  {
+    kicker: "Columbus GenLayer",
+    title: "Resident Vibes",
+    prompt: "rank residential community vibrancy across this area",
+  },
+  {
+    kicker: "Columbus GenLayer",
+    title: "Safety Score",
+    prompt: "highlight low-incident streets and high-visibility safety zones",
+  },
 ];
 
+// Total scroll distance is 100vh sticky pin + 300vh of travel = 400vh.
+// Tile-state buckets across the 0..1 progress range:
+//   [0,    0.46) tile 1 active (intro overlay covers it for the first
+//                ~20% — tile 1 is already in its expanded layout
+//                underneath, so when the intro fades there's no
+//                "expand from collapsed" transition).
+//   [0.46, 0.73) tile 2
+//   [0.73, 1.00] tile 3
+const TRAVEL_VH = 3;
+
 export function GenLayersSection() {
-  const displayRef = useRef<HTMLDivElement | null>(null);
-  const [displayRevealed, setDisplayRevealed] = useState(false);
+  const sectionRef = useRef<HTMLDivElement | null>(null);
+  const [progress, setProgress] = useState(0);
+  // 0/1/2 = active tile. Tile 1 is active from the start so it sits in
+  // its expanded form behind the intro overlay.
   const [activeTile, setActiveTile] = useState(0);
 
   useEffect(() => {
-    const node = displayRef.current;
+    const node = sectionRef.current;
     if (!node) return;
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const entry = entries[0];
-        if (entry?.isIntersecting) {
-          setDisplayRevealed(true);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.22, rootMargin: "0px 0px -10% 0px" },
-    );
-    observer.observe(node);
-    return () => observer.disconnect();
+
+    let rafId = 0;
+    const update = () => {
+      rafId = 0;
+      const rect = node.getBoundingClientRect();
+      const extraPx = window.innerHeight * TRAVEL_VH;
+      const raw = Math.max(0, Math.min(1, -rect.top / extraPx));
+      setProgress(raw);
+      let next = 0;
+      if (raw >= 0.73) next = 2;
+      else if (raw >= 0.46) next = 1;
+      setActiveTile(next);
+    };
+
+    const onScroll = () => {
+      if (rafId !== 0) return;
+      rafId = window.requestAnimationFrame(update);
+    };
+
+    update();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+      if (rafId !== 0) window.cancelAnimationFrame(rafId);
+    };
   }, []);
 
-  // Auto-cycle the active tile left → right every 5 seconds. Manual clicks
-  // reset the timer so the user gets a fresh 5s on the tile they chose.
-  useEffect(() => {
-    const id = window.setInterval(() => {
-      setActiveTile((i) => (i + 1) % TILES.length);
-    }, 5000);
-    return () => window.clearInterval(id);
-  }, [activeTile]);
+  // Intro overlay opacity: 1 until raw=0.10, fades to 0 by raw=0.20. Continuous
+  // — driven directly by scroll progress rather than discrete step transitions.
+  const introOpacity = Math.max(0, Math.min(1, 1 - (progress - 0.10) / 0.10));
 
   return (
     <div
@@ -131,37 +167,76 @@ export function GenLayersSection() {
           <span className={styles.genLayersHeadLabel}>Gen Layers</span>
         </div>
 
-        {/* Image-backed display — headline top-left, 3 tile labels inside,
-            top+bottom blur gradients. Expands from a rounded card to
-            near-full-screen on scroll-reveal. */}
-        <div
-          ref={displayRef}
-          className={[
-            styles.genLayersDisplay,
-            displayRevealed ? styles.genLayersDisplayRevealed : "",
-          ]
-            .filter(Boolean)
-            .join(" ")}
-        >
-          <h3 className={styles.genLayersHeadline}>
-            Dynamically creating geodata layers, without complex and
-            expensive surveying.
-          </h3>
+        {/* Sticky-scroll experience — outer wrapper is 4 viewports tall;
+            the inner panel pins to the top for the duration of the scroll,
+            and tile state is driven entirely by scroll progress. */}
+        <div ref={sectionRef} className={styles.genLayersStickyOuter}>
+          <div className={styles.genLayersStickyInner}>
+            <div
+              className={[
+                styles.genLayersTilesRow,
+                activeTile === 0 ? styles.genLayersTilesRowState1 : "",
+                activeTile === 1 ? styles.genLayersTilesRowState2 : "",
+                activeTile === 2 ? styles.genLayersTilesRowState3 : "",
+              ]
+                .filter(Boolean)
+                .join(" ")}
+            >
+              {TILES.map((tile, i) => {
+                const isActive = i === activeTile;
+                const isInactive = activeTile >= 0 && !isActive;
+                return (
+                  <div
+                    key={tile.title}
+                    className={[
+                      styles.genLayersTile,
+                      isActive ? styles.genLayersTileActive : "",
+                      isInactive ? styles.genLayersTileInactive : "",
+                    ]
+                      .filter(Boolean)
+                      .join(" ")}
+                  >
+                    <span className={styles.genLayersTileKicker}>{tile.kicker}</span>
+                    <span className={styles.genLayersTileTitle}>{tile.title}</span>
+                    <span className={styles.genLayersTilePromptLabel}>Prompt:</span>
+                    <span className={styles.genLayersTilePrompt}>
+                      &ldquo;{tile.prompt}&rdquo;
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
 
-          <div className={styles.genLayersTilesRow}>
-            {TILES.map((tile, i) => (
-              <button
-                key={tile.title}
-                type="button"
-                className={`${styles.genLayersTile} ${i === activeTile ? styles.genLayersTileActive : ""}`}
-                onClick={() => setActiveTile(i)}
-                aria-pressed={i === activeTile}
-              >
-                <span className={styles.genLayersTileKicker}>{tile.kicker}</span>
-                <span className={styles.genLayersTileTitle}>{tile.title}</span>
-              </button>
-            ))}
+            {/* Top-edge blur — frosted gradient strongest at the top, fades
+                downward. Provides visual continuity with the (now transparent)
+                navbar so its text stays readable over the satellite imagery. */}
+            <div className={styles.genLayersTopBlur} aria-hidden />
+
+            {/* Intro overlay — heavy blur + headline + scroll hint. Sits on
+                top of the tiles; opacity is driven by scroll progress. */}
+            <div
+              className={styles.genLayersIntro}
+              style={{ opacity: introOpacity }}
+              aria-hidden={introOpacity === 0}
+            >
+              <h3 className={styles.genLayersHeadline}>
+                Columbus-01 can dynamically creating geodata layers, without
+                complex and expensive surveying.
+              </h3>
+              <span className={styles.genLayersScrollHint}>
+                ↓ Scroll to see the magic
+              </span>
+            </div>
           </div>
+        </div>
+
+        {/* Progress bar — sits below the sticky outer so it appears in
+            normal flow once the user has scrolled past the experience. */}
+        <div className={styles.genLayersProgressBar} aria-hidden>
+          <div
+            className={styles.genLayersProgressFill}
+            style={{ width: `${progress * 100}%` }}
+          />
         </div>
 
         {/* Glass CTA — MapsGPT page style */}

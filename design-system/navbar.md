@@ -37,6 +37,7 @@
 - Fades in when `isCompact` is true (standard pages) **or** when `bgTriggerPassed` is true (products page).
 - Hidden while the hamburger dropdown is open (overridden by a full-width white background on the nav bar itself).
 - `[data-navbar-bg-trigger]` is a zero-height div placed in the page between the hero and the first content section on the products page. When it scrolls past the top of the viewport, `bgTriggerPassed` → `true`.
+- **Technology page exception:** while the Gen Layers band overlaps the navbar Y position, `TechnologyPage.tsx` toggles `body.gen-layers-active`. A scoped `:global` rule in `components/technology/technology.module.css` forces the frosted-bg div (the first child of `nav.header-font`) to `opacity: 0 !important` so the section bleeds through. The navbar's text/icon colors continue to be controlled by the standard `theme="dark"` prop; only the bg layer is overridden. The class is removed on page unmount so other routes are unaffected.
 
 ---
 
