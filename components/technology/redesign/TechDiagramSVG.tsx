@@ -279,24 +279,47 @@ export function TechDiagramSVG({ activeTitle, onLayerClick, ...props }: TechDiag
 
   const getShift = (layerIndex: number) => {
     if (activeIndex === -1) return 0;
-    if (layerIndex < activeIndex) return -38;
-    if (layerIndex > activeIndex) return 38;
+    if (layerIndex < activeIndex) return -70;
+    if (layerIndex > activeIndex) return 70;
     return 0;
   };
 
-  const offsetL1 = getShift(0); // 0
-  const offsetL2 = getShift(1);
-  const offsetL3 = getShift(2);
-  const offsetL4 = getShift(3);
+  // Baseline pulls each layer up so they sit closer together vertically.
+  // L1↔L2 and L3↔L4 gaps are kept slightly larger than L2↔L3.
+  const offsetL1 = getShift(0);
+  const offsetL2 = getShift(1) - 10;
+  const offsetL3 = getShift(2) - 60;
+  const offsetL4 = getShift(3) - 70;
 
   const pathTransition = { transition: "d 0.4s ease, opacity 0.4s ease" };
 
-  const drawLine = (x1: number, y1: number, x2: number, y2: number, shift1: number, shift2: number, opacity: number) => (
-    <path d={`M ${x1} ${y1 + shift1} L ${x2} ${y2 + shift2}`} style={{ ...pathTransition, opacity }} stroke={border} strokeWidth={1} strokeDasharray="6 6" />
-  );
+  const drawLine = (x1: number, y1: number, x2: number, y2: number, shift1: number, shift2: number, opacity: number) => {
+    // Split into two halves at the midpoint so each end follows its layer's
+    // shift independently. When layers move apart, the two halves separate.
+    const midX = (x1 + x2) / 2;
+    const midY = (y1 + y2) / 2;
+    return (
+      <>
+        <path
+          d={`M ${x1} ${y1 + shift1} L ${midX} ${midY + shift1}`}
+          style={{ ...pathTransition, opacity }}
+          stroke="#000000"
+          strokeWidth={1}
+          strokeDasharray="6 6"
+        />
+        <path
+          d={`M ${midX} ${midY + shift2} L ${x2} ${y2 + shift2}`}
+          style={{ ...pathTransition, opacity }}
+          stroke="#000000"
+          strokeWidth={1}
+          strokeDasharray="6 6"
+        />
+      </>
+    );
+  };
 
   return (
-    <svg viewBox="0 0 600 1100" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <svg viewBox="0 -80 600 1240" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
       <defs>
         <clipPath id="clip-l1"><polygon points="300,6 550,138 300,270 50,138" /></clipPath>
         <clipPath id="clip-l2"><polygon points="300,270 482,368 300,466 118,368" /></clipPath>
@@ -309,7 +332,6 @@ export function TechDiagramSVG({ activeTitle, onLayerClick, ...props }: TechDiag
         {/* L1 -> L2 */}
         {drawLine(50, 138, 118, 368, offsetL1, offsetL2, getOpacity(1))}
         {drawLine(550, 138, 482, 368, offsetL1, offsetL2, getOpacity(1))}
-        {drawLine(300, 6, 300, 270, offsetL1, offsetL2, getOpacity(1))}
         {drawLine(300, 270, 300, 466, offsetL1, offsetL2, getOpacity(1))}
 
         {/* L2 -> L3 */}
@@ -323,6 +345,7 @@ export function TechDiagramSVG({ activeTitle, onLayerClick, ...props }: TechDiag
         {drawLine(482, 598, 482, 825, offsetL3, offsetL4, getOpacity(3))}
         {drawLine(300, 500, 300, 727, offsetL3, offsetL4, getOpacity(3))}
         {drawLine(300, 696, 300, 923, offsetL3, offsetL4, getOpacity(3))}
+
       </g>
 
       {/* Ground Plane (Layer 4) */}
@@ -378,6 +401,14 @@ export function TechDiagramSVG({ activeTitle, onLayerClick, ...props }: TechDiag
         <polygon points="300,270 550,138 550,158 300,290" fill={rightFace} stroke={border} strokeWidth={strokeWidth} />
         <polygon points="300,6 550,138 300,270 50,138" fill={bgFill} stroke={border} strokeWidth={strokeWidth} style={{ pointerEvents: "auto" }} />
         <image {...dataCollectionProps} x="50" y="6" width="500" height="264" clipPath="url(#clip-l1)" />
+      </g>
+
+      {/* Center spine — drawn last so it sits on top of all layers and animations */}
+      <g style={{ pointerEvents: "none" }}>
+        {drawLine(300, 270, 300, 368, offsetL1, offsetL2, getOpacity(1))}
+        {drawLine(300, 368, 300, 598, offsetL2, offsetL3, getOpacity(2))}
+        {drawLine(300, 598, 300, 825, offsetL3, offsetL4, getOpacity(3))}
+        {drawLine(300, 825, 300, 979, offsetL4, offsetL4, getOpacity(3))}
       </g>
     </svg>
   );
