@@ -3405,6 +3405,7 @@
   height: 36px;
   max-width: 90px;
   filter: grayscale(100%);
+  mix-blend-mode: multiply;
 }
 
 .dimGridCell .dimLogoMonogram {
@@ -3735,7 +3736,7 @@
 .dimLogos {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 0px 4px;
+  gap: 14px 12px;
   margin-top: auto;
 }
 

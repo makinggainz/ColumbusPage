@@ -191,15 +191,18 @@ export function TechnologySections() {
                   </div>
                 </div>
                 <div className={`${styles.dimGridCell} ${styles.dimGridCellBottom}`}>
-                  <div className={styles.dimLogos}>
+                  <div className={styles.dimLogos} style={{ gridTemplateColumns: "1fr" }}>
                     <div className={styles.dimLogoItem}>
-                      <span className={styles.dimLogoMonogram} title="Physical Intelligence">π Physical Intelligence</span>
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src="/TechnologyPageImages/physical-intelligence-logo.jpeg" alt="Physical Intelligence" className={styles.dimLogoImg} style={{ height: 108, maxWidth: 270 }} />
                     </div>
                     <div className={styles.dimLogoItem}>
-                      <span className={styles.dimLogoMonogram} title="runway">runway</span>
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src="/TechnologyPageImages/runway-logo.jpeg" alt="Runway" className={styles.dimLogoImg} />
                     </div>
                     <div className={styles.dimLogoItem}>
-                      <span className={styles.dimLogoMonogram} title="Meta">Meta</span>
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src="/TechnologyPageImages/meta-logo.jpeg" alt="Meta" className={styles.dimLogoImg} />
                     </div>
                   </div>
                 </div>
