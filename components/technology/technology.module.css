@@ -167,7 +167,7 @@
      line lands exactly at the navbar logo's left edge x-position. */
   width: var(--tech-sidebar-x);
   pointer-events: none;
-  z-index: 5;
+  z-index: 100;
   background: transparent;
   border: none;
   border-right: 1px solid rgba(0, 102, 204, 0.3);
@@ -210,7 +210,7 @@
   bottom: 0;
   width: var(--tech-sidebar-x);
   pointer-events: none;
-  z-index: 0;
+  z-index: 100;
 }
 
 .sidebarRightLineSvg {
