@@ -5,9 +5,16 @@ import { useEffect, useRef, useState } from "react";
 import glassStyles from "@/components/ui/GlassButton.module.css";
 import styles from "../technology.module.css";
 
+const TILES = [
+  { kicker: "Columbus GenLayer", title: "Solar roof possibility" },
+  { kicker: "Columbus GenLayer", title: "Resident Vibes" },
+  { kicker: "Columbus GenLayer", title: "Safety Score" },
+];
+
 export function GenLayersSection() {
   const displayRef = useRef<HTMLDivElement | null>(null);
   const [displayRevealed, setDisplayRevealed] = useState(false);
+  const [activeTile, setActiveTile] = useState(0);
 
   useEffect(() => {
     const node = displayRef.current;
@@ -25,6 +32,15 @@ export function GenLayersSection() {
     observer.observe(node);
     return () => observer.disconnect();
   }, []);
+
+  // Auto-cycle the active tile left → right every 5 seconds. Manual clicks
+  // reset the timer so the user gets a fresh 5s on the tile they chose.
+  useEffect(() => {
+    const id = window.setInterval(() => {
+      setActiveTile((i) => (i + 1) % TILES.length);
+    }, 5000);
+    return () => window.clearInterval(id);
+  }, [activeTile]);
 
   return (
     <div
@@ -127,27 +143,24 @@ export function GenLayersSection() {
             .filter(Boolean)
             .join(" ")}
         >
-          <div className={styles.genLayersDisplayFadeTop} aria-hidden />
-          <div className={styles.genLayersDisplayFadeBottom} aria-hidden />
-
           <h3 className={styles.genLayersHeadline}>
             Dynamically creating geodata layers, without complex and
             expensive surveying.
           </h3>
 
           <div className={styles.genLayersTilesRow}>
-            <div className={styles.genLayersTile}>
-              <span className={styles.genLayersTileKicker}>Columbus GenLayer</span>
-              <span className={styles.genLayersTileTitle}>Solar roof possibility</span>
-            </div>
-            <div className={styles.genLayersTile}>
-              <span className={styles.genLayersTileKicker}>Columbus GenLayer</span>
-              <span className={styles.genLayersTileTitle}>Resident Vibes</span>
-            </div>
-            <div className={styles.genLayersTile}>
-              <span className={styles.genLayersTileKicker}>Columbus GenLayer</span>
-              <span className={styles.genLayersTileTitle}>Safety Score</span>
-            </div>
+            {TILES.map((tile, i) => (
+              <button
+                key={tile.title}
+                type="button"
+                className={`${styles.genLayersTile} ${i === activeTile ? styles.genLayersTileActive : ""}`}
+                onClick={() => setActiveTile(i)}
+                aria-pressed={i === activeTile}
+              >
+                <span className={styles.genLayersTileKicker}>{tile.kicker}</span>
+                <span className={styles.genLayersTileTitle}>{tile.title}</span>
+              </button>
+            ))}
           </div>
         </div>
 

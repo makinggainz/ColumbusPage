@@ -12,7 +12,16 @@ export function TechnologyPage() {
   const [navTheme, setNavTheme] = useState<"light" | "dark">("light");
 
   const updateNavState = useCallback(() => {
-    // Hero now has a light background, so navbar stays in "light" mode throughout.
+    // Switch to dark when the Gen Layers band is overlapping the navbar.
+    const band = document.getElementById("gen-layers-band");
+    if (band) {
+      const rect = band.getBoundingClientRect();
+      const navY = 56; // approx compact navbar height — switch when band crosses it
+      if (rect.top <= navY && rect.bottom >= navY) {
+        setNavTheme("dark");
+        return;
+      }
+    }
     setNavTheme("light");
   }, []);
 

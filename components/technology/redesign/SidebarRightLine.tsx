@@ -103,18 +103,20 @@ function CurveSvg({ height, timelineY }: { height: number; timelineY: number }) 
   // bulges past the gap tips with a quadratic jet arc. Lives in the
   // gutter (x > 0), flowing OUTWARD through the opening.
   const JET = 1100;
+  // Left edge shifted from x=0 to x=-1 so the bleed extends 1px into the
+  // 1px exposed column at the slide's right edge (the slide bg is pulled
+  // back 1px on each side so the sidebar divider line stays visible). This
+  // makes the bleed flush with the slide bg with no visible seam.
   const bleedPath = [
-    `M 0 ${y1}`,
+    `M -1 ${y1}`,
     // Follows the top stroke curve down-right to the upper gap tip (BOW, y4).
-    `C 0 ${y1 + topDy * TANGENT_V} ${BOW * (1 - TANGENT_H)} ${y4} ${BOW} ${y4}`,
+    `C -1 ${y1 + topDy * TANGENT_V} ${BOW * (1 - TANGENT_H)} ${y4} ${BOW} ${y4}`,
     // Jet — quadratic arc peaking at (BOW+JET, timelineY) → gap bottom tip.
     `Q ${BOW + JET} ${timelineY} ${BOW} ${y5}`,
-    // Follows the bottom stroke curve back to (0, y8).
-    `C ${BOW * (1 - TANGENT_H)} ${y5} 0 ${y8 - botDy * TANGENT_V} 0 ${y8}`,
-    // Close along the line (x=0). This edge sits at the boundary between
-    // the section bg (same color as the fill) and the gutter — no visible
-    // seam since section bg and BLEED_COLOR match.
-    `L 0 ${y1}`,
+    // Follows the bottom stroke curve back to (-1, y8).
+    `C ${BOW * (1 - TANGENT_H)} ${y5} -1 ${y8 - botDy * TANGENT_V} -1 ${y8}`,
+    // Close along the shifted left edge (x=-1).
+    `L -1 ${y1}`,
     `Z`,
   ].join(" ");
 
