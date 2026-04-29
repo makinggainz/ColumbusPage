@@ -254,7 +254,7 @@ const TetrisBlocks = ({ isVisible }: { isVisible: boolean }) => {
 
 export function TechDiagramSVG({ activeTitle, onLayerClick, ...props }: TechDiagramSVGProps) {
   const border = "#1e2e7a";
-  const bgFill = "transparent";
+  const bgFill = "#ffffff";
   const leftFace = bgFill;
   const rightFace = bgFill;
   const strokeWidth = 1.5;
@@ -278,8 +278,10 @@ export function TechDiagramSVG({ activeTitle, onLayerClick, ...props }: TechDiag
   };
 
   const getShift = (layerIndex: number) => {
-    if (activeIndex === -1 || activeIndex === 3) return 0;
-    return layerIndex > activeIndex ? 80 : 0;
+    if (activeIndex === -1) return 0;
+    if (layerIndex < activeIndex) return -38;
+    if (layerIndex > activeIndex) return 38;
+    return 0;
   };
 
   const offsetL1 = getShift(0); // 0
@@ -325,7 +327,7 @@ export function TechDiagramSVG({ activeTitle, onLayerClick, ...props }: TechDiag
 
       {/* Ground Plane (Layer 4) */}
       <g id="layer4" style={{ transform: `translateY(${offsetL4}px)`, opacity: getOpacity(3), transition: "transform 0.4s ease, opacity 0.4s ease", cursor: "pointer" }} onClick={() => onLayerClick?.("Answers, insights, patterns")}>
-        <polygon points="300,671 586,825 300,979 14,825" fill={bgFill} stroke={border} strokeWidth={strokeWidth} style={{ pointerEvents: "auto" }} />
+        <polygon points="300,671 586,825 300,979 14,825" fill="transparent" stroke={border} strokeWidth={strokeWidth} style={{ pointerEvents: "auto" }} />
         <g stroke={border} strokeWidth={0.5}>
           {[...Array(12)].map((_, i) => {
             const t = i / 11;
@@ -342,7 +344,7 @@ export function TechDiagramSVG({ activeTitle, onLayerClick, ...props }: TechDiag
           })}
         </g>
         <g clipPath="url(#clip-l4-center)">
-          <polygon points="300,727 482,825 300,923 118,825" fill={bgFill} />
+          <polygon points="300,727 482,825 300,923 118,825" fill="transparent" />
           <image {...lastLayerProps} x="118" y="727" width="364" height="196" />
         </g>
         <polygon points="300,727 482,825 300,923 118,825" fill="none" stroke={border} strokeWidth={strokeWidth} />
@@ -365,14 +367,13 @@ export function TechDiagramSVG({ activeTitle, onLayerClick, ...props }: TechDiag
       </g>
 
       {/* Animated Shapes and Lines */}
-      <AnimatedShapes bubbles={BUBBLES_L1} isVisible={isDataCollection} border={border} />
       <FusionLines isVisible={isFusion} offsetL2={offsetL2} />
       
       {/* Tetris Blocks Layer (Answers / Insights) */}
       <TetrisBlocks isVisible={isAnswers} />
 
       {/* Layer 1 */}
-      <g id="layer1" style={{ opacity: getOpacity(0), transition: "opacity 0.4s ease", cursor: "pointer" }} onClick={() => onLayerClick?.("Data Collection")}>
+      <g id="layer1" style={{ transform: `translateY(${offsetL1}px)`, opacity: getOpacity(0), transition: "transform 0.4s ease, opacity 0.4s ease", cursor: "pointer" }} onClick={() => onLayerClick?.("Data Collection")}>
         <polygon points="50,138 300,270 300,290 50,158" fill={leftFace} stroke={border} strokeWidth={strokeWidth} />
         <polygon points="300,270 550,138 550,158 300,290" fill={rightFace} stroke={border} strokeWidth={strokeWidth} />
         <polygon points="300,6 550,138 300,270 50,138" fill={bgFill} stroke={border} strokeWidth={strokeWidth} style={{ pointerEvents: "auto" }} />

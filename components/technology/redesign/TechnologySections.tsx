@@ -49,8 +49,10 @@ export function TechnologySections() {
       {/* Right-edge divider line — mirrors sidebarPanel, bends outward at the LGM timeline with a gap */}
       <SidebarRightLine timelineId="lgm-timeline-track" />
 
-      {/* Main content column */}
-      <div>
+      {/* Main content column — lifted above sidebars (z:100) so the
+          timeline track that extends into the gutter renders on top
+          of the bleed/curves. */}
+      <div style={{ position: "relative", zIndex: 200 }}>
       {/* ── 1. What's an LGM ── */}
       <Slide id="index">
         <div className={styles.slideFrame}>
@@ -523,23 +525,31 @@ export function TechnologySections() {
                 <ResearchGroup title="Answers, insights, patterns">
                   <p>One model, innumerable granular ground truths.</p>
                   <div className={styles.coreResearchProducts}>
-                    <a href="/" className={styles.coreResearchProduct}>
+                    <a href="/enterprise" className={styles.coreResearchProduct}>
                       <span className={styles.coreResearchProductGlyph} aria-hidden>
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img src="/logobueno.png" alt="" />
                       </span>
                       <span>Columbus</span>
                     </a>
-                    <a href="/products/mapsgpt" className={styles.coreResearchProduct}>
+                    <a
+                      href="https://mapsgpt.es"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={styles.coreResearchProduct}
+                    >
                       <span className={styles.coreResearchProductGlyph} aria-hidden>
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img src="/MapsGPT-logo.png" alt="" />
                       </span>
                       <span>Elio</span>
                     </a>
-                    <a href="#" className={`${styles.coreResearchProduct} ${styles.coreResearchProductSoon}`}>
+                    <span
+                      className={`${styles.coreResearchProduct} ${styles.coreResearchProductSoon}`}
+                      aria-disabled="true"
+                    >
                       <span>More Soon</span>
-                    </a>
+                    </span>
                   </div>
                   <a href="/use-cases" className={styles.coreResearchGroupLink}>
                     Other use cases

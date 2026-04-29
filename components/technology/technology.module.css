@@ -4152,7 +4152,7 @@
   right: calc(-1 * (var(--tech-sidebar-x) + var(--page-padding)));
   height: 1px;
   background: var(--tech-color-text-brand);
-  z-index: 1;
+  z-index: 200;
 }
 
 .lgmTimelineDot {
@@ -5094,18 +5094,8 @@
   box-shadow:
     inset 0 0.125em 0.125em rgba(0, 0, 0, 0.05),
     inset 0 -0.125em 0.125em rgba(255, 255, 255, 0.5),
-    0 0.25em 0.125em -0.125em rgba(0, 0, 0, 0.2),
     inset 0 0 0.1em 0.25em rgba(255, 255, 255, 0.2);
   text-shadow: 0 0.05em 0.05em rgba(0, 0, 0, 0.05);
-}
-
-.coreResearchProduct:hover {
-  transform: scale(0.975);
-  box-shadow:
-    inset 0 0.125em 0.125em rgba(0, 0, 0, 0.05),
-    inset 0 -0.125em 0.125em rgba(255, 255, 255, 0.5),
-    0 0.15em 0.05em -0.1em rgba(0, 0, 0, 0.25),
-    inset 0 0 0.05em 0.1em rgba(255, 255, 255, 0.5);
 }
 
 /* Disable backdrop-filter on mobile to match the mapsgpt GlassButton behavior. */
@@ -5141,7 +5131,7 @@
    Kept as a class hook so future tweaks (e.g. disabling hover on placeholder
    pills) can target it without touching the others. */
 .coreResearchProductSoon {
-  /* intentionally empty — inherits full glass-pill treatment */
+  cursor: default;
 }
 
 @media (max-width: 900px) {
