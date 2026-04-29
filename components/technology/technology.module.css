@@ -4358,7 +4358,7 @@
   text-decoration: none;
   white-space: nowrap;
   transition: color 200ms ease;
-  margin-top: 6px;
+  margin-top: 12px;
   background: color-mix(in srgb, var(--tech-color-bg) 50%, transparent);
   padding: 4px 10px;
   border-radius: 6px;
@@ -5143,6 +5143,12 @@
   padding-bottom: clamp(56px, 7vw, 96px);
 }
 
+.resultsSlide .lgmKicker,
+.resultsSlide .resultsTitle,
+.resultsSlide .resultsLead {
+  text-align: center;
+}
+
 .resultsTitle {
   margin: 8px 0 0;
   font-size: var(--tech-fs-h3);
@@ -5153,7 +5159,7 @@
 }
 
 .resultsLead {
-  margin: 16px 0 0;
+  margin: 16px auto 0;
   max-width: 640px;
   font-size: var(--tech-fs-body-lg);
   line-height: 1.55;
