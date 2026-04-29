@@ -173,16 +173,15 @@ function CurveSvg({ height, timelineY }: { height: number; timelineY: number }) 
         <linearGradient
           id={`${gradientId}-mask`}
           gradientUnits="userSpaceOnUse"
-          x1={0}
+          x1={BOW + JET}
           y1={timelineY}
-          x2={BOW + JET}
+          x2={0}
           y2={timelineY}
         >
           <stop offset="0%"   stopColor="#ffffff" stopOpacity="0"    />
-          <stop offset="35%"  stopColor="#ffffff" stopOpacity="0.3"  />
-          <stop offset="70%"  stopColor="#ffffff" stopOpacity="0.95" />
-          <stop offset="90%"  stopColor="#ffffff" stopOpacity="0.6"  />
-          <stop offset="100%" stopColor="#ffffff" stopOpacity="0"    />
+          <stop offset="40%"  stopColor="#ffffff" stopOpacity="0.45" />
+          <stop offset="75%"  stopColor="#ffffff" stopOpacity="1"    />
+          <stop offset="100%" stopColor="#ffffff" stopOpacity="1"    />
         </linearGradient>
         <mask id={`${gradientId}-m`}>
           <rect
@@ -193,18 +192,90 @@ function CurveSvg({ height, timelineY }: { height: number; timelineY: number }) 
             fill={`url(#${gradientId}-mask)`}
           />
         </mask>
+
+        {/* Radial halo — emanates from the line crossing point in the
+            gap and extends outward into the gutter. Mimics the timeline
+            halo "leaking" through the gap. */}
+        <radialGradient
+          id={`${gradientId}-radial-halo`}
+          gradientUnits="userSpaceOnUse"
+          cx={0}
+          cy={timelineY}
+          r={500}
+        >
+          <stop offset="0%"   stopColor="#0066cc" stopOpacity="0.18" />
+          <stop offset="35%"  stopColor="#0066cc" stopOpacity="0.08" />
+          <stop offset="100%" stopColor="#0066cc" stopOpacity="0"    />
+        </radialGradient>
       </defs>
 
-      {/* Bleed — rendered BEFORE the curves so strokes land on top.
-          Two path layers masked together: first the base-plus-pattern
-          (#F9F9F9 + plus dots), then the halo (blue vertical gradient).
-          Both fade together at the gap edges via the shared mask. */}
+      {/* Radial halo — sits BEHIND the bleed and curves. Centered at the
+          line crossing point (0, timelineY), extends rightward into the
+          gutter, fading to 0 toward the screen edge. */}
+      <rect
+        x={0}
+        y={timelineY - 500}
+        width={500}
+        height={1000}
+        fill={`url(#${gradientId}-radial-halo)`}
+      />
+
+      {/* Bleed (#3) — rendered BEFORE the curves so strokes land on top.
+          Single base-pattern path (#F9F9F9 + plus dots) matching the
+          timeline section background. Faded by the shared mask. */}
       <g mask={`url(#${gradientId}-m)`}>
         <path d={bleedPath} fill={`url(#${gradientId}-pat)`} stroke="none" />
-        <path d={bleedPath} fill={`url(#${gradientId}-halo)`} stroke="none" />
       </g>
 
       <path d={path} fill="none" stroke={STROKE} strokeWidth="1" />
+
+      {/* ── Temporary numbered reference labels for design discussion. ──
+          Remove these <text> elements when no longer needed. */}
+      <text
+        x={BOW * 0.55}
+        y={y1 + (y4 - y1) * 0.5}
+        fontSize="22"
+        fontWeight="700"
+        fontFamily="monospace"
+        fill="#FF0000"
+        stroke="#FFFFFF"
+        strokeWidth="4"
+        paintOrder="stroke"
+        textAnchor="middle"
+        dominantBaseline="middle"
+      >
+        1
+      </text>
+      <text
+        x={BOW * 0.55}
+        y={y5 + (y8 - y5) * 0.5}
+        fontSize="22"
+        fontWeight="700"
+        fontFamily="monospace"
+        fill="#FF0000"
+        stroke="#FFFFFF"
+        strokeWidth="4"
+        paintOrder="stroke"
+        textAnchor="middle"
+        dominantBaseline="middle"
+      >
+        2
+      </text>
+      <text
+        x={BOW + JET - 12}
+        y={timelineY}
+        fontSize="22"
+        fontWeight="700"
+        fontFamily="monospace"
+        fill="#FF0000"
+        stroke="#FFFFFF"
+        strokeWidth="4"
+        paintOrder="stroke"
+        textAnchor="end"
+        dominantBaseline="middle"
+      >
+        3
+      </text>
     </svg>
   );
 }

@@ -4071,21 +4071,23 @@
 }
 
 .lgmFoundationalTitle {
-  margin: 0;
+  margin: 0 auto;
   max-width: 980px;
   font-size: var(--tech-fs-h3);
   font-weight: 500;
   letter-spacing: var(--tech-tracking-tight);
   line-height: 1.2;
   color: var(--tech-color-text);
+  text-align: center;
 }
 
 .lgmFoundationalLead {
-  margin: 16px 0 0;
+  margin: 16px auto 0;
   max-width: 700px;
   font-size: var(--tech-fs-body-lg);
   line-height: 1.55;
   color: var(--tech-color-text);
+  text-align: center;
 }
 
 /* Live HTML/CSS timeline — replaces the baked Timeline.png. 4 milestones
@@ -4135,9 +4137,9 @@
   background: linear-gradient(
     to bottom,
     transparent 0%,
-    rgba(0, 102, 204, 0.04) 25%,
-    rgba(0, 102, 204, 0.16) 50%,
-    rgba(0, 102, 204, 0.04) 75%,
+    rgba(0, 102, 204, 0.015) 25%,
+    rgba(0, 102, 204, 0.07) 50%,
+    rgba(0, 102, 204, 0.015) 75%,
     transparent 100%
   );
 }
@@ -4217,11 +4219,9 @@
 .lgmTimelineMilestoneTop {
   /* Anchored at the centerline. min-height keeps the 2026/2028/Columbus
      columns tall enough that their stems fully extend to the line via
-     margin-top: auto / flex-grow. The 2022 + 2025 columns opt out via
-     .lgmTimelineMilestoneCompact so their year markers sit close to
-     the line instead of floating high. */
+     margin-top: auto / flex-grow. */
   bottom: 50%;
-  min-height: clamp(120px, 14vw, 160px);
+  min-height: clamp(60px, 7vw, 80px);
 }
 
 .lgmTimelineMilestoneCompact {
@@ -4232,27 +4232,27 @@
 }
 
 .lgmTimelineMilestoneBottom {
-  /* Mirror of TOP. No padding-top so the stem (first DOM child) starts
-     directly at the centerline / track. */
+  /* Mirror of TOP. padding-top creates breathing room between the
+     centerline track and the year/CTA content sitting below it. */
   top: 50%;
+  padding-top: 14px;
 }
 
-/* Year — small, muted navy. Brand body-sm scale (16px). 16px gap below
-   so the year visually breathes from any label that follows it in the
-   same TOP column. */
+/* Year — small, muted navy. Brand body-sm scale (16px). Tight gap below
+   so it sits close to any CTA that follows it in the same BOTTOM column. */
 .lgmTimelineYear {
   font-size: var(--tech-fs-body-sm);
   font-weight: 500;
   color: rgba(10, 19, 68, 0.4);
   letter-spacing: 0;
   line-height: 1;
-  margin-bottom: 16px;
+  margin-bottom: 4px;
 }
 
-/* Label — milestone heading. 36px / 140% line-height / -2% tracking. */
+/* Label — milestone heading. 28px / 140% line-height / -2% tracking. */
 .lgmTimelineLabel {
-  font-size: 36px;
-  font-weight: 600;
+  font-size: 28px;
+  font-weight: 500;
   color: #000000;
   line-height: 1.4;
   letter-spacing: -0.02em;
@@ -4266,6 +4266,7 @@
 .lgmTimelineColumbus {
   pointer-events: none;
   z-index: 3;
+  min-height: clamp(120px, 14vw, 160px);
 }
 
 /* Push the Columbus logo down by the height of a year marker (16px line
@@ -4322,6 +4323,22 @@
 .lgmTimelineMilestoneTop .lgmTimelineStem {
   margin-top: auto;
   margin-bottom: 0;
+  position: relative;
+}
+
+/* Solid black dot at the base of the Columbus stem only, sitting
+   exactly on the centerline track. */
+.lgmTimelineColumbus .lgmTimelineStem::after {
+  content: "";
+  position: absolute;
+  bottom: -3px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #000000;
+  opacity: 1;
 }
 
 /* BOTTOM stem: top touches the centerline; 8px gap to the label below. */
@@ -4331,8 +4348,8 @@
 }
 
 /* CTA link inside BOTTOM columns for 2026/2028. Matches .lgmInlineCta.
-   margin-top pushes the CTA down so it visually clears the timeline
-   instead of butting up against it. */
+   Sits tight below the year — the milestone padding-top gives the gap
+   from the timeline track. */
 .lgmTimelineCta {
   display: inline-flex;
   align-items: center;
@@ -4343,7 +4360,10 @@
   text-decoration: none;
   white-space: nowrap;
   transition: color 200ms ease;
-  margin-top: 28px;
+  margin-top: 6px;
+  background: color-mix(in srgb, var(--tech-color-bg) 50%, transparent);
+  padding: 4px 10px;
+  border-radius: 6px;
 }
 
 .lgmTimelineCta svg {

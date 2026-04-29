@@ -224,11 +224,10 @@ export function TechnologySections() {
       <Slide id="lgm-vs-llm" className={`${styles.lgmSlide} ${styles.dotGrid}`}>
         <div className={styles.slideFrame}>
           <RevealOnView className={`${styles.editorialSlide} ${styles.lgmFoundationalSlide}`}>
-            <p className={styles.lgmKicker}>A NEW FOUNDATIONAL MODEL</p>
             <h2 className={styles.lgmFoundationalTitle}>
               A Large Geospatial Model is the next frontier in AI
             </h2>
-            <p className={styles.lgmFoundationalLead}>And we&apos;ve already flown off the edge.</p>
+            <p className={styles.lgmFoundationalLead}>The path forward</p>
 
             {(() => {
               // Timeline spans 2022 → 2028 inclusive (7 years) with a
@@ -239,7 +238,7 @@ export function TechnologySections() {
 
               // 2025 + 2026 sit only one year apart — shift 2025 left and
               // 2026 right so their labels have breathing room.
-              const x2025 = `calc(${yearMid(2025)} - clamp(72px, 9vw, 140px))`;
+              const x2025 = `calc(${yearMid(2025)} - clamp(140px, 16vw, 220px))`;
               const x2026 = `calc(${yearMid(2026)} + clamp(40px, 5vw, 80px))`;
 
               // Columbus "now" marker — its own dot/stem/date, sitting
@@ -286,23 +285,23 @@ export function TechnologySections() {
               <span className={`${styles.lgmTimelineDot} ${styles.lgmTimelineDotTrailing}`} style={{ left: yearMid(2032) }} aria-hidden />
 
               {/* ─── 2022 — year above the line (no stem); LLM below ─── */}
-              <div className={`${styles.lgmTimelineMilestone} ${styles.lgmTimelineMilestoneTop} ${styles.lgmTimelineMilestoneCompact}`} style={{ left: yearMid(2022) }}>
+              <div className={`${styles.lgmTimelineMilestone} ${styles.lgmTimelineMilestoneTop}`} style={{ left: yearMid(2022) }}>
+                <span className={styles.lgmTimelineLabel}>LLM</span>
+                <span className={styles.lgmTimelineStem} aria-hidden />
+              </div>
+              <div className={`${styles.lgmTimelineMilestone} ${styles.lgmTimelineMilestoneBottom} ${styles.lgmTimelineMilestoneCompact}`} style={{ left: yearMid(2022) }}>
                 <span className={styles.lgmTimelineYear}>2022</span>
               </div>
-              <div className={`${styles.lgmTimelineMilestone} ${styles.lgmTimelineMilestoneBottom}`} style={{ left: yearMid(2022) }}>
-                <span className={styles.lgmTimelineStem} aria-hidden />
-                <span className={styles.lgmTimelineLabel}>LLM</span>
-              </div>
 
-              {/* ─── 2025 — year above (no stem); Geo-tuned label below ─── */}
-              <div className={`${styles.lgmTimelineMilestone} ${styles.lgmTimelineMilestoneTop} ${styles.lgmTimelineMilestoneCompact}`} style={{ left: x2025 }}>
-                <span className={styles.lgmTimelineYear}>2025</span>
-              </div>
-              <div className={`${styles.lgmTimelineMilestone} ${styles.lgmTimelineMilestoneBottom}`} style={{ left: x2025 }}>
-                <span className={styles.lgmTimelineStem} aria-hidden />
+              {/* ─── 2025 — Geo-tuned label above; year below ─── */}
+              <div className={`${styles.lgmTimelineMilestone} ${styles.lgmTimelineMilestoneTop}`} style={{ left: x2025 }}>
                 <span className={styles.lgmTimelineLabel}>
                   Geo-tuned LLM<br />&amp; Vision Models
                 </span>
+                <span className={styles.lgmTimelineStem} aria-hidden />
+              </div>
+              <div className={`${styles.lgmTimelineMilestone} ${styles.lgmTimelineMilestoneBottom} ${styles.lgmTimelineMilestoneCompact}`} style={{ left: x2025 }}>
+                <span className={styles.lgmTimelineYear}>2025</span>
               </div>
 
               {/* ─── Columbus — separate "now" marker between 2025 and 2026 ─── */}
@@ -317,13 +316,13 @@ export function TechnologySections() {
                 <span className={styles.lgmTimelineStem} aria-hidden />
               </div>
 
-              {/* ─── 2026 — year floats above Generalist/LGM (one word per line), stem to dot, CTA below (no stem above CTA) ─── */}
+              {/* ─── 2026 — Generalist LGM label above; year + CTA below ─── */}
               <div className={`${styles.lgmTimelineMilestone} ${styles.lgmTimelineMilestoneTop}`} style={{ left: x2026 }}>
-                <span className={styles.lgmTimelineYear}>2026</span>
                 <span className={styles.lgmTimelineLabel}>Generalist<br />LGM</span>
                 <span className={styles.lgmTimelineStem} aria-hidden />
               </div>
               <div className={`${styles.lgmTimelineMilestone} ${styles.lgmTimelineMilestoneBottom}`} style={{ left: x2026 }}>
+                <span className={styles.lgmTimelineYear}>2026</span>
                 <Link href={blogHref(BLOG_SLUG.timelineGeneralistLgm)} className={styles.lgmTimelineCta}>
                   <span>Read our Paper</span>
                   <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden>
@@ -332,13 +331,13 @@ export function TechnologySections() {
                 </Link>
               </div>
 
-              {/* ─── 2028 — year floats above UGM, stem to dot, CTA below (no stem above CTA) ─── */}
+              {/* ─── 2028 — UGM label above; year + CTA below ─── */}
               <div className={`${styles.lgmTimelineMilestone} ${styles.lgmTimelineMilestoneTop}`} style={{ left: yearMid(2028) }}>
-                <span className={styles.lgmTimelineYear}>2028</span>
                 <span className={styles.lgmTimelineLabel}>UGM</span>
                 <span className={styles.lgmTimelineStem} aria-hidden />
               </div>
               <div className={`${styles.lgmTimelineMilestone} ${styles.lgmTimelineMilestoneBottom}`} style={{ left: yearMid(2028) }}>
+                <span className={styles.lgmTimelineYear}>2028</span>
                 <Link href={blogHref(BLOG_SLUG.ugmRoadmapGamePlan)} className={styles.lgmTimelineCta}>
                   <span>Our Game Plan</span>
                   <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden>
