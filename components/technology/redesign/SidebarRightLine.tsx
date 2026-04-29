@@ -209,22 +209,13 @@ function CurveSvg({ height, timelineY }: { height: number; timelineY: number }) 
         </radialGradient>
       </defs>
 
-      {/* Radial halo — sits BEHIND the bleed and curves. Centered at the
-          line crossing point (0, timelineY), extends rightward into the
-          gutter, fading to 0 toward the screen edge. */}
-      <rect
-        x={0}
-        y={timelineY - 500}
-        width={500}
-        height={1000}
-        fill={`url(#${gradientId}-radial-halo)`}
-      />
-
       {/* Bleed (#3) — rendered BEFORE the curves so strokes land on top.
-          Single base-pattern path (#F9F9F9 + plus dots) matching the
-          timeline section background. Faded by the shared mask. */}
+          Two stacked fills inside the same mask: first the base pattern
+          (#F9F9F9 + plus dots) matching the timeline section background,
+          then the radial halo glow centered at the line crossing point. */}
       <g mask={`url(#${gradientId}-m)`}>
         <path d={bleedPath} fill={`url(#${gradientId}-pat)`} stroke="none" />
+        <path d={bleedPath} fill={`url(#${gradientId}-radial-halo)`} stroke="none" />
       </g>
 
       <path d={path} fill="none" stroke={STROKE} strokeWidth="1" />
