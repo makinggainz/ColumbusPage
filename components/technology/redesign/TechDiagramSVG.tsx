@@ -180,7 +180,7 @@ const PuzzleLayer = ({ isVisible }: { isVisible: boolean }) => {
   );
 };
 
-const TetrisBlocks = ({ isVisible }: { isVisible: boolean }) => {
+const TetrisBlocks = ({ isVisible, offsetY = 0 }: { isVisible: boolean, offsetY?: number }) => {
   const dark = "#1e2e7a";
   const dur = 6;
 
@@ -192,7 +192,7 @@ const TetrisBlocks = ({ isVisible }: { isVisible: boolean }) => {
   ];
 
   return (
-    <g style={{ opacity: isVisible ? 1 : 0, transition: "opacity 0.4s ease", pointerEvents: "none" }}>
+    <g style={{ opacity: isVisible ? 1 : 0, transition: "opacity 0.4s ease, transform 0.4s ease", pointerEvents: "none", transform: `translateY(${offsetY}px)` }}>
       {blocks.map((b, i) => (
         <g key={`tetris-${i}`}>
           <animateTransform
@@ -281,6 +281,15 @@ export function TechDiagramSVG({ activeTitle, onLayerClick, ...props }: TechDiag
     return activeIndex === 1 ? 0 : 1;
   };
 
+  // Connector lines hide entirely when EITHER of the two layers they connect
+  // is the active (selected) layer. Lines connecting two non-active layers
+  // remain visible at full opacity.
+  const getConnectorOpacity = (upperIdx: number, lowerIdx: number) => {
+    if (activeIndex === -1) return 1;
+    if (activeIndex === upperIdx || activeIndex === lowerIdx) return 0;
+    return 1;
+  };
+
   const getShift = (layerIndex: number) => {
     if (activeIndex === -1) return 0;
     if (layerIndex < activeIndex) {
@@ -302,29 +311,18 @@ export function TechDiagramSVG({ activeTitle, onLayerClick, ...props }: TechDiag
   const pathTransition = { transition: "d 0.4s ease, opacity 0.4s ease" };
 
   const drawLine = (x1: number, y1: number, x2: number, y2: number, shift1: number, shift2: number, opacity: number, connectsToActive: boolean = false, isCenterLine: boolean = false, customColor?: string) => {
-    // Split into two halves at the midpoint so each end follows its layer's
-    // shift independently. When layers move apart, the two halves separate.
-    const midX = (x1 + x2) / 2;
-    const midY = (y1 + y2) / 2;
+    // Single continuous dashed line from (x1,y1) to (x2,y2). Each endpoint
+    // follows its layer's shift; the line stretches when shifts differ.
     const strokeColor = customColor ? customColor : isCenterLine ? "#22c55e" : connectsToActive ? "#e63946" : "#000000";
 
     return (
-      <>
-        <path
-          d={`M ${x1} ${y1 + shift1} L ${midX} ${midY + shift1}`}
-          style={{ ...pathTransition, opacity }}
-          stroke={strokeColor}
-          strokeWidth={1}
-          strokeDasharray="6 6"
-        />
-        <path
-          d={`M ${midX} ${midY + shift2} L ${x2} ${y2 + shift2}`}
-          style={{ ...pathTransition, opacity }}
-          stroke={strokeColor}
-          strokeWidth={1}
-          strokeDasharray="6 6"
-        />
-      </>
+      <path
+        d={`M ${x1} ${y1 + shift1} L ${x2} ${y2 + shift2}`}
+        style={{ ...pathTransition, opacity }}
+        stroke={strokeColor}
+        strokeWidth={1}
+        strokeDasharray="6 6"
+      />
     );
   };
 
@@ -339,58 +337,30 @@ export function TechDiagramSVG({ activeTitle, onLayerClick, ...props }: TechDiag
 
       {/* Dashed background lines connecting the layers */}
       <g>
-        {/* Above L1 */}
-        <text x="65" y="110" fontSize="11" fill="#22c55e" fontWeight="bold">0.1</text>
-        <text x="500" y="110" fontSize="11" fill="#22c55e" fontWeight="bold">0.2</text>
-        <text x="275" y="170" fontSize="11" fill="#22c55e" fontWeight="bold">0.3</text>
-
         {/* L1 -> L2 */}
-        {drawLine(50, 138, 73, 215, offsetL1, offsetL2, getOpacity(1), activeIndex === 0 || activeIndex === 1)}
-        {drawLine(73, 215, 95, 291, offsetL1, offsetL2, hideOnFusionSelect())}
-        {drawLine(95, 291, 118, 368, offsetL1, offsetL2, getOpacity(1), activeIndex === 0 || activeIndex === 1)}
-        {drawLine(550, 138, 527, 215, offsetL1, offsetL2, getOpacity(1), activeIndex === 0 || activeIndex === 1)}
-        {drawLine(527, 215, 505, 291, offsetL1, offsetL2, hideOnFusionSelect())}
-        {drawLine(505, 291, 482, 368, offsetL1, offsetL2, getOpacity(1), activeIndex === 0 || activeIndex === 1)}
-        {drawLine(300, 270, 300, 466, offsetL1, offsetL2, hideOnFusionSelect(), activeIndex === 0 || activeIndex === 1, true)}
-
-        <text x="65" y="170" fontSize="11" fill="#22c55e" fontWeight="bold">1.1.1</text>
-        <text x="65" y="258" fontSize="11" fill="#22c55e" fontWeight="bold">1.1.2</text>
-        <text x="65" y="330" fontSize="11" fill="#22c55e" fontWeight="bold">1.1.3</text>
-        <text x="500" y="170" fontSize="11" fill="#22c55e" fontWeight="bold">1.2.1</text>
-        <text x="500" y="258" fontSize="11" fill="#22c55e" fontWeight="bold">1.2.2</text>
-        <text x="500" y="330" fontSize="11" fill="#22c55e" fontWeight="bold">1.2.3</text>
-        <text x="275" y="373" fontSize="11" fill="#22c55e" fontWeight="bold">1.3</text>
+        {drawLine(50, 138, 73, 215, offsetL1, offsetL2, getConnectorOpacity(0, 1), activeIndex === 0 || activeIndex === 1)}
+        {drawLine(73, 215, 95, 291, offsetL1, offsetL2, getConnectorOpacity(0, 1))}
+        {drawLine(95, 291, 118, 368, offsetL1, offsetL2, getConnectorOpacity(0, 1), activeIndex === 0 || activeIndex === 1)}
+        {drawLine(550, 138, 527, 215, offsetL1, offsetL2, getConnectorOpacity(0, 1), activeIndex === 0 || activeIndex === 1)}
+        {drawLine(527, 215, 505, 291, offsetL1, offsetL2, getConnectorOpacity(0, 1))}
+        {drawLine(505, 291, 482, 368, offsetL1, offsetL2, getConnectorOpacity(0, 1), activeIndex === 0 || activeIndex === 1)}
+        {drawLine(300, 270, 300, 466, offsetL1, offsetL2, getConnectorOpacity(0, 1), activeIndex === 0 || activeIndex === 1, true)}
 
         {/* L2 -> L3 */}
-        {drawLine(118, 368, 118, 444, offsetL2, offsetL3, getOpacity(2), activeIndex === 1 || activeIndex === 2, false, "#8B6F47")}
-        {drawLine(118, 444, 118, 521, offsetL2, offsetL3, hideOnFusionSelect())}
-        {drawLine(118, 521, 118, 598, offsetL2, offsetL3, getOpacity(2), activeIndex === 1 || activeIndex === 2)}
-        {drawLine(482, 368, 482, 444, offsetL2, offsetL3, getOpacity(2), activeIndex === 1 || activeIndex === 2)}
-        {drawLine(482, 444, 482, 521, offsetL2, offsetL3, hideOnFusionSelect())}
-        {drawLine(482, 521, 482, 598, offsetL2, offsetL3, getOpacity(2), activeIndex === 1 || activeIndex === 2)}
-        {drawLine(300, 270, 300, 500, offsetL2, offsetL3, getOpacity(2), activeIndex === 1 || activeIndex === 2)}
-        {drawLine(300, 466, 300, 696, offsetL2, offsetL3, getOpacity(2), activeIndex === 1 || activeIndex === 2)}
-
-        <text x="95" y="410" fontSize="11" fill="#8B6F47" fontWeight="bold">2.1.1</text>
-        <text x="95" y="483" fontSize="11" fill="#22c55e" fontWeight="bold">2.1.2</text>
-        <text x="95" y="556" fontSize="11" fill="#22c55e" fontWeight="bold">2.1.3</text>
-        <text x="460" y="410" fontSize="11" fill="#22c55e" fontWeight="bold">2.2.1</text>
-        <text x="460" y="483" fontSize="11" fill="#22c55e" fontWeight="bold">2.2.2</text>
-        <text x="460" y="556" fontSize="11" fill="#22c55e" fontWeight="bold">2.2.3</text>
-        <text x="275" y="390" fontSize="11" fill="#22c55e" fontWeight="bold">2.3</text>
-        <text x="275" y="586" fontSize="11" fill="#22c55e" fontWeight="bold">2.4</text>
+        {drawLine(118, 368, 118, 444, offsetL2, offsetL3, getConnectorOpacity(1, 2), activeIndex === 1 || activeIndex === 2, false, "#8B6F47")}
+        {drawLine(118, 444, 118, 521, offsetL2, offsetL3, getConnectorOpacity(1, 2))}
+        {drawLine(118, 521, 118, 598, offsetL2, offsetL3, getConnectorOpacity(1, 2), activeIndex === 1 || activeIndex === 2)}
+        {drawLine(482, 368, 482, 444, offsetL2, offsetL3, getConnectorOpacity(1, 2), activeIndex === 1 || activeIndex === 2)}
+        {drawLine(482, 444, 482, 521, offsetL2, offsetL3, getConnectorOpacity(1, 2))}
+        {drawLine(482, 521, 482, 598, offsetL2, offsetL3, getConnectorOpacity(1, 2), activeIndex === 1 || activeIndex === 2)}
+        {drawLine(300, 270, 300, 500, offsetL2, offsetL3, getConnectorOpacity(1, 2), activeIndex === 1 || activeIndex === 2)}
+        {drawLine(300, 466, 300, 696, offsetL2, offsetL3, getConnectorOpacity(1, 2), activeIndex === 1 || activeIndex === 2)}
 
         {/* L3 -> L4 */}
-        {drawLine(118, 598, 118, 825, offsetL3, offsetL4, getOpacity(3), activeIndex === 2 || activeIndex === 3)}
-        {drawLine(482, 598, 482, 825, offsetL3, offsetL4, getOpacity(3), activeIndex === 2 || activeIndex === 3)}
-        {drawLine(300, 500, 300, 727, offsetL3, offsetL4, getOpacity(3), activeIndex === 2 || activeIndex === 3)}
-        {drawLine(300, 696, 300, 923, offsetL3, offsetL4, getOpacity(3), activeIndex === 2 || activeIndex === 3)}
-
-        <text x="95" y="716" fontSize="11" fill="#22c55e" fontWeight="bold">3.1</text>
-        <text x="460" y="716" fontSize="11" fill="#22c55e" fontWeight="bold">3.2</text>
-        <text x="275" y="618" fontSize="11" fill="#22c55e" fontWeight="bold">3.3</text>
-        <text x="275" y="814" fontSize="11" fill="#22c55e" fontWeight="bold">3.4</text>
-
+        {drawLine(118, 598, 118, 825, offsetL3, offsetL4, getConnectorOpacity(2, 3), activeIndex === 2 || activeIndex === 3)}
+        {drawLine(482, 598, 482, 825, offsetL3, offsetL4, getConnectorOpacity(2, 3), activeIndex === 2 || activeIndex === 3)}
+        {drawLine(300, 500, 300, 727, offsetL3, offsetL4, getConnectorOpacity(2, 3), activeIndex === 2 || activeIndex === 3)}
+        {drawLine(300, 696, 300, 923, offsetL3, offsetL4, getConnectorOpacity(2, 3), activeIndex === 2 || activeIndex === 3)}
       </g>
 
       {/* Ground Plane (Layer 4) */}
@@ -438,7 +408,7 @@ export function TechDiagramSVG({ activeTitle, onLayerClick, ...props }: TechDiag
       <FusionLines isVisible={isFusion} offsetL2={offsetL2} />
       
       {/* Tetris Blocks Layer (Answers / Insights) */}
-      <TetrisBlocks isVisible={isAnswers} />
+      <TetrisBlocks isVisible={isAnswers} offsetY={offsetL4} />
 
       {/* Layer 1 */}
       <g id="layer1" style={{ transform: `translateY(${offsetL1}px)`, opacity: getOpacity(0), transition: "transform 0.4s ease, opacity 0.4s ease", cursor: "pointer" }} onClick={() => onLayerClick?.("Data Collection")}>
@@ -450,10 +420,10 @@ export function TechDiagramSVG({ activeTitle, onLayerClick, ...props }: TechDiag
 
       {/* Center spine — drawn last so it sits on top of all layers and animations */}
       <g style={{ pointerEvents: "none" }}>
-        {drawLine(300, 270, 300, 368, offsetL1, offsetL2, getOpacity(1), activeIndex === 0 || activeIndex === 1, activeIndex === 0 || activeIndex === 1)}
-        {drawLine(300, 368, 300, 598, offsetL2, offsetL3, getOpacity(2), activeIndex === 1 || activeIndex === 2, activeIndex === 1 || activeIndex === 2)}
-        {drawLine(300, 598, 300, 825, offsetL3, offsetL4, getOpacity(3), activeIndex === 2 || activeIndex === 3, activeIndex === 2 || activeIndex === 3)}
-        {drawLine(300, 825, 300, 979, offsetL4, offsetL4, getOpacity(3), activeIndex === 3, activeIndex === 3)}
+        {drawLine(300, 270, 300, 368, offsetL1, offsetL2, getConnectorOpacity(0, 1), activeIndex === 0 || activeIndex === 1, activeIndex === 0 || activeIndex === 1)}
+        {drawLine(300, 368, 300, 598, offsetL2, offsetL3, getConnectorOpacity(1, 2), activeIndex === 1 || activeIndex === 2, activeIndex === 1 || activeIndex === 2)}
+        {drawLine(300, 598, 300, 825, offsetL3, offsetL4, getConnectorOpacity(2, 3), activeIndex === 2 || activeIndex === 3, activeIndex === 2 || activeIndex === 3)}
+        {drawLine(300, 825, 300, 979, offsetL4, offsetL4, getConnectorOpacity(3, 3), activeIndex === 3, activeIndex === 3)}
       </g>
     </svg>
   );
