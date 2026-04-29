@@ -193,19 +193,19 @@ function CurveSvg({ height, timelineY }: { height: number; timelineY: number }) 
           />
         </mask>
 
-        {/* Radial halo — emanates from the line crossing point in the
-            gap and extends outward into the gutter. Mimics the timeline
-            halo "leaking" through the gap. */}
+        {/* Radial halo — single point source at the leftmost edge of the
+            bleed shape on the timeline centerline (where the line passes
+            through the gap). Bright concentrated peak, falls off radially. */}
         <radialGradient
           id={`${gradientId}-radial-halo`}
           gradientUnits="userSpaceOnUse"
           cx={0}
           cy={timelineY}
-          r={500}
+          r={220}
         >
-          <stop offset="0%"   stopColor="#0066cc" stopOpacity="0.18" />
-          <stop offset="35%"  stopColor="#0066cc" stopOpacity="0.08" />
-          <stop offset="100%" stopColor="#0066cc" stopOpacity="0"    />
+          <stop offset="0%"   stopColor="#0066cc" stopOpacity="0.07"  />
+          <stop offset="50%"  stopColor="#0066cc" stopOpacity="0.015" />
+          <stop offset="100%" stopColor="#0066cc" stopOpacity="0"     />
         </radialGradient>
       </defs>
 

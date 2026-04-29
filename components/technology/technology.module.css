@@ -210,7 +210,7 @@
   bottom: 0;
   width: var(--tech-sidebar-x);
   pointer-events: none;
-  z-index: 5;
+  z-index: 0;
 }
 
 .sidebarRightLineSvg {
@@ -4120,14 +4120,12 @@
      gradient hugs the line as a tight band instead of spreading wide. */
   top: -30px;
   bottom: -30px;
-  /* Halo bounds match the section background exactly: from the sidebar's
-     right edge (var(--tech-sidebar-x) from viewport left) to the viewport
-     right edge. The timeline element sits var(--page-padding) inside the
-     sidebar line (slideFrame's inner padding), so the halo overflows its
-     parent by -page-padding on the left and by -(sidebar-x + page-padding)
-     on the right. */
+  /* Halo extends from the page-padding overflow on the left, across the
+     full content column, and through the page-padding gap so it touches
+     the inner edge of the sidebar gutter exactly. The gutter's own radial
+     halo (in <SidebarRightLine>) picks up from that boundary. */
   left: calc(-1 * var(--page-padding));
-  right: calc(-1 * (var(--tech-sidebar-x) + var(--page-padding)));
+  right: calc(-1 * var(--page-padding));
   pointer-events: none;
   z-index: -1;
   /* Vertical linear gradient — uniform along the x-axis, strongest at
