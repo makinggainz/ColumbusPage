@@ -338,21 +338,13 @@ export function TechDiagramSVG({ activeTitle, onLayerClick, ...props }: TechDiag
       {/* Dashed background lines connecting the layers */}
       <g>
         {/* L1 -> L2 */}
-        {drawLine(50, 138, 73, 215, offsetL1, offsetL2, getConnectorOpacity(0, 1), activeIndex === 0 || activeIndex === 1)}
-        {drawLine(73, 215, 95, 291, offsetL1, offsetL2, getConnectorOpacity(0, 1))}
-        {drawLine(95, 291, 118, 368, offsetL1, offsetL2, getConnectorOpacity(0, 1), activeIndex === 0 || activeIndex === 1)}
-        {drawLine(550, 138, 527, 215, offsetL1, offsetL2, getConnectorOpacity(0, 1), activeIndex === 0 || activeIndex === 1)}
-        {drawLine(527, 215, 505, 291, offsetL1, offsetL2, getConnectorOpacity(0, 1))}
-        {drawLine(505, 291, 482, 368, offsetL1, offsetL2, getConnectorOpacity(0, 1), activeIndex === 0 || activeIndex === 1)}
+        {drawLine(50, 138, 118, 368, offsetL1, offsetL2, getConnectorOpacity(0, 1), activeIndex === 0 || activeIndex === 1)}
+        {drawLine(550, 138, 482, 368, offsetL1, offsetL2, getConnectorOpacity(0, 1), activeIndex === 0 || activeIndex === 1)}
         {drawLine(300, 270, 300, 466, offsetL1, offsetL2, getConnectorOpacity(0, 1), activeIndex === 0 || activeIndex === 1, true)}
 
         {/* L2 -> L3 */}
-        {drawLine(118, 368, 118, 444, offsetL2, offsetL3, getConnectorOpacity(1, 2), activeIndex === 1 || activeIndex === 2, false, "#8B6F47")}
-        {drawLine(118, 444, 118, 521, offsetL2, offsetL3, getConnectorOpacity(1, 2))}
-        {drawLine(118, 521, 118, 598, offsetL2, offsetL3, getConnectorOpacity(1, 2), activeIndex === 1 || activeIndex === 2)}
-        {drawLine(482, 368, 482, 444, offsetL2, offsetL3, getConnectorOpacity(1, 2), activeIndex === 1 || activeIndex === 2)}
-        {drawLine(482, 444, 482, 521, offsetL2, offsetL3, getConnectorOpacity(1, 2))}
-        {drawLine(482, 521, 482, 598, offsetL2, offsetL3, getConnectorOpacity(1, 2), activeIndex === 1 || activeIndex === 2)}
+        {drawLine(118, 368, 118, 598, offsetL2, offsetL3, getConnectorOpacity(1, 2), activeIndex === 1 || activeIndex === 2)}
+        {drawLine(482, 368, 482, 598, offsetL2, offsetL3, getConnectorOpacity(1, 2), activeIndex === 1 || activeIndex === 2)}
         {drawLine(300, 270, 300, 500, offsetL2, offsetL3, getConnectorOpacity(1, 2), activeIndex === 1 || activeIndex === 2)}
         {drawLine(300, 466, 300, 696, offsetL2, offsetL3, getConnectorOpacity(1, 2), activeIndex === 1 || activeIndex === 2)}
 

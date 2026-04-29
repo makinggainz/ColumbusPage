@@ -450,7 +450,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
         <>
             {/* ── Backdrop overlay (dropdown open) ── */}
             <div
-                className={`fixed inset-0 z-40 ${
+                className={`fixed inset-0 z-1040 ${
                     isMenuOpen
                         ? "pointer-events-auto"
                         : "pointer-events-none"
@@ -469,7 +469,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
             {/* ══════════════ NAVBAR ══════════════ */}
             <nav
                 ref={navRef}
-                className="header-font fixed top-0 left-0 right-0 z-50"
+                className="header-font fixed top-0 left-0 right-0 z-1050"
                 style={{
                     color: navColor,
                     opacity: footerInView ? 0 : hasScrolled ? 1 : 0,
@@ -800,7 +800,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                 className={`fixed left-0 right-0 max-[899px]:bottom-0 overflow-hidden max-[899px]:flex max-[899px]:flex-col`}
                 style={{
                     ...dropdownBg,
-                    zIndex: 45,
+                    zIndex: 1045,
                     top: 0,
                     maxHeight: isMenuOpen ? "100dvh" : "0px",
                     opacity: isMenuOpen ? 1 : 0,

@@ -161,30 +161,6 @@ export function GenLayersSection() {
           </a>
         </div>
 
-        {/* THE GRID section — unchanged */}
-        <div className={styles.genLayersGrid}>
-          <span className={styles.genLayersGridKicker}>THE GRID</span>
-          <div className={styles.genLayersGridArt} aria-hidden>
-            <svg viewBox="0 0 900 520" fill="none" preserveAspectRatio="xMidYMid slice">
-              <rect width="900" height="520" fill="rgba(18, 25, 40, 0.85)" />
-              {Array.from({ length: 28 }).map((_, i) => (
-                <line key={`vx${i}`} x1={i * 34} y1="0" x2={i * 34 - 80} y2="520" stroke="rgba(180, 180, 190, 0.12)" strokeWidth="0.6" />
-              ))}
-              {Array.from({ length: 16 }).map((_, i) => (
-                <line key={`hz${i}`} x1="0" y1={i * 34} x2="900" y2={i * 34 - 30} stroke="rgba(180, 180, 190, 0.12)" strokeWidth="0.6" />
-              ))}
-              <polygon points="360,180 540,180 560,280 340,280" fill="rgba(240, 240, 240, 0.75)" stroke="rgba(220, 220, 220, 0.85)" />
-              <polygon points="340,280 560,280 580,340 320,340" fill="rgba(230, 230, 230, 0.55)" />
-              {[[150, 150, 80, 60], [680, 140, 100, 70], [140, 370, 110, 70], [700, 370, 90, 80]].map(([x, y, w, h], idx) => (
-                <g key={idx}>
-                  <rect x={x} y={y} width={w} height={h} fill="rgba(60, 70, 85, 0.85)" stroke="rgba(140, 150, 170, 0.6)" />
-                  <rect x={x + 10} y={y + 10} width={w - 20} height={h - 20} fill="rgba(90, 100, 115, 0.55)" />
-                </g>
-              ))}
-            </svg>
-            <span className={styles.genLayersGridCaption}>SHIBUYA, TOKYO</span>
-          </div>
-        </div>
       </div>
     </div>
   );
