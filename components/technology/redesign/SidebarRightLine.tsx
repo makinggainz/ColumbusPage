@@ -102,7 +102,7 @@ function CurveSvg({ height, timelineY }: { height: number; timelineY: number }) 
   // (so the shape is literally bounded BY the structure lines) and
   // bulges past the gap tips with a quadratic jet arc. Lives in the
   // gutter (x > 0), flowing OUTWARD through the opening.
-  const JET = 70;
+  const JET = 1100;
   const bleedPath = [
     `M 0 ${y1}`,
     // Follows the top stroke curve down-right to the upper gap tip (BOW, y4).
