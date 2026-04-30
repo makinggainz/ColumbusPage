@@ -927,6 +927,11 @@ export const Hero = () => {
 
   // Scroll-driven vignette + hero grid reveal (lines fade in over the first 200px)
   useEffect(() => {
+    // Hero grid reveal: latch the var to 1 the first time we detect any scroll.
+    // Consuming elements (hero verticals, Hero→Vision divider, navbar border)
+    // transition opacity smoothly via CSS, matching the hero content fade-in.
+    let gridShown = window.scrollY > 0;
+    if (gridShown) document.documentElement.style.setProperty("--hero-grid-opacity", "1");
     const onScroll = () => {
       const el = sectionRef.current;
       if (!el) return;
@@ -934,10 +939,11 @@ export const Hero = () => {
       const scrolled = -rect.top;
       const total = el.offsetHeight - window.innerHeight;
       setVignetteOpacity(Math.max(0, Math.min(1, scrolled / total)));
-      const gridOpacity = Math.max(0, Math.min(1, window.scrollY / 200));
-      document.documentElement.style.setProperty("--hero-grid-opacity", String(gridOpacity));
+      if (!gridShown && window.scrollY > 0) {
+        gridShown = true;
+        document.documentElement.style.setProperty("--hero-grid-opacity", "1");
+      }
     };
-    onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => {
       window.removeEventListener("scroll", onScroll);
@@ -1000,7 +1006,7 @@ export const Hero = () => {
       <div className="absolute top-0 bottom-0 right-0 pointer-events-none" style={{ width: "30%", background: "linear-gradient(to left, #F9F9F9 0%, transparent 100%)", zIndex: 1, opacity: vignetteOpacity }} aria-hidden />
 
       {/* Vertical structure lines — extend the grid lines up through the hero */}
-      <div className="pointer-events-none absolute inset-0" style={{ zIndex: 4, opacity: "var(--hero-grid-opacity, 0)" }} aria-hidden>
+      <div className="pointer-events-none absolute inset-0" style={{ zIndex: 4, opacity: "var(--hero-grid-opacity, 0)", transition: "opacity 1000ms ease" }} aria-hidden>
         <div className="max-w-[1287px] mx-5 md:mx-auto relative h-full">
           <div style={{ position: "absolute", top: 0, left: 0, width: 1, height: "100%", background: "var(--grid-line)" }} />
           <div style={{ position: "absolute", top: 0, right: 0, width: 1, height: "100%", background: "var(--grid-line)" }} />

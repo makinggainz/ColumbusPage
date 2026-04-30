@@ -29,7 +29,7 @@ export default function Home() {
       <Hero />
 
       {/* Hero → Vision gap: full-width horizontal divider + bounded vertical structure lines */}
-      <div className="relative" style={{ height: 64, opacity: "var(--hero-grid-opacity, 0)" }}>
+      <div className="relative" style={{ height: 64, opacity: "var(--hero-grid-opacity, 0)", transition: "opacity 1000ms ease" }}>
         <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 1, background: "var(--grid-line)" }} />
         <div className="max-w-[1287px] mx-5 md:mx-auto relative h-full">
           <div style={{ position: "absolute", top: 0, left: 0, width: 1, height: "100%", background: "var(--grid-line)" }} />

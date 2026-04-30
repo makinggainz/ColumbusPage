@@ -484,6 +484,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                             height: 1,
                             background: "var(--grid-line)",
                             opacity: isHomePage ? "var(--hero-grid-opacity, 0)" : 1,
+                            transition: "opacity 1000ms ease",
                         }}
                         aria-hidden
                     />
