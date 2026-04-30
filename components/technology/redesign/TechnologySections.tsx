@@ -440,7 +440,7 @@ export function TechnologySections() {
               <CoreResearchArt />
 
               <div className={styles.coreResearchBody}>
-                <ResearchGroup title="Data Collection">
+                <ResearchGroup title={"1. Data Collection"}>
                   <p>
                     The most extensive data collection in the industry. Versatile
                     methods ranging from drones, car data, human data, public data
@@ -465,7 +465,7 @@ export function TechnologySections() {
                   </Link>
                 </ResearchGroup>
 
-                <ResearchGroup title="Fusion">
+                <ResearchGroup title={"2. Fusion"}>
                   <p>
                     Accurate, automatic data filtering{" "}
                     <Definition
@@ -500,7 +500,7 @@ export function TechnologySections() {
                   </p>
                 </ResearchGroup>
 
-                <ResearchGroup title="Core Reasoning">
+                <ResearchGroup title={`3.${" "}Core Reasoning`}>
                   <p>
                     Our reasoning model considers temporal data, and sifts
                     through vast amounts of aggregated geospatial data &mdash;
@@ -522,7 +522,7 @@ export function TechnologySections() {
                   </Link>
                 </ResearchGroup>
 
-                <ResearchGroup title="Answers, insights, patterns">
+                <ResearchGroup title={`4.${" "}Answers, insights, patterns`}>
                   <p>One model, innumerable granular ground truths.</p>
                   <div className={styles.coreResearchProducts}>
                     <a href="/enterprise" className={styles.coreResearchProduct}>
@@ -589,98 +589,43 @@ export function TechnologySections() {
             <p className={styles.resultsLead}>The latest results from our development of the LGM.</p>
 
             <div className={styles.resultsGrid}>
-              <div className={styles.resultsCard}>
-                <div className={styles.resultsCardCopy}>
-                  <span className={styles.resultsCardNumber}>1</span>
-                  <p className={styles.resultsCardText}>
-                    Fast semantic reasoning in cities.<br />Contextual enrichment.
-                  </p>
+              {[
+                {
+                  num: "1",
+                  text: "Fast semantic reasoning in cities. Contextual enrichment.",
+                },
+                {
+                  num: "2",
+                  text: "Generative geospatial data",
+                },
+                {
+                  num: "3",
+                  text: "Generalist model, with access to wide catalogue",
+                },
+                {
+                  num: "4",
+                  text: "Deep spatial reasoning at scale",
+                },
+              ].map((item) => (
+                <div key={item.num} className={styles.resultsCard}>
+                  <div className={styles.resultsCardArt} aria-hidden>
+                    <svg viewBox="0 0 100 100" fill="none" preserveAspectRatio="xMidYMid meet">
+                      {/* Wireframe globe — outer rim, latitudes, longitudes, surface marker. */}
+                      <circle cx="50" cy="50" r="34" stroke="rgba(255,255,255,0.85)" strokeWidth="0.9" />
+                      <ellipse cx="50" cy="50" rx="34" ry="9" stroke="rgba(255,255,255,0.7)" strokeWidth="0.7" />
+                      <ellipse cx="50" cy="50" rx="32" ry="22" stroke="rgba(255,255,255,0.55)" strokeWidth="0.6" />
+                      <ellipse cx="50" cy="50" rx="28" ry="32" stroke="rgba(255,255,255,0.55)" strokeWidth="0.6" />
+                      <line x1="50" y1="16" x2="50" y2="84" stroke="rgba(255,255,255,0.85)" strokeWidth="0.8" />
+                      <line x1="34" y1="22" x2="66" y2="22" stroke="rgba(255,255,255,0.55)" strokeWidth="0.6" />
+                      <line x1="28" y1="34" x2="72" y2="34" stroke="rgba(255,255,255,0.55)" strokeWidth="0.6" />
+                      <line x1="28" y1="66" x2="72" y2="66" stroke="rgba(255,255,255,0.55)" strokeWidth="0.6" />
+                      <line x1="34" y1="78" x2="66" y2="78" stroke="rgba(255,255,255,0.55)" strokeWidth="0.6" />
+                      <circle cx="61" cy="40" r="3" fill="rgba(255,255,255,0.9)" />
+                    </svg>
+                  </div>
+                  <h3 className={styles.resultsCardText}>{`${item.num}. ${item.text}`}</h3>
                 </div>
-                <div className={styles.resultsCardArt} aria-hidden>
-                  <svg viewBox="0 0 320 220" fill="none" preserveAspectRatio="xMidYMid slice">
-                    {Array.from({ length: 9 }).map((_, i) => (
-                      <line key={`vx${i}`} x1={40 + i * 32} y1="20" x2={-40 + i * 32} y2="200" stroke="rgba(255,255,255,0.3)" strokeWidth="0.6" />
-                    ))}
-                    {Array.from({ length: 7 }).map((_, i) => (
-                      <line key={`hy${i}`} x1="0" y1={40 + i * 28} x2="320" y2={20 + i * 28} stroke="rgba(255,255,255,0.3)" strokeWidth="0.6" />
-                    ))}
-                    {[[80,70],[150,60],[220,75],[100,120],[175,110],[250,130],[120,170],[200,165]].map(([x,y], idx) => (
-                      <g key={idx}>
-                        <path d={`M${x} ${y} L${x+24} ${y-8} L${x+34} ${y+4} L${x+18} ${y+18} L${x} ${y+12} Z`} stroke="rgba(255,255,255,0.8)" strokeWidth="0.9" fill="none" />
-                        <path d={`M${x+4} ${y-2} L${x+18} ${y-8}`} stroke="rgba(255,255,255,0.55)" strokeWidth="0.6" />
-                      </g>
-                    ))}
-                  </svg>
-                </div>
-              </div>
-
-              <div className={styles.resultsCard}>
-                <div className={styles.resultsCardCopy}>
-                  <span className={styles.resultsCardNumber}>2</span>
-                  <p className={styles.resultsCardText}>
-                    Generalist model,<br />with access to<br />wide catalogue
-                  </p>
-                </div>
-                <div className={styles.resultsCardArt} aria-hidden>
-                  <svg viewBox="0 0 320 220" fill="none" preserveAspectRatio="xMidYMid slice">
-                    {Array.from({ length: 18 }).map((_, i) => (
-                      <line key={`g1-${i}`} x1={20 + i * 16} y1="120" x2={20 + i * 16} y2={120 + 40 * Math.sin((i / 18) * Math.PI * 2)} stroke="rgba(255,255,255,0.4)" strokeWidth="0.6" />
-                    ))}
-                    <ellipse cx="160" cy="115" rx="100" ry="18" stroke="rgba(255,255,255,0.5)" strokeWidth="0.8" />
-                    {Array.from({ length: 10 }).map((_, i) => (
-                      <ellipse key={`r${i}`} cx="160" cy="115" rx={10 + i * 10} ry={2 + i * 1.8} stroke="rgba(255,255,255,0.2)" strokeWidth="0.4" />
-                    ))}
-                    <circle cx="160" cy="115" r="14" stroke="rgba(255,255,255,0.9)" strokeWidth="0.8" fill="rgba(255,255,255,0.12)" />
-                  </svg>
-                </div>
-              </div>
-
-              <div className={styles.resultsCard}>
-                <div className={styles.resultsCardCopy}>
-                  <span className={styles.resultsCardNumber}>3</span>
-                  <p className={styles.resultsCardText}>
-                    Generative<br />geospatial data
-                  </p>
-                </div>
-                <div className={styles.resultsCardArt} aria-hidden>
-                  <svg viewBox="0 0 320 220" fill="none" preserveAspectRatio="xMidYMid slice">
-                    {[0, 1, 2].map((layer) => {
-                      const yBase = 60 + layer * 50;
-                      return (
-                        <g key={layer}>
-                          {Array.from({ length: 14 }).map((_, i) => (
-                            <line key={`vx${layer}-${i}`} x1={30 + i * 20} y1={yBase - 18} x2={10 + i * 20} y2={yBase + 18} stroke="rgba(255,255,255,0.35)" strokeWidth="0.5" />
-                          ))}
-                          {Array.from({ length: 4 }).map((_, i) => (
-                            <line key={`hz${layer}-${i}`} x1="30" y1={yBase - 18 + i * 12} x2="290" y2={yBase - 18 + i * 12 - 6} stroke="rgba(255,255,255,0.3)" strokeWidth="0.5" />
-                          ))}
-                        </g>
-                      );
-                    })}
-                  </svg>
-                </div>
-              </div>
-
-              <div className={styles.resultsCard}>
-                <div className={styles.resultsCardCopy}>
-                  <span className={styles.resultsCardNumber}>4</span>
-                  <p className={styles.resultsCardText}>
-                    Deep spatial<br />reasoning at<br />scale
-                  </p>
-                </div>
-                <div className={styles.resultsCardArt} aria-hidden>
-                  <svg viewBox="0 0 320 220" fill="none" preserveAspectRatio="xMidYMid slice">
-                    <ellipse cx="160" cy="70" rx="110" ry="22" stroke="rgba(255,255,255,0.45)" strokeWidth="0.7" />
-                    <ellipse cx="160" cy="170" rx="120" ry="24" stroke="rgba(255,255,255,0.45)" strokeWidth="0.7" />
-                    {Array.from({ length: 14 }).map((_, i) => {
-                      const a = (i / 14) * Math.PI * 2;
-                      return <line key={`s${i}`} x1={160 + Math.cos(a) * 8} y1="110" x2={160 + Math.cos(a) * 50} y2={120 + Math.sin(a) * 4} stroke="rgba(255,255,255,0.4)" strokeWidth="0.5" />;
-                    })}
-                    <path d="M150 30 L160 100 L170 30 M155 30 L165 95" stroke="rgba(255,255,255,0.75)" strokeWidth="0.8" fill="none" />
-                    <path d="M160 110 L140 160 M160 110 L180 160 M160 110 L155 170 M160 110 L165 170" stroke="rgba(255,255,255,0.5)" strokeWidth="0.6" />
-                  </svg>
-                </div>
-              </div>
+              ))}
             </div>
 
             <div className={styles.resultsArticlesRow}>

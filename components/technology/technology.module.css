@@ -5195,7 +5195,7 @@
   flex-direction: row;
   align-items: center;
   gap: clamp(28px, 3vw, 48px);
-  padding: clamp(20px, 2vw, 28px) 0;
+  padding: clamp(2px, 0.3vw, 5px) 0;
   background: transparent;
 }
 
@@ -5207,12 +5207,14 @@
   padding-bottom: 0;
 }
 
-/* 1px hairline divider that fades out on the right side. Lives on every
-   card except the last so there's no trailing line below the bottom row. */
+/* 1px hairline divider that fades out on the right side. Starts inline
+   with the title's left edge (past the blue art card + the row gap)
+   instead of at the row's leftmost edge — visually pairs with the
+   numbered title rather than spanning under the art block. */
 .resultsCard:not(:last-child)::after {
   content: "";
   position: absolute;
-  left: 0;
+  left: calc(clamp(160px, 16vw, 240px) + clamp(28px, 3vw, 48px));
   right: 0;
   bottom: 0;
   height: 1px;
@@ -5234,7 +5236,7 @@
   aspect-ratio: 16 / 11;
   background: #1d3fa6;
   overflow: hidden;
-  border-radius: 0;
+  border-radius: 8px;
 }
 
 .resultsCardArt svg {
