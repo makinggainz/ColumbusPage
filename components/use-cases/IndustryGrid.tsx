@@ -142,7 +142,11 @@
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 
-export default function IndustryGrid() {
+interface IndustryGridProps {
+  lightTheme?: boolean;
+}
+
+export default function IndustryGrid({ lightTheme = false }: IndustryGridProps = {}) {
   const sectionRef = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
 
@@ -162,6 +166,36 @@ export default function IndustryGrid() {
     transform: visible ? "translateY(0)" : "translateY(16px)",
     transition: `opacity 0.7s ease ${delay}ms, transform 0.7s ease ${delay}ms`,
   });
+
+  // Theme-dependent classes / values
+  const sectionBgClass = lightTheme ? "bg-white" : "bg-black";
+  const sectionLinesClass = lightTheme ? "section-lines-light" : "section-lines-dark";
+  const titleBarBgClass = lightTheme ? "bg-[#F5F5F7]" : "bg-black";
+  const titleBarTextClass = lightTheme ? "text-[#1D1D1F]" : "text-white";
+  const overlayTextClass = lightTheme ? "text-[#1D1D1F]" : "text-white";
+  const overlayMutedTextClass = lightTheme
+    ? "text-[rgba(29,29,31,0.7)]"
+    : "text-gray-200";
+  const overlayGradientClass = lightTheme
+    ? "bg-gradient-to-t from-white/80 to-transparent"
+    : "bg-gradient-to-t from-black/95 to-transparent";
+  const ctaBgColor = lightTheme ? "#0A1344" : "white";
+  const ctaTextColor = lightTheme ? "white" : "#1D1D1F";
+  const ctaArrowStroke = lightTheme ? "white" : "#2563EB";
+  const ctaArrowHoverClass = lightTheme
+    ? "group-hover:text-white"
+    : "group-hover:text-[#2563EB]";
+
+  // Title gradient (only used in dark mode); for light, use solid token color
+  const titleStyleDark: React.CSSProperties = {
+    WebkitBackgroundClip: "text",
+    WebkitTextFillColor: "transparent",
+    WebkitTextStroke: "1px rgba(255,255,255,0.5)",
+    paintOrder: "stroke fill",
+  };
+  const titleClassName = lightTheme
+    ? "inline-block text-[64px] font-semibold max-md:text-[36px] text-[#1D1D1F]"
+    : "inline-block text-[64px] font-semibold max-md:text-[36px] bg-gradient-to-b from-[#EBEBEB] to-[#A6A6A6] bg-clip-text text-transparent";
 
   const industries = [
     { title: "Commercial Real Estate", img: "/use-cases/comercial.png" },
@@ -210,20 +244,15 @@ export default function IndustryGrid() {
   ];
 
   return (
-    <section className="w-full bg-black flex justify-center">
+    <section className={`w-full ${sectionBgClass} flex justify-center`}>
 
-      <div ref={sectionRef} className="section-lines-dark w-full max-w-[1287px] mx-auto py-[120px]">
+      <div ref={sectionRef} className={`${sectionLinesClass} w-full max-w-[1287px] mx-auto py-[120px]`}>
 
         {/* TITLE */}
         <h2 className="text-center mb-[48px] max-md:mb-[36px] px-8 md:px-10" style={anim(0)}>
           <span
-            className="inline-block text-[64px] font-semibold max-md:text-[36px] bg-gradient-to-b from-[#EBEBEB] to-[#A6A6A6] bg-clip-text text-transparent"
-            style={{
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              WebkitTextStroke: "1px rgba(255,255,255,0.5)",
-              paintOrder: "stroke fill",
-            }}
+            className={titleClassName}
+            style={lightTheme ? undefined : titleStyleDark}
           >
             Find your industry
           </span>
@@ -250,7 +279,7 @@ export default function IndustryGrid() {
                 />
 
                 {/* OVERLAY: visible on hover, same treatment as Urban Planning */}
-                <div className="absolute inset-0 top-[450px] bg-gradient-to-t from-black/95 to-transparent flex flex-col justify-center px-8 text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                <div className={`absolute inset-0 top-[450px] ${overlayGradientClass} flex flex-col justify-center px-8 ${overlayTextClass} opacity-0 transition-opacity duration-300 group-hover:opacity-100`}>
 
                   {/* Heading */}
                   <h3 className="text-[20px] mb-4 text-center">
@@ -259,14 +288,14 @@ export default function IndustryGrid() {
 
                   {/* Paragraph text */}
                   {item.overlay?.text && (
-                    <p className="text-[14px] text-gray-200 max-w-[320px] mx-auto text-center mb-6 leading-relaxed">
+                    <p className={`text-[14px] ${overlayMutedTextClass} max-w-[320px] mx-auto text-center mb-6 leading-relaxed`}>
                       {item.overlay.text}
                     </p>
                   )}
 
                   {/* Bullet list */}
                   {item.overlay?.list && (
-                    <ul className="text-[14px] text-gray-200 mb-6 space-y-2 max-w-[300px] mx-auto text-left">
+                    <ul className={`text-[14px] ${overlayMutedTextClass} mb-6 space-y-2 max-w-[300px] mx-auto text-left`}>
                       {item.overlay.list.map((point, idx) => (
                         <li key={idx} className="flex gap-2">
                           <span>•</span>
@@ -282,10 +311,10 @@ export default function IndustryGrid() {
                     <button
                       type="button"
                       className="group flex items-center gap-3 leading-none whitespace-nowrap hover:opacity-90 transition-all duration-300"
-                      style={{ fontSize: 14, fontWeight: 500, height: 45, paddingLeft: 20, paddingRight: 16, backgroundColor: "white", color: "#1D1D1F" }}
+                      style={{ fontSize: 14, fontWeight: 500, height: 45, paddingLeft: 20, paddingRight: 16, backgroundColor: ctaBgColor, color: ctaTextColor }}
                     >
-                      <span className="transition-colors duration-300 group-hover:text-[#2563EB]">Talk to us</span>
-                      <svg className="transition-transform duration-300 group-hover:translate-x-0.5" width="10" height="18" viewBox="0 0 7 12" fill="none" stroke="#2563EB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                      <span className={`transition-colors duration-300 ${ctaArrowHoverClass}`}>Talk to us</span>
+                      <svg className="transition-transform duration-300 group-hover:translate-x-0.5" width="10" height="18" viewBox="0 0 7 12" fill="none" stroke={ctaArrowStroke} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                         <path d="M1 1l5 5-5 5" />
                       </svg>
                     </button>
@@ -294,10 +323,10 @@ export default function IndustryGrid() {
                       <button
                         type="button"
                         className="group flex items-center gap-3 leading-none whitespace-nowrap hover:opacity-90 transition-all duration-300"
-                        style={{ fontSize: 14, fontWeight: 500, height: 45, paddingLeft: 20, paddingRight: 16, backgroundColor: "white", color: "#1D1D1F" }}
+                        style={{ fontSize: 14, fontWeight: 500, height: 45, paddingLeft: 20, paddingRight: 16, backgroundColor: ctaBgColor, color: ctaTextColor }}
                       >
-                        <span className="transition-colors duration-300 group-hover:text-[#2563EB]">Learn more</span>
-                        <svg className="transition-transform duration-300 group-hover:translate-x-0.5" width="10" height="18" viewBox="0 0 7 12" fill="none" stroke="#2563EB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                        <span className={`transition-colors duration-300 ${ctaArrowHoverClass}`}>Learn more</span>
+                        <svg className="transition-transform duration-300 group-hover:translate-x-0.5" width="10" height="18" viewBox="0 0 7 12" fill="none" stroke={ctaArrowStroke} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                           <path d="M1 1l5 5-5 5" />
                         </svg>
                       </button>
@@ -310,8 +339,8 @@ export default function IndustryGrid() {
               </div>
 
               {/* TITLE BAR */}
-              <div className="bg-black h-[42px] mt-[10px] flex items-center justify-center">
-                <p className="text-white text-[24px] font-semibold tracking-wide">
+              <div className={`${titleBarBgClass} h-[42px] mt-[10px] flex items-center justify-center`}>
+                <p className={`${titleBarTextClass} text-[24px] font-semibold tracking-wide`}>
                   {item.title}
                 </p>
               </div>

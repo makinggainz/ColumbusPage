@@ -6,7 +6,6 @@ import { Footer } from "@/components/layout/Footer";
 
 import HeroSection from "@/components/use-cases/HeroSection";
 import ResultsSection from "@/components/use-cases/ResultsSection";
-import UseCasesHero from "@/components/use-cases/UseCaseHero";
 import ContactSection from "@/components/use-cases/ContactSection";
 import IndustryGrid from "@/components/use-cases/IndustryGrid";
 import Chat from "@/components/use-cases/Chat";
@@ -18,10 +17,7 @@ import { GenLayersSection } from "@/components/technology/redesign/GenLayersSect
 
 export default function ResearchApplicationsRoute() {
   const [navTheme, setNavTheme] = useState<"light" | "dark">("dark");
-  const [heroOverlay, setHeroOverlay] = useState(0);
-  const sectionBRef = useRef<HTMLElement>(null);
-  const sectionCRef = useRef<HTMLElement>(null);
-  const sectionDRef = useRef<HTMLElement>(null);
+  const heroRef = useRef<HTMLElement>(null);
   const sec4Ref = useRef<HTMLElement>(null);
   const sec5Ref = useRef<HTMLElement>(null);
   const sec6Ref = useRef<HTMLElement>(null);
@@ -31,19 +27,13 @@ export default function ResearchApplicationsRoute() {
   useEffect(() => {
     const NAVBAR_H = 80;
     const update = () => {
-      if (sectionCRef.current && sectionDRef.current) {
-        const cRect = sectionCRef.current.getBoundingClientRect();
-        const overC = cRect.top <= NAVBAR_H && cRect.bottom > NAVBAR_H;
-        setNavTheme(overC ? "light" : "dark");
-      }
-      if (sectionBRef.current) {
-        const bRect = sectionBRef.current.getBoundingClientRect();
-        const bHeight = sectionBRef.current.offsetHeight;
-        const scrolled = -bRect.top;
-        const fadeStart = bHeight * 0.35;
-        const fadeEnd = bHeight * 0.88;
-        const progress = Math.max(0, Math.min(1, (scrolled - fadeStart) / (fadeEnd - fadeStart)));
-        setHeroOverlay(progress);
+      // The hero is dark; everything below it is on a light background. Once
+      // the hero has scrolled past the navbar, switch to "light" theme so
+      // the navbar reads as dark text on the light sections beneath.
+      if (heroRef.current) {
+        const hRect = heroRef.current.getBoundingClientRect();
+        const pastHero = hRect.bottom <= NAVBAR_H;
+        setNavTheme(pastHero ? "light" : "dark");
       }
     };
     window.addEventListener("scroll", update, { passive: true });
@@ -52,47 +42,40 @@ export default function ResearchApplicationsRoute() {
   }, []);
 
   return (
-    <main>
+    <main style={{ backgroundColor: "#FFFFFF" }}>
       <Navbar theme={navTheme} />
 
-      <section className="relative" ref={sectionBRef}>
+      <section className="relative" ref={heroRef}>
         <HeroSection videoSrc="/research-applications-video.mp4" />
-        <div
-          className="absolute inset-0 bg-black pointer-events-none z-30"
-          style={{ opacity: heroOverlay }}
-        />
       </section>
-      <section className="relative bg-black" ref={sectionCRef}>
+      <section className="relative bg-black">
         <ResultsSection />
-      </section>
-      <section className="relative" ref={sectionDRef}>
-        <UseCasesHero />
       </section>
       <div className="relative">
         <ScrollProgressTracker sectionRefs={[sec4Ref, sec5Ref, sec6Ref, sec7Ref, sec8Ref]} />
         <section className="relative" ref={sec4Ref}>
-          <Chat />
+          <Chat lightTheme />
         </section>
         <section className="relative" ref={sec5Ref}>
-          <SuperModelSection />
+          <SuperModelSection lightTheme />
         </section>
         <section className="relative" ref={sec6Ref}>
-          <AgentResearch />
+          <AgentResearch lightTheme />
         </section>
         <section className="relative" ref={sec7Ref}>
-          <DataCatalogue />
+          <DataCatalogue lightTheme />
         </section>
         <section className="relative" ref={sec8Ref}>
-          <IndustryGrid />
+          <IndustryGrid lightTheme />
         </section>
       </div>
       <section className="relative">
-        <ContactSection />
+        <ContactSection lightTheme />
       </section>
       <section className="relative">
         <GenLayersSection />
       </section>
-      <Footer theme="dark" />
+      <Footer theme="light" />
     </main>
   );
 }

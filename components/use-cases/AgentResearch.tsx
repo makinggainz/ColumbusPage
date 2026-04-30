@@ -46,7 +46,11 @@ const SIDEBAR_ITEMS: SidebarItem[] = [
 
 const FADE_DURATION_MS = 300;
 
-export default function AgenticResearch() {
+type AgenticResearchProps = {
+  lightTheme?: boolean;
+};
+
+export default function AgenticResearch({ lightTheme = false }: AgenticResearchProps) {
   const [openId, setOpenId] = useState<string>("research");
   const [userHasTapped, setUserHasTapped] = useState(false);
   const [contentOpacity, setContentOpacity] = useState(1);
@@ -87,22 +91,43 @@ export default function AgenticResearch() {
     setTimeout(() => setContentOpacity(1), FADE_DURATION_MS / 2);
   };
 
-  return (
-    <section className="w-full bg-black flex justify-center">
-      <div ref={sectionRef} className="section-lines-dark w-full max-w-[1287px] mx-auto px-8 md:px-10 py-[120px]">
+  // Theme-dependent classes
+  const sectionBg = lightTheme ? "bg-white" : "bg-black";
+  const sectionLines = lightTheme ? "" : "section-lines-dark";
+  const headingText = lightTheme ? "text-[#1D1D1F]" : "text-white";
+  const rowBg = lightTheme ? "bg-white" : "bg-black";
+  const rowText = lightTheme ? "text-[#1D1D1F]" : "text-white";
+  const outerBorder = lightTheme
+    ? "border-[0.7px] border-[rgba(10,19,68,0.15)]"
+    : "border-[0.7px] border-white/50";
+  const rowDivider = lightTheme
+    ? "border-b-[0.7px] border-[rgba(10,19,68,0.15)]"
+    : "border-b-[0.7px] border-white";
+  const focusRing = lightTheme
+    ? "focus-visible:ring-[#0A1344]/30"
+    : "focus-visible:ring-white/50";
+  const accordionDescText = lightTheme ? "text-[rgba(29,29,31,0.7)]" : "text-gray-300";
+  const templatesLabelText = lightTheme ? "text-[rgba(29,29,31,0.6)]" : "text-gray-400";
+  const calloutBg = lightTheme ? "bg-[#F5F5F7]" : "bg-[#2a2a2a]";
+  const calloutHeading = lightTheme ? "text-[#1D1D1F]" : "text-white";
+  const calloutBody = lightTheme ? "text-[rgba(29,29,31,0.7)]" : "text-gray-300";
 
-        <h2 className="text-white text-[48px] font-semibold tracking-[-0.02em] mb-[30px] max-md:text-[28px]" style={anim(0)}>
+  return (
+    <section className={`w-full ${sectionBg} flex justify-center`}>
+      <div ref={sectionRef} className={`${sectionLines} w-full max-w-[1287px] mx-auto px-8 md:px-10 py-[120px]`}>
+
+        <h2 className={`${headingText} text-[48px] font-semibold tracking-[-0.02em] mb-[30px] max-md:text-[28px]`} style={anim(0)}>
           Agentic geospatial research
         </h2>
 
         {/* MOBILE SIDEBAR */}
-        <div className="hidden max-md:flex max-md:flex-col max-md:h-[420px] overflow-hidden rounded-lg mb-6 border-[0.7px] border-white/50" style={anim(100)}>
+        <div className={`hidden max-md:flex max-md:flex-col max-md:h-[420px] overflow-hidden rounded-lg mb-6 ${outerBorder}`} style={anim(100)}>
           {SIDEBAR_ITEMS.map((item) => (
             <button
               key={item.id}
               type="button"
               onClick={() => handleCellTap(item.id)}
-              className={`relative w-full flex flex-col text-left text-white overflow-hidden focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50 cursor-pointer transition-[height] duration-300 ease-in-out bg-black border-b-[0.7px] border-white last:border-b-0 ${
+              className={`relative w-full flex flex-col text-left ${rowText} overflow-hidden focus:outline-none focus-visible:ring-2 ${focusRing} cursor-pointer transition-[height] duration-300 ease-in-out ${rowBg} ${rowDivider} last:border-b-0 ${
                 openId === item.id ? "min-h-[268px] flex-1" : "h-[76px] flex-shrink-0"
               }`}
             >
@@ -123,9 +148,9 @@ export default function AgenticResearch() {
                     transition={{ duration: 0.25 }}
                     className="relative z-10 flex-1 px-6 pb-6 pt-0 flex flex-col min-h-0"
                   >
-                    <p className="text-[14px] text-gray-300 mb-4">{item.openContent.description}</p>
+                    <p className={`text-[14px] ${accordionDescText} mb-4`}>{item.openContent.description}</p>
                     {item.openContent.listItems.length > 0 && (
-                      <ul className="text-[14px] text-gray-300 space-y-2">
+                      <ul className={`text-[14px] ${accordionDescText} space-y-2`}>
                         {item.openContent.listItems.map((li) => (
                           <li key={li}>• {li}</li>
                         ))}
@@ -141,14 +166,14 @@ export default function AgenticResearch() {
         {/* DESKTOP: sidebar + main content (same layout as E/F) */}
         <div className="flex flex-col md:flex-row overflow-hidden gap-0 min-h-0" style={anim(100)}>
           <div
-            className="hidden md:flex w-[348px] max-lg:w-[280px] flex-shrink-0 text-white flex-col overflow-hidden h-[674px] max-lg:h-[520px] border-[0.7px] border-white/50 border-r-0 rounded-l-lg"
+            className={`hidden md:flex w-[348px] max-lg:w-[280px] flex-shrink-0 ${rowText} flex-col overflow-hidden h-[674px] max-lg:h-[520px] ${outerBorder} border-r-0 rounded-l-lg`}
           >
             {SIDEBAR_ITEMS.map((item) => (
               <button
                 key={item.id}
                 type="button"
                 onClick={() => handleCellTap(item.id)}
-                className={`relative w-full flex flex-col text-left overflow-hidden focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50 cursor-pointer transition-[height] duration-300 ease-in-out flex-shrink-0 bg-black border-b-[0.7px] border-white last:border-b-0 ${
+                className={`relative w-full flex flex-col text-left overflow-hidden focus:outline-none focus-visible:ring-2 ${focusRing} cursor-pointer transition-[height] duration-300 ease-in-out flex-shrink-0 ${rowBg} ${rowDivider} last:border-b-0 ${
                   openId === item.id
                     ? "min-h-[522px] max-lg:min-h-[368px] flex-1"
                     : "h-[76px]"
@@ -171,11 +196,11 @@ export default function AgenticResearch() {
                       transition={{ duration: 0.25 }}
                       className="relative z-10 flex-1 px-6 pb-6 pt-0 flex flex-col min-h-0"
                     >
-                      <p className="text-[16px] text-gray-300 mb-4 leading-relaxed max-lg:text-[14px]">
+                      <p className={`text-[16px] ${accordionDescText} mb-4 leading-relaxed max-lg:text-[14px]`}>
                         {item.openContent.description}
                       </p>
                       {item.openContent.listItems.length > 0 && (
-                        <ul className="text-[16px] text-gray-300 space-y-2 max-lg:text-[14px]">
+                        <ul className={`text-[16px] ${accordionDescText} space-y-2 max-lg:text-[14px]`}>
                           {item.openContent.listItems.map((li) => (
                             <li key={li}>• {li}</li>
                           ))}
@@ -190,7 +215,7 @@ export default function AgenticResearch() {
 
           {/* MAIN CONTENT — templates + report (fades on sidebar tap) */}
           <div
-            className="flex-1 min-w-0 h-[674px] max-lg:h-[520px] transition-opacity ease-in-out overflow-auto border-[0.7px] border-white/50 border-l-0 rounded-r-lg p-6"
+            className={`flex-1 min-w-0 h-[674px] max-lg:h-[520px] transition-opacity ease-in-out overflow-auto ${outerBorder} border-l-0 rounded-r-lg p-6`}
             style={{
               opacity: contentOpacity,
               transitionDuration: `${FADE_DURATION_MS / 2}ms`,
@@ -199,30 +224,32 @@ export default function AgenticResearch() {
             <div className="grid grid-cols-[320px_1fr] gap-8 max-xl:grid-cols-1 p-0 max-md:pt-0">
               {/* TEMPLATE CARDS */}
               <div className="flex flex-col gap-4">
-                <p className="text-gray-400 text-[13px] mb-2">
+                <p className={`${templatesLabelText} text-[13px] mb-2`}>
                   Templates
                 </p>
-                <div className="h-[151px] bg-[#2a2a2a] rounded-xl p-5 text-white">
+                <div className={`h-[151px] ${calloutBg} rounded-xl p-5 ${calloutHeading}`}>
                   <h4 className="text-[20px] font-semibold mb-2">General Report</h4>
-                  <p className="text-[16px] text-gray-300">
+                  <p className={`text-[16px] ${calloutBody}`}>
                     A general review of the parcel, considering key variables in construction
                   </p>
                 </div>
-                <div className="h-[151px] bg-[#2a2a2a] rounded-xl p-5 text-white">
+                <div className={`h-[151px] ${calloutBg} rounded-xl p-5 ${calloutHeading}`}>
                   <h4 className="text-[20px] font-semibold mb-2">Geotech/soils report</h4>
-                  <p className="text-[16px] text-gray-300">
+                  <p className={`text-[16px] ${calloutBody}`}>
                     Report for bearing capacity, groundwater, rock, slope stability
                   </p>
                 </div>
-                <div className="h-[151px] bg-[#2a2a2a] rounded-xl p-5 text-white">
+                <div className={`h-[151px] ${calloutBg} rounded-xl p-5 ${calloutHeading}`}>
                   <h4 className="text-[20px] font-semibold mb-2">General Geological study</h4>
-                  <p className="text-[16px] text-gray-300">
+                  <p className={`text-[16px] ${calloutBody}`}>
                     Wetlands/flood, stormwater, heritage/trees and other constraints
                   </p>
                 </div>
-                <div className="relative bg-[#2a2a2a] rounded-[14px] p-5 text-white w-full overflow-hidden">
+                <div className={`relative ${calloutBg} rounded-[14px] p-5 ${calloutHeading} w-full overflow-hidden`}>
                   <h4 className="font-semibold text-[15px]">Advanced Geological study</h4>
-                  <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black opacity-60 pointer-events-none" />
+                  {!lightTheme && (
+                    <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black opacity-60 pointer-events-none" />
+                  )}
                 </div>
               </div>
 

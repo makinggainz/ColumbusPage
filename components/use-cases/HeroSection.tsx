@@ -44,7 +44,6 @@ export default function HeroSection({
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
-    // If readyState is already sufficient, mark ready immediately
     if (video.readyState >= 3) {
       setVideoReady(true);
     }
@@ -53,7 +52,6 @@ export default function HeroSection({
   // Start typing bottom text after title + subtitle have faded in
   useEffect(() => {
     if (!visible) return;
-    // title delay 0s + subtitle delay 0.15s + transition 0.7s ≈ 1s total
     const start = window.setTimeout(() => {
       let idx = 0;
       const iv = window.setInterval(() => {
@@ -67,8 +65,8 @@ export default function HeroSection({
   }, [visible]);
 
   const fadeIn = (delay = 0): React.CSSProperties => ({
-    opacity:   visible ? 1 : 0,
-    filter:    visible ? "blur(0px)" : "blur(8px)",
+    opacity: visible ? 1 : 0,
+    filter: visible ? "blur(0px)" : "blur(8px)",
     transform: visible ? "translateY(0)" : "translateY(16px)",
     transition: `opacity 0.7s ease-out ${delay}s, filter 0.7s ease-out ${delay}s, transform 0.7s ease-out ${delay}s`,
   });
@@ -88,7 +86,6 @@ export default function HeroSection({
 
   return (
     <section className="relative w-full h-screen overflow-hidden bg-black">
-
       {/* Background video — looped, muted, autoplay */}
       <video
         ref={videoRef}
@@ -101,7 +98,7 @@ export default function HeroSection({
         className="absolute inset-0 w-full h-full object-cover"
       />
 
-      {/* Dark overlay — includes blur while video is loading */}
+      {/* Dark overlay — radial vignette + blur while video loads */}
       <div
         className="absolute inset-0"
         style={{
@@ -110,7 +107,8 @@ export default function HeroSection({
           backdropFilter: videoReady ? "none" : "blur(20px)",
           WebkitBackdropFilter: videoReady ? "none" : "blur(20px)",
           opacity: visible ? 1 : 0,
-          transition: "opacity 1.2s ease-out 0s, backdrop-filter 0.8s ease-out, -webkit-backdrop-filter 0.8s ease-out",
+          transition:
+            "opacity 1.2s ease-out 0s, backdrop-filter 0.8s ease-out, -webkit-backdrop-filter 0.8s ease-out",
         }}
       />
 
@@ -126,7 +124,7 @@ export default function HeroSection({
         aria-hidden
       />
 
-      {/* Three frosted-glass panels — initially obscure the video, then
+      {/* Three frosted-glass panels — initially obscure the bg, then
           sequentially collapse downward to reveal it. Middle panel spans the
           bounded grid (matching the vertical structure lines); side panels
           fill the exterior regions. */}
@@ -157,10 +155,8 @@ export default function HeroSection({
 
       {/* Content container — lateral constraints */}
       <div className="relative z-20 w-full max-w-[1287px] mx-auto px-8 md:px-10 h-full flex flex-col">
-
         {/* TEXT BLOCK */}
         <div className="mt-[295px] max-md:mt-[180px] text-center">
-
           {/* TITLE */}
           <h1
             className="text-white text-[61px] md:text-[78px] max-md:text-[39px] leading-[1.2]"
@@ -181,7 +177,6 @@ export default function HeroSection({
           >
             {subtitle}
           </p>
-
         </div>
 
         {/* BOTTOM CTA — typed text doubles as a button: click to scroll past the hero */}
@@ -222,7 +217,6 @@ export default function HeroSection({
             <style>{`@keyframes fadeInArrow { to { opacity: 1 } }`}</style>
           </button>
         </div>
-
       </div>
     </section>
   );
