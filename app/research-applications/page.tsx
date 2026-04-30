@@ -12,7 +12,7 @@ import Chat from "@/components/use-cases/Chat";
 import SuperModelSection from "@/components/use-cases/SuperModelSection";
 import AgentResearch from "@/components/use-cases/AgentResearch";
 import DataCatalogue from "@/components/use-cases/DataCatalogue";
-import ScrollProgressTracker from "@/components/use-cases/ScrollProgressTracker";
+import CapabilitiesSection from "@/components/use-cases/CapabilitiesSection";
 import { GenLayersSection } from "@/components/technology/redesign/GenLayersSection";
 
 export default function ResearchApplicationsRoute() {
@@ -66,8 +66,10 @@ export default function ResearchApplicationsRoute() {
       <section className="relative bg-black">
         <ResultsSection />
       </section>
+      <section className="relative">
+        <CapabilitiesSection />
+      </section>
       <div className="relative">
-        <ScrollProgressTracker sectionRefs={[sec4Ref, sec5Ref, sec6Ref, sec7Ref, sec8Ref]} />
         <section className="relative" ref={sec4Ref}>
           <Chat lightTheme />
         </section>

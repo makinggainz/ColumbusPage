@@ -148,11 +148,11 @@ const StackedRingsArt = () => (
 
 /* ── Items ────────────────────────────────────────────────────── */
 
-const ITEMS: { num: string; title: string; art: React.ReactNode }[] = [
-  { num: "1", title: "Fast semantic reasoning in cities. Contextual enrichment.", art: <CoordinateArt /> },
-  { num: "2", title: "Generalist model, with access to wide catalogue", art: <CubeArt /> },
-  { num: "3", title: "Generative geospatial data", art: <WaveSurfaceArt /> },
-  { num: "4", title: "Deep spatial reasoning at scale", art: <StackedRingsArt /> },
+const ITEMS: { num: string; title: string; subtitle: string; art: React.ReactNode }[] = [
+  { num: "1", title: "Fast semantic reasoning in cities.", subtitle: "Contextual enrichment.", art: <CoordinateArt /> },
+  { num: "2", title: "Generalist model", subtitle: "with access to wide catalogue", art: <CubeArt /> },
+  { num: "3", title: "Generative", subtitle: "geospatial data", art: <WaveSurfaceArt /> },
+  { num: "4", title: "Deep spatial reasoning", subtitle: "at scale", art: <StackedRingsArt /> },
 ];
 
 export default function ResultsSection() {
@@ -249,16 +249,23 @@ export default function ResultsSection() {
                   />
                 )}
 
-                {/* Illustration */}
-                <div className="w-full aspect-square max-w-[200px] mb-10">
+                {/* Illustration — horizontally centred within the card */}
+                <div className="w-full aspect-square max-w-[200px] mx-auto mb-10">
                   {item.art}
                 </div>
 
-                {/* Number on the left of the title */}
-                <h3 className="text-[#1D1D1F] text-[20px] lg:text-[22px] leading-[1.3] tracking-[-0.01em] flex items-baseline gap-3" style={{ fontWeight: 500 }}>
-                  <span className="shrink-0">{item.num}.</span>
-                  <span>{item.title}</span>
-                </h3>
+                {/* Number on the left of the title; subtitle sits below the title */}
+                <div className="flex items-baseline gap-3">
+                  <span className="shrink-0 text-[#1D1D1F] text-[20px] lg:text-[22px] leading-[1.3] tracking-[-0.01em]" style={{ fontWeight: 500 }}>{item.num}.</span>
+                  <div className="min-w-0">
+                    <h3 className="m-0 text-[#1D1D1F] text-[20px] lg:text-[22px] leading-[1.3] tracking-[-0.01em]" style={{ fontWeight: 500 }}>
+                      {item.title}
+                    </h3>
+                    <p className="m-0 mt-1 text-[14px] lg:text-[15px] leading-[1.4]" style={{ color: "rgba(29, 29, 31, 0.55)", fontWeight: 400 }}>
+                      {item.subtitle}
+                    </p>
+                  </div>
+                </div>
               </div>
             ))}
           </div>
