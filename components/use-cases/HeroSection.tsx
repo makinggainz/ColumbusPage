@@ -100,11 +100,23 @@ export default function HeroSection({
         aria-hidden
       />
 
+      {/* Vertical structure lines — extend the page grid up through the hero. */}
+      <div
+        className="pointer-events-none absolute inset-0"
+        style={{ zIndex: 15 }}
+        aria-hidden
+      >
+        <div className="max-w-[1287px] mx-5 md:mx-auto relative h-full">
+          <div style={{ position: "absolute", top: 0, left: 0, width: 1, height: "100%", background: "var(--grid-line)" }} />
+          <div style={{ position: "absolute", top: 0, right: 0, width: 1, height: "100%", background: "var(--grid-line)" }} />
+        </div>
+      </div>
+
       {/* Content container — lateral constraints */}
       <div className="relative z-20 w-full max-w-[1287px] mx-auto px-8 md:px-10 h-full flex flex-col">
 
         {/* TEXT BLOCK */}
-        <div className="mt-[295px] max-md:mt-[180px]">
+        <div className="mt-[295px] max-md:mt-[180px] text-center">
 
           {/* TITLE */}
           <h1
@@ -119,19 +131,9 @@ export default function HeroSection({
             {title}
           </h1>
 
-          {/* Divider line — fades out at edges */}
-          <div
-            className="mt-2 w-full"
-            style={{
-              height: 1,
-              background: "linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.5) 25%, rgba(255,255,255,0.5) 75%, rgba(255,255,255,0) 100%)",
-              ...fadeIn(0.08),
-            }}
-          />
-
           {/* SUBTITLE */}
           <p
-            className="text-white/70 mt-6 max-w-[760px] text-[20px] font-normal leading-[1.5] max-md:text-[16px]"
+            className="text-white/70 mt-6 mx-auto max-w-[760px] text-[20px] font-normal leading-[1.5] max-md:text-[16px]"
             style={fadeIn(0.15)}
           >
             {subtitle}
@@ -139,33 +141,43 @@ export default function HeroSection({
 
         </div>
 
-        {/* BOTTOM TEXT — typed in last */}
+        {/* BOTTOM CTA — typed text doubles as a button: click to scroll past the hero */}
         <div
-          className="mt-auto pb-[48px] flex items-center gap-2 text-white text-[16px] font-medium tracking-[0.04em] max-md:text-[14px]"
+          className="mt-auto pb-[48px] flex items-center justify-center"
           style={{ minHeight: "1.4em" }}
         >
-          <span>{typedText}</span>
-          {typedText.length >= BOTTOM_TEXT.length && (
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 16 16"
-              fill="none"
-              style={{
-                opacity: 0,
-                animation: "fadeInArrow 0.4s ease-out forwards",
-              }}
-            >
-              <path
-                d="M8 3v8.5M4 8.5l4 4.5 4-4.5"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          )}
-          <style>{`@keyframes fadeInArrow { to { opacity: 1 } }`}</style>
+          <button
+            type="button"
+            onClick={(e) => {
+              const hero = (e.currentTarget as HTMLButtonElement).closest("section");
+              if (hero) window.scrollTo({ top: hero.offsetHeight, behavior: "smooth" });
+            }}
+            className="group flex items-center gap-2 text-white text-[16px] font-medium tracking-[0.04em] max-md:text-[14px] cursor-pointer transition-colors duration-300 hover:text-[#0066CC]"
+          >
+            <span>{typedText}</span>
+            {typedText.length >= BOTTOM_TEXT.length && (
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 16 16"
+                fill="none"
+                className="transition-transform duration-300 group-hover:translate-y-0.5"
+                style={{
+                  opacity: 0,
+                  animation: "fadeInArrow 0.4s ease-out forwards",
+                }}
+              >
+                <path
+                  d="M8 3v8.5M4 8.5l4 4.5 4-4.5"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            )}
+            <style>{`@keyframes fadeInArrow { to { opacity: 1 } }`}</style>
+          </button>
         </div>
 
       </div>
