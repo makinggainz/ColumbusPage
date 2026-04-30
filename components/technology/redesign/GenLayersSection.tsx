@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 
 import styles from "../technology.module.css";
 
@@ -121,7 +122,7 @@ function TileOverlay({
       ref={refSetter}
       className={styles.genLayersTileOverlay}
       viewBox="0 0 100 67"
-      preserveAspectRatio="none"
+      preserveAspectRatio="xMidYMid slice"
       aria-hidden
     >
       {index === 2
@@ -161,8 +162,12 @@ export function GenLayersSection() {
   const progressFillRefs = useRef<Array<HTMLDivElement | null>>([null, null, null]);
   const tileRefs = useRef<Array<HTMLDivElement | null>>([null, null, null]);
   const tileOverlayRefs = useRef<Array<SVGSVGElement | null>>([null, null, null]);
+  // tilePromptRefs → top-left prompt box (appears first, before overlay).
+  // tileTextRefs   → bottom-center kicker + title (appears after overlay).
+  const tilePromptRefs = useRef<Array<HTMLDivElement | null>>([null, null, null]);
   const tileTextRefs = useRef<Array<HTMLDivElement | null>>([null, null, null]);
   const introRef = useRef<HTMLDivElement | null>(null);
+  const tilesRowRef = useRef<HTMLDivElement | null>(null);
   // 0/1/2 = active tile. Tile 1 is active from the start so its analyse
   // animation starts running as soon as the user enters the section.
   const [activeTile, setActiveTile] = useState(0);
@@ -201,20 +206,30 @@ export function GenLayersSection() {
       // only at the very start of the section. Fully opaque until raw=0.10,
       // fades to 0 by raw=0.20. Driven directly via DOM ref so it keeps
       // perfect cadence with scroll without React re-renders.
+      const introOpacity = clamp01(1 - (raw - 0.1) / 0.1);
       if (introRef.current) {
-        const introOpacity = clamp01(1 - (raw - 0.1) / 0.1);
         introRef.current.style.opacity = introOpacity.toString();
-        introRef.current.style.pointerEvents = introOpacity > 0 ? "none" : "none";
       }
 
-      // Per-tile analyse animation. Each tile's local progress is mapped
-      // to three phases:
-      //   [0, 0.30)    — clean satellite imagery, no overlays, no bottom blur
-      //   [0.30, 0.45) — SVG overlay (roof/street shapes) fades in
-      //   [0.45, 1.0]  — text + bottom blur fade in and stay
+      // Inactive-tile dark veil — held at 0 while the intro is fully
+      // opaque, fades back to 100% by the time the intro is gone, so
+      // the slivers behind the intro don't poison the bright frosted
+      // backdrop with dark patches.
+      if (tilesRowRef.current) {
+        tilesRowRef.current.style.setProperty(
+          "--inactive-veil-opacity",
+          (1 - introOpacity).toString(),
+        );
+      }
+
+      // Per-tile analyse animation — four phases per tile:
+      //   [0,    0.20) — clean satellite imagery, nothing visible
+      //   [0.20, 0.35) — prompt (top-left) fades in
+      //   [0.35, 0.50) — SVG overlay (roof/street shapes) fades in
+      //   [0.50, 1.0]  — kicker + title (bottom-center) + bottom blur fade in
       // Once a tile is past its bucket (raw >= bucket.end) its visuals
-      // freeze at the phase-C state so collapsed tiles still read as
-      // "analysed" (just blurred via .genLayersTileInactive::after).
+      // freeze at their final state so collapsed tiles still read as
+      // "analysed" (just darkened via .genLayersTileInactive::after).
       for (let i = 0; i < TILE_BUCKETS.length; i++) {
         const bucket = TILE_BUCKETS[i];
         const isInBucket = raw >= bucket.start && raw < bucket.end;
@@ -225,21 +240,25 @@ export function GenLayersSection() {
               ? (raw - bucket.start) / (bucket.end - bucket.start)
               : 0;
 
-        // SVG overlay reveals each child shape one-by-one across the
-        // analyse-overlay phase (local 0.30 → 0.40). Stagger is fast: the
-        // total span of 0.10 progress is divided across however many
-        // children the SVG has, with each shape doing its own short
-        // opacity fade. This produces a visible "house-by-house" reveal
-        // on the roof tiles and a "street-by-street" reveal on the safety
-        // tile. The wrapping SVG stays at opacity: 1 — only its children's
-        // opacities are animated.
+        // Phase B — prompt text (top-left) flips 0→1 at local=0.20.
+        // CSS transition on .genLayersTilePromptBox handles the fade.
+        const showPrompt = isInBucket && local >= 0.20 ? 1 : 0;
+        const promptEl = tilePromptRefs.current[i];
+        if (promptEl) {
+          promptEl.style.opacity = showPrompt.toString();
+        }
+
+        // Phase C — SVG overlay reveals each child shape one-by-one across
+        // local 0.35 → 0.48. Stagger: the span is divided across all
+        // children with each shape doing its own short opacity fade, giving
+        // a "house-by-house" or "street-by-street" reveal.
         const overlayEl = tileOverlayRefs.current[i];
         if (overlayEl) {
           overlayEl.style.opacity = "1";
           const children = overlayEl.children;
           const N = children.length;
-          const animStart = 0.30;
-          const animEnd = 0.40;
+          const animStart = 0.35;
+          const animEnd = 0.48;
           const fadeDuration = 0.02;
           const stride =
             N > 1 ? (animEnd - animStart - fadeDuration) / (N - 1) : 0;
@@ -250,29 +269,25 @@ export function GenLayersSection() {
           }
         }
 
-        // Per-tile progress segment — width tracks the same `local` used
-        // for the visuals: 0% before this tile is active, 100% once the
-        // user has scrolled past it, smoothly interpolated while inside
-        // its bucket.
+        // Per-tile progress segment — width tracks `local` directly.
         const segEl = progressFillRefs.current[i];
         if (segEl) {
           segEl.style.width = `${(local * 100).toFixed(2)}%`;
         }
 
-        // Text + bottom blur are NOT scroll-driven. They flip 0 → 1 once
-        // the SVG overlay finishes its scroll-driven fade-in (local >=
-        // 0.45) on the currently active tile, and CSS transitions on
-        // .genLayersTileText / .genLayersTile::before take care of the
-        // animated reveal. Past or future tiles always read 0.
-        const showText = isInBucket && local >= 0.45 ? 1 : 0;
+        // Phase D — kicker + title (bottom-center) flip 0→1 at local=0.50.
+        // CSS transition on .genLayersTileText handles the fade.
+        // The bottom blur (--text-blur-opacity) tracks the same threshold
+        // so the frosted strip fades in alongside the title.
+        const showTitle = isInBucket && local >= 0.50 ? 1 : 0;
         const textEl = tileTextRefs.current[i];
         if (textEl) {
-          textEl.style.opacity = showText.toString();
+          textEl.style.opacity = showTitle.toString();
         }
 
         const tileEl = tileRefs.current[i];
         if (tileEl) {
-          tileEl.style.setProperty("--text-blur-opacity", showText.toString());
+          tileEl.style.setProperty("--text-blur-opacity", showTitle.toString());
         }
       }
 
@@ -341,84 +356,16 @@ export function GenLayersSection() {
       <div className={styles.genLayersInner}>
         {/* Starburst + "Gen Layers" label sitting over the long left arm */}
         <div className={styles.genLayersHead}>
-          <svg
-            className={styles.genLayersHeadStarburst}
-            viewBox="0 0 1600 220"
-            preserveAspectRatio="xMidYMid meet"
-            aria-hidden
-          >
-            {(() => {
-              const cx = 1500;
-              const cy = 110;
-              const stroke = "rgba(255, 255, 255, 0.92)";
-              type TickStyle = "even" | "end" | "none";
-              type Arm = { angle: number; len: number; ticks: TickStyle };
-              const arms: Arm[] = [
-                { angle: 180.4, len: 1460, ticks: "end" },
-                { angle: 187, len: 200, ticks: "even" },
-                { angle: 226, len: 90, ticks: "even" },
-                { angle: 252, len: 100, ticks: "none" },
-                { angle: 267, len: 105, ticks: "none" },
-                { angle: 282, len: 100, ticks: "none" },
-                { angle: 317, len: 80, ticks: "end" },
-                { angle: 350, len: 85, ticks: "even" },
-                { angle: 4, len: 85, ticks: "even" },
-                { angle: 31, len: 95, ticks: "even" },
-                { angle: 66, len: 100, ticks: "even" },
-                { angle: 90, len: 105, ticks: "even" },
-                { angle: 113, len: 105, ticks: "none" },
-                { angle: 147, len: 95, ticks: "even" },
-              ];
-              return arms.map((arm, i) => {
-                const rad = (arm.angle * Math.PI) / 180;
-                const x2 = cx + Math.cos(rad) * arm.len;
-                const y2 = cy + Math.sin(rad) * arm.len;
-                const perp = rad + Math.PI / 2;
-                const tickHalf = 3.6;
-                const buildTicks = () => {
-                  if (arm.ticks === "none") return [] as number[];
-                  const spacing = 9;
-                  if (arm.ticks === "even") {
-                    const out: number[] = [];
-                    for (let d = 18; d <= arm.len - 14; d += spacing) out.push(d);
-                    return out;
-                  }
-                  const count = Math.min(8, Math.floor(arm.len / 14));
-                  return Array.from({ length: count }, (_, k) => arm.len - 14 - k * spacing);
-                };
-                const ticks = buildTicks();
-                return (
-                  <g key={i}>
-                    <line
-                      x1={cx}
-                      y1={cy}
-                      x2={x2}
-                      y2={y2}
-                      stroke={stroke}
-                      strokeWidth="1.4"
-                      strokeLinecap="round"
-                    />
-                    {ticks.map((d, t) => {
-                      const tx = cx + Math.cos(rad) * d;
-                      const ty = cy + Math.sin(rad) * d;
-                      return (
-                        <line
-                          key={t}
-                          x1={tx - Math.cos(perp) * tickHalf}
-                          y1={ty - Math.sin(perp) * tickHalf}
-                          x2={tx + Math.cos(perp) * tickHalf}
-                          y2={ty + Math.sin(perp) * tickHalf}
-                          stroke={stroke}
-                          strokeWidth="1"
-                          strokeLinecap="round"
-                        />
-                      );
-                    })}
-                  </g>
-                );
-              });
-            })()}
-          </svg>
+          <div className={styles.genLayersHeadStarburst}>
+            <Image
+              src="/TechnologyPageImages/VoyagerGraphic.png"
+              alt=""
+              fill
+              sizes="100vw"
+              style={{ objectFit: "contain", objectPosition: "right center" }}
+              priority={false}
+            />
+          </div>
           <span className={styles.genLayersHeadLabel}>Gen Layers</span>
         </div>
 
@@ -428,6 +375,7 @@ export function GenLayersSection() {
         <div ref={sectionRef} className={styles.genLayersStickyOuter}>
           <div className={styles.genLayersStickyInner}>
             <div
+              ref={tilesRowRef}
               className={[
                 styles.genLayersTilesRow,
                 activeTile === 0 ? styles.genLayersTilesRowState1 : "",
@@ -465,8 +413,22 @@ export function GenLayersSection() {
                       }}
                     />
 
-                    {/* Tile text content — fades in last, after the
-                        analysed image is visible. */}
+                    {/* Phase B — prompt + label, top-left, fades in first
+                        before the SVG overlay. Driven by tilePromptRefs. */}
+                    <div
+                      ref={(el) => {
+                        tilePromptRefs.current[i] = el;
+                      }}
+                      className={styles.genLayersTilePromptBox}
+                    >
+                      <span className={styles.genLayersTilePromptLabel}>Prompt:</span>
+                      <span className={styles.genLayersTilePrompt}>
+                        &ldquo;{tile.prompt}&rdquo;
+                      </span>
+                    </div>
+
+                    {/* Phase D — kicker + title, bottom-center, fades in
+                        after the SVG overlay finishes. Driven by tileTextRefs. */}
                     <div
                       ref={(el) => {
                         tileTextRefs.current[i] = el;
@@ -475,10 +437,6 @@ export function GenLayersSection() {
                     >
                       <span className={styles.genLayersTileKicker}>{tile.kicker}</span>
                       <span className={styles.genLayersTileTitle}>{tile.title}</span>
-                      <span className={styles.genLayersTilePromptLabel}>Prompt:</span>
-                      <span className={styles.genLayersTilePrompt}>
-                        &ldquo;{tile.prompt}&rdquo;
-                      </span>
                     </div>
                   </div>
                 );
