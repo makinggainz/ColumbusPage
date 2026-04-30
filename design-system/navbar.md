@@ -100,9 +100,7 @@
 - `isManuallyToggled` flag prevents hover from conflicting with click-to-close.
 - Closes when the mouse moves below the navbar bottom edge.
 - Backdrop: `backdrop-blur-md bg-black/10` overlay covers the page behind the dropdown.
-- Background:
-  - Light theme: `rgba(248, 249, 252, 0.92)` with `blur(20px)`
-  - Dark theme: `rgba(6, 8, 20, 0.96)` with `blur(24px)`
+- Background: matches the navbar — `background: transparent` with `backdrop-filter: blur(20px) saturate(1.2)`. The dropdown reads as a visual continuation of the navbar above it; whatever colour the page is showing underneath shows through both surfaces.
 
 ### Mobile vs Desktop height treatment
 
