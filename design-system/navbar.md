@@ -48,7 +48,8 @@
 - **Products page:** appear once `bgTriggerPassed` is true AND the hero scroll transition is not active (`!inHeroTransition || bgTriggerPassed`).
 - Animate in via `clip-path: inset(0 0% 0 0)` → `inset(0 100% 0 0)` + opacity fade (400ms spring).
 - Links shown: **Products** (`/products/enterprise`), **Research** (`/technology`), **Use Cases** (`/columbus-solutions` — opens a hover dropdown with two cards: Columbus Pro Enterprise Use-Cases → `/columbus-solutions`, Research Applications → `/research-applications`), **Company** (`/mission`).
-- The Use Cases link mirrors the Products dropdown pattern (chevron + active underline) but renders a different overlay: an empty bordered card for Columbus Pro Enterprise Use-Cases and a bordered card containing an inline globe SVG for Research Applications. Plain text labels sit below each card — no subtitles. The overlay is positioned absolutely over the products card grid and crossfades when `hoverKind === "use-cases"`.
+- The Use Cases link mirrors the Products dropdown pattern (chevron only — no hover/active underline) but renders a different overlay: an empty bordered card for Columbus Pro Enterprise Use-Cases and a bordered card containing an inline globe SVG for Research Applications. Plain text labels sit below each card — no subtitles. The overlay is positioned absolutely over the products card grid and crossfades when `hoverKind === "use-cases"`.
+- **Underline behaviour:** the hover/active underline (animated `width 0 → 100%` line below the label) renders only on **Research** and **Company**. Products and Use Cases intentionally have no underline — they rely on the chevron flip alone to indicate their dropdown state.
 - On the products page, link text uses `glassStyles.glassTextStatic` for the frosted glass look.
 
 ---

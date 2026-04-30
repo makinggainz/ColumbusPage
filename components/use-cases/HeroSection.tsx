@@ -19,12 +19,25 @@ export default function HeroSection({
   const [visible, setVisible] = useState(false);
   const [typedText, setTypedText] = useState("");
   const [videoReady, setVideoReady] = useState(false);
+  const [middleBlurGone, setMiddleBlurGone] = useState(false);
+  const [sideBlursGone, setSideBlursGone] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
 
   // Trigger fade-in shortly after mount (first section, no scroll needed)
   useEffect(() => {
     const t = window.setTimeout(() => setVisible(true), 120);
     return () => clearTimeout(t);
+  }, []);
+
+  // Sequential blur reveal — middle panel collapses first, then the two
+  // exterior panels follow. Same staging + collapse animation as the V2 hero.
+  useEffect(() => {
+    const t1 = window.setTimeout(() => setMiddleBlurGone(true), 700);
+    const t2 = window.setTimeout(() => setSideBlursGone(true), 1700);
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+    };
   }, []);
 
   // Check if video can play immediately on mount
@@ -58,6 +71,19 @@ export default function HeroSection({
     filter:    visible ? "blur(0px)" : "blur(8px)",
     transform: visible ? "translateY(0)" : "translateY(16px)",
     transition: `opacity 0.7s ease-out ${delay}s, filter 0.7s ease-out ${delay}s, transform 0.7s ease-out ${delay}s`,
+  });
+
+  // Frosted-glass overlay panels — same look + feel as the navbar background
+  // (transparent + matching backdrop-filter), collapsed via scaleY(0) anchored
+  // at the bottom using the navbar dropdown's close bezier. Middle panel goes
+  // first, then the two exterior panels.
+  const blurPanelStyle = (gone: boolean): React.CSSProperties => ({
+    background: "transparent",
+    backdropFilter: "blur(20px) saturate(1.2)",
+    WebkitBackdropFilter: "blur(20px) saturate(1.2)",
+    transform: gone ? "scaleY(0)" : "scaleY(1)",
+    transformOrigin: "bottom",
+    transition: "transform 400ms cubic-bezier(0.3, 0, 0.8, 0.15)",
   });
 
   return (
@@ -99,6 +125,23 @@ export default function HeroSection({
         }}
         aria-hidden
       />
+
+      {/* Three frosted-glass panels — initially obscure the video, then
+          sequentially collapse downward to reveal it. Middle panel spans the
+          bounded grid (matching the vertical structure lines); side panels
+          fill the exterior regions. */}
+      <div
+        className="absolute inset-0 grid pointer-events-none"
+        style={{
+          zIndex: 12,
+          gridTemplateColumns: "1fr min(calc(100% - 10px), 1287px) 1fr",
+        }}
+        aria-hidden
+      >
+        <div style={blurPanelStyle(sideBlursGone)} />
+        <div style={blurPanelStyle(middleBlurGone)} />
+        <div style={blurPanelStyle(sideBlursGone)} />
+      </div>
 
       {/* Vertical structure lines — extend the page grid up through the hero. */}
       <div
@@ -152,7 +195,7 @@ export default function HeroSection({
               const hero = (e.currentTarget as HTMLButtonElement).closest("section");
               if (hero) window.scrollTo({ top: hero.offsetHeight, behavior: "smooth" });
             }}
-            className="group flex items-center gap-2 text-white text-[16px] font-medium tracking-[0.04em] max-md:text-[14px] cursor-pointer transition-colors duration-300 hover:text-[#0066CC]"
+            className="group flex items-center gap-2 text-white text-[16px] font-medium tracking-[0.04em] max-md:text-[14px] cursor-pointer"
           >
             <span>{typedText}</span>
             {typedText.length >= BOTTOM_TEXT.length && (
@@ -161,7 +204,7 @@ export default function HeroSection({
                 height="16"
                 viewBox="0 0 16 16"
                 fill="none"
-                className="transition-transform duration-300 group-hover:translate-y-0.5"
+                className="transition-all duration-300 group-hover:translate-y-0.5 group-hover:text-[#0066CC]"
                 style={{
                   opacity: 0,
                   animation: "fadeInArrow 0.4s ease-out forwards",

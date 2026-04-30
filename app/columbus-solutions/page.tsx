@@ -57,8 +57,8 @@ export default function ColumbusSolutionsRoute() {
 
       <section className="relative" ref={sectionBRef}>
         <HeroSection
-          title={<>Columbus Pro<br /> Professional applications</>}
-          subtitle="Spatial intelligence for industry — site selection, planning, logistics, and security at scale."
+          title={<>Columbus<br /> Professional applications</>}
+          subtitle="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
         />
         <div
           className="absolute inset-0 bg-black pointer-events-none z-30"

@@ -606,6 +606,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                                     visual link "active". */}
                                                 {(() => {
                                                     const linkKind = (link as { kind?: "products" | "company" | "use-cases" }).kind;
+                                                    if (linkKind === "products" || linkKind === "use-cases") return null;
                                                     const linkIsActive =
                                                         isMenuOpen &&
                                                         !!linkKind &&
