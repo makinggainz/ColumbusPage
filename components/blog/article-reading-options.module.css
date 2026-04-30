@@ -1,0 +1,67 @@
+.root {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.options {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.divider {
+  width: 1px;
+  height: 16px;
+  background: rgba(10, 19, 68, 0.12);
+  margin: 0 4px;
+  flex-shrink: 0;
+}
+
+:global(body.bg-mode-dark) .divider { background: rgba(255, 255, 255, 0.12); }
+:global(body.bg-mode-sepia) .divider { background: rgba(67, 52, 34, 0.15); }
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: rgba(10, 19, 68, 0.4);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  transition: color 180ms ease, background 180ms ease;
+}
+
+.btn:hover {
+  color: #0A1344;
+}
+
+.btnActive {
+  color: #0A1344;
+}
+
+.label {
+  font-family: inherit;
+}
+
+.aaGlyph {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+/* Dark mode */
+:global(body.bg-mode-dark) .btn { color: rgba(255, 255, 255, 0.35); }
+:global(body.bg-mode-dark) .btn:hover { color: rgba(255, 255, 255, 0.9); }
+:global(body.bg-mode-dark) .btnActive { color: rgba(255, 255, 255, 0.92); }
+
+/* Sepia mode */
+:global(body.bg-mode-sepia) .btn { color: rgba(67, 52, 34, 0.45); }
+:global(body.bg-mode-sepia) .btn:hover { color: #433422; }
+:global(body.bg-mode-sepia) .btnActive { color: #433422; }

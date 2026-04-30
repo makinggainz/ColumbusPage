@@ -2,6 +2,7 @@ import React from "react";
 
 export interface TechDiagramSVGProps extends React.SVGProps<SVGSVGElement> {
   activeTitle?: string | null;
+  onLayerClick?: (title: string) => void;
 }
 
 const pathCircle_iso  = "M 0 -6 L 8 -4 L 12 0 L 8 4 L 0 6 L -8 4 L -12 0 L -8 -4 Z";
@@ -179,7 +180,7 @@ const PuzzleLayer = ({ isVisible }: { isVisible: boolean }) => {
   );
 };
 
-const TetrisBlocks = ({ isVisible }: { isVisible: boolean }) => {
+const TetrisBlocks = ({ isVisible, offsetY = 0 }: { isVisible: boolean, offsetY?: number }) => {
   const dark = "#1e2e7a";
   const dur = 6;
 
@@ -191,7 +192,7 @@ const TetrisBlocks = ({ isVisible }: { isVisible: boolean }) => {
   ];
 
   return (
-    <g style={{ opacity: isVisible ? 1 : 0, transition: "opacity 0.4s ease", pointerEvents: "none" }}>
+    <g style={{ opacity: isVisible ? 1 : 0, transition: "opacity 0.4s ease, transform 0.4s ease", pointerEvents: "none", transform: `translateY(${offsetY}px)` }}>
       {blocks.map((b, i) => (
         <g key={`tetris-${i}`}>
           <animateTransform
@@ -251,21 +252,27 @@ const TetrisBlocks = ({ isVisible }: { isVisible: boolean }) => {
   );
 };
 
-export function TechDiagramSVG({ activeTitle, ...props }: TechDiagramSVGProps) {
+export function TechDiagramSVG({ activeTitle, onLayerClick, ...props }: TechDiagramSVGProps) {
   const border = "#1e2e7a";
-  const bgFill = "transparent";
+  const bgFill = "#ffffff";
   const leftFace = bgFill;
   const rightFace = bgFill;
   const strokeWidth = 1.5;
+
+  const layerTitles = ["Data Collection", "Fusion", "Core Reasoning", "Answers, insights, patterns"];
 
   const dataCollectionProps = { href: "/TechnologyPageImages/DataCollectionLayer.png", preserveAspectRatio: "none" };
   const fusionLayerProps = { href: "/TechnologyPageImages/FusionLayer.png", preserveAspectRatio: "none" };
   const lastLayerProps = { href: "/TechnologyPageImages/LastLayer.png", preserveAspectRatio: "none" };
 
-  const isDataCollection = activeTitle === "Data Collection";
-  const isFusion = activeTitle === "Fusion";
-  const isCoreReasoning = activeTitle === "Core Reasoning";
-  const isAnswers = activeTitle === "Answers, insights, patterns";
+  // Strip an optional leading numeric prefix like "1." or "1. " (with
+  // regular space, em-space, or any whitespace), so the diagram still
+  // matches when the accordion titles are prefixed with "1. ", "2. " etc.
+  const baseTitle = activeTitle?.replace(/^\d+\.\s*/, "") ?? "";
+  const isDataCollection = baseTitle === "Data Collection";
+  const isFusion = baseTitle === "Fusion";
+  const isCoreReasoning = baseTitle === "Core Reasoning";
+  const isAnswers = baseTitle === "Answers, insights, patterns";
   
   const activeIndex = isDataCollection ? 0 : isFusion ? 1 : isCoreReasoning ? 2 : isAnswers ? 3 : -1;
 
@@ -274,24 +281,57 @@ export function TechDiagramSVG({ activeTitle, ...props }: TechDiagramSVGProps) {
     return activeIndex === layerIndex ? 1 : 0.45;
   };
 
-  const getShift = (layerIndex: number) => {
-    if (activeIndex === -1 || activeIndex === 3) return 0;
-    return layerIndex > activeIndex ? 80 : 0;
+  const hideOnFusionSelect = () => {
+    return activeIndex === 1 ? 0 : 1;
   };
 
-  const offsetL1 = getShift(0); // 0
-  const offsetL2 = getShift(1);
-  const offsetL3 = getShift(2);
-  const offsetL4 = getShift(3);
+  // Connector lines hide entirely when EITHER of the two layers they connect
+  // is the active (selected) layer. Lines connecting two non-active layers
+  // remain visible at full opacity.
+  const getConnectorOpacity = (upperIdx: number, lowerIdx: number) => {
+    if (activeIndex === -1) return 1;
+    if (activeIndex === upperIdx || activeIndex === lowerIdx) return 0;
+    return 1;
+  };
+
+  const getShift = (layerIndex: number) => {
+    if (activeIndex === -1) return 0;
+    if (layerIndex < activeIndex) {
+      return activeIndex === 3 ? -110 : -70;
+    }
+    if (layerIndex > activeIndex) {
+      return activeIndex === 2 ? 95 : 70;
+    }
+    return 0;
+  };
+
+  // Baseline pulls each layer up so they sit closer together vertically.
+  // L1↔L2 and L3↔L4 gaps are kept slightly larger than L2↔L3.
+  const offsetL1 = getShift(0);
+  const offsetL2 = getShift(1) - 10;
+  const offsetL3 = getShift(2) - 60;
+  const offsetL4 = getShift(3) - 70;
 
   const pathTransition = { transition: "d 0.4s ease, opacity 0.4s ease" };
 
-  const drawLine = (x1: number, y1: number, x2: number, y2: number, shift1: number, shift2: number, opacity: number) => (
-    <path d={`M ${x1} ${y1 + shift1} L ${x2} ${y2 + shift2}`} style={{ ...pathTransition, opacity }} stroke={border} strokeWidth={1} strokeDasharray="6 6" />
-  );
+  const drawLine = (x1: number, y1: number, x2: number, y2: number, shift1: number, shift2: number, opacity: number, connectsToActive: boolean = false, isCenterLine: boolean = false, customColor?: string) => {
+    // Single continuous dashed line from (x1,y1) to (x2,y2). Each endpoint
+    // follows its layer's shift; the line stretches when shifts differ.
+    const strokeColor = customColor ? customColor : isCenterLine ? "#22c55e" : connectsToActive ? "#e63946" : "#000000";
+
+    return (
+      <path
+        d={`M ${x1} ${y1 + shift1} L ${x2} ${y2 + shift2}`}
+        style={{ ...pathTransition, opacity }}
+        stroke={strokeColor}
+        strokeWidth={1}
+        strokeDasharray="6 6"
+      />
+    );
+  };
 
   return (
-    <svg viewBox="0 0 600 1100" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <svg viewBox="0 -80 600 1240" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
       <defs>
         <clipPath id="clip-l1"><polygon points="300,6 550,138 300,270 50,138" /></clipPath>
         <clipPath id="clip-l2"><polygon points="300,270 482,368 300,466 118,368" /></clipPath>
@@ -302,27 +342,26 @@ export function TechDiagramSVG({ activeTitle, ...props }: TechDiagramSVGProps) {
       {/* Dashed background lines connecting the layers */}
       <g>
         {/* L1 -> L2 */}
-        {drawLine(50, 138, 118, 368, offsetL1, offsetL2, getOpacity(1))}
-        {drawLine(550, 138, 482, 368, offsetL1, offsetL2, getOpacity(1))}
-        {drawLine(300, 6, 300, 270, offsetL1, offsetL2, getOpacity(1))}
-        {drawLine(300, 270, 300, 466, offsetL1, offsetL2, getOpacity(1))}
+        {drawLine(50, 138, 118, 368, offsetL1, offsetL2, getConnectorOpacity(0, 1), activeIndex === 0 || activeIndex === 1)}
+        {drawLine(550, 138, 482, 368, offsetL1, offsetL2, getConnectorOpacity(0, 1), activeIndex === 0 || activeIndex === 1)}
+        {drawLine(300, 270, 300, 466, offsetL1, offsetL2, getConnectorOpacity(0, 1), activeIndex === 0 || activeIndex === 1, true)}
 
         {/* L2 -> L3 */}
-        {drawLine(118, 368, 118, 598, offsetL2, offsetL3, getOpacity(2))}
-        {drawLine(482, 368, 482, 598, offsetL2, offsetL3, getOpacity(2))}
-        {drawLine(300, 270, 300, 500, offsetL2, offsetL3, getOpacity(2))}
-        {drawLine(300, 466, 300, 696, offsetL2, offsetL3, getOpacity(2))}
+        {drawLine(118, 368, 118, 598, offsetL2, offsetL3, getConnectorOpacity(1, 2), activeIndex === 1 || activeIndex === 2)}
+        {drawLine(482, 368, 482, 598, offsetL2, offsetL3, getConnectorOpacity(1, 2), activeIndex === 1 || activeIndex === 2)}
+        {drawLine(300, 270, 300, 500, offsetL2, offsetL3, getConnectorOpacity(1, 2), activeIndex === 1 || activeIndex === 2)}
+        {drawLine(300, 466, 300, 696, offsetL2, offsetL3, getConnectorOpacity(1, 2), activeIndex === 1 || activeIndex === 2)}
 
         {/* L3 -> L4 */}
-        {drawLine(118, 598, 118, 825, offsetL3, offsetL4, getOpacity(3))}
-        {drawLine(482, 598, 482, 825, offsetL3, offsetL4, getOpacity(3))}
-        {drawLine(300, 500, 300, 727, offsetL3, offsetL4, getOpacity(3))}
-        {drawLine(300, 696, 300, 923, offsetL3, offsetL4, getOpacity(3))}
+        {drawLine(118, 598, 118, 825, offsetL3, offsetL4, getConnectorOpacity(2, 3), activeIndex === 2 || activeIndex === 3)}
+        {drawLine(482, 598, 482, 825, offsetL3, offsetL4, getConnectorOpacity(2, 3), activeIndex === 2 || activeIndex === 3)}
+        {drawLine(300, 500, 300, 727, offsetL3, offsetL4, getConnectorOpacity(2, 3), activeIndex === 2 || activeIndex === 3)}
+        {drawLine(300, 696, 300, 923, offsetL3, offsetL4, getConnectorOpacity(2, 3), activeIndex === 2 || activeIndex === 3)}
       </g>
 
       {/* Ground Plane (Layer 4) */}
-      <g id="layer4" style={{ transform: `translateY(${offsetL4}px)`, opacity: getOpacity(3), transition: "transform 0.4s ease, opacity 0.4s ease" }}>
-        <polygon points="300,671 586,825 300,979 14,825" fill={bgFill} stroke={border} strokeWidth={strokeWidth} />
+      <g id="layer4" style={{ transform: `translateY(${offsetL4}px)`, opacity: getOpacity(3), transition: "transform 0.4s ease, opacity 0.4s ease", cursor: "pointer" }} onClick={() => onLayerClick?.("Answers, insights, patterns")}>
+        <polygon points="300,671 586,825 300,979 14,825" fill="transparent" stroke={border} strokeWidth={strokeWidth} style={{ pointerEvents: "auto" }} />
         <g stroke={border} strokeWidth={0.5}>
           {[...Array(12)].map((_, i) => {
             const t = i / 11;
@@ -339,41 +378,48 @@ export function TechDiagramSVG({ activeTitle, ...props }: TechDiagramSVGProps) {
           })}
         </g>
         <g clipPath="url(#clip-l4-center)">
-          <polygon points="300,727 482,825 300,923 118,825" fill={bgFill} />
+          <polygon points="300,727 482,825 300,923 118,825" fill="transparent" />
           <image {...lastLayerProps} x="118" y="727" width="364" height="196" />
         </g>
         <polygon points="300,727 482,825 300,923 118,825" fill="none" stroke={border} strokeWidth={strokeWidth} />
       </g>
 
       {/* Layer 3 */}
-      <g id="layer3" style={{ transform: `translateY(${offsetL3}px)`, opacity: getOpacity(2), transition: "transform 0.4s ease, opacity 0.4s ease" }}>
+      <g id="layer3" style={{ transform: `translateY(${offsetL3}px)`, opacity: getOpacity(2), transition: "transform 0.4s ease, opacity 0.4s ease", cursor: "pointer" }} onClick={() => onLayerClick?.("Core Reasoning")}>
         <polygon points="118,598 300,696 300,716 118,618" fill={leftFace} stroke={border} strokeWidth={strokeWidth} />
         <polygon points="300,696 482,598 482,618 300,716" fill={rightFace} stroke={border} strokeWidth={strokeWidth} />
-        <polygon points="300,500 482,598 300,696 118,598" fill={bgFill} stroke={border} strokeWidth={strokeWidth} />
+        <polygon points="300,500 482,598 300,696 118,598" fill={bgFill} stroke={border} strokeWidth={strokeWidth} style={{ pointerEvents: "auto" }} />
         <PuzzleLayer isVisible={isCoreReasoning} />
       </g>
 
       {/* Layer 2 */}
-      <g id="layer2" style={{ transform: `translateY(${offsetL2}px)`, opacity: getOpacity(1), transition: "transform 0.4s ease, opacity 0.4s ease" }}>
+      <g id="layer2" style={{ transform: `translateY(${offsetL2}px)`, opacity: getOpacity(1), transition: "transform 0.4s ease, opacity 0.4s ease", cursor: "pointer" }} onClick={() => onLayerClick?.("Fusion")}>
         <polygon points="118,368 300,466 300,486 118,388" fill={leftFace} stroke={border} strokeWidth={strokeWidth} />
         <polygon points="300,466 482,368 482,388 300,486" fill={rightFace} stroke={border} strokeWidth={strokeWidth} />
-        <polygon points="300,270 482,368 300,466 118,368" fill={bgFill} stroke={border} strokeWidth={strokeWidth} />
+        <polygon points="300,270 482,368 300,466 118,368" fill={bgFill} stroke={border} strokeWidth={strokeWidth} style={{ pointerEvents: "auto" }} />
         <image {...fusionLayerProps} x="118" y="270" width="364" height="196" clipPath="url(#clip-l2)" />
       </g>
 
       {/* Animated Shapes and Lines */}
-      <AnimatedShapes bubbles={BUBBLES_L1} isVisible={isDataCollection} border={border} />
       <FusionLines isVisible={isFusion} offsetL2={offsetL2} />
       
       {/* Tetris Blocks Layer (Answers / Insights) */}
-      <TetrisBlocks isVisible={isAnswers} />
+      <TetrisBlocks isVisible={isAnswers} offsetY={offsetL4} />
 
       {/* Layer 1 */}
-      <g id="layer1" style={{ opacity: getOpacity(0), transition: "opacity 0.4s ease" }}>
+      <g id="layer1" style={{ transform: `translateY(${offsetL1}px)`, opacity: getOpacity(0), transition: "transform 0.4s ease, opacity 0.4s ease", cursor: "pointer" }} onClick={() => onLayerClick?.("Data Collection")}>
         <polygon points="50,138 300,270 300,290 50,158" fill={leftFace} stroke={border} strokeWidth={strokeWidth} />
         <polygon points="300,270 550,138 550,158 300,290" fill={rightFace} stroke={border} strokeWidth={strokeWidth} />
-        <polygon points="300,6 550,138 300,270 50,138" fill={bgFill} stroke={border} strokeWidth={strokeWidth} />
+        <polygon points="300,6 550,138 300,270 50,138" fill={bgFill} stroke={border} strokeWidth={strokeWidth} style={{ pointerEvents: "auto" }} />
         <image {...dataCollectionProps} x="50" y="6" width="500" height="264" clipPath="url(#clip-l1)" />
+      </g>
+
+      {/* Center spine — drawn last so it sits on top of all layers and animations */}
+      <g style={{ pointerEvents: "none" }}>
+        {drawLine(300, 270, 300, 368, offsetL1, offsetL2, getConnectorOpacity(0, 1), activeIndex === 0 || activeIndex === 1, activeIndex === 0 || activeIndex === 1)}
+        {drawLine(300, 368, 300, 598, offsetL2, offsetL3, getConnectorOpacity(1, 2), activeIndex === 1 || activeIndex === 2, activeIndex === 1 || activeIndex === 2)}
+        {drawLine(300, 598, 300, 825, offsetL3, offsetL4, getConnectorOpacity(2, 3), activeIndex === 2 || activeIndex === 3, activeIndex === 2 || activeIndex === 3)}
+        {drawLine(300, 825, 300, 979, offsetL4, offsetL4, getConnectorOpacity(3, 3), activeIndex === 3, activeIndex === 3)}
       </g>
     </svg>
   );

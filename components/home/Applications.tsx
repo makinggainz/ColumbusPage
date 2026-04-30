@@ -27,15 +27,15 @@ export const Applications = () => {
   });
 
   const items = [
-    { title: "Residential Real Estate", image: "/UseCases/ResidentialRealEstate.jpg", href: "/use-cases" },
-    { title: "Commercial Real Estate", image: "/UseCases/CommercialRealEstate.jpg", href: "/use-cases" },
-    { title: "Generative Geodata", image: "/UseCases/GenDatalayers.png", href: "/use-cases" },
-    { title: "Logistics Optimization", image: "/UseCases/Logistics.webp", href: "/use-cases" },
-    { title: "Urban Planning", image: "/UseCases/UrbanPlanning.jpg", href: "/use-cases" },
-    { title: "Site Selection", image: "/UseCases/SiteSelection.jpg", href: "/use-cases" },
-    { title: "Consumer Mapping", image: "/UseCases/ConsumerMapping.jpeg", href: "/use-cases" },
-    { title: "Ground Due Diligence", image: "/UseCases/GroundDueDillegence.png", href: "/use-cases" },
-    { title: "More", image: "/UseCases/GeoMarketing.png", href: "/use-cases" },
+    { title: "Residential Real Estate", image: "/UseCases/ResidentialRealEstate.jpg", href: "/columbus-solutions" },
+    { title: "Commercial Real Estate", image: "/UseCases/CommercialRealEstate.jpg", href: "/columbus-solutions" },
+    { title: "Generative Geodata", image: "/UseCases/GenDatalayers.png", href: "/columbus-solutions" },
+    { title: "Logistics Optimization", image: "/UseCases/Logistics.webp", href: "/columbus-solutions" },
+    { title: "Urban Planning", image: "/UseCases/UrbanPlanning.jpg", href: "/columbus-solutions" },
+    { title: "Site Selection", image: "/UseCases/SiteSelection.jpg", href: "/columbus-solutions" },
+    { title: "Consumer Mapping", image: "/UseCases/ConsumerMapping.jpeg", href: "/columbus-solutions" },
+    { title: "Ground Due Diligence", image: "/UseCases/GroundDueDillegence.png", href: "/columbus-solutions" },
+    { title: "More", image: "/UseCases/GeoMarketing.png", href: "/columbus-solutions" },
   ];
 
   return (
@@ -50,7 +50,7 @@ export const Applications = () => {
             Applications <span className="hidden min-[640px]:inline font-normal">– across industries</span>
           </span>
           <Link
-            href="/use-cases"
+            href="/columbus-solutions"
             className="group flex items-center gap-3 min-[640px]:gap-10 text-[18px] lg:text-[20px] text-[#1D1D1F] font-semibold transition-opacity"
           >
             <span className="transition-colors duration-300 group-hover:text-[#2563EB]">Explore</span>

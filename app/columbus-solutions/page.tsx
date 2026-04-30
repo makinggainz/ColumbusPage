@@ -1,0 +1,101 @@
+"use client";
+
+import { useEffect, useRef, useState } from "react";
+import { Navbar } from "@/components/layout/Navbar";
+import { Footer } from "@/components/layout/Footer";
+
+import HeroSection from "@/components/use-cases/HeroSection";
+import ResultsSection from "@/components/use-cases/ResultsSection";
+import UseCasesHero from "@/components/use-cases/UseCaseHero";
+import ContactSection from "@/components/use-cases/ContactSection";
+import IndustryGrid from "@/components/use-cases/IndustryGrid";
+import Chat from "@/components/use-cases/Chat";
+import SuperModelSection from "@/components/use-cases/SuperModelSection";
+import AgentResearch from "@/components/use-cases/AgentResearch";
+import DataCatalogue from "@/components/use-cases/DataCatalogue";
+import ScrollProgressTracker from "@/components/use-cases/ScrollProgressTracker";
+import { GenLayersSection } from "@/components/technology/redesign/GenLayersSection";
+
+export default function ColumbusSolutionsRoute() {
+  const [navTheme, setNavTheme] = useState<"light" | "dark">("dark");
+  const [heroOverlay, setHeroOverlay] = useState(0);
+  const sectionBRef = useRef<HTMLElement>(null);
+  const sectionCRef = useRef<HTMLElement>(null);
+  const sectionDRef = useRef<HTMLElement>(null);
+  const sec4Ref = useRef<HTMLElement>(null);
+  const sec5Ref = useRef<HTMLElement>(null);
+  const sec6Ref = useRef<HTMLElement>(null);
+  const sec7Ref = useRef<HTMLElement>(null);
+  const sec8Ref = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const NAVBAR_H = 80;
+    const update = () => {
+      if (sectionCRef.current && sectionDRef.current) {
+        const cRect = sectionCRef.current.getBoundingClientRect();
+        const overC = cRect.top <= NAVBAR_H && cRect.bottom > NAVBAR_H;
+        setNavTheme(overC ? "light" : "dark");
+      }
+      if (sectionBRef.current) {
+        const bRect = sectionBRef.current.getBoundingClientRect();
+        const bHeight = sectionBRef.current.offsetHeight;
+        const scrolled = -bRect.top;
+        const fadeStart = bHeight * 0.35;
+        const fadeEnd = bHeight * 0.88;
+        const progress = Math.max(0, Math.min(1, (scrolled - fadeStart) / (fadeEnd - fadeStart)));
+        setHeroOverlay(progress);
+      }
+    };
+    window.addEventListener("scroll", update, { passive: true });
+    update();
+    return () => window.removeEventListener("scroll", update);
+  }, []);
+
+  return (
+    <main>
+      <Navbar theme={navTheme} />
+
+      <section className="relative" ref={sectionBRef}>
+        <HeroSection
+          title={<>Columbus Pro<br /> Professional applications</>}
+          subtitle="Spatial intelligence for industry — site selection, planning, logistics, and security at scale."
+        />
+        <div
+          className="absolute inset-0 bg-black pointer-events-none z-30"
+          style={{ opacity: heroOverlay }}
+        />
+      </section>
+      <section className="relative bg-black" ref={sectionCRef}>
+        <ResultsSection />
+      </section>
+      <section className="relative" ref={sectionDRef}>
+        <UseCasesHero />
+      </section>
+      <div className="relative">
+        <ScrollProgressTracker sectionRefs={[sec4Ref, sec5Ref, sec6Ref, sec7Ref, sec8Ref]} />
+        <section className="relative" ref={sec4Ref}>
+          <Chat />
+        </section>
+        <section className="relative" ref={sec5Ref}>
+          <SuperModelSection />
+        </section>
+        <section className="relative" ref={sec6Ref}>
+          <AgentResearch />
+        </section>
+        <section className="relative" ref={sec7Ref}>
+          <DataCatalogue />
+        </section>
+        <section className="relative" ref={sec8Ref}>
+          <IndustryGrid />
+        </section>
+      </div>
+      <section className="relative">
+        <ContactSection />
+      </section>
+      <section className="relative">
+        <GenLayersSection />
+      </section>
+      <Footer theme="dark" />
+    </main>
+  );
+}

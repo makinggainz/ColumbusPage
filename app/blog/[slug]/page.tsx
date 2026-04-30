@@ -1,7 +1,11 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { BlogArticleStickyNav } from "@/components/blog/BlogArticleStickyNav";
+import { ArticleReadingOptions } from "@/components/blog/ArticleReadingOptions";
+import { RelatedPosts } from "@/components/blog/RelatedPosts";
 import { ShareButtons } from "@/components/blog/ShareButtons";
+import { Navbar } from "@/components/layout/Navbar";
+import { Footer } from "@/components/layout/Footer";
 import { getAllBlogSlugs, getBlogPost } from "@/lib/blog-posts";
 import { blogBodyWithSectionIds, mergeBlogBody } from "@/lib/blog-lorem-body";
 import blogStyles from "../blog.module.css";
@@ -28,25 +32,34 @@ export default async function BlogPostPage({ params }: Props) {
   if (!post) notFound();
 
   const body = blogBodyWithSectionIds(mergeBlogBody(post.paragraphs));
-  const stickySections = body
-    .filter((b): b is { type: "h2"; text: string; id: string } => b.type === "h2")
-    .map((b) => ({ id: b.id, label: b.text }));
+  const stickySections = [
+    { id: "article-title", label: post.title },
+    ...body
+      .filter((b): b is { type: "h2"; text: string; id: string } => b.type === "h2")
+      .map((b) => ({ id: b.id, label: b.text })),
+  ];
 
   return (
     <main className={`min-h-screen ${blogStyles.articlePage}`}>
       <div className={blogStyles.greyPanel} aria-hidden />
-      <BlogArticleStickyNav sections={stickySections} />
+      <div className="max-[1314px]:block hidden">
+        <Navbar />
+      </div>
+      <BlogArticleStickyNav sections={stickySections} postTitle={post.title} />
 
-      <article className="relative z-[1] mx-auto w-full max-w-[720px] px-4 pt-[162px] pb-12 md:px-6">
-        <h1 className={`${blogStyles.headlineLarge} mb-6`}>{post.title}</h1>
+      <article className="relative z-[1] mx-auto w-full max-w-[720px] px-4 pt-[175px] min-[1315px]:pt-[162px] pb-12 md:px-6">
+        <h1 id="article-title" className={`${blogStyles.headlineLarge} mb-4`}>{post.title}</h1>
         <p
-          className={`${blogStyles.bodyLarge} ${blogStyles.colorOnSurfaceVariant} ${blogStyles.descriptionDivider} mb-3`}
+          className={`${blogStyles.bodyLarge} ${blogStyles.colorOnSurfaceVariant} ${blogStyles.descriptionDivider} mb-4`}
         >
           {post.description}
         </p>
-        <div className="flex items-center gap-1">
-          <p className={`${blogStyles.labelLarge} ${blogStyles.dateLine}`}>{post.date}</p>
-          <ShareButtons title={post.title} size={18} />
+        <div className="flex items-center justify-between gap-4">
+          <div className="flex items-center gap-1">
+            <p className={`${blogStyles.labelLarge} ${blogStyles.dateLine}`}>{post.date}</p>
+            <ShareButtons title={post.title} size={18} />
+          </div>
+          <ArticleReadingOptions />
         </div>
 
         <div
@@ -68,7 +81,16 @@ export default async function BlogPostPage({ params }: Props) {
             )
           )}
         </div>
+
+        <div className={blogStyles.articleShareEnd}>
+          <span className={blogStyles.shareEndLabel}>Share this article</span>
+          <ShareButtons title={post.title} size={22} />
+        </div>
       </article>
+
+      <RelatedPosts currentSlug={post.slug} currentCategory={post.category} />
+      <div className={blogStyles.footerTransition} aria-hidden />
+      <Footer theme="light" />
     </main>
   );
 }

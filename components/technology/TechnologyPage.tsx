@@ -12,8 +12,17 @@ export function TechnologyPage() {
   const [navTheme, setNavTheme] = useState<"light" | "dark">("light");
 
   const updateNavState = useCallback(() => {
-    // Hero now has a light background, so navbar stays in "light" mode throughout.
-    setNavTheme("light");
+    // Switch to dark + make the navbar background see-through while the
+    // Gen Layers band overlaps the navbar Y position.
+    const band = document.getElementById("gen-layers-band");
+    let inBand = false;
+    if (band) {
+      const rect = band.getBoundingClientRect();
+      const navY = 56; // approx compact navbar height — switch when band crosses it
+      inBand = rect.top <= navY && rect.bottom >= navY;
+    }
+    document.body.classList.toggle("gen-layers-active", inBand);
+    setNavTheme(inBand ? "dark" : "light");
   }, []);
 
   useEffect(() => {
@@ -37,6 +46,9 @@ export function TechnologyPage() {
       html.style.scrollBehavior = prevScrollBehavior;
       window.removeEventListener("scroll", updateNavState);
       window.removeEventListener("resize", updateNavState);
+      // Always clean up the body class on unmount so other pages don't
+      // inherit the transparent-navbar override.
+      document.body.classList.remove("gen-layers-active");
     };
   }, [updateNavState]);
 

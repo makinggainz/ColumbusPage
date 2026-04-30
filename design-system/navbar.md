@@ -37,6 +37,7 @@
 - Fades in when `isCompact` is true (standard pages) **or** when `bgTriggerPassed` is true (products page).
 - Hidden while the hamburger dropdown is open (overridden by a full-width white background on the nav bar itself).
 - `[data-navbar-bg-trigger]` is a zero-height div placed in the page between the hero and the first content section on the products page. When it scrolls past the top of the viewport, `bgTriggerPassed` → `true`.
+- **Technology page exception:** while the Gen Layers band overlaps the navbar Y position, `TechnologyPage.tsx` toggles `body.gen-layers-active`. A scoped `:global` rule in `components/technology/technology.module.css` applies a top-down mask (`linear-gradient(to bottom, black 0%, black 30%, transparent 100%)`) plus `border-bottom: none` to the frosted-bg div (the first child of `nav.header-font`). The navbar's existing `backdrop-filter: blur(20px) saturate(1.2)` is therefore strongest at the top of the navbar and fades to nothing at the bottom — a soft "blur gradient" instead of a hard frosted bar. Text/icon colors continue to be controlled by the standard `theme="dark"` prop; only the bg layer's mask is overridden. The class is removed on page unmount so other routes are unaffected.
 
 ---
 
@@ -46,7 +47,8 @@
 - **Standard pages:** appear once the hero CTA element (`#hero-cta`) scrolls out of the viewport (observed via `IntersectionObserver`).
 - **Products page:** appear once `bgTriggerPassed` is true AND the hero scroll transition is not active (`!inHeroTransition || bgTriggerPassed`).
 - Animate in via `clip-path: inset(0 0% 0 0)` → `inset(0 100% 0 0)` + opacity fade (400ms spring).
-- Links shown: **Product** (`/enterprise`), **Use Cases** (`/use-cases`), **Technology** (`/technology`).
+- Links shown: **Products** (`/products/enterprise`), **Research** (`/technology`), **Use Cases** (`/columbus-solutions` — opens a hover dropdown with two cards: Columbus Pro Enterprise Use-Cases → `/columbus-solutions`, Research Applications → `/research-applications`), **Company** (`/mission`).
+- The Use Cases link mirrors the Products dropdown pattern (chevron + active underline) but renders a different overlay: an empty bordered card for Columbus Pro Enterprise Use-Cases and a bordered card containing an inline globe SVG for Research Applications. Plain text labels sit below each card — no subtitles. The overlay is positioned absolutely over the products card grid and crossfades when `hoverKind === "use-cases"`.
 - On the products page, link text uses `glassStyles.glassTextStatic` for the frosted glass look.
 
 ---
@@ -110,8 +112,8 @@
 |-|-------------------|------------------|
 | Max height | Content-driven (padding + content) | `100dvh` (always full screen) |
 | Top padding | `isCompact ? 84 : 96` (px) — inline style, navbar height + 28px visual gap | `isCompact ? 72 : 88` (px) — more breathing room |
-| Bottom padding | `0px` padding + `-10px` margin-bottom (default / products hover) or `-(10 + (cards.bottom - image.bottom))` (company hover) — inline style on the inner content wrapper. Clips below the current visible content's bottom by 10px via `overflow-hidden` on the outer dropdown. Company hover adds extra clip so the image-bottom-to-dropdown-bottom gap matches the default cards-bottom-to-dropdown-bottom gap (`companyAlign.extraMb = lc.bottom - im.bottom`). | `16px` (from `pb-4`, applies below 768px) |
-| Left-column footer alignment | `<dl>` (CONTACT/SOCIAL block) uses `md:mt-auto md:mb-2` — `mt-auto` pushes it to the bottom of the column; `mb-2` (8px) lifts it back up so the CONTACT/SOCIAL eyebrow row aligns with the Columbus/Elio title row in the right column (compensates for h5 being ~8px taller than dt) | `mt-7` — sits naturally below the description |
+| Bottom padding | `0px` padding + `-24px` margin-bottom (default / products hover) or `-(24 + (cards.bottom - image.bottom))` (company hover) — inline style on the inner content wrapper. Halved from the prior `-10` to reduce visible bottom whitespace by 50% across all hover states. Company hover adds extra clip so the image-bottom-to-dropdown-bottom gap matches the default cards-bottom-to-dropdown-bottom gap (`companyAlign.extraMb = lc.bottom - im.bottom`). | `8px` (from `pb-2`, applies below 768px) |
+| Left-column footer alignment | `<dl>` (CONTACT/SOCIAL block) — `marginBottom: 14` (halved from 28) keeps the dl close to the column's bottom while preserving alignment with the right column's title row. Company-hover overrides this with `companyAlign.dlMb`. | `mt-7` — sits naturally below the description |
 
 If you are unsure whether a height/padding change affects mobile or desktop, **ask before making the change.**
 
@@ -185,7 +187,8 @@ The navbar adapts its behaviour per page via props, pathname checks, and DOM mar
 | `/contact` | `<Navbar />` | light | **Visible** | Immediate (no hero CTA) | Standard behaviour |
 | `/enterprise` | `<Navbar theme="light" />` | light | **Hidden** | Immediate (no hero CTA) | Standard light navbar — hero background is `#E8EEF8` |
 | `/maps-gpt` | `<Navbar theme="dark" />` | dark | **Hidden** | Immediate (no hero CTA) | Dark frosted glass |
-| `/use-cases` | `<Navbar theme={navTheme} />` | dynamic | **Hidden** | Immediate (no hero CTA) | See **Use-Cases-Specific Behaviour** section below |
+| `/columbus-solutions` | `<Navbar theme={navTheme} />` | dynamic | **Hidden** | Immediate (no hero CTA) | See **Use-Cases-Specific Behaviour** section below |
+| `/research-applications` | `<Navbar theme={navTheme} />` | dynamic | **Hidden** | Immediate (no hero CTA) | See **Use-Cases-Specific Behaviour** section below |
 | `/mission` | `<Navbar />` | light | **Hidden** | Immediate (no hero CTA) | Standard behaviour |
 | `/market-spy` | `<Navbar />` | light | **Hidden** | Immediate (no hero CTA) | Standard behaviour |
 | `/blog` (index) | `<Navbar />` | light | **Visible** | Immediate (no hero CTA) | Standard navbar — full nav links, Start Now CTA, and hamburger render normally. |
@@ -193,13 +196,13 @@ The navbar adapts its behaviour per page via props, pathname checks, and DOM mar
 
 ### Use-Cases-Specific Behaviour
 
-The `/use-cases` page has unique navbar requirements driven by its dark hero and dynamic section backgrounds. Controlled via `isUseCasesPage` (`pathname === "/use-cases"`).
+The `/columbus-solutions` and `/research-applications` pages share the same navbar requirements — both clone the original use-cases page layout (dark hero + dynamic section backgrounds). Controlled via `isUseCasesPage` (`pathname === "/products/enterprise" || pathname === "/columbus-solutions" || pathname === "/research-applications"`).
 
 | Behaviour | Detail |
 |-----------|--------|
 | **Immediate visibility** | `hasScrolled` is forced `true` on mount (both `useLayoutEffect` and `useEffect`) — no hero entrance animation to wait for. |
 | **Transparent initial background** | No frosted glass at scroll 0. The standard `isCompact` logic handles this (glass appears after 10px scroll). |
-| **Dynamic theme** | Page passes `theme={navTheme}` which switches between `"dark"` (white text) and `"light"` (dark text) based on which section the navbar overlaps. Theme switching is handled in `app/use-cases/page.tsx` via scroll listener against section refs. |
+| **Dynamic theme** | Page passes `theme={navTheme}` which switches between `"dark"` (white text) and `"light"` (dark text) based on which section the navbar overlaps. Theme switching is handled in `app/columbus-solutions/page.tsx` and `app/research-applications/page.tsx` via scroll listener against section refs. |
 | **Nav link colours follow theme** | Nav links use `isDark ? "white" : "#111111"` so they remain readable across dark/light section transitions. |
 | **CTA button transitions with theme** | Dark sections: 10% white background, white text, hover fills solid white with black text. Light sections: solid black background, white text, standard hover. Transitions smoothly between states via `background-color 300ms` and `color 300ms`. |
 | **Logo + wordmark in dark dropdown** | When menu opens on a dark section, logo stays inverted (white) and wordmark stays white — unlike other pages where `navColor` forces `#111111` on menu open. |

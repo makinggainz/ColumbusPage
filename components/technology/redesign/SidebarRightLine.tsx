@@ -102,19 +102,21 @@ function CurveSvg({ height, timelineY }: { height: number; timelineY: number }) 
   // (so the shape is literally bounded BY the structure lines) and
   // bulges past the gap tips with a quadratic jet arc. Lives in the
   // gutter (x > 0), flowing OUTWARD through the opening.
-  const JET = 70;
+  const JET = 1100;
+  // Left edge shifted from x=0 to x=-1 so the bleed extends 1px into the
+  // 1px exposed column at the slide's right edge (the slide bg is pulled
+  // back 1px on each side so the sidebar divider line stays visible). This
+  // makes the bleed flush with the slide bg with no visible seam.
   const bleedPath = [
-    `M 0 ${y1}`,
+    `M -1 ${y1}`,
     // Follows the top stroke curve down-right to the upper gap tip (BOW, y4).
-    `C 0 ${y1 + topDy * TANGENT_V} ${BOW * (1 - TANGENT_H)} ${y4} ${BOW} ${y4}`,
+    `C -1 ${y1 + topDy * TANGENT_V} ${BOW * (1 - TANGENT_H)} ${y4} ${BOW} ${y4}`,
     // Jet — quadratic arc peaking at (BOW+JET, timelineY) → gap bottom tip.
     `Q ${BOW + JET} ${timelineY} ${BOW} ${y5}`,
-    // Follows the bottom stroke curve back to (0, y8).
-    `C ${BOW * (1 - TANGENT_H)} ${y5} 0 ${y8 - botDy * TANGENT_V} 0 ${y8}`,
-    // Close along the line (x=0). This edge sits at the boundary between
-    // the section bg (same color as the fill) and the gutter — no visible
-    // seam since section bg and BLEED_COLOR match.
-    `L 0 ${y1}`,
+    // Follows the bottom stroke curve back to (-1, y8).
+    `C ${BOW * (1 - TANGENT_H)} ${y5} -1 ${y8 - botDy * TANGENT_V} -1 ${y8}`,
+    // Close along the shifted left edge (x=-1).
+    `L -1 ${y1}`,
     `Z`,
   ].join(" ");
 
@@ -173,16 +175,15 @@ function CurveSvg({ height, timelineY }: { height: number; timelineY: number }) 
         <linearGradient
           id={`${gradientId}-mask`}
           gradientUnits="userSpaceOnUse"
-          x1={0}
+          x1={BOW + JET}
           y1={timelineY}
-          x2={BOW + JET}
+          x2={0}
           y2={timelineY}
         >
           <stop offset="0%"   stopColor="#ffffff" stopOpacity="0"    />
-          <stop offset="35%"  stopColor="#ffffff" stopOpacity="0.3"  />
-          <stop offset="70%"  stopColor="#ffffff" stopOpacity="0.95" />
-          <stop offset="90%"  stopColor="#ffffff" stopOpacity="0.6"  />
-          <stop offset="100%" stopColor="#ffffff" stopOpacity="0"    />
+          <stop offset="40%"  stopColor="#ffffff" stopOpacity="0.45" />
+          <stop offset="75%"  stopColor="#ffffff" stopOpacity="1"    />
+          <stop offset="100%" stopColor="#ffffff" stopOpacity="1"    />
         </linearGradient>
         <mask id={`${gradientId}-m`}>
           <rect
@@ -193,15 +194,30 @@ function CurveSvg({ height, timelineY }: { height: number; timelineY: number }) 
             fill={`url(#${gradientId}-mask)`}
           />
         </mask>
+
+        {/* Radial halo — single point source at the leftmost edge of the
+            bleed shape on the timeline centerline (where the line passes
+            through the gap). Bright concentrated peak, falls off radially. */}
+        <radialGradient
+          id={`${gradientId}-radial-halo`}
+          gradientUnits="userSpaceOnUse"
+          cx={0}
+          cy={timelineY}
+          r={220}
+        >
+          <stop offset="0%"   stopColor="#0066cc" stopOpacity="0.07"  />
+          <stop offset="50%"  stopColor="#0066cc" stopOpacity="0.015" />
+          <stop offset="100%" stopColor="#0066cc" stopOpacity="0"     />
+        </radialGradient>
       </defs>
 
-      {/* Bleed — rendered BEFORE the curves so strokes land on top.
-          Two path layers masked together: first the base-plus-pattern
-          (#F9F9F9 + plus dots), then the halo (blue vertical gradient).
-          Both fade together at the gap edges via the shared mask. */}
+      {/* Bleed (#3) — rendered BEFORE the curves so strokes land on top.
+          Two stacked fills inside the same mask: first the base pattern
+          (#F9F9F9 + plus dots) matching the timeline section background,
+          then the radial halo glow centered at the line crossing point. */}
       <g mask={`url(#${gradientId}-m)`}>
         <path d={bleedPath} fill={`url(#${gradientId}-pat)`} stroke="none" />
-        <path d={bleedPath} fill={`url(#${gradientId}-halo)`} stroke="none" />
+        <path d={bleedPath} fill={`url(#${gradientId}-radial-halo)`} stroke="none" />
       </g>
 
       <path d={path} fill="none" stroke={STROKE} strokeWidth="1" />

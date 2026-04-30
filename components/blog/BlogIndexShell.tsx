@@ -1,4 +1,5 @@
 import { Navbar } from "@/components/layout/Navbar";
+import { Footer } from "@/components/layout/Footer";
 import { BlogIndexGrid, type BlogFilter } from "@/components/blog/BlogIndexGrid";
 import { getAllBlogPostsSorted } from "@/lib/blog-posts";
 import styles from "@/app/blog/blog-index.module.css";
@@ -18,6 +19,8 @@ export function BlogIndexShell({ activeFilter }: { activeFilter: BlogFilter }) {
 
         <BlogIndexGrid posts={posts} activeFilter={activeFilter} />
       </div>
+
+      <Footer theme="light" />
     </main>
   );
 }

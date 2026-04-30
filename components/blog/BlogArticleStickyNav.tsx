@@ -2,9 +2,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
-import { AccessibilityMenu } from "@/components/layout/AccessibilityMenu";
 import styles from "./blog-sticky-nav.module.css";
 
 export type BlogStickySection = {
@@ -14,16 +13,46 @@ export type BlogStickySection = {
 
 type Props = {
   sections: BlogStickySection[];
+  postTitle?: string;
 };
 
-export function BlogArticleStickyNav({ sections }: Props) {
+export function BlogArticleStickyNav({ sections, postTitle = "" }: Props) {
   const [logoHovered, setLogoHovered] = useState(false);
+  const [activeId, setActiveId] = useState<string>("");
+  const [pastEnd, setPastEnd] = useState(false);
+
+  useEffect(() => {
+    const footer = document.querySelector("footer");
+    if (!footer) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => setPastEnd(entry.isIntersecting),
+      { threshold: 0 }
+    );
+    observer.observe(footer);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (sections.length === 0) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) setActiveId(entry.target.id);
+        });
+      },
+      { rootMargin: "-10% 0% -80% 0%" }
+    );
+    sections.forEach((s) => {
+      const el = document.getElementById(s.id);
+      if (el) observer.observe(el);
+    });
+    return () => observer.disconnect();
+  }, [sections]);
 
   return (
-    <nav className={styles.dock} aria-label="Article navigation">
-      {/* Home / wordmark — hovering the logo slides "Columbus Earth" out
-          to the right from beneath the glyph (same motion language as the
-          homepage hero popup). */}
+    <nav className={`${styles.dock} ${pastEnd ? styles.dockHidden : ""}`} aria-label="Article navigation">
+
+      {/* Logo */}
       <Link
         href="/"
         className={styles.homeLink}
@@ -33,19 +62,9 @@ export function BlogArticleStickyNav({ sections }: Props) {
         onBlur={() => setLogoHovered(false)}
       >
         <span className={styles.logoGlyph}>
-          <Image
-            src="/logobueno.png"
-            alt="Columbus Earth"
-            fill
-            sizes="32px"
-            className="object-contain"
-            priority
-          />
+          <Image src="/logobueno.png" alt="Columbus Earth" fill sizes="32px" className="object-contain" priority />
         </span>
-        <span
-          className={styles.wordmarkClip}
-          style={{ maxWidth: logoHovered ? 240 : 0 }}
-        >
+        <span className={styles.wordmarkClip} style={{ maxWidth: logoHovered ? 240 : 0 }}>
           <span
             className={styles.wordmarkText}
             style={{
@@ -59,42 +78,32 @@ export function BlogArticleStickyNav({ sections }: Props) {
         </span>
       </Link>
 
+      {/* Back */}
       <Link href="/blog" className={styles.back}>
-        <svg
-          className={styles.backArrow}
-          width="14"
-          height="14"
-          viewBox="0 0 16 16"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          aria-hidden
-        >
+        <svg className={styles.backArrow} width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
           <path d="M10 4l-4 4 4 4" />
         </svg>
         Back to Blog
       </Link>
 
-      {sections.length > 0 ? (
-        <div className={styles.tocBlock}>
-          <p className={styles.tocLabel}>Table of Contents</p>
-          <ul className={styles.sectionList}>
-            {sections.map((s) => (
-              <li key={s.id}>
-                <a href={`#${s.id}`} className={styles.sectionLink}>
-                  {s.label}
-                </a>
-              </li>
-            ))}
+      {/* TOC */}
+      {sections.length > 0 && (
+        <div className={styles.tocSection}>
+          <ul className={styles.tocList}>
+            {sections.map((s, i) => {
+              const isActive = activeId === s.id;
+              return (
+                <li key={s.id}>
+                  <a href={`#${s.id}`} className={`${styles.tocItem} ${isActive ? styles.tocItemActive : ""}`}>
+                    <span className={styles.tocItemLabel} data-label={`${i + 1}. ${s.label}`}>{i + 1}. {s.label}</span>
+                  </a>
+                </li>
+              );
+            })}
           </ul>
         </div>
-      ) : null}
+      )}
 
-      <div className={styles.a11yRow}>
-        <AccessibilityMenu placement="inline-below" triggerSize={18} />
-      </div>
     </nav>
   );
 }

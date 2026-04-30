@@ -1,0 +1,84 @@
+/* No panel, no surface, no switches — plain text options matching the dock's
+   TOC section link style. */
+
+.optionList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: calc(100% + 16px);
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: -0.005em;
+  line-height: 1.4;
+  color: rgba(10, 19, 68, 0.32);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 6px 8px;
+  margin: 0 -8px;
+  text-align: left;
+  outline: none;
+  transition: color 220ms ease;
+}
+
+.option:hover,
+.option:focus-visible {
+  color: #101144;
+}
+
+.option[data-active="true"] {
+  color: rgba(10, 19, 68, 0.85);
+}
+
+/* Dot indicator — hidden when inactive, visible when active */
+.optionDot {
+  font-size: 18px;
+  line-height: 1;
+  flex-shrink: 0;
+  color: #0066CC;
+  opacity: 0;
+  transition: opacity 220ms ease;
+}
+
+.option[data-active="true"] .optionDot {
+  opacity: 1;
+}
+
+/* ── Dark mode ────────────────────────────────────────────────────────── */
+:global(body.bg-mode-dark) .option {
+  color: rgba(255, 255, 255, 0.32);
+}
+:global(body.bg-mode-dark) .option:hover,
+:global(body.bg-mode-dark) .option:focus-visible {
+  color: rgba(255, 255, 255, 0.87);
+}
+:global(body.bg-mode-dark) .option[data-active="true"] {
+  color: rgba(255, 255, 255, 0.75);
+}
+:global(body.bg-mode-dark) .optionDot {
+  color: #4B9CFF;
+}
+
+/* ── Sepia mode ───────────────────────────────────────────────────────── */
+:global(body.bg-mode-sepia) .option {
+  color: rgba(67, 52, 34, 0.32);
+}
+:global(body.bg-mode-sepia) .option:hover,
+:global(body.bg-mode-sepia) .option:focus-visible {
+  color: #433422;
+}
+:global(body.bg-mode-sepia) .option[data-active="true"] {
+  color: rgba(67, 52, 34, 0.80);
+}
+:global(body.bg-mode-sepia) .optionDot {
+  color: #8a5a2b;
+}

@@ -97,12 +97,14 @@
 .dotGrid::before {
   content: "";
   position: absolute;
-  /* V3.1: pattern bounded between the left + right sidebar lines, matching
-     the section-bg clip. Does not leak into the gutters. */
+  /* V3.1: pattern bounded between the left + right sidebar lines, pulled
+     in 1px on each side to match .lgmSlide's bg so the sidebar divider
+     lines remain visible (no dot-pattern texture leaks into the 1px
+     exposed column). */
   top: 0;
   bottom: 0;
-  left: var(--tech-sidebar-x);
-  right: var(--tech-sidebar-x);
+  left: calc(var(--tech-sidebar-x) + 1px);
+  right: calc(var(--tech-sidebar-x) + 1px);
   z-index: 0;
   pointer-events: none;
   background-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M12 11.5v1M11.5 12h1' stroke='rgba(0,102,204,0.12)' stroke-width='1.6' stroke-linecap='square'/%3E%3C/svg%3E");
@@ -119,6 +121,7 @@
    prevent them from sticking to the document scroll. */
 .pageBody {
   position: relative;
+  width: 100%;
   margin-top: 0;
   overflow-x: clip;
 }
@@ -145,6 +148,7 @@
 */
 .contentColumn {
   position: relative;
+  width: 100%;
   /* Breathing room between the hero and the first section. The absolute
      sidebar lines below (top:0 / bottom:0) automatically extend through
      this padding, so the right-line SVG keeps full coverage and the
@@ -165,7 +169,10 @@
      line lands exactly at the navbar logo's left edge x-position. */
   width: var(--tech-sidebar-x);
   pointer-events: none;
-  z-index: 5;
+  /* Above the main-content wrapper (z-index: 200 in TechnologySections.tsx)
+     so the scroll-index labels stay clickable when full-width sections like
+     .genLayersBand cross the gutter. */
+  z-index: 300;
   background: transparent;
   border: none;
   border-right: 1px solid rgba(0, 102, 204, 0.3);
@@ -187,6 +194,7 @@
   left: 0;
   padding: 0 16px;
   pointer-events: auto;
+  transition: opacity 400ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 /* Sections wrapper: no padding/margin override — sections inherit the
@@ -208,7 +216,9 @@
   bottom: 0;
   width: var(--tech-sidebar-x);
   pointer-events: none;
-  z-index: 5;
+  /* Above the main-content wrapper (z-index: 200) so the right divider
+     stays visible when full-width sections like .genLayersBand cross it. */
+  z-index: 300;
 }
 
 .sidebarRightLineSvg {
@@ -220,15 +230,28 @@
 
 /* Hide the fixed sidebar at narrower viewports where the navbar itself
    is in compact mode and the sidebar would visually crowd the content. */
-@media (max-width: 1100px) {
+@media (max-width: 1500px) {
   .sidebarPanel,
   .sidebarPanelRight {
     display: none;
+  }
+
+  .page {
+    --tech-sidebar-x: 0px;
+  }
+
+  .pageShell {
+    padding: 0 !important;
+  }
+
+  .section {
+    width: 100%;
   }
 }
 
 
 .section {
+  width: 100%;
   min-height: 100vh;
   /* Anchor scrolls land flush with the compact navbar's bottom edge. The
      compact navbar is 56px tall, so the last 56px of any preceding content
@@ -558,12 +581,14 @@
 }
 
 .lgmSlide {
-  /* V3.1: bg is confined BETWEEN the left + right sidebar lines — starts
-     at the left sidebar line and ends at the right sidebar line. Gutter
-     strips on both sides show the underlying page surface. */
+  /* V3.1: bg confined BETWEEN the left + right sidebar lines, pulled in
+     1px on each side so the 1px sidebar divider lines remain visible
+     when main content stacks above the sidebars (z:200 vs z:100). The
+     underlying page bg is identical (#F9F9F9), so the 1px exposed column
+     reads as visually continuous with the slide bg. */
   background-image: linear-gradient(var(--tech-color-bg), var(--tech-color-bg));
-  background-position: var(--tech-sidebar-x) 0;
-  background-size: calc(100% - 2 * var(--tech-sidebar-x)) 100%;
+  background-position: calc(var(--tech-sidebar-x) + 1px) 0;
+  background-size: calc(100% - 2 * var(--tech-sidebar-x) - 2px) 100%;
   background-repeat: no-repeat;
 }
 
@@ -684,7 +709,7 @@
 .dataCollectionSection {
   min-height: auto;
   /* V3.1: bg confined within the left + right sidebar lines. */
-  background-image: linear-gradient(var(--tech-color-bg), var(--tech-color-bg));
+  background-image: linear-gradient(#ffffff, #ffffff);
   background-position: var(--tech-sidebar-x) 0;
   background-size: calc(100% - 2 * var(--tech-sidebar-x)) 100%;
   background-repeat: no-repeat;
@@ -2093,15 +2118,17 @@
 
 .coreReasoningSlide {
   position: relative;
-  /* V3.1: vertical gradient bg confined within the left + right sidebar lines. */
+  /* V3.1: vertical gradient bg confined within the sidebar lines, pulled
+     in 1px on each side so the sidebar divider lines remain visible
+     (matches .lgmSlide treatment). */
   background-image: linear-gradient(to bottom,
     #EEF5FF 0%,
     rgba(133, 180, 234, 0.69) 19%,
     #B5D5FA 31%,
     #E1EFFE 92%,
     #F9F9F9 100%);
-  background-position: var(--tech-sidebar-x) 0;
-  background-size: calc(100% - 2 * var(--tech-sidebar-x)) 100%;
+  background-position: calc(var(--tech-sidebar-x) + 1px) 0;
+  background-size: calc(100% - 2 * var(--tech-sidebar-x) - 2px) 100%;
   background-repeat: no-repeat;
 }
 
@@ -2110,12 +2137,12 @@
 .coreReasoningSlide::before {
   content: "";
   position: absolute;
-  /* V3.1: pattern overlay confined within the left + right sidebar lines,
-     matching the section background. */
+  /* V3.1: pattern overlay confined within the sidebar lines, pulled in
+     1px on each side to match the bg. */
   top: 0;
   bottom: 0;
-  left: var(--tech-sidebar-x);
-  right: var(--tech-sidebar-x);
+  left: calc(var(--tech-sidebar-x) + 1px);
+  right: calc(var(--tech-sidebar-x) + 1px);
   pointer-events: none;
   z-index: 0;
   background-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M12 11.5v1M11.5 12h1' stroke='%23E3DFCE' stroke-width='1.6' stroke-linecap='square'/%3E%3C/svg%3E");
@@ -2759,12 +2786,8 @@
 }
 
 @media (max-width: 767px) {
-  .pageShell {
-    padding: 0 12px;
-  }
-
   .section:not(.fullBleedSection):not(.lgmSlide) .slideFrame {
-    padding-inline: 0;
+    padding-inline: var(--page-padding);
   }
 
   .section {
@@ -3263,24 +3286,550 @@
 
 /* ── Comparison table ── */
 .lgmCompareTable {
+  position: relative;
   margin-top: 60px;
-  padding: clamp(32px, 3.5vw, 56px) clamp(28px, 3vw, 48px) clamp(36px, 4vw, 56px);
-  background:
-    radial-gradient(ellipse 60% 55% at 82% 88%, rgba(0, 102, 204, 0.12) 0%, transparent 70%),
-    radial-gradient(ellipse 115% 95% at 22% 14%, #F0F6FF 0%, #D8E7F7 35%, #B5D5FA 70%, #9DC2E5 100%);
-  border-radius: 9px;
+  padding: clamp(88px, 9vw, 120px) clamp(28px, 3vw, 44px) clamp(36px, 4vw, 52px);
+  background: radial-gradient(circle at 95% 8%, #E2F0FF 0%, #E2F0FF 55%, #EDF7FF 100%);
+  border-radius: 16px;
   box-shadow:
     0 0 0 12px var(--tech-color-bg),
     0 0 60px 36px var(--tech-color-bg);
 }
 
-.lgmCompareTableTitle {
-  margin: 0 0 clamp(48px, 5vw, 72px);
-  text-align: center;
-  font-size: clamp(1.5rem, 2.2vw, 2rem);
+/* Branding mark in the top-left corner of the comparison table */
+.dimBranding {
+  position: absolute;
+  top: clamp(20px, 2vw, 28px);
+  left: clamp(20px, 2vw, 28px);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 18px;
+  font-weight: 500;
+  color: #000000;
+  letter-spacing: -0.01em;
+  opacity: 0.5;
+}
+
+.dimBrandingLogo {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+}
+
+/* ── Table grid: row labels (col 1) + 3 model columns (cols 2-4) ── */
+.dimTableGrid {
+  display: grid;
+  grid-template-columns: minmax(110px, max-content) repeat(3, minmax(0, 1fr));
+  column-gap: 18px;
+  row-gap: 0;
+  margin-top: 28px;
+}
+
+.dimModelHeader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  padding-bottom: 16px;
+}
+
+.dimModelHeaderIcon {
+  width: 64px;
+  height: 64px;
+  margin-bottom: 13px;
+  object-fit: contain;
+}
+
+.dimModelHeaderName {
+  margin: 0 0 4px;
+  font-size: 32px;
+  font-weight: 600;
+  color: #000000;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.dimModelHeaderNameLgm {
+  font-weight: 800;
+  -webkit-text-stroke: 0.5px currentColor;
+}
+
+.dimModelHeaderSubtitle {
+  margin: 0;
+  font-size: 14px;
   font-weight: 400;
+  color: rgba(0, 0, 0, 0.5);
+}
+
+.dimRowLabel {
+  display: flex;
+  align-items: center;
+  font-size: 20px;
+  font-weight: 600;
+  color: #000000;
+  letter-spacing: -0.01em;
+  padding-right: 8px;
+  line-height: 1.3;
+}
+
+.dimGridCell {
+  background: #DCEAF8;
+  padding: 28px 22px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 4px;
+  border-left: 1.5px solid #000000;
+  border-right: 1.5px solid #000000;
+}
+
+.dimGridCellTop {
+  border-top: 1.5px solid #000000;
+  border-radius: 12px 12px 0 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.25);
+}
+
+.dimGridCellMid {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.25);
+}
+
+.dimGridCellBottom {
+  border-bottom: 1.5px solid #000000;
+  border-radius: 0 0 12px 12px;
+}
+
+.dimGridCellLgm {
+  background: #B7D7F7;
+}
+
+/* Logo grid sits centered inside building-it cells (override legacy margin-top: auto) */
+.dimGridCell .dimLogos {
+  margin-top: 0;
+  align-items: center;
+  justify-items: center;
+}
+
+/* Smaller logo sizing inside the new grid cells — black & white treatment */
+.dimGridCell .dimLogoImg {
+  height: 36px;
+  max-width: 90px;
+  filter: grayscale(100%);
+  mix-blend-mode: multiply;
+}
+
+.dimGridCell .dimLogoMonogram {
+  width: auto;
+  height: auto;
+  background: transparent;
+  padding: 0;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.dimGridCell .dimLogoItem {
+  justify-content: center;
+}
+
+/* Columbus Earth brand — used in the LGM "Who's building it" cell */
+.dimGridCell .dimBrand {
+  margin-top: 0;
+  flex-direction: column;
+  gap: 8px;
+  text-align: center;
+}
+
+.dimGridCell .dimBrandLogo {
+  width: 56px;
+  height: 56px;
+}
+
+.dimGridCell .dimBrandName {
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.dimCellHeading {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: #000000;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+
+.dimCellNote {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 400;
+  color: rgba(0, 0, 0, 0.5);
+  line-height: 1.45;
+}
+
+/* ── Responsive: stack the table at small screens ── */
+@media (max-width: 900px) {
+  .dimTableGrid {
+    grid-template-columns: 1fr;
+    row-gap: 12px;
+  }
+
+  .dimRowLabel,
+  .dimModelHeader,
+  .dimGridCell {
+    grid-column: 1 / -1;
+  }
+
+  .dimGridCellTop,
+  .dimGridCellMid,
+  .dimGridCellBottom {
+    border: 1.5px solid rgba(10, 19, 68, 0.3);
+    border-radius: 12px;
+  }
+}
+
+/* ── Dimension diagram (nested-rectangles layout) ───────────────────── */
+/* ── Outer LGM rect (transparent — card IS the LGM bg) ──────────────── */
+.dimLgmOuter {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  background: #B7D7F7;
+  border: 0;
+  border-radius: 20px;
+  padding: 28px 20px;
+}
+
+/* VLM middle rect */
+.dimVlm {
+  flex: 1 1 64%;
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  gap: 20px;
+  background: #B7D7F7;
+  border: 1.5px solid rgba(10, 19, 68, 0.4);
+  border-radius: 16px;
+  padding: 24px;
+}
+
+/* LLM inner rect */
+.dimLlm {
+  flex: 0 0 43%;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  background: #B7D7F7;
+  border: 1.5px solid rgba(10, 19, 68, 0.4);
+  border-radius: 12px;
+  padding: 20px;
+}
+
+/* VLM-only content column */
+.dimVlmContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* LGM content column — title at top edge of VLM rect for staircase effect */
+.dimLgm {
+  flex: 0 0 28%;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  background: #B7D7F7;
+  border-radius: 16px;
+  padding: 0 24px 24px;
+}
+
+/* Model titles — LLM & VLM: 500, LGM: 700 */
+.dimModelTitle {
+  margin: 0 0 5px;
+  font-size: 30px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: #0A1344;
+  line-height: 1;
+}
+
+.dimModelSubtitle {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 400;
+  color: rgba(10, 19, 68, 0.55);
+  letter-spacing: -0.01em;
+}
+
+/* LGM column — bold title, same dark text as LLM/VLM */
+.dimLgm .dimModelTitle { font-weight: 700; }
+
+/* ── Three-box layout (LLM | → | VLM | → | LGM) ── */
+.dimBox {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  background: #B7D7F7;
+  border: 1.5px solid rgba(10, 19, 68, 0.4);
+  border-radius: 12px;
+  padding: 22px 20px;
+}
+
+.dimBoxHeader {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.dimBoxIcon {
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+}
+
+.dimReasons {
+  margin: 6px 0 0;
+  font-size: 16px;
+  font-style: italic;
+  font-weight: 500;
   color: #0A1344;
   letter-spacing: -0.01em;
+  line-height: 1.7;
+}
+
+/* Highlight chip for individual data-type tokens inside .dimReasons */
+.dimDataType {
+  background: #8FC0F1;
+  padding: 1px 7px;
+  border-radius: 4px;
+  font-style: normal;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  margin: 0 1px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+.dimDivider {
+  border: 0;
+  border-top: 1px solid rgba(10, 19, 68, 0.25);
+  width: 100%;
+  margin: 0;
+}
+
+.dimQuestion {
+  margin: 0;
+  font-size: 16px;
+  font-style: italic;
+  font-weight: 500;
+  color: #0A1344;
+  letter-spacing: -0.01em;
+  line-height: 1.45;
+}
+
+.dimBoxArrow {
+  align-self: center;
+  flex-shrink: 0;
+  width: 28px;
+  height: 18px;
+  color: rgba(10, 19, 68, 0.7);
+}
+
+.dimBuiltBy {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-top: 8px;
+}
+
+.dimBuiltByLabel {
+  font-size: 14px;
+  font-weight: 500;
+  color: rgba(10, 19, 68, 0.6);
+  letter-spacing: -0.01em;
+}
+
+/* Pill */
+.dimPill {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  background: #8FC0F1;
+  border-radius: 10px;
+  padding: 12px 16px;
+}
+
+.dimPill p {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: #0A1344;
+  line-height: 1.35;
+  text-align: center;
+}
+
+.dimPill p strong { font-weight: 600; }
+
+/* Stacks the Input pill and Output pill tightly together */
+.dimPillStack {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: stretch;
+}
+
+/* Down-arrow connector between the Input and Output pills */
+.dimPillArrow {
+  align-self: center;
+  width: 14px;
+  height: 18px;
+  color: rgba(10, 19, 68, 0.55);
+  margin: 2px 0;
+}
+
+/* Example row beneath the pill — concrete input → output illustration */
+.dimExample {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 0 4px;
+  margin-top: -6px;
+}
+
+.dimExampleIcon {
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  color: rgba(10, 19, 68, 0.6);
+  margin-top: 1px;
+}
+
+.dimExampleText {
+  margin: 0;
+  font-size: 13px;
+  font-style: italic;
+  font-weight: 400;
+  color: rgba(10, 19, 68, 0.72);
+  line-height: 1.4;
+  letter-spacing: -0.01em;
+}
+
+/* Pattern row */
+.dimPattern {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.dimPatternSvg {
+  flex-shrink: 0;
+  width: 42px;
+  height: 42px;
+}
+
+.dimPatternLabel {
+  font-size: 17px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: #0A1344;
+  line-height: 1.35;
+}
+
+/* Logo grid */
+.dimLogos {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px 12px;
+  margin-top: auto;
+}
+
+.dimLogoItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.dimLogoImg {
+  flex-shrink: 0;
+  height: 80px;
+  width: auto;
+  max-width: 100px;
+  object-fit: contain;
+}
+
+.dimLogoMonogram {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 48px;
+  border-radius: 6px;
+  background: rgba(10, 19, 68, 0.12);
+  font-size: 17px;
+  font-weight: 700;
+  color: #0A1344;
+  letter-spacing: -0.02em;
+}
+
+.dimLogoName {
+  font-size: 15px;
+  font-weight: 400;
+  color: #0A1344;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Brand row (Columbus Earth) */
+.dimBrand {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: auto;
+}
+
+.dimBrandLogo {
+  flex-shrink: 0;
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+}
+
+.dimBrandName {
+  font-size: 28px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: #0A1344;
+}
+
+.lgmCompareTableTitle {
+  position: absolute;
+  top: clamp(20px, 2vw, 28px);
+  left: 0;
+  right: 0;
+  margin: 0;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: 26px;
+  font-weight: 600;
+  color: #0A1344;
+  letter-spacing: -0.02em;
+  pointer-events: none;
 }
 
 .lgmCompareTableHead {
@@ -3443,6 +3992,37 @@
   object-fit: contain;
 }
 
+/* Dimension diagram — responsive stack */
+@media (max-width: 960px) {
+  .dimLgmOuter {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .dimVlm {
+    flex-direction: column;
+    gap: 20px;
+    flex: none;
+  }
+
+  .dimLlm {
+    flex: none;
+  }
+
+  .dimLgm {
+    flex: none;
+  }
+
+  .dimBox {
+    flex: none;
+  }
+
+  .dimBoxArrow {
+    transform: rotate(90deg);
+    margin: 4px 0;
+  }
+}
+
 /* Screen-reader-only: keeps text in the DOM for SEO/indexing + a11y */
 .srOnly {
   position: absolute;
@@ -3503,21 +4083,23 @@
 }
 
 .lgmFoundationalTitle {
-  margin: 0;
+  margin: 0 auto;
   max-width: 980px;
   font-size: var(--tech-fs-h3);
   font-weight: 500;
   letter-spacing: var(--tech-tracking-tight);
   line-height: 1.2;
   color: var(--tech-color-text);
+  text-align: center;
 }
 
 .lgmFoundationalLead {
-  margin: 16px 0 0;
+  margin: 16px auto 0;
   max-width: 700px;
   font-size: var(--tech-fs-body-lg);
   line-height: 1.55;
   color: var(--tech-color-text);
+  text-align: center;
 }
 
 /* Live HTML/CSS timeline — replaces the baked Timeline.png. 4 milestones
@@ -3550,14 +4132,12 @@
      gradient hugs the line as a tight band instead of spreading wide. */
   top: -30px;
   bottom: -30px;
-  /* Halo bounds match the section background exactly: from the sidebar's
-     right edge (var(--tech-sidebar-x) from viewport left) to the viewport
-     right edge. The timeline element sits var(--page-padding) inside the
-     sidebar line (slideFrame's inner padding), so the halo overflows its
-     parent by -page-padding on the left and by -(sidebar-x + page-padding)
-     on the right. */
+  /* Halo extends from the page-padding overflow on the left, across the
+     full content column, and through the page-padding gap so it touches
+     the inner edge of the sidebar gutter exactly. The gutter's own radial
+     halo (in <SidebarRightLine>) picks up from that boundary. */
   left: calc(-1 * var(--page-padding));
-  right: calc(-1 * (var(--tech-sidebar-x) + var(--page-padding)));
+  right: calc(-1 * var(--page-padding));
   pointer-events: none;
   z-index: -1;
   /* Vertical linear gradient — uniform along the x-axis, strongest at
@@ -3567,9 +4147,9 @@
   background: linear-gradient(
     to bottom,
     transparent 0%,
-    rgba(0, 102, 204, 0.04) 25%,
-    rgba(0, 102, 204, 0.16) 50%,
-    rgba(0, 102, 204, 0.04) 75%,
+    rgba(0, 102, 204, 0.015) 25%,
+    rgba(0, 102, 204, 0.07) 50%,
+    rgba(0, 102, 204, 0.015) 75%,
     transparent 100%
   );
 }
@@ -3584,7 +4164,7 @@
   right: calc(-1 * (var(--tech-sidebar-x) + var(--page-padding)));
   height: 1px;
   background: var(--tech-color-text-brand);
-  z-index: 1;
+  z-index: 200;
 }
 
 .lgmTimelineDot {
@@ -3649,11 +4229,9 @@
 .lgmTimelineMilestoneTop {
   /* Anchored at the centerline. min-height keeps the 2026/2028/Columbus
      columns tall enough that their stems fully extend to the line via
-     margin-top: auto / flex-grow. The 2022 + 2025 columns opt out via
-     .lgmTimelineMilestoneCompact so their year markers sit close to
-     the line instead of floating high. */
+     margin-top: auto / flex-grow. */
   bottom: 50%;
-  min-height: clamp(120px, 14vw, 160px);
+  min-height: clamp(60px, 7vw, 80px);
 }
 
 .lgmTimelineMilestoneCompact {
@@ -3664,27 +4242,27 @@
 }
 
 .lgmTimelineMilestoneBottom {
-  /* Mirror of TOP. No padding-top so the stem (first DOM child) starts
-     directly at the centerline / track. */
+  /* Mirror of TOP. padding-top creates breathing room between the
+     centerline track and the year/CTA content sitting below it. */
   top: 50%;
+  padding-top: 14px;
 }
 
-/* Year — small, muted navy. Brand body-sm scale (16px). 16px gap below
-   so the year visually breathes from any label that follows it in the
-   same TOP column. */
+/* Year — small, muted navy. Brand body-sm scale (16px). Tight gap below
+   so it sits close to any CTA that follows it in the same BOTTOM column. */
 .lgmTimelineYear {
   font-size: var(--tech-fs-body-sm);
   font-weight: 500;
   color: rgba(10, 19, 68, 0.4);
   letter-spacing: 0;
   line-height: 1;
-  margin-bottom: 16px;
+  margin-bottom: 4px;
 }
 
-/* Label — milestone heading. 36px / 140% line-height / -2% tracking. */
+/* Label — milestone heading. 28px / 140% line-height / -2% tracking. */
 .lgmTimelineLabel {
-  font-size: 36px;
-  font-weight: 600;
+  font-size: 28px;
+  font-weight: 500;
   color: #000000;
   line-height: 1.4;
   letter-spacing: -0.02em;
@@ -3698,6 +4276,7 @@
 .lgmTimelineColumbus {
   pointer-events: none;
   z-index: 3;
+  min-height: clamp(120px, 14vw, 160px);
 }
 
 /* Push the Columbus logo down by the height of a year marker (16px line
@@ -3754,6 +4333,22 @@
 .lgmTimelineMilestoneTop .lgmTimelineStem {
   margin-top: auto;
   margin-bottom: 0;
+  position: relative;
+}
+
+/* Solid black dot at the base of the Columbus stem only, sitting
+   exactly on the centerline track. */
+.lgmTimelineColumbus .lgmTimelineStem::after {
+  content: "";
+  position: absolute;
+  bottom: -3px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #000000;
+  opacity: 1;
 }
 
 /* BOTTOM stem: top touches the centerline; 8px gap to the label below. */
@@ -3763,8 +4358,8 @@
 }
 
 /* CTA link inside BOTTOM columns for 2026/2028. Matches .lgmInlineCta.
-   margin-top pushes the CTA down so it visually clears the timeline
-   instead of butting up against it. */
+   Sits tight below the year — the milestone padding-top gives the gap
+   from the timeline track. */
 .lgmTimelineCta {
   display: inline-flex;
   align-items: center;
@@ -3775,7 +4370,10 @@
   text-decoration: none;
   white-space: nowrap;
   transition: color 200ms ease;
-  margin-top: 28px;
+  margin-top: 12px;
+  background: color-mix(in srgb, var(--tech-color-bg) 50%, transparent);
+  padding: 4px 10px;
+  border-radius: 6px;
 }
 
 .lgmTimelineCta svg {
@@ -3801,18 +4399,14 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: clamp(48px, 6vw, 80px);
-  min-height: 320px;
-  padding: 64px 40px;
-  border-radius: 20px;
+  margin-top: clamp(24px, 3vw, 40px);
+  min-height: 160px;
+  padding: 32px 20px;
+  border-radius: 10px;
   text-align: center;
   text-decoration: none;
   background-color: #fff;
-  box-shadow:
-    inset 0 0 0 1px rgba(255, 255, 255, 0.55),
-    0 6px 28px rgba(0, 102, 204, 0.08),
-    0 0 0 12px var(--tech-color-bg),
-    0 0 60px 36px var(--tech-color-bg);
+  box-shadow: none;
   overflow: hidden;
   transition: transform 320ms ease, box-shadow 320ms ease;
 }
@@ -3850,11 +4444,7 @@
 
 .lgmArticleCard:hover {
   transform: translateY(-2px);
-  box-shadow:
-    inset 0 0 0 1px rgba(255, 255, 255, 0.6),
-    0 10px 32px rgba(0, 102, 204, 0.12),
-    0 0 0 12px var(--tech-color-bg),
-    0 0 60px 36px var(--tech-color-bg);
+  box-shadow: none;
 }
 
 .lgmArticleCard p {
@@ -3876,15 +4466,11 @@
 .lgmArticleCardGlass {
   flex-direction: column;
   justify-content: center;
-  gap: 10px;
+  gap: 5px;
   background-color: rgba(255, 255, 255, 0.55);
   border: 1px solid rgba(255, 255, 255, 0.8);
   /* The radial blur is applied via ::after below, not uniformly on the card */
-  box-shadow:
-    inset 0 0 0 1px rgba(255, 255, 255, 0.6),
-    0 6px 28px rgba(0, 102, 204, 0.08),
-    0 0 0 12px var(--tech-color-bg),
-    0 0 60px 36px var(--tech-color-bg);
+  box-shadow: none;
   transition: none;
 }
 
@@ -3904,11 +4490,7 @@
 
 .lgmArticleCardGlass:hover {
   transform: none;
-  box-shadow:
-    inset 0 0 0 1px rgba(255, 255, 255, 0.6),
-    0 6px 28px rgba(0, 102, 204, 0.08),
-    0 0 0 12px var(--tech-color-bg),
-    0 0 60px 36px var(--tech-color-bg);
+  box-shadow: none;
 }
 
 .lgmArticleCardGlass::before {
@@ -3918,7 +4500,7 @@
 /* Tiered typography inside the glass card:
    kicker (regular) → headline (medium) → conclusion (bold) */
 .lgmArticleKicker {
-  font-size: clamp(0.95rem, 1.05vw, 1.05rem);
+  font-size: clamp(0.825rem, 0.9vw, 0.9rem);
   font-weight: 400;
   letter-spacing: 0.02em;
   line-height: 1.4;
@@ -3927,7 +4509,7 @@
 
 .lgmArticleCardGlass .lgmArticleHeadline {
   margin: 0;
-  font-size: clamp(1.35rem, 1.9vw, 1.75rem);
+  font-size: clamp(1.15rem, 1.6vw, 1.5rem);
   font-weight: 500;
   line-height: 1.25;
   letter-spacing: -0.015em;
@@ -3936,7 +4518,7 @@
 
 .lgmArticleCardGlass .lgmArticleHeadlineStrong {
   margin: 0;
-  font-size: clamp(1.35rem, 1.9vw, 1.75rem);
+  font-size: clamp(1.15rem, 1.6vw, 1.5rem);
   font-weight: 700;
   line-height: 1.25;
   letter-spacing: -0.015em;
@@ -4508,18 +5090,8 @@
   box-shadow:
     inset 0 0.125em 0.125em rgba(0, 0, 0, 0.05),
     inset 0 -0.125em 0.125em rgba(255, 255, 255, 0.5),
-    0 0.25em 0.125em -0.125em rgba(0, 0, 0, 0.2),
     inset 0 0 0.1em 0.25em rgba(255, 255, 255, 0.2);
   text-shadow: 0 0.05em 0.05em rgba(0, 0, 0, 0.05);
-}
-
-.coreResearchProduct:hover {
-  transform: scale(0.975);
-  box-shadow:
-    inset 0 0.125em 0.125em rgba(0, 0, 0, 0.05),
-    inset 0 -0.125em 0.125em rgba(255, 255, 255, 0.5),
-    0 0.15em 0.05em -0.1em rgba(0, 0, 0, 0.25),
-    inset 0 0 0.05em 0.1em rgba(255, 255, 255, 0.5);
 }
 
 /* Disable backdrop-filter on mobile to match the mapsgpt GlassButton behavior. */
@@ -4555,7 +5127,7 @@
    Kept as a class hook so future tweaks (e.g. disabling hover on placeholder
    pills) can target it without touching the others. */
 .coreResearchProductSoon {
-  /* intentionally empty — inherits full glass-pill treatment */
+  cursor: default;
 }
 
 @media (max-width: 900px) {
@@ -4583,6 +5155,12 @@
   padding-bottom: clamp(56px, 7vw, 96px);
 }
 
+.resultsSlide .lgmKicker,
+.resultsSlide .resultsTitle,
+.resultsSlide .resultsLead {
+  text-align: left;
+}
+
 .resultsTitle {
   margin: 8px 0 0;
   font-size: var(--tech-fs-h3);
@@ -4600,102 +5178,65 @@
   color: var(--tech-color-text);
 }
 
-/* Editorial findings catalogue — refined typography on a 2×2 grid with
-   internal "cross" dividers that fade out at their edges (matching the
-   site-wide fade-line aesthetic used in .grid-section). */
+/* Stacked-row catalogue — each row pairs a blue art card with a single
+   line of copy and a "+" button. Hairline dividers separate rows. */
 .resultsGrid {
   position: relative;
   margin-top: clamp(48px, 6vw, 72px);
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0;
+  display: flex;
+  flex-direction: column;
 }
 
-/* Horizontal divider — between row 1 and row 2, fades at left/right edges */
-.resultsGrid::before {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: linear-gradient(to right,
-    transparent 0%,
-    rgba(0, 102, 204, 0.20) 14%,
-    rgba(0, 102, 204, 0.20) 86%,
-    transparent 100%);
-  pointer-events: none;
-}
-
-/* Vertical divider — between col 1 and col 2, fades at top/bottom edges */
-.resultsGrid::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 50%;
-  width: 1px;
-  background: linear-gradient(to bottom,
-    transparent 0%,
-    rgba(0, 102, 204, 0.20) 14%,
-    rgba(0, 102, 204, 0.20) 86%,
-    transparent 100%);
-  pointer-events: none;
-}
-
+/* Row layout — blue art card on the left, numbered title in the middle.
+   Vertical rhythm and divider mirror the research-section accordion rows. */
 .resultsCard {
+  position: relative;
   display: flex;
-  flex-direction: column;
-  gap: clamp(20px, 2.4vw, 32px);
-  align-items: stretch;
-  padding: clamp(36px, 4.5vw, 56px) clamp(28px, 3.5vw, 48px);
+  flex-direction: row;
+  align-items: center;
+  gap: clamp(28px, 3vw, 48px);
+  padding: clamp(2px, 0.3vw, 5px) 0;
   background: transparent;
 }
 
-.resultsCardCopy {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  align-items: flex-start;
-  min-width: 0;
+.resultsCard:first-child {
+  padding-top: 0;
 }
 
-/* Refined large outlined numeral — light-weight, brand blue, editorial */
-.resultsCardNumber {
-  display: inline-block;
-  width: auto;
-  height: auto;
-  padding: 0;
-  background: transparent;
-  border-radius: 0;
-  color: rgba(0, 102, 204, 0.80);
-  font-size: clamp(28px, 3.2vw, 40px);
-  font-weight: 200;
-  letter-spacing: -0.02em;
-  line-height: 1;
-  font-feature-settings: "tnum";
-  font-variant-numeric: tabular-nums;
+.resultsCard:last-child {
+  padding-bottom: 0;
 }
 
-.resultsCardText {
-  margin: 0;
-  font-size: var(--tech-fs-h5);
-  font-weight: 400;
-  line-height: 1.4;
-  letter-spacing: var(--tech-tracking-snug);
-  color: var(--tech-color-text);
-  max-width: 360px;
+/* 1px hairline divider that fades out on the right side. Starts inline
+   with the title's left edge (past the blue art card + the row gap)
+   instead of at the row's leftmost edge — visually pairs with the
+   numbered title rather than spanning under the art block. */
+.resultsCard:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  left: calc(clamp(160px, 16vw, 240px) + clamp(28px, 3vw, 48px));
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    rgba(0, 102, 204, 0.35) 0%,
+    rgba(0, 102, 204, 0.32) 55%,
+    rgba(0, 102, 204, 0) 100%
+  );
+  pointer-events: none;
 }
 
-/* Refined art panel — slim, sharp-cornered, sits at the bottom of each cell */
+/* Blue art tile on the left of each row — fixed width, square corners,
+   solid brand-blue background. Houses the wireframe-globe SVG. */
 .resultsCardArt {
   position: relative;
-  width: 100%;
-  aspect-ratio: 16 / 9;
-  background: linear-gradient(135deg, #1d3fa6 0%, #0f266b 100%);
+  flex-shrink: 0;
+  width: clamp(160px, 16vw, 240px);
+  aspect-ratio: 16 / 11;
+  background: #1d3fa6;
   overflow: hidden;
-  border-radius: 4px;
-  margin-top: auto;
+  border-radius: 8px;
 }
 
 .resultsCardArt svg {
@@ -4703,6 +5244,20 @@
   inset: 0;
   width: 100%;
   height: 100%;
+}
+
+/* Title (with embedded "N. " prefix) — matches .coreResearchGroupHead h3. */
+.resultsCardText {
+  flex: 1;
+  margin: 0;
+  min-width: 0;
+  font-size: var(--tech-fs-h5);
+  font-weight: 500;
+  letter-spacing: var(--tech-tracking-snug);
+  color: var(--tech-color-text);
+  text-align: left;
+  line-height: 1.3;
+  max-width: none;
 }
 
 .resultsArticlesRow {
@@ -4729,14 +5284,10 @@
   z-index: 0;
 }
 
-/* No hover lift/shadow change — match the static glass cards above */
+/* No hover lift, no shadow — match the static glass cards above */
 .resultsArticlesRow .lgmArticleCard:hover {
   transform: none;
-  box-shadow:
-    inset 0 0 0 1px rgba(255, 255, 255, 0.55),
-    0 6px 28px rgba(0, 102, 204, 0.08),
-    0 0 0 12px var(--tech-color-bg),
-    0 0 60px 36px var(--tech-color-bg);
+  box-shadow: none;
 }
 
 @media (max-width: 900px) {
@@ -4767,9 +5318,12 @@
   width: 100vw;
   margin-left: calc(50% - 50vw);
   margin-right: calc(50% - 50vw);
-  background: #0A1344;
+  background: linear-gradient(to bottom, #080808 0%, #000E29 100%);
   color: #ffffff;
-  overflow: hidden;
+  /* overflow-x: clip (not hidden) — clips horizontal overflow without
+     creating the scrolling mechanism that would capture sticky descendants
+     (.genLayersStickyInner). Same pattern as .pageBody. */
+  overflow-x: clip;
 }
 
 .genLayersInner {
@@ -4786,140 +5340,528 @@
 .genLayersHead {
   position: relative;
   width: 100%;
-  min-height: 220px;
+  min-height: 480px;
   margin-bottom: clamp(48px, 6vw, 80px);
+  display: flex;
+  align-items: center;
 }
 
 .genLayersHeadStarburst {
   position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
+  top: 50%;
+  right: 0;
+  width: 1186.26px;
+  height: 692px;
   pointer-events: none;
   display: block;
+  transform: translate(220px, -50%);
+  transform-origin: right center;
+  filter: brightness(0) invert(1);
+  opacity: 0.92;
 }
 
-/* Label background matches the band bg (#0A1344) so the line behind
-   it is cleanly masked. */
+/* Label background matches the band bg (black) so the line behind it is
+   cleanly masked. */
 .genLayersHeadLabel {
   position: absolute;
-  left: 0;
-  top: 50%;
-  transform: translateY(-50%);
+  left: 140px;
+  top: 31%;
   z-index: 2;
-  background: #0A1344;
-  padding-right: 16px;
   font-size: clamp(1.4rem, 1.8vw, 1.8rem);
   font-weight: 500;
   letter-spacing: var(--tech-tracking-snug);
   color: #ffffff;
 }
 
-/* Image-backed display panel — holds the headline (top-left) and the 3
-   Columbus GenLayer tile labels. Has a reveal animation that expands the
-   panel from a smaller rounded card to (nearly) full-screen when it comes
-   into view. Top + bottom edges have subtle blur-gradient overlays that
-   extend across a larger area than before. */
-.genLayersDisplay {
+/* Sticky-pin scroll experience — sized to fit within the page's content
+   bounds (no longer breaks out to 100vw). The inner pin is 70vh; the outer
+   is 70vh + 200vh of scroll travel = 270vh.
+     • top: 15vh on the inner pins it vertically centered in the viewport
+       (15vh top + 70vh height + 15vh bottom = 100vh), so the section
+       "sticks" when the panel reaches the middle of the screen — not
+       when it hits the top.
+     • The JS scroll-progress math in GenLayersSection.tsx accounts for
+       this offset (STICKY_TOP_VH = 0.15). */
+.genLayersStickyOuter {
   position: relative;
-  padding: clamp(32px, 4vw, 64px);
-  border-radius: 12px;
-  overflow: hidden;
-  background-image: url("/TechnologyPageImages/GenLayersimage.png");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  min-height: clamp(520px, 72vh, 780px);
+  /* Break out of .genLayersInner's horizontal padding so the three-tile
+     row spans the page's full content bounds (1287px) edge-to-edge.
+     The negative margins alone aren't enough — `width: 100%` would lock
+     the box to the inner's content area, so we widen the box by the same
+     2× padding amount that the negative margins push it sideways. */
+  width: calc(100% + 2 * clamp(24px, 4vw, 64px));
+  margin-left: calc(-1 * clamp(24px, 4vw, 64px));
+  margin-right: calc(-1 * clamp(24px, 4vw, 64px));
+  height: calc(70vh + 200vh);
+}
+
+.genLayersStickyInner {
+  position: sticky;
+  top: 15vh;
+  width: 100%;
+  height: 70vh;
   display: flex;
   flex-direction: column;
-  gap: clamp(32px, 4vw, 56px);
-
-  /* Reveal — starts inset from the band edges as a smaller card, expands
-     to nearly full screen when in view. transform-origin keeps the
-     expansion anchored to the section's visual center so the motion feels
-     grounded, not jittery. */
-  clip-path: inset(5% 6% 5% 6% round 24px);
-  transform: scale(0.96);
-  transform-origin: center center;
-  transition:
-    clip-path 1.4s cubic-bezier(0.22, 1, 0.36, 1),
-    transform 1.4s cubic-bezier(0.22, 1, 0.36, 1);
+  overflow: hidden;
+  /* Round the panel itself — tiles + intro overlay (and any future
+     children) all get clipped to this radius so the whole composition
+     reads as a single rounded card. Matches the off-step 23px chosen
+     for the tile corners earlier. */
+  border-radius: 23px;
 }
 
-.genLayersDisplayRevealed {
-  clip-path: inset(0% 0% 0% 0% round 0px);
-  transform: scale(1);
+/* Navbar blur-gradient override — while body.gen-layers-active is set
+   (toggled by TechnologyPage when the Gen Layers band overlaps the navbar
+   Y), the navbar's frosted-glass background div (the first child of its
+   <nav>) gets a top-down mask: fully opaque at the top edge, fading to
+   transparent at the bottom. The bg's existing backdrop-filter blur is
+   therefore strongest at the top of the navbar and tapers off downward.
+   Border-bottom is suppressed since it would only render along the masked
+   edge. Text/icon colors continue to be driven by the standard dark
+   `theme` prop. Documented in design-system/navbar.md. */
+:global(body.gen-layers-active nav.header-font > div:first-child) {
+  -webkit-mask-image: linear-gradient(to bottom, black 0%, black 30%, transparent 100%) !important;
+  mask-image: linear-gradient(to bottom, black 0%, black 30%, transparent 100%) !important;
+  border-bottom: none !important;
 }
 
-/* Top + bottom blur-gradient overlays — weaker & more extended than before.
-   Covers ~30% of the panel height each; gentle mask fades both the blur
-   and the color tint away toward the center. */
-.genLayersDisplayFadeTop,
-.genLayersDisplayFadeBottom {
-  position: absolute;
-  left: 0;
-  right: 0;
-  height: clamp(180px, 32%, 360px);
+/* Left-side scroll index fade — while the gen-layers band overlaps the
+   navbar, fade out the scroll-index labels so they don't compete with
+   the section. The opacity transition lives on the canonical
+   .sidebarPanelSticky rule. */
+:global(body.gen-layers-active) .sidebarPanelSticky {
+  opacity: 0;
   pointer-events: none;
+}
+
+/* Hide the vertical structure lines (the blue gutter dividers) while
+   the gen-layers band is active — they read as out-of-place against
+   the dark section. Restored when the body class clears. */
+:global(body.gen-layers-active) .sidebarPanel,
+:global(body.gen-layers-active) .sidebarPanelRight {
+  opacity: 0;
+}
+
+.sidebarPanel,
+.sidebarPanelRight {
+  transition: opacity 400ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* SVG overlay drawn over the tile's satellite image — tile-1/2 use roof
+   rectangles over HK Map.png, tile-3 uses street polylines over HK Map2.png.
+   The whole SVG's opacity is driven each frame from tileOverlayRefs so the
+   shapes appear during the analyse animation's Phase C. preserveAspectRatio
+   is "none" on the SVG so the 100×67 viewBox stretches to the tile's full
+   render box and shape coords roughly track the underlying imagery even as
+   tiles flex between active and sliver widths. */
+.genLayersTileOverlay {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  /* Explicit clip so any path/rect that approaches the edge can't
+     paint outside the image bounds. */
+  overflow: hidden;
+  opacity: 0;
   z-index: 1;
-  -webkit-backdrop-filter: blur(4px);
-  backdrop-filter: blur(4px);
+  pointer-events: none;
 }
 
-.genLayersDisplayFadeTop {
+/* Solar tile — alternating "high potential" (blue) and "low potential" (red)
+   rectangles over each visible roof. */
+.genLayersTileRoofA {
+  fill: rgba(38, 121, 255, 0.55);
+  stroke: rgba(108, 169, 255, 0.95);
+  stroke-width: 0.18;
+}
+
+.genLayersTileRoofB {
+  fill: rgba(255, 84, 84, 0.55);
+  stroke: rgba(255, 168, 168, 0.95);
+  stroke-width: 0.18;
+}
+
+/* Resident-vibes tile — three vibe color groups cycle through the same roof
+   positions: green (active), orange (medium), yellow (warm/quiet). */
+.genLayersTileVibeA {
+  fill: rgba(72, 198, 132, 0.55);
+  stroke: rgba(180, 240, 200, 0.95);
+  stroke-width: 0.18;
+}
+
+.genLayersTileVibeB {
+  fill: rgba(255, 161, 70, 0.55);
+  stroke: rgba(255, 210, 160, 0.95);
+  stroke-width: 0.18;
+}
+
+.genLayersTileVibeC {
+  fill: rgba(247, 220, 90, 0.55);
+  stroke: rgba(255, 240, 175, 0.95);
+  stroke-width: 0.18;
+}
+
+/* Safety-score tile — yellow polylines tracing the major boulevards in
+   HK Map2.png. Uses fill: none + a chunky stroke so the lines read as
+   street-highlight markers. */
+.genLayersTileStreet {
+  fill: none;
+  stroke: rgba(247, 220, 90, 0.85);
+  stroke-width: 0.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Phase B — prompt box, top-left of each tile. Opacity is driven each
+   frame via tilePromptRefs (binary flip at local=0.20, CSS transition
+   provides the actual fade). */
+.genLayersTilePromptBox {
+  position: absolute;
   top: 0;
-  background: linear-gradient(
-    to bottom,
-    rgba(40, 67, 148, 0.18) 0%,
-    rgba(40, 67, 148, 0) 100%
-  );
-  -webkit-mask-image: linear-gradient(to bottom, black 0%, black 20%, transparent 100%);
-  mask-image: linear-gradient(to bottom, black 0%, black 20%, transparent 100%);
+  left: 0;
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  padding: clamp(20px, 2.5vw, 32px);
+  max-width: 60%;
+  opacity: 0;
+  transition: opacity 600ms cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: none;
 }
 
-.genLayersDisplayFadeBottom {
-  bottom: 0;
-  background: linear-gradient(
-    to top,
-    rgba(40, 67, 148, 0.18) 0%,
-    rgba(40, 67, 148, 0) 100%
-  );
-  -webkit-mask-image: linear-gradient(to top, black 0%, black 20%, transparent 100%);
-  mask-image: linear-gradient(to top, black 0%, black 20%, transparent 100%);
+/* Frosted-glass backdrop behind the top-left prompt text — mirrors the
+   bottom blur strip but inverted: strongest blur at the very top edge,
+   tapering to fully transparent partway down. The parent's opacity
+   transition gates visibility so this never shows until Phase B. */
+.genLayersTilePromptBox::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  /* Extend slightly above/left so the blur reaches the panel edge. */
+  top: -4px;
+  left: -4px;
+  right: -4px;
+  /* Tall enough to cover the full prompt text area plus breathing room. */
+  bottom: -20px;
+  background: transparent;
+  -webkit-backdrop-filter: blur(4px) saturate(1.05);
+  backdrop-filter: blur(4px) saturate(1.05);
+  /* Opaque at top, fades to transparent at bottom so blur stays localised
+     to where the prompt text sits. */
+  -webkit-mask-image: linear-gradient(to bottom, black 0%, black 55%, transparent 100%);
+  mask-image: linear-gradient(to bottom, black 0%, black 55%, transparent 100%);
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* Wrapper around the tile's kicker + title — flex column, bottom-centered.
+   Opacity is set to 0 or 1 by the rAF tick (binary flip at local=0.50),
+   so this transition is what produces the animated reveal once the SVG
+   overlay's scroll-driven fade-in finishes. */
+.genLayersTileText {
+  position: relative;
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  opacity: 0;
+  transition: opacity 600ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Progress bar sitting below the sticky outer — fills left-to-right
+   as the user scrolls through the experience. */
+/* Progress bar — sibling of .genLayersStickyInner (not nested inside it),
+   sticky-pinned just below the panel so it floats below as its own bar.
+   Both pin and release together because their pin positions inside the
+   shared outer line up: inner's top: 15vh + height 70vh = 85vh, plus
+   12px gap = 97vh sticky top for the bar. */
+/* Progress bar — three pill-shaped segments side-by-side, one per tile.
+   Sticky-pinned with extra breathing room so it sits visually
+   detached from the panel. Modeled after the iOS home-indicator look
+   (chunky rounded pill) but split into thirds to delineate which step
+   of the analyse process the user is in. */
+.genLayersProgressBar {
+  position: sticky;
+  /* Pin offset and natural-flow margin must match so the bar's pinned
+     position equals its in-flow position when sticky engages. Both bumped
+     from 32px → 72px to keep enough breathing room between the panel and
+     the bar even during the sticky-release window, where the bar would
+     otherwise creep visually closer to the panel as both move with the
+     outer's bottom edge. */
+  top: calc(15vh + 70vh + 72px);
+  width: 16.7%;
+  margin: 72px auto 0;
+  display: flex;
+  gap: 6px;
+  height: 5px;
+  background: transparent;
+  border-radius: 0;
+  overflow: visible;
+}
+
+.genLayersProgressSegment {
+  flex: 1 1 0;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.22);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.genLayersProgressSegmentFill {
+  height: 100%;
+  width: 0;
+  background: #ffffff;
+  /* No CSS transition — width is written every rAF tick directly via
+     progressFillRefs so each segment tracks scroll position with no
+     perceptible lag. */
+}
+
+/* Intro overlay — heavy backdrop-blur veil + headline + scroll hint
+   covering the tiles at the start of the section. Opacity is driven each
+   frame via introRef in GenLayersSection.tsx (1 until raw=0.10, fades to
+   0 by raw=0.20). */
+.genLayersIntro {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  /* Headline sits in the upper third, scroll hint sits ~70% from the
+     top (well below center) — matches the reference layout where the
+     copy and the prompt are visually pushed apart. */
+  justify-content: flex-start;
+  align-items: center;
+  pointer-events: none;
+  /* Lighter blur + a much fainter dark veil so the satellite imagery
+     reads as a bright, soft frosted background instead of a dark wash. */
+  -webkit-backdrop-filter: blur(60px);
+  backdrop-filter: blur(60px);
+  background: rgba(0, 0, 0, 0.18);
+  padding: clamp(40px, 8vh, 96px) clamp(32px, 6vw, 96px) clamp(20vh, 22vh, 24vh);
+  text-align: center;
+}
+
+.genLayersScrollHint {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  /* margin-top: auto pushes the hint to the bottom of the available
+     space (after the padding-bottom on the parent). */
+  margin-top: auto;
+  font-size: 18px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.genLayersScrollHint svg {
+  flex-shrink: 0;
 }
 
 .genLayersHeadline {
   position: relative;
   z-index: 2;
   margin: 0;
-  max-width: 560px;
-  font-size: var(--tech-fs-h4);
-  font-weight: 500;
-  letter-spacing: var(--tech-tracking-tight);
-  line-height: 1.25;
+  max-width: 1200px;
+  font-size: clamp(32px, 4vw, 44px);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.18;
   color: #ffffff;
-  /* Sits in the top-left of the image-backed display */
-  align-self: flex-start;
+  text-align: center;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
+/* The 3 tiles together fill the rest of the display panel and form a
+   single visual block. They flex to give the active tile most of the
+   space while keeping the others as compressed strips on the side. */
 .genLayersTilesRow {
   position: relative;
   z-index: 2;
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: clamp(24px, 3vw, 48px);
-  /* Pin tile labels to the bottom of the image-backed display. */
-  margin-top: auto;
+  display: flex;
+  flex-direction: row;
+  gap: 0;
+  flex: 1;
+  margin-top: 0;
+  min-height: 0;
+  /* Row-level bg removed to prevent peeking. Each tile now manages its own background. */
 }
 
-/* Tile — now a simple text block layered on top of the display's image.
-   No more SVG art backdrop or tall aspect-ratio container. */
 .genLayersTile {
   position: relative;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
+  justify-content: flex-end;
+  text-align: center;
   color: #fff;
+  flex: 1 1 0;
+  min-width: 0;
+  padding: clamp(32px, 4vw, 56px) clamp(20px, 2.5vw, 32px);
+  border: none;
+  border-radius: 0;
+  /* Tiles 1 & 2 are transparent — the row's continuous HK Map.png shows
+     through, so the image is unbroken across the tile-1/tile-2 boundary
+     regardless of how the flex widths shake out. Only tile 3 paints its
+     own opaque background (see :nth-child(3) below). */
+  background-color: transparent;
+  background-image: none;
+  font: inherit;
+  overflow: hidden;
+  transition: flex-grow 600ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Tile 1 (Solar roof) — paints its own HK Map.png. */
+.genLayersTile:nth-child(1) {
+  background-image: url("/TechnologyPageImages/HK%20Map.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* Tile 2 (Resident Vibes — middle) — paints its own opaque HK Map3.png
+   on top of the row-level HK Map.png. Fill — image stretches to exactly
+   cover tile 2 (no cropping, no repeat) at any width, matching the
+   "Fill" setting used on tile 3. */
+.genLayersTile:nth-child(2) {
+  background-image: url("/TechnologyPageImages/HK%20Map3.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* Tile 3 (Safety Score) — paints its own opaque HK Map2.png on top of
+   the row-level HK Map.png. Background-size: 100% 100% scales it to
+   tile 3's actual width (whether active or sliver). */
+.genLayersTile:nth-child(3) {
+  background-image: url("/TechnologyPageImages/HK%20Map2.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* Backdrop-blur gradient over the lower portion of each tile so the text
+   reads cleanly against the satellite imagery — strongest blur at the
+   bottom edge, tapering to no blur at the top. Visibility is gated by the
+   --text-blur-opacity custom property which is written each frame from
+   GenLayersSection.tsx so the blur only appears once the tile's text is
+   appearing (Phase D), not at the clean-image starting state.
+   `saturate(0.8)` flattens any colour cast that the blurred imagery would
+   otherwise smear into the layer; bg stays fully transparent. */
+.genLayersTile::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 65%;
+  background: transparent;
+  -webkit-backdrop-filter: blur(4px) saturate(1.1);
+  backdrop-filter: blur(4px) saturate(1.1);
+  -webkit-mask-image: linear-gradient(to top, black 0%, black 25%, transparent 100%);
+  mask-image: linear-gradient(to top, black 0%, black 25%, transparent 100%);
+  opacity: var(--text-blur-opacity, 0);
+  /* Same easing/duration as .genLayersTileText so the frosted strip
+     fades in alongside the text after the overlay reveal completes. */
+  transition: opacity 600ms cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Tiles themselves are square — the rounded outline lives on the panel
+   (.genLayersStickyInner) so the tiles can sit edge-to-edge with no
+   inner-corner notches between them. The panel's overflow: hidden
+   clips the outer corners to the 23px radius. */
+
+/* Active tile dominates ~96% of the row width. The other two tiles
+   share the remaining ~4% as very thin slivers (flex-grow: 1 each). */
+.genLayersTileActive {
+  flex-grow: 50;
+  z-index: 10;
+}
+
+/* Smooth width transitions when state classes change. */
+.genLayersTile {
+  transition: flex 600ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Eliminate sub-pixel rendering gaps between tiles. Flex-grow ratios
+   like 50:1:1 produce non-integer per-tile widths (e.g. 1237.5 / 24.7 /
+   24.7 on a 1287px row); browsers round each tile's rendered width
+   independently, which can leave a 1–3px hairline gap exposing the
+   dark band behind. A 4px negative left margin on every tile after the
+   first makes adjacent tiles overlap by 4px so the gap can never appear
+   regardless of viewport size or which tile is active. The overlap is
+   invisible because tile padding keeps the visible content (text, SVG
+   overlay) well off the edges. */
+.genLayersTile + .genLayersTile {
+  margin-left: -4px;
+}
+
+/* The section now lives within the page's content bounds (no longer
+   100vw with negative margins), so the gutter-based per-state widths
+   no longer apply. Sizing is driven entirely by .genLayersTileActive
+   { flex-grow: 18 } above — active tile takes ~90%, inactive tiles
+   share the remaining 10% as thin slivers. */
+
+/* Inactive tiles are darkened with a flat 75%-black overlay (no blur)
+   until they become the focus point. The overlay fades smoothly to
+   transparent as a tile transitions to active. */
+.genLayersTile::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0);
+  z-index: 6;
+  pointer-events: none;
+  transition: background 600ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.genLayersTileInactive::after {
+  /* Veil opacity is gated by --inactive-veil-opacity which is written
+     each rAF tick on .genLayersTilesRow. While the intro overlay is
+     fully opaque, the veil is held at 0 so all three tiles read as the
+     same uniformly bright frosted backdrop behind the headline. */
+  background: rgba(0, 0, 0, calc(0.75 * var(--inactive-veil-opacity, 1)));
+  -webkit-backdrop-filter: blur(calc(20px * var(--inactive-veil-opacity, 1)));
+  backdrop-filter: blur(calc(20px * var(--inactive-veil-opacity, 1)));
+}
+
+/* Span-level opacity is no longer set here — the .genLayersTileText
+   wrapper's opacity is driven each frame via tileTextRefs in the rAF
+   tick, which controls all four spans together as the analyse-animation
+   reaches its final phase. */
+
+.genLayersTilePromptLabel {
+  position: relative;
+  z-index: 2;
+  margin-top: 0;
+  margin-bottom: 6px;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: var(--tech-fs-caption);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+.genLayersTilePrompt {
+  position: relative;
+  z-index: 2;
+  margin-top: 6px;
+  max-width: 520px;
+  color: #ffffff;
+  font-size: var(--tech-fs-body-lg);
+  font-weight: 500;
+  letter-spacing: var(--tech-tracking-tight);
+  line-height: 1.35;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45), 0 0 1px rgba(0, 0, 0, 0.6);
 }
 
 /* Legacy tile-art classes preserved for potential re-use but hidden when
@@ -4944,21 +5886,25 @@
   position: relative;
   z-index: 2;
   font-size: var(--tech-fs-caption);
-  letter-spacing: var(--tech-tracking-snug);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
   /* Tiles always show on photo content — keep text on white opacity tiers
      regardless of parent surface flip */
   color: rgba(255, 255, 255, 0.72);
-  margin-bottom: 4px;
+  margin-bottom: 12px;
 }
 
 .genLayersTileTitle {
   position: relative;
   z-index: 2;
-  font-size: var(--tech-fs-body-lg);
-  font-weight: 500;
-  color: rgba(255, 255, 255, 1);
-  letter-spacing: var(--tech-tracking-snug);
-  margin-bottom: 8px;
+  font-size: calc(var(--tech-fs-body-lg) * 1.5);
+  font-weight: 600;
+  color: #ffffff;
+  letter-spacing: var(--tech-tracking-tight);
+  line-height: 1.15;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45), 0 0 1px rgba(0, 0, 0, 0.6);
+  margin-bottom: 20px;
 }
 
 /* Wrap around the explore CTA — centers the glass pill horizontally. */
@@ -4968,21 +5914,38 @@
   margin-top: clamp(40px, 5vw, 64px);
 }
 
-/* Positioning + color only — pill appearance comes from glassStyles.btn
-   applied alongside this class in the JSX. */
+/* Mirrors the navbar's "Start Now" CTA but inverted — solid white pill
+   with black text. The arrow stays #2563EB (matches the navbar's blue
+   accent) and translates on hover; text turns blue on hover. */
 .genLayersExploreBtn {
-  color: #ffffff;
-  font-size: var(--tech-fs-caption);
-  gap: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  height: 36px;
+  padding: 0 20px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1;
+  color: #000000;
+  background-color: #FFFFFF;
   text-decoration: none;
+  white-space: nowrap;
+  transition: color 300ms ease, background-color 300ms ease, opacity 300ms ease;
+}
+
+.genLayersExploreBtn:hover {
+  color: #2563EB;
+  opacity: 0.9;
 }
 
 .genLayersExploreBtn svg {
-  transition: transform 280ms cubic-bezier(0.22, 1, 0.36, 1);
+  stroke: #2563EB;
+  transition: transform 300ms ease-in-out;
 }
 
 .genLayersExploreBtn:hover svg {
-  transform: translateX(2px);
+  transform: translateX(4px);
 }
 
 .genLayersGrid {
@@ -5038,5 +6001,260 @@
   .genLayersTile:not(:last-child) {
     border-right: none;
     border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  }
+}
+
+/* ── Mobile carousel for Core Research section (≤ 767px) ── */
+
+.coreResearchCarousel {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .coreResearchGrid {
+    display: none;
+  }
+
+  .coreResearchCarousel {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+.carouselSlide {
+  display: flex;
+  flex-direction: column;
+}
+
+.carouselTitle {
+  font-size: 22px;
+  font-weight: 600;
+  color: #0A1344;
+  margin-bottom: 20px;
+  line-height: 1.2;
+}
+
+.carouselDiagramContainer {
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+.carouselDiagramWrap {
+  width: 100%;
+  max-width: 200px;
+  flex-shrink: 0;
+}
+
+.carouselDiagramWrap svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.carouselArrow {
+  width: 56px;
+  min-width: 56px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  padding: 0;
+  transition: opacity 200ms ease;
+}
+
+.carouselArrow:hover:not(:disabled) {
+  opacity: 0.7;
+}
+
+.carouselArrow:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+.carouselArrowLeft {
+  order: -1;
+}
+
+.carouselArrowRight {
+  order: 1;
+}
+
+.carouselDots {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.carouselDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(10, 19, 68, 0.2);
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: background 300ms ease;
+}
+
+.carouselDot:hover {
+  background: rgba(10, 19, 68, 0.35);
+}
+
+.carouselDotActive {
+  background: #0A1344;
+}
+
+.carouselDivider {
+  height: 1px;
+  background: linear-gradient(90deg, rgba(10, 19, 68, 0.15) 0%, transparent 100%);
+  margin-bottom: 20px;
+}
+
+.carouselBody {
+  font-size: 15px;
+  line-height: 1.6;
+  color: rgba(10, 19, 68, 0.7);
+}
+
+.carouselBody p {
+  margin: 0 0 16px;
+}
+
+/* ── LGM Timeline mobile scroll ── */
+
+@media (max-width: 600px) {
+  .lgmTimeline {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .lgmTimeline::-webkit-scrollbar {
+    display: none;
+  }
+
+  .lgmTimelineTrack {
+    min-width: 900px;
+  }
+}
+
+/* ── Full-width backgrounds when sidebars hide (≤1500px) ── */
+
+@media (max-width: 1500px) {
+  .lgmSlide {
+    background-position: unset !important;
+    background-size: unset !important;
+    background: var(--tech-color-bg);
+  }
+
+  .dataCollectionSection {
+    background-position: unset !important;
+    background-size: unset !important;
+    background: #ffffff;
+  }
+
+  .coreReasoningSlide {
+    background-position: unset !important;
+    background-size: unset !important;
+    background: linear-gradient(to bottom,
+      #EEF5FF 0%,
+      rgba(133, 180, 234, 0.69) 19%,
+      #B5D5FA 31%,
+      #E1EFFE 92%,
+      #F9F9F9 100%);
+  }
+
+  .coreReasoningSlide::before {
+    left: 0;
+    right: 0;
+  }
+
+  .dotGrid::before {
+    left: 0;
+    right: 0;
+  }
+
+  .verticalLineOverlay {
+    display: none;
+  }
+
+  .lgmTimelineHalo {
+    right: calc(-1 * var(--page-padding));
+  }
+
+  .lgmTimelineTrack {
+    right: calc(-1 * var(--page-padding));
+  }
+
+  /* ── Timeline responsive scaling at ≤1500px ── */
+  .lgmTimeline {
+    height: clamp(160px, 40vw, 300px);
+    margin-top: clamp(20px, 2vw, 40px);
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+    margin-right: calc(-50vw + 50%);
+  }
+
+  .lgmTimelineLabel {
+    font-size: clamp(14px, 3vw, 28px);
+    line-height: 1.2;
+  }
+
+  .lgmTimelineMilestoneTop {
+    min-height: clamp(50px, 10vw, 100px);
+  }
+
+  .lgmTimelineMilestoneCompact {
+    min-height: clamp(32px, 5vw, 50px);
+  }
+
+  .lgmTimelineYear {
+    margin-bottom: clamp(6px, 1vw, 12px);
+    font-size: clamp(10px, 1.5vw, 14px);
+  }
+
+  .lgmTimelineColumbus .lgmTimelineColumbusLogo {
+    width: clamp(32px, 8vw, 55px);
+    height: clamp(32px, 8vw, 55px);
+    margin-top: clamp(12px, 2vw, 24px);
+  }
+
+  .lgmTimelineCta {
+    margin-top: clamp(12px, 2vw, 24px);
+    font-size: clamp(11px, 1.8vw, 14px);
+  }
+
+  .lgmTimelineHalo {
+    top: clamp(-16px, -2.5vw, -30px);
+    bottom: clamp(-16px, -2.5vw, -30px);
+  }
+
+  .lgmTimelineStem {
+    height: clamp(10px, 1.5vw, 20px);
+  }
+
+  .lgmTimelineMilestoneBottom .lgmTimelineStem {
+    margin-bottom: clamp(2px, 0.8vw, 6px);
+  }
+}
+
+/* ── LGM Compare Table mobile scroll ── */
+
+@media (max-width: 600px) {
+  .lgmCompareTable {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .lgmCompareTable::-webkit-scrollbar {
+    display: none;
   }
 }

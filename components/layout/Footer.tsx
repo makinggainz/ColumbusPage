@@ -165,8 +165,8 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false, t
           transition: previouslyOpened ? "none" : "all 1000ms cubic-bezier(0.22, 1, 0.36, 1)",
         }}
       >
-        <div className="max-w-[1200px] mx-auto px-8 pb-6 pt-12">
-          <div className="flex items-start justify-between mb-12">
+        <div className="max-w-[1200px] mx-auto px-6 sm:px-8 pb-6 pt-12">
+          <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-12 lg:gap-8 mb-12">
             <div
               style={{
                 opacity: bottleOpened ? 1 : 0,
@@ -175,8 +175,8 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false, t
                 transitionDelay: previouslyOpened ? "0ms" : bottleOpened ? "400ms" : "0ms",
               }}
             >
-              <h3 className="text-[70px] font-semibold mb-3" style={{ color: '#091344' }}>Columbus Earth</h3>
-              <p className={`text-[17.5px] leading-snug mb-4 max-w-[400px] ${theme === "dark" ? "text-white/50" : isTech ? "text-[#0A1344]/50" : "text-[#1D1D1F]/50"}`}>
+              <h3 className="text-[48px] sm:text-[70px] font-semibold mb-3" style={{ color: '#091344' }}>Columbus Earth</h3>
+              <p className={`text-[15px] sm:text-[17.5px] leading-snug mb-4 max-w-[400px] ${theme === "dark" ? "text-white/50" : isTech ? "text-[#0A1344]/50" : "text-[#1D1D1F]/50"}`}>
                 The frontier AI lab building the first production Universal Geospatial Model.
               </p>
               <div className="flex gap-4">
@@ -184,14 +184,14 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false, t
                 <a href="https://www.linkedin.com/company/columbusearth/about/" target="_blank" rel="noopener noreferrer"><Linkedin size={18} className={`transition-colors ${theme === "dark" ? "text-white/40 hover:text-white" : isTech ? "text-[#0A1344]/40 hover:text-[#0066CC]" : "text-[#1D1D1F]/40 hover:text-[#1D1D1F]"}`} /></a>
               </div>
             </div>
-            <div className="flex gap-8 md:gap-12 mt-[30px]">
+            <div className="flex flex-col sm:flex-row gap-8 sm:gap-12 lg:mt-[30px]">
               {[
                 <FooterColumn key="product" theme={theme} title="Product" links={[
                   { label: "Columbus Pro", href: "/products/enterprise" },
                   { label: "Elio", href: "/" },
-                  { label: "Use Cases", href: "/use-cases" },
+                  { label: "Use Cases", href: "/columbus-solutions" },
                 ]} />,
-                <FooterColumn key="technology" theme={theme} title="Technology" links={[
+                <FooterColumn key="technology" theme={theme} title="Research" links={[
                   { label: "Foundation Model", href: "/technology" },
                   { label: "Timeline", href: "/technology" },
                   { label: "Research", href: "/technology" },
@@ -219,7 +219,7 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false, t
             </div>
           </div>
           <div
-            className={`pt-4 pb-2 flex items-center justify-between text-[13px] ${theme === "dark" ? "text-white/30" : isTech ? "text-[#0A1344]/40" : "text-[#1D1D1F]/40"}`}
+            className={`pt-4 pb-2 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-6 text-[12px] sm:text-[13px] ${theme === "dark" ? "text-white/30" : isTech ? "text-[#0A1344]/40" : "text-[#1D1D1F]/40"}`}
             style={{
               opacity: bottleOpened ? 1 : 0,
               transition: previouslyOpened ? "none" : "opacity 600ms cubic-bezier(0.22, 1, 0.36, 1)",
@@ -227,7 +227,7 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false, t
             }}
           >
             <span>Columbus Earth &copy; 2026</span>
-            <div className="flex items-center gap-6">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-6">
               <span>Website made by hand, no AI.</span>
               <span>www.columbus.earth</span>
             </div>
@@ -251,10 +251,10 @@ const FooterColumn = ({
   const isTech = theme === "technology";
   return (
     <div>
-      <p className={`mb-4 font-medium text-[17.5px] tracking-wide ${theme === "dark" ? "text-white" : isTech ? "text-[#0A1344]" : "text-[#1D1D1F]"}`}>
+      <p className={`mb-4 font-medium text-[15px] sm:text-[17.5px] tracking-wide ${theme === "dark" ? "text-white" : isTech ? "text-[#0A1344]" : "text-[#1D1D1F]"}`}>
         {title}
       </p>
-      <ul className={`space-y-2 text-[17.5px] ${theme === "dark" ? "text-white/60" : isTech ? "text-[#0A1344]/60" : "text-[#1D1D1F]/60"}`}>
+      <ul className={`space-y-2 text-[15px] sm:text-[17.5px] ${theme === "dark" ? "text-white/60" : isTech ? "text-[#0A1344]/60" : "text-[#1D1D1F]/60"}`}>
         {links.map((link, i) => (
           <li key={i}>
             <Link

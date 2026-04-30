@@ -1,70 +1,37 @@
-/* Blog article sticky rail — replaces the navbar entirely on /blog/<slug>.
-   Hosts (top-down): the Columbus home link + wordmark slide-out, the back
-   link, the article section index, and the accessibility menu trigger.
-   Two visual modes: recessed (rest) and revealed (hover/focus-within). */
+/* Blog article sticky rail */
 
 .dock {
   display: none;
 }
 
-@media (min-width: 1100px) {
+@media (min-width: 1315px) {
   .dock {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 10px;
     position: fixed;
     z-index: 20;
-    /* Midpoint anchor between the prior navbar-logo-aligned position
-       (max(24px, (100vw − 1287px) / 2)) and the viewport-edge position
-       (16px). Quarter of the navbar's gutter places the dock comfortably
-       within the grey panel without hugging either side. */
     left: max(20px, calc((100vw - 1287px) / 4));
-    /* Align the dock's top edge with the article's top edge — the
-       <article> uses pt-[162px], and the dock has 14px of internal
-       padding, so 162 − 14 = 148 places its first child (the home link)
-       at the same Y as the article's first child (the date eyebrow). */
     top: 148px;
-    /* Cap so the dock's right edge stays comfortably within the grey
-       panel: grey-right = 50vw − 456, dock-right = 16 + max-width.
-       clamp(180, 50vw − 488, 240) keeps a 16px buffer at wide widths
-       and a sensible minimum at narrower ones. */
     max-width: clamp(180px, calc(50vw - 488px), 240px);
-    padding: 14px;
-    /* Resting state — invisible surface so the rail recedes into the
-       page; only the (faded) text is perceptible. */
-    background: rgba(255, 255, 255, 0);
-    backdrop-filter: blur(0px) saturate(1);
-    -webkit-backdrop-filter: blur(0px) saturate(1);
-    border: 1px solid transparent;
-    box-shadow: none;
-    transition:
-      background-color 280ms cubic-bezier(0.05, 0.7, 0.1, 1),
-      backdrop-filter 280ms cubic-bezier(0.05, 0.7, 0.1, 1),
-      -webkit-backdrop-filter 280ms cubic-bezier(0.05, 0.7, 0.1, 1),
-      border-color 280ms cubic-bezier(0.05, 0.7, 0.1, 1),
-      box-shadow 280ms cubic-bezier(0.05, 0.7, 0.1, 1);
-  }
-
-  .dock:hover,
-  .dock:focus-within {
-    background: rgba(255, 255, 255, 0.72);
-    backdrop-filter: blur(24px) saturate(0.55);
-    -webkit-backdrop-filter: blur(24px) saturate(0.55);
-    border-color: rgba(10, 19, 68, 0.08);
-    box-shadow:
-      0 12px 40px rgba(10, 19, 68, 0.08),
-      0 2px 6px rgba(10, 19, 68, 0.04);
+    opacity: 1;
+    transition: opacity 400ms cubic-bezier(0.22, 1, 0.36, 1);
   }
 }
 
-/* ── Home link + wordmark slide-out ─────────────────────────────────── */
+.dockHidden {
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+
+/* ── Home link ───────────────────────────────────────────────────────── */
 .homeLink {
   display: inline-flex;
   align-items: center;
   gap: 8px;
   text-decoration: none;
   color: inherit;
-  margin-bottom: 4px;
 }
 
 .logoGlyph {
@@ -91,12 +58,11 @@
   color: #0A1344;
   transition:
     opacity 420ms cubic-bezier(0.05, 0.7, 0.1, 1),
-    transform 520ms cubic-bezier(0.05, 0.7, 0.1, 1);
+    transform 520ms cubic-bezier(0.05, 0.7, 0.1, 1),
+    filter 420ms cubic-bezier(0.05, 0.7, 0.1, 1);
 }
 
-/* ── Back link ──────────────────────────────────────────────────────────
-   Minimal — text + left-pointing chevron (mirrors the homepage hero CTA
-   arrow), on-brand navy at rest. */
+/* ── Back link ───────────────────────────────────────────────────────── */
 .back {
   display: inline-flex;
   align-items: center;
@@ -104,10 +70,8 @@
   font-size: 13px;
   font-weight: 500;
   letter-spacing: -0.005em;
-  color: #101144;
+  color: rgba(10, 19, 68, 0.55);
   text-decoration: none;
-  padding: 6px 8px;
-  margin: -6px -8px;
   outline: none;
   transition: color 220ms ease;
 }
@@ -117,226 +81,75 @@
   transition: transform 300ms ease;
 }
 
-.back:hover,
-.back:focus-visible {
-  color: #0A1344;
-}
+.back:hover { color: #0A1344; }
+.back:hover .backArrow { transform: translateX(-2px); }
 
-.back:hover .backArrow,
-.back:focus-visible .backArrow {
-  transform: translateX(-2px);
-}
-
-/* ── Section index ──────────────────────────────────────────────────── */
-.tocBlock {
+/* ── TOC section ─────────────────────────────────────────────────────── */
+.tocSection {
   display: flex;
   flex-direction: column;
-  gap: 0;
+  gap: 8px;
+  margin-top: 8px;
 }
 
-.tocLabel {
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: rgba(10, 19, 68, 0.35);
-  margin-bottom: 6px;
-  transition: color 280ms ease;
-}
 
-.dock:hover .tocLabel,
-.dock:focus-within .tocLabel {
-  color: rgba(10, 19, 68, 0.55);
-}
-
-.sectionList {
+.tocList {
   list-style: none;
   margin: 0;
-  padding-top: 8px;
+  padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 2px;
-  border-top: 0;
-  background-image: linear-gradient(to right, rgba(16, 17, 68, 0.18), transparent);
-  background-size: 100% 1px;
-  background-position: top left;
-  background-repeat: no-repeat;
-  transition: background-image 280ms ease;
+  gap: 1px;
 }
 
-.dock:hover .sectionList,
-.dock:focus-within .sectionList {
-  background-image: linear-gradient(to right, rgba(16, 17, 68, 0.3), transparent);
-}
-
-.sectionLink {
-  display: block;
-  font-size: 12px;
+.tocItem {
+  display: inline-flex;
+  align-items: center;
+  font-size: 13px;
   font-weight: 400;
   letter-spacing: -0.005em;
   line-height: 1.4;
-  color: rgba(10, 19, 68, 0.32);
+  color: rgba(10, 19, 68, 0.38);
   text-decoration: none;
-  padding: 6px 8px;
-  margin: 0 -8px;
+  padding: 3px 0;
   outline: none;
-  transition: color 220ms ease, filter 220ms ease, opacity 220ms ease;
+  transition: color 350ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.dock:hover .sectionLink,
-.dock:focus-within .sectionLink {
-  color: rgba(10, 19, 68, 0.6);
+.tocItem:hover { color: rgba(10, 19, 68, 0.62); }
+
+.tocItemActive {
+  color: #0A1344;
 }
 
-.sectionLink:hover,
-.sectionLink:focus-visible {
-  color: #101144;
-}
-
-/* When any section link is being hovered/focused, blur the *other* links so
-   the hovered one reads as the focus point. The hovered link itself stays
-   crisp via :not(). */
-.sectionList:has(.sectionLink:hover) .sectionLink:not(:hover),
-.sectionList:has(.sectionLink:focus-visible) .sectionLink:not(:focus-visible) {
-  filter: blur(1.5px);
-  opacity: 0.65;
-}
-
-/* ── A11y row at the bottom ─────────────────────────────────────────── */
-.a11yRow {
-  margin-top: 4px;
-  padding-top: 10px;
-  background-image: linear-gradient(to right, rgba(16, 17, 68, 0.18), transparent);
-  background-size: 100% 1px;
-  background-position: top left;
-  background-repeat: no-repeat;
-  transition: background-image 280ms ease;
+.tocItemLabel {
   display: block;
-  margin-left: -2px;
 }
 
-.dock:hover .a11yRow,
-.dock:focus-within .a11yRow {
-  background-image: linear-gradient(to right, rgba(16, 17, 68, 0.3), transparent);
-}
 
-/* ─────────────────────────────────────────────────────────────────────
-   Dark mode (AccessibilityMenu's body.bg-mode-dark)
-   ───────────────────────────────────────────────────────────────────── */
-@media (min-width: 1100px) {
-  :global(body.bg-mode-dark) .dock:hover,
-  :global(body.bg-mode-dark) .dock:focus-within {
-    background: rgba(20, 22, 30, 0.65);
-    backdrop-filter: blur(24px) saturate(0.55);
-    -webkit-backdrop-filter: blur(24px) saturate(0.55);
-    border-color: rgba(255, 255, 255, 0.10);
-    box-shadow:
-      0 12px 40px rgba(0, 0, 0, 0.35),
-      0 2px 6px rgba(0, 0, 0, 0.20);
-  }
-}
+/* ── Dark mode ───────────────────────────────────────────────────────── */
+:global(body.bg-mode-dark) .wordmarkText { color: rgba(255,255,255,0.92); }
+:global(body.bg-mode-dark) .logoGlyph img { filter: brightness(0) invert(1); }
 
-:global(body.bg-mode-dark) .wordmarkText {
-  color: rgba(255, 255, 255, 0.95);
-}
-:global(body.bg-mode-dark) .logoGlyph img {
-  filter: brightness(0) invert(1);
-}
+:global(body.bg-mode-dark) .back { color: rgba(255,255,255,0.55); }
+:global(body.bg-mode-dark) .back:hover { color: rgba(255,255,255,0.90); }
 
-:global(body.bg-mode-dark) .back {
-  color: #4B9CFF;
-}
-:global(body.bg-mode-dark) .back:hover,
-:global(body.bg-mode-dark) .back:focus-visible {
-  color: #FFFFFF;
-}
+:global(body.bg-mode-dark) .shareLabel { color: rgba(255,255,255,0.35); }
 
-:global(body.bg-mode-dark) .tocLabel {
-  color: rgba(255, 255, 255, 0.28);
-}
-:global(body.bg-mode-dark) .dock:hover .tocLabel,
-:global(body.bg-mode-dark) .dock:focus-within .tocLabel {
-  color: rgba(255, 255, 255, 0.50);
-}
 
-:global(body.bg-mode-dark) .sectionList,
-:global(body.bg-mode-dark) .a11yRow {
-  background-image: linear-gradient(to right, rgba(75, 156, 255, 0.18), transparent);
-}
-:global(body.bg-mode-dark) .dock:hover .sectionList,
-:global(body.bg-mode-dark) .dock:focus-within .sectionList,
-:global(body.bg-mode-dark) .dock:hover .a11yRow,
-:global(body.bg-mode-dark) .dock:focus-within .a11yRow {
-  background-image: linear-gradient(to right, rgba(75, 156, 255, 0.32), transparent);
-}
+:global(body.bg-mode-dark) .tocItem { color: rgba(255,255,255,0.32); }
+:global(body.bg-mode-dark) .tocItem:hover { color: rgba(255,255,255,0.72); }
+:global(body.bg-mode-dark) .tocItemActive { color: rgba(255,255,255,0.92); }
 
-:global(body.bg-mode-dark) .sectionLink {
-  color: rgba(255, 255, 255, 0.32);
-}
-:global(body.bg-mode-dark) .dock:hover .sectionLink,
-:global(body.bg-mode-dark) .dock:focus-within .sectionLink {
-  color: rgba(255, 255, 255, 0.65);
-}
-:global(body.bg-mode-dark) .sectionLink:hover,
-:global(body.bg-mode-dark) .sectionLink:focus-visible {
-  color: #4B9CFF;
-  background-color: rgba(75, 156, 255, 0.10);
-}
+/* ── Sepia mode ──────────────────────────────────────────────────────── */
+:global(body.bg-mode-sepia) .wordmarkText { color: #433422; }
 
-/* ─────────────────────────────────────────────────────────────────────
-   Sepia mode
-   ───────────────────────────────────────────────────────────────────── */
-@media (min-width: 1100px) {
-  :global(body.bg-mode-sepia) .dock:hover,
-  :global(body.bg-mode-sepia) .dock:focus-within {
-    background: rgba(244, 236, 216, 0.78);
-    border-color: rgba(67, 52, 34, 0.12);
-    box-shadow:
-      0 12px 40px rgba(67, 52, 34, 0.10),
-      0 2px 6px rgba(67, 52, 34, 0.05);
-  }
-}
+:global(body.bg-mode-sepia) .back { color: rgba(67,52,34,0.55); }
+:global(body.bg-mode-sepia) .back:hover { color: #433422; }
 
-:global(body.bg-mode-sepia) .wordmarkText {
-  color: #433422;
-}
+:global(body.bg-mode-sepia) .shareLabel { color: rgba(67,52,34,0.40); }
 
-:global(body.bg-mode-sepia) .back {
-  color: #8a5a2b;
-}
-:global(body.bg-mode-sepia) .back:hover,
-:global(body.bg-mode-sepia) .back:focus-visible {
-  color: #433422;
-}
 
-:global(body.bg-mode-sepia) .tocLabel {
-  color: rgba(67, 52, 34, 0.35);
-}
-:global(body.bg-mode-sepia) .dock:hover .tocLabel,
-:global(body.bg-mode-sepia) .dock:focus-within .tocLabel {
-  color: rgba(67, 52, 34, 0.55);
-}
-
-:global(body.bg-mode-sepia) .sectionList,
-:global(body.bg-mode-sepia) .a11yRow {
-  background-image: linear-gradient(to right, rgba(138, 90, 43, 0.18), transparent);
-}
-:global(body.bg-mode-sepia) .dock:hover .sectionList,
-:global(body.bg-mode-sepia) .dock:focus-within .sectionList,
-:global(body.bg-mode-sepia) .dock:hover .a11yRow,
-:global(body.bg-mode-sepia) .dock:focus-within .a11yRow {
-  background-image: linear-gradient(to right, rgba(138, 90, 43, 0.3), transparent);
-}
-
-:global(body.bg-mode-sepia) .sectionLink {
-  color: rgba(67, 52, 34, 0.32);
-}
-:global(body.bg-mode-sepia) .dock:hover .sectionLink,
-:global(body.bg-mode-sepia) .dock:focus-within .sectionLink {
-  color: rgba(67, 52, 34, 0.6);
-}
-:global(body.bg-mode-sepia) .sectionLink:hover,
-:global(body.bg-mode-sepia) .sectionLink:focus-visible {
-  color: #8a5a2b;
-  background-color: rgba(138, 90, 43, 0.08);
-}
+:global(body.bg-mode-sepia) .tocItem { color: rgba(67,52,34,0.38); }
+:global(body.bg-mode-sepia) .tocItem:hover { color: rgba(67,52,34,0.75); }
+:global(body.bg-mode-sepia) .tocItemActive { color: #433422; }

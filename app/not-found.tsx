@@ -18,13 +18,13 @@ export default function NotFound() {
       <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-8 text-center">
         <p
           className="text-[120px] md:text-[180px] font-light leading-none"
-          style={{ color: "rgba(20, 60, 160, 0.15)", letterSpacing: "-0.04em" }}
+          style={{ fontFamily: "var(--font-hero)", color: "rgba(20, 60, 160, 0.15)", letterSpacing: "-0.04em" }}
         >
           404
         </p>
         <h1
           className="font-light leading-[1.15] text-[#0A1344] text-[28px] md:text-[39px] lg:text-[49px] mt-4"
-          style={{ letterSpacing: "-0.02em" }}
+          style={{ fontFamily: "var(--font-hero)", letterSpacing: "-0.02em" }}
         >
           Lost at sea.
         </h1>

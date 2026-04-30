@@ -9,13 +9,13 @@ import {
   RESEARCH_CARDS,
 } from "./content";
 import { CoreResearchArt } from "./CoreResearchArt";
+import { CoreResearchCarousel } from "./CoreResearchCarousel";
 import { Definition } from "./Definition";
 import { ResearchAccordionProvider } from "./ResearchAccordionContext";
 import { ResearchGroup } from "./ResearchGroup";
 import { RevealOnView } from "./RevealOnView";
 import { SidebarRightLine } from "./SidebarRightLine";
 import { CareersContactForm } from "./CareersContactForm";
-import { GenLayersSection } from "./GenLayersSection";
 import type { TechnologySectionId } from "./types";
 
 function Slide({
@@ -48,8 +48,10 @@ export function TechnologySections() {
       {/* Right-edge divider line — mirrors sidebarPanel, bends outward at the LGM timeline with a gap */}
       <SidebarRightLine timelineId="lgm-timeline-track" />
 
-      {/* Main content column */}
-      <div>
+      {/* Main content column — lifted above sidebars (z:100) so the
+          timeline track that extends into the gutter renders on top
+          of the bleed/curves. */}
+      <div style={{ position: "relative", zIndex: 200 }}>
       {/* ── 1. What's an LGM ── */}
       <Slide id="index">
         <div className={styles.slideFrame}>
@@ -57,7 +59,7 @@ export function TechnologySections() {
 
             <div className={styles.lgmCompareLayout}>
               <div className={styles.lgmCompareText}>
-                <span className={styles.sectionEyebrow}>What&rsquo;s an LGM</span>
+                <span className={styles.sectionEyebrow}>A new foundation model</span>
                 <h2 className={styles.sectionTitle}>
                   Large Geospatial Model vs Large Language Model.
                 </h2>
@@ -103,98 +105,116 @@ export function TechnologySections() {
               </div>
             </div>
 
-            {/* ── Comparison table ── */}
-            <div className={styles.lgmCompareTable} aria-hidden={false}>
-              <h3 className={styles.lgmCompareTableTitle}>Whats the difference?</h3>
+            {/* ── How an LGM is different — comparison table ── */}
+            <div className={styles.lgmCompareTable}>
+              <div className={styles.dimBranding}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="/logobueno.png" alt="" className={styles.dimBrandingLogo} aria-hidden />
+                <span>Columbus Earth</span>
+              </div>
 
-              <div className={styles.lgmCompareTableHead}>
+              <h3 className={styles.lgmCompareTableTitle}>An LGM vs other foundation models</h3>
+
+              {/* Comparison grid — labels column + 3 model columns */}
+              <div className={styles.dimTableGrid}>
+
+                {/* ── Header row: empty cell + 3 model headers ── */}
                 <div />
-                <div className={styles.lgmCompareColHead}>LLM</div>
-                <div className={styles.lgmCompareColHead}>Vision Model</div>
-                <div className={styles.lgmCompareColHead}>LGM</div>
-              </div>
-
-              <div className={styles.lgmCompareTableBody}>
-                <div className={styles.lgmCompareRowLabel}>
-                  <div>Input</div>
-                  <div>Output</div>
+                <div className={styles.dimModelHeader}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src="/TechnologyPageImages/llm-text-icon.png" alt="" className={styles.dimModelHeaderIcon} aria-hidden />
+                  <h4 className={styles.dimModelHeaderName}>LLM</h4>
+                  <p className={styles.dimModelHeaderSubtitle}>Large-Language-model</p>
                 </div>
-                <div className={styles.lgmCompareCell}>
-                  <p className={styles.lgmCompareCellText}>
-                    alargelanguagelearningmodelistrainedonhugesetsoftextdatafortokenizationofmanywordsoftenfromarticleslargetextbookset
-                    280, 1170, 296, 4088, 30773, 4012, 5079, 2534, 3883, 263,
-                  </p>
+                <div className={styles.dimModelHeader}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src="/TechnologyPageImages/vlm-image-icon.png" alt="" className={styles.dimModelHeaderIcon} aria-hidden />
+                  <h4 className={styles.dimModelHeaderName}>VLM</h4>
+                  <p className={styles.dimModelHeaderSubtitle}>Vision-Language-model</p>
                 </div>
-                <div className={styles.lgmCompareCell} />
-                <div className={styles.lgmCompareCell} />
-              </div>
+                <div className={styles.dimModelHeader}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src="/TechnologyPageImages/lgm-globe-icon.png" alt="" className={styles.dimModelHeaderIcon} aria-hidden />
+                  <h4 className={`${styles.dimModelHeaderName} ${styles.dimModelHeaderNameLgm}`}>LGM</h4>
+                  <p className={styles.dimModelHeaderSubtitle}>Large-Geosaptial-model</p>
+                </div>
 
-              <div className={styles.lgmCompareTableExamples}>
-                <div className={styles.lgmCompareRowLabel}>Examples</div>
+                {/* ── Row 1: Trained on ── */}
+                <div className={styles.dimRowLabel}>Trained on</div>
+                <div className={`${styles.dimGridCell} ${styles.dimGridCellTop}`}>
+                  <h4 className={styles.dimCellHeading}>Text</h4>
+                  <p className={styles.dimCellNote}>e.g. &ldquo;The grass is&rdquo; → &ldquo;green&rdquo;</p>
+                </div>
+                <div className={`${styles.dimGridCell} ${styles.dimGridCellTop}`}>
+                  <h4 className={styles.dimCellHeading}>Text &amp; Image</h4>
+                  <p className={styles.dimCellNote}>e.g. dog photo → &ldquo;a border collie&rdquo;</p>
+                </div>
+                <div className={`${styles.dimGridCell} ${styles.dimGridCellTop} ${styles.dimGridCellLgm}`}>
+                  <h4 className={styles.dimCellHeading}>Physical reality</h4>
+                  <p className={styles.dimCellNote}>e.g. public data + urban imagery + GIS → crime risk map</p>
+                </div>
 
-                {/* LLM — 2×2 logo grid (names kept in alt + sr-only for a11y/SEO) */}
-                <div className={styles.lgmCompareExampleCell}>
-                  <div className={styles.lgmLogoGrid}>
-                    <div className={styles.lgmLogoItem} title="ChatGPT">
+                {/* ── Row 2: What it outputs ── */}
+                <div className={styles.dimRowLabel}>What it<br />outputs</div>
+                <div className={`${styles.dimGridCell} ${styles.dimGridCellMid}`}>
+                  <h4 className={styles.dimCellHeading}>Predictive words</h4>
+                  <p className={styles.dimCellNote}>&ldquo;What word comes next?&rdquo;</p>
+                </div>
+                <div className={`${styles.dimGridCell} ${styles.dimGridCellMid}`}>
+                  <h4 className={styles.dimCellHeading}>Visual reasoning</h4>
+                  <p className={styles.dimCellNote}>&ldquo;What&rsquo;s in this image?&rdquo;</p>
+                </div>
+                <div className={`${styles.dimGridCell} ${styles.dimGridCellMid} ${styles.dimGridCellLgm}`}>
+                  <h4 className={styles.dimCellHeading}>Ground truths</h4>
+                  <p className={styles.dimCellNote}>&ldquo;What&rsquo;s in this physical space?&rdquo;</p>
+                </div>
+
+                {/* ── Row 3: Who's building it ── */}
+                <div className={styles.dimRowLabel}>Who&rsquo;s<br />building it</div>
+                <div className={`${styles.dimGridCell} ${styles.dimGridCellBottom}`}>
+                  <div className={styles.dimLogos}>
+                    <div className={styles.dimLogoItem}>
                       {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src="/TechnologyPageImages/LogosTable/ChatGPT-Vertical-Logo-Vector.svg-.png"
-                        alt="ChatGPT"
-                        className={styles.lgmLogoMark}
-                      />
-                      <span className={styles.srOnly}>ChatGPT</span>
+                      <img src="/TechnologyPageImages/LogosTable/ChatGPT-Vertical-Logo-Vector.svg-.png" alt="ChatGPT" className={styles.dimLogoImg} />
                     </div>
-                    <div className={styles.lgmLogoItem} title="Claude">
+                    <div className={styles.dimLogoItem}>
                       {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src="/TechnologyPageImages/LogosTable/Claude_AI_logo.svg.png"
-                        alt="Claude"
-                        className={styles.lgmLogoMark}
-                      />
-                      <span className={styles.srOnly}>Claude</span>
+                      <img src="/TechnologyPageImages/LogosTable/Claude_AI_logo.svg.png" alt="Claude" className={styles.dimLogoImg} />
                     </div>
-                    <div className={styles.lgmLogoItem} title="Grok">
+                    <div className={styles.dimLogoItem}>
                       {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src="/TechnologyPageImages/LogosTable/Grok-feb-2025-logo.svg.png"
-                        alt="Grok"
-                        className={styles.lgmLogoMark}
-                      />
-                      <span className={styles.srOnly}>Grok</span>
+                      <img src="/TechnologyPageImages/LogosTable/Grok-feb-2025-logo.svg.png" alt="Grok" className={styles.dimLogoImg} />
                     </div>
-                    <div className={styles.lgmLogoItem} title="Perplexity">
+                    <div className={styles.dimLogoItem}>
                       {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src="/TechnologyPageImages/LogosTable/Perplexity_AI_logo.svg.png"
-                        alt="Perplexity"
-                        className={styles.lgmLogoMark}
-                      />
-                      <span className={styles.srOnly}>perplexity</span>
+                      <img src="/TechnologyPageImages/LogosTable/Perplexity_AI_logo.svg.png" alt="Perplexity" className={styles.dimLogoImg} />
                     </div>
                   </div>
                 </div>
-
-                {/* Vision Model — text list */}
-                <div className={styles.lgmCompareExampleCell}>
-                  <ul className={styles.lgmCompareExampleList}>
-                    <li>Clay</li>
-                    <li>Google Deepmind</li>
-                    <li>Maxar</li>
-                  </ul>
+                <div className={`${styles.dimGridCell} ${styles.dimGridCellBottom}`}>
+                  <div className={styles.dimLogos} style={{ gridTemplateColumns: "1fr" }}>
+                    <div className={styles.dimLogoItem}>
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src="/TechnologyPageImages/physical-intelligence-logo.jpeg" alt="Physical Intelligence" className={styles.dimLogoImg} style={{ maxWidth: 135 }} />
+                    </div>
+                    <div className={styles.dimLogoItem}>
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src="/TechnologyPageImages/runway-logo.jpeg" alt="Runway" className={styles.dimLogoImg} />
+                    </div>
+                    <div className={styles.dimLogoItem}>
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src="/TechnologyPageImages/meta-logo.jpeg" alt="Meta" className={styles.dimLogoImg} />
+                    </div>
+                  </div>
                 </div>
-
-                {/* LGM — Columbus Earth */}
-                <div className={styles.lgmCompareExampleCell}>
-                  <div className={styles.lgmCompareBrandMark}>
+                <div className={`${styles.dimGridCell} ${styles.dimGridCellBottom} ${styles.dimGridCellLgm}`}>
+                  <div className={styles.dimBrand}>
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src="/logobueno.png"
-                      alt=""
-                      className={styles.lgmBrandMarkLogo}
-                    />
-                    <span>Columbus Earth</span>
+                    <img src="/logobueno.png" alt="" className={styles.dimBrandLogo} aria-hidden />
+                    <span className={styles.dimBrandName}>Columbus Earth</span>
                   </div>
                 </div>
+
               </div>
             </div>
           </RevealOnView>
@@ -205,11 +225,10 @@ export function TechnologySections() {
       <Slide id="lgm-vs-llm" className={`${styles.lgmSlide} ${styles.dotGrid}`}>
         <div className={styles.slideFrame}>
           <RevealOnView className={`${styles.editorialSlide} ${styles.lgmFoundationalSlide}`}>
-            <p className={styles.lgmKicker}>A NEW FOUNDATIONAL MODEL</p>
             <h2 className={styles.lgmFoundationalTitle}>
               A Large Geospatial Model is the next frontier in AI
             </h2>
-            <p className={styles.lgmFoundationalLead}>And we&apos;ve already flown off the edge.</p>
+            <p className={styles.lgmFoundationalLead}>The path forward</p>
 
             {(() => {
               // Timeline spans 2022 → 2028 inclusive (7 years) with a
@@ -220,7 +239,7 @@ export function TechnologySections() {
 
               // 2025 + 2026 sit only one year apart — shift 2025 left and
               // 2026 right so their labels have breathing room.
-              const x2025 = `calc(${yearMid(2025)} - clamp(72px, 9vw, 140px))`;
+              const x2025 = `calc(${yearMid(2025)} - clamp(140px, 16vw, 220px))`;
               const x2026 = `calc(${yearMid(2026)} + clamp(40px, 5vw, 80px))`;
 
               // Columbus "now" marker — its own dot/stem/date, sitting
@@ -267,23 +286,23 @@ export function TechnologySections() {
               <span className={`${styles.lgmTimelineDot} ${styles.lgmTimelineDotTrailing}`} style={{ left: yearMid(2032) }} aria-hidden />
 
               {/* ─── 2022 — year above the line (no stem); LLM below ─── */}
-              <div className={`${styles.lgmTimelineMilestone} ${styles.lgmTimelineMilestoneTop} ${styles.lgmTimelineMilestoneCompact}`} style={{ left: yearMid(2022) }}>
+              <div className={`${styles.lgmTimelineMilestone} ${styles.lgmTimelineMilestoneTop}`} style={{ left: yearMid(2022) }}>
+                <span className={styles.lgmTimelineLabel}>LLM</span>
+                <span className={styles.lgmTimelineStem} aria-hidden />
+              </div>
+              <div className={`${styles.lgmTimelineMilestone} ${styles.lgmTimelineMilestoneBottom} ${styles.lgmTimelineMilestoneCompact}`} style={{ left: yearMid(2022) }}>
                 <span className={styles.lgmTimelineYear}>2022</span>
               </div>
-              <div className={`${styles.lgmTimelineMilestone} ${styles.lgmTimelineMilestoneBottom}`} style={{ left: yearMid(2022) }}>
-                <span className={styles.lgmTimelineStem} aria-hidden />
-                <span className={styles.lgmTimelineLabel}>LLM</span>
-              </div>
 
-              {/* ─── 2025 — year above (no stem); Geo-tuned label below ─── */}
-              <div className={`${styles.lgmTimelineMilestone} ${styles.lgmTimelineMilestoneTop} ${styles.lgmTimelineMilestoneCompact}`} style={{ left: x2025 }}>
-                <span className={styles.lgmTimelineYear}>2025</span>
-              </div>
-              <div className={`${styles.lgmTimelineMilestone} ${styles.lgmTimelineMilestoneBottom}`} style={{ left: x2025 }}>
-                <span className={styles.lgmTimelineStem} aria-hidden />
+              {/* ─── 2025 — Geo-tuned label above; year below ─── */}
+              <div className={`${styles.lgmTimelineMilestone} ${styles.lgmTimelineMilestoneTop}`} style={{ left: x2025 }}>
                 <span className={styles.lgmTimelineLabel}>
                   Geo-tuned LLM<br />&amp; Vision Models
                 </span>
+                <span className={styles.lgmTimelineStem} aria-hidden />
+              </div>
+              <div className={`${styles.lgmTimelineMilestone} ${styles.lgmTimelineMilestoneBottom} ${styles.lgmTimelineMilestoneCompact}`} style={{ left: x2025 }}>
+                <span className={styles.lgmTimelineYear}>2025</span>
               </div>
 
               {/* ─── Columbus — separate "now" marker between 2025 and 2026 ─── */}
@@ -298,13 +317,13 @@ export function TechnologySections() {
                 <span className={styles.lgmTimelineStem} aria-hidden />
               </div>
 
-              {/* ─── 2026 — year floats above Generalist/LGM (one word per line), stem to dot, CTA below (no stem above CTA) ─── */}
+              {/* ─── 2026 — Generalist LGM label above; year + CTA below ─── */}
               <div className={`${styles.lgmTimelineMilestone} ${styles.lgmTimelineMilestoneTop}`} style={{ left: x2026 }}>
-                <span className={styles.lgmTimelineYear}>2026</span>
                 <span className={styles.lgmTimelineLabel}>Generalist<br />LGM</span>
                 <span className={styles.lgmTimelineStem} aria-hidden />
               </div>
               <div className={`${styles.lgmTimelineMilestone} ${styles.lgmTimelineMilestoneBottom}`} style={{ left: x2026 }}>
+                <span className={styles.lgmTimelineYear}>2026</span>
                 <Link href={blogHref(BLOG_SLUG.timelineGeneralistLgm)} className={styles.lgmTimelineCta}>
                   <span>Read our Paper</span>
                   <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden>
@@ -313,13 +332,13 @@ export function TechnologySections() {
                 </Link>
               </div>
 
-              {/* ─── 2028 — year floats above UGM, stem to dot, CTA below (no stem above CTA) ─── */}
+              {/* ─── 2028 — UGM label above; year + CTA below ─── */}
               <div className={`${styles.lgmTimelineMilestone} ${styles.lgmTimelineMilestoneTop}`} style={{ left: yearMid(2028) }}>
-                <span className={styles.lgmTimelineYear}>2028</span>
                 <span className={styles.lgmTimelineLabel}>UGM</span>
                 <span className={styles.lgmTimelineStem} aria-hidden />
               </div>
               <div className={`${styles.lgmTimelineMilestone} ${styles.lgmTimelineMilestoneBottom}`} style={{ left: yearMid(2028) }}>
+                <span className={styles.lgmTimelineYear}>2028</span>
                 <Link href={blogHref(BLOG_SLUG.ugmRoadmapGamePlan)} className={styles.lgmTimelineCta}>
                   <span>Our Game Plan</span>
                   <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden>
@@ -420,7 +439,7 @@ export function TechnologySections() {
               <CoreResearchArt />
 
               <div className={styles.coreResearchBody}>
-                <ResearchGroup title="Data Collection">
+                <ResearchGroup title={"1. Data Collection"}>
                   <p>
                     The most extensive data collection in the industry. Versatile
                     methods ranging from drones, car data, human data, public data
@@ -445,7 +464,7 @@ export function TechnologySections() {
                   </Link>
                 </ResearchGroup>
 
-                <ResearchGroup title="Fusion">
+                <ResearchGroup title={"2. Fusion"}>
                   <p>
                     Accurate, automatic data filtering{" "}
                     <Definition
@@ -480,7 +499,7 @@ export function TechnologySections() {
                   </p>
                 </ResearchGroup>
 
-                <ResearchGroup title="Core Reasoning">
+                <ResearchGroup title={`3.${" "}Core Reasoning`}>
                   <p>
                     Our reasoning model considers temporal data, and sifts
                     through vast amounts of aggregated geospatial data &mdash;
@@ -502,28 +521,36 @@ export function TechnologySections() {
                   </Link>
                 </ResearchGroup>
 
-                <ResearchGroup title="Answers, insights, patterns">
+                <ResearchGroup title={`4.${" "}Answers, insights, patterns`}>
                   <p>One model, innumerable granular ground truths.</p>
                   <div className={styles.coreResearchProducts}>
-                    <a href="/" className={styles.coreResearchProduct}>
+                    <a href="/enterprise" className={styles.coreResearchProduct}>
                       <span className={styles.coreResearchProductGlyph} aria-hidden>
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img src="/logobueno.png" alt="" />
                       </span>
                       <span>Columbus</span>
                     </a>
-                    <a href="/products/mapsgpt" className={styles.coreResearchProduct}>
+                    <a
+                      href="https://mapsgpt.es"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={styles.coreResearchProduct}
+                    >
                       <span className={styles.coreResearchProductGlyph} aria-hidden>
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img src="/MapsGPT-logo.png" alt="" />
                       </span>
                       <span>Elio</span>
                     </a>
-                    <a href="#" className={`${styles.coreResearchProduct} ${styles.coreResearchProductSoon}`}>
+                    <span
+                      className={`${styles.coreResearchProduct} ${styles.coreResearchProductSoon}`}
+                      aria-disabled="true"
+                    >
                       <span>More Soon</span>
-                    </a>
+                    </span>
                   </div>
-                  <a href="/use-cases" className={styles.coreResearchGroupLink}>
+                  <a href="/columbus-solutions" className={styles.coreResearchGroupLink}>
                     Other use cases
                     <svg width="10" height="10" viewBox="0 0 10 10" aria-hidden>
                       <path d="M2 8l6-6M3.5 2H8v4.5" stroke="currentColor" strokeWidth="1.3" fill="none" strokeLinecap="round" strokeLinejoin="round" />
@@ -533,6 +560,10 @@ export function TechnologySections() {
               </div>
             </div>
             </ResearchAccordionProvider>
+
+            <div className={styles.coreResearchCarousel}>
+              <CoreResearchCarousel />
+            </div>
 
             <a
               href="#"
@@ -557,98 +588,43 @@ export function TechnologySections() {
             <p className={styles.resultsLead}>The latest results from our development of the LGM.</p>
 
             <div className={styles.resultsGrid}>
-              <div className={styles.resultsCard}>
-                <div className={styles.resultsCardCopy}>
-                  <span className={styles.resultsCardNumber}>1</span>
-                  <p className={styles.resultsCardText}>
-                    Fast semantic reasoning in cities.<br />Contextual enrichment.
-                  </p>
+              {[
+                {
+                  num: "1",
+                  text: "Fast semantic reasoning in cities. Contextual enrichment.",
+                },
+                {
+                  num: "2",
+                  text: "Generative geospatial data",
+                },
+                {
+                  num: "3",
+                  text: "Generalist model, with access to wide catalogue",
+                },
+                {
+                  num: "4",
+                  text: "Deep spatial reasoning at scale",
+                },
+              ].map((item) => (
+                <div key={item.num} className={styles.resultsCard}>
+                  <div className={styles.resultsCardArt} aria-hidden>
+                    <svg viewBox="0 0 100 100" fill="none" preserveAspectRatio="xMidYMid meet">
+                      {/* Wireframe globe — outer rim, latitudes, longitudes, surface marker. */}
+                      <circle cx="50" cy="50" r="34" stroke="rgba(255,255,255,0.85)" strokeWidth="0.9" />
+                      <ellipse cx="50" cy="50" rx="34" ry="9" stroke="rgba(255,255,255,0.7)" strokeWidth="0.7" />
+                      <ellipse cx="50" cy="50" rx="32" ry="22" stroke="rgba(255,255,255,0.55)" strokeWidth="0.6" />
+                      <ellipse cx="50" cy="50" rx="28" ry="32" stroke="rgba(255,255,255,0.55)" strokeWidth="0.6" />
+                      <line x1="50" y1="16" x2="50" y2="84" stroke="rgba(255,255,255,0.85)" strokeWidth="0.8" />
+                      <line x1="34" y1="22" x2="66" y2="22" stroke="rgba(255,255,255,0.55)" strokeWidth="0.6" />
+                      <line x1="28" y1="34" x2="72" y2="34" stroke="rgba(255,255,255,0.55)" strokeWidth="0.6" />
+                      <line x1="28" y1="66" x2="72" y2="66" stroke="rgba(255,255,255,0.55)" strokeWidth="0.6" />
+                      <line x1="34" y1="78" x2="66" y2="78" stroke="rgba(255,255,255,0.55)" strokeWidth="0.6" />
+                      <circle cx="61" cy="40" r="3" fill="rgba(255,255,255,0.9)" />
+                    </svg>
+                  </div>
+                  <h3 className={styles.resultsCardText}>{`${item.num}. ${item.text}`}</h3>
                 </div>
-                <div className={styles.resultsCardArt} aria-hidden>
-                  <svg viewBox="0 0 320 220" fill="none" preserveAspectRatio="xMidYMid slice">
-                    {Array.from({ length: 9 }).map((_, i) => (
-                      <line key={`vx${i}`} x1={40 + i * 32} y1="20" x2={-40 + i * 32} y2="200" stroke="rgba(255,255,255,0.3)" strokeWidth="0.6" />
-                    ))}
-                    {Array.from({ length: 7 }).map((_, i) => (
-                      <line key={`hy${i}`} x1="0" y1={40 + i * 28} x2="320" y2={20 + i * 28} stroke="rgba(255,255,255,0.3)" strokeWidth="0.6" />
-                    ))}
-                    {[[80,70],[150,60],[220,75],[100,120],[175,110],[250,130],[120,170],[200,165]].map(([x,y], idx) => (
-                      <g key={idx}>
-                        <path d={`M${x} ${y} L${x+24} ${y-8} L${x+34} ${y+4} L${x+18} ${y+18} L${x} ${y+12} Z`} stroke="rgba(255,255,255,0.8)" strokeWidth="0.9" fill="none" />
-                        <path d={`M${x+4} ${y-2} L${x+18} ${y-8}`} stroke="rgba(255,255,255,0.55)" strokeWidth="0.6" />
-                      </g>
-                    ))}
-                  </svg>
-                </div>
-              </div>
-
-              <div className={styles.resultsCard}>
-                <div className={styles.resultsCardCopy}>
-                  <span className={styles.resultsCardNumber}>2</span>
-                  <p className={styles.resultsCardText}>
-                    Generalist model,<br />with access to<br />wide catalogue
-                  </p>
-                </div>
-                <div className={styles.resultsCardArt} aria-hidden>
-                  <svg viewBox="0 0 320 220" fill="none" preserveAspectRatio="xMidYMid slice">
-                    {Array.from({ length: 18 }).map((_, i) => (
-                      <line key={`g1-${i}`} x1={20 + i * 16} y1="120" x2={20 + i * 16} y2={120 + 40 * Math.sin((i / 18) * Math.PI * 2)} stroke="rgba(255,255,255,0.4)" strokeWidth="0.6" />
-                    ))}
-                    <ellipse cx="160" cy="115" rx="100" ry="18" stroke="rgba(255,255,255,0.5)" strokeWidth="0.8" />
-                    {Array.from({ length: 10 }).map((_, i) => (
-                      <ellipse key={`r${i}`} cx="160" cy="115" rx={10 + i * 10} ry={2 + i * 1.8} stroke="rgba(255,255,255,0.2)" strokeWidth="0.4" />
-                    ))}
-                    <circle cx="160" cy="115" r="14" stroke="rgba(255,255,255,0.9)" strokeWidth="0.8" fill="rgba(255,255,255,0.12)" />
-                  </svg>
-                </div>
-              </div>
-
-              <div className={styles.resultsCard}>
-                <div className={styles.resultsCardCopy}>
-                  <span className={styles.resultsCardNumber}>3</span>
-                  <p className={styles.resultsCardText}>
-                    Generative<br />geospatial data
-                  </p>
-                </div>
-                <div className={styles.resultsCardArt} aria-hidden>
-                  <svg viewBox="0 0 320 220" fill="none" preserveAspectRatio="xMidYMid slice">
-                    {[0, 1, 2].map((layer) => {
-                      const yBase = 60 + layer * 50;
-                      return (
-                        <g key={layer}>
-                          {Array.from({ length: 14 }).map((_, i) => (
-                            <line key={`vx${layer}-${i}`} x1={30 + i * 20} y1={yBase - 18} x2={10 + i * 20} y2={yBase + 18} stroke="rgba(255,255,255,0.35)" strokeWidth="0.5" />
-                          ))}
-                          {Array.from({ length: 4 }).map((_, i) => (
-                            <line key={`hz${layer}-${i}`} x1="30" y1={yBase - 18 + i * 12} x2="290" y2={yBase - 18 + i * 12 - 6} stroke="rgba(255,255,255,0.3)" strokeWidth="0.5" />
-                          ))}
-                        </g>
-                      );
-                    })}
-                  </svg>
-                </div>
-              </div>
-
-              <div className={styles.resultsCard}>
-                <div className={styles.resultsCardCopy}>
-                  <span className={styles.resultsCardNumber}>4</span>
-                  <p className={styles.resultsCardText}>
-                    Deep spatial<br />reasoning at<br />scale
-                  </p>
-                </div>
-                <div className={styles.resultsCardArt} aria-hidden>
-                  <svg viewBox="0 0 320 220" fill="none" preserveAspectRatio="xMidYMid slice">
-                    <ellipse cx="160" cy="70" rx="110" ry="22" stroke="rgba(255,255,255,0.45)" strokeWidth="0.7" />
-                    <ellipse cx="160" cy="170" rx="120" ry="24" stroke="rgba(255,255,255,0.45)" strokeWidth="0.7" />
-                    {Array.from({ length: 14 }).map((_, i) => {
-                      const a = (i / 14) * Math.PI * 2;
-                      return <line key={`s${i}`} x1={160 + Math.cos(a) * 8} y1="110" x2={160 + Math.cos(a) * 50} y2={120 + Math.sin(a) * 4} stroke="rgba(255,255,255,0.4)" strokeWidth="0.5" />;
-                    })}
-                    <path d="M150 30 L160 100 L170 30 M155 30 L165 95" stroke="rgba(255,255,255,0.75)" strokeWidth="0.8" fill="none" />
-                    <path d="M160 110 L140 160 M160 110 L180 160 M160 110 L155 170 M160 110 L165 170" stroke="rgba(255,255,255,0.5)" strokeWidth="0.6" />
-                  </svg>
-                </div>
-              </div>
+              ))}
             </div>
 
             <div className={styles.resultsArticlesRow}>
@@ -670,11 +646,6 @@ export function TechnologySections() {
           </div>
         </div>
       </Slide>
-
-      {/* Gen Layers + The Grid — full-viewport-width band sitting between
-          the data-collection and research-blog slides. Owns its own reveal
-          animation via IntersectionObserver. */}
-      <GenLayersSection />
 
       {/* ── 5. Research Blog ── */}
       <Slide id="research-blog">

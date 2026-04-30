@@ -41,7 +41,10 @@ export function PageTransitionProvider({ children }: { children: React.ReactNode
   // ── Navigate with transition ──
   const navigate = useCallback((href: string) => {
     if (phase !== "idle") return;
-    if (href === pathname) return;
+    if (href === pathname) {
+      window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+      return;
+    }
 
     pendingHref.current = href;
     setTargetHref(href);

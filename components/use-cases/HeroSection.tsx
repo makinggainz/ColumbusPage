@@ -5,7 +5,17 @@ import { useEffect, useRef, useState } from "react";
 const BOTTOM_TEXT = "Find your use case";
 const TYPE_INTERVAL = 28; // ms per character
 
-export default function HeroSection() {
+interface HeroSectionProps {
+  title?: React.ReactNode;
+  subtitle?: React.ReactNode;
+  videoSrc?: string;
+}
+
+export default function HeroSection({
+  title = (<>Why you should be excited<br /> about our LGM</>),
+  subtitle = "Our Geospatial Model — spatial reasoning at scale, without the hallucinations.",
+  videoSrc = "/use-cases-video.mp4",
+}: HeroSectionProps = {}) {
   const [visible, setVisible] = useState(false);
   const [typedText, setTypedText] = useState("");
   const [videoReady, setVideoReady] = useState(false);
@@ -56,7 +66,7 @@ export default function HeroSection() {
       {/* Background video — looped, muted, autoplay */}
       <video
         ref={videoRef}
-        src="/use-cases-video.mp4"
+        src={videoSrc}
         autoPlay
         loop
         muted
@@ -106,7 +116,7 @@ export default function HeroSection() {
               ...fadeIn(0),
             }}
           >
-            Why you should be excited<br /> about our LGM
+            {title}
           </h1>
 
           {/* Divider line — fades out at edges */}
@@ -124,7 +134,7 @@ export default function HeroSection() {
             className="text-white/70 mt-6 max-w-[760px] text-[20px] font-normal leading-[1.5] max-md:text-[16px]"
             style={fadeIn(0.15)}
           >
-            Our Geospatial Model — spatial reasoning at scale, without the hallucinations.
+            {subtitle}
           </p>
 
         </div>

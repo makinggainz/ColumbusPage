@@ -6,11 +6,11 @@ import { useEffect, useRef, useState } from "react";
 import { GridSection, gl } from "./ContentGrid";
 
 const CARDS = [
-  { src: "/Icon/gen.png", label: "City Security", href: "/use-cases" },
-  { src: "/Icon/urban.png", label: "Urban Planning", href: "/use-cases" },
-  { src: "/Icon/site.png", label: "Site Selection", href: "/use-cases" },
-  { src: "/Icon/img1.png", label: "CRE", href: "/use-cases" },
-  { src: "/Icon/more.png", label: "More", href: "/use-cases" },
+  { src: "/Icon/gen.png", label: "City Security", href: "/columbus-solutions" },
+  { src: "/Icon/urban.png", label: "Urban Planning", href: "/columbus-solutions" },
+  { src: "/Icon/site.png", label: "Site Selection", href: "/columbus-solutions" },
+  { src: "/Icon/img1.png", label: "CRE", href: "/columbus-solutions" },
+  { src: "/Icon/more.png", label: "More", href: "/columbus-solutions" },
 ];
 
 export const Industries = () => {
@@ -111,7 +111,7 @@ export const Industries = () => {
             </p>
           </div>
           <Link
-            href="/use-cases"
+            href="/columbus-solutions"
             className="group px-8 min-[1287px]:px-10 py-5 flex items-center justify-between hover:opacity-90 transition-opacity flex-1 min-w-70"
             style={{ minHeight: 76, backgroundColor: "#000000" }}
           >
