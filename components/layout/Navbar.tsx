@@ -556,7 +556,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                 >
                                     {([
                                         { label: "Products", href: "/products/enterprise", hasDropdown: true, kind: "products" as const },
-                                        { label: "Technology", href: "/technology" },
+                                        { label: "Research", href: "/technology" },
                                         { label: "Use Cases", href: "/use-cases" },
                                         { label: "Company", href: "/mission", hasDropdown: true, kind: "company" as const },
                                     ] as const).map((link, i) => (
@@ -1123,7 +1123,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                 </h4>
                                 <ul className="space-y-4">
                                     {[
-                                        { label: "Technology", href: "/technology" },
+                                        { label: "Research", href: "/technology" },
                                         { label: "Use Cases", href: "/use-cases" },
                                         { label: "Our Mission", href: "/mission" },
                                         { label: "Vision", href: "/mission" },
