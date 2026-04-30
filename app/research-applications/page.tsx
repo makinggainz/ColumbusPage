@@ -17,7 +17,7 @@ import ScrollProgressTracker from "@/components/use-cases/ScrollProgressTracker"
 import { GenLayersSection } from "@/components/technology/redesign/GenLayersSection";
 
 export default function ResearchApplicationsRoute() {
-  const [navTheme, setNavTheme] = useState<"light" | "dark">("dark");
+  const [navTheme, setNavTheme] = useState<"light" | "dark">("light");
   const [heroOverlay, setHeroOverlay] = useState(0);
   const sectionBRef = useRef<HTMLElement>(null);
   const sectionCRef = useRef<HTMLElement>(null);
@@ -34,7 +34,9 @@ export default function ResearchApplicationsRoute() {
       if (sectionCRef.current && sectionDRef.current) {
         const cRect = sectionCRef.current.getBoundingClientRect();
         const overC = cRect.top <= NAVBAR_H && cRect.bottom > NAVBAR_H;
-        setNavTheme(overC ? "light" : "dark");
+        // Section C (Results) is a dark band → use "dark" theme there.
+        // Everywhere else (including the new white hero) → "light" theme.
+        setNavTheme(overC ? "dark" : "light");
       }
       if (sectionBRef.current) {
         const bRect = sectionBRef.current.getBoundingClientRect();
