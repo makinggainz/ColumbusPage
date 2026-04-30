@@ -194,6 +194,7 @@
   left: 0;
   padding: 0 16px;
   pointer-events: auto;
+  transition: opacity 400ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 /* Sections wrapper: no padding/margin override — sections inherit the
@@ -5362,150 +5363,336 @@
 .genLayersHead {
   position: relative;
   width: 100%;
-  min-height: 220px;
+  min-height: 480px;
   margin-bottom: clamp(48px, 6vw, 80px);
+  display: flex;
+  align-items: center;
 }
 
 .genLayersHeadStarburst {
   position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
+  top: 50%;
+  right: 0;
+  width: 1186.26px;
+  height: 692px;
   pointer-events: none;
   display: block;
+  transform: translate(220px, -50%);
+  transform-origin: right center;
+  filter: brightness(0) invert(1);
+  opacity: 0.92;
 }
 
 /* Label background matches the band bg (black) so the line behind it is
    cleanly masked. */
 .genLayersHeadLabel {
   position: absolute;
-  left: 0;
-  top: 50%;
-  transform: translateY(-50%);
+  left: 140px;
+  top: 31%;
   z-index: 2;
-  background: #000000;
-  padding-right: 16px;
   font-size: clamp(1.4rem, 1.8vw, 1.8rem);
   font-weight: 500;
   letter-spacing: var(--tech-tracking-snug);
   color: #ffffff;
 }
 
-/* Sticky-pin scroll experience — the outer is 4 viewports tall (1 sticky
-   pin + 3 of scroll travel), the inner pins to the top of the viewport
-   for the duration. State (intro, tile 1, tile 2, tile 3) is driven by
-   continuous scroll progress, not discrete steps. */
+/* Sticky-pin scroll experience — sized to fit within the page's content
+   bounds (no longer breaks out to 100vw). The inner pin is 70vh; the outer
+   is 70vh + 200vh of scroll travel = 270vh.
+     • top: 15vh on the inner pins it vertically centered in the viewport
+       (15vh top + 70vh height + 15vh bottom = 100vh), so the section
+       "sticks" when the panel reaches the middle of the screen — not
+       when it hits the top.
+     • The JS scroll-progress math in GenLayersSection.tsx accounts for
+       this offset (STICKY_TOP_VH = 0.15). */
 .genLayersStickyOuter {
   position: relative;
-  width: 100vw;
-  height: calc(100vh + 300vh);
-  /* Break out of every centered ancestor (genLayersInner, page max-width)
-     so the panel reaches edge-to-edge of the viewport, matching the band. */
-  margin-left: calc(50% - 50vw);
-  margin-right: calc(50% - 50vw);
+  /* Break out of .genLayersInner's horizontal padding so the three-tile
+     row spans the page's full content bounds (1287px) edge-to-edge.
+     The negative margins alone aren't enough — `width: 100%` would lock
+     the box to the inner's content area, so we widen the box by the same
+     2× padding amount that the negative margins push it sideways. */
+  width: calc(100% + 2 * clamp(24px, 4vw, 64px));
+  margin-left: calc(-1 * clamp(24px, 4vw, 64px));
+  margin-right: calc(-1 * clamp(24px, 4vw, 64px));
+  height: calc(70vh + 200vh);
 }
 
 .genLayersStickyInner {
   position: sticky;
-  top: 0;
+  top: 15vh;
   width: 100%;
-  height: 100vh;
+  height: 70vh;
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  /* Round the panel itself — tiles + intro overlay (and any future
+     children) all get clipped to this radius so the whole composition
+     reads as a single rounded card. Matches the off-step 23px chosen
+     for the tile corners earlier. */
+  border-radius: 23px;
 }
 
-/* Top-edge blur — frosted gradient strongest at the top of the sticky
-   panel, fading downward. Sits above the tiles (z-index 4) but below the
-   intro overlay (z-index 5), so during the intro it's hidden under the
-   blur veil; once the intro fades, this provides a soft frosted strip at
-   the top where the (now transparent) navbar lives, keeping the navbar
-   text readable against the satellite imagery. */
-.genLayersTopBlur {
+/* Navbar blur-gradient override — while body.gen-layers-active is set
+   (toggled by TechnologyPage when the Gen Layers band overlaps the navbar
+   Y), the navbar's frosted-glass background div (the first child of its
+   <nav>) gets a top-down mask: fully opaque at the top edge, fading to
+   transparent at the bottom. The bg's existing backdrop-filter blur is
+   therefore strongest at the top of the navbar and tapers off downward.
+   Border-bottom is suppressed since it would only render along the masked
+   edge. Text/icon colors continue to be driven by the standard dark
+   `theme` prop. Documented in design-system/navbar.md. */
+:global(body.gen-layers-active nav.header-font > div:first-child) {
+  -webkit-mask-image: linear-gradient(to bottom, black 0%, black 30%, transparent 100%) !important;
+  mask-image: linear-gradient(to bottom, black 0%, black 30%, transparent 100%) !important;
+  border-bottom: none !important;
+}
+
+/* Left-side scroll index fade — while the gen-layers band overlaps the
+   navbar, fade out the scroll-index labels so they don't compete with
+   the section. The opacity transition lives on the canonical
+   .sidebarPanelSticky rule. */
+:global(body.gen-layers-active) .sidebarPanelSticky {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Hide the vertical structure lines (the blue gutter dividers) while
+   the gen-layers band is active — they read as out-of-place against
+   the dark section. Restored when the body class clears. */
+:global(body.gen-layers-active) .sidebarPanel,
+:global(body.gen-layers-active) .sidebarPanelRight {
+  opacity: 0;
+}
+
+.sidebarPanel,
+.sidebarPanelRight {
+  transition: opacity 400ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* SVG overlay drawn over the tile's satellite image — tile-1/2 use roof
+   rectangles over HK Map.png, tile-3 uses street polylines over HK Map2.png.
+   The whole SVG's opacity is driven each frame from tileOverlayRefs so the
+   shapes appear during the analyse animation's Phase C. preserveAspectRatio
+   is "none" on the SVG so the 100×67 viewBox stretches to the tile's full
+   render box and shape coords roughly track the underlying imagery even as
+   tiles flex between active and sliver widths. */
+.genLayersTileOverlay {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  /* Explicit clip so any path/rect that approaches the edge can't
+     paint outside the image bounds. */
+  overflow: hidden;
+  opacity: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Solar tile — alternating "high potential" (blue) and "low potential" (red)
+   rectangles over each visible roof. */
+.genLayersTileRoofA {
+  fill: rgba(38, 121, 255, 0.55);
+  stroke: rgba(108, 169, 255, 0.95);
+  stroke-width: 0.18;
+}
+
+.genLayersTileRoofB {
+  fill: rgba(255, 84, 84, 0.55);
+  stroke: rgba(255, 168, 168, 0.95);
+  stroke-width: 0.18;
+}
+
+/* Resident-vibes tile — three vibe color groups cycle through the same roof
+   positions: green (active), orange (medium), yellow (warm/quiet). */
+.genLayersTileVibeA {
+  fill: rgba(72, 198, 132, 0.55);
+  stroke: rgba(180, 240, 200, 0.95);
+  stroke-width: 0.18;
+}
+
+.genLayersTileVibeB {
+  fill: rgba(255, 161, 70, 0.55);
+  stroke: rgba(255, 210, 160, 0.95);
+  stroke-width: 0.18;
+}
+
+.genLayersTileVibeC {
+  fill: rgba(247, 220, 90, 0.55);
+  stroke: rgba(255, 240, 175, 0.95);
+  stroke-width: 0.18;
+}
+
+/* Safety-score tile — yellow polylines tracing the major boulevards in
+   HK Map2.png. Uses fill: none + a chunky stroke so the lines read as
+   street-highlight markers. */
+.genLayersTileStreet {
+  fill: none;
+  stroke: rgba(247, 220, 90, 0.85);
+  stroke-width: 0.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Phase B — prompt box, top-left of each tile. Opacity is driven each
+   frame via tilePromptRefs (binary flip at local=0.20, CSS transition
+   provides the actual fade). */
+.genLayersTilePromptBox {
   position: absolute;
   top: 0;
   left: 0;
-  right: 0;
-  height: 28%;
-  pointer-events: none;
   z-index: 4;
-  background: linear-gradient(
-    to bottom,
-    rgba(0, 0, 0, 0.55) 0%,
-    rgba(0, 0, 0, 0.30) 40%,
-    rgba(0, 0, 0, 0) 100%
-  );
-  -webkit-backdrop-filter: blur(12px);
-  backdrop-filter: blur(12px);
-  /* Mask fades the blur layer itself so the bottom edge is invisible —
-     no hard cut where the blur ends. */
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  padding: clamp(20px, 2.5vw, 32px);
+  max-width: 60%;
+  opacity: 0;
+  transition: opacity 600ms cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: none;
+}
+
+/* Frosted-glass backdrop behind the top-left prompt text — mirrors the
+   bottom blur strip but inverted: strongest blur at the very top edge,
+   tapering to fully transparent partway down. The parent's opacity
+   transition gates visibility so this never shows until Phase B. */
+.genLayersTilePromptBox::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  /* Extend slightly above/left so the blur reaches the panel edge. */
+  top: -4px;
+  left: -4px;
+  right: -4px;
+  /* Tall enough to cover the full prompt text area plus breathing room. */
+  bottom: -20px;
+  background: transparent;
+  -webkit-backdrop-filter: blur(4px) saturate(1.05);
+  backdrop-filter: blur(4px) saturate(1.05);
+  /* Opaque at top, fades to transparent at bottom so blur stays localised
+     to where the prompt text sits. */
   -webkit-mask-image: linear-gradient(to bottom, black 0%, black 55%, transparent 100%);
   mask-image: linear-gradient(to bottom, black 0%, black 55%, transparent 100%);
+  z-index: -1;
+  pointer-events: none;
 }
 
-/* Navbar transparency override — while body.gen-layers-active is set
-   (toggled by TechnologyPage when the band overlaps the navbar Y), the
-   Navbar's frosted-glass background div (the first child of its <nav>)
-   is forced to opacity: 0 so the section bleeds through. The navbar's
-   text/icon colors are still driven by the existing dark `theme` prop;
-   only the bg layer changes. Documented in design-system/navbar.md. */
-:global(body.gen-layers-active nav.header-font > div:first-child) {
-  opacity: 0 !important;
+/* Wrapper around the tile's kicker + title — flex column, bottom-centered.
+   Opacity is set to 0 or 1 by the rAF tick (binary flip at local=0.50),
+   so this transition is what produces the animated reveal once the SVG
+   overlay's scroll-driven fade-in finishes. */
+.genLayersTileText {
+  position: relative;
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  opacity: 0;
+  transition: opacity 600ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-/* Intro overlay — heavy backdrop-blur + dark veil over the tiles plus
-   the headline and the "scroll to see the magic" hint. Fades out as
-   the user scrolls past raw=0.20. */
+/* Progress bar sitting below the sticky outer — fills left-to-right
+   as the user scrolls through the experience. */
+/* Progress bar — sibling of .genLayersStickyInner (not nested inside it),
+   sticky-pinned just below the panel so it floats below as its own bar.
+   Both pin and release together because their pin positions inside the
+   shared outer line up: inner's top: 15vh + height 70vh = 85vh, plus
+   12px gap = 97vh sticky top for the bar. */
+/* Progress bar — three pill-shaped segments side-by-side, one per tile.
+   Sticky-pinned with extra breathing room so it sits visually
+   detached from the panel. Modeled after the iOS home-indicator look
+   (chunky rounded pill) but split into thirds to delineate which step
+   of the analyse process the user is in. */
+.genLayersProgressBar {
+  position: sticky;
+  /* Pin offset and natural-flow margin must match so the bar's pinned
+     position equals its in-flow position when sticky engages. Both bumped
+     from 32px → 72px to keep enough breathing room between the panel and
+     the bar even during the sticky-release window, where the bar would
+     otherwise creep visually closer to the panel as both move with the
+     outer's bottom edge. */
+  top: calc(15vh + 70vh + 72px);
+  width: 16.7%;
+  margin: 72px auto 0;
+  display: flex;
+  gap: 6px;
+  height: 5px;
+  background: transparent;
+  border-radius: 0;
+  overflow: visible;
+}
+
+.genLayersProgressSegment {
+  flex: 1 1 0;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.22);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.genLayersProgressSegmentFill {
+  height: 100%;
+  width: 0;
+  background: #ffffff;
+  /* No CSS transition — width is written every rAF tick directly via
+     progressFillRefs so each segment tracks scroll position with no
+     perceptible lag. */
+}
+
+/* Intro overlay — heavy backdrop-blur veil + headline + scroll hint
+   covering the tiles at the start of the section. Opacity is driven each
+   frame via introRef in GenLayersSection.tsx (1 until raw=0.10, fades to
+   0 by raw=0.20). */
 .genLayersIntro {
   position: absolute;
   inset: 0;
   z-index: 5;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  /* Headline sits in the upper third, scroll hint sits ~70% from the
+     top (well below center) — matches the reference layout where the
+     copy and the prompt are visually pushed apart. */
+  justify-content: flex-start;
   align-items: center;
   pointer-events: none;
-  -webkit-backdrop-filter: blur(28px);
-  backdrop-filter: blur(28px);
-  background: rgba(0, 0, 0, 0.45);
-  transition: opacity 320ms cubic-bezier(0.22, 1, 0.36, 1);
-  padding: 0 clamp(32px, 6vw, 96px);
+  /* Lighter blur + a much fainter dark veil so the satellite imagery
+     reads as a bright, soft frosted background instead of a dark wash. */
+  -webkit-backdrop-filter: blur(60px);
+  backdrop-filter: blur(60px);
+  background: rgba(0, 0, 0, 0.18);
+  padding: clamp(40px, 8vh, 96px) clamp(32px, 6vw, 96px) clamp(20vh, 22vh, 24vh);
   text-align: center;
 }
 
 .genLayersScrollHint {
-  margin-top: clamp(48px, 6vh, 96px);
-  font-size: clamp(14px, 1.4vw, 16px);
-  color: rgba(255, 255, 255, 0.85);
-  letter-spacing: 0.02em;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  /* margin-top: auto pushes the hint to the bottom of the available
+     space (after the padding-bottom on the parent). */
+  margin-top: auto;
+  font-size: 18px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: rgba(255, 255, 255, 0.95);
 }
 
-/* Progress bar sitting below the sticky outer — fills left-to-right
-   as the user scrolls through the experience. */
-.genLayersProgressBar {
-  width: 100%;
-  height: 4px;
-  margin-top: clamp(40px, 5vw, 64px);
-  background: rgba(255, 255, 255, 0.12);
-  border-radius: 2px;
-  overflow: hidden;
-}
-
-.genLayersProgressFill {
-  height: 100%;
-  background: #ffffff;
-  transition: width 90ms linear;
+.genLayersScrollHint svg {
+  flex-shrink: 0;
 }
 
 .genLayersHeadline {
   position: relative;
   z-index: 2;
   margin: 0;
-  max-width: 1100px;
-  font-size: var(--tech-fs-h4);
-  font-weight: 500;
-  letter-spacing: var(--tech-tracking-tight);
-  line-height: 1.25;
+  max-width: 1200px;
+  font-size: clamp(32px, 4vw, 44px);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.18;
   color: #ffffff;
   text-align: center;
   display: -webkit-box;
@@ -5526,6 +5713,7 @@
   flex: 1;
   margin-top: 0;
   min-height: 0;
+  /* Row-level bg removed to prevent peeking. Each tile now manages its own background. */
 }
 
 .genLayersTile {
@@ -5541,29 +5729,54 @@
   padding: clamp(32px, 4vw, 56px) clamp(20px, 2.5vw, 32px);
   border: none;
   border-radius: 0;
-  background-image: url("/UseCases/ResidentialRealEstate.jpg");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  text-align: left;
+  /* Tiles 1 & 2 are transparent — the row's continuous HK Map.png shows
+     through, so the image is unbroken across the tile-1/tile-2 boundary
+     regardless of how the flex widths shake out. Only tile 3 paints its
+     own opaque background (see :nth-child(3) below). */
+  background-color: transparent;
+  background-image: none;
   font: inherit;
   overflow: hidden;
   transition: flex-grow 600ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
+/* Tile 1 (Solar roof) — paints its own HK Map.png. */
+.genLayersTile:nth-child(1) {
+  background-image: url("/TechnologyPageImages/HK%20Map.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* Tile 2 (Resident Vibes — middle) — paints its own opaque HK Map3.png
+   on top of the row-level HK Map.png. Fill — image stretches to exactly
+   cover tile 2 (no cropping, no repeat) at any width, matching the
+   "Fill" setting used on tile 3. */
 .genLayersTile:nth-child(2) {
-  background-image: url("/UseCases/UrbanPlanning.jpg");
+  background-image: url("/TechnologyPageImages/HK%20Map3.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
+/* Tile 3 (Safety Score) — paints its own opaque HK Map2.png on top of
+   the row-level HK Map.png. Background-size: 100% 100% scales it to
+   tile 3's actual width (whether active or sliver). */
 .genLayersTile:nth-child(3) {
-  background-image: url("/UseCases/SiteSelection.jpg");
+  background-image: url("/TechnologyPageImages/HK%20Map2.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
-/* Gradient over the lower portion of each tile so the text reads cleanly
-   against the satellite imagery. Strong at the bottom edge, tapering to
-   fully transparent toward the top. No backdrop-filter — it interacts
-   poorly with the rounded outer corners on the first/last tiles, which
-   was producing the "messed up" gradient on the side tiles. */
+/* Backdrop-blur gradient over the lower portion of each tile so the text
+   reads cleanly against the satellite imagery — strongest blur at the
+   bottom edge, tapering to no blur at the top. Visibility is gated by the
+   --text-blur-opacity custom property which is written each frame from
+   GenLayersSection.tsx so the blur only appears once the tile's text is
+   appearing (Phase D), not at the clean-image starting state.
+   `saturate(0.8)` flattens any colour cast that the blurred imagery would
+   otherwise smear into the layer; bg stays fully transparent. */
 .genLayersTile::before {
   content: "";
   position: absolute;
@@ -5571,35 +5784,29 @@
   right: 0;
   bottom: 0;
   height: 65%;
-  background: linear-gradient(
-    to top,
-    rgba(0, 0, 0, 0.92) 0%,
-    rgba(0, 0, 0, 0.65) 30%,
-    rgba(0, 0, 0, 0.3) 65%,
-    rgba(0, 0, 0, 0) 100%
-  );
+  background: transparent;
+  -webkit-backdrop-filter: blur(4px) saturate(1.1);
+  backdrop-filter: blur(4px) saturate(1.1);
+  -webkit-mask-image: linear-gradient(to top, black 0%, black 25%, transparent 100%);
+  mask-image: linear-gradient(to top, black 0%, black 25%, transparent 100%);
+  opacity: var(--text-blur-opacity, 0);
+  /* Same easing/duration as .genLayersTileText so the frosted strip
+     fades in alongside the text after the overlay reveal completes. */
+  transition: opacity 600ms cubic-bezier(0.22, 1, 0.36, 1);
   pointer-events: none;
-  z-index: 1;
+  z-index: 2;
 }
 
-/* Only the outside corners of the row are rounded — first tile rounds its
-   left edge, last tile rounds its right edge. Inside corners are square so
-   the panels meet flush. */
-.genLayersTile:first-child {
-  border-radius: 12px 0 0 12px;
-}
+/* Tiles themselves are square — the rounded outline lives on the panel
+   (.genLayersStickyInner) so the tiles can sit edge-to-edge with no
+   inner-corner notches between them. The panel's overflow: hidden
+   clips the outer corners to the 23px radius. */
 
-.genLayersTile:last-child {
-  border-radius: 0 12px 12px 0;
-}
-
-/* Active tile dominates ~90% of the row width. The other two tiles
-   share the remaining ~10% as thin slivers (flex-grow: 1 each).
-   This is the fallback used at narrow viewports (≤1500px) where the
-   structure-line gutters collapse to 0. The desktop pattern below
-   (>1500px) overrides this with explicit per-state widths. */
+/* Active tile dominates ~96% of the row width. The other two tiles
+   share the remaining ~4% as very thin slivers (flex-grow: 1 each). */
 .genLayersTileActive {
-  flex-grow: 18;
+  flex-grow: 50;
+  z-index: 10;
 }
 
 /* Smooth width transitions when state classes change. */
@@ -5607,99 +5814,77 @@
   transition: flex 600ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-/* Per-state tile widths — each active tile occupies the content area
-   plus the adjacent gutter, while the other two tuck into the opposite
-   gutter as slivers. The structure lines (sidebar dividers at z-index
-   300) paint cleanly over the resulting tile boundaries.
-     • State 1: tile 1 spans [0, right line]; tiles 2 & 3 split the
-       right gutter (var(--tech-sidebar-x) / 2 each).
-     • State 2: tile 2 spans the full content area [left line, right
-       line]; tiles 1 & 3 each fill one gutter.
-     • State 3: tile 3 spans [left line, right edge]; tiles 1 & 2 split
-       the left gutter.
-   Only applied where the gutters are visible (>1500px); below that the
-   sidebars are hidden and --tech-sidebar-x is 0, so the flex-grow
-   fallback above takes over. */
-@media (min-width: 1501px) {
-  .genLayersTilesRowState1 .genLayersTile:nth-child(1) {
-    flex: 0 0 calc(100vw - var(--tech-sidebar-x));
-  }
-  .genLayersTilesRowState1 .genLayersTile:nth-child(2),
-  .genLayersTilesRowState1 .genLayersTile:nth-child(3) {
-    flex: 0 0 calc(var(--tech-sidebar-x) / 2);
-  }
-
-  .genLayersTilesRowState2 .genLayersTile:nth-child(1),
-  .genLayersTilesRowState2 .genLayersTile:nth-child(3) {
-    flex: 0 0 var(--tech-sidebar-x);
-  }
-  .genLayersTilesRowState2 .genLayersTile:nth-child(2) {
-    flex: 0 0 calc(100vw - 2 * var(--tech-sidebar-x));
-  }
-
-  .genLayersTilesRowState3 .genLayersTile:nth-child(1),
-  .genLayersTilesRowState3 .genLayersTile:nth-child(2) {
-    flex: 0 0 calc(var(--tech-sidebar-x) / 2);
-  }
-  .genLayersTilesRowState3 .genLayersTile:nth-child(3) {
-    flex: 0 0 calc(100vw - var(--tech-sidebar-x));
-  }
+/* Eliminate sub-pixel rendering gaps between tiles. Flex-grow ratios
+   like 50:1:1 produce non-integer per-tile widths (e.g. 1237.5 / 24.7 /
+   24.7 on a 1287px row); browsers round each tile's rendered width
+   independently, which can leave a 1–3px hairline gap exposing the
+   dark band behind. A 4px negative left margin on every tile after the
+   first makes adjacent tiles overlap by 4px so the gap can never appear
+   regardless of viewport size or which tile is active. The overlap is
+   invisible because tile padding keeps the visible content (text, SVG
+   overlay) well off the edges. */
+.genLayersTile + .genLayersTile {
+  margin-left: -4px;
 }
 
-/* Inactive tiles get a dark veil and hide all text content. */
-.genLayersTileInactive::after {
+/* The section now lives within the page's content bounds (no longer
+   100vw with negative margins), so the gutter-based per-state widths
+   no longer apply. Sizing is driven entirely by .genLayersTileActive
+   { flex-grow: 18 } above — active tile takes ~90%, inactive tiles
+   share the remaining 10% as thin slivers. */
+
+/* Inactive tiles are darkened with a flat 75%-black overlay (no blur)
+   until they become the focus point. The overlay fades smoothly to
+   transparent as a tile transitions to active. */
+.genLayersTile::after {
   content: "";
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.55);
-  z-index: 2;
+  background: rgba(0, 0, 0, 0);
+  z-index: 6;
   pointer-events: none;
+  transition: background 600ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.genLayersTileInactive .genLayersTileKicker,
-.genLayersTileInactive .genLayersTileTitle,
-.genLayersTileInactive .genLayersTilePromptLabel,
-.genLayersTileInactive .genLayersTilePrompt {
-  opacity: 0;
+.genLayersTileInactive::after {
+  /* Veil opacity is gated by --inactive-veil-opacity which is written
+     each rAF tick on .genLayersTilesRow. While the intro overlay is
+     fully opaque, the veil is held at 0 so all three tiles read as the
+     same uniformly bright frosted backdrop behind the headline. */
+  background: rgba(0, 0, 0, calc(0.75 * var(--inactive-veil-opacity, 1)));
+  -webkit-backdrop-filter: blur(calc(20px * var(--inactive-veil-opacity, 1)));
+  backdrop-filter: blur(calc(20px * var(--inactive-veil-opacity, 1)));
 }
 
-/* Tile content fades in/out as active state changes. Default (intro
-   state, no active class) keeps content transparent so it doesn't read
-   through the intro blur. Only the active tile shows its text. */
-.genLayersTileKicker,
-.genLayersTileTitle,
-.genLayersTilePromptLabel,
-.genLayersTilePrompt {
-  opacity: 0;
-  transition: opacity 360ms ease;
-}
-
-.genLayersTileActive .genLayersTileKicker,
-.genLayersTileActive .genLayersTileTitle,
-.genLayersTileActive .genLayersTilePromptLabel,
-.genLayersTileActive .genLayersTilePrompt {
-  opacity: 1;
-}
+/* Span-level opacity is no longer set here — the .genLayersTileText
+   wrapper's opacity is driven each frame via tileTextRefs in the rAF
+   tick, which controls all four spans together as the analyse-animation
+   reaches its final phase. */
 
 .genLayersTilePromptLabel {
   position: relative;
   z-index: 2;
-  margin-top: 16px;
-  color: rgba(255, 255, 255, 0.85);
-  font-size: var(--tech-fs-body-sm);
+  margin-top: 0;
+  margin-bottom: 6px;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: var(--tech-fs-caption);
   font-weight: 500;
-  letter-spacing: var(--tech-tracking-snug);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
 }
 
 .genLayersTilePrompt {
   position: relative;
   z-index: 2;
-  margin-top: 4px;
+  margin-top: 6px;
   max-width: 520px;
-  color: rgba(255, 255, 255, 0.85);
-  font-size: var(--tech-fs-body-sm);
-  font-style: italic;
-  letter-spacing: var(--tech-tracking-snug);
+  color: #ffffff;
+  font-size: var(--tech-fs-body-lg);
+  font-weight: 500;
+  letter-spacing: var(--tech-tracking-tight);
+  line-height: 1.35;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45), 0 0 1px rgba(0, 0, 0, 0.6);
 }
 
 /* Legacy tile-art classes preserved for potential re-use but hidden when
@@ -5724,21 +5909,25 @@
   position: relative;
   z-index: 2;
   font-size: var(--tech-fs-caption);
-  letter-spacing: var(--tech-tracking-snug);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
   /* Tiles always show on photo content — keep text on white opacity tiers
      regardless of parent surface flip */
   color: rgba(255, 255, 255, 0.72);
-  margin-bottom: 4px;
+  margin-bottom: 12px;
 }
 
 .genLayersTileTitle {
   position: relative;
   z-index: 2;
   font-size: calc(var(--tech-fs-body-lg) * 1.5);
-  font-weight: 500;
-  color: rgba(255, 255, 255, 1);
-  letter-spacing: var(--tech-tracking-snug);
-  margin-bottom: 8px;
+  font-weight: 600;
+  color: #ffffff;
+  letter-spacing: var(--tech-tracking-tight);
+  line-height: 1.15;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45), 0 0 1px rgba(0, 0, 0, 0.6);
+  margin-bottom: 20px;
 }
 
 /* Wrap around the explore CTA — centers the glass pill horizontally. */
@@ -5748,21 +5937,38 @@
   margin-top: clamp(40px, 5vw, 64px);
 }
 
-/* Positioning + color only — pill appearance comes from glassStyles.btn
-   applied alongside this class in the JSX. */
+/* Mirrors the navbar's "Start Now" CTA but inverted — solid white pill
+   with black text. The arrow stays #2563EB (matches the navbar's blue
+   accent) and translates on hover; text turns blue on hover. */
 .genLayersExploreBtn {
-  color: #ffffff;
-  font-size: var(--tech-fs-caption);
-  gap: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  height: 36px;
+  padding: 0 20px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1;
+  color: #000000;
+  background-color: #FFFFFF;
   text-decoration: none;
+  white-space: nowrap;
+  transition: color 300ms ease, background-color 300ms ease, opacity 300ms ease;
+}
+
+.genLayersExploreBtn:hover {
+  color: #2563EB;
+  opacity: 0.9;
 }
 
 .genLayersExploreBtn svg {
-  transition: transform 280ms cubic-bezier(0.22, 1, 0.36, 1);
+  stroke: #2563EB;
+  transition: transform 300ms ease-in-out;
 }
 
 .genLayersExploreBtn:hover svg {
-  transform: translateX(2px);
+  transform: translateX(4px);
 }
 
 .genLayersGrid {
