@@ -265,10 +265,14 @@ export function TechDiagramSVG({ activeTitle, onLayerClick, ...props }: TechDiag
   const fusionLayerProps = { href: "/TechnologyPageImages/FusionLayer.png", preserveAspectRatio: "none" };
   const lastLayerProps = { href: "/TechnologyPageImages/LastLayer.png", preserveAspectRatio: "none" };
 
-  const isDataCollection = activeTitle === "Data Collection";
-  const isFusion = activeTitle === "Fusion";
-  const isCoreReasoning = activeTitle === "Core Reasoning";
-  const isAnswers = activeTitle === "Answers, insights, patterns";
+  // Strip an optional leading numeric prefix like "1." or "1. " (with
+  // regular space, em-space, or any whitespace), so the diagram still
+  // matches when the accordion titles are prefixed with "1. ", "2. " etc.
+  const baseTitle = activeTitle?.replace(/^\d+\.\s*/, "") ?? "";
+  const isDataCollection = baseTitle === "Data Collection";
+  const isFusion = baseTitle === "Fusion";
+  const isCoreReasoning = baseTitle === "Core Reasoning";
+  const isAnswers = baseTitle === "Answers, insights, patterns";
   
   const activeIndex = isDataCollection ? 0 : isFusion ? 1 : isCoreReasoning ? 2 : isAnswers ? 3 : -1;
 
