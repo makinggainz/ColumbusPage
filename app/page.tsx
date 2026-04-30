@@ -28,10 +28,17 @@ export default function Home() {
       <Navbar />
       <Hero />
 
-      {/* Island 1: Vision */}
-      <div className="mt-16">
-        <Vision />
+      {/* Hero → Vision gap: full-width horizontal divider + bounded vertical structure lines */}
+      <div className="relative" style={{ height: 64 }}>
+        <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 1, background: "var(--grid-line)" }} />
+        <div className="max-w-[1287px] mx-5 md:mx-auto relative h-full">
+          <div style={{ position: "absolute", top: 0, left: 0, width: 1, height: "100%", background: "var(--grid-line)" }} />
+          <div style={{ position: "absolute", top: 0, right: 0, width: 1, height: "100%", background: "var(--grid-line)" }} />
+        </div>
       </div>
+
+      {/* Island 1: Vision */}
+      <Vision />
 
       <IslandGap />
 

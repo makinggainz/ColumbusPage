@@ -61,7 +61,7 @@ export const Vision = () => {
     <div>
       <div ref={sentinelTopRef} className="h-0" />
 
-      <GridSection className="grid-section-fade-top">
+      <GridSection>
         {/* Heading */}
         <div
           ref={ref}

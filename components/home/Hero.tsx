@@ -993,6 +993,14 @@ export const Hero = () => {
       <div className="absolute top-0 bottom-0 left-0 pointer-events-none" style={{ width: "30%", background: "linear-gradient(to right, #F9F9F9 0%, transparent 100%)", zIndex: 1, opacity: vignetteOpacity }} aria-hidden />
       <div className="absolute top-0 bottom-0 right-0 pointer-events-none" style={{ width: "30%", background: "linear-gradient(to left, #F9F9F9 0%, transparent 100%)", zIndex: 1, opacity: vignetteOpacity }} aria-hidden />
 
+      {/* Vertical structure lines — extend the grid lines up through the hero */}
+      <div className="pointer-events-none absolute inset-0" style={{ zIndex: 4 }} aria-hidden>
+        <div className="max-w-[1287px] mx-5 md:mx-auto relative h-full">
+          <div style={{ position: "absolute", top: 0, left: 0, width: 1, height: "100%", background: "var(--grid-line)" }} />
+          <div style={{ position: "absolute", top: 0, right: 0, width: 1, height: "100%", background: "var(--grid-line)" }} />
+        </div>
+      </div>
+
       {/* Hero text */}
       <Container className="relative z-10 pt-24 md:pt-32" style={{ maxWidth: 1287 }}>
         <div className="max-w-292">
