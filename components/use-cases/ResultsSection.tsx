@@ -155,10 +155,6 @@ const ITEMS: { num: string; title: string; art: React.ReactNode }[] = [
   { num: "4", title: "Deep spatial reasoning at scale", art: <StackedRingsArt /> },
 ];
 
-// Vertical divider — same dark-navy hue used previously, now with a
-// top→bottom fade-out instead of a solid line.
-const DIVIDER_BG = "linear-gradient(to bottom, rgba(10, 19, 68, 0.2) 0%, rgba(10, 19, 68, 0) 100%)";
-
 export default function ResultsSection() {
   const ref = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
@@ -188,57 +184,84 @@ export default function ResultsSection() {
   return (
     <section
       className="relative w-full py-24 rounded-t-[33px] overflow-hidden"
-      style={{ backgroundColor: "#F7F7F9" }}
+      style={{ backgroundColor: "#FFFFFF" }}
     >
-      <div ref={ref} className="max-w-[1287px] mx-auto px-8 min-[1287px]:px-0">
-        {/* ── Big mixed-color title — homepage/technology section-heading
-            typography: Geist 500, scale 31/39/49px, leading 1.15, tracking
-            -0.02em, color #1D1D1F. Accent words in brand blue. */}
-        <h2
-          className="text-[#1D1D1F] text-[31px] md:text-[39px] lg:text-[49px] leading-[1.15] tracking-[-0.02em] text-center max-md:text-left"
-          style={{ fontWeight: 500, ...anim(0) }}
-        >
-          THE LATEST <span style={{ color: "#0066CC" }}>RESULTS</span> FROM
-          <br />
-          OUR DEVELOPMENT OF
-          <br />
-          A LARGE GEOSPATIAL <span style={{ color: "#0066CC" }}>MODEL</span>
-        </h2>
+      {/* ── Page structure lines — extend the page grid through this section.
+          Same pattern as the hero: vertical lines at the bounded 1287px
+          container's left/right edges, full section height. */}
+      <div className="pointer-events-none absolute inset-0" style={{ zIndex: 1 }} aria-hidden>
+        <div className="max-w-[1287px] mx-auto relative h-full">
+          <div style={{ position: "absolute", top: 0, left: 0, width: 1, height: "100%", background: "var(--grid-line)" }} />
+          <div style={{ position: "absolute", top: 0, right: 0, width: 1, height: "100%", background: "var(--grid-line)" }} />
+        </div>
+      </div>
 
-        {/* ── 4-column cards row, with brand-blue fade-out vertical dividers
-            between cards. Dividers adapt to the responsive column count. */}
-        <div className="mt-24 max-md:mt-14 grid grid-cols-4 max-lg:grid-cols-2 max-md:grid-cols-1">
-          {ITEMS.map((item, i) => (
-            <div
-              key={item.num}
-              className="relative px-6 lg:px-8 py-2"
-              style={anim(120 + i * 90)}
-            >
-              {/* Vertical fade-out divider on every card except the first
-                  in each row. Hidden on mobile (single column). */}
-              {i > 0 && (
-                <div
-                  className={
-                    "pointer-events-none absolute top-0 bottom-0 left-0 w-px max-md:hidden " +
-                    (i % 2 === 0 ? "max-lg:hidden " : "")
-                  }
-                  style={{ background: DIVIDER_BG }}
-                  aria-hidden
-                />
-              )}
+      <div ref={ref} className="relative max-w-[1287px] mx-auto" style={{ zIndex: 2 }}>
+        {/* Header keeps its own internal padding so the title doesn't sit
+            flush against the structure lines on small viewports. */}
+        <div className="px-8 min-[1287px]:px-0">
+          <h2
+            className="text-[#1D1D1F] text-[31px] md:text-[39px] lg:text-[49px] leading-[1.15] tracking-[-0.02em] text-center max-md:text-left"
+            style={{ fontWeight: 500, ...anim(0) }}
+          >
+            THE LATEST <span style={{ color: "#0066CC" }}>RESULTS</span> FROM
+            <br />
+            OUR DEVELOPMENT OF
+            <br />
+            A LARGE GEOSPATIAL <span style={{ color: "#0066CC" }}>MODEL</span>
+          </h2>
+        </div>
 
-              {/* Illustration */}
-              <div className="w-full aspect-square max-w-[200px] mb-10">
-                {item.art}
+        {/* ── 4-column cards row — bracketed with horizontal lines top and
+            bottom that connect the page structure lines to the inter-card
+            vertical separators. Forms a continuous grid of lines. */}
+        <div className="relative mt-24 max-md:mt-14">
+          {/* Top horizontal line — only at lg+ where the 4-col layout has a
+              single bracketing row. */}
+          <div
+            className="pointer-events-none absolute max-lg:hidden"
+            style={{ top: 0, left: 0, right: 0, height: 1, background: "var(--grid-line)" }}
+            aria-hidden
+          />
+          {/* Bottom horizontal line */}
+          <div
+            className="pointer-events-none absolute max-lg:hidden"
+            style={{ bottom: 0, left: 0, right: 0, height: 1, background: "var(--grid-line)" }}
+            aria-hidden
+          />
+
+          <div className="grid grid-cols-4 max-lg:grid-cols-2 max-md:grid-cols-1">
+            {ITEMS.map((item, i) => (
+              <div
+                key={item.num}
+                className="relative px-6 lg:px-8 py-12"
+                style={anim(120 + i * 90)}
+              >
+                {/* Inter-card vertical separator — solid, no fade. */}
+                {i > 0 && (
+                  <div
+                    className={
+                      "pointer-events-none absolute top-0 bottom-0 left-0 w-px max-md:hidden " +
+                      (i % 2 === 0 ? "max-lg:hidden " : "")
+                    }
+                    style={{ background: "var(--grid-line)" }}
+                    aria-hidden
+                  />
+                )}
+
+                {/* Illustration */}
+                <div className="w-full aspect-square max-w-[200px] mb-10">
+                  {item.art}
+                </div>
+
+                {/* Number on the left of the title */}
+                <h3 className="text-[#1D1D1F] text-[20px] lg:text-[22px] leading-[1.3] tracking-[-0.01em] flex items-baseline gap-3" style={{ fontWeight: 500 }}>
+                  <span className="shrink-0">{item.num}.</span>
+                  <span>{item.title}</span>
+                </h3>
               </div>
-
-              {/* Number on the left of the title */}
-              <h3 className="text-[#1D1D1F] text-[20px] lg:text-[22px] leading-[1.3] tracking-[-0.01em] flex items-baseline gap-3" style={{ fontWeight: 500 }}>
-                <span className="shrink-0">{item.num}.</span>
-                <span>{item.title}</span>
-              </h3>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
     </section>

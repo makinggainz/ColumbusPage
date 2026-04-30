@@ -42,7 +42,22 @@ export default function ResearchApplicationsRoute() {
   }, []);
 
   return (
-    <main style={{ backgroundColor: "#FFFFFF" }}>
+    <main className="relative" style={{ backgroundColor: "#FFFFFF" }}>
+      {/* Page-level vertical structure lines — extend the page grid through
+          every section from hero to footer. Sits above section content but
+          below the navbar (z 1050); pointer-events-none keeps interactions
+          on cards / links unaffected. */}
+      <div
+        className="pointer-events-none absolute inset-0"
+        style={{ zIndex: 50 }}
+        aria-hidden
+      >
+        <div className="max-w-[1287px] mx-auto relative h-full">
+          <div style={{ position: "absolute", top: 0, left: 0, width: 1, height: "100%", background: "var(--grid-line)" }} />
+          <div style={{ position: "absolute", top: 0, right: 0, width: 1, height: "100%", background: "var(--grid-line)" }} />
+        </div>
+      </div>
+
       <Navbar theme={navTheme} />
 
       <section className="relative" ref={heroRef}>
