@@ -47,7 +47,7 @@
 - **Standard pages:** appear once the hero CTA element (`#hero-cta`) scrolls out of the viewport (observed via `IntersectionObserver`).
 - **Products page:** appear once `bgTriggerPassed` is true AND the hero scroll transition is not active (`!inHeroTransition || bgTriggerPassed`).
 - Animate in via `clip-path: inset(0 0% 0 0)` → `inset(0 100% 0 0)` + opacity fade (400ms spring).
-- Links shown: **Product** (`/enterprise`), **Use Cases** (`/use-cases`), **Technology** (`/technology`).
+- Links shown: **Products** (`/products/enterprise`), **Technology** (`/technology`), **Use Cases** (`/use-cases`).
 - On the products page, link text uses `glassStyles.glassTextStatic` for the frosted glass look.
 
 ---
