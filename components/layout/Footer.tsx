@@ -191,7 +191,7 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false, t
                   { label: "Elio", href: "/" },
                   { label: "Use Cases", href: "/use-cases" },
                 ]} />,
-                <FooterColumn key="technology" theme={theme} title="Technology" links={[
+                <FooterColumn key="technology" theme={theme} title="Research" links={[
                   { label: "Foundation Model", href: "/technology" },
                   { label: "Timeline", href: "/technology" },
                   { label: "Research", href: "/technology" },
