@@ -14,6 +14,7 @@ import SuperModelSection from "@/components/use-cases/SuperModelSection";
 import AgentResearch from "@/components/use-cases/AgentResearch";
 import DataCatalogue from "@/components/use-cases/DataCatalogue";
 import ScrollProgressTracker from "@/components/use-cases/ScrollProgressTracker";
+import { GenLayersSection } from "@/components/technology/redesign/GenLayersSection";
 
 export default function UseCasesRoute() {
   const [navTheme, setNavTheme] = useState<"light" | "dark">("dark");
@@ -96,6 +97,12 @@ export default function UseCasesRoute() {
       <section className="relative">
         <span className="absolute top-4 left-4 z-50 text-red-500 font-bold text-xl">9</span>
         <ContactSection />
+      </section>
+      <section className="relative">
+        <span className="absolute top-4 left-4 z-50 text-red-500 font-extrabold text-3xl leading-tight max-w-105">
+          MOVED FROM TECHNOLOGY PAGE
+        </span>
+        <GenLayersSection />
       </section>
       <Footer theme="dark" />
     </main>

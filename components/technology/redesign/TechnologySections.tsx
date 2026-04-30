@@ -16,7 +16,6 @@ import { ResearchGroup } from "./ResearchGroup";
 import { RevealOnView } from "./RevealOnView";
 import { SidebarRightLine } from "./SidebarRightLine";
 import { CareersContactForm } from "./CareersContactForm";
-import { GenLayersSection } from "./GenLayersSection";
 import type { TechnologySectionId } from "./types";
 
 function Slide({
@@ -647,11 +646,6 @@ export function TechnologySections() {
           </div>
         </div>
       </Slide>
-
-      {/* Gen Layers + The Grid — full-viewport-width band sitting between
-          the data-collection and research-blog slides. Owns its own reveal
-          animation via IntersectionObserver. */}
-      <GenLayersSection />
 
       {/* ── 5. Research Blog ── */}
       <Slide id="research-blog">
