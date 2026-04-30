@@ -491,7 +491,7 @@ export function GenLayersSection() {
 
         {/* Glass CTA — MapsGPT page style */}
         <div className={styles.genLayersExploreWrap}>
-          <a href="/use-cases" className={styles.genLayersExploreBtn}>
+          <a href="/columbus-solutions" className={styles.genLayersExploreBtn}>
             <span>Explore more maps we&apos;ve made</span>
             <svg width="10" height="18" viewBox="0 0 7 12" fill="none" aria-hidden>
               <path d="M1 1l5 5-5 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />

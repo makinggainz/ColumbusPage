@@ -1026,7 +1026,7 @@ export const Hero = () => {
             {[
               { label: "Products", href: "/products/enterprise", hasPopup: true },
               { label: "Research", href: "/technology", hasPopup: false },
-              { label: "Use Cases", href: "/use-cases", hasPopup: false },
+              { label: "Use Cases", href: "/columbus-solutions", hasPopup: false },
             ].map((link) => {
               if (!link.hasPopup) {
                 return (

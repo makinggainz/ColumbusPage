@@ -16,7 +16,7 @@ import DataCatalogue from "@/components/use-cases/DataCatalogue";
 import ScrollProgressTracker from "@/components/use-cases/ScrollProgressTracker";
 import { GenLayersSection } from "@/components/technology/redesign/GenLayersSection";
 
-export default function UseCasesRoute() {
+export default function ResearchApplicationsRoute() {
   const [navTheme, setNavTheme] = useState<"light" | "dark">("dark");
   const [heroOverlay, setHeroOverlay] = useState(0);
   const sectionBRef = useRef<HTMLElement>(null);
@@ -56,7 +56,6 @@ export default function UseCasesRoute() {
       <Navbar theme={navTheme} />
 
       <section className="relative" ref={sectionBRef}>
-        <span className="absolute top-4 left-4 z-50 text-red-500 font-bold text-xl">1</span>
         <HeroSection />
         <div
           className="absolute inset-0 bg-black pointer-events-none z-30"
@@ -64,44 +63,33 @@ export default function UseCasesRoute() {
         />
       </section>
       <section className="relative bg-black" ref={sectionCRef}>
-        <span className="absolute top-4 left-4 z-50 text-red-500 font-bold text-xl">2</span>
         <ResultsSection />
       </section>
       <section className="relative" ref={sectionDRef}>
-        <span className="absolute top-4 left-4 z-50 text-red-500 font-bold text-xl">3</span>
         <UseCasesHero />
       </section>
       <div className="relative">
         <ScrollProgressTracker sectionRefs={[sec4Ref, sec5Ref, sec6Ref, sec7Ref, sec8Ref]} />
         <section className="relative" ref={sec4Ref}>
-          <span className="absolute top-4 left-4 z-50 text-red-500 font-bold text-xl">4</span>
           <Chat />
         </section>
         <section className="relative" ref={sec5Ref}>
-          <span className="absolute top-4 left-4 z-50 text-red-500 font-bold text-xl">5</span>
           <SuperModelSection />
         </section>
         <section className="relative" ref={sec6Ref}>
-          <span className="absolute top-4 left-4 z-50 text-red-500 font-bold text-xl">6</span>
           <AgentResearch />
         </section>
         <section className="relative" ref={sec7Ref}>
-          <span className="absolute top-4 left-4 z-50 text-red-500 font-bold text-xl">7</span>
           <DataCatalogue />
         </section>
         <section className="relative" ref={sec8Ref}>
-          <span className="absolute top-4 left-4 z-50 text-red-500 font-bold text-xl">8</span>
           <IndustryGrid />
         </section>
       </div>
       <section className="relative">
-        <span className="absolute top-4 left-4 z-50 text-red-500 font-bold text-xl">9</span>
         <ContactSection />
       </section>
       <section className="relative">
-        <span className="absolute top-4 left-4 z-50 text-red-500 font-extrabold text-3xl leading-tight max-w-105">
-          MOVED FROM TECHNOLOGY PAGE
-        </span>
         <GenLayersSection />
       </section>
       <Footer theme="dark" />

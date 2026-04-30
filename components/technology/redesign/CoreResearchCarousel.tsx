@@ -31,7 +31,7 @@ const SLIDES: Slide[] = [
     title: "Answers, insights, patterns",
     text: "One model, innumerable granular ground truths.",
     products: true,
-    link: { label: "Other use cases", href: "/use-cases" },
+    link: { label: "Other use cases", href: "/columbus-solutions" },
   },
 ];
 

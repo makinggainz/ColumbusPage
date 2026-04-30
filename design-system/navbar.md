@@ -47,7 +47,8 @@
 - **Standard pages:** appear once the hero CTA element (`#hero-cta`) scrolls out of the viewport (observed via `IntersectionObserver`).
 - **Products page:** appear once `bgTriggerPassed` is true AND the hero scroll transition is not active (`!inHeroTransition || bgTriggerPassed`).
 - Animate in via `clip-path: inset(0 0% 0 0)` → `inset(0 100% 0 0)` + opacity fade (400ms spring).
-- Links shown: **Products** (`/products/enterprise`), **Research** (`/technology`), **Use Cases** (`/use-cases`).
+- Links shown: **Products** (`/products/enterprise`), **Research** (`/technology`), **Use Cases** (`/columbus-solutions` — opens a hover dropdown with two cards: Columbus Pro Enterprise Use-Cases → `/columbus-solutions`, Research Applications → `/research-applications`), **Company** (`/mission`).
+- The Use Cases link mirrors the Products dropdown pattern (chevron + active underline) but renders a different overlay: an empty bordered card for Columbus Pro Enterprise Use-Cases and a bordered card containing an inline globe SVG for Research Applications. Plain text labels sit below each card — no subtitles. The overlay is positioned absolutely over the products card grid and crossfades when `hoverKind === "use-cases"`.
 - On the products page, link text uses `glassStyles.glassTextStatic` for the frosted glass look.
 
 ---
@@ -186,7 +187,8 @@ The navbar adapts its behaviour per page via props, pathname checks, and DOM mar
 | `/contact` | `<Navbar />` | light | **Visible** | Immediate (no hero CTA) | Standard behaviour |
 | `/enterprise` | `<Navbar theme="light" />` | light | **Hidden** | Immediate (no hero CTA) | Standard light navbar — hero background is `#E8EEF8` |
 | `/maps-gpt` | `<Navbar theme="dark" />` | dark | **Hidden** | Immediate (no hero CTA) | Dark frosted glass |
-| `/use-cases` | `<Navbar theme={navTheme} />` | dynamic | **Hidden** | Immediate (no hero CTA) | See **Use-Cases-Specific Behaviour** section below |
+| `/columbus-solutions` | `<Navbar theme={navTheme} />` | dynamic | **Hidden** | Immediate (no hero CTA) | See **Use-Cases-Specific Behaviour** section below |
+| `/research-applications` | `<Navbar theme={navTheme} />` | dynamic | **Hidden** | Immediate (no hero CTA) | See **Use-Cases-Specific Behaviour** section below |
 | `/mission` | `<Navbar />` | light | **Hidden** | Immediate (no hero CTA) | Standard behaviour |
 | `/market-spy` | `<Navbar />` | light | **Hidden** | Immediate (no hero CTA) | Standard behaviour |
 | `/blog` (index) | `<Navbar />` | light | **Visible** | Immediate (no hero CTA) | Standard navbar — full nav links, Start Now CTA, and hamburger render normally. |
@@ -194,13 +196,13 @@ The navbar adapts its behaviour per page via props, pathname checks, and DOM mar
 
 ### Use-Cases-Specific Behaviour
 
-The `/use-cases` page has unique navbar requirements driven by its dark hero and dynamic section backgrounds. Controlled via `isUseCasesPage` (`pathname === "/use-cases"`).
+The `/columbus-solutions` and `/research-applications` pages share the same navbar requirements — both clone the original use-cases page layout (dark hero + dynamic section backgrounds). Controlled via `isUseCasesPage` (`pathname === "/products/enterprise" || pathname === "/columbus-solutions" || pathname === "/research-applications"`).
 
 | Behaviour | Detail |
 |-----------|--------|
 | **Immediate visibility** | `hasScrolled` is forced `true` on mount (both `useLayoutEffect` and `useEffect`) — no hero entrance animation to wait for. |
 | **Transparent initial background** | No frosted glass at scroll 0. The standard `isCompact` logic handles this (glass appears after 10px scroll). |
-| **Dynamic theme** | Page passes `theme={navTheme}` which switches between `"dark"` (white text) and `"light"` (dark text) based on which section the navbar overlaps. Theme switching is handled in `app/use-cases/page.tsx` via scroll listener against section refs. |
+| **Dynamic theme** | Page passes `theme={navTheme}` which switches between `"dark"` (white text) and `"light"` (dark text) based on which section the navbar overlaps. Theme switching is handled in `app/columbus-solutions/page.tsx` and `app/research-applications/page.tsx` via scroll listener against section refs. |
 | **Nav link colours follow theme** | Nav links use `isDark ? "white" : "#111111"` so they remain readable across dark/light section transitions. |
 | **CTA button transitions with theme** | Dark sections: 10% white background, white text, hover fills solid white with black text. Light sections: solid black background, white text, standard hover. Transitions smoothly between states via `background-color 300ms` and `color 300ms`. |
 | **Logo + wordmark in dark dropdown** | When menu opens on a dark section, logo stays inverted (white) and wordmark stays white — unlike other pages where `navColor` forces `#111111` on menu open. |

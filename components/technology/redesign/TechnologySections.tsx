@@ -550,7 +550,7 @@ export function TechnologySections() {
                       <span>More Soon</span>
                     </span>
                   </div>
-                  <a href="/use-cases" className={styles.coreResearchGroupLink}>
+                  <a href="/columbus-solutions" className={styles.coreResearchGroupLink}>
                     Other use cases
                     <svg width="10" height="10" viewBox="0 0 10 10" aria-hidden>
                       <path d="M2 8l6-6M3.5 2H8v4.5" stroke="currentColor" strokeWidth="1.3" fill="none" strokeLinecap="round" strokeLinejoin="round" />

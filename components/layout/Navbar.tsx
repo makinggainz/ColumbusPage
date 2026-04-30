@@ -27,7 +27,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
        area shows a company image plus Blog/Company links. Any other
        trigger (logo hover, hamburger, etc.) falls back to the default
        dropdown layout. */
-    const [hoverKind, setHoverKind] = useState<"products" | "company" | null>(null);
+    const [hoverKind, setHoverKind] = useState<"products" | "company" | "use-cases" | null>(null);
     const [isManuallyToggled, setIsManuallyToggled] = useState(false);
     const [hasScrolled, setHasScrolled] = useState(false);
     const [isCompact, setIsCompact] = useState(false);
@@ -44,7 +44,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
     const pathname = usePathname();
     const isHomePage = pathname === "/";
     const isProductsPage = pathname === "/products/mapsgpt";
-    const isUseCasesPage = pathname === "/use-cases" || pathname === "/products/enterprise";
+    const isUseCasesPage = pathname === "/products/enterprise" || pathname === "/columbus-solutions" || pathname === "/research-applications";
     const isEnterprisePage = pathname === "/products/enterprise";
     const isContactPage = pathname === "/contact";
     const showWordmarkOnMobile = pathname === "/" || pathname === "/mission" || pathname === "/contact";
@@ -57,6 +57,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
        design-system/navbar-dropdown.md for the full spec. */
     const productsLinkRef = useRef<HTMLAnchorElement | null>(null);
     const companyLinkRef = useRef<HTMLAnchorElement | null>(null);
+    const useCasesLinkRef = useRef<HTMLAnchorElement | null>(null);
     const ctaRef = useRef<HTMLAnchorElement | null>(null);
     const productsColRef = useRef<HTMLDivElement | null>(null);
     const leftColRef = useRef<HTMLDivElement | null>(null);
@@ -557,17 +558,19 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                     {([
                                         { label: "Products", href: "/products/enterprise", hasDropdown: true, kind: "products" as const },
                                         { label: "Research", href: "/technology" },
-                                        { label: "Use Cases", href: "/use-cases" },
+                                        { label: "Use Cases", href: "/columbus-solutions", hasDropdown: true, kind: "use-cases" as const },
                                         { label: "Company", href: "/mission", hasDropdown: true, kind: "company" as const },
                                     ] as const).map((link, i) => (
                                         <Link
                                             key={link.label}
                                             href={link.href}
                                             ref={
-                                                (link as { kind?: "products" | "company" }).kind === "products"
+                                                (link as { kind?: "products" | "company" | "use-cases" }).kind === "products"
                                                     ? productsLinkRef
-                                                    : (link as { kind?: "products" | "company" }).kind === "company"
+                                                    : (link as { kind?: "products" | "company" | "use-cases" }).kind === "company"
                                                     ? companyLinkRef
+                                                    : (link as { kind?: "products" | "company" | "use-cases" }).kind === "use-cases"
+                                                    ? useCasesLinkRef
                                                     : undefined
                                             }
                                             className={navLinkClass}
@@ -582,7 +585,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                             onMouseEnter={
                                                 (link as { hasDropdown?: boolean }).hasDropdown
                                                     ? () => {
-                                                          setHoverKind((link as { kind?: "products" | "company" }).kind ?? null);
+                                                          setHoverKind((link as { kind?: "products" | "company" | "use-cases" }).kind ?? null);
                                                           handleNavMouseEnter();
                                                       }
                                                     : undefined
@@ -600,7 +603,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                                     mouse from the link into the dropdown keeps the
                                                     visual link "active". */}
                                                 {(() => {
-                                                    const linkKind = (link as { kind?: "products" | "company" }).kind;
+                                                    const linkKind = (link as { kind?: "products" | "company" | "use-cases" }).kind;
                                                     const linkIsActive =
                                                         isMenuOpen &&
                                                         !!linkKind &&
@@ -614,9 +617,9 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                                     );
                                                 })()}
                                             </span>
-                                            {/* Arrow chevron — Products only (Company keeps dropdown hover, no arrow). */}
-                                            {(link as { kind?: "products" | "company" }).kind === "products" && (() => {
-                                                const linkKind = (link as { kind?: "products" | "company" }).kind;
+                                            {/* Arrow chevron — Products + Use Cases (Company keeps dropdown hover, no arrow). */}
+                                            {((link as { kind?: "products" | "company" | "use-cases" }).kind === "products" || (link as { kind?: "products" | "company" | "use-cases" }).kind === "use-cases") && (() => {
+                                                const linkKind = (link as { kind?: "products" | "company" | "use-cases" }).kind;
                                                 const flipped = isMenuOpen && !!linkKind && hoverKind === linkKind;
                                                 const crossfade = "opacity 140ms ease-out";
                                                 return (
@@ -824,17 +827,17 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                             ref={leftColRef}
                             className="min-[900px]:col-start-1 min-[900px]:col-span-5 min-[900px]:row-start-1 flex flex-col relative z-10"
                             style={{
-                                opacity: !isMenuOpen ? 0 : hoverKind === "products" ? 0 : 1,
+                                opacity: !isMenuOpen ? 0 : (hoverKind === "products" || hoverKind === "use-cases") ? 0 : 1,
                                 transform: !isMenuOpen
                                     ? "translateY(8px) scale(0.99)"
-                                    : hoverKind === "products"
+                                    : (hoverKind === "products" || hoverKind === "use-cases")
                                     ? "translateX(-12px)"
                                     : "translateY(0) translateX(0) scale(1)",
                                 transition: !isMenuOpen
                                     ? "opacity 150ms ease, transform 150ms ease"
                                     : "opacity 350ms cubic-bezier(0.05, 0.7, 0.1, 1), transform 400ms cubic-bezier(0.05, 0.7, 0.1, 1)",
-                                pointerEvents: hoverKind === "products" ? "none" : "auto",
-                                ...(hoverKind !== "products" && productsAlign && isWideScreen
+                                pointerEvents: (hoverKind === "products" || hoverKind === "use-cases") ? "none" : "auto",
+                                ...((hoverKind !== "products" && hoverKind !== "use-cases") && productsAlign && isWideScreen
                                     ? {
                                         maxWidth: Math.round(
                                             (productsAlign.leftMaxWidth
@@ -895,8 +898,8 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                             style={{
                                 ...(productsAlign && isWideScreen
                                     ? {
-                                        paddingLeft: hoverKind === "products" ? 0 : productsAlign.padLeft,
-                                        paddingRight: hoverKind === "products" ? 0 : productsAlign.padRight,
+                                        paddingLeft: (hoverKind === "products" || hoverKind === "use-cases") ? 0 : productsAlign.padLeft,
+                                        paddingRight: (hoverKind === "products" || hoverKind === "use-cases") ? 0 : productsAlign.padRight,
                                     }
                                     : {}),
                                 transition: "padding 450ms cubic-bezier(0.05, 0.7, 0.1, 1)",
@@ -998,14 +1001,89 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                     </ul>
                                 </div>
 
+                                {/* ── Use-cases cards (desktop) — absolutely positioned
+                                    on top of the products grid; fades in when the user
+                                    hovers Use Cases. Two cards: an empty bordered box for
+                                    Columbus Pro Enterprise Use-Cases, and a bordered box
+                                    with a globe diagram for Research Applications. Plain
+                                    text labels sit below each card. */}
+                                <div
+                                    className="hidden min-[900px]:flex absolute inset-0 justify-center"
+                                    aria-hidden={hoverKind !== "use-cases"}
+                                    style={{
+                                        opacity: hoverKind === "use-cases" && isMenuOpen ? 1 : 0,
+                                        pointerEvents: hoverKind === "use-cases" && isMenuOpen ? "auto" : "none",
+                                        transform: hoverKind === "use-cases" && isMenuOpen ? "translateY(0)" : "translateY(6px)",
+                                        transition: "opacity 350ms cubic-bezier(0.05, 0.7, 0.1, 1), transform 400ms cubic-bezier(0.05, 0.7, 0.1, 1)",
+                                    }}
+                                >
+                                    <div className="grid grid-cols-2 gap-6 w-full max-w-[580px]">
+                                        {[
+                                            { title: "Columbus Pro Enterprise Use-Cases", href: "/columbus-solutions", icon: null as React.ReactNode },
+                                            {
+                                                title: "Research Applications",
+                                                href: "/research-applications",
+                                                icon: (
+                                                    <svg viewBox="0 0 200 200" fill="none" stroke="currentColor" className="w-1/2 h-1/2 max-w-[140px]" aria-hidden>
+                                                        {/* Crosshair dashed lines */}
+                                                        <line x1="100" y1="6" x2="100" y2="38" strokeWidth="1.2" strokeDasharray="4 4" />
+                                                        <line x1="100" y1="162" x2="100" y2="194" strokeWidth="1.2" strokeDasharray="4 4" />
+                                                        <line x1="6" y1="100" x2="38" y2="100" strokeWidth="1.2" strokeDasharray="4 4" />
+                                                        <line x1="162" y1="100" x2="194" y2="100" strokeWidth="1.2" strokeDasharray="4 4" />
+                                                        {/* Globe outline */}
+                                                        <circle cx="100" cy="100" r="60" strokeWidth="1.6" />
+                                                        {/* Longitude meridians (ellipses) */}
+                                                        <ellipse cx="100" cy="100" rx="22" ry="60" strokeWidth="1.2" />
+                                                        <ellipse cx="100" cy="100" rx="42" ry="60" strokeWidth="1.2" />
+                                                        {/* Equator */}
+                                                        <line x1="40" y1="100" x2="160" y2="100" strokeWidth="1.6" />
+                                                        {/* Polar axis */}
+                                                        <line x1="100" y1="40" x2="100" y2="160" strokeWidth="1" strokeDasharray="2 3" />
+                                                        {/* Orbiting body */}
+                                                        <circle cx="138" cy="92" r="5" fill="currentColor" stroke="none" />
+                                                    </svg>
+                                                ),
+                                            },
+                                        ].map((item, index) => (
+                                            <Link
+                                                key={item.href}
+                                                href={item.href}
+                                                onClick={closeMenu}
+                                                className="group flex flex-col cursor-pointer pointer-events-auto"
+                                                style={{
+                                                    opacity: hoverKind === "use-cases" && isMenuOpen ? 1 : 0,
+                                                    transform: hoverKind === "use-cases" && isMenuOpen
+                                                        ? "translateY(0) scale(1)"
+                                                        : "translateY(12px) scale(0.98)",
+                                                    transition: hoverKind === "use-cases" && isMenuOpen
+                                                        ? `opacity 400ms cubic-bezier(0.05, 0.7, 0.1, 1) ${100 + index * 60}ms, transform 450ms cubic-bezier(0.05, 0.7, 0.1, 1) ${100 + index * 60}ms`
+                                                        : `opacity 120ms ease ${(1 - index) * 25}ms, transform 120ms ease ${(1 - index) * 25}ms`,
+                                                }}
+                                            >
+                                                <div
+                                                    className={`relative aspect-square flex items-center justify-center transition-colors duration-300 ${isDark ? "text-white/80 group-hover:text-white" : "text-[#0A1344] group-hover:text-[#2563EB]"}`}
+                                                    style={{
+                                                        border: `1px solid ${isDark ? "rgba(255,255,255,0.35)" : "rgba(10,19,68,0.7)"}`,
+                                                    }}
+                                                >
+                                                    {item.icon}
+                                                </div>
+                                                <h5 className={`mt-5 text-[20px] font-medium tracking-[-0.005em] leading-[1.2] ${dropdownNavLinkClass}`}>
+                                                    {item.title}
+                                                </h5>
+                                            </Link>
+                                        ))}
+                                    </div>
+                                </div>
+
                                 {/* ── Products cards (desktop) — shown in default + products
                                     modes; crossfades out when company mode engages. Cards
                                     are capped at 760px and centred via mx-auto. */}
                                 <div
-                                    className={`hidden min-[900px]:grid grid-cols-2 gap-6 mx-auto min-[900px]:max-w-[760px] ${hoverKind === "company" ? "[&_a]:pointer-events-none!" : ""}`}
+                                    className={`hidden min-[900px]:grid grid-cols-2 gap-6 mx-auto min-[900px]:max-w-[760px] ${(hoverKind === "company" || hoverKind === "use-cases") ? "[&_a]:pointer-events-none!" : ""}`}
                                     style={{
-                                        opacity: hoverKind === "company" ? 0 : 1,
-                                        pointerEvents: hoverKind === "company" ? "none" : "auto",
+                                        opacity: (hoverKind === "company" || hoverKind === "use-cases") ? 0 : 1,
+                                        pointerEvents: (hoverKind === "company" || hoverKind === "use-cases") ? "none" : "auto",
                                         transition: "opacity 350ms cubic-bezier(0.05, 0.7, 0.1, 1)",
                                     }}
                                 >
@@ -1124,7 +1202,8 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                 <ul className="space-y-4">
                                     {[
                                         { label: "Research", href: "/technology" },
-                                        { label: "Use Cases", href: "/use-cases" },
+                                        { label: "Columbus Solutions", href: "/columbus-solutions" },
+                                        { label: "Research Applications", href: "/research-applications" },
                                         { label: "Our Mission", href: "/mission" },
                                         { label: "Vision", href: "/mission" },
                                         { label: "Blog", href: "/blog" },

@@ -275,7 +275,7 @@ export const Capabilities = () => {
                         </ul>
                       )}
                       <Link
-                        href="/use-cases"
+                        href="/columbus-solutions"
                         onClick={e => e.stopPropagation()}
                         className="group inline-flex items-center gap-4 mt-auto leading-none whitespace-nowrap hover:opacity-80 transition-opacity"
                         style={{
@@ -381,7 +381,7 @@ export const Capabilities = () => {
 
               {/* More examples link */}
               <Link
-                href="/use-cases"
+                href="/columbus-solutions"
                 className="absolute right-8 top-1/2 -translate-y-1/2 flex items-center gap-2 text-[15px] font-semibold text-white hover:opacity-90 transition-opacity mobile-blur-none"
                 style={{ backgroundColor: "rgba(255,255,255,0.12)", backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)", border: "1px solid rgba(255,255,255,0.2)", padding: "10px 18px", borderRadius: 9999 }}
               >
