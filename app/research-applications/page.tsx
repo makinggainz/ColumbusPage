@@ -56,7 +56,7 @@ export default function ResearchApplicationsRoute() {
       <Navbar theme={navTheme} />
 
       <section className="relative" ref={sectionBRef}>
-        <HeroSection />
+        <HeroSection videoSrc="/research-applications-video.mp4" />
         <div
           className="absolute inset-0 bg-black pointer-events-none z-30"
           style={{ opacity: heroOverlay }}

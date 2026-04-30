@@ -8,11 +8,13 @@ const TYPE_INTERVAL = 28; // ms per character
 interface HeroSectionProps {
   title?: React.ReactNode;
   subtitle?: React.ReactNode;
+  videoSrc?: string;
 }
 
 export default function HeroSection({
   title = (<>Why you should be excited<br /> about our LGM</>),
   subtitle = "Our Geospatial Model — spatial reasoning at scale, without the hallucinations.",
+  videoSrc = "/use-cases-video.mp4",
 }: HeroSectionProps = {}) {
   const [visible, setVisible] = useState(false);
   const [typedText, setTypedText] = useState("");
@@ -64,7 +66,7 @@ export default function HeroSection({
       {/* Background video — looped, muted, autoplay */}
       <video
         ref={videoRef}
-        src="/use-cases-video.mp4"
+        src={videoSrc}
         autoPlay
         loop
         muted
