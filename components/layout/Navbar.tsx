@@ -458,32 +458,38 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                 }}
                 onMouseLeave={handleMouseLeave}
             >
-                {/* Frosted glass background — fades in on compact */}
+                {/* Backdrop blur — always active, no color tint, so the navbar
+                    takes on whatever color the page is showing underneath it. */}
                 <div
                     className="absolute inset-0 pointer-events-none"
                     style={{
-                        background: isEnterprisePage && isDark ? "rgba(14, 16, 28, 0.95)" : isDark ? "rgba(6, 8, 20, 0.85)" : "rgba(255, 255, 255, 0.82)",
+                        background: "transparent",
                         backdropFilter: "blur(20px) saturate(1.2)",
                         WebkitBackdropFilter: "blur(20px) saturate(1.2)",
-                        borderBottom: isProductsPage ? "none" : isEnterprisePage ? "1px solid rgba(255,255,255,0.10)" : isDark ? "1px solid rgba(255,255,255,0.06)" : isHomePage ? "none" : "1px solid rgba(0,0,0,0.06)",
-                        opacity: isMenuOpen ? 0 : isHomePage ? "var(--hero-grid-opacity, 0)" : (isProductsPage ? bgTriggerPassed : isCompact) ? 1 : 0,
+                        borderBottom: "none",
+                        opacity: isMenuOpen ? 0 : 1,
                         transition: `opacity ${t}`,
                     }}
                 />
 
-                {/* Homepage bottom border — fades in with the hero grid reveal */}
-                {isHomePage && !isMenuOpen && (
+                {/* Bottom border — uses the same --grid-line token as the page's
+                    structure lines so the navbar reads as the top of the grid.
+                    On homepage it fades in with --hero-grid-opacity to match the
+                    hero's reveal; elsewhere it's at full opacity. */}
+                {!isMenuOpen && (
                     <div
                         className="absolute left-0 right-0 pointer-events-none"
                         style={{
                             bottom: 0,
                             height: 1,
-                            background: "rgba(37, 99, 235, 0.3)",
-                            opacity: "var(--hero-grid-opacity, 0)",
+                            background: "var(--grid-line)",
+                            opacity: isHomePage ? "var(--hero-grid-opacity, 0)" : 1,
                         }}
                         aria-hidden
                     />
                 )}
+
+
 
                 <div className="relative mx-auto w-full" style={{ maxWidth: wide ? 1408 : 1287 }}>
                     {/* (navbar bg when dropdown open is now part of the dropdown itself) */}
