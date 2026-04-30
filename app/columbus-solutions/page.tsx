@@ -5,7 +5,6 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 
 import HeroSection from "@/components/use-cases/HeroSection";
-import ResultsSection from "@/components/use-cases/ResultsSection";
 import UseCasesHero from "@/components/use-cases/UseCaseHero";
 import ContactSection from "@/components/use-cases/ContactSection";
 import IndustryGrid from "@/components/use-cases/IndustryGrid";
@@ -17,10 +16,9 @@ import ScrollProgressTracker from "@/components/use-cases/ScrollProgressTracker"
 import { GenLayersSection } from "@/components/technology/redesign/GenLayersSection";
 
 export default function ColumbusSolutionsRoute() {
-  const [navTheme, setNavTheme] = useState<"light" | "dark">("dark");
+  const [navTheme] = useState<"light" | "dark">("dark");
   const [heroOverlay, setHeroOverlay] = useState(0);
   const sectionBRef = useRef<HTMLElement>(null);
-  const sectionCRef = useRef<HTMLElement>(null);
   const sectionDRef = useRef<HTMLElement>(null);
   const sec4Ref = useRef<HTMLElement>(null);
   const sec5Ref = useRef<HTMLElement>(null);
@@ -29,13 +27,7 @@ export default function ColumbusSolutionsRoute() {
   const sec8Ref = useRef<HTMLElement>(null);
 
   useEffect(() => {
-    const NAVBAR_H = 80;
     const update = () => {
-      if (sectionCRef.current && sectionDRef.current) {
-        const cRect = sectionCRef.current.getBoundingClientRect();
-        const overC = cRect.top <= NAVBAR_H && cRect.bottom > NAVBAR_H;
-        setNavTheme(overC ? "light" : "dark");
-      }
       if (sectionBRef.current) {
         const bRect = sectionBRef.current.getBoundingClientRect();
         const bHeight = sectionBRef.current.offsetHeight;
@@ -57,16 +49,13 @@ export default function ColumbusSolutionsRoute() {
 
       <section className="relative" ref={sectionBRef}>
         <HeroSection
-          title={<>Columbus Pro<br /> Professional applications</>}
-          subtitle="Spatial intelligence for industry — site selection, planning, logistics, and security at scale."
+          title={<>Columbus<br /> Professional applications</>}
+          subtitle="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
         />
         <div
           className="absolute inset-0 bg-black pointer-events-none z-30"
           style={{ opacity: heroOverlay }}
         />
-      </section>
-      <section className="relative bg-black" ref={sectionCRef}>
-        <ResultsSection />
       </section>
       <section className="relative" ref={sectionDRef}>
         <UseCasesHero />

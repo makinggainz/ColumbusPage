@@ -55,12 +55,30 @@ const SIDEBAR_ITEMS: SidebarItem[] = [
 
 const FADE_DURATION_MS = 300;
 
-export default function SuperModelSection() {
+type SuperModelSectionProps = {
+  lightTheme?: boolean;
+};
+
+export default function SuperModelSection({ lightTheme = false }: SuperModelSectionProps) {
   const [openId, setOpenId] = useState<string>("generative-geodata");
   const [userHasTapped, setUserHasTapped] = useState(false);
   const [mapOpacity, setMapOpacity] = useState(1);
   const sectionRef = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
+
+  // Theme-dependent classes/colors
+  const sectionBgClass = lightTheme ? "bg-white" : "bg-black";
+  const sectionLinesClass = lightTheme ? "section-lines-light" : "section-lines-dark";
+  const headingTextClass = lightTheme ? "text-[#1D1D1F]" : "text-white";
+  const cellTextClass = lightTheme ? "text-[#1D1D1F]" : "text-white";
+  const cellBgClass = lightTheme ? "bg-white" : "bg-black";
+  const focusRingClass = lightTheme ? "focus-visible:ring-[rgba(10,19,68,0.15)]" : "focus-visible:ring-white/50";
+  const outerBorderClass = lightTheme ? "border-[rgba(10,19,68,0.15)]" : "border-white/50";
+  const dividerBorderClass = lightTheme ? "border-[rgba(10,19,68,0.15)]" : "border-white";
+  const descriptionTextClass = lightTheme ? "text-[rgba(29,29,31,0.7)]" : "text-gray-300";
+  const mutedLabelTextColor = lightTheme ? "#6E6E73" : "#6E6E73";
+  const ctaButtonBg = lightTheme ? "#1D1D1F" : "white";
+  const ctaButtonColor = lightTheme ? "#FFFFFF" : "#1D1D1F";
 
   useEffect(() => {
     const el = sectionRef.current;
@@ -97,21 +115,21 @@ export default function SuperModelSection() {
   };
 
   return (
-    <section className="w-full bg-black flex justify-center">
-      <div ref={sectionRef} className="section-lines-dark w-full max-w-[1287px] mx-auto px-8 md:px-10 py-[120px]">
+    <section className={`w-full ${sectionBgClass} flex justify-center`}>
+      <div ref={sectionRef} className={`${sectionLinesClass} w-full max-w-[1287px] mx-auto px-8 md:px-10 py-[120px]`}>
 
-        <h2 className="text-white text-[48px] font-semibold tracking-[-0.02em] mb-[50px] max-md:text-[28px]" style={anim(0)}>
+        <h2 className={`${headingTextClass} text-[48px] font-semibold tracking-[-0.02em] mb-[50px] max-md:text-[28px]`} style={anim(0)}>
           Surveying the earth with a super model
         </h2>
 
         {/* MOBILE SIDEBAR — 4 cells, no images; total height matches map (420px) so last cell bottom aligns */}
-        <div className="hidden max-md:flex max-md:flex-col max-md:h-[420px] overflow-hidden rounded-lg mb-6 border-[0.7px] border-white/50" style={anim(100)}>
+        <div className={`hidden max-md:flex max-md:flex-col max-md:h-[420px] overflow-hidden rounded-lg mb-6 border-[0.7px] ${outerBorderClass}`} style={anim(100)}>
           {SIDEBAR_ITEMS.map((item) => (
             <button
               key={item.id}
               type="button"
               onClick={() => handleCellTap(item.id)}
-              className={`relative w-full flex flex-col text-left text-white overflow-hidden focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50 cursor-pointer transition-[height] duration-300 ease-in-out bg-black border-b-[0.7px] border-white last:border-b-0 ${
+              className={`relative w-full flex flex-col text-left ${cellTextClass} overflow-hidden focus:outline-none focus-visible:ring-2 ${focusRingClass} cursor-pointer transition-[height] duration-300 ease-in-out ${cellBgClass} border-b-[0.7px] ${dividerBorderClass} last:border-b-0 ${
                 openId === item.id ? "min-h-[192px] flex-1" : "h-[76px] flex-shrink-0"
               }`}
             >
@@ -132,9 +150,9 @@ export default function SuperModelSection() {
                     transition={{ duration: 0.25 }}
                     className="relative z-10 flex-1 px-6 pb-6 pt-0 flex flex-col min-h-0"
                   >
-                    <p className="text-[14px] text-gray-300 mb-4">{item.openContent.description}</p>
+                    <p className={`text-[14px] ${descriptionTextClass} mb-4`}>{item.openContent.description}</p>
                     {item.openContent.listItems.length > 0 && (
-                      <ul className="text-[14px] text-gray-300 space-y-2">
+                      <ul className={`text-[14px] ${descriptionTextClass} space-y-2`}>
                         {item.openContent.listItems.map((li) => (
                           <li key={li}>• {li}</li>
                         ))}
@@ -150,14 +168,14 @@ export default function SuperModelSection() {
         {/* DESKTOP: sidebar + map — 4 cells, no images; expanded cell uses flex-1 so last cell bottom = map bottom */}
         <div className="flex flex-col md:flex-row overflow-hidden rounded-lg gap-0" style={anim(100)}>
           <div
-            className="hidden md:flex w-[348px] max-lg:w-[280px] flex-shrink-0 text-white flex-col overflow-hidden h-[674px] max-lg:h-[520px] border-[0.7px] border-white/50 border-r-0 rounded-l-lg"
+            className={`hidden md:flex w-[348px] max-lg:w-[280px] flex-shrink-0 ${cellTextClass} flex-col overflow-hidden h-[674px] max-lg:h-[520px] border-[0.7px] ${outerBorderClass} border-r-0 rounded-l-lg`}
           >
             {SIDEBAR_ITEMS.map((item) => (
               <button
                 key={item.id}
                 type="button"
                 onClick={() => handleCellTap(item.id)}
-                className={`relative w-full flex flex-col text-left overflow-hidden focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50 cursor-pointer transition-[height] duration-300 ease-in-out flex-shrink-0 bg-black border-b-[0.7px] border-white last:border-b-0 ${
+                className={`relative w-full flex flex-col text-left overflow-hidden focus:outline-none focus-visible:ring-2 ${focusRingClass} cursor-pointer transition-[height] duration-300 ease-in-out flex-shrink-0 ${cellBgClass} border-b-[0.7px] ${dividerBorderClass} last:border-b-0 ${
                   openId === item.id
                     ? "min-h-[446px] max-lg:min-h-[292px] flex-1"
                     : "h-[76px]"
@@ -180,11 +198,11 @@ export default function SuperModelSection() {
                       transition={{ duration: 0.25 }}
                       className="relative z-10 flex-1 px-6 pb-6 pt-0 flex flex-col min-h-0"
                     >
-                      <p className="text-[16px] text-gray-300 mb-4 leading-relaxed max-lg:text-[14px]">
+                      <p className={`text-[16px] ${descriptionTextClass} mb-4 leading-relaxed max-lg:text-[14px]`}>
                         {item.openContent.description}
                       </p>
                       {item.openContent.listItems.length > 0 && (
-                        <ul className="text-[16px] text-gray-300 space-y-2 max-lg:text-[14px]">
+                        <ul className={`text-[16px] ${descriptionTextClass} space-y-2 max-lg:text-[14px]`}>
                           {item.openContent.listItems.map((li) => (
                             <li key={li}>• {li}</li>
                           ))}
@@ -198,7 +216,7 @@ export default function SuperModelSection() {
           </div>
 
           <div
-            className="relative flex-1 min-w-0 h-[674px] max-lg:h-[520px] max-md:h-[420px] rounded-r-lg overflow-hidden transition-opacity ease-in-out border-[0.7px] border-white/50 border-l-0"
+            className={`relative flex-1 min-w-0 h-[674px] max-lg:h-[520px] max-md:h-[420px] rounded-r-lg overflow-hidden transition-opacity ease-in-out border-[0.7px] ${outerBorderClass} border-l-0`}
             style={{
               opacity: mapOpacity,
               transitionDuration: `${FADE_DURATION_MS / 2}ms`,
@@ -225,13 +243,13 @@ export default function SuperModelSection() {
         </div>
 
         <div className="flex items-center justify-end mt-[25px] gap-10" style={anim(200)}>
-          <p className="text-[#6E6E73] text-[20px] font-medium">
+          <p className="text-[20px] font-medium" style={{ color: mutedLabelTextColor }}>
             Generating Ground truths
           </p>
           <button
             type="button"
             className="group flex items-center gap-3 leading-none whitespace-nowrap hover:opacity-90 transition-all duration-300"
-            style={{ fontSize: 14, fontWeight: 500, height: 45, paddingLeft: 20, paddingRight: 16, backgroundColor: "white", color: "#1D1D1F" }}
+            style={{ fontSize: 14, fontWeight: 500, height: 45, paddingLeft: 20, paddingRight: 16, backgroundColor: ctaButtonBg, color: ctaButtonColor }}
           >
             <span className="transition-colors duration-300 group-hover:text-[#2563EB]">See live Smart Layers</span>
             <svg className="transition-transform duration-300 group-hover:translate-x-0.5" width="10" height="18" viewBox="0 0 7 12" fill="none" stroke="#2563EB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">

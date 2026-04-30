@@ -194,12 +194,25 @@ function AnimatedChatCard() {
   );
 }
 
-export default function Chat() {
+type ChatProps = {
+  lightTheme?: boolean;
+};
+
+export default function Chat({ lightTheme = false }: ChatProps) {
   const [openId, setOpenId] = useState<string>("urban-planning");
   const [userHasTapped, setUserHasTapped] = useState(false);
   const [mapOpacity, setMapOpacity] = useState(1);
   const sectionRef = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
+
+  // Theme-dependent class strings/colors
+  const sectionBgClass = lightTheme ? "bg-white" : "bg-black";
+  const sectionLinesClass = lightTheme ? "section-lines" : "section-lines-dark";
+  const headingTextClass = lightTheme ? "text-[#1D1D1F]" : "text-white";
+  const sidebarBorderClass = lightTheme ? "border-[rgba(10,19,68,0.15)]" : "border-black";
+  const mapBorderClass = lightTheme ? "border-[rgba(10,19,68,0.15)]" : "border-black";
+  const sidebarTextClass = lightTheme ? "text-[#1D1D1F]" : "text-white";
+  const descriptionTextClass = lightTheme ? "text-[rgba(29,29,31,0.65)]" : "text-gray-300";
 
   useEffect(() => {
     const el = sectionRef.current;
@@ -238,11 +251,11 @@ export default function Chat() {
   };
 
   return (
-    <section className="w-full bg-black flex justify-center">
-      <div ref={sectionRef} className="section-lines-dark w-full max-w-[1287px] mx-auto px-8 md:px-10 py-30">
+    <section className={`w-full ${sectionBgClass} flex justify-center`}>
+      <div ref={sectionRef} className={`${sectionLinesClass} w-full max-w-[1287px] mx-auto px-8 md:px-10 py-30`}>
 
         <div className="mb-[30px]" style={anim(0)}>
-          <h2 className="text-white text-[48px] font-semibold tracking-[-0.02em] max-md:text-[28px]">
+          <h2 className={`${headingTextClass} text-[48px] font-semibold tracking-[-0.02em] max-md:text-[28px]`}>
             Conversational map chat
           </h2>
         </div>
@@ -262,19 +275,33 @@ export default function Chat() {
                 key={item.id}
                 type="button"
                 onClick={() => handleCellTap(item.id)}
-                className={`relative w-full flex flex-col text-left text-white overflow-hidden focus:outline-none cursor-pointer transition-[height] duration-300 ease-in-out ${
+                className={`relative w-full flex flex-col text-left ${sidebarTextClass} overflow-hidden focus:outline-none cursor-pointer transition-[height] duration-300 ease-in-out ${
                   openId === item.id ? "h-[330px]" : "h-[76px]"
                 }`}
               >
-                <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, #111827 0%, #15203a 30%, #1a2d50 60%, #0f1a2e 100%)" }} />
+                {!lightTheme && (
+                  <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, #111827 0%, #15203a 30%, #1a2d50 60%, #0f1a2e 100%)" }} />
+                )}
+                {lightTheme && (
+                  <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, rgba(10,19,68,0.04) 0%, rgba(10,19,68,0.06) 50%, rgba(10,19,68,0.04) 100%)" }} />
+                )}
                 <Image src={item.bgImage} alt="" fill className="object-cover" sizes="100vw" style={{ filter: "grayscale(1) brightness(0.8) contrast(1.1)", mixBlendMode: "luminosity", opacity: 0.35 }} />
-                {openId === item.id ? (
-                  <span className="absolute inset-0 z-[1] bg-black/20 pointer-events-none" aria-hidden />
-                ) : (
-                  <div className="absolute inset-0 z-[1] bg-black/35 pointer-events-none" aria-hidden />
+                {!lightTheme && (
+                  openId === item.id ? (
+                    <span className="absolute inset-0 z-[1] bg-black/20 pointer-events-none" aria-hidden />
+                  ) : (
+                    <div className="absolute inset-0 z-[1] bg-black/35 pointer-events-none" aria-hidden />
+                  )
+                )}
+                {lightTheme && (
+                  openId === item.id ? (
+                    <span className="absolute inset-0 z-[1] bg-white/40 pointer-events-none" aria-hidden />
+                  ) : (
+                    <div className="absolute inset-0 z-[1] bg-white/55 pointer-events-none" aria-hidden />
+                  )
                 )}
                 <span
-                  className={`relative z-10 flex items-center h-[76px] px-8 font-medium drop-shadow-md flex-shrink-0 transition-[font-size] duration-300 ease-in-out ${
+                  className={`relative z-10 flex items-center h-[76px] px-8 font-medium ${lightTheme ? "" : "drop-shadow-md"} flex-shrink-0 transition-[font-size] duration-300 ease-in-out ${
                     openId === item.id ? "text-[18px]" : "text-[13px]"
                   }`}
                 >
@@ -290,9 +317,9 @@ export default function Chat() {
                       transition={{ duration: 0.25 }}
                       className="relative z-10 flex-1 px-8 pb-6 pt-0 flex flex-col min-h-0"
                     >
-                      <p className="text-[14px] text-gray-300 mb-4">{item.openContent.description}</p>
+                      <p className={`text-[14px] ${descriptionTextClass} mb-4`}>{item.openContent.description}</p>
                       {item.openContent.listItems.length > 0 && (
-                        <ul className="text-[14px] text-gray-300 space-y-2">
+                        <ul className={`text-[14px] ${descriptionTextClass} space-y-2`}>
                           {item.openContent.listItems.map((li) => (
                             <li key={li}>• {li}</li>
                           ))}
@@ -308,7 +335,7 @@ export default function Chat() {
           {/* Desktop layout: sidebar + map */}
           <div className="relative w-full overflow-hidden flex max-md:hidden rounded-lg h-[673px] max-lg:h-[520px]">
             {/* Sidebar */}
-            <div className="w-[348px] max-lg:w-[280px] shrink-0 text-white flex flex-col overflow-hidden h-full border-[0.7px] border-black border-r-0 rounded-l-lg">
+            <div className={`w-[348px] max-lg:w-[280px] shrink-0 ${sidebarTextClass} flex flex-col overflow-hidden h-full border-[0.7px] ${sidebarBorderClass} border-r-0 rounded-l-lg`}>
               {SIDEBAR_ITEMS.map((item) => (
                 <button
                   key={item.id}
@@ -320,15 +347,29 @@ export default function Chat() {
                       : "h-[76px] flex-shrink-0"
                   }`}
                 >
-                  <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, #111827 0%, #15203a 30%, #1a2d50 60%, #0f1a2e 100%)" }} />
+                  {!lightTheme && (
+                    <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, #111827 0%, #15203a 30%, #1a2d50 60%, #0f1a2e 100%)" }} />
+                  )}
+                  {lightTheme && (
+                    <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, rgba(10,19,68,0.04) 0%, rgba(10,19,68,0.06) 50%, rgba(10,19,68,0.04) 100%)" }} />
+                  )}
                   <Image src={item.bgImage} alt="" fill className="object-cover" sizes="348px" style={{ filter: "grayscale(1) brightness(0.8) contrast(1.1)", mixBlendMode: "luminosity", opacity: 0.35 }} />
-                  {openId === item.id ? (
-                    <span className="absolute inset-0 z-[1] bg-black/20 pointer-events-none" aria-hidden />
-                  ) : (
-                    <div className="absolute inset-0 z-[1] bg-black/35 pointer-events-none" aria-hidden />
+                  {!lightTheme && (
+                    openId === item.id ? (
+                      <span className="absolute inset-0 z-[1] bg-black/20 pointer-events-none" aria-hidden />
+                    ) : (
+                      <div className="absolute inset-0 z-[1] bg-black/35 pointer-events-none" aria-hidden />
+                    )
+                  )}
+                  {lightTheme && (
+                    openId === item.id ? (
+                      <span className="absolute inset-0 z-[1] bg-white/40 pointer-events-none" aria-hidden />
+                    ) : (
+                      <div className="absolute inset-0 z-[1] bg-white/55 pointer-events-none" aria-hidden />
+                    )
                   )}
                   <span
-                    className={`relative z-10 flex items-center h-[76px] px-8 font-medium drop-shadow-md flex-shrink-0 transition-[font-size] duration-300 ease-in-out ${
+                    className={`relative z-10 flex items-center h-[76px] px-8 font-medium ${lightTheme ? "" : "drop-shadow-md"} flex-shrink-0 transition-[font-size] duration-300 ease-in-out ${
                       openId === item.id ? "text-[18px] max-lg:text-[16px]" : "text-[13px]"
                     }`}
                   >
@@ -344,11 +385,11 @@ export default function Chat() {
                         transition={{ duration: 0.25 }}
                         className="relative z-10 flex-1 px-8 pb-6 pt-0 flex flex-col min-h-0"
                       >
-                        <p className="text-[16px] text-gray-300 mb-4 leading-relaxed max-lg:text-[14px]">
+                        <p className={`text-[16px] ${descriptionTextClass} mb-4 leading-relaxed max-lg:text-[14px]`}>
                           {item.openContent.description}
                         </p>
                         {item.openContent.listItems.length > 0 && (
-                          <ul className="text-[16px] text-gray-300 space-y-2 max-lg:text-[14px]">
+                          <ul className={`text-[16px] ${descriptionTextClass} space-y-2 max-lg:text-[14px]`}>
                             {item.openContent.listItems.map((li) => (
                               <li key={li}>• {li}</li>
                             ))}
@@ -363,7 +404,7 @@ export default function Chat() {
 
             {/* Map area */}
             <div
-              className="absolute top-0 bottom-0 right-0 left-[348px] max-lg:left-[280px] transition-opacity ease-in-out overflow-hidden border-[0.7px] border-black border-l-0 rounded-r-lg"
+              className={`absolute top-0 bottom-0 right-0 left-[348px] max-lg:left-[280px] transition-opacity ease-in-out overflow-hidden border-[0.7px] ${mapBorderClass} border-l-0 rounded-r-lg`}
               style={{
                 opacity: mapOpacity,
                 transitionDuration: `${FADE_DURATION_MS / 2}ms`,
@@ -376,7 +417,9 @@ export default function Chat() {
                 className="object-cover"
                 priority
               />
-              <div className="absolute inset-0 pointer-events-none" style={{ background: "rgba(18, 8, 52, 0.22)" }} />
+              {!lightTheme && (
+                <div className="absolute inset-0 pointer-events-none" style={{ background: "rgba(18, 8, 52, 0.22)" }} />
+              )}
 
               <AnimatedChatCard />
             </div>
