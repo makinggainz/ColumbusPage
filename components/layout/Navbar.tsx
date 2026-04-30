@@ -465,13 +465,13 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                         background: isEnterprisePage && isDark ? "rgba(14, 16, 28, 0.95)" : isDark ? "rgba(6, 8, 20, 0.85)" : "rgba(255, 255, 255, 0.82)",
                         backdropFilter: "blur(20px) saturate(1.2)",
                         WebkitBackdropFilter: "blur(20px) saturate(1.2)",
-                        borderBottom: isProductsPage ? "none" : isEnterprisePage ? "1px solid rgba(255,255,255,0.10)" : isDark ? "1px solid rgba(255,255,255,0.06)" : isHomePage ? "1px solid rgba(37, 99, 235, 0.3)" : "1px solid rgba(0,0,0,0.06)",
-                        opacity: (isProductsPage ? bgTriggerPassed : isCompact) && !isMenuOpen ? 1 : 0,
+                        borderBottom: isProductsPage ? "none" : isEnterprisePage ? "1px solid rgba(255,255,255,0.10)" : isDark ? "1px solid rgba(255,255,255,0.06)" : isHomePage ? "none" : "1px solid rgba(0,0,0,0.06)",
+                        opacity: isMenuOpen ? 0 : isHomePage ? "var(--hero-grid-opacity, 0)" : (isProductsPage ? bgTriggerPassed : isCompact) ? 1 : 0,
                         transition: `opacity ${t}`,
                     }}
                 />
 
-                {/* Always-visible bottom border on homepage (independent of background fade) */}
+                {/* Homepage bottom border — fades in with the hero grid reveal */}
                 {isHomePage && !isMenuOpen && (
                     <div
                         className="absolute left-0 right-0 pointer-events-none"
@@ -479,6 +479,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                             bottom: 0,
                             height: 1,
                             background: "rgba(37, 99, 235, 0.3)",
+                            opacity: "var(--hero-grid-opacity, 0)",
                         }}
                         aria-hidden
                     />
