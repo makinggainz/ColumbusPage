@@ -991,19 +991,21 @@ export const Hero = () => {
         aria-hidden
       />
 
-      {/* Bottom gradient — fade to white */}
+      {/* Scroll-driven blur overlay — same backdrop-filter as the navbar.
+          As the user scrolls through the hero, the wave mesh frosts out behind
+          a soft blur instead of fading to white at the sides and bottom. Sits
+          below the structure lines (zIndex 4) and hero text so they stay sharp. */}
       <div
-        className="absolute left-0 right-0 bottom-0 pointer-events-none"
+        className="absolute inset-0 pointer-events-none"
         style={{
-          height: 300, background: "linear-gradient(to bottom, transparent, #ffffff)",
-          zIndex: 3,
+          background: "transparent",
+          backdropFilter: "blur(20px) saturate(1.2)",
+          WebkitBackdropFilter: "blur(20px) saturate(1.2)",
+          opacity: vignetteOpacity,
+          zIndex: 2,
         }}
         aria-hidden
       />
-
-      {/* Side vignettes */}
-      <div className="absolute top-0 bottom-0 left-0 pointer-events-none" style={{ width: "30%", background: "linear-gradient(to right, #F9F9F9 0%, transparent 100%)", zIndex: 1, opacity: vignetteOpacity }} aria-hidden />
-      <div className="absolute top-0 bottom-0 right-0 pointer-events-none" style={{ width: "30%", background: "linear-gradient(to left, #F9F9F9 0%, transparent 100%)", zIndex: 1, opacity: vignetteOpacity }} aria-hidden />
 
       {/* Vertical structure lines — extend the grid lines up through the hero */}
       <div className="pointer-events-none absolute inset-0" style={{ zIndex: 4, opacity: "var(--hero-grid-opacity, 0)", transition: "opacity 1000ms ease" }} aria-hidden>
