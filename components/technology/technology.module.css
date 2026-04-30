@@ -5318,7 +5318,7 @@
   width: 100vw;
   margin-left: calc(50% - 50vw);
   margin-right: calc(50% - 50vw);
-  background: #000000;
+  background: linear-gradient(to bottom, #080808 0%, #000E29 100%);
   color: #ffffff;
   /* overflow-x: clip (not hidden) — clips horizontal overflow without
      creating the scrolling mechanism that would capture sticky descendants
