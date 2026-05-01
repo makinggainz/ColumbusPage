@@ -7,20 +7,15 @@ import { Footer } from "@/components/layout/Footer";
 import HeroSection from "@/components/use-cases/HeroSection";
 import ResultsSection from "@/components/use-cases/ResultsSection";
 import ContactSection from "@/components/use-cases/ContactSection";
-import Chat from "@/components/use-cases/Chat";
-import SuperModelSection from "@/components/use-cases/SuperModelSection";
-import AgentResearch from "@/components/use-cases/AgentResearch";
-import DataCatalogue from "@/components/use-cases/DataCatalogue";
 import UseCasesHero from "@/components/use-cases/UseCaseHero";
+import UseCaseStickyScroll from "@/components/use-cases/UseCaseStickyScroll";
+import { IndustryProvider } from "@/components/use-cases/industry/IndustryContext";
+import IndustryStickyNavbar from "@/components/use-cases/industry/IndustryStickyNavbar";
 import { ResearchBlogSection } from "@/components/technology/redesign/ResearchBlogSection";
 
 export default function ResearchApplicationsRoute() {
   const [navTheme, setNavTheme] = useState<"light" | "dark">("dark");
   const heroRef = useRef<HTMLElement>(null);
-  const sec4Ref = useRef<HTMLElement>(null);
-  const sec5Ref = useRef<HTMLElement>(null);
-  const sec6Ref = useRef<HTMLElement>(null);
-  const sec7Ref = useRef<HTMLElement>(null);
 
   useEffect(() => {
     const NAVBAR_H = 80;
@@ -80,20 +75,14 @@ export default function ResearchApplicationsRoute() {
           lightTheme
         />
       </section>
-      <div className="relative">
-        <section className="relative" ref={sec4Ref}>
-          <Chat lightTheme />
-        </section>
-        <section className="relative" ref={sec5Ref}>
-          <SuperModelSection lightTheme />
-        </section>
-        <section className="relative" ref={sec6Ref}>
-          <AgentResearch lightTheme />
-        </section>
-        <section className="relative" ref={sec7Ref}>
-          <DataCatalogue lightTheme />
-        </section>
-      </div>
+
+      {/* Industry-aware use-case block (light variant). The provider wraps the
+          picker, the sticky sub-navbar, and the four-row sticky-scroll. */}
+      <IndustryProvider>
+        <IndustryStickyNavbar lightTheme />
+        <UseCaseStickyScroll lightTheme />
+      </IndustryProvider>
+
       <section className="relative">
         <ResearchBlogSection />
       </section>
