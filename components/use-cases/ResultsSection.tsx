@@ -2,157 +2,97 @@
 
 import { useEffect, useRef, useState } from "react";
 
-const STROKE = "#0A1344";
+// Hairline divider used between rows — fades out toward the right.
+// Mirrors the technology-page Results section divider.
+const DIVIDER_BG =
+  "linear-gradient(to right, rgba(0, 102, 204, 0.35) 0%, rgba(0, 102, 204, 0.32) 55%, rgba(0, 102, 204, 0) 100%)";
 
-/* ── Per-card line-art illustrations ──────────────────────────── */
+/* ── Per-card line-art illustrations ─────────────────────────────
+   Each card gets a unique wireframe shape rendered in white over the
+   solid blue tile, in the same blueprint aesthetic as the technology
+   page's Results cards. */
 
-/* #1 — Semantic reasoning in cities. A coordinate plot with a faint grid,
-   crosshair extending past the frame, and an ellipse cutting through.
-   Reads as "spatial context + reasoning". */
-const CoordinateArt = () => (
-  <svg viewBox="0 0 140 140" fill="none" className="w-full h-full" aria-hidden>
-    {[40, 60, 80, 100].map((y) => (
-      <line key={`h${y}`} x1="20" y1={y} x2="120" y2={y} stroke={STROKE} strokeOpacity="0.18" strokeWidth="0.5" strokeDasharray="2 2" />
-    ))}
-    {[40, 60, 80, 100].map((x) => (
-      <line key={`v${x}`} x1={x} y1="20" x2={x} y2="120" stroke={STROKE} strokeOpacity="0.18" strokeWidth="0.5" strokeDasharray="2 2" />
-    ))}
-    <rect x="20" y="20" width="100" height="100" stroke={STROKE} strokeWidth="0.7" />
-    <line x1="0" y1="70" x2="20" y2="70" stroke={STROKE} strokeWidth="0.7" strokeDasharray="3 3" />
-    <line x1="120" y1="70" x2="140" y2="70" stroke={STROKE} strokeWidth="0.7" strokeDasharray="3 3" />
-    <line x1="70" y1="0" x2="70" y2="20" stroke={STROKE} strokeWidth="0.7" strokeDasharray="3 3" />
-    <line x1="70" y1="120" x2="70" y2="140" stroke={STROKE} strokeWidth="0.7" strokeDasharray="3 3" />
-    <ellipse cx="70" cy="65" rx="28" ry="38" stroke={STROKE} strokeWidth="0.9" />
-    <circle cx="20" cy="20" r="2" fill={STROKE} />
-    <circle cx="120" cy="20" r="2" fill={STROKE} />
-    <circle cx="20" cy="120" r="2" fill={STROKE} />
-    <circle cx="120" cy="120" r="2" fill={STROKE} />
-    <circle cx="70" cy="70" r="2.2" fill={STROKE} />
+const ART_BG = "rgba(255,255,255,0.85)";
+const ART_FG = "rgba(255,255,255,0.7)";
+const ART_DIM = "rgba(255,255,255,0.55)";
+const ART_FAINT = "rgba(255,255,255,0.4)";
+
+const SVG_PROPS = {
+  viewBox: "0 0 100 100",
+  fill: "none",
+  preserveAspectRatio: "xMidYMid meet" as const,
+  className: "absolute inset-0 w-full h-full",
+  "aria-hidden": true,
+} as const;
+
+/* #1 — City skyline + crosshair. "Fast semantic reasoning in cities." */
+const CityArt = () => (
+  <svg {...SVG_PROPS}>
+    <line x1="50" y1="14" x2="50" y2="86" stroke={ART_FAINT} strokeWidth="0.4" strokeDasharray="2 2" />
+    <line x1="14" y1="50" x2="86" y2="50" stroke={ART_FAINT} strokeWidth="0.4" strokeDasharray="2 2" />
+    <rect x="20" y="50" width="11" height="34" stroke={ART_BG} strokeWidth="0.8" />
+    <rect x="32" y="38" width="13" height="46" stroke={ART_BG} strokeWidth="0.8" />
+    <rect x="46" y="44" width="12" height="40" stroke={ART_BG} strokeWidth="0.8" />
+    <rect x="59" y="32" width="13" height="52" stroke={ART_BG} strokeWidth="0.8" />
+    <rect x="73" y="48" width="11" height="36" stroke={ART_BG} strokeWidth="0.8" />
+    <line x1="14" y1="84" x2="86" y2="84" stroke={ART_BG} strokeWidth="0.8" />
+    <circle cx="50" cy="50" r="2" fill="rgba(255,255,255,0.9)" />
   </svg>
 );
 
-/* #2 — Generalist model with wide catalogue. A 4×4×4 wireframe cube in
-   isometric projection. */
-const CubeArt = () => {
-  const N = 4;
-  const ox = 70, oy = 78;
-  const s = 11;
-  const dx = s, dy = s * 0.5;
-  const proj = (x: number, y: number, z: number) => [
-    ox + (x - z) * dx,
-    oy + (x + z) * dy - y * s,
-  ];
-  const lines: React.ReactNode[] = [];
-  // Front face (z=0)
-  for (let i = 0; i <= N; i++) {
-    const [x1, y1] = proj(i, 0, 0);
-    const [x2, y2] = proj(i, N, 0);
-    const outer = i === 0 || i === N;
-    lines.push(<line key={`fv${i}`} x1={x1} y1={y1} x2={x2} y2={y2} stroke={STROKE} strokeWidth={outer ? 0.9 : 0.5} strokeOpacity={outer ? 1 : 0.5} />);
-  }
-  for (let j = 0; j <= N; j++) {
-    const [x1, y1] = proj(0, j, 0);
-    const [x2, y2] = proj(N, j, 0);
-    const outer = j === 0 || j === N;
-    lines.push(<line key={`fh${j}`} x1={x1} y1={y1} x2={x2} y2={y2} stroke={STROKE} strokeWidth={outer ? 0.9 : 0.5} strokeOpacity={outer ? 1 : 0.5} />);
-  }
-  // Right face (x=N)
-  for (let k = 0; k <= N; k++) {
-    const [x1, y1] = proj(N, 0, k);
-    const [x2, y2] = proj(N, N, k);
-    const outer = k === 0 || k === N;
-    lines.push(<line key={`rv${k}`} x1={x1} y1={y1} x2={x2} y2={y2} stroke={STROKE} strokeWidth={outer ? 0.9 : 0.5} strokeOpacity={outer ? 1 : 0.5} />);
-  }
-  for (let j = 0; j <= N; j++) {
-    const [x1, y1] = proj(N, j, 0);
-    const [x2, y2] = proj(N, j, N);
-    const outer = j === 0 || j === N;
-    lines.push(<line key={`rh${j}`} x1={x1} y1={y1} x2={x2} y2={y2} stroke={STROKE} strokeWidth={outer ? 0.9 : 0.5} strokeOpacity={outer ? 1 : 0.5} />);
-  }
-  // Top face (y=N)
-  for (let i = 0; i <= N; i++) {
-    const [x1, y1] = proj(i, N, 0);
-    const [x2, y2] = proj(i, N, N);
-    const outer = i === 0 || i === N;
-    lines.push(<line key={`tv${i}`} x1={x1} y1={y1} x2={x2} y2={y2} stroke={STROKE} strokeWidth={outer ? 0.9 : 0.5} strokeOpacity={outer ? 1 : 0.5} />);
-  }
-  for (let k = 0; k <= N; k++) {
-    const [x1, y1] = proj(0, N, k);
-    const [x2, y2] = proj(N, N, k);
-    const outer = k === 0 || k === N;
-    lines.push(<line key={`th${k}`} x1={x1} y1={y1} x2={x2} y2={y2} stroke={STROKE} strokeWidth={outer ? 0.9 : 0.5} strokeOpacity={outer ? 1 : 0.5} />);
-  }
-  return (
-    <svg viewBox="0 0 140 140" fill="none" className="w-full h-full" aria-hidden>
-      {lines}
-    </svg>
-  );
-};
-
-/* #3 — Generative geospatial data. A 3D wireframe wavy plane. */
-const WaveSurfaceArt = () => {
-  const cols = 9, rows = 5;
-  const proj = (i: number, j: number) => {
-    const xw = i - (cols - 1) / 2;
-    const zw = j / (rows - 1);
-    const y = Math.sin(xw * 0.7) * 6 + Math.cos(zw * Math.PI) * 3;
-    const sx = 70 + xw * 9 - zw * 16;
-    const sy = 90 - y + zw * 22;
-    return [sx, sy];
-  };
-  const rowPaths: string[] = [];
-  for (let j = 0; j < rows; j++) {
-    let p = "";
-    for (let i = 0; i < cols; i++) {
-      const [x, y] = proj(i, j);
-      p += (i === 0 ? "M" : "L") + x.toFixed(2) + " " + y.toFixed(2) + " ";
-    }
-    rowPaths.push(p);
-  }
-  const colPaths: string[] = [];
-  for (let i = 0; i < cols; i++) {
-    let p = "";
-    for (let j = 0; j < rows; j++) {
-      const [x, y] = proj(i, j);
-      p += (j === 0 ? "M" : "L") + x.toFixed(2) + " " + y.toFixed(2) + " ";
-    }
-    colPaths.push(p);
-  }
-  return (
-    <svg viewBox="0 0 140 140" fill="none" className="w-full h-full" aria-hidden>
-      {rowPaths.map((d, i) => (
-        <path key={`r${i}`} d={d} stroke={STROKE} strokeWidth="0.7" fill="none" />
-      ))}
-      {colPaths.map((d, i) => (
-        <path key={`c${i}`} d={d} stroke={STROKE} strokeWidth="0.7" fill="none" />
-      ))}
-    </svg>
-  );
-};
-
-/* #4 — Deep spatial reasoning at scale. Concentric ovals stacked
-   vertically — like halos at increasing depth. */
-const StackedRingsArt = () => (
-  <svg viewBox="0 0 140 140" fill="none" className="w-full h-full" aria-hidden>
-    {[
-      { cy: 96, rx: 44, ry: 7, sw: 0.9 },
-      { cy: 82, rx: 38, ry: 6, sw: 0.85 },
-      { cy: 70, rx: 32, ry: 5, sw: 0.8 },
-      { cy: 60, rx: 26, ry: 4, sw: 0.75 },
-      { cy: 52, rx: 20, ry: 3.2, sw: 0.7 },
-    ].map((r, i) => (
-      <ellipse key={i} cx="70" cy={r.cy} rx={r.rx} ry={r.ry} stroke={STROKE} strokeWidth={r.sw} strokeOpacity={1 - i * 0.12} />
-    ))}
+/* #2 — 3D wave surface mesh. "Generative geospatial data." */
+const WaveArt = () => (
+  <svg {...SVG_PROPS}>
+    <path d="M 10 40 Q 25 32 40 40 T 70 40 T 95 40" stroke={ART_BG} strokeWidth="0.8" />
+    <path d="M 10 52 Q 25 44 40 52 T 70 52 T 95 52" stroke={ART_FG} strokeWidth="0.7" />
+    <path d="M 10 64 Q 25 56 40 64 T 70 64 T 95 64" stroke={ART_DIM} strokeWidth="0.6" />
+    <path d="M 10 76 Q 25 68 40 76 T 70 76 T 95 76" stroke={ART_DIM} strokeWidth="0.6" />
+    <line x1="25" y1="38" x2="25" y2="78" stroke={ART_FAINT} strokeWidth="0.4" />
+    <line x1="40" y1="36" x2="40" y2="78" stroke={ART_FAINT} strokeWidth="0.4" />
+    <line x1="55" y1="38" x2="55" y2="78" stroke={ART_FAINT} strokeWidth="0.4" />
+    <line x1="70" y1="36" x2="70" y2="78" stroke={ART_FAINT} strokeWidth="0.4" />
+    <line x1="85" y1="38" x2="85" y2="78" stroke={ART_FAINT} strokeWidth="0.4" />
   </svg>
 );
 
-/* ── Items ────────────────────────────────────────────────────── */
+/* #3 — Stacked dataset sheets. "Generalist model, wide catalogue." */
+const StackArt = () => (
+  <svg {...SVG_PROPS}>
+    <rect x="22" y="22" width="48" height="32" stroke={ART_BG} strokeWidth="0.8" />
+    <rect x="32" y="34" width="48" height="32" stroke={ART_FG} strokeWidth="0.7" />
+    <rect x="42" y="46" width="48" height="32" stroke={ART_DIM} strokeWidth="0.6" />
+    <line x1="22" y1="22" x2="32" y2="34" stroke={ART_FAINT} strokeWidth="0.4" />
+    <line x1="70" y1="22" x2="80" y2="34" stroke={ART_FAINT} strokeWidth="0.4" />
+    <line x1="22" y1="54" x2="32" y2="66" stroke={ART_FAINT} strokeWidth="0.4" />
+    <line x1="32" y1="34" x2="42" y2="46" stroke={ART_FAINT} strokeWidth="0.4" />
+    <line x1="80" y1="34" x2="90" y2="46" stroke={ART_FAINT} strokeWidth="0.4" />
+    <line x1="32" y1="66" x2="42" y2="78" stroke={ART_FAINT} strokeWidth="0.4" />
+  </svg>
+);
 
-const ITEMS: { num: string; title: string; subtitle: string; art: React.ReactNode }[] = [
-  { num: "1", title: "Fast semantic reasoning in cities.", subtitle: "Contextual enrichment.", art: <CoordinateArt /> },
-  { num: "2", title: "Generalist model", subtitle: "with access to wide catalogue", art: <CubeArt /> },
-  { num: "3", title: "Generative", subtitle: "geospatial data", art: <WaveSurfaceArt /> },
-  { num: "4", title: "Deep spatial reasoning", subtitle: "at scale", art: <StackedRingsArt /> },
+/* #4 — Connected nodes / spatial graph. "Deep spatial reasoning at scale." */
+const NetworkArt = () => (
+  <svg {...SVG_PROPS}>
+    <line x1="25" y1="25" x2="50" y2="50" stroke={ART_DIM} strokeWidth="0.6" />
+    <line x1="25" y1="25" x2="40" y2="68" stroke={ART_DIM} strokeWidth="0.6" />
+    <line x1="50" y1="50" x2="75" y2="25" stroke={ART_DIM} strokeWidth="0.6" />
+    <line x1="50" y1="50" x2="75" y2="75" stroke={ART_DIM} strokeWidth="0.6" />
+    <line x1="50" y1="50" x2="40" y2="68" stroke={ART_DIM} strokeWidth="0.6" />
+    <line x1="40" y1="68" x2="75" y2="75" stroke={ART_DIM} strokeWidth="0.6" />
+    <line x1="75" y1="25" x2="75" y2="75" stroke={ART_DIM} strokeWidth="0.6" />
+    <circle cx="25" cy="25" r="3" fill="rgba(255,255,255,0.9)" />
+    <circle cx="75" cy="25" r="3" fill="rgba(255,255,255,0.9)" />
+    <circle cx="50" cy="50" r="4" fill="rgba(255,255,255,0.95)" />
+    <circle cx="40" cy="68" r="3" fill="rgba(255,255,255,0.9)" />
+    <circle cx="75" cy="75" r="3" fill="rgba(255,255,255,0.9)" />
+  </svg>
+);
+
+const ITEMS: { num: string; text: string; art: React.ReactNode }[] = [
+  { num: "1", text: "Fast semantic reasoning in cities. Contextual enrichment.", art: <CityArt /> },
+  { num: "2", text: "Generative geospatial data", art: <WaveArt /> },
+  { num: "3", text: "Generalist model, with access to wide catalogue", art: <StackArt /> },
+  { num: "4", text: "Deep spatial reasoning at scale", art: <NetworkArt /> },
 ];
 
 export default function ResultsSection() {
@@ -183,92 +123,86 @@ export default function ResultsSection() {
 
   return (
     <section
-      className="relative w-full py-24 rounded-t-[33px] overflow-hidden"
+      className="relative w-full py-24 rounded-[33px] overflow-hidden"
       style={{ backgroundColor: "#FFFFFF" }}
     >
-      {/* ── Page structure lines — extend the page grid through this section.
-          Same pattern as the hero: vertical lines at the bounded 1287px
-          container's left/right edges, full section height. */}
-      <div className="pointer-events-none absolute inset-0" style={{ zIndex: 1 }} aria-hidden>
-        <div className="max-w-[1287px] mx-auto relative h-full">
-          <div style={{ position: "absolute", top: 0, left: 0, width: 1, height: "100%", background: "var(--grid-line)" }} />
-          <div style={{ position: "absolute", top: 0, right: 0, width: 1, height: "100%", background: "var(--grid-line)" }} />
-        </div>
-      </div>
+      <div ref={ref} className="max-w-[1287px] mx-auto px-8 min-[1287px]:px-0">
+        {/* ── Header — eyebrow caption + section heading + supporting
+            subtitle, matching the technology-page Results header pattern. */}
+        <p
+          className="m-0 mb-4 text-[13px] font-normal tracking-[0.08em] uppercase"
+          style={{ color: "rgba(29, 29, 31, 0.35)", ...anim(0) }}
+        >
+          RESULTS
+        </p>
+        <h2
+          className="m-0 text-[39px] font-medium leading-[1.2] tracking-[-0.02em] text-[#1D1D1F]"
+          style={anim(50)}
+        >
+          MODEL COLUMBUS-01
+        </h2>
+        <p
+          className="mt-4 text-[20px] leading-[1.55] text-[#1D1D1F] max-w-[640px]"
+          style={anim(100)}
+        >
+          The latest results from our development of the LGM.
+        </p>
 
-      <div ref={ref} className="relative max-w-[1287px] mx-auto" style={{ zIndex: 2 }}>
-        {/* Header keeps its own internal padding so the title doesn't sit
-            flush against the structure lines on small viewports. */}
-        <div className="px-8 min-[1287px]:px-0">
-          <h2
-            className="text-[#1D1D1F] text-[31px] md:text-[39px] lg:text-[49px] leading-[1.15] tracking-[-0.02em] text-center max-md:text-left"
-            style={{ fontWeight: 500, ...anim(0) }}
-          >
-            THE LATEST <span style={{ color: "#0066CC" }}>RESULTS</span> FROM
-            <br />
-            OUR DEVELOPMENT OF
-            <br />
-            A LARGE GEOSPATIAL <span style={{ color: "#0066CC" }}>MODEL</span>
-          </h2>
-        </div>
-
-        {/* ── 4-column cards row — bracketed with horizontal lines top and
-            bottom that connect the page structure lines to the inter-card
-            vertical separators. Forms a continuous grid of lines. */}
-        <div className="relative mt-24 max-md:mt-14">
-          {/* Top horizontal line — only at lg+ where the 4-col layout has a
-              single bracketing row. */}
-          <div
-            className="pointer-events-none absolute max-lg:hidden"
-            style={{ top: 0, left: 0, right: 0, height: 1, background: "var(--grid-line)" }}
-            aria-hidden
-          />
-          {/* Bottom horizontal line */}
-          <div
-            className="pointer-events-none absolute max-lg:hidden"
-            style={{ bottom: 0, left: 0, right: 0, height: 1, background: "var(--grid-line)" }}
-            aria-hidden
-          />
-
-          <div className="grid grid-cols-4 max-lg:grid-cols-2 max-md:grid-cols-1">
-            {ITEMS.map((item, i) => (
+        {/* ── Stacked-row catalogue — each row pairs a blue art tile (with the
+            wireframe globe) and a single line of numbered copy. Hairline
+            dividers separate every row except the last. Matches the
+            technology-page Results section. */}
+        <div
+          className="flex flex-col"
+          style={{ marginTop: "clamp(48px, 6vw, 72px)" }}
+        >
+          {ITEMS.map((item, i) => (
+            <div
+              key={item.num}
+              className="relative flex flex-row items-center max-md:flex-col max-md:items-start"
+              style={{
+                gap: "clamp(28px, 3vw, 48px)",
+                padding: "clamp(2px, 0.3vw, 5px) 0",
+                paddingTop: i === 0 ? 0 : undefined,
+                paddingBottom: i === ITEMS.length - 1 ? 0 : undefined,
+                ...anim(150 + i * 60),
+              }}
+            >
+              {/* Solid-blue art tile — same wireframe globe in every row.
+                  Square corners (no border-radius) per the use-cases pages. */}
               <div
-                key={item.num}
-                className="relative px-6 lg:px-8 py-12"
-                style={anim(120 + i * 90)}
+                className="relative shrink-0 aspect-[16/11] overflow-hidden"
+                style={{
+                  width: "clamp(160px, 16vw, 240px)",
+                  background: "#1d3fa6",
+                }}
               >
-                {/* Inter-card vertical separator — solid, no fade. */}
-                {i > 0 && (
-                  <div
-                    className={
-                      "pointer-events-none absolute top-0 bottom-0 left-0 w-px max-md:hidden " +
-                      (i % 2 === 0 ? "max-lg:hidden " : "")
-                    }
-                    style={{ background: "var(--grid-line)" }}
-                    aria-hidden
-                  />
-                )}
-
-                {/* Illustration — horizontally centred within the card */}
-                <div className="w-full aspect-square max-w-[200px] mx-auto mb-10">
-                  {item.art}
-                </div>
-
-                {/* Number on the left of the title; subtitle sits below the title */}
-                <div className="flex items-baseline gap-3">
-                  <span className="shrink-0 text-[#1D1D1F] text-[20px] lg:text-[22px] leading-[1.3] tracking-[-0.01em]" style={{ fontWeight: 500 }}>{item.num}.</span>
-                  <div className="min-w-0">
-                    <h3 className="m-0 text-[#1D1D1F] text-[20px] lg:text-[22px] leading-[1.3] tracking-[-0.01em]" style={{ fontWeight: 500 }}>
-                      {item.title}
-                    </h3>
-                    <p className="m-0 mt-1 text-[14px] lg:text-[15px] leading-[1.4]" style={{ color: "rgba(29, 29, 31, 0.55)", fontWeight: 400 }}>
-                      {item.subtitle}
-                    </p>
-                  </div>
-                </div>
+                {item.art}
               </div>
-            ))}
-          </div>
+
+              {/* Numbered title — number and text concatenated as one string,
+                  exactly like the technology-page version. */}
+              <h3 className="flex-1 m-0 min-w-0 text-[22px] font-medium leading-[1.3] tracking-[-0.01em] text-[#1D1D1F]">
+                {`${item.num}. ${item.text}`}
+              </h3>
+
+              {/* Hairline divider beneath every row except the last. Starts
+                  from the title's left edge (past the art tile + gap) and
+                  fades out toward the right. */}
+              {i < ITEMS.length - 1 && (
+                <div
+                  className="absolute right-0 max-md:hidden pointer-events-none"
+                  style={{
+                    bottom: 0,
+                    left: "calc(clamp(160px, 16vw, 240px) + clamp(28px, 3vw, 48px))",
+                    height: 1,
+                    background: DIVIDER_BG,
+                  }}
+                  aria-hidden
+                />
+              )}
+            </div>
+          ))}
         </div>
       </div>
     </section>
