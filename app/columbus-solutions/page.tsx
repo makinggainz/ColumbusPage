@@ -8,7 +8,6 @@ import HeroSection from "@/components/use-cases/HeroSection";
 import ResultsSection from "@/components/use-cases/ResultsSection";
 import UseCasesHero from "@/components/use-cases/UseCaseHero";
 import ContactSection from "@/components/use-cases/ContactSection";
-import IndustryGrid from "@/components/use-cases/IndustryGrid";
 import Chat from "@/components/use-cases/Chat";
 import SuperModelSection from "@/components/use-cases/SuperModelSection";
 import AgentResearch from "@/components/use-cases/AgentResearch";
@@ -24,7 +23,6 @@ export default function ColumbusSolutionsRoute() {
   const sec5Ref = useRef<HTMLElement>(null);
   const sec6Ref = useRef<HTMLElement>(null);
   const sec7Ref = useRef<HTMLElement>(null);
-  const sec8Ref = useRef<HTMLElement>(null);
 
   useEffect(() => {
     const update = () => {
@@ -77,9 +75,6 @@ export default function ColumbusSolutionsRoute() {
         </section>
         <section className="relative" ref={sec7Ref}>
           <DataCatalogue />
-        </section>
-        <section className="relative" ref={sec8Ref}>
-          <IndustryGrid />
         </section>
       </div>
       <section className="relative">

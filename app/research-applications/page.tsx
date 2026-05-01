@@ -7,7 +7,6 @@ import { Footer } from "@/components/layout/Footer";
 import HeroSection from "@/components/use-cases/HeroSection";
 import ResultsSection from "@/components/use-cases/ResultsSection";
 import ContactSection from "@/components/use-cases/ContactSection";
-import IndustryGrid from "@/components/use-cases/IndustryGrid";
 import Chat from "@/components/use-cases/Chat";
 import SuperModelSection from "@/components/use-cases/SuperModelSection";
 import AgentResearch from "@/components/use-cases/AgentResearch";
@@ -22,7 +21,6 @@ export default function ResearchApplicationsRoute() {
   const sec5Ref = useRef<HTMLElement>(null);
   const sec6Ref = useRef<HTMLElement>(null);
   const sec7Ref = useRef<HTMLElement>(null);
-  const sec8Ref = useRef<HTMLElement>(null);
 
   useEffect(() => {
     const NAVBAR_H = 80;
@@ -94,9 +92,6 @@ export default function ResearchApplicationsRoute() {
         </section>
         <section className="relative" ref={sec7Ref}>
           <DataCatalogue lightTheme />
-        </section>
-        <section className="relative" ref={sec8Ref}>
-          <IndustryGrid lightTheme />
         </section>
       </div>
       <section className="relative">
