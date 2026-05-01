@@ -73,10 +73,18 @@ export default function UseCasesHero({
   const textRef = useRef<HTMLDivElement>(null);
   const [textCells, setTextCells] = useState<Set<number>>(() => new Set());
 
-  const cellSize = 112;
+  // 117px cell × 27 cols = 3159px total grid width. With the grid centered
+  // horizontally, two of its column lines coincide with the page-level
+  // structure lines (the 1287px container edges) at every viewport width:
+  //   (vw − 3159)/2 + 8·117  = (vw − 1287)/2  → left page line
+  //   (vw − 3159)/2 + 19·117 = (vw + 1287)/2  → right page line
+  // This holds because 1287 = 11 × 117, so the page-line span fits the cell
+  // grid exactly.
+  const cellSize = 117;
   const cols = 27;
   const rows = 14;
   const totalCells = cols * rows;
+  const gridPxWidth = cellSize * cols;
   const imageGrid = useMemo(
     () => buildConstrainedGrid(cols, rows, USE_CASES_IMAGES.length),
     [cols, rows],
@@ -163,11 +171,16 @@ export default function UseCasesHero({
   return (
     <section className={`relative w-full min-h-[1055px] flex items-center justify-center overflow-hidden ${lightTheme ? "bg-white" : "bg-black"}`}>
 
-      {/* Interactive grid: image in a square only visible when that square is hovered */}
+      {/* Interactive grid: image in a square only visible when that square is
+          hovered. Centered horizontally (width = gridPxWidth) so the column
+          lines coincide with the page-level structure lines. */}
       <div
         ref={gridRef}
-        className="absolute inset-0 grid"
+        className="absolute top-0 bottom-0 grid"
         style={{
+          left: "50%",
+          transform: "translateX(-50%)",
+          width: gridPxWidth,
           gridTemplateColumns: `repeat(${cols}, ${cellSize}px)`,
           gridAutoRows: `${cellSize}px`,
           maskImage: "radial-gradient(circle at 50% 50%, black 0%, transparent 90%)",
@@ -212,15 +225,23 @@ export default function UseCasesHero({
         ))}
       </div>
 
-      {/* THIN-LINE GRID — 150px × 150px squares, fades out from center */}
+      {/* Thin-line cosmetic grid — same width and centering as the interactive
+          grid above so its 117px cells line up identically with the page-level
+          structure lines. */}
       <div
-        className="absolute inset-0 pointer-events-none"
+        className="absolute top-0 bottom-0 pointer-events-none"
         style={{
+          left: "50%",
+          transform: "translateX(-50%)",
+          width: gridPxWidth,
           backgroundImage: `
             linear-gradient(to right, ${lightTheme ? "#D1D5DB" : "#29303D"} 1px, transparent 1px),
             linear-gradient(to bottom, ${lightTheme ? "#D1D5DB" : "#29303D"} 1px, transparent 1px)
           `,
-          backgroundSize: "112px 112px",
+          backgroundSize: `${cellSize}px ${cellSize}px`,
+          // research-applications (lightTheme): hide the very top horizontal
+          // line by shifting the vertical pattern up by 1px.
+          backgroundPositionY: lightTheme ? "-1px" : undefined,
           maskImage: "radial-gradient(circle at 50% 50%, black 0%, transparent 90%)",
           WebkitMaskImage: "radial-gradient(circle at 50% 50%, black 0%, transparent 90%)",
         }}

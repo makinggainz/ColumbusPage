@@ -13,7 +13,7 @@ import Chat from "@/components/use-cases/Chat";
 import SuperModelSection from "@/components/use-cases/SuperModelSection";
 import AgentResearch from "@/components/use-cases/AgentResearch";
 import DataCatalogue from "@/components/use-cases/DataCatalogue";
-import { GenLayersSection } from "@/components/technology/redesign/GenLayersSection";
+import { ResearchBlogSection } from "@/components/technology/redesign/ResearchBlogSection";
 
 export default function ColumbusSolutionsRoute() {
   const [navTheme] = useState<"light" | "dark">("dark");
@@ -83,10 +83,10 @@ export default function ColumbusSolutionsRoute() {
         </section>
       </div>
       <section className="relative">
-        <ContactSection />
+        <ResearchBlogSection />
       </section>
       <section className="relative">
-        <GenLayersSection />
+        <ContactSection />
       </section>
       <Footer theme="dark" />
     </main>

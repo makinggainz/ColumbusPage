@@ -13,7 +13,7 @@ import SuperModelSection from "@/components/use-cases/SuperModelSection";
 import AgentResearch from "@/components/use-cases/AgentResearch";
 import DataCatalogue from "@/components/use-cases/DataCatalogue";
 import UseCasesHero from "@/components/use-cases/UseCaseHero";
-import { GenLayersSection } from "@/components/technology/redesign/GenLayersSection";
+import { ResearchBlogSection } from "@/components/technology/redesign/ResearchBlogSection";
 
 export default function ResearchApplicationsRoute() {
   const [navTheme, setNavTheme] = useState<"light" | "dark">("dark");
@@ -94,10 +94,10 @@ export default function ResearchApplicationsRoute() {
         </section>
       </div>
       <section className="relative">
-        <ContactSection lightTheme />
+        <ResearchBlogSection />
       </section>
       <section className="relative">
-        <GenLayersSection />
+        <ContactSection lightTheme />
       </section>
       <Footer theme="light" />
     </main>
