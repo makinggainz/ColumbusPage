@@ -125,7 +125,7 @@ export default function ResultsSection() {
     <section
       className="relative w-full py-24 rounded-[33px] overflow-hidden"
       style={{
-        background: "linear-gradient(to bottom, #F5F5F7 0%, #F5F5F7 50%, #FFFFFF 50%, #FFFFFF 100%)",
+        backgroundColor: "#FFFFFF",
         boxShadow: "0 24px 40px -12px rgba(10, 19, 68, 0.22)",
       }}
     >

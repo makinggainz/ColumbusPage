@@ -65,7 +65,7 @@ export default function ResearchApplicationsRoute() {
       </section>
       {/* Lifted above the page-level structure lines (z 50) so the vertical
           grid lines do not pass through the Results / Model Columbus-01 block. */}
-      <section className="relative bg-black" style={{ zIndex: 51 }}>
+      <section className="relative" style={{ zIndex: 51, backgroundColor: "#FFFFFF" }}>
         <ResultsSection />
       </section>
       <section className="relative">
