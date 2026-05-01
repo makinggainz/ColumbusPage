@@ -48,7 +48,23 @@ function buildConstrainedGrid(cols: number, rows: number, imageCount: number, se
   return grid;
 }
 
-export default function UseCasesHero() {
+type UseCasesHeroProps = {
+  /** Small caption rendered above the title. Pass an empty string to hide. */
+  eyebrow?: string;
+  /** Large gradient headline. */
+  title?: string;
+  /** Caption rendered below the title. Pass an empty string to hide. */
+  subtitle?: string;
+  /** White-background variant for use on light pages. */
+  lightTheme?: boolean;
+};
+
+export default function UseCasesHero({
+  eyebrow = "An agentic approach to geography and space",
+  title = "More than Site Selection",
+  subtitle = "Industry use cases of Columbus Pro",
+  lightTheme = false,
+}: UseCasesHeroProps = {}) {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const [lockedSet, setLockedSet] = useState<Set<number>>(() => new Set());
   const timersRef = useRef<Map<number, ReturnType<typeof setTimeout>>>(new Map());
@@ -145,7 +161,7 @@ export default function UseCasesHero() {
   }, [cols, rows, cellSize]);
 
   return (
-    <section className="relative w-full min-h-[1055px] flex items-center justify-center overflow-hidden bg-black">
+    <section className={`relative w-full min-h-[1055px] flex items-center justify-center overflow-hidden ${lightTheme ? "bg-white" : "bg-black"}`}>
 
       {/* Interactive grid: image in a square only visible when that square is hovered */}
       <div
@@ -201,8 +217,8 @@ export default function UseCasesHero() {
         className="absolute inset-0 pointer-events-none"
         style={{
           backgroundImage: `
-            linear-gradient(to right, #29303D 1px, transparent 1px),
-            linear-gradient(to bottom, #29303D 1px, transparent 1px)
+            linear-gradient(to right, ${lightTheme ? "#D1D5DB" : "#29303D"} 1px, transparent 1px),
+            linear-gradient(to bottom, ${lightTheme ? "#D1D5DB" : "#29303D"} 1px, transparent 1px)
           `,
           backgroundSize: "112px 112px",
           maskImage: "radial-gradient(circle at 50% 50%, black 0%, transparent 90%)",
@@ -216,24 +232,36 @@ export default function UseCasesHero() {
         ref={textRef}
         className="relative z-10 flex flex-col items-center text-center px-6 pointer-events-none"
         style={{
-          background: "radial-gradient(ellipse 60% 50% at 50% 50%, rgba(0,0,0,0.7) 0%, transparent 100%)",
+          background: lightTheme
+            ? "radial-gradient(ellipse 60% 50% at 50% 50%, rgba(255,255,255,0.85) 0%, transparent 100%)"
+            : "radial-gradient(ellipse 60% 50% at 50% 50%, rgba(0,0,0,0.7) 0%, transparent 100%)",
         }}
       >
 
-        <p className="text-gray-400 text-[32px] mb-4 max-md:text-[14px] font-normal">
-          An agentic approach to geography and space
-        </p>
+        {eyebrow && (
+          <p className={`text-[32px] mb-4 max-md:text-[14px] font-normal ${lightTheme ? "text-[#0A1344]/55" : "text-gray-400"}`}>
+            {eyebrow}
+          </p>
+        )}
 
         <h1
           className="font-semibold text-[64px] leading-[140%] max-md:text-[36px] bg-clip-text text-transparent"
-          style={{ fontFamily: "var(--font-hero)", backgroundImage: "linear-gradient(to right, #ffffff 0%, #B0B0B0 100%)", fontWeight: 600 }}
+          style={{
+            fontFamily: "var(--font-hero)",
+            backgroundImage: lightTheme
+              ? "linear-gradient(to right, #0A1344 0%, #6B7280 100%)"
+              : "linear-gradient(to right, #ffffff 0%, #B0B0B0 100%)",
+            fontWeight: 600,
+          }}
         >
-          More than Site Selection
+          {title}
         </h1>
 
-        <p className="text-gray-400 text-[32px] mt-3 max-md:text-[16px] font-normal">
-          Industry use cases of Columbus Pro
-        </p>
+        {subtitle && (
+          <p className={`text-[32px] mt-3 max-md:text-[16px] font-normal ${lightTheme ? "text-[#0A1344]/55" : "text-gray-400"}`}>
+            {subtitle}
+          </p>
+        )}
 
       </div>
 

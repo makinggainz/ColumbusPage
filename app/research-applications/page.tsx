@@ -12,7 +12,7 @@ import Chat from "@/components/use-cases/Chat";
 import SuperModelSection from "@/components/use-cases/SuperModelSection";
 import AgentResearch from "@/components/use-cases/AgentResearch";
 import DataCatalogue from "@/components/use-cases/DataCatalogue";
-import CapabilitiesSection from "@/components/use-cases/CapabilitiesSection";
+import UseCasesHero from "@/components/use-cases/UseCaseHero";
 import { GenLayersSection } from "@/components/technology/redesign/GenLayersSection";
 
 export default function ResearchApplicationsRoute() {
@@ -63,11 +63,18 @@ export default function ResearchApplicationsRoute() {
       <section className="relative" ref={heroRef}>
         <HeroSection videoSrc="/research-applications-video.mp4" />
       </section>
-      <section className="relative bg-black">
+      {/* Lifted above the page-level structure lines (z 50) so the vertical
+          grid lines do not pass through the Results / Model Columbus-01 block. */}
+      <section className="relative bg-black" style={{ zIndex: 51 }}>
         <ResultsSection />
       </section>
       <section className="relative">
-        <CapabilitiesSection />
+        <UseCasesHero
+          eyebrow=""
+          title="Capabilities"
+          subtitle="What we've explored so far"
+          lightTheme
+        />
       </section>
       <div className="relative">
         <section className="relative" ref={sec4Ref}>

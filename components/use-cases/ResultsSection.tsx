@@ -124,7 +124,10 @@ export default function ResultsSection() {
   return (
     <section
       className="relative w-full py-24 rounded-[33px] overflow-hidden"
-      style={{ backgroundColor: "#FFFFFF" }}
+      style={{
+        backgroundColor: "#FFFFFF",
+        boxShadow: "0 24px 40px -12px rgba(10, 19, 68, 0.22)",
+      }}
     >
       <div ref={ref} className="max-w-[1287px] mx-auto px-8 min-[1287px]:px-0">
         {/* ── Header — eyebrow caption + section heading + supporting
