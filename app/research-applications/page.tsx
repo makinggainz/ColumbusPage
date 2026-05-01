@@ -10,7 +10,6 @@ import ContactSection from "@/components/use-cases/ContactSection";
 import UseCasesHero from "@/components/use-cases/UseCaseHero";
 import UseCaseStickyScroll from "@/components/use-cases/UseCaseStickyScroll";
 import { IndustryProvider } from "@/components/use-cases/industry/IndustryContext";
-import IndustryStickyNavbar from "@/components/use-cases/industry/IndustryStickyNavbar";
 import { ResearchBlogSection } from "@/components/technology/redesign/ResearchBlogSection";
 
 export default function ResearchApplicationsRoute() {
@@ -79,7 +78,6 @@ export default function ResearchApplicationsRoute() {
       {/* Industry-aware use-case block (light variant). The provider wraps the
           picker, the sticky sub-navbar, and the four-row sticky-scroll. */}
       <IndustryProvider>
-        <IndustryStickyNavbar lightTheme />
         <UseCaseStickyScroll lightTheme />
       </IndustryProvider>
 
