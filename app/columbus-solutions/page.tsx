@@ -8,21 +8,17 @@ import HeroSection from "@/components/use-cases/HeroSection";
 import ResultsSection from "@/components/use-cases/ResultsSection";
 import UseCasesHero from "@/components/use-cases/UseCaseHero";
 import ContactSection from "@/components/use-cases/ContactSection";
-import Chat from "@/components/use-cases/Chat";
-import SuperModelSection from "@/components/use-cases/SuperModelSection";
-import AgentResearch from "@/components/use-cases/AgentResearch";
-import DataCatalogue from "@/components/use-cases/DataCatalogue";
-import { ResearchBlogSection } from "@/components/technology/redesign/ResearchBlogSection";
+import UseCaseStickyScroll from "@/components/use-cases/UseCaseStickyScroll";
+import { IndustryProvider } from "@/components/use-cases/industry/IndustryContext";
+import IndustrySelector from "@/components/use-cases/industry/IndustrySelector";
+import IndustryStickyNavbar from "@/components/use-cases/industry/IndustryStickyNavbar";
+import ColumbusSolutionsSections from "@/components/use-cases/ColumbusSolutionsSections";
 
 export default function ColumbusSolutionsRoute() {
   const [navTheme] = useState<"light" | "dark">("dark");
   const [heroOverlay, setHeroOverlay] = useState(0);
   const sectionBRef = useRef<HTMLElement>(null);
   const sectionDRef = useRef<HTMLElement>(null);
-  const sec4Ref = useRef<HTMLElement>(null);
-  const sec5Ref = useRef<HTMLElement>(null);
-  const sec6Ref = useRef<HTMLElement>(null);
-  const sec7Ref = useRef<HTMLElement>(null);
 
   useEffect(() => {
     const update = () => {
@@ -63,23 +59,20 @@ export default function ColumbusSolutionsRoute() {
       <section className="relative" ref={sectionDRef}>
         <UseCasesHero />
       </section>
-      <div className="relative">
-        <section className="relative" ref={sec4Ref}>
-          <Chat />
-        </section>
-        <section className="relative" ref={sec5Ref}>
-          <SuperModelSection />
-        </section>
-        <section className="relative" ref={sec6Ref}>
-          <AgentResearch />
-        </section>
-        <section className="relative" ref={sec7Ref}>
-          <DataCatalogue />
-        </section>
-      </div>
+
+      {/* Industry-aware use-case block. The provider wraps the picker, the
+          sticky sub-navbar (which intersection-observes the four-row block to
+          show/hide itself), and the four-row sticky-scroll. */}
+      <IndustryProvider>
+        <IndustryStickyNavbar />
+        <IndustrySelector />
+        <UseCaseStickyScroll />
+      </IndustryProvider>
+
       <section className="relative">
-        <ResearchBlogSection />
+        <ColumbusSolutionsSections />
       </section>
+
       <section className="relative">
         <ContactSection />
       </section>

@@ -75,15 +75,21 @@ export default function IndustryStickyNavbar({ lightTheme = false }: IndustrySti
     requestAnimationFrame(updateScrollState);
   }, [industryId, updateScrollState]);
 
-  const advance = useCallback(
-    (direction: 1 | -1) => {
-      const currentIdx = INDUSTRY_ORDER.indexOf(industryId);
-      const nextIdx =
-        (currentIdx + direction + INDUSTRY_ORDER.length) % INDUSTRY_ORDER.length;
-      setIndustryId(INDUSTRY_ORDER[nextIdx]);
-    },
-    [industryId, setIndustryId],
-  );
+  // Scroll the carousel track. By default it scrolls forward (right) by
+  // roughly one viewport's worth of chips. Once the track has reached its
+  // right end, the same arrow flips direction and rewinds to the start, so
+  // the user can keep cycling without dragging. Does NOT change the
+  // selected industry — selection is by direct chip click.
+  const handleArrowClick = useCallback(() => {
+    const track = trackRef.current;
+    if (!track) return;
+    if (scrollState.atEnd) {
+      track.scrollTo({ left: 0, behavior: "smooth" });
+    } else {
+      const delta = Math.max(track.clientWidth * 0.7, 160);
+      track.scrollBy({ left: delta, behavior: "smooth" });
+    }
+  }, [scrollState.atEnd]);
 
   // Theme tokens
   const containerBg = lightTheme
@@ -178,16 +184,19 @@ export default function IndustryStickyNavbar({ lightTheme = false }: IndustrySti
           </div>
         </div>
 
-        {/* Next-industry button — advances active industry by one */}
+        {/* Carousel arrow — scrolls the track forward by default. When the
+            track is at its right end, the icon flips and clicking rewinds
+            the track to the start. Selection is by direct chip click; this
+            arrow never changes the active industry. */}
         <button
           type="button"
-          onClick={() => advance(1)}
+          onClick={handleArrowClick}
           className={`shrink-0 inline-flex items-center justify-center w-8 h-8 rounded-full transition-colors duration-200 ${
             lightTheme
               ? "text-[#1D1D1F] hover:bg-[rgba(10,19,68,0.06)]"
               : "text-white hover:bg-white/10"
           }`}
-          aria-label="Next industry"
+          aria-label={scrollState.atEnd ? "Scroll back to start" : "Scroll industries right"}
         >
           <svg
             width="14"
@@ -199,6 +208,10 @@ export default function IndustryStickyNavbar({ lightTheme = false }: IndustrySti
             strokeLinecap="round"
             strokeLinejoin="round"
             aria-hidden
+            style={{
+              transform: scrollState.atEnd ? "rotate(180deg)" : "none",
+              transition: "transform 220ms cubic-bezier(0.4, 0, 0.2, 1)",
+            }}
           >
             <path d="M3 7h8M7.5 3.5L11 7l-3.5 3.5" />
           </svg>

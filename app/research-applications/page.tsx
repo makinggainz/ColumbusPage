@@ -11,6 +11,7 @@ import UseCasesHero from "@/components/use-cases/UseCaseHero";
 import UseCaseStickyScroll from "@/components/use-cases/UseCaseStickyScroll";
 import { IndustryProvider } from "@/components/use-cases/industry/IndustryContext";
 import { ResearchBlogSection } from "@/components/technology/redesign/ResearchBlogSection";
+import ResearchAppSections from "@/components/use-cases/ResearchAppSections";
 
 export default function ResearchApplicationsRoute() {
   const [navTheme, setNavTheme] = useState<"light" | "dark">("dark");
@@ -80,6 +81,8 @@ export default function ResearchApplicationsRoute() {
       <IndustryProvider>
         <UseCaseStickyScroll lightTheme />
       </IndustryProvider>
+
+      <ResearchAppSections />
 
       <section className="relative">
         <ResearchBlogSection />
