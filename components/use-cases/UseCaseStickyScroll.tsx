@@ -112,10 +112,10 @@ export default function UseCaseStickyScroll({ lightTheme = false, excludeSection
     <div data-use-case-rows className="relative w-full">
       {features.map((feature, i) => {
         const isLight = feature.forceLight ? true : lightTheme;
-        const rowBg = isLight ? "#FFFFFF" : "#060810";
+        const rowBg = isLight ? "#FFFFFF" : "#000000";
         const rowBgOverlay = isLight
           ? "linear-gradient(rgba(0,0,0,0.02), rgba(0,0,0,0.02))"
-          : "linear-gradient(rgba(255,255,255,0.04), rgba(255,255,255,0.04))";
+          : "none";
         const rowGridLine = isLight ? "rgba(10, 19, 68, 0.10)" : "rgba(255, 255, 255, 0.10)";
 
         return (
@@ -178,16 +178,6 @@ export default function UseCaseStickyScroll({ lightTheme = false, excludeSection
         );
       })}
       
-      {/* Ensure the bottom-most border uses the last row's gridLine color */}
-      <div 
-        className="relative z-10 w-full" 
-        style={{ 
-          height: 1, 
-          backgroundColor: features[features.length - 1].forceLight || lightTheme 
-            ? "rgba(10, 19, 68, 0.10)" 
-            : "rgba(255, 255, 255, 0.10)" 
-        }} 
-      />
     </div>
   );
 }

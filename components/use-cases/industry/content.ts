@@ -13,22 +13,22 @@ import type {
  * default: the existing Chat dialogue ("Where should the Transportation
  * authority install a new road-signal…") is verbatim Urban Planning content.
  */
-export const DEFAULT_INDUSTRY: IndustryId = "urban-planning";
+export const DEFAULT_INDUSTRY: IndustryId = "urban-infrastructure";
 
 /** Tile order for the IndustrySelector grid + sticky navbar carousel. */
 export const INDUSTRY_ORDER: IndustryId[] = [
   "residential-real-estate",
   "commercial-real-estate",
-  "generative-geodata",
+  "disaster-response",
   "logistics-optimization",
-  "urban-planning",
-  "site-selection",
-  "consumer-mapping",
-  "ground-due-diligence",
+  "urban-infrastructure",
+  "gis-research",
+  "economic-studies",
+  "academic-research",
   "geomarketing",
-  "city-security",
-  "environmental",
-  "tourism",
+  "defence-security",
+  "environmental-research",
+  "critical-minerals",
 ];
 
 const META: Record<IndustryId, { name: string; shortName: string; imageSrc: string }> = {
@@ -42,34 +42,34 @@ const META: Record<IndustryId, { name: string; shortName: string; imageSrc: stri
     shortName: "Commercial Real Estate",
     imageSrc: "/use-cases/comercial.png",
   },
-  "generative-geodata": {
-    name: "Generative Geodata",
-    shortName: "Generative Geodata",
+  "disaster-response": {
+    name: "Disaster Response",
+    shortName: "Disaster Response",
     imageSrc: "/use-cases/env.png",
   },
   "logistics-optimization": {
     name: "Logistics Optimization",
-    shortName: "Logistics",
+    shortName: "Logistics Optimization",
     imageSrc: "/use-cases/logistics.png",
   },
-  "urban-planning": {
-    name: "Urban Planning",
-    shortName: "Urban Planning",
+  "urban-infrastructure": {
+    name: "Urban Infrastructure",
+    shortName: "Urban Infrastructure",
     imageSrc: "/use-cases/planning.png",
   },
-  "site-selection": {
-    name: "Site Selection",
-    shortName: "Site Selection",
+  "gis-research": {
+    name: "GIS Research",
+    shortName: "GIS Research",
     imageSrc: "/use-cases/comercial.png",
   },
-  "consumer-mapping": {
-    name: "Consumer Mapping",
-    shortName: "Consumer Mapping",
+  "economic-studies": {
+    name: "Economic Studies",
+    shortName: "Economic Studies",
     imageSrc: "/use-cases/geomarketing.png",
   },
-  "ground-due-diligence": {
-    name: "Ground Due Diligence",
-    shortName: "Ground Due Diligence",
+  "academic-research": {
+    name: "Academic Research",
+    shortName: "Academic Research",
     imageSrc: "/use-cases/research.png",
   },
   "geomarketing": {
@@ -77,19 +77,19 @@ const META: Record<IndustryId, { name: string; shortName: string; imageSrc: stri
     shortName: "Geomarketing",
     imageSrc: "/use-cases/geomarketing.png",
   },
-  "city-security": {
-    name: "City Security",
-    shortName: "City Security",
+  "defence-security": {
+    name: "Defence & Security",
+    shortName: "Defence & Security",
     imageSrc: "/use-cases/security.png",
   },
-  "environmental": {
-    name: "Environmental",
-    shortName: "Environment",
+  "environmental-research": {
+    name: "Environmental Research",
+    shortName: "Environmental Research",
     imageSrc: "/use-cases/env.png",
   },
-  "tourism": {
-    name: "Tourism",
-    shortName: "Tourism",
+  "critical-minerals": {
+    name: "Critical Minerals",
+    shortName: "Critical Minerals",
     imageSrc: "/use-cases/tourism.png",
   },
 };
@@ -335,14 +335,14 @@ function buildIndustry(id: IndustryId, useExisting: boolean): IndustryContent {
 export const INDUSTRY_CONTENT: Record<IndustryId, IndustryContent> = {
   "residential-real-estate": buildIndustry("residential-real-estate", false),
   "commercial-real-estate": buildIndustry("commercial-real-estate", false),
-  "generative-geodata": buildIndustry("generative-geodata", false),
+  "disaster-response": buildIndustry("disaster-response", false),
   "logistics-optimization": buildIndustry("logistics-optimization", false),
-  "urban-planning": buildIndustry("urban-planning", true),
-  "site-selection": buildIndustry("site-selection", false),
-  "consumer-mapping": buildIndustry("consumer-mapping", false),
-  "ground-due-diligence": buildIndustry("ground-due-diligence", false),
+  "urban-infrastructure": buildIndustry("urban-infrastructure", true),
+  "gis-research": buildIndustry("gis-research", false),
+  "economic-studies": buildIndustry("economic-studies", false),
+  "academic-research": buildIndustry("academic-research", false),
   "geomarketing": buildIndustry("geomarketing", false),
-  "city-security": buildIndustry("city-security", false),
-  "environmental": buildIndustry("environmental", false),
-  "tourism": buildIndustry("tourism", false),
+  "defence-security": buildIndustry("defence-security", false),
+  "environmental-research": buildIndustry("environmental-research", false),
+  "critical-minerals": buildIndustry("critical-minerals", false),
 };

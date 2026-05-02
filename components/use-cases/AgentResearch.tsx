@@ -120,7 +120,7 @@ export default function AgenticResearch({
       </div>
 
       {/* Section title */}
-      <h2 className="absolute top-6 left-6 z-20 text-black text-[24px] md:text-[28px] lg:text-[32px] font-medium tracking-[-0.02em] leading-[1.1] m-0">
+      <h2 className="absolute top-6 left-6 z-20 text-white text-[24px] md:text-[28px] lg:text-[32px] font-medium tracking-[-0.02em] leading-[1.1] m-0">
         Agentic geospatial research
       </h2>
     </div>

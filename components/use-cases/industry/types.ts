@@ -18,16 +18,16 @@
 export type IndustryId =
   | "residential-real-estate"
   | "commercial-real-estate"
-  | "generative-geodata"
+  | "disaster-response"
   | "logistics-optimization"
-  | "urban-planning"
-  | "site-selection"
-  | "consumer-mapping"
-  | "ground-due-diligence"
+  | "urban-infrastructure"
+  | "gis-research"
+  | "economic-studies"
+  | "academic-research"
   | "geomarketing"
-  | "city-security"
-  | "environmental"
-  | "tourism";
+  | "defence-security"
+  | "environmental-research"
+  | "critical-minerals";
 
 /**
  * Content rendered in the section-G sticky left rail for one row in one

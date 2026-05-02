@@ -248,7 +248,7 @@ type ColumbusSolutionsSectionsProps = {
 };
 
 export default function ColumbusSolutionsSections({ lightTheme = false }: ColumbusSolutionsSectionsProps) {
-  const bg = lightTheme ? "#FFFFFF" : "#060810";
+  const bg = lightTheme ? "#FFFFFF" : "#000000";
   const gridLine = lightTheme ? "rgba(10, 19, 68, 0.10)" : "rgba(255,255,255,0.10)";
   const titleColor = lightTheme ? "#1D1D1F" : "#FFFFFF";
   const descColor = lightTheme ? "rgba(29,29,31,0.75)" : "rgba(255,255,255,0.75)";

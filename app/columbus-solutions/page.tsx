@@ -38,7 +38,7 @@ export default function ColumbusSolutionsRoute() {
   }, []);
 
   return (
-    <main>
+    <main className="bg-black">
       <Navbar theme={navTheme} />
 
       <section className="relative" ref={sectionBRef}>
