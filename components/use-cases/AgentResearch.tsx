@@ -119,18 +119,8 @@ export default function AgenticResearch({
         </div>
       </div>
 
-      {/* Title gradient backdrop */}
-      <div
-        className="absolute top-0 left-0 right-0 h-[100px] pointer-events-none z-10"
-        style={{
-          background:
-            "linear-gradient(to bottom, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.3) 50%, transparent 100%)",
-        }}
-        aria-hidden
-      />
-
-      {/* Section title — overlays the gradient. */}
-      <h2 className="absolute top-6 left-6 z-20 text-white text-[24px] md:text-[28px] lg:text-[32px] font-medium tracking-[-0.02em] leading-[1.1] m-0">
+      {/* Section title */}
+      <h2 className="absolute top-6 left-6 z-20 text-black text-[24px] md:text-[28px] lg:text-[32px] font-medium tracking-[-0.02em] leading-[1.1] m-0">
         Agentic geospatial research
       </h2>
     </div>

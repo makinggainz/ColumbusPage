@@ -93,7 +93,7 @@ function CreativeDataLayersVisual({ lightTheme = false }: { lightTheme?: boolean
           ))}
         </div>
         <p className="text-white/50 text-[12px] mt-3">
-          Prompt Columbus to generate any data layer on demand — no surveying required.
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit.
         </p>
       </div>
     </MapPanel>
@@ -225,7 +225,7 @@ function RegulatoryComplianceVisual({ lightTheme = false }: { lightTheme?: boole
         </div>
         <div className="mt-4 pt-3 border-t border-white/10">
           <p className="text-white/40 text-[11px] leading-relaxed">
-            Columbus auto-maps your project against applicable regulations and flags conflicts before they become blockers.
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
           </p>
         </div>
       </div>
@@ -259,11 +259,11 @@ export default function ColumbusSolutionsSections({ lightTheme = false }: Columb
       id: "creative-data-layers",
       title: "Creative data layers",
       description:
-        "Prompt Columbus to generate entirely new geospatial data layers on demand. No field surveys, no waiting — just describe what you need.",
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
       bullets: [
-        "Solar potential, vibrancy, safety scores",
-        "Fully custom semantic layers",
-        "Updated in real-time as conditions change",
+        "Lorem ipsum dolor sit amet",
+        "Consectetur adipiscing elit",
+        "Sed do eiusmod tempor",
       ],
       visual: <CreativeDataLayersVisual lightTheme={lightTheme} />,
     },
@@ -271,11 +271,11 @@ export default function ColumbusSolutionsSections({ lightTheme = false }: Columb
       id: "predict-the-future",
       title: "Predict the future",
       description:
-        "Columbus-01's temporal reasoning engine forecasts how an area will change — population shifts, commercial activity, risk exposure.",
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
       bullets: [
-        "6-month to 5-year forecast horizons",
-        "Scenario modelling & sensitivity analysis",
-        "Confidence intervals on every prediction",
+        "Lorem ipsum dolor sit amet",
+        "Consectetur adipiscing elit",
+        "Sed do eiusmod tempor",
       ],
       visual: <PredictFutureVisual lightTheme={lightTheme} />,
     },
@@ -283,11 +283,11 @@ export default function ColumbusSolutionsSections({ lightTheme = false }: Columb
       id: "automated-audits",
       title: "Automated audits & due diligence",
       description:
-        "Run comprehensive property and site audits in seconds. Columbus pulls public records, satellite imagery and regulatory databases to build a complete picture.",
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
       bullets: [
-        "Zoning, environmental & infrastructure checks",
-        "One-click PDF report generation",
-        "Audit trail with source citations",
+        "Lorem ipsum dolor sit amet",
+        "Consectetur adipiscing elit",
+        "Sed do eiusmod tempor",
       ],
       visual: <AuditsDueDiligenceVisual lightTheme={lightTheme} />,
     },
@@ -295,11 +295,11 @@ export default function ColumbusSolutionsSections({ lightTheme = false }: Columb
       id: "regulatory-compliance",
       title: "Easy regulatory compliance",
       description:
-        "Stay ahead of the regulatory landscape. Columbus automatically maps your project against local, national and international requirements.",
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
       bullets: [
-        "Multi-jurisdictional rule engine",
-        "Real-time regulation change alerts",
-        "Exportable compliance certificates",
+        "Lorem ipsum dolor sit amet",
+        "Consectetur adipiscing elit",
+        "Sed do eiusmod tempor",
       ],
       visual: <RegulatoryComplianceVisual lightTheme={lightTheme} />,
     },

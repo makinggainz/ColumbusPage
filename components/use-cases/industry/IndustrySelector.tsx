@@ -74,9 +74,6 @@ export default function IndustrySelector({ lightTheme = false }: IndustrySelecto
           >
             Tell us where you work
           </h2>
-          <p className={`mt-3 text-[16px] md:text-[20px] leading-[1.5] ${subtitleTextClass}`}>
-            The four sections below tailor to the industry you choose. You can switch any time.
-          </p>
         </div>
 
         {/* Tile grid — bounded inside the section-lines container. Short
@@ -114,7 +111,8 @@ export default function IndustrySelector({ lightTheme = false }: IndustrySelecto
                       {item.name}
                       {/* Hover-only underline */}
                       <span
-                        className="absolute left-0 right-0 -bottom-2 h-px bg-white opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+                        className="absolute left-0 -bottom-2 h-px bg-white w-0 group-hover:w-full pointer-events-none"
+                        style={{ transition: "width 500ms cubic-bezier(0.22, 1, 0.36, 1)" }}
                         aria-hidden
                       />
                     </span>
@@ -138,6 +136,13 @@ export default function IndustrySelector({ lightTheme = false }: IndustrySelecto
               </button>
             );
           })}
+        </div>
+
+        {/* Footer text */}
+        <div className="text-center px-8 md:px-10 mt-[48px] max-md:mt-[36px]" style={anim(120)}>
+          <p className={`text-[16px] md:text-[20px] leading-[1.5] ${subtitleTextClass}`}>
+            The four sections below tailor to the industry you choose. You can switch any time.
+          </p>
         </div>
       </div>
     </section>

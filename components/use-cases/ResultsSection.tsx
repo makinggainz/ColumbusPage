@@ -88,11 +88,11 @@ const NetworkArt = () => (
   </svg>
 );
 
-const ITEMS: { num: string; text: string; art: React.ReactNode }[] = [
-  { num: "1", text: "Fast semantic reasoning in cities. Contextual enrichment.", art: <CityArt /> },
-  { num: "2", text: "Generative geospatial data", art: <WaveArt /> },
-  { num: "3", text: "Generalist model, with access to wide catalogue", art: <StackArt /> },
-  { num: "4", text: "Deep spatial reasoning at scale", art: <NetworkArt /> },
+const ITEMS: { text: string }[] = [
+  { text: "Ask the map anything" },
+  { text: "An AI that considers it all" },
+  { text: "Faster research reports" },
+  { text: "Generative data layers" },
 ];
 
 export default function ResultsSection() {
@@ -132,23 +132,17 @@ export default function ResultsSection() {
       <div ref={ref} className="max-w-[1287px] mx-auto px-8 min-[1287px]:px-0">
         {/* ── Header — eyebrow caption + section heading + supporting
             subtitle, matching the technology-page Results header pattern. */}
-        <p
-          className="m-0 mb-4 text-[13px] font-normal tracking-[0.08em] uppercase"
-          style={{ color: "rgba(29, 29, 31, 0.35)", ...anim(0) }}
-        >
-          RESULTS
-        </p>
         <h2
           className="m-0 text-[39px] font-medium leading-[1.2] tracking-[-0.02em] text-[#1D1D1F]"
-          style={anim(50)}
+          style={anim(0)}
         >
-          MODEL COLUMBUS-01
+          Columbus Pro
         </h2>
         <p
           className="mt-4 text-[20px] leading-[1.55] text-[#1D1D1F] max-w-[640px]"
-          style={anim(100)}
+          style={anim(50)}
         >
-          The latest results from our development of the LGM.
+          Essential capabilities
         </p>
 
         {/* ── Stacked-row catalogue — each row pairs a blue art tile (with the
@@ -161,32 +155,30 @@ export default function ResultsSection() {
         >
           {ITEMS.map((item, i) => (
             <div
-              key={item.num}
+              key={item.text}
               className="relative flex flex-row items-center max-md:flex-col max-md:items-start"
               style={{
                 gap: "clamp(28px, 3vw, 48px)",
                 padding: "clamp(2px, 0.3vw, 5px) 0",
                 paddingTop: i === 0 ? 0 : undefined,
                 paddingBottom: i === ITEMS.length - 1 ? 0 : undefined,
-                ...anim(150 + i * 60),
+                ...anim(100 + i * 60),
               }}
             >
-              {/* Solid-blue art tile — same wireframe globe in every row.
-                  Square corners (no border-radius) per the use-cases pages. */}
+              {/* Solid-blue art tile — empty rounded blue box. */}
               <div
-                className="relative shrink-0 aspect-[16/11] overflow-hidden"
+                className="relative shrink-0 aspect-[16/11] overflow-hidden rounded-[12px]"
                 style={{
                   width: "clamp(160px, 16vw, 240px)",
-                  background: "#1d3fa6",
+                  background: "#3150B5",
+                  border: "1px solid rgba(0,0,0,0.1)"
                 }}
               >
-                {item.art}
               </div>
 
-              {/* Numbered title — number and text concatenated as one string,
-                  exactly like the technology-page version. */}
+              {/* Title without numbers */}
               <h3 className="flex-1 m-0 min-w-0 text-[22px] font-medium leading-[1.3] tracking-[-0.01em] text-[#1D1D1F]">
-                {`${item.num}. ${item.text}`}
+                {item.text}
               </h3>
 
               {/* Hairline divider beneath every row except the last. Starts

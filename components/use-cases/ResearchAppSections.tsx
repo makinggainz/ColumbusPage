@@ -124,240 +124,92 @@ function CreativeDataLayersVisual() {
           ))}
         </div>
         <p className="text-white/45 text-[12px] mt-3">
-          Prompt Columbus to generate any data layer on demand — no surveying required.
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit.
         </p>
       </div>
     </MapPanel>
   );
 }
 
-// ─── Generative Surveying — long sticky scroll (3 tiles) ──────────────────
+// ─── Generative Geodata Visual (Long Scroll) ──────────────────────────────
 
-type SurveyTile = { kicker: string; title: string; prompt: string; stat: string; statLabel: string };
-
-const SURVEY_TILES: SurveyTile[] = [
-  {
-    kicker: "Columbus GenSurvey",
-    title: "Rooftop Solar Mapping",
-    prompt: "estimate solar installation viability for every building in this district",
-    stat: "98%",
-    statLabel: "Coverage vs manual survey",
-  },
-  {
-    kicker: "Columbus GenSurvey",
-    title: "Pedestrian Flow Analysis",
-    prompt: "model pedestrian density and movement patterns at peak hours",
-    stat: "< 2 min",
-    statLabel: "Time to generate vs weeks of fieldwork",
-  },
-  {
-    kicker: "Columbus GenSurvey",
-    title: "Structural Condition Index",
-    prompt: "assess building structural conditions from imagery and urban data",
-    stat: "10×",
-    statLabel: "Faster than traditional inspection",
-  },
-];
-
-// Tile-bucket boundaries (same math as GenLayersSection)
-const TILE_BUCKETS = [
-  { start: 0, end: 0.46 },
-  { start: 0.46, end: 0.73 },
-  { start: 0.73, end: 1 },
-];
-const TRAVEL_VH = 2;
-const STICKY_TOP_VH = 0.15;
-const clamp01 = (v: number) => Math.max(0, Math.min(1, v));
-
-function GenerativeSurveyingSection() {
-  const outerRef = useRef<HTMLDivElement>(null);
-  const introRef = useRef<HTMLDivElement>(null);
-  const tileRefs = useRef<Array<HTMLDivElement | null>>([null, null, null]);
-  const promptRefs = useRef<Array<HTMLDivElement | null>>([null, null, null]);
-  const textRefs = useRef<Array<HTMLDivElement | null>>([null, null, null]);
-  const progressRefs = useRef<Array<HTMLDivElement | null>>([null, null, null]);
-  const [activeTile, setActiveTile] = useState(0);
-
-  // Map images per tile (reuse existing public assets)
-  const tileImages = ["/barca.png", "/HK Map-2.png", "/tokyo.png"];
-
-  useEffect(() => {
-    const node = outerRef.current;
-    if (!node) return;
-    let rafId = 0;
-    let lastTile = 0;
-    let lastRaw = 0;
-
-    const update = () => {
-      rafId = 0;
-      const rect = node.getBoundingClientRect();
-      const stickyTopPx = window.innerHeight * STICKY_TOP_VH;
-      const extraPx = window.innerHeight * TRAVEL_VH;
-      const raw = clamp01((stickyTopPx - rect.top) / extraPx);
-
-      const introOp = clamp01(1 - (raw - 0.1) / 0.1);
-      if (introRef.current) introRef.current.style.opacity = introOp.toString();
-
-      for (let i = 0; i < TILE_BUCKETS.length; i++) {
-        const b = TILE_BUCKETS[i];
-        const inBucket = raw >= b.start && raw < b.end;
-        const local = raw >= b.end ? 1 : inBucket ? (raw - b.start) / (b.end - b.start) : 0;
-
-        const promptEl = promptRefs.current[i];
-        if (promptEl) promptEl.style.opacity = (inBucket && local >= 0.2 ? 1 : 0).toString();
-
-        const textEl = textRefs.current[i];
-        if (textEl) textEl.style.opacity = (inBucket && local >= 0.5 ? 1 : 0).toString();
-
-        const segEl = progressRefs.current[i];
-        if (segEl) segEl.style.width = `${(local * 100).toFixed(2)}%`;
-      }
-
-      if (raw !== lastRaw) lastRaw = raw;
-      let next = 0;
-      if (raw >= 0.73) next = 2;
-      else if (raw >= 0.46) next = 1;
-      if (next !== lastTile) { lastTile = next; setActiveTile(next); }
-    };
-
-    const onScroll = () => { if (rafId === 0) rafId = window.requestAnimationFrame(update); };
-    update();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
-      if (rafId !== 0) window.cancelAnimationFrame(rafId);
-    };
-  }, []);
-
+function GenerativeGeodataVisual() {
   return (
-    <div className="relative w-full bg-[#060810]" style={{ overflow: "hidden" }}>
-      {/* Section intro label */}
-      <div className="relative z-10 max-w-[1287px] mx-auto px-6 pt-20 pb-10">
-        <span className="text-white/40 text-[11px] uppercase tracking-widest font-medium">Research application</span>
-        <h2 className="text-white text-[36px] md:text-[48px] font-medium tracking-[-0.02em] leading-[1.15] mt-3 max-w-[640px]">
-          Generative surveying
+    <div className="flex flex-col gap-0 w-full">
+      {/* Visual 1: Surveying the earth with a super model */}
+      <div className="relative w-full h-[640px] max-lg:h-[560px] max-md:h-[440px] overflow-hidden border-b border-[rgba(10,19,68,0.10)]">
+        <Image src="/use-cases/havana.png" alt="" fill className="object-cover" />
+        <div className="absolute top-0 left-0 right-0 h-[140px] pointer-events-none z-10" style={{ background: "linear-gradient(to bottom, rgba(0,0,0,0.6) 0%, transparent 100%)" }} />
+        <h2 className="absolute top-6 left-6 z-20 text-white text-[24px] md:text-[28px] lg:text-[32px] font-medium tracking-[-0.02em] leading-[1.1] m-0">
+          Surveying the earth with a super model
         </h2>
-        <p className="text-white/55 text-[16px] leading-[1.6] mt-4 max-w-[520px]">
-          Columbus-01 generates comprehensive geospatial surveys from prompts alone — replacing weeks of expensive fieldwork with seconds of AI inference.
-        </p>
+        <div className="absolute top-6 right-6 z-20 text-white/80 font-medium text-[13px] flex items-center gap-2">
+          <span className="text-[16px]">🌐</span> Built on Columbus Pro
+        </div>
+        <div className="absolute left-[20px] top-[180px] h-[220px] w-[12px] rounded-full bg-gradient-to-b from-green-400 via-yellow-400 to-red-500 z-10" />
+        <div className="absolute bottom-[24px] left-[100px] right-[160px] max-md:left-[20px] max-md:right-[20px] bg-white text-black rounded-xl shadow-xl p-5 z-20 flex items-center justify-between gap-4">
+          <p className="text-[16px] md:text-[18px] leading-snug">
+            I need a data layer of buildings in Havana by safety score. In the perspective of: City Planning
+          </p>
+          <div className="w-[32px] h-[32px] bg-[#1c2c6b] rounded-md shrink-0" />
+        </div>
+      </div>
+      
+      {/* Visual 2: Solar roof possibility */}
+      <div className="relative w-full h-[640px] max-lg:h-[560px] max-md:h-[440px] overflow-hidden border-b border-[rgba(10,19,68,0.10)]">
+        <Image src="/beach.png" alt="" fill className="object-cover" />
+        <div className="absolute top-0 left-0 right-0 h-[140px] pointer-events-none z-10" style={{ background: "linear-gradient(to bottom, rgba(0,0,0,0.6) 0%, transparent 100%)" }} />
+        <span className="absolute top-6 left-6 z-20 text-white/70 text-[12px] uppercase">Columbus GenLayer</span>
+        <h2 className="absolute top-12 left-6 z-20 text-white text-[24px] md:text-[28px] lg:text-[32px] font-medium tracking-[-0.02em] leading-[1.1] m-0">
+          Solar roof possibility
+        </h2>
+        <div className="absolute top-6 right-6 z-20 text-white/80 font-medium text-[13px] flex items-center gap-2">
+          <span className="text-[16px]">🌐</span> Built on Columbus Pro
+        </div>
+        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 text-white text-center text-[15px] md:text-[16px] bg-black/40 px-6 py-3 rounded-full backdrop-blur-md whitespace-nowrap">
+          <span className="opacity-60 mr-3">Prompt:</span>
+          &quot;rank the possibility of solar roof panel installation in this neighborhood&quot;
+        </div>
       </div>
 
-      {/* Sticky scroll outer — 270vh total (70vh sticky + 200vh travel) */}
-      <div ref={outerRef} style={{ height: `${(1 + TRAVEL_VH) * 100}vh` }}>
-        <div
-          style={{
-            position: "sticky",
-            top: `${STICKY_TOP_VH * 100}vh`,
-            height: `${(1 - STICKY_TOP_VH) * 100}vh`,
-          }}
-        >
-          {/* Tiles row */}
-          <div
-            className="relative w-full h-full flex"
-            style={{ overflow: "hidden" }}
-          >
-            {SURVEY_TILES.map((tile, i) => {
-              const isActive = i === activeTile;
-              return (
-                <div
-                  key={tile.title}
-                  ref={(el) => { tileRefs.current[i] = el; }}
-                  className="absolute inset-0 transition-opacity duration-500"
-                  style={{ opacity: isActive ? 1 : 0.08 }}
-                >
-                  <Image
-                    src={tileImages[i]}
-                    alt=""
-                    fill
-                    className="object-cover"
-                    priority={i === 0}
-                  />
-                  {/* dark tint */}
-                  <div className="absolute inset-0 bg-black/40" />
+      {/* Visual 3: Resident Vibes */}
+      <div className="relative w-full h-[640px] max-lg:h-[560px] max-md:h-[440px] overflow-hidden border-b border-[rgba(10,19,68,0.10)]">
+        <Image src="/barca.png" alt="" fill className="object-cover" />
+        <div className="absolute top-0 left-0 right-0 h-[140px] pointer-events-none z-10" style={{ background: "linear-gradient(to bottom, rgba(0,0,0,0.6) 0%, transparent 100%)" }} />
+        <span className="absolute top-6 left-6 z-20 text-white/70 text-[12px] uppercase">Columbus GenLayer</span>
+        <h2 className="absolute top-12 left-6 z-20 text-white text-[24px] md:text-[28px] lg:text-[32px] font-medium tracking-[-0.02em] leading-[1.1] m-0">
+          Resident Vibes
+        </h2>
+        <div className="absolute top-6 right-6 z-20 text-white/80 font-medium text-[13px] flex items-center gap-2">
+          <span className="text-[16px]">🌐</span> Built on Columbus Pro
+        </div>
+      </div>
 
-                  {/* Prompt box — top left */}
-                  <div
-                    ref={(el) => { promptRefs.current[i] = el; }}
-                    className="absolute top-8 left-8 z-20 max-w-[340px] rounded-xl px-4 py-3 backdrop-blur-md transition-opacity duration-300"
-                    style={{ opacity: 0, background: "rgba(255,255,255,.10)", border: "1px solid rgba(255,255,255,.2)" }}
-                  >
-                    <span className="text-white/50 text-[11px] uppercase tracking-widest block mb-1">Prompt</span>
-                    <span className="text-white text-[14px] leading-snug">&ldquo;{tile.prompt}&rdquo;</span>
-                  </div>
-
-                  {/* Stat badge — top right */}
-                  <div
-                    ref={(el) => { textRefs.current[i] = el; }}
-                    className="absolute bottom-14 left-8 z-20 transition-opacity duration-300"
-                    style={{ opacity: 0 }}
-                  >
-                    <div
-                      className="rounded-2xl px-6 py-4 backdrop-blur-md"
-                      style={{ background: "rgba(6,8,16,.72)", border: "1px solid rgba(255,255,255,.14)" }}
-                    >
-                      <span className="text-white/50 text-[11px] uppercase tracking-widest block mb-1">{tile.kicker}</span>
-                      <span className="text-white text-[28px] font-semibold tracking-tight block leading-none">{tile.stat}</span>
-                      <span className="text-white/60 text-[12px] mt-1 block">{tile.statLabel}</span>
-                      <span className="text-white text-[18px] font-medium mt-2 block">{tile.title}</span>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-
-            {/* Intro overlay */}
-            <div
-              ref={introRef}
-              className="absolute inset-0 z-30 flex flex-col items-center justify-center backdrop-blur-sm pointer-events-none"
-              style={{ background: "rgba(6,8,16,.82)" }}
-            >
-              <h3 className="text-white text-[28px] md:text-[36px] font-medium tracking-[-0.02em] leading-[1.2] text-center max-w-[560px] px-8">
-                Columbus-01 surveys the earth without setting foot on it.
-              </h3>
-              <span className="mt-8 text-white/45 text-[13px] flex items-center gap-2">
-                <svg width="14" height="20" viewBox="0 0 18 26" fill="none" aria-hidden>
-                  <path d="M9 1V22M1 15l8 8 8-8" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-                Scroll to explore
-              </span>
-            </div>
-          </div>
-
-          {/* Progress bar */}
-          <div
-            className="absolute bottom-6 left-1/2 -translate-x-1/2 z-40 flex gap-2"
-            aria-hidden
-          >
-            {[0, 1, 2].map((i) => (
-              <div
-                key={i}
-                className="relative h-1 w-24 rounded-full overflow-hidden"
-                style={{ background: "rgba(255,255,255,.18)" }}
-              >
-                <div
-                  ref={(el) => { progressRefs.current[i] = el; }}
-                  className="absolute left-0 top-0 h-full rounded-full"
-                  style={{ width: "0%", background: "rgba(255,255,255,.85)" }}
-                />
-              </div>
-            ))}
-          </div>
+      {/* Visual 4: Safety Score */}
+      <div className="relative w-full h-[640px] max-lg:h-[560px] max-md:h-[440px] overflow-hidden">
+        <Image src="/terra.png" alt="" fill className="object-cover" />
+        <div className="absolute top-0 left-0 right-0 h-[140px] pointer-events-none z-10" style={{ background: "linear-gradient(to bottom, rgba(0,0,0,0.6) 0%, transparent 100%)" }} />
+        <span className="absolute top-6 left-6 z-20 text-white/70 text-[12px] uppercase">Columbus GenLayer</span>
+        <h2 className="absolute top-12 left-6 z-20 text-white text-[24px] md:text-[28px] lg:text-[32px] font-medium tracking-[-0.02em] leading-[1.1] m-0">
+          Safety Score
+        </h2>
+        <div className="absolute top-6 right-6 z-20 text-white/80 font-medium text-[13px] flex items-center gap-2">
+          <span className="text-[16px]">🌐</span> Built on Columbus Pro
         </div>
       </div>
     </div>
   );
 }
 
-// ─── Sticky-scroll wrapper for the two shorter sections ───────────────────
+// ─── Sticky-scroll wrapper ─────────────────────────────────────────────────
 
 type SectionRow = {
   id: string;
   title: string;
-  description: string;
+  description: React.ReactNode;
   bullets?: string[];
   visual: React.ReactNode;
+  link?: string;
 };
 
 function StickyScrollBlock({ rows }: { rows: SectionRow[] }) {
@@ -370,13 +222,20 @@ function StickyScrollBlock({ rows }: { rows: SectionRow[] }) {
       <h3 className="m-0 text-[18px] font-medium leading-[1.3] tracking-[-0.01em]" style={{ color: titleColor }}>
         {row.title}
       </h3>
-      <p className="mt-3 text-[14px] leading-[1.55]" style={{ color: descColor }}>
+      <div className="mt-4 text-[14px] leading-[1.55] space-y-4" style={{ color: descColor }}>
         {row.description}
-      </p>
+      </div>
       {row.bullets && row.bullets.length > 0 && (
         <ul className="mt-3 text-[14px] leading-[1.55] space-y-1.5" style={{ color: descColor }}>
           {row.bullets.map((b) => <li key={b}>• {b}</li>)}
         </ul>
+      )}
+      {row.link && (
+        <div className="mt-6">
+          <a href="#" className="text-[14px] font-medium hover:text-[#0A1344] underline underline-offset-4" style={{ color: titleColor }}>
+            {row.link}
+          </a>
+        </div>
       )}
     </div>
   );
@@ -409,37 +268,43 @@ function StickyScrollBlock({ rows }: { rows: SectionRow[] }) {
 // ─── Main export ───────────────────────────────────────────────────────────
 
 export default function ResearchAppSections() {
-  const shortRows: SectionRow[] = [
+  const rows: SectionRow[] = [
+    {
+      id: "generative-geodata",
+      title: "Generative Geodata",
+      description: (
+        <>
+          <p>Columbus has brought accurate GenAI to GeoData, dynamically creating new layers of geospatial information using UGM.</p>
+          <p>&ldquo;Smart Layers&rdquo; can be used to create creative data layers that would otherwise be time-intensive or expensive to obtain.</p>
+          <p>Smart layers can also be used when data is unavailable or hard to survey.</p>
+        </>
+      ),
+      link: "See live Smart Layers ↗",
+      visual: <GenerativeGeodataVisual />,
+    },
     {
       id: "predicting-future",
       title: "Predicting the future",
-      description:
-        "Columbus-01's temporal reasoning engine forecasts how any area will evolve — traffic, vacancy, risk exposure and more.",
+      description: <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>,
       bullets: [
-        "6-month to 5-year forecast horizons",
-        "Scenario modelling & sensitivity analysis",
-        "Confidence intervals on every prediction",
+        "Lorem ipsum dolor sit amet",
+        "Consectetur adipiscing elit",
+        "Sed do eiusmod tempor",
       ],
       visual: <PredictingFutureVisual />,
     },
     {
       id: "creative-data-layers",
       title: "Creative data layers",
-      description:
-        "Prompt Columbus to generate entirely new geospatial data layers on demand — no field surveys, no waiting.",
+      description: <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>,
       bullets: [
-        "Solar potential, vibrancy, safety scores",
-        "Fully custom semantic layers",
-        "Updated in real-time as conditions change",
+        "Lorem ipsum dolor sit amet",
+        "Consectetur adipiscing elit",
+        "Sed do eiusmod tempor",
       ],
       visual: <CreativeDataLayersVisual />,
     },
   ];
 
-  return (
-    <>
-      <StickyScrollBlock rows={shortRows} />
-      <GenerativeSurveyingSection />
-    </>
-  );
+  return <StickyScrollBlock rows={rows} />;
 }

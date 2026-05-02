@@ -135,6 +135,18 @@ export default function CapabilitiesSection() {
           What we&apos;ve explored so far
         </p>
       </div>
+
+      {/* Left and right white gradient overlays */}
+      <div 
+        className="absolute top-0 bottom-0 left-0 w-[15vw] pointer-events-none z-20"
+        style={{ background: "linear-gradient(to right, #FFFFFF 0%, transparent 100%)" }}
+        aria-hidden
+      />
+      <div 
+        className="absolute top-0 bottom-0 right-0 w-[15vw] pointer-events-none z-20"
+        style={{ background: "linear-gradient(to left, #FFFFFF 0%, transparent 100%)" }}
+        aria-hidden
+      />
     </section>
   );
 }

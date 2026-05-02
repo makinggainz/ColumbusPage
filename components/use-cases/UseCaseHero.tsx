@@ -286,6 +286,12 @@ export default function UseCasesHero({
 
       </div>
 
+      {/* Edge fade gradients */}
+      <div className={`absolute top-0 left-0 right-0 h-[250px] bg-gradient-to-b ${lightTheme ? "from-white" : "from-black"} to-transparent z-20 pointer-events-none`} />
+      <div className={`absolute bottom-0 left-0 right-0 h-[250px] bg-gradient-to-t ${lightTheme ? "from-white" : "from-black"} to-transparent z-20 pointer-events-none`} />
+      <div className={`absolute top-0 bottom-0 left-0 w-[250px] bg-gradient-to-r ${lightTheme ? "from-white" : "from-black"} to-transparent z-20 pointer-events-none max-md:hidden`} />
+      <div className={`absolute top-0 bottom-0 right-0 w-[250px] bg-gradient-to-l ${lightTheme ? "from-white" : "from-black"} to-transparent z-20 pointer-events-none max-md:hidden`} />
+
     </section>
   );
 }

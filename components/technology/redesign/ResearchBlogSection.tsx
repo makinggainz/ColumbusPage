@@ -36,7 +36,7 @@ const techTokens: React.CSSProperties = {
   ["--tech-color-card-border" as string]: "rgba(10, 19, 68, 0.10)",
   ["--tech-radius-sm" as string]: "3px",
   ["--tech-radius-base" as string]: "6px",
-  ["--tech-radius-md" as string]: "10px",
+  ["--tech-radius-md" as string]: "0px",
   ["--tech-radius-lg" as string]: "14px",
   ["--tech-radius-xl" as string]: "18px",
   ["--tech-tracking-tight" as string]: "-0.02em",

@@ -76,13 +76,13 @@ export default function ResearchApplicationsRoute() {
         />
       </section>
 
+      <ResearchAppSections />
+
       {/* Industry-aware use-case block (light variant). The provider wraps the
           picker, the sticky sub-navbar, and the four-row sticky-scroll. */}
       <IndustryProvider>
-        <UseCaseStickyScroll lightTheme />
+        <UseCaseStickyScroll lightTheme excludeSections={["super-model"]} />
       </IndustryProvider>
-
-      <ResearchAppSections />
 
       <section className="relative">
         <ResearchBlogSection />
