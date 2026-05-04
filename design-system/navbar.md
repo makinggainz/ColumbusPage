@@ -48,8 +48,7 @@
 - **Products page:** appear once `bgTriggerPassed` is true AND the hero scroll transition is not active (`!inHeroTransition || bgTriggerPassed`).
 - Animate in via `clip-path: inset(0 0% 0 0)` → `inset(0 100% 0 0)` + opacity fade (400ms spring).
 - Links shown: **Products** (`/products/enterprise`), **Research** (`/technology`), **Use Cases** (`/columbus-solutions` — opens a hover dropdown with two cards: Columbus Pro Enterprise Use-Cases → `/columbus-solutions`, Research Applications → `/research-applications`), **Company** (`/mission`).
-- The Use Cases link mirrors the Products dropdown pattern (chevron only — no hover/active underline) but renders a different overlay: an empty bordered card for Columbus Pro Enterprise Use-Cases and a bordered card containing an inline globe SVG for Research Applications. Plain text labels sit below each card — no subtitles. The overlay is positioned absolutely over the products card grid and crossfades when `hoverKind === "use-cases"`.
-- **Underline behaviour:** the hover/active underline (animated `width 0 → 100%` line below the label) renders only on **Research** and **Company**. Products and Use Cases intentionally have no underline — they rely on the chevron flip alone to indicate their dropdown state.
+- The Use Cases link mirrors the Products dropdown pattern (chevron + active underline) but renders a different overlay: an empty bordered card for Columbus Pro Enterprise Use-Cases and a bordered card containing an inline globe SVG for Research Applications. Plain text labels sit below each card — no subtitles. The overlay is positioned absolutely over the products card grid and crossfades when `hoverKind === "use-cases"`.
 - On the products page, link text uses `glassStyles.glassTextStatic` for the frosted glass look.
 
 ---
@@ -101,7 +100,9 @@
 - `isManuallyToggled` flag prevents hover from conflicting with click-to-close.
 - Closes when the mouse moves below the navbar bottom edge.
 - Backdrop: `backdrop-blur-md bg-black/10` overlay covers the page behind the dropdown.
-- Background: matches the navbar — `background: transparent` with `backdrop-filter: blur(20px) saturate(1.2)`. The dropdown reads as a visual continuation of the navbar above it; whatever colour the page is showing underneath shows through both surfaces.
+- Background:
+  - Light theme: `rgba(248, 249, 252, 0.92)` with `blur(20px)`
+  - Dark theme: `rgba(6, 8, 20, 0.96)` with `blur(24px)`
 
 ### Mobile vs Desktop height treatment
 
@@ -201,7 +202,7 @@ The `/columbus-solutions` and `/research-applications` pages share the same navb
 |-----------|--------|
 | **Immediate visibility** | `hasScrolled` is forced `true` on mount (both `useLayoutEffect` and `useEffect`) — no hero entrance animation to wait for. |
 | **Transparent initial background** | No frosted glass at scroll 0. The standard `isCompact` logic handles this (glass appears after 10px scroll). |
-| **Dynamic theme** | Page passes `theme={navTheme}` which switches between `"dark"` (white text) and `"light"` (dark text) based on which section the navbar overlaps. **`/columbus-solutions`** is dark end-to-end below its dark hero, so its `navTheme` stays at `"dark"` for the lifetime of the page. **`/research-applications`** has a dark hero with a light page below it; `navTheme` stays `"dark"` while the hero is in view and flips to `"light"` once the hero's bottom passes the navbar. Both pages still wire the prop through state so they comply with the dynamic-theme contract. |
+| **Dynamic theme** | Page passes `theme={navTheme}` which switches between `"dark"` (white text) and `"light"` (dark text) based on which section the navbar overlaps. Theme switching is handled in `app/columbus-solutions/page.tsx` and `app/research-applications/page.tsx` via scroll listener against section refs. |
 | **Nav link colours follow theme** | Nav links use `isDark ? "white" : "#111111"` so they remain readable across dark/light section transitions. |
 | **CTA button transitions with theme** | Dark sections: 10% white background, white text, hover fills solid white with black text. Light sections: solid black background, white text, standard hover. Transitions smoothly between states via `background-color 300ms` and `color 300ms`. |
 | **Logo + wordmark in dark dropdown** | When menu opens on a dark section, logo stays inverted (white) and wordmark stays white — unlike other pages where `navColor` forces `#111111` on menu open. |

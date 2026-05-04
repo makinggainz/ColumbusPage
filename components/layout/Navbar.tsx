@@ -40,6 +40,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
         typeof window !== "undefined" ? window.innerWidth >= NAV_BREAKPOINT : true
     );
     const [bgTriggerPassed, setBgTriggerPassed] = useState(false);
+    const [island2Reached, setIsland2Reached] = useState(false);
     const pathname = usePathname();
     const isHomePage = pathname === "/";
     const isProductsPage = pathname === "/products/mapsgpt";
@@ -174,10 +175,30 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
             bgTriggerObs.observe(bgTrigger);
         }
 
+        // Homepage: show navbar border once vertical grid lines reach full opacity (~192px into Island 2)
+        const island2 = document.querySelector("[data-island-2]");
+        let island2Obs: IntersectionObserver | undefined;
+        if (island2) {
+            island2Obs = new IntersectionObserver(
+                ([entry]) => {
+                    // Show border when island 2 enters, keep it unless user scrolls back above it
+                    if (entry.isIntersecting) {
+                        setIsland2Reached(true);
+                    } else if (entry.boundingClientRect.top > 0) {
+                        // Only hide if island 2 is below the viewport (scrolled back up)
+                        setIsland2Reached(false);
+                    }
+                },
+                { threshold: 0, rootMargin: "-192px 0px 0px 0px" }
+            );
+            island2Obs.observe(island2);
+        }
+
         return () => {
             ctaObs?.disconnect();
             footerObs?.disconnect();
             bgTriggerObs?.disconnect();
+            island2Obs?.disconnect();
             if (heroTransitionHandler) window.removeEventListener("scroll", heroTransitionHandler);
             window.removeEventListener("scroll", handleScroll);
             window.removeEventListener("resize", handleResize);
@@ -395,13 +416,9 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
         : "#0A1344";
 
     // ── Dropdown tokens ─────────────────────────────────────────────────
-    // Match the navbar's bg settings: transparent fill + blur(20px) saturate(1.2),
-    // so the dropdown reads as a visual continuation of the navbar above it.
-    const dropdownBg = {
-        background: "transparent",
-        backdropFilter: "blur(20px) saturate(1.2)",
-        WebkitBackdropFilter: "blur(20px) saturate(1.2)",
-    };
+    const dropdownBg = isDark
+        ? { background: "rgba(6, 8, 20, 0.96)", backdropFilter: "blur(24px)", WebkitBackdropFilter: "blur(24px)" }
+        : { background: "rgba(248, 249, 252, 0.92)", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)" };
 
     const dropdownHeadingClass = isDark ? "text-white/40" : "text-[#0A1344]/50";
     const dropdownBodyClass    = isDark ? "text-white/65" : "text-[#0A1344]/70";
@@ -463,37 +480,18 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                 }}
                 onMouseLeave={handleMouseLeave}
             >
-                {/* Backdrop blur — always active, no color tint, so the navbar
-                    takes on whatever color the page is showing underneath it. */}
+                {/* Frosted glass background — fades in on compact */}
                 <div
                     className="absolute inset-0 pointer-events-none"
                     style={{
-                        background: "transparent",
+                        background: isEnterprisePage && isDark ? "rgba(14, 16, 28, 0.95)" : isDark ? "rgba(6, 8, 20, 0.85)" : "rgba(255, 255, 255, 0.82)",
                         backdropFilter: "blur(20px) saturate(1.2)",
                         WebkitBackdropFilter: "blur(20px) saturate(1.2)",
-                        borderBottom: "none",
-                        opacity: isMenuOpen ? 0 : 1,
+                        borderBottom: isProductsPage ? "none" : (isHomePage && !island2Reached) ? "none" : isEnterprisePage ? "1px solid rgba(255,255,255,0.10)" : isDark ? "1px solid rgba(255,255,255,0.06)" : isHomePage ? "1px solid rgba(37, 99, 235, 0.3)" : "1px solid rgba(0,0,0,0.06)",
+                        opacity: (isProductsPage ? bgTriggerPassed : isCompact) && !isMenuOpen ? 1 : 0,
                         transition: `opacity ${t}`,
                     }}
                 />
-
-                {/* Bottom border — uses the same --grid-line token as the page's
-                    structure lines so the navbar reads as the top of the grid.
-                    On homepage it fades in with --hero-grid-opacity to match the
-                    hero's reveal; elsewhere it's at full opacity. */}
-                {!isMenuOpen && (
-                    <div
-                        className="absolute left-0 right-0 pointer-events-none"
-                        style={{
-                            bottom: 0,
-                            height: 1,
-                            background: "var(--grid-line)",
-                            opacity: isHomePage ? "var(--hero-grid-opacity, 0)" : 1,
-                            transition: "opacity 1000ms ease",
-                        }}
-                        aria-hidden
-                    />
-                )}
 
                 <div className="relative mx-auto w-full" style={{ maxWidth: wide ? 1408 : 1287 }}>
                     {/* (navbar bg when dropdown open is now part of the dropdown itself) */}
@@ -606,7 +604,6 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                                     visual link "active". */}
                                                 {(() => {
                                                     const linkKind = (link as { kind?: "products" | "company" | "use-cases" }).kind;
-                                                    if (linkKind === "products" || linkKind === "use-cases") return null;
                                                     const linkIsActive =
                                                         isMenuOpen &&
                                                         !!linkKind &&
