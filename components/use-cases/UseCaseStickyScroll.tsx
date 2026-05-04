@@ -40,19 +40,19 @@ export default function UseCaseStickyScroll({ lightTheme = false, excludeSection
       id: "super-model",
       featureTitle: "Surveying the earth with a super model",
       leftRail: industry.superModel.leftRail,
-      content: (isLight) => <SuperModelSection embedded lightTheme={isLight} />,
+      content: (isLight: boolean) => <SuperModelSection embedded lightTheme={isLight} />,
     },
     {
       id: "agent-research",
       featureTitle: "Agentic geospatial research",
       leftRail: industry.agentResearch.leftRail,
-      content: (isLight) => <AgentResearch embedded lightTheme={isLight} />,
+      content: (isLight: boolean) => <AgentResearch embedded lightTheme={isLight} />,
     },
     {
       id: "data-catalogue",
       featureTitle: "The most accurate data catalogue",
       leftRail: industry.dataCatalogue.leftRail,
-      content: (isLight) => <DataCatalogue embedded lightTheme={isLight} />,
+      content: (isLight: boolean) => <DataCatalogue embedded lightTheme={isLight} />,
     },
   ].filter(f => !excludeSections.includes(f.id));
 
