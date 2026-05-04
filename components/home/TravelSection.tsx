@@ -274,13 +274,11 @@ export const TravelSection = () => {
             ...anim(350),
           }}
         >
-          <span aria-hidden className="absolute left-0 top-0 flex h-7 w-7 items-center justify-center rounded-br bg-black/70 text-xs font-bold text-white" style={{ zIndex: 99 }}>2</span>
           <img
             src="/MapsGPTDesktop.png"
             alt="MapsGPT desktop interface"
             className="w-full h-full object-cover object-top"
           />
-          <span aria-hidden className="absolute left-7 top-0 flex h-7 w-7 items-center justify-center rounded-br bg-black/70 text-xs font-bold text-white" style={{ zIndex: 99 }}>3</span>
         </div>
 
         {/* Mobile mockup — direct child of beachRef */}
@@ -296,13 +294,11 @@ export const TravelSection = () => {
             ...anim(400),
           }}
         >
-          <span aria-hidden className="absolute left-0 top-0 flex h-7 w-7 items-center justify-center rounded-br bg-black/70 text-xs font-bold text-white" style={{ zIndex: 99 }}>4</span>
           <img
             src="/MapsGPTMobile.png"
             alt="MapsGPT mobile interface"
             className="w-full h-full object-cover object-top"
           />
-          <span aria-hidden className="absolute left-7 top-0 flex h-7 w-7 items-center justify-center rounded-br bg-black/70 text-xs font-bold text-white" style={{ zIndex: 99 }}>5</span>
         </div>
 
         {/* Centered content — z-10 renders on top of both mockups */}
