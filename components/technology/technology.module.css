@@ -2883,6 +2883,37 @@
   background: #000;
 }
 
+/* Vertical structure lines that extend the .sidebarPanel / .sidebarPanelRight
+   borders from the content section UP through the hero section. Same
+   x-positions (var(--tech-sidebar-x) from each edge) so they line up with
+   the lines below; switched to a translucent white because the hero bg is
+   dark. Hidden at the same breakpoint as the content-side sidebar lines. */
+.techHeroStructureLineLeft,
+.techHeroStructureLineRight {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: rgba(255, 255, 255, 0.3);
+  z-index: 25;
+  pointer-events: none;
+}
+
+.techHeroStructureLineLeft {
+  left: var(--tech-sidebar-x);
+}
+
+.techHeroStructureLineRight {
+  right: var(--tech-sidebar-x);
+}
+
+@media (max-width: 1500px) {
+  .techHeroStructureLineLeft,
+  .techHeroStructureLineRight {
+    display: none;
+  }
+}
+
 .techHeroVideo {
   position: absolute;
   inset: 0;
@@ -2962,7 +2993,7 @@
   font-weight: 300;
   line-height: 1.2;
   letter-spacing: -0.02em;
-  color: #0A1344;
+  color: #FFFFFF;
 }
 
 .techHeroSubtitle {
@@ -2972,7 +3003,7 @@
   font-weight: 300;
   line-height: 1.55;
   letter-spacing: -0.005em;
-  color: rgba(10, 19, 68, 0.85);
+  color: rgba(255, 255, 255, 0.85);
   white-space: normal;
 }
 
@@ -3004,22 +3035,22 @@
   font-size: clamp(0.95rem, 1vw, 1.05rem);
   font-weight: 500;
   letter-spacing: -0.18px;
-  color: rgba(10, 19, 68, 0.85);
+  color: rgba(255, 255, 255, 0.85);
   text-decoration: none;
   -webkit-tap-highlight-color: transparent;
-  background: rgba(255, 255, 255, 0.22);
+  background: rgba(255, 255, 255, 0.08);
   -webkit-backdrop-filter: blur(18px) saturate(1.35);
   backdrop-filter: blur(18px) saturate(1.35);
   border-radius: 4px;
   cursor: pointer;
   transition: color 0.3s ease, background 0.3s ease;
-  box-shadow: inset 0 0 0 1px rgba(10, 19, 68, 0.12);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.18);
 }
 
 .techHeroNavItem:hover {
-  color: #0A1344;
-  background: rgba(255, 255, 255, 0.32);
-  box-shadow: inset 0 0 0 1px rgba(10, 19, 68, 0.2);
+  color: #FFFFFF;
+  background: rgba(255, 255, 255, 0.16);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.3);
 }
 
 .techHeroNavText {

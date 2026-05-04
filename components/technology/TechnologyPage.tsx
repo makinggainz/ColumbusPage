@@ -9,20 +9,26 @@ import { TechHeroSection } from "./TechHeroSection";
 import { TechnologySections } from "./redesign/TechnologySections";
 
 export function TechnologyPage() {
-  const [navTheme, setNavTheme] = useState<"light" | "dark">("light");
+  const [navTheme, setNavTheme] = useState<"light" | "dark">("dark");
 
   const updateNavState = useCallback(() => {
+    const navY = 56; // approx compact navbar height
+
+    // The hero now uses a dark background image — keep the navbar in dark
+    // theme (white text/logo) until the hero has scrolled past the navbar.
+    const hero = document.querySelector<HTMLElement>(`.${styles.techHero}`);
+    const overHero = hero ? hero.getBoundingClientRect().bottom > navY : false;
+
     // Switch to dark + make the navbar background see-through while the
     // Gen Layers band overlaps the navbar Y position.
     const band = document.getElementById("gen-layers-band");
     let inBand = false;
     if (band) {
       const rect = band.getBoundingClientRect();
-      const navY = 56; // approx compact navbar height — switch when band crosses it
       inBand = rect.top <= navY && rect.bottom >= navY;
     }
     document.body.classList.toggle("gen-layers-active", inBand);
-    setNavTheme(inBand ? "dark" : "light");
+    setNavTheme(overHero || inBand ? "dark" : "light");
   }, []);
 
   useEffect(() => {
