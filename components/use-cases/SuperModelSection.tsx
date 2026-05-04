@@ -53,17 +53,20 @@ const X_GLYPH = (
 );
 
 /**
- * "Surveying the earth with a super model" — animated demo of Columbus
- * detecting missing data mid-investigation and offering to fill it in.
+ * "Surveying the earth with a super model" — animated demo built on the
+ * same single-panel UI primitives as the Chat row: one compact white
+ * rounded-2xl shadow-xl panel pinned to the bottom-left, with a
+ * scrollable conversation area on top and a bordered input bar on the
+ * bottom. The same blur veil + map background + "Columbus is
+ * investigating" + considering pattern + cursor glyph + easing curves
+ * are reused so the two rows feel like one design system.
  *
- * Loop: fade-in to a chat already in progress (Columbus thinking) → popup
- * replaces the bottom user-query card asking to fill missing data → cursor
- * taps Yes → popup closes → Columbus thinks more, lists considering lines
- * → success message → 5s idle → fade-out → restart.
- *
- * UI primitives mirror Chat.tsx exactly (map + blur veil, white rounded
- * panels with shadow-xl, "Columbus is investigating" + considering lines,
- * cursor glyph, easing curves) so the two rows feel like one design system.
+ * Loop: fade in mid-investigation (Columbus thinking, the user's prompt
+ * persists in the bottom input bar with a stop icon) → popup REPLACES
+ * the input bar in place asking to fill missing data (Yes / No / Ignore
+ * + X) → cursor moves in and taps Yes → popup closes, input bar returns
+ * → Columbus thinks more (additional considering lines stagger in) →
+ * success message → 5s idle → fade out → restart.
  */
 export default function SuperModelSection({
   lightTheme = false,
@@ -74,6 +77,7 @@ export default function SuperModelSection({
   const data = content ?? industry.superModel;
 
   const sectionRef = useRef<HTMLDivElement>(null);
+  const conversationRef = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
   const [phase, setPhase] = useState<Phase>("fading-in");
   const [visibleFillConsidering, setVisibleFillConsidering] = useState(0);
@@ -117,7 +121,7 @@ export default function SuperModelSection({
         return;
       }
 
-      await wait(800);
+      await wait(700);
       if (cancelled) return;
       setPhase("thinking-initial");
       await wait(1200);
@@ -139,7 +143,7 @@ export default function SuperModelSection({
       if (cancelled) return;
 
       setPhase("thinking-fill");
-      await wait(450);
+      await wait(420);
       if (cancelled) return;
 
       setPhase("filling-considering");
@@ -170,6 +174,13 @@ export default function SuperModelSection({
     return () => { cancelled = true; };
   }, [visible, reducedMotion]);
 
+  // Auto-scroll the conversation area as new content appears
+  useEffect(() => {
+    const el = conversationRef.current;
+    if (!el) return;
+    el.scrollTo({ top: el.scrollHeight, behavior: "smooth" });
+  }, [phase, visibleFillConsidering]);
+
   // Phase predicates
   const isIntro = phase === "fading-in";
   const isFadingOut = phase === "fading-out";
@@ -182,8 +193,7 @@ export default function SuperModelSection({
     "idle-end",
   ].includes(phase);
   const successVisible = ["success", "idle-end"].includes(phase);
-  const userQueryCardVisible = !popupVisible && !isIntro && !isFadingOut;
-  const panelsVisible = !isIntro && !isFadingOut;
+  const panelVisible = !isIntro && !isFadingOut;
   const blurActive = isIntro || isFadingOut;
 
   const visualBlock = (
@@ -222,16 +232,21 @@ export default function SuperModelSection({
         aria-hidden
       />
 
-      {/* TOP CARD — thinking / conversation */}
+      {/* Layer 2 — Chat panel. Same dimensions and positioning as the Chat row. */}
       <div
-        className="absolute top-[40px] left-[40px] right-[40px] bottom-[200px] max-md:left-[20px] max-md:right-[20px] max-md:top-[20px] max-md:bottom-[160px] z-20 bg-white rounded-2xl shadow-xl overflow-hidden flex flex-col"
+        className="absolute left-[40px] bottom-[40px] w-[460px] top-[100px] max-xl:left-[32px] max-xl:w-[400px] max-md:left-[20px] max-md:right-[20px] max-md:bottom-[20px] max-md:top-[60px] max-md:w-auto z-20 bg-white rounded-2xl shadow-xl overflow-hidden flex flex-col"
         style={{
-          opacity: panelsVisible ? 1 : 0,
-          transform: panelsVisible ? "translateY(0)" : "translateY(8px)",
-          transition: "opacity 500ms ease, transform 500ms cubic-bezier(0.05, 0.7, 0.1, 1)",
+          opacity: panelVisible ? 1 : 0,
+          transform: panelVisible ? "translateY(0) scale(1)" : "translateY(8px) scale(0.99)",
+          transition:
+            "opacity 500ms ease, transform 500ms cubic-bezier(0.05, 0.7, 0.1, 1)",
         }}
       >
-        <div className="px-6 pt-6 pb-5 max-md:px-4 max-md:pt-4 max-md:pb-3 flex flex-col gap-3 overflow-y-auto">
+        {/* Top: scrollable conversation area */}
+        <div
+          ref={conversationRef}
+          className="flex-1 overflow-y-auto px-6 pt-6 pb-4 max-md:px-4"
+        >
           {/* Columbus is investigating */}
           <div className="flex items-center gap-2.5 text-[#a0a0a8]">
             <Image
@@ -244,25 +259,21 @@ export default function SuperModelSection({
             <span className="text-[14px]">Columbus is investigating</span>
           </div>
 
-          {/* Initial considering line — visible the whole loop */}
-          <div className="pl-7 text-[13px] text-[#a0a0a8]">{INITIAL_CONSIDERING}</div>
+          {/* Considering lines — initial line is always present */}
+          <div className="mt-2 pl-7 space-y-1">
+            <div className="text-[13px] text-[#a0a0a8]">{INITIAL_CONSIDERING}</div>
 
-          {/* Fill-in considering lines (after Yes) */}
-          <div
-            className="pl-7 mt-1 flex flex-col gap-1"
-            style={{
-              opacity: fillThinkingVisible ? 1 : 0,
-              transform: fillThinkingVisible ? "translateY(0)" : "translateY(6px)",
-              transition: "opacity 320ms ease, transform 320ms ease",
-            }}
-          >
+            {/* Fill-in considering lines (after Yes) */}
             {FILL_CONSIDERING.map((line, i) => (
               <div
                 key={line}
                 className="text-[13px] text-[#a0a0a8]"
                 style={{
-                  opacity: visibleFillConsidering > i ? 1 : 0,
-                  transform: visibleFillConsidering > i ? "translateY(0)" : "translateY(6px)",
+                  opacity: fillThinkingVisible && visibleFillConsidering > i ? 1 : 0,
+                  transform:
+                    fillThinkingVisible && visibleFillConsidering > i
+                      ? "translateY(0)"
+                      : "translateY(6px)",
                   transition: "opacity 220ms ease, transform 220ms ease",
                 }}
               >
@@ -273,7 +284,7 @@ export default function SuperModelSection({
 
           {/* Success message */}
           <div
-            className="mt-2 flex items-center gap-2.5 text-[#1D1D1F]"
+            className="mt-5 flex items-center gap-2.5"
             style={{
               opacity: successVisible ? 1 : 0,
               transform: successVisible ? "translateY(0)" : "translateY(6px)",
@@ -281,92 +292,100 @@ export default function SuperModelSection({
             }}
           >
             <span
-              className="inline-flex items-center justify-center w-5 h-5 rounded-full text-white text-[12px] leading-none"
+              className="inline-flex items-center justify-center w-5 h-5 rounded-full text-white text-[12px] leading-none shrink-0"
               style={{ background: "#16a34a" }}
+              aria-hidden
             >
               ✓
             </span>
-            <span className="text-[14px] font-medium">{SUCCESS_MESSAGE}</span>
+            <span className="text-[13px] font-medium text-[#1D1D1F]">{SUCCESS_MESSAGE}</span>
           </div>
         </div>
-      </div>
 
-      {/* BOTTOM CARD — user query + stop button (visible when popup hidden) */}
-      <div
-        className="absolute bottom-[40px] left-[40px] right-[40px] max-md:left-[20px] max-md:right-[20px] max-md:bottom-[20px] z-20 bg-white rounded-2xl shadow-xl flex items-center justify-between gap-4 px-5 py-4 max-md:px-4 max-md:py-3"
-        style={{
-          opacity: userQueryCardVisible ? 1 : 0,
-          pointerEvents: userQueryCardVisible ? "auto" : "none",
-          transition: "opacity 280ms ease",
-        }}
-      >
-        <p className="flex-1 text-[14px] leading-[1.5] text-[#1D1D1F]">{USER_QUERY}</p>
-        <div
-          className="w-10 h-10 rounded-xl bg-[#e8e8ec] flex items-center justify-center shrink-0"
-          aria-hidden
-        >
-          <div className="w-3 h-3 rounded-[2px] bg-[#0A1344]" />
-        </div>
-      </div>
-
-      {/* POPUP — replaces bottom card when popupVisible. Yes / No / Ignore + X */}
-      <div
-        className="absolute bottom-[40px] left-[40px] right-[40px] max-md:left-[20px] max-md:right-[20px] max-md:bottom-[20px] z-20 bg-white rounded-2xl shadow-xl"
-        style={{
-          opacity: popupVisible ? 1 : 0,
-          transform: popupVisible ? "translateY(0) scale(1)" : "translateY(6px) scale(0.99)",
-          pointerEvents: popupVisible ? "auto" : "none",
-          transition:
-            "opacity 320ms ease, transform 320ms cubic-bezier(0.05, 0.7, 0.1, 1)",
-        }}
-      >
-        <div className="relative px-5 py-4 max-md:px-4 max-md:py-3">
-          {/* X close button */}
+        {/* Bottom area — input bar OR popup, grid-stacked so they crossfade
+            in place. The grid cell sizes to whichever child has more
+            content at any moment. */}
+        <div className="grid border-t border-[rgba(0,0,0,0.06)]">
+          {/* Input bar — persistent user query + stop icon */}
           <div
-            className="absolute top-3 right-3 w-7 h-7 rounded-full flex items-center justify-center text-[#a0a0a8]"
-            aria-hidden
+            className="px-5 py-4 max-md:px-3"
+            style={{
+              gridArea: "1 / 1",
+              opacity: popupVisible ? 0 : 1,
+              pointerEvents: popupVisible ? "none" : "auto",
+              transition: "opacity 280ms ease",
+            }}
           >
-            {X_GLYPH}
+            <div className="flex items-end gap-3">
+              <div className="flex-1 text-[14px] leading-[1.5] text-[#1D1D1F]">
+                {USER_QUERY}
+              </div>
+              <div
+                className="w-10 h-10 rounded-xl bg-[#e8e8ec] flex items-center justify-center shrink-0"
+                aria-hidden
+              >
+                <div className="w-3 h-3 rounded-[2px] bg-[#0A1344]" />
+              </div>
+            </div>
           </div>
 
-          <p className="text-[14px] font-medium text-[#1D1D1F] pr-8">{POPUP_TITLE}</p>
-          <p className="text-[13px] text-[#6E6E73] mt-1 pr-8">{POPUP_SUBTITLE}</p>
+          {/* Popup — title + subtitle + Yes / No / Ignore + X close */}
+          <div
+            className="relative px-5 py-4 max-md:px-3"
+            style={{
+              gridArea: "1 / 1",
+              opacity: popupVisible ? 1 : 0,
+              pointerEvents: popupVisible ? "auto" : "none",
+              transition: "opacity 320ms ease",
+            }}
+          >
+            {/* X close */}
+            <div
+              className="absolute top-3 right-3 w-6 h-6 rounded-full flex items-center justify-center text-[#a0a0a8]"
+              aria-hidden
+            >
+              {X_GLYPH}
+            </div>
 
-          <div className="mt-4 flex items-center gap-2">
-            <button
-              type="button"
-              data-yes-button
-              className="px-4 h-9 rounded-lg bg-[#0A1344] text-white text-[13px] font-medium"
-              style={{
-                transform: phase === "cursor-tap" ? "scale(0.96)" : "scale(1)",
-                transition: "transform 140ms ease",
-              }}
-            >
-              Yes
-            </button>
-            <button
-              type="button"
-              className="px-4 h-9 rounded-lg bg-[#e8e8ec] text-[#1D1D1F] text-[13px] font-medium"
-            >
-              No
-            </button>
-            <button
-              type="button"
-              className="ml-auto h-9 px-3 rounded-lg text-[13px] font-medium text-[#6E6E73]"
-            >
-              Ignore
-            </button>
+            <p className="text-[14px] font-medium text-[#1D1D1F] pr-8">{POPUP_TITLE}</p>
+            <p className="text-[13px] text-[#6E6E73] mt-1 pr-8">{POPUP_SUBTITLE}</p>
+
+            <div className="mt-4 flex items-center gap-2">
+              <button
+                type="button"
+                data-yes-button
+                className="px-4 h-9 rounded-lg bg-[#0A1344] text-white text-[13px] font-medium"
+                style={{
+                  transform: phase === "cursor-tap" ? "scale(0.96)" : "scale(1)",
+                  transition: "transform 140ms ease",
+                }}
+              >
+                Yes
+              </button>
+              <button
+                type="button"
+                className="px-4 h-9 rounded-lg bg-[#e8e8ec] text-[#1D1D1F] text-[13px] font-medium"
+              >
+                No
+              </button>
+              <button
+                type="button"
+                className="ml-auto h-9 px-3 rounded-lg text-[13px] font-medium text-[#6E6E73]"
+              >
+                Ignore
+              </button>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Animated cursor — moves to roughly the Yes button position */}
+      {/* Cursor — animates toward the Yes button at the bottom of the panel */}
       <div
         className="absolute z-40 pointer-events-none"
         style={{
           opacity: cursorVisible ? 1 : 0,
           left: cursorVisible ? "calc(40px + 30px)" : "calc(100% - 80px)",
-          bottom: cursorVisible ? "82px" : "60px",
+          bottom: cursorVisible ? "78px" : "60px",
           transform: `scale(${phase === "cursor-tap" ? 0.85 : 1})`,
           transition:
             "left 720ms cubic-bezier(0.22, 1, 0.36, 1), bottom 720ms cubic-bezier(0.22, 1, 0.36, 1), opacity 200ms ease, transform 140ms ease",
@@ -376,7 +395,7 @@ export default function SuperModelSection({
         {CURSOR_GLYPH}
       </div>
 
-      {/* Built on Columbus Pro footer (kept from prior visual) */}
+      {/* Built on Columbus Pro footer */}
       <div className="absolute bottom-[8px] right-[12px] text-white text-[12px] opacity-70 z-10">
         Built on Columbus Pro
       </div>
