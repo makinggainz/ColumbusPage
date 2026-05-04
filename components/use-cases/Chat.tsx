@@ -6,42 +6,62 @@ import { useIndustry } from "./industry/IndustryContext";
 import type { ChatRowContent } from "./industry/types";
 
 const QUERY =
-  "If the Poyo ravine overflows in the next 6 hours at the same intensity as the October 2024 event, which municipalities downstream of Chiva will be inundated first, where are the elderly care homes inside that flood envelope, and which evacuation routes will still be passable?";
+  "Show me all parcels over 5,000 m² in the Madrid metro area zoned for residential, currently undeveloped, within 1km of a metro station, and owned by a single entity for over 10 years";
+// Each line maps one-to-one to a "deep reasoning" step in the chat — the
+// last two add map layers when they appear.
 const CONSIDERING = [
-  "Considering demographics of Miami",
-  "Considering October 2024 flood envelope",
-  "Considering elderly-care home registry",
-  "Considering AP-7 corridor passability",
+  "Gathered verified sources",
+  "Preparing deep reasoning",
+  "Adding metro stations and 1km service radii",
+  "Adding qualifying parcels",
 ];
 const RESPONSE =
-  "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.";
-const FOLLOW_UP = "Now show me only the routes that don't cross the AP-7";
+  "Found 47 qualifying parcels across the Madrid metro area. Combined area: 412,800 m². Largest single owner: Promociones Inmobiliarias Madrid SA (8 parcels, since 2011).";
+const FOLLOW_UP = "Now filter to parcels above 10,000 m²";
 const CONSIDERING_2 = [
-  "Considering AP-7 corridor",
-  "Considering alternate evacuation paths",
+  "Filtering by parcel size > 10,000 m²",
 ];
 const RESPONSE_2 =
-  "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
+  "12 parcels remain after filtering. Highlighted on the map.";
 
-// ── Map-overlay data — stylized answer to the Poyo ravine flood query ──
-// Coordinates are percentages of the visual block. They're skewed toward
-// the right side so the chat panel (bottom-left) doesn't cover the labels.
-const TOWNS: { name: string; time: string; left: string; top: string }[] = [
-  { name: "Chiva", time: "T+0:15", left: "39%", top: "32%" },
-  { name: "Loriguilla", time: "T+1:10", left: "52%", top: "24%" },
-  { name: "Riba-roja de Túria", time: "T+2:00", left: "67%", top: "20%" },
-  { name: "Aldaia", time: "T+3:45", left: "57%", top: "52%" },
-  { name: "Paiporta", time: "T+5:20", left: "73%", top: "62%" },
+// ── Map-overlay data — stylized answer to the Madrid parcel query ──
+// Coordinates are percentages of the OVERLAY container. The overlay sits
+// on top of the right (visible) copy of the duplicated Madrid map; both
+// the right map and this overlay are translated 28% to the right so the
+// Madrid label and these markers clear the chat panel on the left.
+const METRO_STATIONS: { cx: number; cy: number }[] = [
+  { cx: 38, cy: 31 },
+  { cx: 53, cy: 28 },
+  { cx: 45, cy: 39 },
+  { cx: 60, cy: 36 },
+  { cx: 35, cy: 49 },
+  { cx: 50, cy: 47 },
+  { cx: 62, cy: 53 },
+  { cx: 42, cy: 58 },
 ];
 
-const CARE_HOMES: { left: string; top: string }[] = [
-  { left: "44%", top: "42%" },
-  { left: "51%", top: "48%" },
-  { left: "59%", top: "45%" },
-  { left: "63%", top: "56%" },
-  { left: "70%", top: "50%" },
-  { left: "77%", top: "58%" },
+// Parcels — small squares, each placed inside the 1km service radius of one
+// of the metro stations with subtle random offsets. `largeOnly` is preserved
+// through round 2's "parcels above 10,000 m²" filter.
+const PARCELS: { x: number; y: number; largeOnly: boolean }[] = [
+  { x: 37.4, y: 29.8, largeOnly: false },
+  { x: 39.3, y: 31.7, largeOnly: true },
+  { x: 52.1, y: 27.0, largeOnly: true },
+  { x: 54.0, y: 28.9, largeOnly: false },
+  { x: 44.2, y: 38.4, largeOnly: false },
+  { x: 46.0, y: 40.1, largeOnly: false },
+  { x: 59.3, y: 35.4, largeOnly: true },
+  { x: 60.8, y: 37.2, largeOnly: false },
+  { x: 34.2, y: 48.0, largeOnly: false },
+  { x: 36.0, y: 50.0, largeOnly: true },
+  { x: 49.1, y: 46.1, largeOnly: false },
+  { x: 50.7, y: 48.0, largeOnly: true },
+  { x: 61.4, y: 52.2, largeOnly: false },
+  { x: 63.0, y: 54.0, largeOnly: false },
+  { x: 41.2, y: 57.1, largeOnly: true },
+  { x: 42.7, y: 58.7, largeOnly: false },
 ];
+const STATION_RADIUS_PX = 56; // perfect circle, ~1km on the Madrid view
 
 type Phase =
   | "idle"
@@ -259,10 +279,9 @@ export default function Chat({ lightTheme = false, embedded = false, content }: 
   const investigating2Visible = ["investigating-2", "considering-2", "responding-2"].includes(phase);
   const response2Visible = phase === "responding-2";
 
-  // Map-overlay reveal predicates — staged with the chat response.
-  const overlayGroupVisible = [
-    "clearing-blur",
-    "investigating",
+  // Map-overlay reveal predicates — each layer reveals when its matching
+  // "deep reasoning" line appears in the chat.
+  const inResponseFlow = [
     "considering",
     "responding",
     "typing-followup",
@@ -272,39 +291,12 @@ export default function Chat({ lightTheme = false, embedded = false, content }: 
     "considering-2",
     "responding-2",
   ].includes(phase);
-  const floodVisible = [
-    "investigating",
-    "considering",
-    "responding",
-    "typing-followup",
-    "sending-followup",
-    "bubble-in-2",
-    "investigating-2",
-    "considering-2",
-    "responding-2",
-  ].includes(phase);
-  const townsVisible = [
-    "considering",
-    "responding",
-    "typing-followup",
-    "sending-followup",
-    "bubble-in-2",
-    "investigating-2",
-    "considering-2",
-    "responding-2",
-  ].includes(phase);
-  const ravineVisible = townsVisible;
-  const careHomesVisible = [
-    "responding",
-    "typing-followup",
-    "sending-followup",
-    "bubble-in-2",
-    "investigating-2",
-    "considering-2",
-    "responding-2",
-  ].includes(phase);
-  const routesVisible = careHomesVisible;
-  const legendVisible = overlayGroupVisible;
+  // Layer 1 (line index 3): metro stations + 1km service radii
+  const stationsVisible = inResponseFlow && visibleConsidering >= 3;
+  // Layer 2 (line index 4): qualifying parcels
+  const parcelsVisible = inResponseFlow && visibleConsidering >= 4;
+  // Round 2 filter: only the largeOnly parcels remain after the filter line appears
+  const parcelsLargeOnly = visibleConsidering2 >= 1;
 
 
   const visualBlock = (
@@ -316,221 +308,124 @@ export default function Chat({ lightTheme = false, embedded = false, content }: 
         transition: "opacity 0.7s ease",
       }}
     >
-      {/* Layer 0 — satellite map background */}
+      {/* Layer 0 — Madrid base map */}
       <Image
-        src={data.mapImageSrc}
-        alt="Satellite map"
+        src="/MadridMap.png"
+        alt="Madrid metro area map"
         fill
         className="object-cover"
         priority
       />
-      {!lightTheme && (
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{ background: "rgba(18, 8, 52, 0.18)" }}
-        />
-      )}
 
-      {/* Layer 0.5 — Flood-query answer overlay. Sits above the map but
-          below the blur veil so it's naturally hidden during the early
-          chat phases (the blur covers it) and revealed progressively as
-          Columbus thinks/responds. Tied to the existing Phase state. */}
+      {/* Layer 0.5 — Madrid query answer overlay. Layers reveal one-by-one
+          as each "deep reasoning" line appears in the chat. */}
       <div
         className="absolute inset-0 pointer-events-none z-[5]"
-        style={{
-          opacity: overlayGroupVisible ? 1 : 0,
-          transition: "opacity 520ms cubic-bezier(0.05, 0.7, 0.1, 1)",
-        }}
         aria-hidden
       >
-        {/* SVG: flood envelope + ravine flow + evacuation routes */}
         <svg
           className="absolute inset-0 w-full h-full"
           viewBox="0 0 100 100"
           preserveAspectRatio="none"
         >
-          {/* Outer flood band — 4-6h time-of-arrival */}
-          <path
-            d="M 30 28 C 35 22, 60 22, 78 30 C 92 35, 95 50, 88 65 C 82 78, 60 80, 45 75 C 32 68, 25 50, 30 28 Z"
-            fill="rgba(0, 102, 204, 0.14)"
-            stroke="#0066CC"
-            strokeWidth="0.18"
-            strokeOpacity="0.4"
-            style={{
-              opacity: floodVisible ? 1 : 0,
-              transition: "opacity 360ms cubic-bezier(0.05, 0.7, 0.1, 1) 400ms",
-            }}
-          />
-          {/* Middle band — 2-4h */}
-          <path
-            d="M 33 33 C 40 28, 60 28, 75 35 C 88 42, 88 55, 80 65 C 72 73, 58 73, 45 68 C 35 62, 28 50, 33 33 Z"
-            fill="rgba(0, 102, 204, 0.22)"
-            stroke="#0066CC"
-            strokeWidth="0.18"
-            strokeOpacity="0.5"
-            style={{
-              opacity: floodVisible ? 1 : 0,
-              transition: "opacity 360ms cubic-bezier(0.05, 0.7, 0.1, 1) 200ms",
-            }}
-          />
-          {/* Inner band — 0-2h, near source */}
-          <path
-            d="M 38 40 C 45 35, 60 36, 70 42 C 78 48, 76 56, 68 60 C 60 65, 50 64, 42 60 C 35 55, 32 47, 38 40 Z"
-            fill="rgba(0, 102, 204, 0.32)"
-            stroke="#0066CC"
-            strokeWidth="0.2"
-            strokeOpacity="0.6"
-            style={{
-              opacity: floodVisible ? 1 : 0,
-              transition: "opacity 360ms cubic-bezier(0.05, 0.7, 0.1, 1)",
-            }}
-          />
-
-          {/* Ravine flow path — animated line-draw via stroke-dashoffset */}
-          <path
-            d="M 28 26 Q 36 32, 44 38 Q 52 44, 58 50 Q 64 54, 70 56"
-            fill="none"
-            stroke="#06B6D4"
-            strokeWidth="0.5"
-            strokeLinecap="round"
-            strokeOpacity="0.95"
-            pathLength="100"
-            strokeDasharray="100"
-            style={{
-              strokeDashoffset: ravineVisible ? 0 : 100,
-              transition: "stroke-dashoffset 600ms cubic-bezier(0.22, 1, 0.36, 1)",
-            }}
-          />
-
-          {/* Open evacuation route — green, line-drawn */}
-          <path
-            d="M 65 50 Q 73 32, 84 18"
-            fill="none"
-            stroke="#16a34a"
-            strokeWidth="0.6"
-            strokeLinecap="round"
-            pathLength="100"
-            strokeDasharray="100"
-            style={{
-              strokeDashoffset: routesVisible ? 0 : 100,
-              transition: "stroke-dashoffset 600ms cubic-bezier(0.22, 1, 0.36, 1)",
-            }}
-          />
-          {/* At-risk route — yellow, dashed */}
-          <path
-            d="M 72 50 Q 84 56, 95 62"
-            fill="none"
-            stroke="#f59e0b"
-            strokeWidth="0.6"
-            strokeLinecap="round"
-            strokeDasharray="1.2 1.2"
-            style={{
-              opacity: routesVisible ? 1 : 0,
-              transition: "opacity 600ms cubic-bezier(0.05, 0.7, 0.1, 1) 200ms",
-            }}
-          />
-          {/* Blocked route — red, line-drawn, with X marker */}
-          <path
-            d="M 56 65 L 60 78 L 64 90"
-            fill="none"
-            stroke="#DC2626"
-            strokeWidth="0.6"
-            strokeLinecap="round"
-            pathLength="100"
-            strokeDasharray="100"
-            style={{
-              strokeDashoffset: routesVisible ? 0 : 100,
-              transition: "stroke-dashoffset 600ms cubic-bezier(0.22, 1, 0.36, 1) 400ms",
-            }}
-          />
-          <g
-            transform="translate(60 78)"
-            style={{
-              opacity: routesVisible ? 1 : 0,
-              transition: "opacity 280ms ease 900ms",
-            }}
-          >
-            <circle cx="0" cy="0" r="1.6" fill="white" stroke="#DC2626" strokeWidth="0.3" />
-            <line x1="-0.7" y1="-0.7" x2="0.7" y2="0.7" stroke="#DC2626" strokeWidth="0.35" strokeLinecap="round" />
-            <line x1="0.7" y1="-0.7" x2="-0.7" y2="0.7" stroke="#DC2626" strokeWidth="0.35" strokeLinecap="round" />
-          </g>
+          {/* Layer 1 — 1km service radius circles around each metro station */}
+          {METRO_STATIONS.map((s, i) => (
+            <circle
+              key={`r-${i}`}
+              cx={s.cx}
+              cy={s.cy}
+              r={STATION_RADIUS}
+              fill="rgba(0, 102, 204, 0.14)"
+              stroke="#0066CC"
+              strokeWidth="0.18"
+              strokeOpacity="0.55"
+              style={{
+                opacity: stationsVisible ? 1 : 0,
+                transition: `opacity 360ms cubic-bezier(0.05, 0.7, 0.1, 1) ${i * 60}ms`,
+              }}
+            />
+          ))}
         </svg>
 
-        {/* Town pills — staggered fade-in by arrival order */}
-        {TOWNS.map((town, i) => (
+        {/* Layer 1 — Metro station markers (DOM elements so they stay crisp) */}
+        {METRO_STATIONS.map((s, i) => (
           <div
-            key={town.name}
-            className="absolute inline-flex items-center gap-1.5 bg-white/95 shadow-sm rounded-full px-2.5 py-1 text-[11px] font-medium text-[#0A1344] whitespace-nowrap"
-            style={{
-              left: town.left,
-              top: town.top,
-              opacity: townsVisible ? 1 : 0,
-              transform: townsVisible
-                ? "translate(-50%, -50%) scale(1)"
-                : "translate(-50%, -50%) scale(0.92)",
-              transition: `opacity 320ms cubic-bezier(0.05, 0.7, 0.1, 1) ${i * 150}ms, transform 320ms cubic-bezier(0.22, 1, 0.36, 1) ${i * 150}ms`,
-            }}
-          >
-            <span className="w-1.5 h-1.5 rounded-full" style={{ background: "#0066CC" }} />
-            <span>{town.name}</span>
-            <span className="text-[#6E6E73]">— {town.time}</span>
-          </div>
-        ))}
-
-        {/* Care home pins — drop-in stagger */}
-        {CARE_HOMES.map((pin, i) => (
-          <div
-            key={`pin-${i}`}
+            key={`s-${i}`}
             className="absolute"
             style={{
-              left: pin.left,
-              top: pin.top,
-              opacity: careHomesVisible ? 1 : 0,
-              transform: careHomesVisible
-                ? "translate(-50%, -50%) translateY(0)"
-                : "translate(-50%, -50%) translateY(-4px)",
-              transition: `opacity 280ms cubic-bezier(0.05, 0.7, 0.1, 1) ${i * 80}ms, transform 320ms cubic-bezier(0.22, 1, 0.36, 1) ${i * 80}ms`,
+              left: `${s.cx}%`,
+              top: `${s.cy}%`,
+              opacity: stationsVisible ? 1 : 0,
+              transform: stationsVisible
+                ? "translate(-50%, -50%) scale(1)"
+                : "translate(-50%, -50%) scale(0.6)",
+              transition: `opacity 280ms cubic-bezier(0.05, 0.7, 0.1, 1) ${i * 60 + 120}ms, transform 320ms cubic-bezier(0.22, 1, 0.36, 1) ${i * 60 + 120}ms`,
             }}
           >
             <div
               className="w-3 h-3 rounded-full bg-white flex items-center justify-center"
               style={{
                 border: "1.5px solid #DC2626",
-                boxShadow: "0 1px 2px rgba(0,0,0,0.12)",
+                boxShadow: "0 1px 2px rgba(0,0,0,0.18)",
               }}
             >
-              <div className="w-[3px] h-[3px] rounded-full" style={{ background: "#DC2626" }} />
+              <div className="w-[4px] h-[4px] rounded-full" style={{ background: "#DC2626" }} />
             </div>
           </div>
         ))}
+
+        {/* Layer 2 — Qualifying parcels (small green squares inside the radii) */}
+        {PARCELS.map((p, i) => {
+          const visible = parcelsVisible && (!parcelsLargeOnly || p.largeOnly);
+          return (
+            <div
+              key={`p-${i}`}
+              className="absolute"
+              style={{
+                left: `${p.x}%`,
+                top: `${p.y}%`,
+                opacity: visible ? 1 : 0,
+                transform: visible
+                  ? "translate(-50%, -50%) scale(1)"
+                  : "translate(-50%, -50%) scale(0.4)",
+                transition: `opacity 280ms cubic-bezier(0.05, 0.7, 0.1, 1) ${i * 50}ms, transform 320ms cubic-bezier(0.22, 1, 0.36, 1) ${i * 50}ms`,
+              }}
+            >
+              <div
+                className="w-2 h-2 rounded-[1px]"
+                style={{
+                  background: "#16a34a",
+                  border: "1px solid white",
+                  boxShadow: "0 1px 2px rgba(0,0,0,0.18)",
+                }}
+              />
+            </div>
+          );
+        })}
 
         {/* Legend pill — bottom-right corner of the visual */}
         <div
           className="absolute bottom-4 right-4 hidden md:inline-flex items-center gap-3 bg-white/95 shadow-md rounded-full px-3.5 py-1.5 text-[11px] font-medium text-[#0A1344]"
           style={{
-            opacity: legendVisible ? 1 : 0,
-            transform: legendVisible ? "translateY(0)" : "translateY(4px)",
+            opacity: stationsVisible ? 1 : 0,
+            transform: stationsVisible ? "translateY(0)" : "translateY(4px)",
             transition: "opacity 320ms ease, transform 320ms cubic-bezier(0.22, 1, 0.36, 1)",
           }}
         >
-          <span className="inline-flex items-center gap-1.5">
-            <span className="w-2 h-2 rounded-sm" style={{ background: "rgba(0, 102, 204, 0.32)" }} />
-            Inundated
-          </span>
           <span className="inline-flex items-center gap-1.5">
             <span
               className="w-2 h-2 rounded-full"
               style={{ background: "white", border: "1.5px solid #DC2626" }}
             />
-            Care home
+            Metro station
           </span>
           <span className="inline-flex items-center gap-1.5">
-            <span className="w-3 h-[2px] rounded" style={{ background: "#16a34a" }} />
-            Open
+            <span className="w-2 h-2 rounded-sm" style={{ background: "rgba(0, 102, 204, 0.32)" }} />
+            1km radius
           </span>
           <span className="inline-flex items-center gap-1.5">
-            <span className="w-3 h-[2px] rounded" style={{ background: "#DC2626" }} />
-            Blocked
+            <span className="w-2 h-2 rounded-[1px]" style={{ background: "#16a34a" }} />
+            Parcel
           </span>
         </div>
       </div>
@@ -548,34 +443,26 @@ export default function Chat({ lightTheme = false, embedded = false, content }: 
         aria-hidden
       />
 
-      {/* Layer 2 — "+ New chat" pill, centered in the visual block */}
+      {/* Layer 2 — Chat panel. Morphs through three states:
+            1. idle:        centered narrow pill with "+ New chat" text
+            2. pill input:  centered wide pill with "Ask Columbus" + send
+            3. full panel:  bottom-left, conversation area + input
+          Position, width, height, and content all transition between states. */}
       <div
-        className="absolute top-1/2 left-1/2 z-30"
+        className="absolute z-20 bg-white rounded-2xl shadow-xl overflow-hidden flex flex-col max-md:left-[20px] max-md:right-[20px] max-md:w-auto"
         style={{
-          opacity: newChatVisible ? 1 : 0,
-          transform: `translate(-50%, -50%) scale(${phase === "cursor-tap" ? 0.94 : 1})`,
-          transition: "opacity 240ms ease, transform 160ms ease",
-          pointerEvents: "none",
-        }}
-        aria-hidden
-      >
-        <div className="inline-flex items-center gap-2 bg-white shadow-md rounded-full px-5 py-2.5 text-[14px] font-medium text-[#1D1D1F]">
-          <span className="inline-block w-4 h-4 rounded-full bg-[#0A1344] text-white text-[12px] leading-4 text-center">+</span>
-          New chat
-        </div>
-      </div>
-
-      {/* Layer 2 — Chat panel. Collapsed = input-only at original card width.
-          Expanded = same width but full card height with conversation above
-          the input. Only `top` animates so width / left position stay fixed. */}
-      <div
-        className="absolute left-[40px] bottom-[40px] w-[460px] max-xl:left-[32px] max-xl:w-[400px] max-md:left-[20px] max-md:right-[20px] max-md:bottom-[20px] max-md:w-auto z-20 bg-white rounded-2xl shadow-xl overflow-hidden flex flex-col"
-        style={{
-          top: panelExpanded ? "100px" : "calc(100% - 40px - 88px)",
-          opacity: chatOpen ? 1 : 0,
-          transform: chatOpen ? "translateY(0) scale(1)" : "translateY(8px) scale(0.99)",
+          left: panelExpanded
+            ? "40px"
+            : newChatVisible
+              ? "calc(50% - 100px)"
+              : "calc(50% - 230px)",
+          top: panelExpanded ? "100px" : "calc(50% - 28px)",
+          width: newChatVisible ? "200px" : "460px",
+          height: panelExpanded ? "calc(100% - 140px)" : "56px",
+          opacity: phase === "fading-out" ? 0 : 1,
+          transform: `scale(${phase === "cursor-tap" ? 0.96 : 1})`,
           transition:
-            "top 480ms cubic-bezier(0.05, 0.7, 0.1, 1), opacity 500ms ease, transform 500ms cubic-bezier(0.05, 0.7, 0.1, 1)",
+            "left 520ms cubic-bezier(0.05, 0.7, 0.1, 1), top 520ms cubic-bezier(0.05, 0.7, 0.1, 1), width 520ms cubic-bezier(0.05, 0.7, 0.1, 1), height 520ms cubic-bezier(0.05, 0.7, 0.1, 1), opacity 500ms ease, transform 180ms ease",
         }}
       >
         {/* Conversation area — visible only when expanded. */}
@@ -603,32 +490,36 @@ export default function Chat({ lightTheme = false, embedded = false, content }: 
             </div>
           </div>
 
-          {/* Columbus is investigating */}
+          {/* Columbus deep reasoning header */}
           <div
-            className="mt-4 flex items-center gap-2 text-[#5a5a63]"
+            className="mt-4 flex items-center gap-2.5 text-[#5a5a63]"
             style={{
               opacity: investigatingVisible ? 1 : 0,
               transform: investigatingVisible ? "translateY(0)" : "translateY(6px)",
               transition: "opacity 250ms ease, transform 250ms ease",
             }}
           >
-            <Image src="/logobueno.png" alt="" width={18} height={18} className="object-contain shrink-0" />
-            <span className="text-[14px] font-medium">Columbus is investigating</span>
+            <Image src="/logobueno.png" alt="" width={22} height={22} className="object-contain shrink-0" />
+            <span className="text-[14px] font-medium">Columbus deep reasoning</span>
           </div>
 
-          {/* Considering lines */}
-          <div className="mt-2 pl-[26px] space-y-1">
+          {/* Deep reasoning steps with green check when complete */}
+          <div className="mt-3 pl-[32px] space-y-3">
             {CONSIDERING.map((line, i) => (
               <div
                 key={line}
-                className="text-[13px] text-[#6b6b73] leading-[1.4]"
+                className="flex items-center justify-between gap-3"
                 style={{
                   opacity: visibleConsidering > i ? 1 : 0,
                   transform: visibleConsidering > i ? "translateY(0)" : "translateY(6px)",
-                  transition: "opacity 220ms ease, transform 220ms ease",
+                  transition: "opacity 260ms ease, transform 260ms ease",
                 }}
               >
-                {line}
+                <span className="text-[13px] text-[#6b6b73] leading-[1.4]">{line}</span>
+                <svg viewBox="0 0 16 16" width="14" height="14" className="shrink-0" aria-hidden>
+                  <circle cx="8" cy="8" r="7" fill="#16a34a" />
+                  <path d="M5 8.2 L7.1 10.3 L11 6.4" stroke="white" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
               </div>
             ))}
           </div>
@@ -659,32 +550,36 @@ export default function Chat({ lightTheme = false, embedded = false, content }: 
             </div>
           </div>
 
-          {/* Columbus is investigating — round 2 */}
+          {/* Columbus deep reasoning — round 2 */}
           <div
-            className="mt-4 flex items-center gap-2 text-[#5a5a63]"
+            className="mt-4 flex items-center gap-2.5 text-[#5a5a63]"
             style={{
               opacity: investigating2Visible ? 1 : 0,
               transform: investigating2Visible ? "translateY(0)" : "translateY(6px)",
               transition: "opacity 250ms ease, transform 250ms ease",
             }}
           >
-            <Image src="/logobueno.png" alt="" width={18} height={18} className="object-contain shrink-0" />
-            <span className="text-[14px] font-medium">Columbus is investigating</span>
+            <Image src="/logobueno.png" alt="" width={22} height={22} className="object-contain shrink-0" />
+            <span className="text-[14px] font-medium">Columbus deep reasoning</span>
           </div>
 
-          {/* Considering lines — round 2 */}
-          <div className="mt-2 pl-[26px] space-y-1">
+          {/* Deep reasoning steps with green check — round 2 */}
+          <div className="mt-3 pl-[32px] space-y-3">
             {CONSIDERING_2.map((line, i) => (
               <div
                 key={line}
-                className="text-[13px] text-[#6b6b73] leading-[1.4]"
+                className="flex items-center justify-between gap-3"
                 style={{
                   opacity: visibleConsidering2 > i ? 1 : 0,
                   transform: visibleConsidering2 > i ? "translateY(0)" : "translateY(6px)",
-                  transition: "opacity 220ms ease, transform 220ms ease",
+                  transition: "opacity 260ms ease, transform 260ms ease",
                 }}
               >
-                {line}
+                <span className="text-[13px] text-[#6b6b73] leading-[1.4]">{line}</span>
+                <svg viewBox="0 0 16 16" width="14" height="14" className="shrink-0" aria-hidden>
+                  <circle cx="8" cy="8" r="7" fill="#16a34a" />
+                  <path d="M5 8.2 L7.1 10.3 L11 6.4" stroke="white" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
               </div>
             ))}
           </div>
@@ -702,12 +597,34 @@ export default function Chat({ lightTheme = false, embedded = false, content }: 
           </div>
         </div>
 
-        {/* Input bar — clean, no borders / dividers. Text always left-aligned
-            with comfortable padding. Send button always visible: light gray
-            pill background with a small dark-navy square inside. */}
-        <div className="px-6 py-5 max-md:px-4 max-md:py-4">
-          <div className="flex items-center gap-3">
-            <div className="flex-1 text-[15px] leading-[1.4] text-[#1D1D1F] min-h-[32px] flex items-center overflow-hidden">
+        {/* Input bar — morphs from "+ New chat" (idle pill) to a chat input
+            with "Ask Columbus" placeholder + send button (pill input / panel). */}
+        <div className="absolute bottom-0 left-0 right-0 h-14 flex items-center px-5">
+          {/* "+ New chat" text — visible during idle, fades on tap */}
+          <div
+            className="absolute inset-0 flex items-center justify-center text-[15px] font-medium text-[#1D1D1F]"
+            style={{
+              opacity: newChatVisible ? 1 : 0,
+              transition: "opacity 220ms ease",
+              pointerEvents: "none",
+            }}
+            aria-hidden
+          >
+            <span className="inline-flex items-center gap-2">
+              <span className="inline-block w-4 h-4 rounded-full bg-[#0A1344] text-white text-[12px] leading-4 text-center">+</span>
+              New chat
+            </span>
+          </div>
+
+          {/* Chat input + send button — visible after the pill morphs */}
+          <div
+            className="flex items-center gap-3 w-full"
+            style={{
+              opacity: newChatVisible ? 0 : 1,
+              transition: "opacity 220ms ease 160ms",
+            }}
+          >
+            <div className="flex-1 text-[14px] leading-[1.4] text-[#1D1D1F] min-h-[32px] flex items-center overflow-hidden">
               {phase === "typing-query" || phase === "sending" ? (
                 <span className="text-[#1D1D1F] truncate">
                   {typedQuery}
@@ -725,13 +642,21 @@ export default function Chat({ lightTheme = false, embedded = false, content }: 
               )}
             </div>
             <div
-              className="w-10 h-10 rounded-[10px] flex items-center justify-center shrink-0 bg-[#e8e8ec]"
+              className="w-9 h-9 rounded-[10px] flex items-center justify-center shrink-0 bg-[#e8e8ec]"
               aria-hidden
             >
               <div className="w-3 h-3 rounded-[2px] bg-[#0A1344]" />
             </div>
           </div>
         </div>
+      </div>
+
+      {/* Disclaimer — top-right, always visible across all phases */}
+      <div
+        className="absolute top-3 right-3 z-30 text-[11px] font-medium text-white/80 italic pointer-events-none"
+        style={{ textShadow: "0 1px 2px rgba(0, 0, 0, 0.45)" }}
+      >
+        Not real results, simplified
       </div>
 
       {/* Layer 3 — animated cursor (moves toward the centered "+ New chat" pill) */}
