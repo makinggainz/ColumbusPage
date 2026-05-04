@@ -5,125 +5,63 @@ import Image from "next/image";
 import { useIndustry } from "./industry/IndustryContext";
 import type { ChatRowContent } from "./industry/types";
 
-type AnimatedChatCardProps = {
-  query: string;
-  considering: string[];
-  responseHtml: string;
-  followUp: string;
-};
+const QUERY =
+  "If the Poyo ravine overflows in the next 6 hours at the same intensity as the October 2024 event, which municipalities downstream of Chiva will be inundated first, where are the elderly care homes inside that flood envelope, and which evacuation routes will still be passable?";
+const CONSIDERING = [
+  "Considering demographics of Miami",
+  "Considering October 2024 flood envelope",
+  "Considering elderly-care home registry",
+  "Considering AP-7 corridor passability",
+];
+const RESPONSE =
+  "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.";
+const FOLLOW_UP = "Now show me only the routes that don't cross the AP-7";
+const CONSIDERING_2 = [
+  "Considering AP-7 corridor",
+  "Considering alternate evacuation paths",
+];
+const RESPONSE_2 =
+  "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
 
-function AnimatedChatCard({ query, considering, responseHtml, followUp }: AnimatedChatCardProps) {
-  const [phase, setPhase] = useState<"typing" | "sending" | "thinking" | "done">("typing");
-  const [typedQuery, setTypedQuery] = useState("");
-  const [visibleSteps, setVisibleSteps] = useState(0);
-  const [showResponse, setShowResponse] = useState(false);
-  const [showFollowUp, setShowFollowUp] = useState(false);
+// ── Map-overlay data — stylized answer to the Poyo ravine flood query ──
+// Coordinates are percentages of the visual block. They're skewed toward
+// the right side so the chat panel (bottom-left) doesn't cover the labels.
+const TOWNS: { name: string; time: string; left: string; top: string }[] = [
+  { name: "Chiva", time: "T+0:15", left: "39%", top: "32%" },
+  { name: "Loriguilla", time: "T+1:10", left: "52%", top: "24%" },
+  { name: "Riba-roja de Túria", time: "T+2:00", left: "67%", top: "20%" },
+  { name: "Aldaia", time: "T+3:45", left: "57%", top: "52%" },
+  { name: "Paiporta", time: "T+5:20", left: "73%", top: "62%" },
+];
 
-  useEffect(() => {
-    let cancelled = false;
+const CARE_HOMES: { left: string; top: string }[] = [
+  { left: "44%", top: "42%" },
+  { left: "51%", top: "48%" },
+  { left: "59%", top: "45%" },
+  { left: "63%", top: "56%" },
+  { left: "70%", top: "50%" },
+  { left: "77%", top: "58%" },
+];
 
-    const runSequence = async () => {
-      setPhase("typing");
-      setTypedQuery("");
-      setVisibleSteps(0);
-      setShowResponse(false);
-      setShowFollowUp(false);
-
-      for (let i = 1; i <= query.length; i++) {
-        if (cancelled) return;
-        await new Promise(r => setTimeout(r, 28));
-        setTypedQuery(query.slice(0, i));
-      }
-
-      await new Promise(r => setTimeout(r, 300));
-      if (cancelled) return;
-      setPhase("sending");
-
-      await new Promise(r => setTimeout(r, 400));
-      if (cancelled) return;
-      setPhase("thinking");
-
-      for (let i = 1; i <= considering.length; i++) {
-        await new Promise(r => setTimeout(r, 380));
-        if (cancelled) return;
-        setVisibleSteps(i);
-      }
-
-      await new Promise(r => setTimeout(r, 400));
-      if (cancelled) return;
-      setShowResponse(true);
-
-      await new Promise(r => setTimeout(r, 500));
-      if (cancelled) return;
-      setShowFollowUp(true);
-      setPhase("done");
-
-      await new Promise(r => setTimeout(r, 4000));
-      if (cancelled) return;
-      runSequence();
-    };
-
-    runSequence();
-    return () => { cancelled = true; };
-  }, [query, considering, responseHtml, followUp]);
-
-  const sent = phase === "sending" || phase === "thinking" || phase === "done";
-
-  return (
-    <div className="absolute left-[40px] top-[100px] bottom-[40px] w-[460px] max-xl:left-[32px] max-xl:w-[400px] max-md:left-[20px] max-md:right-[20px] max-md:w-auto bg-[#f5f5f7] rounded-2xl shadow-xl p-7 flex flex-col z-20">
-      <div
-        className="flex items-center gap-3 mb-4"
-        style={{ opacity: sent ? 1 : 0, transition: "opacity 0.3s ease" }}
-      >
-        <span className="text-[20px]">🌐</span>
-        <span className="text-gray-400 text-[14px] font-mono">Columbus is thinking...</span>
-      </div>
-
-      <div className="text-gray-400 text-[13px] space-y-1 mb-5 font-mono pl-9">
-        {considering.map((step, i) => (
-          <p
-            key={i}
-            style={{
-              opacity: visibleSteps > i ? 1 : 0,
-              transform: visibleSteps > i ? "translateY(0)" : "translateY(6px)",
-              transition: "opacity 0.25s ease, transform 0.25s ease",
-            }}
-          >
-            {step}
-          </p>
-        ))}
-      </div>
-
-      <div
-        className="text-gray-800 text-[14px] mb-5 leading-[1.65] font-medium"
-        style={{ opacity: showResponse ? 1 : 0, transform: showResponse ? "translateY(0)" : "translateY(8px)", transition: "opacity 0.35s ease, transform 0.35s ease" }}
-        dangerouslySetInnerHTML={{ __html: responseHtml }}
-      />
-
-      <div
-        className="text-gray-700 text-[14px] leading-[1.65]"
-        style={{ opacity: showFollowUp ? 1 : 0, transform: showFollowUp ? "translateY(0)" : "translateY(8px)", transition: "opacity 0.35s ease, transform 0.35s ease" }}
-      >
-        {followUp}
-      </div>
-
-      <div className="flex-1" />
-
-      <div className="bg-white rounded-2xl shadow-sm px-5 py-4 flex items-center justify-between gap-4 mt-5">
-        <span className="text-gray-500 text-[15px] leading-snug" style={{ minHeight: "1.5em" }}>
-          {sent ? query : (typedQuery || <span className="opacity-0">x</span>)}
-          {!sent && <span className="inline-block w-0.5 h-4 bg-gray-400 ml-0.5 animate-pulse" />}
-        </span>
-        <div
-          className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0 transition-all duration-200"
-          style={{ background: sent ? "#0A1344" : "rgba(37, 99, 235, 0.12)" }}
-        >
-          <div className="w-5 h-5 rounded-sm" style={{ background: sent ? "white" : "#0A1344" }} />
-        </div>
-      </div>
-    </div>
-  );
-}
+type Phase =
+  | "idle"
+  | "cursor-moving"
+  | "cursor-tap"
+  | "chat-open"
+  | "typing-query"
+  | "sending"
+  | "bubble-in"
+  | "clearing-blur"
+  | "investigating"
+  | "considering"
+  | "responding"
+  | "typing-followup"
+  | "sending-followup"
+  | "bubble-in-2"
+  | "investigating-2"
+  | "considering-2"
+  | "responding-2"
+  | "fading-out";
 
 type ChatProps = {
   lightTheme?: boolean;
@@ -131,18 +69,37 @@ type ChatProps = {
   content?: ChatRowContent;
 };
 
+const CURSOR_GLYPH = (
+  <svg viewBox="0 0 24 24" width="22" height="22" fill="#1D1D1F" stroke="white" strokeWidth="1" aria-hidden>
+    <path d="M5 3 L5 19 L9.5 14.5 L12 20.5 L14 19.5 L11.5 13.5 L18 13.5 Z" />
+  </svg>
+);
+
 /**
- * Conversational map chat — the right-column visual for row 1 of the
- * use-case sticky-scroll. The map fills the full width and height of the
- * container; the section title overlays the top-left with a gradient
- * backdrop for legibility against the photo.
+ * Conversational map chat — animated demo for the use-case sticky-scroll
+ * Chat row. Loops through: blurred satellite map → cursor taps centered
+ * "+ New chat" → input-only panel → user types query → first send expands
+ * the panel to full height → blur clears → Columbus thinks (4 considering
+ * lines) → lorem ipsum response → user types follow-up → sends → Columbus
+ * thinks/responds again → whole panel fades out → loop.
  */
 export default function Chat({ lightTheme = false, embedded = false, content }: ChatProps) {
   const { industry } = useIndustry();
   const data = content ?? industry.chat;
 
   const sectionRef = useRef<HTMLDivElement>(null);
+  const conversationRef = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
+
+  const [phase, setPhase] = useState<Phase>("idle");
+  const [typedQuery, setTypedQuery] = useState("");
+  const [typedFollowUp, setTypedFollowUp] = useState("");
+  const [visibleConsidering, setVisibleConsidering] = useState(0);
+  const [visibleConsidering2, setVisibleConsidering2] = useState(0);
+  const [reducedMotion, setReducedMotion] = useState(() => {
+    if (typeof window === "undefined") return false;
+    return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  });
 
   useEffect(() => {
     const el = sectionRef.current;
@@ -155,6 +112,201 @@ export default function Chat({ lightTheme = false, embedded = false, content }: 
     return () => obs.disconnect();
   }, []);
 
+  useEffect(() => {
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const onChange = (e: MediaQueryListEvent) => setReducedMotion(e.matches);
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
+  }, []);
+
+  useEffect(() => {
+    if (!visible) return;
+    let cancelled = false;
+    const wait = (ms: number) => new Promise<void>(r => setTimeout(r, ms));
+
+    const run = async () => {
+      setPhase("idle");
+      setTypedQuery("");
+      setTypedFollowUp("");
+      setVisibleConsidering(0);
+      setVisibleConsidering2(0);
+
+      if (reducedMotion) {
+        setPhase("responding-2");
+        await wait(5000);
+        if (cancelled) return;
+        run();
+        return;
+      }
+
+      await wait(700);
+      if (cancelled) return;
+      setPhase("cursor-moving");
+      await wait(900);
+      if (cancelled) return;
+      setPhase("cursor-tap");
+      await wait(180);
+      if (cancelled) return;
+      setPhase("chat-open");
+      await wait(400);
+      if (cancelled) return;
+      setPhase("typing-query");
+
+      for (let i = 1; i <= QUERY.length; i++) {
+        if (cancelled) return;
+        await wait(15);
+        setTypedQuery(QUERY.slice(0, i));
+      }
+      await wait(280);
+      if (cancelled) return;
+
+      setPhase("sending");
+      await wait(220);
+      if (cancelled) return;
+
+      setPhase("bubble-in");
+      await wait(520);
+      if (cancelled) return;
+
+      setPhase("clearing-blur");
+      await wait(520);
+      if (cancelled) return;
+
+      setPhase("investigating");
+      await wait(360);
+      if (cancelled) return;
+
+      setPhase("considering");
+      for (let i = 1; i <= CONSIDERING.length; i++) {
+        if (cancelled) return;
+        await wait(420);
+        setVisibleConsidering(i);
+      }
+      await wait(500);
+      if (cancelled) return;
+
+      setPhase("responding");
+      await wait(1400);
+      if (cancelled) return;
+
+      setPhase("typing-followup");
+      for (let i = 1; i <= FOLLOW_UP.length; i++) {
+        if (cancelled) return;
+        await wait(28);
+        setTypedFollowUp(FOLLOW_UP.slice(0, i));
+      }
+      await wait(280);
+      if (cancelled) return;
+
+      setPhase("sending-followup");
+      await wait(220);
+      if (cancelled) return;
+
+      setPhase("bubble-in-2");
+      await wait(420);
+      if (cancelled) return;
+
+      setPhase("investigating-2");
+      await wait(360);
+      if (cancelled) return;
+
+      setPhase("considering-2");
+      for (let i = 1; i <= CONSIDERING_2.length; i++) {
+        if (cancelled) return;
+        await wait(420);
+        setVisibleConsidering2(i);
+      }
+      await wait(400);
+      if (cancelled) return;
+
+      setPhase("responding-2");
+      await wait(1100);
+      if (cancelled) return;
+
+      setPhase("fading-out");
+      await wait(900);
+      if (cancelled) return;
+
+      run();
+    };
+
+    run();
+    return () => { cancelled = true; };
+  }, [visible, reducedMotion]);
+
+  // Auto-scroll the conversation area as new content appears
+  useEffect(() => {
+    const el = conversationRef.current;
+    if (!el) return;
+    el.scrollTo({ top: el.scrollHeight, behavior: "smooth" });
+  }, [phase, visibleConsidering, visibleConsidering2]);
+
+  // Phase predicates
+  const blurActive = ["idle", "cursor-moving", "cursor-tap", "chat-open", "typing-query", "sending", "bubble-in", "fading-out"].includes(phase);
+  const cursorVisible = ["cursor-moving", "cursor-tap"].includes(phase);
+  const chatOpen = ![
+    "idle", "cursor-moving", "cursor-tap", "fading-out",
+  ].includes(phase);
+  const newChatVisible = ["idle", "cursor-moving", "cursor-tap"].includes(phase);
+  // Panel is small (input-only) until the first send fires
+  const panelExpanded = ![
+    "idle", "cursor-moving", "cursor-tap", "chat-open", "typing-query", "sending", "fading-out",
+  ].includes(phase);
+  const querySent = ["bubble-in", "clearing-blur", "investigating", "considering", "responding", "typing-followup", "sending-followup", "bubble-in-2", "investigating-2", "considering-2", "responding-2"].includes(phase);
+  const investigatingVisible = ["investigating", "considering", "responding", "typing-followup", "sending-followup", "bubble-in-2", "investigating-2", "considering-2", "responding-2"].includes(phase);
+  const responseVisible = ["responding", "typing-followup", "sending-followup", "bubble-in-2", "investigating-2", "considering-2", "responding-2"].includes(phase);
+  const followUpBubbleVisible = ["bubble-in-2", "investigating-2", "considering-2", "responding-2"].includes(phase);
+  const investigating2Visible = ["investigating-2", "considering-2", "responding-2"].includes(phase);
+  const response2Visible = phase === "responding-2";
+
+  // Map-overlay reveal predicates — staged with the chat response.
+  const overlayGroupVisible = [
+    "clearing-blur",
+    "investigating",
+    "considering",
+    "responding",
+    "typing-followup",
+    "sending-followup",
+    "bubble-in-2",
+    "investigating-2",
+    "considering-2",
+    "responding-2",
+  ].includes(phase);
+  const floodVisible = [
+    "investigating",
+    "considering",
+    "responding",
+    "typing-followup",
+    "sending-followup",
+    "bubble-in-2",
+    "investigating-2",
+    "considering-2",
+    "responding-2",
+  ].includes(phase);
+  const townsVisible = [
+    "considering",
+    "responding",
+    "typing-followup",
+    "sending-followup",
+    "bubble-in-2",
+    "investigating-2",
+    "considering-2",
+    "responding-2",
+  ].includes(phase);
+  const ravineVisible = townsVisible;
+  const careHomesVisible = [
+    "responding",
+    "typing-followup",
+    "sending-followup",
+    "bubble-in-2",
+    "investigating-2",
+    "considering-2",
+    "responding-2",
+  ].includes(phase);
+  const routesVisible = careHomesVisible;
+  const legendVisible = overlayGroupVisible;
+
+
   const visualBlock = (
     <div
       ref={sectionRef}
@@ -164,9 +316,10 @@ export default function Chat({ lightTheme = false, embedded = false, content }: 
         transition: "opacity 0.7s ease",
       }}
     >
+      {/* Layer 0 — satellite map background */}
       <Image
         src={data.mapImageSrc}
-        alt="Map"
+        alt="Satellite map"
         fill
         className="object-cover"
         priority
@@ -174,32 +327,428 @@ export default function Chat({ lightTheme = false, embedded = false, content }: 
       {!lightTheme && (
         <div
           className="absolute inset-0 pointer-events-none"
-          style={{ background: "rgba(18, 8, 52, 0.22)" }}
+          style={{ background: "rgba(18, 8, 52, 0.18)" }}
         />
       )}
 
-      {/* Title gradient backdrop — top, fading to transparent. */}
+      {/* Layer 0.5 — Flood-query answer overlay. Sits above the map but
+          below the blur veil so it's naturally hidden during the early
+          chat phases (the blur covers it) and revealed progressively as
+          Columbus thinks/responds. Tied to the existing Phase state. */}
       <div
-        className="absolute top-0 left-0 right-0 h-[140px] pointer-events-none z-10"
+        className="absolute inset-0 pointer-events-none z-[5]"
         style={{
-          background:
-            "linear-gradient(to bottom, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.35) 50%, transparent 100%)",
+          opacity: overlayGroupVisible ? 1 : 0,
+          transition: "opacity 520ms cubic-bezier(0.05, 0.7, 0.1, 1)",
+        }}
+        aria-hidden
+      >
+        {/* SVG: flood envelope + ravine flow + evacuation routes */}
+        <svg
+          className="absolute inset-0 w-full h-full"
+          viewBox="0 0 100 100"
+          preserveAspectRatio="none"
+        >
+          {/* Outer flood band — 4-6h time-of-arrival */}
+          <path
+            d="M 30 28 C 35 22, 60 22, 78 30 C 92 35, 95 50, 88 65 C 82 78, 60 80, 45 75 C 32 68, 25 50, 30 28 Z"
+            fill="rgba(0, 102, 204, 0.14)"
+            stroke="#0066CC"
+            strokeWidth="0.18"
+            strokeOpacity="0.4"
+            style={{
+              opacity: floodVisible ? 1 : 0,
+              transition: "opacity 360ms cubic-bezier(0.05, 0.7, 0.1, 1) 400ms",
+            }}
+          />
+          {/* Middle band — 2-4h */}
+          <path
+            d="M 33 33 C 40 28, 60 28, 75 35 C 88 42, 88 55, 80 65 C 72 73, 58 73, 45 68 C 35 62, 28 50, 33 33 Z"
+            fill="rgba(0, 102, 204, 0.22)"
+            stroke="#0066CC"
+            strokeWidth="0.18"
+            strokeOpacity="0.5"
+            style={{
+              opacity: floodVisible ? 1 : 0,
+              transition: "opacity 360ms cubic-bezier(0.05, 0.7, 0.1, 1) 200ms",
+            }}
+          />
+          {/* Inner band — 0-2h, near source */}
+          <path
+            d="M 38 40 C 45 35, 60 36, 70 42 C 78 48, 76 56, 68 60 C 60 65, 50 64, 42 60 C 35 55, 32 47, 38 40 Z"
+            fill="rgba(0, 102, 204, 0.32)"
+            stroke="#0066CC"
+            strokeWidth="0.2"
+            strokeOpacity="0.6"
+            style={{
+              opacity: floodVisible ? 1 : 0,
+              transition: "opacity 360ms cubic-bezier(0.05, 0.7, 0.1, 1)",
+            }}
+          />
+
+          {/* Ravine flow path — animated line-draw via stroke-dashoffset */}
+          <path
+            d="M 28 26 Q 36 32, 44 38 Q 52 44, 58 50 Q 64 54, 70 56"
+            fill="none"
+            stroke="#06B6D4"
+            strokeWidth="0.5"
+            strokeLinecap="round"
+            strokeOpacity="0.95"
+            pathLength="100"
+            strokeDasharray="100"
+            style={{
+              strokeDashoffset: ravineVisible ? 0 : 100,
+              transition: "stroke-dashoffset 600ms cubic-bezier(0.22, 1, 0.36, 1)",
+            }}
+          />
+
+          {/* Open evacuation route — green, line-drawn */}
+          <path
+            d="M 65 50 Q 73 32, 84 18"
+            fill="none"
+            stroke="#16a34a"
+            strokeWidth="0.6"
+            strokeLinecap="round"
+            pathLength="100"
+            strokeDasharray="100"
+            style={{
+              strokeDashoffset: routesVisible ? 0 : 100,
+              transition: "stroke-dashoffset 600ms cubic-bezier(0.22, 1, 0.36, 1)",
+            }}
+          />
+          {/* At-risk route — yellow, dashed */}
+          <path
+            d="M 72 50 Q 84 56, 95 62"
+            fill="none"
+            stroke="#f59e0b"
+            strokeWidth="0.6"
+            strokeLinecap="round"
+            strokeDasharray="1.2 1.2"
+            style={{
+              opacity: routesVisible ? 1 : 0,
+              transition: "opacity 600ms cubic-bezier(0.05, 0.7, 0.1, 1) 200ms",
+            }}
+          />
+          {/* Blocked route — red, line-drawn, with X marker */}
+          <path
+            d="M 56 65 L 60 78 L 64 90"
+            fill="none"
+            stroke="#DC2626"
+            strokeWidth="0.6"
+            strokeLinecap="round"
+            pathLength="100"
+            strokeDasharray="100"
+            style={{
+              strokeDashoffset: routesVisible ? 0 : 100,
+              transition: "stroke-dashoffset 600ms cubic-bezier(0.22, 1, 0.36, 1) 400ms",
+            }}
+          />
+          <g
+            transform="translate(60 78)"
+            style={{
+              opacity: routesVisible ? 1 : 0,
+              transition: "opacity 280ms ease 900ms",
+            }}
+          >
+            <circle cx="0" cy="0" r="1.6" fill="white" stroke="#DC2626" strokeWidth="0.3" />
+            <line x1="-0.7" y1="-0.7" x2="0.7" y2="0.7" stroke="#DC2626" strokeWidth="0.35" strokeLinecap="round" />
+            <line x1="0.7" y1="-0.7" x2="-0.7" y2="0.7" stroke="#DC2626" strokeWidth="0.35" strokeLinecap="round" />
+          </g>
+        </svg>
+
+        {/* Town pills — staggered fade-in by arrival order */}
+        {TOWNS.map((town, i) => (
+          <div
+            key={town.name}
+            className="absolute inline-flex items-center gap-1.5 bg-white/95 shadow-sm rounded-full px-2.5 py-1 text-[11px] font-medium text-[#0A1344] whitespace-nowrap"
+            style={{
+              left: town.left,
+              top: town.top,
+              opacity: townsVisible ? 1 : 0,
+              transform: townsVisible
+                ? "translate(-50%, -50%) scale(1)"
+                : "translate(-50%, -50%) scale(0.92)",
+              transition: `opacity 320ms cubic-bezier(0.05, 0.7, 0.1, 1) ${i * 150}ms, transform 320ms cubic-bezier(0.22, 1, 0.36, 1) ${i * 150}ms`,
+            }}
+          >
+            <span className="w-1.5 h-1.5 rounded-full" style={{ background: "#0066CC" }} />
+            <span>{town.name}</span>
+            <span className="text-[#6E6E73]">— {town.time}</span>
+          </div>
+        ))}
+
+        {/* Care home pins — drop-in stagger */}
+        {CARE_HOMES.map((pin, i) => (
+          <div
+            key={`pin-${i}`}
+            className="absolute"
+            style={{
+              left: pin.left,
+              top: pin.top,
+              opacity: careHomesVisible ? 1 : 0,
+              transform: careHomesVisible
+                ? "translate(-50%, -50%) translateY(0)"
+                : "translate(-50%, -50%) translateY(-4px)",
+              transition: `opacity 280ms cubic-bezier(0.05, 0.7, 0.1, 1) ${i * 80}ms, transform 320ms cubic-bezier(0.22, 1, 0.36, 1) ${i * 80}ms`,
+            }}
+          >
+            <div
+              className="w-3 h-3 rounded-full bg-white flex items-center justify-center"
+              style={{
+                border: "1.5px solid #DC2626",
+                boxShadow: "0 1px 2px rgba(0,0,0,0.12)",
+              }}
+            >
+              <div className="w-[3px] h-[3px] rounded-full" style={{ background: "#DC2626" }} />
+            </div>
+          </div>
+        ))}
+
+        {/* Legend pill — bottom-right corner of the visual */}
+        <div
+          className="absolute bottom-4 right-4 hidden md:inline-flex items-center gap-3 bg-white/95 shadow-md rounded-full px-3.5 py-1.5 text-[11px] font-medium text-[#0A1344]"
+          style={{
+            opacity: legendVisible ? 1 : 0,
+            transform: legendVisible ? "translateY(0)" : "translateY(4px)",
+            transition: "opacity 320ms ease, transform 320ms cubic-bezier(0.22, 1, 0.36, 1)",
+          }}
+        >
+          <span className="inline-flex items-center gap-1.5">
+            <span className="w-2 h-2 rounded-sm" style={{ background: "rgba(0, 102, 204, 0.32)" }} />
+            Inundated
+          </span>
+          <span className="inline-flex items-center gap-1.5">
+            <span
+              className="w-2 h-2 rounded-full"
+              style={{ background: "white", border: "1.5px solid #DC2626" }}
+            />
+            Care home
+          </span>
+          <span className="inline-flex items-center gap-1.5">
+            <span className="w-3 h-[2px] rounded" style={{ background: "#16a34a" }} />
+            Open
+          </span>
+          <span className="inline-flex items-center gap-1.5">
+            <span className="w-3 h-[2px] rounded" style={{ background: "#DC2626" }} />
+            Blocked
+          </span>
+        </div>
+      </div>
+
+      {/* Layer 1 — strong blur veil that clears once Columbus has answered */}
+      <div
+        className="absolute inset-0 pointer-events-none z-10"
+        style={{
+          backdropFilter: blurActive ? "blur(24px)" : "blur(0px)",
+          WebkitBackdropFilter: blurActive ? "blur(24px)" : "blur(0px)",
+          background: blurActive ? "rgba(245, 245, 247, 0.55)" : "rgba(245, 245, 247, 0)",
+          transition:
+            "backdrop-filter 520ms cubic-bezier(0.05, 0.7, 0.1, 1), -webkit-backdrop-filter 520ms cubic-bezier(0.05, 0.7, 0.1, 1), background 520ms cubic-bezier(0.05, 0.7, 0.1, 1)",
         }}
         aria-hidden
       />
 
-      {/* Section title — overlays the gradient. */}
-      <h2 className="absolute top-6 left-6 z-20 text-white text-[24px] md:text-[28px] lg:text-[32px] font-medium tracking-[-0.02em] leading-[1.1] m-0">
-        Conversational map chat
-      </h2>
+      {/* Layer 2 — "+ New chat" pill, centered in the visual block */}
+      <div
+        className="absolute top-1/2 left-1/2 z-30"
+        style={{
+          opacity: newChatVisible ? 1 : 0,
+          transform: `translate(-50%, -50%) scale(${phase === "cursor-tap" ? 0.94 : 1})`,
+          transition: "opacity 240ms ease, transform 160ms ease",
+          pointerEvents: "none",
+        }}
+        aria-hidden
+      >
+        <div className="inline-flex items-center gap-2 bg-white shadow-md rounded-full px-5 py-2.5 text-[14px] font-medium text-[#1D1D1F]">
+          <span className="inline-block w-4 h-4 rounded-full bg-[#0A1344] text-white text-[12px] leading-4 text-center">+</span>
+          New chat
+        </div>
+      </div>
 
-      <AnimatedChatCard
-        key={`${data.query}`}
-        query={data.query}
-        considering={data.considering}
-        responseHtml={data.responseHtml}
-        followUp={data.followUp}
-      />
+      {/* Layer 2 — Chat panel. Collapsed = input-only at original card width.
+          Expanded = same width but full card height with conversation above
+          the input. Only `top` animates so width / left position stay fixed. */}
+      <div
+        className="absolute left-[40px] bottom-[40px] w-[460px] max-xl:left-[32px] max-xl:w-[400px] max-md:left-[20px] max-md:right-[20px] max-md:bottom-[20px] max-md:w-auto z-20 bg-white rounded-2xl shadow-xl overflow-hidden flex flex-col"
+        style={{
+          top: panelExpanded ? "100px" : "calc(100% - 40px - 88px)",
+          opacity: chatOpen ? 1 : 0,
+          transform: chatOpen ? "translateY(0) scale(1)" : "translateY(8px) scale(0.99)",
+          transition:
+            "top 480ms cubic-bezier(0.05, 0.7, 0.1, 1), opacity 500ms ease, transform 500ms cubic-bezier(0.05, 0.7, 0.1, 1)",
+        }}
+      >
+        {/* Conversation area — visible only when expanded. */}
+        <div
+          ref={conversationRef}
+          className="flex-1 overflow-y-auto px-5 pt-5 pb-3 [&::-webkit-scrollbar]:hidden"
+          style={{
+            scrollbarWidth: "none",
+            msOverflowStyle: "none",
+            opacity: panelExpanded ? 1 : 0,
+            transition: "opacity 280ms ease 200ms",
+          }}
+        >
+          {/* User message bubble */}
+          <div
+            className="flex justify-end"
+            style={{
+              opacity: querySent ? 1 : 0,
+              transform: querySent ? "translateY(0)" : "translateY(8px)",
+              transition: "opacity 320ms ease, transform 320ms cubic-bezier(0.05, 0.7, 0.1, 1)",
+            }}
+          >
+            <div className="max-w-[92%] bg-[#f0f0f3] text-[#1D1D1F] rounded-2xl px-4 py-3 text-[13px] leading-[1.5]">
+              &ldquo;{QUERY}&rdquo;
+            </div>
+          </div>
+
+          {/* Columbus is investigating */}
+          <div
+            className="mt-4 flex items-center gap-2 text-[#5a5a63]"
+            style={{
+              opacity: investigatingVisible ? 1 : 0,
+              transform: investigatingVisible ? "translateY(0)" : "translateY(6px)",
+              transition: "opacity 250ms ease, transform 250ms ease",
+            }}
+          >
+            <Image src="/logobueno.png" alt="" width={18} height={18} className="object-contain shrink-0" />
+            <span className="text-[14px] font-medium">Columbus is investigating</span>
+          </div>
+
+          {/* Considering lines */}
+          <div className="mt-2 pl-[26px] space-y-1">
+            {CONSIDERING.map((line, i) => (
+              <div
+                key={line}
+                className="text-[13px] text-[#6b6b73] leading-[1.4]"
+                style={{
+                  opacity: visibleConsidering > i ? 1 : 0,
+                  transform: visibleConsidering > i ? "translateY(0)" : "translateY(6px)",
+                  transition: "opacity 220ms ease, transform 220ms ease",
+                }}
+              >
+                {line}
+              </div>
+            ))}
+          </div>
+
+          {/* Response */}
+          <div
+            className="mt-4 text-[13px] leading-[1.55] text-[#1D1D1F]"
+            style={{
+              opacity: responseVisible ? 1 : 0,
+              transform: responseVisible ? "translateY(0)" : "translateY(8px)",
+              transition: "opacity 380ms ease, transform 380ms cubic-bezier(0.05, 0.7, 0.1, 1)",
+            }}
+          >
+            {RESPONSE}
+          </div>
+
+          {/* Follow-up user bubble */}
+          <div
+            className="mt-4 flex justify-end"
+            style={{
+              opacity: followUpBubbleVisible ? 1 : 0,
+              transform: followUpBubbleVisible ? "translateY(0)" : "translateY(8px)",
+              transition: "opacity 320ms ease, transform 320ms cubic-bezier(0.05, 0.7, 0.1, 1)",
+            }}
+          >
+            <div className="max-w-[92%] bg-[#f0f0f3] text-[#1D1D1F] rounded-2xl px-4 py-3 text-[13px] leading-[1.5]">
+              {FOLLOW_UP}
+            </div>
+          </div>
+
+          {/* Columbus is investigating — round 2 */}
+          <div
+            className="mt-4 flex items-center gap-2 text-[#5a5a63]"
+            style={{
+              opacity: investigating2Visible ? 1 : 0,
+              transform: investigating2Visible ? "translateY(0)" : "translateY(6px)",
+              transition: "opacity 250ms ease, transform 250ms ease",
+            }}
+          >
+            <Image src="/logobueno.png" alt="" width={18} height={18} className="object-contain shrink-0" />
+            <span className="text-[14px] font-medium">Columbus is investigating</span>
+          </div>
+
+          {/* Considering lines — round 2 */}
+          <div className="mt-2 pl-[26px] space-y-1">
+            {CONSIDERING_2.map((line, i) => (
+              <div
+                key={line}
+                className="text-[13px] text-[#6b6b73] leading-[1.4]"
+                style={{
+                  opacity: visibleConsidering2 > i ? 1 : 0,
+                  transform: visibleConsidering2 > i ? "translateY(0)" : "translateY(6px)",
+                  transition: "opacity 220ms ease, transform 220ms ease",
+                }}
+              >
+                {line}
+              </div>
+            ))}
+          </div>
+
+          {/* Response — round 2 */}
+          <div
+            className="mt-4 text-[13px] leading-[1.55] text-[#1D1D1F]"
+            style={{
+              opacity: response2Visible ? 1 : 0,
+              transform: response2Visible ? "translateY(0)" : "translateY(8px)",
+              transition: "opacity 380ms ease, transform 380ms cubic-bezier(0.05, 0.7, 0.1, 1)",
+            }}
+          >
+            {RESPONSE_2}
+          </div>
+        </div>
+
+        {/* Input bar — clean, no borders / dividers. Text always left-aligned
+            with comfortable padding. Send button always visible: light gray
+            pill background with a small dark-navy square inside. */}
+        <div className="px-6 py-5 max-md:px-4 max-md:py-4">
+          <div className="flex items-center gap-3">
+            <div className="flex-1 text-[15px] leading-[1.4] text-[#1D1D1F] min-h-[32px] flex items-center overflow-hidden">
+              {phase === "typing-query" || phase === "sending" ? (
+                <span className="text-[#1D1D1F] truncate">
+                  {typedQuery}
+                  <span className="inline-block w-0.5 h-4 bg-[#1D1D1F] ml-0.5 align-middle animate-pulse" />
+                </span>
+              ) : phase === "typing-followup" || phase === "sending-followup" ? (
+                <span className="text-[#1D1D1F] truncate">
+                  {typedFollowUp}
+                  {phase === "typing-followup" && (
+                    <span className="inline-block w-0.5 h-4 bg-[#1D1D1F] ml-0.5 align-middle animate-pulse" />
+                  )}
+                </span>
+              ) : (
+                <span className="text-[#a0a0a8]">Ask Columbus…</span>
+              )}
+            </div>
+            <div
+              className="w-10 h-10 rounded-[10px] flex items-center justify-center shrink-0 bg-[#e8e8ec]"
+              aria-hidden
+            >
+              <div className="w-3 h-3 rounded-[2px] bg-[#0A1344]" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Layer 3 — animated cursor (moves toward the centered "+ New chat" pill) */}
+      <div
+        className="absolute z-40 pointer-events-none"
+        style={{
+          opacity: cursorVisible ? 1 : 0,
+          left: cursorVisible ? "calc(50% - 8px)" : "calc(100% - 80px)",
+          top: cursorVisible ? "calc(50% - 4px)" : "calc(100% - 80px)",
+          transform: `scale(${phase === "cursor-tap" ? 0.85 : 1})`,
+          transition:
+            "left 760ms cubic-bezier(0.22, 1, 0.36, 1), top 760ms cubic-bezier(0.22, 1, 0.36, 1), opacity 200ms ease, transform 140ms ease",
+        }}
+        aria-hidden
+      >
+        {CURSOR_GLYPH}
+      </div>
     </div>
   );
 
