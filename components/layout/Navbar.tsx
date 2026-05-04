@@ -40,12 +40,12 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
         typeof window !== "undefined" ? window.innerWidth >= NAV_BREAKPOINT : true
     );
     const [bgTriggerPassed, setBgTriggerPassed] = useState(false);
-    const [island2Reached, setIsland2Reached] = useState(false);
     const pathname = usePathname();
     const isHomePage = pathname === "/";
     const isProductsPage = pathname === "/products/mapsgpt";
     const isUseCasesPage = pathname === "/products/enterprise" || pathname === "/columbus-solutions" || pathname === "/research-applications";
     const isEnterprisePage = pathname === "/products/enterprise";
+const isTechnologyPage = pathname === "/technology";
     const isContactPage = pathname === "/contact";
     const showWordmarkOnMobile = pathname === "/" || pathname === "/mission" || pathname === "/contact";
     const navRef = useRef<HTMLElement>(null);
@@ -175,30 +175,10 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
             bgTriggerObs.observe(bgTrigger);
         }
 
-        // Homepage: show navbar border once vertical grid lines reach full opacity (~192px into Island 2)
-        const island2 = document.querySelector("[data-island-2]");
-        let island2Obs: IntersectionObserver | undefined;
-        if (island2) {
-            island2Obs = new IntersectionObserver(
-                ([entry]) => {
-                    // Show border when island 2 enters, keep it unless user scrolls back above it
-                    if (entry.isIntersecting) {
-                        setIsland2Reached(true);
-                    } else if (entry.boundingClientRect.top > 0) {
-                        // Only hide if island 2 is below the viewport (scrolled back up)
-                        setIsland2Reached(false);
-                    }
-                },
-                { threshold: 0, rootMargin: "-192px 0px 0px 0px" }
-            );
-            island2Obs.observe(island2);
-        }
-
         return () => {
             ctaObs?.disconnect();
             footerObs?.disconnect();
             bgTriggerObs?.disconnect();
-            island2Obs?.disconnect();
             if (heroTransitionHandler) window.removeEventListener("scroll", heroTransitionHandler);
             window.removeEventListener("scroll", handleScroll);
             window.removeEventListener("resize", handleResize);
@@ -487,11 +467,38 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                         background: isEnterprisePage && isDark ? "rgba(14, 16, 28, 0.95)" : isDark ? "rgba(6, 8, 20, 0.85)" : "rgba(255, 255, 255, 0.82)",
                         backdropFilter: "blur(20px) saturate(1.2)",
                         WebkitBackdropFilter: "blur(20px) saturate(1.2)",
-                        borderBottom: isProductsPage ? "none" : (isHomePage && !island2Reached) ? "none" : isEnterprisePage ? "1px solid rgba(255,255,255,0.10)" : isDark ? "1px solid rgba(255,255,255,0.06)" : isHomePage ? "1px solid rgba(37, 99, 235, 0.3)" : "1px solid rgba(0,0,0,0.06)",
+                        borderBottom: isProductsPage ? "none" : isHomePage ? "none" : isEnterprisePage ? "1px solid rgba(255,255,255,0.10)" : isDark ? "1px solid rgba(255,255,255,0.06)" : "1px solid rgba(0,0,0,0.06)",
                         opacity: (isProductsPage ? bgTriggerPassed : isCompact) && !isMenuOpen ? 1 : 0,
                         transition: `opacity ${t}`,
                     }}
                 />
+
+                {/* Always-visible bottom border on homepage — matches the hero/island grid lines */}
+                {isHomePage && !isMenuOpen && (
+                    <div
+                        className="absolute left-0 right-0 pointer-events-none"
+                        style={{ bottom: 0, height: 1, background: "var(--grid-line)" }}
+                        aria-hidden
+                    />
+                )}
+
+                {/* Always-visible bottom border on the technology page — matches the
+                    page's vertical structure lines. White (rgba(255,255,255,0.3))
+                    while the navbar is in dark theme over the hero, blue
+                    (rgba(0,102,204,0.3)) once the user has scrolled past the hero
+                    onto the white content below. */}
+                {isTechnologyPage && !isMenuOpen && (
+                    <div
+                        className="absolute left-0 right-0 pointer-events-none"
+                        style={{
+                            bottom: 0,
+                            height: 1,
+                            background: isDark ? "rgba(255, 255, 255, 0.3)" : "rgba(0, 102, 204, 0.3)",
+                            transition: `background ${t}`,
+                        }}
+                        aria-hidden
+                    />
+                )}
 
                 <div className="relative mx-auto w-full" style={{ maxWidth: wide ? 1408 : 1287 }}>
                     {/* (navbar bg when dropdown open is now part of the dropdown itself) */}
