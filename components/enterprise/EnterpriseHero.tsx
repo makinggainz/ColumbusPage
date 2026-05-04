@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+import { StructureGrid } from "./StructureGrid";
 
 const QUESTION = "Where is the best place to purchase property for new company headquarters for our billion dollar company Manthano?";
 
@@ -73,11 +74,11 @@ export default function EnterpriseHero() {
       <div
         className="absolute inset-0"
         style={{
-          backgroundImage: "url(/probackground.png)",
+          backgroundImage: "url(/productbackground1.png)",
           backgroundPosition: "top center",
           backgroundSize: "100% auto",
           backgroundRepeat: "no-repeat",
-          filter: "grayscale(1) blur(6px)",
+          filter: "grayscale(1)",
           transform: "scale(1.02)",
           zIndex: 0,
         }}
@@ -96,6 +97,8 @@ export default function EnterpriseHero() {
           zIndex: 0,
         }}
       />
+      {/* Vertical structure lines — extends the grid from sections below into the hero */}
+      <StructureGrid lineColor="rgba(10,19,68,0.12)" cellSize={9999} />
 
       {/* ── Text block ── */}
       {/* pt-[200px] restores the vertical breathing room previously

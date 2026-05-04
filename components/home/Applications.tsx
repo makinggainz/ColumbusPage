@@ -29,13 +29,13 @@ export const Applications = () => {
   const items = [
     { title: "Residential Real Estate", image: "/UseCases/ResidentialRealEstate.jpg", href: "/columbus-solutions" },
     { title: "Commercial Real Estate", image: "/UseCases/CommercialRealEstate.jpg", href: "/columbus-solutions" },
-    { title: "Generative Geodata", image: "/UseCases/GenDatalayers.png", href: "/columbus-solutions" },
+    { title: "Disaster Response", image: "/UseCases/GenDatalayers.png", href: "/columbus-solutions" },
     { title: "Logistics Optimization", image: "/UseCases/Logistics.webp", href: "/columbus-solutions" },
-    { title: "Urban Planning", image: "/UseCases/UrbanPlanning.jpg", href: "/columbus-solutions" },
-    { title: "Site Selection", image: "/UseCases/SiteSelection.jpg", href: "/columbus-solutions" },
-    { title: "Consumer Mapping", image: "/UseCases/ConsumerMapping.jpeg", href: "/columbus-solutions" },
-    { title: "Ground Due Diligence", image: "/UseCases/GroundDueDillegence.png", href: "/columbus-solutions" },
-    { title: "More", image: "/UseCases/GeoMarketing.png", href: "/columbus-solutions" },
+    { title: "Urban Infrastructure", image: "/UseCases/UrbanPlanning.jpg", href: "/columbus-solutions" },
+    { title: "GIS Research", image: "/UseCases/SiteSelection.jpg", href: "/columbus-solutions" },
+    { title: "Economic Studies", image: "/UseCases/ConsumerMapping.jpeg", href: "/columbus-solutions" },
+    { title: "Academic Research", image: "/UseCases/GroundDueDillegence.png", href: "/columbus-solutions" },
+    { title: "Geomarketing", image: "/UseCases/GeoMarketing.png", href: "/columbus-solutions" },
   ];
 
   return (

@@ -988,7 +988,7 @@ const isTechnologyPage = pathname === "/technology";
                                             { label: "Vision", href: "/mission" },
                                             { label: "Blog", href: "/blog" },
                                         ].map((item) => (
-                                            <li key={item.label} className="pointer-events-auto">
+                                            <li key={item.label}>
                                                 <Link
                                                     href={item.href}
                                                     onClick={closeMenu}
@@ -1059,7 +1059,7 @@ const isTechnologyPage = pathname === "/technology";
                                                 key={item.href}
                                                 href={item.href}
                                                 onClick={closeMenu}
-                                                className="group flex flex-col cursor-pointer pointer-events-auto"
+                                                className="group flex flex-col cursor-pointer"
                                                 style={{
                                                     opacity: hoverKind === "use-cases" && isMenuOpen ? 1 : 0,
                                                     transform: hoverKind === "use-cases" && isMenuOpen
@@ -1068,6 +1068,12 @@ const isTechnologyPage = pathname === "/technology";
                                                     transition: hoverKind === "use-cases" && isMenuOpen
                                                         ? `opacity 400ms cubic-bezier(0.05, 0.7, 0.1, 1) ${100 + index * 60}ms, transform 450ms cubic-bezier(0.05, 0.7, 0.1, 1) ${100 + index * 60}ms`
                                                         : `opacity 120ms ease ${(1 - index) * 25}ms, transform 120ms ease ${(1 - index) * 25}ms`,
+                                                    // Inline override beats the products-col descendant rule
+                                                    // `[&_a]:min-[900px]:pointer-events-auto` (line ~904), which would
+                                                    // otherwise leave this card hit-testable while invisible and
+                                                    // intercept clicks meant for the Company overlay's links
+                                                    // (Vision / Blog) stacked beneath it in the same `relative` parent.
+                                                    pointerEvents: hoverKind === "use-cases" && isMenuOpen ? "auto" : "none",
                                                 }}
                                             >
                                                 <div
