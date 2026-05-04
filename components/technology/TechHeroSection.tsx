@@ -64,7 +64,7 @@ export function TechHeroSection() {
   return (
     <section ref={sectionRef} className={styles.techHero}>
       <Image
-        src="/TechpgHero.png"
+        src="/TechnologyBackground.png"
         alt=""
         fill
         priority
