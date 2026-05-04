@@ -308,46 +308,53 @@ export default function Chat({ lightTheme = false, embedded = false, content }: 
         transition: "opacity 0.7s ease",
       }}
     >
-      {/* Layer 0 — Madrid base map */}
-      <Image
-        src="/MadridMap.png"
-        alt="Madrid metro area map"
-        fill
-        className="object-cover"
-        priority
-      />
-
-      {/* Layer 0.5 — Madrid query answer overlay. Layers reveal one-by-one
-          as each "deep reasoning" line appears in the chat. */}
+      {/* Layer 0 — Madrid base map. Two side-by-side copies: the right copy
+          is shifted 28% so the Madrid label and overlays clear the chat
+          panel; the left copy duplicates the map underneath the chat panel
+          so the map reads as continuous. */}
       <div
-        className="absolute inset-0 pointer-events-none z-[5]"
+        className="absolute top-0 bottom-0 left-0 w-full"
+        style={{ transform: "translateX(-72%)" }}
+      >
+        <Image src="/MadridMap.png" alt="" fill className="object-cover" priority />
+      </div>
+      <div
+        className="absolute top-0 bottom-0 left-0 w-full"
+        style={{ transform: "translateX(28%)" }}
+      >
+        <Image src="/MadridMap.png" alt="Madrid metro area map" fill className="object-cover" priority />
+      </div>
+
+      {/* Layer 0.5 — Madrid query answer overlay. Same right-shift as the
+          right map so coordinates land on the visible Madrid view. */}
+      <div
+        className="absolute top-0 bottom-0 left-0 w-full pointer-events-none z-[5]"
+        style={{ transform: "translateX(28%)" }}
         aria-hidden
       >
-        <svg
-          className="absolute inset-0 w-full h-full"
-          viewBox="0 0 100 100"
-          preserveAspectRatio="none"
-        >
-          {/* Layer 1 — 1km service radius circles around each metro station */}
-          {METRO_STATIONS.map((s, i) => (
-            <circle
-              key={`r-${i}`}
-              cx={s.cx}
-              cy={s.cy}
-              r={STATION_RADIUS}
-              fill="rgba(0, 102, 204, 0.14)"
-              stroke="#0066CC"
-              strokeWidth="0.18"
-              strokeOpacity="0.55"
-              style={{
-                opacity: stationsVisible ? 1 : 0,
-                transition: `opacity 360ms cubic-bezier(0.05, 0.7, 0.1, 1) ${i * 60}ms`,
-              }}
-            />
-          ))}
-        </svg>
+        {/* Layer 1 — 1km service radius circles (DOM divs = perfect circles) */}
+        {METRO_STATIONS.map((s, i) => (
+          <div
+            key={`r-${i}`}
+            className="absolute"
+            style={{
+              left: `${s.cx}%`,
+              top: `${s.cy}%`,
+              width: STATION_RADIUS_PX,
+              height: STATION_RADIUS_PX,
+              borderRadius: "50%",
+              background: "rgba(0, 102, 204, 0.14)",
+              border: "1px solid rgba(0, 102, 204, 0.55)",
+              transform: stationsVisible
+                ? "translate(-50%, -50%) scale(1)"
+                : "translate(-50%, -50%) scale(0.6)",
+              opacity: stationsVisible ? 1 : 0,
+              transition: `opacity 360ms cubic-bezier(0.05, 0.7, 0.1, 1) ${i * 60}ms, transform 420ms cubic-bezier(0.22, 1, 0.36, 1) ${i * 60}ms`,
+            }}
+          />
+        ))}
 
-        {/* Layer 1 — Metro station markers (DOM elements so they stay crisp) */}
+        {/* Layer 1 — Metro station markers (sit on top of the radii) */}
         {METRO_STATIONS.map((s, i) => (
           <div
             key={`s-${i}`}
@@ -403,31 +410,34 @@ export default function Chat({ lightTheme = false, embedded = false, content }: 
           );
         })}
 
-        {/* Legend pill — bottom-right corner of the visual */}
-        <div
-          className="absolute bottom-4 right-4 hidden md:inline-flex items-center gap-3 bg-white/95 shadow-md rounded-full px-3.5 py-1.5 text-[11px] font-medium text-[#0A1344]"
-          style={{
-            opacity: stationsVisible ? 1 : 0,
-            transform: stationsVisible ? "translateY(0)" : "translateY(4px)",
-            transition: "opacity 320ms ease, transform 320ms cubic-bezier(0.22, 1, 0.36, 1)",
-          }}
-        >
-          <span className="inline-flex items-center gap-1.5">
-            <span
-              className="w-2 h-2 rounded-full"
-              style={{ background: "white", border: "1.5px solid #DC2626" }}
-            />
-            Metro station
-          </span>
-          <span className="inline-flex items-center gap-1.5">
-            <span className="w-2 h-2 rounded-sm" style={{ background: "rgba(0, 102, 204, 0.32)" }} />
-            1km radius
-          </span>
-          <span className="inline-flex items-center gap-1.5">
-            <span className="w-2 h-2 rounded-[1px]" style={{ background: "#16a34a" }} />
-            Parcel
-          </span>
-        </div>
+      </div>
+
+      {/* Legend pill — non-shifted so it sits flush in the visual's
+          bottom-right corner regardless of the right-map translation. */}
+      <div
+        className="absolute bottom-4 right-4 z-[5] hidden md:inline-flex items-center gap-3 bg-white/95 shadow-md rounded-full px-3.5 py-1.5 text-[11px] font-medium text-[#0A1344] pointer-events-none"
+        style={{
+          opacity: stationsVisible ? 1 : 0,
+          transform: stationsVisible ? "translateY(0)" : "translateY(4px)",
+          transition: "opacity 320ms ease, transform 320ms cubic-bezier(0.22, 1, 0.36, 1)",
+        }}
+        aria-hidden
+      >
+        <span className="inline-flex items-center gap-1.5">
+          <span
+            className="w-2 h-2 rounded-full"
+            style={{ background: "white", border: "1.5px solid #DC2626" }}
+          />
+          Metro station
+        </span>
+        <span className="inline-flex items-center gap-1.5">
+          <span className="w-2 h-2 rounded-full" style={{ background: "rgba(0, 102, 204, 0.32)" }} />
+          1km radius
+        </span>
+        <span className="inline-flex items-center gap-1.5">
+          <span className="w-2 h-2 rounded-[1px]" style={{ background: "#16a34a" }} />
+          Parcel
+        </span>
       </div>
 
       {/* Layer 1 — strong blur veil that clears once Columbus has answered */}
@@ -449,7 +459,7 @@ export default function Chat({ lightTheme = false, embedded = false, content }: 
             3. full panel:  bottom-left, conversation area + input
           Position, width, height, and content all transition between states. */}
       <div
-        className="absolute z-20 bg-white rounded-2xl shadow-xl overflow-hidden flex flex-col max-md:left-[20px] max-md:right-[20px] max-md:w-auto"
+        className="absolute z-20 bg-white shadow-xl overflow-hidden flex flex-col max-md:left-[20px] max-md:right-[20px] max-md:w-auto"
         style={{
           left: panelExpanded
             ? "40px"
@@ -459,10 +469,13 @@ export default function Chat({ lightTheme = false, embedded = false, content }: 
           top: panelExpanded ? "100px" : "calc(50% - 28px)",
           width: newChatVisible ? "200px" : "460px",
           height: panelExpanded ? "calc(100% - 140px)" : "56px",
+          // Pill state = fully rounded (corners cap at half-height = 28px on
+          // a 56px tall pill). Full panel = M3 medium-large card radius.
+          borderRadius: panelExpanded ? "16px" : "9999px",
           opacity: phase === "fading-out" ? 0 : 1,
           transform: `scale(${phase === "cursor-tap" ? 0.96 : 1})`,
           transition:
-            "left 520ms cubic-bezier(0.05, 0.7, 0.1, 1), top 520ms cubic-bezier(0.05, 0.7, 0.1, 1), width 520ms cubic-bezier(0.05, 0.7, 0.1, 1), height 520ms cubic-bezier(0.05, 0.7, 0.1, 1), opacity 500ms ease, transform 180ms ease",
+            "left 520ms cubic-bezier(0.05, 0.7, 0.1, 1), top 520ms cubic-bezier(0.05, 0.7, 0.1, 1), width 520ms cubic-bezier(0.05, 0.7, 0.1, 1), height 520ms cubic-bezier(0.05, 0.7, 0.1, 1), border-radius 80ms ease 480ms, opacity 500ms ease, transform 180ms ease",
         }}
       >
         {/* Conversation area — visible only when expanded. */}
@@ -653,8 +666,7 @@ export default function Chat({ lightTheme = false, embedded = false, content }: 
 
       {/* Disclaimer — top-right, always visible across all phases */}
       <div
-        className="absolute top-3 right-3 z-30 text-[11px] font-medium text-white/80 italic pointer-events-none"
-        style={{ textShadow: "0 1px 2px rgba(0, 0, 0, 0.45)" }}
+        className="absolute top-3 right-3 z-30 inline-flex items-center bg-black/55 backdrop-blur-sm rounded-full px-2.5 py-1 text-[11px] font-medium text-white italic pointer-events-none"
       >
         Not real results, simplified
       </div>
