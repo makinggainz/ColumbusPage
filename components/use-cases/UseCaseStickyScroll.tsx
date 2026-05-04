@@ -28,31 +28,35 @@ export default function UseCaseStickyScroll({ lightTheme = false, excludeSection
 
 
 
-  type FeatureRow = { id: string; leftRail: RowLeftRail; content: (isLight: boolean) => React.ReactNode; forceLight?: boolean };
+  type FeatureRow = { id: string; featureTitle: string; leftRail: RowLeftRail; content: (isLight: boolean) => React.ReactNode; forceLight?: boolean };
   const features: FeatureRow[] = [
     {
       id: "chat",
+      featureTitle: "Conversational map chat",
       leftRail: industry.chat.leftRail,
       content: (isLight) => <Chat embedded lightTheme={isLight} />,
     },
     {
       id: "super-model",
+      featureTitle: "Surveying the earth with a super model",
       leftRail: industry.superModel.leftRail,
       content: (isLight) => <SuperModelSection embedded lightTheme={isLight} />,
     },
     {
       id: "agent-research",
+      featureTitle: "Agentic geospatial research",
       leftRail: industry.agentResearch.leftRail,
       content: (isLight) => <AgentResearch embedded lightTheme={isLight} />,
     },
     {
       id: "data-catalogue",
+      featureTitle: "The most accurate data catalogue",
       leftRail: industry.dataCatalogue.leftRail,
       content: (isLight) => <DataCatalogue embedded lightTheme={isLight} />,
     },
   ].filter(f => !excludeSections.includes(f.id));
 
-  const renderLeftRail = (rail: RowLeftRail, isLight: boolean) => {
+  const renderLeftRail = (featureTitle: string, rail: RowLeftRail, isLight: boolean) => {
     const rowTitleColor = isLight ? "#1D1D1F" : "#FFFFFF";
     const rowDescriptionColor = isLight ? "rgba(29, 29, 31, 0.75)" : "rgba(255, 255, 255, 0.75)";
     const rowBulletColor = isLight ? "rgba(29, 29, 31, 0.75)" : "rgba(255, 255, 255, 0.75)";
@@ -61,10 +65,10 @@ export default function UseCaseStickyScroll({ lightTheme = false, excludeSection
     return (
       <div className="max-w-[280px]">
         <h3
-          className="m-0 text-[18px] font-medium leading-[1.3] tracking-[-0.01em]"
+          className="m-0 text-[24px] md:text-[28px] font-medium leading-[1.15] tracking-[-0.02em]"
           style={{ color: rowTitleColor }}
         >
-          {rail.title}
+          {featureTitle}
         </h3>
         <p
           className="mt-3 text-[14px] leading-[1.55] whitespace-pre-line"
@@ -155,13 +159,13 @@ export default function UseCaseStickyScroll({ lightTheme = false, excludeSection
               <div className="relative grid grid-cols-1 lg:grid-cols-[330px_1px_1fr]">
                 {/* Mobile: left-rail block above content */}
                 <div className="lg:hidden px-6 pt-10 pb-6">
-                  {renderLeftRail(feature.leftRail, isLight)}
+                  {renderLeftRail(feature.featureTitle, feature.leftRail, isLight)}
                 </div>
 
                 {/* Desktop: sticky left rail */}
                 <div className="hidden lg:block bg-transparent">
                   <div className="sticky top-20 px-8 py-[64px]">
-                    {renderLeftRail(feature.leftRail, isLight)}
+                    {renderLeftRail(feature.featureTitle, feature.leftRail, isLight)}
                   </div>
                 </div>
 

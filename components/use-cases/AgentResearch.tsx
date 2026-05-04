@@ -56,10 +56,8 @@ export default function AgenticResearch({
         transition: "opacity 0.7s ease",
       }}
     >
-      {/* Panel content fills the container; padding-top reserves space for the
-          overlaid title at the top. */}
       <div
-        className={`absolute inset-0 overflow-auto rounded-lg ${outerBorder} pt-20 pb-6 px-6`}
+        className={`absolute inset-0 overflow-auto rounded-lg ${outerBorder} pt-6 pb-6 px-6`}
       >
         <div className="grid grid-cols-[320px_1fr] gap-8 max-xl:grid-cols-1 p-0 max-md:pt-0">
           {/* TEMPLATE CARDS */}
@@ -118,11 +116,6 @@ export default function AgenticResearch({
           </div>
         </div>
       </div>
-
-      {/* Section title */}
-      <h2 className="absolute top-6 left-6 z-20 text-white text-[24px] md:text-[28px] lg:text-[32px] font-medium tracking-[-0.02em] leading-[1.1] m-0">
-        Agentic geospatial research
-      </h2>
     </div>
   );
 
