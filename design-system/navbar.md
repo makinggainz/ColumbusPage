@@ -47,8 +47,8 @@
 - **Standard pages:** appear once the hero CTA element (`#hero-cta`) scrolls out of the viewport (observed via `IntersectionObserver`).
 - **Products page:** appear once `bgTriggerPassed` is true AND the hero scroll transition is not active (`!inHeroTransition || bgTriggerPassed`).
 - Animate in via `clip-path: inset(0 0% 0 0)` → `inset(0 100% 0 0)` + opacity fade (400ms spring).
-- Links shown: **Products** (`/products/enterprise`), **Research** (`/technology`), **Use Cases** (`/columbus-solutions` — opens a hover dropdown with two cards: Columbus Pro Enterprise Use-Cases → `/columbus-solutions`, Research Applications → `/research-applications`), **Company** (`/mission`).
-- The Use Cases link mirrors the Products dropdown pattern (chevron + active underline) but renders a different overlay: an empty bordered card for Columbus Pro Enterprise Use-Cases and a bordered card containing an inline globe SVG for Research Applications. Plain text labels sit below each card — no subtitles. The overlay is positioned absolutely over the products card grid and crossfades when `hoverKind === "use-cases"`.
+- Links shown: **Products** (`/products/enterprise`), **Research** (`/technology`), **Use Cases** (`/columbus-solutions` — opens a hover dropdown with two cards: Columbus Business Use cases → `/columbus-solutions`, Research Applications → `/research-applications`), **Company** (`/mission`).
+- The Use Cases link mirrors the Products dropdown pattern (chevron + active underline) but renders a different overlay: an empty bordered card for Columbus Business Use cases and a bordered card containing an inline globe SVG for Research Applications. Plain text labels sit below each card — no subtitles. The overlay is positioned absolutely over the products card grid and crossfades when `hoverKind === "use-cases"`.
 - On the products page, link text uses `glassStyles.glassTextStatic` for the frosted glass look.
 
 ---

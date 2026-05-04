@@ -64,13 +64,19 @@ export function TechHeroSection() {
   return (
     <section ref={sectionRef} className={styles.techHero}>
       <Image
-        src="/TechpgHero.png"
+        src="/TechnologyBackground.png"
         alt=""
         fill
         priority
         sizes="100vw"
         className={styles.techHeroVideo}
       />
+
+      {/* Hero-only structure lines — visually continue the .sidebarPanel /
+          .sidebarPanelRight content lines all the way up through the hero
+          at the same x-positions (var(--tech-sidebar-x) from each edge). */}
+      <div className={styles.techHeroStructureLineLeft} aria-hidden />
+      <div className={styles.techHeroStructureLineRight} aria-hidden />
 
       {/* Scroll-driven blur overlay — sits above the hero image + text,
           backdrop-filter blurs everything behind it as `blurProgress`
@@ -116,7 +122,7 @@ export function TechHeroSection() {
             className={styles.techHeroDivider}
             style={{
               background:
-                "linear-gradient(to right, rgba(10,19,68,0.45) 0%, rgba(10,19,68,0.22) 50%, rgba(10,19,68,0) 100%)",
+                "linear-gradient(to right, rgba(255,255,255,0.45) 0%, rgba(255,255,255,0.22) 50%, rgba(255,255,255,0) 100%)",
               ...fadeIn(0.12),
             }}
           />

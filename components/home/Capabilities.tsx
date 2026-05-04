@@ -6,10 +6,6 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { GridSection, gl } from "./ContentGrid";
 
-const D = ({ n }: { n: number }) => (
-  <span style={{ position: "absolute", top: 0, left: 0, zIndex: 9999, background: "red", color: "white", fontSize: 10, fontWeight: 700, borderRadius: "50%", width: 18, height: 18, display: "flex", alignItems: "center", justifyContent: "center", pointerEvents: "none" }}>{n}</span>
-);
-
 type SidebarItem = {
   id: string;
   label: string;
@@ -92,7 +88,6 @@ function AnimatedChatCard() {
 
   return (
     <div className="absolute left-[72px] top-[40px] bottom-[40px] w-[514px] max-xl:left-[48px] max-xl:w-[440px] max-lg:left-[24px] max-lg:w-[360px] bg-[#f5f5f7] shadow-xl p-8 flex flex-col">
-      <D n={30} />
       {/* Thinking header */}
       <div
         className="flex items-center gap-3 mb-4"
@@ -201,9 +196,7 @@ export const Capabilities = () => {
   return (
     <>
     <GridSection style={{ borderTop: "none", position: "relative", zIndex: 1 }}>
-      <D n={1} />
       <div ref={sectionRef} style={{ overflow: "visible", position: "relative" }}>
-        <D n={2} />
         {/* Header */}
         <div
           className="flex items-center justify-center px-8 md:px-10 pt-24 pb-12"
@@ -215,7 +208,6 @@ export const Capabilities = () => {
             transition: "opacity 0.7s ease, transform 0.7s ease",
           }}
         >
-          <D n={3} />
           <h2 className="font-medium tracking-[-0.02em] text-[20px] lg:text-[25px] text-[#6E6E73]">
             Capabilities
           </h2>
@@ -229,10 +221,8 @@ export const Capabilities = () => {
             zIndex: 10,
           }}
         >
-          <D n={5} />
           {/* Mobile sidebar */}
           <div className="hidden max-md:block overflow-hidden" style={{ position: "relative" }}>
-            <D n={6} />
             {SIDEBAR_ITEMS.map((item) => (
               <button
                 key={item.id}
@@ -302,10 +292,8 @@ export const Capabilities = () => {
 
           {/* Desktop layout: sidebar + map */}
           <div ref={contentRef} className="relative w-full overflow-hidden flex max-md:hidden h-[673px] max-lg:h-[520px] bg-[#111827]">
-            <D n={16} />
             {/* Sidebar */}
             <div className="w-[348px] max-lg:w-[280px] shrink-0 text-white flex flex-col overflow-hidden h-full" style={{ position: "relative" }}>
-              <D n={17} />
               {SIDEBAR_ITEMS.map((item) => (
                 <button
                   key={item.id}
@@ -366,7 +354,6 @@ export const Capabilities = () => {
                 transitionDuration: `${FADE_DURATION_MS / 2}ms`,
               }}
             >
-              <D n={26} />
               <Image
                 src="/HK Map-2.png"
                 alt="Map"

@@ -40,12 +40,12 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
         typeof window !== "undefined" ? window.innerWidth >= NAV_BREAKPOINT : true
     );
     const [bgTriggerPassed, setBgTriggerPassed] = useState(false);
-    const [island2Reached, setIsland2Reached] = useState(false);
     const pathname = usePathname();
     const isHomePage = pathname === "/";
     const isProductsPage = pathname === "/products/mapsgpt";
     const isUseCasesPage = pathname === "/products/enterprise" || pathname === "/columbus-solutions" || pathname === "/research-applications";
     const isEnterprisePage = pathname === "/products/enterprise";
+const isTechnologyPage = pathname === "/technology";
     const isContactPage = pathname === "/contact";
     const showWordmarkOnMobile = pathname === "/" || pathname === "/mission" || pathname === "/contact";
     const navRef = useRef<HTMLElement>(null);
@@ -175,30 +175,10 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
             bgTriggerObs.observe(bgTrigger);
         }
 
-        // Homepage: show navbar border once vertical grid lines reach full opacity (~192px into Island 2)
-        const island2 = document.querySelector("[data-island-2]");
-        let island2Obs: IntersectionObserver | undefined;
-        if (island2) {
-            island2Obs = new IntersectionObserver(
-                ([entry]) => {
-                    // Show border when island 2 enters, keep it unless user scrolls back above it
-                    if (entry.isIntersecting) {
-                        setIsland2Reached(true);
-                    } else if (entry.boundingClientRect.top > 0) {
-                        // Only hide if island 2 is below the viewport (scrolled back up)
-                        setIsland2Reached(false);
-                    }
-                },
-                { threshold: 0, rootMargin: "-192px 0px 0px 0px" }
-            );
-            island2Obs.observe(island2);
-        }
-
         return () => {
             ctaObs?.disconnect();
             footerObs?.disconnect();
             bgTriggerObs?.disconnect();
-            island2Obs?.disconnect();
             if (heroTransitionHandler) window.removeEventListener("scroll", heroTransitionHandler);
             window.removeEventListener("scroll", handleScroll);
             window.removeEventListener("resize", handleResize);
@@ -487,11 +467,38 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                         background: isEnterprisePage && isDark ? "rgba(14, 16, 28, 0.95)" : isDark ? "rgba(6, 8, 20, 0.85)" : "rgba(255, 255, 255, 0.82)",
                         backdropFilter: "blur(20px) saturate(1.2)",
                         WebkitBackdropFilter: "blur(20px) saturate(1.2)",
-                        borderBottom: isProductsPage ? "none" : (isHomePage && !island2Reached) ? "none" : isEnterprisePage ? "1px solid rgba(255,255,255,0.10)" : isDark ? "1px solid rgba(255,255,255,0.06)" : isHomePage ? "1px solid rgba(37, 99, 235, 0.3)" : "1px solid rgba(0,0,0,0.06)",
+                        borderBottom: isProductsPage ? "none" : isHomePage ? "none" : isEnterprisePage ? "1px solid rgba(255,255,255,0.10)" : isDark ? "1px solid rgba(255,255,255,0.06)" : "1px solid rgba(0,0,0,0.06)",
                         opacity: (isProductsPage ? bgTriggerPassed : isCompact) && !isMenuOpen ? 1 : 0,
                         transition: `opacity ${t}`,
                     }}
                 />
+
+                {/* Always-visible bottom border on homepage — matches the hero/island grid lines */}
+                {isHomePage && !isMenuOpen && (
+                    <div
+                        className="absolute left-0 right-0 pointer-events-none"
+                        style={{ bottom: 0, height: 1, background: "var(--grid-line)" }}
+                        aria-hidden
+                    />
+                )}
+
+                {/* Always-visible bottom border on the technology page — matches the
+                    page's vertical structure lines. White (rgba(255,255,255,0.3))
+                    while the navbar is in dark theme over the hero, blue
+                    (rgba(0,102,204,0.3)) once the user has scrolled past the hero
+                    onto the white content below. */}
+                {isTechnologyPage && !isMenuOpen && (
+                    <div
+                        className="absolute left-0 right-0 pointer-events-none"
+                        style={{
+                            bottom: 0,
+                            height: 1,
+                            background: isDark ? "rgba(255, 255, 255, 0.3)" : "rgba(0, 102, 204, 0.3)",
+                            transition: `background ${t}`,
+                        }}
+                        aria-hidden
+                    />
+                )}
 
                 <div className="relative mx-auto w-full" style={{ maxWidth: wide ? 1408 : 1287 }}>
                     {/* (navbar bg when dropdown open is now part of the dropdown itself) */}
@@ -981,7 +988,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                             { label: "Vision", href: "/mission" },
                                             { label: "Blog", href: "/blog" },
                                         ].map((item) => (
-                                            <li key={item.label} className="pointer-events-auto">
+                                            <li key={item.label}>
                                                 <Link
                                                     href={item.href}
                                                     onClick={closeMenu}
@@ -1004,7 +1011,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                 {/* ── Use-cases cards (desktop) — absolutely positioned
                                     on top of the products grid; fades in when the user
                                     hovers Use Cases. Two cards: an empty bordered box for
-                                    Columbus Pro Enterprise Use-Cases, and a bordered box
+                                    Columbus Business Use cases, and a bordered box
                                     with a globe diagram for Research Applications. Plain
                                     text labels sit below each card. */}
                                 <div
@@ -1019,29 +1026,32 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                 >
                                     <div className="grid grid-cols-2 gap-6 w-full max-w-[580px]">
                                         {[
-                                            { title: "Columbus Pro Enterprise Use-Cases", href: "/columbus-solutions", icon: null as React.ReactNode },
+                                            {
+                                                title: "Columbus Business Use cases",
+                                                href: "/columbus-solutions",
+                                                icon: (
+                                                    <Image
+                                                        src="/logobueno.png"
+                                                        alt=""
+                                                        width={140}
+                                                        height={140}
+                                                        className="w-1/2 h-1/2 max-w-[140px] object-contain"
+                                                        style={{ filter: isDark ? "brightness(0) invert(1)" : undefined }}
+                                                    />
+                                                ),
+                                            },
                                             {
                                                 title: "Research Applications",
                                                 href: "/research-applications",
                                                 icon: (
-                                                    <svg viewBox="0 0 200 200" fill="none" stroke="currentColor" className="w-1/2 h-1/2 max-w-[140px]" aria-hidden>
-                                                        {/* Crosshair dashed lines */}
-                                                        <line x1="100" y1="6" x2="100" y2="38" strokeWidth="1.2" strokeDasharray="4 4" />
-                                                        <line x1="100" y1="162" x2="100" y2="194" strokeWidth="1.2" strokeDasharray="4 4" />
-                                                        <line x1="6" y1="100" x2="38" y2="100" strokeWidth="1.2" strokeDasharray="4 4" />
-                                                        <line x1="162" y1="100" x2="194" y2="100" strokeWidth="1.2" strokeDasharray="4 4" />
-                                                        {/* Globe outline */}
-                                                        <circle cx="100" cy="100" r="60" strokeWidth="1.6" />
-                                                        {/* Longitude meridians (ellipses) */}
-                                                        <ellipse cx="100" cy="100" rx="22" ry="60" strokeWidth="1.2" />
-                                                        <ellipse cx="100" cy="100" rx="42" ry="60" strokeWidth="1.2" />
-                                                        {/* Equator */}
-                                                        <line x1="40" y1="100" x2="160" y2="100" strokeWidth="1.6" />
-                                                        {/* Polar axis */}
-                                                        <line x1="100" y1="40" x2="100" y2="160" strokeWidth="1" strokeDasharray="2 3" />
-                                                        {/* Orbiting body */}
-                                                        <circle cx="138" cy="92" r="5" fill="currentColor" stroke="none" />
-                                                    </svg>
+                                                    <Image
+                                                        src="/TechnologyPageImages/lgm-globe-icon.png"
+                                                        alt=""
+                                                        width={140}
+                                                        height={140}
+                                                        className="w-1/2 h-1/2 max-w-[140px] object-contain"
+                                                        style={{ filter: isDark ? "brightness(0) invert(1)" : undefined }}
+                                                    />
                                                 ),
                                             },
                                         ].map((item, index) => (
@@ -1049,7 +1059,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                                 key={item.href}
                                                 href={item.href}
                                                 onClick={closeMenu}
-                                                className="group flex flex-col cursor-pointer pointer-events-auto"
+                                                className="group flex flex-col cursor-pointer"
                                                 style={{
                                                     opacity: hoverKind === "use-cases" && isMenuOpen ? 1 : 0,
                                                     transform: hoverKind === "use-cases" && isMenuOpen
@@ -1058,6 +1068,12 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                                     transition: hoverKind === "use-cases" && isMenuOpen
                                                         ? `opacity 400ms cubic-bezier(0.05, 0.7, 0.1, 1) ${100 + index * 60}ms, transform 450ms cubic-bezier(0.05, 0.7, 0.1, 1) ${100 + index * 60}ms`
                                                         : `opacity 120ms ease ${(1 - index) * 25}ms, transform 120ms ease ${(1 - index) * 25}ms`,
+                                                    // Inline override beats the products-col descendant rule
+                                                    // `[&_a]:min-[900px]:pointer-events-auto` (line ~904), which would
+                                                    // otherwise leave this card hit-testable while invisible and
+                                                    // intercept clicks meant for the Company overlay's links
+                                                    // (Vision / Blog) stacked beneath it in the same `relative` parent.
+                                                    pointerEvents: hoverKind === "use-cases" && isMenuOpen ? "auto" : "none",
                                                 }}
                                             >
                                                 <div
@@ -1126,6 +1142,33 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                                         transition: "opacity 250ms ease",
                                                     }}
                                                 />
+                                                {item.screenshot && (
+                                                    <>
+                                                        <div
+                                                            className="absolute inset-0 pointer-events-none"
+                                                            style={{ backdropFilter: "blur(4px)", WebkitBackdropFilter: "blur(4px)", zIndex: 1 }}
+                                                        />
+                                                        <div
+                                                            className="absolute overflow-hidden"
+                                                            style={{
+                                                                left: "5%",
+                                                                bottom: 0,
+                                                                width: "90%",
+                                                                height: "85%",
+                                                                borderRadius: "8px 8px 0 0",
+                                                                boxShadow: "0 -4px 30px rgba(0,0,0,0.25)",
+                                                                zIndex: 2,
+                                                            }}
+                                                        >
+                                                            <Image
+                                                                src={item.screenshot}
+                                                                alt={`${item.title} Interface`}
+                                                                fill
+                                                                className="object-cover object-top"
+                                                            />
+                                                        </div>
+                                                    </>
+                                                )}
                                                 {item.video && (
                                                     <video
                                                         ref={elioVideoRef}

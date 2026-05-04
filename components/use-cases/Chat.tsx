@@ -2,217 +2,118 @@
 
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
-import Link from "next/link";
-import { motion, AnimatePresence } from "framer-motion";
 
-type SidebarItem = {
-  id: string;
-  label: string;
-  bgImage: string;
-  openContent?: {
-    title: string;
-    description: string;
-    listItems: string[];
-  };
-};
-
-const SIDEBAR_ITEMS: SidebarItem[] = [
-  {
-    id: "city-security",
-    label: "City security",
-    bgImage: "/use-cases/security.png",
-    openContent: {
-      title: "City security",
-      description: "Use cases and data for city security and defence applications.",
-      listItems: [],
-    },
-  },
-  {
-    id: "urban-planning",
-    label: "Urban Planning & Infrastructure",
-    bgImage: "/use-cases/planning.png",
-    openContent: {
-      title: "Urban Planning & Infrastructure",
-      description: "Enabling faster site-selection for Residential and commercial Real Estate customers, including:",
-      listItems: ["Franchises", "Consultants", "CRE", "Residential Developers", "Wholesale brokers"],
-    },
-  },
-  {
-    id: "environmental",
-    label: "Environmental",
-    bgImage: "/use-cases/env.png",
-    openContent: {
-      title: "Environmental",
-      description: "Environment and response use cases.",
-      listItems: [],
-    },
-  },
-  {
-    id: "academic-research",
-    label: "Academic Research",
-    bgImage: "/use-cases/research.png",
-    openContent: {
-      title: "Academic Research",
-      description: "Geospatial data and tools for academic and research use cases.",
-      listItems: [],
-    },
-  },
-  {
-    id: "tourism",
-    label: "Tourism",
-    bgImage: "/use-cases/tourism.png",
-    openContent: {
-      title: "Tourism",
-      description: "Tourism and destination intelligence.",
-      listItems: [],
-    },
-  },
-];
-
-const QUERY = "Where should the Transportation authority install a new road-signal for traffic?";
+const QUERY =
+  "Show me all parcels over 5,000 m² in the Madrid metro area zoned for residential, currently undeveloped, within 1km of a metro station, and owned by a single entity for over 10 years";
+// Each line maps one-to-one to a "deep reasoning" step in the chat — the
+// last two add map layers when they appear.
 const CONSIDERING = [
-  "Considering demographics of Miami",
-  "Considering lot prices",
-  "Considering trade area competition",
-  "Considering your customer target",
+  "Gathered verified sources",
+  "Preparing deep reasoning",
+  "Adding metro stations and 1km service radii",
+  "Adding qualifying parcels",
+];
+const RESPONSE =
+  "Found 47 qualifying parcels across the Madrid metro area. Combined area: 412,800 m². Largest single owner: Promociones Inmobiliarias Madrid SA (8 parcels, since 2011).";
+const FOLLOW_UP = "Now filter to parcels above 10,000 m²";
+const CONSIDERING_2 = [
+  "Filtering by parcel size > 10,000 m²",
+];
+const RESPONSE_2 =
+  "12 parcels remain after filtering. Highlighted on the map.";
+
+// ── Map-overlay data — stylized answer to the Madrid parcel query ──
+// Coordinates are percentages of the OVERLAY container. The overlay sits
+// on top of the right (visible) copy of the duplicated Madrid map; both
+// the right map and this overlay are translated 28% to the right so the
+// Madrid label and these markers clear the chat panel on the left.
+const METRO_STATIONS: { cx: number; cy: number }[] = [
+  { cx: 38, cy: 31 },
+  { cx: 53, cy: 28 },
+  { cx: 45, cy: 39 },
+  { cx: 60, cy: 36 },
+  { cx: 35, cy: 49 },
+  { cx: 50, cy: 47 },
+  { cx: 62, cy: 53 },
+  { cx: 42, cy: 58 },
 ];
 
-function AnimatedChatCard() {
-  const [phase, setPhase] = useState<"typing" | "sending" | "thinking" | "done">("typing");
-  const [typedQuery, setTypedQuery] = useState("");
-  const [visibleSteps, setVisibleSteps] = useState(0);
-  const [showResponse, setShowResponse] = useState(false);
-  const [showFollowUp, setShowFollowUp] = useState(false);
+// Parcels — small squares, each placed inside the 1km service radius of one
+// of the metro stations with subtle random offsets. `largeOnly` is preserved
+// through round 2's "parcels above 10,000 m²" filter.
+const PARCELS: { x: number; y: number; largeOnly: boolean }[] = [
+  { x: 37.4, y: 29.8, largeOnly: false },
+  { x: 39.3, y: 31.7, largeOnly: true },
+  { x: 52.1, y: 27.0, largeOnly: true },
+  { x: 54.0, y: 28.9, largeOnly: false },
+  { x: 44.2, y: 38.4, largeOnly: false },
+  { x: 46.0, y: 40.1, largeOnly: false },
+  { x: 59.3, y: 35.4, largeOnly: true },
+  { x: 60.8, y: 37.2, largeOnly: false },
+  { x: 34.2, y: 48.0, largeOnly: false },
+  { x: 36.0, y: 50.0, largeOnly: true },
+  { x: 49.1, y: 46.1, largeOnly: false },
+  { x: 50.7, y: 48.0, largeOnly: true },
+  { x: 61.4, y: 52.2, largeOnly: false },
+  { x: 63.0, y: 54.0, largeOnly: false },
+  { x: 41.2, y: 57.1, largeOnly: true },
+  { x: 42.7, y: 58.7, largeOnly: false },
+];
+const STATION_RADIUS_PX = 56; // perfect circle, ~1km on the Madrid view
 
-  useEffect(() => {
-    let cancelled = false;
-
-    const runSequence = async () => {
-      setPhase("typing");
-      setTypedQuery("");
-      setVisibleSteps(0);
-      setShowResponse(false);
-      setShowFollowUp(false);
-
-      for (let i = 1; i <= QUERY.length; i++) {
-        if (cancelled) return;
-        await new Promise(r => setTimeout(r, 28));
-        setTypedQuery(QUERY.slice(0, i));
-      }
-
-      await new Promise(r => setTimeout(r, 300));
-      if (cancelled) return;
-      setPhase("sending");
-
-      await new Promise(r => setTimeout(r, 400));
-      if (cancelled) return;
-      setPhase("thinking");
-
-      for (let i = 1; i <= CONSIDERING.length; i++) {
-        await new Promise(r => setTimeout(r, 380));
-        if (cancelled) return;
-        setVisibleSteps(i);
-      }
-
-      await new Promise(r => setTimeout(r, 400));
-      if (cancelled) return;
-      setShowResponse(true);
-
-      await new Promise(r => setTimeout(r, 500));
-      if (cancelled) return;
-      setShowFollowUp(true);
-      setPhase("done");
-
-      await new Promise(r => setTimeout(r, 4000));
-      if (cancelled) return;
-      runSequence();
-    };
-
-    runSequence();
-    return () => { cancelled = true; };
-  }, []);
-
-  const sent = phase === "sending" || phase === "thinking" || phase === "done";
-
-  return (
-    <div className="absolute left-[72px] top-[40px] bottom-[40px] w-[514px] max-xl:left-[48px] max-xl:w-[440px] max-lg:left-[24px] max-lg:w-[360px] bg-[#f5f5f7] rounded-2xl shadow-xl p-8 flex flex-col">
-      <div
-        className="flex items-center gap-3 mb-4"
-        style={{ opacity: sent ? 1 : 0, transition: "opacity 0.3s ease" }}
-      >
-        <span className="text-[20px]">🌐</span>
-        <span className="text-gray-400 text-[15px] font-mono">Columbus is thinking...</span>
-      </div>
-
-      <div className="text-gray-400 text-[14px] space-y-1 mb-6 font-mono pl-9">
-        {CONSIDERING.map((step, i) => (
-          <p
-            key={i}
-            style={{
-              opacity: visibleSteps > i ? 1 : 0,
-              transform: visibleSteps > i ? "translateY(0)" : "translateY(6px)",
-              transition: "opacity 0.25s ease, transform 0.25s ease",
-            }}
-          >
-            {step}
-          </p>
-        ))}
-      </div>
-
-      <div
-        className="text-gray-800 text-[15px] mb-6 leading-[1.65] font-medium"
-        style={{ opacity: showResponse ? 1 : 0, transform: showResponse ? "translateY(0)" : "translateY(8px)", transition: "opacity 0.35s ease, transform 0.35s ease" }}
-      >
-        These areas <span className="text-red-700">marked,</span> have streets that often have had crashes.
-        There is poor road signal trafficking. Consumer&apos;s have
-        expressed disastisfaction with this section.
-      </div>
-
-      <div
-        className="text-gray-700 text-[15px] leading-[1.65]"
-        style={{ opacity: showFollowUp ? 1 : 0, transform: showFollowUp ? "translateY(0)" : "translateY(8px)", transition: "opacity 0.35s ease, transform 0.35s ease" }}
-      >
-        / Would you like to order a specific dataset and survey?
-        Our partner agents will be dispatched for the study.
-      </div>
-
-      <div className="flex-1" />
-
-      <div className="bg-white rounded-2xl shadow-sm px-6 py-5 flex items-center justify-between gap-5 mt-6">
-        <span className="text-gray-500 text-[16px] leading-snug" style={{ minHeight: "1.5em" }}>
-          {sent ? QUERY : (typedQuery || <span className="opacity-0">x</span>)}
-          {!sent && <span className="inline-block w-0.5 h-4 bg-gray-400 ml-0.5 animate-pulse" />}
-        </span>
-        <div
-          className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0 transition-all duration-200"
-          style={{ background: sent ? "#0A1344" : "rgba(37, 99, 235, 0.12)" }}
-        >
-          <div className="w-5 h-5 rounded-sm" style={{ background: sent ? "white" : "#0A1344" }} />
-        </div>
-      </div>
-    </div>
-  );
-}
+type Phase =
+  | "idle"
+  | "cursor-moving"
+  | "cursor-tap"
+  | "chat-open"
+  | "typing-query"
+  | "sending"
+  | "bubble-in"
+  | "clearing-blur"
+  | "investigating"
+  | "considering"
+  | "responding"
+  | "typing-followup"
+  | "sending-followup"
+  | "bubble-in-2"
+  | "investigating-2"
+  | "considering-2"
+  | "responding-2"
+  | "fading-out";
 
 type ChatProps = {
   lightTheme?: boolean;
+  embedded?: boolean;
 };
 
-export default function Chat({ lightTheme = false }: ChatProps) {
-  const [openId, setOpenId] = useState<string>("urban-planning");
-  const [userHasTapped, setUserHasTapped] = useState(false);
-  const [mapOpacity, setMapOpacity] = useState(1);
+const CURSOR_GLYPH = (
+  <svg viewBox="0 0 24 24" width="22" height="22" fill="#1D1D1F" stroke="white" strokeWidth="1" aria-hidden>
+    <path d="M5 3 L5 19 L9.5 14.5 L12 20.5 L14 19.5 L11.5 13.5 L18 13.5 Z" />
+  </svg>
+);
+
+/**
+ * Conversational map chat — animated demo for the use-case sticky-scroll
+ * Chat row. Loops through: blurred satellite map → cursor taps centered
+ * "+ New chat" → input-only panel → user types query → first send expands
+ * the panel to full height → blur clears → Columbus thinks (4 considering
+ * lines) → lorem ipsum response → user types follow-up → sends → Columbus
+ * thinks/responds again → whole panel fades out → loop.
+ */
+export default function Chat({ lightTheme = false, embedded = false }: ChatProps) {
   const sectionRef = useRef<HTMLDivElement>(null);
+  const conversationRef = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
 
-  // Theme-dependent class strings/colors
-  const sectionBgClass = lightTheme ? "bg-white" : "bg-black";
-  const sectionLinesClass = lightTheme ? "section-lines" : "section-lines-dark";
-  const headingTextClass = lightTheme ? "text-[#1D1D1F]" : "text-white";
-  const sidebarBorderClass = lightTheme ? "border-[rgba(10,19,68,0.15)]" : "border-black";
-  const mapBorderClass = lightTheme ? "border-[rgba(10,19,68,0.15)]" : "border-black";
-  const sidebarTextClass = lightTheme ? "text-[#1D1D1F]" : "text-white";
-  const descriptionTextClass = lightTheme ? "text-[rgba(29,29,31,0.65)]" : "text-gray-300";
+  const [phase, setPhase] = useState<Phase>("idle");
+  const [typedQuery, setTypedQuery] = useState("");
+  const [typedFollowUp, setTypedFollowUp] = useState("");
+  const [visibleConsidering, setVisibleConsidering] = useState(0);
+  const [visibleConsidering2, setVisibleConsidering2] = useState(0);
+  const [reducedMotion, setReducedMotion] = useState(() => {
+    if (typeof window === "undefined") return false;
+    return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  });
 
   useEffect(() => {
     const el = sectionRef.current;
@@ -225,207 +126,571 @@ export default function Chat({ lightTheme = false }: ChatProps) {
     return () => obs.disconnect();
   }, []);
 
-  const anim = (delay = 0): React.CSSProperties => ({
-    opacity: visible ? 1 : 0,
-    transform: visible ? "translateY(0)" : "translateY(16px)",
-    transition: `opacity 0.7s ease ${delay}ms, transform 0.7s ease ${delay}ms`,
-  });
+  useEffect(() => {
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const onChange = (e: MediaQueryListEvent) => setReducedMotion(e.matches);
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
+  }, []);
 
   useEffect(() => {
-    if (userHasTapped) return;
-    const interval = setInterval(() => {
-      const currentIndex = SIDEBAR_ITEMS.findIndex((item) => item.id === openId);
-      const nextIndex = (currentIndex + 1) % SIDEBAR_ITEMS.length;
-      setOpenId(SIDEBAR_ITEMS[nextIndex].id);
-    }, 5000);
-    return () => clearInterval(interval);
-  }, [openId, userHasTapped]);
+    if (!visible) return;
+    let cancelled = false;
+    const wait = (ms: number) => new Promise<void>(r => setTimeout(r, ms));
 
-  const FADE_DURATION_MS = 300;
+    const run = async () => {
+      setPhase("idle");
+      setTypedQuery("");
+      setTypedFollowUp("");
+      setVisibleConsidering(0);
+      setVisibleConsidering2(0);
 
-  const handleCellTap = (itemId: string) => {
-    setUserHasTapped(true);
-    setOpenId(itemId);
-    setMapOpacity(0);
-    setTimeout(() => setMapOpacity(1), FADE_DURATION_MS / 2);
-  };
+      if (reducedMotion) {
+        setPhase("responding-2");
+        await wait(5000);
+        if (cancelled) return;
+        run();
+        return;
+      }
 
-  return (
-    <section className={`w-full ${sectionBgClass} flex justify-center`}>
-      <div ref={sectionRef} className={`${sectionLinesClass} w-full max-w-[1287px] mx-auto px-8 md:px-10 py-30`}>
+      await wait(700);
+      if (cancelled) return;
+      setPhase("cursor-moving");
+      await wait(900);
+      if (cancelled) return;
+      setPhase("cursor-tap");
+      await wait(180);
+      if (cancelled) return;
+      setPhase("chat-open");
+      await wait(400);
+      if (cancelled) return;
+      setPhase("typing-query");
 
-        <div className="mb-[30px]" style={anim(0)}>
-          <h2 className={`${headingTextClass} text-[48px] font-semibold tracking-[-0.02em] max-md:text-[28px]`}>
-            Conversational map chat
-          </h2>
-        </div>
+      for (let i = 1; i <= QUERY.length; i++) {
+        if (cancelled) return;
+        await wait(15);
+        setTypedQuery(QUERY.slice(0, i));
+      }
+      await wait(280);
+      if (cancelled) return;
 
-        {/* Main content */}
+      setPhase("sending");
+      await wait(220);
+      if (cancelled) return;
+
+      setPhase("bubble-in");
+      await wait(520);
+      if (cancelled) return;
+
+      setPhase("clearing-blur");
+      await wait(520);
+      if (cancelled) return;
+
+      setPhase("investigating");
+      await wait(360);
+      if (cancelled) return;
+
+      setPhase("considering");
+      for (let i = 1; i <= CONSIDERING.length; i++) {
+        if (cancelled) return;
+        await wait(420);
+        setVisibleConsidering(i);
+      }
+      await wait(500);
+      if (cancelled) return;
+
+      setPhase("responding");
+      await wait(1400);
+      if (cancelled) return;
+
+      setPhase("typing-followup");
+      for (let i = 1; i <= FOLLOW_UP.length; i++) {
+        if (cancelled) return;
+        await wait(28);
+        setTypedFollowUp(FOLLOW_UP.slice(0, i));
+      }
+      await wait(280);
+      if (cancelled) return;
+
+      setPhase("sending-followup");
+      await wait(220);
+      if (cancelled) return;
+
+      setPhase("bubble-in-2");
+      await wait(420);
+      if (cancelled) return;
+
+      setPhase("investigating-2");
+      await wait(360);
+      if (cancelled) return;
+
+      setPhase("considering-2");
+      for (let i = 1; i <= CONSIDERING_2.length; i++) {
+        if (cancelled) return;
+        await wait(420);
+        setVisibleConsidering2(i);
+      }
+      await wait(400);
+      if (cancelled) return;
+
+      setPhase("responding-2");
+      await wait(1100);
+      if (cancelled) return;
+
+      setPhase("fading-out");
+      await wait(900);
+      if (cancelled) return;
+
+      run();
+    };
+
+    run();
+    return () => { cancelled = true; };
+  }, [visible, reducedMotion]);
+
+  // Auto-scroll the conversation area as new content appears
+  useEffect(() => {
+    const el = conversationRef.current;
+    if (!el) return;
+    el.scrollTo({ top: el.scrollHeight, behavior: "smooth" });
+  }, [phase, visibleConsidering, visibleConsidering2]);
+
+  // Phase predicates
+  const blurActive = ["idle", "cursor-moving", "cursor-tap", "chat-open", "typing-query", "sending", "bubble-in", "fading-out"].includes(phase);
+  const cursorVisible = ["cursor-moving", "cursor-tap"].includes(phase);
+  const newChatVisible = ["idle", "cursor-moving", "cursor-tap"].includes(phase);
+  // Panel is small (input-only) until the first send fires
+  const panelExpanded = ![
+    "idle", "cursor-moving", "cursor-tap", "chat-open", "typing-query", "sending", "fading-out",
+  ].includes(phase);
+  const querySent = ["bubble-in", "clearing-blur", "investigating", "considering", "responding", "typing-followup", "sending-followup", "bubble-in-2", "investigating-2", "considering-2", "responding-2"].includes(phase);
+  const investigatingVisible = ["investigating", "considering", "responding", "typing-followup", "sending-followup", "bubble-in-2", "investigating-2", "considering-2", "responding-2"].includes(phase);
+  const responseVisible = ["responding", "typing-followup", "sending-followup", "bubble-in-2", "investigating-2", "considering-2", "responding-2"].includes(phase);
+  const followUpBubbleVisible = ["bubble-in-2", "investigating-2", "considering-2", "responding-2"].includes(phase);
+  const investigating2Visible = ["investigating-2", "considering-2", "responding-2"].includes(phase);
+  const response2Visible = phase === "responding-2";
+
+  // Map-overlay reveal predicates — each layer reveals when its matching
+  // "deep reasoning" line appears in the chat.
+  const inResponseFlow = [
+    "considering",
+    "responding",
+    "typing-followup",
+    "sending-followup",
+    "bubble-in-2",
+    "investigating-2",
+    "considering-2",
+    "responding-2",
+  ].includes(phase);
+  // Layer 1 (line index 3): metro stations + 1km service radii
+  const stationsVisible = inResponseFlow && visibleConsidering >= 3;
+  // Layer 2 (line index 4): qualifying parcels
+  const parcelsVisible = inResponseFlow && visibleConsidering >= 4;
+  // Round 2 filter: only the largeOnly parcels remain after the filter line appears
+  const parcelsLargeOnly = visibleConsidering2 >= 1;
+
+
+  const visualBlock = (
+    <div
+      ref={sectionRef}
+      className="relative w-full h-[640px] max-lg:h-[560px] max-md:h-[440px] overflow-hidden"
+      style={{
+        opacity: visible ? 1 : 0,
+        transition: "opacity 0.7s ease",
+      }}
+    >
+      {/* Layer 0 — Madrid base map. Two side-by-side copies: the right copy
+          is shifted 28% so the Madrid label and overlays clear the chat
+          panel; the left copy duplicates the map underneath the chat panel
+          so the map reads as continuous. */}
+      <div
+        className="absolute top-0 bottom-0 left-0 w-full"
+        style={{ transform: "translateX(-72%)" }}
+      >
+        <Image src="/MadridMap.png" alt="" fill className="object-cover" priority />
+      </div>
+      <div
+        className="absolute top-0 bottom-0 left-0 w-full"
+        style={{ transform: "translateX(28%)" }}
+      >
+        <Image src="/MadridMap.png" alt="Madrid metro area map" fill className="object-cover" priority />
+      </div>
+
+      {/* Layer 0.5 — Madrid query answer overlay. Same right-shift as the
+          right map so coordinates land on the visible Madrid view. */}
+      <div
+        className="absolute top-0 bottom-0 left-0 w-full pointer-events-none z-[5]"
+        style={{ transform: "translateX(28%)" }}
+        aria-hidden
+      >
+        {/* Layer 1 — 1km service radius circles (DOM divs = perfect circles) */}
+        {METRO_STATIONS.map((s, i) => (
+          <div
+            key={`r-${i}`}
+            className="absolute"
+            style={{
+              left: `${s.cx}%`,
+              top: `${s.cy}%`,
+              width: STATION_RADIUS_PX,
+              height: STATION_RADIUS_PX,
+              borderRadius: "50%",
+              background: "rgba(0, 102, 204, 0.14)",
+              border: "1px solid rgba(0, 102, 204, 0.55)",
+              transform: stationsVisible
+                ? "translate(-50%, -50%) scale(1)"
+                : "translate(-50%, -50%) scale(0.6)",
+              opacity: stationsVisible ? 1 : 0,
+              transition: `opacity 360ms cubic-bezier(0.05, 0.7, 0.1, 1) ${i * 60}ms, transform 420ms cubic-bezier(0.22, 1, 0.36, 1) ${i * 60}ms`,
+            }}
+          />
+        ))}
+
+        {/* Layer 1 — Metro station markers (sit on top of the radii) */}
+        {METRO_STATIONS.map((s, i) => (
+          <div
+            key={`s-${i}`}
+            className="absolute"
+            style={{
+              left: `${s.cx}%`,
+              top: `${s.cy}%`,
+              opacity: stationsVisible ? 1 : 0,
+              transform: stationsVisible
+                ? "translate(-50%, -50%) scale(1)"
+                : "translate(-50%, -50%) scale(0.6)",
+              transition: `opacity 280ms cubic-bezier(0.05, 0.7, 0.1, 1) ${i * 60 + 120}ms, transform 320ms cubic-bezier(0.22, 1, 0.36, 1) ${i * 60 + 120}ms`,
+            }}
+          >
+            <div
+              className="w-3 h-3 rounded-full bg-white flex items-center justify-center"
+              style={{
+                border: "1.5px solid #DC2626",
+                boxShadow: "0 1px 2px rgba(0,0,0,0.18)",
+              }}
+            >
+              <div className="w-[4px] h-[4px] rounded-full" style={{ background: "#DC2626" }} />
+            </div>
+          </div>
+        ))}
+
+        {/* Layer 2 — Qualifying parcels (small green squares inside the radii) */}
+        {PARCELS.map((p, i) => {
+          const visible = parcelsVisible && (!parcelsLargeOnly || p.largeOnly);
+          return (
+            <div
+              key={`p-${i}`}
+              className="absolute"
+              style={{
+                left: `${p.x}%`,
+                top: `${p.y}%`,
+                opacity: visible ? 1 : 0,
+                transform: visible
+                  ? "translate(-50%, -50%) scale(1)"
+                  : "translate(-50%, -50%) scale(0.4)",
+                transition: `opacity 280ms cubic-bezier(0.05, 0.7, 0.1, 1) ${i * 50}ms, transform 320ms cubic-bezier(0.22, 1, 0.36, 1) ${i * 50}ms`,
+              }}
+            >
+              <div
+                className="w-2 h-2 rounded-[1px]"
+                style={{
+                  background: "#16a34a",
+                  border: "1px solid white",
+                  boxShadow: "0 1px 2px rgba(0,0,0,0.18)",
+                }}
+              />
+            </div>
+          );
+        })}
+
+      </div>
+
+      {/* Legend pill — non-shifted so it sits flush in the visual's
+          bottom-right corner regardless of the right-map translation. */}
+      <div
+        className="absolute bottom-4 right-4 z-[5] hidden md:inline-flex items-center gap-3 bg-white/95 shadow-md rounded-full px-3.5 py-1.5 text-[11px] font-medium text-[#0A1344] pointer-events-none"
+        style={{
+          opacity: stationsVisible ? 1 : 0,
+          transform: stationsVisible ? "translateY(0)" : "translateY(4px)",
+          transition: "opacity 320ms ease, transform 320ms cubic-bezier(0.22, 1, 0.36, 1)",
+        }}
+        aria-hidden
+      >
+        <span className="inline-flex items-center gap-1.5">
+          <span
+            className="w-2 h-2 rounded-full"
+            style={{ background: "white", border: "1.5px solid #DC2626" }}
+          />
+          Metro station
+        </span>
+        <span className="inline-flex items-center gap-1.5">
+          <span className="w-2 h-2 rounded-full" style={{ background: "rgba(0, 102, 204, 0.32)" }} />
+          1km radius
+        </span>
+        <span className="inline-flex items-center gap-1.5">
+          <span className="w-2 h-2 rounded-[1px]" style={{ background: "#16a34a" }} />
+          Parcel
+        </span>
+      </div>
+
+      {/* Layer 1 — strong blur veil that clears once Columbus has answered */}
+      <div
+        className="absolute inset-0 pointer-events-none z-10"
+        style={{
+          backdropFilter: blurActive ? "blur(24px)" : "blur(0px)",
+          WebkitBackdropFilter: blurActive ? "blur(24px)" : "blur(0px)",
+          background: blurActive ? "rgba(245, 245, 247, 0.55)" : "rgba(245, 245, 247, 0)",
+          transition:
+            "backdrop-filter 520ms cubic-bezier(0.05, 0.7, 0.1, 1), -webkit-backdrop-filter 520ms cubic-bezier(0.05, 0.7, 0.1, 1), background 520ms cubic-bezier(0.05, 0.7, 0.1, 1)",
+        }}
+        aria-hidden
+      />
+
+      {/* Layer 2 — Chat panel. Morphs through three states:
+            1. idle:        centered narrow pill with "+ New chat" text
+            2. pill input:  centered wide pill with "Ask Columbus" + send
+            3. full panel:  bottom-left, conversation area + input
+          Position, width, height, and content all transition between states. */}
+      <div
+        className="absolute z-20 bg-white shadow-xl overflow-hidden flex flex-col max-md:left-[20px] max-md:right-[20px] max-md:w-auto"
+        style={{
+          left: panelExpanded
+            ? "40px"
+            : newChatVisible
+              ? "calc(50% - 100px)"
+              : "calc(50% - 230px)",
+          top: panelExpanded ? "100px" : "calc(50% - 28px)",
+          width: newChatVisible ? "200px" : "460px",
+          height: panelExpanded ? "calc(100% - 140px)" : "56px",
+          // Pill state = fully rounded (corners cap at half-height = 28px on
+          // a 56px tall pill). Full panel = M3 medium-large card radius.
+          // The radius morphs first; the size transitions wait ~160ms so
+          // the corners are already at their final 16px before the panel
+          // starts growing — otherwise the corners look huge mid-morph
+          // since 9999px caps at half-height as the panel grows.
+          borderRadius: panelExpanded ? "16px" : "9999px",
+          opacity: phase === "fading-out" ? 0 : 1,
+          transform: `scale(${phase === "cursor-tap" ? 0.96 : 1})`,
+          transition:
+            "left 480ms cubic-bezier(0.05, 0.7, 0.1, 1) 160ms, top 480ms cubic-bezier(0.05, 0.7, 0.1, 1) 160ms, width 480ms cubic-bezier(0.05, 0.7, 0.1, 1) 160ms, height 480ms cubic-bezier(0.05, 0.7, 0.1, 1) 160ms, border-radius 140ms ease, opacity 500ms ease, transform 180ms ease",
+        }}
+      >
+        {/* Conversation area — visible only when expanded. */}
         <div
+          ref={conversationRef}
+          className="flex-1 overflow-y-auto px-5 pt-5 pb-3 [&::-webkit-scrollbar]:hidden"
           style={{
-            opacity: visible ? 1 : 0,
-            transform: visible ? "translateY(0)" : "translateY(16px)",
-            transition: "opacity 0.7s ease 0.15s, transform 0.7s ease 0.15s",
+            scrollbarWidth: "none",
+            msOverflowStyle: "none",
+            opacity: panelExpanded ? 1 : 0,
+            transition: "opacity 280ms ease 200ms",
           }}
         >
-          {/* Mobile sidebar */}
-          <div className="hidden max-md:block overflow-hidden mb-6">
-            {SIDEBAR_ITEMS.map((item) => (
-              <button
-                key={item.id}
-                type="button"
-                onClick={() => handleCellTap(item.id)}
-                className={`relative w-full flex flex-col text-left ${sidebarTextClass} overflow-hidden focus:outline-none cursor-pointer transition-[height] duration-300 ease-in-out ${
-                  openId === item.id ? "h-[330px]" : "h-[76px]"
-                }`}
+          {/* User message bubble */}
+          <div
+            className="flex justify-end"
+            style={{
+              opacity: querySent ? 1 : 0,
+              transform: querySent ? "translateY(0)" : "translateY(8px)",
+              transition: "opacity 320ms ease, transform 320ms cubic-bezier(0.05, 0.7, 0.1, 1)",
+            }}
+          >
+            <div className="max-w-[92%] bg-[#f0f0f3] text-[#1D1D1F] rounded-2xl px-4 py-3 text-[13px] leading-[1.5]">
+              &ldquo;{QUERY}&rdquo;
+            </div>
+          </div>
+
+          {/* Columbus deep reasoning header */}
+          <div
+            className="mt-4 flex items-center gap-2.5 text-[#5a5a63]"
+            style={{
+              opacity: investigatingVisible ? 1 : 0,
+              transform: investigatingVisible ? "translateY(0)" : "translateY(6px)",
+              transition: "opacity 250ms ease, transform 250ms ease",
+            }}
+          >
+            <Image src="/logobueno.png" alt="" width={22} height={22} className="object-contain shrink-0" />
+            <span className="text-[14px] font-medium">Columbus deep reasoning</span>
+          </div>
+
+          {/* Deep reasoning steps with green check when complete */}
+          <div className="mt-3 pl-[32px] space-y-3">
+            {CONSIDERING.map((line, i) => (
+              <div
+                key={line}
+                className="flex items-center justify-between gap-3"
+                style={{
+                  opacity: visibleConsidering > i ? 1 : 0,
+                  transform: visibleConsidering > i ? "translateY(0)" : "translateY(6px)",
+                  transition: "opacity 260ms ease, transform 260ms ease",
+                }}
               >
-                {!lightTheme && (
-                  <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, #111827 0%, #15203a 30%, #1a2d50 60%, #0f1a2e 100%)" }} />
-                )}
-                {lightTheme && (
-                  <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, rgba(10,19,68,0.04) 0%, rgba(10,19,68,0.06) 50%, rgba(10,19,68,0.04) 100%)" }} />
-                )}
-                <Image src={item.bgImage} alt="" fill className="object-cover" sizes="100vw" style={{ filter: "grayscale(1) brightness(0.8) contrast(1.1)", mixBlendMode: "luminosity", opacity: 0.35 }} />
-                {!lightTheme && (
-                  openId === item.id ? (
-                    <span className="absolute inset-0 z-[1] bg-black/20 pointer-events-none" aria-hidden />
-                  ) : (
-                    <div className="absolute inset-0 z-[1] bg-black/35 pointer-events-none" aria-hidden />
-                  )
-                )}
-                {lightTheme && (
-                  openId === item.id ? (
-                    <span className="absolute inset-0 z-[1] bg-white/40 pointer-events-none" aria-hidden />
-                  ) : (
-                    <div className="absolute inset-0 z-[1] bg-white/55 pointer-events-none" aria-hidden />
-                  )
-                )}
-                <span
-                  className={`relative z-10 flex items-center h-[76px] px-8 font-medium ${lightTheme ? "" : "drop-shadow-md"} flex-shrink-0 transition-[font-size] duration-300 ease-in-out ${
-                    openId === item.id ? "text-[18px]" : "text-[13px]"
-                  }`}
-                >
-                  {item.label}
-                </span>
-                <AnimatePresence mode="wait">
-                  {openId === item.id && item.openContent && (
-                    <motion.div
-                      key={item.id}
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      transition={{ duration: 0.25 }}
-                      className="relative z-10 flex-1 px-8 pb-6 pt-0 flex flex-col min-h-0"
-                    >
-                      <p className={`text-[14px] ${descriptionTextClass} mb-4`}>{item.openContent.description}</p>
-                      {item.openContent.listItems.length > 0 && (
-                        <ul className={`text-[14px] ${descriptionTextClass} space-y-2`}>
-                          {item.openContent.listItems.map((li) => (
-                            <li key={li}>• {li}</li>
-                          ))}
-                        </ul>
-                      )}
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </button>
+                <span className="text-[13px] text-[#6b6b73] leading-[1.4]">{line}</span>
+                <svg viewBox="0 0 16 16" width="14" height="14" className="shrink-0" aria-hidden>
+                  <circle cx="8" cy="8" r="7" fill="#16a34a" />
+                  <path d="M5 8.2 L7.1 10.3 L11 6.4" stroke="white" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </div>
             ))}
           </div>
 
-          {/* Desktop layout: sidebar + map */}
-          <div className="relative w-full overflow-hidden flex max-md:hidden rounded-lg h-[673px] max-lg:h-[520px]">
-            {/* Sidebar */}
-            <div className={`w-[348px] max-lg:w-[280px] shrink-0 ${sidebarTextClass} flex flex-col overflow-hidden h-full border-[0.7px] ${sidebarBorderClass} border-r-0 rounded-l-lg`}>
-              {SIDEBAR_ITEMS.map((item) => (
-                <button
-                  key={item.id}
-                  type="button"
-                  onClick={() => handleCellTap(item.id)}
-                  className={`relative w-full flex flex-col text-left overflow-hidden focus:outline-none cursor-pointer transition-[height] duration-300 ease-in-out ${
-                    openId === item.id
-                      ? "h-[369px] max-lg:h-[216px] flex-shrink-0"
-                      : "h-[76px] flex-shrink-0"
-                  }`}
-                >
-                  {!lightTheme && (
-                    <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, #111827 0%, #15203a 30%, #1a2d50 60%, #0f1a2e 100%)" }} />
-                  )}
-                  {lightTheme && (
-                    <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, rgba(10,19,68,0.04) 0%, rgba(10,19,68,0.06) 50%, rgba(10,19,68,0.04) 100%)" }} />
-                  )}
-                  <Image src={item.bgImage} alt="" fill className="object-cover" sizes="348px" style={{ filter: "grayscale(1) brightness(0.8) contrast(1.1)", mixBlendMode: "luminosity", opacity: 0.35 }} />
-                  {!lightTheme && (
-                    openId === item.id ? (
-                      <span className="absolute inset-0 z-[1] bg-black/20 pointer-events-none" aria-hidden />
-                    ) : (
-                      <div className="absolute inset-0 z-[1] bg-black/35 pointer-events-none" aria-hidden />
-                    )
-                  )}
-                  {lightTheme && (
-                    openId === item.id ? (
-                      <span className="absolute inset-0 z-[1] bg-white/40 pointer-events-none" aria-hidden />
-                    ) : (
-                      <div className="absolute inset-0 z-[1] bg-white/55 pointer-events-none" aria-hidden />
-                    )
-                  )}
-                  <span
-                    className={`relative z-10 flex items-center h-[76px] px-8 font-medium ${lightTheme ? "" : "drop-shadow-md"} flex-shrink-0 transition-[font-size] duration-300 ease-in-out ${
-                      openId === item.id ? "text-[18px] max-lg:text-[16px]" : "text-[13px]"
-                    }`}
-                  >
-                    {item.label}
-                  </span>
-                  <AnimatePresence mode="wait">
-                    {openId === item.id && item.openContent && (
-                      <motion.div
-                        key={item.id}
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 0.25 }}
-                        className="relative z-10 flex-1 px-8 pb-6 pt-0 flex flex-col min-h-0"
-                      >
-                        <p className={`text-[16px] ${descriptionTextClass} mb-4 leading-relaxed max-lg:text-[14px]`}>
-                          {item.openContent.description}
-                        </p>
-                        {item.openContent.listItems.length > 0 && (
-                          <ul className={`text-[16px] ${descriptionTextClass} space-y-2 max-lg:text-[14px]`}>
-                            {item.openContent.listItems.map((li) => (
-                              <li key={li}>• {li}</li>
-                            ))}
-                          </ul>
-                        )}
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </button>
-              ))}
-            </div>
+          {/* Response */}
+          <div
+            className="mt-4 text-[13px] leading-[1.55] text-[#1D1D1F]"
+            style={{
+              opacity: responseVisible ? 1 : 0,
+              transform: responseVisible ? "translateY(0)" : "translateY(8px)",
+              transition: "opacity 380ms ease, transform 380ms cubic-bezier(0.05, 0.7, 0.1, 1)",
+            }}
+          >
+            {RESPONSE}
+          </div>
 
-            {/* Map area */}
-            <div
-              className={`absolute top-0 bottom-0 right-0 left-[348px] max-lg:left-[280px] transition-opacity ease-in-out overflow-hidden border-[0.7px] ${mapBorderClass} border-l-0 rounded-r-lg`}
-              style={{
-                opacity: mapOpacity,
-                transitionDuration: `${FADE_DURATION_MS / 2}ms`,
-              }}
-            >
-              <Image
-                src="/HK Map-2.png"
-                alt="Map"
-                fill
-                className="object-cover"
-                priority
-              />
-              {!lightTheme && (
-                <div className="absolute inset-0 pointer-events-none" style={{ background: "rgba(18, 8, 52, 0.22)" }} />
-              )}
-
-              <AnimatedChatCard />
+          {/* Follow-up user bubble */}
+          <div
+            className="mt-4 flex justify-end"
+            style={{
+              opacity: followUpBubbleVisible ? 1 : 0,
+              transform: followUpBubbleVisible ? "translateY(0)" : "translateY(8px)",
+              transition: "opacity 320ms ease, transform 320ms cubic-bezier(0.05, 0.7, 0.1, 1)",
+            }}
+          >
+            <div className="max-w-[92%] bg-[#f0f0f3] text-[#1D1D1F] rounded-2xl px-4 py-3 text-[13px] leading-[1.5]">
+              {FOLLOW_UP}
             </div>
+          </div>
+
+          {/* Columbus deep reasoning — round 2 */}
+          <div
+            className="mt-4 flex items-center gap-2.5 text-[#5a5a63]"
+            style={{
+              opacity: investigating2Visible ? 1 : 0,
+              transform: investigating2Visible ? "translateY(0)" : "translateY(6px)",
+              transition: "opacity 250ms ease, transform 250ms ease",
+            }}
+          >
+            <Image src="/logobueno.png" alt="" width={22} height={22} className="object-contain shrink-0" />
+            <span className="text-[14px] font-medium">Columbus deep reasoning</span>
+          </div>
+
+          {/* Deep reasoning steps with green check — round 2 */}
+          <div className="mt-3 pl-[32px] space-y-3">
+            {CONSIDERING_2.map((line, i) => (
+              <div
+                key={line}
+                className="flex items-center justify-between gap-3"
+                style={{
+                  opacity: visibleConsidering2 > i ? 1 : 0,
+                  transform: visibleConsidering2 > i ? "translateY(0)" : "translateY(6px)",
+                  transition: "opacity 260ms ease, transform 260ms ease",
+                }}
+              >
+                <span className="text-[13px] text-[#6b6b73] leading-[1.4]">{line}</span>
+                <svg viewBox="0 0 16 16" width="14" height="14" className="shrink-0" aria-hidden>
+                  <circle cx="8" cy="8" r="7" fill="#16a34a" />
+                  <path d="M5 8.2 L7.1 10.3 L11 6.4" stroke="white" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </div>
+            ))}
+          </div>
+
+          {/* Response — round 2 */}
+          <div
+            className="mt-4 text-[13px] leading-[1.55] text-[#1D1D1F]"
+            style={{
+              opacity: response2Visible ? 1 : 0,
+              transform: response2Visible ? "translateY(0)" : "translateY(8px)",
+              transition: "opacity 380ms ease, transform 380ms cubic-bezier(0.05, 0.7, 0.1, 1)",
+            }}
+          >
+            {RESPONSE_2}
           </div>
         </div>
 
+        {/* Input bar — morphs from "+ New chat" (idle pill) to a chat input
+            with "Ask Columbus" placeholder + send button (pill input / panel). */}
+        <div className="absolute bottom-0 left-0 right-0 h-14 flex items-center px-5">
+          {/* "+ New chat" text — visible during idle, fades on tap */}
+          <div
+            className="absolute inset-0 flex items-center justify-center text-[15px] font-medium text-[#1D1D1F]"
+            style={{
+              opacity: newChatVisible ? 1 : 0,
+              transition: "opacity 220ms ease",
+              pointerEvents: "none",
+            }}
+            aria-hidden
+          >
+            <span className="inline-flex items-center gap-2">
+              <span className="inline-block w-4 h-4 rounded-full bg-[#0A1344] text-white text-[12px] leading-4 text-center">+</span>
+              New chat
+            </span>
+          </div>
+
+          {/* Chat input + send button — visible after the pill morphs */}
+          <div
+            className="flex items-center gap-3 w-full"
+            style={{
+              opacity: newChatVisible ? 0 : 1,
+              transition: "opacity 220ms ease 160ms",
+            }}
+          >
+            <div className="flex-1 text-[14px] leading-[1.4] text-[#1D1D1F] min-h-[32px] flex items-center overflow-hidden">
+              {phase === "typing-query" || phase === "sending" ? (
+                <span className="text-[#1D1D1F] truncate">
+                  {typedQuery}
+                  <span className="inline-block w-0.5 h-4 bg-[#1D1D1F] ml-0.5 align-middle animate-pulse" />
+                </span>
+              ) : phase === "typing-followup" || phase === "sending-followup" ? (
+                <span className="text-[#1D1D1F] truncate">
+                  {typedFollowUp}
+                  {phase === "typing-followup" && (
+                    <span className="inline-block w-0.5 h-4 bg-[#1D1D1F] ml-0.5 align-middle animate-pulse" />
+                  )}
+                </span>
+              ) : (
+                <span className="text-[#a0a0a8]">Ask Columbus…</span>
+              )}
+            </div>
+            <div
+              className="w-9 h-9 rounded-[10px] flex items-center justify-center shrink-0 bg-[#e8e8ec]"
+              aria-hidden
+            >
+              <div className="w-3 h-3 rounded-[2px] bg-[#0A1344]" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Disclaimer — top-right, always visible across all phases */}
+      <div
+        className="absolute top-3 right-3 z-30 inline-flex items-center bg-black/55 backdrop-blur-sm rounded-full px-2.5 py-1 text-[11px] font-medium text-white italic pointer-events-none"
+      >
+        Not real results, simplified
+      </div>
+
+      {/* Layer 3 — animated cursor (moves toward the centered "+ New chat" pill) */}
+      <div
+        className="absolute z-40 pointer-events-none"
+        style={{
+          opacity: cursorVisible ? 1 : 0,
+          left: cursorVisible ? "calc(50% - 8px)" : "calc(100% - 80px)",
+          top: cursorVisible ? "calc(50% - 4px)" : "calc(100% - 80px)",
+          transform: `scale(${phase === "cursor-tap" ? 0.85 : 1})`,
+          transition:
+            "left 760ms cubic-bezier(0.22, 1, 0.36, 1), top 760ms cubic-bezier(0.22, 1, 0.36, 1), opacity 200ms ease, transform 140ms ease",
+        }}
+        aria-hidden
+      >
+        {CURSOR_GLYPH}
+      </div>
+    </div>
+  );
+
+  if (embedded) return visualBlock;
+
+  const sectionBgClass = lightTheme ? "bg-white" : "bg-black";
+  return (
+    <section className={`w-full ${sectionBgClass} flex justify-center`}>
+      <div className="w-full max-w-[1287px] mx-auto px-8 md:px-10 py-30">
+        {visualBlock}
       </div>
     </section>
   );

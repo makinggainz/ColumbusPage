@@ -48,7 +48,7 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false, t
       <footer data-navbar-theme="light" className="relative bg-[#F5F5F7] border-t border-[rgba(0,0,0,0.08)] py-10">
         <div className="max-w-[980px] mx-auto px-6 flex flex-col items-center text-center gap-5">
           <p className="text-[12px] text-[#6E6E73] max-w-md leading-relaxed">
-            The frontier AI lab building the first production Universal Geospatial Model.
+            The frontier AI lab building the first production Large Geospacial Model.
           </p>
           <div className="flex gap-4">
             <Mail size={16} className="cursor-pointer text-[#6E6E73] hover:text-[#1D1D1F] transition-colors" />
@@ -177,7 +177,7 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false, t
             >
               <h3 className="text-[48px] sm:text-[70px] font-semibold mb-3" style={{ color: '#091344' }}>Columbus Earth</h3>
               <p className={`text-[15px] sm:text-[17.5px] leading-snug mb-4 max-w-[400px] ${theme === "dark" ? "text-white/50" : isTech ? "text-[#0A1344]/50" : "text-[#1D1D1F]/50"}`}>
-                The frontier AI lab building the first production Universal Geospatial Model.
+                The frontier AI lab building the first production Large Geospacial Model.
               </p>
               <div className="flex gap-4">
                 <a href="mailto:contact@columbus.earth"><Mail size={18} className={`transition-colors ${theme === "dark" ? "text-white/40 hover:text-white" : isTech ? "text-[#0A1344]/40 hover:text-[#0066CC]" : "text-[#1D1D1F]/40 hover:text-[#1D1D1F]"}`} /></a>

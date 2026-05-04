@@ -260,27 +260,40 @@ export const TravelSection = () => {
           className="object-cover object-center"
         />
 
-        {/* Desktop mockup — direct child of beachRef so left/right resolves against full width */}
+        {/* Desktop mockup — direct child of beachRef so left/right resolves
+            against full width. The PNG asset has a thick monitor bezel baked
+            in; we mask it away with `clip-path: inset()` and use
+            `filter: drop-shadow` (instead of box-shadow) so the soft shadow
+            follows the clipped shape instead of the original rectangle. */}
         <div
-          className="absolute overflow-hidden"
+          className="absolute"
           style={{
             left: 0,
             right: "14%",
             bottom: 0,
             height: "68%",
-            borderRadius: "12px 12px 0 0",
-            boxShadow: "0 -8px 60px rgba(0,0,0,0.28)",
             zIndex: 2,
+            filter: "drop-shadow(0 -8px 24px rgba(0,0,0,0.28))",
             ...anim(350),
           }}
         >
-          <span aria-hidden className="absolute left-0 top-0 flex h-7 w-7 items-center justify-center rounded-br bg-black/70 text-xs font-bold text-white" style={{ zIndex: 99 }}>2</span>
-          <img
-            src="/MapsGPTDesktop.png"
-            alt="MapsGPT desktop interface"
-            className="w-full h-full object-cover object-top"
-          />
-          <span aria-hidden className="absolute left-7 top-0 flex h-7 w-7 items-center justify-center rounded-br bg-black/70 text-xs font-bold text-white" style={{ zIndex: 99 }}>3</span>
+          <div
+            className="absolute inset-0 overflow-hidden"
+            style={{
+              borderRadius: "12px 12px 0 0",
+              // top  right  bottom  left  — matches the bezel proportions
+              // baked into MapsGPTDesktop.png. The thicker monitor stand on
+              // the bottom needs the largest inset; the left bezel is
+              // thinner so it gets the smallest inset.
+              clipPath: "inset(5% 5% 13% 2% round 12px 12px 0 0)",
+            }}
+          >
+            <img
+              src="/MapsGPTDesktop.png"
+              alt="MapsGPT desktop interface"
+              className="w-full h-full object-cover object-top"
+            />
+          </div>
         </div>
 
         {/* Mobile mockup — direct child of beachRef */}
@@ -296,13 +309,11 @@ export const TravelSection = () => {
             ...anim(400),
           }}
         >
-          <span aria-hidden className="absolute left-0 top-0 flex h-7 w-7 items-center justify-center rounded-br bg-black/70 text-xs font-bold text-white" style={{ zIndex: 99 }}>4</span>
           <img
             src="/MapsGPTMobile.png"
             alt="MapsGPT mobile interface"
             className="w-full h-full object-cover object-top"
           />
-          <span aria-hidden className="absolute left-7 top-0 flex h-7 w-7 items-center justify-center rounded-br bg-black/70 text-xs font-bold text-white" style={{ zIndex: 99 }}>5</span>
         </div>
 
         {/* Centered content — z-10 renders on top of both mockups */}

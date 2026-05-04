@@ -120,7 +120,7 @@ export default function DifferenceSection() {
 
               <h3 className="text-[28px] md:text-[39px] lg:text-[49px] font-light leading-[1.1] mb-3 flex items-center justify-center gap-3" style={{ letterSpacing: "-0.02em", color: "var(--ent-text-primary)" }}>
                 <Image src="/enterprise/logo.png" alt="columbus" width={42} height={42} />
-                <span style={columbusLoaded ? {} : loadingTextStyle}>Columbus LGM</span>
+                <span style={columbusLoaded ? {} : loadingTextStyle}>Columbus</span>
               </h3>
 
               <div style={fadeIn(columbusLoaded, 0)}>

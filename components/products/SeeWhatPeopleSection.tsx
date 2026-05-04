@@ -16,7 +16,7 @@ const PHOTOS = [
   `/FavoriteSpots/${encodeURIComponent("(22).jpeg")}`,
 ];
 
-type CardData = {
+export type CardData = {
   place: string;
   rating: string;
   photo: string;
@@ -69,7 +69,7 @@ const COLUMNS: CardData[][] = [
       rating: "4.8",
       photo: PHOTOS[0],
       response: "Strong match — clifftop pool above the sea, legendary Riviera glamour",
-      query: "Most glamorous hotel on the French Riviera with an infinity pool above the sea?",
+      query: "Egypt Trip 2026",
       avatar: "https://i.pravatar.cc/80?img=16",
     },
     {
@@ -104,7 +104,7 @@ const COLUMNS: CardData[][] = [
       rating: "4.5",
       photo: PHOTOS[4],
       response: "Great pick — beachfront setting, great DJs, quintessential Tulum vibes",
-      query: "Best beach club in Tulum for a relaxed day with good food and good music?",
+      query: "Madrid by GenZ",
       avatar: "https://i.pravatar.cc/80?img=38",
     },
     {
@@ -161,7 +161,7 @@ const COLUMNS: CardData[][] = [
   ],
 ];
 
-function QueryCard({ place, rating, photo, response, query, avatar }: CardData) {
+export function QueryCard({ place, rating, photo, response, query, avatar }: CardData) {
   return (
     <Link
       href="/maps-gpt"

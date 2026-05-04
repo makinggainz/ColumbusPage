@@ -4,6 +4,7 @@ export type Product = {
   href: string;
   img: string;
   video?: string;
+  screenshot?: string;
 };
 
 export const PRODUCTS: Product[] = [
@@ -11,7 +12,8 @@ export const PRODUCTS: Product[] = [
     title: "Columbus",
     subtitle: "An agentic GIS",
     href: "/products/enterprise",
-    img: "/ColumbusNavbarDropdownmenu.png",
+    img: "/ProductBackgroundImageHome.png",
+    screenshot: "/Icon/desktop-ui.png",
   },
   {
     title: "Elio",

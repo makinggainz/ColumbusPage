@@ -8,7 +8,6 @@ import { TrustStrip } from "@/components/home/TrustStrip";
 import { Applications } from "@/components/home/Applications";
 import { Careers } from "@/components/home/Careers";
 import { Industries } from "@/components/home/Industries";
-import { Capabilities } from "@/components/home/Capabilities";
 import { PartnerStrip } from "@/components/home/PartnerStrip";
 import { TravelSection } from "@/components/home/TravelSection";
 import { GeneratedMaps } from "@/components/home/GeneratedMaps";
@@ -38,7 +37,6 @@ export default function Home() {
       {/* Island 2: Columbus Pro */}
       <div data-island-2>
         <SiteSelection />
-        <Capabilities />
         <PartnerStrip />
         <Industries />
       </div>

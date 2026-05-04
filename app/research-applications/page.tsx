@@ -7,22 +7,15 @@ import { Footer } from "@/components/layout/Footer";
 import HeroSection from "@/components/use-cases/HeroSection";
 import ResultsSection from "@/components/use-cases/ResultsSection";
 import ContactSection from "@/components/use-cases/ContactSection";
-import IndustryGrid from "@/components/use-cases/IndustryGrid";
-import Chat from "@/components/use-cases/Chat";
-import SuperModelSection from "@/components/use-cases/SuperModelSection";
-import AgentResearch from "@/components/use-cases/AgentResearch";
-import DataCatalogue from "@/components/use-cases/DataCatalogue";
-import ScrollProgressTracker from "@/components/use-cases/ScrollProgressTracker";
-import { GenLayersSection } from "@/components/technology/redesign/GenLayersSection";
+import UseCasesHero from "@/components/use-cases/UseCaseHero";
+import UseCaseStickyScroll from "@/components/use-cases/UseCaseStickyScroll";
+import { IndustryProvider } from "@/components/use-cases/industry/IndustryContext";
+import { ResearchBlogSection } from "@/components/technology/redesign/ResearchBlogSection";
+import ResearchAppSections from "@/components/use-cases/ResearchAppSections";
 
 export default function ResearchApplicationsRoute() {
   const [navTheme, setNavTheme] = useState<"light" | "dark">("dark");
   const heroRef = useRef<HTMLElement>(null);
-  const sec4Ref = useRef<HTMLElement>(null);
-  const sec5Ref = useRef<HTMLElement>(null);
-  const sec6Ref = useRef<HTMLElement>(null);
-  const sec7Ref = useRef<HTMLElement>(null);
-  const sec8Ref = useRef<HTMLElement>(null);
 
   useEffect(() => {
     const NAVBAR_H = 80;
@@ -63,32 +56,55 @@ export default function ResearchApplicationsRoute() {
       <section className="relative" ref={heroRef}>
         <HeroSection videoSrc="/research-applications-video.mp4" />
       </section>
-      <section className="relative bg-black">
-        <ResultsSection />
+      {/* Lifted above the page-level structure lines (z 50) so the vertical
+          grid lines do not pass through the Results / Model Columbus-01 block. */}
+      <section
+        className="relative"
+        style={{
+          zIndex: 51,
+          background: "linear-gradient(to bottom, #000000 50%, #FFFFFF 50%)",
+        }}
+      >
+        <ResultsSection
+          compact
+          title="Model Columbus-01"
+          subtitle="Fundamental engineering results of Columbus-01"
+          itemTexts={[
+            "Large scale reasoning for spatial data",
+            "Generative AI for geospatial data",
+            "Large data synthesis",
+            "Semantic reasoning layer for coordinate spaces",
+          ]}
+          itemImages={[
+            "/TechnologyPageImages/ReasoningLayer.png",
+            "/TechnologyPageImages/LastLayer.png",
+            "/TechnologyPageImages/DataCollectionLayer.png",
+            "/TechnologyPageImages/FusionLayer.png",
+          ]}
+        />
       </section>
-      <div className="relative">
-        <ScrollProgressTracker sectionRefs={[sec4Ref, sec5Ref, sec6Ref, sec7Ref, sec8Ref]} />
-        <section className="relative" ref={sec4Ref}>
-          <Chat lightTheme />
-        </section>
-        <section className="relative" ref={sec5Ref}>
-          <SuperModelSection lightTheme />
-        </section>
-        <section className="relative" ref={sec6Ref}>
-          <AgentResearch lightTheme />
-        </section>
-        <section className="relative" ref={sec7Ref}>
-          <DataCatalogue lightTheme />
-        </section>
-        <section className="relative" ref={sec8Ref}>
-          <IndustryGrid lightTheme />
-        </section>
-      </div>
+      <section className="relative">
+        <UseCasesHero
+          eyebrow=""
+          title="Capabilities"
+          subtitle="What we've explored so far"
+          lightTheme
+        />
+      </section>
+
+      <ResearchAppSections />
+
+      {/* Industry-aware use-case block (light variant). The provider wraps the
+          picker, the sticky sub-navbar, and the four-row sticky-scroll. */}
+      <IndustryProvider>
+        <UseCaseStickyScroll lightTheme excludeSections={["super-model"]} />
+      </IndustryProvider>
+
+      <section className="relative">
+        <ResearchBlogSection />
+      </section>
       <section className="relative">
         <ContactSection lightTheme />
-      </section>
-      <section className="relative">
-        <GenLayersSection />
       </section>
       <Footer theme="light" />
     </main>
