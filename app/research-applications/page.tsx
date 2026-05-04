@@ -66,6 +66,7 @@ export default function ResearchApplicationsRoute() {
         }}
       >
         <ResultsSection
+          compact
           title="Model Columbus-01"
           subtitle="Fundamental engineering results of Columbus-01"
           itemTexts={[

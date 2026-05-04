@@ -161,6 +161,9 @@ type ResultsSectionProps = {
   /** Per-feature text overrides — same length / index alignment as itemImages.
    *  Lets a page swap the row labels without forking the whole component. */
   itemTexts?: string[];
+  /** When true, hide the SVG skeleton overlays and render the per-row image
+   *  smaller (centered, with whitespace padding) on a white tile. */
+  compact?: boolean;
 };
 
 export default function ResultsSection({
@@ -168,6 +171,7 @@ export default function ResultsSection({
   subtitle = "Essential capabilities",
   itemImages,
   itemTexts,
+  compact = false,
 }: ResultsSectionProps = {}) {
   const items: Item[] = ITEMS.map((it, i) => ({
     ...it,
@@ -252,36 +256,53 @@ export default function ResultsSection({
                   ...anim(100 + i * 60),
                 }}
               >
-                {/* Tile — either a satellite map basemap or a clean white
-                    canvas (Row 3, "Faster research reports"). The skeleton
-                    is layered on top in either case. */}
+                {/* Tile — default variant: blue basemap with the SVG skeleton
+                    overlayed (or white canvas + skeleton for Row 3). Compact
+                    variant: white tile with the image rendered small (centred
+                    with whitespace) and no skeleton overlay. */}
                 <div
                   className="relative shrink-0 aspect-[16/11] overflow-hidden rounded-[12px]"
                   style={{
-                    width: "clamp(160px, 16vw, 240px)",
+                    width: compact
+                      ? "clamp(110px, 11vw, 160px)"
+                      : "clamp(160px, 16vw, 240px)",
                     border: "1px solid rgba(0,0,0,0.05)",
-                    background: hasMap ? "#3150B5" : "white",
+                    background: compact ? "white" : (hasMap ? "#3150B5" : "white"),
                   }}
                 >
                   {hasMap && item.image && (
-                    <>
-                      <Image
-                        src={item.image}
-                        alt=""
-                        fill
-                        sizes="(max-width: 768px) 50vw, 240px"
-                        className="object-cover"
-                      />
-                      {/* Subtle navy scrim so the white skeleton elements
-                          read cleanly over even the lightest map. */}
-                      <div
-                        className="absolute inset-0 pointer-events-none"
-                        style={{ background: "rgba(10, 19, 68, 0.18)" }}
-                        aria-hidden
-                      />
-                    </>
+                    compact ? (
+                      <div className="absolute inset-0 p-3">
+                        <div className="relative w-full h-full">
+                          <Image
+                            src={item.image}
+                            alt=""
+                            fill
+                            sizes="(max-width: 768px) 40vw, 160px"
+                            className="object-contain"
+                          />
+                        </div>
+                      </div>
+                    ) : (
+                      <>
+                        <Image
+                          src={item.image}
+                          alt=""
+                          fill
+                          sizes="(max-width: 768px) 50vw, 240px"
+                          className="object-cover"
+                        />
+                        {/* Subtle navy scrim so the white skeleton elements
+                            read cleanly over even the lightest map. */}
+                        <div
+                          className="absolute inset-0 pointer-events-none"
+                          style={{ background: "rgba(10, 19, 68, 0.18)" }}
+                          aria-hidden
+                        />
+                      </>
+                    )
                   )}
-                  <item.Skeleton />
+                  {!compact && <item.Skeleton />}
                 </div>
 
                 {/* Title without numbers */}
