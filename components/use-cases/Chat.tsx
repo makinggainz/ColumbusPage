@@ -2,8 +2,6 @@
 
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
-import { useIndustry } from "./industry/IndustryContext";
-import type { ChatRowContent } from "./industry/types";
 
 const QUERY =
   "Show me all parcels over 5,000 m² in the Madrid metro area zoned for residential, currently undeveloped, within 1km of a metro station, and owned by a single entity for over 10 years";
@@ -86,7 +84,6 @@ type Phase =
 type ChatProps = {
   lightTheme?: boolean;
   embedded?: boolean;
-  content?: ChatRowContent;
 };
 
 const CURSOR_GLYPH = (
@@ -103,10 +100,7 @@ const CURSOR_GLYPH = (
  * lines) → lorem ipsum response → user types follow-up → sends → Columbus
  * thinks/responds again → whole panel fades out → loop.
  */
-export default function Chat({ lightTheme = false, embedded = false, content }: ChatProps) {
-  const { industry } = useIndustry();
-  const data = content ?? industry.chat;
-
+export default function Chat({ lightTheme = false, embedded = false }: ChatProps) {
   const sectionRef = useRef<HTMLDivElement>(null);
   const conversationRef = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
@@ -264,9 +258,6 @@ export default function Chat({ lightTheme = false, embedded = false, content }: 
   // Phase predicates
   const blurActive = ["idle", "cursor-moving", "cursor-tap", "chat-open", "typing-query", "sending", "bubble-in", "fading-out"].includes(phase);
   const cursorVisible = ["cursor-moving", "cursor-tap"].includes(phase);
-  const chatOpen = ![
-    "idle", "cursor-moving", "cursor-tap", "fading-out",
-  ].includes(phase);
   const newChatVisible = ["idle", "cursor-moving", "cursor-tap"].includes(phase);
   // Panel is small (input-only) until the first send fires
   const panelExpanded = ![
