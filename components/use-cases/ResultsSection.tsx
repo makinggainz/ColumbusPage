@@ -40,43 +40,31 @@ const ChatSkeleton = () => (
 
 /* Row 2 — "An AI that considers it all"
    Wider panel — no input bar — populated with a tall stacked list of
-   "source-type" rows, each prefixed with a small coloured indicator
-   evoking different data domains (demographics / imagery / mobility /
-   economic / etc.). Reads as breadth-of-consideration rather than a
-   chat back-and-forth. */
-const ConsideringSourcesSkeleton = () => {
-  const SOURCE_DOTS = [
-    "rgba(0,102,204,0.65)",   // demographics
-    "rgba(22,163,74,0.65)",   // environment
-    "rgba(245,158,11,0.65)",  // mobility
-    "rgba(220,38,38,0.65)",   // safety
-    "rgba(6,182,212,0.65)",   // hydrology
-    "rgba(168,85,247,0.65)",  // economic
-    "rgba(0,102,204,0.65)",   // imagery
-  ];
-  return (
-    <svg {...SKELETON_SVG_PROPS}>
-      <rect x="6" y="6" width="68" height="58" rx="2.2" fill="white" stroke="rgba(10,19,68,0.08)" strokeWidth="0.3" />
-      {/* Header — Columbus thinking */}
-      <circle cx="11" cy="12" r="1.6" fill="rgba(10,19,68,0.28)" />
-      <rect x="14.6" y="11.2" width="26" height="1.6" rx="0.5" fill="rgba(10,19,68,0.22)" />
-      {/* Source rows */}
-      {SOURCE_DOTS.map((color, i) => {
-        const y = 18 + i * 5.5;
-        const widths = [44, 38, 50, 32, 46, 36, 42];
-        return (
-          <g key={i}>
-            <rect x="11" y={y} width="2.2" height="2.2" rx="0.5" fill={color} />
-            <rect x="15" y={y + 0.4} width={widths[i]} height="1.4" rx="0.3" fill="rgba(10,19,68,0.16)" />
-          </g>
-        );
-      })}
-      {/* Footer counter chip */}
-      <rect x="11" y="58" width="22" height="3.5" rx="1" fill="rgba(0,102,204,0.10)" />
-      <rect x="13" y="59.4" width="14" height="1.2" rx="0.3" fill="rgba(0,102,204,0.65)" />
-    </svg>
-  );
-};
+   "source-type" rows. Same muted navy-on-white palette as the chat
+   skeleton; each row's leading square uses the avatar opacity so they
+   read as a list rather than a rainbow. */
+const ConsideringSourcesSkeleton = () => (
+  <svg {...SKELETON_SVG_PROPS}>
+    <rect x="6" y="6" width="68" height="58" rx="2.2" fill="white" stroke="rgba(10,19,68,0.08)" strokeWidth="0.3" />
+    {/* Header — Columbus thinking */}
+    <circle cx="11" cy="12" r="1.6" fill="rgba(10,19,68,0.28)" />
+    <rect x="14.6" y="11.2" width="26" height="1.6" rx="0.5" fill="rgba(10,19,68,0.22)" />
+    {/* Source rows — uniform muted grey */}
+    {Array.from({ length: 7 }).map((_, i) => {
+      const y = 18 + i * 5.5;
+      const widths = [44, 38, 50, 32, 46, 36, 42];
+      return (
+        <g key={i}>
+          <rect x="11" y={y} width="2.2" height="2.2" rx="0.5" fill="rgba(10,19,68,0.28)" />
+          <rect x="15" y={y + 0.4} width={widths[i]} height="1.4" rx="0.3" fill="rgba(10,19,68,0.16)" />
+        </g>
+      );
+    })}
+    {/* Footer counter chip */}
+    <rect x="11" y="58" width="22" height="3.5" rx="1" fill="rgba(10,19,68,0.06)" />
+    <rect x="13" y="59.4" width="14" height="1.2" rx="0.3" fill="rgba(10,19,68,0.22)" />
+  </svg>
+);
 
 /* Row 3 — "Faster research reports"
    White-background tile with a clean document silhouette: title +
@@ -101,7 +89,7 @@ const ReportSkeleton = () => (
     <rect x="10" y="40" width="38" height="22" rx="1.2" fill="rgba(10,19,68,0.03)" stroke="rgba(10,19,68,0.10)" strokeWidth="0.3" />
     <line x1="13" y1="60" x2="45" y2="60" stroke="rgba(10,19,68,0.18)" strokeWidth="0.3" />
     {[3, 7, 12, 10, 14, 16, 18].map((h, i) => (
-      <rect key={i} x={14 + i * 4.4} y={60 - h} width="2.4" height={h} rx="0.4" fill="rgba(0,102,204,0.55)" />
+      <rect key={i} x={14 + i * 4.4} y={60 - h} width="2.4" height={h} rx="0.4" fill="rgba(10,19,68,0.32)" />
     ))}
     {/* Side body — right column */}
     <rect x="52" y="42" width="38" height="1.2" rx="0.3" fill="rgba(10,19,68,0.16)" />
@@ -119,19 +107,21 @@ const ReportSkeleton = () => (
    in the bottom-left. */
 const DataLayersSkeleton = () => (
   <svg {...SKELETON_SVG_PROPS}>
-    {/* Layer polygons — different domains stacked over the basemap */}
-    <path d="M 6 14 L 28 10 L 36 24 L 24 32 L 10 28 Z" fill="rgba(0,102,204,0.32)" stroke="rgba(0,102,204,0.65)" strokeWidth="0.35" />
-    <path d="M 34 18 L 58 14 L 62 30 L 48 38 L 38 30 Z" fill="rgba(220,38,38,0.26)" stroke="rgba(220,38,38,0.6)" strokeWidth="0.35" />
-    <path d="M 8 36 L 30 34 L 34 50 L 18 58 L 10 50 Z" fill="rgba(245,158,11,0.26)" stroke="rgba(245,158,11,0.6)" strokeWidth="0.35" />
-    <path d="M 38 42 L 60 40 L 64 56 L 50 62 L 40 54 Z" fill="rgba(22,163,74,0.30)" stroke="rgba(22,163,74,0.6)" strokeWidth="0.35" />
+    {/* Layer polygons — same navy hue at varying opacities suggests
+        stacking without competing with the chat skeleton's monochrome
+        palette. */}
+    <path d="M 6 14 L 28 10 L 36 24 L 24 32 L 10 28 Z" fill="rgba(10,19,68,0.20)" stroke="rgba(10,19,68,0.45)" strokeWidth="0.35" />
+    <path d="M 34 18 L 58 14 L 62 30 L 48 38 L 38 30 Z" fill="rgba(10,19,68,0.16)" stroke="rgba(10,19,68,0.40)" strokeWidth="0.35" />
+    <path d="M 8 36 L 30 34 L 34 50 L 18 58 L 10 50 Z" fill="rgba(10,19,68,0.18)" stroke="rgba(10,19,68,0.42)" strokeWidth="0.35" />
+    <path d="M 38 42 L 60 40 L 64 56 L 50 62 L 40 54 Z" fill="rgba(10,19,68,0.22)" stroke="rgba(10,19,68,0.48)" strokeWidth="0.35" />
     {/* Layers panel — top-right */}
     <rect x="68" y="6" width="26" height="24" rx="1.5" fill="white" stroke="rgba(10,19,68,0.08)" strokeWidth="0.3" />
     <rect x="70.5" y="8" width="14" height="1.4" rx="0.4" fill="rgba(10,19,68,0.28)" />
     {[
-      { y: 13, c: "rgba(0,102,204,0.7)" },
-      { y: 17, c: "rgba(220,38,38,0.7)" },
-      { y: 21, c: "rgba(245,158,11,0.7)" },
-      { y: 25, c: "rgba(22,163,74,0.7)" },
+      { y: 13, c: "rgba(10,19,68,0.40)" },
+      { y: 17, c: "rgba(10,19,68,0.32)" },
+      { y: 21, c: "rgba(10,19,68,0.26)" },
+      { y: 25, c: "rgba(10,19,68,0.22)" },
     ].map((row, i) => (
       <g key={i}>
         <rect x="70.5" y={row.y} width="2.2" height="2.2" rx="0.3" fill={row.c} />
