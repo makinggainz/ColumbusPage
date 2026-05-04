@@ -1,99 +1,63 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 
 // Hairline divider used between rows — fades out toward the right.
 // Mirrors the technology-page Results section divider.
 const DIVIDER_BG =
   "linear-gradient(to right, rgba(0, 102, 204, 0.35) 0%, rgba(0, 102, 204, 0.32) 55%, rgba(0, 102, 204, 0) 100%)";
 
-/* ── Per-card line-art illustrations ─────────────────────────────
-   Each card gets a unique wireframe shape rendered in white over the
-   solid blue tile, in the same blueprint aesthetic as the technology
-   page's Results cards. */
-
-const ART_BG = "rgba(255,255,255,0.85)";
-const ART_FG = "rgba(255,255,255,0.7)";
-const ART_DIM = "rgba(255,255,255,0.55)";
-const ART_FAINT = "rgba(255,255,255,0.4)";
-
-const SVG_PROPS = {
-  viewBox: "0 0 100 100",
-  fill: "none",
-  preserveAspectRatio: "xMidYMid meet" as const,
-  className: "absolute inset-0 w-full h-full",
-  "aria-hidden": true,
-} as const;
-
-/* #1 — City skyline + crosshair. "Fast semantic reasoning in cities." */
-const CityArt = () => (
-  <svg {...SVG_PROPS}>
-    <line x1="50" y1="14" x2="50" y2="86" stroke={ART_FAINT} strokeWidth="0.4" strokeDasharray="2 2" />
-    <line x1="14" y1="50" x2="86" y2="50" stroke={ART_FAINT} strokeWidth="0.4" strokeDasharray="2 2" />
-    <rect x="20" y="50" width="11" height="34" stroke={ART_BG} strokeWidth="0.8" />
-    <rect x="32" y="38" width="13" height="46" stroke={ART_BG} strokeWidth="0.8" />
-    <rect x="46" y="44" width="12" height="40" stroke={ART_BG} strokeWidth="0.8" />
-    <rect x="59" y="32" width="13" height="52" stroke={ART_BG} strokeWidth="0.8" />
-    <rect x="73" y="48" width="11" height="36" stroke={ART_BG} strokeWidth="0.8" />
-    <line x1="14" y1="84" x2="86" y2="84" stroke={ART_BG} strokeWidth="0.8" />
-    <circle cx="50" cy="50" r="2" fill="rgba(255,255,255,0.9)" />
-  </svg>
-);
-
-/* #2 — 3D wave surface mesh. "Generative geospatial data." */
-const WaveArt = () => (
-  <svg {...SVG_PROPS}>
-    <path d="M 10 40 Q 25 32 40 40 T 70 40 T 95 40" stroke={ART_BG} strokeWidth="0.8" />
-    <path d="M 10 52 Q 25 44 40 52 T 70 52 T 95 52" stroke={ART_FG} strokeWidth="0.7" />
-    <path d="M 10 64 Q 25 56 40 64 T 70 64 T 95 64" stroke={ART_DIM} strokeWidth="0.6" />
-    <path d="M 10 76 Q 25 68 40 76 T 70 76 T 95 76" stroke={ART_DIM} strokeWidth="0.6" />
-    <line x1="25" y1="38" x2="25" y2="78" stroke={ART_FAINT} strokeWidth="0.4" />
-    <line x1="40" y1="36" x2="40" y2="78" stroke={ART_FAINT} strokeWidth="0.4" />
-    <line x1="55" y1="38" x2="55" y2="78" stroke={ART_FAINT} strokeWidth="0.4" />
-    <line x1="70" y1="36" x2="70" y2="78" stroke={ART_FAINT} strokeWidth="0.4" />
-    <line x1="85" y1="38" x2="85" y2="78" stroke={ART_FAINT} strokeWidth="0.4" />
-  </svg>
-);
-
-/* #3 — Stacked dataset sheets. "Generalist model, wide catalogue." */
-const StackArt = () => (
-  <svg {...SVG_PROPS}>
-    <rect x="22" y="22" width="48" height="32" stroke={ART_BG} strokeWidth="0.8" />
-    <rect x="32" y="34" width="48" height="32" stroke={ART_FG} strokeWidth="0.7" />
-    <rect x="42" y="46" width="48" height="32" stroke={ART_DIM} strokeWidth="0.6" />
-    <line x1="22" y1="22" x2="32" y2="34" stroke={ART_FAINT} strokeWidth="0.4" />
-    <line x1="70" y1="22" x2="80" y2="34" stroke={ART_FAINT} strokeWidth="0.4" />
-    <line x1="22" y1="54" x2="32" y2="66" stroke={ART_FAINT} strokeWidth="0.4" />
-    <line x1="32" y1="34" x2="42" y2="46" stroke={ART_FAINT} strokeWidth="0.4" />
-    <line x1="80" y1="34" x2="90" y2="46" stroke={ART_FAINT} strokeWidth="0.4" />
-    <line x1="32" y1="66" x2="42" y2="78" stroke={ART_FAINT} strokeWidth="0.4" />
-  </svg>
-);
-
-/* #4 — Connected nodes / spatial graph. "Deep spatial reasoning at scale." */
-const NetworkArt = () => (
-  <svg {...SVG_PROPS}>
-    <line x1="25" y1="25" x2="50" y2="50" stroke={ART_DIM} strokeWidth="0.6" />
-    <line x1="25" y1="25" x2="40" y2="68" stroke={ART_DIM} strokeWidth="0.6" />
-    <line x1="50" y1="50" x2="75" y2="25" stroke={ART_DIM} strokeWidth="0.6" />
-    <line x1="50" y1="50" x2="75" y2="75" stroke={ART_DIM} strokeWidth="0.6" />
-    <line x1="50" y1="50" x2="40" y2="68" stroke={ART_DIM} strokeWidth="0.6" />
-    <line x1="40" y1="68" x2="75" y2="75" stroke={ART_DIM} strokeWidth="0.6" />
-    <line x1="75" y1="25" x2="75" y2="75" stroke={ART_DIM} strokeWidth="0.6" />
-    <circle cx="25" cy="25" r="3" fill="rgba(255,255,255,0.9)" />
-    <circle cx="75" cy="25" r="3" fill="rgba(255,255,255,0.9)" />
-    <circle cx="50" cy="50" r="4" fill="rgba(255,255,255,0.95)" />
-    <circle cx="40" cy="68" r="3" fill="rgba(255,255,255,0.9)" />
-    <circle cx="75" cy="75" r="3" fill="rgba(255,255,255,0.9)" />
-  </svg>
-);
-
-const ITEMS: { text: string }[] = [
-  { text: "Ask the map anything" },
-  { text: "An AI that considers it all" },
-  { text: "Faster research reports" },
-  { text: "Generative data layers" },
+const ITEMS: { text: string; image: string }[] = [
+  { text: "Ask the map anything", image: "/MadridMap.png" },
+  { text: "An AI that considers it all", image: "/use-cases/havana.png" },
+  { text: "Faster research reports", image: "/HK Map-2.png" },
+  { text: "Generative data layers", image: "/use-cases/gmap.png" },
 ];
+
+/**
+ * Skeleton overlay — a heavily simplified silhouette of the
+ * Conversational Map Chat UI (Chat.tsx): a small white rounded panel on
+ * the lower-left of the tile, with a header dot + label, a few muted
+ * "considering" lines, a divider, and an input bar with a send button.
+ * Rendered inside an SVG so it scales with the tile at any size and
+ * stays crisp on retina displays.
+ */
+const ChatSkeleton = () => (
+  <svg
+    className="absolute inset-0 w-full h-full"
+    viewBox="0 0 100 70"
+    preserveAspectRatio="none"
+    aria-hidden
+  >
+    {/* Chat panel — bottom-left, ~50% width × ~62% height */}
+    <rect
+      x="6"
+      y="14"
+      width="52"
+      height="50"
+      rx="2.2"
+      fill="white"
+      stroke="rgba(10,19,68,0.08)"
+      strokeWidth="0.3"
+    />
+    {/* Header — small avatar dot + label bar */}
+    <circle cx="11" cy="20" r="1.6" fill="rgba(10,19,68,0.28)" />
+    <rect x="14.6" y="19.1" width="20" height="1.6" rx="0.5" fill="rgba(10,19,68,0.22)" />
+    {/* Considering lines, indented under the avatar */}
+    <rect x="14.6" y="25" width="34" height="1.2" rx="0.3" fill="rgba(10,19,68,0.14)" />
+    <rect x="14.6" y="29" width="28" height="1.2" rx="0.3" fill="rgba(10,19,68,0.14)" />
+    <rect x="14.6" y="33" width="22" height="1.2" rx="0.3" fill="rgba(10,19,68,0.14)" />
+    {/* Response paragraph stub */}
+    <rect x="9" y="40" width="44" height="1.4" rx="0.3" fill="rgba(10,19,68,0.18)" />
+    <rect x="9" y="44" width="36" height="1.4" rx="0.3" fill="rgba(10,19,68,0.18)" />
+    {/* Border-top hairline above the input bar */}
+    <line x1="6" y1="52" x2="58" y2="52" stroke="rgba(0,0,0,0.06)" strokeWidth="0.3" />
+    {/* Input bar — text field + send button */}
+    <rect x="9" y="56" width="32" height="1.6" rx="0.5" fill="rgba(10,19,68,0.14)" />
+    <rect x="49" y="54.2" width="6" height="6" rx="1.4" fill="#0A1344" />
+  </svg>
+);
 
 export default function ResultsSection() {
   const ref = useRef<HTMLDivElement>(null);
@@ -112,7 +76,15 @@ export default function ResultsSection() {
       { threshold: 0.05 },
     );
     obs.observe(el);
-    return () => obs.disconnect();
+    // Safety fallback: even if the observer never fires (slow paint / stuck
+    // hydration / browser tab backgrounded during mount) force the section
+    // to its visible state after 1.5s so the rows never get stuck stacked
+    // at translateY(14px) opacity:0.
+    const fallback = setTimeout(() => setVisible(true), 1500);
+    return () => {
+      obs.disconnect();
+      clearTimeout(fallback);
+    };
   }, []);
 
   const anim = (delay = 0): React.CSSProperties => ({
@@ -145,13 +117,15 @@ export default function ResultsSection() {
           Essential capabilities
         </p>
 
-        {/* ── Stacked-row catalogue — each row pairs a blue art tile (with the
-            wireframe globe) and a single line of numbered copy. Hairline
-            dividers separate every row except the last. Matches the
-            technology-page Results section. */}
+        {/* ── Stacked-row catalogue. Explicit gap on the parent guarantees
+            consistent vertical spacing between rows even if the row-level
+            anim transform is mid-flight or the layout has just hydrated. */}
         <div
           className="flex flex-col"
-          style={{ marginTop: "clamp(48px, 6vw, 72px)" }}
+          style={{
+            marginTop: "clamp(48px, 6vw, 72px)",
+            gap: "clamp(20px, 2.5vw, 36px)",
+          }}
         >
           {ITEMS.map((item, i) => (
             <div
@@ -159,21 +133,33 @@ export default function ResultsSection() {
               className="relative flex flex-row items-center max-md:flex-col max-md:items-start"
               style={{
                 gap: "clamp(28px, 3vw, 48px)",
-                padding: "clamp(2px, 0.3vw, 5px) 0",
-                paddingTop: i === 0 ? 0 : undefined,
-                paddingBottom: i === ITEMS.length - 1 ? 0 : undefined,
                 ...anim(100 + i * 60),
               }}
             >
-              {/* Solid-blue art tile — empty rounded blue box. */}
+              {/* Map tile — real GIS imagery + simplified Chat-UI skeleton on top. */}
               <div
                 className="relative shrink-0 aspect-[16/11] overflow-hidden rounded-[12px]"
                 style={{
                   width: "clamp(160px, 16vw, 240px)",
+                  border: "1px solid rgba(0,0,0,0.1)",
                   background: "#3150B5",
-                  border: "1px solid rgba(0,0,0,0.1)"
                 }}
               >
+                <Image
+                  src={item.image}
+                  alt=""
+                  fill
+                  sizes="(max-width: 768px) 50vw, 240px"
+                  className="object-cover"
+                />
+                {/* Subtle navy scrim so the white skeleton panel reads
+                    cleanly over even the lightest map */}
+                <div
+                  className="absolute inset-0 pointer-events-none"
+                  style={{ background: "rgba(10, 19, 68, 0.18)" }}
+                  aria-hidden
+                />
+                <ChatSkeleton />
               </div>
 
               {/* Title without numbers */}
@@ -188,7 +174,7 @@ export default function ResultsSection() {
                 <div
                   className="absolute right-0 max-md:hidden pointer-events-none"
                   style={{
-                    bottom: 0,
+                    bottom: "calc(-1 * clamp(20px, 2.5vw, 36px) / 2)",
                     left: "calc(clamp(160px, 16vw, 240px) + clamp(28px, 3vw, 48px))",
                     height: 1,
                     background: DIVIDER_BG,
