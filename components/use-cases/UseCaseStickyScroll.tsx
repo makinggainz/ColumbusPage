@@ -34,7 +34,7 @@ export default function UseCaseStickyScroll({ lightTheme = false, excludeSection
       id: "chat",
       featureTitle: "Conversational map chat",
       leftRail: industry.chat.leftRail,
-      content: (isLight) => <Chat embedded lightTheme={isLight} />,
+      content: (isLight: boolean) => <Chat embedded lightTheme={isLight} />,
     },
     {
       id: "super-model",
