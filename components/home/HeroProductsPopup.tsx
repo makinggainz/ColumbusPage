@@ -133,6 +133,37 @@ export function HeroProductsPopup({ open, onClose }: Props) {
                       transition: "opacity 250ms ease",
                     }}
                   />
+                  {p.screenshot && (
+                    <>
+                      <div
+                        className="absolute inset-0 pointer-events-none"
+                        style={{
+                          backdropFilter: "blur(4px)",
+                          WebkitBackdropFilter: "blur(4px)",
+                          zIndex: 1,
+                        }}
+                      />
+                      <div
+                        className="absolute overflow-hidden"
+                        style={{
+                          left: "5%",
+                          bottom: 0,
+                          width: "90%",
+                          height: "85%",
+                          borderRadius: "8px 8px 0 0",
+                          boxShadow: "0 -4px 30px rgba(0,0,0,0.25)",
+                          zIndex: 2,
+                        }}
+                      >
+                        <Image
+                          src={p.screenshot}
+                          alt={`${p.title} interface`}
+                          fill
+                          className="object-cover object-top"
+                        />
+                      </div>
+                    </>
+                  )}
                   {isElio && p.video && (
                     <video
                       ref={videoRef}
@@ -145,6 +176,7 @@ export function HeroProductsPopup({ open, onClose }: Props) {
                       style={{
                         opacity: hoveredIdx === 1 ? 1 : 0,
                         transition: "opacity 250ms ease",
+                        zIndex: 3,
                       }}
                     />
                   )}
