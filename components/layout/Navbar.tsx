@@ -1019,29 +1019,32 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                 >
                                     <div className="grid grid-cols-2 gap-6 w-full max-w-[580px]">
                                         {[
-                                            { title: "Columbus Pro Enterprise Use-Cases", href: "/columbus-solutions", icon: null as React.ReactNode },
+                                            {
+                                                title: "Columbus Pro Enterprise Use-Cases",
+                                                href: "/columbus-solutions",
+                                                icon: (
+                                                    <Image
+                                                        src="/logobueno.png"
+                                                        alt=""
+                                                        width={140}
+                                                        height={140}
+                                                        className="w-1/2 h-1/2 max-w-[140px] object-contain"
+                                                        style={{ filter: isDark ? "brightness(0) invert(1)" : undefined }}
+                                                    />
+                                                ),
+                                            },
                                             {
                                                 title: "Research Applications",
                                                 href: "/research-applications",
                                                 icon: (
-                                                    <svg viewBox="0 0 200 200" fill="none" stroke="currentColor" className="w-1/2 h-1/2 max-w-[140px]" aria-hidden>
-                                                        {/* Crosshair dashed lines */}
-                                                        <line x1="100" y1="6" x2="100" y2="38" strokeWidth="1.2" strokeDasharray="4 4" />
-                                                        <line x1="100" y1="162" x2="100" y2="194" strokeWidth="1.2" strokeDasharray="4 4" />
-                                                        <line x1="6" y1="100" x2="38" y2="100" strokeWidth="1.2" strokeDasharray="4 4" />
-                                                        <line x1="162" y1="100" x2="194" y2="100" strokeWidth="1.2" strokeDasharray="4 4" />
-                                                        {/* Globe outline */}
-                                                        <circle cx="100" cy="100" r="60" strokeWidth="1.6" />
-                                                        {/* Longitude meridians (ellipses) */}
-                                                        <ellipse cx="100" cy="100" rx="22" ry="60" strokeWidth="1.2" />
-                                                        <ellipse cx="100" cy="100" rx="42" ry="60" strokeWidth="1.2" />
-                                                        {/* Equator */}
-                                                        <line x1="40" y1="100" x2="160" y2="100" strokeWidth="1.6" />
-                                                        {/* Polar axis */}
-                                                        <line x1="100" y1="40" x2="100" y2="160" strokeWidth="1" strokeDasharray="2 3" />
-                                                        {/* Orbiting body */}
-                                                        <circle cx="138" cy="92" r="5" fill="currentColor" stroke="none" />
-                                                    </svg>
+                                                    <Image
+                                                        src="/TechnologyPageImages/lgm-globe-icon.png"
+                                                        alt=""
+                                                        width={140}
+                                                        height={140}
+                                                        className="w-1/2 h-1/2 max-w-[140px] object-contain"
+                                                        style={{ filter: isDark ? "brightness(0) invert(1)" : undefined }}
+                                                    />
                                                 ),
                                             },
                                         ].map((item, index) => (
