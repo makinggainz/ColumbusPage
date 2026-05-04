@@ -1004,7 +1004,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                 {/* ── Use-cases cards (desktop) — absolutely positioned
                                     on top of the products grid; fades in when the user
                                     hovers Use Cases. Two cards: an empty bordered box for
-                                    Columbus Pro Enterprise Use-Cases, and a bordered box
+                                    Columbus Business Use cases, and a bordered box
                                     with a globe diagram for Research Applications. Plain
                                     text labels sit below each card. */}
                                 <div
@@ -1020,7 +1020,7 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                     <div className="grid grid-cols-2 gap-6 w-full max-w-[580px]">
                                         {[
                                             {
-                                                title: "Columbus Pro Enterprise Use-Cases",
+                                                title: "Columbus Business Use cases",
                                                 href: "/columbus-solutions",
                                                 icon: (
                                                     <Image
