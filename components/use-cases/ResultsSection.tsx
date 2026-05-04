@@ -141,7 +141,7 @@ export default function ResultsSection() {
                 className="relative shrink-0 aspect-[16/11] overflow-hidden rounded-[12px]"
                 style={{
                   width: "clamp(160px, 16vw, 240px)",
-                  border: "1px solid rgba(0,0,0,0.1)",
+                  border: "1px solid rgba(0,0,0,0.05)",
                   background: "#3150B5",
                 }}
               >
