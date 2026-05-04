@@ -150,7 +150,30 @@ const ITEMS: Item[] = [
   { text: "Generative data layers", image: "/use-cases/gmap.png", Skeleton: DataLayersSkeleton },
 ];
 
-export default function ResultsSection() {
+type ResultsSectionProps = {
+  /** Section title — defaults to the columbus-solutions wording. */
+  title?: string;
+  /** Section subtitle — defaults to the columbus-solutions wording. */
+  subtitle?: string;
+  /** Per-feature image overrides. Pass 4 entries (one per row) to swap the
+   *  default images on a per-page basis. `null` keeps the white-canvas tile. */
+  itemImages?: (string | null)[];
+  /** Per-feature text overrides — same length / index alignment as itemImages.
+   *  Lets a page swap the row labels without forking the whole component. */
+  itemTexts?: string[];
+};
+
+export default function ResultsSection({
+  title = "Columbus Pro",
+  subtitle = "Essential capabilities",
+  itemImages,
+  itemTexts,
+}: ResultsSectionProps = {}) {
+  const items: Item[] = ITEMS.map((it, i) => ({
+    ...it,
+    image: itemImages?.[i] !== undefined ? itemImages[i] : it.image,
+    text: itemTexts?.[i] ?? it.text,
+  }));
   const ref = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
 
@@ -199,13 +222,13 @@ export default function ResultsSection() {
           className="m-0 text-[39px] font-medium leading-[1.2] tracking-[-0.02em] text-[#1D1D1F]"
           style={anim(0)}
         >
-          Columbus Pro
+          {title}
         </h2>
         <p
           className="mt-4 text-[20px] leading-[1.55] text-[#1D1D1F] max-w-[640px]"
           style={anim(50)}
         >
-          Essential capabilities
+          {subtitle}
         </p>
 
         {/* ── Stacked-row catalogue. Explicit gap on the parent guarantees
@@ -218,7 +241,7 @@ export default function ResultsSection() {
             gap: "clamp(20px, 2.5vw, 36px)",
           }}
         >
-          {ITEMS.map((item, i) => {
+          {items.map((item, i) => {
             const hasMap = item.image !== null;
             return (
               <div
@@ -269,7 +292,7 @@ export default function ResultsSection() {
                 {/* Hairline divider beneath every row except the last. Starts
                     from the title's left edge (past the art tile + gap) and
                     fades out toward the right. */}
-                {i < ITEMS.length - 1 && (
+                {i < items.length - 1 && (
                   <div
                     className="absolute right-0 max-md:hidden pointer-events-none"
                     style={{

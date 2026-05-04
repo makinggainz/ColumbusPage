@@ -65,7 +65,22 @@ export default function ResearchApplicationsRoute() {
           background: "linear-gradient(to bottom, #000000 50%, #FFFFFF 50%)",
         }}
       >
-        <ResultsSection />
+        <ResultsSection
+          title="Model Columbus-01"
+          subtitle="Fundamental engineering results of Columbus-01"
+          itemTexts={[
+            "Large scale reasoning for spatial data",
+            "Generative AI for geospatial data",
+            "Large data synthesis",
+            "Semantic reasoning layer for coordinate spaces",
+          ]}
+          itemImages={[
+            "/TechnologyPageImages/ReasoningLayer.png",
+            "/TechnologyPageImages/LastLayer.png",
+            "/TechnologyPageImages/DataCollectionLayer.png",
+            "/TechnologyPageImages/FusionLayer.png",
+          ]}
+        />
       </section>
       <section className="relative">
         <UseCasesHero

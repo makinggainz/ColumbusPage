@@ -519,7 +519,7 @@ export default function Hero() {
             backgroundRepeat: "no-repeat",
             clipPath: bgExpanded
               ? "inset(0px 0% 0px 0% round 0px)"
-              : "inset(clamp(0px, 5vw, 100px) clamp(0px, 2vw, 5%) clamp(0px, 5vw, 100px) clamp(0px, 2vw, 5%) round clamp(0px, 3vw, 55px))",
+              : "inset(clamp(0px, 5vw, 120px) max(0px, calc(50vw - 704px)) clamp(0px, 5vw, 120px) max(0px, calc(50vw - 704px)) round clamp(0px, 3vw, 55px))",
             zIndex: 0,
             opacity: heroReady ? 1 : 0,
             transition: "opacity 0.8s ease-out, clip-path 0.9s cubic-bezier(0.4, 0, 0.2, 1)",

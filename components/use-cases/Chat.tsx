@@ -462,11 +462,15 @@ export default function Chat({ lightTheme = false, embedded = false }: ChatProps
           height: panelExpanded ? "calc(100% - 140px)" : "56px",
           // Pill state = fully rounded (corners cap at half-height = 28px on
           // a 56px tall pill). Full panel = M3 medium-large card radius.
+          // The radius morphs first; the size transitions wait ~160ms so
+          // the corners are already at their final 16px before the panel
+          // starts growing — otherwise the corners look huge mid-morph
+          // since 9999px caps at half-height as the panel grows.
           borderRadius: panelExpanded ? "16px" : "9999px",
           opacity: phase === "fading-out" ? 0 : 1,
           transform: `scale(${phase === "cursor-tap" ? 0.96 : 1})`,
           transition:
-            "left 520ms cubic-bezier(0.05, 0.7, 0.1, 1), top 520ms cubic-bezier(0.05, 0.7, 0.1, 1), width 520ms cubic-bezier(0.05, 0.7, 0.1, 1), height 520ms cubic-bezier(0.05, 0.7, 0.1, 1), border-radius 80ms ease 480ms, opacity 500ms ease, transform 180ms ease",
+            "left 480ms cubic-bezier(0.05, 0.7, 0.1, 1) 160ms, top 480ms cubic-bezier(0.05, 0.7, 0.1, 1) 160ms, width 480ms cubic-bezier(0.05, 0.7, 0.1, 1) 160ms, height 480ms cubic-bezier(0.05, 0.7, 0.1, 1) 160ms, border-radius 140ms ease, opacity 500ms ease, transform 180ms ease",
         }}
       >
         {/* Conversation area — visible only when expanded. */}
