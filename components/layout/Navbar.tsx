@@ -1129,6 +1129,33 @@ export const Navbar = ({ theme = "light", wide = false }: { theme?: "light" | "d
                                                         transition: "opacity 250ms ease",
                                                     }}
                                                 />
+                                                {item.screenshot && (
+                                                    <>
+                                                        <div
+                                                            className="absolute inset-0 pointer-events-none"
+                                                            style={{ backdropFilter: "blur(4px)", WebkitBackdropFilter: "blur(4px)", zIndex: 1 }}
+                                                        />
+                                                        <div
+                                                            className="absolute overflow-hidden"
+                                                            style={{
+                                                                left: "5%",
+                                                                bottom: 0,
+                                                                width: "90%",
+                                                                height: "85%",
+                                                                borderRadius: "8px 8px 0 0",
+                                                                boxShadow: "0 -4px 30px rgba(0,0,0,0.25)",
+                                                                zIndex: 2,
+                                                            }}
+                                                        >
+                                                            <Image
+                                                                src={item.screenshot}
+                                                                alt={`${item.title} Interface`}
+                                                                fill
+                                                                className="object-cover object-top"
+                                                            />
+                                                        </div>
+                                                    </>
+                                                )}
                                                 {item.video && (
                                                     <video
                                                         ref={elioVideoRef}
