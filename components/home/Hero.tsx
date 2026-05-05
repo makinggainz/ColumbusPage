@@ -952,29 +952,44 @@ export const Hero = () => {
       className="relative overflow-hidden flex flex-col"
       style={{ background: "#F9F9F9", minHeight: "calc(100vh + 300px)" }}
     >
-      {/* Mesh */}
+      {/* Mesh — drawn FIRST so the sky image (next) can paint cleanly over
+          its upper portion. Mesh is fully visible only where the sky fades
+          out, removing the mesh-on-cloud color seam in the upper hero. */}
       <div className="absolute inset-0">
         <WaveMesh />
       </div>
 
-      {/* Top gradient */}
+      {/* Sky background — clouds + soft blue, lifted from the contact page's
+          IslandScene asset. Painted on top of the WaveMesh so the upper hero
+          shows uniform clouds without the mesh's blue grid tinting them. The
+          bottom edge fades to transparent so the wave area below blends in
+          without a hard 65%-height edge. */}
+      <img
+        src="/emoji/skyBackground.png"
+        alt=""
+        aria-hidden
+        className="absolute inset-x-0 top-0 w-full pointer-events-none select-none"
+        style={{
+          height: "65%",
+          objectFit: "cover",
+          objectPosition: "top center",
+          zIndex: 0,
+          WebkitMaskImage:
+            "linear-gradient(to bottom, black 0%, black 70%, transparent 100%)",
+          maskImage:
+            "linear-gradient(to bottom, black 0%, black 70%, transparent 100%)",
+        }}
+      />
+
+      {/* Top gradient — symmetric fade so neither edge produces a hard seam
+          across the cloud sky. Peaks white-ish at the middle (under the
+          headline) and fades back to transparent above and below. */}
       <div
         className="absolute left-0 right-0 pointer-events-none"
         style={{
           top: "calc(100vh * 0.22)", height: "calc(100vh * 0.18)",
-          background: "linear-gradient(to bottom, #F9F9F9, transparent)",
+          background: "linear-gradient(to bottom, transparent 0%, #F9F9F9 50%, transparent 100%)",
           zIndex: 1,
-        }}
-        aria-hidden
-      />
-
-      {/* Accent gradient — top of hero */}
-      <div
-        className="absolute left-0 right-0 top-0 pointer-events-none"
-        style={{
-          height: "50%",
-          background: "linear-gradient(to bottom, rgba(0, 102, 204, 0.15) 0%, rgba(0, 102, 204, 0.08) 60%, transparent 100%)",
-          zIndex: 3,
         }}
         aria-hidden
       />
