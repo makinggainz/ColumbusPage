@@ -1,0 +1,148 @@
+/* ──────────────────────────────────────────────────────────────────────────
+   MistX scoped design system override for /products/enterprise.
+
+   Strategy (per MistX CLAUDE.md "Page-scoped color exceptions"):
+   The route's outermost element gets `.theme-mistx`. Variable redeclaration
+   sits on `body:has(.theme-mistx)` so any future siblings (a global Nav, a
+   portal) inherit the MistX palette while the route is active. Visual
+   atmosphere and utility helpers live on `.theme-mistx` itself.
+
+   This file is THE complete MistX surface for this route:
+   • palette tokens (--mistx-*)
+   • Funnel-Display-equivalent + Rubik typography
+   • layout helpers (.mistx-container, .mistx-grid-pattern)
+   • signature "Rainbow" footer band gradient
+   • reveal animation parity with MistX's [data-reveal]
+
+   No M3 token from /design-system/tokens.css is consumed inside this scope.
+   ────────────────────────────────────────────────────────────────────────── */
+
+body:has(.theme-mistx) {
+  /* Surfaces */
+  --mistx-bg: #F1F5FE;
+  --mistx-bg-deep: #DCE7FB;
+  --mistx-border: #C7D7F8;
+  --mistx-border-soft: rgba(199, 215, 248, 0.6);
+
+  /* Brand blue ramp */
+  --mistx-blue: #154ACC;
+  --mistx-blue-bright: #2663EB;
+  --mistx-blue-deep: #12369C;
+  --mistx-navy: #0E256E;
+  --mistx-deep-navy: #091442;
+  --mistx-pale-sky: #E8EFFD;
+
+  /* Ink */
+  --mistx-ink: #1f1f1f;
+  --mistx-ink-soft: #3d3d3d;
+
+  /* Nav reservation height (matches MistX --nav-height) */
+  --mistx-nav-height: 72px;
+
+  /* Force the body surface to MistX pale-blue while the route is active.
+     Background-attachment: fixed so it anchors to the viewport. */
+  background: var(--mistx-bg);
+}
+
+/* Page-level atmosphere + utility scope. */
+.theme-mistx {
+  background: var(--mistx-bg);
+  color: var(--mistx-ink);
+  font-family: var(--font-rubik), system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 400;
+  letter-spacing: 0;
+  min-height: 100vh;
+}
+
+/* Typography hierarchy inside the scope — Rubik 400 across the board, per
+   MistX §2.7 "weight discipline: default weight 400 for nearly everything". */
+.theme-mistx h1,
+.theme-mistx h2,
+.theme-mistx h3,
+.theme-mistx h4 {
+  font-family: var(--font-rubik), system-ui, sans-serif;
+  font-weight: 400;
+  letter-spacing: -0.025em;
+  color: var(--mistx-ink);
+  margin: 0;
+}
+
+.theme-mistx p,
+.theme-mistx li,
+.theme-mistx span,
+.theme-mistx button,
+.theme-mistx a {
+  font-family: var(--font-rubik), system-ui, sans-serif;
+}
+
+/* Container — MistX --container-7xl (1280px) + 24px gutters. */
+.mistx-container {
+  width: 100%;
+  max-width: 80rem;       /* 1280px */
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 24px;
+  padding-right: 24px;
+}
+
+/* Dot-grid backdrop — exact recreation of MistX's .bg-grid-pattern.
+   Renders inside section content blocks behind cards. */
+.mistx-grid-pattern {
+  background-image: radial-gradient(
+    circle,
+    var(--mistx-grid-color, var(--mistx-bg-deep)) 1px,
+    transparent 1.5px
+  );
+  background-size: 20px 20px;
+  padding-top: 32px;
+  padding-bottom: 32px;
+}
+@media (min-width: 768px) {
+  .mistx-grid-pattern {
+    padding-top: 64px;
+    padding-bottom: 64px;
+  }
+}
+
+/* Reveal animation parity with MistX [data-reveal]. */
+.theme-mistx [data-reveal] {
+  opacity: 0;
+  transform: translateY(22px);
+  transition:
+    opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.theme-mistx [data-reveal].is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.theme-mistx [data-reveal-delay="1"] { transition-delay: 90ms; }
+.theme-mistx [data-reveal-delay="2"] { transition-delay: 180ms; }
+.theme-mistx [data-reveal-delay="3"] { transition-delay: 270ms; }
+@media (prefers-reduced-motion: reduce) {
+  .theme-mistx [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+/* Signature MistX Rainbow band — pale-sky → bright-blue → brand-blue →
+   deep-blue → navy → deep-navy. The page closer the MistX brand requires
+   on every page. */
+.mistx-rainbow-band {
+  background: linear-gradient(
+    90deg,
+    #E8EFFD 0%,
+    #2663EB 22%,
+    #154ACC 44%,
+    #12369C 66%,
+    #0E256E 84%,
+    #091442 100%
+  );
+  height: 12px;
+  width: 100%;
+}
+
+/* Selection highlight in MistX brand blue. */
+.theme-mistx ::selection { background: rgba(21, 74, 204, 0.32); color: inherit; }
