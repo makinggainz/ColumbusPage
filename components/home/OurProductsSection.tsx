@@ -68,6 +68,13 @@ const PRODUCTS: ProductCellProps[] = [
     glow: "11, 27, 43",
     glowAlphas: { a1: 0.09, a2: 0.03, a3: 0.14 },
     cardBgAlpha: 0.06,
+    // Drops the white card + colored plate; the image sits directly
+    // in the cell, anchored to the bottom of its portrait canvas where
+    // the point-cloud mountain lives.
+    bgImage: {
+      src: "/Researchimg.png",
+      objectPosition: "center bottom",
+    },
   },
 ];
 

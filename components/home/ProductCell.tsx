@@ -129,11 +129,11 @@ const CSS = `
 @media (min-width: 640px)  { .pc-cell { min-height: var(--pc-minh-sm, 420px); } }
 @media (min-width: 1024px) { .pc-cell { min-height: var(--pc-minh-lg, 480px); } }
 
-/* corner: glow swells from the bottom-right of a compact cell */
+/* corner: no cell-level glow gradient — the cell stays a flat white
+   surface. (Removed the two radial-gradient layers that previously
+   painted the sky-blue glow from the bottom-right.) */
 .pc-cell--corner {
-  background-image:
-    radial-gradient(200% 135% at 100% 100%, rgba(var(--pc-glow), var(--pc-a1)), rgba(var(--pc-glow), var(--pc-a2)) 48%, transparent 76%),
-    radial-gradient(115% 68% at 100% 100%, rgba(var(--pc-glow), var(--pc-a3)), transparent 58%);
+  background-image: none;
 }
 
 /* split: gentler glow tuned for a wide 2-column row — sizes smaller in
@@ -297,10 +297,11 @@ const CSS = `
   .pc-cell--corner .pc-card { left: 36px; top: 46%; }
 }
 
-/* Feather + fully-hidden zone on the right and bottom edges of the
-   corner card. The 15% feather (70%→85%) is the same width as before,
-   just shifted inward — past 85% the card is fully transparent (the
-   "100% overlay color" zone) all the way to the card edge. */
+/* Edge-fade on BOTH the corner card and its blue plate. With the cell
+   bg now flat white (radial glow removed above), fading to transparent
+   reads identically to fading to white — and using a mask means the
+   plate fades in lockstep with the card, so the sky-blue tint doesn't
+   keep showing at the edges where the card has faded out. */
 .pc-cell--corner .pc-card,
 .pc-cell--corner .pc-card-bg {
   -webkit-mask-image:
@@ -347,12 +348,8 @@ const CSS = `
   pointer-events: none;
 }
 .pc-cell--corner .pc-bg-img {
-  right: 0; bottom: 0;
-  left: 22%; top: 44%;
+  inset: 0;
   width: auto; height: auto;
-}
-@media (min-width: 1024px) {
-  .pc-cell--corner .pc-bg-img { left: 24%; top: 46%; }
 }
 .pc-cell--split .pc-bg-img {
   right: 24px; bottom: 24px;
