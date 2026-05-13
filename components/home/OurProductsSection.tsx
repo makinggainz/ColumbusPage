@@ -21,29 +21,27 @@
  */
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
-
-interface Product {
-  name: string;
-  desc: string;
-  href: string;
-  logo: string;
-  /** Optional CSS filter applied to the logo (Columbus reuses the navbar
-   *  recolor filter so the brand mark renders in the same navy blue). */
-  logoFilter?: string;
-}
+import { ProductCell, type ProductCellProps } from "./ProductCell";
 
 // Columbus uses the same recolour filter as MistxNav so the mark reads
 // as the same navy-blue brand colour the navbar shows.
 const COLUMBUS_LOGO_FILTER =
   "brightness(0) saturate(100%) invert(8%) sepia(80%) saturate(1400%) hue-rotate(215deg) brightness(90%)";
 
-const PRODUCTS: Product[] = [
+// Each product overrides the ProductCell defaults to match the original
+// per-product glow variants. Elio inherits the defaults (sky-300,
+// alphas 0.28 / 0.10 / 0.42, plate 0.275).
+const PRODUCTS: ProductCellProps[] = [
   {
     name: "Columbus",
     desc: "An agentic GIS platform for professionals",
     href: "#",
     logo: "/logobueno.png",
     logoFilter: COLUMBUS_LOGO_FILTER,
+    // sky-400, slightly darker than the default sky-300. Plate drops
+    // to 0.18 because the darker hue reads heavier at the same alpha.
+    glow: "56, 189, 248",
+    cardBgAlpha: 0.18,
   },
   {
     name: "Elio",
@@ -56,6 +54,11 @@ const PRODUCTS: Product[] = [
     desc: "Our jurney to the Large Geospacial Model",
     href: "#",
     logo: "/TechnologyPageImages/lgm-globe-icon.png",
+    // charcoal matching the LGM globe line-art (#0B1B2B). Heavier
+    // than sky-blue, so all alphas drop to keep the cell airy.
+    glow: "11, 27, 43",
+    glowAlphas: { a1: 0.09, a2: 0.03, a3: 0.14 },
+    cardBgAlpha: 0.06,
   },
 ];
 
@@ -92,19 +95,6 @@ const CSS = `
   .ops-container { margin-left: auto; margin-right: auto; }
 }
 
-/* heading — centred, regular weight (same as before) */
-.ops-title {
-  margin: 0 auto;
-  max-width: 32rem;
-  text-align: center;
-  font-size: 32px;
-  line-height: 1.08;
-  font-weight: 400;
-  letter-spacing: -0.01em;
-  color: var(--ops-ink);
-}
-@media (min-width: 768px) { .ops-title { font-size: 42px; } }
-
 /* scroll reveal */
 .ops-reveal {
   transition: transform 700ms ease-out, opacity 700ms ease-out;
@@ -129,6 +119,8 @@ const CSS = `
 @media (min-width: 640px)  { .ops-grid-inner { grid-template-columns: 1fr 1fr; } }
 @media (min-width: 1024px) { .ops-grid-inner { grid-template-columns: 1fr 1fr 1fr; } }
 
+/* hairlines on the cell + filler boundaries; cell visuals themselves
+   live in ProductCell.tsx */
 .ops-cell,
 .ops-filler {
   border-bottom: 1px solid var(--ops-gridline);
@@ -137,129 +129,10 @@ const CSS = `
 .ops-filler { display: none; min-height: 64px; }
 @media (min-width: 640px) { .ops-filler { display: block; } }
 
-/* a large product cell — soft glow from the bottom-right corner. Color
-   is driven per-cell via --ops-glow (rgb triplet) and opacities via
-   --ops-glow-a1/a2/a3. Default values render the sky-blue Elio glow;
-   per-product variants below recolour for Columbus / Research. */
-.ops-cell {
-  position: relative;
-  overflow: hidden;
-  min-height: 340px;
-  background-color: #ffffff;
-  --ops-glow: 125, 211, 252;
-  --ops-glow-a1: 0.28;
-  --ops-glow-a2: 0.10;
-  --ops-glow-a3: 0.42;
-  --ops-cardbg-a: 0.275;
-  background-image:
-    radial-gradient(200% 135% at 100% 100%, rgba(var(--ops-glow), var(--ops-glow-a1)), rgba(var(--ops-glow), var(--ops-glow-a2)) 48%, transparent 76%),
-    radial-gradient(115% 68% at 100% 100%, rgba(var(--ops-glow), var(--ops-glow-a3)), transparent 58%);
-}
-@media (min-width: 640px)  { .ops-cell { min-height: 420px; } }
-@media (min-width: 1024px) { .ops-cell { min-height: 480px; } }
-
-/* Columbus: slightly darker than the default sky-blue glow — sky-400
-   (#38BDF8) vs sky-300 (#7DD3FC) on the other cells. Alphas match
-   Elio so the only shift is hue/lightness. The card-bg plate, however,
-   reads heavier than Elio at the same alpha (darker hue = more visible),
-   so it drops to 0.18 to match Elio's perceived weight. */
-.ops-cell--columbus {
-  --ops-glow: 56, 189, 248;
-  --ops-cardbg-a: 0.18;
-}
-
-/* Research: charcoal glow matching the LGM globe line-art (#0B1B2B). */
-.ops-cell--research {
-  --ops-glow: 11, 27, 43;
-  --ops-glow-a1: 0.09;
-  --ops-glow-a2: 0.03;
-  --ops-glow-a3: 0.14;
-  /* Charcoal is much heavier than sky-blue, so the plate behind the
-     white card drops to 0.06 to read as a faint tint, not a heavy bar. */
-  --ops-cardbg-a: 0.06;
-}
-
 /* white fades so the hairlines dissolve into the section bg */
 .ops-fade { pointer-events: none; position: absolute; left: -1px; right: -1px; height: 70px; z-index: 3; }
 .ops-fade--top    { top: 0;    background-image: linear-gradient(#fff, rgba(255,255,255,0.64) 54%, rgba(255,255,255,0.06)); }
 .ops-fade--bottom { bottom: 0; background-image: linear-gradient(to top, #fff, rgba(255,255,255,0.64) 54%, rgba(255,255,255,0.06)); }
-
-/* top-left text block */
-.ops-cell-head {
-  position: absolute;
-  top: 0; left: 0;
-  z-index: 2;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  padding: 28px;
-  box-sizing: border-box;
-}
-@media (min-width: 1024px) { .ops-cell-head { padding: 36px; } }
-/* title row — product logo on the left, name on the right; weight 400
-   to match the .ops-title heading "We're all about maps" */
-.ops-cell-title {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-.ops-cell-logo {
-  width: 32px;
-  height: 32px;
-  object-fit: contain;
-  flex: 0 0 auto;
-  display: block;
-}
-@media (min-width: 1024px) { .ops-cell-logo { width: 36px; height: 36px; } }
-.ops-cell-name { margin: 0; font-size: 24px; line-height: 1.15; font-weight: 400; letter-spacing: -0.01em; color: var(--ops-ink); }
-@media (min-width: 1024px) { .ops-cell-name { font-size: 28px; } }
-.ops-cell-desc { margin: 16px 0 0; font-size: 16px; line-height: 1.4; color: var(--ops-ink); }
-@media (min-width: 1024px) { .ops-cell-desc { font-size: 18px; } }
-.ops-cell-link {
-  margin-top: 18px;
-  font-family: var(--ops-mono);
-  font-size: 14px;
-  font-weight: 500;
-  letter-spacing: 0.02em;
-  color: var(--ops-brand);
-  text-decoration: none;
-}
-.ops-cell-link:hover { text-decoration: underline; }
-
-/* sky-blue plate behind the white card — peeks out along the card's top & left
-   edges (a "border-like" sliver), with a 1px white outer border */
-.ops-card-bg {
-  position: absolute;
-  right: 0; bottom: 0;
-  left: calc(22% - 7px); top: calc(44% - 7px);
-  z-index: 1;
-  background: rgba(var(--ops-glow), var(--ops-cardbg-a));
-  border: 1px solid #ffffff;
-  border-radius: 16px 0 0 0;
-  box-sizing: border-box;
-}
-@media (min-width: 1024px) { .ops-card-bg { left: calc(24% - 8px); top: calc(46% - 8px); } }
-
-/* white card pinned bottom-right: top-left corner rounded, right & bottom flush */
-.ops-card {
-  position: absolute;
-  right: 0; bottom: 0;
-  left: 22%; top: 44%;
-  z-index: 2;
-  background: #ffffff;
-  border-radius: 12px 0 0 0;
-  overflow: hidden;
-  display: flex;
-  gap: 16px;
-  padding: 22px;
-  box-sizing: border-box;
-}
-@media (min-width: 1024px) { .ops-card { padding: 26px; gap: 20px; left: 24%; top: 46%; } }
-.ops-skel-sq { flex: 0 0 36%; align-self: stretch; border-radius: 8px; background: var(--ops-skel); }
-.ops-skel-lines { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 11px; }
-@media (min-width: 1024px) { .ops-skel-lines { gap: 13px; } }
-.ops-skel-line { height: 12px; border-radius: 4px; background: var(--ops-skel); }
-.ops-skel-line:last-child { width: 58%; }
 `;
 
 function Reveal({
@@ -305,29 +178,13 @@ function Reveal({
   );
 }
 
-function SkeletonCard() {
-  return (
-    <div className="ops-card" aria-hidden>
-      <div className="ops-skel-sq" />
-      <div className="ops-skel-lines">
-        <div className="ops-skel-line" />
-        <div className="ops-skel-line" />
-        <div className="ops-skel-line" />
-        <div className="ops-skel-line" />
-        <div className="ops-skel-line" />
-        <div className="ops-skel-line" />
-      </div>
-    </div>
-  );
-}
-
 export default function OurProductsSection() {
   return (
     <section id="products" className="ops-section">
       <style>{CSS}</style>
       <div className="ops-container">
         <Reveal>
-          <h2 className="ops-title">We&rsquo;re all about maps</h2>
+          <h2 className="h2 mx-auto max-w-lg text-center text-ink">We&rsquo;re all about maps</h2>
         </Reveal>
 
         <Reveal className="ops-gridwrap">
@@ -339,30 +196,7 @@ export default function OurProductsSection() {
               <div className="ops-filler" aria-hidden />
 
               {PRODUCTS.map((p) => (
-                <div
-                  className={`ops-cell ops-cell--${p.name.toLowerCase()}`}
-                  key={p.name}
-                >
-                  <div className="ops-cell-head">
-                    <div className="ops-cell-title">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src={p.logo}
-                        alt=""
-                        aria-hidden
-                        className="ops-cell-logo"
-                        style={p.logoFilter ? { filter: p.logoFilter } : undefined}
-                      />
-                      <h3 className="ops-cell-name">{p.name}</h3>
-                    </div>
-                    <p className="ops-cell-desc">{p.desc}</p>
-                    <a className="ops-cell-link" href={p.href}>
-                      Learn more
-                    </a>
-                  </div>
-                  <div className="ops-card-bg" aria-hidden />
-                  <SkeletonCard />
-                </div>
+                <ProductCell key={p.name} className="ops-cell" {...p} />
               ))}
 
               {/* empty hairline row below */}

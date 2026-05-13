@@ -6,6 +6,7 @@ import {
   TextScrollIntro,
   ColumbusFeatureCell,
   DatasetsCarousel,
+  CtaBanner,
   PlatformProducts,
   StickyScrollFeatures,
   CaseStudyCard,
@@ -47,6 +48,11 @@ export default function Home() {
         <TextScrollIntro />
         <ColumbusFeatureCell />
         <DatasetsCarousel />
+        <CtaBanner
+          title="No GIS experience needed. Get to critical decisions faster."
+          primaryCta={{ label: "Start Now", href: "#" }}
+          secondaryCta={{ label: "Learn More", href: "#" }}
+        />
         <PlatformProducts />
         <StickyScrollFeatures />
         <CaseStudyCard />

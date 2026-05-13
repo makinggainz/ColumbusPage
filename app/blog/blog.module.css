@@ -1,53 +1,49 @@
-/* Typography uses catcherX typescale tokens (defined in app/globals.css). */
+/* Typography uses the catcherX scale (.h*/.p-*) from app/globals.css.
+   These camelCase class names are kept for backwards-compat with blog
+   templates; each maps to the nearest h*/p-* step. */
 
 .headlineLarge {
   font-family: var(--font-sans);
-  font-size: var(--text-headline-lg-size);
-  line-height: var(--text-headline-lg-line-height);
-  font-weight: var(--text-headline-lg-weight);
-  letter-spacing: var(--text-headline-lg-tracking);
+  font-size: var(--typography--h3);
+  line-height: var(--typography--h3--line-height);
+  font-weight: 500;
   color: var(--color-ink);
 }
 
 .titleLarge {
   font-family: var(--font-sans);
-  font-size: var(--text-title-lg-size);
-  line-height: var(--text-title-lg-line-height);
-  font-weight: var(--text-title-lg-weight);
-  letter-spacing: var(--text-title-lg-tracking);
+  font-size: var(--typography--h5);
+  line-height: var(--typography--h5--line-height);
+  font-weight: 500;
   color: var(--color-ink);
 }
 
 .bodyLarge {
   font-family: var(--font-sans);
-  font-size: var(--text-body-lg-size);
-  line-height: var(--text-body-lg-line-height);
-  font-weight: var(--text-body-lg-weight);
-  letter-spacing: var(--text-body-lg-tracking);
+  font-size: var(--typography--p-l);
+  line-height: var(--typography--p-l--line-height);
+  font-weight: 400;
 }
 
 .bodyMedium {
   font-family: var(--font-sans);
-  font-size: var(--text-body-md-size);
-  line-height: var(--text-body-md-line-height);
-  font-weight: var(--text-body-md-weight);
-  letter-spacing: var(--text-body-md-tracking);
+  font-size: var(--typography--p-m);
+  line-height: var(--typography--p-m--line-height);
+  font-weight: 400;
 }
 
 .labelLarge {
   font-family: var(--font-sans);
-  font-size: var(--text-label-lg-size);
-  line-height: var(--text-label-lg-line-height);
-  font-weight: var(--text-label-lg-weight);
-  letter-spacing: var(--text-label-lg-tracking);
+  font-size: var(--typography--p-m);
+  line-height: var(--typography--p-m--line-height);
+  font-weight: 500;
 }
 
 .labelMediumUpper {
   font-family: var(--font-sans);
-  font-size: var(--text-label-md-size);
-  line-height: var(--text-label-md-line-height);
-  font-weight: var(--text-label-md-weight);
-  letter-spacing: var(--text-label-md-tracking);
+  font-size: var(--typography--p-s);
+  line-height: var(--typography--p-s--line-height);
+  font-weight: 500;
   text-transform: uppercase;
 }
 
@@ -91,10 +87,9 @@
 
 .sectionHeading {
   font-family: var(--font-sans);
-  font-size: var(--text-headline-sm-size);
-  line-height: var(--text-headline-sm-line-height);
-  font-weight: var(--text-headline-sm-weight);
-  letter-spacing: var(--text-headline-sm-tracking);
+  font-size: var(--typography--h6);
+  line-height: var(--typography--h6--line-height);
+  font-weight: 500;
   color: var(--color-ink);
   margin-top: 40px;
   margin-bottom: 16px;
@@ -103,10 +98,9 @@
 
 .proseParagraph {
   font-family: var(--font-sans);
-  font-size: var(--text-body-lg-size);
+  font-size: var(--typography--p-l);
   line-height: 1.75rem;
-  font-weight: var(--text-body-lg-weight);
-  letter-spacing: var(--text-body-lg-tracking);
+  font-weight: 400;
   color: var(--color-ink);
   margin: 0 0 24px;
 }

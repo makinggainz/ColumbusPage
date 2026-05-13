@@ -8,8 +8,6 @@
  * Tokens are defined in app/globals.css (@theme block + :root typescale).
  */
 
-import type { CSSProperties } from "react";
-
 const COLORS: { name: string; token: string; hex: string; note?: string }[] = [
   { name: "Ink", token: "--color-ink", hex: "#0B1B2B", note: "Default heading + body text" },
   { name: "Muted", token: "--color-muted", hex: "#5A6B7B", note: "Secondary text" },
@@ -20,14 +18,17 @@ const COLORS: { name: string; token: string; hex: string; note?: string }[] = [
   { name: "Grid line", token: "--color-gridline", hex: "#E7E7F1", note: "Blueprint hairlines" },
 ];
 
-const TYPESCALE: { name: string; base: string; sample: string }[] = [
-  { name: "Headline / Large", base: "headline-lg", sample: "The frontier research lab" },
-  { name: "Headline / Small", base: "headline-sm", sample: "Section heading" },
-  { name: "Title / Large", base: "title-lg", sample: "Card title or article subhead" },
-  { name: "Body / Large", base: "body-lg", sample: "Paragraph body — the default reading size for prose." },
-  { name: "Body / Medium", base: "body-md", sample: "Compact body — secondary captions and meta." },
-  { name: "Label / Large", base: "label-lg", sample: "Button label or chip" },
-  { name: "Label / Medium", base: "label-md", sample: "EYEBROW / KICKER" },
+const TYPESCALE: { name: string; cls: string; sample: string }[] = [
+  { name: "Display heading",  cls: "h1", sample: "The frontier research lab" },
+  { name: "Section heading",  cls: "h2", sample: "We're all about maps" },
+  { name: "Subsection",       cls: "h3", sample: "Built for global teams" },
+  { name: "Card / row title", cls: "h4", sample: "Columbus Pro" },
+  { name: "Small heading",    cls: "h5", sample: "Inline emphasis title" },
+  { name: "List heading",     cls: "h6", sample: "Notable references" },
+  { name: "Eyebrow heading",  cls: "h7", sample: "Captions and labels" },
+  { name: "Body / Large",     cls: "p-l", sample: "Paragraph body — the default reading size for prose." },
+  { name: "Body / Medium",    cls: "p-m", sample: "Compact body — secondary captions and meta." },
+  { name: "Body / Small",     cls: "p-s", sample: "Disclaimers, footnotes, and dense metadata rows." },
 ];
 
 const SHAPE: { name: string; token: string; px: string }[] = [
@@ -73,23 +74,21 @@ export default function DesignSystemPage() {
       </Section>
 
       <Section title="Typescale">
+        <p className="p-l text-muted mb-8 max-w-[60ch]">
+          The standard rule is <code className="font-mono">{'<h2 className="h2">'}</code> — semantic
+          tag plus matching class. Headings default to <strong>Medium 500</strong>; paragraph
+          classes default to <strong>Regular 400</strong>. Override weights with utility classes
+          (<code className="font-mono">font-bold</code>, <code className="font-mono">font-normal</code>)
+          when needed. Mobile sizes (≤991px) shrink h1–h5; h6/h7/p-* are constant.
+        </p>
         <div className="space-y-8">
-          {TYPESCALE.map((t) => {
-            const style: CSSProperties = {
-              fontFamily: "var(--font-sans)",
-              fontSize: `var(--text-${t.base}-size)`,
-              lineHeight: `var(--text-${t.base}-line-height)`,
-              fontWeight: `var(--text-${t.base}-weight)` as CSSProperties["fontWeight"],
-              letterSpacing: `var(--text-${t.base}-tracking)`,
-            };
-            return (
-              <article key={t.base} className="border-b border-gridline pb-6">
-                <p className="text-sm font-mono text-muted mb-2">--text-{t.base}-*</p>
-                <p className="text-xs text-muted mb-3">{t.name}</p>
-                <p style={style} className="text-ink">{t.sample}</p>
-              </article>
-            );
-          })}
+          {TYPESCALE.map((t) => (
+            <article key={t.cls} className="border-b border-gridline pb-6">
+              <p className="text-sm font-mono text-muted mb-2">.{t.cls} · --typography--{t.cls}</p>
+              <p className="text-xs text-muted mb-3">{t.name}</p>
+              <p className={`${t.cls} text-ink`}>{t.sample}</p>
+            </article>
+          ))}
         </div>
       </Section>
 
@@ -150,15 +149,7 @@ function Section({ title, children }: { title: string; children: React.ReactNode
   return (
     <section className="section border-t border-gridline">
       <div className="container-site">
-        <h2
-          className="font-normal tracking-tight text-ink mb-10"
-          style={{
-            fontSize: "var(--text-headline-lg-size)",
-            lineHeight: "var(--text-headline-lg-line-height)",
-          }}
-        >
-          {title}
-        </h2>
+        <h2 className="h2 tracking-tight text-ink mb-10">{title}</h2>
         {children}
       </div>
     </section>

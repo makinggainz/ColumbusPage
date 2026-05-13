@@ -62,11 +62,17 @@ export function TextScrollIntro() {
               className="size-14 object-contain lg:size-16"
               style={{ filter: COLUMBUS_LOGO_FILTER }}
             />
-            <h2 className="text-4xl font-medium tracking-tight text-ink sm:text-5xl">
+            <h2 className="h2 tracking-tight text-ink">
               Columbus
             </h2>
           </div>
 
+          {/* Exception to the typography system: this scroll-reveal lead
+              paragraph keeps its original three-tier responsive sizing
+              (24/30/36px) and leading-snug. The design system's single
+              991px cutoff loses the middle tier and the .h3 class uses
+              the default heading line-height (106%), both of which hurt
+              this animation. Treat as a one-off display paragraph. */}
           <p
             ref={ref}
             className="text-center text-2xl sm:text-3xl lg:text-4xl font-medium tracking-tight leading-snug text-ink"

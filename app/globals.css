@@ -71,7 +71,12 @@ html {
   /* ─── catcherX (NewsCatcher) design system tokens ───────────────────────
      The site's single design system. Mirrors catcherX/tailwind.config.ts.
      Material Design 3 tokens were removed — this is the only source of
-     truth for color, type, shape, and motion. */
+     truth for color, type, shape, and motion.
+
+     HARD RULE: no purple anywhere on this site. No purple/violet/fuchsia
+     hex, no Tailwind purple/violet/fuchsia/indigo utility classes, no
+     purple stops in any gradient, no hue-rotate landing in the purple
+     band (~260–320°). Blue-family only. */
   --color-bg1: #F6F8FB;          /* page gradient top stop */
   --color-bg2: #E5EDFB;          /* pale-blue wash (use at 40% opacity) */
   --color-ink: #0B1B2B;          /* default heading + body text */
@@ -83,51 +88,49 @@ html {
   --container-site: 1200px;      /* the single content-column width */
   --radius-card: 20px;           /* signature container radius */
 
-  /* Inter is the single typeface. Bound to --font-sans via the
-     next/font/google loader in app/fonts.ts; --font-inter is the variable
-     name the loader produces. Body inherits this through @layer base. */
-  --font-sans: var(--font-inter), system-ui, sans-serif;
+  /* PP Neue Montreal (commercial, Pangram Pangram) is the canonical face.
+     TODO: drop licensed .woff2 files into public/fonts/ and add @font-face
+     declarations to actually render it. Until then the stack falls back to
+     Inter (loaded via next/font in app/fonts.ts), then Arial — same fallback
+     behaviour as the live newscatcherapi.com site. */
+  --font-sans: "Ppneuemontreal", "PP Neue Montreal", var(--font-inter), Arial, ui-sans-serif, system-ui, sans-serif;
+
+  /* Typography utilities — register text-h1…text-p-s as Tailwind font-size
+     utilities, each paired with its companion line-height token. Source of
+     truth is the --typography--* CSS variables in :root below. */
+  --text-h1: var(--typography--h1);   --text-h1--line-height: var(--typography--h1--line-height);
+  --text-h2: var(--typography--h2);   --text-h2--line-height: var(--typography--h2--line-height);
+  --text-h3: var(--typography--h3);   --text-h3--line-height: var(--typography--h3--line-height);
+  --text-h4: var(--typography--h4);   --text-h4--line-height: var(--typography--h4--line-height);
+  --text-h5: var(--typography--h5);   --text-h5--line-height: var(--typography--h5--line-height);
+  --text-h6: var(--typography--h6);   --text-h6--line-height: var(--typography--h6--line-height);
+  --text-h7: var(--typography--h7);   --text-h7--line-height: var(--typography--h7--line-height);
+  --text-p-l: var(--typography--p-l); --text-p-l--line-height: var(--typography--p-l--line-height);
+  --text-p-m: var(--typography--p-m); --text-p-m--line-height: var(--typography--p-m--line-height);
+  --text-p-s: var(--typography--p-s); --text-p-s--line-height: var(--typography--p-s--line-height);
 }
 
-/* ─── catcherX typescale ───────────────────────────────────────────────
-   Seven style sizes. Each defines size, line-height, weight, and
-   tracking as separate vars so compound consumers (CSS modules) can
-   read individual properties. Font-family is inherited from --font-sans. */
+/* ─── catcherX typography scale ────────────────────────────────────────
+   Ten steps (h1–h7, p-l, p-m, p-s). Each token holds the desktop size;
+   its --line-height companion holds the matching leading. The mobile
+   media query below (≤991px, matching catcherX's single Webflow cutoff)
+   downshifts h1–h5; h6/h7/p-* are constant across breakpoints.
+
+   Standard usage: <h2 className="h2">…</h2>, <p className="p-l">…</p>.
+   The .h1–.p-s classes below default to font-weight 500 for headings
+   and 400 for paragraph styles — override with utility classes
+   (font-bold, font-normal, etc.) when needed. */
 :root {
-  --text-headline-lg-size: 2rem;            /* 32px */
-  --text-headline-lg-line-height: 2.5rem;   /* 40px */
-  --text-headline-lg-weight: 400;
-  --text-headline-lg-tracking: 0;
-
-  --text-headline-sm-size: 1.5rem;          /* 24px */
-  --text-headline-sm-line-height: 2rem;     /* 32px */
-  --text-headline-sm-weight: 400;
-  --text-headline-sm-tracking: 0;
-
-  --text-title-lg-size: 1.375rem;           /* 22px */
-  --text-title-lg-line-height: 1.75rem;     /* 28px */
-  --text-title-lg-weight: 400;
-  --text-title-lg-tracking: 0;
-
-  --text-body-lg-size: 1rem;                /* 16px */
-  --text-body-lg-line-height: 1.5rem;       /* 24px */
-  --text-body-lg-weight: 400;
-  --text-body-lg-tracking: 0.03125rem;
-
-  --text-body-md-size: 0.875rem;            /* 14px */
-  --text-body-md-line-height: 1.25rem;      /* 20px */
-  --text-body-md-weight: 400;
-  --text-body-md-tracking: 0.015625rem;
-
-  --text-label-lg-size: 0.875rem;           /* 14px */
-  --text-label-lg-line-height: 1.25rem;     /* 20px */
-  --text-label-lg-weight: 500;
-  --text-label-lg-tracking: 0.00625rem;
-
-  --text-label-md-size: 0.75rem;            /* 12px */
-  --text-label-md-line-height: 1rem;        /* 16px */
-  --text-label-md-weight: 500;
-  --text-label-md-tracking: 0.03125rem;
+  --typography--h1: 4rem;        --typography--h1--line-height: 103%;
+  --typography--h2: 2.625rem;    --typography--h2--line-height: 106%;
+  --typography--h3: 2.25rem;     --typography--h3--line-height: 106%;
+  --typography--h4: 1.75rem;     --typography--h4--line-height: 112%;
+  --typography--h5: 1.375rem;    --typography--h5--line-height: 135%;
+  --typography--h6: 1.5rem;      --typography--h6--line-height: 1.75rem;
+  --typography--h7: 1.125rem;    --typography--h7--line-height: 1.5rem;
+  --typography--p-l: 1rem;       --typography--p-l--line-height: 142%;
+  --typography--p-m: 0.875rem;   --typography--p-m--line-height: 135%;
+  --typography--p-s: 0.75rem;    --typography--p-s--line-height: 128%;
 
   /* Shape */
   --radius-md: 12px;
@@ -137,6 +140,28 @@ html {
   --motion-duration-md: 300ms;
   --motion-easing-decelerate: cubic-bezier(0.05, 0.7, 0.1, 1);
 }
+
+@media (max-width: 991px) {
+  :root {
+    --typography--h1: 2.5rem;   --typography--h1--line-height: 105%;
+    --typography--h2: 2rem;     --typography--h2--line-height: 104%;
+    --typography--h3: 1.5rem;   --typography--h3--line-height: 106%;
+    --typography--h4: 1.5rem;   --typography--h4--line-height: 112%;
+    --typography--h5: 1.25rem;  --typography--h5--line-height: 120%;
+    /* h6, h7, p-* unchanged across breakpoints */
+  }
+}
+
+.h1 { font-size: var(--typography--h1); line-height: var(--typography--h1--line-height); font-weight: 500; }
+.h2 { font-size: var(--typography--h2); line-height: var(--typography--h2--line-height); font-weight: 500; }
+.h3 { font-size: var(--typography--h3); line-height: var(--typography--h3--line-height); font-weight: 500; }
+.h4 { font-size: var(--typography--h4); line-height: var(--typography--h4--line-height); font-weight: 500; }
+.h5 { font-size: var(--typography--h5); line-height: var(--typography--h5--line-height); font-weight: 500; }
+.h6 { font-size: var(--typography--h6); line-height: var(--typography--h6--line-height); font-weight: 500; }
+.h7 { font-size: var(--typography--h7); line-height: var(--typography--h7--line-height); font-weight: 500; }
+.p-l { font-size: var(--typography--p-l); line-height: var(--typography--p-l--line-height); font-weight: 400; }
+.p-m { font-size: var(--typography--p-m); line-height: var(--typography--p-m--line-height); font-weight: 400; }
+.p-s { font-size: var(--typography--p-s); line-height: var(--typography--p-s--line-height); font-weight: 400; }
 
 /* Theme variables */
 :root {

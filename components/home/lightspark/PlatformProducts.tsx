@@ -128,11 +128,11 @@ export function PlatformProducts() {
                     className="object-contain"
                     style={tile.logoFilter ? { filter: tile.logoFilter } : undefined}
                   />
-                  <h3 className="text-xl font-semibold tracking-tight text-ink">
+                  <h3 className="h5 tracking-tight text-ink">
                     {tile.name}
                   </h3>
                 </div>
-                <p className="mt-4 text-base leading-relaxed text-muted">
+                <p className="p-l mt-4 text-muted">
                   <strong className="font-semibold text-ink">
                     {tile.lead}
                   </strong>{" "}

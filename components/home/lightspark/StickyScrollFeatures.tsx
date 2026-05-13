@@ -51,7 +51,7 @@ export function StickyScrollFeatures() {
              somewhere to anchor; top-[20vh] keeps the heading
              roughly mid-screen as the user scrolls the items. */}
           <div className="md:sticky md:top-[20vh] md:self-start">
-            <h2 className="text-4xl md:text-5xl font-normal tracking-tight leading-[1.22] text-ink mb-10">
+            <h2 className="h2 tracking-tight text-ink mb-10">
               Columbus Earth is making geospatial intelligence instant, open, and grounded.
             </h2>
           </div>

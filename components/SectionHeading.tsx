@@ -10,10 +10,10 @@ interface SectionHeadingProps {
 
 /**
  * The single canonical section heading block (catcherX design
- * system). Composition: optional `.eyebrow` kicker → h2
- * (text-3xl→sm:text-4xl, font-bold, tracking-tight) → optional
- * description (text-lg text-muted). Block max-width is 42rem so
- * long lines aren't allowed for section headings.
+ * system). Composition: optional `.eyebrow` kicker → `.h2`
+ * (Medium 500, tracking-tight) → optional `.p-l` description in
+ * text-muted. Block max-width is 42rem so long lines aren't allowed
+ * for section headings.
  *
  * Alignment rule: section h2/h3 + body are left-aligned by default;
  * pass `centered` only for hero / CTA-banner heading moments.
@@ -32,11 +32,11 @@ export function SectionHeading({
   return (
     <div className={wrapper}>
       {eyebrow && <p className="eyebrow">{eyebrow}</p>}
-      <h2 className="mt-3 text-3xl font-bold tracking-tight text-ink sm:text-4xl">
+      <h2 className="h2 mt-3 tracking-tight text-ink">
         {title}
       </h2>
       {description && (
-        <p className="mt-4 text-lg text-muted">{description}</p>
+        <p className="p-l mt-4 text-muted">{description}</p>
       )}
     </div>
   );

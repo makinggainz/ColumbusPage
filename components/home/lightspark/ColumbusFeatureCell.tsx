@@ -1,42 +1,31 @@
 "use client";
 
 /**
- * Columbus features cell — non-sticky, per-feature visuals.
+ * Columbus features cell — three feature rows inside the same grid
+ * wrapper as OurProductsSection.
  *
- * Three feature rows stacked inside a single cell. Each row pairs:
- *   - Left half: feature name + lorem-ipsum description + "Learn more"
- *   - Right half: a per-feature radial-glow panel with a *unique*
- *     skeleton mock that hints at what the feature does (chat-bubble
- *     pattern for Map Chat; list/table pattern for Data Digestion;
- *     parcel grid for Site Selection and Audits).
+ * Each row uses <ProductCell variant="split">:
+ *   - Left half: feature name + description + "Learn more"
+ *   - Right half: a glow-plated white card containing a unique mock
+ *     (chat-bubble for Map Chat; list/table for Data Digestion;
+ *     parcel grid for Site Selection and Audits)
  *
- * No sticky-scroll, no IntersectionObserver, no activeIdx. Each row
- * is self-contained — it owns its glow colour and its visual mock at
- * all times. Rows are separated by a hairline divider so they read
- * as the same "panel family" as the three cells under "We're all
- * about maps".
- *
- * Wrapper preserved from earlier variants:
- *   .cfc-grid with `border-left` + .cfc-filler rows above and below +
- *   top/bottom fade overlays — so the vertical hairlines still extend
- *   past the cell and dissolve into the page surface.
- *
- * Per-feature glow colours are pastel rainbow at Tailwind ~300
- * lightness — same family as the sky-blue default on the 3-up cells.
+ * This component owns the outer hairline grid + fade overlays + the
+ * per-feature mocks. The cell visuals themselves (glow, plate, card,
+ * typography, geometry) all live in ProductCell.
  */
+
+import { ProductCell } from "@/components/home/ProductCell";
 
 interface Feature {
   key: string;
   name: string;
   desc: string;
-  /** rgb triplet (no `rgba()` wrap) — drives the row's radial-glow
-   *  layer and the plate behind the white skeleton card. */
-  glow: string;
   mock: "mapchat" | "data" | "site";
 }
 
-// All three rows share the same sky-400 glow used by the Columbus
-// cell in OurProductsSection (`.ops-cell--columbus`) — #38BDF8.
+// All three rows share the sky-400 glow used by the Columbus cell in
+// OurProductsSection (`.ops-cell--columbus`) — #38BDF8.
 const COLUMBUS_GLOW = "56, 189, 248";
 
 const FEATURES: Feature[] = [
@@ -45,7 +34,6 @@ const FEATURES: Feature[] = [
     name: "Map Chat",
     desc:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-    glow: COLUMBUS_GLOW,
     mock: "mapchat",
   },
   {
@@ -53,7 +41,6 @@ const FEATURES: Feature[] = [
     name: "Data Digestion",
     desc:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-    glow: COLUMBUS_GLOW,
     mock: "data",
   },
   {
@@ -61,7 +48,6 @@ const FEATURES: Feature[] = [
     name: "Site Selection and Audits",
     desc:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-    glow: COLUMBUS_GLOW,
     mock: "site",
   },
 ];
@@ -93,7 +79,11 @@ const CSS = `
   border-bottom: 1px solid var(--color-gridline);
   border-right: 1px solid var(--color-gridline);
 }
-.cfc-filler { display: none; min-height: 64px; }
+/* filler rows above and below the cell — their height controls how
+   far the vertical hairlines (grid border-left + cell border-right)
+   extend past the cell at top and bottom. The 70px fade overlay
+   dissolves the outermost end of the line into the page. */
+.cfc-filler { display: none; min-height: 112px; }
 @media (min-width: 640px) { .cfc-filler { display: block; } }
 
 .cfc-cell {
@@ -106,128 +96,10 @@ const CSS = `
 .cfc-fade--top    { top: 0;    background-image: linear-gradient(#fff, rgba(255,255,255,0.64) 54%, rgba(255,255,255,0.06)); }
 .cfc-fade--bottom { bottom: 0; background-image: linear-gradient(to top, #fff, rgba(255,255,255,0.64) 54%, rgba(255,255,255,0.06)); }
 
-/* ── feature rows ─────────────────────────────────────────────────── */
-
+/* ── stacked feature rows (each row is a ProductCell variant="split") ── */
 .cfc-rows { display: flex; flex-direction: column; }
-
-.cfc-row {
-  position: relative;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  min-height: 440px;
-  /* radial glow set inline per-row — spans the full row width so the
-     wash reads behind the text on the left as well as the card on the
-     right (matches the ops-cell pattern in OurProductsSection). */
-}
-.cfc-row + .cfc-row {
+.cfc-row:not(:first-of-type) {
   border-top: 1px solid var(--color-gridline);
-}
-@media (min-width: 768px) {
-  .cfc-row {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    min-height: 480px;
-  }
-}
-@media (min-width: 1024px) {
-  .cfc-row { min-height: 560px; }
-}
-
-/* left half — text */
-.cfc-row-left {
-  position: relative;
-  z-index: 2;
-  padding: 48px 28px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-@media (min-width: 768px) {
-  .cfc-row-left { padding: 64px 36px; }
-}
-@media (min-width: 1024px) {
-  .cfc-row-left { padding: 88px 44px; }
-}
-
-.cfc-row-name {
-  margin: 0;
-  font-size: 28px;
-  line-height: 1.1;
-  font-weight: 400;
-  letter-spacing: -0.01em;
-  color: var(--color-ink);
-}
-@media (min-width: 1024px) { .cfc-row-name { font-size: 32px; } }
-
-.cfc-row-desc {
-  margin: 16px 0 0;
-  max-width: 36rem;
-  font-size: 17px;
-  line-height: 1.5;
-  color: var(--color-muted);
-}
-@media (min-width: 1024px) { .cfc-row-desc { font-size: 19px; } }
-
-.cfc-row-link {
-  margin-top: 24px;
-  align-self: flex-start;
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--color-brand);
-  text-decoration: none;
-}
-.cfc-row-link:hover { text-decoration: underline; }
-
-/* right half — visual canvas with the card/mock (glow now lives on the row) */
-.cfc-row-visual {
-  position: relative;
-  min-height: 320px;
-}
-@media (min-width: 768px) {
-  .cfc-row-visual { min-height: 0; }
-}
-
-/* colored plate behind the white card — peeks 7-8px above and to the
-   left of the card so a thin sliver of color reads as a border-like
-   accent, matching the ops-card-bg pattern in OurProductsSection. */
-.cfc-card-bg {
-  position: absolute;
-  right: 24px;
-  bottom: 24px;
-  left: calc(24px - 7px);
-  top: calc(20% - 7px);
-  z-index: 1;
-  border: 1px solid #ffffff;
-  border-radius: 16px 0 0 0;
-  box-sizing: border-box;
-}
-@media (min-width: 768px) {
-  .cfc-card-bg { right: 36px; bottom: 36px; left: calc(36px - 7px); top: calc(28% - 7px); }
-}
-@media (min-width: 1024px) {
-  .cfc-card-bg { right: 44px; bottom: 44px; left: calc(44px - 8px); top: calc(26% - 8px); }
-}
-
-/* white card with skeleton mock — pinned bottom of right column */
-.cfc-card {
-  position: absolute;
-  right: 24px;
-  bottom: 24px;
-  left: 24px;
-  top: 20%;
-  z-index: 2;
-  background: #ffffff;
-  border-radius: 12px 0 0 0;
-  overflow: hidden;
-  padding: 22px;
-  box-sizing: border-box;
-}
-@media (min-width: 768px) {
-  .cfc-card { right: 36px; bottom: 36px; left: 36px; top: 28%; padding: 24px; }
-}
-@media (min-width: 1024px) {
-  .cfc-card { right: 44px; bottom: 44px; left: 44px; top: 26%; padding: 28px; }
 }
 
 /* ── mock: Map Chat (chat bubble + text lines) ────────────────────── */
@@ -326,7 +198,6 @@ const CSS = `
   border-radius: 8px;
   background: #F0F1F4;
 }
-/* a couple of cells get a stronger highlight, hinting "selected parcels" */
 .cfc-mock-site .cfc-site-cell:nth-child(2),
 .cfc-mock-site .cfc-site-cell:nth-child(6) {
   background: #E7E9EF;
@@ -334,7 +205,7 @@ const CSS = `
   outline-offset: -1.5px;
 }
 .cfc-mock-site .cfc-site-cell:nth-child(8) {
-  background: rgba(20, 81, 232, 0.10); /* brand at 10% */
+  background: rgba(20, 81, 232, 0.10);
 }
 `;
 
@@ -364,7 +235,6 @@ function Mock({ kind }: { kind: Feature["mock"] }) {
       </div>
     );
   }
-  // default: mapchat
   return (
     <div className="cfc-mock-mapchat" aria-hidden>
       <div className="cfc-bubble" />
@@ -392,32 +262,17 @@ export function ColumbusFeatureCell() {
             <div className="cfc-cell">
               <div className="cfc-rows">
                 {FEATURES.map((f) => (
-                  <div
-                    className="cfc-row"
+                  <ProductCell
                     key={f.key}
-                    style={{
-                      backgroundImage: `radial-gradient(160% 130% at 100% 100%, rgba(${f.glow}, 0.14), rgba(${f.glow}, 0.05) 48%, transparent 76%), radial-gradient(95% 65% at 100% 100%, rgba(${f.glow}, 0.21), transparent 58%)`,
-                    }}
-                  >
-                    <div className="cfc-row-left">
-                      <h3 className="cfc-row-name">{f.name}</h3>
-                      <p className="cfc-row-desc">{f.desc}</p>
-                      <a className="cfc-row-link" href="#">
-                        Learn more →
-                      </a>
-                    </div>
-
-                    <div className="cfc-row-visual">
-                      <div
-                        className="cfc-card-bg"
-                        aria-hidden
-                        style={{ backgroundColor: `rgba(${f.glow}, 0.22)` }}
-                      />
-                      <div className="cfc-card">
-                        <Mock kind={f.mock} />
-                      </div>
-                    </div>
-                  </div>
+                    className="cfc-row"
+                    variant="split"
+                    name={f.name}
+                    desc={f.desc}
+                    href="#"
+                    linkText="Learn more →"
+                    glow={COLUMBUS_GLOW}
+                    card={<Mock kind={f.mock} />}
+                  />
                 ))}
               </div>
             </div>

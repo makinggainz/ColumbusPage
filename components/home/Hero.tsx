@@ -910,15 +910,15 @@ export const Hero = () => {
       <Container className="relative z-10 pt-24 md:pt-32" style={{ maxWidth: 1287, marginTop: 100 }}>
         <div className="max-w-292">
           {/* Eyebrow */}
-          <p className="text-sm md:text-base font-medium tracking-tight text-[#0A1344] uppercase mb-4 mt-15" style={{ minHeight: "1.5em", ...fadeIn(0) }}>
+          <p className="p-m font-medium tracking-tight text-ink uppercase mb-4 mt-15" style={{ minHeight: "1.5em", ...fadeIn(0) }}>
             {EYEBROW_TEXT}
           </p>
 
-          {/* Heading — font-family matches the navbar "Columbus Earth"
-              wordmark (Axiforma). Weight reduced to medium (500). */}
+          {/* Heading — uses the project's .h1 typescale class
+              (4rem desktop, 2.5rem ≤991px; weight 500). */}
           <h1
-            className="font-medium leading-[1.2] text-[#0A1344] text-[39px] md:text-[49px] lg:text-[61px]"
-            style={{ fontFamily: "var(--font-hero)", letterSpacing: "-0.02em", ...fadeIn(80) }}
+            className="h1 text-ink tracking-tight"
+            style={fadeIn(80)}
           >
             {HEADING_LINE1}
             <br />
