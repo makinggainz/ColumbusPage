@@ -42,6 +42,15 @@ const PRODUCTS: ProductCellProps[] = [
     // to 0.18 because the darker hue reads heavier at the same alpha.
     glow: "56, 189, 248",
     cardBgAlpha: 0.18,
+    card: (
+      // eslint-disable-next-line @next/next/no-img-element
+      <img
+        src="/ColumbusHomeimg.png"
+        alt=""
+        aria-hidden
+        className="ops-product-img"
+      />
+    ),
   },
   {
     name: "Elio",
@@ -133,6 +142,22 @@ const CSS = `
 .ops-fade { pointer-events: none; position: absolute; left: -1px; right: -1px; height: 70px; z-index: 3; }
 .ops-fade--top    { top: 0;    background-image: linear-gradient(#fff, rgba(255,255,255,0.64) 54%, rgba(255,255,255,0.06)); }
 .ops-fade--bottom { bottom: 0; background-image: linear-gradient(to top, #fff, rgba(255,255,255,0.64) 54%, rgba(255,255,255,0.06)); }
+
+/* product image (drops into ProductCell's .pc-card in place of the
+   default skeleton). Top + left edges are flush with the card edges;
+   the image scales to fill the card via object-fit: cover. The card's
+   default 22-26px padding is neutralised via :has() so nothing offsets
+   the image from the card's borders. */
+.pc-card:has(> .ops-product-img) {
+  padding: 0;
+}
+.ops-product-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top left;
+}
 `;
 
 function Reveal({

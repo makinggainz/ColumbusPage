@@ -82,6 +82,16 @@ export interface ProductCellProps {
    *  an overlay) instead of the default plate-behind-skeleton pattern. */
   visual?: ReactNode;
 
+  /** When provided, drops the colored plate + white card entirely and
+   *  renders this image directly inside the cell, filling the same area
+   *  the card would have occupied. The text head still floats on top. */
+  bgImage?: {
+    src: string;
+    /** Override the default `top left` crop anchor when the image's
+     *  meaningful content isn't in the top-left of its canvas. */
+    objectPosition?: string;
+  };
+
   variant?: ProductCellVariant;
   className?: string;
 }
@@ -269,20 +279,38 @@ const CSS = `
   .pc-card { padding: 26px; gap: 20px; }
 }
 
-/* corner: card flush to the cell's right & bottom edges */
+/* corner: card flush to the cell's right & bottom edges. Card left
+   matches the .pc-cell-head padding (28px / 36px) so the card's left
+   edge aligns vertically with the text-rail's left edge. */
 .pc-cell--corner .pc-card-bg {
   right: 0; bottom: 0;
-  left: calc(22% - 7px); top: calc(44% - 7px);
+  left: calc(28px - 7px); top: calc(44% - 7px);
 }
 @media (min-width: 1024px) {
-  .pc-cell--corner .pc-card-bg { left: calc(24% - 8px); top: calc(46% - 8px); }
+  .pc-cell--corner .pc-card-bg { left: calc(36px - 8px); top: calc(46% - 8px); }
 }
 .pc-cell--corner .pc-card {
   right: 0; bottom: 0;
-  left: 22%; top: 44%;
+  left: 28px; top: 44%;
 }
 @media (min-width: 1024px) {
-  .pc-cell--corner .pc-card { left: 24%; top: 46%; }
+  .pc-cell--corner .pc-card { left: 36px; top: 46%; }
+}
+
+/* Feather + fully-hidden zone on the right and bottom edges of the
+   corner card. The 15% feather (70%→85%) is the same width as before,
+   just shifted inward — past 85% the card is fully transparent (the
+   "100% overlay color" zone) all the way to the card edge. */
+.pc-cell--corner .pc-card,
+.pc-cell--corner .pc-card-bg {
+  -webkit-mask-image:
+    linear-gradient(to right, #000 0%, #000 70%, transparent 85%),
+    linear-gradient(to bottom, #000 0%, #000 70%, transparent 85%);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(to right, #000 0%, #000 70%, transparent 85%),
+    linear-gradient(to bottom, #000 0%, #000 70%, transparent 85%);
+  mask-composite: intersect;
 }
 
 /* split: card sits at the bottom of the right column, inset 24-44px
@@ -306,6 +334,36 @@ const CSS = `
 }
 @media (min-width: 1024px) {
   .pc-cell--split .pc-card { right: 44px; bottom: 44px; left: 44px; top: 26%; padding: 28px; }
+}
+
+/* ── bgImage variant: no plate, no card — image sits directly in
+   the cell, filling the same footprint the card would have. ────── */
+.pc-bg-img {
+  position: absolute;
+  display: block;
+  object-fit: cover;
+  object-position: top left;
+  z-index: 1;
+  pointer-events: none;
+}
+.pc-cell--corner .pc-bg-img {
+  right: 0; bottom: 0;
+  left: 22%; top: 44%;
+  width: auto; height: auto;
+}
+@media (min-width: 1024px) {
+  .pc-cell--corner .pc-bg-img { left: 24%; top: 46%; }
+}
+.pc-cell--split .pc-bg-img {
+  right: 24px; bottom: 24px;
+  left: 24px; top: 20%;
+  width: auto; height: auto;
+}
+@media (min-width: 768px) {
+  .pc-cell--split .pc-bg-img { right: 36px; bottom: 36px; left: 36px; top: 28%; }
+}
+@media (min-width: 1024px) {
+  .pc-cell--split .pc-bg-img { right: 44px; bottom: 44px; left: 44px; top: 26%; }
 }
 
 /* ── default skeleton ──────────────────────────────────────────────── */
@@ -346,6 +404,7 @@ export function ProductCell({
   minHeight,
   card,
   visual,
+  bgImage,
   variant = "corner",
   className = "",
 }: ProductCellProps) {
@@ -398,6 +457,16 @@ export function ProductCell({
       {card ?? <DefaultSkeleton />}
     </div>
   );
+  const bgImg = bgImage ? (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src={bgImage.src}
+      alt=""
+      aria-hidden
+      className="pc-bg-img"
+      style={bgImage.objectPosition ? { objectPosition: bgImage.objectPosition } : undefined}
+    />
+  ) : null;
 
   return (
     <>
@@ -409,7 +478,7 @@ export function ProductCell({
         {head}
         {variant === "split" ? (
           <div className="pc-visual">
-            {visual ?? (
+            {bgImg ?? visual ?? (
               <>
                 {plate}
                 {cardEl}
@@ -417,10 +486,12 @@ export function ProductCell({
             )}
           </div>
         ) : (
-          <>
-            {plate}
-            {cardEl}
-          </>
+          bgImg ?? (
+            <>
+              {plate}
+              {cardEl}
+            </>
+          )
         )}
       </div>
     </>
