@@ -57,9 +57,9 @@ export function TextScrollIntro() {
             <Image
               src="/logobueno.png"
               alt="Columbus logo"
-              width={48}
-              height={48}
-              className="size-10 object-contain lg:size-12"
+              width={72}
+              height={72}
+              className="size-14 object-contain lg:size-16"
               style={{ filter: COLUMBUS_LOGO_FILTER }}
             />
             <h2 className="text-4xl font-medium tracking-tight text-ink sm:text-5xl">

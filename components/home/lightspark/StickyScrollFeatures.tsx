@@ -49,21 +49,19 @@ export function StickyScrollFeatures() {
         <div className="grid grid-cols-1 gap-12 md:grid-cols-2 md:gap-16">
           {/* Left rail — sticky heading. self-start so sticky has
              somewhere to anchor; top-[20vh] keeps the heading
-             roughly mid-screen as the user scrolls the cards. */}
+             roughly mid-screen as the user scrolls the items. */}
           <div className="md:sticky md:top-[20vh] md:self-start">
-            <h2 className="text-3xl font-medium tracking-tight leading-snug text-ink sm:text-4xl">
-              Columbus Earth is making geospatial intelligence{" "}
-              <span className="text-brand">instant</span>,{" "}
-              <span className="text-brand">open</span>, and{" "}
-              <span className="text-brand">grounded</span>.
+            <h2 className="text-4xl md:text-5xl font-normal tracking-tight leading-[1.22] text-ink mb-10">
+              Columbus Earth is making geospatial intelligence instant, open, and grounded.
             </h2>
           </div>
 
-          {/* Right column — three pillar cards that reveal as they
-             enter the viewport. */}
-          <div className="space-y-6">
+          {/* Right column — three pillar items that reveal as they
+             enter the viewport. Plain text (no card chrome) — bold
+             lead word, muted body. */}
+          <div className="space-y-16 md:space-y-20">
             {PILLARS.map((pillar) => (
-              <PillarCard key={pillar.title} pillar={pillar} />
+              <PillarItem key={pillar.title} pillar={pillar} />
             ))}
           </div>
         </div>
@@ -72,7 +70,7 @@ export function StickyScrollFeatures() {
   );
 }
 
-function PillarCard({ pillar }: { pillar: Pillar }) {
+function PillarItem({ pillar }: { pillar: Pillar }) {
   const ref = useRef<HTMLDivElement>(null);
   const reduced = useReducedMotion();
   const inView = useInView(ref, { once: true, margin: "0px 0px -15% 0px" });
@@ -81,12 +79,11 @@ function PillarCard({ pillar }: { pillar: Pillar }) {
   return (
     <motion.article
       ref={ref}
-      className="card"
       initial={reduced ? { opacity: 1, y: 0 } : { opacity: 0, y: 40 }}
       animate={animate}
       transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
     >
-      <p className="text-base leading-relaxed text-muted">
+      <p className="text-xl leading-tight tracking-tight text-muted">
         <strong className="font-semibold text-ink">{pillar.title}</strong>{" "}
         {pillar.body}
       </p>

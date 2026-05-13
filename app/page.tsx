@@ -5,6 +5,7 @@ import OurProductsSection from "@/components/home/OurProductsSection";
 import {
   TextScrollIntro,
   ColumbusFeatureCell,
+  DatasetsCarousel,
   PlatformProducts,
   StickyScrollFeatures,
   CaseStudyCard,
@@ -45,6 +46,7 @@ export default function Home() {
       <div className="mt-16">
         <TextScrollIntro />
         <ColumbusFeatureCell />
+        <DatasetsCarousel />
         <PlatformProducts />
         <StickyScrollFeatures />
         <CaseStudyCard />
