@@ -1,41 +1,46 @@
 "use client";
 
 /**
- * Columbus features cell — sticky-scroll, layerzero-style.
+ * Columbus features cell — stacking-sticky-headers sticky-scroll.
  *
- * Visual ref: the user's screenshot, which shows all three feature
- * NAMES stacked on the left at all times; only the *active* feature's
- * description + "Learn more" link reveals below its name. The right
- * column updates its radial glow + card-bg plate to the active
- * feature's colour.
+ * Visible panel (the "single div" the user sees) looks like one of
+ * the cells under "We're all about maps":
+ *   - hairline border-left from .cfc-grid + border-right on cell
+ *   - sky-blue radial glow from bottom-right
+ *   - top/bottom fade overlays dissolving the gridlines
  *
- * Mechanic:
- *   - Outer `.cfc-cell` is intentionally tall (N × STEP_HEIGHT) so the
- *     section has scroll budget for N progress states.
- *   - `.cfc-ss-sticky` inside the cell sticks at `top: 0` for the
- *     whole stuck phase — the page appears pinned.
- *   - `useScroll` on the cell ref drives `activeIdx` via
- *     `useMotionValueEvent` (floor(progress × N)).
- *   - Each feature row pairs an always-visible `<h3>` with a
- *     CSS-transitioned `.cfc-ss-content` wrapper (max-height + opacity)
- *     that collapses to 0 when inactive.
+ * The panel is `position: sticky` and fits in viewport (70vh, centred
+ * via `top: 15vh`). The outer cell is tall (N × 100vh) so there's
+ * scroll budget for N feature states while the panel stays pinned.
  *
- * Sticky bug fix from the prior version: `overflow: hidden` on
- * `.cfc-cell` made the cell itself the sticky scrollport, but the cell
- * isn't actually scrollable — so sticky never engaged. Removing it
- * lets sticky fall back to the viewport scrollport. Clipping that
- * was previously on the cell is no longer needed (the moving stack
- * is gone); the right-column visual keeps its own `overflow: hidden`
- * to clip the radial glow + skeleton card.
+ * Inside the left column:
+ *   - TOP: collapsed stack of feature names — every feature with
+ *     index < activeIdx is rendered here, dimmed, separated by
+ *     hairlines.
+ *   - BELOW STACK: the active feature in expanded form — large name +
+ *     description + "Learn more".
  *
- * Wrapper preserved from earlier versions:
- *   .cfc-grid with `border-left` + .cfc-filler rows above and below +
- *   top/bottom fade overlays — so the vertical hairlines still extend
- *   past the cell and dissolve into the page surface, matching the
- *   three cells under "We're all about maps".
+ * Each feature's name has a unique `layoutId`. When activeIdx
+ * advances, Framer Motion sees the same layoutId moving from the
+ * "active" position (mid-panel, large) into the collapsed stack
+ * (top, small) and smoothly interpolates that transition. That's
+ * the "collapses into just the feature name, stays at the top" feel
+ * the user described.
+ *
+ * AnimatePresence wraps the active feature's content so description
+ * + Learn more fade in/out cleanly as activeIdx flips.
+ *
+ * Scroll progress is damped via `useSpring` so quick scrolling
+ * doesn't snap between states — it lags slightly and lands smoothly.
  */
 
-import { useScroll, useMotionValueEvent } from "framer-motion";
+import {
+  AnimatePresence,
+  motion,
+  useMotionValueEvent,
+  useScroll,
+  useSpring,
+} from "framer-motion";
 import { useRef, useState } from "react";
 
 interface Feature {
@@ -71,14 +76,8 @@ const FEATURES: Feature[] = [
   },
 ];
 
-// One scroll "step" worth of cell height. STEP_HEIGHT === sticky-inner
-// height so one full step of page scroll progresses the section by
-// 1/N of total progress, which advances `activeIdx` by one. 728 =
-// +40% over the prior 520px static cell.
-const STEP_HEIGHT = 728;
-
 const CSS = `
-/* ── wrapper: matches OurProductsSection's grid + fillers + fades ── */
+/* ── wrapper: matches OurProductsSection's grid + fillers ─────────── */
 .cfc-grid {
   position: relative;
   width: 100%;
@@ -95,103 +94,116 @@ const CSS = `
 .cfc-filler { display: none; min-height: 64px; }
 @media (min-width: 640px) { .cfc-filler { display: block; } }
 
-/* NOTE: NO overflow: hidden on .cfc-cell — that would make the cell
-   itself the sticky scrollport and break the sticky inner. The cell
-   is a tall container that the sticky inner pins inside. */
+/* Cell provides the scroll budget — N × 100vh tall. NO overflow:
+   hidden so its sticky child can engage. */
 .cfc-cell {
   position: relative;
   background-color: #ffffff;
 }
 
+/* ── pinned panel (#columbus-features-sticky) ─────────────────────── */
+.cfc-ss-sticky {
+  position: sticky;
+  top: 15vh;
+  height: 70vh;
+  width: 100%;
+  overflow: hidden;
+  background-color: #ffffff;
+  background-image:
+    radial-gradient(160% 130% at 100% 100%, rgba(125, 211, 252, 0.28), rgba(125, 211, 252, 0.10) 48%, transparent 76%),
+    radial-gradient(95% 65% at 100% 100%, rgba(125, 211, 252, 0.42), transparent 58%);
+}
+
+/* fades sit inside sticky so they track the pinned panel's edges */
 .cfc-fade { pointer-events: none; position: absolute; left: -1px; right: -1px; height: 70px; z-index: 4; }
 .cfc-fade--top    { top: 0;    background-image: linear-gradient(#fff, rgba(255,255,255,0.64) 54%, rgba(255,255,255,0.06)); }
 .cfc-fade--bottom { bottom: 0; background-image: linear-gradient(to top, #fff, rgba(255,255,255,0.64) 54%, rgba(255,255,255,0.06)); }
-
-/* ── desktop sticky-scroll ───────────────────────────────────────── */
-.cfc-ss-sticky {
-  position: sticky;
-  top: 0;
-  height: ${STEP_HEIGHT}px;
-}
 
 .cfc-ss-grid {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   height: 100%;
+  width: 100%;
+  position: relative;
+  z-index: 1;
 }
 
-/* left column — vertical stack of feature rows, all names always
-   visible; only the active one expands its content. */
-.cfc-ss-features {
+/* ── left column ──────────────────────────────────────────────────── */
+.cfc-ss-left {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  gap: 28px;
-  padding: 64px 44px;
+  padding: 56px 36px;
   height: 100%;
   box-sizing: border-box;
+  min-width: 0;
 }
+@media (min-width: 1024px) { .cfc-ss-left { padding: 72px 56px; } }
 
-.cfc-ss-step {
-  position: relative;
+/* collapsed stack — dim names of features the user has progressed
+   past. Each row has a hairline above so they read as a stack. */
+.cfc-ss-collapsed-stack {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 8px;
 }
-
-.cfc-ss-name {
-  margin: 0;
-  font-size: 28px;
-  line-height: 1.1;
+.cfc-ss-collapsed-item {
+  font-size: 22px;
+  line-height: 1.2;
   font-weight: 400;
   letter-spacing: -0.01em;
   color: var(--color-muted);
-  opacity: 0.55;
-  transition: color 300ms ease, opacity 300ms ease;
+  opacity: 0.45;
+  padding: 14px 0;
+  border-top: 1px solid var(--color-gridline);
 }
-@media (min-width: 1024px) { .cfc-ss-name { font-size: 32px; } }
-
-.cfc-ss-step[data-active="true"] .cfc-ss-name {
-  color: var(--color-ink);
-  opacity: 1;
-}
-
-/* expanding content wrapper — max-height + opacity transitions give
-   a smooth reveal/collapse as activeIdx changes */
-.cfc-ss-content {
-  overflow: hidden;
-  max-height: 0;
-  opacity: 0;
-  margin-top: 0;
-  transition: max-height 450ms cubic-bezier(0.22, 1, 0.36, 1),
-              opacity 280ms ease,
-              margin-top 450ms cubic-bezier(0.22, 1, 0.36, 1);
-}
-.cfc-ss-step[data-active="true"] .cfc-ss-content {
-  max-height: 320px;
-  opacity: 1;
-  margin-top: 16px;
+.cfc-ss-collapsed-item:first-child { border-top: none; padding-top: 0; }
+@media (min-width: 1024px) {
+  .cfc-ss-collapsed-item { font-size: 26px; padding: 16px 0; }
 }
 
-.cfc-ss-desc {
+/* active feature — expanded with full content. A hairline above it
+   when there's a collapsed stack so the regions read as connected. */
+.cfc-ss-active {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding-top: 20px;
+}
+.cfc-ss-active--with-stack {
+  border-top: 1px solid var(--color-gridline);
+  margin-top: 4px;
+}
+
+.cfc-ss-active-name {
   margin: 0;
-  max-width: 36rem;
+  font-size: 40px;
+  line-height: 1.05;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: var(--color-ink);
+}
+@media (min-width: 1024px) { .cfc-ss-active-name { font-size: 48px; } }
+
+.cfc-ss-active-desc {
+  margin: 20px 0 0;
+  max-width: 32rem;
   font-size: 17px;
   line-height: 1.5;
-  color: var(--color-ink);
+  color: var(--color-muted);
 }
-@media (min-width: 1024px) { .cfc-ss-desc { font-size: 19px; } }
+@media (min-width: 1024px) { .cfc-ss-active-desc { font-size: 19px; } }
 
-.cfc-ss-link {
+.cfc-ss-active-link {
   display: inline-block;
-  margin-top: 20px;
+  margin-top: 28px;
   font-size: 14px;
   font-weight: 600;
   color: var(--color-brand);
   text-decoration: none;
 }
-.cfc-ss-link:hover { text-decoration: underline; }
+.cfc-ss-active-link:hover { text-decoration: underline; }
 
-/* right column — visual canvas; glow layers crossfade for smooth
-   colour transition; card-bg plate retains its existing position
-   under the white skeleton card */
+/* ── right column ─────────────────────────────────────────────────── */
 .cfc-ss-visual {
   position: relative;
   height: 100%;
@@ -251,15 +263,14 @@ const CSS = `
 .cfc-skel-line:nth-child(5) { width: 64%; }
 .cfc-skel-line:last-child { width: 46%; }
 
-/* ── mobile fallback: no sticky, no scroll behaviour ──────────────── */
+/* ── mobile fallback ──────────────────────────────────────────────── */
 @media (max-width: 767px) {
   .cfc-cell { min-height: 0 !important; }
-  .cfc-ss-sticky { position: static; height: auto; }
+  .cfc-ss-sticky { position: static; top: auto; height: auto; overflow: visible; }
   .cfc-ss-grid { display: flex; flex-direction: column; height: auto; }
-  .cfc-ss-features { padding: 48px 28px; gap: 24px; height: auto; }
-  /* on mobile, all features show their content (no scroll mechanic) */
-  .cfc-ss-name { color: var(--color-ink) !important; opacity: 1 !important; }
-  .cfc-ss-content { max-height: 320px !important; opacity: 1 !important; margin-top: 12px !important; }
+  .cfc-ss-left { padding: 48px 28px; height: auto; }
+  .cfc-ss-active-name { font-size: 32px; }
+  .cfc-ss-active-desc { font-size: 17px; }
   .cfc-ss-visual { display: none; }
 }
 `;
@@ -283,20 +294,21 @@ function SkeletonCard() {
 export function ColumbusFeatureCell() {
   const cellRef = useRef<HTMLDivElement>(null);
 
-  // Progress from "cell top hits viewport top" to "cell bottom hits
-  // viewport bottom". Since cell-height = N × STEP_HEIGHT and the
-  // sticky inner ≤ viewport-height on a typical desktop, this maps
-  // cleanly across the stuck phase.
+  // Scroll progress over the cell's onscreen range.
   const { scrollYProgress } = useScroll({
     target: cellRef,
     offset: ["start start", "end end"],
   });
 
-  // activeIdx = floor(progress × N), clamped — gives clean thresholds
-  // at progress = 1/N, 2/N, ... so each feature owns 1/N of the
-  // section's scroll budget.
+  // Damped progress so quick scrolling lands smoothly between states.
+  const smoothProgress = useSpring(scrollYProgress, {
+    stiffness: 90,
+    damping: 24,
+    restDelta: 0.001,
+  });
+
   const [activeIdx, setActiveIdx] = useState(0);
-  useMotionValueEvent(scrollYProgress, "change", (p) => {
+  useMotionValueEvent(smoothProgress, "change", (p) => {
     const idx = Math.min(
       FEATURES.length - 1,
       Math.max(0, Math.floor(p * FEATURES.length)),
@@ -304,8 +316,8 @@ export function ColumbusFeatureCell() {
     setActiveIdx(idx);
   });
 
-  const activeGlow = FEATURES[activeIdx].glow;
-  const cellHeight = FEATURES.length * STEP_HEIGHT;
+  const activeFeature = FEATURES[activeIdx];
+  const collapsed = FEATURES.slice(0, activeIdx);
 
   return (
     <section className="section">
@@ -318,32 +330,80 @@ export function ColumbusFeatureCell() {
             <div
               ref={cellRef}
               className="cfc-cell"
-              style={{ minHeight: `${cellHeight}px` }}
+              style={{ minHeight: `${FEATURES.length * 100}vh` }}
             >
-              <div className="cfc-ss-sticky">
+              <div id="columbus-features-sticky" className="cfc-ss-sticky">
+                <div className="cfc-fade cfc-fade--top" aria-hidden />
+
                 <div className="cfc-ss-grid">
-                  {/* left — all feature names visible; active one
-                      expands its description + Learn more */}
-                  <div className="cfc-ss-features">
-                    {FEATURES.map((f, i) => (
-                      <div
-                        key={f.key}
-                        className="cfc-ss-step"
-                        data-active={activeIdx === i}
+                  <div className="cfc-ss-left">
+                    {/* Collapsed stack at top — features the user has
+                       progressed past. Each name keeps its layoutId so
+                       Framer Motion animates the previously-active
+                       feature smoothly into this stack. */}
+                    {collapsed.length > 0 && (
+                      <div className="cfc-ss-collapsed-stack">
+                        {collapsed.map((f) => (
+                          <motion.div
+                            key={f.key}
+                            layoutId={`feature-name-${f.key}`}
+                            className="cfc-ss-collapsed-item"
+                            transition={{
+                              duration: 0.55,
+                              ease: [0.22, 1, 0.36, 1],
+                            }}
+                          >
+                            {f.name}
+                          </motion.div>
+                        ))}
+                      </div>
+                    )}
+
+                    {/* Active feature — expanded with content. Name has
+                       the same layoutId as it would in the collapsed
+                       stack, so on activeIdx swap Framer Motion
+                       interpolates the position smoothly. */}
+                    <div
+                      className={
+                        collapsed.length > 0
+                          ? "cfc-ss-active cfc-ss-active--with-stack"
+                          : "cfc-ss-active"
+                      }
+                    >
+                      <motion.h3
+                        key={activeFeature.key}
+                        layoutId={`feature-name-${activeFeature.key}`}
+                        className="cfc-ss-active-name"
+                        transition={{
+                          duration: 0.55,
+                          ease: [0.22, 1, 0.36, 1],
+                        }}
                       >
-                        <h3 className="cfc-ss-name">{f.name}</h3>
-                        <div className="cfc-ss-content">
-                          <p className="cfc-ss-desc">{f.desc}</p>
-                          <a className="cfc-ss-link" href="#">
+                        {activeFeature.name}
+                      </motion.h3>
+
+                      <AnimatePresence mode="wait" initial={false}>
+                        <motion.div
+                          key={`content-${activeFeature.key}`}
+                          initial={{ opacity: 0, y: 12 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: -12 }}
+                          transition={{
+                            duration: 0.4,
+                            ease: [0.22, 1, 0.36, 1],
+                          }}
+                        >
+                          <p className="cfc-ss-active-desc">
+                            {activeFeature.desc}
+                          </p>
+                          <a className="cfc-ss-active-link" href="#">
                             Learn more →
                           </a>
-                        </div>
-                      </div>
-                    ))}
+                        </motion.div>
+                      </AnimatePresence>
+                    </div>
                   </div>
 
-                  {/* right — sticky visual; gradient crossfades by
-                      swapping opacity across stacked layers */}
                   <div className="cfc-ss-visual">
                     {FEATURES.map((f, i) => (
                       <div
@@ -359,19 +419,20 @@ export function ColumbusFeatureCell() {
                     <div
                       className="cfc-card-bg"
                       aria-hidden
-                      style={{ backgroundColor: `rgba(${activeGlow}, 0.275)` }}
+                      style={{
+                        backgroundColor: `rgba(${activeFeature.glow}, 0.275)`,
+                      }}
                     />
                     <SkeletonCard />
                   </div>
                 </div>
+
+                <div className="cfc-fade cfc-fade--bottom" aria-hidden />
               </div>
             </div>
 
             <div className="cfc-filler" aria-hidden />
           </div>
-
-          <div className="cfc-fade cfc-fade--top" aria-hidden />
-          <div className="cfc-fade cfc-fade--bottom" aria-hidden />
         </div>
       </div>
     </section>

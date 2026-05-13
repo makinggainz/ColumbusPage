@@ -910,7 +910,7 @@ export const Hero = () => {
       <Container className="relative z-10 pt-24 md:pt-32" style={{ maxWidth: 1287, marginTop: 100 }}>
         <div className="max-w-292">
           {/* Eyebrow */}
-          <p className="text-sm md:text-base font-medium tracking-tight text-[#0A1344] uppercase mb-4 mt-15" style={{ minHeight: "1.5em", ...fadeIn(0) }}>
+          <p className="text-sm md:text-base font-semibold tracking-widest text-[#0A1344] uppercase mb-4 mt-16" style={{ minHeight: "1.5em", ...fadeIn(0) }}>
             {EYEBROW_TEXT}
           </p>
 
