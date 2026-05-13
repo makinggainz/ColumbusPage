@@ -2,7 +2,12 @@ import { type ReactNode } from "react";
 import { MistxNav } from "@/components/layout/MistxNav";
 import { Hero } from "@/components/home/Hero";
 import OurProductsSection from "@/components/home/OurProductsSection";
-import { Vision } from "@/components/home/VisionSection";
+import {
+  TextScrollIntro,
+  PlatformProducts,
+  StickyScrollFeatures,
+  CaseStudyCard,
+} from "@/components/home/lightspark";
 import { Footer } from "@/components/layout/Footer";
 import { SiteSelection } from "@/components/home/SiteSelection";
 import { TrustStrip } from "@/components/home/TrustStrip";
@@ -33,9 +38,14 @@ export default function Home() {
           ~/Downloads/OurProductsSection.tsx */}
       <OurProductsSection />
 
-      {/* Island 1: Vision */}
+      {/* Island 1: Lightspark-style platform band (replaces the old Vision
+          island — TextScroll word-reveal intro, three platform tiles,
+          sticky-scroll Instant/Open/Grounded pillars, partner case study) */}
       <div className="mt-16">
-        <Vision />
+        <TextScrollIntro />
+        <PlatformProducts />
+        <StickyScrollFeatures />
+        <CaseStudyCard />
       </div>
 
       <IslandGap />

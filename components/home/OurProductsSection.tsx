@@ -137,21 +137,47 @@ const CSS = `
 .ops-filler { display: none; min-height: 64px; }
 @media (min-width: 640px) { .ops-filler { display: block; } }
 
-/* a large product cell — blue glow from the bottom-right (laraX hero gradient, repositioned) */
+/* a large product cell — soft glow from the bottom-right corner. Color
+   is driven per-cell via --ops-glow (rgb triplet) and opacities via
+   --ops-glow-a1/a2/a3. Default values render the sky-blue Elio glow;
+   per-product variants below recolour for Columbus / Research. */
 .ops-cell {
   position: relative;
   overflow: hidden;
   min-height: 340px;
   background-color: #ffffff;
-  /* soft sky-blue glow emanating from the bottom-right corner — the layered
-     radial gradient from laraX.html's hero (rgb 125,211,252 / "#7dd3fc"),
-     enlarged and re-anchored to 100% 100% so it clearly reads as bottom-right */
+  --ops-glow: 125, 211, 252;
+  --ops-glow-a1: 0.28;
+  --ops-glow-a2: 0.10;
+  --ops-glow-a3: 0.42;
+  --ops-cardbg-a: 0.275;
   background-image:
-    radial-gradient(200% 135% at 100% 100%, rgba(125, 211, 252, 0.28), rgba(125, 211, 252, 0.10) 48%, transparent 76%),
-    radial-gradient(115% 68% at 100% 100%, rgba(125, 211, 252, 0.42), transparent 58%);
+    radial-gradient(200% 135% at 100% 100%, rgba(var(--ops-glow), var(--ops-glow-a1)), rgba(var(--ops-glow), var(--ops-glow-a2)) 48%, transparent 76%),
+    radial-gradient(115% 68% at 100% 100%, rgba(var(--ops-glow), var(--ops-glow-a3)), transparent 58%);
 }
 @media (min-width: 640px)  { .ops-cell { min-height: 420px; } }
 @media (min-width: 1024px) { .ops-cell { min-height: 480px; } }
+
+/* Columbus: slightly darker than the default sky-blue glow — sky-400
+   (#38BDF8) vs sky-300 (#7DD3FC) on the other cells. Alphas match
+   Elio so the only shift is hue/lightness. The card-bg plate, however,
+   reads heavier than Elio at the same alpha (darker hue = more visible),
+   so it drops to 0.18 to match Elio's perceived weight. */
+.ops-cell--columbus {
+  --ops-glow: 56, 189, 248;
+  --ops-cardbg-a: 0.18;
+}
+
+/* Research: charcoal glow matching the LGM globe line-art (#0B1B2B). */
+.ops-cell--research {
+  --ops-glow: 11, 27, 43;
+  --ops-glow-a1: 0.09;
+  --ops-glow-a2: 0.03;
+  --ops-glow-a3: 0.14;
+  /* Charcoal is much heavier than sky-blue, so the plate behind the
+     white card drops to 0.06 to read as a faint tint, not a heavy bar. */
+  --ops-cardbg-a: 0.06;
+}
 
 /* white fades so the hairlines dissolve into the section bg */
 .ops-fade { pointer-events: none; position: absolute; left: -1px; right: -1px; height: 70px; z-index: 3; }
@@ -207,7 +233,7 @@ const CSS = `
   right: 0; bottom: 0;
   left: calc(22% - 7px); top: calc(44% - 7px);
   z-index: 1;
-  background: rgba(125, 211, 252, 0.275);
+  background: rgba(var(--ops-glow), var(--ops-cardbg-a));
   border: 1px solid #ffffff;
   border-radius: 16px 0 0 0;
   box-sizing: border-box;
@@ -313,7 +339,10 @@ export default function OurProductsSection() {
               <div className="ops-filler" aria-hidden />
 
               {PRODUCTS.map((p) => (
-                <div className="ops-cell" key={p.name}>
+                <div
+                  className={`ops-cell ops-cell--${p.name.toLowerCase()}`}
+                  key={p.name}
+                >
                   <div className="ops-cell-head">
                     <div className="ops-cell-title">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
