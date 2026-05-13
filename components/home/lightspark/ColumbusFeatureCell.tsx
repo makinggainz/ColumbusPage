@@ -117,6 +117,13 @@ const CSS = `
   }
 }
 
+/* Map Chat row owns its visual via the map image + chat card, so the
+   row-level radial glow ProductCell paints behind every split row is
+   redundant — strip it here so only the map image reads. */
+.cfc-row--mapchat.pc-cell--split {
+  background-image: none;
+}
+
 /* ── visual: Map Chat — image-backed bg div + chat card overlay ────
    Border-radius 7px matches the navbar CTA buttons. At md+ the bg div
    is 50% wider than its original inset width and extends LEFTWARD into
@@ -124,46 +131,21 @@ const CSS = `
    layout) it stays inside .pc-visual since there's no left column to
    extend into. The radial fade overlay was removed — the map image
    reads as-is across the panel. */
-/* Colored plate sitting BEHIND the map bg div — peeks 7-8px outside
-   the bg's edges on all sides to read as a thin colored "frame",
-   matching the .pc-card-bg pattern used around the white skeleton
-   cards in OurProductsSection. Sky-400 at 18% alpha is the same value
-   the Columbus cell uses in OPS for its plate. */
-.cfc-mapchat-bg-plate {
-  position: absolute;
-  inset: 17px;
-  border: 1px solid #ffffff;
-  border-radius: 11px;
-  background: rgba(56, 189, 248, 0.18);
-  box-sizing: border-box;
-}
-@media (min-width: 768px) {
-  .cfc-mapchat-bg-plate { inset: 29px; }
-}
-@media (min-width: 1024px) {
-  .cfc-mapchat-bg-plate { inset: 36px; }
-}
-
-/* Bg div fills its column with a normal inset. The "50% wider" feel
-   comes from CFC's grid override below (1fr → 3fr right-column) — the
-   bg div doesn't need to extend past .pc-visual, so no overlap with
-   the text column. */
+/* Bg div fills the entire visual column — right edge flush with the
+   column's right edge, full height. A linear gradient overlay washes
+   the map toward white on the LEFT so the image dissolves into the
+   cell background where it meets the text column. */
 .cfc-mapchat-bg {
   position: absolute;
-  inset: 24px;
-  border-radius: 7px;
+  inset: 0;
   overflow: hidden;
   background-color: #ffffff;
-  background-image: url('/MapChatbackgroundimg.png');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-}
-@media (min-width: 768px) {
-  .cfc-mapchat-bg { inset: 36px; }
-}
-@media (min-width: 1024px) {
-  .cfc-mapchat-bg { inset: 44px; }
+  background-image:
+    linear-gradient(to right, #ffffff 0%, rgba(255,255,255,0.85) 10%, rgba(255,255,255,0.45) 25%, rgba(255,255,255,0.12) 42%, transparent 55%),
+    url('/MapChatbackgroundimg.png');
+  background-size: cover, cover;
+  background-position: center, center;
+  background-repeat: no-repeat, no-repeat;
 }
 
 /* white chat card overlaid on the map. At md+ the bg is now ~1.5× wider
@@ -182,6 +164,7 @@ const CSS = `
   gap: 14px;
   padding: 16px 18px 14px;
   background: #ffffff;
+  border: 1px solid var(--color-gridline);
   border-radius: 12px;
   box-shadow: 0 1px 2px rgba(11, 27, 43, 0.04), 0 6px 18px rgba(11, 27, 43, 0.06);
   box-sizing: border-box;
@@ -224,7 +207,7 @@ const CSS = `
 .cfc-mapchat-status-stack {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 8px;
 }
 .cfc-mapchat-status {
   font-size: var(--typography--p-m);
@@ -238,18 +221,24 @@ const CSS = `
   color: var(--color-muted, #6F7790);
 }
 
-/* active input area at the bottom — plain text + stop button */
+/* active input area at the bottom — rounded input pill containing the
+   text and a stop button, mirroring a real chat composer. */
 .cfc-mapchat-input {
   margin-top: auto;
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   gap: 12px;
+  padding: 12px 12px 12px 16px;
+  background: #ffffff;
+  border: 1px solid var(--color-gridline);
+  border-radius: 10px;
 }
 .cfc-mapchat-input-text {
   flex: 1;
   margin: 0;
+  padding: 2px 0;
   font-size: var(--typography--p-m);
-  line-height: 1.4;
+  line-height: 1.5;
   color: var(--color-ink, #0B1B2B);
 }
 .cfc-mapchat-stop {
@@ -362,16 +351,12 @@ const CSS = `
 function MapChatVisual() {
   return (
     <>
-      {/* Colored plate peeking 7-8px outside the bg div's edges to give
-         the map panel a "framed" border effect, matching the OPS cells. */}
-      <div className="cfc-mapchat-bg-plate" aria-hidden />
       <div className="cfc-mapchat-bg" aria-hidden>
         <div className="cfc-mapchat-card">
         <div className="cfc-mapchat-msg-user">
-          Show me parcels between 2,500–4,000 sqm where the surrounding luxury retail
-          density is high but office vacancy is below 8%. I&rsquo;m developing a
-          mixed-use building in Madrid with ground-floor luxury retail, 4 floors of
-          premium office, and 6 floors of branded residences
+          Find 2,500–4,000 sqm parcels in Madrid near dense luxury retail with
+          office vacancy under 8%. Mixed-use: ground-floor retail, 4 floors office,
+          6 floors branded residences.
         </div>
         <div className="cfc-mapchat-status-row">
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -383,13 +368,15 @@ function MapChatVisual() {
           />
           <div className="cfc-mapchat-status-stack">
             <div className="cfc-mapchat-status">Columbus is investigating</div>
-            <div className="cfc-mapchat-substatus">Considering demographics of Miami</div>
+            <div className="cfc-mapchat-substatus">Mapping luxury retail density across Salamanca and Chamberí</div>
+            <div className="cfc-mapchat-substatus">Cross-referencing Q1 2026 office vacancy by district</div>
+            <div className="cfc-mapchat-substatus">Filtering parcels with mixed-use zoning and 10-floor allowance</div>
+            <div className="cfc-mapchat-substatus">Modeling branded residence demand near Castellana</div>
           </div>
         </div>
         <div className="cfc-mapchat-input">
           <p className="cfc-mapchat-input-text">
-            Now only show me parcels where the asking price is under €12,000/sqm and
-            within 400m of a Metro stop on Line 2 or Line 4.
+            Now filter to parcels under €12,000/sqm within 400m of Metro Line 2 or 4.
           </p>
           <button className="cfc-mapchat-stop" type="button" aria-label="Stop">
             <span className="cfc-mapchat-stop-icon" />
@@ -446,7 +433,7 @@ export function ColumbusFeatureCell() {
                 {FEATURES.map((f) => (
                   <ProductCell
                     key={f.key}
-                    className="cfc-row"
+                    className={`cfc-row${f.key === "map-chat" ? " cfc-row--mapchat" : ""}`}
                     variant="split"
                     name={f.name}
                     desc={f.desc}
