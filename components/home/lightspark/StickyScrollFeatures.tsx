@@ -51,8 +51,8 @@ export function StickyScrollFeatures() {
              somewhere to anchor; top-[20vh] keeps the heading
              roughly mid-screen as the user scrolls the cards. */}
           <div className="md:sticky md:top-[20vh] md:self-start">
-            <h2 className="text-3xl font-bold tracking-tight text-ink sm:text-4xl">
-              Making geospatial intelligence{" "}
+            <h2 className="text-3xl font-medium tracking-tight leading-snug text-ink sm:text-4xl">
+              Columbus Earth is making geospatial intelligence{" "}
               <span className="text-brand">instant</span>,{" "}
               <span className="text-brand">open</span>, and{" "}
               <span className="text-brand">grounded</span>.
