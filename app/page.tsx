@@ -4,6 +4,7 @@ import { Hero } from "@/components/home/Hero";
 import OurProductsSection from "@/components/home/OurProductsSection";
 import {
   TextScrollIntro,
+  ColumbusFeatureCell,
   PlatformProducts,
   StickyScrollFeatures,
   CaseStudyCard,
@@ -43,6 +44,7 @@ export default function Home() {
           sticky-scroll Instant/Open/Grounded pillars, partner case study) */}
       <div className="mt-16">
         <TextScrollIntro />
+        <ColumbusFeatureCell />
         <PlatformProducts />
         <StickyScrollFeatures />
         <CaseStudyCard />

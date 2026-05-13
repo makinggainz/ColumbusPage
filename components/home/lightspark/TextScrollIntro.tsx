@@ -16,10 +16,19 @@
  */
 
 import { motion, useScroll, useTransform, useReducedMotion, type MotionValue } from "framer-motion";
+import Image from "next/image";
 import { useRef } from "react";
 
+// Recolour filter matching MistxNav so the brand mark reads in the
+// same navy blue everywhere it appears on the site.
+const COLUMBUS_LOGO_FILTER =
+  "brightness(0) saturate(100%) invert(8%) sepia(80%) saturate(1400%) hue-rotate(215deg) brightness(90%)";
+
+// Copy reframed as a definition of the platform itself (rather than an
+// API/product blurb). Leads with the noun phrase ("The agentic platform")
+// — the "Columbus" brand title above the paragraph supplies the subject.
 const COPY =
-  "Our simple APIs let you query, generate, and reason over any location on Earth — buildings, terrain, traffic, climate. Columbus Pro, MapsGPT, and the Large Geospatial Model streamline how your team turns the physical world into decisions.";
+  "The agentic platform for the physical world. We let teams query, generate, and reason over any location on Earth — buildings, terrain, traffic, climate — turning raw geographic complexity into clear, grounded answers in plain English.";
 
 export function TextScrollIntro() {
   const ref = useRef<HTMLParagraphElement>(null);
@@ -41,25 +50,43 @@ export function TextScrollIntro() {
   return (
     <section className="section">
       <div className="container-site">
-        <p
-          ref={ref}
-          className="mx-auto max-w-3xl text-center text-2xl sm:text-3xl lg:text-4xl font-medium tracking-tight leading-snug text-ink"
-        >
-          {words.map((word, i) => {
-            const start = Math.max(0, i / words.length - windowSize * 0.25);
-            const end = Math.min(1, start + windowSize);
-            return (
-              <Word
-                key={`${i}-${word}`}
-                word={word}
-                start={start}
-                end={end}
-                progress={scrollYProgress}
-                reduced={Boolean(reduced)}
-              />
-            );
-          })}
-        </p>
+        <div className="mx-auto max-w-3xl">
+          {/* Brand title — logo to the left of the wordmark, centred
+             above the scroll-reveal paragraph. */}
+          <div className="mb-10 flex items-center justify-center gap-3 lg:mb-12 lg:gap-4">
+            <Image
+              src="/logobueno.png"
+              alt="Columbus logo"
+              width={48}
+              height={48}
+              className="size-10 object-contain lg:size-12"
+              style={{ filter: COLUMBUS_LOGO_FILTER }}
+            />
+            <h2 className="text-4xl font-medium tracking-tight text-ink sm:text-5xl">
+              Columbus
+            </h2>
+          </div>
+
+          <p
+            ref={ref}
+            className="text-center text-2xl sm:text-3xl lg:text-4xl font-medium tracking-tight leading-snug text-ink"
+          >
+            {words.map((word, i) => {
+              const start = Math.max(0, i / words.length - windowSize * 0.25);
+              const end = Math.min(1, start + windowSize);
+              return (
+                <Word
+                  key={`${i}-${word}`}
+                  word={word}
+                  start={start}
+                  end={end}
+                  progress={scrollYProgress}
+                  reduced={Boolean(reduced)}
+                />
+              );
+            })}
+          </p>
+        </div>
       </div>
     </section>
   );
