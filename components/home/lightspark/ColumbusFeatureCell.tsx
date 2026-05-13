@@ -157,8 +157,14 @@ const CSS = `
   position: absolute;
   top: 8%;
   bottom: 8%;
-  left: 14%;
-  right: 14%;
+  /* Card left aligned with .cfc-datacat-card below (22% / 24% of
+     .pc-visual). Right values are tuned so the card width stays the
+     same as before the alignment shift:
+       base: 72% width (was 14%/14%, now 22%/6%)
+       md:   48% width (was 9.333%/42.667%, now 22%/30%)
+       lg:   48% width (was 9.333%/42.667%, now 24%/28%) */
+  left: 22%;
+  right: 6%;
   display: flex;
   flex-direction: column;
   gap: 14px;
@@ -171,12 +177,17 @@ const CSS = `
 }
 @media (min-width: 768px) {
   .cfc-mapchat-card {
-    left: 9.333%;
-    right: 42.667%;
+    left: 22%;
+    right: 30%;
   }
 }
 @media (min-width: 1024px) {
-  .cfc-mapchat-card { padding: 20px 22px 16px; gap: 18px; }
+  .cfc-mapchat-card {
+    left: 24%;
+    right: 28%;
+    padding: 20px 22px 16px;
+    gap: 18px;
+  }
 }
 
 /* past user message — gray bubble, right-aligned */
