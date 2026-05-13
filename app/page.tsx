@@ -7,7 +7,10 @@ import {
   ColumbusFeatureCell,
   DatasetsCarousel,
   CtaBanner,
-  PlatformProducts,
+  ElioTextScrollIntro,
+  ElioFeatureCell,
+  ElioValuesCards,
+  ElioFinalCTA,
   StickyScrollFeatures,
   CaseStudyCard,
 } from "@/components/home/lightspark";
@@ -53,7 +56,14 @@ export default function Home() {
           primaryCta={{ label: "Start Now", href: "#" }}
           secondaryCta={{ label: "Learn More", href: "#" }}
         />
-        <PlatformProducts />
+
+        {/* Elio super-section — parallels the Columbus super-section above
+            (intro → features → values → final CTA). */}
+        <ElioTextScrollIntro />
+        <ElioFeatureCell />
+        <ElioValuesCards />
+        <ElioFinalCTA />
+
         <StickyScrollFeatures />
         <CaseStudyCard />
       </div>
