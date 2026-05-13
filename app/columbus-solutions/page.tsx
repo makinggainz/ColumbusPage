@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Navbar } from "@/components/layout/Navbar";
+import { MistxNav } from "@/components/layout/MistxNav";
 import { Footer } from "@/components/layout/Footer";
 
 import HeroSection from "@/components/use-cases/HeroSection";
@@ -15,7 +15,6 @@ import IndustryStickyNavbar from "@/components/use-cases/industry/IndustrySticky
 import ColumbusSolutionsSections from "@/components/use-cases/ColumbusSolutionsSections";
 
 export default function ColumbusSolutionsRoute() {
-  const [navTheme] = useState<"light" | "dark">("dark");
   const [heroOverlay, setHeroOverlay] = useState(0);
   const sectionBRef = useRef<HTMLElement>(null);
   const sectionDRef = useRef<HTMLElement>(null);
@@ -39,7 +38,7 @@ export default function ColumbusSolutionsRoute() {
 
   return (
     <main className="bg-black">
-      <Navbar theme={navTheme} />
+      <MistxNav />
 
       <section className="relative" ref={sectionBRef}>
         <HeroSection

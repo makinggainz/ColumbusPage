@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { Navbar } from "@/components/layout/Navbar";
+import { useRef } from "react";
+import { MistxNav } from "@/components/layout/MistxNav";
 import { Footer } from "@/components/layout/Footer";
 
 import HeroSection from "@/components/use-cases/HeroSection";
@@ -14,25 +14,7 @@ import { ResearchBlogSection } from "@/components/technology/redesign/ResearchBl
 import ResearchAppSections from "@/components/use-cases/ResearchAppSections";
 
 export default function ResearchApplicationsRoute() {
-  const [navTheme, setNavTheme] = useState<"light" | "dark">("dark");
   const heroRef = useRef<HTMLElement>(null);
-
-  useEffect(() => {
-    const NAVBAR_H = 80;
-    const update = () => {
-      // The hero is dark; everything below it is on a light background. Once
-      // the hero has scrolled past the navbar, switch to "light" theme so
-      // the navbar reads as dark text on the light sections beneath.
-      if (heroRef.current) {
-        const hRect = heroRef.current.getBoundingClientRect();
-        const pastHero = hRect.bottom <= NAVBAR_H;
-        setNavTheme(pastHero ? "light" : "dark");
-      }
-    };
-    window.addEventListener("scroll", update, { passive: true });
-    update();
-    return () => window.removeEventListener("scroll", update);
-  }, []);
 
   return (
     <main className="relative" style={{ backgroundColor: "#FFFFFF" }}>
@@ -51,7 +33,7 @@ export default function ResearchApplicationsRoute() {
         </div>
       </div>
 
-      <Navbar theme={navTheme} />
+      <MistxNav />
 
       <section className="relative" ref={heroRef}>
         <HeroSection videoSrc="/research-applications-video.mp4" />

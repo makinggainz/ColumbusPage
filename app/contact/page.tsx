@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
-import { Navbar } from "@/components/layout/Navbar";
+import { MistxNav } from "@/components/layout/MistxNav";
 import { Footer } from "@/components/layout/Footer";
 
 const BeachOceanScene = dynamic(() => import("@/components/contact/IslandScene"), { ssr: false });
@@ -140,7 +140,7 @@ export default function ContactPage() {
       `}</style>
 
       <BeachOceanScene phase={phase} messageText={form.message} senderName={form.firstName} />
-      <Navbar />
+      <MistxNav />
 
       <div className="relative z-10">
 

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import dynamic from "next/dynamic";
-import { Navbar } from "@/components/layout/Navbar";
+import { MistxNav } from "@/components/layout/MistxNav";
 
 const UnderwaterScene = dynamic(() => import("@/components/home/UnderwaterScene"), { ssr: false });
 
@@ -12,7 +12,7 @@ export default function NotFound() {
       {/* Underwater scene — fixed fullscreen background */}
       <UnderwaterScene />
 
-      <Navbar />
+      <MistxNav />
 
       {/* Content */}
       <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-8 text-center">

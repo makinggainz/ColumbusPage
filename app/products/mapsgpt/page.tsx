@@ -1,4 +1,4 @@
-import { Navbar } from "@/components/layout/Navbar";
+import { MistxNav } from "@/components/layout/MistxNav";
 import { Footer } from "@/components/layout/Footer";
 import FavoritesSection from "@/components/products/FavoritesSection";
 import FinalCTASection from "@/components/products/FinalCTASection";
@@ -38,7 +38,7 @@ export default function ProductsPage() {
   return (
     <main style={{ overflowX: "clip" }}>
       <SectionWithLabel label={sectionLabels[0]}>
-        <Navbar wide />
+        <MistxNav />
       </SectionWithLabel>
       <SectionWithLabel label={sectionLabels[1]}>
         <Hero />

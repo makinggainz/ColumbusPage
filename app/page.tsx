@@ -1,6 +1,7 @@
 import { type ReactNode } from "react";
-import { Navbar } from "@/components/layout/Navbar";
+import { MistxNav } from "@/components/layout/MistxNav";
 import { Hero } from "@/components/home/Hero";
+import OurProductsSection from "@/components/home/OurProductsSection";
 import { Vision } from "@/components/home/VisionSection";
 import { Footer } from "@/components/layout/Footer";
 import { SiteSelection } from "@/components/home/SiteSelection";
@@ -25,8 +26,12 @@ function IslandGap() {
 export default function Home() {
   return (
     <main className="min-h-screen" style={{ backgroundColor: "#ffffff" }}>
-      <Navbar />
+      <MistxNav />
       <Hero />
+
+      {/* Our products — self-contained section from
+          ~/Downloads/OurProductsSection.tsx */}
+      <OurProductsSection />
 
       {/* Island 1: Vision */}
       <div className="mt-16">

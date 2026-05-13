@@ -1,4 +1,4 @@
-import { Navbar } from "@/components/layout/Navbar";
+import { MistxNav } from "@/components/layout/MistxNav";
 import { Footer } from "@/components/layout/Footer";
 import { BlogIndexGrid, type BlogFilter } from "@/components/blog/BlogIndexGrid";
 import { getAllBlogPostsSorted } from "@/lib/blog-posts";
@@ -9,7 +9,7 @@ export function BlogIndexShell({ activeFilter }: { activeFilter: BlogFilter }) {
 
   return (
     <main className={styles.page}>
-      <Navbar />
+      <MistxNav />
 
       <div className={styles.container}>
         <h1 className={styles.headline}>Blog</h1>

@@ -1,11 +1,11 @@
 "use client";
 
 import "@/components/enterprise/enterprise-tokens.css";
-import { useEffect, useRef, useState } from "react";
+import { useRef } from "react";
 import EnterpriseHero from "@/components/enterprise/EnterpriseHero";
 import ProblemCards from "@/components/enterprise/ProblemCards";
 import SolutionShowcase from "@/components/enterprise/SolutionShowcase";
-import { Navbar } from "@/components/layout/Navbar";
+import { MistxNav } from "@/components/layout/MistxNav";
 import { Footer } from "@/components/layout/Footer";
 import ComparisonSection from "@/components/enterprise/ComparisonSection";
 import ChatSection from "@/components/enterprise/ChatSection";
@@ -37,33 +37,13 @@ function SectionWithLabel({
 }
 
 export default function EnterprisePage() {
-  const [navTheme, setNavTheme] = useState<"light" | "dark">("light");
   const darkStartRef = useRef<HTMLDivElement>(null);
   const diffRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const NAVBAR_H = 80;
-    const update = () => {
-      const darkEl = darkStartRef.current;
-      const diffEl = diffRef.current;
-      if (darkEl && diffEl) {
-        const darkTop = darkEl.getBoundingClientRect().top;
-        const diffTop = diffEl.getBoundingClientRect().top;
-        // Dark when past the dark sections start, light again at diff section
-        const pastDarkStart = darkTop <= NAVBAR_H;
-        const pastDiff = diffTop <= NAVBAR_H;
-        setNavTheme(pastDarkStart && !pastDiff ? "dark" : "light");
-      }
-    };
-    window.addEventListener("scroll", update, { passive: true });
-    update();
-    return () => window.removeEventListener("scroll", update);
-  }, []);
 
   return (
     <main className="ent-scope">
       <SectionWithLabel label={sectionLabels[0]}>
-        <Navbar theme={navTheme} />
+        <MistxNav />
       </SectionWithLabel>
       <SectionWithLabel label={sectionLabels[1]}>
         <EnterpriseHero />

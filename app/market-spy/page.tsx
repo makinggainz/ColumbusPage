@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, type ReactNode } from "react";
-import { Navbar } from "@/components/layout/Navbar";
+import { MistxNav } from "@/components/layout/MistxNav";
 import { MapBackground, MapMarker } from "@/components/map/MapBackground";
 
 type Sector = "FASHION" | "RESTAURANTS" | "CAFES";
@@ -245,7 +245,7 @@ export default function MarketSpyPage() {
 
     return (
         <main className="h-screen w-full flex flex-col overflow-hidden bg-white">
-            <Navbar />
+            <MistxNav />
 
             {/* Main Dashboard Content - Starts below navbar */}
             <div className="flex-1 flex pt-20"> {/* pt-20 to clear fixed navbar */}

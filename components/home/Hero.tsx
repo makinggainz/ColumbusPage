@@ -2,7 +2,6 @@
 
 import { useEffect, useState, useRef, useCallback } from "react";
 import { Container } from "@/components/layout/Container";
-import { HeroProductsPopup } from "@/components/home/HeroProductsPopup";
 
 interface Ripple { wx: number; wz: number; t: number; strength: number }
 type V3 = [number, number, number];
@@ -837,11 +836,7 @@ const HEADING_LINE2 = "Large Geospatial Model.";
 export const Hero = () => {
   const [mounted, setMounted] = useState(false);
   const [vignetteOpacity, setVignetteOpacity] = useState(0);
-  const [productsOpen, setProductsOpen] = useState(false);
-  const [isTouch, setIsTouch] = useState(false);
-  const [pastHeroCta, setPastHeroCta] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
-  const productsCloseTimerRef = useRef<number | undefined>(undefined);
 
   // Trigger fade-in on mount
   useEffect(() => {
@@ -853,77 +848,6 @@ export const Hero = () => {
   useEffect(() => {
     window.dispatchEvent(new CustomEvent("hero-reveal"));
   }, []);
-
-  // Touch detection — controls tap-to-open vs hover-to-open behavior on the
-  // Products popup. Resolved after mount so SSR matches default desktop.
-  useEffect(() => {
-    setIsTouch(window.matchMedia("(hover: none)").matches);
-  }, []);
-
-  // Hide the hero Products popup once #hero-cta scrolls out of view (the
-  // navbar's own Products dropdown takes over from there).
-  useEffect(() => {
-    const cta = document.getElementById("hero-cta");
-    if (!cta) return;
-    const obs = new IntersectionObserver(
-      ([entry]) => {
-        const past = !entry.isIntersecting;
-        setPastHeroCta(past);
-        if (past) setProductsOpen(false);
-      },
-      { threshold: 0 },
-    );
-    obs.observe(cta);
-    return () => obs.disconnect();
-  }, []);
-
-  // Cancel any pending close timer on unmount.
-  useEffect(() => {
-    return () => {
-      if (productsCloseTimerRef.current !== undefined) {
-        window.clearTimeout(productsCloseTimerRef.current);
-      }
-    };
-  }, []);
-
-  const openProducts = useCallback(() => {
-    if (productsCloseTimerRef.current !== undefined) {
-      window.clearTimeout(productsCloseTimerRef.current);
-      productsCloseTimerRef.current = undefined;
-    }
-    setProductsOpen(true);
-  }, []);
-
-  const scheduleCloseProducts = useCallback(() => {
-    if (productsCloseTimerRef.current !== undefined) {
-      window.clearTimeout(productsCloseTimerRef.current);
-    }
-    productsCloseTimerRef.current = window.setTimeout(() => {
-      setProductsOpen(false);
-      productsCloseTimerRef.current = undefined;
-    }, 120);
-  }, []);
-
-  const closeProducts = useCallback(() => {
-    if (productsCloseTimerRef.current !== undefined) {
-      window.clearTimeout(productsCloseTimerRef.current);
-      productsCloseTimerRef.current = undefined;
-    }
-    setProductsOpen(false);
-  }, []);
-
-  // Touch: outside-click closes the popup.
-  useEffect(() => {
-    if (!productsOpen || !isTouch) return;
-    const onPointerDown = (e: PointerEvent) => {
-      const target = e.target as Element | null;
-      if (!target?.closest("[data-hero-products-anchor]")) {
-        setProductsOpen(false);
-      }
-    };
-    document.addEventListener("pointerdown", onPointerDown);
-    return () => document.removeEventListener("pointerdown", onPointerDown);
-  }, [productsOpen, isTouch]);
 
   // Scroll-driven vignette
   useEffect(() => {
@@ -950,7 +874,7 @@ export const Hero = () => {
     <section
       ref={sectionRef}
       className="relative overflow-hidden flex flex-col"
-      style={{ background: "#F9F9F9", minHeight: "calc(100vh + 300px)" }}
+      style={{ background: "#ffffff", minHeight: "calc(100vh + 300px)" }}
     >
       {/* Mesh */}
       <div className="absolute inset-0">
@@ -962,19 +886,8 @@ export const Hero = () => {
         className="absolute left-0 right-0 pointer-events-none"
         style={{
           top: "calc(100vh * 0.22)", height: "calc(100vh * 0.18)",
-          background: "linear-gradient(to bottom, #F9F9F9, transparent)",
+          background: "linear-gradient(to bottom, #ffffff, transparent)",
           zIndex: 1,
-        }}
-        aria-hidden
-      />
-
-      {/* Accent gradient — top of hero */}
-      <div
-        className="absolute left-0 right-0 top-0 pointer-events-none"
-        style={{
-          height: "50%",
-          background: "linear-gradient(to bottom, rgba(0, 102, 204, 0.15) 0%, rgba(0, 102, 204, 0.08) 60%, transparent 100%)",
-          zIndex: 3,
         }}
         aria-hidden
       />
@@ -990,99 +903,27 @@ export const Hero = () => {
       />
 
       {/* Side vignettes */}
-      <div className="absolute top-0 bottom-0 left-0 pointer-events-none" style={{ width: "30%", background: "linear-gradient(to right, #F9F9F9 0%, transparent 100%)", zIndex: 1, opacity: vignetteOpacity }} aria-hidden />
-      <div className="absolute top-0 bottom-0 right-0 pointer-events-none" style={{ width: "30%", background: "linear-gradient(to left, #F9F9F9 0%, transparent 100%)", zIndex: 1, opacity: vignetteOpacity }} aria-hidden />
+      <div className="absolute top-0 bottom-0 left-0 pointer-events-none" style={{ width: "30%", background: "linear-gradient(to right, #ffffff 0%, transparent 100%)", zIndex: 1, opacity: vignetteOpacity }} aria-hidden />
+      <div className="absolute top-0 bottom-0 right-0 pointer-events-none" style={{ width: "30%", background: "linear-gradient(to left, #ffffff 0%, transparent 100%)", zIndex: 1, opacity: vignetteOpacity }} aria-hidden />
 
-      {/* Hero text */}
-      <Container className="relative z-10 pt-24 md:pt-32" style={{ maxWidth: 1287 }}>
+      {/* Hero text — pushed down 100px from its previous position. */}
+      <Container className="relative z-10 pt-24 md:pt-32" style={{ maxWidth: 1287, marginTop: 100 }}>
         <div className="max-w-292">
           {/* Eyebrow */}
           <p className="text-sm md:text-base font-medium tracking-tight text-[#0A1344] uppercase mb-4 mt-15" style={{ minHeight: "1.5em", ...fadeIn(0) }}>
             {EYEBROW_TEXT}
           </p>
 
-          {/* Heading */}
+          {/* Heading — font-family matches the navbar "Columbus Earth"
+              wordmark (Axiforma). Weight reduced to medium (500). */}
           <h1
-            className="font-light leading-[1.2] text-[#0A1344] text-[39px] md:text-[49px] lg:text-[61px]"
+            className="font-medium leading-[1.2] text-[#0A1344] text-[39px] md:text-[49px] lg:text-[61px]"
             style={{ fontFamily: "var(--font-hero)", letterSpacing: "-0.02em", ...fadeIn(80) }}
           >
             {HEADING_LINE1}
             <br />
             {HEADING_LINE2}
           </h1>
-
-          {/* CTA + Nav links */}
-          <div id="hero-cta" className="flex items-center gap-8 mt-7" style={fadeIn(200)}>
-            <a
-              href="/contact"
-              className="group flex items-center justify-between gap-5 leading-none rounded-none hover:opacity-90 transition-opacity"
-              style={{ height: 36, marginRight: 16, paddingLeft: 20, paddingRight: 16, fontSize: 15, fontWeight: 500, borderRadius: 0, backgroundColor: "#000000", color: "white" }}
-            >
-              <span className="transition-colors duration-300 group-hover:text-[#2563EB]">Contact</span>
-              <svg className="transition-transform duration-300 group-hover:translate-x-0.5" width="10" height="18" viewBox="0 0 7 12" fill="none" stroke="#2563EB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M1 1l5 5-5 5" />
-              </svg>
-            </a>
-            {[
-              { label: "Products", href: "/products/enterprise", hasPopup: true },
-              { label: "Research", href: "/technology", hasPopup: false },
-              { label: "Use Cases", href: "/columbus-solutions", hasPopup: false },
-            ].map((link) => {
-              if (!link.hasPopup) {
-                return (
-                  <a
-                    key={link.label}
-                    href={link.href}
-                    className="group hidden min-[642px]:flex items-center gap-1 text-md font-medium text-[#0A1344] transition-opacity duration-300 hover:opacity-60"
-                  >
-                    {link.label}
-                    <svg className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-0.5" fill="none" viewBox="0 0 16 16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M6 4l4 4-4 4" />
-                    </svg>
-                  </a>
-                );
-              }
-              /* Products: hover/tap events on the wrapper so they keep
-                 firing while the popup overlays the area. The original
-                 link is z-index'd above the popup so it stays put. */
-              return (
-                <div
-                  key={link.label}
-                  data-hero-products-anchor
-                  style={{ position: "relative" }}
-                  className="hidden min-[642px]:block"
-                  onMouseEnter={!isTouch ? openProducts : undefined}
-                  onMouseLeave={!isTouch ? scheduleCloseProducts : undefined}
-                  onFocus={!isTouch ? openProducts : undefined}
-                >
-                  <a
-                    href={link.href}
-                    onClick={isTouch ? (e) => {
-                      if (!productsOpen) {
-                        e.preventDefault();
-                        openProducts();
-                      }
-                    } : undefined}
-                    aria-haspopup="menu"
-                    aria-expanded={productsOpen}
-                    className="group flex items-center gap-1 text-md font-medium text-[#0A1344] transition-opacity duration-300 hover:opacity-60"
-                    style={{ position: "relative", zIndex: 41 }}
-                  >
-                    {link.label}
-                    <svg className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-0.5" fill="none" viewBox="0 0 16 16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M6 4l4 4-4 4" />
-                    </svg>
-                  </a>
-                  {!pastHeroCta && (
-                    <HeroProductsPopup
-                      open={productsOpen}
-                      onClose={closeProducts}
-                    />
-                  )}
-                </div>
-              );
-            })}
-          </div>
         </div>
       </Container>
     </section>

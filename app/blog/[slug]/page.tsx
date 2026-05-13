@@ -4,7 +4,7 @@ import { BlogArticleStickyNav } from "@/components/blog/BlogArticleStickyNav";
 import { ArticleReadingOptions } from "@/components/blog/ArticleReadingOptions";
 import { RelatedPosts } from "@/components/blog/RelatedPosts";
 import { ShareButtons } from "@/components/blog/ShareButtons";
-import { Navbar } from "@/components/layout/Navbar";
+import { MistxNav } from "@/components/layout/MistxNav";
 import { Footer } from "@/components/layout/Footer";
 import { getAllBlogSlugs, getBlogPost } from "@/lib/blog-posts";
 import { blogBodyWithSectionIds, mergeBlogBody } from "@/lib/blog-lorem-body";
@@ -43,7 +43,7 @@ export default async function BlogPostPage({ params }: Props) {
     <main className={`min-h-screen ${blogStyles.articlePage}`}>
       <div className={blogStyles.greyPanel} aria-hidden />
       <div className="max-[1314px]:block hidden">
-        <Navbar />
+        <MistxNav />
       </div>
       <BlogArticleStickyNav sections={stickySections} postTitle={post.title} />
 

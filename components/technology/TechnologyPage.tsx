@@ -1,7 +1,7 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
-import { Navbar } from "@/components/layout/Navbar";
+import { useCallback, useEffect } from "react";
+import { MistxNav } from "@/components/layout/MistxNav";
 import { Footer } from "@/components/layout/Footer";
 
 import styles from "./technology.module.css";
@@ -9,30 +9,23 @@ import { TechHeroSection } from "./TechHeroSection";
 import { TechnologySections } from "./redesign/TechnologySections";
 
 export function TechnologyPage() {
-  const [navTheme, setNavTheme] = useState<"light" | "dark">("light");
-
+  // Toggle a body class while the Gen Layers band crosses the navbar Y so
+  // CSS overrides in technology.module.css can make the nav background
+  // transparent over that band. MistxNav handles its own scroll backdrop.
   const updateNavState = useCallback(() => {
-    // Switch to dark + make the navbar background see-through while the
-    // Gen Layers band overlaps the navbar Y position.
     const band = document.getElementById("gen-layers-band");
     let inBand = false;
     if (band) {
       const rect = band.getBoundingClientRect();
-      const navY = 56; // approx compact navbar height — switch when band crosses it
+      const navY = 56;
       inBand = rect.top <= navY && rect.bottom >= navY;
     }
     document.body.classList.toggle("gen-layers-active", inBand);
-    setNavTheme(inBand ? "dark" : "light");
   }, []);
 
   useEffect(() => {
-    // Fire hero-reveal so the Navbar sets hasScrolled = true immediately
     window.dispatchEvent(new Event("hero-reveal"));
 
-    // Enable smooth scrolling for anchor links and programmatic scrollTo
-    // calls scoped to the technology page only. Does NOT affect mouse-wheel
-    // or trackpad scrolling — those stay native. Restored to the original
-    // value on unmount so other pages aren't impacted.
     const html = document.documentElement;
     const prevScrollBehavior = html.style.scrollBehavior;
     html.style.scrollBehavior = "smooth";
@@ -46,15 +39,13 @@ export function TechnologyPage() {
       html.style.scrollBehavior = prevScrollBehavior;
       window.removeEventListener("scroll", updateNavState);
       window.removeEventListener("resize", updateNavState);
-      // Always clean up the body class on unmount so other pages don't
-      // inherit the transparent-navbar override.
       document.body.classList.remove("gen-layers-active");
     };
   }, [updateNavState]);
 
   return (
     <main className={styles.page}>
-      <Navbar theme={navTheme} />
+      <MistxNav />
       <div className={styles.pageBody}>
         <div className={styles.pageBodyInner}>
           <TechHeroSection />

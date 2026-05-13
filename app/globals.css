@@ -67,6 +67,28 @@ html {
 @theme {
   --text-md: 1.0625rem;     /* 17px */
   --text-display: 4rem;     /* 64px — primary display/hero heading size */
+
+  /* ─── catcherX (NewsCatcher) design system tokens ───────────────────────
+     The site's primary design system. Mirrors catcherX/tailwind.config.ts
+     verbatim. Full spec: design-system/design-system.md.
+     The legacy --md-sys-* (Material Design 3) tokens remain in
+     design-system/tokens.css for pages that haven't migrated yet —
+     see design-system.md §14.3 "known gaps". */
+  --color-bg1: #F6F8FB;          /* page gradient top stop */
+  --color-bg2: #E5EDFB;          /* pale-blue wash (use at 40% opacity) */
+  --color-ink: #0B1B2B;          /* default heading + body text */
+  --color-muted: #5A6B7B;        /* secondary text */
+  --color-gridline: #E7E7F1;     /* blueprint-grid hairline */
+  --color-brand: #1451E8;        /* NewsCatcher Blue — signal colour only */
+  --color-brand-soft: #74A0FE;   /* decorative gradient stop only */
+
+  --container-site: 1200px;      /* the single content-column width */
+  --radius-card: 20px;           /* signature container radius */
+
+  /* Inter is the single typeface. Bound to --font-sans via the
+     next/font/google loader in app/fonts.ts; --font-inter is the variable
+     name the loader produces. Body inherits this through @layer base. */
+  --font-sans: var(--font-inter), system-ui, sans-serif;
 }
 
 /* Theme variables */
@@ -78,6 +100,12 @@ html {
   --container-padding: 24px;
   --page-padding: 24px; /* matches structure lines + navbar logo/hamburger edges */
   --grid-line: rgba(37, 99, 235, 0.3);
+
+  /* Mirror of the @theme stops so the body-gradient declaration below
+     can interpolate them (Tailwind v4 doesn't expose @theme vars at the
+     same selector). */
+  --catcher-bg1: #F6F8FB;
+  --catcher-bg2: #E5EDFB;
 }
 
 /* Dark section lateral constraint lines — for use-cases dark sections */
@@ -1045,4 +1073,102 @@ body.bg-mode-dark {
 body.bg-mode-dark main,
 body.bg-mode-dark article {
   background-color: transparent !important;
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   catcherX (NewsCatcher) design system
+   ────────────────────────────────────────────────────────────────────────
+   Ported from /Users/alexramirezblonski/Documents/catcherX/src/app/globals.css
+   verbatim and adapted for Tailwind v4 (this project) vs v3 (catcherX).
+   Tokens live in the @theme block at the top of this file. Full spec:
+   design-system/design-system.md. Prime directive: change the system, not
+   one component — see CLAUDE.md.
+   ════════════════════════════════════════════════════════════════════════ */
+
+/* The catcherX body-gradient (bg1 → white at 40%). Pages can opt in by
+   adding `data-catcher` to <body> or to their root <main>. Kept opt-in
+   so legacy pages with their own black/white backgrounds don't get a
+   pale-blue cast. */
+[data-catcher] {
+  background: linear-gradient(180deg, var(--catcher-bg1) 0%, #ffffff 40%);
+  color: #0B1B2B;
+  font-family: var(--font-inter), system-ui, sans-serif;
+}
+
+/* Page-width content column — the single content constraint for every
+   section on a catcherX-themed page. 1200px max + responsive gutters. */
+.container-site {
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  max-width: 1200px;
+  padding-left: 24px;
+  padding-right: 24px;
+}
+@media (min-width: 1024px) {
+  .container-site {
+    padding-left: 32px;
+    padding-right: 32px;
+  }
+}
+
+/* Vertical section rhythm — padding, not margin, so gaps never collapse. */
+.section {
+  padding-top: 80px;
+  padding-bottom: 80px;
+}
+@media (min-width: 1024px) {
+  .section {
+    padding-top: 112px;
+    padding-bottom: 112px;
+  }
+}
+
+/* Eyebrow / kicker label above section headings. */
+.eyebrow {
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: #1451E8;
+}
+
+/* Pill buttons — three variants. */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  transition: background-color 150ms ease, color 150ms ease, border-color 150ms ease;
+  cursor: pointer;
+}
+.btn-primary {
+  background: #1451E8;
+  color: #ffffff;
+}
+.btn-primary:hover {
+  background: #0e3fbd;
+}
+.btn-ghost {
+  background: transparent;
+  color: #1451E8;
+  border: 1px solid rgba(20, 81, 232, 0.30);
+}
+.btn-ghost:hover {
+  background: rgba(20, 81, 232, 0.05);
+}
+
+/* Soft-elevated card surface — the one card pattern. */
+.card {
+  border-radius: 20px;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  background: rgba(255, 255, 255, 0.80);
+  padding: 28px;
+  box-shadow:
+    0 1px 2px rgba(11, 27, 43, 0.04),
+    0 12px 32px rgba(11, 27, 43, 0.06);
+  backdrop-filter: blur(8px);
 }

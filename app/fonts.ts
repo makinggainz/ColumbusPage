@@ -1,4 +1,4 @@
-import { Cormorant_Garamond, Cambo, Instrument_Serif, Geist, DM_Sans } from "next/font/google";
+import { Cormorant_Garamond, Cambo, Instrument_Serif, Geist, DM_Sans, Inter } from "next/font/google";
 
 export const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
@@ -27,4 +27,12 @@ export const dmSans = DM_Sans({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-dm-sans",
+});
+
+// Inter — single-family typography per the catcherX (NewsCatcher) design
+// system. Headings/body/labels all bind to `--font-sans` via this variable.
+export const inter = Inter({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-sans",
 });

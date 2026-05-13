@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
-import { Navbar } from "@/components/layout/Navbar";
+import { MistxNav } from "@/components/layout/MistxNav";
 import { Footer } from "@/components/layout/Footer";
 import { GridSection, GridCell, gl } from "@/components/home/ContentGrid";
 
@@ -148,7 +148,7 @@ export default function OurMissionPage() {
         </div>
       )}
 
-      <Navbar />
+      <MistxNav />
 
       {/* ════════ 1. HERO ════════ */}
       {/* Accent gradient — full width, behind everything */}
