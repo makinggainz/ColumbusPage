@@ -42,8 +42,8 @@ const FEATURES: Feature[] = [
     mock: "mapchat",
   },
   {
-    key: "data-digestion",
-    name: "Data Digestion",
+    key: "data-catalogue",
+    name: "Data Catalogue",
     desc:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
     mock: "data",
@@ -262,6 +262,58 @@ const CSS = `
   background: var(--color-ink, #0B1B2B);
 }
 
+/* ── visual: Data Catalogue — product image card with top-left framed
+   plate. Mirrors the OurProductsSection skeleton-card pattern: the
+   white card is pinned to the bottom-right of .pc-visual (right and
+   bottom flush with the column's edges, top-left corner rounded 12px),
+   sitting on a slightly larger colored plate that peeks 7-8px out on
+   the top and left as a thin "border" sliver. Same sky-400 at 18%
+   alpha + 1px white outer border + 16px top-left radius the OPS
+   Columbus cell uses for its plate. */
+.cfc-datacat-plate {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: calc(22% - 7px);
+  top: calc(12% - 7px);
+  z-index: 1;
+  background: rgba(56, 189, 248, 0.18);
+  border: 1px solid #ffffff;
+  border-radius: 16px 0 0 0;
+  box-sizing: border-box;
+}
+@media (min-width: 1024px) {
+  .cfc-datacat-plate { left: calc(24% - 8px); top: calc(12% - 8px); }
+}
+
+.cfc-datacat-card {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 22%;
+  top: 12%;
+  z-index: 2;
+  background: #ffffff;
+  border-radius: 12px 0 0 0;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+@media (min-width: 1024px) {
+  .cfc-datacat-card { left: 24%; top: 12%; }
+}
+
+/* Image scales up to fill the card. object-position: top left anchors
+   it to the card's top-left corner — its top and left edges sit flush
+   with the card edges, and overflow on the right/bottom is clipped
+   by the card's overflow: hidden. */
+.cfc-datacat-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top left;
+}
+
 /* ── mock: Data Digestion (header bar + list rows) ────────────────── */
 .cfc-mock-data {
   display: flex;
@@ -389,9 +441,30 @@ function MapChatVisual() {
 }
 
 /**
- * Placeholder skeleton mocks for features that haven't been built out yet
- * (Data Digestion, Site Selection). Map Chat now uses MapChatVisual via
- * the `visual` prop instead.
+ * Data Catalogue visual — product screenshot pinned to the bottom-right
+ * of the visual column, with a colored plate peeking 7-8px on the top
+ * and left (the OPS .pc-card-bg pattern). Right and bottom edges sit
+ * flush with .pc-visual's edges.
+ */
+function DataCatalogueVisual() {
+  return (
+    <>
+      <div className="cfc-datacat-plate" aria-hidden />
+      <div className="cfc-datacat-card" aria-hidden>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/dataCataSm.png"
+          alt=""
+          className="cfc-datacat-img"
+        />
+      </div>
+    </>
+  );
+}
+
+/**
+ * Placeholder skeleton mock for Site Selection — kept as-is until that
+ * feature gets its own visual treatment.
  */
 function Mock({ kind }: { kind: "data" | "site" }) {
   if (kind === "data") {
@@ -442,6 +515,8 @@ export function ColumbusFeatureCell() {
                     glow={COLUMBUS_GLOW}
                     {...(f.key === "map-chat"
                       ? { visual: <MapChatVisual /> }
+                      : f.key === "data-catalogue"
+                      ? { visual: <DataCatalogueVisual /> }
                       : { card: <Mock kind={f.mock as "data" | "site"} /> })}
                   />
                 ))}
