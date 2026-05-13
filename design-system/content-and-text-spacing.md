@@ -7,6 +7,21 @@
 
 ---
 
+## 0. Prime directive — adherence by default
+
+**Always follow the design-system rules in this document (and the other docs in `design-system/`) unless the user explicitly asks you to deviate for a specific case.**
+
+- The rules below — spacing scale, section rhythm, tracking, leading, line-height — are the default for every new UI change and every existing-UI edit.
+- "Looks fine to me" or "let's just hardcode it" are not reasons to break the system. If a value doesn't appear in the scale (e.g. `5px`, `6px`, `7px`, `11px`, `13px`, `18px`), do not introduce it.
+- When the user asks for a change that conflicts with a rule here, **ask before deviating**: "this rule says X — do you want me to follow it, or break the rule for this one case?" Don't silently override the system.
+- One-off overrides must be explicit and scoped. If the user says "I want this specific element to use 7px here," apply it only to that element and call out the deviation in the commit message or PR description.
+- If the rule itself is wrong, **update this document in the same change** so the system stays the source of truth — don't let drift accumulate.
+- Page-scoped docs (`enterprise-page.md`, `products-page.md`, etc.) may narrow these rules but never silently contradict them; flag conflicts when you spot them.
+
+This rule applies to every assistant working in this repo. It overrides defaults like "match the surrounding code" — surrounding code may itself be a pre-system artifact that needs migration, not duplication.
+
+---
+
 ## 1. Text spacing
 
 ### 1.1 Tracking + leading tokens

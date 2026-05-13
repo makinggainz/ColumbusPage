@@ -26,12 +26,37 @@ interface Product {
   name: string;
   desc: string;
   href: string;
+  logo: string;
+  /** Optional CSS filter applied to the logo (Columbus reuses the navbar
+   *  recolor filter so the brand mark renders in the same navy blue). */
+  logoFilter?: string;
 }
 
+// Columbus uses the same recolour filter as MistxNav so the mark reads
+// as the same navy-blue brand colour the navbar shows.
+const COLUMBUS_LOGO_FILTER =
+  "brightness(0) saturate(100%) invert(8%) sepia(80%) saturate(1400%) hue-rotate(215deg) brightness(90%)";
+
 const PRODUCTS: Product[] = [
-  { name: "Columbus", desc: "The agentic GIS product", href: "#" },
-  { name: "Elio", desc: "The consumer product", href: "#" },
-  { name: "Research", desc: "Check out our research", href: "#" },
+  {
+    name: "Columbus",
+    desc: "An agentic GIS platform for professionals",
+    href: "#",
+    logo: "/logobueno.png",
+    logoFilter: COLUMBUS_LOGO_FILTER,
+  },
+  {
+    name: "Elio",
+    desc: "Smart and social maps",
+    href: "#",
+    logo: "/MapsGPT-logo.png",
+  },
+  {
+    name: "Research",
+    desc: "Our jurney to the Large Geospacial Model",
+    href: "#",
+    logo: "/TechnologyPageImages/lgm-globe-icon.png",
+  },
 ];
 
 const CSS = `
@@ -145,9 +170,24 @@ const CSS = `
   box-sizing: border-box;
 }
 @media (min-width: 1024px) { .ops-cell-head { padding: 36px; } }
-.ops-cell-name { margin: 0; font-size: 24px; line-height: 1.15; font-weight: 700; color: var(--ops-ink); }
+/* title row — product logo on the left, name on the right; weight 400
+   to match the .ops-title heading "We're all about maps" */
+.ops-cell-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.ops-cell-logo {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  flex: 0 0 auto;
+  display: block;
+}
+@media (min-width: 1024px) { .ops-cell-logo { width: 36px; height: 36px; } }
+.ops-cell-name { margin: 0; font-size: 24px; line-height: 1.15; font-weight: 400; letter-spacing: -0.01em; color: var(--ops-ink); }
 @media (min-width: 1024px) { .ops-cell-name { font-size: 28px; } }
-.ops-cell-desc { margin: 6px 0 0; font-size: 16px; line-height: 1.4; color: var(--ops-ink); }
+.ops-cell-desc { margin: 16px 0 0; font-size: 16px; line-height: 1.4; color: var(--ops-ink); }
 @media (min-width: 1024px) { .ops-cell-desc { font-size: 18px; } }
 .ops-cell-link {
   margin-top: 18px;
@@ -275,7 +315,17 @@ export default function OurProductsSection() {
               {PRODUCTS.map((p) => (
                 <div className="ops-cell" key={p.name}>
                   <div className="ops-cell-head">
-                    <h3 className="ops-cell-name">{p.name}</h3>
+                    <div className="ops-cell-title">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={p.logo}
+                        alt=""
+                        aria-hidden
+                        className="ops-cell-logo"
+                        style={p.logoFilter ? { filter: p.logoFilter } : undefined}
+                      />
+                      <h3 className="ops-cell-name">{p.name}</h3>
+                    </div>
                     <p className="ops-cell-desc">{p.desc}</p>
                     <a className="ops-cell-link" href={p.href}>
                       Learn more
