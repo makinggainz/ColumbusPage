@@ -76,6 +76,12 @@ export interface ProductCellProps {
   /** Content of the white card. Defaults to the 1-square + 6-lines skeleton. */
   card?: ReactNode;
 
+  /** When provided (split variant only), replaces the entire right-column
+   *  content — both the colored plate and the white card. Use this when
+   *  the row needs a fully custom visual (e.g. an image-backed panel with
+   *  an overlay) instead of the default plate-behind-skeleton pattern. */
+  visual?: ReactNode;
+
   variant?: ProductCellVariant;
   className?: string;
 }
@@ -339,6 +345,7 @@ export function ProductCell({
   cardBgAlpha,
   minHeight,
   card,
+  visual,
   variant = "corner",
   className = "",
 }: ProductCellProps) {
@@ -402,8 +409,12 @@ export function ProductCell({
         {head}
         {variant === "split" ? (
           <div className="pc-visual">
-            {plate}
-            {cardEl}
+            {visual ?? (
+              <>
+                {plate}
+                {cardEl}
+              </>
+            )}
           </div>
         ) : (
           <>
