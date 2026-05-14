@@ -117,25 +117,24 @@ const CSS = `
   }
 }
 
-/* Map Chat row owns its visual via the map image + chat card, so the
-   row-level radial glow ProductCell paints behind every split row is
-   redundant — strip it here so only the map image reads. */
-.cfc-row--mapchat.pc-cell--split {
+/* Map Chat + Data Catalogue rows both own their visual via the map
+   image, so the row-level sky-blue radial glow ProductCell paints
+   behind every split row is redundant — strip it on both so only the
+   map image reads behind the chat card / data-catalogue card. */
+.cfc-row--mapchat.pc-cell--split,
+.cfc-row--datacat.pc-cell--split {
   background-image: none;
 }
 
-/* ── visual: Map Chat — image-backed bg div + chat card overlay ────
-   Border-radius 7px matches the navbar CTA buttons. At md+ the bg div
-   is 50% wider than its original inset width and extends LEFTWARD into
-   the row's text column (right anchor preserved). On mobile (stacked
-   layout) it stays inside .pc-visual since there's no left column to
-   extend into. The radial fade overlay was removed — the map image
-   reads as-is across the panel. */
-/* Bg div fills the entire visual column — right edge flush with the
-   column's right edge, full height. A linear gradient overlay washes
-   the map toward white on the LEFT so the image dissolves into the
-   cell background where it meets the text column. */
-.cfc-mapchat-bg {
+/* ── visual: Map Chat + Data Catalogue — image-backed bg div + card overlay ──
+   Both rows share the same Madrid-map background and the same left-
+   fading white wash. The bg div fills the entire visual column; its
+   linear-gradient overlay dissolves the map toward white on the LEFT
+   so the image meets the row's text column without a hard edge. The
+   per-row card (chat composer for Map Chat, product screenshot for
+   Data Catalogue) sits on top via its own z-index. */
+.cfc-mapchat-bg,
+.cfc-datacat-bg {
   position: absolute;
   inset: 0;
   overflow: hidden;
@@ -460,6 +459,10 @@ function MapChatVisual() {
 function DataCatalogueVisual() {
   return (
     <>
+      {/* Same map background + left-fading white wash as Map Chat row
+          above. Renders behind .cfc-datacat-plate (z-index: 1) and
+          .cfc-datacat-card (z-index: 2). */}
+      <div className="cfc-datacat-bg" aria-hidden />
       <div className="cfc-datacat-plate" aria-hidden />
       <div className="cfc-datacat-card" aria-hidden>
         {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -517,7 +520,13 @@ export function ColumbusFeatureCell() {
                 {FEATURES.map((f) => (
                   <ProductCell
                     key={f.key}
-                    className={`cfc-row${f.key === "map-chat" ? " cfc-row--mapchat" : ""}`}
+                    className={`cfc-row${
+                      f.key === "map-chat"
+                        ? " cfc-row--mapchat"
+                        : f.key === "data-catalogue"
+                        ? " cfc-row--datacat"
+                        : ""
+                    }`}
                     variant="split"
                     name={f.name}
                     desc={f.desc}
