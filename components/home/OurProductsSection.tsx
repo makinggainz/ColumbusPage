@@ -74,15 +74,6 @@ const PRODUCTS: ProductCellProps[] = [
     glow: "11, 27, 43",
     glowAlphas: { a1: 0.09, a2: 0.03, a3: 0.14 },
     cardBgAlpha: 0.06,
-    // Drops the white card + colored plate; the point-cloud mountain
-    // image sits directly in the cell, anchored to the bottom of its
-    // portrait canvas where the meaningful content lives. The text
-    // head (logo + name + desc + Learn more) still floats on top via
-    // .pc-cell-head's z-index: 2 over .pc-bg-img's z-index: 1.
-    bgImage: {
-      src: "/Researchimg.png",
-      objectPosition: "center bottom",
-    },
   },
 ];
 
