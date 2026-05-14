@@ -150,7 +150,15 @@ const CSS = `
   transition: opacity 280ms ease-out;
 }
 .pc-cell--corner:hover::before { opacity: 1; }
-.pc-cell--corner:has(.pc-bg-img)::before { z-index: 2; }
+/* Research (bgImage variant) flips the hover model: the charcoal
+   radial is PRESENT by default and FADES OUT on hover — the inverse
+   of Columbus + Elio. z-index is raised above the bgImage (which
+   sits at z-index 1) so the glow is actually visible. */
+.pc-cell--corner:has(.pc-bg-img)::before {
+  z-index: 2;
+  opacity: 1;
+}
+.pc-cell--corner:has(.pc-bg-img):hover::before { opacity: 0; }
 @media (prefers-reduced-motion: reduce) {
   .pc-cell--corner::before { transition: none; }
 }

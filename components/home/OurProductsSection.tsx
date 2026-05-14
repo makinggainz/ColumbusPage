@@ -184,6 +184,7 @@ const CSS = `
   --pc-fade-color: #F5E6D0;
 }
 
+
 /* product image (drops into ProductCell's .pc-card in place of the
    default skeleton). Top + left edges are flush with the card edges;
    the image scales to fill the card via object-fit: cover. The card's
