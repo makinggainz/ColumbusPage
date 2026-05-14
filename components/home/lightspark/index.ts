@@ -6,5 +6,6 @@ export { ElioTextScrollIntro } from "./ElioTextScrollIntro";
 export { ElioFeatureCell } from "./ElioFeatureCell";
 export { ElioValuesCards } from "./ElioValuesCards";
 export { ElioFinalCTA } from "./ElioFinalCTA";
+export { ElioBackdrop } from "./ElioBackdrop";
 export { StickyScrollFeatures } from "./StickyScrollFeatures";
 export { CaseStudyCard } from "./CaseStudyCard";

@@ -100,7 +100,7 @@ const CSS = `
   overflow: hidden;
   border: 1px solid var(--color-gridline);
   border-radius: 7px;
-  background: #ffffff;
+  background: #ffffff url('/elio/endingImgHomeElio.png') center / cover no-repeat;
   padding: 64px 24px 96px;
   text-align: center;
 }
@@ -109,36 +109,6 @@ const CSS = `
 }
 @media (min-width: 1024px) {
   .efcta-card { padding: 120px 64px 176px; }
-}
-
-.efcta-card::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(
-      ellipse 95% 75% at 50% 100%,
-      rgba(56, 189, 248, 0.30) 0%,
-      rgba(56, 189, 248, 0.14) 42%,
-      transparent 82%
-    );
-  pointer-events: none;
-  z-index: 1;
-}
-
-.efcta-card::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background-image:
-    repeating-linear-gradient( 45deg, rgba(56, 189, 248, 0.18) 0 1px, transparent 1px 40px),
-    repeating-linear-gradient(-45deg, rgba(56, 189, 248, 0.18) 0 1px, transparent 1px 40px);
-  -webkit-mask-image: radial-gradient(ellipse 95% 75% at 50% 100%, #000 0%, transparent 82%);
-  mask-image: radial-gradient(ellipse 95% 75% at 50% 100%, #000 0%, transparent 82%);
-  transform: perspective(900px) rotateX(55deg);
-  transform-origin: 50% 100%;
-  pointer-events: none;
-  z-index: 2;
 }
 
 .efcta-content {

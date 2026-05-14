@@ -111,17 +111,47 @@ function ArrowDot({ className = "" }: { className?: string }) {
   );
 }
 
+// Backdrop colour the nav uses by default once scrolled past the hero.
+const NAV_BG_DEFAULT = "#ffffff";
+// Backdrop colour while the nav sits over the Elio super-section on the
+// homepage (see <ElioBackdrop>) — matches that section's warm surface so
+// there's no visible seam between nav and page.
+const NAV_BG_ELIO = "#FCF3E8";
+
+// How far below the top of the viewport the nav's bottom edge falls. The
+// "in Elio section" test compares this y-coordinate against the section's
+// bounding box. ~80px keeps it loosely in sync with the nav row height
+// (py-6 + 34px logo ≈ 82px) without being brittle.
+const NAV_HIT_Y = 80;
+
 export function MistxNav() {
   const [scrolled, setScrolled] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<DropdownId | null>(null);
   const [elioOpen, setElioOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [inElioSection, setInElioSection] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 80);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    const update = () => {
+      setScrolled(window.scrollY > 80);
+      // The [data-elio-section] marker is rendered by <ElioBackdrop> on
+      // the homepage. Other pages won't have it, in which case the nav
+      // keeps its default white backdrop.
+      const el = document.querySelector<HTMLElement>("[data-elio-section]");
+      if (!el) {
+        setInElioSection(false);
+        return;
+      }
+      const rect = el.getBoundingClientRect();
+      setInElioSection(rect.top <= NAV_HIT_Y && rect.bottom >= NAV_HIT_Y);
+    };
+    update();
+    window.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update);
+    return () => {
+      window.removeEventListener("scroll", update);
+      window.removeEventListener("resize", update);
+    };
   }, []);
 
   const navItemTriggerProps = (id: DropdownId) => ({
@@ -131,11 +161,16 @@ export function MistxNav() {
 
   return (
     <header className="fixed z-[999] top-0 left-0 w-full">
-      {/* Backdrop: invisible over hero, solid #ffffff once scrolled into
-          content — matches the homepage hero / content surface. */}
+      {/* Backdrop: invisible over hero, solid surface once scrolled into
+          content. Colour swaps from #ffffff → #FCF3E8 while the viewer is
+          inside the <ElioBackdrop> super-section so the nav blends into
+          the warm Elio background and snaps back when they leave it. */}
       <div
-        className="absolute left-0 top-0 w-full pointer-events-none z-0 bg-[#ffffff] transition-[height] duration-300"
-        style={{ height: scrolled ? "100%" : "0%" }}
+        className="absolute left-0 top-0 w-full pointer-events-none z-0 transition-[height,background-color] duration-300"
+        style={{
+          height: scrolled ? "100%" : "0%",
+          backgroundColor: inElioSection ? NAV_BG_ELIO : NAV_BG_DEFAULT,
+        }}
       />
 
       {/* Content row — bounds match the page's content sections

@@ -36,7 +36,13 @@ export function ElioTextScrollIntro() {
     <section className="section">
       <div className="container-site">
         <div className="mx-auto max-w-3xl">
-          <div className="mb-10 flex items-center justify-center gap-3 lg:mb-12 lg:gap-4">
+          {/* Heading → subtitle gap follows design-system/content-and-text-
+              spacing.md §2.2: "Between an h2 and its subtitle paragraph
+              in the same heading block | 24px mobile / 48px desktop |
+              mt-6 md:mt-12". Was mb-10 lg:mb-12 (40/48) — mobile is now
+              tightened to 24px, desktop snaps to the md breakpoint per
+              the design system. */}
+          <div className="mb-6 flex items-center justify-center gap-3 md:mb-12 lg:gap-4">
             <Image
               src="/MapsGPT-logo.png"
               alt="Elio logo"
