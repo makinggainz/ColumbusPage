@@ -172,7 +172,7 @@ const CSS = `
   background-repeat: no-repeat;
 }
 .ops-cell--elio {
-  background-image: url("/eliobackground.png");
+  background-image: url("/eliocardbackground.png");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
