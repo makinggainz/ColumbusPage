@@ -127,20 +127,59 @@ const CSS = `
 }
 
 /* ── visual: Map Chat + Data Catalogue — image-backed bg div + card overlay ──
-   Both rows share the same Madrid-map background and the same left-
-   fading white wash. The bg div fills the entire visual column; its
-   linear-gradient overlay dissolves the map toward white on the LEFT
-   so the image meets the row's text column without a hard edge. The
-   per-row card (chat composer for Map Chat, product screenshot for
-   Data Catalogue) sits on top via its own z-index. */
+   Shared positioning and base. The per-row card (chat composer for Map
+   Chat, product screenshot for Data Catalogue) renders as a SIBLING of
+   the bg div (both positioned within .pc-visual), so resizing the bg
+   div's bounding box doesn't shift the card's screen position. */
 .cfc-mapchat-bg,
 .cfc-datacat-bg {
   position: absolute;
   inset: 0;
   overflow: hidden;
   background-color: #ffffff;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+/* Map Chat: the Madrid-map background stops short of the text column
+   on the left instead of fading into it. From md+ the bg div is inset
+   from the visual column's left edge by 6%, so the cell's white surface
+   shows between the text and the map's hard left edge. On mobile the
+   visual column stacks below the text, so the map fills full-width. */
+.cfc-mapchat-bg {
+  background-image: url('/MapChatbackgroundimg.png');
+}
+@media (min-width: 768px) {
+  .cfc-mapchat-bg { inset: 0 0 0 6%; }
+}
+
+/* Data Catalogue is MIRRORED relative to the other rows — the visual
+   column sits on the LEFT, the text column on the RIGHT. The map bg
+   therefore starts from the row's left edge and fades toward white on
+   the RIGHT (where it now meets the text). The product-screenshot card
+   pins to the bottom-LEFT of the visual column with a right-edge mask
+   that dissolves it into that same cream/white gap before the text.
+   The grid swap only fires at md+; on mobile the row stacks (text on
+   top, visual below) so the swap is a no-op. */
+@media (min-width: 768px) {
+  .cfc-row--datacat.pc-cell--split {
+    grid-template-columns: minmax(0, 3fr) minmax(0, 1fr);
+  }
+  /* grid-row: 1 on BOTH is required. The .pc-cell--split grid uses the
+     default grid-auto-flow (row / sparse). With only grid-column set,
+     .pc-cell-head (DOM-first) lands at (1, 2) and the cursor advances
+     past column 2; .pc-visual (DOM-second) at grid-column: 1 then ends
+     up at (2, 1) instead of (1, 1), creating a phantom second row that
+     pushes the map + card below the text. Pinning both to row 1 keeps
+     them side-by-side. */
+  .cfc-row--datacat .pc-cell-head { grid-column: 2; grid-row: 1; }
+  .cfc-row--datacat .pc-visual    { grid-column: 1; grid-row: 1; }
+}
+
+.cfc-datacat-bg {
   background-image:
-    linear-gradient(to right, #ffffff 0%, rgba(255,255,255,0.85) 10%, rgba(255,255,255,0.45) 25%, rgba(255,255,255,0.12) 42%, transparent 55%),
+    linear-gradient(to left, #ffffff 0%, rgba(255,255,255,0.85) 10%, rgba(255,255,255,0.45) 25%, rgba(255,255,255,0.12) 42%, transparent 55%),
     url('/MapChatbackgroundimg.png');
   background-size: cover, cover;
   background-position: center, center;
@@ -272,56 +311,59 @@ const CSS = `
   background: var(--color-ink, #0B1B2B);
 }
 
-/* ── visual: Data Catalogue — product image card with top-left framed
-   plate. Mirrors the OurProductsSection skeleton-card pattern: the
-   white card is pinned to the bottom-right of .pc-visual (right and
-   bottom flush with the column's edges, top-left corner rounded 12px),
-   sitting on a slightly larger colored plate that peeks 7-8px out on
-   the top and left as a thin "border" sliver. Same sky-400 at 18%
-   alpha + 1px white outer border + 16px top-left radius the OPS
-   Columbus cell uses for its plate. */
+/* ── visual: Data Catalogue — product image card with top-RIGHT framed
+   plate. Mirrored relative to the other rows because the Data Catalogue
+   row swaps visual to the LEFT side (see grid override above). The
+   white card pins to the bottom-LEFT of .pc-visual (left + bottom flush
+   with the column's edges, top-RIGHT corner rounded 12px), sitting on
+   a slightly larger colored plate that peeks 7-8px out on the top and
+   right as a thin "border" sliver. */
 .cfc-datacat-plate {
   position: absolute;
-  right: 0;
+  left: 0;
   bottom: 0;
-  left: calc(22% - 7px);
+  right: calc(22% - 7px);
   top: calc(12% - 7px);
   z-index: 1;
   background: rgba(56, 189, 248, 0.18);
   border: 1px solid #ffffff;
-  border-radius: 16px 0 0 0;
+  border-radius: 0 16px 0 0;
   box-sizing: border-box;
 }
 @media (min-width: 1024px) {
-  .cfc-datacat-plate { left: calc(24% - 8px); top: calc(12% - 8px); }
+  .cfc-datacat-plate { right: calc(24% - 8px); top: calc(12% - 8px); }
 }
 
 .cfc-datacat-card {
   position: absolute;
-  right: 0;
+  left: 0;
   bottom: 0;
-  left: 22%;
+  right: 22%;
   top: 12%;
   z-index: 2;
   background: #ffffff;
-  border-radius: 12px 0 0 0;
+  border-radius: 0 12px 0 0;
   overflow: hidden;
   box-sizing: border-box;
+  /* The card's right edge dissolves into the cream/white gap between
+     it and the text column on its right. Solid from 0–75% of the card
+     width, fading to transparent at 100%. */
+  -webkit-mask-image: linear-gradient(to right, #000 0%, #000 75%, transparent 100%);
+  mask-image: linear-gradient(to right, #000 0%, #000 75%, transparent 100%);
 }
 @media (min-width: 1024px) {
-  .cfc-datacat-card { left: 24%; top: 12%; }
+  .cfc-datacat-card { right: 24%; top: 12%; }
 }
 
-/* Image scales up to fill the card. object-position: top left anchors
-   it to the card's top-left corner — its top and left edges sit flush
-   with the card edges, and overflow on the right/bottom is clipped
-   by the card's overflow: hidden. */
+/* Image scales up to fill the card. object-position: top right anchors
+   it to the card's top-right corner — matches the card's rounded
+   top-right corner. */
 .cfc-datacat-img {
   display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: top left;
+  object-position: top right;
 }
 
 /* ── mock: Data Digestion (header bar + list rows) ────────────────── */
@@ -413,8 +455,11 @@ const CSS = `
 function MapChatVisual() {
   return (
     <>
-      <div className="cfc-mapchat-bg" aria-hidden>
-        <div className="cfc-mapchat-card">
+      {/* Map background — sibling of the card (not parent), so the bg
+          div's bounding box can be inset (e.g. stop short of the text
+          column on the left) without shifting the card. */}
+      <div className="cfc-mapchat-bg" aria-hidden />
+      <div className="cfc-mapchat-card" aria-hidden>
         <div className="cfc-mapchat-msg-user">
           Find 2,500–4,000 sqm parcels in Madrid near dense luxury retail with
           office vacancy under 8%. Mixed-use: ground-floor retail, 4 floors office,
@@ -443,7 +488,6 @@ function MapChatVisual() {
           <button className="cfc-mapchat-stop" type="button" aria-label="Stop">
             <span className="cfc-mapchat-stop-icon" />
           </button>
-        </div>
         </div>
       </div>
     </>
