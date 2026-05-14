@@ -48,7 +48,32 @@ export function TextScrollIntro() {
   const windowSize = 2 / words.length;
 
   return (
-    <section className="section">
+    <section className="section relative isolate">
+      {/* Watermark layer — split out from the section's inline background
+          so we can fade the top + bottom into the page surface (via
+          mask-image) and dial the whole image down to 50% opacity
+          without affecting the foreground text. */}
+      <div
+        aria-hidden
+        className="absolute inset-0 -z-10 pointer-events-none"
+        style={{
+          backgroundImage: 'url("/ColumbusBackgroundMB.png")',
+          backgroundRepeat: "no-repeat",
+          backgroundPosition: "center",
+          /* 120vw width pushes the watermark a touch past the viewport's
+             left + right edges. Height set to 70vw — ~35% taller than
+             the natural ~52vw at 100vw width (img is 1740×904). */
+          backgroundSize: "120vw 70vw",
+          opacity: 0.5,
+          /* Linear fade: transparent at the top edge → opaque from 15%
+             to 85% → transparent again at the bottom edge, so the
+             watermark melts seamlessly into the page above and below. */
+          WebkitMaskImage:
+            "linear-gradient(to bottom, transparent 0%, #000 15%, #000 85%, transparent 100%)",
+          maskImage:
+            "linear-gradient(to bottom, transparent 0%, #000 15%, #000 85%, transparent 100%)",
+        }}
+      />
       <div className="container-site">
         <div className="mx-auto max-w-3xl">
           {/* Brand title — logo to the left of the wordmark, centred

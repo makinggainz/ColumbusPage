@@ -37,6 +37,7 @@ const PRODUCTS: ProductCellProps[] = [
     // to 0.18 because the darker hue reads heavier at the same alpha.
     glow: "56, 189, 248",
     cardBgAlpha: 0.18,
+    className: "ops-cell--columbus",
     card: (
       // eslint-disable-next-line @next/next/no-img-element
       <img
@@ -52,6 +53,7 @@ const PRODUCTS: ProductCellProps[] = [
     desc: "Smart and social maps",
     href: "#",
     logo: "/MapsGPT-logo.png",
+    className: "ops-cell--elio",
     card: (
       // eslint-disable-next-line @next/next/no-img-element
       <img
@@ -72,6 +74,15 @@ const PRODUCTS: ProductCellProps[] = [
     glow: "11, 27, 43",
     glowAlphas: { a1: 0.09, a2: 0.03, a3: 0.14 },
     cardBgAlpha: 0.06,
+    // Drops the white card + colored plate; the point-cloud mountain
+    // image sits directly in the cell, anchored to the bottom of its
+    // portrait canvas where the meaningful content lives. The text
+    // head (logo + name + desc + Learn more) still floats on top via
+    // .pc-cell-head's z-index: 2 over .pc-bg-img's z-index: 1.
+    bgImage: {
+      src: "/Researchimg.png",
+      objectPosition: "center bottom",
+    },
   },
 ];
 
@@ -150,6 +161,23 @@ const CSS = `
   overflow: hidden;
 }
 
+/* Columbus + Elio cells use a full-bleed photo background instead of
+   the bare white surface. The image sits behind ProductCell's radial
+   wash (which lives on a ::before pseudo) and behind the text head +
+   card + plate, so it reads as the cell's backdrop. */
+.ops-cell--columbus {
+  background-image: url("/Colbackgroundcard.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+.ops-cell--elio {
+  background-image: url("/eliobackground.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
 /* product image (drops into ProductCell's .pc-card in place of the
    default skeleton). Top + left edges are flush with the card edges;
    the image scales to fill the card via object-fit: cover. The card's
@@ -223,7 +251,11 @@ export default function OurProductsSection() {
           <div className="ops-grid">
             <div className="ops-grid-inner">
               {PRODUCTS.map((p) => (
-                <ProductCell key={p.name} className="ops-cell" {...p} />
+                <ProductCell
+                  key={p.name}
+                  {...p}
+                  className={`ops-cell ${p.className ?? ""}`.trim()}
+                />
               ))}
             </div>
           </div>
