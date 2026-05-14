@@ -115,30 +115,6 @@ const VARIANT_DEFAULTS = {
 } as const;
 
 const CSS = `
-/* Feather mask stops live in typed custom properties so the default
-   state can match V2 exactly (70%/85% stops, alpha 0 = transparent
-   far end) and snap to a fully-open mask (100%/100%, alpha 1 = opaque
-   far end) on hover. The variables are NOT transitioned — the mask
-   change is instant so the card's right + bottom edges are crisp
-   before the wash + white-card-surface animations begin. Registering
-   the properties via @property still ensures the gradient parses
-   correctly across browsers (Chrome 85+, Safari 16.4+, Firefox 128+). */
-@property --pc-feather-mid {
-  syntax: "<percentage>";
-  inherits: false;
-  initial-value: 70%;
-}
-@property --pc-feather-end {
-  syntax: "<percentage>";
-  inherits: false;
-  initial-value: 85%;
-}
-@property --pc-feather-alpha {
-  syntax: "<number>";
-  inherits: false;
-  initial-value: 0;
-}
-
 .pc-cell {
   --pc-skel: #F0F1F4;
   --pc-sans: var(--font-sans, "Ppneuemontreal", "PP Neue Montreal", Arial, sans-serif);
@@ -153,12 +129,13 @@ const CSS = `
 @media (min-width: 640px)  { .pc-cell { min-height: var(--pc-minh-sm, 420px); } }
 @media (min-width: 1024px) { .pc-cell { min-height: var(--pc-minh-lg, 480px); } }
 
-/* corner: glow swells from the bottom-right of a compact cell. The
-   radial wash + plate are decorative colored layers painted over
-   the cell's white surface; on hover they fade away so the product
-   image reads cleanly on the bare cell. The radial wash lives on a
-   ::before pseudo so its opacity is animatable (CSS variables on
-   the parent's background-image can't themselves be transitioned). */
+/* corner: V2.1 hover model on every corner cell.
+   Default state: per-product radial glow is HIDDEN (::before opacity 0)
+   so the bare cell surface (white for Columbus/Elio's photo-bg cards,
+   point-cloud image for Research's bgImage) reads clean on first paint.
+   Hover state: the glow FADES IN to opacity 1 over 280ms ease-out.
+   For Research the glow is raised above the bgImage via :has() since
+   the bgImage sits at z-index 1. */
 .pc-cell--corner { cursor: pointer; }
 .pc-cell--corner::before {
   content: "";
@@ -169,36 +146,13 @@ const CSS = `
   background-image:
     radial-gradient(200% 135% at 100% 100%, rgba(var(--pc-glow), var(--pc-a1)), rgba(var(--pc-glow), var(--pc-a2)) 48%, transparent 76%),
     radial-gradient(115% 68% at 100% 100%, rgba(var(--pc-glow), var(--pc-a3)), transparent 58%);
-  /* Material-standard ease (cubic-bezier(0.4, 0, 0.2, 1)) over 900ms.
-     Distributes the opacity change evenly across the whole duration
-     instead of front-loading it like easeOutExpo did — so after the
-     mask snaps open at t=0 the wash reads as a deliberate smooth
-     glide-out rather than an instant flash. */
-  transition: opacity 900ms cubic-bezier(0.4, 0, 0.2, 1);
-}
-.pc-cell--corner:hover::before { opacity: 0; }
-@media (prefers-reduced-motion: reduce) {
-  .pc-cell--corner::before { transition: none; }
-}
-
-/* === Research (bgImage variant) — V2.1 inverse hover model ===
-   Research drops the white card + plate (.pc-bg-img fills the cell
-   instead). Override the corner-variant hover above to match V2.1:
-     - Glow is HIDDEN by default (opacity 0) so the point-cloud image
-       reads clean on first paint.
-     - Glow is RAISED above the bgImage (z-index 2) so it's actually
-       visible — the bgImage sits at z-index 1.
-     - On hover the glow FADES IN to opacity 1 over 280ms. */
-.pc-cell--corner:has(.pc-bg-img)::before {
-  z-index: 2;
   opacity: 0;
   transition: opacity 280ms ease-out;
 }
-.pc-cell--corner:has(.pc-bg-img):hover::before {
-  opacity: 1;
-}
+.pc-cell--corner:hover::before { opacity: 1; }
+.pc-cell--corner:has(.pc-bg-img)::before { z-index: 2; }
 @media (prefers-reduced-motion: reduce) {
-  .pc-cell--corner:has(.pc-bg-img)::before { transition: none; }
+  .pc-cell--corner::before { transition: none; }
 }
 
 /* split: gentler glow tuned for a wide 2-column row — sizes smaller in
@@ -339,16 +293,6 @@ const CSS = `
   gap: 16px;
   padding: 22px;
   box-sizing: border-box;
-  /* fade the white card surface on hover. Only background-color
-     transitions, not opacity — so any product image / content inside
-     stays fully visible while the white card backing dissolves.
-     Matches the wash's 900ms / cubic-bezier(0.4, 0, 0.2, 1) so the
-     two layers fade in lockstep. */
-  transition: background-color 900ms cubic-bezier(0.4, 0, 0.2, 1);
-}
-.pc-cell--corner:hover .pc-card { background-color: transparent; }
-@media (prefers-reduced-motion: reduce) {
-  .pc-card { transition: none; }
 }
 @media (min-width: 1024px) {
   .pc-card { padding: 26px; gap: 20px; }
@@ -372,32 +316,34 @@ const CSS = `
   .pc-cell--corner .pc-card { left: 36px; top: 46%; }
 }
 
-/* Feather + fully-hidden zone on the right and bottom edges of the
-   corner card — identical default state to V2 (linear-gradient
-   mask, 70%→85% stops, mask-composite: intersect). The feather
-   snaps to fully open on hover with NO transition, so the card's
-   right + bottom edges are crisp by the time the other hover
-   animations (wash, white-card-surface) start playing. */
-.pc-cell--corner .pc-card,
-.pc-cell--corner .pc-card-bg {
-  -webkit-mask-image:
-    linear-gradient(to right, #000 0%, #000 var(--pc-feather-mid), rgba(0, 0, 0, var(--pc-feather-alpha)) var(--pc-feather-end)),
-    linear-gradient(to bottom, #000 0%, #000 var(--pc-feather-mid), rgba(0, 0, 0, var(--pc-feather-alpha)) var(--pc-feather-end));
-  -webkit-mask-composite: source-in;
-  mask-image:
-    linear-gradient(to right, #000 0%, #000 var(--pc-feather-mid), rgba(0, 0, 0, var(--pc-feather-alpha)) var(--pc-feather-end)),
-    linear-gradient(to bottom, #000 0%, #000 var(--pc-feather-mid), rgba(0, 0, 0, var(--pc-feather-alpha)) var(--pc-feather-end));
-  mask-composite: intersect;
+/* V2.1 edge-fade: a ::after overlay sits on top of the card AND the
+   plate, painting two linear gradients along the right + bottom
+   edges (transparent at 0–70%, opaque --pc-fade-color by 85%). The
+   end colour is a CSS variable so each cell can override it to match
+   its own backdrop — defaults to #ffffff (the V2.1 white surface);
+   .ops-cell--columbus / .ops-cell--elio set it to their photo-bg
+   tone so the card edges dissolve into the photo instead of into
+   a white sliver. On hover the overlay's opacity transitions to 0
+   over 280ms ease-out, so the edges sharpen up at the same time the
+   radial glow fades in. */
+.pc-cell--corner .pc-card::after,
+.pc-cell--corner .pc-card-bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(to right, transparent 0%, transparent 60%, var(--pc-fade-color, #ffffff) 95%),
+    linear-gradient(to bottom, transparent 0%, transparent 60%, var(--pc-fade-color, #ffffff) 95%);
+  transition: opacity 280ms ease-out;
 }
-.pc-cell--corner:hover .pc-card,
-.pc-cell--corner:hover .pc-card-bg {
-  --pc-feather-mid: 100%;
-  --pc-feather-end: 100%;
-  --pc-feather-alpha: 1;
+.pc-cell--corner:hover .pc-card::after,
+.pc-cell--corner:hover .pc-card-bg::after {
+  opacity: 0;
 }
 @media (prefers-reduced-motion: reduce) {
-  .pc-cell--corner .pc-card,
-  .pc-cell--corner .pc-card-bg { transition: none; }
+  .pc-cell--corner .pc-card::after,
+  .pc-cell--corner .pc-card-bg::after { transition: none; }
 }
 
 /* split: card sits at the bottom of the right column, inset 24-44px

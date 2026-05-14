@@ -163,18 +163,25 @@ const CSS = `
 /* Columbus + Elio cells use a full-bleed photo background instead of
    the bare white surface. The image sits behind ProductCell's radial
    wash (which lives on a ::before pseudo) and behind the text head +
-   card + plate, so it reads as the cell's backdrop. */
+   card + plate, so it reads as the cell's backdrop.
+
+   --pc-fade-color is the end-stop of the card's right/bottom edge-
+   fade overlay (see ProductCell.tsx, .pc-card::after / .pc-card-bg::after).
+   Sampling the photo's dominant tone lets the card dissolve into the
+   photo instead of fading to a bright white sliver. */
 .ops-cell--columbus {
   background-image: url("/Colbackgroundcard.png");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+  --pc-fade-color: #EFEAD8;
 }
 .ops-cell--elio {
   background-image: url("/eliocardbackground.png");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+  --pc-fade-color: #F5E6D0;
 }
 
 /* product image (drops into ProductCell's .pc-card in place of the
