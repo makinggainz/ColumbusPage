@@ -1,6 +1,6 @@
 import { type ReactNode } from "react";
 import { MistxNav } from "@/components/layout/MistxNav";
-import { Hero } from "@/components/home/Hero";
+import { HeroNew } from "@/components/home/HeroNew";
 import OurProductsSection from "@/components/home/OurProductsSection";
 import {
   TextScrollIntro,
@@ -28,7 +28,7 @@ export default function Home() {
   return (
     <main className="min-h-screen" style={{ backgroundColor: "#ffffff" }}>
       <MistxNav />
-      <Hero />
+      <HeroNew />
 
       {/* Our products — self-contained section from
           ~/Downloads/OurProductsSection.tsx */}
