@@ -117,12 +117,18 @@ const CSS = `
 
 .ops-gridwrap { margin-top: 28px; }
 
-/* 3-column blueprint grid */
+/* 3-column blueprint grid. A sky-blue box-shadow halos out from all
+   four edges of the conglomerate so the row of cells reads as glowing
+   into the page. Two layered shadows — a tight inner band and a soft
+   outer falloff — give the glow more depth than a single radial. */
 .ops-grid {
   position: relative;
   width: 100%;
   margin-inline: auto;
   border-left: 1px solid var(--ops-gridline);
+  box-shadow:
+    0 0 60px 0  rgba(56, 189, 248, 0.45),
+    0 0 160px 0 rgba(56, 189, 248, 0.25);
 }
 .ops-grid-inner { display: grid; grid-template-columns: 1fr; }
 @media (min-width: 640px)  { .ops-grid-inner { grid-template-columns: 1fr 1fr; } }
