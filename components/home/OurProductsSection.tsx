@@ -7,17 +7,12 @@
  *
  * Layout:
  *   - centred "We're all about maps" <h2> (bold)
- *   - a 3-column blueprint grid (hairline cells, empty rows above & below)
- *   - each large cell: a soft blue radial glow emanating from the bottom-right
- *     (the layered radial gradient from laraX.html's hero, repositioned), the
- *     product name / one-line description / "Learn more" pinned top-left, and a
- *     white card pinned to the bottom-right (top-left corner rounded 12px, the
- *     other corners square so its right & bottom edges sit flush with the cell)
- *     containing a placeholder UI skeleton.
- *
- * Colours/fonts:
- *   ink #0B1B2B · muted #6F7790 · brand #183FD9 · gridline #E7E7F1 · glow rgb(125,211,252) ("#7dd3fc")
- *   sans "PP Neue Montreal" → Arial · mono "PP Neue Montreal Mono" → system mono (neither bundled)
+ *   - a 3-up grid of self-contained product cards (1px gridline border,
+ *     7px corners) — mirrors the contained-card pattern used by CtaBanner
+ *     ("No GIS experience..." block). No extending hairlines or fade overlays.
+ *   - each card uses ProductCell with its original per-product blue
+ *     radial wash + plate (sky-400 for Columbus, sky-300 for Elio,
+ *     charcoal for Research).
  */
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
@@ -28,9 +23,9 @@ import { ProductCell, type ProductCellProps } from "./ProductCell";
 const COLUMBUS_LOGO_FILTER =
   "brightness(0) saturate(100%) invert(8%) sepia(80%) saturate(1400%) hue-rotate(215deg) brightness(90%)";
 
-// Each product overrides the ProductCell defaults to match the original
-// per-product glow variants. Elio inherits the defaults (sky-300,
-// alphas 0.28 / 0.10 / 0.42, plate 0.275).
+// Each product keeps its original cell-level radial wash + plate
+// (restored after V2 zeroed them out). Elio inherits the ProductCell
+// corner defaults (sky-300, alphas 0.28 / 0.10 / 0.42, plate 0.275).
 const PRODUCTS: ProductCellProps[] = [
   {
     name: "Columbus",
@@ -86,11 +81,14 @@ const CSS = `
   color: var(--ops-ink);
   font-family: var(--ops-sans);
   -webkit-font-smoothing: antialiased;
-  padding-top: 96px;
-  padding-bottom: 72px;
+  /* design-system section rhythm: py-20 → py-28 (matches .section in
+     app/globals.css). Symmetric top/bottom so the gap to neighbouring
+     sections reads the same on both sides. */
+  padding-top: 80px;
+  padding-bottom: 80px;
 }
 @media (min-width: 1024px) {
-  .ops-section { padding-top: 136px; padding-bottom: 96px; }
+  .ops-section { padding-top: 112px; padding-bottom: 112px; }
 }
 
 .ops-container {
@@ -115,33 +113,33 @@ const CSS = `
   .ops-reveal { transition: none; transform: none; opacity: 1; }
 }
 
-.ops-gridwrap { margin-top: 28px; }
+/* title → content rhythm matching DatasetsCarousel (56 → 80px) so
+   adjacent sections share the same h2-to-content gap. */
+.ops-gridwrap { margin-top: 56px; }
+@media (min-width: 1024px) { .ops-gridwrap { margin-top: 80px; } }
 
-/* 3-column blueprint grid */
+/* 3-up grid of self-contained cards — matches the contained-card
+   pattern used by CtaBanner ("No GIS experience..." block). No
+   extending hairlines, no fade overlays, no shared cell borders. */
 .ops-grid {
   position: relative;
   width: 100%;
   margin-inline: auto;
-  border-left: 1px solid var(--ops-gridline);
 }
-.ops-grid-inner { display: grid; grid-template-columns: 1fr; }
-@media (min-width: 640px)  { .ops-grid-inner { grid-template-columns: 1fr 1fr; } }
-@media (min-width: 1024px) { .ops-grid-inner { grid-template-columns: 1fr 1fr 1fr; } }
-
-/* hairlines on the cell + filler boundaries; cell visuals themselves
-   live in ProductCell.tsx */
-.ops-cell,
-.ops-filler {
-  border-bottom: 1px solid var(--ops-gridline);
-  border-right: 1px solid var(--ops-gridline);
+.ops-grid-inner {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
 }
-.ops-filler { display: none; min-height: 64px; }
-@media (min-width: 640px) { .ops-filler { display: block; } }
+@media (min-width: 640px)  { .ops-grid-inner { grid-template-columns: 1fr 1fr; gap: 20px; } }
+@media (min-width: 1024px) { .ops-grid-inner { grid-template-columns: 1fr 1fr 1fr; gap: 24px; } }
 
-/* white fades so the hairlines dissolve into the section bg */
-.ops-fade { pointer-events: none; position: absolute; left: -1px; right: -1px; height: 70px; z-index: 3; }
-.ops-fade--top    { top: 0;    background-image: linear-gradient(#fff, rgba(255,255,255,0.64) 54%, rgba(255,255,255,0.06)); }
-.ops-fade--bottom { bottom: 0; background-image: linear-gradient(to top, #fff, rgba(255,255,255,0.64) 54%, rgba(255,255,255,0.06)); }
+/* each cell is a contained card: 1px gridline border + 7px corners */
+.ops-cell {
+  border: 1px solid var(--ops-gridline);
+  border-radius: 7px;
+  overflow: hidden;
+}
 
 /* product image (drops into ProductCell's .pc-card in place of the
    default skeleton). Top + left edges are flush with the card edges;
@@ -215,23 +213,10 @@ export default function OurProductsSection() {
         <Reveal className="ops-gridwrap">
           <div className="ops-grid">
             <div className="ops-grid-inner">
-              {/* empty hairline row above */}
-              <div className="ops-filler" aria-hidden />
-              <div className="ops-filler" aria-hidden />
-              <div className="ops-filler" aria-hidden />
-
               {PRODUCTS.map((p) => (
                 <ProductCell key={p.name} className="ops-cell" {...p} />
               ))}
-
-              {/* empty hairline row below */}
-              <div className="ops-filler" aria-hidden />
-              <div className="ops-filler" aria-hidden />
-              <div className="ops-filler" aria-hidden />
             </div>
-
-            <div className="ops-fade ops-fade--top" aria-hidden />
-            <div className="ops-fade ops-fade--bottom" aria-hidden />
           </div>
         </Reveal>
       </div>
