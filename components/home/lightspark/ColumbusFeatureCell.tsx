@@ -70,41 +70,35 @@ const CSS = `
   .cfc-container { margin-left: auto; margin-right: auto; }
 }
 
-/* ── wrapper: matches OurProductsSection's grid + fillers + fades ── */
+/* ── wrapper: borderless map-test variant. The hairline blueprint grid
+   (left border on .cfc-grid, bottom + right borders on each cell, top +
+   bottom fillers that extended those hairlines past the row, and the
+   fade overlays that dissolved their endpoints into the page) is all
+   removed in -mapTest. Each row now reads as a free-floating map + text
+   pairing, separated only by the natural vertical rhythm of the section. */
 .cfc-grid {
   position: relative;
   width: 100%;
   margin-inline: auto;
-  border-left: 1px solid var(--color-gridline);
 }
 .cfc-grid-inner { display: grid; grid-template-columns: 1fr; }
-
-.cfc-cell,
-.cfc-filler {
-  border-bottom: 1px solid var(--color-gridline);
-  border-right: 1px solid var(--color-gridline);
-}
-/* filler rows above and below the cell — their height controls how
-   far the vertical hairlines (grid border-left + cell border-right)
-   extend past the cell at top and bottom. The 70px fade overlay
-   dissolves the outermost end of the line into the page. */
-.cfc-filler { display: none; min-height: 112px; }
-@media (min-width: 640px) { .cfc-filler { display: block; } }
 
 .cfc-cell {
   position: relative;
   overflow: hidden;
-  background-color: #ffffff;
 }
 
-.cfc-fade { pointer-events: none; position: absolute; left: -1px; right: -1px; height: 70px; z-index: 4; }
-.cfc-fade--top    { top: 0;    background-image: linear-gradient(#fff, rgba(255,255,255,0.64) 54%, rgba(255,255,255,0.06)); }
-.cfc-fade--bottom { bottom: 0; background-image: linear-gradient(to top, #fff, rgba(255,255,255,0.64) 54%, rgba(255,255,255,0.06)); }
-
-/* ── stacked feature rows (each row is a ProductCell variant="split") ── */
-.cfc-rows { display: flex; flex-direction: column; }
-.cfc-row:not(:first-of-type) {
-  border-top: 1px solid var(--color-gridline);
+/* ── stacked feature rows (each row is a ProductCell variant="split") ──
+   Vertical gap between rows so each feature showcase reads as its own
+   moment. Tighter on mobile (40px) and wider on md+ (96px), where the
+   rows render as side-by-side grids and need more breathing room. */
+.cfc-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+@media (min-width: 768px) {
+  .cfc-rows { gap: 96px; }
 }
 
 /* Override ProductCell's default 1fr 1fr split — features need a wider
@@ -117,6 +111,22 @@ const CSS = `
   }
 }
 
+/* Data Catalogue (the middle row) is INVERTED relative to the other two
+   so the feature rows oscillate text-LEFT / text-RIGHT / text-LEFT down
+   the section. Both grid items are pinned to grid-row 1 — otherwise the
+   default sparse grid-auto-flow drops .pc-visual onto a phantom second
+   row when only grid-column is set (it places .pc-cell-head at (1, 2),
+   advances the cursor past column 2, then puts .pc-visual at (2, 1)
+   instead of (1, 1)). The plate / card / image inside .pc-visual are
+   mirrored separately below to match the new top-RIGHT rounded corner. */
+@media (min-width: 768px) {
+  .cfc-row--datacat.pc-cell--split {
+    grid-template-columns: minmax(0, 3fr) minmax(0, 1fr);
+  }
+  .cfc-row--datacat .pc-cell-head { grid-column: 2; grid-row: 1; }
+  .cfc-row--datacat .pc-visual    { grid-column: 1; grid-row: 1; }
+}
+
 /* Map Chat + Data Catalogue rows both own their visual via the map
    image, so the row-level sky-blue radial glow ProductCell paints
    behind every split row is redundant — strip it on both so only the
@@ -127,24 +137,30 @@ const CSS = `
 }
 
 /* ── visual: Map Chat + Data Catalogue — image-backed bg div + card overlay ──
-   Both rows share the same Madrid-map background and the same left-
-   fading white wash. The bg div fills the entire visual column; its
-   linear-gradient overlay dissolves the map toward white on the LEFT
-   so the image meets the row's text column without a hard edge. The
-   per-row card (chat composer for Map Chat, product screenshot for
-   Data Catalogue) sits on top via its own z-index. */
+   The map image fills the visual column; instead of a directional white
+   wash, the bg fades out at ALL FOUR EDGES via two intersected linear-
+   gradient masks (horizontal + vertical, each opaque in the middle 70%
+   and transparent at the edges). The result reads as a soft-edged map
+   floating in the row instead of a hard rectangle. Per-row cards (chat
+   composer for Map Chat, product screenshot for Data Catalogue) sit on
+   top via their own z-index. */
 .cfc-mapchat-bg,
 .cfc-datacat-bg {
   position: absolute;
   inset: 0;
   overflow: hidden;
-  background-color: #ffffff;
-  background-image:
-    linear-gradient(to right, #ffffff 0%, rgba(255,255,255,0.85) 10%, rgba(255,255,255,0.45) 25%, rgba(255,255,255,0.12) 42%, transparent 55%),
-    url('/MapChatbackgroundimg.png');
-  background-size: cover, cover;
-  background-position: center, center;
-  background-repeat: no-repeat, no-repeat;
+  background-image: url('/MapChatbackgroundimg.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  -webkit-mask-image:
+    linear-gradient(to right, transparent, #000 14%, #000 86%, transparent),
+    linear-gradient(to bottom, transparent, #000 14%, #000 86%, transparent);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(to right, transparent, #000 14%, #000 86%, transparent),
+    linear-gradient(to bottom, transparent, #000 14%, #000 86%, transparent);
+  mask-composite: intersect;
 }
 
 /* white chat card overlaid on the map. At md+ the bg is now ~1.5× wider
@@ -272,56 +288,56 @@ const CSS = `
   background: var(--color-ink, #0B1B2B);
 }
 
-/* ── visual: Data Catalogue — product image card with top-left framed
-   plate. Mirrors the OurProductsSection skeleton-card pattern: the
-   white card is pinned to the bottom-right of .pc-visual (right and
-   bottom flush with the column's edges, top-left corner rounded 12px),
+/* ── visual: Data Catalogue — product image card with top-RIGHT framed
+   plate (mirrored, because the Data Catalogue row is inverted: visual
+   sits on the LEFT, text on the RIGHT — see the grid override above).
+   The white card pins to the bottom-LEFT of .pc-visual (left + bottom
+   flush with the column's edges, top-RIGHT corner rounded 12px),
    sitting on a slightly larger colored plate that peeks 7-8px out on
-   the top and left as a thin "border" sliver. Same sky-400 at 18%
-   alpha + 1px white outer border + 16px top-left radius the OPS
-   Columbus cell uses for its plate. */
+   the top and right as a thin "border" sliver. Same sky-400 at 18%
+   alpha + 1px white outer border + 16px top-right radius. */
 .cfc-datacat-plate {
   position: absolute;
-  right: 0;
+  left: 0;
   bottom: 0;
-  left: calc(22% - 7px);
+  right: calc(22% - 7px);
   top: calc(12% - 7px);
   z-index: 1;
   background: rgba(56, 189, 248, 0.18);
   border: 1px solid #ffffff;
-  border-radius: 16px 0 0 0;
+  border-radius: 0 16px 0 0;
   box-sizing: border-box;
 }
 @media (min-width: 1024px) {
-  .cfc-datacat-plate { left: calc(24% - 8px); top: calc(12% - 8px); }
+  .cfc-datacat-plate { right: calc(24% - 8px); top: calc(12% - 8px); }
 }
 
 .cfc-datacat-card {
   position: absolute;
-  right: 0;
+  left: 0;
   bottom: 0;
-  left: 22%;
+  right: 22%;
   top: 12%;
   z-index: 2;
   background: #ffffff;
-  border-radius: 12px 0 0 0;
+  border-radius: 0 12px 0 0;
   overflow: hidden;
   box-sizing: border-box;
 }
 @media (min-width: 1024px) {
-  .cfc-datacat-card { left: 24%; top: 12%; }
+  .cfc-datacat-card { right: 24%; top: 12%; }
 }
 
-/* Image scales up to fill the card. object-position: top left anchors
-   it to the card's top-left corner — its top and left edges sit flush
-   with the card edges, and overflow on the right/bottom is clipped
-   by the card's overflow: hidden. */
+/* Image scales up to fill the card. object-position: top right anchors
+   it to the card's top-right corner — its top and right edges sit flush
+   with the card edges (matching the new top-right rounded corner) and
+   overflow on the left/bottom is clipped by the card's overflow: hidden. */
 .cfc-datacat-img {
   display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: top left;
+  object-position: top right;
 }
 
 /* ── mock: Data Digestion (header bar + list rows) ────────────────── */
@@ -513,8 +529,6 @@ export function ColumbusFeatureCell() {
       <div className="cfc-container">
         <div className="cfc-grid">
           <div className="cfc-grid-inner">
-            <div className="cfc-filler" aria-hidden />
-
             <div className="cfc-cell">
               <div className="cfc-rows">
                 {FEATURES.map((f) => (
@@ -542,12 +556,7 @@ export function ColumbusFeatureCell() {
                 ))}
               </div>
             </div>
-
-            <div className="cfc-filler" aria-hidden />
           </div>
-
-          <div className="cfc-fade cfc-fade--top" aria-hidden />
-          <div className="cfc-fade cfc-fade--bottom" aria-hidden />
         </div>
       </div>
     </section>
