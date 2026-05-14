@@ -181,6 +181,26 @@ const CSS = `
   .pc-cell--corner::before { transition: none; }
 }
 
+/* === Research (bgImage variant) — V2.1 inverse hover model ===
+   Research drops the white card + plate (.pc-bg-img fills the cell
+   instead). Override the corner-variant hover above to match V2.1:
+     - Glow is HIDDEN by default (opacity 0) so the point-cloud image
+       reads clean on first paint.
+     - Glow is RAISED above the bgImage (z-index 2) so it's actually
+       visible — the bgImage sits at z-index 1.
+     - On hover the glow FADES IN to opacity 1 over 280ms. */
+.pc-cell--corner:has(.pc-bg-img)::before {
+  z-index: 2;
+  opacity: 0;
+  transition: opacity 280ms ease-out;
+}
+.pc-cell--corner:has(.pc-bg-img):hover::before {
+  opacity: 1;
+}
+@media (prefers-reduced-motion: reduce) {
+  .pc-cell--corner:has(.pc-bg-img)::before { transition: none; }
+}
+
 /* split: gentler glow tuned for a wide 2-column row — sizes smaller in
    percentage terms because the row is much wider than a corner cell */
 .pc-cell--split {
@@ -414,12 +434,8 @@ const CSS = `
   pointer-events: none;
 }
 .pc-cell--corner .pc-bg-img {
-  right: 0; bottom: 0;
-  left: 22%; top: 44%;
+  inset: 0;
   width: auto; height: auto;
-}
-@media (min-width: 1024px) {
-  .pc-cell--corner .pc-bg-img { left: 24%; top: 46%; }
 }
 .pc-cell--split .pc-bg-img {
   right: 24px; bottom: 24px;
