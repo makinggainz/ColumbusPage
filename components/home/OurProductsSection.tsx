@@ -35,7 +35,7 @@ const PRODUCTS: ProductCellProps[] = [
   {
     name: "Columbus",
     desc: "An agentic GIS platform for professionals",
-    href: "#",
+    href: "#columbus",
     logo: "/logobueno.png",
     logoFilter: COLUMBUS_LOGO_FILTER,
     // sky-400, slightly darker than the default sky-300. Plate drops
@@ -55,7 +55,7 @@ const PRODUCTS: ProductCellProps[] = [
   {
     name: "Elio",
     desc: "Smart and social maps",
-    href: "#",
+    href: "#elio",
     logo: "/MapsGPT-logo.png",
   },
   {

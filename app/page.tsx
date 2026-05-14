@@ -48,21 +48,27 @@ export default function Home() {
           island — TextScroll word-reveal intro, three platform tiles,
           sticky-scroll Instant/Open/Grounded pillars, partner case study) */}
       <div className="mt-16">
-        <TextScrollIntro />
-        <ColumbusFeatureCell />
-        <DatasetsCarousel />
-        <CtaBanner
-          title="No GIS experience needed. Get to critical decisions faster."
-          primaryCta={{ label: "Start Now", href: "#" }}
-          secondaryCta={{ label: "Learn More", href: "#" }}
-        />
+        {/* anchor target for OurProductsSection's Columbus cell */}
+        <div id="columbus">
+          <TextScrollIntro />
+          <ColumbusFeatureCell />
+          <DatasetsCarousel />
+          <CtaBanner
+            title="No GIS experience needed. Get to critical decisions faster."
+            primaryCta={{ label: "Start Now", href: "#" }}
+            secondaryCta={{ label: "Learn More", href: "#" }}
+          />
+        </div>
 
-        {/* Elio super-section — parallels the Columbus super-section above
+        {/* anchor target for OurProductsSection's Elio cell.
+            Elio super-section parallels the Columbus super-section above
             (intro → features → values → final CTA). */}
-        <ElioTextScrollIntro />
-        <ElioFeatureCell />
-        <ElioValuesCards />
-        <ElioFinalCTA />
+        <div id="elio">
+          <ElioTextScrollIntro />
+          <ElioFeatureCell />
+          <ElioValuesCards />
+          <ElioFinalCTA />
+        </div>
 
         <StickyScrollFeatures />
         <CaseStudyCard />

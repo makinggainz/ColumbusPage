@@ -297,22 +297,91 @@ const CSS = `
   .pc-cell--corner .pc-card { left: 36px; top: 46%; }
 }
 
-/* Edge-fade on BOTH the corner card and its blue plate. With the cell
-   bg now flat white (radial glow removed above), fading to transparent
-   reads identically to fading to white — and using a mask means the
-   plate fades in lockstep with the card, so the sky-blue tint doesn't
-   keep showing at the edges where the card has faded out. */
-.pc-cell--corner .pc-card,
-.pc-cell--corner .pc-card-bg {
-  -webkit-mask-image:
-    linear-gradient(to right, #000 0%, #000 70%, transparent 85%),
-    linear-gradient(to bottom, #000 0%, #000 70%, transparent 85%);
-  -webkit-mask-composite: source-in;
-  mask-image:
-    linear-gradient(to right, #000 0%, #000 70%, transparent 85%),
-    linear-gradient(to bottom, #000 0%, #000 70%, transparent 85%);
-  mask-composite: intersect;
+/* === Hover animation on corner cells ===
+   Three things move at once when the user hovers a corner cell:
+     1. The card (.pc-card) + plate (.pc-card-bg) translate up-left
+        by 6px — the "product lift" feel.
+     2. The white edge-fade overlay on the card (::after) fades to
+        opacity 0 — the right/bottom feather dissipates so the card
+        edges sharpen up.
+     3. The cell's sky-blue radial glow (::before) fades to opacity
+        1 — the gradient that used to live on .pc-cell--corner
+        reappears behind the lifted card.
+   For Research (bgImage variant), the image translates upward instead
+   so the point-cloud dots feel like they're drifting up. */
+
+/* (1) White edge-fade overlay on BOTH the card AND the colored plate.
+   Replaces the previous mask so each layer can transition opacity
+   independently on hover. Putting the same overlay on the plate means
+   its visible top-left peek also fades to white at its right and
+   bottom ends — so the sky-blue tint dissolves along the same edges
+   the card's content does. */
+.pc-cell--corner .pc-card::after,
+.pc-cell--corner .pc-card-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(to right, transparent 0%, transparent 70%, #ffffff 85%),
+    linear-gradient(to bottom, transparent 0%, transparent 70%, #ffffff 85%);
+  transition: opacity 280ms ease-out;
 }
+.pc-cell--corner:hover .pc-card::after,
+.pc-cell--corner:hover .pc-card-bg::after {
+  opacity: 0;
+}
+
+/* (2) Sky-blue radial glow on the cell (was previously painted as the
+   default .pc-cell--corner background). Hidden by default, fades in
+   on hover. Default z-index 0 keeps it behind the plate + card for
+   Columbus/Elio. For Research (which fills the cell with a bgImage
+   image), we raise the glow above the image so it's actually visible
+   — still below the cell-head text since the text is a later DOM
+   sibling at the same z-index. */
+.pc-cell--corner::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image:
+    radial-gradient(200% 135% at 100% 100%, rgba(var(--pc-glow), var(--pc-a1)), rgba(var(--pc-glow), var(--pc-a2)) 48%, transparent 76%),
+    radial-gradient(115% 68% at 100% 100%, rgba(var(--pc-glow), var(--pc-a3)), transparent 58%);
+  opacity: 0;
+  transition: opacity 280ms ease-out;
+}
+.pc-cell--corner:has(.pc-bg-img)::before {
+  z-index: 2;
+}
+.pc-cell--corner:hover::before {
+  opacity: 1;
+}
+
+/* All three corner cells get a pointer cursor so they read as clickable. */
+.pc-cell--corner {
+  cursor: pointer;
+}
+
+/* Cell-wide overlay link covering the entire cell. Sits above the
+   visual layers but BELOW the cell-head's "Learn more" link (which
+   gets bumped to z-index 6) so clicks on the inline link still work
+   as a direct hit on that element. */
+.pc-cell-overlay-link {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  text-indent: -9999px;
+  overflow: hidden;
+}
+.pc-cell-link {
+  position: relative;
+  z-index: 6;
+}
+
+/* (3) The card lift / image-rise scaleY transforms were removed —
+   only the white-fade dissipation (::after) and the radial-glow
+   fade-in (::before) remain as hover effects. */
 
 /* split: card sits at the bottom of the right column, inset 24-44px
    from the column's right / left / bottom edges */
@@ -489,6 +558,15 @@ export function ProductCell({
               {cardEl}
             </>
           )
+        )}
+        {/* Cell-wide click target. Only renders when href is a real
+           anchor (skipped for "#" / empty so Research stays inert). */}
+        {href && href !== "#" && (
+          <a
+            href={href}
+            className="pc-cell-overlay-link"
+            aria-label={`View ${name}`}
+          />
         )}
       </div>
     </>
