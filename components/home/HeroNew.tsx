@@ -219,11 +219,24 @@ const HN_CSS = `
   color: #0B1B2B;
   overflow: hidden;
   transition: background-image 200ms ease;
+  /* Fixed-height flex column. Top header (tabs + meta) + bottom footer
+     (pagination + caption) take their natural height; the product image
+     in the middle flex-fills the remaining space with object-fit: contain
+     so different aspect-ratio screenshots don't resize the card. */
+  display: flex;
+  flex-direction: column;
+  height: 480px;
 }
-@media (min-width: 768px)  { .hn-showcase { margin-top: 64px; padding: 32px 32px 36px; } }
-@media (min-width: 1024px) { .hn-showcase { margin-top: 72px; padding: 36px 48px 44px; } }
+@media (min-width: 768px) {
+  .hn-showcase { margin-top: 64px; padding: 32px 32px 36px; height: 580px; }
+}
+@media (min-width: 1024px) {
+  .hn-showcase { margin-top: 72px; padding: 36px 48px 44px; height: 640px; }
+}
 
 .hn-showcase > * { position: relative; z-index: 1; }
+.hn-showcase-top { flex: 0 0 auto; }
+.hn-footer       { flex: 0 0 auto; }
 
 .hn-showcase-top {
   display: flex;
@@ -343,19 +356,25 @@ const HN_CSS = `
   color: rgba(11, 27, 43, 0.65);
 }
 
-/* Centre product image — one per slide, sourced from TABS[slide].productImage.
-   Sized to dominate the showcase card. */
+/* Centre product image — flex-fills the middle of the fixed-height
+   showcase card. Different products have different aspect ratios; using
+   object-fit: contain keeps each image at its natural ratio fitted into
+   the same area, so the card itself never resizes when the slide swaps.
+   min-height: 0 is required for the flex item to shrink below its
+   intrinsic image height. */
 .hn-product-image {
   display: block;
   width: 100%;
   max-width: 880px;
-  height: auto;
-  margin: 24px auto;
+  margin: 16px auto;
   border-radius: 14px;
   box-shadow: 0 18px 50px rgba(11, 27, 43, 0.18);
+  flex: 1 1 0;
+  min-height: 0;
+  object-fit: contain;
 }
-@media (min-width: 768px)  { .hn-product-image { margin: 32px auto; } }
-@media (min-width: 1024px) { .hn-product-image { margin: 40px auto; } }
+@media (min-width: 768px)  { .hn-product-image { margin: 20px auto; } }
+@media (min-width: 1024px) { .hn-product-image { margin: 24px auto; } }
 
 /* ── Carousel arrows ────────────────────────────────────────────────── */
 .hn-arrow {
