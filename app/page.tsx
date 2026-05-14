@@ -12,19 +12,9 @@ import {
   ElioValuesCards,
   ElioFinalCTA,
   StickyScrollFeatures,
-  CaseStudyCard,
 } from "@/components/home/lightspark";
 import { Footer } from "@/components/layout/Footer";
-import { SiteSelection } from "@/components/home/SiteSelection";
-import { TrustStrip } from "@/components/home/TrustStrip";
-import { Applications } from "@/components/home/Applications";
 import { Careers } from "@/components/home/Careers";
-import { Industries } from "@/components/home/Industries";
-import { Capabilities } from "@/components/home/Capabilities";
-import { PartnerStrip } from "@/components/home/PartnerStrip";
-import { TravelSection } from "@/components/home/TravelSection";
-import { GeneratedMaps } from "@/components/home/GeneratedMaps";
-import { UniqueSpotsSection } from "@/components/home/UniqueSpotsSection";
 function IslandGap() {
   return (
     <div className="max-w-[1287px] mx-5 md:mx-auto relative" style={{ height: 120 }}>
@@ -65,39 +55,11 @@ export default function Home() {
         <ElioFinalCTA />
 
         <StickyScrollFeatures />
-        <CaseStudyCard />
       </div>
 
       <IslandGap />
 
-      {/* Island 2: Columbus Pro */}
-      <div data-island-2>
-        <SiteSelection />
-        <Capabilities />
-        <PartnerStrip />
-        <Industries />
-      </div>
-
-      <IslandGap />
-
-      {/* Island 3: MapsGPT */}
-      <div>
-        <TravelSection />
-        <TrustStrip />
-        <GeneratedMaps />
-        <UniqueSpotsSection />
-      </div>
-
-      <IslandGap />
-
-      {/* Island 4: Applications */}
-      <div>
-        <Applications />
-      </div>
-
-      <IslandGap />
-
-      {/* Island 5: Hiring Humans */}
+      {/* Hiring Humans */}
       <div>
         <Careers />
       </div>
