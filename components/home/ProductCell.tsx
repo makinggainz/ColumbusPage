@@ -115,6 +115,30 @@ const VARIANT_DEFAULTS = {
 } as const;
 
 const CSS = `
+/* Feather mask stops live in typed custom properties so the default
+   state can match V2 exactly (70%/85% stops, alpha 0 = transparent
+   far end) and snap to a fully-open mask (100%/100%, alpha 1 = opaque
+   far end) on hover. The variables are NOT transitioned — the mask
+   change is instant so the card's right + bottom edges are crisp
+   before the wash + white-card-surface animations begin. Registering
+   the properties via @property still ensures the gradient parses
+   correctly across browsers (Chrome 85+, Safari 16.4+, Firefox 128+). */
+@property --pc-feather-mid {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: 70%;
+}
+@property --pc-feather-end {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: 85%;
+}
+@property --pc-feather-alpha {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 0;
+}
+
 .pc-cell {
   --pc-skel: #F0F1F4;
   --pc-sans: var(--font-sans, "Ppneuemontreal", "PP Neue Montreal", Arial, sans-serif);
@@ -129,11 +153,32 @@ const CSS = `
 @media (min-width: 640px)  { .pc-cell { min-height: var(--pc-minh-sm, 420px); } }
 @media (min-width: 1024px) { .pc-cell { min-height: var(--pc-minh-lg, 480px); } }
 
-/* corner: glow swells from the bottom-right of a compact cell */
-.pc-cell--corner {
+/* corner: glow swells from the bottom-right of a compact cell. The
+   radial wash + plate are decorative colored layers painted over
+   the cell's white surface; on hover they fade away so the product
+   image reads cleanly on the bare cell. The radial wash lives on a
+   ::before pseudo so its opacity is animatable (CSS variables on
+   the parent's background-image can't themselves be transitioned). */
+.pc-cell--corner { cursor: pointer; }
+.pc-cell--corner::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
   background-image:
     radial-gradient(200% 135% at 100% 100%, rgba(var(--pc-glow), var(--pc-a1)), rgba(var(--pc-glow), var(--pc-a2)) 48%, transparent 76%),
     radial-gradient(115% 68% at 100% 100%, rgba(var(--pc-glow), var(--pc-a3)), transparent 58%);
+  /* Material-standard ease (cubic-bezier(0.4, 0, 0.2, 1)) over 900ms.
+     Distributes the opacity change evenly across the whole duration
+     instead of front-loading it like easeOutExpo did — so after the
+     mask snaps open at t=0 the wash reads as a deliberate smooth
+     glide-out rather than an instant flash. */
+  transition: opacity 900ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+.pc-cell--corner:hover::before { opacity: 0; }
+@media (prefers-reduced-motion: reduce) {
+  .pc-cell--corner::before { transition: none; }
 }
 
 /* split: gentler glow tuned for a wide 2-column row — sizes smaller in
@@ -274,6 +319,16 @@ const CSS = `
   gap: 16px;
   padding: 22px;
   box-sizing: border-box;
+  /* fade the white card surface on hover. Only background-color
+     transitions, not opacity — so any product image / content inside
+     stays fully visible while the white card backing dissolves.
+     Matches the wash's 900ms / cubic-bezier(0.4, 0, 0.2, 1) so the
+     two layers fade in lockstep. */
+  transition: background-color 900ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+.pc-cell--corner:hover .pc-card { background-color: transparent; }
+@media (prefers-reduced-motion: reduce) {
+  .pc-card { transition: none; }
 }
 @media (min-width: 1024px) {
   .pc-card { padding: 26px; gap: 20px; }
@@ -298,19 +353,31 @@ const CSS = `
 }
 
 /* Feather + fully-hidden zone on the right and bottom edges of the
-   corner card. The 15% feather (70%→85%) is the same width as before,
-   just shifted inward — past 85% the card is fully transparent (the
-   "100% overlay color" zone) all the way to the card edge. */
+   corner card — identical default state to V2 (linear-gradient
+   mask, 70%→85% stops, mask-composite: intersect). The feather
+   snaps to fully open on hover with NO transition, so the card's
+   right + bottom edges are crisp by the time the other hover
+   animations (wash, white-card-surface) start playing. */
 .pc-cell--corner .pc-card,
 .pc-cell--corner .pc-card-bg {
   -webkit-mask-image:
-    linear-gradient(to right, #000 0%, #000 70%, transparent 85%),
-    linear-gradient(to bottom, #000 0%, #000 70%, transparent 85%);
+    linear-gradient(to right, #000 0%, #000 var(--pc-feather-mid), rgba(0, 0, 0, var(--pc-feather-alpha)) var(--pc-feather-end)),
+    linear-gradient(to bottom, #000 0%, #000 var(--pc-feather-mid), rgba(0, 0, 0, var(--pc-feather-alpha)) var(--pc-feather-end));
   -webkit-mask-composite: source-in;
   mask-image:
-    linear-gradient(to right, #000 0%, #000 70%, transparent 85%),
-    linear-gradient(to bottom, #000 0%, #000 70%, transparent 85%);
+    linear-gradient(to right, #000 0%, #000 var(--pc-feather-mid), rgba(0, 0, 0, var(--pc-feather-alpha)) var(--pc-feather-end)),
+    linear-gradient(to bottom, #000 0%, #000 var(--pc-feather-mid), rgba(0, 0, 0, var(--pc-feather-alpha)) var(--pc-feather-end));
   mask-composite: intersect;
+}
+.pc-cell--corner:hover .pc-card,
+.pc-cell--corner:hover .pc-card-bg {
+  --pc-feather-mid: 100%;
+  --pc-feather-end: 100%;
+  --pc-feather-alpha: 1;
+}
+@media (prefers-reduced-motion: reduce) {
+  .pc-cell--corner .pc-card,
+  .pc-cell--corner .pc-card-bg { transition: none; }
 }
 
 /* split: card sits at the bottom of the right column, inset 24-44px

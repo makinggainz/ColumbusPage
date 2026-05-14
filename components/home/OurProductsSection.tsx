@@ -52,6 +52,15 @@ const PRODUCTS: ProductCellProps[] = [
     desc: "Smart and social maps",
     href: "#",
     logo: "/MapsGPT-logo.png",
+    card: (
+      // eslint-disable-next-line @next/next/no-img-element
+      <img
+        src="/mapsgptdesktopimg.png"
+        alt=""
+        aria-hidden
+        className="ops-product-img"
+      />
+    ),
   },
   {
     name: "Research",
@@ -102,15 +111,15 @@ const CSS = `
   .ops-container { margin-left: auto; margin-right: auto; }
 }
 
-/* scroll reveal */
+/* scroll reveal — opacity fade only, no upward movement. */
 .ops-reveal {
-  transition: transform 700ms ease-out, opacity 700ms ease-out;
-  will-change: transform, opacity;
+  transition: opacity 700ms ease-out;
+  will-change: opacity;
 }
-.ops-reveal[data-shown="false"] { transform: translateY(24px); opacity: 0; }
-.ops-reveal[data-shown="true"]  { transform: none; opacity: 1; }
+.ops-reveal[data-shown="false"] { opacity: 0; }
+.ops-reveal[data-shown="true"]  { opacity: 1; }
 @media (prefers-reduced-motion: reduce) {
-  .ops-reveal { transition: none; transform: none; opacity: 1; }
+  .ops-reveal { transition: none; opacity: 1; }
 }
 
 /* title → content rhythm matching DatasetsCarousel (56 → 80px) so
