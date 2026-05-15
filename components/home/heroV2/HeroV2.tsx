@@ -63,38 +63,19 @@ const CSS = `
 @media (min-width: 768px)  { .hv2-card { padding: 64px 56px; } }
 @media (min-width: 1024px) { .hv2-card { padding: 96px 88px; } }
 
-/* Bg image: positioned right of centre, vertically centred, masked to
-   fade out at all edges. */
+/* Bg image: fills the entire card. object-fit: cover scales the image
+   to fully cover the card area without distortion (cropping as needed
+   on viewports whose aspect doesn't match the asset). */
 .hv2-bg {
   position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  right: -8%;
-  height: 80%;
-  width: auto;
-  max-width: 70%;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
   pointer-events: none;
   user-select: none;
-  -webkit-mask-image:
-    linear-gradient(to right,  transparent 0%, #000 28%, #000 78%, transparent 100%),
-    linear-gradient(to bottom, transparent 0%, #000 22%, #000 78%, transparent 100%);
-  -webkit-mask-composite: source-in;
-  mask-image:
-    linear-gradient(to right,  transparent 0%, #000 28%, #000 78%, transparent 100%),
-    linear-gradient(to bottom, transparent 0%, #000 22%, #000 78%, transparent 100%);
-  mask-composite: intersect;
   z-index: 0;
-}
-@media (min-width: 768px) { .hv2-bg { right: 0; height: 90%; max-width: 60%; } }
-
-/* Left fade overlay so the headline reads on the bg image */
-.hv2-fade {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 1;
-  background:
-    linear-gradient(to right, #ffffff 0%, #ffffff 36%, transparent 64%);
 }
 
 .hv2-content {
@@ -178,7 +159,6 @@ export function HeroV2() {
         aria-hidden="true"
         className="hv2-bg"
       />
-      <div className="hv2-fade" aria-hidden="true" />
       <div className="hv2-content">
         <h1 className="hv2-title">
           The frontier research lab building geospatial reasoning for the real world.

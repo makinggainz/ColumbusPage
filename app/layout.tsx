@@ -27,8 +27,11 @@ export default function RootLayout({
       </head>
 
       {/* DM Sans is the project-wide body font; Geist remains registered as a
-          variable for the few legacy spots that still reference it directly. */}
-      <body className={`${dmSans.className} antialiased bg-white min-h-screen`}>
+          variable for the few legacy spots that still reference it directly.
+          Body bg is black so every layer behind <main> — including bounce-
+          scroll on iOS / Safari and any gap not painted by <main> — reads
+          as the V2 black page frame. */}
+      <body className={`${dmSans.className} antialiased bg-black min-h-screen`}>
         <LenisProvider>
           <ScrollRestorer />
           {children}
