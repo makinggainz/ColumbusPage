@@ -35,8 +35,6 @@ interface Tab {
    *  OurProductsSection's "We're all about maps" cells so the per-product
    *  imagery is consistent across the page. */
   bg: string;
-  /** Product screenshot rendered at the centre of the showcase card. */
-  productImage: string;
 }
 
 interface Slide {
@@ -50,19 +48,16 @@ const TABS: Tab[] = [
     label: "Columbus",
     logo: "/logobueno.png",
     bg: "/Colbackgroundcard.png",
-    productImage: "/ColumbusProductImg.png",
   },
   {
     label: "Elio",
     logo: "/MapsGPT-logo.png",
     bg: "/eliocardbackground.png",
-    productImage: "/MapsGPTDesktop.png",
   },
   {
     label: "Research",
     logo: "/TechnologyPageImages/lgm-globe-icon.png",
     bg: "/Researchimg.png",
-    productImage: "/Researchimg.png",
   },
 ];
 
@@ -356,26 +351,6 @@ const HN_CSS = `
   color: rgba(11, 27, 43, 0.65);
 }
 
-/* Centre product image — flex-fills the middle of the fixed-height
-   showcase card. Different products have different aspect ratios; using
-   object-fit: contain keeps each image at its natural ratio fitted into
-   the same area, so the card itself never resizes when the slide swaps.
-   min-height: 0 is required for the flex item to shrink below its
-   intrinsic image height. */
-.hn-product-image {
-  display: block;
-  width: 100%;
-  max-width: 880px;
-  margin: 16px auto;
-  border-radius: 14px;
-  box-shadow: 0 18px 50px rgba(11, 27, 43, 0.18);
-  flex: 1 1 0;
-  min-height: 0;
-  object-fit: contain;
-}
-@media (min-width: 768px)  { .hn-product-image { margin: 20px auto; } }
-@media (min-width: 1024px) { .hn-product-image { margin: 24px auto; } }
-
 /* ── Carousel arrows ────────────────────────────────────────────────── */
 .hn-arrow {
   position: absolute;
@@ -495,7 +470,6 @@ export function HeroNew() {
 
   const current = SLIDES[slide];
   const currentBg = TABS[slide].bg;
-  const currentProductImage = TABS[slide].productImage;
 
   return (
     <section className="hn-section" aria-label="Columbus product hero">
@@ -585,15 +559,6 @@ export function HeroNew() {
           >
             ›
           </button>
-
-          {/* Centre product image for the active slide. Sourced from
-              TABS[slide].productImage so it swaps with the auto-rotate. */}
-          <img
-            key={currentProductImage}
-            src={currentProductImage}
-            alt={`${current.title} product screenshot`}
-            className="hn-product-image"
-          />
 
           <div className="hn-footer">
             <div
