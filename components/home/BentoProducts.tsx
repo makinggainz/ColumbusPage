@@ -29,8 +29,6 @@ const COLUMBUS_LOGO_FILTER =
 
 const CSS = `
 .bp-section {
-  position: relative;
-  isolation: isolate;
   background: #FFFFFF;
   padding: 0 0 80px;
   font-family: var(--font-sans, "Ppneuemontreal", "PP Neue Montreal", Arial, sans-serif);
@@ -39,32 +37,7 @@ const CSS = `
   .bp-section { padding-bottom: 112px; }
 }
 
-/* Section watermark — the ColumbusBackgroundMB map art that used to
-   live as the Research tile's bgImage is now painted along the bottom
-   of the bento section, behind the grid. Positioned absolute at the
-   section's bottom edge with a center-bottom anchor + 120vw width so
-   the map extends a bit past the viewport on either side, melting into
-   the page surface above via a top-to-bottom linear mask. */
-.bp-section-watermark {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 70%;
-  background-image: url('/ColumbusBackgroundMB.png');
-  background-position: center bottom;
-  background-size: 120vw auto;
-  background-repeat: no-repeat;
-  opacity: 0.5;
-  z-index: 0;
-  pointer-events: none;
-  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 30%, #000 100%);
-  mask-image: linear-gradient(to bottom, transparent 0%, #000 30%, #000 100%);
-}
-
 .bp-bounds {
-  position: relative;
-  z-index: 1;
   max-width: 1287px;
   margin-left: 20px;
   margin-right: 20px;
@@ -120,30 +93,10 @@ const CSS = `
 
 .bp-card--columbus { background-image: url('/Colbackgroundcard.png'); }
 .bp-card--elio     { background-image: url('/eliocardbackground.png'); }
-/* Research no longer uses a CSS background-image. ColumbusBackgroundMB
-   is rendered as a real <img> child (.bp-bg) sitting absolute behind
-   the text block, so it can be positioned/scaled independently of the
-   card's own surface. */
-.bp-bg {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
-  z-index: 0;
-  pointer-events: none;
-}
-
-/* Research-only blur — the techpg-radiance image reads as an abstract
-   atmospheric wash behind the text rail instead of a crisp photo.
-   transform: scale(1.08) pre-bleeds the image past the card edges so
-   the blur halo lives outside the card's overflow: hidden clip area
-   (no visible blurred edge inside the card). */
-.bp-card--research .bp-bg {
-  transform: scale(1.08);
-  filter: blur(10px);
-}
+/* Research shares Columbus's cream backdrop — the ColumbusBackgroundMB
+   watermark has moved back to its original -Gdesign placement behind
+   the "We're all about maps" heading above the bento. */
+.bp-card--research { background-image: url('/Colbackgroundcard.png'); }
 
 /* Top scrim — fades from a translucent white surface at the top (where
    the text sits) to transparent past the brand row, so the brand mark +
@@ -321,10 +274,6 @@ interface Product {
   /** When true, the cell spans both columns on desktop as an elongated
    *  banner row (used by Research at the bottom of the grid). */
   wide?: boolean;
-  /** Optional full-bleed background image rendered as a real <img>
-   *  child of the card (behind text via z-index 0). Used by Research
-   *  to layer ColumbusBackgroundMB behind its text block. */
-  bgImage?: string;
 }
 
 const PRODUCTS: Product[] = [
@@ -355,10 +304,6 @@ const PRODUCTS: Product[] = [
     tagline: "Building the Large Geospatial Model",
     ctaLabel: "Explore research",
     wide: true,
-    // Mirrors BlogSection's "Research: creating a fire prediction model"
-    // card so the bento Research tile and the matching blog card share
-    // the same identifying imagery.
-    bgImage: "/TechnologyPageImages/techpg-radiance.png",
   },
 ];
 
@@ -387,7 +332,6 @@ export function BentoProducts() {
   return (
     <section className="bp-section" aria-label="Our products">
       <style>{CSS}</style>
-      <div className="bp-section-watermark" aria-hidden />
       <div className="bp-bounds">
         <div className="bp-grid">
           {PRODUCTS.map((p) => (
@@ -396,9 +340,6 @@ export function BentoProducts() {
               href={p.href}
               className={`bp-card ${p.cellClass}${p.wide ? " bp-card--wide" : ""}`}
             >
-              {p.bgImage && (
-                <img src={p.bgImage} alt="" aria-hidden className="bp-bg" />
-              )}
               <div className="bp-text-block">
                 <div className="bp-brand">
                   <img
