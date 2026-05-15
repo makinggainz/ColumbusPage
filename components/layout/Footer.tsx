@@ -4,20 +4,37 @@ import { useState, useEffect, useRef } from "react";
 import type { FC } from "react";
 import Link from "next/link";
 import { Mail, Linkedin } from "lucide-react";
-import { BottleScene } from "@/components/layout/BottleScene";
 
 export type FooterProps = {
   variant?: "default" | "compact";
   reveal?: boolean;
   theme?: "light" | "dark" | "light-blue" | "technology";
+  /** Optional override for the footer's surface color. When provided,
+   *  it wins over the theme-derived default (e.g., pass `#0A2239` to
+   *  match the homepage body bg under the reveal-style footer). */
+  bg?: string;
 };
 
-export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false, theme = "light" }) => {
+export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false, theme = "light", bg }) => {
   const isLight = theme === "light" || theme === "light-blue" || theme === "technology";
   const isTech = theme === "technology";
-  const bgColor = theme === "dark" ? "#000000" : theme === "light-blue" ? "#F4F3EB" : isTech ? "#FFFFFF" : "#F9F9F9";
+  const bgColor =
+    bg ??
+    (theme === "dark"
+      ? "#000000"
+      : theme === "light-blue"
+        ? "#F4F3EB"
+        : isTech
+          ? "#FFFFFF"
+          : "#F9F9F9");
   const [noteOpen, setNoteOpen] = useState(false);
-  const [bottleOpened, setBottleOpened] = useState(false);
+  // bottleOpened starts true now that the BottleScene has been removed
+  // — all bottle-gated content is visible immediately. The state is
+  // retained (instead of being deleted) because removing it would touch
+  // every opacity/transform/transition in the JSX below; with the
+  // initial value flipped to `true`, every conditional already lands on
+  // its "open" branch.
+  const [bottleOpened, setBottleOpened] = useState(true);
   const [previouslyOpened, setPreviouslyOpened] = useState(false);
   const [footerVisible, setFooterVisible] = useState(false);
   const footerRef = useRef<HTMLElement>(null);
@@ -47,7 +64,7 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false, t
     return (
       <footer data-navbar-theme="light" className="relative bg-[#F5F5F7] border-t border-[rgba(0,0,0,0.08)] py-10">
         <div className="max-w-[980px] mx-auto px-6 flex flex-col items-center text-center gap-5">
-          <p className="text-[12px] text-[#6E6E73] max-w-md leading-relaxed">
+          <p className="p-s text-[#6E6E73] max-w-md leading-relaxed">
             The frontier AI lab building the first production Universal Geospatial Model.
           </p>
           <div className="flex gap-4">
@@ -64,7 +81,7 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false, t
       ref={footerRef}
       data-footer
       data-navbar-theme={theme === "dark" ? "dark" : "light"}
-      className={`overflow-hidden flex flex-col relative ${theme === "dark" ? "text-white" : isTech ? "text-[#0A1344]" : "text-[#1D1D1F]"} ${reveal ? "h-screen" : "min-h-screen"}`}
+      className={`overflow-hidden flex flex-col relative ${theme === "dark" ? "text-white" : isTech ? "text-[#0A1344]" : "text-[#1D1D1F]"} ${reveal ? "" : "min-h-screen"}`}
       style={{
         background: bgColor,
         cursor: !bottleOpened ? "default" : undefined,
@@ -84,7 +101,7 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false, t
         style={{ pointerEvents: bottleOpened ? "auto" : "none" }}
       >
         <p
-          className="text-[15px] leading-relaxed mb-6"
+          className="p-l leading-relaxed mb-6"
           style={{
             color: theme === "dark" ? "rgba(255,255,255,0.5)" : isTech ? "rgba(10,19,68,0.6)" : "rgba(29,29,31,0.6)",
             opacity: bottleOpened ? 1 : 0,
@@ -98,7 +115,7 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false, t
           geospatial intelligence systems of tomorrow.
         </p>
         <p
-          className="text-[15px] leading-relaxed mb-12"
+          className="p-l leading-relaxed mb-12"
           style={{
             color: theme === "dark" ? "rgba(255,255,255,0.5)" : isTech ? "rgba(10,19,68,0.6)" : "rgba(29,29,31,0.6)",
             opacity: bottleOpened ? 1 : 0,
@@ -115,10 +132,8 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false, t
         </p>
       </div>
 
-      {/* 3D Bottle scene */}
-      <BottleScene onBottleClick={() => { if (!previouslyOpened) { setNoteOpen(true); } setBottleOpened(true); try { localStorage.setItem("bottle-opened", "true"); } catch {} }} visible={footerVisible} dark={theme === "dark"} bg={theme === "light-blue" ? "#F4F3EB" : isTech ? "#FFFFFF" : undefined} waveRgb={theme === "light-blue" || isTech ? "10,19,68" : undefined} alreadyOpened={previouslyOpened} />
-
-      {/* Note overlay — appears when bottle is clicked */}
+      {/* Note overlay — kept for backwards compatibility; never opens now
+          that the bottle is gone. */}
       {noteOpen && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center"
@@ -136,18 +151,18 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false, t
             }}
             onClick={e => e.stopPropagation()}
           >
-            <p className="text-[15px] text-[#8a7a5a] italic mb-6" style={{ fontFamily: "Georgia, serif" }}>
+            <p className="p-l text-[#8a7a5a] italic mb-6" style={{ fontFamily: "Georgia, serif" }}>
               Dear Explorer,
             </p>
-            <p className="text-[28px] font-semibold text-[#3a3020] leading-snug mb-4" style={{ fontFamily: "Georgia, serif" }}>
+            <p className="h4 font-semibold text-[#3a3020] leading-snug mb-4" style={{ fontFamily: "Georgia, serif" }}>
               Thank you for reaching the end.
             </p>
-            <p className="text-[15px] text-[#8a7a5a] leading-relaxed mb-8" style={{ fontFamily: "Georgia, serif" }}>
+            <p className="p-l text-[#8a7a5a] leading-relaxed mb-8" style={{ fontFamily: "Georgia, serif" }}>
               Like Columbus, the best discoveries come to those who venture further than the rest.
             </p>
             <button
               onClick={() => setNoteOpen(false)}
-              className="text-[13px] text-[#8a7a5a] hover:text-[#3a3020] transition-colors tracking-wide"
+              className="p-s text-[#8a7a5a] hover:text-[#3a3020] transition-colors tracking-wide"
             >
               CLOSE
             </button>
@@ -175,8 +190,13 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false, t
                 transitionDelay: previouslyOpened ? "0ms" : bottleOpened ? "400ms" : "0ms",
               }}
             >
-              <h3 className="text-[48px] sm:text-[70px] font-semibold mb-3" style={{ color: '#091344' }}>Columbus Earth</h3>
-              <p className={`text-[15px] sm:text-[17.5px] leading-snug mb-4 max-w-[400px] ${theme === "dark" ? "text-white/50" : isTech ? "text-[#0A1344]/50" : "text-[#1D1D1F]/50"}`}>
+              <h3
+                className="h1 font-semibold mb-3"
+                style={{ color: theme === "dark" ? "#FFFFFF" : "#091344" }}
+              >
+                Columbus Earth
+              </h3>
+              <p className={`p-l leading-snug mb-4 max-w-[400px] ${theme === "dark" ? "text-white/50" : isTech ? "text-[#0A1344]/50" : "text-[#1D1D1F]/50"}`}>
                 The frontier AI lab building the first production Universal Geospatial Model.
               </p>
               <div className="flex gap-4">
@@ -219,7 +239,7 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false, t
             </div>
           </div>
           <div
-            className={`pt-4 pb-2 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-6 text-[12px] sm:text-[13px] ${theme === "dark" ? "text-white/30" : isTech ? "text-[#0A1344]/40" : "text-[#1D1D1F]/40"}`}
+            className={`pt-4 pb-2 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-6 p-s ${theme === "dark" ? "text-white/30" : isTech ? "text-[#0A1344]/40" : "text-[#1D1D1F]/40"}`}
             style={{
               opacity: bottleOpened ? 1 : 0,
               transition: previouslyOpened ? "none" : "opacity 600ms cubic-bezier(0.22, 1, 0.36, 1)",
@@ -251,10 +271,10 @@ const FooterColumn = ({
   const isTech = theme === "technology";
   return (
     <div>
-      <p className={`mb-4 font-medium text-[15px] sm:text-[17.5px] tracking-wide ${theme === "dark" ? "text-white" : isTech ? "text-[#0A1344]" : "text-[#1D1D1F]"}`}>
+      <p className={`mb-4 font-medium p-l tracking-wide ${theme === "dark" ? "text-white" : isTech ? "text-[#0A1344]" : "text-[#1D1D1F]"}`}>
         {title}
       </p>
-      <ul className={`space-y-2 text-[15px] sm:text-[17.5px] ${theme === "dark" ? "text-white/60" : isTech ? "text-[#0A1344]/60" : "text-[#1D1D1F]/60"}`}>
+      <ul className={`space-y-2 p-l ${theme === "dark" ? "text-white/60" : isTech ? "text-[#0A1344]/60" : "text-[#1D1D1F]/60"}`}>
         {links.map((link, i) => (
           <li key={i}>
             <Link

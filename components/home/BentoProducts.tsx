@@ -1,19 +1,23 @@
 "use client";
 
 /**
- * Featured + 2-stacked bento grid for the homepage product lineup.
+ * Bento grid for the homepage product lineup.
  *
- * Layout mirrors the most common modern landing-page bento pattern
- * (Linear, Vercel, Apple, Stripe — see Mobbin reference set, 2026):
- * one large "featured" tile takes the left ~58% of the row at full
- * grid height; two smaller tiles stack on the right. On mobile all
- * three collapse into a single column (Columbus → Elio → Research).
+ * Layout (desktop): two equal-width tiles on the top row (Columbus +
+ * Elio) and a single elongated banner tile on the bottom row spanning
+ * both columns (Research). On mobile all three collapse into a single
+ * column.
  *
- * Each tile is a self-contained card: 1px hairline border, 7px corners
- * (design-system shape token), full-bleed per-product background image
- * with a bottom-aligned scrim so the title + tagline read cleanly.
+ * Each tile uses the "text-top, visual-peeks-from-bottom" pattern:
+ *   - Top of card:   brand row (logo + name large), short tagline, CTA.
+ *   - Bottom of card: the product visual (UI screenshot) anchored to
+ *     the bottom edge, partially extending below the card so only its
+ *     top portion reads inside the cell (overflow: hidden on the cell
+ *     clips the rest).
  *
- * Replaces the older 3-up OurProductsSection.
+ * Pattern is adapted from the OurProductsSection / ProductCell "corner"
+ * variant on the experimentV6-…-mapTest reference branch (text rail
+ * pinned, visual offset toward an edge).
  */
 
 /* eslint-disable @next/next/no-img-element */
@@ -26,9 +30,6 @@ const COLUMBUS_LOGO_FILTER =
 const CSS = `
 .bp-section {
   background: #FFFFFF;
-  /* matches the project section rhythm (py-20 → py-28). No top padding
-     here — the section directly above (TextScrollIntro) already supplies
-     its own bottom padding. */
   padding: 0 0 80px;
   font-family: var(--font-sans, "Ppneuemontreal", "PP Neue Montreal", Arial, sans-serif);
 }
@@ -46,8 +47,6 @@ const CSS = `
   .bp-bounds { margin-left: auto; margin-right: auto; }
 }
 
-/* Grid: 1-col mobile (each tile = 1 row). 2-col desktop with the
-   featured tile spanning both rows of the right-hand column track. */
 .bp-grid {
   display: grid;
   grid-template-columns: 1fr;
@@ -55,15 +54,14 @@ const CSS = `
 }
 @media (min-width: 1024px) {
   .bp-grid {
-    grid-template-columns: 1.4fr 1fr;
-    grid-template-rows: 1fr 1fr;
+    grid-template-columns: 1fr 1fr;
     gap: 20px;
   }
 }
 
-/* Each tile is a self-contained card. The per-product background image
-   is set on the cell itself; a bottom-aligned scrim (.bp-card::after)
-   keeps the title + tagline legible across every photo theme. */
+/* Each tile: full-bleed per-product background, hairline border, 7px
+   corners. overflow: hidden so the bottom-peeking visual clips at the
+   card edge. */
 .bp-card {
   position: relative;
   overflow: hidden;
@@ -73,151 +71,187 @@ const CSS = `
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  padding: 24px;
-  display: flex;
-  flex-direction: column;
+  padding: 28px;
   text-decoration: none;
   color: #0B1B2B;
-  /* Fixed (not min-) height per breakpoint so the natural size of the
-     centered product image can't push the cell taller. Values mirror
-     the original OurProductsSection ProductCell defaults (340 / 420 /
-     480). The visual region below uses flex-basis: 0 + min-height: 0
-     so the image shrinks to fit whatever space is left after the
-     top-left brand mark + bottom-aligned title block. */
-  height: 340px;
+  display: block;
+  height: 460px;
 }
-@media (min-width: 640px) {
-  .bp-card { height: 420px; }
-}
-@media (min-width: 1024px) {
-  .bp-card { padding: 32px; height: 480px; }
-}
+@media (min-width: 640px)  { .bp-card { height: 520px; padding: 32px; } }
+@media (min-width: 1024px) { .bp-card { height: 560px; padding: 40px; } }
 
-/* Featured tile spans both rows of the right-hand column track on
-   desktop (i.e. fills the whole left column). At lg+ its height
-   equals 2 × secondary tile height + the row gap, so the two columns
-   bottom-align without leftover space. */
-.bp-card--featured { height: 340px; }
-@media (min-width: 640px)  { .bp-card--featured { height: 420px; } }
+/* Wide tile (Research) spans both columns on desktop as an elongated
+   banner row. Slightly shorter than the square tiles above so the
+   banner reads as a horizontal panel. */
 @media (min-width: 1024px) {
-  .bp-card--featured {
-    grid-row: span 2;
-    padding: 40px;
-    height: calc(480px * 2 + 20px);
+  .bp-card--wide {
+    grid-column: span 2;
+    height: 440px;
   }
 }
 
 .bp-card--columbus { background-image: url('/Colbackgroundcard.png'); }
 .bp-card--elio     { background-image: url('/eliocardbackground.png'); }
-.bp-card--research {
-  background-image: url('/Researchimg.png');
-  background-position: center bottom;
-  color: #FFFFFF;
-  border-color: rgba(255, 255, 255, 0.18);
-}
+/* Research shares Columbus's cream backdrop (per Gdesign tweak). All
+   light-mode defaults (dark text, hairline border, white top scrim,
+   white-backed product visual) now apply uniformly across all three
+   tiles — no dark-mode overrides remain. */
+.bp-card--research { background-image: url('/Colbackgroundcard.png'); }
 
-/* Bottom-aligned readability scrim — fades from transparent at the top
-   to a translucent surface at the bottom where the text sits. The dark
-   Research tile gets a navy-tinted scrim instead of a white one. */
-.bp-card::after {
+/* Top scrim — fades from a translucent white surface at the top (where
+   the text sits) to transparent past the brand row, so the brand mark +
+   tagline + CTA read against the busy bg textures without obscuring
+   the lower half where the product visual peeks up. */
+.bp-card::before {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(255,255,255,0.0) 35%, rgba(255,255,255,0.78) 100%);
+  background: linear-gradient(180deg, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0.0) 55%);
   pointer-events: none;
   z-index: 0;
 }
-.bp-card--research::after {
-  background: linear-gradient(180deg, rgba(11,27,43,0.0) 25%, rgba(11,27,43,0.72) 100%);
-}
-.bp-card > * { position: relative; z-index: 1; }
 
-/* Top-left meta row: logo + product name. Larger than a chip — reads
-   as the brand mark for the tile. */
-.bp-meta-row {
-  display: inline-flex;
-  align-items: center;
-  gap: 14px;
-  font-size: 20px;
-  font-weight: 500;
-  letter-spacing: -0.015em;
-  color: inherit;
+/* Top text block — brand row, tagline, CTA stacked. */
+.bp-text-block {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 18px;
+  max-width: 30rem;
 }
 @media (min-width: 1024px) {
-  .bp-card--featured .bp-meta-row { gap: 16px; font-size: 24px; }
+  .bp-card--wide .bp-text-block { gap: 22px; max-width: 34rem; }
+}
+
+.bp-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
 }
 .bp-logo {
-  width: 36px;
-  height: 36px;
+  width: 42px;
+  height: 42px;
   object-fit: contain;
   flex: 0 0 auto;
 }
-@media (min-width: 1024px) {
-  .bp-card--featured .bp-logo { width: 44px; height: 44px; }
-}
-
-/* Centered product visual. flex-basis: 0 + min-height: 0 lets the
-   region shrink and grow with the leftover space inside the cell —
-   without those, the image's natural height would push the card
-   taller than its declared height. */
-.bp-visual {
-  flex: 1 1 0;
-  min-height: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 24px 0;
-  overflow: hidden;
-}
-.bp-visual img {
-  display: block;
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain;
-  border-radius: 7px;
-  box-shadow: 0 12px 32px rgba(11, 27, 43, 0.12);
-  border: 1px solid rgba(11, 27, 43, 0.06);
-  background-color: #FFFFFF;
-}
-.bp-card--research .bp-visual img {
-  background-color: transparent;
-  border-color: rgba(255, 255, 255, 0.14);
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.32);
-}
-
-/* Bottom content block: title (display) + tagline (body). Constrained
-   max-width so long lines don't run past the natural reading column. */
-.bp-content {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  max-width: 32rem;
-}
-.bp-title {
-  margin: 0;
-  font-size: 22px;
-  line-height: 1.14;
-  letter-spacing: -0.02em;
+/* Typography on .bp-name / .bp-tagline pulls from the project scale
+   (font-size + line-height tokens). .bp-name uses .h3 on standard
+   tiles and .h2 on the wide hero tile; .bp-tagline uses .h5 across
+   the board. letter-spacing + max-width remain as layout/wrap
+   controls (outside the scale). */
+.bp-name {
+  font-size: var(--typography--h3);
+  line-height: var(--typography--h3--line-height);
   font-weight: 500;
+  letter-spacing: -0.025em;
   color: inherit;
 }
-@media (min-width: 768px) {
-  .bp-title { font-size: 26px; }
+.bp-card--wide .bp-name {
+  font-size: var(--typography--h2);
+  line-height: var(--typography--h2--line-height);
 }
 @media (min-width: 1024px) {
-  .bp-card--featured .bp-title { font-size: 38px; line-height: 1.06; }
-  .bp-title { font-size: 24px; }
+  .bp-logo { width: 50px; height: 50px; }
+  .bp-card--wide .bp-logo { width: 56px; height: 56px; }
 }
+
 .bp-tagline {
   margin: 0;
-  font-size: 14px;
-  line-height: 1.5;
+  font-size: var(--typography--h5);
+  line-height: var(--typography--h5--line-height);
+  font-weight: 500;
+  letter-spacing: -0.015em;
   color: inherit;
-  opacity: 0.72;
   max-width: 28rem;
 }
 @media (min-width: 1024px) {
-  .bp-card--featured .bp-tagline { font-size: 15px; max-width: 32rem; }
+  .bp-card--wide .bp-tagline { max-width: 34rem; }
+}
+
+/* Signature CTA pill — same pattern as CtaBanner / Careers / ProductCell:
+   #1f1f1f surface, white label that swaps to #154ACC on hover, and the
+   five-dot blue ArrowDots glyph (#154ACC) that slides 2px to the right
+   on hover. 7px corners pull from the design-system shape token. */
+.bp-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 20px;
+  background-color: #1f1f1f;
+  color: #FFFFFF;
+  border-radius: 7px;
+  font-size: var(--typography--p-m);
+  line-height: var(--typography--p-m--line-height);
+  font-weight: 500;
+  white-space: nowrap;
+  transition: color 180ms ease;
+}
+.bp-cta:hover { color: #154ACC; }
+.bp-cta-arrow {
+  display: inline-block;
+  color: #154ACC;
+  transition: transform 180ms ease;
+}
+.bp-cta:hover .bp-cta-arrow { transform: translateX(2px); }
+.bp-cta-arrow svg { display: block; }
+@media (prefers-reduced-motion: reduce) {
+  .bp-cta,
+  .bp-cta-arrow { transition: none; }
+}
+
+/* Bottom-anchored product visual — sits absolute at the card's bottom
+   edge with a negative offset so its lower portion clips out below the
+   card border (visible portion is the top ~60% of the image). The
+   horizontal insets keep the visual aligned with the text rail's
+   left padding so the composition reads as one column. */
+.bp-visual {
+  position: absolute;
+  left: 28px;
+  right: 28px;
+  bottom: -22%;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  /* Fast-but-smooth lift on card hover. Eased with a custom decel
+     curve (close to ease-out-quart) so the visual snaps up then
+     settles. */
+  transition: transform 220ms cubic-bezier(0.22, 0.61, 0.36, 1);
+  will-change: transform;
+}
+@media (min-width: 640px)  { .bp-visual { left: 32px; right: 32px; bottom: -24%; } }
+@media (min-width: 1024px) { .bp-visual { left: 40px; right: 40px; bottom: -26%; } }
+.bp-card:hover .bp-visual { transform: translateY(-12px); }
+@media (min-width: 1024px) {
+  .bp-card:hover .bp-visual { transform: translateY(-18px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .bp-visual { transition: none; }
+  .bp-card:hover .bp-visual { transform: none; }
+}
+
+/* Wide tile shifts its visual to the right half so the text rail can
+   read in the left half (text-left / visual-right horizontal split,
+   common for banner rows in modern landing pages). */
+@media (min-width: 1024px) {
+  .bp-card--wide .bp-visual {
+    left: auto;
+    right: 40px;
+    bottom: -22%;
+    width: 52%;
+  }
+}
+
+.bp-visual img {
+  display: block;
+  width: 100%;
+  max-width: 720px;
+  height: auto;
+  border-radius: 10px;
+  box-shadow: 0 24px 60px rgba(11, 27, 43, 0.20);
+  border: 1px solid rgba(11, 27, 43, 0.08);
+  background-color: #FFFFFF;
 }
 `;
 
@@ -227,12 +261,17 @@ interface Product {
   logo: string;
   logoFilter?: string;
   name: string;
-  title: string;
+  /** Single short phrase, sits below the brand row. */
   tagline: string;
-  featured?: boolean;
-  /** Centered product visual — the screenshot/graphic that sits between
-   *  the top-left brand mark and the bottom-aligned title block. */
-  visual: string;
+  /** Pill CTA label, e.g. "Learn more", "Try Elio". */
+  ctaLabel: string;
+  /** Product UI screenshot/graphic anchored to the bottom of the cell.
+   *  Optional — omit on tiles that should render text-only (e.g.
+   *  Research after the Gdesign tweak that dropped the LGM graphic). */
+  visual?: string;
+  /** When true, the cell spans both columns on desktop as an elongated
+   *  banner row (used by Research at the bottom of the grid). */
+  wide?: boolean;
 }
 
 const PRODUCTS: Product[] = [
@@ -242,10 +281,8 @@ const PRODUCTS: Product[] = [
     logo: "/logobueno.png",
     logoFilter: COLUMBUS_LOGO_FILTER,
     name: "Columbus",
-    title: "The agentic GIS platform for professionals.",
-    tagline:
-      "Query, generate, and reason over any location on Earth in plain English.",
-    featured: true,
+    tagline: "All-in-one map intelligence platform",
+    ctaLabel: "Learn more",
     visual: "/ColumbusHomeimg.png",
   },
   {
@@ -253,9 +290,8 @@ const PRODUCTS: Product[] = [
     href: "/elio",
     logo: "/MapsGPT-logo.png",
     name: "Elio",
-    title: "Smart, social maps for every spot on your list.",
-    tagline:
-      "Find your next anything — ranked by vibe, value, and time of day.",
+    tagline: "Making maps feel alive again",
+    ctaLabel: "Try Elio",
     visual: "/mapsgptdesktopimg.png",
   },
   {
@@ -263,12 +299,32 @@ const PRODUCTS: Product[] = [
     href: "/research-applications",
     logo: "/TechnologyPageImages/lgm-globe-icon.png",
     name: "Research",
-    title: "Our journey to the Large Geospatial Model.",
-    tagline:
-      "Open research on geospatial foundation models and terrain reasoning.",
-    visual: "/TechnologyPageImages/LGMsummaryGraphic.png",
+    tagline: "Building the Large Geospatial Model",
+    ctaLabel: "Explore research",
+    wide: true,
   },
 ];
+
+/* Signature 5-dot diagonal arrow used by CtaBanner / Careers / ProductCell.
+   Circles use currentColor so the wrapping `.bp-cta-arrow` controls the
+   fill (set to brand blue #154ACC by default). */
+function ArrowDots() {
+  return (
+    <svg
+      width="12"
+      height="13"
+      viewBox="0 0 9 13"
+      fill="none"
+      aria-hidden="true"
+    >
+      <circle cx="7.22" cy="6.589" r="1.28" fill="currentColor" />
+      <circle cx="4.658" cy="4.018" r="1.28" fill="currentColor" />
+      <circle cx="2.099" cy="1.46" r="1.28" fill="currentColor" />
+      <circle cx="4.658" cy="9.151" r="1.28" fill="currentColor" />
+      <circle cx="2.099" cy="11.718" r="1.28" fill="currentColor" />
+    </svg>
+  );
+}
 
 export function BentoProducts() {
   return (
@@ -280,25 +336,32 @@ export function BentoProducts() {
             <a
               key={p.name}
               href={p.href}
-              className={`bp-card ${p.cellClass}${p.featured ? " bp-card--featured" : ""}`}
+              className={`bp-card ${p.cellClass}${p.wide ? " bp-card--wide" : ""}`}
             >
-              <div className="bp-meta-row">
-                <img
-                  src={p.logo}
-                  alt=""
-                  aria-hidden
-                  className="bp-logo"
-                  style={p.logoFilter ? { filter: p.logoFilter } : undefined}
-                />
-                {p.name}
-              </div>
-              <div className="bp-visual">
-                <img src={p.visual} alt="" aria-hidden />
-              </div>
-              <div className="bp-content">
-                <h3 className="bp-title">{p.title}</h3>
+              <div className="bp-text-block">
+                <div className="bp-brand">
+                  <img
+                    src={p.logo}
+                    alt=""
+                    aria-hidden
+                    className="bp-logo"
+                    style={p.logoFilter ? { filter: p.logoFilter } : undefined}
+                  />
+                  <span className="bp-name">{p.name}</span>
+                </div>
                 <p className="bp-tagline">{p.tagline}</p>
+                <span className="bp-cta">
+                  {p.ctaLabel}
+                  <span className="bp-cta-arrow">
+                    <ArrowDots />
+                  </span>
+                </span>
               </div>
+              {p.visual && (
+                <div className="bp-visual">
+                  <img src={p.visual} alt="" aria-hidden />
+                </div>
+              )}
             </a>
           ))}
         </div>

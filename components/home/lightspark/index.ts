@@ -8,3 +8,5 @@ export { ElioValuesCards } from "./ElioValuesCards";
 export { ElioFinalCTA } from "./ElioFinalCTA";
 export { StickyScrollFeatures } from "./StickyScrollFeatures";
 export { CaseStudyCard } from "./CaseStudyCard";
+export { BlogSection } from "./BlogSection";
+export { MissionScrollIntro } from "./MissionScrollIntro";

@@ -19,7 +19,11 @@ const HN_CSS = `
 .hn-section {
   position: relative;
   overflow: hidden;
-  background-color: #FDFCFC;
+  /* Match the surface colour of the section that follows the hero
+     (PageFrame's #FFFFFF) so the bottom edge of the hero blends
+     seamlessly into the next section. The radial vignette + left
+     readability layer both fade to this same colour. */
+  background-color: #FFFFFF;
   background-image: url('/mapwaterhero.png');
   background-position: right center;
   background-size: cover;
@@ -53,11 +57,44 @@ const HN_CSS = `
   inset: 0;
   background: linear-gradient(
     to right,
-    rgba(253, 252, 252, 0.92) 0%,
-    rgba(253, 252, 252, 0.78) 30%,
-    rgba(253, 252, 252, 0.30) 55%,
+    rgba(255, 255, 255, 0.92) 0%,
+    rgba(255, 255, 255, 0.78) 30%,
+    rgba(255, 255, 255, 0.30) 55%,
     transparent 75%
   );
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Two-layer overlay (single ::after):
+   1. Top — linear bottom fade. Ensures the section's bottom edge is
+      fully opaque white so the hand-off to the next section
+      (TextScrollIntro / page wrapper #FFFFFF) is seamless, with no
+      leftover image showing at the seam.
+   2. Beneath — radial vignette centred at ~76% horizontal / 50%
+      vertical (the tall-ship's position). Transparent at the ship,
+      ramps to opaque white outward so the surrounding water + map
+      texture fades into the page and the eye lands on the ship.
+   Sits above the bg image but beneath bounds content (z-index 1;
+   bounds is at z-index 2). */
+.hn-section::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      to bottom,
+      transparent 65%,
+      rgba(255, 255, 255, 0.55) 85%,
+      rgba(255, 255, 255, 1) 100%
+    ),
+    radial-gradient(
+      ellipse 38% 55% at 76% 50%,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 0) 32%,
+      rgba(255, 255, 255, 0.55) 65%,
+      rgba(255, 255, 255, 1) 100%
+    );
   pointer-events: none;
   z-index: 1;
 }

@@ -4,23 +4,17 @@ import { HeroNew } from "@/components/home/HeroNew";
 import { BentoProducts } from "@/components/home/BentoProducts";
 import {
   TextScrollIntro,
-  ColumbusFeatureCell,
-  DatasetsCarousel,
-  CtaBanner,
-  ElioTextScrollIntro,
-  ElioFeatureCell,
-  ElioValuesCards,
-  ElioFinalCTA,
-  StickyScrollFeatures,
+  BlogSection,
+  MissionScrollIntro,
 } from "@/components/home/lightspark";
-import { Footer } from "@/components/layout/Footer";
 import { Careers } from "@/components/home/Careers";
+
+// Footer is now rendered in `app/layout.tsx` with `reveal` mode — it sits
+// fixed at the viewport bottom (z-index 0) behind the PageFrame card so it
+// reveals when the user scrolls past the end of the page content.
 function IslandGap() {
   return (
-    <div className="max-w-[1287px] mx-5 md:mx-auto relative" style={{ height: 120 }}>
-      <div style={{ position: "absolute", top: 0, left: 0, width: 1, height: "100%", background: "var(--grid-line)" }} />
-      <div style={{ position: "absolute", top: 0, right: 0, width: 1, height: "100%", background: "var(--grid-line)" }} />
-    </div>
+    <div className="max-w-[1287px] mx-5 md:mx-auto" style={{ height: 120 }} />
   );
 }
 
@@ -38,22 +32,8 @@ export default function Home() {
         <TextScrollIntro />
         <BentoProducts />
 
-        <ColumbusFeatureCell />
-        <DatasetsCarousel />
-        <CtaBanner
-          title="No GIS experience needed. Get to critical decisions faster."
-          primaryCta={{ label: "Start Now", href: "#" }}
-          secondaryCta={{ label: "Learn More", href: "#" }}
-        />
-
-        {/* Elio super-section — parallels the Columbus super-section above
-            (intro → features → values → final CTA). */}
-        <ElioTextScrollIntro />
-        <ElioFeatureCell />
-        <ElioValuesCards />
-        <ElioFinalCTA />
-
-        <StickyScrollFeatures />
+        <BlogSection />
+        <MissionScrollIntro />
       </div>
 
       <IslandGap />
@@ -62,8 +42,6 @@ export default function Home() {
       <div>
         <Careers />
       </div>
-
-      <Footer />
     </main>
   );
 }

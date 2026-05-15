@@ -1,14 +1,22 @@
 "use client";
 
 /**
- * Hiring Humans — rebuilt to match the page's Lightspark/MistX design
- * system: `.section` wrapper, 1287px hairline-bound content column,
- * `.h2 text-ink` / `.p-l text-muted` typography, 1px gridline dividers,
- * 7px-corner #1F1F1F submit pill with #154ACC hover + dot-arrow.
+ * Hiring Humans — centred section heading, hairline-divided intro
+ * (heading left / paragraph right at md+), and a centred form with
+ * bottom-border inputs. Mirrors the visual language used elsewhere
+ * on the homepage (BentoProducts, BlogSection, CtaBanner, Mission/
+ * TextScrollIntro): centred layout, hairline borders, no drop
+ * shadows, 7px-corner CTA.
  *
- * Easter eggs preserved verbatim — hovering / clicking the "Humans."
- * word still spawns the walking stick-figure canvas, and clicking a
- * figure still opens the team-member "paper note" overlay.
+ * All copy preserved verbatim ("Hiring Humans.", "Our team is based
+ * in Washington DC and Madrid.", "Careers & investment queries",
+ * the paragraph copy, "We accept interns.", "Submit"). The form
+ * fields (Name / Message / Enter email) and the auto-resizing
+ * textarea are preserved. The "Humans." word still carries the
+ * easter-egg trigger (hover-with-5s-delay + click) that spawns the
+ * walking stick-figure canvas, and clicking a figure still opens
+ * the paper-note overlay with the original notes from Alex /
+ * Erick / David.
  */
 
 import { useRef, useEffect, useState, useCallback } from "react";
@@ -152,6 +160,94 @@ function ArrowDots({ className = "" }: { className?: string }) {
   );
 }
 
+// ─── Dotted world map ────────────────────────────────────────────────────────
+//
+// Hand-encoded 60×30 grid that loosely approximates the major land masses
+// (Greenland, North America, Eurasia, Africa, India/SE Asia, Australia,
+// southern Africa, south-eastern South America). '.' = empty cell, 'X' =
+// dot. Two cells are pinned in brand blue: Washington DC and Madrid (the
+// team's two locations).
+//
+// The grid is rendered as <circle> elements inside an SVG with a 2:1
+// aspect ratio. Sized via CSS (width: 100%) so it scales responsively.
+
+const WORLD_MAP: string[] = [
+  // 0         1         2         3         4         5         6
+  // 0123456789012345678901234567890123456789012345678901234567890
+  "............................................................",
+  "...............XX....XXX..XXXX...XXXXX.XXXXX..XX............",
+  ".............XXXXXX..XXXXXXX...XXXXX..XXXXXX..XXXX..........",
+  "...........XXXXXXXXX.XXXXXXXX.XXXXXXXXXXXXXXXXX.XXXX........",
+  ".........XXXXXXXXXXX.XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX.......",
+  "........XXXXXXXXXXX..XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX........",
+  ".......XXXXXXXXXXX..XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX.........",
+  "......XXXXXXXXXXX..XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX..........",
+  "......XXXXXXXXXX...XXXXXX.XXXXXXXXXXXXXXXXXXXXXXX...........",
+  "......XXXXXXXXX...XXXX.XXXXXXXXX..XXXXXXX..XXXX.X...........",
+  "......XXXXXXX.....XX....XXXXX.....XXXXXX....XXX.............",
+  ".......XXXX.........XX..XXX.......XXXXX......X..............",
+  ".......XX............XX.XX.........XXX....XXX...XX..........",
+  "........X............XXXX..........XXX....X.X..XXXX.........",
+  "........X...........XXX.............XX....X...XXX...........",
+  ".........X..........XXX.............XX....X....XX.X.........",
+  ".........X.........XXX..............X.....X.....XX.XX.......",
+  ".........X.........XX...............X.....X.....XX.XXX......",
+  ".........XX.......XX...............X......X.....X..XX.......",
+  ".........XX.......XX...............X......X..............X..",
+  "..........X......XX................X......X............XXXX.",
+  "..........X......X.................X......X............XXXX.",
+  "..........X.....X..................X.......X............XX..",
+  "...........X...X...................X........X...............",
+  "............X.X....................X...............X........",
+  "............................................................",
+  "............................................................",
+  "............................................................",
+  "............................................................",
+  "............................................................",
+];
+const MAP_ROWS = WORLD_MAP.length;
+const MAP_COLS = 60;
+const MAP_VB_W = 600;
+const MAP_VB_H = 300;
+const MAP_CELL = MAP_VB_W / MAP_COLS;
+const MAP_DOT_R = 2.4;
+
+// Washington DC: ~38.9°N, -77° → col 18, row 9
+// Madrid: ~40.4°N, -3.7° → col 31, row 8
+const HIGHLIGHT_CELLS = new Set(["9-18", "8-31"]);
+
+function DottedWorldMap() {
+  const dots: React.ReactElement[] = [];
+  for (let r = 0; r < MAP_ROWS; r++) {
+    const row = WORLD_MAP[r];
+    for (let c = 0; c < MAP_COLS; c++) {
+      if (row[c] !== "X") continue;
+      const cx = c * MAP_CELL + MAP_CELL / 2;
+      const cy = r * MAP_CELL + MAP_CELL / 2;
+      const highlight = HIGHLIGHT_CELLS.has(`${r}-${c}`);
+      dots.push(
+        <circle
+          key={`${r}-${c}`}
+          cx={cx}
+          cy={cy}
+          r={highlight ? MAP_DOT_R * 1.4 : MAP_DOT_R}
+          fill={highlight ? "#154ACC" : "#0B1B2B"}
+        />,
+      );
+    }
+  }
+  return (
+    <svg
+      className="careers-map-svg"
+      viewBox={`0 0 ${MAP_VB_W} ${MAP_VB_H}`}
+      role="img"
+      aria-label="Team locations: Washington DC and Madrid"
+    >
+      {dots}
+    </svg>
+  );
+}
+
 const CSS = `
 .careers-bounds {
   max-width: 1287px;
@@ -163,41 +259,82 @@ const CSS = `
   .careers-bounds { margin-left: auto; margin-right: auto; }
 }
 
+/* ── Header ─────────────────────────────────────────────────────────────
+   Centered heading + subtitle, mirroring the section-heading pattern
+   used elsewhere on the page. */
 .careers-header {
   text-align: center;
-  padding: 24px 0 56px;
+  padding-bottom: 40px;
+}
+.careers-title {
+  letter-spacing: -0.025em;
+  margin: 0;
 }
 .careers-trigger {
   color: #154ACC;
   cursor: default;
 }
-
-.careers-rule {
-  height: 1px;
-  background: var(--color-gridline);
+.careers-sub {
+  margin: 16px auto 0;
+  max-width: 36rem;
+  color: var(--color-muted);
 }
 
-.careers-intro {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 16px;
-  padding: 56px 0;
+/* ── Dotted world map (DC + Madrid in brand blue) ───────────────────── */
+.careers-map {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 8px 0;
 }
-@media (min-width: 768px) {
-  .careers-intro {
-    grid-template-columns: 1fr 1fr;
-    align-items: start;
-    gap: 48px;
-  }
+.careers-map-svg { display: block; width: 100%; height: auto; }
+
+/* ── Join CTA (centered black pill, same arrow-dots glyph as the
+        rest of the site) ─────────────────────────────────────────────── */
+.careers-join-row {
+  display: flex;
+  justify-content: center;
+  margin-top: 40px;
 }
-.careers-intro-copy { text-align: left; }
-@media (min-width: 768px) {
-  .careers-intro-copy { text-align: right; }
+.careers-join {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 28px;
+  background: #1f1f1f;
+  color: #FFFFFF;
+  border-radius: 9999px;
+  font-size: var(--typography--p-m);
+  line-height: 1;
+  font-weight: 500;
+  border: 0;
+  cursor: pointer;
+  transition: color 150ms ease;
+}
+.careers-join:hover { color: #154ACC; }
+
+/* ── Reveal form panel ────────────────────────────────────────────────
+   Hidden by default; clicking "Join our team" toggles it open. Keeps
+   the original Name / Message / Email form + Submit + "We accept
+   interns." aside available on the page. */
+.careers-form-panel {
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  transition: max-height 320ms ease, opacity 320ms ease, margin-top 320ms ease;
+  margin-top: 0;
+}
+.careers-form-panel[data-open="true"] {
+  max-height: 800px;
+  opacity: 1;
+  margin-top: 56px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .careers-form-panel { transition: none; }
 }
 
 .careers-form-wrap {
   max-width: 600px;
-  margin: 56px auto 0;
+  margin: 0 auto;
 }
 
 .careers-field {
@@ -218,9 +355,9 @@ const CSS = `
   resize: none;
   display: block;
   overflow: hidden;
-  color: #1D1D1F;
-  font-size: 16px;
-  line-height: 1.6;
+  color: var(--color-ink);
+  font-size: var(--typography--p-l);
+  line-height: var(--typography--p-l--line-height);
 }
 .careers-field input::placeholder,
 .careers-field textarea::placeholder {
@@ -230,6 +367,7 @@ const CSS = `
 .careers-aside {
   margin-top: 12px;
   text-align: right;
+  color: var(--color-muted);
 }
 
 .careers-submit-row {
@@ -245,7 +383,8 @@ const CSS = `
   color: #ffffff;
   border-radius: 7px;
   padding: 10px 20px;
-  font-size: 14px;
+  font-size: var(--typography--p-m);
+  line-height: var(--typography--p-m--line-height);
   font-weight: 500;
   transition: color 150ms ease;
   border: 0;
@@ -268,6 +407,7 @@ export const Careers = ({ hideHeader, className = "" }: { hideHeader?: boolean; 
   const hoverTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [active, setActive] = useState(false);
   const [note, setNote]     = useState<string | null>(null);
+  const [formOpen, setFormOpen] = useState(false);
 
   const handleTextareaInput = () => {
     const el = textareaRef.current;
@@ -276,7 +416,8 @@ export const Careers = ({ hideHeader, className = "" }: { hideHeader?: boolean; 
     el.style.height = `${el.scrollHeight}px`;
   };
 
-  // Spawn exactly 3 figures — tallest always gets "note from alex"
+  // Spawn exactly 3 clickable figures + 1 non-clickable — tallest always
+  // gets "note from alex".
   const spawnFigures = useCallback(() => {
     if (figuresRef.current.some(f => f.state === "walking" || f.state === "paused")) return;
 
@@ -534,79 +675,93 @@ export const Careers = ({ hideHeader, className = "" }: { hideHeader?: boolean; 
     <section className={`section ${className}`}>
       <style>{CSS}</style>
       <div className="careers-bounds">
-
         {!hideHeader && (
-          <>
-            <div className="careers-header">
-              <h2 className="h2 tracking-tight text-ink">
-                Hiring{" "}
-                <span
-                  className="careers-trigger"
-                  onMouseEnter={() => {
-                    if (hoverTimerRef.current) clearTimeout(hoverTimerRef.current);
-                    hoverTimerRef.current = setTimeout(spawnFigures, 5000);
-                  }}
-                  onMouseLeave={() => {
-                    if (hoverTimerRef.current) { clearTimeout(hoverTimerRef.current); hoverTimerRef.current = null; }
-                  }}
-                  onClick={spawnFigures}
-                >
-                  Humans.
-                </span>
-              </h2>
-              <p className="p-l text-muted mt-4">
-                Our team is based in Washington DC and Madrid.
-              </p>
-            </div>
-
-            <div className="careers-rule" />
-
-            <div className="careers-intro">
-              <h3 className="h3 tracking-tight text-ink">Careers &amp; investment queries</h3>
-              <p className="p-m text-muted careers-intro-copy">
-                If you&apos;re excited about creating paradigm shifts in physical world understanding.{" "}
-                <span className="text-ink" style={{ fontWeight: 500 }}>Join us now.</span>
-              </p>
-            </div>
-
-            <div className="careers-rule" />
-          </>
+          <div className="careers-header">
+            <h2 className="h2 tracking-tight text-ink careers-title">
+              Hiring{" "}
+              <span
+                className="careers-trigger"
+                onMouseEnter={() => {
+                  if (hoverTimerRef.current) clearTimeout(hoverTimerRef.current);
+                  hoverTimerRef.current = setTimeout(spawnFigures, 5000);
+                }}
+                onMouseLeave={() => {
+                  if (hoverTimerRef.current) { clearTimeout(hoverTimerRef.current); hoverTimerRef.current = null; }
+                }}
+                onClick={spawnFigures}
+              >
+                Humans.
+              </span>
+            </h2>
+            <p className="p-l careers-sub">
+              Our team is based in Washington DC and Madrid.
+            </p>
+          </div>
         )}
 
-        <div className="careers-form-wrap">
-          <form className="flex flex-col">
-            {[
-              { type: "text", placeholder: "Name", tag: "input" },
-              { type: "text", placeholder: "Message", tag: "textarea" },
-              { type: "email", placeholder: "Enter email", tag: "input" },
-            ].map(({ type, placeholder, tag }) => (
-              <label key={placeholder} className="careers-field">
-                {tag === "textarea" ? (
-                  <textarea
-                    ref={textareaRef}
-                    placeholder={placeholder}
-                    rows={1}
-                    onInput={handleTextareaInput}
-                  />
-                ) : (
-                  <input type={type} placeholder={placeholder} />
-                )}
-              </label>
-            ))}
-          </form>
-
-          <p className="p-s text-muted careers-aside">We accept interns.</p>
-
-          <div className="careers-submit-row">
-            <button type="submit" className="careers-submit group">
-              Submit
-              <span className="ml-1 inline-block transition-transform group-hover:translate-x-0.5">
-                <ArrowDots className="text-[#154ACC]" />
-              </span>
-            </button>
-          </div>
+        <div className="careers-map">
+          <DottedWorldMap />
         </div>
 
+        <div className="careers-join-row">
+          <button
+            type="button"
+            className="careers-join group"
+            aria-expanded={formOpen}
+            aria-controls="careers-form-panel"
+            onClick={() => setFormOpen((v) => !v)}
+          >
+            Join our team
+            <span className="inline-block transition-transform group-hover:translate-x-0.5">
+              <ArrowDots className="text-[#154ACC]" />
+            </span>
+          </button>
+        </div>
+
+        <div
+          id="careers-form-panel"
+          className="careers-form-panel"
+          data-open={formOpen ? "true" : "false"}
+          aria-hidden={!formOpen}
+        >
+          <div className="careers-form-wrap">
+            <h3 className="h3 tracking-tight text-ink" style={{ marginBottom: 8 }}>
+              Careers &amp; investment queries
+            </h3>
+            <p className="p-m" style={{ color: "var(--color-muted)", margin: 0 }}>
+              If you&apos;re excited about creating paradigm shifts in physical world understanding.{" "}
+              <span style={{ color: "var(--color-ink)", fontWeight: 500 }}>Join us now.</span>
+            </p>
+
+            <form className="flex flex-col" style={{ marginTop: 24 }}>
+              <label className="careers-field">
+                <input type="text" placeholder="Name" />
+              </label>
+              <label className="careers-field">
+                <textarea
+                  ref={textareaRef}
+                  placeholder="Message"
+                  rows={1}
+                  onInput={handleTextareaInput}
+                />
+              </label>
+              <label className="careers-field">
+                <input type="email" placeholder="Enter email" />
+              </label>
+            </form>
+
+            <p className="p-s careers-aside">We accept interns.</p>
+
+            <div className="careers-submit-row">
+              <button type="submit" className="careers-submit group">
+                Submit
+                <span className="ml-1 inline-block transition-transform group-hover:translate-x-0.5">
+                  <ArrowDots className="text-[#154ACC]" />
+                </span>
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Easter-egg canvas — fixed at the viewport bottom while figures are alive. */}
@@ -627,7 +782,7 @@ export const Careers = ({ hideHeader, className = "" }: { hideHeader?: boolean; 
       {/* Fullscreen team-member note overlay (paper-note styling, preserved). */}
       {note && (
         <div
-          className="fixed inset-0 z-[10000] flex items-center justify-center"
+          className="fixed inset-0 z-10000 flex items-center justify-center"
           onClick={dismissNote}
         >
           <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" />
@@ -644,62 +799,62 @@ export const Careers = ({ hideHeader, className = "" }: { hideHeader?: boolean; 
           >
             {note === "note from alex" && (
               <>
-                <p className="text-[15px] text-[#8a7a5a] italic mb-5" style={{ fontFamily: "Georgia, serif" }}>
+                <p className="p-l text-[#8a7a5a] italic mb-5" style={{ fontFamily: "Georgia, serif" }}>
                   A note from Alexander - COO
                 </p>
-                <p className="text-[17px] text-[#3a3020] leading-relaxed mb-6" style={{ fontFamily: "Georgia, serif" }}>
+                <p className="p-l text-[#3a3020] leading-relaxed mb-6" style={{ fontFamily: "Georgia, serif" }}>
                   Hey I&apos;m Alexander R.B., co-founder. You found one of my easter eggs. If you would like to reach out to me personally you can find me on my Instagram at{" "}
                   <a href="https://instagram.com/alexrb.1" target="_blank" rel="noopener noreferrer" className="underline hover:text-[#154ACC] transition-colors">alexrb.1</a>
                   {" "}or my LinkedIn at:{" "}
                   <a href="https://www.linkedin.com/in/alexander-ramirez-blonski-a96121150" target="_blank" rel="noopener noreferrer" className="underline hover:text-[#154ACC] transition-colors">Alexander Ramirez Blonski</a>
                 </p>
-                <p className="text-[17px] text-[#3a3020] leading-relaxed mb-8" style={{ fontFamily: "Georgia, serif" }}>
+                <p className="p-l text-[#3a3020] leading-relaxed mb-8" style={{ fontFamily: "Georgia, serif" }}>
                   Enjoy your day ;)
                 </p>
               </>
             )}
             {note === "note 1" && (
               <>
-                <p className="text-[15px] text-[#8a7a5a] italic mb-5" style={{ fontFamily: "Georgia, serif" }}>
+                <p className="p-l text-[#8a7a5a] italic mb-5" style={{ fontFamily: "Georgia, serif" }}>
                   A note from Erick - CTO
                 </p>
-                <p className="text-[17px] text-[#3a3020] leading-relaxed mb-4" style={{ fontFamily: "Georgia, serif" }}>
+                <p className="p-l text-[#3a3020] leading-relaxed mb-4" style={{ fontFamily: "Georgia, serif" }}>
                   Hey, I&apos;m Erick, Co-founder and CTO. My brain&apos;s responsible for all the innovative engineering behind the scenes!
                 </p>
-                <p className="text-[17px] text-[#3a3020] leading-relaxed mb-4" style={{ fontFamily: "Georgia, serif" }}>
+                <p className="p-l text-[#3a3020] leading-relaxed mb-4" style={{ fontFamily: "Georgia, serif" }}>
                   Check out my LinkedIn here:{" "}
                   <a href="https://www.linkedin.com/in/erick-mollinedo-lara-889587224/" target="_blank" rel="noopener noreferrer" className="underline hover:text-[#154ACC] transition-colors">Erick Mollinedo Lara</a>
                 </p>
-                <p className="text-[15px] text-[#8a7a5a] italic mb-8" style={{ fontFamily: "Georgia, serif" }}>
+                <p className="p-l text-[#8a7a5a] italic mb-8" style={{ fontFamily: "Georgia, serif" }}>
                   P.S. I did not write this, Alex did
                 </p>
               </>
             )}
             {note === "note 2" && (
               <>
-                <p className="text-[15px] text-[#8a7a5a] italic mb-5" style={{ fontFamily: "Georgia, serif" }}>
+                <p className="p-l text-[#8a7a5a] italic mb-5" style={{ fontFamily: "Georgia, serif" }}>
                   A note from David - CEO
                 </p>
-                <p className="text-[17px] text-[#3a3020] leading-relaxed mb-4" style={{ fontFamily: "Georgia, serif" }}>
+                <p className="p-l text-[#3a3020] leading-relaxed mb-4" style={{ fontFamily: "Georgia, serif" }}>
                   Hey, I&apos;m David, Co-founder and CEO.
                 </p>
-                <p className="text-[17px] text-[#3a3020] leading-relaxed mb-4" style={{ fontFamily: "Georgia, serif" }}>
+                <p className="p-l text-[#3a3020] leading-relaxed mb-4" style={{ fontFamily: "Georgia, serif" }}>
                   Check out my LinkedIn here:{" "}
                   <a href="https://www.linkedin.com/in/davidramirezblonski/" target="_blank" rel="noopener noreferrer" className="underline hover:text-[#154ACC] transition-colors">David Ramirez Blonski</a>
                   , and my personal website here:{" "}
                   <a href="https://www.gdsteel.co" target="_blank" rel="noopener noreferrer" className="underline hover:text-[#154ACC] transition-colors">gdsteel.co</a>
                 </p>
-                <p className="text-[17px] text-[#3a3020] leading-relaxed mb-4" style={{ fontFamily: "Georgia, serif" }}>
+                <p className="p-l text-[#3a3020] leading-relaxed mb-4" style={{ fontFamily: "Georgia, serif" }}>
                   Hope you have a beautiful day.
                 </p>
-                <p className="text-[15px] text-[#8a7a5a] italic mb-8" style={{ fontFamily: "Georgia, serif" }}>
+                <p className="p-l text-[#8a7a5a] italic mb-8" style={{ fontFamily: "Georgia, serif" }}>
                   P.S. I did not write this, Alex did
                 </p>
               </>
             )}
             <button
               onClick={dismissNote}
-              className="text-[13px] text-[#8a7a5a] hover:text-[#3a3020] transition-colors tracking-wide cursor-pointer"
+              className="p-s text-[#8a7a5a] hover:text-[#3a3020] transition-colors tracking-wide cursor-pointer"
             >
               CLOSE
             </button>

@@ -5,6 +5,7 @@ import { cormorant, cambo, geist, dmSans, inter } from "@/app/fonts";
 import { LenisProvider } from "@/components/home/LenisContext";
 import { ScrollRestorer } from "@/components/layout/ScrollRestorer";
 import { PageFrame } from "@/components/layout/PageFrame";
+import { Footer } from "@/components/layout/Footer";
 
 export { cormorant, cambo };
 
@@ -35,6 +36,12 @@ export default function RootLayout({
       >
         <LenisProvider>
           <ScrollRestorer />
+          {/* Footer sits behind the PageFrame card (z-index 0, fixed at
+              viewport bottom via Footer's `reveal` prop). PageFrame is
+              z-index 1 with a bottom margin equal to the footer height,
+              so as the user scrolls past the page content the white card
+              slides up over the fixed footer — revealing it from below. */}
+          <Footer reveal theme="dark" bg="#0A2239" />
           <PageFrame>{children}</PageFrame>
         </LenisProvider>
       </body>

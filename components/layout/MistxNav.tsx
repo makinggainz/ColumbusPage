@@ -194,10 +194,9 @@ export function MistxNav() {
             />
           </a>
           <span
-            className="hidden lg:flex items-center font-semibold leading-none whitespace-nowrap text-[#1f1f1f]"
+            className="h7 hidden lg:flex items-center font-semibold leading-none whitespace-nowrap text-[#1f1f1f]"
             style={{
               fontFamily: "Axiforma, var(--font-hero), sans-serif",
-              fontSize: 18,
               position: "relative",
               top: "3px",
             }}
@@ -215,7 +214,7 @@ export function MistxNav() {
             const dd = dropdowns[id];
             const isOpen = openDropdown === id;
             const triggerClass =
-              "group py-4 flex items-center text-sm gap-2 transition-opacity duration-500 opacity-80 hover:opacity-100 text-[#1f1f1f]";
+              "group py-4 flex items-center p-m gap-2 transition-opacity duration-500 opacity-80 hover:opacity-100 text-[#1f1f1f]";
             return (
               <div key={id} className="relative" {...navItemTriggerProps(id)}>
                 {dd.href ? (
@@ -254,7 +253,7 @@ export function MistxNav() {
                         <li key={item.href} role="none">
                           <a
                             role="menuitem"
-                            className="block px-4 py-2 text-sm transition-colors hover:bg-[#DCE7FB]"
+                            className="block px-4 py-2 p-m transition-colors hover:bg-[#DCE7FB]"
                             href={item.href}
                           >
                             {item.label}
@@ -274,7 +273,7 @@ export function MistxNav() {
           {/* Contact */}
           <a
             target="_self"
-            className="group rounded-[7px] px-5 py-2 text-sm hidden md:flex items-center truncate gap-2 transition-colors bg-transparent text-[#1f1f1f] hover:text-[#154ACC]"
+            className="group rounded-[7px] px-5 py-2 p-m hidden md:flex items-center truncate gap-2 transition-colors bg-transparent text-[#1f1f1f] hover:text-[#154ACC]"
             href="/contact"
           >
             Contact
@@ -290,7 +289,7 @@ export function MistxNav() {
             onMouseLeave={() => setElioOpen(false)}
           >
             <button
-              className="group rounded-[7px] px-5 py-2 text-sm flex items-center gap-2 transition-colors bg-[#1f1f1f] text-white hover:text-[#154ACC]"
+              className="group rounded-[7px] px-5 py-2 p-m flex items-center gap-2 transition-colors bg-[#1f1f1f] text-white hover:text-[#154ACC]"
               aria-haspopup="menu"
               aria-expanded={elioOpen}
             >
@@ -309,7 +308,7 @@ export function MistxNav() {
                   <li role="none">
                     <a
                       role="menuitem"
-                      className="block px-4 py-2 text-sm transition-colors hover:bg-[#DCE7FB]"
+                      className="block px-4 py-2 p-m transition-colors hover:bg-[#DCE7FB]"
                       href="#"
                     >
                       Try Elio
@@ -318,7 +317,7 @@ export function MistxNav() {
                   <li role="none">
                     <a
                       role="menuitem"
-                      className="block px-4 py-2 text-sm transition-colors hover:bg-[#DCE7FB]"
+                      className="block px-4 py-2 p-m transition-colors hover:bg-[#DCE7FB]"
                       href="#"
                     >
                       Try Mapsurf
@@ -327,7 +326,7 @@ export function MistxNav() {
                   <li role="none">
                     <a
                       role="menuitem"
-                      className="block px-4 py-2 text-sm transition-colors hover:bg-[#DCE7FB]"
+                      className="block px-4 py-2 p-m transition-colors hover:bg-[#DCE7FB]"
                       href="/products/enterprise"
                     >
                       Try Columbus
@@ -398,7 +397,7 @@ export function MistxNav() {
                       <li key={item.href}>
                         <a
                           href={item.href}
-                          className="text-sm py-1 block hover:underline"
+                          className="p-m py-1 block hover:underline"
                         >
                           {item.label}
                         </a>
@@ -411,7 +410,7 @@ export function MistxNav() {
             <li className="mt-6">
               <a
                 href="/products/enterprise"
-                className="block rounded-[7px] px-5 py-2 bg-[#1f1f1f] text-white text-sm text-center transition-colors hover:text-[#154ACC]"
+                className="block rounded-[7px] px-5 py-2 bg-[#1f1f1f] text-white p-m text-center transition-colors hover:text-[#154ACC]"
               >
                 Try Columbus
               </a>
@@ -419,7 +418,7 @@ export function MistxNav() {
             <li className="mt-2">
               <a
                 href="#"
-                className="block rounded-[7px] px-5 py-2 bg-[#1f1f1f] text-white text-sm text-center transition-colors hover:text-[#154ACC]"
+                className="block rounded-[7px] px-5 py-2 bg-[#1f1f1f] text-white p-m text-center transition-colors hover:text-[#154ACC]"
               >
                 Try Elio
               </a>
