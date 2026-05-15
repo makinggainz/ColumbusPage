@@ -47,12 +47,13 @@
   --font-hero: "Axiforma", var(--font-dm-sans), "SF Pro", -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
-/* Base reset — use overflow-x: clip (not hidden) so position:sticky works on enterprise Section C */
+/* Base reset — use overflow-x: clip (not hidden) so position:sticky works on enterprise Section C.
+   V2 homepage page bg is BLACK so the card grid sits inside a black frame. */
 html,
 body {
   margin: 0;
   padding: 0;
-  background: #000000;
+  background-color: #000000 !important;
   color: #1D1D1F;
   overflow-x: clip;
   min-height: 100%;
