@@ -1,38 +1,16 @@
-import { Cormorant_Garamond, Cambo, Instrument_Serif, Geist, DM_Sans, Inter } from "next/font/google";
+/**
+ * Font loading is handled via Google Fonts `<link>` tags in
+ * `app/layout.tsx` rather than `next/font/google`. The two fonts the
+ * site uses (Funnel Display, Opening Hours Sans) aren't all present
+ * in the running Next.js version's font map — going through the CDN
+ * directly bypasses that lookup entirely.
+ *
+ * The font-family references live in `app/globals.css`:
+ *   - `--font-display` → "Funnel Display"
+ *   - `--font-sans`    → "Opening Hours Sans"
+ *
+ * Axiforma (used only for the "Columbus Earth" wordmark in the navbar)
+ * is self-hosted via @font-face in globals.css.
+ */
 
-export const cormorant = Cormorant_Garamond({
-  subsets: ["latin"],
-  weight: ["600"],
-  display: "swap",
-});
-
-export const cambo = Cambo({
-  weight: "400",
-  subsets: ["latin"],
-});
-
-export const instrumentSerif = Instrument_Serif({
-  weight: "400",
-  subsets: ["latin"],
-  display: "swap",
-});
-
-export const geist = Geist({
-  subsets: ["latin"],
-  display: "swap",
-  variable: "--font-geist-sans",
-});
-
-export const dmSans = DM_Sans({
-  subsets: ["latin"],
-  display: "swap",
-  variable: "--font-dm-sans",
-});
-
-// Inter — single-family typography per the catcherX (NewsCatcher) design
-// system. Headings/body/labels all bind to `--font-sans` via this variable.
-export const inter = Inter({
-  subsets: ["latin"],
-  display: "swap",
-  variable: "--font-sans",
-});
+export {};

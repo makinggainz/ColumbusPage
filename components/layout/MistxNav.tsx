@@ -134,7 +134,16 @@ export function MistxNav() {
     const apply = () => {
       const el = headerRef.current;
       if (!el) return;
-      setStuck(el.getBoundingClientRect().top <= 0.5);
+      // Stuck = the navbar has pinned to its sticky `top` offset.
+      // Read the live --frame-margin so this stays correct if the
+      // gutter value is ever changed.
+      const margin =
+        parseFloat(
+          getComputedStyle(document.documentElement).getPropertyValue(
+            "--frame-margin",
+          ),
+        ) || 0;
+      setStuck(el.getBoundingClientRect().top <= margin + 0.5);
     };
     const onScroll = () => {
       if (raf) return;
@@ -161,8 +170,15 @@ export function MistxNav() {
   return (
     <header
       ref={headerRef}
-      className="sticky top-0 z-100 w-full transition-[background-color] duration-300"
+      className="sticky z-100 w-full transition-[background-color] duration-300"
       style={{
+        // Sticks at the card's top edge (= the 16px top gutter), so the
+        // gutter stays visible above the navbar instead of getting
+        // covered when the navbar pins. Top-corner radii match the
+        // PageFrame card so the navbar's white backdrop curves with it.
+        top: "var(--frame-margin, 16px)",
+        borderTopLeftRadius: "var(--frame-radius, 16px)",
+        borderTopRightRadius: "var(--frame-radius, 16px)",
         backgroundColor: showBackdrop ? "#FFFFFF" : "transparent",
       }}
     >
@@ -213,8 +229,12 @@ export function MistxNav() {
           {(Object.keys(dropdowns) as Array<DropdownId>).map((id) => {
             const dd = dropdowns[id];
             const isOpen = openDropdown === id;
+            // Pill-style hover ported from webiaX's NavigationMenuTrigger:
+            // a subtle rounded background fades in under the link on hover,
+            // replacing the earlier opacity-80 → 100 brightening pass.
             const triggerClass =
-              "group py-4 flex items-center p-m gap-2 transition-opacity duration-500 opacity-80 hover:opacity-100 text-[#1f1f1f]";
+              "group flex items-center p-m gap-2 px-4 py-2 rounded-2xl text-[#1f1f1f] " +
+              "hover:bg-black/5 transition-colors duration-200";
             return (
               <div key={id} className="relative" {...navItemTriggerProps(id)}>
                 {dd.href ? (

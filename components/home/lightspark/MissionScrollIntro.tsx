@@ -26,7 +26,7 @@ import {
 import { useRef } from "react";
 
 const COPY =
-  "Our mission is to make every place on Earth understandable, queryable, and actionable — without specialist software or specialist training. Columbus is the lab building the geospatial reasoning that closes that gap.";
+  "We are building a thinking planet — a computer brain that reasons across the vastness of geospatial data. A Universal Geospatial Model. The most powerful map platform ever built.";
 
 export function MissionScrollIntro() {
   const ref = useRef<HTMLParagraphElement>(null);

@@ -160,93 +160,13 @@ function ArrowDots({ className = "" }: { className?: string }) {
   );
 }
 
-// ─── Dotted world map ────────────────────────────────────────────────────────
+// ─── Team-locations map ──────────────────────────────────────────────────────
 //
-// Hand-encoded 60×30 grid that loosely approximates the major land masses
-// (Greenland, North America, Eurasia, Africa, India/SE Asia, Australia,
-// southern Africa, south-eastern South America). '.' = empty cell, 'X' =
-// dot. Two cells are pinned in brand blue: Washington DC and Madrid (the
-// team's two locations).
-//
-// The grid is rendered as <circle> elements inside an SVG with a 2:1
-// aspect ratio. Sized via CSS (width: 100%) so it scales responsively.
-
-const WORLD_MAP: string[] = [
-  // 0         1         2         3         4         5         6
-  // 0123456789012345678901234567890123456789012345678901234567890
-  "............................................................",
-  "...............XX....XXX..XXXX...XXXXX.XXXXX..XX............",
-  ".............XXXXXX..XXXXXXX...XXXXX..XXXXXX..XXXX..........",
-  "...........XXXXXXXXX.XXXXXXXX.XXXXXXXXXXXXXXXXX.XXXX........",
-  ".........XXXXXXXXXXX.XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX.......",
-  "........XXXXXXXXXXX..XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX........",
-  ".......XXXXXXXXXXX..XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX.........",
-  "......XXXXXXXXXXX..XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX..........",
-  "......XXXXXXXXXX...XXXXXX.XXXXXXXXXXXXXXXXXXXXXXX...........",
-  "......XXXXXXXXX...XXXX.XXXXXXXXX..XXXXXXX..XXXX.X...........",
-  "......XXXXXXX.....XX....XXXXX.....XXXXXX....XXX.............",
-  ".......XXXX.........XX..XXX.......XXXXX......X..............",
-  ".......XX............XX.XX.........XXX....XXX...XX..........",
-  "........X............XXXX..........XXX....X.X..XXXX.........",
-  "........X...........XXX.............XX....X...XXX...........",
-  ".........X..........XXX.............XX....X....XX.X.........",
-  ".........X.........XXX..............X.....X.....XX.XX.......",
-  ".........X.........XX...............X.....X.....XX.XXX......",
-  ".........XX.......XX...............X......X.....X..XX.......",
-  ".........XX.......XX...............X......X..............X..",
-  "..........X......XX................X......X............XXXX.",
-  "..........X......X.................X......X............XXXX.",
-  "..........X.....X..................X.......X............XX..",
-  "...........X...X...................X........X...............",
-  "............X.X....................X...............X........",
-  "............................................................",
-  "............................................................",
-  "............................................................",
-  "............................................................",
-  "............................................................",
-];
-const MAP_ROWS = WORLD_MAP.length;
-const MAP_COLS = 60;
-const MAP_VB_W = 600;
-const MAP_VB_H = 300;
-const MAP_CELL = MAP_VB_W / MAP_COLS;
-const MAP_DOT_R = 2.4;
-
-// Washington DC: ~38.9°N, -77° → col 18, row 9
-// Madrid: ~40.4°N, -3.7° → col 31, row 8
-const HIGHLIGHT_CELLS = new Set(["9-18", "8-31"]);
-
-function DottedWorldMap() {
-  const dots: React.ReactElement[] = [];
-  for (let r = 0; r < MAP_ROWS; r++) {
-    const row = WORLD_MAP[r];
-    for (let c = 0; c < MAP_COLS; c++) {
-      if (row[c] !== "X") continue;
-      const cx = c * MAP_CELL + MAP_CELL / 2;
-      const cy = r * MAP_CELL + MAP_CELL / 2;
-      const highlight = HIGHLIGHT_CELLS.has(`${r}-${c}`);
-      dots.push(
-        <circle
-          key={`${r}-${c}`}
-          cx={cx}
-          cy={cy}
-          r={highlight ? MAP_DOT_R * 1.4 : MAP_DOT_R}
-          fill={highlight ? "#154ACC" : "#0B1B2B"}
-        />,
-      );
-    }
-  }
-  return (
-    <svg
-      className="careers-map-svg"
-      viewBox={`0 0 ${MAP_VB_W} ${MAP_VB_H}`}
-      role="img"
-      aria-label="Team locations: Washington DC and Madrid"
-    >
-      {dots}
-    </svg>
-  );
-}
+// Hand-drawn world map asset with DC + Madrid pinned in brand blue
+// (/public/hiringhumans2.jpeg). Rendered as a real <img> so the
+// pencil-sketch detail (ships, compass rose, coastlines) reads cleanly
+// at any width. Sized via CSS — width: 100%, height auto — to scale
+// responsively inside the .careers-map wrapper.
 
 const CSS = `
 .careers-bounds {
@@ -280,13 +200,22 @@ const CSS = `
   color: var(--color-muted);
 }
 
-/* ── Dotted world map (DC + Madrid in brand blue) ───────────────────── */
+/* ── Team-locations map (DC + Madrid pinned in brand blue) ──────────── */
 .careers-map {
   max-width: 960px;
   margin: 0 auto;
   padding: 8px 0;
 }
-.careers-map-svg { display: block; width: 100%; height: auto; }
+.careers-map-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  /* 7px corners — design-system shape token used by every inner visual
+     (BentoProducts visuals, blog/feature cards). The outer frame
+     radius belongs to the PageFrame card itself, not to in-card
+     imagery. */
+  border-radius: 7px;
+}
 
 /* ── Join CTA (centered black pill, same arrow-dots glyph as the
         rest of the site) ─────────────────────────────────────────────── */
@@ -324,7 +253,11 @@ const CSS = `
   margin-top: 0;
 }
 .careers-form-panel[data-open="true"] {
-  max-height: 800px;
+  /* Large ceiling rather than an exact height so the reveal never
+     clips if the form grows (extra fields, validation messages, etc.).
+     The cap is needed because CSS transitions can't animate max-height
+     when the value is "auto". */
+  max-height: 1600px;
   opacity: 1;
   margin-top: 56px;
 }
@@ -335,6 +268,25 @@ const CSS = `
 .careers-form-wrap {
   max-width: 600px;
   margin: 0 auto;
+}
+
+/* Form-panel intro typography. Heading + lede live above the inputs;
+   the form-grid spacing sits below them via .careers-form-fields. */
+.careers-form-intro-title {
+  margin: 0 0 8px;
+}
+.careers-form-intro-copy {
+  margin: 0;
+  color: var(--color-muted);
+}
+.careers-form-intro-emph {
+  color: var(--color-ink);
+  font-weight: 500;
+}
+.careers-form-fields {
+  margin-top: 24px;
+  display: flex;
+  flex-direction: column;
 }
 
 .careers-field {
@@ -382,9 +334,9 @@ const CSS = `
   background: #1f1f1f;
   color: #ffffff;
   border-radius: 9999px;
-  padding: 10px 20px;
+  padding: 14px 28px;
   font-size: var(--typography--p-m);
-  line-height: var(--typography--p-m--line-height);
+  line-height: 1;
   font-weight: 500;
   transition: color 150ms ease;
   border: 0;
@@ -700,7 +652,11 @@ export const Careers = ({ hideHeader, className = "" }: { hideHeader?: boolean; 
         )}
 
         <div className="careers-map">
-          <DottedWorldMap />
+          <img
+            src="/hiringhumans2.jpeg"
+            alt="Team locations: Washington DC and Madrid"
+            className="careers-map-img"
+          />
         </div>
 
         <div className="careers-join-row">
@@ -725,15 +681,15 @@ export const Careers = ({ hideHeader, className = "" }: { hideHeader?: boolean; 
           aria-hidden={!formOpen}
         >
           <div className="careers-form-wrap">
-            <h3 className="h3 tracking-tight text-ink" style={{ marginBottom: 8 }}>
+            <h3 className="h3 tracking-tight text-ink careers-form-intro-title">
               Careers &amp; investment queries
             </h3>
-            <p className="p-m" style={{ color: "var(--color-muted)", margin: 0 }}>
+            <p className="p-m careers-form-intro-copy">
               If you&apos;re excited about creating paradigm shifts in physical world understanding.{" "}
-              <span style={{ color: "var(--color-ink)", fontWeight: 500 }}>Join us now.</span>
+              <span className="careers-form-intro-emph">Join us now.</span>
             </p>
 
-            <form className="flex flex-col" style={{ marginTop: 24 }}>
+            <form className="careers-form-fields">
               <label className="careers-field">
                 <input type="text" placeholder="Name" />
               </label>

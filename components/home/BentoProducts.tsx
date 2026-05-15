@@ -59,14 +59,14 @@ const CSS = `
   }
 }
 
-/* Each tile: full-bleed per-product background, hairline border, 7px
+/* Each tile: full-bleed per-product background, hairline border, 13px
    corners. overflow: hidden so the bottom-peeking visual clips at the
    card edge. */
 .bp-card {
   position: relative;
   overflow: hidden;
   border: 1px solid #E7E7F1;
-  border-radius: 7px;
+  border-radius: 13px;
   background-color: #FFFFFF;
   background-size: cover;
   background-position: center;
@@ -82,21 +82,25 @@ const CSS = `
 
 /* Wide tile (Research) spans both columns on desktop as an elongated
    banner row. Slightly shorter than the square tiles above so the
-   banner reads as a horizontal panel. */
+   banner reads as a horizontal panel — reduced a further 30%
+   (440 → 308) per Gdesign tweak so the panel reads as a thin band. */
 @media (min-width: 1024px) {
   .bp-card--wide {
     grid-column: span 2;
-    height: 440px;
+    height: 308px;
   }
 }
 
 .bp-card--columbus { background-image: url('/Colbackgroundcard.png'); }
 .bp-card--elio     { background-image: url('/eliocardbackground.png'); }
-/* Research shares Columbus's cream backdrop (per Gdesign tweak). All
-   light-mode defaults (dark text, hairline border, white top scrim,
-   white-backed product visual) now apply uniformly across all three
-   tiles — no dark-mode overrides remain. */
-.bp-card--research { background-image: url('/Colbackgroundcard.png'); }
+/* Research uses a left-to-right linear gradient — light sky #CAE5F5 at
+   0% to mid-blue #76A8F3 at 100%, both fully opaque — matching the
+   Figma swatch supplied by Gdesign. Replaces the prior cream backdrop
+   (/Colbackgroundcard.png) so the Research tile reads as a distinct
+   blue band against the cream Columbus / Elio tiles above. */
+.bp-card--research {
+  background-image: linear-gradient(to right, #CAE5F5 0%, #76A8F3 100%);
+}
 
 /* Top scrim — fades from a translucent white surface at the top (where
    the text sits) to transparent past the brand row, so the brand mark +
@@ -173,17 +177,19 @@ const CSS = `
 /* Signature CTA pill — same pattern as CtaBanner / Careers / ProductCell:
    #1f1f1f surface, white label that swaps to #154ACC on hover, and the
    five-dot blue ArrowDots glyph (#154ACC) that slides 2px to the right
-   on hover. 7px corners pull from the design-system shape token. */
+   on hover. Padding + line-height match Careers' "Join our team"
+   reference button so every homepage-content CTA renders at the same
+   42px height. */
 .bp-cta {
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  padding: 8px 20px;
+  padding: 14px 28px;
   background-color: #1f1f1f;
   color: #FFFFFF;
   border-radius: 9999px;
   font-size: var(--typography--p-m);
-  line-height: var(--typography--p-m--line-height);
+  line-height: 1;
   font-weight: 500;
   white-space: nowrap;
   transition: color 180ms ease;
@@ -201,16 +207,16 @@ const CSS = `
   .bp-cta-arrow { transition: none; }
 }
 
-/* Bottom-anchored product visual — sits absolute at the card's bottom
-   edge with a negative offset so its lower portion clips out below the
-   card border (visible portion is the top ~60% of the image). The
+/* Bottom-anchored product visual — now lifted above the card's bottom
+   edge (positive bottom %) so the entire screenshot is visible and the
+   image floats with a small breathing-room gap below it. The
    horizontal insets keep the visual aligned with the text rail's
    left padding so the composition reads as one column. */
 .bp-visual {
   position: absolute;
   left: 28px;
   right: 28px;
-  bottom: -22%;
+  bottom: -2%;
   z-index: 1;
   display: flex;
   justify-content: center;
@@ -220,8 +226,8 @@ const CSS = `
   transition: transform 220ms cubic-bezier(0.22, 0.61, 0.36, 1);
   will-change: transform;
 }
-@media (min-width: 640px)  { .bp-visual { left: 32px; right: 32px; bottom: -24%; } }
-@media (min-width: 1024px) { .bp-visual { left: 40px; right: 40px; bottom: -26%; } }
+@media (min-width: 640px)  { .bp-visual { left: 32px; right: 32px; bottom: -2%; } }
+@media (min-width: 1024px) { .bp-visual { left: 40px; right: 40px; bottom: -2%; } }
 .bp-card:hover .bp-visual { transform: translateY(-12px); }
 @media (min-width: 1024px) {
   .bp-card:hover .bp-visual { transform: translateY(-18px); }
@@ -300,7 +306,7 @@ const PRODUCTS: Product[] = [
     logo: "/TechnologyPageImages/lgm-globe-icon.png",
     name: "Research",
     tagline: "Building the Large Geospatial Model",
-    ctaLabel: "Explore research",
+    ctaLabel: "Read Thesis",
     wide: true,
   },
 ];

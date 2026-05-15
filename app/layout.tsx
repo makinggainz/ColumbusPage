@@ -1,13 +1,10 @@
 import type { Metadata } from "next";
 import "./globals.css";
 
-import { cormorant, cambo, geist, dmSans, inter } from "@/app/fonts";
 import { LenisProvider } from "@/components/home/LenisContext";
 import { ScrollRestorer } from "@/components/layout/ScrollRestorer";
 import { PageFrame } from "@/components/layout/PageFrame";
 import { Footer } from "@/components/layout/Footer";
-
-export { cormorant, cambo };
 
 export const metadata: Metadata = {
   title: "Columbus",
@@ -23,15 +20,24 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${dmSans.variable} ${geist.variable} ${inter.variable}`}>
+    <html lang="en">
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+        {/* Google Fonts — Funnel Display (titles, .h1 … .h7) and
+            Opening Hours Sans (body, paragraphs, UI). preconnect speeds
+            the second request; display=swap avoids FOIT. The font-family
+            names are wired up in globals.css via --font-display /
+            --font-sans. */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@300..800&family=Opening+Hours+Sans:wght@400..700&display=swap"
+        />
       </head>
 
-      {/* DM Sans is the project-wide body font; Geist remains registered as a
-          variable for the few legacy spots that still reference it directly. */}
       <body
-        className={`${dmSans.className} antialiased min-h-screen`}
+        className="antialiased min-h-screen"
         style={{ backgroundColor: "#0A2239" }}
       >
         <LenisProvider>

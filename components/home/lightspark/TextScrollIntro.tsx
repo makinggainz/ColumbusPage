@@ -1,19 +1,18 @@
 "use client";
 
 /**
- * "We're all about maps" intro — section heading that sits above the
- * BentoProducts grid. The scroll-driven word-reveal lede was removed
- * per the experimentV6-Gdesign redesign; only the heading + watermark
- * surface remain.
+ * "We're all about maps" intro — section heading sitting above the
+ * BentoProducts grid, over a ColumbusBackgroundMB watermark (restored
+ * from the original -Gdesign branch placement).
  */
 
 export function TextScrollIntro() {
   return (
     <section className="section relative isolate">
-      {/* Watermark layer — split out from the section's inline background
-          so we can fade the top + bottom into the page surface (via
-          mask-image) and dial the whole image down to 50% opacity
-          without affecting the foreground text. */}
+      {/* Watermark — center-anchored, 120vw × 70vw so it bleeds past
+          the section edges, 50% opacity, with a top + bottom linear
+          mask so the image fades into the page surface above and
+          below the heading. */}
       <div
         aria-hidden
         className="absolute inset-0 -z-10 pointer-events-none"

@@ -88,12 +88,16 @@ html {
   --container-site: 1200px;      /* the single content-column width */
   --radius-card: 20px;           /* signature container radius */
 
-  /* PP Neue Montreal (commercial, Pangram Pangram) is the canonical face.
-     TODO: drop licensed .woff2 files into public/fonts/ and add @font-face
-     declarations to actually render it. Until then the stack falls back to
-     Inter (loaded via next/font in app/fonts.ts), then Arial — same fallback
-     behaviour as the live newscatcherapi.com site. */
-  --font-sans: "Ppneuemontreal", "PP Neue Montreal", var(--font-inter), Arial, ui-sans-serif, system-ui, sans-serif;
+  /* Two-family typography system (Gdesign V2):
+       --font-sans     → Opening Hours Sans, body / paragraphs / UI
+       --font-display  → Funnel Display, every heading (.h1 … .h7) and
+                         any title-style display copy
+     Both faces load from Google Fonts via the <link> tag in app/layout.tsx
+     <head>. The "Columbus Earth" wordmark in the navbar keeps Axiforma
+     via --font-hero (see the @font-face declarations at the top of
+     this file). */
+  --font-sans: "Opening Hours Sans", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+  --font-display: "Funnel Display", "Opening Hours Sans", ui-sans-serif, system-ui, sans-serif;
 
   /* Typography utilities — register text-h1…text-p-s as Tailwind font-size
      utilities, each paired with its companion line-height token. Source of
@@ -152,16 +156,19 @@ html {
   }
 }
 
-.h1 { font-size: var(--typography--h1); line-height: var(--typography--h1--line-height); font-weight: 500; }
-.h2 { font-size: var(--typography--h2); line-height: var(--typography--h2--line-height); font-weight: 500; }
-.h3 { font-size: var(--typography--h3); line-height: var(--typography--h3--line-height); font-weight: 500; }
-.h4 { font-size: var(--typography--h4); line-height: var(--typography--h4--line-height); font-weight: 500; }
-.h5 { font-size: var(--typography--h5); line-height: var(--typography--h5--line-height); font-weight: 500; }
-.h6 { font-size: var(--typography--h6); line-height: var(--typography--h6--line-height); font-weight: 500; }
-.h7 { font-size: var(--typography--h7); line-height: var(--typography--h7--line-height); font-weight: 500; }
-.p-l { font-size: var(--typography--p-l); line-height: var(--typography--p-l--line-height); font-weight: 400; }
-.p-m { font-size: var(--typography--p-m); line-height: var(--typography--p-m--line-height); font-weight: 400; }
-.p-s { font-size: var(--typography--p-s); line-height: var(--typography--p-s--line-height); font-weight: 400; }
+/* Headings (.h1 … .h7) bind to Funnel Display via --font-display.
+   Paragraph utilities (.p-l/.p-m/.p-s) inherit Opening Hours Sans from
+   the body. */
+.h1 { font-family: var(--font-display); font-size: var(--typography--h1); line-height: var(--typography--h1--line-height); font-weight: 500; }
+.h2 { font-family: var(--font-display); font-size: var(--typography--h2); line-height: var(--typography--h2--line-height); font-weight: 500; }
+.h3 { font-family: var(--font-display); font-size: var(--typography--h3); line-height: var(--typography--h3--line-height); font-weight: 500; }
+.h4 { font-family: var(--font-display); font-size: var(--typography--h4); line-height: var(--typography--h4--line-height); font-weight: 500; }
+.h5 { font-family: var(--font-display); font-size: var(--typography--h5); line-height: var(--typography--h5--line-height); font-weight: 500; }
+.h6 { font-family: var(--font-display); font-size: var(--typography--h6); line-height: var(--typography--h6--line-height); font-weight: 500; }
+.h7 { font-family: var(--font-display); font-size: var(--typography--h7); line-height: var(--typography--h7--line-height); font-weight: 500; }
+.p-l { font-family: var(--font-sans); font-size: var(--typography--p-l); line-height: var(--typography--p-l--line-height); font-weight: 400; }
+.p-m { font-family: var(--font-sans); font-size: var(--typography--p-m); line-height: var(--typography--p-m--line-height); font-weight: 400; }
+.p-s { font-family: var(--font-sans); font-size: var(--typography--p-s); line-height: var(--typography--p-s--line-height); font-weight: 400; }
 
 /* Theme variables */
 :root {
@@ -309,6 +316,12 @@ html {
 body {
   background: #0A2239;
   color: var(--foreground);
+  /* Opening Hours Sans is the project-wide body face. Everything that
+     doesn't set its own font-family inherits it from here. Headings
+     opt in to Funnel Display via the .h1 … .h7 utilities; the
+     Columbus Earth wordmark in the navbar opts in to Axiforma via
+     --font-hero. */
+  font-family: var(--font-sans);
 }
 
 /* Bottle note appearance */
