@@ -1,7 +1,7 @@
 "use client";
 
 /* eslint-disable @next/next/no-img-element */
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 // Site-wide nav, ported verbatim from MistX (/Users/alexramirezblonski/
 // Documents/MistX/components/nav/Nav.tsx) and adapted for ColumbusPage.
@@ -112,17 +112,46 @@ function ArrowDot({ className = "" }: { className?: string }) {
 }
 
 export function MistxNav() {
-  const [scrolled, setScrolled] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<DropdownId | null>(null);
   const [elioOpen, setElioOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  // True while the navbar is still in flow (not stuck to the viewport
+  // top). While in flow on a hero page, the navbar stays transparent so
+  // the hero image reads through. The moment its top edge reaches
+  // viewport y=0 the navbar sticks, swaps to a solid white backdrop,
+  // and the hairline divider appears. Pages without the hero marker
+  // render the white backdrop on every scroll position.
+  const [stuck, setStuck] = useState(false);
+  // Optimistic default: assume a hero exists so home doesn't flash a
+  // white backdrop on first paint. The effect below re-checks on mount
+  // and flips this off on non-hero pages.
+  const [hasHero, setHasHero] = useState(true);
+  const headerRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 80);
-    onScroll();
+    setHasHero(!!document.querySelector("[data-hero-section]"));
+    let raf = 0;
+    const apply = () => {
+      const el = headerRef.current;
+      if (!el) return;
+      setStuck(el.getBoundingClientRect().top <= 0.5);
+    };
+    const onScroll = () => {
+      if (raf) return;
+      raf = window.requestAnimationFrame(() => {
+        apply();
+        raf = 0;
+      });
+    };
+    apply();
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      if (raf) window.cancelAnimationFrame(raf);
+    };
   }, []);
+
+  const showBackdrop = stuck || !hasHero;
 
   const navItemTriggerProps = (id: DropdownId) => ({
     onMouseEnter: () => setOpenDropdown(id),
@@ -130,14 +159,13 @@ export function MistxNav() {
   });
 
   return (
-    <header className="fixed z-[999] top-0 left-0 w-full">
-      {/* Backdrop: invisible over hero, solid #ffffff once scrolled into
-          content — matches the homepage hero / content surface. */}
-      <div
-        className="absolute left-0 top-0 w-full pointer-events-none z-0 bg-[#ffffff] transition-[height] duration-300"
-        style={{ height: scrolled ? "100%" : "0%" }}
-      />
-
+    <header
+      ref={headerRef}
+      className="sticky top-0 z-100 w-full transition-[background-color] duration-300"
+      style={{
+        backgroundColor: showBackdrop ? "#FFFFFF" : "transparent",
+      }}
+    >
       {/* Content row — bounds match the page's content sections
           (max-w-[1287px] mx-5 md:mx-auto), no inner padding, so the logo's
           left edge and the "Try Elio" CTA's right edge sit flush with the

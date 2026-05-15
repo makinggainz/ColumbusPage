@@ -1,7 +1,7 @@
 import { type ReactNode } from "react";
 import { MistxNav } from "@/components/layout/MistxNav";
 import { HeroNew } from "@/components/home/HeroNew";
-import OurProductsSection from "@/components/home/OurProductsSection";
+import { BentoProducts } from "@/components/home/BentoProducts";
 import {
   TextScrollIntro,
   ColumbusFeatureCell,
@@ -30,15 +30,14 @@ export default function Home() {
       <MistxNav />
       <HeroNew />
 
-      {/* Our products — self-contained section from
-          ~/Downloads/OurProductsSection.tsx */}
-      <OurProductsSection />
-
-      {/* Island 1: Lightspark-style platform band (replaces the old Vision
-          island — TextScroll word-reveal intro, three platform tiles,
-          sticky-scroll Instant/Open/Grounded pillars, partner case study) */}
+      {/* "We're all about maps" intro + bento grid (Columbus / Elio /
+          Research). The intro lede is the renamed TextScrollIntro
+          (scroll-driven word reveal); the bento grid below shows the
+          three products as a featured + 2-stacked tile layout. */}
       <div className="mt-16">
         <TextScrollIntro />
+        <BentoProducts />
+
         <ColumbusFeatureCell />
         <DatasetsCarousel />
         <CtaBanner

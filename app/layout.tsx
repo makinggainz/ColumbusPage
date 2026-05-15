@@ -4,6 +4,7 @@ import "./globals.css";
 import { cormorant, cambo, geist, dmSans, inter } from "@/app/fonts";
 import { LenisProvider } from "@/components/home/LenisContext";
 import { ScrollRestorer } from "@/components/layout/ScrollRestorer";
+import { PageFrame } from "@/components/layout/PageFrame";
 
 export { cormorant, cambo };
 
@@ -28,10 +29,13 @@ export default function RootLayout({
 
       {/* DM Sans is the project-wide body font; Geist remains registered as a
           variable for the few legacy spots that still reference it directly. */}
-      <body className={`${dmSans.className} antialiased bg-white min-h-screen`}>
+      <body
+        className={`${dmSans.className} antialiased min-h-screen`}
+        style={{ backgroundColor: "#0A2239" }}
+      >
         <LenisProvider>
           <ScrollRestorer />
-          {children}
+          <PageFrame>{children}</PageFrame>
         </LenisProvider>
       </body>
     </html>
