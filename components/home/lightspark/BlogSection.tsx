@@ -326,7 +326,7 @@ export function BlogSection() {
           <div className="blog-cta">
             <a
               href="#"
-              className="group rounded-[7px] px-5 py-2 p-m flex items-center gap-2 transition-colors bg-[#1f1f1f] text-white hover:text-[#154ACC]"
+              className="group rounded-full px-5 py-2 p-m flex items-center gap-2 transition-colors bg-[#1f1f1f] text-white hover:text-[#154ACC]"
             >
               Read all posts
               <span className="ml-2 inline-block transition-transform group-hover:translate-x-0.5">

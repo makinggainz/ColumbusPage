@@ -273,7 +273,7 @@ export function MistxNav() {
           {/* Contact */}
           <a
             target="_self"
-            className="group rounded-[7px] px-5 py-2 p-m hidden md:flex items-center truncate gap-2 transition-colors bg-transparent text-[#1f1f1f] hover:text-[#154ACC]"
+            className="group rounded-full px-5 py-2 p-m hidden md:flex items-center truncate gap-2 transition-colors bg-transparent text-[#1f1f1f] hover:text-[#154ACC]"
             href="/contact"
           >
             Contact
@@ -289,7 +289,7 @@ export function MistxNav() {
             onMouseLeave={() => setElioOpen(false)}
           >
             <button
-              className="group rounded-[7px] px-5 py-2 p-m flex items-center gap-2 transition-colors bg-[#1f1f1f] text-white hover:text-[#154ACC]"
+              className="group rounded-full px-5 py-2 p-m flex items-center gap-2 transition-colors bg-[#1f1f1f] text-white hover:text-[#154ACC]"
               aria-haspopup="menu"
               aria-expanded={elioOpen}
             >
@@ -410,7 +410,7 @@ export function MistxNav() {
             <li className="mt-6">
               <a
                 href="/products/enterprise"
-                className="block rounded-[7px] px-5 py-2 bg-[#1f1f1f] text-white p-m text-center transition-colors hover:text-[#154ACC]"
+                className="block rounded-full px-5 py-2 bg-[#1f1f1f] text-white p-m text-center transition-colors hover:text-[#154ACC]"
               >
                 Try Columbus
               </a>
@@ -418,7 +418,7 @@ export function MistxNav() {
             <li className="mt-2">
               <a
                 href="#"
-                className="block rounded-[7px] px-5 py-2 bg-[#1f1f1f] text-white p-m text-center transition-colors hover:text-[#154ACC]"
+                className="block rounded-full px-5 py-2 bg-[#1f1f1f] text-white p-m text-center transition-colors hover:text-[#154ACC]"
               >
                 Try Elio
               </a>

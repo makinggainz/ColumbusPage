@@ -181,7 +181,7 @@ const CSS = `
   padding: 8px 20px;
   background-color: #1f1f1f;
   color: #FFFFFF;
-  border-radius: 7px;
+  border-radius: 9999px;
   font-size: var(--typography--p-m);
   line-height: var(--typography--p-m--line-height);
   font-weight: 500;

@@ -381,7 +381,7 @@ const CSS = `
   gap: 10px;
   background: #1f1f1f;
   color: #ffffff;
-  border-radius: 7px;
+  border-radius: 9999px;
   padding: 10px 20px;
   font-size: var(--typography--p-m);
   line-height: var(--typography--p-m--line-height);
