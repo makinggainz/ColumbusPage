@@ -12,6 +12,11 @@
  * that previously sat behind "We're all about maps"). A white wash +
  * bottom fade sit above the image so the centred H1 reads cleanly and
  * the hero hands off seamlessly into the next section.
+ *
+ * Full-bleed: the section breaks out of the PageFrame's 16px gutter on
+ * its top and both sides so the texture runs edge-to-edge with the
+ * viewport (see the negative margins on `.hn-section`). PageFrame
+ * switches to `overflow: visible` on the homepage to allow this.
  */
 
 const HN_CSS = `
@@ -26,17 +31,27 @@ const HN_CSS = `
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
-  /* The navbar is sticky (stays in document flow + occupies its own
-     ~80px height). Pulling this section up by -80px makes the map
-     texture extend behind the navbar so the navbar reads as part of
-     the hero. Section then spans the full viewport (y=0 → 100vh) with
-     the navbar overlaying y=0..80. */
-  margin-top: -80px;
-  /* Asymmetric padding: push content down by the nav height so the
-     H1 stays clear of the navbar overlay. With min-height: 100vh +
-     flex centering, the H1 lands at exactly 50vh + 40px — the visual
-     midpoint of the area *below* the navbar. */
-  padding-top: 80px;
+  /* Full-bleed: the hero escapes the PageFrame's gutter on its top and
+     both sides so the map texture runs edge-to-edge with the viewport.
+     PageFrame uses overflow: visible on the homepage so this overflow
+     is not clipped.
+       • top    — the navbar is sticky (in flow, ~80px tall). Pulling
+                  up by -80px overlaps it, then a further
+                  -var(--frame-margin) clears the frame's top gutter so
+                  the section's top edge lands at viewport y=0.
+       • sides  — negative left/right margins of var(--frame-margin)
+                  widen the section past the frame to both viewport
+                  edges. The calc tracks --frame-margin so it stays
+                  edge-aligned while the frame's scroll animation runs
+                  the gutter 16px → 0. */
+  margin-top: calc(-80px - var(--frame-margin, 16px));
+  margin-left: calc(-1 * var(--frame-margin, 16px));
+  margin-right: calc(-1 * var(--frame-margin, 16px));
+  /* Asymmetric padding: push content down past the nav height + the
+     reclaimed top gutter so the H1 stays clear of the navbar overlay.
+     With min-height: 100vh + flex centering, the H1 lands at the
+     visual midpoint of the area *below* the navbar. */
+  padding-top: calc(80px + var(--frame-margin, 16px));
   padding-bottom: 0;
   color: #0B1B2B;
   font-family: var(--font-sans, "Ppneuemontreal", "PP Neue Montreal", Arial, sans-serif);

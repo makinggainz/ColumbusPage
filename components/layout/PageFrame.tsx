@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, type ReactNode } from "react";
+import { usePathname } from "next/navigation";
 
 /**
  * The rounded white "card" the entire site sits inside (experimentV6-Gdesign).
@@ -36,6 +37,13 @@ const MAX_MARGIN = 16;
 const MAX_RADIUS = 24;
 
 export function PageFrame({ children }: { children: ReactNode }) {
+  // The homepage hero bleeds past the card to the viewport edges
+  // (full-bleed — no 16px frame gutter on its top/sides). For that the
+  // frame must not clip its overflowing first child, so the homepage
+  // uses `overflow: visible`. Every other route keeps `overflow: clip`
+  // so the rounded corners still mask content as before.
+  const isHome = usePathname() === "/";
+
   useEffect(() => {
     // Keep `--footer-reveal-height` in sync with the real footer DOM
     // height. The footer uses `reveal` mode → fixed + h-screen, so the
@@ -119,7 +127,7 @@ export function PageFrame({ children }: { children: ReactNode }) {
         marginBottom: "var(--footer-reveal-height, 100vh)",
         borderRadius: "var(--frame-radius, 24px)",
         backgroundColor: "#FFFFFF",
-        overflow: "clip",
+        overflow: isHome ? "visible" : "clip",
         minHeight: "calc(100vh - var(--frame-margin, 16px) * 2)",
       }}
     >
