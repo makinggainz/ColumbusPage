@@ -23,8 +23,8 @@ import { Footer } from "@/components/layout/Footer";
 export default function Home() {
   return (
     <main
-      className="min-h-screen pb-12"
-      style={{ backgroundColor: "#FDFCFC" }}
+      className="min-h-screen"
+      style={{ backgroundColor: "#000000" }}
     >
       <MistxNav />
 

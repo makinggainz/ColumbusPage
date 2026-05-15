@@ -23,26 +23,34 @@ const CSS = `
    research, hiring, footer) wear this chrome. Lives in the hero's
    <style> because the hero is the first card on the page; the rule
    is a global selector so subsequent cards pick it up without
-   duplicating it. */
+   duplicating it.
+
+   Cards span nearly the full viewport width with a 10 px gutter on
+   every side. Vertical margins collapse between adjacent cards so the
+   gap between two cards is also 10 px. The first card carries extra
+   top margin to clear the fixed navbar (~80 px tall); every other
+   card uses the standard 10 px.
+
+   The cards sit on a black page background; the 10 px gutter between
+   each card reads as a dark frame around the card grid. */
 .cardv2 {
   position: relative;
-  max-width: 1287px;
-  margin: 24px 20px 0;
+  margin: 10px;
   background-color: #ffffff;
   border: 1px solid var(--color-gridline, #E7E7F1);
   border-radius: 24px;
   overflow: hidden;
   box-sizing: border-box;
 }
+.cardv2:first-of-type { margin-top: 92px; }
 @media (min-width: 768px) {
-  .cardv2 { margin: 32px auto 0; }
-}
-.cardv2:first-of-type { margin-top: 100px; }
-@media (min-width: 768px) {
-  .cardv2:first-of-type { margin-top: 120px; }
+  .cardv2:first-of-type { margin-top: 100px; }
 }
 .cardv2--full {
-  min-height: calc(100vh - 130px);
+  min-height: calc(100vh - 110px);
+}
+@media (min-width: 768px) {
+  .cardv2--full { min-height: calc(100vh - 120px); }
 }
 
 /* Hero card — MistX-style: bg image off-centre on the right, headline
@@ -165,7 +173,7 @@ export function HeroV2() {
     <section className="cardv2 cardv2--full hv2-card" aria-label="Columbus">
       <style>{CSS}</style>
       <img
-        src="/herobackground2.png"
+        src="/mapwaterhero.png"
         alt=""
         aria-hidden="true"
         className="hv2-bg"

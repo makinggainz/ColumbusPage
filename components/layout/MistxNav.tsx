@@ -131,11 +131,13 @@ export function MistxNav() {
 
   return (
     <header className="fixed z-[999] top-0 left-0 w-full">
-      {/* Backdrop: invisible over hero, solid #ffffff once scrolled into
-          content — matches the homepage hero / content surface. */}
+      {/* Backdrop: solid black so the nav blends into the V2 black page
+          frame around the card grid. Always visible (height 100%) so
+          when the user scrolls down over the white cards the nav is
+          still an opaque black bar floating above. */}
       <div
-        className="absolute left-0 top-0 w-full pointer-events-none z-0 bg-[#ffffff] transition-[height] duration-300"
-        style={{ height: scrolled ? "100%" : "0%" }}
+        className="absolute left-0 top-0 w-full pointer-events-none z-0 bg-[#000000]"
+        style={{ height: "100%" }}
       />
 
       {/* Content row — bounds match the page's content sections
@@ -159,14 +161,14 @@ export function MistxNav() {
               className="object-contain transition-[filter] duration-300"
               style={{
                 color: "transparent",
-                filter:
-                  "brightness(0) saturate(100%) invert(8%) sepia(80%) saturate(1400%) hue-rotate(215deg) brightness(90%)",
+                /* White on the new black nav bg. */
+                filter: "brightness(0) invert(1)",
               }}
               src="/logobueno.png"
             />
           </a>
           <span
-            className="hidden lg:flex items-center font-semibold leading-none whitespace-nowrap text-[#1f1f1f]"
+            className="hidden lg:flex items-center font-semibold leading-none whitespace-nowrap text-white"
             style={{
               fontFamily: "Axiforma, var(--font-hero), sans-serif",
               fontSize: 18,
@@ -187,7 +189,7 @@ export function MistxNav() {
             const dd = dropdowns[id];
             const isOpen = openDropdown === id;
             const triggerClass =
-              "group py-4 flex items-center text-sm gap-2 transition-opacity duration-500 opacity-80 hover:opacity-100 text-[#1f1f1f]";
+              "group py-4 flex items-center text-sm gap-2 transition-opacity duration-500 opacity-80 hover:opacity-100 text-white";
             return (
               <div key={id} className="relative" {...navItemTriggerProps(id)}>
                 {dd.href ? (
@@ -246,7 +248,7 @@ export function MistxNav() {
           {/* Contact */}
           <a
             target="_self"
-            className="group rounded-[7px] px-5 py-2 text-sm hidden md:flex items-center truncate gap-2 transition-colors bg-transparent text-[#1f1f1f] hover:text-[#154ACC]"
+            className="group rounded-[7px] px-5 py-2 text-sm hidden md:flex items-center truncate gap-2 transition-colors bg-transparent text-white hover:text-[#154ACC]"
             href="/contact"
           >
             Contact
@@ -262,7 +264,7 @@ export function MistxNav() {
             onMouseLeave={() => setElioOpen(false)}
           >
             <button
-              className="group rounded-[7px] px-5 py-2 text-sm flex items-center gap-2 transition-colors bg-[#1f1f1f] text-white hover:text-[#154ACC]"
+              className="group rounded-[7px] px-5 py-2 text-sm flex items-center gap-2 transition-colors bg-white text-[#1f1f1f] hover:text-[#154ACC]"
               aria-haspopup="menu"
               aria-expanded={elioOpen}
             >
@@ -312,7 +314,7 @@ export function MistxNav() {
 
           {/* Mobile menu trigger */}
           <button
-            className="lg:hidden md:px-2 cursor-pointer text-[#1f1f1f]"
+            className="lg:hidden md:px-2 cursor-pointer text-white"
             aria-label={mobileOpen ? "Close menu" : "Open menu"}
             aria-expanded={mobileOpen}
             onClick={() => setMobileOpen((v) => !v)}
