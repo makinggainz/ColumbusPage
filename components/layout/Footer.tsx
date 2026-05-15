@@ -95,6 +95,49 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false, t
         }
       }}
     >
+      {/* Earth-from-space backdrop — dark theme only. The planet is
+          anchored bottom-center and pushed mostly offscreen so only the
+          top arc curves into view, giving a "rising from the horizon"
+          effect as the page scrolls and the footer is revealed.
+          Source: NASA Earth (Western Hemisphere), transparent background. */}
+      {theme === "dark" && (
+        <div aria-hidden className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
+          {/* Starfield — small white dots scattered through the deep-space area */}
+          <Starfield />
+          {/* Soft atmospheric glow near the horizon, fading up into deep space */}
+          <div
+            className="absolute inset-0"
+            style={{
+              background:
+                "radial-gradient(ellipse 90% 70% at 50% 110%, rgba(70,140,220,0.28) 0%, rgba(10,34,57,0) 55%)",
+            }}
+          />
+          {/* The planet itself — transparent-bg PNG/WebP, sized so its top
+              hemisphere arcs above the footer's bottom edge */}
+          <div
+            className="absolute left-1/2 bottom-0"
+            style={{
+              width: "min(1800px, 200vw)",
+              aspectRatio: "1 / 1",
+              transform: "translate(-50%, 58%)",
+              backgroundImage: "url(/earth-from-space.webp)",
+              backgroundSize: "contain",
+              backgroundPosition: "center",
+              backgroundRepeat: "no-repeat",
+            }}
+          />
+          {/* Readability scrim — darkens the planet so the mission copy and
+              footer columns stay legible on top of it. */}
+          <div
+            className="absolute inset-0"
+            style={{
+              background:
+                "linear-gradient(180deg, rgba(10,34,57,0.82) 0%, rgba(10,34,57,0.72) 30%, rgba(10,34,57,0.62) 60%, rgba(10,34,57,0.72) 100%)",
+            }}
+          />
+        </div>
+      )}
+
       {/* Mission text — top center, above the bottle */}
       <div
         className="relative z-10 flex flex-col items-center text-center px-8 pt-24 pb-0 max-w-3xl mx-auto w-full"
@@ -258,6 +301,45 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false, t
     </footer>
   );
 };
+
+// Deterministic pseudo-random so the star layout is stable across renders
+// (and identical between server and client — avoids hydration mismatches).
+const STARS = (() => {
+  let seed = 1337;
+  const rand = () => {
+    seed = (seed * 1664525 + 1013904223) % 4294967296;
+    return seed / 4294967296;
+  };
+  return Array.from({ length: 70 }, (_, i) => {
+    const x = rand() * 100;
+    // Bias y toward the top half — the planet occupies the bottom area
+    const y = rand() * 70;
+    const size = rand() < 0.15 ? 2.5 : rand() < 0.5 ? 1.5 : 1;
+    const opacity = 0.35 + rand() * 0.55;
+    return { i, x, y, size, opacity };
+  });
+})();
+
+const Starfield: FC = () => (
+  <div className="absolute inset-0 pointer-events-none">
+    {STARS.map(({ i, x, y, size, opacity }) => (
+      <span
+        key={i}
+        style={{
+          position: "absolute",
+          left: `${x}%`,
+          top: `${y}%`,
+          width: `${size}px`,
+          height: `${size}px`,
+          borderRadius: "50%",
+          background: "white",
+          opacity,
+          boxShadow: size >= 2 ? "0 0 4px rgba(255,255,255,0.6)" : undefined,
+        }}
+      />
+    ))}
+  </div>
+);
 
 const FooterColumn = ({
   title,

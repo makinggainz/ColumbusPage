@@ -3,7 +3,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { cambo } from "@/app/fonts";
 import { GridSection, gl } from "./ContentGrid";
 import glassStyles from "@/components/ui/GlassButton.module.css";
 

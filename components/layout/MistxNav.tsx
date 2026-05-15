@@ -24,59 +24,29 @@ import { useEffect, useRef, useState } from "react";
 // actual route on this project — a Next.js redirect would normalize the
 // original but the direct link avoids a 308 hop).
 
-type DropdownId = "products" | "research" | "blog" | "company";
+// Flat top-level nav links — no submenus. The previous Products /
+// Research / Blog / Company dropdowns were collapsed into direct
+// destinations. The only remaining dropdown lives on the right-side
+// "Try Elio" CTA below.
+const navLinks: { label: string; href: string }[] = [
+  { label: "Consumer", href: "/elio" },
+  { label: "Enterprise", href: "/products/enterprise" },
+  { label: "Research", href: "/research" },
+  { label: "Blog", href: "/blog" },
+  { label: "Company", href: "/mission" },
+];
 
-const dropdowns: Record<
-  DropdownId,
-  { label: string; href?: string; items: { label: string; href: string }[] }
-> = {
-  products: {
-    label: "Products",
-    items: [
-      { label: "Enterprise", href: "/products/enterprise" },
-      { label: "Elio", href: "/elio" },
-    ],
-  },
-  research: {
-    label: "Research",
-    href: "/research",
-    items: [
-      { label: "Models", href: "https://mistral.ai/models" },
-      { label: "Magistral", href: "https://mistral.ai/news/magistral" },
-      { label: "Open Source", href: "https://mistral.ai/news/open-source" },
-      { label: "Papers", href: "https://mistral.ai/research" },
-    ],
-  },
-  blog: {
-    label: "Blog",
-    href: "https://mistral.ai/news",
-    items: [
-      { label: "Latest Posts", href: "https://mistral.ai/news" },
-      {
-        label: "Product Updates",
-        href: "https://mistral.ai/news/category/product",
-      },
-      {
-        label: "Research",
-        href: "https://mistral.ai/news/category/research",
-      },
-      {
-        label: "Newsroom",
-        href: "https://mistral.ai/news/category/newsroom",
-      },
-    ],
-  },
-  company: {
-    label: "Company",
-    items: [
-      { label: "About", href: "https://mistral.ai/about" },
-      { label: "Mission", href: "https://mistral.ai/mission" },
-      { label: "Careers", href: "https://mistral.ai/careers" },
-      { label: "Press", href: "https://mistral.ai/press" },
-      { label: "Contact", href: "https://mistral.ai/contact" },
-    ],
-  },
-};
+// "Try Elio" launcher items. Each row renders name + one-line
+// description + chevron — the product-picker dropdown pattern lifted
+// from Mobbin samples (Patreon "Create" CTA dropdown, Hers product-row
+// menu, Fibery grouped select). Visual: white rounded-2xl card,
+// hairline border, subtle shadow, bg-black/5 row hover matching the
+// navbar pill hover one screen over.
+const elioMenuItems: { label: string; href: string; desc: string }[] = [
+  { label: "Try Elio", href: "/elio", desc: "Consumer travel reasoning" },
+  { label: "Try Mapsurf", href: "/products/mapsgpt", desc: "Lightweight map workspace" },
+  { label: "Try Columbus", href: "/products/enterprise", desc: "Enterprise geospatial intelligence" },
+];
 
 /**
  * The double-stacked arrow icon MistX uses on every nav item — slides up
@@ -112,7 +82,6 @@ function ArrowDot({ className = "" }: { className?: string }) {
 }
 
 export function MistxNav() {
-  const [openDropdown, setOpenDropdown] = useState<DropdownId | null>(null);
   const [elioOpen, setElioOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   // True while the navbar is still in flow (not stuck to the viewport
@@ -161,11 +130,6 @@ export function MistxNav() {
   }, []);
 
   const showBackdrop = stuck || !hasHero;
-
-  const navItemTriggerProps = (id: DropdownId) => ({
-    onMouseEnter: () => setOpenDropdown(id),
-    onMouseLeave: () => setOpenDropdown((d) => (d === id ? null : d)),
-  });
 
   return (
     <header
@@ -221,71 +185,21 @@ export function MistxNav() {
           </span>
         </div>
 
-        {/* Center: main nav links */}
+        {/* Center: flat top-level links. webiaX-style pill hover, no
+            submenus — each link goes directly to its destination. */}
         <nav
-          className="hidden lg:flex items-center gap-6 absolute left-1/2 -translate-x-1/2"
+          className="hidden lg:flex items-center gap-1 absolute left-1/2 -translate-x-1/2"
           aria-label="Main navigation"
         >
-          {(Object.keys(dropdowns) as Array<DropdownId>).map((id) => {
-            const dd = dropdowns[id];
-            const isOpen = openDropdown === id;
-            // Pill-style hover ported from webiaX's NavigationMenuTrigger:
-            // a subtle rounded background fades in under the link on hover,
-            // replacing the earlier opacity-80 → 100 brightening pass.
-            const triggerClass =
-              "group flex items-center p-m gap-2 px-4 py-2 rounded-2xl text-[#1f1f1f] " +
-              "hover:bg-black/5 transition-colors duration-200";
-            return (
-              <div key={id} className="relative" {...navItemTriggerProps(id)}>
-                {dd.href ? (
-                  <a
-                    role="menuitem"
-                    aria-haspopup="menu"
-                    aria-expanded={isOpen}
-                    href={dd.href}
-                    className={triggerClass}
-                  >
-                    {dd.label}
-                    <NavArrowStack />
-                  </a>
-                ) : (
-                  <button
-                    role="menuitem"
-                    aria-haspopup="menu"
-                    aria-expanded={isOpen}
-                    onClick={() =>
-                      setOpenDropdown((d) => (d === id ? null : id))
-                    }
-                    className={triggerClass}
-                  >
-                    {dd.label}
-                    <NavArrowStack />
-                  </button>
-                )}
-                {isOpen && (
-                  <div
-                    role="menu"
-                    className="absolute left-0 top-full min-w-[240px] bg-[#F1F5FE] text-[#1f1f1f] shadow-lg py-2 z-50 rounded-b-[20px] overflow-hidden"
-                    style={{ borderTop: "2px solid #154ACC" }}
-                  >
-                    <ul>
-                      {dd.items.map((item) => (
-                        <li key={item.href} role="none">
-                          <a
-                            role="menuitem"
-                            className="block px-4 py-2 p-m transition-colors hover:bg-[#DCE7FB]"
-                            href={item.href}
-                          >
-                            {item.label}
-                          </a>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-              </div>
-            );
-          })}
+          {navLinks.map((link) => (
+            <a
+              key={link.label}
+              href={link.href}
+              className="flex items-center p-m px-4 py-2 rounded-2xl text-[#1f1f1f] hover:bg-black/5 transition-colors duration-200"
+            >
+              {link.label}
+            </a>
+          ))}
         </nav>
 
         {/* Right: CTAs */}
@@ -309,7 +223,7 @@ export function MistxNav() {
             onMouseLeave={() => setElioOpen(false)}
           >
             <button
-              className="group rounded-full px-5 py-2 p-m flex items-center gap-2 transition-colors bg-[#1f1f1f] text-white hover:text-[#154ACC]"
+              className="group cursor-pointer rounded-full px-5 py-2 p-m flex items-center gap-2 transition-colors bg-[#1f1f1f] text-white hover:text-[#154ACC]"
               aria-haspopup="menu"
               aria-expanded={elioOpen}
             >
@@ -318,43 +232,53 @@ export function MistxNav() {
                 <NavArrowStack className="text-[#154ACC]" />
               </span>
             </button>
-            {elioOpen && (
+            {/* Product picker dropdown — Mobbin pattern (Patreon "Create"
+                CTA dropdown / Hers product rows). Outer wrapper sits
+                flush with the button's bottom (no margin gap) and uses
+                pt-2 to fold the visual 8px gap into its own hit area —
+                without this the cursor would cross dead space between
+                button and panel, fire mouseleave on the parent, and
+                snap the menu closed before reaching any item. Inner
+                div carries the white rounded-card visuals. Always
+                mounted so opacity + translateY drive the open/close. */}
+            <div
+              aria-hidden={!elioOpen}
+              className="absolute right-0 top-full pt-2 w-[300px] z-50 transition-all duration-200"
+              style={{
+                opacity: elioOpen ? 1 : 0,
+                transform: elioOpen ? "translateY(0)" : "translateY(-4px)",
+                pointerEvents: elioOpen ? "auto" : "none",
+              }}
+            >
               <div
                 role="menu"
-                className="absolute right-0 top-full mt-1 min-w-[180px] bg-[#F1F5FE] text-[#1f1f1f] shadow-lg py-2 z-50 rounded-b-[20px] overflow-hidden"
-                style={{ borderTop: "2px solid #154ACC" }}
+                className="bg-white text-[#1f1f1f] rounded-2xl p-1.5"
+                style={{
+                  border: "1px solid rgba(0,0,0,0.08)",
+                  boxShadow: "0 12px 32px -8px rgba(15, 22, 36, 0.12), 0 4px 12px -4px rgba(15, 22, 36, 0.08)",
+                }}
               >
                 <ul>
-                  <li role="none">
-                    <a
-                      role="menuitem"
-                      className="block px-4 py-2 p-m transition-colors hover:bg-[#DCE7FB]"
-                      href="#"
-                    >
-                      Try Elio
-                    </a>
-                  </li>
-                  <li role="none">
-                    <a
-                      role="menuitem"
-                      className="block px-4 py-2 p-m transition-colors hover:bg-[#DCE7FB]"
-                      href="#"
-                    >
-                      Try Mapsurf
-                    </a>
-                  </li>
-                  <li role="none">
-                    <a
-                      role="menuitem"
-                      className="block px-4 py-2 p-m transition-colors hover:bg-[#DCE7FB]"
-                      href="/products/enterprise"
-                    >
-                      Try Columbus
-                    </a>
-                  </li>
+                  {elioMenuItems.map((item) => (
+                    <li key={item.label} role="none">
+                      <a
+                        role="menuitem"
+                        href={item.href}
+                        className="group flex items-start gap-3 px-3 py-2.5 rounded-xl transition-colors hover:bg-black/5"
+                      >
+                        <div className="flex-1 min-w-0">
+                          <div className="p-m font-medium leading-snug">{item.label}</div>
+                          <div className="p-s leading-snug mt-0.5 text-[#1f1f1f]/55">{item.desc}</div>
+                        </div>
+                        <span className="mt-1.5 shrink-0 transition-transform group-hover:translate-x-0.5">
+                          <ArrowDot className="text-[#154ACC]" />
+                        </span>
+                      </a>
+                    </li>
+                  ))}
                 </ul>
               </div>
-            )}
+            </div>
           </div>
 
           {/* Mobile menu trigger */}
@@ -403,45 +327,36 @@ export function MistxNav() {
         </div>
       </div>
 
-      {/* Mobile drawer */}
+      {/* Mobile drawer — flat list of top-level links, then the Try Elio
+          product picker mirrored as a grouped block at the bottom. */}
       {mobileOpen && (
         <div className="lg:hidden absolute top-full left-0 w-full bg-[#F1F5FE] text-[#1f1f1f] z-20 px-6 py-6 shadow-lg max-h-[calc(100vh-100px)] overflow-y-auto">
-          <ul className="flex flex-col gap-1">
-            {(Object.keys(dropdowns) as Array<DropdownId>).map((id) => {
-              const dd = dropdowns[id];
-              return (
-                <li key={id}>
-                  <div className="font-semibold mt-3 py-1">{dd.label}</div>
-                  <ul className="flex flex-col gap-1 pl-4">
-                    {dd.items.map((item) => (
-                      <li key={item.href}>
-                        <a
-                          href={item.href}
-                          className="p-m py-1 block hover:underline"
-                        >
-                          {item.label}
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
-                </li>
-              );
-            })}
-            <li className="mt-6">
-              <a
-                href="/products/enterprise"
-                className="block rounded-full px-5 py-2 bg-[#1f1f1f] text-white p-m text-center transition-colors hover:text-[#154ACC]"
-              >
-                Try Columbus
-              </a>
-            </li>
-            <li className="mt-2">
-              <a
-                href="#"
-                className="block rounded-full px-5 py-2 bg-[#1f1f1f] text-white p-m text-center transition-colors hover:text-[#154ACC]"
-              >
-                Try Elio
-              </a>
+          <ul className="flex flex-col">
+            {navLinks.map((link) => (
+              <li key={link.label}>
+                <a
+                  href={link.href}
+                  className="p-m py-2 block font-medium hover:text-[#154ACC] transition-colors"
+                >
+                  {link.label}
+                </a>
+              </li>
+            ))}
+            <li className="mt-4 pt-4 border-t border-[rgba(0,0,0,0.08)]">
+              <div className="p-s text-[#1f1f1f]/55 mb-2 uppercase tracking-wide">Try</div>
+              <ul className="flex flex-col">
+                {elioMenuItems.map((item) => (
+                  <li key={item.label}>
+                    <a
+                      href={item.href}
+                      className="block py-2 hover:text-[#154ACC] transition-colors"
+                    >
+                      <span className="p-m font-medium block">{item.label}</span>
+                      <span className="p-s text-[#1f1f1f]/55 block">{item.desc}</span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
             </li>
           </ul>
         </div>
