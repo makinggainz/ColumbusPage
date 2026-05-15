@@ -134,7 +134,16 @@ export function MistxNav() {
     const apply = () => {
       const el = headerRef.current;
       if (!el) return;
-      setStuck(el.getBoundingClientRect().top <= 0.5);
+      // Stuck = the navbar has pinned to its sticky `top` offset.
+      // Read the live --frame-margin so this stays correct if the
+      // gutter value is ever changed.
+      const margin =
+        parseFloat(
+          getComputedStyle(document.documentElement).getPropertyValue(
+            "--frame-margin",
+          ),
+        ) || 0;
+      setStuck(el.getBoundingClientRect().top <= margin + 0.5);
     };
     const onScroll = () => {
       if (raf) return;
@@ -161,8 +170,15 @@ export function MistxNav() {
   return (
     <header
       ref={headerRef}
-      className="sticky top-0 z-100 w-full transition-[background-color] duration-300"
+      className="sticky z-100 w-full transition-[background-color] duration-300"
       style={{
+        // Sticks at the card's top edge (= the 16px top gutter), so the
+        // gutter stays visible above the navbar instead of getting
+        // covered when the navbar pins. Top-corner radii match the
+        // PageFrame card so the navbar's white backdrop curves with it.
+        top: "var(--frame-margin, 16px)",
+        borderTopLeftRadius: "var(--frame-radius, 16px)",
+        borderTopRightRadius: "var(--frame-radius, 16px)",
         backgroundColor: showBackdrop ? "#FFFFFF" : "transparent",
       }}
     >

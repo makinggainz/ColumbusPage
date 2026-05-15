@@ -324,9 +324,15 @@ export function BlogSection() {
         </div>
 
           <div className="blog-cta">
+            {/* Padding + line-height match the Careers "Join our team"
+                reference button (14px / 28px / line-height: 1 = 42px
+                outer height) so every homepage-content CTA renders the
+                same. lineHeight is inlined to win over `.p-m`'s
+                companion line-height token. */}
             <a
               href="#"
-              className="group rounded-full px-5 py-2 p-m flex items-center gap-2 transition-colors bg-[#1f1f1f] text-white hover:text-[#154ACC]"
+              className="group rounded-full px-7 py-3.5 p-m flex items-center gap-2 transition-colors bg-[#1f1f1f] text-white hover:text-[#154ACC]"
+              style={{ lineHeight: 1 }}
             >
               Read all posts
               <span className="ml-2 inline-block transition-transform group-hover:translate-x-0.5">

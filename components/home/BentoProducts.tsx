@@ -29,6 +29,8 @@ const COLUMBUS_LOGO_FILTER =
 
 const CSS = `
 .bp-section {
+  position: relative;
+  isolation: isolate;
   background: #FFFFFF;
   padding: 0 0 80px;
   font-family: var(--font-sans, "Ppneuemontreal", "PP Neue Montreal", Arial, sans-serif);
@@ -37,7 +39,32 @@ const CSS = `
   .bp-section { padding-bottom: 112px; }
 }
 
+/* Section watermark — the ColumbusBackgroundMB map art that used to
+   live as the Research tile's bgImage is now painted along the bottom
+   of the bento section, behind the grid. Positioned absolute at the
+   section's bottom edge with a center-bottom anchor + 120vw width so
+   the map extends a bit past the viewport on either side, melting into
+   the page surface above via a top-to-bottom linear mask. */
+.bp-section-watermark {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 70%;
+  background-image: url('/ColumbusBackgroundMB.png');
+  background-position: center bottom;
+  background-size: 120vw auto;
+  background-repeat: no-repeat;
+  opacity: 0.5;
+  z-index: 0;
+  pointer-events: none;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 30%, #000 100%);
+  mask-image: linear-gradient(to bottom, transparent 0%, #000 30%, #000 100%);
+}
+
 .bp-bounds {
+  position: relative;
+  z-index: 1;
   max-width: 1287px;
   margin-left: 20px;
   margin-right: 20px;
@@ -59,14 +86,14 @@ const CSS = `
   }
 }
 
-/* Each tile: full-bleed per-product background, hairline border, 7px
+/* Each tile: full-bleed per-product background, hairline border, 13px
    corners. overflow: hidden so the bottom-peeking visual clips at the
    card edge. */
 .bp-card {
   position: relative;
   overflow: hidden;
   border: 1px solid #E7E7F1;
-  border-radius: 7px;
+  border-radius: 13px;
   background-color: #FFFFFF;
   background-size: cover;
   background-position: center;
@@ -82,21 +109,41 @@ const CSS = `
 
 /* Wide tile (Research) spans both columns on desktop as an elongated
    banner row. Slightly shorter than the square tiles above so the
-   banner reads as a horizontal panel. */
+   banner reads as a horizontal panel — reduced a further 30%
+   (440 → 308) per Gdesign tweak so the panel reads as a thin band. */
 @media (min-width: 1024px) {
   .bp-card--wide {
     grid-column: span 2;
-    height: 440px;
+    height: 308px;
   }
 }
 
 .bp-card--columbus { background-image: url('/Colbackgroundcard.png'); }
 .bp-card--elio     { background-image: url('/eliocardbackground.png'); }
-/* Research shares Columbus's cream backdrop (per Gdesign tweak). All
-   light-mode defaults (dark text, hairline border, white top scrim,
-   white-backed product visual) now apply uniformly across all three
-   tiles — no dark-mode overrides remain. */
-.bp-card--research { background-image: url('/Colbackgroundcard.png'); }
+/* Research no longer uses a CSS background-image. ColumbusBackgroundMB
+   is rendered as a real <img> child (.bp-bg) sitting absolute behind
+   the text block, so it can be positioned/scaled independently of the
+   card's own surface. */
+.bp-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Research-only blur — the techpg-radiance image reads as an abstract
+   atmospheric wash behind the text rail instead of a crisp photo.
+   transform: scale(1.08) pre-bleeds the image past the card edges so
+   the blur halo lives outside the card's overflow: hidden clip area
+   (no visible blurred edge inside the card). */
+.bp-card--research .bp-bg {
+  transform: scale(1.08);
+  filter: blur(10px);
+}
 
 /* Top scrim — fades from a translucent white surface at the top (where
    the text sits) to transparent past the brand row, so the brand mark +
@@ -173,17 +220,19 @@ const CSS = `
 /* Signature CTA pill — same pattern as CtaBanner / Careers / ProductCell:
    #1f1f1f surface, white label that swaps to #154ACC on hover, and the
    five-dot blue ArrowDots glyph (#154ACC) that slides 2px to the right
-   on hover. 7px corners pull from the design-system shape token. */
+   on hover. Padding + line-height match Careers' "Join our team"
+   reference button so every homepage-content CTA renders at the same
+   42px height. */
 .bp-cta {
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  padding: 8px 20px;
+  padding: 14px 28px;
   background-color: #1f1f1f;
   color: #FFFFFF;
   border-radius: 9999px;
   font-size: var(--typography--p-m);
-  line-height: var(--typography--p-m--line-height);
+  line-height: 1;
   font-weight: 500;
   white-space: nowrap;
   transition: color 180ms ease;
@@ -201,16 +250,16 @@ const CSS = `
   .bp-cta-arrow { transition: none; }
 }
 
-/* Bottom-anchored product visual — sits absolute at the card's bottom
-   edge with a negative offset so its lower portion clips out below the
-   card border (visible portion is the top ~60% of the image). The
+/* Bottom-anchored product visual — now lifted above the card's bottom
+   edge (positive bottom %) so the entire screenshot is visible and the
+   image floats with a small breathing-room gap below it. The
    horizontal insets keep the visual aligned with the text rail's
    left padding so the composition reads as one column. */
 .bp-visual {
   position: absolute;
   left: 28px;
   right: 28px;
-  bottom: -22%;
+  bottom: -2%;
   z-index: 1;
   display: flex;
   justify-content: center;
@@ -220,8 +269,8 @@ const CSS = `
   transition: transform 220ms cubic-bezier(0.22, 0.61, 0.36, 1);
   will-change: transform;
 }
-@media (min-width: 640px)  { .bp-visual { left: 32px; right: 32px; bottom: -24%; } }
-@media (min-width: 1024px) { .bp-visual { left: 40px; right: 40px; bottom: -26%; } }
+@media (min-width: 640px)  { .bp-visual { left: 32px; right: 32px; bottom: -2%; } }
+@media (min-width: 1024px) { .bp-visual { left: 40px; right: 40px; bottom: -2%; } }
 .bp-card:hover .bp-visual { transform: translateY(-12px); }
 @media (min-width: 1024px) {
   .bp-card:hover .bp-visual { transform: translateY(-18px); }
@@ -272,6 +321,10 @@ interface Product {
   /** When true, the cell spans both columns on desktop as an elongated
    *  banner row (used by Research at the bottom of the grid). */
   wide?: boolean;
+  /** Optional full-bleed background image rendered as a real <img>
+   *  child of the card (behind text via z-index 0). Used by Research
+   *  to layer ColumbusBackgroundMB behind its text block. */
+  bgImage?: string;
 }
 
 const PRODUCTS: Product[] = [
@@ -302,6 +355,10 @@ const PRODUCTS: Product[] = [
     tagline: "Building the Large Geospatial Model",
     ctaLabel: "Explore research",
     wide: true,
+    // Mirrors BlogSection's "Research: creating a fire prediction model"
+    // card so the bento Research tile and the matching blog card share
+    // the same identifying imagery.
+    bgImage: "/TechnologyPageImages/techpg-radiance.png",
   },
 ];
 
@@ -330,6 +387,7 @@ export function BentoProducts() {
   return (
     <section className="bp-section" aria-label="Our products">
       <style>{CSS}</style>
+      <div className="bp-section-watermark" aria-hidden />
       <div className="bp-bounds">
         <div className="bp-grid">
           {PRODUCTS.map((p) => (
@@ -338,6 +396,9 @@ export function BentoProducts() {
               href={p.href}
               className={`bp-card ${p.cellClass}${p.wide ? " bp-card--wide" : ""}`}
             >
+              {p.bgImage && (
+                <img src={p.bgImage} alt="" aria-hidden className="bp-bg" />
+              )}
               <div className="bp-text-block">
                 <div className="bp-brand">
                   <img

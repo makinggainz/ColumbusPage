@@ -3,45 +3,40 @@
 import { useEffect, type ReactNode } from "react";
 
 /**
- * The rounded white "card" the entire site sits inside (experimentV6-Gdesign).
+ * The rounded white "card" the entire site sits inside (experimentV6-Gdesign,
+ * V2 variant).
  *
- * Two scroll-driven transitions, run as a single animation curve `t`
- * (1 = rounded + inset 16px, 0 = full-bleed):
+ * V2 change: the card stays at a constant 16px gutter + 24px radius
+ * the whole way down — the scroll-driven "expand to full-bleed then
+ * collapse back" animation from V1 was removed. `--frame-margin` and
+ * `--frame-radius` are still exposed as CSS variables on <html> so
+ * the sticky navbar (which reads `--frame-margin` for its sticky
+ * `top` offset) keeps working, but they are now static.
  *
- *   • Top reveal — from scrollY 0..SCROLL_RANGE: t animates 1 → 0
- *     (card expands toward the viewport edges).
- *   • Bottom reveal — over the final SCROLL_RANGE pixels of scroll
- *     before maxScroll: t animates 0 → 1 (card collapses back to the
- *     inset+rounded state, so the bottom edge has the same 24px corners
- *     and 16px gutter as the top of the page).
- *
- * The intermediate middle of the page sits at t = 0 (full-bleed).
- *
- * The transition runs as CSS variables (--frame-margin / --frame-radius)
- * on <html> so other elements that need to track the frame — most
- * importantly the sticky navbar's `top` — can read the same value and
- * stay aligned with the card edge during the transition.
- *
- * Footer reveal mechanic: `app/layout.tsx` renders `<Footer reveal />`
- * as a fixed, z-index 0 element at the viewport bottom. PageFrame is
- * z-index 1 with `margin-bottom: var(--footer-reveal-height)`, so the
- * body's scrollable area extends past the page content by exactly the
- * footer's height. As the user scrolls into that extra range, the
- * white card slides up over the fixed footer — revealing it — while
- * the bottom-reveal animation simultaneously restores the rounded
- * corners + 16px side gutter.
+ * Footer reveal mechanic preserved: `app/layout.tsx` renders
+ * `<Footer reveal />` fixed at z-index 0; PageFrame is z-index 1 with
+ * `margin-bottom: var(--footer-reveal-height)`, so the body's scrollable
+ * area extends past the page content by exactly the footer's height
+ * and the card slides up over the fixed footer to reveal it.
  */
-const SCROLL_RANGE = 150;
-const MAX_MARGIN = 16;
-const MAX_RADIUS = 24;
+const FRAME_MARGIN = 16;
+const FRAME_RADIUS = 16;
 
 export function PageFrame({ children }: { children: ReactNode }) {
   useEffect(() => {
-    // Keep `--footer-reveal-height` in sync with the real footer DOM
-    // height. The footer uses `reveal` mode → fixed + h-screen, so the
-    // height is normally 100vh, but we measure it directly so the
-    // margin-bottom and reveal range stay accurate if the footer
-    // changes (e.g., different variants, resize, mobile).
+    // Static frame variables — locked at the inset+rounded state for V2.
+    document.documentElement.style.setProperty(
+      "--frame-margin",
+      `${FRAME_MARGIN}px`,
+    );
+    document.documentElement.style.setProperty(
+      "--frame-radius",
+      `${FRAME_RADIUS}px`,
+    );
+
+    // Keep --footer-reveal-height in sync with the real footer DOM
+    // height so PageFrame's marginBottom always equals the footer's
+    // height (otherwise the footer can't be revealed on scroll-past).
     const footer = document.querySelector("[data-footer]") as HTMLElement | null;
     let ro: ResizeObserver | null = null;
     const applyFooterHeight = () => {
@@ -57,53 +52,9 @@ export function PageFrame({ children }: { children: ReactNode }) {
       ro.observe(footer);
     }
     window.addEventListener("resize", applyFooterHeight);
-
-    let raf = 0;
-    const apply = () => {
-      const scrollY = window.scrollY;
-      const docHeight = document.documentElement.scrollHeight;
-      const viewportHeight = window.innerHeight;
-      const maxScroll = Math.max(0, docHeight - viewportHeight);
-
-      // Top reveal: 1 → 0 over the first SCROLL_RANGE pixels.
-      const topProgress = Math.min(1, Math.max(0, scrollY / SCROLL_RANGE));
-
-      // Bottom reveal: 0 → 1 over the final SCROLL_RANGE pixels before
-      // maxScroll. Triggered once the user is within (footerHeight) of
-      // the end so it begins as the fixed footer starts being revealed,
-      // and completes by the time the footer is ~SCROLL_RANGE px in.
-      const footerHeight =
-        parseFloat(
-          getComputedStyle(document.documentElement).getPropertyValue(
-            "--footer-reveal-height",
-          ),
-        ) || 0;
-      const revealStart = maxScroll - footerHeight;
-      const bottomProgress =
-        footerHeight > 0
-          ? Math.min(1, Math.max(0, (scrollY - revealStart) / SCROLL_RANGE))
-          : 0;
-
-      const t = Math.max(1 - topProgress, bottomProgress);
-      const margin = MAX_MARGIN * t;
-      const radius = MAX_RADIUS * t;
-      document.documentElement.style.setProperty("--frame-margin", `${margin}px`);
-      document.documentElement.style.setProperty("--frame-radius", `${radius}px`);
-    };
-    const onScroll = () => {
-      if (raf) return;
-      raf = window.requestAnimationFrame(() => {
-        apply();
-        raf = 0;
-      });
-    };
-    apply();
-    window.addEventListener("scroll", onScroll, { passive: true });
     return () => {
-      window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", applyFooterHeight);
       if (ro) ro.disconnect();
-      if (raf) window.cancelAnimationFrame(raf);
     };
   }, []);
 
@@ -111,7 +62,6 @@ export function PageFrame({ children }: { children: ReactNode }) {
     <div
       style={{
         position: "relative",
-        zIndex: 1,
         margin: "var(--frame-margin, 16px)",
         // Reserve scroll room below the card equal to the footer's
         // height so the user can scroll past the content and reveal
