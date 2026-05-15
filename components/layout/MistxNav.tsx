@@ -229,8 +229,12 @@ export function MistxNav() {
           {(Object.keys(dropdowns) as Array<DropdownId>).map((id) => {
             const dd = dropdowns[id];
             const isOpen = openDropdown === id;
+            // Pill-style hover ported from webiaX's NavigationMenuTrigger:
+            // a subtle rounded background fades in under the link on hover,
+            // replacing the earlier opacity-80 → 100 brightening pass.
             const triggerClass =
-              "group py-4 flex items-center p-m gap-2 transition-opacity duration-500 opacity-80 hover:opacity-100 text-[#1f1f1f]";
+              "group flex items-center p-m gap-2 px-4 py-2 rounded-2xl text-[#1f1f1f] " +
+              "hover:bg-black/5 transition-colors duration-200";
             return (
               <div key={id} className="relative" {...navItemTriggerProps(id)}>
                 {dd.href ? (

@@ -93,10 +93,14 @@ const CSS = `
 
 .bp-card--columbus { background-image: url('/Colbackgroundcard.png'); }
 .bp-card--elio     { background-image: url('/eliocardbackground.png'); }
-/* Research shares Columbus's cream backdrop — the ColumbusBackgroundMB
-   watermark has moved back to its original -Gdesign placement behind
-   the "We're all about maps" heading above the bento. */
-.bp-card--research { background-image: url('/Colbackgroundcard.png'); }
+/* Research uses a left-to-right linear gradient — light sky #CAE5F5 at
+   0% to mid-blue #76A8F3 at 100%, both fully opaque — matching the
+   Figma swatch supplied by Gdesign. Replaces the prior cream backdrop
+   (/Colbackgroundcard.png) so the Research tile reads as a distinct
+   blue band against the cream Columbus / Elio tiles above. */
+.bp-card--research {
+  background-image: linear-gradient(to right, #CAE5F5 0%, #76A8F3 100%);
+}
 
 /* Top scrim — fades from a translucent white surface at the top (where
    the text sits) to transparent past the brand row, so the brand mark +
@@ -302,7 +306,7 @@ const PRODUCTS: Product[] = [
     logo: "/TechnologyPageImages/lgm-globe-icon.png",
     name: "Research",
     tagline: "Building the Large Geospatial Model",
-    ctaLabel: "Explore research",
+    ctaLabel: "Read Thesis",
     wide: true,
   },
 ];
