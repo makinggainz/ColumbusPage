@@ -164,11 +164,11 @@ export function MistxNav({ heroWhite = false }: { heroWhite?: boolean } = {}) {
       ref={headerRef}
       className="sticky z-100 w-full transition-[background-color] duration-300"
       style={{
-        // Sticks at the card's top edge (= the 16px top gutter), so the
+        // Sticks at the card's top edge (= the 30px top gutter), so the
         // gutter stays visible above the navbar instead of getting
         // covered when the navbar pins. Top-corner radii match the
         // PageFrame card so the navbar's white backdrop curves with it.
-        top: "var(--frame-margin, 16px)",
+        top: "var(--frame-margin, 30px)",
         borderTopLeftRadius: "var(--frame-radius, 20px)",
         borderTopRightRadius: "var(--frame-radius, 20px)",
         backgroundColor: showBackdrop && !heroScrim ? "#FFFFFF" : "transparent",

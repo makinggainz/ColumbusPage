@@ -13,7 +13,7 @@ import { useEffect, type ReactNode } from "react";
  *   • Bottom reveal — over the final SCROLL_RANGE pixels of scroll
  *     before maxScroll: t animates 0 → 1 (card collapses back to the
  *     inset+rounded state, so the bottom edge has the same 13px corners
- *     and 16px gutter as the top of the page).
+ *     and 30px gutter as the top of the page).
  *
  * The intermediate middle of the page sits at t = 0 (full-bleed).
  *
@@ -32,7 +32,7 @@ import { useEffect, type ReactNode } from "react";
  * corners + 16px side gutter.
  */
 const SCROLL_RANGE = 150;
-const MAX_MARGIN = 16;
+const MAX_MARGIN = 30;
 const MAX_RADIUS = 20;
 
 export function PageFrame({ children }: { children: ReactNode }) {
@@ -112,7 +112,7 @@ export function PageFrame({ children }: { children: ReactNode }) {
       style={{
         position: "relative",
         zIndex: 1,
-        margin: "var(--frame-margin, 16px)",
+        margin: "var(--frame-margin, 30px)",
         // Reserve scroll room below the card equal to the footer's
         // height so the user can scroll past the content and reveal
         // the fixed footer that sits behind it (z-index 0).
@@ -122,9 +122,11 @@ export function PageFrame({ children }: { children: ReactNode }) {
         // sets --frame-shadow so the white card reads as a floating
         // panel against its white backdrop. Tracks the rounded corners.
         boxShadow: "var(--frame-shadow, none)",
+        // 1px hairline matching the BentoProducts card stroke (#E7E7F1).
+        border: "1px solid #E7E7F1",
         backgroundColor: "#FFFFFF",
         overflow: "clip",
-        minHeight: "calc(100vh - var(--frame-margin, 16px) * 2)",
+        minHeight: "calc(100vh - var(--frame-margin, 30px) * 2)",
       }}
     >
       {children}
