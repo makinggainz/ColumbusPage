@@ -81,7 +81,7 @@ function ArrowDot({ className = "" }: { className?: string }) {
   );
 }
 
-export function MistxNav() {
+export function MistxNav({ heroWhite = false }: { heroWhite?: boolean } = {}) {
   const [elioOpen, setElioOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   // True while the navbar is still in flow (not stuck to the viewport
@@ -123,6 +123,12 @@ export function MistxNav() {
   }, []);
 
   const showBackdrop = stuck || !hasHero;
+  // When `heroWhite` is set (enterprise page), the nav contents render in
+  // white while the navbar floats transparently over the hero image, then
+  // revert to the default dark colors once the white backdrop pins on
+  // scroll — white-on-white would otherwise be invisible. The "Try Elio"
+  // CTA keeps its filled navy pill in both states.
+  const lightNav = heroWhite && !showBackdrop;
 
   return (
     <header
@@ -160,18 +166,20 @@ export function MistxNav() {
               className="object-contain transition-[filter] duration-300"
               style={{
                 color: "transparent",
-                filter:
-                  "brightness(0) saturate(100%) invert(8%) sepia(80%) saturate(1400%) hue-rotate(215deg) brightness(90%)",
+                filter: lightNav
+                  ? "brightness(0) invert(1)"
+                  : "brightness(0) saturate(100%) invert(8%) sepia(80%) saturate(1400%) hue-rotate(215deg) brightness(90%)",
               }}
               src="/logobueno.png"
             />
           </a>
           <span
-            className="h7 hidden lg:flex items-center font-semibold leading-none whitespace-nowrap text-[#0F173C]"
+            className="h7 hidden lg:flex items-center font-semibold leading-none whitespace-nowrap"
             style={{
               fontFamily: "Axiforma, 'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif",
               position: "relative",
               top: "3px",
+              color: lightNav ? "#FFFFFF" : "#0F173C",
             }}
           >
             Columbus Earth
@@ -188,7 +196,11 @@ export function MistxNav() {
             <a
               key={link.label}
               href={link.href}
-              className="flex items-center p-m px-4 py-2 rounded-full text-[#1f1f1f] hover:bg-black/5 transition-colors duration-200"
+              className={`flex items-center p-m px-4 py-2 rounded-full transition-colors duration-200 ${
+                lightNav
+                  ? "text-white hover:bg-white/10"
+                  : "text-[#1f1f1f] hover:bg-black/5"
+              }`}
             >
               {link.label}
             </a>
@@ -200,12 +212,16 @@ export function MistxNav() {
           {/* Contact */}
           <a
             target="_self"
-            className="group rounded-button px-5 py-2 p-m hidden md:flex items-center truncate gap-2 transition-colors bg-transparent text-[#1f1f1f] hover:bg-black/5 hover:text-[#0081AC]"
+            className={`group rounded-button px-5 py-2 p-m hidden md:flex items-center truncate gap-2 transition-colors bg-transparent ${
+              lightNav
+                ? "text-white hover:bg-white/10"
+                : "text-[#1f1f1f] hover:bg-black/5 hover:text-[#0081AC]"
+            }`}
             href="/contact"
           >
             Contact
             <span className="ml-2 inline-block transition-transform group-hover:translate-x-0.5">
-              <ArrowDot className="text-[#0081AC]" />
+              <ArrowDot className={lightNav ? "text-white" : "text-[#0081AC]"} />
             </span>
           </a>
 
@@ -276,7 +292,7 @@ export function MistxNav() {
 
           {/* Mobile menu trigger */}
           <button
-            className="lg:hidden md:px-2 cursor-pointer text-[#1f1f1f]"
+            className={`lg:hidden md:px-2 cursor-pointer ${lightNav ? "text-white" : "text-[#1f1f1f]"}`}
             aria-label={mobileOpen ? "Close menu" : "Open menu"}
             aria-expanded={mobileOpen}
             onClick={() => setMobileOpen((v) => !v)}

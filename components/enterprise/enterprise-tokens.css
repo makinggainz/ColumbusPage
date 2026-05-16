@@ -9,8 +9,12 @@
  */
 
 .ent-scope {
-  /* ── Typography — font stack ── */
-  --ent-font-sans:           'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif;
+  /* ── Typography — font stack ──
+     Body copy uses the project body face (Opening Hours Sans, --font-sans);
+     title texts use Axiforma (--font-hero). See the .ent-scope font-family
+     rules at the foot of this file. */
+  --ent-font-sans:           var(--font-sans);
+  --ent-font-heading:        var(--font-hero);
 
   /* ── Typography — sizes (Major Third 1.25, base 16px) ── */
   --ent-text-overline:       11px;   /* e12 — uppercase labels       */
@@ -46,18 +50,22 @@
   --ent-leading-body:        1.5;    /* 13–16px */
   --ent-leading-overline:    1.2;    /* 11px */
 
-  /* ── Colors — text on light ── */
-  --ent-text-primary:        #1D1D1F;
+  /* ── Colors — text on light ──
+     Matched to the homepage palette: --color-ink (#0B1B2B) for headings +
+     body, --color-muted (#5A6B7B) for secondary copy. */
+  --ent-text-primary:        #0B1B2B;
   --ent-text-navy:           #0A1344;
-  --ent-text-secondary:      #374151;
-  --ent-text-tertiary:       #6B7280;
-  --ent-text-muted:          rgba(10, 19, 68, 0.40);
+  --ent-text-secondary:      #5A6B7B;
+  --ent-text-tertiary:       #5A6B7B;
+  --ent-text-muted:          #5A6B7B;
 
-  /* ── Colors — text on dark (4 levels only) ── */
-  --ent-dark-text-full:      rgba(255, 255, 255, 1.0);
-  --ent-dark-text-high:      rgba(255, 255, 255, 0.75);
-  --ent-dark-text-medium:    rgba(255, 255, 255, 0.45);
-  --ent-dark-text-low:       rgba(255, 255, 255, 0.25);
+  /* ── Colors — formerly "text on dark" ──
+     The dark sections are now light to match the homepage, so these
+     four levels resolve to dark ink/muted on a white background. */
+  --ent-dark-text-full:      #0B1B2B;
+  --ent-dark-text-high:      #0B1B2B;
+  --ent-dark-text-medium:    #5A6B7B;
+  --ent-dark-text-low:       rgba(11, 27, 43, 0.35);
 
   /* ── Colors — accent blues ── */
   --ent-blue-primary:        #2563EB;
@@ -69,27 +77,32 @@
   --ent-gradient-start:      #06096D;
   --ent-gradient-end:        #318BCA;
 
-  /* ── Colors — backgrounds ── */
-  --ent-bg-light:            #F9F9F9;
+  /* ── Colors — backgrounds ──
+     All white to match the homepage; the formerly-dark sections
+     (--ent-bg-dark / --ent-bg-dark-alt) now render light. */
+  --ent-bg-light:            #FFFFFF;
   --ent-bg-white:            #FFFFFF;
   --ent-bg-card:             #FDFDFD;
-  --ent-bg-dark:             #060810;
-  --ent-bg-dark-alt:         #1a1a1a;
+  --ent-bg-dark:             #FFFFFF;
+  --ent-bg-dark-alt:         #FFFFFF;
   --ent-bg-monitor-frame:    #1D1D1F;
   --ent-bg-monitor-titlebar: #F5F5F7;
 
-  /* ── Colors — borders ── */
-  --ent-border-card:         #EDEDED;
+  /* ── Colors — borders ──
+     --ent-border-card / --ent-border-dark-grid mirror the homepage
+     blueprint hairline (--color-gridline #E7E7F1). */
+  --ent-border-card:         #E7E7F1;
   --ent-border-subtle:       rgba(0, 0, 0, 0.07);
   --ent-border-medium:       rgba(0, 0, 0, 0.10);
-  --ent-border-dark-grid:    rgba(255, 255, 255, 0.10);
-  --ent-border-dark-subtle:  rgba(255, 255, 255, 0.06);
+  --ent-border-dark-grid:    #E7E7F1;
+  --ent-border-dark-subtle:  rgba(11, 27, 43, 0.06);
   --ent-border-accent:       rgba(27, 55, 206, 0.25);
 
-  /* ── Colors — buttons ── */
-  --ent-btn-dark:            #1D1D1F;
-  --ent-btn-navy:            #0A1344;
-  --ent-btn-navy-alt:        #0E1A44;
+  /* ── Colors — buttons ──
+     Filled CTAs use the homepage navy (--color-cta #0B1342). */
+  --ent-btn-dark:            #0B1342;
+  --ent-btn-navy:            #0B1342;
+  --ent-btn-navy-alt:        #0B1342;
 
   /* ── Colors — window chrome ── */
   --ent-chrome-red:          #FF5F57;
@@ -183,5 +196,22 @@
     margin-left: auto;
     margin-right: auto;
   }
+}
+
+/* ── Typography — font families ──
+   Title texts on the enterprise page render in Axiforma; everything else
+   (body copy, UI, captions) inherits the project body face, Opening Hours
+   Sans. Enterprise sections use semantic h1–h6 tags for their titles, so
+   the heading selector below covers them without per-component edits.
+   The shared <footer> is excluded so it keeps the site-wide Funnel
+   Display heading face it uses on every other page. */
+.ent-scope {
+  font-family: var(--ent-font-sans);
+  /* Default ink matches the homepage (--color-ink) so headings/body
+     that don't set an explicit color still read on-brand. */
+  color: var(--ent-text-primary);
+}
+.ent-scope :is(h1, h2, h3, h4, h5, h6):not(footer *) {
+  font-family: var(--ent-font-heading);
 }
 

@@ -112,7 +112,7 @@ export default function DifferenceSection() {
         <div className="mt-12 md:mt-20 w-full grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-0 relative">
 
           {/* Divider */}
-          <div className="hidden lg:block absolute left-1/2 top-0 bottom-0 w-[1px] bg-[#DADADA] opacity-50" />
+          <div className="hidden lg:block absolute left-1/2 top-0 bottom-0 w-[1px] bg-gridline" />
 
           {/* Columbus LGM */}
           <div style={fadeIn(visible, 0.3)} className="flex flex-col items-center lg:items-end text-center lg:pr-20">
@@ -127,7 +127,7 @@ export default function DifferenceSection() {
                 <div className="relative w-full aspect-[467/319] rounded-[10px] overflow-hidden shadow-md">
                   <Image src="/enterprise/lgm.png" alt="lgm" fill className="object-cover scale-[1.15]" />
                 </div>
-                <ul className="mt-8 space-y-4 text-left w-full list-none pl-0 text-[15px] md:text-[16px] font-normal leading-[1.5] tracking-[-0.01em] text-black">
+                <ul className="mt-8 space-y-4 text-left w-full list-none pl-0 text-[15px] md:text-[16px] font-normal leading-[1.5] tracking-[-0.01em] text-ink">
                   <li className="flex items-center gap-2"><span className="text-green-600">✔</span> Highest fidelity and fresh data</li>
                   <li className="flex items-center gap-2"><span className="text-green-600">✔</span> Understands space and coordinates</li>
                   <li className="flex items-center gap-2"><span className="text-green-600">✔</span> Spatial and contextual reasoning</li>
@@ -152,15 +152,15 @@ export default function DifferenceSection() {
                 <div className="relative w-full aspect-[467/319] rounded-[10px] overflow-hidden">
                   <Image src="/enterprise/basic.png" alt="basic" fill className="object-cover opacity-90" />
                 </div>
-                <ul className="mt-8 space-y-4 text-left w-full list-none pl-0 text-[15px] md:text-[16px] font-normal leading-[1.5] tracking-[-0.01em] text-black">
-                  <li className="flex items-center gap-2"><span className="text-black">✖</span> Regurgitates old articles about areas</li>
+                <ul className="mt-8 space-y-4 text-left w-full list-none pl-0 text-[15px] md:text-[16px] font-normal leading-[1.5] tracking-[-0.01em] text-ink">
+                  <li className="flex items-center gap-2"><span className="text-ink">✖</span> Regurgitates old articles about areas</li>
                   <li className="flex items-center gap-2">
-                    <span className="text-black">✖</span> Hallucinates Coordinates 60% of time{" "}
+                    <span className="text-ink">✖</span> Hallucinates Coordinates 60% of time{" "}
                     <span className="text-blue-400">Source</span>
                   </li>
-                  <li className="flex items-center gap-2"><span className="text-black">✖</span> Limited data reach</li>
-                  <li className="flex items-center gap-2"><span className="text-black">✖</span> Text outputs, no map or GIS</li>
-                  <li className="flex items-center gap-2"><span className="text-black">✖</span> Built for text, consumers</li>
+                  <li className="flex items-center gap-2"><span className="text-ink">✖</span> Limited data reach</li>
+                  <li className="flex items-center gap-2"><span className="text-ink">✖</span> Text outputs, no map or GIS</li>
+                  <li className="flex items-center gap-2"><span className="text-ink">✖</span> Built for text, consumers</li>
                 </ul>
               </div>
 

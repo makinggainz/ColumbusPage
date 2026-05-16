@@ -24,7 +24,7 @@ export default function SolutionShowcase() {
   }, []);
 
   return (
-    <div ref={sectionRef} style={{ "--grid-line": "rgba(255,255,255,0.10)", backgroundColor: "rgba(255,255,255,0.04)" } as React.CSSProperties}>
+    <div ref={sectionRef} style={{ "--grid-line": "var(--ent-border-dark-grid)", backgroundColor: "transparent" } as React.CSSProperties}>
       <GridSection
         style={{
           backgroundColor: "transparent",
@@ -36,7 +36,7 @@ export default function SolutionShowcase() {
           style={{ paddingTop: 120, paddingBottom: 120 }}
         >
           <h2
-            className="text-white leading-[1.1] text-[28px] md:text-[36px] lg:text-[45px]"
+            className="text-ink leading-[1.1] text-[28px] md:text-[36px] lg:text-[45px]"
             style={{ fontWeight: 500, letterSpacing: "-0.02em", maxWidth: 720 }}
           >
             Its time for a more powerful and intuitive GIS

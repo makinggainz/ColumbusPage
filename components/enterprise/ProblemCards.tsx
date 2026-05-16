@@ -33,7 +33,7 @@ export default function ProblemCards() {
   }, []);
 
   return (
-    <div ref={sectionRef} style={{ "--grid-line": "var(--ent-border-dark-grid)", backgroundColor: "rgba(255,255,255,0.04)" } as React.CSSProperties}>
+    <div ref={sectionRef} style={{ "--grid-line": "var(--ent-border-dark-grid)", backgroundColor: "transparent" } as React.CSSProperties}>
       <GridSection
         style={{
           backgroundColor: "transparent",
@@ -45,7 +45,7 @@ export default function ProblemCards() {
           style={{ paddingTop: 100, paddingBottom: 100 }}
         >
           <h2
-            className="text-white leading-[1.1] text-[28px] md:text-[36px] lg:text-[45px]"
+            className="text-ink leading-[1.1] text-[28px] md:text-[36px] lg:text-[45px]"
             style={{ fontWeight: 500, letterSpacing: "-0.02em", maxWidth: 720 }}
           >
             Legacy GIS slows you down because...

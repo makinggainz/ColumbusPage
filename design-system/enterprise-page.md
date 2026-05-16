@@ -8,11 +8,19 @@
 
 ## Typefaces
 
-| Role | Stack | Where |
-|------|-------|-------|
-| Display / Headings / UI | `'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif` | All headings, section labels, CTAs, body text |
+Two-family system, applied page-wide via `.ent-scope` rules in `enterprise-tokens.css`.
 
-No secondary typefaces on this page.
+| Role | Stack | Token | Where |
+|------|-------|-------|-------|
+| Titles / Headings | `Axiforma` | `--ent-font-heading` (= `--font-hero`) | All `h1`–`h6` title texts |
+| Body / UI | `Opening Hours Sans` | `--ent-font-sans` (= `--font-sans`) | Body copy, captions, UI labels, CTAs |
+
+Mechanism: `.ent-scope` sets the body face on the whole page; a
+`.ent-scope :is(h1,h2,h3,h4,h5,h6):not(footer *)` rule promotes every heading
+to Axiforma. Enterprise sections use semantic `h1`–`h6` tags for their titles,
+so no per-component font edits are needed. The shared `<footer>` is excluded
+via `:not(footer *)` so it keeps the site-wide Funnel Display heading face it
+uses on every other page.
 
 ---
 
@@ -386,3 +394,55 @@ border-right: 1px solid rgba(255,255,255,0.10)
 ```
 
 Horizontal dividers between sub-sections use the same color at 1px height.
+
+---
+
+## EnterpriseHero — Background & Navbar Treatment
+
+The hero (`components/enterprise/EnterpriseHero.tsx`) is a full-bleed photo
+hero whose background runs to the very top of the page, behind the navbar.
+
+### Background
+
+| Layer | Value |
+|-------|-------|
+| Image | `/ColumbusBackgroundbento.png` — the same sky photo as the homepage Columbus bento tile (`BentoProducts`). `background-size: cover`, `background-position: center`. |
+| Dark overlay | Flat `rgba(0,0,0,0.10)` black scrim — the bento tile's scrim (`0.18`) lightened so the sky reads brighter. |
+| Bottom fade | `linear-gradient(to bottom, transparent, var(--ent-bg-light))` over the bottom 40%, blending the hero into the section below. |
+
+### Extending behind the navbar
+
+`MistxNav` is `position: sticky` and stays in document flow (~83–90px tall by
+breakpoint). The hero is pulled up with `margin-top: -120px` and a matching
+`padding-top: 120px`:
+
+- the negative margin lets the sky background span the full page width up
+  behind the navbar;
+- the equal padding keeps hero content in place (nothing shifts);
+- `120px` deliberately exceeds the navbar height so no white PageFrame card
+  peeks through above the hero at any breakpoint — the overshoot is clipped
+  by the card's `overflow: clip`.
+
+`MistxNav` must be rendered as a **direct child of `<main>`**, not wrapped in
+a `SectionWithLabel` (or any short `position: relative` section) — a wrapper
+becomes the sticky containing block and lets the navbar scroll away.
+
+### Hero text
+
+`h1`, the subtitle, and the "Talk to Founders" link all render in white
+(`#FFFFFF`) for contrast against the sky. The link's arrow keeps the
+`#2563EB` (Blue Primary) accent.
+
+### Navbar colour over the hero
+
+The hero `<section>` carries `data-hero-section`, so `MistxNav` stays
+transparent at the top of the page and only paints its white backdrop once
+scrolled. `MistxNav` is passed the `heroWhite` prop:
+
+- **Transparent (at page top, over the sky):** logo, "Columbus Earth"
+  wordmark, nav links, and the Contact button render white.
+- **Pinned (scrolled, white backdrop):** reverts to the default dark nav
+  colours — white-on-white would otherwise be invisible.
+- The "Try Elio" CTA keeps its filled navy pill in both states.
+
+`heroWhite` is opt-in and defaults off, so every other page is unaffected.

@@ -55,20 +55,20 @@ const features: {
           <h2 className="text-[28px] md:text-[39px] font-light leading-[1.1] tracking-[-0.02em]" style={{ color: "var(--ent-dark-text-medium)" }}>
             Can&apos;t find relevant datasets for your research?
           </h2>
-          <h3 className="text-[28px] md:text-[39px] font-medium text-white leading-[1.1] tracking-[-0.02em]">
+          <h3 className="text-[28px] md:text-[39px] font-medium text-ink leading-[1.1] tracking-[-0.02em]">
             Columbus has it.
           </h3>
         </div>
 
         <div
-          className="w-full rounded-none border border-white/8 border-l-0 border-r-0 overflow-hidden flex items-center justify-center"
-          style={{ aspectRatio: "16 / 9", background: "linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.06) 50%, rgba(255,255,255,0.03) 100%)" }}
+          className="w-full rounded-none border border-gridline border-l-0 border-r-0 overflow-hidden flex items-center justify-center"
+          style={{ aspectRatio: "16 / 9", background: "linear-gradient(135deg, rgba(11,27,43,0.02) 0%, rgba(11,27,43,0.04) 50%, rgba(11,27,43,0.02) 100%)" }}
         >
           <span className="text-[14px] font-medium tracking-[0.12em] uppercase" style={{ color: "var(--ent-dark-text-low)" }}>Video Demo</span>
         </div>
 
         <div className="max-w-[900px] mt-10 mb-10 px-4 lg:px-0">
-          <p className="text-[22px] md:text-[28px] leading-[1.55] tracking-[-0.01em] text-white">
+          <p className="text-[22px] md:text-[28px] leading-[1.55] tracking-[-0.01em] text-ink">
             The <span className="font-semibold">highest quality</span>, and most versatile
             data-sets for your critical research and decisions.
           </p>
@@ -77,8 +77,8 @@ const features: {
           </a>
         </div>
 
-        <div className="bg-white/5 border border-white/10 rounded-[10px] p-10 mx-4 lg:mx-0">
-          <h3 className="text-center text-[22px] font-medium tracking-[-0.02em] text-white mb-2">
+        <div className="bg-[#FAFAFA] border border-gridline rounded-[10px] p-10 mx-4 lg:mx-0">
+          <h3 className="text-center text-[22px] font-medium tracking-[-0.02em] text-ink mb-2">
             Vetted, high-fidelity, and smart datasets
           </h3>
           <p className="text-center text-[14px] mb-8" style={{ color: "var(--ent-dark-text-medium)" }}>
@@ -104,12 +104,12 @@ const features: {
       "Query any location on Earth in natural language. Ask questions, get maps and spatial answers instantly.",
     content: (
       <div>
-        <h2 className="px-4 lg:px-0 text-[28px] md:text-[39px] lg:text-[49px] font-medium text-white leading-[1.1] tracking-[-0.02em]">
+        <h2 className="px-4 lg:px-0 text-[28px] md:text-[39px] lg:text-[49px] font-medium text-ink leading-[1.1] tracking-[-0.02em]">
           Chat with Earth
         </h2>
         <div
-          className="mt-10 w-full rounded-none border border-white/8 border-l-0 border-r-0 overflow-hidden flex items-center justify-center"
-          style={{ aspectRatio: "16 / 9", background: "linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.06) 50%, rgba(255,255,255,0.03) 100%)" }}
+          className="mt-10 w-full rounded-none border border-gridline border-l-0 border-r-0 overflow-hidden flex items-center justify-center"
+          style={{ aspectRatio: "16 / 9", background: "linear-gradient(135deg, rgba(11,27,43,0.02) 0%, rgba(11,27,43,0.04) 50%, rgba(11,27,43,0.02) 100%)" }}
         >
           <span className="text-[14px] font-medium tracking-[0.12em] uppercase" style={{ color: "var(--ent-dark-text-low)" }}>Video Demo</span>
         </div>
@@ -123,12 +123,12 @@ const features: {
       "Generate full site-selection and due diligence reports from a single prompt. What took weeks now takes minutes.",
     content: (
       <div>
-        <h2 className="px-4 lg:px-0 text-[28px] md:text-[39px] lg:text-[49px] font-medium text-white leading-[1.1] tracking-[-0.02em]">
+        <h2 className="px-4 lg:px-0 text-[28px] md:text-[39px] lg:text-[49px] font-medium text-ink leading-[1.1] tracking-[-0.02em]">
           Research Reports
         </h2>
         <div
-          className="mt-10 w-full rounded-none border border-white/8 border-l-0 border-r-0 overflow-hidden flex items-center justify-center"
-          style={{ aspectRatio: "16 / 9", background: "linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.06) 50%, rgba(255,255,255,0.03) 100%)" }}
+          className="mt-10 w-full rounded-none border border-gridline border-l-0 border-r-0 overflow-hidden flex items-center justify-center"
+          style={{ aspectRatio: "16 / 9", background: "linear-gradient(135deg, rgba(11,27,43,0.02) 0%, rgba(11,27,43,0.04) 50%, rgba(11,27,43,0.02) 100%)" }}
         >
           <span className="text-[14px] font-medium tracking-[0.12em] uppercase" style={{ color: "var(--ent-dark-text-low)" }}>Video Demo</span>
         </div>
@@ -142,12 +142,12 @@ const features: {
       "AI-generated geospatial datasets that fill gaps where traditional surveying is too expensive or unavailable.",
     content: (
       <div>
-        <h2 className="px-4 lg:px-0 text-[28px] md:text-[39px] lg:text-[49px] font-medium text-white leading-[1.1] tracking-[-0.02em]">
+        <h2 className="px-4 lg:px-0 text-[28px] md:text-[39px] lg:text-[49px] font-medium text-ink leading-[1.1] tracking-[-0.02em]">
           Generative Geodata
         </h2>
         <div
-          className="mt-10 w-full rounded-none border border-white/8 border-l-0 border-r-0 overflow-hidden flex items-center justify-center"
-          style={{ aspectRatio: "16 / 9", background: "linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.06) 50%, rgba(255,255,255,0.03) 100%)" }}
+          className="mt-10 w-full rounded-none border border-gridline border-l-0 border-r-0 overflow-hidden flex items-center justify-center"
+          style={{ aspectRatio: "16 / 9", background: "linear-gradient(135deg, rgba(11,27,43,0.02) 0%, rgba(11,27,43,0.04) 50%, rgba(11,27,43,0.02) 100%)" }}
         >
           <span className="text-[14px] font-medium tracking-[0.12em] uppercase" style={{ color: "var(--ent-dark-text-low)" }}>Video Demo</span>
         </div>
@@ -161,12 +161,12 @@ const features: {
       "Real humans available around the clock — find datasets, get platform tips, or connect with a live agent instantly.",
     content: (
       <div>
-        <h2 className="px-4 lg:px-0 text-[28px] md:text-[39px] lg:text-[49px] font-medium text-white leading-[1.1] tracking-[-0.02em]">
+        <h2 className="px-4 lg:px-0 text-[28px] md:text-[39px] lg:text-[49px] font-medium text-ink leading-[1.1] tracking-[-0.02em]">
           24/7 Human Support
         </h2>
         <div
-          className="mt-10 w-full rounded-none border border-white/8 border-l-0 border-r-0 overflow-hidden flex items-center justify-center"
-          style={{ aspectRatio: "16 / 9", background: "linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.06) 50%, rgba(255,255,255,0.03) 100%)" }}
+          className="mt-10 w-full rounded-none border border-gridline border-l-0 border-r-0 overflow-hidden flex items-center justify-center"
+          style={{ aspectRatio: "16 / 9", background: "linear-gradient(135deg, rgba(11,27,43,0.02) 0%, rgba(11,27,43,0.04) 50%, rgba(11,27,43,0.02) 100%)" }}
         >
           <span className="text-[14px] font-medium tracking-[0.12em] uppercase" style={{ color: "var(--ent-dark-text-low)" }}>Video Demo</span>
         </div>
@@ -180,7 +180,7 @@ export default function StickyScrollSection() {
   const [, ...rest] = features;
 
   return (
-    <div className="relative w-full" style={{ "--grid-line": "var(--ent-border-dark-grid)", backgroundColor: "var(--ent-bg-dark)", backgroundImage: "linear-gradient(rgba(255,255,255,0.04), rgba(255,255,255,0.04))" } as React.CSSProperties}>
+    <div className="relative w-full" style={{ "--grid-line": "var(--ent-border-dark-grid)", backgroundColor: "var(--ent-bg-dark)" } as React.CSSProperties}>
 
       {/* Noise grain texture */}
       <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ zIndex: 1, opacity: 0.40, mixBlendMode: "multiply" }}>
@@ -213,15 +213,15 @@ export default function StickyScrollSection() {
 
             {/* Mobile: label above content */}
             <div className="lg:hidden px-4 pt-10 pb-4">
-              <p className="text-[11px] font-medium tracking-[0.12em] uppercase text-white/30 mb-0">{feature.label}</p>
+              <p className="text-[11px] font-medium tracking-[0.12em] uppercase text-muted mb-0">{feature.label}</p>
             </div>
 
             {/* Desktop: Left column (label + description together, sticky) */}
             <div className="hidden lg:block bg-transparent">
               <div className="sticky top-20 px-8 py-[94px]">
                 <div className="max-w-[270px]">
-                  <p className="text-[11px] font-medium tracking-[0.12em] uppercase text-white/30 mb-3">{feature.label}</p>
-                  <p className="text-[22px] font-normal leading-[1.55] tracking-[-0.01em] text-white">
+                  <p className="text-[11px] font-medium tracking-[0.12em] uppercase text-muted mb-3">{feature.label}</p>
+                  <p className="text-[22px] font-normal leading-[1.55] tracking-[-0.01em] text-ink">
                     {feature.description}
                   </p>
                 </div>
@@ -244,7 +244,7 @@ export default function StickyScrollSection() {
 
             {/* Mobile: description below content */}
             <div className="lg:hidden px-4 pt-4 pb-10">
-              <p className="text-[16px] font-normal leading-[1.6] tracking-[-0.01em] text-white/45">
+              <p className="text-[16px] font-normal leading-[1.6] tracking-[-0.01em] text-muted">
                 {feature.description}
               </p>
             </div>

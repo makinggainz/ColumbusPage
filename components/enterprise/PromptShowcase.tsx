@@ -6,12 +6,12 @@ import { useEffect, useRef, useState } from "react";
 function PromptCard({ image, text, popStyle }: { image: string; text: string; popStyle?: React.CSSProperties }) {
   return (
     <div
-      className="w-[320px] md:w-[360px] lg:w-[376px] rounded-[18px] bg-[#FDFDFD] border border-[#EDEDED] shadow-lg overflow-hidden"
+      className="w-[320px] md:w-[360px] lg:w-[376px] rounded-[18px] bg-[#FDFDFD] border border-gridline shadow-lg overflow-hidden"
       style={popStyle}
     >
 
       {/* Header */}
-      <div className="flex items-center gap-2 px-4 py-3 text-[14px] text-[#374151] font-medium">
+      <div className="flex items-center gap-2 px-4 py-3 text-[14px] text-muted font-medium">
         🌐 I created this map for you
       </div>
 
@@ -28,7 +28,7 @@ function PromptCard({ image, text, popStyle }: { image: string; text: string; po
       {/* Prompt */}
       <div className="flex items-center justify-between px-4 py-3 bg-white text-[14px] leading-[140%]">
         <span className="max-w-[240px] md:max-w-[260px]">{text}</span>
-        <div className="w-6 h-6 bg-[#0E1A44] rounded-[6px]" />
+        <div className="w-6 h-6 bg-cta rounded-[6px]" />
       </div>
 
     </div>
@@ -38,13 +38,13 @@ function PromptCard({ image, text, popStyle }: { image: string; text: string; po
 function CenterPrompt({ popStyle }: { popStyle?: React.CSSProperties }) {
   return (
     <div
-      className="relative w-[320px] md:w-[420px] lg:w-[503px] rounded-[18px] bg-[#F7F7F7] border border-[#EDEDED] shadow-xl overflow-visible"
+      className="relative w-[320px] md:w-[420px] lg:w-[503px] rounded-[18px] bg-[#F7F7F7] border border-gridline shadow-xl overflow-visible"
       style={popStyle}
     >
 
-      <div className="px-5 py-4 text-[13px] text-[#6B7280] leading-[150%]">
+      <div className="px-5 py-4 text-[13px] text-muted leading-[150%]">
 
-        <div className="flex items-center gap-2 mb-2 font-medium text-[#4B5563]">
+        <div className="flex items-center gap-2 mb-2 font-medium text-muted">
           🌐 Columbus is thinking...
         </div>
 
@@ -54,7 +54,7 @@ function CenterPrompt({ popStyle }: { popStyle?: React.CSSProperties }) {
 
       </div>
 
-      <div className="flex items-center gap-3 px-5 py-3 bg-white border-t border-[#EDEDED] rounded-b-[18px]">
+      <div className="flex items-center gap-3 px-5 py-3 bg-white border-t border-gridline rounded-b-[18px]">
         <span className="text-[15px] font-medium flex-1 min-w-0">
           Where should I open a new pizzeria shop?
         </span>
@@ -284,58 +284,58 @@ export default function PromptShowcase() {
           >
             Ask about a drawn area
           </h3>
-          <p className="font-medium text-[22px] md:text-[28px] leading-[1.55] tracking-[-0.01em] text-black mt-4 max-w-[334px]"
+          <p className="font-medium text-[22px] md:text-[28px] leading-[1.55] tracking-[-0.01em] text-ink mt-4 max-w-[334px]"
             style={fadeInStyle(part2Visible, 0.15)}
           >
             Draw a specific space and ask
           </p>
 
           {/* Selected area card — 280px below bottom edge of "and ask" */}
-          <div className="mt-[280px] w-[320px] md:w-[360px] rounded-[14px] bg-white border border-[#EDEDED] shadow-xl overflow-hidden"
+          <div className="mt-[280px] w-[320px] md:w-[360px] rounded-[14px] bg-white border border-gridline shadow-xl overflow-hidden"
             style={popStyle(part2CardsVisible, 0)}
           >
-            <div className="flex items-center justify-between px-4 py-3 border-b border-[#EDEDED]">
-              <span className="font-semibold text-[15px] text-[#111] flex items-center gap-2">
+            <div className="flex items-center justify-between px-4 py-3 border-b border-gridline">
+              <span className="font-semibold text-[15px] text-ink flex items-center gap-2">
                 Selected area
                 <span className="text-[#1B37CE]">✓</span>
               </span>
-              <button type="button" className="text-[#888] hover:text-[#111] text-lg leading-none" aria-label="Close">×</button>
+              <button type="button" className="text-[#888] hover:text-ink text-lg leading-none" aria-label="Close">×</button>
             </div>
-            <p className="px-4 py-3 text-[13px] text-[#6B7280] leading-[150%]">
+            <p className="px-4 py-3 text-[13px] text-muted leading-[150%]">
               Click points on the map to measure distances and research areas.
             </p>
-            <div className="border-t border-[#EDEDED]">
-              <details className="group border-b border-[#EDEDED]">
-                <summary className="px-4 py-3 text-[13px] font-medium text-[#374151] cursor-pointer flex items-center justify-between list-none">
+            <div className="border-t border-gridline">
+              <details className="group border-b border-gridline">
+                <summary className="px-4 py-3 text-[13px] font-medium text-muted cursor-pointer flex items-center justify-between list-none">
                   Advanced Measurements
                   <span className="text-[#9CA3AF] group-open:rotate-180 transition-transform">▼</span>
                 </summary>
-                <div className="px-4 pb-3 text-[13px] text-[#6B7280]">
+                <div className="px-4 pb-3 text-[13px] text-muted">
                   Perimeter size — Min: 456.34 m Median: 356.23 m Max: 1345.35 m
                 </div>
               </details>
-              <details className="group border-b border-[#EDEDED]">
-                <summary className="px-4 py-3 text-[13px] font-medium text-[#374151] cursor-pointer flex items-center justify-between list-none">
+              <details className="group border-b border-gridline">
+                <summary className="px-4 py-3 text-[13px] font-medium text-muted cursor-pointer flex items-center justify-between list-none">
                   Listed Owners
                   <span className="text-[#9CA3AF] group-open:rotate-180 transition-transform">▼</span>
                 </summary>
-                <div className="px-4 pb-3 text-[13px] text-[#6B7280] space-y-1">
+                <div className="px-4 pb-3 text-[13px] text-muted space-y-1">
                   <p>Janet McArthy (age 45)</p>
                   <p>Tom McArthy (age 52)</p>
                 </div>
               </details>
               <details className="group">
-                <summary className="px-4 py-3 text-[13px] font-medium text-[#374151] cursor-pointer flex items-center justify-between list-none">
+                <summary className="px-4 py-3 text-[13px] font-medium text-muted cursor-pointer flex items-center justify-between list-none">
                   Property History
                   <span className="text-[#9CA3AF] group-open:rotate-180 transition-transform">▼</span>
                 </summary>
-                <div className="px-4 pb-3 text-[13px] text-[#6B7280] space-y-1">
+                <div className="px-4 pb-3 text-[13px] text-muted space-y-1">
                   <p>Bought Jan, 2023</p>
                   <p>Last listed price: $345,309</p>
                 </div>
               </details>
             </div>
-            <div className="px-4 py-3 border-t border-[#EDEDED]">
+            <div className="px-4 py-3 border-t border-gridline">
               <button type="button" className="text-[13px] font-medium text-[#1B37CE] hover:underline">
                 More data
               </button>
@@ -343,7 +343,7 @@ export default function PromptShowcase() {
           </div>
 
           {/* Bottom-left CTA — 30px below selected area card */}
-          <p className="mt-[30px] text-black font-medium text-[22px] md:text-[28px] leading-[1.55] tracking-[-0.01em] max-w-[380px]"
+          <p className="mt-[30px] text-ink font-medium text-[22px] md:text-[28px] leading-[1.55] tracking-[-0.01em] max-w-[380px]"
             style={fadeInStyle(part2Visible, 0.3)}
           >
             Or access full advanced data about the polygon.
@@ -382,14 +382,14 @@ export default function PromptShowcase() {
                 Columbus is thinking...
               </span>
             </div>
-            <div className="flex items-center gap-2 px-5 py-3 border-t border-[#EDEDED] bg-[#FAFAFA]" style={{ paddingLeft: 24 }}>
+            <div className="flex items-center gap-2 px-5 py-3 border-t border-gridline bg-[#FAFAFA]" style={{ paddingLeft: 24 }}>
               <input
                 type="text"
                 readOnly
                 value="what is the jewish demographic in this area"
-                className="flex-1 min-w-0 bg-transparent text-[14px] text-[#111] outline-none"
+                className="flex-1 min-w-0 bg-transparent text-[14px] text-ink outline-none"
               />
-              <div className="w-8 h-8 rounded-[8px] bg-[#0E1A44] flex-shrink-0" aria-hidden />
+              <div className="w-8 h-8 rounded-[8px] bg-cta flex-shrink-0" aria-hidden />
             </div>
           </div>
           {/* Tool icons: bottom of stack = card bottom, larger icons with even spacing */}

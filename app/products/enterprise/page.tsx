@@ -42,13 +42,15 @@ export default function EnterprisePage() {
 
   return (
     <main className="ent-scope">
-      <SectionWithLabel label={sectionLabels[0]}>
-        <MistxNav />
-      </SectionWithLabel>
+      {/* MistxNav is rendered as a direct child of <main> — not wrapped in
+          SectionWithLabel — so its position:sticky has the full page as its
+          containing block. Wrapping it in a navbar-height <section> would
+          trap the sticky element and let it scroll away after ~88px. */}
+      <MistxNav heroWhite />
       <SectionWithLabel label={sectionLabels[1]}>
         <EnterpriseHero />
       </SectionWithLabel>
-      <div ref={darkStartRef} className="relative" style={{ backgroundColor: "#060810" }}>
+      <div ref={darkStartRef} className="relative" style={{ backgroundColor: "#ffffff" }}>
         <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ zIndex: 1, opacity: 0.40, mixBlendMode: "multiply" }}>
           <filter id="b2cNoise">
             <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="4" stitchTiles="stitch" />
@@ -65,8 +67,8 @@ export default function EnterprisePage() {
           </SectionWithLabel>
           {/* Horizontal line from screen edges to grid bounds */}
           <div className="relative w-full" style={{ height: 1 }}>
-            <div className="absolute top-0 left-0 h-px" style={{ width: "calc((100% - 1287px) / 2)", backgroundColor: "rgba(255,255,255,0.10)" }} />
-            <div className="absolute top-0 right-0 h-px" style={{ width: "calc((100% - 1287px) / 2)", backgroundColor: "rgba(255,255,255,0.10)" }} />
+            <div className="absolute top-0 left-0 h-px" style={{ width: "calc((100% - 1287px) / 2)", backgroundColor: "#E7E7F1" }} />
+            <div className="absolute top-0 right-0 h-px" style={{ width: "calc((100% - 1287px) / 2)", backgroundColor: "#E7E7F1" }} />
           </div>
           <SectionWithLabel label={sectionLabels[4]}>
             <ComparisonSection />

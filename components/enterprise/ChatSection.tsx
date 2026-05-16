@@ -26,11 +26,12 @@ export default function ChatSection() {
         className="absolute inset-0 pointer-events-none"
         style={{ backgroundColor: "var(--ent-blue-tint)", mixBlendMode: "color", opacity: 0.5, zIndex: 0 }}
       />
-      {/* Dark gradient overlay */}
+      {/* Light scrim — keeps the blurred photo faint so dark text reads,
+          mirroring the EnterpriseHero treatment. */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
-          background: "linear-gradient(180deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.25) 50%, rgba(0,0,0,0.45) 100%)",
+          background: "linear-gradient(180deg, rgba(255,255,255,0.72) 0%, rgba(255,255,255,0.45) 50%, rgba(255,255,255,0.62) 100%)",
           zIndex: 1,
         }}
         aria-hidden
@@ -38,7 +39,7 @@ export default function ChatSection() {
 
       {/* Heading */}
       <h2
-        className="relative z-10 font-medium text-center text-[28px] md:text-[36px] lg:text-[48px] leading-[1.15] tracking-[-0.02em] text-white px-6"
+        className="relative z-10 font-medium text-center text-[28px] md:text-[36px] lg:text-[48px] leading-[1.15] tracking-[-0.02em] text-ink px-6"
       >
         Chat with us now about Columbus Pro
       </h2>
