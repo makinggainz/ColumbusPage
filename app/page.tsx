@@ -25,8 +25,8 @@ import { Careers } from "@/components/home/Careers";
 const HOME_BACKDROP_CSS = `
 html, body { background: #FFFFFF !important; }
 :root {
-  --frame-shadow: 0 -1px 2px rgba(15, 23, 60, 0.10),
-                  0 -6px 14px rgba(15, 23, 60, 0.15);
+  --frame-shadow: 0 0 2px rgba(0, 0, 0, 0.10),
+                  0 0 14px rgba(0, 0, 0, 0.15);
 }
 `;
 

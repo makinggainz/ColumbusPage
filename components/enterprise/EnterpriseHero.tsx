@@ -71,12 +71,11 @@ export default function EnterpriseHero() {
         paddingTop: 120,
       }}
     >
-      {/* Background image — illustrated night-time cityscape aerial
-          (public/productHero.jpeg), cover-fit. */}
+      {/* Background image — public/productback.png, cover-fit. */}
       <div
         className="absolute inset-0"
         style={{
-          backgroundImage: "url(/productHero.jpeg)",
+          backgroundImage: "url(/productback.png)",
           backgroundPosition: "center",
           backgroundSize: "cover",
           backgroundRepeat: "no-repeat",
