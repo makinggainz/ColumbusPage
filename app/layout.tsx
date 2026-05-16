@@ -4,7 +4,7 @@ import "./globals.css";
 import { LenisProvider } from "@/components/home/LenisContext";
 import { ScrollRestorer } from "@/components/layout/ScrollRestorer";
 import { PageFrame } from "@/components/layout/PageFrame";
-import { Footer } from "@/components/layout/Footer";
+import { RouteAwareFooter } from "@/components/layout/RouteAwareFooter";
 
 export const metadata: Metadata = {
   title: "Columbus",
@@ -46,13 +46,10 @@ export default function RootLayout({
               viewport bottom via Footer's `reveal` prop). PageFrame is
               z-index 1 with a bottom margin equal to the footer height,
               so as the user scrolls past the page content the white card
-              slides up over the fixed footer — revealing it from below. */}
-          <Footer
-            reveal
-            theme="dark"
-            bg="#000000"
-            bgImage="/footerbackground.jpeg"
-          />
+              slides up over the fixed footer — revealing it from below.
+              RouteAwareFooter themes it per route: light/white on the
+              homepage (matching its white backdrop), dark elsewhere. */}
+          <RouteAwareFooter />
           <PageFrame>{children}</PageFrame>
         </LenisProvider>
       </body>

@@ -118,6 +118,10 @@ export function PageFrame({ children }: { children: ReactNode }) {
         // the fixed footer that sits behind it (z-index 0).
         marginBottom: "var(--footer-reveal-height, 100vh)",
         borderRadius: "var(--frame-radius, 20px)",
+        // Off by default (navy backdrop on most routes). The homepage
+        // sets --frame-shadow so the white card reads as a floating
+        // panel against its white backdrop. Tracks the rounded corners.
+        boxShadow: "var(--frame-shadow, none)",
         backgroundColor: "#FFFFFF",
         overflow: "clip",
         minHeight: "calc(100vh - var(--frame-margin, 16px) * 2)",
