@@ -32,8 +32,8 @@ export default function ProductBanner() {
       <div
         className="relative z-10 flex flex-col items-center justify-center px-4 md:px-10"
         style={{
-          paddingTop: "clamp(120px, 15vw, 230px)",
-          paddingBottom: "clamp(120px, 15vw, 230px)",
+          paddingTop: "clamp(120px, 15vw, 192px)",
+          paddingBottom: "clamp(120px, 15vw, 192px)",
           opacity: visible ? 1 : 0,
           transform: visible ? "translateY(0)" : "translateY(10px)",
           transition: "opacity 0.6s ease, transform 0.6s ease",
@@ -44,7 +44,7 @@ export default function ProductBanner() {
           style={{
             fontWeight: 500,
             letterSpacing: "-0.02em",
-            color: "#1D1D1F",
+            color: "var(--ent-text-primary)",
           }}
         >
           <strong>Columbus Pro</strong>
@@ -57,8 +57,8 @@ export default function ProductBanner() {
           className="group mt-10 flex items-center gap-3 text-[15px] lg:text-[20px] font-medium transition-opacity"
           style={{ color: "var(--ent-text-primary)" }}
         >
-          <span className="transition-colors duration-300 group-hover:text-[#2563EB]">Try Demo</span>
-          <svg className="transition-transform duration-300 group-hover:translate-x-0.5" width="10" height="18" viewBox="0 0 7 12" fill="none" stroke="#2563EB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+          <span className="transition-colors duration-300 group-hover:text-(--ent-accent)">Try Demo</span>
+          <svg className="transition-transform duration-300 group-hover:translate-x-0.5" width="10" height="18" viewBox="0 0 7 12" fill="none" stroke="var(--ent-accent)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
             <path d="M1 1l5 5-5 5" />
           </svg>
         </Link>

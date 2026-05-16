@@ -19,7 +19,9 @@ const features: {
     fullBleedTop: true,
     content: (
       <div className="relative w-full h-[500px] md:h-[600px] lg:h-[694px]">
-        <span className="absolute left-0 top-0 z-50 flex h-8 w-8 items-center justify-center rounded-br bg-black/80 text-[11px] font-bold text-white opacity-25" aria-hidden>g1.1</span>
+        {process.env.NODE_ENV !== "production" && (
+          <span className="absolute left-0 top-0 z-50 flex h-8 w-8 items-center justify-center rounded-br bg-black/80 text-[11px] font-bold text-white opacity-25" aria-hidden>g1.1</span>
+        )}
         <Image
           src="/enterprise/sunbg.png"
           alt="background"
@@ -212,9 +214,11 @@ export default function StickyScrollSection() {
           <div
             className="relative grid grid-cols-1 lg:grid-cols-[355px_1fr]"
           >
-            <span className="absolute left-0 top-0 z-50 flex h-8 w-8 items-center justify-center rounded-br bg-black/80 text-sm font-bold text-white opacity-25" aria-hidden>
-              g{i + 2}
-            </span>
+            {process.env.NODE_ENV !== "production" && (
+              <span className="absolute left-0 top-0 z-50 flex h-8 w-8 items-center justify-center rounded-br bg-black/80 text-sm font-bold text-white opacity-25" aria-hidden>
+                g{i + 2}
+              </span>
+            )}
 
             {/* Mobile: label above content */}
             <div className="lg:hidden px-4 pt-10 pb-4">
@@ -223,7 +227,7 @@ export default function StickyScrollSection() {
 
             {/* Desktop: Left column (label + description together, sticky) */}
             <div className="hidden lg:block bg-transparent">
-              <div className="sticky top-20 px-8 py-[94px]">
+              <div className="sticky top-20 px-8 py-24">
                 <div className="max-w-[270px]">
                   <p className="text-[11px] font-medium tracking-[0.12em] uppercase text-muted mb-3">{feature.label}</p>
                   <p className="text-[22px] font-normal leading-[1.55] tracking-[-0.01em] text-ink">
@@ -239,14 +243,14 @@ export default function StickyScrollSection() {
                 {feature.content}
               </div>
             ) : (
-              <div className="bg-transparent py-0 lg:py-[74px] px-0 lg:pl-12 lg:pr-8 flex justify-center">
+              <div className="bg-transparent py-0 lg:py-18 px-0 lg:pl-12 lg:pr-8 flex justify-center">
                 <div className="w-full">{feature.content}</div>
               </div>
             )}
 
             {/* Mobile: description below content */}
             <div className="lg:hidden px-4 pt-4 pb-10">
-              <p className="text-[16px] font-normal leading-[1.6] tracking-[-0.01em] text-muted">
+              <p className="text-[16px] font-normal leading-[1.55] tracking-[-0.01em] text-muted">
                 {feature.description}
               </p>
             </div>

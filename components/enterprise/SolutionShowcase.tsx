@@ -33,10 +33,10 @@ export default function SolutionShowcase() {
         {/* Header row */}
         <div
           className="flex flex-col items-center text-center px-6 md:px-10"
-          style={{ paddingTop: 120, paddingBottom: 120 }}
+          style={{ paddingTop: "var(--ent-section-lg)", paddingBottom: "var(--ent-section-lg)" }}
         >
           <h2
-            className="text-ink leading-[1.1] text-[28px] md:text-[36px] lg:text-[45px]"
+            className="text-ink leading-[1.1] text-[28px] md:text-[36px] lg:text-[49px]"
             style={{ fontWeight: 500, letterSpacing: "-0.02em", maxWidth: 720 }}
           >
             Its time for a more powerful and intuitive GIS

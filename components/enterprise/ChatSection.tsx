@@ -39,7 +39,7 @@ export default function ChatSection() {
 
       {/* Heading */}
       <h2
-        className="relative z-10 font-medium text-center text-[28px] md:text-[36px] lg:text-[48px] leading-[1.15] tracking-[-0.02em] text-ink px-6"
+        className="relative z-10 font-medium text-center text-[28px] md:text-[36px] lg:text-[48px] leading-[1.1] tracking-[-0.02em] text-ink px-6"
       >
         Chat with us now about Columbus Pro
       </h2>
@@ -50,8 +50,8 @@ export default function ChatSection() {
         className="relative z-10 group mt-8 flex items-center gap-3 leading-none whitespace-nowrap rounded-button hover:opacity-90 transition-all duration-300 cursor-pointer"
         style={{ fontSize: 15, fontWeight: 500, height: 36, paddingLeft: 20, paddingRight: 16, backgroundColor: "var(--ent-btn-dark)", color: "white" }}
       >
-        <span className="transition-colors duration-300 group-hover:text-[#2563EB]">Talk to Founders</span>
-        <svg className="transition-transform duration-300 group-hover:translate-x-0.5" width="10" height="18" viewBox="0 0 7 12" fill="none" stroke="#2563EB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <span className="transition-colors duration-300 group-hover:text-(--ent-accent)">Talk to Founders</span>
+        <svg className="transition-transform duration-300 group-hover:translate-x-0.5" width="10" height="18" viewBox="0 0 7 12" fill="none" stroke="var(--ent-accent)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
           <path d="M1 1l5 5-5 5" />
         </svg>
       </button>

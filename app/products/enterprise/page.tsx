@@ -25,12 +25,14 @@ function SectionWithLabel({
 }) {
   return (
     <section className="relative">
-      <span
-        className="absolute left-0 top-0 z-50 flex h-8 w-8 items-center justify-center rounded-br bg-black/80 text-sm font-bold text-white opacity-25"
-        aria-hidden
-      >
-        {label}
-      </span>
+      {process.env.NODE_ENV !== "production" && (
+        <span
+          className="absolute left-0 top-0 z-50 flex h-8 w-8 items-center justify-center rounded-br bg-black/80 text-sm font-bold text-white opacity-25"
+          aria-hidden
+        >
+          {label}
+        </span>
+      )}
       {children}
     </section>
   );
@@ -73,8 +75,8 @@ export default function EnterprisePage() {
           </SectionWithLabel>
           {/* Horizontal line from screen edges to grid bounds */}
           <div className="relative w-full" style={{ height: 1 }}>
-            <div className="absolute top-0 left-0 h-px" style={{ width: "calc((100% - 1287px) / 2)", backgroundColor: "#E7E7F1" }} />
-            <div className="absolute top-0 right-0 h-px" style={{ width: "calc((100% - 1287px) / 2)", backgroundColor: "#E7E7F1" }} />
+            <div className="absolute top-0 left-0 h-px" style={{ width: "calc((100% - var(--ent-max-width)) / 2)", backgroundColor: "var(--ent-border-card)" }} />
+            <div className="absolute top-0 right-0 h-px" style={{ width: "calc((100% - var(--ent-max-width)) / 2)", backgroundColor: "var(--ent-border-card)" }} />
           </div>
           <SectionWithLabel label={sectionLabels[4]}>
             <ComparisonSection />

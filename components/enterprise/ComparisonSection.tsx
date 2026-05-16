@@ -31,9 +31,9 @@ export default function ComparisonSection() {
           style={{
             width: "100%",
             aspectRatio: "16 / 9",
-            borderRadius: 12,
+            borderRadius: "var(--ent-radius-lg)",
             background: "linear-gradient(135deg, rgba(11,27,43,0.02) 0%, rgba(11,27,43,0.04) 50%, rgba(11,27,43,0.02) 100%)",
-            border: "1px solid rgba(11,27,43,0.08)",
+            border: "1px solid var(--ent-border-card)",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -46,7 +46,7 @@ export default function ComparisonSection() {
             style={{
               fontSize: 16,
               fontWeight: 500,
-              letterSpacing: "0.06em",
+              letterSpacing: "var(--ent-tracking-overline)",
               textTransform: "uppercase",
               color: "var(--ent-dark-text-low)",
             }}

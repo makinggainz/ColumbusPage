@@ -60,8 +60,10 @@
   --ent-text-muted:          #5A6B7B;
 
   /* ── Colors — formerly "text on dark" ──
-     The dark sections are now light to match the homepage, so these
-     four levels resolve to dark ink/muted on a white background. */
+     The `*-dark*` names are historical. The page is now fully light to
+     match the homepage, so these four levels resolve to dark ink/muted
+     on a white background. Treat them as the light-ink tokens; do NOT
+     reintroduce dark/white-opacity values here. */
   --ent-dark-text-full:      #0B1B2B;
   --ent-dark-text-high:      #0B1B2B;
   --ent-dark-text-medium:    #5A6B7B;
@@ -84,8 +86,9 @@
   --ent-gradient-end:        #318BCA;
 
   /* ── Colors — backgrounds ──
-     All white to match the homepage; the formerly-dark sections
-     (--ent-bg-dark / --ent-bg-dark-alt) now render light. */
+     All white to match the homepage. The `*-dark*` names are historical:
+     --ent-bg-dark / --ent-bg-dark-alt now render light (white). Do NOT
+     reintroduce dark values — the whole page is one light surface. */
   --ent-bg-light:            #FFFFFF;
   --ent-bg-white:            #FFFFFF;
   --ent-bg-card:             #FDFDFD;
@@ -95,8 +98,10 @@
   --ent-bg-monitor-titlebar: #F5F5F7;
 
   /* ── Colors — borders ──
-     --ent-border-card / --ent-border-dark-grid mirror the homepage
-     blueprint hairline (--color-gridline #E7E7F1). */
+     --ent-border-card / --ent-border-dark-grid both mirror the homepage
+     blueprint hairline (--color-gridline #E7E7F1). The `-dark-` name is
+     historical — it is the light hairline. Do NOT reintroduce a darker
+     or white-opacity grid value. */
   --ent-border-card:         #E7E7F1;
   --ent-border-subtle:       rgba(0, 0, 0, 0.07);
   --ent-border-medium:       rgba(0, 0, 0, 0.10);
@@ -171,10 +176,6 @@
   --ent-easing-reveal:       ease;
   --ent-easing-spring:       cubic-bezier(0.34, 1.56, 0.64, 1);
   --ent-easing-toggle:       cubic-bezier(0.25, 1, 0.5, 1);
-
-  /* ── Noise grain overlay ── */
-  --ent-noise-opacity:       0.40;
-  --ent-noise-opacity-strong: 0.50;
 }
 
 /* Tablet+ overrides */

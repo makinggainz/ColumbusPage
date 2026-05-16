@@ -113,7 +113,7 @@ export default function EnterpriseHero() {
 
         <p
           className="mt-5"
-          style={{ fontSize: 21, color: "#FFFFFF", letterSpacing: "-0.01em", fontWeight: 400, maxWidth: 480 }}
+          style={{ fontSize: "var(--ent-text-body-l)", color: "#FFFFFF", letterSpacing: "-0.01em", fontWeight: 400, maxWidth: 480 }}
         >
           GIS so easy, the janitor could be your new researcher
         </p>
@@ -122,11 +122,11 @@ export default function EnterpriseHero() {
           href="/contact"
           className="group flex items-center gap-3 mt-8 text-[18px] lg:text-[20px] text-white font-semibold transition-opacity"
         >
-          <span className="transition-colors duration-300 group-hover:text-[#2563EB]">Talk to Founders</span>
+          <span className="transition-colors duration-300 group-hover:text-(--ent-accent)">Talk to Founders</span>
           <svg
             className="transition-transform duration-300 group-hover:translate-x-0.5"
             width="9" height="16" viewBox="0 0 7 12" fill="none"
-            stroke="#2563EB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"
+            stroke="var(--ent-accent)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"
           >
             <path d="M1 1l5 5-5 5" />
           </svg>
@@ -159,24 +159,25 @@ export default function EnterpriseHero() {
             boxShadow: "0 30px 70px rgba(11,27,43,0.28), 0 2px 10px rgba(11,27,43,0.12)",
           }}
         >
-          {/* Window (back div) — translucent white glass. Its 4px of inset
-              padding below the title bar shows around the product image as
-              a glass gutter on the left, right and bottom. The 20px corner
-              radius matches the site PageFrame. */}
+          {/* Window (back div) — one continuous translucent glass surface.
+              Its 4px of inset padding shows around the product image as a
+              glass gutter; the title bar sits on this same glass (no border,
+              no separate fill) so the strip above the image and the gutter
+              around it read as one seamless pane. 20px radius = PageFrame. */}
           <div
             style={{
               position: "relative",
               width: "100%",
               borderRadius: 20,
               overflow: "hidden",
-              background: "rgba(255,255,255,0.06)",
+              background: "rgba(255,255,255,0.3)",
               backdropFilter: "blur(20px)",
               WebkitBackdropFilter: "blur(20px)",
-              border: "1px solid rgba(255,255,255,0.28)",
             }}
           >
-            {/* Title bar — frosted glass strip carrying the browser
-                close / minimize / expand traffic-light buttons. */}
+            {/* Title bar — carries the traffic lights + tabs directly on
+                the window glass: no own background and no bottom divider,
+                so it flows seamlessly into the gutter around the image. */}
             <div
               style={{
                 display: "flex",
@@ -185,8 +186,6 @@ export default function EnterpriseHero() {
                 height: "clamp(34px, 3.4vw, 46px)",
                 paddingLeft: "clamp(15px, 1.7vw, 24px)",
                 paddingRight: "clamp(12px, 1.5vw, 20px)",
-                background: "rgba(255,255,255,0.3)",
-                borderBottom: "1px solid rgba(255,255,255,0.32)",
               }}
             >
               {(["var(--ent-chrome-red)", "var(--ent-chrome-yellow)", "var(--ent-chrome-green)"] as const).map(c => (

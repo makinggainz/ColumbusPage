@@ -4,6 +4,15 @@
 > The rest of the Columbus Earth site uses a separate system defined in `fonts-typescale.md`.
 > The consumer product page (`/products`) uses `products-page.md`.
 
+> **Status — light, homepage-aligned palette.** The page no longer has a dark
+> theme. All surfaces are white, text is the homepage ink/muted, the hairline
+> is the homepage `--color-gridline`, filled CTAs use the homepage navy, and
+> the single interactive accent is `#0081AC` (the homepage accent). SVG noise
+> grain and vertical structure rails are removed. Typefaces, the e1–e12 type
+> scale, weights, the spacing/radius scales and the motion vocabulary are
+> unchanged and still accurate. `*-dark*` token names are **historical** and
+> resolve to the light palette — see `enterprise-tokens.css`.
+
 ---
 
 ## Typefaces
@@ -47,13 +56,11 @@ The enterprise page uses the same ratio as the global site scale for visual cons
 
 **Only these sizes should be used. Do not invent intermediate values.**
 
-### Deviations to normalize in existing components
-- `45px` (ProblemCards, SolutionShowcase, StickyScrollSection, ProductBanner headings) → move to **e3 (49px)**
-- `48px` (DifferenceSection comparison h3) → move to **e3 (49px)**
-- `36px` at `lg:` (PromptShowcase section heading) → move to **e3 (49px)** at `lg:`
-- `510` weight (PromptShowcase "Columbus is thinking...") → normalize to **500**
-- `21px` (hero subtitle) → move to **e7 (20px)**
-- `24px` (StickyScrollSection body text) → move to **e6 (22px)** or **e5 (28px)**
+### Resolved
+- ProblemCards / SolutionShowcase `lg:` headings → **e3 (49px)** ✓
+- EnterpriseHero subtitle → **e7 (20px, `--ent-text-body-l`)** ✓
+- StickyScrollSection body / DifferenceSection comparison h3 / PromptShowcase
+  heading & `510` weight — verified already compliant in current code ✓
 
 ### Monitor mockup UI (excluded from scale)
 
@@ -112,11 +119,10 @@ Three tiers — simplified from the 7+ values currently scattered across compone
 | e7–e11 (13–20px) | `-0.01em` |
 | e12 (11px) overlines | `+0.12em` |
 
-### Deviations to normalize
-- `-0.04em` (DifferenceSection title, PromptShowcase heading) → `-0.03em`
-- `-0.025em` (ProductBanner heading) → `-0.02em`
-- `0.06em` (uppercase "Video Demo" labels) → `0.12em`
-- `0.2em` (PromptShowcase "REAL USE CASE STORIES") → `0.12em`
+### Resolved
+- ComparisonSection uppercase video label → **`0.12em`** (`--ent-tracking-overline`) ✓
+- DifferenceSection title, PromptShowcase heading/overline, ProductBanner
+  heading — verified already compliant (`-0.03em` / `0.12em` / `-0.02em`) ✓
 
 ---
 
@@ -134,10 +140,10 @@ Three tiers — simplified from the 7+ values currently scattered across compone
 | e10–e11 — 13–14px | `1.5` |
 | e12 — 11px overlines | `1.2` |
 
-### Deviations to normalize
-- `1.15` (ChatSection heading) → `1.1`
-- `1.6` (StickyScrollSection descriptions) → `1.55`
-- `1.65` (DifferenceSection list items, prompt box text) → `1.5` or `1.55`
+### Resolved
+- ChatSection heading → **`1.1`** ✓
+- StickyScrollSection mobile description → **`1.55`** (matches desktop) ✓
+- DifferenceSection list items / prompt box — verified already compliant (`1.5`) ✓
 
 ---
 
@@ -154,7 +160,6 @@ backgroundClip: "text"
 |------|----------|---------|
 | Part 2 Heading | `linear-gradient(90deg, #06096D 0%, #318BCA 100%)` | PromptShowcase "Ask about a drawn area" |
 | Loading Shimmer | `linear-gradient(90deg, #0A1344 0%, #0A1344 30%, #8A9BD4 50%, #0A1344 70%, #0A1344 100%)` | DifferenceSection "Columbus LGM" / "Basic AI" while loading |
-| ProductBanner Noise | SVG noise texture (`feTurbulence`) fill clipped to text | "Columbus Pro — GIS made effortless" |
 
 > Use `filter: drop-shadow(...)` not `text-shadow` — `text-shadow` has no effect when `WebkitTextFillColor` is transparent.
 
@@ -164,41 +169,43 @@ backgroundClip: "text"
 
 ### Text on light backgrounds
 
-| Token | Value | When to use |
-|-------|-------|-------------|
-| **Text Primary** | `#1D1D1F` | Headings and body text on white/light surfaces |
-| **Text Navy** | `#0A1344` | Brand identity text — monitor UI, icon buttons, brand labels |
-| **Text Secondary** | `#374151` | Supporting text, card headers |
-| **Text Tertiary** | `#6B7280` | Descriptions, placeholders, muted labels |
-| **Text Muted** | `rgba(10, 19, 68, 0.40)` | Hero subtitle, breadcrumb separators |
-
-Rules:
-- Do not use `#4B5563` or `#111`. Map to Text Primary or Text Secondary.
-- Do not introduce new gray hex values. Pick from the tokens above.
-
-### Text on dark backgrounds (4 opacity levels only)
+The page is one light surface; text colours map to the homepage palette
+(`--color-ink` / `--color-muted`).
 
 | Token | Value | When to use |
 |-------|-------|-------------|
-| **Dark Text Full** | `rgba(255,255,255,1.0)` | Headings on dark sections |
-| **Dark Text High** | `rgba(255,255,255,0.75)` | Body text on dark. Replaces any 0.70 usage. |
-| **Dark Text Medium** | `rgba(255,255,255,0.45)` | Secondary text, subtitles on dark. Replaces 0.35, 0.40. |
-| **Dark Text Low** | `rgba(255,255,255,0.25)` | Placeholder text, decorative labels on dark. Replaces 0.20, 0.30. |
+| **Text Primary** (`--ent-text-primary`) | `#0B1B2B` | Headings and body text — same as homepage `--color-ink` |
+| **Text Navy** (`--ent-text-navy`) | `#0A1344` | Monitor-UI / brand-identity text only (mockup chrome) |
+| **Text Secondary / Tertiary / Muted** | `#5A6B7B` | All supporting / muted copy — same as homepage `--color-muted` |
 
 Rules:
-- **Only these 4 white-opacity levels.** Do not use ad-hoc values like 0.35 or 0.62.
-- If text feels too faint at 0.25, step up to 0.45. If too strong at 0.75, step down to 0.45.
+- Do not introduce new gray hex values. Use the tokens above.
+- The legacy `#1D1D1F`, `#374151`, `#6B7280`, `rgba(10,19,68,0.40)` values are retired.
 
-### Accent blues
+### Dark backgrounds — removed
 
-> **Rule: Do not introduce new blue hex values.** Every blue on this page must be one of these tokens.
+The enterprise page has **no dark sections**. The formerly-dark surfaces
+(ProblemCards, SolutionShowcase, StickyScrollSection, ComparisonSection,
+ChatSection) now render white to match the homepage. The historical
+`--ent-dark-text-*` tokens still exist for call-site stability but resolve to
+dark ink/muted on white (see `enterprise-tokens.css`). Do not author new
+white-on-dark text or reintroduce white-opacity levels.
+
+### Interactive accent & decorative blues
+
+> **Rule: Do not introduce new blue hex values, and no purple/violet/indigo
+> anywhere on the site.** Interactive accents use `--ent-accent` only;
+> decorative blues are limited to the tokens below.
 
 | Token | Value | Role |
 |-------|-------|------|
-| **Blue Primary** | `#2563EB` | CTA hover states, chevron arrows, interactive highlights |
-| **Blue Deep** | `#1B37CE` | Selected area checkmark, prompt box border accent |
-| **Blue Tint** | `#0066CC` | Hero background overlay tint, blue washes |
-| **Blue Shimmer** | `#8A9BD4` | Loading shimmer gradient midpoint |
+| **Accent** (`--ent-accent`) | `#0081AC` | The ONLY colour for interactive accents — arrows, links, CTA hover. Matches the homepage accent. |
+| **Blue Deep** (`--ent-blue-deep`) | `#1B37CE` | DifferenceSection selected-area checkmark + prompt-box border accent (decorative/identity) |
+| **Blue Tint** (`--ent-blue-tint`) | `#0066CC` | ChatSection photo wash / hero overlay tint (decorative) |
+| **Blue Shimmer** (`--ent-blue-shimmer`) | `#8A9BD4` | DifferenceSection loading-shimmer gradient midpoint |
+
+`#2563EB` (the former "Blue Primary") is **retired** from interactive use;
+`--ent-blue-primary` is kept only as a deprecated, unreferenced token.
 
 ### Gradient blues (PromptShowcase only)
 
@@ -209,34 +216,34 @@ Rules:
 
 ### Backgrounds & surfaces
 
+The whole page is white to match the homepage. `*-dark*` names are historical
+and resolve to white.
+
 | Token | Value | Usage |
 |-------|-------|-------|
-| **Bg Light** | `#F9F9F9` | Hero, ProductBanner — default light section background |
-| **Bg White** | `#FFFFFF` | PromptShowcase, DifferenceSection, card surfaces |
-| **Bg Card** | `#FDFDFD` | PromptShowcase card backgrounds. Replaces `#F7F7F7`, `#FAFAFA`. |
-| **Bg Dark** | `#060810` | Dark sections — ProblemCards, SolutionShowcase, StickyScrollSection, ComparisonSection |
-| **Bg Dark Alt** | `#1a1a1a` | ChatSection background |
-| **Bg Monitor Frame** | `#1D1D1F` | Monitor mockup outer frame |
-| **Bg Monitor Titlebar** | `#F5F5F7` | Monitor window title bar chrome |
+| **Bg Light / Bg White** (`--ent-bg-light` / `--ent-bg-white`) | `#FFFFFF` | Every section background |
+| **Bg Card** (`--ent-bg-card`) | `#FDFDFD` | PromptShowcase card surfaces |
+| **Bg Dark / Bg Dark Alt** (`--ent-bg-dark` / `--ent-bg-dark-alt`) | `#FFFFFF` | Historical names — resolve to white. Do not reintroduce dark values. |
+| **Bg Monitor Frame** (`--ent-bg-monitor-frame`) | `#1D1D1F` | Monitor mockup bezel — the only dark fill, an intentional device frame |
+| **Bg Monitor Titlebar** (`--ent-bg-monitor-titlebar`) | `#F5F5F7` | Monitor window title-bar chrome |
 
 ### Borders & dividers
 
 | Token | Value | Usage |
 |-------|-------|-------|
-| **Border Card** | `#EDEDED` | Card borders on light backgrounds |
-| **Border Subtle** | `rgba(0,0,0,0.07)` | Internal panel dividers, sidebar borders |
-| **Border Medium** | `rgba(0,0,0,0.10)` | Window title bar borders |
-| **Border Dark Grid** | `rgba(255,255,255,0.10)` | Grid lines, vertical structure lines on dark backgrounds |
-| **Border Dark Subtle** | `rgba(255,255,255,0.06)` | Fainter structural lines on dark backgrounds |
-| **Border Accent** | `rgba(27,55,206,0.25)` | DifferenceSection prompt box border (Blue Deep at 25% opacity) |
+| **Border Card** (`--ent-border-card`) | `#E7E7F1` | All hairline borders / dividers — the homepage blueprint hairline (`--color-gridline`) |
+| **Border Dark Grid** (`--ent-border-dark-grid`) | `#E7E7F1` | Historical name — the same light hairline as Border Card |
+| **Border Subtle** (`--ent-border-subtle`) | `rgba(0,0,0,0.07)` | Internal monitor-panel dividers |
+| **Border Medium** (`--ent-border-medium`) | `rgba(0,0,0,0.10)` | Monitor window title-bar borders |
+| **Border Accent** (`--ent-border-accent`) | `rgba(27,55,206,0.25)` | DifferenceSection prompt-box border (Blue Deep @ 25% — identity) |
 
 ### Button & icon backgrounds
 
+Filled CTAs use the homepage navy (`--color-cta`).
+
 | Token | Value | Usage |
 |-------|-------|-------|
-| **Button Dark** | `#1D1D1F` | "More use cases" button, dark CTA backgrounds |
-| **Button Navy** | `#0A1344` | Monitor UI send button, sidebar active icon |
-| **Button Navy Alt** | `#0E1A44` | Prompt card icon, alternate dark button |
+| **Button Dark / Navy / Navy Alt** (`--ent-btn-dark` / `--ent-btn-navy` / `--ent-btn-navy-alt`) | `#0B1342` | All filled CTA + monitor-UI button backgrounds — same as homepage `--color-cta` |
 
 ### Window chrome colors (monitor mockup only)
 
@@ -272,16 +279,18 @@ All spacing must be a **multiple of 4px**. No exceptions.
 |-------|-------|-------|
 | Section SM | `96px` (24 × 4) | Compact sections |
 | Section MD | `112px` (28 × 4) | DifferenceSection (`py-28`) |
-| Section LG | `128px` (32 × 4) | PromptShowcase (`py-32`), SolutionShowcase (120px → 128px) |
+| Section LG | `128px` (32 × 4) | PromptShowcase (`py-32`), SolutionShowcase header |
 | Section XL | `160px` (40 × 4) | PromptShowcase at md (`md:py-40`) |
-| Section Hero | `192px` (48 × 4) | ProductBanner (230px → 192px) |
+| Section Hero | `192px` (48 × 4) | ProductBanner (`clamp(120px,15vw,192px)`) |
 
-### Deviations to normalize
-- `100px` (ProblemCards padding) → `96px` or `104px`
-- `230px` (ProductBanner padding) → `192px` or `224px` (56 × 4)
-- `280px` (ChatSection paddingTop) → `288px` (72 × 4) or `256px` (64 × 4)
-- `120px` (SolutionShowcase padding) → `128px`
-- `74px` (StickyScrollSection py) → `72px` (18 × 4) or `76px` (19 × 4)
+### Resolved
+- ProblemCards header padding → **96px** (`--ent-section-sm`) ✓
+- SolutionShowcase header padding → **128px** (`--ent-section-lg`) ✓
+- ProductBanner padding → **`clamp(120px,15vw,192px)`** (`--ent-section-hero` cap) ✓
+- StickyScrollSection sticky column → **96px** (`py-24`); content column → **72px** (`lg:py-18`) ✓
+
+Accepted exception: ChatSection `lg:pt-[280px]` is a deliberate
+monitor-overlap value, not on the section-padding scale — left as-is.
 
 ### Common gaps
 
@@ -361,39 +370,22 @@ Stagger delays: 0s, 0.15s, 0.3s, 0.45s for sequential elements.
 
 ---
 
-## Noise Grain Texture
+## Background Treatment (Line-Art)
 
-Multiple dark sections share a consistent SVG noise overlay:
+The SVG noise grain and the blueprint vertical structure rails are **removed**.
+They are replaced by a single faint city line-art image,
+`/enterpriseartbackground.png`, anchored along the bottom horizon:
 
-```html
-<svg style="opacity: 0.40–0.50; mixBlendMode: multiply">
-  <filter id="noise">
-    <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="4" stitchTiles="stitch" />
-    <feColorMatrix type="saturate" values="0" />
-  </filter>
-  <rect width="100%" height="100%" filter="url(#noise)" />
-</svg>
-```
+| Where | Treatment |
+|-------|-----------|
+| Mid-block (ProblemCards → ComparisonSection wrapper), ProductBanner | `background-image: url(/enterpriseartbackground.png)`; `background-size: 100% auto`; `background-repeat: no-repeat`; `background-position: center bottom`; on `#FFFFFF` |
+| StickyScrollSection | Same image, `filter: invert(1)`, `mix-blend-mode: screen`, `opacity: 0.5`, height `min(70%, 700px)` — reads as a faint light wash on white |
 
-| Section | Opacity |
-|---------|---------|
-| Dark sections (ProblemCards → ComparisonSection wrapper) | `0.40` |
-| ProductBanner | `0.50` |
-| StickyScrollSection | `0.40` |
-
----
-
-## Grid Structure Lines
-
-Dark sections use vertical structure lines at the content constraint boundary:
-
-```
-max-width: 1287px, centered
-border-left: 1px solid rgba(255,255,255,0.10)
-border-right: 1px solid rgba(255,255,255,0.10)
-```
-
-Horizontal dividers between sub-sections use the same color at 1px height.
+Horizontal dividers (e.g. the page mid-block rule) are a 1px line in
+**`--ent-border-card` (`#E7E7F1`)**, drawn from the screen edge to the
+1287px content bound. Vertical structure rails are suppressed page-wide via
+`.ent-scope .grid-section::before/::after { display:none }` in
+`enterprise-tokens.css` — do not reintroduce them.
 
 ---
 
@@ -430,8 +422,8 @@ becomes the sticky containing block and lets the navbar scroll away.
 ### Hero text
 
 `h1`, the subtitle, and the "Talk to Founders" link all render in white
-(`#FFFFFF`) for contrast against the sky. The link's arrow keeps the
-`#2563EB` (Blue Primary) accent.
+(`#FFFFFF`) for contrast against the sky. The link's arrow and hover state
+use the `#0081AC` (`--ent-accent`) interactive accent.
 
 ### Navbar backdrop + colour over the hero
 
