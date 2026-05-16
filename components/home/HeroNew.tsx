@@ -43,6 +43,15 @@ const HN_CSS = `
   min-height: 100vh;
   display: flex;
   align-items: center;
+  /* Bottom gutter + rounded bottom corners. Reuses the same
+     --frame-margin / --frame-radius vars PageFrame animates (30px / 20px
+     at scrollY 0 → 0 / 0 within the first 150px of scroll). At rest the
+     hero reads as an inset rounded card with a gutter beneath it; as the
+     user scrolls it merges to full-bleed in sync with the PageFrame
+     reveal. overflow: hidden (above) clips the video to the radius. */
+  margin-bottom: var(--frame-margin, 30px);
+  border-bottom-left-radius: var(--frame-radius, 20px);
+  border-bottom-right-radius: var(--frame-radius, 20px);
 }
 
 /* Full-bleed background video. Sits at the very bottom of the section's

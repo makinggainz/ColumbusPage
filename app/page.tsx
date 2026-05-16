@@ -47,7 +47,10 @@ export default function Home() {
           Research). The intro lede is the renamed TextScrollIntro
           (scroll-driven word reveal); the bento grid below shows the
           three products as a featured + 2-stacked tile layout. */}
-      <div className="mt-16">
+      {/* pt-16 (not mt-16): padding, not margin, so the hero's animated
+          bottom gutter (margin-bottom: var(--frame-margin)) isn't eaten
+          by sibling margin-collapse and stays visible / animatable. */}
+      <div className="pt-16">
         <TextScrollIntro />
         <BentoProducts />
 
