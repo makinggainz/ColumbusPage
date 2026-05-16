@@ -24,7 +24,22 @@ export default function SolutionShowcase() {
   }, []);
 
   return (
-    <div ref={sectionRef} style={{ "--grid-line": "var(--ent-border-dark-grid)", backgroundColor: "transparent" } as React.CSSProperties}>
+    <div
+      ref={sectionRef}
+      className="relative overflow-hidden"
+      style={{
+        "--grid-line": "var(--ent-border-dark-grid)",
+        backgroundColor: "#ffffff",
+        // The faint city line-art now lives only behind this section,
+        // full-width and anchored along the bottom horizon. The GridSection
+        // below is transparent (inline override), so it reads behind the
+        // "Its time for a more powerful…" heading.
+        backgroundImage: "url(/enterpriseartbackground.png)",
+        backgroundSize: "100% auto",
+        backgroundRepeat: "no-repeat",
+        backgroundPosition: "center bottom",
+      } as React.CSSProperties}
+    >
       <GridSection
         style={{
           backgroundColor: "transparent",

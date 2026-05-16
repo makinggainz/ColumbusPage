@@ -4,14 +4,22 @@
 > The rest of the Columbus Earth site uses a separate system defined in `fonts-typescale.md`.
 > The consumer product page (`/products`) uses `products-page.md`.
 
-> **Status — light, homepage-aligned palette.** The page no longer has a dark
-> theme. All surfaces are white, text is the homepage ink/muted, the hairline
-> is the homepage `--color-gridline`, filled CTAs use the homepage navy, and
-> the single interactive accent is `#0081AC` (the homepage accent). SVG noise
-> grain and vertical structure rails are removed. Typefaces, the e1–e12 type
-> scale, weights, the spacing/radius scales and the motion vocabulary are
-> unchanged and still accurate. `*-dark*` token names are **historical** and
-> resolve to the light palette — see `enterprise-tokens.css`.
+> **Status — strict homepage parity.** The page reads as the same design
+> language as the homepage. All surfaces are white; text is the homepage
+> ink/muted; the hairline is `--color-gridline`; filled CTAs use the homepage
+> navy at the homepage button radius (`rounded-button-md`, 18px); the single
+> interactive accent is `#0081AC`. **Headings render in Funnel Display**
+> (`--font-display`) — the homepage heading face; Axiforma is no longer used
+> for enterprise headings. **Content cards / media frames / prompt boxes use a
+> 7px corner** (`--ent-radius-card`) — the homepage's canonical card radius —
+> with the homepage product-visual shadow (`--ent-shadow-card`) and the
+> `#E7E7F1` hairline ring. **Enterprise-only gradient text is removed**;
+> affected headings render solid `--ent-text-primary`. SVG noise grain and
+> vertical structure rails are removed. The e1–e12 type scale, weights,
+> spacing scale and motion vocabulary are unchanged. The monitor mockup keeps
+> its own device-chrome radii (it has no homepage equivalent). `*-dark*` token
+> names are **historical** and resolve to the light palette — see
+> `enterprise-tokens.css`.
 
 ---
 
@@ -21,15 +29,19 @@ Two-family system, applied page-wide via `.ent-scope` rules in `enterprise-token
 
 | Role | Stack | Token | Where |
 |------|-------|-------|-------|
-| Titles / Headings | `Axiforma` | `--ent-font-heading` (= `--font-hero`) | All `h1`–`h6` title texts |
+| Titles / Headings | `Funnel Display` | `--ent-font-heading` (= `--font-display`) | All `h1`–`h6` title texts — same as the homepage |
 | Body / UI | `Opening Hours Sans` | `--ent-font-sans` (= `--font-sans`) | Body copy, captions, UI labels, CTAs |
+
+Strict homepage parity: enterprise headings use **Funnel Display**, the same
+face the homepage hero and section headings use. Axiforma (`--font-hero`) is
+no longer used for enterprise page headings.
 
 Mechanism: `.ent-scope` sets the body face on the whole page; a
 `.ent-scope :is(h1,h2,h3,h4,h5,h6):not(footer *)` rule promotes every heading
-to Axiforma. Enterprise sections use semantic `h1`–`h6` tags for their titles,
-so no per-component font edits are needed. The shared `<footer>` is excluded
-via `:not(footer *)` so it keeps the site-wide Funnel Display heading face it
-uses on every other page.
+to Funnel Display. Enterprise sections use semantic `h1`–`h6` tags for their
+titles, so no per-component font edits are needed (the one inline override on
+the hero `h1` now points at `--ent-font-heading`). The shared `<footer>`
+already uses the site-wide Funnel Display heading face — now identical.
 
 ---
 
@@ -147,21 +159,19 @@ Three tiers — simplified from the 7+ values currently scattered across compone
 
 ---
 
-## Gradient Text
+## Gradient Text — removed
 
-Gradient text is used sparingly on the enterprise page, rendered via:
-```css
-WebkitBackgroundClip: "text"
-WebkitTextFillColor: "transparent"
-backgroundClip: "text"
-```
+Strict homepage parity: the homepage has no gradient text, so all
+enterprise-only gradient text is **removed**.
 
-| Name | Gradient | Element |
-|------|----------|---------|
-| Part 2 Heading | `linear-gradient(90deg, #06096D 0%, #318BCA 100%)` | PromptShowcase "Ask about a drawn area" |
-| Loading Shimmer | `linear-gradient(90deg, #0A1344 0%, #0A1344 30%, #8A9BD4 50%, #0A1344 70%, #0A1344 100%)` | DifferenceSection "Columbus LGM" / "Basic AI" while loading |
+| Was | Now |
+|-----|-----|
+| PromptShowcase "Ask about a drawn area" — `linear-gradient(90deg, #06096D→#318BCA)` clipped to text | Solid `--ent-text-primary` (`text-ink`) |
+| DifferenceSection "Columbus LGM" / "Basic AI" loading shimmer — animated navy→`#8A9BD4` clip | Solid `--ent-text-primary` (no gradient, no `comparison-shimmer` animation) |
 
-> Use `filter: drop-shadow(...)` not `text-shadow` — `text-shadow` has no effect when `WebkitTextFillColor` is transparent.
+The `--ent-gradient-start` / `--ent-gradient-end` tokens are retained but
+**deprecated and unreferenced**. Do not reintroduce `WebkitBackgroundClip:
+text` / `WebkitTextFillColor: transparent` on this page.
 
 ---
 
@@ -202,17 +212,16 @@ white-on-dark text or reintroduce white-opacity levels.
 | **Accent** (`--ent-accent`) | `#0081AC` | The ONLY colour for interactive accents — arrows, links, CTA hover. Matches the homepage accent. |
 | **Blue Deep** (`--ent-blue-deep`) | `#1B37CE` | DifferenceSection selected-area checkmark + prompt-box border accent (decorative/identity) |
 | **Blue Tint** (`--ent-blue-tint`) | `#0066CC` | ChatSection photo wash / hero overlay tint (decorative) |
-| **Blue Shimmer** (`--ent-blue-shimmer`) | `#8A9BD4` | DifferenceSection loading-shimmer gradient midpoint |
+| ~~Blue Shimmer~~ (`--ent-blue-shimmer`) | `#8A9BD4` | **Deprecated** — loading-shimmer gradient text removed (strict parity); unused |
 
 `#2563EB` (the former "Blue Primary") is **retired** from interactive use;
 `--ent-blue-primary` is kept only as a deprecated, unreferenced token.
 
-### Gradient blues (PromptShowcase only)
+### Gradient blues — deprecated
 
-| Token | Value |
-|-------|-------|
-| Gradient Start | `#06096D` |
-| Gradient End | `#318BCA` |
+`--ent-gradient-start` (`#06096D`) / `--ent-gradient-end` (`#318BCA`) are
+**retired** — strict homepage parity removed all gradient text. The tokens
+remain defined but unreferenced; do not use them.
 
 ### Backgrounds & surfaces
 
@@ -261,9 +270,9 @@ Filled CTAs use the homepage navy (`--color-cta`).
 |-------|-------|-------|
 | **Monitor** | `0 40px 100px rgba(0,0,0,0.50), 0 12px 32px rgba(0,0,0,0.30)` | Hero desktop monitor frame |
 | **Monitor Top** | `0 -20px 60px rgba(0,0,0,0.30), 0 -6px 20px rgba(0,0,0,0.15)` | ChatSection monitor (shadow upward) |
-| **Card** | `0px 0px 30px rgba(0,0,0,0.2)` | PromptShowcase cards |
+| **Card** (`--ent-shadow-card`) | `0 24px 60px rgba(11,27,43,0.20)` | Content cards — the homepage product-visual shadow (BentoProducts `.bp-visual`). Paired with the `#E7E7F1` hairline ring (`border border-gridline`), same as the homepage. |
 | **Card XL** | Tailwind `shadow-xl` | PromptShowcase larger cards, selected area card |
-| **Prompt Glow** | `0px 0px 30px 5px rgba(191,197,235,0.25)` | DifferenceSection prompt box |
+| **Prompt Glow** (`--ent-shadow-prompt-glow`) | `0px 0px 30px 5px rgba(191,197,235,0.25)` | DifferenceSection prompt box — canonical homepage blue-glow-on-white; kept |
 | **Image** | Tailwind `shadow-md` | DifferenceSection comparison images |
 | **Image Deep** | Tailwind `shadow-2xl` | StickyScrollSection desk/mobile images |
 
@@ -320,14 +329,22 @@ monitor-overlap value, not on the section-padding scale — left as-is.
 
 ## Border Radius
 
+Strict homepage parity: **every content card, media frame and prompt box uses
+the homepage card corner — `--ent-radius-card` (7px)** (the homepage blog +
+feature cards and careers map). Filled CTAs use the homepage content-CTA
+radius, `rounded-button-md` (18px). The monitor mockup keeps its own
+device-chrome radii (no homepage equivalent — see note). Small inner chips
+stay at 3–8px (homepage micro-element scale).
+
 | Token | Value | Usage |
 |-------|-------|-------|
+| **Radius Card** (`--ent-radius-card`) | `7px` | All content cards / media frames / prompt boxes — the homepage card corner |
 | **Radius SM** | `3px` | Small UI elements, monitor nav buttons |
-| **Radius Base** | `6px` | Card sub-elements |
-| **Radius MD** | `10px` | DifferenceSection images, data cards |
-| **Radius LG** | `14px` | Large cards, prompt boxes, rounded containers |
-| **Radius XL** | `18px` | PromptShowcase cards |
-| **Radius 2XL** | `24px` | Monitor frame (responsive: `clamp(12px, 1.6vw, 24px)`) |
+| **Radius Base** | `6px` | Tiny icon tiles (homepage micro-elements) |
+| **Radius MD** | `10px` | Reserved — superseded by Radius Card for cards/media |
+| **Radius LG** | `14px` | Reserved — superseded by Radius Card |
+| **Radius XL** | `18px` | Reserved — CTAs use `rounded-button-md` (18px) instead |
+| **Radius 2XL** | `24px` | Monitor-mockup device chrome (responsive: `clamp(12px, 1.6vw, 24px)`) — hardware, not a card |
 | **Radius Full** | `9999px` | Pill shapes, circular buttons, toggle |
 
 ---

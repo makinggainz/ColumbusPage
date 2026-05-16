@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from "react";
 function PromptCard({ image, text, popStyle }: { image: string; text: string; popStyle?: React.CSSProperties }) {
   return (
     <div
-      className="w-[320px] md:w-[360px] lg:w-[376px] rounded-[18px] bg-[#FDFDFD] border border-gridline shadow-lg overflow-hidden"
+      className="w-[320px] md:w-[360px] lg:w-[376px] rounded-[7px] bg-[#FDFDFD] border border-gridline shadow-lg overflow-hidden"
       style={popStyle}
     >
 
@@ -38,7 +38,7 @@ function PromptCard({ image, text, popStyle }: { image: string; text: string; po
 function CenterPrompt({ popStyle }: { popStyle?: React.CSSProperties }) {
   return (
     <div
-      className="relative w-[320px] md:w-[420px] lg:w-[503px] rounded-[18px] bg-[#F7F7F7] border border-gridline shadow-xl overflow-visible"
+      className="relative w-[320px] md:w-[420px] lg:w-[503px] rounded-[7px] bg-[#F7F7F7] border border-gridline shadow-xl overflow-visible"
       style={popStyle}
     >
 
@@ -273,14 +273,8 @@ export default function PromptShowcase() {
         <div className="absolute left-0 right-0 top-8 md:top-[72px] z-10 flex flex-row items-end justify-between">
           <div className="w-[320px] md:w-[480px] ml-[40px]">
           <h3
-            className="font-medium text-[28px] md:text-[36px] leading-[1.1] tracking-[-0.03em] flex items-center whitespace-nowrap"
-            style={{
-              background: "linear-gradient(90deg, var(--ent-gradient-start) 0%, var(--ent-gradient-end) 100%)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              backgroundClip: "text",
-              ...fadeInStyle(part2Visible, 0),
-            }}
+            className="font-medium text-[28px] md:text-[36px] leading-[1.1] tracking-[-0.03em] text-ink flex items-center whitespace-nowrap"
+            style={fadeInStyle(part2Visible, 0)}
           >
             Ask about a drawn area
           </h3>
@@ -291,7 +285,7 @@ export default function PromptShowcase() {
           </p>
 
           {/* Selected area card — 280px below bottom edge of "and ask" */}
-          <div className="mt-[280px] w-[320px] md:w-[360px] rounded-[14px] bg-white border border-gridline shadow-xl overflow-hidden"
+          <div className="mt-[280px] w-[320px] md:w-[360px] rounded-[7px] bg-white border border-gridline shadow-xl overflow-hidden"
             style={popStyle(part2CardsVisible, 0)}
           >
             <div className="flex items-center justify-between px-4 py-3 border-b border-gridline">
@@ -361,7 +355,7 @@ export default function PromptShowcase() {
               border: "1px solid var(--ent-border-card)",
               borderRight: "1px solid var(--ent-border-card)",
               boxShadow: "var(--ent-shadow-card)",
-              borderRadius: "var(--ent-radius-xl)",
+              borderRadius: "var(--ent-radius-card)",
               ...popStyle(part2CardsVisible, 0.1),
             }}
           >
@@ -407,7 +401,7 @@ export default function PromptShowcase() {
       <div className="flex justify-center pt-8 pb-4">
         <button
           type="button"
-          className="group flex items-center gap-3 leading-none whitespace-nowrap rounded-button hover:opacity-90 transition-all duration-300 cursor-pointer"
+          className="group flex items-center gap-3 leading-none whitespace-nowrap rounded-button-md hover:opacity-90 transition-all duration-300 cursor-pointer"
           style={{ fontSize: 15, fontWeight: 500, height: 36, paddingLeft: 20, paddingRight: 16, backgroundColor: "var(--ent-btn-dark)", color: "white" }}
         >
           <span className="transition-colors duration-300 group-hover:text-(--ent-accent)">More use cases</span>

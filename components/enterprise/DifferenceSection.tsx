@@ -13,13 +13,11 @@ const fadeIn = (visible: boolean, delay: number): React.CSSProperties => ({
   transition: `opacity 0.6s ease-out ${delay}s, filter 0.6s ease-out ${delay}s, transform 0.6s ease-out ${delay}s`,
 });
 
+// Strict homepage parity: enterprise-only gradient/shimmer text is dropped.
+// The loading state simply renders solid homepage ink (no gradient, no
+// background-position animation).
 const loadingTextStyle: React.CSSProperties = {
-  backgroundImage: "linear-gradient(90deg, var(--ent-text-navy) 0%, var(--ent-text-navy) 30%, var(--ent-blue-shimmer) 50%, var(--ent-text-navy) 70%, var(--ent-text-navy) 100%)",
-  backgroundSize: "200% 100%",
-  WebkitBackgroundClip: "text",
-  backgroundClip: "text",
-  color: "transparent",
-  animation: "comparison-shimmer 1.6s ease-in-out infinite",
+  color: "var(--ent-text-primary)",
 };
 
 export default function DifferenceSection() {
@@ -71,13 +69,6 @@ export default function DifferenceSection() {
 
   return (
     <section ref={sectionRef} className="w-full py-28 lg:py-[180px]" style={{ backgroundColor: "var(--ent-bg-white)" }}>
-      <style>{`
-        @keyframes comparison-shimmer {
-          0% { background-position: 100% 0; }
-          100% { background-position: -100% 0; }
-        }
-      `}</style>
-
       <div className="ent-content-bounds px-4 md:px-10 flex flex-col items-center">
 
         {/* Title */}
@@ -94,7 +85,7 @@ export default function DifferenceSection() {
             ...fadeIn(visible, 0.15),
             boxShadow: "var(--ent-shadow-prompt-glow)",
           }}
-          className="mt-8 w-full max-w-[759px] bg-white border-[1.5px] border-[#1B37CE]/25 rounded-[14px] px-4 md:px-6 py-5 flex items-center justify-between gap-4 md:gap-6"
+          className="mt-8 w-full max-w-[759px] bg-white border-[1.5px] border-[#1B37CE]/25 rounded-[7px] px-4 md:px-6 py-5 flex items-center justify-between gap-4 md:gap-6"
         >
           <p className="text-[15px] md:text-[20px] font-medium leading-[1.5] tracking-[-0.01em] text-left line-clamp-3 min-h-[4.2em]">
             {typedText}
@@ -121,7 +112,7 @@ export default function DifferenceSection() {
               </h3>
 
               <div style={fadeIn(columbusLoaded, 0)}>
-                <div className="relative w-full aspect-[467/319] rounded-[10px] overflow-hidden shadow-md">
+                <div className="relative w-full aspect-[467/319] rounded-[7px] overflow-hidden shadow-md">
                   <Image src="/enterprise/lgm.png" alt="lgm" fill className="object-cover scale-[1.15]" />
                 </div>
                 <ul className="mt-8 space-y-4 text-left w-full list-none pl-0 text-[15px] md:text-[16px] font-normal leading-[1.5] tracking-[-0.01em] text-ink">
@@ -146,7 +137,7 @@ export default function DifferenceSection() {
               </h3>
 
               <div style={fadeIn(basicLoaded, 0)}>
-                <div className="relative w-full aspect-[467/319] rounded-[10px] overflow-hidden">
+                <div className="relative w-full aspect-[467/319] rounded-[7px] overflow-hidden">
                   <Image src="/enterprise/basic.png" alt="basic" fill className="object-cover opacity-90" />
                 </div>
                 <ul className="mt-8 space-y-4 text-left w-full list-none pl-0 text-[15px] md:text-[16px] font-normal leading-[1.5] tracking-[-0.01em] text-ink">

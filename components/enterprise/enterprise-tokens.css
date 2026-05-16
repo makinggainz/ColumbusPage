@@ -10,11 +10,14 @@
 
 .ent-scope {
   /* ── Typography — font stack ──
-     Body copy uses the project body face (Opening Hours Sans, --font-sans);
-     title texts use Axiforma (--font-hero). See the .ent-scope font-family
-     rules at the foot of this file. */
+     Strict homepage parity: headings use the homepage display face
+     (Funnel Display, --font-display) — the same face the homepage hero
+     and section headings use. Body copy uses the project body face
+     (Opening Hours Sans, --font-sans). Axiforma (--font-hero) is no
+     longer used for enterprise page headings. See the .ent-scope
+     font-family rules at the foot of this file. */
   --ent-font-sans:           var(--font-sans);
-  --ent-font-heading:        var(--font-hero);
+  --ent-font-heading:        var(--font-display);
 
   /* ── Typography — sizes (Major Third 1.25, base 16px) ── */
   --ent-text-overline:       11px;   /* e12 — uppercase labels       */
@@ -79,9 +82,12 @@
   --ent-blue-primary:        #2563EB;   /* DEPRECATED — superseded by --ent-accent; retained, unused. */
   --ent-blue-deep:           #1B37CE;
   --ent-blue-tint:           #0066CC;
-  --ent-blue-shimmer:        #8A9BD4;
+  --ent-blue-shimmer:        #8A9BD4;   /* DEPRECATED — loading-shimmer gradient text removed (strict homepage parity); unused. */
 
-  /* ── Colors — gradient blues (PromptShowcase) ── */
+  /* ── Colors — gradient blues ──
+     DEPRECATED. Strict homepage parity dropped all enterprise-only
+     gradient text; headings render solid --ent-text-primary. Retained
+     unreferenced to avoid breakage. */
   --ent-gradient-start:      #06096D;
   --ent-gradient-end:        #318BCA;
 
@@ -150,7 +156,13 @@
   --ent-content-px:          24px;
   --ent-monitor-max-width:   1100px;
 
-  /* ── Border radius ── */
+  /* ── Border radius ──
+     Strict homepage parity: content cards / media frames / prompt boxes
+     use --ent-radius-card (7px) — the homepage's canonical card corner
+     (blog + feature cards, careers map). The monitor-mockup device
+     chrome keeps its own hardware radii (it has no homepage equivalent).
+     Filled CTAs use the homepage button radius (rounded-button-md, 18px). */
+  --ent-radius-card:         7px;
   --ent-radius-sm:           3px;
   --ent-radius-base:         6px;
   --ent-radius-md:           10px;
@@ -162,7 +174,10 @@
   /* ── Shadows ── */
   --ent-shadow-monitor:      0 40px 100px rgba(0, 0, 0, 0.50), 0 12px 32px rgba(0, 0, 0, 0.30);
   --ent-shadow-monitor-top:  0 -20px 60px rgba(0, 0, 0, 0.30), 0 -6px 20px rgba(0, 0, 0, 0.15);
-  --ent-shadow-card:         0px 0px 30px rgba(0, 0, 0, 0.2);
+  /* Card elevation matches the homepage product-visual shadow
+     (BentoProducts .bp-visual). Cards also carry the #E7E7F1 hairline
+     ring via `border border-gridline`, same as the homepage. */
+  --ent-shadow-card:         0 24px 60px rgba(11, 27, 43, 0.20);
   --ent-shadow-prompt-glow:  0px 0px 30px 5px rgba(191, 197, 235, 0.25);
 
   /* ── Motion — durations ── */
@@ -206,12 +221,13 @@
 }
 
 /* ── Typography — font families ──
-   Title texts on the enterprise page render in Axiforma; everything else
-   (body copy, UI, captions) inherits the project body face, Opening Hours
-   Sans. Enterprise sections use semantic h1–h6 tags for their titles, so
-   the heading selector below covers them without per-component edits.
-   The shared <footer> is excluded so it keeps the site-wide Funnel
-   Display heading face it uses on every other page. */
+   Strict homepage parity: title texts render in Funnel Display
+   (--ent-font-heading → --font-display), the same heading face the
+   homepage uses; everything else (body copy, UI, captions) inherits the
+   project body face, Opening Hours Sans. Enterprise sections use semantic
+   h1–h6 tags for their titles, so the heading selector below covers them
+   without per-component edits. The shared <footer> is excluded so it
+   keeps the site-wide Funnel Display face it already uses (now identical). */
 .ent-scope {
   font-family: var(--ent-font-sans);
   /* Default ink matches the homepage (--color-ink) so headings/body

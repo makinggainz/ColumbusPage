@@ -79,7 +79,7 @@ const features: {
           </a>
         </div>
 
-        <div className="bg-[#FAFAFA] border border-gridline rounded-[10px] p-10 mx-4 lg:mx-0">
+        <div className="bg-[#FAFAFA] border border-gridline rounded-[7px] p-10 mx-4 lg:mx-0">
           <h3 className="text-center text-[22px] font-medium tracking-[-0.02em] text-ink mb-2">
             Vetted, high-fidelity, and smart datasets
           </h3>
@@ -239,7 +239,7 @@ export default function StickyScrollSection() {
 
             {/* Right content */}
             {feature.fullBleedTop ? (
-              <div className="bg-transparent rounded-[14px] overflow-hidden">
+              <div className="bg-transparent rounded-[7px] overflow-hidden">
                 {feature.content}
               </div>
             ) : (

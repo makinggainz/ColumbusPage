@@ -52,19 +52,14 @@ export default function EnterprisePage() {
       <SectionWithLabel label={sectionLabels[1]}>
         <EnterpriseHero />
       </SectionWithLabel>
-      {/* White mid-block — the decorative blueprint grid + grain that used
-          to texture these sections is replaced by the faint city line-art
-          background, anchored full-width along the bottom horizon. */}
+      {/* White mid-block. The faint city line-art background is no longer
+          applied here at the block level — it now lives only behind the
+          SolutionShowcase ("Its time for a more powerful…") section so it
+          does not bleed behind ProblemCards or ComparisonSection. */}
       <div
         ref={darkStartRef}
         className="relative"
-        style={{
-          backgroundColor: "#ffffff",
-          backgroundImage: "url(/enterpriseartbackground.png)",
-          backgroundSize: "100% auto",
-          backgroundRepeat: "no-repeat",
-          backgroundPosition: "center bottom",
-        }}
+        style={{ backgroundColor: "#ffffff" }}
       >
         <div className="relative z-10">
           <SectionWithLabel label={sectionLabels[2]}>
