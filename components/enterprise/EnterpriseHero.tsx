@@ -71,12 +71,14 @@ export default function EnterpriseHero() {
         paddingTop: 120,
       }}
     >
-      {/* Background image — the Columbus bento sky photo, cover-fit, matching
-          the homepage Columbus product tile (BentoProducts). */}
+      {/* Background image — illustrated dusk city-park aerial, cover-fit.
+          Lives in public/Archive 2/ (second image); the %20 in the URL is
+          the encoded space in the folder name. */}
       <div
         className="absolute inset-0"
         style={{
-          backgroundImage: "url(/ColumbusBackgroundbento.png)",
+          backgroundImage:
+            "url('/Archive%202/grok-image-c91a13c8-1203-4ed4-ae20-de798412e8cf.png')",
           backgroundPosition: "center",
           backgroundSize: "cover",
           backgroundRepeat: "no-repeat",
