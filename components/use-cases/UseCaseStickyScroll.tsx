@@ -136,6 +136,10 @@ export default function UseCaseStickyScroll({ lightTheme = false, excludeSection
         const rowBgOverlay = "none";
         const rowGridLine = isLight ? "rgba(10, 19, 68, 0.10)" : "rgba(255, 255, 255, 0.10)";
         const roundFirst = roundedTop && i === 0;
+        // Oscillating layout: even rows keep text-left / visual-right;
+        // odd rows flip to visual-left / text-right. Mobile always stacks
+        // text above visual regardless (lg:order only applies at lg+).
+        const reversed = i % 2 === 1;
 
         return (
           <div
@@ -183,25 +187,32 @@ export default function UseCaseStickyScroll({ lightTheme = false, excludeSection
               {i > 0 && (
                 <div className="w-full" style={{ height: 1, backgroundColor: rowGridLine }} />
               )}
-              <div className="relative grid grid-cols-1 lg:grid-cols-[330px_1px_1fr]">
+              <div
+                className={`relative grid grid-cols-1 ${
+                  reversed
+                    ? "lg:grid-cols-[1fr_1px_330px]"
+                    : "lg:grid-cols-[330px_1px_1fr]"
+                }`}
+              >
                 {/* Mobile: left-rail block above content */}
                 <div className="lg:hidden px-6 pt-10 pb-6">
                   {renderLeftRail(feature.featureTitle, feature.leftRail, isLight)}
                 </div>
 
                 {/* Desktop: left rail — sticky by default; the enterprise
-                    page passes disableSticky so it scrolls in normal flow. */}
-                <div className="hidden lg:block bg-transparent">
+                    page passes disableSticky so it scrolls in normal flow.
+                    On reversed rows it sits in the third column. */}
+                <div className={`hidden lg:block bg-transparent ${reversed ? "lg:order-3" : "lg:order-1"}`}>
                   <div className={`${disableSticky ? "" : "sticky top-20"} px-8 py-16`}>
                     {renderLeftRail(feature.featureTitle, feature.leftRail, isLight)}
                   </div>
                 </div>
 
                 {/* Vertical divider */}
-                <div className="hidden lg:block" style={{ backgroundColor: rowGridLine }} />
+                <div className="hidden lg:block lg:order-2" style={{ backgroundColor: rowGridLine }} />
 
-                {/* Right column */}
-                <div className="bg-transparent">
+                {/* Visual column — first column on reversed rows. */}
+                <div className={`bg-transparent ${reversed ? "lg:order-1" : "lg:order-3"}`}>
                   {feature.content(isLight)}
                 </div>
               </div>

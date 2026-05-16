@@ -362,24 +362,37 @@ export default function ColumbusSolutionsSections({ lightTheme = false, disableS
             : {}),
         }}
       >
-        {rows.map((row, i) => (
-          <div key={row.id}>
-            {i > 0 && <div className="w-full" style={{ height: 1, backgroundColor: gridLine }} />}
-            <div className="relative grid grid-cols-1 lg:grid-cols-[330px_1px_1fr]">
-              {/* Mobile: rail above content */}
-              <div className="lg:hidden px-6 pt-10 pb-6">{renderRail(row)}</div>
-              {/* Desktop: left rail — sticky by default; the enterprise
-                  page passes disableSticky so it scrolls in normal flow. */}
-              <div className="hidden lg:block bg-transparent">
-                <div className={`${disableSticky ? "" : "sticky top-20"} px-8 py-16`}>{renderRail(row)}</div>
+        {rows.map((row, i) => {
+          // Oscillating layout: even rows keep text-left / visual-right;
+          // odd rows flip to visual-left / text-right. Mobile always stacks
+          // text above visual (lg:order only applies at lg+).
+          const reversed = i % 2 === 1;
+          return (
+            <div key={row.id}>
+              {i > 0 && <div className="w-full" style={{ height: 1, backgroundColor: gridLine }} />}
+              <div
+                className={`relative grid grid-cols-1 ${
+                  reversed
+                    ? "lg:grid-cols-[1fr_1px_330px]"
+                    : "lg:grid-cols-[330px_1px_1fr]"
+                }`}
+              >
+                {/* Mobile: rail above content */}
+                <div className="lg:hidden px-6 pt-10 pb-6">{renderRail(row)}</div>
+                {/* Desktop: left rail — sticky by default; the enterprise
+                    page passes disableSticky so it scrolls in normal flow.
+                    On reversed rows it sits in the third column. */}
+                <div className={`hidden lg:block bg-transparent ${reversed ? "lg:order-3" : "lg:order-1"}`}>
+                  <div className={`${disableSticky ? "" : "sticky top-20"} px-8 py-16`}>{renderRail(row)}</div>
+                </div>
+                {/* Vertical divider */}
+                <div className="hidden lg:block lg:order-2" style={{ backgroundColor: gridLine }} />
+                {/* Visual content — first column on reversed rows. */}
+                <div className={`bg-transparent ${reversed ? "lg:order-1" : "lg:order-3"}`}>{row.visual}</div>
               </div>
-              {/* Vertical divider */}
-              <div className="hidden lg:block" style={{ backgroundColor: gridLine }} />
-              {/* Right content */}
-              <div className="bg-transparent">{row.visual}</div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
       {/* Full-bleed closing hairline — replaced by the card's rounded
           bottom edge when roundedBottom is set (enterprise page). */}
