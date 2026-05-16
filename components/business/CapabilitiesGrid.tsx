@@ -192,7 +192,7 @@ export default function CapabilitiesGrid() {
           className="text-center leading-[1.1] text-[28px] md:text-[36px] lg:text-[45px]"
           style={{ color: "var(--ent-text-primary)", fontWeight: 500, letterSpacing: "-0.02em" }}
         >
-          Business-grade capabilities
+          Enterprise-grade capabilities
         </h2>
 
         <div className="mt-14 lg:mt-20 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-16 lg:gap-x-16 lg:gap-y-20">
