@@ -149,7 +149,7 @@ const CSS = `
 
 /* Audience cut-out — the page surface (#FFFFFF, the colour the cards
    sit on) notched into the card's top-right corner, with the audience
-   label ("For enterprise" / "For consumer") set inside it. The white is
+   label ("For business" / "For consumer") set inside it. The white is
    flush to the card's top and right edges, so it reads as a piece cut
    out of the corner itself rather than a panel laid on top.
 
@@ -225,7 +225,7 @@ const CSS = `
   .bp-notch-label { font-size: 18px; }
 }
 /* Per-card label tint — keyed to each tile's background:
-   • Columbus enterprise tile → sky blue (#018ADE), the dominant colour
+   • Columbus business tile → sky blue (#018ADE), the dominant colour
      of its cloud-sky backdrop.
    • Elio consumer tile → a deepened sand tone (#C98A5B): the beach
      photo's cream (#FCEFE1) darkened so the label stays legible against
@@ -422,7 +422,7 @@ interface Product {
   /** Single short phrase, sits below the brand row. */
   tagline: string;
   /** Optional audience label shown inside a rounded cut-out notched
-   *  into the card's top-right corner, e.g. "For enterprise" /
+   *  into the card's top-right corner, e.g. "For business" /
    *  "For consumer" / "For the curious". */
   audience?: string;
   /** Pill CTA label, e.g. "Learn more", "Try Elio". */
@@ -439,12 +439,12 @@ interface Product {
 const PRODUCTS: Product[] = [
   {
     cellClass: "bp-card--columbus",
-    href: "/products/enterprise",
+    href: "/products/business",
     logo: "/logobueno.png",
     logoFilter: COLUMBUS_LOGO_FILTER,
     name: "Columbus",
     tagline: "All-in-one map intelligence platform",
-    audience: "For enterprise",
+    audience: "For business",
     ctaLabel: "Learn more",
     visual: "/ColumbusHomeimg.png",
   },

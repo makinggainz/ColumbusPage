@@ -47,8 +47,8 @@
 - **Standard pages:** appear once the hero CTA element (`#hero-cta`) scrolls out of the viewport (observed via `IntersectionObserver`).
 - **Products page:** appear once `bgTriggerPassed` is true AND the hero scroll transition is not active (`!inHeroTransition || bgTriggerPassed`).
 - Animate in via `clip-path: inset(0 0% 0 0)` → `inset(0 100% 0 0)` + opacity fade (400ms spring).
-- Links shown: **Products** (`/products/enterprise`), **Research** (`/technology`), **Use Cases** (`/columbus-solutions` — opens a hover dropdown with two cards: Columbus Pro Enterprise Use-Cases → `/columbus-solutions`, Research Applications → `/research-applications`), **Company** (`/mission`).
-- The Use Cases link mirrors the Products dropdown pattern (chevron only — no hover/active underline) but renders a different overlay: an empty bordered card for Columbus Pro Enterprise Use-Cases and a bordered card containing an inline globe SVG for Research Applications. Plain text labels sit below each card — no subtitles. The overlay is positioned absolutely over the products card grid and crossfades when `hoverKind === "use-cases"`.
+- Links shown: **Products** (`/products/business`), **Research** (`/technology`), **Use Cases** (`/columbus-solutions` — opens a hover dropdown with two cards: Columbus Pro Business Use-Cases → `/columbus-solutions`, Research Applications → `/research-applications`), **Company** (`/mission`).
+- The Use Cases link mirrors the Products dropdown pattern (chevron only — no hover/active underline) but renders a different overlay: an empty bordered card for Columbus Pro Business Use-Cases and a bordered card containing an inline globe SVG for Research Applications. Plain text labels sit below each card — no subtitles. The overlay is positioned absolutely over the products card grid and crossfades when `hoverKind === "use-cases"`.
 - **Underline behaviour:** the hover/active underline (animated `width 0 → 100%` line below the label) renders only on **Research** and **Company**. Products and Use Cases intentionally have no underline — they rely on the chevron flip alone to indicate their dropdown state.
 - On the products page, link text uses `glassStyles.glassTextStatic` for the frosted glass look.
 
@@ -184,7 +184,7 @@ The navbar adapts its behaviour per page via props, pathname checks, and DOM mar
 | `/products` | `<Navbar wide />` | light (glass) | **Hidden** | `[data-navbar-bg-trigger]` passes viewport top + hero transition complete | Glass CTA button, glass wordmark text, hero-transition tracking hides links/CTA mid-scroll, `hasScrolled` forced true after 1700ms entrance animation, hamburger always visible with 12px left margin from CTA |
 | `/mission` | `<Navbar theme="dark" />` | dark | **Visible** | Immediate (no hero CTA) | Dark frosted glass, inverted logo via `brightness(0) invert(1)` |
 | `/contact` | `<Navbar />` | light | **Visible** | Immediate (no hero CTA) | Standard behaviour |
-| `/enterprise` | `<Navbar theme="light" />` | light | **Hidden** | Immediate (no hero CTA) | Standard light navbar — hero background is `#E8EEF8` |
+| `/business` | `<Navbar theme="light" />` | light | **Hidden** | Immediate (no hero CTA) | Standard light navbar — hero background is `#E8EEF8` |
 | `/maps-gpt` | `<Navbar theme="dark" />` | dark | **Hidden** | Immediate (no hero CTA) | Dark frosted glass |
 | `/columbus-solutions` | `<Navbar theme={navTheme} />` | dynamic | **Hidden** | Immediate (no hero CTA) | See **Use-Cases-Specific Behaviour** section below |
 | `/research-applications` | `<Navbar theme={navTheme} />` | dynamic | **Hidden** | Immediate (no hero CTA) | See **Use-Cases-Specific Behaviour** section below |
@@ -195,7 +195,7 @@ The navbar adapts its behaviour per page via props, pathname checks, and DOM mar
 
 ### Use-Cases-Specific Behaviour
 
-The `/columbus-solutions` and `/research-applications` pages share the same navbar requirements — both clone the original use-cases page layout (dark hero + dynamic section backgrounds). Controlled via `isUseCasesPage` (`pathname === "/products/enterprise" || pathname === "/columbus-solutions" || pathname === "/research-applications"`).
+The `/columbus-solutions` and `/research-applications` pages share the same navbar requirements — both clone the original use-cases page layout (dark hero + dynamic section backgrounds). Controlled via `isUseCasesPage` (`pathname === "/products/business" || pathname === "/columbus-solutions" || pathname === "/research-applications"`).
 
 | Behaviour | Detail |
 |-----------|--------|

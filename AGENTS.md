@@ -34,7 +34,7 @@ The `design-system/` folder is the source of truth for every visual decision on 
 | [navbar.md](design-system/navbar.md) + [navbar-dropdown.md](design-system/navbar-dropdown.md) | Anything touching the global nav |
 | [products-page.md](design-system/products-page.md) | Homepage and product surfaces (cells, glow plates, skeletons) |
 | [technology-page.md](design-system/technology-page.md) | `/technology` |
-| [enterprise-page.md](design-system/enterprise-page.md) | `/enterprise` and the sticky-scroll feature pattern |
+| [business-page.md](design-system/business-page.md) | `/business` and the sticky-scroll feature pattern |
 | [use-cases-pages.md](design-system/use-cases-pages.md) | `/use-cases` and per-industry pages |
 
 ### Required workflow for every UI change

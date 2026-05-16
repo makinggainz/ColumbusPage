@@ -84,28 +84,28 @@ export default function DataSection() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
 
             <DatasetCard
-              image="/enterprise/mp1.png"
+              image="/business/mp1.png"
               title="Future Appreciation Zones"
               rows="55,010 rows"
               desc="Predicts 2–5 year property value growth using migration, job forecasts, and permit trends."
             />
 
             <DatasetCard
-              image="/enterprise/mp2.png"
+              image="/business/mp2.png"
               title="Future Turnover Hotspots"
               rows="40,206 rows"
               desc="Predicts high-flip areas from sales velocity, investor inflows, and economic cycles."
             />
 
             <DatasetCard
-              image="/enterprise/mp3.png"
+              image="/business/mp3.png"
               title="Future Displacement Risk Overlay"
               rows="33,520 rows"
               desc="Flags areas at risk of resident displacement from rising costs and affordable housing changes."
             />
 
             <DatasetCard
-              image="/enterprise/mp3.png"
+              image="/business/mp3.png"
               title="Future Displacement Risk Overlay"
               rows="33,520 rows"
               desc="Flags areas at risk of resident displacement from rising costs and affordable housing changes."
@@ -136,13 +136,13 @@ export default function DataSection() {
             </p>
 
             <div className="flex flex-wrap justify-center items-center gap-10">
-              <Image src="/enterprise/logo1.png" width={70} height={40} alt="" />
-              <Image src="/enterprise/logo2.png" width={90} height={40} alt="" />
-              <Image src="/enterprise/logo3.png" width={90} height={40} alt="" />
-              <Image src="/enterprise/logo4.png" width={90} height={40} alt="" />
-              <Image src="/enterprise/logo5.png" width={90} height={40} alt="" />
-              <Image src="/enterprise/logo6.png" width={70} height={40} alt="" />
-              <Image src="/enterprise/logo7.png" width={90} height={40} alt="" />
+              <Image src="/business/logo1.png" width={70} height={40} alt="" />
+              <Image src="/business/logo2.png" width={90} height={40} alt="" />
+              <Image src="/business/logo3.png" width={90} height={40} alt="" />
+              <Image src="/business/logo4.png" width={90} height={40} alt="" />
+              <Image src="/business/logo5.png" width={90} height={40} alt="" />
+              <Image src="/business/logo6.png" width={70} height={40} alt="" />
+              <Image src="/business/logo7.png" width={90} height={40} alt="" />
             </div>
 
           </div>

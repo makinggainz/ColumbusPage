@@ -1,11 +1,11 @@
 /**
- * Enterprise Page — Design Tokens
- * Scoped to the /products/enterprise page.
+ * Business Page — Design Tokens
+ * Scoped to the /products/business page.
  *
- * Every spacing, color, radius, weight, and transition in enterprise
+ * Every spacing, color, radius, weight, and transition in business
  * sections MUST reference a token defined here — no magic numbers.
  *
- * See design-system/enterprise-page.md for the full spec.
+ * See design-system/business-page.md for the full spec.
  */
 
 .ent-scope {
@@ -14,7 +14,7 @@
      (Funnel Display, --font-display) — the same face the homepage hero
      and section headings use. Body copy uses the project body face
      (Opening Hours Sans, --font-sans). Axiforma (--font-hero) is no
-     longer used for enterprise page headings. See the .ent-scope
+     longer used for business page headings. See the .ent-scope
      font-family rules at the foot of this file. */
   --ent-font-sans:           var(--font-sans);
   --ent-font-heading:        var(--font-display);
@@ -85,7 +85,7 @@
   --ent-blue-shimmer:        #8A9BD4;   /* DEPRECATED — loading-shimmer gradient text removed (strict homepage parity); unused. */
 
   /* ── Colors — gradient blues ──
-     DEPRECATED. Strict homepage parity dropped all enterprise-only
+     DEPRECATED. Strict homepage parity dropped all business-only
      gradient text; headings render solid --ent-text-primary. Retained
      unreferenced to avoid breakage. */
   --ent-gradient-start:      #06096D;
@@ -224,7 +224,7 @@
    Strict homepage parity: title texts render in Funnel Display
    (--ent-font-heading → --font-display), the same heading face the
    homepage uses; everything else (body copy, UI, captions) inherits the
-   project body face, Opening Hours Sans. Enterprise sections use semantic
+   project body face, Opening Hours Sans. Business sections use semantic
    h1–h6 tags for their titles, so the heading selector below covers them
    without per-component edits. The shared <footer> is excluded so it
    keeps the site-wide Funnel Display face it already uses (now identical). */
@@ -241,9 +241,9 @@
 /* ── Suppress the shared ContentGrid vertical rails ──
    <GridSection> (components/home/ContentGrid.tsx) draws full-height
    left/right structure lines via .grid-section::before / ::after in
-   app/globals.css. The home page keeps them, but the enterprise page
+   app/globals.css. The home page keeps them, but the business page
    (sections b2 / b3 — ProblemCards, SolutionShowcase) should have no
-   vertical structure lines. This file only loads on the enterprise
+   vertical structure lines. This file only loads on the business
    page and the selector is .ent-scope-scoped, so the home page is
    unaffected. */
 .ent-scope .grid-section::before,
@@ -254,7 +254,7 @@
 /* Same rationale for the columbus-solutions block ported into section g.
    IndustrySelector wraps its content in .section-lines-light /
    .section-lines-dark, which paint blue full-height rails (globals.css).
-   The enterprise page has no vertical structure lines, so suppress them
+   The business page has no vertical structure lines, so suppress them
    here too — page-scoped, columbus-solutions keeps its rails. */
 .ent-scope .section-lines-light::before,
 .ent-scope .section-lines-light::after,

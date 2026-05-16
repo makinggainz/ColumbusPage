@@ -10,7 +10,7 @@ export const PRODUCTS: Product[] = [
   {
     title: "Columbus",
     subtitle: "An agentic GIS",
-    href: "/products/enterprise",
+    href: "/products/business",
     img: "/ColumbusNavbarDropdownmenu.png",
   },
   {

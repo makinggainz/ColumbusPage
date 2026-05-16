@@ -13,7 +13,7 @@ const fadeIn = (visible: boolean, delay: number): React.CSSProperties => ({
   transition: `opacity 0.6s ease-out ${delay}s, filter 0.6s ease-out ${delay}s, transform 0.6s ease-out ${delay}s`,
 });
 
-// Strict homepage parity: enterprise-only gradient/shimmer text is dropped.
+// Strict homepage parity: business-only gradient/shimmer text is dropped.
 // The loading state simply renders solid homepage ink (no gradient, no
 // background-position animation).
 const loadingTextStyle: React.CSSProperties = {
@@ -107,13 +107,13 @@ export default function DifferenceSection() {
             <div className="w-full max-w-[467px]">
 
               <h3 className="text-[28px] md:text-[39px] lg:text-[49px] font-light leading-[1.1] mb-3 flex items-center justify-center gap-3" style={{ letterSpacing: "-0.02em", color: "var(--ent-text-primary)" }}>
-                <Image src="/enterprise/logo.png" alt="columbus" width={42} height={42} />
+                <Image src="/business/logo.png" alt="columbus" width={42} height={42} />
                 <span style={columbusLoaded ? {} : loadingTextStyle}>Columbus LGM</span>
               </h3>
 
               <div style={fadeIn(columbusLoaded, 0)}>
                 <div className="relative w-full aspect-[467/319] rounded-[7px] overflow-hidden shadow-md">
-                  <Image src="/enterprise/lgm.png" alt="lgm" fill className="object-cover scale-[1.15]" />
+                  <Image src="/business/lgm.png" alt="lgm" fill className="object-cover scale-[1.15]" />
                 </div>
                 <ul className="mt-8 space-y-4 text-left w-full list-none pl-0 text-[15px] md:text-[16px] font-normal leading-[1.5] tracking-[-0.01em] text-ink">
                   <li className="flex items-center gap-2"><span className="text-green-600">✔</span> Highest fidelity and fresh data</li>
@@ -121,7 +121,7 @@ export default function DifferenceSection() {
                   <li className="flex items-center gap-2"><span className="text-green-600">✔</span> Spatial and contextual reasoning</li>
                   <li className="flex items-center gap-2"><span className="text-green-600">✔</span> Thinks with human-like intuition</li>
                   <li className="flex items-center gap-2"><span className="text-green-600">✔</span> Produces maps and visuals</li>
-                  <li className="flex items-center gap-2"><span className="text-green-600">✔</span> Built for physical world, enterprises</li>
+                  <li className="flex items-center gap-2"><span className="text-green-600">✔</span> Built for physical world, businesses</li>
                 </ul>
               </div>
 
@@ -138,7 +138,7 @@ export default function DifferenceSection() {
 
               <div style={fadeIn(basicLoaded, 0)}>
                 <div className="relative w-full aspect-[467/319] rounded-[7px] overflow-hidden">
-                  <Image src="/enterprise/basic.png" alt="basic" fill className="object-cover opacity-90" />
+                  <Image src="/business/basic.png" alt="basic" fill className="object-cover opacity-90" />
                 </div>
                 <ul className="mt-8 space-y-4 text-left w-full list-none pl-0 text-[15px] md:text-[16px] font-normal leading-[1.5] tracking-[-0.01em] text-ink">
                   <li className="flex items-center gap-2"><span className="text-ink">✖</span> Regurgitates old articles about areas</li>

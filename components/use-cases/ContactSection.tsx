@@ -106,7 +106,7 @@ export default function ContactSection({ lightTheme = false }: ContactSectionPro
             <br />
             Check out our{" "}
             <Link
-              href="/products/enterprise"
+              href="/products/business"
               className="cursor-pointer hover:opacity-80 transition-opacity"
               style={{ borderBottom: "0.5px solid currentColor", paddingBottom: "1px" }}
             >

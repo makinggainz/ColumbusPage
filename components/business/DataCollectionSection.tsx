@@ -30,7 +30,7 @@
 //           <div className="relative w-full h-[500px] md:h-[600px] lg:h-[694px] rounded-[14px] overflow-hidden">
 
 //             <Image
-//               src="/enterprise/sunbg.png"
+//               src="/business/sunbg.png"
 //               alt="background"
 //               fill
 //               className="object-cover blur-[6px] scale-110"
@@ -42,7 +42,7 @@
 
 //             {/* desktop app */}
 //             <Image
-//               src="/enterprise/desk.png"
+//               src="/business/desk.png"
 //               alt="desktop"
 //               width={849}
 //               height={476}
@@ -51,7 +51,7 @@
 
 //             {/* phone mock */}
 //             <Image
-//               src="/enterprise/mob.png"
+//               src="/business/mob.png"
 //               alt="mobile"
 //               width={266}
 //               height={579}
@@ -104,7 +104,7 @@ export default function DataCollectionSection() {
           <div className="relative w-full h-[420px] sm:h-[500px] md:h-[600px] lg:h-[694px] rounded-[14px] overflow-hidden">
 
             <Image
-              src="/enterprise/sunbg.png"
+              src="/business/sunbg.png"
               alt="background"
               fill
               className="object-cover blur-[6px] scale-110"
@@ -116,7 +116,7 @@ export default function DataCollectionSection() {
 
             {/* desktop app */}
             <Image
-              src="/enterprise/desk.png"
+              src="/business/desk.png"
               alt="desktop"
               width={849}
               height={476}
@@ -133,7 +133,7 @@ export default function DataCollectionSection() {
 
             {/* phone mock */}
             <Image
-              src="/enterprise/mob.png"
+              src="/business/mob.png"
               alt="mobile"
               width={266}
               height={579}

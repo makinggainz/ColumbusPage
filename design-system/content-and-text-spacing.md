@@ -16,7 +16,7 @@
 - When the user asks for a change that conflicts with a rule here, **ask before deviating**: "this rule says X — do you want me to follow it, or break the rule for this one case?" Don't silently override the system.
 - One-off overrides must be explicit and scoped. If the user says "I want this specific element to use 7px here," apply it only to that element and call out the deviation in the commit message or PR description.
 - If the rule itself is wrong, **update this document in the same change** so the system stays the source of truth — don't let drift accumulate.
-- Page-scoped docs (`enterprise-page.md`, `products-page.md`, etc.) may narrow these rules but never silently contradict them; flag conflicts when you spot them.
+- Page-scoped docs (`business-page.md`, `products-page.md`, etc.) may narrow these rules but never silently contradict them; flag conflicts when you spot them.
 
 This rule applies to every assistant working in this repo. It overrides defaults like "match the surrounding code" — surrounding code may itself be a pre-system artifact that needs migration, not duplication.
 

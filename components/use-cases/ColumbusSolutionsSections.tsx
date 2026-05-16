@@ -249,7 +249,7 @@ type ColumbusSolutionsSectionsProps = {
    * Drop the desktop left-rail `position: sticky` so each row's rail
    * scrolls normally instead of pinning while the visual scrolls past.
    * Off by default → columbus-solutions keeps the sticky effect.
-   * Page-scoped: only the enterprise page opts in.
+   * Page-scoped: only the business page opts in.
    */
   disableSticky?: boolean;
   /**
@@ -379,7 +379,7 @@ export default function ColumbusSolutionsSections({ lightTheme = false, disableS
               >
                 {/* Mobile: rail above content */}
                 <div className="lg:hidden px-6 pt-10 pb-6">{renderRail(row)}</div>
-                {/* Desktop: left rail — sticky by default; the enterprise
+                {/* Desktop: left rail — sticky by default; the business
                     page passes disableSticky so it scrolls in normal flow.
                     On reversed rows it sits in the third column. */}
                 <div className={`hidden lg:block bg-transparent ${reversed ? "lg:order-3" : "lg:order-1"}`}>
@@ -395,7 +395,7 @@ export default function ColumbusSolutionsSections({ lightTheme = false, disableS
         })}
       </div>
       {/* Full-bleed closing hairline — replaced by the card's rounded
-          bottom edge when roundedBottom is set (enterprise page). */}
+          bottom edge when roundedBottom is set (business page). */}
       {!roundedBottom && (
         <div className="relative z-10 w-full" style={{ height: 1, backgroundColor: gridLine }} />
       )}

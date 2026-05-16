@@ -35,8 +35,8 @@ export function TechNavbar() {
           <Link href="#" className="transition-opacity hover:opacity-70">
             Use Cases
           </Link>
-          <Link href="/technology" className="font-semibold transition-opacity hover:opacity-70" aria-current="page">
-            Technology
+          <Link href="/research" className="font-semibold transition-opacity hover:opacity-70" aria-current="page">
+            Research
           </Link>
         </nav>
 

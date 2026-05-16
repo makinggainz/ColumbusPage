@@ -32,7 +32,7 @@ function useScrollReveal(threshold = 0.1) {
   return { ref, visible, anim };
 }
 
-/* ── Wireframe Globe (from enterprise ProductBanner) ── */
+/* ── Wireframe Globe (from business ProductBanner) ── */
 function WireframeGlobe({ className = "" }: { className?: string }) {
   const cx = 400, cy = 400, R = 350;
   const tiltX = 20 * (Math.PI / 180);
@@ -251,7 +251,7 @@ export default function OurMissionPage() {
                   <li className="flex items-start gap-3"><span className="text-green-600 mt-0.5">✔</span> Understands space and coordinates</li>
                   <li className="flex items-start gap-3"><span className="text-green-600 mt-0.5">✔</span> Spatial and contextual reasoning</li>
                   <li className="flex items-start gap-3"><span className="text-green-600 mt-0.5">✔</span> Produces maps and visuals</li>
-                  <li className="flex items-start gap-3"><span className="text-green-600 mt-0.5">✔</span> Built for physical world, enterprises</li>
+                  <li className="flex items-start gap-3"><span className="text-green-600 mt-0.5">✔</span> Built for physical world, businesses</li>
                 </ul>
               </div>
 

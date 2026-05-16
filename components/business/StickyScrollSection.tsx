@@ -23,21 +23,21 @@ const features: {
           <span className="absolute left-0 top-0 z-50 flex h-8 w-8 items-center justify-center rounded-br bg-black/80 text-[11px] font-bold text-white opacity-25" aria-hidden>g1.1</span>
         )}
         <Image
-          src="/enterprise/sunbg.png"
+          src="/business/sunbg.png"
           alt="background"
           fill
           className="object-cover blur-[6px] scale-110"
         />
         <div className="absolute inset-0 bg-black/5 backdrop-blur-[2px]" />
         <Image
-          src="/enterprise/desk.png"
+          src="/business/desk.png"
           alt="desktop"
           width={849}
           height={476}
           className="absolute left-[8%] bottom-[8%] rounded-xl shadow-2xl"
         />
         <Image
-          src="/enterprise/mob.png"
+          src="/business/mob.png"
           alt="mobile"
           width={266}
           height={579}
@@ -74,7 +74,7 @@ const features: {
             The <span className="font-semibold">highest quality</span>, and most versatile
             data-sets for your critical research and decisions.
           </p>
-          <a href="/technology" className="text-[14px] mt-4 inline-flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity" style={{ color: "var(--ent-dark-text-high)" }}>
+          <a href="/research" className="text-[14px] mt-4 inline-flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity" style={{ color: "var(--ent-dark-text-high)" }}>
             Learn about our Data Collection →
           </a>
         </div>
@@ -87,13 +87,13 @@ const features: {
             We vet our data with partner organizations
           </p>
           <div className="flex flex-wrap justify-center items-center gap-10">
-            <Image src="/enterprise/logo1.png" width={70} height={40} alt="" />
-            <Image src="/enterprise/logo2.png" width={90} height={40} alt="" />
-            <Image src="/enterprise/logo3.png" width={90} height={40} alt="" />
-            <Image src="/enterprise/logo4.png" width={90} height={40} alt="" />
-            <Image src="/enterprise/logo5.png" width={90} height={40} alt="" />
-            <Image src="/enterprise/logo6.png" width={70} height={40} alt="" />
-            <Image src="/enterprise/logo7.png" width={90} height={40} alt="" />
+            <Image src="/business/logo1.png" width={70} height={40} alt="" />
+            <Image src="/business/logo2.png" width={90} height={40} alt="" />
+            <Image src="/business/logo3.png" width={90} height={40} alt="" />
+            <Image src="/business/logo4.png" width={90} height={40} alt="" />
+            <Image src="/business/logo5.png" width={90} height={40} alt="" />
+            <Image src="/business/logo6.png" width={70} height={40} alt="" />
+            <Image src="/business/logo7.png" width={90} height={40} alt="" />
           </div>
         </div>
       </div>
@@ -194,7 +194,7 @@ export default function StickyScrollSection() {
         style={{
           height: "min(70%, 700px)",
           zIndex: 1,
-          backgroundImage: "url(/enterpriseartbackground.png)",
+          backgroundImage: "url(/businessartbackground.png)",
           backgroundSize: "100% auto",
           backgroundRepeat: "no-repeat",
           backgroundPosition: "center bottom",

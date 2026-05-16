@@ -6,7 +6,10 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       { source: "/products",    destination: "/products/mapsgpt",    permanent: true },
-      { source: "/enterprise",  destination: "/products/enterprise", permanent: true },
+      { source: "/business",  destination: "/products/business", permanent: true },
+      // Back-compat: the page was formerly branded "enterprise" — keep old URLs alive.
+      { source: "/enterprise", destination: "/products/business", permanent: true },
+      { source: "/products/enterprise", destination: "/products/business", permanent: true },
       { source: "/mapsgpt",     destination: "/products/mapsgpt",    permanent: true },
       { source: "/maps-gpt",    destination: "/products/maps-gpt",   permanent: true },
       { source: "/our-mission", destination: "/mission",             permanent: true },

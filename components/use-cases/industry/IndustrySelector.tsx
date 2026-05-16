@@ -10,7 +10,7 @@ type IndustrySelectorProps = {
   lightTheme?: boolean;
   /**
    * Restrict & order the tiles shown. Defaults to the full INDUSTRY_ORDER
-   * (columbus-solutions). The enterprise page passes a reduced subset.
+   * (columbus-solutions). The business page passes a reduced subset.
    */
   industries?: IndustryId[];
   /**

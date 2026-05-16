@@ -36,7 +36,7 @@ export default function MapChatSection() {
           <div className="w-full max-w-[941px] lg:w-[941px] bg-white rounded-[10px] shadow-[0_30px_80px_rgba(0,0,0,0.08)] overflow-hidden">
 
             <img
-              src="/enterprise/mapchat.png"
+              src="/business/mapchat.png"
               alt="Map Chat"
               className="w-full h-auto block"
             />

@@ -19,7 +19,7 @@
 - ✔ Understands space and coordinates
 - ✔ Spatial and contextual reasoning
 - ✔ Produces maps and visuals
-- ✔ Built for physical world, enterprises
+- ✔ Built for physical world, businesses
 
 ## How We Differ — Generic AI
 - ✖ Regurgitates old articles about areas

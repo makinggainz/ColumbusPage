@@ -380,7 +380,7 @@ export default function SectionCScroll() {
               }}
             >
               <img
-                src="/enterprise/legacyGIS.png"
+                src="/business/legacyGIS.png"
                 alt="Legacy GIS"
                 className="w-full h-full object-cover"
               />
@@ -453,7 +453,7 @@ export default function SectionCScroll() {
                 }}
               >
                 <img
-                  src="/enterpriseIronManGifs/goodbye.gif"
+                  src="/businessIronManGifs/goodbye.gif"
                   alt=""
                   className="absolute inset-0 w-full h-full object-cover"
                 />
@@ -569,7 +569,7 @@ export default function SectionCScroll() {
               }}
             >
               <img
-                src="/enterprise/mapchatEnterprise.png"
+                src="/business/mapchatBusiness.png"
                 alt="Columbus Pro map chat"
                 width={992}
                 height={569}

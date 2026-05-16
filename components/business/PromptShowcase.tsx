@@ -153,13 +153,13 @@ export default function PromptShowcase() {
       <div className="flex flex-col items-center gap-6 lg:hidden px-4 md:px-10">
 
         <PromptCard
-          image="/enterprise/citymap.png"
+          image="/business/citymap.png"
           text="map of philly to drive my truck to run over as many pedestrians as possible"
           popStyle={popStyle(cardsVisible, 0)}
         />
 
         <PromptCard
-          image="/enterprise/map2.png"
+          image="/business/map2.png"
           text="make me a map of charlotte, but filter only vacant lots next to transportation lines"
           popStyle={popStyle(cardsVisible, 0.08)}
         />
@@ -167,13 +167,13 @@ export default function PromptShowcase() {
         <CenterPrompt popStyle={popStyle(cardsVisible, 0.16)} />
 
         <PromptCard
-          image="/enterprise/map3.png"
+          image="/business/map3.png"
           text="map of france but in weird colors to make it hard to understand"
           popStyle={popStyle(cardsVisible, 0.24)}
         />
 
         <PromptCard
-          image="/enterprise/map4.png"
+          image="/business/map4.png"
           text="lava map for silly billies"
           popStyle={popStyle(cardsVisible, 0.32)}
         />
@@ -185,7 +185,7 @@ export default function PromptShowcase() {
 
             {/* MAIN MAP */}
             <Image
-                src="/enterprise/bmapp.png"
+                src="/business/bmapp.png"
                 alt="map"
                 fill
                 className="object-cover"
@@ -210,7 +210,7 @@ export default function PromptShowcase() {
         {/* TOP LEFT */}
         <div className="absolute left-[2%] top-[3%]">
           <PromptCard
-            image="/enterprise/citymap.png"
+            image="/business/citymap.png"
             text="map of philly to drive my truck to run over as many pedestrians as possible"
             popStyle={popStyle(cardsVisible, 0)}
           />
@@ -219,7 +219,7 @@ export default function PromptShowcase() {
         {/* TOP RIGHT */}
         <div className="absolute right-[2%] top-[3%]">
           <PromptCard
-            image="/enterprise/map2.png"
+            image="/business/map2.png"
             text="make me a map of charlotte, but filter only vacant lots next to transportation lines"
             popStyle={popStyle(cardsVisible, 0.08)}
           />
@@ -228,7 +228,7 @@ export default function PromptShowcase() {
         {/* BOTTOM LEFT */}
         <div className="absolute left-[2%] bottom-[3%]">
           <PromptCard
-            image="/enterprise/map3.png"
+            image="/business/map3.png"
             text="map of france but in weird colors to make it hard to understand"
             popStyle={popStyle(cardsVisible, 0.16)}
           />
@@ -237,7 +237,7 @@ export default function PromptShowcase() {
         {/* BOTTOM RIGHT */}
         <div className="absolute right-[2%] bottom-[3%]">
           <PromptCard
-            image="/enterprise/map4.png"
+            image="/business/map4.png"
             text="lava map for silly billies"
             popStyle={popStyle(cardsVisible, 0.24)}
           />
@@ -248,9 +248,9 @@ export default function PromptShowcase() {
           className="absolute flex flex-col items-center gap-2 top-[52%] -translate-y-1/2 z-[100]"
           style={{ left: "calc(100% + 12px)" }}
         >
-          <Image src="/enterprise/tool1.png" alt="" width={100} height={100} className="rounded object-cover" />
-          <Image src="/enterprise/tool2.png" alt="" width={100} height={100} className="rounded object-cover" />
-          <Image src="/enterprise/tool3.png" alt="" width={100} height={100} className="rounded object-cover" />
+          <Image src="/business/tool1.png" alt="" width={100} height={100} className="rounded object-cover" />
+          <Image src="/business/tool2.png" alt="" width={100} height={100} className="rounded object-cover" />
+          <Image src="/business/tool3.png" alt="" width={100} height={100} className="rounded object-cover" />
         </div>
 
       </div>
@@ -260,7 +260,7 @@ export default function PromptShowcase() {
       <div ref={part2Ref} data-prompt-area="part-2" className="hidden lg:block relative w-full h-[1036px] mt-16 md:mt-24 rounded-2xl overflow-hidden mx-auto max-w-[1235px]">
         {/* Part 2 — Map background */}
         <Image
-          src="/enterprise/drawnAreaMap.png"
+          src="/business/drawnAreaMap.png"
           alt=""
           fill
           className="object-cover"
@@ -360,7 +360,7 @@ export default function PromptShowcase() {
             }}
           >
             <div className="flex items-center gap-2 px-5 py-4" style={{ paddingLeft: 24 }}>
-              {/* Icon: add public/enterprise/Screenshot_2025-12-18_at_3.30.33_PM-removebg-preview.png (21×21) for design asset */}
+              {/* Icon: add public/business/Screenshot_2025-12-18_at_3.30.33_PM-removebg-preview.png (21×21) for design asset */}
               <span className="w-[21px] h-[21px] flex-shrink-0 rounded bg-[#A1A6B2]/30" aria-hidden />
               <span
                 className="flex items-center"
@@ -388,10 +388,10 @@ export default function PromptShowcase() {
           </div>
           {/* Tool icons: bottom of stack = card bottom, larger icons with even spacing */}
           <div className="flex flex-col justify-end gap-3 flex-shrink-0">
-            <Image src="/enterprise/tool1.png" alt="" width={100} height={100} className="rounded-full object-cover flex-shrink-0" />
-            <Image src="/enterprise/tool2.png" alt="" width={100} height={100} className="rounded-full object-cover flex-shrink-0" />
-            <Image src="/enterprise/tool3.png" alt="" width={100} height={100} className="rounded-full object-cover flex-shrink-0" />
-            <Image src="/enterprise/tool4.png" alt="" width={100} height={100} className="rounded-full object-cover flex-shrink-0" />
+            <Image src="/business/tool1.png" alt="" width={100} height={100} className="rounded-full object-cover flex-shrink-0" />
+            <Image src="/business/tool2.png" alt="" width={100} height={100} className="rounded-full object-cover flex-shrink-0" />
+            <Image src="/business/tool3.png" alt="" width={100} height={100} className="rounded-full object-cover flex-shrink-0" />
+            <Image src="/business/tool4.png" alt="" width={100} height={100} className="rounded-full object-cover flex-shrink-0" />
           </div>
         </div>
         </div>

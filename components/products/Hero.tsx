@@ -542,7 +542,7 @@ export default function Hero() {
               style={{ zIndex: 2 }}
             >
               {/* Spacer — preserves the vertical rhythm previously occupied
-                  by the now-removed ConsumerEnterpriseToggle. Keeps
+                  by the now-removed ConsumerBusinessToggle. Keeps
                   badgeTitleRef at its original y-position so the parent
                   flex-column gap-[200px] reproduces the same head clearance
                   above the phone mockup below. */}

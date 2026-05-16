@@ -169,7 +169,7 @@ export const BLOG_POSTS: BlogPost[] = [
     category: "COMPANY NEWS",
     description: "Milestones from generalist LGM to a universal geospatial model.",
     paragraphs: [
-      "Universal Geospatial Model (UGM) is the horizon: one reasoning stack that can ingest planetary-scale evidence and support enterprise, scientific, and civic use cases. This roadmap highlights dependencies on data coverage, evaluation harnesses, and partner feedback.",
+      "Universal Geospatial Model (UGM) is the horizon: one reasoning stack that can ingest planetary-scale evidence and support business, scientific, and civic use cases. This roadmap highlights dependencies on data coverage, evaluation harnesses, and partner feedback.",
     ],
   },
   {

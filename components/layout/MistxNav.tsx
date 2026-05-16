@@ -20,7 +20,7 @@ import { useEffect, useRef, useState } from "react";
 //     filename — verified ~149KB on both)
 //
 // Behavior, markup, ARIA semantics, hover/scroll dynamics are unchanged.
-// Internal link `/enterprise` is repointed to `/products/enterprise` (the
+// Internal link `/business` is repointed to `/products/business` (the
 // actual route on this project — a Next.js redirect would normalize the
 // original but the direct link avoids a 308 hop).
 
@@ -32,9 +32,9 @@ const navLinks: { label: string; href: string }[] = [
   // "Consumer" has no dedicated /elio route yet — pointed at /products/mapsgpt
   // for now (per product owner). Repoint to /elio once that page exists.
   { label: "Consumer", href: "/products/mapsgpt" },
-  { label: "Enterprise", href: "/products/enterprise" },
-  // Actual route is /research-applications; /research never existed.
-  { label: "Research", href: "/research-applications" },
+  { label: "Business", href: "/products/business" },
+  // Points at the Technology page — the LGM / research content lives there.
+  { label: "Research", href: "/research" },
   { label: "Blog", href: "/blog" },
   { label: "Company", href: "/mission" },
 ];
@@ -49,7 +49,7 @@ const elioMenuItems: { label: string; href: string; desc: string }[] = [
   // No /elio route yet — temporarily points to /products/mapsgpt.
   { label: "Try Elio", href: "/products/mapsgpt", desc: "Consumer travel reasoning" },
   { label: "Try Mapsurf", href: "/products/mapsgpt", desc: "Lightweight map workspace" },
-  { label: "Try Columbus", href: "/products/enterprise", desc: "Enterprise geospatial intelligence" },
+  { label: "Try Columbus", href: "/products/business", desc: "Business geospatial intelligence" },
 ];
 
 /**
@@ -100,7 +100,7 @@ export function MistxNav({ heroWhite = false }: { heroWhite?: boolean } = {}) {
   // and flips this off on non-hero pages.
   const [hasHero, setHasHero] = useState(true);
   // True while the navbar still overlaps the hero section (the hero's
-  // bottom edge is below the navbar's, minus a lead offset). Enterprise-
+  // bottom edge is below the navbar's, minus a lead offset). Business-
   // only — drives the sky-tinted gradient scrim, which applies only
   // while over the hero.
   const [overHero, setOverHero] = useState(false);
@@ -145,18 +145,18 @@ export function MistxNav({ heroWhite = false }: { heroWhite?: boolean } = {}) {
   }, []);
 
   const showBackdrop = stuck || !hasHero;
-  // When `heroWhite` is set (enterprise page), the nav contents render in
+  // When `heroWhite` is set (business page), the nav contents render in
   // white while the navbar floats transparently over the hero image, then
   // revert to the default dark colors once the white backdrop pins on
   // scroll — white-on-white would otherwise be invisible. The "Try Elio"
   // CTA keeps its filled navy pill in both states.
-  // On the enterprise hero the nav contents stay white the whole time
+  // On the business hero the nav contents stay white the whole time
   // the navbar is in front of the hero — at the top (transparent) and
   // while scrolling over it (sky-tinted gradient scrim below). They
   // revert to the default dark colours only once the hero has scrolled
   // out and the solid white backdrop pins.
   const lightNav = heroWhite && (!stuck || overHero);
-  // Enterprise-only: while scrolled ("on movement") AND the navbar still
+  // Business-only: while scrolled ("on movement") AND the navbar still
   // overlaps the hero, the solid white backdrop is replaced by a scrim
   // tinted to the hero image's sky colour — opaque at the top, fading to
   // fully transparent at the navbar's bottom border. Once the hero
@@ -178,7 +178,7 @@ export function MistxNav({ heroWhite = false }: { heroWhite?: boolean } = {}) {
         backgroundColor: showBackdrop && !heroScrim ? "#FFFFFF" : "transparent",
       }}
     >
-      {/* Enterprise hero-only backdrop. Sits behind the content row
+      {/* Business hero-only backdrop. Sits behind the content row
           (z-0 vs the row's z-10). Tinted to the hero image's dominant
           sky colour (#018ADE = rgb(1,138,222) — the same value the
           BentoProducts Columbus tile uses for /ColumbusBackgroundbento

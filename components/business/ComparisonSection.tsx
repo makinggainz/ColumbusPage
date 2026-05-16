@@ -177,7 +177,7 @@ export default function ComparisonSection() {
               className="relative shrink-0 hidden md:block"
               style={{ width: "36%", borderLeft: HAIRLINE }}
             >
-              <Image src="/enterprise/citymap.png" alt="" fill className="object-cover object-center" />
+              <Image src="/business/citymap.png" alt="" fill className="object-cover object-center" />
               <span
                 className="absolute top-3 right-3 flex items-center justify-center rounded-full bg-white"
                 style={{ width: 26, height: 26, border: HAIRLINE }}

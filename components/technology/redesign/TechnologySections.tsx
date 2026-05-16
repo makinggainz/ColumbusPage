@@ -524,7 +524,7 @@ export function TechnologySections() {
                 <ResearchGroup title={`4.${" "}Answers, insights, patterns`}>
                   <p>One model, innumerable granular ground truths.</p>
                   <div className={styles.coreResearchProducts}>
-                    <a href="/enterprise" className={styles.coreResearchProduct}>
+                    <a href="/business" className={styles.coreResearchProduct}>
                       <span className={styles.coreResearchProductGlyph} aria-hidden>
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img src="/logobueno.png" alt="" />

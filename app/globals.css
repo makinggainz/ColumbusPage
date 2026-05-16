@@ -44,10 +44,10 @@
    the site sets `font-family: var(--font-hero)` (inline or via its module
    CSS) so swapping the display face is a one-line change here. */
 :root {
-  --font-hero: "Axiforma", var(--font-dm-sans), "SF Pro", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-hero: "Axiforma", "SF Pro", -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
-/* Base reset — use overflow-x: clip (not hidden) so position:sticky works on enterprise Section C */
+/* Base reset — use overflow-x: clip (not hidden) so position:sticky works on business Section C */
 html,
 body {
   margin: 0;

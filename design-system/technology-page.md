@@ -2,7 +2,7 @@
 
 > This document governs the technology page (`/technology`) only.
 > It is modeled directly on the Mission page (`app/mission/page.tsx`), which is the canonical reference for the brand's current visual direction.
-> Other pages: `mission/` (handcrafted, ungoverned), `products/enterprise` → `enterprise-page.md`, `/products` → `products-page.md`.
+> Other pages: `mission/` (handcrafted, ungoverned), `products/business` → `business-page.md`, `/products` → `products-page.md`.
 
 ---
 

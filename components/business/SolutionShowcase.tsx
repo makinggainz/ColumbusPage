@@ -30,7 +30,7 @@ export default function SolutionShowcase() {
       style={{
         "--grid-line": "var(--ent-border-dark-grid)",
         // Transparent so the shared B2+B3 city line-art backdrop (set on
-        // the mid-block in app/products/enterprise/page.tsx) reads behind
+        // the mid-block in app/products/business/page.tsx) reads behind
         // the "Its time for a more powerful…" heading.
         backgroundColor: "transparent",
       } as React.CSSProperties}

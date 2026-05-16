@@ -1,31 +1,30 @@
 "use client";
 
-import "@/components/enterprise/enterprise-tokens.css";
+import "@/components/business/business-tokens.css";
 import { useRef } from "react";
-import EnterpriseHero from "@/components/enterprise/EnterpriseHero";
-import ProblemCards from "@/components/enterprise/ProblemCards";
-import SolutionShowcase from "@/components/enterprise/SolutionShowcase";
+import BusinessHero from "@/components/business/BusinessHero";
+import ProblemCards from "@/components/business/ProblemCards";
+import SolutionShowcase from "@/components/business/SolutionShowcase";
 import { MistxNav } from "@/components/layout/MistxNav";
 import { Footer } from "@/components/layout/Footer";
-import ComparisonSection from "@/components/enterprise/ComparisonSection";
-import ChatSection from "@/components/enterprise/ChatSection";
-import ContactSection from "@/components/use-cases/ContactSection";
+import ComparisonSection from "@/components/business/ComparisonSection";
+import ChatSection from "@/components/business/ChatSection";
 import UseCaseStickyScroll from "@/components/use-cases/UseCaseStickyScroll";
 import { IndustryProvider } from "@/components/use-cases/industry/IndustryContext";
 import IndustrySelector from "@/components/use-cases/industry/IndustrySelector";
 import IndustryStickyNavbar from "@/components/use-cases/industry/IndustryStickyNavbar";
 import ColumbusSolutionsSections from "@/components/use-cases/ColumbusSolutionsSections";
 import type { IndustryId } from "@/components/use-cases/industry/types";
-import ProductBanner from "@/components/enterprise/ProductBanner";
-import CapabilitiesGrid from "@/components/enterprise/CapabilitiesGrid";
-import FAQSection from "@/components/enterprise/FAQSection";
+import ProductBanner from "@/components/business/ProductBanner";
+import CapabilitiesGrid from "@/components/business/CapabilitiesGrid";
+import FAQSection from "@/components/business/FAQSection";
 
 const sectionLabels = ["a", "b", "b2", "b3", "c", "d", "e", "g", "m", "n"] as const;
 
 /* The reduced industry set shown in section g's "Tell us where you work"
    picker (and its sticky sub-navbar), ordered as the design's 3×2 grid.
    Scoped to this page — columbus-solutions still shows the full list. */
-const ENTERPRISE_INDUSTRIES: IndustryId[] = [
+const BUSINESS_INDUSTRIES: IndustryId[] = [
   "residential-real-estate",
   "commercial-real-estate",
   "urban-infrastructure",
@@ -56,7 +55,7 @@ function SectionWithLabel({
   );
 }
 
-export default function EnterprisePage() {
+export default function BusinessPage() {
   const darkStartRef = useRef<HTMLDivElement>(null);
 
   return (
@@ -67,7 +66,7 @@ export default function EnterprisePage() {
           trap the sticky element and let it scroll away after ~88px. */}
       <MistxNav heroWhite />
       <SectionWithLabel label={sectionLabels[1]}>
-        <EnterpriseHero />
+        <BusinessHero />
       </SectionWithLabel>
       {/* White mid-block. */}
       <div
@@ -90,7 +89,7 @@ export default function EnterprisePage() {
               style={{
                 top: "0%",
                 zIndex: 0,
-                backgroundImage: "url(/enterpriseartbackground.png)",
+                backgroundImage: "url(/businessartbackground.png)",
                 backgroundSize: "100% 100%",
                 backgroundRepeat: "no-repeat",
                 backgroundPosition: "center bottom",
@@ -120,15 +119,14 @@ export default function EnterprisePage() {
         {/* Section g — ported from /columbus-solutions: the industry-aware
             block ("Pick your industry" → IndustrySelector + the four-row
             UseCaseStickyScroll under IndustryProvider), then
-            ColumbusSolutionsSections, through ContactSection
-            ("We're at the frontier. / The horizon is wide.").
-            lightTheme is forced on so it matches the enterprise page's
+            ColumbusSolutionsSections and the FAQ.
+            lightTheme is forced on so it matches the business page's
             white/homepage system. topOffset = MistxNav's height (its
             content row is py-6 ≈ 84px) so the industry sub-navbar pins
             flush under it instead of the 56px columbus-solutions navbar. */}
         <IndustryProvider>
-          <IndustryStickyNavbar lightTheme topOffset={84} industries={ENTERPRISE_INDUSTRIES} />
-          <IndustrySelector lightTheme rounded industries={ENTERPRISE_INDUSTRIES} />
+          <IndustryStickyNavbar lightTheme topOffset={84} industries={BUSINESS_INDUSTRIES} />
+          <IndustrySelector lightTheme rounded industries={BUSINESS_INDUSTRIES} />
           <UseCaseStickyScroll lightTheme roundedTop disableSticky />
         </IndustryProvider>
         <section className="relative">
@@ -137,9 +135,6 @@ export default function EnterprisePage() {
         <SectionWithLabel label="faq">
           <FAQSection />
         </SectionWithLabel>
-        <section className="relative">
-          <ContactSection lightTheme />
-        </section>
       </SectionWithLabel>
       <SectionWithLabel label={sectionLabels[8]}>
         <ChatSection />

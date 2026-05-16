@@ -12,7 +12,7 @@ export default function DrawAreaSection() {
         <div className="relative w-[1200px] h-[800px]">
 
           <Image
-            src="/enterprise/dmap.png"
+            src="/business/dmap.png"
             alt="map"
             fill
             className="object-cover"
@@ -102,7 +102,7 @@ export default function DrawAreaSection() {
 
             {/* polygon */}
             <Image
-              src="/enterprise/polygon.png"
+              src="/business/polygon.png"
               alt="polygon"
               width={427}
               height={362}
@@ -131,10 +131,10 @@ export default function DrawAreaSection() {
             {/* right tool buttons */}
             <div className="absolute right-0 top-[120px] flex flex-col gap-4">
 
-              <Image src="/enterprise/tool1.png" alt="" width={36} height={36} />
-              <Image src="/enterprise/tool2.png" alt="" width={36} height={36} />
-              <Image src="/enterprise/tool3.png" alt="" width={36} height={36} />
-              <Image src="/enterprise/tool4.png" alt="" width={44} height={38} />
+              <Image src="/business/tool1.png" alt="" width={36} height={36} />
+              <Image src="/business/tool2.png" alt="" width={36} height={36} />
+              <Image src="/business/tool3.png" alt="" width={36} height={36} />
+              <Image src="/business/tool4.png" alt="" width={44} height={38} />
 
             </div>
 

@@ -1,6 +1,6 @@
-# /products/enterprise Page — Typography & Design System
+# /products/business Page — Typography & Design System
 
-> This document governs the enterprise product page (`/products/enterprise`) only.
+> This document governs the business product page (`/products/business`) only.
 > The rest of the Columbus Earth site uses a separate system defined in `fonts-typescale.md`.
 > The consumer product page (`/products`) uses `products-page.md`.
 
@@ -10,35 +10,35 @@
 > navy at the homepage button radius (`rounded-button-md`, 18px); the single
 > interactive accent is `#0081AC`. **Headings render in Funnel Display**
 > (`--font-display`) — the homepage heading face; Axiforma is no longer used
-> for enterprise headings. **Content cards / media frames / prompt boxes use a
+> for business headings. **Content cards / media frames / prompt boxes use a
 > 7px corner** (`--ent-radius-card`) — the homepage's canonical card radius —
 > with the homepage product-visual shadow (`--ent-shadow-card`) and the
-> `#E7E7F1` hairline ring. **Enterprise-only gradient text is removed**;
+> `#E7E7F1` hairline ring. **Business-only gradient text is removed**;
 > affected headings render solid `--ent-text-primary`. SVG noise grain and
 > vertical structure rails are removed. The e1–e12 type scale, weights,
 > spacing scale and motion vocabulary are unchanged. The monitor mockup keeps
 > its own device-chrome radii (it has no homepage equivalent). `*-dark*` token
 > names are **historical** and resolve to the light palette — see
-> `enterprise-tokens.css`.
+> `business-tokens.css`.
 
 ---
 
 ## Typefaces
 
-Two-family system, applied page-wide via `.ent-scope` rules in `enterprise-tokens.css`.
+Two-family system, applied page-wide via `.ent-scope` rules in `business-tokens.css`.
 
 | Role | Stack | Token | Where |
 |------|-------|-------|-------|
 | Titles / Headings | `Funnel Display` | `--ent-font-heading` (= `--font-display`) | All `h1`–`h6` title texts — same as the homepage |
 | Body / UI | `Opening Hours Sans` | `--ent-font-sans` (= `--font-sans`) | Body copy, captions, UI labels, CTAs |
 
-Strict homepage parity: enterprise headings use **Funnel Display**, the same
+Strict homepage parity: business headings use **Funnel Display**, the same
 face the homepage hero and section headings use. Axiforma (`--font-hero`) is
-no longer used for enterprise page headings.
+no longer used for business page headings.
 
 Mechanism: `.ent-scope` sets the body face on the whole page; a
 `.ent-scope :is(h1,h2,h3,h4,h5,h6):not(footer *)` rule promotes every heading
-to Funnel Display. Enterprise sections use semantic `h1`–`h6` tags for their
+to Funnel Display. Business sections use semantic `h1`–`h6` tags for their
 titles, so no per-component font edits are needed (the one inline override on
 the hero `h1` now points at `--ent-font-heading`). The shared `<footer>`
 already uses the site-wide Funnel Display heading face — now identical.
@@ -49,19 +49,19 @@ already uses the site-wide Funnel Display heading face — now identical.
 
 **Ratio: Major Third (1.25) — Base: 16px — aligned with global `fonts-typescale.md`**
 
-The enterprise page uses the same ratio as the global site scale for visual consistency across Columbus Earth. The scale is extended at the small end for card UI elements.
+The business page uses the same ratio as the global site scale for visual consistency across Columbus Earth. The scale is extended at the small end for card UI elements.
 
 | Step | Size | Name | Current Usage |
 |------|------|------|---------------|
-| e1 | **76px** | Display XL | EnterpriseHero heading at lg |
+| e1 | **76px** | Display XL | BusinessHero heading at lg |
 | e2 | **64px** | Display L | PromptShowcase heading at lg, DifferenceSection title at lg |
-| e3 | **49px** | Display M | EnterpriseHero heading at md, section headings at lg, comparison headings |
-| e4 | **39px** | Display S | EnterpriseHero heading at mobile |
+| e3 | **49px** | Display M | BusinessHero heading at md, section headings at lg, comparison headings |
+| e4 | **39px** | Display S | BusinessHero heading at mobile |
 | e5 | **28px** | Heading L | Section headings at mobile, PromptShowcase sub-headings at lg |
 | e6 | **22px** | Heading M | StickyScrollSection descriptions, PromptShowcase part 2 body |
 | e7 | **20px** | Body L | CTA text, SolutionShowcase subtitle, hero subtitle |
 | e8 | **16px** | Body | Body text, DifferenceSection list items, comparison details |
-| e9 | **15px** | Body S | ProblemCards text, ConsumerEnterpriseToggle labels |
+| e9 | **15px** | Body S | ProblemCards text, ConsumerBusinessToggle labels |
 | e10 | **14px** | UI | Button text, links, PromptShowcase card headers, CTA links |
 | e11 | **13px** | Caption | PromptShowcase card details, accordion summaries |
 | e12 | **11px** | Overline | StickyScrollSection feature category labels (uppercase) |
@@ -70,13 +70,13 @@ The enterprise page uses the same ratio as the global site scale for visual cons
 
 ### Resolved
 - ProblemCards / SolutionShowcase `lg:` headings → **e3 (49px)** ✓
-- EnterpriseHero subtitle → **e7 (20px, `--ent-text-body-l`)** ✓
+- BusinessHero subtitle → **e7 (20px, `--ent-text-body-l`)** ✓
 - StickyScrollSection body / DifferenceSection comparison h3 / PromptShowcase
   heading & `510` weight — verified already compliant in current code ✓
 
 ### Monitor mockup UI (excluded from scale)
 
-The EnterpriseHero and ChatSection contain a desktop monitor mockup with miniaturized UI elements. These use viewport-relative `clamp()` values and are **not part of the page type scale**:
+The BusinessHero and ChatSection contain a desktop monitor mockup with miniaturized UI elements. These use viewport-relative `clamp()` values and are **not part of the page type scale**:
 
 | Element | Size |
 |---------|------|
@@ -162,7 +162,7 @@ Three tiers — simplified from the 7+ values currently scattered across compone
 ## Gradient Text — removed
 
 Strict homepage parity: the homepage has no gradient text, so all
-enterprise-only gradient text is **removed**.
+business-only gradient text is **removed**.
 
 | Was | Now |
 |-----|-----|
@@ -194,11 +194,11 @@ Rules:
 
 ### Dark backgrounds — removed
 
-The enterprise page has **no dark sections**. The formerly-dark surfaces
+The business page has **no dark sections**. The formerly-dark surfaces
 (ProblemCards, SolutionShowcase, StickyScrollSection, ComparisonSection,
 ChatSection) now render white to match the homepage. The historical
 `--ent-dark-text-*` tokens still exist for call-site stability but resolve to
-dark ink/muted on white (see `enterprise-tokens.css`). Do not author new
+dark ink/muted on white (see `business-tokens.css`). Do not author new
 white-on-dark text or reintroduce white-opacity levels.
 
 ### Interactive accent & decorative blues
@@ -362,7 +362,7 @@ This page uses its own easing vocabulary, not the global M3 tokens.
 | **Typewriter** | Linear | 38ms/char (hero), 18ms/char (DifferenceSection) | Character-by-character text reveal |
 | **Shimmer** | `ease-in-out` | 1600ms infinite | DifferenceSection loading gradient sweep |
 | **Hover Shift** | — | 300ms | CTA hover color/transform transitions |
-| **Toggle Nudge** | `cubic-bezier(0.25, 1, 0.5, 1)` | 300ms | ConsumerEnterpriseToggle active state |
+| **Toggle Nudge** | `cubic-bezier(0.25, 1, 0.5, 1)` | 300ms | ConsumerBusinessToggle active state |
 
 ### Scroll-trigger pattern
 
@@ -391,24 +391,24 @@ Stagger delays: 0s, 0.15s, 0.3s, 0.45s for sequential elements.
 
 The SVG noise grain and the blueprint vertical structure rails are **removed**.
 They are replaced by a single faint city line-art image,
-`/enterpriseartbackground.png`, anchored along the bottom horizon:
+`/businessartbackground.png`, anchored along the bottom horizon:
 
 | Where | Treatment |
 |-------|-----------|
-| Mid-block (ProblemCards → ComparisonSection wrapper), ProductBanner | `background-image: url(/enterpriseartbackground.png)`; `background-size: 100% auto`; `background-repeat: no-repeat`; `background-position: center bottom`; on `#FFFFFF` |
+| Mid-block (ProblemCards → ComparisonSection wrapper), ProductBanner | `background-image: url(/businessartbackground.png)`; `background-size: 100% auto`; `background-repeat: no-repeat`; `background-position: center bottom`; on `#FFFFFF` |
 | StickyScrollSection | Same image, `filter: invert(1)`, `mix-blend-mode: screen`, `opacity: 0.5`, height `min(70%, 700px)` — reads as a faint light wash on white |
 
 Horizontal dividers (e.g. the page mid-block rule) are a 1px line in
 **`--ent-border-card` (`#E7E7F1`)**, drawn from the screen edge to the
 1287px content bound. Vertical structure rails are suppressed page-wide via
 `.ent-scope .grid-section::before/::after { display:none }` in
-`enterprise-tokens.css` — do not reintroduce them.
+`business-tokens.css` — do not reintroduce them.
 
 ---
 
-## EnterpriseHero — Background & Navbar Treatment
+## BusinessHero — Background & Navbar Treatment
 
-The hero (`components/enterprise/EnterpriseHero.tsx`) is a full-bleed photo
+The hero (`components/business/BusinessHero.tsx`) is a full-bleed photo
 hero whose background runs to the very top of the page, behind the navbar.
 
 ### Background
@@ -446,7 +446,7 @@ use the `#0081AC` (`--ent-accent`) interactive accent.
 
 The hero `<section>` carries `data-hero-section` and `MistxNav` is passed
 the `heroWhite` prop. `heroWhite` is opt-in and defaults off, so every other
-page keeps the standard transparent→solid-white behaviour. On the enterprise
+page keeps the standard transparent→solid-white behaviour. On the business
 page the navbar has **three** states, keyed off scroll position and whether
 the navbar still overlaps the hero (`overHero` — the hero's bottom edge is
 still below the navbar's):

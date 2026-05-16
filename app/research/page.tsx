@@ -1,5 +1,5 @@
 import { TechnologyPage } from "@/components/technology/TechnologyPage";
 
-export default function TechnologyRoutePage() {
+export default function ResearchRoutePage() {
   return <TechnologyPage />;
 }

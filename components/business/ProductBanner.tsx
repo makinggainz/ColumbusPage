@@ -34,7 +34,7 @@ export default function ProductBanner() {
         className="pointer-events-none absolute inset-x-0 bottom-0 z-0"
         style={{
           aspectRatio: "1881 / 836",
-          backgroundImage: "url(/enterpriseartbackground.png)",
+          backgroundImage: "url(/businessartbackground.png)",
           backgroundSize: "100% 100%",
           backgroundRepeat: "no-repeat",
           backgroundPosition: "center bottom",

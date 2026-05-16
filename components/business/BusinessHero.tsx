@@ -10,7 +10,7 @@ const reveal = (visible: boolean, delay: number): React.CSSProperties => ({
   transition: `opacity 0.75s ease ${delay}s, transform 0.75s ease ${delay}s`,
 });
 
-export default function EnterpriseHero() {
+export default function BusinessHero() {
   const sectionRef = useRef<HTMLElement>(null);
   const [visible, setVisible] = useState(false);
 
@@ -101,7 +101,7 @@ export default function EnterpriseHero() {
 
       {/* ── Text block ── */}
       {/* pt-[200px] restores the vertical breathing room previously
-          provided by the removed ConsumerEnterpriseToggle wrapper
+          provided by the removed ConsumerBusinessToggle wrapper
           (pt-32 + pill height ~43px + pb-10 ≈ 211px). */}
       <div className="relative z-10 flex flex-col items-center text-center px-6 pt-[200px]" style={reveal(visible, 0.1)}>
         <h1

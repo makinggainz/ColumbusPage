@@ -6,11 +6,11 @@ import glassStyles from "@/components/ui/GlassButton.module.css";
 
 interface Props {
   variant?: "dark" | "light";
-  active?: "consumer" | "enterprise";
+  active?: "consumer" | "business";
   glass?: boolean;
 }
 
-export function ConsumerEnterpriseToggle({ variant = "dark", active = "enterprise", glass = true }: Props) {
+export function ConsumerBusinessToggle({ variant = "dark", active = "business", glass = true }: Props) {
   const isDark = variant === "dark";
   const [hoveringInactive, setHoveringInactive] = useState(false);
 
@@ -50,24 +50,24 @@ export function ConsumerEnterpriseToggle({ variant = "dark", active = "enterpris
       };
 
   const consumerActive = active === "consumer";
-  const enterpriseActive = active === "enterprise";
+  const businessActive = active === "business";
 
   // Subtle shift: active pill nudges toward hovered inactive side
-  const shift = hoveringInactive ? (enterpriseActive ? 4 : -4) : 0;
+  const shift = hoveringInactive ? (businessActive ? 4 : -4) : 0;
 
   return (
     <div className={containerClass} style={containerStyle}>
       <Link
-        href="/products/enterprise"
-        className={enterpriseActive ? activeClass : inactiveClass}
+        href="/products/business"
+        className={businessActive ? activeClass : inactiveClass}
         style={{
-          ...(enterpriseActive ? {
+          ...(businessActive ? {
             ...activePillStyle,
             transform: `translateX(${shift}px)`,
             transition: "transform 0.3s var(--ent-easing-toggle)",
           } : {}),
         }}
-        onMouseEnter={() => { if (!enterpriseActive) setHoveringInactive(true); }}
+        onMouseEnter={() => { if (!businessActive) setHoveringInactive(true); }}
         onMouseLeave={() => setHoveringInactive(false)}
       >
         Columbus Pro

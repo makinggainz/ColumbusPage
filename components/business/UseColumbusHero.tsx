@@ -27,7 +27,7 @@ export default function UseColumbusHero() {
         {/* Image */}
         <div className="mt-6">
           <Image
-            src="/enterprise/use.png"
+            src="/business/use.png"
             alt="user"
             width={391}
             height={238}

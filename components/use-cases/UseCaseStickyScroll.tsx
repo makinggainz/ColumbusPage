@@ -22,7 +22,7 @@ type UseCaseStickyScrollProps = {
    * feature description scrolls normally with its row instead of
    * pinning while the right column scrolls past. Off by default →
    * columbus-solutions / research-applications keep the sticky effect.
-   * Page-scoped: only the enterprise page opts in.
+   * Page-scoped: only the business page opts in.
    */
   disableSticky?: boolean;
 };
@@ -132,7 +132,7 @@ export default function UseCaseStickyScroll({ lightTheme = false, excludeSection
         const isLight = feature.forceLight ? true : lightTheme;
         const rowBg = isLight ? "#FFFFFF" : "#000000";
         // Light rows are pure #FFFFFF (no tint) so they match the white
-        // enterprise page / IndustrySelector above. Dark stays untinted.
+        // business page / IndustrySelector above. Dark stays untinted.
         const rowBgOverlay = "none";
         const rowGridLine = isLight ? "rgba(10, 19, 68, 0.10)" : "rgba(255, 255, 255, 0.10)";
         const roundFirst = roundedTop && i === 0;
@@ -199,7 +199,7 @@ export default function UseCaseStickyScroll({ lightTheme = false, excludeSection
                   {renderLeftRail(feature.featureTitle, feature.leftRail, isLight)}
                 </div>
 
-                {/* Desktop: left rail — sticky by default; the enterprise
+                {/* Desktop: left rail — sticky by default; the business
                     page passes disableSticky so it scrolls in normal flow.
                     On reversed rows it sits in the third column. */}
                 <div className={`hidden lg:block bg-transparent ${reversed ? "lg:order-3" : "lg:order-1"}`}>

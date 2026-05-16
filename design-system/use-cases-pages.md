@@ -97,7 +97,7 @@ Plus from elsewhere: `Navbar`, `Footer`, `GenLayersSection`.
 
 Both pages render `<Navbar />` and the navbar's `isUseCasesPage` check in
 [`components/layout/Navbar.tsx`](../components/layout/Navbar.tsx) covers
-both routes (alongside `/products/enterprise`). See
+both routes (alongside `/products/business`). See
 [design-system/navbar.md](navbar.md) for the navbar's "Use-Cases-Specific
 Behaviour" section, which documents the dynamic theme-switching behaviour
 shared across these routes.

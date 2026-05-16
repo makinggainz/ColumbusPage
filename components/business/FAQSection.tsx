@@ -6,7 +6,7 @@ import { useState } from "react";
  * Commonly-asked questions — left label + right accordion.
  *
  * Layout is inspired by a standard two-column FAQ, but every visual
- * decision comes from the enterprise/homepage system: Funnel Display
+ * decision comes from the business/homepage system: Funnel Display
  * heading (via the `.ent-scope :is(h1..h6)` rule), `text-ink` / `text-muted`
  * copy, the `#E7E7F1` `border-gridline` hairline, the 7px homepage card
  * corner (`--ent-radius-card`), and the `#0081AC` interactive accent.
@@ -23,7 +23,7 @@ const FAQS: { q: string; a: string }[] = [
   },
   {
     q: "What security measures do we take?",
-    a: "Enterprise data is encrypted in transit and at rest, access is scoped per organization, and your private data is never used to train shared models. We support the controls enterprise teams expect before rolling Columbus out across an organization.",
+    a: "Business data is encrypted in transit and at rest, access is scoped per organization, and your private data is never used to train shared models. We support the controls business teams expect before rolling Columbus out across an organization.",
   },
   {
     q: "Is this only for GIS professionals?",

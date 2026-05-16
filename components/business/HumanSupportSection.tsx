@@ -52,7 +52,7 @@ export default function HumanSupportSection() {
             <div className="relative w-[570px] h-[605px] rounded-[23px] overflow-hidden shadow-lg">
 
               <img
-                src="/enterprise/humanbg.png"
+                src="/business/humanbg.png"
                 alt="Support Background"
                 className="w-full h-full object-cover"
               />
@@ -61,7 +61,7 @@ export default function HumanSupportSection() {
               <div className="absolute inset-0 flex items-center justify-center">
 
                 <img
-                  src="/enterprise/bot.png"
+                  src="/business/bot.png"
                   alt="Bot Chat"
                   className="w-[454px] h-[499px]"
                 />

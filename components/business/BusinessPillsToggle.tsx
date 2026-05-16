@@ -6,7 +6,7 @@ import glassStyles from "@/components/ui/GlassButton.module.css";
 const PILLS = ["Map Chat", "Agentic Audits", "Agentic Research Reports", "Data Catalogue"];
 const INSET = 4;
 
-export function EnterprisePillsToggle() {
+export function BusinessPillsToggle() {
   const [active, setActive] = useState(0);
   const [indicator, setIndicator] = useState({ left: 0, width: 0, ready: false });
   const containerRef = useRef<HTMLDivElement>(null);

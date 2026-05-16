@@ -246,7 +246,7 @@ function ChatInput() {
       </div>
 
       <Link
-        href="/technology"
+        href="/research"
         className="flex items-center justify-center gap-2 mt-6 hover:opacity-75"
         style={{ textDecoration: "none", transition: `opacity var(--hiw-duration-normal)`, opacity: 0.35 }}
       >

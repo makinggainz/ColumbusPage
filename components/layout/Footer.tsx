@@ -268,15 +268,15 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false, t
             <div className="flex flex-col sm:flex-row gap-8 sm:gap-12 lg:mt-[30px]">
               {[
                 <FooterColumn key="product" theme={theme} title="Product" links={[
-                  { label: "Columbus Pro", href: "/products/enterprise" },
+                  { label: "Columbus Pro", href: "/products/business" },
                   { label: "Elio", href: "/" },
                   { label: "Use Cases", href: "/columbus-solutions" },
                 ]} />,
                 <FooterColumn key="technology" theme={theme} title="Research" links={[
-                  { label: "Foundation Model", href: "/technology" },
-                  { label: "Timeline", href: "/technology" },
-                  { label: "Research", href: "/technology" },
-                  { label: "Results", href: "/technology" },
+                  { label: "Foundation Model", href: "/research" },
+                  { label: "Timeline", href: "/research" },
+                  { label: "Research", href: "/research" },
+                  { label: "Results", href: "/research" },
                   { label: "Blog", href: "/blog" },
                 ]} />,
                 <FooterColumn key="company" theme={theme} title="Company" links={[

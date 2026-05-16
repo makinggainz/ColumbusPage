@@ -27,7 +27,7 @@ export default function ChatSection() {
         style={{ backgroundColor: "var(--ent-blue-tint)", mixBlendMode: "color", opacity: 0.5, zIndex: 0 }}
       />
       {/* Light scrim — keeps the blurred photo faint so dark text reads,
-          mirroring the EnterpriseHero treatment. */}
+          mirroring the BusinessHero treatment. */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
@@ -204,7 +204,7 @@ export default function ChatSection() {
                 {/* Map panel */}
                 <div style={{ flex: 1, position: "relative", overflow: "hidden" }}>
                   <Image
-                    src="/enterprise/mapchat.png"
+                    src="/business/mapchat.png"
                     alt=""
                     fill
                     className="object-cover object-center"

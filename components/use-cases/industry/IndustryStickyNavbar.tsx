@@ -10,13 +10,13 @@ type IndustryStickyNavbarProps = {
   /**
    * Distance (px) from the viewport top where this sub-navbar pins — must
    * equal the height of the main navbar above it. Defaults to 56 (the
-   * columbus-solutions compact navbar). The enterprise page's MistxNav is
+   * columbus-solutions compact navbar). The business page's MistxNav is
    * taller, so it passes its own value.
    */
   topOffset?: number;
   /**
    * Restrict & order the industry links. Defaults to the full
-   * INDUSTRY_ORDER; the enterprise page passes the same reduced subset
+   * INDUSTRY_ORDER; the business page passes the same reduced subset
    * as its IndustrySelector so the two stay in sync.
    */
   industries?: IndustryId[];
