@@ -52,7 +52,7 @@ html,
 body {
   margin: 0;
   padding: 0;
-  background: #0B1342;
+  background: #0F173C;
   color: #1D1D1F;
   overflow-x: clip;
   min-height: 100%;
@@ -97,19 +97,19 @@ html {
      matches the button's rendered height:
        sm  ≤ 40px   ·  md 41–52px  ·  lg 53–66px  ·  xl ≥ 67px
 
-     FIX (over-rounding): each tier value is anchored to the *typical*
-     button height that lands in that tier — NOT the tier's upper bound.
-     The earlier md/lg were anchored to the range max (48 / 61px), which
-     over-rounded the shorter, more common buttons in each tier (e.g. the
-     ~42px content CTAs read at ratio 0.52 instead of ~0.46). Re-anchored:
-       md → 44px typical → 44 × 0.457 ≈ 20px
+     The strict ratio (height × 0.457) is the lg/xl baseline. md is an
+     exception: the formula gave 20px for the ~42–44px content CTAs, but
+     that still read as too round next to the navbar — so md is a
+     deliberate *small bump*, 2px over sm, per design review.
+       md → 18px  (sm + 2px, not formula-derived)
        lg → 57px typical → 57 × 0.457 ≈ 26px
+       xl → 74px typical → 74 × 0.457 ≈ 34px
      Each generates a Tailwind utility (rounded-button, rounded-button-md,
      rounded-button-lg, rounded-button-xl); CSS files use var(--radius-button*). */
-  --radius-button: 16px;         /* sm — ~35px navbar-sized buttons (default) */
-  --radius-button-md: 20px;      /* md — ~44px-tall buttons (44 × 0.457)       */
-  --radius-button-lg: 26px;      /* lg — ~57px-tall buttons (57 × 0.457)       */
-  --radius-button-xl: 34px;      /* xl — ~74px-tall buttons (74 × 0.457)       */
+  --radius-button: 16px;         /* sm — ~35px navbar-sized buttons (default)  */
+  --radius-button-md: 18px;      /* md — ~42px content CTAs (small +2px bump)   */
+  --radius-button-lg: 26px;      /* lg — ~57px-tall buttons (57 × 0.457)        */
+  --radius-button-xl: 34px;      /* xl — ~74px-tall buttons (74 × 0.457)        */
 
   /* Two-family typography system (Gdesign V2):
        --font-sans     → Opening Hours Sans, body / paragraphs / UI
@@ -337,7 +337,7 @@ html {
 
 /* Typography */
 body {
-  background: #0B1342;
+  background: #0F173C;
   color: var(--foreground);
   /* Opening Hours Sans is the project-wide body face. Everything that
      doesn't set its own font-family inherits it from here. Headings

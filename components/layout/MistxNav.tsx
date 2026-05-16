@@ -167,7 +167,7 @@ export function MistxNav() {
             />
           </a>
           <span
-            className="h7 hidden lg:flex items-center font-semibold leading-none whitespace-nowrap text-[#1f1f1f]"
+            className="h7 hidden lg:flex items-center font-semibold leading-none whitespace-nowrap text-[#0F173C]"
             style={{
               fontFamily: "Axiforma, 'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif",
               position: "relative",

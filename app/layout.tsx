@@ -38,7 +38,7 @@ export default function RootLayout({
 
       <body
         className="antialiased min-h-screen"
-        style={{ backgroundColor: "#0B1342" }}
+        style={{ backgroundColor: "#0F173C" }}
       >
         <LenisProvider>
           <ScrollRestorer />
