@@ -445,7 +445,7 @@ still below the navbar's):
 | State | Condition | Backdrop | Contents |
 |-------|-----------|----------|----------|
 | **Transparent** | At page top (not scrolled) | None — sky reads through | White (logo, wordmark, links, Contact) |
-| **Gradient scrim** | Scrolled **and** still over the hero | Black top-down gradient (see below) | White |
+| **Gradient scrim** | Scrolled **and** still over the hero | Sky-tinted top-down gradient (see below) | White |
 | **Solid** | Scrolled past the hero | Normal `#FFFFFF` backdrop | Dark (default) |
 
 Nav contents stay **white the entire time the navbar is in front of the
@@ -456,10 +456,15 @@ pins. The "Try Elio" CTA keeps its filled navy pill in all three states.
 **Gradient scrim backdrop:** an absolutely-positioned layer behind the nav
 content row (`z-0` vs the row's `z-10`):
 
-- `background: linear-gradient(to bottom, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0) 100%)`
-  — darkest at the top, fading to fully transparent (alpha 0) exactly at
-  the navbar's bottom border (`top:0; bottom:0`), so the white nav
-  contents stay legible with no hard edge at the bottom;
-- no blur or tint (the earlier frosted-glass version was removed);
+- tinted to the hero image's dominant sky colour, **#018ADE**
+  (`rgb(1,138,222)`) — the same value `BentoProducts` uses for the
+  Columbus tile's `/ColumbusBackgroundbento.png`, so the navbar reads as
+  a continuation of the sky;
+- `background: linear-gradient(to bottom, rgba(1,138,222,1) 0%, rgba(1,138,222,0.55) 50%, rgba(1,138,222,0) 100%)`
+  — fully opaque at the top, fading to fully transparent (alpha 0)
+  exactly at the navbar's bottom border (`top:0; bottom:0`), so it
+  blends into the real sky below with no hard edge;
+- no blur (the earlier frosted-glass/black-gradient versions were
+  removed);
 - driven by `opacity` + a 300ms transition so it cross-fades with the
   solid backdrop as the hero scrolls out from behind the navbar.

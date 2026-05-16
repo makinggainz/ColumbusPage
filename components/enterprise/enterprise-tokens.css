@@ -67,8 +67,14 @@
   --ent-dark-text-medium:    #5A6B7B;
   --ent-dark-text-low:       rgba(11, 27, 43, 0.35);
 
+  /* ── Colors — interactive accent ──
+     The ONLY colour allowed on interactive accents — arrows, links, CTA
+     hover. Matches the homepage #0081AC accent so interactive cues read
+     the same site-wide. */
+  --ent-accent:              #0081AC;
+
   /* ── Colors — accent blues ── */
-  --ent-blue-primary:        #2563EB;
+  --ent-blue-primary:        #2563EB;   /* DEPRECATED — superseded by --ent-accent; retained, unused. */
   --ent-blue-deep:           #1B37CE;
   --ent-blue-tint:           #0066CC;
   --ent-blue-shimmer:        #8A9BD4;

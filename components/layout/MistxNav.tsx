@@ -97,8 +97,8 @@ export function MistxNav({ heroWhite = false }: { heroWhite?: boolean } = {}) {
   const [hasHero, setHasHero] = useState(true);
   // True while the navbar still overlaps the hero section (the hero's
   // bottom edge is below the navbar's, minus a lead offset). Enterprise-
-  // only — drives the black gradient scrim, which applies only while
-  // over the hero.
+  // only — drives the sky-tinted gradient scrim, which applies only
+  // while over the hero.
   const [overHero, setOverHero] = useState(false);
   const headerRef = useRef<HTMLElement | null>(null);
 
@@ -148,15 +148,15 @@ export function MistxNav({ heroWhite = false }: { heroWhite?: boolean } = {}) {
   // CTA keeps its filled navy pill in both states.
   // On the enterprise hero the nav contents stay white the whole time
   // the navbar is in front of the hero — at the top (transparent) and
-  // while scrolling over it (dark gradient scrim below). They revert to
-  // the default dark colours only once the hero has scrolled out and the
-  // solid white backdrop pins.
+  // while scrolling over it (sky-tinted gradient scrim below). They
+  // revert to the default dark colours only once the hero has scrolled
+  // out and the solid white backdrop pins.
   const lightNav = heroWhite && (!stuck || overHero);
   // Enterprise-only: while scrolled ("on movement") AND the navbar still
-  // overlaps the hero, the solid white backdrop is replaced by a black
-  // gradient scrim — darkest at the top, fading to fully transparent at
-  // the navbar's bottom border. Once the hero scrolls out from behind
-  // the navbar it reverts to the normal solid backdrop.
+  // overlaps the hero, the solid white backdrop is replaced by a scrim
+  // tinted to the hero image's sky colour — opaque at the top, fading to
+  // fully transparent at the navbar's bottom border. Once the hero
+  // scrolls out from behind the navbar it reverts to the solid backdrop.
   const heroScrim = heroWhite && stuck && overHero;
 
   return (
@@ -175,13 +175,14 @@ export function MistxNav({ heroWhite = false }: { heroWhite?: boolean } = {}) {
       }}
     >
       {/* Enterprise hero-only backdrop. Sits behind the content row
-          (z-0 vs the row's z-10). A black gradient scrim — darkest at
-          the top, fading to fully transparent (alpha 0) exactly at the
-          navbar's bottom border — so the white nav contents stay
-          legible while the hero scrolls behind it, with no hard edge at
-          the bottom. Driven by opacity so it cross-fades with the
-          solid-white backdrop as the hero scrolls out from behind the
-          navbar. */}
+          (z-0 vs the row's z-10). Tinted to the hero image's dominant
+          sky colour (#018ADE = rgb(1,138,222) — the same value the
+          BentoProducts Columbus tile uses for /ColumbusBackgroundbento
+          .png), so the navbar reads as a continuation of the sky. Fully
+          opaque at the top, fading to transparent (alpha 0) exactly at
+          the navbar's bottom border, so it blends into the real sky
+          below with no hard edge. Driven by opacity so it cross-fades
+          with the solid-white backdrop as the hero scrolls out. */}
       {heroWhite && (
         <div
           aria-hidden
@@ -191,7 +192,7 @@ export function MistxNav({ heroWhite = false }: { heroWhite?: boolean } = {}) {
             borderTopLeftRadius: "var(--frame-radius, 20px)",
             borderTopRightRadius: "var(--frame-radius, 20px)",
             background:
-              "linear-gradient(to bottom, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0) 100%)",
+              "linear-gradient(to bottom, rgba(1,138,222,1) 0%, rgba(1,138,222,0.55) 50%, rgba(1,138,222,0) 100%)",
             opacity: heroScrim ? 1 : 0,
             transition: "opacity 300ms ease",
           }}

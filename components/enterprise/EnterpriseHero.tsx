@@ -238,12 +238,9 @@ export default function EnterpriseHero() {
                       height: "70%",
                       paddingLeft: "clamp(8px, 0.9vw, 13px)",
                       paddingRight: "clamp(6px, 0.7vw, 10px)",
-                      // Same corner-roundness *appearance* as the navbar CTA:
-                      // that button uses radius ≈ height × 0.457 (16px / 35px).
-                      // The tab is shorter (~70% of the 34–46px title bar),
-                      // so its radius scales down by the same ratio to read
-                      // equally rounded.
-                      borderRadius: "clamp(11px, 1.1vw, 15px)",
+                      // Subtle corner rounding — softer than the navbar-CTA
+                      // ratio, which read as over-rounded at this tab height.
+                      borderRadius: "clamp(6px, 0.6vw, 9px)",
                       background: active ? "rgba(255,255,255,0.7)" : "rgba(255,255,255,0.18)",
                       border: `1px solid ${active ? "rgba(255,255,255,0.6)" : "rgba(255,255,255,0.22)"}`,
                       // Equal share of the tab row, capped at the midpoint
