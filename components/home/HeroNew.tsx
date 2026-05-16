@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect, useRef } from "react";
+
 /**
  * Hero section — minimal layout for the experimentV6-Gdesign redesign.
  *
@@ -8,11 +10,10 @@
  * class (Medium 500, 64px desktop / 40px ≤991px) — same typescale used
  * on every heading across the page.
  *
- * Right side: full-bleed boat-sailing background image
- * (/mapwaterhero.png, a topographic-line water texture with a small
- * tall-ship anchored to the right). A left-side white→transparent
- * gradient overlay sits above the image so the H1 reads cleanly
- * regardless of how the watercolour map texture lands behind it.
+ * Right side: full-bleed boat-sailing background video
+ * (/HeroShipVid.mp4), with /BoatHero.jpg as the poster frame. A
+ * left-side white→transparent gradient overlay sits above the video
+ * so the H1 reads cleanly regardless of how the footage lands behind it.
  */
 
 const HN_CSS = `
@@ -24,10 +25,6 @@ const HN_CSS = `
      seamlessly into the next section. The radial vignette + left
      readability layer both fade to this same colour. */
   background-color: #FFFFFF;
-  background-image: url('/mapwaterhero.png');
-  background-position: right center;
-  background-size: cover;
-  background-repeat: no-repeat;
   /* The navbar is sticky (stays in document flow + occupies its own
      ~80px height). Pulling this section up by -80px makes the boat
      image extend behind the navbar so the navbar reads as part of the
@@ -47,10 +44,25 @@ const HN_CSS = `
   align-items: center;
 }
 
+/* Full-bleed background video. Sits at the very bottom of the section's
+   stacking (z-index: 0) so the ::before readability gradient and ::after
+   vignette (both z-index: 1) and the .hn-bounds content (z-index: 2)
+   all layer cleanly on top. object-position mirrors the old
+   background-position so the ::after radial vignette stays aligned. */
+.hn-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: right center;
+  z-index: 0;
+}
+
 /* Left-side readability layer — fades from the section's base surface
    (#FDFCFC) at the left edge to transparent past the H1's max-width,
    so the H1 sits on a near-solid background while the boat half of
-   the image reads through cleanly on the right. */
+   the video reads through cleanly on the right. */
 .hn-section::before {
   content: "";
   position: absolute;
@@ -89,10 +101,10 @@ const HN_CSS = `
       rgba(255, 255, 255, 1) 100%
     ),
     radial-gradient(
-      ellipse 38% 55% at 76% 50%,
+      ellipse 56% 80% at 76% 50%,
       rgba(255, 255, 255, 0) 0%,
-      rgba(255, 255, 255, 0) 32%,
-      rgba(255, 255, 255, 0.55) 65%,
+      rgba(255, 255, 255, 0) 44%,
+      rgba(255, 255, 255, 0.55) 73%,
       rgba(255, 255, 255, 1) 100%
     );
   pointer-events: none;
@@ -142,9 +154,37 @@ const HN_CSS = `
 `;
 
 export function HeroNew() {
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  // Next SSR doesn't emit the `muted` attribute into the server HTML
+  // (it's only set as a property after hydration), so browsers block
+  // autoplay. Explicitly set `.muted` and call `.play()` — with a
+  // `canplay` retry in case the data wasn't ready on the first attempt.
+  useEffect(() => {
+    const v = videoRef.current;
+    if (!v) return;
+    v.muted = true;
+    const tryPlay = () => { v.play().catch(() => {}); };
+    tryPlay();
+    v.addEventListener("canplay", tryPlay);
+    return () => v.removeEventListener("canplay", tryPlay);
+  }, []);
+
   return (
     <section className="hn-section" aria-label="Columbus hero" data-hero-section>
       <style>{HN_CSS}</style>
+      <video
+        ref={videoRef}
+        className="hn-video"
+        src="/HeroShipVid.mp4"
+        poster="/BoatHero.jpg"
+        autoPlay
+        loop
+        muted
+        playsInline
+        preload="auto"
+        aria-hidden
+      />
       <div className="hn-bounds">
         <h1 className="h1 hn-title tracking-tight text-ink">
           The frontier research lab building geospatial reasoning for the real world.
