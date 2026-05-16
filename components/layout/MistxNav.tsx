@@ -29,9 +29,12 @@ import { useEffect, useRef, useState } from "react";
 // destinations. The only remaining dropdown lives on the right-side
 // "Try Elio" CTA below.
 const navLinks: { label: string; href: string }[] = [
-  { label: "Consumer", href: "/elio" },
+  // "Consumer" has no dedicated /elio route yet — pointed at /products/mapsgpt
+  // for now (per product owner). Repoint to /elio once that page exists.
+  { label: "Consumer", href: "/products/mapsgpt" },
   { label: "Enterprise", href: "/products/enterprise" },
-  { label: "Research", href: "/research" },
+  // Actual route is /research-applications; /research never existed.
+  { label: "Research", href: "/research-applications" },
   { label: "Blog", href: "/blog" },
   { label: "Company", href: "/mission" },
 ];
@@ -43,7 +46,8 @@ const navLinks: { label: string; href: string }[] = [
 // hairline border, subtle shadow, bg-black/5 row hover matching the
 // navbar pill hover one screen over.
 const elioMenuItems: { label: string; href: string; desc: string }[] = [
-  { label: "Try Elio", href: "/elio", desc: "Consumer travel reasoning" },
+  // No /elio route yet — temporarily points to /products/mapsgpt.
+  { label: "Try Elio", href: "/products/mapsgpt", desc: "Consumer travel reasoning" },
   { label: "Try Mapsurf", href: "/products/mapsgpt", desc: "Lightweight map workspace" },
   { label: "Try Columbus", href: "/products/enterprise", desc: "Enterprise geospatial intelligence" },
 ];
