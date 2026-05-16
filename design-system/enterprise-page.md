@@ -433,16 +433,33 @@ becomes the sticky containing block and lets the navbar scroll away.
 (`#FFFFFF`) for contrast against the sky. The link's arrow keeps the
 `#2563EB` (Blue Primary) accent.
 
-### Navbar colour over the hero
+### Navbar backdrop + colour over the hero
 
-The hero `<section>` carries `data-hero-section`, so `MistxNav` stays
-transparent at the top of the page and only paints its white backdrop once
-scrolled. `MistxNav` is passed the `heroWhite` prop:
+The hero `<section>` carries `data-hero-section` and `MistxNav` is passed
+the `heroWhite` prop. `heroWhite` is opt-in and defaults off, so every other
+page keeps the standard transparent→solid-white behaviour. On the enterprise
+page the navbar has **three** states, keyed off scroll position and whether
+the navbar still overlaps the hero (`overHero` — the hero's bottom edge is
+still below the navbar's):
 
-- **Transparent (at page top, over the sky):** logo, "Columbus Earth"
-  wordmark, nav links, and the Contact button render white.
-- **Pinned (scrolled, white backdrop):** reverts to the default dark nav
-  colours — white-on-white would otherwise be invisible.
-- The "Try Elio" CTA keeps its filled navy pill in both states.
+| State | Condition | Backdrop | Contents |
+|-------|-----------|----------|----------|
+| **Transparent** | At page top (not scrolled) | None — sky reads through | White (logo, wordmark, links, Contact) |
+| **Gradient scrim** | Scrolled **and** still over the hero | Black top-down gradient (see below) | White |
+| **Solid** | Scrolled past the hero | Normal `#FFFFFF` backdrop | Dark (default) |
 
-`heroWhite` is opt-in and defaults off, so every other page is unaffected.
+Nav contents stay **white the entire time the navbar is in front of the
+hero** (transparent state + gradient-scrim state); they revert to the
+default dark colours only once the hero scrolls out and the solid backdrop
+pins. The "Try Elio" CTA keeps its filled navy pill in all three states.
+
+**Gradient scrim backdrop:** an absolutely-positioned layer behind the nav
+content row (`z-0` vs the row's `z-10`):
+
+- `background: linear-gradient(to bottom, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0) 100%)`
+  — darkest at the top, fading to fully transparent (alpha 0) exactly at
+  the navbar's bottom border (`top:0; bottom:0`), so the white nav
+  contents stay legible with no hard edge at the bottom;
+- no blur or tint (the earlier frosted-glass version was removed);
+- driven by `opacity` + a 300ms transition so it cross-fades with the
+  solid backdrop as the hero scrolls out from behind the navbar.

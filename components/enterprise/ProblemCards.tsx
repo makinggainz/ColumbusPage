@@ -78,7 +78,6 @@ export default function ProblemCards() {
                 width: 210,
                 height: 210,
                 backgroundColor: "transparent",
-                borderRight: i < PAIN_POINTS.length - 1 ? "1px solid var(--grid-line)" : "none",
                 borderBottom: "1px solid var(--grid-line)",
                 fontSize: 15,
                 fontWeight: 400,

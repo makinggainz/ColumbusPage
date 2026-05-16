@@ -95,6 +95,11 @@ export function MistxNav({ heroWhite = false }: { heroWhite?: boolean } = {}) {
   // white backdrop on first paint. The effect below re-checks on mount
   // and flips this off on non-hero pages.
   const [hasHero, setHasHero] = useState(true);
+  // True while the navbar still overlaps the hero section (the hero's
+  // bottom edge is below the navbar's, minus a lead offset). Enterprise-
+  // only — drives the black gradient scrim, which applies only while
+  // over the hero.
+  const [overHero, setOverHero] = useState(false);
   const headerRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
@@ -106,6 +111,19 @@ export function MistxNav({ heroWhite = false }: { heroWhite?: boolean } = {}) {
       // transparent so the hero image reads through it to the top of the
       // card; any scroll at all swaps the solid backdrop in.
       setStuck(window.scrollY > 0);
+      // Is the navbar still in front of the hero? True while the hero's
+      // bottom edge sits below the navbar's lower edge. The +LEAD offset
+      // flips this false a little *before* the hero fully clears the
+      // navbar, so the classic solid white backdrop takes over sooner.
+      const SCRIM_EXIT_LEAD = 80;
+      const heroEl = document.querySelector("[data-hero-section]");
+      const headerEl = headerRef.current;
+      setOverHero(
+        !!heroEl &&
+          !!headerEl &&
+          heroEl.getBoundingClientRect().bottom >
+            headerEl.getBoundingClientRect().bottom + SCRIM_EXIT_LEAD,
+      );
     };
     const onScroll = () => {
       if (raf) return;
@@ -128,7 +146,18 @@ export function MistxNav({ heroWhite = false }: { heroWhite?: boolean } = {}) {
   // revert to the default dark colors once the white backdrop pins on
   // scroll — white-on-white would otherwise be invisible. The "Try Elio"
   // CTA keeps its filled navy pill in both states.
-  const lightNav = heroWhite && !showBackdrop;
+  // On the enterprise hero the nav contents stay white the whole time
+  // the navbar is in front of the hero — at the top (transparent) and
+  // while scrolling over it (dark gradient scrim below). They revert to
+  // the default dark colours only once the hero has scrolled out and the
+  // solid white backdrop pins.
+  const lightNav = heroWhite && (!stuck || overHero);
+  // Enterprise-only: while scrolled ("on movement") AND the navbar still
+  // overlaps the hero, the solid white backdrop is replaced by a black
+  // gradient scrim — darkest at the top, fading to fully transparent at
+  // the navbar's bottom border. Once the hero scrolls out from behind
+  // the navbar it reverts to the normal solid backdrop.
+  const heroScrim = heroWhite && stuck && overHero;
 
   return (
     <header
@@ -142,9 +171,32 @@ export function MistxNav({ heroWhite = false }: { heroWhite?: boolean } = {}) {
         top: "var(--frame-margin, 16px)",
         borderTopLeftRadius: "var(--frame-radius, 20px)",
         borderTopRightRadius: "var(--frame-radius, 20px)",
-        backgroundColor: showBackdrop ? "#FFFFFF" : "transparent",
+        backgroundColor: showBackdrop && !heroScrim ? "#FFFFFF" : "transparent",
       }}
     >
+      {/* Enterprise hero-only backdrop. Sits behind the content row
+          (z-0 vs the row's z-10). A black gradient scrim — darkest at
+          the top, fading to fully transparent (alpha 0) exactly at the
+          navbar's bottom border — so the white nav contents stay
+          legible while the hero scrolls behind it, with no hard edge at
+          the bottom. Driven by opacity so it cross-fades with the
+          solid-white backdrop as the hero scrolls out from behind the
+          navbar. */}
+      {heroWhite && (
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-x-0 top-0 bottom-0"
+          style={{
+            zIndex: 0,
+            borderTopLeftRadius: "var(--frame-radius, 20px)",
+            borderTopRightRadius: "var(--frame-radius, 20px)",
+            background:
+              "linear-gradient(to bottom, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0) 100%)",
+            opacity: heroScrim ? 1 : 0,
+            transition: "opacity 300ms ease",
+          }}
+        />
+      )}
       {/* Content row — bounds match the page's content sections
           (max-w-[1287px] mx-5 md:mx-auto), no inner padding, so the logo's
           left edge and the "Try Elio" CTA's right edge sit flush with the

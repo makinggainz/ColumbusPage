@@ -14,6 +14,27 @@ export default function EnterpriseHero() {
   const sectionRef = useRef<HTMLElement>(null);
   const [visible, setVisible] = useState(false);
 
+  // Browser-tab mock: selectable (click to activate) and reorderable
+  // (drag a tab onto another to swap its position in the order).
+  const [tabs, setTabs] = useState([
+    { id: "columbus", label: "Columbus" },
+    { id: "site-report", label: "Site Report" },
+    { id: "trade-area", label: "Trade Area" },
+    { id: "new-tab", label: "New Tab" },
+  ]);
+  const [activeTabId, setActiveTabId] = useState("columbus");
+  const dragTabIndex = useRef<number | null>(null);
+
+  const moveTab = (from: number, to: number) => {
+    if (from === to) return;
+    setTabs(prev => {
+      const next = [...prev];
+      const [moved] = next.splice(from, 1);
+      next.splice(to, 0, moved);
+      return next;
+    });
+  };
+
   // Intersection observer — reveal the hero when it enters view.
   useEffect(() => {
     const el = sectionRef.current;
@@ -163,6 +184,7 @@ export default function EnterpriseHero() {
                 gap: "clamp(7px, 0.8vw, 10px)",
                 height: "clamp(34px, 3.4vw, 46px)",
                 paddingLeft: "clamp(15px, 1.7vw, 24px)",
+                paddingRight: "clamp(12px, 1.5vw, 20px)",
                 background: "rgba(255,255,255,0.3)",
                 borderBottom: "1px solid rgba(255,255,255,0.32)",
               }}
@@ -179,6 +201,101 @@ export default function EnterpriseHero() {
                   }}
                 />
               ))}
+
+              {/* Browser tabs — frosted-glass strips filling the space to
+                  the right of the traffic lights. First tab reads as the
+                  active/foreground tab (brighter glass + ink label). */}
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "clamp(7px, 0.9vw, 12px)",
+                  marginLeft: "clamp(12px, 1.5vw, 22px)",
+                  height: "100%",
+                  flex: 1,
+                  minWidth: 0,
+                }}
+              >
+                {tabs.map((tab, i) => {
+                  const active = tab.id === activeTabId;
+                  return (
+                  <div
+                    key={tab.id}
+                    draggable
+                    onClick={() => setActiveTabId(tab.id)}
+                    onDragStart={() => { dragTabIndex.current = i; }}
+                    onDragOver={e => e.preventDefault()}
+                    onDrop={e => {
+                      e.preventDefault();
+                      if (dragTabIndex.current !== null) moveTab(dragTabIndex.current, i);
+                      dragTabIndex.current = null;
+                    }}
+                    onDragEnd={() => { dragTabIndex.current = null; }}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "clamp(4px, 0.5vw, 7px)",
+                      height: "70%",
+                      paddingLeft: "clamp(8px, 0.9vw, 13px)",
+                      paddingRight: "clamp(6px, 0.7vw, 10px)",
+                      // Same corner-roundness *appearance* as the navbar CTA:
+                      // that button uses radius ≈ height × 0.457 (16px / 35px).
+                      // The tab is shorter (~70% of the 34–46px title bar),
+                      // so its radius scales down by the same ratio to read
+                      // equally rounded.
+                      borderRadius: "clamp(11px, 1.1vw, 15px)",
+                      background: active ? "rgba(255,255,255,0.7)" : "rgba(255,255,255,0.18)",
+                      border: `1px solid ${active ? "rgba(255,255,255,0.6)" : "rgba(255,255,255,0.22)"}`,
+                      // Equal share of the tab row, capped at the midpoint
+                      // between the compact (150) and full-stretch (220)
+                      // sizes so the four tabs sit comfortably in the bar.
+                      flex: "1 1 0",
+                      minWidth: 0,
+                      maxWidth: 185,
+                      cursor: "pointer",
+                      userSelect: "none",
+                      transition: "background 200ms ease, border-color 200ms ease",
+                    }}
+                  >
+                    <div
+                      style={{
+                        width: "clamp(11px, 1.2vw, 16px)",
+                        aspectRatio: "1",
+                        borderRadius: "50%",
+                        background: "linear-gradient(135deg, #74A0FE 0%, #1451E8 100%)",
+                        flexShrink: 0,
+                      }}
+                    />
+                    <span
+                      style={{
+                        fontSize: "clamp(8px, 0.85vw, 12px)",
+                        fontWeight: 500,
+                        letterSpacing: "-0.01em",
+                        color: active ? "var(--ent-text-primary)" : "var(--ent-text-secondary)",
+                        whiteSpace: "nowrap",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        minWidth: 0,
+                        flex: 1,
+                      }}
+                    >
+                      {tab.label}
+                    </span>
+                    <span
+                      aria-hidden
+                      style={{
+                        fontSize: "clamp(9px, 1vw, 13px)",
+                        lineHeight: 1,
+                        color: "var(--ent-text-muted)",
+                        flexShrink: 0,
+                      }}
+                    >
+                      ×
+                    </span>
+                  </div>
+                  );
+                })}
+              </div>
             </div>
 
             {/* Product image — the Columbus bento visual from the homepage,

@@ -26,7 +26,7 @@ function SectionWithLabel({
   return (
     <section className="relative">
       <span
-        className="absolute left-0 top-0 z-50 flex h-8 w-8 items-center justify-center rounded-br bg-black/80 text-sm font-bold text-white"
+        className="absolute left-0 top-0 z-50 flex h-8 w-8 items-center justify-center rounded-br bg-black/80 text-sm font-bold text-white opacity-25"
         aria-hidden
       >
         {label}
@@ -50,14 +50,20 @@ export default function EnterprisePage() {
       <SectionWithLabel label={sectionLabels[1]}>
         <EnterpriseHero />
       </SectionWithLabel>
-      <div ref={darkStartRef} className="relative" style={{ backgroundColor: "#ffffff" }}>
-        <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ zIndex: 1, opacity: 0.40, mixBlendMode: "multiply" }}>
-          <filter id="b2cNoise">
-            <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="4" stitchTiles="stitch" />
-            <feColorMatrix type="saturate" values="0" />
-          </filter>
-          <rect width="100%" height="100%" filter="url(#b2cNoise)" />
-        </svg>
+      {/* White mid-block — the decorative blueprint grid + grain that used
+          to texture these sections is replaced by the faint city line-art
+          background, anchored full-width along the bottom horizon. */}
+      <div
+        ref={darkStartRef}
+        className="relative"
+        style={{
+          backgroundColor: "#ffffff",
+          backgroundImage: "url(/enterpriseartbackground.png)",
+          backgroundSize: "100% auto",
+          backgroundRepeat: "no-repeat",
+          backgroundPosition: "center bottom",
+        }}
+      >
         <div className="relative z-10">
           <SectionWithLabel label={sectionLabels[2]}>
             <ProblemCards />

@@ -111,9 +111,6 @@ export default function DifferenceSection() {
         {/* Comparison */}
         <div className="mt-12 md:mt-20 w-full grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-0 relative">
 
-          {/* Divider */}
-          <div className="hidden lg:block absolute left-1/2 top-0 bottom-0 w-[1px] bg-gridline" />
-
           {/* Columbus LGM */}
           <div style={fadeIn(visible, 0.3)} className="flex flex-col items-center lg:items-end text-center lg:pr-20">
             <div className="w-full max-w-[467px]">

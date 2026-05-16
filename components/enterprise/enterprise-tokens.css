@@ -215,3 +215,16 @@
   font-family: var(--ent-font-heading);
 }
 
+/* ── Suppress the shared ContentGrid vertical rails ──
+   <GridSection> (components/home/ContentGrid.tsx) draws full-height
+   left/right structure lines via .grid-section::before / ::after in
+   app/globals.css. The home page keeps them, but the enterprise page
+   (sections b2 / b3 — ProblemCards, SolutionShowcase) should have no
+   vertical structure lines. This file only loads on the enterprise
+   page and the selector is .ent-scope-scoped, so the home page is
+   unaffected. */
+.ent-scope .grid-section::before,
+.ent-scope .grid-section::after {
+  display: none;
+}
+

@@ -22,93 +22,13 @@ export default function ProductBanner() {
     <section
       ref={sectionRef}
       className="relative w-full overflow-hidden"
-      style={{ backgroundColor: "var(--ent-bg-light)" }}
+      style={{
+        backgroundImage: "url(/enterpriseartbackground.png)",
+        backgroundSize: "100% auto",
+        backgroundRepeat: "no-repeat",
+        backgroundPosition: "center bottom",
+      }}
     >
-      {/* Blue gradient from top — same as hero. Base color is --ent-blue-tint (#0066CC) at varying opacities */}
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          background: "linear-gradient(to bottom, rgba(0, 102, 204, 0.15) 0%, rgba(0, 102, 204, 0.10) 50%, rgba(0, 102, 204, 0.04) 80%, transparent 100%)",
-          zIndex: 0,
-        }}
-        aria-hidden
-      />
-
-      {/* Wireframe globe — GIS platform identity */}
-      <svg
-        className="absolute pointer-events-none"
-        style={{ bottom: "-20%", left: "50%", transform: "translateX(-50%)", width: "120%", height: "90%", zIndex: 0, opacity: 0.6 }}
-        viewBox="0 0 800 800"
-        fill="none"
-        aria-hidden
-      >
-        {(() => {
-          const cx = 400, cy = 400, R = 350;
-          const tiltX = 20 * (Math.PI / 180);
-          const tiltY = -15 * (Math.PI / 180);
-          const project = (lon: number, lat: number): [number, number] | null => {
-            const l = lon * (Math.PI / 180), p = lat * (Math.PI / 180);
-            let x = Math.cos(p) * Math.cos(l);
-            let y = Math.cos(p) * Math.sin(l);
-            let z = Math.sin(p);
-            const y1 = y * Math.cos(tiltX) - z * Math.sin(tiltX);
-            const z1 = y * Math.sin(tiltX) + z * Math.cos(tiltX);
-            const x2 = x * Math.cos(tiltY) + z1 * Math.sin(tiltY);
-            const z2 = -x * Math.sin(tiltY) + z1 * Math.cos(tiltY);
-            if (z2 < -0.1) return null;
-            return [cx + x2 * R, cy - y1 * R];
-          };
-          const buildLine = (pts: ([number, number] | null)[]): string => {
-            let d = "", pen = false;
-            for (const pt of pts) {
-              if (!pt) { pen = false; continue; }
-              d += pen ? `L${pt[0].toFixed(1)},${pt[1].toFixed(1)} ` : `M${pt[0].toFixed(1)},${pt[1].toFixed(1)} `;
-              pen = true;
-            }
-            return d;
-          };
-          const steps = 120;
-          const lines: React.ReactElement[] = [];
-          // Meridians every 20°
-          for (let lon = -180; lon < 180; lon += 20) {
-            const pts = Array.from({ length: steps + 1 }, (_, i) => project(lon, -90 + i * (180 / steps)));
-            const d = buildLine(pts);
-            if (d) lines.push(<path key={`m${lon}`} d={d} stroke="rgba(37,99,235,0.12)" strokeWidth={0.8} />);
-          }
-          // Parallels every 15°
-          for (let lat = -75; lat <= 75; lat += 15) {
-            const pts = Array.from({ length: steps + 1 }, (_, i) => project(-180 + i * (360 / steps), lat));
-            const d = buildLine(pts);
-            if (d) lines.push(<path key={`p${lat}`} d={d} stroke="rgba(37,99,235,0.10)" strokeWidth={0.6} />);
-          }
-          // Equator + prime meridian stronger
-          const eq = Array.from({ length: steps + 1 }, (_, i) => project(-180 + i * (360 / steps), 0));
-          const eqD = buildLine(eq);
-          if (eqD) lines.push(<path key="eq" d={eqD} stroke="rgba(37,99,235,0.20)" strokeWidth={1.2} />);
-          const pm = Array.from({ length: steps + 1 }, (_, i) => project(0, -90 + i * (180 / steps)));
-          const pmD = buildLine(pm);
-          if (pmD) lines.push(<path key="pm" d={pmD} stroke="rgba(37,99,235,0.18)" strokeWidth={1.0} />);
-          // Globe outline
-          lines.push(<circle key="outline" cx={cx} cy={cy} r={R} stroke="rgba(37,99,235,0.08)" strokeWidth={1} />);
-          return lines;
-        })()}
-      </svg>
-
-      {/* Noise grain texture — strong */}
-      <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ zIndex: 1, opacity: 0.50, mixBlendMode: "multiply" }}>
-        <filter id="sectionDNoise">
-          <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="4" stitchTiles="stitch" />
-          <feColorMatrix type="saturate" values="0" />
-        </filter>
-        <rect width="100%" height="100%" filter="url(#sectionDNoise)" />
-      </svg>
-
-      {/* Vertical structure lines */}
-      <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 1 }} aria-hidden>
-        <div className="absolute top-0 bottom-0 ent-content-bounds left-0 right-0" style={{ borderLeft: "1px solid var(--grid-line)", borderRight: "1px solid var(--grid-line)" }} />
-      </div>
-
-
       <div
         className="relative z-10 flex flex-col items-center justify-center px-4 md:px-10"
         style={{
@@ -124,11 +44,7 @@ export default function ProductBanner() {
           style={{
             fontWeight: 500,
             letterSpacing: "-0.02em",
-            color: "transparent",
-            backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='200' height='200' fill='%231D1D1F' /%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.35'/%3E%3C/svg%3E")`,
-            backgroundSize: "200px 200px",
-            backgroundClip: "text",
-            WebkitBackgroundClip: "text",
+            color: "#1D1D1F",
           }}
         >
           <strong>Columbus Pro</strong>

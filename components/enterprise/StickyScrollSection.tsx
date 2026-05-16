@@ -19,7 +19,7 @@ const features: {
     fullBleedTop: true,
     content: (
       <div className="relative w-full h-[500px] md:h-[600px] lg:h-[694px]">
-        <span className="absolute left-0 top-0 z-50 flex h-8 w-8 items-center justify-center rounded-br bg-black/80 text-[11px] font-bold text-white" aria-hidden>g1.1</span>
+        <span className="absolute left-0 top-0 z-50 flex h-8 w-8 items-center justify-center rounded-br bg-black/80 text-[11px] font-bold text-white opacity-25" aria-hidden>g1.1</span>
         <Image
           src="/enterprise/sunbg.png"
           alt="background"
@@ -182,32 +182,37 @@ export default function StickyScrollSection() {
   return (
     <div className="relative w-full" style={{ "--grid-line": "var(--ent-border-dark-grid)", backgroundColor: "var(--ent-bg-dark)" } as React.CSSProperties}>
 
-      {/* Noise grain texture */}
-      <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ zIndex: 1, opacity: 0.40, mixBlendMode: "multiply" }}>
-        <filter id="sectionGNoise">
-          <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="4" stitchTiles="stitch" />
-          <feColorMatrix type="saturate" values="0" />
-        </filter>
-        <rect width="100%" height="100%" filter="url(#sectionGNoise)" />
-      </svg>
+      {/* City line-art background. The source PNG is near-white, so on this
+          dark section it is inverted (white field → dark, lines → light) and
+          screen-blended: the dark field drops out and only the faint light
+          lines remain — replacing the old grid + grain texture. */}
+      <div
+        className="absolute inset-x-0 bottom-0 pointer-events-none"
+        aria-hidden
+        style={{
+          height: "min(70%, 700px)",
+          zIndex: 1,
+          backgroundImage: "url(/enterpriseartbackground.png)",
+          backgroundSize: "100% auto",
+          backgroundRepeat: "no-repeat",
+          backgroundPosition: "center bottom",
+          filter: "invert(1)",
+          mixBlendMode: "screen",
+          opacity: 0.5,
+        }}
+      />
 
       {/* G2–G6 — inside constraint wrapper */}
-      <div
-        className="relative z-10 ent-content-bounds"
-        style={{
-          borderLeft: "1px solid var(--grid-line)",
-          borderRight: "1px solid var(--grid-line)",
-        }}
-      >
+      <div className="relative z-10 ent-content-bounds">
         {rest.map((feature, i) => (
           <div key={feature.id}>
             {i > 0 && (
               <div className="w-full" style={{ height: 1, backgroundColor: "var(--grid-line)" }} />
             )}
           <div
-            className="relative grid grid-cols-1 lg:grid-cols-[355px_1px_1fr]"
+            className="relative grid grid-cols-1 lg:grid-cols-[355px_1fr]"
           >
-            <span className="absolute left-0 top-0 z-50 flex h-8 w-8 items-center justify-center rounded-br bg-black/80 text-sm font-bold text-white" aria-hidden>
+            <span className="absolute left-0 top-0 z-50 flex h-8 w-8 items-center justify-center rounded-br bg-black/80 text-sm font-bold text-white opacity-25" aria-hidden>
               g{i + 2}
             </span>
 
@@ -227,9 +232,6 @@ export default function StickyScrollSection() {
                 </div>
               </div>
             </div>
-
-            {/* Vertical divider */}
-            <div className="hidden lg:block" style={{ backgroundColor: "var(--grid-line)" }} />
 
             {/* Right content */}
             {feature.fullBleedTop ? (
