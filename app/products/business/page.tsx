@@ -55,11 +55,19 @@ function SectionWithLabel({
   );
 }
 
+/* The PageFrame carries a 1px #E7E7F1 hairline border site-wide (set in
+   PageFrame.tsx). The business page drops it: this scoped <style> sets
+   --frame-border to none while the page is mounted, and is removed on
+   client-side nav to any other route — which reverts to the global
+   default border. */
+const FRAME_NO_BORDER_CSS = `:root { --frame-border: none; }`;
+
 export default function BusinessPage() {
   const darkStartRef = useRef<HTMLDivElement>(null);
 
   return (
     <main className="ent-scope">
+      <style>{FRAME_NO_BORDER_CSS}</style>
       {/* MistxNav is rendered as a direct child of <main> — not wrapped in
           SectionWithLabel — so its position:sticky has the full page as its
           containing block. Wrapping it in a navbar-height <section> would
@@ -75,35 +83,16 @@ export default function BusinessPage() {
         style={{ backgroundColor: "#ffffff" }}
       >
         <div className="relative z-10">
-          {/* B2 + B3 share one city line-art backdrop. It is anchored to
-              the bottom of B3 and now spans the full B2+B3 stack so the
-              line-art is clearly present through ProblemCards (b2), not
-              just its lower half. `top` is the single tunable knob: raise
-              the % to pull the start line back down (e.g. "20%" to clear
-              the b2 heading). The b2 feature cards paint solid white on
-              top so they read above the art. */}
-          <div className="relative">
-            <div
-              aria-hidden
-              className="absolute inset-x-0 bottom-0 pointer-events-none"
-              style={{
-                top: "0%",
-                zIndex: 0,
-                backgroundImage: "url(/businessartbackground.png)",
-                backgroundSize: "100% 100%",
-                backgroundRepeat: "no-repeat",
-                backgroundPosition: "center bottom",
-              }}
-            />
-            <div className="relative z-10">
-              <SectionWithLabel label={sectionLabels[2]}>
-                <ProblemCards />
-              </SectionWithLabel>
-              <SectionWithLabel label={sectionLabels[3]}>
-                <SolutionShowcase />
-              </SectionWithLabel>
-            </div>
-          </div>
+          {/* B2 (ProblemCards) sits on plain white — no backdrop. B3
+              (SolutionShowcase) carries its own line-art (a hand-drawn
+              galleon on the left, a harbour town on the right); see
+              components/business/SolutionShowcase.tsx. */}
+          <SectionWithLabel label={sectionLabels[2]}>
+            <ProblemCards />
+          </SectionWithLabel>
+          <SectionWithLabel label={sectionLabels[3]}>
+            <SolutionShowcase />
+          </SectionWithLabel>
           <SectionWithLabel label={sectionLabels[4]}>
             <ComparisonSection />
           </SectionWithLabel>

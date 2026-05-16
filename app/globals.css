@@ -45,6 +45,12 @@
    CSS) so swapping the display face is a one-line change here. */
 :root {
   --font-hero: "Axiforma", "SF Pro", -apple-system, BlinkMacSystemFont, sans-serif;
+
+  /* PageFrame drop shadow — site-wide. Lets the white frame card read as
+     a floating panel against the white site backdrop on every route.
+     A route can drop the frame's hairline border via --frame-border. */
+  --frame-shadow: 0 0 2px rgba(0, 0, 0, 0.10),
+                  0 0 14px rgba(0, 0, 0, 0.15);
 }
 
 /* Base reset — use overflow-x: clip (not hidden) so position:sticky works on business Section C */
@@ -52,10 +58,33 @@ html,
 body {
   margin: 0;
   padding: 0;
-  background: #0F173C;
+  /* White site backdrop behind the PageFrame card — the 30px gutter
+     around the frame reads as white on every route, at all scroll
+     positions. */
+  background-color: #FFFFFF;
   color: #1D1D1F;
   overflow-x: clip;
   min-height: 100%;
+}
+
+/* Footer reveal — once the user reaches the footer, PageFrame sets
+   [data-footer-reached] on <html>, which fades the white cover off the
+   footer (below). The page backdrop itself stays white throughout. */
+
+/* White cover over the reveal footer. Opaque while scrolling the page
+   (footer reads as white, matching the backdrop); fades out when the
+   footer is reached, revealing the footer's full dark design at once. */
+.footer-reveal-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 30;
+  background-color: #FFFFFF;
+  pointer-events: none;
+  opacity: 1;
+  transition: opacity 500ms ease;
+}
+html[data-footer-reached] .footer-reveal-overlay {
+  opacity: 0;
 }
 
 /* Normal scroll (no smooth) — Lenis is disabled for native speed */

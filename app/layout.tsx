@@ -36,10 +36,9 @@ export default function RootLayout({
         />
       </head>
 
-      <body
-        className="antialiased min-h-screen"
-        style={{ backgroundColor: "#0F173C" }}
-      >
+      {/* Body background (white) is driven by globals.css (`html, body`);
+          no inline style here so the stylesheet rule stays in control. */}
+      <body className="antialiased min-h-screen">
         <LenisProvider>
           <ScrollRestorer />
           {/* Footer sits behind the PageFrame card (z-index 0, fixed at

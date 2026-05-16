@@ -71,23 +71,24 @@ export default function BusinessHero() {
         paddingTop: 120,
       }}
     >
-      {/* Background image — the Columbus bento sky photo, cover-fit, matching
-          the homepage Columbus product tile (BentoProducts). */}
+      {/* Background image — the Columbus cityscape photo (ColumbusBackgroundV2),
+          cover-fit. backgroundPosition is biased below center so the visible
+          frame sits a little lower, revealing more of the trees at the bottom. */}
       <div
         className="absolute inset-0"
         style={{
-          backgroundImage: "url(/ColumbusBackgroundbento.png)",
-          backgroundPosition: "center",
+          backgroundImage: "url(/ColumbusBackgroundV2.png)",
+          backgroundPosition: "center 60%",
           backgroundSize: "cover",
           backgroundRepeat: "no-repeat",
           zIndex: 0,
         }}
       />
-      {/* Dark overlay — the same flat black scrim the bento tile uses,
-          lightened here (0.10 vs the tile's 0.18) so the sky reads brighter. */}
+      {/* Dark overlay — a flat black scrim over the cityscape, deepened so
+          the hero text and the bottom of the frame read with more contrast. */}
       <div
         className="absolute inset-0 pointer-events-none"
-        style={{ backgroundColor: "rgba(0, 0, 0, 0.10)", zIndex: 0 }}
+        style={{ backgroundColor: "rgba(0, 0, 0, 0.28)", zIndex: 0 }}
       />
       {/* Fade to white at bottom */}
       <div

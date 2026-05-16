@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { GridSection } from "../home/ContentGrid";
 
@@ -26,18 +27,41 @@ export default function SolutionShowcase() {
   return (
     <div
       ref={sectionRef}
-      className="relative"
+      className="relative overflow-hidden"
       style={{
         "--grid-line": "var(--ent-border-dark-grid)",
-        // Transparent so the shared B2+B3 city line-art backdrop (set on
-        // the mid-block in app/products/business/page.tsx) reads behind
-        // the "Its time for a more powerful…" heading.
         backgroundColor: "transparent",
       } as React.CSSProperties}
     >
+      {/* B3 line-art — a faint hand-drawn galleon hugs the lower-left of
+          the screen and a harbour town the lower-right, both sitting
+          behind the heading. Scoped to B3 (B2 above stays plain white). */}
+      <div aria-hidden className="pointer-events-none absolute inset-0 z-0">
+        <div className="absolute bottom-0 left-0 w-[26%] max-w-90 aspect-1378/1260">
+          <Image
+            src="/businessB3/left.png"
+            alt=""
+            fill
+            sizes="26vw"
+            className="object-contain object-bottom-left"
+          />
+        </div>
+        <div className="absolute bottom-0 right-0 w-[38%] max-w-140 aspect-1604/1296">
+          <Image
+            src="/businessB3/right.png"
+            alt=""
+            fill
+            sizes="38vw"
+            className="object-contain object-bottom-right"
+          />
+        </div>
+      </div>
+
       <GridSection
         style={{
           backgroundColor: "transparent",
+          position: "relative",
+          zIndex: 1,
         }}
       >
         {/* Header row */}

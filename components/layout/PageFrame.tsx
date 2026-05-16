@@ -6,14 +6,14 @@ import { useEffect, type ReactNode } from "react";
  * The rounded white "card" the entire site sits inside (experimentV6-Gdesign).
  *
  * Two scroll-driven transitions, run as a single animation curve `t`
- * (1 = rounded + inset 16px, 0 = full-bleed):
+ * (1 = rounded + inset 30px, 0 = full-bleed):
  *
  *   • Top reveal — from scrollY 0..SCROLL_RANGE: t animates 1 → 0
  *     (card expands toward the viewport edges).
  *   • Bottom reveal — over the final SCROLL_RANGE pixels of scroll
  *     before maxScroll: t animates 0 → 1 (card collapses back to the
  *     inset+rounded state, so the bottom edge has the same 13px corners
- *     and 16px gutter as the top of the page).
+ *     and 30px gutter as the top of the page).
  *
  * The intermediate middle of the page sits at t = 0 (full-bleed).
  *
@@ -29,10 +29,10 @@ import { useEffect, type ReactNode } from "react";
  * footer's height. As the user scrolls into that extra range, the
  * white card slides up over the fixed footer — revealing it — while
  * the bottom-reveal animation simultaneously restores the rounded
- * corners + 16px side gutter.
+ * corners + 30px side gutter.
  */
 const SCROLL_RANGE = 150;
-const MAX_MARGIN = 16;
+const MAX_MARGIN = 30;
 const MAX_RADIUS = 20;
 
 export function PageFrame({ children }: { children: ReactNode }) {
@@ -89,6 +89,20 @@ export function PageFrame({ children }: { children: ReactNode }) {
       const radius = MAX_RADIUS * t;
       document.documentElement.style.setProperty("--frame-margin", `${margin}px`);
       document.documentElement.style.setProperty("--frame-radius", `${radius}px`);
+
+      // Footer-reached: flips true once the user scrolls ~halfway into the
+      // footer reveal range, and false again only below ~38% (hysteresis
+      // so jitter at the threshold doesn't flip it back and forth). Drives
+      // the white→black backdrop + footer transition via the
+      // [data-footer-reached] attribute on <html> — consumed by
+      // globals.css (backdrop) and the .footer-reveal-overlay (Footer.tsx).
+      if (footerHeight > 0) {
+        const root = document.documentElement;
+        const reached = root.hasAttribute("data-footer-reached")
+          ? scrollY >= revealStart + footerHeight * 0.38
+          : scrollY >= revealStart + footerHeight * 0.5;
+        root.toggleAttribute("data-footer-reached", reached);
+      }
     };
     const onScroll = () => {
       if (raf) return;
@@ -112,15 +126,23 @@ export function PageFrame({ children }: { children: ReactNode }) {
       style={{
         position: "relative",
         zIndex: 1,
-        margin: "var(--frame-margin, 16px)",
+        margin: "var(--frame-margin, 30px)",
         // Reserve scroll room below the card equal to the footer's
         // height so the user can scroll past the content and reveal
         // the fixed footer that sits behind it (z-index 0).
         marginBottom: "var(--footer-reveal-height, 100vh)",
         borderRadius: "var(--frame-radius, 20px)",
+        // Drop shadow — set globally via --frame-shadow in globals.css so
+        // the white card reads as a floating panel against the white
+        // site backdrop on every route. Tracks the rounded corners.
+        boxShadow: "var(--frame-shadow, none)",
+        // 1px hairline matching the BentoProducts card stroke (#E7E7F1).
+        // Routes can opt out by setting --frame-border: none (the business
+        // page does this — see app/products/business/page.tsx).
+        border: "var(--frame-border, 1px solid #E7E7F1)",
         backgroundColor: "#FFFFFF",
         overflow: "clip",
-        minHeight: "calc(100vh - var(--frame-margin, 16px) * 2)",
+        minHeight: "calc(100vh - var(--frame-margin, 30px) * 2)",
       }}
     >
       {children}

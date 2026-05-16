@@ -316,6 +316,14 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false, t
         </div>
       </div>
 
+      {/* Reveal cover — only on the fixed `reveal` footer. Opaque white
+          while the user scrolls the page (the footer reads as white,
+          matching the site backdrop); fades out when the footer is
+          reached — driven by [data-footer-reached] on <html>, set by
+          PageFrame. z-index 30 sits above the earth backdrop (z-0) and
+          footer content (z-10) so it hides the whole dark design. */}
+      {reveal && <div aria-hidden className="footer-reveal-overlay" />}
+
     </footer>
   );
 };

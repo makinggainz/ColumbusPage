@@ -43,6 +43,18 @@ const HN_CSS = `
   min-height: 100vh;
   display: flex;
   align-items: center;
+  /* Floating-div treatment: a fixed 30px gutter below the hero +
+     rounded bottom corners, so the hero reads as a self-contained card
+     sitting inside the PageFrame. 30px matches the frame's at-rest
+     top/side gutter (--frame-margin max); the bottom radius matches the
+     frame's at-rest corner (--frame-radius max = 20px). Held static (not
+     scroll-tracked) so the hero stays a floating card rather than
+     collapsing to full-bleed. overflow: hidden (above) clips the video
+     to the rounded corners. The top corners are rounded by the
+     PageFrame's own clip. */
+  margin-bottom: 30px;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
 }
 
 /* Full-bleed background video. Sits at the very bottom of the section's

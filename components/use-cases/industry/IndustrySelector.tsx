@@ -74,7 +74,7 @@ export default function IndustrySelector({ lightTheme = false, industries, round
     <section className={`w-full ${sectionBg} flex justify-center`}>
       <div
         ref={sectionRef}
-        className={`${sectionLinesClass} w-full max-w-[1287px] mx-auto py-[120px] max-md:py-[72px]`}
+        className={`${sectionLinesClass} w-full max-w-[1287px] mx-auto pt-30 pb-15 max-md:pt-18 max-md:pb-10`}
       >
         {/* Header */}
         <div className="text-center px-8 md:px-10 mb-[48px] max-md:mb-[36px]" style={anim(0)}>
@@ -153,13 +153,6 @@ export default function IndustrySelector({ lightTheme = false, industries, round
               </button>
             );
           })}
-        </div>
-
-        {/* Footer text */}
-        <div className="text-center px-8 md:px-10 mt-[48px] max-md:mt-[36px]" style={anim(120)}>
-          <p className={`text-[16px] md:text-[20px] leading-[1.5] ${subtitleTextClass}`}>
-            The sections below tailor to the industry you choose. You can switch any time.
-          </p>
         </div>
       </div>
     </section>
