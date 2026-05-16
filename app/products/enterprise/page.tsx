@@ -9,7 +9,6 @@ import { MistxNav } from "@/components/layout/MistxNav";
 import { Footer } from "@/components/layout/Footer";
 import ComparisonSection from "@/components/enterprise/ComparisonSection";
 import ChatSection from "@/components/enterprise/ChatSection";
-import PromptShowcase from "@/components/enterprise/PromptShowcase";
 import ContactSection from "@/components/use-cases/ContactSection";
 import UseCaseStickyScroll from "@/components/use-cases/UseCaseStickyScroll";
 import { IndustryProvider } from "@/components/use-cases/industry/IndustryContext";
@@ -19,7 +18,6 @@ import ColumbusSolutionsSections from "@/components/use-cases/ColumbusSolutionsS
 import type { IndustryId } from "@/components/use-cases/industry/types";
 import ProductBanner from "@/components/enterprise/ProductBanner";
 import CapabilitiesGrid from "@/components/enterprise/CapabilitiesGrid";
-import DifferenceSection from "@/components/enterprise/DifferenceSection";
 import FAQSection from "@/components/enterprise/FAQSection";
 
 const sectionLabels = ["a", "b", "b2", "b3", "c", "d", "e", "g", "m", "n"] as const;
@@ -60,7 +58,6 @@ function SectionWithLabel({
 
 export default function EnterprisePage() {
   const darkStartRef = useRef<HTMLDivElement>(null);
-  const diffRef = useRef<HTMLDivElement>(null);
 
   return (
     <main className="ent-scope">
@@ -144,14 +141,6 @@ export default function EnterprisePage() {
           <ContactSection lightTheme />
         </section>
       </SectionWithLabel>
-      <div ref={diffRef}>
-        <SectionWithLabel label="diff">
-          <DifferenceSection />
-        </SectionWithLabel>
-        <SectionWithLabel label={sectionLabels[6]}>
-          <PromptShowcase />
-        </SectionWithLabel>
-      </div>
       <SectionWithLabel label={sectionLabels[8]}>
         <ChatSection />
       </SectionWithLabel>
