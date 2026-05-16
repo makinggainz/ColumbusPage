@@ -33,7 +33,9 @@ export function MissionScrollIntro() {
   const reduced = useReducedMotion();
   const { scrollYProgress } = useScroll({
     target: ref,
-    offset: ["start 0.85", "end 0.3"],
+    /* Tighter end offset (0.5 vs 0.3) — the word-reveal reaches full
+       opacity over a shorter scroll distance, so the text fills faster. */
+    offset: ["start 0.85", "end 0.5"],
   });
 
   const words = COPY.split(" ");
