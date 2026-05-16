@@ -11,6 +11,20 @@ type UseCaseStickyScrollProps = {
   /** White-background variant for use on light pages. */
   lightTheme?: boolean;
   excludeSections?: string[];
+  /**
+   * Round the top corners of the first row with the PageFrame radius
+   * (20px) so it tucks under the rounded IndustrySelector grid above it.
+   * Off by default → columbus-solutions stays square.
+   */
+  roundedTop?: boolean;
+  /**
+   * Drop the desktop left-rail `position: sticky`, so each row's
+   * feature description scrolls normally with its row instead of
+   * pinning while the right column scrolls past. Off by default →
+   * columbus-solutions / research-applications keep the sticky effect.
+   * Page-scoped: only the enterprise page opts in.
+   */
+  disableSticky?: boolean;
 };
 
 /**
@@ -23,7 +37,7 @@ type UseCaseStickyScrollProps = {
  * CTA) that scrolls with the page until it hits the top, then sticks while
  * the right column scrolls past.
  */
-export default function UseCaseStickyScroll({ lightTheme = false, excludeSections = [] }: UseCaseStickyScrollProps) {
+export default function UseCaseStickyScroll({ lightTheme = false, excludeSections = [], roundedTop = false, disableSticky = false }: UseCaseStickyScrollProps) {
   const { industry } = useIndustry();
 
 
@@ -117,10 +131,11 @@ export default function UseCaseStickyScroll({ lightTheme = false, excludeSection
       {features.map((feature, i) => {
         const isLight = feature.forceLight ? true : lightTheme;
         const rowBg = isLight ? "#FFFFFF" : "#000000";
-        const rowBgOverlay = isLight
-          ? "linear-gradient(rgba(0,0,0,0.02), rgba(0,0,0,0.02))"
-          : "none";
+        // Light rows are pure #FFFFFF (no tint) so they match the white
+        // enterprise page / IndustrySelector above. Dark stays untinted.
+        const rowBgOverlay = "none";
         const rowGridLine = isLight ? "rgba(10, 19, 68, 0.10)" : "rgba(255, 255, 255, 0.10)";
+        const roundFirst = roundedTop && i === 0;
 
         return (
           <div
@@ -151,6 +166,18 @@ export default function UseCaseStickyScroll({ lightTheme = false, excludeSection
               style={{
                 borderLeft: `1px solid ${rowGridLine}`,
                 borderRight: `1px solid ${rowGridLine}`,
+                // First row = top of the long features card: add the top
+                // hairline + PageFrame 20px corner radius (and clip the
+                // flush right-column visual to it) so it reads as one
+                // bordered, rounded card with the IndustrySelector above.
+                ...(roundFirst
+                  ? {
+                      borderTop: `1px solid ${rowGridLine}`,
+                      borderTopLeftRadius: 20,
+                      borderTopRightRadius: 20,
+                      overflow: "hidden",
+                    }
+                  : {}),
               }}
             >
               {i > 0 && (
@@ -162,9 +189,10 @@ export default function UseCaseStickyScroll({ lightTheme = false, excludeSection
                   {renderLeftRail(feature.featureTitle, feature.leftRail, isLight)}
                 </div>
 
-                {/* Desktop: sticky left rail */}
+                {/* Desktop: left rail — sticky by default; the enterprise
+                    page passes disableSticky so it scrolls in normal flow. */}
                 <div className="hidden lg:block bg-transparent">
-                  <div className="sticky top-20 px-8 py-[64px]">
+                  <div className={`${disableSticky ? "" : "sticky top-20"} px-8 py-16`}>
                     {renderLeftRail(feature.featureTitle, feature.leftRail, isLight)}
                   </div>
                 </div>

@@ -245,9 +245,23 @@ type SectionRow = {
 
 type ColumbusSolutionsSectionsProps = {
   lightTheme?: boolean;
+  /**
+   * Drop the desktop left-rail `position: sticky` so each row's rail
+   * scrolls normally instead of pinning while the visual scrolls past.
+   * Off by default → columbus-solutions keeps the sticky effect.
+   * Page-scoped: only the enterprise page opts in.
+   */
+  disableSticky?: boolean;
+  /**
+   * Round the bottom corners of the 1287 content card with the PageFrame
+   * radius (20px) and drop the full-bleed hairline beneath it, so this
+   * marks the rounded END of the long features card. Off by default →
+   * columbus-solutions keeps the square edge + full-width rule.
+   */
+  roundedBottom?: boolean;
 };
 
-export default function ColumbusSolutionsSections({ lightTheme = false }: ColumbusSolutionsSectionsProps) {
+export default function ColumbusSolutionsSections({ lightTheme = false, disableSticky = false, roundedBottom = false }: ColumbusSolutionsSectionsProps) {
   const bg = lightTheme ? "#FFFFFF" : "#000000";
   const gridLine = lightTheme ? "rgba(10, 19, 68, 0.10)" : "rgba(255,255,255,0.10)";
   const titleColor = lightTheme ? "#1D1D1F" : "#FFFFFF";
@@ -333,7 +347,20 @@ export default function ColumbusSolutionsSections({ lightTheme = false }: Columb
     >
       <div
         className="relative z-10 mx-5 md:mx-auto max-w-[1287px]"
-        style={{ borderLeft: `1px solid ${gridLine}`, borderRight: `1px solid ${gridLine}` }}
+        style={{
+          borderLeft: `1px solid ${gridLine}`,
+          borderRight: `1px solid ${gridLine}`,
+          // Bottom of the long features card: close it with the bottom
+          // hairline + PageFrame 20px corners, clipping the last visual.
+          ...(roundedBottom
+            ? {
+                borderBottom: `1px solid ${gridLine}`,
+                borderBottomLeftRadius: 20,
+                borderBottomRightRadius: 20,
+                overflow: "hidden",
+              }
+            : {}),
+        }}
       >
         {rows.map((row, i) => (
           <div key={row.id}>
@@ -341,9 +368,10 @@ export default function ColumbusSolutionsSections({ lightTheme = false }: Columb
             <div className="relative grid grid-cols-1 lg:grid-cols-[330px_1px_1fr]">
               {/* Mobile: rail above content */}
               <div className="lg:hidden px-6 pt-10 pb-6">{renderRail(row)}</div>
-              {/* Desktop: sticky rail */}
+              {/* Desktop: left rail — sticky by default; the enterprise
+                  page passes disableSticky so it scrolls in normal flow. */}
               <div className="hidden lg:block bg-transparent">
-                <div className="sticky top-20 px-8 py-[64px]">{renderRail(row)}</div>
+                <div className={`${disableSticky ? "" : "sticky top-20"} px-8 py-16`}>{renderRail(row)}</div>
               </div>
               {/* Vertical divider */}
               <div className="hidden lg:block" style={{ backgroundColor: gridLine }} />
@@ -353,7 +381,11 @@ export default function ColumbusSolutionsSections({ lightTheme = false }: Columb
           </div>
         ))}
       </div>
-      <div className="relative z-10 w-full" style={{ height: 1, backgroundColor: gridLine }} />
+      {/* Full-bleed closing hairline — replaced by the card's rounded
+          bottom edge when roundedBottom is set (enterprise page). */}
+      {!roundedBottom && (
+        <div className="relative z-10 w-full" style={{ height: 1, backgroundColor: gridLine }} />
+      )}
     </div>
   );
 }

@@ -20,6 +20,7 @@ import type { IndustryId } from "@/components/use-cases/industry/types";
 import ProductBanner from "@/components/enterprise/ProductBanner";
 import CapabilitiesGrid from "@/components/enterprise/CapabilitiesGrid";
 import DifferenceSection from "@/components/enterprise/DifferenceSection";
+import FAQSection from "@/components/enterprise/FAQSection";
 
 const sectionLabels = ["a", "b", "b2", "b3", "c", "d", "e", "g", "m", "n"] as const;
 
@@ -131,11 +132,14 @@ export default function EnterprisePage() {
         <IndustryProvider>
           <IndustryStickyNavbar lightTheme topOffset={84} industries={ENTERPRISE_INDUSTRIES} />
           <IndustrySelector lightTheme rounded industries={ENTERPRISE_INDUSTRIES} />
-          <UseCaseStickyScroll lightTheme />
+          <UseCaseStickyScroll lightTheme roundedTop disableSticky />
         </IndustryProvider>
         <section className="relative">
-          <ColumbusSolutionsSections lightTheme />
+          <ColumbusSolutionsSections lightTheme disableSticky roundedBottom />
         </section>
+        <SectionWithLabel label="faq">
+          <FAQSection />
+        </SectionWithLabel>
         <section className="relative">
           <ContactSection lightTheme />
         </section>
