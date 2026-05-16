@@ -354,7 +354,7 @@ export default function SuperModelSection({
               <button
                 type="button"
                 data-yes-button
-                className="px-4 h-9 rounded-lg bg-[#0A1344] text-white text-[13px] font-medium"
+                className="px-4 h-9 rounded-button bg-[#0A1344] text-white text-[13px] font-medium"
                 style={{
                   transform: phase === "cursor-tap" ? "scale(0.96)" : "scale(1)",
                   transition: "transform 140ms ease",
@@ -364,13 +364,13 @@ export default function SuperModelSection({
               </button>
               <button
                 type="button"
-                className="px-4 h-9 rounded-lg bg-[#e8e8ec] text-[#1D1D1F] text-[13px] font-medium"
+                className="px-4 h-9 rounded-button bg-[#e8e8ec] text-[#1D1D1F] text-[13px] font-medium"
               >
                 No
               </button>
               <button
                 type="button"
-                className="ml-auto h-9 px-3 rounded-lg text-[13px] font-medium text-[#6E6E73]"
+                className="ml-auto h-9 px-3 rounded-button text-[13px] font-medium text-[#6E6E73]"
               >
                 Ignore
               </button>

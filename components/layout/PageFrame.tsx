@@ -12,7 +12,7 @@ import { useEffect, type ReactNode } from "react";
  *     (card expands toward the viewport edges).
  *   • Bottom reveal — over the final SCROLL_RANGE pixels of scroll
  *     before maxScroll: t animates 0 → 1 (card collapses back to the
- *     inset+rounded state, so the bottom edge has the same 24px corners
+ *     inset+rounded state, so the bottom edge has the same 13px corners
  *     and 16px gutter as the top of the page).
  *
  * The intermediate middle of the page sits at t = 0 (full-bleed).
@@ -33,7 +33,7 @@ import { useEffect, type ReactNode } from "react";
  */
 const SCROLL_RANGE = 150;
 const MAX_MARGIN = 16;
-const MAX_RADIUS = 24;
+const MAX_RADIUS = 20;
 
 export function PageFrame({ children }: { children: ReactNode }) {
   useEffect(() => {
@@ -117,7 +117,7 @@ export function PageFrame({ children }: { children: ReactNode }) {
         // height so the user can scroll past the content and reveal
         // the fixed footer that sits behind it (z-index 0).
         marginBottom: "var(--footer-reveal-height, 100vh)",
-        borderRadius: "var(--frame-radius, 24px)",
+        borderRadius: "var(--frame-radius, 20px)",
         backgroundColor: "#FFFFFF",
         overflow: "clip",
         minHeight: "calc(100vh - var(--frame-margin, 16px) * 2)",

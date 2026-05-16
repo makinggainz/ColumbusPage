@@ -52,7 +52,7 @@ html,
 body {
   margin: 0;
   padding: 0;
-  background: #0A2239;
+  background: #0B1342;
   color: #1D1D1F;
   overflow-x: clip;
   min-height: 100%;
@@ -84,9 +84,32 @@ html {
   --color-gridline: #E7E7F1;     /* blueprint-grid hairline */
   --color-brand: #1451E8;        /* NewsCatcher Blue — signal colour only */
   --color-brand-soft: #74A0FE;   /* decorative gradient stop only */
+  /* Primary CTA / filled-button surface — the navy brand colour the
+     navbar Columbus logo renders as. Generates the `bg-cta` utility. */
+  --color-cta: #0B1342;
 
   --container-site: 1200px;      /* the single content-column width */
   --radius-card: 20px;           /* signature container radius */
+  /* Button/CTA corner roundness, scaled by button size. Anchored to the
+     navbar button (~35px tall, 16px radius → radius/height ratio ≈ 0.457);
+     larger buttons get a proportionally larger radius so they keep the
+     same visual roundness as the navbar reference. Pick the tier that
+     matches the button's rendered height:
+       sm  ≤ 40px   ·  md 41–52px  ·  lg 53–66px  ·  xl ≥ 67px
+
+     FIX (over-rounding): each tier value is anchored to the *typical*
+     button height that lands in that tier — NOT the tier's upper bound.
+     The earlier md/lg were anchored to the range max (48 / 61px), which
+     over-rounded the shorter, more common buttons in each tier (e.g. the
+     ~42px content CTAs read at ratio 0.52 instead of ~0.46). Re-anchored:
+       md → 44px typical → 44 × 0.457 ≈ 20px
+       lg → 57px typical → 57 × 0.457 ≈ 26px
+     Each generates a Tailwind utility (rounded-button, rounded-button-md,
+     rounded-button-lg, rounded-button-xl); CSS files use var(--radius-button*). */
+  --radius-button: 16px;         /* sm — ~35px navbar-sized buttons (default) */
+  --radius-button-md: 20px;      /* md — ~44px-tall buttons (44 × 0.457)       */
+  --radius-button-lg: 26px;      /* lg — ~57px-tall buttons (57 × 0.457)       */
+  --radius-button-xl: 34px;      /* xl — ~74px-tall buttons (74 × 0.457)       */
 
   /* Two-family typography system (Gdesign V2):
        --font-sans     → Opening Hours Sans, body / paragraphs / UI
@@ -314,7 +337,7 @@ html {
 
 /* Typography */
 body {
-  background: #0A2239;
+  background: #0B1342;
   color: var(--foreground);
   /* Opening Hours Sans is the project-wide body face. Everything that
      doesn't set its own font-family inherits it from here. Headings
@@ -1189,7 +1212,7 @@ body.bg-mode-dark article {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border-radius: 9999px;
+  border-radius: var(--radius-button);
   padding: 10px 20px;
   font-size: 14px;
   font-weight: 600;

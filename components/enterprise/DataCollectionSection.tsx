@@ -91,7 +91,7 @@ export default function DataCollectionSection() {
             faster.
           </p>
 
-          <button className="mt-6 bg-[#0A1344] text-white px-8 py-3 rounded-md text-[15px] font-medium">
+          <button className="mt-6 bg-[#0A1344] text-white px-8 py-3 rounded-button-md text-[15px] font-medium">
             Let’s Chat
           </button>
 

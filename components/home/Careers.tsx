@@ -191,7 +191,7 @@ const CSS = `
   margin: 0;
 }
 .careers-trigger {
-  color: #154ACC;
+  color: #0081AC;
   cursor: default;
 }
 .careers-sub {
@@ -229,9 +229,9 @@ const CSS = `
   align-items: center;
   gap: 12px;
   padding: 14px 28px;
-  background: #1f1f1f;
+  background: var(--color-cta);
   color: #FFFFFF;
-  border-radius: 9999px;
+  border-radius: var(--radius-button-md);
   font-size: var(--typography--p-m);
   line-height: 1;
   font-weight: 500;
@@ -239,7 +239,7 @@ const CSS = `
   cursor: pointer;
   transition: color 150ms ease;
 }
-.careers-join:hover { color: #154ACC; }
+.careers-join:hover { color: #0081AC; }
 
 /* ── Reveal form panel ────────────────────────────────────────────────
    Hidden by default; clicking "Join our team" toggles it open. Keeps
@@ -296,7 +296,7 @@ const CSS = `
   transition: border-color 200ms ease;
 }
 .careers-field:focus-within {
-  border-bottom-color: #154ACC;
+  border-bottom-color: #0081AC;
 }
 .careers-field input,
 .careers-field textarea {
@@ -331,9 +331,9 @@ const CSS = `
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  background: #1f1f1f;
+  background: var(--color-cta);
   color: #ffffff;
-  border-radius: 9999px;
+  border-radius: var(--radius-button-md);
   padding: 14px 28px;
   font-size: var(--typography--p-m);
   line-height: 1;
@@ -342,7 +342,7 @@ const CSS = `
   border: 0;
   cursor: pointer;
 }
-.careers-submit:hover { color: #154ACC; }
+.careers-submit:hover { color: #0081AC; }
 `;
 
 // ─── Component ───────────────────────────────────────────────────────────────
@@ -669,7 +669,7 @@ export const Careers = ({ hideHeader, className = "" }: { hideHeader?: boolean; 
           >
             Join our team
             <span className="inline-block transition-transform group-hover:translate-x-0.5">
-              <ArrowDots className="text-[#154ACC]" />
+              <ArrowDots className="text-[#0081AC]" />
             </span>
           </button>
         </div>
@@ -712,7 +712,7 @@ export const Careers = ({ hideHeader, className = "" }: { hideHeader?: boolean; 
               <button type="submit" className="careers-submit group">
                 Submit
                 <span className="ml-1 inline-block transition-transform group-hover:translate-x-0.5">
-                  <ArrowDots className="text-[#154ACC]" />
+                  <ArrowDots className="text-[#0081AC]" />
                 </span>
               </button>
             </div>
@@ -760,9 +760,9 @@ export const Careers = ({ hideHeader, className = "" }: { hideHeader?: boolean; 
                 </p>
                 <p className="p-l text-[#3a3020] leading-relaxed mb-6" style={{ fontFamily: "Georgia, serif" }}>
                   Hey I&apos;m Alexander R.B., co-founder. You found one of my easter eggs. If you would like to reach out to me personally you can find me on my Instagram at{" "}
-                  <a href="https://instagram.com/alexrb.1" target="_blank" rel="noopener noreferrer" className="underline hover:text-[#154ACC] transition-colors">alexrb.1</a>
+                  <a href="https://instagram.com/alexrb.1" target="_blank" rel="noopener noreferrer" className="underline hover:text-[#0081AC] transition-colors">alexrb.1</a>
                   {" "}or my LinkedIn at:{" "}
-                  <a href="https://www.linkedin.com/in/alexander-ramirez-blonski-a96121150" target="_blank" rel="noopener noreferrer" className="underline hover:text-[#154ACC] transition-colors">Alexander Ramirez Blonski</a>
+                  <a href="https://www.linkedin.com/in/alexander-ramirez-blonski-a96121150" target="_blank" rel="noopener noreferrer" className="underline hover:text-[#0081AC] transition-colors">Alexander Ramirez Blonski</a>
                 </p>
                 <p className="p-l text-[#3a3020] leading-relaxed mb-8" style={{ fontFamily: "Georgia, serif" }}>
                   Enjoy your day ;)
@@ -779,7 +779,7 @@ export const Careers = ({ hideHeader, className = "" }: { hideHeader?: boolean; 
                 </p>
                 <p className="p-l text-[#3a3020] leading-relaxed mb-4" style={{ fontFamily: "Georgia, serif" }}>
                   Check out my LinkedIn here:{" "}
-                  <a href="https://www.linkedin.com/in/erick-mollinedo-lara-889587224/" target="_blank" rel="noopener noreferrer" className="underline hover:text-[#154ACC] transition-colors">Erick Mollinedo Lara</a>
+                  <a href="https://www.linkedin.com/in/erick-mollinedo-lara-889587224/" target="_blank" rel="noopener noreferrer" className="underline hover:text-[#0081AC] transition-colors">Erick Mollinedo Lara</a>
                 </p>
                 <p className="p-l text-[#8a7a5a] italic mb-8" style={{ fontFamily: "Georgia, serif" }}>
                   P.S. I did not write this, Alex did
@@ -796,9 +796,9 @@ export const Careers = ({ hideHeader, className = "" }: { hideHeader?: boolean; 
                 </p>
                 <p className="p-l text-[#3a3020] leading-relaxed mb-4" style={{ fontFamily: "Georgia, serif" }}>
                   Check out my LinkedIn here:{" "}
-                  <a href="https://www.linkedin.com/in/davidramirezblonski/" target="_blank" rel="noopener noreferrer" className="underline hover:text-[#154ACC] transition-colors">David Ramirez Blonski</a>
+                  <a href="https://www.linkedin.com/in/davidramirezblonski/" target="_blank" rel="noopener noreferrer" className="underline hover:text-[#0081AC] transition-colors">David Ramirez Blonski</a>
                   , and my personal website here:{" "}
-                  <a href="https://www.gdsteel.co" target="_blank" rel="noopener noreferrer" className="underline hover:text-[#154ACC] transition-colors">gdsteel.co</a>
+                  <a href="https://www.gdsteel.co" target="_blank" rel="noopener noreferrer" className="underline hover:text-[#0081AC] transition-colors">gdsteel.co</a>
                 </p>
                 <p className="p-l text-[#3a3020] leading-relaxed mb-4" style={{ fontFamily: "Georgia, serif" }}>
                   Hope you have a beautiful day.

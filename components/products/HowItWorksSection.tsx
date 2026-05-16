@@ -230,7 +230,7 @@ function ChatInput() {
           <button
             type="button"
             onClick={(e) => { e.stopPropagation(); if (hasText) handleSend(); }}
-            className="flex items-center justify-center shrink-0 rounded-full"
+            className="flex items-center justify-center shrink-0 rounded-button"
             style={{
               width: 40, height: 40, background: "var(--hiw-accent)",
               opacity: hasText ? 1 : 0.4, cursor: hasText ? "pointer" : "default",

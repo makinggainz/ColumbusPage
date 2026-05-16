@@ -167,7 +167,7 @@ const CSS = `
   gap: 10px;
   background: #1f1f1f;
   color: #ffffff;
-  border-radius: 9999px;
+  border-radius: var(--radius-button-md);
   padding: 8px 16px;
   text-decoration: none;
   transition: color 150ms ease;
@@ -206,7 +206,7 @@ export function ElioFinalCTA() {
             <div className="efcta-ctas">
               <a
                 href="#"
-                className="group rounded-full px-5 py-2 text-sm flex items-center gap-2 transition-colors bg-[#1f1f1f] text-white hover:text-[#154ACC]"
+                className="group rounded-button px-5 py-2 text-sm flex items-center gap-2 transition-colors bg-cta text-white hover:text-[#154ACC]"
               >
                 Try Elio in browser
                 <span className="ml-2 inline-block transition-transform group-hover:translate-x-0.5">

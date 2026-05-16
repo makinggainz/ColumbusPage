@@ -5,10 +5,11 @@ import { useEffect, useRef } from "react";
 /**
  * Hero section — minimal layout for the experimentV6-Gdesign redesign.
  *
- * Left column: H1 ("The frontier research lab building geospatial
- * reasoning for the real world.") rendered with the project's `.h1`
- * class (Medium 500, 64px desktop / 40px ≤991px) — same typescale used
- * on every heading across the page.
+ * Left column: a small eyebrow ("The frontier research lab") sits
+ * above the H1 ("building geospatial reasoning for the real
+ * world."). The H1 uses the project's `.h1` class (Medium 500, 64px
+ * desktop / 40px ≤991px) — same typescale used on every heading across
+ * the page.
  *
  * Right side: full-bleed boat-sailing background video
  * (/HeroShipVid.mp4), with /BoatHero.jpg as the poster frame. A
@@ -131,25 +132,36 @@ const HN_CSS = `
 
 /* Font-size + line-height come from the .h1 class on the element
    (--typography--h1 = 64px ≥992 / 40px ≤991, single project cutoff).
-   This rule only sets the layout/wrap controls — both per-breakpoint
-   max-widths are tuned so text-wrap: balance lands the sentence on a
-   stable line count at each scale-tier (.h1 mobile vs .h1 desktop).
-
-   Sizing math for "The frontier research lab building geospatial
-   reasoning for the real world." (76 chars, 11 words) with balance:
-   - 2-line break needs ~38 chars per line; longest-line lower bound
-     ~76rem at 64px / ~50rem at 40px.
-   - 3-line break needs ~25 chars per line average; longest natural
-     word-group is "reasoning for the real world." (28 chars) so
-     lower bound ~58rem at 64px / ~38rem at 40px.
-   max-width must sit between those two bounds to force exactly 3
-   lines. Chosen values: 40rem mobile, 64rem desktop. */
+   This rule only sets the layout/wrap controls — the per-breakpoint
+   max-widths are tuned so text-wrap: balance lands "building
+   geospatial reasoning for the real world." (49 chars, 7 words) on a
+   stable 2-line break at each scale-tier (.h1 mobile vs .h1 desktop). */
 .hn-title {
   text-wrap: balance;
   max-width: 40rem;
 }
 @media (min-width: 992px) {
   .hn-title { max-width: 64rem; }
+}
+
+/* Eyebrow / kicker — small label above the H1, set in the same accent
+   as the "Try Elio" button arrows (#0081AC) so it reads as a distinct
+   label rather than faded headline text. Sizing stays well below .h1
+   at both tiers so the hierarchy is unambiguous. */
+.hn-eyebrow {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: 0.02em;
+  color: #0081AC;
+  margin-bottom: 14px;
+}
+@media (min-width: 992px) {
+  .hn-eyebrow {
+    font-size: 18px;
+    margin-bottom: 20px;
+  }
 }
 `;
 
@@ -186,8 +198,9 @@ export function HeroNew() {
         aria-hidden
       />
       <div className="hn-bounds">
+        <p className="hn-eyebrow">The frontier research lab</p>
         <h1 className="h1 hn-title tracking-tight text-ink">
-          The frontier research lab building geospatial reasoning for the real world.
+          building geospatial reasoning for the real world.
         </h1>
       </div>
     </section>

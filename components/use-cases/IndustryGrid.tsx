@@ -310,7 +310,7 @@ export default function IndustryGrid({ lightTheme = false }: IndustryGridProps =
 
                     <button
                       type="button"
-                      className="group flex items-center gap-3 leading-none whitespace-nowrap hover:opacity-90 transition-all duration-300"
+                      className="group flex items-center gap-3 leading-none whitespace-nowrap rounded-button-md hover:opacity-90 transition-all duration-300"
                       style={{ fontSize: 14, fontWeight: 500, height: 45, paddingLeft: 20, paddingRight: 16, backgroundColor: ctaBgColor, color: ctaTextColor }}
                     >
                       <span className={`transition-colors duration-300 ${ctaArrowHoverClass}`}>Talk to us</span>
@@ -322,7 +322,7 @@ export default function IndustryGrid({ lightTheme = false }: IndustryGridProps =
                     {item.overlay?.showLearnMore && (
                       <button
                         type="button"
-                        className="group flex items-center gap-3 leading-none whitespace-nowrap hover:opacity-90 transition-all duration-300"
+                        className="group flex items-center gap-3 leading-none whitespace-nowrap rounded-button-md hover:opacity-90 transition-all duration-300"
                         style={{ fontSize: 14, fontWeight: 500, height: 45, paddingLeft: 20, paddingRight: 16, backgroundColor: ctaBgColor, color: ctaTextColor }}
                       >
                         <span className={`transition-colors duration-300 ${ctaArrowHoverClass}`}>Learn more</span>

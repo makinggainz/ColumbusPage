@@ -11,8 +11,8 @@ import { useEffect, useRef, useState } from "react";
 //   • `text-mistral-black`      → `text-[#1f1f1f]`
 //   • `bg-mistral-black`        → `bg-[#1f1f1f]`
 //   • `bg-mistral-beige-deep`   → `bg-[#DCE7FB]`
-//   • `text-mistral-orange`     → `text-[#154ACC]` (rebrand blue, not orange)
-//   • `border-mistral-orange`   → `border-[#154ACC]`
+//   • `text-mistral-orange`     → `text-[#0081AC]` (rebrand blue, not orange)
+//   • `border-mistral-orange`   → `border-[#0081AC]`
 //   • `md:container`            → `max-w-[1287px] mx-5 md:mx-auto`  (matches this
 //                                 project's content bounds; no inner padding so the
 //                                 logo / "Try Elio" CTA sit flush with those bounds)
@@ -101,18 +101,11 @@ export function MistxNav() {
     setHasHero(!!document.querySelector("[data-hero-section]"));
     let raf = 0;
     const apply = () => {
-      const el = headerRef.current;
-      if (!el) return;
-      // Stuck = the navbar has pinned to its sticky `top` offset.
-      // Read the live --frame-margin so this stays correct if the
-      // gutter value is ever changed.
-      const margin =
-        parseFloat(
-          getComputedStyle(document.documentElement).getPropertyValue(
-            "--frame-margin",
-          ),
-        ) || 0;
-      setStuck(el.getBoundingClientRect().top <= margin + 0.5);
+      // The #FFFFFF backdrop appears the instant the user scrolls. At the
+      // exact top of a hero page (scrollY === 0) the navbar stays
+      // transparent so the hero image reads through it to the top of the
+      // card; any scroll at all swaps the solid backdrop in.
+      setStuck(window.scrollY > 0);
     };
     const onScroll = () => {
       if (raf) return;
@@ -141,8 +134,8 @@ export function MistxNav() {
         // covered when the navbar pins. Top-corner radii match the
         // PageFrame card so the navbar's white backdrop curves with it.
         top: "var(--frame-margin, 16px)",
-        borderTopLeftRadius: "var(--frame-radius, 16px)",
-        borderTopRightRadius: "var(--frame-radius, 16px)",
+        borderTopLeftRadius: "var(--frame-radius, 20px)",
+        borderTopRightRadius: "var(--frame-radius, 20px)",
         backgroundColor: showBackdrop ? "#FFFFFF" : "transparent",
       }}
     >
@@ -176,7 +169,7 @@ export function MistxNav() {
           <span
             className="h7 hidden lg:flex items-center font-semibold leading-none whitespace-nowrap text-[#1f1f1f]"
             style={{
-              fontFamily: "Axiforma, var(--font-hero), sans-serif",
+              fontFamily: "Axiforma, 'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif",
               position: "relative",
               top: "3px",
             }}
@@ -195,7 +188,7 @@ export function MistxNav() {
             <a
               key={link.label}
               href={link.href}
-              className="flex items-center p-m px-4 py-2 rounded-2xl text-[#1f1f1f] hover:bg-black/5 transition-colors duration-200"
+              className="flex items-center p-m px-4 py-2 rounded-full text-[#1f1f1f] hover:bg-black/5 transition-colors duration-200"
             >
               {link.label}
             </a>
@@ -207,12 +200,12 @@ export function MistxNav() {
           {/* Contact */}
           <a
             target="_self"
-            className="group rounded-full px-5 py-2 p-m hidden md:flex items-center truncate gap-2 transition-colors bg-transparent text-[#1f1f1f] hover:text-[#154ACC]"
+            className="group rounded-button px-5 py-2 p-m hidden md:flex items-center truncate gap-2 transition-colors bg-transparent text-[#1f1f1f] hover:bg-black/5 hover:text-[#0081AC]"
             href="/contact"
           >
             Contact
             <span className="ml-2 inline-block transition-transform group-hover:translate-x-0.5">
-              <ArrowDot className="text-[#154ACC]" />
+              <ArrowDot className="text-[#0081AC]" />
             </span>
           </a>
 
@@ -223,13 +216,13 @@ export function MistxNav() {
             onMouseLeave={() => setElioOpen(false)}
           >
             <button
-              className="group cursor-pointer rounded-full px-5 py-2 p-m flex items-center gap-2 transition-colors bg-[#1f1f1f] text-white hover:text-[#154ACC]"
+              className="group cursor-pointer rounded-button px-5 py-2 p-m flex items-center gap-2 transition-colors bg-cta text-white hover:text-[#0081AC]"
               aria-haspopup="menu"
               aria-expanded={elioOpen}
             >
               Try Elio
               <span className="ml-2 inline-block transition-transform group-hover:translate-x-0.5">
-                <NavArrowStack className="text-[#154ACC]" />
+                <NavArrowStack className="text-[#0081AC]" />
               </span>
             </button>
             {/* Product picker dropdown — Mobbin pattern (Patreon "Create"
@@ -271,7 +264,7 @@ export function MistxNav() {
                           <div className="p-s leading-snug mt-0.5 text-[#1f1f1f]/55">{item.desc}</div>
                         </div>
                         <span className="mt-1.5 shrink-0 transition-transform group-hover:translate-x-0.5">
-                          <ArrowDot className="text-[#154ACC]" />
+                          <ArrowDot className="text-[#0081AC]" />
                         </span>
                       </a>
                     </li>
@@ -336,7 +329,7 @@ export function MistxNav() {
               <li key={link.label}>
                 <a
                   href={link.href}
-                  className="p-m py-2 block font-medium hover:text-[#154ACC] transition-colors"
+                  className="p-m py-2 block font-medium hover:text-[#0081AC] transition-colors"
                 >
                   {link.label}
                 </a>
@@ -349,7 +342,7 @@ export function MistxNav() {
                   <li key={item.label}>
                     <a
                       href={item.href}
-                      className="block py-2 hover:text-[#154ACC] transition-colors"
+                      className="block py-2 hover:text-[#0081AC] transition-colors"
                     >
                       <span className="p-m font-medium block">{item.label}</span>
                       <span className="p-s text-[#1f1f1f]/55 block">{item.desc}</span>

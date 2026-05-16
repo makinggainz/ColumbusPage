@@ -407,7 +407,7 @@ export default function PromptShowcase() {
       <div className="flex justify-center pt-8 pb-4">
         <button
           type="button"
-          className="group flex items-center gap-3 leading-none whitespace-nowrap rounded-none hover:opacity-90 transition-all duration-300 cursor-pointer"
+          className="group flex items-center gap-3 leading-none whitespace-nowrap rounded-button hover:opacity-90 transition-all duration-300 cursor-pointer"
           style={{ fontSize: 15, fontWeight: 500, height: 36, paddingLeft: 20, paddingRight: 16, backgroundColor: "var(--ent-btn-dark)", color: "white" }}
         >
           <span className="transition-colors duration-300 group-hover:text-[#2563EB]">More use cases</span>

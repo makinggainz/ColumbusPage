@@ -38,7 +38,7 @@ export default function RootLayout({
 
       <body
         className="antialiased min-h-screen"
-        style={{ backgroundColor: "#0A2239" }}
+        style={{ backgroundColor: "#0B1342" }}
       >
         <LenisProvider>
           <ScrollRestorer />
@@ -47,7 +47,12 @@ export default function RootLayout({
               z-index 1 with a bottom margin equal to the footer height,
               so as the user scrolls past the page content the white card
               slides up over the fixed footer — revealing it from below. */}
-          <Footer reveal theme="dark" bg="#0A2239" />
+          <Footer
+            reveal
+            theme="dark"
+            bg="#000000"
+            bgImage="/footerbackground.jpeg"
+          />
           <PageFrame>{children}</PageFrame>
         </LenisProvider>
       </body>

@@ -191,7 +191,7 @@ export default function IndustryStickyNavbar({ lightTheme = false }: IndustrySti
         <button
           type="button"
           onClick={handleArrowClick}
-          className={`shrink-0 inline-flex items-center justify-center w-8 h-8 rounded-full transition-colors duration-200 ${
+          className={`shrink-0 inline-flex items-center justify-center w-8 h-8 rounded-button transition-colors duration-200 ${
             lightTheme
               ? "text-[#1D1D1F] hover:bg-[rgba(10,19,68,0.06)]"
               : "text-white hover:bg-white/10"

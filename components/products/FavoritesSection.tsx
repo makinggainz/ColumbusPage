@@ -67,7 +67,7 @@ export default function FavoritesSection() {
           <a
             href="https://mapsgpt.es"
             className={`group flex items-center justify-center gap-4 lg:gap-6 h-14 lg:h-16 no-underline cursor-pointer active:scale-[0.98] select-none ${glassStyles.btn}`}
-            style={{ borderRadius: "var(--hiw-radius-full)", paddingInline: 48 }}
+            style={{ borderRadius: "var(--radius-button-lg)", paddingInline: 48 }}
           >
             <span
               className="text-[clamp(18px,2vw,22px)] lg:text-[20px]!"

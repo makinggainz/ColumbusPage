@@ -12,7 +12,7 @@ export const Button: React.FC<ButtonProps> = ({
     size = "md",
     ...props
 }) => {
-    const baseStyles = "inline-flex items-center justify-center rounded-full font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none";
+    const baseStyles = "inline-flex items-center justify-center font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none";
 
     const variants = {
         primary: "bg-primary text-white hover:bg-primary/90",
@@ -21,10 +21,12 @@ export const Button: React.FC<ButtonProps> = ({
         ghost: "hover:bg-gray-100 text-gray-700",
     };
 
+    // Radius scales with size so each tier keeps the navbar button's
+    // visual roundness (see --radius-button* in globals.css).
     const sizes = {
-        sm: "h-9 px-3 text-sm",
-        md: "h-11 px-6 text-base", // Slightly larger for that premium feel
-        lg: "h-14 px-8 text-lg",
+        sm: "h-9 px-3 text-sm rounded-button",
+        md: "h-11 px-6 text-base rounded-button-md", // Slightly larger for that premium feel
+        lg: "h-14 px-8 text-lg rounded-button-lg",
     };
 
     const combinedClassName = `${baseStyles} ${variants[variant]} ${sizes[size]} ${className}`;

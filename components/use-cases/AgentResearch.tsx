@@ -98,17 +98,17 @@ export default function AgenticResearch({
                 fill
                 className="object-cover"
               />
-              <button className="absolute top-4 left-4 bg-white text-black text-[12px] px-4 py-1.5 rounded-lg shadow">
+              <button className="absolute top-4 left-4 bg-white text-black text-[12px] px-4 py-1.5 rounded-button shadow">
                 Interact with me
               </button>
             </div>
             <div className="border border-gray-200 rounded-xl p-3 flex items-center justify-between">
               <p className="text-gray-400 text-[12px]">{data.inputPlaceholder}</p>
               <div className="flex gap-2">
-                <button className="bg-gray-200 text-black text-[12px] px-3 py-1.5 rounded-md">
+                <button className="bg-gray-200 text-black text-[12px] px-3 py-1.5 rounded-button">
                   Upload File
                 </button>
-                <button className="bg-gray-200 text-black text-[12px] px-3 py-1.5 rounded-md">
+                <button className="bg-gray-200 text-black text-[12px] px-3 py-1.5 rounded-button">
                   Select on map
                 </button>
               </div>

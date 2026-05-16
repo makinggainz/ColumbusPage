@@ -625,7 +625,7 @@ export default function ShowcaseSection({ compact = false, onInteraction }: { co
                     <button
                       type="button"
                       onClick={() => { if (isExpanded) { userInteractedRef.current = true; stopAutoplay(); handleClosePill(index); } }}
-                      className={`flex h-full w-[313px] cursor-pointer flex-col rounded-[28px] border-0 p-6 text-left touch-manipulation ${glassStyles.featurePill}`}
+                      className={`flex h-full w-[313px] cursor-pointer flex-col rounded-button-lg border-0 p-6 text-left touch-manipulation ${glassStyles.featurePill}`}
                       aria-label={isExpanded ? `Close ${label}` : undefined}
                       onMouseEnter={() => { if (window.innerWidth >= 1024) setCtaShineKey((k) => k + 1); }}
                     >
@@ -668,7 +668,7 @@ export default function ShowcaseSection({ compact = false, onInteraction }: { co
                     <button
                       type="button"
                       onClick={() => { userInteractedRef.current = true; stopAutoplay(); setExpandedPillIndex(index); }}
-                      className={`group relative flex h-[56px] min-w-[176px] w-max cursor-pointer items-center gap-3 rounded-[28px] border-0 px-4 text-left touch-manipulation overflow-hidden ${glassStyles.featurePill}`}
+                      className={`group relative flex h-[56px] min-w-[176px] w-max cursor-pointer items-center gap-3 rounded-button-lg border-0 px-4 text-left touch-manipulation overflow-hidden ${glassStyles.featurePill}`}
                       onMouseEnter={() => { if (window.innerWidth >= 1024) setCtaShineKey((k) => k + 1); }}
                     >
                       <span
@@ -844,7 +844,7 @@ function MobileFeatureCarousel({
               ref={(el) => { pillRefs.current[index] = el; }}
               type="button"
               onClick={() => handlePillClick(index)}
-              className={`snap-start shrink-0 flex flex-col rounded-[22px] text-left relative ${glassStyles.featurePill}`}
+              className={`snap-start shrink-0 flex flex-col rounded-button text-left relative ${glassStyles.featurePill}`}
               style={{
                 width: isActive ? "calc(100vw - 48px)" : "auto",
                 minWidth: isActive ? "calc(100vw - 48px)" : undefined,

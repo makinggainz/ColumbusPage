@@ -141,7 +141,7 @@ export function CtaBanner({ title, primaryCta, secondaryCta }: CtaBannerProps) {
             <div className="ctab-ctas">
               <a
                 href={primaryCta.href}
-                className="group rounded-full px-5 py-2 text-sm flex items-center gap-2 transition-colors bg-[#1f1f1f] text-white hover:text-[#154ACC]"
+                className="group rounded-button px-5 py-2 text-sm flex items-center gap-2 transition-colors bg-cta text-white hover:text-[#154ACC]"
               >
                 {primaryCta.label}
                 <span className="ml-2 inline-block transition-transform group-hover:translate-x-0.5">
@@ -151,7 +151,7 @@ export function CtaBanner({ title, primaryCta, secondaryCta }: CtaBannerProps) {
               {secondaryCta && (
                 <a
                   href={secondaryCta.href}
-                  className="group rounded-full px-5 py-2 text-sm flex items-center gap-2 transition-colors bg-transparent text-[#1f1f1f] hover:text-[#154ACC]"
+                  className="group rounded-button px-5 py-2 text-sm flex items-center gap-2 transition-colors bg-transparent text-[#1f1f1f] hover:text-[#154ACC]"
                 >
                   {secondaryCta.label}
                   <span className="ml-2 inline-block transition-transform group-hover:translate-x-0.5">

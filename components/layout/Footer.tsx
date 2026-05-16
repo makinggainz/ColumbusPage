@@ -10,12 +10,17 @@ export type FooterProps = {
   reveal?: boolean;
   theme?: "light" | "dark" | "light-blue" | "technology";
   /** Optional override for the footer's surface color. When provided,
-   *  it wins over the theme-derived default (e.g., pass `#0A2239` to
-   *  match the homepage body bg under the reveal-style footer). */
+   *  it wins over the theme-derived default (e.g., pass `#000000` to
+   *  match the homepage footer background image). */
   bg?: string;
+  /** Optional full-bleed background image for the footer. When set, the
+   *  image is layered under a top-down gradient that fades from the
+   *  solid `bg` colour at the top into the image lower down, so the
+   *  footer reveals as a fade into that colour. */
+  bgImage?: string;
 };
 
-export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false, theme = "light", bg }) => {
+export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false, theme = "light", bg, bgImage }) => {
   const isLight = theme === "light" || theme === "light-blue" || theme === "technology";
   const isTech = theme === "technology";
   const bgColor =
@@ -83,7 +88,20 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false, t
       data-navbar-theme={theme === "dark" ? "dark" : "light"}
       className={`overflow-hidden flex flex-col relative ${theme === "dark" ? "text-white" : isTech ? "text-[#0A1344]" : "text-[#1D1D1F]"} ${reveal ? "" : "min-h-screen"}`}
       style={{
-        background: bgColor,
+        // With a bgImage: layer a top-down gradient (solid bgColor at the
+        // top, fading to transparent ~62% down) over the photo so the
+        // footer reveals as a fade into the bgColor and the image reads
+        // through lower down. bgColor is also set as the base color so
+        // any area the cover image doesn't reach stays on-tone.
+        ...(bgImage
+          ? {
+              backgroundColor: bgColor,
+              backgroundImage: `linear-gradient(to bottom, ${bgColor} 0%, rgba(0,0,0,0.55) 30%, rgba(0,0,0,0) 62%), url("${bgImage}")`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+              backgroundRepeat: "no-repeat",
+            }
+          : { background: bgColor }),
         cursor: !bottleOpened ? "default" : undefined,
         ...(reveal ? { position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 0 } as React.CSSProperties : {}),
       }}

@@ -40,7 +40,7 @@ export function EnterprisePillsToggle() {
         marginTop: "24px",
         width: "893px",
         height: "56px",
-        borderRadius: "28px",
+        borderRadius: "var(--radius-button-lg)",
         overflow: "hidden",
         backgroundColor: "rgba(0, 0, 0, 0.25)",
         backdropFilter: "blur(4px)",

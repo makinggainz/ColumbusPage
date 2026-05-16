@@ -89,7 +89,7 @@
   color: rgba(10, 19, 68, 0.55);
   text-decoration: none;
   padding: 8px 14px;
-  border-radius: 0;
+  border-radius: var(--radius-button);
   cursor: pointer;
   transition: color 220ms ease, background-color 220ms ease;
   flex-shrink: 0;

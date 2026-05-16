@@ -323,7 +323,7 @@ export function CareersContactForm({ intro }: Props = {}) {
                 <button
                   type="submit"
                   className="ccf-btn flex items-center gap-4 self-start"
-                  style={{ height: 40, paddingLeft: 20, paddingRight: 16, fontSize: 14, fontWeight: 500, backgroundColor: "#000000", color: "white", borderRadius: 0 }}
+                  style={{ height: 40, paddingLeft: 20, paddingRight: 16, fontSize: 14, fontWeight: 500, backgroundColor: "#000000", color: "white", borderRadius: "var(--radius-button)" }}
                 >
                   <span>Submit</span>
                   <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#0066CC" strokeWidth="1.2" strokeLinecap="round">
@@ -404,7 +404,7 @@ export function CareersContactForm({ intro }: Props = {}) {
                 <button
                   type="submit"
                   className="ccf-btn flex items-center gap-4 self-start"
-                  style={{ height: 40, paddingLeft: 20, paddingRight: 16, fontSize: 14, fontWeight: 500, backgroundColor: "#000000", color: "white", borderRadius: 0 }}
+                  style={{ height: 40, paddingLeft: 20, paddingRight: 16, fontSize: 14, fontWeight: 500, backgroundColor: "#000000", color: "white", borderRadius: "var(--radius-button)" }}
                 >
                   <span>Submit</span>
                   <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#0066CC" strokeWidth="1.2" strokeLinecap="round">
@@ -479,7 +479,7 @@ export function CareersContactForm({ intro }: Props = {}) {
                 <button
                   type="submit"
                   className="ccf-btn flex items-center gap-4 self-start"
-                  style={{ height: 40, paddingLeft: 20, paddingRight: 16, fontSize: 14, fontWeight: 500, backgroundColor: "#000000", color: "white", borderRadius: 0 }}
+                  style={{ height: 40, paddingLeft: 20, paddingRight: 16, fontSize: 14, fontWeight: 500, backgroundColor: "#000000", color: "white", borderRadius: "var(--radius-button)" }}
                 >
                   <span>Submit</span>
                   <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#0066CC" strokeWidth="1.2" strokeLinecap="round">
@@ -512,7 +512,7 @@ export function CareersContactForm({ intro }: Props = {}) {
           <button
             onClick={resetForm}
             className="ccf-btn mt-8 flex items-center gap-4"
-            style={{ height: 40, paddingLeft: 20, paddingRight: 16, fontSize: 14, fontWeight: 500, backgroundColor: "#000000", color: "white", borderRadius: 0 }}
+            style={{ height: 40, paddingLeft: 20, paddingRight: 16, fontSize: 14, fontWeight: 500, backgroundColor: "#000000", color: "white", borderRadius: "var(--radius-button)" }}
           >
             <span>Send another message</span>
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#0066CC" strokeWidth="1.2" strokeLinecap="round">

@@ -30,7 +30,7 @@ export const Products = () => {
                             <div className="mt-auto">
                                 <Link
                                     href="/market-spy"
-                                    className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white font-semibold px-6 py-3 rounded-full transition-all group-hover:gap-4"
+                                    className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white font-semibold px-6 py-3 rounded-button-md transition-all group-hover:gap-4"
                                 >
                                     Launch Dashboard <span className="transition-transform">→</span>
                                 </Link>
@@ -68,7 +68,7 @@ export const Products = () => {
                             <div className="mt-auto">
                                 <Link
                                     href="/maps-gpt"
-                                    className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white font-semibold px-6 py-3 rounded-full transition-all group-hover:gap-4"
+                                    className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white font-semibold px-6 py-3 rounded-button-md transition-all group-hover:gap-4"
                                 >
                                     Try MapsGPT <span className="transition-transform">→</span>
                                 </Link>

@@ -144,7 +144,7 @@ export default function DrawAreaSection() {
 
         {/* button */}
         <div className="flex justify-center mt-20">
-          <button className="border border-black px-6 py-2 rounded-md text-[14px]">
+          <button className="border border-black px-6 py-2 rounded-button text-[14px]">
             More use cases →
           </button>
         </div>

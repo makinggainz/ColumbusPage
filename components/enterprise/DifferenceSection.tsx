@@ -103,7 +103,7 @@ export default function DifferenceSection() {
             )}
           </p>
 
-          <button className="flex-shrink-0 w-[44px] h-[44px] md:w-[54px] md:h-[55px] rounded-[11px] flex items-center justify-center text-white" style={{ backgroundColor: "var(--ent-btn-navy)" }}>
+          <button className="flex-shrink-0 w-[44px] h-[44px] md:w-[54px] md:h-[55px] rounded-button-md flex items-center justify-center text-white" style={{ backgroundColor: "var(--ent-btn-navy)" }}>
             →
           </button>
         </div>

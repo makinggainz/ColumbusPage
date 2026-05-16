@@ -321,7 +321,7 @@ function PillToggle() {
             key={label}
             type="button"
             onClick={() => { setActive(i); measure(i); }}
-            className="flex items-center justify-center rounded-full cursor-pointer transition-all duration-300"
+            className="flex items-center justify-center rounded-button cursor-pointer transition-all duration-300"
             style={{
               height: 44,
               fontSize: 13,

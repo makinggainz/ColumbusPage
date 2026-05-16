@@ -273,7 +273,7 @@ const CSS = `
   height: 32px;
   padding: 0;
   border: 0;
-  border-radius: 6px;
+  border-radius: var(--radius-button);
   background: #E7E9EF;
   cursor: pointer;
   display: inline-flex;

@@ -59,13 +59,15 @@ const CSS = `
   }
 }
 
-/* Each tile: full-bleed per-product background, hairline border, 13px
-   corners. overflow: hidden so the bottom-peeking visual clips at the
-   card edge. */
+/* Each tile: full-bleed per-product background, 13px corners. overflow:
+   hidden so the bottom-peeking visual clips at the card edge. The 1px
+   hairline is NOT a CSS border — a CSS border always paints a full
+   rectangle and can't be masked, so it would run straight across the
+   audience cut-out. It's drawn instead by the ::after ring below, which
+   the white notch + fillets can sit on top of. */
 .bp-card {
   position: relative;
   overflow: hidden;
-  border: 1px solid #E7E7F1;
   border-radius: 13px;
   background-color: #FFFFFF;
   background-size: cover;
@@ -91,8 +93,19 @@ const CSS = `
   }
 }
 
-.bp-card--columbus { background-image: url('/Colbackgroundcard.png'); }
-.bp-card--elio     { background-image: url('/eliocardbackground.png'); }
+/* Columbus tile: photo backdrop with a subtle flat black overlay
+   (the leading solid-colour gradient layer) to deepen the image. */
+.bp-card--columbus {
+  background-image:
+    linear-gradient(rgba(0, 0, 0, 0.18), rgba(0, 0, 0, 0.18)),
+    url('/ColumbusBackgroundbento.png');
+}
+/* Elio tile: same subtle flat black overlay as the Columbus tile. */
+.bp-card--elio {
+  background-image:
+    linear-gradient(rgba(0, 0, 0, 0.18), rgba(0, 0, 0, 0.18)),
+    url('/eliocardbackground.png');
+}
 /* Research uses a left-to-right linear gradient — light sky #CAE5F5 at
    0% to mid-blue #76A8F3 at 100%, both fully opaque — matching the
    Figma swatch supplied by Gdesign. Replaces the prior cream backdrop
@@ -115,18 +128,130 @@ const CSS = `
   z-index: 0;
 }
 
-/* Top text block — brand row, tagline, CTA stacked. */
+/* Hairline ring — a 1px inset stroke just inside the card edge, drawn as
+   an overlay rather than a CSS border. Two reasons it's an overlay:
+     • the white audience notch (z-index 3) + its fillets sit on top of
+       it, masking exactly the top/right spans where the silhouette
+       detours inward — so the visible hairline follows the cut-out.
+     • z-index 2 keeps it above the top scrim (::before, z-index 0) so the
+       stroke reads at full strength along the top edge.
+   inset box-shadow (not border) so it isn't clipped away and follows the
+   13px radius. */
+.bp-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 13px;
+  box-shadow: inset 0 0 0 1px #E7E7F1;
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Audience cut-out — the page surface (#FFFFFF, the colour the cards
+   sit on) notched into the card's top-right corner, with the audience
+   label ("For enterprise" / "For consumer") set inside it. The white is
+   flush to the card's top and right edges, so it reads as a piece cut
+   out of the corner itself rather than a panel laid on top.
+
+   All three cut corners are rounded by the card's own 13px radius, so
+   the cut has no sharp edges:
+     • top-right    — coincides with the card's existing rounded corner.
+     • bottom-left  — the deep concave corner of the cut (border-radius).
+     • top-left + bottom-right — convex corners where the cut runs into
+       the card's top / right edges; rounded by the ::before / ::after
+       fillets below.
+   z-index 3 sits it above the scrim, product visual and text block. */
+.bp-notch {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 3;
+  box-sizing: border-box;
+  height: 43px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 28px;
+  background-color: #FFFFFF;
+  /* TL TR BR BL — TL/BR are squared off here and rounded by the
+     fillets; TR matches the card corner; BL is the concave cut. */
+  border-radius: 0 13px 0 13px;
+  /* Hairline on the cut edges only — the left + bottom edges are the
+     notch's silhouette (the inward detour of the card outline), so they
+     carry the 1px stroke; with border-radius BL the concave corner gets
+     it for free. The top + right edges are the cut-out opening (flush to
+     the card edge) and stay borderless. */
+  border-left: 1px solid #E7E7F1;
+  border-bottom: 1px solid #E7E7F1;
+}
+/* Corner fillets — a 13×13 box sitting just outside the notch (::before
+   top-left, ::after bottom-right), painted white everywhere except a
+   transparent quarter-disc the card keeps. This eases the notch's
+   straight edge into the card's edge on a 13px convex arc instead of a
+   hard 90° corner.
+
+   The gradient also carries the hairline: a 1px #E7E7F1 band sits at the
+   transparent→white transition (~12.5px radius), so the card outline's
+   stroke curves along the fillet arc and joins the notch's straight
+   border to the card's ::after ring. */
+.bp-notch::before,
+.bp-notch::after {
+  content: "";
+  position: absolute;
+  width: 13px;
+  height: 13px;
+  background: radial-gradient(
+    circle at left bottom,
+    rgba(255, 255, 255, 0) 11.5px,
+    #E7E7F1 12.25px,
+    #E7E7F1 12.75px,
+    #FFFFFF 13.5px
+  );
+}
+.bp-notch::before { top: 0; left: -13px; }
+.bp-notch::after { bottom: -13px; right: 0; }
+/* Label size mirrors the hero section's eyebrow / superscript
+   (.hn-eyebrow in HeroNew.tsx): 16px, stepping up to 18px ≥992px.
+   line-height: 1 keeps it tight in the notch. Colour is set per card
+   below — each label is tinted to its tile's background imagery. */
+.bp-notch-label {
+  font-size: 16px;
+  line-height: 1;
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  white-space: nowrap;
+}
+@media (min-width: 992px) {
+  .bp-notch-label { font-size: 18px; }
+}
+/* Per-card label tint — drawn from each tile's background photo:
+   • Columbus enterprise tile → sky blue (#018ADE), the dominant colour
+     of its cloud-sky backdrop.
+   • Elio consumer tile → a deepened sand tone (#C98A5B): the beach
+     photo's cream (#FCEFE1) darkened so the label stays legible against
+     the white notch while still reading as the beach tile. */
+.bp-card--columbus .bp-notch-label { color: #018ADE; }
+.bp-card--elio .bp-notch-label { color: #C98A5B; }
+@media (min-width: 640px) {
+  .bp-notch { height: 46px; padding: 0 32px; }
+}
+@media (min-width: 1024px) {
+  .bp-notch { height: 53px; padding: 0 40px; }
+}
+
+/* Top text block — brand row, tagline, CTA stacked. Spacing is set with
+   explicit per-pair margins (on .bp-tagline / .bp-cta) rather than one
+   flex gap: see the optical-spacing note on those rules below. */
 .bp-text-block {
   position: relative;
   z-index: 2;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 18px;
   max-width: 30rem;
 }
 @media (min-width: 1024px) {
-  .bp-card--wide .bp-text-block { gap: 22px; max-width: 34rem; }
+  .bp-card--wide .bp-text-block { max-width: 34rem; }
 }
 
 .bp-brand {
@@ -156,13 +281,28 @@ const CSS = `
   font-size: var(--typography--h2);
   line-height: var(--typography--h2--line-height);
 }
+/* Columbus + Elio tiles render their wordmark at semibold weight
+   (Research keeps the default 500). Colour stays inherited. */
+.bp-card--columbus .bp-name,
+.bp-card--elio .bp-name {
+  font-weight: 600;
+}
+/* Research tile sets its title in Funnel Display (the design system's
+   --font-display heading face). */
+.bp-card--research .bp-name {
+  font-family: var(--font-display);
+}
 @media (min-width: 1024px) {
   .bp-logo { width: 50px; height: 50px; }
   .bp-card--wide .bp-logo { width: 56px; height: 56px; }
 }
 
+/* Stacked spacing — title→subtitle. The brand row is logo-height
+   (42–56px), so it carries empty box space below the shorter product-name
+   text; the subtitle→CTA gap below (.bp-cta) adds +6px to optically
+   cancel that, so both gaps read as even whitespace. */
 .bp-tagline {
-  margin: 0;
+  margin: 18px 0 0;
   font-size: var(--typography--h5);
   line-height: var(--typography--h5--line-height);
   font-weight: 500;
@@ -171,12 +311,15 @@ const CSS = `
   max-width: 28rem;
 }
 @media (min-width: 1024px) {
-  .bp-card--wide .bp-tagline { max-width: 34rem; }
+  /* Wide tile keeps its roomier stack (22px title→subtitle), with the
+     same +6px optical compensation on the subtitle→CTA gap. */
+  .bp-card--wide .bp-tagline { max-width: 34rem; margin-top: 22px; }
+  .bp-card--wide .bp-cta { margin-top: 28px; }
 }
 
 /* Signature CTA pill — same pattern as CtaBanner / Careers / ProductCell:
-   #1f1f1f surface, white label that swaps to #154ACC on hover, and the
-   five-dot blue ArrowDots glyph (#154ACC) that slides 2px to the right
+   #1f1f1f surface, white label that swaps to #0081AC on hover, and the
+   five-dot blue ArrowDots glyph (#0081AC) that slides 2px to the right
    on hover. Padding + line-height match Careers' "Join our team"
    reference button so every homepage-content CTA renders at the same
    42px height. */
@@ -184,20 +327,26 @@ const CSS = `
   display: inline-flex;
   align-items: center;
   gap: 10px;
+  /* subtitle→CTA gap. 18px (matching the title→subtitle margin) + 6px
+     optical compensation: the CTA pill's top edge is hard (line-height 1),
+     unlike the brand row above the tagline which has empty box space
+     below its name text — so the raw gap here would otherwise look
+     tighter than the title→subtitle gap. */
+  margin-top: 24px;
   padding: 14px 28px;
-  background-color: #1f1f1f;
+  background-color: var(--color-cta);
   color: #FFFFFF;
-  border-radius: 9999px;
+  border-radius: var(--radius-button-md);
   font-size: var(--typography--p-m);
   line-height: 1;
   font-weight: 500;
   white-space: nowrap;
   transition: color 180ms ease;
 }
-.bp-cta:hover { color: #154ACC; }
+.bp-cta:hover { color: #0081AC; }
 .bp-cta-arrow {
   display: inline-block;
-  color: #154ACC;
+  color: #0081AC;
   transition: transform 180ms ease;
 }
 .bp-cta:hover .bp-cta-arrow { transform: translateX(2px); }
@@ -269,6 +418,10 @@ interface Product {
   name: string;
   /** Single short phrase, sits below the brand row. */
   tagline: string;
+  /** Optional audience label shown inside a rounded cut-out notched
+   *  into the card's top-right corner, e.g. "For enterprise" /
+   *  "For consumer" / "For the curious". */
+  audience?: string;
   /** Pill CTA label, e.g. "Learn more", "Try Elio". */
   ctaLabel: string;
   /** Product UI screenshot/graphic anchored to the bottom of the cell.
@@ -288,6 +441,7 @@ const PRODUCTS: Product[] = [
     logoFilter: COLUMBUS_LOGO_FILTER,
     name: "Columbus",
     tagline: "All-in-one map intelligence platform",
+    audience: "For enterprise",
     ctaLabel: "Learn more",
     visual: "/ColumbusHomeimg.png",
   },
@@ -297,6 +451,7 @@ const PRODUCTS: Product[] = [
     logo: "/MapsGPT-logo.png",
     name: "Elio",
     tagline: "Making maps feel alive again",
+    audience: "For consumer",
     ctaLabel: "Try Elio",
     visual: "/mapsgptdesktopimg.png",
   },
@@ -306,6 +461,7 @@ const PRODUCTS: Product[] = [
     logo: "/TechnologyPageImages/lgm-globe-icon.png",
     name: "Research",
     tagline: "Building the Large Geospatial Model",
+    audience: "For the curious",
     ctaLabel: "Read Thesis",
     wide: true,
   },
@@ -313,7 +469,7 @@ const PRODUCTS: Product[] = [
 
 /* Signature 5-dot diagonal arrow used by CtaBanner / Careers / ProductCell.
    Circles use currentColor so the wrapping `.bp-cta-arrow` controls the
-   fill (set to brand blue #154ACC by default). */
+   fill (set to the navbar accent #0081AC by default). */
 function ArrowDots() {
   return (
     <svg
@@ -344,6 +500,11 @@ export function BentoProducts() {
               href={p.href}
               className={`bp-card ${p.cellClass}${p.wide ? " bp-card--wide" : ""}`}
             >
+              {p.audience && (
+                <div className="bp-notch">
+                  <span className="bp-notch-label">{p.audience}</span>
+                </div>
+              )}
               <div className="bp-text-block">
                 <div className="bp-brand">
                   <img
@@ -353,7 +514,19 @@ export function BentoProducts() {
                     className="bp-logo"
                     style={p.logoFilter ? { filter: p.logoFilter } : undefined}
                   />
-                  <span className="bp-name">{p.name}</span>
+                  <span
+                    className="bp-name"
+                    style={
+                      p.cellClass === "bp-card--columbus"
+                        ? {
+                            fontFamily:
+                              '"Axiforma", "SF Pro", -apple-system, BlinkMacSystemFont, sans-serif',
+                          }
+                        : undefined
+                    }
+                  >
+                    {p.name}
+                  </span>
                 </div>
                 <p className="bp-tagline">{p.tagline}</p>
                 <span className="bp-cta">

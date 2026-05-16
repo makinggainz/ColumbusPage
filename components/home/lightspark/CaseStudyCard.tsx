@@ -149,7 +149,7 @@ export function CaseStudyCard() {
                 </p>
                 <a
                   href="#"
-                  className="mt-8 inline-flex items-center justify-center rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-ink transition-colors hover:bg-white/90"
+                  className="mt-8 inline-flex items-center justify-center rounded-button bg-white px-5 py-2.5 text-sm font-semibold text-ink transition-colors hover:bg-white/90"
                 >
                   Learn more
                 </a>

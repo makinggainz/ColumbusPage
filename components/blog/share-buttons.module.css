@@ -6,7 +6,7 @@
   justify-content: center;
   border: none;
   background: none;
-  border-radius: 50%;
+  border-radius: var(--radius-button);
   cursor: pointer;
   padding: 0;
   color: rgba(10, 19, 68, 0.45);

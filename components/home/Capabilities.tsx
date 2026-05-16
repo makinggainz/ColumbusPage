@@ -383,7 +383,7 @@ export const Capabilities = () => {
               <Link
                 href="/columbus-solutions"
                 className="absolute right-8 top-1/2 -translate-y-1/2 flex items-center gap-2 text-[15px] font-semibold text-white hover:opacity-90 transition-opacity mobile-blur-none"
-                style={{ backgroundColor: "rgba(255,255,255,0.12)", backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)", border: "1px solid rgba(255,255,255,0.2)", padding: "10px 18px", borderRadius: 9999 }}
+                style={{ backgroundColor: "rgba(255,255,255,0.12)", backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)", border: "1px solid rgba(255,255,255,0.2)", padding: "10px 18px", borderRadius: "var(--radius-button)" }}
               >
                 More examples
                 <svg width="8" height="14" viewBox="0 0 8 14" fill="none" stroke="#2563EB" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
