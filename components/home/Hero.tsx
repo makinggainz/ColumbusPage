@@ -876,9 +876,17 @@ export const Hero = () => {
       className="relative overflow-hidden flex flex-col"
       style={{ background: "#ffffff", minHeight: "calc(100vh + 300px)" }}
     >
-      {/* Mesh */}
+      {/* Background video */}
       <div className="absolute inset-0">
-        <WaveMesh />
+        <video
+          src="/HeroShipVid.mp4"
+          autoPlay
+          loop
+          muted
+          playsInline
+          preload="auto"
+          className="w-full h-full object-cover"
+        />
       </div>
 
       {/* Top gradient */}
