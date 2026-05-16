@@ -827,6 +827,37 @@ const WaveMesh = () => {
   );
 };
 
+/* ── Hero background video ──
+   Self-contained so it owns its own ref + autoplay handling. React /
+   Next SSR doesn't emit the `muted` attribute into the server HTML
+   (it only sets the property after hydration), which makes browsers
+   block autoplay. Setting `.muted = true` and calling `.play()` in an
+   effect — plus a `canplay` retry — guarantees playback. */
+const HeroBackgroundVideo = () => {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  useEffect(() => {
+    const v = videoRef.current;
+    if (!v) return;
+    v.muted = true;
+    const tryPlay = () => { v.play().catch(() => {}); };
+    tryPlay();
+    v.addEventListener("canplay", tryPlay);
+    return () => v.removeEventListener("canplay", tryPlay);
+  }, []);
+  return (
+    <video
+      ref={videoRef}
+      src="/HeroShipVid.mp4"
+      autoPlay
+      loop
+      muted
+      playsInline
+      preload="auto"
+      className="w-full h-full object-cover"
+    />
+  );
+};
+
 /* ── Text constants ── */
 const EYEBROW_TEXT = "FRONTIER AI RESEARCH & PRODUCT COMPANY";
 const HEADING_LINE1 = "Building the first in\u2011production";
@@ -878,15 +909,7 @@ export const Hero = () => {
     >
       {/* Background video */}
       <div className="absolute inset-0">
-        <video
-          src="/HeroShipVid.mp4"
-          autoPlay
-          loop
-          muted
-          playsInline
-          preload="auto"
-          className="w-full h-full object-cover"
-        />
+        <HeroBackgroundVideo />
       </div>
 
       {/* Top gradient */}
