@@ -26,18 +26,13 @@ export default function SolutionShowcase() {
   return (
     <div
       ref={sectionRef}
-      className="relative overflow-hidden"
+      className="relative"
       style={{
         "--grid-line": "var(--ent-border-dark-grid)",
-        backgroundColor: "#ffffff",
-        // The faint city line-art now lives only behind this section,
-        // full-width and anchored along the bottom horizon. The GridSection
-        // below is transparent (inline override), so it reads behind the
-        // "Its time for a more powerful…" heading.
-        backgroundImage: "url(/enterpriseartbackground.png)",
-        backgroundSize: "100% auto",
-        backgroundRepeat: "no-repeat",
-        backgroundPosition: "center bottom",
+        // Transparent so the shared B2+B3 city line-art backdrop (set on
+        // the mid-block in app/products/enterprise/page.tsx) reads behind
+        // the "Its time for a more powerful…" heading.
+        backgroundColor: "transparent",
       } as React.CSSProperties}
     >
       <GridSection

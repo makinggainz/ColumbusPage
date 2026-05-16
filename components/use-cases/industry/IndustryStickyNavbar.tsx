@@ -7,6 +7,19 @@ import type { IndustryId } from "./types";
 
 type IndustryStickyNavbarProps = {
   lightTheme?: boolean;
+  /**
+   * Distance (px) from the viewport top where this sub-navbar pins — must
+   * equal the height of the main navbar above it. Defaults to 56 (the
+   * columbus-solutions compact navbar). The enterprise page's MistxNav is
+   * taller, so it passes its own value.
+   */
+  topOffset?: number;
+  /**
+   * Restrict & order the industry links. Defaults to the full
+   * INDUSTRY_ORDER; the enterprise page passes the same reduced subset
+   * as its IndustrySelector so the two stay in sync.
+   */
+  industries?: IndustryId[];
 };
 
 /**
@@ -20,7 +33,8 @@ type IndustryStickyNavbarProps = {
  * Visible only while the four-row block intersects the viewport (observed
  * via the `[data-use-case-rows]` marker rendered by UseCaseStickyScroll).
  */
-export default function IndustryStickyNavbar({ lightTheme = false }: IndustryStickyNavbarProps) {
+export default function IndustryStickyNavbar({ lightTheme = false, topOffset = 56, industries }: IndustryStickyNavbarProps) {
+  const order = industries ?? INDUSTRY_ORDER;
   const { industryId, setIndustryId } = useIndustry();
   const [shown, setShown] = useState(false);
   const [scrollState, setScrollState] = useState({ atStart: true, atEnd: false });
@@ -32,11 +46,11 @@ export default function IndustryStickyNavbar({ lightTheme = false }: IndustrySti
     if (!target) return;
     const obs = new IntersectionObserver(
       ([entry]) => setShown(entry.isIntersecting),
-      { rootMargin: "-56px 0px 0px 0px", threshold: 0 },
+      { rootMargin: `-${topOffset}px 0px 0px 0px`, threshold: 0 },
     );
     obs.observe(target);
     return () => obs.disconnect();
-  }, []);
+  }, [topOffset]);
 
   // Track horizontal scroll position so we can show / hide the edge gradients.
   const updateScrollState = useCallback(() => {
@@ -112,8 +126,9 @@ export default function IndustryStickyNavbar({ lightTheme = false }: IndustrySti
 
   return (
     <div
-      className={`fixed top-[56px] left-0 right-0 z-40 w-full ${containerBg} transition-[opacity,transform] duration-300 ease-out`}
+      className={`fixed left-0 right-0 z-40 w-full ${containerBg} transition-[opacity,transform] duration-300 ease-out`}
       style={{
+        top: topOffset,
         opacity: shown ? 1 : 0,
         transform: shown ? "translateY(0)" : "translateY(-12px)",
         pointerEvents: shown ? "auto" : "none",
@@ -157,7 +172,7 @@ export default function IndustryStickyNavbar({ lightTheme = false }: IndustrySti
             className="flex items-center gap-7 overflow-x-auto"
             style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
           >
-            {INDUSTRY_ORDER.map((id) => {
+            {order.map((id) => {
               const item = INDUSTRY_CONTENT[id];
               const isActive = industryId === id;
               return (

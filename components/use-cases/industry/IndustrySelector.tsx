@@ -4,9 +4,20 @@ import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { useIndustry } from "./IndustryContext";
 import { INDUSTRY_CONTENT, INDUSTRY_ORDER } from "./content";
+import type { IndustryId } from "./types";
 
 type IndustrySelectorProps = {
   lightTheme?: boolean;
+  /**
+   * Restrict & order the tiles shown. Defaults to the full INDUSTRY_ORDER
+   * (columbus-solutions). The enterprise page passes a reduced subset.
+   */
+  industries?: IndustryId[];
+  /**
+   * Clip the tile grid with the PageFrame's corner radius (20px). Off by
+   * default so columbus-solutions keeps square edges.
+   */
+  rounded?: boolean;
 };
 
 /**
@@ -17,7 +28,8 @@ type IndustrySelectorProps = {
  * arrow on the label; the active selection has no extra emphasis here (the
  * sticky sub-navbar above shows what's active).
  */
-export default function IndustrySelector({ lightTheme = false }: IndustrySelectorProps) {
+export default function IndustrySelector({ lightTheme = false, industries, rounded = false }: IndustrySelectorProps) {
+  const order = industries ?? INDUSTRY_ORDER;
   const { industryId, setIndustryId } = useIndustry();
   const sectionRef = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
@@ -80,9 +92,14 @@ export default function IndustrySelector({ lightTheme = false }: IndustrySelecto
             (16:9) tiles, edge-to-edge within the bounds. */}
         <div
           className="grid grid-cols-3 max-lg:grid-cols-2 max-md:grid-cols-1 gap-0"
-          style={anim(120)}
+          style={{
+            ...anim(120),
+            // Match the PageFrame card corner radius (MAX_RADIUS = 20px in
+            // components/layout/PageFrame.tsx); overflow clips the tiles.
+            ...(rounded ? { borderRadius: 20, overflow: "hidden" } : {}),
+          }}
         >
-          {INDUSTRY_ORDER.map((id) => {
+          {order.map((id) => {
             const item = INDUSTRY_CONTENT[id];
             return (
               <button

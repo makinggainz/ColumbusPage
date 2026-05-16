@@ -57,7 +57,9 @@ export default function ProblemCards() {
       <div
         className="w-full overflow-x-auto lg:overflow-x-visible"
         style={{
-          backgroundColor: "var(--ent-bg-dark)",
+          // Transparent so the shared B2+B3 city line-art backdrop reads
+          // through the strip; only the individual cards paint white.
+          backgroundColor: "transparent",
           borderTop: "1px solid var(--grid-line)",
           opacity: visible ? 1 : 0,
           transition: "opacity 0.7s ease 0.3s",
@@ -77,7 +79,9 @@ export default function ProblemCards() {
               style={{
                 width: 210,
                 height: 210,
-                backgroundColor: "transparent",
+                // Full white — the feature cards sit above the city
+                // line-art backdrop that rises into the lower half of b2.
+                backgroundColor: "#ffffff",
                 borderBottom: "1px solid var(--grid-line)",
                 fontSize: 15,
                 fontWeight: 400,

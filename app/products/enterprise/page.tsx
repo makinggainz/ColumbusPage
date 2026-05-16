@@ -10,11 +10,30 @@ import { Footer } from "@/components/layout/Footer";
 import ComparisonSection from "@/components/enterprise/ComparisonSection";
 import ChatSection from "@/components/enterprise/ChatSection";
 import PromptShowcase from "@/components/enterprise/PromptShowcase";
-import StickyScrollSection from "@/components/enterprise/StickyScrollSection";
+import ContactSection from "@/components/use-cases/ContactSection";
+import UseCaseStickyScroll from "@/components/use-cases/UseCaseStickyScroll";
+import { IndustryProvider } from "@/components/use-cases/industry/IndustryContext";
+import IndustrySelector from "@/components/use-cases/industry/IndustrySelector";
+import IndustryStickyNavbar from "@/components/use-cases/industry/IndustryStickyNavbar";
+import ColumbusSolutionsSections from "@/components/use-cases/ColumbusSolutionsSections";
+import type { IndustryId } from "@/components/use-cases/industry/types";
 import ProductBanner from "@/components/enterprise/ProductBanner";
+import CapabilitiesGrid from "@/components/enterprise/CapabilitiesGrid";
 import DifferenceSection from "@/components/enterprise/DifferenceSection";
 
 const sectionLabels = ["a", "b", "b2", "b3", "c", "d", "e", "g", "m", "n"] as const;
+
+/* The reduced industry set shown in section g's "Tell us where you work"
+   picker (and its sticky sub-navbar), ordered as the design's 3×2 grid.
+   Scoped to this page — columbus-solutions still shows the full list. */
+const ENTERPRISE_INDUSTRIES: IndustryId[] = [
+  "residential-real-estate",
+  "commercial-real-estate",
+  "urban-infrastructure",
+  "geomarketing",
+  "academic-research",
+  "environmental-research",
+];
 
 function SectionWithLabel({
   label,
@@ -52,26 +71,41 @@ export default function EnterprisePage() {
       <SectionWithLabel label={sectionLabels[1]}>
         <EnterpriseHero />
       </SectionWithLabel>
-      {/* White mid-block. The faint city line-art background is no longer
-          applied here at the block level — it now lives only behind the
-          SolutionShowcase ("Its time for a more powerful…") section so it
-          does not bleed behind ProblemCards or ComparisonSection. */}
+      {/* White mid-block. */}
       <div
         ref={darkStartRef}
         className="relative"
         style={{ backgroundColor: "#ffffff" }}
       >
         <div className="relative z-10">
-          <SectionWithLabel label={sectionLabels[2]}>
-            <ProblemCards />
-          </SectionWithLabel>
-          <SectionWithLabel label={sectionLabels[3]}>
-            <SolutionShowcase />
-          </SectionWithLabel>
-          {/* Horizontal line from screen edges to grid bounds */}
-          <div className="relative w-full" style={{ height: 1 }}>
-            <div className="absolute top-0 left-0 h-px" style={{ width: "calc((100% - var(--ent-max-width)) / 2)", backgroundColor: "var(--ent-border-card)" }} />
-            <div className="absolute top-0 right-0 h-px" style={{ width: "calc((100% - var(--ent-max-width)) / 2)", backgroundColor: "var(--ent-border-card)" }} />
+          {/* B2 + B3 share one city line-art backdrop. It is anchored to
+              the bottom of B3 and now spans the full B2+B3 stack so the
+              line-art is clearly present through ProblemCards (b2), not
+              just its lower half. `top` is the single tunable knob: raise
+              the % to pull the start line back down (e.g. "20%" to clear
+              the b2 heading). The b2 feature cards paint solid white on
+              top so they read above the art. */}
+          <div className="relative">
+            <div
+              aria-hidden
+              className="absolute inset-x-0 bottom-0 pointer-events-none"
+              style={{
+                top: "0%",
+                zIndex: 0,
+                backgroundImage: "url(/enterpriseartbackground.png)",
+                backgroundSize: "100% 100%",
+                backgroundRepeat: "no-repeat",
+                backgroundPosition: "center bottom",
+              }}
+            />
+            <div className="relative z-10">
+              <SectionWithLabel label={sectionLabels[2]}>
+                <ProblemCards />
+              </SectionWithLabel>
+              <SectionWithLabel label={sectionLabels[3]}>
+                <SolutionShowcase />
+              </SectionWithLabel>
+            </div>
           </div>
           <SectionWithLabel label={sectionLabels[4]}>
             <ComparisonSection />
@@ -81,8 +115,30 @@ export default function EnterprisePage() {
       <SectionWithLabel label={sectionLabels[5]}>
         <ProductBanner />
       </SectionWithLabel>
+      <SectionWithLabel label="d2">
+        <CapabilitiesGrid />
+      </SectionWithLabel>
       <SectionWithLabel label={sectionLabels[7]}>
-        <StickyScrollSection />
+        {/* Section g — ported from /columbus-solutions: the industry-aware
+            block ("Pick your industry" → IndustrySelector + the four-row
+            UseCaseStickyScroll under IndustryProvider), then
+            ColumbusSolutionsSections, through ContactSection
+            ("We're at the frontier. / The horizon is wide.").
+            lightTheme is forced on so it matches the enterprise page's
+            white/homepage system. topOffset = MistxNav's height (its
+            content row is py-6 ≈ 84px) so the industry sub-navbar pins
+            flush under it instead of the 56px columbus-solutions navbar. */}
+        <IndustryProvider>
+          <IndustryStickyNavbar lightTheme topOffset={84} industries={ENTERPRISE_INDUSTRIES} />
+          <IndustrySelector lightTheme rounded industries={ENTERPRISE_INDUSTRIES} />
+          <UseCaseStickyScroll lightTheme />
+        </IndustryProvider>
+        <section className="relative">
+          <ColumbusSolutionsSections lightTheme />
+        </section>
+        <section className="relative">
+          <ContactSection lightTheme />
+        </section>
       </SectionWithLabel>
       <div ref={diffRef}>
         <SectionWithLabel label="diff">

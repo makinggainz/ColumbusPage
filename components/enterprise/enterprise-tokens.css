@@ -251,3 +251,15 @@
   display: none;
 }
 
+/* Same rationale for the columbus-solutions block ported into section g.
+   IndustrySelector wraps its content in .section-lines-light /
+   .section-lines-dark, which paint blue full-height rails (globals.css).
+   The enterprise page has no vertical structure lines, so suppress them
+   here too — page-scoped, columbus-solutions keeps its rails. */
+.ent-scope .section-lines-light::before,
+.ent-scope .section-lines-light::after,
+.ent-scope .section-lines-dark::before,
+.ent-scope .section-lines-dark::after {
+  display: none;
+}
+
