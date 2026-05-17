@@ -36,6 +36,26 @@ function ArrowDots({ className = "" }: { className?: string }) {
   );
 }
 
+/**
+ * Quote-mark glyph — two slanted bars forming an opening quotation mark,
+ * set above every founder quote (the featured photo tile and the two
+ * side cards). Colour comes from `currentColor`, so the same glyph reads
+ * white over the dark photo and accent-blue on the white side cards.
+ */
+function QuoteMark({ className = "" }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 36 28"
+      fill="currentColor"
+      aria-hidden="true"
+    >
+      <path d="M8 0h8l-8 28H0z" />
+      <path d="M22 0h8l-8 28h-8z" />
+    </svg>
+  );
+}
+
 /* "Read more" cards — featured card + 3 small, mirroring the homepage
    BlogSection. Each links to its real blog post. */
 type PostCard = {
@@ -72,14 +92,26 @@ const POSTS: PostCard[] = [
   },
 ];
 
-/* Founder quotes — copy reproduced verbatim from the design mockup. */
-const QUOTES: { quote: string; name: string; role: string; avatar: string }[] = [
+/* Founder quotes — copy reproduced verbatim from the design mockup.
+   `FEATURED` fills the left photo tile; `QUOTES` are the two stacked
+   cards on the right. */
+type Quote = { quote: string; name: string; role: string; avatar: string };
+
+const FEATURED: Quote = {
+  quote:
+    "I started Columbus just to get some Columbussy on my dih. I like males.",
+  name: "David Ramirez Blonski",
+  role: "Co-Founder, CEO",
+  avatar: "/David.png",
+};
+
+const QUOTES: Quote[] = [
   {
     quote:
       "I started Columbus just to get some Columbussy on my dih. I like males.",
-    name: "David Ramirez Blonski",
-    role: "Co-Founder, CEO",
-    avatar: "/David.png",
+    name: "Alexander Ramirez Blonski",
+    role: "Co-Founder, CPO",
+    avatar: "/Alex.jpg",
   },
   {
     quote: "When I'm not working on Columbus im gooning to hentai from Japan.",
@@ -115,9 +147,9 @@ export default function CompanyPage() {
 
       {/* ════════ 2. OUR MISSION ════════
           Option A — open statement (no card). The copy fills in
-          word-by-word on scroll, the homepage MissionScrollIntro
-          mechanic. */}
-      <section className="section">
+          word-by-word on scroll and un-fills as it leaves, the homepage
+          MissionScrollIntro mechanic. */}
+      <section className={styles.statementSection}>
         <div className={styles.bounds}>
           <h2 className={`mb-4 md:mb-6 ${styles.sectionLabel}`}>
             Our Mission
@@ -127,7 +159,7 @@ export default function CompanyPage() {
       </section>
 
       {/* ════════ 3. OUR VISION ════════ */}
-      <section className="section">
+      <section className={styles.statementSection}>
         <div className={styles.bounds}>
           <h2 className={`mb-4 md:mb-6 ${styles.sectionLabel}`}>
             Our Vision
@@ -196,11 +228,13 @@ export default function CompanyPage() {
             A quote from our founders
           </h2>
           <div className={styles.foundersGrid}>
-            {/* Left — bento photo tile with the BentoProducts-style
-                top-right cut-out notch carrying the "Our CEO" label. */}
+            {/* Left — featured photo tile: the grouppic group photo, a
+                top/bottom black gradient for legibility, the founder's
+                quote set over the top and the attribution bottom-right.
+                Keeps the BentoProducts-style "Our CEO" cut-out notch. */}
             <div className={styles.founderPhoto}>
               <Image
-                src="/blog-still-lake.jpg"
+                src="/grouppic.png"
                 alt=""
                 fill
                 sizes="(min-width: 768px) 640px, 100vw"
@@ -208,17 +242,38 @@ export default function CompanyPage() {
               <div className={styles.photoNotch}>
                 <span className={styles.photoNotchLabel}>Our CEO</span>
               </div>
+              <div className={styles.featuredQuoteBlock}>
+                <QuoteMark className={styles.quoteMarkLight} />
+                <p className={styles.featuredQuote}>{FEATURED.quote}</p>
+              </div>
+              <div
+                className={`${styles.attribution} ${styles.featuredAttribution}`}
+              >
+                <div className={styles.avatar}>
+                  <Image
+                    src={FEATURED.avatar}
+                    alt={FEATURED.name}
+                    fill
+                    sizes="64px"
+                  />
+                </div>
+                <div>
+                  <p className={styles.attributionName}>{FEATURED.name}</p>
+                  <p className={styles.attributionRole}>{FEATURED.role}</p>
+                </div>
+              </div>
             </div>
 
             {/* Right — two stacked quote cards. */}
             <div className={styles.quoteCol}>
               {QUOTES.map((q) => (
                 <div key={q.name} className={styles.quoteCard}>
-                  <p className={styles.quoteText}>{`“${q.quote}”`}</p>
+                  <QuoteMark className={styles.quoteMarkAccent} />
+                  <p className={styles.quoteText}>{q.quote}</p>
                   <div className={styles.quoteSpacer} aria-hidden />
                   <div className={styles.attribution}>
                     <div className={styles.avatar}>
-                      <Image src={q.avatar} alt={q.name} fill sizes="40px" />
+                      <Image src={q.avatar} alt={q.name} fill sizes="64px" />
                     </div>
                     <div>
                       <p className={styles.attributionName}>{q.name}</p>
@@ -240,7 +295,7 @@ export default function CompanyPage() {
           >
             Our values
           </h2>
-          <div className={styles.card}>
+          <div className={`${styles.card} ${styles.valuesCard}`}>
             <div className={styles.valuesImage}>
               <Image src="/blog-clouds-dawn.jpg" alt="" fill sizes="200px" />
             </div>

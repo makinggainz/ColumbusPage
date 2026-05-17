@@ -125,6 +125,21 @@
   color: var(--color-ink);
 }
 
+/* Mission + vision sections — a touch more vertical rhythm than a
+   standard .section (128px vs 112px desktop) so the two open
+   scroll-reveal statements each get their own breathing room and a
+   clean gap between them. 128px = --spacing-6xl. */
+.statementSection {
+  padding-top: 80px;
+  padding-bottom: 80px;
+}
+@media (min-width: 1024px) {
+  .statementSection {
+    padding-top: 128px;
+    padding-bottom: 128px;
+  }
+}
+
 /* ── Hairline statement card — the shared container for the mission,
    vision, values and contact blocks. Capped at a readable max-width
    (≈816px) and centred, so it never spans the full 1287px bounds; the
@@ -138,8 +153,6 @@
      tiles and the /blog index media tiles. */
   border-radius: 13px;
   background: #FFFFFF;
-  /* Same floating-panel drop shadow as the PageFrame card. */
-  box-shadow: var(--frame-shadow, none);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -352,24 +365,50 @@
   }
 }
 
-/* Photo tile — 13px corners + hairline ring + top-right cut-out notch,
-   the exact card language of the homepage BentoProducts tiles. */
+/* Featured photo tile — 13px corners + hairline ring + top-right cut-out
+   notch (the BentoProducts card language), now carrying the featured
+   founder quote over the group photo. A flex column with space-between
+   pins the quote block to the top and the attribution to the bottom. */
 .founderPhoto {
   position: relative;
   overflow: hidden;
   border-radius: 13px;
   background: #ECEFF3;
-  min-height: 320px;
-  /* Same floating-panel drop shadow as the PageFrame card. */
-  box-shadow: var(--frame-shadow, none);
+  min-height: 420px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 32px;
 }
 @media (min-width: 768px) {
   .founderPhoto {
     height: 692px;
   }
 }
+@media (max-width: 768px) {
+  .founderPhoto {
+    padding: 24px;
+  }
+}
 .founderPhoto img {
   object-fit: cover;
+}
+
+/* Top + bottom black gradient — darkens the photo behind the quote and
+   the attribution so the white text stays legible over any imagery. */
+.founderPhoto::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.72) 0%,
+    rgba(0, 0, 0, 0) 30%,
+    rgba(0, 0, 0, 0) 58%,
+    rgba(0, 0, 0, 0.82) 100%
+  );
 }
 
 /* Hairline ring — inset box-shadow (not a CSS border) so the notch +
@@ -382,6 +421,59 @@
   box-shadow: inset 0 0 0 1px var(--color-gridline);
   pointer-events: none;
   z-index: 2;
+}
+
+/* Featured quote block — quote mark + quote, pinned to the top-left and
+   sitting above the gradient. */
+.featuredQuoteBlock {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 420px;
+}
+
+.featuredQuote {
+  color: #FFFFFF;
+  font-family: var(--font-sans);
+  font-size: 24px;
+  line-height: 1.4;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+@media (min-width: 1024px) {
+  .featuredQuote {
+    font-size: 28px;
+  }
+}
+
+/* Attribution pinned to the bottom-right corner of the photo tile, with
+   white text tuned for the dark gradient beneath it. */
+.featuredAttribution {
+  position: relative;
+  z-index: 2;
+  align-self: flex-end;
+}
+.featuredAttribution .attributionName {
+  color: #FFFFFF;
+}
+.featuredAttribution .attributionRole {
+  color: rgba(255, 255, 255, 0.72);
+}
+
+/* Quote-mark glyph — sized + coloured per placement. Light (near-white)
+   over the dark photo; accent-blue at 25% opacity on the white cards. */
+.quoteMarkLight {
+  width: 46px;
+  height: auto;
+  color: rgba(255, 255, 255, 0.92);
+}
+.quoteMarkAccent {
+  width: 42px;
+  height: auto;
+  color: rgba(0, 129, 172, 0.25);
+  margin-bottom: 24px;
 }
 
 /* Cut-out notch — the white page surface notched into the tile's
@@ -469,8 +561,6 @@
   padding: 40px;
   display: flex;
   flex-direction: column;
-  /* Same floating-panel drop shadow as the PageFrame card. */
-  box-shadow: var(--frame-shadow, none);
 }
 
 /* Quote copy — "Body large": 16px, stepping up to 20px at lg. */
@@ -533,6 +623,16 @@
 }
 
 /* ── Values card ──────────────────────────────────────────────────────── */
+/* Tighter vertical padding than the 96px statement cards. The values card
+   carries an image + author row (not a centred text statement), so the
+   author row should sit a balanced, symmetric distance from the card edge
+   — the testimonial/profile-card convention (Mobbin: Savee, SeatGeek).
+   Horizontal padding is left to the base .card rule. */
+.valuesCard {
+  padding-top: 48px;
+  padding-bottom: 48px;
+}
+
 .valuesImage {
   position: relative;
   width: 200px;

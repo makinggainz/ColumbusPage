@@ -3,15 +3,20 @@
 /**
  * Scroll-driven word-reveal statement.
  *
- * Each word fades from 0.15 → 1 opacity as the paragraph scrolls through
- * the viewport — the same mechanic the homepage `MissionScrollIntro`
- * ("We are building a thinking planet…") uses (Framer Motion
- * useScroll + per-word useTransform).
+ * As the paragraph scrolls through the viewport its words fill in one
+ * after another (the homepage `MissionScrollIntro` mechanic — Framer
+ * Motion useScroll + per-word useTransform), then — once it has been
+ * read at centre — they un-fill again as it scrolls away, so focus is
+ * handed to whatever statement fills in next.
  *
- * Typography matches that homepage component verbatim — the documented
- * 24 / 30 / 36px exception to the type scale, medium weight, tight
- * tracking — so the company page's mission + vision statements read as
- * the same editorial moment as the homepage.
+ * Lifecycle over the element's scroll journey (0 = entering from the
+ * bottom, 0.5 = exactly centred, 1 = leaving past the top):
+ *   0 → FILL_END           words fill in, one after another
+ *   FILL_END → UNFILL_START statement holds fully lit (brackets centre)
+ *   UNFILL_START → 1        words un-fill, one after another
+ *
+ * Typography matches the homepage component verbatim — the documented
+ * 24 / 30 / 36px exception to the type scale.
  */
 
 import {
@@ -23,54 +28,74 @@ import {
 } from "framer-motion";
 import { useRef } from "react";
 
+/* Opacity a word rests at before it has filled / after it has un-filled. */
+const DIM = 0.15;
+/* Word-fill completes by this point in the scroll journey — just before
+   the statement reaches centre, so it is fully lit while centred. */
+const FILL_END = 0.46;
+/* Un-fill begins here — just after centre. The statement therefore holds
+   fully lit across FILL_END…UNFILL_START, which brackets the 0.5 centre. */
+const UNFILL_START = 0.56;
+/* Width (in progress units) of a single word's fade ramp. */
+const RAMP = 0.14;
+
 export function ScrollRevealStatement({ text }: { text: string }) {
   const ref = useRef<HTMLParagraphElement>(null);
   const reduced = useReducedMotion();
   const { scrollYProgress } = useScroll({
     target: ref,
-    offset: ["start 0.85", "end 0.5"],
+    /* Symmetric offsets → progress 0.5 is the element exactly centred. */
+    offset: ["start 0.85", "end 0.15"],
   });
 
   const words = text.split(" ");
-  const windowSize = 2 / words.length;
+  const lastIndex = Math.max(1, words.length - 1);
 
   return (
     <p
       ref={ref}
       className="mx-auto max-w-3xl text-center text-2xl sm:text-3xl lg:text-4xl font-medium tracking-tight leading-snug text-ink"
     >
-      {words.map((word, i) => {
-        const start = Math.max(0, i / words.length - windowSize * 0.25);
-        const end = Math.min(1, start + windowSize);
-        return (
-          <Word
-            key={`${i}-${word}`}
-            word={word}
-            start={start}
-            end={end}
-            progress={scrollYProgress}
-            reduced={Boolean(reduced)}
-          />
-        );
-      })}
+      {words.map((word, i) => (
+        <Word
+          key={`${i}-${word}`}
+          word={word}
+          frac={i / lastIndex}
+          progress={scrollYProgress}
+          reduced={Boolean(reduced)}
+        />
+      ))}
     </p>
   );
 }
 
 function Word({
   word,
-  start,
-  end,
+  frac,
   progress,
   reduced,
 }: {
+  /** The word's text. */
   word: string;
-  start: number;
-  end: number;
+  /** 0…1 position of this word within the sentence. */
+  frac: number;
   progress: MotionValue<number>;
   reduced: boolean;
 }) {
-  const opacity = useTransform(progress, [start, end], [0.15, 1]);
+  // Fill ramps are spread across [0, FILL_END]; un-fill ramps across
+  // [UNFILL_START, 1] — both in word order, so the top of the paragraph
+  // (which enters/leaves the viewport first) fills and un-fills first.
+  const fillStart = frac * (FILL_END - RAMP);
+  const fillEnd = fillStart + RAMP;
+  const unfillStart = UNFILL_START + frac * (1 - RAMP - UNFILL_START);
+  const unfillEnd = unfillStart + RAMP;
+
+  const opacity = useTransform(
+    progress,
+    [fillStart, fillEnd, unfillStart, unfillEnd],
+    [DIM, 1, 1, DIM],
+  );
+
   return (
     <>
       <motion.span
