@@ -119,7 +119,7 @@ export default function CompanyPage() {
           mechanic. */}
       <section className="section">
         <div className={styles.bounds}>
-          <h2 className={`h2 mb-10 md:mb-20 ${styles.sectionLabel}`}>
+          <h2 className={`mb-4 md:mb-6 ${styles.sectionLabel}`}>
             Our Mission
           </h2>
           <ScrollRevealStatement text="To create intelligence to critically understand our planet better. Deep surveying of all earth. To create a computer brain, able to think across the vastness of our earth's data. To create the most powerful map platform." />
@@ -129,7 +129,7 @@ export default function CompanyPage() {
       {/* ════════ 3. OUR VISION ════════ */}
       <section className="section">
         <div className={styles.bounds}>
-          <h2 className={`h2 mb-10 md:mb-20 ${styles.sectionLabel}`}>
+          <h2 className={`mb-4 md:mb-6 ${styles.sectionLabel}`}>
             Our Vision
           </h2>
           <ScrollRevealStatement text="We believe maps, can lead to the journey to a Universal Geospatial Model. A thinking earth." />

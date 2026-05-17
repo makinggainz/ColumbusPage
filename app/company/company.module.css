@@ -104,13 +104,20 @@
 }
 
 /* ── Section heading helpers ──────────────────────────────────────────── */
-/* "OUR MISSION" / "OUR VISION" — uppercase Funnel Display label. */
+/* "OUR MISSION" / "OUR VISION" — small uppercase eyebrow / kicker sitting
+   just above the open statement, not a full-size heading. */
 .sectionLabel {
   text-transform: uppercase;
   text-align: center;
   color: var(--color-ink);
-  /* tracking-wider (0.05em) — the design-system token for emphasis labels. */
-  letter-spacing: 0.05em;
+  font-family: var(--font-sans);
+  /* 13px — type-scale step 8 (captions / card labels). */
+  font-size: 13px;
+  font-weight: 600;
+  /* tracking-widest (0.1em) — the design-system token for uppercase
+     micro-text. */
+  letter-spacing: 0.1em;
+  line-height: 1.5;
 }
 
 .sectionHeading {
@@ -516,9 +523,10 @@
 }
 .attributionRole {
   font-family: var(--font-sans);
-  /* p-m step — 14px. */
-  font-size: var(--typography--p-m);
-  line-height: var(--typography--p-m--line-height);
+  /* Matches the name size (h7 — 18px); the role is distinguished by
+     weight + muted colour, not by being smaller. */
+  font-size: var(--typography--h7);
+  line-height: 1.25;
   font-weight: 400;
   color: var(--color-muted);
   margin-top: 4px;
