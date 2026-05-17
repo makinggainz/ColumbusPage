@@ -145,27 +145,14 @@
   }
 }
 
-/* Statement copy — "Body large": 16px, stepping up to 20px at lg. */
-.cardText {
-  max-width: 600px;
-  color: var(--color-ink);
-  font-family: var(--font-sans);
-  font-size: 16px;
-  line-height: 1.5;
-  font-weight: 400;
-}
-@media (min-width: 1024px) {
-  .cardText {
-    font-size: 20px;
-  }
-}
-.cardText + .cardText {
-  margin-top: 32px;
+/* Centres "The timeline" link below the open vision statement. */
+.timelineWrap {
+  margin-top: 40px;
+  text-align: center;
 }
 
-/* "The timeline" inline link inside the vision card. */
+/* "The timeline" inline link below the vision statement. */
 .timelineLink {
-  margin-top: 32px;
   display: inline-flex;
   align-items: center;
   gap: 8px;

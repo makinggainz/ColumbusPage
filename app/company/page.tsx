@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Mail, Linkedin } from "lucide-react";
 
 import { MistxNav } from "@/components/layout/MistxNav";
+import { ScrollRevealStatement } from "@/components/company/ScrollRevealStatement";
 import styles from "./company.module.css";
 
 export const metadata: Metadata = {
@@ -112,20 +113,16 @@ export default function CompanyPage() {
         </div>
       </section>
 
-      {/* ════════ 2. OUR MISSION ════════ */}
+      {/* ════════ 2. OUR MISSION ════════
+          Option A — open statement (no card). The copy fills in
+          word-by-word on scroll, the homepage MissionScrollIntro
+          mechanic. */}
       <section className="section">
         <div className={styles.bounds}>
           <h2 className={`h2 mb-10 md:mb-20 ${styles.sectionLabel}`}>
             Our Mission
           </h2>
-          <div className={styles.card}>
-            <p className={styles.cardText}>
-              {"To create intelligence to critically understand our planet better. Deep surveying of all earth. To create a computer brain, able to think across the vastness of our earth's data."}
-            </p>
-            <p className={styles.cardText}>
-              To create the most powerful map platform.
-            </p>
-          </div>
+          <ScrollRevealStatement text="To create intelligence to critically understand our planet better. Deep surveying of all earth. To create a computer brain, able to think across the vastness of our earth's data. To create the most powerful map platform." />
         </div>
       </section>
 
@@ -135,11 +132,8 @@ export default function CompanyPage() {
           <h2 className={`h2 mb-10 md:mb-20 ${styles.sectionLabel}`}>
             Our Vision
           </h2>
-          <div className={styles.card}>
-            <p className={styles.cardText}>
-              We believe maps, can lead to the journey to a Universal
-              Geospatial Model. A thinking earth.
-            </p>
+          <ScrollRevealStatement text="We believe maps, can lead to the journey to a Universal Geospatial Model. A thinking earth." />
+          <div className={styles.timelineWrap}>
             <Link href="/research" className={`p-m ${styles.timelineLink}`}>
               The timeline
               <svg
