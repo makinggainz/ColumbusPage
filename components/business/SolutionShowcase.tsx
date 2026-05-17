@@ -64,10 +64,13 @@ export default function SolutionShowcase() {
           zIndex: 1,
         }}
       >
-        {/* Header row */}
+        {/* Header row — this block is the title of the merged B3·C section.
+            paddingTop is the section's top padding (--ent-section-lg);
+            paddingBottom is the heading→content gap to ComparisonSection
+            below (--ent-space-16), not a full section gap. */}
         <div
           className="flex flex-col items-center text-center px-6 md:px-10"
-          style={{ paddingTop: "var(--ent-section-lg)", paddingBottom: "var(--ent-section-lg)" }}
+          style={{ paddingTop: "var(--ent-section-lg)", paddingBottom: "var(--ent-space-16)" }}
         >
           <h2
             className="text-ink leading-[1.1] text-[28px] md:text-[36px] lg:text-[49px]"

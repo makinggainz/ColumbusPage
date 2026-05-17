@@ -32,7 +32,7 @@ export default function ComparisonSection() {
   return (
     <section
       ref={sectionRef}
-      className="relative w-full py-16 lg:py-24"
+      className="relative w-full pb-16 lg:pb-24"
       style={{ backgroundColor: "transparent" }}
     >
       <div

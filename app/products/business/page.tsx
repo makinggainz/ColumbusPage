@@ -90,10 +90,12 @@ export default function BusinessPage() {
           <SectionWithLabel label={sectionLabels[2]}>
             <ProblemCards />
           </SectionWithLabel>
-          <SectionWithLabel label={sectionLabels[3]}>
+          {/* B3 + C are one section: SolutionShowcase is the title/intro,
+              ComparisonSection is its content directly below. The gap
+              between them is a heading→content space (set on
+              SolutionShowcase's header padding), not a section gap. */}
+          <SectionWithLabel label={`${sectionLabels[3]} · ${sectionLabels[4]}`}>
             <SolutionShowcase />
-          </SectionWithLabel>
-          <SectionWithLabel label={sectionLabels[4]}>
             <ComparisonSection />
           </SectionWithLabel>
         </div>

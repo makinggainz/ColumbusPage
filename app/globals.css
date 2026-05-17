@@ -58,13 +58,35 @@ html,
 body {
   margin: 0;
   padding: 0;
-  /* White site backdrop behind the PageFrame card — the 30px gutter
-     around the frame reads as white on every route, at all scroll
-     positions. */
-  background-color: #FFFFFF;
   color: #1D1D1F;
   overflow-x: clip;
   min-height: 100%;
+}
+
+/* Site backdrop — painted on <html> (the canvas), NOT <body>: the
+   PageFrame card's 30px top margin collapses outward through <body>
+   (no padding/border; overflow-x: clip is not a block-formatting
+   context), which would shift a body background ~30px down. The root
+   background paints the canvas from the true top edge instead.
+   White base + a soft blue accent gradient in the experimentV6 hero's
+   style (rgba(0,102,204) fading top→transparent), top-anchored, one
+   viewport tall. background-attachment defaults to scroll, so it scrolls
+   away with the page. Visible through the 30px frame gutter. */
+html {
+  background-color: #FFFFFF;
+  background-image: linear-gradient(
+    to bottom,
+    rgba(0, 102, 204, 0.15) 0%,
+    rgba(0, 102, 204, 0.08) 60%,
+    transparent 100%
+  );
+  background-repeat: no-repeat;
+  background-size: 100% 100vh;
+}
+
+/* Transparent so the <html> canvas (white + gradient) shows through. */
+body {
+  background: transparent;
 }
 
 /* Footer reveal — once the user reaches the footer, PageFrame sets
@@ -366,7 +388,8 @@ html {
 
 /* Typography */
 body {
-  background: #0F173C;
+  /* Backdrop colour is owned by the `html, body` rule above (white) —
+     not re-set here, so there's a single source of truth. */
   color: var(--foreground);
   /* Opening Hours Sans is the project-wide body face. Everything that
      doesn't set its own font-family inherits it from here. Headings
