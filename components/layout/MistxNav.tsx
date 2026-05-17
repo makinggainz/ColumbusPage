@@ -36,7 +36,7 @@ const navLinks: { label: string; href: string }[] = [
   // Points at the Technology page — the LGM / research content lives there.
   { label: "Research", href: "/research" },
   { label: "Blog", href: "/blog" },
-  { label: "Company", href: "/mission" },
+  { label: "Company", href: "/company" },
 ];
 
 // "Try Elio" launcher items. Each row renders name + one-line
@@ -180,13 +180,13 @@ export function MistxNav({ heroWhite = false }: { heroWhite?: boolean } = {}) {
     >
       {/* Business hero-only backdrop. Sits behind the content row
           (z-0 vs the row's z-10). Tinted to the hero image's dominant
-          sky colour (#018ADE = rgb(1,138,222) — the same value the
-          BentoProducts Columbus tile uses for /ColumbusBackgroundbento
-          .png), so the navbar reads as a continuation of the sky. Fully
-          opaque at the top, fading to transparent (alpha 0) exactly at
-          the navbar's bottom border, so it blends into the real sky
-          below with no hard edge. Driven by opacity so it cross-fades
-          with the solid-white backdrop as the hero scrolls out. */}
+          sky colour (#0063C7 = rgb(0,99,199) — sampled from the top of
+          /businessback3.png, the current BusinessHero background), so the
+          navbar reads as a continuation of the sky. Fully opaque at the
+          top, fading to transparent (alpha 0) exactly at the navbar's
+          bottom border, so it blends into the real sky below with no
+          hard edge. Driven by opacity so it cross-fades with the
+          solid-white backdrop as the hero scrolls out. */}
       {heroWhite && (
         <div
           aria-hidden
@@ -196,7 +196,7 @@ export function MistxNav({ heroWhite = false }: { heroWhite?: boolean } = {}) {
             borderTopLeftRadius: "var(--frame-radius, 20px)",
             borderTopRightRadius: "var(--frame-radius, 20px)",
             background:
-              "linear-gradient(to bottom, rgba(1,138,222,1) 0%, rgba(1,138,222,0.55) 50%, rgba(1,138,222,0) 100%)",
+              "linear-gradient(to bottom, rgba(0,99,199,1) 0%, rgba(0,99,199,0.55) 50%, rgba(0,99,199,0) 100%)",
             opacity: heroScrim ? 1 : 0,
             transition: "opacity 300ms ease",
           }}

@@ -1,7 +1,7 @@
 # /technology Page — Typography & Design System
 
 > This document governs the technology page (`/technology`) only.
-> It is modeled directly on the Mission page (`app/mission/page.tsx`), which is the canonical reference for the brand's current visual direction.
+> It is modeled directly on the Mission page (`app/company/page.tsx`), which is the canonical reference for the brand's current visual direction.
 > Other pages: `mission/` (handcrafted, ungoverned), `products/business` → `business-page.md`, `/products` → `products-page.md`.
 
 ---

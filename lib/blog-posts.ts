@@ -45,7 +45,7 @@ export const BLOG_POSTS: BlogPost[] = [
     title: "Earth recipes",
     date: "Apr 2026",
     publishedAt: "2026-04-01",
-    image: "/TechnologyPageImages/unkown-layers.jpeg",
+    image: "/blog-mountain-fog.jpg",
     category: "ENGINEERING",
     description: "How we compose geospatial signals into trainable recipes for the LGM.",
     paragraphs: [
@@ -58,7 +58,7 @@ export const BLOG_POSTS: BlogPost[] = [
     title: "Philosophy behind a Universal Geospatial Model",
     date: "Mar 2026",
     publishedAt: "2026-03-01",
-    image: "/TechnologyPageImages/multieWaveEminations.jpeg",
+    image: "/ColumbusBackgroundbento.png",
     category: "COMPANY NEWS",
     description: "Why we believe maps are the path toward a universal model of the planet.",
     paragraphs: [
@@ -71,7 +71,7 @@ export const BLOG_POSTS: BlogPost[] = [
     title: "Mimicking the adult brain",
     date: "Feb 2026",
     publishedAt: "2026-02-01",
-    image: "/TechnologyPageImages/deep-layers.jpeg",
+    image: "/blog-misty-forest.jpg",
     category: "ENGINEERING",
     description: "Analogies between spatial cognition and model architecture choices.",
     paragraphs: [
@@ -84,6 +84,7 @@ export const BLOG_POSTS: BlogPost[] = [
     title: "MapsGPT Version 2.5: architecture improvements",
     date: "Apr 2026",
     publishedAt: "2026-04-08",
+    image: "/businessback3.png",
     category: "PRODUCT",
     description: "Release notes focused on reliability, latency, and map fidelity.",
     paragraphs: [
@@ -96,7 +97,7 @@ export const BLOG_POSTS: BlogPost[] = [
     title: "Research paper: Erick fire prediction",
     date: "Mar 2026",
     publishedAt: "2026-03-15",
-    image: "/TechnologyPageImages/techpg-radiance.png",
+    image: "/blog-still-lake.jpg",
     category: "ENGINEERING",
     description: "Building a fire-risk signal from heterogeneous environmental inputs.",
     paragraphs: [
@@ -109,6 +110,7 @@ export const BLOG_POSTS: BlogPost[] = [
     title: "MapsGPT: building a consumer product",
     date: "Feb 2026",
     publishedAt: "2026-02-12",
+    image: "/businessback3.png",
     category: "PRODUCT",
     description: "Product decisions that keep spatial intelligence approachable.",
     paragraphs: [
@@ -120,6 +122,7 @@ export const BLOG_POSTS: BlogPost[] = [
     title: "Why LLMs do not cut it for geospatial queries",
     date: "Jan 2026",
     publishedAt: "2026-01-10",
+    image: "/blog-moonlit-peaks.jpg",
     category: "ENGINEERING",
     description: "Architectural gaps when text-first models face coordinates and maps.",
     paragraphs: [
@@ -132,6 +135,7 @@ export const BLOG_POSTS: BlogPost[] = [
     title: "Generative geospatial layers",
     date: "Dec 2025",
     publishedAt: "2025-12-01",
+    image: "/blog-himalaya.jpg",
     category: "ENGINEERING",
     description: "Notes on learned layers that augment basemaps and feature stores.",
     paragraphs: [
@@ -143,6 +147,7 @@ export const BLOG_POSTS: BlogPost[] = [
     title: "Founding large geospatial models: an in-depth primer",
     date: "Nov 2025",
     publishedAt: "2025-11-01",
+    image: "/ColumbusBackgroundbento.png",
     category: "COMPANY NEWS",
     description: "From first principles to the Columbus Earth research stack.",
     paragraphs: [
@@ -154,6 +159,7 @@ export const BLOG_POSTS: BlogPost[] = [
     title: "Drawbacks of LLMs and vision models—and how the LGM innovates",
     date: "Oct 2025",
     publishedAt: "2025-10-01",
+    image: "/blog-mountain-fog.jpg",
     category: "ENGINEERING",
     description: "A concise comparison across inputs, outputs, and evaluation.",
     paragraphs: [
@@ -166,6 +172,7 @@ export const BLOG_POSTS: BlogPost[] = [
     title: "Our game plan toward UGM",
     date: "Sep 2025",
     publishedAt: "2025-09-01",
+    image: "/blog-clouds-dawn.jpg",
     category: "COMPANY NEWS",
     description: "Milestones from generalist LGM to a universal geospatial model.",
     paragraphs: [
@@ -177,6 +184,7 @@ export const BLOG_POSTS: BlogPost[] = [
     title: "Generalist LGM: research paper companion",
     date: "Aug 2025",
     publishedAt: "2025-08-01",
+    image: "/blog-misty-forest.jpg",
     category: "ENGINEERING",
     description: "Context for the timeline milestone and what shipped in the lab.",
     paragraphs: [
@@ -188,6 +196,7 @@ export const BLOG_POSTS: BlogPost[] = [
     title: "Mapping the unknown with Gen Layers",
     date: "Jul 2025",
     publishedAt: "2025-07-01",
+    image: "/blog-moonlit-peaks.jpg",
     category: "ENGINEERING",
     description: "Exploration workflows when base coverage is thin or uneven.",
     paragraphs: [
@@ -199,6 +208,7 @@ export const BLOG_POSTS: BlogPost[] = [
     title: "Deep spatial reasoning at scale",
     date: "Jun 2025",
     publishedAt: "2025-06-01",
+    image: "/blog-himalaya.jpg",
     category: "ENGINEERING",
     description: "Throughput, tiling, and memory when reasoning spans large extents.",
     paragraphs: [

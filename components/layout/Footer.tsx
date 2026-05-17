@@ -13,10 +13,12 @@ export type FooterProps = {
    *  it wins over the theme-derived default (e.g., pass `#000000` to
    *  match the homepage footer background image). */
   bg?: string;
-  /** Optional full-bleed background image for the footer. When set, the
-   *  image is layered under a top-down gradient that fades from the
-   *  solid `bg` colour at the top into the image lower down, so the
-   *  footer reveals as a fade into that colour. */
+  /** Optional full-bleed background image for the footer.
+   *  - On a `dark` theme it is layered under a top-down gradient that
+   *    fades from the solid `bg` colour at the top into the image lower
+   *    down, so the footer reveals as a fade into that colour.
+   *  - On a light theme it is rendered as a dimmed, top/bottom-masked
+   *    watermark — the same treatment used behind the blog page hero. */
   bgImage?: string;
 };
 
@@ -93,7 +95,7 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false, t
         // footer reveals as a fade into the bgColor and the image reads
         // through lower down. bgColor is also set as the base color so
         // any area the cover image doesn't reach stays on-tone.
-        ...(bgImage
+        ...(bgImage && theme === "dark"
           ? {
               backgroundColor: bgColor,
               backgroundImage: `linear-gradient(to bottom, ${bgColor} 0%, rgba(0,0,0,0.55) 30%, rgba(0,0,0,0) 62%), url("${bgImage}")`,
@@ -151,6 +153,28 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false, t
             style={{
               background:
                 "linear-gradient(180deg, rgba(10,34,57,0.82) 0%, rgba(10,34,57,0.72) 30%, rgba(10,34,57,0.62) 60%, rgba(10,34,57,0.72) 100%)",
+            }}
+          />
+        </div>
+      )}
+
+      {/* Watermark backdrop — light themes only. Renders `bgImage` with the
+          same dimmed, top/bottom-masked treatment used behind the blog page
+          hero, so the footer reads as that image fading into a white field. */}
+      {theme !== "dark" && bgImage && (
+        <div aria-hidden className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
+          <div
+            className="absolute inset-0"
+            style={{
+              backgroundImage: `url("${bgImage}")`,
+              backgroundRepeat: "no-repeat",
+              backgroundPosition: "center",
+              backgroundSize: "120% 100%",
+              opacity: 0.45,
+              WebkitMaskImage:
+                "linear-gradient(to bottom, transparent 0%, #000 22%, #000 80%, transparent 100%)",
+              maskImage:
+                "linear-gradient(to bottom, transparent 0%, #000 22%, #000 80%, transparent 100%)",
             }}
           />
         </div>
@@ -280,8 +304,8 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false, t
                   { label: "Blog", href: "/blog" },
                 ]} />,
                 <FooterColumn key="company" theme={theme} title="Company" links={[
-                  { label: "Our mission", href: "/mission" },
-                  { label: "Our vision", href: "/mission" },
+                  { label: "Our mission", href: "/company" },
+                  { label: "Our vision", href: "/company" },
                   { label: "Blog", href: "/blog" },
                 ]} />,
               ].map((col, i) => (

@@ -1,0 +1,604 @@
+/* Company page — built on the homepage / blog visual language:
+   #FFFFFF surface, Funnel Display headings, hairline cards
+   (1px var(--color-gridline)), 1287px content bounds, and the blog
+   page's navbar-overlay hero treatment with a masked watermark.
+
+   Spacing: every padding / gap / margin below is a 4px-grid value from
+   the design-system scale (12 / 16 / 20 / 24 / 32 / 40 / 48 / 64 / 96). */
+
+.page {
+  position: relative;
+  background: #FFFFFF;
+  color: var(--color-ink);
+}
+
+/* ── Hero ──────────────────────────────────────────────────────────────
+   Full-viewport hero, identical structure to the blog index hero: pulled
+   up behind the sticky navbar (margin-top: -80px) and given back the
+   80px so it spans exactly one screen. Content is flex-centred. */
+.hero {
+  position: relative;
+  overflow: hidden;
+  margin-top: -80px;
+  /* +80px cancels the -80px navbar pull so the hero fills exactly one
+     viewport. dvh tracks mobile browser chrome; vh is the fallback. */
+  min-height: calc(100vh + 80px);
+  min-height: calc(100dvh + 80px);
+  padding: 80px 24px 48px;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  background: #FFFFFF;
+}
+
+/* companyhero watermark — the tall-ship-and-globe sketch, dimmed and
+   top/bottom-masked so it melts into the white page exactly like the
+   minimalistCity watermark on the blog + homepage heroes. */
+.heroWatermark {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: url("/companyhero.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 20%, #000 80%, transparent 100%);
+  mask-image: linear-gradient(to bottom, transparent 0%, #000 20%, #000 80%, transparent 100%);
+}
+
+.heroInner {
+  position: relative;
+  z-index: 1;
+  /* Grows to fill the space below the navbar, centring the title block. */
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+.heroHeadline {
+  color: var(--color-ink);
+  margin: 0;
+}
+
+/* Hero subtitle — "Body large" per the type scale: 16px, stepping up to
+   20px at the lg breakpoint. Heading→subtitle gap follows the design-
+   system rule: 24px mobile / 48px desktop. */
+.heroLead {
+  margin: 24px auto 0;
+  max-width: 600px;
+  color: var(--color-muted);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.5;
+  font-weight: 400;
+}
+@media (min-width: 768px) {
+  .heroLead {
+    margin-top: 48px;
+  }
+}
+@media (min-width: 1024px) {
+  .heroLead {
+    font-size: 20px;
+  }
+}
+
+/* ── Content bounds — 1287px column, matching the homepage + blog. ────── */
+.bounds {
+  max-width: 1287px;
+  margin-left: 20px;
+  margin-right: 20px;
+  box-sizing: border-box;
+}
+@media (min-width: 768px) {
+  .bounds {
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+/* ── Section heading helpers ──────────────────────────────────────────── */
+/* "OUR MISSION" / "OUR VISION" — uppercase Funnel Display label. */
+.sectionLabel {
+  text-transform: uppercase;
+  text-align: center;
+  color: var(--color-ink);
+  /* tracking-wider (0.05em) — the design-system token for emphasis labels. */
+  letter-spacing: 0.05em;
+}
+
+.sectionHeading {
+  text-align: center;
+  color: var(--color-ink);
+}
+
+/* ── Hairline statement card — the shared container for the mission,
+   vision, values and contact blocks. Capped at a readable max-width
+   (≈816px) and centred, so it never spans the full 1287px bounds; the
+   max-width keeps it fluid down every breakpoint. ─────────────────────── */
+.card {
+  max-width: 816px;
+  margin-left: auto;
+  margin-right: auto;
+  border: 1px solid var(--color-gridline);
+  /* 13px — the card corner radius shared by the homepage BentoProducts
+     tiles and the /blog index media tiles. */
+  border-radius: 13px;
+  background: #FFFFFF;
+  /* Same floating-panel drop shadow as the PageFrame card. */
+  box-shadow: var(--frame-shadow, none);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 96px 32px;
+}
+@media (max-width: 768px) {
+  .card {
+    padding: 48px 24px;
+  }
+}
+
+/* Statement copy — "Body large": 16px, stepping up to 20px at lg. */
+.cardText {
+  max-width: 600px;
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.5;
+  font-weight: 400;
+}
+@media (min-width: 1024px) {
+  .cardText {
+    font-size: 20px;
+  }
+}
+.cardText + .cardText {
+  margin-top: 32px;
+}
+
+/* "The timeline" inline link inside the vision card. */
+.timelineLink {
+  margin-top: 32px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  color: var(--color-ink);
+  transition: color 200ms ease;
+}
+.timelineLink:hover {
+  color: #0081AC;
+}
+
+/* ── "Read more" card grid — ported from the homepage BlogSection
+   (featured card + 3 small, blurred-image background, hover swap). ────── */
+.cardGrid {
+  display: flex;
+  gap: 16px;
+  align-items: stretch;
+  justify-content: flex-start;
+}
+
+.postCard {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  flex: 1.5 1 0;
+  min-width: 0;
+  max-width: 280px;
+  min-height: 320px;
+  padding: 20px;
+  border-radius: 13px;
+  overflow: hidden;
+  text-decoration: none;
+  color: var(--color-ink);
+  cursor: pointer;
+  transition: flex-grow 420ms cubic-bezier(0.4, 0, 0.2, 1),
+              max-width 420ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Blurred image layer beneath the title — extends past the card edges
+   so the blur's soft fade is clipped away by the card's overflow. */
+.postCard::before {
+  content: "";
+  position: absolute;
+  inset: -16px;
+  background-image: var(--card-bg);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  filter: blur(2px);
+  z-index: 0;
+  transition: filter 300ms ease;
+}
+
+/* Glassy backdrop layer that pushes the imagery further behind the title. */
+.postCard::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  -webkit-backdrop-filter: blur(16px) saturate(1.1);
+  backdrop-filter: blur(16px) saturate(1.1);
+  z-index: 0;
+}
+
+.postCard > * {
+  position: relative;
+  z-index: 1;
+}
+
+.postCardFeatured::before,
+.postCard:hover::before {
+  filter: blur(10px);
+}
+
+.cardGrid:has(.postCard:not(.postCardFeatured):hover) .postCardFeatured::before {
+  filter: blur(2px);
+}
+
+.postCard:hover {
+  color: #0A1344;
+}
+.postCard:hover .postCardTitle {
+  color: #0081AC;
+}
+
+.postCardTitle {
+  letter-spacing: -0.01em;
+  color: var(--color-ink);
+  max-width: 18ch;
+  text-wrap: balance;
+  transition: color 300ms ease, max-width 420ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.postCardFeatured .postCardTitle,
+.postCard:not(.postCardFeatured):hover .postCardTitle {
+  max-width: 32ch;
+}
+
+.cardGrid:has(.postCard:not(.postCardFeatured):hover) .postCardFeatured .postCardTitle {
+  max-width: 18ch;
+}
+
+.postCardFeatured {
+  flex: 3.2 1 0;
+  max-width: 880px;
+}
+
+.postCard:not(.postCardFeatured):hover {
+  flex: 3.2 1 0;
+  max-width: 880px;
+}
+
+.cardGrid:has(.postCard:not(.postCardFeatured):hover) .postCardFeatured {
+  flex: 1.5 1 0;
+  max-width: 280px;
+}
+
+/* Flex spacer pushes the title to the bottom of the active card. */
+.postCardSpacer {
+  flex-grow: 0;
+  transition: flex-grow 420ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+.postCardFeatured .postCardSpacer,
+.postCard:not(.postCardFeatured):hover .postCardSpacer {
+  flex-grow: 1;
+}
+.cardGrid:has(.postCard:not(.postCardFeatured):hover) .postCardFeatured .postCardSpacer {
+  flex-grow: 0;
+}
+
+/* Dot-arrow glyph — visible only on the active card. */
+.postCardArrow {
+  position: absolute;
+  bottom: 18px;
+  right: 18px;
+  z-index: 1;
+  color: #0081AC;
+  opacity: 0;
+  transition: transform 300ms ease, opacity 300ms ease;
+}
+.postCardFeatured .postCardArrow {
+  opacity: 1;
+}
+.postCard:not(.postCardFeatured):hover .postCardArrow {
+  opacity: 1;
+  transform: translateX(2px);
+}
+.cardGrid:has(.postCard:not(.postCardFeatured):hover) .postCardFeatured .postCardArrow {
+  opacity: 0;
+}
+
+@media (max-width: 900px) {
+  .cardGrid {
+    flex-wrap: wrap;
+  }
+  .postCard {
+    flex: 1 1 calc(50% - 8px);
+    max-width: none;
+  }
+  .postCardFeatured {
+    flex: 1 1 100%;
+    max-width: none;
+  }
+}
+@media (max-width: 600px) {
+  .postCard,
+  .postCardFeatured {
+    flex: 1 1 100%;
+  }
+}
+
+/* ── Founders quote section — a bento grid: a tall photo tile on the left
+   (using the homepage BentoProducts notch-card pattern) and two stacked
+   quote cards on the right whose combined height matches the photo. ──── */
+.foundersGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  align-items: stretch;
+}
+@media (min-width: 1024px) {
+  .foundersGrid {
+    gap: 20px;
+  }
+}
+@media (max-width: 768px) {
+  .foundersGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Photo tile — 13px corners + hairline ring + top-right cut-out notch,
+   the exact card language of the homepage BentoProducts tiles. */
+.founderPhoto {
+  position: relative;
+  overflow: hidden;
+  border-radius: 13px;
+  background: #ECEFF3;
+  min-height: 320px;
+  /* Same floating-panel drop shadow as the PageFrame card. */
+  box-shadow: var(--frame-shadow, none);
+}
+@media (min-width: 768px) {
+  .founderPhoto {
+    height: 692px;
+  }
+}
+.founderPhoto img {
+  object-fit: cover;
+}
+
+/* Hairline ring — inset box-shadow (not a CSS border) so the notch +
+   fillets can sit on top of it. */
+.founderPhoto::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 13px;
+  box-shadow: inset 0 0 0 1px var(--color-gridline);
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Cut-out notch — the white page surface notched into the tile's
+   top-right corner, carrying the "Our CEO" label. Geometry + fillet
+   technique ported verbatim from BentoProducts. */
+.photoNotch {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 3;
+  box-sizing: border-box;
+  height: 46px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 28px;
+  background-color: #FFFFFF;
+  /* TL TR BR BL — TR matches the card corner; BL is the concave cut. */
+  border-radius: 0 13px 0 13px;
+  border-left: 1px solid var(--color-gridline);
+  border-bottom: 1px solid var(--color-gridline);
+}
+@media (min-width: 1024px) {
+  .photoNotch {
+    height: 53px;
+    padding: 0 40px;
+  }
+}
+
+/* Corner fillets — ease the notch's straight edges into the card edge on
+   a 13px convex arc, carrying the hairline around that arc. */
+.photoNotch::before,
+.photoNotch::after {
+  content: "";
+  position: absolute;
+  width: 13px;
+  height: 13px;
+  background: radial-gradient(
+    circle at left bottom,
+    rgba(255, 255, 255, 0) 11.5px,
+    #E7E7F1 12.25px,
+    #E7E7F1 12.75px,
+    #FFFFFF 13.5px
+  );
+}
+.photoNotch::before {
+  top: 0;
+  left: -13px;
+}
+.photoNotch::after {
+  bottom: -13px;
+  right: 0;
+}
+
+.photoNotchLabel {
+  font-size: 16px;
+  line-height: 1;
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  white-space: nowrap;
+  color: #0081AC;
+}
+@media (min-width: 992px) {
+  .photoNotchLabel {
+    font-size: 18px;
+  }
+}
+
+.quoteCol {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+@media (min-width: 1024px) {
+  .quoteCol {
+    gap: 20px;
+  }
+}
+
+.quoteCard {
+  flex: 1;
+  border: 1px solid var(--color-gridline);
+  border-radius: 13px;
+  background: #FFFFFF;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  /* Same floating-panel drop shadow as the PageFrame card. */
+  box-shadow: var(--frame-shadow, none);
+}
+
+/* Quote copy — "Body large": 16px, stepping up to 20px at lg. */
+.quoteText {
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.5;
+  font-weight: 400;
+}
+@media (min-width: 1024px) {
+  .quoteText {
+    font-size: 20px;
+  }
+}
+
+.quoteSpacer {
+  flex: 1 1 auto;
+  min-height: 32px;
+}
+
+/* Avatar + name + role row — shared by the founder quote cards and the
+   values card attribution. */
+.attribution {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.avatar {
+  position: relative;
+  width: 64px;
+  height: 64px;
+  border-radius: 9999px;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: #ECEFF3;
+}
+.avatar img {
+  object-fit: cover;
+}
+
+.attributionName {
+  font-family: var(--font-sans);
+  /* h7 step — 18px. */
+  font-size: var(--typography--h7);
+  line-height: 1.25;
+  font-weight: 500;
+  color: var(--color-ink);
+}
+.attributionRole {
+  font-family: var(--font-sans);
+  /* p-m step — 14px. */
+  font-size: var(--typography--p-m);
+  line-height: var(--typography--p-m--line-height);
+  font-weight: 400;
+  color: var(--color-muted);
+  margin-top: 4px;
+}
+
+/* ── Values card ──────────────────────────────────────────────────────── */
+.valuesImage {
+  position: relative;
+  width: 200px;
+  height: 128px;
+  border-radius: 13px;
+  overflow: hidden;
+  margin-bottom: 40px;
+  background: #ECEFF3;
+}
+.valuesImage img {
+  object-fit: cover;
+}
+
+/* ── Contact CTA ──────────────────────────────────────────────────────────
+   Layered "art-style" row, per the design mockup: the two social icon
+   circles lap over each other and over the leading edge of the
+   "Contact Page" link. The circles are translucent so the text still
+   reads through the overlap. */
+.contactText {
+  max-width: 620px;
+  color: var(--color-ink);
+}
+
+.contactActions {
+  margin-top: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.iconCircle {
+  position: relative;
+  z-index: 1;
+  width: 40px;
+  height: 40px;
+  border-radius: 9999px;
+  background: rgba(11, 27, 43, 0.10);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-ink);
+  transition: background-color 200ms ease, color 200ms ease;
+}
+/* Each subsequent circle laps over the previous one. */
+.iconCircle + .iconCircle {
+  margin-left: -16px;
+}
+.iconCircle:hover {
+  background: rgba(11, 27, 43, 0.16);
+  color: #0081AC;
+}
+
+/* "Contact Page" — plain display-type link whose leading edge tucks
+   beneath the icon circles for the overlapping composition. */
+.contactCta {
+  margin-left: -18px;
+  color: var(--color-ink);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color 200ms ease;
+}
+.contactCta:hover {
+  color: #0081AC;
+}

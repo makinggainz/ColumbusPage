@@ -47,7 +47,7 @@
 - **Standard pages:** appear once the hero CTA element (`#hero-cta`) scrolls out of the viewport (observed via `IntersectionObserver`).
 - **Products page:** appear once `bgTriggerPassed` is true AND the hero scroll transition is not active (`!inHeroTransition || bgTriggerPassed`).
 - Animate in via `clip-path: inset(0 0% 0 0)` → `inset(0 100% 0 0)` + opacity fade (400ms spring).
-- Links shown: **Products** (`/products/business`), **Research** (`/technology`), **Use Cases** (`/columbus-solutions` — opens a hover dropdown with two cards: Columbus Pro Business Use-Cases → `/columbus-solutions`, Research Applications → `/research-applications`), **Company** (`/mission`).
+- Links shown: **Products** (`/products/business`), **Research** (`/technology`), **Use Cases** (`/columbus-solutions` — opens a hover dropdown with two cards: Columbus Pro Business Use-Cases → `/columbus-solutions`, Research Applications → `/research-applications`), **Company** (`/company`).
 - The Use Cases link mirrors the Products dropdown pattern (chevron only — no hover/active underline) but renders a different overlay: an empty bordered card for Columbus Pro Business Use-Cases and a bordered card containing an inline globe SVG for Research Applications. Plain text labels sit below each card — no subtitles. The overlay is positioned absolutely over the products card grid and crossfades when `hoverKind === "use-cases"`.
 - **Underline behaviour:** the hover/active underline (animated `width 0 → 100%` line below the label) renders only on **Research** and **Company**. Products and Use Cases intentionally have no underline — they rely on the chevron flip alone to indicate their dropdown state.
 - On the products page, link text uses `glassStyles.glassTextStatic` for the frosted glass look.
@@ -75,7 +75,7 @@
 - Sits to the right of the logo image inside the left-side `<Link href="/">`.
 - **Hidden** (opacity 0) on mobile (`< 900px`) on all pages **except**:
   - `/` (homepage)
-  - `/mission`
+  - `/company`
   - `/contact` (contact us)
 - On desktop, hidden while the CTA is visible (nav links phase) so the wordmark and CTA don't compete for space.
 - On the products page, uses `glassStyles.glassTextStatic` for the frosted glass text effect.
@@ -182,13 +182,13 @@ The navbar adapts its behaviour per page via props, pathname checks, and DOM mar
 |------|-------|-------|--------------------|-------------------|-------------------|
 | `/` (homepage) | `<Navbar />` | light | **Visible** | Hero CTA (`#hero-cta`) scrolls out of viewport | Standard behaviour — frosted glass appears on compact scroll |
 | `/products` | `<Navbar wide />` | light (glass) | **Hidden** | `[data-navbar-bg-trigger]` passes viewport top + hero transition complete | Glass CTA button, glass wordmark text, hero-transition tracking hides links/CTA mid-scroll, `hasScrolled` forced true after 1700ms entrance animation, hamburger always visible with 12px left margin from CTA |
-| `/mission` | `<Navbar theme="dark" />` | dark | **Visible** | Immediate (no hero CTA) | Dark frosted glass, inverted logo via `brightness(0) invert(1)` |
+| `/company` | `<Navbar theme="dark" />` | dark | **Visible** | Immediate (no hero CTA) | Dark frosted glass, inverted logo via `brightness(0) invert(1)` |
 | `/contact` | `<Navbar />` | light | **Visible** | Immediate (no hero CTA) | Standard behaviour |
 | `/business` | `<Navbar theme="light" />` | light | **Hidden** | Immediate (no hero CTA) | Standard light navbar — hero background is `#E8EEF8` |
 | `/maps-gpt` | `<Navbar theme="dark" />` | dark | **Hidden** | Immediate (no hero CTA) | Dark frosted glass |
 | `/columbus-solutions` | `<Navbar theme={navTheme} />` | dynamic | **Hidden** | Immediate (no hero CTA) | See **Use-Cases-Specific Behaviour** section below |
 | `/research-applications` | `<Navbar theme={navTheme} />` | dynamic | **Hidden** | Immediate (no hero CTA) | See **Use-Cases-Specific Behaviour** section below |
-| `/mission` | `<Navbar />` | light | **Hidden** | Immediate (no hero CTA) | Standard behaviour |
+| `/company` | `<Navbar />` | light | **Hidden** | Immediate (no hero CTA) | Standard behaviour |
 | `/market-spy` | `<Navbar />` | light | **Hidden** | Immediate (no hero CTA) | Standard behaviour |
 | `/blog` (index) | `<Navbar />` | light | **Visible** | Immediate (no hero CTA) | Standard navbar — full nav links, Start Now CTA, and hamburger render normally. |
 | `/blog/<slug>` | **No `<Navbar />`** | n/a | n/a | n/a | **The article page does not render the Navbar at all.** The Columbus home link, "← All posts" back link, article section index, and the `<AccessibilityMenu />` all live inside the floating left-side dock ([components/blog/BlogArticleStickyNav.tsx](../components/blog/BlogArticleStickyNav.tsx)) which replaces the navbar entirely. The dock recedes at rest and expands on hover/focus-within. |
@@ -213,7 +213,7 @@ The `/columbus-solutions` and `/research-applications` pages share the same navb
 - **`logoHovered`** — Local navbar state. Set to `true` when the logo `<Link>` receives `mouseenter` while `isBlogArticle` is true; reset to `false` on `mouseleave`. Drives the wordmark wrapper's `max-width` and the inner span's `opacity` + `translateX`.
 - **`isProductsPage`** — `pathname === "/mapsgpt"`. Controls: glass CTA style, `bgTriggerPassed` bg logic, Start Now text colour (always black), hero-transition tracking.
 - **`isUseCasesPage`** — `pathname === "/use-cases"`. Controls: immediate navbar visibility, CTA light/dark variants, nav link theme-aware colouring, dark-aware dropdown (logo, wordmark, arrows stay white when menu opens on dark sections).
-- **`showWordmarkOnMobile`** — `pathname === "/" || "/mission" || "/contact"`. Controls: wordmark opacity on mobile.
+- **`showWordmarkOnMobile`** — `pathname === "/" || "/company" || "/contact"`. Controls: wordmark opacity on mobile.
 - **`wide`** — Prop. Controls: glass text effects (`glassTextStatic`), wider max-width (1408px vs 1287px), hero-outer scroll tracking, `[data-navbar-bg-trigger]` usage, hamburger always showing on desktop.
 
 ### DOM markers by page
@@ -261,7 +261,7 @@ Each route has a pool of 2–3 unique quotes that are randomly selected per navi
 
 When adding a new page to the site, decide:
 
-1. Should the **Columbus Earth wordmark** be visible on mobile? If yes, add the pathname to the allowlist in `Navbar.tsx` (currently: `/`, `/mission`, `/contact`).
+1. Should the **Columbus Earth wordmark** be visible on mobile? If yes, add the pathname to the allowlist in `Navbar.tsx` (currently: `/`, `/company`, `/contact`).
 2. Does the page have a **hero CTA** (`id="hero-cta"`)? If yes, nav links will auto-appear once it scrolls out — no extra work needed.
 3. Does the page need the **products glass navbar** (`wide` mode)? Only `/products` uses this. Do not apply `wide` to other pages.
 4. Does the page need a **`[data-navbar-bg-trigger]`** element? Only needed on pages using `wide` mode.

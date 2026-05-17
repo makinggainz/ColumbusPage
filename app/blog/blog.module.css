@@ -1,6 +1,6 @@
-/* Typography uses the catcherX scale (.h*/.p-*) from app/globals.css.
+/* Typography uses the catcherX scale (.h-x / .p-x) from app/globals.css.
    These camelCase class names are kept for backwards-compat with blog
-   templates; each maps to the nearest h*/p-* step. */
+   templates; each maps to the nearest h-x / p-x step. */
 
 .headlineLarge {
   font-family: var(--font-sans);

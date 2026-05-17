@@ -48,9 +48,9 @@ export default function RootLayout({
               slides up over the fixed footer — revealing it from below. */}
           <Footer
             reveal
-            theme="dark"
-            bg="#000000"
-            bgImage="/footerbackground.jpeg"
+            theme="light"
+            bg="#FFFFFF"
+            bgImage="/minimalistCity.png"
           />
           <PageFrame>{children}</PageFrame>
         </LenisProvider>

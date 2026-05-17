@@ -12,7 +12,9 @@ const nextConfig: NextConfig = {
       { source: "/products/enterprise", destination: "/products/business", permanent: true },
       { source: "/mapsgpt",     destination: "/products/mapsgpt",    permanent: true },
       { source: "/maps-gpt",    destination: "/products/maps-gpt",   permanent: true },
-      { source: "/our-mission", destination: "/mission",             permanent: true },
+      // The Company page was formerly routed at /mission (and earlier /our-mission).
+      { source: "/our-mission", destination: "/company",             permanent: true },
+      { source: "/mission",     destination: "/company",             permanent: true },
     ];
   },
   images: {

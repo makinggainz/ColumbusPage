@@ -34,6 +34,10 @@ import { useEffect, type ReactNode } from "react";
 const SCROLL_RANGE = 150;
 const MAX_MARGIN = 30;
 const MAX_RADIUS = 20;
+/* Frame border thickness — a thin 2px accent hairline on the inset
+   (rounded card) state that fades out to 0 as the card expands to
+   full-bleed, so no border frames the page once it fills the screen. */
+const MIN_BORDER = 2;
 
 export function PageFrame({ children }: { children: ReactNode }) {
   useEffect(() => {
@@ -87,8 +91,15 @@ export function PageFrame({ children }: { children: ReactNode }) {
       const t = Math.max(1 - topProgress, bottomProgress);
       const margin = MAX_MARGIN * t;
       const radius = MAX_RADIUS * t;
+      // Border tracks t: a thin MIN_BORDER hairline while inset, fading
+      // to 0 at full-bleed so no border frames the page full-screen.
+      const borderWidth = MIN_BORDER * t;
       document.documentElement.style.setProperty("--frame-margin", `${margin}px`);
       document.documentElement.style.setProperty("--frame-radius", `${radius}px`);
+      document.documentElement.style.setProperty(
+        "--frame-border-width",
+        `${borderWidth}px`,
+      );
 
       // Footer-reached: flips true once the user scrolls ~halfway into the
       // footer reveal range, and false again only below ~38% (hysteresis
@@ -136,10 +147,14 @@ export function PageFrame({ children }: { children: ReactNode }) {
         // the white card reads as a floating panel against the white
         // site backdrop on every route. Tracks the rounded corners.
         boxShadow: "var(--frame-shadow, none)",
-        // 1px hairline matching the BentoProducts card stroke (#E7E7F1).
-        // Routes can opt out by setting --frame-border: none (the business
-        // page does this — see app/products/business/page.tsx).
-        border: "var(--frame-border, 1px solid #E7E7F1)",
+        // Accent hairline on the inset (rounded card) state. A real CSS
+        // border on the card element; its width animates with the card —
+        // 2px while inset, fading to 0 once the card reaches full-bleed
+        // (--frame-border-width, set by the scroll handler above) — so no
+        // border frames the page when it fills the screen. Routes can opt
+        // out entirely by setting --frame-border: none (the business page
+        // does this — see app/products/business/page.tsx).
+        border: "var(--frame-border, var(--frame-border-width, 2px) solid #0081AC)",
         backgroundColor: "#FFFFFF",
         overflow: "clip",
         minHeight: "calc(100vh - var(--frame-margin, 30px) * 2)",
