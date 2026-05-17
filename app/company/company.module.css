@@ -104,18 +104,38 @@
 }
 
 /* ── Section heading helpers ──────────────────────────────────────────── */
-/* "OUR MISSION" / "OUR VISION" — uppercase Funnel Display label. */
+/* "OUR MISSION" / "OUR VISION" — small uppercase eyebrow / kicker sitting
+   just above the open statement, not a full-size heading. */
 .sectionLabel {
   text-transform: uppercase;
   text-align: center;
   color: var(--color-ink);
-  /* tracking-wider (0.05em) — the design-system token for emphasis labels. */
-  letter-spacing: 0.05em;
+  font-family: var(--font-sans);
+  /* 13px — type-scale step 8 (captions / card labels). */
+  font-size: 13px;
+  font-weight: 600;
+  /* tracking-widest (0.1em) — the design-system token for uppercase
+     micro-text. */
+  letter-spacing: 0.1em;
+  line-height: 1.5;
 }
 
 .sectionHeading {
   text-align: center;
   color: var(--color-ink);
+}
+
+/* Mission + vision sections — a touch more vertical rhythm than a standard
+   .section so the two open statements each get their own breathing room. */
+.statementSection {
+  padding-top: 80px;
+  padding-bottom: 80px;
+}
+@media (min-width: 1024px) {
+  .statementSection {
+    padding-top: 128px;
+    padding-bottom: 128px;
+  }
 }
 
 /* ── Hairline statement card — the shared container for the mission,
@@ -130,9 +150,7 @@
   /* 13px — the card corner radius shared by the homepage BentoProducts
      tiles and the /blog index media tiles. */
   border-radius: 13px;
-  background: #FFFFFF;
-  /* Same floating-panel drop shadow as the PageFrame card. */
-  box-shadow: var(--frame-shadow, none);
+  /* No fill — framed only by the hairline border. */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -145,27 +163,14 @@
   }
 }
 
-/* Statement copy — "Body large": 16px, stepping up to 20px at lg. */
-.cardText {
-  max-width: 600px;
-  color: var(--color-ink);
-  font-family: var(--font-sans);
-  font-size: 16px;
-  line-height: 1.5;
-  font-weight: 400;
-}
-@media (min-width: 1024px) {
-  .cardText {
-    font-size: 20px;
-  }
-}
-.cardText + .cardText {
-  margin-top: 32px;
+/* Centres "The timeline" link below the open vision statement. */
+.timelineWrap {
+  margin-top: 40px;
+  text-align: center;
 }
 
-/* "The timeline" inline link inside the vision card. */
+/* "The timeline" inline link below the vision statement. */
 .timelineLink {
-  margin-top: 32px;
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -366,8 +371,6 @@
   border-radius: 13px;
   background: #ECEFF3;
   min-height: 320px;
-  /* Same floating-panel drop shadow as the PageFrame card. */
-  box-shadow: var(--frame-shadow, none);
 }
 @media (min-width: 768px) {
   .founderPhoto {
@@ -445,10 +448,15 @@
 .photoNotchLabel {
   font-size: 16px;
   line-height: 1;
-  font-weight: 500;
-  letter-spacing: -0.015em;
+  /* 600 — uppercase at 500 optically reads light, so it needs a step up
+     to land as a visible medium weight. */
+  font-weight: 600;
+  text-transform: uppercase;
+  /* Light positive tracking — uppercase reads cramped at negative. */
+  letter-spacing: 0.04em;
   white-space: nowrap;
-  color: #0081AC;
+  /* Dark ink — matches the label colour in the design mockup. */
+  color: var(--color-ink);
 }
 @media (min-width: 992px) {
   .photoNotchLabel {
@@ -467,25 +475,37 @@
   }
 }
 
+/* Quote-mark glyph above each quote — a small accent, accent-blue at
+   25% opacity, sized to roughly one line of the quote text. */
+.quoteMarkAccent {
+  width: 32px;
+  height: auto;
+  color: rgba(0, 129, 172, 0.25);
+  margin-bottom: 16px;
+}
+
 .quoteCard {
   flex: 1;
   border: 1px solid var(--color-gridline);
   border-radius: 13px;
-  background: #FFFFFF;
+  /* Subtle tonal fill (--color-bg1) instead of white + drop shadow. */
+  background: var(--color-bg1);
   padding: 40px;
   display: flex;
   flex-direction: column;
-  /* Same floating-panel drop shadow as the PageFrame card. */
-  box-shadow: var(--frame-shadow, none);
 }
 
-/* Quote copy — "Body large": 16px, stepping up to 20px at lg. */
+/* Quote copy — "Body large": 16px, stepping up to 20px at lg. Medium
+   weight to match the featured quote. */
 .quoteText {
   color: var(--color-ink);
   font-family: var(--font-sans);
   font-size: 16px;
   line-height: 1.5;
-  font-weight: 400;
+  font-weight: 500;
+  /* Narrower measure — wraps the quote sooner so it doesn't run the full
+     card width. */
+  max-width: 26ch;
 }
 @media (min-width: 1024px) {
   .quoteText {
@@ -529,15 +549,26 @@
 }
 .attributionRole {
   font-family: var(--font-sans);
-  /* p-m step — 14px. */
-  font-size: var(--typography--p-m);
-  line-height: var(--typography--p-m--line-height);
+  /* Matches the name size (h7 — 18px); the role is distinguished by
+     weight + muted colour, not by being smaller. */
+  font-size: var(--typography--h7);
+  line-height: 1.25;
   font-weight: 400;
   color: var(--color-muted);
   margin-top: 4px;
 }
 
-/* ── Values card ──────────────────────────────────────────────────────── */
+/* ── Values card ──────────────────────────────────────────────────────────
+   40px inset — so the profile row sits the same distance off the bottom
+   edge as the bento quote cards above. Content is centred as a column;
+   text-align stays left so the profile name/role still read left-aligned
+   like the bento profile components. */
+.valuesCard {
+  align-items: center;
+  text-align: left;
+  padding: 40px;
+}
+
 .valuesImage {
   position: relative;
   width: 200px;

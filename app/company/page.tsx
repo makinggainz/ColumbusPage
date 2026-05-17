@@ -35,6 +35,26 @@ function ArrowDots({ className = "" }: { className?: string }) {
   );
 }
 
+/**
+ * Quote-mark glyph — two filled comma shapes forming an opening double
+ * quotation mark, set above each founder quote. A genuine curly quote
+ * (rounded head + tapering tail) reads instantly, so it recedes rather
+ * than snagging the eye. Colour comes from `currentColor`.
+ */
+function QuoteMark({ className = "" }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 40 31"
+      fill="currentColor"
+      aria-hidden="true"
+    >
+      <path d="M11 2C15.97 2 20 6.03 20 11C20 15.97 15.97 20 11 20C9 23 7 26 3 29C6 24 4 18 2 11C2 6.03 6.03 2 11 2Z" />
+      <path d="M31 2C35.97 2 40 6.03 40 11C40 15.97 35.97 20 31 20C29 23 27 26 23 29C26 24 24 18 22 11C22 6.03 26.03 2 31 2Z" />
+    </svg>
+  );
+}
+
 /* "Read more" cards — featured card + 3 small, mirroring the homepage
    BlogSection. Each links to its real blog post. */
 type PostCard = {
@@ -112,34 +132,31 @@ export default function CompanyPage() {
         </div>
       </section>
 
-      {/* ════════ 2. OUR MISSION ════════ */}
-      <section className="section">
+      {/* ════════ 2. OUR MISSION ════════
+          Open statement (no card) — a large, centred mission statement
+          at the cardexperiment1 type sizing (24 / 30 / 36px). */}
+      <section className={styles.statementSection}>
         <div className={styles.bounds}>
-          <h2 className={`h2 mb-10 md:mb-20 ${styles.sectionLabel}`}>
+          <h2 className={`mb-4 md:mb-6 ${styles.sectionLabel}`}>
             Our Mission
           </h2>
-          <div className={styles.card}>
-            <p className={styles.cardText}>
-              {"To create intelligence to critically understand our planet better. Deep surveying of all earth. To create a computer brain, able to think across the vastness of our earth's data."}
-            </p>
-            <p className={styles.cardText}>
-              To create the most powerful map platform.
-            </p>
-          </div>
+          <p className="mx-auto max-w-3xl text-center text-2xl sm:text-3xl lg:text-4xl font-medium tracking-tight leading-snug text-ink">
+            {"To create intelligence to critically understand our planet better. Deep surveying of all earth. To create a computer brain, able to think across the vastness of our earth's data. To create the most powerful map platform."}
+          </p>
         </div>
       </section>
 
       {/* ════════ 3. OUR VISION ════════ */}
-      <section className="section">
+      <section className={styles.statementSection}>
         <div className={styles.bounds}>
-          <h2 className={`h2 mb-10 md:mb-20 ${styles.sectionLabel}`}>
+          <h2 className={`mb-4 md:mb-6 ${styles.sectionLabel}`}>
             Our Vision
           </h2>
-          <div className={styles.card}>
-            <p className={styles.cardText}>
-              We believe maps, can lead to the journey to a Universal
-              Geospatial Model. A thinking earth.
-            </p>
+          <p className="mx-auto max-w-3xl text-center text-2xl sm:text-3xl lg:text-4xl font-medium tracking-tight leading-snug text-ink">
+            We believe maps, can lead to the journey to a Universal Geospatial
+            Model. A thinking earth.
+          </p>
+          <div className={styles.timelineWrap}>
             <Link href="/research" className={`p-m ${styles.timelineLink}`}>
               The timeline
               <svg
@@ -206,13 +223,13 @@ export default function CompanyPage() {
                 top-right cut-out notch carrying the "Our CEO" label. */}
             <div className={styles.founderPhoto}>
               <Image
-                src="/blog-still-lake.jpg"
+                src="/grouppic-founders.png"
                 alt=""
                 fill
                 sizes="(min-width: 768px) 640px, 100vw"
               />
               <div className={styles.photoNotch}>
-                <span className={styles.photoNotchLabel}>Our CEO</span>
+                <span className={styles.photoNotchLabel}>Our Team</span>
               </div>
             </div>
 
@@ -220,11 +237,12 @@ export default function CompanyPage() {
             <div className={styles.quoteCol}>
               {QUOTES.map((q) => (
                 <div key={q.name} className={styles.quoteCard}>
-                  <p className={styles.quoteText}>{`“${q.quote}”`}</p>
+                  <QuoteMark className={styles.quoteMarkAccent} />
+                  <p className={styles.quoteText}>{q.quote}</p>
                   <div className={styles.quoteSpacer} aria-hidden />
                   <div className={styles.attribution}>
                     <div className={styles.avatar}>
-                      <Image src={q.avatar} alt={q.name} fill sizes="40px" />
+                      <Image src={q.avatar} alt={q.name} fill sizes="64px" />
                     </div>
                     <div>
                       <p className={styles.attributionName}>{q.name}</p>
@@ -246,9 +264,10 @@ export default function CompanyPage() {
           >
             Our values
           </h2>
-          <div className={styles.card}>
+          <div className={`${styles.card} ${styles.valuesCard}`}>
+            <QuoteMark className={styles.quoteMarkAccent} />
             <div className={styles.valuesImage}>
-              <Image src="/blog-clouds-dawn.jpg" alt="" fill sizes="200px" />
+              <Image src="/henti.png" alt="" fill sizes="200px" />
             </div>
             <div className={styles.attribution}>
               <div className={styles.avatar}>
