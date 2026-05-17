@@ -152,7 +152,9 @@
   /* 13px — the card corner radius shared by the homepage BentoProducts
      tiles and the /blog index media tiles. */
   border-radius: 13px;
-  background: #FFFFFF;
+  /* Subtle tonal fill (--color-bg1) instead of white — turns the card
+     into a deliberate panel with presence against the white page. */
+  background: var(--color-bg1);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -374,28 +376,36 @@
   overflow: hidden;
   border-radius: 13px;
   background: #ECEFF3;
-  min-height: 420px;
+  /* Square tile — height tracks the column width. The right-hand quote
+     column stretches to match it (grid align-items: stretch), so the
+     whole bento row is exactly as tall as this tile is wide. */
+  aspect-ratio: 1 / 1;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 32px;
+  /* 40px inset — matches the .quoteCard padding so the attribution row
+     lines up with the profile components on the right-hand cards. */
+  padding: 40px;
 }
-@media (min-width: 768px) {
-  .founderPhoto {
-    height: 692px;
-  }
+/* Dedicated image layer — a clean absolutely-positioned box so the
+   <Image fill> sizes to the full tile, decoupled from the flex /
+   aspect-ratio layout container above it. */
+.founderPhotoMedia {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
 }
-@media (max-width: 768px) {
-  .founderPhoto {
-    padding: 24px;
-  }
-}
-.founderPhoto img {
+.founderPhotoMedia img {
   object-fit: cover;
+  /* Square crop biased slightly upward so the group of people stays in
+     the clear band between the top + bottom gradients. */
+  object-position: center 42%;
 }
 
 /* Top + bottom black gradient — darkens the photo behind the quote and
-   the attribution so the white text stays legible over any imagery. */
+   the attribution so the white text stays legible over any imagery.
+   Both the top and bottom gradients begin at 75% black and fade to fully
+   transparent in the middle of the tile. */
 .founderPhoto::before {
   content: "";
   position: absolute;
@@ -404,10 +414,11 @@
   pointer-events: none;
   background: linear-gradient(
     to bottom,
-    rgba(0, 0, 0, 0.72) 0%,
-    rgba(0, 0, 0, 0) 30%,
+    rgba(0, 0, 0, 0.75) 0%,
+    rgba(0, 0, 0, 0.45) 32%,
     rgba(0, 0, 0, 0) 58%,
-    rgba(0, 0, 0, 0.82) 100%
+    rgba(0, 0, 0, 0) 66%,
+    rgba(0, 0, 0, 0.75) 100%
   );
 }
 
@@ -423,37 +434,44 @@
   z-index: 2;
 }
 
-/* Featured quote block — quote mark + quote, pinned to the top-left and
-   sitting above the gradient. */
+/* Featured quote block — quote mark + quote, sitting above the gradient.
+   Sits at the top of the tile (just the 40px tile padding), with a tight
+   gap between the mark and the quote, the way Mobbin testimonial cards
+   place the glyph — a small accent at the top, not a watermark. */
 .featuredQuoteBlock {
   position: relative;
   z-index: 2;
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  max-width: 420px;
+  gap: 16px;
+  /* Wide enough that the quote wraps to ~3 lines (not 4+), keeping the
+     block clear of the photo subjects lower in the frame. */
+  max-width: 460px;
 }
 
+/* Featured quote — Medium weight, stepping up to the 32px type-scale
+   step at the lg breakpoint. */
 .featuredQuote {
   color: #FFFFFF;
   font-family: var(--font-sans);
   font-size: 24px;
   line-height: 1.4;
-  font-weight: 400;
+  font-weight: 500;
   letter-spacing: -0.01em;
 }
 @media (min-width: 1024px) {
   .featuredQuote {
-    font-size: 28px;
+    font-size: 32px;
   }
 }
 
-/* Attribution pinned to the bottom-right corner of the photo tile, with
-   white text tuned for the dark gradient beneath it. */
+/* Attribution pinned to the bottom-left of the photo tile, with white
+   text tuned for the dark gradient beneath it. The 40px tile padding
+   gives it the same inset as the profile rows on the right-hand cards. */
 .featuredAttribution {
   position: relative;
   z-index: 2;
-  align-self: flex-end;
+  align-self: flex-start;
 }
 .featuredAttribution .attributionName {
   color: #FFFFFF;
@@ -462,18 +480,21 @@
   color: rgba(255, 255, 255, 0.72);
 }
 
-/* Quote-mark glyph — sized + coloured per placement. Light (near-white)
-   over the dark photo; accent-blue at 25% opacity on the white cards. */
+/* Quote-mark glyph — a small accent above the quote, sized to roughly
+   one line of the quote text (the Mobbin testimonial-card convention).
+   White over the dark photo; accent-blue at 25% opacity on the white
+   side cards. */
 .quoteMarkLight {
-  width: 46px;
+  width: 44px;
   height: auto;
-  color: rgba(255, 255, 255, 0.92);
+  /* Same 72% white as the "Co-Founder, CEO" role label on the tile. */
+  color: rgba(255, 255, 255, 0.72);
 }
 .quoteMarkAccent {
-  width: 42px;
+  width: 32px;
   height: auto;
   color: rgba(0, 129, 172, 0.25);
-  margin-bottom: 24px;
+  margin-bottom: 16px;
 }
 
 /* Cut-out notch — the white page surface notched into the tile's
@@ -531,10 +552,15 @@
 .photoNotchLabel {
   font-size: 16px;
   line-height: 1;
-  font-weight: 500;
-  letter-spacing: -0.015em;
+  /* 600 — uppercase at 500 optically reads light, so it needs a step up
+     to land as a visible medium weight. */
+  font-weight: 600;
+  text-transform: uppercase;
+  /* Light positive tracking — uppercase reads cramped at negative. */
+  letter-spacing: 0.04em;
   white-space: nowrap;
-  color: #0081AC;
+  /* Dark ink — matches the "Our CEO" label in the design mockup. */
+  color: var(--color-ink);
 }
 @media (min-width: 992px) {
   .photoNotchLabel {
@@ -557,19 +583,21 @@
   flex: 1;
   border: 1px solid var(--color-gridline);
   border-radius: 13px;
-  background: #FFFFFF;
+  /* No fill — the cards sit transparent on the page surface, framed only
+     by their hairline border. */
   padding: 40px;
   display: flex;
   flex-direction: column;
 }
 
-/* Quote copy — "Body large": 16px, stepping up to 20px at lg. */
+/* Quote copy — "Body large": 16px, stepping up to 20px at lg. Medium
+   weight to match the featured quote. */
 .quoteText {
   color: var(--color-ink);
   font-family: var(--font-sans);
   font-size: 16px;
   line-height: 1.5;
-  font-weight: 400;
+  font-weight: 500;
 }
 @media (min-width: 1024px) {
   .quoteText {

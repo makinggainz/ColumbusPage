@@ -37,21 +37,23 @@ function ArrowDots({ className = "" }: { className?: string }) {
 }
 
 /**
- * Quote-mark glyph — two slanted bars forming an opening quotation mark,
- * set above every founder quote (the featured photo tile and the two
- * side cards). Colour comes from `currentColor`, so the same glyph reads
- * white over the dark photo and accent-blue on the white side cards.
+ * Quote-mark glyph — two filled comma shapes forming an opening double
+ * quotation mark, set above every founder quote (the featured photo tile
+ * and the two side cards). A genuine curly quote (rounded head + tapering
+ * tail) reads instantly, so it recedes rather than snagging the eye.
+ * Colour comes from `currentColor`, so the same glyph reads white over
+ * the dark photo and accent-blue on the white side cards.
  */
 function QuoteMark({ className = "" }: { className?: string }) {
   return (
     <svg
       className={className}
-      viewBox="0 0 36 28"
+      viewBox="0 0 40 31"
       fill="currentColor"
       aria-hidden="true"
     >
-      <path d="M8 0h8l-8 28H0z" />
-      <path d="M22 0h8l-8 28h-8z" />
+      <path d="M11 2C15.97 2 20 6.03 20 11C20 15.97 15.97 20 11 20C9 23 7 26 3 29C6 24 4 18 2 11C2 6.03 6.03 2 11 2Z" />
+      <path d="M31 2C35.97 2 40 6.03 40 11C40 15.97 35.97 20 31 20C29 23 27 26 23 29C26 24 24 18 22 11C22 6.03 26.03 2 31 2Z" />
     </svg>
   );
 }
@@ -233,12 +235,14 @@ export default function CompanyPage() {
                 quote set over the top and the attribution bottom-right.
                 Keeps the BentoProducts-style "Our CEO" cut-out notch. */}
             <div className={styles.founderPhoto}>
-              <Image
-                src="/grouppic.png"
-                alt=""
-                fill
-                sizes="(min-width: 768px) 640px, 100vw"
-              />
+              <div className={styles.founderPhotoMedia}>
+                <Image
+                  src="/grouppic-founders.png"
+                  alt=""
+                  fill
+                  sizes="(min-width: 768px) 640px, 100vw"
+                />
+              </div>
               <div className={styles.photoNotch}>
                 <span className={styles.photoNotchLabel}>Our CEO</span>
               </div>
