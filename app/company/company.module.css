@@ -58,8 +58,8 @@
   justify-content: center;
   width: 100%;
   /* 768px — the single reading-column width shared by the hero, the
-     mission / vision statements (.textColumn) and the contact card, so
-     the centred text spine never changes width down the page. */
+     vision statement (.textColumn) and the contact card, so the centred
+     text spine never changes width down the page. */
   max-width: 768px;
   margin: 0 auto;
 }
@@ -109,9 +109,9 @@
   }
 }
 
-/* ── Reading column — the 768px centred text spine. Used by the mission,
-   vision and contact sections so every text block shares one width; only
-   the §4 / §5 card rows widen out to the full .bounds. ─────────────────── */
+/* ── Reading column — the 768px centred text spine. Used by the vision
+   statement and the contact card so every text block shares one width;
+   only the card grids widen out to the full .bounds. ──────────────────── */
 .textColumn {
   max-width: 768px;
   margin-left: 20px;
@@ -149,8 +149,8 @@
 }
 
 /* ── Hairline contact card — capped at 768px so it sits on the same
-   reading-column width as the hero and the mission / vision statements,
-   keeping the centred text spine one consistent width. ──────────────────── */
+   reading-column width as the hero and the vision statement, keeping the
+   centred text spine one consistent width. ──────────────────────────────── */
 .card {
   max-width: 768px;
   margin-left: auto;
@@ -172,13 +172,13 @@
   }
 }
 
-/* Centres "The timeline" link below the open vision statement. */
+/* Centres "The timeline" link below the "what we're building" pillars. */
 .timelineWrap {
   margin-top: 40px;
   text-align: center;
 }
 
-/* "The timeline" inline link below the vision statement. */
+/* "The timeline" inline link. */
 .timelineLink {
   display: inline-flex;
   align-items: center;
@@ -347,6 +347,60 @@
   }
 }
 
+/* ── "What we're building" — three pillar cards laying out the Large
+   Geospatial Model. Hairline, no fill (the blueprint-grid treatment) so
+   they read as structural alongside the soft-filled team cards below. ─── */
+.pillarGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+@media (min-width: 1024px) {
+  .pillarGrid {
+    gap: 20px;
+  }
+}
+@media (max-width: 768px) {
+  .pillarGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.pillar {
+  border: 1px solid var(--color-gridline);
+  border-radius: 13px;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Pillar index — a quiet "01 / 02 / 03" sequence marker, sized to the
+   section kicker so every micro-label on the page reads at one scale. */
+.pillarIndex {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: var(--color-muted);
+}
+
+/* Pillar title — uses the global .h5 type step; this rule only adds the
+   spacing and balanced wrap. */
+.pillarTitle {
+  margin-top: 20px;
+  color: var(--color-ink);
+  text-wrap: balance;
+}
+
+.pillarBody {
+  margin-top: 12px;
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.5;
+  font-weight: 400;
+  color: var(--color-muted);
+}
+
 /* ── Founders quote section — a bento grid: a tall photo tile on the left
    (using the homepage BentoProducts notch-card pattern) and two stacked
    quote cards on the right whose combined height matches the photo. ──── */
@@ -376,21 +430,16 @@
   overflow: hidden;
   border-radius: 13px;
   background: #ECEFF3;
-  /* Square tile — height tracks the column width. The right-hand quote
-     column stretches to match it (grid align-items: stretch), so the
-     whole bento row is exactly as tall as this tile is wide. A square is
-     the canonical bento proportion (vs. an arbitrary fixed pixel height)
-     and keeps the stacked right cards at a clean ratio. */
+  /* Square tile — the right-hand quote column stretches to match it. */
   aspect-ratio: 1 / 1;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  /* 40px inset — matches the .quoteCard padding so the attribution row
-     lines up with the profile components on the right-hand cards. */
+  /* 40px inset — matches the .quoteCard padding so the attribution rows
+     line up across the bento row. */
   padding: 40px;
 }
-/* Dedicated image layer — an absolutely-positioned box so the <Image fill>
-   sizes to the full tile, decoupled from the flex layout container. */
+/* Dedicated image layer so <Image fill> sizes to the full tile. */
 .founderPhotoMedia {
   position: absolute;
   inset: 0;
@@ -398,23 +447,21 @@
 }
 .founderPhotoMedia img {
   object-fit: cover;
-  /* Square crop biased slightly upward so the group of people stays in
-     the clear band between the top + bottom gradients. */
+  /* Square crop biased slightly upward so the group stays in the clear
+     band between the top + bottom gradients. */
   object-position: center 42%;
 }
 
 /* Top + bottom navy wash for legibility. Kept deliberately light — heavy
    enough at the edges to carry the white quote (top) and attribution
    (bottom), but eased off through the middle so the tile reads as a photo
-   rather than a near-black slab competing with the rest of the page. */
+   rather than a near-black slab. */
 .founderPhoto::before {
   content: "";
   position: absolute;
   inset: 0;
   z-index: 1;
   pointer-events: none;
-  /* Navy CTA colour (#0B1342) — a deep, calm wash rather than a vivid
-     blue. */
   background: linear-gradient(
     to bottom,
     rgba(11, 19, 66, 0.70) 0%,
@@ -437,21 +484,19 @@
   z-index: 2;
 }
 
-/* Featured quote block — quote mark + quote, at the top of the tile (just
-   the 40px tile padding), sitting above the gradient. */
+/* Featured quote block — quote mark + quote, at the top of the tile. */
 .featuredQuoteBlock {
   position: relative;
   z-index: 2;
   display: flex;
   flex-direction: column;
   gap: 16px;
-  /* Wide enough that the quote wraps to ~3 lines (not 4+), keeping the
-     block clear of the photo subjects lower in the frame. */
+  /* Wide enough that the quote wraps to ~3 lines, keeping it clear of the
+     photo subjects lower in the frame. */
   max-width: 460px;
 }
 
-/* Featured quote — Medium weight, stepping up to the 32px type-scale step
-   at the lg breakpoint. */
+/* Featured quote — Medium weight, stepping up to the 32px step at lg. */
 .featuredQuote {
   color: #FFFFFF;
   font-family: var(--font-sans);
@@ -489,7 +534,7 @@
 }
 
 /* Cut-out notch — the white page surface notched into the tile's
-   top-right corner, carrying the "Our CEO" label. Geometry + fillet
+   top-right corner, carrying the "Our Team" label. Geometry + fillet
    technique ported verbatim from BentoProducts. */
 .photoNotch {
   position: absolute;
@@ -541,19 +586,14 @@
 }
 
 .photoNotchLabel {
-  /* 13px — matches the section-kicker (.sectionLabel) size so every small
-     uppercase label on the page reads at one consistent scale. */
+  /* 13px — matches the section kicker so every small uppercase label on
+     the page reads at one consistent scale. */
   font-size: 13px;
   line-height: 1;
-  /* 600 — uppercase at 500 optically reads light, so it needs a step up
-     to land as a visible medium weight. */
   font-weight: 600;
   text-transform: uppercase;
-  /* tracking-widest (0.1em) — same as the section kickers. */
   letter-spacing: 0.1em;
   white-space: nowrap;
-  /* Muted secondary text — softer than full ink so it recedes against
-     the white notch, but still has enough contrast to read clearly. */
   color: var(--color-muted);
 }
 
@@ -568,9 +608,8 @@
   }
 }
 
-/* Quote-mark glyph above each quote — a faint neutral ink tint (not the
-   accent blue), sized to roughly one line of the quote text, so it reads
-   as a quiet typographic mark rather than a coloured accent. */
+/* Quote-mark glyph above each quote — a faint neutral ink tint, a quiet
+   typographic mark rather than a coloured accent. */
 .quoteMarkAccent {
   width: 32px;
   height: auto;
@@ -589,18 +628,15 @@
   flex-direction: column;
 }
 
-/* Quote copy — "Body large": 16px, stepping up to 20px at lg. Medium
-   weight to match the featured quote. */
+/* Quote copy — "Body large": 16px, stepping up to 20px at lg. */
 .quoteText {
-  /* Dark ink — one consistent quote treatment across the page; the accent
-     blue is reserved for interactive states (links, hovers, the CTA). */
+  /* Dark ink — the accent blue is reserved for interactive states. */
   color: var(--color-ink);
   font-family: var(--font-sans);
   font-size: 16px;
   line-height: 1.5;
   font-weight: 500;
-  /* Narrower measure — wraps the quote sooner so it doesn't run the full
-     card width. */
+  /* Narrower measure — wraps the quote sooner than the full card width. */
   max-width: 26ch;
 }
 @media (min-width: 1024px) {
@@ -614,8 +650,8 @@
   min-height: 32px;
 }
 
-/* Avatar + name + role row — shared by the founder quote cards and the
-   values card attribution. */
+/* Avatar + name + role row — shared by the photo tile and the quote
+   cards. */
 .attribution {
   display: flex;
   align-items: center;
@@ -645,17 +681,14 @@
 }
 .attributionRole {
   font-family: var(--font-sans);
-  /* Matches the name size (h7 — 18px); the role is distinguished by
-     weight + muted colour, not by being smaller. */
+  /* Matches the name size; the role is distinguished by weight + muted
+     colour, not by being smaller. */
   font-size: var(--typography--h7);
   line-height: 1.25;
   font-weight: 400;
   color: var(--color-muted);
   margin-top: 4px;
 }
-
-/* The "Our values" section is rendered by the ValuesTeam client component
-   (components/company/ValuesTeam.tsx) with its own CSS module. */
 
 /* ── Contact CTA ──────────────────────────────────────────────────────────
    A row of the two social icon circles followed by the homepage-style

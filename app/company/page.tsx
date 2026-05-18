@@ -4,7 +4,6 @@ import Link from "next/link";
 import { Mail, Linkedin } from "lucide-react";
 
 import { MistxNav } from "@/components/layout/MistxNav";
-import { ValuesTeam } from "@/components/company/ValuesTeam";
 import {
   ScrollHighlightStatement,
   type StatementSegment,
@@ -41,10 +40,30 @@ function ArrowDots({ className = "" }: { className?: string }) {
 }
 
 /**
+ * Arrow glyph for the inline "The timeline" link.
+ */
+function ArrowUpRight() {
+  return (
+    <svg
+      width="13"
+      height="13"
+      viewBox="0 0 13 13"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.6"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M3.5 9.5 9.5 3.5M4.5 3.5h5v5" />
+    </svg>
+  );
+}
+
+/**
  * Quote-mark glyph — two filled comma shapes forming an opening double
- * quotation mark, set above each founder quote. A genuine curly quote
- * (rounded head + tapering tail) reads instantly, so it recedes rather
- * than snagging the eye. Colour comes from `currentColor`.
+ * quotation mark, set above each founder quote. Colour comes from
+ * `currentColor`.
  */
 function QuoteMark({ className = "" }: { className?: string }) {
   return (
@@ -59,6 +78,65 @@ function QuoteMark({ className = "" }: { className?: string }) {
     </svg>
   );
 }
+
+/* ── Vision manifesto — one statement, segmented for ScrollHighlight-
+   Statement. `important` segments stay dark after the body fades. ────── */
+const VISION_STATEMENT: StatementSegment[] = [
+  { text: "We believe maps, can lead to the journey to" },
+  { text: "a Universal Geospatial Model.", important: true },
+  { text: "A thinking earth.", important: true },
+];
+
+/* ── What we're building — the Large Geospatial Model, as three parts.
+   Each pillar paraphrases one strand of the company mission. ─────────── */
+type Pillar = { index: string; title: string; body: string };
+
+const PILLARS: Pillar[] = [
+  {
+    index: "01",
+    title: "Survey all of earth",
+    body: "Deep, continuous surveying of the planet — the raw intelligence to critically understand every layer of it.",
+  },
+  {
+    index: "02",
+    title: "A computer brain",
+    body: "A model that can think across the vastness of the earth's data, not merely store it.",
+  },
+  {
+    index: "03",
+    title: "The most powerful map platform",
+    body: "Turning that intelligence into the most powerful map platform ever built.",
+  },
+];
+
+/* ── Founders. Quote copy reproduced verbatim from the design mockup.
+   `FEATURED` fills the left photo tile; `QUOTES` are the two stacked
+   cards on the right. ──────────────────────────────────────────────── */
+type Quote = { quote: string; name: string; role: string; avatar: string };
+
+const FEATURED: Quote = {
+  quote:
+    "I started Columbus just to get some Columbussy on my dih. I like males.",
+  name: "David Ramirez Blonski",
+  role: "Co-Founder, CEO",
+  avatar: "/David.png",
+};
+
+const QUOTES: Quote[] = [
+  {
+    quote:
+      "I started Columbus just to get some Columbussy on my dih. I like males.",
+    name: "Alexander Ramirez Blonski",
+    role: "Co-Founder, CPO",
+    avatar: "/Alex.jpg",
+  },
+  {
+    quote: "When I'm not working on Columbus im gooning to hentai from Japan.",
+    name: "Erick Lara",
+    role: "Co-Founder, CTO",
+    avatar: "/Erick.png",
+  },
+];
 
 /* "Read more" cards — featured card + 3 small, mirroring the homepage
    BlogSection. Each links to its real blog post. */
@@ -96,67 +174,12 @@ const POSTS: PostCard[] = [
   },
 ];
 
-/* Founder quotes — copy reproduced verbatim from the design mockup.
-   `FEATURED` fills the left photo tile; `QUOTES` are the two stacked
-   cards on the right. */
-type Quote = { quote: string; name: string; role: string; avatar: string };
-
-const FEATURED: Quote = {
-  quote:
-    "I started Columbus just to get some Columbussy on my dih. I like males.",
-  name: "David Ramirez Blonski",
-  role: "Co-Founder, CEO",
-  avatar: "/David.png",
-};
-
-const QUOTES: Quote[] = [
-  {
-    quote:
-      "I started Columbus just to get some Columbussy on my dih. I like males.",
-    name: "Alexander Ramirez Blonski",
-    role: "Co-Founder, CPO",
-    avatar: "/Alex.jpg",
-  },
-  {
-    quote: "When I'm not working on Columbus im gooning to hentai from Japan.",
-    name: "Erick Lara",
-    role: "Co-Founder, CTO",
-    avatar: "/Erick.png",
-  },
-];
-
-/* 4th cofounder — ninja-mask placeholder image; quote to be filled in. */
-const FOURTH: Quote = {
-  quote: "Quote coming soon.",
-  name: "Josue De Silva",
-  role: "Co-Founder, CAO",
-  avatar: "/cofounder-placeholder.svg",
-};
-
-/* All four cofounders, in row order, for the "Our values" team row. */
-const COFOUNDERS: Quote[] = [FEATURED, ...QUOTES, FOURTH];
-
-/* Mission / vision statements, segmented for ScrollHighlightStatement —
-   `important` segments stay dark after the fill; the rest dims back. */
-const MISSION_STATEMENT: StatementSegment[] = [
-  { text: "To create" },
-  { text: "intelligence", important: true },
-  {
-    text: "to critically understand our planet better. Deep surveying of all earth. To create",
-  },
-  { text: "a computer brain,", important: true },
-  {
-    text: "able to think across the vastness of our earth's data. To create",
-  },
-  { text: "the most powerful map platform.", important: true },
-];
-
-const VISION_STATEMENT: StatementSegment[] = [
-  { text: "We believe maps, can lead to the journey to" },
-  { text: "a Universal Geospatial Model.", important: true },
-  { text: "A thinking earth.", important: true },
-];
-
+/**
+ * Company page. Six sections in a deliberate narrative order:
+ * hero (who we are) → vision (what we believe) → what we're building
+ * (the LGM, in three parts) → the team (who builds it) → the blog
+ * (go deeper) → contact.
+ */
 export default function CompanyPage() {
   return (
     <main className={styles.page}>
@@ -181,81 +204,47 @@ export default function CompanyPage() {
         </div>
       </section>
 
-      {/* ════════ 2. OUR MISSION ════════
-          Open statement (no card) — starts fully lit; the body fades out
-          on scroll, leaving the key phrases (ScrollHighlightStatement). */}
+      {/* ════════ 2. OUR VISION ════════
+          One manifesto statement — the body fades out on scroll, leaving
+          the key phrases (ScrollHighlightStatement). The page's single
+          scroll-driven moment. */}
       <section className="section">
         <div className={styles.textColumn}>
-          <h2 className={`mb-6 md:mb-8 ${styles.sectionLabel}`}>
-            Our Mission
-          </h2>
-          <ScrollHighlightStatement segments={MISSION_STATEMENT} />
+          <h2 className={`mb-6 md:mb-8 ${styles.sectionLabel}`}>Our vision</h2>
+          <ScrollHighlightStatement segments={VISION_STATEMENT} />
         </div>
       </section>
 
-      {/* ════════ 3. OUR VISION ════════
-          Static statement — the scroll-fade is a signature effect, used
-          once (Mission); rendering Vision lit keeps the page from
-          animating two sections back-to-back. */}
+      {/* ════════ 3. WHAT WE'RE BUILDING ════════
+          The substance section — the Large Geospatial Model broken into
+          three pillars, each a hairline card. */}
       <section className="section">
-        <div className={styles.textColumn}>
+        <div className={styles.bounds}>
           <h2 className={`mb-6 md:mb-8 ${styles.sectionLabel}`}>
-            Our Vision
+            What we&apos;re building
           </h2>
-          <ScrollHighlightStatement segments={VISION_STATEMENT} static />
+          <div className={styles.pillarGrid}>
+            {PILLARS.map((pillar) => (
+              <div key={pillar.index} className={styles.pillar}>
+                <span className={styles.pillarIndex}>{pillar.index}</span>
+                <h3 className={`h5 ${styles.pillarTitle}`}>{pillar.title}</h3>
+                <p className={styles.pillarBody}>{pillar.body}</p>
+              </div>
+            ))}
+          </div>
           <div className={styles.timelineWrap}>
             <Link href="/research" className={`p-m ${styles.timelineLink}`}>
               The timeline
-              <svg
-                width="13"
-                height="13"
-                viewBox="0 0 13 13"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.6"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                aria-hidden="true"
-              >
-                <path d="M3.5 9.5 9.5 3.5M4.5 3.5h5v5" />
-              </svg>
+              <ArrowUpRight />
             </Link>
           </div>
         </div>
       </section>
 
-      {/* ════════ 4. READ MORE ════════ */}
-      <section className="section">
-        <div className={styles.bounds}>
-          <h2 className={`mb-6 md:mb-8 ${styles.sectionLabel}`}>
-            Read more about what we do
-          </h2>
-          <div className={styles.cardGrid}>
-            {POSTS.map((post) => (
-              <Link
-                key={post.title}
-                href={post.href}
-                className={
-                  post.featured
-                    ? `${styles.postCard} ${styles.postCardFeatured}`
-                    : styles.postCard
-                }
-                style={{ ["--card-bg" as string]: `url(${post.image})` }}
-              >
-                <div className={styles.postCardSpacer} aria-hidden />
-                <span className={`h5 ${styles.postCardTitle}`}>
-                  {post.title}
-                </span>
-                <span className={styles.postCardArrow}>
-                  <ArrowDots />
-                </span>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ════════ 5. A QUOTE FROM OUR FOUNDERS ════════ */}
+      {/* ════════ 4. A QUOTE FROM OUR FOUNDERS ════════
+          Bento grid — a tall group-photo tile on the left carrying the
+          featured founder quote, and two stacked quote cards on the
+          right whose combined height matches the photo. */}
       <section className="section">
         <div className={styles.bounds}>
           <h2 className={`mb-6 md:mb-8 ${styles.sectionLabel}`}>
@@ -263,7 +252,7 @@ export default function CompanyPage() {
           </h2>
           <div className={styles.foundersGrid}>
             {/* Left — featured photo tile: the group photo with a
-                top/bottom black gradient for legibility, the featured
+                top/bottom navy gradient for legibility, the featured
                 founder quote over the top and the attribution bottom-left.
                 Square (aspect-ratio 1/1) — the right column stretches to
                 match its height. */}
@@ -324,17 +313,38 @@ export default function CompanyPage() {
         </div>
       </section>
 
-      {/* ════════ 6. OUR VALUES ════════ */}
+      {/* ════════ 5. READ MORE ════════ */}
       <section className="section">
         <div className={styles.bounds}>
           <h2 className={`mb-6 md:mb-8 ${styles.sectionLabel}`}>
-            Our values
+            Read more about what we do
           </h2>
-          <ValuesTeam cofounders={COFOUNDERS} image="/henti.png" />
+          <div className={styles.cardGrid}>
+            {POSTS.map((post) => (
+              <Link
+                key={post.title}
+                href={post.href}
+                className={
+                  post.featured
+                    ? `${styles.postCard} ${styles.postCardFeatured}`
+                    : styles.postCard
+                }
+                style={{ ["--card-bg" as string]: `url(${post.image})` }}
+              >
+                <div className={styles.postCardSpacer} aria-hidden />
+                <span className={`h5 ${styles.postCardTitle}`}>
+                  {post.title}
+                </span>
+                <span className={styles.postCardArrow}>
+                  <ArrowDots />
+                </span>
+              </Link>
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* ════════ 7. CONTACT CTA ════════ */}
+      {/* ════════ 6. CONTACT CTA ════════ */}
       <section className="section">
         <div className={styles.bounds}>
           <div className={styles.card}>

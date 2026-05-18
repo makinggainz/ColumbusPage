@@ -176,13 +176,10 @@ export function MistxNav({
       ref={headerRef}
       className="sticky z-100 w-full transition-[background-color] duration-300"
       style={{
-        // Sticks at the card's top edge (= the 30px top gutter), so the
-        // gutter stays visible above the navbar instead of getting
-        // covered when the navbar pins. Top-corner radii match the
-        // PageFrame card so the navbar's white backdrop curves with it.
-        top: "var(--frame-margin, 30px)",
-        borderTopLeftRadius: "var(--frame-radius, 20px)",
-        borderTopRightRadius: "var(--frame-radius, 20px)",
+        // Sticks flush to the top of the viewport (y=0). The page renders
+        // full-bleed with no frame gutter, so the navbar anchors directly
+        // to the screen edge with square corners.
+        top: 0,
         backgroundColor: showBackdrop && !heroScrim ? "#FFFFFF" : "transparent",
       }}
     >
@@ -201,8 +198,6 @@ export function MistxNav({
           className="pointer-events-none absolute inset-x-0 top-0 bottom-0"
           style={{
             zIndex: 0,
-            borderTopLeftRadius: "var(--frame-radius, 20px)",
-            borderTopRightRadius: "var(--frame-radius, 20px)",
             background: `linear-gradient(to bottom, rgba(${scrimRGB},1) 0%, rgba(${scrimRGB},0.55) 50%, rgba(${scrimRGB},0) 100%)`,
             opacity: heroScrim ? 1 : 0,
             transition: "opacity 300ms ease",

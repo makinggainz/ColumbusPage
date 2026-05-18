@@ -1,7 +1,3 @@
-"use client";
-
-import { useEffect, useRef } from "react";
-
 /**
  * Hero section — minimal layout for the experimentV6-Gdesign redesign.
  *
@@ -11,10 +7,9 @@ import { useEffect, useRef } from "react";
  * desktop / 40px ≤991px) — same typescale used on every heading across
  * the page.
  *
- * Right side: full-bleed boat-sailing background video
- * (/HeroShipVid.mp4), with /BoatHero.jpg as the poster frame. A
- * left-side white→transparent gradient overlay sits above the video
- * so the H1 reads cleanly regardless of how the footage lands behind it.
+ * Right side: full-bleed background image (/herobackground123.png). A
+ * left-side white→transparent gradient overlay sits above the image
+ * so the H1 reads cleanly regardless of how the artwork lands behind it.
  */
 
 const HN_CSS = `
@@ -57,12 +52,10 @@ const HN_CSS = `
   border-bottom-right-radius: 20px;
 }
 
-/* Full-bleed background video. Sits at the very bottom of the section's
-   stacking (z-index: 0) so the ::before readability gradient and ::after
-   vignette (both z-index: 1) and the .hn-bounds content (z-index: 2)
-   all layer cleanly on top. object-position mirrors the old
-   background-position so the ::after radial vignette stays aligned. */
-.hn-video {
+/* Full-bleed background image. Sits at the very bottom of the section's
+   stacking (z-index: 0) so the ::after bottom fade (z-index: 1) and the
+   .hn-bounds content (z-index: 2) all layer cleanly on top. */
+.hn-image {
   position: absolute;
   inset: 0;
   width: 100%;
@@ -72,54 +65,22 @@ const HN_CSS = `
   z-index: 0;
 }
 
-/* Left-side readability layer — fades from the section's base surface
-   (#FDFCFC) at the left edge to transparent past the H1's max-width,
-   so the H1 sits on a near-solid background while the boat half of
-   the video reads through cleanly on the right. */
-.hn-section::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    to right,
-    rgba(255, 255, 255, 0.92) 0%,
-    rgba(255, 255, 255, 0.78) 30%,
-    rgba(255, 255, 255, 0.30) 55%,
-    transparent 75%
-  );
-  pointer-events: none;
-  z-index: 1;
-}
-
-/* Two-layer overlay (single ::after):
-   1. Top — linear bottom fade. Ensures the section's bottom edge is
-      fully opaque white so the hand-off to the next section
-      (TextScrollIntro / page wrapper #FFFFFF) is seamless, with no
-      leftover image showing at the seam.
-   2. Beneath — radial vignette centred at ~76% horizontal / 50%
-      vertical (the tall-ship's position). Transparent at the ship,
-      ramps to opaque white outward so the surrounding water + map
-      texture fades into the page and the eye lands on the ship.
-   Sits above the bg image but beneath bounds content (z-index 1;
-   bounds is at z-index 2). */
+/* Bottom fade overlay — a single linear gradient that ramps to fully
+   opaque white at the section's bottom edge, so the hand-off to the
+   next section (TextScrollIntro / page wrapper #FFFFFF) is seamless
+   with no leftover image showing at the seam. The image itself reads
+   uncovered everywhere else. Sits above the bg image but beneath the
+   bounds content (z-index 1; bounds is at z-index 2). */
 .hn-section::after {
   content: "";
   position: absolute;
   inset: 0;
-  background:
-    linear-gradient(
-      to bottom,
-      transparent 65%,
-      rgba(255, 255, 255, 0.55) 85%,
-      rgba(255, 255, 255, 1) 100%
-    ),
-    radial-gradient(
-      ellipse 56% 80% at 76% 50%,
-      rgba(255, 255, 255, 0) 0%,
-      rgba(255, 255, 255, 0) 44%,
-      rgba(255, 255, 255, 0.55) 73%,
-      rgba(255, 255, 255, 1) 100%
-    );
+  background: linear-gradient(
+    to bottom,
+    transparent 65%,
+    rgba(255, 255, 255, 0.55) 85%,
+    rgba(255, 255, 255, 1) 100%
+  );
   pointer-events: none;
   z-index: 1;
 }
@@ -178,35 +139,14 @@ const HN_CSS = `
 `;
 
 export function HeroNew() {
-  const videoRef = useRef<HTMLVideoElement>(null);
-
-  // Next SSR doesn't emit the `muted` attribute into the server HTML
-  // (it's only set as a property after hydration), so browsers block
-  // autoplay. Explicitly set `.muted` and call `.play()` — with a
-  // `canplay` retry in case the data wasn't ready on the first attempt.
-  useEffect(() => {
-    const v = videoRef.current;
-    if (!v) return;
-    v.muted = true;
-    const tryPlay = () => { v.play().catch(() => {}); };
-    tryPlay();
-    v.addEventListener("canplay", tryPlay);
-    return () => v.removeEventListener("canplay", tryPlay);
-  }, []);
-
   return (
     <section className="hn-section" aria-label="Columbus hero" data-hero-section>
       <style>{HN_CSS}</style>
-      <video
-        ref={videoRef}
-        className="hn-video"
-        src="/HeroShipVid.mp4"
-        poster="/BoatHero.jpg"
-        autoPlay
-        loop
-        muted
-        playsInline
-        preload="auto"
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        className="hn-image"
+        src="/herobackground123.png"
+        alt=""
         aria-hidden
       />
       <div className="hn-bounds">
