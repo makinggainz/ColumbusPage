@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { MistxNav } from "@/components/layout/MistxNav";
 
 type Phase = "writing" | "folding" | "bottling" | "dropping" | "floating" | "done";
@@ -141,6 +141,7 @@ export default function ContactPage() {
   const [charCount, setCharCount] = useState(0);
   const [mounted, setMounted] = useState(false);
   const [tabKey, setTabKey] = useState(0);
+  const cardRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const t = setTimeout(() => setMounted(true), 120);
@@ -153,6 +154,20 @@ export default function ContactPage() {
     transform: mounted ? "translateY(0px)" : "translateY(18px)",
     transition: `opacity 1000ms ease ${delay}ms, filter 1000ms ease ${delay}ms, transform 1000ms ease ${delay}ms`,
   });
+
+  /* Glide the form card up under the navbar the first time the user
+     interacts with it. `scrollIntoView` + the card's `scroll-margin-top`
+     lets the browser compute the landing spot, so it can't overshoot
+     the way manual `scrollY` math did (the page sits inside PageFrame's
+     margin'd, `overflow: clip` wrapper, which threw the math off).
+     The guard skips the scroll once the card is already up — or
+     scrolled past — so focusing a field or switching tabs never
+     re-yanks the page. */
+  const scrollToForm = () => {
+    const el = cardRef.current;
+    if (!el || el.getBoundingClientRect().top < 140) return;
+    el.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -282,7 +297,7 @@ export default function ContactPage() {
             <div style={heroFadeIn(200)}>
 
               {/* ── Form card ── */}
-              <div style={cardStyle}>
+              <div ref={cardRef} style={{ ...cardStyle, scrollMarginTop: 120 }} onClick={scrollToForm}>
 
                 {/* Pill tab row — left-aligned */}
                 <div className="flex gap-2.5 overflow-x-auto px-4 py-4" style={{ borderBottom: `1px solid ${HAIRLINE}` }}>

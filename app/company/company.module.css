@@ -180,13 +180,13 @@
   }
 }
 
-/* Centres "The timeline" link below the open vision statement. */
+/* Centres "The timeline" link below the "what we're building" pillars. */
 .timelineWrap {
   margin-top: 40px;
   text-align: center;
 }
 
-/* "The timeline" inline link below the vision statement. */
+/* "The timeline" inline link below the pillars. */
 .timelineLink {
   display: inline-flex;
   align-items: center;
@@ -197,6 +197,60 @@
 }
 .timelineLink:hover {
   color: #0081AC;
+}
+
+/* ── "What we're building" — three pillar cards laying out the Large
+   Geospatial Model. Hairline, no fill (the blueprint-grid treatment) so
+   they read as structural alongside the soft-filled team cards below. ─── */
+.pillarGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+@media (min-width: 1024px) {
+  .pillarGrid {
+    gap: 20px;
+  }
+}
+@media (max-width: 768px) {
+  .pillarGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.pillar {
+  border: 1px solid var(--color-gridline);
+  border-radius: 13px;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Pillar index — a quiet "01 / 02 / 03" sequence marker, sized to the
+   section kicker so every micro-label on the page reads at one scale. */
+.pillarIndex {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: var(--color-muted);
+}
+
+/* Pillar title — uses the global .h5 type step; this rule only adds the
+   spacing and balanced wrap. */
+.pillarTitle {
+  margin-top: 20px;
+  color: var(--color-ink);
+  text-wrap: balance;
+}
+
+.pillarBody {
+  margin-top: 12px;
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.5;
+  font-weight: 400;
+  color: var(--color-muted);
 }
 
 /* ── "Read more" card grid — ported from the homepage BlogSection

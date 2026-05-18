@@ -298,8 +298,11 @@ export function MistxNav({
               className="h7 hidden lg:flex items-center font-semibold leading-none whitespace-nowrap"
               style={{
                 fontFamily: "Axiforma, 'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif",
+                fontSize: "1.25rem",
+                fontWeight: 650,
+                marginLeft: "-4px",
                 position: "relative",
-                top: "3px",
+                top: "2px",
                 color: lightNav ? "#FFFFFF" : "#0F173C",
               }}
             >
