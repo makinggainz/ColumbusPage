@@ -475,14 +475,15 @@
   inset: 0;
   z-index: 1;
   pointer-events: none;
-  /* Blue wash (#00529E) — a touch darker than the previous #0066CC. */
+  /* Blue wash (#005CB5) — the midpoint between the original #0066CC and
+     the darker #00529E. */
   background: linear-gradient(
     to bottom,
-    rgba(0, 82, 158, 0.88) 0%,
-    rgba(0, 82, 158, 0.66) 30%,
-    rgba(0, 82, 158, 0.45) 50%,
-    rgba(0, 82, 158, 0.66) 70%,
-    rgba(0, 82, 158, 0.88) 100%
+    rgba(0, 92, 181, 0.88) 0%,
+    rgba(0, 92, 181, 0.66) 30%,
+    rgba(0, 92, 181, 0.45) 50%,
+    rgba(0, 92, 181, 0.66) 70%,
+    rgba(0, 92, 181, 0.88) 100%
   );
 }
 

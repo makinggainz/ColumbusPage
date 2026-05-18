@@ -88,7 +88,19 @@ function ArrowDot({ className = "" }: { className?: string }) {
 export function MistxNav({
   heroWhite = false,
   heroLight = false,
-}: { heroWhite?: boolean; heroLight?: boolean } = {}) {
+  heroTint,
+}: {
+  heroWhite?: boolean;
+  heroLight?: boolean;
+  /**
+   * Like `heroLight`, but with a caller-supplied scrim colour instead of
+   * the MapsGPT stage colour. Set it to the hero's surface colour and the
+   * navbar floats transparent at the top of the page, then fades in a
+   * masked gradient-opacity scrim of this colour while scrolling over the
+   * hero (the Research page uses it — see app/research / TechnologyPage).
+   */
+  heroTint?: string;
+} = {}) {
   const [elioOpen, setElioOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   // True while the navbar is still in flow (not stuck to the viewport
@@ -189,14 +201,16 @@ export function MistxNav({
   // `heroLight` (the MapsGPT hero) reuses the float-over-hero mechanic
   // for a LIGHT hero: nav contents stay dark (lightNav stays false) and
   // the scrim is a pale sand tint instead of business' sky blue.
-  const heroFloat = heroWhite || heroLight;
+  const heroFloat = heroWhite || heroLight || heroTint != null;
   const heroScrim = heroFloat && stuck && overHero;
   const scrimRGB = "0,99,199";
   // MapsGPT sticky-stage scene colour — matches Hero's CREAM top stop /
   // NAVY top stop / LIGHT. A single solid that the navbar's masked scrim
   // cross-fades between via `background-color` (see the scrim div below).
+  // `heroTint` (Research page) overrides this with a fixed caller colour.
   const heroStageColor =
-    heroPhase === 2 ? "#063140" : heroPhase === 3 ? "#FFFFFF" : "#F7F2E4";
+    heroTint ??
+    (heroPhase === 2 ? "#063140" : heroPhase === 3 ? "#FFFFFF" : "#F7F2E4");
 
   return (
     <header
@@ -245,7 +259,7 @@ export function MistxNav({
           700ms cubic-bezier matches Hero's backdrop transition exactly,
           and Hero dispatches the scene change in the same tick as its own
           setState, so the two cross-fades start on the same frame. */}
-      {heroLight && (
+      {(heroLight || heroTint != null) && (
         <div
           aria-hidden
           className="pointer-events-none absolute inset-x-0 top-0 bottom-0"
@@ -299,7 +313,7 @@ export function MistxNav({
               style={{
                 fontFamily: "Axiforma, 'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif",
                 fontSize: "1.25rem",
-                fontWeight: 650,
+                fontWeight: 605,
                 marginLeft: "-4px",
                 position: "relative",
                 top: "2px",

@@ -49,14 +49,19 @@ export default function BusinessPage() {
           Wrapping it in a navbar-height <section> would trap the sticky
           element and let it scroll away after ~88px. */}
       <MistxNav heroWhite />
-      <section className="relative">
+      {/* z-20 keeps the hero above the white block below so the glass
+          window can bleed down and overlap it (see BusinessHero). */}
+      <section className="relative z-20">
         <BusinessHero />
       </section>
-      {/* White mid-block. */}
+      {/* White mid-block. The paddingTop reserves an empty white band at the
+          top so the hero's glass window can bleed down into it without
+          covering the "Legacy GIS slows you down…" header — the content
+          starts below the bleed. */}
       <div
         ref={darkStartRef}
         className="relative"
-        style={{ backgroundColor: "#ffffff" }}
+        style={{ backgroundColor: "#ffffff", paddingTop: "clamp(110px, 12vw, 180px)" }}
       >
         <div className="relative z-10">
           {/* ProblemCards sits on plain white — no backdrop. SolutionShowcase

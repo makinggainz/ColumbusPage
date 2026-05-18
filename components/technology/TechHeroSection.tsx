@@ -1,10 +1,10 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
 import styles from "./technology.module.css";
+import { TechHeroMesh } from "./TechHeroMesh";
 import { HERO_SCROLL_INDEX_ITEMS } from "./redesign/content";
 
 export function TechHeroSection() {
@@ -62,15 +62,18 @@ export function TechHeroSection() {
   });
 
   return (
-    <section ref={sectionRef} className={styles.techHero}>
-      <Image
-        src="/TechpgHero.png"
-        alt=""
-        fill
-        priority
-        sizes="100vw"
-        className={styles.techHeroVideo}
-      />
+    <section ref={sectionRef} data-hero-section className={styles.techHero}>
+      {/* Animated 3D wave-mesh background — ported from the experimentV6
+          home hero. Fills the whole hero (including the band that sits
+          under the transparent navbar). */}
+      <TechHeroMesh />
+
+      {/* Top→bottom gradient stack — ported from the experimentV6 hero.
+          A blue accent tint at the top, a horizon softener mid-way, and
+          a fade to white that blends the mesh into the section below. */}
+      <div aria-hidden className={styles.techHeroAccentGradient} />
+      <div aria-hidden className={styles.techHeroHorizonGradient} />
+      <div aria-hidden className={styles.techHeroBottomGradient} />
 
       {/* Scroll-driven blur overlay — sits above the hero image + text,
           backdrop-filter blurs everything behind it as `blurProgress`

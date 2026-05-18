@@ -2878,17 +2878,65 @@
 .techHero {
   position: relative;
   width: 100%;
-  height: 100vh;
+  /* The 120px overshoot pairs with the negative margin-top below: the
+     hero is pulled up so its animated mesh extends to the very top of
+     the page (behind the sticky navbar), while padding-top keeps the
+     hero content clear of the navbar overlay so nothing shifts. The
+     overshoot is added to the height so the hero still contributes a
+     full 100vh of scroll. Same technique as components/business/
+     BusinessHero.tsx. */
+  height: calc(100vh + 120px);
+  margin-top: -120px;
+  padding-top: 120px;
   overflow: hidden;
-  background: #000;
+  /* Light surface behind the (transparent) mesh canvas — matches the
+     experimentV6 home hero's #F9F9F9 background. */
+  background: #F9F9F9;
 }
 
-.techHeroVideo {
+/* ── Hero gradient stack — ported from the experimentV6 home hero.
+   Layered above the mesh canvas (z-index 0) but below the hero
+   content (.techHeroContent, z-index 10). ── */
+
+/* Blue accent tint across the top half. */
+.techHeroAccentGradient {
   position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 50%;
+  z-index: 3;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 102, 204, 0.15) 0%,
+    rgba(0, 102, 204, 0.08) 60%,
+    transparent 100%
+  );
+}
+
+/* Horizon softener — fades the mesh's far horizon line into the surface. */
+.techHeroHorizonGradient {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 22vh;
+  height: 18vh;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(to bottom, #F9F9F9, transparent);
+}
+
+/* Fade to white at the bottom — blends the mesh into the section below. */
+.techHeroBottomGradient {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 300px;
+  z-index: 3;
+  pointer-events: none;
+  background: linear-gradient(to bottom, transparent, #ffffff);
 }
 
 /* Scroll-driven blur overlay. Sits above the hero image AND text inside
@@ -2934,6 +2982,9 @@
 
 .techHeroContent {
   position: relative;
+  /* Above the mesh canvas (z 0) and the gradient stack (z 1–3); still
+     below the scroll-driven blur (z 20) and fade-to-black (z 30). */
+  z-index: 10;
   width: 100%;
   max-width: 1287px;
   margin: 0 auto;

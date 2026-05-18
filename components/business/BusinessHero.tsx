@@ -56,7 +56,7 @@ export default function BusinessHero() {
     <section
       ref={sectionRef}
       data-hero-section
-      className="relative w-full overflow-hidden"
+      className="relative w-full"
       style={{
         backgroundColor: "var(--ent-bg-light)",
         // The navbar is sticky and stays in document flow (~83–90px tall
@@ -71,14 +71,15 @@ export default function BusinessHero() {
         paddingTop: 120,
       }}
     >
-      {/* Background image — the Columbus cityscape photo (ColumbusBackgroundV2),
-          cover-fit. backgroundPosition is biased below center so the visible
-          frame sits a little lower, revealing more of the trees at the bottom. */}
+      {/* Background image — the businessback4 skyline photo, cover-fit.
+          backgroundPosition is biased high up the image (25%) so the frame
+          sits well up: the cloud band lands around the level of the product
+          showcase window rather than up by the headline. */}
       <div
         className="absolute inset-0"
         style={{
-          backgroundImage: "url(/ColumbusBackgroundV2.png)",
-          backgroundPosition: "center 60%",
+          backgroundImage: "url(/businessback4.png)",
+          backgroundPosition: "center 25%",
           backgroundSize: "cover",
           backgroundRepeat: "no-repeat",
           zIndex: 0,
@@ -90,16 +91,6 @@ export default function BusinessHero() {
         className="absolute inset-0 pointer-events-none"
         style={{ backgroundColor: "rgba(0, 0, 0, 0.28)", zIndex: 0 }}
       />
-      {/* Fade to white at bottom */}
-      <div
-        className="absolute bottom-0 left-0 right-0 pointer-events-none"
-        style={{
-          height: "40%",
-          background: "linear-gradient(to bottom, transparent 0%, var(--ent-bg-light) 100%)",
-          zIndex: 0,
-        }}
-      />
-
       {/* ── Text block ── */}
       {/* pt-[200px] restores the vertical breathing room previously
           provided by the removed ConsumerBusinessToggle wrapper
@@ -134,14 +125,18 @@ export default function BusinessHero() {
         </Link>
       </div>
 
-      {/* ── Product display — glass browser window ── */}
+      {/* ── Product display — glass browser window ──
+          The negative marginBottom pulls the section's bottom edge up so the
+          lower portion of the glass window bleeds down past the hero and
+          overlaps the white section that follows underneath. */}
       <div
         className="relative z-10 flex justify-center w-full"
         style={{
           marginTop: "clamp(48px, 6vw, 80px)",
           paddingLeft: 20,
           paddingRight: 20,
-          paddingBottom: "clamp(64px, 9vw, 130px)",
+          paddingBottom: 0,
+          marginBottom: "clamp(-170px, -12vw, -100px)",
           ...reveal(visible, 0.22),
         }}
       >

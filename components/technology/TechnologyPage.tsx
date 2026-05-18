@@ -45,7 +45,11 @@ export function TechnologyPage() {
 
   return (
     <main className={styles.page}>
-      <MistxNav />
+      {/* heroTint floats the navbar transparent over the animated mesh
+          hero, then fades in a #F9F9F9 gradient-opacity scrim on scroll —
+          the same float-over-hero behaviour as the MapsGPT/Business
+          pages, tinted to the Research hero's surface colour. */}
+      <MistxNav heroTint="#F9F9F9" />
       <div className={styles.pageBody}>
         <div className={styles.pageBodyInner}>
           <TechHeroSection />

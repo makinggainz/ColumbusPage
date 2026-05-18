@@ -393,6 +393,8 @@ export default function Hero() {
           height: "100dvh",
           width: "100%",
           paddingTop: "clamp(56px, 7vh, 90px)",
+          // Heavier bottom pad biases the centred content upward a touch.
+          paddingBottom: "clamp(150px, 19vh, 230px)",
         }}
       >
         {/* Light pastel Elio background + soft legibility wash */}
