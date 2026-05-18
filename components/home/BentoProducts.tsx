@@ -234,7 +234,7 @@ const CSS = `
      .bp-card--research background gradient. */
 .bp-card--columbus .bp-notch-label { color: #018ADE; }
 .bp-card--elio .bp-notch-label { color: #C98A5B; }
-.bp-card--research .bp-notch-label { color: #76A8F3; }
+.bp-card--research .bp-notch-label { color: #018ADE; }
 @media (min-width: 640px) {
   .bp-notch { height: 46px; padding: 0 32px; }
 }

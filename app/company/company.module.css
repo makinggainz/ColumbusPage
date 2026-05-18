@@ -43,6 +43,7 @@
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
+  opacity: 0.5;
   -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 20%, #000 80%, transparent 100%);
   mask-image: linear-gradient(to bottom, transparent 0%, #000 20%, #000 80%, transparent 100%);
 }

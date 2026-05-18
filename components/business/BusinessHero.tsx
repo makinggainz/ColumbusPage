@@ -71,14 +71,14 @@ export default function BusinessHero() {
         paddingTop: 120,
       }}
     >
-      {/* Background image — the businessback3 cityscape photo, cover-fit.
-          backgroundPosition is biased below center so the visible frame sits
-          a little lower, revealing more of the trees at the bottom. */}
+      {/* Background image — the Columbus cityscape photo (ColumbusBackgroundV2),
+          cover-fit. backgroundPosition is biased below center so the visible
+          frame sits a little lower, revealing more of the trees at the bottom. */}
       <div
         className="absolute inset-0"
         style={{
-          backgroundImage: "url(/businessback3.png)",
-          backgroundPosition: "center 12%",
+          backgroundImage: "url(/ColumbusBackgroundV2.png)",
+          backgroundPosition: "center 60%",
           backgroundSize: "cover",
           backgroundRepeat: "no-repeat",
           zIndex: 0,

@@ -37,21 +37,21 @@ export default function SolutionShowcase() {
           the screen and a harbour town the lower-right, both sitting
           behind the heading. Scoped to B3 (B2 above stays plain white). */}
       <div aria-hidden className="pointer-events-none absolute inset-0 z-0">
-        <div className="absolute bottom-0 left-0 w-[26%] max-w-90 aspect-1378/1260">
+        <div className="absolute bottom-0 left-0 w-[22%] max-w-76 aspect-1378/1260">
           <Image
             src="/businessB3/left.png"
             alt=""
             fill
-            sizes="26vw"
+            sizes="22vw"
             className="object-contain object-bottom-left"
           />
         </div>
-        <div className="absolute bottom-0 right-0 w-[38%] max-w-140 aspect-1604/1296">
+        <div className="absolute bottom-0 right-0 w-[32%] max-w-120 aspect-1604/1296">
           <Image
             src="/businessB3/right.png"
             alt=""
             fill
-            sizes="38vw"
+            sizes="32vw"
             className="object-contain object-bottom-right"
           />
         </div>

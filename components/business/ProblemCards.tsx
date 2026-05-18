@@ -83,6 +83,7 @@ export default function ProblemCards() {
                 // line-art backdrop that rises into the lower half of b2.
                 backgroundColor: "#ffffff",
                 borderBottom: "1px solid var(--grid-line)",
+                borderRight: i < PAIN_POINTS.length - 1 ? "1px solid var(--grid-line)" : undefined,
                 fontSize: 15,
                 fontWeight: 400,
                 lineHeight: 1.5,

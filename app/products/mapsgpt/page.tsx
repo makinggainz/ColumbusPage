@@ -3,6 +3,9 @@ import { Footer } from "@/components/layout/Footer";
 import FavoritesSection from "@/components/products/FavoritesSection";
 import FinalCTASection from "@/components/products/FinalCTASection";
 import Hero from "@/components/products/Hero";
+import MoreFeaturesSection from "@/components/products/MoreFeaturesSection";
+import DestinationsSection from "@/components/products/DestinationsSection";
+import ClosingCTASection from "@/components/products/ClosingCTASection";
 import HowItWorksSection from "@/components/products/HowItWorksSection";
 import NewAtMapsGPTSection from "@/components/products/NewAtMapsGPTSection";
 import InspirationSection from "@/components/products/InspirationSection";
@@ -44,6 +47,11 @@ export default function ProductsPage() {
       <SectionWithLabel label={sectionLabels[1]}>
         <Hero />
       </SectionWithLabel>
+      {/* Post-hero stretch — bento features → destinations → closing CTA.
+          The original sections below shift down, unchanged. */}
+      <MoreFeaturesSection />
+      <DestinationsSection />
+      <ClosingCTASection />
       {/* Section C — ShowcaseSection removed; the scrollytelling Hero now
           carries the product-showcase role. */}
       {/* Section D — QuestionsSection (commented out, may restore later)

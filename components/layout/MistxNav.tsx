@@ -107,6 +107,12 @@ export function MistxNav({
   // only — drives the sky-tinted gradient scrim, which applies only
   // while over the hero.
   const [overHero, setOverHero] = useState(false);
+  // MapsGPT-only: the hero's sticky scroll stage swaps its backdrop colour
+  // through three scenes (cream → navy → white). Hero broadcasts the active
+  // scene via a `mapsgpt-hero-phase` event; the navbar mirrors that colour
+  // so it reads as a seamless continuation of the stage behind it. 0 is the
+  // cream intro; 1/2/3 are the cream / navy / white scenes.
+  const [heroPhase, setHeroPhase] = useState(0);
   const headerRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
@@ -147,6 +153,17 @@ export function MistxNav({
     };
   }, []);
 
+  // MapsGPT-only: track the hero's sticky-stage scene so the navbar
+  // backdrop can recolour to match it. Only wired up when `heroLight` is
+  // set, keeping this behaviour scoped to the MapsGPT page.
+  useEffect(() => {
+    if (!heroLight) return;
+    const onPhase = (e: Event) =>
+      setHeroPhase((e as CustomEvent<number>).detail ?? 0);
+    window.addEventListener("mapsgpt-hero-phase", onPhase);
+    return () => window.removeEventListener("mapsgpt-hero-phase", onPhase);
+  }, [heroLight]);
+
   const showBackdrop = stuck || !hasHero;
   // When `heroWhite` is set (business page), the nav contents render in
   // white while the navbar floats transparently over the hero image, then
@@ -158,7 +175,12 @@ export function MistxNav({
   // while scrolling over it (sky-tinted gradient scrim below). They
   // revert to the default dark colours only once the hero has scrolled
   // out and the solid white backdrop pins.
-  const lightNav = heroWhite && (!stuck || overHero);
+  // White nav contents on the business hero (white-on-image), and on the
+  // MapsGPT hero while its navy mid-scene sits behind the navbar — dark
+  // text would be invisible against #063140.
+  const lightNav =
+    (heroWhite && (!stuck || overHero)) ||
+    (heroLight && overHero && heroPhase === 2);
   // Business-only: while scrolled ("on movement") AND the navbar still
   // overlaps the hero, the solid white backdrop is replaced by a scrim
   // tinted to the hero image's sky colour — opaque at the top, fading to
@@ -169,7 +191,12 @@ export function MistxNav({
   // the scrim is a pale sand tint instead of business' sky blue.
   const heroFloat = heroWhite || heroLight;
   const heroScrim = heroFloat && stuck && overHero;
-  const scrimRGB = heroLight ? "244,234,220" : "0,99,199";
+  const scrimRGB = "0,99,199";
+  // MapsGPT sticky-stage scene colour — matches Hero's CREAM top stop /
+  // NAVY top stop / LIGHT. A single solid that the navbar's masked scrim
+  // cross-fades between via `background-color` (see the scrim div below).
+  const heroStageColor =
+    heroPhase === 2 ? "#063140" : heroPhase === 3 ? "#FFFFFF" : "#F7F2E4";
 
   return (
     <header
@@ -195,7 +222,7 @@ export function MistxNav({
           bottom border, so it blends into the real sky below with no
           hard edge. Driven by opacity so it cross-fades with the
           solid-white backdrop as the hero scrolls out. */}
-      {heroFloat && (
+      {heroWhite && (
         <div
           aria-hidden
           className="pointer-events-none absolute inset-x-0 top-0 bottom-0"
@@ -206,6 +233,34 @@ export function MistxNav({
             background: `linear-gradient(to bottom, rgba(${scrimRGB},1) 0%, rgba(${scrimRGB},0.55) 50%, rgba(${scrimRGB},0) 100%)`,
             opacity: heroScrim ? 1 : 0,
             transition: "opacity 300ms ease",
+          }}
+        />
+      )}
+      {/* MapsGPT hero-only backdrop. A single solid fill masked to the
+          same top-opaque → bottom-transparent fade as the business scrim,
+          so it melts into the sticky stage with no hard edge. Its colour
+          tracks the stage scene via `background-color` — a solid colour
+          IS transitionable (a gradient `background` is not), so the scene
+          change cross-fades cleanly with no muddy layer-stacking. The
+          700ms cubic-bezier matches Hero's backdrop transition exactly,
+          and Hero dispatches the scene change in the same tick as its own
+          setState, so the two cross-fades start on the same frame. */}
+      {heroLight && (
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-x-0 top-0 bottom-0"
+          style={{
+            zIndex: 0,
+            borderTopLeftRadius: "var(--frame-radius, 20px)",
+            borderTopRightRadius: "var(--frame-radius, 20px)",
+            backgroundColor: heroStageColor,
+            maskImage:
+              "linear-gradient(to bottom, black 0%, rgba(0,0,0,0.55) 50%, transparent 100%)",
+            WebkitMaskImage:
+              "linear-gradient(to bottom, black 0%, rgba(0,0,0,0.55) 50%, transparent 100%)",
+            opacity: heroScrim ? 1 : 0,
+            transition:
+              "opacity 300ms ease, background-color 700ms cubic-bezier(0.44,0,0.56,1)",
           }}
         />
       )}

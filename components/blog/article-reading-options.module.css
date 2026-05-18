@@ -49,6 +49,19 @@
   font-family: inherit;
 }
 
+/* On narrow screens the expanded option row (4 labelled buttons + the
+   trigger) is wider than the article column and gets clipped by the
+   page's overflow-x: hidden. Drop to icon-only there — every button
+   keeps its aria-label, so it stays accessible. */
+@media (max-width: 600px) {
+  .label {
+    display: none;
+  }
+  .divider {
+    margin: 0 2px;
+  }
+}
+
 .aaGlyph {
   font-size: 12px;
   font-weight: 600;

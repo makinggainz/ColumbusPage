@@ -33,7 +33,7 @@ export default async function BlogPostPage({ params }: Props) {
 
   const body = blogBodyWithSectionIds(mergeBlogBody(post.paragraphs));
   const stickySections = [
-    { id: "article-title", label: post.title },
+    { id: "article-title", label: "Introduction" },
     ...body
       .filter((b): b is { type: "h2"; text: string; id: string } => b.type === "h2")
       .map((b) => ({ id: b.id, label: b.text })),
@@ -41,16 +41,15 @@ export default async function BlogPostPage({ params }: Props) {
 
   return (
     <main className={`min-h-screen ${blogStyles.articlePage}`}>
-      <div className={blogStyles.greyPanel} aria-hidden />
       <div className="max-[1314px]:block hidden">
         <MistxNav />
       </div>
-      <BlogArticleStickyNav sections={stickySections} postTitle={post.title} />
+      <BlogArticleStickyNav sections={stickySections} />
 
       <article className="relative z-[1] mx-auto w-full max-w-[720px] px-4 pt-[175px] min-[1315px]:pt-[162px] pb-12 md:px-6">
-        <h1 id="article-title" className={`${blogStyles.headlineLarge} mb-4`}>{post.title}</h1>
+        <h1 id="article-title" className={`${blogStyles.headlineLarge} mb-4 scroll-mt-24`}>{post.title}</h1>
         <p
-          className={`${blogStyles.bodyLarge} ${blogStyles.colorOnSurfaceVariant} ${blogStyles.descriptionDivider} mb-4`}
+          className={`${blogStyles.bodyLarge} ${blogStyles.colorOnSurfaceVariant} mb-4`}
         >
           {post.description}
         </p>

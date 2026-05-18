@@ -19,9 +19,7 @@ import ProductBanner from "@/components/business/ProductBanner";
 import CapabilitiesGrid from "@/components/business/CapabilitiesGrid";
 import FAQSection from "@/components/business/FAQSection";
 
-const sectionLabels = ["a", "b", "b2", "b3", "c", "d", "e", "g", "m", "n"] as const;
-
-/* The reduced industry set shown in section g's "Tell us where you work"
+/* The reduced industry set shown in the "Tell us where you work"
    picker (and its sticky sub-navbar), ordered as the design's 3×2 grid.
    Scoped to this page — columbus-solutions still shows the full list. */
 const BUSINESS_INDUSTRIES: IndustryId[] = [
@@ -32,28 +30,6 @@ const BUSINESS_INDUSTRIES: IndustryId[] = [
   "academic-research",
   "environmental-research",
 ];
-
-function SectionWithLabel({
-  label,
-  children,
-}: {
-  label: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <section className="relative">
-      {process.env.NODE_ENV !== "production" && (
-        <span
-          className="absolute left-0 top-0 z-50 flex h-8 w-8 items-center justify-center rounded-br bg-black/80 text-sm font-bold text-white opacity-25"
-          aria-hidden
-        >
-          {label}
-        </span>
-      )}
-      {children}
-    </section>
-  );
-}
 
 /* The PageFrame carries a 1px #E7E7F1 hairline border site-wide (set in
    PageFrame.tsx). The business page drops it: this scoped <style> sets
@@ -68,14 +44,14 @@ export default function BusinessPage() {
   return (
     <main className="ent-scope">
       <style>{FRAME_NO_BORDER_CSS}</style>
-      {/* MistxNav is rendered as a direct child of <main> — not wrapped in
-          SectionWithLabel — so its position:sticky has the full page as its
-          containing block. Wrapping it in a navbar-height <section> would
-          trap the sticky element and let it scroll away after ~88px. */}
+      {/* MistxNav is rendered as a direct child of <main> so its
+          position:sticky has the full page as its containing block.
+          Wrapping it in a navbar-height <section> would trap the sticky
+          element and let it scroll away after ~88px. */}
       <MistxNav heroWhite />
-      <SectionWithLabel label={sectionLabels[1]}>
+      <section className="relative">
         <BusinessHero />
-      </SectionWithLabel>
+      </section>
       {/* White mid-block. */}
       <div
         ref={darkStartRef}
@@ -83,34 +59,33 @@ export default function BusinessPage() {
         style={{ backgroundColor: "#ffffff" }}
       >
         <div className="relative z-10">
-          {/* B2 (ProblemCards) sits on plain white — no backdrop. B3
-              (SolutionShowcase) carries its own line-art (a hand-drawn
-              galleon on the left, a harbour town on the right); see
+          {/* ProblemCards sits on plain white — no backdrop. SolutionShowcase
+              carries its own line-art (a hand-drawn galleon on the left, a
+              harbour town on the right); see
               components/business/SolutionShowcase.tsx. */}
-          <SectionWithLabel label={sectionLabels[2]}>
+          <section className="relative">
             <ProblemCards />
-          </SectionWithLabel>
-          {/* B3 + C are one section: SolutionShowcase is the title/intro,
-              ComparisonSection is its content directly below. The gap
-              between them is a heading→content space (set on
-              SolutionShowcase's header padding), not a section gap. */}
-          <SectionWithLabel label={`${sectionLabels[3]} · ${sectionLabels[4]}`}>
+          </section>
+          {/* SolutionShowcase is the title/intro, ComparisonSection is its
+              content directly below. The gap between them is a
+              heading→content space (set on SolutionShowcase's header
+              padding), not a section gap. */}
+          <section className="relative">
             <SolutionShowcase />
             <ComparisonSection />
-          </SectionWithLabel>
+          </section>
         </div>
       </div>
-      <SectionWithLabel label={sectionLabels[5]}>
+      <section className="relative">
         <ProductBanner />
-      </SectionWithLabel>
-      <SectionWithLabel label="d2">
+      </section>
+      <section className="relative">
         <CapabilitiesGrid />
-      </SectionWithLabel>
-      <SectionWithLabel label={sectionLabels[7]}>
-        {/* Section g — ported from /columbus-solutions: the industry-aware
-            block ("Pick your industry" → IndustrySelector + the four-row
-            UseCaseStickyScroll under IndustryProvider), then
-            ColumbusSolutionsSections and the FAQ.
+      </section>
+      <section className="relative">
+        {/* The industry-aware block ("Pick your industry" →
+            IndustrySelector + the four-row UseCaseStickyScroll under
+            IndustryProvider), then ColumbusSolutionsSections and the FAQ.
             lightTheme is forced on so it matches the business page's
             white/homepage system. topOffset = MistxNav's height (its
             content row is py-6 ≈ 84px) so the industry sub-navbar pins
@@ -123,17 +98,17 @@ export default function BusinessPage() {
         <section className="relative">
           <ColumbusSolutionsSections lightTheme disableSticky roundedBottom />
         </section>
-        <SectionWithLabel label="faq">
+        <section className="relative">
           <FAQSection />
-        </SectionWithLabel>
-      </SectionWithLabel>
-      <SectionWithLabel label={sectionLabels[8]}>
+        </section>
+      </section>
+      <section className="relative">
         <ChatSection />
-      </SectionWithLabel>
+      </section>
       <div style={{ backgroundColor: "#ffffff" }}>
-        <SectionWithLabel label={sectionLabels[9]}>
+        <section className="relative">
           <Footer theme="light" />
-        </SectionWithLabel>
+        </section>
       </div>
     </main>
   );

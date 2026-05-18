@@ -13,16 +13,20 @@ export type BlogStickySection = {
 
 type Props = {
   sections: BlogStickySection[];
-  postTitle?: string;
 };
 
-export function BlogArticleStickyNav({ sections, postTitle = "" }: Props) {
+export function BlogArticleStickyNav({ sections }: Props) {
   const [logoHovered, setLogoHovered] = useState(false);
   const [activeId, setActiveId] = useState<string>("");
   const [pastEnd, setPastEnd] = useState(false);
 
   useEffect(() => {
-    const footer = document.querySelector("footer");
+    // Scope to the article's own footer, which lives inside <main>. A
+    // plain `querySelector("footer")` instead matches the global reveal
+    // footer (layout.tsx) — a position:fixed, full-height element pinned
+    // to the viewport, so it reads as "intersecting" the moment this
+    // effect runs and hides the dock on load.
+    const footer = document.querySelector("main footer");
     if (!footer) return;
     const observer = new IntersectionObserver(
       ([entry]) => setPastEnd(entry.isIntersecting),
@@ -95,7 +99,7 @@ export function BlogArticleStickyNav({ sections, postTitle = "" }: Props) {
               return (
                 <li key={s.id}>
                   <a href={`#${s.id}`} className={`${styles.tocItem} ${isActive ? styles.tocItemActive : ""}`}>
-                    <span className={styles.tocItemLabel} data-label={`${i + 1}. ${s.label}`}>{i + 1}. {s.label}</span>
+                    <span className={styles.tocItemLabel}>{i + 1}. {s.label}</span>
                   </a>
                 </li>
               );
