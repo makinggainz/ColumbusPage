@@ -207,40 +207,43 @@ export function MistxNav({ heroWhite = false }: { heroWhite?: boolean } = {}) {
           left edge and the "Try Elio" CTA's right edge sit flush with the
           page's left/right content bounds. */}
       <div className="max-w-[1287px] mx-5 md:mx-auto flex items-center py-6 relative z-10">
-        {/* Left: logo + wordmark */}
-        <div className="flex-1 flex items-center gap-3">
+        {/* Left: logo + wordmark — a single home link wrapping both, so
+            the "Columbus Earth" text is clickable alongside the logo. */}
+        <div className="flex-1 flex items-center">
           <a
             rel="home"
             aria-label="Home"
-            className="relative z-10 flex size-[34px] items-center justify-center"
+            className="relative z-10 flex items-center gap-3"
             href="/"
           >
-            <img
-              alt="Columbus Logo"
-              width={34}
-              height={34}
-              decoding="async"
-              className="object-contain transition-[filter] duration-300"
+            <span className="flex size-[34px] items-center justify-center">
+              <img
+                alt="Columbus Logo"
+                width={34}
+                height={34}
+                decoding="async"
+                className="object-contain transition-[filter] duration-300"
+                style={{
+                  color: "transparent",
+                  filter: lightNav
+                    ? "brightness(0) invert(1)"
+                    : "brightness(0) saturate(100%) invert(8%) sepia(80%) saturate(1400%) hue-rotate(215deg) brightness(90%)",
+                }}
+                src="/logobueno.png"
+              />
+            </span>
+            <span
+              className="h7 hidden lg:flex items-center font-semibold leading-none whitespace-nowrap"
               style={{
-                color: "transparent",
-                filter: lightNav
-                  ? "brightness(0) invert(1)"
-                  : "brightness(0) saturate(100%) invert(8%) sepia(80%) saturate(1400%) hue-rotate(215deg) brightness(90%)",
+                fontFamily: "Axiforma, 'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif",
+                position: "relative",
+                top: "3px",
+                color: lightNav ? "#FFFFFF" : "#0F173C",
               }}
-              src="/logobueno.png"
-            />
+            >
+              Columbus Earth
+            </span>
           </a>
-          <span
-            className="h7 hidden lg:flex items-center font-semibold leading-none whitespace-nowrap"
-            style={{
-              fontFamily: "Axiforma, 'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif",
-              position: "relative",
-              top: "3px",
-              color: lightNav ? "#FFFFFF" : "#0F173C",
-            }}
-          >
-            Columbus Earth
-          </span>
         </div>
 
         {/* Center: flat top-level links. webiaX-style pill hover, no

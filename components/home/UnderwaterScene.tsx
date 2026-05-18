@@ -54,6 +54,23 @@ export default function UnderwaterScene() {
       }));
       whaleRef.current = { x: -350, y: H * 0.55, speed: 12, phase: 0 };
       subRef.current = { x: -500, y: H * 0.42, speed: 22 };
+
+      // Every stroke is drawn at THIN× its nominal width so the whole
+      // scene reads as fine vintage line-art — matching the companyhero
+      // ink sketch — rather than heavy strokes. Done once as a setter
+      // shim on the 2D context so individual draw calls stay untouched.
+      const THIN = 0.6;
+      const nativeLW = Object.getOwnPropertyDescriptor(
+        CanvasRenderingContext2D.prototype,
+        "lineWidth",
+      );
+      if (nativeLW?.get && nativeLW.set) {
+        Object.defineProperty(ctx, "lineWidth", {
+          get() { return nativeLW.get!.call(ctx); },
+          set(v: number) { nativeLW.set!.call(ctx, v * THIN); },
+        });
+      }
+
       initedRef.current = true;
     }
 
@@ -64,7 +81,10 @@ export default function UnderwaterScene() {
 
     const t = performance.now() * 0.001;
     const dt = 0.016;
-    const rgb = "20,60,160";
+    // Black ink — every creature, wave and wreck stroke is drawn in black
+    // to match the vintage linear illustrations (e.g. the companyhero
+    // sketch). Depth/atmosphere still comes purely from per-stroke alpha.
+    const rgb = "0,0,0";
 
     // ── Surface mesh at top (original IslandScene style) ──
     const surfFov = 550, surfHorizon = H * 0.25, surfCamH = 380;
@@ -338,7 +358,7 @@ export default function UnderwaterScene() {
         const sway = Math.sin(t * 0.6 + i * 1.3 + s * 0.8) * 6;
         const sway2 = Math.sin(t * 0.9 + i * 0.7 + s * 1.2) * 3;
         const height = 20 + (i % 4) * 8 + s * 5;
-        ctx.strokeStyle = `rgba(40,80,40,${(0.06 + (i % 3) * 0.02).toFixed(3)})`;
+        ctx.strokeStyle = `rgba(${rgb},${(0.06 + (i % 3) * 0.02).toFixed(3)})`;
         ctx.lineWidth = 0.8 + s * 0.2;
         ctx.beginPath();
         ctx.moveTo(sx + s * 4, baseY);
@@ -502,7 +522,7 @@ export default function UnderwaterScene() {
       const sway = Math.sin(t * 0.7 + i * 1.5) * 5;
       const sway2 = Math.sin(t * 1.1 + i * 0.9) * 3;
       const height = 25 + (i % 3) * 12;
-      ctx.strokeStyle = `rgba(40,80,40,${(0.07 + (i % 3) * 0.02).toFixed(3)})`;
+      ctx.strokeStyle = `rgba(${rgb},${(0.07 + (i % 3) * 0.02).toFixed(3)})`;
       ctx.lineWidth = 1;
       ctx.beginPath();
       ctx.moveTo(sx, wreckY + 15);

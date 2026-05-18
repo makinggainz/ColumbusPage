@@ -147,14 +147,8 @@ export function PageFrame({ children }: { children: ReactNode }) {
         // the white card reads as a floating panel against the white
         // site backdrop on every route. Tracks the rounded corners.
         boxShadow: "var(--frame-shadow, none)",
-        // Accent hairline on the inset (rounded card) state. A real CSS
-        // border on the card element; its width animates with the card —
-        // 2px while inset, fading to 0 once the card reaches full-bleed
-        // (--frame-border-width, set by the scroll handler above) — so no
-        // border frames the page when it fills the screen. Routes can opt
-        // out entirely by setting --frame-border: none (the business page
-        // does this — see app/products/business/page.tsx).
-        border: "var(--frame-border, var(--frame-border-width, 2px) solid #0081AC)",
+        // No border frames the card.
+        border: "none",
         backgroundColor: "#FFFFFF",
         overflow: "clip",
         minHeight: "calc(100vh - var(--frame-margin, 30px) * 2)",

@@ -4,6 +4,11 @@ import Link from "next/link";
 import { Mail, Linkedin } from "lucide-react";
 
 import { MistxNav } from "@/components/layout/MistxNav";
+import { ValuesTeam } from "@/components/company/ValuesTeam";
+import {
+  ScrollHighlightStatement,
+  type StatementSegment,
+} from "@/components/company/ScrollHighlightStatement";
 import styles from "./company.module.css";
 
 export const metadata: Metadata = {
@@ -91,14 +96,26 @@ const POSTS: PostCard[] = [
   },
 ];
 
-/* Founder quotes — copy reproduced verbatim from the design mockup. */
-const QUOTES: { quote: string; name: string; role: string; avatar: string }[] = [
+/* Founder quotes — copy reproduced verbatim from the design mockup.
+   `FEATURED` fills the left photo tile; `QUOTES` are the two stacked
+   cards on the right. */
+type Quote = { quote: string; name: string; role: string; avatar: string };
+
+const FEATURED: Quote = {
+  quote:
+    "I started Columbus just to get some Columbussy on my dih. I like males.",
+  name: "David Ramirez Blonski",
+  role: "Co-Founder, CEO",
+  avatar: "/David.png",
+};
+
+const QUOTES: Quote[] = [
   {
     quote:
       "I started Columbus just to get some Columbussy on my dih. I like males.",
-    name: "David Ramirez Blonski",
-    role: "Co-Founder, CEO",
-    avatar: "/David.png",
+    name: "Alexander Ramirez Blonski",
+    role: "Co-Founder, CPO",
+    avatar: "/Alex.jpg",
   },
   {
     quote: "When I'm not working on Columbus im gooning to hentai from Japan.",
@@ -106,6 +123,38 @@ const QUOTES: { quote: string; name: string; role: string; avatar: string }[] = 
     role: "Co-Founder, CTO",
     avatar: "/Erick.png",
   },
+];
+
+/* 4th cofounder — ninja-mask placeholder image; quote to be filled in. */
+const FOURTH: Quote = {
+  quote: "Quote coming soon.",
+  name: "Josue De Silva",
+  role: "Co-Founder, CAO",
+  avatar: "/cofounder-placeholder.svg",
+};
+
+/* All four cofounders, in row order, for the "Our values" team row. */
+const COFOUNDERS: Quote[] = [FEATURED, ...QUOTES, FOURTH];
+
+/* Mission / vision statements, segmented for ScrollHighlightStatement —
+   `important` segments stay dark after the fill; the rest dims back. */
+const MISSION_STATEMENT: StatementSegment[] = [
+  { text: "To create" },
+  { text: "intelligence", important: true },
+  {
+    text: "to critically understand our planet better. Deep surveying of all earth. To create",
+  },
+  { text: "a computer brain,", important: true },
+  {
+    text: "able to think across the vastness of our earth's data. To create",
+  },
+  { text: "the most powerful map platform.", important: true },
+];
+
+const VISION_STATEMENT: StatementSegment[] = [
+  { text: "We believe maps, can lead to the journey to" },
+  { text: "a Universal Geospatial Model.", important: true },
+  { text: "A thinking earth.", important: true },
 ];
 
 export default function CompanyPage() {
@@ -133,16 +182,14 @@ export default function CompanyPage() {
       </section>
 
       {/* ════════ 2. OUR MISSION ════════
-          Open statement (no card) — a large, centred mission statement
-          at the cardexperiment1 type sizing (24 / 30 / 36px). */}
+          Open statement (no card) — body held dim; the key phrases fade
+          in as the section scrolls down (ScrollHighlightStatement). */}
       <section className={styles.statementSection}>
         <div className={styles.bounds}>
           <h2 className={`mb-4 md:mb-6 ${styles.sectionLabel}`}>
             Our Mission
           </h2>
-          <p className="mx-auto max-w-3xl text-center text-2xl sm:text-3xl lg:text-4xl font-medium tracking-tight leading-snug text-ink">
-            {"To create intelligence to critically understand our planet better. Deep surveying of all earth. To create a computer brain, able to think across the vastness of our earth's data. To create the most powerful map platform."}
-          </p>
+          <ScrollHighlightStatement segments={MISSION_STATEMENT} />
         </div>
       </section>
 
@@ -152,10 +199,7 @@ export default function CompanyPage() {
           <h2 className={`mb-4 md:mb-6 ${styles.sectionLabel}`}>
             Our Vision
           </h2>
-          <p className="mx-auto max-w-3xl text-center text-2xl sm:text-3xl lg:text-4xl font-medium tracking-tight leading-snug text-ink">
-            We believe maps, can lead to the journey to a Universal Geospatial
-            Model. A thinking earth.
-          </p>
+          <ScrollHighlightStatement segments={VISION_STATEMENT} />
           <div className={styles.timelineWrap}>
             <Link href="/research" className={`p-m ${styles.timelineLink}`}>
               The timeline
@@ -219,17 +263,42 @@ export default function CompanyPage() {
             A quote from our founders
           </h2>
           <div className={styles.foundersGrid}>
-            {/* Left — bento photo tile with the BentoProducts-style
-                top-right cut-out notch carrying the "Our CEO" label. */}
+            {/* Left — featured photo tile: the group photo with a
+                top/bottom black gradient for legibility, the featured
+                founder quote over the top and the attribution bottom-left.
+                Square (aspect-ratio 1/1) — the right column stretches to
+                match its height. */}
             <div className={styles.founderPhoto}>
-              <Image
-                src="/grouppic-founders.png"
-                alt=""
-                fill
-                sizes="(min-width: 768px) 640px, 100vw"
-              />
+              <div className={styles.founderPhotoMedia}>
+                <Image
+                  src="/grouppic-founders.png"
+                  alt=""
+                  fill
+                  sizes="(min-width: 768px) 640px, 100vw"
+                />
+              </div>
               <div className={styles.photoNotch}>
                 <span className={styles.photoNotchLabel}>Our Team</span>
+              </div>
+              <div className={styles.featuredQuoteBlock}>
+                <QuoteMark className={styles.quoteMarkLight} />
+                <p className={styles.featuredQuote}>{FEATURED.quote}</p>
+              </div>
+              <div
+                className={`${styles.attribution} ${styles.featuredAttribution}`}
+              >
+                <div className={styles.avatar}>
+                  <Image
+                    src={FEATURED.avatar}
+                    alt={FEATURED.name}
+                    fill
+                    sizes="64px"
+                  />
+                </div>
+                <div>
+                  <p className={styles.attributionName}>{FEATURED.name}</p>
+                  <p className={styles.attributionRole}>{FEATURED.role}</p>
+                </div>
               </div>
             </div>
 
@@ -259,33 +328,10 @@ export default function CompanyPage() {
       {/* ════════ 6. OUR VALUES ════════ */}
       <section className="section">
         <div className={styles.bounds}>
-          <h2
-            className={`h2 tracking-tight mb-10 md:mb-20 ${styles.sectionHeading}`}
-          >
+          <h2 className={`mb-4 md:mb-6 ${styles.sectionLabel}`}>
             Our values
           </h2>
-          <div className={`${styles.card} ${styles.valuesCard}`}>
-            <QuoteMark className={styles.quoteMarkAccent} />
-            <div className={styles.valuesImage}>
-              <Image src="/henti.png" alt="" fill sizes="200px" />
-            </div>
-            <div className={styles.attribution}>
-              <div className={styles.avatar}>
-                <Image
-                  src="/Alex.jpg"
-                  alt="Alexander Ramirez Blonski"
-                  fill
-                  sizes="40px"
-                />
-              </div>
-              <div>
-                <p className={styles.attributionName}>
-                  Alexander Ramirez Blonski
-                </p>
-                <p className={styles.attributionRole}>Co-Founder, CPO</p>
-              </div>
-            </div>
-          </div>
+          <ValuesTeam cofounders={COFOUNDERS} image="/henti.png" />
         </div>
       </section>
 
@@ -294,7 +340,7 @@ export default function CompanyPage() {
         <div className={styles.bounds}>
           <div className={styles.card}>
             <p className={`h4 ${styles.contactText}`}>
-              {"We're always open to communicate. If you have any questions left on the product or company contact us here"}
+              {"We're always open to communicate. If you have any questions send us a message in a bottle here"}
             </p>
             <div className={styles.contactActions}>
               <a
@@ -313,8 +359,18 @@ export default function CompanyPage() {
               >
                 <Mail size={18} />
               </a>
-              <Link href="/contact" className={`h5 ${styles.contactCta}`}>
-                Contact Page
+              {/* On-brand pill CTA — sized to the homepage's canonical
+                  ~42px content CTA (BentoProducts / Careers): 14×28px box,
+                  line-height 1. Fully rounded so it reads as a peer of the
+                  circular icon buttons beside it. */}
+              <Link
+                href="/contact"
+                className="group rounded-full px-7 py-3.5 text-sm leading-none flex items-center gap-2.5 transition-colors bg-cta text-white hover:text-[#154ACC]"
+              >
+                Contact Us
+                <span className="inline-block transition-transform group-hover:translate-x-0.5">
+                  <ArrowDots className="text-[#154ACC]" />
+                </span>
               </Link>
             </div>
           </div>

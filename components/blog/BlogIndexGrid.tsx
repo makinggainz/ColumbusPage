@@ -38,7 +38,7 @@ export function BlogIndexGrid({ posts, activeFilter }: Props) {
               <div className={styles.cardImagePlaceholder} aria-hidden="true" />
             )}
             <div className={styles.notch}>
-              <span className={styles.notchLabel}>{post.category}</span>
+              <span className={styles.notchLabel}>{post.audience}</span>
             </div>
           </div>
 

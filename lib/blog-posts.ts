@@ -16,6 +16,10 @@ export type BlogPost = {
   /** Optional hero image path shown at the top of the article. */
   image?: string;
   category: BlogCategory;
+  /** Playful "For …" audience tag shown as the label on article cards
+      (the notch on the blog index + the related-posts cards). `category`
+      still drives filtering — this is display-only personality. */
+  audience: string;
 };
 
 export function blogHref(slug: string): string {
@@ -47,6 +51,7 @@ export const BLOG_POSTS: BlogPost[] = [
     publishedAt: "2026-04-01",
     image: "/blog-mountain-fog.jpg",
     category: "ENGINEERING",
+    audience: "For engineers",
     description: "How we compose geospatial signals into trainable recipes for the LGM.",
     paragraphs: [
       "Training a Large Geospatial Model is less like scraping the web and more like composing ingredients: satellite passes, street-level captures, administrative boundaries, and human activity layers must be normalized, aligned in space and time, and weighted so the model learns stable physical priors.",
@@ -60,6 +65,7 @@ export const BLOG_POSTS: BlogPost[] = [
     publishedAt: "2026-03-01",
     image: "/ColumbusBackgroundbento.png",
     category: "COMPANY NEWS",
+    audience: "For dreamers",
     description: "Why we believe maps are the path toward a universal model of the planet.",
     paragraphs: [
       "A Universal Geospatial Model is not a single dataset; it is a commitment to represent the world as it is observed, updated, and questioned. Our philosophy centers on verifiable coordinates, temporal consistency, and interfaces that let analysts and software ask the same questions in the same language.",
@@ -73,6 +79,7 @@ export const BLOG_POSTS: BlogPost[] = [
     publishedAt: "2026-02-01",
     image: "/blog-misty-forest.jpg",
     category: "ENGINEERING",
+    audience: "For the curious",
     description: "Analogies between spatial cognition and model architecture choices.",
     paragraphs: [
       "Human spatial reasoning blends episodic memory, hierarchical maps, and continuous refinement as new evidence arrives. Our architecture borrows metaphors—not literal neuroscience—from these processes to structure attention, memory, and retrieval for geospatial tasks.",
@@ -86,6 +93,7 @@ export const BLOG_POSTS: BlogPost[] = [
     publishedAt: "2026-04-08",
     image: "/businessback3.png",
     category: "PRODUCT",
+    audience: "For builders",
     description: "Release notes focused on reliability, latency, and map fidelity.",
     paragraphs: [
       "MapsGPT 2.5 tightens the path from natural language intent to rendered map products. We improved caching for tile-heavy previews, hardened coordinate parsing, and refined how the model proposes layers when the user is underspecified.",
@@ -99,6 +107,7 @@ export const BLOG_POSTS: BlogPost[] = [
     publishedAt: "2026-03-15",
     image: "/blog-still-lake.jpg",
     category: "ENGINEERING",
+    audience: "For researchers",
     description: "Building a fire-risk signal from heterogeneous environmental inputs.",
     paragraphs: [
       "This research thread documents how we combined fuel moisture proxies, terrain, weather windows, and historical ignition points into a model that surfaces early warnings without overfitting to a single geography.",
@@ -112,6 +121,7 @@ export const BLOG_POSTS: BlogPost[] = [
     publishedAt: "2026-02-12",
     image: "/businessback3.png",
     category: "PRODUCT",
+    audience: "For travelers",
     description: "Product decisions that keep spatial intelligence approachable.",
     paragraphs: [
       "Shipping a consumer geospatial assistant means constraining complexity: sensible defaults for projections, legible legends, and guardrails when users ask for impossible geometry. We walk through the product surface and how it maps to model capabilities.",
@@ -124,6 +134,7 @@ export const BLOG_POSTS: BlogPost[] = [
     publishedAt: "2026-01-10",
     image: "/blog-moonlit-peaks.jpg",
     category: "ENGINEERING",
+    audience: "For skeptics",
     description: "Architectural gaps when text-first models face coordinates and maps.",
     paragraphs: [
       "Large language models excel at language patterns but are not grounded in continuous space by default. Hallucinated coordinates, stale corpora, and ambiguous units are predictable failure modes when users expect map-grade answers.",
@@ -137,6 +148,7 @@ export const BLOG_POSTS: BlogPost[] = [
     publishedAt: "2025-12-01",
     image: "/blog-himalaya.jpg",
     category: "ENGINEERING",
+    audience: "For mapmakers",
     description: "Notes on learned layers that augment basemaps and feature stores.",
     paragraphs: [
       "Generative layers are not replacements for survey data; they are structured hypotheses that must be validated against ground truth. We describe how we train and blend them with classical GIS layers so downstream agents can reason safely.",
@@ -149,6 +161,7 @@ export const BLOG_POSTS: BlogPost[] = [
     publishedAt: "2025-11-01",
     image: "/ColumbusBackgroundbento.png",
     category: "COMPANY NEWS",
+    audience: "For the interested",
     description: "From first principles to the Columbus Earth research stack.",
     paragraphs: [
       "This long-form primer introduces the data, fusion, and reasoning pillars that define an LGM at Columbus Earth. It is meant for technical readers who want the narrative behind our public roadmap.",
@@ -161,6 +174,7 @@ export const BLOG_POSTS: BlogPost[] = [
     publishedAt: "2025-10-01",
     image: "/blog-mountain-fog.jpg",
     category: "ENGINEERING",
+    audience: "For the doubtful",
     description: "A concise comparison across inputs, outputs, and evaluation.",
     paragraphs: [
       "Text and vision backbones brought step-function gains to general AI, but geospatial workloads need stable frames of reference, scale-aware features, and tooling that emits maps—not paragraphs alone.",
@@ -174,6 +188,7 @@ export const BLOG_POSTS: BlogPost[] = [
     publishedAt: "2025-09-01",
     image: "/blog-clouds-dawn.jpg",
     category: "COMPANY NEWS",
+    audience: "For Columbus",
     description: "Milestones from generalist LGM to a universal geospatial model.",
     paragraphs: [
       "Universal Geospatial Model (UGM) is the horizon: one reasoning stack that can ingest planetary-scale evidence and support business, scientific, and civic use cases. This roadmap highlights dependencies on data coverage, evaluation harnesses, and partner feedback.",
@@ -186,6 +201,7 @@ export const BLOG_POSTS: BlogPost[] = [
     publishedAt: "2025-08-01",
     image: "/blog-misty-forest.jpg",
     category: "ENGINEERING",
+    audience: "For researchers",
     description: "Context for the timeline milestone and what shipped in the lab.",
     paragraphs: [
       "As generalist LGM capabilities crossed internal quality bars, we consolidated findings into a paper-style writeup. This companion piece summarizes hypotheses, ablations, and what we deferred to future releases.",
@@ -198,6 +214,7 @@ export const BLOG_POSTS: BlogPost[] = [
     publishedAt: "2025-07-01",
     image: "/blog-moonlit-peaks.jpg",
     category: "ENGINEERING",
+    audience: "For explorers",
     description: "Exploration workflows when base coverage is thin or uneven.",
     paragraphs: [
       "Gen Layers help analysts propose intermediate surfaces—hypothetical contours, likely corridors, or candidate regions—when direct observation is sparse. We explain how we keep those proposals auditable and reversible.",
@@ -210,6 +227,7 @@ export const BLOG_POSTS: BlogPost[] = [
     publishedAt: "2025-06-01",
     image: "/blog-himalaya.jpg",
     category: "ENGINEERING",
+    audience: "For builders",
     description: "Throughput, tiling, and memory when reasoning spans large extents.",
     paragraphs: [
       "Spatial reasoning at scale is as much an systems problem as a modeling one. We outline how we shard work across tiles, reuse embeddings, and maintain consistent topology at boundaries so answers stay coherent across a continent-sized viewport.",

@@ -53,7 +53,7 @@ export function RelatedPosts({ currentSlug, currentCategory }: Props) {
               )}
             </div>
             <div className={indexStyles.cardMeta}>
-              <span className={indexStyles.cardCategory}>{post.category}</span>
+              <span className={indexStyles.cardCategory}>{post.audience}</span>
               <span className={indexStyles.cardDate}>{post.date}</span>
             </div>
             <span className={indexStyles.cardTitle}>{post.title}</span>

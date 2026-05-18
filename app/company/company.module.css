@@ -111,13 +111,19 @@
   text-align: center;
   color: var(--color-ink);
   font-family: var(--font-sans);
-  /* 13px — type-scale step 8 (captions / card labels). */
-  font-size: 13px;
+  /* Matches the homepage hero eyebrow (.hn-eyebrow) size — 16px, 18px at
+     the 992px breakpoint. */
+  font-size: 16px;
   font-weight: 600;
   /* tracking-widest (0.1em) — the design-system token for uppercase
      micro-text. */
   letter-spacing: 0.1em;
   line-height: 1.5;
+}
+@media (min-width: 992px) {
+  .sectionLabel {
+    font-size: 18px;
+  }
 }
 
 .sectionHeading {
@@ -363,22 +369,64 @@
   }
 }
 
-/* Photo tile — 13px corners + hairline ring + top-right cut-out notch,
-   the exact card language of the homepage BentoProducts tiles. */
+/* Featured photo tile — 13px corners + hairline ring + top-right cut-out
+   notch, carrying the featured founder quote over the group photo. A flex
+   column with space-between pins the quote block to the top and the
+   attribution to the bottom. */
 .founderPhoto {
   position: relative;
   overflow: hidden;
   border-radius: 13px;
   background: #ECEFF3;
-  min-height: 320px;
+  /* Square tile — height tracks the column width. The right-hand quote
+     column stretches to match it (grid align-items: stretch), so the
+     whole bento row is exactly as tall as this tile is wide. A square is
+     the canonical bento proportion (vs. an arbitrary fixed pixel height)
+     and keeps the stacked right cards at a clean ratio. */
+  aspect-ratio: 1 / 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  /* 40px inset — matches the .quoteCard padding so the attribution row
+     lines up with the profile components on the right-hand cards. */
+  padding: 40px;
 }
-@media (min-width: 768px) {
-  .founderPhoto {
-    height: 692px;
-  }
+/* Dedicated image layer — an absolutely-positioned box so the <Image fill>
+   sizes to the full tile, decoupled from the flex layout container. */
+.founderPhotoMedia {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
 }
-.founderPhoto img {
+.founderPhotoMedia img {
   object-fit: cover;
+  /* Square crop biased slightly upward so the group of people stays in
+     the clear band between the top + bottom gradients. */
+  object-position: center 42%;
+}
+
+/* Top + bottom accent-blue wash — recolored from the original neutral
+   black gradient to the global accent token (--accent #0066CC) so the
+   featured tile shares the bento row's accent theme. The washes are
+   extended deep toward the centre and the middle never fully clears, so
+   the photo reads as a quiet, dimmed backdrop rather than a distracting
+   image while keeping the quote (top) and attribution (bottom) legible.
+   Opacity runs slightly heavier than the black version because #0066CC is
+   a mid-tone — the extra coverage keeps the white text comfortably legible. */
+.founderPhoto::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 102, 204, 0.88) 0%,
+    rgba(0, 102, 204, 0.66) 30%,
+    rgba(0, 102, 204, 0.45) 50%,
+    rgba(0, 102, 204, 0.66) 70%,
+    rgba(0, 102, 204, 0.88) 100%
+  );
 }
 
 /* Hairline ring — inset box-shadow (not a CSS border) so the notch +
@@ -391,6 +439,57 @@
   box-shadow: inset 0 0 0 1px var(--color-gridline);
   pointer-events: none;
   z-index: 2;
+}
+
+/* Featured quote block — quote mark + quote, at the top of the tile (just
+   the 40px tile padding), sitting above the gradient. */
+.featuredQuoteBlock {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  /* Wide enough that the quote wraps to ~3 lines (not 4+), keeping the
+     block clear of the photo subjects lower in the frame. */
+  max-width: 460px;
+}
+
+/* Featured quote — Medium weight, stepping up to the 32px type-scale step
+   at the lg breakpoint. */
+.featuredQuote {
+  color: #FFFFFF;
+  font-family: var(--font-sans);
+  font-size: 24px;
+  line-height: 1.4;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+@media (min-width: 1024px) {
+  .featuredQuote {
+    font-size: 32px;
+  }
+}
+
+/* Attribution pinned to the bottom-left of the photo tile, white text
+   tuned for the dark gradient beneath it. */
+.featuredAttribution {
+  position: relative;
+  z-index: 2;
+  align-self: flex-start;
+}
+.featuredAttribution .attributionName {
+  color: #FFFFFF;
+}
+.featuredAttribution .attributionRole {
+  color: rgba(255, 255, 255, 0.72);
+}
+
+/* Quote-mark glyph on the featured tile — faint white, recedes into the
+   dimmed photo backdrop. */
+.quoteMarkLight {
+  width: 44px;
+  height: auto;
+  color: rgba(255, 255, 255, 0.5);
 }
 
 /* Cut-out notch — the white page surface notched into the tile's
@@ -498,7 +597,8 @@
 /* Quote copy — "Body large": 16px, stepping up to 20px at lg. Medium
    weight to match the featured quote. */
 .quoteText {
-  color: var(--color-ink);
+  /* Accent blue — matches the quote-mark glyph above each quote. */
+  color: #0081AC;
   font-family: var(--font-sans);
   font-size: 16px;
   line-height: 1.5;
@@ -558,35 +658,12 @@
   margin-top: 4px;
 }
 
-/* ── Values card ──────────────────────────────────────────────────────────
-   40px inset — so the profile row sits the same distance off the bottom
-   edge as the bento quote cards above. Content is centred as a column;
-   text-align stays left so the profile name/role still read left-aligned
-   like the bento profile components. */
-.valuesCard {
-  align-items: center;
-  text-align: left;
-  padding: 40px;
-}
-
-.valuesImage {
-  position: relative;
-  width: 200px;
-  height: 128px;
-  border-radius: 13px;
-  overflow: hidden;
-  margin-bottom: 40px;
-  background: #ECEFF3;
-}
-.valuesImage img {
-  object-fit: cover;
-}
+/* The "Our values" section is rendered by the ValuesTeam client component
+   (components/company/ValuesTeam.tsx) with its own CSS module. */
 
 /* ── Contact CTA ──────────────────────────────────────────────────────────
-   Layered "art-style" row, per the design mockup: the two social icon
-   circles lap over each other and over the leading edge of the
-   "Contact Page" link. The circles are translucent so the text still
-   reads through the overlap. */
+   A row of the two social icon circles followed by the homepage-style
+   pill CTA, evenly spaced (no overlap). */
 .contactText {
   max-width: 620px;
   color: var(--color-ink);
@@ -595,13 +672,14 @@
 .contactActions {
   margin-top: 48px;
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: center;
+  /* Healthy, even spacing between the circles and the CTA. */
+  gap: 16px;
 }
 
 .iconCircle {
-  position: relative;
-  z-index: 1;
   width: 40px;
   height: 40px;
   border-radius: 9999px;
@@ -612,24 +690,7 @@
   color: var(--color-ink);
   transition: background-color 200ms ease, color 200ms ease;
 }
-/* Each subsequent circle laps over the previous one. */
-.iconCircle + .iconCircle {
-  margin-left: -16px;
-}
 .iconCircle:hover {
   background: rgba(11, 27, 43, 0.16);
-  color: #0081AC;
-}
-
-/* "Contact Page" — plain display-type link whose leading edge tucks
-   beneath the icon circles for the overlapping composition. */
-.contactCta {
-  margin-left: -18px;
-  color: var(--color-ink);
-  text-decoration: none;
-  white-space: nowrap;
-  transition: color 200ms ease;
-}
-.contactCta:hover {
   color: #0081AC;
 }
