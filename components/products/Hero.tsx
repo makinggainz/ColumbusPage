@@ -3,20 +3,18 @@
 /**
  * MapsGPT Hero — ported from the PolarX project's hero.
  *
- * Faithful to PolarX's layout + scroll choreography:
- *   • Hero header — centered stack (wordmark → headline → paragraph →
- *     button + rating) over a full-bleed photo.
- *   • Sticky device section — a 3D phone PINS and SNAPS through four
- *     discrete poses while the BACKDROP cross-fades through three scenes
- *     (warm → navy → light), an ASK · DISCOVER · GO pill row recolours
- *     per scene, and a per-phase eyebrow + heading reads beside the phone.
- *   • Floating photo-cards scatter in only on the final scene.
+ *   • Hero header — a NORMAL-FLOW section: vivid full-bleed photo, white
+ *     content stack in the upper third, phone clipped at the bottom edge.
+ *     It scrolls up and away, its diagonal bottom edge revealing the
+ *     coloured scene beneath — a physical reveal, not a dissolve.
+ *   • Sticky device stage — a coloured backdrop (warm → navy → light)
+ *     pinned beneath the header; a 3D phone that snaps through four poses;
+ *     an Ask · Discover · Go pill row that recolours per scene; a
+ *     per-phase eyebrow + heading; floating photo-cards on the last scene.
  *
- * The hero lives inside the site PageFrame, so it fills the frame width
- * (100%, not 100vw) and lets the frame handle the inset + rounded corners.
- *
- * On-page copy is MapsGPT's own (this is the MapsGPT product page).
- * Restyled to design-system/products-page.md — teal/cyan, SF Pro, no purple.
+ * Lives inside the site PageFrame — fills the frame width (100%, not
+ * 100vw). On-page copy is MapsGPT's own. Restyled to
+ * design-system/products-page.md — teal/cyan, SF Pro, no purple.
  */
 
 import Image from "next/image";
@@ -30,44 +28,19 @@ const smoothstep = (e0: number, e1: number, x: number) => {
   return t * t * (3 - 2 * t);
 };
 
-const SNAP = "transform 0.5s cubic-bezier(0.32, 1.15, 0.5, 1)"; // PolarX phone spring
-const APPEAR = "cubic-bezier(0.22, 1.4, 0.36, 1)"; // PolarX appear-animation spring
+const SNAP = "transform 0.5s cubic-bezier(0.32, 1.15, 0.5, 1)";
+const APPEAR = "cubic-bezier(0.22, 1.4, 0.36, 1)";
 
-// ── Three scenes — backdrop, ink, and pill styling per phase ─────────
-// Mirrors PolarX's cream→navy→white scene system, palette-mapped to the
-// /products design system (teal/cyan).
+// ── Three scenes — ink + pill styling per phase ──────────────────────
 const SCENES = [
-  {
-    // 1 — Ask (warm light)
-    bg: "linear-gradient(180deg, #F7F2E4 0%, #EFE7D2 100%)",
-    ink: "#063140",
-    eyebrow: "#00838F",
-    pillBg: "#063140",
-    pillText: "#FFFFFF",
-    pillRot: "-4deg",
-    pillIdle: "rgba(6,49,64,0.40)",
-  },
-  {
-    // 2 — Discover (navy)
-    bg: "linear-gradient(180deg, #063140 0%, #03202A 100%)",
-    ink: "#FFFFFF",
-    eyebrow: "#8DF7FF",
-    pillBg: "#00B1D4",
-    pillText: "#04222C",
-    pillRot: "-4deg",
-    pillIdle: "rgba(255,255,255,0.50)",
-  },
-  {
-    // 3 — Go (light)
-    bg: "linear-gradient(180deg, #FFFFFF 0%, #E6F4F5 100%)",
-    ink: "#063140",
-    eyebrow: "#00838F",
-    pillBg: "#0F6B6E",
-    pillText: "#FFFFFF",
-    pillRot: "-5deg",
-    pillIdle: "rgba(6,49,64,0.40)",
-  },
+  { ink: "#063140", eyebrow: "#00838F", pillBg: "#063140", pillText: "#FFFFFF", pillRot: "-4deg", pillIdle: "rgba(6,49,64,0.40)" },
+  { ink: "#FFFFFF", eyebrow: "#8DF7FF", pillBg: "#00B1D4", pillText: "#04222C", pillRot: "-4deg", pillIdle: "rgba(255,255,255,0.50)" },
+  { ink: "#063140", eyebrow: "#00838F", pillBg: "#0F6B6E", pillText: "#FFFFFF", pillRot: "-5deg", pillIdle: "rgba(6,49,64,0.40)" },
 ] as const;
+
+const CREAM = "linear-gradient(180deg, #F7F2E4 0%, #EFE7D2 100%)";
+const NAVY = "linear-gradient(180deg, #063140 0%, #03202A 100%)";
+const LIGHT = "linear-gradient(180deg, #FFFFFF 0%, #E6F4F5 100%)";
 
 const PILL_WORDS = ["Ask", "Discover", "Go"] as const;
 
@@ -82,14 +55,12 @@ function phoneStates(isLg: boolean) {
   ];
 }
 
-// ── Per-phase eyebrow + heading ──────────────────────────────────────
 const PANELS = [
   { eyebrow: "Ask anything", heading: "Chat your way around any city.", side: "right" },
   { eyebrow: "Discover", heading: "Find the places worth your time.", side: "left" },
   { eyebrow: "Get going", heading: "Directions the second you decide.", side: "above" },
 ] as const;
 
-// ── Floating photo-cards — final (Go) scene only ─────────────────────
 const CARDS = [
   { img: "/blog-himalaya.jpg", label: "Annapurna, NP", x: -452, y: -158, rot: -6, bob: 0 },
   { img: "/amazonia.jpg", label: "Amazon Basin", x: -416, y: 168, rot: 5, bob: 1.1 },
@@ -97,8 +68,11 @@ const CARDS = [
   { img: "/blog-misty-forest.jpg", label: "Cloud Forest", x: 426, y: 158, rot: -5, bob: 1.6 },
 ];
 
+// Diagonal cut at the header's bottom edge (the hero→scene seam).
+const SEAM = 104;
+
 export default function Hero() {
-  const [phase, setPhase] = useState(0); // 0 intro · 1 Ask · 2 Discover · 3 Go
+  const [phase, setPhase] = useState(0);
   const [mounted, setMounted] = useState(false);
   const [isLg, setIsLg] = useState(true);
 
@@ -130,9 +104,10 @@ export default function Hero() {
       setPhase(next);
     }
 
+    // Intro: phone rises into frame from below; clipped low at the start.
     const rise = riseRef.current;
     if (rise) {
-      const ty = progress < 0.3 ? lerp(236, 0, smoothstep(0, 0.3, progress)) : 0;
+      const ty = progress < 0.3 ? lerp(540, 0, smoothstep(0, 0.3, progress)) : 0;
       rise.style.transform = `translateY(${ty}px)`;
     }
   }, []);
@@ -159,39 +134,23 @@ export default function Hero() {
   const phoneW = isLg ? 296 : 210;
   const phoneH = Math.round(phoneW * 1.926);
   const states = phoneStates(isLg);
-  // The active scene (phases 1-3); phase 0 has no scene (photo header).
   const scene = SCENES[clamp(phase - 1, 0, 2)];
   const inDevice = phase >= 1;
 
   return (
     <div ref={outerRef} data-hero-outer className="relative lg:h-[440vh] h-[380vh]" style={{ marginTop: -32 }}>
-      {/* ════ Backdrop stage — pinned, cross-fades photo → 3 scenes ════ */}
+      {/* ════ Coloured scene backdrop — pinned, revealed as the header scrolls off ════ */}
       <div className="absolute inset-0 z-0">
         <div className="sticky top-0 overflow-hidden" style={{ height: "100dvh" }}>
-          {/* Photo (phase 0) */}
-          <div className="absolute inset-0" style={{ opacity: phase === 0 ? 1 : 0, transition: "opacity 0.8s ease" }}>
-            <Image src="/Gtestlast.jpeg" alt="" fill priority sizes="100vw" style={{ objectFit: "cover" }} />
-            <div
-              className="absolute inset-0"
-              style={{
-                background:
-                  "linear-gradient(180deg, rgba(255,255,255,0.62) 0%, rgba(255,255,255,0.28) 40%, " +
-                  "rgba(247,242,228,0.10) 66%, rgba(247,242,228,0.85) 100%)",
-              }}
-            />
-          </div>
-          {/* Three scenes */}
-          {SCENES.map((s, i) => (
-            <div
-              key={i}
-              className="absolute inset-0"
-              style={{
-                background: s.bg,
-                opacity: phase === i + 1 ? 1 : 0,
-                transition: "opacity 0.7s cubic-bezier(0.44,0,0.56,1)",
-              }}
-            />
-          ))}
+          <div className="absolute inset-0" style={{ background: CREAM }} />
+          <div
+            className="absolute inset-0"
+            style={{ background: NAVY, opacity: phase === 2 ? 1 : 0, transition: "opacity 0.7s cubic-bezier(0.44,0,0.56,1)" }}
+          />
+          <div
+            className="absolute inset-0"
+            style={{ background: LIGHT, opacity: phase === 3 ? 1 : 0, transition: "opacity 0.7s cubic-bezier(0.44,0,0.56,1)" }}
+          />
         </div>
       </div>
 
@@ -207,9 +166,7 @@ export default function Hero() {
                   key={i}
                   className="absolute left-1/2 top-1/2"
                   style={{
-                    transform: `translate(-50%, -50%) translate(${c.x}px, ${
-                      c.y + (on ? 0 : 34)
-                    }px) rotate(${c.rot}deg)`,
+                    transform: `translate(-50%, -50%) translate(${c.x}px, ${c.y + (on ? 0 : 34)}px) rotate(${c.rot}deg)`,
                     opacity: on ? 1 : 0,
                     transition: `opacity 0.55s ease ${i * 70}ms, transform 0.7s ${APPEAR} ${i * 70}ms`,
                   }}
@@ -270,9 +227,9 @@ export default function Hero() {
             <div
               className="absolute left-1/2 top-1/2"
               style={{
-                transform: `translate(-50%, -50%) perspective(1200px) rotateX(${
-                  mounted ? 0 : 30
-                }deg) translateY(${mounted ? 0 : 150}px)`,
+                transform: `translate(-50%, -50%) perspective(1200px) rotateX(${mounted ? 0 : 30}deg) translateY(${
+                  mounted ? 0 : 150
+                }px)`,
                 opacity: mounted ? 1 : 0,
                 transition: `transform 1.5s ${APPEAR} 0.15s, opacity 0.9s ease 0.15s`,
               }}
@@ -300,7 +257,7 @@ export default function Hero() {
             </div>
           </div>
 
-          {/* ASK · DISCOVER · GO pill row — recolours per scene */}
+          {/* ASK · DISCOVER · GO pill row */}
           <div
             className="absolute left-1/2 flex items-center"
             style={{
@@ -342,38 +299,62 @@ export default function Hero() {
         </div>
       </div>
 
-      {/* ════ Header content — scrolls away ════ */}
+      {/* ════ Hero header — normal flow: scrolls up & away, diagonal seam ════ */}
       <header
-        className="relative z-20 flex flex-col items-center justify-center"
-        style={{ height: "100dvh", width: "100%", paddingBottom: "8vh" }}
+        className="relative z-20 flex flex-col items-center"
+        style={{
+          height: "100dvh",
+          width: "100%",
+          paddingTop: "13vh",
+          clipPath: `polygon(0 0, 100% 0, 100% calc(100% - ${SEAM}px), 0 100%)`,
+        }}
       >
-        <div className="relative flex flex-col items-center text-center px-6" style={{ maxWidth: 820, gap: 32 }}>
-          <Stagger show={mounted} delay={120} y={70}>
-            <div className="flex items-center gap-2" style={{ color: "#063140" }}>
-              <MapsGPTGlobe size={isLg ? 32 : 28} />
-              <span
-                style={{
-                  fontFamily: '"SF Compact", -apple-system, BlinkMacSystemFont, sans-serif',
-                  fontSize: isLg ? 25 : 21,
-                  fontWeight: 600,
-                  letterSpacing: "-0.02em",
-                }}
-              >
-                MapsGPT
-              </span>
+        {/* Vivid photo + dark teal scrim (no milky veil) */}
+        <div aria-hidden className="absolute inset-0 overflow-hidden">
+          <Image src="/amazonia.jpg" alt="" fill priority sizes="100vw" style={{ objectFit: "cover" }} />
+          <div
+            className="absolute inset-0"
+            style={{
+              background:
+                "linear-gradient(180deg, rgba(3,28,37,0.52) 0%, rgba(3,28,37,0.30) 32%, " +
+                "rgba(3,28,37,0.12) 60%, rgba(3,28,37,0.02) 100%)",
+            }}
+          />
+        </div>
+
+        {/* Content stack — white, upper third */}
+        <div className="relative flex flex-col items-center text-center px-6" style={{ maxWidth: 820, gap: 30 }}>
+          {/* Award-style badge row */}
+          <Stagger show={mounted} delay={100} y={56}>
+            <div className="flex items-center" style={{ gap: 26, color: "rgba(255,255,255,0.92)" }}>
+              <Badge>Powered by Columbus‑01</Badge>
+              <Badge>Your AI travel guide</Badge>
             </div>
           </Stagger>
 
-          <Stagger show={mounted} delay={220} y={90}>
+          <Stagger show={mounted} delay={210} y={84}>
             <div className="flex flex-col items-center" style={{ gap: 16 }}>
+              <div className="flex items-center gap-2" style={{ color: "#FFFFFF" }}>
+                <MapsGPTGlobe size={isLg ? 30 : 26} />
+                <span
+                  style={{
+                    fontFamily: '"SF Compact", -apple-system, BlinkMacSystemFont, sans-serif',
+                    fontSize: isLg ? 23 : 20,
+                    fontWeight: 600,
+                    letterSpacing: "-0.02em",
+                  }}
+                >
+                  MapsGPT
+                </span>
+              </div>
               <h1
                 style={{
                   fontFamily: '"SF Pro", -apple-system, BlinkMacSystemFont, sans-serif',
-                  fontSize: "clamp(36px, 5.4vw, 64px)",
+                  fontSize: "clamp(38px, 5.6vw, 66px)",
                   fontWeight: 700,
-                  lineHeight: 1.12,
+                  lineHeight: 1.1,
                   letterSpacing: "-0.02em",
-                  color: "#063140",
+                  color: "#FFFFFF",
                 }}
               >
                 One travel app for
@@ -382,13 +363,13 @@ export default function Hero() {
               </h1>
               <p
                 style={{
-                  width: "84%",
+                  width: "86%",
                   fontFamily: '"SF Pro", -apple-system, BlinkMacSystemFont, sans-serif',
                   fontSize: isLg ? 20 : 16,
                   fontWeight: 400,
                   lineHeight: 1.5,
                   letterSpacing: "-0.01em",
-                  color: "rgba(6,49,64,0.78)",
+                  color: "rgba(255,255,255,0.86)",
                 }}
               >
                 Join the travelers who <Mark>ask</Mark>, <Mark>discover</Mark> and{" "}
@@ -397,7 +378,7 @@ export default function Hero() {
             </div>
           </Stagger>
 
-          <Stagger show={mounted} delay={340} y={90}>
+          <Stagger show={mounted} delay={330} y={84}>
             <div className="flex flex-wrap items-center justify-center" style={{ gap: 16 }}>
               <a
                 href="#section-see-what-people"
@@ -408,14 +389,14 @@ export default function Hero() {
                   height: 54,
                   padding: "0 26px",
                   borderRadius: 999,
-                  background: "#063140",
-                  color: "#FFFFFF",
+                  background: "#FFFFFF",
+                  color: "#063140",
                   fontFamily: '"SF Pro", -apple-system, BlinkMacSystemFont, sans-serif',
                   fontSize: 17,
                   fontWeight: 600,
                   letterSpacing: "-0.02em",
                   textDecoration: "none",
-                  boxShadow: "0 12px 26px -10px rgba(6,49,64,0.6)",
+                  boxShadow: "0 14px 30px -10px rgba(0,0,0,0.45)",
                   transition: "transform 0.25s cubic-bezier(0.25,1,0.5,1)",
                 }}
                 onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.04)")}
@@ -425,7 +406,7 @@ export default function Hero() {
                 Get the app
               </a>
               <div className="flex items-center" style={{ gap: 8 }}>
-                <div className="flex items-center" style={{ gap: 2, color: "#E46962" }}>
+                <div className="flex items-center" style={{ gap: 2, color: "#FFC53D" }}>
                   {[0, 1, 2, 3, 4].map((i) => (
                     <span key={i} style={{ fontSize: 16 }}>
                       ★
@@ -438,7 +419,7 @@ export default function Hero() {
                     fontSize: 13,
                     fontWeight: 600,
                     letterSpacing: "0.04em",
-                    color: "rgba(6,49,64,0.62)",
+                    color: "rgba(255,255,255,0.78)",
                   }}
                 >
                   4.8 · 12K RATINGS
@@ -448,13 +429,19 @@ export default function Hero() {
           </Stagger>
         </div>
 
+        {/* Explore cue */}
         <div
           aria-hidden
           className="absolute left-1/2 -translate-x-1/2 flex flex-col items-center gap-1"
-          style={{ bottom: 24, color: "#063140", opacity: mounted && phase === 0 ? 0.5 : 0, transition: "opacity 0.5s ease" }}
+          style={{
+            bottom: SEAM + 22,
+            color: "rgba(255,255,255,0.82)",
+            opacity: mounted && phase === 0 ? 1 : 0,
+            transition: "opacity 0.5s ease",
+          }}
         >
-          <span style={{ fontSize: 11, fontWeight: 600, letterSpacing: "0.12em" }}>SCROLL</span>
-          <span style={{ animation: "mgHeroNudge 1.6s ease-in-out infinite" }}>↓</span>
+          <span style={{ animation: "mgHeroNudge 1.6s ease-in-out infinite", fontSize: 15 }}>↓</span>
+          <span style={{ fontSize: 11, fontWeight: 600, letterSpacing: "0.14em" }}>EXPLORE THE APP</span>
         </div>
       </header>
 
@@ -463,7 +450,7 @@ export default function Hero() {
 
       <style>{`
         @keyframes mgHeroBob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-        @keyframes mgHeroNudge { 0%,100% { transform: translateY(0); } 50% { transform: translateY(4px); } }
+        @keyframes mgHeroNudge { 0%,100% { transform: translateY(0); } 50% { transform: translateY(5px); } }
       `}</style>
     </div>
   );
@@ -484,13 +471,48 @@ function Stagger({ show, delay, y, children }: { show: boolean; delay: number; y
   );
 }
 
+// ── Laurel-flanked badge ─────────────────────────────────────────────
+function Laurel({ flip }: { flip?: boolean }) {
+  return (
+    <svg width="16" height="32" viewBox="0 0 16 32" style={{ transform: flip ? "scaleX(-1)" : undefined, flexShrink: 0 }}>
+      <path d="M12 3 C 6 10, 5 22, 8 30" stroke="currentColor" strokeWidth="1.3" fill="none" strokeLinecap="round" />
+      <g fill="currentColor">
+        <ellipse cx="9" cy="8" rx="3.2" ry="1.6" transform="rotate(-32 9 8)" />
+        <ellipse cx="6.6" cy="14" rx="3.4" ry="1.7" transform="rotate(-12 6.6 14)" />
+        <ellipse cx="6.2" cy="20" rx="3.4" ry="1.7" transform="rotate(8 6.2 20)" />
+        <ellipse cx="7.6" cy="25.5" rx="3" ry="1.5" transform="rotate(26 7.6 25.5)" />
+      </g>
+    </svg>
+  );
+}
+
+function Badge({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="flex items-center" style={{ gap: 4 }}>
+      <Laurel />
+      <span
+        style={{
+          fontFamily: '"SF Pro", -apple-system, BlinkMacSystemFont, sans-serif',
+          fontSize: 12.5,
+          fontWeight: 600,
+          letterSpacing: "0.02em",
+          whiteSpace: "nowrap",
+        }}
+      >
+        {children}
+      </span>
+      <Laurel flip />
+    </div>
+  );
+}
+
 // ── Inline highlight ─────────────────────────────────────────────────
 function Mark({ children }: { children: React.ReactNode }) {
   return (
     <span
       style={{
-        background: "#063140",
-        color: "#FFFFFF",
+        background: "#FFFFFF",
+        color: "#063140",
         borderRadius: 6,
         padding: "1px 8px",
         fontWeight: 600,
