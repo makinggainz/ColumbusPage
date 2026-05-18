@@ -37,8 +37,6 @@ const APPEAR = "cubic-bezier(0.22, 1.4, 0.36, 1)";
 
 // Pull the hero up behind the floating navbar (business-hero pattern).
 const NAV_PULL = 120;
-// Diagonal cut at the header's bottom edge (the hero→scene seam).
-const SEAM = 104;
 
 // ── Scroll-stage layout (vh) ─────────────────────────────────────────
 // Each text label is a real, normal-flow block this tall; it scrolls up
@@ -121,6 +119,7 @@ export default function Hero() {
   const phaseRef = useRef(0);
   const isLgRef = useRef(true);
   const labelRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const blockRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   useEffect(() => {
     const check = () => {
@@ -348,9 +347,15 @@ export default function Hero() {
                   <button
                     type="button"
                     aria-label={`Jump to ${word}`}
-                    onClick={() =>
-                      labelRefs.current[SCENE_FIRST_LABEL[i]]?.scrollIntoView({ behavior: "smooth", block: "center" })
-                    }
+                    onClick={() => {
+                      const blk = blockRefs.current[SCENE_FIRST_LABEL[i]];
+                      if (!blk) return;
+                      const r = blk.getBoundingClientRect();
+                      window.scrollTo({
+                        top: window.scrollY + r.top + r.height / 2 - window.innerHeight / 2,
+                        behavior: "smooth",
+                      });
+                    }}
                     style={{
                       fontFamily: '"SF Pro", -apple-system, BlinkMacSystemFont, sans-serif',
                       fontSize: isLg ? 19 : 16,
@@ -388,7 +393,6 @@ export default function Hero() {
           height: "100dvh",
           width: "100%",
           paddingTop: "clamp(56px, 7vh, 90px)",
-          clipPath: `polygon(0 0, 100% 0, 100% calc(100% - ${SEAM}px), 0 100%)`,
         }}
       >
         {/* Light pastel Elio background + soft legibility wash */}
@@ -501,7 +505,13 @@ export default function Hero() {
               ? { left: "calc(50% + 168px)", width: 360 }
               : { right: "calc(50% + 168px)", width: 360, textAlign: "right" };
           return (
-            <div key={i} style={{ position: "relative", height: `${LABEL_BLOCK_VH}vh` }}>
+            <div
+              key={i}
+              ref={(el) => {
+                blockRefs.current[i] = el;
+              }}
+              style={{ position: "relative", height: `${LABEL_BLOCK_VH}vh` }}
+            >
               <div
                 ref={(el) => {
                   labelRefs.current[i] = el;

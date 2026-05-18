@@ -141,7 +141,6 @@ export default function ContactPage() {
   const [charCount, setCharCount] = useState(0);
   const [mounted, setMounted] = useState(false);
   const [tabKey, setTabKey] = useState(0);
-  const cardRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const t = setTimeout(() => setMounted(true), 120);
@@ -293,10 +292,10 @@ export default function ContactPage() {
             <div style={heroFadeIn(200)}>
 
               {/* ── Form card ── */}
-              <div ref={cardRef} style={cardStyle} onClick={scrollToForm}>
+              <div style={cardStyle}>
 
-                {/* Pill tab row — centred, evenly spaced */}
-                <div className="flex justify-center gap-2.5 overflow-x-auto px-4 py-4" style={{ borderBottom: `1px solid ${HAIRLINE}` }}>
+                {/* Pill tab row — left-aligned */}
+                <div className="flex gap-2.5 overflow-x-auto px-4 py-4" style={{ borderBottom: `1px solid ${HAIRLINE}` }}>
                   {TABS.map(opt => (
                     <button
                       key={opt.value}

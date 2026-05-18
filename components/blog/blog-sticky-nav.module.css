@@ -89,14 +89,24 @@
 .back:hover { color: var(--color-ink); }
 .back:hover .backArrow { transform: translateX(-2px); }
 
-/* ── TOC section ─────────────────────────────────────────────────────── */
+/* ── Table of contents ───────────────────────────────────────────────
+   A vertical scroll-rail TOC (Perplexity / Codecademy pattern): a faint
+   continuous guide line down the left of the list, with the active
+   section's segment painted in the blog accent. */
 .tocSection {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  margin-top: 8px;
+  gap: 10px;
+  margin-top: 14px;
 }
 
+.tocHeading {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--color-ink) 38%, transparent);
+}
 
 .tocList {
   list-style: none;
@@ -104,30 +114,50 @@
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 1px;
+  /* The continuous guide rail. */
+  border-left: 1px solid color-mix(in srgb, var(--color-ink) 12%, transparent);
 }
 
 .tocItem {
-  display: inline-flex;
-  align-items: center;
+  display: block;
+  position: relative;
   font-size: 13px;
   font-weight: 400;
   letter-spacing: -0.005em;
-  line-height: 1.4;
+  line-height: 1.45;
   color: color-mix(in srgb, var(--color-ink) 42%, transparent);
   text-decoration: none;
-  padding: 3px 0;
+  padding: 7px 0 7px 16px;
   outline: none;
-  transition: color 350ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition: color 300ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* This item's rail segment — a 2px bar sitting on the guide line.
+   Absolutely positioned so toggling it never reflows the text. */
+.tocItem::before {
+  content: "";
+  position: absolute;
+  left: -1px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: transparent;
+  transition: background 300ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .tocItem:hover { color: color-mix(in srgb, var(--color-ink) 66%, transparent); }
+.tocItem:hover::before { background: color-mix(in srgb, var(--color-ink) 22%, transparent); }
 
-/* Active section — the blog accent, matching the index notch label and
-   card-hover colour. Colour-only (no weight change) so the rail never
-   reflows as the reader scrolls between sections. */
-.tocItemActive {
+/* Active section — accent text + a solid accent rail segment, matching
+   the index notch label / card-hover colour. Colour-only (no weight or
+   width change) so the rail never reflows as the reader scrolls. */
+.tocItemActive,
+.tocItemActive:hover {
   color: #0081AC;
+}
+.tocItemActive::before,
+.tocItemActive:hover::before {
+  background: #0081AC;
 }
 
 .tocItemLabel {
@@ -142,9 +172,15 @@
 :global(body.bg-mode-dark) .back { color: rgba(255,255,255,0.55); }
 :global(body.bg-mode-dark) .back:hover { color: rgba(255,255,255,0.90); }
 
+:global(body.bg-mode-dark) .tocHeading { color: rgba(255,255,255,0.4); }
+:global(body.bg-mode-dark) .tocList { border-left-color: rgba(255,255,255,0.12); }
 :global(body.bg-mode-dark) .tocItem { color: rgba(255,255,255,0.32); }
 :global(body.bg-mode-dark) .tocItem:hover { color: rgba(255,255,255,0.72); }
-:global(body.bg-mode-dark) .tocItemActive { color: #5BB8D8; }
+:global(body.bg-mode-dark) .tocItem:hover::before { background: rgba(255,255,255,0.22); }
+:global(body.bg-mode-dark) .tocItemActive,
+:global(body.bg-mode-dark) .tocItemActive:hover { color: #5BB8D8; }
+:global(body.bg-mode-dark) .tocItemActive::before,
+:global(body.bg-mode-dark) .tocItemActive:hover::before { background: #5BB8D8; }
 
 /* ── Sepia mode ──────────────────────────────────────────────────────── */
 :global(body.bg-mode-sepia) .wordmarkText { color: #433422; }
@@ -152,6 +188,12 @@
 :global(body.bg-mode-sepia) .back { color: rgba(67,52,34,0.55); }
 :global(body.bg-mode-sepia) .back:hover { color: #433422; }
 
+:global(body.bg-mode-sepia) .tocHeading { color: rgba(67,52,34,0.5); }
+:global(body.bg-mode-sepia) .tocList { border-left-color: rgba(67,52,34,0.15); }
 :global(body.bg-mode-sepia) .tocItem { color: rgba(67,52,34,0.38); }
 :global(body.bg-mode-sepia) .tocItem:hover { color: rgba(67,52,34,0.75); }
-:global(body.bg-mode-sepia) .tocItemActive { color: #8A5A2B; }
+:global(body.bg-mode-sepia) .tocItem:hover::before { background: rgba(67,52,34,0.25); }
+:global(body.bg-mode-sepia) .tocItemActive,
+:global(body.bg-mode-sepia) .tocItemActive:hover { color: #8A5A2B; }
+:global(body.bg-mode-sepia) .tocItemActive::before,
+:global(body.bg-mode-sepia) .tocItemActive:hover::before { background: #8A5A2B; }

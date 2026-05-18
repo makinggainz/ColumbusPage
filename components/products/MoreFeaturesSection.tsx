@@ -2,9 +2,11 @@
 
 /**
  * MoreFeaturesSection — a bento grid of MapsGPT's secondary selling
- * points, right after the hero. Styled with the site design system
- * (Funnel Display headings, Opening Hours Sans body, catcherX colour
- * tokens, 7px corners, 1px gridline borders, 1287px bounds).
+ * points, right after the hero. Two large anchor tiles (the "ask" core
+ * and the full-width "any browser, any screen" tile) carry the visuals;
+ * smaller tiles round out the feature set. Styled with the site design
+ * system (Funnel Display headings, Opening Hours Sans body, catcherX
+ * colour tokens, 7px corners, 1px gridline borders, 1287px bounds).
  */
 
 import Image from "next/image";
@@ -14,13 +16,13 @@ import MapsGPTGlobe from "@/components/products/MapsGPTGlobe";
 type Card = {
   col: string;
   row: string;
-  variant: "big" | "navy" | "plain" | "photo";
+  variant: "big" | "navy" | "plain" | "desktop";
   eyebrow?: string;
   title: string;
   body?: string;
-  img?: string;
   chips?: string[];
   globe?: boolean;
+  img?: string;
 };
 
 const CARDS: Card[] = [
@@ -49,36 +51,31 @@ const CARDS: Card[] = [
     globe: true,
   },
   {
-    col: "1 / 3",
+    col: "1 / 7",
     row: "3 / 5",
-    variant: "photo",
-    img: "/FavoriteSpots/(23).jpeg",
-    title: "It knows every city worth the trip.",
+    variant: "desktop",
+    eyebrow: "Any browser, any screen",
+    title: "Open it right in your browser.",
+    body: "No download, no install — MapsGPT runs in any browser. Plan the trip on your laptop, pick it up on your phone.",
+    img: "/mapsgptdesktopimg.png",
   },
   {
-    col: "3 / 5",
-    row: "3 / 4",
+    col: "1 / 3",
+    row: "5 / 6",
     variant: "plain",
     title: "Learns your taste",
     body: "The more you ask, the sharper its picks get.",
   },
   {
-    col: "5 / 7",
-    row: "3 / 4",
+    col: "3 / 5",
+    row: "5 / 6",
     variant: "plain",
     title: "Roll the dice",
     body: "Can't decide? Let it surprise you.",
   },
   {
-    col: "3 / 5",
-    row: "4 / 5",
-    variant: "plain",
-    title: "Open in any browser",
-    body: "No download — your AI travel pal is one tab away.",
-  },
-  {
     col: "5 / 7",
-    row: "4 / 5",
+    row: "5 / 6",
     variant: "plain",
     title: "Save your favorites",
     body: "Heart a place, build a list, share the trip.",
@@ -118,8 +115,10 @@ export default function MoreFeaturesSection() {
         }
         @media (max-width: 980px) {
           .mg-bento { grid-template-columns: 1fr; grid-auto-rows: auto; }
-          .mg-bento > * { grid-column: 1 / -1 !important; grid-row: auto !important; min-height: 196px; }
+          .mg-bento > * { grid-column: 1 / -1 !important; grid-row: auto !important; min-height: 188px; }
         }
+        .mg-desk-card { display: flex; }
+        @media (max-width: 980px) { .mg-desk-card { flex-direction: column; } }
       `}</style>
 
       <div className="mg-bento-bounds">
@@ -164,31 +163,108 @@ export default function MoreFeaturesSection() {
 }
 
 function BentoCard({ card }: { card: Card }) {
-  // ── Photo tile ──
-  if (card.variant === "photo") {
+  // ── Desktop / any-browser tile — text + a browser-window screenshot ──
+  if (card.variant === "desktop") {
     return (
       <div
+        className="mg-desk-card"
         style={{
-          position: "relative",
           width: "100%",
           height: "100%",
           minHeight: 280,
+          boxSizing: "border-box",
+          background: "#FFFFFF",
           border: "1px solid #E7E7F1",
           borderRadius: 7,
+          boxShadow: "0 1px 2px rgba(11,27,43,0.04), 0 12px 32px rgba(11,27,43,0.05)",
           overflow: "hidden",
         }}
       >
-        <Image src={card.img!} alt="" fill sizes="(max-width:980px) 100vw, 460px" style={{ objectFit: "cover" }} />
+        {/* Text */}
         <div
           style={{
-            position: "absolute",
-            inset: 0,
-            background: "linear-gradient(180deg, rgba(11,19,66,0) 40%, rgba(11,19,66,0.82) 100%)",
+            flex: "1 1 0",
+            minWidth: 250,
+            padding: 40,
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            gap: 12,
           }}
-        />
-        <h3 className="h5" style={{ position: "absolute", left: 24, right: 24, bottom: 22, color: "#FFFFFF" }}>
-          {card.title}
-        </h3>
+        >
+          <span className="eyebrow" style={{ fontSize: 13, letterSpacing: "0.16em" }}>
+            {card.eyebrow}
+          </span>
+          <h3 className="h3" style={{ color: "#0B1B2B", letterSpacing: "-0.01em" }}>
+            {card.title}
+          </h3>
+          <p className="p-l" style={{ color: "#5A6B7B", maxWidth: 420 }}>
+            {card.body}
+          </p>
+        </div>
+
+        {/* Browser-window screenshot */}
+        <div
+          style={{
+            flex: "1.3 1 0",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: 28,
+          }}
+        >
+          <div
+            style={{
+              width: "100%",
+              maxWidth: 560,
+              borderRadius: 10,
+              overflow: "hidden",
+              border: "1px solid #E7E7F1",
+              boxShadow: "0 18px 40px -16px rgba(11,27,43,0.28)",
+              background: "#FFFFFF",
+            }}
+          >
+            {/* browser chrome */}
+            <div
+              style={{
+                height: 30,
+                display: "flex",
+                alignItems: "center",
+                gap: 6,
+                padding: "0 12px",
+                background: "#EEF0F3",
+                borderBottom: "1px solid #E7E7F1",
+              }}
+            >
+              {["#FF5F57", "#FEBC2E", "#28C840"].map((c) => (
+                <span key={c} style={{ width: 9, height: 9, borderRadius: 999, background: c }} />
+              ))}
+              <span
+                className="p-s"
+                style={{
+                  marginLeft: 10,
+                  padding: "2px 12px",
+                  borderRadius: 999,
+                  background: "#FFFFFF",
+                  border: "1px solid #E7E7F1",
+                  color: "#5A6B7B",
+                }}
+              >
+                mapsgpt.es
+              </span>
+            </div>
+            {/* screenshot */}
+            <div style={{ position: "relative", width: "100%", aspectRatio: "1.7" }}>
+              <Image
+                src={card.img!}
+                alt="MapsGPT in a desktop browser"
+                fill
+                sizes="(max-width:980px) 90vw, 560px"
+                style={{ objectFit: "cover", objectPosition: "left top" }}
+              />
+            </div>
+          </div>
+        </div>
       </div>
     );
   }

@@ -90,16 +90,23 @@ export function BlogArticleStickyNav({ sections }: Props) {
         Back to Blog
       </Link>
 
-      {/* TOC */}
+      {/* TOC — a vertical scroll-rail (Perplexity / Codecademy pattern):
+          a faint guide line down the left with the active section's
+          segment painted in the blog accent. */}
       {sections.length > 0 && (
         <div className={styles.tocSection}>
+          <span className={styles.tocHeading}>On this page</span>
           <ul className={styles.tocList}>
-            {sections.map((s, i) => {
+            {sections.map((s) => {
               const isActive = activeId === s.id;
               return (
                 <li key={s.id}>
-                  <a href={`#${s.id}`} className={`${styles.tocItem} ${isActive ? styles.tocItemActive : ""}`}>
-                    <span className={styles.tocItemLabel}>{i + 1}. {s.label}</span>
+                  <a
+                    href={`#${s.id}`}
+                    className={`${styles.tocItem} ${isActive ? styles.tocItemActive : ""}`}
+                    aria-current={isActive ? "location" : undefined}
+                  >
+                    <span className={styles.tocItemLabel}>{s.label}</span>
                   </a>
                 </li>
               );
