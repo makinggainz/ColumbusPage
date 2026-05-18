@@ -9,7 +9,6 @@ import InspirationSection from "@/components/products/InspirationSection";
 // import QuestionsSection from "@/components/products/QuestionsSection";
 // import RecommendationsSection from "@/components/products/RecommendationsSection";
 import SeeWhatPeopleSection from "@/components/products/SeeWhatPeopleSection";
-import ShowcaseSection from "@/components/products/ShowcaseSection";
 
 
 const sectionLabels = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k"] as const;
@@ -44,9 +43,8 @@ export default function ProductsPage() {
         <Hero />
       </SectionWithLabel>
       <div data-navbar-bg-trigger />
-      <SectionWithLabel label={sectionLabels[2]}>
-        <ShowcaseSection compact />
-      </SectionWithLabel>
+      {/* Section C — ShowcaseSection removed; the scrollytelling Hero now
+          carries the product-showcase role. */}
       {/* Section D — QuestionsSection (commented out, may restore later)
       <SectionWithLabel label={sectionLabels[3]}>
         <QuestionsSection />
