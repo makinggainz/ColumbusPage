@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { MistxNav } from "@/components/layout/MistxNav";
 
 type Phase = "writing" | "folding" | "bottling" | "dropping" | "floating" | "done";
@@ -153,16 +153,6 @@ export default function ContactPage() {
     transform: mounted ? "translateY(0px)" : "translateY(18px)",
     transition: `opacity 1000ms ease ${delay}ms, filter 1000ms ease ${delay}ms, transform 1000ms ease ${delay}ms`,
   });
-
-  /* Glide the form card up to a comfortable reading position — fired on
-     any click within the card (tab switch, focusing a field, etc.).
-     The 100px offset clears the sticky navbar. */
-  const scrollToForm = () => {
-    const el = cardRef.current;
-    if (!el) return;
-    const top = el.getBoundingClientRect().top + window.scrollY - 100;
-    window.scrollTo({ top, behavior: "smooth" });
-  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;

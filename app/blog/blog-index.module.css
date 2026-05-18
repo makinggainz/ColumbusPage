@@ -291,15 +291,38 @@
   flex-direction: column;
 }
 
+/* Meta row — the article category + publish date, sitting above the
+   title. Category first (what the article is about), then the date. */
+.cardMeta {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 12px;
+}
+
+.cardCategory,
 .cardDate {
   font-family: var(--font-sans);
   font-size: 12px;
   font-weight: 500;
   letter-spacing: 0.06em;
   text-transform: uppercase;
+}
+
+.cardCategory {
+  font-weight: 600;
+  color: var(--color-ink);
+}
+
+.cardMetaDot {
+  color: var(--color-muted);
+  font-size: 12px;
+  line-height: 1;
+}
+
+.cardDate {
   color: var(--color-muted);
   font-variant-numeric: tabular-nums;
-  margin-bottom: 12px;
 }
 
 .cardTitle {
@@ -339,6 +362,8 @@
     #111318 13.5px
   );
 }
+:global(body.bg-mode-dark) .cardCategory { color: rgba(255, 255, 255, 0.9); }
+:global(body.bg-mode-dark) .cardMetaDot { color: rgba(255, 255, 255, 0.4); }
 :global(body.bg-mode-dark) .cardDate { color: rgba(255, 255, 255, 0.5); }
 :global(body.bg-mode-dark) .cardTitle { color: rgba(255, 255, 255, 0.95); }
 :global(body.bg-mode-dark) .cardDescription { color: rgba(255, 255, 255, 0.55); }
@@ -360,6 +385,8 @@
     #f4ecd8 13.5px
   );
 }
+:global(body.bg-mode-sepia) .cardCategory { color: #433422; }
+:global(body.bg-mode-sepia) .cardMetaDot { color: rgba(67, 52, 34, 0.55); }
 :global(body.bg-mode-sepia) .cardDate { color: rgba(67, 52, 34, 0.6); }
 :global(body.bg-mode-sepia) .cardTitle { color: #433422; }
 :global(body.bg-mode-sepia) .cardDescription { color: rgba(67, 52, 34, 0.7); }

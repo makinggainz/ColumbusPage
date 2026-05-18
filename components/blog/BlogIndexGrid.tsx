@@ -44,7 +44,11 @@ export function BlogIndexGrid({ posts, activeFilter }: Props) {
 
           {/* Article text — sits underneath the tile. */}
           <div className={styles.cardBody}>
-            <span className={styles.cardDate}>{post.date}</span>
+            <span className={styles.cardMeta}>
+              <span className={styles.cardCategory}>{post.category}</span>
+              <span className={styles.cardMetaDot} aria-hidden="true">·</span>
+              <span className={styles.cardDate}>{post.date}</span>
+            </span>
             <span className={`h5 ${styles.cardTitle}`}>{post.title}</span>
             <span className={`p-m ${styles.cardDescription}`}>
               {post.description}
