@@ -148,6 +148,13 @@
   text-wrap: balance;
 }
 
+/* Full-size centred heading — used by the "A quote from our founders"
+   section (which keeps the cardexperiment1 heading treatment). */
+.sectionHeading {
+  text-align: center;
+  color: var(--color-ink);
+}
+
 /* ── Hairline contact card — capped at 768px so it sits on the same
    reading-column width as the hero and the mission / vision statements,
    keeping the centred text spine one consistent width. ──────────────────── */
@@ -413,15 +420,14 @@
   inset: 0;
   z-index: 1;
   pointer-events: none;
-  /* Navy CTA colour (#0B1342) — a deep, calm wash rather than a vivid
-     blue. */
+  /* Lighter blue wash (#0066CC). */
   background: linear-gradient(
     to bottom,
-    rgba(11, 19, 66, 0.70) 0%,
-    rgba(11, 19, 66, 0.48) 30%,
-    rgba(11, 19, 66, 0.32) 50%,
-    rgba(11, 19, 66, 0.48) 70%,
-    rgba(11, 19, 66, 0.70) 100%
+    rgba(0, 102, 204, 0.88) 0%,
+    rgba(0, 102, 204, 0.66) 30%,
+    rgba(0, 102, 204, 0.45) 50%,
+    rgba(0, 102, 204, 0.66) 70%,
+    rgba(0, 102, 204, 0.88) 100%
   );
 }
 
@@ -568,13 +574,12 @@
   }
 }
 
-/* Quote-mark glyph above each quote — a faint neutral ink tint (not the
-   accent blue), sized to roughly one line of the quote text, so it reads
-   as a quiet typographic mark rather than a coloured accent. */
+/* Quote-mark glyph above each quote — accent blue at 25% opacity, sized
+   to roughly one line of the quote text. */
 .quoteMarkAccent {
   width: 32px;
   height: auto;
-  color: rgba(11, 27, 43, 0.14);
+  color: rgba(0, 129, 172, 0.25);
   margin-bottom: 16px;
 }
 
@@ -592,9 +597,8 @@
 /* Quote copy — "Body large": 16px, stepping up to 20px at lg. Medium
    weight to match the featured quote. */
 .quoteText {
-  /* Dark ink — one consistent quote treatment across the page; the accent
-     blue is reserved for interactive states (links, hovers, the CTA). */
-  color: var(--color-ink);
+  /* Accent blue — matches the quote-mark glyph above each quote. */
+  color: #0081AC;
   font-family: var(--font-sans);
   font-size: 16px;
   line-height: 1.5;

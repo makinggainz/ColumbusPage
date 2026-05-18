@@ -258,7 +258,9 @@ export default function CompanyPage() {
       {/* ════════ 5. A QUOTE FROM OUR FOUNDERS ════════ */}
       <section className="section">
         <div className={styles.bounds}>
-          <h2 className={`mb-6 md:mb-8 ${styles.sectionLabel}`}>
+          <h2
+            className={`h2 tracking-tight mb-10 md:mb-20 ${styles.sectionHeading}`}
+          >
             A quote from our founders
           </h2>
           <div className={styles.foundersGrid}>
