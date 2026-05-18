@@ -17,7 +17,7 @@ const cardStyle: React.CSSProperties = {
   boxShadow: "0 1px 3px rgba(0,0,0,0.04), 0 4px 20px rgba(0,0,0,0.03)",
 };
 
-const inputClass = "bg-transparent outline-none py-2 text-[16px] text-[#0A1344] w-full";
+const inputClass = "bg-transparent outline-none py-2 text-p-l text-[var(--color-cta)] w-full";
 
 const fadeLine: React.CSSProperties = {
   height: 1,
@@ -117,14 +117,14 @@ export function CareersContactForm({ intro }: Props = {}) {
           position: absolute;
           bottom: 0; left: 0; right: 0;
           height: 1px;
-          background: linear-gradient(to right, rgba(10,19,68,0.12) 0%, rgba(10,19,68,0.12) 60%, transparent 100%);
+          background: linear-gradient(to right, color-mix(in srgb, var(--color-cta) 12%, transparent) 0%, color-mix(in srgb, var(--color-cta) 12%, transparent) 60%, transparent 100%);
         }
         .ccf-input-wrap .ccf-input-fill {
           position: absolute;
           bottom: 0; left: 0;
           height: 1px;
           width: 0;
-          background: rgba(0,102,204,0.7);
+          background: color-mix(in srgb, var(--color-brand) 70%, transparent);
           transition: width 0.5s cubic-bezier(0.22, 1, 0.36, 1);
           z-index: 1;
         }
@@ -135,7 +135,7 @@ export function CareersContactForm({ intro }: Props = {}) {
           content: "";
           position: absolute;
           inset: 0;
-          background: linear-gradient(to top, rgba(0,102,204,0.12) 0%, rgba(0,102,204,0.04) 60%, transparent 100%);
+          background: linear-gradient(to top, color-mix(in srgb, var(--color-brand) 12%, transparent) 0%, color-mix(in srgb, var(--color-brand) 4%, transparent) 60%, transparent 100%);
           opacity: 0;
           transform: translateY(100%);
           transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
@@ -145,7 +145,7 @@ export function CareersContactForm({ intro }: Props = {}) {
         .ccf-tab span { position: relative; z-index: 1; }
 
         .ccf-btn { cursor: pointer; }
-        .ccf-btn:hover span { color: #0066CC; }
+        .ccf-btn:hover span { color: var(--color-brand); }
         .ccf-btn:hover svg { transform: translate(2px, -2px); }
         .ccf-btn svg { transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1); }
         .ccf-btn span { transition: color 0.3s ease; }
@@ -165,7 +165,7 @@ export function CareersContactForm({ intro }: Props = {}) {
           {/* Tab bar */}
           <div
             className="flex"
-            style={{ borderBottom: "1px solid rgba(10,19,68,0.08)" }}
+            style={{ borderBottom: "1px solid color-mix(in srgb, var(--color-cta) 8%, transparent)" }}
           >
             {TABS.map((opt) => (
               <button
@@ -176,10 +176,10 @@ export function CareersContactForm({ intro }: Props = {}) {
                   setTabKey((k) => k + 1);
                 }}
                 data-active={tab === opt.value}
-                className="ccf-tab flex-1 py-4 text-[14px] font-medium cursor-pointer"
+                className="ccf-tab flex-1 py-4 text-p-m font-medium cursor-pointer"
                 style={{
-                  color: tab === opt.value ? "#0A1344" : "rgba(10,19,68,0.35)",
-                  borderRight: "1px solid rgba(10,19,68,0.06)",
+                  color: tab === opt.value ? "var(--color-cta)" : "color-mix(in srgb, var(--color-cta) 35%, transparent)",
+                  borderRight: "1px solid color-mix(in srgb, var(--color-cta) 6%, transparent)",
                   transition: "color 0.3s ease",
                 }}
               >
@@ -197,13 +197,13 @@ export function CareersContactForm({ intro }: Props = {}) {
             {tab === "columbus-pro" && (
               <form className="flex flex-col gap-7" onSubmit={handleSend}>
                 <div className="mb-2">
-                  <h3 className="text-[22px] font-medium text-[#0A1344] tracking-[-0.02em]">
+                  <h3 className="text-h5 font-medium text-[var(--color-cta)] tracking-[-0.02em]">
                     Book a Demo
                   </h3>
                 </div>
 
                 <label className="flex flex-col gap-1">
-                  <span className="text-[14px]" style={{ color: "rgba(10,19,68,0.65)" }}>Company email</span>
+                  <span className="text-p-m" style={{ color: "color-mix(in srgb, var(--color-cta) 65%, transparent)" }}>Company email</span>
                   <div className="ccf-input-wrap">
                     <input
                       type="email"
@@ -219,7 +219,7 @@ export function CareersContactForm({ intro }: Props = {}) {
                 </label>
 
                 <label className="flex flex-col gap-1">
-                  <span className="text-[14px]" style={{ color: "rgba(10,19,68,0.65)" }}>Company size</span>
+                  <span className="text-p-m" style={{ color: "color-mix(in srgb, var(--color-cta) 65%, transparent)" }}>Company size</span>
                   <div className="ccf-input-wrap">
                     <input
                       type="text"
@@ -235,15 +235,15 @@ export function CareersContactForm({ intro }: Props = {}) {
                 </label>
 
                 <label className="flex flex-col gap-1">
-                  <span className="text-[14px]" style={{ color: "rgba(10,19,68,0.65)" }}>Industry</span>
+                  <span className="text-p-m" style={{ color: "color-mix(in srgb, var(--color-cta) 65%, transparent)" }}>Industry</span>
                   <select
                     name="industry"
                     required
                     value={form.industry}
                     onChange={handleChange}
-                    className="bg-transparent outline-none py-3 text-[15px] text-[#0A1344] w-full appearance-none cursor-pointer"
+                    className="bg-transparent outline-none py-3 text-p-m text-[var(--color-cta)] w-full appearance-none cursor-pointer"
                     style={{
-                      borderBottom: "1px solid rgba(10,19,68,0.12)",
+                      borderBottom: "1px solid color-mix(in srgb, var(--color-cta) 12%, transparent)",
                       backgroundImage:
                         "url(\"data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%230A1344' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E\")",
                       backgroundRepeat: "no-repeat",
@@ -264,7 +264,7 @@ export function CareersContactForm({ intro }: Props = {}) {
                 </label>
 
                 <label className="flex flex-col gap-1">
-                  <span className="text-[14px]" style={{ color: "rgba(10,19,68,0.65)" }}>What are you hoping to get out of Columbus?</span>
+                  <span className="text-p-m" style={{ color: "color-mix(in srgb, var(--color-cta) 65%, transparent)" }}>What are you hoping to get out of Columbus?</span>
                   <textarea
                     name="message"
                     required
@@ -272,21 +272,21 @@ export function CareersContactForm({ intro }: Props = {}) {
                     rows={4}
                     value={form.message}
                     onChange={handleChange}
-                    className="bg-transparent border border-[rgba(10,19,68,0.08)] focus:border-[rgba(0,102,204,0.5)] outline-none p-3 text-[15px] text-[#0A1344] placeholder:text-[rgba(10,19,68,0.25)] transition-colors duration-300 resize-y mt-1"
+                    className="bg-transparent border border-[color-mix(in_srgb,var(--color-cta)_8%,transparent)] focus:border-[color-mix(in_srgb,var(--color-brand)_50%,transparent)] outline-none p-3 text-p-m text-[var(--color-cta)] placeholder:text-[color-mix(in_srgb,var(--color-cta)_25%,transparent)] transition-colors duration-300 resize-y mt-1"
                     style={{ borderRadius: 0 }}
                   />
-                  <span className="text-[13px] text-right" style={{ color: "rgba(10,19,68,0.3)" }}>{charCount}/500</span>
+                  <span className="text-p-s text-right" style={{ color: "color-mix(in srgb, var(--color-cta) 30%, transparent)" }}>{charCount}/500</span>
                 </label>
 
                 <label className="flex flex-col gap-1">
-                  <span className="text-[14px]" style={{ color: "rgba(10,19,68,0.65)" }}>How did you hear about us?</span>
+                  <span className="text-p-m" style={{ color: "color-mix(in srgb, var(--color-cta) 65%, transparent)" }}>How did you hear about us?</span>
                   <select
                     name="heardFrom"
                     value={form.heardFrom}
                     onChange={handleChange}
-                    className="bg-transparent outline-none py-3 text-[15px] text-[#0A1344] w-full appearance-none cursor-pointer"
+                    className="bg-transparent outline-none py-3 text-p-m text-[var(--color-cta)] w-full appearance-none cursor-pointer"
                     style={{
-                      borderBottom: "1px solid rgba(10,19,68,0.12)",
+                      borderBottom: "1px solid color-mix(in srgb, var(--color-cta) 12%, transparent)",
                       backgroundImage:
                         "url(\"data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%230A1344' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E\")",
                       backgroundRepeat: "no-repeat",
@@ -316,17 +316,17 @@ export function CareersContactForm({ intro }: Props = {}) {
                   </select>
                 </label>
 
-                <p className="text-[13px] leading-[1.5]" style={{ color: "rgba(10,19,68,0.35)" }}>
+                <p className="text-p-s leading-[1.5]" style={{ color: "color-mix(in srgb, var(--color-cta) 35%, transparent)" }}>
                   By submitting, you agree with our <Link href="/terms" className="underline cursor-pointer">Terms</Link> and <Link href="/privacy" className="underline cursor-pointer">Privacy Policy</Link>.
                 </p>
 
                 <button
                   type="submit"
                   className="ccf-btn flex items-center gap-4 self-start"
-                  style={{ height: 40, paddingLeft: 20, paddingRight: 16, fontSize: 14, fontWeight: 500, backgroundColor: "#000000", color: "white", borderRadius: "var(--radius-button)" }}
+                  style={{ height: 40, paddingLeft: 20, paddingRight: 16, fontSize: "var(--text-p-m)", fontWeight: 500, backgroundColor: "#000000", color: "white", borderRadius: "var(--radius-button)" }}
                 >
                   <span>Submit</span>
-                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#0066CC" strokeWidth="1.2" strokeLinecap="round">
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="var(--color-brand)" strokeWidth="1.2" strokeLinecap="round">
                     <path d="M1 13L13 1M13 1H5M13 1V9" />
                   </svg>
                 </button>
@@ -337,17 +337,17 @@ export function CareersContactForm({ intro }: Props = {}) {
               <form className="flex flex-col gap-7" onSubmit={handleSend}>
                 {tab === "investment" && (
                   <div className="mb-2">
-                    <h3 className="text-[22px] font-medium text-[#0A1344] tracking-[-0.02em]">Investment Inquiry</h3>
+                    <h3 className="text-h5 font-medium text-[var(--color-cta)] tracking-[-0.02em]">Investment Inquiry</h3>
                   </div>
                 )}
                 {tab === "elio" && (
                   <div className="mb-2">
-                    <h3 className="text-[22px] font-medium text-[#0A1344] tracking-[-0.02em]">Elio / MapsGPT</h3>
+                    <h3 className="text-h5 font-medium text-[var(--color-cta)] tracking-[-0.02em]">Elio / MapsGPT</h3>
                   </div>
                 )}
 
                 <label className="flex flex-col gap-1">
-                  <span className="text-[14px]" style={{ color: "rgba(10,19,68,0.65)" }}>Name</span>
+                  <span className="text-p-m" style={{ color: "color-mix(in srgb, var(--color-cta) 65%, transparent)" }}>Name</span>
                   <div className="ccf-input-wrap">
                     <input type="text" name="firstName" required value={form.firstName} onChange={handleChange} className={inputClass} />
                     <div className="ccf-input-fill" />
@@ -355,7 +355,7 @@ export function CareersContactForm({ intro }: Props = {}) {
                 </label>
 
                 <label className="flex flex-col gap-1">
-                  <span className="text-[14px]" style={{ color: "rgba(10,19,68,0.65)" }}>Email</span>
+                  <span className="text-p-m" style={{ color: "color-mix(in srgb, var(--color-cta) 65%, transparent)" }}>Email</span>
                   <div className="ccf-input-wrap">
                     <input type="email" name="email" required value={form.email} onChange={handleChange} className={inputClass} />
                     <div className="ccf-input-fill" />
@@ -363,7 +363,7 @@ export function CareersContactForm({ intro }: Props = {}) {
                 </label>
 
                 <label className="flex flex-col gap-1">
-                  <span className="text-[14px]" style={{ color: "rgba(10,19,68,0.65)" }}>{tab === "investment" ? "Organization" : "Role"}</span>
+                  <span className="text-p-m" style={{ color: "color-mix(in srgb, var(--color-cta) 65%, transparent)" }}>{tab === "investment" ? "Organization" : "Role"}</span>
                   <div className="ccf-input-wrap">
                     <input type="text" name="role" required value={form.role} onChange={handleChange} className={inputClass} />
                     <div className="ccf-input-fill" />
@@ -371,7 +371,7 @@ export function CareersContactForm({ intro }: Props = {}) {
                 </label>
 
                 <label className="flex flex-col gap-1">
-                  <span className="text-[14px]" style={{ color: "rgba(10,19,68,0.65)" }}>
+                  <span className="text-p-m" style={{ color: "color-mix(in srgb, var(--color-cta) 65%, transparent)" }}>
                     {tab === "investment" ? "Tell us about your interest" : "Tell us about your project"}
                   </span>
                   <textarea
@@ -386,28 +386,28 @@ export function CareersContactForm({ intro }: Props = {}) {
                         ? "Share your investment thesis or partnership proposal."
                         : "Please share your objectives and any specific requirements."
                     }
-                    className="bg-transparent border border-[rgba(10,19,68,0.08)] focus:border-[rgba(0,102,204,0.5)] outline-none p-3 text-[15px] text-[#0A1344] placeholder:text-[rgba(10,19,68,0.25)] transition-colors duration-300 resize-y mt-1"
+                    className="bg-transparent border border-[color-mix(in_srgb,var(--color-cta)_8%,transparent)] focus:border-[color-mix(in_srgb,var(--color-brand)_50%,transparent)] outline-none p-3 text-p-m text-[var(--color-cta)] placeholder:text-[color-mix(in_srgb,var(--color-cta)_25%,transparent)] transition-colors duration-300 resize-y mt-1"
                     style={{ borderRadius: 0 }}
                   />
-                  <span className="text-[13px] text-right" style={{ color: "rgba(10,19,68,0.3)" }}>{charCount}/500</span>
+                  <span className="text-p-s text-right" style={{ color: "color-mix(in srgb, var(--color-cta) 30%, transparent)" }}>{charCount}/500</span>
                 </label>
 
                 <label className="flex items-start gap-3 cursor-pointer">
-                  <input type="checkbox" checked={updates} onChange={(e) => setUpdates(e.target.checked)} className="mt-0.5 w-4 h-4 accent-[#0066CC]" style={{ borderRadius: 0 }} />
-                  <span className="text-[14px] leading-[1.5]" style={{ color: "rgba(10,19,68,0.65)" }}>I want to receive product updates from Columbus Earth.</span>
+                  <input type="checkbox" checked={updates} onChange={(e) => setUpdates(e.target.checked)} className="mt-0.5 w-4 h-4 accent-[var(--color-brand)]" style={{ borderRadius: 0 }} />
+                  <span className="text-p-m leading-[1.5]" style={{ color: "color-mix(in srgb, var(--color-cta) 65%, transparent)" }}>I want to receive product updates from Columbus Earth.</span>
                 </label>
 
-                <p className="text-[13px] leading-[1.5]" style={{ color: "rgba(10,19,68,0.35)" }}>
+                <p className="text-p-s leading-[1.5]" style={{ color: "color-mix(in srgb, var(--color-cta) 35%, transparent)" }}>
                   By submitting, you agree with our <Link href="/terms" className="underline cursor-pointer">Terms</Link> and <Link href="/privacy" className="underline cursor-pointer">Privacy Policy</Link>.
                 </p>
 
                 <button
                   type="submit"
                   className="ccf-btn flex items-center gap-4 self-start"
-                  style={{ height: 40, paddingLeft: 20, paddingRight: 16, fontSize: 14, fontWeight: 500, backgroundColor: "#000000", color: "white", borderRadius: "var(--radius-button)" }}
+                  style={{ height: 40, paddingLeft: 20, paddingRight: 16, fontSize: "var(--text-p-m)", fontWeight: 500, backgroundColor: "#000000", color: "white", borderRadius: "var(--radius-button)" }}
                 >
                   <span>Submit</span>
-                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#0066CC" strokeWidth="1.2" strokeLinecap="round">
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="var(--color-brand)" strokeWidth="1.2" strokeLinecap="round">
                     <path d="M1 13L13 1M13 1H5M13 1V9" />
                   </svg>
                 </button>
@@ -417,11 +417,11 @@ export function CareersContactForm({ intro }: Props = {}) {
             {tab === "careers" && (
               <form className="flex flex-col gap-7" onSubmit={handleSend}>
                 <div className="mb-2">
-                  <h3 className="text-[22px] font-medium text-[#0A1344] tracking-[-0.02em]">Join Our Team</h3>
+                  <h3 className="text-h5 font-medium text-[var(--color-cta)] tracking-[-0.02em]">Join Our Team</h3>
                 </div>
 
                 <label className="flex flex-col gap-1">
-                  <span className="text-[14px]" style={{ color: "rgba(10,19,68,0.65)" }}>Name</span>
+                  <span className="text-p-m" style={{ color: "color-mix(in srgb, var(--color-cta) 65%, transparent)" }}>Name</span>
                   <div className="ccf-input-wrap">
                     <input type="text" name="firstName" required value={form.firstName} onChange={handleChange} className={inputClass} />
                     <div className="ccf-input-fill" />
@@ -429,7 +429,7 @@ export function CareersContactForm({ intro }: Props = {}) {
                 </label>
 
                 <label className="flex flex-col gap-1">
-                  <span className="text-[14px]" style={{ color: "rgba(10,19,68,0.65)" }}>Email</span>
+                  <span className="text-p-m" style={{ color: "color-mix(in srgb, var(--color-cta) 65%, transparent)" }}>Email</span>
                   <div className="ccf-input-wrap">
                     <input type="email" name="email" required value={form.email} onChange={handleChange} className={inputClass} />
                     <div className="ccf-input-fill" />
@@ -437,7 +437,7 @@ export function CareersContactForm({ intro }: Props = {}) {
                 </label>
 
                 <label className="flex flex-col gap-1">
-                  <span className="text-[14px]" style={{ color: "rgba(10,19,68,0.65)" }}>Role you&apos;re interested in</span>
+                  <span className="text-p-m" style={{ color: "color-mix(in srgb, var(--color-cta) 65%, transparent)" }}>Role you&apos;re interested in</span>
                   <div className="ccf-input-wrap">
                     <input type="text" name="role" required value={form.role} onChange={handleChange} className={inputClass} placeholder="e.g. Software Engineer, Data Scientist..." />
                     <div className="ccf-input-fill" />
@@ -445,7 +445,7 @@ export function CareersContactForm({ intro }: Props = {}) {
                 </label>
 
                 <label className="flex flex-col gap-1">
-                  <span className="text-[14px]" style={{ color: "rgba(10,19,68,0.65)" }}>Tell us about yourself</span>
+                  <span className="text-p-m" style={{ color: "color-mix(in srgb, var(--color-cta) 65%, transparent)" }}>Tell us about yourself</span>
                   <textarea
                     name="message"
                     required
@@ -454,35 +454,35 @@ export function CareersContactForm({ intro }: Props = {}) {
                     value={form.message}
                     onChange={handleChange}
                     placeholder="What excites you about geospatial intelligence? What would you bring to the team?"
-                    className="bg-transparent border border-[rgba(10,19,68,0.08)] focus:border-[rgba(0,102,204,0.5)] outline-none p-3 text-[15px] text-[#0A1344] placeholder:text-[rgba(10,19,68,0.25)] transition-colors duration-300 resize-y mt-1"
+                    className="bg-transparent border border-[color-mix(in_srgb,var(--color-cta)_8%,transparent)] focus:border-[color-mix(in_srgb,var(--color-brand)_50%,transparent)] outline-none p-3 text-p-m text-[var(--color-cta)] placeholder:text-[color-mix(in_srgb,var(--color-cta)_25%,transparent)] transition-colors duration-300 resize-y mt-1"
                     style={{ borderRadius: 0 }}
                   />
-                  <span className="text-[13px] text-right" style={{ color: "rgba(10,19,68,0.3)" }}>{charCount}/500</span>
+                  <span className="text-p-s text-right" style={{ color: "color-mix(in srgb, var(--color-cta) 30%, transparent)" }}>{charCount}/500</span>
                 </label>
 
                 <label className="flex flex-col gap-2">
-                  <span className="text-[14px]" style={{ color: "rgba(10,19,68,0.65)" }}>
-                    Resume <span className="text-[12px]" style={{ color: "rgba(10,19,68,0.35)" }}>(optional — PDF or DOC)</span>
+                  <span className="text-p-m" style={{ color: "color-mix(in srgb, var(--color-cta) 65%, transparent)" }}>
+                    Resume <span className="text-p-s" style={{ color: "color-mix(in srgb, var(--color-cta) 35%, transparent)" }}>(optional — PDF or DOC)</span>
                   </span>
                   <input
                     type="file"
                     accept=".pdf,.doc,.docx"
-                    className="text-[14px] text-[#0A1344] file:mr-4 file:py-2 file:px-4 file:border-0 file:text-[13px] file:font-medium file:bg-[rgba(10,19,68,0.06)] file:text-[#0A1344] hover:file:bg-[rgba(10,19,68,0.1)] file:cursor-pointer file:transition-colors file:duration-200"
+                    className="text-p-m text-[var(--color-cta)] file:mr-4 file:py-2 file:px-4 file:border-0 file:text-p-s file:font-medium file:bg-[color-mix(in_srgb,var(--color-cta)_6%,transparent)] file:text-[var(--color-cta)] hover:file:bg-[color-mix(in_srgb,var(--color-cta)_10%,transparent)] file:cursor-pointer file:transition-colors file:duration-200"
                     style={{ borderRadius: 0 }}
                   />
                 </label>
 
-                <p className="text-[13px] leading-[1.5]" style={{ color: "rgba(10,19,68,0.35)" }}>
+                <p className="text-p-s leading-[1.5]" style={{ color: "color-mix(in srgb, var(--color-cta) 35%, transparent)" }}>
                   By submitting, you agree with our <Link href="/terms" className="underline">Terms</Link> and <Link href="/privacy" className="underline">Privacy Policy</Link>.
                 </p>
 
                 <button
                   type="submit"
                   className="ccf-btn flex items-center gap-4 self-start"
-                  style={{ height: 40, paddingLeft: 20, paddingRight: 16, fontSize: 14, fontWeight: 500, backgroundColor: "#000000", color: "white", borderRadius: "var(--radius-button)" }}
+                  style={{ height: 40, paddingLeft: 20, paddingRight: 16, fontSize: "var(--text-p-m)", fontWeight: 500, backgroundColor: "#000000", color: "white", borderRadius: "var(--radius-button)" }}
                 >
                   <span>Submit</span>
-                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#0066CC" strokeWidth="1.2" strokeLinecap="round">
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="var(--color-brand)" strokeWidth="1.2" strokeLinecap="round">
                     <path d="M1 13L13 1M13 1H5M13 1V9" />
                   </svg>
                 </button>
@@ -498,24 +498,24 @@ export function CareersContactForm({ intro }: Props = {}) {
           style={{ animation: "ccfConfirm 0.9s cubic-bezier(0.16, 1, 0.3, 1)" }}
         >
           <p
-            className="text-[28px] font-semibold mb-3"
-            style={{ color: "#0A1344", letterSpacing: "-0.02em" }}
+            className="text-h4 font-semibold mb-3"
+            style={{ color: "var(--color-cta)", letterSpacing: "-0.02em" }}
           >
             Message sent.
           </p>
           <p
-            className="text-[17px] leading-[1.6] max-w-[400px]"
-            style={{ color: "rgba(10,19,68,0.45)", fontWeight: 400 }}
+            className="text-p-l leading-[1.6] max-w-[400px]"
+            style={{ color: "color-mix(in srgb, var(--color-cta) 45%, transparent)", fontWeight: 400 }}
           >
             Thanks — we&rsquo;ll be in touch shortly.
           </p>
           <button
             onClick={resetForm}
             className="ccf-btn mt-8 flex items-center gap-4"
-            style={{ height: 40, paddingLeft: 20, paddingRight: 16, fontSize: 14, fontWeight: 500, backgroundColor: "#000000", color: "white", borderRadius: "var(--radius-button)" }}
+            style={{ height: 40, paddingLeft: 20, paddingRight: 16, fontSize: "var(--text-p-m)", fontWeight: 500, backgroundColor: "#000000", color: "white", borderRadius: "var(--radius-button)" }}
           >
             <span>Send another message</span>
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#0066CC" strokeWidth="1.2" strokeLinecap="round">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="var(--color-brand)" strokeWidth="1.2" strokeLinecap="round">
               <path d="M1 13L13 1M13 1H5M13 1V9" />
             </svg>
           </button>

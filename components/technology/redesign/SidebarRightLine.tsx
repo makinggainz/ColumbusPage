@@ -7,12 +7,12 @@ import styles from "../technology.module.css";
 const BOW = 140;        // horizontal distance the curve bows to the right
 const CURVE_VERT = 200; // vertical tangent length on each side of the gap
 const GAP_HALF = 80;    // half-height of the open gap at the timeline crossing
-const STROKE = "rgba(0, 102, 204, 0.3)";
+const STROKE = "color-mix(in srgb, var(--color-brand) 30%, transparent)";
 
 // The section's bg color "bleeds out" of the line through the curve opening
 // — the filled shape lives in the gutter (x > 0 in SVG coords) so the
 // effect visibly flows AWAY from the content area, not into it.
-const BLEED_COLOR = "#F9F9F9";
+const BLEED_COLOR = "var(--color-bg1)";
 
 export function SidebarRightLine({ timelineId }: { timelineId: string }) {
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -142,7 +142,7 @@ function CurveSvg({ height, timelineY }: { height: number; timelineY: number }) 
           <rect width="24" height="24" fill={BLEED_COLOR} />
           <path
             d="M12 11.5v1M11.5 12h1"
-            stroke="rgba(0,102,204,0.12)"
+            stroke="color-mix(in srgb, var(--color-brand) 12%, transparent)"
             strokeWidth="1.6"
             strokeLinecap="square"
           />
@@ -162,11 +162,11 @@ function CurveSvg({ height, timelineY }: { height: number; timelineY: number }) 
           x2={0}
           y2={timelineY + 230}
         >
-          <stop offset="0%"   stopColor="#0066cc" stopOpacity="0"    />
-          <stop offset="25%"  stopColor="#0066cc" stopOpacity="0.04" />
-          <stop offset="50%"  stopColor="#0066cc" stopOpacity="0.16" />
-          <stop offset="75%"  stopColor="#0066cc" stopOpacity="0.04" />
-          <stop offset="100%" stopColor="#0066cc" stopOpacity="0"    />
+          <stop offset="0%"   stopColor="var(--color-brand)" stopOpacity="0"    />
+          <stop offset="25%"  stopColor="var(--color-brand)" stopOpacity="0.04" />
+          <stop offset="50%"  stopColor="var(--color-brand)" stopOpacity="0.16" />
+          <stop offset="75%"  stopColor="var(--color-brand)" stopOpacity="0.04" />
+          <stop offset="100%" stopColor="var(--color-brand)" stopOpacity="0"    />
         </linearGradient>
 
         {/* Mask gradient — same opacity profile as before, fades both
@@ -205,9 +205,9 @@ function CurveSvg({ height, timelineY }: { height: number; timelineY: number }) 
           cy={timelineY}
           r={220}
         >
-          <stop offset="0%"   stopColor="#0066cc" stopOpacity="0.07"  />
-          <stop offset="50%"  stopColor="#0066cc" stopOpacity="0.015" />
-          <stop offset="100%" stopColor="#0066cc" stopOpacity="0"     />
+          <stop offset="0%"   stopColor="var(--color-brand)" stopOpacity="0.07"  />
+          <stop offset="50%"  stopColor="var(--color-brand)" stopOpacity="0.015" />
+          <stop offset="100%" stopColor="var(--color-brand)" stopOpacity="0"     />
         </radialGradient>
       </defs>
 

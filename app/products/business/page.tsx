@@ -54,16 +54,18 @@ export default function BusinessPage() {
       <section className="relative z-20">
         <BusinessHero />
       </section>
-      {/* White mid-block. The paddingTop reserves an empty white band at the
-          top so the hero's glass window can bleed down into it without
-          covering the "Legacy GIS slows you down…" header — the content
-          starts below the bleed. */}
+      {/* White mid-block. The small paddingTop lets the "Legacy GIS slows you
+          down…" header ride UP into the hero photo's bleed zone (the photo's
+          bottom edge is pulled below the hero — see BusinessHero) so the
+          header sits on top of the photo rather than below it. */}
       <div
         ref={darkStartRef}
         className="relative"
-        style={{ backgroundColor: "#ffffff", paddingTop: "clamp(110px, 12vw, 180px)" }}
+        style={{ backgroundColor: "#ffffff", paddingTop: "clamp(48px, 6vw, 96px)" }}
       >
-        <div className="relative z-10">
+        {/* z-30 lifts this content above the hero photo (z-20) so the header
+            paints on top of the bled-down image. */}
+        <div className="relative z-30">
           {/* ProblemCards sits on plain white — no backdrop. SolutionShowcase
               carries its own line-art (a hand-drawn galleon on the left, a
               harbour town on the right); see

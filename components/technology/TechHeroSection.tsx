@@ -119,7 +119,7 @@ export function TechHeroSection() {
             className={styles.techHeroDivider}
             style={{
               background:
-                "linear-gradient(to right, rgba(10,19,68,0.45) 0%, rgba(10,19,68,0.22) 50%, rgba(10,19,68,0) 100%)",
+                "linear-gradient(to right, color-mix(in srgb, var(--color-cta) 45%, transparent) 0%, color-mix(in srgb, var(--color-cta) 22%, transparent) 50%, color-mix(in srgb, var(--color-cta) 0%, transparent) 100%)",
               ...fadeIn(0.12),
             }}
           />

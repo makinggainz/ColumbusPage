@@ -39,10 +39,18 @@ export default function ProblemCards() {
           backgroundColor: "transparent",
         }}
       >
-        {/* Header row */}
+        {/* Header row. This heading rides up onto the hero photo's bled-down
+            lower edge, so a soft white radial gradient sits behind it as a
+            legibility wash — bright at the centre, fading to transparent so
+            the photo still reads around the text. */}
         <div
           className="flex flex-col items-center text-center px-6 md:px-10"
-          style={{ paddingTop: "var(--ent-section-sm)", paddingBottom: "var(--ent-section-sm)" }}
+          style={{
+            paddingTop: "var(--ent-section-sm)",
+            paddingBottom: "var(--ent-section-sm)",
+            background:
+              "radial-gradient(ellipse 55% 100% at 50% 50%, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.78) 42%, rgba(255,255,255,0) 78%)",
+          }}
         >
           <h2
             className="text-ink leading-[1.1] text-[28px] md:text-[36px] lg:text-[49px]"

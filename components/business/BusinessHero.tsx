@@ -71,25 +71,44 @@ export default function BusinessHero() {
         paddingTop: 120,
       }}
     >
-      {/* Background image — the businessback4 skyline photo, cover-fit.
-          backgroundPosition is biased high up the image (25%) so the frame
-          sits well up: the cloud band lands around the level of the product
-          showcase window rather than up by the headline. */}
+      {/* Background image — the bizibizback2 skyline photo, cover-fit. The
+          layer is NOT clipped to the hero: its bottom edge is pulled well
+          below the section (negative `bottom`) so the lower part of the
+          photo — the snowy park that fades to white — bleeds down and
+          overlays the top of the white sections that follow.
+          A bottom mask fades the layer to transparent over its last ~25%
+          so the cropped photo dissolves into the white section instead of
+          ending on a hard horizontal seam. */}
       <div
-        className="absolute inset-0"
+        className="absolute pointer-events-none"
         style={{
-          backgroundImage: "url(/businessback4.png)",
+          top: 0,
+          left: 0,
+          right: 0,
+          // Extends the photo below the hero so it bleeds into the next
+          // section; kept in step with the white block's paddingTop in
+          // app/products/business/page.tsx so it never covers that content.
+          bottom: "clamp(-300px, -20vw, -180px)",
+          backgroundImage: "url(/bizibizback2.png)",
           backgroundPosition: "center 25%",
           backgroundSize: "cover",
           backgroundRepeat: "no-repeat",
+          maskImage: "linear-gradient(to bottom, #000 74%, transparent 99%)",
+          WebkitMaskImage: "linear-gradient(to bottom, #000 74%, transparent 99%)",
           zIndex: 0,
         }}
       />
-      {/* Dark overlay — a flat black scrim over the cityscape, deepened so
-          the hero text and the bottom of the frame read with more contrast. */}
+      {/* Dark overlay — a black scrim over the cityscape for text contrast.
+          It fades to transparent before the section's bottom edge so the
+          bled-out lower part of the photo meets the white sections with no
+          hard darkening seam. */}
       <div
         className="absolute inset-0 pointer-events-none"
-        style={{ backgroundColor: "rgba(0, 0, 0, 0.28)", zIndex: 0 }}
+        style={{
+          background:
+            "linear-gradient(to bottom, rgba(0,0,0,0.32) 0%, rgba(0,0,0,0.20) 55%, rgba(0,0,0,0) 86%)",
+          zIndex: 0,
+        }}
       />
       {/* ── Text block ── */}
       {/* pt-[200px] restores the vertical breathing room previously
@@ -125,18 +144,14 @@ export default function BusinessHero() {
         </Link>
       </div>
 
-      {/* ── Product display — glass browser window ──
-          The negative marginBottom pulls the section's bottom edge up so the
-          lower portion of the glass window bleeds down past the hero and
-          overlaps the white section that follows underneath. */}
+      {/* ── Product display — glass browser window ── */}
       <div
         className="relative z-10 flex justify-center w-full"
         style={{
           marginTop: "clamp(48px, 6vw, 80px)",
           paddingLeft: 20,
           paddingRight: 20,
-          paddingBottom: 0,
-          marginBottom: "clamp(-170px, -12vw, -100px)",
+          paddingBottom: "clamp(64px, 9vw, 130px)",
           ...reveal(visible, 0.22),
         }}
       >
