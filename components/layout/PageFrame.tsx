@@ -3,42 +3,24 @@
 import { useEffect, type ReactNode } from "react";
 
 /**
- * The rounded white "card" the entire site sits inside (experimentV6-Gdesign).
+ * Full-bleed page container (experimentV6-Gdesign-noFrame).
  *
- * Two scroll-driven transitions, run as a single animation curve `t`
- * (1 = rounded + inset 30px, 0 = full-bleed):
+ * The earlier "frame" treatment — a rounded white card inset by a 30px
+ * gutter that expanded to full-bleed on scroll — has been removed. The
+ * page now renders edge-to-edge at all times, like a normal page. The
+ * frame CSS variables (--frame-margin / --frame-radius /
+ * --frame-border-width) are pinned to 0 in globals.css so consumers that
+ * still read them (e.g. the sticky navbar's `top`) stay aligned with the
+ * viewport edge.
  *
- *   • Top reveal — from scrollY 0..SCROLL_RANGE: t animates 1 → 0
- *     (card expands toward the viewport edges).
- *   • Bottom reveal — over the final SCROLL_RANGE pixels of scroll
- *     before maxScroll: t animates 0 → 1 (card collapses back to the
- *     inset+rounded state, so the bottom edge has the same 13px corners
- *     and 30px gutter as the top of the page).
- *
- * The intermediate middle of the page sits at t = 0 (full-bleed).
- *
- * The transition runs as CSS variables (--frame-margin / --frame-radius)
- * on <html> so other elements that need to track the frame — most
- * importantly the sticky navbar's `top` — can read the same value and
- * stay aligned with the card edge during the transition.
- *
- * Footer reveal mechanic: `app/layout.tsx` renders `<Footer reveal />`
- * as a fixed, z-index 0 element at the viewport bottom. PageFrame is
- * z-index 1 with `margin-bottom: var(--footer-reveal-height)`, so the
- * body's scrollable area extends past the page content by exactly the
- * footer's height. As the user scrolls into that extra range, the
- * white card slides up over the fixed footer — revealing it — while
- * the bottom-reveal animation simultaneously restores the rounded
- * corners + 30px side gutter.
+ * Footer reveal mechanic (unchanged): `app/layout.tsx` renders
+ * `<Footer reveal />` as a fixed, z-index 0 element at the viewport
+ * bottom. This container is z-index 1 with `margin-bottom:
+ * var(--footer-reveal-height)`, so the body's scrollable area extends
+ * past the page content by exactly the footer's height. As the user
+ * scrolls into that extra range, the white page slides up over the
+ * fixed footer — revealing it.
  */
-const SCROLL_RANGE = 150;
-const MAX_MARGIN = 30;
-const MAX_RADIUS = 20;
-/* Frame border thickness — a thin 2px accent hairline on the inset
-   (rounded card) state that fades out to 0 as the card expands to
-   full-bleed, so no border frames the page once it fills the screen. */
-const MIN_BORDER = 2;
-
 export function PageFrame({ children }: { children: ReactNode }) {
   useEffect(() => {
     // Keep `--footer-reveal-height` in sync with the real footer DOM
@@ -69,45 +51,20 @@ export function PageFrame({ children }: { children: ReactNode }) {
       const viewportHeight = window.innerHeight;
       const maxScroll = Math.max(0, docHeight - viewportHeight);
 
-      // Top reveal: 1 → 0 over the first SCROLL_RANGE pixels.
-      const topProgress = Math.min(1, Math.max(0, scrollY / SCROLL_RANGE));
-
-      // Bottom reveal: 0 → 1 over the final SCROLL_RANGE pixels before
-      // maxScroll. Triggered once the user is within (footerHeight) of
-      // the end so it begins as the fixed footer starts being revealed,
-      // and completes by the time the footer is ~SCROLL_RANGE px in.
-      const footerHeight =
-        parseFloat(
-          getComputedStyle(document.documentElement).getPropertyValue(
-            "--footer-reveal-height",
-          ),
-        ) || 0;
-      const revealStart = maxScroll - footerHeight;
-      const bottomProgress =
-        footerHeight > 0
-          ? Math.min(1, Math.max(0, (scrollY - revealStart) / SCROLL_RANGE))
-          : 0;
-
-      const t = Math.max(1 - topProgress, bottomProgress);
-      const margin = MAX_MARGIN * t;
-      const radius = MAX_RADIUS * t;
-      // Border tracks t: a thin MIN_BORDER hairline while inset, fading
-      // to 0 at full-bleed so no border frames the page full-screen.
-      const borderWidth = MIN_BORDER * t;
-      document.documentElement.style.setProperty("--frame-margin", `${margin}px`);
-      document.documentElement.style.setProperty("--frame-radius", `${radius}px`);
-      document.documentElement.style.setProperty(
-        "--frame-border-width",
-        `${borderWidth}px`,
-      );
-
       // Footer-reached: flips true once the user scrolls ~halfway into the
       // footer reveal range, and false again only below ~38% (hysteresis
       // so jitter at the threshold doesn't flip it back and forth). Drives
       // the white→black backdrop + footer transition via the
       // [data-footer-reached] attribute on <html> — consumed by
       // globals.css (backdrop) and the .footer-reveal-overlay (Footer.tsx).
+      const footerHeight =
+        parseFloat(
+          getComputedStyle(document.documentElement).getPropertyValue(
+            "--footer-reveal-height",
+          ),
+        ) || 0;
       if (footerHeight > 0) {
+        const revealStart = maxScroll - footerHeight;
         const root = document.documentElement;
         const reached = root.hasAttribute("data-footer-reached")
           ? scrollY >= revealStart + footerHeight * 0.38
@@ -137,21 +94,17 @@ export function PageFrame({ children }: { children: ReactNode }) {
       style={{
         position: "relative",
         zIndex: 1,
-        margin: "var(--frame-margin, 30px)",
-        // Reserve scroll room below the card equal to the footer's
+        // Full-bleed: no gutter, no rounded corners, no border, no shadow.
+        margin: 0,
+        // Reserve scroll room below the page equal to the footer's
         // height so the user can scroll past the content and reveal
         // the fixed footer that sits behind it (z-index 0).
         marginBottom: "var(--footer-reveal-height, 100vh)",
-        borderRadius: "var(--frame-radius, 20px)",
-        // Drop shadow — set globally via --frame-shadow in globals.css so
-        // the white card reads as a floating panel against the white
-        // site backdrop on every route. Tracks the rounded corners.
-        boxShadow: "var(--frame-shadow, none)",
-        // No border frames the card.
+        borderRadius: 0,
         border: "none",
         backgroundColor: "#FFFFFF",
         overflow: "clip",
-        minHeight: "calc(100vh - var(--frame-margin, 30px) * 2)",
+        minHeight: "100vh",
       }}
     >
       {children}

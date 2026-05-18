@@ -46,11 +46,14 @@
 :root {
   --font-hero: "Axiforma", "SF Pro", -apple-system, BlinkMacSystemFont, sans-serif;
 
-  /* PageFrame drop shadow — site-wide. Lets the white frame card read as
-     a floating panel against the white site backdrop on every route.
-     A route can drop the frame's hairline border via --frame-border. */
-  --frame-shadow: 0 0 2px rgba(0, 0, 0, 0.10),
-                  0 0 14px rgba(0, 0, 0, 0.15);
+  /* Frame variables — pinned to 0 (experimentV6-Gdesign-noFrame). The
+     page renders full-bleed, so the gutter, corner radius and hairline
+     are all zero. Kept as variables so consumers that still read them
+     (e.g. the sticky navbar's `top` / corner radii) stay flush with the
+     viewport edge. */
+  --frame-margin: 0px;
+  --frame-radius: 0px;
+  --frame-border-width: 0px;
 }
 
 /* Base reset — use overflow-x: clip (not hidden) so position:sticky works on business Section C */
@@ -58,8 +61,8 @@ html,
 body {
   margin: 0;
   padding: 0;
-  /* White site backdrop behind the PageFrame card — visible through the
-     30px gutter around the frame on every route. */
+  /* White site backdrop. The page renders full-bleed (no frame gutter),
+     so this is only visible during the footer reveal. */
   background-color: #FFFFFF;
   color: #1D1D1F;
   overflow-x: clip;
