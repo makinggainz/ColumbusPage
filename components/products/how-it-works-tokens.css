@@ -1,38 +1,41 @@
 /**
  * How It Works — Page-Local Design Tokens
- * Scoped to sections e–g of the MapsGPT products page.
+ * Scoped to the MapsGPT product-page sections (How it works, New at
+ * MapsGPT, Final CTA).
  *
- * Inspired by mindtrip.ai's clean, card-based "How it Works" pattern.
- * Every spacing, color, radius, weight, and transition in these sections
- * MUST reference a token defined here — no magic numbers.
+ * These sections keep their original layouts, but the token *values*
+ * below are retargeted onto the Columbus site design system
+ * (app/globals.css): Funnel Display headings + Opening Hours Sans body,
+ * the navy/blue palette, #0081AC accent, hairline #E7E7F1 borders, the
+ * 13px card shape language, 1287px content bounds, the .section rhythm.
  */
 
 .hiw-scope {
-  /* ── Colors ── */
+  /* ── Colors — Columbus design system ── */
   --hiw-bg-page:           #FFFFFF;
   --hiw-bg-card:           #FFFFFF;
-  --hiw-bg-subtle:         #F7F8FA;
+  --hiw-bg-subtle:         var(--color-bg1);          /* #F6F8FB */
 
-  --hiw-text-primary:      #111827;
-  --hiw-text-secondary:    #6B7280;
-  --hiw-text-tertiary:     #9CA3AF;
+  --hiw-text-primary:      var(--color-ink);          /* #0B1B2B */
+  --hiw-text-secondary:    var(--color-muted);        /* #5A6B7B */
+  --hiw-text-tertiary:     rgba(11, 27, 43, 0.45);
   --hiw-text-on-accent:    #FFFFFF;
 
-  --hiw-accent:            #5FBFF1;
-  --hiw-accent-soft:       rgba(95, 191, 241, 0.10);
-  --hiw-accent-alt:        #E46962;
+  /* Single accent — the site-wide #0081AC used for links / hovers /
+     interactive highlights (was cyan #5FBFF1 + red #E46962). */
+  --hiw-accent:            #0081AC;
+  --hiw-accent-soft:       rgba(0, 129, 172, 0.10);
+  --hiw-accent-alt:        #0081AC;
 
-  --hiw-border:            #E5E7EB;
-  --hiw-border-light:      #F3F4F6;
+  --hiw-border:            var(--color-gridline);     /* #E7E7F1 */
+  --hiw-border-light:      #F1F2F6;
 
-  /* ── Title gradients (applied via background-clip: text) ──
-   *   Step 1: cool ocean blue
-   *   Step 2: warm red-to-magenta
-   *   Step 3: teal-to-blue bridge
-   */
-  --hiw-gradient-step1:    linear-gradient(90deg, #063140 0%, #5FBFF1 100%);
-  --hiw-gradient-step2:    linear-gradient(90deg, #DE2F32 0%, #B00098 100%);
-  --hiw-gradient-step3:    linear-gradient(90deg, #0A6E5C 0%, #2A8FC2 100%);
+  /* Heading "gradients" — flattened to solid ink. The design system
+     sets headings in solid colour, never clipped gradients; kept as
+     tokens so any `background-clip:text` consumer still renders ink. */
+  --hiw-gradient-step1:    var(--color-ink);
+  --hiw-gradient-step2:    var(--color-ink);
+  --hiw-gradient-step3:    var(--color-ink);
 
   /* ── Typography — sizes (practical scale, base 18px) ── */
   --hiw-text-xs:           13px;
@@ -57,10 +60,11 @@
   --hiw-leading-normal:    1.5;
   --hiw-leading-relaxed:   1.6;
 
-  /* ── Typography — font stack ── */
-  --hiw-font-sans:         'SF Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  /* ── Typography — font stacks (Columbus design system) ── */
+  --hiw-font-sans:         var(--font-sans);     /* Opening Hours Sans — body / UI */
+  --hiw-font-display:      var(--font-display);  /* Funnel Display — headings */
 
-  /* ── Spacing (4px grid) ── */
+  /* ── Spacing (4px grid — the design-system scale) ── */
   --hiw-space-1:           4px;
   --hiw-space-2:           8px;
   --hiw-space-3:           12px;
@@ -77,19 +81,20 @@
   --hiw-space-40:          160px;
   --hiw-space-48:          192px;
 
-  /* ── Border radius ── */
-  --hiw-radius-sm:         8px;
-  --hiw-radius-md:         12px;
-  --hiw-radius-lg:         16px;
-  --hiw-radius-xl:         20px;
-  --hiw-radius-2xl:        24px;
+  /* ── Border radius — the design-system shape language (13px card,
+     smaller inner visuals). ── */
+  --hiw-radius-sm:         6px;
+  --hiw-radius-md:         8px;
+  --hiw-radius-lg:         10px;
+  --hiw-radius-xl:         13px;
+  --hiw-radius-2xl:        13px;
   --hiw-radius-full:       9999px;
 
   /* ── Shadows ── */
-  --hiw-shadow-sm:         0 0 8px rgba(0, 0, 0, 0.10);
-  --hiw-shadow-card:       0 2px 16px rgba(0, 0, 0, 0.04);
-  --hiw-shadow-card-hover: 0 4px 24px rgba(0, 0, 0, 0.07);
-  --hiw-shadow-lg:         0 8px 32px rgba(0, 0, 0, 0.07);
+  --hiw-shadow-sm:         0 0 8px rgba(11, 27, 43, 0.08);
+  --hiw-shadow-card:       0 2px 16px rgba(11, 27, 43, 0.05);
+  --hiw-shadow-card-hover: 0 4px 24px rgba(11, 27, 43, 0.08);
+  --hiw-shadow-lg:         0 8px 32px rgba(11, 27, 43, 0.08);
 
   /* ── Motion ── */
   --hiw-duration-fast:     150ms;
@@ -99,31 +104,68 @@
   --hiw-easing-spring:     cubic-bezier(0.34, 1.56, 0.64, 1);
   --hiw-easing-decel:      cubic-bezier(0, 0, 0.2, 1);
 
-  /* ── Layout ── */
-  --hiw-max-width:         1408px;
-  --hiw-content-px:        24px;
+  /* ── Layout — design-system bounds + section rhythm ── */
+  --hiw-max-width:         1287px;
+  --hiw-content-px:        20px;
   --hiw-step-image-radius: var(--hiw-radius-xl);
   --hiw-step-gap:          var(--hiw-space-32);
-  --hiw-section-py:        var(--hiw-space-24);
+  --hiw-section-py:        var(--hiw-space-20);   /* 80px — .section rhythm */
 
   /* ── Misc ── */
-  --hiw-powered-opacity:   0.35;
+  --hiw-powered-opacity:   0.45;
 }
 
 /* Tablet+ overrides */
 @media (min-width: 768px) {
   .hiw-scope {
-    --hiw-content-px:      32px;
     --hiw-step-gap:        var(--hiw-space-40);
-    --hiw-section-py:      var(--hiw-space-32);
   }
 }
 
 /* Desktop overrides */
 @media (min-width: 1024px) {
   .hiw-scope {
-    --hiw-content-px:      48px;
     --hiw-step-gap:        var(--hiw-space-48);
-    --hiw-section-py:      var(--hiw-space-40);
+    --hiw-section-py:      112px;   /* .section desktop rhythm */
   }
 }
+
+/* ── Shared CTA pill — the homepage signature button (navy surface,
+   white label → #0081AC on hover). Replaces the glassmorphism buttons.
+   Applied to anchors in these sections. ──────────────────────────────── */
+.hiw-scope .hiw-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 14px 28px;
+  background: var(--color-cta);
+  color: #FFFFFF;
+  border-radius: var(--radius-button-md);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  text-decoration: none;
+  border: 0;
+  cursor: pointer;
+  transition: color 180ms ease;
+}
+.hiw-scope .hiw-cta:hover { color: #0081AC; }
+.hiw-scope .hiw-cta svg { display: block; }
+.hiw-scope .hiw-cta-arrow {
+  display: inline-block;
+  color: #0081AC;
+  transition: transform 180ms ease;
+}
+.hiw-scope .hiw-cta:hover .hiw-cta-arrow { transform: translateX(2px); }
+
+/* Inverse pill — white surface, navy label — for use on the dark
+   photographic Final-CTA hero where a navy pill would lose contrast. */
+.hiw-scope .hiw-cta-light {
+  background: #FFFFFF;
+  color: var(--color-cta);
+}
+.hiw-scope .hiw-cta-light:hover { color: #0081AC; }

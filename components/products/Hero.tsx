@@ -1,621 +1,483 @@
-"use client";
+/* eslint-disable @next/next/no-img-element */
 
 /**
- * MapsGPT Hero — ported from the PolarX project's hero.
+ * MapsGPT product hero.
  *
- *   • Hero header — a normal-flow section over the light pastel Elio
- *     background; dark content stack in the upper third; extends up
- *     behind the floating navbar; scrolls up and away (diagonal seam).
- *   • Sticky device stage — a coloured backdrop (warm → navy → light)
- *     revealed beneath the header; a BARE 3D phone device that snaps
- *     through four discrete poses; an Ask · Discover · Go pill row that
- *     recolours per scene; per-scene labels (~2 each) that RISE from the
- *     bottom of the viewport; floating photo-cards on the final scene.
+ * Layout ported 1:1 from the MistX `/elio` hero — a centred headline
+ * block (brand mark, headline, subhead, CTA row, rating) sitting in the
+ * upper third, with the platform screenshot below it.
  *
- * Lives inside the site PageFrame (fills frame width). On-page copy is
- * MapsGPT's own. Restyled to design-system/products-page.md.
+ * Restyled to the Columbus homepage design system: Funnel Display
+ * headings via the global `.h1` class, the navy/blue palette
+ * (--color-ink / --color-cta / #0081AC accent), the homepage signature
+ * CTA pill + 5-dot ArrowDots glyph, the 1287px content bounds, and the
+ * HeroNew "floating-div" treatment (navbar pulled behind, 30px bottom
+ * gutter, rounded bottom corners).
+ *
+ * Background: the elio hero's warm-sand beach scene. Product display:
+ * the same glass browser-window frame used on the /products/business
+ * hero (traffic lights + tab strip + translucent glass gutter).
  */
 
-import Image from "next/image";
-import { useRef, useEffect, useState, useCallback } from "react";
-import MapsGPTGlobe from "@/components/products/MapsGPTGlobe";
-
-const clamp = (v: number, a: number, b: number) => (v < a ? a : v > b ? b : v);
-const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
-const smoothstep = (e0: number, e1: number, x: number) => {
-  const t = clamp((x - e0) / (e1 - e0), 0, 1);
-  return t * t * (3 - 2 * t);
-};
-
-// PolarX phone-snap spring; PolarX appear-animation spring.
-const SNAP = "transform 0.45s cubic-bezier(0.32, 1.15, 0.5, 1)";
-const APPEAR = "cubic-bezier(0.22, 1.4, 0.36, 1)";
-
-// Pull the hero up behind the floating navbar (business-hero pattern).
-const NAV_PULL = 120;
-// Diagonal cut at the header's bottom edge (the hero→scene seam).
-const SEAM = 104;
-
-// ── Three scenes — ink + pill styling per phase ──────────────────────
-const SCENES = [
-  { ink: "#063140", eyebrow: "#00838F", pillBg: "#063140", pillText: "#FFFFFF", pillRot: "-4deg", pillIdle: "rgba(6,49,64,0.40)" },
-  { ink: "#FFFFFF", eyebrow: "#8DF7FF", pillBg: "#00B1D4", pillText: "#04222C", pillRot: "-4deg", pillIdle: "rgba(255,255,255,0.50)" },
-  { ink: "#063140", eyebrow: "#00838F", pillBg: "#0F6B6E", pillText: "#FFFFFF", pillRot: "-5deg", pillIdle: "rgba(6,49,64,0.40)" },
-] as const;
-
-const CREAM = "linear-gradient(180deg, #F7F2E4 0%, #EFE7D2 100%)";
-const NAVY = "linear-gradient(180deg, #063140 0%, #03202A 100%)";
-const LIGHT = "linear-gradient(180deg, #FFFFFF 0%, #E6F4F5 100%)";
-
-const PILL_WORDS = ["Ask", "Discover", "Go"] as const;
-
-// ── Phone pose — 4 discrete states (PolarX: intro / Plan / Track / Relive) ──
-function phoneStates(isLg: boolean) {
-  const sx = isLg ? 1 : 0.42;
-  const introScale = isLg ? 1.4 : 1.12;
-  const goScale = isLg ? 0.7 : 0.78;
-  // Mobile: lift the phone into the upper half so the rising labels
-  // have a clear band below it (desktop keeps PolarX's exact values).
-  const lift = isLg ? 0 : -160;
-  const goY = isLg ? 50 : -110;
-  return [
-    `perspective(1200px) translateX(0px) translateY(-40px) scale(${introScale}) rotateX(40deg) rotateY(0deg)`,
-    `perspective(1200px) translateX(${-140 * sx}px) translateY(${lift}px) scale(1) rotateX(0deg) rotateY(${20 * sx}deg)`,
-    `perspective(1200px) translateX(${140 * sx}px) translateY(${lift}px) scale(1) rotateX(0deg) rotateY(${-20 * sx}deg)`,
-    `perspective(1200px) translateX(0px) translateY(${goY}px) scale(${goScale}) rotateX(0deg) rotateY(0deg)`,
-  ];
+const CSS = `
+.mh-hero {
+  position: relative;
+  overflow: hidden;
+  /* Warm-sand base + the elio beach scene at the top, fading into the
+     sand below it — ported from the MistX /elio hero. */
+  background-color: #FCF3E8;
+  background-image: url('/mapsgpt-hero-bg.png');
+  background-size: 100% auto;
+  background-position: top center;
+  background-repeat: no-repeat;
+  /* Navbar is sticky in flow; the hero is pulled up behind it so the
+     navbar reads as part of the hero. -120px (not -80px) — comfortably
+     more than the navbar height — so no white PageFrame card peeks
+     through above the photo background at any breakpoint (same trick as
+     BusinessHero); the overshoot is harmlessly clipped by the frame.
+     padding-top gives the height back so content stays clear of the nav. */
+  margin-top: -120px;
+  padding-top: 120px;
+  /* Floating-div treatment — matches HeroNew so the hero reads as a card
+     inside the PageFrame: 30px bottom gutter + rounded bottom corners. */
+  margin-bottom: 30px;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+  font-family: var(--font-sans);
+  color: var(--color-ink);
 }
 
-// ── Per-scene labels — 2 per scene; each rises through the viewport ──
-// `win` = scroll-progress sub-window over which the label travels from
-// below-centre → centre → above-centre. `scene` 1|2|3 picks SCENES ink.
-const LABELS = [
-  { scene: 1, side: "right", eyebrow: "Ask anything", heading: "Chat your way around any city.", win: [0.3, 0.45] },
-  { scene: 1, side: "right", eyebrow: "Plain language", heading: "No filters, no menus — just ask.", win: [0.38, 0.53] },
-  { scene: 2, side: "left", eyebrow: "Discover", heading: "Find the places worth your time.", win: [0.53, 0.68] },
-  { scene: 2, side: "left", eyebrow: "Local-grade picks", heading: "Ranked by people who actually went.", win: [0.61, 0.76] },
-  { scene: 3, side: "left", eyebrow: "Get going", heading: "Directions the second you decide.", win: [0.76, 0.9] },
-  { scene: 3, side: "right", eyebrow: "On the move", heading: "Your route recalculated as you wander.", win: [0.84, 1.0] },
-] as const;
+/* Bottom fade — the warm sand resolves to white so the hero hands off
+   cleanly to the white section below it (same treatment as HeroNew). */
+.mh-hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent 55%, #FFFFFF 100%);
+  pointer-events: none;
+  z-index: 0;
+}
 
-const CARDS = [
-  { img: "/blog-himalaya.jpg", label: "Annapurna, NP", x: -452, y: -158, rot: -6, bob: 0 },
-  { img: "/amazonia.jpg", label: "Amazon Basin", x: -416, y: 168, rot: 5, bob: 1.1 },
-  { img: "/BoatHero.jpg", label: "Old Harbor", x: 452, y: -188, rot: 6, bob: 0.6 },
-  { img: "/blog-misty-forest.jpg", label: "Cloud Forest", x: 426, y: 158, rot: -5, bob: 1.6 },
-];
+.mh-bounds {
+  position: relative;
+  z-index: 1;
+  max-width: 1287px;
+  margin-left: 20px;
+  margin-right: 20px;
+  box-sizing: border-box;
+  padding-top: 128px;
+  padding-bottom: 72px;
+}
+@media (min-width: 768px) {
+  .mh-bounds {
+    margin-left: auto;
+    margin-right: auto;
+    padding-top: 188px;
+    padding-bottom: 120px;
+  }
+}
 
-export default function Hero() {
-  const [phase, setPhase] = useState(0);
-  const [mounted, setMounted] = useState(false);
-  const [isLg, setIsLg] = useState(true);
+/* Headline column — centred, capped at the reading-column width. */
+.mh-head {
+  max-width: 768px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 28px;
+}
+@media (min-width: 768px) { .mh-head { gap: 36px; } }
 
-  const outerRef = useRef<HTMLDivElement>(null);
-  const riseRef = useRef<HTMLDivElement>(null);
-  const phaseRef = useRef(0);
-  const isLgRef = useRef(true);
-  const labelRefs = useRef<(HTMLDivElement | null)[]>([]);
+/* Brand mark — logo + wordmark, a quiet label above the headline. */
+.mh-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--color-muted);
+}
+.mh-brand img { height: 30px; width: auto; object-fit: contain; }
 
-  useEffect(() => {
-    const check = () => {
-      const lg = window.innerWidth >= 1024;
-      isLgRef.current = lg;
-      setIsLg(lg);
-    };
-    check();
-    window.addEventListener("resize", check);
-    return () => window.removeEventListener("resize", check);
-  }, []);
+.mh-title {
+  margin: 0;
+  text-wrap: balance;
+  max-width: 18ch;
+}
 
-  useEffect(() => {
-    const t = setTimeout(() => setMounted(true), 90);
-    return () => clearTimeout(t);
-  }, []);
+.mh-lead {
+  margin: 0;
+  max-width: 32rem;
+  font-size: 18px;
+  line-height: 1.5;
+  font-weight: 400;
+  color: var(--color-muted);
+}
+@media (min-width: 1024px) { .mh-lead { font-size: 20px; } }
 
-  const onScroll = useCallback(() => {
-    const el = outerRef.current;
-    if (!el) return;
-    const vh = window.innerHeight;
-    const range = el.offsetHeight - vh;
-    const progress = range > 0 ? clamp(-el.getBoundingClientRect().top / range, 0, 1) : 0;
+.mh-cta-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+.mh-cta-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+}
 
-    const next = progress < 0.3 ? 0 : progress < 0.53 ? 1 : progress < 0.76 ? 2 : 3;
-    if (next !== phaseRef.current) {
-      phaseRef.current = next;
-      setPhase(next);
-    }
+/* Primary CTA — the homepage signature pill (.bp-cta): navy surface,
+   white label that swaps to #0081AC on hover, 5-dot ArrowDots glyph. */
+.mh-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 28px;
+  background-color: var(--color-cta);
+  color: #FFFFFF;
+  border-radius: var(--radius-button-md);
+  font-size: var(--typography--p-l);
+  line-height: 1;
+  font-weight: 500;
+  white-space: nowrap;
+  text-decoration: none;
+  transition: color 180ms ease;
+}
+.mh-cta:hover { color: #0081AC; }
+.mh-cta-arrow {
+  display: inline-block;
+  color: #0081AC;
+  transition: transform 180ms ease;
+}
+.mh-cta:hover .mh-cta-arrow { transform: translateX(2px); }
+.mh-cta-arrow svg { display: block; }
 
-    // Intro: phone rises into frame from below.
-    const rise = riseRef.current;
-    if (rise) {
-      const ty = progress < 0.3 ? lerp(540, 0, smoothstep(0, 0.3, progress)) : 0;
-      rise.style.transform = `translateY(${ty}px)`;
-    }
+/* App-store badges — same navy surface as the CTA, on the homepage
+   palette (the MistX badges were #1f1f1f). */
+.mh-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 16px;
+  background-color: var(--color-cta);
+  color: #FFFFFF;
+  border-radius: var(--radius-button-md);
+  text-decoration: none;
+  transition: opacity 180ms ease;
+}
+.mh-badge:hover { opacity: 0.85; }
+.mh-badge > svg { width: 22px; height: 22px; flex-shrink: 0; }
+.mh-badge-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  line-height: 1.1;
+  gap: 1px;
+}
+.mh-badge-text .small { font-size: 9px; font-weight: 500; opacity: 0.8; }
+.mh-badge-text .big { font-size: 14px; font-weight: 600; letter-spacing: -0.01em; }
 
-    // Labels: each rises below-centre → centre → above-centre over its
-    // window, fading + scaling by distance from centre (PolarX feel).
-    const lg = isLgRef.current;
-    const RISE = vh * (lg ? 0.42 : 0.15);
-    const base = lg ? "translate(0,-50%)" : "translate(-50%,-50%)";
-    for (let i = 0; i < LABELS.length; i++) {
-      const node = labelRefs.current[i];
-      if (!node) continue;
-      const [s, e] = LABELS[i].win;
-      const p = clamp((progress - s) / (e - s), 0, 1);
-      const d = (p - 0.5) * 2; // −1 below · 0 centre · +1 above
-      const f = 1 - smoothstep(0.4, 1, Math.abs(d));
-      node.style.transform = `${base} translateY(${(-d * RISE).toFixed(1)}px) scale(${(0.5 + 0.5 * f).toFixed(3)})`;
-      node.style.opacity = f.toFixed(3);
-    }
-  }, []);
+/* Rating row. */
+.mh-rating-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 8px 14px;
+}
+.mh-stars {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  color: #0081AC;
+}
+.mh-stars svg { width: 14px; height: 14px; }
+.mh-rating-text {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-muted);
+  font-variant-numeric: tabular-nums;
+}
+.mh-dot { color: var(--color-gridline); }
+.mh-free { font-size: 13px; color: var(--color-muted); }
 
-  useEffect(() => {
-    let raf = 0;
-    const handler = () => {
-      if (raf) return;
-      raf = requestAnimationFrame(() => {
-        onScroll();
-        raf = 0;
-      });
-    };
-    onScroll();
-    window.addEventListener("scroll", handler, { passive: true });
-    window.addEventListener("resize", handler);
-    return () => {
-      window.removeEventListener("scroll", handler);
-      window.removeEventListener("resize", handler);
-      if (raf) cancelAnimationFrame(raf);
-    };
-  }, [onScroll]);
+/* ── Product display — glass browser window, ported from BusinessHero ──
+   An outer 1.5px gradient ring + a translucent blurred-glass window
+   carrying traffic lights, a tab strip, and the screenshot inset 4px so
+   the glass shows around it as a gutter. */
+.mh-shot { margin-top: 56px; }
+@media (min-width: 768px) { .mh-shot { margin-top: 80px; } }
 
-  const phoneW = isLg ? 296 : 210;
-  const phoneH = Math.round(phoneW * 1.926);
-  const states = phoneStates(isLg);
-  const scene = SCENES[clamp(phase - 1, 0, 2)];
-  const inDevice = phase >= 1;
+.mh-frame {
+  /* Spans the full 1287px content bounds (.mh-bounds). */
+  width: 100%;
+  margin: 0 auto;
+  /* Concentric with the window: 20px window radius + 1.5px ring. */
+  border-radius: 21.5px;
+  padding: 1.5px;
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.85) 0%,
+    rgba(255, 255, 255, 0.28) 38%,
+    rgba(255, 255, 255, 0.04) 62%,
+    rgba(255, 255, 255, 0.55) 100%
+  );
+  box-shadow: 0 30px 70px rgba(11, 27, 43, 0.28),
+              0 2px 10px rgba(11, 27, 43, 0.12);
+}
 
+.mh-window {
+  position: relative;
+  width: 100%;
+  border-radius: 20px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.3);
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+}
+
+.mh-titlebar {
+  display: flex;
+  align-items: center;
+  gap: clamp(7px, 0.8vw, 10px);
+  height: clamp(34px, 3.4vw, 46px);
+  padding-left: clamp(15px, 1.7vw, 24px);
+  padding-right: clamp(12px, 1.5vw, 20px);
+}
+.mh-light {
+  width: clamp(10px, 1vw, 13px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 0.5px rgba(0, 0, 0, 0.12);
+  flex-shrink: 0;
+}
+
+.mh-tabs {
+  display: flex;
+  align-items: center;
+  gap: clamp(7px, 0.9vw, 12px);
+  margin-left: clamp(12px, 1.5vw, 22px);
+  height: 100%;
+  flex: 1;
+  min-width: 0;
+}
+.mh-tab {
+  display: flex;
+  align-items: center;
+  gap: clamp(4px, 0.5vw, 7px);
+  height: 70%;
+  padding-left: clamp(8px, 0.9vw, 13px);
+  padding-right: clamp(6px, 0.7vw, 10px);
+  border-radius: clamp(6px, 0.6vw, 9px);
+  flex: 1 1 0;
+  min-width: 0;
+  max-width: 185px;
+  background: rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+}
+.mh-tab--active {
+  background: rgba(255, 255, 255, 0.7);
+  border-color: rgba(255, 255, 255, 0.6);
+}
+.mh-tab-fav {
+  width: clamp(11px, 1.2vw, 16px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #74A0FE 0%, #1451E8 100%);
+  flex-shrink: 0;
+}
+.mh-tab-label {
+  font-size: clamp(8px, 0.85vw, 12px);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+  flex: 1;
+  color: var(--color-muted);
+}
+.mh-tab--active .mh-tab-label { color: var(--color-ink); }
+.mh-tab-x {
+  font-size: clamp(9px, 1vw, 13px);
+  line-height: 1;
+  color: var(--color-muted);
+  flex-shrink: 0;
+}
+
+/* Screenshot inset 4px so the window glass shows around it as a gutter. */
+.mh-window-pad { padding: 4px; }
+.mh-window-img {
+  border-radius: 16px;
+  overflow: hidden;
+}
+.mh-window-img img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+`;
+
+/* Signature 5-dot diagonal arrow — shared with BentoProducts / Careers /
+   the company-page CTAs. */
+function ArrowDots() {
   return (
-    <div
-      ref={outerRef}
-      data-hero-section
-      data-hero-outer
-      className="relative lg:h-[440vh] h-[380vh]"
-      style={{ marginTop: -NAV_PULL }}
-    >
-      {/* ════ Coloured scene backdrop — pinned, revealed as the header scrolls off ════ */}
-      <div className="absolute inset-0 z-0">
-        <div className="sticky top-0 overflow-hidden" style={{ height: "100dvh" }}>
-          <div className="absolute inset-0" style={{ background: CREAM }} />
-          <div
-            className="absolute inset-0"
-            style={{ background: NAVY, opacity: phase === 2 ? 1 : 0, transition: "opacity 0.7s cubic-bezier(0.44,0,0.56,1)" }}
-          />
-          <div
-            className="absolute inset-0"
-            style={{ background: LIGHT, opacity: phase === 3 ? 1 : 0, transition: "opacity 0.7s cubic-bezier(0.44,0,0.56,1)" }}
-          />
+    <svg width="12" height="13" viewBox="0 0 9 13" fill="none" aria-hidden="true">
+      <circle cx="7.22" cy="6.589" r="1.28" fill="currentColor" />
+      <circle cx="4.658" cy="4.018" r="1.28" fill="currentColor" />
+      <circle cx="2.099" cy="1.46" r="1.28" fill="currentColor" />
+      <circle cx="4.658" cy="9.151" r="1.28" fill="currentColor" />
+      <circle cx="2.099" cy="11.718" r="1.28" fill="currentColor" />
+    </svg>
+  );
+}
+
+function AppStoreBadge() {
+  return (
+    <a href="https://mapsgpt.es" className="mh-badge" aria-label="Download on the App Store">
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M17.05 12.04c-.03-2.93 2.4-4.34 2.5-4.41-1.36-1.99-3.49-2.27-4.24-2.3-1.81-.18-3.53 1.06-4.45 1.06-.92 0-2.34-1.04-3.85-1.01-1.98.03-3.81 1.15-4.83 2.91-2.06 3.57-.53 8.84 1.48 11.74.99 1.42 2.16 3.02 3.69 2.96 1.49-.06 2.05-.96 3.85-.96 1.79 0 2.31.96 3.88.93 1.6-.03 2.61-1.45 3.59-2.88 1.13-1.65 1.6-3.25 1.62-3.34-.04-.01-3.11-1.19-3.14-4.7zM14.18 3.95c.82-1 1.37-2.4 1.22-3.78-1.18.05-2.6.78-3.45 1.78-.76.88-1.43 2.29-1.25 3.66 1.32.1 2.65-.67 3.48-1.66z" />
+      </svg>
+      <span className="mh-badge-text">
+        <span className="small">Download on the</span>
+        <span className="big">App Store</span>
+      </span>
+    </a>
+  );
+}
+
+function PlayStoreBadge() {
+  return (
+    <a href="https://mapsgpt.es" className="mh-badge" aria-label="Get it on Google Play">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <defs>
+          <linearGradient id="mh-play-a" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#00D4FF" />
+            <stop offset="100%" stopColor="#0078FF" />
+          </linearGradient>
+          <linearGradient id="mh-play-b" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#FFCE00" />
+            <stop offset="100%" stopColor="#FFB000" />
+          </linearGradient>
+          <linearGradient id="mh-play-c" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor="#FF3A44" />
+            <stop offset="100%" stopColor="#C31162" />
+          </linearGradient>
+          <linearGradient id="mh-play-d" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#01E16C" />
+            <stop offset="100%" stopColor="#00B14B" />
+          </linearGradient>
+        </defs>
+        <path d="M3.6 1.4c-.3.3-.5.7-.5 1.3v18.6c0 .5.2 1 .5 1.2L13.4 12 3.6 1.4z" fill="url(#mh-play-a)" />
+        <path d="M16.4 15l-3-3 3-3 4.1 2.4c1.2.7 1.2 1.8 0 2.5L16.4 15z" fill="url(#mh-play-b)" />
+        <path d="M16.4 9l-12.8 13c.4.4 1 .4 1.7 0l11.1-6.4-3-3 3-3.6z" fill="url(#mh-play-c)" />
+        <path d="M16.4 9L5.3 2.6c-.7-.4-1.3-.4-1.7 0l12.8 13L19.4 9h-3z" fill="url(#mh-play-d)" />
+      </svg>
+      <span className="mh-badge-text">
+        <span className="small">GET IT ON</span>
+        <span className="big">Google Play</span>
+      </span>
+    </a>
+  );
+}
+
+function StarRating() {
+  return (
+    <div className="mh-rating-row">
+      <span className="mh-stars" aria-hidden="true">
+        {Array.from({ length: 5 }).map((_, i) => (
+          <svg key={i} viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+          </svg>
+        ))}
+      </span>
+      <span className="mh-rating-text">4.8 · 12K ratings</span>
+      <span className="mh-dot" aria-hidden="true">·</span>
+      <span className="mh-free">Free, forever</span>
+    </div>
+  );
+}
+
+/* Browser-window tabs in the product frame — static (the business hero's
+   drag-to-reorder is a page-specific easter egg, not the framing). */
+const WINDOW_TABS = ["MapsGPT", "Discover", "My Trips", "New Tab"];
+const TRAFFIC_LIGHTS = ["#FF5F57", "#FEBC2E", "#28C840"];
+
+export function Hero() {
+  return (
+    <section className="mh-hero" aria-label="MapsGPT" data-hero-section>
+      <style>{CSS}</style>
+      <div className="mh-bounds">
+        <div className="mh-head">
+          <div className="mh-brand">
+            <img src="/MapsGPT-logo.png" alt="" aria-hidden="true" />
+            MapsGPT
+          </div>
+
+          <h1 className="h1 mh-title tracking-tight text-ink">
+            Find your next anything.
+          </h1>
+
+          <p className="mh-lead">
+            A smarter, more social map for every spot on your list.
+          </p>
+
+          <div className="mh-cta-group">
+            <div className="mh-cta-row">
+              <a className="mh-cta" href="https://mapsgpt.es">
+                Try MapsGPT
+                <span className="mh-cta-arrow">
+                  <ArrowDots />
+                </span>
+              </a>
+              <AppStoreBadge />
+              <PlayStoreBadge />
+            </div>
+            <StarRating />
+          </div>
         </div>
-      </div>
 
-      {/* ════ Phone · labels · cards · pill row — pinned ════ */}
-      <div className="absolute inset-0 z-30 pointer-events-none">
-        <div className="sticky top-0 overflow-hidden" style={{ height: "100dvh" }}>
-          {/* Floating photo-cards — Go scene only */}
-          {isLg &&
-            CARDS.map((c, i) => {
-              const on = phase === 3;
-              return (
-                <div
-                  key={i}
-                  className="absolute left-1/2 top-1/2"
-                  style={{
-                    transform: `translate(-50%, -50%) translate(${c.x}px, ${c.y + (on ? 0 : 34)}px) rotate(${c.rot}deg)`,
-                    opacity: on ? 1 : 0,
-                    transition: `opacity 0.55s ease ${i * 70}ms, transform 0.7s ${APPEAR} ${i * 70}ms`,
-                  }}
-                >
-                  <div style={{ animation: `mgHeroBob 5s ease-in-out ${c.bob}s infinite` }}>
-                    <PhotoCard img={c.img} label={c.label} />
-                  </div>
+        {/* Product display — glass browser window (same frame as the
+            /products/business hero). */}
+        <div className="mh-shot">
+          <div className="mh-frame">
+            <div className="mh-window">
+              <div className="mh-titlebar">
+                {TRAFFIC_LIGHTS.map((c) => (
+                  <span key={c} className="mh-light" style={{ backgroundColor: c }} />
+                ))}
+                <div className="mh-tabs">
+                  {WINDOW_TABS.map((label, i) => (
+                    <div
+                      key={label}
+                      className={i === 0 ? "mh-tab mh-tab--active" : "mh-tab"}
+                    >
+                      <span className="mh-tab-fav" aria-hidden="true" />
+                      <span className="mh-tab-label">{label}</span>
+                      <span className="mh-tab-x" aria-hidden="true">×</span>
+                    </div>
+                  ))}
                 </div>
-              );
-            })}
-
-          {/* Per-scene labels — rise from the bottom (transform/opacity set in onScroll) */}
-          {LABELS.map((lab, i) => {
-            const sc = SCENES[lab.scene - 1];
-            const pos: React.CSSProperties = isLg
-              ? lab.side === "right"
-                ? { top: "50%", left: "calc(50% + 170px)", width: 356 }
-                : { top: "50%", right: "calc(50% + 170px)", width: 356, textAlign: "right" }
-              : { top: "75%", left: "50%", width: "min(440px, 86vw)", textAlign: "center" };
-            return (
-              <div
-                key={i}
-                ref={(el) => {
-                  labelRefs.current[i] = el;
-                }}
-                className="absolute"
-                style={{ ...pos, opacity: 0, willChange: "transform, opacity" }}
-              >
-                <div
-                  style={{
-                    fontFamily: '"SF Pro", -apple-system, BlinkMacSystemFont, sans-serif',
-                    fontSize: 14,
-                    fontWeight: 600,
-                    letterSpacing: "0.14em",
-                    textTransform: "uppercase",
-                    color: sc.eyebrow,
-                  }}
-                >
-                  {lab.eyebrow}
-                </div>
-                <h2
-                  style={{
-                    marginTop: 12,
-                    fontFamily: '"SF Pro", -apple-system, BlinkMacSystemFont, sans-serif',
-                    fontSize: isLg ? 40 : 25,
-                    fontWeight: 700,
-                    lineHeight: 1.22,
-                    letterSpacing: "-0.02em",
-                    color: sc.ink,
-                  }}
-                >
-                  {lab.heading}
-                </h2>
               </div>
-            );
-          })}
-
-          {/* The bare 3D phone */}
-          <div ref={riseRef} className="absolute inset-0" style={{ willChange: "transform" }}>
-            <div
-              className="absolute left-1/2 top-1/2"
-              style={{
-                transform: `translate(-50%, -50%) perspective(1200px) rotateX(${mounted ? 0 : 30}deg) translateY(${
-                  mounted ? 0 : 150
-                }px)`,
-                opacity: mounted ? 1 : 0,
-                transition: `transform 1.5s ${APPEAR} 0.15s, opacity 0.9s ease 0.15s`,
-              }}
-            >
-              <div style={{ transform: states[phase], transition: SNAP, willChange: "transform" }}>
-                {/* Bare device — cyan glass bezel + neutral screen.
-                    The inner screen <div> is the single swap point for
-                    future screen content (image / video / markup). */}
-                <div
-                  style={{
-                    width: phoneW,
-                    height: phoneH,
-                    boxSizing: "border-box",
-                    borderRadius: 44,
-                    padding: 8,
-                    background: "rgba(150,225,255,0.20)",
-                    border: "1px solid rgba(150,200,220,0.35)",
-                    boxShadow:
-                      "0 2px 2px -0.25px rgba(0,0,0,0.08), 0 6px 6px -1px rgba(0,0,0,0.08), " +
-                      "0 16px 16px -1.5px rgba(0,0,0,0.09), 0 27px 27px -1.75px rgba(0,0,0,0.10), " +
-                      "0 50px 50px -2px rgba(0,40,60,0.18)",
-                  }}
-                >
-                  {/* ▼ screen — swap point */}
-                  <div
-                    style={{
-                      width: "100%",
-                      height: "100%",
-                      borderRadius: 36,
-                      background: "linear-gradient(180deg, #FFFFFF 0%, #EAF4F5 100%)",
-                      overflow: "hidden",
-                    }}
+              <div className="mh-window-pad">
+                <div className="mh-window-img">
+                  <img
+                    src="/mapsgptdesktopimg.png"
+                    alt="MapsGPT — map view with a conversational chat panel"
                   />
                 </div>
               </div>
             </div>
           </div>
-
-          {/* ASK · DISCOVER · GO pill row */}
-          <div
-            className="absolute left-1/2 flex items-center"
-            style={{
-              bottom: "clamp(28px, 5.5vh, 64px)",
-              transform: "translateX(-50%)",
-              gap: 6,
-              opacity: inDevice ? 1 : 0,
-              transition: "opacity 0.5s ease",
-            }}
-          >
-            {PILL_WORDS.map((word, i) => {
-              const on = phase === i + 1;
-              return (
-                <div key={word} className="flex items-center" style={{ gap: 6 }}>
-                  <span
-                    style={{
-                      fontFamily: '"SF Pro", -apple-system, BlinkMacSystemFont, sans-serif',
-                      fontSize: isLg ? 19 : 16,
-                      fontWeight: 600,
-                      letterSpacing: "-0.01em",
-                      padding: "6px 16px",
-                      borderRadius: 8,
-                      backgroundColor: on ? scene.pillBg : "transparent",
-                      color: on ? scene.pillText : scene.pillIdle,
-                      transform: on ? `rotate(${scene.pillRot})` : "rotate(0deg)",
-                      transition:
-                        "background-color 0.45s ease, color 0.45s ease, transform 0.45s cubic-bezier(0.2,0.8,0.2,1)",
-                    }}
-                  >
-                    {word}
-                  </span>
-                  {i < PILL_WORDS.length - 1 && (
-                    <span style={{ color: scene.pillIdle, fontWeight: 600, transition: "color 0.45s ease" }}>·</span>
-                  )}
-                </div>
-              );
-            })}
-          </div>
         </div>
       </div>
-
-      {/* ════ Hero header — normal flow over the Elio image; scrolls away ════ */}
-      <header
-        className="relative z-20 flex flex-col items-center"
-        style={{
-          height: "100dvh",
-          width: "100%",
-          paddingTop: "clamp(150px, 18vh, 210px)",
-          clipPath: `polygon(0 0, 100% 0, 100% calc(100% - ${SEAM}px), 0 100%)`,
-        }}
-      >
-        {/* Light pastel Elio background + soft legibility wash */}
-        <div aria-hidden className="absolute inset-0 overflow-hidden">
-          <Image src="/eliocardbackground.png" alt="" fill priority sizes="100vw" style={{ objectFit: "cover" }} />
-          <div
-            className="absolute inset-0"
-            style={{
-              background:
-                "linear-gradient(180deg, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0.28) 30%, " +
-                "rgba(255,255,255,0.06) 58%, rgba(255,255,255,0) 100%)",
-            }}
-          />
-          <div
-            className="absolute inset-0"
-            style={{ background: "linear-gradient(0deg, rgba(247,242,228,0.6) 0%, rgba(247,242,228,0) 22%)" }}
-          />
-        </div>
-
-        {/* Content stack — dark teal, upper third */}
-        <div className="relative flex flex-col items-center text-center px-6" style={{ maxWidth: 820, gap: 30 }}>
-          <Stagger show={mounted} delay={100} y={56}>
-            <div
-              className="flex items-center"
-              style={{ flexDirection: isLg ? "row" : "column", gap: isLg ? 26 : 8, color: "rgba(6,49,64,0.80)" }}
-            >
-              <Badge>Powered by Columbus‑01</Badge>
-              <Badge>Your AI travel guide</Badge>
-            </div>
-          </Stagger>
-
-          <Stagger show={mounted} delay={210} y={84}>
-            <div className="flex flex-col items-center" style={{ gap: 16 }}>
-              <div className="flex items-center gap-2" style={{ color: "#063140" }}>
-                <MapsGPTGlobe size={isLg ? 30 : 26} />
-                <span
-                  style={{
-                    fontFamily: '"SF Compact", -apple-system, BlinkMacSystemFont, sans-serif',
-                    fontSize: isLg ? 23 : 20,
-                    fontWeight: 600,
-                    letterSpacing: "-0.02em",
-                  }}
-                >
-                  MapsGPT
-                </span>
-              </div>
-              <h1
-                style={{
-                  fontFamily: '"SF Pro", -apple-system, BlinkMacSystemFont, sans-serif',
-                  fontSize: "clamp(38px, 5.6vw, 66px)",
-                  fontWeight: 700,
-                  lineHeight: 1.1,
-                  letterSpacing: "-0.02em",
-                  color: "#063140",
-                }}
-              >
-                One travel app for
-                <br />
-                everywhere you go
-              </h1>
-              <p
-                style={{
-                  width: "86%",
-                  fontFamily: '"SF Pro", -apple-system, BlinkMacSystemFont, sans-serif',
-                  fontSize: isLg ? 20 : 16,
-                  fontWeight: 400,
-                  lineHeight: 1.5,
-                  letterSpacing: "-0.01em",
-                  color: "rgba(6,49,64,0.78)",
-                }}
-              >
-                Join the travelers who <Mark>ask</Mark>, <Mark>discover</Mark> and{" "}
-                <Mark>go</Mark> with an AI guide that knows every street on Earth.
-              </p>
-            </div>
-          </Stagger>
-
-          <Stagger show={mounted} delay={330} y={84}>
-            <div className="flex flex-wrap items-center justify-center" style={{ gap: 16 }}>
-              <a
-                href="#section-see-what-people"
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: 9,
-                  height: 54,
-                  padding: "0 26px",
-                  borderRadius: 999,
-                  background: "#063140",
-                  color: "#FFFFFF",
-                  fontFamily: '"SF Pro", -apple-system, BlinkMacSystemFont, sans-serif',
-                  fontSize: 17,
-                  fontWeight: 600,
-                  letterSpacing: "-0.02em",
-                  textDecoration: "none",
-                  boxShadow: "0 14px 30px -12px rgba(6,49,64,0.35)",
-                  transition: "transform 0.25s cubic-bezier(0.25,1,0.5,1)",
-                }}
-                onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.04)")}
-                onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
-              >
-                <span style={{ fontSize: 15 }}>↓</span>
-                Get the app
-              </a>
-              <div className="flex items-center" style={{ gap: 8 }}>
-                <div className="flex items-center" style={{ gap: 2, color: "#FFC53D" }}>
-                  {[0, 1, 2, 3, 4].map((i) => (
-                    <span key={i} style={{ fontSize: 16 }}>
-                      ★
-                    </span>
-                  ))}
-                </div>
-                <span
-                  style={{
-                    fontFamily: '"SF Pro", -apple-system, BlinkMacSystemFont, sans-serif',
-                    fontSize: 13,
-                    fontWeight: 600,
-                    letterSpacing: "0.04em",
-                    color: "rgba(6,49,64,0.62)",
-                  }}
-                >
-                  4.8 · 12K RATINGS
-                </span>
-              </div>
-            </div>
-          </Stagger>
-        </div>
-
-        {/* Explore cue */}
-        <div
-          aria-hidden
-          className="absolute left-1/2 -translate-x-1/2 flex flex-col items-center gap-1"
-          style={{
-            bottom: SEAM + 22,
-            color: "rgba(6,49,64,0.66)",
-            opacity: mounted && phase === 0 ? 1 : 0,
-            transition: "opacity 0.5s ease",
-          }}
-        >
-          <span style={{ animation: "mgHeroNudge 1.6s ease-in-out infinite", fontSize: 15 }}>↓</span>
-          <span style={{ fontSize: 11, fontWeight: 600, letterSpacing: "0.14em" }}>EXPLORE THE APP</span>
-        </div>
-      </header>
-
-      {/* ════ Device section — scroll length for the pinned stage ════ */}
-      <section className="relative z-10 lg:h-[340vh] h-[280vh]" style={{ width: "100%" }} />
-
-      <style>{`
-        @keyframes mgHeroBob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-        @keyframes mgHeroNudge { 0%,100% { transform: translateY(0); } 50% { transform: translateY(5px); } }
-      `}</style>
-    </div>
+    </section>
   );
 }
 
-// ── Staged spring entrance ───────────────────────────────────────────
-function Stagger({ show, delay, y, children }: { show: boolean; delay: number; y: number; children: React.ReactNode }) {
-  return (
-    <div
-      style={{
-        opacity: show ? 1 : 0,
-        transform: show ? "translateY(0)" : `translateY(${y}px)`,
-        transition: `transform 1.1s ${APPEAR} ${delay}ms, opacity 0.7s ease ${delay}ms`,
-      }}
-    >
-      {children}
-    </div>
-  );
-}
-
-// ── Laurel-flanked badge ─────────────────────────────────────────────
-function Laurel({ flip }: { flip?: boolean }) {
-  return (
-    <svg width="16" height="32" viewBox="0 0 16 32" style={{ transform: flip ? "scaleX(-1)" : undefined, flexShrink: 0 }}>
-      <path d="M12 3 C 6 10, 5 22, 8 30" stroke="currentColor" strokeWidth="1.3" fill="none" strokeLinecap="round" />
-      <g fill="currentColor">
-        <ellipse cx="9" cy="8" rx="3.2" ry="1.6" transform="rotate(-32 9 8)" />
-        <ellipse cx="6.6" cy="14" rx="3.4" ry="1.7" transform="rotate(-12 6.6 14)" />
-        <ellipse cx="6.2" cy="20" rx="3.4" ry="1.7" transform="rotate(8 6.2 20)" />
-        <ellipse cx="7.6" cy="25.5" rx="3" ry="1.5" transform="rotate(26 7.6 25.5)" />
-      </g>
-    </svg>
-  );
-}
-
-function Badge({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="flex items-center" style={{ gap: 4 }}>
-      <Laurel />
-      <span
-        style={{
-          fontFamily: '"SF Pro", -apple-system, BlinkMacSystemFont, sans-serif',
-          fontSize: 12.5,
-          fontWeight: 600,
-          letterSpacing: "0.02em",
-          whiteSpace: "nowrap",
-        }}
-      >
-        {children}
-      </span>
-      <Laurel flip />
-    </div>
-  );
-}
-
-// ── Inline highlight ─────────────────────────────────────────────────
-function Mark({ children }: { children: React.ReactNode }) {
-  return (
-    <span
-      style={{
-        background: "#063140",
-        color: "#FFFFFF",
-        borderRadius: 6,
-        padding: "1px 8px",
-        fontWeight: 600,
-        whiteSpace: "nowrap",
-      }}
-    >
-      {children}
-    </span>
-  );
-}
-
-// ── Floating photo-card ──────────────────────────────────────────────
-function PhotoCard({ img, label }: { img: string; label: string }) {
-  return (
-    <div
-      style={{
-        width: 168,
-        borderRadius: 18,
-        overflow: "hidden",
-        background: "#FFFFFF",
-        border: "1px solid rgba(150,200,220,0.4)",
-        boxShadow: "0 22px 44px -16px rgba(0,40,60,0.4)",
-      }}
-    >
-      <div style={{ position: "relative", width: "100%", height: 196 }}>
-        <Image src={img} alt={label} fill sizes="168px" style={{ objectFit: "cover" }} />
-      </div>
-      <div style={{ display: "flex", alignItems: "center", gap: 5, padding: "9px 11px 11px" }}>
-        <span style={{ fontSize: 11 }}>📍</span>
-        <span
-          style={{
-            fontFamily: '"SF Pro", -apple-system, sans-serif',
-            fontSize: 12,
-            fontWeight: 600,
-            letterSpacing: "-0.01em",
-            color: "#063140",
-          }}
-        >
-          {label}
-        </span>
-      </div>
-    </div>
-  );
-}
+export default Hero;

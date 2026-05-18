@@ -23,7 +23,7 @@ interface Step {
 const STEPS: Step[] = [
   {
     title: "Chat to find what you need",
-    titleGradient: "linear-gradient(90deg, #063140 0%, #5FBFF1 100%)",
+    titleGradient: "linear-gradient(90deg, #063140 0%, #0081AC 100%)",
     description:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco.",
     image: "/how/center.png",
@@ -179,15 +179,15 @@ function ChatInput() {
           onClick={(e) => e.stopPropagation()}
         >
           <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden>
-            <rect x="1.5" y="1.5" width="17" height="17" rx="4" stroke="#5FBFF1" strokeWidth="1.5"/>
-            <circle cx="6.5" cy="6.5" r="1.25" fill="#5FBFF1"/>
-            <circle cx="13.5" cy="6.5" r="1.25" fill="#5FBFF1"/>
-            <circle cx="10" cy="10" r="1.25" fill="#5FBFF1"/>
-            <circle cx="6.5" cy="13.5" r="1.25" fill="#5FBFF1"/>
-            <circle cx="13.5" cy="13.5" r="1.25" fill="#5FBFF1"/>
+            <rect x="1.5" y="1.5" width="17" height="17" rx="4" stroke="#0081AC" strokeWidth="1.5"/>
+            <circle cx="6.5" cy="6.5" r="1.25" fill="#0081AC"/>
+            <circle cx="13.5" cy="6.5" r="1.25" fill="#0081AC"/>
+            <circle cx="10" cy="10" r="1.25" fill="#0081AC"/>
+            <circle cx="6.5" cy="13.5" r="1.25" fill="#0081AC"/>
+            <circle cx="13.5" cy="13.5" r="1.25" fill="#0081AC"/>
           </svg>
           <span style={{
-            fontFamily: "'Inter', sans-serif",
+            fontFamily: "var(--hiw-font-sans)",
             fontWeight: "var(--hiw-weight-semibold)" as unknown as number,
             fontSize: "var(--hiw-text-sm)",
             color: "var(--hiw-accent)",
@@ -216,12 +216,12 @@ function ChatInput() {
               onBlur={() => setIsFocused(false)}
               onKeyDown={(e) => { if (e.key === "Enter" && hasText) handleSend(); }}
               className="w-full bg-transparent outline-none border-none placeholder-transparent"
-              style={{ fontFamily: "'Inter', sans-serif", fontSize: "18px", color: "var(--hiw-text-primary)", caretColor: "var(--hiw-accent)" }}
+              style={{ fontFamily: "var(--hiw-font-sans)", fontSize: "18px", color: "var(--hiw-text-primary)", caretColor: "var(--hiw-accent)" }}
             />
             {!isFocused && !inputValue && (
               <div className="pointer-events-none absolute left-0 top-1/2 -translate-y-1/2 flex items-center gap-0.75">
                 <span style={{ width: "2px", height: "20px", background: "#000", borderRadius: "1px", animation: "blink 1.1s step-start infinite", flexShrink: 0, display: "block" }} />
-                <span style={{ fontFamily: "'Inter', sans-serif", fontSize: "18px", color: "var(--hiw-text-tertiary)", lineHeight: 1 }}>
+                <span style={{ fontFamily: "var(--hiw-font-sans)", fontSize: "18px", color: "var(--hiw-text-tertiary)", lineHeight: 1 }}>
                   Ask MapsGPT anything
                 </span>
               </div>
@@ -253,9 +253,8 @@ function ChatInput() {
         <span
           className="text-[15px] leading-[140%]"
           style={{
-            fontFamily: "var(--hiw-font-sans)", fontWeight: 274,
-            background: "linear-gradient(90deg, #0A1342 0%, #2A2A2A 100%)",
-            WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text",
+            fontFamily: "var(--hiw-font-sans)", fontWeight: 400,
+            color: "var(--hiw-text-secondary)",
           }}
         >
           Powered by Columbus-01
@@ -512,7 +511,7 @@ const FRIEND_AVATARS = [
 ];
 
 const SHARE_ACTIONS = [
-  { icon: "map", label: "Shared Map", color: "#5FBFF1" },
+  { icon: "map", label: "Shared Map", color: "#0081AC" },
   { icon: "copy", label: "Copy Link", color: "#6B7280" },
   { icon: "whatsapp", label: "WhatsApp", color: "#25D366" },
   { icon: "sms", label: "SMS", color: "#34C759" },
@@ -830,14 +829,12 @@ function StepCard({
       <div className={`${reverse ? "lg:order-1" : "lg:order-2"} order-2`}>
         <h3
           style={{
-            fontFamily: "var(--hiw-font-sans)",
-            fontWeight: "var(--hiw-weight-semibold)" as unknown as number,
+            fontFamily: "var(--hiw-font-display)",
+            fontWeight: "var(--hiw-weight-medium)" as unknown as number,
             fontSize: "clamp(32px, 4vw, var(--hiw-text-3xl))",
             lineHeight: "var(--hiw-leading-tight)" as unknown as number,
-            background: step.titleGradient,
-            WebkitBackgroundClip: "text",
-            WebkitTextFillColor: "transparent",
-            backgroundClip: "text",
+            letterSpacing: "-0.02em",
+            color: "var(--hiw-text-primary)",
             margin: 0,
             marginBottom: "var(--hiw-space-4)",
           }}
@@ -886,10 +883,11 @@ export default function HowItWorksSection() {
         <div style={{ textAlign: "center", marginBottom: "var(--hiw-step-gap)" }}>
           <h2
             style={{
-              fontFamily: "var(--hiw-font-sans)",
-              fontWeight: "var(--hiw-weight-bold)" as unknown as number,
+              fontFamily: "var(--hiw-font-display)",
+              fontWeight: "var(--hiw-weight-medium)" as unknown as number,
               fontSize: "clamp(42px, 5vw, var(--hiw-text-4xl))",
               lineHeight: "var(--hiw-leading-tight)" as unknown as number,
+              letterSpacing: "-0.02em",
               color: "var(--hiw-text-primary)",
               margin: 0,
             }}

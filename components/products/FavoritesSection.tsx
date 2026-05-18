@@ -1,104 +1,90 @@
-"use client";
+/**
+ * Favorites CTA band — a centred line that points travellers to the app.
+ *
+ * Rebuilt on the Columbus homepage design system: a centred `.h2`
+ * Funnel Display heading and the homepage signature CTA pill (navy
+ * surface, white label → #0081AC on hover, 5-dot ArrowDots glyph),
+ * 1287px bounds, the `.section` rhythm. Replaces the prior recolored-
+ * emoji + glassmorphism-button implementation.
+ */
 
-import Image from "next/image";
-import glassStyles from "@/components/ui/GlassButton.module.css";
-import "@/components/products/how-it-works-tokens.css";
+/* Signature 5-dot diagonal arrow — shared with BentoProducts / Careers. */
+function ArrowDots() {
+  return (
+    <svg width="12" height="13" viewBox="0 0 9 13" fill="none" aria-hidden="true">
+      <circle cx="7.22" cy="6.589" r="1.28" fill="currentColor" />
+      <circle cx="4.658" cy="4.018" r="1.28" fill="currentColor" />
+      <circle cx="2.099" cy="1.46" r="1.28" fill="currentColor" />
+      <circle cx="4.658" cy="9.151" r="1.28" fill="currentColor" />
+      <circle cx="2.099" cy="11.718" r="1.28" fill="currentColor" />
+    </svg>
+  );
+}
+
+const CSS = `
+.fav-bounds {
+  max-width: 1287px;
+  margin-left: 20px;
+  margin-right: 20px;
+  box-sizing: border-box;
+}
+@media (min-width: 768px) {
+  .fav-bounds { margin-left: auto; margin-right: auto; }
+}
+
+.fav-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.fav-title {
+  margin: 0;
+  max-width: 22ch;
+  text-wrap: balance;
+}
+
+/* Homepage signature CTA pill. */
+.fav-cta {
+  margin-top: 40px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 28px;
+  background: var(--color-cta);
+  color: #FFFFFF;
+  border-radius: var(--radius-button-md);
+  font-size: var(--typography--p-m);
+  line-height: 1;
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 180ms ease;
+}
+.fav-cta:hover { color: #0081AC; }
+.fav-cta-arrow {
+  display: inline-block;
+  color: #0081AC;
+  transition: transform 180ms ease;
+}
+.fav-cta:hover .fav-cta-arrow { transform: translateX(2px); }
+.fav-cta-arrow svg { display: block; }
+`;
 
 export default function FavoritesSection() {
   return (
-    <section
-      className="hiw-scope"
-      style={{
-        background: "var(--hiw-bg-page)",
-        paddingTop: "var(--hiw-section-py)",
-        paddingBottom: "var(--hiw-space-48)",
-      }}
-    >
-      <div
-        style={{
-          maxWidth: "var(--hiw-max-width)",
-          marginInline: "auto",
-          paddingInline: "var(--hiw-content-px)",
-        }}
-      >
-        <div
-          className="flex flex-col lg:flex-row items-center justify-center text-center"
-          style={{ gap: "var(--hiw-space-12)" }}
-        >
-          <span className="hover-bee inline-block cursor-default">
-            <Image
-              src="/how/light.png"
-              alt=""
-              width={120}
-              height={100}
-              className="w-20 sm:w-24 lg:w-32 h-auto block"
-              style={{ filter: "sepia(1) saturate(4) hue-rotate(165deg) brightness(0.85)" }}
-            />
-          </span>
-          <h2 style={{
-            fontFamily: "var(--hiw-font-sans)",
-            fontWeight: "var(--hiw-weight-semibold)" as unknown as number,
-            fontSize: "clamp(32px, 5vw, var(--hiw-text-4xl))",
-            lineHeight: "var(--hiw-leading-tight)" as unknown as number,
-            color: "var(--hiw-text-primary)",
-            margin: 0,
-          }}>
-            Let our AI find you
-            <br />
-            the coolest place, faster.
+    <section className="section">
+      <style>{CSS}</style>
+      <div className="fav-bounds">
+        <div className="fav-inner">
+          <h2 className="h2 tracking-tight text-ink fav-title">
+            Let our AI find you the coolest place, faster.
           </h2>
-          <span className="hover-bee inline-block cursor-default">
-            <Image
-              src="/how/serach.png"
-              alt=""
-              width={120}
-              height={100}
-              className="w-20 sm:w-24 lg:w-32 h-auto block"
-              style={{ filter: "sepia(1) saturate(4) hue-rotate(165deg) brightness(0.85)" }}
-            />
-          </span>
-        </div>
-
-        {/* CTA */}
-        <div
-          className="flex flex-col items-center"
-          style={{ marginTop: "var(--hiw-space-12)" }}
-        >
-          <a
-            href="https://mapsgpt.es"
-            className={`group flex items-center justify-center gap-4 lg:gap-6 h-14 lg:h-16 no-underline cursor-pointer active:scale-[0.98] select-none ${glassStyles.btn}`}
-            style={{ borderRadius: "var(--radius-button-lg)", paddingInline: 48 }}
-          >
-            <span
-              className="text-[clamp(18px,2vw,22px)] lg:text-[20px]!"
-              style={{
-                fontFamily: "var(--hiw-font-sans)",
-                fontWeight: 590,
-                lineHeight: "140%",
-                letterSpacing: "-0.02em",
-                color: "#00B1D4",
-                whiteSpace: "nowrap",
-              }}
-            >
-              <span className="lg:hidden">Find your Spots now</span>
-              <span className="hidden lg:inline">Find your favourite spots now</span>
+          <a className="fav-cta" href="https://mapsgpt.es">
+            Find your favourite spots now
+            <span className="fav-cta-arrow">
+              <ArrowDots />
             </span>
-            <svg
-              width="13"
-              height="13"
-              viewBox="0 0 13 13"
-              fill="none"
-              className="shrink-0 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
-              aria-hidden
-            >
-              <path
-                d="M2 11L11 2M11 2H4M11 2V9"
-                stroke="#00B1D4"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
           </a>
         </div>
       </div>

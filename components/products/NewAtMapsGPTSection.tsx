@@ -3,7 +3,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRef, useEffect, useState } from "react";
-import glassStyles from "@/components/ui/GlassButton.module.css";
 import "@/components/products/how-it-works-tokens.css";
 
 /* ═══════════════════════════════════════════════════════════════
@@ -39,10 +38,10 @@ const FEATURES: Feature[] = [
     label: "Ranked Spots",
     description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
     href: "https://mapsgpt.es",
-    bgColorA: "#5FBFF1",
-    bgColorB: "#01A35D",
-    bgColorC: "#01A35D",
-    bgColorD: "#5FBFF1",
+    bgColorA: "#CAE5F5",
+    bgColorB: "#E5EDFB",
+    bgColorC: "#E5EDFB",
+    bgColorD: "#CAE5F5",
     miniCards: [
       { image: `/FavoriteSpots/${encodeURIComponent("(22).jpeg")}`, title: "Lorem Ipsum", subtitle: "Dolor sit amet consectetur" },
       { image: `/FavoriteSpots/${encodeURIComponent("(20).jpeg")}`, title: "Adipiscing Elit", subtitle: "Sed do eiusmod tempor" },
@@ -57,10 +56,10 @@ const FEATURES: Feature[] = [
     label: "Shared Itineraries",
     description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut enim ad minim veniam, quis nostrud exercitation ullamco.",
     href: "https://mapsgpt.es",
-    bgColorA: "#DE2F32",
-    bgColorB: "#B00098",
-    bgColorC: "#B00098",
-    bgColorD: "#DE2F32",
+    bgColorA: "#CAE5F5",
+    bgColorB: "#E5EDFB",
+    bgColorC: "#E5EDFB",
+    bgColorD: "#CAE5F5",
     miniCards: [
       { image: `/FavoriteSpots/${encodeURIComponent("(23).jpeg")}`, title: "Consectetur", subtitle: "Adipiscing elit sed" },
       { image: `/FavoriteSpots/${encodeURIComponent("(14).jpeg")}`, title: "Eiusmod Tempor", subtitle: "Incididunt ut labore" },
@@ -75,10 +74,10 @@ const FEATURES: Feature[] = [
     label: "Search by Character",
     description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis aute irure dolor in reprehenderit in voluptate velit.",
     href: "https://mapsgpt.es",
-    bgColorA: "#0A6E5C",
-    bgColorB: "#2A8FC2",
-    bgColorC: "#2A8FC2",
-    bgColorD: "#0A6E5C",
+    bgColorA: "#CAE5F5",
+    bgColorB: "#E5EDFB",
+    bgColorC: "#E5EDFB",
+    bgColorD: "#CAE5F5",
     miniCards: [
       { image: `/FavoriteSpots/${encodeURIComponent("(19).jpeg")}`, title: "Reprehenderit", subtitle: "In voluptate velit" },
       { image: `/FavoriteSpots/${encodeURIComponent("(21).jpeg")}`, title: "Esse Cillum", subtitle: "Dolore eu fugiat" },
@@ -93,10 +92,10 @@ const FEATURES: Feature[] = [
     label: "Roll the Dice",
     description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Excepteur sint occaecat cupidatat non proident.",
     href: "https://mapsgpt.es",
-    bgColorA: "#00B1D4",
-    bgColorB: "#5FBFF1",
-    bgColorC: "#5FBFF1",
-    bgColorD: "#00B1D4",
+    bgColorA: "#CAE5F5",
+    bgColorB: "#E5EDFB",
+    bgColorC: "#E5EDFB",
+    bgColorD: "#CAE5F5",
     miniCards: [
       { image: `/FavoriteSpots/${encodeURIComponent("(24).jpeg")}`, title: "???", subtitle: "Tap to reveal" },
       { image: `/FavoriteSpots/${encodeURIComponent("(17).jpeg")}`, title: "???", subtitle: "Tap to reveal" },
@@ -248,10 +247,11 @@ function FeatureCard({ feature }: { feature: Feature }) {
           zIndex: 1,
         }}>
         <h3 style={{
-          fontFamily: "var(--hiw-font-sans)",
-          fontWeight: "var(--hiw-weight-semibold)" as unknown as number,
+          fontFamily: "var(--hiw-font-display)",
+          fontWeight: "var(--hiw-weight-medium)" as unknown as number,
           fontSize: "24px",
           lineHeight: "var(--hiw-leading-snug)" as unknown as number,
+          letterSpacing: "-0.02em",
           color: "var(--hiw-text-primary)",
           margin: 0,
           marginBottom: "var(--hiw-space-2)",
@@ -272,22 +272,13 @@ function FeatureCard({ feature }: { feature: Feature }) {
         </p>
 
         {/* CTA — matches section C style */}
-        <Link
-          href="/maps-gpt"
-          className={`group flex items-center justify-center gap-6 w-full h-[52px] cursor-pointer no-underline ${glassStyles.btn}`}
-          style={{ padding: 0 }}
-        >
-          <span className="text-[clamp(18px,2vw,22px)] lg:text-[20px]!" style={{
-            fontFamily: "var(--hiw-font-sans)",
-            fontWeight: 590,
-            letterSpacing: "-0.02em",
-            color: "#00B1D4",
-          }}>
-            Try it now
+        <Link href="/maps-gpt" className="hiw-cta" style={{ alignSelf: "flex-start" }}>
+          Try it now
+          <span className="hiw-cta-arrow">
+            <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden>
+              <path d="M2 11L11 2M11 2H4M11 2V9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
           </span>
-          <svg width="13" height="13" viewBox="0 0 13 13" fill="none" className="shrink-0 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" aria-hidden>
-            <path d="M2 11L11 2M11 2H4M11 2V9" stroke="#00B1D4" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
         </Link>
       </div>
     </div>
@@ -375,10 +366,11 @@ export default function NewAtMapsGPTSection() {
         paddingInline: "var(--hiw-content-px)",
       }}>
         <h2 style={{
-          fontFamily: "var(--hiw-font-sans)",
-          fontWeight: "var(--hiw-weight-bold)" as unknown as number,
+          fontFamily: "var(--hiw-font-display)",
+          fontWeight: "var(--hiw-weight-medium)" as unknown as number,
           fontSize: "clamp(42px, 5vw, var(--hiw-text-4xl))",
           lineHeight: "var(--hiw-leading-tight)" as unknown as number,
+          letterSpacing: "-0.02em",
           color: "var(--hiw-text-primary)",
           margin: 0,
           marginBottom: "var(--hiw-space-16)",

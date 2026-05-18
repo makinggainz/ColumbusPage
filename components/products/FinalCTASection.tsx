@@ -3,7 +3,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
-import glassStyles from "@/components/ui/GlassButton.module.css";
 import "@/components/products/how-it-works-tokens.css";
 
 export default function FinalCTASection() {
@@ -62,18 +61,14 @@ export default function FinalCTASection() {
           }}>
             <span style={{
               fontWeight: "var(--hiw-weight-semibold)" as unknown as number,
-              background: "linear-gradient(180deg, #8DF7FF 0%, #00B1D4 40%, #0089A3 100%)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              backgroundClip: "text",
-              filter: "drop-shadow(0 1px 2px rgba(0,0,0,0.12)) drop-shadow(0 0.5px 1px rgba(0,0,0,0.08))",
+              color: "#FFFFFF",
             }}>MapsGPT</span>
             <span style={{ color: "var(--hiw-text-on-accent)" }}>{" "}is browser based</span>
           </p>
           {/* Title */}
           <h2 style={{
-            fontFamily: "var(--hiw-font-sans)",
-            fontWeight: "var(--hiw-weight-bold)" as unknown as number,
+            fontFamily: "var(--hiw-font-display)",
+            fontWeight: "var(--hiw-weight-medium)" as unknown as number,
             fontSize: "var(--hiw-text-3xl)",
             lineHeight: 1.1,
             letterSpacing: "-0.03em",
@@ -93,24 +88,13 @@ export default function FinalCTASection() {
           }}>
             Access your local AI travel pal<br />on any browser.
           </p>
-          <a
-            href="https://mapsgpt.es"
-            className={`group inline-flex items-center justify-center gap-4 h-14 no-underline cursor-pointer active:scale-[0.98] select-none ${glassStyles.btn}`}
-            style={{ maxWidth: "fit-content", marginInline: "auto", backdropFilter: "blur(3px)", WebkitBackdropFilter: "blur(3px)" }}
-          >
-            <span className="text-[clamp(18px,2vw,22px)] lg:text-[20px]!" style={{
-              fontFamily: "var(--hiw-font-sans)",
-              fontWeight: 590,
-              lineHeight: "140%",
-              letterSpacing: "-0.02em",
-              color: "var(--hiw-text-on-accent)",
-              whiteSpace: "nowrap",
-            }}>
-              Try MapsGPT it&apos;s free!
+          <a href="https://mapsgpt.es" className="hiw-cta hiw-cta-light">
+            Try MapsGPT it&apos;s free!
+            <span className="hiw-cta-arrow">
+              <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden>
+                <path d="M2 11L11 2M11 2H4M11 2V9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
             </span>
-            <svg width="12" height="12" viewBox="0 0 13 13" fill="none" className="shrink-0" aria-hidden>
-              <path d="M2 11L11 2M11 2H4M11 2V9" stroke="#ffffff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
           </a>
         </div>
 
@@ -211,19 +195,15 @@ export default function FinalCTASection() {
               }}>
                 <span style={{
                   fontWeight: "var(--hiw-weight-semibold)" as unknown as number,
-                  background: "linear-gradient(180deg, #8DF7FF 0%, #00B1D4 40%, #0089A3 100%)",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                  backgroundClip: "text",
-                  filter: "drop-shadow(0 1px 2px rgba(0,0,0,0.12)) drop-shadow(0 0.5px 1px rgba(0,0,0,0.08))",
+                  color: "#FFFFFF",
                 }}>MapsGPT</span>
                 <span style={{ color: "var(--hiw-text-on-accent)" }}>{" "}is browser based</span>
               </p>
 
               {/* Title */}
               <h2 style={{
-                fontFamily: "var(--hiw-font-sans)",
-                fontWeight: "var(--hiw-weight-bold)" as unknown as number,
+                fontFamily: "var(--hiw-font-display)",
+                fontWeight: "var(--hiw-weight-medium)" as unknown as number,
                 fontSize: "var(--hiw-text-5xl)",
                 lineHeight: 1.1,
                 letterSpacing: "-0.03em",
@@ -249,29 +229,13 @@ export default function FinalCTASection() {
                 on any browser.
               </p>
 
-              <a
-                href="https://mapsgpt.es"
-                className={`group inline-flex items-center justify-center gap-6 no-underline cursor-pointer active:scale-[0.98] select-none ${glassStyles.btn}`}
-                style={{
-                  padding: "var(--hiw-space-4) var(--hiw-space-8)",
-                  maxWidth: 412,
-                  backdropFilter: "blur(3px)",
-                  WebkitBackdropFilter: "blur(3px)",
-                }}
-              >
-                <span style={{
-                  fontFamily: "var(--hiw-font-sans)",
-                  fontWeight: 590,
-                  fontSize: "20px",
-                  lineHeight: "var(--hiw-leading-normal)" as unknown as number,
-                  letterSpacing: "-0.02em",
-                  color: "var(--hiw-text-on-accent)",
-                }}>
-                  Try MapsGPT it&apos;s free!
+              <a href="https://mapsgpt.es" className="hiw-cta hiw-cta-light">
+                Try MapsGPT it&apos;s free!
+                <span className="hiw-cta-arrow">
+                  <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden>
+                    <path d="M2 11L11 2M11 2H4M11 2V9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
                 </span>
-                <svg width="13" height="13" viewBox="0 0 13 13" fill="none" className="shrink-0 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" aria-hidden>
-                  <path d="M2 11L11 2M11 2H4M11 2V9" stroke="#ffffff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
               </a>
             </div>
           </div>
@@ -370,10 +334,11 @@ export default function FinalCTASection() {
             maxWidth: 560,
           }}>
             <h3 style={{
-              fontFamily: "var(--hiw-font-sans)",
-              fontWeight: "var(--hiw-weight-bold)" as unknown as number,
+              fontFamily: "var(--hiw-font-display)",
+              fontWeight: "var(--hiw-weight-medium)" as unknown as number,
               fontSize: "clamp(var(--hiw-text-2xl), 5vw, var(--hiw-text-4xl))",
               lineHeight: 1.1,
+              letterSpacing: "-0.02em",
               color: "var(--hiw-text-primary)",
               margin: 0,
               marginBottom: "var(--hiw-space-4)",
@@ -396,30 +361,10 @@ export default function FinalCTASection() {
             </p>
 
             <div className="flex flex-wrap" style={{ gap: "var(--hiw-space-4)" }}>
-              <Link
-                href="/feedback"
-                className={`${glassStyles.btn} no-underline cursor-pointer text-[clamp(18px,2vw,22px)] lg:text-[20px]!`}
-                style={{
-                  padding: "var(--hiw-space-4) var(--hiw-space-8)",
-                  fontFamily: "var(--hiw-font-sans)",
-                  fontWeight: 590,
-                  letterSpacing: "-0.02em",
-                  color: "var(--hiw-text-primary)",
-                }}
-              >
+              <Link href="/feedback" className="hiw-cta">
                 Request a feature
               </Link>
-              <Link
-                href="/feedback"
-                className={`${glassStyles.btn} no-underline cursor-pointer text-[clamp(18px,2vw,22px)] lg:text-[20px]!`}
-                style={{
-                  padding: "var(--hiw-space-4) var(--hiw-space-8)",
-                  fontFamily: "var(--hiw-font-sans)",
-                  fontWeight: 590,
-                  letterSpacing: "-0.02em",
-                  color: "var(--hiw-text-primary)",
-                }}
-              >
+              <Link href="/feedback" className="hiw-cta">
                 Report a bug
               </Link>
             </div>
