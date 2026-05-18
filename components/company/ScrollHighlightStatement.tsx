@@ -12,19 +12,22 @@ import { useRef } from "react";
 /**
  * Scroll-driven highlight statement (Our Mission / Our Vision).
  *
- * The body of the statement sits permanently in the dim resting state —
- * no fill-in. Only the `important` ("focus") words animate: they fade up
- * from dim to full, one after another, as the section scrolls down — so
- * scrolling progressively reveals the key phrases against the quiet rest.
+ * The statement starts fully lit. As the section scrolls down, the
+ * non-focus body words fade out — one after another — to a gently dimmed
+ * state, while the `important` ("focus") words hold at full opacity, so
+ * the key phrases are left standing out against the quieted rest.
  *
- * `prefers-reduced-motion` opts out — every word renders fully lit so the
- * statement stays readable.
+ * `prefers-reduced-motion` opts out — every word stays fully lit.
  */
 
-/** Opacity of the non-focus body text, and the focus words' start state. */
-const DIM = 0.15;
-/** By this point in the scroll journey every focus word has appeared. */
-const APPEAR_END = 0.6;
+/** Opacity the non-focus body text fades down to (kept gentle — still
+ *  clearly readable, just quieted). */
+const DIM = 0.4;
+/** Scroll progress at which the body text begins to fade — kept late so
+ *  the statement stays fully readable as it enters and rises into view. */
+const FADE_START = 0.42;
+/** By this point in the scroll journey the body text has fully faded. */
+const FADE_END = 0.72;
 /** Width (in progress units) of a single word's fade ramp. */
 const RAMP = 0.14;
 
@@ -88,29 +91,23 @@ function Word({
   progress: MotionValue<number>;
   reduced: boolean;
 }) {
-  // Focus words fade in on a ramp staggered by their position, so they
-  // appear in reading order as the section scrolls down.
-  const start = frac * (APPEAR_END - RAMP);
+  // Body words fade out on a ramp staggered by their position across
+  // [FADE_START, FADE_END], so the statement quiets down in reading order
+  // — and only once it has been read.
+  const start = FADE_START + frac * (FADE_END - FADE_START - RAMP);
   const end = start + RAMP;
-  const opacity = useTransform(progress, [start, end], [DIM, 1]);
+  const opacity = useTransform(progress, [start, end], [1, DIM]);
 
   let content;
-  if (reduced) {
-    // No animation — render fully lit so the statement stays readable.
+  if (reduced || token.important) {
+    // Focus words (and reduced-motion) stay fully lit.
     content = <span className="inline-block">{token.word}</span>;
-  } else if (token.important) {
-    // Focus word — fades up from dim as you scroll.
+  } else {
+    // Body text — full at the start, fades out as you scroll.
     content = (
       <motion.span className="inline-block" style={{ opacity }}>
         {token.word}
       </motion.span>
-    );
-  } else {
-    // Body text — held quietly in the dim resting state.
-    content = (
-      <span className="inline-block" style={{ opacity: DIM }}>
-        {token.word}
-      </span>
     );
   }
 

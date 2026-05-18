@@ -182,8 +182,8 @@ export default function CompanyPage() {
       </section>
 
       {/* ════════ 2. OUR MISSION ════════
-          Open statement (no card) — body held dim; the key phrases fade
-          in as the section scrolls down (ScrollHighlightStatement). */}
+          Open statement (no card) — starts fully lit; the body fades out
+          on scroll, leaving the key phrases (ScrollHighlightStatement). */}
       <section className={styles.statementSection}>
         <div className={styles.bounds}>
           <h2 className={`mb-4 md:mb-6 ${styles.sectionLabel}`}>
