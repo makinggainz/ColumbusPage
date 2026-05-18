@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { MistxNav } from "@/components/layout/MistxNav";
 
 type Phase = "writing" | "folding" | "bottling" | "dropping" | "floating" | "done";
@@ -28,9 +28,9 @@ const INK = "var(--color-ink)";           /* #0B1B2B */
 const MUTED = "var(--color-muted)";        /* #5A6B7B */
 const HAIRLINE = "var(--color-gridline)";  /* #E7E7F1 */
 const CTA = "var(--color-cta)";            /* #0B1342 navy */
-/* Interactive accent — the MistX blue every homepage CTA uses
-   (CtaBanner / ElioFinalCTA). Hardcoded site-wide, no @theme token. */
-const ACCENT = "#154ACC";
+/* Interactive accent — the teal the navbar "Try Elio" CTA arrows use
+   (see components/layout/MistxNav.tsx). Hardcoded, no @theme token. */
+const ACCENT = "#0081AC";
 
 const FAQS: { q: string; a: React.ReactNode }[] = [
   {
@@ -87,17 +87,16 @@ function ArrowDots({ className = "" }: { className?: string }) {
 }
 
 /* Primary CTA — the site-wide button idiom: navy `bg-cta` fill, white
-   label that turns brand-blue on hover, dot-arrow nudging right.
-   Mirrors the <a> CTAs in CtaBanner / ElioFinalCTA exactly. */
+   label that turns to the accent on hover, dot-arrow nudging right. */
 function CtaButton({ children, className = "", ...props }: React.ButtonHTMLAttributes<HTMLButtonElement>) {
   return (
     <button
       {...props}
-      className={`group rounded-button px-5 py-2 text-sm flex items-center gap-2 transition-colors bg-cta text-white hover:text-[#154ACC] cursor-pointer ${className}`}
+      className={`group rounded-button px-5 py-2 text-sm flex items-center gap-2 transition-colors bg-cta text-white hover:text-[#0081AC] cursor-pointer ${className}`}
     >
       {children}
       <span className="ml-2 inline-block transition-transform group-hover:translate-x-0.5">
-        <ArrowDots className="text-[#154ACC]" />
+        <ArrowDots className="text-[#0081AC]" />
       </span>
     </button>
   );
@@ -142,6 +141,7 @@ export default function ContactPage() {
   const [charCount, setCharCount] = useState(0);
   const [mounted, setMounted] = useState(false);
   const [tabKey, setTabKey] = useState(0);
+  const cardRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const t = setTimeout(() => setMounted(true), 120);
@@ -154,6 +154,16 @@ export default function ContactPage() {
     transform: mounted ? "translateY(0px)" : "translateY(18px)",
     transition: `opacity 1000ms ease ${delay}ms, filter 1000ms ease ${delay}ms, transform 1000ms ease ${delay}ms`,
   });
+
+  /* Glide the form card up to a comfortable reading position — fired on
+     any click within the card (tab switch, focusing a field, etc.).
+     The 100px offset clears the sticky navbar. */
+  const scrollToForm = () => {
+    const el = cardRef.current;
+    if (!el) return;
+    const top = el.getBoundingClientRect().top + window.scrollY - 100;
+    window.scrollTo({ top, behavior: "smooth" });
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -273,9 +283,6 @@ export default function ContactPage() {
             <h1 className="h1 tracking-tight text-ink" style={heroFadeIn(0)}>
               Get in touch.
             </h1>
-            <p className="p-l text-muted mt-4 max-w-xl mx-auto" style={heroFadeIn(80)}>
-              Let&apos;s start your journey.
-            </p>
           </div>
         )}
         {phase !== "writing" && <div className="pt-24 md:pt-32" />}
@@ -286,10 +293,10 @@ export default function ContactPage() {
             <div style={heroFadeIn(200)}>
 
               {/* ── Form card ── */}
-              <div style={cardStyle}>
+              <div ref={cardRef} style={cardStyle} onClick={scrollToForm}>
 
-                {/* Pill tab row */}
-                <div className="flex gap-1.5 overflow-x-auto px-4 py-4" style={{ borderBottom: `1px solid ${HAIRLINE}` }}>
+                {/* Pill tab row — centred, evenly spaced */}
+                <div className="flex justify-center gap-2.5 overflow-x-auto px-4 py-4" style={{ borderBottom: `1px solid ${HAIRLINE}` }}>
                   {TABS.map(opt => (
                     <button
                       key={opt.value}
@@ -413,7 +420,7 @@ export default function ContactPage() {
                       </label>
 
                       <label className="flex items-start gap-3 cursor-pointer">
-                        <input type="checkbox" checked={updates} onChange={e => setUpdates(e.target.checked)} className="mt-0.5 w-4 h-4 accent-[#154ACC]" />
+                        <input type="checkbox" checked={updates} onChange={e => setUpdates(e.target.checked)} className="mt-0.5 w-4 h-4 accent-[#0081AC]" />
                         <span className="text-[14px] leading-[1.5]" style={{ color: MUTED }}>I want to receive product updates from Columbus Earth.</span>
                       </label>
 
