@@ -17,18 +17,20 @@
   margin-bottom: 16px;
 }
 
-/* Quote-mark glyph — accent blue at 25%, matching the founder cards. */
+/* Quote-mark glyph — a faint neutral ink tint, matching the founder
+   cards. The accent blue is reserved for interactive states. */
 .quoteMark {
   width: 32px;
   height: auto;
-  color: rgba(0, 129, 172, 0.25);
+  color: rgba(11, 27, 43, 0.14);
   margin-bottom: 16px;
 }
 
-/* Quote copy — accent blue, matching the founder quote cards. */
+/* Quote copy — dark ink, one consistent quote treatment with the founder
+   quote cards. */
 .quote {
   max-width: 32ch;
-  color: #0081AC;
+  color: var(--color-ink);
   font-family: var(--font-sans);
   font-size: 20px;
   line-height: 1.5;

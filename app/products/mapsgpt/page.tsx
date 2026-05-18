@@ -36,13 +36,14 @@ function SectionWithLabel({
 export default function ProductsPage() {
   return (
     <main style={{ overflowX: "clip" }}>
-      <SectionWithLabel label={sectionLabels[0]}>
-        <MistxNav />
-      </SectionWithLabel>
+      {/* MistxNav is a direct child of <main> — not wrapped in a
+          SectionWithLabel — so its position:sticky has the full page as
+          its containing block. `heroLight` floats it over the light
+          MapsGPT hero (dark contents, pale scrim) like the business page. */}
+      <MistxNav heroLight />
       <SectionWithLabel label={sectionLabels[1]}>
         <Hero />
       </SectionWithLabel>
-      <div data-navbar-bg-trigger />
       {/* Section C — ShowcaseSection removed; the scrollytelling Hero now
           carries the product-showcase role. */}
       {/* Section D — QuestionsSection (commented out, may restore later)

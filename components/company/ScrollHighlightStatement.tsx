@@ -17,7 +17,10 @@ import { useRef } from "react";
  * state, while the `important` ("focus") words hold at full opacity, so
  * the key phrases are left standing out against the quieted rest.
  *
- * `prefers-reduced-motion` opts out — every word stays fully lit.
+ * `prefers-reduced-motion` opts out — every word stays fully lit. So does
+ * the `static` prop: the scroll-fade is a signature effect, so it is used
+ * once (Our Mission); Our Vision passes `static` and renders fully lit
+ * with no scroll motion, so the page isn't animating two sections in a row.
  */
 
 /** Opacity the non-focus body text fades down to (kept gentle — still
@@ -48,8 +51,11 @@ function tokenize(segments: StatementSegment[]): Token[] {
 
 export function ScrollHighlightStatement({
   segments,
+  static: isStatic = false,
 }: {
   segments: StatementSegment[];
+  /** Render fully lit with no scroll motion (used for Our Vision). */
+  static?: boolean;
 }) {
   const ref = useRef<HTMLParagraphElement>(null);
   const reduced = useReducedMotion();
@@ -60,11 +66,13 @@ export function ScrollHighlightStatement({
 
   const tokens = tokenize(segments);
   const lastIndex = Math.max(1, tokens.length - 1);
+  // `static` and reduced-motion share one path: every word stays lit.
+  const lit = isStatic || Boolean(reduced);
 
   return (
     <p
       ref={ref}
-      className="mx-auto max-w-3xl text-center text-2xl sm:text-3xl lg:text-4xl font-medium tracking-tight leading-snug text-ink"
+      className="mx-auto max-w-3xl text-balance text-center text-2xl sm:text-3xl lg:text-4xl font-medium tracking-tight leading-snug text-ink"
     >
       {tokens.map((token, i) => (
         <Word
@@ -72,7 +80,7 @@ export function ScrollHighlightStatement({
           token={token}
           frac={i / lastIndex}
           progress={scrollYProgress}
-          reduced={Boolean(reduced)}
+          reduced={lit}
         />
       ))}
     </p>

@@ -85,7 +85,10 @@ function ArrowDot({ className = "" }: { className?: string }) {
   );
 }
 
-export function MistxNav({ heroWhite = false }: { heroWhite?: boolean } = {}) {
+export function MistxNav({
+  heroWhite = false,
+  heroLight = false,
+}: { heroWhite?: boolean; heroLight?: boolean } = {}) {
   const [elioOpen, setElioOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   // True while the navbar is still in flow (not stuck to the viewport
@@ -161,7 +164,12 @@ export function MistxNav({ heroWhite = false }: { heroWhite?: boolean } = {}) {
   // tinted to the hero image's sky colour — opaque at the top, fading to
   // fully transparent at the navbar's bottom border. Once the hero
   // scrolls out from behind the navbar it reverts to the solid backdrop.
-  const heroScrim = heroWhite && stuck && overHero;
+  // `heroLight` (the MapsGPT hero) reuses the float-over-hero mechanic
+  // for a LIGHT hero: nav contents stay dark (lightNav stays false) and
+  // the scrim is a pale sand tint instead of business' sky blue.
+  const heroFloat = heroWhite || heroLight;
+  const heroScrim = heroFloat && stuck && overHero;
+  const scrimRGB = heroLight ? "244,234,220" : "0,99,199";
 
   return (
     <header
@@ -187,7 +195,7 @@ export function MistxNav({ heroWhite = false }: { heroWhite?: boolean } = {}) {
           bottom border, so it blends into the real sky below with no
           hard edge. Driven by opacity so it cross-fades with the
           solid-white backdrop as the hero scrolls out. */}
-      {heroWhite && (
+      {heroFloat && (
         <div
           aria-hidden
           className="pointer-events-none absolute inset-x-0 top-0 bottom-0"
@@ -195,8 +203,7 @@ export function MistxNav({ heroWhite = false }: { heroWhite?: boolean } = {}) {
             zIndex: 0,
             borderTopLeftRadius: "var(--frame-radius, 20px)",
             borderTopRightRadius: "var(--frame-radius, 20px)",
-            background:
-              "linear-gradient(to bottom, rgba(0,99,199,1) 0%, rgba(0,99,199,0.55) 50%, rgba(0,99,199,0) 100%)",
+            background: `linear-gradient(to bottom, rgba(${scrimRGB},1) 0%, rgba(${scrimRGB},0.55) 50%, rgba(${scrimRGB},0) 100%)`,
             opacity: heroScrim ? 1 : 0,
             transition: "opacity 300ms ease",
           }}

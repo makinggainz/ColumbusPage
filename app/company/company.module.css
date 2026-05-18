@@ -57,13 +57,19 @@
   align-items: center;
   justify-content: center;
   width: 100%;
-  max-width: 760px;
+  /* 768px — the single reading-column width shared by the hero, the
+     mission / vision statements (.textColumn) and the contact card, so
+     the centred text spine never changes width down the page. */
+  max-width: 768px;
   margin: 0 auto;
 }
 
 .heroHeadline {
   color: var(--color-ink);
   margin: 0;
+  /* Even line lengths — centred multi-line text scans far better when the
+     lines are balanced rather than ragged. */
+  text-wrap: balance;
 }
 
 /* Hero subtitle — "Body large" per the type scale: 16px, stepping up to
@@ -103,53 +109,50 @@
   }
 }
 
-/* ── Section heading helpers ──────────────────────────────────────────── */
-/* "OUR MISSION" / "OUR VISION" — small uppercase eyebrow / kicker sitting
-   just above the open statement, not a full-size heading. */
+/* ── Reading column — the 768px centred text spine. Used by the mission,
+   vision and contact sections so every text block shares one width; only
+   the §4 / §5 card rows widen out to the full .bounds. ─────────────────── */
+.textColumn {
+  max-width: 768px;
+  margin-left: 20px;
+  margin-right: 20px;
+  box-sizing: border-box;
+}
+@media (min-width: 768px) {
+  .textColumn {
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+/* ── Section opener ───────────────────────────────────────────────────────
+   Every section on the page opens with this one treatment — a small
+   uppercase eyebrow. Keeping a single opener style (rather than alternating
+   an eyebrow with a full-size heading) gives the page a predictable rhythm,
+   and leaves the hero h1 as the only large type on the page. */
 .sectionLabel {
   text-transform: uppercase;
   text-align: center;
   color: var(--color-ink);
   font-family: var(--font-sans);
-  /* Matches the homepage hero eyebrow (.hn-eyebrow) size — 16px, 18px at
-     the 992px breakpoint. */
-  font-size: 16px;
+  /* Quiet kicker — 13px. The label opens every section, so it stays small
+     and recedes rather than reading as a heading; the hero h1 is the
+     page's only large type. */
+  font-size: 13px;
   font-weight: 600;
   /* tracking-widest (0.1em) — the design-system token for uppercase
      micro-text. */
   letter-spacing: 0.1em;
   line-height: 1.5;
-}
-@media (min-width: 992px) {
-  .sectionLabel {
-    font-size: 18px;
-  }
+  /* Even line lengths if the label wraps. */
+  text-wrap: balance;
 }
 
-.sectionHeading {
-  text-align: center;
-  color: var(--color-ink);
-}
-
-/* Mission + vision sections — a touch more vertical rhythm than a standard
-   .section so the two open statements each get their own breathing room. */
-.statementSection {
-  padding-top: 80px;
-  padding-bottom: 80px;
-}
-@media (min-width: 1024px) {
-  .statementSection {
-    padding-top: 128px;
-    padding-bottom: 128px;
-  }
-}
-
-/* ── Hairline statement card — the shared container for the mission,
-   vision, values and contact blocks. Capped at a readable max-width
-   (≈816px) and centred, so it never spans the full 1287px bounds; the
-   max-width keeps it fluid down every breakpoint. ─────────────────────── */
+/* ── Hairline contact card — capped at 768px so it sits on the same
+   reading-column width as the hero and the mission / vision statements,
+   keeping the centred text spine one consistent width. ──────────────────── */
 .card {
-  max-width: 816px;
+  max-width: 768px;
   margin-left: auto;
   margin-right: auto;
   border: 1px solid var(--color-gridline);
@@ -263,21 +266,16 @@
   color: #0081AC;
 }
 
+/* One static measure (32ch) for every card title — small cards are
+   narrower than 32ch so it simply wraps at their width, the featured /
+   expanded card caps at 32ch. The title no longer animates its width as
+   cards expand, so a hover reflows only the card box, not the text. */
 .postCardTitle {
   letter-spacing: -0.01em;
   color: var(--color-ink);
-  max-width: 18ch;
-  text-wrap: balance;
-  transition: color 300ms ease, max-width 420ms cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.postCardFeatured .postCardTitle,
-.postCard:not(.postCardFeatured):hover .postCardTitle {
   max-width: 32ch;
-}
-
-.cardGrid:has(.postCard:not(.postCardFeatured):hover) .postCardFeatured .postCardTitle {
-  max-width: 18ch;
+  text-wrap: balance;
+  transition: color 300ms ease;
 }
 
 .postCardFeatured {
@@ -405,14 +403,10 @@
   object-position: center 42%;
 }
 
-/* Top + bottom accent-blue wash — recolored from the original neutral
-   black gradient to the global accent token (--accent #0066CC) so the
-   featured tile shares the bento row's accent theme. The washes are
-   extended deep toward the centre and the middle never fully clears, so
-   the photo reads as a quiet, dimmed backdrop rather than a distracting
-   image while keeping the quote (top) and attribution (bottom) legible.
-   Opacity runs slightly heavier than the black version because #0066CC is
-   a mid-tone — the extra coverage keeps the white text comfortably legible. */
+/* Top + bottom navy wash for legibility. Kept deliberately light — heavy
+   enough at the edges to carry the white quote (top) and attribution
+   (bottom), but eased off through the middle so the tile reads as a photo
+   rather than a near-black slab competing with the rest of the page. */
 .founderPhoto::before {
   content: "";
   position: absolute;
@@ -423,11 +417,11 @@
      blue. */
   background: linear-gradient(
     to bottom,
-    rgba(11, 19, 66, 0.88) 0%,
-    rgba(11, 19, 66, 0.66) 30%,
-    rgba(11, 19, 66, 0.45) 50%,
-    rgba(11, 19, 66, 0.66) 70%,
-    rgba(11, 19, 66, 0.88) 100%
+    rgba(11, 19, 66, 0.70) 0%,
+    rgba(11, 19, 66, 0.48) 30%,
+    rgba(11, 19, 66, 0.32) 50%,
+    rgba(11, 19, 66, 0.48) 70%,
+    rgba(11, 19, 66, 0.70) 100%
   );
 }
 
@@ -503,11 +497,11 @@
   right: 0;
   z-index: 3;
   box-sizing: border-box;
-  height: 46px;
+  height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0 28px;
+  padding: 0 24px;
   background-color: #FFFFFF;
   /* TL TR BR BL — TR matches the card corner; BL is the concave cut. */
   border-radius: 0 13px 0 13px;
@@ -516,8 +510,8 @@
 }
 @media (min-width: 1024px) {
   .photoNotch {
-    height: 53px;
-    padding: 0 40px;
+    height: 44px;
+    padding: 0 32px;
   }
 }
 
@@ -547,23 +541,20 @@
 }
 
 .photoNotchLabel {
-  font-size: 16px;
+  /* 13px — matches the section-kicker (.sectionLabel) size so every small
+     uppercase label on the page reads at one consistent scale. */
+  font-size: 13px;
   line-height: 1;
   /* 600 — uppercase at 500 optically reads light, so it needs a step up
      to land as a visible medium weight. */
   font-weight: 600;
   text-transform: uppercase;
-  /* Light positive tracking — uppercase reads cramped at negative. */
-  letter-spacing: 0.04em;
+  /* tracking-widest (0.1em) — same as the section kickers. */
+  letter-spacing: 0.1em;
   white-space: nowrap;
   /* Muted secondary text — softer than full ink so it recedes against
      the white notch, but still has enough contrast to read clearly. */
   color: var(--color-muted);
-}
-@media (min-width: 992px) {
-  .photoNotchLabel {
-    font-size: 18px;
-  }
 }
 
 .quoteCol {
@@ -577,12 +568,13 @@
   }
 }
 
-/* Quote-mark glyph above each quote — a small accent, accent-blue at
-   25% opacity, sized to roughly one line of the quote text. */
+/* Quote-mark glyph above each quote — a faint neutral ink tint (not the
+   accent blue), sized to roughly one line of the quote text, so it reads
+   as a quiet typographic mark rather than a coloured accent. */
 .quoteMarkAccent {
   width: 32px;
   height: auto;
-  color: rgba(0, 129, 172, 0.25);
+  color: rgba(11, 27, 43, 0.14);
   margin-bottom: 16px;
 }
 
@@ -600,8 +592,9 @@
 /* Quote copy — "Body large": 16px, stepping up to 20px at lg. Medium
    weight to match the featured quote. */
 .quoteText {
-  /* Accent blue — matches the quote-mark glyph above each quote. */
-  color: #0081AC;
+  /* Dark ink — one consistent quote treatment across the page; the accent
+     blue is reserved for interactive states (links, hovers, the CTA). */
+  color: var(--color-ink);
   font-family: var(--font-sans);
   font-size: 16px;
   line-height: 1.5;

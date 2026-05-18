@@ -184,22 +184,25 @@ export default function CompanyPage() {
       {/* ════════ 2. OUR MISSION ════════
           Open statement (no card) — starts fully lit; the body fades out
           on scroll, leaving the key phrases (ScrollHighlightStatement). */}
-      <section className={styles.statementSection}>
-        <div className={styles.bounds}>
-          <h2 className={`mb-4 md:mb-6 ${styles.sectionLabel}`}>
+      <section className="section">
+        <div className={styles.textColumn}>
+          <h2 className={`mb-6 md:mb-8 ${styles.sectionLabel}`}>
             Our Mission
           </h2>
           <ScrollHighlightStatement segments={MISSION_STATEMENT} />
         </div>
       </section>
 
-      {/* ════════ 3. OUR VISION ════════ */}
-      <section className={styles.statementSection}>
-        <div className={styles.bounds}>
-          <h2 className={`mb-4 md:mb-6 ${styles.sectionLabel}`}>
+      {/* ════════ 3. OUR VISION ════════
+          Static statement — the scroll-fade is a signature effect, used
+          once (Mission); rendering Vision lit keeps the page from
+          animating two sections back-to-back. */}
+      <section className="section">
+        <div className={styles.textColumn}>
+          <h2 className={`mb-6 md:mb-8 ${styles.sectionLabel}`}>
             Our Vision
           </h2>
-          <ScrollHighlightStatement segments={VISION_STATEMENT} />
+          <ScrollHighlightStatement segments={VISION_STATEMENT} static />
           <div className={styles.timelineWrap}>
             <Link href="/research" className={`p-m ${styles.timelineLink}`}>
               The timeline
@@ -224,9 +227,7 @@ export default function CompanyPage() {
       {/* ════════ 4. READ MORE ════════ */}
       <section className="section">
         <div className={styles.bounds}>
-          <h2
-            className={`h2 tracking-tight mb-10 md:mb-20 ${styles.sectionHeading}`}
-          >
+          <h2 className={`mb-6 md:mb-8 ${styles.sectionLabel}`}>
             Read more about what we do
           </h2>
           <div className={styles.cardGrid}>
@@ -257,9 +258,7 @@ export default function CompanyPage() {
       {/* ════════ 5. A QUOTE FROM OUR FOUNDERS ════════ */}
       <section className="section">
         <div className={styles.bounds}>
-          <h2
-            className={`h2 tracking-tight mb-10 md:mb-20 ${styles.sectionHeading}`}
-          >
+          <h2 className={`mb-6 md:mb-8 ${styles.sectionLabel}`}>
             A quote from our founders
           </h2>
           <div className={styles.foundersGrid}>
@@ -328,7 +327,7 @@ export default function CompanyPage() {
       {/* ════════ 6. OUR VALUES ════════ */}
       <section className="section">
         <div className={styles.bounds}>
-          <h2 className={`mb-4 md:mb-6 ${styles.sectionLabel}`}>
+          <h2 className={`mb-6 md:mb-8 ${styles.sectionLabel}`}>
             Our values
           </h2>
           <ValuesTeam cofounders={COFOUNDERS} image="/henti.png" />
