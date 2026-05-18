@@ -3,15 +3,17 @@
 /**
  * Hero section — minimal layout for the experimentV6-Gdesign redesign.
  *
- * Centred H1 ("The frontier research lab building geospatial reasoning
- * for the real world.") rendered with the project's `.h1` class
- * (Medium 500, 64px desktop / 40px ≤991px) — same typescale used on
- * every heading across the page.
+ * Composition (centred): a pill badge ("The frontier research lab")
+ * sits above the H1 ("Building geospatial reasoning for the real
+ * world."). Splitting the lab line out of the headline lets the H1
+ * carry the product promise on its own while the badge frames who is
+ * making it. The H1 still uses the project's `.h1` class (Medium 500,
+ * 64px desktop / 40px ≤991px) — the same typescale as every heading.
  *
  * Background: the ColumbusBackgroundMB map watermark (the same texture
  * that previously sat behind "We're all about maps"). A white wash +
- * bottom fade sit above the image so the centred H1 reads cleanly and
- * the hero hands off seamlessly into the next section.
+ * bottom fade sit above the image so the centred content reads cleanly
+ * and the hero hands off seamlessly into the next section.
  *
  * Full-bleed: the section breaks out of the PageFrame's 16px gutter on
  * its top and both sides so the texture runs edge-to-edge with the
@@ -48,9 +50,9 @@ const HN_CSS = `
   margin-left: calc(-1 * var(--frame-margin, 16px));
   margin-right: calc(-1 * var(--frame-margin, 16px));
   /* Asymmetric padding: push content down past the nav height + the
-     reclaimed top gutter so the H1 stays clear of the navbar overlay.
-     With min-height: 100vh + flex centering, the H1 lands at the
-     visual midpoint of the area *below* the navbar. */
+     reclaimed top gutter so the content stays clear of the navbar
+     overlay. With min-height: 100vh + flex centering, the content
+     lands at the visual midpoint of the area *below* the navbar. */
   padding-top: calc(80px + var(--frame-margin, 16px));
   padding-bottom: 0;
   color: #0B1B2B;
@@ -62,7 +64,7 @@ const HN_CSS = `
 
 /* Readability wash — a uniform semi-opaque white layer that mutes the
    map texture (matching the 0.5 opacity it had behind "We're all about
-   maps") so the centred H1 sits on a calm, near-solid background. */
+   maps") so the centred content sits on a calm, near-solid background. */
 .hn-section::before {
   content: "";
   position: absolute;
@@ -97,29 +99,51 @@ const HN_CSS = `
   margin-left: auto;
   margin-right: auto;
   box-sizing: border-box;
-  /* Lift the title 50px above the section's vertical centre. translateY
-     is preferred over a negative margin so the flex centering math
-     stays clean and adjacent siblings (none today, but future-proof)
-     aren't dragged with it. */
+  text-align: center;
+  /* Lift the content 50px above the section's vertical centre.
+     translateY is preferred over a negative margin so the flex
+     centering math stays clean and adjacent siblings aren't dragged. */
   transform: translateY(-50px);
+}
+
+/* Pill badge — "The frontier research lab". A minimal full-radius
+   pill with a solid brand-blue fill (#1451E8, the exact accent used by
+   .btn-primary and the navbar CTA pills) and white text — the same
+   fill treatment as every other blue pill on the site, so it reads
+   unmistakably as the brand blue rather than a washed-out tint. Sized
+   off the project's body type (--font-sans), not the heading face. */
+.hn-badge {
+  display: inline-flex;
+  align-items: center;
+  margin-bottom: 22px;
+  padding: 8px 16px;
+  border-radius: 9999px;
+  background: #1451E8;
+  font-family: var(--font-sans, "Ppneuemontreal", "PP Neue Montreal", Arial, sans-serif);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  line-height: 1;
+  color: #FFFFFF;
+  white-space: nowrap;
 }
 
 /* Font-size + line-height come from the .h1 class on the element
    (--typography--h1 = 64px ≥992 / 40px ≤991, single project cutoff).
    This rule only sets the layout/wrap controls — both per-breakpoint
    max-widths are tuned so text-wrap: balance lands the sentence on a
-   stable line count at each scale-tier (.h1 mobile vs .h1 desktop).
+   stable 2-line break at each scale-tier (.h1 mobile vs .h1 desktop).
 
-   Sizing math for "The frontier research lab building geospatial
-   reasoning for the real world." (76 chars, 11 words) with balance:
-   - 2-line break needs ~38 chars per line; longest-line lower bound
-     ~76rem at 64px / ~50rem at 40px.
-   - 3-line break needs ~25 chars per line average; longest natural
-     word-group is "reasoning for the real world." (28 chars) so
-     lower bound ~58rem at 64px / ~38rem at 40px.
-   max-width must sit between those two bounds to force exactly 3
-   lines. Chosen values: 40rem mobile, 64rem desktop. The title is
-   centred horizontally (margin: auto) and text-centred. */
+   Sizing math for "Building geospatial reasoning for the real world."
+   (49 chars, 7 words) with balance, at ~0.52em average glyph width:
+   - single line ≈ 49·0.52em ≈ 25.5em → 1.63k px at 64px / 1.0k px at
+     40px, so any max-width below that forces a wrap.
+   - 2-line break: longest natural line is "building geospatial
+     reasoning" (29 chars) ≈ 15em → ~60rem at 64px / ~38rem at 40px.
+   max-width must sit above the 2-line lower bound but below the
+   single-line width to land exactly 2 lines. Chosen values — 40rem
+   mobile, 64rem desktop — clear both bounds. The title is centred
+   horizontally (margin: auto) and text-centred. */
 .hn-title {
   text-wrap: balance;
   text-align: center;
@@ -137,8 +161,9 @@ export function HeroNew() {
     <section className="hn-section" aria-label="Columbus hero" data-hero-section>
       <style>{HN_CSS}</style>
       <div className="hn-bounds">
+        <span className="hn-badge">The frontier research lab</span>
         <h1 className="h1 hn-title tracking-tight text-ink">
-          The frontier research lab building geospatial reasoning for the real world.
+          Building geospatial reasoning for the real world.
         </h1>
       </div>
     </section>
