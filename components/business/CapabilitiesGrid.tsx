@@ -4,73 +4,49 @@ import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 
 /* ── Section: "Enterprise-grade capabilities" ────────────────────────────────
-   Bento grid of six capability tiles, on a 4-column / 3-row layout:
+   Six capability tiles in a uniform 3-up grid. Each tile shows its product
+   mockup image (public/cap-grid-1..6.png), a bolded label, and a one-line
+   subtitle, all stacked below the image.
 
-     ┌──────────┬──────┐
-     │  hero    │  t2  │   hero  = col-span-2, row-span-2  (Ask anything)
-     │  (2×2)   ├──────┤   t2/t3 = col-span-2              (wide)
-     │          │  t3  │   t4/t5 = col-span-1              (small)
-     ├────┬─────┼──────┤   t6    = col-span-2              (wide)
-     │ t4 │ t5  │  t6  │
-     └────┴─────┴──────┘
+   The PNGs are already self-contained rounded cards (own hairline border +
+   transparent rounded corners), so the tile adds no border/radius of its
+   own — that would double up as a visible frame. The image just renders at
+   the cell width with its intrinsic aspect ratio.
 
-   Each tile is a white card with the canonical 7px radius and #E7E7F1
-   hairline (matches PromptShowcase, FAQSection, etc.). Title + description
-   live INSIDE the card with padded text, then a product mockup fills the
-   remaining space — composition adjusts per variant:
+   Hover lifts the image 3px and shifts the label to the accent color,
+   signalling depth without inventing dead routes (no capability detail
+   pages exist yet, so tiles stay non-anchor). */
 
-     - hero  : text top, large image fills the rest, centered
-     - wide  : text left half, image right half (horizontal split)
-     - small : text-only (no image — too cramped to read at 1×1)
-
-   Below `lg`, the grid collapses: 2-col on `sm` (all tiles equal weight,
-   variant treatments still apply per tile shape) and a single stacked
-   column on mobile. */
-
-type Variant = "hero" | "wide" | "small";
-
-const ITEMS: { title: string; description: string; image: string; variant: Variant; span: string }[] = [
+const ITEMS: { title: string; description: string; image: string }[] = [
   {
     title: "Ask the map anything",
     description: "Natural-language queries across every layer of geospatial data — no GIS expertise required.",
     image: "/cap-grid-1.png",
-    variant: "hero",
-    span: "lg:col-span-2 lg:row-span-2",
   },
   {
     title: "Agent research reports",
     description: "Autonomous agents compile site-selection and due-diligence reports in minutes, not weeks.",
     image: "/cap-grid-3.png",
-    variant: "wide",
-    span: "lg:col-span-2",
   },
   {
     title: "Generative data layers",
     description: "Spin up custom data overlays on demand, generated from your prompts and our catalogue.",
     image: "/cap-grid-5.png",
-    variant: "wide",
-    span: "lg:col-span-2",
   },
   {
     title: "An AI that considers it all",
     description: "Demographics, zoning, coordinates, and your own datasets reasoned over together.",
     image: "/cap-grid-2.png",
-    variant: "small",
-    span: "lg:col-span-1",
   },
   {
     title: "Data Catalogue",
-    description: "Thousands of curated, citation-ready datasets ready to query.",
+    description: "Thousands of curated, citation-ready datasets ready to query alongside your own.",
     image: "/cap-grid-4.png",
-    variant: "small",
-    span: "lg:col-span-1",
   },
   {
     title: "Light-speed due diligence",
     description: "Run the full diligence stack on a parcel — title, environmental, demographic — in one pass.",
     image: "/cap-grid-6.png",
-    variant: "wide",
-    span: "lg:col-span-2",
   },
 ];
 
@@ -103,116 +79,60 @@ export default function CapabilitiesGrid() {
           Enterprise-grade capabilities
         </h2>
 
-        <div
-          className="mt-14 lg:mt-20 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5"
-          style={{ gridAutoRows: "minmax(240px, auto)" }}
-        >
+        <div className="mt-14 lg:mt-20 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-16 lg:gap-x-16 lg:gap-y-20">
           {ITEMS.map((item, i) => (
             <article
               key={item.title}
-              className={`cap-tile group relative overflow-hidden bg-white border border-gridline rounded-[7px] ${item.span}`}
+              className="cap-tile group"
               style={{
                 opacity: visible ? 1 : 0,
                 transform: visible ? "translateY(0)" : "translateY(18px)",
-                transition: `opacity 0.6s ease ${0.06 * i}s, transform 0.6s ease ${0.06 * i}s, border-color 0.25s ease, box-shadow 0.25s ease`,
+                transition: `opacity 0.6s ease ${0.06 * i}s, transform 0.6s ease ${0.06 * i}s`,
               }}
             >
-              {item.variant === "hero" && <HeroTile item={item} />}
-              {item.variant === "wide" && <WideTile item={item} />}
-              {item.variant === "small" && <SmallTile item={item} />}
+              <div className="cap-tile-img-wrap">
+                <Image
+                  src={item.image}
+                  alt={item.title}
+                  width={915}
+                  height={627}
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                  className="block w-[88%] h-auto mx-auto"
+                />
+              </div>
+              <h3
+                className="cap-tile-title mt-4 text-center text-[20px] md:text-[22px] font-semibold leading-[1.2]"
+                style={{ color: "var(--ent-text-primary)", letterSpacing: "-0.01em" }}
+              >
+                {item.title}
+              </h3>
+              <p
+                className="mt-2 mx-auto max-w-90 text-center text-[14px] md:text-[15px] leading-[1.45]"
+                style={{ color: "var(--ent-text-secondary)", letterSpacing: "-0.005em" }}
+              >
+                {item.description}
+              </p>
             </article>
           ))}
         </div>
       </div>
 
       <style jsx>{`
+        .cap-tile-img-wrap {
+          transition: transform 0.35s ease;
+        }
+        .cap-tile-title {
+          transition: color 0.25s ease;
+        }
         @media (hover: hover) {
-          .cap-tile:hover {
-            border-color: var(--ent-border-accent);
-            box-shadow: 0 6px 24px -10px rgba(0, 129, 172, 0.18);
+          .cap-tile:hover .cap-tile-img-wrap {
+            transform: translateY(-3px);
+          }
+          .cap-tile:hover .cap-tile-title {
+            color: var(--ent-accent);
           }
         }
       `}</style>
     </section>
-  );
-}
-
-/* ── Variant subcomponents ──────────────────────────────────────────────── */
-
-type Item = { title: string; description: string; image: string };
-
-function TileCopy({ item, size }: { item: Item; size: "hero" | "wide" | "small" }) {
-  const titleClass =
-    size === "hero" ? "text-[24px] md:text-[26px] lg:text-[30px]"
-    : size === "wide" ? "text-[19px] md:text-[21px]"
-    : "text-[17px] md:text-[18px]";
-  const descClass =
-    size === "hero" ? "text-[15px] md:text-[16px] max-w-[460px]"
-    : size === "wide" ? "text-[13.5px] md:text-[14.5px] max-w-[360px]"
-    : "text-[13px] md:text-[13.5px]";
-  return (
-    <div>
-      <h3
-        className={`${titleClass} font-semibold leading-[1.2]`}
-        style={{ color: "var(--ent-text-primary)", letterSpacing: "-0.01em" }}
-      >
-        {item.title}
-      </h3>
-      <p
-        className={`${descClass} mt-2 leading-[1.45]`}
-        style={{ color: "var(--ent-text-secondary)", letterSpacing: "-0.005em" }}
-      >
-        {item.description}
-      </p>
-    </div>
-  );
-}
-
-function HeroTile({ item }: { item: Item }) {
-  return (
-    <div className="flex h-full flex-col p-7 md:p-9">
-      <TileCopy item={item} size="hero" />
-      <div className="relative mt-6 flex-1 min-h-55 md:min-h-65">
-        <Image
-          src={item.image}
-          alt={item.title}
-          fill
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 50vw"
-          className="object-contain object-bottom"
-        />
-      </div>
-    </div>
-  );
-}
-
-function WideTile({ item }: { item: Item }) {
-  return (
-    <div className="flex h-full flex-col md:flex-row">
-      <div className="flex flex-col justify-center p-6 md:p-7 md:w-[44%] md:shrink-0">
-        <TileCopy item={item} size="wide" />
-      </div>
-      <div className="relative flex-1 min-h-40 md:min-h-0">
-        <Image
-          src={item.image}
-          alt={item.title}
-          fill
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 33vw"
-          className="object-contain object-bottom-right p-3 md:p-4"
-        />
-      </div>
-    </div>
-  );
-}
-
-function SmallTile({ item }: { item: Item }) {
-  return (
-    <div className="flex h-full flex-col justify-between p-6 md:p-7">
-      <TileCopy item={item} size="small" />
-      <div
-        aria-hidden
-        className="mt-5 h-0.75 w-10 rounded-full"
-        style={{ backgroundColor: "var(--ent-accent)" }}
-      />
-    </div>
   );
 }
