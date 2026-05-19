@@ -185,7 +185,6 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false, t
               // squashing); anchored to the band's bottom edge.
               backgroundPosition: "center bottom",
               backgroundSize: "cover",
-              opacity: 0.45,
               // Fade the lower half of the photo to transparent so it
               // dissolves into the white footer below — no hard seam
               // between the image band and the link columns.

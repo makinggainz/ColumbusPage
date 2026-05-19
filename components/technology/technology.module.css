@@ -584,9 +584,18 @@
 }
 
 .lgmSlide {
-  /* Soft warm-grey gradient fills the whole section panel (rounding
-     inherited from .section). */
-  background: linear-gradient(to right, #F5F3F1 0%, #F6F5F3 66%, #F9F9F9 100%);
+  /* Soft warm-grey gradient. A white vertical fade is layered on top so
+     the section blends smoothly into the (white) sections above + below
+     rather than changing colour abruptly at the edges. */
+  background:
+    linear-gradient(
+      to bottom,
+      #ffffff 0%,
+      rgba(255, 255, 255, 0) 200px,
+      rgba(255, 255, 255, 0) calc(100% - 200px),
+      #ffffff 100%
+    ),
+    linear-gradient(to right, #F5F3F1 0%, #F6F5F3 66%, #F9F9F9 100%);
 }
 
 .lgmWrap {
@@ -2137,13 +2146,22 @@
 
 .coreReasoningSlide {
   position: relative;
-  /* Vertical gradient fills the rounded panel (rounding from .section). */
-  background-image: linear-gradient(to bottom,
-    #EEF5FF 0%,
-    rgba(133, 180, 234, 0.69) 19%,
-    #B5D5FA 31%,
-    #E1EFFE 92%,
-    var(--color-bg1) 100%);
+  /* Vertical blue gradient with a white edge-fade layered on top, so the
+     section transitions smoothly into the white sections above + below. */
+  background-image:
+    linear-gradient(
+      to bottom,
+      #ffffff 0%,
+      rgba(255, 255, 255, 0) 200px,
+      rgba(255, 255, 255, 0) calc(100% - 200px),
+      #ffffff 100%
+    ),
+    linear-gradient(to bottom,
+      #EEF5FF 0%,
+      rgba(133, 180, 234, 0.69) 19%,
+      #B5D5FA 31%,
+      #E1EFFE 92%,
+      var(--color-bg1) 100%);
 }
 
 /* Section-wide plus-sign pattern overlay (behind all content). */
@@ -3241,15 +3259,6 @@
   justify-content: center;
   align-items: flex-start;
   padding-top: 40px;
-  /* Clip ONLY at the right structure line. The line sits at slideFrame's
-     outer right border (at viewport >= 1335px). .lgmCompareArt's right
-     edge is inset from there by var(--page-padding) [slideFrame's
-     padding-inline = 24px] + 16px [.editorialSlide's horizontal padding]
-     = 40px total. We extend the clip's right boundary outward by exactly
-     that combined amount so the cut lands on the line. -9999px on the
-     other three sides leaves top/bottom/left fully visible (the upward
-     translate stays uncropped). */
-  clip-path: inset(-9999px calc(-1 * (var(--page-padding) + 16px)) -9999px -9999px);
 }
 
 .lgmCompareArt svg,
@@ -3259,7 +3268,9 @@
   height: auto;
   display: block;
   object-fit: contain;
-  transform: translate(80px, -65px);
+  /* Lifted upward only — no rightward shift, so the diagram stays fully
+     inside its column and no part is clipped. */
+  transform: translateY(-65px);
 }
 
 /* "Read our in-depth article" inline link */
@@ -4153,18 +4164,13 @@
      gradient hugs the line as a tight band instead of spreading wide. */
   top: -30px;
   bottom: -30px;
-  /* Halo extends from the page-padding overflow on the left, across the
-     full content column, and through the page-padding gap so it touches
-     the inner edge of the sidebar gutter exactly. The gutter's own radial
-     halo (in <SidebarRightLine>) picks up from that boundary. */
-  left: calc(-1 * var(--page-padding));
-  right: calc(-1 * var(--page-padding));
+  /* Spans the timeline track exactly: starts at the track's left edge and
+     extends out to the same far-right point the track reaches. */
+  left: 0;
+  right: calc(-1 * (var(--tech-sidebar-x) + var(--page-padding)));
   pointer-events: none;
   z-index: -1;
-  /* Vertical linear gradient — uniform along the x-axis, strongest at
-     the centerline (where the track sits) and fading symmetrically up
-     and down. NOT a radial gradient: every x position along the line
-     gets the same vertical fade. */
+  /* Vertical fade — strongest at the centerline, fading up + down. */
   background: linear-gradient(
     to bottom,
     transparent 0%,
@@ -4173,6 +4179,9 @@
     color-mix(in srgb, var(--color-brand) 1.5%, transparent) 75%,
     transparent 100%
   );
+  /* Left edge starts fully transparent (0 opacity) and ramps in. */
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 35%);
+  mask-image: linear-gradient(to right, transparent 0%, #000 35%);
 }
 
 /* Horizontal track — starts flush with the timeline box's left edge and
@@ -4424,7 +4433,7 @@
   margin-top: clamp(24px, 3vw, 40px);
   min-height: 160px;
   padding: 32px 20px;
-  border-radius: 10px;
+  border-radius: 16px;
   text-align: center;
   text-decoration: none;
   background-color: #fff;
@@ -4490,7 +4499,6 @@
   justify-content: center;
   gap: 5px;
   background-color: rgba(255, 255, 255, 0.55);
-  border: 1px solid rgba(255, 255, 255, 0.8);
   /* The radial blur is applied via ::after below, not uniformly on the card */
   box-shadow: none;
   transition: none;
@@ -4549,11 +4557,9 @@
   color: var(--color-cta);
 }
 
-/* Subdued variant — keeps the same 1px white border as the other glass card,
-   but drops the heavy outer "page-bg cutout" ring shadows so the card doesn't
-   read as framed/cut out. */
+/* Subdued variant — drops the heavy outer "page-bg cutout" ring shadows so
+   the card doesn't read as framed/cut out. */
 .lgmArticleCardFlush {
-  border: 1px solid rgba(255, 255, 255, 0.8);
   box-shadow: none;
 }
 
@@ -5270,7 +5276,6 @@
 
 .resultsArticlesRow .lgmArticleCard {
   margin-top: 0;
-  border: 1px solid rgba(255, 255, 255, 0.8);
   transition: none;
 }
 

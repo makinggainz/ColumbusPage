@@ -2,7 +2,6 @@
 
 import { useCallback, useEffect } from "react";
 import { MistxNav } from "@/components/layout/MistxNav";
-import { Footer } from "@/components/layout/Footer";
 
 import styles from "./technology.module.css";
 import { TechHeroSection } from "./TechHeroSection";
@@ -61,7 +60,6 @@ export function TechnologyPage() {
           </div>
         </div>
       </div>
-      <Footer theme="technology" />
     </main>
   );
 }
