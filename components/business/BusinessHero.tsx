@@ -59,6 +59,14 @@ export default function BusinessHero() {
       className="relative w-full"
       style={{
         backgroundColor: "var(--ent-bg-light)",
+        // Match the section's box to the ColumBuzHero photo's aspect ratio
+        // (1022 × 1810) so the section grows tall enough to show the FULL
+        // image, top to bottom — sky, skyline and the snowy park — with no
+        // crop. On desktop the hero content is shorter than this height, so
+        // the aspect ratio governs; on narrow viewports where the content
+        // is taller, the content governs and the image (contained, top-
+        // anchored) still shows in full with white space below it.
+        aspectRatio: "1022 / 1810",
         // The navbar is sticky and stays in document flow (~83–90px tall
         // depending on breakpoint). Pulling the hero up lets its sky
         // background extend to the very top of the page, behind the
@@ -71,30 +79,23 @@ export default function BusinessHero() {
         paddingTop: 120,
       }}
     >
-      {/* Background image — the bizibizback2 skyline photo, cover-fit. The
-          layer is NOT clipped to the hero: its bottom edge is pulled well
-          below the section (negative `bottom`) so the lower part of the
-          photo — the snowy park that fades to white — bleeds down and
-          overlays the top of the white sections that follow.
-          A bottom mask fades the layer to transparent over its last ~25%
-          so the cropped photo dissolves into the white section instead of
-          ending on a hard horizontal seam. */}
+      {/* Background image — the ColumBuzHero skyline photo, shown in full.
+          The layer fills the section (inset 0); because the section box is
+          aspect-matched to the photo (see above), `contain` renders the
+          entire image with no crop. No mask is used: the photo's own bottom
+          edge IS a snowy park that fades to white, so that natural white
+          edge bleeds straight into the white sections below. */}
       <div
         className="absolute pointer-events-none"
         style={{
           top: 0,
           left: 0,
           right: 0,
-          // Extends the photo below the hero so it bleeds into the next
-          // section; kept in step with the white block's paddingTop in
-          // app/products/business/page.tsx so it never covers that content.
-          bottom: "clamp(-300px, -20vw, -180px)",
-          backgroundImage: "url(/bizibizback2.png)",
-          backgroundPosition: "center 25%",
-          backgroundSize: "cover",
+          bottom: 0,
+          backgroundImage: "url(/ColumBuzHero.png)",
+          backgroundPosition: "center top",
+          backgroundSize: "contain",
           backgroundRepeat: "no-repeat",
-          maskImage: "linear-gradient(to bottom, #000 74%, transparent 99%)",
-          WebkitMaskImage: "linear-gradient(to bottom, #000 74%, transparent 99%)",
           zIndex: 0,
         }}
       />

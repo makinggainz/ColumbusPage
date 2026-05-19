@@ -27,7 +27,7 @@ export default function SolutionShowcase() {
   return (
     <div
       ref={sectionRef}
-      className="relative overflow-hidden"
+      className="relative"
       style={{
         "--grid-line": "var(--ent-border-dark-grid)",
         backgroundColor: "transparent",
@@ -37,16 +37,16 @@ export default function SolutionShowcase() {
           the screen and a harbour town the lower-right, both sitting
           behind the heading. Scoped to B3 (B2 above stays plain white). */}
       <div aria-hidden className="pointer-events-none absolute inset-0 z-0">
-        <div className="absolute bottom-0 left-0 w-[22%] max-w-76 aspect-1378/1260">
+        <div className="absolute top-0 left-0 w-[22%] max-w-76 aspect-1378/1260">
           <Image
             src="/businessB3/left.png"
             alt=""
             fill
             sizes="22vw"
-            className="object-contain object-bottom-left"
+            className="object-contain object-top-left"
           />
         </div>
-        <div className="absolute bottom-0 right-0 w-[32%] max-w-120 aspect-1604/1296">
+        <div className="absolute -bottom-12.5 right-0 w-[32%] max-w-120 aspect-1604/1296">
           <Image
             src="/businessB3/right.png"
             alt=""

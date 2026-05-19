@@ -105,7 +105,7 @@ export function TechHeroSection() {
       <div className={styles.techHeroContent}>
         <div className={styles.techHeroTextBlock}>
           <h1 className={styles.techHeroTitle} style={{ fontFamily: "var(--font-hero)", ...fadeIn(0) }}>
-            Building a brain for earth
+            Building a brain for earth.
           </h1>
 
           <p className={styles.techHeroSubtitle} style={fadeIn(0.06)}>
@@ -123,6 +123,11 @@ export function TechHeroSection() {
               ...fadeIn(0.12),
             }}
           />
+
+          {/* Label introducing the index list below */}
+          <p className={styles.techHeroIndexLabel} style={fadeIn(0.16)}>
+            An interactive Thesis
+          </p>
 
           {/* Index items as selectable navigation under the title */}
           <nav className={styles.techHeroNav} style={fadeIn(0.18)}>

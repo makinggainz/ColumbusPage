@@ -3075,6 +3075,16 @@
   height: 1px;
 }
 
+/* Label introducing the hero index list ("An interactive Thesis") */
+.techHeroIndexLabel {
+  margin: 24px 0 0;
+  font-size: var(--text-h3);
+  line-height: var(--text-h3--line-height);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: var(--color-cta);
+}
+
 /* Hero nav — index items displayed under the title (glass-button inspired) */
 .techHeroNav {
   margin-top: 24px;
