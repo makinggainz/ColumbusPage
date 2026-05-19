@@ -64,8 +64,10 @@ export default function BusinessPage() {
         style={{ backgroundColor: "#ffffff", paddingTop: "clamp(48px, 6vw, 96px)" }}
       >
         {/* z-30 lifts this content above the hero photo (z-20) so the header
-            paints on top of the bled-down image. */}
-        <div className="relative z-30">
+            paints on top of the bled-down image. The -160px marginTop pulls
+            the "Legacy GIS slows you down…" header UP onto the photo's snowy
+            park, which bleeds down over this block's white background. */}
+        <div className="relative z-30" style={{ marginTop: -160 }}>
           {/* ProblemCards sits on plain white — no backdrop. SolutionShowcase
               carries its own line-art (a hand-drawn galleon on the left, a
               harbour town on the right); see

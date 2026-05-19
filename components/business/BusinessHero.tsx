@@ -59,14 +59,9 @@ export default function BusinessHero() {
       className="relative w-full"
       style={{
         backgroundColor: "var(--ent-bg-light)",
-        // Match the section's box to the ColumBuzHero photo's aspect ratio
-        // (1022 × 1810) so the section grows tall enough to show the FULL
-        // image, top to bottom — sky, skyline and the snowy park — with no
-        // crop. On desktop the hero content is shorter than this height, so
-        // the aspect ratio governs; on narrow viewports where the content
-        // is taller, the content governs and the image (contained, top-
-        // anchored) still shows in full with white space below it.
-        aspectRatio: "1022 / 1810",
+        // Height is content-driven: the section is just tall enough for the
+        // hero copy + product window. The background photo (below) is taller
+        // than this and bleeds DOWN past the section over the next block.
         // The navbar is sticky and stays in document flow (~83–90px tall
         // depending on breakpoint). Pulling the hero up lets its sky
         // background extend to the very top of the page, behind the
@@ -79,22 +74,25 @@ export default function BusinessHero() {
         paddingTop: 120,
       }}
     >
-      {/* Background image — the ColumBuzHero skyline photo, shown in full.
-          The layer fills the section (inset 0); because the section box is
-          aspect-matched to the photo (see above), `contain` renders the
-          entire image with no crop. No mask is used: the photo's own bottom
-          edge IS a snowy park that fades to white, so that natural white
-          edge bleeds straight into the white sections below. */}
+      {/* Background image — the ColumBuzHero skyline photo. The layer has a
+          fixed 2044 × 2715 box (the photo's width at 0.75 × its height), so
+          `cover` + `center bottom` crops the top ~25% (plain sky) and keeps
+          the skyline + snowy park. It is anchored to the hero's top edge
+          (top: 0); being taller than the hero content, its lower part bleeds
+          DOWN past the section and over the white background of the block
+          below — no mask is needed because the photo's own bottom edge is a
+          snowy park that fades to white, so it dissolves into that white
+          block. */}
       <div
         className="absolute pointer-events-none"
         style={{
           top: 0,
           left: 0,
           right: 0,
-          bottom: 0,
+          aspectRatio: "2044 / 2715",
           backgroundImage: "url(/ColumBuzHero.png)",
-          backgroundPosition: "center top",
-          backgroundSize: "contain",
+          backgroundPosition: "center bottom",
+          backgroundSize: "cover",
           backgroundRepeat: "no-repeat",
           zIndex: 0,
         }}
@@ -107,7 +105,7 @@ export default function BusinessHero() {
         className="absolute inset-0 pointer-events-none"
         style={{
           background:
-            "linear-gradient(to bottom, rgba(0,0,0,0.32) 0%, rgba(0,0,0,0.20) 55%, rgba(0,0,0,0) 86%)",
+            "linear-gradient(to bottom, rgba(0,0,0,0.42) 0%, rgba(0,0,0,0.28) 38%, rgba(0,0,0,0.12) 62%, rgba(0,0,0,0) 86%)",
           zIndex: 0,
         }}
       />
