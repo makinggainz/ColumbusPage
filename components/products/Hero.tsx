@@ -415,7 +415,7 @@ export default function Hero() {
         </div>
 
         {/* Content stack — dark teal, upper third */}
-        <div className="relative flex flex-col items-center text-center px-6" style={{ maxWidth: 820, gap: 30 }}>
+        <div className="relative flex flex-col items-center text-center px-6" style={{ maxWidth: 820, gap: 32 }}>
           <Stagger show={mounted} delay={120} y={84}>
             <div className="flex flex-col items-center" style={{ gap: 16 }}>
               <div className="flex items-center gap-2" style={{ color: "#063140" }}>
@@ -428,7 +428,7 @@ export default function Hero() {
                     letterSpacing: "-0.02em",
                   }}
                 >
-                  MapsGPT
+                  Elio
                 </span>
               </div>
               <h1
@@ -445,19 +445,6 @@ export default function Hero() {
                 <br />
                 everywhere you go
               </h1>
-              <p
-                style={{
-                  maxWidth: 520,
-                  fontFamily: '"SF Pro", -apple-system, BlinkMacSystemFont, sans-serif',
-                  fontSize: isLg ? 20 : 16,
-                  fontWeight: 400,
-                  lineHeight: 1.5,
-                  letterSpacing: "-0.01em",
-                  color: "rgba(6,49,64,0.78)",
-                }}
-              >
-                Ask MapsGPT for anything, anywhere — and get places actually worth your time.
-              </p>
             </div>
           </Stagger>
 
@@ -486,7 +473,7 @@ export default function Hero() {
                 onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.04)")}
                 onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
               >
-                Try MapsGPT in browser
+                Try Elio in browser
               </a>
               <StoreBadges />
             </div>

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { Mail, Linkedin } from "lucide-react";
+import { Linkedin } from "lucide-react";
 
 import { MistxNav } from "@/components/layout/MistxNav";
 import { ValuesTeam } from "@/components/company/ValuesTeam";
@@ -387,13 +387,6 @@ export default function CompanyPage() {
                 aria-label="Columbus Earth on LinkedIn"
               >
                 <Linkedin size={18} />
-              </a>
-              <a
-                href="mailto:contact@columbus.earth"
-                className={styles.iconCircle}
-                aria-label="Email Columbus Earth"
-              >
-                <Mail size={18} />
               </a>
               {/* On-brand pill CTA — sized to the homepage's canonical
                   ~42px content CTA (BentoProducts / Careers): 14×28px box,

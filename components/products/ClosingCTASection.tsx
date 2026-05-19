@@ -127,7 +127,7 @@ export default function ClosingCTASection() {
               Your next trip starts with a question.
             </h2>
             <p className="p-l" style={{ margin: "16px auto 0", maxWidth: 460, color: "#5A6B7B" }}>
-              Open MapsGPT, ask away, and go — free, no account needed.
+              Open Elio, ask away, and go — free, no account needed.
             </p>
 
             <div
@@ -141,7 +141,7 @@ export default function ClosingCTASection() {
               }}
             >
               <a href="https://mapsgpt.es" target="_blank" rel="noreferrer" className="mg-cta-pill group">
-                Try MapsGPT in browser
+                Try Elio in browser
                 <span style={{ display: "inline-block", color: "#154ACC" }}>
                   <ArrowDots />
                 </span>

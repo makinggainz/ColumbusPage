@@ -121,7 +121,7 @@ export function CoreResearchCarousel() {
               </span>
               <span>Columbus</span>
             </a>
-            <a href="/products/mapsgpt" className={styles.coreResearchProduct}>
+            <a href="/products/consumer" className={styles.coreResearchProduct}>
               <span className={styles.coreResearchProductGlyph} aria-hidden>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src="/MapsGPT-logo.png" alt="" />

@@ -29,9 +29,7 @@ import { useEffect, useRef, useState } from "react";
 // destinations. The only remaining dropdown lives on the right-side
 // "Try Elio" CTA below.
 const navLinks: { label: string; href: string }[] = [
-  // "Consumer" has no dedicated /elio route yet — pointed at /products/mapsgpt
-  // for now (per product owner). Repoint to /elio once that page exists.
-  { label: "Consumer", href: "/products/mapsgpt" },
+  { label: "Consumer", href: "/products/consumer" },
   { label: "Business", href: "/products/business" },
   // Points at the Technology page — the LGM / research content lives there.
   { label: "Research", href: "/research" },
@@ -40,15 +38,15 @@ const navLinks: { label: string; href: string }[] = [
 ];
 
 // "Try Elio" launcher items. Each row renders name + one-line
-// description + chevron — the product-picker dropdown pattern lifted
-// from Mobbin samples (Patreon "Create" CTA dropdown, Hers product-row
-// menu, Fibery grouped select). Visual: white rounded-2xl card,
-// hairline border, subtle shadow, bg-black/5 row hover matching the
-// navbar pill hover one screen over.
+// description — the content (labels / descriptions / hrefs) is
+// unchanged. The dropdown UI + animation below is modelled on
+// todesktop.com's "Products" nav menu: a dark glassy translucent
+// panel (rgba(15,7,29,0.78) + backdrop-blur), 14px radius, a layered
+// shadow with inset white top-edge highlights, light text on dark,
+// and a fade + scale-from-top entrance with a per-row stagger.
 const elioMenuItems: { label: string; href: string; desc: string }[] = [
-  // No /elio route yet — temporarily points to /products/mapsgpt.
-  { label: "Try Elio", href: "/products/mapsgpt", desc: "Consumer travel reasoning" },
-  { label: "Try Mapsurf", href: "/products/mapsgpt", desc: "Lightweight map workspace" },
+  { label: "Try Elio", href: "/products/consumer", desc: "Consumer travel reasoning" },
+  { label: "Try Mapsurf", href: "/products/consumer", desc: "Lightweight map workspace" },
   { label: "Try Columbus", href: "/products/business", desc: "Business geospatial intelligence" },
 ];
 
@@ -203,7 +201,7 @@ export function MistxNav({
   // the scrim is a pale sand tint instead of business' sky blue.
   const heroFloat = heroWhite || heroLight || heroTint != null;
   const heroScrim = heroFloat && stuck && overHero;
-  const scrimRGB = "0,99,199";
+  const scrimRGB = "4,87,141";
   // MapsGPT sticky-stage scene colour — matches Hero's CREAM top stop /
   // NAVY top stop / LIGHT. A single solid that the navbar's masked scrim
   // cross-fades between via `background-color` (see the scrim div below).
@@ -228,10 +226,10 @@ export function MistxNav({
       }}
     >
       {/* Business hero-only backdrop. Sits behind the content row
-          (z-0 vs the row's z-10). Tinted to the hero image's dominant
-          sky colour (#0063C7 = rgb(0,99,199) — sampled from the top of
-          /businessback3.png, the current BusinessHero background), so the
-          navbar reads as a continuation of the sky. Fully opaque at the
+          (z-0 vs the row's z-10). Tinted to the colour seen IN the navbar
+          zone of the hero — the ColumBuzHero sky composited with
+          BusinessHero's dark overlay (#04578D = rgb(4,87,141)) — so the
+          navbar reads as a continuation of that backdrop. Fully opaque at the
           top, fading to transparent (alpha 0) exactly at the navbar's
           bottom border, so it blends into the real sky below with no
           hard edge. Driven by opacity so it cross-fades with the
@@ -380,46 +378,72 @@ export function MistxNav({
                 <NavArrowStack className="text-[#0081AC]" />
               </span>
             </button>
-            {/* Product picker dropdown — Mobbin pattern (Patreon "Create"
-                CTA dropdown / Hers product rows). Outer wrapper sits
-                flush with the button's bottom (no margin gap) and uses
-                pt-2 to fold the visual 8px gap into its own hit area —
-                without this the cursor would cross dead space between
-                button and panel, fire mouseleave on the parent, and
-                snap the menu closed before reaching any item. Inner
-                div carries the white rounded-card visuals. Always
-                mounted so opacity + translateY drive the open/close. */}
+            {/* Product picker dropdown — todesktop.com "Products" menu
+                pattern. Outer wrapper sits flush with the button's
+                bottom (no margin gap) and uses pt-2.5 to fold the
+                visual gap into its own hit area — without this the
+                cursor would cross dead space between button and panel,
+                fire mouseleave on the parent, and snap the menu closed
+                before reaching any item. The wrapper drives the panel
+                fade + scale-from-top-right entrance; rows fade in with
+                a per-row stagger. Always mounted so the transitions
+                run on open/close. */}
             <div
               aria-hidden={!elioOpen}
-              className="absolute right-0 top-full pt-2 w-[300px] z-50 transition-all duration-200"
+              className="absolute right-0 top-full pt-2.5 w-[320px] z-50"
               style={{
                 opacity: elioOpen ? 1 : 0,
-                transform: elioOpen ? "translateY(0)" : "translateY(-4px)",
+                transform: elioOpen
+                  ? "translateY(0) scale(1)"
+                  : "translateY(-6px) scale(0.96)",
+                transformOrigin: "top right",
                 pointerEvents: elioOpen ? "auto" : "none",
+                transition:
+                  "opacity 300ms cubic-bezier(0.6,0.6,0,1), transform 300ms cubic-bezier(0.6,0.6,0,1)",
               }}
             >
+              {/* Dark glassy panel — todesktop.com's dropdown surface:
+                  translucent near-black fill + backdrop blur, 14px
+                  radius, layered drop shadow with inset white highlights
+                  along the top edge for the glassy lip. */}
               <div
                 role="menu"
-                className="bg-white text-[#1f1f1f] rounded-2xl p-1.5"
+                className="p-1.5"
                 style={{
-                  border: "1px solid rgba(0,0,0,0.08)",
-                  boxShadow: "0 12px 32px -8px rgba(15, 22, 36, 0.12), 0 4px 12px -4px rgba(15, 22, 36, 0.08)",
+                  backgroundColor: "rgba(15, 7, 29, 0.78)",
+                  backdropFilter: "blur(20px) saturate(160%)",
+                  WebkitBackdropFilter: "blur(20px) saturate(160%)",
+                  borderRadius: "14px",
+                  border: "1px solid rgba(255,255,255,0.08)",
+                  boxShadow:
+                    "rgba(9,1,20,0.06) 0px 8px 8px -3px, rgba(8,1,20,0.06) 0px 3px 3px -1.5px, rgba(8,1,20,0.04) 0px 2px 2px -1px, rgba(8,1,20,0.03) 0px 1px 1px -0.5px, rgba(8,1,20,0.03) 0px 0.5px 0.5px 0px, rgba(255,255,255,0.08) 0px -4px 12px -4px inset, rgba(255,255,255,0.06) 0px 1px 3px 0px inset, rgba(255,255,255,0.12) 0px 0.5px 0.5px 0px inset",
                 }}
               >
                 <ul>
-                  {elioMenuItems.map((item) => (
+                  {elioMenuItems.map((item, i) => (
                     <li key={item.label} role="none">
                       <a
                         role="menuitem"
                         href={item.href}
-                        className="group flex items-start gap-3 px-3 py-2.5 rounded-xl transition-colors hover:bg-black/5"
+                        className="group flex items-start gap-3 px-3 py-2.5 rounded-[10px] transition-colors duration-150 hover:bg-white/8"
+                        style={{
+                          opacity: elioOpen ? 1 : 0,
+                          transform: elioOpen
+                            ? "translateY(0)"
+                            : "translateY(4px)",
+                          transition: `opacity 260ms cubic-bezier(0.6,0.6,0,1) ${
+                            elioOpen ? 70 + i * 45 : 0
+                          }ms, transform 260ms cubic-bezier(0.6,0.6,0,1) ${
+                            elioOpen ? 70 + i * 45 : 0
+                          }ms`,
+                        }}
                       >
                         <div className="flex-1 min-w-0">
-                          <div className="p-m font-medium leading-snug">{item.label}</div>
-                          <div className="p-s leading-snug mt-0.5 text-[#1f1f1f]/55">{item.desc}</div>
+                          <div className="p-m font-medium leading-snug text-white">{item.label}</div>
+                          <div className="p-s leading-snug mt-0.5 text-white/50">{item.desc}</div>
                         </div>
-                        <span className="mt-1.5 shrink-0 transition-transform group-hover:translate-x-0.5">
-                          <ArrowDot className="text-[#0081AC]" />
+                        <span className="mt-1 shrink-0 text-white/35 transition-transform group-hover:translate-x-0.5">
+                          <ArrowDot />
                         </span>
                       </a>
                     </li>

@@ -13,7 +13,7 @@ const EASE_WIPE = "cubic-bezier(0.77, 0, 0.175, 1)"; // smooth wipe (Quart in-ou
 
 function isMapsGptRoute(href: string): boolean {
   const path = href.split("?")[0].split("#")[0];
-  return path === "/products/maps-gpt" || path === "/products/mapsgpt";
+  return path === "/products/maps-gpt" || path === "/products/consumer";
 }
 
 /* ── Transition states ──────────────────────────────────── */

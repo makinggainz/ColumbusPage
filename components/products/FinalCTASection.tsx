@@ -67,7 +67,7 @@ export default function FinalCTASection() {
               WebkitTextFillColor: "transparent",
               backgroundClip: "text",
               filter: "drop-shadow(0 1px 2px rgba(0,0,0,0.12)) drop-shadow(0 0.5px 1px rgba(0,0,0,0.08))",
-            }}>MapsGPT</span>
+            }}>Elio</span>
             <span style={{ color: "var(--hiw-text-on-accent)" }}>{" "}is browser based</span>
           </p>
           {/* Title */}
@@ -106,7 +106,7 @@ export default function FinalCTASection() {
               color: "var(--hiw-text-on-accent)",
               whiteSpace: "nowrap",
             }}>
-              Try MapsGPT it&apos;s free!
+              Try Elio it&apos;s free!
             </span>
             <svg width="12" height="12" viewBox="0 0 13 13" fill="none" className="shrink-0" aria-hidden>
               <path d="M2 11L11 2M11 2H4M11 2V9" stroke="#ffffff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
@@ -126,7 +126,7 @@ export default function FinalCTASection() {
         >
           <Image
             src="/ConsumerPageCityMock2.png"
-            alt="MapsGPT on phone"
+            alt="Elio on phone"
             width={320}
             height={600}
             className="w-full h-auto"
@@ -168,7 +168,7 @@ export default function FinalCTASection() {
                   transition: `opacity 0.8s var(--hiw-easing-decel), transform 0.8s var(--hiw-easing-decel)`,
                 }}
               >
-                <Image src="/ConsumerPageCityMock2.png" alt="MapsGPT on phone" fill className="object-contain object-top" />
+                <Image src="/ConsumerPageCityMock2.png" alt="Elio on phone" fill className="object-contain object-top" />
               </div>
 
               {/* Floating hearts */}
@@ -216,7 +216,7 @@ export default function FinalCTASection() {
                   WebkitTextFillColor: "transparent",
                   backgroundClip: "text",
                   filter: "drop-shadow(0 1px 2px rgba(0,0,0,0.12)) drop-shadow(0 0.5px 1px rgba(0,0,0,0.08))",
-                }}>MapsGPT</span>
+                }}>Elio</span>
                 <span style={{ color: "var(--hiw-text-on-accent)" }}>{" "}is browser based</span>
               </p>
 
@@ -267,7 +267,7 @@ export default function FinalCTASection() {
                   letterSpacing: "-0.02em",
                   color: "var(--hiw-text-on-accent)",
                 }}>
-                  Try MapsGPT it&apos;s free!
+                  Try Elio it&apos;s free!
                 </span>
                 <svg width="13" height="13" viewBox="0 0 13 13" fill="none" className="shrink-0 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" aria-hidden>
                   <path d="M2 11L11 2M11 2H4M11 2V9" stroke="#ffffff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
@@ -378,7 +378,7 @@ export default function FinalCTASection() {
               margin: 0,
               marginBottom: "var(--hiw-space-4)",
             }}>
-              MapsGPT is updated
+              Elio is updated
               <br />
               regularly.
             </h3>

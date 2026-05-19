@@ -9,13 +9,9 @@ import { HERO_SCROLL_INDEX_ITEMS } from "./redesign/content";
 
 export function TechHeroSection() {
   const [visible, setVisible] = useState(false);
-  // Two scroll-driven progress values (both 0–1). Same driving pattern as
-  // the use-cases page's hero overlay ([app/use-cases/page.tsx:38-45]):
-  // measures the hero section's own scroll progress via
-  // getBoundingClientRect. Black overlay uses use-cases' 35%/88% window;
-  // blur starts later (60%/95%) so it only kicks in when the user is
-  // almost totally past the hero.
-  const [blackProgress, setBlackProgress] = useState(0);
+  // Scroll-driven blur progress (0–1). Measures the hero section's own
+  // scroll progress via getBoundingClientRect; the blur kicks in only
+  // once the user is almost totally past the hero (60%/95% window).
   const [blurProgress, setBlurProgress] = useState(0);
   const sectionRef = useRef<HTMLElement>(null);
 
@@ -39,10 +35,7 @@ export function TechHeroSection() {
           0,
           Math.min(1, (scrolled - height * start) / (height * (end - start)))
         );
-      // Black overlay — matches use-cases' 35% → 88% window
-      // ([app/use-cases/page.tsx:42-44]).
-      setBlackProgress(progressIn(0.35, 0.88));
-      // Blur — starts later, once the user is mostly past the hero.
+      // Blur — starts late, once the user is mostly past the hero.
       setBlurProgress(progressIn(0.6, 0.95));
     };
     window.addEventListener("scroll", update, { passive: true });
@@ -90,21 +83,9 @@ export function TechHeroSection() {
         }}
       />
 
-      {/* Scroll-driven fade-to-black — directly mirrors the use-cases
-          hero overlay ([app/use-cases/page.tsx:60-63]). Opacity ramps
-          0→1 through the same 35%/88% scroll window. */}
-      <div
-        aria-hidden
-        className={styles.techHeroBlackOverlay}
-        style={{
-          opacity: blackProgress,
-          pointerEvents: "none",
-        }}
-      />
-
       <div className={styles.techHeroContent}>
         <div className={styles.techHeroTextBlock}>
-          <h1 className={styles.techHeroTitle} style={{ fontFamily: "var(--font-hero)", ...fadeIn(0) }}>
+          <h1 className={styles.techHeroTitle} style={fadeIn(0)}>
             Building a brain for earth.
           </h1>
 

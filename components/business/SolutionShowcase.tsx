@@ -78,19 +78,6 @@ export default function SolutionShowcase() {
           >
             Its time for a more powerful and intuitive GIS
           </h2>
-          <p
-            style={{
-              marginTop: 24,
-              fontSize: "clamp(16px, 1.4vw, 20px)",
-              color: "var(--ent-dark-text-medium)",
-              letterSpacing: "-0.01em",
-              fontWeight: 400,
-              maxWidth: 540,
-              lineHeight: 1.55,
-            }}
-          >
-            See how Columbus Pro can speed up your workflow
-          </p>
         </div>
       </GridSection>
     </div>

@@ -14,7 +14,6 @@ import { Definition } from "./Definition";
 import { ResearchAccordionProvider } from "./ResearchAccordionContext";
 import { ResearchGroup } from "./ResearchGroup";
 import { RevealOnView } from "./RevealOnView";
-import { SidebarRightLine } from "./SidebarRightLine";
 import { CareersContactForm } from "./CareersContactForm";
 import type { TechnologySectionId } from "./types";
 
@@ -45,13 +44,10 @@ export function TechnologySections() {
         </div>
       </div>
 
-      {/* Right-edge divider line — mirrors sidebarPanel, bends outward at the LGM timeline with a gap */}
-      <SidebarRightLine timelineId="lgm-timeline-track" />
-
-      {/* Main content column — lifted above sidebars (z:100) so the
-          timeline track that extends into the gutter renders on top
-          of the bleed/curves. */}
-      <div style={{ position: "relative", zIndex: 200 }}>
+      {/* Main content column. z-index stays low (1) — below the sidebar
+          panel (2) and, crucially, below the sticky navbar (z-100) so the
+          nav always paints over the page content. */}
+      <div style={{ position: "relative", zIndex: 1 }}>
       {/* ── 1. What's an LGM ── */}
       <Slide id="index">
         <div className={styles.slideFrame}>
@@ -622,7 +618,7 @@ export function TechnologySections() {
                       <circle cx="61" cy="40" r="3" fill="rgba(255,255,255,0.9)" />
                     </svg>
                   </div>
-                  <h3 className={styles.resultsCardText}>{`${item.num}. ${item.text}`}</h3>
+                  <h3 className={styles.resultsCardText}>{item.text}</h3>
                 </div>
               ))}
             </div>

@@ -16,7 +16,7 @@ export const PRODUCTS: Product[] = [
   {
     title: "Elio",
     subtitle: "The smart social map",
-    href: "/products/mapsgpt",
+    href: "/products/consumer",
     img: "/navbardropElio.png",
     video: "/Eliodropdownmenuvid.mp4",
   },

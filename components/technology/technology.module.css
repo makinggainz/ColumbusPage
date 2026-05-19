@@ -101,14 +101,13 @@
 .dotGrid::before {
   content: "";
   position: absolute;
-  /* V3.1: pattern bounded between the left + right sidebar lines, pulled
-     in 1px on each side to match .lgmSlide's bg so the sidebar divider
-     lines remain visible (no dot-pattern texture leaks into the 1px
-     exposed column). */
+  /* Pattern fills the panel; border-radius keeps it inside the rounded
+     corners (it's also vertically masked away from the top/bottom edges). */
   top: 0;
   bottom: 0;
-  left: calc(var(--tech-sidebar-x) + 1px);
-  right: calc(var(--tech-sidebar-x) + 1px);
+  left: 0;
+  right: 0;
+  border-radius: var(--radius-card);
   z-index: 0;
   pointer-events: none;
   background-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M12 11.5v1M11.5 12h1' stroke='rgba(0,102,204,0.12)' stroke-width='1.6' stroke-linecap='square'/%3E%3C/svg%3E");
@@ -132,7 +131,9 @@
 
 .pageShell {
   width: 100%;
-  background: #fff;
+  /* Soft page tint sits BEHIND the section panels — it shows through the
+     gutter between each rounded panel (same surface the homepage uses). */
+  background: var(--color-bg1);
 }
 
 /*
@@ -173,13 +174,13 @@
      line lands exactly at the navbar logo's left edge x-position. */
   width: var(--tech-sidebar-x);
   pointer-events: none;
-  /* Above the main-content wrapper (z-index: 200 in TechnologySections.tsx)
+  /* Above the main-content wrapper (z-index: 1 in TechnologySections.tsx)
      so the scroll-index labels stay clickable when full-width sections like
-     .genLayersBand cross the gutter. */
-  z-index: 300;
+     .genLayersBand cross the gutter — but still below the sticky navbar
+     (z-100) so the nav paints over the page. */
+  z-index: 2;
   background: transparent;
   border: none;
-  border-right: 1px solid color-mix(in srgb, var(--color-brand) 30%, transparent);
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
   opacity: 1;
@@ -220,9 +221,9 @@
   bottom: 0;
   width: var(--tech-sidebar-x);
   pointer-events: none;
-  /* Above the main-content wrapper (z-index: 200) so the right divider
-     stays visible when full-width sections like .genLayersBand cross it. */
-  z-index: 300;
+  /* Above the main-content wrapper (z-index: 1) but below the sticky
+     navbar (z-100) so the nav paints over the page. */
+  z-index: 2;
 }
 
 .sidebarRightLineSvg {
@@ -255,7 +256,15 @@
 
 
 .section {
-  width: 100%;
+  /* Each section is a rounded panel: capped to the 1287px content width,
+     centred, and separated from the next panel by a small gutter that
+     reveals the tinted page background (.pageShell). 20px radius =
+     --radius-card, the site's signature container radius. */
+  width: min(1287px, 100% - 2 * var(--page-padding));
+  margin-inline: auto;
+  margin-bottom: clamp(12px, 1.6vw, 22px);
+  border-radius: var(--radius-card);
+  background: #FFFFFF;
   min-height: 100vh;
   /* Anchor scrolls land flush with the compact navbar's bottom edge. The
      compact navbar is 56px tall, so the last 56px of any preceding content
@@ -587,15 +596,9 @@
 }
 
 .lgmSlide {
-  /* V3.1: bg confined BETWEEN the left + right sidebar lines, pulled in
-     1px on each side so the 1px sidebar divider lines remain visible
-     when main content stacks above the sidebars (z:200 vs z:100). The
-     underlying page bg is identical (var(--color-bg1)), so the 1px exposed column
-     reads as visually continuous with the slide bg. */
-  background-image: linear-gradient(var(--tech-color-bg), var(--tech-color-bg));
-  background-position: calc(var(--tech-sidebar-x) + 1px) 0;
-  background-size: calc(100% - 2 * var(--tech-sidebar-x) - 2px) 100%;
-  background-repeat: no-repeat;
+  /* Soft warm-grey gradient fills the whole section panel (rounding
+     inherited from .section). */
+  background: linear-gradient(to right, #F5F3F1 0%, #F6F5F3 66%, #F9F9F9 100%);
 }
 
 .lgmWrap {
@@ -719,11 +722,8 @@
 
 .dataCollectionSection {
   min-height: auto;
-  /* V3.1: bg confined within the left + right sidebar lines. */
-  background-image: linear-gradient(#ffffff, #ffffff);
-  background-position: var(--tech-sidebar-x) 0;
-  background-size: calc(100% - 2 * var(--tech-sidebar-x)) 100%;
-  background-repeat: no-repeat;
+  /* White panel — background + rounding inherited from .section. */
+  background: #FFFFFF;
 }
 
 .dataCollectionSection .slideFrame {
@@ -2149,31 +2149,26 @@
 
 .coreReasoningSlide {
   position: relative;
-  /* V3.1: vertical gradient bg confined within the sidebar lines, pulled
-     in 1px on each side so the sidebar divider lines remain visible
-     (matches .lgmSlide treatment). */
+  /* Vertical gradient fills the rounded panel (rounding from .section). */
   background-image: linear-gradient(to bottom,
     #EEF5FF 0%,
     rgba(133, 180, 234, 0.69) 19%,
     #B5D5FA 31%,
     #E1EFFE 92%,
     var(--color-bg1) 100%);
-  background-position: calc(var(--tech-sidebar-x) + 1px) 0;
-  background-size: calc(100% - 2 * var(--tech-sidebar-x) - 2px) 100%;
-  background-repeat: no-repeat;
 }
 
-/* Section-wide plus-sign pattern overlay (behind all content).
-   Uses ::before because .section::after already defines a 1px bottom divider. */
+/* Section-wide plus-sign pattern overlay (behind all content). */
 .coreReasoningSlide::before {
   content: "";
   position: absolute;
-  /* V3.1: pattern overlay confined within the sidebar lines, pulled in
-     1px on each side to match the bg. */
+  /* Pattern fills the panel; border-radius keeps it inside the rounded
+     corners (it's also masked to fade out before the lower edge). */
   top: 0;
   bottom: 0;
-  left: calc(var(--tech-sidebar-x) + 1px);
-  right: calc(var(--tech-sidebar-x) + 1px);
+  left: 0;
+  right: 0;
+  border-radius: var(--radius-card);
   pointer-events: none;
   z-index: 0;
   background-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M12 11.5v1M11.5 12h1' stroke='%23E3DFCE' stroke-width='1.6' stroke-linecap='square'/%3E%3C/svg%3E");
@@ -2969,7 +2964,8 @@
   background: linear-gradient(to bottom, var(--color-bg1), transparent);
 }
 
-/* Fade to white at the bottom — blends the mesh into the section below. */
+/* Fade to the page tint at the bottom — blends the mesh into the gutter
+   that sits above the first section panel. */
 .techHeroBottomGradient {
   position: absolute;
   left: 0;
@@ -2978,7 +2974,7 @@
   height: 300px;
   z-index: 3;
   pointer-events: none;
-  background: linear-gradient(to bottom, transparent, #ffffff);
+  background: linear-gradient(to bottom, transparent, var(--color-bg1));
 }
 
 /* Scroll-driven blur overlay. Sits above the hero image AND text inside
@@ -2992,20 +2988,6 @@
   pointer-events: none;
   transition: opacity 60ms linear;
 }
-
-/* Scroll-driven fade-to-black overlay — mirrors the use-cases page's
-   hero overlay ([app/use-cases/page.tsx:60-63]). Layered ABOVE the
-   blur overlay so it fully darkens the hero at the end of the scroll
-   window, even while the blur is still active. */
-.techHeroBlackOverlay {
-  position: absolute;
-  inset: 0;
-  z-index: 30;
-  background: #000000;
-  pointer-events: none;
-  transition: opacity 60ms linear;
-}
-
 
 .techHeroOverlay {
   position: absolute;
@@ -3046,25 +3028,31 @@
      hero title + subtitle at the same horizontal extent as the homepage
      hero so titles align across pages. */
   max-width: 1168px;
-  margin-top: 235px;
+  margin-top: 125px;
 }
 
+/* Matches the homepage hero heading exactly — the design-system `.h1`
+   utility ([app/globals.css:213]): Funnel Display, weight 500, the
+   --text-h1 typescale (responsive via --typography--h1), and the
+   `tracking-tight` (-0.025em) the homepage <h1> carries. */
 .techHeroTitle {
   margin: 0;
+  font-family: var(--font-display);
   font-size: var(--text-h1);
-  font-weight: 300;
+  font-weight: 500;
   line-height: var(--text-h1--line-height);
-  letter-spacing: -0.02em;
+  letter-spacing: -0.025em;
   color: var(--color-cta);
 }
 
+/* Body copy — matches the design-system `.p-l` utility: Opening Hours
+   Sans (inherited --font-sans), weight 400, --text-p-l typescale. */
 .techHeroSubtitle {
   margin: 20px 0 0;
   max-width: 860px;
   font-size: var(--text-p-l);
-  font-weight: 300;
+  font-weight: 400;
   line-height: var(--text-p-l--line-height);
-  letter-spacing: -0.005em;
   color: color-mix(in srgb, var(--color-cta) 85%, transparent);
   white-space: normal;
 }
@@ -3146,11 +3134,7 @@
 
 @media (max-width: 768px) {
   .techHeroTextBlock {
-    margin-top: 180px;
-  }
-
-  .techHeroTitle {
-    font-size: var(--text-h2);
+    margin-top: 70px;
   }
 
   .techHeroNavItem {
@@ -3164,135 +3148,68 @@
 
 /* ───────────────────────────────────────────────
    SCROLL INDEX (inline sidebar nav)
-   Thin vertical line + thick active segment.
+   Minimalist pill list — borrows the navbar's vocabulary: plain muted
+   text at rest, a rounded-full pill background on hover/active. No track
+   line, no gradient segment.
    ─────────────────────────────────────────────── */
-/* Gradient-breathing scroll index — keeps today's structure (track + labels)
-   but re-tunes the state vocabulary to sit inside the hero's language. The
-   active segment is a vertical gradient that fades at both ends (echoing
-   the hero's 1px horizontal divider). Labels are Geist 300/500 — matching
-   the hero title's weight hierarchy — with slightly wider tracking. */
 .scrollIndex {
   display: flex;
-  align-items: stretch;
-  gap: 0;
-  padding-left: 16px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
   opacity: 1;
   pointer-events: auto;
-  transform: none;
 }
 
-.scrollIndexVisible {
-  /* No-op — index is always visible once gated by pastHero. */
-}
-
-/* 3px-wide column holding the 1px background line + 3px gradient segment. */
-.scrollIndexTrack {
-  position: relative;
-  width: 3px;
-  flex-shrink: 0;
-  align-self: stretch;
-  min-height: 100%;
-}
-
-/* 1px background line — shared token used on the right-edge line and
-   Mission / Homepage dividers. */
-.scrollIndexLine {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 50%;
-  width: 1px;
-  transform: translateX(-50%);
-  background: var(--grid-line);
-}
-
-/* Active segment — 3px wide gradient that fades at both ends and peaks
-   at the midpoint, echoing the section divider language. */
-.scrollIndexActiveSegment {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 3px;
-  background: linear-gradient(
-    to bottom,
-    transparent 0%,
-    var(--grid-line) 15%,
-    #13234A 50%,
-    var(--grid-line) 85%,
-    transparent 100%
-  );
-  transition: top 300ms cubic-bezier(0.22, 1, 0.36, 1),
-              height 300ms cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-/* Label column — vertical stack of anchor links. */
-.scrollIndexLabels {
-  display: flex;
-  flex-direction: column;
-  padding-left: 12px;
-}
-
-/* Individual label — Geist 300 inactive, darkens + weight 500 on active.
-   Sizing drops from the prior 13px to 12px with a slight tracking increase
-   to match the hero title's editorial feel. */
+/* Individual label — a navbar-style pill link. Plain muted text at rest;
+   the navbar's `hover:bg-black/5` rounded-full treatment on hover; the
+   active section keeps that pill persistently with darker, heavier text. */
 .scrollIndexLabel {
-  position: relative;
   display: flex;
   align-items: center;
   white-space: nowrap;
   font-size: var(--text-p-s);
-  font-weight: 300;
-  letter-spacing: 0.02em;
-  color: rgba(19, 35, 74, 0.45);
+  font-weight: 400;
+  letter-spacing: 0;
+  color: rgba(19, 35, 74, 0.5);
   text-decoration: none;
-  padding: 10px 16px 10px 0;
-  transition: color 220ms ease, font-weight 220ms ease;
+  padding: 7px 14px;
+  border-radius: var(--radius-full);
+  transition: color 200ms ease, background-color 200ms ease;
 }
 
 .scrollIndexLabel:hover {
-  color: rgba(19, 35, 74, 0.85);
+  color: rgba(19, 35, 74, 0.9);
+  background: rgba(0, 0, 0, 0.05);
 }
 
 .scrollIndexLabel:focus-visible {
-  outline: 2px solid #13234A;
+  outline: 2px solid var(--color-cta);
   outline-offset: 2px;
 }
 
 .scrollIndexLabelActive,
 .scrollIndexLabelActive:hover {
-  color: #13234A;
+  color: var(--color-cta);
   font-weight: 500;
+  background: rgba(0, 0, 0, 0.06);
 }
 
-/* White-mode — applied when the index's sticky Y overlaps the Gen Layers
-   dark-navy full-width band. Flips the track, segment, and label colors
-   to white opacity tiers so the index remains legible against the band. */
-.scrollIndexOnDark .scrollIndexLine {
-  background: rgba(255, 255, 255, 0.28);
-}
-
-.scrollIndexOnDark .scrollIndexActiveSegment {
-  background: linear-gradient(
-    to bottom,
-    transparent 0%,
-    rgba(255, 255, 255, 0.4) 15%,
-    #ffffff 50%,
-    rgba(255, 255, 255, 0.4) 85%,
-    transparent 100%
-  );
-}
-
+/* White-mode — applied when the index's sticky Y overlaps a dark band.
+   Flips the pill text + background to white opacity tiers. */
 .scrollIndexOnDark .scrollIndexLabel {
   color: rgba(255, 255, 255, 0.55);
 }
 
 .scrollIndexOnDark .scrollIndexLabel:hover {
-  color: rgba(255, 255, 255, 0.95);
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .scrollIndexOnDark .scrollIndexLabelActive,
 .scrollIndexOnDark .scrollIndexLabelActive:hover {
   color: #ffffff;
+  background: rgba(255, 255, 255, 0.12);
 }
 
 /* ── Research blog: reduce right inset to match homepage right boundary ── */
@@ -4003,7 +3920,7 @@
 .lgmCompareCellText {
   margin: 0;
   font-size: var(--text-p-l);
-  font-weight: 300;
+  font-weight: 400;
   line-height: var(--text-p-l--line-height);
   letter-spacing: 0;
   color: var(--color-cta);
@@ -4273,13 +4190,13 @@
   );
 }
 
-/* Horizontal track — solid line that runs from the section's left
-   content bound (at the sidebar line) all the way to the viewport's
-   right edge, matching the halo's bounds on both sides. */
+/* Horizontal track — starts flush with the timeline box's left edge and
+   deliberately extends out past its right edge, running into the page
+   gutter so the line reads as continuing beyond its container. */
 .lgmTimelineTrack {
   position: absolute;
   top: 50%;
-  left: calc(-1 * var(--page-padding));
+  left: 0;
   right: calc(-1 * (var(--tech-sidebar-x) + var(--page-padding)));
   height: 1px;
   background: var(--tech-color-text-brand);
@@ -5284,7 +5201,7 @@
 .resultsSlide .lgmKicker,
 .resultsSlide .resultsTitle,
 .resultsSlide .resultsLead {
-  text-align: left;
+  text-align: center;
 }
 
 .resultsTitle {
@@ -5298,72 +5215,45 @@
 }
 
 .resultsLead {
-  margin: 16px 0 0;
+  margin: 16px auto 0;
   max-width: 640px;
   font-size: var(--tech-fs-body-lg);
   line-height: 1.55;
   color: var(--tech-color-text);
 }
 
-/* Stacked-row catalogue — each row pairs a blue art card with a single
-   line of copy and a "+" button. Hairline dividers separate rows. */
+/* 2×2 card grid — each cell stacks a blue art tile above a centred
+   caption. Capped + centred so the cards stay a modest size rather than
+   stretching the full section width. */
 .resultsGrid {
   position: relative;
-  margin-top: clamp(48px, 6vw, 72px);
-  display: flex;
-  flex-direction: column;
+  margin: clamp(48px, 6vw, 72px) auto 0;
+  max-width: 720px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: clamp(28px, 4vw, 56px);
+  row-gap: clamp(36px, 4vw, 56px);
 }
 
-/* Row layout — blue art card on the left, numbered title in the middle.
-   Vertical rhythm and divider mirror the research-section accordion rows. */
+/* Card — blue art tile on top, caption text centred underneath. */
 .resultsCard {
   position: relative;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   align-items: center;
-  gap: clamp(28px, 3vw, 48px);
-  padding: clamp(2px, 0.3vw, 5px) 0;
+  gap: clamp(16px, 1.6vw, 24px);
   background: transparent;
 }
 
-.resultsCard:first-child {
-  padding-top: 0;
-}
-
-.resultsCard:last-child {
-  padding-bottom: 0;
-}
-
-/* 1px hairline divider that fades out on the right side. Starts inline
-   with the title's left edge (past the blue art card + the row gap)
-   instead of at the row's leftmost edge — visually pairs with the
-   numbered title rather than spanning under the art block. */
-.resultsCard:not(:last-child)::after {
-  content: "";
-  position: absolute;
-  left: calc(clamp(160px, 16vw, 240px) + clamp(28px, 3vw, 48px));
-  right: 0;
-  bottom: 0;
-  height: 1px;
-  background: linear-gradient(
-    to right,
-    color-mix(in srgb, var(--color-brand) 35%, transparent) 0%,
-    color-mix(in srgb, var(--color-brand) 32%, transparent) 55%,
-    color-mix(in srgb, var(--color-brand) 0%, transparent) 100%
-  );
-  pointer-events: none;
-}
-
-/* Blue art tile on the left of each row — fixed width, square corners,
-   solid brand-blue background. Houses the wireframe-globe SVG. */
+/* Blue art tile — fills the grid cell, rounded corners, solid brand-blue
+   background. Houses the wireframe-globe SVG. */
 .resultsCardArt {
   position: relative;
-  flex-shrink: 0;
-  width: clamp(160px, 16vw, 240px);
+  width: 100%;
   aspect-ratio: 16 / 11;
   background: #1d3fa6;
   overflow: hidden;
-  border-radius: 8px;
+  border-radius: 16px;
 }
 
 .resultsCardArt svg {
@@ -5373,19 +5263,17 @@
   height: 100%;
 }
 
-/* Title (with embedded "N. " prefix) — matches .coreResearchGroupHead h3. */
+/* Caption — centred under the art tile. */
 .resultsCardText {
-  flex: 1;
   margin: 0;
-  min-width: 0;
-  font-size: var(--tech-fs-h5);
+  font-size: var(--tech-fs-body-lg);
   font-family: var(--font-display);
   font-weight: 500;
   letter-spacing: var(--tech-tracking-snug);
   color: var(--tech-color-text);
-  text-align: left;
-  line-height: 1.3;
-  max-width: none;
+  text-align: center;
+  line-height: 1.35;
+  max-width: 340px;
 }
 
 .resultsArticlesRow {
@@ -6279,42 +6167,9 @@
   }
 }
 
-/* ── Full-width backgrounds when sidebars hide (≤1500px) ── */
+/* ── Responsive section adjustments when sidebars hide (≤1500px) ── */
 
 @media (max-width: 1500px) {
-  .lgmSlide {
-    background-position: unset !important;
-    background-size: unset !important;
-    background: var(--tech-color-bg);
-  }
-
-  .dataCollectionSection {
-    background-position: unset !important;
-    background-size: unset !important;
-    background: #ffffff;
-  }
-
-  .coreReasoningSlide {
-    background-position: unset !important;
-    background-size: unset !important;
-    background: linear-gradient(to bottom,
-      #EEF5FF 0%,
-      rgba(133, 180, 234, 0.69) 19%,
-      #B5D5FA 31%,
-      #E1EFFE 92%,
-      var(--color-bg1) 100%);
-  }
-
-  .coreReasoningSlide::before {
-    left: 0;
-    right: 0;
-  }
-
-  .dotGrid::before {
-    left: 0;
-    right: 0;
-  }
-
   .verticalLineOverlay {
     display: none;
   }

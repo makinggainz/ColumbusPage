@@ -73,7 +73,7 @@ export function ConsumerBusinessToggle({ variant = "dark", active = "business", 
         Columbus Pro
       </Link>
       <Link
-        href="/products/mapsgpt"
+        href="/products/consumer"
         className={`${consumerActive ? activeClass : inactiveClass} ${consumerActive && !isDark ? glassStyles.activePillConsumer : ""}`}
         style={{
           ...(consumerActive ? {

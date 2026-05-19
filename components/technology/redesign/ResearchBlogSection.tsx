@@ -42,8 +42,9 @@ const techTokens: React.CSSProperties = {
   ["--tech-tracking-tight" as string]: "-0.02em",
   ["--tech-tracking-snug" as string]: "-0.01em",
   ["--tech-tracking-wide" as string]: "0.08em",
-  fontFamily:
-    "var(--font-dm-sans), 'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif",
+  // Design-system body font (Opening Hours Sans). Headings inside still
+  // opt into Funnel Display via their own `font-family: var(--font-display)`.
+  fontFamily: "var(--font-sans)",
 };
 
 export function ResearchBlogSection() {

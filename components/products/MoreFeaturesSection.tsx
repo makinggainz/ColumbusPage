@@ -98,7 +98,7 @@ const CARDS: Card[] = [
     theme: "lightblue",
     eyebrow: "The core",
     title: "Just ask — it finds it.",
-    body: "Tell MapsGPT what you're after in plain words. It reads the vibe and hands back places actually worth your time.",
+    body: "Tell Elio what you're after in plain words. It reads the vibe and hands back places actually worth your time.",
     chips: ["rooftop bar, sunset view", "quiet beach near Bali", "best ramen, still open"],
   },
   {
@@ -125,7 +125,7 @@ const CARDS: Card[] = [
     theme: "white",
     eyebrow: "Any browser, any screen",
     title: "Open it right in your browser.",
-    body: "No download, no install — MapsGPT runs in any browser. Plan the trip on your laptop, pick it up on your phone.",
+    body: "No download, no install — Elio runs in any browser. Plan the trip on your laptop, pick it up on your phone.",
     img: "/mapsgptdesktopimg.png",
   },
   {
@@ -208,7 +208,7 @@ export default function MoreFeaturesSection() {
         >
           <div className="eyebrow">The good stuff</div>
           <h2 className="h2" style={{ marginTop: 14, color: "#0B1B2B", letterSpacing: "-0.01em" }}>
-            Why you&apos;ll love MapsGPT
+            Why you&apos;ll love Elio
           </h2>
         </div>
 
@@ -394,7 +394,7 @@ function BentoCard({ card }: { card: Card }) {
             <div style={{ position: "relative", width: "100%", aspectRatio: "1.7" }}>
               <Image
                 src={card.img!}
-                alt="MapsGPT in a desktop browser"
+                alt="Elio in a desktop browser"
                 fill
                 sizes="(max-width:980px) 90vw, 560px"
                 style={{ objectFit: "cover", objectPosition: "left top" }}

@@ -114,7 +114,7 @@ export default function DestinationsSection() {
           Your next favorite place is already out there.
         </h2>
         <p className="p-l" style={{ margin: "16px auto 0", maxWidth: 540, color: "#5A6B7B" }}>
-          From rooftop bars to hidden trails, MapsGPT has a pick for every kind of trip.
+          From rooftop bars to hidden trails, Elio has a pick for every kind of trip.
         </p>
       </div>
 

@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
 const reveal = (visible: boolean, delay: number): React.CSSProperties => ({
@@ -59,9 +58,13 @@ export default function BusinessHero() {
       className="relative w-full"
       style={{
         backgroundColor: "var(--ent-bg-light)",
-        // Height is content-driven: the section is just tall enough for the
-        // hero copy + product window. The background photo (below) is taller
-        // than this and bleeds DOWN past the section over the next block.
+        // The section box is aspect-matched to the ColumBuzHero crop
+        // (2044 × 2833 — the photo's width at the displayed-crop height),
+        // so the section is exactly tall enough to contain the full crop:
+        // the photo fills it edge-to-edge and does NOT bleed past it. The
+        // ratio is ~80px taller than a straight top-25% crop would be, so
+        // the crop frame sits ~80px higher up the photo (more sky shown).
+        aspectRatio: "2044 / 2833",
         // The navbar is sticky and stays in document flow (~83–90px tall
         // depending on breakpoint). Pulling the hero up lets its sky
         // background extend to the very top of the page, behind the
@@ -74,22 +77,20 @@ export default function BusinessHero() {
         paddingTop: 120,
       }}
     >
-      {/* Background image — the ColumBuzHero skyline photo. The layer has a
-          fixed 2044 × 2715 box (the photo's width at 0.75 × its height), so
-          `cover` + `center bottom` crops the top ~25% (plain sky) and keeps
-          the skyline + snowy park. It is anchored to the hero's top edge
-          (top: 0); being taller than the hero content, its lower part bleeds
-          DOWN past the section and over the white background of the block
-          below — no mask is needed because the photo's own bottom edge is a
-          snowy park that fades to white, so it dissolves into that white
-          block. */}
+      {/* Background image — the ColumBuzHero skyline photo. The layer fills
+          the section (inset 0); the section box is aspect-matched to the
+          crop (see above), so `cover` + `center bottom` trims the top of the
+          plain sky and keeps the skyline + snowy park, with the photo
+          contained entirely within the hero (no bleed past it). No mask is
+          needed — the photo's own bottom edge is a snowy park that fades to
+          white, dissolving into the white block below. */}
       <div
         className="absolute pointer-events-none"
         style={{
           top: 0,
           left: 0,
           right: 0,
-          aspectRatio: "2044 / 2715",
+          bottom: 0,
           backgroundImage: "url(/ColumBuzHero.png)",
           backgroundPosition: "center bottom",
           backgroundSize: "cover",
@@ -127,20 +128,6 @@ export default function BusinessHero() {
         >
           GIS so easy, the janitor could be your new researcher
         </p>
-
-        <Link
-          href="/contact"
-          className="group flex items-center gap-3 mt-8 text-[18px] lg:text-[20px] text-white font-semibold transition-opacity"
-        >
-          <span className="transition-colors duration-300 group-hover:text-(--ent-accent)">Talk to Founders</span>
-          <svg
-            className="transition-transform duration-300 group-hover:translate-x-0.5"
-            width="9" height="16" viewBox="0 0 7 12" fill="none"
-            stroke="var(--ent-accent)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"
-          >
-            <path d="M1 1l5 5-5 5" />
-          </svg>
-        </Link>
       </div>
 
       {/* ── Product display — glass browser window ── */}

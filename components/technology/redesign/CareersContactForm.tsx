@@ -8,22 +8,67 @@ type InquiryType = "columbus-pro" | "elio" | "investment" | "careers";
 const TABS: { value: InquiryType; label: string }[] = [
   { value: "columbus-pro", label: "Columbus Pro" },
   { value: "elio", label: "Elio" },
-  { value: "investment", label: "Investment" },
+  { value: "investment", label: "Investors" },
   { value: "careers", label: "Careers" },
 ];
 
+const TAB_INTRO: Record<InquiryType, { heading: string; sub: string }> = {
+  "columbus-pro": { heading: "Book a demo", sub: "See Columbus working on your own data." },
+  elio: { heading: "Tell us about your project", sub: "Share what you want to build with Elio." },
+  investment: { heading: "Investor relations", sub: "Let’s talk partnerships and the road ahead." },
+  careers: { heading: "Join the crew", sub: "Tell us where you’d make your mark." },
+};
+
+/* Design tokens — same source of truth as the contact page
+   (app/contact/page.tsx), so this form stays in lock-step with it. */
+const INK = "var(--color-ink)";
+const MUTED = "var(--color-muted)";
+const HAIRLINE = "var(--color-gridline)";
+const CTA = "var(--color-cta)";
+/* Interactive accent — the teal the navbar "Try Elio" CTA arrows use. */
+const ACCENT = "#0081AC";
+
 const cardStyle: React.CSSProperties = {
   backgroundColor: "#FFFFFF",
-  boxShadow: "0 1px 3px rgba(0,0,0,0.04), 0 4px 20px rgba(0,0,0,0.03)",
+  border: `1px solid ${HAIRLINE}`,
+  borderRadius: "var(--radius-card)",
+  boxShadow: `0 1px 3px color-mix(in srgb, ${CTA} 5%, transparent), 0 16px 44px color-mix(in srgb, ${CTA} 10%, transparent)`,
 };
 
-const inputClass = "bg-transparent outline-none py-2 text-p-l text-[var(--color-cta)] w-full";
+const labelEl = (text: string) => (
+  <span className="text-[13px] font-medium" style={{ color: MUTED }}>
+    {text}
+  </span>
+);
 
-const fadeLine: React.CSSProperties = {
-  height: 1,
-  background:
-    "linear-gradient(to right, rgba(0,0,0,0.08) 0%, rgba(0,0,0,0.08) 60%, transparent 100%)",
-};
+/* The dot-arrow icon every CTA on the site carries (navbar + Hero). */
+function ArrowDots({ className = "" }: { className?: string }) {
+  return (
+    <svg className={"size-3 shrink-0 " + className} width="24" viewBox="0 0 9 13" fill="none" aria-hidden="true">
+      <circle cx="7.22" cy="6.589" r="1.28" fill="currentColor" />
+      <circle cx="4.658" cy="4.018" r="1.28" fill="currentColor" />
+      <circle cx="2.099" cy="1.46" r="1.28" fill="currentColor" />
+      <circle cx="4.658" cy="9.151" r="1.28" fill="currentColor" />
+      <circle cx="2.099" cy="11.718" r="1.28" fill="currentColor" />
+    </svg>
+  );
+}
+
+/* Primary CTA — the site-wide button idiom: navy `bg-cta` fill, white
+   label that turns to the accent on hover, dot-arrow nudging right. */
+function CtaButton({ children, className = "", ...props }: React.ButtonHTMLAttributes<HTMLButtonElement>) {
+  return (
+    <button
+      {...props}
+      className={`group rounded-button px-5 py-2 text-sm flex items-center gap-2 transition-colors bg-cta text-white hover:text-[#0081AC] cursor-pointer ${className}`}
+    >
+      {children}
+      <span className="ml-2 inline-block transition-transform group-hover:translate-x-0.5">
+        <ArrowDots className="text-[#0081AC]" />
+      </span>
+    </button>
+  );
+}
 
 type Props = {
   /** Optional intro block (e.g. section heading + lead) rendered above
@@ -81,8 +126,7 @@ export function CareersContactForm({ intro }: Props = {}) {
     <div className="w-full max-w-[640px] mx-auto">
       <style>{`
         /* Intro wrapper collapses to zero height when the form has been
-           submitted. grid-template-rows animation is the modern way to
-           animate an auto-height element to zero smoothly. */
+           submitted. */
         .ccf-intro-wrap {
           display: grid;
           grid-template-rows: 1fr;
@@ -100,55 +144,63 @@ export function CareersContactForm({ intro }: Props = {}) {
           margin-bottom: 0;
           pointer-events: none;
         }
-        .ccf-intro-wrap > * {
-          overflow: hidden;
-          min-height: 0;
-        }
-      `}</style>
-      {intro && (
-        <div className="ccf-intro-wrap" data-hidden={submitted} aria-hidden={submitted}>
-          <div>{intro}</div>
-        </div>
-      )}
-      <style>{`
-        .ccf-input-wrap { position: relative; }
-        .ccf-input-wrap::after {
-          content: "";
-          position: absolute;
-          bottom: 0; left: 0; right: 0;
-          height: 1px;
-          background: linear-gradient(to right, color-mix(in srgb, var(--color-cta) 12%, transparent) 0%, color-mix(in srgb, var(--color-cta) 12%, transparent) 60%, transparent 100%);
-        }
-        .ccf-input-wrap .ccf-input-fill {
-          position: absolute;
-          bottom: 0; left: 0;
-          height: 1px;
-          width: 0;
-          background: color-mix(in srgb, var(--color-brand) 70%, transparent);
-          transition: width 0.5s cubic-bezier(0.22, 1, 0.36, 1);
-          z-index: 1;
-        }
-        .ccf-input-wrap:focus-within .ccf-input-fill { width: 100%; }
+        .ccf-intro-wrap > * { overflow: hidden; min-height: 0; }
 
-        .ccf-tab { position: relative; overflow: hidden; }
-        .ccf-tab::before {
-          content: "";
-          position: absolute;
-          inset: 0;
-          background: linear-gradient(to top, color-mix(in srgb, var(--color-brand) 12%, transparent) 0%, color-mix(in srgb, var(--color-brand) 4%, transparent) 60%, transparent 100%);
-          opacity: 0;
-          transform: translateY(100%);
-          transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+        /* ── Boxed fields — rounded, hairline border, accent focus ── */
+        .ccf-input, .ccf-select, .ccf-textarea {
+          width: 100%;
+          border: 1px solid ${HAIRLINE};
+          background: #FFFFFF;
+          color: ${INK};
+          font-size: 15px;
+          outline: none;
+          transition: border-color 0.2s ease, box-shadow 0.2s ease;
         }
-        .ccf-tab:hover::before { opacity: 0.4; transform: translateY(0%); }
-        .ccf-tab[data-active="true"]::before { opacity: 1; transform: translateY(0%); }
-        .ccf-tab span { position: relative; z-index: 1; }
-
-        .ccf-btn { cursor: pointer; }
-        .ccf-btn:hover span { color: var(--color-brand); }
-        .ccf-btn:hover svg { transform: translate(2px, -2px); }
-        .ccf-btn svg { transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1); }
-        .ccf-btn span { transition: color 0.3s ease; }
+        .ccf-input   { padding: 11px 14px; border-radius: var(--radius-md); }
+        .ccf-textarea{ padding: 12px 14px; border-radius: var(--radius-md); min-height: 116px; line-height: 1.55; resize: vertical; }
+        .ccf-select  {
+          padding: 11px 40px 11px 14px;
+          border-radius: var(--radius-md);
+          appearance: none;
+          cursor: pointer;
+          background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%235A6B7B' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+          background-repeat: no-repeat;
+          background-position: right 14px center;
+        }
+        .ccf-input::placeholder, .ccf-textarea::placeholder { color: color-mix(in srgb, ${INK} 32%, transparent); }
+        .ccf-input:focus, .ccf-select:focus, .ccf-textarea:focus {
+          border-color: ${ACCENT};
+          box-shadow: 0 0 0 3px color-mix(in srgb, ${ACCENT} 14%, transparent);
+        }
+        /* ── Pill tabs — navy fill on the active one ── */
+        .ccf-tab {
+          padding: 7px 15px;
+          font-size: 13px;
+          font-weight: 500;
+          border-radius: var(--radius-full);
+          color: ${MUTED};
+          white-space: nowrap;
+          cursor: pointer;
+          transition: background-color 0.25s ease, color 0.25s ease;
+        }
+        .ccf-tab:hover { color: ${INK}; background: color-mix(in srgb, ${INK} 5%, transparent); }
+        .ccf-tab[data-active="true"],
+        .ccf-tab[data-active="true"]:hover { background: ${CTA}; color: #FFFFFF; }
+        /* ── Resume file input ── */
+        .ccf-file { font-size: 14px; color: ${INK}; }
+        .ccf-file::file-selector-button {
+          margin-right: 14px;
+          padding: 8px 14px;
+          border: 1px solid ${HAIRLINE};
+          border-radius: var(--radius-md);
+          background: var(--color-bg1);
+          color: ${INK};
+          font-size: 13px;
+          font-weight: 500;
+          cursor: pointer;
+          transition: background-color 0.2s ease;
+        }
+        .ccf-file::file-selector-button:hover { background: color-mix(in srgb, var(--color-bg1), ${INK} 5%); }
 
         @keyframes ccfTabContentIn {
           from { opacity: 0; filter: blur(6px); transform: translateY(12px); }
@@ -160,12 +212,18 @@ export function CareersContactForm({ intro }: Props = {}) {
         }
       `}</style>
 
+      {intro && (
+        <div className="ccf-intro-wrap" data-hidden={submitted} aria-hidden={submitted}>
+          <div>{intro}</div>
+        </div>
+      )}
+
       {!submitted && (
         <div style={cardStyle}>
-          {/* Tab bar */}
+          {/* Pill tab row — left-aligned */}
           <div
-            className="flex"
-            style={{ borderBottom: "1px solid color-mix(in srgb, var(--color-cta) 8%, transparent)" }}
+            className="flex gap-2.5 overflow-x-auto px-4 py-4"
+            style={{ borderBottom: `1px solid ${HAIRLINE}` }}
           >
             {TABS.map((opt) => (
               <button
@@ -176,14 +234,9 @@ export function CareersContactForm({ intro }: Props = {}) {
                   setTabKey((k) => k + 1);
                 }}
                 data-active={tab === opt.value}
-                className="ccf-tab flex-1 py-4 text-p-m font-medium cursor-pointer"
-                style={{
-                  color: tab === opt.value ? "var(--color-cta)" : "color-mix(in srgb, var(--color-cta) 35%, transparent)",
-                  borderRight: "1px solid color-mix(in srgb, var(--color-cta) 6%, transparent)",
-                  transition: "color 0.3s ease",
-                }}
+                className="ccf-tab"
               >
-                <span>{opt.label}</span>
+                {opt.label}
               </button>
             ))}
           </div>
@@ -191,66 +244,31 @@ export function CareersContactForm({ intro }: Props = {}) {
           {/* Tab content */}
           <div
             key={tabKey}
-            className="px-8 py-8 md:px-10 md:py-10"
+            className="px-6 py-7 md:px-8 md:py-9"
             style={{ animation: "ccfTabContentIn 0.5s cubic-bezier(0.22, 1, 0.36, 1)" }}
           >
+            <div className="mb-7">
+              <h3 className="h4 tracking-tight text-ink">{TAB_INTRO[tab].heading}</h3>
+              <p className="p-m text-muted mt-2">{TAB_INTRO[tab].sub}</p>
+            </div>
+
+            {/* ── Columbus Pro — book a demo ── */}
             {tab === "columbus-pro" && (
-              <form className="flex flex-col gap-7" onSubmit={handleSend}>
-                <div className="mb-2">
-                  <h3 className="text-h5 font-medium text-[var(--color-cta)] tracking-[-0.02em]">
-                    Book a Demo
-                  </h3>
-                </div>
-
-                <label className="flex flex-col gap-1">
-                  <span className="text-p-m" style={{ color: "color-mix(in srgb, var(--color-cta) 65%, transparent)" }}>Company email</span>
-                  <div className="ccf-input-wrap">
-                    <input
-                      type="email"
-                      name="email"
-                      required
-                      value={form.email}
-                      onChange={handleChange}
-                      className={inputClass}
-                      placeholder="name@company.com"
-                    />
-                    <div className="ccf-input-fill" />
-                  </div>
+              <form className="flex flex-col gap-5" onSubmit={handleSend}>
+                <label className="flex flex-col gap-1.5">
+                  {labelEl("Company email")}
+                  <input type="email" name="email" required value={form.email} onChange={handleChange} className="ccf-input" placeholder="name@company.com" />
                 </label>
 
-                <label className="flex flex-col gap-1">
-                  <span className="text-p-m" style={{ color: "color-mix(in srgb, var(--color-cta) 65%, transparent)" }}>Company size</span>
-                  <div className="ccf-input-wrap">
-                    <input
-                      type="text"
-                      name="companySize"
-                      required
-                      value={form.companySize}
-                      onChange={handleChange}
-                      className={inputClass}
-                      placeholder="Enter the number of employees"
-                    />
-                    <div className="ccf-input-fill" />
-                  </div>
+                <label className="flex flex-col gap-1.5">
+                  {labelEl("Company size")}
+                  <input type="text" name="companySize" required value={form.companySize} onChange={handleChange} className="ccf-input" placeholder="Number of employees" />
                 </label>
 
-                <label className="flex flex-col gap-1">
-                  <span className="text-p-m" style={{ color: "color-mix(in srgb, var(--color-cta) 65%, transparent)" }}>Industry</span>
-                  <select
-                    name="industry"
-                    required
-                    value={form.industry}
-                    onChange={handleChange}
-                    className="bg-transparent outline-none py-3 text-p-m text-[var(--color-cta)] w-full appearance-none cursor-pointer"
-                    style={{
-                      borderBottom: "1px solid color-mix(in srgb, var(--color-cta) 12%, transparent)",
-                      backgroundImage:
-                        "url(\"data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%230A1344' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E\")",
-                      backgroundRepeat: "no-repeat",
-                      backgroundPosition: "right center",
-                    }}
-                  >
-                    <option value="" disabled>Please Select</option>
+                <label className="flex flex-col gap-1.5">
+                  {labelEl("Industry")}
+                  <select name="industry" required value={form.industry} onChange={handleChange} className="ccf-select">
+                    <option value="" disabled>Please select</option>
                     <option value="real-estate">Real Estate</option>
                     <option value="government">Government</option>
                     <option value="logistics">Logistics &amp; Supply Chain</option>
@@ -263,37 +281,16 @@ export function CareersContactForm({ intro }: Props = {}) {
                   </select>
                 </label>
 
-                <label className="flex flex-col gap-1">
-                  <span className="text-p-m" style={{ color: "color-mix(in srgb, var(--color-cta) 65%, transparent)" }}>What are you hoping to get out of Columbus?</span>
-                  <textarea
-                    name="message"
-                    required
-                    maxLength={500}
-                    rows={4}
-                    value={form.message}
-                    onChange={handleChange}
-                    className="bg-transparent border border-[color-mix(in_srgb,var(--color-cta)_8%,transparent)] focus:border-[color-mix(in_srgb,var(--color-brand)_50%,transparent)] outline-none p-3 text-p-m text-[var(--color-cta)] placeholder:text-[color-mix(in_srgb,var(--color-cta)_25%,transparent)] transition-colors duration-300 resize-y mt-1"
-                    style={{ borderRadius: 0 }}
-                  />
-                  <span className="text-p-s text-right" style={{ color: "color-mix(in srgb, var(--color-cta) 30%, transparent)" }}>{charCount}/500</span>
+                <label className="flex flex-col gap-1.5">
+                  {labelEl("What are you hoping to get out of Columbus?")}
+                  <textarea name="message" required maxLength={500} rows={4} value={form.message} onChange={handleChange} className="ccf-textarea" placeholder="Tell us how you want to work with Columbus Pro." />
+                  <span className="text-[12px] text-right" style={{ color: MUTED }}>{charCount}/500</span>
                 </label>
 
-                <label className="flex flex-col gap-1">
-                  <span className="text-p-m" style={{ color: "color-mix(in srgb, var(--color-cta) 65%, transparent)" }}>How did you hear about us?</span>
-                  <select
-                    name="heardFrom"
-                    value={form.heardFrom}
-                    onChange={handleChange}
-                    className="bg-transparent outline-none py-3 text-p-m text-[var(--color-cta)] w-full appearance-none cursor-pointer"
-                    style={{
-                      borderBottom: "1px solid color-mix(in srgb, var(--color-cta) 12%, transparent)",
-                      backgroundImage:
-                        "url(\"data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%230A1344' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E\")",
-                      backgroundRepeat: "no-repeat",
-                      backgroundPosition: "right center",
-                    }}
-                  >
-                    <option value="" disabled>Please Select</option>
+                <label className="flex flex-col gap-1.5">
+                  {labelEl("How did you hear about us?")}
+                  <select name="heardFrom" value={form.heardFrom} onChange={handleChange} className="ccf-select">
+                    <option value="" disabled>Please select</option>
                     <option value="linkedin">LinkedIn</option>
                     <option value="twitter">Twitter / X</option>
                     <option value="facebook-instagram">Facebook / Instagram</option>
@@ -304,188 +301,119 @@ export function CareersContactForm({ intro }: Props = {}) {
                     <option value="other-search">Other Search / Research</option>
                     <option value="word-of-mouth">Word of Mouth / Referral</option>
                     <option value="events">Events / Conferences / Webinars</option>
-                    <option value="news-press">News / Press / Articles / Newsletters / Podcast</option>
-                    <option value="short-squeeze">Short Squeeze Newsletter</option>
+                    <option value="news-press">News / Press / Articles / Podcast</option>
                     <option value="ooh-billboards">Out of Home / Billboards</option>
                     <option value="product-hunt">Product Hunt / Forums</option>
                     <option value="direct-outreach">Direct Outreach</option>
                     <option value="partnership">Partnership / Integration</option>
-                    <option value="existing-customer">Existing Customer / Prior Experience</option>
-                    <option value="other-ad">Other Advertisement</option>
+                    <option value="existing-customer">Existing Customer</option>
                     <option value="other">Other</option>
                   </select>
                 </label>
 
-                <p className="text-p-s leading-[1.5]" style={{ color: "color-mix(in srgb, var(--color-cta) 35%, transparent)" }}>
-                  By submitting, you agree with our <Link href="/terms" className="underline cursor-pointer">Terms</Link> and <Link href="/privacy" className="underline cursor-pointer">Privacy Policy</Link>.
-                </p>
-
-                <button
-                  type="submit"
-                  className="ccf-btn flex items-center gap-4 self-start"
-                  style={{ height: 40, paddingLeft: 20, paddingRight: 16, fontSize: "var(--text-p-m)", fontWeight: 500, backgroundColor: "#000000", color: "white", borderRadius: "var(--radius-button)" }}
-                >
-                  <span>Submit</span>
-                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="var(--color-brand)" strokeWidth="1.2" strokeLinecap="round">
-                    <path d="M1 13L13 1M13 1H5M13 1V9" />
-                  </svg>
-                </button>
-              </form>
-            )}
-
-            {(tab === "investment" || tab === "elio") && (
-              <form className="flex flex-col gap-7" onSubmit={handleSend}>
-                {tab === "investment" && (
-                  <div className="mb-2">
-                    <h3 className="text-h5 font-medium text-[var(--color-cta)] tracking-[-0.02em]">Investment Inquiry</h3>
-                  </div>
-                )}
-                {tab === "elio" && (
-                  <div className="mb-2">
-                    <h3 className="text-h5 font-medium text-[var(--color-cta)] tracking-[-0.02em]">Elio / MapsGPT</h3>
-                  </div>
-                )}
-
-                <label className="flex flex-col gap-1">
-                  <span className="text-p-m" style={{ color: "color-mix(in srgb, var(--color-cta) 65%, transparent)" }}>Name</span>
-                  <div className="ccf-input-wrap">
-                    <input type="text" name="firstName" required value={form.firstName} onChange={handleChange} className={inputClass} />
-                    <div className="ccf-input-fill" />
-                  </div>
-                </label>
-
-                <label className="flex flex-col gap-1">
-                  <span className="text-p-m" style={{ color: "color-mix(in srgb, var(--color-cta) 65%, transparent)" }}>Email</span>
-                  <div className="ccf-input-wrap">
-                    <input type="email" name="email" required value={form.email} onChange={handleChange} className={inputClass} />
-                    <div className="ccf-input-fill" />
-                  </div>
-                </label>
-
-                <label className="flex flex-col gap-1">
-                  <span className="text-p-m" style={{ color: "color-mix(in srgb, var(--color-cta) 65%, transparent)" }}>{tab === "investment" ? "Organization" : "Role"}</span>
-                  <div className="ccf-input-wrap">
-                    <input type="text" name="role" required value={form.role} onChange={handleChange} className={inputClass} />
-                    <div className="ccf-input-fill" />
-                  </div>
-                </label>
-
-                <label className="flex flex-col gap-1">
-                  <span className="text-p-m" style={{ color: "color-mix(in srgb, var(--color-cta) 65%, transparent)" }}>
-                    {tab === "investment" ? "Tell us about your interest" : "Tell us about your project"}
-                  </span>
-                  <textarea
-                    name="message"
-                    required
-                    maxLength={500}
-                    rows={4}
-                    value={form.message}
-                    onChange={handleChange}
-                    placeholder={
-                      tab === "investment"
-                        ? "Share your investment thesis or partnership proposal."
-                        : "Please share your objectives and any specific requirements."
-                    }
-                    className="bg-transparent border border-[color-mix(in_srgb,var(--color-cta)_8%,transparent)] focus:border-[color-mix(in_srgb,var(--color-brand)_50%,transparent)] outline-none p-3 text-p-m text-[var(--color-cta)] placeholder:text-[color-mix(in_srgb,var(--color-cta)_25%,transparent)] transition-colors duration-300 resize-y mt-1"
-                    style={{ borderRadius: 0 }}
-                  />
-                  <span className="text-p-s text-right" style={{ color: "color-mix(in srgb, var(--color-cta) 30%, transparent)" }}>{charCount}/500</span>
-                </label>
-
-                <label className="flex items-start gap-3 cursor-pointer">
-                  <input type="checkbox" checked={updates} onChange={(e) => setUpdates(e.target.checked)} className="mt-0.5 w-4 h-4 accent-[var(--color-brand)]" style={{ borderRadius: 0 }} />
-                  <span className="text-p-m leading-[1.5]" style={{ color: "color-mix(in srgb, var(--color-cta) 65%, transparent)" }}>I want to receive product updates from Columbus Earth.</span>
-                </label>
-
-                <p className="text-p-s leading-[1.5]" style={{ color: "color-mix(in srgb, var(--color-cta) 35%, transparent)" }}>
-                  By submitting, you agree with our <Link href="/terms" className="underline cursor-pointer">Terms</Link> and <Link href="/privacy" className="underline cursor-pointer">Privacy Policy</Link>.
-                </p>
-
-                <button
-                  type="submit"
-                  className="ccf-btn flex items-center gap-4 self-start"
-                  style={{ height: 40, paddingLeft: 20, paddingRight: 16, fontSize: "var(--text-p-m)", fontWeight: 500, backgroundColor: "#000000", color: "white", borderRadius: "var(--radius-button)" }}
-                >
-                  <span>Submit</span>
-                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="var(--color-brand)" strokeWidth="1.2" strokeLinecap="round">
-                    <path d="M1 13L13 1M13 1H5M13 1V9" />
-                  </svg>
-                </button>
-              </form>
-            )}
-
-            {tab === "careers" && (
-              <form className="flex flex-col gap-7" onSubmit={handleSend}>
-                <div className="mb-2">
-                  <h3 className="text-h5 font-medium text-[var(--color-cta)] tracking-[-0.02em]">Join Our Team</h3>
-                </div>
-
-                <label className="flex flex-col gap-1">
-                  <span className="text-p-m" style={{ color: "color-mix(in srgb, var(--color-cta) 65%, transparent)" }}>Name</span>
-                  <div className="ccf-input-wrap">
-                    <input type="text" name="firstName" required value={form.firstName} onChange={handleChange} className={inputClass} />
-                    <div className="ccf-input-fill" />
-                  </div>
-                </label>
-
-                <label className="flex flex-col gap-1">
-                  <span className="text-p-m" style={{ color: "color-mix(in srgb, var(--color-cta) 65%, transparent)" }}>Email</span>
-                  <div className="ccf-input-wrap">
-                    <input type="email" name="email" required value={form.email} onChange={handleChange} className={inputClass} />
-                    <div className="ccf-input-fill" />
-                  </div>
-                </label>
-
-                <label className="flex flex-col gap-1">
-                  <span className="text-p-m" style={{ color: "color-mix(in srgb, var(--color-cta) 65%, transparent)" }}>Role you&apos;re interested in</span>
-                  <div className="ccf-input-wrap">
-                    <input type="text" name="role" required value={form.role} onChange={handleChange} className={inputClass} placeholder="e.g. Software Engineer, Data Scientist..." />
-                    <div className="ccf-input-fill" />
-                  </div>
-                </label>
-
-                <label className="flex flex-col gap-1">
-                  <span className="text-p-m" style={{ color: "color-mix(in srgb, var(--color-cta) 65%, transparent)" }}>Tell us about yourself</span>
-                  <textarea
-                    name="message"
-                    required
-                    maxLength={500}
-                    rows={4}
-                    value={form.message}
-                    onChange={handleChange}
-                    placeholder="What excites you about geospatial intelligence? What would you bring to the team?"
-                    className="bg-transparent border border-[color-mix(in_srgb,var(--color-cta)_8%,transparent)] focus:border-[color-mix(in_srgb,var(--color-brand)_50%,transparent)] outline-none p-3 text-p-m text-[var(--color-cta)] placeholder:text-[color-mix(in_srgb,var(--color-cta)_25%,transparent)] transition-colors duration-300 resize-y mt-1"
-                    style={{ borderRadius: 0 }}
-                  />
-                  <span className="text-p-s text-right" style={{ color: "color-mix(in srgb, var(--color-cta) 30%, transparent)" }}>{charCount}/500</span>
-                </label>
-
-                <label className="flex flex-col gap-2">
-                  <span className="text-p-m" style={{ color: "color-mix(in srgb, var(--color-cta) 65%, transparent)" }}>
-                    Resume <span className="text-p-s" style={{ color: "color-mix(in srgb, var(--color-cta) 35%, transparent)" }}>(optional — PDF or DOC)</span>
-                  </span>
-                  <input
-                    type="file"
-                    accept=".pdf,.doc,.docx"
-                    className="text-p-m text-[var(--color-cta)] file:mr-4 file:py-2 file:px-4 file:border-0 file:text-p-s file:font-medium file:bg-[color-mix(in_srgb,var(--color-cta)_6%,transparent)] file:text-[var(--color-cta)] hover:file:bg-[color-mix(in_srgb,var(--color-cta)_10%,transparent)] file:cursor-pointer file:transition-colors file:duration-200"
-                    style={{ borderRadius: 0 }}
-                  />
-                </label>
-
-                <p className="text-p-s leading-[1.5]" style={{ color: "color-mix(in srgb, var(--color-cta) 35%, transparent)" }}>
+                <p className="text-[13px] leading-[1.5]" style={{ color: MUTED }}>
                   By submitting, you agree with our <Link href="/terms" className="underline">Terms</Link> and <Link href="/privacy" className="underline">Privacy Policy</Link>.
                 </p>
 
-                <button
-                  type="submit"
-                  className="ccf-btn flex items-center gap-4 self-start"
-                  style={{ height: 40, paddingLeft: 20, paddingRight: 16, fontSize: "var(--text-p-m)", fontWeight: 500, backgroundColor: "#000000", color: "white", borderRadius: "var(--radius-button)" }}
-                >
-                  <span>Submit</span>
-                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="var(--color-brand)" strokeWidth="1.2" strokeLinecap="round">
-                    <path d="M1 13L13 1M13 1H5M13 1V9" />
-                  </svg>
-                </button>
+                <div className="flex items-center gap-4 pt-1">
+                  <CtaButton type="submit">Submit</CtaButton>
+                  <span className="text-[13px] text-muted">We answer fast.</span>
+                </div>
+              </form>
+            )}
+
+            {/* ── Investors / Elio ── */}
+            {(tab === "investment" || tab === "elio") && (
+              <form className="flex flex-col gap-5" onSubmit={handleSend}>
+                <label className="flex flex-col gap-1.5">
+                  {labelEl("Name")}
+                  <input type="text" name="firstName" required value={form.firstName} onChange={handleChange} className="ccf-input" placeholder="Your name" />
+                </label>
+
+                <label className="flex flex-col gap-1.5">
+                  {labelEl("Email")}
+                  <input type="email" name="email" required value={form.email} onChange={handleChange} className="ccf-input" placeholder="name@company.com" />
+                </label>
+
+                <label className="flex flex-col gap-1.5">
+                  {labelEl(tab === "investment" ? "Organization" : "Role")}
+                  <input type="text" name="role" required value={form.role} onChange={handleChange} className="ccf-input" />
+                </label>
+
+                <label className="flex flex-col gap-1.5">
+                  {labelEl(tab === "investment" ? "Tell us about your interest" : "Tell us about your project")}
+                  <textarea
+                    name="message"
+                    required
+                    maxLength={500}
+                    rows={4}
+                    value={form.message}
+                    onChange={handleChange}
+                    className="ccf-textarea"
+                    placeholder={
+                      tab === "investment"
+                        ? "Share your investment thesis or partnership proposal."
+                        : "Share your objectives and any specific requirements."
+                    }
+                  />
+                  <span className="text-[12px] text-right" style={{ color: MUTED }}>{charCount}/500</span>
+                </label>
+
+                <label className="flex items-start gap-3 cursor-pointer">
+                  <input type="checkbox" checked={updates} onChange={(e) => setUpdates(e.target.checked)} className="mt-0.5 w-4 h-4 accent-[#0081AC]" />
+                  <span className="text-[14px] leading-[1.5]" style={{ color: MUTED }}>I want to receive product updates from Columbus Earth.</span>
+                </label>
+
+                <p className="text-[13px] leading-[1.5]" style={{ color: MUTED }}>
+                  By submitting, you agree with our <Link href="/terms" className="underline">Terms</Link> and <Link href="/privacy" className="underline">Privacy Policy</Link>.
+                </p>
+
+                <div className="flex items-center gap-4 pt-1">
+                  <CtaButton type="submit">Submit</CtaButton>
+                  <span className="text-[13px] text-muted">We answer fast.</span>
+                </div>
+              </form>
+            )}
+
+            {/* ── Careers ── */}
+            {tab === "careers" && (
+              <form className="flex flex-col gap-5" onSubmit={handleSend}>
+                <label className="flex flex-col gap-1.5">
+                  {labelEl("Name")}
+                  <input type="text" name="firstName" required value={form.firstName} onChange={handleChange} className="ccf-input" placeholder="Your name" />
+                </label>
+
+                <label className="flex flex-col gap-1.5">
+                  {labelEl("Email")}
+                  <input type="email" name="email" required value={form.email} onChange={handleChange} className="ccf-input" placeholder="name@company.com" />
+                </label>
+
+                <label className="flex flex-col gap-1.5">
+                  {labelEl("Role you’re interested in")}
+                  <input type="text" name="role" required value={form.role} onChange={handleChange} className="ccf-input" placeholder="e.g. Software Engineer, Data Scientist…" />
+                </label>
+
+                <label className="flex flex-col gap-1.5">
+                  {labelEl("Tell us about yourself")}
+                  <textarea name="message" required maxLength={500} rows={4} value={form.message} onChange={handleChange} className="ccf-textarea" placeholder="What excites you about geospatial intelligence? What would you bring to the team?" />
+                  <span className="text-[12px] text-right" style={{ color: MUTED }}>{charCount}/500</span>
+                </label>
+
+                <label className="flex flex-col gap-2">
+                  <span className="text-[13px] font-medium" style={{ color: MUTED }}>
+                    Resume <span className="text-[12px]" style={{ color: MUTED }}>(optional — PDF or DOC)</span>
+                  </span>
+                  <input type="file" accept=".pdf,.doc,.docx" className="ccf-file" />
+                </label>
+
+                <p className="text-[13px] leading-[1.5]" style={{ color: MUTED }}>
+                  By submitting, you agree with our <Link href="/terms" className="underline">Terms</Link> and <Link href="/privacy" className="underline">Privacy Policy</Link>.
+                </p>
+
+                <div className="flex items-center gap-4 pt-1">
+                  <CtaButton type="submit">Submit</CtaButton>
+                  <span className="text-[13px] text-muted">We answer fast.</span>
+                </div>
               </form>
             )}
           </div>
@@ -497,31 +425,15 @@ export function CareersContactForm({ intro }: Props = {}) {
           className="flex flex-col items-center text-center py-16"
           style={{ animation: "ccfConfirm 0.9s cubic-bezier(0.16, 1, 0.3, 1)" }}
         >
-          <p
-            className="text-h4 font-semibold mb-3"
-            style={{ color: "var(--color-cta)", letterSpacing: "-0.02em" }}
-          >
-            Message sent.
-          </p>
-          <p
-            className="text-p-l leading-[1.6] max-w-[400px]"
-            style={{ color: "color-mix(in srgb, var(--color-cta) 45%, transparent)", fontWeight: 400 }}
-          >
+          <p className="h4 tracking-tight text-ink mb-3">Message sent.</p>
+          <p className="p-l text-muted max-w-[400px]">
             Thanks — we&rsquo;ll be in touch shortly.
           </p>
-          <button
-            onClick={resetForm}
-            className="ccf-btn mt-8 flex items-center gap-4"
-            style={{ height: 40, paddingLeft: 20, paddingRight: 16, fontSize: "var(--text-p-m)", fontWeight: 500, backgroundColor: "#000000", color: "white", borderRadius: "var(--radius-button)" }}
-          >
-            <span>Send another message</span>
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="var(--color-brand)" strokeWidth="1.2" strokeLinecap="round">
-              <path d="M1 13L13 1M13 1H5M13 1V9" />
-            </svg>
-          </button>
+          <CtaButton className="mt-8" onClick={resetForm}>
+            Send another message
+          </CtaButton>
         </div>
       )}
-
     </div>
   );
 }
