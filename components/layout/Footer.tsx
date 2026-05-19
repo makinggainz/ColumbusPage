@@ -197,13 +197,30 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false, t
         </div>
       )}
 
-      {/* Mission text — sits over the bgImage band at the top of the footer. */}
+      {/* Footer content — Columbus logo, mission statement, link columns
+          and socials, centred over the bgImage band. */}
       <div
-        className="relative z-10 flex flex-col items-center text-center px-8 pt-24 pb-0 max-w-3xl mx-auto w-full"
+        className="relative z-10 flex flex-col items-center text-center px-8 pt-24 pb-12 max-w-5xl mx-auto w-full"
         style={{ pointerEvents: bottleOpened ? "auto" : "none" }}
       >
+        {/* Columbus logo — top, centred */}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/logobueno.png"
+          alt="Columbus Earth"
+          width={56}
+          height={56}
+          className="mb-8"
+          style={{
+            opacity: bottleOpened ? 1 : 0,
+            transform: bottleOpened ? "translateY(0)" : "translateY(10px)",
+            transition: previouslyOpened ? "none" : "opacity 600ms cubic-bezier(0.22, 1, 0.36, 1), transform 600ms cubic-bezier(0.22, 1, 0.36, 1)",
+          }}
+        />
+
+        {/* Mission statement */}
         <p
-          className="p-l leading-relaxed mb-6"
+          className="p-l leading-relaxed mb-14 max-w-3xl"
           style={{
             color: theme === "dark" ? "rgba(255,255,255,0.5)" : isTech ? "rgba(10,19,68,0.6)" : "rgba(29,29,31,0.6)",
             opacity: bottleOpened ? 1 : 0,
@@ -216,22 +233,53 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false, t
           foundation models and data collection innovations to power the
           geospatial intelligence systems of tomorrow.
         </p>
-        <p
-          className="p-l leading-relaxed mb-12"
+
+        {/* Link columns */}
+        <div
+          className="flex flex-col sm:flex-row items-center sm:items-start justify-center gap-10 sm:gap-16 text-left mb-10"
           style={{
-            color: theme === "dark" ? "rgba(255,255,255,0.5)" : isTech ? "rgba(10,19,68,0.6)" : "rgba(29,29,31,0.6)",
             opacity: bottleOpened ? 1 : 0,
-            transform: bottleOpened ? "translateY(0)" : "translateY(10px)",
+            transform: bottleOpened ? "translateY(0)" : "translateY(12px)",
             transition: previouslyOpened ? "none" : "opacity 600ms cubic-bezier(0.22, 1, 0.36, 1), transform 600ms cubic-bezier(0.22, 1, 0.36, 1)",
             transitionDelay: previouslyOpened ? "0ms" : bottleOpened ? "250ms" : "0ms",
           }}
         >
-          We&apos;re building foundation models that understand the physical world
-          through geospatial reasoning. GeoContext-1 processes satellite imagery,
-          terrain data, infrastructure networks, and temporal patterns to generate
-          actionable intelligence across defence, climate, consumer and urban
-          planning domains.
-        </p>
+          <FooterColumn theme={theme} title="Product" links={[
+            { label: "Columbus Pro", href: "/products/business" },
+            { label: "Elio", href: "/" },
+            { label: "Use Cases", href: "/columbus-solutions" },
+          ]} />
+          <FooterColumn theme={theme} title="Research" links={[
+            { label: "Foundation Model", href: "/research" },
+            { label: "Timeline", href: "/research" },
+            { label: "Research", href: "/research" },
+            { label: "Results", href: "/research" },
+            { label: "Blog", href: "/blog" },
+          ]} />
+          <FooterColumn theme={theme} title="Company" links={[
+            { label: "Our mission", href: "/company" },
+            { label: "Our vision", href: "/company" },
+            { label: "Blog", href: "/blog" },
+          ]} />
+        </div>
+
+        {/* Email + LinkedIn */}
+        <div
+          className="flex gap-5"
+          style={{
+            opacity: bottleOpened ? 1 : 0,
+            transform: bottleOpened ? "translateY(0)" : "translateY(12px)",
+            transition: previouslyOpened ? "none" : "opacity 600ms cubic-bezier(0.22, 1, 0.36, 1), transform 600ms cubic-bezier(0.22, 1, 0.36, 1)",
+            transitionDelay: previouslyOpened ? "0ms" : bottleOpened ? "400ms" : "0ms",
+          }}
+        >
+          <a href="mailto:contact@columbus.earth" aria-label="Email Columbus Earth">
+            <Mail size={20} className={`transition-colors ${theme === "dark" ? "text-white/45 hover:text-white" : isTech ? "text-[#0A1344]/45 hover:text-[#0066CC]" : "text-[#1D1D1F]/45 hover:text-[#1D1D1F]"}`} />
+          </a>
+          <a href="https://www.linkedin.com/company/columbusearth/about/" target="_blank" rel="noopener noreferrer" aria-label="Columbus Earth on LinkedIn">
+            <Linkedin size={20} className={`transition-colors ${theme === "dark" ? "text-white/45 hover:text-white" : isTech ? "text-[#0A1344]/45 hover:text-[#0066CC]" : "text-[#1D1D1F]/45 hover:text-[#1D1D1F]"}`} />
+          </a>
+        </div>
       </div>
       </div>
 
@@ -273,89 +321,20 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false, t
         </div>
       )}
 
-      {/* Footer content — fades in after bottle is opened */}
+      {/* Bottom bar — pinned to the very bottom of the full-height footer. */}
       <div
-        className="relative z-10 w-full mt-auto"
+        className={`relative z-10 w-full px-8 pt-4 pb-8 flex flex-col sm:flex-row items-center justify-center gap-1.5 sm:gap-5 p-s ${theme === "dark" ? "text-white/35" : isTech ? "text-[#0A1344]/45" : "text-[#1D1D1F]/45"}`}
         style={{
           opacity: bottleOpened ? 1 : 0,
-          transform: bottleOpened ? "translateY(0)" : "translateY(20px)",
-          pointerEvents: bottleOpened ? "auto" : "none",
-          transition: previouslyOpened ? "none" : "all 1000ms cubic-bezier(0.22, 1, 0.36, 1)",
+          transition: previouslyOpened ? "none" : "opacity 600ms cubic-bezier(0.22, 1, 0.36, 1)",
+          transitionDelay: previouslyOpened ? "0ms" : bottleOpened ? "550ms" : "0ms",
         }}
       >
-        <div className="max-w-[1200px] mx-auto px-6 sm:px-8 pb-6 pt-12">
-          <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-12 lg:gap-8 mb-12">
-            <div
-              style={{
-                opacity: bottleOpened ? 1 : 0,
-                transform: bottleOpened ? "translateY(0)" : "translateY(12px)",
-                transition: previouslyOpened ? "none" : "opacity 600ms cubic-bezier(0.22, 1, 0.36, 1), transform 600ms cubic-bezier(0.22, 1, 0.36, 1)",
-                transitionDelay: previouslyOpened ? "0ms" : bottleOpened ? "400ms" : "0ms",
-              }}
-            >
-              <h3
-                className="h1 font-semibold mb-3"
-                style={{ color: theme === "dark" ? "#FFFFFF" : "#091344" }}
-              >
-                Columbus Earth
-              </h3>
-              <p className={`p-l leading-snug mb-4 max-w-[400px] ${theme === "dark" ? "text-white/50" : isTech ? "text-[#0A1344]/50" : "text-[#1D1D1F]/50"}`}>
-                The frontier AI lab building the first production Universal Geospatial Model.
-              </p>
-              <div className="flex gap-4">
-                <a href="mailto:contact@columbus.earth"><Mail size={18} className={`transition-colors ${theme === "dark" ? "text-white/40 hover:text-white" : isTech ? "text-[#0A1344]/40 hover:text-[#0066CC]" : "text-[#1D1D1F]/40 hover:text-[#1D1D1F]"}`} /></a>
-                <a href="https://www.linkedin.com/company/columbusearth/about/" target="_blank" rel="noopener noreferrer"><Linkedin size={18} className={`transition-colors ${theme === "dark" ? "text-white/40 hover:text-white" : isTech ? "text-[#0A1344]/40 hover:text-[#0066CC]" : "text-[#1D1D1F]/40 hover:text-[#1D1D1F]"}`} /></a>
-              </div>
-            </div>
-            <div className="flex flex-col sm:flex-row gap-8 sm:gap-12 lg:mt-[30px]">
-              {[
-                <FooterColumn key="product" theme={theme} title="Product" links={[
-                  { label: "Columbus Pro", href: "/products/business" },
-                  { label: "Elio", href: "/" },
-                  { label: "Use Cases", href: "/columbus-solutions" },
-                ]} />,
-                <FooterColumn key="technology" theme={theme} title="Research" links={[
-                  { label: "Foundation Model", href: "/research" },
-                  { label: "Timeline", href: "/research" },
-                  { label: "Research", href: "/research" },
-                  { label: "Results", href: "/research" },
-                  { label: "Blog", href: "/blog" },
-                ]} />,
-                <FooterColumn key="company" theme={theme} title="Company" links={[
-                  { label: "Our mission", href: "/company" },
-                  { label: "Our vision", href: "/company" },
-                  { label: "Blog", href: "/blog" },
-                ]} />,
-              ].map((col, i) => (
-                <div
-                  key={i}
-                  style={{
-                    opacity: bottleOpened ? 1 : 0,
-                    transform: bottleOpened ? "translateY(0)" : "translateY(12px)",
-                    transition: previouslyOpened ? "none" : "opacity 600ms cubic-bezier(0.22, 1, 0.36, 1), transform 600ms cubic-bezier(0.22, 1, 0.36, 1)",
-                    transitionDelay: previouslyOpened ? "0ms" : bottleOpened ? `${520 + i * 120}ms` : "0ms",
-                  }}
-                >
-                  {col}
-                </div>
-              ))}
-            </div>
-          </div>
-          <div
-            className={`pt-4 pb-2 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-6 p-s ${theme === "dark" ? "text-white/30" : isTech ? "text-[#0A1344]/40" : "text-[#1D1D1F]/40"}`}
-            style={{
-              opacity: bottleOpened ? 1 : 0,
-              transition: previouslyOpened ? "none" : "opacity 600ms cubic-bezier(0.22, 1, 0.36, 1)",
-              transitionDelay: previouslyOpened ? "0ms" : bottleOpened ? "900ms" : "0ms",
-            }}
-          >
-            <span>Columbus Earth &copy; 2026</span>
-            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-6">
-              <span>Website made by hand, no AI.</span>
-              <span>www.columbus.earth</span>
-            </div>
-          </div>
-        </div>
+        <span>Columbus Earth &copy; 2026</span>
+        <span aria-hidden className="hidden sm:inline opacity-50">·</span>
+        <span>Website made by hand, no AI.</span>
+        <span aria-hidden className="hidden sm:inline opacity-50">·</span>
+        <span>www.columbus.earth</span>
       </div>
 
       {/* Reveal cover — only on the fixed `reveal` footer. Opaque white

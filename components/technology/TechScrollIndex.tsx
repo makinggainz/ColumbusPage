@@ -10,6 +10,7 @@ export function TechScrollIndex() {
   const [activeIdx, setActiveIdx] = useState(0);
   const [pastHero, setPastHero] = useState(false);
   const [onDark, setOnDark] = useState(false);
+  const [atEnd, setAtEnd] = useState(false);
 
   const updateActive = useCallback(() => {
     const probeY = window.innerHeight * 0.42;
@@ -55,15 +56,29 @@ export function TechScrollIndex() {
     setOnDark(overlap);
   }, []);
 
+  /* Fade the index out once the user reaches the bottom of the last
+     section (Careers) — its bottom edge scrolling into view. */
+  const updateAtEnd = useCallback(() => {
+    const careers = document.getElementById("careers");
+    if (!careers) {
+      setAtEnd(false);
+      return;
+    }
+    const rect = careers.getBoundingClientRect();
+    setAtEnd(rect.bottom <= window.innerHeight);
+  }, []);
+
   useEffect(() => {
     updateActive();
     updatePastHero();
     updateOnDark();
+    updateAtEnd();
 
     const handler = () => {
       updateActive();
       updatePastHero();
       updateOnDark();
+      updateAtEnd();
     };
 
     window.addEventListener("scroll", handler, { passive: true });
@@ -73,15 +88,19 @@ export function TechScrollIndex() {
       window.removeEventListener("scroll", handler);
       window.removeEventListener("resize", handler);
     };
-  }, [updateActive, updatePastHero, updateOnDark]);
+  }, [updateActive, updatePastHero, updateOnDark, updateAtEnd]);
 
   return (
     <nav
-      className={[styles.scrollIndex, onDark ? styles.scrollIndexOnDark : ""]
+      className={[
+        styles.scrollIndex,
+        onDark ? styles.scrollIndexOnDark : "",
+        atEnd ? styles.scrollIndexHidden : "",
+      ]
         .filter(Boolean)
         .join(" ")}
       aria-label="Page section index"
-      aria-hidden={!pastHero}
+      aria-hidden={!pastHero || atEnd}
     >
       {HERO_SCROLL_INDEX_ITEMS.map((item, i) => {
         const isActive = i === activeIdx;

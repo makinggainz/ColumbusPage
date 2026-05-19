@@ -2939,7 +2939,10 @@
    Layered above the mesh canvas (z-index 0) but below the hero
    content (.techHeroContent, z-index 10). ── */
 
-/* Blue accent tint across the top half. */
+/* Blue accent tint across the top half. Every stop is the brand blue
+   (= --color-brand #1451E8) at a different alpha — fading by opacity
+   only, never through a muddy/violet midtone the way a fade to bare
+   `transparent` (which drifts the RGB toward black) would. */
 .techHeroAccentGradient {
   position: absolute;
   left: 0;
@@ -2950,9 +2953,9 @@
   pointer-events: none;
   background: linear-gradient(
     to bottom,
-    color-mix(in srgb, var(--color-brand) 15%, transparent) 0%,
-    color-mix(in srgb, var(--color-brand) 8%, transparent) 60%,
-    transparent 100%
+    rgba(20, 81, 232, 0.15) 0%,
+    rgba(20, 81, 232, 0.08) 60%,
+    rgba(20, 81, 232, 0) 100%
   );
 }
 
@@ -2965,7 +2968,7 @@
   height: 18vh;
   z-index: 1;
   pointer-events: none;
-  background: linear-gradient(to bottom, var(--color-bg1), transparent);
+  background: linear-gradient(to bottom, var(--color-bg1), rgba(246, 248, 251, 0));
 }
 
 /* Fade to white at the bottom — blends the mesh into the section below. */
@@ -2977,7 +2980,7 @@
   height: 300px;
   z-index: 3;
   pointer-events: none;
-  background: linear-gradient(to bottom, transparent, #ffffff);
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0), #ffffff);
 }
 
 /* Scroll-driven blur overlay. Sits above the hero image AND text inside
@@ -3151,23 +3154,46 @@
 
 /* ───────────────────────────────────────────────
    SCROLL INDEX (inline sidebar nav)
-   Minimalist pill list — borrows the navbar's vocabulary: plain muted
-   text at rest, a rounded-full pill background on hover/active. No track
-   line, no gradient segment.
+   Navbar-style pill list running down a vertical index rail — a faint
+   full-height line on the left whose segment "lights up" alongside the
+   active section's pill, giving it the structure of a page index.
    ─────────────────────────────────────────────── */
 .scrollIndex {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: 2px;
+  /* Room for the rail + a gap before the pills start. */
+  padding-left: 16px;
   opacity: 1;
   pointer-events: auto;
+  transition: opacity 350ms ease;
+}
+
+/* Faded out once the bottom of the last section (Careers) is reached. */
+.scrollIndexHidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Vertical index rail — faint full-height line down the left edge. */
+.scrollIndex::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 4px;
+  bottom: 4px;
+  width: 1.5px;
+  border-radius: 1px;
+  background: color-mix(in srgb, var(--color-cta) 14%, transparent);
 }
 
 /* Individual label — a navbar-style pill link. Plain muted text at rest;
    the navbar's `hover:bg-black/5` rounded-full treatment on hover; the
    active section keeps that pill persistently with darker, heavier text. */
 .scrollIndexLabel {
+  position: relative;
   display: flex;
   align-items: center;
   white-space: nowrap;
@@ -3179,6 +3205,23 @@
   padding: 7px 14px;
   border-radius: var(--radius-full);
   transition: color 200ms ease, background-color 200ms ease;
+}
+
+/* Active-section marker — sits exactly on the rail (left: -16px walks
+   back from the pill's edge to the rail) and grows in when active. */
+.scrollIndexLabel::before {
+  content: "";
+  position: absolute;
+  left: -16px;
+  top: 50%;
+  width: 1.5px;
+  height: 100%;
+  border-radius: 1px;
+  background: var(--color-cta);
+  opacity: 0;
+  transform: translateY(-50%) scaleY(0.3);
+  transition: opacity 220ms ease,
+              transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .scrollIndexLabel:hover {
@@ -3198,8 +3241,21 @@
   background: rgba(0, 0, 0, 0.06);
 }
 
+.scrollIndexLabelActive::before {
+  opacity: 1;
+  transform: translateY(-50%) scaleY(0.62);
+}
+
 /* White-mode — applied when the index's sticky Y overlaps a dark band.
-   Flips the pill text + background to white opacity tiers. */
+   Flips the rail, marker, and pills to white opacity tiers. */
+.scrollIndexOnDark::before {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.scrollIndexOnDark .scrollIndexLabel::before {
+  background: #ffffff;
+}
+
 .scrollIndexOnDark .scrollIndexLabel {
   color: rgba(255, 255, 255, 0.55);
 }
