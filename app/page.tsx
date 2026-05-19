@@ -1,6 +1,5 @@
-import { type ReactNode } from "react";
-import { MistxNav } from "@/components/layout/MistxNav";
-import { HeroNew } from "@/components/home/HeroNew";
+import { CircleHero } from "@/components/home/CircleHero";
+import { CircleProducts } from "@/components/home/CircleProducts";
 import { BentoProducts } from "@/components/home/BentoProducts";
 import {
   TextScrollIntro,
@@ -21,16 +20,14 @@ function IslandGap() {
 export default function Home() {
   return (
     <main className="min-h-screen" style={{ backgroundColor: "#ffffff" }}>
-      <MistxNav />
-      <HeroNew />
+      {/* circleUI concept — every piece of media lives inside a circular
+          portal; nav + copy orbit it. CircleHero carries its own curved
+          navigation ring, so no sticky <MistxNav> renders on the home
+          route. CircleProducts is the three-portal section that follows. */}
+      <CircleHero />
+      <CircleProducts />
 
-      {/* "We're all about maps" intro + bento grid (Columbus / Elio /
-          Research). The intro lede is the renamed TextScrollIntro
-          (scroll-driven word reveal); the bento grid below shows the
-          three products as a featured + 2-stacked tile layout. */}
-      {/* pt-16 (not mt-16): padding, not margin, so the hero's 30px
-          floating-div bottom gutter (margin-bottom on .hn-section) isn't
-          swallowed by sibling margin-collapse and stays a true 30px. */}
+      {/* Existing homepage sections kept below the new circleUI lead. */}
       <div className="pt-16">
         <TextScrollIntro />
         <BentoProducts />

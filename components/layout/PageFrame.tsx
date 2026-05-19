@@ -32,8 +32,13 @@ import { useEffect, type ReactNode } from "react";
  * corners + 30px side gutter.
  */
 const SCROLL_RANGE = 150;
-const MAX_MARGIN = 30;
-const MAX_RADIUS = 20;
+/* Frame effect removed — the page is full-bleed: no inset margin, no
+   corner radius, no border, no drop shadow. Held at 0 so the published
+   --frame-margin / --frame-radius vars keep the sticky navbar flush with
+   the viewport top. The component is retained only for the footer-reveal
+   mechanic (margin-bottom + the data-footer-reached toggle below). */
+const MAX_MARGIN = 0;
+const MAX_RADIUS = 0;
 /* Frame border thickness — a thin 2px accent hairline on the inset
    (rounded card) state that fades out to 0 as the card expands to
    full-bleed, so no border frames the page once it fills the screen. */
@@ -137,21 +142,19 @@ export function PageFrame({ children }: { children: ReactNode }) {
       style={{
         position: "relative",
         zIndex: 1,
-        margin: "var(--frame-margin, 30px)",
-        // Reserve scroll room below the card equal to the footer's
+        // Frame effect removed — full-bleed, no inset margin / radius /
+        // border / shadow.
+        margin: "var(--frame-margin, 0px)",
+        // Reserve scroll room below the page equal to the footer's
         // height so the user can scroll past the content and reveal
         // the fixed footer that sits behind it (z-index 0).
         marginBottom: "var(--footer-reveal-height, 100vh)",
-        borderRadius: "var(--frame-radius, 20px)",
-        // Drop shadow — set globally via --frame-shadow in globals.css so
-        // the white card reads as a floating panel against the white
-        // site backdrop on every route. Tracks the rounded corners.
-        boxShadow: "var(--frame-shadow, none)",
-        // No border frames the card.
+        borderRadius: "var(--frame-radius, 0px)",
+        boxShadow: "none",
         border: "none",
         backgroundColor: "#FFFFFF",
         overflow: "clip",
-        minHeight: "calc(100vh - var(--frame-margin, 30px) * 2)",
+        minHeight: "calc(100vh - var(--frame-margin, 0px) * 2)",
       }}
     >
       {children}
