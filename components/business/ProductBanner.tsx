@@ -65,12 +65,16 @@ export default function ProductBanner() {
 
         <Link
           href="/contact"
-          className="group mt-10 flex items-center gap-3 text-[15px] lg:text-[20px] font-medium transition-opacity"
-          style={{ color: "var(--ent-text-primary)" }}
+          className="group mt-10 flex items-center gap-3 leading-none whitespace-nowrap rounded-button-md hover:opacity-90 transition-all duration-300"
+          style={{ fontSize: 15, fontWeight: 500, height: 36, paddingLeft: 20, paddingRight: 16, backgroundColor: "var(--ent-btn-dark)", color: "white" }}
         >
           <span className="transition-colors duration-300 group-hover:text-(--ent-accent)">Try Demo</span>
-          <svg className="transition-transform duration-300 group-hover:translate-x-0.5" width="10" height="18" viewBox="0 0 7 12" fill="none" stroke="var(--ent-accent)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M1 1l5 5-5 5" />
+          <svg className="transition-transform duration-300 group-hover:translate-x-0.5" width="10" height="14" viewBox="0 0 9 13" fill="none" aria-hidden>
+            <circle cx="7.22" cy="6.589" r="1.28" fill="var(--ent-accent)" />
+            <circle cx="4.658" cy="4.018" r="1.28" fill="var(--ent-accent)" />
+            <circle cx="2.099" cy="1.46" r="1.28" fill="var(--ent-accent)" />
+            <circle cx="4.658" cy="9.151" r="1.28" fill="var(--ent-accent)" />
+            <circle cx="2.099" cy="11.718" r="1.28" fill="var(--ent-accent)" />
           </svg>
         </Link>
       </div>

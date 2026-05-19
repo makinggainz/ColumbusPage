@@ -173,17 +173,17 @@ function drawBoat3D(
     ctx.stroke();
   };
 
-  const hullStroke = `rgba(20,81,232,${(0.5 * a).toFixed(3)})`;
-  const hullFill = `rgba(20,81,232,${(0.06 * a).toFixed(3)})`;
-  const hullFillDark = `rgba(20,81,232,${(0.1 * a).toFixed(3)})`;
-  const ribStroke = `rgba(20,81,232,${(0.25 * a).toFixed(3)})`;
-  const mastStroke = `rgba(20,81,232,${(0.45 * a).toFixed(3)})`;
-  const sailFill = `rgba(20,81,232,${(0.05 * a).toFixed(3)})`;
-  const sailStroke = `rgba(20,81,232,${(0.25 * a).toFixed(3)})`;
-  const riggingStroke = `rgba(20,81,232,${(0.15 * a).toFixed(3)})`;
-  const flagFill = `rgba(20,81,232,${(0.3 * a).toFixed(3)})`;
-  const scStroke = `rgba(20,81,232,${(0.4 * a).toFixed(3)})`;
-  const scFill = `rgba(20,81,232,${(0.08 * a).toFixed(3)})`;
+  const hullStroke = `rgba(20,60,160,${(0.5 * a).toFixed(3)})`;
+  const hullFill = `rgba(20,60,160,${(0.06 * a).toFixed(3)})`;
+  const hullFillDark = `rgba(20,60,160,${(0.1 * a).toFixed(3)})`;
+  const ribStroke = `rgba(20,60,160,${(0.25 * a).toFixed(3)})`;
+  const mastStroke = `rgba(20,60,160,${(0.45 * a).toFixed(3)})`;
+  const sailFill = `rgba(20,60,160,${(0.05 * a).toFixed(3)})`;
+  const sailStroke = `rgba(20,60,160,${(0.25 * a).toFixed(3)})`;
+  const riggingStroke = `rgba(20,60,160,${(0.15 * a).toFixed(3)})`;
+  const flagFill = `rgba(20,60,160,${(0.3 * a).toFixed(3)})`;
+  const scStroke = `rgba(20,60,160,${(0.4 * a).toFixed(3)})`;
+  const scFill = `rgba(20,60,160,${(0.08 * a).toFixed(3)})`;
 
   // ── Hull faces (port side panels) ──
   for (let i = 0; i < STATIONS.length - 1; i++) {
@@ -344,8 +344,8 @@ function drawBoat3D(
   drawFace(flagPts, flagFill, mastStroke, 0.6);
 
   // ── Crew ──
-  const crewStroke = `rgba(20,81,232,${(0.5 * a).toFixed(3)})`;
-  const crewHead = `rgba(20,81,232,${(0.35 * a).toFixed(3)})`;
+  const crewStroke = `rgba(20,60,160,${(0.5 * a).toFixed(3)})`;
+  const crewHead = `rgba(20,60,160,${(0.35 * a).toFixed(3)})`;
   const headR = 0.9;
   const bodyH = 3;
 
@@ -663,7 +663,7 @@ export function TechHeroMesh() {
           const p = grid[r][c];
           if (!p) continue;
           const depthT = r / gridRows;
-          ctx.strokeStyle = `rgba(20,81,232,${(0.08 + depthT * 0.22).toFixed(3)})`;
+          ctx.strokeStyle = `rgba(20,60,160,${(0.08 + depthT * 0.22).toFixed(3)})`;
           ctx.lineWidth = 0.8 + depthT * 1.2;
           if (!started) { ctx.moveTo(p.sx, p.sy); started = true; }
           else ctx.lineTo(p.sx, p.sy);
@@ -673,7 +673,7 @@ export function TechHeroMesh() {
 
       for (let r = 0; r < gridRows; r++) {
         const depthT = r / gridRows;
-        ctx.strokeStyle = `rgba(20,81,232,${(0.08 + depthT * 0.22).toFixed(3)})`;
+        ctx.strokeStyle = `rgba(20,60,160,${(0.08 + depthT * 0.22).toFixed(3)})`;
         ctx.lineWidth = 0.8 + depthT * 1.2;
         ctx.beginPath();
         let started = false;
