@@ -2939,10 +2939,9 @@
    Layered above the mesh canvas (z-index 0) but below the hero
    content (.techHeroContent, z-index 10). ── */
 
-/* Blue accent tint across the top half. Every stop is the brand blue
-   (= --color-brand #1451E8) at a different alpha — fading by opacity
-   only, never through a muddy/violet midtone the way a fade to bare
-   `transparent` (which drifts the RGB toward black) would. */
+/* Blue accent tint across the top half — the site's original hero
+   accent gradient (from the homepage hero on `main`): azure #0066CC,
+   faded by alpha only so it never drifts through a muddy midtone. */
 .techHeroAccentGradient {
   position: absolute;
   left: 0;
@@ -2953,9 +2952,9 @@
   pointer-events: none;
   background: linear-gradient(
     to bottom,
-    rgba(20, 81, 232, 0.15) 0%,
-    rgba(20, 81, 232, 0.08) 60%,
-    rgba(20, 81, 232, 0) 100%
+    rgba(0, 102, 204, 0.15) 0%,
+    rgba(0, 102, 204, 0.08) 60%,
+    rgba(0, 102, 204, 0) 100%
   );
 }
 
