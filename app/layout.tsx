@@ -50,7 +50,7 @@ export default function RootLayout({
             reveal
             theme="light"
             bg="#FFFFFF"
-            bgImage="/minimalistCity.png"
+            bgImage="/footerbackgroundimage2.png"
           />
           <PageFrame>{children}</PageFrame>
         </LenisProvider>

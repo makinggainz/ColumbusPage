@@ -163,7 +163,7 @@ function ArrowDots({ className = "" }: { className?: string }) {
 // ─── Team-locations map ──────────────────────────────────────────────────────
 //
 // Hand-drawn world map asset with DC + Madrid pinned in brand blue
-// (/public/hiringhumans2.jpeg). Rendered as a real <img> so the
+// (/public/hiring-humans/world-map-countries.png). Rendered as a real <img> so the
 // pencil-sketch detail (ships, compass rose, coastlines) reads cleanly
 // at any width. Sized via CSS — width: 100%, height auto — to scale
 // responsively inside the .careers-map wrapper.
@@ -202,7 +202,7 @@ const CSS = `
 
 /* ── Team-locations map (DC + Madrid pinned in brand blue) ──────────── */
 .careers-map {
-  max-width: 960px;
+  max-width: 780px;
   margin: 0 auto;
   padding: 8px 0;
 }
@@ -653,7 +653,7 @@ export const Careers = ({ hideHeader, className = "" }: { hideHeader?: boolean; 
 
         <div className="careers-map">
           <img
-            src="/hiringhumans2.jpeg"
+            src="/hiring-humans/world-map-countries.png"
             alt="Team locations: Washington DC and Madrid"
             className="careers-map-img"
           />

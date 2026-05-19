@@ -15,10 +15,10 @@ import Image from "next/image";
 
 const ITEMS: { title: string; image: string }[] = [
   { title: "Ask the map anything", image: "/cap-grid-1.png" },
-  { title: "Agent research reports", image: "/cap-grid-2.png" },
-  { title: "Generative data layers", image: "/cap-grid-3.png" },
-  { title: "An AI that considers it all", image: "/cap-grid-4.png" },
-  { title: "Data Catalogue", image: "/cap-grid-5.png" },
+  { title: "Agent research reports", image: "/cap-grid-3.png" },
+  { title: "Generative data layers", image: "/cap-grid-5.png" },
+  { title: "An AI that considers it all", image: "/cap-grid-2.png" },
+  { title: "Data Catalogue", image: "/cap-grid-4.png" },
   { title: "Light-speed due dilligence", image: "/cap-grid-6.png" },
 ];
 
@@ -67,7 +67,7 @@ export default function CapabilitiesGrid() {
                 width={915}
                 height={627}
                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                className="block w-full h-auto"
+                className="block w-[88%] h-auto mx-auto"
               />
               <p
                 className="mt-4 text-center text-[20px] md:text-[22px] font-semibold leading-[1.2]"

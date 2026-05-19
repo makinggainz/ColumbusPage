@@ -101,13 +101,11 @@
 .dotGrid::before {
   content: "";
   position: absolute;
-  /* Pattern fills the panel; border-radius keeps it inside the rounded
-     corners (it's also vertically masked away from the top/bottom edges). */
+  /* Pattern fills the section (vertically masked away from the edges). */
   top: 0;
   bottom: 0;
   left: 0;
   right: 0;
-  border-radius: var(--radius-card);
   z-index: 0;
   pointer-events: none;
   background-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M12 11.5v1M11.5 12h1' stroke='rgba(0,102,204,0.12)' stroke-width='1.6' stroke-linecap='square'/%3E%3C/svg%3E");
@@ -131,9 +129,7 @@
 
 .pageShell {
   width: 100%;
-  /* Soft page tint sits BEHIND the section panels — it shows through the
-     gutter between each rounded panel (same surface the homepage uses). */
-  background: var(--color-bg1);
+  background: #fff;
 }
 
 /*
@@ -256,15 +252,7 @@
 
 
 .section {
-  /* Each section is a rounded panel: capped to the 1287px content width,
-     centred, and separated from the next panel by a small gutter that
-     reveals the tinted page background (.pageShell). 20px radius =
-     --radius-card, the site's signature container radius. */
-  width: min(1287px, 100% - 2 * var(--page-padding));
-  margin-inline: auto;
-  margin-bottom: clamp(12px, 1.6vw, 22px);
-  border-radius: var(--radius-card);
-  background: #FFFFFF;
+  width: 100%;
   min-height: 100vh;
   /* Anchor scrolls land flush with the compact navbar's bottom edge. The
      compact navbar is 56px tall, so the last 56px of any preceding content
@@ -2162,13 +2150,11 @@
 .coreReasoningSlide::before {
   content: "";
   position: absolute;
-  /* Pattern fills the panel; border-radius keeps it inside the rounded
-     corners (it's also masked to fade out before the lower edge). */
+  /* Pattern fills the section (masked to fade out before the lower edge). */
   top: 0;
   bottom: 0;
   left: 0;
   right: 0;
-  border-radius: var(--radius-card);
   pointer-events: none;
   z-index: 0;
   background-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M12 11.5v1M11.5 12h1' stroke='%23E3DFCE' stroke-width='1.6' stroke-linecap='square'/%3E%3C/svg%3E");
@@ -2964,8 +2950,7 @@
   background: linear-gradient(to bottom, var(--color-bg1), transparent);
 }
 
-/* Fade to the page tint at the bottom — blends the mesh into the gutter
-   that sits above the first section panel. */
+/* Fade to white at the bottom — blends the mesh into the section below. */
 .techHeroBottomGradient {
   position: absolute;
   left: 0;
@@ -2974,7 +2959,7 @@
   height: 300px;
   z-index: 3;
   pointer-events: none;
-  background: linear-gradient(to bottom, transparent, var(--color-bg1));
+  background: linear-gradient(to bottom, transparent, #ffffff);
 }
 
 /* Scroll-driven blur overlay. Sits above the hero image AND text inside

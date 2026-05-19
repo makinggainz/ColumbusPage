@@ -105,7 +105,12 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false, t
             }
           : { background: bgColor }),
         cursor: !bottleOpened ? "default" : undefined,
-        ...(reveal ? { position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 0 } as React.CSSProperties : {}),
+        // The reveal footer is `position: fixed` at the viewport bottom, so
+        // it can never be taller than the viewport — anything above the top
+        // edge is unreachable. Pinning it to exactly 100dvh keeps the whole
+        // footer (image band + mission + link columns) on-screen; the flex
+        // layout below distributes that height.
+        ...(reveal ? { position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 0, height: "100dvh" } as React.CSSProperties : {}),
       }}
       onClick={() => {
         if (!bottleOpened && !previouslyOpened) {
@@ -158,29 +163,42 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false, t
         </div>
       )}
 
-      {/* Watermark backdrop — light themes only. Renders `bgImage` with the
-          same dimmed, top/bottom-masked treatment used behind the blog page
-          hero, so the footer reads as that image fading into a white field. */}
+      {/* Top region — a flex-1 block that grows to fill all footer space
+          above the link columns. It holds the bgImage band plus the mission
+          text overlaid on it, so the photo can never push itself (or the
+          columns) past the fixed footer's edges. */}
+      <div className="relative z-0 flex-1 flex flex-col w-full min-h-0">
+      {/* Watermark backdrop — light themes only. `bgImage` fills this whole
+          top region; a bottom mask dissolves it into the white link-columns
+          area below with no hard seam. */}
       {theme !== "dark" && bgImage && (
-        <div aria-hidden className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 z-0 overflow-hidden"
+        >
           <div
             className="absolute inset-0"
             style={{
               backgroundImage: `url("${bgImage}")`,
               backgroundRepeat: "no-repeat",
-              backgroundPosition: "center",
-              backgroundSize: "120% 100%",
+              // `cover` keeps the photo at its true aspect ratio (no
+              // squashing); anchored to the band's bottom edge.
+              backgroundPosition: "center bottom",
+              backgroundSize: "cover",
               opacity: 0.45,
+              // Fade the lower half of the photo to transparent so it
+              // dissolves into the white footer below — no hard seam
+              // between the image band and the link columns.
               WebkitMaskImage:
-                "linear-gradient(to bottom, transparent 0%, #000 22%, #000 80%, transparent 100%)",
+                "linear-gradient(to bottom, #000 0%, #000 48%, transparent 100%)",
               maskImage:
-                "linear-gradient(to bottom, transparent 0%, #000 22%, #000 80%, transparent 100%)",
+                "linear-gradient(to bottom, #000 0%, #000 48%, transparent 100%)",
             }}
           />
         </div>
       )}
 
-      {/* Mission text — top center, above the bottle */}
+      {/* Mission text — sits over the bgImage band at the top of the footer. */}
       <div
         className="relative z-10 flex flex-col items-center text-center px-8 pt-24 pb-0 max-w-3xl mx-auto w-full"
         style={{ pointerEvents: bottleOpened ? "auto" : "none" }}
@@ -215,6 +233,7 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false, t
           actionable intelligence across defence, climate, consumer and urban
           planning domains.
         </p>
+      </div>
       </div>
 
       {/* Note overlay — kept for backwards compatibility; never opens now

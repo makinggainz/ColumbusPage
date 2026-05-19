@@ -455,7 +455,7 @@ const PRODUCTS: Product[] = [
     name: "Elio",
     tagline: "Making maps feel alive again",
     audience: "For consumer",
-    ctaLabel: "Try Elio",
+    ctaLabel: "Learn more",
     visual: "/mapsgptdesktopimg.png",
   },
   {
