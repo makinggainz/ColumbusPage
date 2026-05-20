@@ -3153,18 +3153,16 @@
 
 /* ───────────────────────────────────────────────
    SCROLL INDEX (inline sidebar nav)
-   Navbar-style pill list running down a vertical index rail — a faint
-   full-height line on the left whose segment "lights up" alongside the
-   active section's pill, giving it the structure of a page index.
+   Vertical column of small grey dots. The active item expands into a
+   rounded pill containing a blue dot + the section label — every other
+   item stays as a bare dot. Inspired by juanmora.co/work.
    ─────────────────────────────────────────────── */
 .scrollIndex {
   position: relative;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 2px;
-  /* Room for the rail + a gap before the pills start. */
-  padding-left: 16px;
+  gap: 18px;
   opacity: 1;
   pointer-events: auto;
   transition: opacity 350ms ease;
@@ -3176,56 +3174,48 @@
   pointer-events: none;
 }
 
-/* Vertical index rail — faint full-height line down the left edge. */
-.scrollIndex::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 4px;
-  bottom: 4px;
-  width: 1.5px;
-  border-radius: 1px;
-  background: color-mix(in srgb, var(--color-cta) 14%, transparent);
-}
-
-/* Individual label — a navbar-style pill link. Plain muted text at rest;
-   the navbar's `hover:bg-black/5` rounded-full treatment on hover; the
-   active section keeps that pill persistently with darker, heavier text. */
+/* Each item is a link sized to its dot — pill background, padding, and
+   text appear only when the item is .scrollIndexLabelActive. */
 .scrollIndexLabel {
   position: relative;
-  display: flex;
+  display: inline-flex;
   align-items: center;
+  gap: 10px;
   white-space: nowrap;
   font-size: var(--text-p-s);
-  font-weight: 400;
+  font-weight: 500;
   letter-spacing: 0;
-  color: rgba(19, 35, 74, 0.5);
+  color: transparent;
   text-decoration: none;
-  padding: 7px 14px;
+  padding: 6px 14px 6px 10px;
   border-radius: var(--radius-full);
-  transition: color 200ms ease, background-color 200ms ease;
+  background: transparent;
+  transition: color 220ms ease, background-color 220ms ease,
+              padding 220ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-/* Active-section marker — sits exactly on the rail (left: -16px walks
-   back from the pill's edge to the rail) and grows in when active. */
-.scrollIndexLabel::before {
-  content: "";
-  position: absolute;
-  left: -16px;
-  top: 50%;
-  width: 1.5px;
-  height: 100%;
-  border-radius: 1px;
-  background: var(--color-cta);
+/* Dot indicator — grey at rest, blue when the item is active. */
+.scrollIndexDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(19, 35, 74, 0.28);
+  flex: none;
+  transition: background-color 220ms ease, transform 220ms ease;
+}
+
+/* Label text — hidden by default; max-width animates open when active. */
+.scrollIndexText {
+  display: inline-block;
+  max-width: 0;
+  overflow: hidden;
   opacity: 0;
-  transform: translateY(-50%) scaleY(0.3);
-  transition: opacity 220ms ease,
-              transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition: max-width 280ms cubic-bezier(0.22, 1, 0.36, 1),
+              opacity 220ms ease;
 }
 
-.scrollIndexLabel:hover {
-  color: rgba(19, 35, 74, 0.9);
-  background: rgba(0, 0, 0, 0.05);
+.scrollIndexLabel:hover .scrollIndexDot {
+  background: rgba(19, 35, 74, 0.55);
 }
 
 .scrollIndexLabel:focus-visible {
@@ -3235,39 +3225,62 @@
 
 .scrollIndexLabelActive,
 .scrollIndexLabelActive:hover {
-  color: var(--color-cta);
-  font-weight: 500;
-  background: rgba(0, 0, 0, 0.06);
+  background: rgba(19, 35, 74, 0.07);
+  color: rgba(19, 35, 74, 0.78);
 }
 
-.scrollIndexLabelActive::before {
+.scrollIndexLabelActive .scrollIndexDot {
+  background: var(--color-cta);
+}
+
+.scrollIndexLabelActive .scrollIndexText {
+  max-width: 240px;
   opacity: 1;
-  transform: translateY(-50%) scaleY(0.62);
 }
 
-/* White-mode — applied when the index's sticky Y overlaps a dark band.
-   Flips the rail, marker, and pills to white opacity tiers. */
-.scrollIndexOnDark::before {
-  background: rgba(255, 255, 255, 0.2);
+/* When the user hovers anywhere over the nav, expand every item so all
+   labels read at once. The active item keeps its blue dot + filled pill;
+   the rest get a muted pill so the active one still stands out. */
+.scrollIndex:hover .scrollIndexLabel {
+  background: rgba(19, 35, 74, 0.04);
+  color: rgba(19, 35, 74, 0.78);
 }
 
-.scrollIndexOnDark .scrollIndexLabel::before {
+.scrollIndex:hover .scrollIndexLabelActive {
+  background: rgba(19, 35, 74, 0.07);
+}
+
+.scrollIndex:hover .scrollIndexText {
+  max-width: 240px;
+  opacity: 1;
+}
+
+/* White-mode — applied when the index's sticky Y overlaps a dark band. */
+.scrollIndexOnDark .scrollIndexDot {
+  background: rgba(255, 255, 255, 0.4);
+}
+
+.scrollIndexOnDark .scrollIndexLabel:hover .scrollIndexDot {
   background: #ffffff;
-}
-
-.scrollIndexOnDark .scrollIndexLabel {
-  color: rgba(255, 255, 255, 0.55);
-}
-
-.scrollIndexOnDark .scrollIndexLabel:hover {
-  color: #ffffff;
-  background: rgba(255, 255, 255, 0.1);
 }
 
 .scrollIndexOnDark .scrollIndexLabelActive,
 .scrollIndexOnDark .scrollIndexLabelActive:hover {
+  background: rgba(255, 255, 255, 0.14);
   color: #ffffff;
-  background: rgba(255, 255, 255, 0.12);
+}
+
+.scrollIndexOnDark .scrollIndexLabelActive .scrollIndexDot {
+  background: #ffffff;
+}
+
+.scrollIndexOnDark.scrollIndex:hover .scrollIndexLabel {
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+}
+
+.scrollIndexOnDark.scrollIndex:hover .scrollIndexLabelActive {
+  background: rgba(255, 255, 255, 0.14);
 }
 
 /* ── Research blog: reduce right inset to match homepage right boundary ── */

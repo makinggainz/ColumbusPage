@@ -116,7 +116,8 @@ export function TechScrollIndex() {
               .join(" ")}
             aria-current={isActive ? "true" : undefined}
           >
-            {item.label}
+            <span className={styles.scrollIndexDot} aria-hidden />
+            <span className={styles.scrollIndexText}>{item.label}</span>
           </Link>
         );
       })}
