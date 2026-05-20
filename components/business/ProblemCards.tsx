@@ -87,9 +87,11 @@ export default function ProblemCards() {
               style={{
                 width: 210,
                 height: 210,
-                // Full white — the feature cards sit above the city
-                // line-art backdrop that rises into the lower half of b2.
-                backgroundColor: "#ffffff",
+                // Subtle off-white fill (#FAFAFA) — same tint used in
+                // PromptShowcase / StickyScrollSection so the pain-point
+                // cards read as part of the same surface family while
+                // still lifting off the city line-art backdrop behind.
+                backgroundColor: "#FAFAFA",
                 borderBottom: "1px solid var(--grid-line)",
                 borderRight: i < PAIN_POINTS.length - 1 ? "1px solid var(--grid-line)" : undefined,
                 fontSize: 15,

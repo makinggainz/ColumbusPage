@@ -35,8 +35,17 @@ export default function SolutionShowcase() {
     >
       {/* B3 line-art — a faint hand-drawn galleon hugs the lower-left of
           the screen and a harbour town the lower-right, both sitting
-          behind the heading. Scoped to B3 (B2 above stays plain white). */}
-      <div aria-hidden className="pointer-events-none absolute inset-0 z-0">
+          behind the heading. Scoped to B3 (B2 above stays plain white).
+
+          Container z-index is -10 so the line-art paints UNDERNEATH the
+          in-flow pain-point cards above (which live in the same
+          `z-30` page wrapper). The right harbour-town is sized large
+          enough (`w-[42%] max-w-160`) that, anchored at the bottom-right
+          of B3, it overflows upward into the pain-cards row and reads as
+          a backdrop behind those statements rather than a decoration
+          floating in front of them. The heading stays on top via
+          GridSection's `z-index: 1`. */}
+      <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">
         <div className="absolute top-0 left-0 w-[22%] max-w-76 aspect-1378/1260">
           <Image
             src="/businessB3/left.png"
@@ -46,12 +55,12 @@ export default function SolutionShowcase() {
             className="object-contain object-top-left"
           />
         </div>
-        <div className="absolute -bottom-12.5 right-0 w-[32%] max-w-120 aspect-1604/1296">
+        <div className="absolute -bottom-12.5 right-0 w-[42%] max-w-160 aspect-1604/1296">
           <Image
             src="/businessB3/right.png"
             alt=""
             fill
-            sizes="32vw"
+            sizes="42vw"
             className="object-contain object-bottom-right"
           />
         </div>

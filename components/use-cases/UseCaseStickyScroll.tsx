@@ -144,6 +144,7 @@ export default function UseCaseStickyScroll({ lightTheme = false, excludeSection
         return (
           <div
             key={feature.id}
+            id={feature.id}
             className="relative w-full"
             style={{
               backgroundColor: rowBg,

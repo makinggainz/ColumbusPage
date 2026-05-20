@@ -8,38 +8,34 @@ export default function ChatSection() {
       className="relative w-full overflow-hidden flex flex-col items-center pt-24 md:pt-40 lg:pt-[280px]"
       style={{ backgroundColor: "var(--ent-bg-dark-alt)" }}
     >
-      {/* Background image — matches hero */}
+      {/* Background image — same photo + crop as BusinessHero
+          (center bottom, cover, no filter). */}
       <div
-        className="absolute inset-0"
+        className="absolute inset-0 pointer-events-none"
         style={{
-          backgroundImage: "url(/probackground.png)",
-          backgroundPosition: "top center",
+          backgroundImage: "url(/ColumBuzHero.png)",
+          backgroundPosition: "center bottom",
           backgroundSize: "cover",
           backgroundRepeat: "no-repeat",
-          filter: "grayscale(1) blur(6px)",
-          transform: "scale(1.02)",
           zIndex: 0,
         }}
       />
-      {/* Blue tint — matches hero */}
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{ backgroundColor: "var(--ent-blue-tint)", mixBlendMode: "color", opacity: 0.5, zIndex: 0 }}
-      />
-      {/* Light scrim — keeps the blurred photo faint so dark text reads,
-          mirroring the BusinessHero treatment. */}
+      {/* Dark scrim — same gradient as BusinessHero: black at the top for
+          text contrast, fading to transparent before the bottom edge so
+          the photo meets the monitor band cleanly. */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
-          background: "linear-gradient(180deg, rgba(255,255,255,0.72) 0%, rgba(255,255,255,0.45) 50%, rgba(255,255,255,0.62) 100%)",
-          zIndex: 1,
+          background:
+            "linear-gradient(to bottom, rgba(0,0,0,0.42) 0%, rgba(0,0,0,0.28) 38%, rgba(0,0,0,0.12) 62%, rgba(0,0,0,0) 86%)",
+          zIndex: 0,
         }}
         aria-hidden
       />
 
       {/* Heading */}
       <h2
-        className="relative z-10 font-medium text-center text-[28px] md:text-[36px] lg:text-[48px] leading-[1.1] tracking-[-0.02em] text-ink px-6"
+        className="relative z-10 font-medium text-center text-[28px] md:text-[36px] lg:text-[48px] leading-[1.1] tracking-[-0.02em] text-white px-6"
       >
         Chat with us now about Columbus Pro
       </h2>

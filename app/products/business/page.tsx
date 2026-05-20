@@ -18,6 +18,8 @@ import type { IndustryId } from "@/components/use-cases/industry/types";
 import ProductBanner from "@/components/business/ProductBanner";
 import CapabilitiesGrid from "@/components/business/CapabilitiesGrid";
 import FAQSection from "@/components/business/FAQSection";
+import BusinessFeatureIndex from "@/components/business/BusinessFeatureIndex";
+import SuperFeatureSection from "@/components/business/SuperFeatureSection";
 
 /* The reduced industry set shown in the "Tell us where you work"
    picker (and its sticky sub-navbar), ordered as the design's 3×2 grid.
@@ -44,6 +46,7 @@ export default function BusinessPage() {
   return (
     <main className="ent-scope">
       <style>{FRAME_NO_BORDER_CSS}</style>
+      <BusinessFeatureIndex />
       {/* MistxNav is rendered as a direct child of <main> so its
           position:sticky has the full page as its containing block.
           Wrapping it in a navbar-height <section> would trap the sticky
@@ -67,14 +70,14 @@ export default function BusinessPage() {
               carries its own line-art (a hand-drawn galleon on the left, a
               harbour town on the right); see
               components/business/SolutionShowcase.tsx. */}
-          <section className="relative">
+          <section id="problem" className="relative">
             <ProblemCards />
           </section>
           {/* SolutionShowcase is the title/intro, ComparisonSection is its
               content directly below. The gap between them is a
               heading→content space (set on SolutionShowcase's header
               padding), not a section gap. */}
-          <section className="relative">
+          <section id="solution" className="relative">
             <SolutionShowcase />
             <ComparisonSection />
           </section>
@@ -83,7 +86,7 @@ export default function BusinessPage() {
       <section className="relative">
         <ProductBanner />
       </section>
-      <section className="relative">
+      <section id="capabilities" className="relative">
         <CapabilitiesGrid />
       </section>
       <section className="relative">
@@ -97,6 +100,19 @@ export default function BusinessPage() {
         <IndustryProvider>
           <IndustryStickyNavbar lightTheme topOffset={84} industries={BUSINESS_INDUSTRIES} />
           <IndustrySelector lightTheme rounded industries={BUSINESS_INDUSTRIES} />
+          <SuperFeatureSection
+            id="super-model"
+            title="Super-feature title"
+            subtitle="One-line description of what this super feature does and why it matters."
+            backgroundImage="/ColumBuzHero.png"
+            demoImage="/ColumbusHomeimg.png"
+            demoAlt="Product demo"
+            subFeatures={[
+              { title: "Sub-feature one", description: "Short description of the first sub-feature in this super section." },
+              { title: "Sub-feature two", description: "Short description of the second sub-feature in this super section." },
+              { title: "Sub-feature three", description: "Short description of the third sub-feature in this super section." },
+            ]}
+          />
           <UseCaseStickyScroll lightTheme roundedTop disableSticky />
         </IndustryProvider>
         <section className="relative">

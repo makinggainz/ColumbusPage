@@ -147,7 +147,11 @@ export default function BusinessHero() {
         <div
           style={{
             width: "100%",
-            maxWidth: 1100,
+            // Matches the site content bounds (.ent-content-bounds → 1287px),
+            // the same width used by CapabilitiesGrid and other ent-scope
+            // sections below. The 20px gutters on the wrapper above keep the
+            // window from kissing the viewport edge on narrower screens.
+            maxWidth: 1287,
             // Concentric with the window: 20px window radius + 1.5px ring.
             borderRadius: 21.5,
             padding: 1.5,
