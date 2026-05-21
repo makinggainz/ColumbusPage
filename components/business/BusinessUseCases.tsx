@@ -92,12 +92,12 @@ type IndustryBackdrops = {
    chatHero          → sky + clouds with roof peeks → res-bg-1 @ 40%
    chatSub[0]        → suburban houses landscape    → res-bg-2
    chatSub[1]        → dense city aerial (Madrid)   → res-bg-3
-   chatSub[2]        → modern apts, NO skyline      → res-bg-7
+   chatSub[2]        → apts + distant skyline       → res-bg-5
    chatSub[3]        → hillside houses + city       → res-bg-4
    dataCatalogueHero → European tree-lined street   → res-bg-6
                        (consumed as the Agentic Research hero — see the
                        "Backdrop shifted down" comment below)
-   agenticResearchHero → apts + distant skyline     → res-bg-5
+   agenticResearchHero → modern apts, NO skyline    → res-bg-7
                          (consumed as the Dashboard hero)
    dashboardHero     → unused (slot chain shifted up). */
 const RESIDENTIAL_BACKDROPS: IndustryBackdrops = {
@@ -109,11 +109,11 @@ const RESIDENTIAL_BACKDROPS: IndustryBackdrops = {
   chatSub: [
     "/Residential/res-bg-2.png",
     "/Residential/res-bg-3.png",
-    "/Residential/res-bg-7.png",
+    "/Residential/res-bg-5.png",
     "/Residential/res-bg-4.png",
   ],
   dataCatalogueHero: "/Residential/res-bg-6.png",
-  agenticResearchHero: "/Residential/res-bg-5.png",
+  agenticResearchHero: "/Residential/res-bg-7.png",
   dashboardHero: "/Residential/res-bg-1.png",
 };
 
