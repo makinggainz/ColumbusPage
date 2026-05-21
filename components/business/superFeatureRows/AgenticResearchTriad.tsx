@@ -276,52 +276,80 @@ function ComplianceGraphic() {
   );
 }
 
-const ITEMS: TriadItem[] = [
-  {
-    title: "Agentic Research Reports",
-    description:
-      "Hand Columbus your industry project and grab new sites or other industry-relevant findings, review-ready, while you focus on the rest.",
-    icon: (
-      <IconChip>
-        {/* clipboard / report */}
-        <rect x="8" y="3" width="8" height="4" rx="1" />
-        <path d="M16 5h2a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h2" />
-        <path d="M9 12h6" />
-        <path d="M9 16h4" />
-      </IconChip>
-    ),
-    graphic: <ReportsGraphic />,
-  },
-  {
-    title: "Agentic Audits and due diligence",
-    description:
-      "Need to quickly audit sites or targets? Columbus can do your due diligence, offer a new perspective, and give new insights.",
-    icon: (
-      <IconChip>
-        {/* magnifier with check — audit */}
-        <circle cx="11" cy="11" r="7" />
-        <path d="m21 21-4.3-4.3" />
-        <path d="m8.5 11 2 2 3.5-3.5" />
-      </IconChip>
-    ),
-    graphic: <AuditsGraphic />,
-  },
-  {
-    title: "Audit Regulatory compliance",
-    description:
-      "Audits let you check whether your site complies with regulations — fast, transparent, and ready to share.",
-    icon: (
-      <IconChip>
-        {/* shield with check — compliance */}
-        <path d="M12 3 4 6v6c0 4.4 3.4 8.4 8 9 4.6-.6 8-4.6 8-9V6z" />
-        <path d="m9 12 2 2 4-4" />
-      </IconChip>
-    ),
-    graphic: <ComplianceGraphic />,
-  },
-];
+/* Optional override for one of the three triad slots. Only `title` and
+   `description` vary across industries — the icon and graphic stay
+   fixed per slot since they brand the triad. */
+export type TriadOverride = {
+  title?: string;
+  description?: string;
+};
 
-export default function AgenticResearchTriad() {
+export type AgenticResearchTriadProps = {
+  reports?: TriadOverride;
+  audits?: TriadOverride;
+  compliance?: TriadOverride;
+};
+
+const DEFAULT_REPORTS = {
+  title: "Agentic Research Reports",
+  description:
+    "Hand Columbus your industry project and grab new sites or other industry-relevant findings, review-ready, while you focus on the rest.",
+};
+const DEFAULT_AUDITS = {
+  title: "Agentic Audits and due diligence",
+  description:
+    "Need to quickly audit sites or targets? Columbus can do your due diligence, offer a new perspective, and give new insights.",
+};
+const DEFAULT_COMPLIANCE = {
+  title: "Audit Regulatory compliance",
+  description:
+    "Audits let you check whether your site complies with regulations — fast, transparent, and ready to share.",
+};
+
+export default function AgenticResearchTriad({
+  reports = {},
+  audits = {},
+  compliance = {},
+}: AgenticResearchTriadProps = {}) {
+  const items: TriadItem[] = [
+    {
+      title: reports.title ?? DEFAULT_REPORTS.title,
+      description: reports.description ?? DEFAULT_REPORTS.description,
+      icon: (
+        <IconChip>
+          <rect x="8" y="3" width="8" height="4" rx="1" />
+          <path d="M16 5h2a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h2" />
+          <path d="M9 12h6" />
+          <path d="M9 16h4" />
+        </IconChip>
+      ),
+      graphic: <ReportsGraphic />,
+    },
+    {
+      title: audits.title ?? DEFAULT_AUDITS.title,
+      description: audits.description ?? DEFAULT_AUDITS.description,
+      icon: (
+        <IconChip>
+          <circle cx="11" cy="11" r="7" />
+          <path d="m21 21-4.3-4.3" />
+          <path d="m8.5 11 2 2 3.5-3.5" />
+        </IconChip>
+      ),
+      graphic: <AuditsGraphic />,
+    },
+    {
+      title: compliance.title ?? DEFAULT_COMPLIANCE.title,
+      description: compliance.description ?? DEFAULT_COMPLIANCE.description,
+      icon: (
+        <IconChip>
+          <path d="M12 3 4 6v6c0 4.4 3.4 8.4 8 9 4.6-.6 8-4.6 8-9V6z" />
+          <path d="m9 12 2 2 4-4" />
+        </IconChip>
+      ),
+      graphic: <ComplianceGraphic />,
+    },
+  ];
+
   return (
     /* Negative top margin pulls the triad up toward the hero above.
        SuperFeatureSection sets `mt-20 lg:mt-32` (80/128px) on every
@@ -332,7 +360,7 @@ export default function AgenticResearchTriad() {
       className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 items-stretch"
       style={{ marginTop: "clamp(-80px, -6vw, -32px)" }}
     >
-      {ITEMS.map((item) => (
+      {items.map((item) => (
         <TriadCard key={item.title} item={item} />
       ))}
     </div>

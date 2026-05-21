@@ -13,7 +13,7 @@ import ColumbusMark from "./ColumbusMark";
 const FONT =
   "Axiforma, 'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif";
 
-const REASONING_BULLETS = [
+const DEFAULT_REASONING_BULLETS = [
   "Spike velocity in geo-tagged Instagram and TikTok posts within 3-block radii",
   "Demographic profile of posters via image analysis (age cohort, style cues, income proxies)",
   "Type of activity captured (natural wine bars, specialty coffee, vintage retail, art openings vs. loitering)",
@@ -23,10 +23,23 @@ const REASONING_BULLETS = [
   "Replacement of security gates and roll-down shutters with glass storefronts",
 ];
 
-const PROMPT_TEXT =
+const DEFAULT_PROMPT_TEXT =
   "What could be the next Williamsburg or Bushwick? Build me a 'Pre-Vibe Shift Index' for every census tract in Brooklyn, Queens, and the Bronx. Score each tract on the early signals that a neighborhood is 12–24 months from a meaningful retail rent and residential value re-rating";
 
-export default function SurveyEarthRow() {
+const DEFAULT_MAP_ALT =
+  "NYC pre-vibe shift choropleth across Brooklyn, Queens, and the Bronx";
+
+export type SurveyEarthRowProps = {
+  reasoningBullets?: string[];
+  promptText?: string;
+  mapAlt?: string;
+};
+
+export default function SurveyEarthRow({
+  reasoningBullets = DEFAULT_REASONING_BULLETS,
+  promptText = DEFAULT_PROMPT_TEXT,
+  mapAlt = DEFAULT_MAP_ALT,
+}: SurveyEarthRowProps = {}) {
   return (
     <div style={{ fontFamily: FONT }}>
       <RowHeader
@@ -44,13 +57,6 @@ export default function SurveyEarthRow() {
         }
       />
 
-      {/* Overlapping 12-col grid: the card stack occupies cols 1–7 and the
-          map occupies cols 6–12, so they overlap in cols 6–7. z-index lifts
-          the cards above the map so the map appears tucked under them. */}
-      {/* Overlapping 12-col grid: the card stack occupies cols 1–7 and the
-          map occupies cols 6–12, so they overlap in cols 6–7. z-index lifts
-          the cards above the map so the map appears tucked under them.
-          alignItems: stretch lets the left column match the map's height. */}
       <div
         className="hidden lg:grid"
         style={{
@@ -59,11 +65,6 @@ export default function SurveyEarthRow() {
           alignItems: "stretch",
         }}
       >
-        {/* Left — investigating card grows to fill the row height (so it
-            matches the map on the right); the prompt card overlaps its
-            bottom edge as a floating overlay. Cols 1–5 (~42% of the row)
-            give the card stack a bit more breathing room while the map
-            still extends well under it. */}
         <div
           style={{
             gridColumn: "1 / 6",
@@ -76,7 +77,7 @@ export default function SurveyEarthRow() {
           }}
         >
           <div style={{ flex: 1, display: "flex" }}>
-            <InvestigatingCard />
+            <InvestigatingCard bullets={reasoningBullets} />
           </div>
           <div
             style={{
@@ -85,13 +86,10 @@ export default function SurveyEarthRow() {
               zIndex: 2,
             }}
           >
-            <PromptCard />
+            <PromptCard text={promptText} />
           </div>
         </div>
 
-        {/* Right — choropleth map, widened to cols 3–12 (~83%) so it
-            extends well to the left and the card stack appears to float
-            on top of it. */}
         <div
           style={{
             gridColumn: "3 / 13",
@@ -101,7 +99,7 @@ export default function SurveyEarthRow() {
         >
           <MapThumb
             src="/business/SuperModelback.png"
-            alt="NYC pre-vibe shift choropleth across Brooklyn, Queens, and the Bronx"
+            alt={mapAlt}
             aspectRatio="5 / 3"
             radius="var(--ent-radius-2xl)"
             shadow={false}
@@ -112,14 +110,14 @@ export default function SurveyEarthRow() {
       {/* Mobile / tablet — fall back to a plain stack with no overlap. */}
       <div className="lg:hidden flex flex-col gap-6">
         <div className="relative">
-          <InvestigatingCard />
+          <InvestigatingCard bullets={reasoningBullets} />
           <div style={{ position: "relative", marginTop: -24, zIndex: 2 }}>
-            <PromptCard />
+            <PromptCard text={promptText} />
           </div>
         </div>
         <MapThumb
           src="/business/SuperModelback.png"
-          alt="NYC pre-vibe shift choropleth across Brooklyn, Queens, and the Bronx"
+          alt={mapAlt}
           aspectRatio="4 / 3"
           radius="var(--ent-radius-2xl)"
           shadow={false}
@@ -129,7 +127,7 @@ export default function SurveyEarthRow() {
   );
 }
 
-function InvestigatingCard() {
+function InvestigatingCard({ bullets }: { bullets: string[] }) {
   return (
     <div
       style={{
@@ -175,7 +173,7 @@ function InvestigatingCard() {
           margin: 0,
         }}
       >
-        {REASONING_BULLETS.map((b) => (
+        {bullets.map((b) => (
           <li key={b}>{b}</li>
         ))}
       </ul>
@@ -183,7 +181,7 @@ function InvestigatingCard() {
   );
 }
 
-function PromptCard() {
+function PromptCard({ text }: { text: string }) {
   return (
     <div
       style={{
@@ -206,7 +204,7 @@ function PromptCard() {
           letterSpacing: "-0.005em",
         }}
       >
-        {PROMPT_TEXT}
+        {text}
       </p>
       <button
         type="button"

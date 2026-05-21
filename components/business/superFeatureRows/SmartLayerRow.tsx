@@ -14,7 +14,41 @@ import ColumbusMark from "./ColumbusMark";
 const FONT =
   "Axiforma, 'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif";
 
-export default function SmartLayerRow() {
+export type SmartLayerFeature = {
+  title: string;
+  description: string;
+};
+
+export type SmartLayerRowProps = {
+  layerName?: string;
+  layerSubtitle?: string;
+  layerDescription?: string;
+  features?: SmartLayerFeature[];
+  mapAlt?: string;
+  promptText?: string;
+};
+
+const DEFAULT_LAYER_NAME = "Value-Add Rent Lift Probability";
+const DEFAULT_LAYER_SUBTITLE = "Subtitle information maybe";
+const DEFAULT_LAYER_DESCRIPTION =
+  "AI-generated layer scoring the probability of achieving 25%+ rent lift within 24 months of renovation.";
+const DEFAULT_FEATURES: SmartLayerFeature[] = [
+  { title: "Generated from 20+ data sources", description: "Historical electricity outage records resolved to the individual distribution feeder, harmonized across major utilities" },
+  { title: "Fills critical data gaps", description: "Triple-checked for completeness and consistency" },
+  { title: "property level scoring", description: "Fresh data, continuously monitored and maintained" },
+];
+const DEFAULT_MAP_ALT = "Nashville smart layer heatmap";
+const DEFAULT_PROMPT_TEXT =
+  "Create a smart layer called 'Value-Add Rent Lift Probability' for every multifamily property of 100+ units built between 1975 and 2000 across the Nashville MSA. Score each property on the probability of supporting a 25%+ rent lift within 24 months of renovation";
+
+export default function SmartLayerRow({
+  layerName = DEFAULT_LAYER_NAME,
+  layerSubtitle = DEFAULT_LAYER_SUBTITLE,
+  layerDescription = DEFAULT_LAYER_DESCRIPTION,
+  features = DEFAULT_FEATURES,
+  mapAlt = DEFAULT_MAP_ALT,
+  promptText = DEFAULT_PROMPT_TEXT,
+}: SmartLayerRowProps = {}) {
   return (
     <div style={{ fontFamily: FONT }}>
       <RowHeader
@@ -58,12 +92,17 @@ export default function SmartLayerRow() {
             }}
           >
             <div className="lg:col-span-4" style={{ paddingRight: "clamp(0px, 1.5vw, 24px)" }}>
-              <SmartLayerOverlay />
+              <SmartLayerOverlay
+                layerName={layerName}
+                layerSubtitle={layerSubtitle}
+                layerDescription={layerDescription}
+                features={features}
+              />
             </div>
             <div className="lg:col-span-8">
               <MapThumb
                 src="/business/becomeartistMap.png"
-                alt="Nashville smart layer heatmap"
+                alt={mapAlt}
                 aspectRatio="4 / 3"
                 radius="var(--ent-radius-card)"
                 shadow={false}
@@ -71,9 +110,7 @@ export default function SmartLayerRow() {
             </div>
           </div>
 
-          <PromptBar
-            text="Create a smart layer called 'Value-Add Rent Lift Probability' for every multifamily property of 100+ units built between 1975 and 2000 across the Nashville MSA. Score each property on the probability of supporting a 25%+ rent lift within 24 months of renovation"
-          />
+          <PromptBar text={promptText} />
         </div>
       </div>
     </div>
@@ -137,7 +174,17 @@ function Sidebar() {
   );
 }
 
-function SmartLayerOverlay() {
+function SmartLayerOverlay({
+  layerName,
+  layerSubtitle,
+  layerDescription,
+  features,
+}: {
+  layerName: string;
+  layerSubtitle: string;
+  layerDescription: string;
+  features: SmartLayerFeature[];
+}) {
   return (
     <div
       style={{
@@ -169,8 +216,7 @@ function SmartLayerOverlay() {
           letterSpacing: "-0.005em",
         }}
       >
-        AI-generated layer scoring the probability of achieving 25%+ rent lift
-        within 24 months of renovation.
+        {layerDescription}
       </p>
 
       <div
@@ -193,7 +239,7 @@ function SmartLayerOverlay() {
                 letterSpacing: "-0.01em",
               }}
             >
-              Value-Add Rent Lift Probability
+              {layerName}
             </div>
             <div
               style={{
@@ -203,7 +249,7 @@ function SmartLayerOverlay() {
                 letterSpacing: "-0.005em",
               }}
             >
-              Subtitle information maybe
+              {layerSubtitle}
             </div>
           </div>
           <SmartLayerPill />
@@ -219,18 +265,9 @@ function SmartLayerOverlay() {
             gap: 12,
           }}
         >
-          <FeatureRow
-            title="Generated from 20+ data sources"
-            description="Historical electricity outage records resolved to the individual distribution feeder, harmonized across major utilities"
-          />
-          <FeatureRow
-            title="Fills critical data gaps"
-            description="Triple-checked for completeness and consistency"
-          />
-          <FeatureRow
-            title="property level scoring"
-            description="Fresh data, continuously monitored and maintained"
-          />
+          {features.map((f, i) => (
+            <FeatureRow key={i} title={f.title} description={f.description} />
+          ))}
         </ul>
       </div>
     </div>

@@ -50,6 +50,14 @@ export type SuperFeatureSectionProps = {
   subtitle?: React.ReactNode;
   /* Background image shared by the main frame and sub-feature cards. */
   backgroundImage: string;
+  /* CSS background-position for the main frame's backdrop. Defaults to
+     "center" so existing sections are unchanged. */
+  backgroundPosition?: string;
+  /* CSS background-size for the main frame's backdrop. Defaults to
+     "cover". Override to zoom into a region of the photo — e.g.
+     "auto 400%" pairs with `backgroundPosition: "center top"` to show
+     only the very top slice of a tall image. */
+  backgroundSize?: string;
   /* Optional override applied to every sub-feature card's backdrop. Each
      sub-feature may still override this individually via its own
      `backdropImage`. Falls back to `backgroundImage` when omitted. */
@@ -80,6 +88,8 @@ export default function SuperFeatureSection({
   title,
   subtitle,
   backgroundImage,
+  backgroundPosition = "center",
+  backgroundSize = "cover",
   subFeatureBackdrop,
   demoImage,
   demoAlt = "",
@@ -146,7 +156,7 @@ export default function SuperFeatureSection({
           className="relative overflow-hidden"
           style={{ borderRadius: "var(--ent-radius-2xl)" }}
         >
-          <SkyBackdrop image={backgroundImage} scrim={scrim} />
+          <SkyBackdrop image={backgroundImage} scrim={scrim} position={backgroundPosition} size={backgroundSize} />
           <div className="relative z-10 flex justify-center" style={{ padding: "clamp(20px, 3vw, 40px)" }}>
             {demoVisual ? (
               demoVisual
@@ -256,10 +266,14 @@ function SkyBackdrop({
   image,
   scrim = true,
   lockToSquare = false,
+  position = "center",
+  size = "cover",
 }: {
   image: string;
   scrim?: boolean;
   lockToSquare?: boolean;
+  position?: string;
+  size?: string;
 }) {
   const isGradient = image.includes("gradient(");
   /* When `lockToSquare` is set, the image + scrim render inside a 1:1
@@ -272,8 +286,8 @@ function SkyBackdrop({
       className="absolute inset-0 pointer-events-none"
       style={{
         backgroundImage: isGradient ? image : `url(${image})`,
-        backgroundPosition: "center",
-        backgroundSize: "cover",
+        backgroundPosition: position,
+        backgroundSize: size,
         backgroundRepeat: "no-repeat",
         zIndex: 0,
       }}

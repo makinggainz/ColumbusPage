@@ -6,17 +6,25 @@
    by a hairline divider. Used inside the "Drop Any File" super-feature row
    as a floating overlay on top of a map backdrop. */
 
-const FILES = [
+const DEFAULT_FILES = [
   "Portfolio_RentRoll_2011_Master.xlsx",
   "Portfolio_RentRoll_2011_Master.xlsx",
   "Portfolio_RentRoll_2011_Master.xlsx",
   "Portfolio_RentRoll_2011_Master.xlsx",
 ];
 
-const FOLLOWUP =
+const DEFAULT_FOLLOWUP =
   "now overlay our nearest 2 competitors, and their portfolios. I want to see a easy visual of the comparison";
 
-export default function HarmonizedFilesCard() {
+export type HarmonizedFilesCardProps = {
+  files?: string[];
+  followUp?: string;
+};
+
+export default function HarmonizedFilesCard({
+  files = DEFAULT_FILES,
+  followUp = DEFAULT_FOLLOWUP,
+}: HarmonizedFilesCardProps = {}) {
   return (
     <div
       style={{
@@ -73,7 +81,7 @@ export default function HarmonizedFilesCard() {
             overflow: "hidden",
           }}
         >
-          {FILES.map((name, i) => (
+          {files.map((name, i) => (
             <li
               key={`${name}-${i}`}
               style={{
@@ -131,7 +139,7 @@ export default function HarmonizedFilesCard() {
             letterSpacing: "-0.005em",
           }}
         >
-          {FOLLOWUP}
+          {followUp}
         </p>
         <button
           type="button"

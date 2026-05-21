@@ -7,7 +7,48 @@
    internal weighing steps. The list fades to transparent at the bottom so
    it reads as a stream that continues beyond the card. */
 
-export default function ColumbusReasoningCard() {
+export type ReasoningItem = {
+  /* Optional bold prefix shown before the body text (e.g. "Safety reality
+     vs. official stats:"). When omitted the body renders without a label. */
+  label?: string;
+  body: React.ReactNode;
+};
+
+const DEFAULT_PROMPT =
+  "A broker has pitched a €50M mixed-use building in Milan’s Porta Nuova periphery. Critically evaluate this acquisition. Don’t just summarize the IM — challenge it. Tell me how the streets are and what people say about this neighborhood.";
+
+const DEFAULT_ITEMS: ReasoningItem[] = [
+  {
+    label: "Safety reality vs. official stats:",
+    body: "Police data says “crime average,” but Columbus’s human-factor model detects broken-window patterns, aggressive loitering signatures at night, and near-zero female pedestrians after 21:00 within a 200m radius. Score: High Perceived Risk.",
+  },
+  {
+    label: "Activity validation vs. broker narrative:",
+    body: "Broker calls it a “bustling retail corridor.” Columbus footfall analysis shows heavy throughput but 92% are transit commuters passing through Garibaldi station — dwell time near zero, retail conversion negligible. Score: Low Retail Viability.",
+  },
+  {
+    label: "Tenant credit quality",
+    body: "of the existing rent roll vs. industry distress signals",
+  },
+  {
+    label: "WALT (weighted average lease term)",
+    body: "vs. submarket lease expiry wall",
+  },
+  {
+    label: "Comparable transactions",
+    body: "in past 18 months — both closed and busted deals",
+  },
+];
+
+export type ColumbusReasoningCardProps = {
+  prompt?: string;
+  items?: ReasoningItem[];
+};
+
+export default function ColumbusReasoningCard({
+  prompt = DEFAULT_PROMPT,
+  items = DEFAULT_ITEMS,
+}: ColumbusReasoningCardProps = {}) {
   return (
     <div
       className="mx-auto w-full"
@@ -36,10 +77,7 @@ export default function ColumbusReasoningCard() {
             fontWeight: 500,
           }}
         >
-          A broker has pitched a €50M mixed-use building in Milan&rsquo;s Porta
-          Nuova periphery. Critically evaluate this acquisition. Don&rsquo;t
-          just summarize the IM — challenge it. Tell me how the streets are
-          and what people say about this neighborhood.
+          {prompt}
         </div>
       </div>
 
@@ -88,42 +126,16 @@ export default function ColumbusReasoningCard() {
             listStyleType: "disc",
           }}
         >
-          <li>
-            <strong style={{ fontWeight: 600, color: "#7C8591" }}>
-              Safety reality vs. official stats:
-            </strong>{" "}
-            Police data says &ldquo;crime average,&rdquo; but Columbus&rsquo;s
-            human-factor model detects broken-window patterns, aggressive
-            loitering signatures at night, and near-zero female pedestrians
-            after 21:00 within a 200m radius. Score: High Perceived Risk.
-          </li>
-          <li>
-            <strong style={{ fontWeight: 600, color: "#7C8591" }}>
-              Activity validation vs. broker narrative:
-            </strong>{" "}
-            Broker calls it a &ldquo;bustling retail corridor.&rdquo; Columbus
-            footfall analysis shows heavy throughput but 92% are transit
-            commuters passing through Garibaldi station — dwell time near
-            zero, retail conversion negligible. Score: Low Retail Viability.
-          </li>
-          <li>
-            <strong style={{ fontWeight: 600, color: "#7C8591" }}>
-              Tenant credit quality
-            </strong>{" "}
-            of the existing rent roll vs. industry distress signals
-          </li>
-          <li>
-            <strong style={{ fontWeight: 600, color: "#7C8591" }}>
-              WALT (weighted average lease term)
-            </strong>{" "}
-            vs. submarket lease expiry wall
-          </li>
-          <li>
-            <strong style={{ fontWeight: 600, color: "#7C8591" }}>
-              Comparable transactions
-            </strong>{" "}
-            in past 18 months — both closed and busted deals
-          </li>
+          {items.map((item, i) => (
+            <li key={i}>
+              {item.label ? (
+                <>
+                  <strong style={{ fontWeight: 600, color: "#7C8591" }}>{item.label}</strong>{" "}
+                </>
+              ) : null}
+              {item.body}
+            </li>
+          ))}
         </ul>
       </div>
     </div>

@@ -11,13 +11,13 @@
      and tracking pull from --ent-text-* and --ent-tracking-* tokens.
    • Spacing on the 4px grid via --ent-space-* tokens. */
 
-type HistoryRow = {
+export type HistoryRow = {
   title: string;
   body: string;
   age: string;
 };
 
-const ROWS: HistoryRow[] = [
+const DEFAULT_ROWS: HistoryRow[] = [
   {
     title: "Minneapolis Real estate property vacant lots",
     body: "In this chat you asked me to display all vacant lots with independent owners, and by utilities.",
@@ -53,7 +53,13 @@ const ROWS: HistoryRow[] = [
   },
 ];
 
-export default function DashboardListMockup() {
+export type DashboardListMockupProps = {
+  rows?: HistoryRow[];
+};
+
+export default function DashboardListMockup({
+  rows = DEFAULT_ROWS,
+}: DashboardListMockupProps = {}) {
   return (
     <div
       className="mx-auto"
@@ -80,7 +86,7 @@ export default function DashboardListMockup() {
         <TopBar />
         <Tabs />
         <Controls />
-        <List />
+        <List rows={rows} />
         <div style={{ flex: 1 }} />
       </div>
     </div>
@@ -366,7 +372,7 @@ function Controls() {
   );
 }
 
-function List() {
+function List({ rows }: { rows: HistoryRow[] }) {
   return (
     <div
       style={{
@@ -375,8 +381,8 @@ function List() {
         flexDirection: "column",
       }}
     >
-      {ROWS.map((row, i) => (
-        <ListRow key={row.title + i} row={row} last={i === ROWS.length - 1} />
+      {rows.map((row, i) => (
+        <ListRow key={row.title + i} row={row} last={i === rows.length - 1} />
       ))}
     </div>
   );

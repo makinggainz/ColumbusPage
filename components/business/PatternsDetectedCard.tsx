@@ -5,25 +5,38 @@
    Report" footer. Used inside the "See what others cant" super-feature
    row as a floating overlay on top of a map backdrop. */
 
-type Pattern = {
+export type Pattern = {
   n: number;
   title: string;
   properties: string;
   roi: string;
 };
 
-const PATTERNS: Pattern[] = [
+const DEFAULT_PATTERNS: Pattern[] = [
   { n: 1, title: "High ROI Near Transit Coorridors", properties: "342 properties", roi: "Avg ROI: 28%" },
   { n: 2, title: "10-20% Below Median Priced Buys", properties: "342 properties", roi: "Avg ROI: 24%" },
   { n: 3, title: "Pre-1980 Homes, Modern Updates", properties: "342 properties", roi: "Avg ROI: 28%" },
   { n: 4, title: "High ROI Near Transit Coorridors", properties: "342 properties", roi: "Avg ROI: 28%" },
 ];
 
+const DEFAULT_HEADING = "4 patterns detected";
+const DEFAULT_AREA = "Accross the Manhatan area [DATE]";
+
 /* Numbered badge colour ramps from bright red (1) to near-black (4), so the
    ranked list reads like a heat scale at a glance. */
 const BADGE_COLORS = ["#DC2626", "#7F1D1D", "#4A0A0A", "#1F0303"];
 
-export default function PatternsDetectedCard() {
+export type PatternsDetectedCardProps = {
+  heading?: string;
+  area?: string;
+  patterns?: Pattern[];
+};
+
+export default function PatternsDetectedCard({
+  heading = DEFAULT_HEADING,
+  area = DEFAULT_AREA,
+  patterns = DEFAULT_PATTERNS,
+}: PatternsDetectedCardProps = {}) {
   return (
     <div
       style={{
@@ -47,7 +60,7 @@ export default function PatternsDetectedCard() {
           margin: 0,
         }}
       >
-        4 patterns detected
+        {heading}
       </h4>
       <p
         style={{
@@ -57,11 +70,11 @@ export default function PatternsDetectedCard() {
           letterSpacing: "-0.005em",
         }}
       >
-        Accross the Manhatan area [DATE]
+        {area}
       </p>
 
       <ul style={{ listStyle: "none", padding: 0, margin: "clamp(18px, 2.2vw, 26px) 0 0", display: "flex", flexDirection: "column", gap: 12 }}>
-        {PATTERNS.map((p, i) => (
+        {patterns.map((p, i) => (
           <li
             key={`${p.n}-${p.title}`}
             style={{

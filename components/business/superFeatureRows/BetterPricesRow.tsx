@@ -12,7 +12,49 @@ import ComparisonCard from "./ComparisonCard";
 const FONT =
   "Axiforma, 'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif";
 
-export default function BetterPricesRow() {
+export type ComparisonFeature = {
+  title: string;
+  description: string;
+};
+
+export type BetterPricesRowProps = {
+  columbusTitle?: string;
+  columbusPrice?: string;
+  columbusMapAlt?: string;
+  columbusFeatures?: ComparisonFeature[];
+  competitorTitle?: string;
+  competitorPrice?: string;
+  competitorMapAlt?: string;
+  competitorFeatures?: ComparisonFeature[];
+};
+
+const DEFAULT_COLUMBUS_TITLE = "Power grid outage history with feeder-circuit-level granularity";
+const DEFAULT_COLUMBUS_PRICE = "$2,400 / year";
+const DEFAULT_COLUMBUS_MAP_ALT = "Power grid outage layer preview";
+const DEFAULT_COLUMBUS_FEATURES: ComparisonFeature[] = [
+  { title: "55,010 rows", description: "Historical outage records resolved to the individual distribution feeder, harmonized across major utilities" },
+  { title: "Verified accuracy", description: "Triple-checked for completeness and consistency before every release" },
+  { title: "Updated quarterly", description: "Fresh data, continuously monitored and maintained" },
+];
+const DEFAULT_COMPETITOR_TITLE = "Power grid outages, county-level aggregates only";
+const DEFAULT_COMPETITOR_PRICE = "$18,000 / year";
+const DEFAULT_COMPETITOR_MAP_ALT = "Competitor data layer preview";
+const DEFAULT_COMPETITOR_FEATURES: ComparisonFeature[] = [
+  { title: "8,200 rows", description: "County-level aggregated outage counts pulled from a single utility's public reports" },
+  { title: "Self-reported data", description: "Provided directly by utilities, not independently audited or cross-checked" },
+  { title: "Updated annually", description: "Refreshed once a year, often months behind real-world conditions" },
+];
+
+export default function BetterPricesRow({
+  columbusTitle = DEFAULT_COLUMBUS_TITLE,
+  columbusPrice = DEFAULT_COLUMBUS_PRICE,
+  columbusMapAlt = DEFAULT_COLUMBUS_MAP_ALT,
+  columbusFeatures = DEFAULT_COLUMBUS_FEATURES,
+  competitorTitle = DEFAULT_COMPETITOR_TITLE,
+  competitorPrice = DEFAULT_COMPETITOR_PRICE,
+  competitorMapAlt = DEFAULT_COMPETITOR_MAP_ALT,
+  competitorFeatures = DEFAULT_COMPETITOR_FEATURES,
+}: BetterPricesRowProps = {}) {
   return (
     <div
       className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start"
@@ -56,10 +98,10 @@ export default function BetterPricesRow() {
         <ComparisonCard
           title="Columbus Data Layer"
           priceLabel="Market price"
-          price="$2,400 / year"
+          price={columbusPrice}
           avatar={<ColumbusMark size={20} />}
           mapSrc="/business/map2.png"
-          mapAlt="Power grid outage layer preview"
+          mapAlt={columbusMapAlt}
         >
           <div
             style={{
@@ -70,7 +112,7 @@ export default function BetterPricesRow() {
               lineHeight: 1.3,
             }}
           >
-            Power grid outage history with feeder-circuit-level granularity
+            {columbusTitle}
           </div>
 
           <ul
@@ -83,31 +125,24 @@ export default function BetterPricesRow() {
               gap: 14,
             }}
           >
-            <FeatureRow
-              icon={<DatabaseIcon />}
-              title="55,010 rows"
-              description="Historical outage records resolved to the individual distribution feeder, harmonized across major utilities"
-            />
-            <FeatureRow
-              icon={<ShieldCheckIcon />}
-              title="Verified accuracy"
-              description="Triple-checked for completeness and consistency before every release"
-            />
-            <FeatureRow
-              icon={<RefreshIcon />}
-              title="Updated quarterly"
-              description="Fresh data, continuously monitored and maintained"
-            />
+            {columbusFeatures.map((f, i) => (
+              <FeatureRow
+                key={`col-${i}`}
+                icon={[<DatabaseIcon key="d" />, <ShieldCheckIcon key="s" />, <RefreshIcon key="r" />][i] ?? <DatabaseIcon />}
+                title={f.title}
+                description={f.description}
+              />
+            ))}
           </ul>
         </ComparisonCard>
 
         <ComparisonCard
           title="Best Competitor"
           priceLabel="Market price"
-          price="$18,000 / year"
+          price={competitorPrice}
           avatar={<CompetitorMark />}
           mapSrc="/business/map3.png"
-          mapAlt="Competitor data layer preview"
+          mapAlt={competitorMapAlt}
         >
           <div
             style={{
@@ -118,7 +153,7 @@ export default function BetterPricesRow() {
               lineHeight: 1.3,
             }}
           >
-            Power grid outages, county-level aggregates only
+            {competitorTitle}
           </div>
 
           <ul
@@ -131,21 +166,14 @@ export default function BetterPricesRow() {
               gap: 14,
             }}
           >
-            <FeatureRow
-              icon={<DatabaseIcon />}
-              title="8,200 rows"
-              description="County-level aggregated outage counts pulled from a single utility's public reports"
-            />
-            <FeatureRow
-              icon={<AlertIcon />}
-              title="Self-reported data"
-              description="Provided directly by utilities, not independently audited or cross-checked"
-            />
-            <FeatureRow
-              icon={<CalendarIcon />}
-              title="Updated annually"
-              description="Refreshed once a year, often months behind real-world conditions"
-            />
+            {competitorFeatures.map((f, i) => (
+              <FeatureRow
+                key={`comp-${i}`}
+                icon={[<DatabaseIcon key="d" />, <AlertIcon key="a" />, <CalendarIcon key="c" />][i] ?? <DatabaseIcon />}
+                title={f.title}
+                description={f.description}
+              />
+            ))}
           </ul>
         </ComparisonCard>
       </div>

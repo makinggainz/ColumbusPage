@@ -7,25 +7,45 @@
    a key takeaway panel, and a "View Full Report" footer button. Lives on
    top of a map (see ForecastVisual). */
 
-type RankedItem = {
+export type RankedItem = {
   rank: number;
   label: string;
   delta: string;
 };
 
-const TOP_SUBMARKETS: RankedItem[] = [
+const DEFAULT_TOP_ITEMS: RankedItem[] = [
   { rank: 1, label: "City Core", delta: "+11.8%" },
   { rank: 2, label: "Kings Cross", delta: "+10.3%" },
   { rank: 3, label: "Southbank", delta: "+9.7%" },
   { rank: 4, label: "Stratford", delta: "+8.7%" },
 ];
 
+const DEFAULT_QUESTION_RECAP =
+  "Here are the London office submarkets forcasted to see the strongest prime rent growth for Grade A space over the next 24 months";
+const DEFAULT_PANEL_TITLE = "Top 5 Submarkets by Forcasted Prime Rent Growth";
+const DEFAULT_PANEL_SUBTITLE = "Next 24 Months";
+const DEFAULT_TAKEAWAY = DEFAULT_QUESTION_RECAP;
+
 /* Numbered badges fade from saturated red → near-black down the list,
    mirroring the gradient in the source design. */
 const BADGE_FILLS = ["#D8362B", "#A82424", "#6B1414", "#2A0606"];
 const RED_TEXT = "#D8362B";
 
-export default function ForecastCard() {
+export type ForecastCardProps = {
+  questionRecap?: string;
+  panelTitle?: string;
+  panelSubtitle?: string;
+  items?: RankedItem[];
+  takeaway?: string;
+};
+
+export default function ForecastCard({
+  questionRecap = DEFAULT_QUESTION_RECAP,
+  panelTitle = DEFAULT_PANEL_TITLE,
+  panelSubtitle = DEFAULT_PANEL_SUBTITLE,
+  items = DEFAULT_TOP_ITEMS,
+  takeaway = DEFAULT_TAKEAWAY,
+}: ForecastCardProps = {}) {
   return (
     <div
       style={{
@@ -64,8 +84,7 @@ export default function ForecastCard() {
           letterSpacing: "-0.005em",
         }}
       >
-        Here are the London office submarkets forcasted to see the strongest
-        prime rent growth for Grade A space over the next 24 months
+        {questionRecap}
       </p>
 
       {/* Ranked submarkets panel */}
@@ -85,7 +104,7 @@ export default function ForecastCard() {
             letterSpacing: "-0.01em",
           }}
         >
-          Top 5 Submarkets by Forcasted Prime Rent Growth
+          {panelTitle}
         </div>
         <div
           className="mt-1"
@@ -95,11 +114,11 @@ export default function ForecastCard() {
             letterSpacing: "-0.005em",
           }}
         >
-          Next 24 Months
+          {panelSubtitle}
         </div>
 
         <ul className="mt-4 flex flex-col gap-2.5">
-          {TOP_SUBMARKETS.map((item, i) => (
+          {items.map((item, i) => (
             <li
               key={item.rank}
               className="flex items-center justify-between"
@@ -166,8 +185,7 @@ export default function ForecastCard() {
             letterSpacing: "-0.005em",
           }}
         >
-          Here are the London office submarkets forcasted to see the strongest
-          prime rent growth for Grade A space over the next 24 months
+          {takeaway}
         </p>
       </div>
 
