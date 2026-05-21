@@ -127,10 +127,12 @@ const RESIDENTIAL_BACKDROPS: IndustryBackdrops = {
                        → ColumBuzHero @ "center 25%" (top sky band)
    chatSub[0]        → skyscrapers + clouds (former hero photo)
                        → ColumbusBackgroundV2 @ "center 40%"
-   chatSub[1]        → horizontal NYC-style skyline     → cre-bg-1
-   chatSub[2]        → cleaner modern glass cluster     → cre-bg-2
-   chatSub[3]        → park + distant skyline (Central Park)
-                       → ColumBuzHero @ "center 75%" (park band)
+   chatSub[1]        → London skyline + Thames + Tower Bridge → London
+   chatSub[2]        → NYC 3-point perspective of Central Park
+                       + flanking skyscrapers → businessback3
+   chatSub[3]        → same portrait as chatSub[0], anchored to the
+                       very bottom so the visible band lands on the
+                       park lawn → ColumbusBackgroundV2 @ "center bottom"
    dataCatalogueHero → aerial city neighbourhoods       → cre-bg-2
                        (consumed as the Agentic Research hero)
    agenticResearchHero → downtown buildings close-up    → cre-bg-1
@@ -146,17 +148,17 @@ const COMMERCIAL_BACKDROPS: IndustryBackdrops = {
   chatHeroPosition: "center 25%",
   chatSub: [
     "/ColumbusBackgroundV2.png",
-    "/CREbg/cre-bg-1.png",
-    "/CREbg/cre-bg-2.png",
-    "/ColumBuzHero.png",
+    "/London.png",
+    "/businessback3.png",
+    "/ColumbusBackgroundV2.png",
   ],
   /* chatSub[0] uses the former portrait hero photo of NYC's Central Park
      skyline; "center 40%" lands the square crop on the cloud + skyscraper
      band so the "See what others cant" tile reads as skyscrapers framed
-     by clouds. chatSub[3] uses ColumBuzHero anchored low so the visible
-     slice lands on the park + treetops, matching the "Drop Any File" PDF
-     preview. */
-  chatSubPositions: ["center 40%", undefined, undefined, "center 75%"],
+     by clouds. chatSub[3] reuses the same portrait, but anchored to the
+     very bottom so the visible band lands on the park lawn (matches the
+     "Drop Any File" tile in the PDF). */
+  chatSubPositions: ["center 40%", undefined, undefined, "center bottom"],
   dataCatalogueHero: "/CREbg/cre-bg-2.png",
   agenticResearchHero: "/CREbg/cre-bg-1.png",
   dashboardHero: "/CREbg/cre-bg-2.png",
@@ -177,14 +179,18 @@ const ENVIRONMENTAL_BACKDROPS: IndustryBackdrops = {
 
 const ACADEMIC_BACKDROPS: IndustryBackdrops = {
   chatHero: "/Academic/acad-bg-1.png",
+  /* chatSub[3] (Drop Any File) uses acad-bg-6; the chain then shifts so
+     the Agentic Research and Dashboard hero slots pick up acad-bg-7 and
+     acad-bg-8 respectively. acad-bg-5 — the Screenshot file at slot 5 —
+     drops out of the active mapping. */
   chatSub: [
     "/Academic/acad-bg-2.png",
     "/Academic/acad-bg-3.png",
     "/Academic/acad-bg-4.png",
-    "/Academic/acad-bg-5.png",
+    "/Academic/acad-bg-6.png",
   ],
-  dataCatalogueHero: "/Academic/acad-bg-6.png",
-  agenticResearchHero: "/Academic/acad-bg-7.png",
+  dataCatalogueHero: "/Academic/acad-bg-7.png",
+  agenticResearchHero: "/Academic/acad-bg-8.png",
   dashboardHero: "/Academic/acad-bg-1.png",
 };
 
