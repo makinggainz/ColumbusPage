@@ -321,15 +321,32 @@ export default function ComparisonSection() {
       style={{ backgroundColor: "transparent" }}
     >
       <style>{CMP_CSS}</style>
+      {/* Outer panel card — matches the heading card above (hairline
+          border + 2xl radius + bg-card surface) so the heading and the
+          content beneath read as part of the same design-system family.
+          The product mockup on the right remains its own nested 7px
+          card inside this panel. */}
       <div
-        className="ent-content-bounds px-4 md:px-6 grid grid-cols-1 lg:grid-cols-[380px_1fr] gap-10 lg:gap-16 lg:items-stretch"
+        className="ent-content-bounds"
         style={{
+          backgroundColor: "var(--ent-bg-card)",
+          border: "1px solid var(--ent-border-dark-grid)",
+          borderRadius: "var(--ent-radius-2xl)",
           opacity: entered ? 1 : 0,
           transform: entered ? "translateY(0)" : "translateY(16px)",
           transition: "opacity 0.6s ease, transform 0.6s ease",
         }}
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
+      >
+      <div
+        className="grid grid-cols-1 lg:grid-cols-[380px_1fr] gap-10 lg:gap-16 lg:items-stretch"
+        style={{
+          paddingTop: "var(--ent-space-12)",
+          paddingBottom: "var(--ent-space-12)",
+          paddingLeft: "clamp(20px, 3vw, 40px)",
+          paddingRight: "clamp(20px, 3vw, 40px)",
+        }}
       >
         {/* ── Left: feature accordion. Each row is clickable; the active
             row expands to reveal a description + horizontal progress bar
@@ -526,6 +543,7 @@ export default function ComparisonSection() {
             </div>
           </div>
         </div>
+      </div>
       </div>
     </section>
   );

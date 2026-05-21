@@ -56,39 +56,55 @@ export default function CapabilitiesGrid() {
           Enterprise-grade capabilities
         </h2>
 
-        <div className="mt-14 lg:mt-20 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-16 lg:gap-x-16 lg:gap-y-20">
-          {ITEMS.map((item, i) => (
-            <article
-              key={item.title}
-              className="cap-tile group"
-              style={{
-                opacity: visible ? 1 : 0,
-                transform: visible ? "translateY(0)" : "translateY(18px)",
-                transition: `opacity 0.6s ease ${0.06 * i}s, transform 0.6s ease ${0.06 * i}s`,
-              }}
-            >
-              {/* Aspect-locked wrapper — the source PNGs span 1.60–1.67
-                  ratios, so leaving `h-auto` makes each tile a slightly
-                  different height and the titles below misalign across a
-                  row. Pinning the wrapper to 1.65 + object-cover keeps
-                  every tile identical in height. */}
-              <div className="cap-tile-img-wrap relative w-[88%] mx-auto aspect-[1.65/1] rounded-[7px] border border-gridline overflow-hidden">
-                <Image
-                  src={item.image}
-                  alt={item.title}
-                  fill
-                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                  className="object-cover"
-                />
-              </div>
-              <h3
-                className="cap-tile-title mt-4 text-center text-[20px] md:text-[22px] font-semibold leading-[1.2]"
-                style={{ color: "var(--ent-text-primary)", letterSpacing: "-0.01em" }}
+        {/* Card panel — matches the ComparisonSection content card
+            (--ent-bg-card surface, hairline border, 2xl radius) so this
+            grid reads as part of the same design-system family. */}
+        <div
+          className="mt-14 lg:mt-20"
+          style={{
+            backgroundColor: "var(--ent-bg-card)",
+            border: "1px solid var(--ent-border-dark-grid)",
+            borderRadius: "var(--ent-radius-2xl)",
+            paddingTop: "var(--ent-space-12)",
+            paddingBottom: "var(--ent-space-12)",
+            paddingLeft: "clamp(20px, 3vw, 40px)",
+            paddingRight: "clamp(20px, 3vw, 40px)",
+          }}
+        >
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-16 lg:gap-x-16 lg:gap-y-20">
+            {ITEMS.map((item, i) => (
+              <article
+                key={item.title}
+                className="cap-tile group"
+                style={{
+                  opacity: visible ? 1 : 0,
+                  transform: visible ? "translateY(0)" : "translateY(18px)",
+                  transition: `opacity 0.6s ease ${0.06 * i}s, transform 0.6s ease ${0.06 * i}s`,
+                }}
               >
-                {item.title}
-              </h3>
-            </article>
-          ))}
+                {/* Aspect-locked wrapper — the source PNGs span 1.60–1.67
+                    ratios, so leaving `h-auto` makes each tile a slightly
+                    different height and the titles below misalign across a
+                    row. Pinning the wrapper to 1.65 + object-cover keeps
+                    every tile identical in height. */}
+                <div className="cap-tile-img-wrap relative w-[88%] mx-auto aspect-[1.65/1] rounded-[7px] border border-gridline overflow-hidden">
+                  <Image
+                    src={item.image}
+                    alt={item.title}
+                    fill
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    className="object-cover"
+                  />
+                </div>
+                <h3
+                  className="cap-tile-title mt-4 text-center text-[20px] md:text-[22px] font-semibold leading-[1.2]"
+                  style={{ color: "var(--ent-text-primary)", letterSpacing: "-0.01em" }}
+                >
+                  {item.title}
+                </h3>
+              </article>
+            ))}
+          </div>
         </div>
       </div>
 

@@ -155,6 +155,7 @@ export default function SuperFeatureSection({
         className="ent-content-bounds mt-10 lg:mt-14"
         style={{
           backgroundColor: panel ? "#F7F7F7" : "transparent",
+          border: panel ? "1px solid var(--ent-border-dark-grid)" : "none",
           borderRadius: panel ? "var(--ent-radius-2xl)" : "0",
           paddingBottom: panel ? "var(--ent-space-16)" : "0",
           overflow: panel ? "hidden" : "visible",
