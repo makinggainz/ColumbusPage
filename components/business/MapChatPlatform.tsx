@@ -34,6 +34,10 @@ export type MapChatPlatformProps = {
   dataCardMin?: string;
   dataCardMax?: string;
   dataCardSecondary?: string;
+  /* Map image rendered behind the MapPanel UI. Defaults to the generic
+     /MapChatbackgroundimg.png; industry-specific maps are passed in from
+     BusinessUseCases via the IndustryBackdrops `chatMainMap` field. */
+  map?: string;
 };
 
 const DEFAULT_BREADCRUMB = "Minneapolis Real Estate property flips";
@@ -48,6 +52,7 @@ const DEFAULT_DATA_CARD_TITLE = "Households Median Income";
 const DEFAULT_DATA_CARD_MIN = "$2,490";
 const DEFAULT_DATA_CARD_MAX = "$20,490";
 const DEFAULT_DATA_CARD_SECONDARY = "Gen Z Average Consumption";
+const DEFAULT_MAP = "/MapChatbackgroundimg.png";
 
 export default function MapChatPlatform({
   breadcrumb = DEFAULT_BREADCRUMB,
@@ -59,6 +64,7 @@ export default function MapChatPlatform({
   dataCardMin = DEFAULT_DATA_CARD_MIN,
   dataCardMax = DEFAULT_DATA_CARD_MAX,
   dataCardSecondary = DEFAULT_DATA_CARD_SECONDARY,
+  map = DEFAULT_MAP,
 }: MapChatPlatformProps = {}) {
   return (
     <div
@@ -87,6 +93,7 @@ export default function MapChatPlatform({
                 dataCardMin={dataCardMin}
                 dataCardMax={dataCardMax}
                 dataCardSecondary={dataCardSecondary}
+                map={map}
               />
             </div>
           </div>
@@ -378,6 +385,7 @@ function MapPanel({
   dataCardMin,
   dataCardMax,
   dataCardSecondary,
+  map,
 }: {
   cityLabel: string;
   pois: [MapChatPoi, MapChatPoi];
@@ -387,11 +395,12 @@ function MapPanel({
   dataCardMin: string;
   dataCardMax: string;
   dataCardSecondary: string;
+  map: string;
 }) {
   return (
     <div className="relative flex-1 overflow-hidden" style={{ minWidth: 0 }}>
       <Image
-        src="/MapChatbackgroundimg.png"
+        src={map}
         alt=""
         fill
         sizes="(max-width: 1180px) 60vw, 720px"

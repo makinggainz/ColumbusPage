@@ -67,14 +67,18 @@ export default function CapabilitiesGrid() {
                 transition: `opacity 0.6s ease ${0.06 * i}s, transform 0.6s ease ${0.06 * i}s`,
               }}
             >
-              <div className="cap-tile-img-wrap">
+              {/* Aspect-locked wrapper — the source PNGs span 1.60–1.67
+                  ratios, so leaving `h-auto` makes each tile a slightly
+                  different height and the titles below misalign across a
+                  row. Pinning the wrapper to 1.65 + object-cover keeps
+                  every tile identical in height. */}
+              <div className="cap-tile-img-wrap relative w-[88%] mx-auto aspect-[1.65/1] rounded-[7px] border border-gridline overflow-hidden">
                 <Image
                   src={item.image}
                   alt={item.title}
-                  width={915}
-                  height={627}
+                  fill
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                  className="block w-[88%] h-auto mx-auto rounded-[7px] border border-gridline"
+                  className="object-cover"
                 />
               </div>
               <h3

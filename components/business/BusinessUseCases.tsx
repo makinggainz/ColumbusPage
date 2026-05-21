@@ -81,6 +81,14 @@ type IndustryBackdrops = {
      sub-feature SkyBackdrops. `undefined` entries inherit SkyBackdrop's
      default "center". Aligned to `chatSub` by index. */
   chatSubPositions?: [string?, string?, string?, string?];
+  /* Optional per-industry override for the map IMAGE rendered inside the
+     chat-section visuals (the MapPanel inside MapChatPlatform and the
+     MapLayeredVisual map inside each chat sub-feature). Industries that
+     omit these fall back to the generic "/MapChatbackgroundimg.png".
+     `chatSubMaps` is aligned to `chatSub` by index; only the slots that
+     render a MapLayeredVisual (0, 1, 3 today) actually consume it. */
+  chatMainMap?: string;
+  chatSubMaps?: [string?, string?, string?, string?];
 };
 
 /* Mapping authored against /Users/.../Downloads/comi.pdf (which the user
@@ -162,6 +170,19 @@ const COMMERCIAL_BACKDROPS: IndustryBackdrops = {
   dataCatalogueHero: "/CREbg/cre-bg-2.png",
   agenticResearchHero: "/CREbg/cre-bg-1.png",
   dashboardHero: "/CREbg/cre-bg-2.png",
+  /* CRE-specific map illustrations for the chat section. chatMainMap is
+     the London map with City Core / Kings Cross / Southbank / Stratford
+     percentage zones; the chatSubMaps line up with the chat sub-features
+     (slot 0 = "See what others cant" Manhattan zone map, slot 1 = London
+     forecast heatmap, slot 3 = London file-import dot map; slot 2 has no
+     MapLayeredVisual). */
+  chatMainMap: "/CREMaps/chat-platform-map.png",
+  chatSubMaps: [
+    "/CREMaps/see-what-others-cant.png",
+    "/CREMaps/like-weather-forecasts.png",
+    undefined,
+    "/CREMaps/import-files.png",
+  ],
 };
 
 const ENVIRONMENTAL_BACKDROPS: IndustryBackdrops = {
@@ -1368,7 +1389,7 @@ export default function BusinessUseCases() {
         backgroundImage={bg.chatHero}
         backgroundPosition={bg.chatHeroPosition}
         subFeatureBackdrop={bg.chatSub[0]}
-        demoVisual={<MapChatPlatform {...copy.mapChat} />}
+        demoVisual={<MapChatPlatform {...copy.mapChat} map={bg.chatMainMap} />}
         subFeatures={[
           {
             title: "See what others cant",
@@ -1376,7 +1397,7 @@ export default function BusinessUseCases() {
             backdropImage: bg.chatSub[0],
             backdropPosition: bg.chatSubPositions?.[0],
             visual: (
-              <MapLayeredVisual map="/MapChatbackgroundimg.png" alt="Map chat background" variant="floating">
+              <MapLayeredVisual map={bg.chatSubMaps?.[0] ?? "/MapChatbackgroundimg.png"} alt="Map chat background" variant="floating">
                 <PatternsDetectedCard {...copy.cards.patterns} />
               </MapLayeredVisual>
             ),
@@ -1387,7 +1408,7 @@ export default function BusinessUseCases() {
             backdropImage: bg.chatSub[1],
             backdropPosition: bg.chatSubPositions?.[1],
             visual: (
-              <MapLayeredVisual map="/MapChatbackgroundimg.png" alt="Map chat background" variant="floating">
+              <MapLayeredVisual map={bg.chatSubMaps?.[1] ?? "/MapChatbackgroundimg.png"} alt="Map chat background" variant="floating">
                 <ForecastCard {...copy.cards.forecast} />
               </MapLayeredVisual>
             ),
@@ -1405,7 +1426,7 @@ export default function BusinessUseCases() {
             backdropImage: bg.chatSub[3],
             backdropPosition: bg.chatSubPositions?.[3],
             visual: (
-              <MapLayeredVisual map="/MapChatbackgroundimg.png" alt="Map chat background">
+              <MapLayeredVisual map={bg.chatSubMaps?.[3] ?? "/MapChatbackgroundimg.png"} alt="Map chat background">
                 <HarmonizedFilesCard {...copy.cards.harmonized} />
               </MapLayeredVisual>
             ),
@@ -1453,7 +1474,7 @@ export default function BusinessUseCases() {
            previously sat behind the data-catalogue section. */
         backgroundImage={bg.dataCatalogueHero}
         subFeatureBackdrop={bg.agenticResearchHero}
-        demoVisual={<MapChatPlatform {...copy.mapChat} />}
+        demoVisual={<MapChatPlatform {...copy.mapChat} map={bg.chatMainMap} />}
         subFeatures={[
           { id: "due-diligence", title: "Agentic research sub-features", description: null, visual: <AgenticResearchTriad {...copy.rows.agenticTriad} />, stacked: true },
         ]}
