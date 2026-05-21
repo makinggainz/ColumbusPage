@@ -77,29 +77,86 @@ type IndustryBackdrops = {
   /* Chat hero positional tweak (residential's tall portrait photos do
      better with center top so the sky doesn't dominate). */
   chatHeroPosition?: string;
+  /* Optional per-sub-feature background-position override for the chat
+     sub-feature SkyBackdrops. `undefined` entries inherit SkyBackdrop's
+     default "center". Aligned to `chatSub` by index. */
+  chatSubPositions?: [string?, string?, string?, string?];
 };
 
+/* Mapping authored against /Users/.../Downloads/comi.pdf (which the user
+   confirmed is the design pass for the residential industry — its
+   filename and content were swapped). Each slot's image matches the
+   preview thumbnail under the corresponding feature title in that PDF.
+
+   Slot → PDF preview → asset:
+   chatHero          → sky + clouds with roof peeks → res-bg-1 @ 40%
+   chatSub[0]        → suburban houses landscape    → res-bg-2
+   chatSub[1]        → dense city aerial (Madrid)   → res-bg-3
+   chatSub[2]        → modern apts, NO skyline      → res-bg-7
+   chatSub[3]        → hillside houses + city       → res-bg-4
+   dataCatalogueHero → European tree-lined street   → res-bg-6
+                       (consumed as the Agentic Research hero — see the
+                       "Backdrop shifted down" comment below)
+   agenticResearchHero → apts + distant skyline     → res-bg-5
+                         (consumed as the Dashboard hero)
+   dashboardHero     → unused (slot chain shifted up). */
 const RESIDENTIAL_BACKDROPS: IndustryBackdrops = {
   chatHero: "/Residential/res-bg-1.png",
+  /* res-bg-1 is a portrait suburban shot with the cloud band at ~30–55%
+     of the photo. "center 40%" puts the visible slice on the clouds with
+     a sliver of roof peaks at the bottom — matching the PDF chatHero. */
+  chatHeroPosition: "center 40%",
   chatSub: [
     "/Residential/res-bg-2.png",
     "/Residential/res-bg-3.png",
+    "/Residential/res-bg-7.png",
     "/Residential/res-bg-4.png",
-    "/Residential/res-bg-5.png",
   ],
   dataCatalogueHero: "/Residential/res-bg-6.png",
-  agenticResearchHero: "/Residential/res-bg-7.png",
+  agenticResearchHero: "/Residential/res-bg-5.png",
   dashboardHero: "/Residential/res-bg-1.png",
 };
 
+/* Mapping authored against /Users/.../Downloads/resi.pdf (which the user
+   confirmed is the design pass for the commercial industry — its
+   filename and content were swapped). Each slot's image matches the
+   preview thumbnail under the corresponding feature title in that PDF.
+
+   Slot → PDF preview → asset:
+   chatHero          → sky + clouds + faint skyscraper peaks
+                       → ColumBuzHero @ "center 25%" (top sky band)
+   chatSub[0]        → skyscrapers + clouds (former hero photo)
+                       → ColumbusBackgroundV2 @ "center 40%"
+   chatSub[1]        → horizontal NYC-style skyline     → cre-bg-1
+   chatSub[2]        → cleaner modern glass cluster     → cre-bg-2
+   chatSub[3]        → park + distant skyline (Central Park)
+                       → ColumBuzHero @ "center 75%" (park band)
+   dataCatalogueHero → aerial city neighbourhoods       → cre-bg-2
+                       (consumed as the Agentic Research hero)
+   agenticResearchHero → downtown buildings close-up    → cre-bg-1
+                         (consumed as the Dashboard hero)
+   dashboardHero     → unused (slot chain shifted up). */
 const COMMERCIAL_BACKDROPS: IndustryBackdrops = {
-  chatHero: "/CREbg/cre-bg-1.png",
+  chatHero: "/ColumBuzHero.png",
+  /* ColumBuzHero is a portrait NYC photo with pure blue sky at the very
+     top, cloud + skyscraper-peak band at ~30–55%, full skyline at
+     ~55–70%, and a faded Central Park at the bottom. "center 25%" puts
+     the visible slice on the upper sky + cloud zone so the chat hero
+     reads as clouds with just a hint of the skyline at the bottom. */
+  chatHeroPosition: "center 25%",
   chatSub: [
-    "/CREbg/cre-bg-2.png",
+    "/ColumbusBackgroundV2.png",
     "/CREbg/cre-bg-1.png",
     "/CREbg/cre-bg-2.png",
-    "/CREbg/cre-bg-1.png",
+    "/ColumBuzHero.png",
   ],
+  /* chatSub[0] uses the former portrait hero photo of NYC's Central Park
+     skyline; "center 40%" lands the square crop on the cloud + skyscraper
+     band so the "See what others cant" tile reads as skyscrapers framed
+     by clouds. chatSub[3] uses ColumBuzHero anchored low so the visible
+     slice lands on the park + treetops, matching the "Drop Any File" PDF
+     preview. */
+  chatSubPositions: ["center 40%", undefined, undefined, "center 75%"],
   dataCatalogueHero: "/CREbg/cre-bg-2.png",
   agenticResearchHero: "/CREbg/cre-bg-1.png",
   dashboardHero: "/CREbg/cre-bg-2.png",
@@ -166,13 +223,15 @@ const GRADIENT_BACKDROPS: IndustryBackdrops = {
 };
 
 function backdropsFor(industryId: IndustryId): IndustryBackdrops {
-  if (industryId === "residential-real-estate") return RESIDENTIAL_BACKDROPS;
+  /* Commercial real estate is the ONLY industry that uses the /CREbg set —
+     never fall back to it for any other industry. Every industry without
+     its own photo set falls back to Residential. */
   if (industryId === "commercial-real-estate") return COMMERCIAL_BACKDROPS;
   if (industryId === "environmental-research") return ENVIRONMENTAL_BACKDROPS;
   if (industryId === "academic-research") return ACADEMIC_BACKDROPS;
   if (industryId === "geomarketing") return GEOMARKETING_BACKDROPS;
   if (industryId === "urban-infrastructure") return URBAN_INFRASTRUCTURE_BACKDROPS;
-  return GRADIENT_BACKDROPS;
+  return RESIDENTIAL_BACKDROPS;
 }
 
 /* Per-industry copy block. Titles never change (they brand the feature),
@@ -220,7 +279,7 @@ const RESIDENTIAL_COPY: IndustryCopy = {
   chatSubtitle: (
     <>
       With <Blue>conversational map chat</Blue>, ask your chat directly about anything. Have a conversation like you&rsquo;re talking to your best analyst.
-      <div className="mt-3 text-[13px]" style={{ opacity: 0.75 }}>
+      <div className="mt-3">
         Faster site-selection for Residential Real Estate customers, including Consultants, Residential Developers, and Wholesale brokers.
       </div>
     </>
@@ -361,15 +420,12 @@ const RESIDENTIAL_COPY: IndustryCopy = {
     },
     agenticTriad: {
       reports: {
-        title: "Site Acquisition Shortlist Reports",
         description: "Find the top development sites for mid-rise residential in your target region — review-ready shortlists with parcel-level comps and envelope criteria.",
       },
       audits: {
-        title: "Parcel Due Diligence",
         description: "Generative parcel due diligence: zoning, infrastructure, soil/flood/seismic risk, and competitor pipeline — with an on-the-ground surveying team available on request.",
       },
       compliance: {
-        title: "Maximum Buildable Envelope Audit",
         description: "Audit candidate parcels for the legal maximum buildable residential square footage across all applicable zoning, overlays, and municipal regulations.",
       },
     },
@@ -495,20 +551,8 @@ const COMMERCIAL_COPY: IndustryCopy = {
         { title: "Updated annually", description: "Refreshed once a year, often months behind real-world conditions." },
       ],
     },
-    agenticTriad: {
-      reports: {
-        title: "Site Acquisition Shortlist Reports",
-        description: "Hand Columbus your acquisition brief — it'll rank top markets, recommend specific high-street sites, and deliver lease comps and footfall, review-ready.",
-      },
-      audits: {
-        title: "Acquisition Comparative Due Diligence",
-        description: "Investment-target shortlist due diligence: rent gaps, value-add comparables, supply pipeline, employment drivers, broker-undisclosed risks.",
-      },
-      compliance: {
-        title: "Mixed-Use Development Site Audit",
-        description: "Audit candidate sites for mixed-use development compliance — zoning, inclusionary requirements, MEPA review thresholds, and overlay districts.",
-      },
-    },
+    /* Use the AgenticResearchTriad defaults for all three slots. */
+    agenticTriad: {},
     dashboard: {
       rows: [
         { title: "Manhattan PE-buyer pattern map · trailing 18 months", body: "In this chat we mapped every CRE transaction over $25M to the ultimate beneficial owner and clustered by asset class.", age: "20 hours ago" },
@@ -683,15 +727,12 @@ const URBAN_COPY: IndustryCopy = {
     },
     agenticTriad: {
       reports: {
-        title: "Site Suitability Analysis Reports",
         description: "Hand Columbus your planning brief — it'll evaluate candidate parcels against transit, schools, soil, flood risk, infrastructure capacity, and PRG compliance.",
       },
       audits: {
-        title: "Capital Project Risk & Feasibility Audit",
         description: "Independent due diligence on internal survey findings — verifying severity classifications, coordination opportunities, and timeline feasibility.",
       },
       compliance: {
-        title: "Road & Pavement Works Compliance Audit",
         description: "Audit planned resurfacing programs against road construction standards, noise reduction targets, EU construction-waste directives, and accessibility provisions.",
       },
     },
@@ -726,7 +767,7 @@ const ENVIRONMENTAL_COPY: IndustryCopy = {
   chatSubtitle: (
     <>
       With <Blue>conversational map chat</Blue>, ask your chat directly about anything. Have a conversation like you&rsquo;re talking to your best Forest Ecologist.
-      <div className="mt-3 text-[13px]" style={{ opacity: 0.75 }}>
+      <div className="mt-3">
         Faster field-team prioritization for Environmental Research customers, including Forest Ecologists, Field Research Coordinators, and Conservation Scientists.
       </div>
     </>
@@ -874,15 +915,12 @@ const ENVIRONMENTAL_COPY: IndustryCopy = {
     },
     agenticTriad: {
       reports: {
-        title: "Wildlife Habitat Loss & Protection Priority Reports",
         description: "Hand Columbus a national-scale planning brief and it produces a review-ready research report — including which habitat patches remain intact and most important to protect.",
       },
       audits: {
-        title: "Pollution & Contamination Due Diligence",
         description: "Full environmental due-diligence on a parcel or operation: soil contamination history, nearby industrial activity, air quality, groundwater pollution, historical chemical storage.",
       },
       compliance: {
-        title: "EU Protected Areas Compliance Check",
         description: "Audit proposed projects against EU wildlife protection rules and national nature laws — flagging issues before approval can be granted.",
       },
     },
@@ -917,7 +955,7 @@ const ACADEMIC_COPY: IndustryCopy = {
   chatSubtitle: (
     <>
       With <Blue>conversational map chat</Blue>, ask your chat directly about anything. Have a conversation like you&rsquo;re talking to your best Spatial Epidemiologist.
-      <div className="mt-3 text-[13px]" style={{ opacity: 0.75 }}>
+      <div className="mt-3">
         Faster cluster identification for Academic Research customers, including Spatial Epidemiologists, Public Health Researchers, and Population Health Postdocs.
       </div>
     </>
@@ -1060,15 +1098,12 @@ const ACADEMIC_COPY: IndustryCopy = {
     },
     agenticTriad: {
       reports: {
-        title: "Comparative Research Reports",
         description: "Hand Columbus a grant brief and it produces a review-ready spatial evidence base — running templates that match the deliverables funder review committees actually expect.",
       },
       audits: {
-        title: "Empirical Due Diligence Reports",
         description: "Generative due-diligence reports on a project, parcel, or policy proposal — defensibility, equity implications, comparable outcomes.",
       },
       compliance: {
-        title: "Research Ethics & Regulatory Audit",
         description: "Audit active research projects against ethical, data protection, research security, and funder mandate stacks — across the institution.",
       },
     },
@@ -1103,7 +1138,7 @@ const GEOMARKETING_COPY: IndustryCopy = {
   chatSubtitle: (
     <>
       With <Blue>conversational map chat</Blue>, ask your chat directly about anything. Have a conversation like you&rsquo;re talking to your best Site Selection Analyst.
-      <div className="mt-3 text-[13px]" style={{ opacity: 0.75 }}>
+      <div className="mt-3">
         Faster trade-area shortlisting for Geomarketing customers, including Site Selection Directors, Network Strategy VPs, and Franchise Development Leads.
       </div>
     </>
@@ -1246,15 +1281,12 @@ const GEOMARKETING_COPY: IndustryCopy = {
     },
     agenticTriad: {
       reports: {
-        title: "National Catchment & Media Weight Plan",
         description: "Hand Columbus a network-strategy brief — it'll deliver a national catchment report showing where your core shopper lives and where to weight Q2 media spend.",
       },
       audits: {
-        title: "Campaign Audit Reports",
         description: "Pre-launch audits of OOH campaigns: per-panel audience reach, competitor share-of-voice, restricted-category overlaps, and risks before you go live.",
       },
       compliance: {
-        title: "Outdoor Advertising Compliance Audit",
         description: "Audit retail networks and OOH campaigns against municipal regulations — alcohol licensing, tobacco display, signage, language requirements, store by store.",
       },
     },
@@ -1328,6 +1360,7 @@ export default function BusinessUseCases() {
         title="Ask, Discover, Understand"
         subtitle={copy.chatSubtitle}
         backgroundImage={bg.chatHero}
+        backgroundPosition={bg.chatHeroPosition}
         subFeatureBackdrop={bg.chatSub[0]}
         demoVisual={<MapChatPlatform {...copy.mapChat} />}
         subFeatures={[
@@ -1335,8 +1368,9 @@ export default function BusinessUseCases() {
             title: "See what others cant",
             description: copy.sub1Description,
             backdropImage: bg.chatSub[0],
+            backdropPosition: bg.chatSubPositions?.[0],
             visual: (
-              <MapLayeredVisual map="/MapChatbackgroundimg.png" alt="Map chat background">
+              <MapLayeredVisual map="/MapChatbackgroundimg.png" alt="Map chat background" variant="floating">
                 <PatternsDetectedCard {...copy.cards.patterns} />
               </MapLayeredVisual>
             ),
@@ -1345,8 +1379,9 @@ export default function BusinessUseCases() {
             title: "Like weather forcasts for real-estate",
             description: copy.sub2Description,
             backdropImage: bg.chatSub[1],
+            backdropPosition: bg.chatSubPositions?.[1],
             visual: (
-              <MapLayeredVisual map="/MapChatbackgroundimg.png" alt="Map chat background">
+              <MapLayeredVisual map="/MapChatbackgroundimg.png" alt="Map chat background" variant="floating">
                 <ForecastCard {...copy.cards.forecast} />
               </MapLayeredVisual>
             ),
@@ -1355,12 +1390,14 @@ export default function BusinessUseCases() {
             title: "AI that critically thinks",
             description: copy.sub3Description,
             backdropImage: bg.chatSub[2],
+            backdropPosition: bg.chatSubPositions?.[2],
             visual: <ColumbusReasoningCard {...copy.cards.reasoning} />,
           },
           {
             title: "Drop Any File, Columbus does the rest",
             description: copy.sub4Description,
             backdropImage: bg.chatSub[3],
+            backdropPosition: bg.chatSubPositions?.[3],
             visual: (
               <MapLayeredVisual map="/MapChatbackgroundimg.png" alt="Map chat background">
                 <HarmonizedFilesCard {...copy.cards.harmonized} />
@@ -1380,7 +1417,11 @@ export default function BusinessUseCases() {
         }
         title="Trusted data, verified for confidence"
         subtitle={copy.dataCatalogueSubtitle}
-        backgroundImage={bg.dataCatalogueHero}
+        /* Pure blue-sky backdrop, no photo. SkyBackdrop accepts a raw CSS
+           gradient (detected via the `gradient(` substring) and skips the
+           scrim, so the frame renders as clean sky-blue with nothing else
+           in it. */
+        backgroundImage="linear-gradient(180deg, #5DADE2 0%, #AED6F1 100%)"
         subFeatureBackdrop={bg.dataCatalogueHero}
         demoImage="/dataCataSm.png"
         demoAlt="Columbus data manager"
@@ -1402,7 +1443,9 @@ export default function BusinessUseCases() {
         }
         title="Agentic Research"
         subtitle={copy.agenticResearchSubtitle}
-        backgroundImage={bg.agenticResearchHero}
+        /* Backdrop shifted down: this slot now uses the photo that
+           previously sat behind the data-catalogue section. */
+        backgroundImage={bg.dataCatalogueHero}
         subFeatureBackdrop={bg.agenticResearchHero}
         demoVisual={<MapChatPlatform {...copy.mapChat} />}
         subFeatures={[
@@ -1421,7 +1464,11 @@ export default function BusinessUseCases() {
         }
         title="Dashboard"
         subtitle={<>All your work organized and easy to access.</>}
-        backgroundImage={bg.dashboardHero}
+        /* Backdrop shifted down: this slot now uses the photo that
+           previously sat behind the agentic-research section. The
+           original `bg.dashboardHero` is unused but kept in the data
+           shape in case the chain is unwound. */
+        backgroundImage={bg.agenticResearchHero}
         demoVisual={<DashboardListMockup {...copy.rows.dashboard} />}
         panel={false}
       />

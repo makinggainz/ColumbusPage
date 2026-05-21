@@ -23,6 +23,10 @@ export type SuperFeatureSubItem = {
   visual?: React.ReactNode;
   /* Per-row override of the shared sky backdrop (e.g. a map image). */
   backdropImage?: string;
+  /* Per-row CSS `background-position` for the SkyBackdrop image — e.g.
+     "center 35%" to shift the visible slice of a tall photo onto the
+     skyline. Falls back to SkyBackdrop's default "center". */
+  backdropPosition?: string;
   /* Per-row override of the visual frame's aspect ratio. The default is
      "1 / 1" (square); pass e.g. "4 / 5" for a row whose card is taller
      than wide and would otherwise be clipped by the square frame. */
@@ -217,6 +221,7 @@ export default function SuperFeatureSection({
                     <SkyBackdrop
                       image={item.backdropImage ?? subFeatureBackdrop ?? backgroundImage}
                       lockToSquare={item.lockBackdropToSquare}
+                      position={item.backdropPosition}
                     />
                     <div
                       className="relative z-10 w-full h-full flex items-center justify-center"

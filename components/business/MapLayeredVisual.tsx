@@ -1,7 +1,7 @@
 "use client";
 
 /* Composes a map "context" panel with a data UI card anchored to the left.
-   Two variants:
+   Three variants:
    - "full-bleed" (default): the map fills the surrounding rounded frame
      and a leader line + pin reach out from the card's right edge to a
      marker on the map — so the card reads as "data about this point on
@@ -9,7 +9,12 @@
    - "floating": the map is a smaller rounded rectangle in the center-right
      of the frame with the surrounding backdrop (e.g. sky/cityscape) still
      visible on both sides; the card overlaps the map's left portion. No
-     leader/pin — the card and map relate by overlap, not by connector. */
+     leader/pin — the card and map relate by overlap, not by connector.
+   - "flush": the card and map sit side-by-side with no overlap. The map's
+     left edge butts against the card's right edge, and the map stretches
+     to exactly match the card's height — so the top and bottom borders
+     line up perfectly. The map fills the remaining horizontal room out
+     to the parent frame's right edge. */
 export default function MapLayeredVisual({
   map,
   alt = "",
@@ -21,52 +26,119 @@ export default function MapLayeredVisual({
   alt?: string;
   children: React.ReactNode;
   maxWidth?: number;
-  variant?: "full-bleed" | "floating";
+  variant?: "full-bleed" | "floating" | "flush";
 }) {
-  if (variant === "floating") {
+  if (variant === "flush") {
     return (
       <div
         style={{
           position: "relative",
           width: "100%",
           height: "100%",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          padding: "clamp(16px, 2vw, 28px)",
         }}
       >
-        {/* Floating map — centred-right rounded rectangle, leaves the
-            parent backdrop visible around it. The card overlaps its left
-            edge so most of the visible map sits to the card's right. */}
-        <div
-          aria-label={alt || undefined}
-          role={alt ? "img" : undefined}
-          style={{
-            position: "absolute",
-            top: "4%",
-            bottom: "4%",
-            left: "33%",
-            right: "10%",
-            borderRadius: "var(--ent-radius-2xl)",
-            overflow: "hidden",
-            backgroundImage: `url(${map})`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-            boxShadow: "var(--ent-shadow-card)",
-          }}
-        />
-
-        {/* Card — anchored to the left of the frame, vertically centred,
-            sits on top of the map's left portion. */}
+        {/* Inline flex row — `alignItems: stretch` makes the map take the
+            card's natural height, so the top and bottom borders match. */}
         <div
           style={{
-            position: "absolute",
-            left: "clamp(12px, 2vw, 28px)",
-            top: "50%",
-            transform: "translateY(-50%)",
+            display: "flex",
+            alignItems: "stretch",
             width: "100%",
-            maxWidth,
-            zIndex: 1,
           }}
         >
-          {children}
+          {/* Card — natural width up to `maxWidth`. */}
+          <div style={{ flexShrink: 0, width: "100%", maxWidth }}>
+            {children}
+          </div>
+          {/* Map — flexes to fill remaining width, stretches to card
+              height. Outer-right corners rounded; inner-left corners
+              left square so the seam reads as a clean butt-join. */}
+          <div
+            aria-label={alt || undefined}
+            role={alt ? "img" : undefined}
+            style={{
+              flex: 1,
+              minWidth: 0,
+              borderTopRightRadius: "var(--ent-radius-2xl)",
+              borderBottomRightRadius: "var(--ent-radius-2xl)",
+              overflow: "hidden",
+              backgroundImage: `url(${map})`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+              boxShadow: "var(--ent-shadow-card)",
+            }}
+          />
+        </div>
+      </div>
+    );
+  }
+
+  if (variant === "floating") {
+    /* The card determines the layout height; the map matches it. The map
+       is absolutely positioned with top:0 / bottom:0 inside an inline-flex
+       wrapper whose height is set by the card alone — so the map can never
+       be taller than the UI it accompanies. The map's left edge sits at
+       50% of the card's width so the card visually covers half the map. */
+    const overlap = maxWidth * 0.5;
+    return (
+      <div
+        style={{
+          position: "relative",
+          width: "100%",
+          height: "100%",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          padding: "clamp(16px, 2vw, 28px)",
+        }}
+      >
+        <div
+          style={{
+            position: "relative",
+            display: "flex",
+            width: "100%",
+            maxWidth: maxWidth + 320,
+          }}
+        >
+          {/* Card — fixed width, flex-shrink:0; its natural height
+              determines the wrapper height that the map then matches. */}
+          <div
+            style={{
+              width: maxWidth,
+              flexShrink: 0,
+              position: "relative",
+              zIndex: 2,
+            }}
+          >
+            {children}
+          </div>
+
+          {/* Map — absolutely positioned so it doesn't influence wrapper
+              height. top:0/bottom:0 makes it exactly the card's height;
+              left starts halfway across the card so the card hides ~50%
+              of the map. */}
+          <div
+            aria-label={alt || undefined}
+            role={alt ? "img" : undefined}
+            style={{
+              position: "absolute",
+              top: 0,
+              bottom: 0,
+              left: overlap,
+              right: 0,
+              borderRadius: "var(--ent-radius-2xl)",
+              overflow: "hidden",
+              backgroundImage: `url(${map})`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+              boxShadow: "var(--ent-shadow-card)",
+              zIndex: 1,
+            }}
+          />
         </div>
       </div>
     );

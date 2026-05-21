@@ -175,6 +175,27 @@ const HN_CSS = `
     margin-bottom: 20px;
   }
 }
+
+/* Subhead beneath the H1. Set well below .h1 so the hierarchy stays
+   clear, with text-wrap: balance to land "We Are An Applied AI Lab
+   For Geospatial Intelligence." on a clean two-line break. */
+.hn-subtitle {
+  margin-top: 28px;
+  max-width: 22rem;
+  text-wrap: balance;
+  font-family: var(--font-sans, "Ppneuemontreal", "PP Neue Montreal", Arial, sans-serif);
+  font-size: 18px;
+  line-height: 1.25;
+  font-weight: 600;
+  color: #0B1B2B;
+}
+@media (min-width: 992px) {
+  .hn-subtitle {
+    margin-top: 36px;
+    max-width: 24rem;
+    font-size: 22px;
+  }
+}
 `;
 
 export function HeroNew() {
@@ -214,6 +235,9 @@ export function HeroNew() {
         <h1 className="h1 hn-title tracking-tight text-ink">
           building geospatial reasoning for the real world.
         </h1>
+        <p className="hn-subtitle">
+          We Are An Applied AI Lab For Geospatial Intelligence.
+        </p>
       </div>
     </section>
   );
