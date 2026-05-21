@@ -20,6 +20,16 @@ type IndustryStickyNavbarProps = {
    * as its IndustrySelector so the two stay in sync.
    */
   industries?: IndustryId[];
+  /**
+   * When true, this sub-navbar pins to the SAME top position the main
+   * navbar uses (var(--frame-margin, 30px)) instead of sitting below it,
+   * AND it broadcasts a window-level `industry-sticky-shown` CustomEvent
+   * whenever its `shown` state flips. The main navbar listens for that
+   * event and slides itself out of the way, so the industry picker
+   * effectively REPLACES the navbar while it's active. Defaults to false
+   * so existing callers (columbus-solutions) keep their stacked layout.
+   */
+  takeover?: boolean;
 };
 
 /**
@@ -33,7 +43,7 @@ type IndustryStickyNavbarProps = {
  * Visible only while the four-row block intersects the viewport (observed
  * via the `[data-use-case-rows]` marker rendered by UseCaseStickyScroll).
  */
-export default function IndustryStickyNavbar({ lightTheme = false, topOffset = 56, industries }: IndustryStickyNavbarProps) {
+export default function IndustryStickyNavbar({ lightTheme = false, topOffset = 56, industries, takeover = false }: IndustryStickyNavbarProps) {
   const order = industries ?? INDUSTRY_ORDER;
   const { industryId, setIndustryId } = useIndustry();
   const [shown, setShown] = useState(false);
@@ -63,6 +73,22 @@ export default function IndustryStickyNavbar({ lightTheme = false, topOffset = 5
   }, []);
 
   const effectiveTop = measuredTop ?? topOffset;
+
+  /* In takeover mode the sub-navbar REPLACES the main navbar, so it pins
+     at the same top slot the main navbar uses (the page-frame margin)
+     and the main navbar slides itself out of the way. Without takeover
+     it sits below the main navbar at its measured bottom edge. */
+  const topPosition = takeover ? "var(--frame-margin, 30px)" : effectiveTop;
+
+  /* Broadcast `shown` so a takeover-capable main navbar can hide while
+     this sub-navbar is active. Scoped to takeover mode so non-takeover
+     pages don't fire stray events. */
+  useEffect(() => {
+    if (!takeover) return;
+    window.dispatchEvent(
+      new CustomEvent("industry-sticky-shown", { detail: shown }),
+    );
+  }, [shown, takeover]);
 
   // Visibility: prefer the explicit industry sticky-zone wrapper if a
   // page provides one (e.g. business page wraps from the first super-
@@ -142,7 +168,12 @@ export default function IndustryStickyNavbar({ lightTheme = false, topOffset = 5
     <div
       className={`fixed left-0 right-0 z-40 w-full ${containerBg} transition-[opacity,transform] duration-300 ease-out`}
       style={{
-        top: effectiveTop,
+        top: topPosition,
+        /* In takeover mode the picker should inherit the page frame's
+           top corner curve so it visually replaces the main navbar with
+           a continuous rounded card edge. */
+        borderTopLeftRadius: takeover ? "var(--frame-radius, 20px)" : undefined,
+        borderTopRightRadius: takeover ? "var(--frame-radius, 20px)" : undefined,
         opacity: shown ? 1 : 0,
         transform: shown ? "translateY(0)" : "translateY(-12px)",
         pointerEvents: shown ? "auto" : "none",

@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
 const reveal = (visible: boolean, delay: number): React.CSSProperties => ({
@@ -8,6 +9,27 @@ const reveal = (visible: boolean, delay: number): React.CSSProperties => ({
   transform: visible ? "translateY(0)" : "translateY(14px)",
   transition: `opacity 0.75s ease ${delay}s, transform 0.75s ease ${delay}s`,
 });
+
+/* Dot-arrow glyph used inside the primary CTA — five filled circles in a
+   chevron shape. Mirrors the `ArrowDots` defined in ElioFinalCTA so all
+   bg-cta buttons across the site share the same trailing glyph. */
+function ArrowDots({ className = "" }: { className?: string }) {
+  return (
+    <svg
+      className={"size-3 shrink-0 " + className}
+      width="24"
+      viewBox="0 0 9 13"
+      fill="none"
+      aria-hidden="true"
+    >
+      <circle cx="7.22" cy="6.589" r="1.28" fill="currentColor" />
+      <circle cx="4.658" cy="4.018" r="1.28" fill="currentColor" />
+      <circle cx="2.099" cy="1.46" r="1.28" fill="currentColor" />
+      <circle cx="4.658" cy="9.151" r="1.28" fill="currentColor" />
+      <circle cx="2.099" cy="11.718" r="1.28" fill="currentColor" />
+    </svg>
+  );
+}
 
 export default function BusinessHero() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -128,6 +150,20 @@ export default function BusinessHero() {
         >
           GIS so easy, the janitor could be your new researcher
         </p>
+
+        {/* CTA — the site-wide on-brand pill button (bg-cta navy fill,
+            white text, dot-arrow). Same idiom used on the homepage's
+            ElioFinalCTA, the /company page, /not-found, and other primary
+            CTAs across the site. */}
+        <Link
+          href="/maps-gpt"
+          className="group mt-8 rounded-full px-7 py-3.5 text-sm leading-none flex items-center gap-2.5 transition-colors bg-cta text-white hover:text-[#154ACC]"
+        >
+          Start Now
+          <span className="inline-block transition-transform group-hover:translate-x-0.5">
+            <ArrowDots className="text-[#154ACC]" />
+          </span>
+        </Link>
       </div>
 
       {/* ── Product display — glass browser window ── */}

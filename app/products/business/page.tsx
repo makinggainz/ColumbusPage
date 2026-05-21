@@ -9,11 +9,9 @@ import { MistxNav } from "@/components/layout/MistxNav";
 import { Footer } from "@/components/layout/Footer";
 import ComparisonSection from "@/components/business/ComparisonSection";
 import ChatSection from "@/components/business/ChatSection";
-import UseCaseStickyScroll from "@/components/use-cases/UseCaseStickyScroll";
 import { IndustryProvider } from "@/components/use-cases/industry/IndustryContext";
 import IndustrySelector from "@/components/use-cases/industry/IndustrySelector";
 import IndustryStickyNavbar from "@/components/use-cases/industry/IndustryStickyNavbar";
-import ColumbusSolutionsSections from "@/components/use-cases/ColumbusSolutionsSections";
 import type { IndustryId } from "@/components/use-cases/industry/types";
 import ProductBanner from "@/components/business/ProductBanner";
 import CapabilitiesGrid from "@/components/business/CapabilitiesGrid";
@@ -133,14 +131,14 @@ export default function BusinessPage() {
       </section>
       <section className="relative">
         {/* The industry-aware block ("Pick your industry" →
-            IndustrySelector + the four-row UseCaseStickyScroll under
-            IndustryProvider), then ColumbusSolutionsSections and the FAQ.
-            lightTheme is forced on so it matches the business page's
-            white/homepage system. topOffset = MistxNav's height (its
-            content row is py-6 ≈ 84px) so the industry sub-navbar pins
-            flush under it instead of the 56px columbus-solutions navbar. */}
+            IndustrySelector under IndustryProvider, which scopes the
+            super-feature rows below to the chosen industry), then the
+            FAQ. lightTheme is forced on so it matches the business
+            page's white/homepage system. topOffset = MistxNav's height
+            (its content row is py-6 ≈ 84px) so the industry sub-navbar
+            pins flush under it. */}
         <IndustryProvider>
-          <IndustryStickyNavbar lightTheme topOffset={84} industries={BUSINESS_INDUSTRIES} />
+          <IndustryStickyNavbar lightTheme topOffset={84} industries={BUSINESS_INDUSTRIES} takeover />
           <IndustrySelector lightTheme rounded industries={BUSINESS_INDUSTRIES} />
           {/* Industry sticky zone — the sub-navbar above observes this
               wrapper, so the navbar appears the moment the user scrolls
@@ -316,12 +314,8 @@ export default function BusinessPage() {
             demoVisual={<DashboardListMockup />}
             panel={false}
           />
-          <UseCaseStickyScroll lightTheme roundedTop disableSticky />
           </div>
         </IndustryProvider>
-        <section className="relative">
-          <ColumbusSolutionsSections lightTheme disableSticky roundedBottom />
-        </section>
         <section className="relative">
           <FAQSection />
         </section>

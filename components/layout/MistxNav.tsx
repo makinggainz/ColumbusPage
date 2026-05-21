@@ -123,6 +123,11 @@ export function MistxNav({
   // so it reads as a seamless continuation of the stage behind it. 0 is the
   // cream intro; 1/2/3 are the cream / navy / white scenes.
   const [heroPhase, setHeroPhase] = useState(0);
+  // When a takeover-capable IndustryStickyNavbar is visible on the page,
+  // it dispatches `industry-sticky-shown` events; this state mirrors
+  // those so the main navbar can slide itself out and let the sub-navbar
+  // occupy the top slot alone. No-op on pages without that sub-navbar.
+  const [industryHidden, setIndustryHidden] = useState(false);
   const headerRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
@@ -174,6 +179,19 @@ export function MistxNav({
     return () => window.removeEventListener("mapsgpt-hero-phase", onPhase);
   }, [heroLight]);
 
+  // Listen for the takeover signal from IndustryStickyNavbar (business
+  // page). When the sub-navbar is showing, hide the main navbar; when it
+  // hides, the main navbar slides back in. Pages without that sub-
+  // navbar never fire this event, so this is a no-op everywhere else.
+  useEffect(() => {
+    const onIndustry = (e: Event) => {
+      const detail = (e as CustomEvent<boolean>).detail;
+      setIndustryHidden(!!detail);
+    };
+    window.addEventListener("industry-sticky-shown", onIndustry);
+    return () => window.removeEventListener("industry-sticky-shown", onIndustry);
+  }, []);
+
   const showBackdrop = stuck || !hasHero;
   // When `heroWhite` is set (business page), the nav contents render in
   // white while the navbar floats transparently over the hero image, then
@@ -213,7 +231,7 @@ export function MistxNav({
   return (
     <header
       ref={headerRef}
-      className="sticky z-100 w-full transition-[background-color] duration-300"
+      className="sticky z-100 w-full"
       style={{
         // Sticks at the card's top edge (= the 30px top gutter), so the
         // gutter stays visible above the navbar instead of getting
@@ -223,7 +241,17 @@ export function MistxNav({
         borderTopLeftRadius: "var(--frame-radius, 20px)",
         borderTopRightRadius: "var(--frame-radius, 20px)",
         backgroundColor: showBackdrop && !heroScrim ? "#FFFFFF" : "transparent",
+        // Industry-picker takeover: slide up + fade out so the
+        // sub-navbar (positioned at the same top slot) reads as a clean
+        // replacement, no overlap. Returns to translateY(0) the moment
+        // the sticky-zone scrolls out of view.
+        transform: industryHidden ? "translateY(-110%)" : "translateY(0)",
+        opacity: industryHidden ? 0 : 1,
+        pointerEvents: industryHidden ? "none" : undefined,
+        transition:
+          "background-color 300ms ease, transform 300ms cubic-bezier(0.22, 1, 0.36, 1), opacity 300ms ease",
       }}
+      aria-hidden={industryHidden || undefined}
     >
       {/* Business hero-only backdrop. Sits behind the content row
           (z-0 vs the row's z-10). Tinted to the colour seen IN the navbar
