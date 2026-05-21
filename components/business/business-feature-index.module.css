@@ -48,7 +48,7 @@
 
 .itemActive,
 .itemActive:hover {
-  background: rgba(11, 27, 43, 0.07);
+  background: #f7f7f7;
   color: rgba(11, 27, 43, 0.82);
 }
 
@@ -62,12 +62,12 @@
 }
 
 .root:hover .item {
-  background: rgba(11, 27, 43, 0.04);
+  background: #f7f7f7;
   color: rgba(11, 27, 43, 0.82);
 }
 
 .root:hover .itemActive {
-  background: rgba(11, 27, 43, 0.07);
+  background: #f7f7f7;
 }
 
 .root:hover .text {

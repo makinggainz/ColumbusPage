@@ -6,9 +6,6 @@ import { createPortal } from "react-dom";
 import styles from "./business-feature-index.module.css";
 
 const ITEMS = [
-  { label: "Pain Points", id: "problem" },
-  { label: "Solution", id: "solution" },
-  { label: "Capabilities", id: "capabilities" },
   { label: "Conversational chat", id: "chat" },
   { label: "Generative surveying", id: "super-model" },
   { label: "Agent research", id: "agent-research" },

@@ -2,158 +2,312 @@
 
 import Image from "next/image";
 
-/* ── Super-feature section scaffold ─────────────────────────────────────────
-   One "super feature": a centered title/subtitle, then a hero-style framed
-   block (image background + dark scrim) with a product-demo image layered
-   on top, then a row of sub-features beneath. The whole thing sits inside
-   an #F7F7F7 panel so consecutive super-features can stack as one band. */
+/* ── Super-feature section ──────────────────────────────────────────────────
+   One "super feature" on an #F7F7F7 band. Header: small icon, title, and a
+   two-line subtitle (the inline accent text is the only colour spot). Below
+   it, a sky-backdrop frame holds the main product demo. Beneath that, the
+   sub-features stack as alternating rows — text column on one side, a
+   matching sky-backdrop card with a floating mockup on the other. */
 
 export type SuperFeatureSubItem = {
   title: string;
-  description: string;
+  description: React.ReactNode;
+  /* Optional icon shown above the title in the text column. Same chip style
+     as the parent super-feature icon — pass a 36×36 element. */
+  icon?: React.ReactNode;
+  /* Either pass `image` (rendered inside a default floating card) or
+     `visual` (rendered raw — bring your own card / chrome). */
+  image?: string;
+  imageAlt?: string;
+  visual?: React.ReactNode;
+  /* Per-row override of the shared sky backdrop (e.g. a map image). */
+  backdropImage?: string;
+  /* Opt out of the side-by-side 4/8 grid + 1:1 square frame and render the
+     `visual` across the full sub-features content width with no automatic
+     header/text column. The `visual` then owns its own heading, subtitle,
+     internal layout, and backdrop. When `stacked` is true, `description`,
+     `image`, `imageAlt`, and `backdropImage` are ignored. */
+  stacked?: boolean;
 };
 
 export type SuperFeatureSectionProps = {
   id?: string;
+  icon?: React.ReactNode;
   title: string;
-  subtitle?: string;
-  /* Background image for the framed block (hero-style with dark overlay). */
+  subtitle?: React.ReactNode;
+  /* Background image shared by the main frame and sub-feature cards. */
   backgroundImage: string;
-  /* Product-demo image that sits on top of the framed block. */
-  demoImage: string;
+  /* Optional override applied to every sub-feature card's backdrop. Each
+     sub-feature may still override this individually via its own
+     `backdropImage`. Falls back to `backgroundImage` when omitted. */
+  subFeatureBackdrop?: string;
+  /* Provide one of `demoImage` (rendered through FloatingMockup) or
+     `demoVisual` (a React node rendered raw inside the framed block).
+     When both are present, `demoVisual` wins. */
+  demoImage?: string;
   demoAlt?: string;
+  demoVisual?: React.ReactNode;
   subFeatures?: SuperFeatureSubItem[];
+  /* When false, the surrounding #F7F7F7 panel is dropped and the hero
+     block + sub-features render directly on the page background. Sections
+     that already supply their own framing (e.g. a card mockup) use this
+     to avoid a double-frame. Defaults to true to preserve existing
+     sections' visuals. */
+  panel?: boolean;
+  /* When false, the dark legibility scrim that SkyBackdrop paints over
+     photographic background images is dropped, so the image renders at
+     its true brightness. Defaults to true so existing sections keep
+     their current appearance. */
+  scrim?: boolean;
 };
 
 export default function SuperFeatureSection({
   id,
+  icon,
   title,
   subtitle,
   backgroundImage,
+  subFeatureBackdrop,
   demoImage,
   demoAlt = "",
+  demoVisual,
   subFeatures = [],
+  panel = true,
+  scrim = true,
 }: SuperFeatureSectionProps) {
   return (
     <section
       id={id}
       className="relative w-full"
       style={{
-        backgroundColor: "#F7F7F7",
         paddingTop: "var(--ent-section-lg)",
         paddingBottom: "var(--ent-section-lg)",
       }}
     >
+      {/* Header — sits OUTSIDE the gray panel, on the page background */}
       <div className="ent-content-bounds">
-        {/* Header — centered title + subtitle */}
         <div className="flex flex-col items-center text-center px-6">
+          {icon ? (
+            <div className="mb-5 flex items-center justify-center">{icon}</div>
+          ) : null}
           <h2
-            className="leading-[1.1] text-[28px] md:text-[36px] lg:text-[45px]"
+            className="leading-[1.1] text-[28px] md:text-[36px] lg:text-[42px]"
             style={{
               color: "var(--ent-text-primary)",
-              fontWeight: 500,
+              fontWeight: 600,
               letterSpacing: "-0.02em",
-              maxWidth: 720,
+              maxWidth: 760,
             }}
           >
             {title}
           </h2>
           {subtitle ? (
-            <p
-              className="mt-4 max-w-150 text-[15px] md:text-[17px] leading-[1.5]"
+            <div
+              className="mt-3 max-w-150 text-[15px] md:text-[16px] leading-[1.55]"
               style={{ color: "var(--ent-text-secondary)", letterSpacing: "-0.005em" }}
             >
               {subtitle}
-            </p>
+            </div>
           ) : null}
         </div>
+      </div>
 
-        {/* Framed block — background image + dark overlay (hero pattern),
-            with the product-demo image layered above. */}
+      {/* Gray panel — capped to content bounds with rounded corners. The
+          main demo block runs flush to the panel's edges (no horizontal
+          padding on the panel itself); sub-features below set their own
+          horizontal padding so they stay readable. When `panel` is false,
+          the panel chrome (background, radius, overflow clipping) is
+          dropped so content sits directly on the page background. */}
+      <div
+        className="ent-content-bounds mt-10 lg:mt-14"
+        style={{
+          backgroundColor: panel ? "#F7F7F7" : "transparent",
+          borderRadius: panel ? "var(--ent-radius-2xl)" : "0",
+          paddingBottom: panel ? "var(--ent-section-lg)" : "0",
+          overflow: panel ? "hidden" : "visible",
+        }}
+      >
+        {/* Main framed block — sky backdrop + product demo, fills the
+            panel's full width (no inset). */}
         <div
-          className="relative mt-12 lg:mt-16 overflow-hidden"
-          style={{
-            borderRadius: "var(--ent-radius-card)",
-            border: "1px solid var(--ent-border-card)",
-          }}
+          className="relative overflow-hidden"
+          style={{ borderRadius: "var(--ent-radius-2xl)" }}
         >
-          <div
-            className="absolute inset-0 pointer-events-none"
-            style={{
-              backgroundImage: `url(${backgroundImage})`,
-              backgroundPosition: "center",
-              backgroundSize: "cover",
-              backgroundRepeat: "no-repeat",
-              zIndex: 0,
-            }}
-            aria-hidden
-          />
-          <div
-            className="absolute inset-0 pointer-events-none"
-            style={{
-              background:
-                "linear-gradient(to bottom, rgba(0,0,0,0.42) 0%, rgba(0,0,0,0.28) 38%, rgba(0,0,0,0.12) 62%, rgba(0,0,0,0) 86%)",
-              zIndex: 0,
-            }}
-            aria-hidden
-          />
-
-          {/* Product-demo container — sits on top of the image. Inner image
-              gets its own rounded card so it reads as a product mock floating
-              above the framed backdrop. */}
-          <div
-            className="relative z-10 flex justify-center w-full"
-            style={{
-              paddingTop: "clamp(48px, 7vw, 96px)",
-              paddingBottom: "clamp(48px, 7vw, 96px)",
-              paddingLeft: 20,
-              paddingRight: 20,
-            }}
-          >
-            <div
-              style={{
-                width: "100%",
-                maxWidth: 1100,
-                borderRadius: "var(--ent-radius-card)",
-                overflow: "hidden",
-                boxShadow: "var(--ent-shadow-card)",
-              }}
-            >
-              <div style={{ position: "relative", width: "100%", aspectRatio: "16 / 10" }}>
-                <Image
-                  src={demoImage}
-                  alt={demoAlt}
-                  fill
-                  sizes="(max-width: 1100px) 100vw, 1100px"
-                  className="object-cover object-center"
-                />
-              </div>
-            </div>
+          <SkyBackdrop image={backgroundImage} scrim={scrim} />
+          <div className="relative z-10 flex justify-center" style={{ padding: "clamp(20px, 3vw, 40px)" }}>
+            {demoVisual ? (
+              demoVisual
+            ) : demoImage ? (
+              <FloatingMockup src={demoImage} alt={demoAlt} aspectRatio="16 / 9" maxWidth={1180} />
+            ) : null}
           </div>
         </div>
 
-        {/* Sub-features — text grid beneath the framed block */}
+        {/* Sub-features — alternating text/visual rows */}
         {subFeatures.length > 0 ? (
-          <div className="mt-12 lg:mt-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-10">
-            {subFeatures.map(item => (
-              <div key={item.title}>
-                <h3
-                  className="text-[18px] md:text-[20px] font-semibold leading-[1.2]"
-                  style={{ color: "var(--ent-text-primary)", letterSpacing: "-0.01em" }}
+          <div
+            className="mt-20 lg:mt-32 flex flex-col gap-20 lg:gap-32"
+            style={{
+              paddingLeft: "clamp(20px, 3vw, 40px)",
+              paddingRight: "clamp(20px, 3vw, 40px)",
+            }}
+          >
+            {subFeatures.map((item, i) => {
+              const reversed = i % 2 === 1;
+              if (item.stacked) {
+                /* Full-width row — the visual owns its header, subtitle,
+                   and backdrop. No 4/8 grid, no 1:1 square frame, no
+                   SkyBackdrop. */
+                return (
+                  <div key={item.title} className="w-full">
+                    {item.visual}
+                  </div>
+                );
+              }
+              return (
+                <div
+                  key={item.title}
+                  className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center"
                 >
-                  {item.title}
-                </h3>
-                <p
-                  className="mt-2 text-[14px] md:text-[15px] leading-[1.5]"
-                  style={{ color: "var(--ent-text-secondary)", letterSpacing: "-0.005em" }}
-                >
-                  {item.description}
-                </p>
-              </div>
-            ))}
+                  <div className={`lg:col-span-4 px-6 lg:px-0 ${reversed ? "lg:order-2 lg:pl-8" : "lg:pr-8"}`}>
+                    {item.icon ? (
+                      <div className="mb-4 flex items-center">{item.icon}</div>
+                    ) : null}
+                    <h3
+                      className="text-[24px] md:text-[30px] lg:text-[36px] leading-[1.1]"
+                      style={{ color: "var(--ent-text-primary)", fontWeight: 600, letterSpacing: "-0.02em" }}
+                    >
+                      {item.title}
+                    </h3>
+                    <div
+                      className="mt-4 text-[14px] md:text-[15px] leading-[1.6]"
+                      style={{ color: "var(--ent-text-secondary)", letterSpacing: "-0.005em" }}
+                    >
+                      {item.description}
+                    </div>
+                  </div>
+                  <div
+                    className={`lg:col-span-8 relative overflow-hidden ${reversed ? "lg:order-1" : ""}`}
+                    style={{
+                      borderRadius: "var(--ent-radius-2xl)",
+                      aspectRatio: "1 / 1",
+                    }}
+                  >
+                    <SkyBackdrop image={item.backdropImage ?? subFeatureBackdrop ?? backgroundImage} />
+                    <div
+                      className="relative z-10 w-full h-full flex items-center justify-center"
+                      style={{ padding: "clamp(24px, 3vw, 56px)" }}
+                    >
+                      {item.visual ? (
+                        item.visual
+                      ) : item.image ? (
+                        <div
+                          style={{
+                            maxWidth: "78%",
+                            width: "100%",
+                            borderRadius: "var(--ent-radius-2xl)",
+                            overflow: "hidden",
+                            boxShadow: SUPER_FLOATING_BOX_SHADOW,
+                          }}
+                        >
+                          <Image
+                            src={item.image}
+                            alt={item.imageAlt ?? item.title}
+                            width={900}
+                            height={650}
+                            sizes="(max-width: 1024px) 90vw, 600px"
+                            className="block w-full h-auto"
+                          />
+                        </div>
+                      ) : null}
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         ) : null}
       </div>
     </section>
   );
 }
+
+/* Backdrop. Accepts either a photo path (rendered via `url(...)`) or a raw
+   CSS gradient string (e.g. `linear-gradient(...)`) — detected by the
+   presence of `gradient(` in the value. Photos get a subtle top-down scrim
+   for legibility; gradients self-control lightness and skip the scrim.
+   Callers can also force the scrim off via `scrim={false}` when they want
+   the photo at its true brightness (e.g. when no white UI is overlaid). */
+function SkyBackdrop({ image, scrim = true }: { image: string; scrim?: boolean }) {
+  const isGradient = image.includes("gradient(");
+  return (
+    <>
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          backgroundImage: isGradient ? image : `url(${image})`,
+          backgroundPosition: "center",
+          backgroundSize: "cover",
+          backgroundRepeat: "no-repeat",
+          zIndex: 0,
+        }}
+        aria-hidden
+      />
+      {isGradient || !scrim ? null : (
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background:
+              "linear-gradient(to bottom, rgba(0,0,0,0.18) 0%, rgba(0,0,0,0.08) 50%, rgba(0,0,0,0) 100%)",
+            zIndex: 0,
+          }}
+          aria-hidden
+        />
+      )}
+    </>
+  );
+}
+
+function FloatingMockup({
+  src,
+  alt,
+  aspectRatio,
+  maxWidth,
+}: {
+  src: string;
+  alt: string;
+  aspectRatio: string;
+  maxWidth: number;
+}) {
+  return (
+    <div
+      className="mx-auto"
+      style={{
+        width: "100%",
+        maxWidth,
+        borderRadius: "var(--ent-radius-2xl)",
+        overflow: "hidden",
+        boxShadow: SUPER_FLOATING_BOX_SHADOW,
+      }}
+    >
+      <div style={{ position: "relative", width: "100%", aspectRatio }}>
+        <Image
+          src={src}
+          alt={alt}
+          fill
+          sizes={`(max-width: ${maxWidth}px) 100vw, ${maxWidth}px`}
+          className="object-cover object-center"
+        />
+      </div>
+    </div>
+  );
+}
+
+/* Heavy multi-layer shadow recipe used for content floating over the
+   photographic SkyBackdrop. A close, dark layer grounds the card to its
+   immediate surroundings; the wider, softer layers carry the halo that
+   reads at distance. Tuned to ground white UI mockups over busy imagery
+   without needing a scrim. */
+const SUPER_FLOATING_BOX_SHADOW =
+  "0 1px 2px rgba(0,0,0,0.10), 0 6px 14px rgba(0,0,0,0.10), 0 28px 56px rgba(0,0,0,0.22), 0 56px 96px rgba(0,0,0,0.18)";
+
