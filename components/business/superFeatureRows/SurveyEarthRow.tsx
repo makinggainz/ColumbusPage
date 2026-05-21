@@ -34,7 +34,7 @@ export default function SurveyEarthRow() {
         title="Survey the earth with a super model"
         subtitle={
           <>
-            <a href="#" style={{ color: "var(--ent-accent)" }}>
+            <a href="#" style={{ color: "var(--ent-accent)", fontWeight: 500 }}>
               Smart Layers
             </a>
             , allows you to come up with data layers that would&rsquo;ve been
@@ -104,6 +104,7 @@ export default function SurveyEarthRow() {
             alt="NYC pre-vibe shift choropleth across Brooklyn, Queens, and the Bronx"
             aspectRatio="5 / 3"
             radius="var(--ent-radius-2xl)"
+            shadow={false}
           />
         </div>
       </div>
@@ -121,6 +122,7 @@ export default function SurveyEarthRow() {
           alt="NYC pre-vibe shift choropleth across Brooklyn, Queens, and the Bronx"
           aspectRatio="4 / 3"
           radius="var(--ent-radius-2xl)"
+          shadow={false}
         />
       </div>
     </div>

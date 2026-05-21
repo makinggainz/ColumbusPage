@@ -158,7 +158,7 @@ export default function BusinessPage() {
             title="Ask, Discover, Understand"
             subtitle={
               <>
-                With <a href="#" style={{ color: "var(--ent-accent)" }}>conversational map chat</a>, ask your chat directly about anything.<br />
+                With <a href="#" style={{ color: "var(--ent-accent)", fontWeight: 500 }}>conversational map chat</a>, ask your chat directly about anything.<br />
                 Have a conversation like you&rsquo;re talking to your best Noids analyst
               </>
             }
@@ -171,7 +171,7 @@ export default function BusinessPage() {
                 title: "See what others cant",
                 description: (
                   <>
-                    Sophisticated <a href="#" style={{ color: "var(--ent-accent)" }}>pattern detection</a>.
+                    Sophisticated <a href="#" style={{ color: "var(--ent-accent)", fontWeight: 500 }}>pattern detection</a>.
                     Ask chat to uncover hidden patterns across the map &amp; data
                   </>
                 ),
@@ -190,7 +190,7 @@ export default function BusinessPage() {
                 description: (
                   <>
                     <p>
-                      Like weather forecasts, but for [UserIndustry]. <a href="#" style={{ color: "var(--ent-accent)" }}>Predict the future</a> on Columbus.
+                      Like weather forecasts, but for [UserIndustry]. <a href="#" style={{ color: "var(--ent-accent)", fontWeight: 500 }}>Predict the future</a> on Columbus.
                     </p>
                     <p className="mt-3">Forecast residential prices, note future hot areas.</p>
                     <p className="mt-3">Powered by a deep-learning pattern recognition fed by the most up-to-date and high quality data.</p>
@@ -217,7 +217,7 @@ export default function BusinessPage() {
                 description: (
                   <>
                     <p>
-                      Drop in messy spreadsheets, PDFs, or exports — Columbus <a href="#" style={{ color: "var(--ent-accent)" }}>harmonizes</a> them and puts them on the map.
+                      Drop in messy spreadsheets, PDFs, or exports — Columbus <a href="#" style={{ color: "var(--ent-accent)", fontWeight: 500 }}>harmonizes</a> them and puts them on the map.
                     </p>
                     <p className="mt-3">No schemas to define, no columns to map. Just upload and ask follow-up questions in plain English.</p>
                   </>
@@ -243,10 +243,10 @@ export default function BusinessPage() {
             title="Trusted data, verified for confidence"
             subtitle={
               <>
-                Access proprietary data, and the highest quality data from our <a href="#" style={{ color: "var(--ent-accent)" }}>curated data catalogue</a>. Data on Columbus is triple-checked.
+                Access proprietary data, and the highest quality data from our <a href="#" style={{ color: "var(--ent-accent)", fontWeight: 500 }}>curated data catalogue</a>. Data on Columbus is triple-checked.
               </>
             }
-            backgroundImage="/vibegreen.png"
+            backgroundImage="/ColumBuzHero.png"
             subFeatureBackdrop="/Residential/res-bg-6.png"
             demoImage="/dataCataSm.png"
             demoAlt="Columbus data manager"
@@ -291,6 +291,7 @@ export default function BusinessPage() {
             demoAlt="Columbus Map Chat View — Minneapolis real estate property flips"
             subFeatures={[
               {
+                id: "due-diligence",
                 title: "Agentic research sub-features",
                 description: null,
                 visual: <AgenticResearchTriad />,

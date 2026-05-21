@@ -6,10 +6,12 @@ import { createPortal } from "react-dom";
 import styles from "./business-feature-index.module.css";
 
 const ITEMS = [
-  { label: "Conversational chat", id: "chat" },
-  { label: "Generative surveying", id: "super-model" },
-  { label: "Agent research", id: "agentic-research" },
-  { label: "Data catalogue", id: "data-catalogue" },
+  { label: "Map Chat", id: "chat" },
+  { label: "Data Catalogue", id: "data-catalogue" },
+  { label: "Generative Data", id: "super-model" },
+  { label: "Research", id: "agentic-research" },
+  { label: "Due Dillegence", id: "due-diligence" },
+  { label: "Dashboard", id: "dashboard" },
 ];
 
 export default function BusinessFeatureIndex() {

@@ -420,7 +420,6 @@ export default function ComparisonSection() {
             border: HAIRLINE,
             borderRadius: "var(--ent-radius-card)",
             backgroundColor: "#FFFFFF",
-            boxShadow: "0 1px 2px rgba(11,27,43,0.04), 0 14px 36px rgba(11,27,43,0.10)",
           }}
         >
           {/* App top bar */}

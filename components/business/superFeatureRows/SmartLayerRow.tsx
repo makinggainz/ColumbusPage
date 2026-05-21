@@ -24,7 +24,7 @@ export default function SmartLayerRow() {
           <>
             Columbus has brought accurate GenAI to GeoData.
             <br />
-            <a href="#" style={{ color: "var(--ent-accent)" }}>
+            <a href="#" style={{ color: "var(--ent-accent)", fontWeight: 500 }}>
               Smart layers
             </a>{" "}
             complete gaps in data when its unavailable or hard to survey.

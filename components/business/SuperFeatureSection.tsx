@@ -256,12 +256,11 @@ function SkyBackdrop({ image, scrim = true }: { image: string; scrim?: boolean }
         <div
           className="absolute inset-0 pointer-events-none"
           style={{
-            /* Stronger top-down legibility scrim. Roughly 2.5× the
-               previous values across the gradient stops so light-coloured
-               photos (e.g. /vibegreen.png) carry enough contrast for the
-               header text + white UI mockups sitting on top of them. */
-            background:
-              "linear-gradient(to bottom, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.25) 50%, rgba(0,0,0,0.10) 100%)",
+            /* Flat 35% black scrim — uniform across the image rather
+               than a top-down gradient. Tuned for enough contrast on
+               light photos without darkening the bottom of the frame
+               unevenly. */
+            background: "rgba(0,0,0,0.35)",
             zIndex: 0,
           }}
           aria-hidden

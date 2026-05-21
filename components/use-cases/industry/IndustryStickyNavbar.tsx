@@ -39,6 +39,30 @@ export default function IndustryStickyNavbar({ lightTheme = false, topOffset = 5
   const [shown, setShown] = useState(false);
   const [scrollState, setScrollState] = useState({ atStart: true, atEnd: false });
   const trackRef = useRef<HTMLDivElement>(null);
+  // Dynamically measured bottom of the page header above this sub-navbar
+  // so the two sit flush regardless of the header's actual height. Falls
+  // back to the static `topOffset` prop until the measurement runs (and
+  // for SSR), so the navbar still renders at a sensible position.
+  const [measuredTop, setMeasuredTop] = useState<number | null>(null);
+
+  useEffect(() => {
+    const header = document.querySelector<HTMLElement>("header");
+    if (!header) return;
+    const measure = () => {
+      const rect = header.getBoundingClientRect();
+      setMeasuredTop(rect.bottom);
+    };
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(header);
+    window.addEventListener("resize", measure);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener("resize", measure);
+    };
+  }, []);
+
+  const effectiveTop = measuredTop ?? topOffset;
 
   // Visibility: prefer the explicit industry sticky-zone wrapper if a
   // page provides one (e.g. business page wraps from the first super-
@@ -52,11 +76,11 @@ export default function IndustryStickyNavbar({ lightTheme = false, topOffset = 5
     if (!target) return;
     const obs = new IntersectionObserver(
       ([entry]) => setShown(entry.isIntersecting),
-      { rootMargin: `-${topOffset}px 0px 0px 0px`, threshold: 0 },
+      { rootMargin: `-${effectiveTop}px 0px 0px 0px`, threshold: 0 },
     );
     obs.observe(target);
     return () => obs.disconnect();
-  }, [topOffset]);
+  }, [effectiveTop]);
 
   // Track horizontal scroll position so we can show / hide the edge gradients.
   const updateScrollState = useCallback(() => {
@@ -118,7 +142,7 @@ export default function IndustryStickyNavbar({ lightTheme = false, topOffset = 5
     <div
       className={`fixed left-0 right-0 z-40 w-full ${containerBg} transition-[opacity,transform] duration-300 ease-out`}
       style={{
-        top: topOffset,
+        top: effectiveTop,
         opacity: shown ? 1 : 0,
         transform: shown ? "translateY(0)" : "translateY(-12px)",
         pointerEvents: shown ? "auto" : "none",
