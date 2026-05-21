@@ -106,11 +106,8 @@ function LeftColumn() {
         borderRight: `1px solid ${HAIRLINE}`,
       }}
     >
-      <div
-        className="flex items-center justify-center"
-        style={{ height: 48, backgroundColor: ACTIVE_PILL }}
-      >
-        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round">
+      <div className="flex items-center justify-center" style={{ height: 48 }}>
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#1F2937" strokeWidth="2" strokeLinecap="round">
           <path d="M4 6h16M4 12h16M4 18h16" />
         </svg>
       </div>
@@ -177,10 +174,8 @@ function SideIcon({ children, active = false }: { children: React.ReactNode; act
     <div
       className="flex items-center justify-center"
       style={{
-        width: 34,
-        height: 34,
-        marginBottom: 8,
-        borderRadius: 7,
+        width: "100%",
+        height: 56,
         backgroundColor: active ? ACTIVE_PILL : "transparent",
         color: active ? "#FFFFFF" : "#4B5563",
       }}
@@ -299,9 +294,23 @@ function ChatPanel() {
             backgroundColor: PANEL_BG,
           }}
         >
-          <span style={{ color: MUTED, fontSize: 13 }}>
-            Ask Columbus or type &ldquo;/&rdquo;
-          </span>
+          <input
+            type="text"
+            placeholder={'Ask Columbus or type "/"'}
+            aria-label="Ask Columbus"
+            style={{
+              flex: 1,
+              minWidth: 0,
+              height: "100%",
+              border: "none",
+              outline: "none",
+              background: "transparent",
+              color: NAVY,
+              fontSize: 13,
+              fontFamily: "inherit",
+              padding: 0,
+            }}
+          />
           <button
             type="button"
             aria-label="Send"
@@ -313,7 +322,8 @@ function ChatPanel() {
               backgroundColor: NAVY,
               color: "#FFFFFF",
               border: "none",
-              cursor: "default",
+              cursor: "pointer",
+              marginLeft: 8,
             }}
           >
             <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -642,7 +652,6 @@ function DrawnAreaPanel({
       style={{
         right: 10,
         top: 10,
-        bottom: 10,
         width: "30%",
         maxWidth: 270,
         minWidth: 190,
