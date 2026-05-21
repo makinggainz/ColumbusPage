@@ -2,6 +2,14 @@
 
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
+import {
+  Building2,
+  GraduationCap,
+  Home,
+  LandPlot,
+  Leaf,
+  MapPinned,
+} from "lucide-react";
 import { useIndustry } from "./IndustryContext";
 import { INDUSTRY_CONTENT, INDUSTRY_ORDER } from "./content";
 import type { IndustryId } from "./types";
@@ -203,8 +211,9 @@ function IconGrid({
         className="mx-auto grid grid-cols-3 max-md:grid-cols-1"
         style={{
           maxWidth: 1100,
-          /* Strict homepage parity: 7px card corner (--ent-radius-card). */
-          borderRadius: 7,
+          /* Match the corner radius of the SuperFeatureSection panels that
+             sit directly below this grid (--ent-radius-2xl, 24px). */
+          borderRadius: "var(--ent-radius-2xl, 24px)",
           /* Hairline = homepage --color-gridline (#E7E7F1) to match every
              other card on the business page. */
           border: "1px solid #E7E7F1",
@@ -237,36 +246,31 @@ function IconGrid({
                 "group relative flex items-center gap-5",
                 "px-6 md:px-8 py-8 md:py-10",
                 "text-left cursor-pointer transition-colors duration-200",
-                /* Hover lifts text/icon to the homepage accent (#0081AC),
-                   matching CapabilitiesGrid hover behaviour. Active state
-                   uses the same accent persistently. */
                 "border-r border-b border-gridline",
                 "max-md:border-r-0",
                 "max-md:last:border-b-0",
                 "md:nth-[3n]:border-r-0",
                 "md:nth-[n+4]:border-b-0",
+                /* Selection signal is a low-opacity wash of the homepage
+                   navy (--color-cta #0B1342). Idle ink (#0B1B2B) is kept
+                   on text + icon so the active state reads as "selected"
+                   without an in-your-face color shift. */
                 isActive
-                  ? "bg-[rgba(0,129,172,0.05)]"
-                  : "hover:bg-[rgba(11,27,43,0.025)]",
+                  ? "bg-[rgba(11,19,66,0.07)]"
+                  : "hover:bg-[rgba(11,19,66,0.03)]",
               ].join(" ")}
               style={{ minHeight: 130 }}
             >
               <span
                 aria-hidden
-                className="shrink-0 inline-flex items-center justify-center transition-colors duration-200"
-                style={{
-                  width: 48,
-                  height: 48,
-                  color: isActive ? "var(--ent-accent, #0081AC)" : "#0B1B2B",
-                }}
+                className="shrink-0 inline-flex items-center justify-center"
+                style={{ width: 48, height: 48, color: "#0B1B2B" }}
               >
                 <IndustryIcon id={id} />
               </span>
               <span
-                className="text-[18px] md:text-[20px] font-medium leading-[1.2] tracking-[-0.01em] transition-colors duration-200 group-hover:text-(--ent-accent,#0081AC)"
-                style={{
-                  color: isActive ? "var(--ent-accent, #0081AC)" : "#0B1B2B",
-                }}
+                className="text-[18px] md:text-[20px] font-medium leading-[1.2] tracking-[-0.01em]"
+                style={{ color: "#0B1B2B" }}
               >
                 {item.name}
               </span>
@@ -278,176 +282,21 @@ function IconGrid({
   );
 }
 
-/* Per-industry icon. Every glyph is hand-tuned to live inside a 48-unit
-   viewBox, stroke 1.6, round caps/joins, fill: none. The Residential
-   icon carries a small green "David" map-pin badge as a flourish (only
-   colour accent in the grid). All other icons are pure ink line art. */
+/* Per-industry icon. All glyphs come from lucide-react so the stroke
+   weight, cap style, and visual density stay in lockstep across every
+   industry. Rendered at 36px on a 48px chip; strokeWidth 1.6 keeps the
+   lines hairline-thin like the rest of the business page. */
+const INDUSTRY_LUCIDE_ICON: Partial<Record<IndustryId, React.ComponentType<{ size?: number; strokeWidth?: number; absoluteStrokeWidth?: boolean }>>> = {
+  "residential-real-estate": Home,
+  "commercial-real-estate": Building2,
+  "urban-infrastructure": LandPlot,
+  "geomarketing": MapPinned,
+  "academic-research": GraduationCap,
+  "environmental-research": Leaf,
+};
+
 function IndustryIcon({ id }: { id: IndustryId }) {
-  switch (id) {
-    case "residential-real-estate":
-      return (
-        <svg
-          width="48"
-          height="48"
-          viewBox="0 0 48 48"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.6"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          {/* Chimney */}
-          <path d="M32 11 V18" />
-          {/* Roof */}
-          <path d="M6 24 L24 8 L42 24" />
-          {/* Walls */}
-          <path d="M10 22 V42 H38 V22" />
-          {/* Door */}
-          <path d="M20 42 V31 H28 V42" />
-          {/* Window (left) */}
-          <rect x="14" y="27" width="4" height="4" />
-          {/* Window (right) */}
-          <rect x="30" y="27" width="4" height="4" />
-        </svg>
-      );
-
-    case "commercial-real-estate":
-      return (
-        <svg
-          width="48"
-          height="48"
-          viewBox="0 0 48 48"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.6"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          {/* Left tower (tall) */}
-          <path d="M8 41 V14 H22 V41" />
-          {/* Right tower (shorter, offset right) */}
-          <path d="M22 41 V20 H40 V41" />
-          {/* Ground line */}
-          <path d="M6 41 H42" />
-          {/* Left tower windows — 3 rows x 2 cols */}
-          <path d="M12 19 H14 M17 19 H19" />
-          <path d="M12 25 H14 M17 25 H19" />
-          <path d="M12 31 H14 M17 31 H19" />
-          {/* Right tower windows — 2 rows x 3 cols */}
-          <path d="M26 26 H28 M31 26 H33 M36 26 H38" />
-          <path d="M26 33 H28 M31 33 H33 M36 33 H38" />
-        </svg>
-      );
-
-    case "urban-infrastructure":
-      return (
-        <svg
-          width="48"
-          height="48"
-          viewBox="0 0 48 48"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.6"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          {/* Lantern cap (peak + finial) */}
-          <path d="M24 6 V8" />
-          <path d="M19 10 L24 6 L29 10" />
-          {/* Lantern body */}
-          <path d="M19 10 H29 V20 H19 Z" />
-          {/* Light vent inside lantern */}
-          <path d="M22 13 H26" />
-          {/* Decorative collar below lantern */}
-          <path d="M21 20 H27 L26 23 H22 Z" />
-          {/* Post */}
-          <path d="M24 23 V40" />
-          {/* Decorative arm joint */}
-          <circle cx="24" cy="28" r="1.2" />
-          {/* Base */}
-          <path d="M20 40 H28" />
-          <path d="M18 42 H30" />
-        </svg>
-      );
-
-    case "geomarketing":
-      return (
-        <svg
-          width="48"
-          height="48"
-          viewBox="0 0 48 48"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.6"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          {/* Billboard frame */}
-          <rect x="7" y="9" width="34" height="20" rx="1.5" />
-          {/* Inside content lines (chart-like) */}
-          <path d="M12 24 L18 19 L23 22 L30 15 L36 18" />
-          {/* Legs */}
-          <path d="M16 29 L14 41" />
-          <path d="M32 29 L34 41" />
-          {/* Ground */}
-          <path d="M10 41 H38" />
-        </svg>
-      );
-
-    case "academic-research":
-      return (
-        <svg
-          width="48"
-          height="48"
-          viewBox="0 0 48 48"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.6"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          {/* Mortarboard top (diamond) */}
-          <path d="M24 10 L42 19 L24 28 L6 19 Z" />
-          {/* Cap body under the board */}
-          <path d="M13 22 V29 C13 31 18 33 24 33 C30 33 35 31 35 29 V22" />
-          {/* Tassel — string + knot */}
-          <path d="M38 20 V32" />
-          <circle cx="38" cy="34" r="1.4" />
-        </svg>
-      );
-
-    case "environmental-research":
-      return (
-        <svg
-          width="48"
-          height="48"
-          viewBox="0 0 48 48"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.6"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          {/* Globe */}
-          <circle cx="24" cy="24" r="13" />
-          {/* Equator */}
-          <path d="M11 24 H37" />
-          {/* Meridian (ellipse) */}
-          <ellipse cx="24" cy="24" rx="6" ry="13" />
-          {/* Right leaf */}
-          <path d="M37 24 C41 22 44 24 44 28 C40 28 37 26 37 24 Z" />
-          {/* Left leaf */}
-          <path d="M11 24 C7 22 4 24 4 28 C8 28 11 26 11 24 Z" />
-        </svg>
-      );
-
-    default:
-      // Fallback dot — should never render for the business page subset
-      // but keeps the type exhaustive without crashing the route.
-      return (
-        <svg width="48" height="48" viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="1.6">
-          <circle cx="24" cy="24" r="4" />
-        </svg>
-      );
-  }
+  const Icon = INDUSTRY_LUCIDE_ICON[id];
+  if (!Icon) return null;
+  return <Icon size={36} strokeWidth={1.6} absoluteStrokeWidth />;
 }

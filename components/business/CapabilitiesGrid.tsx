@@ -5,25 +5,26 @@ import Image from "next/image";
 
 /* ── Section: "Enterprise-grade capabilities" ────────────────────────────────
    Six capability tiles in a uniform 3-up grid. Each tile shows its product
-   mockup image (public/cap-grid-1..6.png) with a bolded label stacked
-   directly below — no subtitle.
+   mockup image (public/capabilitiesImages/capability-1..6.png) with a bolded
+   label stacked directly below — no subtitle.
 
-   The PNGs are already self-contained rounded cards (own hairline border +
-   transparent rounded corners), so the tile adds no border/radius of its
-   own — that would double up as a visible frame. The image just renders at
-   the cell width with its intrinsic aspect ratio.
+   Each image carries the design-system card chrome — a hairline #E7E7F1
+   border (--ent-border-card, same hairline used by the IndustrySelector
+   panel directly below this section) and a 7px corner (--ent-radius-card,
+   the canonical card radius). overflow:hidden via rounded-[7px] clips the
+   raw screenshot to that corner.
 
    Hover lifts the image 3px and shifts the label to the accent color,
    signalling depth without inventing dead routes (no capability detail
    pages exist yet, so tiles stay non-anchor). */
 
 const ITEMS: { title: string; image: string }[] = [
-  { title: "Ask the map anything", image: "/cap-grid-1.png" },
-  { title: "Agent research reports", image: "/cap-grid-3.png" },
-  { title: "Generative data layers", image: "/cap-grid-5.png" },
-  { title: "An AI that considers it all", image: "/cap-grid-2.png" },
-  { title: "Data Catalogue", image: "/cap-grid-4.png" },
-  { title: "Light-speed due diligence", image: "/cap-grid-6.png" },
+  { title: "Ask the map anything", image: "/capabilitiesImages/capability-6.png" },
+  { title: "Agent research reports", image: "/capabilitiesImages/capability-1.png" },
+  { title: "24/7 personal support", image: "/capabilitiesImages/capability-3.png" },
+  { title: "High-fidelity accurate data", image: "/capabilitiesImages/capability-4.png" },
+  { title: "Data Catalogue", image: "/capabilitiesImages/capability-5.png" },
+  { title: "Light-speed due diligence", image: "/capabilitiesImages/capability-2.png" },
 ];
 
 export default function CapabilitiesGrid() {
@@ -73,7 +74,7 @@ export default function CapabilitiesGrid() {
                   width={915}
                   height={627}
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                  className="block w-[88%] h-auto mx-auto"
+                  className="block w-[88%] h-auto mx-auto rounded-[7px] border border-gridline"
                 />
               </div>
               <h3
@@ -87,22 +88,6 @@ export default function CapabilitiesGrid() {
         </div>
       </div>
 
-      <style jsx>{`
-        .cap-tile-img-wrap {
-          transition: transform 0.35s ease;
-        }
-        .cap-tile-title {
-          transition: color 0.25s ease;
-        }
-        @media (hover: hover) {
-          .cap-tile:hover .cap-tile-img-wrap {
-            transform: translateY(-3px);
-          }
-          .cap-tile:hover .cap-tile-title {
-            color: var(--ent-accent);
-          }
-        }
-      `}</style>
     </section>
   );
 }
