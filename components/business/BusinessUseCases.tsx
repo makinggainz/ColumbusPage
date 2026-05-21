@@ -1395,8 +1395,9 @@ export default function BusinessUseCases() {
             description: copy.sub1Description,
             backdropImage: bg.chatSub[0],
             backdropPosition: bg.chatSubPositions?.[0],
+            visualFullBleed: true,
             visual: (
-              <MapLayeredVisual map={bg.chatSubMaps?.[0] ?? "/MapChatbackgroundimg.png"} alt="Map chat background" variant="floating">
+              <MapLayeredVisual map={bg.chatSubMaps?.[0] ?? "/MapChatbackgroundimg.png"} alt="Map chat background">
                 <PatternsDetectedCard {...copy.cards.patterns} />
               </MapLayeredVisual>
             ),
@@ -1406,8 +1407,9 @@ export default function BusinessUseCases() {
             description: copy.sub2Description,
             backdropImage: bg.chatSub[1],
             backdropPosition: bg.chatSubPositions?.[1],
+            visualFullBleed: true,
             visual: (
-              <MapLayeredVisual map={bg.chatSubMaps?.[1] ?? "/MapChatbackgroundimg.png"} alt="Map chat background" variant="floating">
+              <MapLayeredVisual map={bg.chatSubMaps?.[1] ?? "/MapChatbackgroundimg.png"} alt="Map chat background">
                 <ForecastCard {...copy.cards.forecast} />
               </MapLayeredVisual>
             ),
@@ -1424,6 +1426,7 @@ export default function BusinessUseCases() {
             description: copy.sub4Description,
             backdropImage: bg.chatSub[3],
             backdropPosition: bg.chatSubPositions?.[3],
+            visualFullBleed: true,
             visual: (
               <MapLayeredVisual map={bg.chatSubMaps?.[3] ?? "/MapChatbackgroundimg.png"} alt="Map chat background">
                 <HarmonizedFilesCard {...copy.cards.harmonized} />

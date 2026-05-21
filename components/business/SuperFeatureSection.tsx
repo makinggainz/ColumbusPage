@@ -45,6 +45,12 @@ export type SuperFeatureSubItem = {
      internal layout, and backdrop. When `stacked` is true, `description`,
      `image`, `imageAlt`, and `backdropImage` are ignored. */
   stacked?: boolean;
+  /* When true, the `visual` renders directly inside the rounded frame at
+     `position: absolute; inset: 0` — bypassing the inner padded flex
+     wrapper. Use when the visual itself is a full-bleed map/image that
+     should cover the entire frame edge-to-edge, and the visual handles
+     its own internal padding for any overlaid UI. */
+  visualFullBleed?: boolean;
 };
 
 export type SuperFeatureSectionProps = {
@@ -223,6 +229,9 @@ export default function SuperFeatureSection({
                       lockToSquare={item.lockBackdropToSquare}
                       position={item.backdropPosition}
                     />
+                    {item.visualFullBleed && item.visual ? (
+                      <div className="absolute inset-0 z-10">{item.visual}</div>
+                    ) : (
                     <div
                       className="relative z-10 w-full h-full flex items-center justify-center"
                       style={{ padding: "clamp(24px, 3vw, 56px)" }}
@@ -250,6 +259,7 @@ export default function SuperFeatureSection({
                         </div>
                       ) : null}
                     </div>
+                    )}
                   </div>
                 </div>
               );
