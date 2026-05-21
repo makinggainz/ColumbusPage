@@ -478,7 +478,7 @@ const COMMERCIAL_COPY: IndustryCopy = {
   sub2Description: (
     <>
       <p>
-        Like weather forecasts, but for commercial real estate. <Blue>Predict the future</Blue> on Columbus.
+        Like weather forecasts, but for CRE. <Blue>Predict the future</Blue> on Columbus.
       </p>
       <p className="mt-3">Forecast prime-rent growth, submarket trajectory, and emerging hotspots.</p>
       <p className="mt-3">Powered by a deep-learning pattern recognition fed by the most up-to-date and high quality data.</p>

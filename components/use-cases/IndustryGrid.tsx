@@ -7,7 +7,7 @@
 // export default function IndustryGrid() {
 
 //   const industries = [
-//     { title: "Commercial Real Estate", img: "/use-cases/comercial.png" },
+//     { title: "CRE", img: "/use-cases/comercial.png" },
 
 //     {
 //   title: "Urban Planning",
@@ -198,7 +198,7 @@ export default function IndustryGrid({ lightTheme = false }: IndustryGridProps =
     : "inline-block text-[64px] font-semibold max-md:text-[36px] bg-gradient-to-b from-[#EBEBEB] to-[#A6A6A6] bg-clip-text text-transparent";
 
   const industries = [
-    { title: "Commercial Real Estate", img: "/use-cases/comercial.png" },
+    { title: "CRE", img: "/use-cases/comercial.png" },
 
     {
       title: "Urban Planning",

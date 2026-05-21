@@ -97,7 +97,7 @@ export default function BusinessPage() {
             pins flush under it. */}
         <IndustryProvider initialIndustryId="residential-real-estate">
           <IndustryStickyNavbar lightTheme topOffset={84} industries={BUSINESS_INDUSTRIES} takeover />
-          <IndustrySelector lightTheme rounded industries={BUSINESS_INDUSTRIES} />
+          <IndustrySelector lightTheme rounded industries={BUSINESS_INDUSTRIES} variant="iconGrid" />
           {/* Industry sticky zone — the sub-navbar above observes this
               wrapper, so the navbar appears the moment the user scrolls
               into the first super-feature ("Ask, Discover, Understand")

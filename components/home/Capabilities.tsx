@@ -38,7 +38,7 @@ const SIDEBAR_ITEMS: SidebarItem[] = [
     bgImage: "/use-cases/planning.png",
     openContent: {
       title: "Research Reports",
-      description: "Enabling faster site-selection for Residential and commercial Real Estate customers, including:",
+      description: "Enabling faster site-selection for Residential and CRE customers, including:",
       listItems: ["Franchises", "Consultants", "CRE", "Residential Developers", "Wholesale brokers"],
     },
   },

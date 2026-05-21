@@ -38,8 +38,8 @@ const META: Record<IndustryId, { name: string; shortName: string; imageSrc: stri
     imageSrc: "/use-cases/residentila.png",
   },
   "commercial-real-estate": {
-    name: "Commercial Real Estate",
-    shortName: "Commercial Real Estate",
+    name: "CRE",
+    shortName: "CRE",
     imageSrc: "/use-cases/comercial.png",
   },
   "disaster-response": {
@@ -100,7 +100,7 @@ const URBAN_CHAT: ChatRowContent = {
   leftRail: {
     title: "Urban Planning & Infrastructure",
     description:
-      "Enabling faster site-selection for Residential and commercial Real Estate customers, including:",
+      "Enabling faster site-selection for Residential and CRE customers, including:",
     bullets: ["Franchises", "Consultants", "CRE", "Residential Developers", "Wholesale brokers"],
   },
   query: "Where should the Transportation authority install a new road-signal for traffic?",

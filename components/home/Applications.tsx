@@ -28,7 +28,7 @@ export const Applications = () => {
 
   const items = [
     { title: "Residential Real Estate", image: "/UseCases/ResidentialRealEstate.jpg", href: "/columbus-solutions" },
-    { title: "Commercial Real Estate", image: "/UseCases/CommercialRealEstate.jpg", href: "/columbus-solutions" },
+    { title: "CRE", image: "/UseCases/CommercialRealEstate.jpg", href: "/columbus-solutions" },
     { title: "Generative Geodata", image: "/UseCases/GenDatalayers.png", href: "/columbus-solutions" },
     { title: "Logistics Optimization", image: "/UseCases/Logistics.webp", href: "/columbus-solutions" },
     { title: "Urban Planning", image: "/UseCases/UrbanPlanning.jpg", href: "/columbus-solutions" },
