@@ -47,14 +47,13 @@ function IconChip({ children }: { children: React.ReactNode }) {
   );
 }
 
-/* Inline blue keyword. Always rendered as an underline-less <a> to match the
-   site's existing pattern — link target is left as # because these are
-   styled tokens, not navigation. */
+/* Inline blue keyword. Rendered as a <span> — these are styled tokens
+   for emphasis, not navigation, so they should not be clickable. */
 function Blue({ children }: { children: React.ReactNode }) {
   return (
-    <a href="#" style={{ color: "var(--ent-accent)", fontWeight: 500 }}>
+    <span style={{ color: "var(--ent-accent)", fontWeight: 500 }}>
       {children}
-    </a>
+    </span>
   );
 }
 
