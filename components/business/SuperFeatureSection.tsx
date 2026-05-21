@@ -23,6 +23,18 @@ export type SuperFeatureSubItem = {
   visual?: React.ReactNode;
   /* Per-row override of the shared sky backdrop (e.g. a map image). */
   backdropImage?: string;
+  /* Per-row override of the visual frame's aspect ratio. The default is
+     "1 / 1" (square); pass e.g. "4 / 5" for a row whose card is taller
+     than wide and would otherwise be clipped by the square frame. */
+  visualAspectRatio?: string;
+  /* When the frame is taller than the default square (via
+     `visualAspectRatio`), `background-size: cover` zooms the SkyBackdrop
+     image in to fill the new height — which makes the photo look stretched
+     even though it's only cropped. Set this to true to lock the backdrop
+     image to a 1:1 wrapper anchored to the top of the frame, so the image
+     keeps the same look it had at the default aspect. The strip below the
+     image is transparent and blends with the surrounding panel. */
+  lockBackdropToSquare?: boolean;
   /* Opt out of the side-by-side 4/8 grid + 1:1 square frame and render the
      `visual` across the full sub-features content width with no automatic
      header/text column. The `visual` then owns its own heading, subtitle,
@@ -124,7 +136,7 @@ export default function SuperFeatureSection({
         style={{
           backgroundColor: panel ? "#F7F7F7" : "transparent",
           borderRadius: panel ? "var(--ent-radius-2xl)" : "0",
-          paddingBottom: panel ? "var(--ent-section-lg)" : "0",
+          paddingBottom: panel ? "var(--ent-space-16)" : "0",
           overflow: panel ? "hidden" : "visible",
         }}
       >
@@ -189,10 +201,13 @@ export default function SuperFeatureSection({
                     className={`lg:col-span-8 relative overflow-hidden ${reversed ? "lg:order-1" : ""}`}
                     style={{
                       borderRadius: "var(--ent-radius-2xl)",
-                      aspectRatio: "1 / 1",
+                      aspectRatio: item.visualAspectRatio ?? "1 / 1",
                     }}
                   >
-                    <SkyBackdrop image={item.backdropImage ?? subFeatureBackdrop ?? backgroundImage} />
+                    <SkyBackdrop
+                      image={item.backdropImage ?? subFeatureBackdrop ?? backgroundImage}
+                      lockToSquare={item.lockBackdropToSquare}
+                    />
                     <div
                       className="relative z-10 w-full h-full flex items-center justify-center"
                       style={{ padding: "clamp(24px, 3vw, 56px)" }}
@@ -237,35 +252,66 @@ export default function SuperFeatureSection({
    for legibility; gradients self-control lightness and skip the scrim.
    Callers can also force the scrim off via `scrim={false}` when they want
    the photo at its true brightness (e.g. when no white UI is overlaid). */
-function SkyBackdrop({ image, scrim = true }: { image: string; scrim?: boolean }) {
+function SkyBackdrop({
+  image,
+  scrim = true,
+  lockToSquare = false,
+}: {
+  image: string;
+  scrim?: boolean;
+  lockToSquare?: boolean;
+}) {
   const isGradient = image.includes("gradient(");
-  return (
-    <>
+  /* When `lockToSquare` is set, the image + scrim render inside a 1:1
+     wrapper pinned to the top of the frame instead of filling it. Any
+     extra height of the frame (taller-than-square rows) is left
+     transparent so it blends into the surrounding panel — the photo
+     keeps the exact framing it had at 1:1. */
+  const imageLayer = (
+    <div
+      className="absolute inset-0 pointer-events-none"
+      style={{
+        backgroundImage: isGradient ? image : `url(${image})`,
+        backgroundPosition: "center",
+        backgroundSize: "cover",
+        backgroundRepeat: "no-repeat",
+        zIndex: 0,
+      }}
+      aria-hidden
+    />
+  );
+  const scrimLayer =
+    isGradient || !scrim ? null : (
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
-          backgroundImage: isGradient ? image : `url(${image})`,
-          backgroundPosition: "center",
-          backgroundSize: "cover",
-          backgroundRepeat: "no-repeat",
+          /* Flat 35% black scrim — uniform across the image rather
+             than a top-down gradient. Tuned for enough contrast on
+             light photos without darkening the bottom of the frame
+             unevenly. */
+          background: "rgba(0,0,0,0.35)",
           zIndex: 0,
         }}
         aria-hidden
       />
-      {isGradient || !scrim ? null : (
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            /* Flat 35% black scrim — uniform across the image rather
-               than a top-down gradient. Tuned for enough contrast on
-               light photos without darkening the bottom of the frame
-               unevenly. */
-            background: "rgba(0,0,0,0.35)",
-            zIndex: 0,
-          }}
-          aria-hidden
-        />
-      )}
+    );
+
+  if (lockToSquare) {
+    return (
+      <div
+        className="absolute top-0 left-0 right-0 pointer-events-none overflow-hidden"
+        style={{ aspectRatio: "1 / 1", zIndex: 0 }}
+        aria-hidden
+      >
+        {imageLayer}
+        {scrimLayer}
+      </div>
+    );
+  }
+  return (
+    <>
+      {imageLayer}
+      {scrimLayer}
     </>
   );
 }

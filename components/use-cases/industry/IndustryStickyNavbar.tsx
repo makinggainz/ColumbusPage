@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useIndustry } from "./IndustryContext";
 import { INDUSTRY_CONTENT, INDUSTRY_ORDER } from "./content";
@@ -47,6 +48,12 @@ export default function IndustryStickyNavbar({ lightTheme = false, topOffset = 5
   const order = industries ?? INDUSTRY_ORDER;
   const { industryId, setIndustryId } = useIndustry();
   const [shown, setShown] = useState(false);
+  /* Takeover-only: true while the user has scrolled UP by more than the
+     coexist threshold since the last downward scroll. In this state the
+     main navbar re-appears at the top slot and this sub-navbar drops
+     back to its `effectiveTop` (under the navbar) position so both can
+     coexist — the typical "scroll up to reveal navbar" pattern. */
+  const [coexist, setCoexist] = useState(false);
   const [scrollState, setScrollState] = useState({ atStart: true, atEnd: false });
   const trackRef = useRef<HTMLDivElement>(null);
   // Dynamically measured bottom of the page header above this sub-navbar
@@ -74,38 +81,90 @@ export default function IndustryStickyNavbar({ lightTheme = false, topOffset = 5
 
   const effectiveTop = measuredTop ?? topOffset;
 
-  /* In takeover mode the sub-navbar REPLACES the main navbar, so it pins
-     at the same top slot the main navbar uses (the page-frame margin)
-     and the main navbar slides itself out of the way. Without takeover
-     it sits below the main navbar at its measured bottom edge. */
-  const topPosition = takeover ? "var(--frame-margin, 30px)" : effectiveTop;
+  /* Takeover-active means the sub-navbar is actively replacing the main
+     navbar. While coexisting (user scrolled up past the threshold), the
+     sub-navbar drops back to its under-navbar slot and the main navbar
+     comes back. */
+  const inTakeover = takeover && !coexist;
+  const topPosition = inTakeover ? "var(--frame-margin, 30px)" : effectiveTop;
 
-  /* Broadcast `shown` so a takeover-capable main navbar can hide while
-     this sub-navbar is active. Scoped to takeover mode so non-takeover
-     pages don't fire stray events. */
+  /* Broadcast the effective takeover state so a takeover-capable main
+     navbar hides only when this sub-navbar is actually replacing it (not
+     when the two are coexisting after a scroll-up). Scoped to takeover
+     mode so non-takeover pages don't fire stray events. */
   useEffect(() => {
     if (!takeover) return;
     window.dispatchEvent(
-      new CustomEvent("industry-sticky-shown", { detail: shown }),
+      new CustomEvent("industry-sticky-shown", { detail: shown && inTakeover }),
     );
-  }, [shown, takeover]);
+  }, [shown, inTakeover, takeover]);
+
+  /* Scroll-up reveal: while takeover is in play, an upward scroll of
+     >100px brings the main navbar back and slides this sub-navbar down
+     into its coexist position. Any downward scroll resets the threshold
+     and re-engages takeover. */
+  useEffect(() => {
+    if (!takeover) return;
+    let lastY = window.scrollY;
+    let upAccum = 0;
+    const THRESHOLD = 100;
+    const onScroll = () => {
+      const y = window.scrollY;
+      const delta = y - lastY;
+      if (delta < 0) {
+        upAccum += -delta;
+        if (upAccum > THRESHOLD) setCoexist(true);
+      } else if (delta > 0) {
+        upAccum = 0;
+        setCoexist(false);
+      }
+      lastY = y;
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [takeover]);
 
   // Visibility: prefer the explicit industry sticky-zone wrapper if a
   // page provides one (e.g. business page wraps from the first super-
   // feature through the use-case rows so the navbar appears as soon as
   // the user scrolls into "Ask, Discover, Understand"). Fall back to
   // [data-use-case-rows] for pages that only render the use-case stack.
+  //
+  // Trigger geometry: the rootMargin shrinks the viewport into a 1px
+  // strip at y=effectiveTop (the navbar's bottom edge). The picker is
+  // "shown" only while the zone TARGET overlaps that strip — i.e. while
+  // the zone is currently crossing the navbar line. This means the
+  // picker waits until the section ABOVE the zone (the IndustrySelector
+  // / "Tell us where you work") has fully scrolled past the navbar
+  // before appearing, and hides again the moment the zone's bottom
+  // clears the navbar on the way out.
   useEffect(() => {
     const target =
       document.querySelector<HTMLElement>("[data-industry-sticky-zone]") ??
       document.querySelector<HTMLElement>("[data-use-case-rows]");
     if (!target) return;
-    const obs = new IntersectionObserver(
-      ([entry]) => setShown(entry.isIntersecting),
-      { rootMargin: `-${effectiveTop}px 0px 0px 0px`, threshold: 0 },
-    );
+    const setupObs = () => {
+      const bottomShrink = Math.max(0, window.innerHeight - effectiveTop - 1);
+      return new IntersectionObserver(
+        ([entry]) => setShown(entry.isIntersecting),
+        {
+          rootMargin: `-${effectiveTop}px 0px -${bottomShrink}px 0px`,
+          threshold: 0,
+        },
+      );
+    };
+    let obs = setupObs();
     obs.observe(target);
-    return () => obs.disconnect();
+    const onResize = () => {
+      obs.disconnect();
+      obs = setupObs();
+      obs.observe(target);
+    };
+    window.addEventListener("resize", onResize);
+    return () => {
+      obs.disconnect();
+      window.removeEventListener("resize", onResize);
+    };
   }, [effectiveTop]);
 
   // Track horizontal scroll position so we can show / hide the edge gradients.
@@ -169,11 +228,12 @@ export default function IndustryStickyNavbar({ lightTheme = false, topOffset = 5
       className={`fixed left-0 right-0 z-40 w-full ${containerBg} transition-[opacity,transform] duration-300 ease-out`}
       style={{
         top: topPosition,
-        /* In takeover mode the picker should inherit the page frame's
+        /* In active takeover the picker should inherit the page frame's
            top corner curve so it visually replaces the main navbar with
-           a continuous rounded card edge. */
-        borderTopLeftRadius: takeover ? "var(--frame-radius, 20px)" : undefined,
-        borderTopRightRadius: takeover ? "var(--frame-radius, 20px)" : undefined,
+           a continuous rounded card edge. While coexisting (main navbar
+           visible above), the picker is a flat sub-bar — no corners. */
+        borderTopLeftRadius: inTakeover ? "var(--frame-radius, 20px)" : undefined,
+        borderTopRightRadius: inTakeover ? "var(--frame-radius, 20px)" : undefined,
         opacity: shown ? 1 : 0,
         transform: shown ? "translateY(0)" : "translateY(-12px)",
         pointerEvents: shown ? "auto" : "none",
@@ -181,6 +241,36 @@ export default function IndustryStickyNavbar({ lightTheme = false, topOffset = 5
       aria-hidden={!shown}
     >
       <div className="flex items-center gap-4 px-6 md:px-10 py-3 max-w-[1287px] mx-auto">
+        {/* Columbus home logo + leading separator — visible ONLY in
+            active takeover (the picker is replacing the main navbar).
+            In coexist mode the main navbar above already shows its own
+            logo, so this one is hidden to avoid two stacked logos. */}
+        {inTakeover && (
+          <>
+            <Link
+              href="/"
+              aria-label="Home"
+              className="shrink-0 inline-flex items-center justify-center"
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                alt="Columbus Logo"
+                width={28}
+                height={28}
+                decoding="async"
+                src="/logobueno.png"
+                className="object-contain"
+                style={{
+                  filter: lightTheme
+                    ? "brightness(0) saturate(100%) invert(8%) sepia(80%) saturate(1400%) hue-rotate(215deg) brightness(90%)"
+                    : "brightness(0) invert(1)",
+                }}
+              />
+            </Link>
+            <div className={`shrink-0 w-px h-5 ${separatorClass}`} aria-hidden />
+          </>
+        )}
+
         {/* Muted "Industry" label */}
         <span className={`shrink-0 text-[14px] font-medium ${labelTextClass}`}>
           Industry

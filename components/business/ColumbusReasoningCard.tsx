@@ -17,7 +17,7 @@ export default function ColumbusReasoningCard() {
         borderRadius: "var(--ent-radius-2xl)",
         border: "1px solid var(--ent-border-card)",
         boxShadow: "var(--ent-shadow-card)",
-        padding: "clamp(20px, 2.4vw, 28px)",
+        padding: "clamp(28px, 3vw, 40px)",
         overflow: "hidden",
         fontFamily: "Axiforma, 'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif",
       }}
@@ -28,10 +28,10 @@ export default function ColumbusReasoningCard() {
             background: "#EFEFEF",
             color: "var(--ent-text-primary)",
             borderRadius: 18,
-            padding: "16px 18px",
+            padding: "18px 20px",
             maxWidth: "92%",
             fontSize: 16,
-            lineHeight: 1.4,
+            lineHeight: 1.45,
             letterSpacing: "-0.01em",
             fontWeight: 500,
           }}
@@ -43,7 +43,7 @@ export default function ColumbusReasoningCard() {
         </div>
       </div>
 
-      <div className="mt-6 flex items-center gap-2">
+      <div className="mt-8 flex items-center gap-2">
         <ColumbusLogo />
         <span
           style={{
@@ -58,12 +58,12 @@ export default function ColumbusReasoningCard() {
       </div>
 
       <div
-        className="mt-4 relative"
+        className="mt-5 relative"
         style={{
           WebkitMaskImage:
-            "linear-gradient(to bottom, #000 0%, #000 70%, transparent 100%)",
+            "linear-gradient(to bottom, #000 0%, #000 82%, transparent 100%)",
           maskImage:
-            "linear-gradient(to bottom, #000 0%, #000 70%, transparent 100%)",
+            "linear-gradient(to bottom, #000 0%, #000 82%, transparent 100%)",
         }}
       >
         <p
@@ -72,13 +72,13 @@ export default function ColumbusReasoningCard() {
             fontSize: 13.5,
             lineHeight: 1.55,
             letterSpacing: "-0.005em",
-            marginBottom: 8,
+            marginBottom: 10,
           }}
         >
           Columbus weighs:
         </p>
         <ul
-          className="flex flex-col gap-2"
+          className="flex flex-col gap-3"
           style={{
             color: "#9AA3AE",
             fontSize: 13.5,

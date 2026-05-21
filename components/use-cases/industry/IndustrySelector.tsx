@@ -68,7 +68,6 @@ export default function IndustrySelector({ lightTheme = false, industries, round
   const sectionBg = lightTheme ? "bg-white" : "bg-black";
   const sectionLinesClass = lightTheme ? "section-lines-light" : "section-lines-dark";
   const headingTextClass = lightTheme ? "text-[#1D1D1F]" : "text-white";
-  const subtitleTextClass = lightTheme ? "text-[rgba(29,29,31,0.55)]" : "text-white/55";
 
   return (
     <section className={`w-full ${sectionBg} flex justify-center`}>
@@ -78,13 +77,10 @@ export default function IndustrySelector({ lightTheme = false, industries, round
       >
         {/* Header */}
         <div className="text-center px-8 md:px-10 mb-[48px] max-md:mb-[36px]" style={anim(0)}>
-          <p className={`text-[13px] font-normal tracking-[0.08em] uppercase ${subtitleTextClass}`}>
-            Pick your industry
-          </p>
           <h2
-            className={`mt-3 text-[39px] md:text-[49px] font-medium leading-[1.15] tracking-[-0.02em] ${headingTextClass}`}
+            className={`text-[39px] md:text-[49px] font-medium leading-[1.15] tracking-[-0.02em] ${headingTextClass}`}
           >
-            Tell us where you work
+            Use Cases by Industry
           </h2>
         </div>
 

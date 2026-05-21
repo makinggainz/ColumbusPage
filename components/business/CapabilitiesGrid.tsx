@@ -5,8 +5,8 @@ import Image from "next/image";
 
 /* ── Section: "Enterprise-grade capabilities" ────────────────────────────────
    Six capability tiles in a uniform 3-up grid. Each tile shows its product
-   mockup image (public/cap-grid-1..6.png), a bolded label, and a one-line
-   subtitle, all stacked below the image.
+   mockup image (public/cap-grid-1..6.png) with a bolded label stacked
+   directly below — no subtitle.
 
    The PNGs are already self-contained rounded cards (own hairline border +
    transparent rounded corners), so the tile adds no border/radius of its
@@ -17,37 +17,13 @@ import Image from "next/image";
    signalling depth without inventing dead routes (no capability detail
    pages exist yet, so tiles stay non-anchor). */
 
-const ITEMS: { title: string; description: string; image: string }[] = [
-  {
-    title: "Ask the map anything",
-    description: "Natural-language queries across every layer of geospatial data — no GIS expertise required.",
-    image: "/cap-grid-1.png",
-  },
-  {
-    title: "Agent research reports",
-    description: "Autonomous agents compile site-selection and due-diligence reports in minutes, not weeks.",
-    image: "/cap-grid-3.png",
-  },
-  {
-    title: "Generative data layers",
-    description: "Spin up custom data overlays on demand, generated from your prompts and our catalogue.",
-    image: "/cap-grid-5.png",
-  },
-  {
-    title: "An AI that considers it all",
-    description: "Demographics, zoning, coordinates, and your own datasets reasoned over together.",
-    image: "/cap-grid-2.png",
-  },
-  {
-    title: "Data Catalogue",
-    description: "Thousands of curated, citation-ready datasets ready to query alongside your own.",
-    image: "/cap-grid-4.png",
-  },
-  {
-    title: "Light-speed due diligence",
-    description: "Run the full diligence stack on a parcel — title, environmental, demographic — in one pass.",
-    image: "/cap-grid-6.png",
-  },
+const ITEMS: { title: string; image: string }[] = [
+  { title: "Ask the map anything", image: "/cap-grid-1.png" },
+  { title: "Agent research reports", image: "/cap-grid-3.png" },
+  { title: "Generative data layers", image: "/cap-grid-5.png" },
+  { title: "An AI that considers it all", image: "/cap-grid-2.png" },
+  { title: "Data Catalogue", image: "/cap-grid-4.png" },
+  { title: "Light-speed due diligence", image: "/cap-grid-6.png" },
 ];
 
 export default function CapabilitiesGrid() {
@@ -106,12 +82,6 @@ export default function CapabilitiesGrid() {
               >
                 {item.title}
               </h3>
-              <p
-                className="mt-2 mx-auto max-w-90 text-center text-[14px] md:text-[15px] leading-[1.45]"
-                style={{ color: "var(--ent-text-secondary)", letterSpacing: "-0.005em" }}
-              >
-                {item.description}
-              </p>
             </article>
           ))}
         </div>

@@ -21,19 +21,12 @@ export default function BusinessFeatureIndex() {
 
   useEffect(() => setMounted(true), []);
 
+  /* Active-item tracking only — visibility is driven separately by the
+     industry-sticky-zone observer below so this index hides at the same
+     point the takeover sub-navbar does (i.e. when the user scrolls into
+     the FAQ section below the super-feature stack). */
   const update = useCallback(() => {
     const probeY = window.innerHeight * 0.42;
-
-    const first = document.getElementById(ITEMS[0].id);
-    const last = document.getElementById(ITEMS[ITEMS.length - 1].id);
-    if (!first || !last) {
-      setVisible(false);
-      return;
-    }
-    const firstTop = first.getBoundingClientRect().top;
-    const lastBottom = last.getBoundingClientRect().bottom;
-    setVisible(firstTop <= probeY && lastBottom > 0);
-
     for (let i = ITEMS.length - 1; i >= 0; i--) {
       const el = document.getElementById(ITEMS[i].id);
       if (!el) continue;
@@ -54,6 +47,26 @@ export default function BusinessFeatureIndex() {
       window.removeEventListener("resize", update);
     };
   }, [update]);
+
+  /* Visibility — mirror the IndustryStickyNavbar by observing the same
+     [data-industry-sticky-zone] wrapper. The index appears the moment the
+     user scrolls into the super-feature zone and disappears as soon as
+     they scroll past it (into the FAQ section). Falls back to false if no
+     page provides the zone, so the index stays out of the way on pages
+     that don't opt in. */
+  useEffect(() => {
+    const zone = document.querySelector<HTMLElement>("[data-industry-sticky-zone]");
+    if (!zone) {
+      setVisible(false);
+      return;
+    }
+    const obs = new IntersectionObserver(
+      ([entry]) => setVisible(entry.isIntersecting),
+      { rootMargin: "0px 0px 0px 0px", threshold: 0 },
+    );
+    obs.observe(zone);
+    return () => obs.disconnect();
+  }, []);
 
   if (!mounted) return null;
 

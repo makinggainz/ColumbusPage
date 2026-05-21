@@ -322,7 +322,7 @@ export default function ComparisonSection() {
     >
       <style>{CMP_CSS}</style>
       <div
-        className="ent-content-bounds px-4 md:px-6 grid grid-cols-1 lg:grid-cols-[380px_1fr] gap-10 lg:gap-16 items-center"
+        className="ent-content-bounds px-4 md:px-6 grid grid-cols-1 lg:grid-cols-[380px_1fr] gap-10 lg:gap-16 lg:items-stretch"
         style={{
           opacity: entered ? 1 : 0,
           transform: entered ? "translateY(0)" : "translateY(16px)",
@@ -333,13 +333,16 @@ export default function ComparisonSection() {
       >
         {/* ── Left: feature accordion. Each row is clickable; the active
             row expands to reveal a description + horizontal progress bar
-            (the bar drives the auto-advance). ── */}
-        <ul className="flex flex-col list-none m-0 p-0">
+            (the bar drives the auto-advance). The ul stretches to the row
+            height (matching the product display on the right at lg+); each
+            <li> uses `flex-1` so the four feature rows share that height
+            equally instead of stacking compactly at the top. ── */}
+        <ul className="flex flex-col list-none m-0 p-0 lg:h-full">
           {FEATURES.map((f, i) => {
             const isActive = i === active;
             const Icon = RAIL[f.rail];
             return (
-              <li key={f.title} className="relative">
+              <li key={f.title} className="relative lg:flex-1 lg:flex lg:flex-col">
                 <button
                   type="button"
                   onClick={() => select(i)}
@@ -368,13 +371,19 @@ export default function ComparisonSection() {
                     </span>
                   </div>
 
-                  {/* expanded body — description */}
+                  {/* Expanded body — description. Uses a FIXED expanded
+                      height instead of `maxHeight: 240`, so all four
+                      features render the same active-row height regardless
+                      of how their description wraps. Without this lock,
+                      different desc lengths gave each feature a different
+                      natural body height — the accordion column resized
+                      between cycles and the page below shifted with it. */}
                   <div
                     style={{
-                      maxHeight: isActive ? 240 : 0,
+                      height: isActive ? 130 : 0,
                       opacity: isActive ? 1 : 0,
                       overflow: "hidden",
-                      transition: "max-height 0.45s ease, opacity 0.35s ease",
+                      transition: "height 0.45s ease, opacity 0.35s ease",
                     }}
                   >
                     <p

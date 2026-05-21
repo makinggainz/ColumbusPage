@@ -33,7 +33,7 @@ export default function PatternsDetectedCard() {
         borderRadius: "var(--ent-radius-2xl)",
         boxShadow:
           "0 0 0 1px rgba(11, 27, 43, 0.06), 0 24px 60px rgba(11, 27, 43, 0.20)",
-        padding: "clamp(18px, 2.2vw, 26px)",
+        padding: "clamp(24px, 2.8vw, 34px)",
         color: "var(--ent-text-primary)",
         fontFamily: "Axiforma, 'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif",
       }}
@@ -60,14 +60,14 @@ export default function PatternsDetectedCard() {
         Accross the Manhatan area [DATE]
       </p>
 
-      <ul style={{ listStyle: "none", padding: 0, margin: "clamp(14px, 1.6vw, 18px) 0 0", display: "flex", flexDirection: "column", gap: 8 }}>
+      <ul style={{ listStyle: "none", padding: 0, margin: "clamp(18px, 2.2vw, 26px) 0 0", display: "flex", flexDirection: "column", gap: 12 }}>
         {PATTERNS.map((p, i) => (
           <li
             key={`${p.n}-${p.title}`}
             style={{
               backgroundColor: "#F2F2F2",
               borderRadius: 12,
-              padding: "clamp(10px, 1.2vw, 14px) clamp(12px, 1.4vw, 16px)",
+              padding: "clamp(14px, 1.6vw, 20px) clamp(14px, 1.6vw, 20px)",
               display: "flex",
               gap: 12,
               alignItems: "flex-start",

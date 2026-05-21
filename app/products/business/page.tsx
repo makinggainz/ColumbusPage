@@ -174,11 +174,7 @@ export default function BusinessPage() {
                   </>
                 ),
                 visual: (
-                  <MapLayeredVisual
-                    map="/MapChatbackgroundimg.png"
-                    alt="Map chat background"
-                    variant="floating"
-                  >
+                  <MapLayeredVisual map="/MapChatbackgroundimg.png" alt="Map chat background">
                     <PatternsDetectedCard />
                   </MapLayeredVisual>
                 ),
