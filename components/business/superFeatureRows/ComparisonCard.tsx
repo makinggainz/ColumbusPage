@@ -32,8 +32,6 @@ export default function ComparisonCard({
       style={{
         background: "#FFFFFF",
         borderRadius: "var(--ent-radius-2xl)",
-        border: "1px solid var(--ent-border-card)",
-        boxShadow: "var(--ent-shadow-card)",
         padding: "clamp(18px, 2vw, 26px)",
         display: "flex",
         flexDirection: "column",

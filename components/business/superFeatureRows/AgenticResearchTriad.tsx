@@ -51,18 +51,16 @@ function IconChip({ children }: { children: React.ReactNode }) {
   );
 }
 
-/* Square graphic plate — the surrounding chrome (subtle tint, generous
-   internal padding) is consistent across all three features so the SVGs
-   themselves can be expressive without the cards feeling visually
-   mismatched. No border — minimalist by design. */
+/* Square graphic plate — transparent so the SVG sits directly on the
+   parent card. Padding kept so the graphic doesn't crowd the card's
+   edge. */
 function GraphicPlate({ children }: { children: React.ReactNode }) {
   return (
     <div
       style={{
         width: "100%",
         aspectRatio: "5 / 3",
-        background: "#FAFBFC",
-        borderRadius: "var(--ent-radius-2xl)",
+        background: "transparent",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
@@ -349,7 +347,10 @@ function TriadCard({ item }: { item: TriadItem }) {
        minimalist; the GraphicPlate's faint tint carries the structure. */
     <div
       style={{
-        background: "var(--ent-bg-white)",
+        /* A touch darker than the surrounding super-section panel
+           (#F7F7F7) so each triad card reads as a distinct tile against
+           the panel without losing the neutral, quiet tone. */
+        background: "#EDEDED",
         borderRadius: "var(--ent-radius-2xl)",
         padding: "var(--ent-space-6)",
         display: "flex",
@@ -360,9 +361,6 @@ function TriadCard({ item }: { item: TriadItem }) {
         height: "100%",
       }}
     >
-      {/* Icon superscript */}
-      {item.icon}
-
       {/* Per-feature minimalist graphic — replaces the previous UI mockup. */}
       <GraphicPlate>{item.graphic}</GraphicPlate>
 

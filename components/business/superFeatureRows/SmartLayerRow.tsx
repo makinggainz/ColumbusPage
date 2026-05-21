@@ -19,7 +19,6 @@ export default function SmartLayerRow() {
     <div style={{ fontFamily: FONT }}>
       <RowHeader
         align="left"
-        icon={<SparkleChip />}
         title="With smart layers, you become an artist"
         subtitle={
           <>
@@ -43,7 +42,6 @@ export default function SmartLayerRow() {
           background: "#FFFFFF",
           borderRadius: "var(--ent-radius-2xl)",
           border: "1px solid var(--ent-border-card)",
-          boxShadow: "var(--ent-shadow-card)",
           overflow: "hidden",
           display: "grid",
           gridTemplateColumns: "64px 1fr",
@@ -369,38 +367,6 @@ function StopButton() {
         }}
       />
     </button>
-  );
-}
-
-/* Mirrors `IconChip` in app/products/business/page.tsx — 36×36 translucent
-   navy circle wrapping an 18×18 stroked SVG — so the sub-feature header
-   icons in this section match the parent super section's icon style. */
-function SparkleChip() {
-  return (
-    <span
-      aria-hidden
-      className="inline-flex items-center justify-center"
-      style={{
-        width: 36,
-        height: 36,
-        borderRadius: 9999,
-        background: "rgba(11,27,43,0.06)",
-      }}
-    >
-      <svg
-        width="18"
-        height="18"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="#0B1B2B"
-        strokeWidth="1.8"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        {/* sparkle/star — smart layer generation */}
-        <path d="M12 3l2 5 5 2-5 2-2 5-2-5-5-2 5-2z" />
-      </svg>
-    </span>
   );
 }
 

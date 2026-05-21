@@ -61,11 +61,12 @@ export default function SurveyEarthRow() {
       >
         {/* Left — investigating card grows to fill the row height (so it
             matches the map on the right); the prompt card overlaps its
-            bottom edge as a floating overlay. Narrowed to cols 1–4 (~35%
-            of the row) so the map can extend further left under it. */}
+            bottom edge as a floating overlay. Cols 1–5 (~42% of the row)
+            give the card stack a bit more breathing room while the map
+            still extends well under it. */}
         <div
           style={{
-            gridColumn: "1 / 5",
+            gridColumn: "1 / 6",
             gridRow: 1,
             position: "relative",
             zIndex: 2,
@@ -101,7 +102,7 @@ export default function SurveyEarthRow() {
           <MapThumb
             src="/business/SuperModelback.png"
             alt="NYC pre-vibe shift choropleth across Brooklyn, Queens, and the Bronx"
-            aspectRatio="2 / 1"
+            aspectRatio="5 / 3"
             radius="var(--ent-radius-2xl)"
           />
         </div>
@@ -133,7 +134,6 @@ function InvestigatingCard() {
         background: "#FFFFFF",
         borderRadius: "var(--ent-radius-2xl)",
         border: "1px solid var(--ent-border-card)",
-        boxShadow: "var(--ent-shadow-card)",
         padding: "clamp(20px, 2.2vw, 28px)",
         /* Fill the parent's height so the left stack matches the map on
            the right. The bullet list sits at the top — extra height shows
@@ -188,10 +188,6 @@ function PromptCard() {
         background: "#FFFFFF",
         borderRadius: "var(--ent-radius-2xl)",
         border: "1px solid var(--ent-border-card)",
-        /* Stronger, layered shadow so the card reads as a floating overlay
-           on top of the InvestigatingCard rather than a flush sibling. */
-        boxShadow:
-          "0 24px 48px rgba(11, 27, 43, 0.16), 0 8px 16px rgba(11, 27, 43, 0.08)",
         padding: "clamp(18px, 2vw, 22px)",
         display: "flex",
         alignItems: "center",

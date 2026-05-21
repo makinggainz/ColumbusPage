@@ -55,12 +55,12 @@ export default function SolutionShowcase() {
             className="object-contain object-top-left"
           />
         </div>
-        <div className="absolute -bottom-12.5 right-0 w-[42%] max-w-160 aspect-1604/1296">
+        <div className="absolute -bottom-12.5 right-0 w-[28%] max-w-md aspect-1604/1296">
           <Image
             src="/businessB3/right.png"
             alt=""
             fill
-            sizes="42vw"
+            sizes="28vw"
             className="object-contain object-bottom-right"
           />
         </div>

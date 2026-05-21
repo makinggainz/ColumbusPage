@@ -142,6 +142,11 @@ export default function BusinessPage() {
         <IndustryProvider>
           <IndustryStickyNavbar lightTheme topOffset={84} industries={BUSINESS_INDUSTRIES} />
           <IndustrySelector lightTheme rounded industries={BUSINESS_INDUSTRIES} />
+          {/* Industry sticky zone — the sub-navbar above observes this
+              wrapper, so the navbar appears the moment the user scrolls
+              into the first super-feature ("Ask, Discover, Understand")
+              and stays visible through the use-case stack below. */}
+          <div data-industry-sticky-zone>
           <SuperFeatureSection
             id="chat"
             icon={
@@ -164,19 +169,6 @@ export default function BusinessPage() {
             subFeatures={[
               {
                 title: "See what others cant",
-                icon: (
-                  <IconChip>
-                    {/* sparkles — pattern detection */}
-                    <path d="M12 3v3" />
-                    <path d="M12 18v3" />
-                    <path d="M3 12h3" />
-                    <path d="M18 12h3" />
-                    <path d="m5.6 5.6 2.1 2.1" />
-                    <path d="m16.3 16.3 2.1 2.1" />
-                    <path d="m5.6 18.4 2.1-2.1" />
-                    <path d="m16.3 7.7 2.1-2.1" />
-                  </IconChip>
-                ),
                 description: (
                   <>
                     Sophisticated <a href="#" style={{ color: "var(--ent-accent)" }}>pattern detection</a>.
@@ -195,13 +187,6 @@ export default function BusinessPage() {
               },
               {
                 title: "Like weather forcasts for real-estate",
-                icon: (
-                  <IconChip>
-                    {/* trending-up — forecasting */}
-                    <polyline points="22 7 13.5 15.5 8.5 10.5 2 17" />
-                    <polyline points="16 7 22 7 22 13" />
-                  </IconChip>
-                ),
                 description: (
                   <>
                     <p>
@@ -219,14 +204,6 @@ export default function BusinessPage() {
               },
               {
                 title: "AI that critically thinks",
-                icon: (
-                  <IconChip>
-                    {/* lightbulb — reasoning */}
-                    <path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.8.8 1.3 1.5 1.5 2.5" />
-                    <path d="M9 18h6" />
-                    <path d="M10 22h4" />
-                  </IconChip>
-                ),
                 description: (
                   <>
                     <p>Columbus AI considers a wide breadth of data everytime it critically thinks.</p>
@@ -237,15 +214,6 @@ export default function BusinessPage() {
               },
               {
                 title: "Drop Any File, Columbus does the rest",
-                icon: (
-                  <IconChip>
-                    {/* file-up — drop / upload any file */}
-                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                    <path d="M14 2v6h6" />
-                    <path d="M12 18v-6" />
-                    <path d="m9 15 3-3 3 3" />
-                  </IconChip>
-                ),
                 description: (
                   <>
                     <p>
@@ -279,7 +247,6 @@ export default function BusinessPage() {
               </>
             }
             backgroundImage="/vibegreen.png"
-            scrim={false}
             subFeatureBackdrop="/Residential/res-bg-6.png"
             demoImage="/dataCataSm.png"
             demoAlt="Columbus data manager"
@@ -291,6 +258,7 @@ export default function BusinessPage() {
                 stacked: true,
               },
               {
+                id: "super-model",
                 title: "Survey the earth with a super model",
                 description: null,
                 visual: <SurveyEarthRow />,
@@ -348,6 +316,7 @@ export default function BusinessPage() {
             panel={false}
           />
           <UseCaseStickyScroll lightTheme roundedTop disableSticky />
+          </div>
         </IndustryProvider>
         <section className="relative">
           <ColumbusSolutionsSections lightTheme disableSticky roundedBottom />

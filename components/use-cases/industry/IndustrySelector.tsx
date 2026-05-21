@@ -24,9 +24,9 @@ type IndustrySelectorProps = {
  * Industry tile picker — 4 rows × 3 cols on desktop, bounded by the page's
  * 1287px content rail (vertical structure lines on either side via
  * section-lines-{dark,light}). Tiles are short (16:9) with a blurred photo
- * background and a label overlaid. Hover reveals an underline + downward
- * arrow on the label; the active selection has no extra emphasis here (the
- * sticky sub-navbar above shows what's active).
+ * background and a label overlaid. Hover reveals a downward arrow next to
+ * the label; the active selection has no extra emphasis here (the sticky
+ * sub-navbar above shows what's active).
  */
 export default function IndustrySelector({ lightTheme = false, industries, rounded = false }: IndustrySelectorProps) {
   const order = industries ?? INDUSTRY_ORDER;
@@ -124,15 +124,7 @@ export default function IndustrySelector({ lightTheme = false, industries, round
                 {/* Label */}
                 <div className="absolute inset-0 flex items-center justify-center px-6 md:px-8 text-center">
                   <span className="relative inline-flex items-baseline gap-3 text-white text-[20px] md:text-[20px] lg:text-[25px] font-medium leading-[1.15] tracking-[-0.01em]">
-                    <span className="relative">
-                      {item.name}
-                      {/* Hover-only underline */}
-                      <span
-                        className="absolute left-0 -bottom-2 h-px bg-white w-0 group-hover:w-full pointer-events-none"
-                        style={{ transition: "width 500ms cubic-bezier(0.22, 1, 0.36, 1)" }}
-                        aria-hidden
-                      />
-                    </span>
+                    <span>{item.name}</span>
                     {/* Hover-only down arrow */}
                     <svg
                       width="14"

@@ -67,7 +67,12 @@ export default function DashboardListMockup() {
         overflow: "hidden",
         display: "grid",
         gridTemplateColumns: "56px 1fr",
-        minHeight: "min(72vh, 620px)",
+        /* Width stays governed by maxWidth (1180px). Height is derived
+           from a 16:10 MacBook Pro display ratio (the 13" MBP and most
+           MBP marketing photos) so the dashboard reads as a laptop
+           screen without feeling taller than the other 16:9 hero
+           mockups already on this page. */
+        aspectRatio: "16 / 10",
       }}
     >
       <IconRail />

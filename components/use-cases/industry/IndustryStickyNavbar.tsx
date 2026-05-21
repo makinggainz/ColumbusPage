@@ -40,9 +40,15 @@ export default function IndustryStickyNavbar({ lightTheme = false, topOffset = 5
   const [scrollState, setScrollState] = useState({ atStart: true, atEnd: false });
   const trackRef = useRef<HTMLDivElement>(null);
 
-  // Show/hide when the four-row block is in the viewport.
+  // Visibility: prefer the explicit industry sticky-zone wrapper if a
+  // page provides one (e.g. business page wraps from the first super-
+  // feature through the use-case rows so the navbar appears as soon as
+  // the user scrolls into "Ask, Discover, Understand"). Fall back to
+  // [data-use-case-rows] for pages that only render the use-case stack.
   useEffect(() => {
-    const target = document.querySelector<HTMLElement>("[data-use-case-rows]");
+    const target =
+      document.querySelector<HTMLElement>("[data-industry-sticky-zone]") ??
+      document.querySelector<HTMLElement>("[data-use-case-rows]");
     if (!target) return;
     const obs = new IntersectionObserver(
       ([entry]) => setShown(entry.isIntersecting),
@@ -88,22 +94,6 @@ export default function IndustryStickyNavbar({ lightTheme = false, topOffset = 5
     // for keyboard / button-driven flows.
     requestAnimationFrame(updateScrollState);
   }, [industryId, updateScrollState]);
-
-  // Scroll the carousel track. By default it scrolls forward (right) by
-  // roughly one viewport's worth of chips. Once the track has reached its
-  // right end, the same arrow flips direction and rewinds to the start, so
-  // the user can keep cycling without dragging. Does NOT change the
-  // selected industry — selection is by direct chip click.
-  const handleArrowClick = useCallback(() => {
-    const track = trackRef.current;
-    if (!track) return;
-    if (scrollState.atEnd) {
-      track.scrollTo({ left: 0, behavior: "smooth" });
-    } else {
-      const delta = Math.max(track.clientWidth * 0.7, 160);
-      track.scrollBy({ left: delta, behavior: "smooth" });
-    }
-  }, [scrollState.atEnd]);
 
   // Theme tokens
   const containerBg = lightTheme
@@ -199,38 +189,6 @@ export default function IndustryStickyNavbar({ lightTheme = false, topOffset = 5
           </div>
         </div>
 
-        {/* Carousel arrow — scrolls the track forward by default. When the
-            track is at its right end, the icon flips and clicking rewinds
-            the track to the start. Selection is by direct chip click; this
-            arrow never changes the active industry. */}
-        <button
-          type="button"
-          onClick={handleArrowClick}
-          className={`shrink-0 inline-flex items-center justify-center w-8 h-8 rounded-button transition-colors duration-200 ${
-            lightTheme
-              ? "text-[#1D1D1F] hover:bg-[rgba(10,19,68,0.06)]"
-              : "text-white hover:bg-white/10"
-          }`}
-          aria-label={scrollState.atEnd ? "Scroll back to start" : "Scroll industries right"}
-        >
-          <svg
-            width="14"
-            height="14"
-            viewBox="0 0 14 14"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.6"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            aria-hidden
-            style={{
-              transform: scrollState.atEnd ? "rotate(180deg)" : "none",
-              transition: "transform 220ms cubic-bezier(0.4, 0, 0.2, 1)",
-            }}
-          >
-            <path d="M3 7h8M7.5 3.5L11 7l-3.5 3.5" />
-          </svg>
-        </button>
       </div>
     </div>
   );

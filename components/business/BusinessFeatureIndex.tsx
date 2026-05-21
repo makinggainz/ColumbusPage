@@ -8,7 +8,7 @@ import styles from "./business-feature-index.module.css";
 const ITEMS = [
   { label: "Conversational chat", id: "chat" },
   { label: "Generative surveying", id: "super-model" },
-  { label: "Agent research", id: "agent-research" },
+  { label: "Agent research", id: "agentic-research" },
   { label: "Data catalogue", id: "data-catalogue" },
 ];
 
@@ -70,20 +70,22 @@ export default function BusinessFeatureIndex() {
         pointerEvents: visible ? "auto" : "none",
       }}
     >
-      {ITEMS.map((item, i) => {
-        const isActive = i === activeIdx;
-        return (
-          <a
-            key={item.id}
-            href={`#${item.id}`}
-            className={`${styles.item} ${isActive ? styles.itemActive : ""}`}
-            aria-current={isActive ? "true" : undefined}
-          >
-            <span className={styles.dot} aria-hidden />
-            <span className={styles.text}>{item.label}</span>
-          </a>
-        );
-      })}
+      <ul className={styles.list}>
+        {ITEMS.map((item, i) => {
+          const isActive = i === activeIdx;
+          return (
+            <li key={item.id}>
+              <a
+                href={`#${item.id}`}
+                className={`${styles.item} ${isActive ? styles.itemActive : ""}`}
+                aria-current={isActive ? "location" : undefined}
+              >
+                {item.label}
+              </a>
+            </li>
+          );
+        })}
+      </ul>
     </nav>,
     document.body,
   );

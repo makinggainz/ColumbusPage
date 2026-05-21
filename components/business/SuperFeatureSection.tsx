@@ -12,9 +12,10 @@ import Image from "next/image";
 export type SuperFeatureSubItem = {
   title: string;
   description: React.ReactNode;
-  /* Optional icon shown above the title in the text column. Same chip style
-     as the parent super-feature icon — pass a 36×36 element. */
-  icon?: React.ReactNode;
+  /* Optional DOM id applied to the sub-feature's row wrapper, so the
+     floating BusinessFeatureIndex (and any in-page anchor links) can target
+     a specific sub-feature directly without needing its own SuperFeature. */
+  id?: string;
   /* Either pass `image` (rendered inside a default floating card) or
      `visual` (rendered raw — bring your own card / chrome). */
   image?: string;
@@ -159,7 +160,7 @@ export default function SuperFeatureSection({
                    and backdrop. No 4/8 grid, no 1:1 square frame, no
                    SkyBackdrop. */
                 return (
-                  <div key={item.title} className="w-full">
+                  <div key={item.title} id={item.id} className="w-full">
                     {item.visual}
                   </div>
                 );
@@ -167,12 +168,10 @@ export default function SuperFeatureSection({
               return (
                 <div
                   key={item.title}
+                  id={item.id}
                   className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center"
                 >
                   <div className={`lg:col-span-4 px-6 lg:px-0 ${reversed ? "lg:order-2 lg:pl-8" : "lg:pr-8"}`}>
-                    {item.icon ? (
-                      <div className="mb-4 flex items-center">{item.icon}</div>
-                    ) : null}
                     <h3
                       className="text-[24px] md:text-[30px] lg:text-[36px] leading-[1.1]"
                       style={{ color: "var(--ent-text-primary)", fontWeight: 600, letterSpacing: "-0.02em" }}
@@ -257,8 +256,12 @@ function SkyBackdrop({ image, scrim = true }: { image: string; scrim?: boolean }
         <div
           className="absolute inset-0 pointer-events-none"
           style={{
+            /* Stronger top-down legibility scrim. Roughly 2.5× the
+               previous values across the gradient stops so light-coloured
+               photos (e.g. /vibegreen.png) carry enough contrast for the
+               header text + white UI mockups sitting on top of them. */
             background:
-              "linear-gradient(to bottom, rgba(0,0,0,0.18) 0%, rgba(0,0,0,0.08) 50%, rgba(0,0,0,0) 100%)",
+              "linear-gradient(to bottom, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.25) 50%, rgba(0,0,0,0.10) 100%)",
             zIndex: 0,
           }}
           aria-hidden

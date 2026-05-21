@@ -1,78 +1,78 @@
+/* Business feature index — the floating left-rail TOC that mirrors the
+   blog article's `BlogArticleStickyNav` (vertical guide line, faint idle
+   labels, accent rail segment + accent text for the active section).
+   Logic stays in BusinessFeatureIndex.tsx; this file only owns visual
+   styling. Hidden below 1100px so it never collides with main content. */
+
 .root {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  gap: 14px;
+  gap: 10px;
   transition: opacity 350ms ease;
 }
 
+.heading {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, #0B1B2B 38%, transparent);
+  margin: 0 0 4px;
+  padding-left: 16px;
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  /* Continuous faint guide rail running the full list height. */
+  border-left: 1px solid color-mix(in srgb, #0B1B2B 12%, transparent);
+}
+
 .item {
+  display: block;
   position: relative;
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  white-space: nowrap;
   font-size: 13px;
-  font-weight: 500;
-  letter-spacing: 0;
-  color: transparent;
+  font-weight: 400;
+  letter-spacing: -0.005em;
+  line-height: 1.45;
+  color: color-mix(in srgb, #0B1B2B 42%, transparent);
   text-decoration: none;
-  padding: 6px 14px 6px 10px;
-  border-radius: 9999px;
+  padding: 16px 0 16px 16px;
+  outline: none;
+  white-space: nowrap;
+  transition: color 300ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Active section's rail segment — a 2px bar sitting on the guide line.
+   Absolutely positioned so toggling never reflows the labels. */
+.item::before {
+  content: "";
+  position: absolute;
+  left: -1px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
   background: transparent;
-  transition: color 220ms ease, background-color 220ms ease,
-    padding 220ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition: background 300ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 999px;
-  background: rgba(11, 27, 43, 0.28);
-  flex: none;
-  transition: background-color 220ms ease, transform 220ms ease;
+.item:hover {
+  color: color-mix(in srgb, #0B1B2B 66%, transparent);
 }
-
-.text {
-  display: inline-block;
-  max-width: 0;
-  overflow: hidden;
-  opacity: 0;
-  transition: max-width 280ms cubic-bezier(0.22, 1, 0.36, 1),
-    opacity 220ms ease;
-}
-
-.item:hover .dot {
-  background: rgba(11, 27, 43, 0.55);
+.item:hover::before {
+  background: color-mix(in srgb, #0B1B2B 22%, transparent);
 }
 
 .itemActive,
 .itemActive:hover {
-  background: #f7f7f7;
-  color: rgba(11, 27, 43, 0.82);
+  color: #0081AC;
 }
-
-.itemActive .dot {
-  background: #0081ac;
-}
-
-.itemActive .text {
-  max-width: 240px;
-  opacity: 1;
-}
-
-.root:hover .item {
-  background: #f7f7f7;
-  color: rgba(11, 27, 43, 0.82);
-}
-
-.root:hover .itemActive {
-  background: #f7f7f7;
-}
-
-.root:hover .text {
-  max-width: 240px;
-  opacity: 1;
+.itemActive::before,
+.itemActive:hover::before {
+  background: #0081AC;
 }
 
 @media (max-width: 1100px) {
