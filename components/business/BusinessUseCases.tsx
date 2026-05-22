@@ -136,7 +136,7 @@ const RESIDENTIAL_BACKDROPS: IndustryBackdrops = {
      surveyEarthMap feed the two data-catalogue rows. */
   chatMainMap: "/ResidentialMaps/chat-platform-map.png",
   chatSubMaps: [
-    "/ResidentialMaps/see-what-others-cant.png",
+    "/ResidentialMaps/pattern-detection.png",
     "/ResidentialMaps/like-weather-forecasts.png",
     undefined,
     "/ResidentialMaps/import-files.png",
@@ -233,6 +233,23 @@ const ACADEMIC_BACKDROPS: IndustryBackdrops = {
   dataCatalogueHero: "/Academic/acad-bg-7.png",
   agenticResearchHero: "/Academic/acad-bg-8.png",
   dashboardHero: "/Academic/acad-bg-1.png",
+  /* Academic-specific map illustrations. Same slot semantics as CRE /
+     residential / urban-infrastructure. The chatMainMap uses the novel
+     "AI that critically thinks" image — academic research framing for
+     the MapPanel inside MapChatPlatform. chatSubMaps line up with the
+     chat sub-features (slot 0 "See what others cant", slot 1 "Like
+     weather forcasts…", slot 3 "Drop Any File"; slot 2 has no
+     MapLayeredVisual). smartLayerMap and surveyEarthMap feed the two
+     data-catalogue rows. */
+  chatMainMap: "/AcademicMaps/ai-critical-thinking.png",
+  chatSubMaps: [
+    "/AcademicMaps/see-what-others-cant.png",
+    "/AcademicMaps/like-weather-forecasts.png",
+    undefined,
+    "/AcademicMaps/import-files.png",
+  ],
+  smartLayerMap: "/AcademicMaps/smart-layers.png",
+  surveyEarthMap: "/AcademicMaps/survey-model.png",
 };
 
 const GEOMARKETING_BACKDROPS: IndustryBackdrops = {
@@ -246,6 +263,23 @@ const GEOMARKETING_BACKDROPS: IndustryBackdrops = {
   dataCatalogueHero: "/Geomarketing/geo-bg-6.png",
   agenticResearchHero: "/Geomarketing/geo-bg-7.png",
   dashboardHero: "/Geomarketing/geo-bg-1.png",
+  /* Geomarketing-specific map illustrations. Same slot semantics as CRE
+     / residential / urban-infrastructure — chatMainMap drives
+     MapChatPlatform's MapPanel; chatSubMaps[0/1] align with the chat
+     sub-features "See what others cant" (pattern-detect) and "Like
+     weather forcasts…" (predict-future). Slots 2 and 3 omitted — slot 3
+     ("Drop Any File") has no provided geomarketing map and falls back to
+     the generic default. smartLayerMap and surveyEarthMap feed the two
+     data-catalogue rows. */
+  chatMainMap: "/GeomarketingMaps/conversational.png",
+  chatSubMaps: [
+    "/GeomarketingMaps/pattern-detect.png",
+    "/GeomarketingMaps/predict-future.png",
+    undefined,
+    undefined,
+  ],
+  smartLayerMap: "/GeomarketingMaps/be-creative.png",
+  surveyEarthMap: "/GeomarketingMaps/super-model.png",
 };
 
 const URBAN_INFRASTRUCTURE_BACKDROPS: IndustryBackdrops = {
