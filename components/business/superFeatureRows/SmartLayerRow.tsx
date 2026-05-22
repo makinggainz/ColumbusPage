@@ -25,6 +25,7 @@ export type SmartLayerRowProps = {
   layerDescription?: string;
   features?: SmartLayerFeature[];
   mapAlt?: string;
+  mapSrc?: string;
   promptText?: string;
 };
 
@@ -38,6 +39,7 @@ const DEFAULT_FEATURES: SmartLayerFeature[] = [
   { title: "property level scoring", description: "Fresh data, continuously monitored and maintained" },
 ];
 const DEFAULT_MAP_ALT = "Nashville smart layer heatmap";
+const DEFAULT_MAP_SRC = "/business/becomeartistMap.png";
 const DEFAULT_PROMPT_TEXT =
   "Create a smart layer called 'Value-Add Rent Lift Probability' for every multifamily property of 100+ units built between 1975 and 2000 across the Nashville MSA. Score each property on the probability of supporting a 25%+ rent lift within 24 months of renovation";
 
@@ -47,6 +49,7 @@ export default function SmartLayerRow({
   layerDescription = DEFAULT_LAYER_DESCRIPTION,
   features = DEFAULT_FEATURES,
   mapAlt = DEFAULT_MAP_ALT,
+  mapSrc = DEFAULT_MAP_SRC,
   promptText = DEFAULT_PROMPT_TEXT,
 }: SmartLayerRowProps = {}) {
   return (
@@ -101,7 +104,7 @@ export default function SmartLayerRow({
             </div>
             <div className="lg:col-span-8">
               <MapThumb
-                src="/business/becomeartistMap.png"
+                src={mapSrc}
                 alt={mapAlt}
                 aspectRatio="4 / 3"
                 radius="var(--ent-radius-card)"

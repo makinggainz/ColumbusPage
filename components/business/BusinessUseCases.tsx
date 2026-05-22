@@ -88,6 +88,12 @@ type IndustryBackdrops = {
      render a MapLayeredVisual (0, 1, 3 today) actually consume it. */
   chatMainMap?: string;
   chatSubMaps?: [string?, string?, string?, string?];
+  /* Optional per-industry overrides for the map IMAGES rendered inside
+     the data-catalogue rows (SmartLayerRow and SurveyEarthRow). Each row
+     keeps its hardcoded default ("/business/becomeartistMap.png" /
+     "/business/SuperModelback.png") when an industry omits these. */
+  smartLayerMap?: string;
+  surveyEarthMap?: string;
 };
 
 /* Mapping authored against /Users/.../Downloads/comi.pdf (which the user
@@ -122,6 +128,21 @@ const RESIDENTIAL_BACKDROPS: IndustryBackdrops = {
   dataCatalogueHero: "/Residential/res-bg-6.png",
   agenticResearchHero: "/Residential/res-bg-7.png",
   dashboardHero: "/Residential/res-bg-1.png",
+  /* Residential-specific map illustrations. Same slot semantics as the
+     CRE / urban-infrastructure sets — chatMainMap drives MapChatPlatform's
+     MapPanel; chatSubMaps line up with the chat sub-features (slot 0
+     "See what others cant", slot 1 "Like weather forcasts…", slot 3
+     "Drop Any File"; slot 2 has no MapLayeredVisual). smartLayerMap and
+     surveyEarthMap feed the two data-catalogue rows. */
+  chatMainMap: "/ResidentialMaps/chat-platform-map.png",
+  chatSubMaps: [
+    "/ResidentialMaps/see-what-others-cant.png",
+    "/ResidentialMaps/like-weather-forecasts.png",
+    undefined,
+    "/ResidentialMaps/import-files.png",
+  ],
+  smartLayerMap: "/ResidentialMaps/smart-layers.png",
+  surveyEarthMap: "/ResidentialMaps/survey-model.png",
 };
 
 /* Mapping authored against /Users/.../Downloads/resi.pdf (which the user
@@ -238,6 +259,21 @@ const URBAN_INFRASTRUCTURE_BACKDROPS: IndustryBackdrops = {
   dataCatalogueHero: "/UrbanInfrastructure/urb-bg-6.png",
   agenticResearchHero: "/UrbanInfrastructure/urb-bg-7.png",
   dashboardHero: "/UrbanInfrastructure/urb-bg-1.png",
+  /* Urban-infra map illustrations. chatMainMap drives MapChatPlatform's
+     MapPanel; chatSubMaps align with the chat sub-features (slot 0 "See
+     what others cant" → pattern-detection, slot 1 "Like weather
+     forcasts…" → predict-future, slot 2 has no MapLayeredVisual, slot 3
+     "Drop Any File" → file-compatibility). smartLayerMap and
+     surveyEarthMap feed the two data-catalogue rows. */
+  chatMainMap: "/UrbanPlanningMaps/map-chat.png",
+  chatSubMaps: [
+    "/UrbanPlanningMaps/pattern-detection.png",
+    "/UrbanPlanningMaps/predict-future.png",
+    undefined,
+    "/UrbanPlanningMaps/file-compatibility.png",
+  ],
+  smartLayerMap: "/UrbanPlanningMaps/creative-smart-layers.png",
+  surveyEarthMap: "/UrbanPlanningMaps/survey-model.png",
 };
 
 const GRADIENT_BACKDROPS: IndustryBackdrops = {
@@ -1452,8 +1488,8 @@ export default function BusinessUseCases() {
         demoImage="/dataCataSm.png"
         demoAlt="Columbus data manager"
         subFeatures={[
-          { title: "With smart layers, you become an artist", description: null, visual: <SmartLayerRow {...copy.rows.smartLayer} />, stacked: true },
-          { id: "super-model", title: "Survey the earth with a super model", description: null, visual: <SurveyEarthRow {...copy.rows.surveyEarth} />, stacked: true },
+          { title: "With smart layers, you become an artist", description: null, visual: <SmartLayerRow {...copy.rows.smartLayer} mapSrc={bg.smartLayerMap} />, stacked: true },
+          { id: "super-model", title: "Survey the earth with a super model", description: null, visual: <SurveyEarthRow {...copy.rows.surveyEarth} mapSrc={bg.surveyEarthMap} />, stacked: true },
           { title: "Better Data, Better Prices", description: null, visual: <BetterPricesRow {...copy.rows.betterPrices} />, stacked: true },
         ]}
       />
