@@ -467,8 +467,11 @@ const RESIDENTIAL_COPY: IndustryCopy = {
       ],
       /* Green ramp (dark → pale) — matches the residential forecast
          map's green-vegetation accent palette and reads as a heat
-         scale across the four numbered ranking badges. */
-      badgeColors: ["#5AA851", "#7FC75E", "#B0E896", "#DCF8CF"],
+         scale across the four numbered ranking badges. Ranks 3 and 4
+         deepened from the original light-greens (#B0E896 / #DCF8CF)
+         so the percentages stay readable while still being clearly
+         lighter than ranks 1 and 2. */
+      badgeColors: ["#5AA851", "#7FC75E", "#9FE181", "#C7EBA8"],
       takeaway:
         "Single-family demand in Madrid is concentrating in inner-ring neighborhoods with new transit, with Alcobendas leading the suburban set.",
     },
@@ -656,9 +659,11 @@ const COMMERCIAL_COPY: IndustryCopy = {
     // Current defaults are already London / Grade A CRE — keep them.
     // Blue ramp (dark → pale) — matches the CRE forecast map's saturated
     // blue heatmap palette, applied as the heat scale on the four ranked
-    // submarket badges.
+    // submarket badges. Ranks 3 and 4 deepened from the original light
+    // blues (#85C2FF / #BBE0FF) so the percentages stay readable while
+    // still being clearly lighter than ranks 1 and 2.
     forecast: {
-      badgeColors: ["#001FAE", "#3B6EF0", "#85C2FF", "#BBE0FF"],
+      badgeColors: ["#001FAE", "#3B6EF0", "#74B9FE", "#A5D0FA"],
     },
     // Current default prompt is already the Milan Porta Nuova CRE prompt.
     reasoning: {},
@@ -810,8 +815,11 @@ const URBAN_COPY: IndustryCopy = {
         { rank: 4, label: "Riem", delta: "+9.7%" },
       ],
       /* Warm ramp (red → orange → yellow → pale) — matches the Munich
-         congestion map's red→yellow flower-shaped polygons. */
-      badgeColors: ["#DE1F20", "#F79654", "#FBC362", "#F6E8A1"],
+         congestion map's red→yellow flower-shaped polygons. Ranks 3
+         and 4 deepened from the original light yellows (#FBC362 /
+         #F6E8A1) so the percentages stay readable while still being
+         clearly lighter than ranks 1 and 2. */
+      badgeColors: ["#DE1F20", "#F79654", "#FAB94A", "#F2D770"],
       takeaway:
         "Congestion growth concentrates on residential pipelines feeding the BMW / Siemens employment ring, with S-Bahn capacity ceilings amplifying spill-over.",
     },
@@ -1017,8 +1025,10 @@ const ENVIRONMENTAL_COPY: IndustryCopy = {
       ],
       /* Warm ramp (red → orange → yellow → pale) — matches the Sierra
          Nevada wildfire ignition map's red→yellow ignition risk
-         heatmap palette. */
-      badgeColors: ["#DE1F20", "#F79654", "#FBC362", "#F6E8A1"],
+         heatmap palette. Ranks 3 and 4 deepened from the original
+         light yellows (#FBC362 / #F6E8A1) so the percentages stay
+         readable while still being clearly lighter than ranks 1 and 2. */
+      badgeColors: ["#DE1F20", "#F79654", "#FAB94A", "#F2D770"],
       takeaway:
         "Ignition risk peaks where bark-beetle mortality patches overlap historic Santa Ana / Diablo wind corridors and the wildland-urban interface.",
     },
@@ -1424,8 +1434,11 @@ const GEOMARKETING_COPY: IndustryCopy = {
         { rank: 4, label: "Lisbon — Marvila", delta: "+8.5%" },
       ],
       /* Blue ramp (dark → pale) — matches the Geomarketing forecast
-         map's blue audience-density heatmap palette. */
-      badgeColors: ["#001FAE", "#3B6EF0", "#85C2FF", "#BBE0FF"],
+         map's blue audience-density heatmap palette. Ranks 3 and 4
+         deepened from the original light blues (#85C2FF / #BBE0FF)
+         so the percentages stay readable while still being clearly
+         lighter than ranks 1 and 2. */
+      badgeColors: ["#001FAE", "#3B6EF0", "#74B9FE", "#A5D0FA"],
       takeaway:
         "Italian, Spanish, and Latin-American diaspora concentration is the strongest forward signal — Porta Romana leads on disposable-income trajectory.",
     },
