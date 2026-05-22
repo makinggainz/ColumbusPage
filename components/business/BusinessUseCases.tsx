@@ -440,19 +440,20 @@ const RESIDENTIAL_COPY: IndustryCopy = {
   ),
   cards: {
     patterns: {
-      heading: "6 patterns detected",
+      heading: "3 patterns detected",
       prompt:
         "Rank the possibility of solar roof panel installation in this neighborhood",
       area: "Across Chevy Chase · Q2 2026",
       patterns: [
-        { n: 1, title: "Single-Entity Holdings Near Red Line", properties: "412 parcels", roi: "Avg ROI: 26%" },
-        { n: 2, title: "Tear-Down Opportunities Below $250/sqft", properties: "189 parcels", roi: "Avg ROI: 22%" },
-        { n: 3, title: "10+ Year Holds Ripe For Rezoning", properties: "276 parcels", roi: "Avg ROI: 19%" },
-        { n: 4, title: "Single-Family Hot Zones", properties: "340 areas", roi: "Avg ROI: 17%" },
+        { n: 1, title: "Unshaded South-Facing Roofs With Strong Daily Insolation", properties: "312 homes", roi: "Solar potential: High" },
+        { n: 2, title: "Existing Rooftop Solar Arrays Already Installed", properties: "47 homes", roi: "Status: Occupied" },
+        { n: 3, title: "Workable Roofs Pending Minor Tree-Canopy Trimming", properties: "186 homes", roi: "Solar potential: Medium" },
       ],
-      /* Residential map's two-tone building paint (vibrant red +
-         vibrant blue), alternated across the four numbered badges. */
-      badgeColors: ["#DC2626", "#2563EB", "#DC2626", "#2563EB"],
+      /* Residential map's two-tone rooftop paint — red marks homes with
+         high solar potential (unobstructed, well-aligned), blue marks
+         homes with existing arrays already occupying the roof. Sequence
+         alternates red-blue-red across the three numbered patterns. */
+      badgeColors: ["#DC2626", "#2563EB", "#DC2626"],
     },
     forecast: {
       questionRecap:
@@ -648,7 +649,7 @@ const COMMERCIAL_COPY: IndustryCopy = {
       area: "Across Manhattan · trailing 18 months",
       patterns: [
         { n: 1, title: "PE Funds Concentrating in Pre-War Office", properties: "187 transactions", roi: "Avg cap: 5.4%" },
-        { n: 2, title: "Multifamily Rotation Out of Midtown", properties: "94 transactions", roi: "Avg cap: 4.9%" },
+        { n: 2, title: "Multifamily Rotation Out of Upper East Side", properties: "94 transactions", roi: "Avg cap: 4.9%" },
         { n: 3, title: "Mixed-Use Buys Near New Subway Stops", properties: "61 transactions", roi: "Avg cap: 5.1%" },
         { n: 4, title: "Industrial-to-Residential Conversions", properties: "42 transactions", roi: "Avg cap: 5.6%" },
       ],
