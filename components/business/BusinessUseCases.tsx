@@ -54,7 +54,7 @@ function IconChip({ children }: { children: React.ReactNode }) {
    for emphasis, not navigation, so they should not be clickable. */
 function Blue({ children }: { children: React.ReactNode }) {
   return (
-    <span style={{ color: "var(--ent-accent)", fontWeight: 500 }}>
+    <span style={{ color: "var(--ent-accent)", fontWeight: 600 }}>
       {children}
     </span>
   );
@@ -441,6 +441,8 @@ const RESIDENTIAL_COPY: IndustryCopy = {
   cards: {
     patterns: {
       heading: "4 patterns detected",
+      prompt:
+        "Find patterns in single-family residential parcel acquisitions across the Madrid metro area in the past 18 months. What is the smart money buying and what does that tell me about where prices are headed?",
       area: "Across the Madrid metro area · Q2 2026",
       patterns: [
         { n: 1, title: "Single-Entity Holdings Near New Metro", properties: "412 parcels", roi: "Avg ROI: 26%" },
@@ -448,6 +450,9 @@ const RESIDENTIAL_COPY: IndustryCopy = {
         { n: 3, title: "10+ Year Holds Ripe For Rezoning", properties: "276 parcels", roi: "Avg ROI: 19%" },
         { n: 4, title: "Single-Family Hot Zones", properties: "340 areas", roi: "Avg ROI: 17%" },
       ],
+      /* Residential map's two-tone building paint (vibrant red +
+         vibrant blue), alternated across the four numbered badges. */
+      badgeColors: ["#DC2626", "#2563EB", "#DC2626", "#2563EB"],
     },
     forecast: {
       questionRecap:
@@ -460,6 +465,10 @@ const RESIDENTIAL_COPY: IndustryCopy = {
         { rank: 3, label: "Alcobendas", delta: "+7.2%" },
         { rank: 4, label: "Pozuelo", delta: "+6.5%" },
       ],
+      /* Green ramp (dark → pale) — matches the residential forecast
+         map's green-vegetation accent palette and reads as a heat
+         scale across the four numbered ranking badges. */
+      badgeColors: ["#5AA851", "#7FC75E", "#B0E896", "#DCF8CF"],
       takeaway:
         "Single-family demand in Madrid is concentrating in inner-ring neighborhoods with new transit, with Alcobendas leading the suburban set.",
     },
@@ -631,6 +640,8 @@ const COMMERCIAL_COPY: IndustryCopy = {
   cards: {
     patterns: {
       heading: "4 patterns detected",
+      prompt:
+        "Find the patterns in current private equity CRE purchases across all of Manhattan over the last 18 months. What are they actually buying and what does it tell me about where others think the market is going?",
       area: "Across Manhattan · trailing 18 months",
       patterns: [
         { n: 1, title: "PE Funds Concentrating in Pre-War Office", properties: "187 transactions", roi: "Avg cap: 5.4%" },
@@ -638,9 +649,17 @@ const COMMERCIAL_COPY: IndustryCopy = {
         { n: 3, title: "Mixed-Use Buys Near New Subway Stops", properties: "61 transactions", roi: "Avg cap: 5.1%" },
         { n: 4, title: "Industrial-to-Residential Conversions", properties: "42 transactions", roi: "Avg cap: 5.6%" },
       ],
+      /* CRE Manhattan map's blue polygons + navy markers — blue ramp
+         from dark navy down to pale. */
+      badgeColors: ["#001FAE", "#3B6EF0", "#85C2FF", "#BBE0FF"],
     },
     // Current defaults are already London / Grade A CRE — keep them.
-    forecast: {},
+    // Blue ramp (dark → pale) — matches the CRE forecast map's saturated
+    // blue heatmap palette, applied as the heat scale on the four ranked
+    // submarket badges.
+    forecast: {
+      badgeColors: ["#001FAE", "#3B6EF0", "#85C2FF", "#BBE0FF"],
+    },
     // Current default prompt is already the Milan Porta Nuova CRE prompt.
     reasoning: {},
     harmonized: {
@@ -766,6 +785,8 @@ const URBAN_COPY: IndustryCopy = {
   cards: {
     patterns: {
       heading: "4 patterns detected",
+      prompt:
+        "Find hidden patterns linking pothole formation across the 7th arrondissement — vibration, traffic load, climate, root systems — anything that predicts where the next failures will appear.",
       area: "Across the 7th arrondissement · trailing 36 months",
       patterns: [
         { n: 1, title: "Tram-Vibration Pothole Corridors", properties: "84 segments", roi: "Repair priority: High" },
@@ -773,6 +794,9 @@ const URBAN_COPY: IndustryCopy = {
         { n: 3, title: "North-Facing Freeze-Thaw Streets", properties: "117 segments", roi: "Repair priority: Med" },
         { n: 4, title: "Plane-Tree Root-Heave Hotspots", properties: "49 segments", roi: "Repair priority: Med" },
       ],
+      /* Urban Paris-streets map's yellow/amber street segments —
+         amber ramp from dark amber down to pale yellow. */
+      badgeColors: ["#B17F00", "#E5A800", "#F5C842", "#FBE078"],
     },
     forecast: {
       questionRecap:
@@ -785,6 +809,9 @@ const URBAN_COPY: IndustryCopy = {
         { rank: 3, label: "Sendling-Westpark", delta: "+11.1%" },
         { rank: 4, label: "Riem", delta: "+9.7%" },
       ],
+      /* Warm ramp (red → orange → yellow → pale) — matches the Munich
+         congestion map's red→yellow flower-shaped polygons. */
+      badgeColors: ["#DE1F20", "#F79654", "#FBC362", "#F6E8A1"],
       takeaway:
         "Congestion growth concentrates on residential pipelines feeding the BMW / Siemens employment ring, with S-Bahn capacity ceilings amplifying spill-over.",
     },
@@ -964,6 +991,8 @@ const ENVIRONMENTAL_COPY: IndustryCopy = {
   cards: {
     patterns: {
       heading: "4 patterns detected",
+      prompt:
+        "Find patterns in sightings of sperm whale species across the North Atlantic over the last twenty years. What's driving the aggregation bands, and how are they shifting with sea-surface temperatures?",
       area: "Across the North Atlantic · trailing 20 years",
       patterns: [
         { n: 1, title: "Sperm Whale Aggregation Bands", properties: "812 sightings", roi: "Confidence: High" },
@@ -971,6 +1000,9 @@ const ENVIRONMENTAL_COPY: IndustryCopy = {
         { n: 3, title: "Shipping-Lane Avoidance Corridors", properties: "184 transects", roi: "Confidence: Med" },
         { n: 4, title: "SST-Driven Range Shifts (2010→2024)", properties: "9 cohorts", roi: "Confidence: Med" },
       ],
+      /* Environmental North-Atlantic map's navy whale markers over
+         blue ocean — blue ramp from dark navy to pale. */
+      badgeColors: ["#001FAE", "#3B6EF0", "#85C2FF", "#BBE0FF"],
     },
     forecast: {
       questionRecap:
@@ -983,6 +1015,10 @@ const ENVIRONMENTAL_COPY: IndustryCopy = {
         { rank: 3, label: "Mariposa Corridor", delta: "+27%" },
         { rank: 4, label: "Sequoia Buffer", delta: "+22%" },
       ],
+      /* Warm ramp (red → orange → yellow → pale) — matches the Sierra
+         Nevada wildfire ignition map's red→yellow ignition risk
+         heatmap palette. */
+      badgeColors: ["#DE1F20", "#F79654", "#FBC362", "#F6E8A1"],
       takeaway:
         "Ignition risk peaks where bark-beetle mortality patches overlap historic Santa Ana / Diablo wind corridors and the wildland-urban interface.",
     },
@@ -1160,6 +1196,8 @@ const ACADEMIC_COPY: IndustryCopy = {
   cards: {
     patterns: {
       heading: "4 patterns detected",
+      prompt:
+        "Find hidden patterns between vending machine density across Tokyo and anything else on the map — population, transit, building types, whatever stands out.",
       area: "Across Tokyo's 23 special wards",
       patterns: [
         { n: 1, title: "Vending Density Near Konbini Gaps", properties: "1,204 machines", roi: "Signal: Strong" },
@@ -1167,6 +1205,9 @@ const ACADEMIC_COPY: IndustryCopy = {
         { n: 3, title: "Daytime Commuter-Pop Corridors", properties: "146 corridors", roi: "Signal: Med" },
         { n: 4, title: "Fragmented Land-Ownership Pockets", properties: "523 parcels", roi: "Signal: Med" },
       ],
+      /* Academic Tokyo-wards heatmap — red center (Shinjuku/Chiyoda)
+         fading to orange-yellow at the periphery. */
+      badgeColors: ["#DE1F20", "#F79654", "#FBC362", "#F6E8A1"],
     },
     forecast: {
       questionRecap:
@@ -1179,6 +1220,10 @@ const ACADEMIC_COPY: IndustryCopy = {
         { rank: 3, label: "Lewisham", delta: "+6.8%" },
         { rank: 4, label: "Peckham", delta: "+5.9%" },
       ],
+      /* Academic badge palette — matches the predict-future chloropleth's
+         own deep-blue → light-green tier ramp so the card UI reads as the
+         same data story as the map behind it. */
+      badgeColors: ["#1554A3", "#65B9D7", "#93D5D4", "#D9E9C5"],
       takeaway:
         "Crossrail-adjacent boroughs lead, with tech-cluster spillover and lifestyle-amenity density tracking the strongest cohort growth.",
     },
@@ -1354,6 +1399,8 @@ const GEOMARKETING_COPY: IndustryCopy = {
   cards: {
     patterns: {
       heading: "4 patterns detected",
+      prompt:
+        "Across our 580 Canadian branches, map 6 years of campaign performance against each branch's trade area boundary. Show me where marketing actually drives sales and where we're wasting spend on saturated zones.",
       area: "Across 580 Canadian branches · trailing 6 years",
       patterns: [
         { n: 1, title: "Spend Wasted in Saturated Trade Areas", properties: "112 branches", roi: "Reallocate: High" },
@@ -1361,6 +1408,9 @@ const GEOMARKETING_COPY: IndustryCopy = {
         { n: 3, title: "Demographic-Shift Misalignment", properties: "94 branches", roi: "Reallocate: Med" },
         { n: 4, title: "Digital-Adoption Erosion", properties: "146 branches", roi: "Reallocate: Med" },
       ],
+      /* Geomarketing Canada-branches heatmap — full warm-to-cool
+         range (red high-density, orange/yellow mid, green low). */
+      badgeColors: ["#DE1F20", "#F79654", "#FBC362", "#5AA851"],
     },
     forecast: {
       questionRecap:
@@ -1373,6 +1423,9 @@ const GEOMARKETING_COPY: IndustryCopy = {
         { rank: 3, label: "Berlin — Neukölln", delta: "+9.3%" },
         { rank: 4, label: "Lisbon — Marvila", delta: "+8.5%" },
       ],
+      /* Blue ramp (dark → pale) — matches the Geomarketing forecast
+         map's blue audience-density heatmap palette. */
+      badgeColors: ["#001FAE", "#3B6EF0", "#85C2FF", "#BBE0FF"],
       takeaway:
         "Italian, Spanish, and Latin-American diaspora concentration is the strongest forward signal — Porta Romana leads on disposable-income trajectory.",
     },

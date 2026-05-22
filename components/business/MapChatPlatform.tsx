@@ -166,6 +166,9 @@ function MapImage({ map }: { map: string }) {
         bottom: 0,
         left: `${MAP_LEFT}%`,
         right: 0,
+        /* Vibrancy lift — same recipe as MapThumb / MapLayeredVisual,
+           applied to the wrapper so the next/image below inherits it. */
+        filter: "saturate(1.2) contrast(1.08)",
       }}
     >
       <Image

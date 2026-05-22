@@ -69,6 +69,9 @@ export default function MapLayeredVisual({
               backgroundImage: `url(${map})`,
               backgroundSize: "cover",
               backgroundPosition: "center",
+              /* Vibrancy lift — same recipe as MapThumb; brings muted
+                 industry maps up to the CRE reference's saturation. */
+              filter: "saturate(1.2) contrast(1.08)",
               boxShadow: "var(--ent-shadow-card)",
             }}
           />
@@ -135,6 +138,9 @@ export default function MapLayeredVisual({
               backgroundImage: `url(${map})`,
               backgroundSize: "cover",
               backgroundPosition: "center",
+              /* Vibrancy lift — same recipe as MapThumb; brings muted
+                 industry maps up to the CRE reference's saturation. */
+              filter: "saturate(1.2) contrast(1.08)",
               boxShadow: "var(--ent-shadow-card)",
               zIndex: 1,
             }}

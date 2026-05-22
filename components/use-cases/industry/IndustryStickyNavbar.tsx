@@ -316,7 +316,7 @@ export default function IndustryStickyNavbar({ lightTheme = false, topOffset = 5
                   type="button"
                   data-industry-link={id}
                   onClick={() => handleSelect(id)}
-                  className={`relative shrink-0 whitespace-nowrap py-1 text-[14px] font-medium tracking-[-0.005em] transition-colors duration-200 ${
+                  className={`relative shrink-0 cursor-pointer whitespace-nowrap py-1 text-[14px] font-medium tracking-[-0.005em] transition-colors duration-200 ${
                     isActive ? activeLinkClass : idleLinkClass
                   }`}
                   aria-pressed={isActive}

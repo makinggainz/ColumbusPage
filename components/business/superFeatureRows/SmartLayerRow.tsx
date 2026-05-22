@@ -177,7 +177,10 @@ export default function SmartLayerRow({
         >
           {/* Map — fills the inner pane with a 3px gutter on top and
               right; extends all the way left and down so it sits
-              BEHIND the smart-layer overlay card and prompt bar. */}
+              BEHIND the smart-layer overlay card and prompt bar.
+              Carries the same vibrancy filter as MapThumb /
+              MapLayeredVisual so industry maps match the CRE reference
+              regardless of which renderer they're piped through. */}
           <div
             role={mapAlt ? "img" : undefined}
             aria-label={mapAlt || undefined}
@@ -191,24 +194,22 @@ export default function SmartLayerRow({
               backgroundImage: `url(${mapSrc})`,
               backgroundSize: "cover",
               backgroundPosition: "center",
+              filter: "saturate(1.2) contrast(1.08)",
             }}
           />
 
-          {/* Content stack — fills the inner pane vertically so the
-              smart-layer overlay can grow to whatever height makes the
-              chatbox land exactly one clamp(10px, 1.2cqw, 16px) above
-              the inner pane's bottom edge. All four gaps (overlay-top,
-              overlay-left, chatbox-left, chatbox-bottom) plus the
-              overlay→chatbox gap use the same clamp. */}
+          {/* Content stack — fills the inner pane vertically. The
+              overlay wrapper carries its own top + left + bottom
+              inset (so the smart-layer card stays clear of the inner
+              pane's edges), but the chatbox sits FLUSH against the
+              inner pane's bottom, left, and right edges. */}
           <div
             style={{
               position: "absolute",
               inset: 0,
               zIndex: 1,
-              padding: "clamp(10px, 1.2cqw, 16px)",
               display: "flex",
               flexDirection: "column",
-              gap: "clamp(10px, 1.2cqw, 16px)",
             }}
           >
             <div
@@ -216,6 +217,9 @@ export default function SmartLayerRow({
                 width: "min(58%, 580px)",
                 flex: 1,
                 minHeight: 0,
+                marginTop: "clamp(10px, 1.2cqw, 16px)",
+                marginLeft: "clamp(10px, 1.2cqw, 16px)",
+                marginBottom: "clamp(10px, 1.2cqw, 16px)",
                 display: "flex",
                 flexDirection: "column",
               }}
@@ -435,9 +439,15 @@ function PromptBar({ text }: { text: string }) {
     <div
       style={{
         background: "#FFFFFF",
-        borderRadius: 12,
-        border: "1px solid var(--ent-border-card)",
-        boxShadow: "0 12px 32px rgba(11, 27, 43, 0.10), 0 2px 6px rgba(11, 27, 43, 0.06)",
+        /* Top corners rounded (12px to match the map above); bottom
+           corners square because the bar is flush with the inner
+           pane's bottom edge — a rounded bottom would create visible
+           map slivers in the bottom-left/right corners. */
+        borderRadius: "12px 12px 0 0",
+        borderTop: "1px solid var(--ent-border-card)",
+        /* Shadow projects ONLY upward: negative Y offset, negative
+           spread to choke off horizontal/downward bleed. */
+        boxShadow: "0 -10px 24px -6px rgba(11, 27, 43, 0.18), 0 -2px 6px -2px rgba(11, 27, 43, 0.08)",
         padding: "22px clamp(20px, 2vw, 28px)",
         display: "flex",
         alignItems: "center",
@@ -448,7 +458,7 @@ function PromptBar({ text }: { text: string }) {
       <p
         style={{
           margin: 0,
-          width: "55%",
+          width: "63%",
           fontSize: 14,
           lineHeight: 1.55,
           color: "var(--ent-text-primary)",

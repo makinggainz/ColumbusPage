@@ -32,6 +32,12 @@ export default function MapThumb({
         backgroundImage: `url(${src})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
+        /* Vibrancy lift — brings muted industry maps (residential weather,
+           geomarketing predict-future, academic choropleths) up to the
+           saturation level of the CRE reference map. Subtle enough that
+           already-vibrant maps (Urban Munich, residential parcel paint)
+           don't blow out. */
+        filter: "saturate(1.2) contrast(1.08)",
         boxShadow: shadow ? "var(--ent-shadow-card)" : "none",
       }}
     />

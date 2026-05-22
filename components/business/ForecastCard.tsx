@@ -27,8 +27,9 @@ const DEFAULT_PANEL_SUBTITLE = "Next 24 Months";
 const DEFAULT_TAKEAWAY = DEFAULT_QUESTION_RECAP;
 
 /* Numbered badges fade from saturated red → near-black down the list,
-   mirroring the gradient in the source design. */
-const BADGE_FILLS = ["#D8362B", "#A82424", "#6B1414", "#2A0606"];
+   mirroring the gradient in the source design. Industries can override
+   via `badgeColors` to match the accent palette of their specific map. */
+const DEFAULT_BADGE_FILLS = ["#D8362B", "#A82424", "#6B1414", "#2A0606"];
 const RED_TEXT = "#D8362B";
 
 export type ForecastCardProps = {
@@ -37,6 +38,7 @@ export type ForecastCardProps = {
   panelSubtitle?: string;
   items?: RankedItem[];
   takeaway?: string;
+  badgeColors?: string[];
 };
 
 export default function ForecastCard({
@@ -45,6 +47,7 @@ export default function ForecastCard({
   panelSubtitle = DEFAULT_PANEL_SUBTITLE,
   items = DEFAULT_TOP_ITEMS,
   takeaway = DEFAULT_TAKEAWAY,
+  badgeColors = DEFAULT_BADGE_FILLS,
 }: ForecastCardProps = {}) {
   return (
     <div
@@ -132,7 +135,8 @@ export default function ForecastCard({
                     width: 22,
                     height: 22,
                     borderRadius: 9999,
-                    background: BADGE_FILLS[i],
+                    background:
+                      badgeColors[i] ?? badgeColors[badgeColors.length - 1] ?? DEFAULT_BADGE_FILLS[0],
                     color: "#FFFFFF",
                     fontSize: 12,
                     fontWeight: 600,
@@ -145,7 +149,10 @@ export default function ForecastCard({
               </div>
               <span
                 style={{
-                  color: RED_TEXT,
+                  color:
+                    badgeColors[i] ??
+                    badgeColors[badgeColors.length - 1] ??
+                    RED_TEXT,
                   fontVariantNumeric: "tabular-nums",
                   letterSpacing: "-0.005em",
                 }}
