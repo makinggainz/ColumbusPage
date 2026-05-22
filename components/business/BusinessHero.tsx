@@ -1,8 +1,11 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+import MapChatPlatform from "./MapChatPlatformHero";
+import AgenticResearchMockup from "./AgenticResearchMockup";
+import DataManagerMockup from "./DataManagerMockup";
+import DashboardMockup from "./DashboardMockup";
 
 const reveal = (visible: boolean, delay: number): React.CSSProperties => ({
   opacity: visible ? 1 : 0,
@@ -35,15 +38,18 @@ export default function BusinessHero() {
   const sectionRef = useRef<HTMLElement>(null);
   const [visible, setVisible] = useState(false);
 
-  // Browser-tab mock: selectable (click to activate) and reorderable
-  // (drag a tab onto another to swap its position in the order).
+  // Browser-tab mock: each tab maps to one of the four product-display
+  // mockup components pulled from the experimentV6-Gdesign branch
+  // (Map Chat, Agentic Research, Data Manager, Dashboard). Clicking a
+  // tab swaps which mockup is rendered. Tabs remain reorderable (drag
+  // a tab onto another to swap its position).
   const [tabs, setTabs] = useState([
-    { id: "columbus", label: "Columbus" },
-    { id: "site-report", label: "Site Report" },
-    { id: "trade-area", label: "Trade Area" },
-    { id: "new-tab", label: "New Tab" },
+    { id: "map-chat", label: "Ask the Map" },
+    { id: "research", label: "Research Reports" },
+    { id: "data", label: "Data Catalogue" },
+    { id: "dashboard", label: "Dashboard" },
   ]);
-  const [activeTabId, setActiveTabId] = useState("columbus");
+  const [activeTabId, setActiveTabId] = useState("map-chat");
   const dragTabIndex = useRef<number | null>(null);
 
   const moveTab = (from: number, to: number) => {
@@ -360,33 +366,31 @@ export default function BusinessHero() {
               </div>
             </div>
 
-            {/* Product image — the Columbus bento visual from the homepage,
-                inset 4px on all sides so the translucent window glass shows
-                through as a gutter (including a 4px strip below the title
-                bar, which keeps the rounded top corners clean). All four
-                corners are rounded 20px to match the window and PageFrame;
-                the image is slightly translucent so the glass reads through. */}
-            <div style={{ padding: 4 }}>
-              <div
-                style={{
-                  position: "relative",
-                  width: "100%",
-                  aspectRatio: "1654 / 951",
-                  borderRadius: 20,
-                  overflow: "hidden",
-                }}
-              >
-                <Image
-                  src="/ColumbusHomeimg.png"
-                  alt="Columbus map intelligence platform"
-                  fill
-                  priority
-                  sizes="(max-width: 1100px) 100vw, 1100px"
-                  className="object-cover object-center"
-                  style={{ opacity: 0.9 }}
-                />
-              </div>
+            {/* Product display — one of four Gdesign mockup components
+                composes the frame PNG with overlaid coded UI (map tiles,
+                cards, chat panel) for the active tab. Each mockup ships
+                with its own aspect-ratio + maxWidth + hairline border;
+                we drop the aspect-locked image wrapper so the mockup
+                renders at its native dimensions. A 4px gutter remains
+                so the glass window shows around the mockup, and an
+                override drops the mockup's own border so only the glass
+                window chrome reads at the outer edge. */}
+            <div
+              style={{ padding: 4 }}
+              className="hero-product-display"
+            >
+              {activeTabId === "map-chat" && <MapChatPlatform />}
+              {activeTabId === "research" && <AgenticResearchMockup />}
+              {activeTabId === "data" && <DataManagerMockup />}
+              {activeTabId === "dashboard" && <DashboardMockup />}
             </div>
+            <style>{`
+              .hero-product-display > div {
+                max-width: 100% !important;
+                border: none !important;
+                border-radius: 16px !important;
+              }
+            `}</style>
           </div>
         </div>
       </div>

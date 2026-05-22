@@ -70,10 +70,8 @@ export default function ProblemCards() {
       <div
         className="w-full max-w-[1600px] mx-auto overflow-x-auto lg:overflow-x-visible"
         style={{
-          // Transparent so the shared B2+B3 city line-art backdrop reads
-          // through the strip; only the individual cards paint white.
-          backgroundColor: "transparent",
-          border: "1px solid var(--grid-line)",
+          backgroundColor: "#F0F0F0",
+          border: "1px solid var(--ent-border-dark-grid)",
           borderRadius: "var(--ent-radius-2xl)",
           opacity: visible ? 1 : 0,
           transition: "opacity 0.7s ease 0.3s",
@@ -96,12 +94,8 @@ export default function ProblemCards() {
                 style={{
                   width: 210,
                   height: 210,
-                  // Subtle off-white fill (#FAFAFA) — same tint used in
-                  // PromptShowcase / StickyScrollSection so the pain-point
-                  // cards read as part of the same surface family while
-                  // still lifting off the city line-art backdrop behind.
-                  backgroundColor: "#FAFAFA",
-                  borderRight: !isLast ? "1px solid var(--grid-line)" : undefined,
+                  backgroundColor: "#F0F0F0",
+                  borderRight: !isLast ? "1px solid rgba(0,0,0,0.08)" : undefined,
                   borderTopLeftRadius: isFirst ? "var(--ent-radius-2xl)" : undefined,
                   borderBottomLeftRadius: isFirst ? "var(--ent-radius-2xl)" : undefined,
                   borderTopRightRadius: isLast ? "var(--ent-radius-2xl)" : undefined,
@@ -109,7 +103,7 @@ export default function ProblemCards() {
                   fontSize: 15,
                   fontWeight: 400,
                   lineHeight: 1.5,
-                  color: "var(--ent-dark-text-high)",
+                  color: "var(--ent-text-primary)",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
