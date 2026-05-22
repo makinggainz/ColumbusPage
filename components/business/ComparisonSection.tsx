@@ -201,7 +201,7 @@ export default function ComparisonSection() {
             auto-advance progress bar is preserved on the active cell's
             bottom edge. ── */}
         <ul
-          className="flex flex-col list-none m-0 p-0 lg:h-full overflow-hidden rounded-3xl lg:rounded-r-none border border-(--ent-border-card)"
+          className="flex flex-col list-none m-0 p-0 lg:h-full overflow-hidden rounded-3xl lg:rounded-r-none border-2 border-(--ent-border-card)"
           style={{
             /* Inactive cells take this surface as their fill — same
                #FAFAFA the SuperFeatureSection panels and the
@@ -339,7 +339,7 @@ export default function ComparisonSection() {
             between separate product screenshots. cmpFade is gone
             entirely — the swap is instant. ── */}
         <div
-          className="relative w-full min-w-0 overflow-hidden rounded-3xl lg:rounded-l-none border border-(--ent-border-card) lg:border-l-0"
+          className="relative w-full min-w-0 overflow-hidden rounded-3xl lg:rounded-l-none border-2 border-(--ent-border-card) lg:border-l-0"
           style={{
             backgroundImage: "url('/Environmental/env-bg-1.png')",
             backgroundSize: "cover",

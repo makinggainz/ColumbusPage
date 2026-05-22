@@ -93,7 +93,7 @@ export default function FAQSection() {
                    dominates. Corner radius is the --ent-radius-2xl
                    token used by every other major card surface on
                    this page. */
-                className="border border-gridline overflow-hidden transition-[background-color,opacity] duration-200"
+                className="border-2 border-gridline overflow-hidden transition-[background-color,opacity] duration-200"
                 style={{
                   backgroundColor: open ? "#FFFFFF" : "#FAFAFA",
                   borderRadius: "var(--ent-radius-2xl)",

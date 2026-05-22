@@ -218,7 +218,7 @@ function IconGrid({
              CapabilitiesGrid, ComparisonSection, and SuperFeatureSection
              panels so all major panels on the business page share one
              border width / color / radius. */
-          border: "1px solid var(--ent-border-card)",
+          border: "2px solid var(--ent-border-card)",
           overflow: "hidden",
           /* Container fill #FAFAFA — matches the ProblemCards pain-point
              cards, the ComparisonSection feature stack <ul>, and the

@@ -63,7 +63,7 @@ export default function CapabilitiesGrid() {
           className="mt-14 lg:mt-20"
           style={{
             backgroundColor: "#FAFAFA",
-            border: "1px solid var(--ent-border-dark-grid)",
+            border: "2px solid var(--ent-border-dark-grid)",
             borderRadius: "var(--ent-radius-2xl)",
             paddingTop: "var(--ent-space-12)",
             paddingBottom: "var(--ent-space-12)",
@@ -87,7 +87,7 @@ export default function CapabilitiesGrid() {
                     different height and the titles below misalign across a
                     row. Pinning the wrapper to 1.65 + object-cover keeps
                     every tile identical in height. */}
-                <div className="cap-tile-img-wrap relative w-[88%] mx-auto aspect-[1.65/1] rounded-[7px] border border-gridline overflow-hidden">
+                <div className="cap-tile-img-wrap relative w-[88%] mx-auto aspect-[1.65/1] rounded-[7px] border-2 border-gridline overflow-hidden">
                   <Image
                     src={item.image}
                     alt={item.title}

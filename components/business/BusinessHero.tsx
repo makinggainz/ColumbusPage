@@ -1,8 +1,11 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+import MapChatPlatform from "./MapChatPlatform";
+import AgenticResearchMockup from "./AgenticResearchMockup";
+import DataManagerMockup from "./DataManagerMockup";
+import DashboardMockup from "./DashboardMockup";
 
 const reveal = (visible: boolean, delay: number): React.CSSProperties => ({
   opacity: visible ? 1 : 0,
@@ -35,15 +38,63 @@ export default function BusinessHero() {
   const sectionRef = useRef<HTMLElement>(null);
   const [visible, setVisible] = useState(false);
 
-  // Browser-tab mock: selectable (click to activate) and reorderable
-  // (drag a tab onto another to swap its position in the order).
-  const [tabs, setTabs] = useState([
-    { id: "columbus", label: "Columbus" },
-    { id: "site-report", label: "Site Report" },
-    { id: "trade-area", label: "Trade Area" },
-    { id: "new-tab", label: "New Tab" },
+  // Browser-tab mock: each tab maps to one of the four product-display
+  // mockup components (MapChat / Agentic Research / Data Manager /
+  // Dashboard). Clicking a tab swaps which mockup is rendered. The
+  // per-tab `icon` is the same SVG used by the super-feature header for
+  // that feature (see IconChip in BusinessUseCases) — magnifier for
+  // chat, document for research, database for data catalogue, 4-up grid
+  // for dashboard — so the tab favicon and the section icon below match.
+  // Tabs remain reorderable (drag a tab onto another to swap its position).
+  type HeroTab = { id: string; label: string; icon: React.ReactNode };
+  const [tabs, setTabs] = useState<HeroTab[]>([
+    {
+      id: "map-chat",
+      label: "Ask the Map",
+      icon: (
+        <>
+          <circle cx="11" cy="11" r="7" />
+          <path d="m20 20-3.5-3.5" />
+        </>
+      ),
+    },
+    {
+      id: "research",
+      label: "Research Reports",
+      icon: (
+        <>
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+          <path d="M14 2v6h6" />
+          <path d="m11 13 4 4" />
+          <path d="M15 11h3v3" />
+        </>
+      ),
+    },
+    {
+      id: "data",
+      label: "Data Catalogue",
+      icon: (
+        <>
+          <ellipse cx="12" cy="5" rx="8" ry="3" />
+          <path d="M4 5v6c0 1.66 3.58 3 8 3s8-1.34 8-3V5" />
+          <path d="M4 11v6c0 1.66 3.58 3 8 3s8-1.34 8-3v-6" />
+        </>
+      ),
+    },
+    {
+      id: "dashboard",
+      label: "Dashboard",
+      icon: (
+        <>
+          <rect x="3" y="3" width="7" height="7" />
+          <rect x="14" y="3" width="7" height="7" />
+          <rect x="3" y="14" width="7" height="7" />
+          <rect x="14" y="14" width="7" height="7" />
+        </>
+      ),
+    },
   ]);
-  const [activeTabId, setActiveTabId] = useState("columbus");
+  const [activeTabId, setActiveTabId] = useState("map-chat");
   const dragTabIndex = useRef<number | null>(null);
 
   const moveTab = (from: number, to: number) => {
@@ -239,8 +290,8 @@ export default function BusinessHero() {
               ))}
 
               {/* Browser tabs — frosted-glass strips filling the space to
-                  the right of the traffic lights. First tab reads as the
-                  active/foreground tab (brighter glass + ink label). */}
+                  the right of the traffic lights. Active tab reads as the
+                  foreground tab (brighter glass + ink label). */}
               <div
                 style={{
                   display: "flex",
@@ -290,15 +341,26 @@ export default function BusinessHero() {
                       transition: "background 200ms ease, border-color 200ms ease",
                     }}
                   >
-                    <div
+                    {/* Feature icon — same SVG paths as the super-feature
+                        section header below, scaled to the tab favicon
+                        slot. Active tab uses the ink stroke; inactive
+                        tabs are muted to match the secondary label color. */}
+                    <svg
+                      aria-hidden
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke={active ? "var(--ent-text-primary)" : "var(--ent-text-secondary)"}
+                      strokeWidth="1.8"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
                       style={{
                         width: "clamp(11px, 1.2vw, 16px)",
-                        aspectRatio: "1",
-                        borderRadius: "50%",
-                        background: "linear-gradient(135deg, #74A0FE 0%, #1451E8 100%)",
+                        height: "clamp(11px, 1.2vw, 16px)",
                         flexShrink: 0,
                       }}
-                    />
+                    >
+                      {tab.icon}
+                    </svg>
                     <span
                       style={{
                         fontSize: "clamp(8px, 0.85vw, 12px)",
@@ -331,33 +393,31 @@ export default function BusinessHero() {
               </div>
             </div>
 
-            {/* Product image — the Columbus bento visual from the homepage,
-                inset 4px on all sides so the translucent window glass shows
-                through as a gutter (including a 4px strip below the title
-                bar, which keeps the rounded top corners clean). All four
-                corners are rounded 20px to match the window and PageFrame;
-                the image is slightly translucent so the glass reads through. */}
-            <div style={{ padding: 4 }}>
-              <div
-                style={{
-                  position: "relative",
-                  width: "100%",
-                  aspectRatio: "1654 / 951",
-                  borderRadius: 20,
-                  overflow: "hidden",
-                }}
-              >
-                <Image
-                  src="/ColumbusHomeimg.png"
-                  alt="Columbus map intelligence platform"
-                  fill
-                  priority
-                  sizes="(max-width: 1100px) 100vw, 1100px"
-                  className="object-cover object-center"
-                  style={{ opacity: 0.9 }}
-                />
-              </div>
+            {/* Product display — one of four mockup components composes
+                the frame PNG with overlaid coded UI (map tiles, cards,
+                chat panel) for the active tab. Each mockup ships with
+                its own aspect-ratio + maxWidth + hairline border; we
+                drop the aspect-locked image wrapper so the mockup
+                renders at its native dimensions. A 4px gutter remains
+                so the glass window shows around the mockup, and an
+                override drops the mockup's own border so only the glass
+                window chrome reads at the outer edge. */}
+            <div
+              style={{ padding: 4 }}
+              className="hero-product-display"
+            >
+              {activeTabId === "map-chat" && <MapChatPlatform />}
+              {activeTabId === "research" && <AgenticResearchMockup />}
+              {activeTabId === "data" && <DataManagerMockup />}
+              {activeTabId === "dashboard" && <DashboardMockup />}
             </div>
+            <style>{`
+              .hero-product-display > div {
+                max-width: 100% !important;
+                border: none !important;
+                border-radius: 16px !important;
+              }
+            `}</style>
           </div>
         </div>
       </div>

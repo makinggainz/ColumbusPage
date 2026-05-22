@@ -221,7 +221,7 @@ export default function DataManagerMockup({ industryId }: DataManagerMockupProps
         aspectRatio: "5184 / 3003",
         maxWidth: 1180,
         borderRadius: "var(--ent-radius-2xl)",
-        border: "1px solid var(--ent-border-card)",
+        border: "2px solid var(--ent-border-card)",
         backgroundColor: "#FFFFFF",
         overflow: "hidden",
         /* Container query unit basis — `cqw` inside resolves to 1% of

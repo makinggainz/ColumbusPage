@@ -61,14 +61,19 @@ export default function ProblemCards() {
         </div>
       </GridSection>
 
-      {/* Full-width card strip — scrollable squares on mobile, grid on desktop */}
+      {/* Card strip — intentionally breaks the standard 1287px content
+          bound out to 1600px to draw the eye and make the pain points
+          feel weightier than the surrounding sections. Scrollable on
+          mobile, grid on desktop. Fully bordered on all 4 sides with
+          the design-system's 2xl radius for panel-sized containers.
+          Strip fill is #F0F0F0 (a touch darker than the white page
+          surface so the strip reads as its own block). */}
       <div
-        className="w-full overflow-x-auto lg:overflow-x-visible"
+        className="w-full max-w-[1600px] mx-auto overflow-x-auto lg:overflow-x-visible"
         style={{
-          // Transparent so the shared B2+B3 city line-art backdrop reads
-          // through the strip; only the individual cards paint white.
-          backgroundColor: "transparent",
-          borderTop: "1px solid var(--grid-line)",
+          backgroundColor: "#F0F0F0",
+          border: "2px solid var(--ent-border-dark-grid)",
+          borderRadius: "var(--ent-radius-2xl)",
           opacity: visible ? 1 : 0,
           transition: "opacity 0.7s ease 0.3s",
           WebkitOverflowScrolling: "touch",
@@ -80,36 +85,37 @@ export default function ProblemCards() {
             gridTemplateColumns: `repeat(${PAIN_POINTS.length}, 1fr)`,
           }}
         >
-          {PAIN_POINTS.map((text, i) => (
-            <div
-              key={i}
-              className="shrink-0 lg:shrink lg:w-auto! lg:h-auto! px-9 py-5 lg:px-6 lg:py-12"
-              style={{
-                width: 210,
-                height: 210,
-                // Surface fill #FAFAFA — the design-system muted-gray
-                // family on the business page (ComparisonSection
-                // <ul> + SuperFeatureSection panel) now matches this
-                // value rather than the other way around. Three units
-                // lighter than #F7F7F7 — closer to white but still
-                // visibly off the page surface.
-                backgroundColor: "#FAFAFA",
-                borderBottom: "1px solid var(--grid-line)",
-                borderRight: i < PAIN_POINTS.length - 1 ? "1px solid var(--grid-line)" : undefined,
-                fontSize: 15,
-                fontWeight: 400,
-                lineHeight: 1.5,
-                color: "var(--ent-dark-text-high)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                textAlign: "center" as const,
-                letterSpacing: "-0.01em",
-              }}
-            >
-              {text}
-            </div>
-          ))}
+          {PAIN_POINTS.map((text, i) => {
+            const isFirst = i === 0;
+            const isLast = i === PAIN_POINTS.length - 1;
+            return (
+              <div
+                key={i}
+                className="shrink-0 lg:shrink lg:w-auto! lg:h-auto! px-9 py-5 lg:px-6 lg:py-12"
+                style={{
+                  width: 210,
+                  height: 210,
+                  backgroundColor: "#F0F0F0",
+                  borderRight: !isLast ? "1px solid rgba(0,0,0,0.08)" : undefined,
+                  borderTopLeftRadius: isFirst ? "var(--ent-radius-2xl)" : undefined,
+                  borderBottomLeftRadius: isFirst ? "var(--ent-radius-2xl)" : undefined,
+                  borderTopRightRadius: isLast ? "var(--ent-radius-2xl)" : undefined,
+                  borderBottomRightRadius: isLast ? "var(--ent-radius-2xl)" : undefined,
+                  fontSize: 15,
+                  fontWeight: 400,
+                  lineHeight: 1.5,
+                  color: "var(--ent-text-primary)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  textAlign: "center" as const,
+                  letterSpacing: "-0.01em",
+                }}
+              >
+                {text}
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>

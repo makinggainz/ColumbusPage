@@ -125,7 +125,7 @@ export default function MapChatPlatform({
       style={{
         maxWidth: 1180,
         borderRadius: "var(--ent-radius-2xl)",
-        border: "1px solid var(--ent-border-card)",
+        border: "2px solid var(--ent-border-card)",
         overflow: "hidden",
         backgroundColor: PANEL_BG,
       }}

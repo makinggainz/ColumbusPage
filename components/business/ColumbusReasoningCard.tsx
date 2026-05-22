@@ -62,7 +62,7 @@ export default function ColumbusReasoningCard({
         minHeight: tall ? 640 : undefined,
         background: "#FFFFFF",
         borderRadius: "var(--ent-radius-2xl)",
-        border: "1px solid var(--ent-border-card)",
+        border: "2px solid var(--ent-border-card)",
         boxShadow: "var(--ent-shadow-card)",
         padding: "clamp(28px, 3vw, 40px)",
         overflow: "hidden",
