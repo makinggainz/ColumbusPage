@@ -61,13 +61,14 @@ export default function ProblemCards() {
         </div>
       </GridSection>
 
-      {/* Card strip — slightly narrowed to the standard content bound
-          (1287px) so it no longer hits the viewport edges. Scrollable
-          on mobile, grid on desktop. Fully bordered on all 4 sides
-          with the design-system's 2xl radius (24px) for panel-sized
+      {/* Card strip — intentionally breaks the standard 1287px content
+          bound out to 1600px to draw the eye and make the pain points
+          feel weightier than the surrounding sections. Scrollable on
+          mobile, grid on desktop. Fully bordered on all 4 sides with
+          the design-system's 2xl radius (24px) for panel-sized
           containers. */}
       <div
-        className="w-full max-w-[1287px] mx-auto overflow-x-auto lg:overflow-x-visible"
+        className="w-full max-w-[1600px] mx-auto overflow-x-auto lg:overflow-x-visible"
         style={{
           // Transparent so the shared B2+B3 city line-art backdrop reads
           // through the strip; only the individual cards paint white.

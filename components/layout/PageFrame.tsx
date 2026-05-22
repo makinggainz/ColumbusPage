@@ -3,41 +3,30 @@
 import { useEffect, type ReactNode } from "react";
 
 /**
- * The rounded white "card" the entire site sits inside (experimentV6-Gdesign).
+ * The rounded white "card" the entire site sits inside.
  *
- * Two scroll-driven transitions, run as a single animation curve `t`
- * (1 = rounded + inset 30px, 0 = full-bleed):
+ * The card is flush to the viewport edges (margin = 0) with a fixed
+ * MAX_RADIUS corner radius, so the site backdrop (black, set in
+ * globals.css) only shows through the 4 corner wedges.
  *
- *   • Top reveal — from scrollY 0..SCROLL_RANGE: t animates 1 → 0
- *     (card expands toward the viewport edges).
- *   • Bottom reveal — over the final SCROLL_RANGE pixels of scroll
- *     before maxScroll: t animates 0 → 1 (card collapses back to the
- *     inset+rounded state, so the bottom edge has the same 13px corners
- *     and 30px gutter as the top of the page).
- *
- * The intermediate middle of the page sits at t = 0 (full-bleed).
- *
- * The transition runs as CSS variables (--frame-margin / --frame-radius)
- * on <html> so other elements that need to track the frame — most
- * importantly the sticky navbar's `top` — can read the same value and
- * stay aligned with the card edge during the transition.
+ * The scroll-driven `t` curve is retained because it still drives the
+ * footer-reached flip below (white→black backdrop swap on
+ * [data-footer-reached]) and because external elements track
+ * --frame-margin / --frame-radius (sticky navbar top + top corners,
+ * IndustryStickyNavbar in-takeover state). Since MAX_MARGIN = 0 the
+ * margin variable is effectively static at 0; radius is held static at
+ * MAX_RADIUS so the rounded corners are preserved end-to-end.
  *
  * Footer reveal mechanic: `app/layout.tsx` renders `<Footer reveal />`
  * as a fixed, z-index 0 element at the viewport bottom. PageFrame is
  * z-index 1 with `margin-bottom: var(--footer-reveal-height)`, so the
  * body's scrollable area extends past the page content by exactly the
- * footer's height. As the user scrolls into that extra range, the
- * white card slides up over the fixed footer — revealing it — while
- * the bottom-reveal animation simultaneously restores the rounded
- * corners + 30px side gutter.
+ * footer's height — letting the card slide up over the fixed footer.
  */
 const SCROLL_RANGE = 150;
-const MAX_MARGIN = 30;
+const MAX_MARGIN = 2;
 const MAX_RADIUS = 20;
-/* Frame border thickness — a thin 2px accent hairline on the inset
-   (rounded card) state that fades out to 0 as the card expands to
-   full-bleed, so no border frames the page once it fills the screen. */
-const MIN_BORDER = 2;
+const MIN_BORDER = 0;
 
 export function PageFrame({ children }: { children: ReactNode }) {
   useEffect(() => {
@@ -90,9 +79,7 @@ export function PageFrame({ children }: { children: ReactNode }) {
 
       const t = Math.max(1 - topProgress, bottomProgress);
       const margin = MAX_MARGIN * t;
-      const radius = MAX_RADIUS * t;
-      // Border tracks t: a thin MIN_BORDER hairline while inset, fading
-      // to 0 at full-bleed so no border frames the page full-screen.
+      const radius = MAX_RADIUS;
       const borderWidth = MIN_BORDER * t;
       document.documentElement.style.setProperty("--frame-margin", `${margin}px`);
       document.documentElement.style.setProperty("--frame-radius", `${radius}px`);

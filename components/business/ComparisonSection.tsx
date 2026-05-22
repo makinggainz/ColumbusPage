@@ -359,7 +359,20 @@ export default function ComparisonSection() {
             const isActive = i === active;
             const Icon = RAIL[f.rail];
             return (
-              <li key={f.title} className="relative lg:flex-1 lg:flex lg:flex-col">
+              <li
+                key={f.title}
+                className="relative lg:flex-1 lg:flex lg:flex-col"
+                style={{
+                  border: `1px solid ${isActive ? SOFT : "transparent"}`,
+                  backgroundColor: isActive ? "#FFFFFF" : "transparent",
+                  borderRadius: "var(--ent-radius-2xl)",
+                  opacity: isActive ? 1 : 0.4,
+                  paddingLeft: 16,
+                  paddingRight: 16,
+                  transition:
+                    "opacity 0.35s ease, background-color 0.35s ease, border-color 0.35s ease",
+                }}
+              >
                 <button
                   type="button"
                   onClick={() => select(i)}
@@ -412,22 +425,21 @@ export default function ComparisonSection() {
                   </div>
                 </button>
 
-                {/* Row separator — doubles as the progress track. The
-                    active row's separator fills with accent over the
-                    cycle, and its animation end drives the auto-advance. */}
-                <span
-                  className="absolute left-0 bottom-0 w-full"
-                  style={{ height: 1, backgroundColor: SOFT }}
-                  aria-hidden
-                />
+                {/* Invisible timing element — drives the auto-advance via
+                    its CSS animation end. The visible row separator and
+                    progress fill were removed to match the cleaner card
+                    treatment; the animation itself still runs so each
+                    feature still cycles after CYCLE_MS. */}
                 {isActive && (
                   <span
                     key={runId}
                     onAnimationEnd={advance}
-                    className="absolute left-0 bottom-0"
                     style={{
-                      height: 2,
-                      backgroundColor: "var(--ent-accent)",
+                      position: "absolute",
+                      width: 0,
+                      height: 0,
+                      opacity: 0,
+                      pointerEvents: "none",
                       animation: `cmpBarFill ${CYCLE_MS}ms linear`,
                       animationPlayState: paused ? "paused" : "running",
                     }}

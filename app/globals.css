@@ -58,9 +58,10 @@ html,
 body {
   margin: 0;
   padding: 0;
-  /* White site backdrop behind the PageFrame card — visible through the
-     30px gutter around the frame on every route. */
-  background-color: #FFFFFF;
+  /* Black site backdrop behind the PageFrame card — visible through the
+     card's rounded-corner wedges (page is flush to the viewport edges)
+     and during the bottom footer-reveal. */
+  background-color: #000000;
   color: #1D1D1F;
   overflow-x: clip;
   min-height: 100%;
@@ -70,14 +71,14 @@ body {
    [data-footer-reached] on <html>, which fades the white cover off the
    footer (below). The page backdrop itself stays white throughout. */
 
-/* White cover over the reveal footer. Opaque while scrolling the page
-   (footer reads as white, matching the backdrop); fades out when the
-   footer is reached, revealing the footer's full dark design at once. */
+/* Cover over the reveal footer. Opaque while scrolling the page (matches
+   the black site backdrop); fades out when the footer is reached,
+   revealing the footer's full dark design at once. */
 .footer-reveal-overlay {
   position: absolute;
   inset: 0;
   z-index: 30;
-  background-color: #FFFFFF;
+  background-color: #000000;
   pointer-events: none;
   opacity: 1;
   transition: opacity 500ms ease;
@@ -365,7 +366,7 @@ html {
 
 /* Typography */
 body {
-  /* Backdrop colour is owned by the `html, body` rule above (white) —
+  /* Backdrop colour is owned by the `html, body` rule above (black) —
      not re-set here, so there's a single source of truth. */
   color: var(--foreground);
   /* Opening Hours Sans is the project-wide body face. Everything that

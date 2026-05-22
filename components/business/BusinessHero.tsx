@@ -115,8 +115,37 @@ export default function BusinessHero() {
           bottom: 0,
           backgroundImage: "url(/ColumBuzHero.png)",
           backgroundPosition: "center bottom",
-          backgroundSize: "cover",
+          /* The photo (1022×1810, ~0.565 aspect) has white-fading left/
+             right edges — designed to dissolve into a white page bg. The
+             section's aspect (~0.722) is wider than the photo, so `cover`
+             width-matches and those white edges land at the section's
+             left/right. Against the new black backdrop showing through
+             PageFrame's rounded corners, the fade reads as a band/hard
+             clip. Scaling the bg up (115% wide) pushes the faded portion
+             past the section edges (clipped by the card), so the visible
+             area is solid photo content. */
+          backgroundSize: "115% auto",
           backgroundRepeat: "no-repeat",
+          zIndex: 0,
+        }}
+      />
+      {/* Corner darkening — feathers the hero photo to black at the top
+          corners so the transition from photo to the black body backdrop
+          (visible through PageFrame's rounded top-left/top-right) is
+          smooth rather than a hard color line at the curve. Top corners
+          only; the bottom of the hero fades to the white section below
+          and shouldn't be darkened. */}
+      <div
+        aria-hidden
+        className="absolute pointer-events-none"
+        style={{
+          top: 0,
+          left: 0,
+          right: 0,
+          height: 180,
+          background:
+            "radial-gradient(circle at top left, rgba(0,0,0,0.85) 0px, rgba(0,0,0,0) 90px), " +
+            "radial-gradient(circle at top right, rgba(0,0,0,0.85) 0px, rgba(0,0,0,0) 90px)",
           zIndex: 0,
         }}
       />
