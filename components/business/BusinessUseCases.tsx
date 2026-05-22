@@ -391,7 +391,9 @@ type IndustryCopy = {
 const RESIDENTIAL_COPY: IndustryCopy = {
   chatSubtitle: (
     <>
-      With <Blue>conversational map chat</Blue>, ask your chat directly about anything. Have a conversation like you&rsquo;re talking to your best analyst.
+      <div>
+        With <Blue>conversational map chat</Blue>, ask your chat directly about anything. Have a conversation like you&rsquo;re talking to your best analyst.
+      </div>
       <div className="mt-3">
         Faster site-selection for Residential Real Estate customers, including Consultants, Residential Developers, and Wholesale brokers.
       </div>
@@ -1570,7 +1572,7 @@ export default function BusinessUseCases() {
             description: copy.sub3Description,
             backdropImage: bg.chatSub[2],
             backdropPosition: bg.chatSubPositions?.[2],
-            visual: <ColumbusReasoningCard {...copy.cards.reasoning} />,
+            visual: <ColumbusReasoningCard {...copy.cards.reasoning} tall />,
           },
           {
             title: "Drop Any File, Columbus does the rest",
@@ -1604,9 +1606,9 @@ export default function BusinessUseCases() {
         subFeatureBackdrop={bg.dataCatalogueHero}
         demoVisual={<DataManagerMockup industryId={industryId} />}
         subFeatures={[
+          { title: "Better Data, Better Prices", description: null, visual: <BetterPricesRow {...copy.rows.betterPrices} />, stacked: true },
           { title: "With smart layers, you become an artist", description: null, visual: <SmartLayerRow {...copy.rows.smartLayer} mapSrc={bg.smartLayerMap} />, stacked: true },
           { id: "super-model", title: "Survey the earth with a super model", description: null, visual: <SurveyEarthRow {...copy.rows.surveyEarth} mapSrc={bg.surveyEarthMap} />, stacked: true },
-          { title: "Better Data, Better Prices", description: null, visual: <BetterPricesRow {...copy.rows.betterPrices} />, stacked: true },
         ]}
       />
       <SuperFeatureSection

@@ -43,17 +43,23 @@ const DEFAULT_ITEMS: ReasoningItem[] = [
 export type ColumbusReasoningCardProps = {
   prompt?: string;
   items?: ReasoningItem[];
+  /* When true, the card stretches ~35% taller. The reasoning list area
+     becomes a flex child that fills the extra height, so more of the
+     "Columbus weighs" stream is visible before fading. */
+  tall?: boolean;
 };
 
 export default function ColumbusReasoningCard({
   prompt = DEFAULT_PROMPT,
   items = DEFAULT_ITEMS,
+  tall = false,
 }: ColumbusReasoningCardProps = {}) {
   return (
     <div
-      className="mx-auto w-full"
+      className="mx-auto w-full flex flex-col"
       style={{
         maxWidth: 560,
+        minHeight: tall ? 640 : undefined,
         background: "#FFFFFF",
         borderRadius: "var(--ent-radius-2xl)",
         border: "1px solid var(--ent-border-card)",
@@ -96,7 +102,7 @@ export default function ColumbusReasoningCard({
       </div>
 
       <div
-        className="mt-5 relative"
+        className="mt-5 relative flex-1"
         style={{
           WebkitMaskImage:
             "linear-gradient(to bottom, #000 0%, #000 82%, transparent 100%)",

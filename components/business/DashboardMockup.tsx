@@ -346,6 +346,22 @@ export default function DashboardMockup({ industryId }: DashboardMockupProps = {
             "clamp(14px, 2.2cqw, 32px) clamp(20px, 4cqw, 60px) clamp(12px, 2cqw, 24px)",
         }}
       >
+      {/* Inner content column — capped to a narrower max-width and
+          centered, so the tabs / toolbar / list don't run the full pane
+          width. Mirrors the reference Dashboard screenshot where the
+          content sits as a centered column inside the right pane. */}
+      <div
+        style={{
+          width: "100%",
+          maxWidth: "clamp(280px, 60cqw, 720px)",
+          marginLeft: "auto",
+          marginRight: "auto",
+          flex: 1,
+          minHeight: 0,
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
         {/* Tab row — underlined active tab, gray inactive labels. */}
         <div
           style={{
@@ -519,6 +535,7 @@ export default function DashboardMockup({ industryId }: DashboardMockupProps = {
             <ItemRow key={item.title} item={item} />
           ))}
         </div>
+      </div>
       </div>
     </div>
   );

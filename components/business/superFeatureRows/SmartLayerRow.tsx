@@ -1,15 +1,14 @@
 "use client";
 
-import MapThumb from "./MapThumb";
 import RowHeader from "./RowHeader";
 import ColumbusMark from "./ColumbusMark";
 
 /* Row 1 — "With smart layers, you become an artist".
    Stacked layout: chip + heading + subtitle on top, full-width composite
-   panel below. The panel mocks a Columbus workspace — a navy left rail of
-   nav icons, a Columbus "created a new smart layer" card on the left, a
-   hex-bin heatmap on the right, and a full-width prompt input bar pinned
-   to the bottom. */
+   panel below. The panel mocks a Columbus workspace — a sidebar image
+   pinned to the left, a Columbus "created a new smart layer" card next
+   to a hex-bin heatmap stretched to match the card's height, and a
+   full-width prompt input bar pinned to the bottom. */
 
 const FONT =
   "Axiforma, 'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif";
@@ -70,10 +69,10 @@ export default function SmartLayerRow({
         }
       />
 
-      {/* Outer composite — a single rounded card with the sidebar pinned to
-          the left running the full height, the main canvas (Columbus
-          content + map) filling the rest, and the prompt bar as the
-          bottom row inside the same card. */}
+      {/* Main composite — sidebar image pinned to the left, chat content
+          (smart-layer overlay + map) on the right. The prompt bar lives
+          OUTSIDE this card so it can read as a separate floating
+          element with its own drop shadow. */}
       <div
         style={{
           background: "#FFFFFF",
@@ -82,97 +81,65 @@ export default function SmartLayerRow({
           overflow: "hidden",
           display: "grid",
           gridTemplateColumns: "64px 1fr",
+          alignItems: "stretch",
         }}
       >
-        <Sidebar />
+        <img
+          src="/business/become-artist-sidebar.png"
+          alt=""
+          aria-hidden
+          style={{
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            objectPosition: "center",
+            display: "block",
+          }}
+        />
 
-        <div style={{ display: "flex", flexDirection: "column", minWidth: 0 }}>
-          <div
-            className="grid grid-cols-1 lg:grid-cols-12 items-start"
-            style={{
-              gap: 0,
-              padding: "clamp(20px, 2vw, 28px)",
-            }}
-          >
-            <div className="lg:col-span-4" style={{ paddingRight: "clamp(0px, 1.5vw, 24px)" }}>
-              <SmartLayerOverlay
-                layerName={layerName}
-                layerSubtitle={layerSubtitle}
-                layerDescription={layerDescription}
-                features={features}
-              />
-            </div>
-            <div className="lg:col-span-8">
-              <MapThumb
-                src={mapSrc}
-                alt={mapAlt}
-                aspectRatio="4 / 3"
-                radius="var(--ent-radius-card)"
-                shadow={false}
-              />
-            </div>
+        <div
+          className="grid grid-cols-1 lg:grid-cols-12"
+          style={{
+            gap: 0,
+            padding: "clamp(20px, 2vw, 28px)",
+            alignItems: "stretch",
+            minWidth: 0,
+          }}
+        >
+          <div className="lg:col-span-4" style={{ paddingRight: "clamp(0px, 1.5vw, 24px)" }}>
+            <SmartLayerOverlay
+              layerName={layerName}
+              layerSubtitle={layerSubtitle}
+              layerDescription={layerDescription}
+              features={features}
+            />
           </div>
-
-          <PromptBar text={promptText} />
+          {/* Map — background-image div with height: 100% so it stretches
+              to match the SmartLayerOverlay's height rather than being
+              capped by a fixed aspect ratio. */}
+          <div
+            className="lg:col-span-8"
+            role={mapAlt ? "img" : undefined}
+            aria-label={mapAlt || undefined}
+            style={{
+              width: "100%",
+              height: "100%",
+              minHeight: 240,
+              borderRadius: "var(--ent-radius-card)",
+              overflow: "hidden",
+              backgroundImage: `url(${mapSrc})`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+            }}
+          />
         </div>
       </div>
-    </div>
-  );
-}
 
-function Sidebar() {
-  const ACTIVE_INDEX = 1;
-  const icons: React.ReactNode[] = [
-    <BurgerIcon key="b" />,
-    <GridIcon key="g" />,
-    <SearchIcon key="s" />,
-    <PencilIcon key="p" />,
-    <DatabaseIcon key="d" />,
-  ];
-  return (
-    <div
-      style={{
-        background: "#FFFFFF",
-        borderRight: "1px solid #ECECEC",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        padding: "16px 0",
-        gap: 14,
-      }}
-    >
-      {icons.map((icon, i) => {
-        const active = i === ACTIVE_INDEX;
-        return (
-          <span
-            key={i}
-            style={{
-              width: 36,
-              height: 36,
-              borderRadius: 8,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              background: active ? "#0A1344" : "transparent",
-              color: active ? "#FFFFFF" : "#6B7280",
-            }}
-          >
-            {icon}
-          </span>
-        );
-      })}
-      <span style={{ flex: 1 }} />
-      <span
-        aria-hidden
-        style={{
-          width: 28,
-          height: 28,
-          borderRadius: 9999,
-          background: "linear-gradient(135deg,#C9A782,#7E5A3C)",
-          marginBottom: 6,
-        }}
-      />
-      <SettingsIcon />
+      {/* Prompt bar — a floating sibling card with its own drop shadow,
+          separated from the main composite by a vertical gap. */}
+      <div style={{ marginTop: 16 }}>
+        <PromptBar text={promptText} />
+      </div>
     </div>
   );
 }
@@ -353,12 +320,14 @@ function PromptBar({ text }: { text: string }) {
   return (
     <div
       style={{
-        marginTop: "auto",
         background: "#FFFFFF",
-        borderTop: "1px solid #ECECEC",
-        padding: "20px clamp(20px, 2vw, 28px)",
+        borderRadius: "var(--ent-radius-2xl)",
+        border: "1px solid var(--ent-border-card)",
+        boxShadow: "0 12px 32px rgba(11, 27, 43, 0.10), 0 2px 6px rgba(11, 27, 43, 0.06)",
+        padding: "22px clamp(20px, 2vw, 28px)",
         display: "flex",
         alignItems: "center",
+        justifyContent: "space-between",
         gap: 16,
       }}
     >
@@ -410,53 +379,3 @@ function StopButton() {
   );
 }
 
-/* Sidebar icon glyphs — simple stroked SVGs at 18px. */
-function BurgerIcon() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" aria-hidden>
-      <path d="M4 7h16M4 12h16M4 17h16" />
-    </svg>
-  );
-}
-function GridIcon() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" aria-hidden>
-      <rect x="4" y="4" width="7" height="7" rx="1.5" />
-      <rect x="13" y="4" width="7" height="7" rx="1.5" />
-      <rect x="4" y="13" width="7" height="7" rx="1.5" />
-      <rect x="13" y="13" width="7" height="7" rx="1.5" />
-    </svg>
-  );
-}
-function SearchIcon() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-      <circle cx="11" cy="11" r="6" />
-      <path d="m20 20-3.5-3.5" />
-    </svg>
-  );
-}
-function PencilIcon() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-      <path d="M4 20l4-1 11-11-3-3L5 16l-1 4Z" />
-    </svg>
-  );
-}
-function DatabaseIcon() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" aria-hidden>
-      <ellipse cx="12" cy="6" rx="7" ry="3" />
-      <path d="M5 6v6c0 1.66 3.13 3 7 3s7-1.34 7-3V6" />
-      <path d="M5 12v6c0 1.66 3.13 3 7 3s7-1.34 7-3v-6" />
-    </svg>
-  );
-}
-function SettingsIcon() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6B7280" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden style={{ marginBottom: 6 }}>
-      <circle cx="12" cy="12" r="3" />
-      <path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1A2 2 0 1 1 4.3 17l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1A1.7 1.7 0 0 0 4.6 9a1.7 1.7 0 0 0-.3-1.8l-.1-.1A2 2 0 1 1 7 4.3l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1Z" />
-    </svg>
-  );
-}
