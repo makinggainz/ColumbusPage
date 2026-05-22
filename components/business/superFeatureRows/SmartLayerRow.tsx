@@ -1,14 +1,15 @@
 "use client";
 
+import Image from "next/image";
 import RowHeader from "./RowHeader";
 import ColumbusMark from "./ColumbusMark";
 
 /* Row 1 — "With smart layers, you become an artist".
-   Stacked layout: chip + heading + subtitle on top, full-width composite
-   panel below. The panel mocks a Columbus workspace — a sidebar image
-   pinned to the left, a Columbus "created a new smart layer" card next
-   to a hex-bin heatmap stretched to match the card's height, and a
-   full-width prompt input bar pinned to the bottom. */
+   Wraps the smart-layer mock in the shared ResearchFrame chrome (the
+   same PNG used by AgenticResearchMockup) so the workspace reads with
+   the canonical Columbus app frame: baked-in left rail + top bar, with
+   the inner pane (4.32% left, 7.02% top, 0 right, 0.57% bottom) hosting
+   the map, the floating smart-layer card, and the prompt bar. */
 
 const FONT =
   "Axiforma, 'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif";
@@ -52,7 +53,7 @@ export default function SmartLayerRow({
   promptText = DEFAULT_PROMPT_TEXT,
 }: SmartLayerRowProps = {}) {
   return (
-    <div style={{ fontFamily: FONT, position: "relative" }}>
+    <div style={{ fontFamily: FONT }}>
       <RowHeader
         align="left"
         title="With smart layers, you become an artist"
@@ -69,45 +70,114 @@ export default function SmartLayerRow({
         }
       />
 
-      {/* Main composite — sidebar image pinned to the left, chat content
-          (smart-layer overlay + map) on the right. The prompt bar lives
-          OUTSIDE this card so it can read as a separate floating
-          element with its own drop shadow. */}
+      {/* ResearchFrame chrome — same PNG used by AgenticResearchMockup.
+          Carries a baked left rail + top bar (with a "Columbus / project"
+          breadcrumb and a "Shared with" group). We cover the project-
+          specific portion of the breadcrumb with smart-layer text and
+          blank out the collaborator group; the inner pane (4.32% left,
+          7.02% top, 0 right, 0.57% bottom) hosts the smart-layer mock. */}
       <div
+        className="relative w-full mx-auto"
         style={{
-          background: "#FFFFFF",
-          borderRadius: "var(--ent-radius-2xl)",
-          border: "1px solid var(--ent-border-card)",
+          aspectRatio: "5190 / 2993",
+          maxWidth: 1180,
+          borderRadius: "var(--ent-radius-2xl, 20px)",
           overflow: "hidden",
-          display: "grid",
-          gridTemplateColumns: "64px 1fr",
-          alignItems: "stretch",
+          boxShadow:
+            "0 1px 2px rgba(0,0,0,0.10), 0 6px 14px rgba(0,0,0,0.10), 0 28px 56px rgba(0,0,0,0.22), 0 56px 96px rgba(0,0,0,0.18)",
+          containerType: "inline-size",
         }}
       >
-        <img
-          src="/business/become-artist-sidebar.png"
+        <Image
+          src="/business/ResearchFrame.png"
           alt=""
+          fill
+          sizes="(max-width: 1180px) 100vw, 1180px"
+          className="object-cover object-center pointer-events-none"
+          style={{ zIndex: 5 }}
+          priority
+        />
+
+        {/* Breadcrumb cover — replaces the chrome's baked "Kansans
+            Project 435..." text with smart-layer breadcrumb. Spans the
+            same x range AgenticResearchMockup uses (17.34% → 60.89%). */}
+        <div
           aria-hidden
           style={{
-            width: "100%",
-            height: "100%",
-            objectFit: "cover",
-            objectPosition: "center",
-            display: "block",
+            position: "absolute",
+            top: 0,
+            left: "17.34%",
+            width: "43.55%",
+            height: "7.02%",
+            backgroundColor: "#FFFFFF",
+            zIndex: 6,
+            display: "flex",
+            alignItems: "center",
+            paddingLeft: "clamp(2px, 0.3cqw, 4px)",
+            fontFamily: FONT,
+          }}
+        >
+          <span
+            style={{
+              fontSize: "clamp(0.7rem, 1.15cqw, 1rem)",
+              fontWeight: 600,
+              color: "#0F173C",
+              letterSpacing: "-0.015em",
+              lineHeight: 1.1,
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+            }}
+          >
+            Smart Layers
+            <span
+              style={{
+                color: "#6B7280",
+                fontWeight: 500,
+                margin: "0 clamp(6px, 0.8cqw, 10px)",
+              }}
+            >
+              /
+            </span>
+            {layerName}
+          </span>
+        </div>
+
+        {/* Shared-with cover — blanks out the baked-in collaborator
+            avatars since the smart-layer view doesn't share an artifact
+            the way agentic research does. */}
+        <div
+          aria-hidden
+          style={{
+            position: "absolute",
+            top: 0,
+            left: "69.36%",
+            width: "15.42%",
+            height: "7.02%",
+            backgroundColor: "#FFFFFF",
+            zIndex: 6,
           }}
         />
 
+        {/* Inner pane — sits flush against the chrome's solid white
+            content area. Map fills the pane; the smart-layer card and
+            the prompt bar float on top. */}
         <div
+          className="absolute"
           style={{
-            position: "relative",
-            minWidth: 0,
-            minHeight: 480,
+            left: "4.32%",
+            top: "7.02%",
+            right: 0,
+            bottom: "0.57%",
+            backgroundColor: "#FFFFFF",
+            overflow: "hidden",
+            zIndex: 10,
+            fontFamily: FONT,
           }}
         >
-          {/* Map — fills the right container almost edge to edge (3px
-              gutter on top and right) and extends all the way left and
-              down so it sits BEHIND the smart-layer overlay card on the
-              left. */}
+          {/* Map — fills the inner pane with a 3px gutter on top and
+              right; extends all the way left and down so it sits
+              BEHIND the smart-layer overlay card and prompt bar. */}
           <div
             role={mapAlt ? "img" : undefined}
             aria-label={mapAlt || undefined}
@@ -123,51 +193,55 @@ export default function SmartLayerRow({
               backgroundPosition: "center",
             }}
           />
-          {/* Smart-layer overlay — its own white card floating on top
-              of the map, anchored to the top-left of the right area. */}
+
+          {/* Content stack — fills the inner pane vertically so the
+              smart-layer overlay can grow to whatever height makes the
+              chatbox land exactly one clamp(10px, 1.2cqw, 16px) above
+              the inner pane's bottom edge. All four gaps (overlay-top,
+              overlay-left, chatbox-left, chatbox-bottom) plus the
+              overlay→chatbox gap use the same clamp. */}
           <div
             style={{
-              position: "relative",
+              position: "absolute",
+              inset: 0,
               zIndex: 1,
-              padding: "clamp(20px, 2vw, 28px)",
-              width: "min(45%, 460px)",
+              padding: "clamp(10px, 1.2cqw, 16px)",
+              display: "flex",
+              flexDirection: "column",
+              gap: "clamp(10px, 1.2cqw, 16px)",
             }}
           >
             <div
               style={{
-                background: "#FFFFFF",
-                borderRadius: 14,
-                padding: "18px 20px",
+                width: "min(58%, 580px)",
+                flex: 1,
+                minHeight: 0,
+                display: "flex",
+                flexDirection: "column",
               }}
             >
-              <SmartLayerOverlay
-                layerName={layerName}
-                layerSubtitle={layerSubtitle}
-                layerDescription={layerDescription}
-                features={features}
-              />
+              <div
+                style={{
+                  background: "#FFFFFF",
+                  borderRadius: 14,
+                  padding:
+                    "clamp(12px, 1.4cqw, 18px) clamp(14px, 1.5cqw, 20px)",
+                  flex: 1,
+                  minHeight: 0,
+                }}
+              >
+                <SmartLayerOverlay
+                  layerName={layerName}
+                  layerSubtitle={layerSubtitle}
+                  layerDescription={layerDescription}
+                  features={features}
+                />
+              </div>
             </div>
+
+            <PromptBar text={promptText} />
           </div>
         </div>
-      </div>
-
-      {/* Prompt bar — floating card anchored to the BOTTOM of the main
-          composite so its lower edge sits flush with the card's bottom
-          edge regardless of how many lines the prompt text wraps to.
-          Absolute positioning pulls it out of the flow so the next
-          sub-feature below isn't pushed down by its height. Left offset
-          equals the sidebar column width (64px) so the prompt sits to
-          the RIGHT of the sidebar image instead of covering it. */}
-      <div
-        style={{
-          position: "absolute",
-          bottom: 0,
-          left: 64,
-          right: 0,
-          zIndex: 2,
-        }}
-      >
-        <PromptBar text={promptText} />
       </div>
     </div>
   );
@@ -374,7 +448,7 @@ function PromptBar({ text }: { text: string }) {
       <p
         style={{
           margin: 0,
-          flex: 1,
+          width: "55%",
           fontSize: 14,
           lineHeight: 1.55,
           color: "var(--ent-text-primary)",
