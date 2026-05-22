@@ -8,13 +8,17 @@ export default function ChatSection() {
       className="relative w-full overflow-hidden flex flex-col items-center pt-24 md:pt-40 lg:pt-[280px]"
       style={{ backgroundColor: "var(--ent-bg-dark-alt)" }}
     >
-      {/* Background image — same photo + crop as BusinessHero
-          (center bottom, cover, no filter). */}
+      {/* Background image — ColumBuzHero portrait photo. Anchored at
+          "center 30%" instead of "center bottom" so the cloud band
+          (≈35–55% of the photo) lands in the lower half of the
+          visible section frame, sitting behind the bottom half of the
+          monitor mockup instead of the snowy park (which would
+          otherwise fill that area). */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
           backgroundImage: "url(/ColumBuzHero.png)",
-          backgroundPosition: "center bottom",
+          backgroundPosition: "center 30%",
           backgroundSize: "cover",
           backgroundRepeat: "no-repeat",
           zIndex: 0,

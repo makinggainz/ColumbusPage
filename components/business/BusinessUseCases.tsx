@@ -14,6 +14,9 @@ import SurveyEarthRow, { type SurveyEarthRowProps } from "./superFeatureRows/Sur
 import BetterPricesRow, { type BetterPricesRowProps } from "./superFeatureRows/BetterPricesRow";
 import AgenticResearchTriad, { type AgenticResearchTriadProps } from "./superFeatureRows/AgenticResearchTriad";
 import DashboardListMockup, { type DashboardListMockupProps } from "./superFeatureRows/DashboardListMockup";
+import DataManagerMockup from "./DataManagerMockup";
+import AgenticResearchMockup from "./AgenticResearchMockup";
+import DashboardMockup from "./DashboardMockup";
 import { useIndustry } from "@/components/use-cases/industry/IndustryContext";
 import type { IndustryId } from "@/components/use-cases/industry/types";
 
@@ -216,6 +219,21 @@ const ENVIRONMENTAL_BACKDROPS: IndustryBackdrops = {
   dataCatalogueHero: "/Environmental/env-bg-6.png",
   agenticResearchHero: "/Environmental/env-bg-7.png",
   dashboardHero: "/Environmental/env-bg-1.png",
+  /* Environmental-specific map illustrations. Same slot semantics as the
+     other industries — chatMainMap drives the MapChatPlatform demo;
+     chatSubMaps align with the chat sub-features (slot 0 "See what
+     others cant", slot 1 "Like weather forcasts…", slot 3 "Drop Any
+     File"; slot 2 has no MapLayeredVisual). smartLayerMap and
+     surveyEarthMap feed the two data-catalogue rows. */
+  chatMainMap: "/EnvironmentalMaps/map-chat.png",
+  chatSubMaps: [
+    "/EnvironmentalMaps/pattern-detection.png",
+    "/EnvironmentalMaps/predict-future.png",
+    undefined,
+    "/EnvironmentalMaps/file-compatibility.png",
+  ],
+  smartLayerMap: "/EnvironmentalMaps/smart-layers.png",
+  surveyEarthMap: "/EnvironmentalMaps/survey-model.png",
 };
 
 const ACADEMIC_BACKDROPS: IndustryBackdrops = {
@@ -241,7 +259,7 @@ const ACADEMIC_BACKDROPS: IndustryBackdrops = {
      weather forcasts…", slot 3 "Drop Any File"; slot 2 has no
      MapLayeredVisual). smartLayerMap and surveyEarthMap feed the two
      data-catalogue rows. */
-  chatMainMap: "/AcademicMaps/ai-critical-thinking.png",
+  chatMainMap: "/AcademicMaps/chat-platform-map.png",
   chatSubMaps: [
     "/AcademicMaps/see-what-others-cant.png",
     "/AcademicMaps/like-weather-forecasts.png",
@@ -265,18 +283,17 @@ const GEOMARKETING_BACKDROPS: IndustryBackdrops = {
   dashboardHero: "/Geomarketing/geo-bg-1.png",
   /* Geomarketing-specific map illustrations. Same slot semantics as CRE
      / residential / urban-infrastructure — chatMainMap drives
-     MapChatPlatform's MapPanel; chatSubMaps[0/1] align with the chat
-     sub-features "See what others cant" (pattern-detect) and "Like
-     weather forcasts…" (predict-future). Slots 2 and 3 omitted — slot 3
-     ("Drop Any File") has no provided geomarketing map and falls back to
-     the generic default. smartLayerMap and surveyEarthMap feed the two
-     data-catalogue rows. */
+     MapChatPlatform's MapPanel; chatSubMaps line up with the chat
+     sub-features (slot 0 "See what others cant" → pattern-detect, slot
+     1 "Like weather forcasts…" → predict-future, slot 3 "Drop Any File"
+     → import-files; slot 2 has no MapLayeredVisual). smartLayerMap and
+     surveyEarthMap feed the two data-catalogue rows. */
   chatMainMap: "/GeomarketingMaps/conversational.png",
   chatSubMaps: [
     "/GeomarketingMaps/pattern-detect.png",
     "/GeomarketingMaps/predict-future.png",
     undefined,
-    undefined,
+    "/GeomarketingMaps/import-files.png",
   ],
   smartLayerMap: "/GeomarketingMaps/be-creative.png",
   surveyEarthMap: "/GeomarketingMaps/super-model.png",
@@ -497,21 +514,21 @@ const RESIDENTIAL_COPY: IndustryCopy = {
       mapAlt: "Family-friendliness density choropleth for residential Madrid",
     },
     betterPrices: {
-      columbusTitle: "Forward-Looking Municipal Plan Revision Tracker",
+      columbusTitle: "Spain Residential Market Intelligence — Enriched Parcel Layer",
       columbusPrice: "€2,400 / year",
-      columbusMapAlt: "Spanish PGOU revision tracker preview",
+      columbusMapAlt: "Spain residential parcel layer preview",
       columbusFeatures: [
-        { title: "55,010 rows", description: "Aggregated, structured data on every pending PGOU revision across Spanish municipalities — drafts, public-comment phases, approval timelines." },
-        { title: "Verified accuracy", description: "Triple-checked against municipal filings and registry records." },
-        { title: "Updated quarterly", description: "Fresh data, continuously monitored as revisions move through public comment." },
+        { title: "~8.4M cadastral parcels", description: "Catastro coverage enriched with transaction history, AVM estimates, demographic layers, and zoning — query-ready at municipality and postal-code granularity." },
+        { title: "AVM + market comps included", description: "Estimated value, price per m², absorption rate, and rental yield resolved to the postal-code level." },
+        { title: "Updated monthly", description: "Transaction and listing signals refreshed monthly; cadastral geometry refreshed on the official Catastro release cycle." },
       ],
-      competitorTitle: "Planning-consultancy engagement, generic municipal summaries",
-      competitorPrice: "€20,000+ / year",
-      competitorMapAlt: "Planning consultancy report preview",
+      competitorTitle: "Per-asset valuation-platform subscription",
+      competitorPrice: "From €49 / month · enterprise tiers quote-based",
+      competitorMapAlt: "Per-asset valuation platform preview",
       competitorFeatures: [
-        { title: "Engagement-based", description: "Delivered through a consultancy engagement, scoped to specific municipalities you flag in advance." },
-        { title: "Self-reported summaries", description: "Pulled from municipal press releases, not independently cross-checked." },
-        { title: "Updated on request", description: "Refreshes are tied to the consulting engagement cycle, not the revision cycle itself." },
+        { title: "Valuation-centric", description: "Optimized for individual asset appraisal; no parcel-level geospatial enrichment or zoning layer." },
+        { title: "Per-asset billing", description: "Starts low for small portfolios; costs scale with monitored asset count rather than flat-rate access." },
+        { title: "No bulk export", description: "Programmatic access for portfolio-scale queries requires a separate enterprise contract." },
       ],
     },
     agenticTriad: {
@@ -549,6 +566,17 @@ const RESIDENTIAL_COPY: IndustryCopy = {
     dataCardMin: "€18,400",
     dataCardMax: "€96,200",
     dataCardSecondary: "Single-Family Buyer Density",
+    userQuery: "Show me which neighborhoods in Amsterdam have seen the largest rent increases over the past 5 years",
+    responseIntro: "Here are the Amsterdam buurten with the steepest free-sector rent growth over the past five years",
+    listTitle: "Top 4 Buurten by Free-Sector Rent Growth",
+    listSubtitle: "Last 5 Years",
+    listItems: [
+      { rank: 1, name: "De Pijp-Noord", pct: "+28.4%" },
+      { rank: 2, name: "Oud-West", pct: "+24.1%" },
+      { rank: 3, name: "Indische Buurt", pct: "+21.6%" },
+      { rank: 4, name: "Oostelijke Eilanden", pct: "+19.3%" },
+    ],
+    keyTakeaway: "Rent growth concentrates in tram-served buurten with tight new-build pipelines; independent business turnover lags the price rise by 18–24 months.",
   },
 };
 
@@ -630,21 +658,21 @@ const COMMERCIAL_COPY: IndustryCopy = {
     smartLayer: {},
     surveyEarth: {},
     betterPrices: {
-      columbusTitle: "Permitting Approval Map for CRE Acquisitions",
+      columbusTitle: "Submarket Entitlement & Permitting Intelligence — Office, Multifamily, Mixed-Use",
       columbusPrice: "$2,400 / year",
-      columbusMapAlt: "CRE permitting approval map preview",
+      columbusMapAlt: "CRE submarket entitlement intelligence preview",
       columbusFeatures: [
-        { title: "33,520 rows", description: "Per-submarket permitting approval rates, timelines, and entitlement risk for office, multifamily, and mixed-use." },
-        { title: "Verified accuracy", description: "Triple-checked against municipal filings and entitlement records." },
-        { title: "Updated quarterly", description: "Fresh data, continuously monitored as deals move through entitlement." },
+        { title: "~10,000 submarket-type rows", description: "Approval rates, entitlement timelines, and risk scores across 2,500+ U.S. submarkets, broken out by office, multifamily, and mixed-use." },
+        { title: "Verified accuracy", description: "Aggregated from municipal filings and entitlement records, then cross-checked against permit issuance data." },
+        { title: "Updated quarterly", description: "Re-aggregated each quarter as new municipal records are filed." },
       ],
-      competitorTitle: "Broker-network estimates, market-wide aggregates only",
-      competitorPrice: "$18,000 / year",
-      competitorMapAlt: "Competitor data layer preview",
+      competitorTitle: "Enterprise construction-pipeline data subscription",
+      competitorPrice: "$6,000–$12,000 / seat / year",
+      competitorMapAlt: "Enterprise construction pipeline data preview",
       competitorFeatures: [
-        { title: "8,200 rows", description: "Market-wide aggregated permitting counts pulled from a single brokerage's quarterly report." },
-        { title: "Self-reported data", description: "Provided directly by the broker, not independently audited or cross-checked." },
-        { title: "Updated annually", description: "Refreshed once a year, often months behind real-world conditions." },
+        { title: "Project-level records only", description: "Individual permit records by address; not rolled up into submarket-level approval rates or entitlement risk scores." },
+        { title: "Pipeline tracking, not entitlement scoring", description: "Strong for tracking what's under construction; does not estimate approval likelihood pre-application." },
+        { title: "Per-seat licensing", description: "Priced per user with regional vs. national coverage tiers; full national access pushes toward the upper end." },
       ],
     },
     /* Use the AgenticResearchTriad defaults for all three slots. */
@@ -673,6 +701,17 @@ const COMMERCIAL_COPY: IndustryCopy = {
     dataCardMin: "+2.1%",
     dataCardMax: "+11.8%",
     dataCardSecondary: "Cap Rate Compression",
+    userQuery: "Which London office submarkets will see the strongest prime rent growth for Grade A space over the next 24 months?",
+    responseIntro: "Here are the London submarkets forecasted to lead Grade A prime-rent growth as Elizabeth Line ridership matures and ESG-compliant supply stays thin",
+    listTitle: "Top 4 Submarkets by Grade A Prime Rent Growth",
+    listSubtitle: "Next 24 Months",
+    listItems: [
+      { rank: 1, name: "Mayfair / St. James's", pct: "+9.4%" },
+      { rank: 2, name: "King's Cross", pct: "+8.2%" },
+      { rank: 3, name: "Paddington", pct: "+7.6%" },
+      { rank: 4, name: "City Core (EC2)", pct: "+6.1%" },
+    ],
+    keyTakeaway: "Stranding risk on pre-2010 stock pushes demand into ESG-compliant towers; Elizabeth Line catchments lead on absorption velocity.",
   },
 };
 
@@ -804,21 +843,21 @@ const URBAN_COPY: IndustryCopy = {
       mapAlt: "Night-safety choropleth across an urban district",
     },
     betterPrices: {
-      columbusTitle: "Full road network with classification, speed limits, and pavement condition",
+      columbusTitle: "Municipal road network — pavement condition, lane inventory, and speed-limit attribution",
       columbusPrice: "$2,400 / year",
-      columbusMapAlt: "Road-network condition layer preview",
+      columbusMapAlt: "Municipal road-network condition layer preview",
       columbusFeatures: [
-        { title: "40,206 rows", description: "Lane counts, speed limits, and pavement condition scores resolved to individual segments." },
-        { title: "Verified accuracy", description: "Triple-checked against municipal survey data and field audits." },
-        { title: "Updated quarterly", description: "Fresh data, continuously monitored as repairs and reconstructions complete." },
+        { title: "~95,000 segments per city", description: "Lane counts, posted speed limits, and pavement condition scores resolved to individual segments across a full mid-sized municipal network." },
+        { title: "Verified accuracy", description: "Inferred attributes cross-checked against municipal survey data and field audits." },
+        { title: "Updated quarterly", description: "Continuously monitored as repairs and reconstructions complete." },
       ],
-      competitorTitle: "Public road shapefiles, classification-level only",
-      competitorPrice: "$18,000 / year",
-      competitorMapAlt: "Competitor road network preview",
+      competitorTitle: "Enterprise GIS road-network data suite",
+      competitorPrice: "$30,000–$80,000 / year",
+      competitorMapAlt: "Enterprise GIS road network preview",
       competitorFeatures: [
-        { title: "8,200 rows", description: "Classification-only segments pulled from a single municipal open-data portal." },
-        { title: "Self-reported data", description: "Provided directly by the municipality, not independently audited or cross-checked." },
-        { title: "Updated annually", description: "Refreshed once a year, often months behind real-world repair cycles." },
+        { title: "Routing-grade attribution only", description: "Speed limits, turn restrictions, and address ranges — no pavement condition or local repair history." },
+        { title: "Global vendor data", description: "Built from probe vehicles and remote sensing, not from local field audits or municipal records." },
+        { title: "Negotiated enterprise licensing", description: "Pricing scales with coverage area and attribute depth; typically locked behind multi-year contracts." },
       ],
     },
     agenticTriad: {
@@ -856,6 +895,17 @@ const URBAN_COPY: IndustryCopy = {
     dataCardMin: "4,200",
     dataCardMax: "62,800",
     dataCardSecondary: "Transit Capacity Headroom",
+    userQuery: "Forecast the districts in greater Munich most at risk of traffic-congestion growth over the next 2–3 years",
+    responseIntro: "Here are the districts in greater Munich forecasted to experience the worst traffic-congestion growth over the next 2–3 years",
+    listTitle: "Top 4 Districts by Forecasted Congestion Growth",
+    listSubtitle: "Next 24–36 Months",
+    listItems: [
+      { rank: 1, name: "Schwabing-West", pct: "+14.2%" },
+      { rank: 2, name: "Bogenhausen", pct: "+12.8%" },
+      { rank: 3, name: "Sendling-Westpark", pct: "+11.1%" },
+      { rank: 4, name: "Riem", pct: "+9.7%" },
+    ],
+    keyTakeaway: "Congestion growth concentrates on residential pipelines feeding the BMW / Siemens employment ring, with S-Bahn capacity ceilings amplifying spill-over.",
   },
 };
 
@@ -992,21 +1042,21 @@ const ENVIRONMENTAL_COPY: IndustryCopy = {
       mapAlt: "Maasai Mara elephant-safety choropleth",
     },
     betterPrices: {
-      columbusTitle: "Institutional-grade hydrological + environmental datasets",
+      columbusTitle: "Structured ecological + wildfire risk dataset — Copernicus, GBIF & wildfire perimeters harmonized",
       columbusPrice: "€2,400 / year",
-      columbusMapAlt: "Hydrological data layer preview",
+      columbusMapAlt: "Ecological + wildfire risk data layer preview",
       columbusFeatures: [
-        { title: "55,010 rows", description: "Citizen-science wildlife sightings, high-res satellite imagery, and historical wildfire perimeters with cause + suppression cost." },
-        { title: "Verified accuracy", description: "Triple-checked against research-vessel logs, official authorities, and peer-reviewed sources." },
-        { title: "Updated quarterly", description: "Fresh data, continuously refreshed as new field and satellite observations arrive." },
+        { title: "12 thematic layers across 500K+ km²", description: "Copernicus land cover + NDVI time series, GBIF species occurrence summaries, and historical wildfire perimeters with burn severity, joined onto a 1km² grid." },
+        { title: "Cross-checked against research-grade sources", description: "GBIF research-grade filters, official wildfire authorities, and Copernicus Level-2 validated products." },
+        { title: "Updated monthly", description: "Copernicus composites refreshed monthly; GBIF occurrence data refreshed quarterly." },
       ],
-      competitorTitle: "Specialist consultancy engagement",
-      competitorPrice: "€20,000+ / year",
-      competitorMapAlt: "Consultancy report preview",
+      competitorTitle: "Full-platform geospatial analysis subscription",
+      competitorPrice: "€6,000+ / year",
+      competitorMapAlt: "Geospatial analysis platform preview",
       competitorFeatures: [
-        { title: "Engagement-based", description: "Delivered through a specialist consultancy engagement, scoped to your specific study area." },
-        { title: "Self-reported summaries", description: "Pulled from consultancy field surveys, not independently audited across sources." },
-        { title: "Updated on request", description: "Refreshes tied to the engagement cycle, not the underlying data cycle." },
+        { title: "Raw data access only", description: "Pulls the same Copernicus and GBIF feeds, but harmonization, joins, and analytical structure are the researcher's responsibility." },
+        { title: "Requires GIS scripting", description: "Workflows authored in JavaScript or Python; significant technical lift to operationalize across regions." },
+        { title: "Compute charges scale with use", description: "Subscription is the floor; large-area analyses incur additional compute fees on top." },
       ],
     },
     agenticTriad: {
@@ -1044,6 +1094,17 @@ const ENVIRONMENTAL_COPY: IndustryCopy = {
     dataCardMin: "62%",
     dataCardMax: "180%",
     dataCardSecondary: "Bark Beetle Mortality Patches",
+    userQuery: "Which 1km grid cells in the Sierra Nevada foothills are most likely to experience a wildfire ignition exceeding 1,000 acres in the next 12–24 months?",
+    responseIntro: "Here are the Sierra Nevada foothill grid cells flagged by Columbus's fire-weather model for the highest probability of a 1,000+ acre ignition",
+    listTitle: "Top 4 Grid Cells by Ignition Probability",
+    listSubtitle: "Next 12–24 Months",
+    listItems: [
+      { rank: 1, name: "Tahoe Basin Rim", pct: "18.7%" },
+      { rank: 2, name: "Yuba River Canyon", pct: "16.4%" },
+      { rank: 3, name: "Stanislaus N.F. Foothills", pct: "14.2%" },
+      { rank: 4, name: "Sequoia Edge — Three Rivers", pct: "12.5%" },
+    ],
+    keyTakeaway: "Beetle-mortality patches paired with Diablo wind corridors dominate the risk signal; PSPS event history adds a powerline-ignition tail on the western flanks.",
   },
 };
 
@@ -1175,21 +1236,21 @@ const ACADEMIC_COPY: IndustryCopy = {
       mapAlt: "Spain entry-level job availability layer",
     },
     betterPrices: {
-      columbusTitle: "Historical EU land-use change · longitudinal panel",
-      columbusPrice: "€500 / year",
-      columbusMapAlt: "EU land-use change data preview",
+      columbusTitle: "EU Regional Socioeconomic Panel · NUTS-2 · 2000–2024",
+      columbusPrice: "€500 / year · per researcher",
+      columbusMapAlt: "EU NUTS-2 socioeconomic panel preview",
       columbusFeatures: [
-        { title: "55,010 rows", description: "Consistent longitudinal data across countries — census, demographic, GDP, unemployment, land-use change." },
+        { title: "~15,000 region-year observations", description: "Pre-joined and standardised across NUTS-2 classification breaks — GDP per capita, unemployment, population, labour productivity, and educational attainment." },
         { title: "Verified accuracy", description: "Triple-checked against EU statistical offices and peer-reviewed sources." },
         { title: "Updated annually", description: "Fresh data, refreshed against the EU statistical release cycle." },
       ],
-      competitorTitle: "Subscription access only top-tier universities can afford",
-      competitorPrice: "€2,000+ / year",
-      competitorMapAlt: "Subscription dataset preview",
+      competitorTitle: "Bundled commercial data platform for academic research",
+      competitorPrice: "$3,600 / year · per researcher",
+      competitorMapAlt: "Academic data platform preview",
       competitorFeatures: [
-        { title: "Institutional subscription", description: "Locked behind enterprise subscriptions sized for top-tier universities." },
-        { title: "Self-reported attribution", description: "Provided directly by the data vendor, with limited methodology transparency." },
-        { title: "Updated annually", description: "Refreshed once a year, methodology shifts can break longitudinal comparability." },
+        { title: "Bundled commercial providers", description: "30+ vendors aggregated into one platform; coverage skews US/commercial, with thin EU regional socioeconomic depth." },
+        { title: "Per-researcher pricing", description: "Smaller institutions pay full rate per seat regardless of usage; departmental licensing runs into the tens of thousands." },
+        { title: "Curated for academic terms", description: "Data licensed for research use; methodology documentation varies by underlying provider." },
       ],
     },
     agenticTriad: {
@@ -1227,6 +1288,17 @@ const ACADEMIC_COPY: IndustryCopy = {
     dataCardMin: "¥3.2M",
     dataCardMax: "¥14.8M",
     dataCardSecondary: "Daytime / Resident Population Ratio",
+    userQuery: "Forecast which census tracts across Chicago, Atlanta, and Detroit will experience the strongest gentrification pressure over the next 5 years",
+    responseIntro: "Here are the tracts most at risk of cohort-level displacement, scored across rent trajectory, building-permit activity, and longitudinal tenure shifts",
+    listTitle: "Top 4 Tracts by Gentrification Pressure",
+    listSubtitle: "Next 5 Years",
+    listItems: [
+      { rank: 1, name: "Pilsen — Chicago", pct: "+18.2%" },
+      { rank: 2, name: "Old Fourth Ward — Atlanta", pct: "+15.7%" },
+      { rank: 3, name: "Logan Square Edge — Chicago", pct: "+14.3%" },
+      { rank: 4, name: "Corktown — Detroit", pct: "+12.6%" },
+    ],
+    keyTakeaway: "Independent-business turnover lags rent acceleration by 18–24 months; tracts adjacent to Section 8 phaseouts show the sharpest tenure shifts.",
   },
 };
 
@@ -1362,16 +1434,16 @@ const GEOMARKETING_COPY: IndustryCopy = {
       columbusPrice: "£2,400 / year",
       columbusMapAlt: "UK postcode segmentation preview",
       columbusFeatures: [
-        { title: "40,206 rows", description: "6 categories, 18 groups, 62 lifestyle-income types, aligned with Acorn — postcode-level granularity." },
-        { title: "Verified accuracy", description: "Triple-checked against census data and panel surveys." },
+        { title: "1.7M UK unit postcodes", description: "7 lifestyle categories, 22 segment groups, 65 income-and-lifestyle types — postcode-level granularity, aligned with the current Acorn taxonomy." },
+        { title: "Verified accuracy", description: "Triple-checked against ONS census data and panel surveys." },
         { title: "Updated quarterly", description: "Fresh data, continuously refreshed against new audience signals." },
       ],
-      competitorTitle: "CACI direct + planning consultancy engagement",
-      competitorPrice: "£25,000–£80,000 / year",
-      competitorMapAlt: "CACI segmentation preview",
+      competitorTitle: "Direct vendor licence + planning consultancy engagement",
+      competitorPrice: "£17,000–£176,000 / year",
+      competitorMapAlt: "Direct vendor segmentation licence preview",
       competitorFeatures: [
-        { title: "Engagement-based", description: "Direct CACI license plus a planning consultancy engagement scoped to your specific catchments." },
-        { title: "Self-reported attribution", description: "Provided through the vendor, with limited transparency on the underlying mobility signals." },
+        { title: "Engagement-based licensing", description: "Direct vendor licence plus a planning consultancy engagement scoped to your specific catchments." },
+        { title: "Self-reported attribution", description: "Provided through the vendor, with limited transparency on the underlying mobility and panel signals." },
         { title: "Updated annually", description: "Refreshes tied to the engagement cycle, not the audience-signal cycle." },
       ],
     },
@@ -1410,6 +1482,17 @@ const GEOMARKETING_COPY: IndustryCopy = {
     dataCardMin: "1,840",
     dataCardMax: "112,400",
     dataCardSecondary: "Target-Buyer Match %",
+    userQuery: "Over the next 24 months, which European cities and submarkets will see the fastest growth in our target customer profile?",
+    responseIntro: "Here are the EU submarkets forecasted to gain the most of your target cohort, based on disposable-income trends, residential pipelines, and confirmed transport upgrades",
+    listTitle: "Top 4 Submarkets by Target Customer Growth",
+    listSubtitle: "Next 24 Months",
+    listItems: [
+      { rank: 1, name: "Berlin — Friedrichshain", pct: "+13.4%" },
+      { rank: 2, name: "Lisbon — Avenidas Novas", pct: "+11.7%" },
+      { rank: 3, name: "Milan — Isola", pct: "+10.2%" },
+      { rank: 4, name: "Madrid — Chamberí", pct: "+9.1%" },
+    ],
+    keyTakeaway: "Submarkets with sub-€2K/sqm rent and confirmed metro extensions absorb the bulk of the in-migration; Italian and Latin American diaspora clusters reinforce the Iberian leg.",
   },
 };
 
@@ -1519,8 +1602,7 @@ export default function BusinessUseCases() {
            in it. */
         backgroundImage="linear-gradient(180deg, #5DADE2 0%, #AED6F1 100%)"
         subFeatureBackdrop={bg.dataCatalogueHero}
-        demoImage="/dataCataSm.png"
-        demoAlt="Columbus data manager"
+        demoVisual={<DataManagerMockup industryId={industryId} />}
         subFeatures={[
           { title: "With smart layers, you become an artist", description: null, visual: <SmartLayerRow {...copy.rows.smartLayer} mapSrc={bg.smartLayerMap} />, stacked: true },
           { id: "super-model", title: "Survey the earth with a super model", description: null, visual: <SurveyEarthRow {...copy.rows.surveyEarth} mapSrc={bg.surveyEarthMap} />, stacked: true },
@@ -1543,7 +1625,7 @@ export default function BusinessUseCases() {
            previously sat behind the data-catalogue section. */
         backgroundImage={bg.dataCatalogueHero}
         subFeatureBackdrop={bg.agenticResearchHero}
-        demoVisual={<MapChatPlatform {...copy.mapChat} map={bg.chatMainMap} />}
+        demoVisual={<AgenticResearchMockup industryId={industryId} />}
         subFeatures={[
           { id: "due-diligence", title: "Agentic research sub-features", description: null, visual: <AgenticResearchTriad {...copy.rows.agenticTriad} />, stacked: true },
         ]}
@@ -1565,7 +1647,7 @@ export default function BusinessUseCases() {
            original `bg.dashboardHero` is unused but kept in the data
            shape in case the chain is unwound. */
         backgroundImage={bg.agenticResearchHero}
-        demoVisual={<DashboardListMockup {...copy.rows.dashboard} />}
+        demoVisual={<DashboardMockup industryId={industryId} />}
         panel={false}
       />
     </>
