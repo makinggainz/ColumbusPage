@@ -1,10 +1,39 @@
 "use client";
 
-import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
+import MapChatPlatform from "./MapChatPlatform";
+import DataManagerMockup from "./DataManagerMockup";
+import AgenticResearchMockup from "./AgenticResearchMockup";
+import DashboardMockup from "./DashboardMockup";
 
-const HAIRLINE = "1px solid var(--ent-border-card)";
 const SOFT = "var(--ent-border-card)";
+
+/* The right-side mock app is gone — we now render the real
+   SuperFeatureSection demoVisuals (MapChatPlatform / DataManagerMockup /
+   AgenticResearchMockup / DashboardMockup) on the active slot. Industry
+   is locked to residential-real-estate to match what the industry stack
+   below this section opens with. The MapChatPlatform props duplicate
+   the residential entry in BusinessUseCases.tsx RESIDENTIAL_COPY.mapChat
+   — kept inline here so this preview section stays decoupled from
+   that copy. */
+const RESIDENTIAL_INDUSTRY_ID = "residential-real-estate" as const;
+const RESIDENTIAL_MAP_CHAT = {
+  map: "/ResidentialMaps/chat-platform-map.png",
+  userQuery:
+    "Show me which neighborhoods in Amsterdam have seen the largest rent increases over the past 5 years",
+  responseIntro:
+    "Here are the Amsterdam buurten with the steepest free-sector rent growth over the past five years",
+  listTitle: "Top 4 Buurten by Free-Sector Rent Growth",
+  listSubtitle: "Last 5 Years",
+  listItems: [
+    { rank: 1, name: "De Pijp-Noord", pct: "+28.4%" },
+    { rank: 2, name: "Oud-West", pct: "+24.1%" },
+    { rank: 3, name: "Indische Buurt", pct: "+21.6%" },
+    { rank: 4, name: "Oostelijke Eilanden", pct: "+19.3%" },
+  ],
+  keyTakeaway:
+    "Rent growth concentrates in tram-served buurten with tight new-build pipelines; independent business turnover lags the price rise by 18–24 months.",
+};
 
 /* Each feature auto-advances after this long; the expanded item's
    horizontal progress bar is driven by the same CSS animation, so its end
@@ -12,11 +41,18 @@ const SOFT = "var(--ent-border-card)";
    together. */
 const CYCLE_MS = 6000;
 
-/* Scoped keyframes: the horizontal progress-bar fill and the cross-fade of
-   the product display's body panel. Injected once per mount. */
+/* Scoped keyframes + chrome-strip rule:
+   • cmpBarFill: the active row's progress-bar fill, end-of-animation drives auto-advance.
+   • cmpFade: cross-fade when the right-side demo visual swaps.
+   • .cmp-host-visual > *: kills the demo visual's OWN outer chrome
+     (rounded corners, drop shadow, max-width) so it sits flush inside
+     the right host card instead of looking like a floating product
+     screenshot. Each demo (MapChatPlatform / *Mockup) sets those on
+     its root via inline style; `!important` here beats inline. */
 const CMP_CSS = `
 @keyframes cmpBarFill { from { width: 0%; } to { width: 100%; } }
 @keyframes cmpFade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+.cmp-host-visual > * { border-radius: 0 !important; box-shadow: none !important; max-width: none !important; margin: 0 !important; }
 `;
 
 /** Five-dot arrow used inside the site's CTA pills (see BusinessHero) —
@@ -33,8 +69,10 @@ function ArrowDots({ color }: { color: string }) {
   );
 }
 
-/* ── Shared feature glyphs. Each feature renders the same glyph in the
-   left accordion and in the mock app's icon rail. ── */
+/* ── Feature glyphs — the original four-icon set used by the left
+   card before the real-visuals rewrite. Kept independent from the
+   <IconChip> icons in BusinessUseCases because the left card here is
+   an overview/index, not a duplicate of the section headers. ── */
 type IcoProps = { size: number; color: string };
 function GridIco({ size, color }: IcoProps) {
   return (
@@ -65,213 +103,54 @@ function DbIco({ size, color }: IcoProps) {
     </svg>
   );
 }
-/* Glyph order, top→bottom in the rail. A feature's `rail` index points
-   into this — and the accordion reads the same glyph from it. */
-const RAIL = [GridIco, SearchIco, PenIco, DbIco];
 
-/* ── Small shared bits used by the body panels ── */
-function Tab({ children, active }: { children: React.ReactNode; active?: boolean }) {
-  return (
-    <span
-      className="text-[14px] pb-2.5"
-      style={{
-        color: active ? "var(--ent-text-primary)" : "var(--ent-text-secondary)",
-        fontWeight: active ? 600 : 400,
-        borderBottom: active ? "2px solid var(--ent-text-primary)" : "none",
-        marginBottom: active ? -1 : 0,
-      }}
-    >
-      {children}
-    </span>
-  );
-}
-function Skel({ w }: { w: string }) {
-  return <span className="block rounded-full" style={{ height: 8, width: w, backgroundColor: SOFT }} />;
-}
-function BarRow({ data, h }: { data: number[]; h: number }) {
-  return (
-    <div className="flex items-end gap-1.5" style={{ height: h }}>
-      {data.map((v, i) => (
-        <div
-          key={i}
-          className="flex-1 rounded-[3px]"
-          style={{ height: `${v}%`, backgroundColor: "var(--ent-text-primary)", opacity: i % 2 ? 0.3 : 0.85 }}
-        />
-      ))}
-    </div>
-  );
+/* Renders the real SuperFeatureSection demoVisual that corresponds to
+   the active left-card slot. Slot→visual mapping:
+     • Map Chat       → MapChatPlatform        (id=chat)
+     • Reports        → AgenticResearchMockup  (id=agentic-research)
+     • Data Catalogue → DataManagerMockup      (id=data-catalogue)
+     • Dashboard      → DashboardMockup        (id=dashboard)
+   Industry is locked to residential — this section sits ABOVE the
+   page's IndustryProvider, so it can't read the selected industry from
+   context yet. */
+function ActiveVisual({ active }: { active: number }) {
+  switch (active) {
+    case 0:
+      return <MapChatPlatform {...RESIDENTIAL_MAP_CHAT} />;
+    case 1:
+      return <AgenticResearchMockup industryId={RESIDENTIAL_INDUSTRY_ID} />;
+    case 2:
+      return <DataManagerMockup industryId={RESIDENTIAL_INDUSTRY_ID} />;
+    case 3:
+      return <DashboardMockup industryId={RESIDENTIAL_INDUSTRY_ID} />;
+    default:
+      return null;
+  }
 }
 
-/* ── The four product-display body panels (the middle panel of the mock
-   app — the icon rail and map sidebar are rendered once, outside). ── */
-function MapChatBody() {
-  return (
-    <>
-      <div className="flex items-center gap-7" style={{ borderBottom: HAIRLINE }}>
-        <Tab active>Chat</Tab>
-        <Tab>Map Filters</Tab>
-      </div>
-      <p className="mt-7 text-[14px] font-semibold" style={{ color: "var(--ent-text-primary)" }}>General Chat</p>
-      <p className="mt-6 text-[14px] font-semibold" style={{ color: "var(--ent-text-primary)" }}>Special Agents</p>
-      <div className="mt-4 grid grid-cols-2 gap-3.5">
-        {[0, 1, 2, 3].map(k => (
-          <div
-            key={k}
-            className="relative flex items-end"
-            style={{ border: HAIRLINE, borderRadius: "var(--ent-radius-card)", height: 88, padding: 14 }}
-          >
-            <span
-              className="absolute top-2.5 right-2.5 flex items-center justify-center rounded-full text-[10px]"
-              style={{ width: 16, height: 16, border: HAIRLINE, color: "var(--ent-text-secondary)" }}
-            >
-              ?
-            </span>
-            <span className="text-[13px] font-medium" style={{ color: "var(--ent-text-primary)" }}>General Report</span>
-          </div>
-        ))}
-      </div>
-    </>
-  );
-}
-
-function ReportsBody() {
-  return (
-    <>
-      <div className="flex items-center gap-7" style={{ borderBottom: HAIRLINE }}>
-        <Tab active>Report</Tab>
-        <Tab>Sources</Tab>
-      </div>
-      <p className="mt-7 text-[15px] font-semibold" style={{ color: "var(--ent-text-primary)" }}>Q3 Market Coverage</p>
-      <div className="mt-3 flex flex-col gap-2">
-        <Skel w="100%" /><Skel w="92%" /><Skel w="74%" />
-      </div>
-      <div className="mt-5 p-4" style={{ border: HAIRLINE, borderRadius: "var(--ent-radius-card)" }}>
-        <p className="text-[12px]" style={{ color: "var(--ent-text-secondary)" }}>Parcels analysed by quarter</p>
-        <div className="mt-3">
-          <BarRow data={[46, 72, 58, 88, 64, 78]} h={92} />
-        </div>
-      </div>
-      <div className="mt-4 flex flex-col gap-2">
-        <Skel w="88%" /><Skel w="63%" />
-      </div>
-    </>
-  );
-}
-
-const DATASETS = [
-  "Parcels — Hennepin County",
-  "Zoning Districts",
-  "Flood Risk Zones",
-  "Census Blocks 2020",
-  "Road Network",
-];
-function CatalogueBody() {
-  return (
-    <>
-      <div className="flex items-center gap-7" style={{ borderBottom: HAIRLINE }}>
-        <Tab active>Datasets</Tab>
-        <Tab>Saved</Tab>
-      </div>
-      <div
-        className="mt-5 flex items-center gap-2 px-3"
-        style={{ border: HAIRLINE, borderRadius: "var(--ent-radius-card)", height: 36 }}
-      >
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--ent-text-secondary)" strokeWidth="1.8">
-          <circle cx="11" cy="11" r="7" /><path d="m20 20-4-4" />
-        </svg>
-        <span className="text-[13px]" style={{ color: "var(--ent-text-secondary)" }}>Search 2,400 datasets</span>
-      </div>
-      <div className="mt-3 flex flex-col">
-        {DATASETS.map((name, i) => (
-          <div key={name} className="flex items-center gap-3 py-2.5" style={{ borderBottom: i < DATASETS.length - 1 ? HAIRLINE : "none" }}>
-            <span
-              className="flex items-center justify-center shrink-0 rounded-[7px]"
-              style={{ width: 28, height: 28, border: HAIRLINE }}
-            >
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--ent-text-secondary)" strokeWidth="1.8">
-                <path d="m12 3 9 5-9 5-9-5 9-5ZM3 13l9 5 9-5M3 17l9 5 9-5" />
-              </svg>
-            </span>
-            <span className="flex-1 min-w-0 truncate text-[13px] font-medium" style={{ color: "var(--ent-text-primary)" }}>{name}</span>
-            <span
-              className="text-[11px] px-2 py-0.5 shrink-0"
-              style={{ border: HAIRLINE, borderRadius: 999, color: "var(--ent-text-secondary)" }}
-            >
-              GIS
-            </span>
-          </div>
-        ))}
-      </div>
-    </>
-  );
-}
-
-const STATS = [
-  { value: "128", label: "Active maps" },
-  { value: "42", label: "Reports" },
-  { value: "2.4k", label: "Datasets" },
-];
-function DashboardBody() {
-  return (
-    <>
-      <div className="flex items-center gap-7" style={{ borderBottom: HAIRLINE }}>
-        <Tab active>Overview</Tab>
-        <Tab>Activity</Tab>
-      </div>
-      <div className="mt-5 grid grid-cols-3 gap-3">
-        {STATS.map(s => (
-          <div key={s.label} className="p-3" style={{ border: HAIRLINE, borderRadius: "var(--ent-radius-card)" }}>
-            <p className="text-[20px] font-semibold leading-none" style={{ color: "var(--ent-text-primary)" }}>{s.value}</p>
-            <p className="mt-1.5 text-[12px]" style={{ color: "var(--ent-text-secondary)" }}>{s.label}</p>
-          </div>
-        ))}
-      </div>
-      <div className="mt-3 p-4" style={{ border: HAIRLINE, borderRadius: "var(--ent-radius-card)" }}>
-        <p className="text-[12px]" style={{ color: "var(--ent-text-secondary)" }}>Coverage over time</p>
-        <div className="mt-3">
-          <BarRow data={[38, 55, 48, 70, 62, 84, 76]} h={116} />
-        </div>
-      </div>
-    </>
-  );
-}
-
-/* The left accordion's items. Each carries the expanded description and
-   the product display it drives: the `rail` index picks the shared glyph
-   (used by both the accordion and the mock app's rail), plus the app
-   label, the map city, and the body panel. */
+/* The original four left-card slots — labels untouched from the
+   pre-real-visuals version. The `Icon` is the chip glyph, the active
+   slot drives <ActiveVisual /> on the right. */
 const FEATURES = [
   {
     title: "Map Chat",
     desc: "Ask questions in plain language and watch Columbus build the map — filter, query, and explore your data through conversation.",
-    rail: 1,
-    appLabel: "untitled chat",
-    city: "Minneapolis",
-    Body: MapChatBody,
+    Icon: SearchIco,
   },
   {
     title: "Reports",
     desc: "Turn any analysis into a polished, shareable report. Columbus drafts the narrative, charts, and sources so you don't have to.",
-    rail: 2,
-    appLabel: "Q3 market coverage",
-    city: "Hennepin County",
-    Body: ReportsBody,
+    Icon: PenIco,
   },
   {
     title: "Data Catalogue",
     desc: "Browse thousands of ready-to-use datasets — parcels, zoning, demographics — and drop them straight onto your map.",
-    rail: 3,
-    appLabel: "data catalogue",
-    city: "Twin Cities",
-    Body: CatalogueBody,
+    Icon: DbIco,
   },
   {
     title: "Dashboard",
     desc: "Keep every map, report, and dataset in one view. Track coverage and activity across your whole team at a glance.",
-    rail: 0,
-    appLabel: "dashboard",
-    city: "Minneapolis",
-    Body: DashboardBody,
+    Icon: GridIco,
   },
 ] as const;
 
@@ -312,8 +191,6 @@ export default function ComparisonSection() {
     setRunId(r => r + 1);
   };
 
-  const ActiveBody = FEATURES[active].Body;
-
   return (
     <section
       ref={sectionRef}
@@ -322,7 +199,7 @@ export default function ComparisonSection() {
     >
       <style>{CMP_CSS}</style>
       <div
-        className="ent-content-bounds px-4 md:px-6 grid grid-cols-1 lg:grid-cols-[380px_1fr] gap-10 lg:gap-16 lg:items-stretch"
+        className="ent-content-bounds px-4 md:px-6 grid grid-cols-1 lg:grid-cols-[380px_1fr] gap-10 lg:gap-0 lg:items-stretch"
         style={{
           opacity: entered ? 1 : 0,
           transform: entered ? "translateY(0)" : "translateY(16px)",
@@ -331,27 +208,62 @@ export default function ComparisonSection() {
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
       >
-        {/* ── Left: feature accordion. Each row is clickable; the active
-            row expands to reveal a description + horizontal progress bar
-            (the bar drives the auto-advance). The ul stretches to the row
-            height (matching the product display on the right at lg+); each
-            <li> uses `flex-1` so the four feature rows share that height
-            equally instead of stacking compactly at the top. ── */}
-        <ul className="flex flex-col list-none m-0 p-0 lg:h-full">
+        {/* ── Left: feature accordion. 24px corner, hairline #E7E7F1
+            border, #FDFDFD off-white fill, overflow:hidden. At lg+ the
+            right corners go square and the card merges flush into the
+            host card on its right (which now wraps the real demo
+            visual). Hairlines between cells, light gray-wash active
+            state, hover wash on inactive cells. Inactive cells fade to
+            opacity 0.4 so the active row reads loudest. The
+            auto-advance progress bar is preserved on the active cell's
+            bottom edge. ── */}
+        <ul
+          className="flex flex-col list-none m-0 p-0 lg:h-full overflow-hidden rounded-3xl lg:rounded-r-none border border-(--ent-border-card)"
+          style={{
+            background: "#FDFDFD",
+          }}
+        >
           {FEATURES.map((f, i) => {
             const isActive = i === active;
-            const Icon = RAIL[f.rail];
+            const isLast = i === FEATURES.length - 1;
+            const Icon = f.Icon;
             return (
-              <li key={f.title} className="relative lg:flex-1 lg:flex lg:flex-col">
+              <li
+                key={f.title}
+                className={[
+                  "relative lg:flex-1 lg:flex lg:flex-col transition-[background-color,opacity] duration-200",
+                  isActive
+                    ? "bg-[rgba(0,0,0,0.025)] opacity-100"
+                    : "hover:bg-[rgba(0,0,0,0.015)] opacity-40",
+                ].join(" ")}
+              >
                 <button
                   type="button"
                   onClick={() => select(i)}
                   aria-expanded={isActive}
-                  className="w-full text-left cursor-pointer"
+                  className="w-full text-left cursor-pointer px-6 md:px-8"
                 >
                   {/* header row */}
                   <div className="flex items-center gap-4 py-5">
-                    <Icon size={25} color={isActive ? "var(--ent-text-primary)" : "var(--ent-text-secondary)"} />
+                    {/* Icon chip — same dark-wash treatment as the
+                        SuperFeatureSection IconChip used over "Ask,
+                        Discover, Understand" (rgba(11,27,43,0.06) bg,
+                        #0B1B2B stroke), but with the design system's
+                        --ent-radius-card (7px) corner instead of a
+                        full circle so the rounding lines up with the
+                        rest of the page's card hierarchy. */}
+                    <span
+                      aria-hidden
+                      className="inline-flex items-center justify-center shrink-0"
+                      style={{
+                        width: 40,
+                        height: 40,
+                        borderRadius: "var(--ent-radius-card)",
+                        background: "rgba(11,27,43,0.06)",
+                      }}
+                    >
+                      <Icon size={22} color="#0B1B2B" />
+                    </span>
                     <span
                       className="flex-1 text-[21px] md:text-[22px] font-semibold leading-[1.2]"
                       style={{ color: "var(--ent-text-primary)", letterSpacing: "-0.01em" }}
@@ -395,14 +307,17 @@ export default function ComparisonSection() {
                   </div>
                 </button>
 
-                {/* Row separator — doubles as the progress track. The
-                    active row's separator fills with accent over the
-                    cycle, and its animation end drives the auto-advance. */}
-                <span
-                  className="absolute left-0 bottom-0 w-full"
-                  style={{ height: 1, backgroundColor: SOFT }}
-                  aria-hidden
-                />
+                {/* Row separator — skipped on the last cell (the
+                    container's own border handles the bottom edge). The
+                    active row's bottom doubles as the progress track and
+                    its animation end drives the auto-advance. */}
+                {!isLast && (
+                  <span
+                    className="absolute left-0 bottom-0 w-full"
+                    style={{ height: 1, backgroundColor: SOFT }}
+                    aria-hidden
+                  />
+                )}
                 {isActive && (
                   <span
                     key={runId}
@@ -422,108 +337,28 @@ export default function ComparisonSection() {
           })}
         </ul>
 
-        {/* ── Right: product display — a plain white card on the page ── */}
+        {/* ── Right: the host card. Outer corners (24px) match the left
+            card; at lg+ the left side goes square and the left border
+            drops, so the two cards share a single hairline seam and
+            read as one rounded unit. overflow:hidden clips the demo's
+            content to the host's rounded corners.
+
+            The active demo visual sits inside via the .cmp-host-visual
+            wrapper — its CSS rule strips the demo's OWN outer
+            rounded-corner / drop-shadow / max-width chrome so the demo
+            sits flush inside this host instead of floating with its
+            own chrome on top. `key={active}` on the wrapper gives a
+            fresh cmpFade remount each time the active slot switches. ── */}
         <div
-          className="w-full overflow-hidden"
-          style={{
-            border: HAIRLINE,
-            borderRadius: "var(--ent-radius-card)",
-            backgroundColor: "#FFFFFF",
-          }}
+          className="w-full min-w-0 overflow-hidden rounded-3xl lg:rounded-l-none border border-(--ent-border-card) lg:border-l-0"
+          style={{ backgroundColor: "#FFFFFF" }}
         >
-          {/* App top bar */}
           <div
-            className="flex items-center gap-3 px-5"
-            style={{ height: 52, borderBottom: HAIRLINE }}
+            key={active}
+            className="cmp-host-visual w-full h-full"
+            style={{ animation: "cmpFade 0.4s ease" }}
           >
-            <div className="flex flex-col gap-[3px]" aria-hidden>
-              {[0, 1, 2].map(k => (
-                <span key={k} className="block w-[15px] h-[1.5px]" style={{ backgroundColor: "var(--ent-text-primary)" }} />
-              ))}
-            </div>
-            <span
-              className="flex items-center justify-center rounded-full"
-              style={{ width: 22, height: 22, backgroundColor: "var(--ent-text-primary)" }}
-              aria-hidden
-            >
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="1.6">
-                <circle cx="12" cy="12" r="9" />
-                <path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18" />
-              </svg>
-            </span>
-            <span className="text-[14px] font-semibold" style={{ color: "var(--ent-text-primary)" }}>Columbus</span>
-            <span className="text-[13px]" style={{ color: "var(--ent-text-secondary)" }}>/&nbsp;&nbsp;{FEATURES[active].appLabel}</span>
-            <span
-              className="ml-auto flex items-center gap-1.5 text-[12px] font-medium px-3 py-1.5"
-              style={{ border: HAIRLINE, borderRadius: "var(--ent-radius-card)", color: "var(--ent-text-primary)" }}
-            >
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z" />
-              </svg>
-              Report
-            </span>
-          </div>
-
-          {/* App body */}
-          <div className="flex" style={{ height: 420 }}>
-            {/* Icon rail — clickable; each icon selects its feature. */}
-            <div
-              className="flex flex-col items-center py-4 gap-5 shrink-0"
-              style={{ width: 52, borderRight: HAIRLINE }}
-            >
-              {RAIL.map((Ico, idx) => {
-                const fi = FEATURES.findIndex(f => f.rail === idx);
-                const isActive = idx === FEATURES[active].rail;
-                return (
-                  <button
-                    key={idx}
-                    type="button"
-                    onClick={() => select(fi)}
-                    aria-label={FEATURES[fi].title}
-                    className="flex items-center justify-center cursor-pointer"
-                    style={{
-                      width: 30,
-                      height: 30,
-                      borderRadius: 7,
-                      backgroundColor: isActive ? "var(--ent-text-primary)" : "transparent",
-                      transition: "background-color 0.3s ease",
-                    }}
-                  >
-                    <Ico size={isActive ? 15 : 17} color={isActive ? "#fff" : "var(--ent-text-secondary)"} />
-                  </button>
-                );
-              })}
-            </div>
-
-            {/* Main panel — cross-fades on feature change. */}
-            <div
-              key={active}
-              className="flex-1 min-w-0 px-7 py-6 overflow-hidden"
-              style={{ animation: "cmpFade 0.4s ease" }}
-            >
-              <ActiveBody />
-            </div>
-
-            {/* Map panel — kept mounted across features (only the city
-                label changes) so the image never reloads. */}
-            <div
-              className="relative shrink-0 hidden md:block"
-              style={{ width: "36%", borderLeft: HAIRLINE }}
-            >
-              <Image src="/business/citymap.png" alt="" fill className="object-cover object-center" />
-              <span
-                className="absolute top-3 right-3 flex items-center justify-center rounded-full bg-white"
-                style={{ width: 26, height: 26, border: HAIRLINE }}
-              >
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--ent-text-primary)" strokeWidth="1.8"><circle cx="11" cy="11" r="7" /><path d="m20 20-4-4" /></svg>
-              </span>
-              <span
-                className="absolute bottom-3 left-3 text-[12px] font-semibold px-2 py-1 rounded-[7px] bg-white/85"
-                style={{ color: "var(--ent-text-primary)" }}
-              >
-                {FEATURES[active].city}
-              </span>
-            </div>
+            <ActiveVisual active={active} />
           </div>
         </div>
       </div>

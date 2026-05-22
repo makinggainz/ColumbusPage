@@ -149,6 +149,11 @@ export default function SuperFeatureSection({
         className="ent-content-bounds mt-10 lg:mt-14"
         style={{
           backgroundColor: panel ? "#F7F7F7" : "transparent",
+          /* Shared panel chrome — 1px --ent-border-card hairline + 24px
+             corner — matches the CapabilitiesGrid, IndustrySelector, and
+             ComparisonSection panels so every major card on the business
+             page shares one border treatment. */
+          border: panel ? "1px solid var(--ent-border-card)" : "none",
           borderRadius: panel ? "var(--ent-radius-2xl)" : "0",
           paddingBottom: panel ? "var(--ent-space-16)" : "0",
           overflow: panel ? "hidden" : "visible",

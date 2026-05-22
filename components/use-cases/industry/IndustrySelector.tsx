@@ -214,9 +214,11 @@ function IconGrid({
           /* Match the corner radius of the SuperFeatureSection panels that
              sit directly below this grid (--ent-radius-2xl, 24px). */
           borderRadius: "var(--ent-radius-2xl, 24px)",
-          /* Hairline = homepage --color-gridline (#E7E7F1) to match every
-             other card on the business page. */
-          border: "1px solid #E7E7F1",
+          /* Hairline = --ent-border-card (#E7E7F1) — same token as the
+             CapabilitiesGrid, ComparisonSection, and SuperFeatureSection
+             panels so all major panels on the business page share one
+             border width / color / radius. */
+          border: "1px solid var(--ent-border-card)",
           overflow: "hidden",
           /* Subtle off-white card fill (--ent-bg-card). Gives the grid the
              same soft tint as other content cards on the page rather than
