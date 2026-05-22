@@ -306,8 +306,8 @@ const URBAN_INFRASTRUCTURE_BACKDROPS: IndustryBackdrops = {
     undefined,
     "/UrbanPlanningMaps/file-compatibility.png",
   ],
-  smartLayerMap: "/UrbanPlanningMaps/creative-smart-layers.png",
-  surveyEarthMap: "/UrbanPlanningMaps/survey-model.png",
+  smartLayerMap: "/UrbanPlanningMaps/survey-model.png",
+  surveyEarthMap: "/UrbanPlanningMaps/creative-smart-layers.png",
 };
 
 const GRADIENT_BACKDROPS: IndustryBackdrops = {
