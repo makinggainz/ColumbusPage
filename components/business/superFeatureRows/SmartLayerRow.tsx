@@ -52,7 +52,7 @@ export default function SmartLayerRow({
   promptText = DEFAULT_PROMPT_TEXT,
 }: SmartLayerRowProps = {}) {
   return (
-    <div style={{ fontFamily: FONT }}>
+    <div style={{ fontFamily: FONT, position: "relative" }}>
       <RowHeader
         align="left"
         title="With smart layers, you become an artist"
@@ -98,46 +98,75 @@ export default function SmartLayerRow({
         />
 
         <div
-          className="grid grid-cols-1 lg:grid-cols-12"
           style={{
-            gap: 0,
-            padding: "clamp(20px, 2vw, 28px)",
-            alignItems: "stretch",
+            position: "relative",
             minWidth: 0,
+            minHeight: 480,
           }}
         >
-          <div className="lg:col-span-4" style={{ paddingRight: "clamp(0px, 1.5vw, 24px)" }}>
-            <SmartLayerOverlay
-              layerName={layerName}
-              layerSubtitle={layerSubtitle}
-              layerDescription={layerDescription}
-              features={features}
-            />
-          </div>
-          {/* Map — background-image div with height: 100% so it stretches
-              to match the SmartLayerOverlay's height rather than being
-              capped by a fixed aspect ratio. */}
+          {/* Map — fills the right container almost edge to edge (3px
+              gutter on top and right) and extends all the way left and
+              down so it sits BEHIND the smart-layer overlay card on the
+              left. */}
           <div
-            className="lg:col-span-8"
             role={mapAlt ? "img" : undefined}
             aria-label={mapAlt || undefined}
             style={{
-              width: "100%",
-              height: "100%",
-              minHeight: 240,
-              borderRadius: "var(--ent-radius-card)",
-              overflow: "hidden",
+              position: "absolute",
+              top: 3,
+              right: 3,
+              bottom: 0,
+              left: 0,
+              borderRadius: 12,
               backgroundImage: `url(${mapSrc})`,
               backgroundSize: "cover",
               backgroundPosition: "center",
             }}
           />
+          {/* Smart-layer overlay — its own white card floating on top
+              of the map, anchored to the top-left of the right area. */}
+          <div
+            style={{
+              position: "relative",
+              zIndex: 1,
+              padding: "clamp(20px, 2vw, 28px)",
+              width: "min(45%, 460px)",
+            }}
+          >
+            <div
+              style={{
+                background: "#FFFFFF",
+                borderRadius: 14,
+                padding: "18px 20px",
+              }}
+            >
+              <SmartLayerOverlay
+                layerName={layerName}
+                layerSubtitle={layerSubtitle}
+                layerDescription={layerDescription}
+                features={features}
+              />
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* Prompt bar — a floating sibling card with its own drop shadow,
-          separated from the main composite by a vertical gap. */}
-      <div style={{ marginTop: 16 }}>
+      {/* Prompt bar — floating card anchored to the BOTTOM of the main
+          composite so its lower edge sits flush with the card's bottom
+          edge regardless of how many lines the prompt text wraps to.
+          Absolute positioning pulls it out of the flow so the next
+          sub-feature below isn't pushed down by its height. Left offset
+          equals the sidebar column width (64px) so the prompt sits to
+          the RIGHT of the sidebar image instead of covering it. */}
+      <div
+        style={{
+          position: "absolute",
+          bottom: 0,
+          left: 64,
+          right: 0,
+          zIndex: 2,
+        }}
+      >
         <PromptBar text={promptText} />
       </div>
     </div>
@@ -236,7 +265,12 @@ function SmartLayerOverlay({
           }}
         >
           {features.map((f, i) => (
-            <FeatureRow key={i} title={f.title} description={f.description} />
+            <FeatureRow
+              key={i}
+              icon={[<SourceIcon key="src" />, <VerifiedIcon key="ver" />, <FreshIcon key="fresh" />][i] ?? <SourceIcon />}
+              title={f.title}
+              description={f.description}
+            />
           ))}
         </ul>
       </div>
@@ -245,9 +279,11 @@ function SmartLayerOverlay({
 }
 
 function FeatureRow({
+  icon,
   title,
   description,
 }: {
+  icon: React.ReactNode;
   title: string;
   description: string;
 }) {
@@ -255,15 +291,19 @@ function FeatureRow({
     <li className="flex items-start gap-3">
       <span
         aria-hidden
+        className="inline-flex items-center justify-center"
         style={{
           width: 22,
           height: 22,
           borderRadius: 6,
-          background: "#E4E4E7",
+          background: "var(--ent-accent)",
+          color: "#FFFFFF",
           flexShrink: 0,
           marginTop: 2,
         }}
-      />
+      >
+        {icon}
+      </span>
       <div style={{ minWidth: 0 }}>
         <div
           style={{
@@ -321,7 +361,7 @@ function PromptBar({ text }: { text: string }) {
     <div
       style={{
         background: "#FFFFFF",
-        borderRadius: "var(--ent-radius-2xl)",
+        borderRadius: 12,
         border: "1px solid var(--ent-border-card)",
         boxShadow: "0 12px 32px rgba(11, 27, 43, 0.10), 0 2px 6px rgba(11, 27, 43, 0.06)",
         padding: "22px clamp(20px, 2vw, 28px)",
@@ -379,3 +419,53 @@ function StopButton() {
   );
 }
 
+/* Feature-row icons — three 12-vbox stroked SVGs that get placed inside
+   the accent-coloured square next to each feature. Mapped by index in
+   SmartLayerOverlay: source / verified / fresh. */
+function FeatureIconSvg({ children }: { children: React.ReactNode }) {
+  return (
+    <svg
+      width="12"
+      height="12"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2.2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+    >
+      {children}
+    </svg>
+  );
+}
+
+function SourceIcon() {
+  return (
+    <FeatureIconSvg>
+      <ellipse cx="12" cy="5" rx="9" ry="3" />
+      <path d="M3 5v6c0 1.66 4.03 3 9 3s9-1.34 9-3V5" />
+      <path d="M3 11v6c0 1.66 4.03 3 9 3s9-1.34 9-3v-6" />
+    </FeatureIconSvg>
+  );
+}
+
+function VerifiedIcon() {
+  return (
+    <FeatureIconSvg>
+      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+      <path d="m9 12 2 2 4-4" />
+    </FeatureIconSvg>
+  );
+}
+
+function FreshIcon() {
+  return (
+    <FeatureIconSvg>
+      <polyline points="23 4 23 10 17 10" />
+      <polyline points="1 20 1 14 7 14" />
+      <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10" />
+      <path d="M20.49 15A9 9 0 0 1 5.64 18.36L1 14" />
+    </FeatureIconSvg>
+  );
+}
