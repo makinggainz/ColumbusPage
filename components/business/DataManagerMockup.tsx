@@ -220,27 +220,35 @@ export default function DataManagerMockup({ industryId }: DataManagerMockupProps
       style={{
         aspectRatio: "5184 / 3003",
         maxWidth: 1180,
-        borderRadius: "var(--ent-radius-2xl, 20px)",
+        borderRadius: "var(--ent-radius-2xl)",
+        border: "1px solid var(--ent-border-card)",
+        backgroundColor: "#FFFFFF",
         overflow: "hidden",
-        boxShadow:
-          "0 1px 2px rgba(0,0,0,0.10), 0 6px 14px rgba(0,0,0,0.10), 0 28px 56px rgba(0,0,0,0.22), 0 56px 96px rgba(0,0,0,0.18)",
         /* Container query unit basis — `cqw` inside resolves to 1% of
            this wrapper's width, so typography and spacing inside the
            mockup track its rendered size at every viewport. */
         containerType: "inline-size",
       }}
     >
-      {/* Frame chrome (z-5). The PNG's inner pane is transparent; the
-          white surface above paints that area. */}
-      <Image
-        src="/business/DataManagerFrame.png"
-        alt="Columbus Data Manager"
-        fill
-        sizes="(max-width: 1180px) 100vw, 1180px"
-        className="object-cover object-center pointer-events-none"
-        style={{ zIndex: 5 }}
-        priority
-      />
+      {/* Frame chrome (z-5). Inset 6px so the chrome PNG's baked-in
+          bottom-left settings gear icon doesn't fall inside the 24px
+          rounded-corner clip — the wrapper's white background fills
+          the 6px breathing room around the chrome. The PNG's inner
+          pane is transparent; the white surface above paints that
+          area. */}
+      <div
+        className="absolute pointer-events-none"
+        style={{ inset: 6, zIndex: 5 }}
+      >
+        <Image
+          src="/business/DataManagerFrame.png"
+          alt="Columbus Data Manager"
+          fill
+          sizes="(max-width: 1180px) 100vw, 1180px"
+          className="object-cover object-center"
+          priority
+        />
+      </div>
 
       {/* White inner surface (z-10). Insets are the chrome's exact
           pixel boundaries normalised: left=215/5184, top=206/3003. The

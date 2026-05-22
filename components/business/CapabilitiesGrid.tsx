@@ -62,7 +62,7 @@ export default function CapabilitiesGrid() {
         <div
           className="mt-14 lg:mt-20"
           style={{
-            backgroundColor: "var(--ent-bg-card)",
+            backgroundColor: "#FAFAFA",
             border: "1px solid var(--ent-border-dark-grid)",
             borderRadius: "var(--ent-radius-2xl)",
             paddingTop: "var(--ent-space-12)",

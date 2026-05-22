@@ -311,22 +311,33 @@ export default function DashboardMockup({ industryId }: DashboardMockupProps = {
       style={{
         aspectRatio: "5184 / 2976",
         maxWidth: 1180,
-        borderRadius: "var(--ent-radius-2xl, 20px)",
+        /* 24px rounded corners matching the other demos in the
+           ComparisonSection (MapChatPlatform / DataManagerMockup /
+           AgenticResearchMockup). The chrome PNG runs flush to the
+           rounded edges — the white-frame inset that used to live
+           here was creating a visible polaroid-style border around
+           the demo and was removed per the design pass. The
+           rounded clip slightly trims the baked-in burger / gear
+           icons at the corners — accepted tradeoff for a cleaner
+           edge that matches the rest of the family. */
+        borderRadius: "var(--ent-radius-2xl)",
         overflow: "hidden",
-        boxShadow:
-          "0 1px 2px rgba(0,0,0,0.10), 0 6px 14px rgba(0,0,0,0.10), 0 28px 56px rgba(0,0,0,0.22), 0 56px 96px rgba(0,0,0,0.18)",
         containerType: "inline-size",
       }}
     >
-      <Image
-        src="/business/DashboardFrame.png"
-        alt="Columbus Dashboard"
-        fill
-        sizes="(max-width: 1180px) 100vw, 1180px"
-        className="object-cover object-center pointer-events-none"
-        style={{ zIndex: 5 }}
-        priority
-      />
+      <div
+        className="absolute pointer-events-none"
+        style={{ inset: 0, zIndex: 5 }}
+      >
+        <Image
+          src="/business/DashboardFrame.png"
+          alt="Columbus Dashboard"
+          fill
+          sizes="(max-width: 1180px) 100vw, 1180px"
+          className="object-cover object-center"
+          priority
+        />
+      </div>
 
       <div
         className="absolute"

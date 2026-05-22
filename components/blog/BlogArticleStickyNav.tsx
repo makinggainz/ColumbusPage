@@ -70,20 +70,26 @@ export function BlogArticleStickyNav({ sections }: Props) {
         aria-label={minimized ? "Show table of contents" : "Minimize table of contents"}
         aria-expanded={!minimized}
       >
+        {/* PanelLeftClose / PanelLeftOpen — a rounded sidebar rectangle
+            with a vertical divider near the left and an inset chevron
+            pointing the direction the panel will move. Matches the
+            collapse/expand glyph used in chat-app sidebars. */}
         <svg
-          viewBox="0 0 16 16"
+          viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"
-          strokeWidth="1.8"
+          strokeWidth="2"
           strokeLinecap="round"
           strokeLinejoin="round"
           aria-hidden
           className={styles.toggleBtnIcon}
         >
+          <rect width="18" height="18" x="3" y="3" rx="2" />
+          <path d="M9 3v18" />
           {minimized ? (
-            <path d="M6 4l4 4-4 4" />
+            <path d="m14 9 3 3-3 3" />
           ) : (
-            <path d="M10 4l-4 4 4 4" />
+            <path d="m16 15-3-3 3-3" />
           )}
         </svg>
       </button>

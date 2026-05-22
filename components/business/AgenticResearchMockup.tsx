@@ -303,22 +303,32 @@ export default function AgenticResearchMockup({ industryId }: AgenticResearchMoc
       style={{
         aspectRatio: "5190 / 2993",
         maxWidth: 1180,
-        borderRadius: "var(--ent-radius-2xl, 20px)",
+        /* 24px rounded corners matching MapChatPlatform /
+           DataManagerMockup. The chrome PNG runs flush to the
+           rounded edges (the 6px white-frame inset that used to
+           live here was creating a visible polaroid-style border
+           around the demo — removed per the design pass). The
+           rounded clip slightly trims the baked-in bottom-left
+           settings gear icon — accepted tradeoff for a cleaner
+           edge that matches the other demos in the family. */
+        borderRadius: "var(--ent-radius-2xl)",
         overflow: "hidden",
-        boxShadow:
-          "0 1px 2px rgba(0,0,0,0.10), 0 6px 14px rgba(0,0,0,0.10), 0 28px 56px rgba(0,0,0,0.22), 0 56px 96px rgba(0,0,0,0.18)",
         containerType: "inline-size",
       }}
     >
-      <Image
-        src="/business/ResearchFrame.png"
-        alt="Columbus Agentic Research"
-        fill
-        sizes="(max-width: 1180px) 100vw, 1180px"
-        className="object-cover object-center pointer-events-none"
-        style={{ zIndex: 5 }}
-        priority
-      />
+      <div
+        className="absolute pointer-events-none"
+        style={{ inset: 0, zIndex: 5 }}
+      >
+        <Image
+          src="/business/ResearchFrame.png"
+          alt="Columbus Agentic Research"
+          fill
+          sizes="(max-width: 1180px) 100vw, 1180px"
+          className="object-cover object-center"
+          priority
+        />
+      </div>
 
       {/* Breadcrumb cover — opaque white div over the project-title
           portion of the chrome's top bar, with custom industry text
@@ -451,12 +461,11 @@ export default function AgenticResearchMockup({ industryId }: AgenticResearchMoc
         style={{
           left: "4.32%",
           top: "7.02%",
-          /* Chrome rail ends at y=2976 of the 2993-tall source
-             (99.43% from top). Without this offset the inner pane
-             extends ~17px past the rail's bottom edge and shows as
-             an awkward white lip in the bottom-left corner. */
           right: 0,
-          bottom: "0.57%",
+          /* Inner pane extends all the way to the chrome's bottom so
+             the AI suggestion banner inside the right column has room
+             to breathe and doesn't read as prematurely cut off. */
+          bottom: 0,
           backgroundColor: "#FFFFFF",
           overflow: "hidden",
           zIndex: 10,

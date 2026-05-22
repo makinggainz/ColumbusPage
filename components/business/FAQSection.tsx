@@ -83,7 +83,22 @@ export default function FAQSection() {
             return (
               <div
                 key={item.q}
-                className="border border-gridline rounded-[7px] bg-white overflow-hidden"
+                /* Same "default filled, selected unfilled" pattern
+                   used in IndustrySelector and ComparisonSection:
+                   closed cards take the #FAFAFA muted-gray surface,
+                   the open (selected) card paints white. Closed
+                   cards also fade their text via opacity:0.4 —
+                   same treatment as the unselected feature rows in
+                   ComparisonSection — so the open card visibly
+                   dominates. Corner radius is the --ent-radius-2xl
+                   token used by every other major card surface on
+                   this page. */
+                className="border border-gridline overflow-hidden transition-[background-color,opacity] duration-200"
+                style={{
+                  backgroundColor: open ? "#FFFFFF" : "#FAFAFA",
+                  borderRadius: "var(--ent-radius-2xl)",
+                  opacity: open ? 1 : 0.4,
+                }}
               >
                 <h3 className="m-0">
                   <button

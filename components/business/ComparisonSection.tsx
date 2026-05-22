@@ -80,17 +80,61 @@ function ActiveVisual({ active }: { active: number }) {
   }
 }
 
-/* The four left-card slots. Layout per the user's design pass:
-   numbered list (1, 2, 3, 4 — comma after each digit) with a
-   short tagline below each title. Icons / arrows / expand-on-active
-   descriptions from the previous design are all gone. Taglines lean
-   into an expedition/captain metaphor that pairs with the new
-   underwater env-bg-2 background on the right host. */
+/* ── Feature glyphs — mirror the icon rail painted into the
+   ConversationalMapChat / *Frame chrome PNGs (the live app's left
+   sidebar). Each feature on the left card carries the same glyph
+   the corresponding tab uses in the demo on the right, so the
+   left list reads as a key to the icon rail.
+     • Map Chat       → SearchBubbleIco (search-bubble glyph)
+     • Reports        → PenSquareIco    (pencil-in-square)
+     • Data Catalogue → DbIco           (stacked-cylinder database)
+     • Dashboard      → GridIco         (2×2 rounded squares) ── */
+type IcoProps = { size: number; color: string };
+function GridIco({ size, color }: IcoProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="3" y="3" width="7" height="7" rx="1.5" />
+      <rect x="14" y="3" width="7" height="7" rx="1.5" />
+      <rect x="3" y="14" width="7" height="7" rx="1.5" />
+      <rect x="14" y="14" width="7" height="7" rx="1.5" />
+    </svg>
+  );
+}
+function SearchBubbleIco({ size, color }: IcoProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="11" cy="11" r="7" />
+      <path d="m20 20-3.5-3.5" />
+    </svg>
+  );
+}
+function PenSquareIco({ size, color }: IcoProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+      <path d="M18.375 2.625a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4Z" />
+    </svg>
+  );
+}
+function DbIco({ size, color }: IcoProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <ellipse cx="12" cy="5" rx="8" ry="3" />
+      <path d="M4 5v6c0 1.66 3.58 3 8 3s8-1.34 8-3V5" />
+      <path d="M4 11v6c0 1.66 3.58 3 8 3s8-1.34 8-3v-6" />
+    </svg>
+  );
+}
+
+/* The four left-card slots. Each carries an `Icon` matching the
+   right-side app's icon rail so the left list reads as a labeled
+   key for the demo on the right. The numeric prefix that used to
+   live here is gone — icons replace it. */
 const FEATURES = [
-  { title: "Map Chat", subtitle: "Chart your own expedition" },
-  { title: "Reports", subtitle: "set our fleet to discover" },
-  { title: "Data Catalogue", subtitle: "Browse everything we've discovered" },
-  { title: "Dashboard", subtitle: "Your captain's view" },
+  { title: "Map Chat", subtitle: "Chart your own expedition", Icon: SearchBubbleIco },
+  { title: "Reports", subtitle: "set our fleet to discover", Icon: PenSquareIco },
+  { title: "Data Catalogue", subtitle: "Browse everything we've discovered", Icon: DbIco },
+  { title: "Dashboard", subtitle: "Your captain's view", Icon: GridIco },
 ] as const;
 
 export default function ComparisonSection() {
@@ -138,7 +182,7 @@ export default function ComparisonSection() {
     >
       <style>{CMP_CSS}</style>
       <div
-        className="ent-content-bounds px-4 md:px-6 grid grid-cols-1 lg:grid-cols-[380px_1fr] gap-10 lg:gap-0 lg:items-stretch"
+        className="ent-content-bounds grid grid-cols-1 lg:grid-cols-[380px_1fr] gap-10 lg:gap-0 lg:items-stretch"
         style={{
           opacity: entered ? 1 : 0,
           transform: entered ? "translateY(0)" : "translateY(16px)",
@@ -160,11 +204,13 @@ export default function ComparisonSection() {
           className="flex flex-col list-none m-0 p-0 lg:h-full overflow-hidden rounded-3xl lg:rounded-r-none border border-(--ent-border-card)"
           style={{
             /* Inactive cells take this surface as their fill — same
-               #F7F7F7 the SuperFeatureSection panels below use. The
-               active cell paints white on top of this (see <li>
-               styles), so the selection feels like a "lifted" card
-               rising above the muted backdrop. */
-            background: "#F7F7F7",
+               #FAFAFA the SuperFeatureSection panels and the
+               ProblemCards pain-point cards use. The active cell's
+               own horizontal fill bar (see <li> styles) paints white
+               from left to right on top of this so the selection
+               feels like a "lifted" card rising above the muted
+               backdrop. */
+            background: "#FAFAFA",
           }}
         >
           {FEATURES.map((f, i) => {
@@ -174,23 +220,34 @@ export default function ComparisonSection() {
               <li
                 key={f.title}
                 className={[
-                  "relative lg:flex-1 lg:flex lg:flex-col transition-[background-color,opacity] duration-200",
-                  /* Active cell paints WHITE on top of the ul's
-                     #F7F7F7 surface so it reads as a lifted card.
-                     Inactive cells leave the ul bg showing through
-                     (so they sit at #F7F7F7) and fade to 0.4 opacity
-                     so the active row is unambiguously the
-                     selected one. */
-                  isActive
-                    ? "bg-white opacity-100"
-                    : "bg-transparent opacity-40",
+                  "relative lg:flex-1 lg:flex lg:flex-col transition-opacity duration-200",
+                  isActive ? "opacity-100" : "opacity-40",
                 ].join(" ")}
               >
+                {/* Horizontal fill bar — paints white over the cell's
+                    full area, scaled from the LEFT edge. Active: scaled
+                    to 1 → fully filled. Inactive: scaled to 0 → fully
+                    collapsed to the left edge (invisible) so the ul's
+                    #FAFAFA shows through. Transitions on transform run
+                    on the GPU for a smooth left-to-right wipe each
+                    time the active slot changes. z-index sits behind
+                    the cell's content (which has z-10 below). */}
+                <span
+                  aria-hidden
+                  className="absolute inset-0 transition-transform duration-500"
+                  style={{
+                    backgroundColor: "#FFFFFF",
+                    transform: isActive ? "scaleX(1)" : "scaleX(0)",
+                    transformOrigin: "left center",
+                    transitionTimingFunction: "cubic-bezier(0.4, 0, 0.2, 1)",
+                    zIndex: 0,
+                  }}
+                />
                 <button
                   type="button"
                   onClick={() => select(i)}
                   aria-pressed={isActive}
-                  className="w-full text-left cursor-pointer px-6 md:px-10 py-7 md:py-8"
+                  className="relative z-10 w-full text-left cursor-pointer px-6 md:px-10 py-7 md:py-8"
                 >
                   {/* Two-column row: numeric prefix on the left, title +
                       tagline stacked on the right. items-start aligns the
@@ -198,15 +255,21 @@ export default function ComparisonSection() {
                       enough at this size). The tagline always shows —
                       there's no expand-on-active animation anymore. */}
                   <div className="flex items-start gap-5">
+                    {/* Feature icon — same glyph the demo on the
+                        right shows in its icon rail for the
+                        corresponding tab. Sized at 24px to align
+                        with the title's cap-height; aria-hidden
+                        since the title carries the label. */}
                     <span
-                      className="text-[21px] md:text-[22px] font-semibold leading-[1.2] shrink-0"
-                      style={{ color: "var(--ent-text-primary)", letterSpacing: "-0.01em" }}
+                      aria-hidden
+                      className="shrink-0 inline-flex items-center justify-center"
+                      style={{ width: 24, height: 24, color: "#0B1B2B" }}
                     >
-                      {i + 1},
+                      <f.Icon size={24} color="#0B1B2B" />
                     </span>
                     <div className="flex-1 min-w-0 flex flex-col gap-1.5">
                       <span
-                        className="text-[21px] md:text-[22px] font-semibold leading-[1.2]"
+                        className="text-[20px] md:text-[22px] font-semibold leading-[1.2]"
                         style={{ color: "var(--ent-text-primary)", letterSpacing: "-0.01em" }}
                       >
                         {f.title}
@@ -290,7 +353,7 @@ export default function ComparisonSection() {
               className="cmp-host-visual absolute"
               style={{
                 top: 58,
-                left: 58,
+                left: 88,
                 width: 1180,
                 display: active === i ? "block" : "none",
               }}

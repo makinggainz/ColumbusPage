@@ -81,22 +81,33 @@ export default function SmartLayerRow({
         style={{
           aspectRatio: "5190 / 2993",
           maxWidth: 1180,
-          borderRadius: "var(--ent-radius-2xl, 20px)",
+          borderRadius: "var(--ent-radius-2xl)",
+          border: "1px solid var(--ent-border-card)",
+          /* White wrapper background blends with the chrome image's
+             white edges, so the 6px chrome inset below reads as
+             seamless across the 24px rounded-corner negative space. */
+          backgroundColor: "#FFFFFF",
           overflow: "hidden",
-          boxShadow:
-            "0 1px 2px rgba(0,0,0,0.10), 0 6px 14px rgba(0,0,0,0.10), 0 28px 56px rgba(0,0,0,0.22), 0 56px 96px rgba(0,0,0,0.18)",
           containerType: "inline-size",
         }}
       >
-        <Image
-          src="/business/ResearchFrame.png"
-          alt=""
-          fill
-          sizes="(max-width: 1180px) 100vw, 1180px"
-          className="object-cover object-center pointer-events-none"
-          style={{ zIndex: 5 }}
-          priority
-        />
+        {/* Chrome image inset 6px on all sides so its baked-in
+            bottom-left settings gear icon doesn't fall inside the
+            24px rounded-corner clip — the wrapper's white background
+            fills the 6px breathing room around the chrome. */}
+        <div
+          className="absolute pointer-events-none"
+          style={{ inset: 6, zIndex: 5 }}
+        >
+          <Image
+            src="/business/ResearchFrame.png"
+            alt=""
+            fill
+            sizes="(max-width: 1180px) 100vw, 1180px"
+            className="object-cover object-center"
+            priority
+          />
+        </div>
 
         {/* Breadcrumb cover — replaces the chrome's baked "Kansans
             Project 435..." text with smart-layer breadcrumb. Spans the

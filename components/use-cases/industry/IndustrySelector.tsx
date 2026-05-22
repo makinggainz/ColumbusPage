@@ -220,10 +220,15 @@ function IconGrid({
              border width / color / radius. */
           border: "1px solid var(--ent-border-card)",
           overflow: "hidden",
-          /* Subtle off-white card fill (--ent-bg-card). Gives the grid the
-             same soft tint as other content cards on the page rather than
-             reading as a transparent void. */
-          background: "#FDFDFD",
+          /* Container fill #FAFAFA — matches the ProblemCards pain-point
+             cards, the ComparisonSection feature stack <ul>, and the
+             SuperFeatureSection panels, so this grid joins the same
+             muted-gray family. Inactive cells leave this surface
+             showing through; the active cell paints white on top so
+             the selected industry reads as a "lifted" empty card,
+             inverting the previous default-empty / selected-shaded
+             pattern. */
+          background: "#FAFAFA",
         }}
       >
         {order.map((id) => {
@@ -247,23 +252,25 @@ function IconGrid({
               className={[
                 "group relative flex items-center gap-5",
                 "px-6 md:px-8 py-8 md:py-10",
-                "text-left cursor-pointer transition-colors duration-200",
+                "text-left cursor-pointer transition-[background-color,opacity] duration-200",
                 "border-r border-b border-gridline",
                 "max-md:border-r-0",
                 "max-md:last:border-b-0",
                 "md:nth-[3n]:border-r-0",
                 "md:nth-[n+4]:border-b-0",
-                /* Selection signal is a low-opacity neutral-black wash —
-                   reads as a clean light gray with zero hue, so it can
-                   never trend toward purple/blue under any colour-
-                   management setup. Idle ink (#0B1B2B) stays on text +
-                   icon so the active state reads as "selected" without
-                   an in-your-face color shift. */
+                /* Inverted selection: active = white (the "lifted"
+                   unfilled card), inactive = transparent so the
+                   container's #FAFAFA surface shows through. Hover
+                   on an inactive cell previews the selected state
+                   with a partial white wash. Inactive cells also
+                   fade their text via opacity:0.4 — same treatment
+                   the ComparisonSection feature stack and FAQ cards
+                   use for unselected items. */
                 isActive
-                  ? "bg-[rgba(0,0,0,0.05)]"
-                  : "hover:bg-[rgba(0,0,0,0.025)]",
+                  ? "bg-white"
+                  : "bg-transparent hover:bg-white/50",
               ].join(" ")}
-              style={{ minHeight: 130 }}
+              style={{ minHeight: 130, opacity: isActive ? 1 : 0.4 }}
             >
               <span
                 aria-hidden

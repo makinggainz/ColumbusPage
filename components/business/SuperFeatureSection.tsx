@@ -148,7 +148,7 @@ export default function SuperFeatureSection({
       <div
         className="ent-content-bounds mt-10 lg:mt-14"
         style={{
-          backgroundColor: panel ? "#F7F7F7" : "transparent",
+          backgroundColor: panel ? "#FAFAFA" : "transparent",
           /* Shared panel chrome — 1px --ent-border-card hairline + 24px
              corner — matches the CapabilitiesGrid, IndustrySelector, and
              ComparisonSection panels so every major card on the business
