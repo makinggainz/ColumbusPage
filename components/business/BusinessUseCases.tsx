@@ -440,13 +440,13 @@ const RESIDENTIAL_COPY: IndustryCopy = {
   ),
   cards: {
     patterns: {
-      heading: "4 patterns detected",
+      heading: "6 patterns detected",
       prompt:
-        "rank the possibility of solar roof panel installation in this neighborhood",
-      area: "Across the Madrid metro area · Q2 2026",
+        "Rank the possibility of solar roof panel installation in this neighborhood",
+      area: "Across Chevy Chase · Q2 2026",
       patterns: [
-        { n: 1, title: "Single-Entity Holdings Near New Metro", properties: "412 parcels", roi: "Avg ROI: 26%" },
-        { n: 2, title: "Undeveloped Lots Below €800/m²", properties: "189 parcels", roi: "Avg ROI: 22%" },
+        { n: 1, title: "Single-Entity Holdings Near Red Line", properties: "412 parcels", roi: "Avg ROI: 26%" },
+        { n: 2, title: "Tear-Down Opportunities Below $250/sqft", properties: "189 parcels", roi: "Avg ROI: 22%" },
         { n: 3, title: "10+ Year Holds Ripe For Rezoning", properties: "276 parcels", roi: "Avg ROI: 19%" },
         { n: 4, title: "Single-Family Hot Zones", properties: "340 areas", roi: "Avg ROI: 17%" },
       ],
@@ -456,14 +456,14 @@ const RESIDENTIAL_COPY: IndustryCopy = {
     },
     forecast: {
       questionRecap:
-        "Here are the Madrid neighborhoods forecasted to see the highest selling prices for single-family homes in the next 1–2 years",
+        "Here are the Chevy Chase area neighborhoods forecasted to see the highest selling prices for single-family homes in the next 1–2 years",
       panelTitle: "Top 4 Neighborhoods by Forecasted Sale Price Growth",
       panelSubtitle: "Next 24 Months",
       items: [
-        { rank: 1, label: "Chamberí", delta: "+9.4%" },
-        { rank: 2, label: "Salamanca", delta: "+8.1%" },
-        { rank: 3, label: "Alcobendas", delta: "+7.2%" },
-        { rank: 4, label: "Pozuelo", delta: "+6.5%" },
+        { rank: 1, label: "Friendship Heights", delta: "+9.4%" },
+        { rank: 2, label: "Bethesda", delta: "+8.1%" },
+        { rank: 3, label: "Cleveland Park", delta: "+7.2%" },
+        { rank: 4, label: "Spring Valley", delta: "+6.5%" },
       ],
       /* Green ramp (dark → pale) — matches the residential forecast
          map's green-vegetation accent palette and reads as a heat
@@ -473,11 +473,11 @@ const RESIDENTIAL_COPY: IndustryCopy = {
          lighter than ranks 1 and 2. */
       badgeColors: ["#5AA851", "#7FC75E", "#9FE181", "#C7EBA8"],
       takeaway:
-        "Single-family demand in Madrid is concentrating in inner-ring neighborhoods with new transit, with Alcobendas leading the suburban set.",
+        "Single-family demand in the Chevy Chase area is concentrating in transit-served pockets, with Friendship Heights leading the inner ring.",
     },
     reasoning: {
       prompt:
-        "Should I acquire this 12,000 m² parcel in Alcobendas for a 60-unit residential project?",
+        "Should I acquire this 80,000 sqft parcel in Bethesda for a 60-unit residential project?",
       items: [
         { label: "Current zoning vs. likely upcoming municipal plan revisions", body: "" },
         { label: "Absorption rate", body: "of comparable units in 5km radius" },
@@ -503,41 +503,41 @@ const RESIDENTIAL_COPY: IndustryCopy = {
   rows: {
     smartLayer: {
       layerName: "Façade Renovation Status",
-      layerSubtitle: "Villanueva del Pardillo · every residential structure",
+      layerSubtitle: "Chevy Chase · every residential structure",
       layerDescription:
         "AI-generated layer classifying every residential building as Recently Renovated, Original Condition / Well-Maintained, or Deteriorated / Renovation Candidate.",
       features: [
         { title: "Inferred from satellite + street-level imagery", description: "Façade condition graded across the full municipality, even where survey data is missing." },
-        { title: "Cross-checked against cadastral construction dates", description: "Triple-checked for completeness and consistency before every release." },
+        { title: "Cross-checked against tax-assessor construction dates", description: "Triple-checked for completeness and consistency before every release." },
         { title: "Building-level scoring", description: "Fresh data, continuously monitored and maintained." },
       ],
-      mapAlt: "Villanueva del Pardillo façade condition heatmap",
+      mapAlt: "Chevy Chase façade condition heatmap",
       promptText:
-        "Generate a smart layer estimating building age, façade condition, and renovation status for every residential structure in the municipality of Villanueva del Pardillo. Classify each building as: Recently Renovated (last 10 years), Original Condition / Well-Maintained, or Deteriorated / Renovation Candidate.",
+        "Generate a smart layer estimating building age, façade condition, and renovation status for every residential structure in Chevy Chase. Classify each building as: Recently Renovated (last 10 years), Original Condition / Well-Maintained, or Deteriorated / Renovation Candidate.",
     },
     surveyEarth: {
       reasoningBullets: [
         "Considering proximity to public and private schools rated 7+/10",
-        "Filtering for density of parks over 2,000 m² within 500m walking distance",
-        "Filtering for presence of pediatric clinics and family healthcare within 1km",
+        "Filtering for density of parks over 0.5 acres within 500 ft walking distance",
+        "Filtering for presence of pediatric clinics and family healthcare within 1 mi",
         "Filtering for traffic volume and street-safety scores on residential streets",
         "Filtering density of grocery stores and pharmacies within walking distance",
       ],
       promptText:
-        "Create a smart layer showing 'family-friendliness density' — combining proximity to schools rated 7+/10, parks over 2,000 m², pediatric clinics, low-traffic streets, and grocery stores within 500m walking distance.",
-      mapAlt: "Family-friendliness density choropleth for residential Madrid",
+        "Create a smart layer showing 'family-friendliness density' — combining proximity to schools rated 7+/10, parks over 0.5 acres, pediatric clinics, low-traffic streets, and grocery stores within 500 ft walking distance.",
+      mapAlt: "Family-friendliness density choropleth for residential Chevy Chase",
     },
     betterPrices: {
-      columbusTitle: "Spain Residential Market Intelligence — Enriched Parcel Layer",
-      columbusPrice: "€2,400 / year",
-      columbusMapAlt: "Spain residential parcel layer preview",
+      columbusTitle: "US Residential Market Intelligence — Enriched Parcel Layer",
+      columbusPrice: "$2,600 / year",
+      columbusMapAlt: "US residential parcel layer preview",
       columbusFeatures: [
-        { title: "~8.4M cadastral parcels", description: "Catastro coverage enriched with transaction history, AVM estimates, demographic layers, and zoning — query-ready at municipality and postal-code granularity." },
-        { title: "AVM + market comps included", description: "Estimated value, price per m², absorption rate, and rental yield resolved to the postal-code level." },
-        { title: "Updated monthly", description: "Transaction and listing signals refreshed monthly; cadastral geometry refreshed on the official Catastro release cycle." },
+        { title: "~155M tax-assessor parcels", description: "Nationwide US parcel coverage enriched with transaction history, AVM estimates, demographic layers, and zoning — query-ready at county and ZIP granularity." },
+        { title: "AVM + market comps included", description: "Estimated value, price per sqft, absorption rate, and rental yield resolved to the ZIP-code level." },
+        { title: "Updated monthly", description: "Transaction and listing signals refreshed monthly; parcel geometry refreshed on the county assessor release cycle." },
       ],
       competitorTitle: "Per-asset valuation-platform subscription",
-      competitorPrice: "From €49 / month · enterprise tiers quote-based",
+      competitorPrice: "From $54 / month · enterprise tiers quote-based",
       competitorMapAlt: "Per-asset valuation platform preview",
       competitorFeatures: [
         { title: "Valuation-centric", description: "Optimized for individual asset appraisal; no parcel-level geospatial enrichment or zoning layer." },
@@ -558,27 +558,27 @@ const RESIDENTIAL_COPY: IndustryCopy = {
     },
     dashboard: {
       rows: [
-        { title: "Madrid metro parcels over 5,000 m² zoned for residential", body: "In this chat we filtered undeveloped parcels within 1km of a metro station and owned by a single entity for 10+ years.", age: "20 hours ago" },
-        { title: "Alcobendas — 12,000 m² parcel acquisition due diligence", body: "In this chat we evaluated a 60-unit residential project against zoning, absorption rate, and competitor pipeline.", age: "1 day ago" },
-        { title: "Madrid neighborhoods forecasted for highest single-family price growth", body: "In this chat we ranked districts by demographic trajectory, lot-price recency, and planned infrastructure.", age: "2 days ago" },
-        { title: "Family-friendliness density layer across central Madrid", body: "In this chat we built a custom smart layer combining schools, parks, pediatric clinics, and grocery access.", age: "3 days ago" },
-        { title: "Valencia province mid-rise residential site shortlist", body: "In this chat Columbus ranked 15 development sites against your 8,000–20,000 m² envelope and 30-min city-center radius.", age: "4 days ago" },
+        { title: "Chevy Chase parcels over 50,000 sqft zoned for residential", body: "In this chat we filtered undeveloped parcels within 1 mi of a Red Line station and owned by a single entity for 10+ years.", age: "20 hours ago" },
+        { title: "Bethesda — 80,000 sqft parcel acquisition due diligence", body: "In this chat we evaluated a 60-unit residential project against zoning, absorption rate, and competitor pipeline.", age: "1 day ago" },
+        { title: "Chevy Chase area neighborhoods forecasted for highest single-family price growth", body: "In this chat we ranked districts by demographic trajectory, lot-price recency, and planned infrastructure.", age: "2 days ago" },
+        { title: "Family-friendliness density layer across the Chevy Chase area", body: "In this chat we built a custom smart layer combining schools, parks, pediatric clinics, and grocery access.", age: "3 days ago" },
+        { title: "DC-metro mid-rise residential site shortlist", body: "In this chat Columbus ranked 15 development sites against your 80,000–215,000 sqft envelope and 30-min commute radius.", age: "4 days ago" },
         { title: "East Austin maximum buildable envelope audit", body: "In this chat we audited the legal cap on residential square footage under SF-3 zoning + HOME Initiative Phase 2 amendments.", age: "5 days ago" },
       ],
     },
   },
   mapChat: {
-    breadcrumb: "Madrid · residential parcel search",
-    cityLabel: "Madrid",
+    breadcrumb: "Chevy Chase · residential parcel search",
+    cityLabel: "Chevy Chase",
     pois: [
-      { top: "28%", left: "55%", label: "Salamanca", tone: "accent" },
-      { top: "78%", left: "46%", label: "Chamberí", tone: "dark" },
+      { top: "28%", left: "55%", label: "Friendship Heights", tone: "accent" },
+      { top: "78%", left: "46%", label: "Bethesda", tone: "dark" },
     ],
     filterLabel: "Income data",
-    filterHelp: "Filter by household income (€ amounts)",
+    filterHelp: "Filter by household income ($ amounts)",
     dataCardTitle: "Households Median Income",
-    dataCardMin: "€18,400",
-    dataCardMax: "€96,200",
+    dataCardMin: "$52,000",
+    dataCardMax: "$280,000",
     dataCardSecondary: "Single-Family Buyer Density",
     userQuery: "Show me which neighborhoods in Amsterdam have seen the largest rent increases over the past 5 years",
     responseIntro: "Here are the Amsterdam buurten with the steepest free-sector rent growth over the past five years",
@@ -642,7 +642,7 @@ const COMMERCIAL_COPY: IndustryCopy = {
   ),
   cards: {
     patterns: {
-      heading: "4 patterns detected",
+      heading: "5 patterns detected",
       prompt:
         "Find me patterns in current private equity CRE purchases across all of Manhattan over the last 18 months. What are they actually buying, and what does it tell me about where others think the market is going?",
       area: "Across Manhattan · trailing 18 months",
@@ -789,7 +789,7 @@ const URBAN_COPY: IndustryCopy = {
   ),
   cards: {
     patterns: {
-      heading: "4 patterns detected",
+      heading: "8 patterns detected",
       prompt:
         "Find hidden patterns linking pothole formation across the 7th arrondissement",
       area: "Across the 7th arrondissement · trailing 36 months",
@@ -998,7 +998,7 @@ const ENVIRONMENTAL_COPY: IndustryCopy = {
   ),
   cards: {
     patterns: {
-      heading: "4 patterns detected",
+      heading: "3 patterns detected",
       prompt:
         "Find patterns in sightings of sperm whale species across the North Atlantic.",
       area: "Across the North Atlantic · trailing 20 years",
@@ -1205,7 +1205,7 @@ const ACADEMIC_COPY: IndustryCopy = {
   ),
   cards: {
     patterns: {
-      heading: "4 patterns detected",
+      heading: "7 patterns detected",
       prompt:
         "Find hidden patterns between vending machine density across Tokyo wards and anything else on the map — population, transit, building types, whatever stands out",
       area: "Across Tokyo's 23 special wards",
