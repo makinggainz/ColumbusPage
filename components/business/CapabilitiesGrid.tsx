@@ -63,7 +63,7 @@ export default function CapabilitiesGrid() {
           className="mt-14 lg:mt-20"
           style={{
             backgroundColor: "var(--ent-bg-card)",
-            border: "1px solid var(--ent-border-card)",
+            border: "1px solid var(--ent-border-dark-grid)",
             borderRadius: "var(--ent-radius-2xl)",
             paddingTop: "var(--ent-space-12)",
             paddingBottom: "var(--ent-space-12)",

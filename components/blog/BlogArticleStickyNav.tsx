@@ -19,6 +19,7 @@ export function BlogArticleStickyNav({ sections }: Props) {
   const [logoHovered, setLogoHovered] = useState(false);
   const [activeId, setActiveId] = useState<string>("");
   const [pastEnd, setPastEnd] = useState(false);
+  const [minimized, setMinimized] = useState(false);
 
   useEffect(() => {
     // Scope to the article's own footer, which lives inside <main>. A
@@ -54,7 +55,42 @@ export function BlogArticleStickyNav({ sections }: Props) {
   }, [sections]);
 
   return (
-    <nav className={`${styles.dock} ${pastEnd ? styles.dockHidden : ""}`} aria-label="Article navigation">
+    <nav
+      className={`${styles.dock} ${pastEnd ? styles.dockHidden : ""} ${minimized ? styles.dockMinimized : ""}`}
+      aria-label="Article navigation"
+    >
+      {/* Minimize/restore toggle — single button sitting in the top-right
+          of the panel. When minimized the panel shrinks to a small circle
+          centred on this button so clicking it (or the bubble itself)
+          re-expands the panel. */}
+      <button
+        type="button"
+        className={styles.toggleBtn}
+        onClick={() => setMinimized((m) => !m)}
+        aria-label={minimized ? "Show table of contents" : "Minimize table of contents"}
+        aria-expanded={!minimized}
+      >
+        <svg
+          viewBox="0 0 16 16"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.8"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          aria-hidden
+          className={styles.toggleBtnIcon}
+        >
+          {minimized ? (
+            <path d="M6 4l4 4-4 4" />
+          ) : (
+            <path d="M10 4l-4 4 4 4" />
+          )}
+        </svg>
+      </button>
+
+      {/* All content lives inside .dockContent so it can be faded out
+          atomically when the panel collapses. */}
+      <div className={styles.dockContent} aria-hidden={minimized || undefined}>
 
       {/* Logo */}
       <Link
@@ -90,22 +126,55 @@ export function BlogArticleStickyNav({ sections }: Props) {
         Back to Blog
       </Link>
 
-      {/* TOC — a vertical scroll-rail (Perplexity / Codecademy pattern):
-          a faint guide line down the left with the active section's
-          segment painted in the blog accent. */}
-      {sections.length > 0 && (
+      {/* TOC — a vertical stepper: each section is a circle indicator
+          on a continuous guide rail, with the section title to its right.
+          Sections above the current reading position read as completed
+          (filled accent circle + check), the current section is active
+          (filled accent + inner dot), and sections below are pending
+          (hollow circle). Visually mirrors the multi-step onboarding
+          pattern but rendered on the page's neutral panel palette. */}
+      {sections.length > 0 && (() => {
+        // Before the scroll-spy observer fires, treat the first section
+        // as active so the stepper isn't all-pending on initial paint.
+        const matchIndex = sections.findIndex((x) => x.id === activeId);
+        const activeIndex = matchIndex === -1 ? 0 : matchIndex;
+        return (
         <div className={styles.tocSection}>
           <span className={styles.tocHeading}>On this page</span>
           <ul className={styles.tocList}>
-            {sections.map((s) => {
-              const isActive = activeId === s.id;
+            {sections.map((s, i) => {
+              const status =
+                i < activeIndex
+                  ? "completed"
+                  : i === activeIndex
+                    ? "active"
+                    : "pending";
               return (
-                <li key={s.id}>
+                <li key={s.id} className={styles.tocStep}>
                   <a
                     href={`#${s.id}`}
-                    className={`${styles.tocItem} ${isActive ? styles.tocItemActive : ""}`}
-                    aria-current={isActive ? "location" : undefined}
+                    className={`${styles.tocItem} ${status === "active" ? styles.tocItemActive : ""} ${status === "completed" ? styles.tocItemCompleted : ""}`}
+                    aria-current={status === "active" ? "location" : undefined}
                   >
+                    <span className={styles.tocCircle} data-status={status}>
+                      {status === "completed" && (
+                        <svg
+                          className={styles.tocCheck}
+                          viewBox="0 0 10 10"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="1.8"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          aria-hidden
+                        >
+                          <path d="M2 5.2l2 2 4-4.4" />
+                        </svg>
+                      )}
+                      {status === "active" && (
+                        <span className={styles.tocActiveDot} aria-hidden />
+                      )}
+                    </span>
                     <span className={styles.tocItemLabel}>{s.label}</span>
                   </a>
                 </li>
@@ -113,8 +182,10 @@ export function BlogArticleStickyNav({ sections }: Props) {
             })}
           </ul>
         </div>
-      )}
+        );
+      })()}
 
+      </div>
     </nav>
   );
 }

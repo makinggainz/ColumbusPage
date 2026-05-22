@@ -3,8 +3,7 @@ import "./globals.css";
 
 import { LenisProvider } from "@/components/home/LenisContext";
 import { ScrollRestorer } from "@/components/layout/ScrollRestorer";
-import { PageFrame } from "@/components/layout/PageFrame";
-import { Footer } from "@/components/layout/Footer";
+import { RootShell } from "@/components/layout/RootShell";
 
 export const metadata: Metadata = {
   title: "Columbus",
@@ -41,18 +40,10 @@ export default function RootLayout({
       <body className="antialiased min-h-screen">
         <LenisProvider>
           <ScrollRestorer />
-          {/* Footer sits behind the PageFrame card (z-index 0, fixed at
-              viewport bottom via Footer's `reveal` prop). PageFrame is
-              z-index 1 with a bottom margin equal to the footer height,
-              so as the user scrolls past the page content the white card
-              slides up over the fixed footer — revealing it from below. */}
-          <Footer
-            reveal
-            theme="light"
-            bg="#FFFFFF"
-            bgImage="/footerbackgroundimg2.png"
-          />
-          <PageFrame>{children}</PageFrame>
+          {/* RootShell renders the standard PageFrame + reveal footer on
+              every route, but article pages (/blog/<slug>) opt out and
+              render full-bleed with no reveal footer. */}
+          <RootShell>{children}</RootShell>
         </LenisProvider>
       </body>
     </html>

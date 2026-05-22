@@ -41,68 +41,20 @@ const RESIDENTIAL_MAP_CHAT = {
    together. */
 const CYCLE_MS = 6000;
 
-/* Scoped keyframes + chrome-strip rule:
-   • cmpBarFill: the active row's progress-bar fill, end-of-animation drives auto-advance.
-   • cmpFade: cross-fade when the right-side demo visual swaps.
-   • .cmp-host-visual > *: kills the demo visual's OWN outer chrome
-     (rounded corners, drop shadow, max-width) so it sits flush inside
-     the right host card instead of looking like a floating product
-     screenshot. Each demo (MapChatPlatform / *Mockup) sets those on
-     its root via inline style; `!important` here beats inline. */
+/* Scoped CSS:
+   • cmpBarFill: invisible 6s timer whose animation end advances the
+     active slot. No visible progress bar on this layout.
+   • .cmp-host-visual > *: kills only the box-shadow on each demo's
+     outermost wrapper (MapChatPlatform / *Mockup all set a heavy
+     floating-card shadow via inline style). Per the user's pass on
+     this design, the demos shouldn't sit on a shadow — they should
+     read as if you're clicking through the live app rather than
+     swapping between framed product screenshots. Rounded corners
+     and the rest of each demo's chrome stay intact. */
 const CMP_CSS = `
 @keyframes cmpBarFill { from { width: 0%; } to { width: 100%; } }
-@keyframes cmpFade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
-.cmp-host-visual > * { border-radius: 0 !important; box-shadow: none !important; max-width: none !important; margin: 0 !important; }
+.cmp-host-visual > * { box-shadow: none !important; }
 `;
-
-/** Five-dot arrow used inside the site's CTA pills (see BusinessHero) —
-   reused here so the accordion's expand cue matches the CTA buttons. */
-function ArrowDots({ color }: { color: string }) {
-  return (
-    <svg width="10" height="14" viewBox="0 0 9 13" fill="none" aria-hidden>
-      <circle cx="7.22" cy="6.589" r="1.28" fill={color} />
-      <circle cx="4.658" cy="4.018" r="1.28" fill={color} />
-      <circle cx="2.099" cy="1.46" r="1.28" fill={color} />
-      <circle cx="4.658" cy="9.151" r="1.28" fill={color} />
-      <circle cx="2.099" cy="11.718" r="1.28" fill={color} />
-    </svg>
-  );
-}
-
-/* ── Feature glyphs — the original four-icon set used by the left
-   card before the real-visuals rewrite. Kept independent from the
-   <IconChip> icons in BusinessUseCases because the left card here is
-   an overview/index, not a duplicate of the section headers. ── */
-type IcoProps = { size: number; color: string };
-function GridIco({ size, color }: IcoProps) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-      <rect x="3" y="3" width="7" height="7" rx="1.5" /><rect x="14" y="3" width="7" height="7" rx="1.5" />
-      <rect x="3" y="14" width="7" height="7" rx="1.5" /><rect x="14" y="14" width="7" height="7" rx="1.5" />
-    </svg>
-  );
-}
-function SearchIco({ size, color }: IcoProps) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-      <circle cx="11" cy="11" r="7" /><path d="m20 20-4-4" />
-    </svg>
-  );
-}
-function PenIco({ size, color }: IcoProps) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z" />
-    </svg>
-  );
-}
-function DbIco({ size, color }: IcoProps) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-      <ellipse cx="12" cy="6" rx="8" ry="3" /><path d="M4 6v12c0 1.7 3.6 3 8 3s8-1.3 8-3V6M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3" />
-    </svg>
-  );
-}
 
 /* Renders the real SuperFeatureSection demoVisual that corresponds to
    the active left-card slot. Slot→visual mapping:
@@ -128,30 +80,17 @@ function ActiveVisual({ active }: { active: number }) {
   }
 }
 
-/* The original four left-card slots — labels untouched from the
-   pre-real-visuals version. The `Icon` is the chip glyph, the active
-   slot drives <ActiveVisual /> on the right. */
+/* The four left-card slots. Layout per the user's design pass:
+   numbered list (1, 2, 3, 4 — comma after each digit) with a
+   short tagline below each title. Icons / arrows / expand-on-active
+   descriptions from the previous design are all gone. Taglines lean
+   into an expedition/captain metaphor that pairs with the new
+   underwater env-bg-2 background on the right host. */
 const FEATURES = [
-  {
-    title: "Map Chat",
-    desc: "Ask questions in plain language and watch Columbus build the map — filter, query, and explore your data through conversation.",
-    Icon: SearchIco,
-  },
-  {
-    title: "Reports",
-    desc: "Turn any analysis into a polished, shareable report. Columbus drafts the narrative, charts, and sources so you don't have to.",
-    Icon: PenIco,
-  },
-  {
-    title: "Data Catalogue",
-    desc: "Browse thousands of ready-to-use datasets — parcels, zoning, demographics — and drop them straight onto your map.",
-    Icon: DbIco,
-  },
-  {
-    title: "Dashboard",
-    desc: "Keep every map, report, and dataset in one view. Track coverage and activity across your whole team at a glance.",
-    Icon: GridIco,
-  },
+  { title: "Map Chat", subtitle: "Chart your own expedition" },
+  { title: "Reports", subtitle: "set our fleet to discover" },
+  { title: "Data Catalogue", subtitle: "Browse everything we've discovered" },
+  { title: "Dashboard", subtitle: "Your captain's view" },
 ] as const;
 
 export default function ComparisonSection() {
@@ -220,97 +159,70 @@ export default function ComparisonSection() {
         <ul
           className="flex flex-col list-none m-0 p-0 lg:h-full overflow-hidden rounded-3xl lg:rounded-r-none border border-(--ent-border-card)"
           style={{
-            background: "#FDFDFD",
+            /* Inactive cells take this surface as their fill — same
+               #F7F7F7 the SuperFeatureSection panels below use. The
+               active cell paints white on top of this (see <li>
+               styles), so the selection feels like a "lifted" card
+               rising above the muted backdrop. */
+            background: "#F7F7F7",
           }}
         >
           {FEATURES.map((f, i) => {
             const isActive = i === active;
             const isLast = i === FEATURES.length - 1;
-            const Icon = f.Icon;
             return (
               <li
                 key={f.title}
                 className={[
                   "relative lg:flex-1 lg:flex lg:flex-col transition-[background-color,opacity] duration-200",
+                  /* Active cell paints WHITE on top of the ul's
+                     #F7F7F7 surface so it reads as a lifted card.
+                     Inactive cells leave the ul bg showing through
+                     (so they sit at #F7F7F7) and fade to 0.4 opacity
+                     so the active row is unambiguously the
+                     selected one. */
                   isActive
-                    ? "bg-[rgba(0,0,0,0.025)] opacity-100"
-                    : "hover:bg-[rgba(0,0,0,0.015)] opacity-40",
+                    ? "bg-white opacity-100"
+                    : "bg-transparent opacity-40",
                 ].join(" ")}
               >
                 <button
                   type="button"
                   onClick={() => select(i)}
-                  aria-expanded={isActive}
-                  className="w-full text-left cursor-pointer px-6 md:px-8"
+                  aria-pressed={isActive}
+                  className="w-full text-left cursor-pointer px-6 md:px-10 py-7 md:py-8"
                 >
-                  {/* header row */}
-                  <div className="flex items-center gap-4 py-5">
-                    {/* Icon chip — same dark-wash treatment as the
-                        SuperFeatureSection IconChip used over "Ask,
-                        Discover, Understand" (rgba(11,27,43,0.06) bg,
-                        #0B1B2B stroke), but with the design system's
-                        --ent-radius-card (7px) corner instead of a
-                        full circle so the rounding lines up with the
-                        rest of the page's card hierarchy. */}
+                  {/* Two-column row: numeric prefix on the left, title +
+                      tagline stacked on the right. items-start aligns the
+                      number with the title's first baseline (close
+                      enough at this size). The tagline always shows —
+                      there's no expand-on-active animation anymore. */}
+                  <div className="flex items-start gap-5">
                     <span
-                      aria-hidden
-                      className="inline-flex items-center justify-center shrink-0"
-                      style={{
-                        width: 40,
-                        height: 40,
-                        borderRadius: "var(--ent-radius-card)",
-                        background: "rgba(11,27,43,0.06)",
-                      }}
-                    >
-                      <Icon size={22} color="#0B1B2B" />
-                    </span>
-                    <span
-                      className="flex-1 text-[21px] md:text-[22px] font-semibold leading-[1.2]"
+                      className="text-[21px] md:text-[22px] font-semibold leading-[1.2] shrink-0"
                       style={{ color: "var(--ent-text-primary)", letterSpacing: "-0.01em" }}
                     >
-                      {f.title}
+                      {i + 1},
                     </span>
-                    {/* CTA-style five-dot arrow — rotates down when active */}
-                    <span
-                      className="shrink-0"
-                      style={{
-                        transform: isActive ? "rotate(90deg)" : "rotate(0deg)",
-                        transition: "transform 0.3s ease",
-                      }}
-                      aria-hidden
-                    >
-                      <ArrowDots color={isActive ? "var(--ent-text-primary)" : "var(--ent-text-secondary)"} />
-                    </span>
-                  </div>
-
-                  {/* Expanded body — description. Uses a FIXED expanded
-                      height instead of `maxHeight: 240`, so all four
-                      features render the same active-row height regardless
-                      of how their description wraps. Without this lock,
-                      different desc lengths gave each feature a different
-                      natural body height — the accordion column resized
-                      between cycles and the page below shifted with it. */}
-                  <div
-                    style={{
-                      height: isActive ? 130 : 0,
-                      opacity: isActive ? 1 : 0,
-                      overflow: "hidden",
-                      transition: "height 0.45s ease, opacity 0.35s ease",
-                    }}
-                  >
-                    <p
-                      className="pb-6 text-[15px] leading-[1.55]"
-                      style={{ color: "var(--ent-text-secondary)", letterSpacing: "-0.01em" }}
-                    >
-                      {f.desc}
-                    </p>
+                    <div className="flex-1 min-w-0 flex flex-col gap-1.5">
+                      <span
+                        className="text-[21px] md:text-[22px] font-semibold leading-[1.2]"
+                        style={{ color: "var(--ent-text-primary)", letterSpacing: "-0.01em" }}
+                      >
+                        {f.title}
+                      </span>
+                      <span
+                        className="text-[14px] md:text-[15px] leading-[1.4]"
+                        style={{ color: "var(--ent-text-secondary)", letterSpacing: "-0.005em" }}
+                      >
+                        {f.subtitle}
+                      </span>
+                    </div>
                   </div>
                 </button>
 
                 {/* Row separator — skipped on the last cell (the
-                    container's own border handles the bottom edge). The
-                    active row's bottom doubles as the progress track and
-                    its animation end drives the auto-advance. */}
+                    container's own border handles the bottom edge). */}
                 {!isLast && (
                   <span
                     className="absolute left-0 bottom-0 w-full"
@@ -318,18 +230,24 @@ export default function ComparisonSection() {
                     aria-hidden
                   />
                 )}
+                {/* Invisible auto-advance timer — animation end fires
+                    advance() so the active slot still cycles every
+                    CYCLE_MS even though the visible progress bar from
+                    the previous design is gone. */}
                 {isActive && (
                   <span
                     key={runId}
                     onAnimationEnd={advance}
-                    className="absolute left-0 bottom-0"
+                    aria-hidden
                     style={{
-                      height: 2,
-                      backgroundColor: "var(--ent-accent)",
+                      position: "absolute",
+                      width: 0,
+                      height: 0,
+                      opacity: 0,
+                      pointerEvents: "none",
                       animation: `cmpBarFill ${CYCLE_MS}ms linear`,
                       animationPlayState: paused ? "paused" : "running",
                     }}
-                    aria-hidden
                   />
                 )}
               </li>
@@ -337,29 +255,49 @@ export default function ComparisonSection() {
           })}
         </ul>
 
-        {/* ── Right: the host card. Outer corners (24px) match the left
-            card; at lg+ the left side goes square and the left border
-            drops, so the two cards share a single hairline seam and
-            read as one rounded unit. overflow:hidden clips the demo's
-            content to the host's rounded corners.
+        {/* ── Right: the host card. Outer corners (24px) match the
+            left card; at lg+ the left side goes square and the left
+            border drops, so the two cards share a single hairline
+            seam and read as one rounded unit. overflow:hidden clips
+            the demos to the host's rounded corners.
 
-            The active demo visual sits inside via the .cmp-host-visual
-            wrapper — its CSS rule strips the demo's OWN outer
-            rounded-corner / drop-shadow / max-width chrome so the demo
-            sits flush inside this host instead of floating with its
-            own chrome on top. `key={active}` on the wrapper gives a
-            fresh cmpFade remount each time the active slot switches. ── */}
+            Background is /Environmental/env-bg-1.png — the sky +
+            clouds + palm-tree hero photo from the user's design
+            reference. Host fixed at 630px tall.
+
+            ALL FOUR demos are pre-mounted inside the host (they all
+            paint to the same top-left/width slot, sized wider than
+            the host so the overflow clip reveals only the top-left
+            portion). Only the active slot is `display:block`; the
+            others are `display:none`. This makes the initial mount
+            load every demo's images up-front, so clicking through
+            the left feature list reads as flipping between live
+            screens of the same app rather than as cross-fading
+            between separate product screenshots. cmpFade is gone
+            entirely — the swap is instant. ── */}
         <div
-          className="w-full min-w-0 overflow-hidden rounded-3xl lg:rounded-l-none border border-(--ent-border-card) lg:border-l-0"
-          style={{ backgroundColor: "#FFFFFF" }}
+          className="relative w-full min-w-0 overflow-hidden rounded-3xl lg:rounded-l-none border border-(--ent-border-card) lg:border-l-0"
+          style={{
+            backgroundImage: "url('/Environmental/env-bg-1.png')",
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            height: 630,
+          }}
         >
-          <div
-            key={active}
-            className="cmp-host-visual w-full h-full"
-            style={{ animation: "cmpFade 0.4s ease" }}
-          >
-            <ActiveVisual active={active} />
-          </div>
+          {FEATURES.map((_, i) => (
+            <div
+              key={i}
+              className="cmp-host-visual absolute"
+              style={{
+                top: 58,
+                left: 58,
+                width: 1180,
+                display: active === i ? "block" : "none",
+              }}
+            >
+              <ActiveVisual active={i} />
+            </div>
+          ))}
         </div>
       </div>
     </section>

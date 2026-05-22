@@ -87,11 +87,13 @@ export default function ProblemCards() {
               style={{
                 width: 210,
                 height: 210,
-                // Subtle off-white fill (#FAFAFA) — same tint used in
-                // PromptShowcase / StickyScrollSection so the pain-point
-                // cards read as part of the same surface family while
-                // still lifting off the city line-art backdrop behind.
-                backgroundColor: "#FAFAFA",
+                // Surface fill #F7F7F7 — matches the SuperFeatureSection
+                // panel surface and the ComparisonSection inactive-cell /
+                // CapabilitiesGrid tile surfaces, so every muted-gray card
+                // on the business page reads as the same family. (Was
+                // #FAFAFA — three units brighter — which read very close
+                // but not identical when viewed next to those surfaces.)
+                backgroundColor: "#F7F7F7",
                 borderBottom: "1px solid var(--grid-line)",
                 borderRight: i < PAIN_POINTS.length - 1 ? "1px solid var(--grid-line)" : undefined,
                 fontSize: 15,
