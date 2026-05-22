@@ -441,9 +441,8 @@ const RESIDENTIAL_COPY: IndustryCopy = {
   cards: {
     patterns: {
       heading: "4 patterns detected",
-      /* No verbatim prompt for Pattern Detection in the residential
-         PDF — that section only shows the header copy with no chat
-         transcript. Omitting the prompt rather than inventing one. */
+      prompt:
+        "rank the possibility of solar roof panel installation in this neighborhood",
       area: "Across the Madrid metro area · Q2 2026",
       patterns: [
         { n: 1, title: "Single-Entity Holdings Near New Metro", properties: "412 parcels", roi: "Avg ROI: 26%" },
@@ -645,7 +644,7 @@ const COMMERCIAL_COPY: IndustryCopy = {
     patterns: {
       heading: "4 patterns detected",
       prompt:
-        "Find me patterns in current private equity CRE dataset purchases across all of Manhattan over the last 18 months. What are they actually buying, and what does it tell me about where others think the market is going?",
+        "Find me patterns in current private equity CRE purchases across all of Manhattan over the last 18 months. What are they actually buying, and what does it tell me about where others think the market is going?",
       area: "Across Manhattan · trailing 18 months",
       patterns: [
         { n: 1, title: "PE Funds Concentrating in Pre-War Office", properties: "187 transactions", roi: "Avg cap: 5.4%" },
