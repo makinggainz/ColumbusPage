@@ -441,8 +441,9 @@ const RESIDENTIAL_COPY: IndustryCopy = {
   cards: {
     patterns: {
       heading: "4 patterns detected",
-      prompt:
-        "Find patterns in single-family residential parcel acquisitions across the Madrid metro area in the past 18 months. What is the smart money buying and what does that tell me about where prices are headed?",
+      /* No verbatim prompt for Pattern Detection in the residential
+         PDF — that section only shows the header copy with no chat
+         transcript. Omitting the prompt rather than inventing one. */
       area: "Across the Madrid metro area · Q2 2026",
       patterns: [
         { n: 1, title: "Single-Entity Holdings Near New Metro", properties: "412 parcels", roi: "Avg ROI: 26%" },
@@ -644,7 +645,7 @@ const COMMERCIAL_COPY: IndustryCopy = {
     patterns: {
       heading: "4 patterns detected",
       prompt:
-        "Find the patterns in current private equity CRE purchases across all of Manhattan over the last 18 months. What are they actually buying and what does it tell me about where others think the market is going?",
+        "Find me patterns in current private equity CRE dataset purchases across all of Manhattan over the last 18 months. What are they actually buying, and what does it tell me about where others think the market is going?",
       area: "Across Manhattan · trailing 18 months",
       patterns: [
         { n: 1, title: "PE Funds Concentrating in Pre-War Office", properties: "187 transactions", roi: "Avg cap: 5.4%" },
@@ -791,7 +792,7 @@ const URBAN_COPY: IndustryCopy = {
     patterns: {
       heading: "4 patterns detected",
       prompt:
-        "Find hidden patterns linking pothole formation across the 7th arrondissement — vibration, traffic load, climate, root systems — anything that predicts where the next failures will appear.",
+        "Find hidden patterns linking pothole formation across the 7th arrondissement",
       area: "Across the 7th arrondissement · trailing 36 months",
       patterns: [
         { n: 1, title: "Tram-Vibration Pothole Corridors", properties: "84 segments", roi: "Repair priority: High" },
@@ -1000,7 +1001,7 @@ const ENVIRONMENTAL_COPY: IndustryCopy = {
     patterns: {
       heading: "4 patterns detected",
       prompt:
-        "Find patterns in sightings of sperm whale species across the North Atlantic over the last twenty years. What's driving the aggregation bands, and how are they shifting with sea-surface temperatures?",
+        "Find patterns in sightings of sperm whale species across the North Atlantic.",
       area: "Across the North Atlantic · trailing 20 years",
       patterns: [
         { n: 1, title: "Sperm Whale Aggregation Bands", properties: "812 sightings", roi: "Confidence: High" },
@@ -1207,7 +1208,7 @@ const ACADEMIC_COPY: IndustryCopy = {
     patterns: {
       heading: "4 patterns detected",
       prompt:
-        "Find hidden patterns between vending machine density across Tokyo and anything else on the map — population, transit, building types, whatever stands out.",
+        "Find hidden patterns between vending machine density across Tokyo wards and anything else on the map — population, transit, building types, whatever stands out",
       area: "Across Tokyo's 23 special wards",
       patterns: [
         { n: 1, title: "Vending Density Near Konbini Gaps", properties: "1,204 machines", roi: "Signal: Strong" },
@@ -1410,7 +1411,7 @@ const GEOMARKETING_COPY: IndustryCopy = {
     patterns: {
       heading: "4 patterns detected",
       prompt:
-        "Across our 580 Canadian branches, map 6 years of campaign performance against each branch's trade area boundary. Show me where marketing actually drives sales and where we're wasting spend on saturated zones.",
+        "Across our 580 Canadian branches, map six years of campaign performance to each store's trade-area boundary. Show where marketing actually drives sales and where we're wasting spend in areas. Show as heatmap.",
       area: "Across 580 Canadian branches · trailing 6 years",
       patterns: [
         { n: 1, title: "Spend Wasted in Saturated Trade Areas", properties: "112 branches", roi: "Reallocate: High" },
