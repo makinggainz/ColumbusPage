@@ -251,13 +251,15 @@ function IconGrid({
                 "max-md:last:border-b-0",
                 "md:nth-[3n]:border-r-0",
                 "md:nth-[n+4]:border-b-0",
-                /* Selection signal is a low-opacity wash of the homepage
-                   navy (--color-cta #0B1342). Idle ink (#0B1B2B) is kept
-                   on text + icon so the active state reads as "selected"
-                   without an in-your-face color shift. */
+                /* Selection signal is a low-opacity neutral-black wash —
+                   reads as a clean light gray with zero hue, so it can
+                   never trend toward purple/blue under any colour-
+                   management setup. Idle ink (#0B1B2B) stays on text +
+                   icon so the active state reads as "selected" without
+                   an in-your-face color shift. */
                 isActive
-                  ? "bg-[rgba(11,19,66,0.07)]"
-                  : "hover:bg-[rgba(11,19,66,0.03)]",
+                  ? "bg-[rgba(0,0,0,0.05)]"
+                  : "hover:bg-[rgba(0,0,0,0.025)]",
               ].join(" ")}
               style={{ minHeight: 130 }}
             >
