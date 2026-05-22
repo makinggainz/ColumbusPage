@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, type ReactNode } from "react";
+import { Mail, Linkedin } from "lucide-react";
 
 /**
  * The rounded white "card" the entire site sits inside.
@@ -142,6 +143,158 @@ export function PageFrame({ children }: { children: ReactNode }) {
       }}
     >
       {children}
+
+      {/* Bottom-middle cut-out — email + LinkedIn icons. Mirrors the
+          BentoProducts audience notch: black panel matching the body
+          backdrop, radial-gradient fillets rounding each convex corner
+          into a smooth 13px arc. Reads as a piece bitten out of the
+          white card's bottom edge. */}
+      <div className="pf-cutout pf-cutout--bm">
+        <a
+          href="mailto:contact@columbus.earth"
+          aria-label="Email Columbus Earth"
+          className="pf-cutout-icon"
+        >
+          <Mail size={18} strokeWidth={1.6} />
+        </a>
+        <a
+          href="https://www.linkedin.com/company/columbusearth/about/"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Columbus Earth on LinkedIn"
+          className="pf-cutout-icon"
+        >
+          <Linkedin size={18} strokeWidth={1.6} />
+        </a>
+      </div>
+
+      {/* Bottom-right cut-out — "Columbus Earth" wordmark. Shares the
+          frame's bottom-right rounded corner (20px); the top-left is the
+          concave bite (13px). */}
+      <div className="pf-cutout pf-cutout--br">
+        <span className="pf-cutout-label">Columbus Earth</span>
+      </div>
+
+      <style>{`
+        /* PageFrame bottom cut-outs — same mechanic as the BentoProducts
+           audience notch (corner panel + radial-gradient fillets on the
+           convex corners), mirrored to the bottom edge of the site card.
+           Notch surface is painted #000000 to match the body backdrop set
+           in globals.css, so each cut-out reads as a piece cut out of the
+           white card exposing the dark surface behind it. */
+        .pf-cutout {
+          position: absolute;
+          z-index: 4;
+          box-sizing: border-box;
+          height: 43px;
+          background-color: #000000;
+          display: flex;
+          align-items: center;
+          color: #FFFFFF;
+        }
+
+        /* Bottom-right: TL TR BR BL — TL is the concave bite, BR matches
+           the frame's own bottom-right radius; TR + BL are squared and
+           rounded by the fillets below. */
+        .pf-cutout--br {
+          bottom: 0;
+          right: 0;
+          padding: 0 28px;
+          border-radius: 13px 0 var(--frame-radius, 20px) 0;
+          justify-content: flex-end;
+        }
+
+        /* Bottom-middle: both top corners are concave (the bite); bottom
+           corners are squared, rounded by fillets on either side. */
+        .pf-cutout--bm {
+          bottom: 0;
+          left: 50%;
+          transform: translateX(-50%);
+          padding: 0 26px;
+          border-radius: 13px 13px 0 0;
+          gap: 22px;
+          justify-content: center;
+        }
+
+        /* Corner fillets — 13×13 boxes painted black (extending the
+           cut-out) everywhere except a transparent quarter-disc near the
+           frame-interior corner, which lets the white card surface come
+           through. Smooths each convex corner of the cut-out into a 13px
+           arc instead of a hard 90° join. */
+        .pf-cutout--br::before,
+        .pf-cutout--br::after {
+          content: "";
+          position: absolute;
+          width: 13px;
+          height: 13px;
+          background: radial-gradient(
+            circle at left top,
+            rgba(0, 0, 0, 0) 11.5px,
+            #000000 13.5px
+          );
+        }
+        .pf-cutout--br::before { top: -13px; right: 0; }
+        .pf-cutout--br::after { bottom: 0; left: -13px; }
+
+        .pf-cutout--bm::before,
+        .pf-cutout--bm::after {
+          content: "";
+          position: absolute;
+          width: 13px;
+          height: 13px;
+          bottom: 0;
+        }
+        .pf-cutout--bm::before {
+          left: -13px;
+          background: radial-gradient(
+            circle at left top,
+            rgba(0, 0, 0, 0) 11.5px,
+            #000000 13.5px
+          );
+        }
+        .pf-cutout--bm::after {
+          right: -13px;
+          background: radial-gradient(
+            circle at right top,
+            rgba(0, 0, 0, 0) 11.5px,
+            #000000 13.5px
+          );
+        }
+
+        /* Wordmark — Axiforma, same face the navbar's "Columbus Earth"
+           wordmark uses (see globals.css --font-hero). */
+        .pf-cutout-label {
+          font-family: "Axiforma", "SF Pro", -apple-system, BlinkMacSystemFont, sans-serif;
+          font-size: 16px;
+          font-weight: 600;
+          letter-spacing: -0.015em;
+          line-height: 1;
+          color: #FFFFFF;
+          white-space: nowrap;
+        }
+
+        .pf-cutout-icon {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          color: rgba(255, 255, 255, 0.85);
+          transition: color 150ms ease;
+        }
+        .pf-cutout-icon:hover { color: #FFFFFF; }
+
+        /* Notch height scales with breakpoint — mirrors BentoProducts. */
+        @media (min-width: 640px) {
+          .pf-cutout { height: 46px; }
+          .pf-cutout--br { padding: 0 32px; }
+          .pf-cutout--bm { padding: 0 30px; gap: 24px; }
+        }
+        @media (min-width: 1024px) {
+          .pf-cutout { height: 53px; }
+          .pf-cutout--br { padding: 0 40px; }
+          .pf-cutout--bm { padding: 0 36px; gap: 28px; }
+          .pf-cutout-label { font-size: 18px; }
+        }
+      `}</style>
     </div>
   );
 }

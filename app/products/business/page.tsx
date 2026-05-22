@@ -6,7 +6,6 @@ import BusinessHero from "@/components/business/BusinessHero";
 import ProblemCards from "@/components/business/ProblemCards";
 import SolutionShowcase from "@/components/business/SolutionShowcase";
 import { MistxNav } from "@/components/layout/MistxNav";
-import { Footer } from "@/components/layout/Footer";
 import ComparisonSection from "@/components/business/ComparisonSection";
 import ChatSection from "@/components/business/ChatSection";
 import { IndustryProvider } from "@/components/use-cases/industry/IndustryContext";
@@ -113,11 +112,6 @@ export default function BusinessPage() {
       <section className="relative">
         <ChatSection />
       </section>
-      <div style={{ backgroundColor: "#ffffff" }}>
-        <section className="relative">
-          <Footer theme="light" />
-        </section>
-      </div>
     </main>
   );
 }
