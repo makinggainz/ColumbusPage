@@ -55,18 +55,20 @@ const PHONE_PEEK = 0.62;
 const INTRO_END = 0.34;
 
 // ── Three scenes — ink + pill styling per phase ──────────────────────
-// Pill backgrounds + matching eyebrow accents pulled from HowItWorksSection
-// step gradients (step 1 → Ask, step 2 → Discover, step 3 → Go). Step 2's
-// magenta endpoint (#B00098) is skipped per the no-purple house rule, so
-// Discover uses the red endpoint #DE2F32 alone.
+// Pill accents stay strictly in the cyan/blue band (hue ≤210°) — high-
+// saturation hues 220°+ can read as purple/indigo on Scene 2's dark navy,
+// which the site explicitly forbids. Scenes 1 + 3 take the lighter endpoints
+// of HowItWorks steps 1 + 3 (#5FBFF1 and #2A8FC2). Step 2's gradient is
+// red→magenta — both banned — so Discover uses a pure cyan, #00B1D4.
 const SCENES = [
-  { ink: "#0B1B2B", eyebrow: "#063140", pillBg: "#063140", pillText: "#FFFFFF", pillRot: "-4deg", pillIdle: "rgba(6,49,64,0.40)" },
-  { ink: "#FFFFFF", eyebrow: "#DE2F32", pillBg: "#DE2F32", pillText: "#FFFFFF", pillRot: "-4deg", pillIdle: "rgba(255,255,255,0.55)" },
-  { ink: "#0B1B2B", eyebrow: "#0A6E5C", pillBg: "#0A6E5C", pillText: "#FFFFFF", pillRot: "-5deg", pillIdle: "rgba(11,27,43,0.40)" },
+  { ink: "#0B1B2B", eyebrow: "#5FBFF1", pillBg: "#5FBFF1", pillText: "#063140", pillRot: "-4deg", pillIdle: "rgba(6,49,64,0.40)" },
+  { ink: "#FFFFFF", eyebrow: "#00B1D4", pillBg: "#00B1D4", pillText: "#04222C", pillRot: "-4deg", pillIdle: "rgba(255,255,255,0.55)" },
+  { ink: "#0B1B2B", eyebrow: "#2A8FC2", pillBg: "#2A8FC2", pillText: "#FFFFFF", pillRot: "-5deg", pillIdle: "rgba(11,27,43,0.40)" },
 ] as const;
 
-// Scene-1 backdrop — soft Elio-logo blue (kept the variable name for diff size).
-const CREAM = "linear-gradient(180deg, #E3F2FB 0%, #C7E5F6 100%)";
+// Scene-1 backdrop — soft Elio-logo blue with a subtle white fade at the
+// top edge so the backdrop reads as light blue without a hard top seam.
+const CREAM = "linear-gradient(180deg, #FFFFFF 0%, #E3F2FB 18%, #C7E5F6 100%)";
 // Scene-2 backdrop — Columbus navbar-logo navy (#0B1342, var --color-cta).
 const NAVY = "linear-gradient(180deg, #0B1342 0%, #060A28 100%)";
 // Solid white — matches HowItWorksSection (#FFFFFF) so the hand-off has no seam.
@@ -121,7 +123,8 @@ export default function Hero() {
   const [isLg, setIsLg] = useState(true);
   // Index of the typewriter phrase currently being typed. TypedPhrase
   // calls back with this every time the next phrase begins, and the
-  // hero background video remounts to match (see VIDEO_BY_PHRASE).
+  // hero background image carousel crossfades to match (see
+  // IMAGE_BY_PHRASE).
   const [activePhrase, setActivePhrase] = useState(0);
 
   const outerRef = useRef<HTMLDivElement>(null);
@@ -407,33 +410,43 @@ export default function Hero() {
           paddingBottom: "clamp(150px, 19vh, 230px)",
         }}
       >
-        {/* Consumer hero background — a video that SWAPS to match the
-            typed-phrase carousel below. The phrase carousel calls back
-            into `activePhrase`; the video remounts via `key` so each
-            new clip starts from frame 0 and the prior one is dropped.
-            `HeroBack.png` is the poster, so the beach photo shows
-            while the clip preloads or whenever a phrase has no video
-            file yet — drop matching files into /public/consumer/videos
-            (see VIDEO_BY_PHRASE below for the expected filenames) and
-            each one lights up automatically.
+        {/* Consumer hero background — a stacked image carousel that
+            SWAPS to match the typed-phrase below. All 10 images are
+            mounted at once (overlapping, position:absolute) so the
+            browser caches them up front and the swap itself is just
+            a CSS opacity transition between two pre-rendered layers
+            — no fetch, no remount, no flash. Each image also slowly
+            "Ken-Burns" scales from 1.0 → 1.06 over 6s while it's the
+            active one, then resets back to 1.0 once another image
+            takes over, giving the hero a gentle cinematic drift.
 
-            On top of the video sits the same dark top-fade band the
-            photo-only version used, so the white navbar contents
-            stay legible regardless of which frame is on screen. */}
+            On top of the image stack sits the same dark scrim +
+            navbar fade the video version used, so the white navbar
+            contents and the centred H1 stack stay legible on every
+            scene. */}
         <div aria-hidden className="absolute inset-0 overflow-hidden">
-          <video
-            key={`hero-bg-${activePhrase}`}
-            src={VIDEO_BY_PHRASE[activePhrase]}
-            poster="/consumer/HeroBack.png"
-            autoPlay
-            loop
-            muted
-            playsInline
-            preload="auto"
-            className="absolute inset-0 w-full h-full"
-            style={{ objectFit: "cover" }}
-            aria-hidden
-          />
+          {IMAGE_BY_PHRASE.map((src, i) => (
+            <img
+              // eslint-disable-next-line @next/next/no-img-element
+              key={src}
+              src={src}
+              alt=""
+              aria-hidden
+              className="absolute inset-0 w-full h-full pointer-events-none"
+              style={{
+                objectFit: "cover",
+                opacity: i === activePhrase ? 1 : 0,
+                transform: `scale(${i === activePhrase ? 1.06 : 1})`,
+                transformOrigin: "center center",
+                // Crossfade ~900ms; the Ken-Burns zoom drifts over
+                // 6s — long enough that it's barely perceptible per
+                // frame, just enough to keep the photo from feeling
+                // dead while a phrase sits on screen.
+                transition:
+                  "opacity 900ms ease-in-out, transform 6s ease-out",
+              }}
+            />
+          ))}
           {/* Global readability scrim — uniform dark tint over the whole
               video so the centred "Elio" + H1 + CTA stack reads
               cleanly on any frame of any clip (varied brightness from
@@ -452,7 +465,7 @@ export default function Hero() {
             style={{
               height: 280,
               background:
-                "linear-gradient(180deg, rgba(8, 22, 32, 0.72) 0%, rgba(8, 22, 32, 0.45) 40%, rgba(8, 22, 32, 0.18) 75%, rgba(8, 22, 32, 0) 100%)",
+                "linear-gradient(180deg, rgba(8, 22, 32, 0.42) 0%, rgba(8, 22, 32, 0.26) 40%, rgba(8, 22, 32, 0.10) 75%, rgba(8, 22, 32, 0) 100%)",
               pointerEvents: "none",
             }}
           />
@@ -670,36 +683,25 @@ const TYPED_PHRASES = [
   "quiet study café",
 ];
 
-// Hero background video per typed phrase — same index as TYPED_PHRASES.
-// Hot-linked at 720p from Mixkit's CDN (free license; no attribution
-// required for non-resale use). Self-hosting all ten clips would add
-// ~57MB to the repo; hot-linking keeps the bundle light, the clips
-// already optimised by Mixkit's CDN, and one swap of an ID below
-// replaces a clip. Each chosen clip leans into the "people enjoying
-// that place" vibe the homepage typing carousel evokes:
-//   hang out spot         → friends drinking wine on a balcony (42716)
-//   romantic date night   → intimate couple dinner (41261)
-//   secret beach spot     → tropical paradise beach (7205)
-//   hidden coffee shop    → people in a coffee shop (Pexels 9406050)
-//   weekend brunch place  → bustling coffee shop with baristas (Pexels 29719125)
-//   local hiking trail    → couple exploring a forest (43151)
-//   cozy bookstore        → bookstore shelves with warm light (14189)
-//   rooftop sunset bar    → young couple having fun in a rooftop bar (47027)
-//   late-night taco joint → fish tacos with beer (16411)
-//   quiet study café      → woman drinking coffee in a cafe (223)
-// The <video> falls back to /consumer/HeroBack.png if any URL ever
-// 404s so the page never goes black.
-const VIDEO_BY_PHRASE = [
-  "https://assets.mixkit.co/videos/42716/42716-720.mp4",
-  "https://assets.mixkit.co/videos/41261/41261-720.mp4",
-  "https://assets.mixkit.co/videos/7205/7205-720.mp4",
-  "https://videos.pexels.com/video-files/9406050/9406050-hd_1280_720_30fps.mp4",
-  "https://videos.pexels.com/video-files/29719125/12778465_3840_2160_24fps.mp4",
-  "https://assets.mixkit.co/videos/43151/43151-720.mp4",
-  "https://assets.mixkit.co/videos/14189/14189-720.mp4",
-  "https://assets.mixkit.co/videos/47027/47027-720.mp4",
-  "https://assets.mixkit.co/videos/16411/16411-720.mp4",
-  "https://assets.mixkit.co/videos/223/223-720.mp4",
+// Hero background image per typed phrase — same index as TYPED_PHRASES.
+// Self-hosted under /public/consumer/images/, slug-named to match the
+// phrase. ALL entries are pre-mounted in the carousel (stacked
+// absolute, opacity-toggled), so the swap is a CSS-only crossfade
+// with no fetch on transition. `secret beach spot` keeps the original
+// tropical-beach hero asset (/consumer/HeroBack.png) — that one
+// pre-dates the per-phrase set and the original framing fits the
+// phrase exactly.
+const IMAGE_BY_PHRASE = [
+  "/consumer/images/hang-out-spot.png",
+  "/consumer/images/romantic-date-night.png",
+  "/consumer/HeroBack.png",
+  "/consumer/images/hidden-coffee-shop.png",
+  "/consumer/images/weekend-brunch-place.png",
+  "/consumer/images/local-hiking-trail.png",
+  "/consumer/images/cozy-bookstore.png",
+  "/consumer/images/rooftop-sunset-bar.png",
+  "/consumer/images/late-night-taco-joint.png",
+  "/consumer/images/quiet-study-cafe.png",
 ];
 
 function TypedPhrase({

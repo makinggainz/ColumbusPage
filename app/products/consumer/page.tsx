@@ -1,12 +1,7 @@
 import { MistxNav } from "@/components/layout/MistxNav";
 import { Footer } from "@/components/layout/Footer";
-import FavoritesSection from "@/components/products/FavoritesSection";
-import FinalCTASection from "@/components/products/FinalCTASection";
 import Hero from "@/components/products/Hero";
-import MoreFeaturesSection from "@/components/products/MoreFeaturesSection";
 import DestinationsSection from "@/components/products/DestinationsSection";
-import ClosingCTASection from "@/components/products/ClosingCTASection";
-import HowItWorksSection from "@/components/products/HowItWorksSection";
 import NewAtMapsGPTSection from "@/components/products/NewAtMapsGPTSection";
 import InspirationSection from "@/components/products/InspirationSection";
 // import QuestionsSection from "@/components/products/QuestionsSection";
@@ -47,37 +42,29 @@ export default function ProductsPage() {
           paints a dark-fade band at its top edge that sits behind the
           navbar zone, giving the white nav text a guaranteed legibility
           backdrop independent of which part of the beach lands here. */}
-      <MistxNav heroWhite lightCta darkBackdrop />
+      <MistxNav lightCta darkBackdrop />
       <SectionWithLabel label={sectionLabels[1]}>
         <Hero />
       </SectionWithLabel>
-      {/* Post-hero stretch — bento features → destinations → closing CTA.
-          The original sections below shift down, unchanged. */}
-      <MoreFeaturesSection />
+      {/* Post-hero stretch — "New at Elio" leads (formerly the bento
+          "A map superapp / Elio makes maps feel alive" slot, since
+          replaced) → destinations → "See what people are asking"
+          straight into the footer. Three sections have been removed
+          from this page: HowItWorksSection, FavoritesSection ("Let
+          our AI find you the coolest place, faster."), ClosingCTA-
+          Section ("Ready when you are. Your next trip starts with a
+          question."), and FinalCTASection ("Elio is updated
+          regularly. Request a feature / Report a bug"). */}
+      <NewAtMapsGPTSection />
       <DestinationsSection />
-      <ClosingCTASection />
-      {/* Section C — ShowcaseSection removed; the scrollytelling Hero now
-          carries the product-showcase role. */}
       {/* Section D — QuestionsSection (commented out, may restore later)
       <SectionWithLabel label={sectionLabels[3]}>
         <QuestionsSection />
       </SectionWithLabel>
       */}
-      <SectionWithLabel label={sectionLabels[4]}>
-        <HowItWorksSection />
-      </SectionWithLabel>
-      <SectionWithLabel label={sectionLabels[5]}>
-        <NewAtMapsGPTSection />
-      </SectionWithLabel>
-      <SectionWithLabel label={sectionLabels[6]}>
-        <FavoritesSection />
-      </SectionWithLabel>
       <SectionWithLabel label={sectionLabels[7]}>
         <div id="section-see-what-people" />
         <SeeWhatPeopleSection />
-      </SectionWithLabel>
-      <SectionWithLabel label={sectionLabels[9]}>
-        <FinalCTASection />
       </SectionWithLabel>
       <SectionWithLabel label={sectionLabels[10]}>
         <Footer />

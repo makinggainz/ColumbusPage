@@ -92,31 +92,37 @@ type Card = {
 };
 
 const CARDS: Card[] = [
+  // Anchor card — PDF's hero use case: "Elio will find your next hang out…
+  // already prepared for you. Or, ask Elio anything else."
   {
     col: "1 / 5",
     row: "1 / 3",
     variant: "big",
     theme: "lightblue",
     eyebrow: "The core",
-    title: "Just ask — it finds it.",
-    body: "Tell Elio what you're after in plain words. It reads the vibe and hands back places actually worth your time.",
+    title: "Find your next hang out.",
+    body: "Tell Elio what you're after — your plan, already prepared. Or ask anything else.",
     chips: ["rooftop bar, sunset view", "quiet beach near Bali", "best ramen, still open"],
   },
+  // PDF: "Looking for the best travel companion? Elio is that too. Elio is
+  // the best travel agent, and knows like a local."
   {
     col: "5 / 7",
     row: "1 / 2",
     variant: "standard",
     theme: "navy",
-    title: "Free to explore",
-    body: "No account, no paywall — start asking right away.",
+    title: "Your travel agent.",
+    body: "Elio plans the trip — and knows like a local.",
   },
+  // PDF: "Your group trips should be planned here. Elio can help find and
+  // suggest things to do."
   {
     col: "5 / 7",
     row: "2 / 3",
     variant: "standard",
     theme: "teal",
-    title: "Powered by Columbus‑01",
-    body: "Our own travel model — reasons about places, neighborhoods, and routes.",
+    title: "Group trips, planned here.",
+    body: "Elio finds and suggests things to do — together.",
     globe: true,
   },
   {
@@ -129,30 +135,33 @@ const CARDS: Card[] = [
     body: "No download, no install — Elio runs in any browser. Plan the trip on your laptop, pick it up on your phone.",
     img: "/mapsgptdesktopimg.png",
   },
+  // PDF: "Find guides, and ranked maps. Vote on places, see guides from people."
   {
     col: "1 / 3",
     row: "5 / 6",
     variant: "standard",
     theme: "lightblue",
-    title: "Learns your taste",
-    body: "Use it a few times — it surfaces spots before you ask.",
+    title: "Guides + ranked maps.",
+    body: "Vote on places. See guides from real people.",
   },
+  // PDF: "Import bookmarks to Elio. Or send us the Reel on Instagram. We'll
+  // put it on your map."
   {
     col: "3 / 5",
     row: "5 / 6",
     variant: "standard",
     theme: "brightblue",
-    title: "Roll the dice",
-    body: "Can't decide? Let it surprise you.",
-    motif: "dice",
+    title: "Send us a Reel — we'll map it.",
+    body: "Or import your bookmarks. Anything you save lands on your map.",
   },
+  // PDF's closing flourish: "and… a nicer looking map."
   {
     col: "5 / 7",
     row: "5 / 6",
     variant: "standard",
     theme: "teal",
-    title: "Save your favorites",
-    body: "Heart a place, build a list, share the trip.",
+    title: "A nicer-looking map.",
+    body: "Beautiful enough to plan from. Detailed enough to actually use.",
     motif: "heart",
   },
 ];
@@ -207,9 +216,9 @@ export default function MoreFeaturesSection() {
             transition: "opacity 0.6s ease-out, transform 0.6s ease-out",
           }}
         >
-          <div className="eyebrow">The good stuff</div>
+          <div className="eyebrow">A map superapp</div>
           <h2 className="h2" style={{ marginTop: 14, color: "#0B1B2B", letterSpacing: "-0.01em" }}>
-            Why you&apos;ll love Elio
+            Elio makes maps feel alive.
           </h2>
         </div>
 

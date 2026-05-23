@@ -188,15 +188,17 @@ export function MistxNav({
   }, []);
 
   // MapsGPT-only: track the hero's sticky-stage scene so the navbar
-  // backdrop can recolour to match it. Only wired up when `heroLight` is
-  // set, keeping this behaviour scoped to the MapsGPT page.
+  // backdrop can recolour to match it. Wired up when `heroLight` OR
+  // `darkBackdrop` is set — the consumer page uses darkBackdrop in a
+  // scene-aware way (dark gradient during phase 0 over the photo header,
+  // then scene-color scrim during phases 1–3 in the sticky stage).
   useEffect(() => {
-    if (!heroLight) return;
+    if (!heroLight && !darkBackdrop) return;
     const onPhase = (e: Event) =>
       setHeroPhase((e as CustomEvent<number>).detail ?? 0);
     window.addEventListener("mapsgpt-hero-phase", onPhase);
     return () => window.removeEventListener("mapsgpt-hero-phase", onPhase);
-  }, [heroLight]);
+  }, [heroLight, darkBackdrop]);
 
   // Listen for the takeover signal from IndustryStickyNavbar (business
   // page). When the sub-navbar is showing, hide the main navbar; when it
@@ -230,10 +232,13 @@ export function MistxNav({
   // hero, then fades off once the navbar pins above the next
   // (white-backed) section so the navbar can swap to the normal
   // white backdrop and the dark text returns.
-  const darkScrimActive = darkBackdrop && (!stuck || overHero);
+  // The dark navbar gradient now only paints during phase 0 (over the
+  // photo hero header). During the sticky stage (phase 1–3) the scene-
+  // color scrim takes over so the navbar reads as part of each scene.
+  const darkScrimActive = darkBackdrop && (!stuck || overHero) && heroPhase === 0;
   const lightNav =
     (heroWhite && (!stuck || overHero)) ||
-    (heroLight && overHero && heroPhase === 2) ||
+    ((heroLight || darkBackdrop) && overHero && heroPhase === 2) ||
     darkScrimActive;
   // Business-only: while scrolled ("on movement") AND the navbar still
   // overlaps the hero, the solid white backdrop is replaced by a scrim
@@ -243,16 +248,18 @@ export function MistxNav({
   // `heroLight` (the MapsGPT hero) reuses the float-over-hero mechanic
   // for a LIGHT hero: nav contents stay dark (lightNav stays false) and
   // the scrim is a pale sand tint instead of business' sky blue.
-  const heroFloat = heroWhite || heroLight || heroTint != null;
+  const heroFloat = heroWhite || heroLight || heroTint != null || darkBackdrop;
   const heroScrim = heroFloat && stuck && overHero;
   const scrimRGB = "4,87,141";
-  // MapsGPT sticky-stage scene colour — matches Hero's CREAM top stop /
-  // NAVY top stop / LIGHT. A single solid that the navbar's masked scrim
-  // cross-fades between via `background-color` (see the scrim div below).
+  // MapsGPT sticky-stage scene colour — matches Hero's CREAM / NAVY / LIGHT
+  // stops. A single solid that the navbar's masked scrim cross-fades
+  // between via `background-color` (see the scrim div below). Phase 1 uses
+  // the soft Elio-blue mid-stop (#E3F2FB) so the navbar reads as part of
+  // Scene 1's light-blue band without going too saturated.
   // `heroTint` (Research page) overrides this with a fixed caller colour.
   const heroStageColor =
     heroTint ??
-    (heroPhase === 2 ? "#063140" : heroPhase === 3 ? "#FFFFFF" : "#F7F2E4");
+    (heroPhase === 2 ? "#0B1342" : heroPhase === 3 ? "#FFFFFF" : "#E3F2FB");
 
   return (
     <header
@@ -321,7 +328,7 @@ export function MistxNav({
           700ms cubic-bezier matches Hero's backdrop transition exactly,
           and Hero dispatches the scene change in the same tick as its own
           setState, so the two cross-fades start on the same frame. */}
-      {(heroLight || heroTint != null) && !darkBackdrop && (
+      {(heroLight || heroTint != null || darkBackdrop) && (
         <div
           aria-hidden
           className="pointer-events-none absolute inset-x-0 top-0 bottom-0"
@@ -334,7 +341,11 @@ export function MistxNav({
               "linear-gradient(to bottom, black 0%, rgba(0,0,0,0.55) 50%, transparent 100%)",
             WebkitMaskImage:
               "linear-gradient(to bottom, black 0%, rgba(0,0,0,0.55) 50%, transparent 100%)",
-            opacity: heroScrim ? 1 : 0,
+            // In darkBackdrop mode the dark scrim owns phase 0; this scene-
+            // color scrim only paints during phases 1–3 in the sticky stage.
+            // Other modes (heroLight, heroTint) keep the original behavior.
+            opacity:
+              heroScrim && (!darkBackdrop || heroPhase > 0) ? 1 : 0,
             transition:
               "opacity 300ms ease, background-color 700ms cubic-bezier(0.44,0,0.56,1)",
           }}
@@ -357,7 +368,7 @@ export function MistxNav({
             borderTopLeftRadius: "var(--frame-radius, 20px)",
             borderTopRightRadius: "var(--frame-radius, 20px)",
             background:
-              "linear-gradient(to bottom, rgba(8, 22, 32, 0.78) 0%, rgba(8, 22, 32, 0.55) 55%, rgba(8, 22, 32, 0) 100%)",
+              "linear-gradient(to bottom, rgba(8, 22, 32, 0.45) 0%, rgba(8, 22, 32, 0.28) 55%, rgba(8, 22, 32, 0) 100%)",
             opacity: darkScrimActive ? 1 : 0,
             transition: "opacity 300ms ease",
           }}
