@@ -134,7 +134,13 @@ export default function BusinessHero() {
       data-hero-section
       className="relative w-full"
       style={{
-        backgroundColor: "var(--ent-bg-light)",
+        /* Solid base color matches the sky at the top-left of the
+           ColumBuzHero.png crop (~#387FD9, averaged from the photo's
+           top 0–15%). The hero photo is layered on top via the absolute
+           div below; this base color fills the entire section so any
+           edge / load / aspect mismatch reads as the same sky blue
+           rather than a flash of white. */
+        backgroundColor: "#387FD9",
         // The section box is aspect-matched to the ColumBuzHero crop
         // (2044 × 2833 — the photo's width at the displayed-crop height),
         // so the section is exactly tall enough to contain the full crop:
