@@ -1,15 +1,31 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import {
+  Clock,
+  DollarSign,
+  Filter,
+  MapPinOff,
+  GraduationCap,
+  Layers,
+  type LucideIcon,
+} from "lucide-react";
 import { GridSection, gl } from "../home/ContentGrid";
 
-const PAIN_POINTS = [
-  "A single site selection report takes your team 2–3 weeks",
-  "You pay $10K+ per seat for software half your team can't use",
-  "Your analysts spend 60% of their time finding and cleaning data",
-  "Coordinates are copy-pasted from Google and wrong half the time",
-  "New hires take 6 months before they can use your GIS tools",
-  "You can't get coordinates, demographics, and lot data in the same place",
+/* Each pain point pairs with a glyph that hints at its specific frustration —
+   clock for time-to-report, dollar for seat-cost, filter for data-cleaning,
+   pin-off for bad coordinates, grad-cap for onboarding, layers for scattered
+   data sources. Icons + text both render in the same dark red so the strip
+   reads as one alarming list. */
+const RED = "#7F1D1D";
+
+const PAIN_POINTS: { text: string; Icon: LucideIcon }[] = [
+  { text: "A single site selection report takes your team 2–3 weeks", Icon: Clock },
+  { text: "You pay $10K+ per seat for software half your team can't use", Icon: DollarSign },
+  { text: "Your analysts spend 60% of their time finding and cleaning data", Icon: Filter },
+  { text: "Coordinates are copy-pasted from Google and wrong half the time", Icon: MapPinOff },
+  { text: "New hires take 6 months before they can use your GIS tools", Icon: GraduationCap },
+  { text: "You can't get coordinates, demographics, and lot data in the same place", Icon: Layers },
 ];
 
 export default function ProblemCards() {
@@ -62,10 +78,10 @@ export default function ProblemCards() {
       </GridSection>
 
       {/* Card strip — edge-to-edge, no fill, no rounded corners. Each
-          cell is bounded by hairline rules matching the vertical
-          separator lines (top + bottom on the strip, right divider
-          between cells) so the six pain points read as a grid of
-          outlined boxes. Scrollable on mobile, grid on desktop. */}
+          cell is bounded by hairline rules (top + bottom on the strip,
+          right divider between cells) so the six pain points read as
+          a grid of outlined boxes. Scrollable on mobile, grid on
+          desktop. */}
       <div
         className="w-full overflow-x-auto lg:overflow-x-visible"
         style={{
@@ -82,7 +98,7 @@ export default function ProblemCards() {
             gridTemplateColumns: `repeat(${PAIN_POINTS.length}, 1fr)`,
           }}
         >
-          {PAIN_POINTS.map((text, i) => {
+          {PAIN_POINTS.map(({ text, Icon }, i) => {
             const isLast = i === PAIN_POINTS.length - 1;
             return (
               <div
@@ -95,15 +111,32 @@ export default function ProblemCards() {
                   fontSize: 15,
                   fontWeight: 400,
                   lineHeight: 1.5,
-                  color: "var(--ent-text-primary)",
+                  color: RED,
                   display: "flex",
+                  flexDirection: "column",
                   alignItems: "center",
                   justifyContent: "center",
+                  gap: 12,
                   textAlign: "center" as const,
                   letterSpacing: "-0.01em",
                 }}
               >
-                {text}
+                <span
+                  aria-hidden
+                  style={{
+                    width: 48,
+                    height: 48,
+                    borderRadius: "9999px",
+                    backgroundColor: "rgba(220,38,38,0.06)",
+                    display: "inline-flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    flexShrink: 0,
+                  }}
+                >
+                  <Icon size={24} strokeWidth={1.75} color={RED} />
+                </span>
+                <span>{text}</span>
               </div>
             );
           })}

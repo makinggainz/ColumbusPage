@@ -288,14 +288,14 @@ export default function ComparisonSection() {
                   type="button"
                   onClick={() => select(i)}
                   aria-pressed={isActive}
-                  className="relative z-10 w-full text-left cursor-pointer px-6 md:px-10 py-7 md:py-8"
+                  className="relative z-10 w-full lg:h-full flex items-center text-left cursor-pointer px-6 md:px-10 py-7 md:py-8"
                 >
                   {/* Two-column row: icon on the left, title +
-                      tagline stacked on the right. items-start aligns
-                      the icon with the title's first baseline (close
-                      enough at this size). The tagline always shows —
+                      tagline stacked on the right. items-center
+                      vertically centers the icon against the
+                      title+tagline block. The tagline always shows —
                       there's no expand-on-active animation anymore. */}
-                  <div className="flex items-start gap-5">
+                  <div className="flex items-center gap-5">
                     {/* Feature icon — same glyph the demo on the
                         right shows in its icon rail for the
                         corresponding tab. Sized at 24px to align
