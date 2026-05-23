@@ -386,7 +386,7 @@ export function MistxNav({
           >
             Contact
             <span className="ml-2 inline-block transition-transform group-hover:translate-x-0.5">
-              <ArrowDot className={lightNav ? "text-white" : "text-[#0081AC]"} />
+              <ArrowDot className={lightNav ? "text-white" : "text-[#6094C1]"} />
             </span>
           </a>
 
@@ -403,7 +403,7 @@ export function MistxNav({
             >
               Try Elio
               <span className="ml-2 inline-block transition-transform group-hover:translate-x-0.5">
-                <NavArrowStack className="text-[#0081AC]" />
+                <NavArrowStack className="text-[#6094C1]" />
               </span>
             </button>
             {/* Product picker dropdown — todesktop.com "Products" menu

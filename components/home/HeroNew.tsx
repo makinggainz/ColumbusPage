@@ -119,7 +119,7 @@ const HN_CSS = `
   background:
     radial-gradient(
       circle at top left,
-      rgba(129, 165, 255, 0.35) 0%,
+      rgba(96, 148, 193, 0.35) 0%,
       rgba(255, 255, 255, 0) 25%
     ),
     linear-gradient(
@@ -172,16 +172,16 @@ const HN_CSS = `
 }
 
 /* Eyebrow / kicker — small label above the H1, set in the same accent
-   as the "Try Elio" button arrows (#0081AC) so it reads as a distinct
-   label rather than faded headline text. Sizing stays well below .h1
-   at both tiers so the hierarchy is unambiguous. */
+   (#6094C1) as the navbar arrow icons and the hero's top-left corner
+   radial gradient, so the three accent surfaces read as one unified
+   blue tone. */
 .hn-eyebrow {
   font-family: var(--font-display);
   font-size: 16px;
   font-weight: 600;
   line-height: 1.2;
   letter-spacing: 0.02em;
-  color: #0081AC;
+  color: #6094C1;
   margin-bottom: 14px;
 }
 @media (min-width: 992px) {
