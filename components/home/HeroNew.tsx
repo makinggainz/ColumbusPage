@@ -1,7 +1,5 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-
 /**
  * Hero section — minimal layout for the experimentV6-Gdesign redesign.
  *
@@ -11,10 +9,10 @@ import { useEffect, useRef } from "react";
  * desktop / 40px ≤991px) — same typescale used on every heading across
  * the page.
  *
- * Right side: full-bleed boat-sailing background video
- * (/HeroShipVid.mp4), with /BoatHero.jpg as the poster frame. A
- * left-side white→transparent gradient overlay sits above the video
- * so the H1 reads cleanly regardless of how the footage lands behind it.
+ * Right side: full-bleed HomeHeroBack illustration (sketched tall
+ * ship sailing toward a city skyline). A left-side white→transparent
+ * gradient overlay sits above the image so the H1 reads cleanly
+ * regardless of how the artwork lands behind it.
  */
 
 const HN_CSS = `
@@ -27,20 +25,25 @@ const HN_CSS = `
      readability layer both fade to this same colour. */
   background-color: #FFFFFF;
   /* The navbar is sticky (stays in document flow + occupies its own
-     ~80px height). Pulling this section up by -80px makes the boat
-     image extend behind the navbar so the navbar reads as part of the
-     hero. Section then spans the full viewport (y=0 → 100vh) with the
-     navbar overlaying y=0..80. */
-  margin-top: -80px;
-  /* Asymmetric padding: push content down by the nav height so the
-     H1 stays clear of the navbar overlay. With min-height: 100vh +
-     flex centering, the H1 lands at exactly 50vh + 40px — the visual
-     midpoint of the area *below* the navbar. */
-  padding-top: 80px;
+     height). Pulling this section up by -120px makes the hero image
+     extend behind the navbar so the navbar reads as part of the hero.
+     The pull is *over*-sized on purpose: the navbar's actual height
+     drifts a few px above 80 with the current padding + content, so a
+     -80 pull leaves a thin white sliver at the section's top edge
+     (visible against the new top-left blue tint). -120 overshoots by
+     ~40px, which the PageFrame's overflow:clip discards — no gap. */
+  margin-top: -120px;
+  /* Asymmetric padding: push content down by 120px so the H1 still
+     lands clear of the navbar overlay (matches the -120 pull above).
+     min-height adds the same +40px so the box's bottom edge — and
+     the H1's flex-centered position — stay exactly where they were
+     under the -80/-80/100vh values; the box is just 40px taller on
+     top, with that extra clipped by the PageFrame. */
+  padding-top: 120px;
   padding-bottom: 0;
   color: #0B1B2B;
   font-family: var(--font-sans, "Ppneuemontreal", "PP Neue Montreal", Arial, sans-serif);
-  min-height: 100vh;
+  min-height: calc(100vh + 40px);
   display: flex;
   align-items: center;
   /* Floating-div treatment: a fixed 30px gutter below the hero +
@@ -49,7 +52,7 @@ const HN_CSS = `
      top/side gutter (--frame-margin max); the bottom radius matches the
      frame's at-rest corner (--frame-radius max = 20px). Held static (not
      scroll-tracked) so the hero stays a floating card rather than
-     collapsing to full-bleed. overflow: hidden (above) clips the video
+     collapsing to full-bleed. overflow: hidden (above) clips the image
      to the rounded corners. The top corners are rounded by the
      PageFrame's own clip. */
   margin-bottom: 30px;
@@ -57,12 +60,12 @@ const HN_CSS = `
   border-bottom-right-radius: 20px;
 }
 
-/* Full-bleed background video. Sits at the very bottom of the section's
+/* Full-bleed background image. Sits at the very bottom of the section's
    stacking (z-index: 0) so the ::before readability gradient and ::after
    vignette (both z-index: 1) and the .hn-bounds content (z-index: 2)
    all layer cleanly on top. object-position mirrors the old
    background-position so the ::after radial vignette stays aligned. */
-.hn-video {
+.hn-bg {
   position: absolute;
   inset: 0;
   width: 100%;
@@ -74,8 +77,8 @@ const HN_CSS = `
 
 /* Left-side readability layer — fades from the section's base surface
    (#FDFCFC) at the left edge to transparent past the H1's max-width,
-   so the H1 sits on a near-solid background while the boat half of
-   the video reads through cleanly on the right. */
+   so the H1 sits on a near-solid background while the ship half of
+   the image reads through cleanly on the right. */
 .hn-section::before {
   content: "";
   position: absolute;
@@ -91,12 +94,19 @@ const HN_CSS = `
   z-index: 1;
 }
 
-/* Two-layer overlay (single ::after):
-   1. Top — linear bottom fade. Ensures the section's bottom edge is
-      fully opaque white so the hand-off to the next section
+/* Three-layer overlay (single ::after). CSS multi-background paints
+   the *first* layer on top, so the stack from top to bottom is:
+   1. Top — top-left blue emanation. Radial gradient anchored at the
+      top-left corner, opaque #81A5FF at the corner and fading to
+      transparent (rgba 255,255,255,0) at the farthest-corner extent.
+      Sits above the bottom fade + vignette so the blue tint shows
+      across the whole top-left quadrant rather than getting hidden
+      by the vignette's opaque-white corner zone.
+   2. Middle — linear bottom fade. Ensures the section's bottom edge
+      is fully opaque white so the hand-off to the next section
       (TextScrollIntro / page wrapper #FFFFFF) is seamless, with no
       leftover image showing at the seam.
-   2. Beneath — radial vignette centred at ~76% horizontal / 50%
+   3. Bottom — radial vignette centred at ~76% horizontal / 50%
       vertical (the tall-ship's position). Transparent at the ship,
       ramps to opaque white outward so the surrounding water + map
       texture fades into the page and the eye lands on the ship.
@@ -107,6 +117,11 @@ const HN_CSS = `
   position: absolute;
   inset: 0;
   background:
+    radial-gradient(
+      circle at top left,
+      rgba(129, 165, 255, 0.35) 0%,
+      rgba(255, 255, 255, 0) 25%
+    ),
     linear-gradient(
       to bottom,
       transparent 65%,
@@ -199,35 +214,13 @@ const HN_CSS = `
 `;
 
 export function HeroNew() {
-  const videoRef = useRef<HTMLVideoElement>(null);
-
-  // Next SSR doesn't emit the `muted` attribute into the server HTML
-  // (it's only set as a property after hydration), so browsers block
-  // autoplay. Explicitly set `.muted` and call `.play()` — with a
-  // `canplay` retry in case the data wasn't ready on the first attempt.
-  useEffect(() => {
-    const v = videoRef.current;
-    if (!v) return;
-    v.muted = true;
-    const tryPlay = () => { v.play().catch(() => {}); };
-    tryPlay();
-    v.addEventListener("canplay", tryPlay);
-    return () => v.removeEventListener("canplay", tryPlay);
-  }, []);
-
   return (
     <section className="hn-section" aria-label="Columbus hero" data-hero-section>
       <style>{HN_CSS}</style>
-      <video
-        ref={videoRef}
-        className="hn-video"
-        src="/HeroShipVid.mp4"
-        poster="/BoatHero.jpg"
-        autoPlay
-        loop
-        muted
-        playsInline
-        preload="auto"
+      <img
+        className="hn-bg"
+        src="/HomeHeroBack.png"
+        alt=""
         aria-hidden
       />
       <div className="hn-bounds">
