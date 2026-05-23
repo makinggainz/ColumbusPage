@@ -61,19 +61,14 @@ export default function ProblemCards() {
         </div>
       </GridSection>
 
-      {/* Card strip — intentionally breaks the standard 1287px content
-          bound out to 1600px to draw the eye and make the pain points
-          feel weightier than the surrounding sections. Scrollable on
-          mobile, grid on desktop. Fully bordered on all 4 sides with
-          the design-system's 2xl radius for panel-sized containers.
-          Strip fill is #F0F0F0 (a touch darker than the white page
-          surface so the strip reads as its own block). */}
+      {/* Card strip — edge to edge, no roundness. Scrollable on mobile,
+          grid on desktop. Cards have no fill color, only divider lines
+          between them. Container has a black border on all sides. */}
       <div
-        className="w-full max-w-[1600px] mx-auto overflow-x-auto lg:overflow-x-visible"
+        className="w-full overflow-x-auto lg:overflow-x-visible"
         style={{
-          backgroundColor: "#F0F0F0",
+          backgroundColor: "transparent",
           border: "2px solid var(--ent-border-dark-grid)",
-          borderRadius: "var(--ent-radius-2xl)",
           opacity: visible ? 1 : 0,
           transition: "opacity 0.7s ease 0.3s",
           WebkitOverflowScrolling: "touch",
@@ -95,12 +90,8 @@ export default function ProblemCards() {
                 style={{
                   width: 210,
                   height: 210,
-                  backgroundColor: "#F0F0F0",
-                  borderRight: !isLast ? "1px solid rgba(0,0,0,0.08)" : undefined,
-                  borderTopLeftRadius: isFirst ? "var(--ent-radius-2xl)" : undefined,
-                  borderBottomLeftRadius: isFirst ? "var(--ent-radius-2xl)" : undefined,
-                  borderTopRightRadius: isLast ? "var(--ent-radius-2xl)" : undefined,
-                  borderBottomRightRadius: isLast ? "var(--ent-radius-2xl)" : undefined,
+                  backgroundColor: "transparent",
+                  borderRight: !isLast ? "1px solid var(--ent-border-dark-grid)" : undefined,
                   fontSize: 15,
                   fontWeight: 400,
                   lineHeight: 1.5,

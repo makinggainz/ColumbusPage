@@ -143,6 +143,7 @@ export default function ComparisonSection() {
   const [onScreen, setOnScreen] = useState(false);
   const [active, setActive] = useState(0);
   const [hovered, setHovered] = useState(false);
+  const [hoveredCard, setHoveredCard] = useState<number | null>(null);
   /* Bumped on every advance/click to remount the progress fill so its
      CSS animation restarts from 0. */
   const [runId, setRunId] = useState(0);
@@ -203,14 +204,11 @@ export default function ComparisonSection() {
         <ul
           className="flex flex-col list-none m-0 p-0 lg:h-full overflow-hidden rounded-3xl lg:rounded-r-none border-2 border-(--ent-border-card)"
           style={{
-            /* Inactive cells take this surface as their fill — same
-               #FAFAFA the SuperFeatureSection panels and the
-               ProblemCards pain-point cards use. The active cell's
-               own horizontal fill bar (see <li> styles) paints white
-               from left to right on top of this so the selection
-               feels like a "lifted" card rising above the muted
-               backdrop. */
-            background: "#FAFAFA",
+            /* Inactive cells are transparent, matching the page background.
+               The active cell's own horizontal fill bar (see <li> styles)
+               paints #F2F2F2 from left to right on top of this so the
+               selection feels like a "lifted" card. */
+            background: "transparent",
           }}
         >
           {FEATURES.map((f, i) => {
@@ -221,8 +219,10 @@ export default function ComparisonSection() {
                 key={f.title}
                 className={[
                   "relative lg:flex-1 lg:flex lg:flex-col transition-opacity duration-200",
-                  isActive ? "opacity-100" : "opacity-40",
+                  isActive ? "opacity-100" : hoveredCard === i ? "opacity-100" : "opacity-70",
                 ].join(" ")}
+                onMouseEnter={() => setHoveredCard(i)}
+                onMouseLeave={() => setHoveredCard(null)}
               >
                 {/* Horizontal fill bar — paints white over the cell's
                     full area, scaled from the LEFT edge. Active: scaled
@@ -236,7 +236,7 @@ export default function ComparisonSection() {
                   aria-hidden
                   className="absolute inset-0 transition-transform duration-500"
                   style={{
-                    backgroundColor: "#FFFFFF",
+                    backgroundColor: "#F2F2F2",
                     transform: isActive ? "scaleX(1)" : "scaleX(0)",
                     transformOrigin: "left center",
                     transitionTimingFunction: "cubic-bezier(0.4, 0, 0.2, 1)",
@@ -247,14 +247,13 @@ export default function ComparisonSection() {
                   type="button"
                   onClick={() => select(i)}
                   aria-pressed={isActive}
-                  className="relative z-10 w-full text-left cursor-pointer px-6 md:px-10 py-7 md:py-8"
+                  className="relative z-10 w-full text-left cursor-pointer px-6 md:px-10 py-7 md:py-8 flex items-center justify-center"
                 >
-                  {/* Two-column row: numeric prefix on the left, title +
-                      tagline stacked on the right. items-start aligns the
-                      number with the title's first baseline (close
-                      enough at this size). The tagline always shows —
+                  {/* Two-column row: icon on the left, title +
+                      tagline stacked on the right. items-center vertically
+                      centers the icon and text. The tagline always shows —
                       there's no expand-on-active animation anymore. */}
-                  <div className="flex items-start gap-5">
+                  <div className="flex items-center gap-5">
                     {/* Feature icon — same glyph the demo on the
                         right shows in its icon rail for the
                         corresponding tab. Sized at 24px to align
@@ -270,7 +269,7 @@ export default function ComparisonSection() {
                     <div className="flex-1 min-w-0 flex flex-col gap-1.5">
                       <span
                         className="text-[20px] md:text-[22px] font-semibold leading-[1.2]"
-                        style={{ color: "var(--ent-text-primary)", letterSpacing: "-0.01em" }}
+                        style={{ color: "#0E173C", letterSpacing: "-0.01em" }}
                       >
                         {f.title}
                       </span>

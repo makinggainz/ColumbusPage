@@ -205,6 +205,8 @@ function IconGrid({
   onSelect: (id: IndustryId) => void;
   animStyle: React.CSSProperties;
 }) {
+  const [hoveredCard, setHoveredCard] = useState<IndustryId | null>(null);
+
   return (
     <div className="px-6 md:px-10" style={animStyle}>
       <div
@@ -220,15 +222,10 @@ function IconGrid({
              border width / color / radius. */
           border: "2px solid var(--ent-border-card)",
           overflow: "hidden",
-          /* Container fill #FAFAFA — matches the ProblemCards pain-point
-             cards, the ComparisonSection feature stack <ul>, and the
-             SuperFeatureSection panels, so this grid joins the same
-             muted-gray family. Inactive cells leave this surface
-             showing through; the active cell paints white on top so
-             the selected industry reads as a "lifted" empty card,
-             inverting the previous default-empty / selected-shaded
-             pattern. */
-          background: "#FAFAFA",
+          /* Container is transparent, matching the page background.
+             Inactive cells are transparent; the active cell paints #F2F2F2
+             so the selected industry reads as a "lifted" empty card. */
+          background: "transparent",
         }}
       >
         {order.map((id) => {
@@ -252,25 +249,17 @@ function IconGrid({
               className={[
                 "group relative flex items-center gap-5",
                 "px-6 md:px-8 py-8 md:py-10",
-                "text-left cursor-pointer transition-[background-color,opacity] duration-200",
+                "text-left cursor-pointer transition-opacity duration-200",
                 "border-r border-b border-gridline",
                 "max-md:border-r-0",
                 "max-md:last:border-b-0",
                 "md:nth-[3n]:border-r-0",
                 "md:nth-[n+4]:border-b-0",
-                /* Inverted selection: active = white (the "lifted"
-                   unfilled card), inactive = transparent so the
-                   container's #FAFAFA surface shows through. Hover
-                   on an inactive cell previews the selected state
-                   with a partial white wash. Inactive cells also
-                   fade their text via opacity:0.4 — same treatment
-                   the ComparisonSection feature stack and FAQ cards
-                   use for unselected items. */
-                isActive
-                  ? "bg-white"
-                  : "bg-transparent hover:bg-white/50",
+                isActive ? "bg-[#F2F2F2]" : "bg-transparent",
               ].join(" ")}
-              style={{ minHeight: 130, opacity: isActive ? 1 : 0.4 }}
+              style={{ minHeight: 130, opacity: isActive ? 1 : hoveredCard === id ? 1 : 0.7 }}
+              onMouseEnter={() => setHoveredCard(id)}
+              onMouseLeave={() => setHoveredCard(null)}
             >
               <span
                 aria-hidden
