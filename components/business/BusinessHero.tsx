@@ -135,13 +135,16 @@ export default function BusinessHero() {
       className="relative w-full"
       style={{
         backgroundColor: "var(--ent-bg-light)",
-        // The section box is aspect-matched to the ColumBuzHero crop
-        // (2044 × 2833 — the photo's width at the displayed-crop height),
-        // so the section is exactly tall enough to contain the full crop:
-        // the photo fills it edge-to-edge and does NOT bleed past it. The
-        // ratio is ~80px taller than a straight top-25% crop would be, so
-        // the crop frame sits ~80px higher up the photo (more sky shown).
-        aspectRatio: "2044 / 2833",
+        // Section height is content-driven (no aspect-ratio lock). The
+        // ColumBuzHero photo fills the section as a background; with
+        // `cover` + `center bottom` the photo's bottom edge (snowy park
+        // fading to white) stays flush with the section's bottom edge —
+        // preserving the natural fade into the white block below — while
+        // the photo's top (plain sky) is the part that gets cropped to
+        // whatever's left over after the text + glass window stack. This
+        // is what eliminates the dead snowy-park strip that used to show
+        // below the glass window when the section was locked to the
+        // photo's full 2044×2833 aspect ratio.
         // The navbar is sticky and stays in document flow (~83–90px tall
         // depending on breakpoint). Pulling the hero up lets its sky
         // background extend to the very top of the page, behind the
@@ -154,13 +157,11 @@ export default function BusinessHero() {
         paddingTop: 120,
       }}
     >
-      {/* Background image — the ColumBuzHero skyline photo. The layer fills
-          the section (inset 0); the section box is aspect-matched to the
-          crop (see above), so `cover` + `center bottom` trims the top of the
-          plain sky and keeps the skyline + snowy park, with the photo
-          contained entirely within the hero (no bleed past it). No mask is
-          needed — the photo's own bottom edge is a snowy park that fades to
-          white, dissolving into the white block below. */}
+      {/* Background image — the ColumBuzHero skyline photo. Fills the
+          section (inset:0) so the photo extends edge-to-edge, including
+          behind the sticky navbar area covered by the section's
+          marginTop:-120 / paddingTop:120 trick. `cover` + `center 50%`
+          keeps the cloud strip + skyline visible around the frame. */}
       <div
         className="absolute pointer-events-none"
         style={{
@@ -169,7 +170,7 @@ export default function BusinessHero() {
           right: 0,
           bottom: 0,
           backgroundImage: "url(/ColumBuzHero.png)",
-          backgroundPosition: "center bottom",
+          backgroundPosition: "center 50%",
           backgroundSize: "cover",
           backgroundRepeat: "no-repeat",
           zIndex: 0,
@@ -187,11 +188,35 @@ export default function BusinessHero() {
           zIndex: 0,
         }}
       />
+      {/* White fade — a transparent→white gradient pinned to the bottom of
+          the hero. Because the section is content-sized with `center 50%`
+          positioning, the photo no longer ends on its natural fade-to-
+          white park; the visible bottom of the photo is mid-image, so the
+          seam into the white block below would read as a hard edge. This
+          layer dissolves the photo into white over the last ~420px of
+          the section with eased stops (the white ramps up gently for the
+          first ~40%, then accelerates to opaque well before the bottom),
+          so the dissolve never reads as a band. Sits above the dark
+          overlay (zIndex 1) so it whites-out the darkened pixels too. */}
+      <div
+        className="absolute pointer-events-none"
+        style={{
+          left: 0,
+          right: 0,
+          bottom: 0,
+          height: 280,
+          background:
+            "linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,0.08) 30%, rgba(255,255,255,0.3) 55%, rgba(255,255,255,0.7) 78%, #FFFFFF 100%)",
+          zIndex: 1,
+        }}
+      />
       {/* ── Text block ── */}
-      {/* pt-[200px] restores the vertical breathing room previously
-          provided by the removed ConsumerBusinessToggle wrapper
-          (pt-32 + pill height ~43px + pb-10 ≈ 211px). */}
-      <div className="relative z-10 flex flex-col items-center text-center px-6 pt-[200px]" style={reveal(visible, 0.1)}>
+      {/* pt-25 (100px) — trimmed from pt-50 to lift the whole content
+          stack (title + CTA + glass frame) up 100px in one shot. The
+          frame's marginTop and the title→CTA spacing are unchanged, so
+          internal gaps stay correct; only the distance from the navbar
+          to the title shrinks. */}
+      <div className="relative z-10 flex flex-col items-center text-center px-6 pt-25" style={reveal(visible, 0.1)}>
         <h1
           className="text-white leading-[1.1] text-[39px] md:text-[49px] lg:text-[76px]"
           style={{ fontFamily: "var(--font-hero)", fontWeight: 500, letterSpacing: "-0.02em", maxWidth: 900 }}
@@ -228,7 +253,7 @@ export default function BusinessHero() {
           marginTop: "clamp(48px, 6vw, 80px)",
           paddingLeft: 20,
           paddingRight: 20,
-          paddingBottom: "clamp(64px, 9vw, 130px)",
+          paddingBottom: "clamp(120px, 14vw, 220px)",
           ...reveal(visible, 0.22),
         }}
       >
@@ -247,7 +272,7 @@ export default function BusinessHero() {
             borderRadius: 21.5,
             padding: 1.5,
             background:
-              "linear-gradient(145deg, rgba(255,255,255,0.85) 0%, rgba(255,255,255,0.28) 38%, rgba(255,255,255,0.04) 62%, rgba(255,255,255,0.55) 100%)",
+              "linear-gradient(145deg, rgba(11,19,66,0.85) 0%, rgba(11,19,66,0.28) 38%, rgba(11,19,66,0.04) 62%, rgba(11,19,66,0.55) 100%)",
             boxShadow: "0 30px 70px rgba(11,27,43,0.28), 0 2px 10px rgba(11,27,43,0.12)",
           }}
         >
@@ -262,14 +287,17 @@ export default function BusinessHero() {
               width: "100%",
               borderRadius: 20,
               overflow: "hidden",
-              background: "rgba(255,255,255,0.3)",
+              background: "rgba(11,19,66,0.5)",
+              border: "1px solid rgba(11,19,66,0.6)",
               backdropFilter: "blur(20px)",
               WebkitBackdropFilter: "blur(20px)",
             }}
           >
-            {/* Title bar — carries the traffic lights + tabs directly on
-                the window glass: no own background and no bottom divider,
-                so it flows seamlessly into the gutter around the image. */}
+            {/* Title bar — carries the traffic lights + tabs on a black
+                navy strip so the unselected tab labels (now white) read
+                with full contrast. The active tab still paints its own
+                white silhouette over this strip, so it pops as the
+                foreground surface. */}
             <div
               style={{
                 display: "flex",
@@ -282,6 +310,10 @@ export default function BusinessHero() {
                 // instead of touching the window's top edge — a few pixels
                 // of glass shows above the tab caps.
                 paddingTop: "clamp(4px, 0.5vw, 6px)",
+                /* Title bar paints no background of its own — it inherits
+                   the window's single dark-glass surface, so the strip
+                   above the product image and the gutter around it read
+                   as one continuous color. */
               }}
             >
               {(["var(--ent-chrome-red)", "var(--ent-chrome-yellow)", "var(--ent-chrome-green)"] as const).map(c => (
@@ -293,6 +325,7 @@ export default function BusinessHero() {
                     borderRadius: "50%",
                     backgroundColor: c,
                     boxShadow: "inset 0 0 0 0.5px rgba(0,0,0,0.12)",
+                    opacity: 0.25,
                   }}
                 />
               ))}
@@ -328,7 +361,7 @@ export default function BusinessHero() {
                   // shaped like a regular button (rounded all corners,
                   // confined to the tab body) so the flared base only
                   // appears for the active tab.
-                  const tabBg = active ? "rgba(255,255,255,0.92)" : "transparent";
+                  const tabBg = active ? "#FFFFFF" : "transparent";
                   return (
                   <div
                     key={tab.id}
@@ -371,7 +404,13 @@ export default function BusinessHero() {
                       maxWidth: 185,
                       cursor: "pointer",
                       userSelect: "none",
-                      transition: "background 200ms ease",
+                      /* No background transition — the flared base
+                         corners are conditionally-rendered divs that
+                         appear instantly when a tab becomes active, so
+                         transitioning the body fade-in created a visible
+                         desync (flares snap in while the body still
+                         interpolated). Snapping the body in instantly
+                         matches the flares' arrival exactly. */
                       // Relative so each tab can host two absolute "ear"
                       // divs at its bottom-left and bottom-right that
                       // draw the Chrome-style flared base — concave
@@ -400,7 +439,7 @@ export default function BusinessHero() {
                           right: 4,
                           bottom: 4,
                           borderRadius: "clamp(6px, 0.7vw, 10px)",
-                          background: hovered ? "rgba(0,0,0,0.08)" : "transparent",
+                          background: hovered ? "rgba(255,255,255,0.12)" : "transparent",
                           transition: "background 180ms ease",
                           pointerEvents: "none",
                         }}
@@ -462,7 +501,7 @@ export default function BusinessHero() {
                       aria-hidden
                       viewBox="0 0 24 24"
                       fill="none"
-                      stroke={active ? "var(--ent-text-primary)" : "rgba(0,0,0,0.55)"}
+                      stroke={active ? "var(--ent-text-primary)" : "#FFFFFF"}
                       strokeWidth="1.8"
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -479,10 +518,10 @@ export default function BusinessHero() {
                         fontSize: "clamp(11px, 1.1vw, 15px)",
                         fontWeight: 500,
                         letterSpacing: "-0.01em",
-                        // Selected → ink. Otherwise pure black at 55%
-                        // opacity, matching the inactive icon stroke
-                        // so label + icon read as one muted pair.
-                        color: active ? "var(--ent-text-primary)" : "rgba(0,0,0,0.55)",
+                        // Selected → ink (sits on the active tab's white
+                        // silhouette). Inactive → pure white, full opacity
+                        // on the navy dark-glass background.
+                        color: active ? "var(--ent-text-primary)" : "#FFFFFF",
                         whiteSpace: "nowrap",
                         overflow: "hidden",
                         textOverflow: "ellipsis",

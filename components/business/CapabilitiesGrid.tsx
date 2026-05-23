@@ -53,30 +53,39 @@ export default function CapabilitiesGrid() {
 
         {/* Single panel wrapping all six tiles — mirrors
             SuperFeatureSection's `panel` chrome so the capabilities grid
-            reads as one demo surface. */}
+            reads as one demo surface. Inner dividers are a 1px gap with
+            the panel's gridline color showing through, so each cell
+            extends edge-to-edge inside the panel. */}
         <div
-          className="mt-14 lg:mt-20"
+          className="mt-14 lg:mt-20 overflow-hidden"
           style={{
-            backgroundColor: "#FAFAFA",
             border: "2px solid var(--ent-border-card)",
             borderRadius: "var(--ent-radius-2xl)",
-            padding: "clamp(28px, 4vw, 56px)",
           }}
         >
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-12 lg:gap-x-16 lg:gap-y-16">
+          <div
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
+            style={{ gap: 1, backgroundColor: "var(--color-gridline)" }}
+          >
             {ITEMS.map((item, i) => (
               <article
                 key={item.title}
-                className="cap-tile group"
+                className="cap-tile group flex flex-col items-center"
                 style={{
+                  backgroundColor: "#FAFAFA",
+                  padding: "clamp(24px, 3vw, 40px)",
                   opacity: visible ? 1 : 0,
                   transform: visible ? "translateY(0)" : "translateY(18px)",
                   transition: `opacity 0.6s ease ${0.06 * i}s, transform 0.6s ease ${0.06 * i}s`,
                 }}
               >
                 <div
-                  className="cap-tile-img-wrap relative w-full overflow-hidden border-2 border-gridline"
-                  style={{ aspectRatio: "1.65 / 1", borderRadius: 7 }}
+                  className="cap-tile-img-wrap relative w-full overflow-hidden"
+                  style={{
+                    aspectRatio: "1.65 / 1",
+                    borderRadius: 7,
+                    border: "1px solid var(--color-gridline)",
+                  }}
                 >
                   <Image
                     src={item.image}
@@ -87,7 +96,7 @@ export default function CapabilitiesGrid() {
                   />
                 </div>
                 <h3
-                  className="cap-tile-title mt-4 text-center text-[20px] md:text-[22px] font-semibold leading-[1.2]"
+                  className="cap-tile-title mt-5 text-center text-[20px] md:text-[22px] font-semibold leading-[1.2]"
                   style={{
                     color: "#0E173C",
                     letterSpacing: "-0.01em",

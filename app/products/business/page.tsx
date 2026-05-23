@@ -59,7 +59,7 @@ export default function BusinessPage() {
       <div
         ref={darkStartRef}
         className="relative"
-        style={{ backgroundColor: "#ffffff", paddingTop: "clamp(48px, 6vw, 96px)" }}
+        style={{ backgroundColor: "#ffffff" }}
       >
         {/* z-30 keeps this content above the hero photo (z-20). */}
         <div className="relative z-30">

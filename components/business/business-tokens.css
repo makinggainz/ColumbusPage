@@ -128,13 +128,15 @@
      #28C840). The literal red was the loudest pixel on the page and
      read as visual noise on what's a custom (not actual macOS)
      product window in the hero. Recolored to the homepage blue scale
-     so the dots still mark out a window affordance but stay on-brand:
-       red → --color-brand-soft  (#74A0FE, light blue)
-       yellow → --color-brand    (#1451E8, NewsCatcher blue — one step deeper)
-       green → --color-cta       (#0B1342, navy) */
-  --ent-chrome-red:          #74A0FE;
+     so the dots still mark out a window affordance but stay on-brand.
+     The blue ramp is now ordered dark → mid → light across the three
+     dot positions:
+       red position    → --color-cta        (#0B1342, navy)
+       yellow position → --color-brand      (#1451E8, NewsCatcher blue)
+       green position  → --color-brand-soft (#74A0FE, light blue) */
+  --ent-chrome-red:          #0B1342;
   --ent-chrome-yellow:       #1451E8;
-  --ent-chrome-green:        #0B1342;
+  --ent-chrome-green:        #74A0FE;
 
   /* ── Spacing (4px grid) ── */
   --ent-space-1:             4px;
