@@ -238,6 +238,10 @@ export function MistxNav({
   const darkScrimActive = darkBackdrop && (!stuck || overHero) && heroPhase === 0;
   const lightNav =
     (heroWhite && (!stuck || overHero)) ||
+    // Phase 2 ("Knows your vibe", navy scene) still needs white nav
+    // contents — dark text would be invisible against the navy scrim.
+    // Phase 3 ("Save & share / Local guide") sits over the white scene
+    // backdrop with NO navbar scrim, so the nav contents stay dark.
     ((heroLight || darkBackdrop) && overHero && heroPhase === 2) ||
     darkScrimActive;
   // Business-only: while scrolled ("on movement") AND the navbar still
@@ -256,10 +260,13 @@ export function MistxNav({
   // between via `background-color` (see the scrim div below). Phase 1 uses
   // the soft Elio-blue mid-stop (#E3F2FB) so the navbar reads as part of
   // Scene 1's light-blue band without going too saturated.
+  // Phase 3 ("Save & share / Local guide") used to wear a pure-black
+  // backdrop here; the consumer page now wants no navbar scrim at all over
+  // scene 3, so phase 3 is excluded from the scene-scrim opacity below.
   // `heroTint` (Research page) overrides this with a fixed caller colour.
   const heroStageColor =
     heroTint ??
-    (heroPhase === 2 ? "#0B1342" : heroPhase === 3 ? "#FFFFFF" : "#E3F2FB");
+    (heroPhase === 2 ? "#0B1342" : "#E3F2FB");
 
   return (
     <header
@@ -342,10 +349,12 @@ export function MistxNav({
             WebkitMaskImage:
               "linear-gradient(to bottom, black 0%, rgba(0,0,0,0.55) 50%, transparent 100%)",
             // In darkBackdrop mode the dark scrim owns phase 0; this scene-
-            // color scrim only paints during phases 1–3 in the sticky stage.
+            // color scrim paints during phases 1–2 only. Phase 3 ("Save &
+            // share / Local guide") deliberately runs with NO scrim so the
+            // navbar floats transparent over the white scene backdrop.
             // Other modes (heroLight, heroTint) keep the original behavior.
             opacity:
-              heroScrim && (!darkBackdrop || heroPhase > 0) ? 1 : 0,
+              heroScrim && (!darkBackdrop || (heroPhase > 0 && heroPhase !== 3)) ? 1 : 0,
             transition:
               "opacity 300ms ease, background-color 700ms cubic-bezier(0.44,0,0.56,1)",
           }}
@@ -368,7 +377,7 @@ export function MistxNav({
             borderTopLeftRadius: "var(--frame-radius, 20px)",
             borderTopRightRadius: "var(--frame-radius, 20px)",
             background:
-              "linear-gradient(to bottom, rgba(8, 22, 32, 0.45) 0%, rgba(8, 22, 32, 0.28) 55%, rgba(8, 22, 32, 0) 100%)",
+              "linear-gradient(to bottom, rgba(0, 0, 0, 0.40) 0%, rgba(0, 0, 0, 0.22) 55%, rgba(0, 0, 0, 0) 100%)",
             opacity: darkScrimActive ? 1 : 0,
             transition: "opacity 300ms ease",
           }}

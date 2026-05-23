@@ -3,7 +3,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRef, useEffect, useState } from "react";
-import glassStyles from "@/components/ui/GlassButton.module.css";
 import "@/components/products/how-it-works-tokens.css";
 
 /* ═══════════════════════════════════════════════════════════════
@@ -271,22 +270,23 @@ function FeatureCard({ feature }: { feature: Feature }) {
           {feature.description}
         </p>
 
-        {/* CTA — matches section C style */}
+        {/* CTA — site primary button style (navbar "Try Elio" pill): solid
+            navy fill (bg-cta = #0B1342) with white label + arrow, rounded
+            to the shared --radius-button token. */}
         <Link
           href="/maps-gpt"
-          className={`group flex items-center justify-center gap-6 w-full h-[52px] cursor-pointer no-underline ${glassStyles.btn}`}
-          style={{ padding: 0 }}
+          className="group inline-flex w-full items-center justify-center gap-3 rounded-button bg-cta px-5 py-3 text-white no-underline transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
         >
           <span className="text-[clamp(18px,2vw,22px)] lg:text-[20px]!" style={{
             fontFamily: "var(--hiw-font-sans)",
             fontWeight: 590,
             letterSpacing: "-0.02em",
-            color: "#00B1D4",
+            color: "#FFFFFF",
           }}>
             Try it now
           </span>
           <svg width="13" height="13" viewBox="0 0 13 13" fill="none" className="shrink-0 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" aria-hidden>
-            <path d="M2 11L11 2M11 2H4M11 2V9" stroke="#00B1D4" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M2 11L11 2M11 2H4M11 2V9" stroke="#FFFFFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         </Link>
       </div>

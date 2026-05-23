@@ -61,9 +61,18 @@ const INTRO_END = 0.34;
 // of HowItWorks steps 1 + 3 (#5FBFF1 and #2A8FC2). Step 2's gradient is
 // red→magenta — both banned — so Discover uses a pure cyan, #00B1D4.
 const SCENES = [
-  { ink: "#0B1B2B", eyebrow: "#5FBFF1", pillBg: "#5FBFF1", pillText: "#063140", pillRot: "-4deg", pillIdle: "rgba(6,49,64,0.40)" },
-  { ink: "#FFFFFF", eyebrow: "#00B1D4", pillBg: "#00B1D4", pillText: "#04222C", pillRot: "-4deg", pillIdle: "rgba(255,255,255,0.55)" },
-  { ink: "#0B1B2B", eyebrow: "#2A8FC2", pillBg: "#2A8FC2", pillText: "#FFFFFF", pillRot: "-5deg", pillIdle: "rgba(11,27,43,0.40)" },
+  // pillText / pillIdle stay WHITE on every scene — the new bottom
+  // black gradient below the pill row gives them a guaranteed
+  // legibility band, regardless of scene backdrop (light blue / navy
+  // / cityscape). pillBg keeps a per-scene tint so the active pill
+  // still reads as a distinct chip.
+  { ink: "#0B1B2B", eyebrow: "#5FBFF1", pillBg: "#5FBFF1", pillText: "#FFFFFF", pillRot: "-4deg", pillIdle: "rgba(255,255,255,0.65)" },
+  { ink: "#FFFFFF", eyebrow: "#00B1D4", pillBg: "#00B1D4", pillText: "#FFFFFF", pillRot: "-4deg", pillIdle: "rgba(255,255,255,0.65)" },
+  // Scene 3 sits on top of the cityscape ElioEndingBackground. The
+  // dedicated scene-3 dark scrim below (see scene backdrop) renders
+  // the image quite dim, so heading + eyebrow flip to WHITE here so
+  // they read cleanly over the darkened photo + floating cards.
+  { ink: "#FFFFFF", eyebrow: "#9FE0FF", pillBg: "#2A8FC2", pillText: "#FFFFFF", pillRot: "-5deg", pillIdle: "rgba(255,255,255,0.65)" },
 ] as const;
 
 // Scene-1 backdrop — soft Elio-logo blue with a subtle white fade at the
@@ -106,6 +115,54 @@ const LABELS = [
   { scene: 3, side: "right", anchor: 0.5, eyebrow: "Local guide in your pocket", heading: "Let Elio find you the coolest place, faster." },
 ] as const;
 
+// One product-shot per label, same index as LABELS. The phone screen
+// renders all six stacked, opacity-toggling to whichever label is
+// closest to the viewport anchor — see `activeLabel` below.
+const PHONE_IMAGES = [
+  // First image in the sequence intentionally matches the LAST label
+  // ("Local guide in your pocket") — the phone enters the pinned
+  // stage already showing the discovery-map screenshot so the user
+  // sees the product's destination right away, then the labels walk
+  // through how it gets there before landing on it again at the end.
+  "/consumer/elio/Localguideinyourpocket.png", // 0  Just ask (also the final shot)
+  "/consumer/elio/ElioFeedback.png",        // 1  Like texting a friend
+  "/consumer/elio/ElioHome.png",            // 2  Knows your vibe
+  "/consumer/elio/ElioZone.png",            // 3  Whole neighborhoods
+  "/consumer/elio/ElioSavedPlaces.png",     // 4  Save & share your favorites
+  "/consumer/elio/Localguideinyourpocket.png", // 5  Local guide in your pocket
+] as const;
+
+// Floating "map pins" + "category cards" that bloom across the Go-scene
+// (phase 3) ElioEndingBackground. ALL cards live in the BOTTOM 35% of
+// the pinned stage (y ≥ +200 in centre-origin coordinates) — clear of
+// the phone mockup (≈ y ±300, centred) and the right-side scrolling
+// text (which lives near the vertical centre). Cards spread left-to-
+// right across the bottom band; `bob` seeds the gentle breathing
+// animation. `kind` selects one of four card looks:
+//   - "category":         thumbnail above + label pill
+//   - "category-profile": circular profile-photo above + label pill
+//   - "place":            ring marker + "Panaria / calm cafe" two-line
+//                         pill, optionally with a category tag above
+//                         and an optional profile-photo circle beside
+//   - "dot":              big gradient avatar with status ring + label
+//   - "dot-label":        tiny pin dot + label pill (no thumbnail)
+const ENDING_CARDS = [
+  { kind: "dot",              label: "Concerts",        x: -640, y: 240, bob: 0.0 },
+  { kind: "place",            label: "Panaria",         sub: "calm cafe", category: "Restaraunts", profile: "/consumer/images/hidden-coffee-shop.png", x: -460, y: 360, bob: 0.6 },
+  { kind: "category",         label: "activities",      thumb: "/consumer/HeroBack.png", profile: "/consumer/images/local-hiking-trail.png", x: -300, y: 240, bob: 1.0 },
+  // "group trips" lives high+left to clear the centred Ask·Discover·Go
+  // pill row at the bottom of the pinned stage.
+  { kind: "category-profile", label: "group trips",     profile: "/consumer/images/hang-out-spot.png", x: -180, y: 250, bob: 1.4 },
+  // Centre-ish Panaria pushed further right so it no longer clashes
+  // with the phone and the pill row's "Ask" side.
+  { kind: "place",            label: "Panaria",         sub: "calm cafe", category: null, profile: "/consumer/images/cozy-bookstore.png", x: 260, y: 290, bob: 0.4 },
+  { kind: "category",         label: "events",          thumb: "/consumer/images/rooftop-sunset-bar.png", profile: "/consumer/images/late-night-taco-joint.png", x: 230, y: 380, bob: 1.8 },
+  { kind: "category",         label: "trending places", thumbs: ["/consumer/images/hidden-coffee-shop.png", "/consumer/images/late-night-taco-joint.png", "/consumer/images/rooftop-sunset-bar.png"], profile: "/consumer/images/weekend-brunch-place.png", x: 460, y: 230, bob: 0.2 },
+  { kind: "dot-label",        label: "spots",           x: 580, y: 380, bob: 1.1 },
+  { kind: "place",            label: "Panaria",         sub: "calm cafe", category: "daily utilities", profile: "/consumer/images/quiet-study-cafe.png", x: 690, y: 230, bob: 1.6 },
+  { kind: "place",            label: "Panaria",         sub: "calm cafe", category: null, x: -720, y: 380, bob: 0.9 },
+] as const;
+
 // Floating travel postcards — final (Go) scene only. The Go heading
 // scrolls through the whole RIGHT column and the pill row owns the
 // bottom-centre, so the cards live entirely in the clear LEFT zone —
@@ -123,13 +180,18 @@ export default function Hero() {
   const [isLg, setIsLg] = useState(true);
   // Index of the typewriter phrase currently being typed. TypedPhrase
   // calls back with this every time the next phrase begins, and the
-  // hero background image carousel crossfades to match (see
-  // IMAGE_BY_PHRASE).
+  // hero background video remounts to match (see VIDEO_BY_PHRASE).
   const [activePhrase, setActivePhrase] = useState(0);
+  // Index of the LABEL currently nearest the viewport anchor (0..5).
+  // Tracks one step finer than `phase` (which only resolves the 3
+  // SCENES) so the phone product-shot can swap per-label, not per-
+  // scene. Updated in onScroll alongside phase.
+  const [activeLabel, setActiveLabel] = useState(0);
 
   const outerRef = useRef<HTMLDivElement>(null);
   const riseRef = useRef<HTMLDivElement>(null);
   const phaseRef = useRef(0);
+  const labelRef = useRef(0);
   const isLgRef = useRef(true);
   const labelRefs = useRef<(HTMLDivElement | null)[]>([]);
   const blockRefs = useRef<(HTMLDivElement | null)[]>([]);
@@ -202,6 +264,14 @@ export default function Hero() {
     let nextPhase: number;
     if (firstBelowAnchor && firstAd > vh * 0.3) nextPhase = 0;
     else nextPhase = LABELS[nearest].scene;
+    // The product-shot the phone displays follows the nearest LABEL
+    // (one of six), not the scene (one of three). During the intro,
+    // before any label has reached its anchor, freeze on label 0.
+    const nextLabel = nextPhase === 0 ? 0 : nearest;
+    if (nextLabel !== labelRef.current) {
+      labelRef.current = nextLabel;
+      setActiveLabel(nextLabel);
+    }
     if (nextPhase !== phaseRef.current) {
       phaseRef.current = nextPhase;
       setPhase(nextPhase);
@@ -264,9 +334,40 @@ export default function Hero() {
             className="absolute inset-0"
             style={{ background: NAVY, opacity: phase === 2 ? 1 : 0, transition: "opacity 0.7s cubic-bezier(0.44,0,0.56,1)" }}
           />
+          {/* Scene 3 ("Save & share" / "Local guide") swaps the flat
+              white backdrop for ElioEndingBackground — a stylised
+              cityscape with rooftops, parks, and waterways the
+              floating cards below pin themselves to. The image is
+              `object-fit: cover` so it scales with the viewport and
+              the focal centre (downtown rooftops) stays roughly
+              behind the phone on every screen size. */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/consumer/elio/ElioEndingBackground.jpg"
+            alt=""
+            aria-hidden
+            className="absolute inset-0 w-full h-full"
+            style={{
+              objectFit: "cover",
+              opacity: phase === 3 ? 1 : 0,
+              transition: "opacity 0.7s cubic-bezier(0.44,0,0.56,1)",
+            }}
+          />
+          {/* Bottom legibility band — black opacity gradient from the
+              very bottom of the pinned stage upward. Always-on (every
+              scene), opaque-ish at the bottom and fully transparent
+              by ~30vh up, so the white "Ask · Discover · Go" pill row
+              + any caption text near the bottom has a guaranteed
+              dark base regardless of the scene backdrop (light blue
+              scene 1 / navy scene 2 / cityscape scene 3). */}
           <div
-            className="absolute inset-0"
-            style={{ background: LIGHT, opacity: phase === 3 ? 1 : 0, transition: "opacity 0.7s cubic-bezier(0.44,0,0.56,1)" }}
+            aria-hidden
+            className="absolute inset-x-0 bottom-0 pointer-events-none"
+            style={{
+              height: "32vh",
+              background:
+                "linear-gradient(to top, rgba(0, 0, 0, 0.55) 0%, rgba(0, 0, 0, 0.30) 45%, rgba(0, 0, 0, 0) 100%)",
+            }}
           />
         </div>
       </div>
@@ -274,29 +375,67 @@ export default function Hero() {
       {/* ════ Phone · cards · pill row — pinned (the ONLY pinned content) ════ */}
       <div className="absolute inset-0 z-30 pointer-events-none">
         <div className="sticky top-0 overflow-hidden" style={{ height: "100dvh" }}>
-          {/* Floating travel postcards — Go scene only */}
+          {/* Floating map-pin / category cards — Go scene only.
+              Replaces the prior travel-postcard scatter; matches the
+              "Concerts / Restaraunts / activities / Panaria calm
+              cafe / trending places / spots / events / daily
+              utilities" overlay shown in the design ref. Each card
+              fades + lifts in on a per-index stagger and bobs
+              gently while on screen. */}
           {isLg &&
-            CARDS.map((c, i) => {
+            ENDING_CARDS.map((c, i) => {
               const on = phase === 3;
               return (
                 <div
-                  key={i}
+                  key={`end-${i}`}
                   className="absolute left-1/2 top-1/2"
                   style={{
-                    transform: `translate(-50%, -50%) translate(${c.x}px, ${c.y + (on ? 0 : 40)}px) rotate(${c.rot}deg)`,
+                    transform: `translate(-50%, -50%) translate(${c.x}px, ${c.y + (on ? 0 : 20)}px)`,
                     opacity: on ? 1 : 0,
-                    transition: `opacity 0.6s ease ${i * 80}ms, transform 0.8s ${APPEAR} ${i * 80}ms`,
+                    transition: `opacity 0.6s ease ${i * 60}ms, transform 0.8s ${APPEAR} ${i * 60}ms`,
+                    zIndex: 5,
                   }}
                 >
-                  <div style={{ animation: `mgHeroBob 5s ease-in-out ${c.bob}s infinite` }}>
-                    <PhotoCard img={c.img} w={c.w} />
+                  <div
+                    style={{
+                      // Damped bob — large initial swings, decays to
+                      // rest by the end of the 12s cycle. One-shot
+                      // (no `infinite`) with `both` fill mode so the
+                      // card holds at translateY(0) after settling
+                      // instead of looping back into perpetual motion.
+                      animation: `mgHeroBob 12s cubic-bezier(0.34, 1.4, 0.4, 1) ${c.bob * 0.35}s 1 both`,
+                    }}
+                  >
+                    <EndingCard card={c} />
                   </div>
                 </div>
               );
             })}
 
+          {/* Scene-3 dark scrim — lives INSIDE the pinned stage at
+              zIndex 6, above the floating ENDING_CARDS (zIndex 5)
+              but BELOW the phone (zIndex 10) and pill row (zIndex
+              20). The floating cards therefore sit "under" the scrim
+              and read as a dimmer, more atmospheric layer of the
+              cityscape, while the phone + pill row stay fully bright
+              and readable. Dialed down from the earlier full scrim:
+              ~0.30 at the top, ~0.20 mid, ~0.32 at the bottom — the
+              cityscape still reads, and the white scene-3 heading
+              has enough contrast without crushing the image. */}
+          <div
+            aria-hidden
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              zIndex: 6,
+              background:
+                "linear-gradient(180deg, rgba(0,0,0,0.30) 0%, rgba(0,0,0,0.20) 50%, rgba(0,0,0,0.32) 100%)",
+              opacity: phase === 3 ? 1 : 0,
+              transition: "opacity 0.7s cubic-bezier(0.44,0,0.56,1)",
+            }}
+          />
+
           {/* The bare 3D phone */}
-          <div ref={riseRef} className="absolute inset-0" style={{ willChange: "transform" }}>
+          <div ref={riseRef} className="absolute inset-0" style={{ willChange: "transform", zIndex: 10 }}>
             <div
               className="absolute left-1/2 top-1/2"
               style={{
@@ -325,23 +464,58 @@ export default function Hero() {
                       "0 50px 50px -2px rgba(0,40,60,0.22)",
                   }}
                 >
-                  {/* ▼ screen — swap point */}
+                  {/* ▼ screen — six product shots stacked, one per
+                      label. The opacity of the layer whose index
+                      matches `activeLabel` rises to 1 while the rest
+                      stay at 0, so the swap reads as a clean
+                      crossfade. All six images mount on first paint
+                      and stay mounted, so subsequent label changes
+                      are zero-cost (no fetch, no remount). */}
                   <div
                     style={{
+                      position: "relative",
                       width: "100%",
                       height: "100%",
                       borderRadius: phoneRadius - phoneBezel,
                       background: "linear-gradient(180deg, #FFFFFF 0%, #EAF4F5 100%)",
                       overflow: "hidden",
                     }}
-                  />
+                  >
+                    {PHONE_IMAGES.map((src, i) => (
+                      /* eslint-disable-next-line @next/next/no-img-element */
+                      <img
+                        key={src}
+                        src={src}
+                        alt=""
+                        aria-hidden
+                        style={{
+                          position: "absolute",
+                          inset: 0,
+                          width: "100%",
+                          height: "100%",
+                          objectFit: "cover",
+                          // Anchor the TOP of the source screenshot to
+                          // the top of the phone screen — any overflow
+                          // (status bar / footer / extra UI below) gets
+                          // cropped off the bottom rather than the top.
+                          objectPosition: "top center",
+                          opacity: i === activeLabel ? 1 : 0,
+                          transition: "opacity 500ms ease",
+                        }}
+                      />
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
           </div>
 
           {/* ASK · DISCOVER · GO pill row — clickable (PolarX's anchor labels);
-              pointerEvents:auto opts back in over the pinned stage's none. */}
+              pointerEvents:auto opts back in over the pinned stage's none.
+              zIndex:20 keeps the pill row above every floating ENDING_CARD
+              (which sit at zIndex:5 in the same pinned stage), so the
+              "Ask · Discover · Go" chips are never obscured by the
+              cityscape map pins on scene 3. */}
           <div
             className="absolute left-1/2 flex items-center"
             style={{
@@ -351,6 +525,7 @@ export default function Hero() {
               opacity: inDevice ? 1 : 0,
               transition: "opacity 0.5s ease",
               pointerEvents: "auto",
+              zIndex: 20,
             }}
           >
             {PILL_WORDS.map((word, i) => {
@@ -410,43 +585,31 @@ export default function Hero() {
           paddingBottom: "clamp(150px, 19vh, 230px)",
         }}
       >
-        {/* Consumer hero background — a stacked image carousel that
-            SWAPS to match the typed-phrase below. All 10 images are
-            mounted at once (overlapping, position:absolute) so the
-            browser caches them up front and the swap itself is just
-            a CSS opacity transition between two pre-rendered layers
-            — no fetch, no remount, no flash. Each image also slowly
-            "Ken-Burns" scales from 1.0 → 1.06 over 6s while it's the
-            active one, then resets back to 1.0 once another image
-            takes over, giving the hero a gentle cinematic drift.
+        {/* Consumer hero background — a video that SWAPS to match the
+            typed-phrase carousel below. The phrase carousel calls back
+            into `activePhrase`; the video remounts via `key` so each
+            new clip starts from frame 0 and the prior one is dropped.
+            `HeroBack.png` is the poster, so the beach photo shows
+            while the clip preloads and is the fallback for any URL
+            that 404s.
 
-            On top of the image stack sits the same dark scrim +
-            navbar fade the video version used, so the white navbar
-            contents and the centred H1 stack stay legible on every
-            scene. */}
+            On top of the video sits a dark scrim + navbar fade so
+            the white navbar contents and the centred H1 stack stay
+            legible regardless of which frame is on screen. */}
         <div aria-hidden className="absolute inset-0 overflow-hidden">
-          {IMAGE_BY_PHRASE.map((src, i) => (
-            <img
-              // eslint-disable-next-line @next/next/no-img-element
-              key={src}
-              src={src}
-              alt=""
-              aria-hidden
-              className="absolute inset-0 w-full h-full pointer-events-none"
-              style={{
-                objectFit: "cover",
-                opacity: i === activePhrase ? 1 : 0,
-                transform: `scale(${i === activePhrase ? 1.06 : 1})`,
-                transformOrigin: "center center",
-                // Crossfade ~900ms; the Ken-Burns zoom drifts over
-                // 6s — long enough that it's barely perceptible per
-                // frame, just enough to keep the photo from feeling
-                // dead while a phrase sits on screen.
-                transition:
-                  "opacity 900ms ease-in-out, transform 6s ease-out",
-              }}
-            />
-          ))}
+          <video
+            key={`hero-bg-${activePhrase}`}
+            src={VIDEO_BY_PHRASE[activePhrase]}
+            poster="/consumer/HeroBack.png"
+            autoPlay
+            loop
+            muted
+            playsInline
+            preload="auto"
+            className="absolute inset-0 w-full h-full"
+            style={{ objectFit: "cover" }}
+            aria-hidden
+          />
           {/* Global readability scrim — uniform dark tint over the whole
               video so the centred "Elio" + H1 + CTA stack reads
               cleanly on any frame of any clip (varied brightness from
@@ -580,8 +743,13 @@ export default function Hero() {
 
       </header>
 
-      {/* ════ Scroll content — per-scene text in NORMAL FLOW; scrolls past the phone ════ */}
-      <div className="relative z-10" style={{ width: "100%" }}>
+      {/* ════ Scroll content — per-scene text in NORMAL FLOW; scrolls past the phone ════
+            z-40 sits ABOVE the pinned phone/cards/pill row (z-30), so
+            the eyebrow + heading always render on top of whatever
+            floating UI the active scene paints — important for Scene
+            3, where the cityscape ENDING_CARDS would otherwise crowd
+            the right-side text labels. */}
+      <div className="relative z-40" style={{ width: "100%" }}>
         <div style={{ height: `${INTRO_LEAD_VH}vh` }} />
         {LABELS.map((lab, i) => {
           const sc = SCENES[lab.scene - 1];
@@ -632,7 +800,7 @@ export default function Hero() {
                     fontFamily: '"SF Pro", -apple-system, BlinkMacSystemFont, sans-serif',
                     fontSize: isLg ? 40 : 25,
                     fontWeight: 700,
-                    lineHeight: 1.22,
+                    lineHeight: 1.15,
                     letterSpacing: "-0.02em",
                     color: sc.ink,
                   }}
@@ -647,7 +815,22 @@ export default function Hero() {
       </div>
 
       <style>{`
-        @keyframes mgHeroBob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        /* Damped float — amplitude decays across the cycle so each
+           card enters with a strong "drop in & bounce" feel and
+           gradually calms to rest. Applied with iteration-count 1 +
+           fill-mode both, so the card settles at translateY(0) and
+           the cityscape stops moving after the entrance. */
+        @keyframes mgHeroBob {
+          0%   { transform: translateY(0); }
+          8%   { transform: translateY(-22px); }
+          18%  { transform: translateY(3px); }
+          30%  { transform: translateY(-15px); }
+          42%  { transform: translateY(2px); }
+          55%  { transform: translateY(-9px); }
+          70%  { transform: translateY(0); }
+          83%  { transform: translateY(-4px); }
+          100% { transform: translateY(0); }
+        }
       `}</style>
     </div>
   );
@@ -683,25 +866,41 @@ const TYPED_PHRASES = [
   "quiet study café",
 ];
 
-// Hero background image per typed phrase — same index as TYPED_PHRASES.
-// Self-hosted under /public/consumer/images/, slug-named to match the
-// phrase. ALL entries are pre-mounted in the carousel (stacked
-// absolute, opacity-toggled), so the swap is a CSS-only crossfade
-// with no fetch on transition. `secret beach spot` keeps the original
-// tropical-beach hero asset (/consumer/HeroBack.png) — that one
-// pre-dates the per-phrase set and the original framing fits the
-// phrase exactly.
-const IMAGE_BY_PHRASE = [
-  "/consumer/images/hang-out-spot.png",
-  "/consumer/images/romantic-date-night.png",
-  "/consumer/HeroBack.png",
-  "/consumer/images/hidden-coffee-shop.png",
-  "/consumer/images/weekend-brunch-place.png",
-  "/consumer/images/local-hiking-trail.png",
-  "/consumer/images/cozy-bookstore.png",
-  "/consumer/images/rooftop-sunset-bar.png",
-  "/consumer/images/late-night-taco-joint.png",
-  "/consumer/images/quiet-study-cafe.png",
+// Hero background video per typed phrase — same index as TYPED_PHRASES.
+// Three are self-hosted local clips (cropped + trimmed from screen
+// recordings) under /public/consumer/videos/; the other seven hot-link
+// off Mixkit's / Pexels' CDNs (both allow free hot-linking; ~57 MB
+// total avoided in the repo). Each clip leans into the "people
+// enjoying that kind of place" vibe of its phrase:
+//   hang out spot         → local clip (house-party, screen-recorded
+//                            + cropped + trimmed to source 1.5s–3.5s,
+//                            /public/consumer/videos/hang-out-spot.mp4)
+//   romantic date night   → intimate couple dinner (Mixkit 41261)
+//   secret beach spot     → local clip (runner on a beach with crashing waves,
+//                            screen-recorded + trimmed -ss 3,
+//                            /public/consumer/videos/secret-beach-spot.mp4)
+//   hidden coffee shop    → restaurant with people sitting outside at night (Pexels 17417856)
+//   weekend brunch place  → bustling coffee shop with baristas (Pexels 29719125)
+//   local hiking trail    → couple exploring a forest (Mixkit 43151)
+//   cozy bookstore        → local clip (dim bookstore "You" opening scene,
+//                            screen-recorded + cropped,
+//                            /public/consumer/videos/cozy-bookstore.mp4)
+//   rooftop sunset bar    → young couple having fun in a rooftop bar (Mixkit 47027)
+//   late-night taco joint → fish tacos with beer (Mixkit 16411)
+//   quiet study café      → woman drinking coffee in a cafe (Mixkit 223)
+// The <video> falls back to /consumer/HeroBack.png (poster) if any
+// URL ever 404s so the page never goes black.
+const VIDEO_BY_PHRASE = [
+  "/consumer/videos/hang-out-spot.mp4",
+  "https://assets.mixkit.co/videos/41261/41261-720.mp4",
+  "/consumer/videos/secret-beach-spot.mp4",
+  "https://videos.pexels.com/video-files/17417856/17417856-hd_1280_720_30fps.mp4",
+  "https://videos.pexels.com/video-files/29719125/12778465_3840_2160_24fps.mp4",
+  "https://assets.mixkit.co/videos/43151/43151-720.mp4",
+  "/consumer/videos/cozy-bookstore.mp4",
+  "https://assets.mixkit.co/videos/47027/47027-720.mp4",
+  "https://assets.mixkit.co/videos/16411/16411-720.mp4",
+  "https://assets.mixkit.co/videos/223/223-720.mp4",
 ];
 
 function TypedPhrase({
@@ -771,6 +970,231 @@ function TypedPhrase({
       />
       <style>{`@keyframes mgHeroCaret { 0%,49% { opacity: 1 } 50%,100% { opacity: 0 } }`}</style>
     </span>
+  );
+}
+
+// ── Go-scene map overlay: floating "you can ask for X" cards that sit on
+//    the cityscape ElioEndingBackground. Four variants:
+//      - "dot":       small avatar circle + label pill (e.g. "Concerts")
+//      - "dot-label": tiny pin dot + label pill (e.g. "spots")
+//      - "place":     two-line "Panaria / calm cafe" pill, optionally
+//                     with a category tag above (e.g. "Restaraunts")
+//      - "category":  rounded thumbnail (or stack of three) + label pill
+//    Styling targets a clean white-pill look that reads as cohesive
+//    "map UI" against the painterly cityscape behind.
+type EndingCardData = (typeof ENDING_CARDS)[number];
+
+function EndingCard({ card }: { card: EndingCardData }) {
+  const pillBase: React.CSSProperties = {
+    padding: "5px 11px",
+    borderRadius: 10,
+    background: "#FFFFFF",
+    fontFamily: '"SF Pro", -apple-system, BlinkMacSystemFont, sans-serif',
+    fontSize: 12,
+    fontWeight: 600,
+    color: "#0B1B2B",
+    letterSpacing: "-0.01em",
+    boxShadow:
+      "0 1px 2px rgba(0,0,0,0.08), 0 8px 24px -8px rgba(0,40,60,0.25)",
+    whiteSpace: "nowrap" as const,
+  };
+  const categoryTag: React.CSSProperties = {
+    ...pillBase,
+    fontSize: 11,
+    fontWeight: 500,
+    opacity: 0.92,
+    marginBottom: 4,
+  };
+  if (card.kind === "dot") {
+    return (
+      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 8 }}>
+        <div
+          style={{
+            width: 50,
+            height: 50,
+            borderRadius: "50%",
+            background: "linear-gradient(135deg, #6094C1 0%, #2A5B8A 100%)",
+            border: "3px solid #FFFFFF",
+            boxShadow: "0 4px 14px -4px rgba(0,40,60,0.35)",
+            position: "relative",
+          }}
+        >
+          {/* Thin ring slice — mimics the green/red status arc in the screenshot */}
+          <div
+            style={{
+              position: "absolute",
+              inset: -4,
+              borderRadius: "50%",
+              border: "2px solid #5CC982",
+              borderRightColor: "#FF5454",
+              borderBottomColor: "transparent",
+              transform: "rotate(35deg)",
+            }}
+          />
+        </div>
+        <div style={pillBase}>{card.label}</div>
+      </div>
+    );
+  }
+  if (card.kind === "dot-label") {
+    return (
+      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 6 }}>
+        <div
+          style={{
+            width: 14,
+            height: 14,
+            borderRadius: "50%",
+            background: "#F45D8B",
+            border: "2px solid #FFFFFF",
+            boxShadow: "0 2px 6px rgba(0,0,0,0.25)",
+          }}
+        />
+        <div style={pillBase}>{card.label}</div>
+      </div>
+    );
+  }
+  if (card.kind === "place") {
+    const profile = "profile" in card ? card.profile : undefined;
+    return (
+      <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
+        {card.category && <div style={categoryTag}>{card.category}</div>}
+        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <div
+            style={{
+              width: 12,
+              height: 12,
+              borderRadius: "50%",
+              background: "#FFFFFF",
+              border: "2px solid #6094C1",
+              boxShadow: "0 2px 6px rgba(0,0,0,0.20)",
+              flexShrink: 0,
+            }}
+          />
+          <div
+            style={{
+              ...pillBase,
+              padding: "6px 12px",
+              lineHeight: 1.15,
+            }}
+          >
+            <div style={{ fontWeight: 600 }}>{card.label}</div>
+            <div style={{ fontSize: 11, fontWeight: 400, opacity: 0.58 }}>{card.sub}</div>
+          </div>
+          {profile && (
+            /* eslint-disable-next-line @next/next/no-img-element */
+            <img
+              src={profile}
+              alt=""
+              style={{
+                width: 26,
+                height: 26,
+                borderRadius: "50%",
+                objectFit: "cover",
+                border: "2px solid #FFFFFF",
+                boxShadow: "0 2px 6px rgba(0,0,0,0.22)",
+                flexShrink: 0,
+              }}
+            />
+          )}
+        </div>
+      </div>
+    );
+  }
+  if (card.kind === "category-profile") {
+    return (
+      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 6 }}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={card.profile}
+          alt=""
+          style={{
+            width: 54,
+            height: 54,
+            borderRadius: "50%",
+            objectFit: "cover",
+            border: "3px solid #FFFFFF",
+            boxShadow: "0 6px 14px -4px rgba(0,40,60,0.30)",
+          }}
+        />
+        <div style={pillBase}>{card.label}</div>
+      </div>
+    );
+  }
+  // "category"
+  const thumbs = "thumbs" in card ? card.thumbs : undefined;
+  const thumb = "thumb" in card ? card.thumb : undefined;
+  const catProfile = "profile" in card ? card.profile : undefined;
+  // Stack thumb (or thumbs) over a small profile-avatar circle that
+  // overlaps the bottom-right corner — reads as an "attribution"
+  // marker (who shared this place), the same visual idiom Instagram
+  // / Airbnb use for user-curated content. Positioned absolute so it
+  // hugs the thumbnail's bottom-right regardless of which thumb
+  // shape is rendered (single / stacked).
+  return (
+    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 6 }}>
+      {(thumbs || thumb) && (
+        <div style={{ position: "relative" }}>
+          {thumbs ? (
+            <div style={{ position: "relative", width: 92, height: 60 }}>
+              {thumbs.slice(0, 3).map((t, i) => (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  key={t}
+                  src={t}
+                  alt=""
+                  style={{
+                    position: "absolute",
+                    width: 70,
+                    height: 50,
+                    left: i * 11,
+                    top: i * 5,
+                    borderRadius: 8,
+                    objectFit: "cover",
+                    border: "2.5px solid #FFFFFF",
+                    boxShadow: "0 4px 10px -3px rgba(0,40,60,0.30)",
+                    zIndex: 3 - i,
+                  }}
+                />
+              ))}
+            </div>
+          ) : thumb ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={thumb}
+              alt=""
+              style={{
+                width: 78,
+                height: 56,
+                borderRadius: 9,
+                objectFit: "cover",
+                border: "2.5px solid #FFFFFF",
+                boxShadow: "0 6px 14px -4px rgba(0,40,60,0.30)",
+              }}
+            />
+          ) : null}
+          {catProfile && (
+            /* eslint-disable-next-line @next/next/no-img-element */
+            <img
+              src={catProfile}
+              alt=""
+              style={{
+                position: "absolute",
+                right: -8,
+                bottom: -8,
+                width: 26,
+                height: 26,
+                borderRadius: "50%",
+                objectFit: "cover",
+                border: "2px solid #FFFFFF",
+                boxShadow: "0 3px 8px rgba(0,0,0,0.28)",
+                zIndex: 5,
+              }}
+            />
+          )}
+        </div>
+      )}
+      <div style={pillBase}>{card.label}</div>
+    </div>
   );
 }
 
