@@ -22,6 +22,7 @@ export default function ProductBanner() {
     <section
       ref={sectionRef}
       className="relative w-full"
+      style={{ marginTop: 100 }}
     >
       {/* Art backdrop, anchored to the section's bottom edge. Its height is
           derived from the image's native 1881×836 ratio against the full
