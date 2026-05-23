@@ -1,73 +1,50 @@
 import { type ReactNode } from "react";
-import { Navbar } from "@/components/layout/Navbar";
-import { Hero } from "@/components/home/Hero";
-import { Vision } from "@/components/home/VisionSection";
-import { Footer } from "@/components/layout/Footer";
-import { SiteSelection } from "@/components/home/SiteSelection";
-import { TrustStrip } from "@/components/home/TrustStrip";
-import { Applications } from "@/components/home/Applications";
+import { MistxNav } from "@/components/layout/MistxNav";
+import { HeroNew } from "@/components/home/HeroNew";
+import { BentoProducts } from "@/components/home/BentoProducts";
+import {
+  TextScrollIntro,
+  BlogSection,
+  MissionScrollIntro,
+} from "@/components/home/lightspark";
 import { Careers } from "@/components/home/Careers";
-import { Industries } from "@/components/home/Industries";
-import { Capabilities } from "@/components/home/Capabilities";
-import { PartnerStrip } from "@/components/home/PartnerStrip";
-import { TravelSection } from "@/components/home/TravelSection";
-import { GeneratedMaps } from "@/components/home/GeneratedMaps";
-import { UniqueSpotsSection } from "@/components/home/UniqueSpotsSection";
+
+// Footer is now rendered in `app/layout.tsx` with `reveal` mode — it sits
+// fixed at the viewport bottom (z-index 0) behind the PageFrame card so it
+// reveals when the user scrolls past the end of the page content.
 function IslandGap() {
   return (
-    <div className="max-w-[1287px] mx-5 md:mx-auto relative" style={{ height: 120 }}>
-      <div style={{ position: "absolute", top: 0, left: 0, width: 1, height: "100%", background: "var(--grid-line)" }} />
-      <div style={{ position: "absolute", top: 0, right: 0, width: 1, height: "100%", background: "var(--grid-line)" }} />
-    </div>
+    <div className="max-w-[1287px] mx-5 md:mx-auto" style={{ height: 120 }} />
   );
 }
 
 export default function Home() {
   return (
     <main className="min-h-screen" style={{ backgroundColor: "#ffffff" }}>
-      <Navbar />
-      <Hero />
+      <MistxNav />
+      <HeroNew />
 
-      {/* Island 1: Vision */}
-      <div className="mt-16">
-        <Vision />
+      {/* "We're all about maps" intro + bento grid (Columbus / Elio /
+          Research). The intro lede is the renamed TextScrollIntro
+          (scroll-driven word reveal); the bento grid below shows the
+          three products as a featured + 2-stacked tile layout. */}
+      {/* pt-16 (not mt-16): padding, not margin, so the hero's 30px
+          floating-div bottom gutter (margin-bottom on .hn-section) isn't
+          swallowed by sibling margin-collapse and stays a true 30px. */}
+      <div className="pt-16">
+        <TextScrollIntro />
+        <BentoProducts />
+
+        <BlogSection />
+        <MissionScrollIntro />
       </div>
 
       <IslandGap />
 
-      {/* Island 2: Columbus Pro */}
-      <div data-island-2>
-        <SiteSelection />
-        <Capabilities />
-        <PartnerStrip />
-        <Industries />
-      </div>
-
-      <IslandGap />
-
-      {/* Island 3: MapsGPT */}
-      <div>
-        <TravelSection />
-        <TrustStrip />
-        <GeneratedMaps />
-        <UniqueSpotsSection />
-      </div>
-
-      <IslandGap />
-
-      {/* Island 4: Applications */}
-      <div>
-        <Applications />
-      </div>
-
-      <IslandGap />
-
-      {/* Island 5: Hiring Humans */}
+      {/* Hiring Humans */}
       <div>
         <Careers />
       </div>
-
-      <Footer />
     </main>
   );
 }

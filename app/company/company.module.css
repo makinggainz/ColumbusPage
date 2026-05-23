@@ -1,0 +1,748 @@
+/* Company page — built on the homepage / blog visual language:
+   #FFFFFF surface, Funnel Display headings, hairline cards
+   (1px var(--color-gridline)), 1287px content bounds, and the blog
+   page's navbar-overlay hero treatment with a masked watermark.
+
+   Spacing: every padding / gap / margin below is a 4px-grid value from
+   the design-system scale (12 / 16 / 20 / 24 / 32 / 40 / 48 / 64 / 96). */
+
+.page {
+  position: relative;
+  background: #FFFFFF;
+  color: var(--color-ink);
+}
+
+/* ── Hero ──────────────────────────────────────────────────────────────
+   Full-viewport hero, identical structure to the blog index hero: pulled
+   up behind the sticky navbar (margin-top: -80px) and given back the
+   80px so it spans exactly one screen. Content is flex-centred. */
+.hero {
+  position: relative;
+  overflow: hidden;
+  margin-top: -80px;
+  /* +80px cancels the -80px navbar pull so the hero fills exactly one
+     viewport. dvh tracks mobile browser chrome; vh is the fallback. */
+  min-height: calc(100vh + 80px);
+  min-height: calc(100dvh + 80px);
+  padding: 80px 24px 48px;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  background: #FFFFFF;
+}
+
+/* companyhero watermark — the tall-ship-and-globe sketch, dimmed and
+   top/bottom-masked so it melts into the white page exactly like the
+   minimalistCity watermark on the blog + homepage heroes. */
+.heroWatermark {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: url("/companyhero.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  opacity: 0.5;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 20%, #000 80%, transparent 100%);
+  mask-image: linear-gradient(to bottom, transparent 0%, #000 20%, #000 80%, transparent 100%);
+}
+
+.heroInner {
+  position: relative;
+  z-index: 1;
+  /* Grows to fill the space below the navbar, centring the title block. */
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  /* 768px — the single reading-column width shared by the hero, the
+     mission / vision statements (.textColumn) and the contact card, so
+     the centred text spine never changes width down the page. */
+  max-width: 768px;
+  margin: 0 auto;
+}
+
+.heroHeadline {
+  color: var(--color-ink);
+  margin: 0;
+  /* Even line lengths — centred multi-line text scans far better when the
+     lines are balanced rather than ragged. */
+  text-wrap: balance;
+}
+
+/* Hero subtitle — "Body large" per the type scale: 16px, stepping up to
+   20px at the lg breakpoint. Heading→subtitle gap follows the design-
+   system rule: 24px mobile / 48px desktop. */
+.heroLead {
+  margin: 24px auto 0;
+  max-width: 600px;
+  color: var(--color-muted);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.5;
+  font-weight: 400;
+}
+@media (min-width: 768px) {
+  .heroLead {
+    margin-top: 48px;
+  }
+}
+@media (min-width: 1024px) {
+  .heroLead {
+    font-size: 20px;
+  }
+}
+
+/* ── Content bounds — 1287px column, matching the homepage + blog. ────── */
+.bounds {
+  max-width: 1287px;
+  margin-left: 20px;
+  margin-right: 20px;
+  box-sizing: border-box;
+}
+@media (min-width: 768px) {
+  .bounds {
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+/* ── Reading column — the 768px centred text spine. Used by the mission,
+   vision and contact sections so every text block shares one width; only
+   the §4 / §5 card rows widen out to the full .bounds. ─────────────────── */
+.textColumn {
+  max-width: 768px;
+  margin-left: 20px;
+  margin-right: 20px;
+  box-sizing: border-box;
+}
+@media (min-width: 768px) {
+  .textColumn {
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+/* ── Section opener ───────────────────────────────────────────────────────
+   Every section on the page opens with this one treatment — a small
+   uppercase eyebrow. Keeping a single opener style (rather than alternating
+   an eyebrow with a full-size heading) gives the page a predictable rhythm,
+   and leaves the hero h1 as the only large type on the page. */
+.sectionLabel {
+  text-transform: uppercase;
+  text-align: center;
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  /* Quiet kicker — 13px. The label opens every section, so it stays small
+     and recedes rather than reading as a heading; the hero h1 is the
+     page's only large type. */
+  font-size: 13px;
+  font-weight: 600;
+  /* tracking-widest (0.1em) — the design-system token for uppercase
+     micro-text. */
+  letter-spacing: 0.1em;
+  line-height: 1.5;
+  /* Even line lengths if the label wraps. */
+  text-wrap: balance;
+}
+
+/* Full-size centred heading — used by the "A quote from our founders"
+   section (which keeps the cardexperiment1 heading treatment). */
+.sectionHeading {
+  text-align: center;
+  color: var(--color-ink);
+}
+
+/* ── Hairline contact card — capped at 768px so it sits on the same
+   reading-column width as the hero and the mission / vision statements,
+   keeping the centred text spine one consistent width. ──────────────────── */
+.card {
+  max-width: 768px;
+  margin-left: auto;
+  margin-right: auto;
+  /* No frame — borderless, centred text only. */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 96px 32px;
+}
+@media (max-width: 768px) {
+  .card {
+    padding: 48px 24px;
+  }
+}
+
+/* Centres "The timeline" link below the "what we're building" pillars. */
+.timelineWrap {
+  margin-top: 40px;
+  text-align: center;
+}
+
+/* "The timeline" inline link below the pillars. */
+.timelineLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  color: var(--color-ink);
+  transition: color 200ms ease;
+}
+.timelineLink:hover {
+  color: #0081AC;
+}
+
+/* ── "What we're building" — three pillar cards laying out the Large
+   Geospatial Model. Hairline, no fill (the blueprint-grid treatment) so
+   they read as structural alongside the soft-filled team cards below. ─── */
+.pillarGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+@media (min-width: 1024px) {
+  .pillarGrid {
+    gap: 20px;
+  }
+}
+@media (max-width: 768px) {
+  .pillarGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.pillar {
+  border: 1px solid var(--color-gridline);
+  border-radius: 13px;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Pillar index — a quiet "01 / 02 / 03" sequence marker, sized to the
+   section kicker so every micro-label on the page reads at one scale. */
+.pillarIndex {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: var(--color-muted);
+}
+
+/* Pillar title — uses the global .h5 type step; this rule only adds the
+   spacing and balanced wrap. */
+.pillarTitle {
+  margin-top: 20px;
+  color: var(--color-ink);
+  text-wrap: balance;
+}
+
+.pillarBody {
+  margin-top: 12px;
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.5;
+  font-weight: 400;
+  color: var(--color-muted);
+}
+
+/* ── "Read more" card grid — ported from the homepage BlogSection
+   (featured card + 3 small, blurred-image background, hover swap). ────── */
+.cardGrid {
+  display: flex;
+  gap: 16px;
+  align-items: stretch;
+  justify-content: flex-start;
+}
+
+.postCard {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  flex: 1.5 1 0;
+  min-width: 0;
+  max-width: 280px;
+  min-height: 320px;
+  padding: 20px;
+  border-radius: 13px;
+  overflow: hidden;
+  text-decoration: none;
+  color: var(--color-ink);
+  cursor: pointer;
+  transition: flex-grow 420ms cubic-bezier(0.4, 0, 0.2, 1),
+              max-width 420ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Blurred image layer beneath the title — extends past the card edges
+   so the blur's soft fade is clipped away by the card's overflow. */
+.postCard::before {
+  content: "";
+  position: absolute;
+  inset: -16px;
+  background-image: var(--card-bg);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  filter: blur(2px);
+  z-index: 0;
+  transition: filter 300ms ease;
+}
+
+/* Glassy backdrop layer that pushes the imagery further behind the title. */
+.postCard::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  -webkit-backdrop-filter: blur(16px) saturate(1.1);
+  backdrop-filter: blur(16px) saturate(1.1);
+  z-index: 0;
+}
+
+.postCard > * {
+  position: relative;
+  z-index: 1;
+}
+
+.postCardFeatured::before,
+.postCard:hover::before {
+  filter: blur(10px);
+}
+
+.cardGrid:has(.postCard:not(.postCardFeatured):hover) .postCardFeatured::before {
+  filter: blur(2px);
+}
+
+.postCard:hover {
+  color: #0A1344;
+}
+.postCard:hover .postCardTitle {
+  color: #0081AC;
+}
+
+/* One static measure (32ch) for every card title — small cards are
+   narrower than 32ch so it simply wraps at their width, the featured /
+   expanded card caps at 32ch. The title no longer animates its width as
+   cards expand, so a hover reflows only the card box, not the text. */
+.postCardTitle {
+  letter-spacing: -0.01em;
+  color: var(--color-ink);
+  max-width: 32ch;
+  text-wrap: balance;
+  transition: color 300ms ease;
+}
+
+.postCardFeatured {
+  flex: 3.2 1 0;
+  max-width: 880px;
+}
+
+.postCard:not(.postCardFeatured):hover {
+  flex: 3.2 1 0;
+  max-width: 880px;
+}
+
+.cardGrid:has(.postCard:not(.postCardFeatured):hover) .postCardFeatured {
+  flex: 1.5 1 0;
+  max-width: 280px;
+}
+
+/* Flex spacer pushes the title to the bottom of the active card. */
+.postCardSpacer {
+  flex-grow: 0;
+  transition: flex-grow 420ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+.postCardFeatured .postCardSpacer,
+.postCard:not(.postCardFeatured):hover .postCardSpacer {
+  flex-grow: 1;
+}
+.cardGrid:has(.postCard:not(.postCardFeatured):hover) .postCardFeatured .postCardSpacer {
+  flex-grow: 0;
+}
+
+/* Dot-arrow glyph — visible only on the active card. */
+.postCardArrow {
+  position: absolute;
+  bottom: 18px;
+  right: 18px;
+  z-index: 1;
+  color: #0081AC;
+  opacity: 0;
+  transition: transform 300ms ease, opacity 300ms ease;
+}
+.postCardFeatured .postCardArrow {
+  opacity: 1;
+}
+.postCard:not(.postCardFeatured):hover .postCardArrow {
+  opacity: 1;
+  transform: translateX(2px);
+}
+.cardGrid:has(.postCard:not(.postCardFeatured):hover) .postCardFeatured .postCardArrow {
+  opacity: 0;
+}
+
+@media (max-width: 900px) {
+  .cardGrid {
+    flex-wrap: wrap;
+  }
+  .postCard {
+    flex: 1 1 calc(50% - 8px);
+    max-width: none;
+  }
+  .postCardFeatured {
+    flex: 1 1 100%;
+    max-width: none;
+  }
+}
+@media (max-width: 600px) {
+  .postCard,
+  .postCardFeatured {
+    flex: 1 1 100%;
+  }
+}
+
+/* ── Founders quote section — a bento grid: a tall photo tile on the left
+   (using the homepage BentoProducts notch-card pattern) and two stacked
+   quote cards on the right whose combined height matches the photo. ──── */
+.foundersGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  align-items: stretch;
+}
+@media (min-width: 1024px) {
+  .foundersGrid {
+    gap: 20px;
+  }
+}
+@media (max-width: 768px) {
+  .foundersGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Featured photo tile — 13px corners + hairline ring + top-right cut-out
+   notch, carrying the featured founder quote over the group photo. A flex
+   column with space-between pins the quote block to the top and the
+   attribution to the bottom. */
+.founderPhoto {
+  position: relative;
+  overflow: hidden;
+  border-radius: 13px;
+  background: #ECEFF3;
+  /* Square tile — height tracks the column width. The right-hand quote
+     column stretches to match it (grid align-items: stretch), so the
+     whole bento row is exactly as tall as this tile is wide. A square is
+     the canonical bento proportion (vs. an arbitrary fixed pixel height)
+     and keeps the stacked right cards at a clean ratio. */
+  aspect-ratio: 1 / 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  /* 40px inset — matches the .quoteCard padding so the attribution row
+     lines up with the profile components on the right-hand cards. */
+  padding: 40px;
+}
+/* Dedicated image layer — an absolutely-positioned box so the <Image fill>
+   sizes to the full tile, decoupled from the flex layout container. */
+.founderPhotoMedia {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+.founderPhotoMedia img {
+  object-fit: cover;
+  /* Square crop biased slightly upward so the group of people stays in
+     the clear band between the top + bottom gradients. */
+  object-position: center 42%;
+}
+
+/* Top + bottom navy wash for legibility. Kept deliberately light — heavy
+   enough at the edges to carry the white quote (top) and attribution
+   (bottom), but eased off through the middle so the tile reads as a photo
+   rather than a near-black slab competing with the rest of the page. */
+.founderPhoto::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  /* Blue wash (#005CB5) — the midpoint between the original #0066CC and
+     the darker #00529E. */
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 92, 181, 0.88) 0%,
+    rgba(0, 92, 181, 0.66) 30%,
+    rgba(0, 92, 181, 0.45) 50%,
+    rgba(0, 92, 181, 0.66) 70%,
+    rgba(0, 92, 181, 0.88) 100%
+  );
+}
+
+/* Hairline ring — inset box-shadow (not a CSS border) so the notch +
+   fillets can sit on top of it. */
+.founderPhoto::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 13px;
+  box-shadow: inset 0 0 0 1px var(--color-gridline);
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Featured quote block — quote mark + quote, at the top of the tile (just
+   the 40px tile padding), sitting above the gradient. */
+.featuredQuoteBlock {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  /* Wide enough that the quote wraps to ~3 lines (not 4+), keeping the
+     block clear of the photo subjects lower in the frame. */
+  max-width: 460px;
+}
+
+/* Featured quote — Medium weight, stepping up to the 32px type-scale step
+   at the lg breakpoint. */
+.featuredQuote {
+  color: #FFFFFF;
+  font-family: var(--font-sans);
+  font-size: 24px;
+  line-height: 1.4;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+@media (min-width: 1024px) {
+  .featuredQuote {
+    font-size: 32px;
+  }
+}
+
+/* Attribution pinned to the bottom-left of the photo tile, white text
+   tuned for the dark gradient beneath it. */
+.featuredAttribution {
+  position: relative;
+  z-index: 2;
+  align-self: flex-start;
+}
+.featuredAttribution .attributionName {
+  color: #FFFFFF;
+}
+.featuredAttribution .attributionRole {
+  color: rgba(255, 255, 255, 0.72);
+}
+
+/* Quote-mark glyph on the featured tile — faint white, recedes into the
+   dimmed photo backdrop. */
+.quoteMarkLight {
+  width: 44px;
+  height: auto;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* Cut-out notch — the white page surface notched into the tile's
+   top-right corner, carrying the "Our CEO" label. Geometry + fillet
+   technique ported verbatim from BentoProducts. */
+.photoNotch {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 3;
+  box-sizing: border-box;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 24px;
+  background-color: #FFFFFF;
+  /* TL TR BR BL — TR matches the card corner; BL is the concave cut. */
+  border-radius: 0 13px 0 13px;
+  border-left: 1px solid var(--color-gridline);
+  border-bottom: 1px solid var(--color-gridline);
+}
+@media (min-width: 1024px) {
+  .photoNotch {
+    height: 44px;
+    padding: 0 32px;
+  }
+}
+
+/* Corner fillets — ease the notch's straight edges into the card edge on
+   a 13px convex arc, carrying the hairline around that arc. */
+.photoNotch::before,
+.photoNotch::after {
+  content: "";
+  position: absolute;
+  width: 13px;
+  height: 13px;
+  background: radial-gradient(
+    circle at left bottom,
+    rgba(255, 255, 255, 0) 11.5px,
+    #E7E7F1 12.25px,
+    #E7E7F1 12.75px,
+    #FFFFFF 13.5px
+  );
+}
+.photoNotch::before {
+  top: 0;
+  left: -13px;
+}
+.photoNotch::after {
+  bottom: -13px;
+  right: 0;
+}
+
+.photoNotchLabel {
+  /* 13px — matches the section-kicker (.sectionLabel) size so every small
+     uppercase label on the page reads at one consistent scale. */
+  font-size: 13px;
+  line-height: 1;
+  /* 600 — uppercase at 500 optically reads light, so it needs a step up
+     to land as a visible medium weight. */
+  font-weight: 600;
+  text-transform: uppercase;
+  /* tracking-widest (0.1em) — same as the section kickers. */
+  letter-spacing: 0.1em;
+  white-space: nowrap;
+  /* Muted secondary text — softer than full ink so it recedes against
+     the white notch, but still has enough contrast to read clearly. */
+  color: var(--color-muted);
+}
+
+.quoteCol {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+@media (min-width: 1024px) {
+  .quoteCol {
+    gap: 20px;
+  }
+}
+
+/* Quote-mark glyph above each quote — accent blue at 25% opacity, sized
+   to roughly one line of the quote text. */
+.quoteMarkAccent {
+  width: 32px;
+  height: auto;
+  color: rgba(0, 129, 172, 0.25);
+  margin-bottom: 16px;
+}
+
+.quoteCard {
+  flex: 1;
+  border: 1px solid var(--color-gridline);
+  border-radius: 13px;
+  /* Subtle tonal fill (--color-bg1) instead of white + drop shadow. */
+  background: var(--color-bg1);
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Quote copy — "Body large": 16px, stepping up to 20px at lg. Medium
+   weight to match the featured quote. */
+.quoteText {
+  /* Accent blue — matches the quote-mark glyph above each quote. */
+  color: #0081AC;
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.5;
+  font-weight: 500;
+  /* Narrower measure — wraps the quote sooner so it doesn't run the full
+     card width. */
+  max-width: 26ch;
+}
+@media (min-width: 1024px) {
+  .quoteText {
+    font-size: 20px;
+  }
+}
+
+.quoteSpacer {
+  flex: 1 1 auto;
+  min-height: 32px;
+}
+
+/* Avatar + name + role row — shared by the founder quote cards and the
+   values card attribution. */
+.attribution {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.avatar {
+  position: relative;
+  width: 64px;
+  height: 64px;
+  border-radius: 9999px;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: #ECEFF3;
+}
+.avatar img {
+  object-fit: cover;
+}
+
+.attributionName {
+  font-family: var(--font-sans);
+  /* h7 step — 18px. */
+  font-size: var(--typography--h7);
+  line-height: 1.25;
+  font-weight: 500;
+  color: var(--color-ink);
+}
+.attributionRole {
+  font-family: var(--font-sans);
+  /* Matches the name size (h7 — 18px); the role is distinguished by
+     weight + muted colour, not by being smaller. */
+  font-size: var(--typography--h7);
+  line-height: 1.25;
+  font-weight: 400;
+  color: var(--color-muted);
+  margin-top: 4px;
+}
+
+/* The "Our values" section is rendered by the ValuesTeam client component
+   (components/company/ValuesTeam.tsx) with its own CSS module. */
+
+/* ── Contact CTA ──────────────────────────────────────────────────────────
+   A row of the two social icon circles followed by the homepage-style
+   pill CTA, evenly spaced (no overlap). */
+.contactText {
+  max-width: 620px;
+  color: var(--color-ink);
+}
+
+.contactActions {
+  margin-top: 48px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  /* Healthy, even spacing between the circles and the CTA. */
+  gap: 16px;
+}
+
+.iconCircle {
+  width: 40px;
+  height: 40px;
+  border-radius: 9999px;
+  background: rgba(11, 27, 43, 0.10);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-ink);
+  transition: background-color 200ms ease, color 200ms ease;
+}
+.iconCircle:hover {
+  background: rgba(11, 27, 43, 0.16);
+  color: #0081AC;
+}

@@ -3,121 +3,6 @@
 import { useEffect, useState, useRef, useCallback } from "react";
 import { Container } from "@/components/layout/Container";
 
-/* ── Madrid locations (world-space positions on the mesh grid) ── */
-const MADRID_LOCATIONS = [
-  // ─ Near field (wz 150–350) — visible wx ≈ ±400 ─
-  { name: "Plaza de Castilla", wx: 96, wz: 168 },
-  { name: "Cuatro Torres", wx: -168, wz: 150 },
-  { name: "Torres KIO", wx: 288, wz: 180 },
-  { name: "Chamartín Station", wx: -48, wz: 192 },
-  { name: "Santiago Bernabéu", wx: 168, wz: 216 },
-  { name: "Tetuán", wx: -240, wz: 200 },
-  { name: "Nuevos Ministerios", wx: 48, wz: 240 },
-  { name: "Chamberí", wx: -144, wz: 264 },
-  { name: "Hortaleza", wx: 360, wz: 192 },
-  { name: "Paseo de la Castellana", wx: 0, wz: 288 },
-  { name: "Glorieta de Bilbao", wx: -216, wz: 312 },
-  { name: "Calle Fuencarral", wx: -96, wz: 300 },
-  { name: "Malasaña", wx: -312, wz: 336 },
-  { name: "Chueca", wx: 120, wz: 324 },
-  { name: "Plaza de Colón", wx: 288, wz: 312 },
-  { name: "Dehesa de la Villa", wx: -384, wz: 240 },
-  // ─ Mid-near field (wz 350–550) — visible wx ≈ ±700 ─
-  { name: "Gran Vía", wx: -168, wz: 384 },
-  { name: "Plaza de España", wx: -408, wz: 396 },
-  { name: "Fundación Telefónica", wx: -72, wz: 360 },
-  { name: "Círculo de Bellas Artes", wx: 144, wz: 408 },
-  { name: "Puerta del Sol", wx: 0, wz: 432 },
-  { name: "Plaza Mayor", wx: -192, wz: 480 },
-  { name: "Puerta de Alcalá", wx: 384, wz: 420 },
-  { name: "Plaza de Cibeles", wx: 264, wz: 408 },
-  { name: "Plaza de Oriente", wx: -360, wz: 432 },
-  { name: "Teatro Real", wx: -312, wz: 456 },
-  { name: "Palacio Real", wx: -480, wz: 432 },
-  { name: "Catedral de la Almudena", wx: -432, wz: 468 },
-  { name: "Calle de Alcalá", wx: 96, wz: 444 },
-  { name: "Congreso de los Diputados", wx: 192, wz: 480 },
-  { name: "Museo Thyssen", wx: 336, wz: 480 },
-  { name: "Salamanca", wx: 528, wz: 384 },
-  { name: "Calle Serrano", wx: 504, wz: 360 },
-  { name: "Argüelles", wx: -504, wz: 348 },
-  { name: "Parque del Oeste", wx: -600, wz: 360 },
-  { name: "Templo de Debod", wx: -552, wz: 396 },
-  { name: "Jardines de Sabatini", wx: -456, wz: 408 },
-  { name: "Calle Princesa", wx: -480, wz: 372 },
-  { name: "Moncloa", wx: -624, wz: 312 },
-  { name: "Faro de Moncloa", wx: -672, wz: 336 },
-  { name: "Ciudad Lineal", wx: 624, wz: 408 },
-  { name: "San Blas", wx: 696, wz: 360 },
-  { name: "Parque de Berlín", wx: 576, wz: 336 },
-  { name: "Mercado de San Miguel", wx: -144, wz: 468 },
-  { name: "Plaza de la Villa", wx: -120, wz: 456 },
-  { name: "Museo del Prado", wx: 360, wz: 504 },
-  { name: "Jardín Botánico", wx: 432, wz: 540 },
-  { name: "El Corte Inglés Castellana", wx: 216, wz: 312 },
-  { name: "Mercado de la Paz", wx: 480, wz: 408 },
-  { name: "Retiro Park", wx: 504, wz: 528 },
-  // ─ Mid field (wz 550–850) — visible wx ≈ ±1000 ─
-  { name: "Lavapiés", wx: -72, wz: 576 },
-  { name: "La Latina", wx: -264, wz: 552 },
-  { name: "Atocha Station", wx: 192, wz: 600 },
-  { name: "Museo Reina Sofía", wx: 240, wz: 576 },
-  { name: "CaixaForum", wx: 312, wz: 564 },
-  { name: "Paseo del Prado", wx: 336, wz: 540 },
-  { name: "El Rastro", wx: -168, wz: 564 },
-  { name: "Mercado de Antón Martín", wx: 48, wz: 540 },
-  { name: "Príncipe Pío", wx: -552, wz: 480 },
-  { name: "Casa de Campo", wx: -816, wz: 624 },
-  { name: "Madrid Río", wx: -576, wz: 696 },
-  { name: "Matadero Madrid", wx: -384, wz: 768 },
-  { name: "Méndez Álvaro", wx: 336, wz: 696 },
-  { name: "Moratalaz", wx: 720, wz: 648 },
-  { name: "WiZink Center", wx: 576, wz: 528 },
-  { name: "Las Ventas", wx: 648, wz: 456 },
-  { name: "Moncloa Bus Station", wx: -648, wz: 348 },
-  { name: "Aluche", wx: -792, wz: 744 },
-  { name: "Wanda Metropolitano", wx: 840, wz: 576 },
-  { name: "Pozuelo", wx: -888, wz: 528 },
-  { name: "Usera", wx: -216, wz: 840 },
-  { name: "Carabanchel", wx: -624, wz: 816 },
-  { name: "Vallecas", wx: 576, wz: 840 },
-  { name: "Coslada", wx: 864, wz: 456 },
-  { name: "Barajas", wx: 912, wz: 288 },
-  { name: "IFEMA", wx: 840, wz: 240 },
-  { name: "Aeropuerto T4", wx: 984, wz: 264 },
-  // ─ Far field (wz 850–1350) — visible wx ≈ ±1600 ─
-  { name: "Villaverde", wx: -360, wz: 984 },
-  { name: "Getafe", wx: -552, wz: 1080 },
-  { name: "Leganés", wx: -888, wz: 1008 },
-  { name: "Alcorcón", wx: -960, wz: 912 },
-  { name: "Parque Warner", wx: 672, wz: 1176 },
-  { name: "Fuenlabrada", wx: -744, wz: 1152 },
-  { name: "Móstoles", wx: -1104, wz: 1056 },
-  { name: "Alcobendas", wx: 360, wz: 168 },
-  { name: "San Sebastián de los Reyes", wx: -312, wz: 156 },
-  { name: "Torrejón de Ardoz", wx: 1128, wz: 384 },
-  { name: "Rivas-Vaciamadrid", wx: 840, wz: 888 },
-  { name: "Arganda del Rey", wx: 1056, wz: 960 },
-  { name: "San Fernando de Henares", wx: 1008, wz: 528 },
-  { name: "Majadahonda", wx: -1056, wz: 480 },
-  { name: "Las Rozas", wx: -1200, wz: 432 },
-  { name: "Boadilla del Monte", wx: -1128, wz: 720 },
-  // ─ Very far field (wz 1350–1900) — visible wx ≈ ±2200 ─
-  { name: "Parla", wx: -624, wz: 1368 },
-  { name: "Pinto", wx: -408, wz: 1464 },
-  { name: "Valdemoro", wx: -216, wz: 1560 },
-  { name: "Aranjuez", wx: 96, wz: 1848 },
-  { name: "Navalcarnero", wx: -1440, wz: 1200 },
-  { name: "Villanueva de la Cañada", wx: -1536, wz: 648 },
-  { name: "Tres Cantos", wx: -504, wz: 168 },
-  { name: "Colmenar Viejo", wx: -648, wz: 150 },
-  { name: "Alcalá de Henares", wx: 1440, wz: 600 },
-  { name: "Guadalajara", wx: 1800, wz: 720 },
-  { name: "Toledo (dir.)", wx: -384, wz: 1920 },
-  { name: "Segovia (dir.)", wx: -1680, wz: 384 },
-];
-
-/* ── Types ── */
 interface Ripple { wx: number; wz: number; t: number; strength: number }
 type V3 = [number, number, number];
 
@@ -850,54 +735,6 @@ const WaveMesh = () => {
       ctx.stroke();
     }
 
-    for (let r = Math.floor(gridRows * 0.6); r < gridRows; r++) {
-      const depthT = r / gridRows;
-      ctx.fillStyle = `rgba(20,60,160,${(0.05 + depthT * 0.15).toFixed(3)})`;
-      for (let c = 0; c < gridCols; c++) {
-        const p = grid[r][c];
-        if (!p) continue;
-        ctx.beginPath();
-        ctx.arc(p.sx, p.sy, 0.4 + depthT * 0.6, 0, Math.PI * 2);
-        ctx.fill();
-      }
-    }
-
-    // ── Madrid location dots ──
-    for (let i = 0; i < MADRID_LOCATIONS.length; i++) {
-      const loc = MADRID_LOCATIONS[i];
-      const wy = getFullWaveHeight(loc.wx, loc.wz);
-      const p = project(loc.wx, wy, loc.wz);
-      if (!p) continue;
-
-      const { sx, sy } = p;
-      const depthScale = Math.min(1, fov / loc.wz * 0.45);
-
-      const pulse = Math.sin(t * 1.2 + i * 0.9) * 0.12;
-      const baseR = (2.5 + pulse) * depthScale;
-
-      // Outer glow
-      const glowR = baseR + 10 * depthScale;
-      const g = ctx.createRadialGradient(sx, sy, baseR * 0.3, sx, sy, glowR);
-      g.addColorStop(0, `rgba(37,99,235,${(0.18 + pulse * 0.3).toFixed(3)})`);
-      g.addColorStop(1, "rgba(37,99,235,0)");
-      ctx.beginPath();
-      ctx.arc(sx, sy, glowR, 0, Math.PI * 2);
-      ctx.fillStyle = g;
-      ctx.fill();
-
-      // Core dot
-      ctx.beginPath();
-      ctx.arc(sx, sy, baseR, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(37,99,235,${(0.55 + pulse * 0.2).toFixed(3)})`;
-      ctx.fill();
-
-      // Bright center
-      ctx.beginPath();
-      ctx.arc(sx, sy, baseR * 0.4, 0, Math.PI * 2);
-      ctx.fillStyle = "rgba(147,197,253,0.35)";
-      ctx.fill();
-    }
-
     // ── Draw boat ──
     const boatDepthAlpha = Math.min(1, Math.max(0.2, fov / boat.wz * 0.5));
     drawBoat3D(ctx, project, boat, t, boatDepthAlpha);
@@ -1037,7 +874,7 @@ export const Hero = () => {
     <section
       ref={sectionRef}
       className="relative overflow-hidden flex flex-col"
-      style={{ background: "#F9F9F9", minHeight: "calc(100vh + 300px)" }}
+      style={{ background: "#ffffff", minHeight: "calc(100vh + 300px)" }}
     >
       {/* Mesh */}
       <div className="absolute inset-0">
@@ -1049,19 +886,8 @@ export const Hero = () => {
         className="absolute left-0 right-0 pointer-events-none"
         style={{
           top: "calc(100vh * 0.22)", height: "calc(100vh * 0.18)",
-          background: "linear-gradient(to bottom, #F9F9F9, transparent)",
+          background: "linear-gradient(to bottom, #ffffff, transparent)",
           zIndex: 1,
-        }}
-        aria-hidden
-      />
-
-      {/* Accent gradient — top of hero */}
-      <div
-        className="absolute left-0 right-0 top-0 pointer-events-none"
-        style={{
-          height: "50%",
-          background: "linear-gradient(to bottom, rgba(0, 102, 204, 0.15) 0%, rgba(0, 102, 204, 0.08) 60%, transparent 100%)",
-          zIndex: 3,
         }}
         aria-hidden
       />
@@ -1077,53 +903,27 @@ export const Hero = () => {
       />
 
       {/* Side vignettes */}
-      <div className="absolute top-0 bottom-0 left-0 pointer-events-none" style={{ width: "30%", background: "linear-gradient(to right, #F9F9F9 0%, transparent 100%)", zIndex: 1, opacity: vignetteOpacity }} aria-hidden />
-      <div className="absolute top-0 bottom-0 right-0 pointer-events-none" style={{ width: "30%", background: "linear-gradient(to left, #F9F9F9 0%, transparent 100%)", zIndex: 1, opacity: vignetteOpacity }} aria-hidden />
+      <div className="absolute top-0 bottom-0 left-0 pointer-events-none" style={{ width: "30%", background: "linear-gradient(to right, #ffffff 0%, transparent 100%)", zIndex: 1, opacity: vignetteOpacity }} aria-hidden />
+      <div className="absolute top-0 bottom-0 right-0 pointer-events-none" style={{ width: "30%", background: "linear-gradient(to left, #ffffff 0%, transparent 100%)", zIndex: 1, opacity: vignetteOpacity }} aria-hidden />
 
-      {/* Hero text */}
-      <Container className="relative z-10 pt-24 md:pt-32" style={{ maxWidth: 1287 }}>
+      {/* Hero text — pushed down 100px from its previous position. */}
+      <Container className="relative z-10 pt-24 md:pt-32" style={{ maxWidth: 1287, marginTop: 100 }}>
         <div className="max-w-292">
           {/* Eyebrow */}
-          <p className="text-sm md:text-base font-medium tracking-tight text-[#0A1344] uppercase mb-4 mt-15" style={{ minHeight: "1.5em", ...fadeIn(0) }}>
+          <p className="p-m font-medium tracking-tight text-ink uppercase mb-4 mt-15" style={{ minHeight: "1.5em", ...fadeIn(0) }}>
             {EYEBROW_TEXT}
           </p>
 
-          {/* Heading */}
-          <h1 className="font-light leading-[1.2] text-[#0A1344] text-[39px] md:text-[49px] lg:text-[61px]" style={{ letterSpacing: "-0.02em", ...fadeIn(80) }}>
+          {/* Heading — uses the project's .h1 typescale class
+              (4rem desktop, 2.5rem ≤991px; weight 500). */}
+          <h1
+            className="h1 text-ink tracking-tight"
+            style={fadeIn(80)}
+          >
             {HEADING_LINE1}
             <br />
             {HEADING_LINE2}
           </h1>
-
-          {/* CTA + Nav links */}
-          <div id="hero-cta" className="flex items-center gap-8 mt-7" style={fadeIn(200)}>
-            <a
-              href="/contact"
-              className="group flex items-center justify-between gap-5 leading-none rounded-none hover:opacity-90 transition-opacity"
-              style={{ height: 36, marginRight: 16, paddingLeft: 20, paddingRight: 16, fontSize: 15, fontWeight: 500, borderRadius: 0, backgroundColor: "#000000", color: "white" }}
-            >
-              <span className="transition-colors duration-300 group-hover:text-[#2563EB]">Contact</span>
-              <svg className="transition-transform duration-300 group-hover:translate-x-0.5" width="10" height="18" viewBox="0 0 7 12" fill="none" stroke="#2563EB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M1 1l5 5-5 5" />
-              </svg>
-            </a>
-            {[
-              { label: "Technology", href: "/technology" },
-              { label: "Products", href: "/products/enterprise" },
-              { label: "Use Cases", href: "/use-cases" },
-            ].map((link) => (
-              <a
-                key={link.label}
-                href={link.href}
-                className="group hidden min-[642px]:flex items-center gap-1 text-md font-medium text-[#0A1344] transition-opacity duration-300 hover:opacity-60"
-              >
-                {link.label}
-                <svg className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-0.5" fill="none" viewBox="0 0 16 16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M6 4l4 4-4 4" />
-                </svg>
-              </a>
-            ))}
-          </div>
         </div>
       </Container>
     </section>

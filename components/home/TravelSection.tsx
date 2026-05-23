@@ -3,7 +3,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { cambo } from "@/app/fonts";
 import { GridSection, gl } from "./ContentGrid";
 import glassStyles from "@/components/ui/GlassButton.module.css";
 
@@ -162,7 +161,7 @@ function TravelPillToggle({ activeTab, setActiveTab, anim }: {
             key={tab}
             type="button"
             onClick={() => handleClick(i)}
-            className="flex items-center justify-center rounded-full cursor-pointer transition-all duration-300"
+            className="flex items-center justify-center rounded-button cursor-pointer transition-all duration-300"
             style={{
               height: 44,
               fontSize: 13,

@@ -46,10 +46,46 @@ export default function ShowcaseSection({ compact = false, onInteraction }: { co
   const [pillIsClosing, setPillIsClosing] = useState(false);
   const [ctaShineKey, setCtaShineKey] = useState(0);
   const closePillTimers = useRef<ReturnType<typeof setTimeout>[]>([]);
+  const pillsContainerRef = useRef<HTMLDivElement>(null);
+  const autoplayTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const autoplayIndexRef = useRef(0);
+  const userInteractedRef = useRef(false);
+
+  const stopAutoplay = useCallback(() => {
+    if (autoplayTimerRef.current) {
+      clearInterval(autoplayTimerRef.current);
+      autoplayTimerRef.current = null;
+    }
+  }, []);
 
   useEffect(() => {
     return () => closePillTimers.current.forEach(clearTimeout);
   }, []);
+
+  // Autoplay: cycle through pills every 5s once section enters view
+  useEffect(() => {
+    const el = pillsContainerRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (!entries[0].isIntersecting || userInteractedRef.current || autoplayTimerRef.current) return;
+        observer.disconnect();
+        const startDelay = setTimeout(() => {
+          if (userInteractedRef.current) return;
+          setExpandedPillIndex(0);
+          autoplayIndexRef.current = 0;
+          autoplayTimerRef.current = setInterval(() => {
+            autoplayIndexRef.current = (autoplayIndexRef.current + 1) % FEATURE_PILL_LABELS.length;
+            setExpandedPillIndex(autoplayIndexRef.current);
+          }, 5000);
+        }, 1200);
+        closePillTimers.current.push(startDelay);
+      },
+      { threshold: 0.4 }
+    );
+    observer.observe(el);
+    return () => { observer.disconnect(); stopAutoplay(); };
+  }, [stopAutoplay]);
 
   useEffect(() => {
     if (expandedPillIndex !== null) {
@@ -564,6 +600,7 @@ export default function ShowcaseSection({ compact = false, onInteraction }: { co
 
           {/* Left column: 6 feature pills */}
           <div
+            ref={pillsContainerRef}
             className="absolute pointer-events-auto flex flex-col justify-center gap-2.5"
             style={{ top: "25.9%", height: "51%" }}
           >
@@ -587,8 +624,8 @@ export default function ShowcaseSection({ compact = false, onInteraction }: { co
                   {showCard ? (
                     <button
                       type="button"
-                      onClick={() => isExpanded && handleClosePill(index)}
-                      className={`flex h-full w-[313px] cursor-pointer flex-col rounded-[28px] border-0 p-6 text-left touch-manipulation ${glassStyles.featurePill}`}
+                      onClick={() => { if (isExpanded) { userInteractedRef.current = true; stopAutoplay(); handleClosePill(index); } }}
+                      className={`flex h-full w-[313px] cursor-pointer flex-col rounded-button-lg border-0 p-6 text-left touch-manipulation ${glassStyles.featurePill}`}
                       aria-label={isExpanded ? `Close ${label}` : undefined}
                       onMouseEnter={() => { if (window.innerWidth >= 1024) setCtaShineKey((k) => k + 1); }}
                     >
@@ -630,8 +667,8 @@ export default function ShowcaseSection({ compact = false, onInteraction }: { co
                   ) : (
                     <button
                       type="button"
-                      onClick={() => setExpandedPillIndex(index)}
-                      className={`group relative flex h-[56px] min-w-[176px] w-max cursor-pointer items-center gap-3 rounded-[28px] border-0 px-4 text-left touch-manipulation overflow-hidden ${glassStyles.featurePill}`}
+                      onClick={() => { userInteractedRef.current = true; stopAutoplay(); setExpandedPillIndex(index); }}
+                      className={`group relative flex h-[56px] min-w-[176px] w-max cursor-pointer items-center gap-3 rounded-button-lg border-0 px-4 text-left touch-manipulation overflow-hidden ${glassStyles.featurePill}`}
                       onMouseEnter={() => { if (window.innerWidth >= 1024) setCtaShineKey((k) => k + 1); }}
                     >
                       <span
@@ -807,7 +844,7 @@ function MobileFeatureCarousel({
               ref={(el) => { pillRefs.current[index] = el; }}
               type="button"
               onClick={() => handlePillClick(index)}
-              className={`snap-start shrink-0 flex flex-col rounded-[22px] text-left relative ${glassStyles.featurePill}`}
+              className={`snap-start shrink-0 flex flex-col rounded-button text-left relative ${glassStyles.featurePill}`}
               style={{
                 width: isActive ? "calc(100vw - 48px)" : "auto",
                 minWidth: isActive ? "calc(100vw - 48px)" : undefined,

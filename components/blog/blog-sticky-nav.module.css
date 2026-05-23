@@ -1,0 +1,428 @@
+/* Blog article sticky rail — the wide-screen table-of-contents dock
+   (logo · "Back to Blog" · stepper section list). Rendered as a
+   floating neutral panel that visually mirrors the multi-step
+   onboarding pattern: a circle on a continuous guide rail per section,
+   with completed/active/pending states. The panel itself uses the
+   business-page palette — #F4F4F5 panel on #E4E4E7 hairline, 7px
+   radius, Axiforma-adjacent neutral tones — so it reads as part of
+   the same design system, not a separate widget. Shown only ≥1315px,
+   where the centred 720px article column leaves room for a fixed left
+   rail; hidden below that. */
+
+.dock {
+  display: none;
+}
+
+@media (min-width: 1315px) {
+  .dock {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    z-index: 20;
+    left: 30px;
+    top: 30px;
+    /* Fill the available left margin of the centred 720px article column,
+       with a fixed 32px gap to the article (30px left inset + 32px gap
+       subtracted from the half-width). Capped at 460px so the panel
+       doesn't sprawl on ultrawide displays. */
+    width: clamp(220px, calc((100vw - 720px) / 2 - 62px), 460px);
+    height: calc(100vh - 60px);
+    padding: 28px;
+    background: #FAFAFA;
+    border: 1px solid #ECECEF;
+    border-radius: 14px;
+    overflow: hidden;
+    opacity: 1;
+    /* Multi-property transition so the size collapse, padding change and
+       radius change run as one motion. */
+    transition:
+      width 420ms cubic-bezier(0.22, 1, 0.36, 1),
+      height 420ms cubic-bezier(0.22, 1, 0.36, 1),
+      padding 420ms cubic-bezier(0.22, 1, 0.36, 1),
+      border-radius 420ms cubic-bezier(0.22, 1, 0.36, 1),
+      opacity 400ms cubic-bezier(0.22, 1, 0.36, 1),
+      background 240ms ease,
+      border-color 240ms ease;
+  }
+}
+
+.dockHidden {
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* Minimised state — panel collapses to a 56×56 circle that centres
+   under the existing toggle button (top:14px right:14px in a 56×56
+   panel naturally lands the 28×28 button on the centre).
+
+   IMPORTANT: border-radius is 28px (half the bubble size), NOT 9999px.
+   border-radius interpolates linearly between numeric values, but is
+   visually clamped to half the smaller dimension. With 9999px → 14px
+   over 420ms, the rendered radius stays clamped near the half-dimension
+   for most of the transition (e.g. 100px+ corners on a half-grown
+   rectangle), only snapping down to 14px in the final frames — which
+   reads as "overly round at the start, sudden hard-edge at the end".
+   28px → 14px interpolates cleanly: each frame's numeric value is
+   within the clamp range, so the corners shrink in step with the box. */
+.dockMinimized {
+  width: 56px !important;
+  height: 56px !important;
+  padding: 0 !important;
+  border-radius: 28px !important;
+}
+
+/* Content wrapper inside the panel. Holds the logo, back link, and
+   stepper TOC. Fades out on minimise so the bubble reads as a single
+   clean interactive surface; pointer-events are dropped via the
+   aria-hidden mirror class so collapsed content can't trap focus or
+   intercept clicks. */
+.dockContent {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  /* Reserve room for the toggle button at the top-right of the panel
+     so the logo and back link don't slide under it. */
+  padding-right: 36px;
+  overflow-y: auto;
+  opacity: 1;
+  /* Expand path (this rule applies as the .dockMinimized class is
+     removed): hold the content hidden while the panel grows, then fade
+     it in over the final 220ms so it never appears squeezed inside a
+     too-small bubble. */
+  transition: opacity 220ms cubic-bezier(0.22, 1, 0.36, 1) 220ms;
+}
+
+/* Collapse path (this rule applies as .dockMinimized is added): fade
+   the content out immediately, well ahead of the size collapse, so the
+   bubble end-state is reached on empty pixels rather than mid-fade. */
+.dockMinimized .dockContent {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 160ms cubic-bezier(0.22, 1, 0.36, 1) 0ms;
+}
+
+/* Toggle button — a 28×28 chevron pill in the top-right corner. When
+   the dock collapses to 56×56 the same position pins it to the centre
+   of the bubble, so this single control both minimises and restores. */
+.toggleBtn {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 28px;
+  height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-radius: 9999px;
+  color: #71717A;
+  cursor: pointer;
+  z-index: 2;
+  transition:
+    background 200ms ease,
+    color 200ms ease;
+}
+
+.toggleBtn:hover {
+  background: rgba(24, 24, 27, 0.06);
+  color: #18181B;
+}
+
+.toggleBtn:focus-visible {
+  outline: 2px solid #0081AC;
+  outline-offset: 2px;
+}
+
+.toggleBtnIcon {
+  width: 15px;
+  height: 15px;
+}
+
+
+/* ── Home link ───────────────────────────────────────────────────────── */
+.homeLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: inherit;
+}
+
+.logoGlyph {
+  position: relative;
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  z-index: 1;
+}
+
+.wordmarkClip {
+  display: inline-block;
+  overflow: hidden;
+  transition: max-width 520ms cubic-bezier(0.05, 0.7, 0.1, 1);
+}
+
+.wordmarkText {
+  display: inline-block;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  white-space: nowrap;
+  color: var(--color-ink);
+  transition:
+    opacity 420ms cubic-bezier(0.05, 0.7, 0.1, 1),
+    transform 520ms cubic-bezier(0.05, 0.7, 0.1, 1),
+    filter 420ms cubic-bezier(0.05, 0.7, 0.1, 1);
+}
+
+/* ── Back link ───────────────────────────────────────────────────────── */
+.back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: -0.005em;
+  color: var(--color-muted);
+  text-decoration: none;
+  outline: none;
+  transition: color 220ms ease;
+}
+
+.backArrow {
+  flex-shrink: 0;
+  transition: transform 300ms ease;
+}
+
+.back:hover { color: var(--color-ink); }
+.back:hover .backArrow { transform: translateX(-2px); }
+
+/* ── Table of contents — stepper layout ──────────────────────────────
+   Per-section row = circle indicator on a continuous guide rail (an
+   absolutely-positioned 1px line down the column of circle centres),
+   followed by the section label. Three indicator states:
+     • pending   — hollow circle (border, no fill)
+     • active    — accent fill with inner dot
+     • completed — accent fill with check glyph
+   The rail and rhythm match the onboarding-stepper reference. */
+.tocSection {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 4px;
+}
+
+.tocHeading {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #71717A;
+}
+
+/* The column of step rows. ::before is the continuous vertical guide
+   rail that the circles sit on. `left` positions it on the centre of
+   the 14px circles (1px panel padding + 7px = 8px offset, minus 0.5px
+   so the 1px line is pixel-aligned). top/bottom inset slightly so the
+   rail starts and ends inside the first/last circle. */
+.tocList {
+  position: relative;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.tocList::before {
+  content: "";
+  position: absolute;
+  left: 7px;
+  top: 14px;
+  bottom: 14px;
+  width: 1px;
+  background: #D4D4D8;
+}
+
+.tocStep {
+  position: relative;
+}
+
+.tocItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  position: relative;
+  font-size: 12.5px;
+  font-weight: 500;
+  letter-spacing: -0.005em;
+  line-height: 1.35;
+  color: #71717A;
+  text-decoration: none;
+  padding: 7px 0;
+  outline: none;
+  transition: color 240ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.tocItem:hover {
+  color: #3F3F46;
+}
+
+/* Circle indicator. Solid panel-coloured fill on the pending state so
+   the guide rail behind it visually breaks at each circle (the line
+   doesn't appear to pass through the circle). */
+.tocCircle {
+  position: relative;
+  z-index: 1;
+  flex-shrink: 0;
+  width: 14px;
+  height: 14px;
+  border-radius: 9999px;
+  border: 1px solid #C4C4C7;
+  /* Matches the panel background so the guide rail visually breaks at
+     each circle (the rail behind the circle is occluded). */
+  background: #FAFAFA;
+  color: #FFFFFF;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    background 240ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 240ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.tocItem:hover .tocCircle {
+  border-color: #A1A1AA;
+}
+
+.tocActiveDot {
+  width: 5px;
+  height: 5px;
+  border-radius: 9999px;
+  background: #FFFFFF;
+}
+
+.tocCheck {
+  width: 9px;
+  height: 9px;
+}
+
+/* Active section — accent text + accent-filled circle. Colour-only
+   weight change so the rail never reflows as the reader scrolls. */
+.tocItemActive,
+.tocItemActive:hover {
+  color: #18181B;
+  font-weight: 600;
+}
+.tocItemActive .tocCircle {
+  background: #0081AC;
+  border-color: #0081AC;
+}
+
+/* Completed sections — same accent fill (slightly less prominent
+   typography than active) so the reader can see at a glance what's
+   behind them. */
+.tocItemCompleted,
+.tocItemCompleted:hover {
+  color: #3F3F46;
+}
+.tocItemCompleted .tocCircle {
+  background: #0081AC;
+  border-color: #0081AC;
+}
+
+.tocItemLabel {
+  display: block;
+}
+
+
+/* ── Dark mode ───────────────────────────────────────────────────────── */
+:global(body.bg-mode-dark) .dock {
+  background: #1F1F1F;
+  border-color: rgba(255, 255, 255, 0.08);
+}
+:global(body.bg-mode-dark) .wordmarkText { color: rgba(255,255,255,0.92); }
+:global(body.bg-mode-dark) .logoGlyph img { filter: brightness(0) invert(1); }
+
+:global(body.bg-mode-dark) .back { color: rgba(255,255,255,0.55); }
+:global(body.bg-mode-dark) .back:hover { color: rgba(255,255,255,0.90); }
+
+:global(body.bg-mode-dark) .tocHeading { color: rgba(255,255,255,0.45); }
+:global(body.bg-mode-dark) .tocList::before { background: rgba(255,255,255,0.14); }
+:global(body.bg-mode-dark) .tocItem { color: rgba(255,255,255,0.50); }
+:global(body.bg-mode-dark) .tocItem:hover { color: rgba(255,255,255,0.85); }
+:global(body.bg-mode-dark) .tocCircle {
+  background: #1F1F1F;
+  border-color: rgba(255,255,255,0.22);
+}
+:global(body.bg-mode-dark) .tocItem:hover .tocCircle {
+  border-color: rgba(255,255,255,0.40);
+}
+:global(body.bg-mode-dark) .tocItemActive,
+:global(body.bg-mode-dark) .tocItemActive:hover { color: rgba(255,255,255,0.95); }
+:global(body.bg-mode-dark) .tocItemActive .tocCircle {
+  background: #5BB8D8;
+  border-color: #5BB8D8;
+}
+:global(body.bg-mode-dark) .tocItemCompleted,
+:global(body.bg-mode-dark) .tocItemCompleted:hover { color: rgba(255,255,255,0.75); }
+:global(body.bg-mode-dark) .tocItemCompleted .tocCircle {
+  background: #5BB8D8;
+  border-color: #5BB8D8;
+}
+:global(body.bg-mode-dark) .toggleBtn {
+  background: transparent;
+  color: rgba(255, 255, 255, 0.65);
+}
+:global(body.bg-mode-dark) .toggleBtn:hover {
+  background: rgba(255, 255, 255, 0.10);
+  color: rgba(255, 255, 255, 0.95);
+}
+
+/* ── Sepia mode ──────────────────────────────────────────────────────── */
+:global(body.bg-mode-sepia) .dock {
+  background: #EFE7D7;
+  border-color: rgba(67, 52, 34, 0.14);
+}
+:global(body.bg-mode-sepia) .wordmarkText { color: #433422; }
+
+:global(body.bg-mode-sepia) .back { color: rgba(67,52,34,0.55); }
+:global(body.bg-mode-sepia) .back:hover { color: #433422; }
+
+:global(body.bg-mode-sepia) .tocHeading { color: rgba(67,52,34,0.55); }
+:global(body.bg-mode-sepia) .tocList::before { background: rgba(67,52,34,0.18); }
+:global(body.bg-mode-sepia) .tocItem { color: rgba(67,52,34,0.55); }
+:global(body.bg-mode-sepia) .tocItem:hover { color: #433422; }
+:global(body.bg-mode-sepia) .tocCircle {
+  background: #EFE7D7;
+  border-color: rgba(67,52,34,0.28);
+}
+:global(body.bg-mode-sepia) .tocItem:hover .tocCircle {
+  border-color: rgba(67,52,34,0.48);
+}
+:global(body.bg-mode-sepia) .tocItemActive,
+:global(body.bg-mode-sepia) .tocItemActive:hover { color: #2E2113; }
+:global(body.bg-mode-sepia) .tocItemActive .tocCircle {
+  background: #8A5A2B;
+  border-color: #8A5A2B;
+}
+:global(body.bg-mode-sepia) .tocItemCompleted,
+:global(body.bg-mode-sepia) .tocItemCompleted:hover { color: #4A3621; }
+:global(body.bg-mode-sepia) .tocItemCompleted .tocCircle {
+  background: #8A5A2B;
+  border-color: #8A5A2B;
+}
+:global(body.bg-mode-sepia) .toggleBtn {
+  background: transparent;
+  color: rgba(67, 52, 34, 0.65);
+}
+:global(body.bg-mode-sepia) .toggleBtn:hover {
+  background: rgba(67, 52, 34, 0.10);
+  color: #2E2113;
+}

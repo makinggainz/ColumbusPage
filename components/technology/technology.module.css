@@ -5,59 +5,268 @@
   --tech-shell-gap: clamp(18px, 2.3vw, 32px);
   --tech-shell-inline: clamp(14px, 2.3vw, 40px);
   --tech-content-gutter: clamp(18px, 2.05vw, 32px);
-  min-height: 100vh;
-  background-color: #fff;
-  color: #0a1628;
+
+  /* V2 — x-position of the fixed left sidebar's right edge / divider line.
+     Same formula the navbar uses for its left gutter so things line up. */
+  --tech-sidebar-x: max(24px, calc((100vw - 1287px) / 2));
+
+  /* ────────────────────────────────────────────────────────────────
+     DESIGN TOKENS — see design-system/technology-page.md
+     ──────────────────────────────────────────────────────────────── */
+
+  /* Type scale — mapped onto the global design-system scale
+     (the --text-h and --text-p tokens in app/globals.css). Headings use
+     the h1–h5 steps; the page's three body sizes collapse onto p-l/p-m
+     and the caption onto p-s, since the system has no >16px paragraph
+     step. */
+  --tech-fs-h1: var(--text-h1);
+  --tech-fs-h2: var(--text-h2);
+  --tech-fs-h3: var(--text-h3);
+  --tech-fs-h4: var(--text-h4);
+  --tech-fs-h5: var(--text-h5);
+  --tech-fs-body-lg: var(--text-p-l);
+  --tech-fs-body: var(--text-p-l);
+  --tech-fs-body-sm: var(--text-p-m);
+  --tech-fs-caption: var(--text-p-s);
+
+  /* Color — light surface defaults */
+  --tech-color-text: var(--color-ink);
+  --tech-color-text-brand: var(--color-cta);
+  --tech-color-text-secondary: var(--color-muted);
+  --tech-color-text-muted: color-mix(in srgb, var(--color-cta) 45%, transparent);
+  --tech-color-bg: var(--color-bg1);
+  --tech-color-bg-card: #FFFFFF;
+  --tech-color-accent: var(--color-brand);
+  --tech-color-border: color-mix(in srgb, var(--color-brand) 30%, transparent);
+  --tech-color-divider: rgba(0, 0, 0, 0.07);
+  --tech-color-card-border: color-mix(in srgb, var(--color-cta) 10%, transparent);
+
+  /* Spacing (4px multiples only) */
+  --tech-space-section-sm: 96px;
+  --tech-space-section: 112px;
+  --tech-space-section-lg: 128px;
+  --tech-space-section-xl: 160px;
+  --tech-space-section-hero: 192px;
+
+  /* Radius */
+  --tech-radius-sm: 3px;
+  --tech-radius-base: 6px;
+  --tech-radius-md: 10px;
+  --tech-radius-lg: 14px;
+  --tech-radius-xl: 18px;
+  --tech-radius-2xl: 24px;
+  --tech-radius-full: 9999px;
+
+  /* Letter spacing */
+  --tech-tracking-tight: -0.02em;
+  --tech-tracking-snug: -0.01em;
+  --tech-tracking-wide: 0.08em;
+
+  font-family: var(--font-sans);
+
+  /* Extra 12px lets window.scrollTo(0,11) work for navbar compact detection */
+  min-height: calc(100vh + 12px);
+  background-color: var(--tech-color-bg);
+  color: var(--tech-color-text);
   overflow-x: clip;
 }
 
-.dotGrid {
-  background-image: radial-gradient(circle, rgba(189, 193, 201, 0.52) 1.1px, transparent 1.6px);
-  background-repeat: repeat;
-  background-size: 16px 16px;
-  background-position: 0 0;
+/* Dark surface modifier — flips text/border/bg tokens within its subtree.
+   Apply this className to any wrapper that should render on a dark background
+   (e.g. .genLayersBand). All descendants using var(--tech-color-*) auto-flip. */
+.darkSurface {
+  --tech-color-text: rgba(255, 255, 255, 1);
+  --tech-color-text-brand: rgba(255, 255, 255, 1);
+  --tech-color-text-secondary: rgba(255, 255, 255, 0.75);
+  --tech-color-text-muted: rgba(255, 255, 255, 0.45);
+  --tech-color-bg: #060810;
+  --tech-color-bg-card: rgba(255, 255, 255, 0.06);
+  --tech-color-border: rgba(255, 255, 255, 0.10);
+  --tech-color-divider: rgba(255, 255, 255, 0.06);
+  --tech-color-card-border: rgba(255, 255, 255, 0.10);
+
+  background: var(--tech-color-bg);
+  color: var(--tech-color-text);
 }
 
+/* Dot pattern rendered in a ::before pseudo so it can carry a vertical
+   mask that fades in at the top of the section and fades out at the
+   bottom. Effect: the grid is visible through the middle where the
+   timeline + graphic live, and dissolves into the surrounding surface
+   before reaching the section edges. */
+.dotGrid {
+  position: relative;
+}
+
+.dotGrid::before {
+  content: "";
+  position: absolute;
+  /* Pattern fills the section (vertically masked away from the edges). */
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M12 11.5v1M11.5 12h1' stroke='rgba(0,102,204,0.12)' stroke-width='1.6' stroke-linecap='square'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 24px 24px;
+  background-position: 0 0;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 38%, #000 62%, transparent 100%);
+  mask-image: linear-gradient(to bottom, transparent 0%, #000 38%, #000 62%, transparent 100%);
+}
+
+/* Native document scroll — .pageBody is just a normal flow container.
+   Uses overflow-x: clip (not hidden) so it doesn't create a scrollport,
+   which would otherwise capture any position:sticky descendants and
+   prevent them from sticking to the document scroll. */
 .pageBody {
   position: relative;
-  margin-top: var(--tech-header-height);
-  height: calc(100vh - var(--tech-header-height));
-  overflow-x: hidden;
-  overflow-y: auto;
-  scroll-behavior: auto;
-  overscroll-behavior-y: none;
-  will-change: scroll-position;
+  width: 100%;
+  margin-top: 0;
+  overflow-x: clip;
 }
 
 .pageShell {
   width: 100%;
-  margin: 0 auto;
-  padding: 0;
-  display: grid;
-  grid-template-columns: var(--tech-sidebar-width) minmax(0, 1fr);
-  gap: 0;
-}
-
-.sidebarColumn {
-  position: relative;
-  min-height: calc(100vh - var(--tech-header-height));
   background: #fff;
-  border-right: none;
-  padding-inline: 14px;
 }
 
+/*
+  Matches the navbar's container exactly — same constraint the homepage
+  and Mission page use: max-width 1287px centered, with 24px gutter
+  below 1287px viewport (matches navbar's px-6) and 0 gutter at/above
+  1287px (matches navbar's px-0 at the breakpoint). Sections inside
+  pin their left + right edges to the navbar's logo-left and
+  Start-Now-CTA-right vertical lines.
+*/
+/*
+  V2: contentColumn is now full-width so each section's background can
+  extend edge-to-edge across the viewport. The 1287px navbar-aligned
+  constraint moves DOWN to .slideFrame, which centers the actual
+  content inside each section while the section element itself (and
+  its background) spans the screen.
+*/
 .contentColumn {
-  min-width: 0;
-  background: #fff;
+  position: relative;
+  width: 100%;
+  /* Breathing room between the hero and the first section. The absolute
+     sidebar lines below (top:0 / bottom:0) automatically extend through
+     this padding, so the right-line SVG keeps full coverage and the
+     timeline curve stays aligned (its Y is recomputed from the timeline's
+     position relative to the lengthened container). */
+  padding-top: 50px;
 }
+
+/* Sidebar index is ABSOLUTELY positioned inside .contentColumn — anchored
+   at the top of the first section ("What's an LGM"). Out of normal flow
+   so the slides stay centered in the viewport. */
+.sidebarPanel {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  /* Width tracks the navbar's left gutter — the border-right divider
+     line lands exactly at the navbar logo's left edge x-position. */
+  width: var(--tech-sidebar-x);
+  pointer-events: none;
+  /* Above the main-content wrapper (z-index: 1 in TechnologySections.tsx)
+     so the scroll-index labels stay clickable when full-width sections like
+     .genLayersBand cross the gutter — but still below the sticky navbar
+     (z-100) so the nav paints over the page. */
+  z-index: 2;
+  background: transparent;
+  border: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  opacity: 1;
+}
+
+/* The inner index is STICKY — initially aligned with the "What's an LGM"
+   kicker (via margin-top matching .editorialSlide's padding-top), then
+   sticks at navbar+padding-top once it reaches that viewport position,
+   following the user as they scroll through subsequent sections. */
+.sidebarPanelSticky {
+  position: sticky;
+  top: calc(var(--tech-header-height) + clamp(48px, 6vw, 80px));
+  /* +50px matches the .contentColumn padding-top above so the index aligns
+     with the first section's kicker instead of the new top breathing room. */
+  margin-top: calc(50px + clamp(48px, 6vw, 80px));
+  left: 0;
+  padding: 0 16px;
+  pointer-events: auto;
+  transition: opacity 400ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Sections wrapper: no padding/margin override — sections inherit the
+   navbar bounds directly from .contentColumn. */
+.contentColumn > div:last-child {
+  max-width: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* Right-edge divider line — mirrors .sidebarPanel on the opposite side
+   of the content. Runs top-to-bottom of .contentColumn. The line itself
+   (and its curved break at the LGM timeline) is drawn by an inline SVG
+   rendered by <SidebarRightLine>. */
+.sidebarPanelRight {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: var(--tech-sidebar-x);
+  pointer-events: none;
+  /* Above the main-content wrapper (z-index: 1) but below the sticky
+     navbar (z-100) so the nav paints over the page. */
+  z-index: 2;
+}
+
+.sidebarRightLineSvg {
+  position: absolute;
+  left: 0;
+  top: 0;
+  overflow: visible;
+}
+
+/* Hide the fixed sidebar at narrower viewports where the navbar itself
+   is in compact mode and the sidebar would visually crowd the content. */
+@media (max-width: 1500px) {
+  .sidebarPanel,
+  .sidebarPanelRight {
+    display: none;
+  }
+
+  .page {
+    --tech-sidebar-x: 0px;
+  }
+
+  .pageShell {
+    padding: 0 !important;
+  }
+
+  .section {
+    width: 100%;
+  }
+}
+
 
 .section {
-  min-height: calc(100vh - var(--tech-header-height));
-  scroll-margin-top: 0;
+  width: 100%;
+  min-height: 100vh;
+  /* Anchor scrolls land flush with the compact navbar's bottom edge. The
+     compact navbar is 56px tall, so the last 56px of any preceding content
+     (e.g. the hero) sits behind the navbar with 0 visible bleed below it. */
+  scroll-margin-top: 56px;
   display: flex;
   align-items: stretch;
   padding: 0;
+  border-bottom: none;
+  position: relative;
 }
+
+/* Per-section bottom divider removed — sections now meet without a
+   horizontal line between them. */
 
 /* First slide only: center "Building a brain for Earth" + diagram vertically */
 .section:has(.indexSlide) {
@@ -65,18 +274,28 @@
 }
 
 .noSnapSection {
-  scroll-margin-top: 0;
+  scroll-margin-top: 56px;
 }
 
 .slideFrame {
   width: 100%;
-  min-height: calc(100vh - var(--tech-header-height));
+  min-height: 100vh;
   display: flex;
   align-items: center;
+  /* V2: Section content centered to the homepage / Mission page's
+     standard <Container> bounds — max-width 1287 + horizontal padding
+     of var(--page-padding) (defined in app/globals.css: 24px below
+     940px, 1vw above). Section text now starts + ends at the exact
+     same x as homepage / Mission / hero content. The section element
+     + background above this still spans the full viewport. */
+  max-width: 1287px;
+  margin: 0 auto;
+  padding-inline: var(--page-padding);
+  box-sizing: border-box;
 }
 
 .section:not(.fullBleedSection):not(.lgmSlide) .slideFrame {
-  padding-inline: var(--tech-content-gutter);
+  padding-inline: var(--page-padding);
 }
 
 .fullBleedSection .slideFrame {
@@ -85,16 +304,8 @@
 
 .fullBleedSection {
   position: relative;
-  left: calc(-1 * var(--tech-sidebar-width));
-  width: calc(100% + var(--tech-sidebar-width));
-}
-
-.footerBleedWrap {
-  position: relative;
-  left: calc(-1 * var(--tech-sidebar-width));
-  width: calc(100% + var(--tech-sidebar-width));
-  margin-top: 0;
-  border-top: 1px solid rgba(255, 255, 255, 0.56);
+  left: 0;
+  width: 100%;
 }
 
 .sidebar {
@@ -134,16 +345,17 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  color: rgba(10, 22, 40, 0.86);
+  color: color-mix(in srgb, var(--color-cta) 86%, transparent);
   text-decoration: none;
-  font-size: clamp(0.97rem, 1vw, 1.05rem);
+  font-size: var(--text-p-l);
   letter-spacing: 0;
   white-space: nowrap;
   transition: color 220ms ease;
 }
 
 .sidebarIndexLabel {
-  font-size: 1.35rem;
+  font-size: var(--text-h5);
+  font-family: var(--font-display);
   font-weight: 400;
 }
 
@@ -177,8 +389,9 @@
 .indexCopy h1 {
   /* margin: 0; */
   margin: 0 0 0 -4px;  /* top, right, bottom, left */
-  font-size: clamp(2.45rem, 3.5vw, 3.75rem);
-  line-height: 0.98;
+  font-size: var(--text-h1);
+  font-family: var(--font-display);
+  line-height: var(--text-h1--line-height);
   letter-spacing: -0.03em;
   white-space: nowrap;
   color: #000000;
@@ -188,7 +401,7 @@
 .indexCopy p {
   margin: 18px 0 0;
   max-width: none;
-  font-size: clamp(1.55rem, 2.22vw, 1.03rem);
+  font-size: var(--text-p-l);
   /* testing smaller text size */
   line-height: 1.29;
   color: #000000;
@@ -221,7 +434,7 @@
 .pipelineCardSmall,
 .pipelineCenterCard,
 .pipelineFooter {
-  border: 1px solid rgba(10, 22, 40, 0.16);
+  border: 1px solid color-mix(in srgb, var(--color-cta) 16%, transparent);
   background: rgba(255, 255, 255, 0.72);
   backdrop-filter: blur(3px);
 }
@@ -235,7 +448,7 @@
 
 .pipelineLabel {
   text-align: center;
-  font-size: 0.95rem;  /* was 0.68rem */
+  font-size: var(--text-p-l);  /* was 0.68rem */
   text-transform: uppercase;
   letter-spacing: 0.06em;
   font-weight: 600;
@@ -366,14 +579,23 @@
   /* Increasing first value for more height original 10px */
   width: 100%;
   text-align: center;
-  font-size: 1.1rem;  /* larger “Insights, Patterns, Answers.” was 1rem */
+  font-size: var(--text-p-l);  /* larger “Insights, Patterns, Answers.” was 1rem */
   color: rgba(0, 0, 0, 0.72);
 }
 
 .lgmSlide {
+  /* Soft warm-grey gradient. A white vertical fade is layered on top so
+     the section blends smoothly into the (white) sections above + below
+     rather than changing colour abruptly at the edges. */
   background:
-    radial-gradient(circle at 26% 92%, rgba(123, 144, 213, 0.35) 0%, transparent 38%),
-    linear-gradient(105deg, #f4f5f8 0%, #dde8f5 48%, #9ec9e9 100%);
+    linear-gradient(
+      to bottom,
+      #ffffff 0%,
+      rgba(255, 255, 255, 0) 200px,
+      rgba(255, 255, 255, 0) calc(100% - 200px),
+      #ffffff 100%
+    ),
+    linear-gradient(to right, #F5F3F1 0%, #F6F5F3 66%, #F9F9F9 100%);
 }
 
 .lgmWrap {
@@ -384,23 +606,26 @@
 .lgmTitle {
   margin: 0;
   max-width: 1050px;
-  font-size: clamp(2rem, 3.25vw, 3.15rem);
-  line-height: 1.12;
+  font-size: var(--text-h2);
+  font-family: var(--font-display);
+  line-height: var(--text-h2--line-height);
   letter-spacing: -0.03em;
 }
 
 .lgmLead {
   margin: clamp(1.9rem, 3vw, 2.7rem) 0 0;
   max-width: 570px;
-  font-size: clamp(1.5rem, 2vw, 2.1rem);
-  line-height: 1.3;
+  font-size: var(--text-h3);
+  font-family: var(--font-display);
+  line-height: var(--text-h3--line-height);
   font-weight: 600;
 }
 
 .lgmTagline {
   margin-top: clamp(1.9rem, 3.2vw, 2.8rem);
   text-align: right;
-  font-size: clamp(1.15rem, 1.5vw, 1.4rem);
+  font-size: var(--text-h5);
+  font-family: var(--font-display);
   font-weight: 600;
 }
 
@@ -413,8 +638,9 @@
 
 .lgmColumn h3 {
   margin: 0;
-  font-size: clamp(2rem, 2.6vw, 2.45rem);
-  line-height: 1.14;
+  font-size: var(--text-h2);
+  font-family: var(--font-display);
+  line-height: var(--text-h2--line-height);
   letter-spacing: -0.03em;
 }
 
@@ -425,8 +651,8 @@
 .llmTokens p {
   margin: 0;
   color: rgba(16, 24, 44, 0.8);
-  font-size: clamp(0.98rem, 1.05vw, 1.1rem);
-  line-height: 1.34;
+  font-size: var(--text-p-l);
+  line-height: var(--text-p-l--line-height);
 }
 
 .lgmBody {
@@ -435,14 +661,14 @@
 
 .lgmBody p {
   margin: 0;
-  font-size: clamp(1rem, 1.13vw, 1.2rem);
-  line-height: 1.36;
+  font-size: var(--text-p-l);
+  line-height: var(--text-p-l--line-height);
   font-weight: 600;
 }
 
 .lgmFoot {
   margin-top: 14px;
-  font-size: clamp(1.03rem, 1.16vw, 1.2rem);
+  font-size: var(--text-p-l);
   font-weight: 600;
 }
 
@@ -457,7 +683,8 @@
 
 .articleLink {
   margin-top: 20px;
-  font-size: clamp(1rem, 1.15vw, 1.2rem);
+  font-size: var(--text-h7);
+  font-family: var(--font-display);
   color: rgba(255, 255, 255, 0.92);
   font-weight: 600;
 }
@@ -477,9 +704,13 @@
 
 .kicker {
   margin: 0;
-  font-size: clamp(1.25rem, 1.8vw, 1.7rem);
-  letter-spacing: -0.02em;
+  font-size: var(--tech-fs-caption);
+  font-weight: 400;
+  letter-spacing: var(--tech-tracking-wide);
   text-transform: uppercase;
+  /* Title color at 35% opacity — auto-flips to white-on-dark via the
+     --tech-color-text token override in .darkSurface. */
+  color: color-mix(in srgb, var(--tech-color-text) 35%, transparent);
 }
 
 .dataSlide {
@@ -488,8 +719,8 @@
 
 .dataCollectionSection {
   min-height: auto;
-  /* Match LGM section gradient end so no white block appears below it */
-  background: linear-gradient(180deg, #9ec9e9 0%, #ffffff 12%);
+  /* White panel — background + rounding inherited from .section. */
+  background: #FFFFFF;
 }
 
 .dataCollectionSection .slideFrame {
@@ -500,12 +731,960 @@
 }
 
 .sectionTitle {
-  margin: 18px 0 0;
+  margin: 12px 0 0;
   max-width: 920px;
-  font-size: clamp(2.1rem, 3.75vw, 3.9rem);
+  font-size: var(--tech-fs-h3);
+  font-family: var(--font-display);
+  font-weight: 500;
+  letter-spacing: var(--tech-tracking-tight);
+  line-height: 1.2;
+  color: var(--tech-color-text);
+}
+
+.sectionLead {
+  margin: 16px 0 0;
+  max-width: 700px;
+  font-size: var(--tech-fs-body-lg);
+  line-height: 1.6;
+  color: var(--tech-color-text-secondary);
+}
+
+/* ── Editorial section (Why an LGM, Results, Research) ── */
+.editorialSlide {
+  width: 100%;
+  max-width: 100%;
+  /* Vertical padding for section rhythm. Horizontal padding-inline: 16px
+     mirrors the homepage's GridCell `p-10` extra inset (40px) on top of
+     the slideFrame's own 24px page-padding — total 40px on each side,
+     matching homepage body content's horizontal alignment. */
+  padding: clamp(48px, 6vw, 80px) 16px;
+}
+
+.editorialBody {
+  margin-top: 28px;
+  max-width: 700px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.editorialBody p {
+  margin: 0;
+  font-size: var(--tech-fs-body);
+  line-height: 1.6;
+  color: var(--tech-color-text);
+}
+
+/* ── LGM vs LLM comparison (4-column) ── */
+.comparisonSuper {
+  margin: 0 0 4px;
+  font-size: var(--text-p-m);
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+/* Timeline labels above the line with vertical sticks */
+.timelineLabels {
+  margin-top: clamp(48px, 6vw, 80px);
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+}
+
+.timelineLabel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0;
+}
+
+.timelineLabel span {
+  font-size: var(--text-p-l);
   font-weight: 600;
-  letter-spacing: -0.03em;
-  line-height: 1.08;
+  color: var(--color-ink);
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+}
+
+.timelineLabelStick {
+  width: 1px;
+  height: 28px;
+  background: color-mix(in srgb, var(--color-cta) 20%, transparent);
+  margin-top: 8px;
+}
+
+.comparisonTrack {
+  margin-top: 0;
+  height: 1px;
+  background: linear-gradient(to right, var(--grid-line, color-mix(in srgb, var(--color-brand) 30%, transparent)) 0%, var(--grid-line, color-mix(in srgb, var(--color-brand) 30%, transparent)) 60%, transparent 100%);
+}
+
+.comparisonGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+}
+
+.comparisonColumn {
+  display: flex;
+  flex-direction: column;
+  padding: 24px 20px 24px 0;
+  border-right: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.comparisonColumn:last-child {
+  border-right: none;
+}
+
+.comparisonColumn:not(:first-child) {
+  padding-left: 20px;
+}
+
+.comparisonHeading {
+  margin: 0;
+  font-size: var(--text-h7);
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--color-ink);
+  line-height: var(--text-h7--line-height);
+}
+
+.comparisonBody {
+  margin-top: 16px;
+  flex: 1;
+}
+
+.comparisonBody p {
+  margin: 0 0 10px;
+  font-size: var(--text-p-m);
+  line-height: 1.55;
+  color: var(--color-muted);
+}
+
+.comparisonMono {
+  font-family: monospace;
+  font-size: var(--text-p-s) !important;
+  color: var(--color-muted);
+  word-break: break-all;
+}
+
+.comparisonFooter {
+  margin-top: auto;
+  padding-top: 16px;
+}
+
+.comparisonFooter span {
+  display: block;
+  font-size: var(--text-p-s);
+  font-weight: 500;
+  color: var(--color-ink);
+  margin-bottom: 4px;
+}
+
+.comparisonFooter p {
+  margin: 0;
+  font-size: var(--text-p-s);
+  color: var(--color-muted);
+}
+
+.comparisonLink {
+  display: inline-block;
+  margin-top: 16px;
+  font-size: var(--text-p-m);
+  font-weight: 500;
+  color: var(--color-cta);
+  text-decoration: none;
+  transition: color 200ms ease;
+}
+
+.comparisonLink:hover {
+  color: var(--color-brand);
+}
+
+.comparisonBottom {
+  margin-top: 32px;
+  text-align: center;
+}
+
+.comparisonBottomLabel {
+  margin: 0;
+  font-size: var(--text-p-l);
+  font-weight: 500;
+  color: var(--color-ink);
+}
+
+.comparisonBottomSub {
+  margin: 4px 0 0;
+  font-size: var(--text-p-m);
+  color: var(--color-muted);
+}
+
+/* ── Timeline (horizontal) ── */
+.timeline {
+  margin-top: 56px;
+  position: relative;
+  width: 100%;
+  padding: 0;
+}
+
+.timelineTrack {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(to right, var(--grid-line, color-mix(in srgb, var(--color-brand) 30%, transparent)) 0%, var(--grid-line, color-mix(in srgb, var(--color-brand) 30%, transparent)) 60%, transparent 100%);
+  transform: translateY(-50%);
+}
+
+.timelineMarkers {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.timelineMilestone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  text-align: center;
+}
+
+.timelineName {
+  font-size: var(--text-p-m);
+  font-weight: 500;
+  color: var(--color-ink);
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+
+.timelineDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-cta);
+  flex-shrink: 0;
+}
+
+.timelineYear {
+  font-size: var(--text-p-m);
+  font-weight: 400;
+  color: var(--color-muted);
+}
+
+@media (max-width: 768px) {
+  .timelineMarkers {
+    gap: 4px;
+  }
+
+  .timelineName {
+    font-size: var(--text-p-s);
+  }
+
+  .timelineYear {
+    font-size: var(--text-p-s);
+  }
+}
+
+/* ── Result Metrics ── */
+.resultMetrics {
+  margin-top: 48px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+  max-width: 680px;
+}
+
+.resultMetric {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.resultNumber {
+  font-size: var(--text-h2);
+  font-family: var(--font-display);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: var(--color-ink);
+  line-height: var(--text-h2--line-height);
+}
+
+.resultLabel {
+  font-size: var(--text-p-m);
+  color: var(--color-muted);
+  letter-spacing: 0.02em;
+}
+
+/* ── Section CTA button ── */
+.sectionCta {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 40px;
+  padding: 0;
+  background: none;
+  border: none;
+  text-decoration: none;
+  font-size: var(--text-p-l);
+  font-weight: 500;
+  color: var(--color-cta);
+  cursor: pointer;
+  transition: color 300ms ease;
+}
+
+.sectionCta:hover {
+  color: var(--color-brand);
+}
+
+.sectionCta svg {
+  transition: transform 300ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.sectionCta:hover svg {
+  transform: translateX(4px);
+}
+
+/* ── Horizontal pipeline diagram ── */
+.pipelineHorizontal {
+  margin-top: 48px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 24px 0;
+}
+
+/* Raw input — no box, tiles float freely */
+.pipelineInput {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.pipelineLabelFree {
+  text-align: center;
+  font-size: var(--text-p-s);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 500;
+  color: color-mix(in srgb, var(--color-cta) 40%, transparent);
+}
+
+/* Built systems — glass box */
+.pipelineStage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  border: 1px solid color-mix(in srgb, var(--color-brand) 12%, transparent);
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(3px);
+  border-radius: 10px;
+  padding: 16px 20px;
+}
+
+.pipelineStageSmall {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid color-mix(in srgb, var(--color-brand) 12%, transparent);
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(3px);
+  border-radius: 10px;
+  padding: 14px 16px;
+}
+
+/* Smaller labels inside horizontal diagram */
+.pipelineHorizontal .pipelineLabel {
+  font-size: var(--text-p-s);
+  letter-spacing: 0.05em;
+  margin-bottom: 4px;
+  color: color-mix(in srgb, var(--color-cta) 55%, transparent);
+}
+
+/* Tiles in a row for horizontal layout */
+.pipelineTilesV {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+}
+
+.pipelineTilesV .pipelineTile {
+  width: 32px;
+  height: 28px;
+}
+
+/* Smaller icons for horizontal fit */
+.pipelineHorizontal .pipelineNode {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+}
+
+.pipelineHorizontal .pipelineBlob {
+  margin: 4px auto 0;
+  width: 40px;
+  height: 36px;
+}
+
+.pipelineHorizontal .pipelineGridIcon {
+  margin: 4px auto 0;
+  width: 42px;
+  height: 42px;
+}
+
+.pipelineOutputs {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+/* Brand blue dashed lines inside the horizontal diagram */
+.pipelineHorizontal .dashedPathRed {
+  stroke: color-mix(in srgb, var(--color-brand) 40%, transparent);
+}
+
+.pipelineConverge {
+  flex-shrink: 0;
+  width: 80px;
+  height: 90px;
+}
+
+.pipelineSplit {
+  flex-shrink: 0;
+  width: 80px;
+  height: 70px;
+}
+
+.pipelineArrowH {
+  flex-shrink: 0;
+  width: 48px;
+  height: 24px;
+}
+
+.pipelineResult {
+  flex-shrink: 0;
+  font-size: var(--text-p-m);
+  font-weight: 500;
+  color: var(--color-cta);
+  letter-spacing: -0.01em;
+  text-align: center;
+  max-width: 130px;
+  line-height: 1.4;
+  font-style: italic;
+}
+
+@media (max-width: 768px) {
+  .pipelineHorizontal {
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+  }
+
+  .pipelineConverge,
+  .pipelineSplit {
+    width: 48px;
+    height: 48px;
+  }
+
+  .pipelineArrowH {
+    width: 32px;
+  }
+}
+
+/* ── Metric grid (6 cards, 3×2) ── */
+.metricGrid {
+  margin-top: 48px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.metricCard {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 28px 24px;
+  background: color-mix(in srgb, var(--color-brand) 5%, transparent);
+  border-radius: 0;
+}
+
+.metricNumber {
+  font-size: var(--text-h2);
+  font-family: var(--font-display);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: var(--color-cta);
+  line-height: var(--text-h2--line-height);
+}
+
+.metricLabel {
+  font-size: var(--text-p-m);
+  color: var(--color-muted);
+  letter-spacing: 0.01em;
+  line-height: 1.4;
+}
+
+@media (max-width: 768px) {
+  .metricGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* ── A New Category section ── */
+.newCategorySlide {
+  background: linear-gradient(180deg, #dde8f5 0%, #9ec9e9 30%, #5a9fd4 60%, #1a2a44 85%, #0a1628 100%);
+}
+
+.newCategorySlide .slideFrame {
+  align-items: flex-start;
+}
+
+.newCategoryInner {
+  width: 100%;
+  padding: clamp(48px, 6vw, 80px) clamp(32px, 4vw, 56px);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.newCategoryHeader {
+  margin-bottom: 48px;
+}
+
+.newCategoryVisual {
+  width: 100%;
+  position: relative;
+}
+
+.newCategoryTextRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 24px;
+}
+
+.newCategoryText {
+}
+
+.newCategoryTitle {
+  margin: 0;
+  font-size: var(--text-h3);
+  font-family: var(--font-display);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: var(--text-h3--line-height);
+  color: var(--color-cta);
+  font-style: italic;
+}
+
+.newCategorySubtitle {
+  margin: 8px 0 0;
+  font-size: var(--text-p-l);
+  color: color-mix(in srgb, var(--color-cta) 60%, transparent);
+}
+
+.newCategoryBrand {
+  font-weight: 600;
+}
+
+.newCategoryLabel {
+  position: absolute;
+  top: -58px;
+  left: 67%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  font-size: var(--text-p-m);
+  font-weight: 500;
+  color: var(--color-cta);
+  z-index: 3;
+}
+
+.newCategoryImageWrap {
+  position: relative;
+  width: 100%;
+  margin-top: 24px;
+  border-radius: 8px;
+  overflow: visible;
+  box-shadow: 0 24px 64px color-mix(in srgb, var(--color-cta) 25%, transparent), 0 8px 24px color-mix(in srgb, var(--color-cta) 15%, transparent);
+}
+
+.newCategoryImage {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 8px;
+}
+
+.newCategoryImageFade {
+  border-radius: 8px;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 40%;
+  background: linear-gradient(to bottom, transparent 0%, color-mix(in srgb, var(--color-cta) 60%, transparent) 60%, color-mix(in srgb, var(--color-cta) 85%, transparent) 100%);
+  pointer-events: none;
+}
+
+/* ── Research card grid (rectangular divs) ── */
+.researchCardGrid {
+  margin-top: 40px;
+  display: flex;
+  gap: 16px;
+  align-items: stretch;
+  justify-content: flex-start;
+}
+
+.researchCard {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  flex: 1.5 1 0;
+  min-width: 0;
+  /* Cap the upper end so cards don't balloon on very wide viewports */
+  max-width: 280px;
+  min-height: 320px;
+  padding: 20px;
+  border-radius: var(--tech-radius-md);
+  border: none;
+  overflow: hidden;
+  text-decoration: none;
+  color: var(--tech-color-text);
+  cursor: pointer;
+  transition: flex-grow 420ms cubic-bezier(0.4, 0, 0.2, 1), max-width 420ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Blurred image layer beneath the title.
+   Uses filter:blur on a pseudo (not backdrop-filter) so it survives ancestor
+   transforms — RevealOnView applies translateY(0) on .revealVisible, which
+   would create a backdrop-root and break backdrop-filter on descendants.
+   Negative inset hides the blur's soft edge fade. */
+.researchCard::before {
+  content: "";
+  position: absolute;
+  /* Extend beyond the card so the blur's soft edge fade lives outside the
+     visible area (clipped by .researchCard overflow:hidden). The image
+     still stretches to fill (100% 100%) so it reads as full-bleed top to
+     bottom and side to side with no fading halo. */
+  inset: -16px;
+  background-image: var(--card-bg, url("/TechnologyPageImages/techpg-radiance.png"));
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  filter: blur(2px);
+  z-index: 0;
+  transition: filter 300ms ease;
+}
+
+.researchCard::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  -webkit-backdrop-filter: blur(16px) saturate(1.1);
+  backdrop-filter: blur(16px) saturate(1.1);
+  z-index: 0;
+}
+
+.researchCard > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* The featured card (and any card on hover) gets the strong blur — same
+   visual treatment as the hover state, so the "active" card always reads
+   as the foggy one. */
+.researchCardFeatured::before,
+.researchCard:hover::before {
+  filter: blur(10px);
+}
+
+/* When a small card is hovered, the original featured loses the strong
+   blur so the swap matches the arrow + size swap. */
+.researchCardGrid:has(.researchCard:not(.researchCardFeatured):hover) .researchCardFeatured::before {
+  filter: blur(2px);
+}
+
+.researchCard:hover {
+  color: var(--color-cta);
+}
+
+.researchCard:hover .researchCardTitle {
+  color: color-mix(in srgb, var(--color-brand) 85%, transparent);
+}
+
+.researchCardArt {
+  /* Legacy SVG art slot — hidden in the new image-bg layout */
+  display: none;
+}
+
+.researchCardTitle {
+  position: relative;
+  z-index: 1;
+  /* Scales fluidly: 16px at narrow viewports up to 22px at large. */
+  font-size: var(--text-h5);
+  font-family: var(--font-display);
+  font-weight: 500;
+  letter-spacing: var(--tech-tracking-snug);
+  line-height: var(--text-h5--line-height);
+  color: var(--tech-color-text);
+  max-width: 18ch;
+  /* Distributes wrapped lines evenly so they re-balance gracefully as the
+     card width changes, rather than the last line being a stranded word. */
+  text-wrap: balance;
+  /* max-width animates so the title's wrap point slides as the card resizes;
+     individual words still hop lines at discrete thresholds, but the hops
+     happen progressively over the transition instead of all at once. */
+  transition: color 300ms ease, max-width 420ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* When the card is in featured/expanded state, give the title room to
+   re-flow into fewer lines as the card grows. */
+.researchCardFeatured .researchCardTitle,
+.researchCard:not(.researchCardFeatured):hover .researchCardTitle {
+  max-width: 32ch;
+}
+
+/* Reciprocal: when a small is hovered, the previously-featured shrinks and
+   its title wrap measure tightens too. */
+.researchCardGrid:has(.researchCard:not(.researchCardFeatured):hover) .researchCardFeatured .researchCardTitle {
+  max-width: 18ch;
+}
+
+/* Featured card — much wider than the small cards (~3.2x flex share). */
+.researchCardFeatured {
+  flex: 3.2 1 0;
+  max-width: 880px;
+}
+
+/* On hover, a small card expands to take on the featured card's full
+   dimensions (flex share + width cap). */
+.researchCard:not(.researchCardFeatured):hover {
+  flex: 3.2 1 0;
+  max-width: 880px;
+}
+
+/* Reciprocal: when any small card is being hovered, the featured card
+   shrinks back to a small-card's dimensions — they effectively swap. */
+.researchCardGrid:has(.researchCard:not(.researchCardFeatured):hover) .researchCardFeatured {
+  flex: 1.5 1 0;
+  max-width: 280px;
+}
+
+/* Flex spacer above the title. With flex-grow:0 the title sits at the top
+   of the card (small/default state). With flex-grow:1 the spacer expands
+   and pushes the title to the bottom (featured/hovered state). flex-grow
+   IS transitionable, so the title slides smoothly between the two states
+   instead of teleporting (justify-content can't transition). */
+.researchCardSpacer {
+  flex-grow: 0;
+  transition: flex-grow 420ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.researchCardFeatured .researchCardSpacer,
+.researchCard:not(.researchCardFeatured):hover .researchCardSpacer {
+  flex-grow: 1;
+}
+
+/* When a small is hovered, featured's spacer collapses → title slides up. */
+.researchCardGrid:has(.researchCard:not(.researchCardFeatured):hover) .researchCardFeatured .researchCardSpacer {
+  flex-grow: 0;
+}
+
+.researchCardArrow {
+  position: absolute;
+  bottom: 16px;
+  right: 18px;
+  z-index: 1;
+  font-size: var(--text-h5);
+  font-family: var(--font-display);
+  color: var(--tech-color-text);
+  /* Hidden by default; only the currently-featured card shows the arrow. */
+  opacity: 0;
+  transition: transform 300ms ease, opacity 300ms ease, color 300ms ease;
+}
+
+/* Featured (the wide card) shows the arrow at rest. */
+.researchCardFeatured .researchCardArrow {
+  opacity: 1;
+}
+
+/* When a small card is hovered it becomes the "featured" — show its arrow. */
+.researchCard:not(.researchCardFeatured):hover .researchCardArrow {
+  opacity: 1;
+  transform: translate(3px, -3px);
+  color: var(--tech-color-accent);
+}
+
+/* …and the original featured loses its arrow at the same time. */
+.researchCardGrid:has(.researchCard:not(.researchCardFeatured):hover) .researchCardFeatured .researchCardArrow {
+  opacity: 0;
+}
+
+@media (max-width: 900px) {
+  .researchCardGrid {
+    flex-wrap: wrap;
+  }
+
+  .researchCard {
+    flex: 1 1 calc(50% - 8px);
+  }
+
+  .researchCardFeatured {
+    flex: 1 1 100%;
+  }
+}
+
+@media (max-width: 600px) {
+  .researchCard,
+  .researchCardFeatured {
+    flex: 1 1 100%;
+  }
+}
+
+/* ── Article list ── */
+.articleList {
+  margin-top: 48px;
+}
+
+.articleRow {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 24px 0;
+  border-bottom: none;
+  text-decoration: none;
+  color: var(--color-muted);
+  transition: color 200ms ease;
+}
+
+/* Bottom line with right fade */
+.articleRow::before {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(to right, color-mix(in srgb, var(--color-brand) 10%, transparent) 0%, color-mix(in srgb, var(--color-brand) 10%, transparent) 60%, transparent 100%);
+  pointer-events: none;
+}
+
+/* Top line on first item with right fade */
+.articleRow:first-child::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(to right, color-mix(in srgb, var(--color-brand) 10%, transparent) 0%, color-mix(in srgb, var(--color-brand) 10%, transparent) 60%, transparent 100%);
+  pointer-events: none;
+}
+
+
+/* Animated hover underline — fills left to right over the faded line */
+.articleRow .articleRowHoverLine {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 1px;
+  width: 0;
+  background: color-mix(in srgb, var(--color-brand) 70%, transparent);
+  transition: width 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  z-index: 1;
+}
+
+.articleRow:hover .articleRowHoverLine {
+  width: 100%;
+}
+
+.articleRow:hover {
+  color: color-mix(in srgb, var(--color-brand) 85%, transparent);
+}
+
+.articleRowTitle {
+  font-size: var(--tech-fs-body-lg);
+  font-weight: 400;
+  line-height: 1.6;
+  color: var(--tech-color-text-brand);
+  transition: color 200ms ease;
+}
+
+.articleRow:hover .articleRowTitle {
+  color: color-mix(in srgb, var(--color-brand) 85%, transparent);
+}
+
+.articleRowRight {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-shrink: 0;
+}
+
+.articleRowDate {
+  font-size: var(--tech-fs-body-lg);
+  font-weight: 400;
+  line-height: 1.6;
+  color: var(--tech-color-text-brand);
+  white-space: nowrap;
+  transition: color 200ms ease;
+}
+
+.articleRow:hover .articleRowDate {
+  color: color-mix(in srgb, var(--color-brand) 85%, transparent);
+}
+
+.articleRowArrow {
+  font-size: var(--tech-fs-body-lg);
+  line-height: 1.6;
+  color: var(--tech-color-text-brand);
+  transition: transform 200ms ease, color 200ms ease;
+}
+
+.articleRow:hover .articleRowArrow {
+  transform: translateX(4px);
+  color: color-mix(in srgb, var(--color-brand) 85%, transparent);
+}
+
+@media (max-width: 768px) {
+  .comparisonGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px 0;
+  }
+
+  .comparisonColumn {
+    border-right: none;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    padding: 16px 12px 16px 0;
+  }
+
+  .comparisonColumn:nth-child(even) {
+    padding-left: 12px;
+    border-left: 1px solid rgba(0, 0, 0, 0.06);
+  }
+
+  .resultMetrics {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
 }
 
 .dataCards {
@@ -518,7 +1697,7 @@
 .dataCard {
   aspect-ratio: 1 / 1;
   border-radius: 10px;
-  border: 1.4px solid rgba(10, 22, 40, 0.35);
+  border: 1.4px solid color-mix(in srgb, var(--color-cta) 35%, transparent);
   background: rgba(255, 255, 255, 0.5);
 }
 
@@ -529,14 +1708,15 @@
 
 .dataList p {
   margin: 0;
-  font-size: clamp(1.25rem, 1.45vw, 1.45rem);
+  font-size: var(--text-p-l);
 }
 
 .dataList ul {
   margin: 6px 0 0;
   padding-left: 24px;
-  font-size: clamp(1rem, 1.1vw, 1.14rem);
-  line-height: 1.4;
+  font-size: var(--text-h7);
+  font-family: var(--font-display);
+  line-height: var(--text-h7--line-height);
 }
 
 .fusingSlide {
@@ -564,7 +1744,8 @@
 
 .fusingTitle {
   margin: 0;
-  font-size: clamp(2.15rem, 3vw, 3rem);
+  font-size: var(--text-h2);
+  font-family: var(--font-display);
   letter-spacing: -0.03em;
 }
 
@@ -577,8 +1758,9 @@
 }
 
 .fusingList li {
-  font-size: clamp(1.95rem, 2.8vw, 3rem);
-  line-height: 1.12;
+  font-size: var(--text-h2);
+  font-family: var(--font-display);
+  line-height: var(--text-h2--line-height);
   letter-spacing: -0.03em;
 }
 
@@ -689,7 +1871,7 @@
   position: relative;
   overflow: hidden;
   margin-top: 12px;
-  border: 1px solid rgba(10, 22, 40, 0.2);
+  border: 1px solid color-mix(in srgb, var(--color-cta) 20%, transparent);
   background: #0f1e3d;
 }
 
@@ -787,8 +1969,9 @@
   top: clamp(1rem, 3vw, 2.6rem);
   width: min(760px, 76%);
   margin: 0;
-  font-size: clamp(2.2rem, 4.1vw, 4.3rem);
-  line-height: 1.1;
+  font-size: var(--text-h1);
+  font-family: var(--font-display);
+  line-height: var(--text-h1--line-height);
   color: rgba(246, 249, 255, 0.96);
   opacity: var(--grid-seq-shibuya);
   transform: translate3d(0, calc((1 - var(--grid-seq-shibuya)) * 28px), 0);
@@ -811,8 +1994,9 @@
   right: clamp(1.2rem, 2.8vw, 2.3rem);
   top: clamp(1rem, 2.7vw, 2.15rem);
   width: min(920px, 86%);
-  font-size: clamp(1.65rem, 2.65vw, 3rem);
-  line-height: 1.2;
+  font-size: var(--text-h2);
+  font-family: var(--font-display);
+  line-height: var(--text-h2--line-height);
 }
 
 .gridSequenceGlass {
@@ -823,12 +2007,14 @@
 .gridSequenceArticleLink {
   right: clamp(1.2rem, 2.8vw, 2.25rem);
   bottom: clamp(0.95rem, 2.2vw, 1.7rem);
-  font-size: clamp(1.18rem, 1.45vw, 1.65rem);
+  font-size: var(--text-h4);
+  font-family: var(--font-display);
 }
 
 .gridSequenceNo {
   margin: 16px 0 0;
-  font-size: clamp(1.38rem, 1.75vw, 1.95rem);
+  font-size: var(--text-h3);
+  font-family: var(--font-display);
   color: rgba(0, 0, 0, 0.86);
   opacity: var(--grid-seq-no);
   transform: translate3d(0, calc((1 - var(--grid-seq-no)) * 16px), 0);
@@ -877,11 +2063,13 @@
   display: inline-flex;
   align-items: center;
   gap: 12px;
-  font-size: clamp(1.15rem, 1.4vw, 1.3rem);
+  font-size: var(--text-h5);
+  font-family: var(--font-display);
 }
 
 .scrollHint span:first-child {
-  font-size: 1.8rem;
+  font-size: var(--text-h4);
+  font-family: var(--font-display);
 }
 
 .gridOverlay {
@@ -900,8 +2088,9 @@
   right: clamp(0.9rem, 3vw, 2.4rem);
   width: min(640px, 60%);
   margin: 0;
-  font-size: clamp(1.45rem, 2.3vw, 2.45rem);
-  line-height: 1.22;
+  font-size: var(--text-h2);
+  font-family: var(--font-display);
+  line-height: var(--text-h2--line-height);
   color: rgba(243, 246, 255, 0.95);
   text-align: right;
   text-shadow:
@@ -926,9 +2115,10 @@
 
 .gridGlassPanel p {
   margin: 0;
-  font-size: clamp(1.35rem, 2.1vw, 2.2rem);
+  font-size: var(--text-h3);
+  font-family: var(--font-display);
   color: rgba(246, 248, 255, 0.96);
-  line-height: 1.3;
+  line-height: var(--text-h3--line-height);
   text-shadow:
     0 1px 2px rgba(4, 8, 18, 0.78),
     0 8px 20px rgba(4, 8, 18, 0.52);
@@ -940,7 +2130,8 @@
   bottom: clamp(0.9rem, 2.1vw, 1.3rem);
   z-index: 3;
   color: rgba(243, 246, 255, 0.92);
-  font-size: clamp(0.98rem, 1.2vw, 1.1rem);
+  font-size: var(--text-h7);
+  font-family: var(--font-display);
   font-weight: 600;
   text-shadow:
     0 1px 2px rgba(4, 8, 18, 0.78),
@@ -949,20 +2140,57 @@
 
 .gridNo {
   margin: 12px 0 0;
-  font-size: clamp(1.35rem, 1.7vw, 1.8rem);
+  font-size: var(--text-h4);
+  font-family: var(--font-display);
 }
 
 .coreReasoningSlide {
   position: relative;
+  /* Vertical blue gradient with a white edge-fade layered on top, so the
+     section transitions smoothly into the white sections above + below. */
+  background-image:
+    linear-gradient(
+      to bottom,
+      #ffffff 0%,
+      rgba(255, 255, 255, 0) 200px,
+      rgba(255, 255, 255, 0) calc(100% - 200px),
+      #ffffff 100%
+    ),
+    linear-gradient(to bottom,
+      #EEF5FF 0%,
+      rgba(133, 180, 234, 0.69) 19%,
+      #B5D5FA 31%,
+      #E1EFFE 92%,
+      var(--color-bg1) 100%);
+}
+
+/* Section-wide plus-sign pattern overlay (behind all content). */
+.coreReasoningSlide::before {
+  content: "";
+  position: absolute;
+  /* Pattern fills the section (masked to fade out before the lower edge). */
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M12 11.5v1M11.5 12h1' stroke='%23E3DFCE' stroke-width='1.6' stroke-linecap='square'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 24px 24px;
+  /* Fade the pattern out as it approaches the "Our proprietary
+     architecture..." intro line (~30-38% down the section). */
+  -webkit-mask-image: linear-gradient(to bottom, black 0%, black 25%, transparent 38%);
+  mask-image: linear-gradient(to bottom, black 0%, black 25%, transparent 38%);
 }
 
 .verticalLineOverlay {
   position: absolute;
   inset: 0;
   pointer-events: none;
-  background-image: linear-gradient(to right, rgba(255, 178, 178, 0.42) 1px, transparent 1px);
+  background-image: linear-gradient(to right, color-mix(in srgb, var(--color-brand) 18%, transparent) 1px, transparent 1px);
   background-size: 140px 100%;
-  opacity: 0.56;
+  opacity: 0.7;
 }
 
 .coreReasoningBody {
@@ -973,17 +2201,19 @@
 .sectionTitleNarrow {
   margin: 36px 0 0;
   max-width: 760px;
-  font-size: clamp(2.25rem, 3.8vw, 3.9rem);
+  font-size: var(--text-h1);
+  font-family: var(--font-display);
   font-weight: 600;
   letter-spacing: -0.03em;
-  line-height: 1.08;
+  line-height: var(--text-h1--line-height);
 }
 
 .coreReasoningText {
   margin: 24px 0 0;
   max-width: 920px;
-  font-size: clamp(1.7rem, 2.4vw, 2.45rem);
-  line-height: 1.3;
+  font-size: var(--text-h2);
+  font-family: var(--font-display);
+  line-height: var(--text-h2--line-height);
 }
 
 .genlayersSlide {
@@ -1002,8 +2232,9 @@
 
 .genlayersHeader h2 {
   margin: 0;
-  font-size: clamp(2.2rem, 4.1vw, 4.7rem);
-  line-height: 1.12;
+  font-size: var(--text-h1);
+  font-family: var(--font-display);
+  line-height: var(--text-h1--line-height);
   letter-spacing: -0.03em;
   text-shadow:
     0 1px 2px rgba(4, 8, 18, 0.82),
@@ -1012,8 +2243,9 @@
 
 .genlayersHeader p {
   margin: 14px 0 0;
-  font-size: clamp(1.45rem, 2.2vw, 2.45rem);
-  line-height: 1.26;
+  font-size: var(--text-h2);
+  font-family: var(--font-display);
+  line-height: var(--text-h2--line-height);
   text-shadow:
     0 1px 2px rgba(4, 8, 18, 0.82),
     0 10px 26px rgba(4, 8, 18, 0.58);
@@ -1084,8 +2316,8 @@
 
 .genlayersCallout p {
   margin: 0;
-  font-size: clamp(0.95rem, 1.15vw, 1.1rem);
-  line-height: 1.45;
+  font-size: var(--text-p-l);
+  line-height: var(--text-p-l--line-height);
 }
 
 .genlayersCalloutLeft {
@@ -1107,8 +2339,9 @@
 
 .researchHead h2 {
   margin: 0;
-  font-size: clamp(2.4rem, 3.9vw, 4.2rem);
-  line-height: 1.1;
+  font-size: var(--text-h1);
+  font-family: var(--font-display);
+  line-height: var(--text-h1--line-height);
   letter-spacing: -0.03em;
 }
 
@@ -1116,7 +2349,7 @@
   margin: 6px 0 0;
   max-width: 430px;
   text-align: right;
-  font-size: clamp(1rem, 1.22vw, 1.2rem);
+  font-size: var(--text-p-l);
   color: rgba(0, 0, 0, 0.66);
 }
 
@@ -1129,7 +2362,8 @@
 
 .researchSubhead {
   margin: 20px 0 0;
-  font-size: clamp(2rem, 3vw, 2.7rem);
+  font-size: var(--text-h2);
+  font-family: var(--font-display);
   letter-spacing: -0.03em;
   font-weight: 500;
 }
@@ -1142,49 +2376,15 @@
   padding-bottom: 8px;
 }
 
-.researchCard {
-  position: relative;
-  flex-shrink: 0;
-  border-radius: 10px;
-  border: 1px solid rgba(10, 22, 40, 0.1);
-  background: rgba(14, 22, 42, 0.06);
-  text-decoration: none;
-  color: inherit;
-  transition: transform 280ms ease, box-shadow 280ms ease, background-color 280ms ease;
-}
 
-.researchCard:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 16px 26px rgba(25, 42, 72, 0.14);
-  background: rgba(14, 22, 42, 0.08);
-}
-
-.researchCard span {
-  display: block;
-  font-size: clamp(1.28rem, 1.7vw, 1.8rem);
-  line-height: 1.28;
-}
-
-.researchCardFeatured {
-  width: min(540px, 68vw);
-  min-height: 300px;
-  padding: 22px 20px;
-  display: flex;
-  align-items: flex-end;
-}
 
 .researchArrow {
   position: absolute;
   right: 14px;
   bottom: 12px;
-  font-size: 2.1rem;
+  font-size: var(--text-h3);
+  font-family: var(--font-display);
   color: #0a1628;
-}
-
-.researchCardThin {
-  width: min(220px, 44vw);
-  min-height: 300px;
-  padding: 18px 12px;
 }
 
 .dynamicSlide {
@@ -1229,8 +2429,9 @@
 .dynamicHeading h2 {
   margin: 0;
   max-width: 860px;
-  font-size: clamp(2rem, 3.5vw, 3.8rem);
-  line-height: 1.12;
+  font-size: var(--text-h1);
+  font-family: var(--font-display);
+  line-height: var(--text-h1--line-height);
   letter-spacing: -0.03em;
   color: rgba(247, 248, 254, 0.94);
   text-shadow:
@@ -1247,7 +2448,7 @@
   padding: 11px 19px;
   color: rgba(247, 250, 255, 0.94);
   text-decoration: none;
-  font-size: clamp(0.94rem, 1.1vw, 1.05rem);
+  font-size: var(--text-p-l);
   background: rgba(255, 255, 255, 0.16);
   backdrop-filter: blur(4px);
   transition: transform 280ms ease, background-color 280ms ease;
@@ -1331,14 +2532,15 @@
 
 .dynamicCaption small {
   display: block;
-  font-size: clamp(0.88rem, 1vw, 0.95rem);
+  font-size: var(--text-p-l);
   color: rgba(245, 247, 255, 0.82);
 }
 
 .dynamicCaption p {
   margin: 3px 0 0;
-  font-size: clamp(1.65rem, 2.2vw, 2.5rem);
-  line-height: 1.12;
+  font-size: var(--text-h2);
+  font-family: var(--font-display);
+  line-height: var(--text-h2--line-height);
 }
 
 .careersHead {
@@ -1350,8 +2552,9 @@
 
 .careersHead h2 {
   margin: 0;
-  font-size: clamp(2.35rem, 3.8vw, 4rem);
-  line-height: 1.1;
+  font-size: var(--text-h1);
+  font-family: var(--font-display);
+  line-height: var(--text-h1--line-height);
   letter-spacing: -0.03em;
   color: #192957;
 }
@@ -1360,122 +2563,32 @@
   margin: 8px 0 0;
   max-width: 530px;
   text-align: right;
-  font-size: clamp(1rem, 1.2vw, 1.12rem);
+  font-size: var(--text-p-l);
   color: rgba(0, 0, 0, 0.72);
-  line-height: 1.35;
+  line-height: var(--text-p-l--line-height);
 }
 
-.careersForm {
-  margin: 26px auto 0;
-  width: min(560px, 100%);
-  display: grid;
-  gap: 16px;
-}
-
-.careersForm label {
-  display: grid;
-  gap: 8px;
-}
-
-.careersForm label span {
-  font-size: 0.95rem;
-  color: rgba(0, 0, 0, 0.45);
-}
-
-.careersForm input {
-  width: 100%;
-  border: 0;
-  border-bottom: 2px solid rgba(0, 0, 0, 0.45);
-  background: transparent;
-  padding: 4px 0 8px;
-  font-size: 1rem;
-  color: #0a1628;
-  outline: none;
-  transition: border-color 220ms ease;
-}
-
-.careersForm input:focus {
-  border-color: rgba(25, 41, 87, 0.9);
-}
-
-.careersFormMeta {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
-}
-
-.careersFormMeta p {
-  margin: 0;
-  font-size: 0.95rem;
-  color: rgba(0, 0, 0, 0.4);
-}
-
-.careersSend {
-  border: 0;
-  background: transparent;
-  color: rgba(25, 41, 87, 0.86);
-  font-size: 0.92rem;
-  text-decoration: underline;
-  text-underline-offset: 3px;
-  cursor: pointer;
-  transition: color 220ms ease;
-}
-
-.careersSend:hover {
-  color: rgba(25, 41, 87, 1);
-}
-
-.hiringSection {
-  padding-top: 0;
-  padding-bottom: 0;
-}
-
-.hiringSection .slideFrame {
-  align-items: stretch;
-  min-height: calc(100vh - var(--tech-header-height));
-}
-
-.hiringArcWrap {
-  position: relative;
-  width: 100%;
-  min-height: 100%;
-  border-top-left-radius: 2000px 280px;
-  border-top-right-radius: 2000px 280px;
-  background: radial-gradient(circle at 56% 16%, #4faff2 0%, #2f4c9e 34%, #263785 56%, #2f4fb8 100%);
-  overflow: hidden;
-  display: flex;
-  justify-content: center;
-}
-
-.hiringArcHighlight {
-  position: absolute;
-  inset: 0;
-  border-top-left-radius: 2000px 280px;
-  border-top-right-radius: 2000px 280px;
-  border-top: 3px solid rgba(255, 255, 255, 0.44);
-  box-shadow: inset 0 14px 28px rgba(255, 255, 255, 0.24);
-  pointer-events: none;
-}
-
-.hiringCopy {
-  position: relative;
-  margin-top: clamp(1.3rem, 5vw, 3.2rem);
-  width: min(760px, 90vw);
+/* Centers the careers section's heading + lead paragraph above the form
+   card. The .sectionTitle / .sectionLead classes are shared across the page
+   and are normally left-aligned with max-widths; inside this wrapper their
+   text is centered and their max-width boxes auto-centered horizontally. */
+.careersIntro {
   text-align: center;
-  color: rgba(246, 249, 255, 0.95);
 }
 
-.hiringCopy h2 {
-  margin: 0;
-  font-size: clamp(2.6rem, 4vw, 4.3rem);
-  letter-spacing: -0.03em;
+.careersIntro .sectionTitle,
+.careersIntro .sectionLead {
+  margin-left: auto;
+  margin-right: auto;
 }
 
-.hiringCopy p {
-  margin: 10px 0 0;
-  font-size: clamp(1.15rem, 1.5vw, 1.45rem);
-  color: rgba(231, 238, 255, 0.85);
+/* Shell around the careers contact form card — centers the 640px card below
+   the section title + lead. The form itself (tabs, inputs, submit button) is
+   fully self-contained in <CareersContactForm> with styling that mirrors
+   /app/contact/page.tsx exactly. */
+.careersFormShell {
+  margin: 40px auto 0;
+  width: 100%;
 }
 
 .reveal {
@@ -1588,12 +2701,6 @@
 }
 
 @media (max-width: 1279px) {
-  .pageBody {
-    height: auto;
-    overflow: visible;
-    overscroll-behavior-y: auto;
-  }
-
   .pageShell {
     grid-template-columns: minmax(0, 1fr);
     gap: 0;
@@ -1607,8 +2714,7 @@
     display: none;
   }
 
-  .fullBleedSection,
-  .footerBleedWrap {
+  .fullBleedSection {
     left: 0;
     width: 100%;
   }
@@ -1685,7 +2791,8 @@
   }
 
   .gridSequenceArticleLink {
-    font-size: clamp(1rem, 1.2vw, 1.12rem);
+    font-size: var(--text-h7);
+    font-family: var(--font-display);
   }
 
   .gridSequenceShibuyaText {
@@ -1720,12 +2827,8 @@
 }
 
 @media (max-width: 767px) {
-  .pageShell {
-    padding: 0 12px;
-  }
-
   .section:not(.fullBleedSection):not(.lgmSlide) .slideFrame {
-    padding-inline: 0;
+    padding-inline: var(--page-padding);
   }
 
   .section {
@@ -1757,15 +2860,6 @@
     min-width: 188px;
     max-width: 62%;
     padding: 9px 12px;
-  }
-
-  .researchCardFeatured,
-  .researchCardThin {
-    min-height: 250px;
-  }
-
-  .hiringArcWrap {
-    min-height: 480px;
   }
 }
 
@@ -1809,5 +2903,3406 @@
   .gridSequenceHint {
     opacity: 1;
     transform: none;
+  }
+}
+
+/* ───────────────────────────────────────────────
+   WRAPPER for Lenis content (hero + shell)
+   ─────────────────────────────────────────────── */
+.pageBodyInner {
+  width: 100%;
+}
+
+/* ───────────────────────────────────────────────
+   TECH HERO SECTION
+   ─────────────────────────────────────────────── */
+.techHero {
+  position: relative;
+  width: 100%;
+  /* The 120px overshoot pairs with the negative margin-top below: the
+     hero is pulled up so its animated mesh extends to the very top of
+     the page (behind the sticky navbar), while padding-top keeps the
+     hero content clear of the navbar overlay so nothing shifts. The
+     overshoot is added to the height so the hero still contributes a
+     full 100vh of scroll. Same technique as components/business/
+     BusinessHero.tsx. */
+  height: calc(100vh + 120px);
+  margin-top: -120px;
+  padding-top: 120px;
+  overflow: hidden;
+  /* Light surface behind the (transparent) mesh canvas — matches the
+     experimentV6 home hero's var(--color-bg1) background. */
+  background: var(--color-bg1);
+}
+
+/* ── Hero gradient stack — ported from the experimentV6 home hero.
+   Layered above the mesh canvas (z-index 0) but below the hero
+   content (.techHeroContent, z-index 10). ── */
+
+/* Blue accent tint across the top half — the site's original hero
+   accent gradient (from the homepage hero on `main`): azure #0066CC,
+   faded by alpha only so it never drifts through a muddy midtone. */
+.techHeroAccentGradient {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 50%;
+  z-index: 3;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 102, 204, 0.15) 0%,
+    rgba(0, 102, 204, 0.08) 60%,
+    rgba(0, 102, 204, 0) 100%
+  );
+}
+
+/* Horizon softener — fades the mesh's far horizon line into the surface. */
+.techHeroHorizonGradient {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 22vh;
+  height: 18vh;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(to bottom, var(--color-bg1), rgba(246, 248, 251, 0));
+}
+
+/* Fade to white at the bottom — blends the mesh into the section below. */
+.techHeroBottomGradient {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 300px;
+  z-index: 3;
+  pointer-events: none;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0), #ffffff);
+}
+
+/* Scroll-driven blur overlay. Sits above the hero image AND text inside
+   .techHero so backdrop-filter blurs both as the user scrolls past the
+   hero section. z-index is high enough to cover .techHeroContent, but
+   pointer-events: none keeps nav links clickable. */
+.techHeroBlurOverlay {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  pointer-events: none;
+  transition: opacity 60ms linear;
+}
+
+.techHeroOverlay {
+  position: absolute;
+  inset: 0;
+}
+
+.techHeroGradient {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 180px;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.techHeroContent {
+  position: relative;
+  /* Above the mesh canvas (z 0) and the gradient stack (z 1–3); still
+     below the scroll-driven blur (z 20) and fade-to-black (z 30). */
+  z-index: 10;
+  width: 100%;
+  max-width: 1287px;
+  margin: 0 auto;
+  /* Match the homepage hero's left/right padding so the title starts
+     and ends at the same x as the homepage. Homepage's <Container>
+     uses padding-inline: var(--page-padding) (24px below 940px,
+     1vw above) defined in app/globals.css. */
+  padding: 0 var(--page-padding);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.techHeroTextBlock {
+  /* Cap content to 1168px (=292 * 4px in Tailwind v4 spacing scale) to
+     match the homepage Hero's `max-w-292` inner wrapper. Keeps the tech
+     hero title + subtitle at the same horizontal extent as the homepage
+     hero so titles align across pages. */
+  max-width: 1168px;
+  margin-top: 125px;
+}
+
+/* Matches the homepage hero heading exactly — the design-system `.h1`
+   utility ([app/globals.css:213]): Funnel Display, weight 500, the
+   --text-h1 typescale (responsive via --typography--h1), and the
+   `tracking-tight` (-0.025em) the homepage <h1> carries. */
+.techHeroTitle {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--text-h1);
+  font-weight: 500;
+  line-height: var(--text-h1--line-height);
+  letter-spacing: -0.025em;
+  color: var(--color-cta);
+}
+
+/* Body copy — matches the design-system `.p-l` utility: Opening Hours
+   Sans (inherited --font-sans), weight 400, --text-p-l typescale. */
+.techHeroSubtitle {
+  margin: 20px 0 0;
+  max-width: 860px;
+  font-size: var(--text-p-l);
+  font-weight: 400;
+  line-height: var(--text-p-l--line-height);
+  color: color-mix(in srgb, var(--color-cta) 85%, transparent);
+  white-space: normal;
+}
+
+.techHeroDivider {
+  margin-top: 28px;
+  width: 100%;
+  height: 1px;
+}
+
+/* Label introducing the hero index list ("An interactive Thesis") */
+.techHeroIndexLabel {
+  margin: 24px 0 0;
+  font-size: var(--text-h3);
+  line-height: var(--text-h3--line-height);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: var(--color-cta);
+}
+
+/* Hero nav — index items displayed under the title (glass-button inspired) */
+.techHeroNav {
+  margin-top: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 100%;
+  max-width: 860px;
+}
+
+.techHeroNavItem {
+  -webkit-appearance: none;
+  appearance: none;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 10px 22px;
+  font-size: var(--text-p-l);
+  font-weight: 500;
+  letter-spacing: -0.18px;
+  color: color-mix(in srgb, var(--color-cta) 85%, transparent);
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+  background: rgba(255, 255, 255, 0.22);
+  -webkit-backdrop-filter: blur(18px) saturate(1.35);
+  backdrop-filter: blur(18px) saturate(1.35);
+  border-radius: var(--radius-button);
+  cursor: pointer;
+  transition: color 0.3s ease, background 0.3s ease;
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-cta) 12%, transparent);
+}
+
+.techHeroNavItem:hover {
+  color: var(--color-cta);
+  background: rgba(255, 255, 255, 0.32);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-cta) 20%, transparent);
+}
+
+.techHeroNavText {
+  position: relative;
+  z-index: 1;
+}
+
+.techHeroNavArrow {
+  position: relative;
+  z-index: 1;
+  flex-shrink: 0;
+  opacity: 0;
+  transition: opacity 0.22s ease, transform 0.22s ease;
+}
+
+.techHeroNavItem:hover .techHeroNavArrow {
+  opacity: 1;
+  transform: translateY(1px);
+}
+
+
+@media (max-width: 768px) {
+  .techHeroTextBlock {
+    margin-top: 70px;
+  }
+
+  .techHeroNavItem {
+    font-size: var(--text-p-m);
+  }
+
+  .techHeroContent {
+    padding: 0 32px;
+  }
+}
+
+/* ───────────────────────────────────────────────
+   SCROLL INDEX (inline sidebar nav)
+   Vertical column of small grey dots. The active item expands into a
+   rounded pill containing a blue dot + the section label — every other
+   item stays as a bare dot. Inspired by juanmora.co/work.
+   ─────────────────────────────────────────────── */
+.scrollIndex {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 18px;
+  opacity: 1;
+  pointer-events: auto;
+  transition: opacity 350ms ease;
+}
+
+/* Faded out once the bottom of the last section (Careers) is reached. */
+.scrollIndexHidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Each item is a link sized to its dot — pill background, padding, and
+   text appear only when the item is .scrollIndexLabelActive. */
+.scrollIndexLabel {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  white-space: nowrap;
+  font-size: var(--text-p-s);
+  font-weight: 500;
+  letter-spacing: 0;
+  color: transparent;
+  text-decoration: none;
+  padding: 6px 14px 6px 10px;
+  border-radius: var(--radius-full);
+  background: transparent;
+  transition: color 220ms ease, background-color 220ms ease,
+              padding 220ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Dot indicator — grey at rest, blue when the item is active. */
+.scrollIndexDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(19, 35, 74, 0.28);
+  flex: none;
+  transition: background-color 220ms ease, transform 220ms ease;
+}
+
+/* Label text — hidden by default; max-width animates open when active. */
+.scrollIndexText {
+  display: inline-block;
+  max-width: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-width 280ms cubic-bezier(0.22, 1, 0.36, 1),
+              opacity 220ms ease;
+}
+
+.scrollIndexLabel:hover .scrollIndexDot {
+  background: rgba(19, 35, 74, 0.55);
+}
+
+.scrollIndexLabel:focus-visible {
+  outline: 2px solid var(--color-cta);
+  outline-offset: 2px;
+}
+
+.scrollIndexLabelActive,
+.scrollIndexLabelActive:hover {
+  background: rgba(19, 35, 74, 0.07);
+  color: rgba(19, 35, 74, 0.78);
+}
+
+.scrollIndexLabelActive .scrollIndexDot {
+  background: var(--color-cta);
+}
+
+.scrollIndexLabelActive .scrollIndexText {
+  max-width: 240px;
+  opacity: 1;
+}
+
+/* When the user hovers anywhere over the nav, expand every item so all
+   labels read at once. The active item keeps its blue dot + filled pill;
+   the rest get a muted pill so the active one still stands out. */
+.scrollIndex:hover .scrollIndexLabel {
+  background: rgba(19, 35, 74, 0.04);
+  color: rgba(19, 35, 74, 0.78);
+}
+
+.scrollIndex:hover .scrollIndexLabelActive {
+  background: rgba(19, 35, 74, 0.07);
+}
+
+.scrollIndex:hover .scrollIndexText {
+  max-width: 240px;
+  opacity: 1;
+}
+
+/* White-mode — applied when the index's sticky Y overlaps a dark band. */
+.scrollIndexOnDark .scrollIndexDot {
+  background: rgba(255, 255, 255, 0.4);
+}
+
+.scrollIndexOnDark .scrollIndexLabel:hover .scrollIndexDot {
+  background: #ffffff;
+}
+
+.scrollIndexOnDark .scrollIndexLabelActive,
+.scrollIndexOnDark .scrollIndexLabelActive:hover {
+  background: rgba(255, 255, 255, 0.14);
+  color: #ffffff;
+}
+
+.scrollIndexOnDark .scrollIndexLabelActive .scrollIndexDot {
+  background: #ffffff;
+}
+
+.scrollIndexOnDark.scrollIndex:hover .scrollIndexLabel {
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+}
+
+.scrollIndexOnDark.scrollIndex:hover .scrollIndexLabelActive {
+  background: rgba(255, 255, 255, 0.14);
+}
+
+/* ── Research blog: reduce right inset to match homepage right boundary ── */
+/* Research Blog block — now inherits the same symmetric .editorialSlide
+   padding as every other section so its left + right edges line up with
+   the rest of the page. (Previous version pinned the right edge to the
+   navbar CTA via a margin-right formula; that made it the one outlier.) */
+.researchEditorial {
+  /* intentionally empty */
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Section 1 — "What's an LGM" comparison layout
+   ═══════════════════════════════════════════════════════════════ */
+
+.sectionEyebrow {
+  display: block;
+  font-size: var(--tech-fs-caption);
+  font-weight: 400;
+  letter-spacing: var(--tech-tracking-wide);
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--tech-color-text) 35%, transparent);
+  margin-bottom: 8px;
+}
+
+.lgmCompareLayout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(240px, 0.9fr);
+  gap: clamp(32px, 5vw, 80px);
+  align-items: start;
+}
+
+.lgmCompareText {
+  min-width: 0;
+}
+
+/* Darken body paragraphs in this section */
+.lgmCompareText .editorialBody p {
+  color: var(--color-ink);
+}
+
+.lgmCompareArt {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 40px;
+}
+
+.lgmCompareArt svg,
+.lgmCompareArtImg {
+  width: 100%;
+  max-width: 1011px;
+  height: auto;
+  display: block;
+  object-fit: contain;
+  /* Lifted upward only — no rightward shift, so the diagram stays fully
+     inside its column and no part is clipped. */
+  transform: translateY(-65px);
+}
+
+/* "Read our in-depth article" inline link */
+.lgmInlineCta {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 32px;
+  font-size: var(--text-h7);
+  font-family: var(--font-display);
+  font-weight: 500;
+  color: var(--color-brand);
+  text-decoration: none;
+  transition: color 200ms ease;
+}
+
+.lgmInlineCta svg {
+  width: 14px;
+  height: 14px;
+  transition: transform 200ms ease;
+}
+
+.lgmInlineCta:hover {
+  color: #1B37CE;
+}
+
+.lgmInlineCta:hover svg {
+  transform: translate(2px, -2px);
+}
+
+/* ── Comparison table ── */
+.lgmCompareTable {
+  position: relative;
+  margin-top: 60px;
+  padding: clamp(88px, 9vw, 120px) clamp(28px, 3vw, 44px) clamp(36px, 4vw, 52px);
+  background: radial-gradient(circle at 95% 8%, #E2F0FF 0%, #E2F0FF 55%, #EDF7FF 100%);
+  border-radius: 16px;
+  box-shadow:
+    0 0 0 12px var(--tech-color-bg),
+    0 0 60px 36px var(--tech-color-bg);
+}
+
+/* Branding mark in the top-left corner of the comparison table */
+.dimBranding {
+  position: absolute;
+  top: clamp(20px, 2vw, 28px);
+  left: clamp(20px, 2vw, 28px);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: var(--text-h7);
+  font-family: var(--font-display);
+  font-weight: 500;
+  color: #000000;
+  letter-spacing: -0.01em;
+  opacity: 0.5;
+}
+
+.dimBrandingLogo {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+}
+
+/* ── Table grid: row labels (col 1) + 3 model columns (cols 2-4) ── */
+.dimTableGrid {
+  display: grid;
+  grid-template-columns: minmax(110px, max-content) repeat(3, minmax(0, 1fr));
+  column-gap: 18px;
+  row-gap: 0;
+  margin-top: 28px;
+}
+
+.dimModelHeader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  padding-bottom: 16px;
+}
+
+.dimModelHeaderIcon {
+  width: 64px;
+  height: 64px;
+  margin-bottom: 13px;
+  object-fit: contain;
+}
+
+.dimModelHeaderName {
+  margin: 0 0 4px;
+  font-size: var(--text-h3);
+  font-family: var(--font-display);
+  font-weight: 600;
+  color: #000000;
+  letter-spacing: -0.02em;
+  line-height: var(--text-h3--line-height);
+}
+
+.dimModelHeaderNameLgm {
+  font-weight: 800;
+  -webkit-text-stroke: 0.5px currentColor;
+}
+
+.dimModelHeaderSubtitle {
+  margin: 0;
+  font-size: var(--text-p-m);
+  font-weight: 400;
+  color: rgba(0, 0, 0, 0.5);
+}
+
+.dimRowLabel {
+  display: flex;
+  align-items: center;
+  font-size: var(--text-h7);
+  font-family: var(--font-display);
+  font-weight: 600;
+  color: #000000;
+  letter-spacing: -0.01em;
+  padding-right: 8px;
+  line-height: var(--text-h7--line-height);
+}
+
+.dimGridCell {
+  background: #DCEAF8;
+  padding: 28px 22px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 4px;
+  border-left: 1.5px solid #000000;
+  border-right: 1.5px solid #000000;
+}
+
+.dimGridCellTop {
+  border-top: 1.5px solid #000000;
+  border-radius: 12px 12px 0 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.25);
+}
+
+.dimGridCellMid {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.25);
+}
+
+.dimGridCellBottom {
+  border-bottom: 1.5px solid #000000;
+  border-radius: 0 0 12px 12px;
+}
+
+.dimGridCellLgm {
+  background: #B7D7F7;
+}
+
+/* Logo grid sits centered inside building-it cells (override legacy margin-top: auto) */
+.dimGridCell .dimLogos {
+  margin-top: 0;
+  align-items: center;
+  justify-items: center;
+}
+
+/* Smaller logo sizing inside the new grid cells — black & white treatment */
+.dimGridCell .dimLogoImg {
+  height: 36px;
+  max-width: 90px;
+  filter: grayscale(100%);
+  mix-blend-mode: multiply;
+}
+
+.dimGridCell .dimLogoMonogram {
+  width: auto;
+  height: auto;
+  background: transparent;
+  padding: 0;
+  font-size: var(--text-p-l);
+  font-weight: 500;
+}
+
+.dimGridCell .dimLogoItem {
+  justify-content: center;
+}
+
+/* Columbus Earth brand — used in the LGM "Who's building it" cell */
+.dimGridCell .dimBrand {
+  margin-top: 0;
+  flex-direction: column;
+  gap: 8px;
+  text-align: center;
+}
+
+.dimGridCell .dimBrandLogo {
+  width: 56px;
+  height: 56px;
+}
+
+.dimGridCell .dimBrandName {
+  font-size: var(--text-h5);
+  font-family: var(--font-display);
+  font-weight: 600;
+}
+
+.dimCellHeading {
+  margin: 0;
+  font-size: var(--text-h7);
+  font-family: var(--font-display);
+  font-weight: 600;
+  color: #000000;
+  letter-spacing: -0.01em;
+  line-height: var(--text-h7--line-height);
+}
+
+.dimCellNote {
+  margin: 0;
+  font-size: var(--text-p-m);
+  font-weight: 400;
+  color: rgba(0, 0, 0, 0.5);
+  line-height: 1.45;
+}
+
+/* ── Responsive: stack the table at small screens ── */
+@media (max-width: 900px) {
+  .dimTableGrid {
+    grid-template-columns: 1fr;
+    row-gap: 12px;
+  }
+
+  .dimRowLabel,
+  .dimModelHeader,
+  .dimGridCell {
+    grid-column: 1 / -1;
+  }
+
+  .dimGridCellTop,
+  .dimGridCellMid,
+  .dimGridCellBottom {
+    border: 1.5px solid color-mix(in srgb, var(--color-cta) 30%, transparent);
+    border-radius: 12px;
+  }
+}
+
+/* ── Dimension diagram (nested-rectangles layout) ───────────────────── */
+/* ── Outer LGM rect (transparent — card IS the LGM bg) ──────────────── */
+.dimLgmOuter {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  background: #B7D7F7;
+  border: 0;
+  border-radius: 20px;
+  padding: 28px 20px;
+}
+
+/* VLM middle rect */
+.dimVlm {
+  flex: 1 1 64%;
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  gap: 20px;
+  background: #B7D7F7;
+  border: 1.5px solid color-mix(in srgb, var(--color-cta) 40%, transparent);
+  border-radius: 16px;
+  padding: 24px;
+}
+
+/* LLM inner rect */
+.dimLlm {
+  flex: 0 0 43%;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  background: #B7D7F7;
+  border: 1.5px solid color-mix(in srgb, var(--color-cta) 40%, transparent);
+  border-radius: 12px;
+  padding: 20px;
+}
+
+/* VLM-only content column */
+.dimVlmContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* LGM content column — title at top edge of VLM rect for staircase effect */
+.dimLgm {
+  flex: 0 0 28%;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  background: #B7D7F7;
+  border-radius: 16px;
+  padding: 0 24px 24px;
+}
+
+/* Model titles — LLM & VLM: 500, LGM: 700 */
+.dimModelTitle {
+  margin: 0 0 5px;
+  font-size: var(--text-h4);
+  font-family: var(--font-display);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: var(--color-cta);
+  line-height: var(--text-h4--line-height);
+}
+
+.dimModelSubtitle {
+  margin: 0;
+  font-size: var(--text-p-m);
+  font-weight: 400;
+  color: color-mix(in srgb, var(--color-cta) 55%, transparent);
+  letter-spacing: -0.01em;
+}
+
+/* LGM column — bold title, same dark text as LLM/VLM */
+.dimLgm .dimModelTitle { font-weight: 700; }
+
+/* ── Three-box layout (LLM | → | VLM | → | LGM) ── */
+.dimBox {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  background: #B7D7F7;
+  border: 1.5px solid color-mix(in srgb, var(--color-cta) 40%, transparent);
+  border-radius: 12px;
+  padding: 22px 20px;
+}
+
+.dimBoxHeader {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.dimBoxIcon {
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+}
+
+.dimReasons {
+  margin: 6px 0 0;
+  font-size: var(--text-p-l);
+  font-style: italic;
+  font-weight: 500;
+  color: var(--color-cta);
+  letter-spacing: -0.01em;
+  line-height: 1.7;
+}
+
+/* Highlight chip for individual data-type tokens inside .dimReasons */
+.dimDataType {
+  background: #8FC0F1;
+  padding: 1px 7px;
+  border-radius: 4px;
+  font-style: normal;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  margin: 0 1px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+.dimDivider {
+  border: 0;
+  border-top: 1px solid color-mix(in srgb, var(--color-cta) 25%, transparent);
+  width: 100%;
+  margin: 0;
+}
+
+.dimQuestion {
+  margin: 0;
+  font-size: var(--text-p-l);
+  font-style: italic;
+  font-weight: 500;
+  color: var(--color-cta);
+  letter-spacing: -0.01em;
+  line-height: 1.45;
+}
+
+.dimBoxArrow {
+  align-self: center;
+  flex-shrink: 0;
+  width: 28px;
+  height: 18px;
+  color: color-mix(in srgb, var(--color-cta) 70%, transparent);
+}
+
+.dimBuiltBy {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-top: 8px;
+}
+
+.dimBuiltByLabel {
+  font-size: var(--text-p-m);
+  font-weight: 500;
+  color: color-mix(in srgb, var(--color-cta) 60%, transparent);
+  letter-spacing: -0.01em;
+}
+
+/* Pill */
+.dimPill {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  background: #8FC0F1;
+  border-radius: 10px;
+  padding: 12px 16px;
+}
+
+.dimPill p {
+  margin: 0;
+  font-size: var(--text-p-l);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: var(--color-cta);
+  line-height: var(--text-p-l--line-height);
+  text-align: center;
+}
+
+.dimPill p strong { font-weight: 600; }
+
+/* Stacks the Input pill and Output pill tightly together */
+.dimPillStack {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: stretch;
+}
+
+/* Down-arrow connector between the Input and Output pills */
+.dimPillArrow {
+  align-self: center;
+  width: 14px;
+  height: 18px;
+  color: color-mix(in srgb, var(--color-cta) 55%, transparent);
+  margin: 2px 0;
+}
+
+/* Example row beneath the pill — concrete input → output illustration */
+.dimExample {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 0 4px;
+  margin-top: -6px;
+}
+
+.dimExampleIcon {
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  color: color-mix(in srgb, var(--color-cta) 60%, transparent);
+  margin-top: 1px;
+}
+
+.dimExampleText {
+  margin: 0;
+  font-size: var(--text-p-m);
+  font-style: italic;
+  font-weight: 400;
+  color: color-mix(in srgb, var(--color-cta) 72%, transparent);
+  line-height: 1.4;
+  letter-spacing: -0.01em;
+}
+
+/* Pattern row */
+.dimPattern {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.dimPatternSvg {
+  flex-shrink: 0;
+  width: 42px;
+  height: 42px;
+}
+
+.dimPatternLabel {
+  font-size: var(--text-h7);
+  font-family: var(--font-display);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: var(--color-cta);
+  line-height: var(--text-h7--line-height);
+}
+
+/* Logo grid */
+.dimLogos {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px 12px;
+  margin-top: auto;
+}
+
+.dimLogoItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.dimLogoImg {
+  flex-shrink: 0;
+  height: 80px;
+  width: auto;
+  max-width: 100px;
+  object-fit: contain;
+}
+
+.dimLogoMonogram {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 48px;
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--color-cta) 12%, transparent);
+  font-size: var(--text-h7);
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--color-cta);
+  letter-spacing: -0.02em;
+}
+
+.dimLogoName {
+  font-size: var(--text-p-l);
+  font-weight: 400;
+  color: var(--color-cta);
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Brand row (Columbus Earth) */
+.dimBrand {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: auto;
+}
+
+.dimBrandLogo {
+  flex-shrink: 0;
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+}
+
+.dimBrandName {
+  font-size: var(--text-h4);
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--color-cta);
+}
+
+.lgmCompareTableTitle {
+  position: absolute;
+  top: clamp(20px, 2vw, 28px);
+  left: 0;
+  right: 0;
+  margin: 0;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: var(--text-h4);
+  font-family: var(--font-display);
+  font-weight: 600;
+  color: var(--color-cta);
+  letter-spacing: -0.02em;
+  pointer-events: none;
+}
+
+.lgmCompareTableHead {
+  display: grid;
+  grid-template-columns: 150px repeat(3, minmax(0, 1fr));
+  gap: 0;
+  padding-bottom: 24px;
+}
+
+.lgmCompareColHead {
+  text-align: center;
+  padding: 0 16px;
+  font-size: var(--text-h3);
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--color-cta);
+  letter-spacing: -0.01em;
+}
+
+.lgmCompareTableBody {
+  display: grid;
+  grid-template-columns: 150px repeat(3, minmax(0, 1fr));
+  gap: 0;
+  min-height: 280px;
+  border-bottom: 1px solid color-mix(in srgb, var(--color-cta) 45%, transparent);
+  /* padding-bottom removed so cell border-lefts extend all the way down to the horizontal line */
+}
+
+.lgmCompareRowLabel {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 120px;
+  padding-top: 2px;
+  padding-right: 16px;
+  font-size: var(--text-h7);
+  font-family: var(--font-display);
+  font-weight: 400;
+  color: var(--color-cta);
+}
+
+/* Push body-row spacing INTO the cells so their border-left reaches the horizontal divider */
+.lgmCompareTableBody .lgmCompareRowLabel {
+  padding-bottom: 34px;
+}
+
+.lgmCompareCell {
+  position: relative;
+  padding: 0 20px 34px;
+  border-left: 1px solid color-mix(in srgb, var(--color-cta) 45%, transparent);
+  font-size: var(--text-h7);
+  font-family: var(--font-display);
+  line-height: var(--text-h7--line-height);
+  color: var(--color-cta);
+}
+
+.lgmCompareCellText {
+  margin: 0;
+  font-size: var(--text-p-l);
+  font-weight: 400;
+  line-height: var(--text-p-l--line-height);
+  letter-spacing: 0;
+  color: var(--color-cta);
+  overflow: hidden;
+  word-break: break-word;
+  display: -webkit-box;
+  -webkit-line-clamp: 10;
+  -webkit-box-orient: vertical;
+  /* fade the last 30% of the text to transparent */
+  mask-image: linear-gradient(to bottom, #000 70%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, #000 70%, transparent 100%);
+}
+
+.lgmCompareTableExamples {
+  display: grid;
+  grid-template-columns: 150px repeat(3, minmax(0, 1fr));
+  gap: 0;
+  /* padding-top removed so cell border-lefts start from the horizontal line.
+     align-items defaults to `stretch` so every cell shares the row height,
+     which keeps all vertical border-lefts the same length. */
+}
+
+.lgmCompareTableExamples .lgmCompareRowLabel {
+  flex-direction: row;
+  align-items: center;
+  gap: 0;
+  padding-top: 24px;
+  padding-bottom: 24px;
+  font-size: var(--text-p-l);
+}
+
+.lgmCompareExampleCell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 20px;
+  border-left: 1px solid color-mix(in srgb, var(--color-cta) 45%, transparent);
+  font-size: var(--text-p-l);
+  line-height: 1.55;
+  color: var(--color-cta);
+  text-align: center;
+}
+
+.lgmCompareExampleList {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.lgmCompareExampleList li {
+  font-size: var(--text-p-l);
+  line-height: 1.5;
+  color: var(--color-cta);
+  text-align: center;
+}
+
+.lgmCompareBrandMark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  font-size: var(--text-h5);
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--color-cta);
+  letter-spacing: -0.01em;
+}
+
+.lgmBrandMarkLogo {
+  width: clamp(38px, 2.8vw, 46px);
+  height: clamp(38px, 2.8vw, 46px);
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+/* LLM column: 2×2 logo grid — logo images include brand wordmark */
+.lgmLogoGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-rows: repeat(2, auto);
+  column-gap: clamp(12px, 1.6vw, 22px);
+  row-gap: clamp(12px, 1.6vw, 20px);
+  justify-items: start;
+  align-items: center;
+}
+
+.lgmLogoItem {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  min-height: clamp(28px, 2.6vw, 36px);
+}
+
+.lgmLogoMark {
+  width: auto;
+  height: clamp(22px, 2.1vw, 30px);
+  max-width: 100%;
+  object-fit: contain;
+}
+
+/* Dimension diagram — responsive stack */
+@media (max-width: 960px) {
+  .dimLgmOuter {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .dimVlm {
+    flex-direction: column;
+    gap: 20px;
+    flex: none;
+  }
+
+  .dimLlm {
+    flex: none;
+  }
+
+  .dimLgm {
+    flex: none;
+  }
+
+  .dimBox {
+    flex: none;
+  }
+
+  .dimBoxArrow {
+    transform: rotate(90deg);
+    margin: 4px 0;
+  }
+}
+
+/* Screen-reader-only: keeps text in the DOM for SEO/indexing + a11y */
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Responsive — stack on small screens */
+@media (max-width: 900px) {
+  .lgmCompareLayout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 32px;
+  }
+
+  .lgmCompareArt {
+    order: -1;
+    padding-top: 0;
+  }
+
+  .lgmCompareArt svg,
+  .lgmCompareArtImg {
+    max-width: 529px;
+    transform: none;
+  }
+
+  .lgmCompareTableHead,
+  .lgmCompareTableBody,
+  .lgmCompareTableExamples {
+    grid-template-columns: 100px repeat(3, minmax(0, 1fr));
+  }
+
+  .lgmCompareColHead {
+    font-size: var(--text-p-l);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Section 2 — "A New Foundational Model" (lgm-vs-llm)
+   ═══════════════════════════════════════════════════════════════ */
+
+.lgmFoundationalSlide {
+  padding-bottom: clamp(56px, 7vw, 96px);
+}
+
+.lgmKicker {
+  margin: 0 0 16px;
+  font-size: var(--tech-fs-caption);
+  font-weight: 400;
+  letter-spacing: var(--tech-tracking-wide);
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--tech-color-text) 35%, transparent);
+}
+
+.lgmFoundationalTitle {
+  margin: 0 auto;
+  max-width: 980px;
+  font-size: var(--tech-fs-h3);
+  font-family: var(--font-display);
+  font-weight: 500;
+  letter-spacing: var(--tech-tracking-tight);
+  line-height: 1.2;
+  color: var(--tech-color-text);
+  text-align: center;
+}
+
+.lgmFoundationalLead {
+  margin: 16px auto 0;
+  max-width: 700px;
+  font-size: var(--tech-fs-body-lg);
+  line-height: 1.55;
+  color: var(--tech-color-text);
+  text-align: center;
+}
+
+/* Live HTML/CSS timeline — replaces the baked Timeline.png. 4 milestones
+   alternate above/below the horizontal track. A soft brand-blue halo
+   emanates from the centerline (top + bottom layers fading to transparent). */
+.lgmTimeline {
+  position: relative;
+  margin-top: clamp(40px, 5vw, 72px);
+  /* Bleed horizontally through .editorialSlide's 16px padding-inline via
+     negative margin-inline, so the timeline's left edge still starts at
+     the slideFrame's content-left bound (same as before padding was
+     added to .editorialSlide). The track's own negative offsets then
+     continue to reach the sidebar line / viewport-right unchanged. */
+  margin-inline: -16px;
+  width: auto;
+  height: clamp(320px, 36vw, 420px);
+  /* No `isolation: isolate` — let z-index: -1 on the halo go behind the
+     timeline so it can encompass content via negative inset without being
+     clipped by a stacking context. */
+}
+
+/* Single soft brand-blue halo — strongest at the centerline, fading to
+   transparent in every direction. Negative inset so the halo extends
+   beyond the timeline box and visually wraps the milestone labels +
+   CTAs that sit above and below the track. Sits behind everything via
+   z-index: -1. */
+.lgmTimelineHalo {
+  position: absolute;
+  /* Vertical extent halved again (was -60px, originally -120px) so the
+     gradient hugs the line as a tight band instead of spreading wide. */
+  top: -30px;
+  bottom: -30px;
+  /* Spans the timeline track exactly: starts at the track's left edge and
+     extends out to the same far-right point the track reaches. */
+  left: 0;
+  right: calc(-1 * (var(--tech-sidebar-x) + var(--page-padding)));
+  pointer-events: none;
+  z-index: -1;
+  /* Vertical fade — strongest at the centerline, fading up + down. */
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    color-mix(in srgb, var(--color-brand) 1.5%, transparent) 25%,
+    color-mix(in srgb, var(--color-brand) 7%, transparent) 50%,
+    color-mix(in srgb, var(--color-brand) 1.5%, transparent) 75%,
+    transparent 100%
+  );
+  /* Left edge starts fully transparent (0 opacity) and ramps in. */
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 35%);
+  mask-image: linear-gradient(to right, transparent 0%, #000 35%);
+}
+
+/* Horizontal track — starts flush with the timeline box's left edge and
+   deliberately extends out past its right edge, running into the page
+   gutter so the line reads as continuing beyond its container. */
+.lgmTimelineTrack {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: calc(-1 * (var(--tech-sidebar-x) + var(--page-padding)));
+  height: 1px;
+  background: var(--tech-color-text-brand);
+  z-index: 200;
+}
+
+.lgmTimelineDot {
+  position: absolute;
+  top: 50%;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--tech-color-text-brand);
+  transform: translate(-50%, -50%);
+  z-index: 2;
+}
+
+/* Decorative minor dots at the in-between years (2023, 2024, 2027) —
+   smaller and softer to read as rhythm marks, not milestones. */
+.lgmTimelineDotMinor {
+  width: 5px;
+  height: 5px;
+  background: var(--tech-color-text-brand);
+  opacity: 0.22;
+}
+
+/* Trailing decorative dots — sit on the right extension of the track
+   (past the last milestone). Smaller and dimmer than the regular minor
+   dots so they read as soft texture trailing off into the distance. */
+.lgmTimelineDotTrailing {
+  width: 4px;
+  height: 4px;
+  background: var(--tech-color-text-brand);
+  opacity: 0.12;
+}
+
+/* Columbus "you are here" dot — bigger than a milestone dot, accent
+   blue with a soft halo so it visually anchors the now-marker. */
+.lgmTimelineDotColumbus {
+  width: 12px;
+  height: 12px;
+  background: var(--tech-color-accent);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-brand) 18%, transparent);
+  z-index: 3;
+}
+
+/* A milestone column — anchored to a percentage left position. Columns
+   span the full top-half (above the line) or bottom-half (below the line)
+   so their contents (year, label, CTA) can be aligned to the far end or
+   pinned next to the line via margin:auto flex-spacing tricks.
+   Content is LEFT-ALIGNED at the dot's x-position (column's left edge
+   sits on the dot; stem, year, label all flow from that edge). */
+.lgmTimelineMilestone {
+  /* Column is centered horizontally on its `left` (the dot's x) via
+     translateX(-50%). Children stack as a centered column so each label
+     sits directly under (or above) its stem and dot. */
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  transform: translateX(-50%);
+  z-index: 2;
+}
+
+.lgmTimelineMilestoneTop {
+  /* Anchored at the centerline. min-height keeps the 2026/2028/Columbus
+     columns tall enough that their stems fully extend to the line via
+     margin-top: auto / flex-grow. */
+  bottom: 50%;
+  min-height: clamp(60px, 7vw, 80px);
+}
+
+.lgmTimelineMilestoneCompact {
+  /* Year-only TOP column — min-height is roughly half of the full
+     milestone min-height, so the year markers (2022, 2025) sit at the
+     midpoint between the line and the taller 2026/2028 year markers. */
+  min-height: clamp(60px, 7vw, 80px);
+}
+
+.lgmTimelineMilestoneBottom {
+  /* Mirror of TOP. padding-top creates breathing room between the
+     centerline track and the year/CTA content sitting below it. */
+  top: 50%;
+  padding-top: 14px;
+}
+
+/* Year — small, muted navy. Brand body-sm scale (16px). Tight gap below
+   so it sits close to any CTA that follows it in the same BOTTOM column. */
+.lgmTimelineYear {
+  font-size: var(--tech-fs-body-sm);
+  font-weight: 500;
+  color: color-mix(in srgb, var(--color-cta) 40%, transparent);
+  letter-spacing: 0;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+/* Label — milestone heading. 28px / 140% line-height / -2% tracking. */
+.lgmTimelineLabel {
+  font-size: var(--text-h4);
+  font-family: var(--font-display);
+  font-weight: 500;
+  color: #000000;
+  line-height: var(--text-h4--line-height);
+  letter-spacing: -0.02em;
+}
+
+/* Columbus "now" marker column — inherits the milestone min-height so
+   its logo sits at the same y as the Generalist LGM / UGM labels (one
+   year-block down from the very top of the column). The stem then
+   stretches the remaining distance back down to the line via the
+   shared margin-top: auto on TOP-column stems. */
+.lgmTimelineColumbus {
+  pointer-events: none;
+  z-index: 3;
+  min-height: clamp(120px, 14vw, 160px);
+}
+
+/* Push the Columbus logo down by the height of a year marker (16px line
+   + 16px margin-bottom) so it sits in line with the milestone labels
+   (Generalist LGM, UGM) which themselves sit just below their year. */
+.lgmTimelineColumbus .lgmTimelineColumbusLogo {
+  margin-top: 32px;
+}
+
+/* Columbus stem stretches to fill the column from logo bottom down to
+   the centerline, so the gap between stem-top and logo equals the gap
+   between the Generalist LGM stem-top and its label (essentially zero,
+   since flex-grow consumes any spare vertical space). */
+.lgmTimelineColumbus .lgmTimelineStem {
+  flex-grow: 1;
+  height: auto;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.lgmTimelineColumbusDate {
+  font-size: var(--tech-fs-caption);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--tech-color-accent);
+  white-space: nowrap;
+  margin-bottom: 8px;
+}
+
+.lgmTimelineColumbusLogo {
+  width: 65px;
+  height: 65px;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 6px color-mix(in srgb, var(--color-brand) 18%, transparent));
+}
+
+/* Stem — small vertical line connecting a dot to its label / CTA. Used
+   in both TOP and BOTTOM columns for every milestone (LLM, Geo-tuned,
+   Generalist LGM, UGM, Read our Paper, Our Game Plan). The 8px gap
+   between stem and adjacent text keeps the line from visually butting
+   into the label or the dot. */
+.lgmTimelineStem {
+  width: 1px;
+  height: 24px;
+  background: var(--tech-color-text-brand);
+  opacity: 0.45;
+}
+
+/* TOP stem: margin-top: auto pushes the stem to the very bottom of the
+   column (which is at the centerline, since the column is anchored
+   `bottom: 50%`). This way the stem visibly extends FROM the line up to
+   the label, regardless of how tall the column is via min-height. */
+.lgmTimelineMilestoneTop .lgmTimelineStem {
+  margin-top: auto;
+  margin-bottom: 0;
+  position: relative;
+}
+
+/* Solid black dot at the base of the Columbus stem only, sitting
+   exactly on the centerline track. */
+.lgmTimelineColumbus .lgmTimelineStem::after {
+  content: "";
+  position: absolute;
+  bottom: -3px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #000000;
+  opacity: 1;
+}
+
+/* BOTTOM stem: top touches the centerline; 8px gap to the label below. */
+.lgmTimelineMilestoneBottom .lgmTimelineStem {
+  margin-top: 0;
+  margin-bottom: 8px;
+}
+
+/* CTA link inside BOTTOM columns for 2026/2028. Matches .lgmInlineCta.
+   Sits tight below the year — the milestone padding-top gives the gap
+   from the timeline track. */
+.lgmTimelineCta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--tech-fs-body-sm);
+  font-weight: 500;
+  color: var(--color-brand);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color 200ms ease;
+  margin-top: 12px;
+  background: color-mix(in srgb, var(--tech-color-bg) 50%, transparent);
+  padding: 4px 10px;
+  border-radius: var(--radius-button);
+}
+
+.lgmTimelineCta svg {
+  transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.lgmTimelineCta:hover {
+  color: #1B37CE;
+}
+
+.lgmTimelineCta:hover svg {
+  transform: translate(2px, -2px);
+}
+
+.lgmTimelineCta:focus-visible {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.lgmArticleCard {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: clamp(24px, 3vw, 40px);
+  min-height: 160px;
+  padding: 32px 20px;
+  border-radius: 16px;
+  text-align: center;
+  text-decoration: none;
+  background-color: #fff;
+  box-shadow: none;
+  overflow: hidden;
+  transition: transform 320ms ease, box-shadow 320ms ease;
+}
+
+.lgmArticleCard::before {
+  content: "";
+  position: absolute;
+  inset: -16px;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  filter: blur(2px);
+  opacity: 0.75;
+  pointer-events: none;
+}
+
+/* Per-card background image overrides */
+.lgmArticleCardBgRadiance::before {
+  background-image: url("/TechnologyPageImages/techpg-radiance.png");
+}
+.lgmArticleCardBgWave::before {
+  background-image: url("/TechnologyPageImages/multieWaveEminations.jpeg");
+}
+.lgmArticleCardBgUnknownLayers::before {
+  background-image: url("/TechnologyPageImages/unkown-layers.jpeg");
+}
+.lgmArticleCardBgDeepLayers::before {
+  background-image: url("/TechnologyPageImages/deep-layers.jpeg");
+}
+
+.lgmArticleCard > * {
+  position: relative;
+  z-index: 1;
+}
+
+.lgmArticleCard:hover {
+  transform: translateY(-2px);
+  box-shadow: none;
+}
+
+.lgmArticleCard p {
+  margin: 0;
+  font-size: var(--tech-fs-body-lg);
+  font-weight: 400;
+  line-height: 1.55;
+  /* Article cards are a self-contained light surface — pin to dark text
+     even when nested inside a .darkSurface block (per design spec). */
+  color: var(--color-ink);
+  letter-spacing: var(--tech-tracking-snug);
+}
+
+.lgmArticleCard p strong {
+  font-weight: 600;
+}
+
+/* ── Glass variant: frosted-blur, no hover lift, tiered typography ── */
+.lgmArticleCardGlass {
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  background-color: rgba(255, 255, 255, 0.55);
+  /* The radial blur is applied via ::after below, not uniformly on the card */
+  box-shadow: none;
+  transition: none;
+}
+
+/* Radial blur layer: strongest at the center, fades to no-blur at the edges.
+   Achieved by masking a backdrop-filtered pseudo-element with a radial gradient
+   so the blur is only present where the mask is opaque. */
+.lgmArticleCardGlass::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  -webkit-backdrop-filter: blur(28px) saturate(1.2);
+  backdrop-filter: blur(28px) saturate(1.2);
+  z-index: 0;
+}
+
+.lgmArticleCardGlass:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+.lgmArticleCardGlass::before {
+  opacity: 0.55;
+}
+
+/* Tiered typography inside the glass card:
+   kicker (regular) → headline (medium) → conclusion (bold) */
+.lgmArticleKicker {
+  font-size: var(--text-p-m);
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  line-height: 1.4;
+  color: rgba(29, 29, 31, 0.65);
+}
+
+.lgmArticleCardGlass .lgmArticleHeadline {
+  margin: 0;
+  font-size: var(--text-h5);
+  font-family: var(--font-display);
+  font-weight: 500;
+  line-height: var(--text-h5--line-height);
+  letter-spacing: -0.015em;
+  color: var(--color-ink);
+}
+
+.lgmArticleCardGlass .lgmArticleHeadlineStrong {
+  margin: 0;
+  font-size: var(--text-h5);
+  font-family: var(--font-display);
+  font-weight: 700;
+  line-height: var(--text-h5--line-height);
+  letter-spacing: -0.015em;
+  color: var(--color-cta);
+}
+
+/* Subdued variant — drops the heavy outer "page-bg cutout" ring shadows so
+   the card doesn't read as framed/cut out. */
+.lgmArticleCardFlush {
+  box-shadow: none;
+}
+
+.lgmArticleCardFlush:hover {
+  box-shadow: none;
+}
+
+@media (max-width: 900px) {
+  .lgmTimelineLabel {
+    font-size: var(--text-p-l);
+  }
+  .lgmTimelineCol {
+    padding-right: 8px;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Section 3 — Core Reasoning / Our Research
+   ═══════════════════════════════════════════════════════════════ */
+
+.coreResearchSlide {
+  padding-bottom: clamp(56px, 7vw, 96px);
+}
+
+/* Wrapper holding the intro text, the aside, AND the absolutely positioned
+   Voyager starburst SVG. Position relative so the SVG can size to the full
+   hero area, with its long horizontal arm extending across the gap between
+   the two text blocks. */
+.coreResearchHero {
+  position: relative;
+  min-height: 480px;
+  z-index: 1;
+}
+
+/* Plus-sign pattern is applied section-wide on .coreReasoningSlide::after.
+   Per-element backdrop-filter "windows" below provide legibility for text and
+   the diagram by softening pluses behind each element. */
+
+.coreResearchIntroRow {
+  position: relative;
+  z-index: 1;
+}
+
+.coreResearchIntroText {
+  position: relative;
+  min-width: 0;
+  max-width: 540px;
+  z-index: 1;
+}
+
+/* Backdrop-blur "legibility window" — softens the section pattern behind text.
+   Horizontal inset is now 0 so the blur halo doesn't bleed past the content
+   element's left + right edges into the sidebar zone or the right gutter.
+   Vertical inset stays slightly negative for a soft top/bottom feather. */
+.coreResearchIntroText::before,
+.coreResearchAside::before,
+.coreResearchIntroLine::before,
+.coreResearchArt::before,
+.coreResearchGroup::before {
+  content: "";
+  position: absolute;
+  inset: -16px 0;
+  z-index: -1;
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  border-radius: 24px;
+  pointer-events: none;
+}
+
+.coreResearchTitle {
+  margin: 4px 0 0;
+  font-size: var(--tech-fs-h4);
+  font-family: var(--font-display);
+  font-weight: 500;
+  letter-spacing: var(--tech-tracking-tight);
+  color: var(--tech-color-text);
+  line-height: 1.25;
+}
+
+.coreResearchLead {
+  margin: 20px 0 0;
+  max-width: 420px;
+  font-size: var(--tech-fs-body-lg);
+  line-height: 1.55;
+  color: var(--tech-color-text);
+}
+
+/* Inline-SVG Voyager pulsar map. Positioned absolutely across the entire
+   .coreResearchHero so the long horizontal arm extends across the gap
+   between the intro text (top) and the aside text (bottom), splitting the
+   two paragraph blocks. The radiating-line center sits on the right side. */
+.coreResearchStarburst {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 1186.26px;
+  height: 692px;
+  pointer-events: none;
+  z-index: 0;
+  /* Anchored to the right so it still reads as the right-side graphic.
+     Small translate nudges the graphic slightly right and down. */
+  transform: translate(220px, -48px);
+  transform-origin: right center;
+}
+
+.coreResearchStarburst svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  overflow: visible;
+}
+
+.coreResearchAside {
+  position: relative;
+  z-index: 1;
+  margin-top: clamp(48px, 6vw, 88px);
+  max-width: 540px;
+}
+
+.coreResearchAside p {
+  margin: 0;
+  font-size: var(--tech-fs-body);
+  line-height: 1.6;
+  color: var(--tech-color-text);
+}
+
+.coreResearchAsideLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 20px;
+  font-size: var(--tech-fs-caption);
+  font-weight: 500;
+  color: var(--tech-color-accent);
+  text-decoration: none;
+  transition: opacity 200ms ease;
+}
+
+.coreResearchAsideLink:hover {
+  opacity: 0.7;
+}
+
+.coreResearchIntroLine {
+  position: relative;
+  margin: clamp(140px, 15vw, 220px) auto clamp(80px, 9vw, 128px);
+  max-width: 620px;
+  text-align: center;
+  font-size: var(--tech-fs-body);
+  line-height: 1.6;
+  color: var(--tech-color-text);
+}
+
+.coreResearchGrid {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(220px, 0.8fr) minmax(0, 1.2fr);
+  gap: clamp(32px, 5vw, 72px);
+  align-items: center;
+  z-index: 1;
+}
+
+.coreResearchArt {
+  position: relative;
+  width: 100%;
+  color: var(--color-cta);
+  z-index: 1;
+}
+
+.coreResearchArt svg {
+  width: 100%;
+  height: auto;
+}
+
+.coreResearchArtImg {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: contain;
+}
+
+/* techdiagramA1 — scaled so the slab visually matches the first box in techDiagram2 */
+.coreResearchArtImgA1 {
+  width: 65%;
+  margin: 0 auto;
+}
+
+.coreResearchArtImgFade {
+  animation: coreArtFadeIn 0.35s ease both;
+}
+
+@keyframes coreArtFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ── Animated bubble row (Data Collection state) ── */
+
+.coreResearchBubbleRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 12px;
+}
+
+.coreResearchBubble {
+  display: block;
+  flex-shrink: 0;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  background: radial-gradient(
+    circle at 36% 34%,
+    rgba(255, 255, 255, 0.88) 0%,
+    rgba(200, 212, 232, 0.60) 50%,
+    rgba(168, 185, 215, 0.28) 100%
+  );
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  box-shadow: inset 0 1px 3px rgba(255, 255, 255, 0.6),
+              0 2px 8px rgba(150, 170, 210, 0.25);
+  animation: bubbleDrop 2.2s ease-in-out infinite both;
+}
+
+.coreResearchBubbleSm {
+  width: 17px;
+  height: 17px;
+}
+
+@keyframes bubbleDrop {
+  0%   { opacity: 0;    transform: translateY(-6px); }
+  18%  { opacity: 0.82; transform: translateY(0);    }
+  72%  { opacity: 0.82; transform: translateY(22px); }
+  100% { opacity: 0;    transform: translateY(30px); }
+}
+
+.coreResearchBody {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  min-width: 0;
+}
+
+.coreResearchGroup {
+  position: relative;
+  z-index: 1;
+}
+
+/* Hairline divider that fades to transparent on the right.
+   Pseudo-element (rather than border-bottom or background-image) so the
+   gradient renders reliably regardless of the group's content state, and
+   stacks predictably against the section's blue background. */
+.coreResearchGroup::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    color-mix(in srgb, var(--tech-color-text) 15%, transparent) 0%,
+    color-mix(in srgb, var(--tech-color-text) 15%, transparent) 55%,
+    transparent 100%
+  );
+  pointer-events: none;
+}
+
+.coreResearchGroup:last-child::after {
+  display: none;
+}
+
+.coreResearchGroup p {
+  margin: 16px 0 0;
+  font-size: var(--tech-fs-body);
+  line-height: 1.6;
+  color: var(--tech-color-text);
+}
+
+.coreResearchGroup mark {
+  background: color-mix(in srgb, var(--color-brand) 12%, transparent);
+  color: inherit;
+  padding: 1px 3px;
+  border-radius: var(--tech-radius-sm);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Definition tooltip — on-brand glass popup over highlighted terms
+   ═══════════════════════════════════════════════════════════════ */
+
+.definitionWrap {
+  position: relative;
+  display: inline;
+}
+
+.definitionTerm {
+  background: color-mix(in srgb, var(--color-brand) 12%, transparent);
+  color: inherit;
+  padding: 1px 4px;
+  border-radius: var(--tech-radius-sm);
+  cursor: help;
+  transition: background 200ms ease, color 200ms ease;
+}
+
+.definitionTerm:hover,
+.definitionTerm:focus-visible {
+  background: color-mix(in srgb, var(--color-brand) 28%, transparent);
+  color: var(--color-cta);
+  outline: none;
+}
+
+/* The popup itself */
+.definitionPopup {
+  position: absolute;
+  bottom: calc(100% + 10px);
+  left: 50%;
+  transform: translateX(-50%) translateY(6px);
+  min-width: 280px;
+  max-width: 340px;
+  padding: 16px 18px;
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  border-radius: 12px;
+  -webkit-backdrop-filter: blur(20px) saturate(1.3);
+  backdrop-filter: blur(20px) saturate(1.3);
+  box-shadow:
+    0 1px 2px color-mix(in srgb, var(--color-cta) 4%, transparent),
+    0 8px 28px color-mix(in srgb, var(--color-brand) 12%, transparent),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.5);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 180ms ease, transform 220ms cubic-bezier(0.22, 1, 0.36, 1),
+              visibility 0s linear 180ms;
+  z-index: 20;
+}
+
+.definitionPopupOpen {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+  transition: opacity 180ms ease, transform 220ms cubic-bezier(0.22, 1, 0.36, 1),
+              visibility 0s linear 0s;
+}
+
+/* Little tail under the popup pointing at the term */
+.definitionPopup::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%) rotate(45deg);
+  width: 10px;
+  height: 10px;
+  margin-top: -6px;
+  background: rgba(255, 255, 255, 0.72);
+  border-right: 1px solid rgba(255, 255, 255, 0.8);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.8);
+  -webkit-backdrop-filter: blur(20px) saturate(1.3);
+  backdrop-filter: blur(20px) saturate(1.3);
+}
+
+.definitionPopupTitle {
+  display: block;
+  margin-bottom: 8px;
+  font-size: var(--text-p-l);
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  color: var(--color-cta);
+}
+
+.definitionPopupBody {
+  display: block;
+  font-size: var(--text-p-m);
+  font-style: italic;
+  line-height: 1.55;
+  color: var(--color-ink);
+}
+
+/* Small-viewport guard: if the popup would clip off-screen, pin it inside
+   the content column by loosening the centering and allowing wrap. */
+@media (max-width: 640px) {
+  .definitionPopup {
+    min-width: 240px;
+    max-width: min(320px, calc(100vw - 48px));
+  }
+}
+
+/* The header is now a button — reset native button styling. Standard
+   accordion convention: title flush left, toggle flush right via
+   space-between + flex:1 on the title. Generous vertical padding makes
+   the click target ~64px tall. */
+.coreResearchGroupHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  width: 100%;
+  padding: 20px 0;
+  background: transparent;
+  border: 0;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.coreResearchGroupHead:hover h3 {
+  color: var(--tech-color-accent);
+}
+
+.coreResearchGroupHead:focus-visible {
+  outline: 2px solid var(--tech-color-accent);
+  outline-offset: 4px;
+  border-radius: var(--tech-radius-sm);
+}
+
+/* Decorative leading dash removed — the row's hairline border-bottom and
+   the right-anchored toggle handle hierarchy and grouping. */
+.coreResearchGroupDash {
+  display: none;
+}
+
+.coreResearchGroupHead h3 {
+  flex: 1;
+  margin: 0;
+  font-size: var(--tech-fs-h5);
+  font-family: var(--font-display);
+  font-weight: 500;
+  letter-spacing: var(--tech-tracking-snug);
+  color: var(--tech-color-text);
+  text-align: left;
+  transition: color 200ms ease;
+}
+
+/* Plus icon — anchored flush right, sized to peer with the 22px heading.
+   Rotates 45° to become an × when the group is open. */
+.coreResearchGroupPlus {
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  margin-left: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: color-mix(in srgb, var(--tech-color-text) 60%, transparent);
+  transition: transform 280ms cubic-bezier(0.22, 1, 0.36, 1),
+              color 200ms ease;
+}
+
+.coreResearchGroupPlus svg {
+  width: 100%;
+  height: 100%;
+}
+
+.coreResearchGroupOpen .coreResearchGroupPlus {
+  transform: rotate(45deg);
+}
+
+.coreResearchGroupHead:hover .coreResearchGroupPlus {
+  color: var(--tech-color-accent);
+}
+
+/* Collapsible content region — animates height via grid-template-rows */
+.coreResearchGroupContent {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 320ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.coreResearchGroupOpen .coreResearchGroupContent {
+  grid-template-rows: 1fr;
+}
+
+.coreResearchGroupInner {
+  min-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(-4px);
+  /* Breathing room before the next group's hairline border. */
+  padding-bottom: 24px;
+  transition: opacity 240ms ease, transform 320ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* When the group is open, release the overflow clip so absolutely-positioned
+   children (e.g. the Definition popup) can escape above the group header. */
+.coreResearchGroupOpen .coreResearchGroupInner {
+  overflow: visible;
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 80ms;
+}
+
+/* Blue inline links — aligned with .lgmInlineCta so every CTA on the page
+   reads with the same size, weight, color, and arrow-slide hover. */
+.coreResearchGroupLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 20px;
+  font-size: var(--text-h7);
+  font-family: var(--font-display);
+  font-weight: 500;
+  color: var(--tech-color-accent);
+  text-decoration: none;
+  transition: color 200ms ease;
+}
+
+.coreResearchGroupLink svg {
+  width: 14px;
+  height: 14px;
+  transition: transform 200ms ease;
+}
+
+.coreResearchGroupLink:hover {
+  color: #1B37CE;
+}
+
+.coreResearchGroupLink:hover svg {
+  transform: translate(2px, -2px);
+}
+
+.coreResearchProducts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+/* Glass-button pill — ported from /components/ui/GlassButton.module.css (.btn)
+   used on the /products/mapsgpt page. Frosted glass with a 4-layer inset-shadow
+   shine, fully-rounded pill shape, 500-weight label. */
+.coreResearchProduct {
+  -webkit-appearance: none;
+  appearance: none;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 0.85rem 1.6rem;
+  font-size: var(--text-h5);
+  font-family: var(--font-display);
+  line-height: var(--text-h5--line-height);
+  font-weight: 500;
+  letter-spacing: -0.18px;
+  color: var(--color-cta);
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-backdrop-filter: blur(clamp(1px, 0.125em, 4px));
+  backdrop-filter: blur(clamp(1px, 0.125em, 4px));
+  background: linear-gradient(
+    -75deg,
+    rgba(255, 255, 255, 0.05),
+    rgba(255, 255, 255, 0.2),
+    rgba(255, 255, 255, 0.05)
+  );
+  border: none;
+  border-radius: var(--radius-button-md);
+  transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1),
+              box-shadow 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+  box-shadow:
+    inset 0 0.125em 0.125em rgba(0, 0, 0, 0.05),
+    inset 0 -0.125em 0.125em rgba(255, 255, 255, 0.5),
+    inset 0 0 0.1em 0.25em rgba(255, 255, 255, 0.2);
+  text-shadow: 0 0.05em 0.05em rgba(0, 0, 0, 0.05);
+}
+
+/* Disable backdrop-filter on mobile to match the mapsgpt GlassButton behavior. */
+@media (max-width: 1023px) {
+  .coreResearchProduct {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
+
+.coreResearchProductGlyph {
+  display: inline-flex;
+  width: 36px;
+  height: 36px;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-cta);
+  flex-shrink: 0;
+}
+
+.coreResearchProductGlyph img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.coreResearchProductGlyph svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* "More Soon" variant — visually identical to the other product pills.
+   Kept as a class hook so future tweaks (e.g. disabling hover on placeholder
+   pills) can target it without touching the others. */
+.coreResearchProductSoon {
+  cursor: default;
+}
+
+@media (max-width: 900px) {
+  .coreResearchIntroRow,
+  .coreResearchGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .coreResearchStarburst {
+    max-width: 280px;
+    margin: 0 auto;
+    transform: none;
+  }
+
+  .coreResearchArt {
+    margin: 0 auto;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Section 4 — Results / Model Columbus-01
+   ═══════════════════════════════════════════════════════════════ */
+
+.resultsSlide {
+  padding-bottom: clamp(56px, 7vw, 96px);
+}
+
+.resultsSlide .lgmKicker,
+.resultsSlide .resultsTitle,
+.resultsSlide .resultsLead {
+  text-align: center;
+}
+
+.resultsTitle {
+  margin: 8px 0 0;
+  font-size: var(--tech-fs-h3);
+  font-family: var(--font-display);
+  font-weight: 500;
+  letter-spacing: var(--tech-tracking-tight);
+  color: var(--tech-color-text);
+  line-height: 1.2;
+}
+
+.resultsLead {
+  margin: 16px auto 0;
+  max-width: 640px;
+  font-size: var(--tech-fs-body-lg);
+  line-height: 1.55;
+  color: var(--tech-color-text);
+}
+
+/* 2×2 card grid — each cell stacks a blue art tile above a centred
+   caption. Capped + centred so the cards stay a modest size rather than
+   stretching the full section width. */
+.resultsGrid {
+  position: relative;
+  margin: clamp(48px, 6vw, 72px) auto 0;
+  max-width: 720px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: clamp(28px, 4vw, 56px);
+  row-gap: clamp(36px, 4vw, 56px);
+}
+
+/* Card — blue art tile on top, caption text centred underneath. */
+.resultsCard {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(16px, 1.6vw, 24px);
+  background: transparent;
+}
+
+/* Blue art tile — fills the grid cell, rounded corners, solid brand-blue
+   background. Houses the wireframe-globe SVG. */
+.resultsCardArt {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 11;
+  background: #1d3fa6;
+  overflow: hidden;
+  border-radius: 16px;
+}
+
+.resultsCardArt svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* Caption — centred under the art tile. */
+.resultsCardText {
+  margin: 0;
+  font-size: var(--tech-fs-body-lg);
+  font-family: var(--font-display);
+  font-weight: 500;
+  letter-spacing: var(--tech-tracking-snug);
+  color: var(--tech-color-text);
+  text-align: center;
+  line-height: 1.35;
+  max-width: 340px;
+}
+
+.resultsArticlesRow {
+  margin-top: clamp(48px, 6vw, 80px);
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(20px, 2.5vw, 32px);
+}
+
+.resultsArticlesRow .lgmArticleCard {
+  margin-top: 0;
+  transition: none;
+}
+
+.resultsArticlesRow .lgmArticleCard::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  -webkit-backdrop-filter: blur(16px) saturate(1.1);
+  backdrop-filter: blur(16px) saturate(1.1);
+  z-index: 0;
+}
+
+/* No hover lift, no shadow — match the static glass cards above */
+.resultsArticlesRow .lgmArticleCard:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+@media (max-width: 900px) {
+  .resultsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .resultsArticlesRow {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Section 5 — Gen Layers + The Grid
+   ═══════════════════════════════════════════════════════════════ */
+
+.researchBlogWrap {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Full-viewport-width band — breaks out of any parent's max-width.
+   Background is #284394 (user-specified). Full-bleed at all times; the
+   reveal animation below lives on .genLayersDisplay, not this container. */
+.genLayersBand {
+  position: relative;
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  background: linear-gradient(to bottom, #080808 0%, #000E29 100%);
+  color: #ffffff;
+  /* overflow-x: clip (not hidden) — clips horizontal overflow without
+     creating the scrolling mechanism that would capture sticky descendants
+     (.genLayersStickyInner). Same pattern as .pageBody. */
+  overflow-x: clip;
+}
+
+.genLayersInner {
+  width: 100%;
+  max-width: 1287px;
+  margin: 0 auto;
+  padding: clamp(80px, 10vw, 140px) clamp(24px, 4vw, 64px);
+  color: #ffffff;
+}
+
+/* Voyager-style starburst head: SVG fills the row absolutely, label sits
+   over the long arm's left end with a matching dark background to mask
+   the line behind the text. */
+.genLayersHead {
+  position: relative;
+  width: 100%;
+  min-height: 480px;
+  margin-bottom: clamp(48px, 6vw, 80px);
+  display: flex;
+  align-items: center;
+}
+
+.genLayersHeadStarburst {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  width: 1186.26px;
+  height: 692px;
+  pointer-events: none;
+  display: block;
+  transform: translate(220px, -50%);
+  transform-origin: right center;
+  filter: brightness(0) invert(1);
+  opacity: 0.92;
+}
+
+/* Label background matches the band bg (black) so the line behind it is
+   cleanly masked. */
+.genLayersHeadLabel {
+  position: absolute;
+  left: 140px;
+  top: 31%;
+  z-index: 2;
+  font-size: var(--text-h4);
+  font-family: var(--font-display);
+  font-weight: 500;
+  letter-spacing: var(--tech-tracking-snug);
+  color: #ffffff;
+}
+
+/* Sticky-pin scroll experience — sized to fit within the page's content
+   bounds (no longer breaks out to 100vw). The inner pin is 70vh; the outer
+   is 70vh + 200vh of scroll travel = 270vh.
+     • top: 15vh on the inner pins it vertically centered in the viewport
+       (15vh top + 70vh height + 15vh bottom = 100vh), so the section
+       "sticks" when the panel reaches the middle of the screen — not
+       when it hits the top.
+     • The JS scroll-progress math in GenLayersSection.tsx accounts for
+       this offset (STICKY_TOP_VH = 0.15). */
+.genLayersStickyOuter {
+  position: relative;
+  /* Break out of .genLayersInner's horizontal padding so the three-tile
+     row spans the page's full content bounds (1287px) edge-to-edge.
+     The negative margins alone aren't enough — `width: 100%` would lock
+     the box to the inner's content area, so we widen the box by the same
+     2× padding amount that the negative margins push it sideways. */
+  width: calc(100% + 2 * clamp(24px, 4vw, 64px));
+  margin-left: calc(-1 * clamp(24px, 4vw, 64px));
+  margin-right: calc(-1 * clamp(24px, 4vw, 64px));
+  height: calc(70vh + 200vh);
+}
+
+.genLayersStickyInner {
+  position: sticky;
+  top: 15vh;
+  width: 100%;
+  height: 70vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  /* Round the panel itself — tiles + intro overlay (and any future
+     children) all get clipped to this radius so the whole composition
+     reads as a single rounded card. Matches the off-step 23px chosen
+     for the tile corners earlier. */
+  border-radius: 23px;
+}
+
+/* Navbar blur-gradient override — while body.gen-layers-active is set
+   (toggled by TechnologyPage when the Gen Layers band overlaps the navbar
+   Y), the navbar's frosted-glass background div (the first child of its
+   <nav>) gets a top-down mask: fully opaque at the top edge, fading to
+   transparent at the bottom. The bg's existing backdrop-filter blur is
+   therefore strongest at the top of the navbar and tapers off downward.
+   Border-bottom is suppressed since it would only render along the masked
+   edge. Text/icon colors continue to be driven by the standard dark
+   `theme` prop. Documented in design-system/navbar.md. */
+:global(body.gen-layers-active nav.header-font > div:first-child) {
+  -webkit-mask-image: linear-gradient(to bottom, black 0%, black 30%, transparent 100%) !important;
+  mask-image: linear-gradient(to bottom, black 0%, black 30%, transparent 100%) !important;
+  border-bottom: none !important;
+}
+
+/* Left-side scroll index fade — while the gen-layers band overlaps the
+   navbar, fade out the scroll-index labels so they don't compete with
+   the section. The opacity transition lives on the canonical
+   .sidebarPanelSticky rule. */
+:global(body.gen-layers-active) .sidebarPanelSticky {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Hide the vertical structure lines (the blue gutter dividers) while
+   the gen-layers band is active — they read as out-of-place against
+   the dark section. Restored when the body class clears. */
+:global(body.gen-layers-active) .sidebarPanel,
+:global(body.gen-layers-active) .sidebarPanelRight {
+  opacity: 0;
+}
+
+.sidebarPanel,
+.sidebarPanelRight {
+  transition: opacity 400ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* SVG overlay drawn over the tile's satellite image — tile-1/2 use roof
+   rectangles over HK Map.png, tile-3 uses street polylines over HK Map2.png.
+   The whole SVG's opacity is driven each frame from tileOverlayRefs so the
+   shapes appear during the analyse animation's Phase C. preserveAspectRatio
+   is "none" on the SVG so the 100×67 viewBox stretches to the tile's full
+   render box and shape coords roughly track the underlying imagery even as
+   tiles flex between active and sliver widths. */
+.genLayersTileOverlay {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  /* Explicit clip so any path/rect that approaches the edge can't
+     paint outside the image bounds. */
+  overflow: hidden;
+  opacity: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Solar tile — alternating "high potential" (blue) and "low potential" (red)
+   rectangles over each visible roof. */
+.genLayersTileRoofA {
+  fill: rgba(38, 121, 255, 0.55);
+  stroke: rgba(108, 169, 255, 0.95);
+  stroke-width: 0.18;
+}
+
+.genLayersTileRoofB {
+  fill: rgba(255, 84, 84, 0.55);
+  stroke: rgba(255, 168, 168, 0.95);
+  stroke-width: 0.18;
+}
+
+/* Resident-vibes tile — three vibe color groups cycle through the same roof
+   positions: green (active), orange (medium), yellow (warm/quiet). */
+.genLayersTileVibeA {
+  fill: rgba(72, 198, 132, 0.55);
+  stroke: rgba(180, 240, 200, 0.95);
+  stroke-width: 0.18;
+}
+
+.genLayersTileVibeB {
+  fill: rgba(255, 161, 70, 0.55);
+  stroke: rgba(255, 210, 160, 0.95);
+  stroke-width: 0.18;
+}
+
+.genLayersTileVibeC {
+  fill: rgba(247, 220, 90, 0.55);
+  stroke: rgba(255, 240, 175, 0.95);
+  stroke-width: 0.18;
+}
+
+/* Safety-score tile — yellow polylines tracing the major boulevards in
+   HK Map2.png. Uses fill: none + a chunky stroke so the lines read as
+   street-highlight markers. */
+.genLayersTileStreet {
+  fill: none;
+  stroke: rgba(247, 220, 90, 0.85);
+  stroke-width: 0.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Phase B — prompt box, top-left of each tile. Opacity is driven each
+   frame via tilePromptRefs (binary flip at local=0.20, CSS transition
+   provides the actual fade). */
+.genLayersTilePromptBox {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  padding: clamp(20px, 2.5vw, 32px);
+  max-width: 60%;
+  opacity: 0;
+  transition: opacity 600ms cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: none;
+}
+
+/* Frosted-glass backdrop behind the top-left prompt text — mirrors the
+   bottom blur strip but inverted: strongest blur at the very top edge,
+   tapering to fully transparent partway down. The parent's opacity
+   transition gates visibility so this never shows until Phase B. */
+.genLayersTilePromptBox::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  /* Extend slightly above/left so the blur reaches the panel edge. */
+  top: -4px;
+  left: -4px;
+  right: -4px;
+  /* Tall enough to cover the full prompt text area plus breathing room. */
+  bottom: -20px;
+  background: transparent;
+  -webkit-backdrop-filter: blur(4px) saturate(1.05);
+  backdrop-filter: blur(4px) saturate(1.05);
+  /* Opaque at top, fades to transparent at bottom so blur stays localised
+     to where the prompt text sits. */
+  -webkit-mask-image: linear-gradient(to bottom, black 0%, black 55%, transparent 100%);
+  mask-image: linear-gradient(to bottom, black 0%, black 55%, transparent 100%);
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* Wrapper around the tile's kicker + title — flex column, bottom-centered.
+   Opacity is set to 0 or 1 by the rAF tick (binary flip at local=0.50),
+   so this transition is what produces the animated reveal once the SVG
+   overlay's scroll-driven fade-in finishes. */
+.genLayersTileText {
+  position: relative;
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  opacity: 0;
+  transition: opacity 600ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Progress bar sitting below the sticky outer — fills left-to-right
+   as the user scrolls through the experience. */
+/* Progress bar — sibling of .genLayersStickyInner (not nested inside it),
+   sticky-pinned just below the panel so it floats below as its own bar.
+   Both pin and release together because their pin positions inside the
+   shared outer line up: inner's top: 15vh + height 70vh = 85vh, plus
+   12px gap = 97vh sticky top for the bar. */
+/* Progress bar — three pill-shaped segments side-by-side, one per tile.
+   Sticky-pinned with extra breathing room so it sits visually
+   detached from the panel. Modeled after the iOS home-indicator look
+   (chunky rounded pill) but split into thirds to delineate which step
+   of the analyse process the user is in. */
+.genLayersProgressBar {
+  position: sticky;
+  /* Pin offset and natural-flow margin must match so the bar's pinned
+     position equals its in-flow position when sticky engages. Both bumped
+     from 32px → 72px to keep enough breathing room between the panel and
+     the bar even during the sticky-release window, where the bar would
+     otherwise creep visually closer to the panel as both move with the
+     outer's bottom edge. */
+  top: calc(15vh + 70vh + 72px);
+  width: 16.7%;
+  margin: 72px auto 0;
+  display: flex;
+  gap: 6px;
+  height: 5px;
+  background: transparent;
+  border-radius: 0;
+  overflow: visible;
+}
+
+.genLayersProgressSegment {
+  flex: 1 1 0;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.22);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.genLayersProgressSegmentFill {
+  height: 100%;
+  width: 0;
+  background: #ffffff;
+  /* No CSS transition — width is written every rAF tick directly via
+     progressFillRefs so each segment tracks scroll position with no
+     perceptible lag. */
+}
+
+/* Intro overlay — heavy backdrop-blur veil + headline + scroll hint
+   covering the tiles at the start of the section. Opacity is driven each
+   frame via introRef in GenLayersSection.tsx (1 until raw=0.10, fades to
+   0 by raw=0.20). */
+.genLayersIntro {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  /* Headline sits in the upper third, scroll hint sits ~70% from the
+     top (well below center) — matches the reference layout where the
+     copy and the prompt are visually pushed apart. */
+  justify-content: flex-start;
+  align-items: center;
+  pointer-events: none;
+  /* Lighter blur + a much fainter dark veil so the satellite imagery
+     reads as a bright, soft frosted background instead of a dark wash. */
+  -webkit-backdrop-filter: blur(60px);
+  backdrop-filter: blur(60px);
+  background: rgba(0, 0, 0, 0.18);
+  padding: clamp(40px, 8vh, 96px) clamp(32px, 6vw, 96px) clamp(20vh, 22vh, 24vh);
+  text-align: center;
+}
+
+.genLayersScrollHint {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  /* margin-top: auto pushes the hint to the bottom of the available
+     space (after the padding-bottom on the parent). */
+  margin-top: auto;
+  font-size: var(--text-h7);
+  font-family: var(--font-display);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.genLayersScrollHint svg {
+  flex-shrink: 0;
+}
+
+.genLayersHeadline {
+  position: relative;
+  z-index: 2;
+  margin: 0;
+  max-width: 1200px;
+  font-size: var(--text-h2);
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: var(--text-h2--line-height);
+  color: #ffffff;
+  text-align: center;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* The 3 tiles together fill the rest of the display panel and form a
+   single visual block. They flex to give the active tile most of the
+   space while keeping the others as compressed strips on the side. */
+.genLayersTilesRow {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: row;
+  gap: 0;
+  flex: 1;
+  margin-top: 0;
+  min-height: 0;
+  /* Row-level bg removed to prevent peeking. Each tile now manages its own background. */
+}
+
+.genLayersTile {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  text-align: center;
+  color: #fff;
+  flex: 1 1 0;
+  min-width: 0;
+  padding: clamp(32px, 4vw, 56px) clamp(20px, 2.5vw, 32px);
+  border: none;
+  border-radius: 0;
+  /* Tiles 1 & 2 are transparent — the row's continuous HK Map.png shows
+     through, so the image is unbroken across the tile-1/tile-2 boundary
+     regardless of how the flex widths shake out. Only tile 3 paints its
+     own opaque background (see :nth-child(3) below). */
+  background-color: transparent;
+  background-image: none;
+  font: inherit;
+  overflow: hidden;
+  transition: flex-grow 600ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Tile 1 (Solar roof) — paints its own HK Map.png. */
+.genLayersTile:nth-child(1) {
+  background-image: url("/TechnologyPageImages/HK%20Map.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* Tile 2 (Resident Vibes — middle) — paints its own opaque HK Map3.png
+   on top of the row-level HK Map.png. Fill — image stretches to exactly
+   cover tile 2 (no cropping, no repeat) at any width, matching the
+   "Fill" setting used on tile 3. */
+.genLayersTile:nth-child(2) {
+  background-image: url("/TechnologyPageImages/HK%20Map3.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* Tile 3 (Safety Score) — paints its own opaque HK Map2.png on top of
+   the row-level HK Map.png. Background-size: 100% 100% scales it to
+   tile 3's actual width (whether active or sliver). */
+.genLayersTile:nth-child(3) {
+  background-image: url("/TechnologyPageImages/HK%20Map2.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* Backdrop-blur gradient over the lower portion of each tile so the text
+   reads cleanly against the satellite imagery — strongest blur at the
+   bottom edge, tapering to no blur at the top. Visibility is gated by the
+   --text-blur-opacity custom property which is written each frame from
+   GenLayersSection.tsx so the blur only appears once the tile's text is
+   appearing (Phase D), not at the clean-image starting state.
+   `saturate(0.8)` flattens any colour cast that the blurred imagery would
+   otherwise smear into the layer; bg stays fully transparent. */
+.genLayersTile::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 65%;
+  background: transparent;
+  -webkit-backdrop-filter: blur(4px) saturate(1.1);
+  backdrop-filter: blur(4px) saturate(1.1);
+  -webkit-mask-image: linear-gradient(to top, black 0%, black 25%, transparent 100%);
+  mask-image: linear-gradient(to top, black 0%, black 25%, transparent 100%);
+  opacity: var(--text-blur-opacity, 0);
+  /* Same easing/duration as .genLayersTileText so the frosted strip
+     fades in alongside the text after the overlay reveal completes. */
+  transition: opacity 600ms cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Tiles themselves are square — the rounded outline lives on the panel
+   (.genLayersStickyInner) so the tiles can sit edge-to-edge with no
+   inner-corner notches between them. The panel's overflow: hidden
+   clips the outer corners to the 23px radius. */
+
+/* Active tile dominates ~96% of the row width. The other two tiles
+   share the remaining ~4% as very thin slivers (flex-grow: 1 each). */
+.genLayersTileActive {
+  flex-grow: 50;
+  z-index: 10;
+}
+
+/* Smooth width transitions when state classes change. */
+.genLayersTile {
+  transition: flex 600ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Eliminate sub-pixel rendering gaps between tiles. Flex-grow ratios
+   like 50:1:1 produce non-integer per-tile widths (e.g. 1237.5 / 24.7 /
+   24.7 on a 1287px row); browsers round each tile's rendered width
+   independently, which can leave a 1–3px hairline gap exposing the
+   dark band behind. A 4px negative left margin on every tile after the
+   first makes adjacent tiles overlap by 4px so the gap can never appear
+   regardless of viewport size or which tile is active. The overlap is
+   invisible because tile padding keeps the visible content (text, SVG
+   overlay) well off the edges. */
+.genLayersTile + .genLayersTile {
+  margin-left: -4px;
+}
+
+/* The section now lives within the page's content bounds (no longer
+   100vw with negative margins), so the gutter-based per-state widths
+   no longer apply. Sizing is driven entirely by .genLayersTileActive
+   { flex-grow: 18 } above — active tile takes ~90%, inactive tiles
+   share the remaining 10% as thin slivers. */
+
+/* Inactive tiles are darkened with a flat 75%-black overlay (no blur)
+   until they become the focus point. The overlay fades smoothly to
+   transparent as a tile transitions to active. */
+.genLayersTile::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0);
+  z-index: 6;
+  pointer-events: none;
+  transition: background 600ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.genLayersTileInactive::after {
+  /* Veil opacity is gated by --inactive-veil-opacity which is written
+     each rAF tick on .genLayersTilesRow. While the intro overlay is
+     fully opaque, the veil is held at 0 so all three tiles read as the
+     same uniformly bright frosted backdrop behind the headline. */
+  background: rgba(0, 0, 0, calc(0.75 * var(--inactive-veil-opacity, 1)));
+  -webkit-backdrop-filter: blur(calc(20px * var(--inactive-veil-opacity, 1)));
+  backdrop-filter: blur(calc(20px * var(--inactive-veil-opacity, 1)));
+}
+
+/* Span-level opacity is no longer set here — the .genLayersTileText
+   wrapper's opacity is driven each frame via tileTextRefs in the rAF
+   tick, which controls all four spans together as the analyse-animation
+   reaches its final phase. */
+
+.genLayersTilePromptLabel {
+  position: relative;
+  z-index: 2;
+  margin-top: 0;
+  margin-bottom: 6px;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: var(--tech-fs-caption);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+.genLayersTilePrompt {
+  position: relative;
+  z-index: 2;
+  margin-top: 6px;
+  max-width: 520px;
+  color: #ffffff;
+  font-size: var(--tech-fs-body-lg);
+  font-weight: 500;
+  letter-spacing: var(--tech-tracking-tight);
+  line-height: 1.35;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45), 0 0 1px rgba(0, 0, 0, 0.6);
+}
+
+/* Legacy tile-art classes preserved for potential re-use but hidden when
+   stripped from the JSX. */
+.genLayersTileArt {
+  display: none;
+}
+
+.genLayersTileArt svg {
+  width: 100%;
+  height: 100%;
+}
+
+.genLayersTileArt::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0) 55%, rgba(0, 0, 0, 0.55) 100%);
+}
+
+.genLayersTileKicker {
+  position: relative;
+  z-index: 2;
+  font-size: var(--tech-fs-caption);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  /* Tiles always show on photo content — keep text on white opacity tiers
+     regardless of parent surface flip */
+  color: rgba(255, 255, 255, 0.72);
+  margin-bottom: 12px;
+}
+
+.genLayersTileTitle {
+  position: relative;
+  z-index: 2;
+  font-size: calc(var(--tech-fs-body-lg) * 1.5);
+  font-weight: 600;
+  color: #ffffff;
+  letter-spacing: var(--tech-tracking-tight);
+  line-height: 1.15;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45), 0 0 1px rgba(0, 0, 0, 0.6);
+  margin-bottom: 20px;
+}
+
+/* Wrap around the explore CTA — centers the glass pill horizontally. */
+.genLayersExploreWrap {
+  display: flex;
+  justify-content: center;
+  margin-top: clamp(40px, 5vw, 64px);
+}
+
+/* Mirrors the navbar's "Start Now" CTA but inverted — solid white pill
+   with black text. The arrow stays #2563EB (matches the navbar's blue
+   accent) and translates on hover; text turns blue on hover. */
+.genLayersExploreBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  height: 36px;
+  padding: 0 20px;
+  font-size: var(--text-p-m);
+  font-weight: 500;
+  line-height: 1;
+  color: #000000;
+  background-color: #FFFFFF;
+  border-radius: var(--radius-button);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color 300ms ease, background-color 300ms ease, opacity 300ms ease;
+}
+
+.genLayersExploreBtn:hover {
+  color: #2563EB;
+  opacity: 0.9;
+}
+
+.genLayersExploreBtn svg {
+  stroke: #2563EB;
+  transition: transform 300ms ease-in-out;
+}
+
+.genLayersExploreBtn:hover svg {
+  transform: translateX(4px);
+}
+
+.genLayersGrid {
+  margin-top: clamp(80px, 10vw, 140px);
+  position: relative;
+}
+
+.genLayersGridKicker {
+  display: block;
+  font-size: var(--tech-fs-caption);
+  font-weight: 400;
+  letter-spacing: var(--tech-tracking-wide);
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--tech-color-text) 35%, transparent);
+  margin-bottom: 16px;
+}
+
+.genLayersGridArt {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.28);
+}
+
+.genLayersGridArt svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.genLayersGridCaption {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: var(--tech-fs-h4);
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  /* Caption sits over photo content — pin to white regardless of token flips */
+  color: #fff;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+  pointer-events: none;
+}
+
+@media (max-width: 900px) {
+  .genLayersTilesRow {
+    grid-template-columns: 1fr;
+    margin-top: 24px;
+  }
+
+  .genLayersTile:not(:last-child) {
+    border-right: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  }
+}
+
+/* ── Mobile carousel for Core Research section (≤ 767px) ── */
+
+.coreResearchCarousel {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .coreResearchGrid {
+    display: none;
+  }
+
+  .coreResearchCarousel {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+.carouselSlide {
+  display: flex;
+  flex-direction: column;
+}
+
+.carouselTitle {
+  font-size: var(--text-h5);
+  font-family: var(--font-display);
+  font-weight: 600;
+  color: var(--color-cta);
+  margin-bottom: 20px;
+  line-height: var(--text-h5--line-height);
+}
+
+.carouselDiagramContainer {
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+.carouselDiagramWrap {
+  width: 100%;
+  max-width: 200px;
+  flex-shrink: 0;
+}
+
+.carouselDiagramWrap svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.carouselArrow {
+  width: 56px;
+  min-width: 56px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  padding: 0;
+  transition: opacity 200ms ease;
+}
+
+.carouselArrow:hover:not(:disabled) {
+  opacity: 0.7;
+}
+
+.carouselArrow:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+.carouselArrowLeft {
+  order: -1;
+}
+
+.carouselArrowRight {
+  order: 1;
+}
+
+.carouselDots {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.carouselDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--color-cta) 20%, transparent);
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: background 300ms ease;
+}
+
+.carouselDot:hover {
+  background: color-mix(in srgb, var(--color-cta) 35%, transparent);
+}
+
+.carouselDotActive {
+  background: var(--color-cta);
+}
+
+.carouselDivider {
+  height: 1px;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--color-cta) 15%, transparent) 0%, transparent 100%);
+  margin-bottom: 20px;
+}
+
+.carouselBody {
+  font-size: var(--text-p-l);
+  line-height: 1.6;
+  color: color-mix(in srgb, var(--color-cta) 70%, transparent);
+}
+
+.carouselBody p {
+  margin: 0 0 16px;
+}
+
+/* ── LGM Timeline mobile scroll ── */
+
+@media (max-width: 600px) {
+  .lgmTimeline {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .lgmTimeline::-webkit-scrollbar {
+    display: none;
+  }
+
+  .lgmTimelineTrack {
+    min-width: 900px;
+  }
+}
+
+/* ── Responsive section adjustments when sidebars hide (≤1500px) ── */
+
+@media (max-width: 1500px) {
+  .verticalLineOverlay {
+    display: none;
+  }
+
+  .lgmTimelineHalo {
+    right: calc(-1 * var(--page-padding));
+  }
+
+  .lgmTimelineTrack {
+    right: calc(-1 * var(--page-padding));
+  }
+
+  /* ── Timeline responsive scaling at ≤1500px ── */
+  .lgmTimeline {
+    height: clamp(160px, 40vw, 300px);
+    margin-top: clamp(20px, 2vw, 40px);
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+    margin-right: calc(-50vw + 50%);
+  }
+
+  .lgmTimelineLabel {
+    font-size: var(--text-h4);
+    font-family: var(--font-display);
+    line-height: var(--text-h4--line-height);
+  }
+
+  .lgmTimelineMilestoneTop {
+    min-height: clamp(50px, 10vw, 100px);
+  }
+
+  .lgmTimelineMilestoneCompact {
+    min-height: clamp(32px, 5vw, 50px);
+  }
+
+  .lgmTimelineYear {
+    margin-bottom: clamp(6px, 1vw, 12px);
+    font-size: var(--text-p-m);
+  }
+
+  .lgmTimelineColumbus .lgmTimelineColumbusLogo {
+    width: clamp(32px, 8vw, 55px);
+    height: clamp(32px, 8vw, 55px);
+    margin-top: clamp(12px, 2vw, 24px);
+  }
+
+  .lgmTimelineCta {
+    margin-top: clamp(12px, 2vw, 24px);
+    font-size: var(--text-p-m);
+  }
+
+  .lgmTimelineHalo {
+    top: clamp(-16px, -2.5vw, -30px);
+    bottom: clamp(-16px, -2.5vw, -30px);
+  }
+
+  .lgmTimelineStem {
+    height: clamp(10px, 1.5vw, 20px);
+  }
+
+  .lgmTimelineMilestoneBottom .lgmTimelineStem {
+    margin-bottom: clamp(2px, 0.8vw, 6px);
+  }
+}
+
+/* ── LGM Compare Table mobile scroll ── */
+
+@media (max-width: 600px) {
+  .lgmCompareTable {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .lgmCompareTable::-webkit-scrollbar {
+    display: none;
   }
 }

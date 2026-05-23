@@ -1,15 +1,89 @@
 @import "tailwindcss";
 @import "mapbox-gl/dist/mapbox-gl.css";
 
-/* Base reset — use overflow-x: clip (not hidden) so position:sticky works on enterprise Section C */
+/* Axiforma — commercial display sans (Kastelov). Self-hosted .woff2 files
+   live in `public/fonts/` (converted from the licensed .ttf via Google's
+   woff2_compress). ~210KB total across the five weights. */
+@font-face {
+  font-family: "Axiforma";
+  src: url("/fonts/Axiforma-Light.woff2") format("woff2");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Axiforma";
+  src: url("/fonts/Axiforma-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Axiforma";
+  src: url("/fonts/Axiforma-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Axiforma";
+  src: url("/fonts/Axiforma-SemiBold.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Axiforma";
+  src: url("/fonts/Axiforma-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Single source of truth for hero title typography. Each hero <h1> across
+   the site sets `font-family: var(--font-hero)` (inline or via its module
+   CSS) so swapping the display face is a one-line change here. */
+:root {
+  --font-hero: "Axiforma", "SF Pro", -apple-system, BlinkMacSystemFont, sans-serif;
+
+  /* PageFrame drop shadow — site-wide. Lets the white frame card read as
+     a floating panel against the white site backdrop on every route.
+     A route can drop the frame's hairline border via --frame-border. */
+  --frame-shadow: 0 0 2px rgba(0, 0, 0, 0.10),
+                  0 0 14px rgba(0, 0, 0, 0.15);
+}
+
+/* Base reset — use overflow-x: clip (not hidden) so position:sticky works on business Section C */
 html,
 body {
   margin: 0;
   padding: 0;
-  background: #FFFFFF;
+  /* White site backdrop behind the PageFrame card — visible through the
+     30px gutter around the frame on every route. */
+  background-color: #FFFFFF;
   color: #1D1D1F;
   overflow-x: clip;
   min-height: 100%;
+}
+
+/* Footer reveal — once the user reaches the footer, PageFrame sets
+   [data-footer-reached] on <html>, which fades the white cover off the
+   footer (below). The page backdrop itself stays white throughout. */
+
+/* White cover over the reveal footer. Opaque while scrolling the page
+   (footer reads as white, matching the backdrop); fades out when the
+   footer is reached, revealing the footer's full dark design at once. */
+.footer-reveal-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 30;
+  background-color: #FFFFFF;
+  pointer-events: none;
+  opacity: 1;
+  transition: opacity 500ms ease;
+}
+html[data-footer-reached] .footer-reveal-overlay {
+  opacity: 0;
 }
 
 /* Normal scroll (no smooth) — Lenis is disabled for native speed */
@@ -21,7 +95,131 @@ html {
 @theme {
   --text-md: 1.0625rem;     /* 17px */
   --text-display: 4rem;     /* 64px — primary display/hero heading size */
+
+  /* ─── catcherX (NewsCatcher) design system tokens ───────────────────────
+     The site's single design system. Mirrors catcherX/tailwind.config.ts.
+     Material Design 3 tokens were removed — this is the only source of
+     truth for color, type, shape, and motion.
+
+     HARD RULE: no purple anywhere on this site. No purple/violet/fuchsia
+     hex, no Tailwind purple/violet/fuchsia/indigo utility classes, no
+     purple stops in any gradient, no hue-rotate landing in the purple
+     band (~260–320°). Blue-family only. */
+  --color-bg1: #F6F8FB;          /* page gradient top stop */
+  --color-bg2: #E5EDFB;          /* pale-blue wash (use at 40% opacity) */
+  --color-ink: #0B1B2B;          /* default heading + body text */
+  --color-muted: #5A6B7B;        /* secondary text */
+  --color-gridline: #E7E7F1;     /* blueprint-grid hairline */
+  --color-brand: #1451E8;        /* NewsCatcher Blue — signal colour only */
+  --color-brand-soft: #74A0FE;   /* decorative gradient stop only */
+  /* Primary CTA / filled-button surface — the navy brand colour the
+     navbar Columbus logo renders as. Generates the `bg-cta` utility. */
+  --color-cta: #0B1342;
+
+  --container-site: 1200px;      /* the single content-column width */
+  --radius-card: 20px;           /* signature container radius */
+  /* Button/CTA corner roundness, scaled by button size. Anchored to the
+     navbar button (~35px tall, 16px radius → radius/height ratio ≈ 0.457);
+     larger buttons get a proportionally larger radius so they keep the
+     same visual roundness as the navbar reference. Pick the tier that
+     matches the button's rendered height:
+       sm  ≤ 40px   ·  md 41–52px  ·  lg 53–66px  ·  xl ≥ 67px
+
+     The strict ratio (height × 0.457) is the lg/xl baseline. md is an
+     exception: the formula gave 20px for the ~42–44px content CTAs, but
+     that still read as too round next to the navbar — so md is a
+     deliberate *small bump*, 2px over sm, per design review.
+       md → 18px  (sm + 2px, not formula-derived)
+       lg → 57px typical → 57 × 0.457 ≈ 26px
+       xl → 74px typical → 74 × 0.457 ≈ 34px
+     Each generates a Tailwind utility (rounded-button, rounded-button-md,
+     rounded-button-lg, rounded-button-xl); CSS files use var(--radius-button*). */
+  --radius-button: 16px;         /* sm — ~35px navbar-sized buttons (default)  */
+  --radius-button-md: 18px;      /* md — ~42px content CTAs (small +2px bump)   */
+  --radius-button-lg: 26px;      /* lg — ~57px-tall buttons (57 × 0.457)        */
+  --radius-button-xl: 34px;      /* xl — ~74px-tall buttons (74 × 0.457)        */
+
+  /* Two-family typography system (Gdesign V2):
+       --font-sans     → Opening Hours Sans, body / paragraphs / UI
+       --font-display  → Funnel Display, every heading (.h1 … .h7) and
+                         any title-style display copy
+     Both faces load from Google Fonts via the <link> tag in app/layout.tsx
+     <head>. The "Columbus Earth" wordmark in the navbar keeps Axiforma
+     via --font-hero (see the @font-face declarations at the top of
+     this file). */
+  --font-sans: "Opening Hours Sans", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+  --font-display: "Funnel Display", "Opening Hours Sans", ui-sans-serif, system-ui, sans-serif;
+
+  /* Typography utilities — register text-h1…text-p-s as Tailwind font-size
+     utilities, each paired with its companion line-height token. Source of
+     truth is the --typography--* CSS variables in :root below. */
+  --text-h1: var(--typography--h1);   --text-h1--line-height: var(--typography--h1--line-height);
+  --text-h2: var(--typography--h2);   --text-h2--line-height: var(--typography--h2--line-height);
+  --text-h3: var(--typography--h3);   --text-h3--line-height: var(--typography--h3--line-height);
+  --text-h4: var(--typography--h4);   --text-h4--line-height: var(--typography--h4--line-height);
+  --text-h5: var(--typography--h5);   --text-h5--line-height: var(--typography--h5--line-height);
+  --text-h6: var(--typography--h6);   --text-h6--line-height: var(--typography--h6--line-height);
+  --text-h7: var(--typography--h7);   --text-h7--line-height: var(--typography--h7--line-height);
+  --text-p-l: var(--typography--p-l); --text-p-l--line-height: var(--typography--p-l--line-height);
+  --text-p-m: var(--typography--p-m); --text-p-m--line-height: var(--typography--p-m--line-height);
+  --text-p-s: var(--typography--p-s); --text-p-s--line-height: var(--typography--p-s--line-height);
 }
+
+/* ─── catcherX typography scale ────────────────────────────────────────
+   Ten steps (h1–h7, p-l, p-m, p-s). Each token holds the desktop size;
+   its --line-height companion holds the matching leading. The mobile
+   media query below (≤991px, matching catcherX's single Webflow cutoff)
+   downshifts h1–h5; h6/h7/p-* are constant across breakpoints.
+
+   Standard usage: <h2 className="h2">…</h2>, <p className="p-l">…</p>.
+   The .h1–.p-s classes below default to font-weight 500 for headings
+   and 400 for paragraph styles — override with utility classes
+   (font-bold, font-normal, etc.) when needed. */
+:root {
+  --typography--h1: 4rem;        --typography--h1--line-height: 103%;
+  --typography--h2: 2.625rem;    --typography--h2--line-height: 106%;
+  --typography--h3: 2.25rem;     --typography--h3--line-height: 106%;
+  --typography--h4: 1.75rem;     --typography--h4--line-height: 112%;
+  --typography--h5: 1.375rem;    --typography--h5--line-height: 135%;
+  --typography--h6: 1.5rem;      --typography--h6--line-height: 1.75rem;
+  --typography--h7: 1.125rem;    --typography--h7--line-height: 1.5rem;
+  --typography--p-l: 1rem;       --typography--p-l--line-height: 142%;
+  --typography--p-m: 0.875rem;   --typography--p-m--line-height: 135%;
+  --typography--p-s: 0.75rem;    --typography--p-s--line-height: 128%;
+
+  /* Shape */
+  --radius-md: 12px;
+  --radius-full: 9999px;
+
+  /* Motion */
+  --motion-duration-md: 300ms;
+  --motion-easing-decelerate: cubic-bezier(0.05, 0.7, 0.1, 1);
+}
+
+@media (max-width: 991px) {
+  :root {
+    --typography--h1: 2.5rem;   --typography--h1--line-height: 105%;
+    --typography--h2: 2rem;     --typography--h2--line-height: 104%;
+    --typography--h3: 1.5rem;   --typography--h3--line-height: 106%;
+    --typography--h4: 1.5rem;   --typography--h4--line-height: 112%;
+    --typography--h5: 1.25rem;  --typography--h5--line-height: 120%;
+    /* h6, h7, p-* unchanged across breakpoints */
+  }
+}
+
+/* Headings (.h1 … .h7) bind to Funnel Display via --font-display.
+   Paragraph utilities (.p-l/.p-m/.p-s) inherit Opening Hours Sans from
+   the body. */
+.h1 { font-family: var(--font-display); font-size: var(--typography--h1); line-height: var(--typography--h1--line-height); font-weight: 500; }
+.h2 { font-family: var(--font-display); font-size: var(--typography--h2); line-height: var(--typography--h2--line-height); font-weight: 500; }
+.h3 { font-family: var(--font-display); font-size: var(--typography--h3); line-height: var(--typography--h3--line-height); font-weight: 500; }
+.h4 { font-family: var(--font-display); font-size: var(--typography--h4); line-height: var(--typography--h4--line-height); font-weight: 500; }
+.h5 { font-family: var(--font-display); font-size: var(--typography--h5); line-height: var(--typography--h5--line-height); font-weight: 500; }
+.h6 { font-family: var(--font-display); font-size: var(--typography--h6); line-height: var(--typography--h6--line-height); font-weight: 500; }
+.h7 { font-family: var(--font-display); font-size: var(--typography--h7); line-height: var(--typography--h7--line-height); font-weight: 500; }
+.p-l { font-family: var(--font-sans); font-size: var(--typography--p-l); line-height: var(--typography--p-l--line-height); font-weight: 400; }
+.p-m { font-family: var(--font-sans); font-size: var(--typography--p-m); line-height: var(--typography--p-m--line-height); font-weight: 400; }
+.p-s { font-family: var(--font-sans); font-size: var(--typography--p-s); line-height: var(--typography--p-s--line-height); font-weight: 400; }
 
 /* Theme variables */
 :root {
@@ -32,6 +230,12 @@ html {
   --container-padding: 24px;
   --page-padding: 24px; /* matches structure lines + navbar logo/hamburger edges */
   --grid-line: rgba(37, 99, 235, 0.3);
+
+  /* Mirror of the @theme stops so the body-gradient declaration below
+     can interpolate them (Tailwind v4 doesn't expose @theme vars at the
+     same selector). */
+  --catcher-bg1: #F6F8FB;
+  --catcher-bg2: #E5EDFB;
 }
 
 /* Dark section lateral constraint lines — for use-cases dark sections */
@@ -46,7 +250,7 @@ html {
   left: 0;
   width: 1px;
   height: 100%;
-  background: linear-gradient(to bottom, transparent 0px, rgba(255,255,255,0.12) 72px, rgba(255,255,255,0.12) calc(100% - 72px), transparent 100%);
+  background: rgba(255,255,255,0.12);
   pointer-events: none;
   z-index: 1;
 }
@@ -57,7 +261,7 @@ html {
   right: 0;
   width: 1px;
   height: 100%;
-  background: linear-gradient(to bottom, transparent 0px, rgba(255,255,255,0.12) 72px, rgba(255,255,255,0.12) calc(100% - 72px), transparent 100%);
+  background: rgba(255,255,255,0.12);
   pointer-events: none;
   z-index: 1;
 }
@@ -72,7 +276,7 @@ html {
   position: absolute;
   top: 0; left: 0;
   width: 1px; height: 100%;
-  background: linear-gradient(to bottom, transparent 0px, rgba(37,99,235,0.6) 72px, rgba(37,99,235,0.6) calc(100% - 72px), transparent 100%);
+  background: rgba(37,99,235,0.6);
   pointer-events: none;
   z-index: 1;
 }
@@ -81,7 +285,7 @@ html {
   position: absolute;
   top: 0; right: 0;
   width: 1px; height: 100%;
-  background: linear-gradient(to bottom, transparent 0px, rgba(37,99,235,0.6) 72px, rgba(37,99,235,0.6) calc(100% - 72px), transparent 100%);
+  background: rgba(37,99,235,0.6);
   pointer-events: none;
   z-index: 1;
 }
@@ -161,8 +365,15 @@ html {
 
 /* Typography */
 body {
-  background: var(--background);
+  /* Backdrop colour is owned by the `html, body` rule above (white) —
+     not re-set here, so there's a single source of truth. */
   color: var(--foreground);
+  /* Opening Hours Sans is the project-wide body face. Everything that
+     doesn't set its own font-family inherits it from here. Headings
+     opt in to Funnel Display via the .h1 … .h7 utilities; the
+     Columbus Earth wordmark in the navbar opts in to Axiforma via
+     --font-hero. */
+  font-family: var(--font-sans);
 }
 
 /* Bottle note appearance */
@@ -923,4 +1134,144 @@ video {
     -webkit-backdrop-filter: none !important;
     backdrop-filter: none !important;
   }
+}
+
+/* Accessibility Options */
+body.dyslexia-mode, 
+body.dyslexia-mode * {
+  font-family: 'OpenDyslexic', 'Comic Sans MS', sans-serif !important;
+}
+
+body.bg-mode-sepia {
+  background-color: #f4ecd8 !important;
+  color: #433422 !important;
+}
+
+/* AccessibilityMenu trigger icon colour follows the active body theme.
+   Without these, the icon stays at `text-[#0A1344]` (light navy) and
+   reads as nearly invisible against the dark surface, or as too-dark
+   on sepia. */
+body.bg-mode-dark [data-accessibility-trigger] {
+  color: rgba(255, 255, 255, 0.85) !important;
+}
+body.bg-mode-dark [data-accessibility-trigger]:hover {
+  background-color: rgba(255, 255, 255, 0.10) !important;
+}
+body.bg-mode-sepia [data-accessibility-trigger] {
+  color: #433422 !important;
+}
+body.bg-mode-sepia [data-accessibility-trigger]:hover {
+  background-color: rgba(67, 52, 34, 0.08) !important;
+}
+body.bg-mode-sepia main,
+body.bg-mode-sepia article {
+  background-color: transparent !important;
+  color: inherit !important;
+}
+
+body.bg-mode-dark {
+  background-color: #111318 !important;
+  color: #e2e2e9 !important;
+}
+body.bg-mode-dark main,
+body.bg-mode-dark article {
+  background-color: transparent !important;
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   catcherX (NewsCatcher) design system
+   ────────────────────────────────────────────────────────────────────────
+   Ported from /Users/alexramirezblonski/Documents/catcherX/src/app/globals.css
+   verbatim and adapted for Tailwind v4 (this project) vs v3 (catcherX).
+   Tokens live in the @theme block at the top of this file. Full spec:
+   design-system/design-system.md. Prime directive: change the system, not
+   one component — see CLAUDE.md.
+   ════════════════════════════════════════════════════════════════════════ */
+
+/* The catcherX body-gradient (bg1 → white at 40%). Pages can opt in by
+   adding `data-catcher` to <body> or to their root <main>. Kept opt-in
+   so legacy pages with their own black/white backgrounds don't get a
+   pale-blue cast. */
+[data-catcher] {
+  background: linear-gradient(180deg, var(--catcher-bg1) 0%, #ffffff 40%);
+  color: #0B1B2B;
+  font-family: var(--font-inter), system-ui, sans-serif;
+}
+
+/* Page-width content column — the single content constraint for every
+   section on a catcherX-themed page. 1200px max + responsive gutters. */
+.container-site {
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  max-width: 1200px;
+  padding-left: 24px;
+  padding-right: 24px;
+}
+@media (min-width: 1024px) {
+  .container-site {
+    padding-left: 32px;
+    padding-right: 32px;
+  }
+}
+
+/* Vertical section rhythm — padding, not margin, so gaps never collapse. */
+.section {
+  padding-top: 80px;
+  padding-bottom: 80px;
+}
+@media (min-width: 1024px) {
+  .section {
+    padding-top: 112px;
+    padding-bottom: 112px;
+  }
+}
+
+/* Eyebrow / kicker label above section headings. */
+.eyebrow {
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: #1451E8;
+}
+
+/* Pill buttons — three variants. */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-button);
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  transition: background-color 150ms ease, color 150ms ease, border-color 150ms ease;
+  cursor: pointer;
+}
+.btn-primary {
+  background: #1451E8;
+  color: #ffffff;
+}
+.btn-primary:hover {
+  background: #0e3fbd;
+}
+.btn-ghost {
+  background: transparent;
+  color: #1451E8;
+  border: 1px solid rgba(20, 81, 232, 0.30);
+}
+.btn-ghost:hover {
+  background: rgba(20, 81, 232, 0.05);
+}
+
+/* Soft-elevated card surface — the one card pattern. */
+.card {
+  border-radius: 20px;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  background: rgba(255, 255, 255, 0.80);
+  padding: 28px;
+  box-shadow:
+    0 1px 2px rgba(11, 27, 43, 0.04),
+    0 12px 32px rgba(11, 27, 43, 0.06);
+  backdrop-filter: blur(8px);
 }

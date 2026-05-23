@@ -16,9 +16,6 @@ export function TechSidebarNav() {
   const [activeId, setActiveId] = useState<TechnologySectionId>("index");
 
   useEffect(() => {
-    const pageBody = document.querySelector<HTMLElement>(`.${styles.pageBody}`);
-    if (!pageBody) return;
-
     const sections = OBSERVED_SECTION_IDS.map((id) => document.getElementById(id)).filter(
       (node): node is HTMLElement => Boolean(node)
     );
@@ -26,8 +23,7 @@ export function TechSidebarNav() {
     if (sections.length === 0) return;
 
     const updateActiveByPosition = () => {
-      const rootRect = pageBody.getBoundingClientRect();
-      const probeY = rootRect.top + rootRect.height * 0.42;
+      const probeY = window.innerHeight * 0.42;
 
       let containing: HTMLElement | null = null;
       let nearest = sections[0];
@@ -56,11 +52,11 @@ export function TechSidebarNav() {
 
     updateActiveByPosition();
 
-    pageBody.addEventListener("scroll", updateActiveByPosition, { passive: true });
+    window.addEventListener("scroll", updateActiveByPosition, { passive: true });
     window.addEventListener("resize", updateActiveByPosition);
 
     return () => {
-      pageBody.removeEventListener("scroll", updateActiveByPosition);
+      window.removeEventListener("scroll", updateActiveByPosition);
       window.removeEventListener("resize", updateActiveByPosition);
     };
   }, []);

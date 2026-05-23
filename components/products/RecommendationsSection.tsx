@@ -14,7 +14,7 @@ export default function RecommendationsSection() {
           <a
             href="https://mapsgpt.es"
             className={`group flex items-center justify-center gap-4 lg:gap-10 w-full max-w-214.25 h-14 lg:h-18.5 no-underline cursor-pointer active:scale-[0.98] select-none ${glassStyles.btn}`}
-            style={{ borderRadius: 14, padding: 0 }}
+            style={{ borderRadius: "var(--radius-button-xl)", padding: 0 }}
           >
             <span
               style={{

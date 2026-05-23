@@ -384,7 +384,7 @@ export default function NewAtMapsGPTSection() {
           marginBottom: "var(--hiw-space-16)",
           textAlign: "center",
         }}>
-          New at MapsGPT
+          New at Elio
         </h2>
       </div>
 

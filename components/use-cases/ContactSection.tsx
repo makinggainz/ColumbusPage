@@ -4,7 +4,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
-export default function ContactSection() {
+interface ContactSectionProps {
+  lightTheme?: boolean;
+}
+
+export default function ContactSection({ lightTheme = false }: ContactSectionProps) {
   const sectionRef = useRef<HTMLElement>(null);
   const [visible, setVisible] = useState(false);
 
@@ -25,20 +29,26 @@ export default function ContactSection() {
     transition: `opacity 0.7s ease ${delay}ms, transform 0.7s ease ${delay}ms`,
   });
 
+  // Theme-dependent classes/colors
+  const sectionBg = lightTheme ? "bg-white" : "bg-black";
+  const primaryTextClass = lightTheme ? "text-[#1D1D1F]" : "text-white";
+  const ctaBgColor = lightTheme ? "#000000" : "white";
+  const ctaTextColor = lightTheme ? "#FFFFFF" : "#1D1D1F";
+
   return (
-    <section ref={sectionRef} className="w-full bg-black flex flex-col items-center pt-[240px] pb-[50px] px-8 md:px-10">
+    <section ref={sectionRef} className={`w-full ${sectionBg} flex flex-col items-center pt-[240px] pb-[50px] px-8 md:px-10`}>
 
       {/* TOP TEXT */}
       <p
-        className="
-        text-white text-center
+        className={`
+        ${primaryTextClass} text-center
         text-[30px] leading-[140%]
         tracking-[0.3em]
         max-w-[491px]
         mb-[140px]
         max-md:text-[22px]
         -mt-[90px]
-        "
+        `}
         style={anim(0)}
       >
         We’re at the frontier.
@@ -69,7 +79,9 @@ export default function ContactSection() {
         />
 
         {/* DARK OVERLAY */}
-        <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse 70% 60% at 50% 50%, rgba(0,0,0,0.60) 0%, rgba(0,0,0,0.20) 100%)" }} />
+        {!lightTheme && (
+          <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse 70% 60% at 50% 50%, rgba(0,0,0,0.60) 0%, rgba(0,0,0,0.20) 100%)" }} />
+        )}
 
         {/* CONTENT */}
         <div
@@ -94,7 +106,7 @@ export default function ContactSection() {
             <br />
             Check out our{" "}
             <Link
-              href="/products/enterprise"
+              href="/products/business"
               className="cursor-pointer hover:opacity-80 transition-opacity"
               style={{ borderBottom: "0.5px solid currentColor", paddingBottom: "1px" }}
             >
@@ -105,7 +117,7 @@ export default function ContactSection() {
           <Link
             href="/contact"
             className="group flex items-center gap-3 leading-none whitespace-nowrap hover:opacity-90 transition-all duration-300"
-            style={{ fontSize: 14, fontWeight: 500, height: 36, paddingLeft: 20, paddingRight: 16, backgroundColor: "white", color: "#1D1D1F" }}
+            style={{ fontSize: 14, fontWeight: 500, height: 36, paddingLeft: 20, paddingRight: 16, backgroundColor: ctaBgColor, color: ctaTextColor }}
           >
             <span className="transition-colors duration-300 group-hover:text-[#2563EB]">Talk to us</span>
             <svg className="transition-transform duration-300 group-hover:translate-x-0.5" width="10" height="18" viewBox="0 0 7 12" fill="none" stroke="#2563EB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">

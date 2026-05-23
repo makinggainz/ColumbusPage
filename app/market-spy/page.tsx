@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, type ReactNode } from "react";
-import { Navbar } from "@/components/layout/Navbar";
+import { MistxNav } from "@/components/layout/MistxNav";
 import { MapBackground, MapMarker } from "@/components/map/MapBackground";
 
 type Sector = "FASHION" | "RESTAURANTS" | "CAFES";
@@ -245,7 +245,7 @@ export default function MarketSpyPage() {
 
     return (
         <main className="h-screen w-full flex flex-col overflow-hidden bg-white">
-            <Navbar />
+            <MistxNav />
 
             {/* Main Dashboard Content - Starts below navbar */}
             <div className="flex-1 flex pt-20"> {/* pt-20 to clear fixed navbar */}
@@ -265,12 +265,12 @@ export default function MarketSpyPage() {
                         </div>
 
                         {/* Sector Selector Tabs */}
-                        <div className="bg-gray-100 p-1 rounded-xl flex">
+                        <div className="bg-gray-100 p-1 rounded-button-md flex">
                             {(["FASHION", "RESTAURANTS", "CAFES"] as Sector[]).map((sector) => (
                                 <button
                                     key={sector}
                                     onClick={() => handleSectorChange(sector)}
-                                    className={`flex-1 py-2 rounded-lg text-sm font-bold transition-all ${activeSector === sector
+                                    className={`flex-1 py-2 rounded-button text-sm font-bold transition-all ${activeSector === sector
                                         ? "bg-white text-primary shadow-sm"
                                         : "text-gray-500 hover:text-gray-700"
                                         }`}
@@ -293,13 +293,13 @@ export default function MarketSpyPage() {
                                 <div className="flex items-center gap-2">
                                     <button
                                         onClick={() => setChatQuery(`Tell me interesting facts about ${selectedMarker.label}`)}
-                                        className="bg-white px-3 py-1 rounded-full text-xs font-bold text-blue-600 shadow-sm border border-blue-100 hover:bg-blue-50 transition-colors flex items-center gap-1"
+                                        className="bg-white px-3 py-1 rounded-button text-xs font-bold text-blue-600 shadow-sm border border-blue-100 hover:bg-blue-50 transition-colors flex items-center gap-1"
                                     >
                                         <span>✨</span> Ask AI
                                     </button>
                                     <button
                                         onClick={() => setSelectedMarker(null)}
-                                        className="p-1 hover:bg-blue-100 rounded-full text-blue-400 hover:text-blue-600"
+                                        className="p-1 hover:bg-blue-100 rounded-button text-blue-400 hover:text-blue-600"
                                     >
                                         ✕
                                     </button>
@@ -313,7 +313,7 @@ export default function MarketSpyPage() {
                                 <button
                                     key={filter}
                                     onClick={() => setActiveFilter(filter === activeFilter ? null : filter)}
-                                    className={`px-3 py-1.5 rounded-full text-xs font-semibold shadow-sm border transition-all hover:shadow-md
+                                    className={`px-3 py-1.5 rounded-button text-xs font-semibold shadow-sm border transition-all hover:shadow-md
                                 ${activeFilter === filter
                                             ? "bg-primary border-primary text-white"
                                             : "bg-white border-gray-200 text-gray-700 hover:border-gray-300"

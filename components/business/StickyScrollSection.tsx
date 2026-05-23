@@ -1,0 +1,267 @@
+"use client";
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import Image from "next/image";
+
+// ── feature definitions ─────────────────────────────────────────────────────
+const features: {
+  id: string;
+  label: string;
+  description: string;
+  content: React.ReactNode;
+  fullBleedTop?: boolean;
+}[] = [
+  {
+    id: "data-collection",
+    label: "Data Collection",
+    description:
+      "Columbus enables anyone to be super-explorers. Let us help you find answers faster.",
+    fullBleedTop: true,
+    content: (
+      <div className="relative w-full h-[500px] md:h-[600px] lg:h-[694px]">
+        {process.env.NODE_ENV !== "production" && (
+          <span className="absolute left-0 top-0 z-50 flex h-8 w-8 items-center justify-center rounded-br bg-black/80 text-[11px] font-bold text-white opacity-25" aria-hidden>g1.1</span>
+        )}
+        <Image
+          src="/business/sunbg.png"
+          alt="background"
+          fill
+          className="object-cover blur-[6px] scale-110"
+        />
+        <div className="absolute inset-0 bg-black/5 backdrop-blur-[2px]" />
+        <Image
+          src="/business/desk.png"
+          alt="desktop"
+          width={849}
+          height={476}
+          className="absolute left-[8%] bottom-[8%] rounded-xl shadow-2xl"
+        />
+        <Image
+          src="/business/mob.png"
+          alt="mobile"
+          width={266}
+          height={579}
+          className="absolute right-[8%] bottom-[8%] shadow-2xl"
+        />
+      </div>
+    ),
+  },
+  {
+    id: "data",
+    label: "Proprietary Data",
+    description:
+      "The most expansive geospatial data catalogue available — vetted, high-fidelity datasets that no one else has.",
+    content: (
+      <div>
+        <div className="mb-10 px-4 lg:px-0">
+          <h2 className="text-[28px] md:text-[39px] font-light leading-[1.1] tracking-[-0.02em]" style={{ color: "var(--ent-dark-text-medium)" }}>
+            Can&apos;t find relevant datasets for your research?
+          </h2>
+          <h3 className="text-[28px] md:text-[39px] font-medium text-ink leading-[1.1] tracking-[-0.02em]">
+            Columbus has it.
+          </h3>
+        </div>
+
+        <div
+          className="w-full rounded-none border border-gridline border-l-0 border-r-0 overflow-hidden flex items-center justify-center"
+          style={{ aspectRatio: "16 / 9", background: "linear-gradient(135deg, rgba(11,27,43,0.02) 0%, rgba(11,27,43,0.04) 50%, rgba(11,27,43,0.02) 100%)" }}
+        >
+          <span className="text-[14px] font-medium tracking-[0.12em] uppercase" style={{ color: "var(--ent-dark-text-low)" }}>Video Demo</span>
+        </div>
+
+        <div className="max-w-[900px] mt-10 mb-10 px-4 lg:px-0">
+          <p className="text-[22px] md:text-[28px] leading-[1.55] tracking-[-0.01em] text-ink">
+            The <span className="font-semibold">highest quality</span>, and most versatile
+            data-sets for your critical research and decisions.
+          </p>
+          <a href="/research" className="text-[14px] mt-4 inline-flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity" style={{ color: "var(--ent-dark-text-high)" }}>
+            Learn about our Data Collection →
+          </a>
+        </div>
+
+        <div className="bg-[#FAFAFA] border border-gridline rounded-[7px] p-10 mx-4 lg:mx-0">
+          <h3 className="text-center text-[22px] font-medium tracking-[-0.02em] text-ink mb-2">
+            Vetted, high-fidelity, and smart datasets
+          </h3>
+          <p className="text-center text-[14px] mb-8" style={{ color: "var(--ent-dark-text-medium)" }}>
+            We vet our data with partner organizations
+          </p>
+          <div className="flex flex-wrap justify-center items-center gap-10">
+            <Image src="/business/logo1.png" width={70} height={40} alt="" />
+            <Image src="/business/logo2.png" width={90} height={40} alt="" />
+            <Image src="/business/logo3.png" width={90} height={40} alt="" />
+            <Image src="/business/logo4.png" width={90} height={40} alt="" />
+            <Image src="/business/logo5.png" width={90} height={40} alt="" />
+            <Image src="/business/logo6.png" width={70} height={40} alt="" />
+            <Image src="/business/logo7.png" width={90} height={40} alt="" />
+          </div>
+        </div>
+      </div>
+    ),
+  },
+  {
+    id: "map-chat",
+    label: "Map Chat",
+    description:
+      "Query any location on Earth in natural language. Ask questions, get maps and spatial answers instantly.",
+    content: (
+      <div>
+        <h2 className="px-4 lg:px-0 text-[28px] md:text-[39px] lg:text-[49px] font-medium text-ink leading-[1.1] tracking-[-0.02em]">
+          Chat with Earth
+        </h2>
+        <div
+          className="mt-10 w-full rounded-none border border-gridline border-l-0 border-r-0 overflow-hidden flex items-center justify-center"
+          style={{ aspectRatio: "16 / 9", background: "linear-gradient(135deg, rgba(11,27,43,0.02) 0%, rgba(11,27,43,0.04) 50%, rgba(11,27,43,0.02) 100%)" }}
+        >
+          <span className="text-[14px] font-medium tracking-[0.12em] uppercase" style={{ color: "var(--ent-dark-text-low)" }}>Video Demo</span>
+        </div>
+      </div>
+    ),
+  },
+  {
+    id: "research-reports",
+    label: "Research Reports",
+    description:
+      "Generate full site-selection and due diligence reports from a single prompt. What took weeks now takes minutes.",
+    content: (
+      <div>
+        <h2 className="px-4 lg:px-0 text-[28px] md:text-[39px] lg:text-[49px] font-medium text-ink leading-[1.1] tracking-[-0.02em]">
+          Research Reports
+        </h2>
+        <div
+          className="mt-10 w-full rounded-none border border-gridline border-l-0 border-r-0 overflow-hidden flex items-center justify-center"
+          style={{ aspectRatio: "16 / 9", background: "linear-gradient(135deg, rgba(11,27,43,0.02) 0%, rgba(11,27,43,0.04) 50%, rgba(11,27,43,0.02) 100%)" }}
+        >
+          <span className="text-[14px] font-medium tracking-[0.12em] uppercase" style={{ color: "var(--ent-dark-text-low)" }}>Video Demo</span>
+        </div>
+      </div>
+    ),
+  },
+  {
+    id: "generated-layers",
+    label: "Generative Geodata",
+    description:
+      "AI-generated geospatial datasets that fill gaps where traditional surveying is too expensive or unavailable.",
+    content: (
+      <div>
+        <h2 className="px-4 lg:px-0 text-[28px] md:text-[39px] lg:text-[49px] font-medium text-ink leading-[1.1] tracking-[-0.02em]">
+          Generative Geodata
+        </h2>
+        <div
+          className="mt-10 w-full rounded-none border border-gridline border-l-0 border-r-0 overflow-hidden flex items-center justify-center"
+          style={{ aspectRatio: "16 / 9", background: "linear-gradient(135deg, rgba(11,27,43,0.02) 0%, rgba(11,27,43,0.04) 50%, rgba(11,27,43,0.02) 100%)" }}
+        >
+          <span className="text-[14px] font-medium tracking-[0.12em] uppercase" style={{ color: "var(--ent-dark-text-low)" }}>Video Demo</span>
+        </div>
+      </div>
+    ),
+  },
+  {
+    id: "human-support",
+    label: "24/7 Human Support",
+    description:
+      "Real humans available around the clock — find datasets, get platform tips, or connect with a live agent instantly.",
+    content: (
+      <div>
+        <h2 className="px-4 lg:px-0 text-[28px] md:text-[39px] lg:text-[49px] font-medium text-ink leading-[1.1] tracking-[-0.02em]">
+          24/7 Human Support
+        </h2>
+        <div
+          className="mt-10 w-full rounded-none border border-gridline border-l-0 border-r-0 overflow-hidden flex items-center justify-center"
+          style={{ aspectRatio: "16 / 9", background: "linear-gradient(135deg, rgba(11,27,43,0.02) 0%, rgba(11,27,43,0.04) 50%, rgba(11,27,43,0.02) 100%)" }}
+        >
+          <span className="text-[14px] font-medium tracking-[0.12em] uppercase" style={{ color: "var(--ent-dark-text-low)" }}>Video Demo</span>
+        </div>
+      </div>
+    ),
+  },
+];
+
+// ── component ───────────────────────────────────────────────────────────────
+export default function StickyScrollSection() {
+  const [, ...rest] = features;
+
+  return (
+    <div className="relative w-full" style={{ "--grid-line": "var(--ent-border-dark-grid)", backgroundColor: "var(--ent-bg-dark)" } as React.CSSProperties}>
+
+      {/* City line-art background. The source PNG is near-white, so on this
+          dark section it is inverted (white field → dark, lines → light) and
+          screen-blended: the dark field drops out and only the faint light
+          lines remain — replacing the old grid + grain texture. */}
+      <div
+        className="absolute inset-x-0 bottom-0 pointer-events-none"
+        aria-hidden
+        style={{
+          height: "min(70%, 700px)",
+          zIndex: 1,
+          backgroundImage: "url(/businessartbackground.png)",
+          backgroundSize: "100% auto",
+          backgroundRepeat: "no-repeat",
+          backgroundPosition: "center bottom",
+          filter: "invert(1)",
+          mixBlendMode: "screen",
+          opacity: 0.5,
+        }}
+      />
+
+      {/* G2–G6 — inside constraint wrapper */}
+      <div className="relative z-10 ent-content-bounds">
+        {rest.map((feature, i) => (
+          <div key={feature.id}>
+            {i > 0 && (
+              <div className="w-full" style={{ height: 1, backgroundColor: "var(--grid-line)" }} />
+            )}
+          <div
+            className="relative grid grid-cols-1 lg:grid-cols-[355px_1fr]"
+          >
+            {process.env.NODE_ENV !== "production" && (
+              <span className="absolute left-0 top-0 z-50 flex h-8 w-8 items-center justify-center rounded-br bg-black/80 text-sm font-bold text-white opacity-25" aria-hidden>
+                g{i + 2}
+              </span>
+            )}
+
+            {/* Mobile: label above content */}
+            <div className="lg:hidden px-4 pt-10 pb-4">
+              <p className="text-[11px] font-medium tracking-[0.12em] uppercase text-muted mb-0">{feature.label}</p>
+            </div>
+
+            {/* Desktop: Left column (label + description together, sticky) */}
+            <div className="hidden lg:block bg-transparent">
+              <div className="sticky top-20 px-8 py-24">
+                <div className="max-w-[270px]">
+                  <p className="text-[11px] font-medium tracking-[0.12em] uppercase text-muted mb-3">{feature.label}</p>
+                  <p className="text-[22px] font-normal leading-[1.55] tracking-[-0.01em] text-ink">
+                    {feature.description}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Right content */}
+            {feature.fullBleedTop ? (
+              <div className="bg-transparent rounded-[7px] overflow-hidden">
+                {feature.content}
+              </div>
+            ) : (
+              <div className="bg-transparent py-0 lg:py-18 px-0 lg:pl-12 lg:pr-8 flex justify-center">
+                <div className="w-full">{feature.content}</div>
+              </div>
+            )}
+
+            {/* Mobile: description below content */}
+            <div className="lg:hidden px-4 pt-4 pb-10">
+              <p className="text-[16px] font-normal leading-[1.55] tracking-[-0.01em] text-muted">
+                {feature.description}
+              </p>
+            </div>
+
+          </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Bottom horizontal line */}
+      <div className="w-full" style={{ height: 1, backgroundColor: "var(--grid-line)" }} />
+    </div>
+  );
+}

@@ -35,17 +35,17 @@ export function TechNavbar() {
           <Link href="#" className="transition-opacity hover:opacity-70">
             Use Cases
           </Link>
-          <Link href="/technology" className="font-semibold transition-opacity hover:opacity-70" aria-current="page">
-            Technology
+          <Link href="/research" className="font-semibold transition-opacity hover:opacity-70" aria-current="page">
+            Research
           </Link>
         </nav>
 
         <div className="flex items-center gap-3">
-          <button className="h-[46px] min-w-[132px] border border-[#2a3963]/65 px-5 text-[13px] font-semibold text-[#192957] transition-colors hover:bg-[#192957]/6 sm:min-w-[168px]">
+          <button className="h-[46px] min-w-[132px] rounded-button-md border border-[#2a3963]/65 px-5 text-[13px] font-semibold text-[#192957] transition-colors hover:bg-[#192957]/6 sm:min-w-[168px]">
             Start Now
           </button>
           <button
-            className="grid h-[46px] w-[46px] place-items-center border border-[#2a3963]/65 transition-colors hover:bg-[#192957]/6"
+            className="grid h-[46px] w-[46px] place-items-center rounded-button-md border border-[#2a3963]/65 transition-colors hover:bg-[#192957]/6"
             aria-label="Open menu"
             type="button"
           >

@@ -166,7 +166,7 @@ export const WhyColumbus = () => {
                             and decision making.
                         </p>
                         <a
-                            href="/technology"
+                            href="/research"
                             className="text-white font-medium flex items-center gap-2 hover:opacity-80 transition-opacity whitespace-nowrap ml-8"
                         >
                             Learn more

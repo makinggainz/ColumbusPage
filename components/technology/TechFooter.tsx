@@ -77,14 +77,14 @@ export function TechFooter() {
             <div className="mt-6 flex items-center gap-5 text-white/88">
               <a
                 href="mailto:contact@columbus.earth"
-                className="inline-flex h-10 w-10 items-center justify-center rounded-md transition-colors hover:bg-white/12"
+                className="inline-flex h-10 w-10 items-center justify-center rounded-button transition-colors hover:bg-white/12"
                 aria-label="Email"
               >
                 <MailIcon />
               </a>
               <a
                 href="#"
-                className="inline-flex h-10 w-10 items-center justify-center rounded-md transition-colors hover:bg-white/12"
+                className="inline-flex h-10 w-10 items-center justify-center rounded-button transition-colors hover:bg-white/12"
                 aria-label="LinkedIn"
               >
                 <LinkedInIcon />
@@ -128,8 +128,8 @@ export function TechFooter() {
           <div className="space-y-4 text-[15px]">
             <p className="text-xs uppercase tracking-wide text-white/65">Company</p>
             <div className="space-y-3 text-[13px]">
-              <Link href="/mission" className="block transition-opacity hover:opacity-80">
-                + Our Mission
+              <Link href="/company" className="block transition-opacity hover:opacity-80">
+                + Company
               </Link>
               <Link href="#careers" className="block transition-opacity hover:opacity-80">
                 + Careers

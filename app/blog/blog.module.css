@@ -1,0 +1,269 @@
+/* Typography uses the catcherX scale (.h-x / .p-x) from app/globals.css.
+   These camelCase class names are kept for backwards-compat with blog
+   templates; each maps to the nearest h-x / p-x step. */
+
+.headlineLarge {
+  font-family: var(--font-display);
+  font-size: var(--typography--h3);
+  line-height: var(--typography--h3--line-height);
+  font-weight: 500;
+  color: var(--color-ink);
+}
+
+.titleLarge {
+  font-family: var(--font-sans);
+  font-size: var(--typography--h5);
+  line-height: var(--typography--h5--line-height);
+  font-weight: 500;
+  color: var(--color-ink);
+}
+
+.bodyLarge {
+  font-family: var(--font-sans);
+  font-size: var(--typography--p-l);
+  line-height: var(--typography--p-l--line-height);
+  font-weight: 400;
+}
+
+.bodyMedium {
+  font-family: var(--font-sans);
+  font-size: var(--typography--p-m);
+  line-height: var(--typography--p-m--line-height);
+  font-weight: 400;
+}
+
+.labelLarge {
+  font-family: var(--font-sans);
+  font-size: var(--typography--p-m);
+  line-height: var(--typography--p-m--line-height);
+  font-weight: 500;
+}
+
+.labelMediumUpper {
+  font-family: var(--font-sans);
+  font-size: var(--typography--p-s);
+  line-height: var(--typography--p-s--line-height);
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.colorOnSurfaceVariant {
+  color: var(--color-muted);
+}
+
+.colorPrimary {
+  color: var(--color-brand);
+}
+
+.listRow {
+  min-height: 48px;
+  padding: 16px 8px;
+  margin-left: -8px;
+  margin-right: -8px;
+  border-radius: var(--radius-md);
+  outline: none;
+  transition: background-color var(--motion-duration-md) var(--motion-easing-decelerate);
+}
+
+.listRow:hover {
+  background-color: color-mix(in srgb, var(--color-ink) 6%, transparent);
+}
+
+.backLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 48px;
+  padding: 8px 8px;
+  margin-left: -8px;
+  border-radius: var(--radius-full);
+  outline: none;
+  transition: opacity var(--motion-duration-md) var(--motion-easing-decelerate);
+}
+
+.backLink:hover {
+  opacity: 0.88;
+}
+
+.sectionHeading {
+  font-family: var(--font-display);
+  font-size: var(--typography--h6);
+  line-height: var(--typography--h6--line-height);
+  font-weight: 500;
+  color: var(--color-ink);
+  margin-top: 40px;
+  margin-bottom: 16px;
+  scroll-margin-top: 96px;
+}
+
+.proseParagraph {
+  font-family: var(--font-sans);
+  font-size: var(--typography--p-l);
+  line-height: 1.75rem;
+  font-weight: 400;
+  color: var(--color-ink);
+  margin: 0 0 24px;
+}
+
+/* Reading-theme text colours — the headline, section headings and prose
+   carry an explicit `color`, so the body.bg-mode-* colour cannot reach
+   them through inheritance. Without these overrides the article text
+   stays dark navy and is invisible in dark mode. */
+:global(body.bg-mode-dark) .headlineLarge,
+:global(body.bg-mode-dark) .sectionHeading {
+  color: rgba(255, 255, 255, 0.95);
+}
+:global(body.bg-mode-dark) .proseParagraph {
+  color: rgba(255, 255, 255, 0.82);
+}
+:global(body.bg-mode-dark) .colorOnSurfaceVariant {
+  color: rgba(255, 255, 255, 0.55);
+}
+
+:global(body.bg-mode-sepia) .headlineLarge,
+:global(body.bg-mode-sepia) .sectionHeading,
+:global(body.bg-mode-sepia) .proseParagraph {
+  color: #433422;
+}
+:global(body.bg-mode-sepia) .colorOnSurfaceVariant {
+  color: rgba(67, 52, 34, 0.6);
+}
+
+/* Article-page <main> — explicit white in default light mode so the
+   right column reads as pure white (the M3 surface is slightly tinted).
+   Dark + sepia let the layout's tokenised surface paint through so the
+   chosen reading theme covers the whole page. */
+.articlePage {
+  background: #FFFFFF;
+  overflow-x: hidden;
+}
+
+:global(body.bg-mode-dark) .articlePage,
+:global(body.bg-mode-sepia) .articlePage {
+  background: transparent;
+}
+
+/* Date eyebrow above the article title — on-brand blue, kept subtle so
+   it doesn't compete with the headline. */
+.dateLine {
+  color: rgba(16, 17, 68, 0.7);
+}
+
+:global(body.bg-mode-dark) .dateLine {
+  color: rgba(75, 156, 255, 0.7);
+}
+
+:global(body.bg-mode-sepia) .dateLine {
+  color: rgba(138, 90, 43, 0.7);
+}
+
+/* Article hero image — a 13px-rounded tile to match the bento card
+   corners used on the blog index. Falls back to a deep-blue gradient
+   when the post has no hero image. */
+.articleImagePlaceholder {
+  width: 100%;
+  height: 220px;
+  background: linear-gradient(145deg, #060d28 0%, #0a1344 40%, #1e2e7a 100%);
+  border-radius: 13px;
+  margin-top: 40px;
+  margin-bottom: 48px;
+}
+
+@media (min-width: 640px) {
+  .articleImagePlaceholder {
+    height: 360px;
+  }
+}
+
+/* Share buttons at end of article */
+.articleShareEnd {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 48px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(16, 17, 68, 0.10);
+}
+
+.shareEndLabel {
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: -0.005em;
+  color: rgba(16, 17, 68, 0.45);
+}
+
+:global(body.bg-mode-dark) .articleShareEnd {
+  border-top-color: rgba(75, 156, 255, 0.18);
+}
+
+:global(body.bg-mode-dark) .shareEndLabel {
+  color: rgba(75, 156, 255, 0.45);
+}
+
+:global(body.bg-mode-sepia) .articleShareEnd {
+  border-top-color: rgba(138, 90, 43, 0.12);
+}
+
+:global(body.bg-mode-sepia) .shareEndLabel {
+  color: rgba(138, 90, 43, 0.45);
+}
+
+/* "Don't miss these" related posts section — aligned with article column */
+.relatedSection {
+  margin: 0 auto;
+  padding: 80px 32px 96px;
+  width: 100%;
+  max-width: 720px;
+}
+
+.relatedHeading {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: var(--color-ink);
+  margin-bottom: 40px;
+}
+
+.relatedGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+@media (max-width: 900px) {
+  .relatedGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 580px) {
+  .relatedGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .relatedSection {
+    padding: 48px 16px 64px;
+  }
+}
+
+:global(body.bg-mode-dark) .relatedHeading {
+  color: rgba(255, 255, 255, 0.95);
+}
+
+:global(body.bg-mode-sepia) .relatedHeading {
+  color: #433422;
+}
+
+/* ── Footer fade transition ──────────────────────────────────────────── */
+.footerTransition {
+  height: 200px;
+  margin-top: -96px;
+  background: linear-gradient(to bottom, transparent, #F9F9F9);
+  pointer-events: none;
+}
+
+:global(body.bg-mode-dark) .footerTransition,
+:global(body.bg-mode-sepia) .footerTransition {
+  display: none;
+}

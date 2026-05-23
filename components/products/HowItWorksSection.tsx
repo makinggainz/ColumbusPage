@@ -27,14 +27,14 @@ const STEPS: Step[] = [
     description:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco.",
     image: "/how/center.png",
-    imageAlt: "MapsGPT chat interface with destination suggestions",
+    imageAlt: "Elio chat interface with destination suggestions",
     imageCluster: true,
   },
   {
     title: "Get personalized recommendations",
     titleGradient: "linear-gradient(90deg, #DE2F32 0%, #B00098 100%)",
     description:
-      "MapsGPT remembers your preferences and continuously learns your vibes. The more you use it, the better it gets — surfacing spots that match your taste before you even ask.",
+      "Elio remembers your preferences and continuously learns your vibes. The more you use it, the better it gets — surfacing spots that match your taste before you even ask.",
     image: "",
     imageAlt: "",
     recommendationCard: true,
@@ -222,7 +222,7 @@ function ChatInput() {
               <div className="pointer-events-none absolute left-0 top-1/2 -translate-y-1/2 flex items-center gap-0.75">
                 <span style={{ width: "2px", height: "20px", background: "#000", borderRadius: "1px", animation: "blink 1.1s step-start infinite", flexShrink: 0, display: "block" }} />
                 <span style={{ fontFamily: "'Inter', sans-serif", fontSize: "18px", color: "var(--hiw-text-tertiary)", lineHeight: 1 }}>
-                  Ask MapsGPT anything
+                  Ask Elio anything
                 </span>
               </div>
             )}
@@ -230,7 +230,7 @@ function ChatInput() {
           <button
             type="button"
             onClick={(e) => { e.stopPropagation(); if (hasText) handleSend(); }}
-            className="flex items-center justify-center shrink-0 rounded-full"
+            className="flex items-center justify-center shrink-0 rounded-button"
             style={{
               width: 40, height: 40, background: "var(--hiw-accent)",
               opacity: hasText ? 1 : 0.4, cursor: hasText ? "pointer" : "default",
@@ -246,7 +246,7 @@ function ChatInput() {
       </div>
 
       <Link
-        href="/technology"
+        href="/research"
         className="flex items-center justify-center gap-2 mt-6 hover:opacity-75"
         style={{ textDecoration: "none", transition: `opacity var(--hiw-duration-normal)`, opacity: 0.35 }}
       >
@@ -383,7 +383,7 @@ function RecommendationCard() {
       {/* Chat bubble: logo + typed message */}
       <div style={{ display: "flex", gap: "var(--hiw-space-3)", alignItems: "flex-start", marginBottom: "var(--hiw-space-5)" }}>
         <div style={{ width: 40, height: 40, borderRadius: "var(--hiw-radius-full)", overflow: "hidden", flexShrink: 0 }}>
-          <Image src="/MapsGPT-logo.png" alt="MapsGPT" width={40} height={40} className="object-contain w-full h-full" />
+          <Image src="/MapsGPT-logo.png" alt="Elio" width={40} height={40} className="object-contain w-full h-full" />
         </div>
         <div>
           <span style={{
@@ -393,7 +393,7 @@ function RecommendationCard() {
             color: "var(--hiw-text-primary)",
             display: "block",
             marginBottom: "var(--hiw-space-1)",
-          }}>MapsGPT</span>
+          }}>Elio</span>
           <div style={{
             fontFamily: "var(--hiw-font-sans)",
             fontSize: "var(--hiw-text-sm)",

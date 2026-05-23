@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Navbar } from "@/components/layout/Navbar";
+import { MistxNav } from "@/components/layout/MistxNav";
 import { Footer } from "@/components/layout/Footer";
 import { MapBackground } from "@/components/map/MapBackground";
 import { Button } from "@/components/ui/Button";
@@ -8,7 +8,7 @@ export default function MapsGPTPage() {
     return (
         <main className="min-h-screen relative">
             <MapBackground initialChapter="gpt-intro" />
-            <Navbar theme="dark" />
+            <MistxNav />
 
             {/* Content Container - Left 50% on desktop */}
             <div className="relative z-10 w-full md:w-1/2 pointer-events-none">
@@ -19,7 +19,10 @@ export default function MapsGPTPage() {
                         <div className="inline-block px-3 py-1 mb-6 text-xs font-semibold tracking-wider text-blue-600 uppercase bg-blue-100 rounded-full">
                             Your Intelligent Travel Copilot
                         </div>
-                        <h1 className="text-5xl md:text-7xl font-bold text-primary mb-6 tracking-tight">
+                        <h1
+                            className="text-5xl md:text-7xl font-bold text-primary mb-6 tracking-tight"
+                            style={{ fontFamily: "var(--font-hero)" }}
+                        >
                             MapsGPT
                         </h1>
                         <p className="text-xl text-gray-700 mb-6 leading-relaxed font-medium">

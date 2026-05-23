@@ -90,6 +90,14 @@ export const BottleScene = ({ onBottleClick, visible, dark, bg, waveRgb, already
     grounded: false,
   });
   const startTimeRef = useRef(alreadyOpened ? 1 : 0);
+  const onBottleClickRef = useRef(onBottleClick);
+  useEffect(() => { onBottleClickRef.current = onBottleClick; }, [onBottleClick]);
+  const autoClickTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const hasScheduledAutoClickRef = useRef(alreadyOpened ?? false);
+
+  useEffect(() => {
+    return () => { if (autoClickTimerRef.current) clearTimeout(autoClickTimerRef.current); };
+  }, []);
 
   const draw = useCallback(() => {
     const cvs = canvasRef.current;
@@ -278,6 +286,12 @@ export const BottleScene = ({ onBottleClick, visible, dark, bg, waveRgb, already
         bottle.grounded = true;
         bottle.vx = 0;
         bottle.vz = 0;
+        if (!hasScheduledAutoClickRef.current) {
+          hasScheduledAutoClickRef.current = true;
+          autoClickTimerRef.current = setTimeout(() => {
+            onBottleClickRef.current?.();
+          }, 3000);
+        }
       }
     } else if (bottle.grounded) {
       // Resting on sand — very gentle rock from nearby waves
@@ -435,26 +449,6 @@ export const BottleScene = ({ onBottleClick, visible, dark, bg, waveRgb, already
       ctx.stroke();
     }
 
-    // "Dear User" text
-    const textAlong = 0.25 * bottleLen;
-    const [twx, twy, twz] = bottlePoint(textAlong, 0, scrollR * 0.2);
-    const tp = project(twx, twy, twz);
-    if (tp) {
-      const scale = fov / twz;
-      const fs = Math.max(11, Math.min(26, scale * 0.9));
-      ctx.save();
-      ctx.translate(tp[0], tp[1]);
-      ctx.rotate(bottle.heading * 0.3 + bottle.pitch * 0.2);
-      ctx.font = `italic 600 ${fs}px Georgia, "Times New Roman", serif`;
-      ctx.fillStyle = "rgba(90,70,40,0.6)";
-      ctx.textAlign = "center";
-      ctx.fillText("Dear User,", 0, 0);
-      ctx.font = `italic ${fs * 0.6}px Georgia, "Times New Roman", serif`;
-      ctx.fillStyle = "rgba(90,70,40,0.4)";
-      ctx.fillText("a message awaits you...", 0, fs * 1.3);
-      ctx.restore();
-    }
-
     // Bottle shadow
     ctx.beginPath();
     let shStarted = false;
@@ -527,6 +521,7 @@ export const BottleScene = ({ onBottleClick, visible, dark, bg, waveRgb, already
     const onClick = () => {
       if (clickedRef.current) return;
       clickedRef.current = true;
+      if (autoClickTimerRef.current) { clearTimeout(autoClickTimerRef.current); autoClickTimerRef.current = null; }
       setHoveringBottle(false);
       cvs.style.cursor = "default";
       onBottleClick?.();

@@ -37,6 +37,7 @@
 - Fades in when `isCompact` is true (standard pages) **or** when `bgTriggerPassed` is true (products page).
 - Hidden while the hamburger dropdown is open (overridden by a full-width white background on the nav bar itself).
 - `[data-navbar-bg-trigger]` is a zero-height div placed in the page between the hero and the first content section on the products page. When it scrolls past the top of the viewport, `bgTriggerPassed` → `true`.
+- **Technology page exception:** while the Gen Layers band overlaps the navbar Y position, `TechnologyPage.tsx` toggles `body.gen-layers-active`. A scoped `:global` rule in `components/technology/technology.module.css` applies a top-down mask (`linear-gradient(to bottom, black 0%, black 30%, transparent 100%)`) plus `border-bottom: none` to the frosted-bg div (the first child of `nav.header-font`). The navbar's existing `backdrop-filter: blur(20px) saturate(1.2)` is therefore strongest at the top of the navbar and fades to nothing at the bottom — a soft "blur gradient" instead of a hard frosted bar. Text/icon colors continue to be controlled by the standard `theme="dark"` prop; only the bg layer's mask is overridden. The class is removed on page unmount so other routes are unaffected.
 
 ---
 
@@ -46,7 +47,9 @@
 - **Standard pages:** appear once the hero CTA element (`#hero-cta`) scrolls out of the viewport (observed via `IntersectionObserver`).
 - **Products page:** appear once `bgTriggerPassed` is true AND the hero scroll transition is not active (`!inHeroTransition || bgTriggerPassed`).
 - Animate in via `clip-path: inset(0 0% 0 0)` → `inset(0 100% 0 0)` + opacity fade (400ms spring).
-- Links shown: **Product** (`/enterprise`), **Use Cases** (`/use-cases`), **Technology** (`/technology`).
+- Links shown: **Products** (`/products/business`), **Research** (`/technology`), **Use Cases** (`/columbus-solutions` — opens a hover dropdown with two cards: Columbus Pro Business Use-Cases → `/columbus-solutions`, Research Applications → `/research-applications`), **Company** (`/company`).
+- The Use Cases link mirrors the Products dropdown pattern (chevron only — no hover/active underline) but renders a different overlay: an empty bordered card for Columbus Pro Business Use-Cases and a bordered card containing an inline globe SVG for Research Applications. Plain text labels sit below each card — no subtitles. The overlay is positioned absolutely over the products card grid and crossfades when `hoverKind === "use-cases"`.
+- **Underline behaviour:** the hover/active underline (animated `width 0 → 100%` line below the label) renders only on **Research** and **Company**. Products and Use Cases intentionally have no underline — they rely on the chevron flip alone to indicate their dropdown state.
 - On the products page, link text uses `glassStyles.glassTextStatic` for the frosted glass look.
 
 ---
@@ -72,11 +75,13 @@
 - Sits to the right of the logo image inside the left-side `<Link href="/">`.
 - **Hidden** (opacity 0) on mobile (`< 900px`) on all pages **except**:
   - `/` (homepage)
-  - `/mission`
+  - `/company`
   - `/contact` (contact us)
 - On desktop, hidden while the CTA is visible (nav links phase) so the wordmark and CTA don't compete for space.
 - On the products page, uses `glassStyles.glassTextStatic` for the frosted glass text effect.
 - Font size transitions: 24px (tall) → 20px (compact).
+
+> A separate logo-hover wordmark slide-out animation lives on blog article pages, but it's implemented inside [components/blog/BlogArticleStickyNav.tsx](../components/blog/BlogArticleStickyNav.tsx), not the Navbar — those pages don't render the Navbar at all.
 
 ---
 
@@ -96,9 +101,45 @@
 - `isManuallyToggled` flag prevents hover from conflicting with click-to-close.
 - Closes when the mouse moves below the navbar bottom edge.
 - Backdrop: `backdrop-blur-md bg-black/10` overlay covers the page behind the dropdown.
-- Background:
-  - Light theme: `rgba(248, 249, 252, 0.92)` with `blur(20px)`
-  - Dark theme: `rgba(6, 8, 20, 0.96)` with `blur(24px)`
+- Background: matches the navbar — `background: transparent` with `backdrop-filter: blur(20px) saturate(1.2)`. The dropdown reads as a visual continuation of the navbar above it; whatever colour the page is showing underneath shows through both surfaces.
+
+### Mobile vs Desktop height treatment
+
+**Mobile and desktop receive completely different treatments — always confirm before changing dropdown height.**
+
+| | Desktop (≥ 900px) | Mobile (< 900px) |
+|-|-------------------|------------------|
+| Max height | Content-driven (padding + content) | `100dvh` (always full screen) |
+| Top padding | `isCompact ? 84 : 96` (px) — inline style, navbar height + 28px visual gap | `isCompact ? 72 : 88` (px) — more breathing room |
+| Bottom padding | `0px` padding + `-24px` margin-bottom (default / products hover) or `-(24 + (cards.bottom - image.bottom))` (company hover) — inline style on the inner content wrapper. Halved from the prior `-10` to reduce visible bottom whitespace by 50% across all hover states. Company hover adds extra clip so the image-bottom-to-dropdown-bottom gap matches the default cards-bottom-to-dropdown-bottom gap (`companyAlign.extraMb = lc.bottom - im.bottom`). | `8px` (from `pb-2`, applies below 768px) |
+| Left-column footer alignment | `<dl>` (CONTACT/SOCIAL block) — `marginBottom: 14` (halved from 28) keeps the dl close to the column's bottom while preserving alignment with the right column's title row. Company-hover overrides this with `companyAlign.dlMb`. | `mt-7` — sits naturally below the description |
+
+If you are unsure whether a height/padding change affects mobile or desktop, **ask before making the change.**
+
+### Company-hover layout overrides (desktop only)
+
+When `hoverKind === "company"`, the right-column layout switches from "image left, ul right (flexed, 40px gap)" to a measured layout that pulls the image to the dropdown's left content edge and aligns the ul with the Company nav link. Driven by the `companyAlign` state, computed in the same `useEffect` as `productsAlign`.
+
+| Element | Default (no hover / products hover) | Company hover |
+|--------|-------------------------------------|---------------|
+| **Image** (CEHQ.png) | Sits at `productsCol.content.left` (Products link x) via flex flow, `marginLeft: 0` | `marginLeft: ulLeft - 24 - 350` — image's right edge sits 24px before the ul's left edge, so it's slightly padded from the Mission/Vision/Blog buttons. (350 = image max-w; 24 = gap to ul.) |
+| **Mission/Vision/Blog ul** | In flex flow after image with `gap-10` (40px) | `position: absolute`, `left: companyAlign.ulLeft` — the ul's left edge aligns with the Company nav link's **text** (`companyLink.box.left + 12px` for the link's `px-3` padding). |
+| **CONTACT/SOCIAL dl** (left col) | `marginBottom: 28px` (lifted 28px above leftCol bottom) | `marginBottom: companyAlign.dlMb` — dynamically computed as `leftCol.bottom - image.bottom`, so the dl's bottom edge aligns with the image's bottom edge. |
+
+`companyAlign` is recomputed on `[isMenuOpen, isCompact, isWideScreen]` and on window resize.
+
+**Both image bottom and grid row bottom are calculated, not measured.** Two layout invariants force this:
+
+1. The overlay containing the image has a `translateY(6px → 0)` entrance animation. A `getBoundingClientRect()` on the image while `hoverKind !== "company"` returns a position 6px low.
+2. ProductsCol's padding is `0` during products-hover and `padLeft + padRight` during company-hover. That padding controls the products cards' content width; cards are `aspect-[16/10]` so their rendered height (and therefore `productsCol.height` and `leftCol.bottom`) depends on hoverKind. At narrow viewports the cards visibly shrink under company-hover padding. Measuring during products-hover captures the taller layout, bakes that into `extraMb`, and clips the company image when the user transitions Products → Company.
+
+So we calculate both:
+- `imBottomAtRest = productsCol.top + 219` (image height = `350 × 10/16`)
+- `expectedLcBottom = productsCol.top + EYEBROW_BLOCK + cardImageHeight + CARDS_TEXT_BLOCK`, where `cardImageHeight` is derived from the cards grid width that *will apply* in company hover (`min(productsCol.outer − padLeft − padRight, 760)`)
+
+The constants — `CARDS_GAP=24`, `CARDS_MAX_WIDTH=760`, `CARDS_TEXT_BLOCK=72.5`, `EYEBROW_BLOCK=35.5` — are pinned to the cards/eyebrow CSS classes; if those change, the constants must move with them.
+
+**extraMb formula:** `extraMb = max(0, expectedLcBottom − imBottomAtRest − 20)`. The `−20` corrects for the base `−10` already in the inner-wrapper `marginBottom` formula and the desired `+10` gap below the image, so the final `marginBottom = −10 − extraMb` positions the visible dropdown bottom exactly 10px below the image — matching the 10px gap in the default state.
 
 ---
 
@@ -141,23 +182,26 @@ The navbar adapts its behaviour per page via props, pathname checks, and DOM mar
 |------|-------|-------|--------------------|-------------------|-------------------|
 | `/` (homepage) | `<Navbar />` | light | **Visible** | Hero CTA (`#hero-cta`) scrolls out of viewport | Standard behaviour — frosted glass appears on compact scroll |
 | `/products` | `<Navbar wide />` | light (glass) | **Hidden** | `[data-navbar-bg-trigger]` passes viewport top + hero transition complete | Glass CTA button, glass wordmark text, hero-transition tracking hides links/CTA mid-scroll, `hasScrolled` forced true after 1700ms entrance animation, hamburger always visible with 12px left margin from CTA |
-| `/mission` | `<Navbar theme="dark" />` | dark | **Visible** | Immediate (no hero CTA) | Dark frosted glass, inverted logo via `brightness(0) invert(1)` |
+| `/company` | `<Navbar theme="dark" />` | dark | **Visible** | Immediate (no hero CTA) | Dark frosted glass, inverted logo via `brightness(0) invert(1)` |
 | `/contact` | `<Navbar />` | light | **Visible** | Immediate (no hero CTA) | Standard behaviour |
-| `/enterprise` | `<Navbar theme="light" />` | light | **Hidden** | Immediate (no hero CTA) | Standard light navbar — hero background is `#E8EEF8` |
+| `/business` | `<Navbar theme="light" />` | light | **Hidden** | Immediate (no hero CTA) | Standard light navbar — hero background is `#E8EEF8` |
 | `/maps-gpt` | `<Navbar theme="dark" />` | dark | **Hidden** | Immediate (no hero CTA) | Dark frosted glass |
-| `/use-cases` | `<Navbar theme={navTheme} />` | dynamic | **Hidden** | Immediate (no hero CTA) | See **Use-Cases-Specific Behaviour** section below |
-| `/mission` | `<Navbar />` | light | **Hidden** | Immediate (no hero CTA) | Standard behaviour |
+| `/columbus-solutions` | `<Navbar theme={navTheme} />` | dynamic | **Hidden** | Immediate (no hero CTA) | See **Use-Cases-Specific Behaviour** section below |
+| `/research-applications` | `<Navbar theme={navTheme} />` | dynamic | **Hidden** | Immediate (no hero CTA) | See **Use-Cases-Specific Behaviour** section below |
+| `/company` | `<Navbar />` | light | **Hidden** | Immediate (no hero CTA) | Standard behaviour |
 | `/market-spy` | `<Navbar />` | light | **Hidden** | Immediate (no hero CTA) | Standard behaviour |
+| `/blog` (index) | `<Navbar />` | light | **Visible** | Immediate (no hero CTA) | Standard navbar — full nav links, Start Now CTA, and hamburger render normally. |
+| `/blog/<slug>` | **No `<Navbar />`** | n/a | n/a | n/a | **The article page does not render the Navbar at all.** The Columbus home link, "← All posts" back link, article section index, and the `<AccessibilityMenu />` all live inside the floating left-side dock ([components/blog/BlogArticleStickyNav.tsx](../components/blog/BlogArticleStickyNav.tsx)) which replaces the navbar entirely. The dock recedes at rest and expands on hover/focus-within. |
 
 ### Use-Cases-Specific Behaviour
 
-The `/use-cases` page has unique navbar requirements driven by its dark hero and dynamic section backgrounds. Controlled via `isUseCasesPage` (`pathname === "/use-cases"`).
+The `/columbus-solutions` and `/research-applications` pages share the same navbar requirements — both clone the original use-cases page layout (dark hero + dynamic section backgrounds). Controlled via `isUseCasesPage` (`pathname === "/products/business" || pathname === "/columbus-solutions" || pathname === "/research-applications"`).
 
 | Behaviour | Detail |
 |-----------|--------|
 | **Immediate visibility** | `hasScrolled` is forced `true` on mount (both `useLayoutEffect` and `useEffect`) — no hero entrance animation to wait for. |
 | **Transparent initial background** | No frosted glass at scroll 0. The standard `isCompact` logic handles this (glass appears after 10px scroll). |
-| **Dynamic theme** | Page passes `theme={navTheme}` which switches between `"dark"` (white text) and `"light"` (dark text) based on which section the navbar overlaps. Theme switching is handled in `app/use-cases/page.tsx` via scroll listener against section refs. |
+| **Dynamic theme** | Page passes `theme={navTheme}` which switches between `"dark"` (white text) and `"light"` (dark text) based on which section the navbar overlaps. **`/columbus-solutions`** is dark end-to-end below its dark hero, so its `navTheme` stays at `"dark"` for the lifetime of the page. **`/research-applications`** has a dark hero with a light page below it; `navTheme` stays `"dark"` while the hero is in view and flips to `"light"` once the hero's bottom passes the navbar. Both pages still wire the prop through state so they comply with the dynamic-theme contract. |
 | **Nav link colours follow theme** | Nav links use `isDark ? "white" : "#111111"` so they remain readable across dark/light section transitions. |
 | **CTA button transitions with theme** | Dark sections: 10% white background, white text, hover fills solid white with black text. Light sections: solid black background, white text, standard hover. Transitions smoothly between states via `background-color 300ms` and `color 300ms`. |
 | **Logo + wordmark in dark dropdown** | When menu opens on a dark section, logo stays inverted (white) and wordmark stays white — unlike other pages where `navColor` forces `#111111` on menu open. |
@@ -165,9 +209,11 @@ The `/use-cases` page has unique navbar requirements driven by its dark hero and
 
 ### Key per-page variables in code
 
+- **Blog article pages** do **not** render `<Navbar />` at all — see [components/blog/BlogArticleStickyNav.tsx](../components/blog/BlogArticleStickyNav.tsx) for the floating dock that replaces it.
+- **`logoHovered`** — Local navbar state. Set to `true` when the logo `<Link>` receives `mouseenter` while `isBlogArticle` is true; reset to `false` on `mouseleave`. Drives the wordmark wrapper's `max-width` and the inner span's `opacity` + `translateX`.
 - **`isProductsPage`** — `pathname === "/mapsgpt"`. Controls: glass CTA style, `bgTriggerPassed` bg logic, Start Now text colour (always black), hero-transition tracking.
 - **`isUseCasesPage`** — `pathname === "/use-cases"`. Controls: immediate navbar visibility, CTA light/dark variants, nav link theme-aware colouring, dark-aware dropdown (logo, wordmark, arrows stay white when menu opens on dark sections).
-- **`showWordmarkOnMobile`** — `pathname === "/" || "/mission" || "/contact"`. Controls: wordmark opacity on mobile.
+- **`showWordmarkOnMobile`** — `pathname === "/" || "/company" || "/contact"`. Controls: wordmark opacity on mobile.
 - **`wide`** — Prop. Controls: glass text effects (`glassTextStatic`), wider max-width (1408px vs 1287px), hero-outer scroll tracking, `[data-navbar-bg-trigger]` usage, hamburger always showing on desktop.
 
 ### DOM markers by page
@@ -215,7 +261,7 @@ Each route has a pool of 2–3 unique quotes that are randomly selected per navi
 
 When adding a new page to the site, decide:
 
-1. Should the **Columbus Earth wordmark** be visible on mobile? If yes, add the pathname to the allowlist in `Navbar.tsx` (currently: `/`, `/mission`, `/contact`).
+1. Should the **Columbus Earth wordmark** be visible on mobile? If yes, add the pathname to the allowlist in `Navbar.tsx` (currently: `/`, `/company`, `/contact`).
 2. Does the page have a **hero CTA** (`id="hero-cta"`)? If yes, nav links will auto-appear once it scrolls out — no extra work needed.
 3. Does the page need the **products glass navbar** (`wide` mode)? Only `/products` uses this. Do not apply `wide` to other pages.
 4. Does the page need a **`[data-navbar-bg-trigger]`** element? Only needed on pages using `wide` mode.

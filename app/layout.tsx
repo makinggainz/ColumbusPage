@@ -1,11 +1,9 @@
 import type { Metadata } from "next";
 import "./globals.css";
 
-import { cormorant, cambo } from "@/app/fonts";
-import { inter } from "@/lib/typography";
 import { LenisProvider } from "@/components/home/LenisContext";
-
-export { cormorant, cambo };
+import { ScrollRestorer } from "@/components/layout/ScrollRestorer";
+import { RootShell } from "@/components/layout/RootShell";
 
 export const metadata: Metadata = {
   title: "Columbus",
@@ -24,11 +22,29 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+        {/* Google Fonts — Funnel Display (titles, .h1 … .h7) and
+            Opening Hours Sans (body, paragraphs, UI). preconnect speeds
+            the second request; display=swap avoids FOIT. The font-family
+            names are wired up in globals.css via --font-display /
+            --font-sans. */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@300..800&family=Opening+Hours+Sans:wght@400..700&display=swap"
+        />
       </head>
 
-      {/* Keep global styles simple - match GFrontEndWork: no Navbar/Footer here, no font on body */}
-      <body className={`${inter.className} antialiased bg-white min-h-screen`}>
-        <LenisProvider>{children}</LenisProvider>
+      {/* Body background (white) is driven by globals.css (`html, body`);
+          no inline style here so the stylesheet rule stays in control. */}
+      <body className="antialiased min-h-screen">
+        <LenisProvider>
+          <ScrollRestorer />
+          {/* RootShell renders the standard PageFrame + reveal footer on
+              every route, but article pages (/blog/<slug>) opt out and
+              render full-bleed with no reveal footer. */}
+          <RootShell>{children}</RootShell>
+        </LenisProvider>
       </body>
     </html>
   );

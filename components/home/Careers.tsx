@@ -1,7 +1,25 @@
 "use client";
 
+/**
+ * Hiring Humans — centred section heading, hairline-divided intro
+ * (heading left / paragraph right at md+), and a centred form with
+ * bottom-border inputs. Mirrors the visual language used elsewhere
+ * on the homepage (BentoProducts, BlogSection, CtaBanner, Mission/
+ * TextScrollIntro): centred layout, hairline borders, no drop
+ * shadows, 7px-corner CTA.
+ *
+ * All copy preserved verbatim ("Hiring Humans.", "Our team is based
+ * in Washington DC and Madrid.", "Careers & investment queries",
+ * the paragraph copy, "We accept interns.", "Submit"). The form
+ * fields (Name / Message / Enter email) and the auto-resizing
+ * textarea are preserved. The "Humans." word still carries the
+ * easter-egg trigger (hover-with-5s-delay + click) that spawns the
+ * walking stick-figure canvas, and clicking a figure still opens
+ * the paper-note overlay with the original notes from Alex /
+ * Erick / David.
+ */
+
 import { useRef, useEffect, useState, useCallback } from "react";
-import { Container } from "@/components/layout/Container";
 
 // ─── Walking figure types ────────────────────────────────────────────────────
 
@@ -18,8 +36,8 @@ interface Figure {
   jumpPhase: number;
   noteLabel: string;
   clickable: boolean;
-  fallX: number;       // x position where fall is triggered
-  stateTimer: number;  // frames spent in current state
+  fallX: number;
+  stateTimer: number;
 }
 
 // ─── Draw a mesh-wireframe stick figure ──────────────────────────────────────
@@ -76,8 +94,8 @@ function drawFigure(
   const rHy = rEy + Math.cos(-armSwing * 0.5) * lArm;
 
   const baseA = hovered ? 0.75 : 0.55;
-  const col  = `rgba(20,60,160,${(alpha * baseA).toFixed(3)})`;
-  const dcol = `rgba(20,60,160,${(alpha * (baseA - 0.1)).toFixed(3)})`;
+  const col  = `rgba(21,74,204,${(alpha * baseA).toFixed(3)})`;
+  const dcol = `rgba(21,74,204,${(alpha * (baseA - 0.1)).toFixed(3)})`;
   ctx.strokeStyle = col;
   ctx.lineWidth   = (hovered ? 1.3 : 0.9) * s;
   ctx.fillStyle   = dcol;
@@ -122,6 +140,211 @@ function hitTest(fig: Figure, mx: number, my: number, groundY: number): boolean 
   return Math.sqrt(dx * dx + dy * dy) < 28 * fig.scale;
 }
 
+// ─── Dot-arrow icon (matches every other CTA on the page) ────────────────────
+
+function ArrowDots({ className = "" }: { className?: string }) {
+  return (
+    <svg
+      className={"size-3 shrink-0 " + className}
+      width="24"
+      viewBox="0 0 9 13"
+      fill="none"
+      aria-hidden="true"
+    >
+      <circle cx="7.22" cy="6.589" r="1.28" fill="currentColor" />
+      <circle cx="4.658" cy="4.018" r="1.28" fill="currentColor" />
+      <circle cx="2.099" cy="1.46" r="1.28" fill="currentColor" />
+      <circle cx="4.658" cy="9.151" r="1.28" fill="currentColor" />
+      <circle cx="2.099" cy="11.718" r="1.28" fill="currentColor" />
+    </svg>
+  );
+}
+
+// ─── Team-locations map ──────────────────────────────────────────────────────
+//
+// Hand-drawn world map asset with DC + Madrid pinned in brand blue
+// (/public/hiring-humans/world-map-countries.png). Rendered as a real <img> so the
+// pencil-sketch detail (ships, compass rose, coastlines) reads cleanly
+// at any width. Sized via CSS — width: 100%, height auto — to scale
+// responsively inside the .careers-map wrapper.
+
+const CSS = `
+.careers-bounds {
+  max-width: 1287px;
+  margin-left: 20px;
+  margin-right: 20px;
+  box-sizing: border-box;
+}
+@media (min-width: 768px) {
+  .careers-bounds { margin-left: auto; margin-right: auto; }
+}
+
+/* ── Header ─────────────────────────────────────────────────────────────
+   Centered heading + subtitle, mirroring the section-heading pattern
+   used elsewhere on the page. */
+.careers-header {
+  text-align: center;
+  padding-bottom: 40px;
+}
+.careers-title {
+  letter-spacing: -0.025em;
+  margin: 0;
+}
+.careers-trigger {
+  color: #0081AC;
+  cursor: default;
+}
+.careers-sub {
+  margin: 16px auto 0;
+  max-width: 36rem;
+  color: var(--color-muted);
+}
+
+/* ── Team-locations map (DC + Madrid pinned in brand blue) ──────────── */
+.careers-map {
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 8px 0;
+}
+.careers-map-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  /* 7px corners — design-system shape token used by every inner visual
+     (BentoProducts visuals, blog/feature cards). The outer frame
+     radius belongs to the PageFrame card itself, not to in-card
+     imagery. */
+  border-radius: 7px;
+}
+
+/* ── Join CTA (centered black pill, same arrow-dots glyph as the
+        rest of the site) ─────────────────────────────────────────────── */
+.careers-join-row {
+  display: flex;
+  justify-content: center;
+  margin-top: 40px;
+}
+.careers-join {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 28px;
+  background: var(--color-cta);
+  color: #FFFFFF;
+  border-radius: var(--radius-button-md);
+  font-size: var(--typography--p-m);
+  line-height: 1;
+  font-weight: 500;
+  border: 0;
+  cursor: pointer;
+  transition: color 150ms ease;
+}
+.careers-join:hover { color: #0081AC; }
+
+/* ── Reveal form panel ────────────────────────────────────────────────
+   Hidden by default; clicking "Join our team" toggles it open. Keeps
+   the original Name / Message / Email form + Submit + "We accept
+   interns." aside available on the page. */
+.careers-form-panel {
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  transition: max-height 320ms ease, opacity 320ms ease, margin-top 320ms ease;
+  margin-top: 0;
+}
+.careers-form-panel[data-open="true"] {
+  /* Large ceiling rather than an exact height so the reveal never
+     clips if the form grows (extra fields, validation messages, etc.).
+     The cap is needed because CSS transitions can't animate max-height
+     when the value is "auto". */
+  max-height: 1600px;
+  opacity: 1;
+  margin-top: 56px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .careers-form-panel { transition: none; }
+}
+
+.careers-form-wrap {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* Form-panel intro typography. Heading + lede live above the inputs;
+   the form-grid spacing sits below them via .careers-form-fields. */
+.careers-form-intro-title {
+  margin: 0 0 8px;
+}
+.careers-form-intro-copy {
+  margin: 0;
+  color: var(--color-muted);
+}
+.careers-form-intro-emph {
+  color: var(--color-ink);
+  font-weight: 500;
+}
+.careers-form-fields {
+  margin-top: 24px;
+  display: flex;
+  flex-direction: column;
+}
+
+.careers-field {
+  display: block;
+  padding: 18px 0;
+  border-bottom: 1px solid var(--color-gridline);
+  transition: border-color 200ms ease;
+}
+.careers-field:focus-within {
+  border-bottom-color: #0081AC;
+}
+.careers-field input,
+.careers-field textarea {
+  width: 100%;
+  background: transparent;
+  border: 0;
+  outline: 0;
+  resize: none;
+  display: block;
+  overflow: hidden;
+  color: var(--color-ink);
+  font-size: var(--typography--p-l);
+  line-height: var(--typography--p-l--line-height);
+}
+.careers-field input::placeholder,
+.careers-field textarea::placeholder {
+  color: rgba(29, 29, 31, 0.45);
+}
+
+.careers-aside {
+  margin-top: 12px;
+  text-align: right;
+  color: var(--color-muted);
+}
+
+.careers-submit-row {
+  margin-top: 32px;
+  display: flex;
+  justify-content: flex-end;
+}
+.careers-submit {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--color-cta);
+  color: #ffffff;
+  border-radius: var(--radius-button-md);
+  padding: 14px 28px;
+  font-size: var(--typography--p-m);
+  line-height: 1;
+  font-weight: 500;
+  transition: color 150ms ease;
+  border: 0;
+  cursor: pointer;
+}
+.careers-submit:hover { color: #0081AC; }
+`;
+
 // ─── Component ───────────────────────────────────────────────────────────────
 
 const CANVAS_H = 180;
@@ -136,6 +359,7 @@ export const Careers = ({ hideHeader, className = "" }: { hideHeader?: boolean; 
   const hoverTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [active, setActive] = useState(false);
   const [note, setNote]     = useState<string | null>(null);
+  const [formOpen, setFormOpen] = useState(false);
 
   const handleTextareaInput = () => {
     const el = textareaRef.current;
@@ -144,7 +368,8 @@ export const Careers = ({ hideHeader, className = "" }: { hideHeader?: boolean; 
     el.style.height = `${el.scrollHeight}px`;
   };
 
-  // Spawn exactly 3 figures — tallest always gets "note from alex"
+  // Spawn exactly 3 clickable figures + 1 non-clickable — tallest always
+  // gets "note from alex".
   const spawnFigures = useCallback(() => {
     if (figuresRef.current.some(f => f.state === "walking" || f.state === "paused")) return;
 
@@ -169,7 +394,6 @@ export const Careers = ({ hideHeader, className = "" }: { hideHeader?: boolean; 
       stateTimer: 0,
     }));
 
-    // 4th figure: the clumsy one — slower, not clickable
     figs.push({
       id: 3,
       x: -50 - 3 * 70,
@@ -192,13 +416,11 @@ export const Careers = ({ hideHeader, className = "" }: { hideHeader?: boolean; 
     setActive(true);
   }, []);
 
-  // Canvas mouse events
   const cachedRectRef = useRef<DOMRect | null>(null);
   const getCachedRect = useCallback(() => {
     if (!cachedRectRef.current && canvasRef.current) cachedRectRef.current = canvasRef.current.getBoundingClientRect();
     return cachedRectRef.current;
   }, []);
-  // Invalidate cached rect on resize
   useEffect(() => {
     const invalidate = () => { cachedRectRef.current = null; };
     window.addEventListener("resize", invalidate);
@@ -220,7 +442,7 @@ export const Careers = ({ hideHeader, className = "" }: { hideHeader?: boolean; 
     }
     hoveredIdRef.current = found;
     e.currentTarget.style.cursor = found !== null ? "pointer" : "default";
-  }, []);
+  }, [getCachedRect]);
 
   const handleCanvasClick = useCallback((e: React.MouseEvent<HTMLCanvasElement>) => {
     const rect = getCachedRect();
@@ -233,7 +455,6 @@ export const Careers = ({ hideHeader, className = "" }: { hideHeader?: boolean; 
       if (!fig.clickable) continue;
       if (fig.state !== "walking" && fig.state !== "paused") continue;
       if (hitTest(fig, mx, my, groundY)) {
-        // Pause ALL clickable walking figures
         for (const f of figuresRef.current) {
           if (f.state === "walking") f.state = "paused";
         }
@@ -241,9 +462,8 @@ export const Careers = ({ hideHeader, className = "" }: { hideHeader?: boolean; 
         return;
       }
     }
-  }, []);
+  }, [getCachedRect]);
 
-  // Dismiss note → resume all
   const dismissNote = useCallback(() => {
     for (const f of figuresRef.current) {
       if (f.state === "paused") f.state = "walking";
@@ -251,7 +471,6 @@ export const Careers = ({ hideHeader, className = "" }: { hideHeader?: boolean; 
     setNote(null);
   }, []);
 
-  // Animation loop
   useEffect(() => {
     if (!active) return;
     const canvas = canvasRef.current;
@@ -289,7 +508,6 @@ export const Careers = ({ hideHeader, className = "" }: { hideHeader?: boolean; 
           fig.opacity = Math.min(1, fig.opacity + 0.025);
           fig.x += fig.speed;
 
-          // Clumsy figure: trip and fall at ~25% of screen
           if (!fig.clickable && fig.fallX === 0 && fig.x > vw * 0.25) {
             fig.state = "falling";
             fig.fallX = fig.x;
@@ -321,13 +539,10 @@ export const Careers = ({ hideHeader, className = "" }: { hideHeader?: boolean; 
           drawFigure(ctx, fig.x, groundY + fig.y, airPhase, fig.scale, fig.opacity, spin, fig.x, groundY + fig.y, false);
 
         } else if (fig.state === "falling") {
-          // Topple forward over ~40 frames
           fig.stateTimer++;
           const fallDuration = 40;
           const t = Math.min(1, fig.stateTimer / fallDuration);
-          // Ease-out rotation: 0 → π/2 (face-plant)
           const rotation = t * t * (Math.PI / 2);
-          // Slide forward slightly while falling
           fig.x += fig.speed * (1 - t) * 0.5;
 
           drawFigure(ctx, fig.x, groundY, fig.fallX * 0.09 + fig.phaseOff, fig.scale, fig.opacity, rotation, fig.x, groundY, false);
@@ -338,17 +553,15 @@ export const Careers = ({ hideHeader, className = "" }: { hideHeader?: boolean; 
           }
 
         } else if (fig.state === "getting-up") {
-          // Lie on ground briefly, then rotate back up over ~50 frames
           fig.stateTimer++;
-          const pauseFrames = 30;  // lie there a moment
+          const pauseFrames = 30;
           const getUpFrames = 45;
 
           let rotation: number;
           if (fig.stateTimer < pauseFrames) {
-            rotation = Math.PI / 2; // still on the ground
+            rotation = Math.PI / 2;
           } else {
             const t = Math.min(1, (fig.stateTimer - pauseFrames) / getUpFrames);
-            // Ease-in: slowly at first, then quickly stand up
             rotation = (Math.PI / 2) * (1 - t * t);
           }
 
@@ -360,16 +573,13 @@ export const Careers = ({ hideHeader, className = "" }: { hideHeader?: boolean; 
           }
 
         } else if (fig.state === "running-back") {
-          // Run backwards (to the left) at faster speed, fading out
           fig.stateTimer++;
           const runSpeed = fig.speed * 2.5;
           fig.x -= runSpeed;
           fig.opacity = Math.max(0, fig.opacity - 0.012);
 
-          // Walking animation but mirrored (negative phase progression)
           const phase = -fig.x * 0.12 + fig.phaseOff;
 
-          // Draw flipped horizontally (facing left)
           ctx.save();
           ctx.translate(fig.x, 0);
           ctx.scale(-1, 1);
@@ -414,19 +624,15 @@ export const Careers = ({ hideHeader, className = "" }: { hideHeader?: boolean; 
   }, [active]);
 
   return (
-    <section className={`py-[115px] md:py-[147px] lg:py-[179px] ${className}`} style={{ backgroundColor: "#F9F9F9" }}>
-      <Container>
-
-        {/* TOP CENTER */}
+    <section className={`section ${className}`}>
+      <style>{CSS}</style>
+      <div className="careers-bounds">
         {!hideHeader && (
-          <div className="text-center mb-36 md:mb-44">
-            <h2
-              className="font-medium tracking-[-0.02em] leading-[1.12] mb-5 text-[25px] md:text-[31px] lg:text-[39px]"
-              style={{ color: "#1D1D1F" }}
-            >
+          <div className="careers-header">
+            <h2 className="h2 tracking-tight text-ink careers-title">
               Hiring{" "}
               <span
-                style={{ color: "#0066CC", cursor: "default" }}
+                className="careers-trigger"
                 onMouseEnter={() => {
                   if (hoverTimerRef.current) clearTimeout(hoverTimerRef.current);
                   hoverTimerRef.current = setTimeout(spawnFigures, 5000);
@@ -439,97 +645,82 @@ export const Careers = ({ hideHeader, className = "" }: { hideHeader?: boolean; 
                 Humans.
               </span>
             </h2>
-            <p className="text-[16px] md:text-[20px]" style={{ color: "rgba(29,29,31,0.45)", letterSpacing: "-0.015em", fontWeight: 400 }}>
+            <p className="p-l careers-sub">
               Our team is based in Washington DC and Madrid.
             </p>
-            <div className="flex justify-center pt-16 pb-20 md:pt-20 md:pb-24">
-              <WorldMapDots />
-            </div>
           </div>
         )}
 
-        {/* TITLE + DESCRIPTION */}
-        {!hideHeader && (
-          <div className="max-w-[1287px] mx-5 md:mx-auto">
-            <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-start mb-6 md:mb-8">
-              <h3
-                className="font-medium tracking-[-0.02em] leading-[1.12] text-[25px] md:text-[31px] lg:text-[39px] text-center md:text-left"
-                style={{ color: "#1D1D1F" }}
-              >
-                Careers &amp; investment queries
-              </h3>
-
-              <p className="text-center md:text-right text-[16px] md:text-[20px]" style={{ color: "rgba(29,29,31,0.45)", letterSpacing: "-0.015em", fontWeight: 400 }}>
-                If you&apos;re excited about creating paradigm<br />
-                shifts in physical world understanding.{" "}
-                <span style={{ fontWeight: 600, color: "rgba(29,29,31,0.8)" }}>Join us now.</span>
-              </p>
-            </div>
-          </div>
-        )}
-
-        {/* DIVIDER — straight line */}
-        {!hideHeader && (
-          <div className="max-w-[1287px] mx-5 md:mx-auto mb-16 md:mb-20">
-            <div style={{ height: 1, background: "rgba(29,29,31,0.18)" }} />
-          </div>
-        )}
-
-        {/* FORM */}
-        <div className="max-w-[675px] mx-5 md:mx-auto">
-          <form className="flex flex-col gap-2">
-            {[
-              { type: "text", placeholder: "Name", tag: "input" },
-              { type: "text", placeholder: "Message", tag: "textarea" },
-              { type: "email", placeholder: "Enter email", tag: "input" },
-            ].map(({ type, placeholder, tag }) => (
-              <label
-                key={placeholder}
-                className="block cursor-text border-b border-[rgba(29,29,31,0.18)] focus-within:border-[#0066CC] transition-colors duration-300"
-                style={{ paddingTop: 20, paddingBottom: 20 }}
-              >
-                {tag === "textarea" ? (
-                  <textarea
-                    ref={textareaRef}
-                    placeholder={placeholder}
-                    rows={1}
-                    onInput={handleTextareaInput}
-                    className="w-full bg-transparent outline-none resize-none block placeholder-[rgba(29,29,31,0.35)] overflow-hidden"
-                    style={{ fontSize: 16, color: "#1D1D1F", lineHeight: 1.6 }}
-                  />
-                ) : (
-                  <input
-                    type={type}
-                    placeholder={placeholder}
-                    className="w-full bg-transparent outline-none block placeholder-[rgba(29,29,31,0.35)]"
-                    style={{ fontSize: 16, color: "#1D1D1F", lineHeight: 1.6 }}
-                  />
-                )}
-              </label>
-            ))}
-          </form>
-
-          <p className="mt-3 text-right" style={{ fontSize: 13, color: "rgba(29,29,31,0.4)", letterSpacing: "-0.01em" }}>
-            We accept interns.
-          </p>
-
-          <div className="mt-10">
-            <button
-              type="submit"
-              className="group px-10 flex items-center justify-between hover:opacity-90 transition-opacity cursor-pointer"
-              style={{ height: 56, backgroundColor: "#000000", width: "100%" }}
-            >
-              <span className="text-white text-[18px] lg:text-[20px] font-medium transition-colors duration-300 group-hover:text-[#0066CC]">Submit</span>
-              <svg width="10" height="18" viewBox="0 0 7 12" fill="none" stroke="#0066CC" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M1 1l5 5-5 5" />
-              </svg>
-            </button>
-          </div>
+        <div className="careers-map">
+          <img
+            src="/hiring-humans/world-map-countries.png"
+            alt="Team locations: Washington DC and Madrid"
+            className="careers-map-img"
+          />
         </div>
 
-      </Container>
+        <div className="careers-join-row">
+          <button
+            type="button"
+            className="careers-join group"
+            aria-expanded={formOpen}
+            aria-controls="careers-form-panel"
+            onClick={() => setFormOpen((v) => !v)}
+          >
+            Join our team
+            <span className="inline-block transition-transform group-hover:translate-x-0.5">
+              <ArrowDots className="text-[#0081AC]" />
+            </span>
+          </button>
+        </div>
 
-      {/* Fixed viewport-bottom canvas for walking figures */}
+        <div
+          id="careers-form-panel"
+          className="careers-form-panel"
+          data-open={formOpen ? "true" : "false"}
+          aria-hidden={!formOpen}
+        >
+          <div className="careers-form-wrap">
+            <h3 className="h3 tracking-tight text-ink careers-form-intro-title">
+              Careers &amp; investment queries
+            </h3>
+            <p className="p-m careers-form-intro-copy">
+              If you&apos;re excited about creating paradigm shifts in physical world understanding.{" "}
+              <span className="careers-form-intro-emph">Join us now.</span>
+            </p>
+
+            <form className="careers-form-fields">
+              <label className="careers-field">
+                <input type="text" placeholder="Name" />
+              </label>
+              <label className="careers-field">
+                <textarea
+                  ref={textareaRef}
+                  placeholder="Message"
+                  rows={1}
+                  onInput={handleTextareaInput}
+                />
+              </label>
+              <label className="careers-field">
+                <input type="email" placeholder="Enter email" />
+              </label>
+            </form>
+
+            <p className="p-s careers-aside">We accept interns.</p>
+
+            <div className="careers-submit-row">
+              <button type="submit" className="careers-submit group">
+                Submit
+                <span className="ml-1 inline-block transition-transform group-hover:translate-x-0.5">
+                  <ArrowDots className="text-[#0081AC]" />
+                </span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Easter-egg canvas — fixed at the viewport bottom while figures are alive. */}
       {active && (
         <canvas
           ref={canvasRef}
@@ -544,10 +735,10 @@ export const Careers = ({ hideHeader, className = "" }: { hideHeader?: boolean; 
         />
       )}
 
-      {/* Fullscreen note overlay (same style as footer bottle note) */}
+      {/* Fullscreen team-member note overlay (paper-note styling, preserved). */}
       {note && (
         <div
-          className="fixed inset-0 z-[10000] flex items-center justify-center"
+          className="fixed inset-0 z-10000 flex items-center justify-center"
           onClick={dismissNote}
         >
           <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" />
@@ -564,62 +755,62 @@ export const Careers = ({ hideHeader, className = "" }: { hideHeader?: boolean; 
           >
             {note === "note from alex" && (
               <>
-                <p className="text-[15px] text-[#8a7a5a] italic mb-5" style={{ fontFamily: "Georgia, serif" }}>
+                <p className="p-l text-[#8a7a5a] italic mb-5" style={{ fontFamily: "Georgia, serif" }}>
                   A note from Alexander - COO
                 </p>
-                <p className="text-[17px] text-[#3a3020] leading-relaxed mb-6" style={{ fontFamily: "Georgia, serif" }}>
+                <p className="p-l text-[#3a3020] leading-relaxed mb-6" style={{ fontFamily: "Georgia, serif" }}>
                   Hey I&apos;m Alexander R.B., co-founder. You found one of my easter eggs. If you would like to reach out to me personally you can find me on my Instagram at{" "}
-                  <a href="https://instagram.com/alexrb.1" target="_blank" rel="noopener noreferrer" className="underline hover:text-[#0066CC] transition-colors">alexrb.1</a>
+                  <a href="https://instagram.com/alexrb.1" target="_blank" rel="noopener noreferrer" className="underline hover:text-[#0081AC] transition-colors">alexrb.1</a>
                   {" "}or my LinkedIn at:{" "}
-                  <a href="https://www.linkedin.com/in/alexander-ramirez-blonski-a96121150" target="_blank" rel="noopener noreferrer" className="underline hover:text-[#0066CC] transition-colors">Alexander Ramirez Blonski</a>
+                  <a href="https://www.linkedin.com/in/alexander-ramirez-blonski-a96121150" target="_blank" rel="noopener noreferrer" className="underline hover:text-[#0081AC] transition-colors">Alexander Ramirez Blonski</a>
                 </p>
-                <p className="text-[17px] text-[#3a3020] leading-relaxed mb-8" style={{ fontFamily: "Georgia, serif" }}>
+                <p className="p-l text-[#3a3020] leading-relaxed mb-8" style={{ fontFamily: "Georgia, serif" }}>
                   Enjoy your day ;)
                 </p>
               </>
             )}
             {note === "note 1" && (
               <>
-                <p className="text-[15px] text-[#8a7a5a] italic mb-5" style={{ fontFamily: "Georgia, serif" }}>
+                <p className="p-l text-[#8a7a5a] italic mb-5" style={{ fontFamily: "Georgia, serif" }}>
                   A note from Erick - CTO
                 </p>
-                <p className="text-[17px] text-[#3a3020] leading-relaxed mb-4" style={{ fontFamily: "Georgia, serif" }}>
+                <p className="p-l text-[#3a3020] leading-relaxed mb-4" style={{ fontFamily: "Georgia, serif" }}>
                   Hey, I&apos;m Erick, Co-founder and CTO. My brain&apos;s responsible for all the innovative engineering behind the scenes!
                 </p>
-                <p className="text-[17px] text-[#3a3020] leading-relaxed mb-4" style={{ fontFamily: "Georgia, serif" }}>
+                <p className="p-l text-[#3a3020] leading-relaxed mb-4" style={{ fontFamily: "Georgia, serif" }}>
                   Check out my LinkedIn here:{" "}
-                  <a href="https://www.linkedin.com/in/erick-mollinedo-lara-889587224/" target="_blank" rel="noopener noreferrer" className="underline hover:text-[#0066CC] transition-colors">Erick Mollinedo Lara</a>
+                  <a href="https://www.linkedin.com/in/erick-mollinedo-lara-889587224/" target="_blank" rel="noopener noreferrer" className="underline hover:text-[#0081AC] transition-colors">Erick Mollinedo Lara</a>
                 </p>
-                <p className="text-[15px] text-[#8a7a5a] italic mb-8" style={{ fontFamily: "Georgia, serif" }}>
+                <p className="p-l text-[#8a7a5a] italic mb-8" style={{ fontFamily: "Georgia, serif" }}>
                   P.S. I did not write this, Alex did
                 </p>
               </>
             )}
             {note === "note 2" && (
               <>
-                <p className="text-[15px] text-[#8a7a5a] italic mb-5" style={{ fontFamily: "Georgia, serif" }}>
+                <p className="p-l text-[#8a7a5a] italic mb-5" style={{ fontFamily: "Georgia, serif" }}>
                   A note from David - CEO
                 </p>
-                <p className="text-[17px] text-[#3a3020] leading-relaxed mb-4" style={{ fontFamily: "Georgia, serif" }}>
+                <p className="p-l text-[#3a3020] leading-relaxed mb-4" style={{ fontFamily: "Georgia, serif" }}>
                   Hey, I&apos;m David, Co-founder and CEO.
                 </p>
-                <p className="text-[17px] text-[#3a3020] leading-relaxed mb-4" style={{ fontFamily: "Georgia, serif" }}>
+                <p className="p-l text-[#3a3020] leading-relaxed mb-4" style={{ fontFamily: "Georgia, serif" }}>
                   Check out my LinkedIn here:{" "}
-                  <a href="https://www.linkedin.com/in/davidramirezblonski/" target="_blank" rel="noopener noreferrer" className="underline hover:text-[#0066CC] transition-colors">David Ramirez Blonski</a>
+                  <a href="https://www.linkedin.com/in/davidramirezblonski/" target="_blank" rel="noopener noreferrer" className="underline hover:text-[#0081AC] transition-colors">David Ramirez Blonski</a>
                   , and my personal website here:{" "}
-                  <a href="https://www.gdsteel.co" target="_blank" rel="noopener noreferrer" className="underline hover:text-[#0066CC] transition-colors">gdsteel.co</a>
+                  <a href="https://www.gdsteel.co" target="_blank" rel="noopener noreferrer" className="underline hover:text-[#0081AC] transition-colors">gdsteel.co</a>
                 </p>
-                <p className="text-[17px] text-[#3a3020] leading-relaxed mb-4" style={{ fontFamily: "Georgia, serif" }}>
+                <p className="p-l text-[#3a3020] leading-relaxed mb-4" style={{ fontFamily: "Georgia, serif" }}>
                   Hope you have a beautiful day.
                 </p>
-                <p className="text-[15px] text-[#8a7a5a] italic mb-8" style={{ fontFamily: "Georgia, serif" }}>
+                <p className="p-l text-[#8a7a5a] italic mb-8" style={{ fontFamily: "Georgia, serif" }}>
                   P.S. I did not write this, Alex did
                 </p>
               </>
             )}
             <button
               onClick={dismissNote}
-              className="text-[13px] text-[#8a7a5a] hover:text-[#3a3020] transition-colors tracking-wide cursor-pointer"
+              className="p-s text-[#8a7a5a] hover:text-[#3a3020] transition-colors tracking-wide cursor-pointer"
             >
               CLOSE
             </button>
@@ -634,150 +825,5 @@ export const Careers = ({ hideHeader, className = "" }: { hideHeader?: boolean; 
         }
       `}</style>
     </section>
-  );
-};
-
-/* ── World Map Dots Component (CSS3 Box-Shadow based) ── */
-
-const WorldMapDots = () => {
-  const dotConfig = [
-    { child: 1, marginTop: 90, shadows: [] },
-    { child: 2, marginTop: 40, shadows: [10, 20, 30] },
-    { child: 3, marginTop: 40, shadows: [10, 20, 30, 40, 110] },
-    { child: 4, marginTop: 40, shadows: [10, 20, 30] },
-    { child: 5, marginTop: 40, shadows: [10, 20, 30] },
-    { child: 6, marginTop: 50, shadows: [10, 20] },
-    { child: 7, marginTop: 50, shadows: [10, 20, 30] },
-    { child: 8, marginTop: 40, shadows: [10, 20, 30, 40, 50] },
-    { child: 9, marginTop: 20, shadows: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100] },
-    { child: 10, marginTop: 20, shadows: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110] },
-    { child: 11, marginTop: 20, shadows: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120] },
-    { child: 12, marginTop: 10, shadows: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140] },
-    { child: 13, marginTop: 10, shadows: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150] },
-    { child: 14, marginTop: 10, shadows: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150] },
-    { child: 15, marginTop: 0, shadows: [10, 20, 30, 40, 50, 60, 80, 90, 100, 110, 120, 130, 160, 170] },
-    { child: 16, marginTop: 0, shadows: [10, 20, 30, 40, 50, 90, 100, 110, 120, 130, 170, 200] },
-    { child: 17, marginTop: 0, shadows: [10, 20, 30, 40, 60, 70, 80, 90, 100, 110, 120, 130, 140, 180, 190, 200, 210, 220] },
-    { child: 18, marginTop: 0, shadows: [10, 20, 40, 50, 60, 70, 80, 90, 100, 110, 120, 160, 170, 180, 190, 200, 210, 220, 230, 260, 270, 280] },
-    { child: 19, marginTop: 0, shadows: [10, 20, 50, 60, 80, 90, 100, 160, 170, 180, 190, 200, 210, 220, 230, 240, 250, 260, 270, 280, 290] },
-    { child: 20, marginTop: 0, shadows: [10, 20, 80, 90, 100, 180, 190, 200, 210, 220, 230, 240, 250, 260, 270] },
-    { child: 21, marginTop: 0, shadows: [10, 20, 30, 40, 60, 180, 190, 200, 210, 220, 230, 240, 250, 260] },
-    { child: 22, marginTop: 0, shadows: [10, 20, 30, 40, 50, 60, 70, 190, 200, 210, 220, 230, 240, 250] },
-    { child: 23, marginTop: 0, shadows: [10, 20, 30, 40, 50, 60, 70, 200, 210, 220, 230, 240] },
-    { child: 24, marginTop: 0, shadows: [10, 20, 30, 40, 50, 200, 210, 220] },
-    { child: 25, marginTop: 0, shadows: [10, 20, 30, 40, 50] },
-    { child: 26, marginTop: 0, shadows: [10, 20, 30, 40, 60] },
-    { child: 27, marginTop: 10, shadows: [10, 50, 140, 150, 160] },
-    { child: 28, marginTop: 90, shadows: [50, 60, 70, 80, 90] },
-    { child: 29, marginTop: 80, shadows: [30, 40, 50, 60, 70, 80, 90, 100, 110] },
-    { child: 30, marginTop: 80, shadows: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110] },
-    { child: 31, marginTop: 70, shadows: [20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120] },
-    { child: 32, marginTop: 60, shadows: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170] },
-    { child: 33, marginTop: 40, shadows: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200, 210] },
-    { child: 34, marginTop: 40, shadows: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200, 210] },
-    { child: 35, marginTop: 40, shadows: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200] },
-    { child: 36, marginTop: 40, shadows: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190] },
-    { child: 37, marginTop: 60, shadows: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 150] },
-    { child: 38, marginTop: 50, shadows: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 170, 180] },
-    { child: 39, marginTop: 50, shadows: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110] },
-    { child: 40, marginTop: 30, shadows: [20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130] },
-    { child: 41, marginTop: 20, shadows: [20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130] },
-    { child: 42, marginTop: 20, shadows: [20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130] },
-    { child: 43, marginTop: 40, shadows: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140] },
-    { child: 44, marginTop: 40, shadows: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130] },
-    { child: 45, marginTop: 30, shadows: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130] },
-    { child: 46, marginTop: 30, shadows: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130] },
-    { child: 47, marginTop: 10, shadows: [20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180] },
-    { child: 48, marginTop: 10, shadows: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190] },
-    { child: 49, marginTop: 20, shadows: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 180, 190] },
-    { child: 50, marginTop: 30, shadows: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 170, 210, 220, 230] },
-    { child: 51, marginTop: 40, shadows: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 130, 160, 200, 210, 220] },
-    { child: 52, marginTop: 40, shadows: [10, 20, 30, 40, 50, 60, 70, 80, 90, 150, 190, 200, 210, 220] },
-    { child: 53, marginTop: 40, shadows: [10, 20, 30, 40, 50, 60, 70, 80, 190, 200, 210, 220] },
-    { child: 54, marginTop: 40, shadows: [10, 20, 30, 40, 50, 60, 70, 100, 170, 190, 200, 210, 220, 230] },
-    { child: 55, marginTop: 40, shadows: [10, 20, 30, 40, 60, 70, 80, 90, 170, 190, 200, 210, 220, 230, 240] },
-    { child: 56, marginTop: 40, shadows: [10, 20, 30, 40, 180, 200, 210, 220, 230] },
-    { child: 57, marginTop: 50, shadows: [10, 20, 30, 40] },
-    { child: 58, marginTop: 50, shadows: [10, 20, 30, 40] },
-    { child: 59, marginTop: 50, shadows: [10, 20, 30, 240] },
-    { child: 60, marginTop: 50, shadows: [10, 20, 30, 220, 230] },
-    { child: 61, marginTop: 50, shadows: [10, 20] },
-    { child: 62, marginTop: 60, shadows: [] },
-    { child: 63, marginTop: 60, shadows: [] },
-  ];
-
-  const SPECIAL_DOTS: [number, number][] = [[18, 9], [30, 4]];
-
-  const isSpecial = (child: number, idx: number) =>
-    SPECIAL_DOTS.some(([c, i]) => c === child && i === idx);
-
-  const shadowsToBoxShadow = (shadows: number[], child: number) => {
-    return shadows
-      .map((offset, idx) => {
-        const color = isSpecial(child, idx) ? "#0066CC" : "#060606";
-        return `0 ${offset}px 0 ${color}`;
-      })
-      .join(", ");
-  };
-
-  return (
-    <div className="flex justify-center">
-      <style jsx>{`
-        @keyframes worldmap-pulse {
-          0%, 100% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.6); }
-          50% { box-shadow: 0 0 0 4px rgba(37, 99, 235, 0); }
-        }
-      `}</style>
-      <div
-        style={{
-          width: "100%",
-          maxWidth: "900px",
-          display: "flex",
-          flexWrap: "wrap",
-          gap: "3px",
-          margin: "0 auto",
-          padding: "0 20px",
-        }}
-      >
-        {dotConfig.map(({ child, marginTop, shadows }) => {
-          // Check if this column has a special dot — render pulse markers
-          const specialIndices = SPECIAL_DOTS
-            .filter(([c]) => c === child)
-            .map(([, i]) => i);
-
-          return (
-            <div
-              key={child}
-              style={{
-                position: "relative",
-                width: "4px",
-                height: "4px",
-                borderRadius: "50%",
-                backgroundColor: "#060606",
-                marginRight: "3px",
-                marginTop: `${marginTop}px`,
-                boxShadow: shadowsToBoxShadow(shadows, child),
-              }}
-            >
-              {specialIndices.map((si) => (
-                <span
-                  key={si}
-                  style={{
-                    position: "absolute",
-                    top: shadows[si],
-                    left: 0,
-                    width: 4,
-                    height: 4,
-                    borderRadius: "50%",
-                    backgroundColor: "#0066CC",
-                    animation: "worldmap-pulse 2s ease-in-out infinite",
-                  }}
-                />
-              ))}
-            </div>
-          );
-        })}
-      </div>
-    </div>
   );
 };

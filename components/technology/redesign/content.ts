@@ -1,29 +1,28 @@
+import { blogHref, BLOG_SLUG } from "@/lib/blog-posts";
+
 import type {
-  GeoOverlayItem,
   NavItem,
+  ResearchArticle,
   ResearchCard,
   TechnologySectionId,
+  TimelineEntry,
 } from "./types";
 
 export const TECHNOLOGY_NAV_ITEMS: NavItem[] = [
-  { id: "index", label: "Index" },
-  { id: "lgm-vs-llm", label: "An LGM vs LLM" },
-  { id: "data-collection", label: "Data Collection" },
-  { id: "core-reasoning", label: "Core Reasoning" },
-  { id: "research-blog", label: "Research Blog" },
-  { id: "careers", label: "Careers" },
+  { id: "index", label: "Foundation Model" },
+  { id: "lgm-vs-llm", label: "Timeline" },
+  { id: "core-reasoning", label: "Research" },
+  { id: "data-collection", label: "Results" },
+  { id: "research-blog", label: "Blog" },
+  { id: "careers", label: "Inquiries" },
 ];
 
 export const OBSERVED_SECTION_IDS: TechnologySectionId[] = [
   "index",
   "lgm-vs-llm",
-  "data-collection",
-  "fusing",
-  "grid-intro",
   "core-reasoning",
-  "genlayers",
+  "data-collection",
   "research-blog",
-  "dynamic-layers",
   "careers",
   "hiring-humans",
 ];
@@ -31,113 +30,84 @@ export const OBSERVED_SECTION_IDS: TechnologySectionId[] = [
 export const SECTION_TO_NAV_ID: Record<TechnologySectionId, TechnologySectionId> = {
   index: "index",
   "lgm-vs-llm": "lgm-vs-llm",
-  "data-collection": "data-collection",
-  fusing: "data-collection",
-  "grid-intro": "data-collection",
   "core-reasoning": "core-reasoning",
-  genlayers: "core-reasoning",
+  "data-collection": "data-collection",
   "research-blog": "research-blog",
-  "dynamic-layers": "research-blog",
   careers: "careers",
   "hiring-humans": "careers",
 };
 
 export const SIDEBAR_HIDDEN_ON = new Set<TechnologySectionId>([
-  "genlayers",
-  "dynamic-layers",
   "hiring-humans",
 ]);
 
-export const LLM_TOKEN_LINES = [
-  "A large language model is trained on",
-  "huge sets of text data for tokenization",
-  "280, 1170, 296, 4088, 30773, 4012, 5079",
-  "2534, 3883, 263, 29072, 268, 64696",
-];
-
-export const LGM_COLUMNS = [
-  {
-    title: "Data-specific LGM & Vision GM",
-    lines: [
-      "Comprehending images and",
-      "predicting certain things like size",
-      "from Earth imagery and context.",
-    ],
-    footer: "Reverse Diffusion",
-  },
-  {
-    title: "Generalist LGM",
-    lines: [
-      "Big data pre-trained",
-      "Large Geospatial Model",
-      "requiring fine-tuned labeling",
-      "for each Earth topic.",
-    ],
-    footer: "",
-  },
-];
-
-export const FUSING_STEPS = [
-  "Structure normalization",
-  "Fixing broken data",
-  "Fixing geocoding",
-  "Spatially pairing unformatted data",
-  "Labeling",
+export const TIMELINE_ENTRIES: TimelineEntry[] = [
+  { name: "Deep Q Networks", year: "2015" },
+  { name: "AlphaGo", year: "2016" },
+  { name: "AlphaZero", year: "2017" },
+  { name: "MuZero", year: "2019" },
+  { name: "PaLM", year: "2022" },
+  { name: "GPT-4", year: "2023" },
+  { name: "Gemini 1", year: "2023" },
 ];
 
 export const RESEARCH_CARDS: ResearchCard[] = [
   {
     featured: true,
     title: "Philosophy behind a Universal Geospatial Model",
-    href: "#",
-  },
-  {
-    title: "MapsGPT Version 2.5. Architecture improvements.",
-    href: "#",
+    href: blogHref(BLOG_SLUG.philosophyUniversalLgm),
+    image: "/TechnologyPageImages/multieWaveEminations.jpeg",
   },
   {
     title: "Mimicking the adult brain.",
-    href: "#",
+    href: blogHref(BLOG_SLUG.mimickingAdultBrain),
+    image: "/TechnologyPageImages/deep-layers.jpeg",
   },
   {
     title: "Earth recipes.",
-    href: "#",
+    href: blogHref(BLOG_SLUG.earthRecipes),
+    image: "/TechnologyPageImages/unkown-layers.jpeg",
   },
   {
-    title: "Research, creating a fire prediction model.",
-    href: "#",
+    title: "Research: creating a fire prediction model.",
+    href: blogHref(BLOG_SLUG.erickFirePrediction),
+    image: "/TechnologyPageImages/techpg-radiance.png",
   },
 ];
 
-export const GENLAYERS_OVERLAYS: GeoOverlayItem[] = [
+export const RESEARCH_ARTICLES: ResearchArticle[] = [
   {
-    id: "forest",
-    title: "forest",
-    items: [
-      "Tree Count",
-      "Tree Species",
-      "Topographical elevation",
-      "Soil type",
-      "Average rainfall",
-      "Average tree heights",
-      "Average tree age",
-      "Wildfire risk score",
-    ],
+    title: "MapsGPT Version 2.5. Architecture improvements.",
+    href: blogHref(BLOG_SLUG.mapsgptV25Architecture),
+    date: "Apr 2026",
   },
   {
-    id: "coast",
-    title: "coast",
-    items: [
-      "Tree Count",
-      "Advanced measurements",
-      "Topographical elevation",
-      "Sand type",
-    ],
+    title: "Research Paper -- Erick fire prediction",
+    href: blogHref(BLOG_SLUG.erickFirePrediction),
+    date: "Mar 2026",
+  },
+  {
+    title: "MapsGPT. Building a consumer product",
+    href: blogHref(BLOG_SLUG.mapsgptConsumerProduct),
+    date: "Feb 2026",
+  },
+  {
+    title: "Why LLMs dont cut it. Issues in LLM architecture for Geosaptial queries.",
+    href: blogHref(BLOG_SLUG.llmsGeospatialQueries),
+    date: "Jan 2026",
+  },
+  {
+    title: "A paper on Generative geospatial layers.",
+    href: blogHref(BLOG_SLUG.generativeGeospatialLayers),
+    date: "Dec 2025",
   },
 ];
 
-export const DYNAMIC_LAYER_CAPTIONS = [
-  "Solar roof possibility",
-  "Resident vibes",
-  "Safety score",
+export const HERO_SCROLL_INDEX_ITEMS = [
+  { label: "Foundation Model", sectionIds: ["index"] },
+  { label: "Timeline", sectionIds: ["lgm-vs-llm"] },
+  { label: "Research", sectionIds: ["core-reasoning"] },
+  { label: "Results", sectionIds: ["data-collection"] },
+  { label: "Blog", sectionIds: ["research-blog"] },
+  { label: "Inquiries", sectionIds: ["careers"] },
 ];

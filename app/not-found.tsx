@@ -1,48 +1,95 @@
 "use client";
 
+import { useEffect } from "react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
-import { Navbar } from "@/components/layout/Navbar";
+import { MistxNav } from "@/components/layout/MistxNav";
 
-const UnderwaterScene = dynamic(() => import("@/components/home/UnderwaterScene"), { ssr: false });
+// Underwater scene — fixed full-screen canvas behind the content.
+// Client-only (ssr:false) because it draws to a <canvas> on mount.
+const UnderwaterScene = dynamic(
+  () => import("@/components/home/UnderwaterScene"),
+  { ssr: false },
+);
+
+/**
+ * Dot-arrow glyph — the 5-circle SVG used by every CTA across the site
+ * (navbar, hero pills, BlogSection cards, the company contact CTA).
+ * Reused here so the "Back to shore" button carries the same CTA
+ * iconography as the rest of the site.
+ */
+function ArrowDots({ className = "" }: { className?: string }) {
+  return (
+    <svg
+      className={"size-3 shrink-0 " + className}
+      width="24"
+      viewBox="0 0 9 13"
+      fill="none"
+      aria-hidden="true"
+    >
+      <circle cx="7.22" cy="6.589" r="1.28" fill="currentColor" />
+      <circle cx="4.658" cy="4.018" r="1.28" fill="currentColor" />
+      <circle cx="2.099" cy="1.46" r="1.28" fill="currentColor" />
+      <circle cx="4.658" cy="9.151" r="1.28" fill="currentColor" />
+      <circle cx="2.099" cy="11.718" r="1.28" fill="currentColor" />
+    </svg>
+  );
+}
 
 export default function NotFound() {
+  // Lock page scroll for the 404 route only. The global PageFrame card
+  // carries a `margin-bottom: 100vh` footer-reveal gutter, which would
+  // otherwise make this single-screen page scrollable. Pinning scroll at
+  // 0 also keeps MistxNav transparent (its backdrop is driven by
+  // `scrollY > 0`), so the navbar has no background here. Restored on
+  // unmount so other routes scroll normally.
+  useEffect(() => {
+    const html = document.documentElement;
+    const { body } = document;
+    const prevHtml = html.style.overflow;
+    const prevBody = body.style.overflow;
+    html.style.overflow = "hidden";
+    body.style.overflow = "hidden";
+    return () => {
+      html.style.overflow = prevHtml;
+      body.style.overflow = prevBody;
+    };
+  }, []);
+
   return (
-    <main className="relative min-h-screen">
+    // data-hero-section lets MistxNav float transparently over the scene,
+    // matching the hero treatment on the home / company / blog pages.
+    <main className="relative min-h-screen" data-hero-section>
       {/* Underwater scene — fixed fullscreen background */}
       <UnderwaterScene />
 
-      <Navbar />
+      <MistxNav />
 
       {/* Content */}
-      <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-8 text-center">
+      <div className="relative z-10 flex min-h-screen flex-col items-center justify-center px-8 text-center">
+        {/* Decorative oversized numeral — Funnel Display, faint ink so it
+            reads as a watermark behind the message. */}
         <p
-          className="text-[120px] md:text-[180px] font-light leading-none"
-          style={{ color: "rgba(20, 60, 160, 0.15)", letterSpacing: "-0.04em" }}
+          className="font-display font-light leading-none text-ink/15 text-[120px] md:text-[180px]"
+          style={{ letterSpacing: "-0.04em" }}
         >
           404
         </p>
-        <h1
-          className="font-light leading-[1.15] text-[#0A1344] text-[28px] md:text-[39px] lg:text-[49px] mt-4"
-          style={{ letterSpacing: "-0.02em" }}
-        >
-          Lost at sea.
-        </h1>
-        <p
-          className="mt-4 text-[16px] md:text-[18px] leading-[1.5]"
-          style={{ color: "rgba(10, 19, 68, 0.45)", fontWeight: 400 }}
-        >
-          This page doesn&apos;t exist — but there&apos;s plenty more to explore.
+        <h1 className="h2 tracking-tight text-ink mt-4">Lost at sea.</h1>
+        <p className="p-l text-muted mt-6 max-w-md">
+          This page doesn&apos;t exist — but there&apos;s plenty more to
+          explore.
         </p>
+        {/* CTA — mirrors the canonical content pill (company contact CTA):
+            rounded-full, bg-cta surface, dot-arrow glyph, #154ACC accent. */}
         <Link
           href="/"
-          className="group flex items-center justify-between gap-5 leading-none hover:opacity-90 transition-opacity mt-10"
-          style={{ height: 36, paddingLeft: 20, paddingRight: 16, fontSize: 15, fontWeight: 500, backgroundColor: "#000000", color: "white" }}
+          className="group mt-10 inline-flex items-center gap-2.5 rounded-full bg-cta px-7 py-3.5 text-sm leading-none text-white transition-colors hover:text-[#154ACC]"
         >
-          <span className="transition-colors duration-300 group-hover:text-[#2563EB]">Back to shore</span>
-          <svg className="transition-transform duration-300 group-hover:translate-x-0.5" width="10" height="18" viewBox="0 0 7 12" fill="none" stroke="#2563EB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M1 1l5 5-5 5" />
-          </svg>
+          Back to shore
+          <span className="inline-block transition-transform group-hover:translate-x-0.5">
+            <ArrowDots className="text-[#154ACC]" />
+          </span>
         </Link>
       </div>
     </main>
