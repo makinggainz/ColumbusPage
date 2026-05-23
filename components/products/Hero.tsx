@@ -75,9 +75,9 @@ const SCENES = [
   { ink: "#FFFFFF", eyebrow: "#9FE0FF", pillBg: "#2A8FC2", pillText: "#FFFFFF", pillRot: "-5deg", pillIdle: "rgba(255,255,255,0.65)" },
 ] as const;
 
-// Scene-1 backdrop — soft Elio-logo blue with a subtle white fade at the
-// top edge so the backdrop reads as light blue without a hard top seam.
-const CREAM = "linear-gradient(180deg, #FFFFFF 0%, #E3F2FB 18%, #C7E5F6 100%)";
+// Scene-1 backdrop — pure white. Matches the new hero's bottom sky band
+// so scene 1 reads as a seamless continuation of the hero's white floor.
+const CREAM = "#FFFFFF";
 // Scene-2 backdrop — Columbus navbar-logo navy (#0B1342, var --color-cta).
 const NAVY = "linear-gradient(180deg, #0B1342 0%, #060A28 100%)";
 // Solid white — matches HowItWorksSection (#FFFFFF) so the hand-off has no seam.
@@ -178,10 +178,6 @@ export default function Hero() {
   const [phase, setPhase] = useState(0);
   const [mounted, setMounted] = useState(false);
   const [isLg, setIsLg] = useState(true);
-  // Index of the typewriter phrase currently being typed. TypedPhrase
-  // calls back with this every time the next phrase begins, and the
-  // hero background video remounts to match (see VIDEO_BY_PHRASE).
-  const [activePhrase, setActivePhrase] = useState(0);
   // Index of the LABEL currently nearest the viewport anchor (0..5).
   // Tracks one step finer than `phase` (which only resolves the 3
   // SCENES) so the phone product-shot can swap per-label, not per-
@@ -354,12 +350,15 @@ export default function Hero() {
             }}
           />
           {/* Bottom legibility band — black opacity gradient from the
-              very bottom of the pinned stage upward. Always-on (every
-              scene), opaque-ish at the bottom and fully transparent
-              by ~30vh up, so the white "Ask · Discover · Go" pill row
-              + any caption text near the bottom has a guaranteed
-              dark base regardless of the scene backdrop (light blue
-              scene 1 / navy scene 2 / cityscape scene 3). */}
+              very bottom of the pinned stage upward. SCOPED TO SCENE 3
+              (the cityscape ElioEndingBackground): scene 3 is the only
+              scene whose backdrop carries enough visual chaos to need a
+              dark base for the pill row + caption text. Scenes 1 and 2
+              own clean coloured backdrops (white + navy) where this
+              band would just paint a dark smudge over otherwise clean
+              colour, so it stays hidden there. Crossfade matches the
+              scene backdrop's own 0.7s cubic-bezier so the band slides
+              in alongside scene 3 with no perceptible seam. */}
           <div
             aria-hidden
             className="absolute inset-x-0 bottom-0 pointer-events-none"
@@ -367,6 +366,8 @@ export default function Hero() {
               height: "32vh",
               background:
                 "linear-gradient(to top, rgba(0, 0, 0, 0.55) 0%, rgba(0, 0, 0, 0.30) 45%, rgba(0, 0, 0, 0) 100%)",
+              opacity: phase === 3 ? 1 : 0,
+              transition: "opacity 0.7s cubic-bezier(0.44,0,0.56,1)",
             }}
           />
         </div>
@@ -574,75 +575,63 @@ export default function Hero() {
         </div>
       </div>
 
-      {/* ════ Hero header — normal flow over the Elio image; scrolls away ════ */}
+      {/* ════ Hero header — normal flow over the flipped earth; scrolls away ════ */}
       <header
-        className="relative z-20 flex flex-col items-center justify-center"
+        className="relative z-20 flex flex-col items-center justify-end"
         style={{
           height: "100dvh",
           width: "100%",
+          background: "#FFFFFF",
+          // Lifts the content stack up off the bottom edge so the CTA
+          // floats over the white sky band rather than hugging the page
+          // floor; pairs with the image-only top portion above.
           paddingTop: "clamp(56px, 7vh, 90px)",
-          // Heavier bottom pad biases the centred content upward a touch.
-          paddingBottom: "clamp(150px, 19vh, 230px)",
+          paddingBottom: "clamp(90px, 14vh, 160px)",
         }}
       >
-        {/* Consumer hero background — a video that SWAPS to match the
-            typed-phrase carousel below. The phrase carousel calls back
-            into `activePhrase`; the video remounts via `key` so each
-            new clip starts from frame 0 and the prior one is dropped.
-            `HeroBack.png` is the poster, so the beach photo shows
-            while the clip preloads and is the fallback for any URL
-            that 404s.
-
-            On top of the video sits a dark scrim + navbar fade so
-            the white navbar contents and the centred H1 stack stay
-            legible regardless of which frame is on screen. */}
+        {/* Consumer hero background — the FinalCTA globe artwork, flipped
+            vertically (scaleY(-1)) so the earth's curve sits at the TOP
+            of the hero with cloud-edged white sky melting away below it.
+            A white-to-transparent gradient over the lower half guarantees
+            the content stack always sits on a clean white field, so the
+            navy headline + navy CTA read cleanly regardless of where the
+            earth's edge happens to fall at this viewport. */}
         <div aria-hidden className="absolute inset-0 overflow-hidden">
-          <video
-            key={`hero-bg-${activePhrase}`}
-            src={VIDEO_BY_PHRASE[activePhrase]}
-            poster="/consumer/HeroBack.png"
-            autoPlay
-            loop
-            muted
-            playsInline
-            preload="auto"
-            className="absolute inset-0 w-full h-full"
-            style={{ objectFit: "cover" }}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/consumer-final-cta-elio-ending.png"
+            alt=""
             aria-hidden
-          />
-          {/* Global readability scrim — uniform dark tint over the whole
-              video so the centred "Elio" + H1 + CTA stack reads
-              cleanly on any frame of any clip (varied brightness from
-              tropical noon to dim café). Sits below the navbar fade so
-              the navbar zone gets stacked dark coverage (scrim + fade),
-              while the rest of the hero gets just this single tint. */}
-          <div
-            className="absolute inset-0"
+            className="absolute inset-0 w-full h-full"
             style={{
-              background: "rgba(0, 0, 0, 0.4)",
-              pointerEvents: "none",
+              objectFit: "cover",
+              objectPosition: "center top",
+              transform: "scaleY(-1)",
             }}
           />
+          {/* White sky band — fades the flipped earth into pure white at
+              the bottom 60% of the hero. Mirrors the FinalCTA section's
+              250px sky band: a generous, clean white field for the
+              headline + CTA to live on. */}
           <div
-            className="absolute inset-x-0 top-0"
+            className="absolute inset-x-0 bottom-0"
             style={{
-              height: 280,
+              height: "62%",
               background:
-                "linear-gradient(180deg, rgba(8, 22, 32, 0.42) 0%, rgba(8, 22, 32, 0.26) 40%, rgba(8, 22, 32, 0.10) 75%, rgba(8, 22, 32, 0) 100%)",
+                "linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.85) 38%, #FFFFFF 75%)",
               pointerEvents: "none",
             }}
           />
         </div>
 
-        {/* Content stack — white over the beach photo, upper third. The
-            "Elio" eyebrow row (Globe icon + label) and the H1 both read
-            in pure white; the colour swap from the prior dark-teal was
-            paired with the background image change so the type sits on
-            top of the tropical scene with maximum contrast. */}
+        {/* Content stack — navy ink on the white sky band, matching the
+            FinalCTA section: cyan→teal gradient "Elio" eyebrow, navy
+            #0B1342 H1, and a navy bg-cta primary pill with white label
+            + arrow (same palette + treatment as the navbar CTA). */}
         <div className="relative flex flex-col items-center text-center px-6" style={{ maxWidth: 820, gap: 32 }}>
           <Stagger show={mounted} delay={120} y={84}>
             <div className="flex flex-col items-center" style={{ gap: 16 }}>
-              <div className="flex items-center gap-2" style={{ color: "#FFFFFF" }}>
+              <div className="flex items-center gap-2">
                 <MapsGPTGlobe size={isLg ? 30 : 26} />
                 <span
                   style={{
@@ -650,6 +639,10 @@ export default function Hero() {
                     fontSize: isLg ? 23 : 20,
                     fontWeight: 600,
                     letterSpacing: "-0.02em",
+                    background: "linear-gradient(180deg, #00B1D4 0%, #0089A3 100%)",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                    backgroundClip: "text",
                   }}
                 >
                   Elio
@@ -662,12 +655,12 @@ export default function Hero() {
                   fontWeight: 700,
                   lineHeight: 1.1,
                   letterSpacing: "-0.02em",
-                  color: "#FFFFFF",
+                  color: "#0B1342",
                 }}
               >
                 Find your next
                 <br />
-                <TypedPhrase onPhraseChange={setActivePhrase} />
+                <TypedPhrase />
               </h1>
             </div>
           </Stagger>
@@ -678,29 +671,31 @@ export default function Hero() {
                 href="https://mapsgpt.es"
                 target="_blank"
                 rel="noreferrer"
+                className="group bg-cta"
                 style={{
                   display: "inline-flex",
                   alignItems: "center",
-                  height: 42,
-                  padding: "0 20px",
+                  gap: 10,
+                  height: 46,
+                  padding: "0 22px",
                   borderRadius: 18,
-                  /* White pill with black text — paired with the beach
-                     hero's white headline so the primary CTA reads as
-                     the bright focal point against the photo. */
-                  background: "#FFFFFF",
-                  color: "#000000",
+                  /* Navy primary pill, matches the FinalCTA + navbar CTA. */
+                  color: "#FFFFFF",
                   fontFamily: '"SF Pro", -apple-system, BlinkMacSystemFont, sans-serif',
                   fontSize: 15,
                   fontWeight: 600,
                   letterSpacing: "-0.01em",
                   textDecoration: "none",
-                  boxShadow: "0 14px 30px -12px rgba(0,0,0,0.35)",
+                  boxShadow: "0 14px 30px -12px rgba(11,19,66,0.35)",
                   transition: "transform 0.25s cubic-bezier(0.25,1,0.5,1)",
                 }}
                 onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.04)")}
                 onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
               >
                 Try Elio in browser
+                <svg width="13" height="13" viewBox="0 0 13 13" fill="none" className="shrink-0 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" aria-hidden>
+                  <path d="M2 11L11 2M11 2H4M11 2V9" stroke="#FFFFFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
               </a>
               <StoreBadges />
             </div>
@@ -866,61 +861,10 @@ const TYPED_PHRASES = [
   "quiet study café",
 ];
 
-// Hero background video per typed phrase — same index as TYPED_PHRASES.
-// Three are self-hosted local clips (cropped + trimmed from screen
-// recordings) under /public/consumer/videos/; the other seven hot-link
-// off Mixkit's / Pexels' CDNs (both allow free hot-linking; ~57 MB
-// total avoided in the repo). Each clip leans into the "people
-// enjoying that kind of place" vibe of its phrase:
-//   hang out spot         → local clip (house-party, screen-recorded
-//                            + cropped + trimmed to source 1.5s–3.5s,
-//                            /public/consumer/videos/hang-out-spot.mp4)
-//   romantic date night   → intimate couple dinner (Mixkit 41261)
-//   secret beach spot     → local clip (runner on a beach with crashing waves,
-//                            screen-recorded + trimmed -ss 3,
-//                            /public/consumer/videos/secret-beach-spot.mp4)
-//   hidden coffee shop    → restaurant with people sitting outside at night (Pexels 17417856)
-//   weekend brunch place  → bustling coffee shop with baristas (Pexels 29719125)
-//   local hiking trail    → couple exploring a forest (Mixkit 43151)
-//   cozy bookstore        → local clip (dim bookstore "You" opening scene,
-//                            screen-recorded + cropped,
-//                            /public/consumer/videos/cozy-bookstore.mp4)
-//   rooftop sunset bar    → young couple having fun in a rooftop bar (Mixkit 47027)
-//   late-night taco joint → fish tacos with beer (Mixkit 16411)
-//   quiet study café      → woman drinking coffee in a cafe (Mixkit 223)
-// The <video> falls back to /consumer/HeroBack.png (poster) if any
-// URL ever 404s so the page never goes black.
-const VIDEO_BY_PHRASE = [
-  "/consumer/videos/hang-out-spot.mp4",
-  "https://assets.mixkit.co/videos/41261/41261-720.mp4",
-  "/consumer/videos/secret-beach-spot.mp4",
-  "https://videos.pexels.com/video-files/17417856/17417856-hd_1280_720_30fps.mp4",
-  "https://videos.pexels.com/video-files/29719125/12778465_3840_2160_24fps.mp4",
-  "https://assets.mixkit.co/videos/43151/43151-720.mp4",
-  "/consumer/videos/cozy-bookstore.mp4",
-  "https://assets.mixkit.co/videos/47027/47027-720.mp4",
-  "https://assets.mixkit.co/videos/16411/16411-720.mp4",
-  "https://assets.mixkit.co/videos/223/223-720.mp4",
-];
-
-function TypedPhrase({
-  onPhraseChange,
-}: {
-  /** Fires with the index of the phrase that is now BEING TYPED (so a
-   *  callback at idx N means typing of phrase N just started; the
-   *  background video should swap to N's source here). */
-  onPhraseChange?: (idx: number) => void;
-}) {
+function TypedPhrase() {
   const [text, setText] = useState("");
   const [phraseIdx, setPhraseIdx] = useState(0);
   const [deleting, setDeleting] = useState(false);
-
-  // Tell the parent which phrase is currently being typed. Fires on
-  // mount with idx 0, then every time phraseIdx advances. Captured in
-  // its own effect so the typewriter timer stays minimal.
-  useEffect(() => {
-    onPhraseChange?.(phraseIdx);
-  }, [phraseIdx, onPhraseChange]);
 
   useEffect(() => {
     const full = TYPED_PHRASES[phraseIdx];
@@ -964,7 +908,7 @@ function TypedPhrase({
           height: "0.9em",
           marginLeft: "0.08em",
           verticalAlign: "-0.08em",
-          background: "#FFFFFF",
+          background: "#0B1342",
           animation: "mgHeroCaret 1s steps(1) infinite",
         }}
       />
