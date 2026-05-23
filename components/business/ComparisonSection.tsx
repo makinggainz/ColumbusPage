@@ -310,13 +310,13 @@ export default function ComparisonSection() {
                     </span>
                     <div className="flex-1 min-w-0 flex flex-col gap-1.5">
                       <span
-                        className="text-[20px] md:text-[22px] font-semibold leading-[1.2]"
+                        className="text-md md:text-[18px] font-semibold leading-[1.2]"
                         style={{ color: "#0E173C", letterSpacing: "-0.01em" }}
                       >
                         {f.title}
                       </span>
                       <span
-                        className="text-[14px] md:text-[15px] leading-[1.4]"
+                        className="text-[13px] md:text-[14px] leading-[1.4]"
                         style={{ color: "var(--ent-text-secondary)", letterSpacing: "-0.005em" }}
                       >
                         {f.subtitle}

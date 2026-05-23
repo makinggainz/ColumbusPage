@@ -106,7 +106,7 @@ const features: {
       "Query any location on Earth in natural language. Ask questions, get maps and spatial answers instantly.",
     content: (
       <div>
-        <h2 className="px-4 lg:px-0 text-[28px] md:text-[39px] lg:text-[49px] font-medium text-ink leading-[1.1] tracking-[-0.02em]">
+        <h2 className="px-4 lg:px-0 text-[28px] md:text-[36px] lg:text-[44px] font-medium text-ink leading-[1.1] tracking-[-0.02em]">
           Chat with Earth
         </h2>
         <div
@@ -125,7 +125,7 @@ const features: {
       "Generate full site-selection and due diligence reports from a single prompt. What took weeks now takes minutes.",
     content: (
       <div>
-        <h2 className="px-4 lg:px-0 text-[28px] md:text-[39px] lg:text-[49px] font-medium text-ink leading-[1.1] tracking-[-0.02em]">
+        <h2 className="px-4 lg:px-0 text-[28px] md:text-[36px] lg:text-[44px] font-medium text-ink leading-[1.1] tracking-[-0.02em]">
           Research Reports
         </h2>
         <div
@@ -144,7 +144,7 @@ const features: {
       "AI-generated geospatial datasets that fill gaps where traditional surveying is too expensive or unavailable.",
     content: (
       <div>
-        <h2 className="px-4 lg:px-0 text-[28px] md:text-[39px] lg:text-[49px] font-medium text-ink leading-[1.1] tracking-[-0.02em]">
+        <h2 className="px-4 lg:px-0 text-[28px] md:text-[36px] lg:text-[44px] font-medium text-ink leading-[1.1] tracking-[-0.02em]">
           Generative Geodata
         </h2>
         <div
@@ -163,7 +163,7 @@ const features: {
       "Real humans available around the clock — find datasets, get platform tips, or connect with a live agent instantly.",
     content: (
       <div>
-        <h2 className="px-4 lg:px-0 text-[28px] md:text-[39px] lg:text-[49px] font-medium text-ink leading-[1.1] tracking-[-0.02em]">
+        <h2 className="px-4 lg:px-0 text-[28px] md:text-[36px] lg:text-[44px] font-medium text-ink leading-[1.1] tracking-[-0.02em]">
           24/7 Human Support
         </h2>
         <div

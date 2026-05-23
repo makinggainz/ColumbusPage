@@ -77,7 +77,7 @@ export default function CapabilitiesGrid() {
     >
       <div className="ent-content-bounds">
         <h2
-          className="text-center leading-[1.1] text-[28px] md:text-[36px] lg:text-[45px]"
+          className="text-center leading-[1.1] text-[28px] md:text-[36px] lg:text-[44px]"
           style={{ color: "var(--ent-text-primary)", fontWeight: 500, letterSpacing: "-0.02em" }}
         >
           Enterprise-grade capabilities
@@ -124,7 +124,7 @@ export default function CapabilitiesGrid() {
                 </div>
               </div>
               <h3
-                className="cap-tile-title mt-4 text-center text-[20px] md:text-[22px] font-semibold leading-[1.2]"
+                className="cap-tile-title mt-4 text-center text-md md:text-[18px] font-semibold leading-[1.2]"
                 style={{
                   /* Mirrors ComparisonSection's feature-title typography
                      (same size class, weight, leading, tracking, and
