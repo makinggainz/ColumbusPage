@@ -75,7 +75,7 @@ export default function FAQSection() {
       <div className="ent-content-bounds px-4 md:px-6 grid grid-cols-1 lg:grid-cols-[300px_1fr] gap-10 lg:gap-16">
         {/* Left: section label */}
         <h2
-          className="text-[28px] md:text-[32px] lg:text-[36px] font-medium leading-[1.15] max-w-[260px]"
+          className="text-[28px] md:text-[36px] lg:text-[44px] font-medium leading-[1.15] max-w-[260px]"
           style={{
             color: "var(--ent-text-primary)",
             letterSpacing: "var(--ent-tracking-heading)",

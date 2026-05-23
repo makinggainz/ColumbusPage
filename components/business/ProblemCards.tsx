@@ -69,7 +69,7 @@ export default function ProblemCards() {
           }}
         >
           <h2
-            className="text-ink leading-[1.1] text-[28px] md:text-[36px] lg:text-[49px]"
+            className="text-ink leading-[1.1] text-[28px] md:text-[36px] lg:text-[44px]"
             style={{ fontWeight: 500, letterSpacing: "-0.02em", maxWidth: 720 }}
           >
             Legacy GIS slows you down because...

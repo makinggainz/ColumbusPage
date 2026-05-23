@@ -39,7 +39,7 @@ export default function ChatSection() {
 
       {/* Heading */}
       <h2
-        className="relative z-10 font-medium text-center text-[28px] md:text-[36px] lg:text-[48px] leading-[1.1] tracking-[-0.02em] text-white px-6"
+        className="relative z-10 font-medium text-center text-[28px] md:text-[36px] lg:text-[44px] leading-[1.1] tracking-[-0.02em] text-white px-6"
       >
         Chat with us now about Columbus Pro
       </h2>

@@ -118,7 +118,7 @@ export default function SuperFeatureSection({
             <div className="mb-5 flex items-center justify-center">{icon}</div>
           ) : null}
           <h2
-            className="leading-[1.1] text-[28px] md:text-[36px] lg:text-[42px]"
+            className="leading-[1.1] text-[28px] md:text-[36px] lg:text-[44px]"
             style={{
               color: "var(--ent-text-primary)",
               fontWeight: 600,

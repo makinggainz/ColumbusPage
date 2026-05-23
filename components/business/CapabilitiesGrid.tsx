@@ -45,7 +45,7 @@ export default function CapabilitiesGrid() {
     >
       <div className="ent-content-bounds">
         <h2
-          className="text-center leading-[1.1] text-[28px] md:text-[36px] lg:text-[45px]"
+          className="text-center leading-[1.1] text-[28px] md:text-[36px] lg:text-[44px]"
           style={{ color: "var(--ent-text-primary)", fontWeight: 500, letterSpacing: "-0.02em" }}
         >
           Enterprise-grade capabilities
@@ -65,7 +65,7 @@ export default function CapabilitiesGrid() {
         >
           <div
             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
-            style={{ gap: 1, backgroundColor: "var(--color-gridline)" }}
+            style={{ gap: 3, backgroundColor: "var(--color-gridline)" }}
           >
             {ITEMS.map((item, i) => (
               <article

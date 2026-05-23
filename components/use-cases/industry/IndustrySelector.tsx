@@ -104,7 +104,7 @@ export default function IndustrySelector({
         {/* Header */}
         <div className="text-center px-8 md:px-10 mb-[48px] max-md:mb-[36px]" style={anim(0)}>
           <h2
-            className={`text-[39px] md:text-[49px] font-medium leading-[1.15] tracking-[-0.02em] ${headingTextClass}`}
+            className={`${isIconGrid ? "text-[28px] md:text-[36px] lg:text-[44px]" : "text-[39px] md:text-[49px]"} font-medium leading-[1.15] tracking-[-0.02em] ${headingTextClass}`}
           >
             {headingText}
           </h2>

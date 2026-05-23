@@ -51,7 +51,7 @@ export default function ProductBanner() {
         }}
       >
         <h2
-          className="text-center leading-[1.1] text-[28px] md:text-[39px] lg:text-[49px]"
+          className="text-center leading-[1.1] text-[28px] md:text-[36px] lg:text-[44px]"
           style={{
             fontWeight: 500,
             letterSpacing: "-0.02em",

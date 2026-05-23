@@ -169,7 +169,7 @@ export default function BusinessHero() {
           left: 0,
           right: 0,
           bottom: 0,
-          backgroundImage: "url(/ColumBuzHero.png)",
+          backgroundImage: "url(/businessPageBackground.png)",
           backgroundPosition: "center 50%",
           backgroundSize: "cover",
           backgroundRepeat: "no-repeat",
@@ -188,35 +188,11 @@ export default function BusinessHero() {
           zIndex: 0,
         }}
       />
-      {/* White fade — a transparent→white gradient pinned to the bottom of
-          the hero. Because the section is content-sized with `center 50%`
-          positioning, the photo no longer ends on its natural fade-to-
-          white park; the visible bottom of the photo is mid-image, so the
-          seam into the white block below would read as a hard edge. This
-          layer dissolves the photo into white over the last ~420px of
-          the section with eased stops (the white ramps up gently for the
-          first ~40%, then accelerates to opaque well before the bottom),
-          so the dissolve never reads as a band. Sits above the dark
-          overlay (zIndex 1) so it whites-out the darkened pixels too. */}
-      <div
-        className="absolute pointer-events-none"
-        style={{
-          left: 0,
-          right: 0,
-          bottom: 0,
-          height: 280,
-          background:
-            "linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,0.08) 30%, rgba(255,255,255,0.3) 55%, rgba(255,255,255,0.7) 78%, #FFFFFF 100%)",
-          zIndex: 1,
-        }}
-      />
       {/* ── Text block ── */}
-      {/* pt-25 (100px) — trimmed from pt-50 to lift the whole content
-          stack (title + CTA + glass frame) up 100px in one shot. The
-          frame's marginTop and the title→CTA spacing are unchanged, so
-          internal gaps stay correct; only the distance from the navbar
-          to the title shrinks. */}
-      <div className="relative z-10 flex flex-col items-center text-center px-6 pt-25" style={reveal(visible, 0.1)}>
+      {/* pt-50 (200px) restores the vertical breathing room previously
+          provided by the removed ConsumerBusinessToggle wrapper
+          (pt-32 + pill height ~43px + pb-10 ≈ 211px). */}
+      <div className="relative z-10 flex flex-col items-center text-center px-6 pt-50" style={reveal(visible, 0.1)}>
         <h1
           className="text-white leading-[1.1] text-[39px] md:text-[49px] lg:text-[76px]"
           style={{ fontFamily: "var(--font-hero)", fontWeight: 500, letterSpacing: "-0.02em", maxWidth: 900 }}
