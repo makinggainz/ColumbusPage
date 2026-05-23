@@ -114,20 +114,22 @@ export default function SuperFeatureSection({
       {/* Header — sits OUTSIDE the gray panel, on the page background */}
       <div className="ent-content-bounds">
         <div className="flex flex-col items-center text-center px-6">
-          {icon ? (
-            <div className="mb-5 flex items-center justify-center">{icon}</div>
-          ) : null}
-          <h2
-            className="leading-[1.1] text-[28px] md:text-[36px] lg:text-[44px]"
-            style={{
-              color: "var(--ent-text-primary)",
-              fontWeight: 600,
-              letterSpacing: "-0.02em",
-              maxWidth: 760,
-            }}
-          >
-            {title}
-          </h2>
+          <div className="flex items-center gap-3 justify-center">
+            {icon ? (
+              <div className="flex-shrink-0 flex items-center justify-center">{icon}</div>
+            ) : null}
+            <h2
+              className="leading-[1.1] text-[28px] md:text-[36px] lg:text-[44px]"
+              style={{
+                color: "var(--ent-text-primary)",
+                fontWeight: 600,
+                letterSpacing: "-0.02em",
+                maxWidth: 760,
+              }}
+            >
+              {title}
+            </h2>
+          </div>
           {subtitle ? (
             <div
               className="mt-3 max-w-150 text-[15px] md:text-[16px] leading-[1.55]"
