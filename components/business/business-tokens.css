@@ -123,10 +123,18 @@
   --ent-btn-navy:            #0B1342;
   --ent-btn-navy-alt:        #0B1342;
 
-  /* ── Colors — window chrome ── */
-  --ent-chrome-red:          #FF5F57;
-  --ent-chrome-yellow:       #FEBC2E;
-  --ent-chrome-green:        #28C840;
+  /* ── Colors — window chrome ──
+     Originally the macOS traffic-light palette (#FF5F57 / #FEBC2E /
+     #28C840). The literal red was the loudest pixel on the page and
+     read as visual noise on what's a custom (not actual macOS)
+     product window in the hero. Recolored to the homepage blue scale
+     so the dots still mark out a window affordance but stay on-brand:
+       red → --color-brand-soft  (#74A0FE, light blue)
+       yellow → --color-brand    (#1451E8, NewsCatcher blue — one step deeper)
+       green → --color-cta       (#0B1342, navy) */
+  --ent-chrome-red:          #74A0FE;
+  --ent-chrome-yellow:       #1451E8;
+  --ent-chrome-green:        #0B1342;
 
   /* ── Spacing (4px grid) ── */
   --ent-space-1:             4px;
