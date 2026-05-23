@@ -74,9 +74,10 @@
 
   /* ── Colors — interactive accent ──
      The ONLY colour allowed on interactive accents — arrows, links, CTA
-     hover. Matches the homepage #0081AC accent so interactive cues read
-     the same site-wide. */
-  --ent-accent:              #0081AC;
+     hover. Reads from the site-wide --color-accent token (globals.css)
+     so a single change there retints every interactive cue across the
+     site, including this business module. */
+  --ent-accent:              var(--color-accent);
 
   /* ── Colors — accent blues ── */
   --ent-blue-primary:        #2563EB;   /* DEPRECATED — superseded by --ent-accent; retained, unused. */

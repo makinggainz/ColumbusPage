@@ -26,7 +26,7 @@ const MUTED = "var(--color-muted)";
 const HAIRLINE = "var(--color-gridline)";
 const CTA = "var(--color-cta)";
 /* Interactive accent — the teal the navbar "Try Elio" CTA arrows use. */
-const ACCENT = "#0081AC";
+const ACCENT = "var(--color-accent)";
 
 const cardStyle: React.CSSProperties = {
   backgroundColor: "#FFFFFF",
@@ -60,11 +60,11 @@ function CtaButton({ children, className = "", ...props }: React.ButtonHTMLAttri
   return (
     <button
       {...props}
-      className={`group rounded-button px-5 py-2 text-sm flex items-center gap-2 transition-colors bg-cta text-white hover:text-[#0081AC] cursor-pointer ${className}`}
+      className={`group rounded-button px-5 py-2 text-sm flex items-center gap-2 transition-colors bg-cta text-white hover:text-accent cursor-pointer ${className}`}
     >
       {children}
       <span className="ml-2 inline-block transition-transform group-hover:translate-x-0.5">
-        <ArrowDots className="text-[#0081AC]" />
+        <ArrowDots className="text-accent" />
       </span>
     </button>
   );
@@ -360,7 +360,7 @@ export function CareersContactForm({ intro }: Props = {}) {
                 </label>
 
                 <label className="flex items-start gap-3 cursor-pointer">
-                  <input type="checkbox" checked={updates} onChange={(e) => setUpdates(e.target.checked)} className="mt-0.5 w-4 h-4 accent-[#0081AC]" />
+                  <input type="checkbox" checked={updates} onChange={(e) => setUpdates(e.target.checked)} className="mt-0.5 w-4 h-4 accent-accent" />
                   <span className="text-[14px] leading-[1.5]" style={{ color: MUTED }}>I want to receive product updates from Columbus Earth.</span>
                 </label>
 

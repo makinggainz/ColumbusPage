@@ -40,11 +40,11 @@ export default function GradientPanel({
 
 export const CODEX_GRADIENTS = {
   chat:
-    "linear-gradient(135deg, #FFE9CC 0%, #FFB088 28%, #5FB8E8 65%, #0081AC 100%)",
+    "linear-gradient(135deg, #FFE9CC 0%, #FFB088 28%, #5FB8E8 65%, var(--color-accent) 100%)",
   dataCatalogue:
     "linear-gradient(135deg, #E6F4FB 0%, #62B6E2 40%, #0F7AA8 75%, #06405E 100%)",
   agenticResearch:
     "linear-gradient(135deg, #C8E8F8 0%, #5FB1DE 35%, #105A82 75%, #062F49 100%)",
   dashboard:
-    "linear-gradient(135deg, #FFF4DF 0%, #FFCB8B 22%, #8FCFE9 60%, #0081AC 100%)",
+    "linear-gradient(135deg, #FFF4DF 0%, #FFCB8B 22%, #8FCFE9 60%, var(--color-accent) 100%)",
 } as const;

@@ -1,6 +1,6 @@
 /* Blog index — redesigned to match the homepage visual language
    (HeroNew + BentoProducts). Funnel Display headings, #0B1B2B ink,
-   #0081AC accent, 13px card corners with the BentoProducts corner
+   var(--color-accent) accent, 13px card corners with the BentoProducts corner
    notch + 1px #E7E7F1 hairline. Card text sits underneath the tile. */
 
 .page {
@@ -282,7 +282,7 @@
   letter-spacing: 0.06em;
   text-transform: uppercase;
   white-space: nowrap;
-  color: #0081AC;
+  color: var(--color-accent);
 }
 
 /* ── Card text — sits underneath the media tile. ────────────────────── */
@@ -327,7 +327,7 @@
   margin: 0 0 8px;
   transition: color 200ms ease;
 }
-.card:hover .cardTitle { color: #0081AC; }
+.card:hover .cardTitle { color: var(--color-accent); }
 
 .cardDescription {
   display: block;

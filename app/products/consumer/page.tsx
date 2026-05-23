@@ -41,9 +41,13 @@ export default function ProductsPage() {
     <main style={{ overflowX: "clip" }}>
       {/* MistxNav is a direct child of <main> — not wrapped in a
           SectionWithLabel — so its position:sticky has the full page as
-          its containing block. `heroLight` floats it over the light
-          MapsGPT hero (dark contents, pale scrim) like the business page. */}
-      <MistxNav heroLight />
+          its containing block. `heroWhite` floats it transparently over
+          the tropical beach hero with WHITE nav contents at rest, so the
+          logo / links / arrows read on the dark photo. The Hero itself
+          paints a dark-fade band at its top edge that sits behind the
+          navbar zone, giving the white nav text a guaranteed legibility
+          backdrop independent of which part of the beach lands here. */}
+      <MistxNav heroWhite lightCta darkBackdrop />
       <SectionWithLabel label={sectionLabels[1]}>
         <Hero />
       </SectionWithLabel>

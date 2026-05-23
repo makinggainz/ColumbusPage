@@ -321,8 +321,8 @@ const CSS = `
 }
 
 /* Signature CTA pill — same pattern as CtaBanner / Careers / ProductCell:
-   #1f1f1f surface, white label that swaps to #0081AC on hover, and the
-   five-dot blue ArrowDots glyph (#0081AC) that slides 2px to the right
+   #1f1f1f surface, white label that swaps to var(--color-accent) on hover, and the
+   five-dot blue ArrowDots glyph (var(--color-accent)) that slides 2px to the right
    on hover. Padding + line-height match Careers' "Join our team"
    reference button so every homepage-content CTA renders at the same
    42px height. */
@@ -346,10 +346,10 @@ const CSS = `
   white-space: nowrap;
   transition: color 180ms ease;
 }
-.bp-cta:hover { color: #0081AC; }
+.bp-cta:hover { color: var(--color-accent); }
 .bp-cta-arrow {
   display: inline-block;
-  color: #0081AC;
+  color: var(--color-accent);
   transition: transform 180ms ease;
 }
 .bp-cta:hover .bp-cta-arrow { transform: translateX(2px); }
@@ -472,7 +472,7 @@ const PRODUCTS: Product[] = [
 
 /* Signature 5-dot diagonal arrow used by CtaBanner / Careers / ProductCell.
    Circles use currentColor so the wrapping `.bp-cta-arrow` controls the
-   fill (set to the navbar accent #0081AC by default). */
+   fill (set to the navbar accent var(--color-accent) by default). */
 function ArrowDots() {
   return (
     <svg

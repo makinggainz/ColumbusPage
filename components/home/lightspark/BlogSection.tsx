@@ -160,7 +160,7 @@ const CSS = `
 }
 
 .blog-card:hover { color: #0A1344; }
-.blog-card:hover .blog-card-title { color: #0081AC; }
+.blog-card:hover .blog-card-title { color: var(--color-accent); }
 
 /* Title — typography from the .h5 class on the element. This rule only
    handles colour, max-width, balance-wrap, and the per-state max-width
@@ -226,7 +226,7 @@ const CSS = `
   bottom: 18px;
   right: 18px;
   z-index: 1;
-  color: #0081AC;
+  color: var(--color-accent);
   opacity: 0;
   transition: transform 300ms ease, opacity 300ms ease;
 }
@@ -331,12 +331,12 @@ export function BlogSection() {
                 companion line-height token. */}
             <a
               href="#"
-              className="group rounded-button-md px-7 py-3.5 p-m flex items-center gap-2 transition-colors bg-cta text-white hover:text-[#0081AC]"
+              className="group rounded-button-md px-7 py-3.5 p-m flex items-center gap-2 transition-colors bg-cta text-white hover:text-accent"
               style={{ lineHeight: 1 }}
             >
               Read all posts
               <span className="ml-2 inline-block transition-transform group-hover:translate-x-0.5">
-                <ArrowDots className="text-[#0081AC]" />
+                <ArrowDots className="text-accent" />
               </span>
             </a>
           </div>

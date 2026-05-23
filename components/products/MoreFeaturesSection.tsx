@@ -51,10 +51,11 @@ const THEMES: Record<ThemeName, Theme> = {
     bg: "linear-gradient(155deg, #FFFFFF 0%, #E3F2F5 100%)",
     ink: "#0B1B2B",
     body: "#5A6B7B",
-    eyebrow: "#0081AC",
+    eyebrow: "var(--color-accent)",
     border: "1px solid #D4E8EB",
-    glow: "rgba(0,129,172,0.18)",
-    shadow: "0 1px 2px rgba(11,27,43,0.04), 0 16px 36px -12px rgba(0,129,172,0.18)",
+    glow: "color-mix(in srgb, var(--color-accent) 18%, transparent)",
+    shadow:
+      "0 1px 2px rgba(11,27,43,0.04), 0 16px 36px -12px color-mix(in srgb, var(--color-accent) 18%, transparent)",
   },
   white: {
     bg: "#FFFFFF",
@@ -289,7 +290,7 @@ function HeartMotif() {
     >
       <path
         d="M16 28S2 19.5 2 9.8C2 5 5.6 2 9.4 2 12 2 14.5 3.6 16 6.2 17.5 3.6 20 2 22.6 2 26.4 2 30 5 30 9.8 30 19.5 16 28 16 28z"
-        fill="rgba(0,129,172,0.12)"
+        fill="color-mix(in srgb, var(--color-accent) 12%, transparent)"
       />
     </svg>
   );

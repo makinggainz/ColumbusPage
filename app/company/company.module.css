@@ -192,7 +192,7 @@
   transition: color 200ms ease;
 }
 .timelineLink:hover {
-  color: #0081AC;
+  color: var(--color-accent);
 }
 
 /* ── "What we're building" — three pillar cards laying out the Large
@@ -321,7 +321,7 @@
   color: #0A1344;
 }
 .postCard:hover .postCardTitle {
-  color: #0081AC;
+  color: var(--color-accent);
 }
 
 /* One static measure (32ch) for every card title — small cards are
@@ -370,7 +370,7 @@
   bottom: 18px;
   right: 18px;
   z-index: 1;
-  color: #0081AC;
+  color: var(--color-accent);
   opacity: 0;
   transition: transform 300ms ease, opacity 300ms ease;
 }
@@ -631,7 +631,7 @@
 .quoteMarkAccent {
   width: 32px;
   height: auto;
-  color: rgba(0, 129, 172, 0.25);
+  color: color-mix(in srgb, var(--color-accent) 25%, transparent);
   margin-bottom: 16px;
 }
 
@@ -650,7 +650,7 @@
    weight to match the featured quote. */
 .quoteText {
   /* Accent blue — matches the quote-mark glyph above each quote. */
-  color: #0081AC;
+  color: var(--color-accent);
   font-family: var(--font-sans);
   font-size: 16px;
   line-height: 1.5;
@@ -744,5 +744,5 @@
 }
 .iconCircle:hover {
   background: rgba(11, 27, 43, 0.16);
-  color: #0081AC;
+  color: var(--color-accent);
 }

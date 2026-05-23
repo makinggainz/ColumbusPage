@@ -91,9 +91,9 @@ function phoneStates(isLg: boolean) {
 // so they appear UNDER the phone and rise (PolarX's Relive text).
 const LABELS = [
   { scene: 1, side: "right", anchor: 0.5, eyebrow: "Ask anything", heading: "Chat your way around any city." },
-  { scene: 1, side: "right", anchor: 0.5, eyebrow: "Plain language", heading: "No filters, no menus — just ask." },
-  { scene: 2, side: "left", anchor: 0.5, eyebrow: "Discover", heading: "Find the places worth your time." },
-  { scene: 2, side: "left", anchor: 0.5, eyebrow: "Local-grade picks", heading: "Ranked by people who actually went." },
+  { scene: 1, side: "right", anchor: 0.5, eyebrow: "Like texting a friend", heading: "Swap a spot, ask alternatives, refine the plan." },
+  { scene: 2, side: "left", anchor: 0.5, eyebrow: "It draws the map", heading: "Markers, routes, and zones — drawn for your trip." },
+  { scene: 2, side: "left", anchor: 0.5, eyebrow: "Whole neighborhoods", heading: "Not just one pin — think “party zone in Madrid.”" },
   { scene: 3, side: "right", anchor: 0.5, eyebrow: "Get going", heading: "Directions the second you decide." },
   { scene: 3, side: "right", anchor: 0.5, eyebrow: "On the move", heading: "Your route recalculated as you wander." },
 ] as const;
@@ -113,6 +113,10 @@ export default function Hero() {
   const [phase, setPhase] = useState(0);
   const [mounted, setMounted] = useState(false);
   const [isLg, setIsLg] = useState(true);
+  // Index of the typewriter phrase currently being typed. TypedPhrase
+  // calls back with this every time the next phrase begins, and the
+  // hero background video remounts to match (see VIDEO_BY_PHRASE).
+  const [activePhrase, setActivePhrase] = useState(0);
 
   const outerRef = useRef<HTMLDivElement>(null);
   const riseRef = useRef<HTMLDivElement>(null);
@@ -397,28 +401,53 @@ export default function Hero() {
           paddingBottom: "clamp(150px, 19vh, 230px)",
         }}
       >
-        {/* Light pastel Elio background + soft legibility wash */}
+        {/* Consumer hero background — a video that SWAPS to match the
+            typed-phrase carousel below. The phrase carousel calls back
+            into `activePhrase`; the video remounts via `key` so each
+            new clip starts from frame 0 and the prior one is dropped.
+            `HeroBack.png` is the poster, so the beach photo shows
+            while the clip preloads or whenever a phrase has no video
+            file yet — drop matching files into /public/consumer/videos
+            (see VIDEO_BY_PHRASE below for the expected filenames) and
+            each one lights up automatically.
+
+            On top of the video sits the same dark top-fade band the
+            photo-only version used, so the white navbar contents
+            stay legible regardless of which frame is on screen. */}
         <div aria-hidden className="absolute inset-0 overflow-hidden">
-          <Image src="/eliocardbackground.png" alt="" fill priority sizes="100vw" style={{ objectFit: "cover" }} />
-          <div
-            className="absolute inset-0"
-            style={{
-              background:
-                "linear-gradient(180deg, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0.28) 30%, " +
-                "rgba(255,255,255,0.06) 58%, rgba(255,255,255,0) 100%)",
-            }}
+          <video
+            key={`hero-bg-${activePhrase}`}
+            src={VIDEO_BY_PHRASE[activePhrase]}
+            poster="/consumer/HeroBack.png"
+            autoPlay
+            loop
+            muted
+            playsInline
+            preload="auto"
+            className="absolute inset-0 w-full h-full"
+            style={{ objectFit: "cover" }}
+            aria-hidden
           />
           <div
-            className="absolute inset-0"
-            style={{ background: "linear-gradient(0deg, rgba(247,242,228,0.6) 0%, rgba(247,242,228,0) 22%)" }}
+            className="absolute inset-x-0 top-0"
+            style={{
+              height: 280,
+              background:
+                "linear-gradient(180deg, rgba(8, 22, 32, 0.72) 0%, rgba(8, 22, 32, 0.45) 40%, rgba(8, 22, 32, 0.18) 75%, rgba(8, 22, 32, 0) 100%)",
+              pointerEvents: "none",
+            }}
           />
         </div>
 
-        {/* Content stack — dark teal, upper third */}
+        {/* Content stack — white over the beach photo, upper third. The
+            "Elio" eyebrow row (Globe icon + label) and the H1 both read
+            in pure white; the colour swap from the prior dark-teal was
+            paired with the background image change so the type sits on
+            top of the tropical scene with maximum contrast. */}
         <div className="relative flex flex-col items-center text-center px-6" style={{ maxWidth: 820, gap: 32 }}>
           <Stagger show={mounted} delay={120} y={84}>
             <div className="flex flex-col items-center" style={{ gap: 16 }}>
-              <div className="flex items-center gap-2" style={{ color: "#063140" }}>
+              <div className="flex items-center gap-2" style={{ color: "#FFFFFF" }}>
                 <MapsGPTGlobe size={isLg ? 30 : 26} />
                 <span
                   style={{
@@ -438,12 +467,12 @@ export default function Hero() {
                   fontWeight: 700,
                   lineHeight: 1.1,
                   letterSpacing: "-0.02em",
-                  color: "#063140",
+                  color: "#FFFFFF",
                 }}
               >
-                One travel app for
+                Find your next
                 <br />
-                everywhere you go
+                <TypedPhrase onPhraseChange={setActivePhrase} />
               </h1>
             </div>
           </Stagger>
@@ -460,14 +489,17 @@ export default function Hero() {
                   height: 42,
                   padding: "0 20px",
                   borderRadius: 18,
-                  background: "#063140",
-                  color: "#FFFFFF",
+                  /* White pill with black text — paired with the beach
+                     hero's white headline so the primary CTA reads as
+                     the bright focal point against the photo. */
+                  background: "#FFFFFF",
+                  color: "#000000",
                   fontFamily: '"SF Pro", -apple-system, BlinkMacSystemFont, sans-serif',
                   fontSize: 15,
                   fontWeight: 600,
                   letterSpacing: "-0.01em",
                   textDecoration: "none",
-                  boxShadow: "0 14px 30px -12px rgba(6,49,64,0.35)",
+                  boxShadow: "0 14px 30px -12px rgba(0,0,0,0.35)",
                   transition: "transform 0.25s cubic-bezier(0.25,1,0.5,1)",
                 }}
                 onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.04)")}
@@ -479,6 +511,40 @@ export default function Hero() {
             </div>
           </Stagger>
         </div>
+
+        {/* Faux rounded bottom corners — small boxes anchored flush in
+            the bottom-left + bottom-right of the hero. Each box is
+            mostly white with a quarter-circle BITE taken out of its
+            inner corner (the corner facing into the hero), so the
+            visible white wedge has straight outer corners against the
+            page edges and a concave arc against the hero image. The
+            hero's bottom-corner curve created by that arc visually
+            matches the PageFrame's rounded top corners. The radial-
+            gradient + box size both read from var(--frame-radius), so
+            the corners shrink to zero in lockstep with the PageFrame's
+            own corners as the user scrolls into full-bleed mode. */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute bottom-0 left-0"
+          style={{
+            width: "var(--frame-radius, 20px)",
+            height: "var(--frame-radius, 20px)",
+            background:
+              "radial-gradient(circle at top right, transparent calc(var(--frame-radius, 20px) - 0.5px), #FFFFFF var(--frame-radius, 20px))",
+            zIndex: 2,
+          }}
+        />
+        <div
+          aria-hidden
+          className="pointer-events-none absolute bottom-0 right-0"
+          style={{
+            width: "var(--frame-radius, 20px)",
+            height: "var(--frame-radius, 20px)",
+            background:
+              "radial-gradient(circle at top left, transparent calc(var(--frame-radius, 20px) - 0.5px), #FFFFFF var(--frame-radius, 20px))",
+            zIndex: 2,
+          }}
+        />
 
       </header>
 
@@ -567,6 +633,123 @@ function Stagger({ show, delay, y, children }: { show: boolean; delay: number; y
     >
       {children}
     </div>
+  );
+}
+
+// ── Typewriter phrase — cycles through realistic search ideas, typing
+//    and backspacing one character at a time with a blinking caret. ──
+const TYPED_PHRASES = [
+  "hang out spot",
+  "romantic date night",
+  "secret beach spot",
+  "hidden coffee shop",
+  "weekend brunch place",
+  "local hiking trail",
+  "cozy bookstore",
+  "rooftop sunset bar",
+  "late-night taco joint",
+  "quiet study café",
+];
+
+// Hero background video per typed phrase — same index as TYPED_PHRASES.
+// Hot-linked at 720p from Mixkit's CDN (free license; no attribution
+// required for non-resale use). Self-hosting all ten clips would add
+// ~57MB to the repo; hot-linking keeps the bundle light, the clips
+// already optimised by Mixkit's CDN, and one swap of an ID below
+// replaces a clip. Each chosen clip leans into the "people enjoying
+// that place" vibe the homepage typing carousel evokes:
+//   hang out spot         → friends drinking wine on a balcony (42716)
+//   romantic date night   → intimate couple dinner (41261)
+//   secret beach spot     → tropical paradise beach (7205)
+//   hidden coffee shop    → urban coffee shop (4350)
+//   weekend brunch place  → happy family brunch outdoors (47157)
+//   local hiking trail    → couple exploring a forest (43151)
+//   cozy bookstore        → bookstore shelves with warm light (14189)
+//   rooftop sunset bar    → young couple having fun in a rooftop bar (47027)
+//   late-night taco joint → fish tacos with beer (16411)
+//   quiet study café      → woman drinking coffee in a cafe (223)
+// The <video> falls back to /consumer/HeroBack.png if any URL ever
+// 404s so the page never goes black.
+const VIDEO_BY_PHRASE = [
+  "https://assets.mixkit.co/videos/42716/42716-720.mp4",
+  "https://assets.mixkit.co/videos/41261/41261-720.mp4",
+  "https://assets.mixkit.co/videos/7205/7205-720.mp4",
+  "https://assets.mixkit.co/videos/4350/4350-720.mp4",
+  "https://assets.mixkit.co/videos/47157/47157-720.mp4",
+  "https://assets.mixkit.co/videos/43151/43151-720.mp4",
+  "https://assets.mixkit.co/videos/14189/14189-720.mp4",
+  "https://assets.mixkit.co/videos/47027/47027-720.mp4",
+  "https://assets.mixkit.co/videos/16411/16411-720.mp4",
+  "https://assets.mixkit.co/videos/223/223-720.mp4",
+];
+
+function TypedPhrase({
+  onPhraseChange,
+}: {
+  /** Fires with the index of the phrase that is now BEING TYPED (so a
+   *  callback at idx N means typing of phrase N just started; the
+   *  background video should swap to N's source here). */
+  onPhraseChange?: (idx: number) => void;
+}) {
+  const [text, setText] = useState("");
+  const [phraseIdx, setPhraseIdx] = useState(0);
+  const [deleting, setDeleting] = useState(false);
+
+  // Tell the parent which phrase is currently being typed. Fires on
+  // mount with idx 0, then every time phraseIdx advances. Captured in
+  // its own effect so the typewriter timer stays minimal.
+  useEffect(() => {
+    onPhraseChange?.(phraseIdx);
+  }, [phraseIdx, onPhraseChange]);
+
+  useEffect(() => {
+    const full = TYPED_PHRASES[phraseIdx];
+    // Typing forward — fast; deleting — quicker; hold 3s at the full
+    // word so the user has time to read it (and so the matching video
+    // background gets a meaningful beat on screen); brief pause before
+    // typing the next one when fully cleared.
+    let delay: number;
+    if (!deleting && text === full) {
+      delay = 3000;
+    } else if (deleting && text === "") {
+      delay = 280;
+    } else {
+      delay = deleting ? 32 : 70;
+    }
+
+    const t = setTimeout(() => {
+      if (!deleting && text === full) {
+        setDeleting(true);
+      } else if (deleting && text === "") {
+        setDeleting(false);
+        setPhraseIdx((i) => (i + 1) % TYPED_PHRASES.length);
+      } else if (deleting) {
+        setText(full.slice(0, text.length - 1));
+      } else {
+        setText(full.slice(0, text.length + 1));
+      }
+    }, delay);
+
+    return () => clearTimeout(t);
+  }, [text, deleting, phraseIdx]);
+
+  return (
+    <span style={{ display: "inline-block", whiteSpace: "nowrap" }}>
+      <span>{text}</span>
+      <span
+        aria-hidden
+        style={{
+          display: "inline-block",
+          width: "0.06em",
+          height: "0.9em",
+          marginLeft: "0.08em",
+          verticalAlign: "-0.08em",
+          background: "#FFFFFF",
+          animation: "mgHeroCaret 1s steps(1) infinite",
+        }}
+      />
+      <style>{`@keyframes mgHeroCaret { 0%,49% { opacity: 1 } 50%,100% { opacity: 0 } }`}</style>
+    </span>
   );
 }
 
