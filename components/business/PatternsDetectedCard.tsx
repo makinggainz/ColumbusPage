@@ -99,7 +99,7 @@ export default function PatternsDetectedCard({
             lineHeight: 1.5,
             fontStyle: "italic",
             paddingLeft: 10,
-            borderLeft: "2px solid #E4E4E7",
+            borderLeft: "2px solid rgba(0, 0, 0, 0.05)",
           }}
         >
           {prompt}
@@ -185,7 +185,7 @@ export default function PatternsDetectedCard({
           marginTop: 14,
           height: 40,
           borderRadius: 11,
-          border: "1px solid #E4E4E7",
+          border: "1px solid rgba(0, 0, 0, 0.05)",
           background: "#FFFFFF",
           color: "var(--ent-text-navy)",
           fontSize: 13,

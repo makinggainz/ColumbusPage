@@ -42,8 +42,13 @@ const RESIDENTIAL_MAP_CHAT = {
 const CYCLE_MS = 6000;
 
 /* Scoped CSS:
-   • cmpBarFill: invisible 6s timer whose animation end advances the
-     active slot. No visible progress bar on this layout.
+   • cmpBarFillIn: when a cell becomes active, the gray fill wipes in
+     from the left edge over FILL_IN_MS (origin: left, scaleX 0 → 1).
+   • cmpBarRecede: chained right after — over the remainder of
+     CYCLE_MS the fill recedes anchored to the right edge (origin:
+     right, scaleX 1 → 0) so the left edge slides rightward and the
+     fill thins as time runs out. The recede's animation-end fires
+     advance(), so the visible countdown IS the timer.
    • .cmp-host-visual > *: kills only the box-shadow on each demo's
      outermost wrapper (MapChatPlatform / *Mockup all set a heavy
      floating-card shadow via inline style). Per the user's pass on
@@ -51,8 +56,17 @@ const CYCLE_MS = 6000;
      read as if you're clicking through the live app rather than
      swapping between framed product screenshots. Rounded corners
      and the rest of each demo's chrome stay intact. */
+const FILL_IN_MS = 500;
+const RECEDE_MS = CYCLE_MS - FILL_IN_MS;
 const CMP_CSS = `
-@keyframes cmpBarFill { from { width: 0%; } to { width: 100%; } }
+@keyframes cmpBarFillIn {
+  from { transform: scaleX(0); transform-origin: left center; }
+  to { transform: scaleX(1); transform-origin: left center; }
+}
+@keyframes cmpBarRecede {
+  from { transform: scaleX(1); transform-origin: right center; }
+  to { transform: scaleX(0); transform-origin: right center; }
+}
 .cmp-host-visual > * { box-shadow: none !important; }
 `;
 
@@ -143,9 +157,17 @@ export default function ComparisonSection() {
   const [onScreen, setOnScreen] = useState(false);
   const [active, setActive] = useState(0);
   const [hovered, setHovered] = useState(false);
+  const [hoveredCard, setHoveredCard] = useState<number | null>(null);
   /* Bumped on every advance/click to remount the progress fill so its
      CSS animation restarts from 0. */
   const [runId, setRunId] = useState(0);
+  /* Tracks where the active cell sits in its two-stage animation. The
+     fill-in entrance should ALWAYS play (it's selection feedback,
+     triggered by click or auto-advance — both of which can occur while
+     the cursor is still inside the section). Only the recede phase
+     respects the hover pause, so the user can "stop and read" without
+     freezing the entrance into the next card. */
+  const [cyclePhase, setCyclePhase] = useState<"fillIn" | "recede">("fillIn");
 
   useEffect(() => {
     const el = sectionRef.current;
@@ -161,8 +183,19 @@ export default function ComparisonSection() {
     return () => obs.disconnect();
   }, []);
 
-  /* Cycling pauses off-screen or while the user is reading (hover). */
-  const paused = !onScreen || hovered;
+  /* Reset to the fill-in phase whenever a new slot becomes active
+     (select() / advance() both bump runId). After FILL_IN_MS we flip
+     to recede so the pause logic kicks in for the rest of the cycle. */
+  useEffect(() => {
+    setCyclePhase("fillIn");
+    const t = setTimeout(() => setCyclePhase("recede"), FILL_IN_MS);
+    return () => clearTimeout(t);
+  }, [runId]);
+
+  /* Cycling pauses off-screen, OR while the user hovers AND the active
+     cell has finished its fill-in entrance. The fill-in is never paused
+     so clicking always gives immediate visual feedback. */
+  const paused = !onScreen || (hovered && cyclePhase === "recede");
 
   const select = (i: number) => {
     if (i === active) return;
@@ -203,14 +236,11 @@ export default function ComparisonSection() {
         <ul
           className="flex flex-col list-none m-0 p-0 lg:h-full overflow-hidden rounded-3xl lg:rounded-r-none border-2 border-(--ent-border-card)"
           style={{
-            /* Inactive cells take this surface as their fill — same
-               #FAFAFA the SuperFeatureSection panels and the
-               ProblemCards pain-point cards use. The active cell's
-               own horizontal fill bar (see <li> styles) paints white
-               from left to right on top of this so the selection
-               feels like a "lifted" card rising above the muted
-               backdrop. */
-            background: "#FAFAFA",
+            /* Inactive cells are transparent, matching the page background.
+               The active cell's own horizontal fill bar (see <li> styles)
+               paints #F2F2F2 from left to right on top of this so the
+               selection feels like a "lifted" card. */
+            background: "transparent",
           }}
         >
           {FEATURES.map((f, i) => {
@@ -221,37 +251,48 @@ export default function ComparisonSection() {
                 key={f.title}
                 className={[
                   "relative lg:flex-1 lg:flex lg:flex-col transition-opacity duration-200",
-                  isActive ? "opacity-100" : "opacity-40",
+                  isActive ? "opacity-100" : hoveredCard === i ? "opacity-100" : "opacity-70",
                 ].join(" ")}
+                onMouseEnter={() => setHoveredCard(i)}
+                onMouseLeave={() => setHoveredCard(null)}
               >
-                {/* Horizontal fill bar — paints white over the cell's
-                    full area, scaled from the LEFT edge. Active: scaled
-                    to 1 → fully filled. Inactive: scaled to 0 → fully
-                    collapsed to the left edge (invisible) so the ul's
-                    #FAFAFA shows through. Transitions on transform run
-                    on the GPU for a smooth left-to-right wipe each
-                    time the active slot changes. z-index sits behind
-                    the cell's content (which has z-10 below). */}
-                <span
-                  aria-hidden
-                  className="absolute inset-0 transition-transform duration-500"
-                  style={{
-                    backgroundColor: "#FFFFFF",
-                    transform: isActive ? "scaleX(1)" : "scaleX(0)",
-                    transformOrigin: "left center",
-                    transitionTimingFunction: "cubic-bezier(0.4, 0, 0.2, 1)",
-                    zIndex: 0,
-                  }}
-                />
+                {/* Countdown fill — when the cell becomes active the
+                    gray fill first wipes in from the LEFT edge over
+                    FILL_IN_MS (cmpBarFillIn), then chains into the
+                    cmpBarRecede countdown which shrinks the fill
+                    anchored to the RIGHT edge over the rest of the
+                    cycle (left edge slides rightward, fill thins).
+                    The mount is keyed by runId so each new active
+                    slot restarts the two-stage animation from
+                    scratch. The recede's animation-end fires
+                    advance() — the visible countdown IS the
+                    auto-advance timer. */}
+                {isActive && (
+                  <span
+                    key={runId}
+                    onAnimationEnd={(e) => {
+                      if (e.animationName === "cmpBarRecede") advance();
+                    }}
+                    aria-hidden
+                    className="absolute inset-0"
+                    style={{
+                      backgroundColor: "#F2F2F2",
+                      animation: `cmpBarFillIn ${FILL_IN_MS}ms cubic-bezier(0.4, 0, 0.2, 1) forwards, cmpBarRecede ${RECEDE_MS}ms linear ${FILL_IN_MS}ms forwards`,
+                      animationPlayState: paused ? "paused" : "running",
+                      willChange: "transform",
+                      zIndex: 0,
+                    }}
+                  />
+                )}
                 <button
                   type="button"
                   onClick={() => select(i)}
                   aria-pressed={isActive}
                   className="relative z-10 w-full text-left cursor-pointer px-6 md:px-10 py-7 md:py-8"
                 >
-                  {/* Two-column row: numeric prefix on the left, title +
-                      tagline stacked on the right. items-start aligns the
-                      number with the title's first baseline (close
+                  {/* Two-column row: icon on the left, title +
+                      tagline stacked on the right. items-start aligns
+                      the icon with the title's first baseline (close
                       enough at this size). The tagline always shows —
                       there's no expand-on-active animation anymore. */}
                   <div className="flex items-start gap-5">
@@ -270,7 +311,7 @@ export default function ComparisonSection() {
                     <div className="flex-1 min-w-0 flex flex-col gap-1.5">
                       <span
                         className="text-[20px] md:text-[22px] font-semibold leading-[1.2]"
-                        style={{ color: "var(--ent-text-primary)", letterSpacing: "-0.01em" }}
+                        style={{ color: "#0E173C", letterSpacing: "-0.01em" }}
                       >
                         {f.title}
                       </span>
@@ -291,26 +332,6 @@ export default function ComparisonSection() {
                     className="absolute left-0 bottom-0 w-full"
                     style={{ height: 1, backgroundColor: SOFT }}
                     aria-hidden
-                  />
-                )}
-                {/* Invisible auto-advance timer — animation end fires
-                    advance() so the active slot still cycles every
-                    CYCLE_MS even though the visible progress bar from
-                    the previous design is gone. */}
-                {isActive && (
-                  <span
-                    key={runId}
-                    onAnimationEnd={advance}
-                    aria-hidden
-                    style={{
-                      position: "absolute",
-                      width: 0,
-                      height: 0,
-                      opacity: 0,
-                      pointerEvents: "none",
-                      animation: `cmpBarFill ${CYCLE_MS}ms linear`,
-                      animationPlayState: paused ? "paused" : "running",
-                    }}
                   />
                 )}
               </li>
@@ -344,6 +365,16 @@ export default function ComparisonSection() {
             backgroundImage: "url('/Environmental/env-bg-1.png')",
             backgroundSize: "cover",
             backgroundPosition: "center",
+            // Without these, `background-clip` defaults to `border-box`
+            // and the sky photo bleeds UNDER the 2px hairline border.
+            // At the rounded top-right + bottom corners the photo sits
+            // a hair outside the border curve, which renders as a faint
+            // fringe — "another image showing through behind the
+            // border". Clipping the background to the padding box pulls
+            // the photo flush with the inside of the border so the
+            // corners read as a clean edge.
+            backgroundClip: "padding-box",
+            backgroundOrigin: "padding-box",
             height: 630,
           }}
         >

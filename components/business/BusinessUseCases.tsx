@@ -1717,6 +1717,7 @@ export default function BusinessUseCases() {
            shape in case the chain is unwound. */
         backgroundImage={bg.agenticResearchHero}
         demoVisual={<DashboardMockup industryId={industryId} />}
+        panel={false}
       />
     </>
   );

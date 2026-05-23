@@ -284,7 +284,7 @@ export default function DataManagerMockup({ industryId }: DataManagerMockupProps
             className="w-full"
             style={{
               borderRadius: 9999,
-              border: "1px solid #E4E4E7",
+              border: "1px solid rgba(0, 0, 0, 0.05)",
               backgroundColor: "#FFFFFF",
               padding: "clamp(6px, 0.85cqw, 11px) clamp(14px, 1.6cqw, 22px)",
               paddingRight: "clamp(34px, 3.4cqw, 46px)",
@@ -330,7 +330,7 @@ export default function DataManagerMockup({ industryId }: DataManagerMockupProps
           style={{
             marginTop: "clamp(8px, 1.4cqw, 18px)",
             gap: "clamp(12px, 2cqw, 30px)",
-            borderBottom: "1px solid #E4E4E7",
+            borderBottom: "1px solid rgba(0, 0, 0, 0.05)",
             paddingBottom: "clamp(7px, 0.9cqw, 13px)",
             overflow: "hidden",
             whiteSpace: "nowrap",
@@ -383,7 +383,7 @@ export default function DataManagerMockup({ industryId }: DataManagerMockupProps
             <article
               key={card.title}
               style={{
-                border: "1px solid #E4E4E7",
+                border: "1px solid rgba(0, 0, 0, 0.05)",
                 borderRadius: "clamp(8px, 0.9cqw, 12px)",
                 overflow: "hidden",
                 backgroundColor: "#FFFFFF",

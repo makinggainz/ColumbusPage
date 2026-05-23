@@ -4,27 +4,54 @@ import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 
 /* ── Section: "Enterprise-grade capabilities" ────────────────────────────────
-   Six capability tiles in a uniform 3-up grid. Each tile shows its product
-   mockup image (public/capabilitiesImages/capability-1..6.png) with a bolded
-   label stacked directly below — no subtitle.
+   Six capability tiles in a uniform 3-up grid. Each tile is a miniature
+   product-display panel: the same /Environmental/env-bg-1.png sky + clouds
+   + palm-tree backdrop the ComparisonSection host card uses, with the
+   capability mockup floating in the top-center of the panel so the
+   surrounding sky reads as a SuperFeatureSection demo frame. Title sits
+   below each panel — no subtitle.
 
-   Each image carries the design-system card chrome — a hairline #E7E7F1
-   border (--ent-border-card, same hairline used by the IndustrySelector
-   panel directly below this section) and a 7px corner (--ent-radius-card,
-   the canonical card radius). overflow:hidden via rounded-[7px] clips the
-   raw screenshot to that corner.
+   The inner mockup keeps its 2px design-system hairline (--ent-border-card,
+   same border the IndustrySelector panel uses) and a 7px corner
+   (--ent-radius-card). overflow:hidden clips both the inner mockup and
+   the outer backdrop to their respective corners. */
 
-   Hover lifts the image 3px and shifts the label to the accent color,
-   signalling depth without inventing dead routes (no capability detail
-   pages exist yet, so tiles stay non-anchor). */
-
-const ITEMS: { title: string; image: string }[] = [
-  { title: "Ask the map anything", image: "/capabilitiesImages/capability-6.png" },
-  { title: "Agent research reports", image: "/capabilitiesImages/capability-1.png" },
-  { title: "24/7 personal support", image: "/capabilitiesImages/capability-3.png" },
-  { title: "High-fidelity accurate data", image: "/capabilitiesImages/capability-4.png" },
-  { title: "Data Catalogue", image: "/capabilitiesImages/capability-5.png" },
-  { title: "Light-speed due diligence", image: "/capabilitiesImages/capability-2.png" },
+/* Per-tile backdrop gradient — six distinct top-to-horizon blue ramps,
+   each derived from the sky region of the matching industry's chatHero
+   ("first SuperFeatureSection background") so the six tiles share a
+   palette but every one has its own slightly different blue. Stops are
+   (top of sky → mid sky → horizon) for a natural sky-to-horizon falloff. */
+const ITEMS: { title: string; image: string; backdrop: string }[] = [
+  {
+    title: "Ask the map anything",
+    image: "/capabilitiesImages/capability-6.png",
+    backdrop: "linear-gradient(180deg, #0174D5 0%, #0286E9 50%, #33A8F6 100%)",
+  },
+  {
+    title: "Agent research reports",
+    image: "/capabilitiesImages/capability-1.png",
+    backdrop: "linear-gradient(180deg, #2F6EC7 0%, #3A84DB 50%, #51A1ED 100%)",
+  },
+  {
+    title: "24/7 personal support",
+    image: "/capabilitiesImages/capability-3.png",
+    backdrop: "linear-gradient(180deg, #009EFF 0%, #00A8FF 50%, #50CDFF 100%)",
+  },
+  {
+    title: "High-fidelity accurate data",
+    image: "/capabilitiesImages/capability-4.png",
+    backdrop: "linear-gradient(180deg, #0187EF 0%, #1A99EF 50%, #61BBF7 100%)",
+  },
+  {
+    title: "Data Catalogue",
+    image: "/capabilitiesImages/capability-5.png",
+    backdrop: "linear-gradient(180deg, #028FEE 0%, #0898F3 50%, #66BFF9 100%)",
+  },
+  {
+    title: "Light-speed due diligence",
+    image: "/capabilitiesImages/capability-2.png",
+    backdrop: "linear-gradient(180deg, #0A8EEE 0%, #1095F1 50%, #40ADF7 100%)",
+  },
 ];
 
 export default function CapabilitiesGrid() {
@@ -56,38 +83,37 @@ export default function CapabilitiesGrid() {
           Enterprise-grade capabilities
         </h2>
 
-        {/* Card panel — matches the ComparisonSection content card
-            (--ent-bg-card surface, hairline border, 2xl radius) so this
-            grid reads as part of the same design-system family. */}
-        <div
-          className="mt-14 lg:mt-20"
-          style={{
-            backgroundColor: "#FAFAFA",
-            border: "2px solid var(--ent-border-dark-grid)",
-            borderRadius: "var(--ent-radius-2xl)",
-            paddingTop: "var(--ent-space-12)",
-            paddingBottom: "var(--ent-space-12)",
-            paddingLeft: "clamp(20px, 3vw, 40px)",
-            paddingRight: "clamp(20px, 3vw, 40px)",
-          }}
-        >
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-16 lg:gap-x-16 lg:gap-y-20">
-            {ITEMS.map((item, i) => (
-              <article
-                key={item.title}
-                className="cap-tile group"
+        <div className="mt-14 lg:mt-20 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-16 lg:gap-x-16 lg:gap-y-20">
+          {ITEMS.map((item, i) => (
+            <article
+              key={item.title}
+              className="cap-tile group"
+              style={{
+                opacity: visible ? 1 : 0,
+                transform: visible ? "translateY(0)" : "translateY(18px)",
+                transition: `opacity 0.6s ease ${0.06 * i}s, transform 0.6s ease ${0.06 * i}s`,
+              }}
+            >
+              {/* Product backdrop panel — per-industry blue-sky gradient
+                  behind a tight 6px gutter that frames the inner capability
+                  mockup. Outer aspect is set just slightly taller than the
+                  1.65 inner so the inner fills with a uniform 6px backdrop
+                  showing on every side. Corner radii are kept restrained
+                  (rounded-2xl outer, 4px inner) so the tiles read as crisp
+                  panels rather than soft cards. */}
+              <div
+                className="relative w-full overflow-hidden"
                 style={{
-                  opacity: visible ? 1 : 0,
-                  transform: visible ? "translateY(0)" : "translateY(18px)",
-                  transition: `opacity 0.6s ease ${0.06 * i}s, transform 0.6s ease ${0.06 * i}s`,
+                  aspectRatio: "1.62 / 1",
+                  padding: 6,
+                  background: item.backdrop,
+                  borderRadius: 13,
                 }}
               >
-                {/* Aspect-locked wrapper — the source PNGs span 1.60–1.67
-                    ratios, so leaving `h-auto` makes each tile a slightly
-                    different height and the titles below misalign across a
-                    row. Pinning the wrapper to 1.65 + object-cover keeps
-                    every tile identical in height. */}
-                <div className="cap-tile-img-wrap relative w-[88%] mx-auto aspect-[1.65/1] rounded-[7px] border-2 border-gridline overflow-hidden">
+                <div
+                  className="cap-tile-img-wrap relative w-full h-full border-2 border-gridline overflow-hidden"
+                  style={{ borderRadius: 13 }}
+                >
                   <Image
                     src={item.image}
                     alt={item.title}
@@ -96,15 +122,27 @@ export default function CapabilitiesGrid() {
                     className="object-cover"
                   />
                 </div>
-                <h3
-                  className="cap-tile-title mt-4 text-center text-[20px] md:text-[22px] font-semibold leading-[1.2]"
-                  style={{ color: "var(--ent-text-primary)", letterSpacing: "-0.01em" }}
-                >
-                  {item.title}
-                </h3>
-              </article>
-            ))}
-          </div>
+              </div>
+              <h3
+                className="cap-tile-title mt-4 text-center text-[20px] md:text-[22px] font-semibold leading-[1.2]"
+                style={{
+                  /* Mirrors ComparisonSection's feature-title typography
+                     (same size class, weight, leading, tracking, and
+                     #0E173C ink) so the two grids read as the same type
+                     family across the page. */
+                  color: "#0E173C",
+                  letterSpacing: "-0.01em",
+                  /* Override the .ent-scope heading rule (which forces
+                     Funnel Display on every h1–h6) so these tile titles
+                     read in the body sans face instead. The h3 stays
+                     for accessibility / heading hierarchy. */
+                  fontFamily: "var(--ent-font-sans)",
+                }}
+              >
+                {item.title}
+              </h3>
+            </article>
+          ))}
         </div>
       </div>
 

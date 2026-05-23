@@ -203,7 +203,7 @@ export default function ForecastCard({
         style={{
           height: 44,
           borderRadius: 12,
-          border: "1px solid #E4E4E7",
+          border: "1px solid rgba(0, 0, 0, 0.05)",
           background: "#FFFFFF",
           color: "var(--ent-text-navy)",
           fontSize: 14,

@@ -95,6 +95,10 @@ export default function BusinessHero() {
     },
   ]);
   const [activeTabId, setActiveTabId] = useState("map-chat");
+  // Tracks which tab the mouse is currently over so inactive tabs can
+  // show a hover highlight (a darker translucent shape) without their
+  // default state painting any background at all.
+  const [hoveredTabId, setHoveredTabId] = useState<string | null>(null);
   const dragTabIndex = useRef<number | null>(null);
 
   const moveTab = (from: number, to: number) => {
@@ -274,6 +278,10 @@ export default function BusinessHero() {
                 height: "clamp(34px, 3.4vw, 46px)",
                 paddingLeft: "clamp(15px, 1.7vw, 24px)",
                 paddingRight: "clamp(12px, 1.5vw, 20px)",
+                // Small top inset so the tabs sit INSIDE the title bar
+                // instead of touching the window's top edge — a few pixels
+                // of glass shows above the tab caps.
+                paddingTop: "clamp(4px, 0.5vw, 6px)",
               }}
             >
               {(["var(--ent-chrome-red)", "var(--ent-chrome-yellow)", "var(--ent-chrome-green)"] as const).map(c => (
@@ -295,8 +303,15 @@ export default function BusinessHero() {
               <div
                 style={{
                   display: "flex",
-                  alignItems: "center",
-                  gap: "clamp(7px, 0.9vw, 12px)",
+                  // Tabs sit on the bottom of the title bar so their flat
+                  // edge meets the content area cleanly — same baseline
+                  // as a Chrome window's tab strip.
+                  alignItems: "flex-end",
+                  // Visible gap between adjacent tabs — Chrome separates
+                  // its tabs with a clear sliver so each reads as its own
+                  // surface; also gives the active tab's flares clearance
+                  // so they don't crowd the next tab.
+                  gap: "clamp(6px, 0.8vw, 10px)",
                   marginLeft: "clamp(12px, 1.5vw, 22px)",
                   height: "100%",
                   flex: 1,
@@ -305,11 +320,22 @@ export default function BusinessHero() {
               >
                 {tabs.map((tab, i) => {
                   const active = tab.id === activeTabId;
+                  const hovered = tab.id === hoveredTabId;
+                  // Selected tab paints the full Chrome silhouette
+                  // (white body + matching white flares). Every other
+                  // state leaves the tab body transparent — the hover
+                  // highlight is a separate inset pill rendered below,
+                  // shaped like a regular button (rounded all corners,
+                  // confined to the tab body) so the flared base only
+                  // appears for the active tab.
+                  const tabBg = active ? "rgba(255,255,255,0.92)" : "transparent";
                   return (
                   <div
                     key={tab.id}
                     draggable
                     onClick={() => setActiveTabId(tab.id)}
+                    onMouseEnter={() => setHoveredTabId(tab.id)}
+                    onMouseLeave={() => setHoveredTabId(prev => (prev === tab.id ? null : prev))}
                     onDragStart={() => { dragTabIndex.current = i; }}
                     onDragOver={e => e.preventDefault()}
                     onDrop={e => {
@@ -322,14 +348,21 @@ export default function BusinessHero() {
                       display: "flex",
                       alignItems: "center",
                       gap: "clamp(4px, 0.5vw, 7px)",
-                      height: "70%",
-                      paddingLeft: "clamp(8px, 0.9vw, 13px)",
-                      paddingRight: "clamp(6px, 0.7vw, 10px)",
-                      // Subtle corner rounding — softer than the navbar-CTA
-                      // ratio, which read as over-rounded at this tab height.
-                      borderRadius: "clamp(6px, 0.6vw, 9px)",
-                      background: active ? "rgba(255,255,255,0.7)" : "rgba(255,255,255,0.18)",
-                      border: `1px solid ${active ? "rgba(255,255,255,0.6)" : "rgba(255,255,255,0.22)"}`,
+                      // Tabs fill the title bar's full height so their
+                      // flat bottom edge sits on the same baseline as the
+                      // content area below — Chrome-style.
+                      height: "100%",
+                      paddingLeft: "clamp(14px, 1.5vw, 22px)",
+                      paddingRight: "clamp(8px, 1vw, 14px)",
+                      // Top corners only — bottom is flat so the tab
+                      // baseline meets the content area cleanly. Matches
+                      // the Chrome tab silhouette (top-rounded, no
+                      // bottom curve).
+                      borderRadius: "clamp(8px, 0.9vw, 12px) clamp(8px, 0.9vw, 12px) 0 0",
+                      background: tabBg,
+                      // No border on any tab — the fill + the flared
+                      // base define each tab's silhouette.
+                      border: "none",
                       // Equal share of the tab row, capped at the midpoint
                       // between the compact (150) and full-stretch (220)
                       // sizes so the four tabs sit comfortably in the bar.
@@ -338,9 +371,89 @@ export default function BusinessHero() {
                       maxWidth: 185,
                       cursor: "pointer",
                       userSelect: "none",
-                      transition: "background 200ms ease, border-color 200ms ease",
+                      transition: "background 200ms ease",
+                      // Relative so each tab can host two absolute "ear"
+                      // divs at its bottom-left and bottom-right that
+                      // draw the Chrome-style flared base — concave
+                      // wedges that connect the tab's straight side
+                      // into the baseline below.
+                      position: "relative",
                     }}
                   >
+                    {/* Hover highlight — only inactive tabs get this.
+                        An inset rounded pill (4px inset from every
+                        edge, fully rounded) painted with a dark
+                        translucent scrim so the hovered tab reads as
+                        a darker shape against the frosted title bar.
+                        Confined to the tab body — the flares stay
+                        clear, so the hover effect looks like a button
+                        highlight inside the tab rather than the full
+                        Chrome silhouette (which is reserved for the
+                        active tab). */}
+                    {!active && (
+                      <div
+                        aria-hidden
+                        style={{
+                          position: "absolute",
+                          top: 4,
+                          left: 4,
+                          right: 4,
+                          bottom: 4,
+                          borderRadius: "clamp(6px, 0.7vw, 10px)",
+                          background: hovered ? "rgba(0,0,0,0.08)" : "transparent",
+                          transition: "background 180ms ease",
+                          pointerEvents: "none",
+                        }}
+                      />
+                    )}
+                    {/* Tab flares — only the active tab gets these.
+                        Two 16×16 masked squares pinned just outside the
+                        bottom-left and bottom-right corners. Mask centre
+                        sits at the FAR corner of each flare (away from
+                        the tab AND away from the baseline — top-left of
+                        the left flare, top-right of the right flare).
+                        The cutout removes the far corner, leaving a
+                        wedge whose right/bottom edges are flat (flush
+                        against the tab edge and the baseline) and whose
+                        outer edge is a smooth concave arc sweeping from
+                        the baseline up-and-outward to 16px to the side
+                        / 16px above the baseline. */}
+                    {active && (
+                      <>
+                        <div
+                          aria-hidden
+                          style={{
+                            position: "absolute",
+                            left: "-16px",
+                            bottom: 0,
+                            width: 16,
+                            height: 16,
+                            background: tabBg,
+                            WebkitMaskImage:
+                              "radial-gradient(circle at top left, transparent 16px, black 16px)",
+                            maskImage:
+                              "radial-gradient(circle at top left, transparent 16px, black 16px)",
+                            pointerEvents: "none",
+                          }}
+                        />
+                        <div
+                          aria-hidden
+                          style={{
+                            position: "absolute",
+                            right: "-16px",
+                            bottom: 0,
+                            width: 16,
+                            height: 16,
+                            background: tabBg,
+                            WebkitMaskImage:
+                              "radial-gradient(circle at top right, transparent 16px, black 16px)",
+                            maskImage:
+                              "radial-gradient(circle at top right, transparent 16px, black 16px)",
+                            pointerEvents: "none",
+                          }}
+                        />
+                      </>
+                    )}
                     {/* Feature icon — same SVG paths as the super-feature
                         section header below, scaled to the tab favicon
                         slot. Active tab uses the ink stroke; inactive
@@ -349,7 +462,7 @@ export default function BusinessHero() {
                       aria-hidden
                       viewBox="0 0 24 24"
                       fill="none"
-                      stroke={active ? "var(--ent-text-primary)" : "var(--ent-text-secondary)"}
+                      stroke={active ? "var(--ent-text-primary)" : "rgba(0,0,0,0.55)"}
                       strokeWidth="1.8"
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -363,10 +476,13 @@ export default function BusinessHero() {
                     </svg>
                     <span
                       style={{
-                        fontSize: "clamp(8px, 0.85vw, 12px)",
+                        fontSize: "clamp(11px, 1.1vw, 15px)",
                         fontWeight: 500,
                         letterSpacing: "-0.01em",
-                        color: active ? "var(--ent-text-primary)" : "var(--ent-text-secondary)",
+                        // Selected → ink. Otherwise pure black at 55%
+                        // opacity, matching the inactive icon stroke
+                        // so label + icon read as one muted pair.
+                        color: active ? "var(--ent-text-primary)" : "rgba(0,0,0,0.55)",
                         whiteSpace: "nowrap",
                         overflow: "hidden",
                         textOverflow: "ellipsis",
@@ -376,17 +492,6 @@ export default function BusinessHero() {
                     >
                       {tab.label}
                     </span>
-                    <span
-                      aria-hidden
-                      style={{
-                        fontSize: "clamp(9px, 1vw, 13px)",
-                        lineHeight: 1,
-                        color: "var(--ent-text-muted)",
-                        flexShrink: 0,
-                      }}
-                    >
-                      ×
-                    </span>
                   </div>
                   );
                 })}
@@ -395,15 +500,12 @@ export default function BusinessHero() {
 
             {/* Product display — one of four mockup components composes
                 the frame PNG with overlaid coded UI (map tiles, cards,
-                chat panel) for the active tab. Each mockup ships with
-                its own aspect-ratio + maxWidth + hairline border; we
-                drop the aspect-locked image wrapper so the mockup
-                renders at its native dimensions. A 4px gutter remains
-                so the glass window shows around the mockup, and an
-                override drops the mockup's own border so only the glass
-                window chrome reads at the outer edge. */}
+                chat panel) for the active tab. All four corners are
+                rounded at 16px so the mockup reads as its own card
+                inside the window's 20px rounded clip — the active tab
+                no longer merges into the mockup surface. */}
             <div
-              style={{ padding: 4 }}
+              style={{ padding: "0 4px 4px 4px" }}
               className="hero-product-display"
             >
               {activeTabId === "map-chat" && <MapChatPlatform />}

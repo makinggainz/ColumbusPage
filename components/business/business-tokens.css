@@ -104,14 +104,16 @@
   --ent-bg-monitor-titlebar: #F5F5F7;
 
   /* ── Colors — borders ──
-     --ent-border-card / --ent-border-dark-grid both mirror the homepage
-     blueprint hairline (--color-gridline #E7E7F1). The `-dark-` name is
-     historical — it is the light hairline. Do NOT reintroduce a darker
-     or white-opacity grid value. */
-  --ent-border-card:         #E7E7F1;
+     Business-page hairlines are flattened to a pure black @ 5% so the
+     borders read as neutral. The previous `#E7E7F1` carried a slight
+     blue/purple cast that conflicted with the rest of the palette;
+     `--color-gridline` is also rebound below (scoped to .ent-scope) so
+     the `border-gridline` Tailwind utility picks up the same value. */
+  --ent-border-card:         rgba(0, 0, 0, 0.05);
   --ent-border-subtle:       rgba(0, 0, 0, 0.07);
   --ent-border-medium:       rgba(0, 0, 0, 0.10);
-  --ent-border-dark-grid:    #E7E7F1;
+  --ent-border-dark-grid:    rgba(0, 0, 0, 0.05);
+  --color-gridline:          rgba(0, 0, 0, 0.05);
   --ent-border-dark-subtle:  rgba(11, 27, 43, 0.06);
   --ent-border-accent:       rgba(27, 55, 206, 0.25);
 

@@ -76,7 +76,7 @@ export default function HarmonizedFilesCard({
             listStyle: "none",
             padding: 0,
             margin: "clamp(12px, 1.4vw, 16px) 0 0",
-            border: "1px solid #ECECEC",
+            border: "1px solid rgba(0, 0, 0, 0.05)",
             borderRadius: 12,
             overflow: "hidden",
           }}
@@ -89,7 +89,7 @@ export default function HarmonizedFilesCard({
                 alignItems: "center",
                 gap: 10,
                 padding: "clamp(9px, 1vw, 12px) clamp(10px, 1.2vw, 14px)",
-                borderTop: i === 0 ? "none" : "1px solid #ECECEC",
+                borderTop: i === 0 ? "none" : "1px solid rgba(0, 0, 0, 0.05)",
                 backgroundColor: "#FFFFFF",
                 minWidth: 0,
               }}
