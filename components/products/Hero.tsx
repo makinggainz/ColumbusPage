@@ -55,14 +55,20 @@ const PHONE_PEEK = 0.62;
 const INTRO_END = 0.34;
 
 // ── Three scenes — ink + pill styling per phase ──────────────────────
+// Pill backgrounds + matching eyebrow accents pulled from HowItWorksSection
+// step gradients (step 1 → Ask, step 2 → Discover, step 3 → Go). Step 2's
+// magenta endpoint (#B00098) is skipped per the no-purple house rule, so
+// Discover uses the red endpoint #DE2F32 alone.
 const SCENES = [
-  { ink: "#063140", eyebrow: "#00838F", pillBg: "#063140", pillText: "#FFFFFF", pillRot: "-4deg", pillIdle: "rgba(6,49,64,0.40)" },
-  { ink: "#FFFFFF", eyebrow: "#8DF7FF", pillBg: "#00B1D4", pillText: "#04222C", pillRot: "-4deg", pillIdle: "rgba(255,255,255,0.50)" },
-  { ink: "#063140", eyebrow: "#00838F", pillBg: "#0F6B6E", pillText: "#FFFFFF", pillRot: "-5deg", pillIdle: "rgba(6,49,64,0.40)" },
+  { ink: "#0B1B2B", eyebrow: "#063140", pillBg: "#063140", pillText: "#FFFFFF", pillRot: "-4deg", pillIdle: "rgba(6,49,64,0.40)" },
+  { ink: "#FFFFFF", eyebrow: "#DE2F32", pillBg: "#DE2F32", pillText: "#FFFFFF", pillRot: "-4deg", pillIdle: "rgba(255,255,255,0.55)" },
+  { ink: "#0B1B2B", eyebrow: "#0A6E5C", pillBg: "#0A6E5C", pillText: "#FFFFFF", pillRot: "-5deg", pillIdle: "rgba(11,27,43,0.40)" },
 ] as const;
 
-const CREAM = "linear-gradient(180deg, #F7F2E4 0%, #EFE7D2 100%)";
-const NAVY = "linear-gradient(180deg, #063140 0%, #03202A 100%)";
+// Scene-1 backdrop — soft Elio-logo blue (kept the variable name for diff size).
+const CREAM = "linear-gradient(180deg, #E3F2FB 0%, #C7E5F6 100%)";
+// Scene-2 backdrop — Columbus navbar-logo navy (#0B1342, var --color-cta).
+const NAVY = "linear-gradient(180deg, #0B1342 0%, #060A28 100%)";
 // Solid white — matches HowItWorksSection (#FFFFFF) so the hand-off has no seam.
 const LIGHT = "#FFFFFF";
 
@@ -90,12 +96,12 @@ function phoneStates(isLg: boolean) {
 // labels sit beside the phone (0.5); the final "below" labels anchor low
 // so they appear UNDER the phone and rise (PolarX's Relive text).
 const LABELS = [
-  { scene: 1, side: "right", anchor: 0.5, eyebrow: "Ask anything", heading: "Chat your way around any city." },
-  { scene: 1, side: "right", anchor: 0.5, eyebrow: "Like texting a friend", heading: "Swap a spot, ask alternatives, refine the plan." },
-  { scene: 2, side: "left", anchor: 0.5, eyebrow: "It draws the map", heading: "Markers, routes, and zones — drawn for your trip." },
+  { scene: 1, side: "right", anchor: 0.5, eyebrow: "Just ask", heading: "Tell Elio what you’re after, in plain words." },
+  { scene: 1, side: "right", anchor: 0.5, eyebrow: "Like texting a friend", heading: "Ask a follow up, get alternatives, refine the plan." },
+  { scene: 2, side: "left", anchor: 0.5, eyebrow: "Knows your vibe", heading: "Remembers what you love — picks get sharper each trip." },
   { scene: 2, side: "left", anchor: 0.5, eyebrow: "Whole neighborhoods", heading: "Not just one pin — think “party zone in Madrid.”" },
-  { scene: 3, side: "right", anchor: 0.5, eyebrow: "Get going", heading: "Directions the second you decide." },
-  { scene: 3, side: "right", anchor: 0.5, eyebrow: "On the move", heading: "Your route recalculated as you wander." },
+  { scene: 3, side: "right", anchor: 0.5, eyebrow: "Save & share your favorites", heading: "Bookmark favorites, add to your personal map, or share with friends." },
+  { scene: 3, side: "right", anchor: 0.5, eyebrow: "Local guide in your pocket", heading: "Let Elio find you the coolest place, faster." },
 ] as const;
 
 // Floating travel postcards — final (Go) scene only. The Go heading
@@ -366,7 +372,7 @@ export default function Hero() {
                       fontWeight: 600,
                       letterSpacing: "-0.01em",
                       padding: "6px 16px",
-                      borderRadius: 8,
+                      borderRadius: on ? 999 : 8,
                       border: "none",
                       appearance: "none",
                       WebkitAppearance: "none",
@@ -375,7 +381,7 @@ export default function Hero() {
                       color: on ? scene.pillText : scene.pillIdle,
                       transform: on ? `rotate(${scene.pillRot})` : "rotate(0deg)",
                       transition:
-                        "background-color 0.45s ease, color 0.45s ease, transform 0.45s cubic-bezier(0.2,0.8,0.2,1)",
+                        "background-color 0.45s ease, color 0.45s ease, border-radius 0.45s ease, transform 0.45s cubic-bezier(0.2,0.8,0.2,1)",
                     }}
                   >
                     {word}
@@ -427,6 +433,19 @@ export default function Hero() {
             className="absolute inset-0 w-full h-full"
             style={{ objectFit: "cover" }}
             aria-hidden
+          />
+          {/* Global readability scrim — uniform dark tint over the whole
+              video so the centred "Elio" + H1 + CTA stack reads
+              cleanly on any frame of any clip (varied brightness from
+              tropical noon to dim café). Sits below the navbar fade so
+              the navbar zone gets stacked dark coverage (scrim + fade),
+              while the rest of the hero gets just this single tint. */}
+          <div
+            className="absolute inset-0"
+            style={{
+              background: "rgba(0, 0, 0, 0.4)",
+              pointerEvents: "none",
+            }}
           />
           <div
             className="absolute inset-x-0 top-0"
@@ -661,8 +680,8 @@ const TYPED_PHRASES = [
 //   hang out spot         → friends drinking wine on a balcony (42716)
 //   romantic date night   → intimate couple dinner (41261)
 //   secret beach spot     → tropical paradise beach (7205)
-//   hidden coffee shop    → urban coffee shop (4350)
-//   weekend brunch place  → happy family brunch outdoors (47157)
+//   hidden coffee shop    → people in a coffee shop (Pexels 9406050)
+//   weekend brunch place  → bustling coffee shop with baristas (Pexels 29719125)
 //   local hiking trail    → couple exploring a forest (43151)
 //   cozy bookstore        → bookstore shelves with warm light (14189)
 //   rooftop sunset bar    → young couple having fun in a rooftop bar (47027)
@@ -674,8 +693,8 @@ const VIDEO_BY_PHRASE = [
   "https://assets.mixkit.co/videos/42716/42716-720.mp4",
   "https://assets.mixkit.co/videos/41261/41261-720.mp4",
   "https://assets.mixkit.co/videos/7205/7205-720.mp4",
-  "https://assets.mixkit.co/videos/4350/4350-720.mp4",
-  "https://assets.mixkit.co/videos/47157/47157-720.mp4",
+  "https://videos.pexels.com/video-files/9406050/9406050-hd_1280_720_30fps.mp4",
+  "https://videos.pexels.com/video-files/29719125/12778465_3840_2160_24fps.mp4",
   "https://assets.mixkit.co/videos/43151/43151-720.mp4",
   "https://assets.mixkit.co/videos/14189/14189-720.mp4",
   "https://assets.mixkit.co/videos/47027/47027-720.mp4",

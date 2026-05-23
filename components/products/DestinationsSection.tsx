@@ -111,10 +111,10 @@ export default function DestinationsSection() {
       >
         <div className="eyebrow">Anywhere on Earth</div>
         <h2 className="h2" style={{ marginTop: 14, color: "#0B1B2B", letterSpacing: "-0.01em" }}>
-          Your next favorite place is already out there.
+          Wherever you go, Elio knows the spots.
         </h2>
         <p className="p-l" style={{ margin: "16px auto 0", maxWidth: 540, color: "#5A6B7B" }}>
-          From rooftop bars to hidden trails, Elio has a pick for every kind of trip.
+          Rooftop bars, hidden trails, late-night taco joints — a pick for every kind of trip.
         </p>
       </div>
 

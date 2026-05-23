@@ -116,7 +116,7 @@ const CARDS: Card[] = [
     variant: "standard",
     theme: "teal",
     title: "Powered by Columbus‑01",
-    body: "Our own travel-reasoning model — tuned for places, not just answers.",
+    body: "Our own travel model — reasons about places, neighborhoods, and routes.",
     globe: true,
   },
   {
@@ -135,7 +135,7 @@ const CARDS: Card[] = [
     variant: "standard",
     theme: "lightblue",
     title: "Learns your taste",
-    body: "The more you ask, the sharper its picks get.",
+    body: "Use it a few times — it surfaces spots before you ask.",
   },
   {
     col: "3 / 5",
