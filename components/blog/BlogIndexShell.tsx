@@ -24,9 +24,6 @@ export function BlogIndexShell({ activeFilter }: { activeFilter: BlogFilter }) {
             Research updates, product notes, and longer-form writing on
             geospatial intelligence.
           </p>
-          <p className={`p-m ${styles.tagline}`}>
-            Latest bottled messages ashore
-          </p>
         </div>
         <BlogFilterBar activeFilter={activeFilter} />
       </section>

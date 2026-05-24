@@ -197,7 +197,7 @@ export default function BusinessHero() {
           className="text-white leading-[1.1] text-[39px] md:text-[49px] lg:text-[76px]"
           style={{ fontFamily: "var(--font-hero)", fontWeight: 500, letterSpacing: "-0.02em", maxWidth: 900 }}
         >
-          An Agentic GIS platform
+          Earth for business
         </h1>
 
         <p

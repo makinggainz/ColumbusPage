@@ -270,26 +270,6 @@ export function BlogSection() {
           heading renders in the exact same surface treatment. The card
           grid below is a separate, watermark-free section. */}
       <section className="section relative isolate">
-        <div
-          aria-hidden
-          className="absolute inset-0 -z-10 pointer-events-none"
-          style={{
-            backgroundImage: 'url("/minimalistCity.png")',
-            backgroundRepeat: "no-repeat",
-            backgroundPosition: "center",
-            /* Stretch image to fully fill the section (both axes) —
-               the only way to guarantee full width AND no top/bottom
-               crop on sections shorter than the image's 2.25 natural
-               aspect. minimalistCity is a flat horizontal scene so
-               the small vertical compression is visually invisible. */
-            backgroundSize: "100% 100%",
-            opacity: 1,
-            WebkitMaskImage:
-              "linear-gradient(to bottom, transparent 0%, #000 15%, #000 85%, transparent 100%)",
-            maskImage:
-              "linear-gradient(to bottom, transparent 0%, #000 15%, #000 85%, transparent 100%)",
-          }}
-        />
         <div className="container-site">
           <div className="mx-auto max-w-3xl">
             <h2 className="text-center h2 tracking-tight text-ink">

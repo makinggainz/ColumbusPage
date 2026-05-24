@@ -104,7 +104,7 @@ const CSS = `
 .bp-card--elio {
   background-image:
     linear-gradient(rgba(0, 0, 0, 0.18), rgba(0, 0, 0, 0.18)),
-    url('/eliocardbackground.png');
+    url('/consumer/elio/ElioEndingBackground.jpg');
 }
 /* Research uses a left-to-right linear gradient — light sky #CAE5F5 at
    0% to mid-blue #76A8F3 at 100%, both fully opaque — matching the

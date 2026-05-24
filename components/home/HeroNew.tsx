@@ -229,7 +229,7 @@ export function HeroNew() {
           building geospatial reasoning for the real world.
         </h1>
         <p className="hn-subtitle">
-          We Are An Applied AI Lab For Geospatial Intelligence.
+          We're an Applied AI lab for geospatial intelligence
         </p>
       </div>
     </section>

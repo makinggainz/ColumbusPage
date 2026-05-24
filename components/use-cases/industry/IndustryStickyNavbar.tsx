@@ -79,7 +79,7 @@ export default function IndustryStickyNavbar({ lightTheme = false, topOffset = 5
     };
   }, []);
 
-  const effectiveTop = measuredTop ?? topOffset;
+  const effectiveTop = (measuredTop && measuredTop > 0) ? measuredTop : topOffset;
 
   /* Takeover-active means the sub-navbar is actively replacing the main
      navbar. While coexisting (user scrolled up past the threshold), the
@@ -139,30 +139,55 @@ export default function IndustryStickyNavbar({ lightTheme = false, topOffset = 5
   // before appearing, and hides again the moment the zone's bottom
   // clears the navbar on the way out.
   useEffect(() => {
+    // Ensure we only run in the browser
+    if (typeof window === "undefined") return;
+    if (!Number.isFinite(effectiveTop)) return;
+
     const target =
       document.querySelector<HTMLElement>("[data-industry-sticky-zone]") ??
       document.querySelector<HTMLElement>("[data-use-case-rows]");
     if (!target) return;
+
     const setupObs = () => {
-      const bottomShrink = Math.max(0, window.innerHeight - effectiveTop - 1);
+      const topValue = Math.max(0, Math.floor(effectiveTop));
+      const bottomValue = Math.max(0, Math.floor(window.innerHeight - topValue - 1));
+      const rootMarginString = `-${topValue}px 0px -${bottomValue}px 0px`;
+
       return new IntersectionObserver(
         ([entry]) => setShown(entry.isIntersecting),
         {
-          rootMargin: `-${effectiveTop}px 0px -${bottomShrink}px 0px`,
+          rootMargin: rootMarginString,
           threshold: 0,
         },
       );
     };
-    let obs = setupObs();
-    obs.observe(target);
-    const onResize = () => {
-      obs.disconnect();
+
+    let obs: IntersectionObserver | null = null;
+    try {
       obs = setupObs();
       obs.observe(target);
+    } catch (e) {
+      console.error("Failed to create IntersectionObserver:", e);
+      return;
+    }
+
+    const onResize = () => {
+      if (obs) {
+        obs.disconnect();
+      }
+      try {
+        obs = setupObs();
+        obs.observe(target);
+      } catch (e) {
+        console.error("Failed to recreate IntersectionObserver on resize:", e);
+      }
     };
+
     window.addEventListener("resize", onResize);
     return () => {
-      obs.disconnect();
+      if (obs) {
+        obs.disconnect();
+      }
       window.removeEventListener("resize", onResize);
     };
   }, [effectiveTop]);
