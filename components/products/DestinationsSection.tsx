@@ -188,7 +188,7 @@ export default function DestinationsSection() {
   }, []);
 
   return (
-    <section ref={ref} className="section" style={{ background: "#FFFFFF", overflow: "hidden" }}>
+    <section ref={ref} className="section" style={{ background: "#FFFFFF", overflow: "hidden", paddingTop: 0 }}>
       <style>{`
         .mg-dest-mask {
           -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
@@ -208,6 +208,304 @@ export default function DestinationsSection() {
         }
         @media (prefers-reduced-motion: reduce) { .mg-dest-track { animation: none; } }
       `}</style>
+
+      {/* Section titles */}
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "1fr 1fr",
+          gap: 40,
+          paddingLeft: 40,
+          paddingRight: 40,
+          paddingBottom: 44,
+          paddingTop: 0,
+          maxWidth: 1400,
+          margin: "0 auto",
+        }}
+      >
+        <h2
+          style={{
+            fontSize: 24,
+            fontWeight: 590,
+            color: "#000000",
+            letterSpacing: "-0.02em",
+            margin: 0,
+          }}
+        >
+          For everyday life.
+        </h2>
+        <h2
+          style={{
+            fontSize: 24,
+            fontWeight: 590,
+            color: "#000000",
+            letterSpacing: "-0.02em",
+            margin: 0,
+            textAlign: "right",
+          }}
+        >
+          For traveling.
+        </h2>
+      </div>
+
+      {/* Middle title */}
+      <div
+        style={{
+          textAlign: "center",
+          paddingLeft: 40,
+          paddingRight: 40,
+          paddingBottom: 60,
+          maxWidth: 1400,
+          margin: "0 auto",
+        }}
+      >
+        <h2
+          style={{
+            fontSize: 44,
+            fontWeight: 590,
+            color: "#000000",
+            letterSpacing: "-0.02em",
+            margin: 0,
+          }}
+        >
+          and everything in between
+        </h2>
+      </div>
+
+      {/* Bento box */}
+      <div
+        style={{
+          paddingLeft: 40,
+          paddingRight: 40,
+          paddingTop: 0,
+          paddingBottom: 0,
+          maxWidth: 1400,
+          margin: "0 auto",
+        }}
+      >
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "2fr 1fr",
+            gridTemplateRows: "auto auto auto",
+            gap: 20,
+            gridAutoRows: "auto",
+          }}
+        >
+          {/* Top left - Full privacy control (large card) */}
+          <div
+            style={{
+              background: "#0F2741",
+              borderRadius: "30px",
+              padding: 40,
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              minHeight: 240,
+              position: "relative",
+              overflow: "hidden",
+            }}
+          >
+            <h3
+              style={{
+                fontSize: 40,
+                fontWeight: 700,
+                color: "#FFFFFF",
+                letterSpacing: "-0.02em",
+                margin: 0,
+                marginBottom: 8,
+              }}
+            >
+              Full privacy control
+            </h3>
+            <p
+              style={{
+                fontSize: 18,
+                fontWeight: 400,
+                color: "#B0C4DE",
+                letterSpacing: "-0.02em",
+                margin: 0,
+              }}
+            >
+              You decide who can see your trip
+            </p>
+          </div>
+
+          {/* Top right - It's FREE! */}
+          <div
+            style={{
+              background: "#FFFFFF",
+              borderRadius: "30px",
+              padding: 40,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              minHeight: 240,
+            }}
+          >
+            <h3
+              style={{
+                fontSize: 48,
+                fontWeight: 700,
+                color: "#0F2741",
+                letterSpacing: "-0.02em",
+                margin: 0,
+                fontStyle: "italic",
+              }}
+            >
+              iT'S FREE!
+            </h3>
+          </div>
+
+          {/* Middle left - Featured in */}
+          <div
+            style={{
+              background: "#F5F5F5",
+              borderRadius: "30px",
+              padding: 40,
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              minHeight: 280,
+            }}
+          >
+            <p
+              style={{
+                fontSize: 14,
+                fontWeight: 600,
+                color: "#999999",
+                letterSpacing: "0.1em",
+                margin: "0 0 30px 0",
+                textTransform: "uppercase",
+              }}
+            >
+              Featured in
+            </p>
+            <h4
+              style={{
+                fontSize: 28,
+                fontWeight: 700,
+                color: "#0F2741",
+                margin: "0 0 20px 0",
+              }}
+            >
+              Forbes
+            </h4>
+            <h4
+              style={{
+                fontSize: 24,
+                fontWeight: 700,
+                color: "#0F2741",
+                margin: "0 0 20px 0",
+              }}
+            >
+              Condé Nast Traveler
+            </h4>
+            <h4
+              style={{
+                fontSize: 24,
+                fontWeight: 700,
+                color: "#0F2741",
+                margin: 0,
+              }}
+            >
+              WIRED
+            </h4>
+          </div>
+
+          {/* Middle center - Works offline (image card) */}
+          <div
+            style={{
+              background: "linear-gradient(135deg, #D0E8F2 0%, #E8F4FA 100%)",
+              borderRadius: "30px",
+              minHeight: 280,
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "flex-end",
+              padding: 40,
+              position: "relative",
+              overflow: "hidden",
+              gridColumn: "2 / 3",
+              gridRow: "2 / 4",
+            }}
+          >
+            <h3
+              style={{
+                fontSize: 40,
+                fontWeight: 700,
+                color: "#FFFFFF",
+                letterSpacing: "-0.02em",
+                margin: 0,
+                marginBottom: 8,
+                textShadow: "0 2px 8px rgba(0,0,0,0.2)",
+              }}
+            >
+              Works offline
+            </h3>
+            <p
+              style={{
+                fontSize: 18,
+                fontWeight: 400,
+                color: "#FFFFFF",
+                letterSpacing: "-0.02em",
+                margin: 0,
+                textShadow: "0 2px 8px rgba(0,0,0,0.2)",
+              }}
+            >
+              Keeps tracking — even when you're offgrid
+            </p>
+          </div>
+
+          {/* Middle right - Battery efficient */}
+          <div
+            style={{
+              background: "#2D5016",
+              borderRadius: "30px",
+              padding: 40,
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between",
+              minHeight: 240,
+            }}
+          >
+            <div>
+              <h3
+                style={{
+                  fontSize: 40,
+                  fontWeight: 700,
+                  color: "#FFFFFF",
+                  letterSpacing: "-0.02em",
+                  margin: 0,
+                  marginBottom: 8,
+                }}
+              >
+                Battery-efficient
+              </h3>
+              <p
+                style={{
+                  fontSize: 16,
+                  fontWeight: 400,
+                  color: "#A8D5A8",
+                  letterSpacing: "-0.02em",
+                  margin: 0,
+                }}
+              >
+                Typically less than 4% battery per day while tracking
+              </p>
+            </div>
+            <div
+              style={{
+                fontSize: 36,
+                fontWeight: 700,
+                color: "#5AC55A",
+              }}
+            >
+              96%
+            </div>
+          </div>
+
+        </div>
+      </div>
 
       {/* Two scrolling photo rows */}
       <div
