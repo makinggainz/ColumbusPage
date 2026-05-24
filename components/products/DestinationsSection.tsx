@@ -597,6 +597,29 @@ export default function DestinationsSection() {
         <Marquee imgs={ROW_A} />
         <Marquee imgs={ROW_B} reverse />
       </div>
+
+      {/* Desktop mockup */}
+      <div
+        style={{
+          paddingLeft: 40,
+          paddingRight: 40,
+          paddingTop: 60,
+          paddingBottom: 60,
+          maxWidth: 1400,
+          margin: "0 auto",
+        }}
+      >
+        <img
+          src="/consumer/elioHome2.png"
+          alt="Elio Desktop"
+          style={{
+            width: "100%",
+            height: "auto",
+            display: "block",
+            borderRadius: 12,
+          }}
+        />
+      </div>
     </section>
   );
 }
