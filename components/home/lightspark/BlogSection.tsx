@@ -134,17 +134,22 @@ const CSS = `
   transition: filter 300ms ease;
 }
 
-/* Glassy backdrop-filter layer to push the imagery further behind
-   the title. */
+/* Red gradient overlay. */
 .blog-card::after {
   content: "";
   position: absolute;
   inset: 0;
   border-radius: inherit;
   pointer-events: none;
-  -webkit-backdrop-filter: blur(16px) saturate(1.1);
-  backdrop-filter: blur(16px) saturate(1.1);
-  z-index: 0;
+  z-index: 1;
+  background: linear-gradient(
+    to bottom,
+    rgba(220, 53, 69, 0.88) 0%,
+    rgba(220, 53, 69, 0.66) 30%,
+    rgba(220, 53, 69, 0.45) 50%,
+    rgba(220, 53, 69, 0.66) 70%,
+    rgba(220, 53, 69, 0.88) 100%
+  );
 }
 
 .blog-card > * { position: relative; z-index: 1; }
