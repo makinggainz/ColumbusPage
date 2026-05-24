@@ -318,6 +318,7 @@ export default function Hero() {
         >
           <h1
             style={{
+              fontFamily: "Axiforma, -apple-system, BlinkMacSystemFont, sans-serif",
               fontSize: "clamp(48px, 8vw, 66px)",
               fontWeight: 590,
               color: "#FFFFFF",
@@ -367,6 +368,7 @@ export default function Hero() {
               padding: "12px 28px",
               fontSize: "16px",
               fontWeight: 600,
+              fontFamily: "Opening Hours Sans, -apple-system, BlinkMacSystemFont, sans-serif",
               backgroundColor: "#FFFFFF",
               color: "#000000",
               border: "none",

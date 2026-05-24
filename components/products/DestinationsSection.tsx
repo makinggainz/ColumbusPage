@@ -98,6 +98,7 @@ function CyclingTitle() {
     >
       <h2
         style={{
+          fontFamily: "Axiforma, -apple-system, BlinkMacSystemFont, sans-serif",
           fontSize: 24,
           fontWeight: 590,
           color: "#000000",
@@ -308,6 +309,7 @@ export default function DestinationsSection() {
       >
         <h2
           style={{
+            fontFamily: "Axiforma, -apple-system, BlinkMacSystemFont, sans-serif",
             fontSize: 24,
             fontWeight: 590,
             color: "#000000",
@@ -319,6 +321,7 @@ export default function DestinationsSection() {
         </h2>
         <h2
           style={{
+            fontFamily: "Axiforma, -apple-system, BlinkMacSystemFont, sans-serif",
             fontSize: 24,
             fontWeight: 590,
             color: "#000000",
@@ -345,6 +348,7 @@ export default function DestinationsSection() {
       >
         <h2
           style={{
+            fontFamily: "Axiforma, -apple-system, BlinkMacSystemFont, sans-serif",
             fontSize: 44,
             fontWeight: 590,
             color: "#000000",
@@ -392,6 +396,7 @@ export default function DestinationsSection() {
           >
             <h3
               style={{
+                fontFamily: "Axiforma, -apple-system, BlinkMacSystemFont, sans-serif",
                 fontSize: 40,
                 fontWeight: 700,
                 color: "#FFFFFF",
@@ -429,6 +434,7 @@ export default function DestinationsSection() {
           >
             <h3
               style={{
+                fontFamily: "Axiforma, -apple-system, BlinkMacSystemFont, sans-serif",
                 fontSize: 36,
                 fontWeight: 700,
                 color: "#0F2741",
@@ -454,48 +460,19 @@ export default function DestinationsSection() {
               minHeight: 280,
             }}
           >
-            <p
+            <h3
               style={{
-                fontSize: 14,
-                fontWeight: 600,
-                color: "#999999",
-                letterSpacing: "0.1em",
-                margin: "0 0 30px 0",
-                textTransform: "uppercase",
-              }}
-            >
-              Featured in
-            </p>
-            <h4
-              style={{
-                fontSize: 28,
+                fontFamily: "Axiforma, -apple-system, BlinkMacSystemFont, sans-serif",
+                fontSize: 32,
                 fontWeight: 700,
                 color: "#0F2741",
-                margin: "0 0 20px 0",
-              }}
-            >
-              Forbes
-            </h4>
-            <h4
-              style={{
-                fontSize: 24,
-                fontWeight: 700,
-                color: "#0F2741",
-                margin: "0 0 20px 0",
-              }}
-            >
-              Condé Nast Traveler
-            </h4>
-            <h4
-              style={{
-                fontSize: 24,
-                fontWeight: 700,
-                color: "#0F2741",
+                letterSpacing: "-0.02em",
                 margin: 0,
+                lineHeight: 1.3,
               }}
             >
-              WIRED
-            </h4>
+              Gets smarter the more you talk to Elio.
+            </h3>
           </div>
 
           {/* Middle center - Stop using Docs to plan trips */}
@@ -516,6 +493,7 @@ export default function DestinationsSection() {
           >
             <h3
               style={{
+                fontFamily: "Axiforma, -apple-system, BlinkMacSystemFont, sans-serif",
                 fontSize: 32,
                 fontWeight: 700,
                 color: "#FFFFFF",
@@ -544,6 +522,7 @@ export default function DestinationsSection() {
             <div>
               <h3
                 style={{
+                  fontFamily: "Axiforma, -apple-system, BlinkMacSystemFont, sans-serif",
                   fontSize: 40,
                   fontWeight: 700,
                   color: "#FFFFFF",
@@ -552,7 +531,7 @@ export default function DestinationsSection() {
                   marginBottom: 8,
                 }}
               >
-                Battery-efficient
+                Ad-free.
               </h3>
               <p
                 style={{
@@ -563,17 +542,8 @@ export default function DestinationsSection() {
                   margin: 0,
                 }}
               >
-                Typically less than 4% battery per day while tracking
+                Find exactly what you're after.
               </p>
-            </div>
-            <div
-              style={{
-                fontSize: 36,
-                fontWeight: 700,
-                color: "#5AC55A",
-              }}
-            >
-              96%
             </div>
           </div>
 
@@ -598,12 +568,48 @@ export default function DestinationsSection() {
         <Marquee imgs={ROW_B} reverse />
       </div>
 
-      {/* Desktop mockup */}
+      {/* Elio is browser based label */}
       <div
         style={{
           paddingLeft: 40,
           paddingRight: 40,
           paddingTop: 60,
+          maxWidth: 1400,
+          margin: "0 auto",
+          textAlign: "center",
+        }}
+      >
+        <p
+          style={{
+            fontFamily: "Opening Hours Sans, -apple-system, BlinkMacSystemFont, sans-serif",
+            fontWeight: 600,
+            fontSize: 22,
+            letterSpacing: "0.02em",
+            lineHeight: 1.4,
+            marginBottom: 40,
+            color: "#0B1B2B",
+          }}
+        >
+          <span
+            style={{
+              fontWeight: 600,
+              background: "linear-gradient(180deg, #00B1D4 0%, #0089A3 100%)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              backgroundClip: "text",
+            }}
+          >
+            Elio
+          </span>
+          <span> is on desktop and mobile</span>
+        </p>
+      </div>
+
+      {/* Desktop mockup */}
+      <div
+        style={{
+          paddingLeft: 40,
+          paddingRight: 40,
           paddingBottom: 60,
           maxWidth: 1400,
           margin: "0 auto",
@@ -616,7 +622,8 @@ export default function DestinationsSection() {
             width: "100%",
             height: "auto",
             display: "block",
-            borderRadius: 12,
+            borderRadius: 40,
+            border: "10px solid #000000",
           }}
         />
       </div>

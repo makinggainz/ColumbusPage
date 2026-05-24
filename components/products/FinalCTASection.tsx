@@ -82,26 +82,8 @@ export default function FinalCTASection() {
             width: "100%",
           }}
         >
-          <p style={{
-            fontFamily: "var(--hiw-font-sans)",
-            fontWeight: "var(--hiw-weight-regular)" as unknown as number,
-            fontSize: "var(--hiw-text-base)",
-            letterSpacing: "0.02em",
-            lineHeight: 1.4,
-            marginBottom: "var(--hiw-space-2)",
-            color: "#0B1342",
-          }}>
-            <span style={{
-              fontWeight: "var(--hiw-weight-semibold)" as unknown as number,
-              background: "linear-gradient(180deg, #00B1D4 0%, #0089A3 100%)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              backgroundClip: "text",
-            }}>Elio</span>
-            <span>{" "}is browser based</span>
-          </p>
           <h2 style={{
-            fontFamily: "var(--hiw-font-sans)",
+            fontFamily: "Axiforma, -apple-system, BlinkMacSystemFont, sans-serif",
             fontWeight: "var(--hiw-weight-bold)" as unknown as number,
             fontSize: "clamp(28px, 6vw, 44px)",
             lineHeight: 1.05,
@@ -111,17 +93,6 @@ export default function FinalCTASection() {
           }}>
             We&apos;re always there for you.
           </h2>
-          <p style={{
-            fontFamily: "var(--hiw-font-sans)",
-            fontWeight: "var(--hiw-weight-regular)" as unknown as number,
-            fontSize: "var(--hiw-text-sm)",
-            color: "rgba(11, 19, 66, 0.7)",
-            letterSpacing: "-0.01em",
-            lineHeight: 1.5,
-            marginBottom: "var(--hiw-space-4)",
-          }}>
-            Access your local AI travel pal on any browser.
-          </p>
           {/* Navy primary CTA — bg-cta + white text/arrow, matches navbar. */}
           <a
             href="https://mapsgpt.es"
@@ -131,7 +102,7 @@ export default function FinalCTASection() {
             style={{ maxWidth: "fit-content", marginInline: "auto" }}
           >
             <span style={{
-              fontFamily: "var(--hiw-font-sans)",
+              fontFamily: "Opening Hours Sans, -apple-system, BlinkMacSystemFont, sans-serif",
               fontWeight: 590,
               fontSize: "16px",
               letterSpacing: "-0.02em",
@@ -192,29 +163,10 @@ export default function FinalCTASection() {
             of the globe image, in dark Columbus-navy ink. */}
         <div className="absolute inset-0 z-10 flex items-start justify-center" style={{ paddingTop: "clamp(48px, 5vw, 96px)" }}>
           <div className="text-center" style={{ maxWidth: 720, paddingInline: "var(--hiw-content-px)" }}>
-            {/* Label */}
-            <p style={{
-              fontFamily: "var(--hiw-font-sans)",
-              fontWeight: "var(--hiw-weight-regular)" as unknown as number,
-              fontSize: "var(--hiw-text-lg)",
-              letterSpacing: "0.02em",
-              lineHeight: 1.4,
-              marginBottom: "var(--hiw-space-3)",
-              color: "#0B1342",
-            }}>
-              <span style={{
-                fontWeight: "var(--hiw-weight-semibold)" as unknown as number,
-                background: "linear-gradient(180deg, #00B1D4 0%, #0089A3 100%)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                backgroundClip: "text",
-              }}>Elio</span>
-              <span>{" "}is browser based</span>
-            </p>
 
             {/* Title */}
             <h2 style={{
-              fontFamily: "var(--hiw-font-sans)",
+              fontFamily: "Axiforma, -apple-system, BlinkMacSystemFont, sans-serif",
               fontWeight: "var(--hiw-weight-bold)" as unknown as number,
               fontSize: "var(--hiw-text-5xl)",
               lineHeight: 1.05,
@@ -227,20 +179,6 @@ export default function FinalCTASection() {
               there for you.
             </h2>
 
-            {/* Subtitle */}
-            <p style={{
-              fontFamily: "var(--hiw-font-sans)",
-              fontWeight: "var(--hiw-weight-regular)" as unknown as number,
-              fontSize: "var(--hiw-text-lg)",
-              color: "rgba(11, 19, 66, 0.7)",
-              letterSpacing: "-0.01em",
-              lineHeight: 1.5,
-              marginBottom: "var(--hiw-space-8)",
-            }}>
-              Access your local AI travel pal
-              <br />
-              on any browser.
-            </p>
 
             {/* Navy primary CTA — bg-cta (#0B1342) with white text + arrow,
                 matches the navbar's "Try Elio" pill. */}
@@ -251,7 +189,7 @@ export default function FinalCTASection() {
               className="group inline-flex items-center justify-center gap-3 rounded-button bg-cta px-6 py-4 no-underline transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
             >
               <span style={{
-                fontFamily: "var(--hiw-font-sans)",
+                fontFamily: "Opening Hours Sans, -apple-system, BlinkMacSystemFont, sans-serif",
                 fontWeight: 590,
                 fontSize: "20px",
                 letterSpacing: "-0.02em",
