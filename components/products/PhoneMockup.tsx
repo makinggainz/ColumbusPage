@@ -16,7 +16,7 @@ export default function PhoneMockup() {
         boxSizing: "content-box",
         zIndex: 50,
         top: "50%",
-        marginTop: -190,
+        marginTop: -160,
       }}
     >
       <Image

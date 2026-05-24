@@ -91,7 +91,7 @@ function CyclingTitle() {
         paddingLeft: 40,
         paddingRight: 40,
         paddingBottom: 40,
-        paddingTop: 60,
+        paddingTop: 100,
         maxWidth: 1400,
         margin: "0 auto",
       }}
@@ -164,7 +164,7 @@ function Marquee({ imgs, reverse }: { imgs: DestPhoto[]; reverse?: boolean }) {
             <div style={{ position: "absolute", top: 10, left: 10, right: 36, display: "flex", alignItems: "center", gap: 6 }}>
               <span style={{
                 fontFamily: "var(--hiw-font-sans, 'Funnel Display', -apple-system, sans-serif)",
-                color: "#FFFFFF",
+                color: "#0F2741",
                 fontWeight: 600,
                 fontSize: 12,
                 letterSpacing: "-0.01em",
@@ -181,7 +181,7 @@ function Marquee({ imgs, reverse }: { imgs: DestPhoto[]; reverse?: boolean }) {
                   <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="#E46962" />
                 </svg>
                 <span style={{
-                  color: "#FFFFFF",
+                  color: "#0F2741",
                   fontFamily: "var(--hiw-font-sans, 'Funnel Display', -apple-system, sans-serif)",
                   fontWeight: 700,
                   fontSize: 10,
@@ -374,7 +374,7 @@ export default function DestinationsSection() {
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "1fr 2fr",
+            gridTemplateColumns: "1fr 1fr",
             gridTemplateRows: "auto auto auto",
             gap: 20,
             gridAutoRows: "auto",
@@ -383,12 +383,12 @@ export default function DestinationsSection() {
           {/* Top left - See whats going on around you (large card) */}
           <div
             style={{
-              background: "#0F2741",
+              background: "#F2F2F2",
               borderRadius: "30px",
               padding: 40,
               display: "flex",
               flexDirection: "column",
-              justifyContent: "center",
+              justifyContent: "flex-start",
               minHeight: 240,
               position: "relative",
               overflow: "hidden",
@@ -397,9 +397,9 @@ export default function DestinationsSection() {
             <h3
               style={{
                 fontFamily: "Axiforma, -apple-system, BlinkMacSystemFont, sans-serif",
-                fontSize: 40,
+                fontSize: 32,
                 fontWeight: 700,
-                color: "#FFFFFF",
+                color: "#0F2741",
                 letterSpacing: "-0.02em",
                 margin: 0,
                 marginBottom: 8,
@@ -409,9 +409,9 @@ export default function DestinationsSection() {
             </h3>
             <p
               style={{
-                fontSize: 18,
+                fontSize: 16,
                 fontWeight: 400,
-                color: "#B0C4DE",
+                color: "#0B1B2B",
                 letterSpacing: "-0.02em",
                 margin: 0,
               }}
@@ -423,99 +423,12 @@ export default function DestinationsSection() {
           {/* Top right - Elio can plan a trip for you */}
           <div
             style={{
-              background: "#FFFFFF",
-              borderRadius: "30px",
-              padding: 40,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              minHeight: 240,
-            }}
-          >
-            <h3
-              style={{
-                fontFamily: "Axiforma, -apple-system, BlinkMacSystemFont, sans-serif",
-                fontSize: 36,
-                fontWeight: 700,
-                color: "#0F2741",
-                letterSpacing: "-0.02em",
-                margin: 0,
-                lineHeight: 1.3,
-                textAlign: "center",
-              }}
-            >
-              Elio can plan a trip for you.
-            </h3>
-          </div>
-
-          {/* Middle left - Featured in */}
-          <div
-            style={{
-              background: "#F5F5F5",
+              background: "#F2F2F2",
               borderRadius: "30px",
               padding: 40,
               display: "flex",
               flexDirection: "column",
-              justifyContent: "center",
-              minHeight: 280,
-            }}
-          >
-            <h3
-              style={{
-                fontFamily: "Axiforma, -apple-system, BlinkMacSystemFont, sans-serif",
-                fontSize: 32,
-                fontWeight: 700,
-                color: "#0F2741",
-                letterSpacing: "-0.02em",
-                margin: 0,
-                lineHeight: 1.3,
-              }}
-            >
-              Gets smarter the more you talk to Elio.
-            </h3>
-          </div>
-
-          {/* Middle center - Stop using Docs to plan trips */}
-          <div
-            style={{
-              background: "linear-gradient(135deg, #D0E8F2 0%, #E8F4FA 100%)",
-              borderRadius: "30px",
-              minHeight: 280,
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "flex-end",
-              padding: 40,
-              position: "relative",
-              overflow: "hidden",
-              gridColumn: "2 / 3",
-              gridRow: "2 / 4",
-            }}
-          >
-            <h3
-              style={{
-                fontFamily: "Axiforma, -apple-system, BlinkMacSystemFont, sans-serif",
-                fontSize: 32,
-                fontWeight: 700,
-                color: "#FFFFFF",
-                letterSpacing: "-0.02em",
-                margin: 0,
-                textShadow: "0 2px 8px rgba(0,0,0,0.2)",
-                lineHeight: 1.4,
-              }}
-            >
-              Stop using Docs to plan trips. Do it all together on one map.
-            </h3>
-          </div>
-
-          {/* Middle right - Battery efficient */}
-          <div
-            style={{
-              background: "#2D5016",
-              borderRadius: "30px",
-              padding: 40,
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "space-between",
+              justifyContent: "flex-start",
               minHeight: 240,
             }}
           >
@@ -523,9 +436,136 @@ export default function DestinationsSection() {
               <h3
                 style={{
                   fontFamily: "Axiforma, -apple-system, BlinkMacSystemFont, sans-serif",
-                  fontSize: 40,
+                  fontSize: 32,
                   fontWeight: 700,
-                  color: "#FFFFFF",
+                  color: "#0F2741",
+                  letterSpacing: "-0.02em",
+                  margin: 0,
+                  marginBottom: 8,
+                  lineHeight: 1.3,
+                }}
+              >
+                Elio can plan a trip for you.
+              </h3>
+              <p
+                style={{
+                  fontSize: 16,
+                  fontWeight: 400,
+                  color: "#0B1B2B",
+                  letterSpacing: "-0.02em",
+                  margin: 0,
+                }}
+              >
+                AI-powered itinerary generation
+              </p>
+            </div>
+          </div>
+
+          {/* Middle left - Featured in */}
+          <div
+            style={{
+              background: "#F2F2F2",
+              borderRadius: "30px",
+              padding: 40,
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "flex-start",
+              minHeight: 280,
+            }}
+          >
+            <div>
+              <h3
+                style={{
+                  fontFamily: "Axiforma, -apple-system, BlinkMacSystemFont, sans-serif",
+                  fontSize: 32,
+                  fontWeight: 700,
+                  color: "#0F2741",
+                  letterSpacing: "-0.02em",
+                  margin: 0,
+                  marginBottom: 8,
+                  lineHeight: 1.3,
+                }}
+              >
+                Gets smarter the more you talk to Elio.
+              </h3>
+              <p
+                style={{
+                  fontSize: 16,
+                  fontWeight: 400,
+                  color: "#0B1B2B",
+                  letterSpacing: "-0.02em",
+                  margin: 0,
+                }}
+              >
+                Learns your preferences and travel style
+              </p>
+            </div>
+          </div>
+
+          {/* Middle center - Stop using Docs to plan trips */}
+          <div
+            style={{
+              background: "#F2F2F2",
+              borderRadius: "30px",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "flex-start",
+              padding: 40,
+              position: "relative",
+              overflow: "hidden",
+              gridColumn: "2 / 3",
+              gridRow: "2 / 4",
+            }}
+          >
+            <div>
+              <h3
+                style={{
+                  fontFamily: "Axiforma, -apple-system, BlinkMacSystemFont, sans-serif",
+                  fontSize: 32,
+                  fontWeight: 700,
+                  color: "#0F2741",
+                  letterSpacing: "-0.02em",
+                  margin: 0,
+                  marginBottom: 8,
+                  textShadow: "none",
+                  lineHeight: 1.4,
+                }}
+              >
+                Stop using Docs to plan trips.
+              </h3>
+              <p
+                style={{
+                  fontSize: 16,
+                  fontWeight: 400,
+                  color: "#0B1B2B",
+                  letterSpacing: "-0.02em",
+                  margin: 0,
+                }}
+              >
+                Do it all together on one map
+              </p>
+            </div>
+          </div>
+
+          {/* Middle right - Battery efficient */}
+          <div
+            style={{
+              background: "linear-gradient(360deg, #F2F2F2 0%, #F0FCFF 100%)",
+              borderRadius: "30px",
+              padding: 40,
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "flex-start",
+              height: 240,
+            }}
+          >
+            <div>
+              <h3
+                style={{
+                  fontFamily: "Axiforma, -apple-system, BlinkMacSystemFont, sans-serif",
+                  fontSize: 32,
+                  fontWeight: 700,
+                  color: "#0F2741",
                   letterSpacing: "-0.02em",
                   margin: 0,
                   marginBottom: 8,
@@ -537,7 +577,7 @@ export default function DestinationsSection() {
                 style={{
                   fontSize: 16,
                   fontWeight: 400,
-                  color: "#A8D5A8",
+                  color: "#0B1B2B",
                   letterSpacing: "-0.02em",
                   margin: 0,
                 }}
