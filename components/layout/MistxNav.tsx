@@ -378,7 +378,7 @@ export function MistxNav({
             borderTopRightRadius: "var(--frame-radius, 20px)",
             background:
               "linear-gradient(to bottom, rgba(0, 0, 0, 0.40) 0%, rgba(0, 0, 0, 0.22) 55%, rgba(0, 0, 0, 0) 100%)",
-            opacity: darkScrimActive ? 1 : 0,
+            opacity: darkScrimActive ? 0.5 : 0,
             transition: "opacity 300ms ease",
           }}
         />

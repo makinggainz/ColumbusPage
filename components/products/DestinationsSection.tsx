@@ -43,6 +43,89 @@ const ROW_B: DestPhoto[] = [
   { src: "/FavoriteSpots/(17).jpeg", place: "Koh Lanta",           rating: "4.7", prompt: "Quiet Thai beach resort far from the parties?", avatar: "https://i.pravatar.cc/80?img=57" },
 ];
 
+const CYCLING_OPTIONS = [
+  "cozy bookspot",
+  "hangout spot",
+  "event",
+  "neighborhood",
+  "travel inspo",
+  "rave spot",
+  "niche restaurant",
+  "thrift shop",
+];
+
+function CyclingTitle() {
+  const [index, setIndex] = useState(0);
+  const [displayText, setDisplayText] = useState("");
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  useEffect(() => {
+    const currentOption = CYCLING_OPTIONS[index];
+    const typingSpeed = isDeleting ? 50 : 100;
+    const pauseTime = 1500;
+
+    const timer = setTimeout(() => {
+      if (!isDeleting) {
+        if (displayText.length < currentOption.length) {
+          setDisplayText(currentOption.slice(0, displayText.length + 1));
+        } else {
+          setTimeout(() => setIsDeleting(true), pauseTime);
+        }
+      } else {
+        if (displayText.length > 0) {
+          setDisplayText(displayText.slice(0, -1));
+        } else {
+          setIsDeleting(false);
+          setIndex((prev) => (prev + 1) % CYCLING_OPTIONS.length);
+        }
+      }
+    }, typingSpeed);
+
+    return () => clearTimeout(timer);
+  }, [displayText, isDeleting, index]);
+
+  return (
+    <div
+      style={{
+        textAlign: "center",
+        paddingLeft: 40,
+        paddingRight: 40,
+        paddingBottom: 40,
+        paddingTop: 60,
+        maxWidth: 1400,
+        margin: "0 auto",
+      }}
+    >
+      <h2
+        style={{
+          fontSize: 24,
+          fontWeight: 590,
+          color: "#000000",
+          letterSpacing: "-0.02em",
+          margin: 0,
+          minHeight: "32px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: "4px",
+        }}
+      >
+        <span>Find your next</span>
+        <span style={{ minWidth: "280px", textAlign: "left" }}>
+          {displayText}
+          <span style={{ opacity: 0.5, animation: "blink 1s infinite" }}>|</span>
+        </span>
+      </h2>
+      <style>{`
+        @keyframes blink {
+          0%, 49% { opacity: 1; }
+          50%, 100% { opacity: 0; }
+        }
+      `}</style>
+    </div>
+  );
+}
+
 function Marquee({ imgs, reverse }: { imgs: DestPhoto[]; reverse?: boolean }) {
   // Two copies of the list → translating one copy-width loops seamlessly.
   const doubled = [...imgs, ...imgs];
@@ -57,7 +140,7 @@ function Marquee({ imgs, reverse }: { imgs: DestPhoto[]; reverse?: boolean }) {
               flex: "none",
               width: 304,
               height: 208,
-              borderRadius: 7,
+              borderRadius: 20,
               overflow: "hidden",
               border: "1px solid #E7E7F1",
             }}
@@ -218,7 +301,7 @@ export default function DestinationsSection() {
           paddingLeft: 40,
           paddingRight: 40,
           paddingBottom: 44,
-          paddingTop: 0,
+          paddingTop: 60,
           maxWidth: 1400,
           margin: "0 auto",
         }}
@@ -232,7 +315,7 @@ export default function DestinationsSection() {
             margin: 0,
           }}
         >
-          For everyday life.
+          For your city.
         </h2>
         <h2
           style={{
@@ -244,7 +327,7 @@ export default function DestinationsSection() {
             textAlign: "right",
           }}
         >
-          For traveling.
+          For your travels.
         </h2>
       </div>
 
@@ -255,6 +338,7 @@ export default function DestinationsSection() {
           paddingLeft: 40,
           paddingRight: 40,
           paddingBottom: 60,
+          paddingTop: 20,
           maxWidth: 1400,
           margin: "0 auto",
         }}
@@ -286,13 +370,13 @@ export default function DestinationsSection() {
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "2fr 1fr",
+            gridTemplateColumns: "1fr 2fr",
             gridTemplateRows: "auto auto auto",
             gap: 20,
             gridAutoRows: "auto",
           }}
         >
-          {/* Top left - Full privacy control (large card) */}
+          {/* Top left - See whats going on around you (large card) */}
           <div
             style={{
               background: "#0F2741",
@@ -316,7 +400,7 @@ export default function DestinationsSection() {
                 marginBottom: 8,
               }}
             >
-              Full privacy control
+              See whats going on around you.
             </h3>
             <p
               style={{
@@ -327,11 +411,11 @@ export default function DestinationsSection() {
                 margin: 0,
               }}
             >
-              You decide who can see your trip
+              Live events, local things.
             </p>
           </div>
 
-          {/* Top right - It's FREE! */}
+          {/* Top right - Elio can plan a trip for you */}
           <div
             style={{
               background: "#FFFFFF",
@@ -345,15 +429,16 @@ export default function DestinationsSection() {
           >
             <h3
               style={{
-                fontSize: 48,
+                fontSize: 36,
                 fontWeight: 700,
                 color: "#0F2741",
                 letterSpacing: "-0.02em",
                 margin: 0,
-                fontStyle: "italic",
+                lineHeight: 1.3,
+                textAlign: "center",
               }}
             >
-              iT'S FREE!
+              Elio can plan a trip for you.
             </h3>
           </div>
 
@@ -413,7 +498,7 @@ export default function DestinationsSection() {
             </h4>
           </div>
 
-          {/* Middle center - Works offline (image card) */}
+          {/* Middle center - Stop using Docs to plan trips */}
           <div
             style={{
               background: "linear-gradient(135deg, #D0E8F2 0%, #E8F4FA 100%)",
@@ -431,29 +516,17 @@ export default function DestinationsSection() {
           >
             <h3
               style={{
-                fontSize: 40,
+                fontSize: 32,
                 fontWeight: 700,
                 color: "#FFFFFF",
                 letterSpacing: "-0.02em",
                 margin: 0,
-                marginBottom: 8,
                 textShadow: "0 2px 8px rgba(0,0,0,0.2)",
+                lineHeight: 1.4,
               }}
             >
-              Works offline
+              Stop using Docs to plan trips. Do it all together on one map.
             </h3>
-            <p
-              style={{
-                fontSize: 18,
-                fontWeight: 400,
-                color: "#FFFFFF",
-                letterSpacing: "-0.02em",
-                margin: 0,
-                textShadow: "0 2px 8px rgba(0,0,0,0.2)",
-              }}
-            >
-              Keeps tracking — even when you're offgrid
-            </p>
           </div>
 
           {/* Middle right - Battery efficient */}
@@ -507,6 +580,9 @@ export default function DestinationsSection() {
         </div>
       </div>
 
+      {/* Title with cycling text */}
+      <CyclingTitle />
+
       {/* Two scrolling photo rows */}
       <div
         style={{
@@ -515,6 +591,7 @@ export default function DestinationsSection() {
           gap: 20,
           opacity: vis ? 1 : 0,
           transition: "opacity 0.8s ease-out 0.15s",
+          paddingTop: 60,
         }}
       >
         <Marquee imgs={ROW_A} />

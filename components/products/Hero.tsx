@@ -225,17 +225,16 @@ export default function Hero() {
     <section
       style={{
         position: "relative",
-        minHeight: "100vh",
+        minHeight: "calc(100vh + 400px)",
         width: "100%",
         overflow: "visible",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        justifyContent: "center",
-        paddingTop: 80,
+        justifyContent: "flex-start",
+        paddingTop: 0,
         paddingBottom: 60,
         marginTop: -120,
-        paddingTop: 200,
         marginBottom: -200,
         backgroundImage: "url(/consumer/elio/ElioEndingBackground.jpg)",
         backgroundSize: "cover",
@@ -267,15 +266,16 @@ export default function Hero() {
       <div
         style={{
           position: "relative",
-          zIndex: 10,
+          zIndex: 60,
           width: "100%",
           maxWidth: 1400,
-          height: "100%",
+          height: "auto",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          justifyContent: "center",
+          justifyContent: "flex-start",
           paddingX: 40,
+          paddingTop: 200,
         }}
       >
         {/* Elio logo - 3D rotating globe + name */}
@@ -335,15 +335,20 @@ export default function Hero() {
           <div
             style={{
               position: "absolute",
-              top: -20,
-              right: -40,
-              width: 26,
-              height: 26,
-              backgroundColor: "#FFFFFF",
-              clipPath: "polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)",
-              boxShadow: "0px 0px 12px rgba(0, 0, 0, 0.25)",
+              top: 0,
+              right: -20,
+              width: 32,
+              height: 32,
             }}
-          />
+          >
+            <Image
+              src="/consumer/star.png"
+              alt="Star"
+              width={32}
+              height={32}
+              style={{ objectFit: "contain" }}
+            />
+          </div>
         </div>
 
         {/* CTA Buttons */}
@@ -378,63 +383,6 @@ export default function Hero() {
           <StoreBadges />
         </div>
 
-        {/* Three-column layout: Left text | Phone | Right text */}
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "1fr auto 1fr",
-            gap: "40px",
-            width: "100%",
-            alignItems: "center",
-            justifyItems: "center",
-            marginBottom: 60,
-          }}
-        >
-          {/* Left section */}
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              gap: 24,
-            }}
-          />
-
-          {/* Center - Phone mockup */}
-          <div
-            style={{
-              position: "relative",
-              width: 360,
-              height: 780,
-              borderRadius: 42,
-              overflow: "hidden",
-              border: "7px solid #000000",
-              boxShadow: "0px 4px 61px rgba(0, 0, 0, 0.25)",
-              flexShrink: 0,
-              marginTop: 0,
-              marginBottom: -200,
-              boxSizing: "content-box",
-              zIndex: 50,
-            }}
-          >
-            <Image
-              src="/consumer/elioHome1.png"
-              alt="Elio App"
-              fill
-              style={{ objectFit: "cover" }}
-            />
-          </div>
-
-          {/* Right section */}
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              gap: 24,
-            }}
-          />
-        </div>
 
       </div>
     </section>
