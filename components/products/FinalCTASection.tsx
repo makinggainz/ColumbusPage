@@ -6,13 +6,80 @@ import MapsGPTGlobe from "@/components/products/MapsGPTGlobe";
 import StoreBadges from "@/components/products/StoreBadges";
 import "@/components/products/how-it-works-tokens.css";
 
-// Friends-on-the-globe markers. Positioned in the 1728×1298 coord-space
-// so each chip lands over a recognisable continent on the globe artwork.
-const FRIEND_PINS = [
-  { left: 360,  top: 700,  name: "Mera",   place: "Park", dist: "Nearby", img: "https://i.pravatar.cc/96?img=16", delay: 0 },
-  { left: 900,  top: 600,  name: "Diana",  place: "Café", dist: "1 hr",   img: "https://i.pravatar.cc/96?img=35", delay: 0.12 },
-  { left: 1020, top: 860,  name: "Adison", place: "Home", dist: "25 min", img: "https://i.pravatar.cc/96?img=3",  delay: 0.24 },
-  { left: 460,  top: 960,  name: "Aliza",  place: "Zara", dist: "20 min", img: "https://i.pravatar.cc/96?img=44", delay: 0.36 },
+// Floating discovery-card overlays on the globe. Each card is one of
+// four visual variants matching the consumer page's pinned-UI design:
+//   • "photo"      — photo card with overlapping avatar stack + pill
+//   • "place"      — circular place photo + name + subtitle + pill
+//   • "stacked"    — three fanned photo cards behind one pill
+//   • "place-only" — place chip without a pill below
+// Positions are in the 1728×1298 coord space; cards orbit around the
+// visible globe and stagger their fade-in entrance.
+type DiscoveryCard =
+  | { type: "photo"; label: string; img: string; avatars: string[]; left: number; top: number; rot: number; delay: number }
+  | { type: "place"; label: string; placeName: string; placeSub: string; img: string; left: number; top: number; rot: number; delay: number }
+  | { type: "stacked"; label: string; imgs: [string, string, string]; left: number; top: number; rot: number; delay: number }
+  | { type: "place-only"; placeName: string; placeSub: string; img: string; left: number; top: number; rot: number; delay: number };
+
+const DISCOVERY_CARDS: DiscoveryCard[] = [
+  {
+    type: "photo",
+    label: "group trips",
+    img: "/FavoriteSpots/(20).jpeg",
+    avatars: [
+      "https://i.pravatar.cc/80?img=16",
+      "https://i.pravatar.cc/80?img=35",
+      "https://i.pravatar.cc/80?img=3",
+      "https://i.pravatar.cc/80?img=44",
+    ],
+    left: 380,
+    top: 560,
+    rot: -3,
+    delay: 0,
+  },
+  {
+    type: "photo",
+    label: "activities",
+    img: "/FavoriteSpots/(17).jpeg",
+    avatars: [
+      "https://i.pravatar.cc/80?img=22",
+      "https://i.pravatar.cc/80?img=7",
+      "https://i.pravatar.cc/80?img=51",
+    ],
+    left: 1310,
+    top: 470,
+    rot: 4,
+    delay: 0.1,
+  },
+  {
+    type: "place",
+    label: "Restaraunts",
+    placeName: "Panaria",
+    placeSub: "calm cafe",
+    img: "/FavoriteSpots/(14).jpeg",
+    left: 700,
+    top: 1030,
+    rot: 0,
+    delay: 0.22,
+  },
+  {
+    type: "stacked",
+    label: "trending places",
+    imgs: ["/FavoriteSpots/(19).jpeg", "/FavoriteSpots/(22).jpeg", "/FavoriteSpots/(21).jpeg"],
+    left: 1300,
+    top: 920,
+    rot: -2,
+    delay: 0.3,
+  },
+  {
+    type: "place-only",
+    placeName: "Lupita",
+    placeSub: "tapas bar",
+    img: "/FavoriteSpots/(23).jpeg",
+    left: 220,
+    top: 940,
+    rot: 0,
+    delay: 0.4,
+  },
 ];
 
 export default function FinalCTASection() {
@@ -62,13 +129,13 @@ export default function FinalCTASection() {
         >
           <Image src="/consumer-final-cta-elio-ending.png" alt="Elio across the globe" fill className="object-cover" priority />
 
-          {/* Floating profile pins — positioned as % of the image wrapper
-              so each chip lands on the same continent at any viewport. */}
-          {FRIEND_PINS.map((p, i) => {
+          {/* Floating discovery cards — positioned as % of the image
+              wrapper so each card lands in the same spot at any viewport. */}
+          {DISCOVERY_CARDS.map((p, i) => {
             const leftPct = (p.left / 1728) * 100;
             const topPct = (p.top / 1298) * 100;
             return (
-              <FriendPin key={i} p={p} leftPct={leftPct} topPct={topPct} mobile visible={pinsVisible} />
+              <DiscoveryCardView key={i} p={p} leftPct={leftPct} topPct={topPct} mobile visible={pinsVisible} />
             );
           })}
         </div>
@@ -174,14 +241,15 @@ export default function FinalCTASection() {
             >
               <Image src="/consumer-final-cta-elio-ending.png" alt="Elio across the globe" fill className="object-cover" priority />
 
-              {/* Floating profile-pin markers — friends at locations, drawn
-                  over the continents on the globe. Each pin = AT-place
-                  label + circular avatar + name·distance chip; fades +
-                  scales in staggered as the section enters view. Coords
-                  are in the 1728×1298 image-wrapper space, not the outer
-                  section, so adding sky band doesn't move the pins. */}
-              {FRIEND_PINS.map((p, i) => (
-                <FriendPin key={i} p={p} leftPx={p.left} topPx={p.top} visible={pinsVisible} />
+              {/* Floating discovery cards — five UI overlays scattered
+                  over the globe (photo card w/ avatars, photo card
+                  selected, place card w/ pill, stacked photo deck,
+                  place card only). Each card fades + scales in
+                  staggered as the section enters view. Coords are in
+                  the 1728×1298 image-wrapper space, not the outer
+                  section, so adding sky band doesn't move the cards. */}
+              {DISCOVERY_CARDS.map((p, i) => (
+                <DiscoveryCardView key={i} p={p} leftPx={p.left} topPx={p.top} visible={pinsVisible} />
               ))}
             </div>
           </div>
@@ -236,13 +304,18 @@ export default function FinalCTASection() {
                 href="https://mapsgpt.es"
                 target="_blank"
                 rel="noreferrer"
-                className="group inline-flex items-center justify-center gap-3 rounded-button-lg bg-cta px-6 py-4 no-underline transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
+                className="group inline-flex items-center justify-center gap-3 bg-cta no-underline transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
+                style={{
+                  height: 46,
+                  padding: "0 22px",
+                  borderRadius: "var(--radius-button-md)",
+                }}
               >
                 <span style={{
                   fontFamily: "var(--hiw-font-sans)",
-                  fontWeight: 590,
-                  fontSize: "20px",
-                  letterSpacing: "-0.02em",
+                  fontWeight: 600,
+                  fontSize: "15px",
+                  letterSpacing: "-0.01em",
                   color: "#FFFFFF",
                 }}>
                   Try Elio it&apos;s free!
@@ -262,13 +335,15 @@ export default function FinalCTASection() {
 }
 
 /* ════════════════════════════════════════════════════════════════════
-   FriendPin — one floating profile marker pinned over the globe.
-   Desktop receives px coords in the 1728-coord-space; mobile receives
-   percentage coords so each pin lands on the same continent at every
-   viewport width.
+   DiscoveryCardView — one floating UI overlay pinned over the globe.
+   Renders one of five visual variants (photo / photo-selected / place /
+   stacked / place-only) based on `p.type`, with a centered pill label
+   below for every variant except `place-only`. Desktop receives px
+   coords in the 1728-coord-space; mobile receives percentage coords
+   so each card lands in the same map zone at every viewport width.
    ════════════════════════════════════════════════════════════════════ */
-type FriendPinProps = {
-  p: { name: string; place: string; dist: string; img: string; delay: number };
+type DiscoveryCardViewProps = {
+  p: DiscoveryCard;
   leftPx?: number;
   topPx?: number;
   leftPct?: number;
@@ -277,79 +352,179 @@ type FriendPinProps = {
   visible: boolean;
 };
 
-function FriendPin({ p, leftPx, topPx, leftPct, topPct, mobile, visible }: FriendPinProps) {
-  const avatarSize = mobile ? 36 : 64;
-  const labelSize = mobile ? 9 : 12;
-  const nameSize = mobile ? 10 : 13;
-  const distSize = mobile ? 9 : 12;
+function DiscoveryCardView({ p, leftPx, topPx, leftPct, topPct, mobile, visible }: DiscoveryCardViewProps) {
+  // Single scale knob — every internal size derives from `s`. Mobile
+  // renders at half size so the cards stay legible without crowding
+  // the smaller globe artwork.
+  const s = mobile ? 0.5 : 1;
+  const FRAME = 8 * s;
+  const PHOTO_W = 280 * s;
+  const PHOTO_H = 200 * s;
+  const RADIUS = 22 * s;
+  const INNER_RADIUS = Math.max(8, RADIUS - FRAME);
+  const cardShadow = "0 12px 32px -8px rgba(0,40,60,0.25), 0 4px 10px rgba(0,0,0,0.08)";
+
+  const pillStyle: React.CSSProperties = {
+    marginTop: 14 * s,
+    alignSelf: "center",
+    background: "#FFFFFF",
+    borderRadius: 9999,
+    padding: `${10 * s}px ${24 * s}px`,
+    fontFamily: "Axiforma, -apple-system, BlinkMacSystemFont, sans-serif",
+    fontSize: 22 * s,
+    fontWeight: 600,
+    letterSpacing: "-0.01em",
+    color: "#0B1342",
+    boxShadow: "0 10px 24px -8px rgba(0,0,0,0.25), 0 2px 6px rgba(0,0,0,0.08)",
+    whiteSpace: "nowrap",
+  };
+
   return (
     <div
       className="absolute flex flex-col items-center pointer-events-none"
       style={{
         left: leftPx != null ? leftPx : `${leftPct}%`,
         top: topPx != null ? topPx : `${topPct}%`,
-        transform: `translate(-50%, -50%) ${visible ? "scale(1)" : "scale(0.6)"}`,
+        transform: `translate(-50%, -50%) ${visible ? "scale(1)" : "scale(0.6)"} rotate(${p.rot}deg)`,
         opacity: visible ? 1 : 0,
         transition: `opacity 0.7s var(--hiw-easing-decel) ${p.delay}s, transform 0.7s var(--hiw-easing-spring) ${p.delay}s`,
       }}
     >
-      <span style={{
-        fontFamily: "var(--hiw-font-sans)",
-        fontWeight: 700,
-        fontSize: labelSize,
-        letterSpacing: "0.14em",
-        textTransform: "uppercase",
-        color: "#0B1342",
-        marginBottom: 6,
-        whiteSpace: "nowrap",
-        textShadow: "0 1px 2px rgba(255,255,255,0.7)",
-      }}>
-        At {p.place}
-      </span>
-      <img
-        src={p.img}
-        alt=""
-        draggable={false}
-        style={{
-          width: avatarSize,
-          height: avatarSize,
-          borderRadius: "9999px",
-          objectFit: "cover",
-          border: `${mobile ? 2 : 3}px solid #FFFFFF`,
-          boxShadow: "0 8px 20px rgba(0,0,0,0.35)",
-        }}
-      />
-      <div style={{
-        marginTop: mobile ? 4 : 8,
-        padding: mobile ? "3px 7px" : "5px 11px",
-        borderRadius: 9999,
-        background: "rgba(255,255,255,0.95)",
-        backdropFilter: "blur(6px)",
-        WebkitBackdropFilter: "blur(6px)",
-        boxShadow: "0 4px 12px rgba(0,0,0,0.18)",
-        display: "flex",
-        alignItems: "center",
-        gap: mobile ? 4 : 6,
-        whiteSpace: "nowrap",
-      }}>
-        <span style={{
-          fontFamily: "var(--hiw-font-sans)",
-          fontWeight: 600,
-          fontSize: nameSize,
-          letterSpacing: "-0.01em",
-          color: "#0B1342",
-        }}>{p.name}</span>
-        <span style={{
-          width: 3, height: 3, borderRadius: "9999px", background: "#0B1342", opacity: 0.4,
-        }} />
-        <span style={{
-          fontFamily: "var(--hiw-font-sans)",
-          fontWeight: 500,
-          fontSize: distSize,
-          letterSpacing: "-0.01em",
-          color: "rgba(11,19,66,0.6)",
-        }}>{p.dist}</span>
-      </div>
+      {/* ── Variant: photo card (with optional avatars) ── */}
+      {(p.type === "photo" || p.type === "photo-selected") && (
+        <div
+          style={{
+            position: "relative",
+            padding: FRAME,
+            background: p.type === "photo-selected" ? "#00B1D4" : "#FFFFFF",
+            borderRadius: RADIUS,
+            boxShadow: cardShadow,
+          }}
+        >
+          <div style={{ width: PHOTO_W, height: PHOTO_H, borderRadius: INNER_RADIUS, overflow: "hidden" }}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={p.img} alt="" draggable={false} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+          </div>
+          {/* Two overlapping avatars peek out the card's bottom-left */}
+          {p.type === "photo" && (
+            <div style={{ position: "absolute", left: 14 * s, bottom: -12 * s, display: "flex" }}>
+              {p.avatars.map((src, i) => (
+                /* eslint-disable-next-line @next/next/no-img-element */
+                <img
+                  key={i}
+                  src={src}
+                  alt=""
+                  draggable={false}
+                  style={{
+                    width: 40 * s,
+                    height: 40 * s,
+                    borderRadius: "9999px",
+                    border: `${3 * s}px solid #FFFFFF`,
+                    objectFit: "cover",
+                    marginLeft: i === 0 ? 0 : -14 * s,
+                    boxShadow: "0 4px 10px rgba(0,0,0,0.18)",
+                  }}
+                />
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* ── Variant: place chip (gray circle + place name + subtitle) ── */}
+      {(p.type === "place" || p.type === "place-only") && (
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 14 * s,
+            background: "#FFFFFF",
+            borderRadius: 9999,
+            padding: `${8 * s}px ${26 * s}px ${8 * s}px ${10 * s}px`,
+            boxShadow: cardShadow,
+          }}
+        >
+          <div
+            style={{
+              width: 56 * s,
+              height: 56 * s,
+              borderRadius: "9999px",
+              background: "#D1D5DB",
+              flexShrink: 0,
+            }}
+            aria-hidden
+          />
+          <div style={{ display: "flex", flexDirection: "column", lineHeight: 1.1 }}>
+            <span style={{
+              fontFamily: "Axiforma, -apple-system, BlinkMacSystemFont, sans-serif",
+              fontWeight: 700,
+              fontSize: 26 * s,
+              color: "#0B1342",
+              letterSpacing: "-0.02em",
+            }}>{p.placeName}</span>
+            <span style={{
+              fontFamily: "Axiforma, -apple-system, BlinkMacSystemFont, sans-serif",
+              fontWeight: 500,
+              fontSize: 18 * s,
+              color: "rgba(11,19,66,0.55)",
+              marginTop: 3 * s,
+              letterSpacing: "-0.01em",
+            }}>{p.placeSub}</span>
+          </div>
+        </div>
+      )}
+
+      {/* ── Variant: stacked photo deck (three fanned cards) ── */}
+      {p.type === "stacked" && (() => {
+        const SUB_W = 180 * s;
+        const SUB_H = 130 * s;
+        const SUB_RADIUS = 18 * s;
+        const SUB_INNER = Math.max(6, SUB_RADIUS - FRAME);
+        const subCard = (img: string, posStyle: React.CSSProperties): React.CSSProperties => ({
+          position: "absolute",
+          padding: FRAME,
+          background: "#FFFFFF",
+          borderRadius: SUB_RADIUS,
+          boxShadow: cardShadow,
+          ...posStyle,
+        });
+        const subInner: React.CSSProperties = {
+          width: SUB_W,
+          height: SUB_H,
+          borderRadius: SUB_INNER,
+          overflow: "hidden",
+        };
+        return (
+          <div style={{ position: "relative", width: SUB_W * 1.85, height: SUB_H * 1.8 }}>
+            {/* Back-left card — tilted CCW */}
+            <div style={subCard(p.imgs[0], { left: 0, top: SUB_H * 0.45, transform: "rotate(-7deg)", zIndex: 1 })}>
+              <div style={subInner}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={p.imgs[0]} alt="" draggable={false} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+              </div>
+            </div>
+            {/* Back-right card — tilted CW, sits highest */}
+            <div style={subCard(p.imgs[1], { right: 0, top: 0, transform: "rotate(7deg)", zIndex: 2 })}>
+              <div style={subInner}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={p.imgs[1]} alt="" draggable={false} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+              </div>
+            </div>
+            {/* Front-centre card — slight CCW, sits in front */}
+            <div style={subCard(p.imgs[2], { left: "50%", top: SUB_H * 0.6, transform: "translateX(-50%) rotate(-2deg)", zIndex: 3 })}>
+              <div style={subInner}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={p.imgs[2]} alt="" draggable={false} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+              </div>
+            </div>
+          </div>
+        );
+      })()}
+
+      {/* Pill label below — every variant except place-only */}
+      {p.type !== "place-only" && (
+        <div style={pillStyle}>{p.label}</div>
+      )}
     </div>
   );
 }

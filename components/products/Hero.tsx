@@ -20,7 +20,6 @@
 
 import Image from "next/image";
 import { useRef, useEffect, useState, useCallback } from "react";
-import { Heart } from "lucide-react";
 import MapsGPTGlobe from "@/components/products/MapsGPTGlobe";
 import StoreBadges from "@/components/products/StoreBadges";
 
@@ -105,21 +104,6 @@ const PHONE_IMAGES = [
 // scene. Without this, intro and active-city would both render
 // PHONE_IMAGES[0] and the transition would be invisible.
 const INTRO_PHONE_IMAGE = "/consumer/elioHome1.png";
-
-// ── Scene-3 user posts ───────────────────────────────────────────────
-// Floating Instagram-style cards scattered around the pinned phone
-// during scene 3. Two pairs (top-left/top-right, bottom-left/bottom-
-// right) so each card has a clear column of its own, the phone reads
-// in the middle, and the closing title at viewport bottom has room.
-// Positions are in px relative to the viewport centre; card centres
-// sit well outside the phone's ~±150 px column. Rotations add a hand-
-// pinned feel.
-const POSTS = [
-  { user: "@maria.travels", caption: "Hidden coffee gem.",   img: "/consumer/images/hidden-coffee-shop.png", likes: 142, x: -400, y: -230, rot: -4 },
-  { user: "@jay.wanders",   caption: "Golden hour vibes.",   img: "/consumer/images/rooftop-sunset-bar.png", likes:  87, x:  400, y: -250, rot:  5 },
-  { user: "@henry.trails",  caption: "Sunday trail run.",    img: "/consumer/images/local-hiking-trail.png", likes:  56, x: -410, y:  170, rot:  3 },
-  { user: "@maya.r",        caption: "My study spot.",       img: "/consumer/images/quiet-study-cafe.png",   likes: 211, x:  410, y:  190, rot: -3 },
-];
 
 export default function Hero() {
   const [phase, setPhase] = useState(0);
@@ -263,134 +247,6 @@ export default function Hero() {
       {/* ════ Phone · pill row — pinned (the ONLY pinned content) ════ */}
       <div className="absolute inset-0 z-30 pointer-events-none">
         <div className="sticky top-0 overflow-hidden" style={{ height: "100dvh" }}>
-          {/* Scene-3 user-post cards — sit behind the pinned phone
-              (zIndex 5 < phone zIndex 10), opacity-toggled by active
-              phase. Hidden on mobile to keep the layout breathable. */}
-          {isLg && (
-            <div
-              aria-hidden
-              className="absolute inset-0"
-              style={{
-                zIndex: 5,
-                opacity: phase === 3 ? 1 : 0,
-                transition: "opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1)",
-                pointerEvents: "none",
-              }}
-            >
-              {POSTS.map((p) => (
-                <div
-                  key={p.user}
-                  style={{
-                    position: "absolute",
-                    left: "50%",
-                    top: "50%",
-                    transform: `translate(calc(-50% + ${p.x}px), calc(-50% + ${p.y}px)) rotate(${p.rot}deg)`,
-                    width: 168,
-                    background: "#FFFFFF",
-                    borderRadius: 16,
-                    overflow: "hidden",
-                    boxShadow:
-                      "0 12px 32px -8px rgba(0,40,60,0.18), 0 4px 10px rgba(0,0,0,0.06)",
-                    border: "1px solid rgba(11,27,43,0.06)",
-                  }}
-                >
-                  {/* Card header — avatar + username */}
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 7,
-                      padding: "8px 10px 6px",
-                    }}
-                  >
-                    <div
-                      aria-hidden
-                      style={{
-                        width: 20,
-                        height: 20,
-                        borderRadius: "50%",
-                        background:
-                          "linear-gradient(135deg, #5FBFF1 0%, #2A8FC2 100%)",
-                        flexShrink: 0,
-                      }}
-                    />
-                    <span
-                      style={{
-                        fontFamily:
-                          '"SF Pro", -apple-system, BlinkMacSystemFont, sans-serif',
-                        fontSize: 11,
-                        fontWeight: 600,
-                        color: "#0B1B2B",
-                        letterSpacing: "-0.01em",
-                      }}
-                    >
-                      {p.user}
-                    </span>
-                  </div>
-                  {/* Photo */}
-                  <div
-                    style={{
-                      width: "100%",
-                      aspectRatio: "4 / 3",
-                      background: "#F4F4F5",
-                      overflow: "hidden",
-                    }}
-                  >
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={p.img}
-                      alt=""
-                      style={{
-                        width: "100%",
-                        height: "100%",
-                        objectFit: "cover",
-                        display: "block",
-                      }}
-                    />
-                  </div>
-                  {/* Caption + likes */}
-                  <div style={{ padding: "6px 10px 10px" }}>
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 5,
-                        marginBottom: 3,
-                        color: "#0B1B2B",
-                      }}
-                    >
-                      <Heart size={11} strokeWidth={2.2} aria-hidden />
-                      <span
-                        style={{
-                          fontFamily:
-                            '"SF Pro", -apple-system, BlinkMacSystemFont, sans-serif',
-                          fontSize: 10,
-                          fontWeight: 600,
-                          color: "#0B1B2B",
-                        }}
-                      >
-                        {p.likes}
-                      </span>
-                    </div>
-                    <p
-                      style={{
-                        fontFamily:
-                          '"SF Pro", -apple-system, BlinkMacSystemFont, sans-serif',
-                        fontSize: 11,
-                        fontWeight: 500,
-                        lineHeight: 1.35,
-                        letterSpacing: "-0.01em",
-                        color: "#0B1B2B",
-                        margin: 0,
-                      }}
-                    >
-                      {p.caption}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
           {/* The bare 3D phone */}
           <div ref={riseRef} className="absolute inset-0" style={{ willChange: "transform", zIndex: 10 }}>
             <div

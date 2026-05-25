@@ -301,61 +301,75 @@ export default function DestinationsSection() {
           backdrops + explanation copy). This section now opens straight
           into the "and everything in between" middle title. */}
 
-      {/* Middle title */}
-      <div
-        style={{
-          textAlign: "center",
-          paddingLeft: 40,
-          paddingRight: 40,
-          paddingBottom: 60,
-          paddingTop: 20,
-          maxWidth: 1400,
-          margin: "0 auto",
-        }}
-      >
-        <h2
+      {/* ════ Full-width band — "and everything in between" + bento ════
+          Page background `rgb(245, 247, 250)` is what the frosted-glass
+          cards rely on bleeding through their semi-transparent fills.
+          The band extends edge-to-edge so the colour wraps the entire
+          section, not just the centred 1400-px content column. */}
+      <div className="eib-band">
+        {/* Middle title */}
+        <div
           style={{
-            fontFamily: "Axiforma, -apple-system, BlinkMacSystemFont, sans-serif",
-            fontSize: 44,
-            fontWeight: 590,
-            color: "#000000",
-            letterSpacing: "-0.02em",
-            margin: 0,
+            textAlign: "center",
+            paddingLeft: 40,
+            paddingRight: 40,
+            paddingBottom: 60,
+            paddingTop: 20,
+            maxWidth: 1400,
+            margin: "0 auto",
           }}
         >
-          and everything in between
-        </h2>
-      </div>
+          <h2
+            style={{
+              fontFamily: "Axiforma, -apple-system, BlinkMacSystemFont, sans-serif",
+              fontSize: 44,
+              fontWeight: 590,
+              color: "#000000",
+              letterSpacing: "-0.02em",
+              margin: 0,
+            }}
+          >
+            and everything in between
+          </h2>
+        </div>
 
-      {/* ════ Bento grid — 5 cards, mixed sizes ════
-          Layout (desktop, 3 cols):
-            • Hero (Stop using Docs) — cols 1-2, rows 1-2, blue gradient
-            • See what's going on    — col 3, row 1
-            • Gets smarter           — col 3, row 2
-            • Elio can plan          — col 1, row 3
-            • Ad-free                — cols 2-3, row 3
-          Mobile (<768px): collapses to a single column. */}
-      <div
-        style={{
-          paddingLeft: 40,
-          paddingRight: 40,
-          maxWidth: 1400,
-          margin: "0 auto",
-        }}
-      >
-        <div className="eib-bento">
-          {/* ── Hero tile — Stop using Docs. Roamy-palette blue gradient,
-                white title, stylized earth horizon + map pins SVG. ── */}
-          <div className="eib-card eib-hero">
-            <div className="eib-text">
-              <h3 className="eib-title eib-title-hero">Stop using Docs to plan trips.</h3>
-              <p className="eib-sub eib-sub-hero">Do it all together on one map.</p>
+        {/* ════ Bento grid — 5 cards, Roamy-style 2-row layout ════
+            Row 1 (12-col): card 1 spans 7, card 2 spans 5  (highlighted)
+            Row 2 (12-col): cards 3/4/5 each span 4         (base)
+            Highlighted variant uses a 3-layer composited gradient (white
+            wash + sky-blue→white fade + faint dark) for a frosted-glass
+            sheen; base cards are a near-transparent dark tint that lets
+            the page bg show through. All cards share the same inset
+            box-shadow that creates the inner glass highlight.
+            Mobile (<640px): all cards stack in a single column. */}
+        <div
+          style={{
+            paddingLeft: 40,
+            paddingRight: 40,
+            maxWidth: 1400,
+            margin: "0 auto",
+          }}
+        >
+          <div className="eib-bento">
+            {/* 1 — Stop using Docs (wide top-left, highlighted) */}
+            <div className="eib-card eib-card--highlight">
+              <div className="eib-text">
+                <h3 className="eib-title">Stop using Docs to plan trips.</h3>
+                <p className="eib-sub">Do it all together on one map.</p>
+              </div>
             </div>
-            <HeroMapArt />
-          </div>
 
-          {/* ── See what's going on around you — radar/pulse pin ── */}
-          <div className="eib-card eib-tile">
+            {/* 2 — Elio can plan a trip for you (top-right, highlighted) */}
+            <div className="eib-card eib-card--highlight">
+              <div className="eib-text">
+                <h3 className="eib-title">Elio can plan a trip for you.</h3>
+                <p className="eib-sub">AI-powered itinerary generation.</p>
+              </div>
+              <ItineraryArt />
+            </div>
+
+          {/* 3 — See what's going on around you (bottom-left) */}
+          <div className="eib-card">
             <div className="eib-text">
               <h3 className="eib-title">See what&rsquo;s going on around you.</h3>
               <p className="eib-sub">Live events, local things.</p>
@@ -363,8 +377,8 @@ export default function DestinationsSection() {
             <RadarPinArt />
           </div>
 
-          {/* ── Gets smarter the more you talk to Elio — chat bubbles ── */}
-          <div className="eib-card eib-tile">
+          {/* 4 — Gets smarter the more you talk to Elio (bottom-mid) */}
+          <div className="eib-card">
             <div className="eib-text">
               <h3 className="eib-title">Gets smarter the more you talk to Elio.</h3>
               <p className="eib-sub">Learns your preferences and travel style.</p>
@@ -372,107 +386,114 @@ export default function DestinationsSection() {
             <ChatBubblesArt />
           </div>
 
-          {/* ── Elio can plan a trip for you — mini itinerary timeline ── */}
-          <div className="eib-card eib-tile">
-            <div className="eib-text">
-              <h3 className="eib-title">Elio can plan a trip for you.</h3>
-              <p className="eib-sub">AI-powered itinerary generation.</p>
+            {/* 5 — Ad-free (bottom-right) */}
+            <div className="eib-card">
+              <div className="eib-text">
+                <h3 className="eib-title">Ad-free.</h3>
+                <p className="eib-sub">Find exactly what you&rsquo;re after.</p>
+              </div>
+              <ShieldCheckArt />
             </div>
-            <ItineraryArt />
-          </div>
-
-          {/* ── Ad-free — clean shield/check icon, wide tile ── */}
-          <div className="eib-card eib-tile eib-tile-wide">
-            <div className="eib-text">
-              <h3 className="eib-title">Ad-free.</h3>
-              <p className="eib-sub">Find exactly what you&rsquo;re after.</p>
-            </div>
-            <ShieldCheckArt />
           </div>
         </div>
       </div>
 
       <style>{`
+        /* Full-width band — vertical spacing only, no background. */
+        .eib-band {
+          padding-top: 80px;
+          padding-bottom: 80px;
+        }
+
         .eib-bento {
           display: grid;
-          grid-template-columns: repeat(3, 1fr);
-          grid-template-rows: minmax(260px, auto) minmax(260px, auto) minmax(220px, auto);
+          grid-template-columns: repeat(12, 1fr);
           gap: 20px;
         }
-        .eib-hero { grid-column: 1 / 3; grid-row: 1 / 3; }
-        .eib-bento > .eib-card:nth-child(2) { grid-column: 3 / 4; grid-row: 1 / 2; }
-        .eib-bento > .eib-card:nth-child(3) { grid-column: 3 / 4; grid-row: 2 / 3; }
-        .eib-bento > .eib-card:nth-child(4) { grid-column: 1 / 2; grid-row: 3 / 4; }
-        .eib-bento > .eib-card:nth-child(5) { grid-column: 2 / 4; grid-row: 3 / 4; }
+        .eib-bento > .eib-card:nth-child(1) { grid-column: span 7; }
+        .eib-bento > .eib-card:nth-child(2) { grid-column: span 5; }
+        .eib-bento > .eib-card:nth-child(3) { grid-column: span 4; }
+        .eib-bento > .eib-card:nth-child(4) { grid-column: span 4; }
+        .eib-bento > .eib-card:nth-child(5) { grid-column: span 4; }
 
+        /* Base card — near-transparent dark tint that lets the page bg
+           bleed through, plus a double inset white shadow that mimics
+           the inner glass highlight on a frosted panel. */
         .eib-card {
           position: relative;
-          border-radius: 28px;
-          padding: 36px;
+          background: rgba(0, 0, 0, 0.02);
+          border-radius: 24px;
+          padding: 32px;
           overflow: hidden;
           display: flex;
           flex-direction: column;
           justify-content: space-between;
-          gap: 24px;
+          gap: 16px;
+          box-shadow:
+            rgba(255, 255, 255, 0.21) 0px -2px 12px 0px inset,
+            rgba(255, 255, 255, 0.60) 0px  1px  1px 0px inset;
+          min-height: 380px;
         }
-        .eib-tile {
-          background: #FFFFFF;
-          border: 1px solid rgba(11,27,43,0.06);
+        @media (min-width: 1200px) {
+          .eib-card { border-radius: 28px; padding: 40px; gap: 24px; }
         }
-        .eib-hero {
-          background: linear-gradient(135deg, #00A3FF 0%, #6EC8FF 55%, #B5E5FF 100%);
-          color: #FFFFFF;
+
+        /* Highlighted variant — three composited background-image
+           gradients on top of the base. Layer order (top → bottom):
+             1. 20% white wash             (frosted milk)
+             2. Sky-blue 15% → white 15%   (vertical sky fade)
+             3. 5% black                   (faint depth, keeps it from
+                                            looking washed out)
+           Slightly larger radius at desktop breakpoints. */
+        .eib-card--highlight {
+          background-image:
+            linear-gradient(90deg, rgba(255, 255, 255, 0.20), rgba(255, 255, 255, 0.20)),
+            linear-gradient(rgba(0, 163, 255, 0.15), rgba(255, 255, 255, 0.15)),
+            linear-gradient(90deg, rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.05));
         }
+
+        .eib-bento > .eib-card:nth-child(1),
+        .eib-bento > .eib-card:nth-child(2) {
+          /* Top row sits a touch taller to match the reference's
+             phone-mockup-driven proportions. */
+          min-height: 420px;
+        }
+
+        .eib-text { max-width: 420px; }
 
         .eib-title {
           font-family: "Axiforma", -apple-system, BlinkMacSystemFont, sans-serif;
-          font-size: 28px;
+          font-size: 22px;
           font-weight: 700;
           line-height: 1.2;
           letter-spacing: -0.02em;
-          color: #0F2741;
-          margin: 0 0 8px 0;
+          color: #0F1B2D;
+          margin: 0 0 10px 0;
         }
         .eib-sub {
           font-family: "Axiforma", -apple-system, BlinkMacSystemFont, sans-serif;
-          font-size: 15px;
+          font-size: 17px;
           font-weight: 400;
           line-height: 1.5;
-          color: #5B6B7E;
+          color: #6B7B8C;
           margin: 0;
         }
-        .eib-title-hero {
-          color: #FFFFFF;
-          font-size: clamp(34px, 3.4vw, 46px);
-          line-height: 1.1;
-          text-shadow: 0 2px 14px rgba(0,40,80,0.25);
-          max-width: 460px;
-        }
-        .eib-sub-hero {
-          color: rgba(255,255,255,0.92);
-          font-size: 17px;
-          text-shadow: 0 1px 8px rgba(0,40,80,0.18);
-        }
 
-        /* Tablet — 2-col, hero spans full, then satellites in 2x2 grid */
+        /* Tablet — 6-col, top row stays 2-up but at 50/50, bottom stays 3-up */
         @media (max-width: 1023px) {
-          .eib-bento {
-            grid-template-columns: repeat(2, 1fr);
-            grid-template-rows: minmax(320px, auto) auto auto;
-          }
-          .eib-hero { grid-column: 1 / 3; grid-row: 1 / 2; }
-          .eib-bento > .eib-card:nth-child(2) { grid-column: 1 / 2; grid-row: 2 / 3; }
-          .eib-bento > .eib-card:nth-child(3) { grid-column: 2 / 3; grid-row: 2 / 3; }
-          .eib-bento > .eib-card:nth-child(4) { grid-column: 1 / 2; grid-row: 3 / 4; }
-          .eib-bento > .eib-card:nth-child(5) { grid-column: 2 / 3; grid-row: 3 / 4; }
+          .eib-bento { grid-template-columns: repeat(6, 1fr); }
+          .eib-bento > .eib-card:nth-child(1) { grid-column: span 6; }
+          .eib-bento > .eib-card:nth-child(2) { grid-column: span 6; }
+          .eib-bento > .eib-card:nth-child(3),
+          .eib-bento > .eib-card:nth-child(4),
+          .eib-bento > .eib-card:nth-child(5) { grid-column: span 2; }
         }
-        /* Mobile — single column */
+        /* Mobile — single column stack */
         @media (max-width: 640px) {
-          .eib-bento { grid-template-columns: 1fr; grid-template-rows: auto; }
-          .eib-bento > .eib-card { grid-column: 1 / -1 !important; grid-row: auto !important; }
+          .eib-bento { grid-template-columns: 1fr; }
+          .eib-bento > .eib-card { grid-column: 1 / -1 !important; min-height: 320px; }
           .eib-card { padding: 28px; }
-          .eib-title { font-size: 24px; }
-          .eib-title-hero { font-size: 32px; }
+          .eib-title { font-size: 19px; }
         }
       `}</style>
 
@@ -566,67 +587,6 @@ export default function DestinationsSection() {
 //  Roamy cyan accent. Pure SVG (no asset deps) so the cards render
 //  immediately; swap any of these for a richer image later.
 // ─────────────────────────────────────────────────────────────────────
-
-/**
- * HeroMapArt — bottom-right earth-horizon arc with 4 map pins and a
- * dashed route line, drawn in translucent white over the blue gradient
- * hero tile. Sized to feel substantial without crowding the title text.
- */
-function HeroMapArt() {
-  return (
-    <div
-      aria-hidden
-      style={{
-        position: "absolute",
-        right: -40,
-        bottom: -40,
-        width: 460,
-        height: 360,
-        pointerEvents: "none",
-      }}
-    >
-      <svg viewBox="0 0 460 360" width="100%" height="100%" fill="none" xmlns="http://www.w3.org/2000/svg">
-        {/* Earth horizon arc — large curve in the lower-right, hint of a globe */}
-        <defs>
-          <radialGradient id="eib-earth" cx="0.5" cy="0.5" r="0.5">
-            <stop offset="0%" stopColor="rgba(255,255,255,0.30)" />
-            <stop offset="70%" stopColor="rgba(255,255,255,0.08)" />
-            <stop offset="100%" stopColor="rgba(255,255,255,0)" />
-          </radialGradient>
-        </defs>
-        <circle cx="430" cy="380" r="280" fill="url(#eib-earth)" />
-        <circle cx="430" cy="380" r="280" stroke="rgba(255,255,255,0.35)" strokeWidth="1.5" fill="none" />
-        {/* Latitude lines on the globe */}
-        <ellipse cx="430" cy="380" rx="280" ry="60" stroke="rgba(255,255,255,0.20)" strokeWidth="1" fill="none" />
-        <ellipse cx="430" cy="380" rx="280" ry="140" stroke="rgba(255,255,255,0.20)" strokeWidth="1" fill="none" />
-        {/* Dashed route line connecting pins */}
-        <path
-          d="M 80 140 Q 180 80 240 160 T 380 170"
-          stroke="rgba(255,255,255,0.85)"
-          strokeWidth="2"
-          strokeDasharray="4 6"
-          strokeLinecap="round"
-        />
-        {/* Map pins — three of them */}
-        {[
-          { x: 80, y: 140 },
-          { x: 240, y: 160 },
-          { x: 380, y: 170 },
-        ].map((p, i) => (
-          <g key={i} transform={`translate(${p.x} ${p.y})`}>
-            <path
-              d="M 0 -22 C -10 -22 -16 -14 -16 -6 C -16 4 -8 8 0 22 C 8 8 16 4 16 -6 C 16 -14 10 -22 0 -22 Z"
-              fill="#FFFFFF"
-              stroke="rgba(0,90,160,0.18)"
-              strokeWidth="0.5"
-            />
-            <circle cx="0" cy="-6" r="4.5" fill="#00A3FF" />
-          </g>
-        ))}
-      </svg>
-    </div>
-  );
-}
 
 /** RadarPinArt — centred pin with concentric pulse rings. */
 function RadarPinArt() {
