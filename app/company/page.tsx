@@ -4,11 +4,11 @@ import Link from "next/link";
 import { Linkedin } from "lucide-react";
 
 import { MistxNav } from "@/components/layout/MistxNav";
-import { ValuesTeam } from "@/components/company/ValuesTeam";
 import {
   ScrollHighlightStatement,
   type StatementSegment,
 } from "@/components/company/ScrollHighlightStatement";
+import { BLOG_POSTS, blogHref } from "@/lib/blog-posts";
 import styles from "./company.module.css";
 
 export const metadata: Metadata = {
@@ -60,41 +60,13 @@ function QuoteMark({ className = "" }: { className?: string }) {
   );
 }
 
-/* "Read more" cards — featured card + 3 small, mirroring the homepage
-   BlogSection. Each links to its real blog post. */
-type PostCard = {
-  title: string;
-  href: string;
-  image: string;
-  featured?: boolean;
-};
-
-// Card backgrounds reuse the homepage BlogSection image set verbatim
-// (the four /TechnologyPageImages used by the "Read our latest releases"
-// row) so this section reads as the same card family as the homepage.
-const POSTS: PostCard[] = [
-  {
-    featured: true,
-    title: "Philosophy behind a Universal Geospatial Model",
-    href: "/blog/philosophy-universal-lgm",
-    image: "/TechnologyPageImages/multieWaveEminations.jpeg",
-  },
-  {
-    title: "MapsGPT Version 2.5. Architecture improvements.",
-    href: "/blog/mapsgpt-v2-5-architecture",
-    image: "/TechnologyPageImages/techpg-radiance.png",
-  },
-  {
-    title: "Mimicking the adult brain.",
-    href: "/blog/mimicking-adult-brain",
-    image: "/TechnologyPageImages/deep-layers.jpeg",
-  },
-  {
-    title: "Earth recipes.",
-    href: "/blog/earth-recipes",
-    image: "/TechnologyPageImages/unkown-layers.jpeg",
-  },
-];
+function getRandomCompanyProductPosts() {
+  const companyProductPosts = BLOG_POSTS.filter(
+    (p) => p.category === "COMPANY NEWS" || p.category === "PRODUCT"
+  );
+  const shuffled = [...companyProductPosts].sort(() => Math.random() - 0.5);
+  return shuffled.slice(0, 3);
+}
 
 /* Founder quotes — copy reproduced verbatim from the design mockup.
    `FEATURED` fills the left photo tile; `QUOTES` are the two stacked
@@ -124,10 +96,6 @@ const QUOTES: Quote[] = [
     avatar: "/Erick.png",
   },
 ];
-
-/* Cofounders, in row order, for the "Our values" team row —
-   CEO, then CTO (QUOTES[1]), then CPO (QUOTES[0]). */
-const COFOUNDERS: Quote[] = [FEATURED, QUOTES[1], QUOTES[0]];
 
 /* Mission / vision statements, segmented for ScrollHighlightStatement —
    `important` segments stay dark after the fill; the rest dims back. */
@@ -265,25 +233,68 @@ export default function CompanyPage() {
           <h2 className={`mb-6 md:mb-8 ${styles.sectionLabel}`}>
             Read more about what we do
           </h2>
-          <div className={styles.cardGrid}>
-            {POSTS.map((post) => (
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "48px 32px" }}>
+            {getRandomCompanyProductPosts().map((post) => (
               <Link
-                key={post.title}
-                href={post.href}
-                className={
-                  post.featured
-                    ? `${styles.postCard} ${styles.postCardFeatured}`
-                    : styles.postCard
-                }
-                style={{ ["--card-bg" as string]: `url(${post.image})` }}
+                key={post.slug}
+                href={blogHref(post.slug)}
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  textDecoration: "none",
+                  color: "inherit",
+                }}
               >
-                <div className={styles.postCardSpacer} aria-hidden />
-                <span className={`h5 ${styles.postCardTitle}`}>
-                  {post.title}
-                </span>
-                <span className={styles.postCardArrow}>
-                  <ArrowDots />
-                </span>
+                <div
+                  style={{
+                    position: "relative",
+                    width: "100%",
+                    aspectRatio: "16 / 10",
+                    borderRadius: "13px",
+                    overflow: "hidden",
+                    background: "#ECEFF3",
+                    marginBottom: "16px",
+                  }}
+                >
+                  {post.image ? (
+                    <Image
+                      src={post.image}
+                      alt=""
+                      fill
+                      style={{ objectFit: "cover" }}
+                      sizes="(min-width: 768px) 33vw, 100vw"
+                    />
+                  ) : (
+                    <div
+                      style={{
+                        position: "absolute",
+                        inset: 0,
+                        background: "linear-gradient(135deg, #0A3760 0%, #0F4C81 52%, #2C86C6 100%)",
+                      }}
+                      aria-hidden="true"
+                    />
+                  )}
+                </div>
+
+                <div style={{ display: "flex", flexDirection: "column" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "8px" }}>
+                    <span style={{ fontSize: "12px", fontWeight: 500, textTransform: "uppercase", color: "var(--color-muted)" }}>
+                      {post.category}
+                    </span>
+                    <span style={{ fontSize: "12px", color: "var(--color-muted)" }} aria-hidden="true">
+                      ·
+                    </span>
+                    <span style={{ fontSize: "12px", fontWeight: 500, textTransform: "uppercase", color: "var(--color-muted)" }}>
+                      {post.date}
+                    </span>
+                  </div>
+                  <h3 style={{ fontSize: "22px", color: "var(--color-ink)", margin: "0 0 8px", letterSpacing: "-0.015em" }}>
+                    {post.title}
+                  </h3>
+                  <p style={{ fontSize: "16px", color: "var(--color-muted)", margin: 0 }}>
+                    {post.description}
+                  </p>
+                </div>
               </Link>
             ))}
           </div>
@@ -361,17 +372,7 @@ export default function CompanyPage() {
         </div>
       </section>
 
-      {/* ════════ 7. OUR VALUES ════════ */}
-      <section className="section">
-        <div className={styles.bounds}>
-          <h2 className={`mb-6 md:mb-8 ${styles.sectionLabel}`}>
-            Our values
-          </h2>
-          <ValuesTeam cofounders={COFOUNDERS} image="/henti.png" />
-        </div>
-      </section>
-
-      {/* ════════ 8. CONTACT CTA ════════ */}
+      {/* ════════ 7. CONTACT CTA ════════ */}
       <section className="section">
         <div className={styles.bounds}>
           <div className={styles.card}>
