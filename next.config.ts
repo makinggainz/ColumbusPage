@@ -1,3 +1,4 @@
+// Trigger Vercel rebuild
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
