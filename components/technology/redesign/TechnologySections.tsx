@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import { blogHref, BLOG_SLUG } from "@/lib/blog-posts";
+import { blogHref, BLOG_SLUG, BLOG_POSTS } from "@/lib/blog-posts";
 import styles from "../technology.module.css";
 import { TechScrollIndex } from "../TechScrollIndex";
 import {
@@ -653,42 +653,90 @@ export function TechnologySections() {
                 Explore the innovative research and recent papers from our team.
               </p>
 
-              {/* Featured papers — 1 wide + 4 narrow.
-                  Hovering a narrow card swaps it with the featured card:
-                  the hovered card grows to featured dimensions and its title
-                  slides to the bottom (via the .researchCardSpacer flex-grow
-                  transition); the featured shrinks and its title slides to
-                  the top. */}
-              <div className={styles.researchCardGrid}>
-                {RESEARCH_CARDS.map((card, index) => (
-                  <Link
-                    key={card.title}
-                    href={card.href}
-                    className={
-                      index === 0
-                        ? `${styles.researchCard} ${styles.researchCardFeatured}`
-                        : styles.researchCard
-                    }
-                    style={card.image ? { "--card-bg": `url(${card.image})` } as Record<string, string> : undefined}
-                  >
-                    <div className={styles.researchCardSpacer} aria-hidden="true" />
-                    <span className={styles.researchCardTitle}>{card.title}</span>
-                    <span className={styles.researchCardArrow}>&#8599;</span>
-                  </Link>
-                ))}
+              {/* Blog cards grid — 3 columns matching /Blog page layout */}
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "48px 32px", marginTop: "48px" }}>
+                {(() => {
+                  const engineeringPosts = BLOG_POSTS.filter((p) => p.category === "ENGINEERING");
+                  const joinUsPost = BLOG_POSTS.find((p) => p.slug === "join-us-research-opportunities");
+                  const shuffled = [...engineeringPosts].sort(() => Math.random() - 0.5);
+                  const selectedPosts = joinUsPost ? [joinUsPost, ...shuffled.slice(0, 2)] : shuffled.slice(0, 3);
+                  return selectedPosts.map((post) => (
+                    <Link
+                      key={post.slug}
+                      href={blogHref(post.slug)}
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        textDecoration: "none",
+                        color: "inherit",
+                      }}
+                    >
+                      <div
+                        style={{
+                          position: "relative",
+                          width: "100%",
+                          aspectRatio: "16 / 10",
+                          borderRadius: "13px",
+                          overflow: "hidden",
+                          background: "#ECEFF3",
+                          marginBottom: "16px",
+                        }}
+                      >
+                        {post.image ? (
+                          <Image
+                            src={post.image}
+                            alt=""
+                            fill
+                            style={{ objectFit: "cover" }}
+                            sizes="(min-width: 768px) 33vw, 100vw"
+                          />
+                        ) : (
+                          <div
+                            style={{
+                              position: "absolute",
+                              inset: 0,
+                              background: "linear-gradient(135deg, #0A3760 0%, #0F4C81 52%, #2C86C6 100%)",
+                            }}
+                            aria-hidden="true"
+                          />
+                        )}
+                      </div>
+
+                      <div style={{ display: "flex", flexDirection: "column" }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "8px" }}>
+                          <span style={{ fontSize: "12px", fontWeight: 500, textTransform: "uppercase", color: "var(--tech-color-text-muted)" }}>
+                            {post.category}
+                          </span>
+                          <span style={{ fontSize: "12px", color: "var(--tech-color-text-muted)" }} aria-hidden="true">
+                            ·
+                          </span>
+                          <span style={{ fontSize: "12px", fontWeight: 500, textTransform: "uppercase", color: "var(--tech-color-text-muted)" }}>
+                            {post.date}
+                          </span>
+                        </div>
+                        <h3 style={{ fontSize: "22px", color: "var(--tech-color-text)", margin: "0 0 8px", letterSpacing: "-0.015em" }}>
+                          {post.title}
+                        </h3>
+                        <p style={{ fontSize: "16px", color: "var(--tech-color-text-muted)", margin: 0 }}>
+                          {post.description}
+                        </p>
+                      </div>
+                    </Link>
+                  ));
+                })()}
               </div>
 
-              {/* All articles — clean list rows */}
+              {/* Engineering articles from /Blog page — clean list rows */}
               <div className={styles.articleList}>
-                {RESEARCH_ARTICLES.map((article) => (
+                {BLOG_POSTS.filter((p) => p.category === "ENGINEERING").map((post) => (
                   <Link
-                    key={article.title}
-                    href={article.href}
+                    key={post.slug}
+                    href={blogHref(post.slug)}
                     className={styles.articleRow}
                   >
-                    <span className={styles.articleRowTitle}>{article.title}</span>
+                    <span className={styles.articleRowTitle}>{post.title}</span>
                     <div className={styles.articleRowRight}>
-                      <span className={styles.articleRowDate}>{article.date}</span>
+                      <span className={styles.articleRowDate}>{post.date}</span>
                       <span className={styles.articleRowArrow}>&rarr;</span>
                     </div>
                     <span className={styles.articleRowHoverLine} />
