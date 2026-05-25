@@ -1,5 +1,7 @@
 "use client";
 
+import { BLOG_POSTS, blogHref } from "@/lib/blog-posts";
+
 /**
  * Blog section — adapted from the Technology page's
  * `ResearchBlogSection` (1 featured card + 3 small cards in a flex row
@@ -41,36 +43,23 @@ function ArrowDots({ className = "" }: { className?: string }) {
   );
 }
 
-interface ResearchCard {
+interface BlogCard {
   title: string;
   href: string;
   image: string;
   featured?: boolean;
 }
 
-const RESEARCH_CARDS: ResearchCard[] = [
-  {
-    featured: true,
-    title: "Philosophy behind a Universal Geospatial Model",
-    href: "#",
-    image: "/TechnologyPageImages/multieWaveEminations.jpeg",
-  },
-  {
-    title: "Mimicking the adult brain.",
-    href: "#",
-    image: "/TechnologyPageImages/deep-layers.jpeg",
-  },
-  {
-    title: "Earth recipes.",
-    href: "#",
-    image: "/TechnologyPageImages/unkown-layers.jpeg",
-  },
-  {
-    title: "Research: creating a fire prediction model.",
-    href: "#",
-    image: "/TechnologyPageImages/techpg-radiance.png",
-  },
-];
+function getRandomBlogCards(): BlogCard[] {
+  const shuffled = [...BLOG_POSTS].sort(() => Math.random() - 0.5);
+  const selected = shuffled.slice(0, 4);
+  return selected.map((post, index) => ({
+    title: post.title,
+    href: blogHref(post.slug),
+    image: post.image || "/ColumbusBackgroundbento.png",
+    featured: index === 0,
+  }));
+}
 
 const CSS = `
 .blog-bounds {
@@ -262,6 +251,8 @@ const CSS = `
 `;
 
 export function BlogSection() {
+  const blogCards = getRandomBlogCards();
+
   return (
     <>
       {/* Heading section — direct clone of TextScrollIntro's "We're all
@@ -307,7 +298,7 @@ export function BlogSection() {
         <style>{CSS}</style>
         <div className="blog-bounds">
           <div className="blog-cardgrid">
-          {RESEARCH_CARDS.map((card) => (
+          {blogCards.map((card) => (
             <a
               key={card.title}
               href={card.href}
@@ -330,7 +321,7 @@ export function BlogSection() {
                 same. lineHeight is inlined to win over `.p-m`'s
                 companion line-height token. */}
             <a
-              href="#"
+              href="/blog"
               className="group rounded-button-md px-7 py-3.5 p-m flex items-center gap-2 transition-colors bg-cta text-white hover:text-[#0081AC]"
               style={{ lineHeight: 1 }}
             >
