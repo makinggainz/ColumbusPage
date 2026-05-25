@@ -32,8 +32,8 @@ import { useEffect, type ReactNode } from "react";
  * corners + 30px side gutter.
  */
 const SCROLL_RANGE = 150;
-const MAX_MARGIN = 7.5;
-const MAX_RADIUS = 30;
+const MAX_MARGIN = 9;
+const MAX_RADIUS = 35;
 /* Frame border thickness — a thin 2px accent hairline on the inset
    (rounded card) state that fades out to 0 as the card expands to
    full-bleed, so no border frames the page once it fills the screen. */
@@ -139,19 +139,19 @@ export function PageFrame({ children }: { children: ReactNode }) {
         zIndex: 1,
         // Top-only gutter. No left/right gutter — the card sits flush
         // against the viewport sides.
-        marginTop: "var(--frame-margin, 7.5px)",
+        marginTop: "var(--frame-margin, 9px)",
         marginLeft: 0,
         marginRight: 0,
         // Reserve scroll room below the card equal to the footer's
         // height so the user can scroll past the content and reveal
         // the fixed footer that sits behind it (z-index 0).
         marginBottom: "var(--footer-reveal-height, 100vh)",
-        borderRadius: "var(--frame-radius, 30px)",
+        borderRadius: "var(--frame-radius, 35px)",
         boxShadow: "var(--frame-shadow, none)",
         border: "none",
         backgroundColor: "#FFFFFF",
         overflow: "clip",
-        minHeight: "calc(100vh - var(--frame-margin, 7.5px))",
+        minHeight: "calc(100vh - var(--frame-margin, 9px))",
       }}
     >
       {children}
