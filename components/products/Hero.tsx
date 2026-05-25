@@ -4,221 +4,6 @@ import Image from "next/image";
 import MapsGPTGlobe from "@/components/products/MapsGPTGlobe";
 import StoreBadges from "@/components/products/StoreBadges";
 
-const ENDING_CARDS = [
-  { kind: "dot" as const,              label: "Concerts",        x: -640, y: 240, bob: 0.0 },
-  { kind: "place" as const,            label: "Panaria",         sub: "calm cafe", category: "Restaurants", profile: "/consumer/images/hidden-coffee-shop.png", x: -460, y: 360, bob: 0.6 },
-  { kind: "category" as const,         label: "activities",      thumb: "/consumer/HeroBack.png", profile: "/consumer/images/local-hiking-trail.png", x: -300, y: 240, bob: 1.0 },
-  { kind: "category-profile" as const, label: "group trips",     profile: "/consumer/images/hang-out-spot.png", x: -180, y: 250, bob: 1.4 },
-  { kind: "place" as const,            label: "Panaria",         sub: "calm cafe", category: null, profile: "/consumer/images/cozy-bookstore.png", x: 260, y: 290, bob: 0.4 },
-  { kind: "category" as const,         label: "events",          thumb: "/consumer/images/rooftop-sunset-bar.png", profile: "/consumer/images/late-night-taco-joint.png", x: 230, y: 380, bob: 1.8 },
-  { kind: "category" as const,         label: "trending places", thumbs: ["/consumer/images/hidden-coffee-shop.png", "/consumer/images/late-night-taco-joint.png", "/consumer/images/rooftop-sunset-bar.png"], profile: "/consumer/images/weekend-brunch-place.png", x: 460, y: 230, bob: 0.2 },
-  { kind: "dot-label" as const,        label: "spots",           x: 580, y: 380, bob: 1.1 },
-  { kind: "place" as const,            label: "Panaria",         sub: "calm cafe", category: "daily utilities", profile: "/consumer/images/quiet-study-cafe.png", x: 690, y: 230, bob: 1.6 },
-  { kind: "place" as const,            label: "Panaria",         sub: "calm cafe", category: null, x: -720, y: 380, bob: 0.9 },
-] as const;
-
-type EndingCardData = (typeof ENDING_CARDS)[number];
-
-function EndingCard({ card }: { card: EndingCardData }) {
-  const pillBase: React.CSSProperties = {
-    padding: "5px 11px",
-    borderRadius: 10,
-    background: "#FFFFFF",
-    fontFamily: '"SF Pro", -apple-system, BlinkMacSystemFont, sans-serif',
-    fontSize: 12,
-    fontWeight: 600,
-    color: "#0B1B2B",
-    letterSpacing: "-0.01em",
-    boxShadow:
-      "0 1px 2px rgba(0,0,0,0.08), 0 8px 24px -8px rgba(0,40,60,0.25)",
-    whiteSpace: "nowrap" as const,
-  };
-  const categoryTag: React.CSSProperties = {
-    ...pillBase,
-    fontSize: 11,
-    fontWeight: 500,
-    opacity: 0.92,
-    marginBottom: 4,
-  };
-  if (card.kind === "dot") {
-    return (
-      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 8 }}>
-        <div
-          style={{
-            width: 50,
-            height: 50,
-            borderRadius: "50%",
-            background: "linear-gradient(135deg, #6094C1 0%, #2A5B8A 100%)",
-            border: "3px solid #FFFFFF",
-            boxShadow: "0 4px 14px -4px rgba(0,40,60,0.35)",
-            position: "relative",
-          }}
-        >
-          <div
-            style={{
-              position: "absolute",
-              inset: -4,
-              borderRadius: "50%",
-              border: "2px solid #5CC982",
-              borderRightColor: "#FF5454",
-              borderBottomColor: "transparent",
-              transform: "rotate(35deg)",
-            }}
-          />
-        </div>
-        <div style={pillBase}>{card.label}</div>
-      </div>
-    );
-  }
-  if (card.kind === "dot-label") {
-    return (
-      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 6 }}>
-        <div
-          style={{
-            width: 14,
-            height: 14,
-            borderRadius: "50%",
-            background: "#F45D8B",
-            border: "2px solid #FFFFFF",
-            boxShadow: "0 2px 6px rgba(0,0,0,0.25)",
-          }}
-        />
-        <div style={pillBase}>{card.label}</div>
-      </div>
-    );
-  }
-  if (card.kind === "place") {
-    const profile = "profile" in card ? card.profile : undefined;
-    return (
-      <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
-        {card.category && <div style={categoryTag}>{card.category}</div>}
-        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <div
-            style={{
-              width: 12,
-              height: 12,
-              borderRadius: "50%",
-              background: "#FFFFFF",
-              border: "2px solid #6094C1",
-              boxShadow: "0 2px 6px rgba(0,0,0,0.20)",
-              flexShrink: 0,
-            }}
-          />
-          <div
-            style={{
-              ...pillBase,
-              padding: "6px 12px",
-              lineHeight: 1.15,
-            }}
-          >
-            <div style={{ fontWeight: 600 }}>{card.label}</div>
-            <div style={{ fontSize: 11, fontWeight: 400, opacity: 0.58 }}>{card.sub}</div>
-          </div>
-          {profile && (
-            <img
-              src={profile}
-              alt=""
-              style={{
-                width: 26,
-                height: 26,
-                borderRadius: "50%",
-                objectFit: "cover",
-                border: "2px solid #FFFFFF",
-                boxShadow: "0 2px 6px rgba(0,0,0,0.22)",
-                flexShrink: 0,
-              }}
-            />
-          )}
-        </div>
-      </div>
-    );
-  }
-  if (card.kind === "category-profile") {
-    return (
-      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 6 }}>
-        <img
-          src={card.profile}
-          alt=""
-          style={{
-            width: 54,
-            height: 54,
-            borderRadius: "50%",
-            objectFit: "cover",
-            border: "3px solid #FFFFFF",
-            boxShadow: "0 6px 14px -4px rgba(0,40,60,0.30)",
-          }}
-        />
-        <div style={pillBase}>{card.label}</div>
-      </div>
-    );
-  }
-  const thumbs = "thumbs" in card ? card.thumbs : undefined;
-  const thumb = "thumb" in card ? card.thumb : undefined;
-  const catProfile = "profile" in card ? card.profile : undefined;
-  return (
-    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 6 }}>
-      {(thumbs || thumb) && (
-        <div style={{ position: "relative" }}>
-          {thumbs ? (
-            <div style={{ position: "relative", width: 92, height: 60 }}>
-              {thumbs.slice(0, 3).map((t, i) => (
-                <img
-                  key={t}
-                  src={t}
-                  alt=""
-                  style={{
-                    position: "absolute",
-                    width: 70,
-                    height: 50,
-                    left: i * 11,
-                    top: i * 5,
-                    borderRadius: 8,
-                    objectFit: "cover",
-                    border: "2.5px solid #FFFFFF",
-                    boxShadow: "0 4px 10px -3px rgba(0,40,60,0.30)",
-                    zIndex: 3 - i,
-                  }}
-                />
-              ))}
-            </div>
-          ) : thumb ? (
-            <img
-              src={thumb}
-              alt=""
-              style={{
-                width: 78,
-                height: 56,
-                borderRadius: 9,
-                objectFit: "cover",
-                border: "2.5px solid #FFFFFF",
-                boxShadow: "0 6px 14px -4px rgba(0,40,60,0.30)",
-              }}
-            />
-          ) : null}
-          {catProfile && (
-            <img
-              src={catProfile}
-              alt=""
-              style={{
-                position: "absolute",
-                right: -8,
-                bottom: -8,
-                width: 26,
-                height: 26,
-                borderRadius: "50%",
-                objectFit: "cover",
-                border: "2px solid #FFFFFF",
-                boxShadow: "0 3px 8px rgba(0,0,0,0.28)",
-                zIndex: 5,
-              }}
-            />
-          )}
-        </div>
-      )}
-      <div style={pillBase}>{card.label}</div>
-    </div>
-  );
-}
 
 export default function Hero() {
   return (
@@ -236,7 +21,7 @@ export default function Hero() {
         paddingBottom: 60,
         marginTop: -120,
         marginBottom: -200,
-        backgroundImage: "url(/consumer/elio/ElioEndingBackground.jpg)",
+        backgroundImage: "url(/consumer/heroBackground.png)",
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
@@ -246,22 +31,6 @@ export default function Hero() {
         clipPath: "polygon(0 0, 100% 0, 100% calc(100% - 24px), calc(100% - 24px) 100%, 24px 100%, 0 calc(100% - 24px))",
       }}
     >
-      {/* Floating map-pin and category cards overlay */}
-      <div style={{ position: "absolute", inset: 0, pointerEvents: "none" }}>
-        {ENDING_CARDS.map((c, i) => (
-          <div
-            key={`end-${i}`}
-            className="absolute left-1/2 top-1/2"
-            style={{
-              transform: `translate(-50%, -50%) translate(${c.x}px, ${c.y}px)`,
-              pointerEvents: "auto",
-            }}
-          >
-            <EndingCard card={c} />
-          </div>
-        ))}
-      </div>
-
       {/* Main content container */}
       <div
         style={{
@@ -274,7 +43,8 @@ export default function Hero() {
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "flex-start",
-          paddingX: 40,
+          paddingLeft: 40,
+          paddingRight: 40,
           paddingTop: 200,
         }}
       >

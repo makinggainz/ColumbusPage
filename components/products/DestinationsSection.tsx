@@ -1,55 +1,13 @@
 "use client";
 
-/**
- * DestinationsSection — a wanderlust band between the bento and the
- * closing CTA: a heading plus two auto-scrolling rows of travel photos.
- * Styled with the site design system (Funnel Display heading, Opening
- * Hours Sans body, 7px corners, 1px gridline borders).
- */
-
 import Image from "next/image";
-import { useRef, useEffect, useState } from "react";
-import { Heart } from "lucide-react";
-
-// Each marquee tile carries the same place / rating / user-prompt metadata
-// the matching photo holds in SeeWhatPeopleSection (section h) — so a
-// Mercado Central thumbnail in the scrolling band reads as the same
-// artefact a viewer will see again in the section-h grid below.
-type DestPhoto = {
-  src: string;
-  place: string;
-  rating: string;
-  prompt: string;
-  // Avatar of the (fictional) person who asked the prompt — same pravatar
-  // seed numbers SeeWhatPeopleSection uses for the matching place, so the
-  // marquee tile and the section-h grid card share a "speaker."
-  avatar: string;
-};
-
-const ROW_A: DestPhoto[] = [
-  { src: "/FavoriteSpots/(14).jpeg", place: "Osteria Francescana", rating: "4.9", prompt: "Authentic Italian fine dining in Modena?", avatar: "https://i.pravatar.cc/80?img=35" },
-  { src: "/FavoriteSpots/(20).jpeg", place: "Hôtel du Cap",        rating: "4.8", prompt: "Most glamorous hotel on the French Riviera?", avatar: "https://i.pravatar.cc/80?img=16" },
-  { src: "/FavoriteSpots/(22).jpeg", place: "Mercado Central",     rating: "4.5", prompt: "Best food market in Madrid?", avatar: "https://i.pravatar.cc/80?img=3" },
-  { src: "/FavoriteSpots/(17).jpeg", place: "Oia Village",         rating: "4.7", prompt: "Best spot in Santorini for the sunset?", avatar: "https://i.pravatar.cc/80?img=1" },
-  { src: "/FavoriteSpots/(19).jpeg", place: "The Brando",          rating: "4.9", prompt: "Exclusive private island for a honeymoon?", avatar: "https://i.pravatar.cc/80?img=22" },
-  { src: "/FavoriteSpots/(21).jpeg", place: "The Ned NYC",         rating: "4.5", prompt: "Coolest NYC rooftop on a summer night?", avatar: "https://i.pravatar.cc/80?img=25" },
-];
-const ROW_B: DestPhoto[] = [
-  { src: "/FavoriteSpots/(23).jpeg", place: "Four Seasons Bali",   rating: "4.9", prompt: "Secluded Bali resort with rice-terrace views?", avatar: "https://i.pravatar.cc/80?img=7" },
-  { src: "/FavoriteSpots/(24).jpeg", place: "Catch LA",            rating: "4.6", prompt: "Best LA rooftop dinner with hill views?", avatar: "https://i.pravatar.cc/80?img=44" },
-  { src: "/FavoriteSpots/(21).jpeg", place: "Papaya Playa",        rating: "4.5", prompt: "Best Tulum beach club for music + food?", avatar: "https://i.pravatar.cc/80?img=38" },
-  { src: "/FavoriteSpots/(19).jpeg", place: "Fushimi Inari",       rating: "4.8", prompt: "Best time to visit Fushimi Inari to skip crowds?", avatar: "https://i.pravatar.cc/80?img=9" },
-  { src: "/FavoriteSpots/(14).jpeg", place: "Nobu Malibu",         rating: "4.8", prompt: "Best oceanfront dinner in Malibu?", avatar: "https://i.pravatar.cc/80?img=51" },
-  { src: "/FavoriteSpots/(17).jpeg", place: "Koh Lanta",           rating: "4.7", prompt: "Quiet Thai beach resort far from the parties?", avatar: "https://i.pravatar.cc/80?img=57" },
-];
+import { useEffect, useState } from "react";
 
 const CYCLING_OPTIONS = [
   "cozy bookspot",
   "hangout spot",
-  "event",
   "neighborhood",
   "travel inspo",
-  "rave spot",
   "niche restaurant",
   "thrift shop",
 ];
@@ -60,613 +18,444 @@ function CyclingTitle() {
   const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
-    const currentOption = CYCLING_OPTIONS[index];
-    const typingSpeed = isDeleting ? 50 : 100;
-    const pauseTime = 1500;
-
+    const current = CYCLING_OPTIONS[index];
+    const speed = isDeleting ? 45 : 90;
+    const pause = 1400;
     const timer = setTimeout(() => {
       if (!isDeleting) {
-        if (displayText.length < currentOption.length) {
-          setDisplayText(currentOption.slice(0, displayText.length + 1));
+        if (displayText.length < current.length) {
+          setDisplayText(current.slice(0, displayText.length + 1));
         } else {
-          setTimeout(() => setIsDeleting(true), pauseTime);
+          setTimeout(() => setIsDeleting(true), pause);
         }
       } else {
         if (displayText.length > 0) {
           setDisplayText(displayText.slice(0, -1));
         } else {
           setIsDeleting(false);
-          setIndex((prev) => (prev + 1) % CYCLING_OPTIONS.length);
+          setIndex((p) => (p + 1) % CYCLING_OPTIONS.length);
         }
       }
-    }, typingSpeed);
-
+    }, speed);
     return () => clearTimeout(timer);
   }, [displayText, isDeleting, index]);
 
   return (
-    <div
+    <h2
       style={{
+        fontFamily: "Axiforma, -apple-system, BlinkMacSystemFont, sans-serif",
+        fontSize: "clamp(28px, 5vw, 48px)",
+        fontWeight: 600,
+        color: "#0B1342",
+        letterSpacing: "-0.02em",
+        lineHeight: 1.1,
+        margin: 0,
         textAlign: "center",
-        paddingLeft: 40,
-        paddingRight: 40,
-        paddingBottom: 40,
-        paddingTop: 100,
-        maxWidth: 1400,
-        margin: "0 auto",
       }}
     >
-      <h2
+      Find your next
+      <br />
+      <span
         style={{
-          fontFamily: "Axiforma, -apple-system, BlinkMacSystemFont, sans-serif",
-          fontSize: 24,
-          fontWeight: 590,
-          color: "#000000",
-          letterSpacing: "-0.02em",
-          margin: 0,
-          minHeight: "32px",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          gap: "4px",
+          background: "linear-gradient(180deg, #00B1D4 0%, #0089A3 100%)",
+          WebkitBackgroundClip: "text",
+          WebkitTextFillColor: "transparent",
+          backgroundClip: "text",
         }}
       >
-        <span>Find your next</span>
-        <span style={{ minWidth: "280px", textAlign: "left" }}>
-          {displayText}
-          <span style={{ opacity: 0.5, animation: "blink 1s infinite" }}>|</span>
-        </span>
-      </h2>
-      <style>{`
-        @keyframes blink {
-          0%, 49% { opacity: 1; }
-          50%, 100% { opacity: 0; }
-        }
-      `}</style>
+        {displayText}
+        <span style={{ opacity: 0.4, animation: "elio-blink 1s infinite" }}>|</span>
+      </span>
+      <style>{`@keyframes elio-blink { 0%, 49% { opacity: 1 } 50%, 100% { opacity: 0 } }`}</style>
+    </h2>
+  );
+}
+
+const FEATURES = [
+  {
+    icon: (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden>
+        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" stroke="#0B1342" strokeWidth="1.6" />
+        <circle cx="12" cy="10" r="3" stroke="#0B1342" strokeWidth="1.6" />
+      </svg>
+    ),
+    title: "Real places",
+    body: "From a quiet café to a rooftop bar — all on one map.",
+  },
+  {
+    icon: (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden>
+        <path d="M12 2l2.39 4.84L20 7.61l-3.95 3.85.93 5.43L12 14.3l-5 2.6.93-5.44L4 7.6l5.61-.78L12 2z" stroke="#0B1342" strokeWidth="1.6" strokeLinejoin="round" />
+      </svg>
+    ),
+    title: "Learns you",
+    body: "Tell Elio what you love. It only gets better from there.",
+  },
+  {
+    icon: (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden>
+        <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2M23 21v-2a4 4 0 00-3-3.87M9 3.13a4 4 0 010 7.75M16 3.13a4 4 0 010 7.75" stroke="#0B1342" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+        <circle cx="9" cy="7" r="4" stroke="#0B1342" strokeWidth="1.6" />
+      </svg>
+    ),
+    title: "With friends",
+    body: "Plan trips together. See where everyone is, in real time.",
+  },
+  {
+    icon: (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden>
+        <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" stroke="#0B1342" strokeWidth="1.6" strokeLinecap="round" />
+      </svg>
+    ),
+    title: "Ad-free",
+    body: "No paid placements. Just what's actually good.",
+  },
+] as const;
+
+type FeatureCardProps = {
+  eyebrow: string;
+  title: string;
+  body: string;
+  image: string;
+  bg: string;
+};
+
+function FeatureCard({ eyebrow, title, body, image, bg }: FeatureCardProps) {
+  return (
+    <div
+      style={{
+        background: bg,
+        borderRadius: 24,
+        padding: "clamp(28px, 4vw, 44px)",
+        display: "flex",
+        flexDirection: "column",
+        gap: 24,
+        position: "relative",
+        overflow: "hidden",
+        minHeight: 460,
+      }}
+    >
+      <div>
+        <p
+          style={{
+            fontFamily:
+              "Opening Hours Sans, -apple-system, BlinkMacSystemFont, sans-serif",
+            fontSize: 13,
+            fontWeight: 600,
+            color: "#0081AC",
+            letterSpacing: "0.06em",
+            textTransform: "uppercase",
+            margin: "0 0 12px",
+          }}
+        >
+          {eyebrow}
+        </p>
+        <h3
+          style={{
+            fontFamily: "Axiforma, -apple-system, BlinkMacSystemFont, sans-serif",
+            fontSize: "clamp(22px, 3vw, 28px)",
+            fontWeight: 600,
+            color: "#0B1342",
+            letterSpacing: "-0.02em",
+            lineHeight: 1.15,
+            margin: "0 0 10px",
+          }}
+        >
+          {title}
+        </h3>
+        <p
+          style={{
+            fontFamily:
+              "Opening Hours Sans, -apple-system, BlinkMacSystemFont, sans-serif",
+            fontSize: 15,
+            fontWeight: 400,
+            color: "#5A6B7B",
+            letterSpacing: "-0.01em",
+            lineHeight: 1.5,
+            margin: 0,
+            maxWidth: 360,
+          }}
+        >
+          {body}
+        </p>
+      </div>
+      <div
+        style={{
+          marginTop: "auto",
+          alignSelf: "center",
+          width: "min(220px, 70%)",
+          aspectRatio: "320 / 700",
+          borderRadius: 30,
+          overflow: "hidden",
+          border: "6px solid #000000",
+          boxShadow: "0 24px 60px -16px rgba(11, 19, 66, 0.30)",
+          position: "relative",
+          background: "#000",
+        }}
+      >
+        <Image
+          src={image}
+          alt=""
+          fill
+          sizes="220px"
+          style={{ objectFit: "cover" }}
+        />
+      </div>
     </div>
   );
 }
 
-function Marquee({ imgs, reverse }: { imgs: DestPhoto[]; reverse?: boolean }) {
-  // Two copies of the list → translating one copy-width loops seamlessly.
-  const doubled = [...imgs, ...imgs];
+const MARQUEE: { src: string; place: string; prompt: string }[] = [
+  { src: "/FavoriteSpots/(14).jpeg", place: "Osteria Francescana", prompt: "Best fine-dining in Modena?" },
+  { src: "/FavoriteSpots/(20).jpeg", place: "Hôtel du Cap", prompt: "Most glamorous Riviera hotel?" },
+  { src: "/FavoriteSpots/(22).jpeg", place: "Mercado Central", prompt: "Best food market in Madrid?" },
+  { src: "/FavoriteSpots/(17).jpeg", place: "Oia Village", prompt: "Where to watch Santorini sunsets?" },
+  { src: "/FavoriteSpots/(19).jpeg", place: "The Brando", prompt: "Private island for a honeymoon?" },
+  { src: "/FavoriteSpots/(21).jpeg", place: "The Ned NYC", prompt: "Coolest NYC rooftop?" },
+  { src: "/FavoriteSpots/(23).jpeg", place: "Four Seasons Bali", prompt: "Rice-terrace resort in Bali?" },
+  { src: "/FavoriteSpots/(24).jpeg", place: "Catch LA", prompt: "Rooftop dinner with LA views?" },
+];
+
+function Marquee() {
+  const doubled = [...MARQUEE, ...MARQUEE];
   return (
-    <div className="mg-dest-mask">
-      <div className={`mg-dest-track${reverse ? " mg-dest-rev" : ""}`}>
+    <div className="elio-marquee-mask">
+      <div className="elio-marquee-track">
         {doubled.map((p, i) => (
           <div
             key={i}
             style={{
               position: "relative",
               flex: "none",
-              width: 304,
-              height: 208,
-              borderRadius: 20,
+              width: 240,
+              height: 320,
+              borderRadius: 16,
               overflow: "hidden",
-              border: "1px solid #E7E7F1",
             }}
           >
-            <Image src={p.src} alt="" fill sizes="304px" style={{ objectFit: "cover" }} />
-            {/* Top + bottom legibility scrims so the white chrome reads
-                cleanly across any photo. */}
+            <Image src={p.src} alt="" fill sizes="240px" style={{ objectFit: "cover" }} />
             <div
               aria-hidden
               style={{
                 position: "absolute",
                 inset: 0,
                 background:
-                  "linear-gradient(to bottom, rgba(0,0,0,0.45) 0%, transparent 32%, transparent 55%, rgba(0,0,0,0.55) 100%)",
-                pointerEvents: "none",
+                  "linear-gradient(180deg, rgba(0,0,0,0) 50%, rgba(0,0,0,0.7) 100%)",
               }}
             />
-            {/* Place name + star rating chip — top-left, white over the
-                gradient. Mirrors the section-h card header exactly. */}
-            <div style={{ position: "absolute", top: 10, left: 10, right: 36, display: "flex", alignItems: "center", gap: 6 }}>
-              <span style={{
-                fontFamily: "var(--hiw-font-sans, 'Funnel Display', -apple-system, sans-serif)",
-                color: "#0F2741",
-                fontWeight: 600,
-                fontSize: 12,
-                letterSpacing: "-0.01em",
-                textShadow: "0 1px 4px rgba(0,0,0,0.45)",
-                whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis",
-              }}>{p.place}</span>
-              <div style={{
-                display: "flex", alignItems: "center", gap: 3,
-                background: "rgba(255,255,255,0.20)",
-                backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)",
-                borderRadius: 4, padding: "2px 6px", flexShrink: 0,
-              }}>
-                <svg width="9" height="9" viewBox="0 0 24 24" fill="none" aria-hidden style={{ flexShrink: 0 }}>
-                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="#E46962" />
-                </svg>
-                <span style={{
-                  color: "#0F2741",
-                  fontFamily: "var(--hiw-font-sans, 'Funnel Display', -apple-system, sans-serif)",
-                  fontWeight: 700,
-                  fontSize: 10,
-                }}>{p.rating}</span>
-              </div>
-            </div>
-            {/* Heart — top-right. */}
-            <div style={{ position: "absolute", top: 10, right: 10 }}>
-              <Heart size={16} color="#FFFFFF" fill="transparent" strokeWidth={2} />
-            </div>
-            {/* Avatar + prompt chat-bubble — bottom-left. Avatar sits
-                outside the bubble (to its left), so the bubble's sharp
-                top-left corner reads as the speech-bubble tail pointing
-                back at the speaker. Soft glassy white fill keeps the
-                prompt legible without fighting the photo. */}
-            <div style={{
-              position: "absolute",
-              left: 10, right: 10, bottom: 10,
-              display: "flex",
-              alignItems: "flex-end",
-              gap: 8,
-            }}>
-              <img
-                src={p.avatar}
-                alt=""
-                draggable={false}
+            <div
+              style={{
+                position: "absolute",
+                left: 14,
+                right: 14,
+                bottom: 14,
+                display: "flex",
+                flexDirection: "column",
+                gap: 2,
+              }}
+            >
+              <span
                 style={{
-                  width: 28,
-                  height: 28,
-                  borderRadius: "9999px",
-                  objectFit: "cover",
-                  flexShrink: 0,
-                  border: "1.5px solid rgba(255,255,255,0.9)",
-                  boxShadow: "0 2px 6px rgba(0,0,0,0.25)",
+                  fontFamily:
+                    "Opening Hours Sans, -apple-system, BlinkMacSystemFont, sans-serif",
+                  fontSize: 13,
+                  fontWeight: 600,
+                  color: "#FFFFFF",
+                  letterSpacing: "-0.01em",
                 }}
-              />
-              <div style={{
-                background: "rgba(255,255,255,0.92)",
-                backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)",
-                borderTopLeftRadius: 4,
-                borderTopRightRadius: 12,
-                borderBottomLeftRadius: 12,
-                borderBottomRightRadius: 12,
-                padding: "7px 10px",
-                boxShadow: "0 2px 8px rgba(0,0,0,0.10)",
-                minWidth: 0,
-                flex: "1 1 auto",
-              }}>
-                <p style={{
-                  fontFamily: "var(--hiw-font-sans, 'Funnel Display', -apple-system, sans-serif)",
-                  fontSize: 11,
-                  fontWeight: 500,
-                  color: "#0B1342",
-                  lineHeight: 1.35,
-                  margin: 0,
-                  display: "-webkit-box",
-                  WebkitLineClamp: 2,
-                  WebkitBoxOrient: "vertical",
-                  overflow: "hidden",
-                }}>{p.prompt}</p>
-              </div>
+              >
+                {p.place}
+              </span>
+              <span
+                style={{
+                  fontFamily:
+                    "Opening Hours Sans, -apple-system, BlinkMacSystemFont, sans-serif",
+                  fontSize: 12,
+                  fontWeight: 400,
+                  color: "rgba(255,255,255,0.85)",
+                  letterSpacing: "-0.01em",
+                }}
+              >
+                "{p.prompt}"
+              </span>
             </div>
           </div>
         ))}
       </div>
+      <style>{`
+        .elio-marquee-mask {
+          -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+          mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+          overflow: hidden;
+        }
+        .elio-marquee-track {
+          display: flex;
+          gap: 16px;
+          width: max-content;
+          animation: elio-scroll 60s linear infinite;
+        }
+        .elio-marquee-mask:hover .elio-marquee-track { animation-play-state: paused; }
+        @keyframes elio-scroll {
+          from { transform: translateX(0); }
+          to   { transform: translateX(calc(-50% - 8px)); }
+        }
+        @media (prefers-reduced-motion: reduce) { .elio-marquee-track { animation: none; } }
+      `}</style>
     </div>
   );
 }
 
 export default function DestinationsSection() {
-  const ref = useRef<HTMLElement>(null);
-  const [vis, setVis] = useState(false);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const obs = new IntersectionObserver(
-      ([e]) => {
-        if (e.isIntersecting) {
-          setVis(true);
-          obs.disconnect();
-        }
-      },
-      { threshold: 0.15 },
-    );
-    obs.observe(el);
-    return () => obs.disconnect();
-  }, []);
-
   return (
-    <section ref={ref} className="section" style={{ background: "#FFFFFF", overflow: "hidden", paddingTop: 0 }}>
-      <style>{`
-        .mg-dest-mask {
-          -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
-          mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
-        }
-        .mg-dest-track {
-          display: flex;
-          gap: 20px;
-          width: max-content;
-          animation: mg-dest-scroll 52s linear infinite;
-        }
-        .mg-dest-rev { animation-direction: reverse; }
-        .mg-dest-mask:hover .mg-dest-track { animation-play-state: paused; }
-        @keyframes mg-dest-scroll {
-          from { transform: translateX(0); }
-          to   { transform: translateX(calc(-50% - 10px)); }
-        }
-        @media (prefers-reduced-motion: reduce) { .mg-dest-track { animation: none; } }
-      `}</style>
-
-      {/* Section titles */}
+    <section
+      style={{
+        background: "#FFFFFF",
+        paddingTop: "clamp(80px, 12vw, 140px)",
+        paddingBottom: "clamp(80px, 12vw, 140px)",
+        overflow: "hidden",
+      }}
+    >
       <div
         style={{
-          display: "grid",
-          gridTemplateColumns: "1fr 1fr",
-          gap: 40,
-          paddingLeft: 40,
-          paddingRight: 40,
-          paddingBottom: 44,
-          paddingTop: 60,
-          maxWidth: 1400,
+          maxWidth: 1200,
           margin: "0 auto",
+          paddingLeft: 24,
+          paddingRight: 24,
         }}
       >
-        <h2
+        <CyclingTitle />
+
+        <p
           style={{
-            fontFamily: "Axiforma, -apple-system, BlinkMacSystemFont, sans-serif",
-            fontSize: 24,
-            fontWeight: 590,
-            color: "#000000",
-            letterSpacing: "-0.02em",
-            margin: 0,
+            fontFamily:
+              "Opening Hours Sans, -apple-system, BlinkMacSystemFont, sans-serif",
+            fontSize: "clamp(15px, 1.8vw, 17px)",
+            fontWeight: 400,
+            color: "#5A6B7B",
+            letterSpacing: "-0.01em",
+            lineHeight: 1.5,
+            textAlign: "center",
+            margin: "20px auto 0",
+            maxWidth: 540,
           }}
         >
-          For your city.
-        </h2>
-        <h2
-          style={{
-            fontFamily: "Axiforma, -apple-system, BlinkMacSystemFont, sans-serif",
-            fontSize: 24,
-            fontWeight: 590,
-            color: "#000000",
-            letterSpacing: "-0.02em",
-            margin: 0,
-            textAlign: "right",
-          }}
-        >
-          For your travels.
-        </h2>
-      </div>
+          Ask Elio anything. It pulls from your taste, your city, and the people
+          you trust — not from whoever paid the most.
+        </p>
 
-      {/* Middle title */}
-      <div
-        style={{
-          textAlign: "center",
-          paddingLeft: 40,
-          paddingRight: 40,
-          paddingBottom: 60,
-          paddingTop: 20,
-          maxWidth: 1400,
-          margin: "0 auto",
-        }}
-      >
-        <h2
-          style={{
-            fontFamily: "Axiforma, -apple-system, BlinkMacSystemFont, sans-serif",
-            fontSize: 44,
-            fontWeight: 590,
-            color: "#000000",
-            letterSpacing: "-0.02em",
-            margin: 0,
-          }}
-        >
-          and everything in between
-        </h2>
-      </div>
-
-      {/* Bento box */}
-      <div
-        style={{
-          paddingLeft: 40,
-          paddingRight: 40,
-          paddingTop: 0,
-          paddingBottom: 0,
-          maxWidth: 1400,
-          margin: "0 auto",
-        }}
-      >
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr",
-            gridTemplateRows: "auto auto auto",
-            gap: 20,
-            gridAutoRows: "auto",
-          }}
-        >
-          {/* Top left - See whats going on around you (large card) */}
-          <div
-            style={{
-              background: "#F2F2F2",
-              borderRadius: "30px",
-              padding: 40,
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "flex-start",
-              minHeight: 240,
-              position: "relative",
-              overflow: "hidden",
-            }}
-          >
-            <h3
-              style={{
-                fontFamily: "Axiforma, -apple-system, BlinkMacSystemFont, sans-serif",
-                fontSize: 32,
-                fontWeight: 700,
-                color: "#0F2741",
-                letterSpacing: "-0.02em",
-                margin: 0,
-                marginBottom: 8,
-              }}
-            >
-              See whats going on around you.
-            </h3>
-            <p
-              style={{
-                fontSize: 16,
-                fontWeight: 400,
-                color: "#0B1B2B",
-                letterSpacing: "-0.02em",
-                margin: 0,
-              }}
-            >
-              Live events, local things.
-            </p>
-          </div>
-
-          {/* Top right - Elio can plan a trip for you */}
-          <div
-            style={{
-              background: "#F2F2F2",
-              borderRadius: "30px",
-              padding: 40,
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "flex-start",
-              minHeight: 240,
-            }}
-          >
-            <div>
-              <h3
+        <div className="elio-feature-row">
+          {FEATURES.map((f) => (
+            <div key={f.title} className="elio-feature-cell">
+              <div
                 style={{
-                  fontFamily: "Axiforma, -apple-system, BlinkMacSystemFont, sans-serif",
-                  fontSize: 32,
-                  fontWeight: 700,
-                  color: "#0F2741",
-                  letterSpacing: "-0.02em",
-                  margin: 0,
-                  marginBottom: 8,
-                  lineHeight: 1.3,
+                  width: 44,
+                  height: 44,
+                  borderRadius: 12,
+                  background: "#F0F7FC",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  marginBottom: 14,
                 }}
               >
-                Elio can plan a trip for you.
-              </h3>
+                {f.icon}
+              </div>
+              <h4
+                style={{
+                  fontFamily:
+                    "Axiforma, -apple-system, BlinkMacSystemFont, sans-serif",
+                  fontSize: 17,
+                  fontWeight: 600,
+                  color: "#0B1342",
+                  letterSpacing: "-0.01em",
+                  margin: "0 0 6px",
+                }}
+              >
+                {f.title}
+              </h4>
               <p
                 style={{
-                  fontSize: 16,
+                  fontFamily:
+                    "Opening Hours Sans, -apple-system, BlinkMacSystemFont, sans-serif",
+                  fontSize: 14,
                   fontWeight: 400,
-                  color: "#0B1B2B",
-                  letterSpacing: "-0.02em",
+                  color: "#5A6B7B",
+                  letterSpacing: "-0.01em",
+                  lineHeight: 1.5,
                   margin: 0,
                 }}
               >
-                AI-powered itinerary generation
+                {f.body}
               </p>
             </div>
-          </div>
+          ))}
+        </div>
 
-          {/* Middle left - Featured in */}
-          <div
-            style={{
-              background: "#F2F2F2",
-              borderRadius: "30px",
-              padding: 40,
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "flex-start",
-              minHeight: 280,
-            }}
-          >
-            <div>
-              <h3
-                style={{
-                  fontFamily: "Axiforma, -apple-system, BlinkMacSystemFont, sans-serif",
-                  fontSize: 32,
-                  fontWeight: 700,
-                  color: "#0F2741",
-                  letterSpacing: "-0.02em",
-                  margin: 0,
-                  marginBottom: 8,
-                  lineHeight: 1.3,
-                }}
-              >
-                Gets smarter the more you talk to Elio.
-              </h3>
-              <p
-                style={{
-                  fontSize: 16,
-                  fontWeight: 400,
-                  color: "#0B1B2B",
-                  letterSpacing: "-0.02em",
-                  margin: 0,
-                }}
-              >
-                Learns your preferences and travel style
-              </p>
-            </div>
-          </div>
-
-          {/* Middle center - Stop using Docs to plan trips */}
-          <div
-            style={{
-              background: "#F2F2F2",
-              borderRadius: "30px",
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "flex-start",
-              padding: 40,
-              position: "relative",
-              overflow: "hidden",
-              gridColumn: "2 / 3",
-              gridRow: "2 / 4",
-            }}
-          >
-            <div>
-              <h3
-                style={{
-                  fontFamily: "Axiforma, -apple-system, BlinkMacSystemFont, sans-serif",
-                  fontSize: 32,
-                  fontWeight: 700,
-                  color: "#0F2741",
-                  letterSpacing: "-0.02em",
-                  margin: 0,
-                  marginBottom: 8,
-                  textShadow: "none",
-                  lineHeight: 1.4,
-                }}
-              >
-                Stop using Docs to plan trips.
-              </h3>
-              <p
-                style={{
-                  fontSize: 16,
-                  fontWeight: 400,
-                  color: "#0B1B2B",
-                  letterSpacing: "-0.02em",
-                  margin: 0,
-                }}
-              >
-                Do it all together on one map
-              </p>
-            </div>
-          </div>
-
-          {/* Middle right - Battery efficient */}
-          <div
-            style={{
-              background: "linear-gradient(360deg, #F2F2F2 0%, #F0FCFF 100%)",
-              borderRadius: "30px",
-              padding: 40,
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "flex-start",
-              height: 240,
-            }}
-          >
-            <div>
-              <h3
-                style={{
-                  fontFamily: "Axiforma, -apple-system, BlinkMacSystemFont, sans-serif",
-                  fontSize: 32,
-                  fontWeight: 700,
-                  color: "#0F2741",
-                  letterSpacing: "-0.02em",
-                  margin: 0,
-                  marginBottom: 8,
-                }}
-              >
-                Ad-free.
-              </h3>
-              <p
-                style={{
-                  fontSize: 16,
-                  fontWeight: 400,
-                  color: "#0B1B2B",
-                  letterSpacing: "-0.02em",
-                  margin: 0,
-                }}
-              >
-                Find exactly what you're after.
-              </p>
-            </div>
-          </div>
-
+        <div className="elio-card-grid">
+          <FeatureCard
+            eyebrow="For your city"
+            title="See what's going on around you."
+            body="Live events, hidden gems, and what your friends are into — all surfaced from where you are right now."
+            image="/consumer/elio/ElioZone.png"
+            bg="#F0F7FC"
+          />
+          <FeatureCard
+            eyebrow="For your travels"
+            title="Plan a trip without 14 browser tabs."
+            body="Elio builds itineraries with the spots, the timing, and the route — together with everyone going."
+            image="/consumer/elio/ElioSavedPlaces.png"
+            bg="#FFF6F0"
+          />
         </div>
       </div>
 
-      {/* Title with cycling text */}
-      <CyclingTitle />
-
-      {/* Two scrolling photo rows */}
       <div
         style={{
-          display: "flex",
-          flexDirection: "column",
-          gap: 20,
-          opacity: vis ? 1 : 0,
-          transition: "opacity 0.8s ease-out 0.15s",
-          paddingTop: 60,
+          marginTop: "clamp(80px, 10vw, 120px)",
+          paddingLeft: 24,
         }}
       >
-        <Marquee imgs={ROW_A} />
-        <Marquee imgs={ROW_B} reverse />
-      </div>
-
-      {/* Elio is browser based label */}
-      <div
-        style={{
-          paddingLeft: 40,
-          paddingRight: 40,
-          paddingTop: 60,
-          maxWidth: 1400,
-          margin: "0 auto",
-          textAlign: "center",
-        }}
-      >
-        <p
+        <h3
           style={{
-            fontFamily: "Opening Hours Sans, -apple-system, BlinkMacSystemFont, sans-serif",
+            fontFamily: "Axiforma, -apple-system, BlinkMacSystemFont, sans-serif",
+            fontSize: "clamp(20px, 2.4vw, 24px)",
             fontWeight: 600,
-            fontSize: 22,
-            letterSpacing: "0.02em",
-            lineHeight: 1.4,
-            marginBottom: 40,
-            color: "#0B1B2B",
+            color: "#0B1342",
+            letterSpacing: "-0.02em",
+            margin: "0 0 24px",
+            paddingRight: 24,
+            maxWidth: 1200,
+            marginLeft: "auto",
+            marginRight: "auto",
+            textAlign: "left",
+            width: "100%",
           }}
         >
-          <span
-            style={{
-              fontWeight: 600,
-              background: "linear-gradient(180deg, #00B1D4 0%, #0089A3 100%)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              backgroundClip: "text",
-            }}
-          >
-            Elio
-          </span>
-          <span> is on desktop and mobile</span>
-        </p>
+          What people ask Elio.
+        </h3>
+        <Marquee />
       </div>
 
-      {/* Desktop mockup */}
-      <div
-        style={{
-          paddingLeft: 40,
-          paddingRight: 40,
-          paddingBottom: 60,
-          maxWidth: 1400,
-          margin: "0 auto",
-        }}
-      >
-        <img
-          src="/consumer/elioHome2.png"
-          alt="Elio Desktop"
-          style={{
-            width: "100%",
-            height: "auto",
-            display: "block",
-            borderRadius: 40,
-            border: "10px solid #000000",
-          }}
-        />
-      </div>
+      <style>{`
+        .elio-feature-row {
+          margin-top: clamp(56px, 8vw, 96px);
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          column-gap: 24px;
+          row-gap: 32px;
+        }
+        .elio-feature-cell { display: flex; flex-direction: column; }
+        .elio-card-grid {
+          margin-top: clamp(56px, 8vw, 96px);
+          display: grid;
+          grid-template-columns: 1fr;
+          gap: 20px;
+        }
+        @media (min-width: 768px) {
+          .elio-feature-row { grid-template-columns: repeat(4, 1fr); column-gap: 32px; }
+          .elio-card-grid { grid-template-columns: 1fr 1fr; gap: 24px; }
+        }
+      `}</style>
     </section>
   );
 }
