@@ -2,23 +2,22 @@ import { MistxNav } from "@/components/layout/MistxNav";
 import Hero from "@/components/products/Hero";
 import DestinationsSection from "@/components/products/DestinationsSection";
 import FinalCTASection from "@/components/products/FinalCTASection";
-import InspirationSection from "@/components/products/InspirationSection";
-// import QuestionsSection from "@/components/products/QuestionsSection";
-// import RecommendationsSection from "@/components/products/RecommendationsSection";
 
 export default function ProductsPage() {
   return (
     <main style={{ overflowX: "clip" }}>
-      {/* MistxNav is a direct child of <main> so its position:sticky has
-          the full page as its containing block. `darkBackdrop` paints the
-          navbar's own dark gradient over the photo hero header; lightCta
-          inverts the "Try Elio" CTA to white-on-dark while floating. */}
       <MistxNav lightCta darkBackdrop />
+
+      {/* Hero owns the entire pinned-phone sticky-scroll: TwerkPage's
+          "social super map" header + two scenes (For your city / For
+          your travels), with one phone pinned and its screenshot +
+          backdrop cross-fading per phase. */}
       <Hero />
-      {/* Post-hero stretch — destinations marquee → final CTA. Removed
-          from this page: NewAtMapsGPTSection, HowItWorksSection,
-          FavoritesSection, ClosingCTASection, SeeWhatPeopleSection. */}
+
+      {/* Bento grid + cycling-title marquees + "Elio is on desktop and
+          mobile" desktop mockup, lifted from TwerkPage. */}
       <DestinationsSection />
+
       <FinalCTASection />
     </main>
   );
