@@ -17,11 +17,15 @@ const CSS = `
 
 .blog-section-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 32px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 48px 32px;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
+  .blog-section-grid { grid-template-columns: repeat(2, 1fr); gap: 40px 24px; }
+}
+
+@media (max-width: 600px) {
   .blog-section-grid { grid-template-columns: 1fr; }
 }
 
@@ -93,7 +97,7 @@ const CSS = `
 
 function getRandomBlogCards() {
   const shuffled = [...BLOG_POSTS].sort(() => Math.random() - 0.5);
-  return shuffled.slice(0, 4);
+  return shuffled.slice(0, 6);
 }
 
 export function BlogSection() {
