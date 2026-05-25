@@ -97,7 +97,7 @@ const CSS = `
 
 function getRandomBlogCards() {
   const shuffled = [...BLOG_POSTS].sort(() => Math.random() - 0.5);
-  return shuffled.slice(0, 6);
+  return shuffled.slice(0, 3);
 }
 
 export function BlogSection() {
