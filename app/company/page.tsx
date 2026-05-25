@@ -75,7 +75,7 @@ type Quote = { quote: string; name: string; role: string; avatar: string };
 
 const FEATURED: Quote = {
   quote:
-    "I started Columbus just to get some Columbussy on my dih. I like males.",
+    "We wish to apply semantic AI in simple and beautiuful products helping real people.",
   name: "David Ramirez Blonski",
   role: "Co-Founder, CEO",
   avatar: "/David.png",
@@ -84,13 +84,13 @@ const FEATURED: Quote = {
 const QUOTES: Quote[] = [
   {
     quote:
-      "I started Columbus just to get some Columbussy on my dih. I like males.",
+      "As the bridge between the physical world and digital world, maps are one of the most interfaces that haven't changed in decades.",
     name: "Alexander Ramirez Blonski",
     role: "Co-Founder, CPO",
     avatar: "/Alex.jpg",
   },
   {
-    quote: "When I'm not working on Columbus im gooning to hentai from Japan.",
+    quote: "Like Columbus, and the great voyagers, we are entering the new frontier of AI. While LLMs are book-smart, we wish to be street-smart.",
     name: "Erick Lara",
     role: "Co-Founder, CTO",
     avatar: "/Erick.png",
