@@ -50,7 +50,10 @@ const INTRO_LEAD_VH = 0;
 // this tail = (hold beat after the last label) and the 100vh release follows.
 const TAIL_VH = 40;
 // Phone peek depth in the intro (fraction of viewport pushed down).
-const PHONE_PEEK = 0.62;
+// 0.5 puts the phone centre roughly at the viewport bottom during the
+// hero header — only the top half of the device shows, sitting below
+// the hero text. Lowered from 0.25 to give the hero copy more room.
+const PHONE_PEEK = 0.5;
 // Scroll-progress point by which the phone has fully risen + pinned.
 const INTRO_END = 0.34;
 
@@ -209,7 +212,7 @@ export default function Hero() {
     const rise = riseRef.current;
     if (rise) {
       const introT = smoothstep(0, INTRO_END, progress);
-      const peekY = vh * (lg ? PHONE_PEEK : 0.58);
+      const peekY = vh * (lg ? PHONE_PEEK : 0.55);
       rise.style.transform = `translateY(${lerp(peekY, 0, introT).toFixed(1)}px)`;
     }
   }, []);
@@ -233,7 +236,7 @@ export default function Hero() {
     };
   }, [onScroll]);
 
-  const phoneW = isLg ? 296 : 210;
+  const phoneW = isLg ? 360 : 240;
   // PolarX device geometry — aspect-ratio 0.4949, corner radius 42/277, bezel 6/277.
   const phoneH = Math.round(phoneW / 0.4949);
   const phoneRadius = Math.round(phoneW * 0.152);
@@ -495,16 +498,20 @@ export default function Hero() {
 
       {/* ════ Hero header — normal flow over the flipped earth; scrolls away ════ */}
       <header
-        className="relative z-20 flex flex-col items-center justify-center"
+        className="relative z-20 flex flex-col items-center"
         style={{
           height: "100dvh",
           width: "100%",
           background: "#FFFFFF",
-          // Bottom-biased padding nudges the centred stack just above
-          // the vertical midline (justify-center alone sits at exact
-          // middle).
-          paddingTop: "clamp(56px, 7vh, 90px)",
-          paddingBottom: "clamp(160px, 22vh, 280px)",
+          // Top-aligned stack: the hero is pulled up behind the navbar
+          // by NAV_PULL (120 px), so paddingTop = NAV_PULL + navbar
+          // clearance (≈ 60 px navbar height + 30 px gap) keeps the
+          // Elio logo + heading comfortably below the navbar. Bottom
+          // padding is small because the phone now occupies the lower
+          // portion of the hero (PHONE_PEEK = 0.25).
+          justifyContent: "flex-start",
+          paddingTop: "clamp(180px, 22vh, 230px)",
+          paddingBottom: 0,
         }}
       >
         {/* Consumer hero background — full-bleed photograph behind the
