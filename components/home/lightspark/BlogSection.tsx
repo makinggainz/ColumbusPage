@@ -106,21 +106,6 @@ export function BlogSection() {
   return (
     <>
       <section className="section relative isolate">
-        <div
-          aria-hidden
-          className="absolute inset-0 -z-10 pointer-events-none"
-          style={{
-            backgroundImage: 'url("/minimalistCity.png")',
-            backgroundRepeat: "no-repeat",
-            backgroundPosition: "center",
-            backgroundSize: "100% 100%",
-            opacity: 1,
-            WebkitMaskImage:
-              "linear-gradient(to bottom, transparent 0%, #000 15%, #000 85%, transparent 100%)",
-            maskImage:
-              "linear-gradient(to bottom, transparent 0%, #000 15%, #000 85%, transparent 100%)",
-          }}
-        />
         <div className="container-site">
           <div className="mx-auto max-w-3xl">
             <h2 className="text-center h2 tracking-tight text-ink">
