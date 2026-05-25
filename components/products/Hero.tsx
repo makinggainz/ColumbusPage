@@ -105,6 +105,87 @@ const PHONE_IMAGES = [
 // PHONE_IMAGES[0] and the transition would be invisible.
 const INTRO_PHONE_IMAGE = "/consumer/elioHome1.png";
 
+// ── Scene-3 floating notifications ────────────────────────────────────
+// Flighty-style cards that fan around the pinned phone during phase 3
+// ("and everything in between"). Each card is one of:
+//   • avatar  — friend pravatar (single round photo)
+//   • stacked — two overlapping pravatars (group / shared trip)
+//   • icon    — coloured circular badge with an emoji centred inside
+// `behind: true` cards render with z-index BELOW the phone (and at
+// lowered opacity) so they read as half-tucked behind the device.
+// `behind: false` cards sit IN FRONT (z-index above phone) at full
+// opacity for the headline moments. Coordinates are px offsets from
+// viewport centre (= phone centre when pinned); `delay` staggers the
+// fade-in once phase 3 activates.
+type Notif = {
+  title: string;
+  sub: string;
+  kind: "avatar" | "stacked" | "icon" | "logo";
+  avatar?: string;
+  avatars?: [string, string];
+  emoji?: string;
+  badge?: string; // hex bg for the icon badge
+  x: number;
+  y: number;
+  rot: number;
+  behind: boolean;
+  delay: number;
+};
+
+const NOTIFICATIONS: Notif[] = [
+  // Top-left — Sophie saved a spot (sharp, in front)
+  {
+    title: "Sophie saved a spot in Barcelona",
+    sub: "Wants to know if you’re free Sunday · 20 min ago",
+    kind: "avatar",
+    avatar: "/profiles/profile2.png",
+    x: -440, y: -210, rot: -3, behind: false, delay: 0,
+  },
+  // Top-right — Elio built your trip (sharp, in front). Uses the
+  // MapsGPT globe (Elio's own brand mark) as the card icon.
+  {
+    title: "Elio built your Madrid weekend",
+    sub: "12 spots · 3 days · Optimized route",
+    kind: "logo",
+    x: 440, y: -210, rot: 3, behind: false, delay: 0.10,
+  },
+  // Mid-left — Hidden coffee shop (faded, behind)
+  {
+    title: "Hidden coffee shop opened nearby",
+    sub: "4 min walk · Trending today",
+    kind: "icon",
+    emoji: "📍",
+    badge: "#0F1B2D",
+    x: -320, y: 30, rot: -4, behind: true, delay: 0.22,
+  },
+  // Mid-right — Trending events (faded, behind)
+  {
+    title: "Trending in Williamsburg this weekend",
+    sub: "8 events Saturday night",
+    kind: "icon",
+    emoji: "📅",
+    badge: "#FF7A6B",
+    x: 320, y: 40, rot: 5, behind: true, delay: 0.26,
+  },
+  // Bottom-left — Sarah & James joined (sharp, in front)
+  {
+    title: "Sarah & James joined your trip",
+    sub: "Tokyo Gems · 14 spots saved together",
+    kind: "stacked",
+    avatars: ["/David.png", "/Erick.png"],
+    x: -420, y: 240, rot: -2, behind: false, delay: 0.34,
+  },
+  // Bottom-right — Rain swap (sharp, in front)
+  {
+    title: "Rain Sunday — Elio swapped to indoor picks",
+    sub: "3 cafés + 1 museum added",
+    kind: "icon",
+    emoji: "☁️",
+    badge: "#9CC9E8",
+    x: 420, y: 250, rot: 2, behind: false, delay: 0.42,
+  },
+];
+
 export default function Hero() {
   const [phase, setPhase] = useState(0);
   const [mounted, setMounted] = useState(false);
@@ -121,6 +202,13 @@ export default function Hero() {
   const isLgRef = useRef(true);
   const labelRefs = useRef<(HTMLDivElement | null)[]>([]);
   const blockRefs = useRef<(HTMLDivElement | null)[]>([]);
+  // True once the scene-3 label block has fully scrolled above the
+  // viewport top — i.e., the user is past the hero into the next
+  // section. `phase` alone stays at 3 (the nearest label is still the
+  // last one) so we need a separate flag to know it's time to hide the
+  // pinned phone + scene-3 notification cards.
+  const [pastHero, setPastHero] = useState(false);
+  const pastHeroRef = useRef(false);
 
   useEffect(() => {
     const check = () => {
@@ -205,6 +293,22 @@ export default function Hero() {
       const peekY = vh * (lg ? PHONE_PEEK : 0.55);
       rise.style.transform = `translateY(${lerp(peekY, 0, introT).toFixed(1)}px)`;
     }
+
+    // ── Past-hero detection: once the last label block has scrolled
+    //    fully above the viewport, the user is in the next section.
+    //    `phase` doesn't naturally drop (the nearest label is still the
+    //    last one), so we keep a separate flag for hiding the scene-3
+    //    notification cards. ───────────────────────────────────────────
+    const lastBlock = blockRefs.current[blockRefs.current.length - 1];
+    let nextPastHero = false;
+    if (lastBlock) {
+      const r = lastBlock.getBoundingClientRect();
+      nextPastHero = r.bottom < 0;
+    }
+    if (nextPastHero !== pastHeroRef.current) {
+      pastHeroRef.current = nextPastHero;
+      setPastHero(nextPastHero);
+    }
   }, []);
 
   useEffect(() => {
@@ -247,6 +351,40 @@ export default function Hero() {
       {/* ════ Phone · pill row — pinned (the ONLY pinned content) ════ */}
       <div className="absolute inset-0 z-30 pointer-events-none">
         <div className="sticky top-0 overflow-hidden" style={{ height: "100dvh" }}>
+          {/* Scene-3 floating notification cards — Flighty-style, fan
+              around the phone during phase 3. Renders both "behind"
+              cards (zIndex 5 < phone's 10) and "in front" cards
+              (zIndex 20 > phone's 10) so the device sits naturally
+              tucked into the cluster. Desktop only — mobile layout is
+              too tight for the side cards. */}
+          {isLg && NOTIFICATIONS.map((n, i) => {
+            const visible = phase === 3 && !pastHero;
+            return (
+              <div
+                key={i}
+                aria-hidden
+                style={{
+                  position: "absolute",
+                  left: "50%",
+                  top: "50%",
+                  zIndex: n.behind ? 5 : 20,
+                  width: 320,
+                  transform: `translate(-50%, -50%) translate(${n.x}px, ${visible ? n.y : n.y + 24}px) rotate(${n.rot}deg)`,
+                  opacity: visible ? (n.behind ? 0.40 : 1) : 0,
+                  // Stagger the fade-IN with each card's delay for a nice
+                  // fan, but drop the delay on fade-OUT so they vanish
+                  // together the moment the user scrolls past scene 3.
+                  transition: visible
+                    ? `opacity 0.7s ease ${n.delay}s, transform 0.9s ${APPEAR} ${n.delay}s`
+                    : "opacity 0.22s ease, transform 0.22s ease",
+                  pointerEvents: "none",
+                }}
+              >
+                <NotifCard n={n} />
+              </div>
+            );
+          })}
+
           {/* The bare 3D phone */}
           <div ref={riseRef} className="absolute inset-0" style={{ willChange: "transform", zIndex: 10 }}>
             <div
@@ -732,4 +870,146 @@ function Stagger({ show, delay, y, children }: { show: boolean; delay: number; y
   );
 }
 
+// ─────────────────────────────────────────────────────────────────────
+//  NotifCard — Flighty-style floating notification card used in
+//  scene 3. White rounded panel with a soft drop shadow, a 40px round
+//  avatar / stacked-avatars / icon-badge on the left, then a tight
+//  title + sub stack on the right.
+// ─────────────────────────────────────────────────────────────────────
+function NotifCard({ n }: { n: Notif }) {
+  return (
+    <div
+      style={{
+        background: "#FFFFFF",
+        borderRadius: 18,
+        padding: "12px 14px",
+        boxShadow:
+          "0 14px 36px -12px rgba(11,27,43,0.22), 0 2px 6px rgba(11,27,43,0.05)",
+        display: "flex",
+        alignItems: "center",
+        gap: 12,
+      }}
+    >
+      {/* Left visual — avatar, stacked avatars, or coloured icon badge. */}
+      {n.kind === "avatar" && n.avatar && (
+        /* eslint-disable-next-line @next/next/no-img-element */
+        <img
+          src={n.avatar}
+          alt=""
+          aria-hidden
+          style={{
+            width: 40,
+            height: 40,
+            borderRadius: 999,
+            objectFit: "cover",
+            flexShrink: 0,
+            background: "#EAF2F7",
+          }}
+        />
+      )}
+      {n.kind === "stacked" && n.avatars && (
+        <div style={{ position: "relative", width: 56, height: 40, flexShrink: 0 }}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={n.avatars[0]}
+            alt=""
+            aria-hidden
+            style={{
+              position: "absolute",
+              left: 0,
+              top: 0,
+              width: 40,
+              height: 40,
+              borderRadius: 999,
+              objectFit: "cover",
+              border: "2px solid #FFFFFF",
+            }}
+          />
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={n.avatars[1]}
+            alt=""
+            aria-hidden
+            style={{
+              position: "absolute",
+              left: 16,
+              top: 0,
+              width: 40,
+              height: 40,
+              borderRadius: 999,
+              objectFit: "cover",
+              border: "2px solid #FFFFFF",
+            }}
+          />
+        </div>
+      )}
+      {n.kind === "icon" && (
+        <div
+          style={{
+            width: 40,
+            height: 40,
+            borderRadius: 999,
+            background: n.badge ?? "#00A3FF",
+            flexShrink: 0,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            fontSize: 20,
+            lineHeight: 1,
+          }}
+        >
+          <span aria-hidden>{n.emoji}</span>
+        </div>
+      )}
+      {n.kind === "logo" && (
+        /* Elio's own brand mark — the rotating MapsGPT globe. */
+        <div
+          style={{
+            width: 40,
+            height: 40,
+            flexShrink: 0,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <MapsGPTGlobe size={36} />
+        </div>
+      )}
+      <div style={{ flex: 1, minWidth: 0 }}>
+        <p
+          style={{
+            fontFamily: '"SF Pro", -apple-system, BlinkMacSystemFont, sans-serif',
+            fontSize: 14,
+            fontWeight: 600,
+            color: "#0F1B2D",
+            margin: 0,
+            lineHeight: 1.25,
+            letterSpacing: "-0.01em",
+            whiteSpace: "nowrap",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+          }}
+        >
+          {n.title}
+        </p>
+        <p
+          style={{
+            fontFamily: '"SF Pro", -apple-system, BlinkMacSystemFont, sans-serif',
+            fontSize: 12,
+            fontWeight: 400,
+            color: "#6B7B8C",
+            margin: "2px 0 0 0",
+            lineHeight: 1.3,
+            whiteSpace: "nowrap",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+          }}
+        >
+          {n.sub}
+        </p>
+      </div>
+    </div>
+  );
+}
 

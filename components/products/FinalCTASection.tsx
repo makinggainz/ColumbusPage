@@ -26,9 +26,9 @@ const DISCOVERY_CARDS: DiscoveryCard[] = [
     label: "group trips",
     img: "/FavoriteSpots/(20).jpeg",
     avatars: [
-      "https://i.pravatar.cc/80?img=16",
+      "/David.png",
       "https://i.pravatar.cc/80?img=35",
-      "https://i.pravatar.cc/80?img=3",
+      "/profiles/profile2.png",
       "https://i.pravatar.cc/80?img=44",
     ],
     left: 380,
@@ -41,9 +41,9 @@ const DISCOVERY_CARDS: DiscoveryCard[] = [
     label: "activities",
     img: "/FavoriteSpots/(17).jpeg",
     avatars: [
-      "https://i.pravatar.cc/80?img=22",
+      "/Alex.jpg",
       "https://i.pravatar.cc/80?img=7",
-      "https://i.pravatar.cc/80?img=51",
+      "/profiles/profile3.png",
     ],
     left: 1310,
     top: 470,
@@ -65,8 +65,8 @@ const DISCOVERY_CARDS: DiscoveryCard[] = [
     type: "stacked",
     label: "trending places",
     imgs: ["/FavoriteSpots/(19).jpeg", "/FavoriteSpots/(22).jpeg", "/FavoriteSpots/(21).jpeg"],
-    left: 1300,
-    top: 920,
+    left: 1020,
+    top: 480,
     rot: -2,
     delay: 0.3,
   },
@@ -75,8 +75,8 @@ const DISCOVERY_CARDS: DiscoveryCard[] = [
     placeName: "Lupita",
     placeSub: "tapas bar",
     img: "/FavoriteSpots/(23).jpeg",
-    left: 220,
-    top: 940,
+    left: 980,
+    top: 950,
     rot: 0,
     delay: 0.4,
   },
@@ -306,21 +306,24 @@ export default function FinalCTASection() {
                 rel="noreferrer"
                 className="group inline-flex items-center justify-center gap-3 bg-cta no-underline transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
                 style={{
-                  height: 46,
-                  padding: "0 22px",
-                  borderRadius: "var(--radius-button-md)",
+                  // Padding + radius matched to StoreBadges `size="lg"`
+                  // (.mg-badge--lg: 14px 22px, radius-button-lg) so the
+                  // navy pill reads at the same visual weight as the
+                  // App Store + Google Play badges next to it.
+                  padding: "14px 22px",
+                  borderRadius: "var(--radius-button-lg, 26px)",
                 }}
               >
                 <span style={{
                   fontFamily: "var(--hiw-font-sans)",
                   fontWeight: 600,
-                  fontSize: "15px",
+                  fontSize: "18px",
                   letterSpacing: "-0.01em",
                   color: "#FFFFFF",
                 }}>
                   Try Elio it&apos;s free!
                 </span>
-                <svg width="13" height="13" viewBox="0 0 13 13" fill="none" className="shrink-0 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" aria-hidden>
+                <svg width="15" height="15" viewBox="0 0 13 13" fill="none" className="shrink-0 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" aria-hidden>
                   <path d="M2 11L11 2M11 2H4M11 2V9" stroke="#FFFFFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               </a>
@@ -353,29 +356,40 @@ type DiscoveryCardViewProps = {
 };
 
 function DiscoveryCardView({ p, leftPx, topPx, leftPct, topPct, mobile, visible }: DiscoveryCardViewProps) {
-  // Single scale knob — every internal size derives from `s`. Mobile
-  // renders at half size so the cards stay legible without crowding
-  // the smaller globe artwork.
-  const s = mobile ? 0.5 : 1;
-  const FRAME = 8 * s;
-  const PHOTO_W = 280 * s;
-  const PHOTO_H = 200 * s;
-  const RADIUS = 22 * s;
-  const INNER_RADIUS = Math.max(8, RADIUS - FRAME);
-  const cardShadow = "0 12px 32px -8px rgba(0,40,60,0.25), 0 4px 10px rgba(0,0,0,0.08)";
+  // Mode-specific size table. Desktop values are intentionally compact
+  // (the cards read as floating UI accents over the globe, not as the
+  // main content), while avatars are kept large relative to the card
+  // so the "group of people on this trip" affordance stays prominent.
+  const sz = mobile
+    ? {
+        photoW: 100, photoH: 70, frame: 4, radius: 12,
+        avatar: 26, avatarBorder: 2, avatarOverlap: 10, avatarOffsetX: 8, avatarOffsetY: 7,
+        pillFont: 9, pillPadV: 5, pillPadH: 13, pillMargin: 7,
+        placeImg: 28, placeName: 11, placeSub: 8, placeGap: 7, placePadH: 14, placePadV: 4,
+        stackedSubW: 70, stackedSubH: 50, stackedSubFrame: 4, stackedSubRadius: 10,
+      }
+    : {
+        photoW: 160, photoH: 115, frame: 6, radius: 18,
+        avatar: 48, avatarBorder: 3, avatarOverlap: 18, avatarOffsetX: 12, avatarOffsetY: 12,
+        pillFont: 14, pillPadV: 8, pillPadH: 20, pillMargin: 10,
+        placeImg: 48, placeName: 18, placeSub: 13, placeGap: 11, placePadH: 22, placePadV: 6,
+        stackedSubW: 108, stackedSubH: 78, stackedSubFrame: 6, stackedSubRadius: 14,
+      };
+  const photoInnerRadius = Math.max(6, sz.radius - sz.frame);
+  const cardShadow = "0 10px 26px -8px rgba(0,40,60,0.25), 0 3px 8px rgba(0,0,0,0.08)";
 
   const pillStyle: React.CSSProperties = {
-    marginTop: 14 * s,
+    marginTop: sz.pillMargin,
     alignSelf: "center",
     background: "#FFFFFF",
     borderRadius: 9999,
-    padding: `${10 * s}px ${24 * s}px`,
+    padding: `${sz.pillPadV}px ${sz.pillPadH}px`,
     fontFamily: "Axiforma, -apple-system, BlinkMacSystemFont, sans-serif",
-    fontSize: 22 * s,
+    fontSize: sz.pillFont,
     fontWeight: 600,
     letterSpacing: "-0.01em",
     color: "#0B1342",
-    boxShadow: "0 10px 24px -8px rgba(0,0,0,0.25), 0 2px 6px rgba(0,0,0,0.08)",
+    boxShadow: "0 8px 20px -8px rgba(0,0,0,0.25), 0 2px 5px rgba(0,0,0,0.08)",
     whiteSpace: "nowrap",
   };
 
@@ -390,84 +404,86 @@ function DiscoveryCardView({ p, leftPx, topPx, leftPct, topPct, mobile, visible 
         transition: `opacity 0.7s var(--hiw-easing-decel) ${p.delay}s, transform 0.7s var(--hiw-easing-spring) ${p.delay}s`,
       }}
     >
-      {/* ── Variant: photo card (with optional avatars) ── */}
-      {(p.type === "photo" || p.type === "photo-selected") && (
+      {/* ── Variant: photo card — white frame + overlapping avatars ── */}
+      {p.type === "photo" && (
         <div
           style={{
             position: "relative",
-            padding: FRAME,
-            background: p.type === "photo-selected" ? "#00B1D4" : "#FFFFFF",
-            borderRadius: RADIUS,
+            padding: sz.frame,
+            background: "#FFFFFF",
+            borderRadius: sz.radius,
             boxShadow: cardShadow,
           }}
         >
-          <div style={{ width: PHOTO_W, height: PHOTO_H, borderRadius: INNER_RADIUS, overflow: "hidden" }}>
+          <div style={{ width: sz.photoW, height: sz.photoH, borderRadius: photoInnerRadius, overflow: "hidden" }}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={p.img} alt="" draggable={false} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
           </div>
-          {/* Two overlapping avatars peek out the card's bottom-left */}
-          {p.type === "photo" && (
-            <div style={{ position: "absolute", left: 14 * s, bottom: -12 * s, display: "flex" }}>
-              {p.avatars.map((src, i) => (
-                /* eslint-disable-next-line @next/next/no-img-element */
-                <img
-                  key={i}
-                  src={src}
-                  alt=""
-                  draggable={false}
-                  style={{
-                    width: 40 * s,
-                    height: 40 * s,
-                    borderRadius: "9999px",
-                    border: `${3 * s}px solid #FFFFFF`,
-                    objectFit: "cover",
-                    marginLeft: i === 0 ? 0 : -14 * s,
-                    boxShadow: "0 4px 10px rgba(0,0,0,0.18)",
-                  }}
-                />
-              ))}
-            </div>
-          )}
+          {/* Avatar stack peeks out the card's bottom-left corner */}
+          <div style={{ position: "absolute", left: sz.avatarOffsetX, bottom: -sz.avatarOffsetY, display: "flex" }}>
+            {p.avatars.map((src, i) => (
+              /* eslint-disable-next-line @next/next/no-img-element */
+              <img
+                key={i}
+                src={src}
+                alt=""
+                draggable={false}
+                style={{
+                  width: sz.avatar,
+                  height: sz.avatar,
+                  borderRadius: "9999px",
+                  border: `${sz.avatarBorder}px solid #FFFFFF`,
+                  objectFit: "cover",
+                  marginLeft: i === 0 ? 0 : -sz.avatarOverlap,
+                  boxShadow: "0 4px 10px rgba(0,0,0,0.18)",
+                  zIndex: p.avatars.length - i,
+                }}
+              />
+            ))}
+          </div>
         </div>
       )}
 
-      {/* ── Variant: place chip (gray circle + place name + subtitle) ── */}
+      {/* ── Variant: place chip — round place photo + name + subtitle ── */}
       {(p.type === "place" || p.type === "place-only") && (
         <div
           style={{
             display: "flex",
             alignItems: "center",
-            gap: 14 * s,
+            gap: sz.placeGap,
             background: "#FFFFFF",
             borderRadius: 9999,
-            padding: `${8 * s}px ${26 * s}px ${8 * s}px ${10 * s}px`,
+            padding: `${sz.placePadV}px ${sz.placePadH}px ${sz.placePadV}px ${sz.placePadV + 2}px`,
             boxShadow: cardShadow,
           }}
         >
           <div
             style={{
-              width: 56 * s,
-              height: 56 * s,
+              width: sz.placeImg,
+              height: sz.placeImg,
               borderRadius: "9999px",
-              background: "#D1D5DB",
+              overflow: "hidden",
               flexShrink: 0,
+              background: "#D1D5DB",
             }}
-            aria-hidden
-          />
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={p.img} alt="" draggable={false} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+          </div>
           <div style={{ display: "flex", flexDirection: "column", lineHeight: 1.1 }}>
             <span style={{
               fontFamily: "Axiforma, -apple-system, BlinkMacSystemFont, sans-serif",
               fontWeight: 700,
-              fontSize: 26 * s,
+              fontSize: sz.placeName,
               color: "#0B1342",
               letterSpacing: "-0.02em",
             }}>{p.placeName}</span>
             <span style={{
               fontFamily: "Axiforma, -apple-system, BlinkMacSystemFont, sans-serif",
               fontWeight: 500,
-              fontSize: 18 * s,
+              fontSize: sz.placeSub,
               color: "rgba(11,19,66,0.55)",
-              marginTop: 3 * s,
+              marginTop: 3,
               letterSpacing: "-0.01em",
             }}>{p.placeSub}</span>
           </div>
@@ -476,13 +492,14 @@ function DiscoveryCardView({ p, leftPx, topPx, leftPct, topPct, mobile, visible 
 
       {/* ── Variant: stacked photo deck (three fanned cards) ── */}
       {p.type === "stacked" && (() => {
-        const SUB_W = 180 * s;
-        const SUB_H = 130 * s;
-        const SUB_RADIUS = 18 * s;
-        const SUB_INNER = Math.max(6, SUB_RADIUS - FRAME);
-        const subCard = (img: string, posStyle: React.CSSProperties): React.CSSProperties => ({
+        const SUB_W = sz.stackedSubW;
+        const SUB_H = sz.stackedSubH;
+        const SUB_FRAME = sz.stackedSubFrame;
+        const SUB_RADIUS = sz.stackedSubRadius;
+        const SUB_INNER = Math.max(6, SUB_RADIUS - SUB_FRAME);
+        const subCard = (posStyle: React.CSSProperties): React.CSSProperties => ({
           position: "absolute",
-          padding: FRAME,
+          padding: SUB_FRAME,
           background: "#FFFFFF",
           borderRadius: SUB_RADIUS,
           boxShadow: cardShadow,
@@ -497,21 +514,21 @@ function DiscoveryCardView({ p, leftPx, topPx, leftPct, topPct, mobile, visible 
         return (
           <div style={{ position: "relative", width: SUB_W * 1.85, height: SUB_H * 1.8 }}>
             {/* Back-left card — tilted CCW */}
-            <div style={subCard(p.imgs[0], { left: 0, top: SUB_H * 0.45, transform: "rotate(-7deg)", zIndex: 1 })}>
+            <div style={subCard({ left: 0, top: SUB_H * 0.45, transform: "rotate(-7deg)", zIndex: 1 })}>
               <div style={subInner}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={p.imgs[0]} alt="" draggable={false} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
               </div>
             </div>
             {/* Back-right card — tilted CW, sits highest */}
-            <div style={subCard(p.imgs[1], { right: 0, top: 0, transform: "rotate(7deg)", zIndex: 2 })}>
+            <div style={subCard({ right: 0, top: 0, transform: "rotate(7deg)", zIndex: 2 })}>
               <div style={subInner}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={p.imgs[1]} alt="" draggable={false} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
               </div>
             </div>
             {/* Front-centre card — slight CCW, sits in front */}
-            <div style={subCard(p.imgs[2], { left: "50%", top: SUB_H * 0.6, transform: "translateX(-50%) rotate(-2deg)", zIndex: 3 })}>
+            <div style={subCard({ left: "50%", top: SUB_H * 0.6, transform: "translateX(-50%) rotate(-2deg)", zIndex: 3 })}>
               <div style={subInner}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={p.imgs[2]} alt="" draggable={false} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />

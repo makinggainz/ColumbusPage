@@ -26,20 +26,25 @@ type DestPhoto = {
   avatar: string;
 };
 
+// Avatars below are intentionally all anonymous / stock faces — the
+// carousel must NOT show any of the founders (David / Erick / Alex)
+// so the marquee reads as "what other people are asking," not a
+// founder-curated feed. Use fresh pravatar seeds that aren't already
+// in ROW_B below.
 const ROW_A: DestPhoto[] = [
-  { src: "/FavoriteSpots/(14).jpeg", place: "Osteria Francescana", rating: "4.9", prompt: "Authentic Italian fine dining in Modena?", avatar: "https://i.pravatar.cc/80?img=35" },
+  { src: "/FavoriteSpots/(14).jpeg", place: "Osteria Francescana", rating: "4.9", prompt: "Authentic Italian fine dining in Modena?", avatar: "https://i.pravatar.cc/80?img=33" },
   { src: "/FavoriteSpots/(20).jpeg", place: "Hôtel du Cap",        rating: "4.8", prompt: "Most glamorous hotel on the French Riviera?", avatar: "https://i.pravatar.cc/80?img=16" },
-  { src: "/FavoriteSpots/(22).jpeg", place: "Mercado Central",     rating: "4.5", prompt: "Best food market in Madrid?", avatar: "https://i.pravatar.cc/80?img=3" },
+  { src: "/FavoriteSpots/(22).jpeg", place: "Mercado Central",     rating: "4.5", prompt: "Best food market in Madrid?", avatar: "https://i.pravatar.cc/80?img=11" },
   { src: "/FavoriteSpots/(17).jpeg", place: "Oia Village",         rating: "4.7", prompt: "Best spot in Santorini for the sunset?", avatar: "https://i.pravatar.cc/80?img=1" },
-  { src: "/FavoriteSpots/(19).jpeg", place: "The Brando",          rating: "4.9", prompt: "Exclusive private island for a honeymoon?", avatar: "https://i.pravatar.cc/80?img=22" },
+  { src: "/FavoriteSpots/(19).jpeg", place: "The Brando",          rating: "4.9", prompt: "Exclusive private island for a honeymoon?", avatar: "https://i.pravatar.cc/80?img=5" },
   { src: "/FavoriteSpots/(21).jpeg", place: "The Ned NYC",         rating: "4.5", prompt: "Coolest NYC rooftop on a summer night?", avatar: "https://i.pravatar.cc/80?img=25" },
 ];
 const ROW_B: DestPhoto[] = [
-  { src: "/FavoriteSpots/(23).jpeg", place: "Four Seasons Bali",   rating: "4.9", prompt: "Secluded Bali resort with rice-terrace views?", avatar: "https://i.pravatar.cc/80?img=7" },
+  { src: "/FavoriteSpots/(23).jpeg", place: "Four Seasons Bali",   rating: "4.9", prompt: "Secluded Bali resort with rice-terrace views?", avatar: "/profiles/profile2.png" },
   { src: "/FavoriteSpots/(24).jpeg", place: "Catch LA",            rating: "4.6", prompt: "Best LA rooftop dinner with hill views?", avatar: "https://i.pravatar.cc/80?img=44" },
-  { src: "/FavoriteSpots/(21).jpeg", place: "Papaya Playa",        rating: "4.5", prompt: "Best Tulum beach club for music + food?", avatar: "https://i.pravatar.cc/80?img=38" },
+  { src: "/FavoriteSpots/(21).jpeg", place: "Papaya Playa",        rating: "4.5", prompt: "Best Tulum beach club for music + food?", avatar: "/profiles/profile3.png" },
   { src: "/FavoriteSpots/(19).jpeg", place: "Fushimi Inari",       rating: "4.8", prompt: "Best time to visit Fushimi Inari to skip crowds?", avatar: "https://i.pravatar.cc/80?img=9" },
-  { src: "/FavoriteSpots/(14).jpeg", place: "Nobu Malibu",         rating: "4.8", prompt: "Best oceanfront dinner in Malibu?", avatar: "https://i.pravatar.cc/80?img=51" },
+  { src: "/FavoriteSpots/(14).jpeg", place: "Nobu Malibu",         rating: "4.8", prompt: "Best oceanfront dinner in Malibu?", avatar: "/profiles/profile1.png" },
   { src: "/FavoriteSpots/(17).jpeg", place: "Koh Lanta",           rating: "4.7", prompt: "Quiet Thai beach resort far from the parties?", avatar: "https://i.pravatar.cc/80?img=57" },
 ];
 
@@ -333,15 +338,15 @@ export default function DestinationsSection() {
           </h2>
         </div>
 
-        {/* ════ Bento grid — 5 cards, Roamy-style 2-row layout ════
-            Row 1 (12-col): card 1 spans 7, card 2 spans 5  (highlighted)
-            Row 2 (12-col): cards 3/4/5 each span 4         (base)
-            Highlighted variant uses a 3-layer composited gradient (white
-            wash + sky-blue→white fade + faint dark) for a frosted-glass
-            sheen; base cards are a near-transparent dark tint that lets
-            the page bg show through. All cards share the same inset
-            box-shadow that creates the inner glass highlight.
-            Mobile (<640px): all cards stack in a single column. */}
+        {/* ════ Bento grid — 5 cards, 4-col layout ════
+            Row 1: card 1 spans 2 cols (See whats going on, screenshot
+              fills the bottom), card 2 spans 2 cols (Elio can plan a
+              trip; mapbento image as backdrop + Day 1/2/3 chip).
+            Row 2: card 3 spans 1 col (Ad-free + 5 stars), card 4 spans
+              1 col (Import from Anywhere + 5 brand icons + Instagram
+              row), card 5 spans 2 cols (plan a trip together + phone
+              mockup with three friends in the group chat).
+            Tablet (<1024px) collapses to 2 cols; mobile (<640px) to 1. */}
         <div
           style={{
             paddingLeft: 40,
@@ -351,149 +356,444 @@ export default function DestinationsSection() {
           }}
         >
           <div className="eib-bento">
-            {/* 1 — Stop using Docs (wide top-left, highlighted) */}
-            <div className="eib-card eib-card--highlight">
+            {/* 1 — See whats going on around you (Elio screenshot fills the bottom) */}
+            <div className="eib-card eib-card--photo">
               <div className="eib-text">
-                <h3 className="eib-title">Stop using Docs to plan trips.</h3>
-                <p className="eib-sub">Do it all together on one map.</p>
+                <h3 className="eib-title">See whats going on around you.</h3>
+                <p className="eib-sub">Live events, local things.</p>
+              </div>
+              <div className="eib-photo-wrap">
+                <Image
+                  src="/consumer/elioHome2.png"
+                  alt=""
+                  fill
+                  sizes="(min-width: 1200px) 600px, 90vw"
+                  className="eib-photo-img"
+                />
               </div>
             </div>
 
-            {/* 2 — Elio can plan a trip for you (top-right, highlighted) */}
-            <div className="eib-card eib-card--highlight">
-              <div className="eib-text">
+            {/* 2 — Elio can plan a trip for you (mapbento backdrop) */}
+            <div className="eib-card eib-card--map">
+              <Image
+                src="/bento/mapbento.png"
+                alt=""
+                fill
+                sizes="(min-width: 1200px) 600px, 90vw"
+                className="eib-map-bg-img"
+              />
+              <div className="eib-text eib-text--over">
                 <h3 className="eib-title">Elio can plan a trip for you.</h3>
-                <p className="eib-sub">AI-powered itinerary generation.</p>
+                <p className="eib-sub">An AI travel planner</p>
+                <div className="eib-day-card">
+                  <span>Day 1</span>
+                  <span>Day 2</span>
+                  <span>Day 3</span>
+                </div>
               </div>
-              <ItineraryArt />
             </div>
 
-          {/* 3 — See what's going on around you (bottom-left) */}
-          <div className="eib-card">
-            <div className="eib-text">
-              <h3 className="eib-title">See what&rsquo;s going on around you.</h3>
-              <p className="eib-sub">Live events, local things.</p>
-            </div>
-            <RadarPinArt />
-          </div>
-
-          {/* 4 — Gets smarter the more you talk to Elio (bottom-mid) */}
-          <div className="eib-card">
-            <div className="eib-text">
-              <h3 className="eib-title">Gets smarter the more you talk to Elio.</h3>
-              <p className="eib-sub">Learns your preferences and travel style.</p>
-            </div>
-            <ChatBubblesArt />
-          </div>
-
-            {/* 5 — Ad-free (bottom-right) */}
-            <div className="eib-card">
+            {/* 3 — Ad-free (light-blue tinted) */}
+            <div className="eib-card eib-card--blue">
               <div className="eib-text">
                 <h3 className="eib-title">Ad-free.</h3>
-                <p className="eib-sub">Find exactly what you&rsquo;re after.</p>
+                <h3 className="eib-title">Find exactly what you&rsquo;re after.</h3>
               </div>
-              <ShieldCheckArt />
+              <div className="eib-stars-wrap">
+                <Image
+                  src="/bento/ad-free.png"
+                  alt=""
+                  width={731}
+                  height={165}
+                  className="eib-stars-img"
+                />
+              </div>
+            </div>
+
+            {/* 4 — Import from Anywhere (5 brand icons + Instagram DM row) */}
+            <div className="eib-card eib-card--blue">
+              <h3 className="eib-title">Import from Anywhere</h3>
+              <div className="eib-icon-row">
+                <Image src="/bento/tiktok.png" alt="TikTok" width={56} height={56} className="eib-icon" />
+                <Image src="/bento/pinterest.png" alt="Pinterest" width={56} height={56} className="eib-icon" />
+                <Image src="/bento/google-maps.png" alt="Google Maps" width={56} height={56} className="eib-icon" />
+                <Image src="/bento/google-docs.png" alt="Google Docs" width={56} height={56} className="eib-icon" />
+                <Image src="/bento/apple-notes.png" alt="Apple Notes" width={56} height={56} className="eib-icon" />
+              </div>
+              <div className="eib-dm-row">
+                <p className="eib-sub eib-sub--dm">or dm us the reel<br />to @Elio</p>
+                <Image src="/bento/instagram.png" alt="Instagram" width={48} height={48} className="eib-icon" />
+              </div>
+            </div>
+
+            {/* 5 — plan a trip together: title + chat UI (left) + phone mockup (right) */}
+            <div className="eib-card eib-card--chat">
+              <div className="eib-chat-card-grid">
+                {/* LEFT column — title above three chat rows, all OUTSIDE the phone */}
+                <div className="eib-chat-side">
+                  <h3 className="eib-title">plan a trip together<br />with your friends.</h3>
+                  <div className="eib-chat-list">
+                    {/* Sydney row + SteinCoffee sub-card */}
+                    <div className="eib-chat-item">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src="/bento/profile-sydney.png" alt="" className="eib-chat-avatar-lg" />
+                      <div className="eib-chat-stack">
+                        <div className="eib-chat-name-lg">Sydney added</div>
+                        <div className="eib-stein-card">
+                          <span className="eib-stein-circle" />
+                          <div className="eib-stein-text">
+                            <span className="eib-stein-name">SteinCoffee</span>
+                            <span className="eib-stein-rank"><span className="eib-laurel">🏆</span> ranked #1</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Natalie row + im-in badge */}
+                    <div className="eib-chat-item">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src="/bento/profile-natalie.png" alt="" className="eib-chat-avatar-lg" />
+                      <div className="eib-chat-stack">
+                        <div className="eib-chat-name-lg">Natalie</div>
+                        <div className="eib-chat-msg-lg">guyssss this is cute</div>
+                      </div>
+                      <div className="eib-im-in">
+                        <span className="eib-im-circle" aria-hidden>👏</span>
+                        <span className="eib-im-label">im in</span>
+                      </div>
+                    </div>
+
+                    {/* Sofiee row + im-in badge */}
+                    <div className="eib-chat-item">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src="/bento/profile-sofiee.png" alt="" className="eib-chat-avatar-lg" />
+                      <div className="eib-chat-stack">
+                        <div className="eib-chat-name-lg">Sofiee</div>
+                        <div className="eib-chat-msg-lg">oh yes</div>
+                      </div>
+                      <div className="eib-im-in">
+                        <span className="eib-im-circle" aria-hidden>👏</span>
+                        <span className="eib-im-label">im in</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* RIGHT column — phone mockup (map + internal avatar column + place pins) */}
+                <GroupTripPhoneMockup />
+              </div>
             </div>
           </div>
         </div>
       </div>
 
       <style>{`
-        /* Full-width band — vertical spacing only, no background. */
-        .eib-band {
-          padding-top: 80px;
-          padding-bottom: 80px;
-        }
-
+        /* 4-col grid: top row [span 2, span 2]; bottom row [span 1, span 1, span 2]. */
         .eib-bento {
           display: grid;
-          grid-template-columns: repeat(12, 1fr);
+          grid-template-columns: repeat(4, 1fr);
+          grid-auto-rows: minmax(360px, auto);
           gap: 20px;
         }
-        .eib-bento > .eib-card:nth-child(1) { grid-column: span 7; }
-        .eib-bento > .eib-card:nth-child(2) { grid-column: span 5; }
-        .eib-bento > .eib-card:nth-child(3) { grid-column: span 4; }
-        .eib-bento > .eib-card:nth-child(4) { grid-column: span 4; }
-        .eib-bento > .eib-card:nth-child(5) { grid-column: span 4; }
+        .eib-bento > .eib-card:nth-child(1) { grid-column: span 2; }
+        .eib-bento > .eib-card:nth-child(2) { grid-column: span 2; }
+        .eib-bento > .eib-card:nth-child(3) { grid-column: span 1; }
+        .eib-bento > .eib-card:nth-child(4) { grid-column: span 1; }
+        .eib-bento > .eib-card:nth-child(5) { grid-column: span 2; }
 
-        /* Base card — near-transparent dark tint that lets the page bg
-           bleed through, plus a double inset white shadow that mimics
-           the inner glass highlight on a frosted panel. */
+        /* Base card — flat light-gray fill, clean editorial rounded block. */
         .eib-card {
           position: relative;
-          background: rgba(0, 0, 0, 0.02);
-          border-radius: 24px;
+          background: #F4F4F5;
+          border-radius: 30px;
           padding: 32px;
           overflow: hidden;
           display: flex;
           flex-direction: column;
-          justify-content: space-between;
           gap: 16px;
-          box-shadow:
-            rgba(255, 255, 255, 0.21) 0px -2px 12px 0px inset,
-            rgba(255, 255, 255, 0.60) 0px  1px  1px 0px inset;
-          min-height: 380px;
         }
         @media (min-width: 1200px) {
-          .eib-card { border-radius: 28px; padding: 40px; gap: 24px; }
+          .eib-card { border-radius: 36px; padding: 40px; }
         }
 
-        /* Highlighted variant — three composited background-image
-           gradients on top of the base. Layer order (top → bottom):
-             1. 20% white wash             (frosted milk)
-             2. Sky-blue 15% → white 15%   (vertical sky fade)
-             3. 5% black                   (faint depth, keeps it from
-                                            looking washed out)
-           Slightly larger radius at desktop breakpoints. */
-        .eib-card--highlight {
-          background-image:
-            linear-gradient(90deg, rgba(255, 255, 255, 0.20), rgba(255, 255, 255, 0.20)),
-            linear-gradient(rgba(0, 163, 255, 0.15), rgba(255, 255, 255, 0.15)),
-            linear-gradient(90deg, rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.05));
+        /* Light-blue tint (Ad-free + Import). */
+        .eib-card--blue {
+          background: linear-gradient(180deg, #EAF6FF 0%, #F2F8FD 100%);
         }
 
-        .eib-bento > .eib-card:nth-child(1),
-        .eib-bento > .eib-card:nth-child(2) {
-          /* Top row sits a touch taller to match the reference's
-             phone-mockup-driven proportions. */
-          min-height: 420px;
+        /* Card 1 — screenshot fills the bottom half. */
+        .eib-card--photo { padding-bottom: 0; }
+        .eib-photo-wrap {
+          position: relative;
+          flex: 1;
+          min-height: 240px;
+          margin-top: 8px;
+        }
+        .eib-photo-img {
+          object-fit: contain;
+          object-position: bottom center;
         }
 
-        .eib-text { max-width: 420px; }
+        /* Card 2 — map fills the entire card; text + Day chip overlay. */
+        .eib-card--map {
+          padding: 0;
+          min-height: 380px;
+        }
+        .eib-map-bg-img {
+          object-fit: cover;
+          object-position: center right;
+          z-index: 0;
+        }
+        .eib-text--over {
+          position: relative;
+          z-index: 1;
+          padding: 32px;
+          max-width: 360px;
+        }
+        @media (min-width: 1200px) {
+          .eib-text--over { padding: 40px; }
+        }
+        .eib-day-card {
+          display: inline-flex;
+          flex-direction: column;
+          gap: 4px;
+          background: #FFFFFF;
+          border-radius: 14px;
+          padding: 12px 18px;
+          margin-top: 18px;
+          box-shadow: 0 4px 14px rgba(0,0,0,0.10);
+          font-family: "Axiforma", -apple-system, BlinkMacSystemFont, sans-serif;
+          font-size: 16px;
+          font-weight: 600;
+          color: #0F1B2D;
+          letter-spacing: -0.01em;
+        }
 
+        /* Card 3 — stars row at the bottom. */
+        .eib-stars-wrap {
+          margin-top: auto;
+          padding-top: 24px;
+        }
+        .eib-stars-img {
+          width: 100%;
+          max-width: 280px;
+          height: auto;
+          display: block;
+        }
+
+        /* Card 4 — brand icon row + Instagram DM row. */
+        .eib-icon-row {
+          display: flex;
+          align-items: center;
+          gap: 14px;
+          flex-wrap: wrap;
+          margin-top: 20px;
+        }
+        .eib-icon {
+          width: 48px;
+          height: 48px;
+          object-fit: contain;
+          display: block;
+        }
+        @media (min-width: 1200px) {
+          .eib-icon { width: 56px; height: 56px; }
+        }
+        .eib-dm-row {
+          display: flex;
+          align-items: center;
+          gap: 14px;
+          margin-top: auto;
+          padding-top: 24px;
+        }
+        .eib-sub--dm {
+          font-size: 16px;
+          line-height: 1.3;
+        }
+
+        /* Card 5 — chat UI on the left, phone mockup on the right.
+           Bottom padding zeroed so the phone image can sit flush with
+           the card's bottom border; chat-side restores its own bottom
+           padding so it doesn't touch the edge. */
+        .eib-card--chat {
+          min-height: 480px;
+          overflow: hidden;
+          padding-bottom: 0;
+        }
+        .eib-chat-card-grid {
+          display: grid;
+          grid-template-columns: 1fr auto;
+          gap: 24px;
+          align-items: stretch;
+          height: 100%;
+        }
+        @media (max-width: 1023px) {
+          .eib-chat-card-grid {
+            grid-template-columns: 1fr;
+          }
+        }
+        .eib-chat-side {
+          display: flex;
+          flex-direction: column;
+          gap: 22px;
+          min-width: 0;
+          padding-bottom: 32px;
+        }
+        @media (min-width: 1200px) {
+          .eib-chat-side { padding-bottom: 40px; }
+        }
+        .eib-chat-list {
+          display: flex;
+          flex-direction: column;
+          gap: 14px;
+        }
+        .eib-chat-item {
+          display: flex;
+          align-items: center;
+          gap: 11px;
+        }
+        .eib-chat-avatar-lg {
+          width: 42px;
+          height: 42px;
+          border-radius: 50%;
+          object-fit: cover;
+          flex-shrink: 0;
+          background: #D1D5DB;
+          box-shadow: 0 3px 8px rgba(0,0,0,0.10);
+        }
+        .eib-chat-stack {
+          display: flex;
+          flex-direction: column;
+          gap: 2px;
+          min-width: 0;
+          flex: 1;
+        }
+        .eib-chat-name-lg {
+          font-family: "Axiforma", -apple-system, sans-serif;
+          font-size: 15px;
+          font-weight: 700;
+          color: #0F1B2D;
+          letter-spacing: -0.02em;
+          line-height: 1.2;
+        }
+        .eib-chat-msg-lg {
+          font-family: "Axiforma", -apple-system, sans-serif;
+          font-size: 12px;
+          font-weight: 500;
+          color: #5B6B7C;
+          line-height: 1.3;
+        }
+
+        /* SteinCoffee inline card — sub-row under "Sydney added" */
+        .eib-stein-card {
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          background: #FFFFFF;
+          border-radius: 14px;
+          padding: 6px 13px 6px 6px;
+          box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+          margin-top: 5px;
+          margin-left: 28px;
+          align-self: flex-start;
+          width: fit-content;
+        }
+        .eib-stein-circle {
+          width: 30px;
+          height: 30px;
+          background: linear-gradient(135deg, #F4F4F5 0%, #E2E5E9 100%);
+          border-radius: 50%;
+          box-shadow: inset 0 -2px 5px rgba(0,0,0,0.06), inset 0 2px 3px rgba(255,255,255,0.85);
+          flex-shrink: 0;
+        }
+        .eib-stein-text {
+          display: flex;
+          flex-direction: column;
+          line-height: 1.15;
+        }
+        .eib-stein-name {
+          font-family: "Axiforma", -apple-system, sans-serif;
+          font-size: 13px;
+          font-weight: 700;
+          color: #0F1B2D;
+          letter-spacing: -0.02em;
+        }
+        .eib-stein-rank {
+          font-family: "Axiforma", -apple-system, sans-serif;
+          font-size: 10px;
+          font-weight: 500;
+          color: #5B6B7C;
+          display: inline-flex;
+          align-items: center;
+          gap: 3px;
+        }
+        .eib-laurel { font-size: 9px; }
+
+        /* "im in" green badge — right edge of Natalie / Sofiee rows */
+        .eib-im-in {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 3px;
+          flex-shrink: 0;
+          margin-left: auto;
+          padding-left: 6px;
+        }
+        .eib-im-circle {
+          width: 30px;
+          height: 30px;
+          background: #34C759;
+          border-radius: 50%;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 14px;
+          box-shadow: 0 3px 7px rgba(52, 199, 89, 0.30);
+        }
+        .eib-im-label {
+          font-family: "Axiforma", -apple-system, sans-serif;
+          font-size: 11px;
+          font-weight: 500;
+          color: #5B6B7C;
+          letter-spacing: -0.01em;
+        }
+
+        /* Text */
+        .eib-text { max-width: 360px; }
         .eib-title {
           font-family: "Axiforma", -apple-system, BlinkMacSystemFont, sans-serif;
-          font-size: 22px;
+          font-size: 26px;
           font-weight: 700;
-          line-height: 1.2;
+          line-height: 1.15;
           letter-spacing: -0.02em;
           color: #0F1B2D;
-          margin: 0 0 10px 0;
+          margin: 0 0 2px 0;
+        }
+        @media (min-width: 1200px) {
+          .eib-title { font-size: 30px; }
         }
         .eib-sub {
           font-family: "Axiforma", -apple-system, BlinkMacSystemFont, sans-serif;
           font-size: 17px;
           font-weight: 400;
-          line-height: 1.5;
-          color: #6B7B8C;
+          line-height: 1.4;
+          color: #5B6B7C;
           margin: 0;
         }
 
-        /* Tablet — 6-col, top row stays 2-up but at 50/50, bottom stays 3-up */
+        /* Tablet — 2-col, top row + card 5 stay full-width, ad-free + import side-by-side */
         @media (max-width: 1023px) {
-          .eib-bento { grid-template-columns: repeat(6, 1fr); }
-          .eib-bento > .eib-card:nth-child(1) { grid-column: span 6; }
-          .eib-bento > .eib-card:nth-child(2) { grid-column: span 6; }
-          .eib-bento > .eib-card:nth-child(3),
-          .eib-bento > .eib-card:nth-child(4),
+          .eib-bento { grid-template-columns: repeat(2, 1fr); }
+          .eib-bento > .eib-card { grid-column: span 1; }
+          .eib-bento > .eib-card:nth-child(1),
+          .eib-bento > .eib-card:nth-child(2),
           .eib-bento > .eib-card:nth-child(5) { grid-column: span 2; }
         }
-        /* Mobile — single column stack */
+        /* Mobile — single column */
         @media (max-width: 640px) {
           .eib-bento { grid-template-columns: 1fr; }
-          .eib-bento > .eib-card { grid-column: 1 / -1 !important; min-height: 320px; }
-          .eib-card { padding: 28px; }
-          .eib-title { font-size: 19px; }
+          .eib-bento > .eib-card { grid-column: 1 / -1 !important; }
+          .eib-card { padding: 24px; }
+          .eib-title { font-size: 22px; }
         }
       `}</style>
 
@@ -583,106 +883,44 @@ export default function DestinationsSection() {
 }
 
 // ─────────────────────────────────────────────────────────────────────
-//  Bento SVG illustrations — minimal, monochrome line art with the
-//  Roamy cyan accent. Pure SVG (no asset deps) so the cards render
-//  immediately; swap any of these for a richer image later.
+//  GroupTripPhoneMockup — phone-shaped panel sitting in Card 5 with a
+//  three-message group-chat UI overlay. Profile photos come from the
+//  user-provided /bento/profile-*.png assets; the map underneath is a
+//  CSS-only stylized field (warm pastel land + cyan water) so the chat
+//  reads as the focal element.
 // ─────────────────────────────────────────────────────────────────────
-
-/** RadarPinArt — centred pin with concentric pulse rings. */
-function RadarPinArt() {
+function GroupTripPhoneMockup() {
   return (
-    <div
-      aria-hidden
-      style={{
-        position: "relative",
-        height: 96,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "flex-start",
-      }}
-    >
-      <svg viewBox="0 0 120 96" width="120" height="96" fill="none" xmlns="http://www.w3.org/2000/svg">
-        {/* Pulse rings — three concentric circles fading outward */}
-        <circle cx="36" cy="48" r="44" stroke="#00A3FF" strokeOpacity="0.10" strokeWidth="1.5" />
-        <circle cx="36" cy="48" r="30" stroke="#00A3FF" strokeOpacity="0.22" strokeWidth="1.5" />
-        <circle cx="36" cy="48" r="16" stroke="#00A3FF" strokeOpacity="0.45" strokeWidth="1.5" />
-        {/* Centred pin */}
-        <g transform="translate(36 48)">
-          <path
-            d="M 0 -18 C -8 -18 -13 -12 -13 -5 C -13 4 -6 8 0 20 C 6 8 13 4 13 -5 C 13 -12 8 -18 0 -18 Z"
-            fill="#00A3FF"
-          />
-          <circle cx="0" cy="-5" r="4" fill="#FFFFFF" />
-        </g>
-      </svg>
-    </div>
-  );
-}
-
-/** ChatBubblesArt — three stair-stepped chat bubbles. */
-function ChatBubblesArt() {
-  return (
-    <div aria-hidden style={{ display: "flex", alignItems: "flex-end", height: 100 }}>
-      <svg viewBox="0 0 160 100" width="160" height="100" fill="none" xmlns="http://www.w3.org/2000/svg">
-        {/* Top bubble — outlined navy (user msg) */}
-        <rect x="2" y="6" width="78" height="28" rx="14" fill="#FFFFFF" stroke="#0F2741" strokeWidth="1.5" />
-        <circle cx="18" cy="20" r="2.5" fill="#0F2741" />
-        <circle cx="28" cy="20" r="2.5" fill="#0F2741" />
-        <circle cx="38" cy="20" r="2.5" fill="#0F2741" />
-        {/* Middle bubble — filled cyan (Elio's reply) */}
-        <rect x="40" y="40" width="96" height="28" rx="14" fill="#00A3FF" />
-        <rect x="52" y="50" width="42" height="3" rx="1.5" fill="rgba(255,255,255,0.95)" />
-        <rect x="52" y="57" width="28" height="3" rx="1.5" fill="rgba(255,255,255,0.65)" />
-        {/* Bottom bubble — outlined (follow-up) */}
-        <rect x="6" y="72" width="62" height="22" rx="11" fill="#FFFFFF" stroke="#0F2741" strokeWidth="1.5" />
-        <rect x="18" y="80" width="38" height="3" rx="1.5" fill="#0F2741" opacity="0.5" />
-      </svg>
-    </div>
-  );
-}
-
-/** ItineraryArt — vertical timeline with 3 stops and placeholder labels. */
-function ItineraryArt() {
-  return (
-    <div aria-hidden>
-      <svg viewBox="0 0 180 100" width="180" height="100" fill="none" xmlns="http://www.w3.org/2000/svg">
-        {/* Vertical timeline */}
-        <line x1="12" y1="16" x2="12" y2="84" stroke="#0F2741" strokeOpacity="0.15" strokeWidth="2" strokeLinecap="round" />
-        {/* 3 stops along the timeline */}
-        {[16, 50, 84].map((y, i) => (
-          <g key={i}>
-            <circle cx="12" cy={y} r="6" fill="#FFFFFF" stroke="#00A3FF" strokeWidth="2" />
-            <circle cx="12" cy={y} r="2.5" fill="#00A3FF" />
-            <rect x="28" y={y - 7} width={i === 1 ? 124 : 96} height="6" rx="3" fill="#0F2741" opacity={i === 1 ? 0.85 : 0.55} />
-            <rect x="28" y={y + 3} width={i === 0 ? 70 : 56} height="4" rx="2" fill="#0F2741" opacity="0.30" />
-          </g>
-        ))}
-      </svg>
-    </div>
-  );
-}
-
-/** ShieldCheckArt — clean shield silhouette with a centered check. */
-function ShieldCheckArt() {
-  return (
-    <div aria-hidden style={{ display: "flex", alignItems: "center", justifyContent: "flex-end" }}>
-      <svg viewBox="0 0 100 100" width="92" height="92" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path
-          d="M 50 8 L 84 22 L 84 52 C 84 72 68 86 50 92 C 32 86 16 72 16 52 L 16 22 Z"
-          fill="#00A3FF"
-          fillOpacity="0.10"
-          stroke="#00A3FF"
-          strokeWidth="2"
-        />
-        <path
-          d="M 32 50 L 46 64 L 70 38"
-          stroke="#00A3FF"
-          strokeWidth="3.5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          fill="none"
-        />
-      </svg>
+    <div className="eib-phone-col" aria-hidden>
+      <Image
+        src="/bento/planatrip.png"
+        alt=""
+        width={958}
+        height={1164}
+        className="eib-phone-img"
+        sizes="(min-width: 1200px) 320px, 40vw"
+      />
+      <style>{`
+        .eib-phone-col {
+          position: relative;
+          align-self: stretch;
+          display: flex;
+          align-items: flex-end;
+          justify-content: flex-end;
+        }
+        .eib-phone-img {
+          display: block;
+          width: 100%;
+          max-width: 278px;
+          height: auto;
+          object-fit: contain;
+          object-position: bottom right;
+          border-radius: 36px;
+          border: 6px solid #000000;
+          box-sizing: border-box;
+          background: #000000;
+        }
+      `}</style>
     </div>
   );
 }
