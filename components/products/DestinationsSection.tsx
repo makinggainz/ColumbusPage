@@ -90,8 +90,8 @@ function CyclingTitle() {
         textAlign: "center",
         paddingLeft: 40,
         paddingRight: 40,
-        paddingBottom: 40,
-        paddingTop: 100,
+        paddingBottom: 56,
+        paddingTop: 140,
         maxWidth: 1400,
         margin: "0 auto",
       }}
@@ -99,20 +99,22 @@ function CyclingTitle() {
       <h2
         style={{
           fontFamily: "Axiforma, -apple-system, BlinkMacSystemFont, sans-serif",
-          fontSize: 24,
+          fontSize: 44,
           fontWeight: 590,
           color: "#000000",
           letterSpacing: "-0.02em",
+          lineHeight: 1.2,
           margin: 0,
-          minHeight: "32px",
+          minHeight: "56px",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          gap: "4px",
+          flexWrap: "wrap",
+          gap: "8px",
         }}
       >
         <span>Find your next</span>
-        <span style={{ minWidth: "280px", textAlign: "left" }}>
+        <span style={{ minWidth: "520px", textAlign: "left" }}>
           {displayText}
           <span style={{ opacity: 0.5, animation: "blink 1s infinite" }}>|</span>
         </span>
@@ -325,235 +327,154 @@ export default function DestinationsSection() {
         </h2>
       </div>
 
-      {/* Bento box */}
+      {/* ════ Bento grid — 5 cards, mixed sizes ════
+          Layout (desktop, 3 cols):
+            • Hero (Stop using Docs) — cols 1-2, rows 1-2, blue gradient
+            • See what's going on    — col 3, row 1
+            • Gets smarter           — col 3, row 2
+            • Elio can plan          — col 1, row 3
+            • Ad-free                — cols 2-3, row 3
+          Mobile (<768px): collapses to a single column. */}
       <div
         style={{
           paddingLeft: 40,
           paddingRight: 40,
-          paddingTop: 0,
-          paddingBottom: 0,
           maxWidth: 1400,
           margin: "0 auto",
         }}
       >
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr",
-            gridTemplateRows: "auto auto auto",
-            gap: 20,
-            gridAutoRows: "auto",
-          }}
-        >
-          {/* Top left - See whats going on around you (large card) */}
-          <div
-            style={{
-              background: "#F2F2F2",
-              borderRadius: "30px",
-              padding: 40,
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "flex-start",
-              minHeight: 240,
-              position: "relative",
-              overflow: "hidden",
-            }}
-          >
-            <h3
-              style={{
-                fontFamily: "Axiforma, -apple-system, BlinkMacSystemFont, sans-serif",
-                fontSize: 32,
-                fontWeight: 700,
-                color: "#0F2741",
-                letterSpacing: "-0.02em",
-                margin: 0,
-                marginBottom: 8,
-              }}
-            >
-              See whats going on around you.
-            </h3>
-            <p
-              style={{
-                fontSize: 16,
-                fontWeight: 400,
-                color: "#0B1B2B",
-                letterSpacing: "-0.02em",
-                margin: 0,
-              }}
-            >
-              Live events, local things.
-            </p>
-          </div>
-
-          {/* Top right - Elio can plan a trip for you */}
-          <div
-            style={{
-              background: "#F2F2F2",
-              borderRadius: "30px",
-              padding: 40,
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "flex-start",
-              minHeight: 240,
-            }}
-          >
-            <div>
-              <h3
-                style={{
-                  fontFamily: "Axiforma, -apple-system, BlinkMacSystemFont, sans-serif",
-                  fontSize: 32,
-                  fontWeight: 700,
-                  color: "#0F2741",
-                  letterSpacing: "-0.02em",
-                  margin: 0,
-                  marginBottom: 8,
-                  lineHeight: 1.3,
-                }}
-              >
-                Elio can plan a trip for you.
-              </h3>
-              <p
-                style={{
-                  fontSize: 16,
-                  fontWeight: 400,
-                  color: "#0B1B2B",
-                  letterSpacing: "-0.02em",
-                  margin: 0,
-                }}
-              >
-                AI-powered itinerary generation
-              </p>
+        <div className="eib-bento">
+          {/* ── Hero tile — Stop using Docs. Roamy-palette blue gradient,
+                white title, stylized earth horizon + map pins SVG. ── */}
+          <div className="eib-card eib-hero">
+            <div className="eib-text">
+              <h3 className="eib-title eib-title-hero">Stop using Docs to plan trips.</h3>
+              <p className="eib-sub eib-sub-hero">Do it all together on one map.</p>
             </div>
+            <HeroMapArt />
           </div>
 
-          {/* Middle left - Featured in */}
-          <div
-            style={{
-              background: "#F2F2F2",
-              borderRadius: "30px",
-              padding: 40,
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "flex-start",
-              minHeight: 280,
-            }}
-          >
-            <div>
-              <h3
-                style={{
-                  fontFamily: "Axiforma, -apple-system, BlinkMacSystemFont, sans-serif",
-                  fontSize: 32,
-                  fontWeight: 700,
-                  color: "#0F2741",
-                  letterSpacing: "-0.02em",
-                  margin: 0,
-                  marginBottom: 8,
-                  lineHeight: 1.3,
-                }}
-              >
-                Gets smarter the more you talk to Elio.
-              </h3>
-              <p
-                style={{
-                  fontSize: 16,
-                  fontWeight: 400,
-                  color: "#0B1B2B",
-                  letterSpacing: "-0.02em",
-                  margin: 0,
-                }}
-              >
-                Learns your preferences and travel style
-              </p>
+          {/* ── See what's going on around you — radar/pulse pin ── */}
+          <div className="eib-card eib-tile">
+            <div className="eib-text">
+              <h3 className="eib-title">See what&rsquo;s going on around you.</h3>
+              <p className="eib-sub">Live events, local things.</p>
             </div>
+            <RadarPinArt />
           </div>
 
-          {/* Middle center - Stop using Docs to plan trips */}
-          <div
-            style={{
-              background: "#F2F2F2",
-              borderRadius: "30px",
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "flex-start",
-              padding: 40,
-              position: "relative",
-              overflow: "hidden",
-              gridColumn: "2 / 3",
-              gridRow: "2 / 4",
-            }}
-          >
-            <div>
-              <h3
-                style={{
-                  fontFamily: "Axiforma, -apple-system, BlinkMacSystemFont, sans-serif",
-                  fontSize: 32,
-                  fontWeight: 700,
-                  color: "#0F2741",
-                  letterSpacing: "-0.02em",
-                  margin: 0,
-                  marginBottom: 8,
-                  textShadow: "none",
-                  lineHeight: 1.4,
-                }}
-              >
-                Stop using Docs to plan trips.
-              </h3>
-              <p
-                style={{
-                  fontSize: 16,
-                  fontWeight: 400,
-                  color: "#0B1B2B",
-                  letterSpacing: "-0.02em",
-                  margin: 0,
-                }}
-              >
-                Do it all together on one map
-              </p>
+          {/* ── Gets smarter the more you talk to Elio — chat bubbles ── */}
+          <div className="eib-card eib-tile">
+            <div className="eib-text">
+              <h3 className="eib-title">Gets smarter the more you talk to Elio.</h3>
+              <p className="eib-sub">Learns your preferences and travel style.</p>
             </div>
+            <ChatBubblesArt />
           </div>
 
-          {/* Middle right - Battery efficient */}
-          <div
-            style={{
-              background: "linear-gradient(360deg, #F2F2F2 0%, #F0FCFF 100%)",
-              borderRadius: "30px",
-              padding: 40,
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "flex-start",
-              height: 240,
-            }}
-          >
-            <div>
-              <h3
-                style={{
-                  fontFamily: "Axiforma, -apple-system, BlinkMacSystemFont, sans-serif",
-                  fontSize: 32,
-                  fontWeight: 700,
-                  color: "#0F2741",
-                  letterSpacing: "-0.02em",
-                  margin: 0,
-                  marginBottom: 8,
-                }}
-              >
-                Ad-free.
-              </h3>
-              <p
-                style={{
-                  fontSize: 16,
-                  fontWeight: 400,
-                  color: "#0B1B2B",
-                  letterSpacing: "-0.02em",
-                  margin: 0,
-                }}
-              >
-                Find exactly what you're after.
-              </p>
+          {/* ── Elio can plan a trip for you — mini itinerary timeline ── */}
+          <div className="eib-card eib-tile">
+            <div className="eib-text">
+              <h3 className="eib-title">Elio can plan a trip for you.</h3>
+              <p className="eib-sub">AI-powered itinerary generation.</p>
             </div>
+            <ItineraryArt />
           </div>
 
+          {/* ── Ad-free — clean shield/check icon, wide tile ── */}
+          <div className="eib-card eib-tile eib-tile-wide">
+            <div className="eib-text">
+              <h3 className="eib-title">Ad-free.</h3>
+              <p className="eib-sub">Find exactly what you&rsquo;re after.</p>
+            </div>
+            <ShieldCheckArt />
+          </div>
         </div>
       </div>
+
+      <style>{`
+        .eib-bento {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          grid-template-rows: minmax(260px, auto) minmax(260px, auto) minmax(220px, auto);
+          gap: 20px;
+        }
+        .eib-hero { grid-column: 1 / 3; grid-row: 1 / 3; }
+        .eib-bento > .eib-card:nth-child(2) { grid-column: 3 / 4; grid-row: 1 / 2; }
+        .eib-bento > .eib-card:nth-child(3) { grid-column: 3 / 4; grid-row: 2 / 3; }
+        .eib-bento > .eib-card:nth-child(4) { grid-column: 1 / 2; grid-row: 3 / 4; }
+        .eib-bento > .eib-card:nth-child(5) { grid-column: 2 / 4; grid-row: 3 / 4; }
+
+        .eib-card {
+          position: relative;
+          border-radius: 28px;
+          padding: 36px;
+          overflow: hidden;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          gap: 24px;
+        }
+        .eib-tile {
+          background: #FFFFFF;
+          border: 1px solid rgba(11,27,43,0.06);
+        }
+        .eib-hero {
+          background: linear-gradient(135deg, #00A3FF 0%, #6EC8FF 55%, #B5E5FF 100%);
+          color: #FFFFFF;
+        }
+
+        .eib-title {
+          font-family: "Axiforma", -apple-system, BlinkMacSystemFont, sans-serif;
+          font-size: 28px;
+          font-weight: 700;
+          line-height: 1.2;
+          letter-spacing: -0.02em;
+          color: #0F2741;
+          margin: 0 0 8px 0;
+        }
+        .eib-sub {
+          font-family: "Axiforma", -apple-system, BlinkMacSystemFont, sans-serif;
+          font-size: 15px;
+          font-weight: 400;
+          line-height: 1.5;
+          color: #5B6B7E;
+          margin: 0;
+        }
+        .eib-title-hero {
+          color: #FFFFFF;
+          font-size: clamp(34px, 3.4vw, 46px);
+          line-height: 1.1;
+          text-shadow: 0 2px 14px rgba(0,40,80,0.25);
+          max-width: 460px;
+        }
+        .eib-sub-hero {
+          color: rgba(255,255,255,0.92);
+          font-size: 17px;
+          text-shadow: 0 1px 8px rgba(0,40,80,0.18);
+        }
+
+        /* Tablet — 2-col, hero spans full, then satellites in 2x2 grid */
+        @media (max-width: 1023px) {
+          .eib-bento {
+            grid-template-columns: repeat(2, 1fr);
+            grid-template-rows: minmax(320px, auto) auto auto;
+          }
+          .eib-hero { grid-column: 1 / 3; grid-row: 1 / 2; }
+          .eib-bento > .eib-card:nth-child(2) { grid-column: 1 / 2; grid-row: 2 / 3; }
+          .eib-bento > .eib-card:nth-child(3) { grid-column: 2 / 3; grid-row: 2 / 3; }
+          .eib-bento > .eib-card:nth-child(4) { grid-column: 1 / 2; grid-row: 3 / 4; }
+          .eib-bento > .eib-card:nth-child(5) { grid-column: 2 / 3; grid-row: 3 / 4; }
+        }
+        /* Mobile — single column */
+        @media (max-width: 640px) {
+          .eib-bento { grid-template-columns: 1fr; grid-template-rows: auto; }
+          .eib-bento > .eib-card { grid-column: 1 / -1 !important; grid-row: auto !important; }
+          .eib-card { padding: 28px; }
+          .eib-title { font-size: 24px; }
+          .eib-title-hero { font-size: 32px; }
+        }
+      `}</style>
 
       {/* Title with cycling text */}
       <CyclingTitle />
@@ -567,37 +488,41 @@ export default function DestinationsSection() {
           opacity: vis ? 1 : 0,
           transition: "opacity 0.8s ease-out 0.15s",
           paddingTop: 60,
+          paddingBottom: 60,
         }}
       >
         <Marquee imgs={ROW_A} />
         <Marquee imgs={ROW_B} reverse />
       </div>
 
-      {/* Elio is browser based label */}
+      {/* "Elio is on desktop and mobile" — section title for the
+          mockup. Matches the "and everything in between" + "Find your
+          next…" titles in size + weight so the page reads as three
+          sibling sections each anchored by a 44px Axiforma h2. */}
       <div
         style={{
           paddingLeft: 40,
           paddingRight: 40,
-          paddingTop: 60,
+          paddingTop: 140,
+          paddingBottom: 56,
           maxWidth: 1400,
           margin: "0 auto",
           textAlign: "center",
         }}
       >
-        <p
+        <h2
           style={{
-            fontFamily: "Opening Hours Sans, -apple-system, BlinkMacSystemFont, sans-serif",
-            fontWeight: 600,
-            fontSize: 22,
-            letterSpacing: "0.02em",
-            lineHeight: 1.4,
-            marginBottom: 40,
-            color: "#0B1B2B",
+            fontFamily: "Axiforma, -apple-system, BlinkMacSystemFont, sans-serif",
+            fontSize: 44,
+            fontWeight: 590,
+            color: "#000000",
+            letterSpacing: "-0.02em",
+            lineHeight: 1.2,
+            margin: 0,
           }}
         >
           <span
             style={{
-              fontWeight: 600,
               background: "linear-gradient(180deg, #00B1D4 0%, #0089A3 100%)",
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
@@ -607,7 +532,7 @@ export default function DestinationsSection() {
             Elio
           </span>
           <span> is on desktop and mobile</span>
-        </p>
+        </h2>
       </div>
 
       {/* Desktop mockup */}
@@ -615,7 +540,7 @@ export default function DestinationsSection() {
         style={{
           paddingLeft: 40,
           paddingRight: 40,
-          paddingBottom: 60,
+          paddingBottom: 80,
           maxWidth: 1400,
           margin: "0 auto",
         }}
@@ -633,5 +558,171 @@ export default function DestinationsSection() {
         />
       </div>
     </section>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────────
+//  Bento SVG illustrations — minimal, monochrome line art with the
+//  Roamy cyan accent. Pure SVG (no asset deps) so the cards render
+//  immediately; swap any of these for a richer image later.
+// ─────────────────────────────────────────────────────────────────────
+
+/**
+ * HeroMapArt — bottom-right earth-horizon arc with 4 map pins and a
+ * dashed route line, drawn in translucent white over the blue gradient
+ * hero tile. Sized to feel substantial without crowding the title text.
+ */
+function HeroMapArt() {
+  return (
+    <div
+      aria-hidden
+      style={{
+        position: "absolute",
+        right: -40,
+        bottom: -40,
+        width: 460,
+        height: 360,
+        pointerEvents: "none",
+      }}
+    >
+      <svg viewBox="0 0 460 360" width="100%" height="100%" fill="none" xmlns="http://www.w3.org/2000/svg">
+        {/* Earth horizon arc — large curve in the lower-right, hint of a globe */}
+        <defs>
+          <radialGradient id="eib-earth" cx="0.5" cy="0.5" r="0.5">
+            <stop offset="0%" stopColor="rgba(255,255,255,0.30)" />
+            <stop offset="70%" stopColor="rgba(255,255,255,0.08)" />
+            <stop offset="100%" stopColor="rgba(255,255,255,0)" />
+          </radialGradient>
+        </defs>
+        <circle cx="430" cy="380" r="280" fill="url(#eib-earth)" />
+        <circle cx="430" cy="380" r="280" stroke="rgba(255,255,255,0.35)" strokeWidth="1.5" fill="none" />
+        {/* Latitude lines on the globe */}
+        <ellipse cx="430" cy="380" rx="280" ry="60" stroke="rgba(255,255,255,0.20)" strokeWidth="1" fill="none" />
+        <ellipse cx="430" cy="380" rx="280" ry="140" stroke="rgba(255,255,255,0.20)" strokeWidth="1" fill="none" />
+        {/* Dashed route line connecting pins */}
+        <path
+          d="M 80 140 Q 180 80 240 160 T 380 170"
+          stroke="rgba(255,255,255,0.85)"
+          strokeWidth="2"
+          strokeDasharray="4 6"
+          strokeLinecap="round"
+        />
+        {/* Map pins — three of them */}
+        {[
+          { x: 80, y: 140 },
+          { x: 240, y: 160 },
+          { x: 380, y: 170 },
+        ].map((p, i) => (
+          <g key={i} transform={`translate(${p.x} ${p.y})`}>
+            <path
+              d="M 0 -22 C -10 -22 -16 -14 -16 -6 C -16 4 -8 8 0 22 C 8 8 16 4 16 -6 C 16 -14 10 -22 0 -22 Z"
+              fill="#FFFFFF"
+              stroke="rgba(0,90,160,0.18)"
+              strokeWidth="0.5"
+            />
+            <circle cx="0" cy="-6" r="4.5" fill="#00A3FF" />
+          </g>
+        ))}
+      </svg>
+    </div>
+  );
+}
+
+/** RadarPinArt — centred pin with concentric pulse rings. */
+function RadarPinArt() {
+  return (
+    <div
+      aria-hidden
+      style={{
+        position: "relative",
+        height: 96,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "flex-start",
+      }}
+    >
+      <svg viewBox="0 0 120 96" width="120" height="96" fill="none" xmlns="http://www.w3.org/2000/svg">
+        {/* Pulse rings — three concentric circles fading outward */}
+        <circle cx="36" cy="48" r="44" stroke="#00A3FF" strokeOpacity="0.10" strokeWidth="1.5" />
+        <circle cx="36" cy="48" r="30" stroke="#00A3FF" strokeOpacity="0.22" strokeWidth="1.5" />
+        <circle cx="36" cy="48" r="16" stroke="#00A3FF" strokeOpacity="0.45" strokeWidth="1.5" />
+        {/* Centred pin */}
+        <g transform="translate(36 48)">
+          <path
+            d="M 0 -18 C -8 -18 -13 -12 -13 -5 C -13 4 -6 8 0 20 C 6 8 13 4 13 -5 C 13 -12 8 -18 0 -18 Z"
+            fill="#00A3FF"
+          />
+          <circle cx="0" cy="-5" r="4" fill="#FFFFFF" />
+        </g>
+      </svg>
+    </div>
+  );
+}
+
+/** ChatBubblesArt — three stair-stepped chat bubbles. */
+function ChatBubblesArt() {
+  return (
+    <div aria-hidden style={{ display: "flex", alignItems: "flex-end", height: 100 }}>
+      <svg viewBox="0 0 160 100" width="160" height="100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        {/* Top bubble — outlined navy (user msg) */}
+        <rect x="2" y="6" width="78" height="28" rx="14" fill="#FFFFFF" stroke="#0F2741" strokeWidth="1.5" />
+        <circle cx="18" cy="20" r="2.5" fill="#0F2741" />
+        <circle cx="28" cy="20" r="2.5" fill="#0F2741" />
+        <circle cx="38" cy="20" r="2.5" fill="#0F2741" />
+        {/* Middle bubble — filled cyan (Elio's reply) */}
+        <rect x="40" y="40" width="96" height="28" rx="14" fill="#00A3FF" />
+        <rect x="52" y="50" width="42" height="3" rx="1.5" fill="rgba(255,255,255,0.95)" />
+        <rect x="52" y="57" width="28" height="3" rx="1.5" fill="rgba(255,255,255,0.65)" />
+        {/* Bottom bubble — outlined (follow-up) */}
+        <rect x="6" y="72" width="62" height="22" rx="11" fill="#FFFFFF" stroke="#0F2741" strokeWidth="1.5" />
+        <rect x="18" y="80" width="38" height="3" rx="1.5" fill="#0F2741" opacity="0.5" />
+      </svg>
+    </div>
+  );
+}
+
+/** ItineraryArt — vertical timeline with 3 stops and placeholder labels. */
+function ItineraryArt() {
+  return (
+    <div aria-hidden>
+      <svg viewBox="0 0 180 100" width="180" height="100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        {/* Vertical timeline */}
+        <line x1="12" y1="16" x2="12" y2="84" stroke="#0F2741" strokeOpacity="0.15" strokeWidth="2" strokeLinecap="round" />
+        {/* 3 stops along the timeline */}
+        {[16, 50, 84].map((y, i) => (
+          <g key={i}>
+            <circle cx="12" cy={y} r="6" fill="#FFFFFF" stroke="#00A3FF" strokeWidth="2" />
+            <circle cx="12" cy={y} r="2.5" fill="#00A3FF" />
+            <rect x="28" y={y - 7} width={i === 1 ? 124 : 96} height="6" rx="3" fill="#0F2741" opacity={i === 1 ? 0.85 : 0.55} />
+            <rect x="28" y={y + 3} width={i === 0 ? 70 : 56} height="4" rx="2" fill="#0F2741" opacity="0.30" />
+          </g>
+        ))}
+      </svg>
+    </div>
+  );
+}
+
+/** ShieldCheckArt — clean shield silhouette with a centered check. */
+function ShieldCheckArt() {
+  return (
+    <div aria-hidden style={{ display: "flex", alignItems: "center", justifyContent: "flex-end" }}>
+      <svg viewBox="0 0 100 100" width="92" height="92" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path
+          d="M 50 8 L 84 22 L 84 52 C 84 72 68 86 50 92 C 32 86 16 72 16 52 L 16 22 Z"
+          fill="#00A3FF"
+          fillOpacity="0.10"
+          stroke="#00A3FF"
+          strokeWidth="2"
+        />
+        <path
+          d="M 32 50 L 46 64 L 70 38"
+          stroke="#00A3FF"
+          strokeWidth="3.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          fill="none"
+        />
+      </svg>
+    </div>
   );
 }
