@@ -21,6 +21,7 @@
 
 import Image from "next/image";
 import { useRef, useEffect, useState, useCallback } from "react";
+import { MessageCircle, Globe, Share2 } from "lucide-react";
 import MapsGPTGlobe from "@/components/products/MapsGPTGlobe";
 import StoreBadges from "@/components/products/StoreBadges";
 
@@ -60,44 +61,59 @@ const INTRO_END = 0.34;
 // which the site explicitly forbids. Scenes 1 + 3 take the lighter endpoints
 // of HowItWorks steps 1 + 3 (#5FBFF1 and #2A8FC2). Step 2's gradient is
 // red→magenta — both banned — so Discover uses a pure cyan, #00B1D4.
+// `pillRestBg` / `pillRestText` = resting state of an INACTIVE pill on
+// each scene. Tuned per scene so the unselected icons read against
+// whatever surface lives behind them: frosted-white circles on the two
+// photographs, near-transparent navy-tint on Scene 3's white field.
 const SCENES = [
-  // pillText / pillIdle stay WHITE on every scene — the new bottom
-  // black gradient below the pill row gives them a guaranteed
-  // legibility band, regardless of scene backdrop (light blue / navy
-  // / cityscape). pillBg keeps a per-scene tint so the active pill
-  // still reads as a distinct chip.
-  { ink: "#0B1B2B", eyebrow: "#5FBFF1", pillBg: "#5FBFF1", pillText: "#FFFFFF", pillRot: "-4deg", pillIdle: "rgba(255,255,255,0.65)" },
-  { ink: "#FFFFFF", eyebrow: "#00B1D4", pillBg: "#00B1D4", pillText: "#FFFFFF", pillRot: "-4deg", pillIdle: "rgba(255,255,255,0.65)" },
-  // Scene 3 sits on top of the cityscape ElioEndingBackground. The
-  // dedicated scene-3 dark scrim below (see scene backdrop) renders
-  // the image quite dim, so heading + eyebrow flip to WHITE here so
-  // they read cleanly over the darkened photo + floating cards.
-  { ink: "#FFFFFF", eyebrow: "#9FE0FF", pillBg: "#2A8FC2", pillText: "#FFFFFF", pillRot: "-5deg", pillIdle: "rgba(255,255,255,0.65)" },
+  // Scene 1 sits on the forYourCity photograph — heading + eyebrow
+  // both white; resting pills are translucent-white "glass" with white
+  // icons, the active pill flips to a solid #5FBFF1.
+  { ink: "#FFFFFF", eyebrow: "#FFFFFF", pillBg: "#5FBFF1", pillText: "#FFFFFF", pillRot: "-4deg", pillIdle: "rgba(255,255,255,0.65)", pillRestBg: "rgba(255,255,255,0.18)", pillRestText: "#FFFFFF" },
+  // Scene 2 sits on the ElioBackground2 photograph — same treatment.
+  { ink: "#FFFFFF", eyebrow: "#FFFFFF", pillBg: "#00B1D4", pillText: "#FFFFFF", pillRot: "-4deg", pillIdle: "rgba(255,255,255,0.65)", pillRestBg: "rgba(255,255,255,0.18)", pillRestText: "#FFFFFF" },
+  // Scene 3 sits on a pure-white field — resting pills are a faint
+  // navy-tinted gray with dark icons, the active pill is solid #2A8FC2.
+  { ink: "#0B1B2B", eyebrow: "#2A8FC2", pillBg: "#2A8FC2", pillText: "#FFFFFF", pillRot: "-5deg", pillIdle: "rgba(11,27,43,0.40)", pillRestBg: "rgba(11,27,43,0.06)", pillRestText: "#0B1B2B" },
 ] as const;
 
-// Scene-1 backdrop — pure white. Matches the new hero's bottom sky band
-// so scene 1 reads as a seamless continuation of the hero's white floor.
-const CREAM = "#FFFFFF";
-// Scene-2 backdrop — Columbus navbar-logo navy (#0B1342, var --color-cta).
-const NAVY = "linear-gradient(180deg, #0B1342 0%, #060A28 100%)";
-// Solid white — matches HowItWorksSection (#FFFFFF) so the hand-off has no seam.
+// Scene-1 backdrop — full-bleed forYourCity photograph (replaces the old
+// solid white). Applied as a CSS background shorthand so the same
+// `background:` slot still works on the existing backdrop layer.
+const CREAM = 'url("/forYourCity.png") center / cover no-repeat';
+// Scene-2 backdrop — full-bleed ElioBackground2 photograph (replaces the
+// old navy gradient).
+const NAVY = 'url("/ElioBackground2.png") center / cover no-repeat';
+// Scene-3 backdrop — pure white (reverted from the cityscape image so
+// scene 3 lands on a clean white field, with the circular orbiting
+// carousel doing the visual work around the phone).
 const LIGHT = "#FFFFFF";
 
-const PILL_WORDS = ["Ask", "Discover", "Go"] as const;
+// Bottom pill row — three scene anchors. Labels live as aria-labels;
+// the visible content is the matching Lucide glyph (Ask → chat bubble,
+// Discover → globe, Share → share arrow).
+const PILL_ITEMS = [
+  { label: "Ask",      Icon: MessageCircle },
+  { label: "Discover", Icon: Globe },
+  { label: "Share",    Icon: Share2 },
+] as const;
 // First label index for each scene 1|2|3 — the pill row scrolls here on click.
 const SCENE_FIRST_LABEL = [0, 2, 4];
 
 // ── Phone pose — 4 discrete states (PolarX: intro / Plan / Track / Relive) ──
+// All side-to-side (X) translation removed per user spec. Intro keeps a softer
+// rotateX tilt (was 40°, dropped to 22°). Scenes 1+2 sit perfectly flat — the
+// previous ±20° rotateY swivel between them was removed so the phone holds a
+// single pose while the screen content + backdrop cross-fade.
 function phoneStates(isLg: boolean) {
-  const sx = isLg ? 1 : 0.42;
   const introScale = isLg ? 1.4 : 1.12;
   const goScale = isLg ? 0.7 : 0.78;
   const lift = isLg ? 0 : -150;
   const goY = isLg ? 0 : -110;
   return [
-    `perspective(1200px) translateX(0px) translateY(-40px) scale(${introScale}) rotateX(40deg) rotateY(0deg)`,
-    `perspective(1200px) translateX(${-140 * sx}px) translateY(${lift}px) scale(1) rotateX(0deg) rotateY(${20 * sx}deg)`,
-    `perspective(1200px) translateX(${140 * sx}px) translateY(${lift}px) scale(1) rotateX(0deg) rotateY(${-20 * sx}deg)`,
+    `perspective(1200px) translateX(0px) translateY(-40px) scale(${introScale}) rotateX(22deg) rotateY(0deg)`,
+    `perspective(1200px) translateX(0px) translateY(${lift}px) scale(1) rotateX(0deg) rotateY(0deg)`,
+    `perspective(1200px) translateX(0px) translateY(${lift}px) scale(1) rotateX(0deg) rotateY(0deg)`,
     `perspective(1200px) translateX(0px) translateY(${goY}px) scale(${goScale}) rotateX(0deg) rotateY(0deg)`,
   ];
 }
@@ -106,62 +122,71 @@ function phoneStates(isLg: boolean) {
 // `anchor` = the viewport fraction the label is fully visible at: side
 // labels sit beside the phone (0.5); the final "below" labels anchor low
 // so they appear UNDER the phone and rise (PolarX's Relive text).
+// `side` = the side that holds the TITLE; the EXPLANATION renders on
+// the OPPOSITE side in a split-column layout. Scene 3 collapses to a
+// single label rendered centred BELOW the phone (no explanation, no
+// eyebrow — just the final "and everything in between" text).
+// All explanation copy is reused VERBATIM from newConsumerPg's
+// original LABELS[0..3].heading strings — no new text is invented.
 const LABELS = [
-  { scene: 1, side: "right", anchor: 0.5, eyebrow: "Just ask", heading: "Tell Elio what you’re after, in plain words." },
-  { scene: 1, side: "right", anchor: 0.5, eyebrow: "Like texting a friend", heading: "Ask a follow up, get alternatives, refine the plan." },
-  { scene: 2, side: "left", anchor: 0.5, eyebrow: "Knows your vibe", heading: "Remembers what you love — picks get sharper each trip." },
-  { scene: 2, side: "left", anchor: 0.5, eyebrow: "Whole neighborhoods", heading: "Not just one pin — think “party zone in Madrid.”" },
-  { scene: 3, side: "right", anchor: 0.5, eyebrow: "Save & share your favorites", heading: "Bookmark favorites, add to your personal map, or share with friends." },
-  { scene: 3, side: "right", anchor: 0.5, eyebrow: "Local guide in your pocket", heading: "Let Elio find you the coolest place, faster." },
+  { scene: 1, side: "left",  anchor: 0.5, title: "For your city.",    explanation: "Tell Elio what you’re after, in plain words." },
+  { scene: 1, side: "left",  anchor: 0.5, title: "For your city.",    explanation: "Ask a follow up, get alternatives, refine the plan." },
+  { scene: 2, side: "right", anchor: 0.5, title: "For your travels.", explanation: "Remembers what you love — picks get sharper each trip." },
+  { scene: 2, side: "right", anchor: 0.5, title: "For your travels.", explanation: "Not just one pin — think “party zone in Madrid.”" },
+  { scene: 3, side: "right", anchor: 0.5, title: "and everything in between" },
 ] as const;
 
 // One product-shot per label, same index as LABELS. The phone screen
 // renders all six stacked, opacity-toggling to whichever label is
 // closest to the viewport anchor — see `activeLabel` below.
 const PHONE_IMAGES = [
-  // First image in the sequence intentionally matches the LAST label
-  // ("Local guide in your pocket") — the phone enters the pinned
-  // stage already showing the discovery-map screenshot so the user
-  // sees the product's destination right away, then the labels walk
-  // through how it gets there before landing on it again at the end.
-  "/consumer/elio/Localguideinyourpocket.png", // 0  Just ask (also the final shot)
-  "/consumer/elio/ElioFeedback.png",        // 1  Like texting a friend
-  "/consumer/elio/ElioHome.png",            // 2  Knows your vibe
-  "/consumer/elio/ElioZone.png",            // 3  Whole neighborhoods
-  "/consumer/elio/ElioSavedPlaces.png",     // 4  Save & share your favorites
-  "/consumer/elio/Localguideinyourpocket.png", // 5  Local guide in your pocket
+  // LABELS[0]'s starting mockup is TwerkPage's elioHome1.png — every
+  // other slot keeps its newConsumerPg screenshot.
+  "/consumer/elioHome1.png",                   // 0  For your city. (starting mockup)
+  "/consumer/elio/ElioFeedback.png",           // 1  For your city. (label 2)
+  "/consumer/elio/ElioHome.png",               // 2  For your travels. (label 1)
+  "/consumer/elio/ElioZone.png",               // 3  For your travels. (label 2)
+  "/consumer/elio/Localguideinyourpocket.png", // 4  and everything in between
 ] as const;
 
-// Floating "map pins" + "category cards" that bloom across the Go-scene
-// (phase 3) ElioEndingBackground. ALL cards live in the BOTTOM 35% of
-// the pinned stage (y ≥ +200 in centre-origin coordinates) — clear of
-// the phone mockup (≈ y ±300, centred) and the right-side scrolling
-// text (which lives near the vertical centre). Cards spread left-to-
-// right across the bottom band; `bob` seeds the gentle breathing
-// animation. `kind` selects one of four card looks:
-//   - "category":         thumbnail above + label pill
-//   - "category-profile": circular profile-photo above + label pill
-//   - "place":            ring marker + "Panaria / calm cafe" two-line
-//                         pill, optionally with a category tag above
-//                         and an optional profile-photo circle beside
-//   - "dot":              big gradient avatar with status ring + label
-//   - "dot-label":        tiny pin dot + label pill (no thumbnail)
-const ENDING_CARDS = [
-  { kind: "dot",              label: "Concerts",        x: -640, y: 240, bob: 0.0 },
-  { kind: "place",            label: "Panaria",         sub: "calm cafe", category: "Restaraunts", profile: "/consumer/images/hidden-coffee-shop.png", x: -460, y: 360, bob: 0.6 },
-  { kind: "category",         label: "activities",      thumb: "/consumer/HeroBack.png", profile: "/consumer/images/local-hiking-trail.png", x: -300, y: 240, bob: 1.0 },
-  // "group trips" lives high+left to clear the centred Ask·Discover·Go
-  // pill row at the bottom of the pinned stage.
-  { kind: "category-profile", label: "group trips",     profile: "/consumer/images/hang-out-spot.png", x: -180, y: 250, bob: 1.4 },
-  // Centre-ish Panaria pushed further right so it no longer clashes
-  // with the phone and the pill row's "Ask" side.
-  { kind: "place",            label: "Panaria",         sub: "calm cafe", category: null, profile: "/consumer/images/cozy-bookstore.png", x: 260, y: 290, bob: 0.4 },
-  { kind: "category",         label: "events",          thumb: "/consumer/images/rooftop-sunset-bar.png", profile: "/consumer/images/late-night-taco-joint.png", x: 230, y: 380, bob: 1.8 },
-  { kind: "category",         label: "trending places", thumbs: ["/consumer/images/hidden-coffee-shop.png", "/consumer/images/late-night-taco-joint.png", "/consumer/images/rooftop-sunset-bar.png"], profile: "/consumer/images/weekend-brunch-place.png", x: 460, y: 230, bob: 0.2 },
-  { kind: "dot-label",        label: "spots",           x: 580, y: 380, bob: 1.1 },
-  { kind: "place",            label: "Panaria",         sub: "calm cafe", category: "daily utilities", profile: "/consumer/images/quiet-study-cafe.png", x: 690, y: 230, bob: 1.6 },
-  { kind: "place",            label: "Panaria",         sub: "calm cafe", category: null, x: -720, y: 380, bob: 0.9 },
-] as const;
+// Scene-3 scroll-driven orbiting ring — offmenu.design-style.
+// 8 round place-thumbnails appear one-by-one at the TOP-RIGHT of the
+// ring as the user scrolls through scene 3, joining a circle that
+// rotates clockwise around the pinned phone. Rotation is purely a
+// function of scroll position (no continuous CSS animation); the
+// existing 8 %/frame lerp on `scene3Progress` (see the rAF effect
+// below) carries the ring smoothly past the user's scroll target
+// when they stop and lags slightly when they fling — that's the
+// physics-like inertial drift the user is after.
+const CAROUSEL_IMAGES = [
+  "/consumer/images/hidden-coffee-shop.png",
+  "/consumer/images/hang-out-spot.png",
+  "/consumer/images/cozy-bookstore.png",
+  "/consumer/images/rooftop-sunset-bar.png",
+  "/consumer/images/late-night-taco-joint.png",
+  "/consumer/images/weekend-brunch-place.png",
+  "/consumer/images/local-hiking-trail.png",
+  "/consumer/images/quiet-study-cafe.png",
+];
+// Ring geometry — radius in px around the pinned-phone centre, plus
+// a small upward offset so the bottom of the ring clears the fixed
+// "and everything in between" footer text.
+const RING_RADIUS = 290;
+const RING_CENTER_Y = -30;
+// Angle (in degrees, screen coords: 0°=right, −90°=up) at which a new
+// image materialises. −45° lands at the upper-right of the ring.
+const ENTRY_ANGLE_DEG = -45;
+// Full ring rotations driven across the 150vh scene-3 block. The first
+// `1 / ROTATIONS_OVER_SCENE` worth of scroll places all 8 images on the
+// ring (one image per 360°/8 of rotation), leaving the remaining scroll
+// to spin the completed ring once more before the pinned stage releases.
+const ROTATIONS_OVER_SCENE = 2;
+const TOTAL_RING_ROTATION_DEG = ROTATIONS_OVER_SCENE * 360;
+// Scene3Progress span used to place all 8 images (0 → 0.5 with the
+// defaults above). After this span the ring is full and just spins.
+const ENTRY_SPAN = 1 / ROTATIONS_OVER_SCENE;
+// Quick smoothstep fade-in window per image, in scene3Progress units.
+const ENTRY_FADE = 0.04;
 
 // Floating travel postcards — final (Go) scene only. The Go heading
 // scrolls through the whole RIGHT column and the pill row owns the
@@ -183,11 +208,22 @@ export default function Hero() {
   // SCENES) so the phone product-shot can swap per-label, not per-
   // scene. Updated in onScroll alongside phase.
   const [activeLabel, setActiveLabel] = useState(0);
+  // Scroll progress through scene 3's 150vh block: 0 = block top at
+  // viewport top, 1 = block bottom at viewport top. Drives the
+  // carousel choreography (emerge → orbit → spiral).
+  const [scene3Progress, setScene3Progress] = useState(0);
+  // Scene-1 forYourCity photo crossfade: 0 while the hero header still
+  // fully covers the viewport (so the user sees the header alone), 1
+  // once the header has scrolled fully off and the photo backdrop is
+  // exposed. Linear with header scroll.
+  const [scene1ImageOpacity, setScene1ImageOpacity] = useState(0);
 
   const outerRef = useRef<HTMLDivElement>(null);
   const riseRef = useRef<HTMLDivElement>(null);
   const phaseRef = useRef(0);
   const labelRef = useRef(0);
+  const scene3ProgressRef = useRef(0);
+  const scene1ImageOpacityRef = useRef(0);
   const isLgRef = useRef(true);
   const labelRefs = useRef<(HTMLDivElement | null)[]>([]);
   const blockRefs = useRef<(HTMLDivElement | null)[]>([]);
@@ -243,8 +279,9 @@ export default function Hero() {
       else t = 1 - (ad - flatRange) / (fullRange - flatRange);
       node.style.opacity = t.toFixed(3);
       const centred = !lg;
-      node.style.transform =
-        (centred ? "translate(-50%,-50%)" : "translateY(-50%)") + ` scale(${(0.5 + 0.5 * t).toFixed(3)})`;
+      // Labels fade only — the prior scale(0.5 → 1) approach motion was removed
+      // so the title + explanation stay at full size and just opacity in/out.
+      node.style.transform = centred ? "translate(-50%,-50%)" : "translateY(-50%)";
       if (i === 0) {
         firstAd = ad;
         firstBelowAnchor = c > anchorY; // first label hasn't risen to its anchor yet
@@ -282,13 +319,45 @@ export default function Hero() {
       );
     }
 
-    // ── Phone rise: peeks from the bottom edge in the intro, rises to its
-    //    pinned centre over the intro scroll, then holds. ──
+    // ── Phone rise: peeks from the bottom edge in the intro, rises to
+    //    its pinned centre over the intro scroll, then holds. (Side-to-
+    //    side X translation is the only thing removed from the phone's
+    //    motion per user spec; the rise + scene poses are unchanged.) ──
     const rise = riseRef.current;
     if (rise) {
       const introT = smoothstep(0, INTRO_END, progress);
       const peekY = vh * (lg ? PHONE_PEEK : 0.58);
       rise.style.transform = `translateY(${lerp(peekY, 0, introT).toFixed(1)}px)`;
+    }
+
+    // Scene 3 scroll progress — drives the carousel choreography.
+    // The scene-3 block (LABELS[4]) is 150vh tall; we want progress 0
+    // when its top reaches the viewport top, and progress 1 when its
+    // bottom reaches the viewport top (i.e. as it scrolls past). Below
+    // 0 or above 1 means scene 3 isn't on screen.
+    const scene3Block = blockRefs.current[4];
+    let s3 = 0;
+    if (scene3Block) {
+      const r = scene3Block.getBoundingClientRect();
+      const elapsed = -r.top; // pixels scrolled past the block's top edge
+      s3 = clamp(elapsed / r.height, 0, 1);
+    }
+    // Update the rAF lerp's TARGET only — a separate effect (below)
+    // continuously eases `scene3Progress` (state, what the carousel
+    // actually renders from) toward this target each frame, giving
+    // the choreography an inertial, glide-into-place feel rather
+    // than snapping per scroll tick (matches offmenu.design's vibe).
+    scene3ProgressRef.current = s3;
+
+    // Scene-1 forYourCity photo fades in linearly with how far the hero
+    // header has scrolled off. The header sits in normal flow at the top
+    // of the hero outer, height 100dvh, so headerScroll ≈ how many px
+    // it's been pushed up. Map 0 → vh to opacity 0 → 1.
+    const headerScroll = -el.getBoundingClientRect().top;
+    const nextS1 = clamp(headerScroll / vh, 0, 1);
+    if (Math.abs(nextS1 - scene1ImageOpacityRef.current) > 0.005) {
+      scene1ImageOpacityRef.current = nextS1;
+      setScene1ImageOpacity(nextS1);
     }
   }, []);
 
@@ -311,6 +380,28 @@ export default function Hero() {
     };
   }, [onScroll]);
 
+  // ── Lerp-based scroll smoothing for the scene-3 carousel ────────
+  // Each frame, ease `scene3Progress` (the value the carousel renders
+  // from) toward `scene3ProgressRef.current` (the raw scroll-derived
+  // target) by 8%. ~12 frames (~200 ms) to fully catch up — fast
+  // enough to feel responsive, slow enough to read as fluid. The
+  // setter early-outs on micro-deltas so it stops churning at rest.
+  useEffect(() => {
+    let raf = 0;
+    let displayed = scene3ProgressRef.current;
+    const tick = () => {
+      const target = scene3ProgressRef.current;
+      const delta = target - displayed;
+      displayed = Math.abs(delta) < 0.0005 ? target : displayed + delta * 0.08;
+      setScene3Progress((prev) =>
+        Math.abs(prev - displayed) < 0.0005 ? prev : displayed,
+      );
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, []);
+
   const phoneW = isLg ? 296 : 210;
   // PolarX device geometry — aspect-ratio 0.4949, corner radius 42/277, bezel 6/277.
   const phoneH = Math.round(phoneW / 0.4949);
@@ -325,40 +416,35 @@ export default function Hero() {
       {/* ════ Coloured scene backdrop — pinned, revealed as the header scrolls off ════ */}
       <div className="absolute inset-0 z-0">
         <div className="sticky top-0 overflow-hidden" style={{ height: "100dvh" }}>
-          <div className="absolute inset-0" style={{ background: CREAM }} />
+          {/* Base layer — solid white. The scene-1 forYourCity photo
+              fades in on top of this as the hero header scrolls off,
+              so the backdrop reads as clean white while the user is
+              still in the hero. */}
+          <div className="absolute inset-0" style={{ background: "#FFFFFF" }} />
+          <div className="absolute inset-0" style={{ background: CREAM, opacity: scene1ImageOpacity }} />
           <div
             className="absolute inset-0"
             style={{ background: NAVY, opacity: phase === 2 ? 1 : 0, transition: "opacity 0.7s cubic-bezier(0.44,0,0.56,1)" }}
           />
-          {/* Scene 3 ("Save & share" / "Local guide") swaps the flat
-              white backdrop for ElioEndingBackground — a stylised
-              cityscape with rooftops, parks, and waterways the
-              floating cards below pin themselves to. The image is
-              `object-fit: cover` so it scales with the viewport and
-              the focal centre (downtown rooftops) stays roughly
-              behind the phone on every screen size. */}
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/consumer/elio/ElioEndingBackground.jpg"
-            alt=""
+          {/* Scene-3 backdrop — solid white. Replaced the prior
+              ElioEndingBackground cityscape (user wants scene 3 back
+              on a clean white field, with a circular orbiting carousel
+              doing the visual work around the phone). */}
+          <div
             aria-hidden
-            className="absolute inset-0 w-full h-full"
+            className="absolute inset-0"
             style={{
-              objectFit: "cover",
+              background: LIGHT,
               opacity: phase === 3 ? 1 : 0,
               transition: "opacity 0.7s cubic-bezier(0.44,0,0.56,1)",
             }}
           />
           {/* Bottom legibility band — black opacity gradient from the
-              very bottom of the pinned stage upward. SCOPED TO SCENE 3
-              (the cityscape ElioEndingBackground): scene 3 is the only
-              scene whose backdrop carries enough visual chaos to need a
-              dark base for the pill row + caption text. Scenes 1 and 2
-              own clean coloured backdrops (white + navy) where this
-              band would just paint a dark smudge over otherwise clean
-              colour, so it stays hidden there. Crossfade matches the
-              scene backdrop's own 0.7s cubic-bezier so the band slides
-              in alongside scene 3 with no perceptible seam. */}
+              very bottom of the pinned stage upward. SCOPED to scenes
+              1 and 2 (the forYourCity / ElioBackground2 photographs),
+              where the white pill row needs a dark contrast band.
+              Scene 3 runs on a clean white field with dark pill colors,
+              so the band stays hidden there. */}
           <div
             aria-hidden
             className="absolute inset-x-0 bottom-0 pointer-events-none"
@@ -366,7 +452,7 @@ export default function Hero() {
               height: "32vh",
               background:
                 "linear-gradient(to top, rgba(0, 0, 0, 0.55) 0%, rgba(0, 0, 0, 0.30) 45%, rgba(0, 0, 0, 0) 100%)",
-              opacity: phase === 3 ? 1 : 0,
+              opacity: phase === 1 || phase === 2 ? 1 : 0,
               transition: "opacity 0.7s cubic-bezier(0.44,0,0.56,1)",
             }}
           />
@@ -383,57 +469,119 @@ export default function Hero() {
               utilities" overlay shown in the design ref. Each card
               fades + lifts in on a per-index stagger and bobs
               gently while on screen. */}
-          {isLg &&
-            ENDING_CARDS.map((c, i) => {
-              const on = phase === 3;
-              return (
-                <div
-                  key={`end-${i}`}
-                  className="absolute left-1/2 top-1/2"
-                  style={{
-                    transform: `translate(-50%, -50%) translate(${c.x}px, ${c.y + (on ? 0 : 20)}px)`,
-                    opacity: on ? 1 : 0,
-                    transition: `opacity 0.6s ease ${i * 60}ms, transform 0.8s ${APPEAR} ${i * 60}ms`,
-                    zIndex: 5,
-                  }}
-                >
+          {/* Scene-3 scroll-driven orbiting ring — offmenu.design-style.
+              Each thumbnail materialises at ENTRY_ANGLE_DEG (upper-right
+              of the ring) when scene3Progress crosses its per-image
+              entry stagger, then rides the ring as it rotates clockwise.
+              Each image's current angle =
+                ENTRY_ANGLE_DEG + (scene3Progress − entryTime_i) · TOTAL_RING_ROTATION_DEG
+              The rAF lerp on scene3Progress (8 %/frame catch-up) is what
+              gives the ring its inertial drift when the user scrolls or
+              stops — no continuous CSS animation, the spin is purely a
+              function of scroll position. */}
+          {isLg && (
+            <div
+              aria-hidden
+              className="absolute left-1/2 top-1/2"
+              style={{
+                width: 0,
+                height: 0,
+                zIndex: 5,
+                pointerEvents: "none",
+              }}
+            >
+              {CAROUSEL_IMAGES.map((src, i) => {
+                const N = CAROUSEL_IMAGES.length;
+                const entryTime = (i / N) * ENTRY_SPAN;
+                const entryT = smoothstep(
+                  entryTime,
+                  entryTime + ENTRY_FADE,
+                  scene3Progress,
+                );
+                // Elapsed scroll since this image entered the ring; clamped
+                // so images sit at the entry point (invisible) until their
+                // stagger fires.
+                const elapsed = Math.max(0, scene3Progress - entryTime);
+                const angleDeg = ENTRY_ANGLE_DEG + elapsed * TOTAL_RING_ROTATION_DEG;
+                const angleRad = (angleDeg * Math.PI) / 180;
+                const x = Math.cos(angleRad) * RING_RADIUS;
+                const y = Math.sin(angleRad) * RING_RADIUS + RING_CENTER_Y;
+                const opacity = phase === 3 ? entryT : 0;
+                return (
                   <div
+                    key={src}
                     style={{
-                      // Damped bob — large initial swings, decays to
-                      // rest by the end of the 12s cycle. One-shot
-                      // (no `infinite`) with `both` fill mode so the
-                      // card holds at translateY(0) after settling
-                      // instead of looping back into perpetual motion.
-                      animation: `mgHeroBob 12s cubic-bezier(0.34, 1.4, 0.4, 1) ${c.bob * 0.35}s 1 both`,
+                      position: "absolute",
+                      left: x,
+                      top: y,
+                      transform: "translate(-50%, -50%)",
+                      opacity,
+                      willChange: "left, top, opacity",
                     }}
                   >
-                    <EndingCard card={c} />
+                    <div
+                      style={{
+                        width: 112,
+                        height: 112,
+                        borderRadius: "50%",
+                        overflow: "hidden",
+                        background: "#FFFFFF",
+                        border: "4px solid #FFFFFF",
+                        boxShadow:
+                          "0 10px 28px -6px rgba(0,40,60,0.30), 0 2px 6px rgba(0,0,0,0.10)",
+                      }}
+                    >
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={src}
+                        alt=""
+                        style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+                      />
+                    </div>
                   </div>
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
+          )}
 
-          {/* Scene-3 dark scrim — lives INSIDE the pinned stage at
-              zIndex 6, above the floating ENDING_CARDS (zIndex 5)
-              but BELOW the phone (zIndex 10) and pill row (zIndex
-              20). The floating cards therefore sit "under" the scrim
-              and read as a dimmer, more atmospheric layer of the
-              cityscape, while the phone + pill row stay fully bright
-              and readable. Dialed down from the earlier full scrim:
-              ~0.30 at the top, ~0.20 mid, ~0.32 at the bottom — the
-              cityscape still reads, and the white scene-3 heading
-              has enough contrast without crushing the image. */}
+          {/* Scene-3 fixed footer text — "and everything in between"
+              anchored at the bottom of the pinned stage, in the exact
+              slot the Ask · Discover · Share pill row occupied. Stays
+              put while the orbiting ring spins above it; visible only
+              during phase 3. */}
           <div
             aria-hidden
-            className="absolute inset-0 pointer-events-none"
+            className="absolute left-1/2"
             style={{
-              zIndex: 6,
-              background:
-                "linear-gradient(180deg, rgba(0,0,0,0.30) 0%, rgba(0,0,0,0.20) 50%, rgba(0,0,0,0.32) 100%)",
+              bottom: "clamp(28px, 5.5vh, 64px)",
+              transform: "translateX(-50%)",
+              zIndex: 20,
               opacity: phase === 3 ? 1 : 0,
-              transition: "opacity 0.7s cubic-bezier(0.44,0,0.56,1)",
+              transition: "opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1)",
+              pointerEvents: "none",
+              textAlign: "center",
+              paddingInline: 24,
             }}
-          />
+          >
+            <h2
+              style={{
+                fontFamily: '"SF Pro", -apple-system, BlinkMacSystemFont, sans-serif',
+                fontSize: 40,
+                fontWeight: 700,
+                lineHeight: 1.15,
+                letterSpacing: "-0.02em",
+                color: "#0B1B2B",
+                margin: 0,
+              }}
+            >
+              and everything in between
+            </h2>
+          </div>
+
+          {/* Scene-3 dark scrim was removed when scene 3's backdrop
+              reverted to solid white — the scrim would only mute the
+              white. The circular orbiting carousel below provides
+              scene 3's visual interest now. */}
 
           {/* The bare 3D phone */}
           <div ref={riseRef} className="absolute inset-0" style={{ willChange: "transform", zIndex: 10 }}>
@@ -511,31 +659,41 @@ export default function Hero() {
             </div>
           </div>
 
-          {/* ASK · DISCOVER · GO pill row — clickable (PolarX's anchor labels);
-              pointerEvents:auto opts back in over the pinned stage's none.
-              zIndex:20 keeps the pill row above every floating ENDING_CARD
-              (which sit at zIndex:5 in the same pinned stage), so the
-              "Ask · Discover · Go" chips are never obscured by the
-              cityscape map pins on scene 3. */}
+          {/* Ask · Discover · Share scene anchors — circular icon buttons
+              with a light-gray resting fill and the per-scene `pillBg`
+              when active (the tab-bar pattern from the reference). The
+              text label appears on hover/focus as a chip below the
+              circle. pointerEvents:auto opts back in over the pinned
+              stage's none; zIndex:20 keeps the row above ENDING_CARDS. */}
           <div
             className="absolute left-1/2 flex items-center"
             style={{
               bottom: "clamp(28px, 5.5vh, 64px)",
               transform: "translateX(-50%)",
-              gap: 6,
-              opacity: inDevice ? 1 : 0,
+              gap: isLg ? 14 : 10,
+              // Hidden in scene 3 (phase 3) — that scene runs the
+              // orbiting-carousel choreography under the phone and the
+              // user spec calls for the bottom nav buttons to disappear.
+              opacity: inDevice && phase !== 3 ? 1 : 0,
               transition: "opacity 0.5s ease",
-              pointerEvents: "auto",
+              pointerEvents: inDevice && phase !== 3 ? "auto" : "none",
               zIndex: 20,
             }}
           >
-            {PILL_WORDS.map((word, i) => {
+            {PILL_ITEMS.map((item, i) => {
               const on = phase === i + 1;
+              const Icon = item.Icon;
+              const circleSize = isLg ? 52 : 44;
+              const iconSize = isLg ? 22 : 18;
               return (
-                <div key={word} className="flex items-center" style={{ gap: 6 }}>
+                <div
+                  key={item.label}
+                  className="mg-pill-wrap"
+                  style={{ position: "relative", display: "flex", flexDirection: "column", alignItems: "center" }}
+                >
                   <button
                     type="button"
-                    aria-label={`Jump to ${word}`}
+                    aria-label={`Jump to ${item.label}`}
                     onClick={() => {
                       const blk = blockRefs.current[SCENE_FIRST_LABEL[i]];
                       if (!blk) return;
@@ -546,28 +704,34 @@ export default function Hero() {
                       });
                     }}
                     style={{
-                      fontFamily: '"SF Pro", -apple-system, BlinkMacSystemFont, sans-serif',
-                      fontSize: isLg ? 19 : 16,
-                      fontWeight: 600,
-                      letterSpacing: "-0.01em",
-                      padding: "6px 16px",
-                      borderRadius: on ? 999 : 8,
+                      display: "inline-flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      width: circleSize,
+                      height: circleSize,
+                      borderRadius: 999,
                       border: "none",
                       appearance: "none",
                       WebkitAppearance: "none",
                       cursor: "pointer",
-                      backgroundColor: on ? scene.pillBg : "transparent",
-                      color: on ? scene.pillText : scene.pillIdle,
+                      // Resting bg/text + backdrop-blur come from the
+                      // current scene, so each unselected pill blends with
+                      // its scene's photo/white field (translucent white
+                      // glass on scenes 1+2, faint navy-tint on scene 3).
+                      backgroundColor: on ? scene.pillBg : scene.pillRestBg,
+                      color: on ? scene.pillText : scene.pillRestText,
+                      backdropFilter: on ? "none" : "blur(10px)",
+                      WebkitBackdropFilter: on ? "none" : "blur(10px)",
                       transform: on ? `rotate(${scene.pillRot})` : "rotate(0deg)",
                       transition:
-                        "background-color 0.45s ease, color 0.45s ease, border-radius 0.45s ease, transform 0.45s cubic-bezier(0.2,0.8,0.2,1)",
+                        "background-color 0.45s ease, color 0.45s ease, backdrop-filter 0.45s ease, transform 0.45s cubic-bezier(0.2,0.8,0.2,1)",
                     }}
                   >
-                    {word}
+                    <Icon size={iconSize} strokeWidth={2.2} aria-hidden />
                   </button>
-                  {i < PILL_WORDS.length - 1 && (
-                    <span style={{ color: scene.pillIdle, fontWeight: 600, transition: "color 0.45s ease" }}>·</span>
-                  )}
+                  {/* Hover/focus tooltip — text label below the circle.
+                      .mg-pill-wrap:hover / :focus-within toggles opacity. */}
+                  <span className="mg-pill-tip">{item.label}</span>
                 </div>
               );
             })}
@@ -577,49 +741,32 @@ export default function Hero() {
 
       {/* ════ Hero header — normal flow over the flipped earth; scrolls away ════ */}
       <header
-        className="relative z-20 flex flex-col items-center justify-end"
+        className="relative z-20 flex flex-col items-center justify-center"
         style={{
           height: "100dvh",
           width: "100%",
           background: "#FFFFFF",
-          // Lifts the content stack up off the bottom edge so the CTA
-          // floats over the white sky band rather than hugging the page
-          // floor; pairs with the image-only top portion above.
+          // Bottom-biased padding nudges the centred stack just above
+          // the vertical midline (justify-center alone sits at exact
+          // middle).
           paddingTop: "clamp(56px, 7vh, 90px)",
-          paddingBottom: "clamp(90px, 14vh, 160px)",
+          paddingBottom: "clamp(160px, 22vh, 280px)",
         }}
       >
-        {/* Consumer hero background — the FinalCTA globe artwork, flipped
-            vertically (scaleY(-1)) so the earth's curve sits at the TOP
-            of the hero with cloud-edged white sky melting away below it.
-            A white-to-transparent gradient over the lower half guarantees
-            the content stack always sits on a clean white field, so the
-            navy headline + navy CTA read cleanly regardless of where the
-            earth's edge happens to fall at this viewport. */}
+        {/* Consumer hero background — TwerkPage's ElioEndingBackground
+            cityscape, full-bleed and un-flipped. Sets the visual tone
+            for the entire hero header beneath the typed-phrase H1 +
+            CTA. */}
         <div aria-hidden className="absolute inset-0 overflow-hidden">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/consumer-final-cta-elio-ending.png"
+            src="/consumer/heroBackground.jpg"
             alt=""
             aria-hidden
             className="absolute inset-0 w-full h-full"
             style={{
               objectFit: "cover",
-              objectPosition: "center top",
-              transform: "scaleY(-1)",
-            }}
-          />
-          {/* White sky band — fades the flipped earth into pure white at
-              the bottom 60% of the hero. Mirrors the FinalCTA section's
-              250px sky band: a generous, clean white field for the
-              headline + CTA to live on. */}
-          <div
-            className="absolute inset-x-0 bottom-0"
-            style={{
-              height: "62%",
-              background:
-                "linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.85) 38%, #FFFFFF 75%)",
-              pointerEvents: "none",
+              objectPosition: "center center",
             }}
           />
         </div>
@@ -631,37 +778,73 @@ export default function Hero() {
         <div className="relative flex flex-col items-center text-center px-6" style={{ maxWidth: 820, gap: 32 }}>
           <Stagger show={mounted} delay={120} y={84}>
             <div className="flex flex-col items-center" style={{ gap: 16 }}>
-              <div className="flex items-center gap-2">
-                <MapsGPTGlobe size={isLg ? 30 : 26} />
-                <span
-                  style={{
-                    fontFamily: '"SF Compact", -apple-system, BlinkMacSystemFont, sans-serif',
-                    fontSize: isLg ? 23 : 20,
-                    fontWeight: 600,
-                    letterSpacing: "-0.02em",
-                    background: "linear-gradient(180deg, #00B1D4 0%, #0089A3 100%)",
-                    WebkitBackgroundClip: "text",
-                    WebkitTextFillColor: "transparent",
-                    backgroundClip: "text",
-                  }}
-                >
-                  Elio
-                </span>
-              </div>
-              <h1
+              {/* Elio lockup — globe + elioName.png wordmark, ported from
+                  the TwerkPage hero. Wrapper drop-shadow lifts the
+                  composite off the photo background. */}
+              <div
+                className="flex items-center"
                 style={{
-                  fontFamily: '"SF Pro", -apple-system, BlinkMacSystemFont, sans-serif',
-                  fontSize: "clamp(32px, 5.6vw, 66px)",
-                  fontWeight: 700,
-                  lineHeight: 1.1,
-                  letterSpacing: "-0.02em",
-                  color: "#0B1342",
+                  gap: 0,
+                  filter: "drop-shadow(0px 0px 51px rgba(0, 0, 0, 0.25))",
                 }}
               >
-                Find your next
-                <br />
-                <TypedPhrase />
-              </h1>
+                <div
+                  className="flex items-center justify-center"
+                  style={{ width: isLg ? 64 : 46, height: isLg ? 64 : 46 }}
+                >
+                  <MapsGPTGlobe size={isLg ? 46 : 34} />
+                </div>
+                <Image
+                  src="/consumer/elioName.png"
+                  alt="Elio"
+                  width={260}
+                  height={110}
+                  style={{
+                    height: "auto",
+                    width: isLg ? 300 : 210,
+                    marginLeft: isLg ? -11 : -8,
+                  }}
+                />
+              </div>
+              {/* Main heading with magic star — matches TwerkPage's
+                  Axiforma 590 white treatment, with the star absolute-
+                  positioned off the top-right of the heading box. */}
+              <div style={{ position: "relative", display: "inline-block" }}>
+                <h1
+                  style={{
+                    fontFamily: "Axiforma, -apple-system, BlinkMacSystemFont, sans-serif",
+                    fontSize: "clamp(48px, 8vw, 66px)",
+                    fontWeight: 590,
+                    color: "#FFFFFF",
+                    textAlign: "center",
+                    letterSpacing: "-0.02em",
+                    lineHeight: 1.2,
+                    textShadow: "0px 0px 30px rgba(0, 0, 0, 0.25)",
+                    maxWidth: 800,
+                    margin: 0,
+                  }}
+                >
+                  the social super map
+                </h1>
+                <div
+                  aria-hidden
+                  style={{
+                    position: "absolute",
+                    top: 0,
+                    right: -20,
+                    width: 32,
+                    height: 32,
+                  }}
+                >
+                  <Image
+                    src="/consumer/star.png"
+                    alt=""
+                    width={32}
+                    height={32}
+                    style={{ objectFit: "contain" }}
+                  />
+                </div>
+              </div>
             </div>
           </Stagger>
 
@@ -743,24 +926,43 @@ export default function Hero() {
             the eyebrow + heading always render on top of whatever
             floating UI the active scene paints — important for Scene
             3, where the cityscape ENDING_CARDS would otherwise crowd
-            the right-side text labels. */}
-      <div className="relative z-40" style={{ width: "100%" }}>
+            the right-side text labels.
+
+            pointer-events-none is critical: this container is a tall
+            scroll-flow block (LABEL_BLOCK_VH per label) that overlaps
+            the pinned Ask · Discover · Share pill row at the bottom of
+            the viewport. Without this rule, the z-40 container would
+            swallow every click + hover meant for the pills. Labels are
+            display-only text with no interactive children, so passing
+            pointer events through to the pinned z-30 layer is safe. */}
+      <div className="relative z-40 pointer-events-none" style={{ width: "100%" }}>
         <div style={{ height: `${INTRO_LEAD_VH}vh` }} />
         {LABELS.map((lab, i) => {
           const sc = SCENES[lab.scene - 1];
           const centred = !isLg;
-          const innerPos: React.CSSProperties = !isLg
-            ? { left: "50%", width: "min(440px, 86vw)", textAlign: "center" }
-            : lab.side === "right"
-              ? { left: "calc(50% + 168px)", width: 360 }
-              : { right: "calc(50% + 168px)", width: 360, textAlign: "right" };
+          const isScene3 = lab.scene === 3;
+          // Three layout modes:
+          //   • Scenes 1 + 2 on desktop  → SPLIT row across the viewport.
+          //     The TITLE (lab.eyebrow rendered big) anchors on lab.side
+          //     and the EXPLANATION (lab.heading rendered as a paragraph)
+          //     anchors on the OPPOSITE side, with a ~380px phone gap.
+          //   • Scene 3 on desktop       → centred BELOW the phone, with
+          //     the existing eyebrow + heading stacked vertically. The
+          //     `top: 75%` anchor drops the label clear of the phone.
+          //   • Mobile (all scenes)      → centred 86vw column at viewport
+          //     centre (unchanged from newConsumerPg).
+          const isSplit = !isScene3 && isLg;
+          const isBelow = isScene3 && isLg;
+          const titleLeft = lab.side === "left";
           return (
             <div
               key={i}
               ref={(el) => {
                 blockRefs.current[i] = el;
               }}
-              style={{ position: "relative", height: `${LABEL_BLOCK_VH}vh` }}
+              // Scene 3 owns a longer (150vh) block so its carousel
+              // choreography has scroll runway to emerge → orbit → spiral.
+              style={{ position: "relative", height: `${lab.scene === 3 ? 150 : LABEL_BLOCK_VH}vh` }}
             >
               <div
                 ref={(el) => {
@@ -768,40 +970,136 @@ export default function Hero() {
                 }}
                 style={{
                   position: "absolute",
-                  top: "50%",
-                  ...innerPos,
+                  top: isBelow ? "75%" : "50%",
+                  // Split + below layouts both span the viewport so the
+                  // grid / centred wrap can do its own internal alignment.
+                  // The mobile branch keeps the single-column anchor.
+                  ...(isSplit || isBelow
+                    ? { left: 0, right: 0 }
+                    : { left: "50%", width: "min(440px, 86vw)", textAlign: "center" as const }),
                   opacity: 0,
-                  transform: centred ? "translate(-50%,-50%) scale(0.5)" : "translateY(-50%) scale(0.5)",
-                  // PolarX device-card transition, verbatim
-                  transition: "opacity 0.35s ease-out, transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1)",
-                  willChange: "transform, opacity",
+                  // Labels fade only — no scale-up approach motion. The
+                  // initial transform matches what onScroll will set so the
+                  // label starts at full size and merely opacity-fades in.
+                  transform:
+                    isSplit || isBelow
+                      ? "translateY(-50%)"
+                      : centred
+                        ? "translate(-50%,-50%)"
+                        : "translateY(-50%)",
+                  transition: "opacity 0.35s ease-out",
+                  willChange: "opacity",
                 }}
               >
-                <div
-                  style={{
-                    fontFamily: '"SF Pro", -apple-system, BlinkMacSystemFont, sans-serif',
-                    fontSize: 14,
-                    fontWeight: 600,
-                    letterSpacing: "0.14em",
-                    textTransform: "uppercase",
-                    color: sc.eyebrow,
-                  }}
-                >
-                  {lab.eyebrow}
-                </div>
-                <h2
-                  style={{
-                    marginTop: 12,
-                    fontFamily: '"SF Pro", -apple-system, BlinkMacSystemFont, sans-serif',
-                    fontSize: isLg ? 40 : 25,
-                    fontWeight: 700,
-                    lineHeight: 1.15,
-                    letterSpacing: "-0.02em",
-                    color: sc.ink,
-                  }}
-                >
-                  {lab.heading}
-                </h2>
+                {isSplit ? (
+                  <div
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns: "1fr 1fr",
+                      // Middle gap = phone (~296px) + breathing room — keeps
+                      // both columns clear of the centred mockup.
+                      columnGap: 380,
+                      paddingInline: 60,
+                      maxWidth: 1400,
+                      marginInline: "auto",
+                      alignItems: "center",
+                    }}
+                  >
+                    {/* Title column — big H2 anchored to its outer edge.
+                        No small uppercase eyebrow above. */}
+                    <div
+                      style={{
+                        gridColumn: titleLeft ? "1 / 2" : "2 / 3",
+                        textAlign: titleLeft ? "left" : "right",
+                      }}
+                    >
+                      <h2
+                        style={{
+                          fontFamily: "Axiforma, -apple-system, BlinkMacSystemFont, sans-serif",
+                          // Matches the hero H1 ("the social super map") so the
+                          // per-scene title reads at the same scale + weight.
+                          fontSize: "clamp(48px, 8vw, 66px)",
+                          fontWeight: 590,
+                          lineHeight: 1.2,
+                          letterSpacing: "-0.02em",
+                          color: sc.ink,
+                          margin: 0,
+                          textShadow: "0px 0px 30px rgba(0, 0, 0, 0.25)",
+                        }}
+                      >
+                        {lab.title}
+                      </h2>
+                    </div>
+                    {/* Explanation column — newConsumerPg's original
+                        heading copy, reused verbatim. */}
+                    <div
+                      style={{
+                        gridColumn: titleLeft ? "2 / 3" : "1 / 2",
+                        textAlign: titleLeft ? "left" : "right",
+                      }}
+                    >
+                      <p
+                        style={{
+                          fontFamily: '"SF Pro", -apple-system, BlinkMacSystemFont, sans-serif',
+                          // Scaled up to sit closer to the new H1-size title.
+                          fontSize: "clamp(22px, 2.4vw, 30px)",
+                          fontWeight: 500,
+                          lineHeight: 1.4,
+                          letterSpacing: "-0.01em",
+                          color: sc.ink,
+                          margin: 0,
+                          maxWidth: 560,
+                          marginLeft: titleLeft ? 0 : "auto",
+                          textShadow: "0 2px 10px rgba(0,0,0,0.25)",
+                        }}
+                      >
+                        {"explanation" in lab ? lab.explanation : ""}
+                      </p>
+                    </div>
+                  </div>
+                ) : isBelow ? (
+                  // Scene-3 label block stays in normal flow as a 150vh
+                  // scroll-runway (drives `scene3Progress`), but the
+                  // visible "and everything in between" text now lives
+                  // as a FIXED footer inside the pinned stage above —
+                  // see the dedicated <div> with the bottom: clamp()
+                  // anchor. So this branch renders nothing.
+                  null
+                ) : (
+                  <>
+                    {/* Mobile fallback — title + explanation stacked centred,
+                        no small uppercase eyebrow. */}
+                    <h2
+                      style={{
+                        fontFamily: '"SF Pro", -apple-system, BlinkMacSystemFont, sans-serif',
+                        fontSize: 28,
+                        fontWeight: 700,
+                        lineHeight: 1.15,
+                        letterSpacing: "-0.02em",
+                        color: sc.ink,
+                        margin: 0,
+                      }}
+                    >
+                      {lab.title}
+                    </h2>
+                    {"explanation" in lab && (
+                      <p
+                        style={{
+                          marginTop: 10,
+                          fontFamily: '"SF Pro", -apple-system, BlinkMacSystemFont, sans-serif',
+                          fontSize: 16,
+                          fontWeight: 500,
+                          lineHeight: 1.5,
+                          letterSpacing: "-0.01em",
+                          color: sc.ink,
+                          margin: 0,
+                        }}
+                      >
+                        {lab.explanation}
+                      </p>
+                    )}
+                  </>
+                )}
               </div>
             </div>
           );
@@ -810,21 +1108,31 @@ export default function Hero() {
       </div>
 
       <style>{`
-        /* Damped float — amplitude decays across the cycle so each
-           card enters with a strong "drop in & bounce" feel and
-           gradually calms to rest. Applied with iteration-count 1 +
-           fill-mode both, so the card settles at translateY(0) and
-           the cityscape stops moving after the entrance. */
-        @keyframes mgHeroBob {
-          0%   { transform: translateY(0); }
-          8%   { transform: translateY(-22px); }
-          18%  { transform: translateY(3px); }
-          30%  { transform: translateY(-15px); }
-          42%  { transform: translateY(2px); }
-          55%  { transform: translateY(-9px); }
-          70%  { transform: translateY(0); }
-          83%  { transform: translateY(-4px); }
-          100% { transform: translateY(0); }
+        /* Hover/focus tooltip under each Ask · Discover · Share button.
+           The label sits beneath the circle and fades in when the user
+           hovers the wrapper (or tabs the inner button into focus). */
+        .mg-pill-tip {
+          position: absolute;
+          top: calc(100% + 8px);
+          left: 50%;
+          transform: translate(-50%, -4px);
+          padding: 4px 10px;
+          border-radius: 9999px;
+          background: rgba(15, 23, 42, 0.92);
+          color: #FFFFFF;
+          font-family: "SF Pro", -apple-system, BlinkMacSystemFont, sans-serif;
+          font-size: 12px;
+          font-weight: 600;
+          letter-spacing: -0.01em;
+          white-space: nowrap;
+          opacity: 0;
+          pointer-events: none;
+          transition: opacity 0.18s ease, transform 0.18s ease;
+        }
+        .mg-pill-wrap:hover .mg-pill-tip,
+        .mg-pill-wrap:focus-within .mg-pill-tip {
+          opacity: 1;
+          transform: translate(-50%, 0);
         }
       `}</style>
     </div>
@@ -846,318 +1154,4 @@ function Stagger({ show, delay, y, children }: { show: boolean; delay: number; y
   );
 }
 
-// ── Typewriter phrase — cycles through realistic search ideas, typing
-//    and backspacing one character at a time with a blinking caret. ──
-const TYPED_PHRASES = [
-  "hang out spot",
-  "romantic date night",
-  "secret beach spot",
-  "hidden coffee shop",
-  "weekend brunch place",
-  "local hiking trail",
-  "cozy bookstore",
-  "rooftop sunset bar",
-  "late-night taco joint",
-  "quiet study café",
-];
 
-function TypedPhrase() {
-  const [text, setText] = useState("");
-  const [phraseIdx, setPhraseIdx] = useState(0);
-  const [deleting, setDeleting] = useState(false);
-
-  useEffect(() => {
-    const full = TYPED_PHRASES[phraseIdx];
-    // Typing forward — fast; deleting — quicker; hold 3s at the full
-    // word so the user has time to read it (and so the matching video
-    // background gets a meaningful beat on screen); brief pause before
-    // typing the next one when fully cleared.
-    let delay: number;
-    if (!deleting && text === full) {
-      delay = 3000;
-    } else if (deleting && text === "") {
-      delay = 280;
-    } else {
-      delay = deleting ? 32 : 70;
-    }
-
-    const t = setTimeout(() => {
-      if (!deleting && text === full) {
-        setDeleting(true);
-      } else if (deleting && text === "") {
-        setDeleting(false);
-        setPhraseIdx((i) => (i + 1) % TYPED_PHRASES.length);
-      } else if (deleting) {
-        setText(full.slice(0, text.length - 1));
-      } else {
-        setText(full.slice(0, text.length + 1));
-      }
-    }, delay);
-
-    return () => clearTimeout(t);
-  }, [text, deleting, phraseIdx]);
-
-  return (
-    <span style={{ display: "inline-block", whiteSpace: "nowrap" }}>
-      <span>{text}</span>
-      <span
-        aria-hidden
-        style={{
-          display: "inline-block",
-          width: "0.06em",
-          height: "0.9em",
-          marginLeft: "0.08em",
-          verticalAlign: "-0.08em",
-          background: "#0B1342",
-          animation: "mgHeroCaret 1s steps(1) infinite",
-        }}
-      />
-      <style>{`@keyframes mgHeroCaret { 0%,49% { opacity: 1 } 50%,100% { opacity: 0 } }`}</style>
-    </span>
-  );
-}
-
-// ── Go-scene map overlay: floating "you can ask for X" cards that sit on
-//    the cityscape ElioEndingBackground. Four variants:
-//      - "dot":       small avatar circle + label pill (e.g. "Concerts")
-//      - "dot-label": tiny pin dot + label pill (e.g. "spots")
-//      - "place":     two-line "Panaria / calm cafe" pill, optionally
-//                     with a category tag above (e.g. "Restaraunts")
-//      - "category":  rounded thumbnail (or stack of three) + label pill
-//    Styling targets a clean white-pill look that reads as cohesive
-//    "map UI" against the painterly cityscape behind.
-type EndingCardData = (typeof ENDING_CARDS)[number];
-
-function EndingCard({ card }: { card: EndingCardData }) {
-  const pillBase: React.CSSProperties = {
-    padding: "5px 11px",
-    borderRadius: 10,
-    background: "#FFFFFF",
-    fontFamily: '"SF Pro", -apple-system, BlinkMacSystemFont, sans-serif',
-    fontSize: 12,
-    fontWeight: 600,
-    color: "#0B1B2B",
-    letterSpacing: "-0.01em",
-    boxShadow:
-      "0 1px 2px rgba(0,0,0,0.08), 0 8px 24px -8px rgba(0,40,60,0.25)",
-    whiteSpace: "nowrap" as const,
-  };
-  const categoryTag: React.CSSProperties = {
-    ...pillBase,
-    fontSize: 11,
-    fontWeight: 500,
-    opacity: 0.92,
-    marginBottom: 4,
-  };
-  if (card.kind === "dot") {
-    return (
-      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 8 }}>
-        <div
-          style={{
-            width: 50,
-            height: 50,
-            borderRadius: "50%",
-            background: "linear-gradient(135deg, #6094C1 0%, #2A5B8A 100%)",
-            border: "3px solid #FFFFFF",
-            boxShadow: "0 4px 14px -4px rgba(0,40,60,0.35)",
-            position: "relative",
-          }}
-        >
-          {/* Thin ring slice — mimics the green/red status arc in the screenshot */}
-          <div
-            style={{
-              position: "absolute",
-              inset: -4,
-              borderRadius: "50%",
-              border: "2px solid #5CC982",
-              borderRightColor: "#FF5454",
-              borderBottomColor: "transparent",
-              transform: "rotate(35deg)",
-            }}
-          />
-        </div>
-        <div style={pillBase}>{card.label}</div>
-      </div>
-    );
-  }
-  if (card.kind === "dot-label") {
-    return (
-      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 6 }}>
-        <div
-          style={{
-            width: 14,
-            height: 14,
-            borderRadius: "50%",
-            background: "#F45D8B",
-            border: "2px solid #FFFFFF",
-            boxShadow: "0 2px 6px rgba(0,0,0,0.25)",
-          }}
-        />
-        <div style={pillBase}>{card.label}</div>
-      </div>
-    );
-  }
-  if (card.kind === "place") {
-    const profile = "profile" in card ? card.profile : undefined;
-    return (
-      <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
-        {card.category && <div style={categoryTag}>{card.category}</div>}
-        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <div
-            style={{
-              width: 12,
-              height: 12,
-              borderRadius: "50%",
-              background: "#FFFFFF",
-              border: "2px solid #6094C1",
-              boxShadow: "0 2px 6px rgba(0,0,0,0.20)",
-              flexShrink: 0,
-            }}
-          />
-          <div
-            style={{
-              ...pillBase,
-              padding: "6px 12px",
-              lineHeight: 1.15,
-            }}
-          >
-            <div style={{ fontWeight: 600 }}>{card.label}</div>
-            <div style={{ fontSize: 11, fontWeight: 400, opacity: 0.58 }}>{card.sub}</div>
-          </div>
-          {profile && (
-            /* eslint-disable-next-line @next/next/no-img-element */
-            <img
-              src={profile}
-              alt=""
-              style={{
-                width: 26,
-                height: 26,
-                borderRadius: "50%",
-                objectFit: "cover",
-                border: "2px solid #FFFFFF",
-                boxShadow: "0 2px 6px rgba(0,0,0,0.22)",
-                flexShrink: 0,
-              }}
-            />
-          )}
-        </div>
-      </div>
-    );
-  }
-  if (card.kind === "category-profile") {
-    return (
-      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 6 }}>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={card.profile}
-          alt=""
-          style={{
-            width: 54,
-            height: 54,
-            borderRadius: "50%",
-            objectFit: "cover",
-            border: "3px solid #FFFFFF",
-            boxShadow: "0 6px 14px -4px rgba(0,40,60,0.30)",
-          }}
-        />
-        <div style={pillBase}>{card.label}</div>
-      </div>
-    );
-  }
-  // "category"
-  const thumbs = "thumbs" in card ? card.thumbs : undefined;
-  const thumb = "thumb" in card ? card.thumb : undefined;
-  const catProfile = "profile" in card ? card.profile : undefined;
-  // Stack thumb (or thumbs) over a small profile-avatar circle that
-  // overlaps the bottom-right corner — reads as an "attribution"
-  // marker (who shared this place), the same visual idiom Instagram
-  // / Airbnb use for user-curated content. Positioned absolute so it
-  // hugs the thumbnail's bottom-right regardless of which thumb
-  // shape is rendered (single / stacked).
-  return (
-    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 6 }}>
-      {(thumbs || thumb) && (
-        <div style={{ position: "relative" }}>
-          {thumbs ? (
-            <div style={{ position: "relative", width: 92, height: 60 }}>
-              {thumbs.slice(0, 3).map((t, i) => (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  key={t}
-                  src={t}
-                  alt=""
-                  style={{
-                    position: "absolute",
-                    width: 70,
-                    height: 50,
-                    left: i * 11,
-                    top: i * 5,
-                    borderRadius: 8,
-                    objectFit: "cover",
-                    border: "2.5px solid #FFFFFF",
-                    boxShadow: "0 4px 10px -3px rgba(0,40,60,0.30)",
-                    zIndex: 3 - i,
-                  }}
-                />
-              ))}
-            </div>
-          ) : thumb ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              src={thumb}
-              alt=""
-              style={{
-                width: 78,
-                height: 56,
-                borderRadius: 9,
-                objectFit: "cover",
-                border: "2.5px solid #FFFFFF",
-                boxShadow: "0 6px 14px -4px rgba(0,40,60,0.30)",
-              }}
-            />
-          ) : null}
-          {catProfile && (
-            /* eslint-disable-next-line @next/next/no-img-element */
-            <img
-              src={catProfile}
-              alt=""
-              style={{
-                position: "absolute",
-                right: -8,
-                bottom: -8,
-                width: 26,
-                height: 26,
-                borderRadius: "50%",
-                objectFit: "cover",
-                border: "2px solid #FFFFFF",
-                boxShadow: "0 3px 8px rgba(0,0,0,0.28)",
-                zIndex: 5,
-              }}
-            />
-          )}
-        </div>
-      )}
-      <div style={pillBase}>{card.label}</div>
-    </div>
-  );
-}
-
-// ── Floating travel postcard — clean white-framed photo, no caption ──
-function PhotoCard({ img, w }: { img: string; w: number }) {
-  const h = Math.round(w / 1.46);
-  return (
-    <div
-      style={{
-        width: w,
-        padding: 6,
-        background: "#FFFFFF",
-        borderRadius: 13,
-        boxShadow: "0 26px 50px -18px rgba(0,40,60,0.45), 0 5px 14px -6px rgba(0,40,60,0.25)",
-      }}
-    >
-      <div style={{ position: "relative", width: "100%", height: h, borderRadius: 8, overflow: "hidden" }}>
-        <Image src={img} alt="" fill sizes="240px" style={{ objectFit: "cover" }} />
-      </div>
-    </div>
-  );
-}

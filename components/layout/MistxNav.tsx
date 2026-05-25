@@ -238,11 +238,13 @@ export function MistxNav({
   const darkScrimActive = darkBackdrop && (!stuck || overHero) && heroPhase === 0;
   const lightNav =
     (heroWhite && (!stuck || overHero)) ||
-    // Phase 2 ("Knows your vibe", navy scene) still needs white nav
-    // contents — dark text would be invisible against the navy scrim.
-    // Phase 3 ("Save & share / Local guide") sits over the white scene
-    // backdrop with NO navbar scrim, so the nav contents stay dark.
-    ((heroLight || darkBackdrop) && overHero && heroPhase === 2) ||
+    // In darkBackdrop mode every photo-backed scene (phases 0, 1, 2)
+    // gets white nav contents so the logo / links / CTA read on the
+    // imagery; phase 3 sits on a clean white field, so nav contents
+    // flip back to dark there. (heroLight legacy: only phase 2 was
+    // navy-dark enough to need light nav contents.)
+    (heroLight && overHero && heroPhase === 2) ||
+    (darkBackdrop && overHero && heroPhase !== 3) ||
     darkScrimActive;
   // Business-only: while scrolled ("on movement") AND the navbar still
   // overlaps the hero, the solid white backdrop is replaced by a scrim
@@ -348,41 +350,23 @@ export function MistxNav({
               "linear-gradient(to bottom, black 0%, rgba(0,0,0,0.55) 50%, transparent 100%)",
             WebkitMaskImage:
               "linear-gradient(to bottom, black 0%, rgba(0,0,0,0.55) 50%, transparent 100%)",
-            // In darkBackdrop mode the dark scrim owns phase 0; this scene-
-            // color scrim paints during phases 1–2 only. Phase 3 ("Save &
-            // share / Local guide") deliberately runs with NO scrim so the
-            // navbar floats transparent over the white scene backdrop.
-            // Other modes (heroLight, heroTint) keep the original behavior.
+            // In darkBackdrop mode the navbar stays FULLY TRANSPARENT
+            // across every scene (consumer page spec) — no scene-color
+            // scrim ever paints; the scene's own backdrop image shows
+            // straight through. Other modes (heroLight, heroTint) keep
+            // the original behaviour.
             opacity:
-              heroScrim && (!darkBackdrop || (heroPhase > 0 && heroPhase !== 3)) ? 1 : 0,
+              !darkBackdrop && heroScrim ? 1 : 0,
             transition:
               "opacity 300ms ease, background-color 700ms cubic-bezier(0.44,0,0.56,1)",
           }}
         />
       )}
-      {/* darkBackdrop — dark gradient behind the navbar while it floats
-          over the hero. Opacity tracks darkScrimActive: visible while
-          overHero (or at scroll=0), fades off once the navbar pins
-          above the next section so the navbar can match its surface
-          color — the standard white backdrop cross-fades in via the
-          backgroundColor transition above. Same colour stops as the
-          consumer hero's own top-edge fade, so the navbar zone reads
-          as a continuation of that band. */}
-      {darkBackdrop && (
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-x-0 top-0 bottom-0"
-          style={{
-            zIndex: 0,
-            borderTopLeftRadius: "var(--frame-radius, 20px)",
-            borderTopRightRadius: "var(--frame-radius, 20px)",
-            background:
-              "linear-gradient(to bottom, rgba(0, 0, 0, 0.40) 0%, rgba(0, 0, 0, 0.22) 55%, rgba(0, 0, 0, 0) 100%)",
-            opacity: darkScrimActive ? 1 : 0,
-            transition: "opacity 300ms ease",
-          }}
-        />
-      )}
+      {/* darkBackdrop scrim removed — consumer page wants the navbar
+          fully transparent over every scene, so the hero / scene
+          backdrop image shows through directly. The white solid
+          backdrop still kicks in once the navbar pins past the hero
+          (see the header's backgroundColor logic above). */}
       {/* Content row — bounds match the page's content sections
           (max-w-[1287px] mx-5 md:mx-auto), no inner padding, so the logo's
           left edge and the "Try Elio" CTA's right edge sit flush with the

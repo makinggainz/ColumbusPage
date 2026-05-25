@@ -43,6 +43,90 @@ const ROW_B: DestPhoto[] = [
   { src: "/FavoriteSpots/(17).jpeg", place: "Koh Lanta",           rating: "4.7", prompt: "Quiet Thai beach resort far from the parties?", avatar: "https://i.pravatar.cc/80?img=57" },
 ];
 
+const CYCLING_OPTIONS = [
+  "cozy bookspot",
+  "hangout spot",
+  "event",
+  "neighborhood",
+  "travel inspo",
+  "rave spot",
+  "niche restaurant",
+  "thrift shop",
+];
+
+function CyclingTitle() {
+  const [index, setIndex] = useState(0);
+  const [displayText, setDisplayText] = useState("");
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  useEffect(() => {
+    const currentOption = CYCLING_OPTIONS[index];
+    const typingSpeed = isDeleting ? 50 : 100;
+    const pauseTime = 1500;
+
+    const timer = setTimeout(() => {
+      if (!isDeleting) {
+        if (displayText.length < currentOption.length) {
+          setDisplayText(currentOption.slice(0, displayText.length + 1));
+        } else {
+          setTimeout(() => setIsDeleting(true), pauseTime);
+        }
+      } else {
+        if (displayText.length > 0) {
+          setDisplayText(displayText.slice(0, -1));
+        } else {
+          setIsDeleting(false);
+          setIndex((prev) => (prev + 1) % CYCLING_OPTIONS.length);
+        }
+      }
+    }, typingSpeed);
+
+    return () => clearTimeout(timer);
+  }, [displayText, isDeleting, index]);
+
+  return (
+    <div
+      style={{
+        textAlign: "center",
+        paddingLeft: 40,
+        paddingRight: 40,
+        paddingBottom: 40,
+        paddingTop: 100,
+        maxWidth: 1400,
+        margin: "0 auto",
+      }}
+    >
+      <h2
+        style={{
+          fontFamily: "Axiforma, -apple-system, BlinkMacSystemFont, sans-serif",
+          fontSize: 24,
+          fontWeight: 590,
+          color: "#000000",
+          letterSpacing: "-0.02em",
+          margin: 0,
+          minHeight: "32px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: "4px",
+        }}
+      >
+        <span>Find your next</span>
+        <span style={{ minWidth: "280px", textAlign: "left" }}>
+          {displayText}
+          <span style={{ opacity: 0.5, animation: "blink 1s infinite" }}>|</span>
+        </span>
+      </h2>
+      <style>{`
+        @keyframes blink {
+          0%, 49% { opacity: 1; }
+          50%, 100% { opacity: 0; }
+        }
+      `}</style>
+    </div>
+  );
+}
+
 function Marquee({ imgs, reverse }: { imgs: DestPhoto[]; reverse?: boolean }) {
   // Two copies of the list → translating one copy-width loops seamlessly.
   const doubled = [...imgs, ...imgs];
@@ -57,7 +141,7 @@ function Marquee({ imgs, reverse }: { imgs: DestPhoto[]; reverse?: boolean }) {
               flex: "none",
               width: 304,
               height: 208,
-              borderRadius: 7,
+              borderRadius: 20,
               overflow: "hidden",
               border: "1px solid #E7E7F1",
             }}
@@ -80,7 +164,7 @@ function Marquee({ imgs, reverse }: { imgs: DestPhoto[]; reverse?: boolean }) {
             <div style={{ position: "absolute", top: 10, left: 10, right: 36, display: "flex", alignItems: "center", gap: 6 }}>
               <span style={{
                 fontFamily: "var(--hiw-font-sans, 'Funnel Display', -apple-system, sans-serif)",
-                color: "#FFFFFF",
+                color: "#0F2741",
                 fontWeight: 600,
                 fontSize: 12,
                 letterSpacing: "-0.01em",
@@ -97,7 +181,7 @@ function Marquee({ imgs, reverse }: { imgs: DestPhoto[]; reverse?: boolean }) {
                   <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="#E46962" />
                 </svg>
                 <span style={{
-                  color: "#FFFFFF",
+                  color: "#0F2741",
                   fontFamily: "var(--hiw-font-sans, 'Funnel Display', -apple-system, sans-serif)",
                   fontWeight: 700,
                   fontSize: 10,
@@ -188,7 +272,7 @@ export default function DestinationsSection() {
   }, []);
 
   return (
-    <section ref={ref} className="section" style={{ background: "#FFFFFF", overflow: "hidden" }}>
+    <section ref={ref} className="section" style={{ background: "#FFFFFF", overflow: "hidden", paddingTop: 0 }}>
       <style>{`
         .mg-dest-mask {
           -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
@@ -209,6 +293,271 @@ export default function DestinationsSection() {
         @media (prefers-reduced-motion: reduce) { .mg-dest-track { animation: none; } }
       `}</style>
 
+      {/* "For your city." / "For your travels." titles previously lived
+          here as a 2-col header — they were promoted to the dedicated
+          ForYouSticky component above this section (their own full-bleed
+          backdrops + explanation copy). This section now opens straight
+          into the "and everything in between" middle title. */}
+
+      {/* Middle title */}
+      <div
+        style={{
+          textAlign: "center",
+          paddingLeft: 40,
+          paddingRight: 40,
+          paddingBottom: 60,
+          paddingTop: 20,
+          maxWidth: 1400,
+          margin: "0 auto",
+        }}
+      >
+        <h2
+          style={{
+            fontFamily: "Axiforma, -apple-system, BlinkMacSystemFont, sans-serif",
+            fontSize: 44,
+            fontWeight: 590,
+            color: "#000000",
+            letterSpacing: "-0.02em",
+            margin: 0,
+          }}
+        >
+          and everything in between
+        </h2>
+      </div>
+
+      {/* Bento box */}
+      <div
+        style={{
+          paddingLeft: 40,
+          paddingRight: 40,
+          paddingTop: 0,
+          paddingBottom: 0,
+          maxWidth: 1400,
+          margin: "0 auto",
+        }}
+      >
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr",
+            gridTemplateRows: "auto auto auto",
+            gap: 20,
+            gridAutoRows: "auto",
+          }}
+        >
+          {/* Top left - See whats going on around you (large card) */}
+          <div
+            style={{
+              background: "#F2F2F2",
+              borderRadius: "30px",
+              padding: 40,
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "flex-start",
+              minHeight: 240,
+              position: "relative",
+              overflow: "hidden",
+            }}
+          >
+            <h3
+              style={{
+                fontFamily: "Axiforma, -apple-system, BlinkMacSystemFont, sans-serif",
+                fontSize: 32,
+                fontWeight: 700,
+                color: "#0F2741",
+                letterSpacing: "-0.02em",
+                margin: 0,
+                marginBottom: 8,
+              }}
+            >
+              See whats going on around you.
+            </h3>
+            <p
+              style={{
+                fontSize: 16,
+                fontWeight: 400,
+                color: "#0B1B2B",
+                letterSpacing: "-0.02em",
+                margin: 0,
+              }}
+            >
+              Live events, local things.
+            </p>
+          </div>
+
+          {/* Top right - Elio can plan a trip for you */}
+          <div
+            style={{
+              background: "#F2F2F2",
+              borderRadius: "30px",
+              padding: 40,
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "flex-start",
+              minHeight: 240,
+            }}
+          >
+            <div>
+              <h3
+                style={{
+                  fontFamily: "Axiforma, -apple-system, BlinkMacSystemFont, sans-serif",
+                  fontSize: 32,
+                  fontWeight: 700,
+                  color: "#0F2741",
+                  letterSpacing: "-0.02em",
+                  margin: 0,
+                  marginBottom: 8,
+                  lineHeight: 1.3,
+                }}
+              >
+                Elio can plan a trip for you.
+              </h3>
+              <p
+                style={{
+                  fontSize: 16,
+                  fontWeight: 400,
+                  color: "#0B1B2B",
+                  letterSpacing: "-0.02em",
+                  margin: 0,
+                }}
+              >
+                AI-powered itinerary generation
+              </p>
+            </div>
+          </div>
+
+          {/* Middle left - Featured in */}
+          <div
+            style={{
+              background: "#F2F2F2",
+              borderRadius: "30px",
+              padding: 40,
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "flex-start",
+              minHeight: 280,
+            }}
+          >
+            <div>
+              <h3
+                style={{
+                  fontFamily: "Axiforma, -apple-system, BlinkMacSystemFont, sans-serif",
+                  fontSize: 32,
+                  fontWeight: 700,
+                  color: "#0F2741",
+                  letterSpacing: "-0.02em",
+                  margin: 0,
+                  marginBottom: 8,
+                  lineHeight: 1.3,
+                }}
+              >
+                Gets smarter the more you talk to Elio.
+              </h3>
+              <p
+                style={{
+                  fontSize: 16,
+                  fontWeight: 400,
+                  color: "#0B1B2B",
+                  letterSpacing: "-0.02em",
+                  margin: 0,
+                }}
+              >
+                Learns your preferences and travel style
+              </p>
+            </div>
+          </div>
+
+          {/* Middle center - Stop using Docs to plan trips */}
+          <div
+            style={{
+              background: "#F2F2F2",
+              borderRadius: "30px",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "flex-start",
+              padding: 40,
+              position: "relative",
+              overflow: "hidden",
+              gridColumn: "2 / 3",
+              gridRow: "2 / 4",
+            }}
+          >
+            <div>
+              <h3
+                style={{
+                  fontFamily: "Axiforma, -apple-system, BlinkMacSystemFont, sans-serif",
+                  fontSize: 32,
+                  fontWeight: 700,
+                  color: "#0F2741",
+                  letterSpacing: "-0.02em",
+                  margin: 0,
+                  marginBottom: 8,
+                  textShadow: "none",
+                  lineHeight: 1.4,
+                }}
+              >
+                Stop using Docs to plan trips.
+              </h3>
+              <p
+                style={{
+                  fontSize: 16,
+                  fontWeight: 400,
+                  color: "#0B1B2B",
+                  letterSpacing: "-0.02em",
+                  margin: 0,
+                }}
+              >
+                Do it all together on one map
+              </p>
+            </div>
+          </div>
+
+          {/* Middle right - Battery efficient */}
+          <div
+            style={{
+              background: "linear-gradient(360deg, #F2F2F2 0%, #F0FCFF 100%)",
+              borderRadius: "30px",
+              padding: 40,
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "flex-start",
+              height: 240,
+            }}
+          >
+            <div>
+              <h3
+                style={{
+                  fontFamily: "Axiforma, -apple-system, BlinkMacSystemFont, sans-serif",
+                  fontSize: 32,
+                  fontWeight: 700,
+                  color: "#0F2741",
+                  letterSpacing: "-0.02em",
+                  margin: 0,
+                  marginBottom: 8,
+                }}
+              >
+                Ad-free.
+              </h3>
+              <p
+                style={{
+                  fontSize: 16,
+                  fontWeight: 400,
+                  color: "#0B1B2B",
+                  letterSpacing: "-0.02em",
+                  margin: 0,
+                }}
+              >
+                Find exactly what you're after.
+              </p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      {/* Title with cycling text */}
+      <CyclingTitle />
+
       {/* Two scrolling photo rows */}
       <div
         style={{
@@ -217,10 +566,71 @@ export default function DestinationsSection() {
           gap: 20,
           opacity: vis ? 1 : 0,
           transition: "opacity 0.8s ease-out 0.15s",
+          paddingTop: 60,
         }}
       >
         <Marquee imgs={ROW_A} />
         <Marquee imgs={ROW_B} reverse />
+      </div>
+
+      {/* Elio is browser based label */}
+      <div
+        style={{
+          paddingLeft: 40,
+          paddingRight: 40,
+          paddingTop: 60,
+          maxWidth: 1400,
+          margin: "0 auto",
+          textAlign: "center",
+        }}
+      >
+        <p
+          style={{
+            fontFamily: "Opening Hours Sans, -apple-system, BlinkMacSystemFont, sans-serif",
+            fontWeight: 600,
+            fontSize: 22,
+            letterSpacing: "0.02em",
+            lineHeight: 1.4,
+            marginBottom: 40,
+            color: "#0B1B2B",
+          }}
+        >
+          <span
+            style={{
+              fontWeight: 600,
+              background: "linear-gradient(180deg, #00B1D4 0%, #0089A3 100%)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              backgroundClip: "text",
+            }}
+          >
+            Elio
+          </span>
+          <span> is on desktop and mobile</span>
+        </p>
+      </div>
+
+      {/* Desktop mockup */}
+      <div
+        style={{
+          paddingLeft: 40,
+          paddingRight: 40,
+          paddingBottom: 60,
+          maxWidth: 1400,
+          margin: "0 auto",
+        }}
+      >
+        <img
+          src="/consumer/elioHome2.png"
+          alt="Elio Desktop"
+          style={{
+            width: "100%",
+            height: "auto",
+            display: "block",
+            borderRadius: 40,
+            border: "10px solid #000000",
+          }}
+        />
       </div>
     </section>
   );
