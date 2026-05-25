@@ -1,75 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
-
-const CYCLING_OPTIONS = [
-  "cozy bookspot",
-  "hangout spot",
-  "neighborhood",
-  "travel inspo",
-  "niche restaurant",
-  "thrift shop",
-];
-
-function CyclingTitle() {
-  const [index, setIndex] = useState(0);
-  const [displayText, setDisplayText] = useState("");
-  const [isDeleting, setIsDeleting] = useState(false);
-
-  useEffect(() => {
-    const current = CYCLING_OPTIONS[index];
-    const speed = isDeleting ? 45 : 90;
-    const pause = 1400;
-    const timer = setTimeout(() => {
-      if (!isDeleting) {
-        if (displayText.length < current.length) {
-          setDisplayText(current.slice(0, displayText.length + 1));
-        } else {
-          setTimeout(() => setIsDeleting(true), pause);
-        }
-      } else {
-        if (displayText.length > 0) {
-          setDisplayText(displayText.slice(0, -1));
-        } else {
-          setIsDeleting(false);
-          setIndex((p) => (p + 1) % CYCLING_OPTIONS.length);
-        }
-      }
-    }, speed);
-    return () => clearTimeout(timer);
-  }, [displayText, isDeleting, index]);
-
-  return (
-    <h2
-      style={{
-        fontFamily: "Axiforma, -apple-system, BlinkMacSystemFont, sans-serif",
-        fontSize: "clamp(28px, 5vw, 48px)",
-        fontWeight: 600,
-        color: "#0B1342",
-        letterSpacing: "-0.02em",
-        lineHeight: 1.1,
-        margin: 0,
-        textAlign: "center",
-      }}
-    >
-      Find your next
-      <br />
-      <span
-        style={{
-          background: "linear-gradient(180deg, #00B1D4 0%, #0089A3 100%)",
-          WebkitBackgroundClip: "text",
-          WebkitTextFillColor: "transparent",
-          backgroundClip: "text",
-        }}
-      >
-        {displayText}
-        <span style={{ opacity: 0.4, animation: "elio-blink 1s infinite" }}>|</span>
-      </span>
-      <style>{`@keyframes elio-blink { 0%, 49% { opacity: 1 } 50%, 100% { opacity: 0 } }`}</style>
-    </h2>
-  );
-}
 
 const FEATURES = [
   {
@@ -323,26 +254,6 @@ export default function DestinationsSection() {
           paddingRight: 24,
         }}
       >
-        <CyclingTitle />
-
-        <p
-          style={{
-            fontFamily:
-              "Opening Hours Sans, -apple-system, BlinkMacSystemFont, sans-serif",
-            fontSize: "clamp(15px, 1.8vw, 17px)",
-            fontWeight: 400,
-            color: "#5A6B7B",
-            letterSpacing: "-0.01em",
-            lineHeight: 1.5,
-            textAlign: "center",
-            margin: "20px auto 0",
-            maxWidth: 540,
-          }}
-        >
-          Ask Elio anything. It pulls from your taste, your city, and the people
-          you trust — not from whoever paid the most.
-        </p>
-
         <div className="elio-feature-row">
           {FEATURES.map((f) => (
             <div key={f.title} className="elio-feature-cell">
@@ -438,7 +349,6 @@ export default function DestinationsSection() {
 
       <style>{`
         .elio-feature-row {
-          margin-top: clamp(56px, 8vw, 96px);
           display: grid;
           grid-template-columns: 1fr 1fr;
           column-gap: 24px;
