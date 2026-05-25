@@ -89,8 +89,18 @@ export function MistxNav({
   heroTint,
   lightCta = false,
   darkBackdrop = false,
+  whiteContents = false,
 }: {
   heroWhite?: boolean;
+  /**
+   * Force nav contents (logo, links, CTA) into white/light mode while
+   * the navbar is floating over a hero, WITHOUT painting any backdrop
+   * scrim of its own. Use on pages that already paint their own dark
+   * gradient inside the hero, so the navbar inherits that contrast.
+   * Falls back to the standard dark contents once the navbar pins above
+   * the next section.
+   */
+  whiteContents?: boolean;
   heroLight?: boolean;
   /**
    * Like `heroLight`, but with a caller-supplied scrim colour instead of
@@ -243,7 +253,12 @@ export function MistxNav({
     // Phase 3 ("Save & share / Local guide") sits over the white scene
     // backdrop with NO navbar scrim, so the nav contents stay dark.
     ((heroLight || darkBackdrop) && overHero && heroPhase === 2) ||
-    darkScrimActive;
+    darkScrimActive ||
+    // `whiteContents` mode: light nav contents only while the navbar is
+    // still floating transparently (not stuck). The moment it pins and
+    // its solid-white backdrop fades in, the contents flip back to dark
+    // so white-on-white doesn't happen.
+    (whiteContents && !stuck);
   // Business-only: while scrolled ("on movement") AND the navbar still
   // overlaps the hero, the solid white backdrop is replaced by a scrim
   // tinted to the hero image's sky colour — opaque at the top, fading to

@@ -310,7 +310,7 @@ export default function DestinationsSection() {
     <section
       style={{
         background: "#FFFFFF",
-        paddingTop: "clamp(80px, 12vw, 140px)",
+        paddingTop: 440,
         paddingBottom: "clamp(80px, 12vw, 140px)",
         overflow: "hidden",
       }}

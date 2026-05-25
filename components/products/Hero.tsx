@@ -8,9 +8,11 @@ import StoreBadges from "@/components/products/StoreBadges";
 export default function Hero() {
   return (
     <section
+      data-hero-section
+      data-hero-outer
       style={{
         position: "relative",
-        minHeight: "calc(100vh + 400px)",
+        minHeight: 800,
         width: "100%",
         overflow: "visible",
         display: "flex",
@@ -18,9 +20,9 @@ export default function Hero() {
         alignItems: "center",
         justifyContent: "flex-start",
         paddingTop: 0,
-        paddingBottom: 60,
+        paddingBottom: 0,
         marginTop: -120,
-        marginBottom: -200,
+        marginBottom: 0,
         backgroundImage: "url(/consumer/heroBackground.png)",
         backgroundSize: "cover",
         backgroundPosition: "center",
@@ -28,9 +30,26 @@ export default function Hero() {
         backgroundClip: "border-box",
         borderRadius: "0 0 24px 24px",
         boxShadow: "inset 0 -2px 0 rgba(0,0,0,0.1)",
-        clipPath: "polygon(0 0, 100% 0, 100% calc(100% - 24px), calc(100% - 24px) 100%, 24px 100%, 0 calc(100% - 24px))",
       }}
     >
+      {/* Top-down dark gradient overlay — sits between the hero photo
+          and the foreground content. Extends 100% of the hero height,
+          fading to transparent at the bottom. Replaces the navbar's
+          previous `darkBackdrop` scrim now that the gradient lives on
+          the hero itself. */}
+      <div
+        aria-hidden
+        style={{
+          position: "absolute",
+          inset: 0,
+          zIndex: 5,
+          pointerEvents: "none",
+          background:
+            "linear-gradient(to bottom, rgba(0, 0, 0, 0.22) 0%, rgba(0, 0, 0, 0) 50%)",
+          borderRadius: "0 0 24px 24px",
+        }}
+      />
+
       {/* Main content container */}
       <div
         style={{
@@ -45,7 +64,7 @@ export default function Hero() {
           justifyContent: "flex-start",
           paddingLeft: 40,
           paddingRight: 40,
-          paddingTop: 200,
+          paddingTop: 140,
         }}
       >
         {/* Elio logo - 3D rotating globe + name */}
@@ -129,7 +148,7 @@ export default function Hero() {
             gap: 16,
             justifyContent: "center",
             flexWrap: "wrap",
-            marginBottom: 80,
+            marginBottom: 40,
             alignItems: "center",
           }}
         >

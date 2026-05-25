@@ -7,7 +7,7 @@ import FinalCTASection from "@/components/products/FinalCTASection";
 export default function ProductsPage() {
   return (
     <main style={{ overflowX: "clip", background: "#FFFFFF" }}>
-      <MistxNav lightCta darkBackdrop />
+      <MistxNav lightCta whiteContents />
 
       <div style={{ position: "relative" }}>
         <Hero />

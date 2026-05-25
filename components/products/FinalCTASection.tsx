@@ -2,6 +2,8 @@
 
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
+import MapsGPTGlobe from "@/components/products/MapsGPTGlobe";
+import StoreBadges from "@/components/products/StoreBadges";
 import "@/components/products/how-it-works-tokens.css";
 
 // Friends-on-the-globe markers. Positioned in the 1728×1298 coord-space
@@ -82,39 +84,65 @@ export default function FinalCTASection() {
             width: "100%",
           }}
         >
+          {/* MapsGPT globe + "Elio is browser based" eyebrow */}
+          <div className="flex items-center justify-center" style={{ gap: 8, marginBottom: "var(--hiw-space-2)" }}>
+            <MapsGPTGlobe size={26} />
+            <p style={{
+              fontFamily: "var(--hiw-font-sans)",
+              fontWeight: "var(--hiw-weight-regular)" as unknown as number,
+              fontSize: "var(--hiw-text-base)",
+              letterSpacing: "0.02em",
+              lineHeight: 1.4,
+              color: "#0B1342",
+            }}>
+              <span style={{
+                fontWeight: "var(--hiw-weight-semibold)" as unknown as number,
+                background: "linear-gradient(180deg, #00B1D4 0%, #0089A3 100%)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+              }}>Elio</span>
+              <span>{" "}is browser based</span>
+            </p>
+          </div>
           <h2 style={{
-            fontFamily: "Axiforma, -apple-system, BlinkMacSystemFont, sans-serif",
+            fontFamily: "var(--hiw-font-sans)",
             fontWeight: "var(--hiw-weight-bold)" as unknown as number,
             fontSize: "clamp(28px, 6vw, 44px)",
             lineHeight: 1.05,
             letterSpacing: "-0.02em",
-            marginBottom: "var(--hiw-space-2)",
+            marginBottom: "var(--hiw-space-4)",
             color: "#0B1342",
           }}>
-            We&apos;re always there for you.
+            Find your next<br />
+            <TypedPhrase />
           </h2>
-          {/* Navy primary CTA — bg-cta + white text/arrow, matches navbar. */}
-          <a
-            href="https://mapsgpt.es"
-            target="_blank"
-            rel="noreferrer"
-            className="group inline-flex items-center justify-center gap-3 rounded-button bg-cta px-5 py-3 no-underline transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
-            style={{ maxWidth: "fit-content", marginInline: "auto" }}
-          >
-            <span style={{
-              fontFamily: "Opening Hours Sans, -apple-system, BlinkMacSystemFont, sans-serif",
-              fontWeight: 590,
-              fontSize: "16px",
-              letterSpacing: "-0.02em",
-              color: "#FFFFFF",
-              whiteSpace: "nowrap",
-            }}>
-              Try Elio it&apos;s free!
-            </span>
-            <svg width="13" height="13" viewBox="0 0 13 13" fill="none" className="shrink-0 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" aria-hidden>
-              <path d="M2 11L11 2M11 2H4M11 2V9" stroke="#FFFFFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </a>
+          {/* Browser CTA + App Store + Google Play badges — same trio the
+              Hero uses. Flex-wrap so the badges stack under the pill on
+              narrow viewports. */}
+          <div className="flex flex-wrap items-center justify-center" style={{ gap: 12 }}>
+            <a
+              href="https://mapsgpt.es"
+              target="_blank"
+              rel="noreferrer"
+              className="group inline-flex items-center justify-center gap-3 rounded-button-md bg-cta px-5 py-3 no-underline transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
+            >
+              <span style={{
+                fontFamily: "var(--hiw-font-sans)",
+                fontWeight: 590,
+                fontSize: "16px",
+                letterSpacing: "-0.02em",
+                color: "#FFFFFF",
+                whiteSpace: "nowrap",
+              }}>
+                Try Elio it&apos;s free!
+              </span>
+              <svg width="13" height="13" viewBox="0 0 13 13" fill="none" className="shrink-0 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" aria-hidden>
+                <path d="M2 11L11 2M11 2H4M11 2V9" stroke="#FFFFFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </a>
+            <StoreBadges />
+          </div>
         </div>
 
       </div>
@@ -163,44 +191,68 @@ export default function FinalCTASection() {
             of the globe image, in dark Columbus-navy ink. */}
         <div className="absolute inset-0 z-10 flex items-start justify-center" style={{ paddingTop: "clamp(48px, 5vw, 96px)" }}>
           <div className="text-center" style={{ maxWidth: 720, paddingInline: "var(--hiw-content-px)" }}>
+            {/* MapsGPT globe + "Elio is browser based" eyebrow */}
+            <div className="flex items-center justify-center" style={{ gap: 10, marginBottom: "var(--hiw-space-3)" }}>
+              <MapsGPTGlobe size={32} />
+              <p style={{
+                fontFamily: "var(--hiw-font-sans)",
+                fontWeight: "var(--hiw-weight-regular)" as unknown as number,
+                fontSize: "var(--hiw-text-lg)",
+                letterSpacing: "0.02em",
+                lineHeight: 1.4,
+                color: "#0B1342",
+              }}>
+                <span style={{
+                  fontWeight: "var(--hiw-weight-semibold)" as unknown as number,
+                  background: "linear-gradient(180deg, #00B1D4 0%, #0089A3 100%)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  backgroundClip: "text",
+                }}>Elio</span>
+                <span>{" "}is browser based</span>
+              </p>
+            </div>
 
             {/* Title */}
             <h2 style={{
-              fontFamily: "Axiforma, -apple-system, BlinkMacSystemFont, sans-serif",
+              fontFamily: "var(--hiw-font-sans)",
               fontWeight: "var(--hiw-weight-bold)" as unknown as number,
               fontSize: "var(--hiw-text-5xl)",
               lineHeight: 1.05,
               letterSpacing: "-0.02em",
-              marginBottom: "var(--hiw-space-4)",
+              marginBottom: "var(--hiw-space-8)",
               color: "#0B1342",
             }}>
-              We&apos;re always
+              Find your next
               <br />
-              there for you.
+              <TypedPhrase />
             </h2>
 
-
-            {/* Navy primary CTA — bg-cta (#0B1342) with white text + arrow,
-                matches the navbar's "Try Elio" pill. */}
-            <a
-              href="https://mapsgpt.es"
-              target="_blank"
-              rel="noreferrer"
-              className="group inline-flex items-center justify-center gap-3 rounded-button bg-cta px-6 py-4 no-underline transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
-            >
-              <span style={{
-                fontFamily: "Opening Hours Sans, -apple-system, BlinkMacSystemFont, sans-serif",
-                fontWeight: 590,
-                fontSize: "20px",
-                letterSpacing: "-0.02em",
-                color: "#FFFFFF",
-              }}>
-                Try Elio it&apos;s free!
-              </span>
-              <svg width="13" height="13" viewBox="0 0 13 13" fill="none" className="shrink-0 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" aria-hidden>
-                <path d="M2 11L11 2M11 2H4M11 2V9" stroke="#FFFFFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </a>
+            {/* Browser CTA + App Store + Google Play badges — same trio
+                the Hero uses, flex-wrapped so the badges drop below the
+                navy pill on narrower viewports. */}
+            <div className="flex flex-wrap items-center justify-center" style={{ gap: 12 }}>
+              <a
+                href="https://mapsgpt.es"
+                target="_blank"
+                rel="noreferrer"
+                className="group inline-flex items-center justify-center gap-3 rounded-button-lg bg-cta px-6 py-4 no-underline transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
+              >
+                <span style={{
+                  fontFamily: "var(--hiw-font-sans)",
+                  fontWeight: 590,
+                  fontSize: "20px",
+                  letterSpacing: "-0.02em",
+                  color: "#FFFFFF",
+                }}>
+                  Try Elio it&apos;s free!
+                </span>
+                <svg width="13" height="13" viewBox="0 0 13 13" fill="none" className="shrink-0 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" aria-hidden>
+                  <path d="M2 11L11 2M11 2H4M11 2V9" stroke="#FFFFFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </a>
+              <StoreBadges />
+            </div>
           </div>
         </div>
       </div>
@@ -299,5 +351,71 @@ function FriendPin({ p, leftPx, topPx, leftPct, topPct, mobile, visible }: Frien
         }}>{p.dist}</span>
       </div>
     </div>
+  );
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   TypedPhrase — cycles through "find your next ___" phrases with the
+   same typewriter mechanic as the Hero's TypedPhrase, but standalone
+   so it can be reused without coupling to Hero's video-swap callback.
+   Caret is the section's navy ink (#0B1342) since this section's H2 is
+   dark-on-light, vs the Hero's white-caret on dark-photo.
+   ════════════════════════════════════════════════════════════════════ */
+const FINAL_TYPED_PHRASES = [
+  "rave spot",
+  "hang out",
+  "group dinner",
+  "weekend trip",
+  "date night",
+  "favorite cafe",
+  "secret beach",
+  "city break",
+];
+
+function TypedPhrase() {
+  const [text, setText] = useState("");
+  const [phraseIdx, setPhraseIdx] = useState(0);
+  const [deleting, setDeleting] = useState(false);
+
+  useEffect(() => {
+    const full = FINAL_TYPED_PHRASES[phraseIdx];
+    let delay: number;
+    if (!deleting && text === full) delay = 2200;
+    else if (deleting && text === "") delay = 280;
+    else delay = deleting ? 32 : 70;
+
+    const t = setTimeout(() => {
+      if (!deleting && text === full) {
+        setDeleting(true);
+      } else if (deleting && text === "") {
+        setDeleting(false);
+        setPhraseIdx((i) => (i + 1) % FINAL_TYPED_PHRASES.length);
+      } else if (deleting) {
+        setText(full.slice(0, text.length - 1));
+      } else {
+        setText(full.slice(0, text.length + 1));
+      }
+    }, delay);
+
+    return () => clearTimeout(t);
+  }, [text, deleting, phraseIdx]);
+
+  return (
+    <span style={{ display: "inline-block", whiteSpace: "nowrap" }}>
+      <span>{text}</span>
+      <span
+        aria-hidden
+        style={{
+          display: "inline-block",
+          width: "0.06em",
+          height: "0.9em",
+          marginLeft: "0.08em",
+          verticalAlign: "-0.08em",
+          background: "#0B1342",
+          animation: "mgFinalCTACaret 1s steps(1) infinite",
+        }}
+      />
+      <style>{`@keyframes mgFinalCTACaret { 0%,49% { opacity: 1 } 50%,100% { opacity: 0 } }`}</style>
+    </span>
   );
 }

@@ -15,8 +15,7 @@ export default function PhoneMockup() {
         boxShadow: "0px 4px 61px rgba(0, 0, 0, 0.25)",
         boxSizing: "content-box",
         zIndex: 50,
-        top: "50%",
-        marginTop: -160,
+        bottom: -380,
       }}
     >
       <Image
