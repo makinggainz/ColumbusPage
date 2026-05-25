@@ -216,6 +216,11 @@
     rgba(0, 92, 181, 0.88) 100%
   );
 }
+
+/* No overlay for engineering cover images */
+.noOverlay::before {
+  background: none;
+}
 @media (prefers-reduced-motion: reduce) {
   .cardMedia img,
   .card:hover .cardMedia img { transition: none; transform: none; }
