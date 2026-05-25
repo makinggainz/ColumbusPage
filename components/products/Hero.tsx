@@ -95,10 +95,16 @@ const LABELS = [
 // stacked, opacity-toggling to whichever label is closest to the
 // viewport anchor — see `activeLabel` below.
 const PHONE_IMAGES = [
-  "/consumer/elioHome1.png",                    // 0  For your city.
+  "/consumer/elio/ElioChat.png",                // 0  For your city. (active)
   "/consumer/elio/ElioZone.png",                // 1  For your travels.
   "/consumer/elio/Localguideinyourpocket.png",  // 2  and everything in between
 ] as const;
+
+// Distinct mockup shown during the hero header (phase 0) so the phone
+// screen visibly swaps the moment "For your city" becomes the active
+// scene. Without this, intro and active-city would both render
+// PHONE_IMAGES[0] and the transition would be invisible.
+const INTRO_PHONE_IMAGE = "/consumer/elioHome1.png";
 
 // ── Scene-3 user posts ───────────────────────────────────────────────
 // Floating Instagram-style cards scattered around the pinned phone
@@ -432,6 +438,25 @@ export default function Hero() {
                       overflow: "hidden",
                     }}
                   >
+                    {/* Intro mockup — shown only during phase 0 (hero
+                        header). Crossfades out the moment "For your
+                        city" activates and PHONE_IMAGES[0] takes over. */}
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={INTRO_PHONE_IMAGE}
+                      alt=""
+                      aria-hidden
+                      style={{
+                        position: "absolute",
+                        inset: 0,
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "cover",
+                        objectPosition: "top center",
+                        opacity: phase === 0 ? 1 : 0,
+                        transition: "opacity 500ms ease",
+                      }}
+                    />
                     {PHONE_IMAGES.map((src, i) => (
                       /* eslint-disable-next-line @next/next/no-img-element */
                       <img
@@ -450,7 +475,10 @@ export default function Hero() {
                           // (status bar / footer / extra UI below) gets
                           // cropped off the bottom rather than the top.
                           objectPosition: "top center",
-                          opacity: i === activeLabel ? 1 : 0,
+                          // Only paint when we're out of the intro AND
+                          // this is the active label, so the intro layer
+                          // owns phase 0 cleanly.
+                          opacity: phase > 0 && i === activeLabel ? 1 : 0,
                           transition: "opacity 500ms ease",
                         }}
                       />
@@ -461,38 +489,6 @@ export default function Hero() {
             </div>
           </div>
 
-          {/* Scene-3 closing title — fixed at viewport bottom centre,
-              directly under the pinned phone. Visible only during phase
-              3; opacity-toggled so it fades in as the user reaches the
-              "everything in between" scene. */}
-          <div
-            aria-hidden
-            className="absolute left-1/2"
-            style={{
-              bottom: "clamp(36px, 6vh, 72px)",
-              transform: "translateX(-50%)",
-              zIndex: 20,
-              opacity: phase === 3 ? 1 : 0,
-              transition: "opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1)",
-              pointerEvents: "none",
-              textAlign: "center",
-              paddingInline: 24,
-            }}
-          >
-            <h2
-              style={{
-                fontFamily: "Axiforma, -apple-system, BlinkMacSystemFont, sans-serif",
-                fontSize: isLg ? 40 : 28,
-                fontWeight: 590,
-                lineHeight: 1.15,
-                letterSpacing: "-0.02em",
-                color: "#0B1B2B",
-                margin: 0,
-              }}
-            >
-              and everything in between
-            </h2>
-          </div>
         </div>
       </div>
 
@@ -526,6 +522,22 @@ export default function Hero() {
             style={{
               objectFit: "cover",
               objectPosition: "center center",
+            }}
+          />
+          {/* Inactive-scene dim — fades in once the sticky scroll takes
+              over (phase >= 1) so the hero matches the same 0.55 black
+              treatment that "For your travels" wears when "For your
+              city" is active. Keeps the brightness ranking consistent:
+              only the currently-active scene reads bright. */}
+          <div
+            aria-hidden
+            style={{
+              position: "absolute",
+              inset: 0,
+              background: "rgba(0,0,0,0.55)",
+              opacity: phase >= 1 ? 1 : 0,
+              transition: "opacity 0.45s cubic-bezier(0.22, 1, 0.36, 1)",
+              pointerEvents: "none",
             }}
           />
         </div>
@@ -578,7 +590,8 @@ export default function Hero() {
                     textAlign: "center",
                     letterSpacing: "-0.02em",
                     lineHeight: 1.2,
-                    textShadow: "0px 0px 30px rgba(0, 0, 0, 0.25)",
+                    textShadow:
+                      "0 1px 2px rgba(0, 0, 0, 0.45), 0 4px 14px rgba(0, 0, 0, 0.55), 0 0 40px rgba(0, 0, 0, 0.35)",
                     maxWidth: 800,
                     margin: 0,
                   }}
@@ -621,9 +634,9 @@ export default function Hero() {
                   height: 46,
                   padding: "0 22px",
                   borderRadius: 18,
-                  /* Black pill with white label, no drop shadow. */
-                  background: "#000000",
-                  color: "#FFFFFF",
+                  /* White pill with dark label + arrow. */
+                  background: "#FFFFFF",
+                  color: "#0B1342",
                   fontFamily: '"SF Pro", -apple-system, BlinkMacSystemFont, sans-serif',
                   fontSize: 15,
                   fontWeight: 600,
@@ -636,7 +649,7 @@ export default function Hero() {
               >
                 Try Elio in browser
                 <svg width="13" height="13" viewBox="0 0 13 13" fill="none" className="shrink-0 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" aria-hidden>
-                  <path d="M2 11L11 2M11 2H4M11 2V9" stroke="#FFFFFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                  <path d="M2 11L11 2M11 2H4M11 2V9" stroke="#0B1342" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               </a>
               <StoreBadges />
@@ -767,32 +780,60 @@ export default function Hero() {
                   // tracking — nothing rendered inline here.
                   null
                 ) : isLg ? (
-                  <div
-                    style={{
-                      paddingInline: 60,
-                      maxWidth: 1400,
-                      marginInline: "auto",
-                    }}
-                  >
-                    <h2
-                      style={{
-                        fontFamily: "Axiforma, -apple-system, BlinkMacSystemFont, sans-serif",
-                        fontSize: "clamp(48px, 7vw, 66px)",
-                        fontWeight: 590,
-                        lineHeight: 1.1,
-                        letterSpacing: "-0.02em",
-                        color: sc.ink,
-                        margin: 0,
-                        maxWidth: "min(520px, 40vw)",
-                        marginLeft: onLeft ? 0 : "auto",
-                        marginRight: onLeft ? "auto" : 0,
-                        textAlign: onLeft ? "left" : "right",
-                        textShadow: hasImage ? "0px 0px 30px rgba(0, 0, 0, 0.35)" : undefined,
-                      }}
-                    >
-                      {lab.title}
-                    </h2>
-                  </div>
+                  // Three-column flex row [left zone | phone spacer | right zone]
+                  // — the centre spacer matches the pinned phone's width so the
+                  // two side zones are mirror images. Each side carries the same
+                  // inner padding (LABEL_PHONE_GAP), which guarantees the title's
+                  // edge facing the phone sits the same distance from the phone
+                  // on both scenes, regardless of text width.
+                  (() => {
+                    const LABEL_PHONE_GAP = 60;
+                    const OUTER_PAD = 60;
+                    const titleStyle = {
+                      fontFamily: "Axiforma, -apple-system, BlinkMacSystemFont, sans-serif",
+                      fontSize: "clamp(48px, 7vw, 66px)",
+                      fontWeight: 590,
+                      lineHeight: 1.1,
+                      letterSpacing: "-0.02em",
+                      color: sc.ink,
+                      margin: 0,
+                      maxWidth: "min(520px, 40vw)",
+                      textShadow: hasImage ? "0px 0px 30px rgba(0, 0, 0, 0.35)" : undefined,
+                    } as const;
+                    return (
+                      <div style={{ display: "flex", width: "100%", alignItems: "center" }}>
+                        <div
+                          style={{
+                            flex: 1,
+                            minWidth: 0,
+                            paddingLeft: OUTER_PAD,
+                            paddingRight: LABEL_PHONE_GAP,
+                            display: "flex",
+                            justifyContent: "flex-end",
+                          }}
+                        >
+                          {onLeft && (
+                            <h2 style={{ ...titleStyle, textAlign: "right" }}>{lab.title}</h2>
+                          )}
+                        </div>
+                        <div style={{ width: phoneW, flexShrink: 0 }} aria-hidden />
+                        <div
+                          style={{
+                            flex: 1,
+                            minWidth: 0,
+                            paddingLeft: LABEL_PHONE_GAP,
+                            paddingRight: OUTER_PAD,
+                            display: "flex",
+                            justifyContent: "flex-start",
+                          }}
+                        >
+                          {!onLeft && (
+                            <h2 style={{ ...titleStyle, textAlign: "left" }}>{lab.title}</h2>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })()
                 ) : (
                   <h2
                     style={{

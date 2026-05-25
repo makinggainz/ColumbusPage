@@ -361,11 +361,26 @@ export function MistxNav({
           }}
         />
       )}
-      {/* darkBackdrop scrim removed — consumer page wants the navbar
-          fully transparent over every scene, so the hero / scene
-          backdrop image shows through directly. The white solid
-          backdrop still kicks in once the navbar pins past the hero
-          (see the header's backgroundColor logic above). */}
+      {/* darkBackdrop — black gradient behind the navbar while it
+          floats over the hero, so the white nav contents read clearly
+          against any photo. Fades to transparent at the navbar's
+          bottom edge; opacity tracks darkScrimActive so it disappears
+          the moment the navbar pins above the next section. */}
+      {darkBackdrop && (
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-x-0 top-0 bottom-0"
+          style={{
+            zIndex: 0,
+            borderTopLeftRadius: "var(--frame-radius, 20px)",
+            borderTopRightRadius: "var(--frame-radius, 20px)",
+            background:
+              "linear-gradient(to bottom, rgba(0, 0, 0, 0.32) 0%, rgba(0, 0, 0, 0.18) 50%, rgba(0, 0, 0, 0) 100%)",
+            opacity: darkScrimActive ? 1 : 0,
+            transition: "opacity 300ms ease",
+          }}
+        />
+      )}
       {/* Content row — bounds match the page's content sections
           (max-w-[1287px] mx-5 md:mx-auto), no inner padding, so the logo's
           left edge and the "Try Elio" CTA's right edge sit flush with the
