@@ -760,7 +760,7 @@ export default function Hero() {
         <div aria-hidden className="absolute inset-0 overflow-hidden">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/consumer/heroBackground.jpg"
+            src="/consumer/heroBackground.png"
             alt=""
             aria-hidden
             className="absolute inset-0 w-full h-full"
