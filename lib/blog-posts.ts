@@ -44,8 +44,8 @@ export const BLOG_SLUG = {
   elioEuropeGuide: "elio-europe-guide",
   elioSpainGuide: "elio-spain-guide",
   elioFunResearch: "elio-fun-research",
-  foundingLgmsInDepth: "founding-lgms-in-depth",
-  ugmRoadmapGamePlan: "ugm-roadmap-game-plan",
+  elioV2NewFeatures: "elio-v2-new-features",
+  joinUsResearchOpportunities: "join-us-research-opportunities",
 } as const;
 
 export const BLOG_POSTS: BlogPost[] = [
@@ -237,30 +237,26 @@ export const BLOG_POSTS: BlogPost[] = [
     paragraphs: ["lorem"],
   },
   {
-    slug: BLOG_SLUG.foundingLgmsInDepth,
-    title: "Founding large geospatial models: an in-depth primer",
-    date: "Nov 2025",
-    publishedAt: "2025-11-01",
-    image: "/ColumbusBackgroundbento.png",
+    slug: BLOG_SLUG.elioV2NewFeatures,
+    title: "Elio: V2 new features",
+    date: "Apr 2026",
+    publishedAt: "2026-04-01",
+    image: "/Blogs/elio.png",
     category: "COMPANY NEWS",
-    audience: "For the interested",
-    description: "From first principles to the Columbus Earth research stack.",
-    paragraphs: [
-      "This long-form primer introduces the data, fusion, and reasoning pillars that define an LGM at Columbus Earth. It is meant for technical readers who want the narrative behind our public roadmap.",
-    ],
+    audience: "For travelers",
+    description: "lorem",
+    paragraphs: ["lorem"],
   },
   {
-    slug: BLOG_SLUG.ugmRoadmapGamePlan,
-    title: "Our game plan toward UGM",
-    date: "Sep 2025",
-    publishedAt: "2025-09-01",
-    image: "/blog-clouds-dawn.jpg",
+    slug: BLOG_SLUG.joinUsResearchOpportunities,
+    title: "Join us! Research opportunities for the rebelious",
+    date: "Apr 2026",
+    publishedAt: "2026-04-02",
+    image: "/Blogs/joinUs.png",
     category: "COMPANY NEWS",
-    audience: "For Columbus",
-    description: "Milestones from generalist LGM to a universal geospatial model.",
-    paragraphs: [
-      "Universal Geospatial Model (UGM) is the horizon: one reasoning stack that can ingest planetary-scale evidence and support business, scientific, and civic use cases. This roadmap highlights dependencies on data coverage, evaluation harnesses, and partner feedback.",
-    ],
+    audience: "For the interested",
+    description: "lorem",
+    paragraphs: ["lorem"],
   },
 ];
 
