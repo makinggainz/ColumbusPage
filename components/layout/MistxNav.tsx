@@ -240,11 +240,10 @@ export function MistxNav({
     (heroWhite && (!stuck || overHero)) ||
     // In darkBackdrop mode every photo-backed scene (phases 0, 1, 2)
     // gets white nav contents so the logo / links / CTA read on the
-    // imagery; phase 3 sits on a clean white field, so nav contents
-    // flip back to dark there. (heroLight legacy: only phase 2 was
-    // navy-dark enough to need light nav contents.)
+    // imagery. (heroLight legacy: only phase 2 was navy-dark enough to
+    // need light nav contents.)
     (heroLight && overHero && heroPhase === 2) ||
-    (darkBackdrop && overHero && heroPhase !== 3) ||
+    (darkBackdrop && overHero) ||
     darkScrimActive;
   // Business-only: while scrolled ("on movement") AND the navbar still
   // overlaps the hero, the solid white backdrop is replaced by a scrim

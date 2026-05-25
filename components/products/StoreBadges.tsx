@@ -58,10 +58,18 @@ const CSS = `
 }
 .mg-badge--lg .mg-badge-l1 { font-size: 12px; }
 .mg-badge--lg .mg-badge-l2 { font-size: 18px; font-weight: 600; }
+
+/* Light variant — white pill with dark text, for use over photo
+   backgrounds (consumer hero). Hover stays in the cyan band. */
+.mg-badge--light { background: #ffffff; color: #0B1342; }
+.mg-badge--light:hover { color: #154ACC; }
 `;
 
-export default function StoreBadges({ size = "default" }: { size?: "default" | "lg" } = {}) {
-  const cls = `mg-badge${size === "lg" ? " mg-badge--lg" : ""}`;
+export default function StoreBadges({
+  size = "default",
+  light = false,
+}: { size?: "default" | "lg"; light?: boolean } = {}) {
+  const cls = `mg-badge${size === "lg" ? " mg-badge--lg" : ""}${light ? " mg-badge--light" : ""}`;
   const glyphSize = size === "lg" ? 26 : 20;
   return (
     <>
