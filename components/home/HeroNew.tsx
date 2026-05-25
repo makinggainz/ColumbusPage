@@ -168,7 +168,10 @@ const HN_CSS = `
   max-width: 40rem;
 }
 @media (min-width: 992px) {
-  .hn-title { max-width: 64rem; }
+  .hn-title {
+    max-width: 64rem;
+    font-size: 60px;
+  }
 }
 
 /* Eyebrow / kicker — small label above the H1, set in the same accent
