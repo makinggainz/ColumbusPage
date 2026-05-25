@@ -59,7 +59,7 @@ body {
   margin: 0;
   padding: 0;
   /* White site backdrop behind the PageFrame card — visible through the
-     30px gutter around the frame on every route. */
+     top gutter (no left/right gutter) around the frame on every route. */
   background-color: #FFFFFF;
   color: #1D1D1F;
   overflow-x: clip;

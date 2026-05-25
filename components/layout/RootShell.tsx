@@ -51,12 +51,7 @@ export function RootShell({ children }: { children: ReactNode }) {
   }
   return (
     <>
-      <Footer
-        reveal
-        theme="light"
-        bg="#FFFFFF"
-        bgImage="/footerbackgroundimg2.png"
-      />
+      <Footer reveal theme="light" />
       <PageFrame>{children}</PageFrame>
     </>
   );
