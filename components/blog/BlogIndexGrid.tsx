@@ -26,7 +26,7 @@ export function BlogIndexGrid({ posts, activeFilter }: Props) {
       {visiblePosts.map((post) => (
         <Link key={post.slug} href={`/blog/${post.slug}`} className={styles.card}>
           {/* Media tile — 13px corners + hairline ring + corner notch. */}
-          <div className={styles.cardMedia}>
+          <div className={`${styles.cardMedia} ${post.image?.includes("EngineeringCover") ? styles.noOverlay : ""}`}>
             {post.image ? (
               <Image
                 src={post.image}
