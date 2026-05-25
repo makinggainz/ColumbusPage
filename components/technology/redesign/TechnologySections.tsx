@@ -83,7 +83,7 @@ export function TechnologySections() {
                     like Aldus PageMaker including versions of Lorem Ipsum.
                   </p>
                 </div>
-                <Link href={blogHref(BLOG_SLUG.foundingLgmsInDepth)} className={styles.lgmInlineCta}>
+                <Link href={blogHref(BLOG_SLUG.philosophyUniversalLgm)} className={styles.lgmInlineCta}>
                   <span>Read our in-depth article</span>
                   <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden>
                     <path d="M2.5 9.5L9.5 2.5M9.5 2.5H4M9.5 2.5V8" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
@@ -320,7 +320,7 @@ export function TechnologySections() {
               </div>
               <div className={`${styles.lgmTimelineMilestone} ${styles.lgmTimelineMilestoneBottom}`} style={{ left: x2026 }}>
                 <span className={styles.lgmTimelineYear}>2026</span>
-                <Link href={blogHref(BLOG_SLUG.timelineGeneralistLgm)} className={styles.lgmTimelineCta}>
+                <Link href={blogHref(BLOG_SLUG.lgmTimeline)} className={styles.lgmTimelineCta}>
                   <span>Read our Paper</span>
                   <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden>
                     <path d="M2.5 9.5L9.5 2.5M9.5 2.5H4M9.5 2.5V8" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
@@ -335,7 +335,7 @@ export function TechnologySections() {
               </div>
               <div className={`${styles.lgmTimelineMilestone} ${styles.lgmTimelineMilestoneBottom}`} style={{ left: yearMid(2028) }}>
                 <span className={styles.lgmTimelineYear}>2028</span>
-                <Link href={blogHref(BLOG_SLUG.ugmRoadmapGamePlan)} className={styles.lgmTimelineCta}>
+                <Link href={blogHref(BLOG_SLUG.whyBuildingLgm)} className={styles.lgmTimelineCta}>
                   <span>Our Game Plan</span>
                   <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden>
                     <path d="M2.5 9.5L9.5 2.5M9.5 2.5H4M9.5 2.5V8" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
@@ -416,7 +416,7 @@ export function TechnologySections() {
                     model, the LGM.
                   </p>
                 </div>
-                <Link href={blogHref(BLOG_SLUG.llmsGeospatialQueries)} className={styles.lgmInlineCta}>
+                <Link href={blogHref(BLOG_SLUG.whyLlmsDidntCutIt)} className={styles.lgmInlineCta}>
                   <span>Why LLMs didn&apos;t work</span>
                   <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden>
                     <path d="M2.5 9.5L9.5 2.5M9.5 2.5H4M9.5 2.5V8" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
@@ -509,7 +509,7 @@ export function TechnologySections() {
                     Our core reasoning is comprised of a new permutation of
                     Reverse Diffusion and RAG architecture.
                   </p>
-                  <Link href={blogHref(BLOG_SLUG.generativeGeospatialLayers)} className={styles.coreResearchGroupLink}>
+                  <Link href={blogHref(BLOG_SLUG.mappingUnknownGenLayers)} className={styles.coreResearchGroupLink}>
                     Read our Paper
                     <svg width="10" height="10" viewBox="0 0 10 10" aria-hidden>
                       <path d="M2 8l6-6M3.5 2H8v4.5" stroke="currentColor" strokeWidth="1.3" fill="none" strokeLinecap="round" strokeLinejoin="round" />
@@ -630,7 +630,7 @@ export function TechnologySections() {
                   <strong>unknown with Gen Layers</strong>
                 </p>
               </Link>
-              <Link href={blogHref(BLOG_SLUG.deepSpatialReasoningScale)} className={`${styles.lgmArticleCard} ${styles.lgmArticleCardBgDeepLayers}`}>
+              <Link href={blogHref(BLOG_SLUG.mimickingAdultBrain)} className={`${styles.lgmArticleCard} ${styles.lgmArticleCardBgDeepLayers}`}>
                 <p>
                   Read our article on<br />
                   <strong>deep spatial reasoning</strong>

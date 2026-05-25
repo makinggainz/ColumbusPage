@@ -65,12 +65,12 @@ export const RESEARCH_CARDS: ResearchCard[] = [
   },
   {
     title: "Earth recipes.",
-    href: blogHref(BLOG_SLUG.earthRecipes),
+    href: blogHref(BLOG_SLUG.earthRecipesWorldThink),
     image: "/TechnologyPageImages/unkown-layers.jpeg",
   },
   {
     title: "Research: creating a fire prediction model.",
-    href: blogHref(BLOG_SLUG.erickFirePrediction),
+    href: blogHref(BLOG_SLUG.firePredictonModel),
     image: "/TechnologyPageImages/techpg-radiance.png",
   },
 ];
@@ -78,27 +78,27 @@ export const RESEARCH_CARDS: ResearchCard[] = [
 export const RESEARCH_ARTICLES: ResearchArticle[] = [
   {
     title: "MapsGPT Version 2.5. Architecture improvements.",
-    href: blogHref(BLOG_SLUG.mapsgptV25Architecture),
+    href: blogHref(BLOG_SLUG.mapsgptBuildingUseful),
     date: "Apr 2026",
   },
   {
     title: "Research Paper -- Erick fire prediction",
-    href: blogHref(BLOG_SLUG.erickFirePrediction),
+    href: blogHref(BLOG_SLUG.firePredictonModel),
     date: "Mar 2026",
   },
   {
     title: "MapsGPT. Building a consumer product",
-    href: blogHref(BLOG_SLUG.mapsgptConsumerProduct),
+    href: blogHref(BLOG_SLUG.mapsgptBuildingUseful),
     date: "Feb 2026",
   },
   {
     title: "Why LLMs dont cut it. Issues in LLM architecture for Geosaptial queries.",
-    href: blogHref(BLOG_SLUG.llmsGeospatialQueries),
+    href: blogHref(BLOG_SLUG.whyLlmsDidntCutIt),
     date: "Jan 2026",
   },
   {
     title: "A paper on Generative geospatial layers.",
-    href: blogHref(BLOG_SLUG.generativeGeospatialLayers),
+    href: blogHref(BLOG_SLUG.mappingUnknownGenLayers),
     date: "Dec 2025",
   },
 ];
