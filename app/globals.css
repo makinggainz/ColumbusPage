@@ -112,6 +112,16 @@ html {
   --color-gridline: #E7E7F1;     /* blueprint-grid hairline */
   --color-brand: #1451E8;        /* NewsCatcher Blue — signal colour only */
   --color-brand-soft: #74A0FE;   /* decorative gradient stop only */
+  /* Site-wide accent — paints navbar arrows, link hover states, eyebrows,
+     focus rings, and decorative tints across every page. Sampled from
+     the most-saturated blue in the homepage hero illustration so the
+     UI accent feels lifted from the artwork. SINGLE SOURCE OF TRUTH:
+     change here to retint every accent surface site-wide. Generates the
+     `text-accent`, `bg-accent`, `border-accent`, `outline-accent`,
+     `accent-accent`, `from-accent`/`to-accent`, `decoration-accent`,
+     `caret-accent`, and `ring-accent` Tailwind utilities; CSS files
+     reference it as var(--color-accent). */
+  --color-accent: #6094C1;
   /* Primary CTA / filled-button surface — the navy brand colour the
      navbar Columbus logo renders as. Generates the `bg-cta` utility. */
   --color-cta: #0B1342;

@@ -12,7 +12,7 @@ import styles from "@/app/blog/blog-index.module.css";
 const FILTER_LABELS: Record<BlogFilter, string> = {
   ALL: "All articles",
   PRODUCT: "Product",
-  ENGINEERING: "Engineering",
+  ENGINEERING: "Research",
   "COMPANY NEWS": "Company News",
 };
 

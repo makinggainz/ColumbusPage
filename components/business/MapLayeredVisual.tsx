@@ -222,7 +222,7 @@ export default function MapLayeredVisual({
               background: "#FFFFFF",
               border: "2px solid var(--ent-accent)",
               boxShadow:
-                "0 0 0 6px rgba(0,129,172,0.20), 0 2px 8px rgba(0,0,0,0.25)",
+                "0 0 0 6px color-mix(in srgb, var(--color-accent) 20%, transparent), 0 2px 8px rgba(0,0,0,0.25)",
               transform: "translate(-50%, -50%)",
               pointerEvents: "none",
             }}

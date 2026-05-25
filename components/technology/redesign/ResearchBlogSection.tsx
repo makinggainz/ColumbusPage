@@ -1,96 +1,202 @@
+import Image from "next/image";
 import Link from "next/link";
 
-import styles from "../technology.module.css";
-import { RESEARCH_ARTICLES, RESEARCH_CARDS } from "./content";
+import { BLOG_POSTS, blogHref } from "@/lib/blog-posts";
 import { RevealOnView } from "./RevealOnView";
 
-/**
- * Token bundle so this section renders correctly when used OUTSIDE the
- * technology page. The technology page sets these on `.page`; on
- * `/columbus-solutions` and `/research-applications` (the two routes that
- * embed this component) `.page` isn't applied, so the inner CSS-module
- * rules (`.sectionTitle`, `.sectionLead`, `.researchCardTitle`,
- * `.articleRowTitle`, etc.) would resolve `var(--tech-fs-*)` to nothing
- * and the type collapses. Inlining the same values on the wrapping
- * `<section>` keeps the cascade intact in both places.
- */
-const techTokens: React.CSSProperties = {
-  ["--tech-fs-h1" as string]: "61px",
-  ["--tech-fs-h2" as string]: "49px",
-  ["--tech-fs-h3" as string]: "39px",
-  ["--tech-fs-h4" as string]: "28px",
-  ["--tech-fs-h5" as string]: "22px",
-  ["--tech-fs-body-lg" as string]: "20px",
-  ["--tech-fs-body" as string]: "18px",
-  ["--tech-fs-body-sm" as string]: "16px",
-  ["--tech-fs-caption" as string]: "13px",
-  ["--tech-color-text" as string]: "#1D1D1F",
-  ["--tech-color-text-brand" as string]: "#0A1344",
-  ["--tech-color-text-secondary" as string]: "#6E6E73",
-  ["--tech-color-text-muted" as string]: "rgba(10, 19, 68, 0.45)",
-  ["--tech-color-bg" as string]: "#F9F9F9",
-  ["--tech-color-bg-card" as string]: "#FFFFFF",
-  ["--tech-color-accent" as string]: "#0066CC",
-  ["--tech-color-border" as string]: "rgba(0, 102, 204, 0.3)",
-  ["--tech-color-divider" as string]: "rgba(0, 0, 0, 0.07)",
-  ["--tech-color-card-border" as string]: "rgba(10, 19, 68, 0.10)",
-  ["--tech-radius-sm" as string]: "3px",
-  ["--tech-radius-base" as string]: "6px",
-  ["--tech-radius-md" as string]: "0px",
-  ["--tech-radius-lg" as string]: "14px",
-  ["--tech-radius-xl" as string]: "18px",
-  ["--tech-tracking-tight" as string]: "-0.02em",
-  ["--tech-tracking-snug" as string]: "-0.01em",
-  ["--tech-tracking-wide" as string]: "0.08em",
-  // Design-system body font (Opening Hours Sans). Headings inside still
-  // opt into Funnel Display via their own `font-family: var(--font-display)`.
-  fontFamily: "var(--font-sans)",
-};
+const CSS = `
+.research-blog-bounds {
+  max-width: 1287px;
+  margin-left: 20px;
+  margin-right: 20px;
+  box-sizing: border-box;
+}
+@media (min-width: 768px) {
+  .research-blog-bounds { margin-left: auto; margin-right: auto; }
+}
+
+.research-blog-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 48px 32px;
+}
+
+@media (max-width: 1024px) {
+  .research-blog-grid { grid-template-columns: repeat(2, 1fr); gap: 40px 24px; }
+}
+
+@media (max-width: 600px) {
+  .research-blog-grid { grid-template-columns: 1fr; }
+}
+
+.research-blog-card {
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  color: inherit;
+}
+
+.research-blog-card-media {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  border-radius: 13px;
+  overflow: hidden;
+  background: #ECEFF3;
+  margin-bottom: 16px;
+}
+
+.research-blog-card-media img {
+  object-fit: cover;
+}
+
+.research-blog-card-body {
+  display: flex;
+  flex-direction: column;
+}
+
+.research-blog-card-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.research-blog-card-category,
+.research-blog-card-date {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+.research-blog-card-date {
+  font-variant-numeric: tabular-nums;
+}
+
+.research-blog-card-meta-dot {
+  color: var(--color-muted);
+  font-size: 12px;
+  line-height: 1;
+}
+
+.research-blog-card-title {
+  display: block;
+  color: var(--color-ink);
+  letter-spacing: -0.015em;
+  margin: 0 0 8px;
+}
+
+.research-blog-card-description {
+  display: block;
+  color: var(--color-muted);
+}
+
+.research-blog-cta {
+  margin-top: 56px;
+  display: flex;
+  justify-content: center;
+}
+`;
+
+function getRandomBlogCards() {
+  const shuffled = [...BLOG_POSTS].sort(() => Math.random() - 0.5);
+  return shuffled.slice(0, 3);
+}
 
 export function ResearchBlogSection() {
+  const randomPosts = getRandomBlogCards();
+
   return (
     <section
       id="research-blog"
       className="w-full py-[120px] max-md:py-[72px] flex justify-center"
-      style={techTokens}
     >
+      <style>{CSS}</style>
       <div className="w-full max-w-[1287px] mx-auto px-8 md:px-10">
-        <RevealOnView className={styles.researchEditorial}>
-          <h2 className={styles.sectionTitle}>Read our latest releases</h2>
-          <p className={styles.sectionLead}>
-            Explore the innovative research and recent papers from our team.
-          </p>
-
-          <div className={styles.researchCardGrid}>
-            {RESEARCH_CARDS.map((card, index) => (
-              <Link
-                key={card.title}
-                href={card.href}
-                className={
-                  index === 0
-                    ? `${styles.researchCard} ${styles.researchCardFeatured}`
-                    : styles.researchCard
-                }
-                style={card.image ? ({ "--card-bg": `url(${card.image})` } as Record<string, string>) : undefined}
-              >
-                <div className={styles.researchCardSpacer} aria-hidden="true" />
-                <span className={styles.researchCardTitle}>{card.title}</span>
-                <span className={styles.researchCardArrow}>&#8599;</span>
-              </Link>
-            ))}
+        <RevealOnView>
+          <div style={{ textAlign: "center", marginBottom: "56px" }}>
+            <h2 style={{ fontSize: "42px", marginBottom: "16px", color: "var(--color-ink)" }}>
+              Read our latest releases
+            </h2>
+            <p style={{ fontSize: "18px", color: "var(--color-muted)" }}>
+              Explore the innovative research and recent papers from our team.
+            </p>
           </div>
 
-          <div className={styles.articleList}>
-            {RESEARCH_ARTICLES.map((article) => (
-              <Link key={article.title} href={article.href} className={styles.articleRow}>
-                <span className={styles.articleRowTitle}>{article.title}</span>
-                <div className={styles.articleRowRight}>
-                  <span className={styles.articleRowDate}>{article.date}</span>
-                  <span className={styles.articleRowArrow}>&rarr;</span>
-                </div>
-                <span className={styles.articleRowHoverLine} />
+          <div className="research-blog-bounds">
+            <div className="research-blog-grid">
+              {randomPosts.map((post) => (
+                <Link
+                  key={post.slug}
+                  href={blogHref(post.slug)}
+                  className="research-blog-card"
+                >
+                  <div className="research-blog-card-media">
+                    {post.image ? (
+                      <Image
+                        src={post.image}
+                        alt=""
+                        fill
+                        sizes="(min-width: 768px) 50vw, 100vw"
+                      />
+                    ) : (
+                      <div
+                        style={{
+                          position: "absolute",
+                          inset: 0,
+                          background:
+                            "linear-gradient(135deg, #0A3760 0%, #0F4C81 52%, #2C86C6 100%)",
+                        }}
+                        aria-hidden="true"
+                      />
+                    )}
+                  </div>
+
+                  <div className="research-blog-card-body">
+                    <div className="research-blog-card-meta">
+                      <span className="research-blog-card-category">
+                        {post.category}
+                      </span>
+                      <span
+                        className="research-blog-card-meta-dot"
+                        aria-hidden="true"
+                      >
+                        ·
+                      </span>
+                      <span className="research-blog-card-date">{post.date}</span>
+                    </div>
+                    <h3 style={{ fontSize: "22px" }} className="research-blog-card-title">
+                      {post.title}
+                    </h3>
+                    <p className="research-blog-card-description">
+                      {post.description}
+                    </p>
+                  </div>
+                </Link>
+              ))}
+            </div>
+
+            <div className="research-blog-cta">
+              <Link
+                href="/blog"
+                style={{
+                  padding: "14px 28px",
+                  fontSize: "16px",
+                  backgroundColor: "var(--color-accent)",
+                  color: "white",
+                  borderRadius: "20px",
+                  textDecoration: "none",
+                  transition: "color 200ms ease",
+                }}
+                onMouseEnter={(e) => (e.currentTarget.style.color = "var(--color-accent)")}
+                onMouseLeave={(e) => (e.currentTarget.style.color = "white")}
+              >
+                Read all posts
               </Link>
-            ))}
+            </div>
           </div>
         </RevealOnView>
       </div>

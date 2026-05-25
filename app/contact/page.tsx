@@ -28,9 +28,11 @@ const INK = "var(--color-ink)";           /* #0B1B2B */
 const MUTED = "var(--color-muted)";        /* #5A6B7B */
 const HAIRLINE = "var(--color-gridline)";  /* #E7E7F1 */
 const CTA = "var(--color-cta)";            /* #0B1342 navy */
-/* Interactive accent — the teal the navbar "Try Elio" CTA arrows use
-   (see components/layout/MistxNav.tsx). Hardcoded, no @theme token. */
-const ACCENT = "#0081AC";
+/* Interactive accent — the site accent token from globals.css
+   (--color-accent). Same value the navbar arrows, hover states, focus
+   rings, and homepage hero eyebrow read from — one change there
+   retints every accent surface site-wide. */
+const ACCENT = "var(--color-accent)";
 
 const FAQS: { q: string; a: React.ReactNode }[] = [
   {
@@ -92,11 +94,11 @@ function CtaButton({ children, className = "", ...props }: React.ButtonHTMLAttri
   return (
     <button
       {...props}
-      className={`group rounded-button px-5 py-2 text-sm flex items-center gap-2 transition-colors bg-cta text-white hover:text-[#0081AC] cursor-pointer ${className}`}
+      className={`group rounded-button px-5 py-2 text-sm flex items-center gap-2 transition-colors bg-cta text-white hover:text-accent cursor-pointer ${className}`}
     >
       {children}
       <span className="ml-2 inline-block transition-transform group-hover:translate-x-0.5">
-        <ArrowDots className="text-[#0081AC]" />
+        <ArrowDots className="text-accent" />
       </span>
     </button>
   );
@@ -424,7 +426,7 @@ export default function ContactPage() {
                       </label>
 
                       <label className="flex items-start gap-3 cursor-pointer">
-                        <input type="checkbox" checked={updates} onChange={e => setUpdates(e.target.checked)} className="mt-0.5 w-4 h-4 accent-[#0081AC]" />
+                        <input type="checkbox" checked={updates} onChange={e => setUpdates(e.target.checked)} className="mt-0.5 w-4 h-4 accent-accent" />
                         <span className="text-[14px] leading-[1.5]" style={{ color: MUTED }}>I want to receive product updates from Columbus Earth.</span>
                       </label>
 

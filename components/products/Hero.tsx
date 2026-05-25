@@ -3,20 +3,19 @@
 /**
  * MapsGPT Hero — ported from the PolarX project's hero.
  *
- *   • Hero header — a normal-flow section over the light pastel Elio
- *     background; dark content stack in the upper third; extends up
- *     behind the floating navbar; scrolls up and away (diagonal seam).
- *   • Sticky device stage — a coloured backdrop (warm → navy → light)
- *     revealed beneath the header; a BARE 3D phone that snaps through
- *     four discrete poses; an Ask · Discover · Go pill row that recolours
- *     per scene; floating photo-cards on the final scene.
- *   • Per-scene text labels live in NORMAL DOCUMENT FLOW — they scroll
- *     up the page past the pinned phone (PolarX's stacked-card mechanic),
- *     fading + scaling by distance from the viewport centre. The phone
- *     is the ONLY pinned thing; the text genuinely scrolls.
+ *   • Hero header — a normal-flow section over a cityscape photo;
+ *     dark content stack in the upper third; extends up behind the
+ *     floating navbar; scrolls up and away.
+ *   • Sticky device stage — full-bleed photo backdrop per scene
+ *     (city for Scene 1, beach for Scene 2); a BARE 3D phone pinned
+ *     at viewport centre; Ask · Discover pill row anchored at the
+ *     bottom. Two scenes: "For your city." on the left, "For your
+ *     travels." on the right.
+ *   • Per-scene title labels live in NORMAL DOCUMENT FLOW — they
+ *     scroll up the page past the pinned phone, opacity-fading by
+ *     distance from the viewport centre.
  *
- * Lives inside the site PageFrame (fills frame width). On-page copy is
- * MapsGPT's own. Restyled to design-system/products-page.md.
+ * Lives inside the site PageFrame (fills frame width).
  */
 
 import Image from "next/image";
@@ -42,7 +41,7 @@ const NAV_PULL = 120;
 // Each text label is a real, normal-flow block this tall; it scrolls up
 // past the pinned phone. 50vh matches PolarX's device-card height exactly.
 const LABEL_BLOCK_VH = 50;
-const INTRO_LEAD_VH = 8;
+const INTRO_LEAD_VH = 0;
 // Exit runway after the last Go label. Sized so the phone stays PINNED while
 // the final under-phone text finishes appearing, then the whole pinned stage
 // (phone + cards + pills + backdrop) releases and scrolls up and out into the
@@ -50,76 +49,166 @@ const INTRO_LEAD_VH = 8;
 // this tail = (hold beat after the last label) and the 100vh release follows.
 const TAIL_VH = 40;
 // Phone peek depth in the intro (fraction of viewport pushed down).
-const PHONE_PEEK = 0.62;
+// 0.5 puts the phone centre roughly at the viewport bottom during the
+// hero header — only the top half of the device shows, sitting below
+// the hero text. Lowered from 0.25 to give the hero copy more room.
+const PHONE_PEEK = 0.5;
 // Scroll-progress point by which the phone has fully risen + pinned.
 const INTRO_END = 0.34;
 
 // ── Three scenes — ink + pill styling per phase ──────────────────────
+// Scenes 1+2 paint a 400-px photograph strip behind the title; an
+// overlay dims whichever strip is NOT the active scene so only one
+// reads bright at a time. Scene 3 drops the strip — clean white field
+// with user-post cards scattered around the phone.
 const SCENES = [
-  { ink: "#063140", eyebrow: "#00838F", pillBg: "#063140", pillText: "#FFFFFF", pillRot: "-4deg", pillIdle: "rgba(6,49,64,0.40)" },
-  { ink: "#FFFFFF", eyebrow: "#8DF7FF", pillBg: "#00B1D4", pillText: "#04222C", pillRot: "-4deg", pillIdle: "rgba(255,255,255,0.50)" },
-  { ink: "#063140", eyebrow: "#00838F", pillBg: "#0F6B6E", pillText: "#FFFFFF", pillRot: "-5deg", pillIdle: "rgba(6,49,64,0.40)" },
+  // Scene 1 — "For your city." over the city strip (white ink + shadow).
+  { ink: "#FFFFFF", pillBg: "#5FBFF1", pillText: "#FFFFFF", pillRot: "-4deg", pillRestBg: "rgba(255,255,255,0.18)", pillRestText: "#FFFFFF" },
+  // Scene 2 — "For your travels." over the beach strip.
+  { ink: "#FFFFFF", pillBg: "#00B1D4", pillText: "#FFFFFF", pillRot: "-4deg", pillRestBg: "rgba(255,255,255,0.18)", pillRestText: "#FFFFFF" },
+  // Scene 3 — "and everything in between" on white. Navy ink, dark-on-
+  // -white resting pills, cyan active pill.
+  { ink: "#0B1B2B", pillBg: "#2A8FC2", pillText: "#FFFFFF", pillRot: "-5deg", pillRestBg: "rgba(11,27,43,0.06)", pillRestText: "#0B1B2B" },
 ] as const;
 
-const CREAM = "linear-gradient(180deg, #F7F2E4 0%, #EFE7D2 100%)";
-const NAVY = "linear-gradient(180deg, #063140 0%, #03202A 100%)";
-// Solid white — matches HowItWorksSection (#FFFFFF) so the hand-off has no seam.
-const LIGHT = "#FFFFFF";
-
-const PILL_WORDS = ["Ask", "Discover", "Go"] as const;
-// First label index for each scene 1|2|3 — the pill row scrolls here on click.
-const SCENE_FIRST_LABEL = [0, 2, 4];
-
-// ── Phone pose — 4 discrete states (PolarX: intro / Plan / Track / Relive) ──
+// ── Phone pose — flat across all phases ──────────────────────────────
+// No intro zoom / tilt — the phone rises into view at its final scale
+// and orientation, then holds the same pose across all three scenes.
 function phoneStates(isLg: boolean) {
-  const sx = isLg ? 1 : 0.42;
-  const introScale = isLg ? 1.4 : 1.12;
-  const goScale = isLg ? 0.7 : 0.78;
   const lift = isLg ? 0 : -150;
-  const goY = isLg ? 0 : -110;
-  return [
-    `perspective(1200px) translateX(0px) translateY(-40px) scale(${introScale}) rotateX(40deg) rotateY(0deg)`,
-    `perspective(1200px) translateX(${-140 * sx}px) translateY(${lift}px) scale(1) rotateX(0deg) rotateY(${20 * sx}deg)`,
-    `perspective(1200px) translateX(${140 * sx}px) translateY(${lift}px) scale(1) rotateX(0deg) rotateY(${-20 * sx}deg)`,
-    `perspective(1200px) translateX(0px) translateY(${goY}px) scale(${goScale}) rotateX(0deg) rotateY(0deg)`,
-  ];
+  const flat = `perspective(1200px) translateX(0px) translateY(${lift}px) scale(1) rotateX(0deg) rotateY(0deg)`;
+  return [flat, flat, flat, flat];
 }
 
-// ── Per-scene labels — 2 per scene, in normal flow ───────────────────
-// `anchor` = the viewport fraction the label is fully visible at: side
-// labels sit beside the phone (0.5); the final "below" labels anchor low
-// so they appear UNDER the phone and rise (PolarX's Relive text).
+// ── Per-scene labels — one per scene, in normal flow ────────────────
+// Scenes 1+2 have a 400-px photo strip behind the title; Scene 3 is
+// the closing "everything in between" scene — no image, white bg, with
+// user-post cards rendered around the pinned phone (see POSTS below).
 const LABELS = [
-  { scene: 1, side: "right", anchor: 0.5, eyebrow: "Ask anything", heading: "Chat your way around any city." },
-  { scene: 1, side: "right", anchor: 0.5, eyebrow: "Plain language", heading: "No filters, no menus — just ask." },
-  { scene: 2, side: "left", anchor: 0.5, eyebrow: "Discover", heading: "Find the places worth your time." },
-  { scene: 2, side: "left", anchor: 0.5, eyebrow: "Local-grade picks", heading: "Ranked by people who actually went." },
-  { scene: 3, side: "right", anchor: 0.5, eyebrow: "Get going", heading: "Directions the second you decide." },
-  { scene: 3, side: "right", anchor: 0.5, eyebrow: "On the move", heading: "Your route recalculated as you wander." },
+  { scene: 1, side: "left",  anchor: 0.5, title: "For your city.",                image: "/consumer/elio/ElioEndingBackground.jpg" },
+  { scene: 2, side: "right", anchor: 0.5, title: "For your travels.",             image: "/consumer/forYourTravels.png" },
+  { scene: 3, side: "right", anchor: 0.5, title: "and everything in between",     image: "" },
 ] as const;
 
-// Floating travel postcards — final (Go) scene only. The Go heading
-// scrolls through the whole RIGHT column and the pill row owns the
-// bottom-centre, so the cards live entirely in the clear LEFT zone —
-// a four-card scrapbook scatter with varied widths + rotations.
-const CARDS = [
-  { img: "/blog-himalaya.jpg", w: 210, x: -356, y: -242, rot: -6, bob: 0 },
-  { img: "/blog-still-lake.jpg", w: 178, x: -486, y: -34, rot: 6, bob: 1.1 },
-  { img: "/blog-misty-forest.jpg", w: 184, x: -312, y: 156, rot: -5, bob: 0.7 },
-  { img: "/blog-clouds-dawn.jpg", w: 200, x: -468, y: 336, rot: 6, bob: 1.4 },
+// One product-shot per label. The phone screen renders all three
+// stacked, opacity-toggling to whichever label is closest to the
+// viewport anchor — see `activeLabel` below.
+const PHONE_IMAGES = [
+  "/consumer/elio/ElioChat.png",                // 0  For your city. (active)
+  "/consumer/elio/ElioZone.png",                // 1  For your travels.
+  "/consumer/elio/Localguideinyourpocket.png",  // 2  and everything in between
+] as const;
+
+// Distinct mockup shown during the hero header (phase 0) so the phone
+// screen visibly swaps the moment "For your city" becomes the active
+// scene. Without this, intro and active-city would both render
+// PHONE_IMAGES[0] and the transition would be invisible.
+const INTRO_PHONE_IMAGE = "/consumer/elioHome1.png";
+
+// ── Scene-3 floating notifications ────────────────────────────────────
+// Flighty-style cards that fan around the pinned phone during phase 3
+// ("and everything in between"). Each card is one of:
+//   • avatar  — friend pravatar (single round photo)
+//   • stacked — two overlapping pravatars (group / shared trip)
+//   • icon    — coloured circular badge with an emoji centred inside
+// `behind: true` cards render with z-index BELOW the phone (and at
+// lowered opacity) so they read as half-tucked behind the device.
+// `behind: false` cards sit IN FRONT (z-index above phone) at full
+// opacity for the headline moments. Coordinates are px offsets from
+// viewport centre (= phone centre when pinned); `delay` staggers the
+// fade-in once phase 3 activates.
+type Notif = {
+  title: string;
+  sub: string;
+  kind: "avatar" | "stacked" | "icon" | "logo";
+  avatar?: string;
+  avatars?: [string, string];
+  emoji?: string;
+  badge?: string; // hex bg for the icon badge
+  x: number;
+  y: number;
+  rot: number;
+  behind: boolean;
+  delay: number;
+};
+
+const NOTIFICATIONS: Notif[] = [
+  // Top-left — Sophie saved a spot (sharp, in front)
+  {
+    title: "Sophie saved a spot in Barcelona",
+    sub: "Wants to know if you’re free Sunday · 20 min ago",
+    kind: "avatar",
+    avatar: "/profiles/profile2.png",
+    x: -440, y: -210, rot: -3, behind: false, delay: 0,
+  },
+  // Top-right — Elio built your trip (sharp, in front). Uses the
+  // MapsGPT globe (Elio's own brand mark) as the card icon.
+  {
+    title: "Elio built your Madrid weekend",
+    sub: "12 spots · 3 days · Optimized route",
+    kind: "logo",
+    x: 440, y: -210, rot: 3, behind: false, delay: 0.10,
+  },
+  // Mid-left — Hidden coffee shop (faded, behind)
+  {
+    title: "Hidden coffee shop opened nearby",
+    sub: "4 min walk · Trending today",
+    kind: "icon",
+    emoji: "📍",
+    badge: "#0F1B2D",
+    x: -320, y: 30, rot: -4, behind: true, delay: 0.22,
+  },
+  // Mid-right — Trending events (faded, behind)
+  {
+    title: "Trending in Williamsburg this weekend",
+    sub: "8 events Saturday night",
+    kind: "icon",
+    emoji: "📅",
+    badge: "#FF7A6B",
+    x: 320, y: 40, rot: 5, behind: true, delay: 0.26,
+  },
+  // Bottom-left — Sarah & James joined (sharp, in front)
+  {
+    title: "Sarah & James joined your trip",
+    sub: "Tokyo Gems · 14 spots saved together",
+    kind: "stacked",
+    avatars: ["/David.png", "/Erick.png"],
+    x: -420, y: 240, rot: -2, behind: false, delay: 0.34,
+  },
+  // Bottom-right — Rain swap (sharp, in front)
+  {
+    title: "Rain Sunday — Elio swapped to indoor picks",
+    sub: "3 cafés + 1 museum added",
+    kind: "icon",
+    emoji: "☁️",
+    badge: "#9CC9E8",
+    x: 420, y: 250, rot: 2, behind: false, delay: 0.42,
+  },
 ];
 
 export default function Hero() {
   const [phase, setPhase] = useState(0);
   const [mounted, setMounted] = useState(false);
   const [isLg, setIsLg] = useState(true);
+  // Tracks the LABEL currently nearest the viewport anchor (0 or 1),
+  // so the phone product-shot swaps per-label. Updated in onScroll
+  // alongside phase.
+  const [activeLabel, setActiveLabel] = useState(0);
 
   const outerRef = useRef<HTMLDivElement>(null);
   const riseRef = useRef<HTMLDivElement>(null);
   const phaseRef = useRef(0);
+  const labelRef = useRef(0);
   const isLgRef = useRef(true);
   const labelRefs = useRef<(HTMLDivElement | null)[]>([]);
   const blockRefs = useRef<(HTMLDivElement | null)[]>([]);
+  // True once the scene-3 label block has fully scrolled above the
+  // viewport top — i.e., the user is past the hero into the next
+  // section. `phase` alone stays at 3 (the nearest label is still the
+  // last one) so we need a separate flag to know it's time to hide the
+  // pinned phone + scene-3 notification cards.
+  const [pastHero, setPastHero] = useState(false);
+  const pastHeroRef = useRef(false);
 
   useEffect(() => {
     const check = () => {
@@ -145,16 +234,9 @@ export default function Hero() {
     const range = el.offsetHeight - vh;
     const progress = range > 0 ? clamp(-el.getBoundingClientRect().top / range, 0, 1) : 0;
 
-    // ── Labels: in normal flow, scrolling 1:1 with the page. Fade + scale
-    //    curve transplanted VERBATIM from PolarX's updateDevices() — flat
-    //    top within `flatRange` of the label's ANCHOR, linear ramp to 0 at
-    //    `fullRange`; opacity = t, scale = 0.5 + 0.5·t. Side labels anchor
-    //    at the viewport centre (beside the phone); the final "below"
-    //    labels anchor low, so they appear UNDER the phone and rise. ──
-    // Desktop: PolarX's wide fade band. Mobile: a tight band low on the
-    // screen so the centred labels sit + fade clear of the lifted phone.
-    const flatRange = vh * (lg ? 0.18 : 0.05);
-    const fullRange = vh * (lg ? 0.45 : 0.16);
+    // ── Track which label block is nearest the viewport anchor so the
+    //    pinned phone can swap its mockup. No opacity fade — titles
+    //    are always at full opacity inside their own scroll block. ──
     let nearest = 0;
     let bestAbs = Infinity;
     let firstAd = Infinity;
@@ -166,14 +248,6 @@ export default function Hero() {
       const c = r.top + r.height / 2;
       const anchorY = (lg ? LABELS[i].anchor : 0.74) * vh;
       const ad = Math.abs(c - anchorY);
-      let t: number;
-      if (ad <= flatRange) t = 1;
-      else if (ad >= fullRange) t = 0;
-      else t = 1 - (ad - flatRange) / (fullRange - flatRange);
-      node.style.opacity = t.toFixed(3);
-      const centred = !lg;
-      node.style.transform =
-        (centred ? "translate(-50%,-50%)" : "translateY(-50%)") + ` scale(${(0.5 + 0.5 * t).toFixed(3)})`;
       if (i === 0) {
         firstAd = ad;
         firstBelowAnchor = c > anchorY; // first label hasn't risen to its anchor yet
@@ -189,6 +263,14 @@ export default function Hero() {
     let nextPhase: number;
     if (firstBelowAnchor && firstAd > vh * 0.3) nextPhase = 0;
     else nextPhase = LABELS[nearest].scene;
+    // The product-shot the phone displays follows the nearest LABEL
+    // (one of two). During the intro, before any label has reached its
+    // anchor, freeze on label 0.
+    const nextLabel = nextPhase === 0 ? 0 : nearest;
+    if (nextLabel !== labelRef.current) {
+      labelRef.current = nextLabel;
+      setActiveLabel(nextLabel);
+    }
     if (nextPhase !== phaseRef.current) {
       phaseRef.current = nextPhase;
       setPhase(nextPhase);
@@ -203,13 +285,29 @@ export default function Hero() {
       );
     }
 
-    // ── Phone rise: peeks from the bottom edge in the intro, rises to its
-    //    pinned centre over the intro scroll, then holds. ──
+    // ── Phone rise: peeks from the bottom edge in the intro, rises to
+    //    its pinned centre over the intro scroll, then holds. ─────────
     const rise = riseRef.current;
     if (rise) {
       const introT = smoothstep(0, INTRO_END, progress);
-      const peekY = vh * (lg ? PHONE_PEEK : 0.58);
+      const peekY = vh * (lg ? PHONE_PEEK : 0.55);
       rise.style.transform = `translateY(${lerp(peekY, 0, introT).toFixed(1)}px)`;
+    }
+
+    // ── Past-hero detection: once the last label block has scrolled
+    //    fully above the viewport, the user is in the next section.
+    //    `phase` doesn't naturally drop (the nearest label is still the
+    //    last one), so we keep a separate flag for hiding the scene-3
+    //    notification cards. ───────────────────────────────────────────
+    const lastBlock = blockRefs.current[blockRefs.current.length - 1];
+    let nextPastHero = false;
+    if (lastBlock) {
+      const r = lastBlock.getBoundingClientRect();
+      nextPastHero = r.bottom < 0;
+    }
+    if (nextPastHero !== pastHeroRef.current) {
+      pastHeroRef.current = nextPastHero;
+      setPastHero(nextPastHero);
     }
   }, []);
 
@@ -232,7 +330,7 @@ export default function Hero() {
     };
   }, [onScroll]);
 
-  const phoneW = isLg ? 296 : 210;
+  const phoneW = isLg ? 360 : 240;
   // PolarX device geometry — aspect-ratio 0.4949, corner radius 42/277, bezel 6/277.
   const phoneH = Math.round(phoneW / 0.4949);
   const phoneRadius = Math.round(phoneW * 0.152);
@@ -243,47 +341,52 @@ export default function Hero() {
 
   return (
     <div ref={outerRef} data-hero-section data-hero-outer className="relative" style={{ marginTop: -NAV_PULL }}>
-      {/* ════ Coloured scene backdrop — pinned, revealed as the header scrolls off ════ */}
+      {/* ════ Sticky scene backdrop — clean white field ════ */}
       <div className="absolute inset-0 z-0">
         <div className="sticky top-0 overflow-hidden" style={{ height: "100dvh" }}>
-          <div className="absolute inset-0" style={{ background: CREAM }} />
-          <div
-            className="absolute inset-0"
-            style={{ background: NAVY, opacity: phase === 2 ? 1 : 0, transition: "opacity 0.7s cubic-bezier(0.44,0,0.56,1)" }}
-          />
-          <div
-            className="absolute inset-0"
-            style={{ background: LIGHT, opacity: phase === 3 ? 1 : 0, transition: "opacity 0.7s cubic-bezier(0.44,0,0.56,1)" }}
-          />
+          <div className="absolute inset-0" style={{ background: "#FFFFFF" }} />
         </div>
       </div>
 
-      {/* ════ Phone · cards · pill row — pinned (the ONLY pinned content) ════ */}
+      {/* ════ Phone · pill row — pinned (the ONLY pinned content) ════ */}
       <div className="absolute inset-0 z-30 pointer-events-none">
         <div className="sticky top-0 overflow-hidden" style={{ height: "100dvh" }}>
-          {/* Floating travel postcards — Go scene only */}
-          {isLg &&
-            CARDS.map((c, i) => {
-              const on = phase === 3;
-              return (
-                <div
-                  key={i}
-                  className="absolute left-1/2 top-1/2"
-                  style={{
-                    transform: `translate(-50%, -50%) translate(${c.x}px, ${c.y + (on ? 0 : 40)}px) rotate(${c.rot}deg)`,
-                    opacity: on ? 1 : 0,
-                    transition: `opacity 0.6s ease ${i * 80}ms, transform 0.8s ${APPEAR} ${i * 80}ms`,
-                  }}
-                >
-                  <div style={{ animation: `mgHeroBob 5s ease-in-out ${c.bob}s infinite` }}>
-                    <PhotoCard img={c.img} w={c.w} />
-                  </div>
-                </div>
-              );
-            })}
+          {/* Scene-3 floating notification cards — Flighty-style, fan
+              around the phone during phase 3. Renders both "behind"
+              cards (zIndex 5 < phone's 10) and "in front" cards
+              (zIndex 20 > phone's 10) so the device sits naturally
+              tucked into the cluster. Desktop only — mobile layout is
+              too tight for the side cards. */}
+          {isLg && NOTIFICATIONS.map((n, i) => {
+            const visible = phase === 3 && !pastHero;
+            return (
+              <div
+                key={i}
+                aria-hidden
+                style={{
+                  position: "absolute",
+                  left: "50%",
+                  top: "50%",
+                  zIndex: n.behind ? 5 : 20,
+                  width: 320,
+                  transform: `translate(-50%, -50%) translate(${n.x}px, ${visible ? n.y : n.y + 24}px) rotate(${n.rot}deg)`,
+                  opacity: visible ? (n.behind ? 0.40 : 1) : 0,
+                  // Stagger the fade-IN with each card's delay for a nice
+                  // fan, but drop the delay on fade-OUT so they vanish
+                  // together the moment the user scrolls past scene 3.
+                  transition: visible
+                    ? `opacity 0.7s ease ${n.delay}s, transform 0.9s ${APPEAR} ${n.delay}s`
+                    : "opacity 0.22s ease, transform 0.22s ease",
+                  pointerEvents: "none",
+                }}
+              >
+                <NotifCard n={n} />
+              </div>
+            );
+          })}
 
           {/* The bare 3D phone */}
-          <div ref={riseRef} className="absolute inset-0" style={{ willChange: "transform" }}>
+          <div ref={riseRef} className="absolute inset-0" style={{ willChange: "transform", zIndex: 10 }}>
             <div
               className="absolute left-1/2 top-1/2"
               style={{
@@ -312,139 +415,202 @@ export default function Hero() {
                       "0 50px 50px -2px rgba(0,40,60,0.22)",
                   }}
                 >
-                  {/* ▼ screen — swap point */}
+                  {/* ▼ screen — six product shots stacked, one per
+                      label. The opacity of the layer whose index
+                      matches `activeLabel` rises to 1 while the rest
+                      stay at 0, so the swap reads as a clean
+                      crossfade. All six images mount on first paint
+                      and stay mounted, so subsequent label changes
+                      are zero-cost (no fetch, no remount). */}
                   <div
                     style={{
+                      position: "relative",
                       width: "100%",
                       height: "100%",
                       borderRadius: phoneRadius - phoneBezel,
                       background: "linear-gradient(180deg, #FFFFFF 0%, #EAF4F5 100%)",
                       overflow: "hidden",
                     }}
-                  />
+                  >
+                    {/* Intro mockup — shown only during phase 0 (hero
+                        header). Crossfades out the moment "For your
+                        city" activates and PHONE_IMAGES[0] takes over. */}
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={INTRO_PHONE_IMAGE}
+                      alt=""
+                      aria-hidden
+                      style={{
+                        position: "absolute",
+                        inset: 0,
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "cover",
+                        objectPosition: "top center",
+                        opacity: phase === 0 ? 1 : 0,
+                        transition: "opacity 500ms ease",
+                      }}
+                    />
+                    {PHONE_IMAGES.map((src, i) => (
+                      /* eslint-disable-next-line @next/next/no-img-element */
+                      <img
+                        key={src}
+                        src={src}
+                        alt=""
+                        aria-hidden
+                        style={{
+                          position: "absolute",
+                          inset: 0,
+                          width: "100%",
+                          height: "100%",
+                          objectFit: "cover",
+                          // Anchor the TOP of the source screenshot to
+                          // the top of the phone screen — any overflow
+                          // (status bar / footer / extra UI below) gets
+                          // cropped off the bottom rather than the top.
+                          objectPosition: "top center",
+                          // Only paint when we're out of the intro AND
+                          // this is the active label, so the intro layer
+                          // owns phase 0 cleanly.
+                          opacity: phase > 0 && i === activeLabel ? 1 : 0,
+                          transition: "opacity 500ms ease",
+                        }}
+                      />
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* ASK · DISCOVER · GO pill row — clickable (PolarX's anchor labels);
-              pointerEvents:auto opts back in over the pinned stage's none. */}
-          <div
-            className="absolute left-1/2 flex items-center"
-            style={{
-              bottom: "clamp(28px, 5.5vh, 64px)",
-              transform: "translateX(-50%)",
-              gap: 6,
-              opacity: inDevice ? 1 : 0,
-              transition: "opacity 0.5s ease",
-              pointerEvents: "auto",
-            }}
-          >
-            {PILL_WORDS.map((word, i) => {
-              const on = phase === i + 1;
-              return (
-                <div key={word} className="flex items-center" style={{ gap: 6 }}>
-                  <button
-                    type="button"
-                    aria-label={`Jump to ${word}`}
-                    onClick={() => {
-                      const blk = blockRefs.current[SCENE_FIRST_LABEL[i]];
-                      if (!blk) return;
-                      const r = blk.getBoundingClientRect();
-                      window.scrollTo({
-                        top: window.scrollY + r.top + r.height / 2 - window.innerHeight / 2,
-                        behavior: "smooth",
-                      });
-                    }}
-                    style={{
-                      fontFamily: '"SF Pro", -apple-system, BlinkMacSystemFont, sans-serif',
-                      fontSize: isLg ? 19 : 16,
-                      fontWeight: 600,
-                      letterSpacing: "-0.01em",
-                      padding: "6px 16px",
-                      borderRadius: 8,
-                      border: "none",
-                      appearance: "none",
-                      WebkitAppearance: "none",
-                      cursor: "pointer",
-                      backgroundColor: on ? scene.pillBg : "transparent",
-                      color: on ? scene.pillText : scene.pillIdle,
-                      transform: on ? `rotate(${scene.pillRot})` : "rotate(0deg)",
-                      transition:
-                        "background-color 0.45s ease, color 0.45s ease, transform 0.45s cubic-bezier(0.2,0.8,0.2,1)",
-                    }}
-                  >
-                    {word}
-                  </button>
-                  {i < PILL_WORDS.length - 1 && (
-                    <span style={{ color: scene.pillIdle, fontWeight: 600, transition: "color 0.45s ease" }}>·</span>
-                  )}
-                </div>
-              );
-            })}
-          </div>
         </div>
       </div>
 
-      {/* ════ Hero header — normal flow over the Elio image; scrolls away ════ */}
+      {/* ════ Hero header — normal flow over the flipped earth; scrolls away ════ */}
       <header
-        className="relative z-20 flex flex-col items-center justify-center"
+        className="relative z-20 flex flex-col items-center"
         style={{
           height: "100dvh",
           width: "100%",
-          paddingTop: "clamp(56px, 7vh, 90px)",
-          // Heavier bottom pad biases the centred content upward a touch.
-          paddingBottom: "clamp(150px, 19vh, 230px)",
+          background: "#FFFFFF",
+          // Top-aligned stack: the hero is pulled up behind the navbar
+          // by NAV_PULL (120 px), so paddingTop = NAV_PULL + navbar
+          // clearance (≈ 60 px navbar height + 30 px gap) keeps the
+          // Elio logo + heading comfortably below the navbar. Bottom
+          // padding is small because the phone now occupies the lower
+          // portion of the hero (PHONE_PEEK = 0.25).
+          justifyContent: "flex-start",
+          paddingTop: "clamp(180px, 22vh, 230px)",
+          paddingBottom: 0,
         }}
       >
-        {/* Light pastel Elio background + soft legibility wash */}
+        {/* Consumer hero background — full-bleed photograph behind the
+            typed-phrase H1 + CTA. */}
         <div aria-hidden className="absolute inset-0 overflow-hidden">
-          <Image src="/eliocardbackground.png" alt="" fill priority sizes="100vw" style={{ objectFit: "cover" }} />
-          <div
-            className="absolute inset-0"
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/consumer/heroBackground.png"
+            alt=""
+            aria-hidden
+            className="absolute inset-0 w-full h-full"
             style={{
-              background:
-                "linear-gradient(180deg, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0.28) 30%, " +
-                "rgba(255,255,255,0.06) 58%, rgba(255,255,255,0) 100%)",
+              objectFit: "cover",
+              objectPosition: "center center",
             }}
           />
+          {/* Inactive-scene dim — fades in once the sticky scroll takes
+              over (phase >= 1) so the hero matches the same 0.55 black
+              treatment that "For your travels" wears when "For your
+              city" is active. Keeps the brightness ranking consistent:
+              only the currently-active scene reads bright. */}
           <div
-            className="absolute inset-0"
-            style={{ background: "linear-gradient(0deg, rgba(247,242,228,0.6) 0%, rgba(247,242,228,0) 22%)" }}
+            aria-hidden
+            style={{
+              position: "absolute",
+              inset: 0,
+              background: "rgba(0,0,0,0.55)",
+              opacity: phase >= 1 ? 1 : 0,
+              transition: "opacity 0.45s cubic-bezier(0.22, 1, 0.36, 1)",
+              pointerEvents: "none",
+            }}
           />
         </div>
 
-        {/* Content stack — dark teal, upper third */}
+        {/* Content stack — navy ink on the white sky band, matching the
+            FinalCTA section: cyan→teal gradient "Elio" eyebrow, navy
+            #0B1342 H1, and a navy bg-cta primary pill with white label
+            + arrow (same palette + treatment as the navbar CTA). */}
         <div className="relative flex flex-col items-center text-center px-6" style={{ maxWidth: 820, gap: 32 }}>
           <Stagger show={mounted} delay={120} y={84}>
             <div className="flex flex-col items-center" style={{ gap: 16 }}>
-              <div className="flex items-center gap-2" style={{ color: "#063140" }}>
-                <MapsGPTGlobe size={isLg ? 30 : 26} />
-                <span
-                  style={{
-                    fontFamily: '"SF Compact", -apple-system, BlinkMacSystemFont, sans-serif',
-                    fontSize: isLg ? 23 : 20,
-                    fontWeight: 600,
-                    letterSpacing: "-0.02em",
-                  }}
-                >
-                  Elio
-                </span>
-              </div>
-              <h1
+              {/* Elio lockup — globe + elioName.png wordmark, ported from
+                  the TwerkPage hero. Wrapper drop-shadow lifts the
+                  composite off the photo background. */}
+              <div
+                className="flex items-center"
                 style={{
-                  fontFamily: '"SF Pro", -apple-system, BlinkMacSystemFont, sans-serif',
-                  fontSize: "clamp(32px, 5.6vw, 66px)",
-                  fontWeight: 700,
-                  lineHeight: 1.1,
-                  letterSpacing: "-0.02em",
-                  color: "#063140",
+                  gap: 0,
+                  filter: "drop-shadow(0px 0px 51px rgba(0, 0, 0, 0.25))",
                 }}
               >
-                One travel app for
-                <br />
-                everywhere you go
-              </h1>
+                <div
+                  className="flex items-center justify-center"
+                  style={{ width: isLg ? 64 : 46, height: isLg ? 64 : 46 }}
+                >
+                  <MapsGPTGlobe size={isLg ? 46 : 34} />
+                </div>
+                <Image
+                  src="/consumer/elioName.png"
+                  alt="Elio"
+                  width={260}
+                  height={110}
+                  style={{
+                    height: "auto",
+                    width: isLg ? 300 : 210,
+                    marginLeft: isLg ? -11 : -8,
+                  }}
+                />
+              </div>
+              {/* Main heading with magic star — matches TwerkPage's
+                  Axiforma 590 white treatment, with the star absolute-
+                  positioned off the top-right of the heading box. */}
+              <div style={{ position: "relative", display: "inline-block" }}>
+                <h1
+                  style={{
+                    fontFamily: "Axiforma, -apple-system, BlinkMacSystemFont, sans-serif",
+                    fontSize: "clamp(48px, 8vw, 66px)",
+                    fontWeight: 590,
+                    color: "#FFFFFF",
+                    textAlign: "center",
+                    letterSpacing: "-0.02em",
+                    lineHeight: 1.2,
+                    textShadow:
+                      "0 1px 2px rgba(0, 0, 0, 0.45), 0 4px 14px rgba(0, 0, 0, 0.55), 0 0 40px rgba(0, 0, 0, 0.35)",
+                    maxWidth: 800,
+                    margin: 0,
+                  }}
+                >
+                  the social super map
+                </h1>
+                <div
+                  aria-hidden
+                  style={{
+                    position: "absolute",
+                    top: 0,
+                    right: -20,
+                    width: 32,
+                    height: 32,
+                  }}
+                >
+                  <Image
+                    src="/consumer/star.png"
+                    alt=""
+                    width={32}
+                    height={32}
+                    style={{ objectFit: "contain" }}
+                  />
+                </div>
+              </div>
             </div>
           </Stagger>
 
@@ -454,53 +620,136 @@ export default function Hero() {
                 href="https://mapsgpt.es"
                 target="_blank"
                 rel="noreferrer"
+                className="group"
                 style={{
                   display: "inline-flex",
                   alignItems: "center",
-                  height: 42,
-                  padding: "0 20px",
+                  gap: 10,
+                  height: 46,
+                  padding: "0 22px",
                   borderRadius: 18,
-                  background: "#063140",
-                  color: "#FFFFFF",
+                  /* White pill with dark label + arrow. */
+                  background: "#FFFFFF",
+                  color: "#0B1342",
                   fontFamily: '"SF Pro", -apple-system, BlinkMacSystemFont, sans-serif',
                   fontSize: 15,
                   fontWeight: 600,
                   letterSpacing: "-0.01em",
                   textDecoration: "none",
-                  boxShadow: "0 14px 30px -12px rgba(6,49,64,0.35)",
                   transition: "transform 0.25s cubic-bezier(0.25,1,0.5,1)",
                 }}
                 onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.04)")}
                 onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
               >
                 Try Elio in browser
+                <svg width="13" height="13" viewBox="0 0 13 13" fill="none" className="shrink-0 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" aria-hidden>
+                  <path d="M2 11L11 2M11 2H4M11 2V9" stroke="#0B1342" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
               </a>
               <StoreBadges />
             </div>
           </Stagger>
         </div>
 
+        {/* Faux rounded bottom corners — small boxes anchored flush in
+            the bottom-left + bottom-right of the hero. Each box is
+            mostly white with a quarter-circle BITE taken out of its
+            inner corner (the corner facing into the hero), so the
+            visible white wedge has straight outer corners against the
+            page edges and a concave arc against the hero image. The
+            hero's bottom-corner curve created by that arc visually
+            matches the PageFrame's rounded top corners. The radial-
+            gradient + box size both read from var(--frame-radius), so
+            the corners shrink to zero in lockstep with the PageFrame's
+            own corners as the user scrolls into full-bleed mode. */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute bottom-0 left-0"
+          style={{
+            width: "var(--frame-radius, 20px)",
+            height: "var(--frame-radius, 20px)",
+            background:
+              "radial-gradient(circle at top right, transparent calc(var(--frame-radius, 20px) - 0.5px), #FFFFFF var(--frame-radius, 20px))",
+            zIndex: 2,
+          }}
+        />
+        <div
+          aria-hidden
+          className="pointer-events-none absolute bottom-0 right-0"
+          style={{
+            width: "var(--frame-radius, 20px)",
+            height: "var(--frame-radius, 20px)",
+            background:
+              "radial-gradient(circle at top left, transparent calc(var(--frame-radius, 20px) - 0.5px), #FFFFFF var(--frame-radius, 20px))",
+            zIndex: 2,
+          }}
+        />
+
       </header>
 
-      {/* ════ Scroll content — per-scene text in NORMAL FLOW; scrolls past the phone ════ */}
-      <div className="relative z-10" style={{ width: "100%" }}>
+      {/* ════ Scroll content — per-scene title in NORMAL FLOW; scrolls past the phone ════
+            z-10 sits BELOW the pinned phone/pill row (z-30) so the
+            phone stays visible in front of each 400-px-tall photo
+            strip as it scrolls past. Title text sits inside each block
+            on top of the photo strip.
+
+            pointer-events-none keeps clicks falling through to the
+            pinned z-30 pill row underneath. */}
+      <div className="relative z-10 pointer-events-none" style={{ width: "100%" }}>
         <div style={{ height: `${INTRO_LEAD_VH}vh` }} />
         {LABELS.map((lab, i) => {
           const sc = SCENES[lab.scene - 1];
           const centred = !isLg;
-          const innerPos: React.CSSProperties = !isLg
-            ? { left: "50%", width: "min(440px, 86vw)", textAlign: "center" }
-            : lab.side === "right"
-              ? { left: "calc(50% + 168px)", width: 360 }
-              : { right: "calc(50% + 168px)", width: 360, textAlign: "right" };
+          const onLeft = lab.side === "left";
+          const isActive = phase === lab.scene;
+          const hasImage = !!lab.image;
+          // Scenes 1+2 are 400-px photo strips behind the title. Scene 3
+          // is a 70vh white block (no image) that gives the floating user-
+          // post cards around the phone room to read. The dim overlay
+          // above each photo strip darkens whichever scene is NOT the
+          // active phase, so only one strip ever reads bright at a time.
           return (
             <div
               key={i}
               ref={(el) => {
                 blockRefs.current[i] = el;
               }}
-              style={{ position: "relative", height: `${LABEL_BLOCK_VH}vh` }}
+              style={{
+                position: "relative",
+                height: hasImage ? 400 : "70vh",
+              }}
             >
+              {hasImage && (
+                <>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={lab.image}
+                    alt=""
+                    aria-hidden
+                    style={{
+                      position: "absolute",
+                      inset: 0,
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "cover",
+                      display: "block",
+                    }}
+                  />
+                  {/* Dim overlay — fades to 0 when this is the active
+                      scene, settles at ~0.55 black otherwise. */}
+                  <div
+                    aria-hidden
+                    style={{
+                      position: "absolute",
+                      inset: 0,
+                      background: "rgba(0,0,0,0.55)",
+                      opacity: isActive ? 0 : 1,
+                      transition: "opacity 0.45s cubic-bezier(0.22, 1, 0.36, 1)",
+                      pointerEvents: "none",
+                    }}
+                  />
+                </>
+              )}
               <div
                 ref={(el) => {
                   labelRefs.current[i] = el;
@@ -508,39 +757,93 @@ export default function Hero() {
                 style={{
                   position: "absolute",
                   top: "50%",
-                  ...innerPos,
-                  opacity: 0,
-                  transform: centred ? "translate(-50%,-50%) scale(0.5)" : "translateY(-50%) scale(0.5)",
-                  // PolarX device-card transition, verbatim
-                  transition: "opacity 0.35s ease-out, transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1)",
-                  willChange: "transform, opacity",
+                  ...(isLg
+                    ? { left: 0, right: 0 }
+                    : { left: "50%", width: "min(440px, 86vw)", textAlign: "center" as const }),
+                  transform: isLg
+                    ? "translateY(-50%)"
+                    : centred
+                      ? "translate(-50%,-50%)"
+                      : "translateY(-50%)",
                 }}
               >
-                <div
-                  style={{
-                    fontFamily: '"SF Pro", -apple-system, BlinkMacSystemFont, sans-serif',
-                    fontSize: 14,
-                    fontWeight: 600,
-                    letterSpacing: "0.14em",
-                    textTransform: "uppercase",
-                    color: sc.eyebrow,
-                  }}
-                >
-                  {lab.eyebrow}
-                </div>
-                <h2
-                  style={{
-                    marginTop: 12,
-                    fontFamily: '"SF Pro", -apple-system, BlinkMacSystemFont, sans-serif',
-                    fontSize: isLg ? 40 : 25,
-                    fontWeight: 700,
-                    lineHeight: 1.22,
-                    letterSpacing: "-0.02em",
-                    color: sc.ink,
-                  }}
-                >
-                  {lab.heading}
-                </h2>
+                {lab.scene === 3 ? (
+                  // Scene-3 title lives as a fixed footer inside the
+                  // pinned-phone container (see the closing <h2> above);
+                  // this block only carries scroll runway + activeLabel
+                  // tracking — nothing rendered inline here.
+                  null
+                ) : isLg ? (
+                  // Three-column flex row [left zone | phone spacer | right zone]
+                  // — the centre spacer matches the pinned phone's width so the
+                  // two side zones are mirror images. Each side carries the same
+                  // inner padding (LABEL_PHONE_GAP), which guarantees the title's
+                  // edge facing the phone sits the same distance from the phone
+                  // on both scenes, regardless of text width.
+                  (() => {
+                    const LABEL_PHONE_GAP = 60;
+                    const OUTER_PAD = 60;
+                    const titleStyle = {
+                      fontFamily: "Axiforma, -apple-system, BlinkMacSystemFont, sans-serif",
+                      fontSize: "clamp(48px, 7vw, 66px)",
+                      fontWeight: 590,
+                      lineHeight: 1.1,
+                      letterSpacing: "-0.02em",
+                      color: sc.ink,
+                      margin: 0,
+                      maxWidth: "min(520px, 40vw)",
+                      textShadow: hasImage ? "0px 0px 30px rgba(0, 0, 0, 0.35)" : undefined,
+                    } as const;
+                    return (
+                      <div style={{ display: "flex", width: "100%", alignItems: "center" }}>
+                        <div
+                          style={{
+                            flex: 1,
+                            minWidth: 0,
+                            paddingLeft: OUTER_PAD,
+                            paddingRight: LABEL_PHONE_GAP,
+                            display: "flex",
+                            justifyContent: "flex-end",
+                          }}
+                        >
+                          {onLeft && (
+                            <h2 style={{ ...titleStyle, textAlign: "right" }}>{lab.title}</h2>
+                          )}
+                        </div>
+                        <div style={{ width: phoneW, flexShrink: 0 }} aria-hidden />
+                        <div
+                          style={{
+                            flex: 1,
+                            minWidth: 0,
+                            paddingLeft: LABEL_PHONE_GAP,
+                            paddingRight: OUTER_PAD,
+                            display: "flex",
+                            justifyContent: "flex-start",
+                          }}
+                        >
+                          {!onLeft && (
+                            <h2 style={{ ...titleStyle, textAlign: "left" }}>{lab.title}</h2>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })()
+                ) : (
+                  <h2
+                    style={{
+                      fontFamily: "Axiforma, -apple-system, BlinkMacSystemFont, sans-serif",
+                      fontSize: 32,
+                      fontWeight: 590,
+                      lineHeight: 1.15,
+                      letterSpacing: "-0.02em",
+                      color: sc.ink,
+                      margin: 0,
+                      textShadow: hasImage ? "0px 0px 24px rgba(0, 0, 0, 0.35)" : undefined,
+                    }}
+                  >
+                    {lab.title}
+                  </h2>
+                )}
               </div>
             </div>
           );
@@ -548,9 +851,6 @@ export default function Hero() {
         <div style={{ height: `${TAIL_VH}vh` }} />
       </div>
 
-      <style>{`
-        @keyframes mgHeroBob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-      `}</style>
     </div>
   );
 }
@@ -570,22 +870,146 @@ function Stagger({ show, delay, y, children }: { show: boolean; delay: number; y
   );
 }
 
-// ── Floating travel postcard — clean white-framed photo, no caption ──
-function PhotoCard({ img, w }: { img: string; w: number }) {
-  const h = Math.round(w / 1.46);
+// ─────────────────────────────────────────────────────────────────────
+//  NotifCard — Flighty-style floating notification card used in
+//  scene 3. White rounded panel with a soft drop shadow, a 40px round
+//  avatar / stacked-avatars / icon-badge on the left, then a tight
+//  title + sub stack on the right.
+// ─────────────────────────────────────────────────────────────────────
+function NotifCard({ n }: { n: Notif }) {
   return (
     <div
       style={{
-        width: w,
-        padding: 6,
         background: "#FFFFFF",
-        borderRadius: 13,
-        boxShadow: "0 26px 50px -18px rgba(0,40,60,0.45), 0 5px 14px -6px rgba(0,40,60,0.25)",
+        borderRadius: 18,
+        padding: "12px 14px",
+        boxShadow:
+          "0 14px 36px -12px rgba(11,27,43,0.22), 0 2px 6px rgba(11,27,43,0.05)",
+        display: "flex",
+        alignItems: "center",
+        gap: 12,
       }}
     >
-      <div style={{ position: "relative", width: "100%", height: h, borderRadius: 8, overflow: "hidden" }}>
-        <Image src={img} alt="" fill sizes="240px" style={{ objectFit: "cover" }} />
+      {/* Left visual — avatar, stacked avatars, or coloured icon badge. */}
+      {n.kind === "avatar" && n.avatar && (
+        /* eslint-disable-next-line @next/next/no-img-element */
+        <img
+          src={n.avatar}
+          alt=""
+          aria-hidden
+          style={{
+            width: 40,
+            height: 40,
+            borderRadius: 999,
+            objectFit: "cover",
+            flexShrink: 0,
+            background: "#EAF2F7",
+          }}
+        />
+      )}
+      {n.kind === "stacked" && n.avatars && (
+        <div style={{ position: "relative", width: 56, height: 40, flexShrink: 0 }}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={n.avatars[0]}
+            alt=""
+            aria-hidden
+            style={{
+              position: "absolute",
+              left: 0,
+              top: 0,
+              width: 40,
+              height: 40,
+              borderRadius: 999,
+              objectFit: "cover",
+              border: "2px solid #FFFFFF",
+            }}
+          />
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={n.avatars[1]}
+            alt=""
+            aria-hidden
+            style={{
+              position: "absolute",
+              left: 16,
+              top: 0,
+              width: 40,
+              height: 40,
+              borderRadius: 999,
+              objectFit: "cover",
+              border: "2px solid #FFFFFF",
+            }}
+          />
+        </div>
+      )}
+      {n.kind === "icon" && (
+        <div
+          style={{
+            width: 40,
+            height: 40,
+            borderRadius: 999,
+            background: n.badge ?? "#00A3FF",
+            flexShrink: 0,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            fontSize: 20,
+            lineHeight: 1,
+          }}
+        >
+          <span aria-hidden>{n.emoji}</span>
+        </div>
+      )}
+      {n.kind === "logo" && (
+        /* Elio's own brand mark — the rotating MapsGPT globe. */
+        <div
+          style={{
+            width: 40,
+            height: 40,
+            flexShrink: 0,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <MapsGPTGlobe size={36} />
+        </div>
+      )}
+      <div style={{ flex: 1, minWidth: 0 }}>
+        <p
+          style={{
+            fontFamily: '"SF Pro", -apple-system, BlinkMacSystemFont, sans-serif',
+            fontSize: 14,
+            fontWeight: 600,
+            color: "#0F1B2D",
+            margin: 0,
+            lineHeight: 1.25,
+            letterSpacing: "-0.01em",
+            whiteSpace: "nowrap",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+          }}
+        >
+          {n.title}
+        </p>
+        <p
+          style={{
+            fontFamily: '"SF Pro", -apple-system, BlinkMacSystemFont, sans-serif',
+            fontSize: 12,
+            fontWeight: 400,
+            color: "#6B7B8C",
+            margin: "2px 0 0 0",
+            lineHeight: 1.3,
+            whiteSpace: "nowrap",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+          }}
+        >
+          {n.sub}
+        </p>
       </div>
     </div>
   );
 }
+

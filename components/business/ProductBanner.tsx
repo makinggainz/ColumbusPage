@@ -59,7 +59,7 @@ export default function ProductBanner() {
             color: "var(--ent-text-primary)",
           }}
         >
-          <strong>Columbus Pro</strong>
+          <strong style={{ color: "#0A1342" }}>Columbus Pro</strong>
           {" — "}
           GIS made effortless
         </h2>

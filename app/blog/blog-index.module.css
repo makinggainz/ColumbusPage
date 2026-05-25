@@ -1,6 +1,6 @@
 /* Blog index — redesigned to match the homepage visual language
    (HeroNew + BentoProducts). Funnel Display headings, #0B1B2B ink,
-   #0081AC accent, 13px card corners with the BentoProducts corner
+   var(--color-accent) accent, 13px card corners with the BentoProducts corner
    notch + 1px #E7E7F1 hairline. Card text sits underneath the tile. */
 
 .page {
@@ -197,17 +197,29 @@
 }
 .card:hover .cardMedia img { transform: scale(1.03); }
 
-/* Unifying treatment (part 2) — a faint cool wash layered over every
-   card image so the grid reads cohesively regardless of each photo's
-   native colour temperature. Sits above the image (z-index 1) but below
-   the hairline ring (::after, z-index 2) and the corner notch (z 3). */
+/* Blue gradient overlay layered over every card image. Sits above the image
+   (z-index 1) but below the hairline ring (::after, z-index 2) and the
+   corner notch (z 3). */
 .cardMedia::before {
   content: "";
   position: absolute;
   inset: 0;
   z-index: 1;
   pointer-events: none;
-  background: rgba(13, 38, 64, 0.12);
+  opacity: 0.6;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 92, 181, 0.88) 0%,
+    rgba(0, 92, 181, 0.66) 30%,
+    rgba(0, 92, 181, 0.45) 50%,
+    rgba(0, 92, 181, 0.66) 70%,
+    rgba(0, 92, 181, 0.88) 100%
+  );
+}
+
+/* No overlay for engineering cover images */
+.noOverlay::before {
+  background: none;
 }
 @media (prefers-reduced-motion: reduce) {
   .cardMedia img,
@@ -282,7 +294,7 @@
   letter-spacing: 0.06em;
   text-transform: uppercase;
   white-space: nowrap;
-  color: #0081AC;
+  color: var(--color-accent);
 }
 
 /* ── Card text — sits underneath the media tile. ────────────────────── */
@@ -327,7 +339,7 @@
   margin: 0 0 8px;
   transition: color 200ms ease;
 }
-.card:hover .cardTitle { color: #0081AC; }
+.card:hover .cardTitle { color: var(--color-accent); }
 
 .cardDescription {
   display: block;

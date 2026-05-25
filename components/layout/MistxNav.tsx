@@ -11,8 +11,8 @@ import { useEffect, useRef, useState } from "react";
 //   • `text-mistral-black`      → `text-[#1f1f1f]`
 //   • `bg-mistral-black`        → `bg-[#1f1f1f]`
 //   • `bg-mistral-beige-deep`   → `bg-[#DCE7FB]`
-//   • `text-mistral-orange`     → `text-[#0081AC]` (rebrand blue, not orange)
-//   • `border-mistral-orange`   → `border-[#0081AC]`
+//   • `text-mistral-orange`     → `text-accent` (site accent — see --color-accent)
+//   • `border-mistral-orange`   → `border-accent`
 //   • `md:container`            → `max-w-[1287px] mx-5 md:mx-auto`  (matches this
 //                                 project's content bounds; no inner padding so the
 //                                 logo / "Try Elio" CTA sit flush with those bounds)
@@ -87,6 +87,8 @@ export function MistxNav({
   heroWhite = false,
   heroLight = false,
   heroTint,
+  lightCta = false,
+  darkBackdrop = false,
 }: {
   heroWhite?: boolean;
   heroLight?: boolean;
@@ -98,6 +100,23 @@ export function MistxNav({
    * hero (the Research page uses it — see app/research / TechnologyPage).
    */
   heroTint?: string;
+  /**
+   * Invert the "Try Elio" CTA to a white pill with black text while the
+   * navbar contents are in light mode (lightNav=true) — i.e., while
+   * floating over a dark/photo hero. Once the navbar pins with its
+   * solid-white backdrop, the CTA reverts to the standard navy fill so
+   * it doesn't disappear into the backdrop. Opt-in per page (consumer
+   * uses it; other pages keep the default navy CTA). */
+  lightCta?: boolean;
+  /**
+   * Replace the navbar's default white/transparent backdrop with an
+   * ALWAYS-visible dark gradient (opaque-ish at the top, fading to
+   * transparent at the navbar's bottom edge). When set, the white
+   * solid backdrop never paints, the heroWhite/heroLight scrims are
+   * suppressed, and nav contents stay in light (white) mode at every
+   * scroll position. Consumer page only — paired with a photo hero
+   * where the navbar must read on a dark band regardless of scroll. */
+  darkBackdrop?: boolean;
 } = {}) {
   const [elioOpen, setElioOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -169,15 +188,17 @@ export function MistxNav({
   }, []);
 
   // MapsGPT-only: track the hero's sticky-stage scene so the navbar
-  // backdrop can recolour to match it. Only wired up when `heroLight` is
-  // set, keeping this behaviour scoped to the MapsGPT page.
+  // backdrop can recolour to match it. Wired up when `heroLight` OR
+  // `darkBackdrop` is set — the consumer page uses darkBackdrop in a
+  // scene-aware way (dark gradient during phase 0 over the photo header,
+  // then scene-color scrim during phases 1–3 in the sticky stage).
   useEffect(() => {
-    if (!heroLight) return;
+    if (!heroLight && !darkBackdrop) return;
     const onPhase = (e: Event) =>
       setHeroPhase((e as CustomEvent<number>).detail ?? 0);
     window.addEventListener("mapsgpt-hero-phase", onPhase);
     return () => window.removeEventListener("mapsgpt-hero-phase", onPhase);
-  }, [heroLight]);
+  }, [heroLight, darkBackdrop]);
 
   // Listen for the takeover signal from IndustryStickyNavbar (business
   // page). When the sub-navbar is showing, hide the main navbar; when it
@@ -206,9 +227,23 @@ export function MistxNav({
   // White nav contents on the business hero (white-on-image), and on the
   // MapsGPT hero while its navy mid-scene sits behind the navbar — dark
   // text would be invisible against #063140.
+  // True while the dark-gradient navbar backdrop is actively painted
+  // (consumer page). It stays on while the navbar floats over the
+  // hero, then fades off once the navbar pins above the next
+  // (white-backed) section so the navbar can swap to the normal
+  // white backdrop and the dark text returns.
+  // The dark navbar gradient now only paints during phase 0 (over the
+  // photo hero header). During the sticky stage (phase 1–3) the scene-
+  // color scrim takes over so the navbar reads as part of each scene.
+  const darkScrimActive = darkBackdrop && (!stuck || overHero) && heroPhase === 0;
   const lightNav =
     (heroWhite && (!stuck || overHero)) ||
-    (heroLight && overHero && heroPhase === 2);
+    // Phase 2 ("Knows your vibe", navy scene) still needs white nav
+    // contents — dark text would be invisible against the navy scrim.
+    // Phase 3 ("Save & share / Local guide") sits over the white scene
+    // backdrop with NO navbar scrim, so the nav contents stay dark.
+    ((heroLight || darkBackdrop) && overHero && heroPhase === 2) ||
+    darkScrimActive;
   // Business-only: while scrolled ("on movement") AND the navbar still
   // overlaps the hero, the solid white backdrop is replaced by a scrim
   // tinted to the hero image's sky colour — opaque at the top, fading to
@@ -217,16 +252,21 @@ export function MistxNav({
   // `heroLight` (the MapsGPT hero) reuses the float-over-hero mechanic
   // for a LIGHT hero: nav contents stay dark (lightNav stays false) and
   // the scrim is a pale sand tint instead of business' sky blue.
-  const heroFloat = heroWhite || heroLight || heroTint != null;
+  const heroFloat = heroWhite || heroLight || heroTint != null || darkBackdrop;
   const heroScrim = heroFloat && stuck && overHero;
   const scrimRGB = "4,87,141";
-  // MapsGPT sticky-stage scene colour — matches Hero's CREAM top stop /
-  // NAVY top stop / LIGHT. A single solid that the navbar's masked scrim
-  // cross-fades between via `background-color` (see the scrim div below).
+  // MapsGPT sticky-stage scene colour — matches Hero's CREAM / NAVY / LIGHT
+  // stops. A single solid that the navbar's masked scrim cross-fades
+  // between via `background-color` (see the scrim div below). Phase 1 uses
+  // the soft Elio-blue mid-stop (#E3F2FB) so the navbar reads as part of
+  // Scene 1's light-blue band without going too saturated.
+  // Phase 3 ("Save & share / Local guide") used to wear a pure-black
+  // backdrop here; the consumer page now wants no navbar scrim at all over
+  // scene 3, so phase 3 is excluded from the scene-scrim opacity below.
   // `heroTint` (Research page) overrides this with a fixed caller colour.
   const heroStageColor =
     heroTint ??
-    (heroPhase === 2 ? "#063140" : heroPhase === 3 ? "#FFFFFF" : "#F7F2E4");
+    (heroPhase === 2 ? "#0B1342" : "#E3F2FB");
 
   return (
     <header
@@ -240,7 +280,17 @@ export function MistxNav({
         top: "var(--frame-margin, 30px)",
         borderTopLeftRadius: "var(--frame-radius, 20px)",
         borderTopRightRadius: "var(--frame-radius, 20px)",
-        backgroundColor: showBackdrop && !heroScrim ? "#FFFFFF" : "transparent",
+        // darkScrimActive owns the navbar's backdrop while the dark
+        // gradient is visible (consumer page over the hero). Once the
+        // navbar pins above the next section (overHero=false) the
+        // dark scrim fades off and the standard backdrop logic kicks
+        // back in, so the navbar can wear the white pin over white
+        // content beneath.
+        backgroundColor: darkScrimActive
+          ? "transparent"
+          : showBackdrop && !heroScrim
+            ? "#FFFFFF"
+            : "transparent",
         // Industry-picker takeover: slide up + fade out so the
         // sub-navbar (positioned at the same top slot) reads as a clean
         // replacement, no overlap. Returns to translateY(0) the moment
@@ -262,7 +312,7 @@ export function MistxNav({
           bottom border, so it blends into the real sky below with no
           hard edge. Driven by opacity so it cross-fades with the
           solid-white backdrop as the hero scrolls out. */}
-      {heroWhite && (
+      {heroWhite && !darkBackdrop && (
         <div
           aria-hidden
           className="pointer-events-none absolute inset-x-0 top-0 bottom-0"
@@ -285,7 +335,7 @@ export function MistxNav({
           700ms cubic-bezier matches Hero's backdrop transition exactly,
           and Hero dispatches the scene change in the same tick as its own
           setState, so the two cross-fades start on the same frame. */}
-      {(heroLight || heroTint != null) && (
+      {(heroLight || heroTint != null || darkBackdrop) && (
         <div
           aria-hidden
           className="pointer-events-none absolute inset-x-0 top-0 bottom-0"
@@ -298,9 +348,38 @@ export function MistxNav({
               "linear-gradient(to bottom, black 0%, rgba(0,0,0,0.55) 50%, transparent 100%)",
             WebkitMaskImage:
               "linear-gradient(to bottom, black 0%, rgba(0,0,0,0.55) 50%, transparent 100%)",
-            opacity: heroScrim ? 1 : 0,
+            // In darkBackdrop mode the dark scrim owns phase 0; this scene-
+            // color scrim paints during phases 1–2 only. Phase 3 ("Save &
+            // share / Local guide") deliberately runs with NO scrim so the
+            // navbar floats transparent over the white scene backdrop.
+            // Other modes (heroLight, heroTint) keep the original behavior.
+            opacity:
+              heroScrim && (!darkBackdrop || (heroPhase > 0 && heroPhase !== 3)) ? 1 : 0,
             transition:
               "opacity 300ms ease, background-color 700ms cubic-bezier(0.44,0,0.56,1)",
+          }}
+        />
+      )}
+      {/* darkBackdrop — dark gradient behind the navbar while it floats
+          over the hero. Opacity tracks darkScrimActive: visible while
+          overHero (or at scroll=0), fades off once the navbar pins
+          above the next section so the navbar can match its surface
+          color — the standard white backdrop cross-fades in via the
+          backgroundColor transition above. Same colour stops as the
+          consumer hero's own top-edge fade, so the navbar zone reads
+          as a continuation of that band. */}
+      {darkBackdrop && (
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-x-0 top-0 bottom-0"
+          style={{
+            zIndex: 0,
+            borderTopLeftRadius: "var(--frame-radius, 20px)",
+            borderTopRightRadius: "var(--frame-radius, 20px)",
+            background:
+              "linear-gradient(to bottom, rgba(0, 0, 0, 0.40) 0%, rgba(0, 0, 0, 0.22) 55%, rgba(0, 0, 0, 0) 100%)",
+            opacity: darkScrimActive ? 1 : 0,
+            transition: "opacity 300ms ease",
           }}
         />
       )}
@@ -380,13 +459,13 @@ export function MistxNav({
             className={`group rounded-button px-5 py-2 p-m hidden md:flex items-center truncate gap-2 transition-colors bg-transparent ${
               lightNav
                 ? "text-white hover:bg-white/10"
-                : "text-[#1f1f1f] hover:bg-black/5 hover:text-[#0081AC]"
+                : "text-[#1f1f1f] hover:bg-black/5 hover:text-accent"
             }`}
             href="/contact"
           >
             Contact
             <span className="ml-2 inline-block transition-transform group-hover:translate-x-0.5">
-              <ArrowDot className={lightNav ? "text-white" : "text-[#0081AC]"} />
+              <ArrowDot className={lightNav ? "text-white" : "text-accent"} />
             </span>
           </a>
 
@@ -397,13 +476,17 @@ export function MistxNav({
             onMouseLeave={() => setElioOpen(false)}
           >
             <button
-              className="group cursor-pointer rounded-button px-5 py-2 p-m flex items-center gap-2 transition-colors bg-cta text-white hover:text-[#0081AC]"
+              className={`group cursor-pointer rounded-button px-5 py-2 p-m flex items-center gap-2 transition-colors hover:text-accent ${
+                lightCta && lightNav
+                  ? "bg-white text-black"
+                  : "bg-cta text-white"
+              }`}
               aria-haspopup="menu"
               aria-expanded={elioOpen}
             >
               Try Elio
               <span className="ml-2 inline-block transition-transform group-hover:translate-x-0.5">
-                <NavArrowStack className="text-[#0081AC]" />
+                <NavArrowStack className="text-accent" />
               </span>
             </button>
             {/* Product picker dropdown — todesktop.com "Products" menu
@@ -536,7 +619,7 @@ export function MistxNav({
               <li key={link.label}>
                 <a
                   href={link.href}
-                  className="p-m py-2 block font-medium hover:text-[#0081AC] transition-colors"
+                  className="p-m py-2 block font-medium hover:text-accent transition-colors"
                 >
                   {link.label}
                 </a>
@@ -549,7 +632,7 @@ export function MistxNav({
                   <li key={item.label}>
                     <a
                       href={item.href}
-                      className="block py-2 hover:text-[#0081AC] transition-colors"
+                      className="block py-2 hover:text-accent transition-colors"
                     >
                       <span className="p-m font-medium block">{item.label}</span>
                       <span className="p-s text-[#1f1f1f]/55 block">{item.desc}</span>
