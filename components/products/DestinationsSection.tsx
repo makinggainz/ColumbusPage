@@ -915,8 +915,13 @@ function GroupTripPhoneMockup() {
           height: auto;
           object-fit: contain;
           object-position: bottom right;
-          border-radius: 36px;
-          border: 6px solid #000000;
+          /* Rounded top, square bottom — the phone peeks out of the card
+             so its bottom edge should sit flush with no chrome. */
+          border-radius: 36px 36px 0 0;
+          border-top: 6px solid #000000;
+          border-left: 6px solid #000000;
+          border-right: 6px solid #000000;
+          border-bottom: 0;
           box-sizing: border-box;
           background: #000000;
         }
