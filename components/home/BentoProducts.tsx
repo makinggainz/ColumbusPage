@@ -21,6 +21,7 @@
  */
 
 import Image from "next/image";
+import { WorldMapLineArt } from "./WorldMapLineArt";
 
 /* Recolour filter matching MistxNav so the Columbus mark renders in the
    same navy blue everywhere it appears on the site. */
@@ -466,6 +467,7 @@ const PRODUCTS: Product[] = [
     tagline: "Building the Large Geospatial Model",
     audience: "For the curious",
     ctaLabel: "Read Thesis",
+    visual: "world-map",
     wide: true,
   },
 ];
@@ -554,19 +556,23 @@ export function BentoProducts() {
               </div>
               {p.visual && (
                 <div className="bp-visual">
-                  {/* The CSS sizes the image — width:100%; max-width:720px.
-                      We give Next a hint via `sizes` so the optimizer
-                      picks an appropriately small AVIF/WebP variant
-                      (the source PNGs are 2-3 MB each). */}
-                  <Image
-                    src={p.visual}
-                    alt=""
-                    aria-hidden
-                    width={720}
-                    height={520}
-                    sizes="(max-width: 1023px) calc(100vw - 56px), 720px"
-                    quality={80}
-                  />
+                  {p.cellClass === "bp-card--research" ? (
+                    <WorldMapLineArt />
+                  ) : (
+                    /* The CSS sizes the image — width:100%; max-width:720px.
+                        We give Next a hint via `sizes` so the optimizer
+                        picks an appropriately small AVIF/WebP variant
+                        (the source PNGs are 2-3 MB each). */
+                    <Image
+                      src={p.visual}
+                      alt=""
+                      aria-hidden
+                      width={720}
+                      height={520}
+                      sizes="(max-width: 1023px) calc(100vw - 56px), 720px"
+                      quality={80}
+                    />
+                  )}
                 </div>
               )}
             </a>
