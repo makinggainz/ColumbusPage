@@ -225,7 +225,7 @@ export default function BusinessHero() {
               letterSpacing: "-0.02em",
             }}
           >
-            Columbus Earth
+            Columbus Pro
           </span>
         </div>
 
