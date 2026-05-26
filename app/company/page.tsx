@@ -114,8 +114,8 @@ const MISSION_STATEMENT: StatementSegment[] = [
 ];
 
 const VISION_STATEMENT: StatementSegment[] = [
-  { text: "We believe maps, can lead to the journey to" },
-  { text: "a Universal Geospatial Model.", important: true },
+  { text: "We believe maps will lead the journey to" },
+  { text: "a Universal Geospatial model.", important: true },
   { text: "A thinking earth.", important: true },
 ];
 
