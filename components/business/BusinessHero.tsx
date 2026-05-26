@@ -226,6 +226,7 @@ export default function BusinessHero() {
               lineHeight: 1,
               display: "flex",
               alignItems: "center",
+              transform: "translateY(5px)",
             }}
           >
             Columbus Pro
