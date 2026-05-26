@@ -200,6 +200,13 @@ export default function BusinessHero() {
           provided by the removed ConsumerBusinessToggle wrapper
           (pt-32 + pill height ~43px + pb-10 ≈ 211px). */}
       <div className="relative z-10 flex flex-col items-center text-center px-6 pt-50" style={reveal(visible, 0.1)}>
+        {/* Columbus logo and name */}
+        <div style={{ marginBottom: 24 }}>
+          <p style={{ color: "#FFFFFF", fontSize: "clamp(16px, 3vw, 24px)", fontWeight: 600, letterSpacing: "0.02em", margin: 0 }}>
+            COLUMBUS
+          </p>
+        </div>
+
         <h1
           className="text-white leading-[1.1] text-[39px] md:text-[49px] lg:text-[76px]"
           style={{ fontFamily: "var(--font-hero)", fontWeight: 500, letterSpacing: "-0.02em", maxWidth: 900 }}
