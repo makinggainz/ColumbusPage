@@ -85,7 +85,7 @@ const FEATURED: Quote = {
 const QUOTES: Quote[] = [
   {
     quote:
-      "As the bridge between the physical world and digital world, maps are one of the most interfaces that haven't changed in decades.",
+      "As the bridge between the physical world and digital world, maps are one of the most ubiquitous interfaces that haven't changed in decades.",
     name: "Alexander Ramirez Blonski",
     role: "Co-Founder, CPO",
     avatar: "/Alex.jpg",
