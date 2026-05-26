@@ -96,6 +96,8 @@ export function TechnologySections() {
                 <img
                   src="/TechnologyPageImages/techDiagram.png"
                   alt=""
+                  loading="lazy"
+                  decoding="async"
                   className={styles.lgmCompareArtImg}
                 />
               </div>
@@ -105,7 +107,7 @@ export function TechnologySections() {
             <div className={styles.lgmCompareTable}>
               <div className={styles.dimBranding}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src="/logobueno.png" alt="" className={styles.dimBrandingLogo} aria-hidden />
+                <img src="/logobueno.png" alt="" className={styles.dimBrandingLogo} aria-hidden loading="lazy" decoding="async" />
                 <span>Columbus Earth</span>
               </div>
 
@@ -118,19 +120,19 @@ export function TechnologySections() {
                 <div />
                 <div className={styles.dimModelHeader}>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src="/TechnologyPageImages/llm-text-icon.png" alt="" className={styles.dimModelHeaderIcon} aria-hidden />
+                  <img src="/TechnologyPageImages/llm-text-icon.png" alt="" className={styles.dimModelHeaderIcon} aria-hidden loading="lazy" decoding="async" />
                   <h4 className={styles.dimModelHeaderName}>LLM</h4>
                   <p className={styles.dimModelHeaderSubtitle}>Large-Language-model</p>
                 </div>
                 <div className={styles.dimModelHeader}>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src="/TechnologyPageImages/vlm-image-icon.png" alt="" className={styles.dimModelHeaderIcon} aria-hidden />
+                  <img src="/TechnologyPageImages/vlm-image-icon.png" alt="" className={styles.dimModelHeaderIcon} aria-hidden loading="lazy" decoding="async" />
                   <h4 className={styles.dimModelHeaderName}>VLM</h4>
                   <p className={styles.dimModelHeaderSubtitle}>Vision-Language-model</p>
                 </div>
                 <div className={styles.dimModelHeader}>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src="/TechnologyPageImages/lgm-globe-icon.png" alt="" className={styles.dimModelHeaderIcon} aria-hidden />
+                  <img src="/TechnologyPageImages/lgm-globe-icon.png" alt="" className={styles.dimModelHeaderIcon} aria-hidden loading="lazy" decoding="async" />
                   <h4 className={`${styles.dimModelHeaderName} ${styles.dimModelHeaderNameLgm}`}>LGM</h4>
                   <p className={styles.dimModelHeaderSubtitle}>Large-Geosaptial-model</p>
                 </div>
@@ -171,19 +173,19 @@ export function TechnologySections() {
                   <div className={styles.dimLogos}>
                     <div className={styles.dimLogoItem}>
                       {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src="/TechnologyPageImages/LogosTable/ChatGPT-Vertical-Logo-Vector.svg-.png" alt="ChatGPT" className={styles.dimLogoImg} />
+                      <img src="/TechnologyPageImages/LogosTable/ChatGPT-Vertical-Logo-Vector.svg-.png" alt="ChatGPT" className={styles.dimLogoImg} loading="lazy" decoding="async" />
                     </div>
                     <div className={styles.dimLogoItem}>
                       {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src="/TechnologyPageImages/LogosTable/Claude_AI_logo.svg.png" alt="Claude" className={styles.dimLogoImg} />
+                      <img src="/TechnologyPageImages/LogosTable/Claude_AI_logo.svg.png" alt="Claude" className={styles.dimLogoImg} loading="lazy" decoding="async" />
                     </div>
                     <div className={styles.dimLogoItem}>
                       {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src="/TechnologyPageImages/LogosTable/Grok-feb-2025-logo.svg.png" alt="Grok" className={styles.dimLogoImg} />
+                      <img src="/TechnologyPageImages/LogosTable/Grok-feb-2025-logo.svg.png" alt="Grok" className={styles.dimLogoImg} loading="lazy" decoding="async" />
                     </div>
                     <div className={styles.dimLogoItem}>
                       {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src="/TechnologyPageImages/LogosTable/Perplexity_AI_logo.svg.png" alt="Perplexity" className={styles.dimLogoImg} />
+                      <img src="/TechnologyPageImages/LogosTable/Perplexity_AI_logo.svg.png" alt="Perplexity" className={styles.dimLogoImg} loading="lazy" decoding="async" />
                     </div>
                   </div>
                 </div>
@@ -191,22 +193,22 @@ export function TechnologySections() {
                   <div className={styles.dimLogos} style={{ gridTemplateColumns: "1fr" }}>
                     <div className={styles.dimLogoItem}>
                       {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src="/TechnologyPageImages/physical-intelligence-logo.jpeg" alt="Physical Intelligence" className={styles.dimLogoImg} style={{ maxWidth: 135 }} />
+                      <img src="/TechnologyPageImages/physical-intelligence-logo.jpeg" alt="Physical Intelligence" className={styles.dimLogoImg} style={{ maxWidth: 135 }} loading="lazy" decoding="async" />
                     </div>
                     <div className={styles.dimLogoItem}>
                       {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src="/TechnologyPageImages/runway-logo.jpeg" alt="Runway" className={styles.dimLogoImg} />
+                      <img src="/TechnologyPageImages/runway-logo.jpeg" alt="Runway" className={styles.dimLogoImg} loading="lazy" decoding="async" />
                     </div>
                     <div className={styles.dimLogoItem}>
                       {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src="/TechnologyPageImages/meta-logo.jpeg" alt="Meta" className={styles.dimLogoImg} />
+                      <img src="/TechnologyPageImages/meta-logo.jpeg" alt="Meta" className={styles.dimLogoImg} loading="lazy" decoding="async" />
                     </div>
                   </div>
                 </div>
                 <div className={`${styles.dimGridCell} ${styles.dimGridCellBottom} ${styles.dimGridCellLgm}`}>
                   <div className={styles.dimBrand}>
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src="/logobueno.png" alt="" className={styles.dimBrandLogo} aria-hidden />
+                    <img src="/logobueno.png" alt="" className={styles.dimBrandLogo} aria-hidden loading="lazy" decoding="async" />
                     <span className={styles.dimBrandName}>Columbus Earth</span>
                   </div>
                 </div>
@@ -523,7 +525,7 @@ export function TechnologySections() {
                     <a href="/business" className={styles.coreResearchProduct}>
                       <span className={styles.coreResearchProductGlyph} aria-hidden>
                         {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img src="/logobueno.png" alt="" />
+                        <img src="/logobueno.png" alt="" loading="lazy" decoding="async" />
                       </span>
                       <span>Columbus</span>
                     </a>
@@ -535,7 +537,7 @@ export function TechnologySections() {
                     >
                       <span className={styles.coreResearchProductGlyph} aria-hidden>
                         {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img src="/MapsGPT-logo.png" alt="" />
+                        <img src="/MapsGPT-logo.png" alt="" loading="lazy" decoding="async" />
                       </span>
                       <span>Elio</span>
                     </a>
@@ -546,12 +548,6 @@ export function TechnologySections() {
                       <span>More Soon</span>
                     </span>
                   </div>
-                  <a href="/columbus-solutions" className={styles.coreResearchGroupLink}>
-                    Other use cases
-                    <svg width="10" height="10" viewBox="0 0 10 10" aria-hidden>
-                      <path d="M2 8l6-6M3.5 2H8v4.5" stroke="currentColor" strokeWidth="1.3" fill="none" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                  </a>
                 </ResearchGroup>
               </div>
             </div>

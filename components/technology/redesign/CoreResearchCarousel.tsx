@@ -31,7 +31,6 @@ const SLIDES: Slide[] = [
     title: "Answers, insights, patterns",
     text: "One model, innumerable granular ground truths.",
     products: true,
-    link: { label: "Other use cases", href: "/columbus-solutions" },
   },
 ];
 
@@ -117,14 +116,14 @@ export function CoreResearchCarousel() {
             <a href="/" className={styles.coreResearchProduct}>
               <span className={styles.coreResearchProductGlyph} aria-hidden>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src="/logobueno.png" alt="" />
+                <img src="/logobueno.png" alt="" loading="lazy" decoding="async" />
               </span>
               <span>Columbus</span>
             </a>
             <a href="/products/consumer" className={styles.coreResearchProduct}>
               <span className={styles.coreResearchProductGlyph} aria-hidden>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src="/MapsGPT-logo.png" alt="" />
+                <img src="/MapsGPT-logo.png" alt="" loading="lazy" decoding="async" />
               </span>
               <span>Elio</span>
             </a>

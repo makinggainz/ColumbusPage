@@ -20,7 +20,7 @@
  * pinned, visual offset toward an edge).
  */
 
-/* eslint-disable @next/next/no-img-element */
+import Image from "next/image";
 
 /* Recolour filter matching MistxNav so the Columbus mark renders in the
    same navy blue everywhere it appears on the site. */
@@ -460,7 +460,7 @@ const PRODUCTS: Product[] = [
   },
   {
     cellClass: "bp-card--research",
-    href: "/research-applications",
+    href: "/research",
     logo: "/TechnologyPageImages/lgm-globe-icon.png",
     name: "Research",
     tagline: "Building the Large Geospatial Model",
@@ -510,11 +510,16 @@ export function BentoProducts() {
               )}
               <div className="bp-text-block">
                 <div className="bp-brand">
-                  <img
+                  {/* 50×50 logo mark — width/height let Next pick a
+                      256-wide AVIF/WebP source even though it renders
+                      smaller, so 2x retina stays sharp. */}
+                  <Image
                     src={p.logo}
                     alt=""
                     aria-hidden
                     className="bp-logo"
+                    width={56}
+                    height={56}
                     style={p.logoFilter ? { filter: p.logoFilter } : undefined}
                   />
                   <span
@@ -541,7 +546,19 @@ export function BentoProducts() {
               </div>
               {p.visual && (
                 <div className="bp-visual">
-                  <img src={p.visual} alt="" aria-hidden />
+                  {/* The CSS sizes the image — width:100%; max-width:720px.
+                      We give Next a hint via `sizes` so the optimizer
+                      picks an appropriately small AVIF/WebP variant
+                      (the source PNGs are 2-3 MB each). */}
+                  <Image
+                    src={p.visual}
+                    alt=""
+                    aria-hidden
+                    width={720}
+                    height={520}
+                    sizes="(max-width: 1023px) calc(100vw - 56px), 720px"
+                    quality={80}
+                  />
                 </div>
               )}
             </a>
