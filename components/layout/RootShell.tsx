@@ -30,18 +30,16 @@ export function RootShell({ children }: { children: ReactNode }) {
   // Article pages run full-bleed: the PageFrame card is bypassed, so
   // the frame CSS vars need to be pinned to 0 (MistxNav's `top` and
   // top-corner radii read from them with 30px / 20px fallbacks that
-  // would otherwise leave the navbar inset 30px from the top edge).
+  // would otherwise leave the navbar inset from the top edge).
   useEffect(() => {
     const root = document.documentElement;
     if (article) {
       root.style.setProperty("--frame-margin", "0px");
       root.style.setProperty("--frame-radius", "0px");
-      root.style.setProperty("--frame-border-width", "0px");
       root.style.setProperty("--footer-reveal-height", "0px");
     } else {
       root.style.removeProperty("--frame-margin");
       root.style.removeProperty("--frame-radius");
-      root.style.removeProperty("--frame-border-width");
       root.style.removeProperty("--footer-reveal-height");
     }
   }, [article]);

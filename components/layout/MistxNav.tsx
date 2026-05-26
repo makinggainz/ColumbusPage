@@ -268,18 +268,24 @@ export function MistxNav({
     heroTint ??
     (heroPhase === 2 ? "#0B1342" : "#E3F2FB");
 
+  // Top-corner radius: matches the PageFrame card while the navbar is at
+  // rest (sitting inside the card's rounded top corners), then flattens
+  // to 0 once it pins flush with the viewport top — otherwise the rounded
+  // corners would expose the body backdrop at the very top edge.
+  const navCornerRadius = stuck ? "0px" : "var(--frame-radius, 35px)";
+
   return (
     <header
       ref={headerRef}
       className="sticky z-100 w-full"
       style={{
-        // Sticks at the card's top edge (= the 30px top gutter), so the
-        // gutter stays visible above the navbar instead of getting
-        // covered when the navbar pins. Top-corner radii match the
-        // PageFrame card so the navbar's white backdrop curves with it.
-        top: "var(--frame-margin, 30px)",
-        borderTopLeftRadius: "var(--frame-radius, 20px)",
-        borderTopRightRadius: "var(--frame-radius, 20px)",
+        // Pins flush with the viewport top when the navbar sticks —
+        // the page-frame top gutter is covered as the navbar slides up,
+        // so no gap appears above the stuck navbar. Top-corner radii
+        // still match the PageFrame card while the navbar is at rest.
+        top: 0,
+        borderTopLeftRadius: navCornerRadius,
+        borderTopRightRadius: navCornerRadius,
         // darkScrimActive owns the navbar's backdrop while the dark
         // gradient is visible (consumer page over the hero). Once the
         // navbar pins above the next section (overHero=false) the
@@ -318,8 +324,8 @@ export function MistxNav({
           className="pointer-events-none absolute inset-x-0 top-0 bottom-0"
           style={{
             zIndex: 0,
-            borderTopLeftRadius: "var(--frame-radius, 20px)",
-            borderTopRightRadius: "var(--frame-radius, 20px)",
+            borderTopLeftRadius: navCornerRadius,
+            borderTopRightRadius: navCornerRadius,
             background: `linear-gradient(to bottom, rgba(${scrimRGB},1) 0%, rgba(${scrimRGB},0.55) 50%, rgba(${scrimRGB},0) 100%)`,
             opacity: heroScrim ? 1 : 0,
             transition: "opacity 300ms ease",
@@ -341,8 +347,8 @@ export function MistxNav({
           className="pointer-events-none absolute inset-x-0 top-0 bottom-0"
           style={{
             zIndex: 0,
-            borderTopLeftRadius: "var(--frame-radius, 20px)",
-            borderTopRightRadius: "var(--frame-radius, 20px)",
+            borderTopLeftRadius: navCornerRadius,
+            borderTopRightRadius: navCornerRadius,
             backgroundColor: heroStageColor,
             maskImage:
               "linear-gradient(to bottom, black 0%, rgba(0,0,0,0.55) 50%, transparent 100%)",
@@ -374,8 +380,8 @@ export function MistxNav({
           className="pointer-events-none absolute inset-x-0 top-0 bottom-0"
           style={{
             zIndex: 0,
-            borderTopLeftRadius: "var(--frame-radius, 20px)",
-            borderTopRightRadius: "var(--frame-radius, 20px)",
+            borderTopLeftRadius: navCornerRadius,
+            borderTopRightRadius: navCornerRadius,
             background:
               "linear-gradient(to bottom, rgba(0, 0, 0, 0.40) 0%, rgba(0, 0, 0, 0.22) 55%, rgba(0, 0, 0, 0) 100%)",
             opacity: darkScrimActive ? 1 : 0,
