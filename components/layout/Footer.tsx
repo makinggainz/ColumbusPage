@@ -8,6 +8,13 @@ export type FooterProps = {
   variant?: "default" | "compact";
   reveal?: boolean;
   theme?: "light" | "dark" | "light-blue";
+  /** Optional override for the footer background color. Currently
+   *  accepted but not rendered — kept for forward-compat with callers
+   *  (e.g. RootShell) that already pass a value. */
+  bg?: string;
+  /** Optional decorative background image path. Currently accepted but
+   *  not rendered — kept for forward-compat with callers. */
+  bgImage?: string;
 };
 
 export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false, theme = "light" }) => {
@@ -73,17 +80,16 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false, t
             </div>
           </div>
           <FooterColumn theme={theme} title="Product" links={[
-            { label: "Columbus Pro", href: "/products/enterprise" },
-            { label: "Use Cases", href: "/use-cases" },
-            { label: "MapsGPT", href: "/products/mapsgpt" },
+            { label: "Columbus Pro", href: "/products/business" },
+            { label: "MapsGPT", href: "/products/consumer" },
           ]} />
           <FooterColumn theme={theme} title="Technology" links={[
-            { label: "LGM vs LLM", href: "/technology" },
-            { label: "Data Collection", href: "/technology" },
-            { label: "Core Reasoning", href: "/technology" },
+            { label: "LGM vs LLM", href: "/research#lgm-vs-llm" },
+            { label: "Data Collection", href: "/research#data-collection" },
+            { label: "Core Reasoning", href: "/research#core-reasoning" },
           ]} />
           <FooterColumn theme={theme} title="Company" links={[
-            { label: "Our Mission", href: "/mission" },
+            { label: "Our Mission", href: "/company" },
             { label: "Contact", href: "/contact" },
           ]} />
         </div>
