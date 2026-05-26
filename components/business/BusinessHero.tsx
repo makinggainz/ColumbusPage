@@ -200,7 +200,7 @@ export default function BusinessHero() {
       {/* pt-50 (200px) restores the vertical breathing room previously
           provided by the removed ConsumerBusinessToggle wrapper
           (pt-32 + pill height ~43px + pb-10 ≈ 211px). */}
-      <div className="relative z-10 flex flex-col items-center text-center px-6 pt-50" style={reveal(visible, 0.1)}>
+      <div className="relative z-10 flex flex-col items-center text-center px-6 pt-50" style={{ ...reveal(visible, 0.1), marginTop: "-40px" }}>
         {/* Columbus logo and name lockup */}
         <div style={{ marginBottom: 32, display: "flex", alignItems: "center", justifyContent: "center", gap: 12, height: 48 }}>
           <span style={{ display: "flex", width: 48, height: 48, alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
