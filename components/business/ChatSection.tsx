@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { ImageWithFallback } from "@/components/ui/ImageWithFallback";
 
 export default function ChatSection() {
   return (
@@ -13,17 +14,23 @@ export default function ChatSection() {
           (≈35–55% of the photo) lands in the lower half of the
           visible section frame, sitting behind the bottom half of the
           monitor mockup instead of the snowy park (which would
-          otherwise fill that area). */}
+          otherwise fill that area). Migrated from CSS background-image
+          (2.5 MB PNG) to next/image so the optimizer can ship an
+          AVIF/WebP variant. */}
       <div
         className="absolute inset-0 pointer-events-none"
-        style={{
-          backgroundImage: "url(/ColumBuzHero.png)",
-          backgroundPosition: "center 30%",
-          backgroundSize: "cover",
-          backgroundRepeat: "no-repeat",
-          zIndex: 0,
-        }}
-      />
+        style={{ zIndex: 0 }}
+      >
+        <ImageWithFallback
+          src="/ColumBuzHero.png"
+          alt=""
+          aria-hidden
+          fill
+          sizes="100vw"
+          quality={80}
+          style={{ objectFit: "cover", objectPosition: "center 30%" }}
+        />
+      </div>
       {/* Dark scrim — same gradient as BusinessHero: black at the top for
           text contrast, fading to transparent before the bottom edge so
           the photo meets the monitor band cleanly. */}

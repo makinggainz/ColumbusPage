@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import { notFound } from "next/navigation";
+import { ImageWithFallback } from "@/components/ui/ImageWithFallback";
 import { BlogArticleStickyNav } from "@/components/blog/BlogArticleStickyNav";
 import { ArticleReadingOptions } from "@/components/blog/ArticleReadingOptions";
 import { RelatedPosts } from "@/components/blog/RelatedPosts";
@@ -70,7 +70,7 @@ export default async function BlogPostPage({ params }: Props) {
           {post.image && (
             // LCP for blog article pages — `priority` issues a preload
             // and serves an AVIF/WebP variant via the optimizer.
-            <Image
+            <ImageWithFallback
               src={post.image}
               alt=""
               aria-hidden

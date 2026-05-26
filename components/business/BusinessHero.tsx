@@ -1,8 +1,8 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+import { ImageWithFallback } from "@/components/ui/ImageWithFallback";
 import MapChatPlatform from "./MapChatPlatform";
 import AgenticResearchMockup from "./AgenticResearchMockup";
 import DataManagerMockup from "./DataManagerMockup";
@@ -171,7 +171,7 @@ export default function BusinessHero() {
         className="absolute pointer-events-none"
         style={{ top: 0, left: 0, right: 0, bottom: 0, zIndex: 0 }}
       >
-        <Image
+        <ImageWithFallback
           src="/businessPageBackground.png"
           alt=""
           aria-hidden

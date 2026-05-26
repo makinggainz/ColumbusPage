@@ -40,16 +40,17 @@
 }
 
 /* ColumbusBackgroundMB watermark — same image used behind the homepage
-   "We're all about maps" intro, with a dimmed + masked treatment. */
+   "We're all about maps" intro, with a dimmed + masked treatment. The
+   image source itself is now an <Image> child of this wrapper (see
+   BlogIndexShell.tsx) so the optimizer can ship AVIF/WebP variants of
+   the 948 KB PNG. The wrapper keeps the mask + opacity so the visual
+   treatment is identical. */
 .heroWatermark {
   position: absolute;
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  background-image: url("/ColumbusBackgroundMB.png");
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: 120% 100%;
+  overflow: hidden;
   opacity: 0.5;
   -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 22%, #000 80%, transparent 100%);
   mask-image: linear-gradient(to bottom, transparent 0%, #000 22%, #000 80%, transparent 100%);
@@ -294,7 +295,10 @@
   letter-spacing: 0.06em;
   text-transform: uppercase;
   white-space: nowrap;
-  color: var(--color-accent);
+  /* Per-card accent set inline on .notch from the image's dominant hue
+     (see getBlogAccentColor). Color is pre-darkened to meet WCAG AA on
+     the white notch surface; falls back to the global accent. */
+  color: var(--notch-accent, var(--color-accent));
 }
 
 /* ── Card text — sits underneath the media tile. ────────────────────── */
@@ -372,6 +376,10 @@
 :global(body.bg-mode-dark) .cardCategory,
 :global(body.bg-mode-dark) .cardMetaDot,
 :global(body.bg-mode-dark) .cardDate { color: rgba(255, 255, 255, 0.5); }
+/* The per-card image-derived accent is tuned for white; on the dark
+   reading-theme notch surface (#111318) it'd be unreadable. Fall back
+   to a light accent here. */
+:global(body.bg-mode-dark) .notchLabel { color: rgba(255, 255, 255, 0.88); }
 :global(body.bg-mode-dark) .cardTitle { color: rgba(255, 255, 255, 0.95); }
 :global(body.bg-mode-dark) .cardDescription { color: rgba(255, 255, 255, 0.55); }
 
@@ -395,5 +403,6 @@
 :global(body.bg-mode-sepia) .cardCategory,
 :global(body.bg-mode-sepia) .cardMetaDot,
 :global(body.bg-mode-sepia) .cardDate { color: rgba(67, 52, 34, 0.6); }
+:global(body.bg-mode-sepia) .notchLabel { color: #433422; }
 :global(body.bg-mode-sepia) .cardTitle { color: #433422; }
 :global(body.bg-mode-sepia) .cardDescription { color: rgba(67, 52, 34, 0.7); }

@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { ImageWithFallback } from "@/components/ui/ImageWithFallback";
 
 export default function ProductBanner() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -30,17 +31,25 @@ export default function ProductBanner() {
           section the top spills *up* past the section edge instead of being
           clipped — it bleeds into the white ComparisonSection above. No
           overflow-hidden on the section so the spill stays visible. */}
+      {/* Art backdrop — migrated from CSS background-image (1.1 MB PNG)
+          to next/image so the optimizer can ship an AVIF/WebP variant.
+          objectFit:fill mirrors the original `background-size: 100% 100%`
+          stretch so the natural 1881×836 ratio + bottom-anchored bleed
+          stay identical. */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 bottom-0 z-0"
-        style={{
-          aspectRatio: "1881 / 836",
-          backgroundImage: "url(/businessartbackground.png)",
-          backgroundSize: "100% 100%",
-          backgroundRepeat: "no-repeat",
-          backgroundPosition: "center bottom",
-        }}
-      />
+        className="pointer-events-none absolute inset-x-0 bottom-0 z-0 overflow-hidden"
+        style={{ aspectRatio: "1881 / 836" }}
+      >
+        <ImageWithFallback
+          src="/businessartbackground.png"
+          alt=""
+          fill
+          sizes="100vw"
+          quality={80}
+          style={{ objectFit: "fill" }}
+        />
+      </div>
       <div
         className="relative z-10 flex flex-col items-center justify-center px-4 md:px-10"
         style={{

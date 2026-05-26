@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Linkedin } from "lucide-react";
 
+import { ImageWithFallback } from "@/components/ui/ImageWithFallback";
 import { MistxNav } from "@/components/layout/MistxNav";
 import {
   ScrollHighlightStatement,
@@ -158,7 +159,7 @@ export default function CompanyPage() {
             The wrapper still owns the mask/opacity so the visual is
             unchanged. */}
         <div className={styles.heroWatermark} aria-hidden>
-          <Image
+          <ImageWithFallback
             src="/companyhero.png"
             alt=""
             fill
@@ -290,6 +291,12 @@ export default function CompanyPage() {
                       aria-hidden="true"
                     />
                   )}
+                  {/* Top-right cut-out — page-surface white so it reads as
+                      a real notch out of the image, carrying the post's
+                      playful audience tag (e.g. "For builders"). */}
+                  <div className={styles.readMoreNotch}>
+                    <span className={styles.readMoreNotchLabel}>{post.audience}</span>
+                  </div>
                 </div>
 
                 <div style={{ display: "flex", flexDirection: "column" }}>

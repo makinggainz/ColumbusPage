@@ -127,7 +127,16 @@ export default function FinalCTASection() {
           className="absolute left-0 right-0 bottom-0"
           style={{ aspectRatio: "1447 / 1087" }}
         >
-          <Image src="/consumer-final-cta-elio-ending.png" alt="Elio across the globe" fill className="object-cover" priority />
+          {/* Below-the-fold final CTA — no `priority` (LCP is the hero
+              at the top of the page). `sizes` lets the optimizer pick a
+              right-sized AVIF/WebP variant for mobile widths. */}
+          <Image
+            src="/consumer-final-cta-elio-ending.png"
+            alt="Elio across the globe"
+            fill
+            sizes="100vw"
+            className="object-cover"
+          />
 
           {/* Floating discovery cards — positioned as % of the image
               wrapper so each card lands in the same spot at any viewport. */}
@@ -239,7 +248,15 @@ export default function FinalCTASection() {
               className="absolute left-0 right-0"
               style={{ bottom: 0, height: IMAGE_HEIGHT }}
             >
-              <Image src="/consumer-final-cta-elio-ending.png" alt="Elio across the globe" fill className="object-cover" priority />
+              {/* Desktop variant — same image, sized to the inner frame.
+                  Not LCP (this is the page-bottom CTA), so no `priority`. */}
+              <Image
+                src="/consumer-final-cta-elio-ending.png"
+                alt="Elio across the globe"
+                fill
+                sizes="(min-width: 1728px) 1728px, 100vw"
+                className="object-cover"
+              />
 
               {/* Floating discovery cards — five UI overlays scattered
                   over the globe (photo card w/ avatars, photo card

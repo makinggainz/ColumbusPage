@@ -20,6 +20,7 @@
 
 import Image from "next/image";
 import { useRef, useEffect, useState, useCallback } from "react";
+import { ImageWithFallback } from "@/components/ui/ImageWithFallback";
 import MapsGPTGlobe from "@/components/products/MapsGPTGlobe";
 import StoreBadges from "@/components/products/StoreBadges";
 
@@ -514,7 +515,7 @@ export default function Hero() {
           {/* LCP for /products/consumer — `priority` emits a preload tag
               so the optimizer's AVIF/WebP variant starts fetching before
               the bundle hydrates. */}
-          <Image
+          <ImageWithFallback
             src="/consumer/heroBackground.png"
             alt=""
             aria-hidden

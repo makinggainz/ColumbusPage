@@ -48,6 +48,23 @@ export const BLOG_SLUG = {
   fasterSiteSelectionColumbus: "faster-site-selection-columbus",
   elioV2NewFeatures: "elio-v2-new-features",
   joinUsResearchOpportunities: "join-us-research-opportunities",
+  /* ── Aliases for legacy keys referenced by /research page CTAs
+        (TechnologySections + content.ts). The original keys were renamed
+        when blog-posts.ts was reorganised; rather than chase down every
+        call site, these aliases point each legacy name at its closest
+        living article so the CTAs resolve to a real `/blog/<slug>` URL
+        instead of `/blog/undefined`. Pick the nearest topical match;
+        update later as new articles ship. */
+  earthRecipes: "earth-recipes-world-think",                  // → earthRecipesWorldThink
+  erickFirePrediction: "fire-prediction-model",               // → firePredictonModel
+  mapsgptV25Architecture: "mapsgpt-building-useful",          // closest mapsgpt article
+  mapsgptConsumerProduct: "mapsgpt-building-useful",          // closest mapsgpt article
+  llmsGeospatialQueries: "why-llms-didnt-cut-it",             // closest LLM-vs-geo article
+  generativeGeospatialLayers: "mapping-unknown-gen-layers",   // closest gen-layers article
+  foundingLgmsInDepth: "philosophy-universal-lgm",            // closest LGM-foundation article
+  timelineGeneralistLgm: "lgm-timeline",                      // → lgmTimeline
+  ugmRoadmapGamePlan: "why-building-lgm",                     // closest "why/roadmap" article
+  deepSpatialReasoningScale: "mapping-unknown-gen-layers",    // closest spatial-reasoning article
 } as const;
 
 export const BLOG_POSTS: BlogPost[] = [
@@ -288,6 +305,31 @@ const bySlug = new Map(BLOG_POSTS.map((p) => [p.slug, p]));
 
 export function getBlogPost(slug: string): BlogPost | undefined {
   return bySlug.get(slug);
+}
+
+/**
+ * Accent color used for the audience-label notch on each blog card. Picked
+ * from the dominant hue of the post's hero image (see scripts/extract-blog-colors.mjs)
+ * and rendered at a fixed dark lightness so contrast against the white notch
+ * passes WCAG AA (≥ 4.5:1). Fallback is the global accent.
+ */
+const BLOG_IMAGE_ACCENT_COLORS: Record<string, string> = {
+  "/Blogs/EngineeringCover.png": "#8A6628",
+  "/Blogs/firePrediction.png": "#1C5097",
+  "/Blogs/MapsGPT.png": "#16579C",
+  "/Academic/acad-bg-1.png": "#16689C",
+  "/Blogs/madrid.png": "#165D9C",
+  "/UrbanInfrastructure/urb-bg-6.png": "#16769C",
+  "/Blogs/spain.jpeg": "#8D4E26",
+  "/Blogs/newyork.jpeg": "#8E4F24",
+  "/Blogs/columbusPreOrder.png": "#16679C",
+  "/CREbg/cre-bg-1.png": "#16609C",
+  "/Blogs/elio.png": "#16579C",
+  "/Blogs/joinUs.png": "#283A8A",
+};
+
+export function getBlogAccentColor(post: BlogPost): string | undefined {
+  return post.image ? BLOG_IMAGE_ACCENT_COLORS[post.image] : undefined;
 }
 
 export function getAllBlogPostsSorted(): BlogPost[] {
