@@ -440,6 +440,8 @@ export default function Hero() {
                       src={INTRO_PHONE_IMAGE}
                       alt=""
                       aria-hidden
+                      fetchPriority="high"
+                      decoding="async"
                       style={{
                         position: "absolute",
                         inset: 0,
@@ -458,6 +460,8 @@ export default function Hero() {
                         src={src}
                         alt=""
                         aria-hidden
+                        loading="lazy"
+                        decoding="async"
                         style={{
                           position: "absolute",
                           inset: 0,
@@ -507,11 +511,18 @@ export default function Hero() {
         {/* Consumer hero background — full-bleed photograph behind the
             typed-phrase H1 + CTA. */}
         <div aria-hidden className="absolute inset-0 overflow-hidden">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
+          {/* LCP for /products/consumer — `priority` emits a preload tag
+              so the optimizer's AVIF/WebP variant starts fetching before
+              the bundle hydrates. */}
+          <Image
             src="/consumer/heroBackground.png"
             alt=""
             aria-hidden
+            fill
+            priority
+            fetchPriority="high"
+            sizes="100vw"
+            quality={80}
             className="absolute inset-0 w-full h-full"
             style={{
               objectFit: "cover",
@@ -726,6 +737,8 @@ export default function Hero() {
                     src={lab.image}
                     alt=""
                     aria-hidden
+                    loading="lazy"
+                    decoding="async"
                     style={{
                       position: "absolute",
                       inset: 0,
@@ -897,6 +910,8 @@ function NotifCard({ n }: { n: Notif }) {
           src={n.avatar}
           alt=""
           aria-hidden
+          loading="lazy"
+          decoding="async"
           style={{
             width: 40,
             height: 40,
@@ -914,6 +929,8 @@ function NotifCard({ n }: { n: Notif }) {
             src={n.avatars[0]}
             alt=""
             aria-hidden
+            loading="lazy"
+            decoding="async"
             style={{
               position: "absolute",
               left: 0,
@@ -930,6 +947,8 @@ function NotifCard({ n }: { n: Notif }) {
             src={n.avatars[1]}
             alt=""
             aria-hidden
+            loading="lazy"
+            decoding="async"
             style={{
               position: "absolute",
               left: 16,

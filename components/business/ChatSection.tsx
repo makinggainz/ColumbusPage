@@ -207,6 +207,7 @@ export default function ChatSection() {
                     src="/business/mapchat.png"
                     alt=""
                     fill
+                    sizes="(max-width: 1023px) 100vw, 720px"
                     className="object-cover object-center"
                   />
                 </div>

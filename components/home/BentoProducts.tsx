@@ -494,6 +494,14 @@ function ArrowDots() {
 export function BentoProducts() {
   return (
     <section className="bp-section" aria-label="Our products">
+      {/* React 19 hoists these <link> tags into the document head. The
+          two bento card backdrops are CSS background-images (so the
+          next-image optimizer can't see them); preloading at section
+          render starts the fetch immediately on first paint instead of
+          waiting for the CSSOM to find the url() — a few-hundred ms
+          earlier on a slow connection. */}
+      <link rel="preload" as="image" href="/ColumbusBackgroundbento.png" />
+      <link rel="preload" as="image" href="/consumer/elio/ElioEndingBackground.jpg" />
       <style>{CSS}</style>
       <div className="bp-bounds">
         <div className="bp-grid">

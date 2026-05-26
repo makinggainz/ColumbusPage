@@ -436,7 +436,7 @@ export default function DestinationsSection() {
                     {/* Sydney row + SteinCoffee sub-card */}
                     <div className="eib-chat-item">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src="/bento/profile-sydney.png" alt="" className="eib-chat-avatar-lg" />
+                      <img src="/bento/profile-sydney.png" alt="" className="eib-chat-avatar-lg" loading="lazy" decoding="async" />
                       <div className="eib-chat-stack">
                         <div className="eib-chat-name-lg">Sydney added</div>
                         <div className="eib-stein-card">
@@ -452,7 +452,7 @@ export default function DestinationsSection() {
                     {/* Natalie row + im-in badge */}
                     <div className="eib-chat-item">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src="/bento/profile-natalie.png" alt="" className="eib-chat-avatar-lg" />
+                      <img src="/bento/profile-natalie.png" alt="" className="eib-chat-avatar-lg" loading="lazy" decoding="async" />
                       <div className="eib-chat-stack">
                         <div className="eib-chat-name-lg">Natalie</div>
                         <div className="eib-chat-msg-lg">guyssss this is cute</div>
@@ -466,7 +466,7 @@ export default function DestinationsSection() {
                     {/* Sofiee row + im-in badge */}
                     <div className="eib-chat-item">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src="/bento/profile-sofiee.png" alt="" className="eib-chat-avatar-lg" />
+                      <img src="/bento/profile-sofiee.png" alt="" className="eib-chat-avatar-lg" loading="lazy" decoding="async" />
                       <div className="eib-chat-stack">
                         <div className="eib-chat-name-lg">Sofiee</div>
                         <div className="eib-chat-msg-lg">oh yes</div>

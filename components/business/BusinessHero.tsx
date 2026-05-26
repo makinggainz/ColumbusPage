@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import MapChatPlatform from "./MapChatPlatform";
@@ -162,20 +163,26 @@ export default function BusinessHero() {
           behind the sticky navbar area covered by the section's
           marginTop:-120 / paddingTop:120 trick. `cover` + `center 50%`
           keeps the cloud strip + skyline visible around the frame. */}
+      {/* LCP for /products/business — formerly a CSS background-image
+          (~2.1 MB PNG). next/image with `priority` ships an AVIF/WebP
+          variant under 200 KB and emits a preload tag so the photo is
+          on screen before the bundle hydrates. */}
       <div
         className="absolute pointer-events-none"
-        style={{
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          backgroundImage: "url(/businessPageBackground.png)",
-          backgroundPosition: "center 50%",
-          backgroundSize: "cover",
-          backgroundRepeat: "no-repeat",
-          zIndex: 0,
-        }}
-      />
+        style={{ top: 0, left: 0, right: 0, bottom: 0, zIndex: 0 }}
+      >
+        <Image
+          src="/businessPageBackground.png"
+          alt=""
+          aria-hidden
+          fill
+          priority
+          fetchPriority="high"
+          sizes="100vw"
+          quality={80}
+          style={{ objectFit: "cover", objectPosition: "center 50%" }}
+        />
+      </div>
       {/* Dark overlay — a black scrim over the cityscape for text contrast.
           It fades to transparent before the section's bottom edge so the
           bled-out lower part of the photo meets the white sections with no

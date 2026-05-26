@@ -151,7 +151,23 @@ export default function CompanyPage() {
           the homepage hero. `data-hero-section` lets the navbar render
           transparent at the top of the page. */}
       <section className={styles.hero} data-hero-section aria-label="Company">
-        <div className={styles.heroWatermark} aria-hidden />
+        {/* Watermark — formerly a CSS background-image (companyhero.png is
+            ~8.6 MB). Routing it through next/image with `priority` lets
+            the optimizer ship a sub-megabyte AVIF/WebP variant and emits
+            a preload tag so the watermark is on screen before hydration.
+            The wrapper still owns the mask/opacity so the visual is
+            unchanged. */}
+        <div className={styles.heroWatermark} aria-hidden>
+          <Image
+            src="/companyhero.png"
+            alt=""
+            fill
+            priority
+            sizes="100vw"
+            quality={75}
+            style={{ objectFit: "cover", objectPosition: "center" }}
+          />
+        </div>
         <div className={styles.heroInner}>
           <h1 className={`h1 tracking-tight ${styles.heroHeadline}`}>
             Building a thinking earth

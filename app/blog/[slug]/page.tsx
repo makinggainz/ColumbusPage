@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import { BlogArticleStickyNav } from "@/components/blog/BlogArticleStickyNav";
 import { ArticleReadingOptions } from "@/components/blog/ArticleReadingOptions";
@@ -63,9 +64,23 @@ export default async function BlogPostPage({ params }: Props) {
 
         <div
           className={blogStyles.articleImagePlaceholder}
-          style={post.image ? { backgroundImage: `url(${post.image})`, backgroundSize: "cover", backgroundPosition: "center" } : undefined}
+          style={{ position: "relative", overflow: "hidden" }}
           aria-hidden
-        />
+        >
+          {post.image && (
+            // LCP for blog article pages — `priority` issues a preload
+            // and serves an AVIF/WebP variant via the optimizer.
+            <Image
+              src={post.image}
+              alt=""
+              aria-hidden
+              fill
+              priority
+              sizes="(min-width: 768px) 720px, 100vw"
+              style={{ objectFit: "cover", objectPosition: "center" }}
+            />
+          )}
+        </div>
 
         <div>
           {body.map((block, i) =>

@@ -1,5 +1,7 @@
 "use client";
 
+import Image from "next/image";
+
 /**
  * Hero section — minimal layout for the experimentV6-Gdesign redesign.
  *
@@ -220,11 +222,19 @@ export function HeroNew() {
   return (
     <section className="hn-section" aria-label="Columbus hero" data-hero-section>
       <style>{HN_CSS}</style>
-      <img
+      {/* LCP image — fill-mode <Image priority> emits a <link rel="preload">
+          so the browser starts the fetch before the bundle hydrates, and
+          serves AVIF/WebP via the next-image optimizer (the 1.2 MB PNG
+          shrinks to ~120-300 KB depending on viewport). */}
+      <Image
         className="hn-bg"
         src="/HomeHeroBack.png"
         alt=""
-        aria-hidden
+        fill
+        priority
+        fetchPriority="high"
+        sizes="100vw"
+        quality={80}
       />
       <div className="hn-bounds">
         <p className="hn-eyebrow">The frontier research lab</p>

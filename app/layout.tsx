@@ -29,6 +29,28 @@ export default function RootLayout({
             --font-sans. */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
+        {/* Warm the connections for the remote image domains we render
+            (next/image proxies them through the optimizer, but the
+            optimizer still talks to the origin once). */}
+        <link rel="dns-prefetch" href="https://images.unsplash.com" />
+        <link rel="dns-prefetch" href="https://i.pravatar.cc" />
+        {/* Preload the two most-used self-hosted Axiforma weights — they
+            sit behind every hero <h1>, so swapping in the real face
+            before first paint avoids a visible FOUT on the LCP text. */}
+        <link
+          rel="preload"
+          href="/fonts/Axiforma-Medium.woff2"
+          as="font"
+          type="font/woff2"
+          crossOrigin=""
+        />
+        <link
+          rel="preload"
+          href="/fonts/Axiforma-SemiBold.woff2"
+          as="font"
+          type="font/woff2"
+          crossOrigin=""
+        />
         <link
           rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@300..800&family=Opening+Hours+Sans:wght@400..700&display=swap"

@@ -20,11 +20,23 @@ const nextConfig: NextConfig = {
   },
   images: {
     remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "images.unsplash.com",
-      },
+      { protocol: "https", hostname: "images.unsplash.com" },
+      { protocol: "https", hostname: "i.pravatar.cc" },
     ],
+    // AVIF first (best compression), then WebP fallback; the browser
+    // picks whichever it can decode. Cuts our heavy PNGs (some 10-40 MB
+    // on disk) down to a few hundred KB at most served sizes.
+    formats: ["image/avif", "image/webp"],
+    // Match the default sizes the Image component picks; keeping the
+    // list tight reduces the number of cached derivatives the optimizer
+    // has to keep on disk.
+    deviceSizes: [640, 750, 828, 1080, 1200, 1287, 1920, 2048],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
+    // 1 year — the optimizer fingerprints by source bytes, so a longer
+    // TTL is safe and avoids re-encoding the same source repeatedly.
+    minimumCacheTTL: 60 * 60 * 24 * 365,
+    // Allow downshifting quality on heavier images via `quality={…}`.
+    qualities: [50, 60, 70, 75, 80, 85, 90, 100],
   },
 };
 
