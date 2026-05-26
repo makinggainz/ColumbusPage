@@ -27,7 +27,7 @@ import { useRef } from "react";
 import { ImageWithFallback } from "@/components/ui/ImageWithFallback";
 
 const COPY =
-  "We are building a thinking planet — a computer brain that reasons across the vastness of geospatial data. A Universal Geospatial Model. The most powerful map platform ever built.";
+  "We are building a thinking earth: a computer brain that reasons across the vastness of geospatial data. Delivering this technology in simple and powerful products for humanity.";
 
 export function MissionScrollIntro() {
   const ref = useRef<HTMLParagraphElement>(null);
