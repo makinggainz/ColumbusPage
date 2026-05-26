@@ -239,7 +239,7 @@ export default function BusinessHero() {
 
         <p
           className="mt-5"
-          style={{ fontSize: "var(--ent-text-body-l)", color: "#FFFFFF", letterSpacing: "-0.01em", fontWeight: 400, maxWidth: 480 }}
+          style={{ fontSize: "var(--ent-text-body-l)", color: "#FFFFFF", letterSpacing: "-0.01em", fontWeight: 400, maxWidth: 480, whiteSpace: "nowrap" }}
         >
           Agentic GIS so easy, the janitor could be your new researcher
         </p>
