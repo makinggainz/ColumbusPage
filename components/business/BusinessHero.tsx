@@ -224,9 +224,6 @@ export default function BusinessHero() {
               margin: 0,
               letterSpacing: "-0.02em",
               lineHeight: 1,
-              display: "flex",
-              alignItems: "center",
-              height: 48,
             }}
           >
             Columbus Pro
