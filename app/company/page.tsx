@@ -136,7 +136,7 @@ const PILLARS: Pillar[] = [
   },
   {
     index: "03",
-    title: "Delivering superintelligence into most powerful map platforms",
+    title: "The most powerful map platforms",
     body: "Actionable intelligence delivered in intuitive and simple platforms.",
   },
 ];
