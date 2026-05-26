@@ -126,18 +126,18 @@ type Pillar = { index: string; title: string; body: string };
 const PILLARS: Pillar[] = [
   {
     index: "01",
-    title: "Survey all of earth",
-    body: "Deep, continuous surveying of the planet — the raw intelligence to critically understand every layer of it.",
+    title: "Surveying all of earth",
+    body: "Granular, accurate and continuous surveying of our planet. From geology to anthropology in spaces.",
   },
   {
     index: "02",
-    title: "A computer brain",
-    body: "A model that can think across the vastness of the earth's data, not merely store it.",
+    title: "Semantic AI model to reason with all data",
+    body: "Our semantic AI reasons across multiple data types including satellite imagery, temporal patterns, public data, private data, 3d data and more",
   },
   {
     index: "03",
-    title: "The most powerful map platform",
-    body: "Turning that intelligence into the most powerful map platform ever built.",
+    title: "Delivering superintelligence into most powerful map platforms",
+    body: "Actionable intelligence delivered in intuitive and simple platforms.",
   },
 ];
 
