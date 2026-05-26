@@ -218,7 +218,7 @@ export default function BusinessHero() {
           className="mt-5"
           style={{ fontSize: "var(--ent-text-body-l)", color: "#FFFFFF", letterSpacing: "-0.01em", fontWeight: 400, maxWidth: 480 }}
         >
-          GIS so easy, the janitor could be your new researcher
+          Agentic GIS so easy, the janitor could be your new researcher
         </p>
 
         {/* CTA — the site-wide on-brand pill button (bg-cta navy fill,
