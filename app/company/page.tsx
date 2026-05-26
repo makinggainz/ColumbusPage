@@ -210,6 +210,19 @@ export default function CompanyPage() {
               </div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* ════════ 4. OUR VISION ════════
+          Static statement — the scroll-fade is a signature effect, used
+          once (Mission); rendering Vision lit keeps the page from
+          animating two sections back-to-back. */}
+      <section className="section">
+        <div className={styles.textColumn}>
+          <h2 className={`mb-6 md:mb-8 ${styles.sectionLabel}`}>
+            Our Vision
+          </h2>
+          <ScrollHighlightStatement segments={VISION_STATEMENT} static />
           <div className={styles.timelineWrap}>
             <Link href="/research" className={`p-m ${styles.timelineLink}`}>
               The timeline
@@ -228,19 +241,6 @@ export default function CompanyPage() {
               </svg>
             </Link>
           </div>
-        </div>
-      </section>
-
-      {/* ════════ 4. OUR VISION ════════
-          Static statement — the scroll-fade is a signature effect, used
-          once (Mission); rendering Vision lit keeps the page from
-          animating two sections back-to-back. */}
-      <section className="section">
-        <div className={styles.textColumn}>
-          <h2 className={`mb-6 md:mb-8 ${styles.sectionLabel}`}>
-            Our Vision
-          </h2>
-          <ScrollHighlightStatement segments={VISION_STATEMENT} static />
         </div>
       </section>
 
