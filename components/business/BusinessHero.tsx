@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { ImageWithFallback } from "@/components/ui/ImageWithFallback";
 import MapChatPlatform from "./MapChatPlatform";
@@ -200,11 +201,32 @@ export default function BusinessHero() {
           provided by the removed ConsumerBusinessToggle wrapper
           (pt-32 + pill height ~43px + pb-10 ≈ 211px). */}
       <div className="relative z-10 flex flex-col items-center text-center px-6 pt-50" style={reveal(visible, 0.1)}>
-        {/* Columbus logo and name */}
-        <div style={{ marginBottom: 24 }}>
-          <p style={{ color: "#FFFFFF", fontSize: "clamp(16px, 3vw, 24px)", fontWeight: 600, letterSpacing: "0.02em", margin: 0 }}>
-            COLUMBUS
-          </p>
+        {/* Columbus logo and name lockup */}
+        <div style={{ marginBottom: 32, display: "flex", alignItems: "center", gap: 12 }}>
+          <span style={{ display: "flex", width: 48, height: 48, alignItems: "center", justifyContent: "center" }}>
+            <Image
+              alt="Columbus Logo"
+              width={48}
+              height={48}
+              src="/logobueno.png"
+              style={{
+                objectFit: "contain",
+                filter: "brightness(0) invert(1)",
+              }}
+            />
+          </span>
+          <span
+            style={{
+              fontFamily: "Axiforma, 'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif",
+              fontSize: "clamp(18px, 3vw, 28px)",
+              fontWeight: 605,
+              color: "#FFFFFF",
+              margin: 0,
+              letterSpacing: "-0.02em",
+            }}
+          >
+            Columbus Earth
+          </span>
         </div>
 
         <h1
