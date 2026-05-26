@@ -202,7 +202,7 @@ export default function BusinessHero() {
           (pt-32 + pill height ~43px + pb-10 ≈ 211px). */}
       <div className="relative z-10 flex flex-col items-center text-center px-6 pt-50" style={reveal(visible, 0.1)}>
         {/* Columbus logo and name lockup */}
-        <div style={{ marginBottom: 32, display: "flex", alignItems: "center", justifyContent: "center", gap: 12 }}>
+        <div style={{ marginBottom: 32, display: "flex", alignItems: "center", justifyContent: "center", gap: 12, height: 48 }}>
           <span style={{ display: "flex", width: 48, height: 48, alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
             <Image
               alt="Columbus Logo"
@@ -226,7 +226,7 @@ export default function BusinessHero() {
               lineHeight: 1,
               display: "flex",
               alignItems: "center",
-              transform: "translateY(5px)",
+              height: 48,
             }}
           >
             Columbus Pro
