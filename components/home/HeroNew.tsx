@@ -199,20 +199,25 @@ const HN_CSS = `
 /* Subhead beneath the H1. Set well below .h1 so the hierarchy stays
    clear, with text-wrap: balance to land "We Are An Applied AI Lab
    For Geospatial Intelligence." on a clean two-line break. */
+/* Skip-a-weight from H1 (Funnel Display 500) → subtitle (sans 400) and
+   step the colour down from --color-ink to --color-muted so the eye
+   reads headline → subtitle as primary → secondary, not as two peer
+   labels. Line-height bumped from 1.25 to 1.4 so the body text breathes
+   like body text rather than a heading. */
 .hn-subtitle {
   margin-top: 28px;
-  max-width: 22rem;
+  max-width: 26rem;
   text-wrap: balance;
   font-family: var(--font-sans, "Ppneuemontreal", "PP Neue Montreal", Arial, sans-serif);
   font-size: 18px;
-  line-height: 1.25;
-  font-weight: 600;
-  color: #0B1B2B;
+  line-height: 1.4;
+  font-weight: 400;
+  color: #5A6B7B;
 }
 @media (min-width: 992px) {
   .hn-subtitle {
     margin-top: 36px;
-    max-width: 24rem;
+    max-width: 30rem;
     font-size: 22px;
   }
 }
