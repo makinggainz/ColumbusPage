@@ -93,6 +93,56 @@ const CSS = `
   display: block;
   color: var(--color-muted);
 }
+
+/* ── Top-right cut-out notch ─────────────────────────────────────────────
+   Same shape used on the /company page "Read more about what we do"
+   cards (and the /blog index audience notch): a 38px-tall white wedge
+   anchored in the tile's top-right corner with a concave fillet curving
+   into the image. The notch's white surface matches the surrounding
+   page background so it reads as a real cut-out into the photo. */
+.blog-section-card-notch {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 3;
+  box-sizing: border-box;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 18px;
+  background-color: #FFFFFF;
+  /* TL TR BR BL — TR matches the tile's 13px corner; BL is the cut. */
+  border-radius: 0 13px 0 13px;
+  border-left: 1px solid #E7E7F1;
+  border-bottom: 1px solid #E7E7F1;
+}
+.blog-section-card-notch::before,
+.blog-section-card-notch::after {
+  content: "";
+  position: absolute;
+  width: 13px;
+  height: 13px;
+  background: radial-gradient(
+    circle at left bottom,
+    rgba(255, 255, 255, 0) 11.5px,
+    #E7E7F1 12.25px,
+    #E7E7F1 12.75px,
+    #FFFFFF 13.5px
+  );
+}
+.blog-section-card-notch::before { top: 0; left: -13px; }
+.blog-section-card-notch::after { bottom: -13px; right: 0; }
+
+.blog-section-card-notch-label {
+  font-size: 12px;
+  line-height: 1;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+  color: var(--color-muted);
+}
 `;
 
 function getRandomBlogCards() {
@@ -144,6 +194,15 @@ export function BlogSection() {
                       aria-hidden="true"
                     />
                   )}
+                  {/* Top-right cut-out — page-surface white so it reads
+                      as a real notch out of the image, carrying the
+                      post's playful audience tag. Same treatment as the
+                      /company "Read more about what we do" cards. */}
+                  <div className="blog-section-card-notch">
+                    <span className="blog-section-card-notch-label">
+                      {post.audience}
+                    </span>
+                  </div>
                 </div>
 
                 <div className="blog-section-card-body">

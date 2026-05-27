@@ -171,7 +171,7 @@ export default function MapsGPTGlobe({ size = 67 }: MapsGPTGlobeProps) {
     const cy = rect.top + rect.height / 2;
     const dx = (e.clientX - cx) / (window.innerWidth / 2);
     const dy = (e.clientY - cy) / (window.innerHeight / 2);
-    const max = 0.45; // ~25 degrees in radians
+    const max = 0.2; // ~11 degrees in radians — small enough that the un-textured back hemisphere never rotates into view
     rotRef.current = {
       x:  Math.max(-1, Math.min(1, dy)) * max,
       y:  Math.max(-1, Math.min(1, dx)) * max,

@@ -312,39 +312,20 @@ const CSS = `
 .bp-card--research .bp-name {
   font-family: var(--font-display);
 }
-/* Elio tile uses the same two-asset lockup the /products/consumer
-   hero renders next to the 3D earth: elioNameHero.png (block "Elio")
-   followed by elioTagline.png (script "making maps feel alive"). Both
-   PNGs are natively white-on-transparent; CSS filters re-tint them
-   inline so they read on the bento card's white-scrim header (cyan
-   block + black script) without any opaque background blocking the
-   photo backdrop beneath. */
+/* Elio tile renders only the block "Elio" wordmark next to the brand
+   icon. The source PNG is white-on-transparent — kept as-is so the
+   wordmark reads pure white over the bento card's photo backdrop. */
 .bp-elio-name {
   width: auto;
   height: 42px;
   object-fit: contain;
   flex: 0 0 auto;
   margin-left: -4px;
-  /* Source PNG is white-on-transparent — kept as-is so the "Elio"
-     wordmark reads white over the bento's photo backdrop. */
-}
-.bp-elio-tagline {
-  width: auto;
-  height: 20px;
-  object-fit: contain;
-  flex: 0 0 auto;
-  margin-left: 8px;
-  margin-top: 4px;
-  /* Source PNG is faint light-grey script; flatten to black then
-     invert to land on pure #FFFFFF so the tagline reads at the same
-     weight as the "Elio" wordmark next to it. */
-  filter: brightness(0) invert(1);
 }
 @media (min-width: 1024px) {
   .bp-logo { width: 50px; height: 50px; }
   .bp-card--wide .bp-logo { width: 56px; height: 56px; }
   .bp-elio-name { height: 50px; margin-left: -5px; }
-  .bp-elio-tagline { height: 24px; margin-left: 10px; }
 }
 
 /* Stacked spacing — title→subtitle. The brand row is logo-height
@@ -597,30 +578,17 @@ export function BentoProducts() {
                     style={p.logoFilter ? { filter: p.logoFilter } : undefined}
                   />
                   {p.cellClass === "bp-card--elio" ? (
-                    /* Elio tile mirrors the /products/consumer hero
-                       lockup: the block "Elio" wordmark, then the
-                       script "making maps feel alive" tagline. Both
-                       PNGs are white-on-transparent and are tinted
-                       inline via the bp-elio-name / bp-elio-tagline
-                       classes (cyan + black respectively) so they read
-                       on the bento's white-scrim header without any
-                       solid background blocking the photo beneath. */
-                    <>
-                      <Image
-                        src="/consumer/elioNameHero.png"
-                        alt={p.name}
-                        className="bp-elio-name"
-                        width={260}
-                        height={110}
-                      />
-                      <Image
-                        src="/consumer/elioTagline.png"
-                        alt="making maps feel alive"
-                        className="bp-elio-tagline"
-                        width={877}
-                        height={285}
-                      />
-                    </>
+                    /* Elio tile renders just the block "Elio" wordmark
+                       next to the brand icon — the script "making
+                       maps feel alive" image was dropped because the
+                       body tagline below already says it. */
+                    <Image
+                      src="/consumer/elioNameHero.png"
+                      alt={p.name}
+                      className="bp-elio-name"
+                      width={260}
+                      height={110}
+                    />
                   ) : (
                     <span
                       className="bp-name"
