@@ -95,8 +95,10 @@ function CyclingTitle() {
         textAlign: "center",
         paddingLeft: 40,
         paddingRight: 40,
-        paddingBottom: 56,
-        paddingTop: 140,
+        /* Vertical paddings reduced ~25% (was 140/56) to compress
+           the section's overall height per design request. */
+        paddingBottom: 42,
+        paddingTop: 105,
         maxWidth: 1400,
         margin: "0 auto",
       }}
@@ -147,7 +149,9 @@ function Marquee({ imgs, reverse }: { imgs: DestPhoto[]; reverse?: boolean }) {
               position: "relative",
               flex: "none",
               width: 304,
-              height: 208,
+              /* Marquee tile height reduced ~25% (was 208) so the
+                 scrolling photo rows are vertically compressed. */
+              height: 156,
               borderRadius: 20,
               overflow: "hidden",
               border: "1px solid #E7E7F1",
@@ -318,8 +322,9 @@ export default function DestinationsSection() {
             textAlign: "center",
             paddingLeft: 40,
             paddingRight: 40,
-            paddingBottom: 60,
-            paddingTop: 20,
+            /* Vertical paddings reduced ~25% (was 60/20). */
+            paddingBottom: 45,
+            paddingTop: 15,
             maxWidth: 1400,
             margin: "0 auto",
           }}
@@ -488,12 +493,14 @@ export default function DestinationsSection() {
       </div>
 
       <style>{`
-        /* 4-col grid: top row [span 2, span 2]; bottom row [span 1, span 1, span 2]. */
+        /* 4-col grid: top row [span 2, span 2]; bottom row [span 1, span 1, span 2].
+           grid-auto-rows + gap reduced ~25% (was 360 / 20) to compress the
+           bento's vertical extent. */
         .eib-bento {
           display: grid;
           grid-template-columns: repeat(4, 1fr);
-          grid-auto-rows: minmax(360px, auto);
-          gap: 20px;
+          grid-auto-rows: minmax(270px, auto);
+          gap: 15px;
         }
         .eib-bento > .eib-card:nth-child(1) { grid-column: span 2; }
         .eib-bento > .eib-card:nth-child(2) { grid-column: span 2; }
@@ -526,7 +533,8 @@ export default function DestinationsSection() {
         .eib-photo-wrap {
           position: relative;
           flex: 1;
-          min-height: 240px;
+          /* min-height reduced ~25% (was 240) so card 1 compresses. */
+          min-height: 180px;
           margin-top: 8px;
         }
         .eib-photo-img {
@@ -534,10 +542,11 @@ export default function DestinationsSection() {
           object-position: bottom center;
         }
 
-        /* Card 2 — map fills the entire card; text + Day chip overlay. */
+        /* Card 2 — map fills the entire card; text + Day chip overlay.
+           min-height reduced ~25% (was 380). */
         .eib-card--map {
           padding: 0;
-          min-height: 380px;
+          min-height: 285px;
         }
         .eib-map-bg-img {
           object-fit: cover;
@@ -615,7 +624,8 @@ export default function DestinationsSection() {
            the card's bottom border; chat-side restores its own bottom
            padding so it doesn't touch the edge. */
         .eib-card--chat {
-          min-height: 480px;
+          /* min-height reduced ~25% (was 480). */
+          min-height: 360px;
           overflow: hidden;
           padding-bottom: 0;
         }
@@ -805,11 +815,13 @@ export default function DestinationsSection() {
         style={{
           display: "flex",
           flexDirection: "column",
-          gap: 20,
+          /* Inter-row gap + outer vertical paddings reduced ~25%
+             (were 20 / 60 / 60). */
+          gap: 15,
           opacity: vis ? 1 : 0,
           transition: "opacity 0.8s ease-out 0.15s",
-          paddingTop: 60,
-          paddingBottom: 60,
+          paddingTop: 45,
+          paddingBottom: 45,
         }}
       >
         <Marquee imgs={ROW_A} />
@@ -824,8 +836,9 @@ export default function DestinationsSection() {
         style={{
           paddingLeft: 40,
           paddingRight: 40,
-          paddingTop: 140,
-          paddingBottom: 56,
+          /* Vertical paddings reduced ~25% (were 140/56). */
+          paddingTop: 105,
+          paddingBottom: 42,
           maxWidth: 1400,
           margin: "0 auto",
           textAlign: "center",
@@ -861,7 +874,8 @@ export default function DestinationsSection() {
         style={{
           paddingLeft: 40,
           paddingRight: 40,
-          paddingBottom: 80,
+          /* paddingBottom reduced ~25% (was 80). */
+          paddingBottom: 60,
           maxWidth: 1400,
           margin: "0 auto",
         }}
