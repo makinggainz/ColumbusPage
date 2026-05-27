@@ -275,7 +275,12 @@ export default function Hero() {
     // scene 2's 400px block has fully scrolled past above.
     if (nextPhase === 3) {
       const scene3Block = blockRefs.current[2];
-      if (scene3Block && scene3Block.getBoundingClientRect().top > 0) {
+      // Lead: trigger phase 3 a bit before the scene-3 block fully
+      // reaches the viewport top, so the notification cards (and the
+      // navbar swap) read as "almost there" rather than waiting for a
+      // perfect zero-crossing. Larger lead = earlier reveal.
+      const PHASE_3_LEAD = 140;
+      if (scene3Block && scene3Block.getBoundingClientRect().top > PHASE_3_LEAD) {
         nextPhase = 2;
       }
     }
