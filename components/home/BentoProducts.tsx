@@ -303,9 +303,23 @@ const CSS = `
 .bp-card--research .bp-name {
   font-family: var(--font-display);
 }
+/* Elio tile uses the elioName.png wordmark (same image rendered next
+   to the 3D earth in the /products/consumer hero) instead of plain
+   text. Sized so the wordmark's visual height matches the .bp-logo
+   above (42px mobile, 50px desktop) — that's the logo-row baseline,
+   so the wordmark + globe icon read as a balanced lockup. Width is
+   derived from the natural 260×110 aspect (≈2.36) so the image
+   isn't stretched. */
+.bp-elio-wordmark {
+  width: 99px;
+  height: auto;
+  object-fit: contain;
+  flex: 0 0 auto;
+}
 @media (min-width: 1024px) {
   .bp-logo { width: 50px; height: 50px; }
   .bp-card--wide .bp-logo { width: 56px; height: 56px; }
+  .bp-elio-wordmark { width: 118px; }
 }
 
 /* Stacked spacing — title→subtitle. The brand row is logo-height
@@ -539,19 +553,34 @@ export function BentoProducts() {
                     height={56}
                     style={p.logoFilter ? { filter: p.logoFilter } : undefined}
                   />
-                  <span
-                    className="bp-name"
-                    style={
-                      p.cellClass === "bp-card--columbus"
-                        ? {
-                            fontFamily:
-                              '"Axiforma", "SF Pro", -apple-system, BlinkMacSystemFont, sans-serif',
-                          }
-                        : undefined
-                    }
-                  >
-                    {p.name}
-                  </span>
+                  {p.cellClass === "bp-card--elio" ? (
+                    /* Elio tile renders the wordmark image (same asset
+                       used in the /products/consumer hero lockup, next
+                       to the 3D earth) in place of plain text. Sized
+                       via .bp-elio-wordmark; height auto preserves the
+                       natural 260×110 aspect. */
+                    <Image
+                      src="/consumer/elioName.png"
+                      alt={p.name}
+                      className="bp-elio-wordmark"
+                      width={260}
+                      height={110}
+                    />
+                  ) : (
+                    <span
+                      className="bp-name"
+                      style={
+                        p.cellClass === "bp-card--columbus"
+                          ? {
+                              fontFamily:
+                                '"Axiforma", "SF Pro", -apple-system, BlinkMacSystemFont, sans-serif',
+                            }
+                          : undefined
+                      }
+                    >
+                      {p.name}
+                    </span>
+                  )}
                 </div>
                 <p className="bp-tagline">{p.tagline}</p>
                 <span className="bp-cta">
