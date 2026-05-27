@@ -38,15 +38,6 @@ export function BlogIndexGrid({ posts, activeFilter }: Props) {
             ) : (
               <div className={styles.cardImagePlaceholder} aria-hidden="true" />
             )}
-            {/* Columbus brand lockup — small logo + "Columbus" wordmark
-                anchored to the top-left of every card image. */}
-            <div className={styles.cardBrand} aria-hidden="true">
-              <span className={styles.cardBrandLogo}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src="/logobueno.png" alt="" width={16} height={16} />
-              </span>
-              <span className={styles.cardBrandText}>Columbus</span>
-            </div>
             <div
               className={styles.notch}
               style={getBlogAccentColor(post)

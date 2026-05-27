@@ -50,10 +50,11 @@ const INTRO_LEAD_VH = 0;
 // this tail = (hold beat after the last label) and the 100vh release follows.
 const TAIL_VH = 40;
 // Phone peek depth in the intro (fraction of viewport pushed down).
-// 0.5 puts the phone centre roughly at the viewport bottom during the
-// hero header — only the top half of the device shows, sitting below
-// the hero text. Lowered from 0.25 to give the hero copy more room.
-const PHONE_PEEK = 0.5;
+// 0.4 sits the phone centre ~10% above the viewport bottom during the
+// hero header — slightly more of the device shows than the original
+// 0.5 (half-hidden) reading, so the phone reads as a fuller object
+// peeking up under the hero text rather than just its top edge.
+const PHONE_PEEK = 0.4;
 // Scroll-progress point by which the phone has fully risen + pinned.
 const INTRO_END = 0.34;
 
