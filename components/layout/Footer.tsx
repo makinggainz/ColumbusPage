@@ -76,14 +76,12 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false, t
         className="absolute inset-0 pointer-events-none"
         style={{ zIndex: 1, background: "#000000", opacity: 0.1 }}
       />
-      {/* pt-18.5 (74px) — a small lift over the original pt-16 (64px)
-          so the footer reads as a touch taller, but no more. The
-          "behind the scene" feel comes from PageFrame's calc()
-          margin-bottom (which pulls the card's bottom DOWN into the
-          footer by --frame-radius, so the rounded card corners sit on
-          the footer's video bg), not from inflating the footer with
-          dead pt space. */}
-      <div className="relative z-10 w-full max-w-[1200px] mx-auto px-8 pt-18.5 pb-6">
+      {/* pt-32 (128px). PageFrame overlaps the footer's top 60px (see
+          PageFrame's calc() margin-bottom), so the visible gap between
+          the card's bottom edge and where this content begins is
+          128 − 60 = 68px — enough breathing room that the footer copy
+          doesn't read as crammed against the card's rounded bottom. */}
+      <div className="relative z-10 w-full max-w-[1200px] mx-auto px-8 pt-32 pb-6">
         <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12 items-start mb-10">
           <div>
             <h3
