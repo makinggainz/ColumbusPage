@@ -95,9 +95,14 @@ export function PageFrame({ children }: { children: ReactNode }) {
         marginLeft: 0,
         marginRight: 0,
         // Reserve scroll room below the card equal to the footer's
-        // height so the user can scroll past the content and reveal
-        // the fixed footer that sits behind it (z-index 0).
-        marginBottom: "var(--footer-reveal-height, 100vh)",
+        // height MINUS 60px so the card's bottom edge ends 60px below
+        // the footer's top edge at max scroll — the card's rounded
+        // bottom corners then sit ON the footer's video bg instead of
+        // above it on the white body background. The footer's top
+        // 60px stay tucked behind the card permanently, which is fine
+        // because the visible footer content begins at pt-18.5 (74px)
+        // from the footer's top, comfortably below the overlap zone.
+        marginBottom: "calc(var(--footer-reveal-height, 100vh) - 60px)",
         borderRadius: "var(--frame-radius, 35px)",
         boxShadow: "var(--frame-shadow, none)",
         border: "none",
