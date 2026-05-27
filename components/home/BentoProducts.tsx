@@ -1,5 +1,8 @@
 "use client";
 
+// Deploy sync marker — touch this comment to retrigger a Vercel build
+// without making a substantive code change.
+
 /**
  * Bento grid for the homepage product lineup.
  *
@@ -20,7 +23,8 @@
  * pinned, visual offset toward an edge).
  */
 
-/* eslint-disable @next/next/no-img-element */
+import Image from "next/image";
+import { WorldMapLineArt } from "./WorldMapLineArt";
 
 /* Recolour filter matching MistxNav so the Columbus mark renders in the
    same navy blue everywhere it appears on the site. */
@@ -100,11 +104,13 @@ const CSS = `
     linear-gradient(rgba(0, 0, 0, 0.18), rgba(0, 0, 0, 0.18)),
     url('/ColumbusBackgroundbento.png');
 }
-/* Elio tile: same subtle flat black overlay as the Columbus tile. */
+/* Elio tile: same subtle flat black overlay as the Columbus tile.
+   Backdrop matches the /products/consumer page hero so clicking through
+   from the bento lands on a visually-continuous image. */
 .bp-card--elio {
   background-image:
     linear-gradient(rgba(0, 0, 0, 0.18), rgba(0, 0, 0, 0.18)),
-    url('/consumer/elio/ElioEndingBackground.jpg');
+    url('/consumer/heroBackground.png');
 }
 /* Research uses a left-to-right linear gradient — light sky #CAE5F5 at
    0% to mid-blue #76A8F3 at 100%, both fully opaque — matching the
@@ -224,17 +230,22 @@ const CSS = `
 @media (min-width: 992px) {
   .bp-notch-label { font-size: 18px; }
 }
-/* Per-card label tint — keyed to each tile's background:
-   • Columbus business tile → sky blue (#018ADE), the dominant colour
-     of its cloud-sky backdrop.
-   • Elio consumer tile → a deepened sand tone (#C98A5B): the beach
-     photo's cream (#FCEFE1) darkened so the label stays legible against
-     the white notch while still reading as the beach tile.
-   • Research tile → mid-blue (#76A8F3), the deeper end of the
-     .bp-card--research background gradient. */
-.bp-card--columbus .bp-notch-label { color: #018ADE; }
-.bp-card--elio .bp-notch-label { color: #C98A5B; }
-.bp-card--research .bp-notch-label { color: #018ADE; }
+/* Per-card label tint — keyed to each tile's actual background. All
+   three cards are blue-dominated (the Columbus + Elio backdrops are
+   bright-blue-sky cityscape photos, and Research is the CAE5F5 → 76A8F3
+   gradient), so every label sits in the blue family — each one a
+   couple of lightness stops darker than the card's dominant colour so
+   it stays legible against the white notch surface.
+   • Columbus business tile → deepest blue (#015C94), the saturated
+     sky-blue that dominates the cloud + skyline photo.
+   • Elio consumer tile → mid sky-blue (#1E6BAE), matching the brighter,
+     mid-day sky in the Elio cityscape photo and offsetting the slightly
+     warmer building tones below it.
+   • Research tile → lighter blue (#4B7BC7), the deeper end of the
+     CAE5F5 → 76A8F3 gradient, slightly darkened. */
+.bp-card--columbus .bp-notch-label { color: #015C94; }
+.bp-card--elio .bp-notch-label { color: #1E6BAE; }
+.bp-card--research .bp-notch-label { color: #4B7BC7; }
 @media (min-width: 640px) {
   .bp-notch { height: 46px; padding: 0 32px; }
 }
@@ -295,9 +306,26 @@ const CSS = `
 .bp-card--research .bp-name {
   font-family: var(--font-display);
 }
+/* Elio tile uses the elioName.png wordmark (same image rendered next
+   to the 3D earth in the /products/consumer hero) instead of plain
+   text. Height is locked to the .bp-logo's height (42px mobile, 50px
+   desktop) so the brand row matches the Columbus tile's row height
+   exactly — this keeps the tagline + CTA at the same Y position as
+   Columbus's. Width is derived from the natural 260×110 aspect via
+   'width: auto', so the image isn't stretched. The wordmark is still
+   the dominant visual in the row (≈99×42 / 118×50 vs the 42/50px
+   logo). */
+.bp-elio-wordmark {
+  width: auto;
+  height: 42px;
+  object-fit: contain;
+  flex: 0 0 auto;
+  margin-left: -6px;
+}
 @media (min-width: 1024px) {
   .bp-logo { width: 50px; height: 50px; }
   .bp-card--wide .bp-logo { width: 56px; height: 56px; }
+  .bp-elio-wordmark { height: 50px; margin-left: -8px; }
 }
 
 /* Stacked spacing — title→subtitle. The brand row is logo-height
@@ -450,7 +478,7 @@ const PRODUCTS: Product[] = [
   },
   {
     cellClass: "bp-card--elio",
-    href: "/elio",
+    href: "/products/consumer",
     logo: "/MapsGPT-logo.png",
     name: "Elio",
     tagline: "Making maps feel alive again",
@@ -460,12 +488,13 @@ const PRODUCTS: Product[] = [
   },
   {
     cellClass: "bp-card--research",
-    href: "/research-applications",
+    href: "/research",
     logo: "/TechnologyPageImages/lgm-globe-icon.png",
     name: "Research",
     tagline: "Building the Large Geospatial Model",
     audience: "For the curious",
     ctaLabel: "Read Thesis",
+    visual: "world-map",
     wide: true,
   },
 ];
@@ -494,6 +523,14 @@ function ArrowDots() {
 export function BentoProducts() {
   return (
     <section className="bp-section" aria-label="Our products">
+      {/* React 19 hoists these <link> tags into the document head. The
+          two bento card backdrops are CSS background-images (so the
+          next-image optimizer can't see them); preloading at section
+          render starts the fetch immediately on first paint instead of
+          waiting for the CSSOM to find the url() — a few-hundred ms
+          earlier on a slow connection. */}
+      <link rel="preload" as="image" href="/ColumbusBackgroundbento.png" />
+      <link rel="preload" as="image" href="/consumer/heroBackground.png" />
       <style>{CSS}</style>
       <div className="bp-bounds">
         <div className="bp-grid">
@@ -510,26 +547,46 @@ export function BentoProducts() {
               )}
               <div className="bp-text-block">
                 <div className="bp-brand">
-                  <img
+                  {/* 50×50 logo mark — width/height let Next pick a
+                      256-wide AVIF/WebP source even though it renders
+                      smaller, so 2x retina stays sharp. */}
+                  <Image
                     src={p.logo}
                     alt=""
                     aria-hidden
                     className="bp-logo"
+                    width={56}
+                    height={56}
                     style={p.logoFilter ? { filter: p.logoFilter } : undefined}
                   />
-                  <span
-                    className="bp-name"
-                    style={
-                      p.cellClass === "bp-card--columbus"
-                        ? {
-                            fontFamily:
-                              '"Axiforma", "SF Pro", -apple-system, BlinkMacSystemFont, sans-serif',
-                          }
-                        : undefined
-                    }
-                  >
-                    {p.name}
-                  </span>
+                  {p.cellClass === "bp-card--elio" ? (
+                    /* Elio tile renders the wordmark image (same asset
+                       used in the /products/consumer hero lockup, next
+                       to the 3D earth) in place of plain text. Sized
+                       via .bp-elio-wordmark; height auto preserves the
+                       natural 260×110 aspect. */
+                    <Image
+                      src="/consumer/elioName.png"
+                      alt={p.name}
+                      className="bp-elio-wordmark"
+                      width={260}
+                      height={110}
+                    />
+                  ) : (
+                    <span
+                      className="bp-name"
+                      style={
+                        p.cellClass === "bp-card--columbus"
+                          ? {
+                              fontFamily:
+                                '"Axiforma", "SF Pro", -apple-system, BlinkMacSystemFont, sans-serif',
+                            }
+                          : undefined
+                      }
+                    >
+                      {p.name}
+                    </span>
+                  )}
                 </div>
                 <p className="bp-tagline">{p.tagline}</p>
                 <span className="bp-cta">
@@ -541,7 +598,23 @@ export function BentoProducts() {
               </div>
               {p.visual && (
                 <div className="bp-visual">
-                  <img src={p.visual} alt="" aria-hidden />
+                  {p.cellClass === "bp-card--research" ? (
+                    <WorldMapLineArt />
+                  ) : (
+                    /* The CSS sizes the image — width:100%; max-width:720px.
+                        We give Next a hint via `sizes` so the optimizer
+                        picks an appropriately small AVIF/WebP variant
+                        (the source PNGs are 2-3 MB each). */
+                    <Image
+                      src={p.visual}
+                      alt=""
+                      aria-hidden
+                      width={720}
+                      height={520}
+                      sizes="(max-width: 1023px) calc(100vw - 56px), 720px"
+                      quality={80}
+                    />
+                  )}
                 </div>
               )}
             </a>

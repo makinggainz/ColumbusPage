@@ -126,6 +126,12 @@ html {
      navbar Columbus logo renders as. Generates the `bg-cta` utility. */
   --color-cta: #0B1342;
 
+  /* Image skeleton / fallback surface — flat neutral grey paint shown
+     by <ImageWithFallback> while a next/image decodes, and left in
+     place if the request errors. Quiet enough to read as "loading…"
+     without flashing animation or distracting the eye on LCP heroes. */
+  --image-skel: #ECECEE;
+
   --container-site: 1200px;      /* the single content-column width */
   --radius-card: 20px;           /* signature container radius */
   /* Button/CTA corner roundness, scaled by button size. Anchored to the
@@ -1157,22 +1163,6 @@ body.bg-mode-sepia {
   color: #433422 !important;
 }
 
-/* AccessibilityMenu trigger icon colour follows the active body theme.
-   Without these, the icon stays at `text-[#0A1344]` (light navy) and
-   reads as nearly invisible against the dark surface, or as too-dark
-   on sepia. */
-body.bg-mode-dark [data-accessibility-trigger] {
-  color: rgba(255, 255, 255, 0.85) !important;
-}
-body.bg-mode-dark [data-accessibility-trigger]:hover {
-  background-color: rgba(255, 255, 255, 0.10) !important;
-}
-body.bg-mode-sepia [data-accessibility-trigger] {
-  color: #433422 !important;
-}
-body.bg-mode-sepia [data-accessibility-trigger]:hover {
-  background-color: rgba(67, 52, 34, 0.08) !important;
-}
 body.bg-mode-sepia main,
 body.bg-mode-sepia article {
   background-color: transparent !important;

@@ -105,7 +105,6 @@ export default function SmartLayerRow({
             fill
             sizes="(max-width: 1180px) 100vw, 1180px"
             className="object-cover object-center"
-            priority
           />
         </div>
 

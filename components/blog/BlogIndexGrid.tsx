@@ -1,8 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import { type BlogCategory, type BlogPost } from "@/lib/blog-posts";
+import { getBlogAccentColor, type BlogCategory, type BlogPost } from "@/lib/blog-posts";
 import styles from "@/app/blog/blog-index.module.css";
+import type { CSSProperties } from "react";
 
 export type BlogFilter = "ALL" | BlogCategory;
 
@@ -26,7 +27,7 @@ export function BlogIndexGrid({ posts, activeFilter }: Props) {
       {visiblePosts.map((post) => (
         <Link key={post.slug} href={`/blog/${post.slug}`} className={styles.card}>
           {/* Media tile — 13px corners + hairline ring + corner notch. */}
-          <div className={`${styles.cardMedia} ${post.image?.includes("EngineeringCover") ? styles.noOverlay : ""}`}>
+          <div className={styles.cardMedia}>
             {post.image ? (
               <Image
                 src={post.image}
@@ -37,7 +38,12 @@ export function BlogIndexGrid({ posts, activeFilter }: Props) {
             ) : (
               <div className={styles.cardImagePlaceholder} aria-hidden="true" />
             )}
-            <div className={styles.notch}>
+            <div
+              className={styles.notch}
+              style={getBlogAccentColor(post)
+                ? ({ "--notch-accent": getBlogAccentColor(post) } as CSSProperties)
+                : undefined}
+            >
               <span className={styles.notchLabel}>{post.audience}</span>
             </div>
           </div>

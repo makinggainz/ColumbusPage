@@ -1,5 +1,7 @@
 "use client";
 
+import Image from "next/image";
+
 /**
  * Hero section — minimal layout for the experimentV6-Gdesign redesign.
  *
@@ -197,20 +199,25 @@ const HN_CSS = `
 /* Subhead beneath the H1. Set well below .h1 so the hierarchy stays
    clear, with text-wrap: balance to land "We Are An Applied AI Lab
    For Geospatial Intelligence." on a clean two-line break. */
+/* Skip-a-weight from H1 (Funnel Display 500) → subtitle (sans 400) and
+   step the colour down from --color-ink to --color-muted so the eye
+   reads headline → subtitle as primary → secondary, not as two peer
+   labels. Line-height bumped from 1.25 to 1.4 so the body text breathes
+   like body text rather than a heading. */
 .hn-subtitle {
   margin-top: 28px;
-  max-width: 22rem;
+  max-width: 26rem;
   text-wrap: balance;
   font-family: var(--font-sans, "Ppneuemontreal", "PP Neue Montreal", Arial, sans-serif);
   font-size: 18px;
-  line-height: 1.25;
-  font-weight: 600;
-  color: #0B1B2B;
+  line-height: 1.4;
+  font-weight: 400;
+  color: #5A6B7B;
 }
 @media (min-width: 992px) {
   .hn-subtitle {
     margin-top: 36px;
-    max-width: 24rem;
+    max-width: 30rem;
     font-size: 22px;
   }
 }
@@ -220,11 +227,19 @@ export function HeroNew() {
   return (
     <section className="hn-section" aria-label="Columbus hero" data-hero-section>
       <style>{HN_CSS}</style>
-      <img
+      {/* LCP image — fill-mode <Image priority> emits a <link rel="preload">
+          so the browser starts the fetch before the bundle hydrates, and
+          serves AVIF/WebP via the next-image optimizer (the 1.2 MB PNG
+          shrinks to ~120-300 KB depending on viewport). */}
+      <Image
         className="hn-bg"
         src="/HomeHeroBack.png"
         alt=""
-        aria-hidden
+        fill
+        priority
+        fetchPriority="high"
+        sizes="100vw"
+        quality={80}
       />
       <div className="hn-bounds">
         <p className="hn-eyebrow">The frontier research lab</p>

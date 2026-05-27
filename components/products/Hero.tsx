@@ -20,6 +20,7 @@
 
 import Image from "next/image";
 import { useRef, useEffect, useState, useCallback } from "react";
+import { ImageWithFallback } from "@/components/ui/ImageWithFallback";
 import MapsGPTGlobe from "@/components/products/MapsGPTGlobe";
 import StoreBadges from "@/components/products/StoreBadges";
 
@@ -49,10 +50,11 @@ const INTRO_LEAD_VH = 0;
 // this tail = (hold beat after the last label) and the 100vh release follows.
 const TAIL_VH = 40;
 // Phone peek depth in the intro (fraction of viewport pushed down).
-// 0.5 puts the phone centre roughly at the viewport bottom during the
-// hero header — only the top half of the device shows, sitting below
-// the hero text. Lowered from 0.25 to give the hero copy more room.
-const PHONE_PEEK = 0.5;
+// 0.4 sits the phone centre ~10% above the viewport bottom during the
+// hero header — slightly more of the device shows than the original
+// 0.5 (half-hidden) reading, so the phone reads as a fuller object
+// peeking up under the hero text rather than just its top edge.
+const PHONE_PEEK = 0.4;
 // Scroll-progress point by which the phone has fully risen + pinned.
 const INTRO_END = 0.34;
 
@@ -351,12 +353,12 @@ export default function Hero() {
       {/* ════ Phone · pill row — pinned (the ONLY pinned content) ════ */}
       <div className="absolute inset-0 z-30 pointer-events-none">
         <div className="sticky top-0 overflow-hidden" style={{ height: "100dvh" }}>
-          {/* Scene-3 floating notification cards — Flighty-style, fan
-              around the phone during phase 3. Renders both "behind"
-              cards (zIndex 5 < phone's 10) and "in front" cards
-              (zIndex 20 > phone's 10) so the device sits naturally
-              tucked into the cluster. Desktop only — mobile layout is
-              too tight for the side cards. */}
+          {/* Scene-3 notification cards — kept in the pinned stage (not
+              in the scrolling label block) so they stay perfectly
+              vertically centred on the phone's landed position for the
+              full duration of scene 3. Visibility is still tied to
+              `phase === 3`, so they fade in only when the phone enters
+              that scene and out the moment it leaves. Desktop only. */}
           {isLg && NOTIFICATIONS.map((n, i) => {
             const visible = phase === 3 && !pastHero;
             return (
@@ -367,13 +369,12 @@ export default function Hero() {
                   position: "absolute",
                   left: "50%",
                   top: "50%",
-                  zIndex: n.behind ? 5 : 20,
                   width: 320,
                   transform: `translate(-50%, -50%) translate(${n.x}px, ${visible ? n.y : n.y + 24}px) rotate(${n.rot}deg)`,
-                  opacity: visible ? (n.behind ? 0.40 : 1) : 0,
-                  // Stagger the fade-IN with each card's delay for a nice
-                  // fan, but drop the delay on fade-OUT so they vanish
-                  // together the moment the user scrolls past scene 3.
+                  // `behind` still drives the opacity (faded background
+                  // cards vs. crisp foreground ones); z-ordering vs. the
+                  // phone is decided by the wrapping z-30 layer.
+                  opacity: visible ? (n.behind ? 0.4 : 1) : 0,
                   transition: visible
                     ? `opacity 0.7s ease ${n.delay}s, transform 0.9s ${APPEAR} ${n.delay}s`
                     : "opacity 0.22s ease, transform 0.22s ease",
@@ -440,6 +441,8 @@ export default function Hero() {
                       src={INTRO_PHONE_IMAGE}
                       alt=""
                       aria-hidden
+                      fetchPriority="high"
+                      decoding="async"
                       style={{
                         position: "absolute",
                         inset: 0,
@@ -458,6 +461,8 @@ export default function Hero() {
                         src={src}
                         alt=""
                         aria-hidden
+                        loading="lazy"
+                        decoding="async"
                         style={{
                           position: "absolute",
                           inset: 0,
@@ -490,7 +495,14 @@ export default function Hero() {
       <header
         className="relative z-20 flex flex-col items-center"
         style={{
-          height: "100dvh",
+          // Header height = 100dvh + NAV_PULL so the background image
+          // fills the full visible viewport at scrollY 0. The outer
+          // wrapper has margin-top: -NAV_PULL, which would otherwise
+          // leave a NAV_PULL-tall gap below the hero (next section
+          // peeking through at the bottom of the screen). Extending the
+          // header by NAV_PULL closes that gap so the image reaches the
+          // bottom edge of the user's screen at rest.
+          height: `calc(100dvh + ${NAV_PULL}px)`,
           width: "100%",
           background: "#FFFFFF",
           // Top-aligned stack: the hero is pulled up behind the navbar
@@ -507,11 +519,18 @@ export default function Hero() {
         {/* Consumer hero background — full-bleed photograph behind the
             typed-phrase H1 + CTA. */}
         <div aria-hidden className="absolute inset-0 overflow-hidden">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
+          {/* LCP for /products/consumer — `priority` emits a preload tag
+              so the optimizer's AVIF/WebP variant starts fetching before
+              the bundle hydrates. */}
+          <ImageWithFallback
             src="/consumer/heroBackground.png"
             alt=""
             aria-hidden
+            fill
+            priority
+            fetchPriority="high"
+            sizes="100vw"
+            quality={80}
             className="absolute inset-0 w-full h-full"
             style={{
               objectFit: "cover",
@@ -651,40 +670,6 @@ export default function Hero() {
           </Stagger>
         </div>
 
-        {/* Faux rounded bottom corners — small boxes anchored flush in
-            the bottom-left + bottom-right of the hero. Each box is
-            mostly white with a quarter-circle BITE taken out of its
-            inner corner (the corner facing into the hero), so the
-            visible white wedge has straight outer corners against the
-            page edges and a concave arc against the hero image. The
-            hero's bottom-corner curve created by that arc visually
-            matches the PageFrame's rounded top corners. The radial-
-            gradient + box size both read from var(--frame-radius), so
-            the corners shrink to zero in lockstep with the PageFrame's
-            own corners as the user scrolls into full-bleed mode. */}
-        <div
-          aria-hidden
-          className="pointer-events-none absolute bottom-0 left-0"
-          style={{
-            width: "var(--frame-radius, 20px)",
-            height: "var(--frame-radius, 20px)",
-            background:
-              "radial-gradient(circle at top right, transparent calc(var(--frame-radius, 20px) - 0.5px), #FFFFFF var(--frame-radius, 20px))",
-            zIndex: 2,
-          }}
-        />
-        <div
-          aria-hidden
-          className="pointer-events-none absolute bottom-0 right-0"
-          style={{
-            width: "var(--frame-radius, 20px)",
-            height: "var(--frame-radius, 20px)",
-            background:
-              "radial-gradient(circle at top left, transparent calc(var(--frame-radius, 20px) - 0.5px), #FFFFFF var(--frame-radius, 20px))",
-            zIndex: 2,
-          }}
-        />
-
       </header>
 
       {/* ════ Scroll content — per-scene title in NORMAL FLOW; scrolls past the phone ════
@@ -726,6 +711,8 @@ export default function Hero() {
                     src={lab.image}
                     alt=""
                     aria-hidden
+                    loading="lazy"
+                    decoding="async"
                     style={{
                       position: "absolute",
                       inset: 0,
@@ -750,6 +737,7 @@ export default function Hero() {
                   />
                 </>
               )}
+
               <div
                 ref={(el) => {
                   labelRefs.current[i] = el;
@@ -792,7 +780,15 @@ export default function Hero() {
                       color: sc.ink,
                       margin: 0,
                       maxWidth: "min(520px, 40vw)",
-                      textShadow: hasImage ? "0px 0px 30px rgba(0, 0, 0, 0.35)" : undefined,
+                      // Stacked shadow over the photo strip — a tight 1px
+                      // contact shadow for letter definition, a tighter
+                      // halo for body legibility, then a wide diffuse halo
+                      // that lifts the text off the busy backdrop.
+                      // Mirrors the Elio H1 lockup's treatment so the
+                      // labels read against any image content underneath.
+                      textShadow: hasImage
+                        ? "0 1px 2px rgba(0,0,0,0.5), 0 3px 12px rgba(0,0,0,0.55), 0 0 36px rgba(0,0,0,0.45)"
+                        : undefined,
                     } as const;
                     return (
                       <div style={{ display: "flex", width: "100%", alignItems: "center" }}>
@@ -838,7 +834,12 @@ export default function Hero() {
                       letterSpacing: "-0.02em",
                       color: sc.ink,
                       margin: 0,
-                      textShadow: hasImage ? "0px 0px 24px rgba(0, 0, 0, 0.35)" : undefined,
+                      // Stacked shadow over the photo strip (mobile
+                      // variant — slightly tighter blur radii than the
+                      // desktop labels above since the type is smaller).
+                      textShadow: hasImage
+                        ? "0 1px 2px rgba(0,0,0,0.5), 0 2px 10px rgba(0,0,0,0.55), 0 0 28px rgba(0,0,0,0.45)"
+                        : undefined,
                     }}
                   >
                     {lab.title}
@@ -897,6 +898,8 @@ function NotifCard({ n }: { n: Notif }) {
           src={n.avatar}
           alt=""
           aria-hidden
+          loading="lazy"
+          decoding="async"
           style={{
             width: 40,
             height: 40,
@@ -914,6 +917,8 @@ function NotifCard({ n }: { n: Notif }) {
             src={n.avatars[0]}
             alt=""
             aria-hidden
+            loading="lazy"
+            decoding="async"
             style={{
               position: "absolute",
               left: 0,
@@ -930,6 +935,8 @@ function NotifCard({ n }: { n: Notif }) {
             src={n.avatars[1]}
             alt=""
             aria-hidden
+            loading="lazy"
+            decoding="async"
             style={{
               position: "absolute",
               left: 16,

@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Linkedin } from "lucide-react";
 
+import { ImageWithFallback } from "@/components/ui/ImageWithFallback";
 import { MistxNav } from "@/components/layout/MistxNav";
 import {
   ScrollHighlightStatement,
@@ -84,7 +85,7 @@ const FEATURED: Quote = {
 const QUOTES: Quote[] = [
   {
     quote:
-      "As the bridge between the physical world and digital world, maps are one of the most interfaces that haven't changed in decades.",
+      "As the bridge between the physical world and digital world, maps are one of the most ubiquitous interfaces that haven't changed in decades.",
     name: "Alexander Ramirez Blonski",
     role: "Co-Founder, CPO",
     avatar: "/Alex.jpg",
@@ -100,21 +101,15 @@ const QUOTES: Quote[] = [
 /* Mission / vision statements, segmented for ScrollHighlightStatement —
    `important` segments stay dark after the fill; the rest dims back. */
 const MISSION_STATEMENT: StatementSegment[] = [
-  { text: "To create" },
-  { text: "intelligence", important: true },
-  {
-    text: "to critically understand our planet better. Deep surveying of all earth. To create",
-  },
-  { text: "a computer brain,", important: true },
-  {
-    text: "able to think across the vastness of our earth's data. To create",
-  },
-  { text: "the most powerful map platform.", important: true },
+  { text: "To bring a" },
+  { text: "paradigm shift", important: true },
+  { text: "in the relationship between" },
+  { text: "AI and the physical world", important: true },
 ];
 
 const VISION_STATEMENT: StatementSegment[] = [
-  { text: "We believe maps, can lead to the journey to" },
-  { text: "a Universal Geospatial Model.", important: true },
+  { text: "We believe maps will lead the journey to" },
+  { text: "a Universal Geospatial model.", important: true },
   { text: "A thinking earth.", important: true },
 ];
 
@@ -125,18 +120,18 @@ type Pillar = { index: string; title: string; body: string };
 const PILLARS: Pillar[] = [
   {
     index: "01",
-    title: "Survey all of earth",
-    body: "Deep, continuous surveying of the planet — the raw intelligence to critically understand every layer of it.",
+    title: "Surveying all of earth",
+    body: "Granular, accurate and continuous surveying of our planet. From geology to anthropology in spaces.",
   },
   {
     index: "02",
-    title: "A computer brain",
-    body: "A model that can think across the vastness of the earth's data, not merely store it.",
+    title: "Semantic AI model to reason with all data",
+    body: "Our semantic AI reasons across multiple data types including satellite imagery, temporal patterns, public data, private data, 3d data and more",
   },
   {
     index: "03",
-    title: "The most powerful map platform",
-    body: "Turning that intelligence into the most powerful map platform ever built.",
+    title: "The most powerful map platforms",
+    body: "Actionable intelligence delivered in intuitive and simple platforms.",
   },
 ];
 
@@ -151,7 +146,23 @@ export default function CompanyPage() {
           the homepage hero. `data-hero-section` lets the navbar render
           transparent at the top of the page. */}
       <section className={styles.hero} data-hero-section aria-label="Company">
-        <div className={styles.heroWatermark} aria-hidden />
+        {/* Watermark — formerly a CSS background-image (companyhero.png is
+            ~8.6 MB). Routing it through next/image with `priority` lets
+            the optimizer ship a sub-megabyte AVIF/WebP variant and emits
+            a preload tag so the watermark is on screen before hydration.
+            The wrapper still owns the mask/opacity so the visual is
+            unchanged. */}
+        <div className={styles.heroWatermark} aria-hidden>
+          <ImageWithFallback
+            src="/companyhero.png"
+            alt=""
+            fill
+            priority
+            sizes="100vw"
+            quality={75}
+            style={{ objectFit: "cover", objectPosition: "center" }}
+          />
+        </div>
         <div className={styles.heroInner}>
           <h1 className={`h1 tracking-tight ${styles.heroHeadline}`}>
             Building a thinking earth
@@ -193,6 +204,19 @@ export default function CompanyPage() {
               </div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* ════════ 4. OUR VISION ════════
+          Static statement — the scroll-fade is a signature effect, used
+          once (Mission); rendering Vision lit keeps the page from
+          animating two sections back-to-back. */}
+      <section className="section">
+        <div className={styles.textColumn}>
+          <h2 className={`mb-6 md:mb-8 ${styles.sectionLabel}`}>
+            Our Vision
+          </h2>
+          <ScrollHighlightStatement segments={VISION_STATEMENT} static />
           <div className={styles.timelineWrap}>
             <Link href="/research" className={`p-m ${styles.timelineLink}`}>
               The timeline
@@ -211,19 +235,6 @@ export default function CompanyPage() {
               </svg>
             </Link>
           </div>
-        </div>
-      </section>
-
-      {/* ════════ 4. OUR VISION ════════
-          Static statement — the scroll-fade is a signature effect, used
-          once (Mission); rendering Vision lit keeps the page from
-          animating two sections back-to-back. */}
-      <section className="section">
-        <div className={styles.textColumn}>
-          <h2 className={`mb-6 md:mb-8 ${styles.sectionLabel}`}>
-            Our Vision
-          </h2>
-          <ScrollHighlightStatement segments={VISION_STATEMENT} static />
         </div>
       </section>
 
@@ -274,6 +285,12 @@ export default function CompanyPage() {
                       aria-hidden="true"
                     />
                   )}
+                  {/* Top-right cut-out — page-surface white so it reads as
+                      a real notch out of the image, carrying the post's
+                      playful audience tag (e.g. "For builders"). */}
+                  <div className={styles.readMoreNotch}>
+                    <span className={styles.readMoreNotchLabel}>{post.audience}</span>
+                  </div>
                 </div>
 
                 <div style={{ display: "flex", flexDirection: "column" }}>

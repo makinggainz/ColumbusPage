@@ -39,10 +39,10 @@
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  background-image: url("/companyhero.png");
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: cover;
+  /* background-image is now an <Image> child (see page.tsx) so the
+     optimizer can ship AVIF/WebP. The wrapper keeps the mask + opacity
+     so the visual treatment is identical. */
+  overflow: hidden;
   opacity: 0.5;
   -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 20%, #000 80%, transparent 100%);
   mask-image: linear-gradient(to bottom, transparent 0%, #000 20%, #000 80%, transparent 100%);
@@ -434,12 +434,12 @@
   overflow: hidden;
   border-radius: 13px;
   background: #ECEFF3;
-  /* Square tile — height tracks the column width. The right-hand quote
-     column stretches to match it (grid align-items: stretch), so the
-     whole bento row is exactly as tall as this tile is wide. A square is
-     the canonical bento proportion (vs. an arbitrary fixed pixel height)
-     and keeps the stacked right cards at a clean ratio. */
-  aspect-ratio: 1 / 1;
+  /* Height tracks the row, which the grid sizes to the right column's
+     two stacked quote cards (the taller of the two items). `align-items:
+     stretch` (grid default) then makes this tile match — bottoms align.
+     A min-height keeps the tile from collapsing if the quotes are ever
+     made unusually short again. */
+  min-height: 480px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -615,6 +615,60 @@
   color: var(--color-muted);
 }
 
+/* ── Read-more card notch ─────────────────────────────────────────────
+   Cut-out shape sitting in the top-right of each "Read more about what
+   we do" card. Same geometry as the blog index notch (38px tall, 18px
+   side padding) — proportioned for the smaller 3-up cards — with the
+   white page surface notched into the tile so it reads as a true cutout
+   against the white page background. */
+.readMoreNotch {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 3;
+  box-sizing: border-box;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 18px;
+  background-color: #FFFFFF;
+  /* TL TR BR BL — TR matches the card corner; BL is the concave cut. */
+  border-radius: 0 13px 0 13px;
+  border-left: 1px solid #E7E7F1;
+  border-bottom: 1px solid #E7E7F1;
+}
+/* Corner fillets — ease the notch's straight edges into the card edge
+   on a 13px convex arc, carrying the hairline around that arc. */
+.readMoreNotch::before,
+.readMoreNotch::after {
+  content: "";
+  position: absolute;
+  width: 13px;
+  height: 13px;
+  background: radial-gradient(
+    circle at left bottom,
+    rgba(255, 255, 255, 0) 11.5px,
+    #E7E7F1 12.25px,
+    #E7E7F1 12.75px,
+    #FFFFFF 13.5px
+  );
+}
+.readMoreNotch::before { top: 0; left: -13px; }
+.readMoreNotch::after { bottom: -13px; right: 0; }
+
+.readMoreNotchLabel {
+  font-size: 12px;
+  line-height: 1;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+  /* Muted ink — readable on the white notch surface (≈ 6:1 contrast)
+     without competing with the card title underneath. */
+  color: var(--color-muted);
+}
+
 .quoteCol {
   display: flex;
   flex-direction: column;
@@ -712,9 +766,6 @@
   color: var(--color-muted);
   margin-top: 4px;
 }
-
-/* The "Our values" section is rendered by the ValuesTeam client component
-   (components/company/ValuesTeam.tsx) with its own CSS module. */
 
 /* ── Contact CTA ──────────────────────────────────────────────────────────
    A row of the two social icon circles followed by the homepage-style

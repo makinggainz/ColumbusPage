@@ -48,6 +48,23 @@ export const BLOG_SLUG = {
   fasterSiteSelectionColumbus: "faster-site-selection-columbus",
   elioV2NewFeatures: "elio-v2-new-features",
   joinUsResearchOpportunities: "join-us-research-opportunities",
+  /* ── Aliases for legacy keys referenced by /research page CTAs
+        (TechnologySections + content.ts). The original keys were renamed
+        when blog-posts.ts was reorganised; rather than chase down every
+        call site, these aliases point each legacy name at its closest
+        living article so the CTAs resolve to a real `/blog/<slug>` URL
+        instead of `/blog/undefined`. Pick the nearest topical match;
+        update later as new articles ship. */
+  earthRecipes: "earth-recipes-world-think",                  // → earthRecipesWorldThink
+  erickFirePrediction: "fire-prediction-model",               // → firePredictonModel
+  mapsgptV25Architecture: "mapsgpt-building-useful",          // closest mapsgpt article
+  mapsgptConsumerProduct: "mapsgpt-building-useful",          // closest mapsgpt article
+  llmsGeospatialQueries: "why-llms-didnt-cut-it",             // closest LLM-vs-geo article
+  generativeGeospatialLayers: "mapping-unknown-gen-layers",   // closest gen-layers article
+  foundingLgmsInDepth: "philosophy-universal-lgm",            // closest LGM-foundation article
+  timelineGeneralistLgm: "lgm-timeline",                      // → lgmTimeline
+  ugmRoadmapGamePlan: "why-building-lgm",                     // closest "why/roadmap" article
+  deepSpatialReasoningScale: "mapping-unknown-gen-layers",    // closest spatial-reasoning article
 } as const;
 
 export const BLOG_POSTS: BlogPost[] = [
@@ -166,7 +183,7 @@ export const BLOG_POSTS: BlogPost[] = [
     title: "Research Demonstration: Fire Prediction Model",
     date: "Apr 2026",
     publishedAt: "2026-04-11",
-    image: "/Blogs/firePrediction.png",
+    image: "/Blogs/firePredictionBlog.png",
     category: "ENGINEERING",
     audience: "For engineers",
     description: "lorem",
@@ -177,7 +194,7 @@ export const BLOG_POSTS: BlogPost[] = [
     title: "MapsGPT: Building a useful mapping AI",
     date: "Apr 2026",
     publishedAt: "2026-04-01",
-    image: "/Blogs/MapsGPT.png",
+    image: "/Blogs/mapsgptBlog.png",
     category: "PRODUCT",
     audience: "For builders",
     description: "lorem",
@@ -188,7 +205,7 @@ export const BLOG_POSTS: BlogPost[] = [
     title: "How to choose cities within to live in: by Elio",
     date: "Apr 2026",
     publishedAt: "2026-04-02",
-    image: "/Academic/acad-bg-1.png",
+    image: "/Blogs/chooseCitiesBlog.png",
     category: "PRODUCT",
     audience: "For travelers",
     description: "lorem",
@@ -199,7 +216,7 @@ export const BLOG_POSTS: BlogPost[] = [
     title: "A guide to Madrid: Written by Elio",
     date: "Apr 2026",
     publishedAt: "2026-04-03",
-    image: "/Blogs/madrid.png",
+    image: "/Blogs/madridBlog.png",
     category: "PRODUCT",
     audience: "For travelers",
     description: "lorem",
@@ -210,7 +227,7 @@ export const BLOG_POSTS: BlogPost[] = [
     title: "A guide to Europe: Cheap but unique cities",
     date: "Apr 2026",
     publishedAt: "2026-04-04",
-    image: "/UrbanInfrastructure/urb-bg-6.png",
+    image: "/Blogs/europeGuideBlog.png",
     category: "PRODUCT",
     audience: "For travelers",
     description: "lorem",
@@ -221,7 +238,7 @@ export const BLOG_POSTS: BlogPost[] = [
     title: "A guide to Spain: Written by Elio",
     date: "Apr 2026",
     publishedAt: "2026-04-05",
-    image: "/Blogs/spain.jpeg",
+    image: "/Blogs/spainGuideBlog.png",
     category: "PRODUCT",
     audience: "For travelers",
     description: "lorem",
@@ -232,7 +249,7 @@ export const BLOG_POSTS: BlogPost[] = [
     title: "Using Elio for fun research",
     date: "Apr 2026",
     publishedAt: "2026-04-06",
-    image: "/Blogs/newyork.jpeg",
+    image: "/Blogs/funResearchBlog.png",
     category: "PRODUCT",
     audience: "For travelers",
     description: "lorem",
@@ -243,7 +260,7 @@ export const BLOG_POSTS: BlogPost[] = [
     title: "Announcing Columbus Pro pre-orders",
     date: "Apr 2026",
     publishedAt: "2026-04-07",
-    image: "/Blogs/columbusPreOrder.png",
+    image: "/Blogs/preOrdersBlog.png",
     category: "PRODUCT",
     audience: "For builders",
     description: "lorem",
@@ -254,7 +271,7 @@ export const BLOG_POSTS: BlogPost[] = [
     title: "Faster Site Selection with Columbus",
     date: "Apr 2026",
     publishedAt: "2026-04-08",
-    image: "/CREbg/cre-bg-1.png",
+    image: "/Blogs/siteSelectionBlog.png",
     category: "PRODUCT",
     audience: "For builders",
     description: "lorem",
@@ -265,7 +282,7 @@ export const BLOG_POSTS: BlogPost[] = [
     title: "Elio: V2 new features",
     date: "Apr 2026",
     publishedAt: "2026-04-01",
-    image: "/Blogs/elio.png",
+    image: "/Blogs/elioV2Blog.png",
     category: "COMPANY NEWS",
     audience: "For travelers",
     description: "lorem",
@@ -288,6 +305,38 @@ const bySlug = new Map(BLOG_POSTS.map((p) => [p.slug, p]));
 
 export function getBlogPost(slug: string): BlogPost | undefined {
   return bySlug.get(slug);
+}
+
+/**
+ * Accent color used for the audience-label notch on each blog card. Picked
+ * from the dominant hue of the post's hero image (see scripts/extract-blog-colors.mjs)
+ * and rendered at a fixed dark lightness so contrast against the white notch
+ * passes WCAG AA (≥ 4.5:1). Fallback is the global accent.
+ */
+const BLOG_IMAGE_ACCENT_COLORS: Record<string, string> = {
+  // EngineeringCover.png is a near-neutral cream backdrop with a navy
+  // Columbus brand mark + faint world-map line art. The extractor picked
+  // up #8A6628 (warm paper-grain noise) because the cream falls below
+  // the saturation threshold and the navy brand mark covers too few
+  // pixels to win the hue vote. Overridden manually to navy so the
+  // label matches the brand mark — same colour joinUs.png naturally
+  // resolved to.
+  "/Blogs/EngineeringCover.png": "#283A8A",
+  "/Blogs/firePredictionBlog.png": "#1D4F95",
+  "/Blogs/mapsgptBlog.png": "#16579C",
+  "/Blogs/chooseCitiesBlog.png": "#16689C",
+  "/Blogs/madridBlog.png": "#165D9C",
+  "/Blogs/europeGuideBlog.png": "#28548A",
+  "/Blogs/spainGuideBlog.png": "#225E91",
+  "/Blogs/funResearchBlog.png": "#28608A",
+  "/Blogs/preOrdersBlog.png": "#16679C",
+  "/Blogs/siteSelectionBlog.png": "#16609C",
+  "/Blogs/elioV2Blog.png": "#16579C",
+  "/Blogs/joinUs.png": "#283A8A",
+};
+
+export function getBlogAccentColor(post: BlogPost): string | undefined {
+  return post.image ? BLOG_IMAGE_ACCENT_COLORS[post.image] : undefined;
 }
 
 export function getAllBlogPostsSorted(): BlogPost[] {

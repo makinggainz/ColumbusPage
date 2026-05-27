@@ -127,7 +127,16 @@ export default function FinalCTASection() {
           className="absolute left-0 right-0 bottom-0"
           style={{ aspectRatio: "1447 / 1087" }}
         >
-          <Image src="/consumer-final-cta-elio-ending.png" alt="Elio across the globe" fill className="object-cover" priority />
+          {/* Below-the-fold final CTA — no `priority` (LCP is the hero
+              at the top of the page). `sizes` lets the optimizer pick a
+              right-sized AVIF/WebP variant for mobile widths. */}
+          <Image
+            src="/consumer-final-cta-elio-ending.png"
+            alt="Elio across the globe"
+            fill
+            sizes="100vw"
+            className="object-cover"
+          />
 
           {/* Floating discovery cards — positioned as % of the image
               wrapper so each card lands in the same spot at any viewport. */}
@@ -239,7 +248,15 @@ export default function FinalCTASection() {
               className="absolute left-0 right-0"
               style={{ bottom: 0, height: IMAGE_HEIGHT }}
             >
-              <Image src="/consumer-final-cta-elio-ending.png" alt="Elio across the globe" fill className="object-cover" priority />
+              {/* Desktop variant — same image, sized to the inner frame.
+                  Not LCP (this is the page-bottom CTA), so no `priority`. */}
+              <Image
+                src="/consumer-final-cta-elio-ending.png"
+                alt="Elio across the globe"
+                fill
+                sizes="(min-width: 1728px) 1728px, 100vw"
+                className="object-cover"
+              />
 
               {/* Floating discovery cards — five UI overlays scattered
                   over the globe (photo card w/ avatars, photo card
@@ -369,11 +386,14 @@ function DiscoveryCardView({ p, leftPx, topPx, leftPct, topPct, mobile, visible 
         stackedSubW: 70, stackedSubH: 50, stackedSubFrame: 4, stackedSubRadius: 10,
       }
     : {
-        photoW: 160, photoH: 115, frame: 6, radius: 18,
-        avatar: 48, avatarBorder: 3, avatarOverlap: 18, avatarOffsetX: 12, avatarOffsetY: 12,
-        pillFont: 14, pillPadV: 8, pillPadH: 20, pillMargin: 10,
-        placeImg: 48, placeName: 18, placeSub: 13, placeGap: 11, placePadH: 22, placePadV: 6,
-        stackedSubW: 108, stackedSubH: 78, stackedSubFrame: 6, stackedSubRadius: 14,
+        // Desktop sizes — kept compact so the cards read as floating UI
+        // accents over the globe rather than competing with the title +
+        // CTA stack above. Roughly 75% of the previous scale.
+        photoW: 120, photoH: 86, frame: 5, radius: 14,
+        avatar: 36, avatarBorder: 2, avatarOverlap: 14, avatarOffsetX: 9, avatarOffsetY: 9,
+        pillFont: 11, pillPadV: 6, pillPadH: 15, pillMargin: 8,
+        placeImg: 36, placeName: 14, placeSub: 10, placeGap: 8, placePadH: 16, placePadV: 5,
+        stackedSubW: 82, stackedSubH: 58, stackedSubFrame: 5, stackedSubRadius: 11,
       };
   const photoInnerRadius = Math.max(6, sz.radius - sz.frame);
   const cardShadow = "0 10px 26px -8px rgba(0,40,60,0.25), 0 3px 8px rgba(0,0,0,0.08)";
@@ -417,7 +437,7 @@ function DiscoveryCardView({ p, leftPx, topPx, leftPct, topPct, mobile, visible 
         >
           <div style={{ width: sz.photoW, height: sz.photoH, borderRadius: photoInnerRadius, overflow: "hidden" }}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={p.img} alt="" draggable={false} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+            <img src={p.img} alt="" draggable={false} loading="lazy" decoding="async" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
           </div>
           {/* Avatar stack peeks out the card's bottom-left corner */}
           <div style={{ position: "absolute", left: sz.avatarOffsetX, bottom: -sz.avatarOffsetY, display: "flex" }}>
@@ -428,6 +448,8 @@ function DiscoveryCardView({ p, leftPx, topPx, leftPct, topPct, mobile, visible 
                 src={src}
                 alt=""
                 draggable={false}
+                loading="lazy"
+                decoding="async"
                 style={{
                   width: sz.avatar,
                   height: sz.avatar,
@@ -468,7 +490,7 @@ function DiscoveryCardView({ p, leftPx, topPx, leftPct, topPct, mobile, visible 
             }}
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={p.img} alt="" draggable={false} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+            <img src={p.img} alt="" draggable={false} loading="lazy" decoding="async" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
           </div>
           <div style={{ display: "flex", flexDirection: "column", lineHeight: 1.1 }}>
             <span style={{
@@ -517,21 +539,21 @@ function DiscoveryCardView({ p, leftPx, topPx, leftPct, topPct, mobile, visible 
             <div style={subCard({ left: 0, top: SUB_H * 0.45, transform: "rotate(-7deg)", zIndex: 1 })}>
               <div style={subInner}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={p.imgs[0]} alt="" draggable={false} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+                <img src={p.imgs[0]} alt="" draggable={false} loading="lazy" decoding="async" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
               </div>
             </div>
             {/* Back-right card — tilted CW, sits highest */}
             <div style={subCard({ right: 0, top: 0, transform: "rotate(7deg)", zIndex: 2 })}>
               <div style={subInner}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={p.imgs[1]} alt="" draggable={false} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+                <img src={p.imgs[1]} alt="" draggable={false} loading="lazy" decoding="async" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
               </div>
             </div>
             {/* Front-centre card — slight CCW, sits in front */}
             <div style={subCard({ left: "50%", top: SUB_H * 0.6, transform: "translateX(-50%) rotate(-2deg)", zIndex: 3 })}>
               <div style={subInner}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={p.imgs[2]} alt="" draggable={false} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+                <img src={p.imgs[2]} alt="" draggable={false} loading="lazy" decoding="async" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
               </div>
             </div>
           </div>

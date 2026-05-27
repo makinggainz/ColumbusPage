@@ -24,9 +24,10 @@ import {
   type MotionValue,
 } from "framer-motion";
 import { useRef } from "react";
+import { ImageWithFallback } from "@/components/ui/ImageWithFallback";
 
 const COPY =
-  "We are building a thinking planet — a computer brain that reasons across the vastness of geospatial data. A Universal Geospatial Model. The most powerful map platform ever built.";
+  "We are building a thinking earth: an AI that reasons across the vastness of geospatial data. Delivering this technology in simple and powerful products for humanity.";
 
 export function MissionScrollIntro() {
   const ref = useRef<HTMLParagraphElement>(null);
@@ -55,26 +56,26 @@ export function MissionScrollIntro() {
         alignItems: "center",
       }}
     >
-      {/* Watermark layer — 75% opacity, no top/bottom fade. background-
-          size: 100% 100% stretches the image to match the section's
-          (now taller) height, so the skyline renders larger. Sits
-          behind foreground text via -z-10. */}
+      {/* Watermark layer — 75% opacity, no top/bottom fade. The image
+          source is now an <Image> child (was a CSS background-image of
+          a 843 KB PNG) so the optimizer can ship an AVIF/WebP variant.
+          objectFit:fill mirrors the original `background-size: 100% 100%`
+          stretch — guarantees full width AND no top/bottom crop on
+          shorter sections. The minimalistCity skyline is a flat
+          horizontal scene so the vertical squish is visually invisible. */}
       <div
         aria-hidden
-        className="absolute inset-0 -z-10 pointer-events-none"
-        style={{
-          backgroundImage: 'url("/minimalistCity.png")',
-          backgroundRepeat: "no-repeat",
-          backgroundPosition: "center",
-          /* Stretch image to fully fill the section (both axes) — the
-             only way to guarantee full width AND no top/bottom crop
-             on sections shorter than the image's 2.25 natural aspect.
-             The minimalistCity skyline is a flat horizontal scene so
-             this small vertical compression is visually invisible. */
-          backgroundSize: "100% 100%",
-          opacity: 1,
-        }}
-      />
+        className="absolute inset-0 -z-10 pointer-events-none overflow-hidden"
+      >
+        <ImageWithFallback
+          src="/minimalistCity.png"
+          alt=""
+          fill
+          sizes="100vw"
+          quality={75}
+          style={{ objectFit: "fill" }}
+        />
+      </div>
 
       <div className="container-site">
         <div className="mx-auto max-w-3xl">

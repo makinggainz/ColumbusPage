@@ -1,3 +1,4 @@
+import { ImageWithFallback } from "@/components/ui/ImageWithFallback";
 import { MistxNav } from "@/components/layout/MistxNav";
 import { BlogIndexGrid, type BlogFilter } from "@/components/blog/BlogIndexGrid";
 import { BlogFilterBar } from "@/components/blog/BlogFilterBar";
@@ -17,7 +18,22 @@ export function BlogIndexShell({ activeFilter }: { activeFilter: BlogFilter }) {
           `data-hero-section` lets the navbar render transparent at the
           top of the page so the watermark reads through it. */}
       <section className={styles.hero} data-hero-section aria-label="Blog">
-        <div className={styles.heroWatermark} aria-hidden />
+        {/* Watermark — formerly a CSS background-image (948 KB PNG).
+            Routing it through next/image with `priority` lets the
+            optimizer ship a sub-200 KB AVIF/WebP variant and emits a
+            preload tag so the watermark is on screen before hydration.
+            The wrapper still owns the mask/opacity treatment. */}
+        <div className={styles.heroWatermark} aria-hidden>
+          <ImageWithFallback
+            src="/ColumbusBackgroundMB.png"
+            alt=""
+            fill
+            priority
+            sizes="120vw"
+            quality={75}
+            style={{ objectFit: "cover", objectPosition: "center" }}
+          />
+        </div>
         <div className={styles.heroInner}>
           <h1 className={`h1 tracking-tight ${styles.headline}`}>Blog</h1>
           <p className={`p-l ${styles.lead}`}>

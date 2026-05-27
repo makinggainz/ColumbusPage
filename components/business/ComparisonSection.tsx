@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { ImageWithFallback } from "@/components/ui/ImageWithFallback";
 import MapChatPlatform from "./MapChatPlatform";
 import DataManagerMockup from "./DataManagerMockup";
 import AgenticResearchMockup from "./AgenticResearchMockup";
@@ -362,22 +363,33 @@ export default function ComparisonSection() {
         <div
           className="relative w-full min-w-0 overflow-hidden rounded-3xl lg:rounded-l-none border-2 border-(--ent-border-card) lg:border-l-0"
           style={{
-            backgroundImage: "url('/Environmental/env-bg-1.png')",
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-            // Without these, `background-clip` defaults to `border-box`
-            // and the sky photo bleeds UNDER the 2px hairline border.
-            // At the rounded top-right + bottom corners the photo sits
-            // a hair outside the border curve, which renders as a faint
-            // fringe — "another image showing through behind the
-            // border". Clipping the background to the padding box pulls
-            // the photo flush with the inside of the border so the
-            // corners read as a clean edge.
-            backgroundClip: "padding-box",
-            backgroundOrigin: "padding-box",
+            // Background was a CSS `background-image: url('…env-bg-1.png')`
+            // (1.8 MB PNG) — migrated to next/image (below) so the
+            // optimizer can ship an AVIF/WebP variant. The same
+            // padding-box clipping rationale applies to the <Image> via
+            // `inset` on the wrapper: the photo stays flush with the
+            // inside of the border, with no fringe at rounded corners.
             height: 630,
           }}
         >
+          {/* Env-bg-1 sky/cityscape backdrop — fills the card behind the
+              swap-in mockup children. `inset: 2` matches the 2px border
+              so the photo sits inside the padding box (mirroring the
+              original background-clip:padding-box behaviour). */}
+          <div
+            aria-hidden
+            className="pointer-events-none absolute"
+            style={{ inset: 2, zIndex: 0 }}
+          >
+            <ImageWithFallback
+              src="/Environmental/env-bg-1.png"
+              alt=""
+              fill
+              sizes="(max-width: 1023px) 100vw, 60vw"
+              quality={80}
+              style={{ objectFit: "cover", objectPosition: "center" }}
+            />
+          </div>
           {FEATURES.map((_, i) => (
             <div
               key={i}

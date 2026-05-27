@@ -1,7 +1,9 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
+import { ImageWithFallback } from "@/components/ui/ImageWithFallback";
 import MapChatPlatform from "./MapChatPlatform";
 import AgenticResearchMockup from "./AgenticResearchMockup";
 import DataManagerMockup from "./DataManagerMockup";
@@ -162,20 +164,26 @@ export default function BusinessHero() {
           behind the sticky navbar area covered by the section's
           marginTop:-120 / paddingTop:120 trick. `cover` + `center 50%`
           keeps the cloud strip + skyline visible around the frame. */}
+      {/* LCP for /products/business — formerly a CSS background-image
+          (~2.1 MB PNG). next/image with `priority` ships an AVIF/WebP
+          variant under 200 KB and emits a preload tag so the photo is
+          on screen before the bundle hydrates. */}
       <div
         className="absolute pointer-events-none"
-        style={{
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          backgroundImage: "url(/businessPageBackground.png)",
-          backgroundPosition: "center 50%",
-          backgroundSize: "cover",
-          backgroundRepeat: "no-repeat",
-          zIndex: 0,
-        }}
-      />
+        style={{ top: 0, left: 0, right: 0, bottom: 0, zIndex: 0 }}
+      >
+        <ImageWithFallback
+          src="/businessPageBackground.png"
+          alt=""
+          aria-hidden
+          fill
+          priority
+          fetchPriority="high"
+          sizes="100vw"
+          quality={80}
+          style={{ objectFit: "cover", objectPosition: "center 50%" }}
+        />
+      </div>
       {/* Dark overlay — a black scrim over the cityscape for text contrast.
           It fades to transparent before the section's bottom edge so the
           bled-out lower part of the photo meets the white sections with no
@@ -192,7 +200,49 @@ export default function BusinessHero() {
       {/* pt-50 (200px) restores the vertical breathing room previously
           provided by the removed ConsumerBusinessToggle wrapper
           (pt-32 + pill height ~43px + pb-10 ≈ 211px). */}
-      <div className="relative z-10 flex flex-col items-center text-center px-6 pt-50" style={reveal(visible, 0.1)}>
+      <div className="relative z-10 flex flex-col items-center text-center px-6 pt-50" style={{ ...reveal(visible, 0.1), marginTop: "-55px" }}>
+        {/* Columbus logo and name lockup — both children are explicit
+            48-tall flex boxes that centre their own content, so the
+            wordmark's optical centre lines up with the logo's centre
+            regardless of font metrics (lineHeight: 1 alone clips the
+            line box to font-size and was leaving the text reading
+            slightly low next to the 48px square logo). */}
+        <div style={{ marginBottom: 32, display: "flex", alignItems: "center", justifyContent: "center", gap: 12 }}>
+          <span style={{ display: "flex", width: 48, height: 48, alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+            <Image
+              alt="Columbus Logo"
+              width={48}
+              height={48}
+              src="/logobueno.png"
+              style={{
+                objectFit: "contain",
+                filter: "brightness(0) invert(1)",
+              }}
+            />
+          </span>
+          <span
+            style={{
+              display: "flex",
+              alignItems: "center",
+              height: 48,
+              fontFamily: "Axiforma, 'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif",
+              fontSize: "clamp(18px, 3vw, 28px)",
+              fontWeight: 605,
+              color: "#FFFFFF",
+              margin: 0,
+              letterSpacing: "-0.02em",
+              lineHeight: 1,
+              // Axiforma's capital glyphs sit slightly high in the em
+              // box, so geometric centring left the wordmark reading a
+              // few px above the logo's optical centre. Nudge the text
+              // down to match.
+              transform: "translateY(4px)",
+            }}
+          >
+            Columbus Pro
+          </span>
+        </div>
+
         <h1
           className="text-white leading-[1.1] text-[39px] md:text-[49px] lg:text-[76px]"
           style={{ fontFamily: "var(--font-hero)", fontWeight: 500, letterSpacing: "-0.02em", maxWidth: 900 }}
@@ -202,9 +252,9 @@ export default function BusinessHero() {
 
         <p
           className="mt-5"
-          style={{ fontSize: "var(--ent-text-body-l)", color: "#FFFFFF", letterSpacing: "-0.01em", fontWeight: 400, maxWidth: 480 }}
+          style={{ fontSize: "var(--ent-text-body-l)", color: "#FFFFFF", letterSpacing: "-0.01em", fontWeight: 400, maxWidth: 480, whiteSpace: "nowrap" }}
         >
-          GIS so easy, the janitor could be your new researcher
+          Agentic GIS so easy, the janitor could be your new researcher
         </p>
 
         {/* CTA — the site-wide on-brand pill button (bg-cta navy fill,

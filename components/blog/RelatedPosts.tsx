@@ -1,8 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
-import { getAllBlogPostsSorted, blogHref, type BlogCategory } from "@/lib/blog-posts";
+import { getAllBlogPostsSorted, blogHref, getBlogAccentColor, type BlogCategory } from "@/lib/blog-posts";
 import indexStyles from "@/app/blog/blog-index.module.css";
 import blogStyles from "@/app/blog/blog.module.css";
+import type { CSSProperties } from "react";
 
 type Props = {
   currentSlug: string;
@@ -46,7 +47,12 @@ export function RelatedPosts({ currentSlug, currentCategory }: Props) {
               ) : (
                 <div className={indexStyles.cardImagePlaceholder} aria-hidden="true" />
               )}
-              <div className={indexStyles.notch}>
+              <div
+                className={indexStyles.notch}
+                style={getBlogAccentColor(post)
+                  ? ({ "--notch-accent": getBlogAccentColor(post) } as CSSProperties)
+                  : undefined}
+              >
                 <span className={indexStyles.notchLabel}>{post.audience}</span>
               </div>
             </div>

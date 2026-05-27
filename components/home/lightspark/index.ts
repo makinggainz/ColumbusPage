@@ -1,12 +1,3 @@
 export { TextScrollIntro } from "./TextScrollIntro";
-export { ColumbusFeatureCell } from "./ColumbusFeatureCell";
-export { DatasetsCarousel } from "./DatasetsCarousel";
-export { CtaBanner } from "./CtaBanner";
-export { ElioTextScrollIntro } from "./ElioTextScrollIntro";
-export { ElioFeatureCell } from "./ElioFeatureCell";
-export { ElioValuesCards } from "./ElioValuesCards";
-export { ElioFinalCTA } from "./ElioFinalCTA";
-export { StickyScrollFeatures } from "./StickyScrollFeatures";
-export { CaseStudyCard } from "./CaseStudyCard";
 export { BlogSection } from "./BlogSection";
 export { MissionScrollIntro } from "./MissionScrollIntro";

@@ -238,11 +238,14 @@ export function MistxNav({
   const darkScrimActive = darkBackdrop && (!stuck || overHero) && heroPhase === 0;
   const lightNav =
     (heroWhite && (!stuck || overHero)) ||
-    // Phase 2 ("Knows your vibe", navy scene) still needs white nav
-    // contents — dark text would be invisible against the navy scrim.
-    // Phase 3 ("Save & share / Local guide") sits over the white scene
-    // backdrop with NO navbar scrim, so the nav contents stay dark.
-    ((heroLight || darkBackdrop) && overHero && heroPhase === 2) ||
+    // In darkBackdrop mode the photo-backed scenes (phases 0, 1, 2)
+    // get white nav contents so the logo / links / CTA read on the
+    // imagery. Phase 3 is a pure-WHITE backdrop on the consumer page,
+    // so the navbar flips back to dark contents there for legibility.
+    // (heroLight legacy: only phase 2 was navy-dark enough to need
+    // light nav contents.)
+    (heroLight && overHero && heroPhase === 2) ||
+    (darkBackdrop && overHero && heroPhase !== 3) ||
     darkScrimActive;
   // Business-only: while scrolled ("on movement") AND the navbar still
   // overlaps the hero, the solid white backdrop is replaced by a scrim
@@ -268,18 +271,27 @@ export function MistxNav({
     heroTint ??
     (heroPhase === 2 ? "#0B1342" : "#E3F2FB");
 
+  // Top-corner radius: matches the PageFrame card (35px) while the navbar
+  // is at rest (sitting inside the card's rounded top corners), then
+  // flattens to 0 once it pins flush with the viewport top — otherwise
+  // the rounded corners would expose the body backdrop at the very top
+  // edge while the navbar is stuck.
+  const navCornerRadius = stuck ? "0px" : "var(--frame-radius, 35px)";
+
   return (
     <header
       ref={headerRef}
       className="sticky z-100 w-full"
       style={{
-        // Sticks at the card's top edge (= the 30px top gutter), so the
-        // gutter stays visible above the navbar instead of getting
-        // covered when the navbar pins. Top-corner radii match the
-        // PageFrame card so the navbar's white backdrop curves with it.
-        top: "var(--frame-margin, 30px)",
-        borderTopLeftRadius: "var(--frame-radius, 20px)",
-        borderTopRightRadius: "var(--frame-radius, 20px)",
+        // Pins flush with the viewport top when stuck (top: 0). The
+        // page-frame's 9px top gutter is covered by the navbar's white
+        // backdrop as it slides up — no gap appears between viewport top
+        // and the stuck navbar. Top-corner radii still match the
+        // PageFrame card while the navbar is at rest, then flatten so
+        // the stuck navbar's edges go flush against the viewport.
+        top: 0,
+        borderTopLeftRadius: navCornerRadius,
+        borderTopRightRadius: navCornerRadius,
         // darkScrimActive owns the navbar's backdrop while the dark
         // gradient is visible (consumer page over the hero). Once the
         // navbar pins above the next section (overHero=false) the
@@ -318,8 +330,8 @@ export function MistxNav({
           className="pointer-events-none absolute inset-x-0 top-0 bottom-0"
           style={{
             zIndex: 0,
-            borderTopLeftRadius: "var(--frame-radius, 20px)",
-            borderTopRightRadius: "var(--frame-radius, 20px)",
+            borderTopLeftRadius: navCornerRadius,
+            borderTopRightRadius: navCornerRadius,
             background: `linear-gradient(to bottom, rgba(${scrimRGB},1) 0%, rgba(${scrimRGB},0.55) 50%, rgba(${scrimRGB},0) 100%)`,
             opacity: heroScrim ? 1 : 0,
             transition: "opacity 300ms ease",
@@ -341,43 +353,44 @@ export function MistxNav({
           className="pointer-events-none absolute inset-x-0 top-0 bottom-0"
           style={{
             zIndex: 0,
-            borderTopLeftRadius: "var(--frame-radius, 20px)",
-            borderTopRightRadius: "var(--frame-radius, 20px)",
+            borderTopLeftRadius: navCornerRadius,
+            borderTopRightRadius: navCornerRadius,
             backgroundColor: heroStageColor,
             maskImage:
               "linear-gradient(to bottom, black 0%, rgba(0,0,0,0.55) 50%, transparent 100%)",
             WebkitMaskImage:
               "linear-gradient(to bottom, black 0%, rgba(0,0,0,0.55) 50%, transparent 100%)",
-            // In darkBackdrop mode the dark scrim owns phase 0; this scene-
-            // color scrim paints during phases 1–2 only. Phase 3 ("Save &
-            // share / Local guide") deliberately runs with NO scrim so the
-            // navbar floats transparent over the white scene backdrop.
-            // Other modes (heroLight, heroTint) keep the original behavior.
+            // In darkBackdrop mode the navbar stays FULLY TRANSPARENT
+            // across every scene (consumer page spec) — no scene-color
+            // scrim ever paints; the scene's own backdrop image shows
+            // straight through. Other modes (heroLight, heroTint) keep
+            // the original behaviour.
             opacity:
-              heroScrim && (!darkBackdrop || (heroPhase > 0 && heroPhase !== 3)) ? 1 : 0,
+              !darkBackdrop && heroScrim ? 1 : 0,
             transition:
               "opacity 300ms ease, background-color 700ms cubic-bezier(0.44,0,0.56,1)",
           }}
         />
       )}
-      {/* darkBackdrop — dark gradient behind the navbar while it floats
-          over the hero. Opacity tracks darkScrimActive: visible while
-          overHero (or at scroll=0), fades off once the navbar pins
-          above the next section so the navbar can match its surface
-          color — the standard white backdrop cross-fades in via the
-          backgroundColor transition above. Same colour stops as the
-          consumer hero's own top-edge fade, so the navbar zone reads
-          as a continuation of that band. */}
+      {/* darkBackdrop — black gradient behind the navbar while it
+          floats over the hero, so the white nav contents read clearly
+          against any photo. Fades to transparent at the navbar's
+          bottom edge; opacity tracks darkScrimActive so it disappears
+          the moment the navbar pins above the next section. */}
       {darkBackdrop && (
         <div
           aria-hidden
           className="pointer-events-none absolute inset-x-0 top-0 bottom-0"
           style={{
             zIndex: 0,
-            borderTopLeftRadius: "var(--frame-radius, 20px)",
-            borderTopRightRadius: "var(--frame-radius, 20px)",
+            borderTopLeftRadius: navCornerRadius,
+            borderTopRightRadius: navCornerRadius,
+            // Halved from the previous 0.32 / 0.18 stops so the dark
+            // scrim sits softer behind the navbar — still enough contrast
+            // for white nav contents over the consumer hero photo, but
+            // not visually heavy on the eye.
             background:
-              "linear-gradient(to bottom, rgba(0, 0, 0, 0.40) 0%, rgba(0, 0, 0, 0.22) 55%, rgba(0, 0, 0, 0) 100%)",
+              "linear-gradient(to bottom, rgba(0, 0, 0, 0.16) 0%, rgba(0, 0, 0, 0.09) 50%, rgba(0, 0, 0, 0) 100%)",
             opacity: darkScrimActive ? 1 : 0,
             transition: "opacity 300ms ease",
           }}
