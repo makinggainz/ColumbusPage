@@ -47,6 +47,13 @@ export function RelatedPosts({ currentSlug, currentCategory }: Props) {
               ) : (
                 <div className={indexStyles.cardImagePlaceholder} aria-hidden="true" />
               )}
+              <div className={indexStyles.cardBrand} aria-hidden="true">
+                <span className={indexStyles.cardBrandLogo}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src="/logobueno.png" alt="" width={16} height={16} />
+                </span>
+                <span className={indexStyles.cardBrandText}>Columbus</span>
+              </div>
               <div
                 className={indexStyles.notch}
                 style={getBlogAccentColor(post)

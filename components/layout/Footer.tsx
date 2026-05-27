@@ -47,30 +47,14 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false, t
       }}
     >
       <div className="relative z-10 w-full max-w-[1200px] mx-auto px-8 pt-16 pb-6">
-        <div className="text-center max-w-3xl mx-auto mb-14">
-          <p
-            className="text-[15px] leading-relaxed mb-6"
-            style={{ color: theme === "dark" ? "rgba(255,255,255,0.5)" : "rgba(29,29,31,0.6)" }}
-          >
-            We are a group of engineers, designers, and company builders developing
-            foundation models and data collection innovations to power the
-            geospatial intelligence systems of tomorrow.
-          </p>
-          <p
-            className="text-[15px] leading-relaxed"
-            style={{ color: theme === "dark" ? "rgba(255,255,255,0.5)" : "rgba(29,29,31,0.6)" }}
-          >
-            We&apos;re building foundation models that understand the physical world
-            through geospatial reasoning. GeoContext-1 processes satellite imagery,
-            terrain data, infrastructure networks, and temporal patterns to generate
-            actionable intelligence across defence, climate, consumer and urban
-            planning domains.
-          </p>
-        </div>
-
         <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12 items-start mb-10">
           <div>
-            <h3 className={`text-[24px] font-semibold mb-3 ${theme === "dark" ? "text-white" : "text-[#1D1D1F]"}`}>Columbus Earth</h3>
+            <h3
+              className={`text-[24px] font-semibold mb-3 ${theme === "dark" ? "text-white" : "text-[#1D1D1F]"}`}
+              style={{ fontFamily: "Axiforma, 'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif", letterSpacing: "-0.02em" }}
+            >
+              Columbus Earth
+            </h3>
             <p className={`text-[14px] leading-relaxed mb-4 max-w-[260px] ${theme === "dark" ? "text-white/50" : "text-[#1D1D1F]/50"}`}>
               The frontier AI lab building the first production Universal Geospatial Model.
             </p>

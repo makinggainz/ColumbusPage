@@ -386,11 +386,14 @@ function DiscoveryCardView({ p, leftPx, topPx, leftPct, topPct, mobile, visible 
         stackedSubW: 70, stackedSubH: 50, stackedSubFrame: 4, stackedSubRadius: 10,
       }
     : {
-        photoW: 160, photoH: 115, frame: 6, radius: 18,
-        avatar: 48, avatarBorder: 3, avatarOverlap: 18, avatarOffsetX: 12, avatarOffsetY: 12,
-        pillFont: 14, pillPadV: 8, pillPadH: 20, pillMargin: 10,
-        placeImg: 48, placeName: 18, placeSub: 13, placeGap: 11, placePadH: 22, placePadV: 6,
-        stackedSubW: 108, stackedSubH: 78, stackedSubFrame: 6, stackedSubRadius: 14,
+        // Desktop sizes — kept compact so the cards read as floating UI
+        // accents over the globe rather than competing with the title +
+        // CTA stack above. Roughly 75% of the previous scale.
+        photoW: 120, photoH: 86, frame: 5, radius: 14,
+        avatar: 36, avatarBorder: 2, avatarOverlap: 14, avatarOffsetX: 9, avatarOffsetY: 9,
+        pillFont: 11, pillPadV: 6, pillPadH: 15, pillMargin: 8,
+        placeImg: 36, placeName: 14, placeSub: 10, placeGap: 8, placePadH: 16, placePadV: 5,
+        stackedSubW: 82, stackedSubH: 58, stackedSubFrame: 5, stackedSubRadius: 11,
       };
   const photoInnerRadius = Math.max(6, sz.radius - sz.frame);
   const cardShadow = "0 10px 26px -8px rgba(0,40,60,0.25), 0 3px 8px rgba(0,0,0,0.08)";

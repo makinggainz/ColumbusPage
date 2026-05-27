@@ -201,8 +201,13 @@ export default function BusinessHero() {
           provided by the removed ConsumerBusinessToggle wrapper
           (pt-32 + pill height ~43px + pb-10 ≈ 211px). */}
       <div className="relative z-10 flex flex-col items-center text-center px-6 pt-50" style={{ ...reveal(visible, 0.1), marginTop: "-55px" }}>
-        {/* Columbus logo and name lockup */}
-        <div style={{ marginBottom: 32, display: "flex", alignItems: "center", justifyContent: "center", gap: 12, height: 48 }}>
+        {/* Columbus logo and name lockup — both children are explicit
+            48-tall flex boxes that centre their own content, so the
+            wordmark's optical centre lines up with the logo's centre
+            regardless of font metrics (lineHeight: 1 alone clips the
+            line box to font-size and was leaving the text reading
+            slightly low next to the 48px square logo). */}
+        <div style={{ marginBottom: 32, display: "flex", alignItems: "center", justifyContent: "center", gap: 12 }}>
           <span style={{ display: "flex", width: 48, height: 48, alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
             <Image
               alt="Columbus Logo"
@@ -217,6 +222,9 @@ export default function BusinessHero() {
           </span>
           <span
             style={{
+              display: "flex",
+              alignItems: "center",
+              height: 48,
               fontFamily: "Axiforma, 'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif",
               fontSize: "clamp(18px, 3vw, 28px)",
               fontWeight: 605,
