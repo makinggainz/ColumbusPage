@@ -5,20 +5,22 @@ import { useState, useEffect, useRef } from "react";
 import { MistxNav } from "@/components/layout/MistxNav";
 
 type Phase = "writing" | "folding" | "bottling" | "dropping" | "floating" | "done";
-type InquiryType = "columbus-pro" | "elio" | "investment" | "careers";
+type InquiryType = "columbus-pro" | "elio" | "investment" | "careers" | "general";
 
 const TABS: { value: InquiryType; label: string }[] = [
+  { value: "general", label: "General inquiry" },
   { value: "columbus-pro", label: "Columbus Pro" },
   { value: "elio", label: "Elio" },
   { value: "investment", label: "Investors" },
   { value: "careers", label: "Careers" },
 ];
 
-const TAB_INTRO: Record<InquiryType, { heading: string; sub: string }> = {
-  "columbus-pro": { heading: "Book a demo", sub: "See Columbus working on your own data." },
-  "elio": { heading: "Tell us about your project", sub: "Share what you want to build with Elio." },
-  "investment": { heading: "Investor relations", sub: "Let’s talk partnerships and the road ahead." },
-  "careers": { heading: "Join the crew", sub: "Tell us where you’d make your mark." },
+const TAB_INTRO: Record<InquiryType, { heading: string }> = {
+  "columbus-pro": { heading: "Book a demo" },
+  "elio": { heading: "What’s up" },
+  "investment": { heading: "Investor relations" },
+  "careers": { heading: "Join the crew" },
+  "general": { heading: "Get in touch" },
 };
 
 /* Design tokens — referenced straight from app/globals.css (@theme),
@@ -138,7 +140,7 @@ function FaqItem({ item }: { item: { q: string; a: React.ReactNode } }) {
 export default function ContactPage() {
   const [form, setForm] = useState({ firstName: "", lastName: "", email: "", role: "", message: "", companySize: "", industry: "", heardFrom: "" });
   const [phase, setPhase] = useState<Phase>("writing");
-  const [tab, setTab] = useState<InquiryType>("columbus-pro");
+  const [tab, setTab] = useState<InquiryType>("general");
   const [updates, setUpdates] = useState(false);
   const [charCount, setCharCount] = useState(0);
   const [mounted, setMounted] = useState(false);
@@ -180,6 +182,7 @@ export default function ContactPage() {
   const handleSend = (e: React.FormEvent) => {
     e.preventDefault();
     setPhase("folding");
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   useEffect(() => {
@@ -323,9 +326,6 @@ export default function ContactPage() {
                     <h2 className="h4 tracking-tight text-ink">
                       {TAB_INTRO[tab].heading}
                     </h2>
-                    <p className="p-m text-muted mt-2">
-                      {TAB_INTRO[tab].sub}
-                    </p>
                   </div>
 
                   {/* ── Columbus Pro — book a demo ── */}
@@ -483,6 +483,36 @@ export default function ContactPage() {
                     </form>
                   )}
 
+                  {/* ── General inquiry ── */}
+                  {tab === "general" && (
+                    <form className="flex flex-col gap-5" onSubmit={handleSend}>
+                      <label className="flex flex-col gap-1.5">
+                        {labelEl("Name")}
+                        <input type="text" name="firstName" required value={form.firstName} onChange={handleChange} className="cf-input" placeholder="Your name" />
+                      </label>
+
+                      <label className="flex flex-col gap-1.5">
+                        {labelEl("Email")}
+                        <input type="email" name="email" required value={form.email} onChange={handleChange} className="cf-input" placeholder="name@example.com" />
+                      </label>
+
+                      <label className="flex flex-col gap-1.5">
+                        {labelEl("Message")}
+                        <textarea name="message" required maxLength={500} rows={4} value={form.message} onChange={handleChange} className="cf-textarea" placeholder="What can we help you with?" />
+                        <span className="text-[12px] text-right" style={{ color: MUTED }}>{charCount}/500</span>
+                      </label>
+
+                      <p className="text-[13px] leading-[1.5]" style={{ color: MUTED }}>
+                        By submitting, you agree with our <Link href="/terms" className="underline">Terms</Link> and <Link href="/privacy" className="underline">Privacy Policy</Link>.
+                      </p>
+
+                      <div className="flex items-center gap-4 pt-1">
+                        <CtaButton type="submit">Submit</CtaButton>
+                        <span className="text-[13px] text-muted">We answer fast.</span>
+                      </div>
+                    </form>
+                  )}
+
                 </div>
               </div>
 
@@ -525,14 +555,12 @@ export default function ContactPage() {
               <p className="p-l text-muted max-w-[400px]">
                 Your bottle has landed. We respond fast.
               </p>
-              {phase === "done" && (
-                <CtaButton
-                  className="mt-8"
-                  onClick={() => { setPhase("writing"); setForm({ firstName: "", lastName: "", email: "", role: "", message: "", companySize: "", industry: "", heardFrom: "" }); setCharCount(0); }}
-                >
-                  Send another message
-                </CtaButton>
-              )}
+              <CtaButton
+                className="mt-8"
+                onClick={() => { setPhase("writing"); setForm({ firstName: "", lastName: "", email: "", role: "", message: "", companySize: "", industry: "", heardFrom: "" }); setCharCount(0); }}
+              >
+                Send another message
+              </CtaButton>
             </div>
           )}
 

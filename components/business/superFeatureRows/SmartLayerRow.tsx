@@ -82,7 +82,10 @@ export default function SmartLayerRow({
           aspectRatio: "5190 / 2993",
           maxWidth: 1180,
           borderRadius: "var(--ent-radius-2xl)",
-          border: "1px solid var(--ent-border-card)",
+          /* Stronger than the default --ent-border-card (rgba(0,0,0,0.05))
+             so the white chrome reads as a defined card instead of
+             dissolving into the white page surface around it. */
+          border: "1.5px solid rgba(0, 0, 0, 0.12)",
           /* White wrapper background blends with the chrome image's
              white edges, so the 6px chrome inset below reads as
              seamless across the 24px rounded-corner negative space. */

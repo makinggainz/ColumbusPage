@@ -67,14 +67,32 @@ export default function IndustryStickyNavbar({ lightTheme = false, topOffset = 5
     if (!header) return;
     const measure = () => {
       const rect = header.getBoundingClientRect();
-      setMeasuredTop(rect.bottom);
+      // The navbar slides itself out of the way with `transform:
+      // translateY(-110%)` while the picker is in takeover mode. That
+      // transform IS reflected in getBoundingClientRect, so when we
+      // re-measure during takeover the bottom value is wildly negative
+      // and won't represent where the navbar will land when it comes
+      // back. Clamp to 0 in that case so we never anchor the picker
+      // off-screen; once the navbar is back in view the next measurement
+      // catches its real bottom.
+      const bottom = rect.bottom > 0 ? rect.bottom : 0;
+      setMeasuredTop(bottom);
     };
     measure();
     const ro = new ResizeObserver(measure);
     ro.observe(header);
+    // Re-measure on scroll so the picker tracks the navbar's *current*
+    // bottom when it slides back in from takeover (a CSS transform
+    // change doesn't fire ResizeObserver, so without this listener the
+    // measurement stays stuck at whatever bottom value was captured the
+    // last time the observer fired — often the wrong value, which left
+    // a visible gap between the navbar's bottom and the picker's top
+    // in coexist mode).
+    window.addEventListener("scroll", measure, { passive: true });
     window.addEventListener("resize", measure);
     return () => {
       ro.disconnect();
+      window.removeEventListener("scroll", measure);
       window.removeEventListener("resize", measure);
     };
   }, []);
@@ -86,7 +104,14 @@ export default function IndustryStickyNavbar({ lightTheme = false, topOffset = 5
      sub-navbar drops back to its under-navbar slot and the main navbar
      comes back. */
   const inTakeover = takeover && !coexist;
-  const topPosition = inTakeover ? "var(--frame-margin, 30px)" : effectiveTop;
+  /* In takeover mode this sub-navbar REPLACES the main navbar, so it
+     must pin flush with the viewport top (top: 0) — same anchor the
+     main navbar uses when stuck. Anchoring to `var(--frame-margin)`
+     instead left a visible page-frame gutter (≈9px on the current
+     frame) between the picker and the top of the screen. While
+     coexisting under the main navbar, it still sits at `effectiveTop`
+     (the measured navbar bottom) so the two stack flush. */
+  const topPosition = inTakeover ? 0 : effectiveTop;
 
   /* Broadcast the effective takeover state so a takeover-capable main
      navbar hides only when this sub-navbar is actually replacing it (not
@@ -102,15 +127,33 @@ export default function IndustryStickyNavbar({ lightTheme = false, topOffset = 5
   /* Scroll-up reveal: while takeover is in play, an upward scroll of
      >100px brings the main navbar back and slides this sub-navbar down
      into its coexist position. Any downward scroll resets the threshold
-     and re-engages takeover. */
+     and re-engages takeover.
+
+     Programmatic anchor jumps from the feature-index dispatch an
+     `industry-index-jump` CustomEvent immediately before the browser
+     starts smooth-scrolling. The jump usually moves upward, which would
+     trip the coexist threshold and reveal the navbar for ~a second
+     before snapping back. We use the event to clamp coexist off and
+     ignore upward deltas for a short window after the jump. */
   useEffect(() => {
     if (!takeover) return;
     let lastY = window.scrollY;
     let upAccum = 0;
+    let suppressUntil = 0;
     const THRESHOLD = 100;
+    const SUPPRESS_MS = 1500;
     const onScroll = () => {
       const y = window.scrollY;
       const delta = y - lastY;
+      const now = performance.now();
+      if (now < suppressUntil) {
+        // Ignore deltas during the index-jump window; keep takeover
+        // engaged and let the page settle before re-arming the
+        // scroll-up reveal.
+        upAccum = 0;
+        lastY = y;
+        return;
+      }
       if (delta < 0) {
         upAccum += -delta;
         if (upAccum > THRESHOLD) setCoexist(true);
@@ -120,8 +163,17 @@ export default function IndustryStickyNavbar({ lightTheme = false, topOffset = 5
       }
       lastY = y;
     };
+    const onIndexJump = () => {
+      suppressUntil = performance.now() + SUPPRESS_MS;
+      upAccum = 0;
+      setCoexist(false);
+    };
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    window.addEventListener("industry-index-jump", onIndexJump);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("industry-index-jump", onIndexJump);
+    };
   }, [takeover]);
 
   // Visibility: prefer the explicit industry sticky-zone wrapper if a

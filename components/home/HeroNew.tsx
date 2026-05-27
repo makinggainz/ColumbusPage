@@ -244,10 +244,10 @@ export function HeroNew() {
       <div className="hn-bounds">
         <p className="hn-eyebrow">The frontier research lab</p>
         <h1 className="h1 hn-title tracking-tight text-ink">
-          building geospatial reasoning for the real world.
+          The Applied AI Lab for geospatial intelligence.
         </h1>
         <p className="hn-subtitle">
-          We're an Applied AI lab for geospatial intelligence
+          Building street-smart AI for the real world.
         </p>
       </div>
     </section>

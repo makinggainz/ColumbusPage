@@ -300,9 +300,11 @@ export function MistxNav({
         // content beneath.
         backgroundColor: darkScrimActive
           ? "transparent"
-          : showBackdrop && !heroScrim
+          : darkBackdrop && overHero && heroPhase === 3
             ? "#FFFFFF"
-            : "transparent",
+            : showBackdrop && !heroScrim
+              ? "#FFFFFF"
+              : "transparent",
         // Industry-picker takeover: slide up + fade out so the
         // sub-navbar (positioned at the same top slot) reads as a clean
         // replacement, no overlap. Returns to translateY(0) the moment

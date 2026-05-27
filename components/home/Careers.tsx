@@ -20,6 +20,7 @@
  */
 
 import { useRef, useEffect, useState, useCallback } from "react";
+import Link from "next/link";
 
 // ─── Walking figure types ────────────────────────────────────────────────────
 
@@ -240,109 +241,6 @@ const CSS = `
   transition: color 150ms ease;
 }
 .careers-join:hover { color: var(--color-accent); }
-
-/* ── Reveal form panel ────────────────────────────────────────────────
-   Hidden by default; clicking "Join our team" toggles it open. Keeps
-   the original Name / Message / Email form + Submit + "We accept
-   interns." aside available on the page. */
-.careers-form-panel {
-  overflow: hidden;
-  max-height: 0;
-  opacity: 0;
-  transition: max-height 320ms ease, opacity 320ms ease, margin-top 320ms ease;
-  margin-top: 0;
-}
-.careers-form-panel[data-open="true"] {
-  /* Large ceiling rather than an exact height so the reveal never
-     clips if the form grows (extra fields, validation messages, etc.).
-     The cap is needed because CSS transitions can't animate max-height
-     when the value is "auto". */
-  max-height: 1600px;
-  opacity: 1;
-  margin-top: 56px;
-}
-@media (prefers-reduced-motion: reduce) {
-  .careers-form-panel { transition: none; }
-}
-
-.careers-form-wrap {
-  max-width: 600px;
-  margin: 0 auto;
-}
-
-/* Form-panel intro typography. Heading + lede live above the inputs;
-   the form-grid spacing sits below them via .careers-form-fields. */
-.careers-form-intro-title {
-  margin: 0 0 8px;
-}
-.careers-form-intro-copy {
-  margin: 0;
-  color: var(--color-muted);
-}
-.careers-form-intro-emph {
-  color: var(--color-ink);
-  font-weight: 500;
-}
-.careers-form-fields {
-  margin-top: 24px;
-  display: flex;
-  flex-direction: column;
-}
-
-.careers-field {
-  display: block;
-  padding: 18px 0;
-  border-bottom: 1px solid var(--color-gridline);
-  transition: border-color 200ms ease;
-}
-.careers-field:focus-within {
-  border-bottom-color: var(--color-accent);
-}
-.careers-field input,
-.careers-field textarea {
-  width: 100%;
-  background: transparent;
-  border: 0;
-  outline: 0;
-  resize: none;
-  display: block;
-  overflow: hidden;
-  color: var(--color-ink);
-  font-size: var(--typography--p-l);
-  line-height: var(--typography--p-l--line-height);
-}
-.careers-field input::placeholder,
-.careers-field textarea::placeholder {
-  color: rgba(29, 29, 31, 0.45);
-}
-
-.careers-aside {
-  margin-top: 12px;
-  text-align: right;
-  color: var(--color-muted);
-}
-
-.careers-submit-row {
-  margin-top: 32px;
-  display: flex;
-  justify-content: flex-end;
-}
-.careers-submit {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  background: var(--color-cta);
-  color: #ffffff;
-  border-radius: var(--radius-button-md);
-  padding: 14px 28px;
-  font-size: var(--typography--p-m);
-  line-height: 1;
-  font-weight: 500;
-  transition: color 150ms ease;
-  border: 0;
-  cursor: pointer;
-}
-.careers-submit:hover { color: var(--color-accent); }
 `;
 
 // ─── Component ───────────────────────────────────────────────────────────────
@@ -350,7 +248,6 @@ const CSS = `
 const CANVAS_H = 180;
 
 export const Careers = ({ hideHeader, className = "" }: { hideHeader?: boolean; className?: string } = {}) => {
-  const textareaRef  = useRef<HTMLTextAreaElement>(null);
   const canvasRef    = useRef<HTMLCanvasElement>(null);
   const figuresRef   = useRef<Figure[]>([]);
   const animRef      = useRef(0);
@@ -359,14 +256,6 @@ export const Careers = ({ hideHeader, className = "" }: { hideHeader?: boolean; 
   const hoverTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [active, setActive] = useState(false);
   const [note, setNote]     = useState<string | null>(null);
-  const [formOpen, setFormOpen] = useState(false);
-
-  const handleTextareaInput = () => {
-    const el = textareaRef.current;
-    if (!el) return;
-    el.style.height = "auto";
-    el.style.height = `${el.scrollHeight}px`;
-  };
 
   // Spawn exactly 3 clickable figures + 1 non-clickable — tallest always
   // gets "note from alex".
@@ -660,63 +549,12 @@ export const Careers = ({ hideHeader, className = "" }: { hideHeader?: boolean; 
         </div>
 
         <div className="careers-join-row">
-          <button
-            type="button"
-            className="careers-join group"
-            aria-expanded={formOpen}
-            aria-controls="careers-form-panel"
-            onClick={() => setFormOpen((v) => !v)}
-          >
+          <Link href="/contact" className="careers-join group">
             Join our team
             <span className="inline-block transition-transform group-hover:translate-x-0.5">
               <ArrowDots className="text-accent" />
             </span>
-          </button>
-        </div>
-
-        <div
-          id="careers-form-panel"
-          className="careers-form-panel"
-          data-open={formOpen ? "true" : "false"}
-          aria-hidden={!formOpen}
-        >
-          <div className="careers-form-wrap">
-            <h3 className="h3 tracking-tight text-ink careers-form-intro-title">
-              Careers &amp; investment queries
-            </h3>
-            <p className="p-m careers-form-intro-copy">
-              If you&apos;re excited about creating paradigm shifts in physical world understanding.{" "}
-              <span className="careers-form-intro-emph">Join us now.</span>
-            </p>
-
-            <form className="careers-form-fields">
-              <label className="careers-field">
-                <input type="text" placeholder="Name" />
-              </label>
-              <label className="careers-field">
-                <textarea
-                  ref={textareaRef}
-                  placeholder="Message"
-                  rows={1}
-                  onInput={handleTextareaInput}
-                />
-              </label>
-              <label className="careers-field">
-                <input type="email" placeholder="Enter email" />
-              </label>
-            </form>
-
-            <p className="p-s careers-aside">We accept interns.</p>
-
-            <div className="careers-submit-row">
-              <button type="submit" className="careers-submit group">
-                Submit
-                <span className="ml-1 inline-block transition-transform group-hover:translate-x-0.5">
-                  <ArrowDots className="text-accent" />
-                </span>
-              </button>
-            </div>
-          </div>
+          </Link>
         </div>
       </div>
 

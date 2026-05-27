@@ -1674,8 +1674,8 @@ export default function BusinessUseCases() {
         demoVisual={<DataManagerMockup industryId={industryId} />}
         subFeatures={[
           { title: "Better Data, Better Prices", description: null, visual: <BetterPricesRow {...copy.rows.betterPrices} />, stacked: true },
-          { title: "With smart layers, you become an artist", description: null, visual: <SmartLayerRow {...copy.rows.smartLayer} mapSrc={bg.smartLayerMap} />, stacked: true },
-          { id: "super-model", title: "Survey the earth with a super model", description: null, visual: <SurveyEarthRow {...copy.rows.surveyEarth} mapSrc={bg.surveyEarthMap} />, stacked: true },
+          { id: "super-model", title: "With smart layers, you become an artist", description: null, visual: <SmartLayerRow {...copy.rows.smartLayer} mapSrc={bg.smartLayerMap} />, stacked: true },
+          { title: "Survey the earth with a super model", description: null, visual: <SurveyEarthRow {...copy.rows.surveyEarth} mapSrc={bg.surveyEarthMap} />, stacked: true },
         ]}
       />
       <SuperFeatureSection

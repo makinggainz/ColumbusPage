@@ -188,12 +188,18 @@ export default function SuperFeatureSection({
           >
             {subFeatures.map((item, i) => {
               const reversed = i % 2 === 1;
+              // When this row is the target of an in-page anchor (e.g.
+              // BusinessFeatureIndex → #super-model), the sticky industry
+              // picker covers the top ~56px of the viewport, so a default
+              // scroll lands the user under the section's title. Reserve
+              // clearance so the heading sits clearly below the picker.
+              const anchorStyle = item.id ? { scrollMarginTop: 90 } : undefined;
               if (item.stacked) {
                 /* Full-width row — the visual owns its header, subtitle,
                    and backdrop. No 4/8 grid, no 1:1 square frame, no
                    SkyBackdrop. */
                 return (
-                  <div key={item.title} id={item.id} className="w-full">
+                  <div key={item.title} id={item.id} className="w-full" style={anchorStyle}>
                     {item.visual}
                   </div>
                 );
@@ -203,6 +209,7 @@ export default function SuperFeatureSection({
                   key={item.title}
                   id={item.id}
                   className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center"
+                  style={anchorStyle}
                 >
                   <div className={`lg:col-span-4 px-6 lg:px-0 ${reversed ? "lg:order-2 lg:pl-8" : "lg:pr-8"}`}>
                     <h3

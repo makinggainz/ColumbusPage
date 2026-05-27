@@ -92,6 +92,16 @@ export default function BusinessFeatureIndex() {
                 href={`#${item.id}`}
                 className={`${styles.item} ${isActive ? styles.itemActive : ""}`}
                 aria-current={isActive ? "location" : undefined}
+                onClick={() => {
+                  /* Tell the IndustryStickyNavbar to keep the main
+                     navbar hidden across the upcoming jump scroll —
+                     without this, the post-click upward motion trips
+                     its scroll-up "coexist" threshold and the navbar
+                     reappears for ~a second before being hidden again.
+                     The picker listens for `industry-index-jump` and
+                     suppresses its coexist auto-flip for a short window. */
+                  window.dispatchEvent(new CustomEvent("industry-index-jump"));
+                }}
               >
                 {item.label}
               </a>

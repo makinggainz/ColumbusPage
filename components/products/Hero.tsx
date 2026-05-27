@@ -87,8 +87,8 @@ function phoneStates(isLg: boolean) {
 // the closing "everything in between" scene — no image, white bg, with
 // user-post cards rendered around the pinned phone (see POSTS below).
 const LABELS = [
-  { scene: 1, side: "left",  anchor: 0.5, title: "For your city.",                image: "/consumer/elio/ElioEndingBackground.jpg" },
-  { scene: 2, side: "right", anchor: 0.5, title: "For your travels.",             image: "/consumer/forYourTravels.png" },
+  { scene: 1, side: "left",  anchor: 0.5, title: "for your city",                 image: "/consumer/elio/ElioEndingBackground.jpg" },
+  { scene: 2, side: "right", anchor: 0.5, title: "for your travels",              image: "/consumer/forYourTravels.png" },
   { scene: 3, side: "right", anchor: 0.5, title: "and everything in between",     image: "" },
 ] as const;
 
@@ -265,6 +265,20 @@ export default function Hero() {
     let nextPhase: number;
     if (firstBelowAnchor && firstAd > vh * 0.3) nextPhase = 0;
     else nextPhase = LABELS[nearest].scene;
+    // Gate phase 3 (the white scene): the navbar flips its contents to
+    // dark on phase 3, and the scene-3 notification cards mount around
+    // the pinned phone. Both should hold until scene 3 is fully covering
+    // the viewport top — otherwise the cards float over the bottom of
+    // scene 2's photo strip, and the navbar reads black against scene
+    // 2's dark image. We require the scene-3 block's top edge to have
+    // reached the viewport top (rect.top <= 0), which by layout means
+    // scene 2's 400px block has fully scrolled past above.
+    if (nextPhase === 3) {
+      const scene3Block = blockRefs.current[2];
+      if (scene3Block && scene3Block.getBoundingClientRect().top > 0) {
+        nextPhase = 2;
+      }
+    }
     // The product-shot the phone displays follows the nearest LABEL
     // (one of two). During the intro, before any label has reached its
     // anchor, freeze on label 0.
@@ -579,14 +593,27 @@ export default function Hero() {
                   <MapsGPTGlobe size={isLg ? 46 : 34} />
                 </div>
                 <Image
-                  src="/consumer/elioName.png"
+                  src="/consumer/elioNameHero.png"
                   alt="Elio"
                   width={260}
                   height={110}
                   style={{
                     height: "auto",
-                    width: isLg ? 300 : 210,
-                    marginLeft: isLg ? -11 : -8,
+                    width: isLg ? 80 : 56,
+                    marginLeft: isLg ? 4 : 3,
+                    marginTop: 1,
+                  }}
+                />
+                <Image
+                  src="/consumer/elioTagline.png"
+                  alt="making maps feel alive"
+                  width={877}
+                  height={285}
+                  style={{
+                    height: "auto",
+                    width: isLg ? 240 : 164,
+                    marginLeft: isLg ? 10 : 7,
+                    marginTop: 3,
                   }}
                 />
               </div>
@@ -597,7 +624,7 @@ export default function Hero() {
                 <h1
                   style={{
                     fontFamily: "Axiforma, -apple-system, BlinkMacSystemFont, sans-serif",
-                    fontSize: "clamp(48px, 8vw, 66px)",
+                    fontSize: "76px",
                     fontWeight: 590,
                     color: "#FFFFFF",
                     textAlign: "center",
