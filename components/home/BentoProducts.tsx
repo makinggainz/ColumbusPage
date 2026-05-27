@@ -305,22 +305,24 @@ const CSS = `
 }
 /* Elio tile uses the elioName.png wordmark (same image rendered next
    to the 3D earth in the /products/consumer hero) instead of plain
-   text. Sized to match the consumer hero exactly: 210px wide on
-   mobile, 300px wide on desktop, with the same small negative
-   margin-left so the wordmark overlaps the logo slightly the way it
-   overlaps the globe in the hero lockup. Natural 260×110 aspect, so
-   height auto resolves to ≈89px mobile / ≈127px desktop. */
+   text. Height is locked to the .bp-logo's height (42px mobile, 50px
+   desktop) so the brand row matches the Columbus tile's row height
+   exactly — this keeps the tagline + CTA at the same Y position as
+   Columbus's. Width is derived from the natural 260×110 aspect via
+   'width: auto', so the image isn't stretched. The wordmark is still
+   the dominant visual in the row (≈99×42 / 118×50 vs the 42/50px
+   logo). */
 .bp-elio-wordmark {
-  width: 210px;
-  height: auto;
+  width: auto;
+  height: 42px;
   object-fit: contain;
   flex: 0 0 auto;
-  margin-left: -8px;
+  margin-left: -6px;
 }
 @media (min-width: 1024px) {
   .bp-logo { width: 50px; height: 50px; }
   .bp-card--wide .bp-logo { width: 56px; height: 56px; }
-  .bp-elio-wordmark { width: 300px; margin-left: -11px; }
+  .bp-elio-wordmark { height: 50px; margin-left: -8px; }
 }
 
 /* Stacked spacing — title→subtitle. The brand row is logo-height
