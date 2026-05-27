@@ -41,8 +41,11 @@ const FRAG = `
     // Only show texture on front hemisphere (facing camera after PI rotation)
     float front = smoothstep(0.0, 0.3, -n.z);
 
-    // Base color: light blue matching logo
-    vec3 base = vec3(0.4, 0.7, 0.85);
+    // Base color — back hemisphere fill. Set to #1DA6F0 so the
+    // un-textured back of the sphere reads as a bright cyan blue
+    // rather than the previous duller teal which looked near-black
+    // under low ambient lighting.
+    vec3 base = vec3(0.114, 0.651, 0.941);
     vec3 col  = mix(base, texCol.rgb, front * uHasTex);
 
     // Subtle specular
@@ -221,7 +224,7 @@ export default function MapsGPTGlobe({ size = 67 }: MapsGPTGlobeProps) {
     const tex = gl.createTexture()!;
     gl.bindTexture(gl.TEXTURE_2D, tex);
     // 1×1 placeholder
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array([15, 25, 40, 255]));
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array([29, 166, 240, 255]));
     gl.uniform1f(gl.getUniformLocation(prog, "uHasTex"), 0);
 
     const img = new window.Image();

@@ -301,31 +301,50 @@ const CSS = `
 .bp-card--elio .bp-name {
   font-weight: 600;
 }
+/* Columbus wordmark colour matches the logo to its left — same navy
+   #0F173C the COLUMBUS_LOGO_FILTER chain lands on (and the same value
+   MistxNav uses for "Columbus Earth"). */
+.bp-card--columbus .bp-name {
+  color: #0F173C;
+}
 /* Research tile sets its title in Funnel Display (the design system's
    --font-display heading face). */
 .bp-card--research .bp-name {
   font-family: var(--font-display);
 }
-/* Elio tile uses the elioName.png wordmark (same image rendered next
-   to the 3D earth in the /products/consumer hero) instead of plain
-   text. Height is locked to the .bp-logo's height (42px mobile, 50px
-   desktop) so the brand row matches the Columbus tile's row height
-   exactly — this keeps the tagline + CTA at the same Y position as
-   Columbus's. Width is derived from the natural 260×110 aspect via
-   'width: auto', so the image isn't stretched. The wordmark is still
-   the dominant visual in the row (≈99×42 / 118×50 vs the 42/50px
-   logo). */
-.bp-elio-wordmark {
+/* Elio tile uses the same two-asset lockup the /products/consumer
+   hero renders next to the 3D earth: elioNameHero.png (block "Elio")
+   followed by elioTagline.png (script "making maps feel alive"). Both
+   PNGs are natively white-on-transparent; CSS filters re-tint them
+   inline so they read on the bento card's white-scrim header (cyan
+   block + black script) without any opaque background blocking the
+   photo backdrop beneath. */
+.bp-elio-name {
   width: auto;
   height: 42px;
   object-fit: contain;
   flex: 0 0 auto;
-  margin-left: -6px;
+  margin-left: -4px;
+  /* Source PNG is white-on-transparent — kept as-is so the "Elio"
+     wordmark reads white over the bento's photo backdrop. */
+}
+.bp-elio-tagline {
+  width: auto;
+  height: 20px;
+  object-fit: contain;
+  flex: 0 0 auto;
+  margin-left: 8px;
+  margin-top: 4px;
+  /* Source PNG is faint light-grey script; flatten to black then
+     invert to land on pure #FFFFFF so the tagline reads at the same
+     weight as the "Elio" wordmark next to it. */
+  filter: brightness(0) invert(1);
 }
 @media (min-width: 1024px) {
   .bp-logo { width: 50px; height: 50px; }
   .bp-card--wide .bp-logo { width: 56px; height: 56px; }
-  .bp-elio-wordmark { height: 50px; margin-left: -8px; }
+  .bp-elio-name { height: 50px; margin-left: -5px; }
+  .bp-elio-tagline { height: 24px; margin-left: 10px; }
 }
 
 /* Stacked spacing — title→subtitle. The brand row is logo-height
@@ -340,6 +359,12 @@ const CSS = `
   letter-spacing: -0.015em;
   color: inherit;
   max-width: 28rem;
+}
+/* Elio tile reads on a darker photo backdrop, so the body tagline
+   ("Making maps feel alive again") needs to be white rather than
+   inheriting the default ink colour. */
+.bp-card--elio .bp-tagline {
+  color: #FFFFFF;
 }
 @media (min-width: 1024px) {
   /* Wide tile keeps its roomier stack (22px title→subtitle), with the
@@ -382,6 +407,18 @@ const CSS = `
 }
 .bp-cta:hover .bp-cta-arrow { transform: translateX(2px); }
 .bp-cta-arrow svg { display: block; }
+
+/* Elio tile inverts the CTA palette — white pill with navy label —
+   so the call-to-action reads bright against the photo backdrop and
+   echoes the white wordmark above it instead of competing with the
+   navy CTA used on the Columbus / Research tiles. */
+.bp-card--elio .bp-cta {
+  background-color: #FFFFFF;
+  color: var(--color-cta);
+}
+.bp-card--elio .bp-cta:hover {
+  color: var(--color-accent);
+}
 @media (prefers-reduced-motion: reduce) {
   .bp-cta,
   .bp-cta-arrow { transition: none; }
@@ -484,7 +521,7 @@ const PRODUCTS: Product[] = [
     tagline: "Making maps feel alive again",
     audience: "For consumer",
     ctaLabel: "Learn more",
-    visual: "/mapsgptdesktopimg.png",
+    visual: "/elioHomePgShowcase.png",
   },
   {
     cellClass: "bp-card--research",
@@ -560,18 +597,30 @@ export function BentoProducts() {
                     style={p.logoFilter ? { filter: p.logoFilter } : undefined}
                   />
                   {p.cellClass === "bp-card--elio" ? (
-                    /* Elio tile renders the wordmark image (same asset
-                       used in the /products/consumer hero lockup, next
-                       to the 3D earth) in place of plain text. Sized
-                       via .bp-elio-wordmark; height auto preserves the
-                       natural 260×110 aspect. */
-                    <Image
-                      src="/consumer/elioName.png"
-                      alt={p.name}
-                      className="bp-elio-wordmark"
-                      width={260}
-                      height={110}
-                    />
+                    /* Elio tile mirrors the /products/consumer hero
+                       lockup: the block "Elio" wordmark, then the
+                       script "making maps feel alive" tagline. Both
+                       PNGs are white-on-transparent and are tinted
+                       inline via the bp-elio-name / bp-elio-tagline
+                       classes (cyan + black respectively) so they read
+                       on the bento's white-scrim header without any
+                       solid background blocking the photo beneath. */
+                    <>
+                      <Image
+                        src="/consumer/elioNameHero.png"
+                        alt={p.name}
+                        className="bp-elio-name"
+                        width={260}
+                        height={110}
+                      />
+                      <Image
+                        src="/consumer/elioTagline.png"
+                        alt="making maps feel alive"
+                        className="bp-elio-tagline"
+                        width={877}
+                        height={285}
+                      />
+                    </>
                   ) : (
                     <span
                       className="bp-name"

@@ -607,6 +607,10 @@ export default function Hero() {
                     width: isLg ? 80 : 56,
                     marginLeft: isLg ? 4 : 3,
                     marginTop: 1,
+                    // Soft white halo + tight contact shadow so the
+                    // wordmark reads cleanly against the dark photo
+                    // backdrop without the previous cyan recolour.
+                    filter: "drop-shadow(0 1px 4px rgba(0,0,0,0.25))",
                   }}
                 />
                 <Image
@@ -616,9 +620,13 @@ export default function Hero() {
                   height={285}
                   style={{
                     height: "auto",
-                    width: isLg ? 240 : 164,
+                    width: isLg ? 200 : 138,
                     marginLeft: isLg ? 10 : 7,
                     marginTop: 3,
+                    // Keep the tagline white (its native colour) and add
+                    // a soft drop-shadow so the faint script reads on
+                    // the dark photo backdrop.
+                    filter: "drop-shadow(0 1px 4px rgba(0,0,0,0.25))",
                   }}
                 />
               </div>
