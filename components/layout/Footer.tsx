@@ -40,7 +40,7 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false, t
     <footer
       data-footer
       data-navbar-theme={theme === "dark" ? "dark" : "light"}
-      className={`overflow-hidden flex flex-col relative ${theme === "dark" ? "text-white" : "text-[#1D1D1F]"}`}
+      className="overflow-hidden flex flex-col relative text-white"
       style={{
         // bgColor is the fallback paint shown while the <video> below
         // is loading (or if it errors / a browser blocks autoplay) and
@@ -68,31 +68,29 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false, t
         aria-hidden
         tabIndex={-1}
       />
-      {/* Theme-tinted scrim — same hue as the static bgColor at ~55%
-          opacity, so the footer keeps its overall colour cast and the
-          existing text styling (dark on light / white on dark) stays
-          legible regardless of what colour the video lands on at any
-          given frame. */}
+      {/* Minimal black scrim — 10% opacity, just enough to take the
+          edge off the video's brightest frames so the white text below
+          retains contrast without significantly darkening the clip. */}
       <div
         aria-hidden
         className="absolute inset-0 pointer-events-none"
-        style={{ zIndex: 1, background: bgColor, opacity: 0.55 }}
+        style={{ zIndex: 1, background: "#000000", opacity: 0.1 }}
       />
       <div className="relative z-10 w-full max-w-[1200px] mx-auto px-8 pt-16 pb-6">
         <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12 items-start mb-10">
           <div>
             <h3
-              className={`text-[24px] font-semibold mb-3 ${theme === "dark" ? "text-white" : "text-[#1D1D1F]"}`}
+              className="text-[24px] font-semibold mb-3 text-white"
               style={{ fontFamily: "Axiforma, 'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif", letterSpacing: "-0.02em" }}
             >
               Columbus Earth
             </h3>
-            <p className={`text-[14px] leading-relaxed mb-4 max-w-[260px] ${theme === "dark" ? "text-white/50" : "text-[#1D1D1F]/50"}`}>
+            <p className="text-[14px] leading-relaxed mb-4 max-w-[260px] text-white/60">
               The frontier AI lab building the first production Universal Geospatial Model.
             </p>
             <div className="flex gap-4">
-              <a href="mailto:contact@columbus.earth"><Mail size={18} className={`transition-colors ${theme === "dark" ? "text-white/40 hover:text-white" : "text-[#1D1D1F]/40 hover:text-[#1D1D1F]"}`} /></a>
-              <a href="https://www.linkedin.com/company/columbusearth/about/" target="_blank" rel="noopener noreferrer"><Linkedin size={18} className={`transition-colors ${theme === "dark" ? "text-white/40 hover:text-white" : "text-[#1D1D1F]/40 hover:text-[#1D1D1F]"}`} /></a>
+              <a href="mailto:contact@columbus.earth"><Mail size={18} className="transition-colors text-white/50 hover:text-white" /></a>
+              <a href="https://www.linkedin.com/company/columbusearth/about/" target="_blank" rel="noopener noreferrer"><Linkedin size={18} className="transition-colors text-white/50 hover:text-white" /></a>
             </div>
           </div>
           <FooterColumn theme={theme} title="Product" links={[
@@ -110,7 +108,7 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false, t
           ]} />
         </div>
 
-        <div className={`border-t pt-4 pb-2 flex items-center justify-between gap-4 text-[13px] ${theme === "dark" ? "border-white/10 text-white/30" : "border-[#1D1D1F]/10 text-[#1D1D1F]/40"}`}>
+        <div className="border-t pt-4 pb-2 flex items-center justify-between gap-4 text-[13px] border-white/15 text-white/50">
           <span>Columbus Earth &copy; 2026</span>
           <span className="italic text-[12px]">Website made by hand, no AI.</span>
           <span className="italic text-[12px]">Nature always prevails</span>
@@ -124,22 +122,23 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false, t
 const FooterColumn = ({
   title,
   links,
-  theme = "light",
 }: {
   title: string;
   links: { label: string; href: string }[];
+  /** Accepted for backward compat with callers, no longer styles the
+   *  text — footer copy is locked to white over the video background. */
   theme?: "light" | "dark" | "light-blue";
 }) => (
   <div>
-    <p className={`mb-4 font-medium text-[17.5px] tracking-wide ${theme === "dark" ? "text-white" : "text-[#1D1D1F]"}`}>
+    <p className="mb-4 font-medium text-[17.5px] tracking-wide text-white">
       {title}
     </p>
-    <ul className={`space-y-2 text-[17.5px] ${theme === "dark" ? "text-white/60" : "text-[#1D1D1F]/60"}`}>
+    <ul className="space-y-2 text-[17.5px] text-white/70">
       {links.map((link, i) => (
         <li key={i}>
           <Link
             href={link.href}
-            className={`cursor-pointer transition-colors ${theme === "dark" ? "hover:text-white" : "hover:text-[#0A1344]"}`}
+            className="cursor-pointer transition-colors hover:text-white"
           >
             {link.label}
           </Link>
