@@ -98,7 +98,13 @@ export function PageFrame({ children }: { children: ReactNode }) {
         // height so the user can scroll past the content and reveal
         // the fixed footer that sits behind it (z-index 0).
         marginBottom: "var(--footer-reveal-height, 100vh)",
-        borderRadius: "var(--frame-radius, 35px)",
+        // Top corners only — bottom corners squared off so the card
+        // sits flush against the footer it slides over (no rounded
+        // gap between the white page bottom and the footer top edge).
+        borderTopLeftRadius: "var(--frame-radius, 35px)",
+        borderTopRightRadius: "var(--frame-radius, 35px)",
+        borderBottomLeftRadius: 0,
+        borderBottomRightRadius: 0,
         boxShadow: "var(--frame-shadow, none)",
         border: "none",
         backgroundColor: "#FFFFFF",
