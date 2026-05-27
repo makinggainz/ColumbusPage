@@ -1,5 +1,8 @@
 "use client";
 
+// Deploy sync marker — touch this comment to retrigger a Vercel build
+// without making a substantive code change.
+
 /**
  * Bento grid for the homepage product lineup.
  *
