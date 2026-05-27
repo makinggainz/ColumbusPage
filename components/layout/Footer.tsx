@@ -68,13 +68,14 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false, t
         aria-hidden
         tabIndex={-1}
       />
-      {/* Minimal black scrim — 10% opacity, just enough to take the
-          edge off the video's brightest frames so the white text below
-          retains contrast without significantly darkening the clip. */}
+      {/* Black scrim — 25% opacity. Darker than the previous 10% pass
+          so the video reads as more cinematic / muted and the white
+          text picks up a stronger contrast against the underlying
+          imagery. */}
       <div
         aria-hidden
         className="absolute inset-0 pointer-events-none"
-        style={{ zIndex: 1, background: "#000000", opacity: 0.1 }}
+        style={{ zIndex: 1, background: "#000000", opacity: 0.25 }}
       />
       {/* pt-32 (128px). PageFrame overlaps the footer's top 60px (see
           PageFrame's calc() margin-bottom), so the visible gap between
