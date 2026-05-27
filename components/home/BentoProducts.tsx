@@ -225,17 +225,20 @@ const CSS = `
 @media (min-width: 992px) {
   .bp-notch-label { font-size: 18px; }
 }
-/* Per-card label tint — keyed to each tile's background:
-   • Columbus business tile → sky blue (#018ADE), the dominant colour
-     of its cloud-sky backdrop.
-   • Elio consumer tile → a deepened sand tone (#C98A5B): the beach
-     photo's cream (#FCEFE1) darkened so the label stays legible against
-     the white notch while still reading as the beach tile.
-   • Research tile → mid-blue (#76A8F3), the deeper end of the
-     .bp-card--research background gradient. */
-.bp-card--columbus .bp-notch-label { color: #018ADE; }
-.bp-card--elio .bp-notch-label { color: #C98A5B; }
-.bp-card--research .bp-notch-label { color: #018ADE; }
+/* Per-card label tint — keyed to each tile's background, knocked down a
+   couple of lightness stops from the card's dominant colour so the
+   labels still read as part of each tile's palette but have enough
+   contrast against the white notch surface to stay legible.
+   • Columbus business tile → deeper sky blue (#015C94), darker than the
+     bright sky-blue dominating the cloud backdrop.
+   • Elio consumer tile → deeper sand tone (#A8703F), the beach photo's
+     warm cream taken a couple of stops darker.
+   • Research tile → deeper version (#4B7BC7) of the gradient's right-
+     hand stop (#76A8F3), since the notch sits in the deeper-blue half
+     of the card. */
+.bp-card--columbus .bp-notch-label { color: #015C94; }
+.bp-card--elio .bp-notch-label { color: #A8703F; }
+.bp-card--research .bp-notch-label { color: #4B7BC7; }
 @media (min-width: 640px) {
   .bp-notch { height: 46px; padding: 0 32px; }
 }
