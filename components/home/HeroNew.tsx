@@ -242,7 +242,6 @@ export function HeroNew() {
         quality={80}
       />
       <div className="hn-bounds">
-        <p className="hn-eyebrow">The frontier research lab</p>
         <h1 className="h1 hn-title tracking-tight text-ink">
           The Applied AI Lab for geospatial intelligence.
         </h1>
