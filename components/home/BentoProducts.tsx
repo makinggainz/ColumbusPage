@@ -101,11 +101,13 @@ const CSS = `
     linear-gradient(rgba(0, 0, 0, 0.18), rgba(0, 0, 0, 0.18)),
     url('/ColumbusBackgroundbento.png');
 }
-/* Elio tile: same subtle flat black overlay as the Columbus tile. */
+/* Elio tile: same subtle flat black overlay as the Columbus tile.
+   Backdrop matches the /products/consumer page hero so clicking through
+   from the bento lands on a visually-continuous image. */
 .bp-card--elio {
   background-image:
     linear-gradient(rgba(0, 0, 0, 0.18), rgba(0, 0, 0, 0.18)),
-    url('/consumer/elio/ElioEndingBackground.jpg');
+    url('/consumer/heroBackground.png');
 }
 /* Research uses a left-to-right linear gradient — light sky #CAE5F5 at
    0% to mid-blue #76A8F3 at 100%, both fully opaque — matching the
@@ -456,7 +458,7 @@ const PRODUCTS: Product[] = [
   },
   {
     cellClass: "bp-card--elio",
-    href: "/elio",
+    href: "/products/consumer",
     logo: "/MapsGPT-logo.png",
     name: "Elio",
     tagline: "Making maps feel alive again",
@@ -508,7 +510,7 @@ export function BentoProducts() {
           waiting for the CSSOM to find the url() — a few-hundred ms
           earlier on a slow connection. */}
       <link rel="preload" as="image" href="/ColumbusBackgroundbento.png" />
-      <link rel="preload" as="image" href="/consumer/elio/ElioEndingBackground.jpg" />
+      <link rel="preload" as="image" href="/consumer/heroBackground.png" />
       <style>{CSS}</style>
       <div className="bp-bounds">
         <div className="bp-grid">
