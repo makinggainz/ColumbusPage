@@ -58,17 +58,21 @@ export function RootShell({ children }: { children: ReactNode }) {
   // frame CSS vars need to be pinned to 0 (MistxNav's `top` and top-corner
   // radii read from them with 9px / 35px fallbacks that would otherwise
   // leave the navbar inset from the top edge).
+  //
+  // For non-full-bleed pages we intentionally do NOTHING here: PageFrame's
+  // own useEffect sets the frame vars on mount (9px / 35px). Removing
+  // them after PageFrame mounts would wipe the values PageFrame just
+  // wrote — React fires child effects before parent effects, so this
+  // effect runs *after* PageFrame's setProperty calls. That race broke
+  // MistxNav's sticky offset (its `top: var(--frame-margin, 30px)` would
+  // fall back to 30px while the frame itself sat at 9px), which made the
+  // navbar appear to stop sticking.
   useEffect(() => {
+    if (!fullBleed) return;
     const root = document.documentElement;
-    if (fullBleed) {
-      root.style.setProperty("--frame-margin", "0px");
-      root.style.setProperty("--frame-radius", "0px");
-      root.style.setProperty("--footer-reveal-height", "0px");
-    } else {
-      root.style.removeProperty("--frame-margin");
-      root.style.removeProperty("--frame-radius");
-      root.style.removeProperty("--footer-reveal-height");
-    }
+    root.style.setProperty("--frame-margin", "0px");
+    root.style.setProperty("--frame-radius", "0px");
+    root.style.setProperty("--footer-reveal-height", "0px");
   }, [fullBleed]);
 
   if (fullBleed) {
