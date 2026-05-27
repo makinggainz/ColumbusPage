@@ -76,10 +76,16 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false, t
         className="absolute inset-0 pointer-events-none"
         style={{ zIndex: 1, background: "#000000", opacity: 0.1 }}
       />
-      {/* pt was 64px (pt-16); bumped to 74px (pt-18.5) so the footer
-          extends ~10px taller — its top edge sits a touch higher on
-          the viewport. */}
-      <div className="relative z-10 w-full max-w-[1200px] mx-auto px-8 pt-18.5 pb-6">
+      {/* pt was 64px (pt-16). Bumped to 180px (pt-45) so the footer
+          extends well above the viewport bottom and slips deep behind
+          the PageFrame card — the video background reads as a hidden
+          scene living behind the rest of the site. The visible footer
+          content (links, branding, bottom row) still anchors near the
+          bottom because pb stays small and the column is flex-start
+          inside its (now taller) flex parent. PageFrame's resize
+          observer picks the new height up automatically, so the
+          scroll-reveal range extends with it. */}
+      <div className="relative z-10 w-full max-w-[1200px] mx-auto px-8 pt-45 pb-6">
         <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12 items-start mb-10">
           <div>
             <h3
