@@ -353,6 +353,39 @@ export default function Hero() {
       {/* ════ Phone · pill row — pinned (the ONLY pinned content) ════ */}
       <div className="absolute inset-0 z-30 pointer-events-none">
         <div className="sticky top-0 overflow-hidden" style={{ height: "100dvh" }}>
+          {/* Scene-3 notification cards — kept in the pinned stage (not
+              in the scrolling label block) so they stay perfectly
+              vertically centred on the phone's landed position for the
+              full duration of scene 3. Visibility is still tied to
+              `phase === 3`, so they fade in only when the phone enters
+              that scene and out the moment it leaves. Desktop only. */}
+          {isLg && NOTIFICATIONS.map((n, i) => {
+            const visible = phase === 3 && !pastHero;
+            return (
+              <div
+                key={i}
+                aria-hidden
+                style={{
+                  position: "absolute",
+                  left: "50%",
+                  top: "50%",
+                  width: 320,
+                  transform: `translate(-50%, -50%) translate(${n.x}px, ${visible ? n.y : n.y + 24}px) rotate(${n.rot}deg)`,
+                  // `behind` still drives the opacity (faded background
+                  // cards vs. crisp foreground ones); z-ordering vs. the
+                  // phone is decided by the wrapping z-30 layer.
+                  opacity: visible ? (n.behind ? 0.4 : 1) : 0,
+                  transition: visible
+                    ? `opacity 0.7s ease ${n.delay}s, transform 0.9s ${APPEAR} ${n.delay}s`
+                    : "opacity 0.22s ease, transform 0.22s ease",
+                  pointerEvents: "none",
+                }}
+              >
+                <NotifCard n={n} />
+              </div>
+            );
+          })}
+
           {/* The bare 3D phone */}
           <div ref={riseRef} className="absolute inset-0" style={{ willChange: "transform", zIndex: 10 }}>
             <div
@@ -705,46 +738,6 @@ export default function Hero() {
                 </>
               )}
 
-              {/* Scene-3 notification cards — anchored to this section
-                  rather than floating around the pinned phone. They sit
-                  at the block's vertical centre (which lines up with the
-                  pinned phone's centre when the phone snaps into scene 3),
-                  then scroll up with the block as the user moves past.
-                  Fade + lift in as soon as phase 3 activates (= the
-                  phone "enters" this section); fade out together when
-                  scene 3 is no longer active. Desktop only — mobile is
-                  too narrow for the side cards. */}
-              {lab.scene === 3 && isLg && (
-                <div className="absolute inset-0 pointer-events-none" style={{ overflow: "visible" }}>
-                  {NOTIFICATIONS.map((n, idx) => {
-                    const visible = isActive && !pastHero;
-                    return (
-                      <div
-                        key={idx}
-                        aria-hidden
-                        style={{
-                          position: "absolute",
-                          left: "50%",
-                          top: "50%",
-                          width: 320,
-                          transform: `translate(-50%, -50%) translate(${n.x}px, ${visible ? n.y : n.y + 24}px) rotate(${n.rot}deg)`,
-                          // `behind` no longer changes z-order (the phone
-                          // is in a higher stacking context now), but is
-                          // still used as a saturation cue — half-opacity
-                          // cards read as background context.
-                          opacity: visible ? (n.behind ? 0.4 : 1) : 0,
-                          transition: visible
-                            ? `opacity 0.7s ease ${n.delay}s, transform 0.9s ${APPEAR} ${n.delay}s`
-                            : "opacity 0.22s ease, transform 0.22s ease",
-                          pointerEvents: "none",
-                        }}
-                      >
-                        <NotifCard n={n} />
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
               <div
                 ref={(el) => {
                   labelRefs.current[i] = el;

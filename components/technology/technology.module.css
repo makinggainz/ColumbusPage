@@ -3412,23 +3412,36 @@
   margin-top: 28px;
 }
 
+/* Logo to the left, name (+ subtitle) to its right — same arrangement
+   and proportions as MistxNav's logo + "Columbus Earth" wordmark
+   (34px logo : 20px text → ratio ≈ 1.7). Scaled here to the table's
+   h3 name size: icon ≈ 1.7× the name's font-size at each breakpoint. */
 .dimModelHeader {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
-  gap: 0;
+  justify-content: center;
+  gap: 12px;
   padding-bottom: 16px;
 }
 
 .dimModelHeaderIcon {
-  width: 64px;
-  height: 64px;
-  margin-bottom: 13px;
+  width: 60px;
+  height: 60px;
   object-fit: contain;
+  flex-shrink: 0;
+}
+
+.dimModelHeaderText {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  min-width: 0;
 }
 
 .dimModelHeaderName {
-  margin: 0 0 4px;
+  margin: 0;
   font-size: var(--text-h3);
   font-family: var(--font-display);
   font-weight: 600;
@@ -3440,6 +3453,19 @@
 .dimModelHeaderNameLgm {
   font-weight: 800;
   -webkit-text-stroke: 0.5px currentColor;
+}
+
+/* Keep the icon proportional when the h3 token shrinks at the
+   ≤991px breakpoint (1.5rem name → ~40px icon, preserving the
+   1.7 logo:text ratio of the navbar). */
+@media (max-width: 991px) {
+  .dimModelHeaderIcon {
+    width: 40px;
+    height: 40px;
+  }
+  .dimModelHeader {
+    gap: 8px;
+  }
 }
 
 .dimModelHeaderSubtitle {
@@ -3521,23 +3547,32 @@
   justify-content: center;
 }
 
-/* Columbus Earth brand — used in the LGM "Who's building it" cell */
+/* Columbus Earth brand — used in the LGM "Who's building it" cell.
+   Logo to the left of the wordmark, sized to the navbar's ratio
+   (logo height ≈ 1.7× wordmark font-size). Text drops to h5 here so
+   the row fits inside the narrow cell at every breakpoint. */
 .dimGridCell .dimBrand {
   margin-top: 0;
-  flex-direction: column;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
   gap: 8px;
-  text-align: center;
+  text-align: left;
+  flex-wrap: nowrap;
+  max-width: 100%;
 }
 
 .dimGridCell .dimBrandLogo {
-  width: 56px;
-  height: 56px;
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
 }
 
 .dimGridCell .dimBrandName {
   font-size: var(--text-h5);
   font-family: var(--font-display);
   font-weight: 600;
+  white-space: nowrap;
 }
 
 .dimCellHeading {

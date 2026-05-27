@@ -65,7 +65,7 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false, t
           </div>
           <FooterColumn theme={theme} title="Product" links={[
             { label: "Columbus Pro", href: "/products/business" },
-            { label: "MapsGPT", href: "/products/consumer" },
+            { label: "Elio", href: "/products/consumer" },
           ]} />
           <FooterColumn theme={theme} title="Technology" links={[
             { label: "LGM vs LLM", href: "/research#lgm-vs-llm" },
@@ -78,8 +78,10 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false, t
           ]} />
         </div>
 
-        <div className={`border-t pt-4 pb-2 flex items-center justify-between text-[13px] ${theme === "dark" ? "border-white/10 text-white/30" : "border-[#1D1D1F]/10 text-[#1D1D1F]/40"}`}>
+        <div className={`border-t pt-4 pb-2 flex items-center justify-between gap-4 text-[13px] ${theme === "dark" ? "border-white/10 text-white/30" : "border-[#1D1D1F]/10 text-[#1D1D1F]/40"}`}>
           <span>Columbus Earth &copy; 2026</span>
+          <span className="italic text-[12px]">Website made by hand, no AI.</span>
+          <span className="italic text-[12px]">Nature always prevails</span>
           <span>www.columbus.earth</span>
         </div>
       </div>

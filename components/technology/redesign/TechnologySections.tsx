@@ -70,17 +70,6 @@ export function TechnologySections() {
                   </p>
                   <p>
                     A new foundational model is needed.
-                    <br />
-                    Lorem Ipsum is simply dummy text of the printing and
-                    typesetting industry. Lorem Ipsum has been the industry&rsquo;s
-                    standard dummy text ever since the 1500s, when an unknown
-                    printer took a galley of type and scrambled it to make a type
-                    specimen book. It has survived not only five centuries, but
-                    also the leap into electronic typesetting, remaining
-                    essentially unchanged. It was popularised in the 1960s with
-                    the release of Letraset sheets containing Lorem Ipsum
-                    passages, and more recently with desktop publishing software
-                    like Aldus PageMaker including versions of Lorem Ipsum.
                   </p>
                 </div>
                 <Link href={blogHref(BLOG_SLUG.foundingLgmsInDepth)} className={styles.lgmInlineCta}>
@@ -121,20 +110,26 @@ export function TechnologySections() {
                 <div className={styles.dimModelHeader}>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src="/TechnologyPageImages/llm-text-icon.png" alt="" className={styles.dimModelHeaderIcon} aria-hidden loading="lazy" decoding="async" />
-                  <h4 className={styles.dimModelHeaderName}>LLM</h4>
-                  <p className={styles.dimModelHeaderSubtitle}>Large-Language-model</p>
+                  <div className={styles.dimModelHeaderText}>
+                    <h4 className={styles.dimModelHeaderName}>LLM</h4>
+                    <p className={styles.dimModelHeaderSubtitle}>Large-Language-model</p>
+                  </div>
                 </div>
                 <div className={styles.dimModelHeader}>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src="/TechnologyPageImages/vlm-image-icon.png" alt="" className={styles.dimModelHeaderIcon} aria-hidden loading="lazy" decoding="async" />
-                  <h4 className={styles.dimModelHeaderName}>VLM</h4>
-                  <p className={styles.dimModelHeaderSubtitle}>Vision-Language-model</p>
+                  <div className={styles.dimModelHeaderText}>
+                    <h4 className={styles.dimModelHeaderName}>VLM</h4>
+                    <p className={styles.dimModelHeaderSubtitle}>Vision-Language-model</p>
+                  </div>
                 </div>
                 <div className={styles.dimModelHeader}>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src="/TechnologyPageImages/lgm-globe-icon.png" alt="" className={styles.dimModelHeaderIcon} aria-hidden loading="lazy" decoding="async" />
-                  <h4 className={`${styles.dimModelHeaderName} ${styles.dimModelHeaderNameLgm}`}>LGM</h4>
-                  <p className={styles.dimModelHeaderSubtitle}>Large-Geosaptial-model</p>
+                  <div className={styles.dimModelHeaderText}>
+                    <h4 className={`${styles.dimModelHeaderName} ${styles.dimModelHeaderNameLgm}`}>LGM</h4>
+                    <p className={styles.dimModelHeaderSubtitle}>Large-Geosaptial-model</p>
+                  </div>
                 </div>
 
                 {/* ── Row 1: Trained on ── */}

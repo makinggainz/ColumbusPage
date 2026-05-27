@@ -101,16 +101,10 @@ const QUOTES: Quote[] = [
 /* Mission / vision statements, segmented for ScrollHighlightStatement —
    `important` segments stay dark after the fill; the rest dims back. */
 const MISSION_STATEMENT: StatementSegment[] = [
-  { text: "To create" },
-  { text: "intelligence", important: true },
-  {
-    text: "to critically understand our planet better. Deep surveying of all earth. To create",
-  },
-  { text: "a computer brain,", important: true },
-  {
-    text: "able to think across the vastness of our earth's data. To create",
-  },
-  { text: "the most powerful map platform.", important: true },
+  { text: "To bring a" },
+  { text: "paradigm shift", important: true },
+  { text: "in the relationship between" },
+  { text: "AI and the physical world", important: true },
 ];
 
 const VISION_STATEMENT: StatementSegment[] = [
