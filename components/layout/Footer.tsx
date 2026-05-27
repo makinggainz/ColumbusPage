@@ -42,10 +42,42 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false, t
       data-navbar-theme={theme === "dark" ? "dark" : "light"}
       className={`overflow-hidden flex flex-col relative ${theme === "dark" ? "text-white" : "text-[#1D1D1F]"}`}
       style={{
+        // bgColor is the fallback paint shown while the <video> below
+        // is loading (or if it errors / a browser blocks autoplay) and
+        // stays visible through the scrim so the footer keeps its
+        // current theme cast.
         background: bgColor,
         ...(reveal ? { position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 0 } as React.CSSProperties : {}),
       }}
     >
+      {/* Background video — cinematic clip living at /public/footer-bg.mp4.
+          autoPlay + muted + loop + playsInline are the four flags required
+          to make it autoplay across browsers (esp. iOS Safari). preload
+          metadata so the file's header loads up front but the full 6.5 MB
+          doesn't transfer until/unless the footer reveals on scroll.
+          aria-hidden + tabIndex=-1 keep it out of the AT tree. */}
+      <video
+        className="absolute inset-0 w-full h-full object-cover"
+        style={{ zIndex: 0, pointerEvents: "none" }}
+        src="/footer-bg.mp4"
+        autoPlay
+        muted
+        loop
+        playsInline
+        preload="metadata"
+        aria-hidden
+        tabIndex={-1}
+      />
+      {/* Theme-tinted scrim — same hue as the static bgColor at ~55%
+          opacity, so the footer keeps its overall colour cast and the
+          existing text styling (dark on light / white on dark) stays
+          legible regardless of what colour the video lands on at any
+          given frame. */}
+      <div
+        aria-hidden
+        className="absolute inset-0 pointer-events-none"
+        style={{ zIndex: 1, background: bgColor, opacity: 0.55 }}
+      />
       <div className="relative z-10 w-full max-w-[1200px] mx-auto px-8 pt-16 pb-6">
         <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12 items-start mb-10">
           <div>
