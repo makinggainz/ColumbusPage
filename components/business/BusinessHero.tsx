@@ -232,6 +232,11 @@ export default function BusinessHero() {
               margin: 0,
               letterSpacing: "-0.02em",
               lineHeight: 1,
+              // Axiforma's capital glyphs sit slightly high in the em
+              // box, so geometric centring left the wordmark reading a
+              // few px above the logo's optical centre. Nudge the text
+              // down to match.
+              transform: "translateY(4px)",
             }}
           >
             Columbus Pro
