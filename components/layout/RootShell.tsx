@@ -23,17 +23,44 @@ function isArticlePath(pathname: string): boolean {
   return !BLOG_CATEGORY_SEGMENTS.has(segment);
 }
 
+/* Real routes that exist in app/. Anything outside this list (and not an
+   article path) is the 404 page being rendered by app/not-found.tsx,
+   which needs to bypass the white PageFrame card so its full-bleed
+   UnderwaterScene animation is actually visible. (Redirect sources like
+   /enterprise → /products/business resolve before render, so pathname
+   at render time is always a destination on this list or genuinely
+   unmatched.) */
+const KNOWN_ROUTE_PATTERNS: RegExp[] = [
+  /^\/$/,
+  /^\/blog(\/|$)/,
+  /^\/company(\/|$)/,
+  /^\/contact(\/|$)/,
+  /^\/products\/business(\/|$)/,
+  /^\/products\/consumer(\/|$)/,
+  /^\/products\/maps-gpt(\/|$)/,
+  /^\/research(\/|$)/,
+];
+
+function isKnownRoute(pathname: string): boolean {
+  return KNOWN_ROUTE_PATTERNS.some((re) => re.test(pathname));
+}
+
 export function RootShell({ children }: { children: ReactNode }) {
   const pathname = usePathname() ?? "";
   const article = isArticlePath(pathname);
+  /* not-found.tsx fires for any path Next didn't match — usePathname()
+     still returns that original path here, so we treat anything outside
+     our route whitelist (and not an article) as the 404 page. */
+  const notFound = !article && !isKnownRoute(pathname);
+  const fullBleed = article || notFound;
 
-  // Article pages run full-bleed: the PageFrame card is bypassed, so
-  // the frame CSS vars need to be pinned to 0 (MistxNav's `top` and
-  // top-corner radii read from them with 30px / 20px fallbacks that
-  // would otherwise leave the navbar inset 30px from the top edge).
+  // Full-bleed pages (articles + 404) bypass the PageFrame card, so the
+  // frame CSS vars need to be pinned to 0 (MistxNav's `top` and top-corner
+  // radii read from them with 30px / 20px fallbacks that would otherwise
+  // leave the navbar inset 30px from the top edge).
   useEffect(() => {
     const root = document.documentElement;
-    if (article) {
+    if (fullBleed) {
       root.style.setProperty("--frame-margin", "0px");
       root.style.setProperty("--frame-radius", "0px");
       root.style.setProperty("--frame-border-width", "0px");
@@ -44,9 +71,9 @@ export function RootShell({ children }: { children: ReactNode }) {
       root.style.removeProperty("--frame-border-width");
       root.style.removeProperty("--footer-reveal-height");
     }
-  }, [article]);
+  }, [fullBleed]);
 
-  if (article) {
+  if (fullBleed) {
     return <>{children}</>;
   }
   return (
