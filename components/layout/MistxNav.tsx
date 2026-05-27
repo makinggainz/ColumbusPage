@@ -385,8 +385,12 @@ export function MistxNav({
             zIndex: 0,
             borderTopLeftRadius: navCornerRadius,
             borderTopRightRadius: navCornerRadius,
+            // Halved from the previous 0.32 / 0.18 stops so the dark
+            // scrim sits softer behind the navbar — still enough contrast
+            // for white nav contents over the consumer hero photo, but
+            // not visually heavy on the eye.
             background:
-              "linear-gradient(to bottom, rgba(0, 0, 0, 0.32) 0%, rgba(0, 0, 0, 0.18) 50%, rgba(0, 0, 0, 0) 100%)",
+              "linear-gradient(to bottom, rgba(0, 0, 0, 0.16) 0%, rgba(0, 0, 0, 0.09) 50%, rgba(0, 0, 0, 0) 100%)",
             opacity: darkScrimActive ? 1 : 0,
             transition: "opacity 300ms ease",
           }}
