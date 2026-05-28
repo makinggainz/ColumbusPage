@@ -262,7 +262,7 @@ export default function BusinessHero() {
             ElioFinalCTA, the /company page, /not-found, and other primary
             CTAs across the site. */}
         <Link
-          href="/maps-gpt"
+          href="/contact?tab=columbus-pro"
           className="group mt-8 rounded-full px-7 py-3.5 text-sm leading-none flex items-center gap-2.5 transition-colors bg-cta text-white hover:text-[#154ACC]"
         >
           Start Now

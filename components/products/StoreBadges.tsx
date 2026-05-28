@@ -74,17 +74,29 @@ export default function StoreBadges({
   return (
     <>
       <style>{CSS}</style>
-      <a href="#" className={cls} aria-label="Download on the App Store">
+      <a
+        href="https://mapsgpt.es"
+        target="_blank"
+        rel="noreferrer"
+        className={cls}
+        aria-label="Coming soon to the App Store — try Elio in your browser"
+      >
         <AppleGlyph size={glyphSize} />
         <span className="mg-badge-label">
-          <span className="mg-badge-l1">Download on the</span>
+          <span className="mg-badge-l1">Coming soon to</span>
           <span className="mg-badge-l2">App Store</span>
         </span>
       </a>
-      <a href="#" className={cls} aria-label="Get it on Google Play">
+      <a
+        href="https://mapsgpt.es"
+        target="_blank"
+        rel="noreferrer"
+        className={cls}
+        aria-label="Coming soon to Google Play — try Elio in your browser"
+      >
         <GooglePlayGlyph size={glyphSize} />
         <span className="mg-badge-label">
-          <span className="mg-badge-l1">GET IT ON</span>
+          <span className="mg-badge-l1">COMING SOON TO</span>
           <span className="mg-badge-l2">Google Play</span>
         </span>
       </a>

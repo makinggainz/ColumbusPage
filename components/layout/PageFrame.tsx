@@ -32,6 +32,21 @@ export function PageFrame({ children }: { children: ReactNode }) {
     root.style.setProperty("--frame-margin", `${FRAME_MARGIN_PX}px`);
     root.style.setProperty("--frame-radius", `${FRAME_RADIUS_PX}px`);
 
+    // First-paint shadow animation. The CSS default `--frame-shadow`
+    // is the alpha-0 (invisible) variant; the visible variant only
+    // resolves once `data-page-mounted` is set. We flip the attribute
+    // on a short timeout (after one rAF so the browser commits the
+    // hidden state as the transition's start value, then a 250ms
+    // delay so the hero content lands first and the shadow blooms in
+    // as a follow-up beat). Without the rAF the two states get
+    // coalesced into one paint and the transition never fires.
+    let mountTimeout = 0;
+    const mountRaf = window.requestAnimationFrame(() => {
+      mountTimeout = window.setTimeout(() => {
+        root.toggleAttribute("data-page-mounted", true);
+      }, 250);
+    });
+
     // Keep `--footer-reveal-height` in sync with the real footer DOM
     // height so margin-bottom + reveal-range computations stay accurate
     // across variants and viewport resizes.
@@ -51,6 +66,14 @@ export function PageFrame({ children }: { children: ReactNode }) {
     let raf = 0;
     const apply = () => {
       const scrollY = window.scrollY;
+      // Page-scrolled flag — true any time the user has moved off the
+      // very top of the page. Drives globals.css's `--frame-shadow`
+      // alpha → 0 override so the PageFrame drop shadow fades out
+      // while scrolling and fades back in when the user returns to the
+      // top. 4px slack absorbs sub-pixel browser scroll quirks (e.g.
+      // momentum overshoot near zero on iOS).
+      root.toggleAttribute("data-page-scrolled", scrollY > 4);
+
       const docHeight = document.documentElement.scrollHeight;
       const viewportHeight = window.innerHeight;
       const maxScroll = Math.max(0, docHeight - viewportHeight);
@@ -81,6 +104,9 @@ export function PageFrame({ children }: { children: ReactNode }) {
       window.removeEventListener("resize", applyFooterHeight);
       if (ro) ro.disconnect();
       if (raf) window.cancelAnimationFrame(raf);
+      window.cancelAnimationFrame(mountRaf);
+      if (mountTimeout) window.clearTimeout(mountTimeout);
+      root.removeAttribute("data-page-mounted");
     };
   }, []);
 
@@ -105,6 +131,11 @@ export function PageFrame({ children }: { children: ReactNode }) {
         marginBottom: "calc(var(--footer-reveal-height, 100vh) - 60px)",
         borderRadius: "var(--frame-radius, 35px)",
         boxShadow: "var(--frame-shadow, none)",
+        // Easing for the scroll-driven shadow fade + the first-load
+        // bloom-in — see globals.css's `data-page-mounted` /
+        // `data-page-scrolled` overrides. 1100ms with a long-tail
+        // ease-out so the halo settles in gently rather than snapping.
+        transition: "box-shadow 1100ms cubic-bezier(0.22, 1, 0.36, 1)",
         border: "none",
         backgroundColor: "#FFFFFF",
         overflow: "clip",

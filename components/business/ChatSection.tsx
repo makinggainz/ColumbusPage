@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { ImageWithFallback } from "@/components/ui/ImageWithFallback";
 
 export default function ChatSection() {
@@ -52,8 +53,8 @@ export default function ChatSection() {
       </h2>
 
       {/* Button */}
-      <button
-        type="button"
+      <Link
+        href="/contact?tab=columbus-pro"
         className="relative z-10 group mt-8 flex items-center gap-3 leading-none whitespace-nowrap rounded-button-md hover:opacity-90 transition-all duration-300 cursor-pointer"
         style={{ fontSize: 15, fontWeight: 500, height: 36, paddingLeft: 20, paddingRight: 16, backgroundColor: "var(--ent-btn-dark)", color: "white" }}
       >
@@ -61,7 +62,7 @@ export default function ChatSection() {
         <svg className="transition-transform duration-300 group-hover:translate-x-0.5" width="10" height="18" viewBox="0 0 7 12" fill="none" stroke="var(--ent-accent)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
           <path d="M1 1l5 5-5 5" />
         </svg>
-      </button>
+      </Link>
 
       {/* Monitor — extends below section, clipped by section overflow:hidden */}
       <div

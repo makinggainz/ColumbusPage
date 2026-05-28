@@ -74,7 +74,7 @@ export default function ProductBanner() {
         </h2>
 
         <Link
-          href="/contact"
+          href="/contact?tab=columbus-pro"
           className="group mt-10 flex items-center gap-3 leading-none whitespace-nowrap rounded-button-md hover:opacity-90 transition-all duration-300"
           style={{ fontSize: 15, fontWeight: 500, height: 36, paddingLeft: 20, paddingRight: 16, backgroundColor: "var(--ent-btn-dark)", color: "white" }}
         >

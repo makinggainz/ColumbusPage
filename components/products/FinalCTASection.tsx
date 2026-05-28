@@ -178,7 +178,7 @@ export default function FinalCTASection() {
                 WebkitTextFillColor: "transparent",
                 backgroundClip: "text",
               }}>Elio</span>
-              <span>{" "}is browser based</span>
+              <span>{" "}is also on browser</span>
             </p>
           </div>
           <h2 style={{
@@ -305,7 +305,7 @@ export default function FinalCTASection() {
                   WebkitTextFillColor: "transparent",
                   backgroundClip: "text",
                 }}>Elio</span>
-                <span>{" "}is browser based</span>
+                <span>{" "}is also on browser</span>
               </p>
             </div>
 

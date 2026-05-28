@@ -48,9 +48,56 @@
 
   /* PageFrame drop shadow — site-wide. Lets the white frame card read as
      a floating panel against the white site backdrop on every route.
-     A route can drop the frame's hairline border via --frame-border. */
-  --frame-shadow: 0 0 2px rgba(0, 0, 0, 0.10),
-                  0 0 14px rgba(0, 0, 0, 0.15);
+     A route can drop the frame's hairline border via --frame-border.
+     Three stacked directional shadows (top + left + right) — no bottom
+     shadow, so the card's bottom edge sits flush on the white backdrop
+     without a dark halo bleeding past it. The negative-offset-equals-
+     blur trick on each layer keeps the shadow strictly outside the
+     three covered sides. Default is the *hidden* variant (alpha 0) so
+     the shadow animates IN once PageFrame sets `data-page-mounted` —
+     see the override below. Shadow is tinted with `--color-accent` via
+     color-mix so the halo carries the brand blue and tracks the token
+     if it ever changes. */
+  --frame-shadow: 0 -24px 24px color-mix(in srgb, var(--color-accent) 0%, transparent),
+                  -8px 0 14px color-mix(in srgb, var(--color-accent) 0%, transparent),
+                   8px 0 14px color-mix(in srgb, var(--color-accent) 0%, transparent);
+}
+
+/* Visible-shadow state — set once PageFrame mounts AND the user is at
+   (or near) the top of the page. The top layer is wider + softer than
+   the sides: -24px Y offset paired with a 24px blur gives a wide,
+   airy halo above the card. Accent-tinted; alpha tuned higher than the
+   old black version (steel-blue reads lighter than pure black against
+   white). The `:not([data-page-scrolled])` clause means the shadow
+   fades back to the transparent default the moment the user scrolls
+   away from the top, and fades back in when they return. PageFrame's
+   inline `transition: box-shadow …` carries the easing for both
+   directions. */
+html[data-page-mounted]:not([data-page-scrolled]) {
+  --frame-shadow: 0 -24px 24px color-mix(in srgb, var(--color-accent) 12%, transparent),
+                  -8px 0 14px color-mix(in srgb, var(--color-accent) 14%, transparent),
+                   8px 0 14px color-mix(in srgb, var(--color-accent) 14%, transparent);
+}
+
+/* Mobile nav drawer shadow — sibling of `--frame-shadow` but with FOUR
+   layers (top + bottom + left + right) since the drawer is a free-
+   floating card with no fixed bottom edge against the white backdrop.
+   Same accent-tinted color-mix recipe and same alphas as the page
+   frame so the drawer reads as a peer of the site card. Default is
+   the alpha-0 variant so MistxNav can fade the halo in when the
+   drawer opens via the `data-mobile-menu-open` attribute on <html>. */
+:root {
+  --nav-mobile-shadow: 0 -24px 24px color-mix(in srgb, var(--color-accent) 0%, transparent),
+                       0  24px 24px color-mix(in srgb, var(--color-accent) 0%, transparent),
+                       -8px 0  14px color-mix(in srgb, var(--color-accent) 0%, transparent),
+                        8px 0  14px color-mix(in srgb, var(--color-accent) 0%, transparent);
+}
+
+html[data-mobile-menu-open] {
+  --nav-mobile-shadow: 0 -24px 24px color-mix(in srgb, var(--color-accent) 12%, transparent),
+                       0  24px 24px color-mix(in srgb, var(--color-accent) 12%, transparent),
+                       -8px 0  14px color-mix(in srgb, var(--color-accent) 14%, transparent),
+                        8px 0  14px color-mix(in srgb, var(--color-accent) 14%, transparent);
 }
 
 /* Base reset — use overflow-x: clip (not hidden) so position:sticky works on business Section C */

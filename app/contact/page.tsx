@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import { MistxNav } from "@/components/layout/MistxNav";
 
 type Phase = "writing" | "folding" | "bottling" | "dropping" | "floating" | "done";
@@ -14,6 +15,8 @@ const TABS: { value: InquiryType; label: string }[] = [
   { value: "investment", label: "Investors" },
   { value: "careers", label: "Careers" },
 ];
+
+const VALID_TABS = new Set<InquiryType>(["general", "columbus-pro", "elio", "investment", "careers"]);
 
 const TAB_INTRO: Record<InquiryType, { heading: string }> = {
   "columbus-pro": { heading: "Book a demo" },
@@ -137,10 +140,21 @@ function FaqItem({ item }: { item: { q: string; a: React.ReactNode } }) {
   );
 }
 
-export default function ContactPage() {
+function ContactPageInner() {
+  const searchParams = useSearchParams();
+  /* Seed the form tab from `?tab=…` so CTAs around the site can route
+     users straight to the form that matches where they came from
+     (e.g. the homepage "Join our team" tile lands on Careers, the
+     business-page "Try Demo" pill lands on Columbus Pro). Falls back
+     to General if the param is missing or unknown. */
+  const initialTab: InquiryType = (() => {
+    const raw = searchParams.get("tab");
+    return raw && VALID_TABS.has(raw as InquiryType) ? (raw as InquiryType) : "general";
+  })();
+
   const [form, setForm] = useState({ firstName: "", lastName: "", email: "", role: "", message: "", companySize: "", industry: "", heardFrom: "" });
   const [phase, setPhase] = useState<Phase>("writing");
-  const [tab, setTab] = useState<InquiryType>("general");
+  const [tab, setTab] = useState<InquiryType>(initialTab);
   const [updates, setUpdates] = useState(false);
   const [charCount, setCharCount] = useState(0);
   const [mounted, setMounted] = useState(false);
@@ -570,5 +584,13 @@ export default function ContactPage() {
 
       </div>
     </main>
+  );
+}
+
+export default function ContactPage() {
+  return (
+    <Suspense fallback={null}>
+      <ContactPageInner />
+    </Suspense>
   );
 }

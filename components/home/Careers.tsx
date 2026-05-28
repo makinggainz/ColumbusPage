@@ -549,7 +549,7 @@ export const Careers = ({ hideHeader, className = "" }: { hideHeader?: boolean; 
         </div>
 
         <div className="careers-join-row">
-          <Link href="/contact" className="careers-join group">
+          <Link href="/contact?tab=careers" className="careers-join group">
             Join our team
             <span className="inline-block transition-transform group-hover:translate-x-0.5">
               <ArrowDots className="text-accent" />

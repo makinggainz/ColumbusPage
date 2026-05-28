@@ -37,6 +37,16 @@ const navLinks: { label: string; href: string }[] = [
   { label: "Company", href: "/company" },
 ];
 
+// Mobile drawer adds Contact to the desktop set — Contact has its own
+// page (app/contact/page.tsx) and is a key destination on mobile where
+// the desktop "contact@columbus.earth" mailto link in the footer is
+// further off-screen. Keeps every entry pointed at a real route in
+// /app so the drawer never advertises a 404.
+const MOBILE_NAV: { label: string; href: string }[] = [
+  ...navLinks,
+  { label: "Contact", href: "/contact" },
+];
+
 // "Try Elio" launcher items. Each row renders name + one-line
 // description — the content (labels / descriptions / hrefs) is
 // unchanged. The dropdown UI + animation below is modelled on
@@ -213,6 +223,47 @@ export function MistxNav({
     return () => window.removeEventListener("industry-sticky-shown", onIndustry);
   }, []);
 
+  // Lock page scroll while the mobile drawer is open. CRITICAL: we lock
+  // <html> only, NOT <body>. Setting `overflow: hidden` on <body> turns
+  // it into a scroll container per CSS spec, which makes the sticky
+  // navbar use <body> instead of the viewport as its scroll context.
+  // <body> doesn't actually scroll, so the navbar's stickiness collapses
+  // and it falls back to its natural top-of-document position — which
+  // is scrolled off-screen when the user is anywhere but page top. That
+  // showed up as the navbar (logo + close X) "disappearing" the moment
+  // the drawer opened after scrolling.
+  useEffect(() => {
+    if (!mobileOpen) return;
+    const html = document.documentElement;
+    const prev = html.style.overflow;
+    html.style.overflow = "hidden";
+    return () => {
+      html.style.overflow = prev;
+    };
+  }, [mobileOpen]);
+
+  // Drive the drawer's accent-tinted halo via `data-mobile-menu-open`
+  // on <html>. The attribute resolves `--nav-mobile-shadow` to its
+  // visible (alpha-non-zero) variant — see globals.css. We flip it
+  // on the NEXT frame so the browser commits the alpha-0 starting
+  // state first, then the drawer's `transition: box-shadow 1100ms …`
+  // eases the halo in. Mirrors the first-paint flow PageFrame uses
+  // for `data-page-mounted`.
+  useEffect(() => {
+    const html = document.documentElement;
+    if (!mobileOpen) {
+      html.removeAttribute("data-mobile-menu-open");
+      return;
+    }
+    const raf = window.requestAnimationFrame(() => {
+      html.setAttribute("data-mobile-menu-open", "");
+    });
+    return () => {
+      window.cancelAnimationFrame(raf);
+      html.removeAttribute("data-mobile-menu-open");
+    };
+  }, [mobileOpen]);
+
   const showBackdrop = stuck || !hasHero;
   // When `heroWhite` is set (business page), the nav contents render in
   // white while the navbar floats transparently over the hero image, then
@@ -291,6 +342,16 @@ export function MistxNav({
         // PageFrame card while the navbar is at rest, then flatten so
         // the stuck navbar's edges go flush against the viewport.
         top: 0,
+        // Inline zIndex + isolation make the navbar's stacking unambiguous
+        // against the mobile drawer (z-40) below. Without these two, when
+        // the navbar is "stuck" (scrolled) and the drawer animates in,
+        // the drawer can paint over it — the morphing of position:sticky
+        // and the drawer's transform/scale stacking-context combine in a
+        // way the .z-100 utility alone doesn't guarantee. isolation:
+        // isolate forces a fresh stacking context for the header so its
+        // z-index is the authority over everything below it.
+        zIndex: 100,
+        isolation: "isolate",
         borderTopLeftRadius: navCornerRadius,
         borderTopRightRadius: navCornerRadius,
         // darkScrimActive owns the navbar's backdrop while the dark
@@ -299,13 +360,15 @@ export function MistxNav({
         // dark scrim fades off and the standard backdrop logic kicks
         // back in, so the navbar can wear the white pin over white
         // content beneath.
-        backgroundColor: darkScrimActive
+        backgroundColor: mobileOpen
           ? "transparent"
-          : darkBackdrop && overHero && heroPhase === 3
-            ? "#FFFFFF"
-            : showBackdrop && !heroScrim
+          : darkScrimActive
+            ? "transparent"
+            : darkBackdrop && overHero && heroPhase === 3
               ? "#FFFFFF"
-              : "transparent",
+              : showBackdrop && !heroScrim
+                ? "#FFFFFF"
+                : "transparent",
         // Industry-picker takeover: slide up + fade out so the
         // sub-navbar (positioned at the same top slot) reads as a clean
         // replacement, no overlap. Returns to translateY(0) the moment
@@ -413,11 +476,11 @@ export function MistxNav({
             className="relative z-10 flex items-center gap-3"
             href="/"
           >
-            <span className="flex size-[34px] items-center justify-center">
+            <span className="flex size-9.5 items-center justify-center">
               <img
                 alt="Columbus Logo"
-                width={34}
-                height={34}
+                width={38}
+                height={38}
                 decoding="async"
                 className="object-contain transition-[filter] duration-300"
                 style={{
@@ -430,7 +493,7 @@ export function MistxNav({
               />
             </span>
             <span
-              className="h7 hidden lg:flex items-center font-semibold leading-none whitespace-nowrap"
+              className="h7 flex items-center font-semibold leading-none whitespace-nowrap"
               style={{
                 fontFamily: "Axiforma, 'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif",
                 fontSize: "1.25rem",
@@ -580,7 +643,10 @@ export function MistxNav({
             </div>
           </div>
 
-          {/* Mobile menu trigger */}
+          {/* Mobile menu trigger — original 3-bar hamburger + clean X
+              swap (no morph animation). Bars are pill-shaped <rect>s
+              with rx = height/2; the bottom bar is half-width with a
+              lower opacity, matching the original ColumbusPage design. */}
           <button
             className={`lg:hidden md:px-2 cursor-pointer ${lightNav ? "text-white" : "text-[#1f1f1f]"}`}
             aria-label={mobileOpen ? "Close menu" : "Open menu"}
@@ -609,9 +675,6 @@ export function MistxNav({
                 fill="none"
                 aria-hidden="true"
               >
-                {/* Bars rendered as <rect> with rx = height/2 so each bar
-                    is fully pill-shaped (max roundness). Original SVG
-                    used straight <path> rectangles. */}
                 <rect
                   opacity="0.5"
                   x="0"
@@ -645,55 +708,192 @@ export function MistxNav({
       </div>
     </header>
 
-      {/* Mobile drawer — full-viewport overlay, layout adapted from the
-          experimentV6-newTechV3.1-NewUseCases branch:
-            • COLUMBUS EARTH header + short intro paragraph
-            • Contact (email) + Social (LinkedIn) two-up
-            • Large nav links with a blue chevron arrow on each row
-            • Full-width bottom CTA pinned to the viewport bottom
-          The drawer is rendered as a SIBLING of <header> (not a child)
-          because the header carries an inline `transform: translateY(...)`
-          for the industry-takeover slide animation, and a transformed
-          ancestor establishes a containing block for fixed descendants —
-          which would resolve the drawer's `top:64 / bottom:0` against the
-          ~64px header box instead of the viewport, collapsing it to ~0px
-          tall. Keeping it as a sibling lets `position: fixed` resolve
-          against the viewport so the drawer fills the space from below
-          the navbar to the viewport bottom and the bottom CTA pins to
-          the edge of the screen. */}
-      {mobileOpen && (
+      {/* Mobile drawer — design-system-aligned, full-viewport card:
+            • Covers the entire screen (top:0, bottom:0) and inherits the
+              page-frame's corner radius via --frame-radius so it reads
+              as the same rounded card the rest of the site lives inside.
+            • Surface = --color-bg1 (pale page wash), ink = --color-ink.
+            • Typography is built from the project's .h4 / .p-l / .p-m /
+              .p-s utility classes (font-family, font-size, line-height
+              all tokenised in globals.css) so every string in this
+              drawer sits on the design-system scale.
+            • Primary nav: large Funnel Display links (.h4), no divider
+              hairlines — items breathe via vertical padding instead.
+              Each row carries the site signature 5-dot ArrowDot in
+              --color-accent at the right edge.
+            • Two-column Contact + Social block sits below the nav.
+            • Pinned bottom CTA reuses the desktop Try Elio styling.
+          Routes are sourced from MOBILE_NAV so every entry points at
+          a real /app route. Rendered as a SIBLING of <header> (not a
+          child) so position:fixed escapes the header's transform-induced
+          containing block — see the prior fix on this branch. */}
+      {/* Drawer is ALWAYS MOUNTED so opacity/transform transitions run
+          on close as well as open — same pattern the desktop Try Elio
+          dropdown uses. Visibility is gated via opacity + pointerEvents.
+          Animation matches the Try Elio panel: fade + translateY(-6px)
+          scale(0.96) → identity, 300ms cubic-bezier(0.6,0.6,0,1),
+          transformOrigin top-right (anchored to the hamburger). Inner
+          rows fade up with a per-row 45ms stagger. */}
+      <div
+        className="lg:hidden fixed inset-0 z-40 flex flex-col overflow-hidden"
+        style={{
+          backgroundColor: "#FFFFFF",
+          color: "var(--color-ink)",
+          fontFamily: "var(--font-sans)",
+          borderRadius: "var(--frame-radius, 35px)",
+          // Accent halo — driven by `--nav-mobile-shadow` in globals.css,
+          // which resolves to alpha-non-zero values once
+          // `html[data-mobile-menu-open]` is set (see the useEffect
+          // above). 4 layers (top + bottom + left + right) so the
+          // drawer reads as a fully lifted card. Eases in with the same
+          // 1100ms cubic-bezier curve as the PageFrame's first-paint
+          // bloom so the two halos feel like siblings.
+          boxShadow: "var(--nav-mobile-shadow, none)",
+          opacity: mobileOpen ? 1 : 0,
+          transform: mobileOpen
+            ? "translateY(0) scale(1)"
+            : "translateY(-6px) scale(0.96)",
+          transformOrigin: "top right",
+          pointerEvents: mobileOpen ? "auto" : "none",
+          // Animation curve + durations mirror the BlogArticleStickyNav
+          // sidebar's minimize/expand: 420ms cubic-bezier(0.22, 1, 0.36, 1)
+          // on transform, 400ms on opacity, ease-out tail so the panel
+          // settles in cleanly (vs. the prior dropdown-style snap).
+          transition:
+            "opacity 400ms cubic-bezier(0.22, 1, 0.36, 1), transform 420ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 1100ms cubic-bezier(0.22, 1, 0.36, 1)",
+        }}
+        role="dialog"
+        aria-modal="true"
+        aria-hidden={!mobileOpen}
+        aria-label="Site navigation"
+      >
+        {/* Scrollable content area. overscrollBehavior: contain stops
+            the inner scroll from chaining to the (locked) page when it
+            reaches its top/bottom edge — important on iOS Safari where
+            the rubber-band would otherwise tug the locked page. */}
         <div
-          className="lg:hidden fixed left-0 right-0 bottom-0 bg-[#F1F5FE] text-[#1f1f1f] z-40 flex flex-col"
-          style={{ top: 64 }}
+          className="flex-1 overflow-y-auto"
+          style={{ overscrollBehavior: "contain" }}
         >
-          <div className="flex-1 overflow-y-auto px-6 pt-8 pb-6">
-            {/* ── Header block ── */}
-            <h4 className="text-[12px] font-medium tracking-widest uppercase text-[#1f1f1f]/70 mb-4">
-              Columbus Earth
-            </h4>
-            <p className="text-[15px] leading-[1.55] text-[#1f1f1f]/80">
-              Columbus Earth Inc. is a spatial frontier AI company building
-              the first production Large Geospatial Model to answer the most
-              difficult questions about our planet.
-            </p>
+          <div
+            className="mx-auto w-full px-6 pb-8"
+            style={{ maxWidth: 1200, paddingTop: 96 }}
+          >
+            {/* ── Eyebrow + intro ──
+                Stagger pattern matches the BlogArticleStickyNav sidebar:
+                160ms fade-out on close (no delay), 220ms fade-in delayed
+                220ms on open (so the panel itself reaches its final
+                state before the content reveals). */}
+            <div
+              className="mb-10"
+              style={{
+                opacity: mobileOpen ? 1 : 0,
+                transform: mobileOpen ? "translateY(0)" : "translateY(4px)",
+                transition: mobileOpen
+                  ? "opacity 220ms cubic-bezier(0.22, 1, 0.36, 1) 220ms, transform 220ms cubic-bezier(0.22, 1, 0.36, 1) 220ms"
+                  : "opacity 160ms cubic-bezier(0.22, 1, 0.36, 1), transform 160ms cubic-bezier(0.22, 1, 0.36, 1)",
+              }}
+            >
+              <p
+                className="p-s font-medium tracking-widest uppercase mb-3"
+                style={{ color: "var(--color-muted)" }}
+              >
+                Columbus Earth
+              </p>
+              <p
+                className="p-l"
+                style={{ color: "var(--color-ink)", maxWidth: "34ch" }}
+              >
+                Building the first Large Geospatial Model to answer the
+                most difficult questions about our planet.
+              </p>
+            </div>
 
-            {/* ── Contact + Social ── */}
-            <dl className="mt-7 flex flex-wrap gap-x-12 gap-y-4">
+            {/* ── Primary nav — large Funnel Display links (.h4), no
+                hairline separators. Reveal stagger matches the article
+                sidebar timing: each row fades in at 220ms-delay-base
+                plus a 45ms per-row stagger; on close every row fades
+                out together over 160ms (no stagger) so the content
+                clears quickly before the panel collapses. ── */}
+            <nav aria-label="Mobile primary">
+              <ul>
+                {MOBILE_NAV.map((link, i) => (
+                  <li
+                    key={link.label}
+                    style={{
+                      opacity: mobileOpen ? 1 : 0,
+                      transform: mobileOpen
+                        ? "translateY(0)"
+                        : "translateY(4px)",
+                      transition: mobileOpen
+                        ? `opacity 220ms cubic-bezier(0.22, 1, 0.36, 1) ${
+                            260 + i * 45
+                          }ms, transform 220ms cubic-bezier(0.22, 1, 0.36, 1) ${
+                            260 + i * 45
+                          }ms`
+                        : "opacity 160ms cubic-bezier(0.22, 1, 0.36, 1), transform 160ms cubic-bezier(0.22, 1, 0.36, 1)",
+                    }}
+                  >
+                    <a
+                      href={link.href}
+                      onClick={() => setMobileOpen(false)}
+                      className="group flex items-center justify-between py-3 transition-colors hover:text-accent"
+                    >
+                      <span
+                        className="h4"
+                        style={{ letterSpacing: "-0.015em" }}
+                      >
+                        {link.label}
+                      </span>
+                      <span
+                        className="shrink-0 text-accent transition-transform group-hover:translate-x-0.5"
+                        aria-hidden="true"
+                      >
+                        <ArrowDot />
+                      </span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+
+            {/* ── Contact + Social — last in the reveal cascade. ── */}
+            <dl
+              className="mt-12 grid grid-cols-2 gap-x-8 gap-y-4"
+              style={{
+                opacity: mobileOpen ? 1 : 0,
+                transform: mobileOpen ? "translateY(0)" : "translateY(4px)",
+                transition: mobileOpen
+                  ? `opacity 220ms cubic-bezier(0.22, 1, 0.36, 1) ${
+                      260 + MOBILE_NAV.length * 45
+                    }ms, transform 220ms cubic-bezier(0.22, 1, 0.36, 1) ${
+                      260 + MOBILE_NAV.length * 45
+                    }ms`
+                  : "opacity 160ms cubic-bezier(0.22, 1, 0.36, 1), transform 160ms cubic-bezier(0.22, 1, 0.36, 1)",
+              }}
+            >
               <div>
-                <dt className="text-[11px] font-medium tracking-widest uppercase text-[#1f1f1f]/55 mb-1.5">
+                <dt
+                  className="p-s font-medium tracking-widest uppercase mb-1.5"
+                  style={{ color: "var(--color-muted)" }}
+                >
                   Contact
                 </dt>
                 <dd>
                   <a
                     href="mailto:contact@columbus.earth"
-                    className="text-[15px] font-medium block break-all hover:text-accent transition-colors"
+                    className="p-m font-medium break-all hover:text-accent transition-colors"
+                    style={{ color: "var(--color-ink)" }}
                   >
                     contact@columbus.earth
                   </a>
                 </dd>
               </div>
               <div>
-                <dt className="text-[11px] font-medium tracking-widest uppercase text-[#1f1f1f]/55 mb-1.5">
+                <dt
+                  className="p-s font-medium tracking-widest uppercase mb-1.5"
+                  style={{ color: "var(--color-muted)" }}
+                >
                   Social
                 </dt>
                 <dd>
@@ -701,108 +901,40 @@ export function MistxNav({
                     href="https://www.linkedin.com/company/columbusearth/about/"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-[15px] font-medium block hover:text-accent transition-colors"
+                    className="p-m font-medium hover:text-accent transition-colors"
+                    style={{ color: "var(--color-ink)" }}
                   >
                     LinkedIn
                   </a>
                 </dd>
               </div>
             </dl>
-
-            {/* ── Nav links — large text with blue chevron arrow per row ── */}
-            <ul className="mt-10 space-y-4">
-              {navLinks.map((link) => (
-                <li key={link.label}>
-                  <a
-                    href={link.href}
-                    onClick={() => setMobileOpen(false)}
-                    className="group flex items-center text-xl font-medium transition-colors hover:text-accent"
-                  >
-                    <span className="transition-transform duration-300 ease-in-out group-hover:translate-x-1">
-                      {link.label}
-                    </span>
-                    <svg
-                      className="ml-3 shrink-0 transition-transform duration-300 ease-in-out group-hover:translate-x-1"
-                      width="9"
-                      height="16"
-                      viewBox="0 0 7 12"
-                      fill="none"
-                      stroke="#2563EB"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <path d="M1 1l5 5-5 5" />
-                    </svg>
-                  </a>
-                </li>
-              ))}
-            </ul>
-
-            {/* ── Try section — Elio launcher items grouped at the bottom ── */}
-            <div className="mt-10">
-              <h4 className="text-[13px] font-medium tracking-[0.08em] uppercase text-[#1f1f1f]/55 mb-4">
-                Try
-              </h4>
-              <ul className="space-y-4">
-                {elioMenuItems.map((item) => (
-                  <li key={item.label}>
-                    <a
-                      href={item.href}
-                      onClick={() => setMobileOpen(false)}
-                      className="group flex items-center text-xl font-medium transition-colors hover:text-accent"
-                    >
-                      <span className="transition-transform duration-300 ease-in-out group-hover:translate-x-1">
-                        {item.label}
-                      </span>
-                      <svg
-                        className="ml-3 shrink-0 transition-transform duration-300 ease-in-out group-hover:translate-x-1"
-                        width="9"
-                        height="16"
-                        viewBox="0 0 7 12"
-                        fill="none"
-                        stroke="#2563EB"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
-                        <path d="M1 1l5 5-5 5" />
-                      </svg>
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
           </div>
+        </div>
 
-          {/* ── Bottom CTA — full-width pinned bar ── */}
+        {/* ── Pinned bottom CTA — mirrors the desktop Try Elio pill
+            (bg-cta + text-accent are project utilities generated from
+            --color-cta / --color-accent). ── */}
+        <div
+          className="px-6 pt-4 pb-6"
+          style={{ backgroundColor: "#FFFFFF" }}
+        >
           <a
             href="/products/consumer"
             onClick={() => setMobileOpen(false)}
-            className="group flex items-center justify-center gap-3 w-full font-medium text-[16px] transition-colors hover:opacity-90"
-            style={{
-              height: 60,
-              backgroundColor: "#000000",
-              color: "#FFFFFF",
-            }}
+            className="group bg-cta text-white rounded-button p-m flex items-center justify-center gap-3 w-full font-medium transition-colors hover:text-accent"
+            style={{ height: 56 }}
           >
-            Start Now
-            <svg
-              className="transition-transform duration-300 ease-in-out group-hover:translate-x-1"
-              width="10"
-              height="18"
-              viewBox="0 0 7 12"
-              fill="none"
-              stroke="#2563EB"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
+            <span>Try Elio</span>
+            <span
+              className="text-accent transition-transform group-hover:translate-x-0.5"
+              aria-hidden="true"
             >
-              <path d="M1 1l5 5-5 5" />
-            </svg>
+              <ArrowDot />
+            </span>
           </a>
         </div>
-      )}
+      </div>
     </>
   );
 }
