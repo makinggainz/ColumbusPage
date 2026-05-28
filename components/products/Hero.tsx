@@ -55,8 +55,15 @@ const TAIL_VH = 40;
 // 0.5 (half-hidden) reading, so the phone reads as a fuller object
 // peeking up under the hero text rather than just its top edge.
 const PHONE_PEEK = 0.4;
+// Trim applied to PHONE_PEEK (in px) so the phone's starting position
+// lands ~15px higher than the raw fraction would put it — more of the
+// mockup is visible the instant the hero loads.
+const PHONE_PEEK_LIFT_PX = 15;
 // Scroll-progress point by which the phone has fully risen + pinned.
-const INTRO_END = 0.34;
+// 0.25 sits the device at its centred pose a touch earlier than the
+// original 0.34, so it reaches vertical focus a bit sooner without
+// snapping into place.
+const INTRO_END = 0.25;
 
 // ── Three scenes — ink + pill styling per phase ──────────────────────
 // Scenes 1+2 paint a 400-px photograph strip behind the title; an
@@ -311,7 +318,7 @@ export default function Hero() {
     const rise = riseRef.current;
     if (rise) {
       const introT = smoothstep(0, INTRO_END, progress);
-      const peekY = vh * (lg ? PHONE_PEEK : 0.55);
+      const peekY = vh * (lg ? PHONE_PEEK : 0.55) - PHONE_PEEK_LIFT_PX;
       rise.style.transform = `translateY(${lerp(peekY, 0, introT).toFixed(1)}px)`;
     }
 
