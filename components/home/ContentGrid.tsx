@@ -15,7 +15,7 @@ export function GridSection({
 }) {
   return (
     <section
-      className={`grid-section max-w-[1287px] mx-auto px-5 bg-white ${className}`}
+      className={`grid-section max-w-[1287px] w-[calc(100%-2.5rem)] mx-auto bg-white ${className}`}
       style={style}
     >
       {children}

@@ -64,11 +64,15 @@ export default function ChatSection() {
         </svg>
       </Link>
 
-      {/* Monitor — extends below section, clipped by section overflow:hidden */}
+      {/* Monitor — extends below section, clipped by section overflow:hidden.
+          Outer px-4 md:px-5 + inline width:100% removed: `.ent-content-bounds`
+          (calc(100% - 2.5rem) + mx-auto) now drives both the gutter and the
+          1287px cap, so stacking the wrapper padding would just double the
+          gutter. */}
       <div
-        className="relative z-10 flex justify-center w-full mt-10 md:mt-16 lg:mt-20 px-4 md:px-5"
+        className="relative z-10 flex justify-center w-full mt-10 md:mt-16 lg:mt-20"
       >
-        <div className="ent-content-bounds" style={{ width: "100%", position: "relative", marginBottom: "-20%" }}>
+        <div className="ent-content-bounds" style={{ position: "relative", marginBottom: "-20%" }}>
           {/* Monitor frame */}
           <div
             style={{
