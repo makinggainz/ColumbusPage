@@ -278,12 +278,15 @@ export default function DestinationsSection() {
         <div
           style={{
             textAlign: "center",
-            paddingLeft: 40,
-            paddingRight: 40,
             /* Vertical paddings reduced ~25% (was 60/20). */
             paddingBottom: 45,
             paddingTop: 15,
-            maxWidth: 1400,
+            /* Canonical content-bounds calc trick — 1287px cap + 20px
+               gutter, matches navbar / .content-bounds / site-wide.
+               Was maxWidth 1400 + paddingLeft/Right 40 (1400 content
+               column on a viewport-wide eib-band background). */
+            maxWidth: 1287,
+            width: "calc(100% - 2.5rem)",
             margin: "0 auto",
           }}
         >
@@ -303,12 +306,13 @@ export default function DestinationsSection() {
 
         {/* ════ Bento — 2-col layout: 3 supporting tiles on the left,
             a tall Search anchor + a short Save tile on the right.
-            Tablet + mobile (<1024px) collapse to a single column. */}
+            Tablet + mobile (<1024px) collapse to a single column.
+            Bounds use the canonical calc trick (1287 cap + 20px
+            gutter), matching navbar / site-wide. */}
         <div
           style={{
-            paddingLeft: 40,
-            paddingRight: 40,
-            maxWidth: 1400,
+            maxWidth: 1287,
+            width: "calc(100% - 2.5rem)",
             margin: "0 auto",
           }}
         >
@@ -1611,12 +1615,14 @@ export default function DestinationsSection() {
           sibling sections each anchored by a 44px Axiforma h2. */}
       <div
         style={{
-          paddingLeft: 40,
-          paddingRight: 40,
           /* Vertical paddings reduced ~25% (were 140/56). */
           paddingTop: 105,
           paddingBottom: 42,
-          maxWidth: 1400,
+          /* Canonical calc-trick bounds — 1287 cap + 20px gutter,
+             matches navbar / site-wide. Was maxWidth 1400 +
+             paddingLeft/Right 40. */
+          maxWidth: 1287,
+          width: "calc(100% - 2.5rem)",
           margin: "0 auto",
           textAlign: "center",
         }}
@@ -1646,14 +1652,15 @@ export default function DestinationsSection() {
         </h2>
       </div>
 
-      {/* Desktop mockup */}
+      {/* Desktop mockup — canonical calc-trick bounds (1287 cap +
+          20px gutter, matches navbar / site-wide). Was maxWidth 1400 +
+          paddingLeft/Right 40. */}
       <div
         style={{
-          paddingLeft: 40,
-          paddingRight: 40,
           /* paddingBottom reduced ~25% (was 80). */
           paddingBottom: 60,
-          maxWidth: 1400,
+          maxWidth: 1287,
+          width: "calc(100% - 2.5rem)",
           margin: "0 auto",
         }}
       >

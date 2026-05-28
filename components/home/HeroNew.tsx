@@ -172,19 +172,19 @@ const HN_CSS = `
 .hn-bounds {
   position: relative;
   z-index: 2;
-  width: 100%;
+  /* Canonical content-bounds calc trick — 1287px cap, always 40px
+     narrower than parent (= 20px gutter on each side at every viewport
+     width), centered. Matches navbar / .content-bounds / site-wide. */
   max-width: 1287px;
-  margin-left: 20px;
-  margin-right: 20px;
+  width: calc(100% - 2.5rem);
+  margin-left: auto;
+  margin-right: auto;
   box-sizing: border-box;
   /* Lift the title 50px above the section's vertical centre. translateY
      is preferred over a negative margin so the flex centering math
      stays clean and adjacent siblings (none today, but future-proof)
      aren't dragged with it. */
   transform: translateY(-50px);
-}
-@media (min-width: 768px) {
-  .hn-bounds { margin-left: auto; margin-right: auto; }
 }
 
 /* Font-size + line-height come from the .h1 class on the element

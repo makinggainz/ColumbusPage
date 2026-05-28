@@ -92,17 +92,17 @@
   color: rgba(11, 27, 43, 0.4);
 }
 
-/* ── Body wrapper — 1287px content column, matching BentoProducts. ──── */
+/* ── Body wrapper — 1287px content column, matching BentoProducts /
+   navbar / site-wide. Uses the calc trick (40px narrower than parent
+   → 20px gutter on each side at every viewport, centered). ──── */
 .body {
   max-width: 1287px;
-  margin-left: 20px;
-  margin-right: 20px;
+  width: calc(100% - 2.5rem);
+  margin-left: auto;
+  margin-right: auto;
   box-sizing: border-box;
   padding-top: 96px;
   padding-bottom: 128px;
-}
-@media (min-width: 768px) {
-  .body { margin-left: auto; margin-right: auto; }
 }
 
 /* ── Filter bar — centred pill row resting at the bottom of the hero ──

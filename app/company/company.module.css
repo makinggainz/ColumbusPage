@@ -95,34 +95,27 @@
   }
 }
 
-/* ── Content bounds — 1287px column, matching the homepage + blog. ────── */
+/* ── Content bounds — 1287px column, matching the homepage + blog.
+   Uses the site-wide calc trick (40px narrower than parent → 20px
+   gutter on each side at every viewport, centered, capped at 1287). */
 .bounds {
   max-width: 1287px;
-  margin-left: 20px;
-  margin-right: 20px;
+  width: calc(100% - 2.5rem);
+  margin-left: auto;
+  margin-right: auto;
   box-sizing: border-box;
-}
-@media (min-width: 768px) {
-  .bounds {
-    margin-left: auto;
-    margin-right: auto;
-  }
 }
 
 /* ── Reading column — the 768px centred text spine. Used by the mission,
    vision and contact sections so every text block shares one width; only
-   the §4 / §5 card rows widen out to the full .bounds. ─────────────────── */
+   the §4 / §5 card rows widen out to the full .bounds. Same calc trick
+   so the 20px gutter holds at every viewport. ─────────────────── */
 .textColumn {
   max-width: 768px;
-  margin-left: 20px;
-  margin-right: 20px;
+  width: calc(100% - 2.5rem);
+  margin-left: auto;
+  margin-right: auto;
   box-sizing: border-box;
-}
-@media (min-width: 768px) {
-  .textColumn {
-    margin-left: auto;
-    margin-right: auto;
-  }
 }
 
 /* ── Section opener ───────────────────────────────────────────────────────

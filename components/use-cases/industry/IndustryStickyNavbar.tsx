@@ -317,7 +317,7 @@ export default function IndustryStickyNavbar({ lightTheme = false, topOffset = 5
       }}
       aria-hidden={!shown}
     >
-      <div className="flex items-center gap-4 px-6 md:px-10 py-3 max-w-[1287px] mx-auto">
+      <div className="flex items-center gap-4 py-3 max-w-[1287px] w-[calc(100%-2.5rem)] mx-auto">
         {/* Columbus home logo + leading separator — visible ONLY in
             active takeover (the picker is replacing the main navbar).
             In coexist mode the main navbar above already shows its own

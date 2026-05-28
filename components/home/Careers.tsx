@@ -170,14 +170,15 @@ function ArrowDots({ className = "" }: { className?: string }) {
 // responsively inside the .careers-map wrapper.
 
 const CSS = `
+/* Canonical content-bounds calc trick — 1287px cap, always 40px
+   narrower than parent (= 20px gutter on each side at every viewport
+   width), centered. Matches navbar / .content-bounds / site-wide. */
 .careers-bounds {
   max-width: 1287px;
-  margin-left: 20px;
-  margin-right: 20px;
+  width: calc(100% - 2.5rem);
+  margin-left: auto;
+  margin-right: auto;
   box-sizing: border-box;
-}
-@media (min-width: 768px) {
-  .careers-bounds { margin-left: auto; margin-right: auto; }
 }
 
 /* ── Header ─────────────────────────────────────────────────────────────

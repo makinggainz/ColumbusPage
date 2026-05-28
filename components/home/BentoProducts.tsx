@@ -41,14 +41,15 @@ const CSS = `
   .bp-section { padding-bottom: 112px; }
 }
 
+/* Canonical content-bounds calc trick — 1287px cap, always 40px
+   narrower than parent (= 20px gutter on each side at every viewport
+   width), centered. Matches navbar / .content-bounds / site-wide. */
 .bp-bounds {
   max-width: 1287px;
-  margin-left: 20px;
-  margin-right: 20px;
+  width: calc(100% - 2.5rem);
+  margin-left: auto;
+  margin-right: auto;
   box-sizing: border-box;
-}
-@media (min-width: 768px) {
-  .bp-bounds { margin-left: auto; margin-right: auto; }
 }
 
 .bp-grid {

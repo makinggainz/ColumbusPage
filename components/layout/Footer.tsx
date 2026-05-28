@@ -82,6 +82,14 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false, t
         style={{ zIndex: 1, background: "#000000", opacity: 0.25 }}
       />
       {/* Reveal-mode wrapper:
+           • Bounds match the navbar's canonical pattern
+             (`max-w-[1287px] w-[calc(100%-2.5rem)] mx-auto`, see
+             MistxNav). The calc trick gives a fixed 20px gutter on each
+             side at every viewport width, and the 1287px cap lines the
+             footer's brand block / link columns / legal row up
+             vertically with the navbar logo and "Try Elio" CTA above.
+             Was max-w-[1200px] + px-8 (32px gutter), which sat 87px
+             narrower than the navbar at wide viewports.
            • Mobile (≤md): `min-h-screen` + `flex flex-col` so the footer
              reads as a dedicated full-viewport end-of-page surface, with
              the brand block (Columbus Earth + tagline) as the dominant
@@ -94,7 +102,7 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false, t
          range — no PageFrame change required. pt-32 (128px) clears
          the 60px card-corner overlap with 68px of visible breathing
          room. */}
-      <div className="relative z-10 w-full max-w-[1200px] mx-auto px-8 pt-32 pb-6 min-h-screen md:min-h-0 flex flex-col">
+      <div className="relative z-10 max-w-[1287px] w-[calc(100%-2.5rem)] mx-auto pt-32 pb-6 min-h-screen md:min-h-0 flex flex-col">
         {/* Content section — mobile stacks (brand → link columns → legal),
             desktop keeps the original 2/4-col grid. The link-column
             wrapper uses `md:contents` to vanish from layout at md+, so
