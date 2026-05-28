@@ -502,7 +502,7 @@ const PRODUCTS: Product[] = [
     tagline: "Making maps feel alive again",
     audience: "For consumer",
     ctaLabel: "Learn more",
-    visual: "/elioHomePgShowcase.png",
+    visual: "/elio-bento-v2.png",
   },
   {
     cellClass: "bp-card--research",

@@ -487,6 +487,15 @@ export default function DestinationsSection() {
                   fades to a paler tint. Title + sub + source icons on
                   the left. */}
               <div className="eib-card eib-card--save">
+                {/* Transparent PNG backdrop layered behind the title +
+                    source icons, sitting above the cyan gradient. */}
+                <Image
+                  src="/bento/save-bg.png"
+                  alt=""
+                  fill
+                  sizes="(min-width: 1200px) 560px, 90vw"
+                  className="eib-save-bg"
+                />
                 <div className="eib-save-text">
                   <h3 className="eib-title">Save places to your map.</h3>
                   <p className="eib-sub">Sync and access them everywhere you go.</p>
@@ -1071,6 +1080,23 @@ export default function DestinationsSection() {
         .eib-card--save .eib-title,
         .eib-card--save .eib-sub {
           color: #FFFFFF;
+        }
+        /* Save-tile backdrop — transparent PNG illustration sitting
+           above the cyan gradient but below the text/icons. Anchored
+           to the right so the subject lands in the open space beside
+           the title + source icons on the left. */
+        .eib-save-bg {
+          object-fit: contain;
+          /* Anchor to the bottom edge so the illustration sits flush
+             with the card's bottom border instead of floating with a
+             gap below it. */
+          object-position: right bottom;
+          z-index: 0;
+          pointer-events: none;
+          /* Shift the rendered image 50% of the card width to the
+             right so the subject reads as a side accent rather than
+             a centred backdrop. */
+          transform: translateX(50%);
         }
         .eib-save-text {
           position: relative;
