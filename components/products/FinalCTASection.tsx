@@ -201,12 +201,23 @@ export default function FinalCTASection() {
               href="https://mapsgpt.es"
               target="_blank"
               rel="noreferrer"
-              className="group inline-flex items-center justify-center gap-3 rounded-button-md bg-cta px-5 py-3 no-underline transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
+              className="group inline-flex items-center justify-center gap-3 rounded-button-md bg-cta no-underline transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
+              style={{
+                // Height locked to the default `StoreBadges` height so
+                // the navy pill sits at the exact same vertical extent
+                // as the App Store + Google Play badges next to it.
+                // Default badges measure ~43px (8px vertical padding +
+                // the stacked "Download on the / App Store" label,
+                // ~27px tall at 10+14px line-height-1.1).
+                height: 43,
+                padding: "0 20px",
+              }}
             >
               <span style={{
                 fontFamily: "var(--hiw-font-sans)",
                 fontWeight: 590,
                 fontSize: "16px",
+                lineHeight: 1,
                 letterSpacing: "-0.02em",
                 color: "#FFFFFF",
                 whiteSpace: "nowrap",
@@ -323,11 +334,17 @@ export default function FinalCTASection() {
                 rel="noreferrer"
                 className="group inline-flex items-center justify-center gap-3 bg-cta no-underline transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
                 style={{
-                  // Padding + radius matched to StoreBadges `size="lg"`
-                  // (.mg-badge--lg: 14px 22px, radius-button-lg) so the
-                  // navy pill reads at the same visual weight as the
-                  // App Store + Google Play badges next to it.
-                  padding: "14px 22px",
+                  // Height locked to the StoreBadges `--lg` height so the
+                  // navy pill lands at the exact same height as the App
+                  // Store + Google Play badges next to it. The badges
+                  // measure ~61px (14px vertical padding + the stacked
+                  // "Download on the / App Store" label, ~33px tall);
+                  // matching by padding alone left the single-line pill
+                  // ~6–8px shorter and visually off — see the Mobbin
+                  // pattern (Oku) for the same-height side-by-side
+                  // treatment this mirrors.
+                  height: 61,
+                  padding: "0 22px",
                   borderRadius: "var(--radius-button-lg, 26px)",
                 }}
               >
@@ -335,6 +352,7 @@ export default function FinalCTASection() {
                   fontFamily: "var(--hiw-font-sans)",
                   fontWeight: 600,
                   fontSize: "18px",
+                  lineHeight: 1,
                   letterSpacing: "-0.01em",
                   color: "#FFFFFF",
                 }}>

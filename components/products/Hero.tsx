@@ -659,6 +659,11 @@ export default function Hero() {
                     right: -20,
                     width: 32,
                     height: 32,
+                    // Mirror the heading's text-shadow stack as a chained
+                    // drop-shadow filter so the star reads with the same
+                    // soft lift off the photo backdrop as the wordmark.
+                    filter:
+                      "drop-shadow(0 1px 2px rgba(0, 0, 0, 0.45)) drop-shadow(0 4px 14px rgba(0, 0, 0, 0.55)) drop-shadow(0 0 40px rgba(0, 0, 0, 0.35))",
                   }}
                 >
                   <Image

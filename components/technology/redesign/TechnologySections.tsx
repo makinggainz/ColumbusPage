@@ -552,15 +552,15 @@ export function TechnologySections() {
               <CoreResearchCarousel />
             </div>
 
-            <a
-              href="#"
+            <Link
+              href={blogHref(BLOG_SLUG.foundingLgmsInDepth)}
               className={`${styles.lgmArticleCard} ${styles.lgmArticleCardGlass} ${styles.lgmArticleCardFlush} ${styles.lgmArticleCardBgWave}`}
             >
               <span className={styles.lgmArticleKicker}>Read our articles on</span>
               <p className={styles.lgmArticleHeadlineStrong}>
                 our foundational model research
               </p>
-            </a>
+            </Link>
           </RevealOnView>
         </div>
       </Slide>
