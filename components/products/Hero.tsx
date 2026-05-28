@@ -96,7 +96,7 @@ const LABELS = [
 // stacked, opacity-toggling to whichever label is closest to the
 // viewport anchor — see `activeLabel` below.
 const PHONE_IMAGES = [
-  "/consumer/elio/ElioChat.png",                // 0  For your city. (active)
+  "/consumer/elio/ElioChat-v2.png",             // 0  For your city. (active)
   "/consumer/elio/ElioZone.png",                // 1  For your travels.
   "/consumer/elio/Localguideinyourpocket.png",  // 2  and everything in between
 ] as const;
