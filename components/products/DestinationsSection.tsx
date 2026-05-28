@@ -664,9 +664,22 @@ export default function DestinationsSection() {
         }
         /* Horizontally mirrored variant — used on the Friends card so
            its cloud silhouette doesn't read as an exact copy of the
-           Planner card directly above it. */
+           Planner card directly above it. The mask fades the rendered
+           LEFT half to transparent so the "Plan a trip together"
+           heading sits on clean gradient (clouds stay anchored on the
+           right). The mask is authored in local pre-transform coords,
+           so it targets the local RIGHT half — which becomes the
+           rendered LEFT after the scaleX(-1) flip. */
         .eib-planner-bg--flip {
-          transform: translateY(20px) scaleX(-1);
+          /* Translate reduced from 20px → 10px so the clouds sit a hair
+             higher on the Friends card than they do on the Planner.
+             Mask inverted: opaque on the rendered LEFT, fading to
+             transparent on the right — so clouds now hug the left edge
+             (under the heading) and the phone mockup on the right sits
+             on a clean gradient. */
+          transform: translateY(40px) scaleX(-1);
+          -webkit-mask-image: linear-gradient(to right, #000 0%, #000 35%, transparent 75%, transparent 100%);
+          mask-image: linear-gradient(to right, #000 0%, #000 35%, transparent 75%, transparent 100%);
         }
         .eib-planner-itinerary {
           position: absolute;

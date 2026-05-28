@@ -43,7 +43,6 @@
      optimizer can ship AVIF/WebP. The wrapper keeps the mask + opacity
      so the visual treatment is identical. */
   overflow: hidden;
-  opacity: 0.5;
   -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 20%, #000 80%, transparent 100%);
   mask-image: linear-gradient(to bottom, transparent 0%, #000 20%, #000 80%, transparent 100%);
 }
