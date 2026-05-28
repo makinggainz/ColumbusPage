@@ -9,7 +9,7 @@
 
 import Image from "next/image";
 import { useRef, useEffect, useState } from "react";
-import { Heart, Plus } from "lucide-react";
+import { Heart, Plus, CalendarDays, Users, Download, Sparkles, Check } from "lucide-react";
 
 // Each marquee tile carries the same place / rating / user-prompt metadata
 // the matching photo holds in SeeWhatPeopleSection (section h) — so a
@@ -68,6 +68,24 @@ function BookmarkIcon() {
       aria-hidden
     >
       <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
+    </svg>
+  );
+}
+
+/* 4-point sparkle star — used at the right edge of each row in the
+   "3 places added" trip-summary card. fill=currentColor so each row
+   can tint the star independently via class colour. */
+function SparkStar({ className }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      aria-hidden
+    >
+      <path d="M12 1 L13.6 10.4 L23 12 L13.6 13.6 L12 23 L10.4 13.6 L1 12 L10.4 10.4 Z" />
     </svg>
   );
 }
@@ -380,9 +398,12 @@ export default function DestinationsSection() {
 
             </div>
 
-            {/* RIGHT column — Planner, Friends across the top two rows;
-                Save + Free-forever share the bottom row in a 2-col split. */}
+            {/* RIGHT column — Planner + Friends share the top row, Save
+                + Free-forever share the bottom row. Wrapped in two
+                .eib-row containers so each row carries its own
+                column ratio independently of the other. */}
             <div className="eib-col eib-col--right">
+              <div className="eib-row eib-row--top">
               {/* Planner — sky-blue gradient backdrop (set on
                   .eib-card--map); title + Day pills on the left. */}
               <div className="eib-card eib-card--map">
@@ -397,18 +418,21 @@ export default function DestinationsSection() {
                   className="eib-planner-bg"
                 />
                 <div className="eib-text eib-text--over">
-                  <h3 className="eib-title eib-title--hero">Elio can plan a trip for you.</h3>
-                  <p className="eib-sub">An AI travel planner</p>
+                  <div className="eib-title-row">
+                    <CalendarDays size={22} strokeWidth={2} className="eib-title-icon" aria-hidden />
+                    <h3 className="eib-title eib-title--hero">Elio can plan a trip for you.</h3>
+                  </div>
+                  <p className="eib-sub">An AI travel planner that takes all the stress out of trip planning.</p>
                 </div>
                 {/* Three-day itinerary stack — a removebg PNG floated in
                     the centre of the card so the trip artefact reads as
                     the planner's hero visual where the Day pills used
                     to sit. */}
                 <Image
-                  src="/bento/planner-itinerary.png"
+                  src="/bento/planner-itinerary-v5.png"
                   alt="Three-day Madrid itinerary"
-                  width={675}
-                  height={370}
+                  width={676}
+                  height={369}
                   className="eib-planner-itinerary"
                   sizes="(min-width: 1200px) 540px, 80vw"
                 />
@@ -430,7 +454,10 @@ export default function DestinationsSection() {
                 />
                 <div className="eib-chat-grid">
                   <div className="eib-chat-side">
-                    <h3 className="eib-title">Plan a trip together<br />with your friends.</h3>
+                    <div className="eib-title-row">
+                      <Users size={20} strokeWidth={2} className="eib-title-icon" aria-hidden />
+                      <h3 className="eib-title">Plan a trip together<br />with your friends.</h3>
+                    </div>
                     <div className="eib-friends-row">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img src="/bento/profile-sydney.png" alt="" className="eib-friend-avatar" loading="lazy" decoding="async" />
@@ -442,31 +469,54 @@ export default function DestinationsSection() {
                         <Plus size={18} strokeWidth={2} />
                       </span>
                     </div>
-                    <div className="eib-stein-stack">
-                      <div className="eib-stein-chip eib-stein-chip--1">
-                        <span className="eib-stein-trophy" aria-hidden>🏆</span>
-                        <div className="eib-stein-text">
-                          <span className="eib-stein-name">SteinCoffee</span>
-                          <span className="eib-stein-rank">Ranked #1</span>
+                    {/* "3 places added" trip-summary card — replaces the
+                        old SteinCoffee chip stack. White rounded panel with
+                        a blue check header, three ranked place rows, and
+                        three small white confetti pills at the top-right.
+                        The confetti is a SIBLING of the card (not a child)
+                        so the card's mask-image fade doesn't clip it. */}
+                    <div className="eib-trip-wrap">
+                      <div className="eib-trip-card">
+                      <div className="eib-trip-header">
+                        <span className="eib-trip-check" aria-hidden>
+                          <Check size={14} strokeWidth={3} />
+                        </span>
+                        <span className="eib-trip-title">3 places added</span>
+                      </div>
+                      <div className="eib-trip-list">
+                        <div className="eib-trip-item">
+                          <span className="eib-trip-emoji" aria-hidden>🏆</span>
+                          <div className="eib-trip-text">
+                            <span className="eib-trip-name">SteinCoffee</span>
+                            <span className="eib-trip-rank">Ranked #1</span>
+                          </div>
+                          <SparkStar className="eib-trip-spark eib-trip-spark--yellow" />
+                        </div>
+                        <div className="eib-trip-item">
+                          <span className="eib-trip-emoji" aria-hidden>🍺</span>
+                          <div className="eib-trip-text">
+                            <span className="eib-trip-name">Bready</span>
+                            <span className="eib-trip-rank">Ranked #2</span>
+                          </div>
+                          <SparkStar className="eib-trip-spark eib-trip-spark--white" />
+                        </div>
+                        <div className="eib-trip-item">
+                          <span className="eib-trip-emoji" aria-hidden>📷</span>
+                          <div className="eib-trip-text">
+                            <span className="eib-trip-name">
+                              Calvin Klein <span className="eib-trip-name-sub">Bnei Brak</span>
+                            </span>
+                            <span className="eib-trip-rank">Ranked #3</span>
+                          </div>
+                          <SparkStar className="eib-trip-spark eib-trip-spark--peach" />
                         </div>
                       </div>
-                      <div className="eib-stein-chip eib-stein-chip--2">
-                        <span className="eib-stein-trophy" aria-hidden>🏆</span>
-                        <div className="eib-stein-text">
-                          <span className="eib-stein-name">Verde Bistro</span>
-                          <span className="eib-stein-rank">Ranked #2</span>
-                        </div>
                       </div>
-                      <div className="eib-stein-chip eib-stein-chip--3">
-                        {/* Trophy + text kept in the DOM (visibility: hidden)
-                            so the back chip reserves the same width as the
-                            two above it, while showing nothing visually. */}
-                        <span className="eib-stein-trophy eib-stein-text--ghost" aria-hidden>🏆</span>
-                        <div className="eib-stein-text eib-stein-text--ghost" aria-hidden>
-                          <span className="eib-stein-name">Verde Bistro</span>
-                          <span className="eib-stein-rank">Ranked #2</span>
-                        </div>
-                      </div>
+                      <span className="eib-trip-confetti" aria-hidden>
+                        <span className="eib-confetti-line eib-confetti-line--1" />
+                        <span className="eib-confetti-line eib-confetti-line--2" />
+                        <span className="eib-confetti-line eib-confetti-line--3" />
+                      </span>
                     </div>
                   </div>
                   <div className="eib-chat-phone" aria-hidden>
@@ -482,45 +532,84 @@ export default function DestinationsSection() {
                 </div>
               </div>
 
+              </div>{/* /.eib-row--top */}
+
+              <div className="eib-row eib-row--bottom">
               {/* Save places to your map — light-cyan gradient backdrop
                   that picks up where the Planner gradient ends, then
                   fades to a paler tint. Title + sub + source icons on
                   the left. */}
               <div className="eib-card eib-card--save">
-                {/* Transparent PNG backdrop layered behind the title +
-                    source icons, sitting above the cyan gradient. */}
+                <div className="eib-save-grid">
+                  <div className="eib-save-text">
+                    <div className="eib-title-row">
+                      <Download size={20} strokeWidth={2} className="eib-title-icon" aria-hidden />
+                      <h3 className="eib-title">Import from anywhere.</h3>
+                    </div>
+                    <p className="eib-sub">Pull in spots from Instagram reels, TikTok clips, Google Maps links, screenshots, and more.</p>
+                  </div>
+                  {/* Phone mockup — anchored to the top of the card so
+                      its top edge aligns with the "Import from anywhere"
+                      title row; the phone is taller than the card so
+                      its bottom hangs past the card edge (clipped by
+                      .eib-card overflow:hidden, no bottom border needed). */}
+                  <div className="eib-save-phone" aria-hidden>
+                    <Image
+                      src="/bento/import-mockup.png"
+                      alt=""
+                      width={853}
+                      height={1844}
+                      className="eib-save-phone-img"
+                      sizes="(min-width: 1200px) 220px, 160px"
+                    />
+                  </div>
+                </div>
+                {/* Source-app chips scattered around the phone mockup —
+                    each chip carries the same frosted glass-button look
+                    as the .coreResearchProduct pills on /technology
+                    (under "One model, innumerable granular ground truths"). */}
+                <div className="eib-source-chips" aria-hidden>
+                  <span className="eib-source-chip eib-source-chip--1">
+                    <Image src="/bento/tiktok.png" alt="" width={56} height={56} />
+                  </span>
+                  <span className="eib-source-chip eib-source-chip--2">
+                    <Image src="/bento/pinterest.png" alt="" width={56} height={56} />
+                  </span>
+                  <span className="eib-source-chip eib-source-chip--3">
+                    <Image src="/bento/google-maps.png" alt="" width={56} height={56} />
+                  </span>
+                  <span className="eib-source-chip eib-source-chip--4">
+                    <Image src="/bento/google-docs.png" alt="" width={56} height={56} />
+                  </span>
+                  <span className="eib-source-chip eib-source-chip--5">
+                    <Image src="/bento/apple-notes.png" alt="" width={56} height={56} />
+                  </span>
+                  <span className="eib-source-chip eib-source-chip--6">
+                    <Image src="/bento/instagram.png" alt="" width={56} height={56} />
+                  </span>
+                </div>
+              </div>
+
+              {/* Free forever — single bottom-right tile in the right
+                  column. Carries the same hairline border + 20px radius
+                  as every other card in the bento. */}
+              <div className="eib-card eib-ff-tile">
+                {/* Transparent PNG illustration moved over from the
+                    Import tile — sits as a decorative backdrop behind
+                    the centred title. */}
                 <Image
                   src="/bento/save-bg.png"
                   alt=""
                   fill
-                  sizes="(min-width: 1200px) 560px, 90vw"
-                  className="eib-save-bg"
+                  sizes="(min-width: 1200px) 280px, 50vw"
+                  className="eib-ff-bg"
                 />
-                <div className="eib-save-text">
-                  <h3 className="eib-title">Save places to your map.</h3>
-                  <p className="eib-sub">Sync and access them everywhere you go.</p>
-                  <div className="eib-icon-row">
-                    <Image src="/bento/tiktok.png" alt="TikTok" width={56} height={56} className="eib-icon" />
-                    <Image src="/bento/pinterest.png" alt="Pinterest" width={56} height={56} className="eib-icon" />
-                    <Image src="/bento/google-maps.png" alt="Google Maps" width={56} height={56} className="eib-icon" />
-                    <Image src="/bento/google-docs.png" alt="Google Docs" width={56} height={56} className="eib-icon" />
-                    <Image src="/bento/apple-notes.png" alt="Apple Notes" width={56} height={56} className="eib-icon" />
-                  </div>
-                </div>
-              </div>
-
-              {/* Free forever — 4 standalone mini-tiles arranged 2x2
-                  inside the bottom-right slot of the right column. Each
-                  mini-tile carries the same hairline border, 20px radius,
-                  and 15px gap as the surrounding bento cards. */}
-              <div className="eib-ff-grid">
-                <div className="eib-card eib-ff-tile">
+                <div className="eib-title-row eib-title-row--center">
+                  <Sparkles size={18} strokeWidth={2} className="eib-title-icon" aria-hidden />
                   <h3 className="eib-title eib-ff-title">Free forever.</h3>
                 </div>
-                <div className="eib-card eib-ff-tile" />
-                <div className="eib-card eib-ff-tile" />
-                <div className="eib-card eib-ff-tile" />
               </div>
+              </div>{/* /.eib-row--bottom */}
             </div>
           </div>
         </div>
@@ -565,16 +654,37 @@ export default function DestinationsSection() {
           min-height: 0;
           height: 100%;
         }
-        /* Right column: 2-col × 2-row CSS grid. Planner + Friends
-           share the top row; Save + Free-forever share the bottom row.
-           Two equal rows means each tile gets the full half of the
-           bento's total row height. */
+        /* Right column: two stacked .eib-row grids so each row can carry
+           an independent column ratio (top row no longer dictates the
+           bottom row's widths and vice versa). The 7.5px terms on the
+           row tracks subtract half the 15px row gap so the two tracks
+           plus the gap still total 100% of the column's height. */
         .eib-col--right {
           display: grid;
-          grid-template-columns: 1fr 1fr;
-          grid-template-rows: 1fr 1fr;
+          grid-template-rows:
+            calc(50% - 7.5px + 35px)
+            calc(50% - 7.5px - 35px);
           gap: 15px;
           height: 100%;
+        }
+        .eib-row {
+          display: grid;
+          gap: 15px;
+          min-width: 0;
+          min-height: 0;
+        }
+        /* Top row — Friends is 35px wider than Planner (was 15px). The
+           extra 20px each way gives the Friends tile more room for its
+           "3 places added" trip-summary card without crowding the phone. */
+        .eib-row--top {
+          grid-template-columns:
+            calc(50% - 7.5px - 35px)
+            calc(50% - 7.5px + 35px);
+        }
+        /* Bottom row — Save spans 2/3 of the row, Free-forever 1/3
+           (mirrors the previous 4:2 column-span ratio). */
+        .eib-row--bottom {
+          grid-template-columns: 2fr 1fr;
         }
 
         /* Base card — unified surface for every tile in the bento.
@@ -631,6 +741,11 @@ export default function DestinationsSection() {
           z-index: 1;
           padding: 24px;
           max-width: 360px;
+          /* Flex-column + 6px gap so the title→sub spacing matches the
+             Save card's .eib-save-text rhythm. */
+          display: flex;
+          flex-direction: column;
+          gap: 6px;
         }
         @media (min-width: 1200px) {
           .eib-text--over { padding: 28px; }
@@ -909,7 +1024,7 @@ export default function DestinationsSection() {
         }
         .eib-chat-phone-img {
           display: block;
-          width: 160px;
+          width: 180px;
           height: auto;
           object-fit: contain;
           object-position: bottom right;
@@ -923,7 +1038,7 @@ export default function DestinationsSection() {
         }
         @media (min-width: 1200px) {
           .eib-chat-phone-img {
-            width: 220px;
+            width: 240px;
             border-radius: 30px 30px 0 0;
             border-top-width: 6px;
             border-left-width: 6px;
@@ -970,69 +1085,161 @@ export default function DestinationsSection() {
           margin-left: -10px;
           flex-shrink: 0;
         }
-        /* Ranking chips — layered stack of three trophy chips that
-           offset diagonally to suggest "and more like this." The top
-           chip (SteinCoffee / Ranked #1) sits fully opaque; the two
-           behind it peek out below + to the right with reduced opacity. */
-        .eib-stein-stack {
+        /* "3 places added" trip-summary card — a white rounded panel
+           with a blue check header, three ranked place rows, and three
+           small white confetti pills at the top-right. Replaces the
+           older layered-chip stack of SteinCoffee / Verde Bistro /
+           Cafe Solaris. */
+        /* Wrapper holds the card + the confetti pills as siblings so
+           the card's mask-image fade doesn't clip the pills that sit
+           outside the card's box. */
+        .eib-trip-wrap {
           position: relative;
-          margin-top: 14px;
+          margin-top: 10px;
           align-self: flex-start;
+          display: inline-block;
+        }
+        .eib-trip-card {
+          position: relative;
+          background: #FFFFFF;
+          border-radius: 16px;
+          padding: 10px;
+          box-shadow: 0 6px 18px rgba(11, 27, 43, 0.08),
+                      0 1px 4px rgba(11, 27, 43, 0.05);
           display: flex;
           flex-direction: column;
+          gap: 6px;
+          /* Width matched to the avatar row above (3 overlapping 50px
+             avatars + the dashed "+" chip, all overlapping by 8–10px).
+             Total visual span ≈ 172px from the left edge of avatar #1
+             to the right edge of the dashed "+" circle. box-sizing +
+             min-width: 0 keep flex children from forcing the card any
+             wider than this explicit width when a row's text is long. */
+          box-sizing: border-box;
+          width: 140px;
+          min-width: 0;
+          /* Fade the entire card (background + all child content) from
+             fully opaque at the top to transparent at the bottom. mask
+             cascades to every descendant so text, rows, check pill and
+             title all share the same soft fade — feels cohesive. */
+          -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 35%, rgba(0,0,0,0) 100%);
+          mask-image: linear-gradient(to bottom, #000 0%, #000 35%, rgba(0,0,0,0) 100%);
         }
-        .eib-stein-chip {
-          position: relative;
+        /* Three white pill-shaped confetti lines anchored to the top-
+           right corner of the trip card. Container pushed further off
+           the corner (top:-18 / right:-24) so the lines read as more
+           detached. Decorative only. */
+        .eib-trip-confetti {
+          position: absolute;
+          top: -13px;
+          right: -18px;
+          width: 38px;
+          height: 32px;
+          pointer-events: none;
+        }
+        .eib-confetti-line {
+          position: absolute;
+          background: #FFFFFF;
+          border-radius: 999px;
+          width: 7px;
+          height: 2px;
+          box-shadow: 0 1px 2px rgba(11, 27, 43, 0.10);
+        }
+        /* Three white pills arranged in a fan that radiates AWAY from
+           the card body. Each rotation orients the pill's long axis
+           along the radial line out from the card's top-right corner.
+           Line #2 is pushed further out along the diagonal than #1/#3
+           so the middle pill reads as the "leader" of the burst. */
+        .eib-confetti-line--1 { top: 3px;  right: 22px; transform: rotate(-90deg); }
+        .eib-confetti-line--2 { top: 5px;  right: 9px;  transform: rotate(-45deg); }
+        .eib-confetti-line--3 { top: 20px; right: 4px;  transform: rotate(0deg); }
+        /* Header row — blue check pill + "3 places added" label */
+        .eib-trip-header {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          padding: 2px 4px 2px 2px;
+        }
+        .eib-trip-check {
+          width: 15px;
+          height: 15px;
+          border-radius: 50%;
+          background: #0080FF;
+          color: #FFFFFF;
           display: inline-flex;
           align-items: center;
-          gap: 10px;
-          background: #FFFFFF;
-          border-radius: 14px;
-          padding: 10px 16px 10px 12px;
-          box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
-          align-self: flex-start;
+          justify-content: center;
+          flex-shrink: 0;
         }
-        .eib-stein-chip--1 { z-index: 3; }
-        .eib-stein-chip--2 {
-          z-index: 2;
-          margin-top: -49px;
-          opacity: 0.5;
+        .eib-trip-title {
+          font-family: "Funnel Display", -apple-system, sans-serif;
+          font-size: 10px;
+          font-weight: 700;
+          color: #0B1B2B;
+          letter-spacing: -0.01em;
         }
-        .eib-stein-chip--3 {
-          z-index: 1;
-          margin-top: -49px;
-          opacity: 0.325;
+        /* List of ranked place rows */
+        .eib-trip-list {
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
         }
-        /* Ghost text inside the back chip — reserves layout width so
-           chip --3 matches the chips above it, while hiding the copy. */
-        .eib-stein-text--ghost {
-          visibility: hidden;
+        .eib-trip-item {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          /* Flat black-tinted fill instead of the previous white + drop
+             shadow, so each row reads as a soft tinted strip that sits
+             flush with the card and fades along with it. */
+          background: rgba(0, 0, 0, 0.05);
+          border-radius: 10px;
+          padding: 5px 8px;
+          /* Stop long row text (e.g. "Calvin Klein Bnei Brak") from
+             forcing the card wider than its explicit 172px width. */
+          min-width: 0;
+          overflow: hidden;
         }
-        .eib-stein-trophy {
-          font-size: 22px;
+        .eib-trip-emoji {
+          font-size: 13px;
           line-height: 1;
           flex-shrink: 0;
         }
-        .eib-stein-text {
+        .eib-trip-text {
+          flex: 1;
           display: flex;
           flex-direction: column;
+          min-width: 0;
           line-height: 1.2;
         }
-        .eib-stein-name {
-          font-family: "Axiforma", -apple-system, sans-serif;
-          font-size: 14px;
+        .eib-trip-name {
+          font-family: "Funnel Display", -apple-system, sans-serif;
+          font-size: 9px;
           font-weight: 700;
-          color: #0F1B2D;
-          letter-spacing: -0.02em;
-        }
-        .eib-stein-rank {
-          font-family: "Axiforma", -apple-system, sans-serif;
-          font-size: 11px;
-          font-weight: 500;
-          color: #5B6B7C;
+          color: #0B1B2B;
           letter-spacing: -0.01em;
-          margin-top: 1px;
+          /* Truncate long names ("Calvin Klein Bnei Brak") with an
+             ellipsis so the row stays inside the card's set width. */
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          min-width: 0;
         }
+        .eib-trip-name-sub {
+          font-weight: 400;
+          color: #5B6B7C;
+          margin-left: 2px;
+        }
+        .eib-trip-rank {
+          font-family: "Funnel Display", -apple-system, sans-serif;
+          font-size: 8px;
+          font-weight: 500;
+          color: #8A95A3;
+          letter-spacing: -0.01em;
+        }
+        .eib-trip-spark { flex-shrink: 0; width: 10px; height: 10px; }
+        .eib-trip-spark--yellow { color: #FFC83D; }
+        .eib-trip-spark--white  { color: #E6EDF4; }
+        .eib-trip-spark--peach  { color: #FFA585; }
 
         /* Free-forever cluster — the bottom-right slot of the right
            column carries a nested 2x2 grid of four standalone cards.
@@ -1040,15 +1247,6 @@ export default function DestinationsSection() {
            fill, hairline border, 20px radius); the inner grid uses the
            same 15px gap as the outer bento so the four tiles read as
            peers of the surrounding cards. */
-        .eib-ff-grid {
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          grid-template-rows: 1fr 1fr;
-          gap: 15px;
-          height: 100%;
-          width: 100%;
-          min-width: 0;
-        }
         .eib-ff-tile {
           padding: 14px;
           align-items: center;
@@ -1081,35 +1279,183 @@ export default function DestinationsSection() {
         .eib-card--save .eib-sub {
           color: #FFFFFF;
         }
-        /* Save-tile backdrop — transparent PNG illustration sitting
-           above the cyan gradient but below the text/icons. Anchored
-           to the right so the subject lands in the open space beside
-           the title + source icons on the left. */
-        .eib-save-bg {
+        /* Free-forever tile backdrop — transparent PNG illustration
+           sitting above the cyan gradient but below the centred title.
+           Contained + bottom-anchored so the subject sits flush with
+           the tile's bottom border. */
+        .eib-ff-bg {
           object-fit: contain;
-          /* Anchor to the bottom edge so the illustration sits flush
-             with the card's bottom border instead of floating with a
-             gap below it. */
-          object-position: right bottom;
+          object-position: center bottom;
           z-index: 0;
           pointer-events: none;
-          /* Shift the rendered image 50% of the card width to the
-             right so the subject reads as a side accent rather than
-             a centred backdrop. */
-          transform: translateX(50%);
         }
-        .eib-save-text {
+        /* Title row inside the Free-forever tile must sit ABOVE the
+           backdrop image. */
+        .eib-ff-tile .eib-title-row {
           position: relative;
           z-index: 1;
-          padding: 20px;
+        }
+        /* Save card inner grid — text on the left, phone mockup hanging
+           off the bottom-right. Mirrors the Friends card's chat-grid
+           treatment. */
+        .eib-save-grid {
+          position: relative;
+          z-index: 1;
+          display: grid;
+          grid-template-columns: 1fr auto;
+          gap: 16px;
+          height: 100%;
+          align-items: stretch;
+        }
+        .eib-save-text {
+          padding: 20px 0 20px 20px;
           display: flex;
           flex-direction: column;
           gap: 6px;
-          max-width: 64%;
-          height: 100%;
+          min-width: 0;
+          /* Tight max-width so the headline + sub wrap onto narrow
+             rag-right lines that echo the Friends card's "Plan a trip
+             together / with your friends." block. */
+          max-width: 180px;
         }
         @media (min-width: 1200px) {
-          .eib-save-text { padding: 24px; max-width: 60%; }
+          .eib-save-text { padding: 24px 0 24px 24px; max-width: 210px; }
+        }
+        /* Phone mock — top/left/right border only, no bottom; the
+           device's top aligns with the "Import from anywhere" title
+           row (matching padding-top) and the bottom hangs past the
+           card's edge, where overflow:hidden clips it. */
+        .eib-save-phone {
+          position: relative;
+          align-self: stretch;
+          display: flex;
+          align-items: flex-start;
+          justify-content: flex-end;
+          /* Padding values include a +20px vertical and +45px horizontal
+             offset on top of the original 20/18 (sm) and 24/24 (lg)
+             alignment values — pushes the phone down + left from the
+             title-aligned corner. Extra 15px of right-padding shifts
+             the phone an additional 15px leftward. */
+          padding-top: 40px;
+          padding-right: 63px;
+        }
+        @media (min-width: 1200px) {
+          .eib-save-phone { padding-top: 44px; padding-right: 69px; }
+        }
+        .eib-save-phone-img {
+          display: block;
+          width: 160px;
+          height: auto;
+          object-fit: contain;
+          object-position: bottom right;
+          border-radius: 24px 24px 0 0;
+          border-top: 5px solid #0F1B2D;
+          border-left: 5px solid #0F1B2D;
+          border-right: 5px solid #0F1B2D;
+          border-bottom: 0;
+          box-sizing: border-box;
+          background: #0F1B2D;
+        }
+        @media (min-width: 1200px) {
+          .eib-save-phone-img {
+            width: 220px;
+            border-radius: 30px 30px 0 0;
+            border-top-width: 6px;
+            border-left-width: 6px;
+            border-right-width: 6px;
+          }
+        }
+
+        /* Scattered source-app chips around the phone mockup. Each chip
+           is a small circular pill with the same frosted glass-button
+           styling used on /technology under "One model, innumerable
+           granular ground truths." (.coreResearchProduct). Chip
+           positions are absolute so they can be sprinkled around the
+           mockup. */
+        .eib-source-chips {
+          position: absolute;
+          inset: 0;
+          z-index: 2;
+          pointer-events: none;
+          /* Shift the whole orbit 15px left so it stays anchored to
+             the phone after the phone's own 15px leftward shift. */
+          transform: translateX(-15px);
+        }
+        .eib-source-chip {
+          position: absolute;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          padding: 0;
+          border: none;
+          border-radius: 999px;
+          -webkit-backdrop-filter: blur(clamp(1px, 0.125em, 4px));
+          backdrop-filter: blur(clamp(1px, 0.125em, 4px));
+          background: linear-gradient(
+            -75deg,
+            rgba(255, 255, 255, 0.05),
+            rgba(255, 255, 255, 0.35),
+            rgba(255, 255, 255, 0.05)
+          );
+          /* Inset shine layers (frosted-glass interior) + a real
+             elevation drop shadow so the chips visibly lift off the
+             card surface and the phone behind them. */
+          box-shadow:
+            inset 0 0.125em 0.125em rgba(0, 0, 0, 0.05),
+            inset 0 -0.125em 0.125em rgba(255, 255, 255, 0.5),
+            inset 0 0 0.1em 0.25em rgba(255, 255, 255, 0.25),
+            0 14px 28px rgba(11, 27, 43, 0.22),
+            0 4px 10px rgba(11, 27, 43, 0.14);
+        }
+        .eib-source-chip img {
+          width: 60%;
+          height: 60%;
+          object-fit: contain;
+        }
+        @media (max-width: 1023px) {
+          .eib-source-chip {
+            -webkit-backdrop-filter: none;
+            backdrop-filter: none;
+          }
+        }
+        /* Per-chip sizes + positions — mirrors the reference layout:
+           - TikTok = biggest, overlaps the phone's mid-right edge
+           - Pinterest + Google Docs = large, top-left + top-right orbit
+           - Google Maps = medium-large, bottom-right overlap
+           - Apple Notes = smallest, overlaps the phone's mid-left edge */
+        .eib-source-chip--1 {                          /* TikTok — biggest, mid-LEFT overlap (was mid-right) */
+          width: 64px; height: 64px;
+          top: 30%; left: 42%;
+        }
+        .eib-source-chip--2 {                          /* Pinterest — large, top-left orbit */
+          width: 58px; height: 58px;
+          top: 2%; left: 50%;
+        }
+        .eib-source-chip--3 {                          /* Google Maps — medium-large, bottom-right overlap */
+          width: 54px; height: 54px;
+          top: 72%; right: 4%;
+        }
+        .eib-source-chip--4 {                          /* Google Docs — large, top-right orbit */
+          width: 56px; height: 56px;
+          top: 6%; right: 6%;
+        }
+        .eib-source-chip--5 {                          /* Apple Notes — smallest, mid-RIGHT overlap (was mid-left) */
+          width: 42px; height: 42px;
+          /* Shifted an extra 10px leftward (right edge moved 10px in) so
+             the right-most chip pulls a bit closer to the phone. */
+          top: 46%; right: calc(-2% + 10px);
+        }
+        .eib-source-chip--6 {                          /* Instagram — medium, bottom-left orbit */
+          width: 56px; height: 56px;
+          top: 70%; left: 47%;
+        }
+        @media (min-width: 1200px) {
+          .eib-source-chip--1 { width: 80px; height: 80px; }
+          .eib-source-chip--2 { width: 72px; height: 72px; }
+          .eib-source-chip--3 { width: 66px; height: 66px; }
+          .eib-source-chip--4 { width: 68px; height: 68px; }
+          .eib-source-chip--5 { width: 50px; height: 50px; }
+          .eib-source-chip--6 { width: 68px; height: 68px; }
         }
 
         /* Save-tile icon row — small enough that all five icons fit
@@ -1131,6 +1477,34 @@ export default function DestinationsSection() {
         @media (min-width: 1200px) {
           .eib-icon-row { gap: 10px; }
           .eib-icon { width: 32px; height: 32px; }
+        }
+
+        /* Title row — stacks a small leading icon ABOVE every bento h3.
+           The icon inherits currentColor so white-on-cyan cards get a
+           white icon and the dark phone-tile default tracks the title
+           ink. */
+        .eib-title-row {
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 8px;
+        }
+        .eib-title-row--center {
+          align-items: center;
+          justify-content: center;
+        }
+        .eib-title-icon {
+          flex-shrink: 0;
+          color: var(--color-ink, #0B1B2B);
+        }
+        /* Every cyan-gradient or photo-backed card flips its title to
+           white — match the icon stroke so it tracks the title colour. */
+        .eib-card--map .eib-title-icon,
+        .eib-card--chat .eib-title-icon,
+        .eib-card--save .eib-title-icon,
+        .eib-ff-tile .eib-title-icon,
+        .eib-card--phone .eib-title-icon {
+          color: #FFFFFF;
         }
 
         /* Tile typography — matches the homepage bento's .h3 convention
@@ -1176,9 +1550,14 @@ export default function DestinationsSection() {
             grid-template-rows: auto;
           }
           .eib-col--right {
-            grid-template-columns: 1fr;
             grid-template-rows: auto;
             height: auto;
+          }
+          /* Collapse both nested rows to single-column stacks on
+             tablet/mobile. */
+          .eib-row--top,
+          .eib-row--bottom {
+            grid-template-columns: 1fr;
           }
           .eib-col > .eib-card {
             flex: 0 1 auto;
