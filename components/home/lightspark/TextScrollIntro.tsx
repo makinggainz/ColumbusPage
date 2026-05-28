@@ -51,7 +51,7 @@ export function TextScrollIntro() {
           />
         </div>
       </div>
-      <div className="container-site">
+      <div className="content-bounds">
         <div className="mx-auto max-w-3xl">
           <h2 className="text-center h2 tracking-tight text-ink">
             We&rsquo;re all about maps

@@ -56,8 +56,12 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false, t
           metadata so the file's header loads up front but the full 6.5 MB
           doesn't transfer until/unless the footer reveals on scroll.
           aria-hidden + tabIndex=-1 keep it out of the AT tree. */}
+      {/* object-position shifts the cropped window of the video. On mobile
+          the default center crop cuts the ship in the distance on the
+          right edge — `85% center` slides the visible window rightward so
+          the ship is in frame. Desktop reverts to centered (default). */}
       <video
-        className="absolute inset-0 w-full h-full object-cover"
+        className="absolute inset-0 w-full h-full object-cover object-[85%_center] md:object-center"
         style={{ zIndex: 0, pointerEvents: "none" }}
         src="/footer-bg.mp4"
         autoPlay
@@ -120,7 +124,14 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false, t
               <a href="https://www.linkedin.com/company/columbusearth/about/" target="_blank" rel="noopener noreferrer"><Linkedin size={18} className="transition-colors text-white/50 hover:text-white" /></a>
             </div>
           </div>
-          <div className="grid grid-cols-3 gap-4 w-full md:contents">
+          {/* Link columns — mobile uses a 2+1 layout (Product + Technology
+              on row 1, Company centered on row 2) so each cell is ~136px
+              wide on a 360-px viewport, big enough for text-[16px] labels
+              without ugly wrap on "Data Collection". The outer wrapper +
+              the Company sub-wrapper both carry `md:contents` so they
+              vanish from layout at md+, restoring the Brand | Product |
+              Technology | Company row of the outer grid at lg+. */}
+          <div className="grid grid-cols-2 gap-6 w-full md:contents">
             <FooterColumn theme={theme} title="Product" links={[
               { label: "Columbus Pro", href: "/products/business" },
               { label: "Elio", href: "/products/consumer" },
@@ -130,10 +141,12 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false, t
               { label: "Data Collection", href: "/research#data-collection" },
               { label: "Core Reasoning", href: "/research#core-reasoning" },
             ]} />
-            <FooterColumn theme={theme} title="Company" links={[
-              { label: "Our Mission", href: "/company" },
-              { label: "Contact", href: "/contact" },
-            ]} />
+            <div className="col-span-2 flex justify-center md:contents">
+              <FooterColumn theme={theme} title="Company" links={[
+                { label: "Our Mission", href: "/company" },
+                { label: "Contact", href: "/contact" },
+              ]} />
+            </div>
           </div>
         </div>
 
@@ -165,10 +178,10 @@ const FooterColumn = ({
   theme?: "light" | "dark" | "light-blue";
 }) => (
   <div>
-    <p className="mb-3 md:mb-4 font-medium text-[13px] md:text-[17.5px] tracking-wide text-white">
+    <p className="mb-3 md:mb-4 font-medium text-[16px] md:text-[17.5px] tracking-wide text-white">
       {title}
     </p>
-    <ul className="space-y-1.5 md:space-y-2 text-[13px] md:text-[17.5px] text-white/70">
+    <ul className="space-y-2 text-[16px] md:text-[17.5px] text-white/70">
       {links.map((link, i) => (
         <li key={i}>
           <Link

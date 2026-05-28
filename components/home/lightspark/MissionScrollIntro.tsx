@@ -77,7 +77,7 @@ export function MissionScrollIntro() {
         />
       </div>
 
-      <div className="container-site">
+      <div className="content-bounds">
         <div className="mx-auto max-w-3xl">
           {/* Exception to the typography system: this scroll-reveal lead
               paragraph keeps the three-tier responsive sizing (24/30/36px)
