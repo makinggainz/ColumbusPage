@@ -279,6 +279,7 @@ export function MistxNav({
   const navCornerRadius = stuck ? "0px" : "var(--frame-radius, 35px)";
 
   return (
+    <>
     <header
       ref={headerRef}
       className="sticky z-100 w-full"
@@ -608,57 +609,200 @@ export function MistxNav({
                 fill="none"
                 aria-hidden="true"
               >
-                <path
+                {/* Bars rendered as <rect> with rx = height/2 so each bar
+                    is fully pill-shaped (max roundness). Original SVG
+                    used straight <path> rectangles. */}
+                <rect
                   opacity="0.5"
-                  d="M49.76 49.76H0V62.20H49.76V49.76Z"
+                  x="0"
+                  y="49.76"
+                  width="49.76"
+                  height="12.44"
+                  rx="6.22"
                   fill="currentColor"
                 />
-                <path
+                <rect
                   opacity="0.7"
-                  d="M74.64 24.88H0V37.32H74.64V24.88Z"
+                  x="0"
+                  y="24.88"
+                  width="74.64"
+                  height="12.44"
+                  rx="6.22"
                   fill="currentColor"
                 />
-                <path d="M74.64 0H0V12.44H74.64V0Z" fill="currentColor" />
+                <rect
+                  x="0"
+                  y="0"
+                  width="74.64"
+                  height="12.44"
+                  rx="6.22"
+                  fill="currentColor"
+                />
               </svg>
             )}
           </button>
         </div>
       </div>
+    </header>
 
-      {/* Mobile drawer — flat list of top-level links, then the Try Elio
-          product picker mirrored as a grouped block at the bottom. */}
+      {/* Mobile drawer — full-viewport overlay, layout adapted from the
+          experimentV6-newTechV3.1-NewUseCases branch:
+            • COLUMBUS EARTH header + short intro paragraph
+            • Contact (email) + Social (LinkedIn) two-up
+            • Large nav links with a blue chevron arrow on each row
+            • Full-width bottom CTA pinned to the viewport bottom
+          The drawer is rendered as a SIBLING of <header> (not a child)
+          because the header carries an inline `transform: translateY(...)`
+          for the industry-takeover slide animation, and a transformed
+          ancestor establishes a containing block for fixed descendants —
+          which would resolve the drawer's `top:64 / bottom:0` against the
+          ~64px header box instead of the viewport, collapsing it to ~0px
+          tall. Keeping it as a sibling lets `position: fixed` resolve
+          against the viewport so the drawer fills the space from below
+          the navbar to the viewport bottom and the bottom CTA pins to
+          the edge of the screen. */}
       {mobileOpen && (
-        <div className="lg:hidden absolute top-full left-0 w-full bg-[#F1F5FE] text-[#1f1f1f] z-20 px-6 py-6 shadow-lg max-h-[calc(100vh-100px)] overflow-y-auto">
-          <ul className="flex flex-col">
-            {navLinks.map((link) => (
-              <li key={link.label}>
-                <a
-                  href={link.href}
-                  className="p-m py-2 block font-medium hover:text-accent transition-colors"
-                >
-                  {link.label}
-                </a>
-              </li>
-            ))}
-            <li className="mt-4 pt-4 border-t border-[rgba(0,0,0,0.08)]">
-              <div className="p-s text-[#1f1f1f]/55 mb-2 uppercase tracking-wide">Try</div>
-              <ul className="flex flex-col">
+        <div
+          className="lg:hidden fixed left-0 right-0 bottom-0 bg-[#F1F5FE] text-[#1f1f1f] z-40 flex flex-col"
+          style={{ top: 64 }}
+        >
+          <div className="flex-1 overflow-y-auto px-6 pt-8 pb-6">
+            {/* ── Header block ── */}
+            <h4 className="text-[12px] font-medium tracking-widest uppercase text-[#1f1f1f]/70 mb-4">
+              Columbus Earth
+            </h4>
+            <p className="text-[15px] leading-[1.55] text-[#1f1f1f]/80">
+              Columbus Earth Inc. is a spatial frontier AI company building
+              the first production Large Geospatial Model to answer the most
+              difficult questions about our planet.
+            </p>
+
+            {/* ── Contact + Social ── */}
+            <dl className="mt-7 flex flex-wrap gap-x-12 gap-y-4">
+              <div>
+                <dt className="text-[11px] font-medium tracking-widest uppercase text-[#1f1f1f]/55 mb-1.5">
+                  Contact
+                </dt>
+                <dd>
+                  <a
+                    href="mailto:contact@columbus.earth"
+                    className="text-[15px] font-medium block break-all hover:text-accent transition-colors"
+                  >
+                    contact@columbus.earth
+                  </a>
+                </dd>
+              </div>
+              <div>
+                <dt className="text-[11px] font-medium tracking-widest uppercase text-[#1f1f1f]/55 mb-1.5">
+                  Social
+                </dt>
+                <dd>
+                  <a
+                    href="https://www.linkedin.com/company/columbusearth/about/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-[15px] font-medium block hover:text-accent transition-colors"
+                  >
+                    LinkedIn
+                  </a>
+                </dd>
+              </div>
+            </dl>
+
+            {/* ── Nav links — large text with blue chevron arrow per row ── */}
+            <ul className="mt-10 space-y-4">
+              {navLinks.map((link) => (
+                <li key={link.label}>
+                  <a
+                    href={link.href}
+                    onClick={() => setMobileOpen(false)}
+                    className="group flex items-center text-xl font-medium transition-colors hover:text-accent"
+                  >
+                    <span className="transition-transform duration-300 ease-in-out group-hover:translate-x-1">
+                      {link.label}
+                    </span>
+                    <svg
+                      className="ml-3 shrink-0 transition-transform duration-300 ease-in-out group-hover:translate-x-1"
+                      width="9"
+                      height="16"
+                      viewBox="0 0 7 12"
+                      fill="none"
+                      stroke="#2563EB"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="M1 1l5 5-5 5" />
+                    </svg>
+                  </a>
+                </li>
+              ))}
+            </ul>
+
+            {/* ── Try section — Elio launcher items grouped at the bottom ── */}
+            <div className="mt-10">
+              <h4 className="text-[13px] font-medium tracking-[0.08em] uppercase text-[#1f1f1f]/55 mb-4">
+                Try
+              </h4>
+              <ul className="space-y-4">
                 {elioMenuItems.map((item) => (
                   <li key={item.label}>
                     <a
                       href={item.href}
-                      className="block py-2 hover:text-accent transition-colors"
+                      onClick={() => setMobileOpen(false)}
+                      className="group flex items-center text-xl font-medium transition-colors hover:text-accent"
                     >
-                      <span className="p-m font-medium block">{item.label}</span>
-                      <span className="p-s text-[#1f1f1f]/55 block">{item.desc}</span>
+                      <span className="transition-transform duration-300 ease-in-out group-hover:translate-x-1">
+                        {item.label}
+                      </span>
+                      <svg
+                        className="ml-3 shrink-0 transition-transform duration-300 ease-in-out group-hover:translate-x-1"
+                        width="9"
+                        height="16"
+                        viewBox="0 0 7 12"
+                        fill="none"
+                        stroke="#2563EB"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <path d="M1 1l5 5-5 5" />
+                      </svg>
                     </a>
                   </li>
                 ))}
               </ul>
-            </li>
-          </ul>
+            </div>
+          </div>
+
+          {/* ── Bottom CTA — full-width pinned bar ── */}
+          <a
+            href="/products/consumer"
+            onClick={() => setMobileOpen(false)}
+            className="group flex items-center justify-center gap-3 w-full font-medium text-[16px] transition-colors hover:opacity-90"
+            style={{
+              height: 60,
+              backgroundColor: "#000000",
+              color: "#FFFFFF",
+            }}
+          >
+            Start Now
+            <svg
+              className="transition-transform duration-300 ease-in-out group-hover:translate-x-1"
+              width="10"
+              height="18"
+              viewBox="0 0 7 12"
+              fill="none"
+              stroke="#2563EB"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M1 1l5 5-5 5" />
+            </svg>
+          </a>
         </div>
       )}
-    </header>
+    </>
   );
 }

@@ -303,9 +303,25 @@ const CSS = `
 }
 /* Columbus wordmark colour matches the logo to its left — same navy
    #0F173C the COLUMBUS_LOGO_FILTER chain lands on (and the same value
-   MistxNav uses for "Columbus Earth"). */
+   MistxNav uses for "Columbus Earth"). Font-size is pinned so the
+   cap-height visually matches the logo (42px mobile / 50px ≥1024px) —
+   sans-serif cap-height is ~0.72× font-size, so font-size = logo /
+   0.72 ≈ 30px mobile / 36px ≥1024px. line-height: 1 keeps the box from
+   carrying empty descender space that would push the row out of sync. */
 .bp-card--columbus .bp-name {
   color: #0F173C;
+  font-size: 26px;
+  line-height: 1;
+  /* Drops the wordmark a hair below the brand row's optical centre so
+     the baseline of the "C" sits closer to the bottom of the logo mark
+     rather than dead-centred against it. */
+  transform: translateY(3px);
+}
+@media (min-width: 1024px) {
+  .bp-card--columbus .bp-name {
+    font-size: 30px;
+    transform: translateY(4px);
+  }
 }
 /* Research tile sets its title in Funnel Display (the design system's
    --font-display heading face). */
@@ -313,14 +329,16 @@ const CSS = `
   font-family: var(--font-display);
 }
 /* Elio tile renders only the block "Elio" wordmark next to the brand
-   icon. The source PNG is white-on-transparent — kept as-is so the
-   wordmark reads pure white over the bento card's photo backdrop. */
+   icon. The source PNG is white-on-transparent — recoloured to the same
+   navy #0F173C used by the Columbus wordmark on the tile to its left so
+   both product names share a palette across the bento row. */
 .bp-elio-name {
   width: auto;
   height: 42px;
   object-fit: contain;
   flex: 0 0 auto;
   margin-left: -4px;
+  filter: brightness(0) saturate(100%) invert(8%) sepia(80%) saturate(1400%) hue-rotate(215deg) brightness(90%);
 }
 @media (min-width: 1024px) {
   .bp-logo { width: 50px; height: 50px; }
@@ -341,12 +359,8 @@ const CSS = `
   color: inherit;
   max-width: 28rem;
 }
-/* Elio tile reads on a darker photo backdrop, so the body tagline
-   ("Making maps feel alive again") needs to be white rather than
-   inheriting the default ink colour. */
-.bp-card--elio .bp-tagline {
-  color: #FFFFFF;
-}
+/* Elio tagline inherits the default ink colour so it matches the
+   Columbus tagline on the tile to its left. */
 @media (min-width: 1024px) {
   /* Wide tile keeps its roomier stack (22px title→subtitle), with the
      same +6px optical compensation on the subtitle→CTA gap. */
@@ -389,17 +403,8 @@ const CSS = `
 .bp-cta:hover .bp-cta-arrow { transform: translateX(2px); }
 .bp-cta-arrow svg { display: block; }
 
-/* Elio tile inverts the CTA palette — white pill with navy label —
-   so the call-to-action reads bright against the photo backdrop and
-   echoes the white wordmark above it instead of competing with the
-   navy CTA used on the Columbus / Research tiles. */
-.bp-card--elio .bp-cta {
-  background-color: #FFFFFF;
-  color: var(--color-cta);
-}
-.bp-card--elio .bp-cta:hover {
-  color: var(--color-accent);
-}
+/* Elio CTA matches the Columbus tile — navy pill with white label —
+   so both tiles share a single CTA treatment across the bento row. */
 @media (prefers-reduced-motion: reduce) {
   .bp-cta,
   .bp-cta-arrow { transition: none; }
@@ -430,6 +435,10 @@ const CSS = `
 @media (min-width: 1024px) {
   .bp-card:hover .bp-visual { transform: translateY(-18px); }
 }
+/* Research tile opts out of the hover-lift — its visual is the
+   WorldMapLineArt graphic, which sits flush to the bottom of the wide
+   banner and shouldn't shift on hover. */
+.bp-card--research:hover .bp-visual { transform: none; }
 @media (prefers-reduced-motion: reduce) {
   .bp-visual { transition: none; }
   .bp-card:hover .bp-visual { transform: none; }
