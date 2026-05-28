@@ -77,52 +77,73 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false, t
         className="absolute inset-0 pointer-events-none"
         style={{ zIndex: 1, background: "#000000", opacity: 0.25 }}
       />
-      {/* Desktop pt-32 (128px) — PageFrame overlaps the footer's top 60px
-          (see PageFrame's calc() margin-bottom), so the visible gap between
-          the card's bottom edge and where this content begins is
-          128 − 60 = 68px — enough breathing room that the footer copy
-          doesn't read as crammed against the card's rounded bottom.
-          Mobile pt-16 (64px) — same logic but scaled down since the card's
-          bottom radius is also visually smaller on narrow viewports.
-          Width: `content-bounds` (1287px max + 20px mobile gutter) ties
-          the footer column edges to the navbar pill on mobile and home
-          page content on desktop. */}
-      <div className="content-bounds relative z-10 w-full pt-16 md:pt-32 pb-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 md:gap-12 items-start mb-10">
+      {/* Reveal-mode wrapper:
+           • Mobile (≤md): `min-h-screen` + `flex flex-col` so the footer
+             reads as a dedicated full-viewport end-of-page surface, with
+             the brand block (Columbus Earth + tagline) as the dominant
+             visual element at the top.
+           • Desktop (md+): `min-h-0` reverts to content-driven height —
+             the original behavior.
+         PageFrame measures `footer.offsetHeight` on mount + resize and
+         reserves `footer_height − 60px` of scroll below the card, so
+         making the footer taller automatically extends the reveal
+         range — no PageFrame change required. pt-32 (128px) clears
+         the 60px card-corner overlap with 68px of visible breathing
+         room. */}
+      <div className="relative z-10 w-full max-w-[1200px] mx-auto px-8 pt-32 pb-6 min-h-screen md:min-h-0 flex flex-col">
+        {/* Content section — mobile stacks (brand → link columns → legal),
+            desktop keeps the original 2/4-col grid. The link-column
+            wrapper uses `md:contents` to vanish from layout at md+, so
+            its three children become direct grid items of the outer grid
+            (restoring Brand|Product|Technology|Company in one row at lg+).
+            On mobile the wrapper renders as a 3-col grid so all three
+            link cols fit side-by-side instead of stacking — keeps content
+            compact enough to fit within the reveal range on small phones. */}
+        <div className="flex flex-col md:grid md:grid-cols-2 lg:grid-cols-4 gap-10 md:gap-12 md:items-start mb-10 text-center md:text-left">
+          {/* Brand block — Columbus Earth + tagline are visually the
+              priority on mobile: text-[36px] heading vs the desktop 24px,
+              wider tagline (text-[16px]), and centered alignment so the
+              eye lands here first. Desktop reverts to the original
+              sizes/left-alignment. */}
           <div>
             <h3
-              className="text-[24px] font-semibold mb-3 text-white"
+              className="text-[36px] md:text-[24px] font-semibold mb-4 md:mb-3 text-white"
               style={{ fontFamily: "Axiforma, 'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif", letterSpacing: "-0.02em" }}
             >
               Columbus Earth
             </h3>
-            <p className="text-[14px] leading-relaxed mb-4 max-w-[260px] text-white/60">
+            <p className="text-[16px] md:text-[14px] leading-relaxed mb-6 md:mb-4 max-w-[320px] md:max-w-[260px] mx-auto md:mx-0 text-white/70 md:text-white/60">
               The frontier AI lab building the first production Universal Geospatial Model.
             </p>
-            <div className="flex gap-4">
+            <div className="flex justify-center md:justify-start gap-5 md:gap-4">
               <a href="mailto:contact@columbus.earth"><Mail size={18} className="transition-colors text-white/50 hover:text-white" /></a>
               <a href="https://www.linkedin.com/company/columbusearth/about/" target="_blank" rel="noopener noreferrer"><Linkedin size={18} className="transition-colors text-white/50 hover:text-white" /></a>
             </div>
           </div>
-          <FooterColumn theme={theme} title="Product" links={[
-            { label: "Columbus Pro", href: "/products/business" },
-            { label: "Elio", href: "/products/consumer" },
-          ]} />
-          <FooterColumn theme={theme} title="Technology" links={[
-            { label: "LGM vs LLM", href: "/research#lgm-vs-llm" },
-            { label: "Data Collection", href: "/research#data-collection" },
-            { label: "Core Reasoning", href: "/research#core-reasoning" },
-          ]} />
-          <FooterColumn theme={theme} title="Company" links={[
-            { label: "Our Mission", href: "/company" },
-            { label: "Contact", href: "/contact" },
-          ]} />
+          <div className="grid grid-cols-3 gap-4 w-full md:contents">
+            <FooterColumn theme={theme} title="Product" links={[
+              { label: "Columbus Pro", href: "/products/business" },
+              { label: "Elio", href: "/products/consumer" },
+            ]} />
+            <FooterColumn theme={theme} title="Technology" links={[
+              { label: "LGM vs LLM", href: "/research#lgm-vs-llm" },
+              { label: "Data Collection", href: "/research#data-collection" },
+              { label: "Core Reasoning", href: "/research#core-reasoning" },
+            ]} />
+            <FooterColumn theme={theme} title="Company" links={[
+              { label: "Our Mission", href: "/company" },
+              { label: "Contact", href: "/contact" },
+            ]} />
+          </div>
         </div>
 
-        {/* Mobile: stack vertically + center align so the 4 spans don't
-            get squeezed into unreadable columns on a 360-px viewport.
-            Desktop (md+): original horizontal row with space-between. */}
-        <div className="border-t pt-4 pb-2 flex flex-col items-center text-center gap-2 md:flex-row md:items-center md:justify-between md:text-left md:gap-4 text-[13px] border-white/15 text-white/50">
+        {/* Legal row — `mt-auto` pushes it to the footer's bottom edge on
+            mobile (where min-h-screen creates extra space below the
+            content section). Desktop is a no-op since the wrapper is
+            content-sized. Mobile stacks the 4 spans vertically because a
+            360-px viewport can't fit them in a row; desktop keeps the
+            original horizontal row. */}
+        <div className="mt-auto border-t pt-4 pb-2 flex flex-col items-center text-center gap-2 md:flex-row md:items-center md:justify-between md:text-left md:gap-4 text-[13px] border-white/15 text-white/50">
           <span>Columbus Earth &copy; 2026</span>
           <span className="italic text-[12px]">Website made by hand, no AI.</span>
           <span className="italic text-[12px]">Nature always prevails</span>
@@ -144,10 +165,10 @@ const FooterColumn = ({
   theme?: "light" | "dark" | "light-blue";
 }) => (
   <div>
-    <p className="mb-4 font-medium text-[17.5px] tracking-wide text-white">
+    <p className="mb-3 md:mb-4 font-medium text-[13px] md:text-[17.5px] tracking-wide text-white">
       {title}
     </p>
-    <ul className="space-y-2 text-[17.5px] text-white/70">
+    <ul className="space-y-1.5 md:space-y-2 text-[13px] md:text-[17.5px] text-white/70">
       {links.map((link, i) => (
         <li key={i}>
           <Link
