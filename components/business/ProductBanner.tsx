@@ -51,7 +51,7 @@ export default function ProductBanner() {
         />
       </div>
       <div
-        className="relative z-10 flex flex-col items-center justify-center px-4 md:px-10"
+        className="relative z-10 flex flex-col items-center justify-center px-5 md:px-10"
         style={{
           paddingTop: "clamp(120px, 15vw, 192px)",
           paddingBottom: "clamp(120px, 15vw, 192px)",

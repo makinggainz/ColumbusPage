@@ -94,12 +94,15 @@ function ArrowDots({ className = "" }: { className?: string }) {
 }
 
 /* Primary CTA — the site-wide button idiom: navy `bg-cta` fill, white
-   label that turns to the accent on hover, dot-arrow nudging right. */
+   label that turns to the accent on hover, dot-arrow nudging right.
+   `touch-target` floors the height at 44px on mobile (Phase 1.5 utility)
+   so the button meets WCAG AA on phones while keeping the slim 36-px
+   desktop look (px-5 py-2 ≈ 36px tall, matches the navbar buttons). */
 function CtaButton({ children, className = "", ...props }: React.ButtonHTMLAttributes<HTMLButtonElement>) {
   return (
     <button
       {...props}
-      className={`group rounded-button px-5 py-2 text-sm flex items-center gap-2 transition-colors bg-cta text-white hover:text-accent cursor-pointer ${className}`}
+      className={`touch-target group rounded-button px-5 py-2 text-sm flex items-center gap-2 transition-colors bg-cta text-white hover:text-accent cursor-pointer ${className}`}
     >
       {children}
       <span className="ml-2 inline-block transition-transform group-hover:translate-x-0.5">
@@ -256,6 +259,18 @@ function ContactPageInner() {
           white-space: nowrap;
           cursor: pointer;
           transition: background-color 0.25s ease, color 0.25s ease;
+          /* Inline-flex so min-height (mobile touch-target floor below)
+             vertically centres the label without needing line-height
+             gymnastics. */
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+        }
+        /* Mobile touch-target floor — 44 × 44 px (WCAG AA). Padding
+           still keeps the visual pill snug on desktop; mobile gets the
+           extra hit area via min-height. */
+        @media (max-width: 1023px) {
+          .cf-tab { min-height: 44px; }
         }
         .cf-tab:hover { color: ${INK}; background: color-mix(in srgb, ${INK} 5%, transparent); }
         .cf-tab[data-active="true"],

@@ -14,7 +14,7 @@ import { Careers } from "@/components/home/Careers";
 // reveals when the user scrolls past the end of the page content.
 function IslandGap() {
   return (
-    <div className="max-w-[1287px] mx-5 md:mx-auto" style={{ height: 120 }} />
+    <div className="max-w-[1287px] mx-auto px-5" style={{ height: 120 }} />
   );
 }
 

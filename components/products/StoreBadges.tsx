@@ -96,7 +96,7 @@ export default function StoreBadges({
       >
         <GooglePlayGlyph size={glyphSize} />
         <span className="mg-badge-label">
-          <span className="mg-badge-l1">COMING SOON TO</span>
+          <span className="mg-badge-l1">Coming soon to</span>
           <span className="mg-badge-l2">Google Play</span>
         </span>
       </a>

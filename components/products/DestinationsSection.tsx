@@ -1413,6 +1413,13 @@ export default function DestinationsSection() {
           object-fit: contain;
         }
         @media (max-width: 1023px) {
+          /* Chip positions (eib-source-chip--1…--6) are absolute
+             percentages tuned for the desktop bento column. When the
+             bento collapses to a single column on mobile the chips
+             land on top of each other and on top of the phone mockup
+             itself — hide them entirely on mobile. The phone + save
+             tile carry the value of this card on their own. */
+          .eib-source-chips { display: none; }
           .eib-source-chip {
             -webkit-backdrop-filter: none;
             backdrop-filter: none;

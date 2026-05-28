@@ -13,9 +13,11 @@ import { useEffect, useRef, useState } from "react";
 //   • `bg-mistral-beige-deep`   → `bg-[#DCE7FB]`
 //   • `text-mistral-orange`     → `text-accent` (site accent — see --color-accent)
 //   • `border-mistral-orange`   → `border-accent`
-//   • `md:container`            → `max-w-[1287px] mx-5 md:mx-auto`  (matches this
-//                                 project's content bounds; no inner padding so the
-//                                 logo / "Try Elio" CTA sit flush with those bounds)
+//   • `md:container`            → `max-w-[1287px] mx-auto px-5`  (matches this
+//                                 project's content bounds; 20px inner padding so the
+//                                 logo / "Try Elio" CTA never touch the viewport edge
+//                                 in the 768–1327px range where outer `mx-5 → md:mx-auto`
+//                                 used to collapse to a zero gutter)
 //   • Logo `/images/Columbo.png` → `/logobueno.png` (same asset, this project's
 //     filename — verified ~149KB on both)
 //
@@ -463,10 +465,11 @@ export function MistxNav({
         />
       )}
       {/* Content row — bounds match the page's content sections
-          (max-w-[1287px] mx-5 md:mx-auto), no inner padding, so the logo's
-          left edge and the "Try Elio" CTA's right edge sit flush with the
-          page's left/right content bounds. */}
-      <div className="max-w-[1287px] mx-5 md:mx-auto flex items-center py-6 relative z-10">
+          (max-w-[1287px] mx-auto px-5). 20px inner padding holds the
+          logo / "Try Elio" CTA off the viewport edge at every viewport
+          width, including the 768–1327px range where the old `mx-5
+          md:mx-auto` pattern collapsed to a zero gutter. */}
+      <div className="max-w-[1287px] mx-auto px-5 flex items-center py-6 relative z-10">
         {/* Left: logo + wordmark — a single home link wrapping both, so
             the "Columbus Earth" text is clickable alongside the logo. */}
         <div className="flex-1 flex items-center">

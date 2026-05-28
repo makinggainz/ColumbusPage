@@ -179,7 +179,6 @@ html {
      without flashing animation or distracting the eye on LCP heroes. */
   --image-skel: #ECECEE;
 
-  --container-site: 1200px;      /* the single content-column width */
   --radius-card: 20px;           /* signature container radius */
   /* Button/CTA corner roundness, scaled by button size. Anchored to the
      navbar button (~35px tall, 16px radius → radius/height ratio ≈ 0.457);
@@ -391,6 +390,92 @@ html {
   }
 }
 
+
+/* ══════════════════════════════════════════════════════════════════════════
+   RESPONSIVE DESIGN-SYSTEM PRIMITIVES
+   ──────────────────────────────────────────────────────────────────────────
+   Canonical responsive tokens + utilities used site-wide. Added as part of
+   the responsive rollout (see /Users/alexramirezblonski/.claude/plans/
+   site-responsive-rollout.md, Phase 1).
+
+   Breakpoints — Tailwind defaults are the canonical set:
+       sm 640px · md 768px · lg 1024px · xl 1280px · 2xl 1536px
+   Custom arbitrary breakpoints are allowed only when annotated with a
+   `WHY:` comment explaining the reason they can't use the standard set.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* Type ramp — mobile→desktop clamps. Use these in place of fixed
+   text-[Npx] declarations whenever a heading risks overflow at narrow
+   viewports. Values reach desktop targets that match the existing
+   homepage / business / catcherX type scale. */
+:root {
+  --type-display:  clamp(36px, 7vw, 76px);   /* hero h1 */
+  --type-h2:       clamp(28px, 5vw, 56px);   /* section heading */
+  --type-h3:       clamp(22px, 3.5vw, 36px); /* sub heading */
+  --type-body:     clamp(15px, 1.6vw, 18px); /* body copy */
+  --type-eyebrow:  clamp(11px, 1.2vw, 13px); /* eyebrow / kicker label */
+
+  /* Vertical rhythm — section padding tokens. Mobile drops ~40% from
+     desktop. Use these in place of fixed py-32 / py-40 declarations on
+     section wrappers where the desktop padding would dominate the
+     mobile viewport. */
+  --section-py:        clamp(56px, 8vw, 128px);
+  --section-py-tight:  clamp(32px, 5vw, 80px);
+}
+
+/* Canonical content bounds — the single width rule for the site.
+       max-width 1287px · auto-centered · 20px inner padding at every size
+   Uses `mx-auto px-5` (auto-margin + inner padding) instead of the older
+   `mx-5 md:mx-auto` flip so the 20px gutter holds at EVERY viewport
+   width, including the 768–1327px range where the old pattern collapsed
+   to zero gutter (container = viewport, mx-auto = 0 margin). Mirrors
+   what MistxNav now uses. `.ent-content-bounds` is kept as an alias for
+   backward compatibility with business components that already reach
+   for it; new code should prefer `.content-bounds`. */
+.content-bounds,
+.ent-content-bounds {
+  max-width: 1287px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1.25rem;   /* 20px */
+  padding-right: 1.25rem;
+}
+
+/* Touch-target floor — WCAG AA requires 44×44px minimum interactive
+   area on mobile. Apply this utility to any small button, pill, icon
+   button, or accordion trigger that renders below 44px tall on mobile.
+   Desktop sizes are unaffected. */
+@media (max-width: 1023px) {
+  .touch-target {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+/* Sticky guardrail — kills `position: sticky` on mobile for elements
+   that were designed for desktop only. Apply this class alongside the
+   sticky element's existing classes; below lg (1024px) the element
+   reverts to normal flow. */
+@media (max-width: 1023px) {
+  .lg-only-sticky {
+    position: static !important;
+  }
+}
+
+/* Mockup-fit wrapper — the four industry mockup frames
+   (DataManagerMockup, AgenticResearchMockup, DashboardMockup,
+   MapChatPlatform) are 5K-pixel PNGs with hardcoded aspect ratios.
+   Wrap them with this utility to constrain to viewport width while
+   preserving aspect. Per design decision, mockups become decorative-
+   only on mobile (text inside becomes unreadable) — surrounding
+   section copy carries the story. Set `--mockup-aspect` inline to
+   match the specific frame's native ratio if it differs from the
+   default 5184/3003. */
+.mockup-fit {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: var(--mockup-aspect, 5184 / 3003);
+}
 
 /* Section F (SiteSelection): animated gradient blobs — orbital paths, linear timing = no pause at loop */
 @keyframes blink {
@@ -1243,23 +1328,6 @@ body.bg-mode-dark article {
   background: linear-gradient(180deg, var(--catcher-bg1) 0%, #ffffff 40%);
   color: #0B1B2B;
   font-family: var(--font-inter), system-ui, sans-serif;
-}
-
-/* Page-width content column — the single content constraint for every
-   section on a catcherX-themed page. 1200px max + responsive gutters. */
-.container-site {
-  margin-left: auto;
-  margin-right: auto;
-  width: 100%;
-  max-width: 1200px;
-  padding-left: 24px;
-  padding-right: 24px;
-}
-@media (min-width: 1024px) {
-  .container-site {
-    padding-left: 32px;
-    padding-right: 32px;
-  }
 }
 
 /* Vertical section rhythm — padding, not margin, so gaps never collapse. */

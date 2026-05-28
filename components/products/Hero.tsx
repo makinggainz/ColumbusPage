@@ -3,6 +3,7 @@
 /**
  * MapsGPT Hero — ported from the PolarX project's hero.
  *
+ * DESKTOP (≥ lg, 1024px):
  *   • Hero header — a normal-flow section over a cityscape photo;
  *     dark content stack in the upper third; extends up behind the
  *     floating navbar; scrolls up and away.
@@ -14,6 +15,17 @@
  *   • Per-scene title labels live in NORMAL DOCUMENT FLOW — they
  *     scroll up the page past the pinned phone, opacity-fading by
  *     distance from the viewport centre.
+ *
+ * MOBILE (< lg):
+ *   The sticky scroll choreography doesn't read at narrow viewports —
+ *   on desktop the labels sit on the LEFT/RIGHT of the centred phone,
+ *   but on mobile the phone fills horizontal space, so labels would
+ *   overlap the device. The sticky-pinned stage + scrolling labels
+ *   are hidden via `hidden lg:block`; in their place a separate
+ *   static stacked sequence (MobileScenes below) renders each scene
+ *   as a self-contained normal-flow section: photo backdrop → label
+ *   → phone with the matching screen → (scene 3 only) notification
+ *   card list. Same design language, no scroll-pinning.
  *
  * Lives inside the site PageFrame (fills frame width).
  */
@@ -103,9 +115,9 @@ const LABELS = [
 // stacked, opacity-toggling to whichever label is closest to the
 // viewport anchor — see `activeLabel` below.
 const PHONE_IMAGES = [
-  "/consumer/elio/ElioChat.png",                // 0  For your city. (active)
+  "/consumer/elio/ElioForYourCity.png",         // 0  For your city. (active)
   "/consumer/elio/ElioZone.png",                // 1  For your travels.
-  "/consumer/elio/Localguideinyourpocket.png",  // 2  and everything in between
+  "/consumer/elio/ElioEverythingInBetween.png", // 2  and everything in between
 ] as const;
 
 // Distinct mockup shown during the hero header (phase 0) so the phone
@@ -369,15 +381,19 @@ export default function Hero() {
 
   return (
     <div ref={outerRef} data-hero-section data-hero-outer className="relative" style={{ marginTop: -NAV_PULL }}>
-      {/* ════ Sticky scene backdrop — clean white field ════ */}
-      <div className="absolute inset-0 z-0">
+      {/* ════ Sticky scene backdrop — clean white field ════
+            Desktop only. Mobile renders the static stacked
+            MobileScenes block instead (see further down). */}
+      <div className="absolute inset-0 z-0 hidden lg:block">
         <div className="sticky top-0 overflow-hidden" style={{ height: "100dvh" }}>
           <div className="absolute inset-0" style={{ background: "#FFFFFF" }} />
         </div>
       </div>
 
-      {/* ════ Phone · pill row — pinned (the ONLY pinned content) ════ */}
-      <div className="absolute inset-0 z-30 pointer-events-none">
+      {/* ════ Phone · pill row — pinned (the ONLY pinned content) ════
+            Desktop only — `hidden lg:block` gates the entire sticky
+            stage so on mobile the phone isn't pinned. */}
+      <div className="absolute inset-0 z-30 pointer-events-none hidden lg:block">
         <div className="sticky top-0 overflow-hidden" style={{ height: "100dvh" }}>
           {/* Scene-3 notification cards — kept in the pinned stage (not
               in the scrolling label block) so they stay perfectly
@@ -644,7 +660,12 @@ export default function Hero() {
                 <h1
                   style={{
                     fontFamily: "Axiforma, -apple-system, BlinkMacSystemFont, sans-serif",
-                    fontSize: "76px",
+                    /* clamp(36px, 9vw, 76px) — keeps the desktop 76px
+                       intent (hit at ~844px viewport and above), scales
+                       smoothly down to 36px on phones so "the social
+                       super map" wraps cleanly without overflowing the
+                       hero column or pushing the CTA pills off-screen. */
+                    fontSize: "clamp(36px, 9vw, 76px)",
                     fontWeight: 590,
                     color: "#FFFFFF",
                     textAlign: "center",
@@ -725,6 +746,7 @@ export default function Hero() {
       </header>
 
       {/* ════ Scroll content — per-scene title in NORMAL FLOW; scrolls past the phone ════
+            Desktop only. Mobile uses MobileScenes (below).
             z-10 sits BELOW the pinned phone/pill row (z-30) so the
             phone stays visible in front of each 400-px-tall photo
             strip as it scrolls past. Title text sits inside each block
@@ -732,7 +754,7 @@ export default function Hero() {
 
             pointer-events-none keeps clicks falling through to the
             pinned z-30 pill row underneath. */}
-      <div className="relative z-10 pointer-events-none" style={{ width: "100%" }}>
+      <div className="relative z-10 pointer-events-none hidden lg:block" style={{ width: "100%" }}>
         <div style={{ height: `${INTRO_LEAD_VH}vh` }} />
         {LABELS.map((lab, i) => {
           const sc = SCENES[lab.scene - 1];
@@ -904,6 +926,143 @@ export default function Hero() {
         <div style={{ height: `${TAIL_VH}vh` }} />
       </div>
 
+      {/* ════ Mobile-only static stack ════
+            Renders one section per scene as a normal-flow block: photo
+            backdrop → label → phone (with the matching screen) → scene-3
+            notification cards as a vertical list. Hidden at lg+ where
+            the sticky stage above takes over. */}
+      <div className="lg:hidden">
+        <MobileScenes />
+      </div>
+
+    </div>
+  );
+}
+
+/* ── Mobile-only stacked scenes ─────────────────────────────────────
+   Same three scenes the desktop sticky stage tells (for your city /
+   for your travels / and everything in between) but rendered as plain
+   stacked sections. Same Axiforma 590 type, same dark-photo + 0.55
+   black scrim treatment, same phone geometry (just sized smaller),
+   same NotifCard for scene-3 notifications — design language locked
+   to desktop. */
+function MobileScenes() {
+  return (
+    <div className="relative z-10 bg-white">
+      {LABELS.map((lab, i) => {
+        const isDarkScene = !!lab.image;
+        const phoneSrc = PHONE_IMAGES[i];
+        return (
+          <section
+            key={i}
+            className="relative w-full overflow-hidden"
+            style={{ background: isDarkScene ? "#0B1B2B" : "#FFFFFF" }}
+          >
+            {isDarkScene && (
+              <>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={lab.image}
+                  alt=""
+                  aria-hidden
+                  loading="lazy"
+                  decoding="async"
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
+                {/* Same 0.55 black dim the desktop label blocks use
+                    when inactive, applied permanently here so the
+                    text reads cleanly on busy photo backdrops. */}
+                <div aria-hidden className="absolute inset-0 bg-black/55" />
+              </>
+            )}
+            <div className="relative z-10 flex flex-col items-center text-center px-5 pt-16 pb-20 gap-10">
+              <h2
+                style={{
+                  fontFamily: "Axiforma, -apple-system, BlinkMacSystemFont, sans-serif",
+                  /* clamp(28px, 8vw, 44px) — keeps the headline
+                     proportional to viewport width across phones. */
+                  fontSize: "clamp(28px, 8vw, 44px)",
+                  fontWeight: 590,
+                  lineHeight: 1.15,
+                  letterSpacing: "-0.02em",
+                  color: isDarkScene ? "#FFFFFF" : "#0B1B2B",
+                  margin: 0,
+                  maxWidth: "min(440px, 86vw)",
+                  textShadow: isDarkScene
+                    ? "0 1px 2px rgba(0,0,0,0.5), 0 2px 10px rgba(0,0,0,0.55), 0 0 28px rgba(0,0,0,0.45)"
+                    : undefined,
+                }}
+              >
+                {lab.title}
+              </h2>
+              <MobilePhone src={phoneSrc} />
+              {lab.scene === 3 && (
+                <div className="flex flex-col gap-3 w-full max-w-90 mt-2">
+                  {NOTIFICATIONS.map((n, idx) => (
+                    <NotifCard key={idx} n={n} />
+                  ))}
+                </div>
+              )}
+            </div>
+          </section>
+        );
+      })}
+    </div>
+  );
+}
+
+/* Self-contained phone device — same geometry the sticky-stage phone
+   uses (PolarX 0.4949 aspect, concentric corner radii, slim bezel,
+   layered drop-shadow). Rendered at a fixed 240-px width — matches
+   the mobile-width the desktop phone falls back to when isLg=false,
+   so visually the mockup reads as the same product device. */
+function MobilePhone({ src }: { src: string }) {
+  const w = 240;
+  const h = Math.round(w / 0.4949);
+  const radius = Math.round(w * 0.152);
+  const bezel = Math.max(5, Math.round(w * 0.022));
+  return (
+    <div
+      style={{
+        width: w,
+        height: h,
+        boxSizing: "border-box",
+        borderRadius: radius,
+        padding: bezel,
+        background: "#10212B",
+        boxShadow:
+          "0 2px 2px -0.25px rgba(0,0,0,0.08), 0 6px 6px -1px rgba(0,0,0,0.08), " +
+          "0 16px 16px -1.5px rgba(0,0,0,0.09), 0 27px 27px -1.75px rgba(0,0,0,0.10), " +
+          "0 50px 50px -2px rgba(0,40,60,0.22)",
+      }}
+    >
+      <div
+        style={{
+          position: "relative",
+          width: "100%",
+          height: "100%",
+          borderRadius: radius - bezel,
+          background: "linear-gradient(180deg, #FFFFFF 0%, #EAF4F5 100%)",
+          overflow: "hidden",
+        }}
+      >
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={src}
+          alt=""
+          aria-hidden
+          loading="lazy"
+          decoding="async"
+          style={{
+            position: "absolute",
+            inset: 0,
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            objectPosition: "top center",
+          }}
+        />
+      </div>
     </div>
   );
 }

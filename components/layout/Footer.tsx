@@ -77,13 +77,18 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false, t
         className="absolute inset-0 pointer-events-none"
         style={{ zIndex: 1, background: "#000000", opacity: 0.25 }}
       />
-      {/* pt-32 (128px). PageFrame overlaps the footer's top 60px (see
-          PageFrame's calc() margin-bottom), so the visible gap between
+      {/* Desktop pt-32 (128px) — PageFrame overlaps the footer's top 60px
+          (see PageFrame's calc() margin-bottom), so the visible gap between
           the card's bottom edge and where this content begins is
           128 − 60 = 68px — enough breathing room that the footer copy
-          doesn't read as crammed against the card's rounded bottom. */}
-      <div className="relative z-10 w-full max-w-[1200px] mx-auto px-8 pt-32 pb-6">
-        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12 items-start mb-10">
+          doesn't read as crammed against the card's rounded bottom.
+          Mobile pt-16 (64px) — same logic but scaled down since the card's
+          bottom radius is also visually smaller on narrow viewports.
+          Width: `content-bounds` (1287px max + 20px mobile gutter) ties
+          the footer column edges to the navbar pill on mobile and home
+          page content on desktop. */}
+      <div className="content-bounds relative z-10 w-full pt-16 md:pt-32 pb-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 md:gap-12 items-start mb-10">
           <div>
             <h3
               className="text-[24px] font-semibold mb-3 text-white"
@@ -114,7 +119,10 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false, t
           ]} />
         </div>
 
-        <div className="border-t pt-4 pb-2 flex items-center justify-between gap-4 text-[13px] border-white/15 text-white/50">
+        {/* Mobile: stack vertically + center align so the 4 spans don't
+            get squeezed into unreadable columns on a 360-px viewport.
+            Desktop (md+): original horizontal row with space-between. */}
+        <div className="border-t pt-4 pb-2 flex flex-col items-center text-center gap-2 md:flex-row md:items-center md:justify-between md:text-left md:gap-4 text-[13px] border-white/15 text-white/50">
           <span>Columbus Earth &copy; 2026</span>
           <span className="italic text-[12px]">Website made by hand, no AI.</span>
           <span className="italic text-[12px]">Nature always prevails</span>

@@ -69,6 +69,32 @@ const CMP_CSS = `
   to { transform: scaleX(0); transform-origin: right center; }
 }
 .cmp-host-visual > * { box-shadow: none !important; }
+
+/* Host card layout — split between mobile (auto-sized, demo fills width)
+   and desktop (fixed 630px, demo absolutely positioned to peek through
+   the top-left, mimicking "you're in the live app" feel).
+
+   Mobile: the host card sizes to the demo's natural aspect ratio. The
+   demo overlay sits in normal flow at full width with 16px breathing
+   room so the sky photo backdrop reads as a thin band around the demo
+   card rather than getting completely covered. No auto-advance: the
+   gray fill bar is hidden on mobile (see .cmp-fill-bar below), so the
+   onAnimationEnd hook that fires advance() never runs.
+   Desktop (lg+): the existing zoomed-in framing — host fixed at 630px,
+   demo absolutely placed at top:58 / left:88 / width:1180 so only the
+   top-left of the mockup peeks through the host's overflow-hidden
+   crop. */
+.cmp-host { padding: 16px; }
+.cmp-host-visual { position: relative; width: 100%; }
+@media (min-width: 1024px) {
+  .cmp-host { padding: 0; height: 630px; }
+  .cmp-host-visual {
+    position: absolute;
+    top: 58px;
+    left: 88px;
+    width: 1180px;
+  }
+}
 `;
 
 /* Renders the real SuperFeatureSection demoVisual that corresponds to
@@ -269,13 +295,21 @@ export default function ComparisonSection() {
                     advance() — the visible countdown IS the
                     auto-advance timer. */}
                 {isActive && (
+                  /* `hidden lg:block` — kills the gray fill bar on mobile.
+                     `display: none` also prevents the CSS animation from
+                     firing, so onAnimationEnd → advance() never runs and
+                     the section becomes a tap-to-select list on mobile
+                     (per Phase 2.2 plan: static stack on mobile, no
+                     auto-advance). Active-state feedback on mobile
+                     comes from the opacity-100 vs opacity-70 contrast
+                     applied to the parent <li> above. */
                   <span
                     key={runId}
                     onAnimationEnd={(e) => {
                       if (e.animationName === "cmpBarRecede") advance();
                     }}
                     aria-hidden
-                    className="absolute inset-0"
+                    className="absolute inset-0 hidden lg:block"
                     style={{
                       backgroundColor: "#F2F2F2",
                       animation: `cmpBarFillIn ${FILL_IN_MS}ms cubic-bezier(0.4, 0, 0.2, 1) forwards, cmpBarRecede ${RECEDE_MS}ms linear ${FILL_IN_MS}ms forwards`,
@@ -361,16 +395,7 @@ export default function ComparisonSection() {
             between separate product screenshots. cmpFade is gone
             entirely — the swap is instant. ── */}
         <div
-          className="relative w-full min-w-0 overflow-hidden rounded-3xl lg:rounded-l-none border-2 border-(--ent-border-card) lg:border-l-0"
-          style={{
-            // Background was a CSS `background-image: url('…env-bg-1.png')`
-            // (1.8 MB PNG) — migrated to next/image (below) so the
-            // optimizer can ship an AVIF/WebP variant. The same
-            // padding-box clipping rationale applies to the <Image> via
-            // `inset` on the wrapper: the photo stays flush with the
-            // inside of the border, with no fringe at rounded corners.
-            height: 630,
-          }}
+          className="cmp-host relative w-full min-w-0 overflow-hidden rounded-3xl lg:rounded-l-none border-2 border-(--ent-border-card) lg:border-l-0"
         >
           {/* Env-bg-1 sky/cityscape backdrop — fills the card behind the
               swap-in mockup children. `inset: 2` matches the 2px border
@@ -391,15 +416,15 @@ export default function ComparisonSection() {
             />
           </div>
           {FEATURES.map((_, i) => (
+            /* Positioning is split between mobile (relative, full width,
+               sits inside the host's 16px padding) and desktop (absolute,
+               top:58 / left:88 / width:1180 — only top-left of the mockup
+               peeks through the host's overflow-hidden crop). See .cmp-host
+               and .cmp-host-visual media queries in CMP_CSS above. */
             <div
               key={i}
-              className="cmp-host-visual absolute"
-              style={{
-                top: 58,
-                left: 88,
-                width: 1180,
-                display: active === i ? "block" : "none",
-              }}
+              className="cmp-host-visual"
+              style={{ display: active === i ? "block" : "none" }}
             >
               <ActiveVisual active={i} />
             </div>

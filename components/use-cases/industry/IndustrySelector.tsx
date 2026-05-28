@@ -99,7 +99,7 @@ export default function IndustrySelector({
     <section className={`w-full ${sectionBg} flex justify-center`}>
       <div
         ref={sectionRef}
-        className={`${sectionLinesClass} w-full max-w-[1287px] mx-auto pt-30 pb-15 max-md:pt-18 max-md:pb-10`}
+        className={`${sectionLinesClass} w-full max-w-[1287px] mx-auto px-5 pt-30 pb-15 max-md:pt-18 max-md:pb-10`}
       >
         {/* Header */}
         <div className="text-center px-8 md:px-10 mb-[48px] max-md:mb-[36px]" style={anim(0)}>

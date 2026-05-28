@@ -37,7 +37,6 @@ const KNOWN_ROUTE_PATTERNS: RegExp[] = [
   /^\/contact(\/|$)/,
   /^\/products\/business(\/|$)/,
   /^\/products\/consumer(\/|$)/,
-  /^\/products\/maps-gpt(\/|$)/,
   /^\/research(\/|$)/,
 ];
 

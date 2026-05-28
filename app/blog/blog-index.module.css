@@ -35,8 +35,14 @@
   background: #FFFFFF;
 }
 
+/* Mobile: drop the 80px top padding to a clamp so the navbar-relative
+   breathing room shrinks proportionally to the viewport (48 px on a
+   ~600 px wide phone → 80 px tablet/desktop). Horizontal gutter
+   matches the site-wide 20 px standard (was 24 px). Bottom padding
+   stays at 24 px so the filter row still anchors flush with the
+   bottom edge. */
 @media (max-width: 768px) {
-  .hero { padding: 80px 24px 24px; }
+  .hero { padding: clamp(48px, 8vw, 80px) 20px 24px; }
 }
 
 /* ColumbusBackgroundMB watermark — same image used behind the homepage

@@ -260,6 +260,12 @@ export const Careers = ({ hideHeader, className = "" }: { hideHeader?: boolean; 
   // Spawn exactly 3 clickable figures + 1 non-clickable — tallest always
   // gets "note from alex".
   const spawnFigures = useCallback(() => {
+    // Easter egg is a desktop hover interaction (5-second hover delay
+    // primary, click fallback). The fixed-position canvas covers the
+    // bottom 180px of the viewport, which is ~28% of a phone screen and
+    // blocks page content. Skip on mobile/tablet (<1024px) where the
+    // interaction model doesn't apply.
+    if (window.matchMedia("(max-width: 1023px)").matches) return;
     if (figuresRef.current.some(f => f.state === "walking" || f.state === "paused")) return;
 
     const scales = [1.2, 0.9, 0.95];

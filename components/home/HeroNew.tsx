@@ -76,6 +76,34 @@ const HN_CSS = `
   object-position: right center;
   z-index: 0;
 }
+/* Mobile: shift the cropping window leftward in the source image so
+   the tall-ship (which sits at ~76% horizontal of the 1672×941 art)
+   moves out of the heavy left-side readability gradient and into the
+   right portion of the section where the gradient is fully
+   transparent. With the desktop default 'right center' (=100%), at a
+   360-px viewport only the rightmost ~24% of the scaled image shows
+   and the ship ends up against the LEFT edge of that window, washed
+   out by the gradient. '72% center' slides the visible window
+   leftward so the ship lands ~30 px further right than '75% center'
+   did (≈ 87% of the section width on a 360-px viewport) — well clear
+   of the gradient and sitting comfortably in the open right zone. */
+@media (max-width: 767px) {
+  .hn-bg {
+    object-position: 72% center;
+  }
+}
+
+/* Mobile: shrink the hero card so the photo (and the tall-ship in it)
+   stops monopolising the viewport. Full 100vh+40px reads as "huge
+   competing element" on a 360x640 phone where the H1 + subtitle only
+   need ~240 px of usable height; 75vh is enough to clear the navbar
+   padding-top (120px) and centre the content, while letting the next
+   section start peeking in earlier as a "there's more below" cue. */
+@media (max-width: 767px) {
+  .hn-section {
+    min-height: 75vh;
+  }
+}
 
 /* Left-side readability layer — fades from the section's base surface
    (#FDFCFC) at the left edge to transparent past the H1's max-width,

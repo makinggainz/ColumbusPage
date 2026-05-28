@@ -244,7 +244,13 @@ export default function CompanyPage() {
           <h2 className={`mb-6 md:mb-8 ${styles.sectionLabel}`}>
             Read more about what we do
           </h2>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "48px 32px" }}>
+          {/* 3-col desktop / 2-col tablet / 1-col mobile. Previously
+              this was an inline gridTemplateColumns: repeat(3, 1fr)
+              with no media queries, so on mobile each card squeezed
+              to ~107 px wide with a ~67-px-tall hero image (unreadable).
+              gap-y-12 = 48 px row gap (matches design); gap-x-8 = 32 px
+              column gap (matches design). */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-12 gap-x-8">
             {getRandomCompanyProductPosts().map((post) => (
               <Link
                 key={post.slug}
