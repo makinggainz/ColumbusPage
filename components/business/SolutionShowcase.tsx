@@ -85,7 +85,7 @@ export default function SolutionShowcase() {
             className="text-ink leading-[1.1] text-[28px] md:text-[36px] lg:text-[44px]"
             style={{ fontWeight: 500, letterSpacing: "-0.02em", maxWidth: 720 }}
           >
-            Its time for a more powerful and intuitive GIS
+            It&rsquo;s time for a more powerful and intuitive GIS
           </h2>
         </div>
       </GridSection>

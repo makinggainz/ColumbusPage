@@ -1665,7 +1665,7 @@ export default function DestinationsSection() {
         }}
       >
         <img
-          src="/consumer/elioHome2.png"
+          src="/consumer/ElioHomeDesktop3.png"
           alt="Elio Desktop"
           style={{
             width: "100%",
