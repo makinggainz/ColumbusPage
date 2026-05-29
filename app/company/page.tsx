@@ -154,7 +154,7 @@ export default function CompanyPage() {
             unchanged. */}
         <div className={styles.heroWatermark} aria-hidden>
           <ImageWithFallback
-            src="/companyhero.png"
+            src="/company-illustration-enhanced.png"
             alt=""
             fill
             priority
