@@ -323,6 +323,7 @@ export function HeroNew() {
           rendered; CSS hides one by viewport (.hn-bg-mobile shown ≤767px,
           .hn-bg-desktop shown ≥768px). Both are priority so whichever
           viewport hits the page gets a preloaded LCP image. */}
+      {/* Desktop background — /HomeHeroBack.png (the "original decided upscaled" asset). */}
       <Image
         className="hn-bg hn-bg-desktop"
         src="/HomeHeroBack.png"
