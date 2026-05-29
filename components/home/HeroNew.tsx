@@ -1,6 +1,8 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import { ArrowDot, NavArrowStack, elioMenuItems } from "../layout/MistxNav";
 
 /**
  * Hero section — minimal layout for the experimentV6-Gdesign redesign.
@@ -81,27 +83,15 @@ const HN_CSS = `
   object-position: right center;
 }
 .hn-bg-mobile {
+  object-position: center center;
   display: none;
 }
 @media (max-width: 767px) {
   .hn-bg-desktop {
     display: none;
   }
-  /* Mobile bg is rendered smaller than the section (height-capped at
-     60vh, width auto-derived from the source 853×1844 aspect) and
-     anchored bottom-center so the upper half of the section stays clear
-     white behind the headline. The mobile Image uses explicit
-     width/height (not fill), so the shared .hn-bg full-bleed rules
-     above do not apply to it. */
   .hn-bg-mobile {
     display: block;
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    height: 60vh;
-    width: auto;
-    z-index: 0;
   }
 }
 
@@ -115,6 +105,21 @@ const HN_CSS = `
 @media (max-width: 767px) {
   .hn-section {
     min-height: calc(100vh + 40px);
+  }
+  /* On mobile, lift the title block an extra 50px above the desktop
+     resting -150px (total -200px) so the headline + subtitle + CTA sit
+     higher and leave more room for the background illustration. */
+  .hn-bounds {
+    transform: translateY(-200px);
+  }
+  /* Stacked white halo on the subtitle so glyphs stay readable over the
+     image where the radial wash thins out. Three zero-offset shadows
+     ramp the halo from a tight 2px core out to an 8px diffuse glow. */
+  .hn-subtitle {
+    text-shadow:
+      0 0 2px rgba(255, 255, 255, 0.95),
+      0 0 4px rgba(255, 255, 255, 0.9),
+      0 0 8px rgba(255, 255, 255, 0.85);
   }
   /* Flip the readability gradient on mobile from left→right to top→bottom.
      Desktop fades the left side to white so the H1 (which sits left of
@@ -146,11 +151,23 @@ const HN_CSS = `
      centered ellipse halo was a desktop carryover with no purpose
      on mobile. */
   .hn-section::after {
-    background: radial-gradient(
-      circle at top left,
-      rgba(96, 148, 193, 0.35) 0%,
-      rgba(255, 255, 255, 0) 25%
-    );
+    background:
+      /* Top-right white wash — wide ellipse anchored at the top-right
+         that extends across most of the upper section. Sized 130% wide ×
+         70% tall so it reaches past the subtitle's left edge on mobile,
+         keeping the skyline buildings from interfering with text. */
+      radial-gradient(
+        ellipse 130% 70% at top right,
+        rgba(255, 255, 255, 0.95) 0%,
+        rgba(255, 255, 255, 0.82) 30%,
+        rgba(255, 255, 255, 0.5) 55%,
+        rgba(255, 255, 255, 0) 82%
+      ),
+      radial-gradient(
+        circle at top left,
+        rgba(96, 148, 193, 0.35) 0%,
+        rgba(255, 255, 255, 0) 25%
+      );
   }
 }
 
@@ -242,11 +259,11 @@ const HN_CSS = `
   margin-left: auto;
   margin-right: auto;
   box-sizing: border-box;
-  /* Lift the title 50px above the section's vertical centre. translateY
+  /* Lift the title 150px above the section's vertical centre. translateY
      is preferred over a negative margin so the flex centering math
      stays clean and adjacent siblings (none today, but future-proof)
      aren't dragged with it. */
-  transform: translateY(-50px);
+  transform: translateY(-150px);
 }
 
 /* Font-size + line-height come from the .h1 class on the element
@@ -311,9 +328,31 @@ const HN_CSS = `
     font-size: 22px;
   }
 }
+
 `;
 
 export function HeroNew() {
+  const [ctaOpen, setCtaOpen] = useState(false);
+  const ctaRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!ctaOpen) return;
+    function onDocClick(e: MouseEvent) {
+      if (!ctaRef.current?.contains(e.target as Node)) {
+        setCtaOpen(false);
+      }
+    }
+    function onKey(e: KeyboardEvent) {
+      if (e.key === "Escape") setCtaOpen(false);
+    }
+    document.addEventListener("mousedown", onDocClick);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("mousedown", onDocClick);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [ctaOpen]);
+
   return (
     <section className="hn-section" aria-label="Columbus hero" data-hero-section>
       <style>{HN_CSS}</style>
@@ -335,14 +374,13 @@ export function HeroNew() {
         quality={80}
       />
       <Image
-        className="hn-bg-mobile"
+        className="hn-bg hn-bg-mobile"
         src="/HomeHeroBackMobile.png"
         alt=""
-        width={853}
-        height={1844}
+        fill
         priority
         fetchPriority="high"
-        sizes="60vh"
+        sizes="100vw"
         quality={80}
       />
       <div className="hn-bounds">
@@ -352,6 +390,91 @@ export function HeroNew() {
         <p className="hn-subtitle">
           Building street-smart AI for the real world.
         </p>
+        {/* Try Elio CTA — mirrors the navbar dropdown verbatim: same
+            button class set (rounded-button px-5 py-2 p-m, bg-cta + white
+            text, hover:text-accent, NavArrowStack icon) and the same dark
+            glassy translucent panel + stagger animation below. The
+            elioMenuItems data is imported from MistxNav so the two stay
+            in sync. Hover opens it (matches navbar); click toggles for
+            touch; Esc / outside-click closes. */}
+        <div
+          ref={ctaRef}
+          className="relative mt-7 inline-block md:mt-9"
+          onMouseEnter={() => setCtaOpen(true)}
+          onMouseLeave={() => setCtaOpen(false)}
+        >
+          <button
+            type="button"
+            className="group cursor-pointer rounded-button-md px-7 py-3.5 p-l md:rounded-button md:px-5 md:py-2 md:p-m flex items-center gap-2 transition-colors hover:text-accent bg-cta text-white"
+            onClick={() => setCtaOpen((o) => !o)}
+            aria-haspopup="menu"
+            aria-expanded={ctaOpen}
+          >
+            Try Elio
+            <span className="ml-2 inline-block transition-transform group-hover:translate-x-0.5">
+              <NavArrowStack className="text-accent" />
+            </span>
+          </button>
+          <div
+            aria-hidden={!ctaOpen}
+            className="absolute left-0 top-full pt-2.5 w-[320px] z-50"
+            style={{
+              opacity: ctaOpen ? 1 : 0,
+              transform: ctaOpen
+                ? "translateY(0) scale(1)"
+                : "translateY(-6px) scale(0.96)",
+              transformOrigin: "top left",
+              pointerEvents: ctaOpen ? "auto" : "none",
+              transition:
+                "opacity 300ms cubic-bezier(0.6,0.6,0,1), transform 300ms cubic-bezier(0.6,0.6,0,1)",
+            }}
+          >
+            <div
+              role="menu"
+              className="p-1.5"
+              style={{
+                backgroundColor: "rgba(15, 7, 29, 0.78)",
+                backdropFilter: "blur(20px) saturate(160%)",
+                WebkitBackdropFilter: "blur(20px) saturate(160%)",
+                borderRadius: "14px",
+                border: "1px solid rgba(255,255,255,0.08)",
+                boxShadow:
+                  "rgba(9,1,20,0.06) 0px 8px 8px -3px, rgba(8,1,20,0.06) 0px 3px 3px -1.5px, rgba(8,1,20,0.04) 0px 2px 2px -1px, rgba(8,1,20,0.03) 0px 1px 1px -0.5px, rgba(8,1,20,0.03) 0px 0.5px 0.5px 0px, rgba(255,255,255,0.08) 0px -4px 12px -4px inset, rgba(255,255,255,0.06) 0px 1px 3px 0px inset, rgba(255,255,255,0.12) 0px 0.5px 0.5px 0px inset",
+              }}
+            >
+              <ul>
+                {elioMenuItems.map((item, i) => (
+                  <li key={item.label} role="none">
+                    <a
+                      role="menuitem"
+                      href={item.href}
+                      className="group flex items-start gap-3 px-3 py-2.5 rounded-[10px] transition-colors duration-150 hover:bg-white/8"
+                      style={{
+                        opacity: ctaOpen ? 1 : 0,
+                        transform: ctaOpen
+                          ? "translateY(0)"
+                          : "translateY(4px)",
+                        transition: `opacity 260ms cubic-bezier(0.6,0.6,0,1) ${
+                          ctaOpen ? 70 + i * 45 : 0
+                        }ms, transform 260ms cubic-bezier(0.6,0.6,0,1) ${
+                          ctaOpen ? 70 + i * 45 : 0
+                        }ms`,
+                      }}
+                    >
+                      <div className="flex-1 min-w-0">
+                        <div className="p-m font-medium leading-snug text-white">{item.label}</div>
+                        <div className="p-s leading-snug mt-0.5 text-white/50">{item.desc}</div>
+                      </div>
+                      <span className="mt-1 shrink-0 text-white/35 transition-transform group-hover:translate-x-0.5">
+                        <ArrowDot />
+                      </span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   );

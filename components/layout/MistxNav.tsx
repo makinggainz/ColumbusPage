@@ -59,7 +59,7 @@ const MOBILE_NAV: { label: string; href: string }[] = [
 // panel (rgba(15,7,29,0.78) + backdrop-blur), 14px radius, a layered
 // shadow with inset white top-edge highlights, light text on dark,
 // and a fade + scale-from-top entrance with a per-row stagger.
-const elioMenuItems: { label: string; href: string; desc: string }[] = [
+export const elioMenuItems: { label: string; href: string; desc: string }[] = [
   { label: "Try Elio", href: "/products/consumer", desc: "Consumer travel reasoning" },
   { label: "Try Mapsurf", href: "/products/consumer", desc: "Lightweight map workspace" },
   { label: "Try Columbus", href: "/products/business", desc: "Business geospatial intelligence" },
@@ -69,7 +69,7 @@ const elioMenuItems: { label: string; href: string; desc: string }[] = [
  * The double-stacked arrow icon MistX uses on every nav item — slides up
  * on hover (the chevron column rotates inside an h-3 overflow-hidden box).
  */
-function NavArrowStack({ className = "" }: { className?: string }) {
+export function NavArrowStack({ className = "" }: { className?: string }) {
   return (
     <div className={"h-3 overflow-hidden relative " + className}>
       <div className="h-6 flex flex-col transition-transform duration-200 group-hover:-translate-y-3">
@@ -80,7 +80,7 @@ function NavArrowStack({ className = "" }: { className?: string }) {
   );
 }
 
-function ArrowDot({ className = "" }: { className?: string }) {
+export function ArrowDot({ className = "" }: { className?: string }) {
   return (
     <svg
       className={"size-3 shrink-0 transition-transform duration-300 " + className}
@@ -653,12 +653,12 @@ export function MistxNav({
             </div>
           </div>
 
-          {/* Mobile menu trigger — original 3-bar hamburger + clean X
-              swap (no morph animation). Bars are pill-shaped <rect>s
-              with rx = height/2; the bottom bar is half-width with a
-              lower opacity, matching the original ColumbusPage design. */}
+          {/* Mobile menu trigger — 2-bar hamburger + clean X swap (no
+              morph animation). Bars are pill-shaped <rect>s with
+              rx = height/2; opacity steps from 1.0 (top) to 0.7
+              (bottom) for a soft visual hierarchy. */}
           <button
-            className={`lg:hidden md:px-2 cursor-pointer ${lightNav ? "text-white" : "text-[#1f1f1f]"}`}
+            className={`lg:hidden md:px-2 cursor-pointer ${lightNav ? "text-white" : "text-[#0F173C]"}`}
             aria-label={mobileOpen ? "Close menu" : "Open menu"}
             aria-expanded={mobileOpen}
             onClick={() => setMobileOpen((v) => !v)}
@@ -680,20 +680,11 @@ export function MistxNav({
             ) : (
               <svg
                 width="24"
-                height="20"
-                viewBox="0 0 75 63"
+                height="12"
+                viewBox="0 0 75 37.32"
                 fill="none"
                 aria-hidden="true"
               >
-                <rect
-                  opacity="0.5"
-                  x="0"
-                  y="49.76"
-                  width="49.76"
-                  height="12.44"
-                  rx="6.22"
-                  fill="currentColor"
-                />
                 <rect
                   opacity="0.7"
                   x="0"

@@ -115,6 +115,22 @@ body {
    [data-footer-reached] on <html>, which fades the white cover off the
    footer (below). The page backdrop itself stays white throughout. */
 
+/* PageFrame's bottom-margin scroll reservation. Default subtracts 60px
+   from the footer height so the card's rounded bottom corners end up
+   sitting ON the footer's dark video bg at max scroll — a desktop
+   design beat. On mobile (<md) the override drops the −60px so the
+   PageFrame scrolls fully past the viewport top, letting the fixed
+   `min-h-screen` footer read as a dedicated full-viewport surface (its
+   sticky navbar is dragged out with it). */
+:root {
+  --frame-bottom-margin: calc(var(--footer-reveal-height, 100vh) - 60px);
+}
+@media (max-width: 767px) {
+  :root {
+    --frame-bottom-margin: var(--footer-reveal-height, 100vh);
+  }
+}
+
 /* White cover over the reveal footer. Opaque while scrolling the page
    (footer reads as white, matching the backdrop); fades out when the
    footer is reached, revealing the footer's full dark design at once. */

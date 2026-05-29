@@ -18,10 +18,19 @@ import { useEffect, type ReactNode } from "react";
  * z-index 1 with `margin-bottom: var(--footer-reveal-height)`, so the
  * body's scrollable area extends past the page content by exactly the
  * footer's height. As the user scrolls into that extra range, the
- * white card slides up over the fixed footer, revealing it. Once the
- * user is far enough into that reveal range, `data-footer-reached` is
- * set on <html>, which globals.css uses to fade the white
- * `.footer-reveal-overlay` off the footer.
+ * white card slides up over the fixed footer, revealing it.
+ *
+ * Two scroll-driven attributes get pinned on <html>:
+ *   • data-footer-near    — flips on ~1.5 viewports BEFORE the reveal
+ *                           range. Footer.tsx watches this and starts
+ *                           the 6.5MB footer-bg.mp4 transfer here so
+ *                           the video is ready to play by the time the
+ *                           reveal actually begins (the video element
+ *                           ships with preload="none" + no autoplay,
+ *                           so nothing transfers at boot).
+ *   • data-footer-reached — flips on 50% into the reveal range, with
+ *                           hysteresis back to 38%. Drives the visible
+ *                           "footer fully revealed" state.
  */
 const FRAME_MARGIN_PX = 9;
 const FRAME_RADIUS_PX = 35;
@@ -83,6 +92,15 @@ export function PageFrame({ children }: { children: ReactNode }) {
         ) || 0;
       if (footerHeight <= 0) return;
       const revealStart = maxScroll - footerHeight;
+      // Lazy-load trigger for the footer video. Fires 1.5 viewports
+      // ahead of the reveal range so the 6.5MB transfer can finish
+      // before the video is visually needed. One-way: the attribute is
+      // only ever added — Footer.tsx watches once via MutationObserver
+      // and disconnects after the first flip, so toggling it back off
+      // would do nothing useful and just generate extra mutations.
+      if (scrollY >= revealStart - footerHeight * 1.5) {
+        root.toggleAttribute("data-footer-near", true);
+      }
       // Hysteresis: flip true at 50% into the reveal range, flip back
       // only below 38% — keeps jitter at the threshold from toggling.
       const reached = root.hasAttribute("data-footer-reached")
@@ -120,15 +138,16 @@ export function PageFrame({ children }: { children: ReactNode }) {
         marginTop: "var(--frame-margin, 9px)",
         marginLeft: 0,
         marginRight: 0,
-        // Reserve scroll room below the card equal to the footer's
-        // height MINUS 60px so the card's bottom edge ends 60px below
-        // the footer's top edge at max scroll — the card's rounded
-        // bottom corners then sit ON the footer's video bg instead of
-        // above it on the white body background. The footer's top
-        // 60px stay tucked behind the card permanently, which is fine
-        // because the visible footer content begins at pt-18.5 (74px)
-        // from the footer's top, comfortably below the overlap zone.
-        marginBottom: "calc(var(--footer-reveal-height, 100vh) - 60px)",
+        // Reserve scroll room below the card. Desktop default subtracts
+        // 60px from the footer's height so the card's bottom edge ends
+        // 60px below the footer's top edge at max scroll — the card's
+        // rounded bottom corners then sit ON the footer's video bg
+        // instead of above it on the white body background. Mobile
+        // (<md) overrides the var in globals.css to drop the −60px, so
+        // the card scrolls fully past the viewport top and the
+        // min-h-screen footer reads as a dedicated full-viewport
+        // surface (its sticky navbar is dragged out with the card).
+        marginBottom: "var(--frame-bottom-margin, calc(var(--footer-reveal-height, 100vh) - 60px))",
         borderRadius: "var(--frame-radius, 35px)",
         boxShadow: "var(--frame-shadow, none)",
         // Easing for the scroll-driven shadow fade + the first-load

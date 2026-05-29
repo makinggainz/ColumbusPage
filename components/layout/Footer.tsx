@@ -1,6 +1,7 @@
 "use client";
 
 import type { FC } from "react";
+import { useEffect, useRef } from "react";
 import Link from "next/link";
 import { Mail, Linkedin } from "lucide-react";
 
@@ -19,6 +20,40 @@ export type FooterProps = {
 
 export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false, theme = "light" }) => {
   const bgColor = theme === "dark" ? "#000000" : theme === "light-blue" ? "#F4F3EB" : "#F9F9F9";
+
+  // Lazy-play the reveal-variant background video. The <video> ships
+  // with preload="none" and NO autoPlay attribute so the 6.5MB
+  // footer-bg.mp4 never transfers at boot. PageFrame's scroll handler
+  // sets data-footer-near on <html> when the user is ~1.5 viewports
+  // ahead of the reveal range; that's our cue to actually begin the
+  // transfer + start playback. The .catch swallows the rejection some
+  // browsers throw if the play() promise is interrupted (e.g. tab
+  // backgrounded mid-fetch); the next intersection re-arms via the
+  // already-set attribute on a back/forward cache restore. iOS Safari
+  // accepts programmatic play() on muted + playsInline videos, so
+  // dropping autoPlay does not break mobile playback.
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  useEffect(() => {
+    if (!reveal) return;
+    const videoEl = videoRef.current;
+    if (!videoEl) return;
+    const root = document.documentElement;
+    const tryPlay = () => {
+      void videoEl.play().catch(() => {});
+    };
+    if (root.hasAttribute("data-footer-near")) {
+      tryPlay();
+      return;
+    }
+    const observer = new MutationObserver(() => {
+      if (root.hasAttribute("data-footer-near")) {
+        tryPlay();
+        observer.disconnect();
+      }
+    });
+    observer.observe(root, { attributes: true, attributeFilter: ["data-footer-near"] });
+    return () => observer.disconnect();
+  }, [reveal]);
 
   if (variant === "compact") {
     return (
@@ -50,25 +85,31 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false, t
         ...(reveal ? { position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 0 } as React.CSSProperties : {}),
       }}
     >
-      {/* Background video — cinematic clip living at /public/footer-bg.mp4.
-          autoPlay + muted + loop + playsInline are the four flags required
-          to make it autoplay across browsers (esp. iOS Safari). preload
-          metadata so the file's header loads up front but the full 6.5 MB
-          doesn't transfer until/unless the footer reveals on scroll.
+      {/* Background video — cinematic clip living at /public/footer-bg.mp4
+          (6.5 MB). Boot-cost optimization: preload="none" + no autoPlay,
+          so the browser does NOT fetch any video bytes at first paint.
+          The poster (/footerbackground.jpeg, 113 KB) paints the footer
+          background as a still until the scroll-driven trigger above
+          calls .play() on the videoRef — at which point the browser
+          fetches the file and starts the actual cinematic playback.
+          muted + loop + playsInline remain required: muted +
+          playsInline keeps iOS Safari willing to honor the programmatic
+          play() call; loop keeps the clip seamless once it's running.
           aria-hidden + tabIndex=-1 keep it out of the AT tree. */}
       {/* object-position shifts the cropped window of the video. On mobile
           the default center crop cuts the ship in the distance on the
           right edge — `85% center` slides the visible window rightward so
           the ship is in frame. Desktop reverts to centered (default). */}
       <video
+        ref={videoRef}
         className="absolute inset-0 w-full h-full object-cover object-[85%_center] md:object-center"
         style={{ zIndex: 0, pointerEvents: "none" }}
         src="/footer-bg.mp4"
-        autoPlay
+        poster="/footerbackground.jpeg"
         muted
         loop
         playsInline
-        preload="metadata"
+        preload="none"
         aria-hidden
         tabIndex={-1}
       />
