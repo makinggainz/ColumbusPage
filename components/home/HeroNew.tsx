@@ -65,63 +65,121 @@ const HN_CSS = `
 /* Full-bleed background image. Sits at the very bottom of the section's
    stacking (z-index: 0) so the ::before readability gradient and ::after
    vignette (both z-index: 1) and the .hn-bounds content (z-index: 2)
-   all layer cleanly on top. object-position mirrors the old
-   background-position so the ::after radial vignette stays aligned. */
+   all layer cleanly on top. Shared rules for both bg variants below;
+   .hn-bg-desktop carries the 1672×941 landscape art; .hn-bg-mobile
+   carries the 853×1844 portrait variant. Display is swapped by viewport
+   in the media-query block. */
 .hn-bg {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: right center;
   z-index: 0;
 }
-/* Mobile: shift the cropping window leftward in the source image so
-   the tall-ship (which sits at ~76% horizontal of the 1672×941 art)
-   moves out of the heavy left-side readability gradient and into the
-   right portion of the section where the gradient is fully
-   transparent. With the desktop default 'right center' (=100%), at a
-   360-px viewport only the rightmost ~24% of the scaled image shows
-   and the ship ends up against the LEFT edge of that window, washed
-   out by the gradient. '72% center' slides the visible window
-   leftward so the ship lands ~30 px further right than '75% center'
-   did (≈ 87% of the section width on a 360-px viewport) — well clear
-   of the gradient and sitting comfortably in the open right zone. */
+.hn-bg-desktop {
+  object-position: right center;
+}
+.hn-bg-mobile {
+  display: none;
+}
 @media (max-width: 767px) {
-  .hn-bg {
-    object-position: 72% center;
+  .hn-bg-desktop {
+    display: none;
+  }
+  /* Mobile bg is rendered smaller than the section (height-capped at
+     60vh, width auto-derived from the source 853×1844 aspect) and
+     anchored bottom-center so the upper half of the section stays clear
+     white behind the headline. The mobile Image uses explicit
+     width/height (not fill), so the shared .hn-bg full-bleed rules
+     above do not apply to it. */
+  .hn-bg-mobile {
+    display: block;
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    height: 60vh;
+    width: auto;
+    z-index: 0;
   }
 }
 
-/* Mobile: shrink the hero card so the photo (and the tall-ship in it)
-   stops monopolising the viewport. Full 100vh+40px reads as "huge
-   competing element" on a 360x640 phone where the H1 + subtitle only
-   need ~240 px of usable height; 75vh is enough to clear the navbar
-   padding-top (120px) and centre the content, while letting the next
-   section start peeking in earlier as a "there's more below" cue. */
+/* Mobile: hero fills the full viewport — same calc(100vh + 40px) the
+   desktop rule uses, where the +40 absorbs the navbar overshoot
+   (margin-top: -120 + padding-top: 120 leaves the box 40 px taller
+   than 100vh on top, then PageFrame's overflow:clip discards it).
+   The portrait .hn-bg-mobile (853×1844) cover-fills the section
+   naturally; H1+subtitle sit centred on top of the upper white band
+   of the illustration. */
 @media (max-width: 767px) {
   .hn-section {
-    min-height: 75vh;
+    min-height: calc(100vh + 40px);
+  }
+  /* Flip the readability gradient on mobile from left→right to top→bottom.
+     Desktop fades the left side to white so the H1 (which sits left of
+     the ship) reads cleanly; on mobile the H1 sits ABOVE the ship
+     instead of beside it, so the fade needs to run vertically — opaque
+     white behind the headline at the top, transparent down where the
+     ship lives. Stops compressed to 0/15/30/45% (vs 0/30/55/75% on
+     desktop) so the fade fully clears by ~45% of section height
+     (≈y285 on a 633px section), leaving the masts (≈y280–516) and
+     hull (≈y516–610) reading at full ink. The headline block only
+     extends to ~40% of section height, so this still gives the H1
+     all the white backdrop it needs. */
+  .hn-section::before {
+    background: linear-gradient(
+      to bottom,
+      rgba(255, 255, 255, 0.92) 0%,
+      rgba(255, 255, 255, 0.78) 15%,
+      rgba(255, 255, 255, 0.30) 30%,
+      transparent 45%
+    );
+  }
+  /* Mobile ::after — strip the desktop bottom-fade and ship-halo
+     layers; keep only the top-left blue tint. The bottom-fade was
+     blending the hero's bottom edge into the next section, but both
+     surfaces are already pure #FFFFFF (see hn-section bg-color +
+     app/page.tsx), so the fade is doing visual work it doesn't need
+     to and was washing out the hull (≈y516–610 on a 633px section,
+     which is exactly where the 80%→100% white ramp landed). The
+     centered ellipse halo was a desktop carryover with no purpose
+     on mobile. */
+  .hn-section::after {
+    background: radial-gradient(
+      circle at top left,
+      rgba(96, 148, 193, 0.35) 0%,
+      rgba(255, 255, 255, 0) 25%
+    );
   }
 }
 
 /* Left-side readability layer — fades from the section's base surface
    (#FDFCFC) at the left edge to transparent past the H1's max-width,
    so the H1 sits on a near-solid background while the ship half of
-   the image reads through cleanly on the right. */
+   the image reads through cleanly on the right.
+
+   Base ::before (positioning + z-index) applies at every viewport so
+   the mobile @media block above only needs to override the background.
+   The desktop-specific left→right gradient is scoped to min-width 768
+   so it doesn't leak onto mobile and override the top→bottom fade. */
 .hn-section::before {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    to right,
-    rgba(255, 255, 255, 0.92) 0%,
-    rgba(255, 255, 255, 0.78) 30%,
-    rgba(255, 255, 255, 0.30) 55%,
-    transparent 75%
-  );
   pointer-events: none;
   z-index: 1;
+}
+@media (min-width: 768px) {
+  .hn-section::before {
+    background: linear-gradient(
+      to right,
+      rgba(255, 255, 255, 0.92) 0%,
+      rgba(255, 255, 255, 0.78) 30%,
+      rgba(255, 255, 255, 0.30) 55%,
+      transparent 75%
+    );
+  }
 }
 
 /* Three-layer overlay (single ::after). CSS multi-background paints
@@ -146,27 +204,31 @@ const HN_CSS = `
   content: "";
   position: absolute;
   inset: 0;
-  background:
-    radial-gradient(
-      circle at top left,
-      rgba(96, 148, 193, 0.35) 0%,
-      rgba(255, 255, 255, 0) 25%
-    ),
-    linear-gradient(
-      to bottom,
-      transparent 65%,
-      rgba(255, 255, 255, 0.55) 85%,
-      rgba(255, 255, 255, 1) 100%
-    ),
-    radial-gradient(
-      ellipse 56% 80% at 76% 50%,
-      rgba(255, 255, 255, 0) 0%,
-      rgba(255, 255, 255, 0) 44%,
-      rgba(255, 255, 255, 0.55) 73%,
-      rgba(255, 255, 255, 1) 100%
-    );
   pointer-events: none;
   z-index: 1;
+}
+@media (min-width: 768px) {
+  .hn-section::after {
+    background:
+      radial-gradient(
+        circle at top left,
+        rgba(96, 148, 193, 0.35) 0%,
+        rgba(255, 255, 255, 0) 25%
+      ),
+      linear-gradient(
+        to bottom,
+        transparent 65%,
+        rgba(255, 255, 255, 0.55) 85%,
+        rgba(255, 255, 255, 1) 100%
+      ),
+      radial-gradient(
+        ellipse 56% 80% at 76% 50%,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0) 44%,
+        rgba(255, 255, 255, 0.55) 73%,
+        rgba(255, 255, 255, 1) 100%
+      );
+  }
 }
 
 .hn-bounds {
@@ -257,16 +319,29 @@ export function HeroNew() {
       <style>{HN_CSS}</style>
       {/* LCP image — fill-mode <Image priority> emits a <link rel="preload">
           so the browser starts the fetch before the bundle hydrates, and
-          serves AVIF/WebP via the next-image optimizer (the 1.2 MB PNG
-          shrinks to ~120-300 KB depending on viewport). */}
+          serves AVIF/WebP via the next-image optimizer. Two variants are
+          rendered; CSS hides one by viewport (.hn-bg-mobile shown ≤767px,
+          .hn-bg-desktop shown ≥768px). Both are priority so whichever
+          viewport hits the page gets a preloaded LCP image. */}
       <Image
-        className="hn-bg"
+        className="hn-bg hn-bg-desktop"
         src="/HomeHeroBack.png"
         alt=""
         fill
         priority
         fetchPriority="high"
         sizes="100vw"
+        quality={80}
+      />
+      <Image
+        className="hn-bg-mobile"
+        src="/HomeHeroBackMobile.png"
+        alt=""
+        width={853}
+        height={1844}
+        priority
+        fetchPriority="high"
+        sizes="60vh"
         quality={80}
       />
       <div className="hn-bounds">

@@ -55,28 +55,26 @@
      blur trick on each layer keeps the shadow strictly outside the
      three covered sides. Default is the *hidden* variant (alpha 0) so
      the shadow animates IN once PageFrame sets `data-page-mounted` —
-     see the override below. Shadow is tinted with `--color-accent` via
-     color-mix so the halo carries the brand blue and tracks the token
-     if it ever changes. */
-  --frame-shadow: 0 -24px 24px color-mix(in srgb, var(--color-accent) 0%, transparent),
-                  -8px 0 14px color-mix(in srgb, var(--color-accent) 0%, transparent),
-                   8px 0 14px color-mix(in srgb, var(--color-accent) 0%, transparent);
+     see the override below. */
+  --frame-shadow: 0 -24px 24px rgba(0, 0, 0, 0),
+                  -8px 0 14px rgba(0, 0, 0, 0),
+                   8px 0 14px rgba(0, 0, 0, 0);
 }
 
 /* Visible-shadow state — set once PageFrame mounts AND the user is at
    (or near) the top of the page. The top layer is wider + softer than
    the sides: -24px Y offset paired with a 24px blur gives a wide,
-   airy halo above the card. Accent-tinted; alpha tuned higher than the
-   old black version (steel-blue reads lighter than pure black against
-   white). The `:not([data-page-scrolled])` clause means the shadow
-   fades back to the transparent default the moment the user scrolls
-   away from the top, and fades back in when they return. PageFrame's
-   inline `transition: box-shadow …` carries the easing for both
-   directions. */
+   airy halo above the card. Black-tinted (rgba) — pure black reads
+   heavier on white than the previous accent tint, so alphas are
+   lower (0.07 top / 0.10 sides). The `:not([data-page-scrolled])`
+   clause means the shadow fades back to the transparent default the
+   moment the user scrolls away from the top, and fades back in when
+   they return. PageFrame's inline `transition: box-shadow …` carries
+   the easing for both directions. */
 html[data-page-mounted]:not([data-page-scrolled]) {
-  --frame-shadow: 0 -24px 24px color-mix(in srgb, var(--color-accent) 12%, transparent),
-                  -8px 0 14px color-mix(in srgb, var(--color-accent) 14%, transparent),
-                   8px 0 14px color-mix(in srgb, var(--color-accent) 14%, transparent);
+  --frame-shadow: 0 -24px 24px rgba(0, 0, 0, 0.07),
+                  -8px 0 14px rgba(0, 0, 0, 0.10),
+                   8px 0 14px rgba(0, 0, 0, 0.10);
 }
 
 /* Mobile nav drawer shadow — sibling of `--frame-shadow` but with FOUR
