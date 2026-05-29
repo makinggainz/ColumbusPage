@@ -3174,8 +3174,9 @@
   pointer-events: none;
 }
 
-/* Each item is a link sized to its dot — pill background, padding, and
-   text appear only when the item is .scrollIndexLabelActive. */
+/* Each item is a link sized to its dot — every label renders its text +
+   muted pill by default; the active item gets the stronger pill + blue
+   dot via .scrollIndexLabelActive below so it still stands out. */
 .scrollIndexLabel {
   position: relative;
   display: inline-flex;
@@ -3185,11 +3186,11 @@
   font-size: var(--text-p-s);
   font-weight: 500;
   letter-spacing: 0;
-  color: transparent;
+  color: rgba(19, 35, 74, 0.78);
   text-decoration: none;
   padding: 6px 14px 6px 10px;
   border-radius: var(--radius-full);
-  background: transparent;
+  background: rgba(19, 35, 74, 0.04);
   transition: color 220ms ease, background-color 220ms ease,
               padding 220ms cubic-bezier(0.22, 1, 0.36, 1);
 }
@@ -3204,12 +3205,14 @@
   transition: background-color 220ms ease, transform 220ms ease;
 }
 
-/* Label text — hidden by default; max-width animates open when active. */
+/* Label text — visible by default so the index reads as a full list of
+   section labels at all times. Transitions retained in case a future
+   variant wants to collapse them again. */
 .scrollIndexText {
   display: inline-block;
-  max-width: 0;
+  max-width: 240px;
   overflow: hidden;
-  opacity: 0;
+  opacity: 1;
   transition: max-width 280ms cubic-bezier(0.22, 1, 0.36, 1),
               opacity 220ms ease;
 }
@@ -3255,7 +3258,15 @@
   opacity: 1;
 }
 
-/* White-mode — applied when the index's sticky Y overlaps a dark band. */
+/* White-mode — applied when the index's sticky Y overlaps a dark band.
+   Default label colour / pill mirror the light-mode "show all" base
+   styling so every item is readable on the dark band, not just the
+   active one. */
+.scrollIndexOnDark .scrollIndexLabel {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.08);
+}
+
 .scrollIndexOnDark .scrollIndexDot {
   background: rgba(255, 255, 255, 0.4);
 }

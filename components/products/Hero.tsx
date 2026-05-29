@@ -223,6 +223,12 @@ export default function Hero() {
   const isLgRef = useRef(true);
   const labelRefs = useRef<(HTMLDivElement | null)[]>([]);
   const blockRefs = useRef<(HTMLDivElement | null)[]>([]);
+  /* Hero-header refs — used to drive the header's dim overlay via the
+     smart-overlay scroll math on mobile (the desktop `phase >= 1`
+     toggle gets out of sync at <lg, parking the dim at full strength).
+     See the useEffect further down. */
+  const headerRef = useRef<HTMLElement>(null);
+  const headerOverlayRef = useRef<HTMLDivElement>(null);
   // True once the scene-3 label block has fully scrolled above the
   // viewport top — i.e., the user is past the hero into the next
   // section. `phase` alone stays at 3 (the nearest label is still the
@@ -369,6 +375,51 @@ export default function Hero() {
       if (raf) cancelAnimationFrame(raf);
     };
   }, [onScroll]);
+
+  /* Imperative driver for the hero header dim overlay. Both desktop and
+     mobile go through this single rAF-coalesced handler so the JSX
+     doesn't have to bind `opacity` to React state (which would
+     re-render and overwrite any imperative value we set).
+       • Desktop (≥lg): opacity follows the existing `phase >= 1`
+         binary toggle, read from `phaseRef.current` (kept in sync with
+         the `phase` state at line ~321).
+       • Mobile (<lg): smart-overlay distance-from-viewport-center math
+         — same pattern as MobileScenes — so the dim is off at rest
+         and only ramps in as the user scrolls the hero away.
+     The JSX initializes `opacity: 0` so the first paint reads clean. */
+  useEffect(() => {
+    let raf = 0;
+    const apply = () => {
+      const headerEl = headerRef.current;
+      const overlayEl = headerOverlayRef.current;
+      if (!headerEl || !overlayEl) return;
+      if (window.innerWidth >= 1024) {
+        overlayEl.style.opacity = phaseRef.current >= 1 ? "1" : "0";
+        return;
+      }
+      const vh = window.innerHeight;
+      const rect = headerEl.getBoundingClientRect();
+      const center = rect.top + rect.height / 2;
+      const distance = Math.abs(center - vh / 2);
+      const t = smoothstep(0, vh, distance);
+      overlayEl.style.opacity = String(0.55 * t);
+    };
+    const onScrollHeader = () => {
+      if (raf) return;
+      raf = requestAnimationFrame(() => {
+        apply();
+        raf = 0;
+      });
+    };
+    apply();
+    window.addEventListener("scroll", onScrollHeader, { passive: true });
+    window.addEventListener("resize", onScrollHeader);
+    return () => {
+      window.removeEventListener("scroll", onScrollHeader);
+      window.removeEventListener("resize", onScrollHeader);
+      if (raf) cancelAnimationFrame(raf);
+    };
+  }, []);
 
   const phoneW = isLg ? 360 : 240;
   // PolarX device geometry — aspect-ratio 0.4949, corner radius 42/277, bezel 6/277.
@@ -535,6 +586,7 @@ export default function Hero() {
 
       {/* ════ Hero header — normal flow over the flipped earth; scrolls away ════ */}
       <header
+        ref={headerRef}
         className="relative z-20 flex flex-col items-center"
         style={{
           // Header height = 100dvh + NAV_PULL so the background image
@@ -579,18 +631,23 @@ export default function Hero() {
               objectPosition: "center center",
             }}
           />
-          {/* Inactive-scene dim — fades in once the sticky scroll takes
-              over (phase >= 1) so the hero matches the same 0.55 black
-              treatment that "For your travels" wears when "For your
-              city" is active. Keeps the brightness ranking consistent:
-              only the currently-active scene reads bright. */}
+          {/* Inactive-scene dim. Opacity is driven imperatively from JS
+              (see the rAF-coalesced effect higher up): desktop (lg+)
+              maps to `phase >= 1 ? 1 : 0` — the existing sticky-stage
+              transition — while mobile (<lg) uses smart-overlay math
+              (distance from viewport center). JSX initializes to 0 so
+              the first paint is clean; the JS handler takes over on
+              mount and on every scroll/resize tick. NO JSX binding to
+              `phase` here — that would trigger React re-renders on
+              every phase tick and overwrite the JS-driven opacity. */}
           <div
+            ref={headerOverlayRef}
             aria-hidden
             style={{
               position: "absolute",
               inset: 0,
               background: "rgba(0,0,0,0.55)",
-              opacity: phase >= 1 ? 1 : 0,
+              opacity: 0,
               transition: "opacity 0.45s cubic-bezier(0.22, 1, 0.36, 1)",
               pointerEvents: "none",
             }}
@@ -653,43 +710,48 @@ export default function Hero() {
                   }}
                 />
               </div>
-              {/* Main heading with magic star — matches TwerkPage's
-                  Axiforma 590 white treatment, with the star absolute-
-                  positioned off the top-right of the heading box. */}
-              <div style={{ position: "relative", display: "inline-block" }}>
-                <h1
-                  style={{
-                    fontFamily: "Axiforma, -apple-system, BlinkMacSystemFont, sans-serif",
-                    /* clamp(36px, 9vw, 76px) — keeps the desktop 76px
-                       intent (hit at ~844px viewport and above), scales
-                       smoothly down to 36px on phones so "the social
-                       super map" wraps cleanly without overflowing the
-                       hero column or pushing the CTA pills off-screen. */
-                    fontSize: "clamp(36px, 9vw, 76px)",
-                    fontWeight: 590,
-                    color: "#FFFFFF",
-                    textAlign: "center",
-                    letterSpacing: "-0.02em",
-                    lineHeight: 1.2,
-                    textShadow:
-                      "0 1px 2px rgba(0, 0, 0, 0.45), 0 4px 14px rgba(0, 0, 0, 0.55), 0 0 40px rgba(0, 0, 0, 0.35)",
-                    maxWidth: 800,
-                    margin: 0,
-                  }}
-                >
-                  the social super map
-                </h1>
-                <div
+              {/* Main heading with magic star. The star is a TRUE
+                  superscript on the last word ("map") — inline at the
+                  end of the heading, sized as a fraction of the cap
+                  height, raised via `vertical-align: super`. Whatever
+                  line "map" lands on, the star follows; on multi-line
+                  wraps the star never floats above an earlier line
+                  the way an absolute-positioned star at the box
+                  top-right would. Plays on the word "super" in
+                  "super map" — literally a superscript. */}
+              <h1
+                style={{
+                  fontFamily: "Axiforma, -apple-system, BlinkMacSystemFont, sans-serif",
+                  /* clamp(36px, 9vw, 76px) — keeps the desktop 76px
+                     intent (hit at ~844px viewport and above), scales
+                     smoothly down to 36px on phones so "the social
+                     super map" wraps cleanly without overflowing the
+                     hero column or pushing the CTA pills off-screen. */
+                  fontSize: "clamp(36px, 9vw, 76px)",
+                  fontWeight: 590,
+                  color: "#FFFFFF",
+                  textAlign: "center",
+                  letterSpacing: "-0.02em",
+                  lineHeight: 1.2,
+                  textShadow:
+                    "0 1px 2px rgba(0, 0, 0, 0.45), 0 4px 14px rgba(0, 0, 0, 0.55), 0 0 40px rgba(0, 0, 0, 0.35)",
+                  maxWidth: 800,
+                  margin: 0,
+                }}
+              >
+                {/* ` ` (NBSP) glues "map" to the star so the
+                    superscript never line-breaks away from the word it
+                    decorates. Size is in `em` so it always tracks the
+                    heading's clamp() font-size — desktop 76px → 30.4px
+                    star, mobile 36px → 14.4px star. */}
+                the social super map{" "}<span
                   aria-hidden
                   style={{
-                    position: "absolute",
-                    top: 0,
-                    right: -20,
-                    width: 32,
-                    height: 32,
-                    // Mirror the heading's text-shadow stack as a chained
-                    // drop-shadow filter so the star reads with the same
-                    // soft lift off the photo backdrop as the wordmark.
+                    display: "inline-block",
+                    position: "relative",
+                    width: "0.4em",
+                    height: "0.4em",
+                    verticalAlign: "super",
                     filter:
                       "drop-shadow(0 1px 2px rgba(0, 0, 0, 0.45)) drop-shadow(0 4px 14px rgba(0, 0, 0, 0.55)) drop-shadow(0 0 40px rgba(0, 0, 0, 0.35))",
                   }}
@@ -697,12 +759,12 @@ export default function Hero() {
                   <Image
                     src="/consumer/star.png"
                     alt=""
-                    width={32}
-                    height={32}
+                    fill
+                    sizes="32px"
                     style={{ objectFit: "contain" }}
                   />
-                </div>
-              </div>
+                </span>
+              </h1>
             </div>
           </Stagger>
 
@@ -738,9 +800,32 @@ export default function Hero() {
                   <path d="M2 11L11 2M11 2H4M11 2V9" stroke="#0B1342" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               </a>
-              <StoreBadges />
+              {/* App Store + Google Play badges — hidden below lg via
+                  `display: contents` so the wrapper doesn't affect the
+                  flex row's layout at lg+. */}
+              <div className="hidden lg:contents">
+                <StoreBadges />
+              </div>
             </div>
           </Stagger>
+
+          {/* Mobile-only product mockup. Mirrors the desktop sticky
+              stage's intro phone (uses the same INTRO_PHONE_IMAGE) so
+              the mobile hero reads with the same visual richness. The
+              `lg:hidden` is on the OUTER wrapper — wrapping the
+              `<Stagger>` itself, not its child — so on desktop the
+              wrapper is `display: none` and is removed from the flex
+              column entirely. If the `lg:hidden` sat on an inner
+              child, the Stagger div would still be rendered as an
+              empty flex item and the parent's `gap: 32` would add a
+              phantom 32-px slot below the CTA row, pushing the
+              content stack lower and making the pinned phone read as
+              floating higher in the layout. */}
+          <div className="lg:hidden">
+            <Stagger show={mounted} delay={400} y={84}>
+              <MobilePhone src={INTRO_PHONE_IMAGE} />
+            </Stagger>
+          </div>
         </div>
 
       </header>
@@ -947,6 +1032,52 @@ export default function Hero() {
    same NotifCard for scene-3 notifications — design language locked
    to desktop. */
 function MobileScenes() {
+  /* Scroll-driven smart-overlay refs. Each dark scene (scenes 1 & 2)
+     gets a 0.55 black dim that fades to 0 as the section's center
+     approaches the viewport center, then fades back up to 0.55 as the
+     section scrolls past. The effect: whichever scene is "in focus"
+     reads clean, off-screen scenes stay dim. Pattern mirrors the
+     desktop sticky stage's `isActive` opacity dial — same use of
+     `smoothstep` + `getBoundingClientRect` + rAF-coalesced scroll
+     handler, no React state per scroll frame. */
+  const sectionRefs = useRef<Array<HTMLElement | null>>([]);
+  const overlayRefs = useRef<Array<HTMLDivElement | null>>([]);
+
+  useEffect(() => {
+    let raf = 0;
+    const apply = () => {
+      const vh = window.innerHeight;
+      const viewportCenter = vh / 2;
+      sectionRefs.current.forEach((sectionEl, i) => {
+        const overlayEl = overlayRefs.current[i];
+        if (!sectionEl || !overlayEl) return;
+        const rect = sectionEl.getBoundingClientRect();
+        const sectionCenter = rect.top + rect.height / 2;
+        const distance = Math.abs(sectionCenter - viewportCenter);
+        /* 0 distance (section center at viewport center) → opacity 0.
+           1× viewport-height of distance → opacity 0.55 (full dim).
+           smoothstep eases the curve so the fade reads natural. */
+        const t = smoothstep(0, vh, distance);
+        overlayEl.style.opacity = String(0.55 * t);
+      });
+    };
+    const onScroll = () => {
+      if (raf) return;
+      raf = window.requestAnimationFrame(() => {
+        apply();
+        raf = 0;
+      });
+    };
+    apply();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+      if (raf) window.cancelAnimationFrame(raf);
+    };
+  }, []);
+
   return (
     <div className="relative z-10 bg-white">
       {LABELS.map((lab, i) => {
@@ -955,6 +1086,7 @@ function MobileScenes() {
         return (
           <section
             key={i}
+            ref={(el) => { sectionRefs.current[i] = el; }}
             className="relative w-full overflow-hidden"
             style={{ background: isDarkScene ? "#0B1B2B" : "#FFFFFF" }}
           >
@@ -969,39 +1101,52 @@ function MobileScenes() {
                   decoding="async"
                   className="absolute inset-0 w-full h-full object-cover"
                 />
-                {/* Same 0.55 black dim the desktop label blocks use
-                    when inactive, applied permanently here so the
-                    text reads cleanly on busy photo backdrops. */}
-                <div aria-hidden className="absolute inset-0 bg-black/55" />
+                {/* Scroll-driven dim — see useEffect above. Initial
+                    opacity 0.55 keeps the SSR paint identical to the
+                    old permanent-dim render so there's no FOUC of a
+                    clean photo before JS hydrates. The 80ms transition
+                    absorbs sub-frame jitter without lagging behind
+                    scroll. */}
+                <div
+                  ref={(el) => { overlayRefs.current[i] = el; }}
+                  aria-hidden
+                  className="absolute inset-0 bg-black"
+                  style={{ opacity: 0.55, transition: "opacity 80ms linear" }}
+                />
               </>
             )}
             <div className="relative z-10 flex flex-col items-center text-center px-5 pt-16 pb-20 gap-10">
-              <h2
-                style={{
-                  fontFamily: "Axiforma, -apple-system, BlinkMacSystemFont, sans-serif",
-                  /* clamp(28px, 8vw, 44px) — keeps the headline
-                     proportional to viewport width across phones. */
-                  fontSize: "clamp(28px, 8vw, 44px)",
-                  fontWeight: 590,
-                  lineHeight: 1.15,
-                  letterSpacing: "-0.02em",
-                  color: isDarkScene ? "#FFFFFF" : "#0B1B2B",
-                  margin: 0,
-                  maxWidth: "min(440px, 86vw)",
-                  textShadow: isDarkScene
-                    ? "0 1px 2px rgba(0,0,0,0.5), 0 2px 10px rgba(0,0,0,0.55), 0 0 28px rgba(0,0,0,0.45)"
-                    : undefined,
-                }}
-              >
-                {lab.title}
-              </h2>
-              <MobilePhone src={phoneSrc} />
-              {lab.scene === 3 && (
-                <div className="flex flex-col gap-3 w-full max-w-90 mt-2">
-                  {NOTIFICATIONS.map((n, idx) => (
-                    <NotifCard key={idx} n={n} />
-                  ))}
-                </div>
+              {/* Scene 3 drops the heading and replaces the vertical
+                  NotifCard list with a scattered layout that fans the
+                  cards above, beside, and below the phone — same set of
+                  notifications, just arranged around the device the way
+                  the desktop sticky stage does (only tighter, since the
+                  mobile viewport is narrower). */}
+              {lab.scene !== 3 && (
+                <h2
+                  style={{
+                    fontFamily: "Axiforma, -apple-system, BlinkMacSystemFont, sans-serif",
+                    /* clamp(28px, 8vw, 44px) — keeps the headline
+                       proportional to viewport width across phones. */
+                    fontSize: "clamp(28px, 8vw, 44px)",
+                    fontWeight: 590,
+                    lineHeight: 1.15,
+                    letterSpacing: "-0.02em",
+                    color: isDarkScene ? "#FFFFFF" : "#0B1B2B",
+                    margin: 0,
+                    maxWidth: "min(440px, 86vw)",
+                    textShadow: isDarkScene
+                      ? "0 1px 2px rgba(0,0,0,0.5), 0 2px 10px rgba(0,0,0,0.55), 0 0 28px rgba(0,0,0,0.45)"
+                      : undefined,
+                  }}
+                >
+                  {lab.title}
+                </h2>
+              )}
+              {lab.scene === 3 ? (
+                <MobileScene3Scatter src={phoneSrc} />
+              ) : (
+                <MobilePhone src={phoneSrc} />
               )}
             </div>
           </section>
@@ -1063,6 +1208,72 @@ function MobilePhone({ src }: { src: string }) {
           }}
         />
       </div>
+    </div>
+  );
+}
+
+/* Scene-3 mobile scatter — fans the six NOTIFICATIONS around the
+   centred phone the way the desktop sticky stage does, only with
+   tighter dx values since mobile viewports are ~320–390 px wide
+   instead of 1024+. Index matches NOTIFICATIONS:
+     0 Sophie (front, top-left)
+     1 Elio Madrid (front, top-right)
+     2 Hidden coffee (behind, mid-left, tucked behind phone)
+     3 Williamsburg (behind, mid-right, tucked behind phone)
+     4 Sarah & James (front, below phone left)
+     5 Rain (front, below phone right)
+   `top` is measured from the scatter container's top edge; the
+   phone wrapper has 80 px of top padding so cards at top < 80 sit
+   above the phone. Phone is 240 × ~485 px, so cards at top > 565
+   sit beneath the phone bottom edge. */
+const MOBILE_SCENE3_POS: { top: number; dx: number; rot: number }[] = [
+  { top: 20,  dx: -75, rot: -4 },
+  { top: 100, dx:  80, rot:  3 },
+  { top: 230, dx: -85, rot: -5 },
+  { top: 320, dx:  85, rot:  4 },
+  { top: 590, dx: -55, rot: -2 },
+  { top: 680, dx:  55, rot:  3 },
+];
+
+function MobileScene3Scatter({ src }: { src: string }) {
+  return (
+    <div className="relative w-full" style={{ height: 805 }}>
+      {/* Phone — centred, with top padding to leave room for the two
+          cards that fan above it. zIndex 1 so the "behind" cards
+          (zIndex 0) tuck under it and the "front" cards (zIndex 2)
+          ride over it. */}
+      <div
+        style={{
+          position: "relative",
+          paddingTop: 80,
+          display: "flex",
+          justifyContent: "center",
+          zIndex: 1,
+        }}
+      >
+        <MobilePhone src={src} />
+      </div>
+      {NOTIFICATIONS.map((n, i) => {
+        const pos = MOBILE_SCENE3_POS[i];
+        return (
+          <div
+            key={i}
+            aria-hidden
+            style={{
+              position: "absolute",
+              left: "50%",
+              top: pos.top,
+              width: 200,
+              transform: `translateX(-50%) translateX(${pos.dx}px) rotate(${pos.rot}deg)`,
+              zIndex: n.behind ? 0 : 2,
+              opacity: n.behind ? 0.45 : 1,
+              pointerEvents: "none",
+            }}
+          >
+            <NotifCard n={n} />
+          </div>
+        );
+      })}
     </div>
   );
 }
