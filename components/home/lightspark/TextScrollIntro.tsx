@@ -42,7 +42,7 @@ export function TextScrollIntro() {
           }}
         >
           <ImageWithFallback
-            src="/ColumbusBackgroundMB.png"
+            src="/ColumbusWorldLinesBG.png"
             alt=""
             fill
             sizes="120vw"

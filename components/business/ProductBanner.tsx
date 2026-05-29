@@ -42,7 +42,7 @@ export default function ProductBanner() {
         style={{ aspectRatio: "1881 / 836" }}
       >
         <ImageWithFallback
-          src="/businessartbackground.png"
+          src="/businessArtBGEnhance.png"
           alt=""
           fill
           sizes="100vw"

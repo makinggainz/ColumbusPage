@@ -115,16 +115,16 @@ const LABELS = [
 // stacked, opacity-toggling to whichever label is closest to the
 // viewport anchor — see `activeLabel` below.
 const PHONE_IMAGES = [
-  "/consumer/elio/ElioForYourCity.png",         // 0  For your city. (active)
-  "/consumer/elio/ElioZone.png",                // 1  For your travels.
-  "/consumer/elio/ElioEverythingInBetween.png", // 2  and everything in between
+  "/consumer/elio/ElioVotingShowcase.png",      // 0  For your city. (active)
+  "/consumer/elio/ElioForYourTravels.png",      // 1  For your travels.
+  "/consumer/elio/ElioProfile.png",             // 2  and everything in between
 ] as const;
 
 // Distinct mockup shown during the hero header (phase 0) so the phone
 // screen visibly swaps the moment "For your city" becomes the active
 // scene. Without this, intro and active-city would both render
 // PHONE_IMAGES[0] and the transition would be invisible.
-const INTRO_PHONE_IMAGE = "/consumer/elio/ElioChat-v2.png";
+const INTRO_PHONE_IMAGE = "/consumer/elio/ElioHeroShowcase.png";
 
 // ── Scene-3 floating notifications ────────────────────────────────────
 // Flighty-style cards that fan around the pinned phone during phase 3

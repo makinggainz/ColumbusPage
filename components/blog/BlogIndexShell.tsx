@@ -25,7 +25,7 @@ export function BlogIndexShell({ activeFilter }: { activeFilter: BlogFilter }) {
             The wrapper still owns the mask/opacity treatment. */}
         <div className={styles.heroWatermark} aria-hidden>
           <ImageWithFallback
-            src="/ColumbusBackgroundMB.png"
+            src="/ColumbusWorldLinesBG.png"
             alt=""
             fill
             priority

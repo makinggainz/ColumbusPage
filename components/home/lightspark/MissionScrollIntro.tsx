@@ -68,7 +68,7 @@ export function MissionScrollIntro() {
         className="absolute inset-0 -z-10 pointer-events-none overflow-hidden"
       >
         <ImageWithFallback
-          src="/minimalistCity.png"
+          src="/minimalistCityEnhanced.png"
           alt=""
           fill
           sizes="100vw"
