@@ -252,7 +252,7 @@ export default function BusinessHero() {
 
         <p
           className="mt-5"
-          style={{ fontSize: "var(--ent-text-body-l)", color: "#FFFFFF", letterSpacing: "-0.01em", fontWeight: 400, maxWidth: 480, whiteSpace: "nowrap" }}
+          style={{ fontSize: "var(--ent-text-body-l)", color: "#FFFFFF", letterSpacing: "-0.01em", fontWeight: 400, maxWidth: 480 }}
         >
           Agentic GIS so easy, the janitor could be your new researcher
         </p>
@@ -287,6 +287,7 @@ export default function BusinessHero() {
             the white translucent border brightens and fades around the
             window so it catches light like a pane of glass. */}
         <div
+          className="biz-product-display"
           style={{
             width: "100%",
             // Matches the site content bounds (.ent-content-bounds → 1287px),
@@ -308,6 +309,7 @@ export default function BusinessHero() {
               no separate fill) so the strip above the image and the gutter
               around it read as one seamless pane. 20px radius = PageFrame. */}
           <div
+            className="biz-product-display"
             style={{
               position: "relative",
               width: "100%",
@@ -325,6 +327,7 @@ export default function BusinessHero() {
                 white silhouette over this strip, so it pops as the
                 foreground surface. */}
             <div
+              className="biz-hero-title-bar"
               style={{
                 display: "flex",
                 alignItems: "center",

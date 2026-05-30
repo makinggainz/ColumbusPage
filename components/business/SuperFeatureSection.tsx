@@ -148,7 +148,7 @@ export default function SuperFeatureSection({
           the panel chrome (background, radius, overflow clipping) is
           dropped so content sits directly on the page background. */}
       <div
-        className="ent-content-bounds mt-10 lg:mt-14"
+        className="biz-product-display ent-content-bounds mt-10 lg:mt-14"
         style={{
           backgroundColor: panel ? "#FAFAFA" : "transparent",
           /* Shared panel chrome — 2px --ent-border-card hairline + 24px
@@ -164,7 +164,7 @@ export default function SuperFeatureSection({
         {/* Main framed block — sky backdrop + product demo, fills the
             panel's full width (no inset). */}
         <div
-          className="relative overflow-hidden"
+          className="biz-product-display relative overflow-hidden"
           style={{ borderRadius: "var(--ent-radius-2xl)" }}
         >
           <SkyBackdrop image={backgroundImage} scrim={scrim} position={backgroundPosition} size={backgroundSize} />

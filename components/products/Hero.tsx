@@ -218,6 +218,14 @@ export default function Hero() {
 
   const outerRef = useRef<HTMLDivElement>(null);
   const riseRef = useRef<HTMLDivElement>(null);
+  /* Wraps the hero CTA-row Stagger so onScroll can read the row's
+     resting bottom-edge via getBoundingClientRect. Used to clamp the
+     phone's at-rest peek position so its top edge never collides with
+     the CTA pills on shorter desktops (≈850–1024 px tall) where the
+     natural viewport-relative peek math is too aggressive. The ref
+     lives on a layout-only wrapper div, NOT on the Stagger itself, so
+     the Stagger's mount-translateY doesn't shift the measurement. */
+  const ctaRowRef = useRef<HTMLDivElement>(null);
   const phaseRef = useRef(0);
   const labelRef = useRef(0);
   const isLgRef = useRef(true);
@@ -335,8 +343,32 @@ export default function Hero() {
     //    its pinned centre over the intro scroll, then holds. ─────────
     const rise = riseRef.current;
     if (rise) {
+      let peekY = vh * (lg ? PHONE_PEEK : 0.55) - PHONE_PEEK_LIFT_PX;
+      // Desktop only: clamp the at-rest peek so the phone's top edge
+      // stays ≥ MIN_PHONE_GAP below the CTA row, no matter what the
+      // viewport height or H1 wrap produces. The natural peek (vh ×
+      // PHONE_PEEK) is purely viewport-relative — on shorter laptops
+      // (or whenever the H1 wraps to two lines) it lands the phone top
+      // right under the CTA pills. Reading the CTA row's resting
+      // bottom-edge from the DOM lets the fix scale across every
+      // desktop viewport without re-tuning. (No-op on mobile — the
+      // sticky stage is hidden < lg.)
+      const ctaRowEl = ctaRowRef.current;
+      if (lg && ctaRowEl) {
+        // At-rest = "as if scrollY were 0". The CTA scrolls with the
+        // page so its current viewport bottom = at-rest viewport
+        // bottom − window.scrollY; add scrollY back to recover it.
+        const ctaBottomAtRest =
+          ctaRowEl.getBoundingClientRect().bottom + window.scrollY;
+        // Phone height at lg matches the JSX (phoneW = 360, aspect 0.4949).
+        const phH = Math.round(360 / 0.4949);
+        const MIN_PHONE_GAP = 80;
+        const minPhoneTopY = ctaBottomAtRest + MIN_PHONE_GAP;
+        // phoneTopY = 0.5·vh + peekY − 0.5·phH  →  solve for peekY.
+        const minPeek = minPhoneTopY - 0.5 * vh + 0.5 * phH;
+        if (minPeek > peekY) peekY = minPeek;
+      }
       const introT = smoothstep(0, INTRO_END, progress);
-      const peekY = vh * (lg ? PHONE_PEEK : 0.55) - PHONE_PEEK_LIFT_PX;
       rise.style.transform = `translateY(${lerp(peekY, 0, introT).toFixed(1)}px)`;
     }
 
@@ -657,8 +689,13 @@ export default function Hero() {
         {/* Content stack — navy ink on the white sky band, matching the
             FinalCTA section: cyan→teal gradient "Elio" eyebrow, navy
             #0B1342 H1, and a navy bg-cta primary pill with white label
-            + arrow (same palette + treatment as the navbar CTA). */}
-        <div className="relative flex flex-col items-center text-center px-6" style={{ maxWidth: 820, gap: 32 }}>
+            + arrow (same palette + treatment as the navbar CTA).
+            maxWidth 980 (was 820) so the H1 "the social super map" + ⋆
+            superscript fits on a single line at the 76 px desktop type
+            cap (text ≈ 830 px wide, container content area now 932 px).
+            Narrower viewports are still constrained by their own width,
+            so mobile keeps its natural multi-line wrap. */}
+        <div className="relative flex flex-col items-center text-center px-6" style={{ maxWidth: 980, gap: 32 }}>
           <Stagger show={mounted} delay={120} y={84}>
             <div className="flex flex-col items-center" style={{ gap: 16 }}>
               {/* Elio lockup — globe + elioName.png wordmark, ported from
@@ -735,39 +772,61 @@ export default function Hero() {
                   lineHeight: 1.2,
                   textShadow:
                     "0 1px 2px rgba(0, 0, 0, 0.45), 0 4px 14px rgba(0, 0, 0, 0.55), 0 0 40px rgba(0, 0, 0, 0.35)",
-                  maxWidth: 800,
+                  maxWidth: 960,
                   margin: 0,
                 }}
               >
-                {/* ` ` (NBSP) glues "map" to the star so the
-                    superscript never line-breaks away from the word it
-                    decorates. Size is in `em` so it always tracks the
-                    heading's clamp() font-size — desktop 76px → 30.4px
-                    star, mobile 36px → 14.4px star. */}
-                the social super map{" "}<span
-                  aria-hidden
-                  style={{
-                    display: "inline-block",
-                    position: "relative",
-                    width: "0.4em",
-                    height: "0.4em",
-                    verticalAlign: "super",
-                    filter:
-                      "drop-shadow(0 1px 2px rgba(0, 0, 0, 0.45)) drop-shadow(0 4px 14px rgba(0, 0, 0, 0.55)) drop-shadow(0 0 40px rgba(0, 0, 0, 0.35))",
-                  }}
-                >
-                  <Image
-                    src="/consumer/star.png"
-                    alt=""
-                    fill
-                    sizes="32px"
-                    style={{ objectFit: "contain" }}
-                  />
+                the social super{" "}
+                {/* `white-space: nowrap` glues "map" and the star into
+                    one atomic word for line-breaking. Without this, an
+                    inline-block at the line-end can still be pushed to
+                    the next line even with no whitespace before it (the
+                    `marginLeft` doesn't suppress the break opportunity
+                    at the inline-block boundary). Wrapping the pair in
+                    a nowrap span guarantees they wrap as a unit — the
+                    star can never end up alone on a line, nor on a line
+                    "map" isn't on, regardless of viewport width, font
+                    metric, or mid-resize font-swap reflow. */}
+                <span style={{ whiteSpace: "nowrap" }}>
+                  map<span
+                    aria-hidden
+                    style={{
+                      display: "inline-block",
+                      position: "relative",
+                      /* All offsets are in `em` so the star's
+                         relationship to "map" stays visually identical
+                         across every viewport — desktop (76 px cap)
+                         gets a ~7.6 px gap + ~11 px lift + 38 px star;
+                         mobile (36 px floor) gets a proportional
+                         ~3.6 px gap + ~5 px lift + 18 px star. */
+                      top: "-0.15em",
+                      marginLeft: "0.1em",
+                      width: "0.5em",
+                      height: "0.5em",
+                      verticalAlign: "super",
+                      filter:
+                        "drop-shadow(0 1px 2px rgba(0, 0, 0, 0.45)) drop-shadow(0 4px 14px rgba(0, 0, 0, 0.55)) drop-shadow(0 0 40px rgba(0, 0, 0, 0.35))",
+                    }}
+                  >
+                    <Image
+                      src="/consumer/star.png"
+                      alt=""
+                      fill
+                      sizes="32px"
+                      style={{ objectFit: "contain" }}
+                    />
+                  </span>
                 </span>
               </h1>
             </div>
           </Stagger>
 
+          {/* Layout-only wrapper — Stagger animates its child via
+              translateY on mount, which would skew getBoundingClientRect
+              on the Stagger itself. Wrapping it lets the onScroll handler
+              read this wrapper's stable layout-determined bottom edge
+              instead (parent boxes ignore child transforms). */}
+          <div ref={ctaRowRef} style={{ width: "100%", display: "flex", justifyContent: "center" }}>
           <Stagger show={mounted} delay={260} y={84}>
             <div className="flex flex-wrap items-center justify-center" style={{ gap: 12 }}>
               <a
@@ -808,6 +867,7 @@ export default function Hero() {
               </div>
             </div>
           </Stagger>
+          </div>
 
           {/* Mobile-only product mockup. Mirrors the desktop sticky
               stage's intro phone (uses the same INTRO_PHONE_IMAGE) so
@@ -1213,35 +1273,44 @@ function MobilePhone({ src }: { src: string }) {
 }
 
 /* Scene-3 mobile scatter — fans the six NOTIFICATIONS around the
-   centred phone the way the desktop sticky stage does, only with
-   tighter dx values since mobile viewports are ~320–390 px wide
-   instead of 1024+. Index matches NOTIFICATIONS:
-     0 Sophie (front, top-left)
-     1 Elio Madrid (front, top-right)
-     2 Hidden coffee (behind, mid-left, tucked behind phone)
-     3 Williamsburg (behind, mid-right, tucked behind phone)
-     4 Sarah & James (front, below phone left)
-     5 Rain (front, below phone right)
-   `top` is measured from the scatter container's top edge; the
-   phone wrapper has 80 px of top padding so cards at top < 80 sit
-   above the phone. Phone is 240 × ~485 px, so cards at top > 565
-   sit beneath the phone bottom edge. */
+   centred phone, all tucked UNDER the mockup (z-index 0, opacity 0.45)
+   so the phone is the single visual focus and the cards read as
+   ambient context fanning out from behind it. Index matches
+   NOTIFICATIONS:
+     0 Sophie         — top-left, above phone
+     1 Elio Madrid    — top-right, above phone
+     2 Hidden coffee  — mid-left, behind phone
+     3 Williamsburg   — mid-right, behind phone
+     4 Sarah & James  — lower-left, behind phone
+     5 Rain           — lower-right, behind phone
+   `top` is measured from the scatter container's top edge; the phone
+   wrapper has 80 px of top padding so cards at top < 80 sit above
+   the phone. Phone is 240 × ~485 px (spans top 80 → 565). All cards
+   render at z-index 0 (behind the phone, which is at z-index 1) per
+   MobileScene3Scatter — NOTIFICATIONS.behind is ignored on mobile. */
 const MOBILE_SCENE3_POS: { top: number; dx: number; rot: number }[] = [
   { top: 20,  dx: -75, rot: -4 },
   { top: 100, dx:  80, rot:  3 },
   { top: 230, dx: -85, rot: -5 },
   { top: 320, dx:  85, rot:  4 },
-  { top: 590, dx: -55, rot: -2 },
-  { top: 680, dx:  55, rot:  3 },
+  // Sarah & James — lower-left, behind phone (moved down 100 px from
+  // the previous lower-side anchor at top 400).
+  { top: 500, dx: -65, rot: -3 },
+  // Rain — lower-right, behind phone.
+  { top: 470, dx:  85, rot:  3 },
 ];
 
 function MobileScene3Scatter({ src }: { src: string }) {
   return (
-    <div className="relative w-full" style={{ height: 805 }}>
+    /* Container height = phone bottom (565 px) + slack for the
+       bottom-most card. Card 4 (Sarah & James) sits at top 500;
+       cards may grow vertically when copy wraps at the original
+       200 px mobile width, so 640 leaves ~ 60 px slack below the
+       tallest expected card. */
+    <div className="relative w-full" style={{ height: 640 }}>
       {/* Phone — centred, with top padding to leave room for the two
-          cards that fan above it. zIndex 1 so the "behind" cards
-          (zIndex 0) tuck under it and the "front" cards (zIndex 2)
-          ride over it. */}
+          cards that fan above it. zIndex 1 so every card (which all
+          render at zIndex 0 below) tucks under it. */}
       <div
         style={{
           position: "relative",
@@ -1265,8 +1334,13 @@ function MobileScene3Scatter({ src }: { src: string }) {
               top: pos.top,
               width: 200,
               transform: `translateX(-50%) translateX(${pos.dx}px) rotate(${pos.rot}deg)`,
-              zIndex: n.behind ? 0 : 2,
-              opacity: n.behind ? 0.45 : 1,
+              /* All mobile cards live UNDER the mockup — z-index 0 +
+                 0.45 opacity, regardless of NOTIFICATIONS.behind (which
+                 still governs the desktop sticky stage). The phone is
+                 the single visual focus; the cards read as ambient
+                 context fanning out from behind it. */
+              zIndex: 0,
+              opacity: 0.45,
               pointerEvents: "none",
             }}
           >
@@ -1405,7 +1479,12 @@ function NotifCard({ n }: { n: Notif }) {
           <MapsGPTGlobe size={36} />
         </div>
       )}
-      <div style={{ flex: 1, minWidth: 0 }}>
+      {/* `textAlign: "left"` overrides the parent stage's `text-center`
+          (MobileScenes wraps every section in a `text-center` flex
+          column for the heading; without an explicit override here,
+          card labels inherit center-alignment and any wrap renders
+          centred line-by-line). */}
+      <div style={{ flex: 1, minWidth: 0, textAlign: "left" }}>
         <p
           style={{
             fontFamily: '"SF Pro", -apple-system, BlinkMacSystemFont, sans-serif',
@@ -1415,9 +1494,6 @@ function NotifCard({ n }: { n: Notif }) {
             margin: 0,
             lineHeight: 1.25,
             letterSpacing: "-0.01em",
-            whiteSpace: "nowrap",
-            overflow: "hidden",
-            textOverflow: "ellipsis",
           }}
         >
           {n.title}
@@ -1430,9 +1506,6 @@ function NotifCard({ n }: { n: Notif }) {
             color: "#6B7B8C",
             margin: "2px 0 0 0",
             lineHeight: 1.3,
-            whiteSpace: "nowrap",
-            overflow: "hidden",
-            textOverflow: "ellipsis",
           }}
         >
           {n.sub}

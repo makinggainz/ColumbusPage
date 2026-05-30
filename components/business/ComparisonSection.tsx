@@ -70,17 +70,17 @@ const CMP_CSS = `
 }
 .cmp-host-visual > * { box-shadow: none !important; }
 
-/* Host card layout — split between mobile (auto-sized, demo fills width)
-   and desktop (fixed 630px, demo absolutely positioned to peek through
-   the top-left, mimicking "you're in the live app" feel).
+/* Host card layout — split between mobile (full mockup visible at
+   container width, scales like a real product screenshot) and desktop
+   (fixed 630px, demo absolutely positioned to peek through the
+   top-left, mimicking "you're in the live app").
 
    Mobile: the host card sizes to the demo's natural aspect ratio. The
    demo overlay sits in normal flow at full width with 16px breathing
-   room so the sky photo backdrop reads as a thin band around the demo
-   card rather than getting completely covered. No auto-advance: the
-   gray fill bar is hidden on mobile (see .cmp-fill-bar below), so the
-   onAnimationEnd hook that fires advance() never runs.
-   Desktop (lg+): the existing zoomed-in framing — host fixed at 630px,
+   room. Interior typography uses cqw, so on a narrow container the
+   text scales proportionally small — the mockup reads as a miniature
+   real product UI rather than a blown-up illustration.
+   Desktop (lg+): the existing zoomed framing — host fixed at 630px,
    demo absolutely placed at top:58 / left:88 / width:1180 so only the
    top-left of the mockup peeks through the host's overflow-hidden
    crop. */

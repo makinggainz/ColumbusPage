@@ -121,7 +121,7 @@ export default function MapChatPlatform({
 }: MapChatPlatformProps = {}) {
   return (
     <div
-      className="mx-auto w-full"
+      className="biz-product-display biz-mockup-frame mx-auto w-full"
       style={{
         maxWidth: 1180,
         borderRadius: "var(--ent-radius-2xl)",

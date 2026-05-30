@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
-import Image from "next/image";
+import Image, { getImageProps } from "next/image";
 import Link from "next/link";
 import { Linkedin } from "lucide-react";
 
-import { ImageWithFallback } from "@/components/ui/ImageWithFallback";
 import { MistxNav } from "@/components/layout/MistxNav";
 import {
   ScrollHighlightStatement,
@@ -135,6 +134,30 @@ const PILLARS: Pillar[] = [
   },
 ];
 
+const COMPANY_HERO_SIZES = "100vw";
+
+const { props: companyHeroDesktopProps } = getImageProps({
+  src: "/company-illustration-enhanced.png",
+  alt: "",
+  width: 3762,
+  height: 2174,
+  sizes: COMPANY_HERO_SIZES,
+  quality: 75,
+  loading: "eager",
+  className: styles.heroWatermarkImage,
+});
+
+const {
+  props: { srcSet: companyHeroMobileSrcSet },
+} = getImageProps({
+  src: "/company-illustration-enhanced-mobile.png",
+  alt: "",
+  width: 1440,
+  height: 2880,
+  sizes: COMPANY_HERO_SIZES,
+  quality: 75,
+});
+
 export default function CompanyPage() {
   return (
     <main className={styles.page}>
@@ -146,22 +169,17 @@ export default function CompanyPage() {
           the homepage hero. `data-hero-section` lets the navbar render
           transparent at the top of the page. */}
       <section className={styles.hero} data-hero-section aria-label="Company">
-        {/* Watermark — formerly a CSS background-image (companyhero.png is
-            ~8.6 MB). Routing it through next/image with `priority` lets
-            the optimizer ship a sub-megabyte AVIF/WebP variant and emits
-            a preload tag so the watermark is on screen before hydration.
-            The wrapper still owns the mask/opacity so the visual is
-            unchanged. */}
+        {/* Watermark — art-directed with a portrait mobile source so the
+            phone hero keeps both the globe and tall ship instead of
+            cropping the desktop canvas. */}
         <div className={styles.heroWatermark} aria-hidden>
-          <ImageWithFallback
-            src="/company-illustration-enhanced.png"
-            alt=""
-            fill
-            priority
-            sizes="100vw"
-            quality={75}
-            style={{ objectFit: "cover", objectPosition: "center" }}
-          />
+          <picture className={styles.heroWatermarkPicture}>
+            <source
+              media="(max-width: 767px)"
+              srcSet={companyHeroMobileSrcSet}
+            />
+            <img {...companyHeroDesktopProps} alt="" />
+          </picture>
         </div>
         <div className={styles.heroInner}>
           <h1 className={`h1 tracking-tight ${styles.heroHeadline}`}>
@@ -291,12 +309,6 @@ export default function CompanyPage() {
                       aria-hidden="true"
                     />
                   )}
-                  {/* Top-right cut-out — page-surface white so it reads as
-                      a real notch out of the image, carrying the post's
-                      playful audience tag (e.g. "For builders"). */}
-                  <div className={styles.readMoreNotch}>
-                    <span className={styles.readMoreNotchLabel}>{post.audience}</span>
-                  </div>
                 </div>
 
                 <div style={{ display: "flex", flexDirection: "column" }}>
@@ -346,9 +358,6 @@ export default function CompanyPage() {
                   fill
                   sizes="(min-width: 768px) 640px, 100vw"
                 />
-              </div>
-              <div className={styles.photoNotch}>
-                <span className={styles.photoNotchLabel}>Our CEO</span>
               </div>
               <div className={styles.featuredQuoteBlock}>
                 <QuoteMark className={styles.quoteMarkLight} />

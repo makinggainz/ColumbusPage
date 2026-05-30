@@ -305,20 +305,57 @@ function ContactPageInner() {
       `}</style>
 
       {/* Static hand-drawn beach backdrop — sits behind all content,
-          full-bleed at the top of the page, fading naturally to white. */}
-      <img
-        src="/contactbackimg.png"
-        alt=""
+          full-bleed at the top of the page. The wrapping section carries
+          `data-hero-section` so the navbar reads as transparent at the
+          top of the page (same handshake the company / blog heroes use)
+          — otherwise the navbar paints a solid white band over the top
+          of the image. `aspect-ratio` on the wrapper preserves the
+          natural 1881:836 ratio, and `min-height: 360px` keeps the scene
+          substantial on phones where the natural ratio would collapse
+          the strip to ~160 px. The top + bottom mask gradient melts the
+          band into the white page above and below it. */}
+      <section
+        data-hero-section
         aria-hidden
-        className="pointer-events-none select-none absolute inset-x-0 top-0 z-0 w-full h-auto"
-      />
+        className="pointer-events-none absolute inset-x-0 top-0 z-0 w-full overflow-hidden"
+        style={{ aspectRatio: "1881 / 836", minHeight: "360px" }}
+      >
+        <img
+          src="/contactbackimg.png"
+          alt=""
+          aria-hidden
+          className="select-none w-full h-full hidden md:block"
+          style={{
+            objectFit: "cover",
+            objectPosition: "center",
+            WebkitMaskImage:
+              "linear-gradient(to bottom, transparent 0%, #000 18%, #000 72%, transparent 100%)",
+            maskImage:
+              "linear-gradient(to bottom, transparent 0%, #000 18%, #000 72%, transparent 100%)",
+          }}
+        />
+        <img
+          src="/contactbackimg-mobile.png"
+          alt=""
+          aria-hidden
+          className="select-none w-full h-full block md:hidden"
+          style={{
+            objectFit: "cover",
+            objectPosition: "right center",
+            WebkitMaskImage:
+              "linear-gradient(to bottom, transparent 0%, #000 18%, #000 72%, transparent 100%)",
+            maskImage:
+              "linear-gradient(to bottom, transparent 0%, #000 18%, #000 72%, transparent 100%)",
+          }}
+        />
+      </section>
       <MistxNav />
 
       <div className="relative z-10">
 
         {phase === "writing" && (
-          <div className="pt-36 md:pt-44 pb-10 md:pb-14 px-8 md:px-10 text-center">
-            <h1 className="h1 tracking-tight text-ink" style={heroFadeIn(0)}>
+          <div className="pt-28 md:pt-44 pb-10 md:pb-14 px-5 md:px-10 text-center">
+            <h1 className="h1 tracking-tight text-ink text-balance" style={heroFadeIn(0)}>
               Get in touch.
             </h1>
           </div>
@@ -547,7 +584,7 @@ function ContactPageInner() {
 
               {/* ── FAQ ── */}
               <div className="mt-20 md:mt-24">
-                <h2 className="h2 tracking-tight text-ink text-center mb-8">
+                <h2 className="h2 tracking-tight text-ink text-center text-balance mb-8">
                   FAQ
                 </h2>
                 <div className="flex flex-col gap-3">

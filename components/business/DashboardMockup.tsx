@@ -307,7 +307,7 @@ export default function DashboardMockup({ industryId }: DashboardMockupProps = {
 
   return (
     <div
-      className="relative w-full mx-auto"
+      className="biz-product-display biz-mockup-frame relative w-full mx-auto"
       style={{
         aspectRatio: "5184 / 2976",
         maxWidth: 1180,

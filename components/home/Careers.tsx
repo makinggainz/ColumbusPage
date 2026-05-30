@@ -208,6 +208,17 @@ const CSS = `
   margin: 0 auto;
   padding: 8px 0;
 }
+/* Stroke-darkening via multiply stacking. The source PNG has fully-opaque
+   pale-gray strokes (~#D0) on pure white. Any global filter (brightness +
+   contrast) drags the near-white background down to gray too. mix-blend-mode:
+   multiply on duplicate copies gives surgical darkening instead — for each
+   pixel, output = a × b. White (1.0 × 1.0) stays white; pale strokes
+   (0.81 × 0.81 = 0.66 with one overlay; × 0.81 again = 0.53 with two)
+   compound down to ink. Browsers dedupe identical asset URLs, so the two
+   overlay <img>s are free over the network. */
+.careers-map-stack {
+  position: relative;
+}
 .careers-map-img {
   display: block;
   width: 100%;
@@ -217,6 +228,16 @@ const CSS = `
      radius belongs to the PageFrame card itself, not to in-card
      imagery. */
   border-radius: 7px;
+}
+.careers-map-img-overlay {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 7px;
+  mix-blend-mode: multiply;
+  pointer-events: none;
 }
 
 /* ── Join CTA (centered black pill, same arrow-dots glyph as the
@@ -548,11 +569,28 @@ export const Careers = ({ hideHeader, className = "" }: { hideHeader?: boolean; 
         )}
 
         <div className="careers-map">
-          <img
-            src="/hiring-humans/world-map-countries.png"
-            alt="Team locations: Washington DC and Madrid"
-            className="careers-map-img"
-          />
+          <div className="careers-map-stack">
+            <img
+              src="/hiring-humans/world-map-countries.png"
+              alt="Team locations: Washington DC and Madrid"
+              className="careers-map-img"
+            />
+            {/* Two multiply-blend overlays darken pale-gray strokes
+                without touching the white background. See .careers-map
+                CSS for the math. */}
+            <img
+              src="/hiring-humans/world-map-countries.png"
+              alt=""
+              aria-hidden="true"
+              className="careers-map-img-overlay"
+            />
+            <img
+              src="/hiring-humans/world-map-countries.png"
+              alt=""
+              aria-hidden="true"
+              className="careers-map-img-overlay"
+            />
+          </div>
         </div>
 
         <div className="careers-join-row">

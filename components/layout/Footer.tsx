@@ -96,13 +96,18 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false, t
           playsInline keeps iOS Safari willing to honor the programmatic
           play() call; loop keeps the clip seamless once it's running.
           aria-hidden + tabIndex=-1 keep it out of the AT tree. */}
-      {/* object-position shifts the cropped window of the video. On mobile
-          the default center crop cuts the ship in the distance on the
-          right edge — `85% center` slides the visible window rightward so
-          the ship is in frame. Desktop reverts to centered (default). */}
+      {/* object-position shifts the cropped window of the video (source
+          1176×784). On mobile we anchor at 75% to hide the Kling
+          wordmark baked into the right edge of the source clip — at a
+          ~390px viewport the height-bound cover scale gives ~875px of
+          horizontal excess, so each 1% pans ≈ 8.7px; going from the
+          original 85% to 75% shifts the visible window ≈87px to the
+          left in the source, clipping the rightmost band where the
+          Kling mark sits while keeping the distant ship in frame.
+          Desktop reverts to centered (default). */}
       <video
         ref={videoRef}
-        className="absolute inset-0 w-full h-full object-cover object-[85%_center] md:object-center"
+        className="absolute inset-0 w-full h-full object-cover object-[75%_center] md:object-center"
         style={{ zIndex: 0, pointerEvents: "none" }}
         src="/footer-bg.mp4"
         poster="/footerbackground.jpeg"

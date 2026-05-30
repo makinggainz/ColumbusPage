@@ -1,9 +1,34 @@
-import { ImageWithFallback } from "@/components/ui/ImageWithFallback";
+import { getImageProps } from "next/image";
+
 import { MistxNav } from "@/components/layout/MistxNav";
 import { BlogIndexGrid, type BlogFilter } from "@/components/blog/BlogIndexGrid";
 import { BlogFilterBar } from "@/components/blog/BlogFilterBar";
 import { getAllBlogPostsSorted } from "@/lib/blog-posts";
 import styles from "@/app/blog/blog-index.module.css";
+
+const BLOG_HERO_SIZES = "(max-width: 767px) 100vw, 120vw";
+
+const { props: blogHeroDesktopProps } = getImageProps({
+  src: "/ColumbusWorldLinesBG.png",
+  alt: "",
+  width: 3480,
+  height: 1808,
+  sizes: BLOG_HERO_SIZES,
+  quality: 75,
+  loading: "eager",
+  className: styles.heroWatermarkImage,
+});
+
+const {
+  props: { srcSet: blogHeroMobileSrcSet },
+} = getImageProps({
+  src: "/BlogHeroMobile-v2.png",
+  alt: "",
+  width: 1024,
+  height: 1536,
+  sizes: BLOG_HERO_SIZES,
+  quality: 75,
+});
 
 export function BlogIndexShell({ activeFilter }: { activeFilter: BlogFilter }) {
   const posts = getAllBlogPostsSorted();
@@ -18,21 +43,17 @@ export function BlogIndexShell({ activeFilter }: { activeFilter: BlogFilter }) {
           `data-hero-section` lets the navbar render transparent at the
           top of the page so the watermark reads through it. */}
       <section className={styles.hero} data-hero-section aria-label="Blog">
-        {/* Watermark — formerly a CSS background-image (948 KB PNG).
-            Routing it through next/image with `priority` lets the
-            optimizer ship a sub-200 KB AVIF/WebP variant and emits a
-            preload tag so the watermark is on screen before hydration.
-            The wrapper still owns the mask/opacity treatment. */}
+        {/* Watermark — art-directed with a portrait mobile source so the
+            phone hero keeps the map continents + contour lines instead
+            of cropping the desktop canvas. */}
         <div className={styles.heroWatermark} aria-hidden>
-          <ImageWithFallback
-            src="/ColumbusWorldLinesBG.png"
-            alt=""
-            fill
-            priority
-            sizes="120vw"
-            quality={75}
-            style={{ objectFit: "cover", objectPosition: "center" }}
-          />
+          <picture className={styles.heroWatermarkPicture}>
+            <source
+              media="(max-width: 767px)"
+              srcSet={blogHeroMobileSrcSet}
+            />
+            <img {...blogHeroDesktopProps} alt="" />
+          </picture>
         </div>
         <div className={styles.heroInner}>
           <h1 className={`h1 tracking-tight ${styles.headline}`}>Blog</h1>

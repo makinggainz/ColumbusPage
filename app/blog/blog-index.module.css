@@ -17,13 +17,15 @@
   position: relative;
   overflow: hidden;
   margin-top: -80px;
-  /* The hero must fill the *visible PageFrame card* at rest (scrollY 0),
-     not the raw viewport: the card is inset 30px + a 2px border on each
-     edge, so its visible content area is (100dvh − 64px). Sizing the hero
-     to exactly that keeps the filter row resting just inside the bottom
-     edge — any taller and the card's `overflow: clip` hides it below the
-     fold. dvh tracks the real (mobile-chrome-aware) viewport; vh is the
-     fallback for older browsers. */
+  /* Desktop hero target: fill the visible PageFrame card so the filter
+     row rests near the bottom edge. The 64px subtraction is an empirical
+     resting value — it originally tracked an older PageFrame chrome
+     (30px gutter + 2px border on each edge); today the chrome is a 9px
+     top gutter only, so this leaves the desktop filter ~88px above the
+     viewport bottom by design. The mobile override below takes a
+     different approach — extends past the viewport so the filter
+     anchors to the bottom edge instead. dvh tracks the real
+     (mobile-chrome-aware) viewport; vh is the fallback. */
   min-height: calc(100vh - 64px);
   min-height: calc(100dvh - 64px);
   /* Bottom padding anchors the filter row ~24px above the card's bottom
@@ -42,7 +44,17 @@
    stays at 24 px so the filter row still anchors flush with the
    bottom edge. */
 @media (max-width: 768px) {
-  .hero { padding: clamp(48px, 8vw, 80px) 20px 24px; }
+  .hero {
+    padding: clamp(48px, 8vw, 80px) 20px 24px;
+    /* Mobile: extend the hero past the PageFrame's content area so it
+       visually fills the viewport (matches HeroNew + company.module.css
+       — `margin-top: -80px` is cancelled by the +80px here). The
+       existing `padding-bottom: 24px` then anchors the filter row
+       ~24px above the viewport's bottom edge instead of ~88px (which
+       is where the desktop `100dvh − 64px` rule leaves it). */
+    min-height: calc(100vh + 80px);
+    min-height: calc(100dvh + 80px);
+  }
 }
 
 /* ColumbusBackgroundMB watermark — same image used behind the homepage
@@ -59,6 +71,20 @@
   overflow: hidden;
   -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 22%, #000 80%, transparent 100%);
   mask-image: linear-gradient(to bottom, transparent 0%, #000 22%, #000 80%, transparent 100%);
+}
+
+.heroWatermarkPicture {
+  position: absolute;
+  inset: 0;
+  display: block;
+}
+
+.heroWatermarkImage {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
 }
 
 .heroInner {
@@ -101,8 +127,15 @@
   margin-left: auto;
   margin-right: auto;
   box-sizing: border-box;
-  padding-top: 96px;
+  /* Vertical rhythm: matches the site-wide `.section` step pair
+     (80px default → 112px at ≥1024px) defined in globals.css. Was a
+     bespoke 96px that sat awkwardly between the two design-system
+     values. */
+  padding-top: 80px;
   padding-bottom: 128px;
+}
+@media (min-width: 1024px) {
+  .body { padding-top: 112px; }
 }
 
 /* ── Filter bar — centred pill row resting at the bottom of the hero ──
@@ -281,6 +314,14 @@
      (see getBlogAccentColor). Color is pre-darkened to meet WCAG AA on
      the white notch surface; falls back to the global accent. */
   color: var(--notch-accent, var(--color-accent));
+}
+
+/* Mobile: hide the audience cut-out notch on each card. Same call as
+   the homepage's BlogSection and BentoProducts — on narrow viewports
+   the notch crowds the card top-edge and the category label fits more
+   cleanly down in .cardMeta below the media. */
+@media (max-width: 767px) {
+  .notch { display: none; }
 }
 
 /* ── Card text — sits underneath the media tile. ────────────────────── */

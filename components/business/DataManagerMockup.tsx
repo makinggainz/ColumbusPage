@@ -216,7 +216,7 @@ export default function DataManagerMockup({ industryId }: DataManagerMockupProps
 
   return (
     <div
-      className="relative w-full mx-auto"
+      className="biz-product-display biz-mockup-frame relative w-full mx-auto"
       style={{
         aspectRatio: "5184 / 3003",
         maxWidth: 1180,

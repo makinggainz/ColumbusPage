@@ -6,7 +6,6 @@ import { ArticleReadingOptions } from "@/components/blog/ArticleReadingOptions";
 import { RelatedPosts } from "@/components/blog/RelatedPosts";
 import { ShareButtons } from "@/components/blog/ShareButtons";
 import { MistxNav } from "@/components/layout/MistxNav";
-import { Footer } from "@/components/layout/Footer";
 import { getAllBlogSlugs, getBlogPost } from "@/lib/blog-posts";
 import { blogBodyWithSectionIds, mergeBlogBody } from "@/lib/blog-lorem-body";
 import blogStyles from "../blog.module.css";
@@ -47,15 +46,15 @@ export default async function BlogPostPage({ params }: Props) {
       </div>
       <BlogArticleStickyNav sections={stickySections} />
 
-      <article className="relative z-[1] mx-auto w-full max-w-[720px] px-5 pt-[175px] min-[1315px]:pt-[162px] pb-12 md:px-6">
+      <article className="relative z-[1] mx-auto w-full max-w-[720px] px-5 pt-24 md:pt-[175px] min-[1315px]:pt-[162px] pb-12 md:px-6">
         <h1 id="article-title" className={`${blogStyles.headlineLarge} mb-4 scroll-mt-24`}>{post.title}</h1>
         <p
           className={`${blogStyles.bodyLarge} ${blogStyles.colorOnSurfaceVariant} mb-4`}
         >
           {post.description}
         </p>
-        <div className="flex items-center justify-between gap-4">
-          <div className="flex items-center gap-1">
+        <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-3">
+          <div className="flex items-center gap-1 min-w-0 flex-wrap">
             <p className={`${blogStyles.labelLarge} ${blogStyles.dateLine}`}>{post.date}</p>
             <ShareButtons title={post.title} size={18} />
           </div>
@@ -138,7 +137,6 @@ export default async function BlogPostPage({ params }: Props) {
 
       <RelatedPosts currentSlug={post.slug} currentCategory={post.category} />
       <div className={blogStyles.footerTransition} aria-hidden />
-      <Footer theme="light" />
     </main>
   );
 }

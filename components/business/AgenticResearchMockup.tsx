@@ -299,7 +299,7 @@ export default function AgenticResearchMockup({ industryId }: AgenticResearchMoc
 
   return (
     <div
-      className="relative w-full mx-auto"
+      className="biz-product-display biz-mockup-frame relative w-full mx-auto"
       style={{
         aspectRatio: "5190 / 2993",
         maxWidth: 1180,

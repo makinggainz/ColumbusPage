@@ -268,3 +268,63 @@
   display: none;
 }
 
+/* ── Mobile: tighter corners on every product-display wrapper ──
+   On phones, product mockups + their wrappers shrink to 7px corners
+   to match the per-tile image corners under "Enterprise-grade
+   capabilities" (CapabilitiesGrid renders each tile's image with a
+   hardcoded `borderRadius: 7`). The desktop 24px --ent-radius-2xl
+   reads as cushy at small scale; 7px is the project's MistX placeholder
+   corner used site-wide on tight UI tiles.
+
+   Scope: the .biz-product-display class is on all four mockup outer
+   wrappers, the SuperFeatureSection panel, and the BusinessHero glass
+   frame + inner window. Two passes: the variable override cascades to
+   descendants whose inline borderRadius uses var(--ent-radius-2xl)
+   (mockups, SuperFeatureSection inner block, sub-feature panels);
+   the !important rule covers the hero's hardcoded inline values
+   (21.5 outer ring, 20 inner window). .cmp-host uses Tailwind's
+   rounded-3xl directly (no token) so it needs its own override. */
+@media (max-width: 767px) {
+  .biz-product-display {
+    --ent-radius-2xl: 7px;
+    border-radius: 7px !important;
+  }
+  .cmp-host {
+    border-radius: 7px !important;
+  }
+  /* Hero: hide the browser-window title bar (traffic lights + the four
+     product tabs) on mobile. The 4-way tab swap is mobile-hostile —
+     CapabilitiesGrid lower on the page already surfaces all four
+     capabilities. activeTabId stays at its default (Map Chat); only the
+     toggle UI is hidden, so the React state machinery is intact for
+     viewport-resize back to >=768. */
+  .biz-hero-title-bar {
+    display: none !important;
+  }
+  /* Symmetric padding around the product display now that the title
+     bar above it is gone — keeps the mockup from kissing the inner
+     window's rounded top edge. */
+  .hero-product-display {
+    padding: 4px !important;
+  }
+  /* "Mini product" treatment for the four standalone mockup frames
+     (MapChatPlatform / DataManagerMockup / AgenticResearchMockup /
+     DashboardMockup). On mobile, cap each mockup at 240px wide and
+     center it inside whatever container holds it. Because the mockups
+     are container-queried (containerType: inline-size + cqw inside),
+     shrinking the wrapper width auto-shrinks all interior typography,
+     spacing, icons — the demo looks like a small screenshot of the
+     real product, not a viewport-filling illustration with oversized
+     text.
+
+     Scope: only the .biz-mockup-frame class. The .biz-product-display
+     wrappers around them (hero glass window, ComparisonSection host,
+     SuperFeatureSection panel) stay at their natural mobile size, so
+     the small mockup floats centered inside the larger card. */
+  .biz-mockup-frame {
+    max-width: 240px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+}
+
