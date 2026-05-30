@@ -66,9 +66,9 @@
    top, and fades it back in when they return. PageFrame's inline
    `transition: box-shadow …` carries the easing for both directions. */
 html[data-page-mounted]:not([data-page-scrolled]) {
-  --frame-shadow: 0 -24px 24px rgba(0, 0, 0, 0.01),
-                  -8px 0 14px rgba(0, 0, 0, 0.0125),
-                   8px 0 14px rgba(0, 0, 0, 0.0125);
+  --frame-shadow: 0 -24px 6px rgba(0, 0, 0, 0.01),
+                  -8px 0 4px rgba(0, 0, 0, 0.0125),
+                   8px 0 4px rgba(0, 0, 0, 0.0125);
 }
 
 /* Mobile nav drawer shadow — sibling of `--frame-shadow` but with FOUR
