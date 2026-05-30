@@ -82,9 +82,12 @@ const CSS = `
   text-decoration: none;
   color: #0B1B2B;
   display: block;
-  height: 460px;
 }
-@media (min-width: 640px)  { .bp-card { height: 520px; padding: 32px; } }
+/* Mobile: drop the fixed pixel height — let the card grow to fit its
+   text + the (now statically-positioned) .bp-visual below. The desktop
+   "text-top, mockup-peeks-from-bottom" pattern only re-engages at
+   ≥1024px where there's room for the absolutely-positioned mockup. */
+@media (min-width: 640px)  { .bp-card { padding: 32px; } }
 @media (min-width: 1024px) { .bp-card { height: 560px; padding: 40px; } }
 
 /* Wide tile (Research) spans both columns on desktop as an elongated
@@ -253,6 +256,14 @@ const CSS = `
 @media (min-width: 1024px) {
   .bp-notch { height: 53px; padding: 0 40px; }
 }
+/* Mobile: hide the audience cut-out entirely. The notched corner is a
+   desktop-only design beat; on a 360–414px viewport it crowds the
+   brand row and isn't worth the visual cost. Each card's hairline
+   ring (.bp-card::after) reverts to a clean uninterrupted rectangle
+   in this range, which is what we want. */
+@media (max-width: 767px) {
+  .bp-notch { display: none; }
+}
 
 /* Top text block — brand row, tagline, CTA stacked. Spacing is set with
    explicit per-pair margins (on .bp-tagline / .bp-cta) rather than one
@@ -275,8 +286,8 @@ const CSS = `
   gap: 12px;
 }
 .bp-logo {
-  width: 42px;
-  height: 42px;
+  width: clamp(36px, 9vw, 42px);
+  height: clamp(36px, 9vw, 42px);
   object-fit: contain;
   flex: 0 0 auto;
 }
@@ -311,7 +322,7 @@ const CSS = `
    carrying empty descender space that would push the row out of sync. */
 .bp-card--columbus .bp-name {
   color: #0F173C;
-  font-size: 26px;
+  font-size: clamp(20px, 5.5vw, 26px);
   line-height: 1;
   /* Drops the wordmark a hair below the brand row's optical centre so
      the baseline of the "C" sits closer to the bottom of the logo mark
@@ -335,7 +346,7 @@ const CSS = `
    both product names share a palette across the bento row. */
 .bp-elio-name {
   width: auto;
-  height: 42px;
+  height: clamp(36px, 9vw, 42px);
   object-fit: contain;
   flex: 0 0 auto;
   margin-left: -4px;
@@ -411,29 +422,38 @@ const CSS = `
   .bp-cta-arrow { transition: none; }
 }
 
-/* Bottom-anchored product visual — now lifted above the card's bottom
-   edge (positive bottom %) so the entire screenshot is visible and the
-   image floats with a small breathing-room gap below it. The
-   horizontal insets keep the visual aligned with the text rail's
-   left padding so the composition reads as one column. */
+/* Mobile (<1024px): the visual sits in normal document flow at the
+   bottom of the card, scaling to the card's content width. Aspect
+   ratio is preserved (height: auto + max-width: 100% on the inner
+   <img>), so the mockup never gets clipped by the card's bounds.
+
+   Desktop (≥1024px) switches back to the original absolute-positioned
+   "peeks-from-bottom" pattern that gave the design its signature
+   text-top / mockup-bottom rhythm. */
 .bp-visual {
-  position: absolute;
-  left: 28px;
-  right: 28px;
-  bottom: -2%;
+  position: relative;
+  margin-top: 24px;
+  width: 100%;
   z-index: 1;
   display: flex;
   justify-content: center;
-  /* Fast-but-smooth lift on card hover. Eased with a custom decel
-     curve (close to ease-out-quart) so the visual snaps up then
-     settles. */
   transition: transform 220ms cubic-bezier(0.22, 0.61, 0.36, 1);
   will-change: transform;
 }
-@media (min-width: 640px)  { .bp-visual { left: 32px; right: 32px; bottom: -2%; } }
-@media (min-width: 1024px) { .bp-visual { left: 40px; right: 40px; bottom: -2%; } }
-.bp-card:hover .bp-visual { transform: translateY(-12px); }
+.bp-visual img,
+.bp-visual > * {
+  max-width: 100%;
+  height: auto;
+}
 @media (min-width: 1024px) {
+  .bp-visual {
+    position: absolute;
+    left: 40px;
+    right: 40px;
+    bottom: -2%;
+    margin-top: 0;
+    width: auto;
+  }
   .bp-card:hover .bp-visual { transform: translateY(-18px); }
 }
 /* Research tile opts out of the hover-lift — its visual is the

@@ -144,6 +144,12 @@ const CSS = `
   white-space: nowrap;
   color: var(--color-muted);
 }
+/* Mobile: hide the audience cut-out on each blog card — same call as
+   the bento tiles. The notched corner is a desktop design beat; on
+   narrow viewports it crowds the card. */
+@media (max-width: 767px) {
+  .blog-section-card-notch { display: none; }
+}
 `;
 
 function getRandomBlogCards() {

@@ -796,12 +796,6 @@ export function MistxNav({
               }}
             >
               <p
-                className="p-s font-medium tracking-widest uppercase mb-3"
-                style={{ color: "var(--color-muted)" }}
-              >
-                Columbus Earth
-              </p>
-              <p
                 className="p-l"
                 style={{ color: "var(--color-ink)", maxWidth: "34ch" }}
               >
