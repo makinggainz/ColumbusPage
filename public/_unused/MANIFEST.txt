@@ -207,3 +207,168 @@
 3064	Icon/claude2.png
 1941	MapsGPTLogos/Logo8.png
 398	cofounder-placeholder.svg
+
+# Deep audit — generated 2026-05-30T21:55:11.693Z
+# Strategy: cross-check against .next/ compiled build output, not source-grep.
+# Total: 159 files, 303.9 MB
+# Format: <bytes>	<original-relative-path>
+
+44273593	mesh-animation.mp4
+9029131	use-cases/hero 2.png
+7986200	animated-mesh-2.mp4
+5803168	use-cases/map 2.png
+5640277	use-cases/comm 2.png
+5640277	use-cases/comm.png
+5585620	use-cases/onsite 2.png
+5585620	use-cases/onsite.png
+5483410	use-cases/urban 2.png
+5178587	use-cases/gd 2.png
+5178587	use-cases/gd.png
+5103362	use-cases/gm 2.png
+5103362	use-cases/gm.png
+5004124	TechnologyPageImages/blogsBg2.png
+4972213	Blogs/voyagersBlog.png
+4037248	business/legacyGIS.png
+4023293	business/HeroImage.png
+3904058	Blogs/cityRiverBlog.png
+3810111	images/13.png
+3490049	business/humanbg.png
+3425292	business/bmapp.png
+3415427	images/9.png
+3404963	business/sunbg.png
+3349616	use-cases/sites 2.png
+3128341	images/12.png
+3057921	Blogs/firePrediction.png
+2833422	UrbanInfrastructure/urb-bg-8.png
+2711389	QuestionsMapsGPT/Question8 2.png
+2711389	QuestionsMapsGPT/Question8.png
+2680201	consumer/HeroBack.png
+2643116	QuestionsMapsGPT/Question2 2.png
+2643116	QuestionsMapsGPT/Question2.png
+2554941	consumer/images/hidden-coffee-shop.png
+2513534	consumer/elio/ElioHome.png
+2505203	bento/planner-route.png
+2502244	AcademicMaps/ai-critical-thinking.png
+2482225	Blogs/columbusPreOrder.png
+2456061	use-cases/logs 2.png
+2438683	QuestionsMapsGPT/FavoriteQuestion 2.png
+2438683	QuestionsMapsGPT/FavoriteQuestion.png
+2437722	use-cases/site 2.png
+2310831	consumer/elio/ElioSavedPlaces.png
+2308136	bento/mapbento.png
+2303453	QuestionsMapsGPT/Question9 2.png
+2303453	QuestionsMapsGPT/Question9.png
+2232372	consumer/images/local-hiking-trail.png
+2226160	consumer/elioHome2.png
+2180081	QuestionsMapsGPT/Question7 2.png
+2180081	QuestionsMapsGPT/Question7.png
+2142617	consumer/images/weekend-brunch-place.png
+2097618	consumer/images/late-night-taco-joint.png
+2090873	images/10.png
+2063380	QuestionsMapsGPT/Question10 2.png
+2063380	QuestionsMapsGPT/Question10.png
+2049195	business/mapchatBusiness.png
+2021275	consumer/images/hang-out-spot.png
+1924151	use-cases/com 2.png
+1924151	use-cases/com.png
+1920507	business/geocoding.png
+1882882	consumer/images/rooftop-sunset-bar.png
+1826375	consumer/elio/ElioZone.png
+1826052	consumer/images/quiet-study-cafe.png
+1796310	consumer/elio/ElioChat-v2.png
+1773215	consumer/bentoEarth.png
+1768403	HeroShipVid.mp4
+1765255	consumer/elio/Localguideinyourpocket.png
+1761858	use-cases/real 2.png
+1749173	consumer/images/romantic-date-night.png
+1748867	consumer/images/cozy-bookstore.png
+1748224	consumer/elio/ElioEverythingInBetween.png
+1705922	use-cases/ub 2.png
+1705922	use-cases/ub.png
+1688550	QuestionsMapsGPT/Question5 2.png
+1688550	QuestionsMapsGPT/Question5.png
+1642499	QuestionsMapsGPT/Question6 2.png
+1642499	QuestionsMapsGPT/Question6.png
+1619117	consumer/elio/ElioForYourCity.png
+1569497	consumer/videos/secret-beach-spot.mp4
+1530802	consumer/elio/ElioFeedback.png
+1525050	business/drawnAreaMap.png
+1464294	use-cases/endImage2.png
+1337142	use-cases/log 2.png
+1325955	use-cases/geo 2.png
+1325955	use-cases/geo.png
+1265548	images/17.png
+1237305	use-cases/res 2.png
+1237305	use-cases/res.png
+1204347	use-cases/gen 2.png
+1204347	use-cases/gen.png
+1202803	consumer/elio/ElioChat.png
+1189659	use-cases/due 2.png
+1189659	use-cases/due.png
+1158100	use-cases/urb 2.png
+1158100	use-cases/urb.png
+1131535	TechnologyPageImages/techpg-radiance.original.png
+1113756	consumer/elioHome1.png
+1069748	QuestionsMapsGPT/Question3 2.png
+1069748	QuestionsMapsGPT/Question3.png
+954280	hiring-humans/world-map-continents.png
+942161	use-cases/result1.png
+861316	consumer/videos/cozy-bookstore.mp4
+804797	QuestionsMapsGPT/Question1 2.png
+804797	QuestionsMapsGPT/Question1.png
+749394	Eliodropdownmenuvid.mp4
+709396	business/lgm.png
+703002	QuestionsMapsGPT/Question4 2.png
+703002	QuestionsMapsGPT/Question4.png
+681265	TechnologyPageImages/techdiagramA1.5.png
+638300	use-cases/result4.png
+627111	use-cases/result3.png
+609040	QuestionsMapsGPT/Question11 2.png
+609040	QuestionsMapsGPT/Question11.png
+604883	business/mob.png
+587582	use-cases/result2.png
+587135	business/map4.png
+539310	business/mp1.png
+527941	business/citymap.png
+515809	images/16.png
+508849	business/mp2.png
+472151	UseCases/UrbanPlanning.jpg
+464963	business/use.png
+396433	henti.png
+388873	business/mp3.png
+386215	consumer/videos/hang-out-spot.mp4
+333214	images/15.png
+308720	use-cases/resultbg.png
+286828	business/bot.png
+223232	business/cobalt-grid.webp
+200989	TechnologyPageImages/blogsBg1.jpeg
+168261	business/become-artist-sidebar.png
+159210	images/11.png
+136266	images/14.png
+123028	Blogs/newyork.jpeg
+116654	use-cases/float2.png
+95657	use-cases/float1.png
+92296	TechnologyPageImages/LogosTable/Screenshot 2026-04-19 at 4.33.59 AM.png
+89644	TechnologyPageImages/LGMsummaryGraphic.png
+69220	bento/ad-free.png
+57248	emoji/plane.png
+48383	how/glas.png
+41015	business/tool4.png
+33765	horse.mp3
+33128	business/tool1.png
+32564	business/logo4.png
+32416	TechnologyPageImages/ReasoningLayer.png
+32009	business/tool2.png
+30783	business/tool3.png
+26527	business/logo1.png
+23872	business/logo6.png
+22597	use-cases/pin 2.png
+22597	use-cases/pin.png
+18701	how/adventure.jpg
+17032	business/logo5.png
+14414	business/logo3.png
+14355	business/logo7.png
+13188	use-cases/urbaninfra.png
+5702	business/logo2.png
+3883	use-cases/pins 2.png
+3095	TechnologyPageImages/LGMsummaryGraphic.svg
