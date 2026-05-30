@@ -22,6 +22,11 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+        {/* iOS Safari tints the address-bar / status-bar region with this
+            colour (the Liquid Glass chrome reads it as the page accent).
+            Setting it to #000000 replaces the default translucent white
+            band with a flat black bar across the top of the viewport. */}
+        <meta name="theme-color" content="#000000" />
         {/* Google Fonts — Funnel Display (titles, .h1 … .h7) and
             Opening Hours Sans (body, paragraphs, UI). preconnect speeds
             the second request; display=swap avoids FOIT. The font-family

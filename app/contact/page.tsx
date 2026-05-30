@@ -26,6 +26,29 @@ const TAB_INTRO: Record<InquiryType, { heading: string }> = {
   "general": { heading: "Get in touch" },
 };
 
+/* Source-of-truth list for the "How did you hear about us?" select.
+   Defined once at module scope so every tab's form renders the same
+   options in the same order — keeps marketing attribution clean. */
+const HEARD_FROM_OPTIONS: { value: string; label: string }[] = [
+  { value: "linkedin", label: "LinkedIn" },
+  { value: "twitter", label: "Twitter / X" },
+  { value: "facebook-instagram", label: "Facebook / Instagram" },
+  { value: "reddit", label: "Reddit" },
+  { value: "other-social", label: "Other Social Media" },
+  { value: "google", label: "Google" },
+  { value: "chatgpt-llm", label: "ChatGPT / Claude / Grok / Other LLM" },
+  { value: "other-search", label: "Other Search / Research" },
+  { value: "word-of-mouth", label: "Word of Mouth / Referral" },
+  { value: "events", label: "Events / Conferences / Webinars" },
+  { value: "news-press", label: "News / Press / Articles / Podcast" },
+  { value: "ooh-billboards", label: "Out of Home / Billboards" },
+  { value: "product-hunt", label: "Product Hunt / Forums" },
+  { value: "direct-outreach", label: "Direct Outreach" },
+  { value: "partnership", label: "Partnership / Integration" },
+  { value: "existing-customer", label: "Existing Customer" },
+  { value: "other", label: "Other" },
+];
+
 /* Design tokens — referenced straight from app/globals.css (@theme),
    the site's single source of truth for colour, so the form stays in
    lock-step with the homepage / blog / company system. */
@@ -218,6 +241,18 @@ function ContactPageInner() {
 
   const labelEl = (text: string) => (
     <span className="text-[13px] font-medium" style={{ color: MUTED }}>{text}</span>
+  );
+
+  const heardFromField = (
+    <label className="flex flex-col gap-1.5">
+      {labelEl("How did you hear about us?")}
+      <select name="heardFrom" value={form.heardFrom} onChange={handleChange} className="cf-select">
+        <option value="" disabled>Please select</option>
+        {HEARD_FROM_OPTIONS.map(o => (
+          <option key={o.value} value={o.value}>{o.label}</option>
+        ))}
+      </select>
+    </label>
   );
 
   return (
@@ -429,29 +464,7 @@ function ContactPageInner() {
                         <span className="text-[12px] text-right" style={{ color: MUTED }}>{charCount}/500</span>
                       </label>
 
-                      <label className="flex flex-col gap-1.5">
-                        {labelEl("How did you hear about us?")}
-                        <select name="heardFrom" value={form.heardFrom} onChange={handleChange} className="cf-select">
-                          <option value="" disabled>Please select</option>
-                          <option value="linkedin">LinkedIn</option>
-                          <option value="twitter">Twitter / X</option>
-                          <option value="facebook-instagram">Facebook / Instagram</option>
-                          <option value="reddit">Reddit</option>
-                          <option value="other-social">Other Social Media</option>
-                          <option value="google">Google</option>
-                          <option value="chatgpt-llm">ChatGPT / Claude / Grok / Other LLM</option>
-                          <option value="other-search">Other Search / Research</option>
-                          <option value="word-of-mouth">Word of Mouth / Referral</option>
-                          <option value="events">Events / Conferences / Webinars</option>
-                          <option value="news-press">News / Press / Articles / Podcast</option>
-                          <option value="ooh-billboards">Out of Home / Billboards</option>
-                          <option value="product-hunt">Product Hunt / Forums</option>
-                          <option value="direct-outreach">Direct Outreach</option>
-                          <option value="partnership">Partnership / Integration</option>
-                          <option value="existing-customer">Existing Customer</option>
-                          <option value="other">Other</option>
-                        </select>
-                      </label>
+                      {heardFromField}
 
                       <p className="text-[13px] leading-[1.5]" style={{ color: MUTED }}>
                         By submitting, you agree with our <Link href="/terms" className="underline">Terms</Link> and <Link href="/privacy" className="underline">Privacy Policy</Link>.
@@ -493,6 +506,8 @@ function ContactPageInner() {
                         <span className="text-[12px] text-right" style={{ color: MUTED }}>{charCount}/500</span>
                       </label>
 
+                      {heardFromField}
+
                       <label className="flex items-start gap-3 cursor-pointer">
                         <input type="checkbox" checked={updates} onChange={e => setUpdates(e.target.checked)} className="mt-0.5 w-4 h-4 accent-accent" />
                         <span className="text-[14px] leading-[1.5]" style={{ color: MUTED }}>I want to receive product updates from Columbus Earth.</span>
@@ -533,6 +548,8 @@ function ContactPageInner() {
                         <span className="text-[12px] text-right" style={{ color: MUTED }}>{charCount}/500</span>
                       </label>
 
+                      {heardFromField}
+
                       <label className="flex flex-col gap-2">
                         <span className="text-[13px] font-medium" style={{ color: MUTED }}>
                           Resume <span className="text-[12px]" style={{ color: MUTED }}>(optional — PDF or DOC)</span>
@@ -569,6 +586,8 @@ function ContactPageInner() {
                         <textarea name="message" required maxLength={500} rows={4} value={form.message} onChange={handleChange} className="cf-textarea" placeholder="What can we help you with?" />
                         <span className="text-[12px] text-right" style={{ color: MUTED }}>{charCount}/500</span>
                       </label>
+
+                      {heardFromField}
 
                       <p className="text-[13px] leading-[1.5]" style={{ color: MUTED }}>
                         By submitting, you agree with our <Link href="/terms" className="underline">Terms</Link> and <Link href="/privacy" className="underline">Privacy Policy</Link>.

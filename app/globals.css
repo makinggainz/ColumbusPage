@@ -46,35 +46,15 @@
 :root {
   --font-hero: "Axiforma", "SF Pro", -apple-system, BlinkMacSystemFont, sans-serif;
 
-  /* PageFrame drop shadow — site-wide. Lets the white frame card read as
-     a floating panel against the white site backdrop on every route.
-     A route can drop the frame's hairline border via --frame-border.
-     Three stacked directional shadows (top + left + right) — no bottom
-     shadow, so the card's bottom edge sits flush on the white backdrop
-     without a dark halo bleeding past it. The negative-offset-equals-
-     blur trick on each layer keeps the shadow strictly outside the
-     three covered sides. Default is the *hidden* variant (alpha 0) so
-     the shadow animates IN once PageFrame sets `data-page-mounted` —
-     see the override below. */
+  /* PageFrame drop shadow — intentionally disabled site-wide. The three
+     layers below remain as a structural placeholder (PageFrame.tsx
+     reads `var(--frame-shadow, none)`), but every alpha is 0 so
+     nothing paints. To re-enable, set non-zero alphas on a state
+     override (the prior `html[data-page-mounted]:not([data-page-scrolled])`
+     rule was removed in favour of "always off"). */
   --frame-shadow: 0 -24px 24px rgba(0, 0, 0, 0),
                   -8px 0 14px rgba(0, 0, 0, 0),
                    8px 0 14px rgba(0, 0, 0, 0);
-}
-
-/* Visible-shadow state — set once PageFrame mounts AND the user is at
-   (or near) the top of the page. The top layer is wider + softer than
-   the sides: -24px Y offset paired with a 24px blur gives a wide,
-   airy halo above the card. Black-tinted (rgba) — pure black reads
-   heavier on white than the previous accent tint, so alphas are
-   lower (0.07 top / 0.10 sides). The `:not([data-page-scrolled])`
-   clause means the shadow fades back to the transparent default the
-   moment the user scrolls away from the top, and fades back in when
-   they return. PageFrame's inline `transition: box-shadow …` carries
-   the easing for both directions. */
-html[data-page-mounted]:not([data-page-scrolled]) {
-  --frame-shadow: 0 -24px 24px rgba(0, 0, 0, 0.07),
-                  -8px 0 14px rgba(0, 0, 0, 0.10),
-                   8px 0 14px rgba(0, 0, 0, 0.10);
 }
 
 /* Mobile nav drawer shadow — sibling of `--frame-shadow` but with FOUR
