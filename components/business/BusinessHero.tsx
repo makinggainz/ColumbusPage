@@ -159,21 +159,21 @@ export default function BusinessHero() {
         paddingTop: 120,
       }}
     >
-      {/* Background image — the ColumBuzHero skyline photo. Fills the
-          section (inset:0) so the photo extends edge-to-edge, including
-          behind the sticky navbar area covered by the section's
-          marginTop:-120 / paddingTop:120 trick. `cover` + `center 50%`
-          keeps the cloud strip + skyline visible around the frame. */}
-      {/* LCP for /products/business — formerly a CSS background-image
-          (~2.1 MB PNG). next/image with `priority` ships an AVIF/WebP
-          variant under 200 KB and emits a preload tag so the photo is
-          on screen before the bundle hydrates. */}
+      {/* Background image — ColumbusBackgroundV2 fills the section
+          (inset:0) edge-to-edge, including behind the sticky navbar area
+          covered by the section's marginTop:-120 / paddingTop:120 trick.
+          `cover` + `center 50%` keeps the focal point of the artwork
+          centred around the frame. */}
+      {/* LCP for /products/business — next/image with `priority` ships
+          an AVIF/WebP variant of the 1.7 MB source PNG and emits a
+          preload tag so the photo is on screen before the bundle
+          hydrates. */}
       <div
         className="absolute pointer-events-none"
         style={{ top: 0, left: 0, right: 0, bottom: 0, zIndex: 0 }}
       >
         <ImageWithFallback
-          src="/businessPageBackground.png"
+          src="/ColumbusBackgroundV2.png"
           alt=""
           aria-hidden
           fill
