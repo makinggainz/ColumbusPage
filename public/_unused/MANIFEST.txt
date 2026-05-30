@@ -463,3 +463,43 @@
 6328379	use-cases/havana.png
 4668123	HK Map-2.png
 999620	hiring-humans/world-map-countries.png
+
+# Deep audit — generated 2026-05-30T23:44:36.864Z
+# Strategy: cross-check against .next/ compiled build output, not source-grep.
+# Total: 27 files, 18.4 MB
+# Format: <bytes>	<original-relative-path>
+
+5803168	use-cases/map.png
+2890271	images/2.png
+2205633	images/8.png
+1337142	use-cases/log.png
+713554	see/3.png
+696607	see/2.png
+692615	see/4.png
+581098	see/5.png
+510074	images/1.png
+506458	images/4.png
+430326	use-cases/chat.png
+428772	see/8.png
+307385	emoji/p.png
+248724	images/3.png
+228608	how/7.png
+209622	images/6.png
+206627	see/7.png
+187510	images/5.png
+174779	images/7.png
+173517	how/5.png
+156939	how/3.png
+143488	see/1.png
+139245	see/6.png
+111544	how/6.png
+110011	how/4.png
+103690	how/1.png
+8573	business/logo.png
+
+# Deep audit — generated 2026-05-30T23:45:29.854Z
+# Strategy: cross-check against .next/ compiled build output, not source-grep.
+# Total: 1 files, 2.1 MB
+# Format: <bytes>	<original-relative-path>
+
+2227255	businessPageBackground.png

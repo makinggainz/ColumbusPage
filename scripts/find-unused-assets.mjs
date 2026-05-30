@@ -50,6 +50,17 @@ const SRC_EXT = /\.(ts|tsx|js|jsx|mjs|cjs|css|scss|html|json)$/i;
 // names by name for documentation or tier-config purposes — they don't
 // represent production use of those assets.
 const SKIP_DIRS = new Set(['node_modules', '.next', '.git', 'design-extract-output', '_unused', 'scripts', '.claude']);
+
+// Files in /public that should NEVER be quarantined even when the audit
+// thinks they're unused. Use sparingly — preferred is to fix the missing
+// reference. Add a comment explaining WHY each entry exists.
+//
+// Paths are relative to PUBLIC_DIR, using forward slashes.
+const ALLOWLIST = new Set([
+  // User-protected: kept for planned reuse / pending design swap, even
+  // though no current code path references it. Don't quarantine.
+  'businessPageBackground.png',
+]);
 // Path-context prefixes: a stem match is treated as a real reference only
 // if it's preceded by one of these. Otherwise standalone English words
 // like "beach" or "card" trip the stem rule when they appear in UI copy.
@@ -135,6 +146,33 @@ function containsPathStem(_haystack, _needle) {
   return false;
 }
 
+// Boundary-aware basename match. A bare `haystack.includes(base)` is too
+// loose for short / numeric basenames: e.g. `1.png` is a substring of
+// `profile1.png`, `ElioVotingShowcase1.png`, `res-bg-1.png`, etc. Result:
+// every file in `public/see/` (`1.png`–`8.png`) survived as "used" because
+// their basenames literally appear inside unrelated longer filenames in
+// completely different folders.
+//
+// The fix: require the character immediately before the basename to be a
+// path/string delimiter (`/`, `"`, `'`, `` ` ``, `(`, `=`, `,`, whitespace)
+// or string start. Anything else (letter, digit, `-`, `_`, `.`) means the
+// match is inside a longer identifier and should be rejected.
+//
+// Char AFTER basename is already terminated by the file extension (which
+// has its own characters), so we don't gate on it — `1.png"` and `1.png/`
+// and `1.png<` all naturally end in non-alpha chars.
+const BASE_LEFT_BOUNDARY = /[/"'`(){}<>\[\],\s=]/;
+function containsBoundedBasename(haystack, base) {
+  let i = 0;
+  while (true) {
+    const j = haystack.indexOf(base, i);
+    if (j === -1) return false;
+    const before = j === 0 ? '' : haystack[j - 1];
+    if (before === '' || BASE_LEFT_BOUNDARY.test(before)) return true;
+    i = j + 1;
+  }
+}
+
 const args = parseArgs(process.argv.slice(2));
 
 // ── 1. Inventory all assets in /public (excluding the existing _unused). ──
@@ -192,15 +230,23 @@ for (const absPath of allAssets) {
   const base = path.basename(absPath);
   const stem = path.basename(absPath, path.extname(absPath));
   const encoded = base.includes(' ') || /[%()&+]/.test(base) ? encodeURIComponent(base) : null;
+  const rel = path.relative(PUBLIC_DIR, absPath).split(path.sep).join('/');
 
-  // Strongest signal: build output contains the literal basename.
-  if (buildText.includes(base) || (encoded && buildText.includes(encoded))) {
+  // User-protected: skip files explicitly allowlisted.
+  if (ALLOWLIST.has(rel)) {
+    buckets.inBuild.push(absPath);  // classify as "used" so it stays out of unused
+    continue;
+  }
+
+  // Strongest signal: build output contains the literal basename at a
+  // path/string boundary (not as a suffix of a longer filename).
+  if (containsBoundedBasename(buildText, base) || (encoded && containsBoundedBasename(buildText, encoded))) {
     buckets.inBuild.push(absPath);
     continue;
   }
 
-  // Next strongest: source contains the literal basename.
-  if (sourceText.includes(base) || (encoded && sourceText.includes(encoded))) {
+  // Next strongest: source contains the literal basename at a boundary.
+  if (containsBoundedBasename(sourceText, base) || (encoded && containsBoundedBasename(sourceText, encoded))) {
     buckets.sourceOnly.push(absPath);
     continue;
   }

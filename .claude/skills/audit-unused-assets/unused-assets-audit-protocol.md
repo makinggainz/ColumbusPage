@@ -157,6 +157,13 @@ Append to this list any time a miss is identified.
 - **Fix:** Stem matching now requires the stem to appear in a **path position** — preceded by `/`, `"/`, `'/`, `` `/ ``, `(/`, or `=/`. This catches dynamic refs like `` `/${name}.png` `` (real path interpolation) and rejects "secret beach" (standalone word). See `containsPathStem()` and `STEM_PREFIX` in [scripts/find-unused-assets.mjs](../../../scripts/find-unused-assets.mjs).
 - **Trade-off:** a hypothetical `import beach from "./foo"` style reference would no longer hit the stem rule — but the basename rule (full filename match) runs first and would catch that case anyway. Net: strictly tighter, no false negatives on real path refs.
 
+### 2026-05-30 — Short basename is a suffix of unrelated longer filenames
+
+- **Example:** User asked about `public/see/`. All 8 files (`1.png` through `8.png`) survived as "used" because their basenames are literal suffixes of dozens of longer filenames in completely different folders: `ElioVotingShowcase1.png` contains `1.png`, `profile1.png` contains `1.png`, `res-bg-4.png` contains `4.png`, `acad-bg-8.png` contains `8.png`, etc. The basename match was bare `haystack.includes(base)` — no boundary check on the left.
+- **Symptom:** generic / numeric / short basenames (1.png, 2.png, map.png, log.png, chat.png, p.png) stay in `/public` because they're substrings of longer filenames elsewhere. Worst on numeric placeholder folders like `images/`, `see/`, `how/`.
+- **Fix:** `containsBoundedBasename()` replaces `haystack.includes(base)`. The character immediately before the basename must be a delimiter (`/`, `"`, `'`, `` ` ``, `(`, `=`, `,`, whitespace) or string-start. Anything else (letter, digit, `-`, `_`, `.`) means the match is inside a longer identifier and is rejected. See [scripts/find-unused-assets.mjs](../../../scripts/find-unused-assets.mjs).
+- **Trade-off:** none meaningful. Real path references always have `/` or quote before the basename. UI prose like "The file 1.png is missing" would have whitespace before — still matches as boundary — but that pattern is extremely rare and would need manual review anyway.
+
 ### 2026-05-30 — Dead data field: assigned but never read
 
 - **Example:** `HK Map-2.png` and `use-cases/havana.png` were kept because they were assigned to a `mapImageSrc` field in `components/use-cases/industry/content.ts` — but **no TSX component ever read `.mapImageSrc`**. The interface `RowChatContent` in `industry/types.ts` declared the field; data objects in `content.ts` set values; but the consuming components (BusinessUseCases, DataManagerMockup, etc.) never destructured or accessed it. The path strings sat inside the bundled JS data object, so basename match said "used".
@@ -175,11 +182,21 @@ Append to this list any time a miss is identified.
 
 ## Allowlist (assets that must NEVER be quarantined)
 
-Add to `scripts/find-unused-assets.mjs` `ALLOWLIST` if you discover one (not currently implemented — add the set when first needed).
+The script supports an `ALLOWLIST` set at the top of [scripts/find-unused-assets.mjs](../../../scripts/find-unused-assets.mjs). Files listed there are forced into the `inBuild` bucket regardless of detection results. Use sparingly — prefer fixing the missing reference. Always leave a comment explaining the entry.
 
-Conventional Next/web files that should be left alone even if unused-looking:
+Current entries:
+- `businessPageBackground.png` — user-protected (kept for planned reuse / pending design swap, 2026-05-30).
+
+Conventional Next/web files that should also be left alone even if unused-looking:
 - `favicon.*`, `apple-touch-icon*`, `manifest.json`, `site.webmanifest`, `robots.txt`, `sitemap.xml`
 - Anything inside `app/**/icon.*`, `app/**/opengraph-image.*`, `app/**/twitter-image.*` — these are Next.js convention files, not in `/public`, so should be naturally out of scope; double-check before quarantining anything in `app/`.
+
+## When the user pins a file mid-audit
+
+If the user says "don't move that one" after you've already quarantined it:
+1. `git mv public/_unused/<rel-path> public/<rel-path>` (or plain `mv` if untracked) to restore.
+2. Add the relative path to `ALLOWLIST` with a one-line comment explaining why.
+3. The next audit will skip it; the protocol stays sharp on everything else.
 
 ## Verification snippet (Phase 5, step 2)
 
@@ -224,5 +241,6 @@ console.log(hits === 0 ? '✓ clean' : `⚠ ${hits} ghost references`);
 | 2026-05-30 | 4 (tighter path-stem + tooling exclusion) | 35 | 58.3 | `beach.png` and 34 others surfaced after two fixes: (a) stem-matching now requires a path prefix (`/`, `"/`, `'/`, etc.) so standalone English words like `beach` in UI copy stop matching, and (b) `scripts/` + `.claude/` are excluded from the source scan so audit/skill files don't self-reference assets. Wins included `use-cases/hero.png` (8.6 MB), `terra.png` (8.3 MB), `forest.png` (5 MB), `beach.png` (5 MB), `companyhero.png` (2.9 MB). Final state: 0 unused, 0 ghost refs. |
 | 2026-05-30 | 5 (markdown exclusion + drop stem matching) | 19 | 58.4 | Three new false-positive classes surfaced. (a) `design-system/*.md` and `docs/*.md` reference assets by name as documentation, not real uses — fixed by dropping `md`/`mdx` from `SRC_EXT`. (b) `image.png`'s stem `image` collided with `next/image.js` and `/_next/image?url=...` framework paths — added strict `.<ext>` requirement, then realized stem-matching had now caused three classes of false positives (substring-in-word, English-word-in-prose, framework-path-collision) for marginal real-ref recall, so dropped it entirely. `containsPathStem()` now always returns false; basename + URL-encoded basename + build-output scan remain. Biggest wins: `research-applications-video.mp4` (30 MB), `use-cases-video.mp4` (16 MB), `Blogs/MapsGPT.png`, `Blogs/elio.png`, `CEHQ.png`, `businessartbackground.png`, `image.png`. Final state: 0 unused, 0 ghost refs, build clean. Skill file renamed from `SKILL.md` to `unused-assets-audit-protocol.md` per user. |
 | 2026-05-30 | 6 (manual dead-data-field cleanup) | 2 + 1 deletion | ~12 | User asked specifically about `HK Map-2.png` and `footerbackground.jpeg`. Investigation found two distinct stories: (a) `footerbackground.jpeg` was a legitimate `<video poster>` reference in `Footer.tsx`, but user wanted it gone — file deleted + `poster` prop removed + dead surrounding comments cleaned. (b) `HK Map-2.png` (and `use-cases/havana.png`) were assigned to a `mapImageSrc` field in `industry/content.ts` but no TSX read that field. Dead data, not dead code. Removed the field from `types.ts` + 4 assignment sites; both PNGs then surfaced naturally in the next audit. NEW false-positive pattern added: "Type-defined data fields assigned but never read". |
+| 2026-05-30 | 7 (boundary-aware basename match) | 28 | 20.5 | User asked about `public/see/`. All 8 `see/N.png` files were kept as "used" because basename `1.png` literally appears as a suffix inside dozens of longer filenames (`ElioVotingShowcase1.png`, `profile1.png`, `res-bg-4.png`, etc.). Fixed `containsBoundedBasename()` to require a path/quote/delimiter immediately before the basename. Surfaced: all 8 `see/*.png`, 7 of `images/*.png` (1, 2, 3, 4, 5, 6, 7, 8), 5 of `how/*.png` (3, 4, 5, 6, 7), `use-cases/map.png`, `use-cases/log.png`, `use-cases/chat.png`, `emoji/p.png`, plus `businessPageBackground.png` (newly orphaned by a user edit replacing the src in BusinessHero.tsx). Final state after clean rebuild: 0 unused, 0 real ghost refs. |
 
 — end —
