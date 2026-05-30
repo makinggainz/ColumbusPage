@@ -15,6 +15,20 @@ import type {
  */
 export const DEFAULT_INDUSTRY: IndustryId = "urban-infrastructure";
 
+/** Per-industry accent colour used on the /products/business page —
+ *  paints the IndustrySelector active-cell background (low-alpha tint)
+ *  and the round IconChips next to titles in the section below. Only
+ *  the six business-page industries have a colour today; consumers
+ *  should fall back gracefully when a key is undefined. */
+export const INDUSTRY_COLOR: Partial<Record<IndustryId, string>> = {
+  "residential-real-estate": "#00A7C0",
+  "commercial-real-estate": "#B6B300",
+  "urban-infrastructure": "#8D8D8D",
+  "geomarketing": "#0066B6",
+  "academic-research": "#8E5801",
+  "environmental-research": "#00B539",
+};
+
 /** Tile order for the IndustrySelector grid + sticky navbar carousel. */
 export const INDUSTRY_ORDER: IndustryId[] = [
   "residential-real-estate",

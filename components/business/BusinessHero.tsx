@@ -566,6 +566,62 @@ export default function BusinessHero() {
               </div>
             </div>
 
+            {/* Mobile-only tab strip — desktop title bar is hidden below
+                768px (see business-tokens.css), so phones get this
+                simplified Chrome-style tab row sitting flat against the
+                top of the mockup. Same `tabs` array, same activeTabId
+                state — taps just swap the mockup below. */}
+            <div
+              className="biz-hero-mobile-tabs"
+              style={{
+                alignItems: "flex-end",
+                justifyContent: "center",
+                gap: 4,
+                paddingLeft: 8,
+                paddingRight: 8,
+                paddingTop: 6,
+              }}
+            >
+              {tabs.map(tab => {
+                const active = tab.id === activeTabId;
+                return (
+                  <button
+                    key={tab.id}
+                    type="button"
+                    aria-label={tab.label}
+                    aria-pressed={active}
+                    onClick={() => setActiveTabId(tab.id)}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      width: 64,
+                      height: 36,
+                      borderRadius: "10px 10px 0 0",
+                      background: active ? "#FFFFFF" : "transparent",
+                      border: "none",
+                      padding: 0,
+                      cursor: "pointer",
+                      WebkitTapHighlightColor: "transparent",
+                    }}
+                  >
+                    <svg
+                      aria-hidden
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke={active ? "var(--ent-text-primary)" : "#FFFFFF"}
+                      strokeWidth="1.8"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      style={{ width: 16, height: 16 }}
+                    >
+                      {tab.icon}
+                    </svg>
+                  </button>
+                );
+              })}
+            </div>
+
             {/* Product display — one of four mockup components composes
                 the frame PNG with overlaid coded UI (map tiles, cards,
                 chat panel) for the active tab. All four corners are

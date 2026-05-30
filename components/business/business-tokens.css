@@ -284,6 +284,14 @@
    the !important rule covers the hero's hardcoded inline values
    (21.5 outer ring, 20 inner window). .cmp-host uses Tailwind's
    rounded-3xl directly (no token) so it needs its own override. */
+
+/* Mobile tab strip in the hero glass window — hidden at desktop sizes
+   so only the Chrome title bar shows. Mobile media query below flips
+   this to display: flex. */
+.biz-hero-mobile-tabs {
+  display: none;
+}
+
 @media (max-width: 767px) {
   .biz-product-display {
     --ent-radius-2xl: 7px;
@@ -292,20 +300,22 @@
   .cmp-host {
     border-radius: 7px !important;
   }
-  /* Hero: hide the browser-window title bar (traffic lights + the four
-     product tabs) on mobile. The 4-way tab swap is mobile-hostile —
-     CapabilitiesGrid lower on the page already surfaces all four
-     capabilities. activeTabId stays at its default (Map Chat); only the
-     toggle UI is hidden, so the React state machinery is intact for
-     viewport-resize back to >=768. */
+  /* Hero: hide the desktop browser-window title bar (traffic lights +
+     the four labeled Chrome tabs) on mobile — replaced by the simpler
+     icon-only .biz-hero-mobile-tabs row below, which drives the same
+     activeTabId state. */
   .biz-hero-title-bar {
     display: none !important;
   }
-  /* Symmetric padding around the product display now that the title
-     bar above it is gone — keeps the mockup from kissing the inner
-     window's rounded top edge. */
+  /* Show the icon-only mobile tab row inside the glass window. */
+  .biz-hero-mobile-tabs {
+    display: flex !important;
+  }
+  /* Drop top padding so the active mobile tab's flat bottom meets the
+     mockup's top edge with no glass gutter — the tab reads as
+     "connected to" the display. Side + bottom stay at 4px. */
   .hero-product-display {
-    padding: 4px !important;
+    padding: 0 4px 4px 4px !important;
   }
   /* "Mini product" treatment for the four standalone mockup frames
      (MapChatPlatform / DataManagerMockup / AgenticResearchMockup /

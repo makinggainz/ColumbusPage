@@ -106,11 +106,14 @@ const HN_CSS = `
   .hn-section {
     min-height: calc(100vh + 40px);
   }
-  /* On mobile, lift the title block an extra 50px above the desktop
-     resting -150px (total -200px) so the headline + subtitle + CTA sit
-     higher and leave more room for the background illustration. */
+  /* On mobile, lift the title block 100px above the section's vertical
+     centre — lands the headline + subtitle + CTA in the upper third of
+     the viewport (≈ 40 % from top), leaving breathing room from the
+     navbar above and the lower 60 % for the ship illustration to read.
+     Pattern matches Mobbin references (Duolingo, Yazio) for hero with
+     title overlaid on illustration. */
   .hn-bounds {
-    transform: translateY(-200px);
+    transform: translateY(-100px);
   }
   /* Stacked white halo on the subtitle so glyphs stay readable over the
      image where the radial wash thins out. Three zero-offset shadows
@@ -259,11 +262,18 @@ const HN_CSS = `
   margin-left: auto;
   margin-right: auto;
   box-sizing: border-box;
-  /* Lift the title 150px above the section's vertical centre. translateY
-     is preferred over a negative margin so the flex centering math
-     stays clean and adjacent siblings (none today, but future-proof)
-     aren't dragged with it. */
-  transform: translateY(-150px);
+}
+/* Lift the title 50px above the section's vertical centre on desktop.
+   translateY is preferred over a negative margin so the flex centering
+   math stays clean and adjacent siblings (none today, but future-proof)
+   aren't dragged with it. Gated to ≥768px so the mobile @media block
+   higher in this stylesheet (which sets -200px) wins on phones — the
+   earlier mobile rule would otherwise be overridden by this one due to
+   matching specificity + later source order. */
+@media (min-width: 768px) {
+  .hn-bounds {
+    transform: translateY(-50px);
+  }
 }
 
 /* Font-size + line-height come from the .h1 class on the element
@@ -388,7 +398,7 @@ export function HeroNew() {
           The Applied AI Lab for geospatial intelligence.
         </h1>
         <p className="hn-subtitle">
-          Building street-smart AI for the real world.
+          Building street-smart AI<br className="md:hidden" /> for the real world.
         </p>
         {/* Try Elio CTA — mirrors the navbar dropdown verbatim: same
             button class set (rounded-button px-5 py-2 p-m, bg-cta + white
@@ -399,7 +409,7 @@ export function HeroNew() {
             touch; Esc / outside-click closes. */}
         <div
           ref={ctaRef}
-          className="relative mt-7 inline-block md:mt-9"
+          className="relative mt-7 inline-block md:mt-9 md:hidden"
           onMouseEnter={() => setCtaOpen(true)}
           onMouseLeave={() => setCtaOpen(false)}
         >

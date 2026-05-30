@@ -548,7 +548,7 @@ const PRODUCTS: Product[] = [
     href: "/products/consumer",
     logo: "/MapsGPT-logo.png",
     name: "Elio",
-    tagline: "Making maps feel alive again",
+    tagline: "Making maps feel alive",
     audience: "For consumer",
     ctaLabel: "Learn more",
     visual: "/elio-bento-v3.png",

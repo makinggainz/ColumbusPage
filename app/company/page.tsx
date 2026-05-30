@@ -359,6 +359,9 @@ export default function CompanyPage() {
                   sizes="(min-width: 768px) 640px, 100vw"
                 />
               </div>
+              <div className={styles.photoNotch}>
+                <span className={styles.photoNotchLabel}>Our CEO</span>
+              </div>
               <div className={styles.featuredQuoteBlock}>
                 <QuoteMark className={styles.quoteMarkLight} />
                 <p className={styles.featuredQuote}>{FEATURED.quote}</p>

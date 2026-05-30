@@ -18,11 +18,18 @@ import DataManagerMockup from "./DataManagerMockup";
 import AgenticResearchMockup from "./AgenticResearchMockup";
 import DashboardMockup from "./DashboardMockup";
 import { useIndustry } from "@/components/use-cases/industry/IndustryContext";
+import { INDUSTRY_COLOR } from "@/components/use-cases/industry/content";
 import type { IndustryId } from "@/components/use-cases/industry/types";
 
 /* 36×36 chip that wraps a 24-vbox SVG icon — local to the use-cases
-   block since this is the only place it's used now. */
+   block since this is the only place it's used now. Stroke colour
+   tracks the currently selected industry's accent (INDUSTRY_COLOR);
+   the chip's background uses the same colour at ~12% alpha so the
+   chip reads as "tinted to match" rather than two-tone. Industries
+   without a defined accent fall back to the original navy/grey. */
 function IconChip({ children }: { children: React.ReactNode }) {
+  const { industryId } = useIndustry();
+  const accent = INDUSTRY_COLOR[industryId];
   return (
     <span
       aria-hidden
@@ -31,7 +38,7 @@ function IconChip({ children }: { children: React.ReactNode }) {
         width: 36,
         height: 36,
         borderRadius: 9999,
-        background: "rgba(11,27,43,0.06)",
+        background: accent ? `${accent}1F` : "rgba(11,27,43,0.06)",
       }}
     >
       <svg
@@ -39,7 +46,7 @@ function IconChip({ children }: { children: React.ReactNode }) {
         height="18"
         viewBox="0 0 24 24"
         fill="none"
-        stroke="#0B1B2B"
+        stroke={accent ?? "#0B1B2B"}
         strokeWidth="1.8"
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -50,11 +57,16 @@ function IconChip({ children }: { children: React.ReactNode }) {
   );
 }
 
-/* Inline blue keyword. Rendered as a <span> — these are styled tokens
-   for emphasis, not navigation, so they should not be clickable. */
+/* Inline highlighted keyword. Colour tracks the currently selected
+   industry's accent (INDUSTRY_COLOR) so the emphasis tokens recolour
+   in lockstep with the IndustrySelector tile background + the title
+   IconChips. Industries without a defined accent fall back to the
+   page's static enterprise accent. */
 function Blue({ children }: { children: React.ReactNode }) {
+  const { industryId } = useIndustry();
+  const accent = INDUSTRY_COLOR[industryId];
   return (
-    <span style={{ color: "var(--ent-accent)", fontWeight: 600 }}>
+    <span style={{ color: accent ?? "var(--ent-accent)", fontWeight: 600 }}>
       {children}
     </span>
   );

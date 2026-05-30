@@ -513,6 +513,65 @@
   z-index: 2;
 }
 
+/* Cut-out notch — the white page surface notched into the founder
+   photo's top-right corner, carrying the "Our CEO" label. Geometry +
+   fillet technique ported verbatim from BentoProducts (.bp-notch). */
+.photoNotch {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 3;
+  box-sizing: border-box;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 24px;
+  background-color: #FFFFFF;
+  /* TL TR BR BL — TR matches the card corner; BL is the concave cut. */
+  border-radius: 0 13px 0 13px;
+  border-left: 1px solid var(--color-gridline);
+  border-bottom: 1px solid var(--color-gridline);
+}
+@media (min-width: 1024px) {
+  .photoNotch {
+    height: 44px;
+    padding: 0 32px;
+  }
+}
+.photoNotch::before,
+.photoNotch::after {
+  content: "";
+  position: absolute;
+  width: 13px;
+  height: 13px;
+  background: radial-gradient(
+    circle at left bottom,
+    rgba(255, 255, 255, 0) 11.5px,
+    #E7E7F1 12.25px,
+    #E7E7F1 12.75px,
+    #FFFFFF 13.5px
+  );
+}
+.photoNotch::before { top: 0; left: -13px; }
+.photoNotch::after { bottom: -13px; right: 0; }
+
+.photoNotchLabel {
+  font-size: 13px;
+  line-height: 1;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  white-space: nowrap;
+  color: var(--color-muted);
+}
+
+/* Desktop-only — hide on mobile per the user's "on desktop not on
+   mobile" requirement. */
+@media (max-width: 1023px) {
+  .photoNotch { display: none; }
+}
+
 /* Featured quote block — quote mark + quote, at the top of the tile (just
    the 40px tile padding), sitting above the gradient. */
 .featuredQuoteBlock {
