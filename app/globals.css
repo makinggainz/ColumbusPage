@@ -46,15 +46,29 @@
 :root {
   --font-hero: "Axiforma", "SF Pro", -apple-system, BlinkMacSystemFont, sans-serif;
 
-  /* PageFrame drop shadow — intentionally disabled site-wide. The three
-     layers below remain as a structural placeholder (PageFrame.tsx
-     reads `var(--frame-shadow, none)`), but every alpha is 0 so
-     nothing paints. To re-enable, set non-zero alphas on a state
-     override (the prior `html[data-page-mounted]:not([data-page-scrolled])`
-     rule was removed in favour of "always off"). */
+  /* PageFrame drop shadow — three stacked directional shadows (top +
+     left + right), no bottom (so the card sits flush on the backdrop
+     without a dark halo bleeding past it). Default is the *hidden*
+     variant (every alpha 0) so the shadow animates IN once PageFrame
+     sets `data-page-mounted` and the user is at the top of the page —
+     see the override below. */
   --frame-shadow: 0 -24px 24px rgba(0, 0, 0, 0),
                   -8px 0 14px rgba(0, 0, 0, 0),
                    8px 0 14px rgba(0, 0, 0, 0);
+}
+
+/* Visible-shadow state — set once PageFrame mounts AND the user is at
+   (or near) the top of the page. Alphas are intentionally very low
+   (0.02 top / 0.025 sides) so the halo reads as a faint floating
+   cue, not a heavy drop shadow. The `:not([data-page-scrolled])`
+   clause fades it back to the transparent default the moment the
+   user scrolls away from the top, and fades it back in when they
+   return. PageFrame's inline `transition: box-shadow …` carries the
+   easing for both directions. */
+html[data-page-mounted]:not([data-page-scrolled]) {
+  --frame-shadow: 0 -24px 24px rgba(0, 0, 0, 0.02),
+                  -8px 0 14px rgba(0, 0, 0, 0.025),
+                   8px 0 14px rgba(0, 0, 0, 0.025);
 }
 
 /* Mobile nav drawer shadow — sibling of `--frame-shadow` but with FOUR
@@ -83,12 +97,29 @@ html,
 body {
   margin: 0;
   padding: 0;
-  /* White site backdrop behind the PageFrame card — visible through the
-     30px gutter around the frame on every route. */
+  /* White backdrop on desktop so the 9px top gutter + the PageFrame's
+     rounded corners read as white-on-white (and the subtle drop shadow
+     on the card actually shows against the bright surround). The black
+     backdrop is mobile-only — see the media query below. */
   background-color: #FFFFFF;
   color: #1D1D1F;
   overflow-x: clip;
   min-height: 100%;
+}
+
+/* Mobile-only black backdrop. iOS Safari 15+ renders a translucent
+   "Liquid Glass" address bar whose tint is sampled from the page
+   content beneath it. With viewport-fit=cover the body extends up
+   into the safe-area, so a white body forces the chrome to read
+   white — the <meta theme-color> alone isn't enough on iOS 18+.
+   Painting the body black here makes the safe-area black so the
+   chrome tints black. Desktop keeps the white backdrop above so the
+   PageFrame shadow + top gutter look correct on larger viewports. */
+@media (max-width: 767px) {
+  html,
+  body {
+    background-color: #000000;
+  }
 }
 
 /* Footer reveal — once the user reaches the footer, PageFrame sets
@@ -510,8 +541,9 @@ html {
 
 /* Typography */
 body {
-  /* Backdrop colour is owned by the `html, body` rule above (white) —
-     not re-set here, so there's a single source of truth. */
+  /* Backdrop colour is owned by the `html, body` rule above (white on
+     desktop, black on mobile via the <768px media query) — not re-set
+     here, so there's a single source of truth. */
   color: var(--foreground);
   /* Opening Hours Sans is the project-wide body face. Everything that
      doesn't set its own font-family inherits it from here. Headings
