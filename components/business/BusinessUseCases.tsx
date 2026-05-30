@@ -250,10 +250,10 @@ const ENVIRONMENTAL_BACKDROPS: IndustryBackdrops = {
 
 const ACADEMIC_BACKDROPS: IndustryBackdrops = {
   chatHero: "/Academic/acad-bg-1.png",
-  /* chatSub[3] (Drop Any File) uses acad-bg-6; the chain then shifts so
-     the Agentic Research and Dashboard hero slots pick up acad-bg-7 and
-     acad-bg-8 respectively. acad-bg-5 — the Screenshot file at slot 5 —
-     drops out of the active mapping. */
+  /* chatSub[3] (Drop Any File) uses acad-bg-6; the chain shifts so the
+     Agentic Research and Dashboard hero slots pick up acad-bg-7 and
+     acad-bg-8 respectively. The original slot-5 backdrop dropped out of
+     the active mapping. */
   chatSub: [
     "/Academic/acad-bg-2.png",
     "/Academic/acad-bg-3.png",

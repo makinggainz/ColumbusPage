@@ -4,16 +4,6 @@
  * Mission / vision section — mirrors the scroll-driven word-reveal
  * pattern used by TextScrollIntro and ElioTextScrollIntro (Framer
  * Motion useScroll + per-word useTransform opacity 0.15 → 1).
- *
- * Background: minimalistCity watermark applied via the exact same
- * masked + dimmed pseudo-layer treatment that ColumbusBackgroundMB
- * carries on TextScrollIntro (the "We're all about maps" / Columbus
- * intro background pattern):
- *   - absolute-positioned div at -z-10 so the foreground text isn't dimmed
- *   - background-size: 120vw 70vw (extends past the viewport's left + right)
- *   - opacity: 0.5
- *   - linear-gradient mask: transparent → 15% → 85% → transparent so the
- *     watermark melts seamlessly into the page above and below
  */
 
 import {
@@ -46,9 +36,6 @@ export function MissionScrollIntro() {
     <section
       className="section relative isolate"
       style={{
-        /* Extra height for this section vs the base .section padding so
-           the minimalistCity watermark renders taller and the band has
-           more breathing room around the scroll-reveal paragraph. */
         minHeight: "min(85vh, 820px)",
         paddingTop: 160,
         paddingBottom: 160,

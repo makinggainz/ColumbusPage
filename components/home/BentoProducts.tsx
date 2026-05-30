@@ -115,11 +115,6 @@ const CSS = `
     linear-gradient(rgba(0, 0, 0, 0.18), rgba(0, 0, 0, 0.18)),
     url('/consumer/heroBackground.png');
 }
-/* Research uses a left-to-right linear gradient — light sky #CAE5F5 at
-   0% to mid-blue #76A8F3 at 100%, both fully opaque — matching the
-   Figma swatch supplied by Gdesign. Replaces the prior cream backdrop
-   (/Colbackgroundcard.png) so the Research tile reads as a distinct
-   blue band against the cream Columbus / Elio tiles above. */
 .bp-card--research {
   background-image: linear-gradient(to right, #CAE5F5 0%, #76A8F3 100%);
 }

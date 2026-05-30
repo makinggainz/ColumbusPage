@@ -372,3 +372,19 @@
 5702	business/logo2.png
 3883	use-cases/pins 2.png
 3095	TechnologyPageImages/LGMsummaryGraphic.svg
+
+# Deep audit — generated 2026-05-30T22:04:37.340Z
+# Strategy: cross-check against .next/ compiled build output, not source-grep.
+# Total: 10 files, 4.9 MB
+# Format: <bytes>	<original-relative-path>
+
+1547531	bento/save-globe.png
+1326527	Academic/acad-bg-5.png
+863570	minimalistCity.png
+502500	flower.png
+492160	TechnologyPageImages/techDiagram2.png
+129740	TechnologyPageImages/techdiagramA1.png
+94572	consumer/elioName.png
+72893	emoji/burger.png
+57288	how/pane.png
+3064	Icon/claude.png

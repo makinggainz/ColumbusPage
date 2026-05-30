@@ -31,9 +31,6 @@
   background: #FFFFFF;
 }
 
-/* companyhero watermark — the tall-ship-and-globe sketch, dimmed and
-   top/bottom-masked so it melts into the white page exactly like the
-   minimalistCity watermark on the blog + homepage heroes. */
 .heroWatermark {
   position: absolute;
   inset: 0;

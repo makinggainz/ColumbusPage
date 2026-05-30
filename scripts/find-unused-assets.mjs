@@ -81,6 +81,25 @@ function readSafe(p, maxBytes = 10 * 1024 * 1024) {
   } catch { return ''; }
 }
 
+// Strip /* ... */ block comments before matching. These can mention old
+// asset names in stale documentation lines that survived a refactor — and
+// they're particularly insidious in CSS-in-JS template literals
+// (e.g. `const CSS = \`/* old (/foo.png) replaced */ .x{...}\``) because
+// Next bundles the entire string verbatim, comments included. Stripping
+// them here keeps the audit honest about what code actually loads.
+//
+// Why only block comments and not line comments: `//` appears in real URLs
+// (`https://`), inside JS strings, and inside CSS `content` declarations.
+// Stripping it would create new false positives. Block comments don't
+// share that ambiguity — `/*` essentially never appears in real data.
+//
+// Past misses fixed by this preprocessor (append when extending):
+//   - 2026-05-30  Colbackgroundcard.png  (CSS comment in
+//                 components/home/BentoProducts.tsx CSS-in-JS literal)
+function stripBlockComments(text) {
+  return text.replace(/\/\*[\s\S]*?\*\//g, ' ');
+}
+
 function isTracked(absPath) {
   try {
     execSync(`git ls-files --error-unmatch "${absPath}"`, { stdio: 'ignore' });
@@ -124,7 +143,8 @@ if (fs.existsSync(NEXT_DIR)) {
   const jsPaths = walkAll(NEXT_DIR).filter(p => /\.(js|mjs|cjs)$/.test(p));
   for (const f of jsPaths) { buildText += readSafe(f) + '\n'; buildFiles++; }
 }
-console.log(`  ${buildFiles} build files loaded.`);
+buildText = stripBlockComments(buildText);
+console.log(`  ${buildFiles} build files loaded (block comments stripped).`);
 
 console.log('Loading source files (fallback)...');
 const sourceFiles = [];
@@ -145,7 +165,8 @@ const SELF_SCRIPTS = new Set([
 const filteredSourceFiles = sourceFiles.filter(f => !SELF_SCRIPTS.has(f));
 let sourceText = '';
 for (const f of filteredSourceFiles) sourceText += readSafe(f) + '\n';
-console.log(`  ${filteredSourceFiles.length} source files loaded (excluding self).`);
+sourceText = stripBlockComments(sourceText);
+console.log(`  ${filteredSourceFiles.length} source files loaded (excluding self, block comments stripped).`);
 
 // ── 3. Classify each asset. ──
 const buckets = {

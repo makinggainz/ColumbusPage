@@ -725,12 +725,6 @@ export default function DestinationsSection() {
           color: #FFFFFF;
         }
 
-        /* Planner — coastline photo fills the entire card. Title + sub
-           + Day pills overlay the photo in white ink with a soft
-           text-shadow for legibility on the varied photo backdrop.
-           Background gradient mirrors the sky-blue gradient in
-           save-globe.png so any pixel that bleeds through the route
-           image lands on the same cyan family as the Save tile. */
         .eib-card--map {
           padding: 0;
           background: linear-gradient(180deg, #0080FF 0%, #B4DDF6 100%);

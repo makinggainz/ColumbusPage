@@ -700,9 +700,6 @@ export default function Hero() {
         <div className="relative flex flex-col items-center text-center px-6" style={{ maxWidth: 980, gap: 32 }}>
           <Stagger show={mounted} delay={120} y={84}>
             <div className="flex flex-col items-center" style={{ gap: 16 }}>
-              {/* Elio lockup — globe + elioName.png wordmark, ported from
-                  the TwerkPage hero. Wrapper drop-shadow lifts the
-                  composite off the photo background. */}
               <div
                 className="flex items-center"
                 style={{
