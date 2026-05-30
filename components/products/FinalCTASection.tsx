@@ -114,13 +114,12 @@ export default function FinalCTASection() {
     >
 
       {/* ═══════════ MOBILE HERO (below lg:) ═══════════ */}
-      {/* Section aspect-ratio adds ~19% extra height over the image's own
-          1447×1087 (≈ desktop's 250px sky band, scaled): mirrors desktop
-          so the headline + CTA sit on a clean white sky band above the
-          earth, never overlapping it. */}
+      {/* Section aspect-ratio adds ~47% extra height over the image's own
+          1447×1087 so the headline + CTA float higher above the earth
+          and the floating discovery cards sit lower in the frame. */}
       <div
         className="lg:hidden relative w-full overflow-hidden"
-        style={{ aspectRatio: "1447 / 1304" }}
+        style={{ aspectRatio: "1447 / 1600" }}
       >
         {/* Globe artwork — anchored to the BOTTOM at its natural aspect. */}
         <div
@@ -193,22 +192,16 @@ export default function FinalCTASection() {
             Find your next<br />
             <TypedPhrase />
           </h2>
-          {/* Browser CTA + App Store + Google Play badges — same trio the
-              Hero uses. Flex-wrap so the badges stack under the pill on
-              narrow viewports. */}
-          <div className="flex flex-wrap items-center justify-center" style={{ gap: 12 }}>
+          {/* Mobile: Browser CTA only — App Store + Google Play badges
+              removed so the mobile final-CTA reads as a single primary
+              action above the floating globe UI. */}
+          <div className="flex items-center justify-center" style={{ gap: 12 }}>
             <a
               href="https://mapsgpt.es"
               target="_blank"
               rel="noreferrer"
               className="group inline-flex items-center justify-center gap-3 rounded-button-md bg-cta no-underline transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
               style={{
-                // Height locked to the default `StoreBadges` height so
-                // the navy pill sits at the exact same vertical extent
-                // as the App Store + Google Play badges next to it.
-                // Default badges measure ~43px (8px vertical padding +
-                // the stacked "Download on the / App Store" label,
-                // ~27px tall at 10+14px line-height-1.1).
                 height: 43,
                 padding: "0 20px",
               }}
@@ -228,7 +221,6 @@ export default function FinalCTASection() {
                 <path d="M2 11L11 2M11 2H4M11 2V9" stroke="#FFFFFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </a>
-            <StoreBadges />
           </div>
         </div>
 
@@ -397,11 +389,14 @@ function DiscoveryCardView({ p, leftPx, topPx, leftPct, topPct, mobile, visible 
   // so the "group of people on this trip" affordance stays prominent.
   const sz = mobile
     ? {
-        photoW: 100, photoH: 70, frame: 4, radius: 12,
-        avatar: 26, avatarBorder: 2, avatarOverlap: 10, avatarOffsetX: 8, avatarOffsetY: 7,
-        pillFont: 9, pillPadV: 5, pillPadH: 13, pillMargin: 7,
-        placeImg: 28, placeName: 11, placeSub: 8, placeGap: 7, placePadH: 14, placePadV: 4,
-        stackedSubW: 70, stackedSubH: 50, stackedSubFrame: 4, stackedSubRadius: 10,
+        // Shrunk ~25% from the prior mobile scale so the floating UI
+        // reads as smaller accents over the larger sky band above the
+        // earth on the taller mobile section.
+        photoW: 76, photoH: 54, frame: 3, radius: 10,
+        avatar: 20, avatarBorder: 2, avatarOverlap: 8, avatarOffsetX: 6, avatarOffsetY: 5,
+        pillFont: 8, pillPadV: 4, pillPadH: 10, pillMargin: 6,
+        placeImg: 22, placeName: 9, placeSub: 7, placeGap: 6, placePadH: 11, placePadV: 3,
+        stackedSubW: 54, stackedSubH: 38, stackedSubFrame: 3, stackedSubRadius: 8,
       }
     : {
         // Desktop sizes — kept compact so the cards read as floating UI

@@ -1578,12 +1578,200 @@ export default function DestinationsSection() {
             height: auto;
             min-height: 480px;
           }
+          /* ── Search-anchor phone tile ──────────────────────────────
+             Cap to phone-shaped width but DROP the hard aspect cap so
+             the bezel grows to its content (search bar + 3 results
+             never clip). Drop the inner overlay side padding to 10px —
+             matches the iOS-native search-screen pattern (Apple Store
+             Search, Mint, Notion) where the search bar + result rows
+             fill almost the full screen edge-to-edge inside the bezel. */
+          .eib-col--left { align-items: stretch; }
+          .eib-col--left > .eib-card--phone {
+            width: 100%;
+            min-height: 0;
+            aspect-ratio: auto;
+            height: auto;
+          }
+          .eib-phone-overlay {
+            height: auto;
+            padding: 48px 10px 22px 10px;
+          }
+          /* ── Friends tile (Plan a trip together) ───────────────────
+             Drop the side-by-side 1fr/auto grid. Position the phone
+             mockup absolutely relative to the card so its bottom edge
+             sits flush with the card bottom. Then layer the "3 places
+             added" trip card on top of the phone so it reads as a
+             notification floating over the device.
+             Selectors use .eib-card.eib-card--chat (specificity 0,2,0)
+             so they beat the @media (max-width: 640px) .eib-card rule
+             that resets card padding back to 22px. */
+          .eib-card.eib-card--chat {
+            min-height: 440px;
+            padding: 0;
+          }
+          .eib-chat-grid {
+            display: block;
+            height: auto;
+            gap: 0;
+            grid-template-columns: none;
+            position: static;
+          }
+          .eib-chat-side {
+            padding: 24px 24px 0 24px;
+          }
+          /* Left column = title only. Friends-row (avatars) + trip-card
+             stack on the right side, both absolute-positioned. Title is
+             constrained so it can't wrap into the right column area. */
+          .eib-card--chat .eib-chat-side > .eib-title-row {
+            max-width: 140px;
+          }
+          /* Avatars row anchored top-right. Removed margin-top so the
+             positioning math is clean. */
+          .eib-card--chat .eib-chat-side > .eib-friends-row {
+            position: absolute;
+            top: 24px;
+            right: 24px;
+            margin: 0;
+            z-index: 5;
+          }
+          /* Phone mockup — wraps the card width minus a 15px gutter on
+             each side, anchored to the card bottom. Its left edge sits
+             at the same 15px from the card edge as the title text. */
+          .eib-card--chat .eib-chat-phone {
+            position: absolute;
+            left: 24px;
+            right: 24px;
+            bottom: 0;
+            width: auto;
+            height: 240px;
+            padding: 0;
+            margin: 0;
+            display: block;
+            align-self: auto;
+            justify-content: flex-start;
+            z-index: 10;
+          }
+          .eib-card--chat .eib-chat-phone-img {
+            width: 100%;
+            max-width: none;
+            height: 100%;
+            object-fit: cover;
+            object-position: top center;
+          }
+          /* Trip-card lifted out of the chat-side flow and overlaid
+             on the phone mockup. Position is absolute relative to the
+             card itself (chat-grid is now position:static). Left edge
+             at 30px from the card edge (= 15px card gutter + 15px
+             phone inset) so the card sits inset over the phone screen. */
+          .eib-card--chat .eib-trip-wrap {
+            position: absolute;
+            top: 78px;
+            right: 24px;
+            left: auto;
+            bottom: auto;
+            transform: none;
+            margin-top: 0;
+            z-index: 6;
+            display: inline-block;
+            align-self: auto;
+          }
+          /* ── Save tile (Import from anywhere) ──────────────────────
+             Same height as the Friends tile above. Phone mockup is
+             pushed down 40% of its own height so only the top 60%
+             reads inside the card (overflow:hidden on .eib-card clips
+             the bottom 40%). Source-app chips restored — orbiting the
+             visible phone area on mobile. */
+          .eib-card.eib-card--save {
+            min-height: 480px;
+            padding: 0;
+          }
+          .eib-save-grid {
+            display: block;
+            height: auto;
+            gap: 0;
+            grid-template-columns: none;
+            position: static;
+          }
+          .eib-save-text {
+            padding: 24px 24px 0 24px;
+            max-width: none;
+          }
+          /* Phone mockup — smaller, centered horizontally, anchored to
+             the card bottom with extra breathing room above so the
+             label stack at the top of the card has room. */
+          .eib-card--save .eib-save-phone {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            bottom: 0;
+            width: 230px;
+            height: 280px;
+            padding: 0;
+            margin: 0;
+            display: block;
+            align-self: auto;
+            justify-content: flex-start;
+            z-index: 2;
+          }
+          .eib-card--save .eib-save-phone-img {
+            width: 100%;
+            max-width: none;
+            height: 100%;
+            object-fit: cover;
+            object-position: top center;
+          }
+          .eib-card--save .eib-source-chips {
+            display: block;
+            transform: none;
+            z-index: 3;
+          }
+          .eib-card--save .eib-source-chip {
+            backdrop-filter: blur(clamp(1px, 0.125em, 4px));
+            -webkit-backdrop-filter: blur(clamp(1px, 0.125em, 4px));
+          }
+          /* Chip orbit tuned to the mobile-centered phone (x=75-275,
+             y=240-480 on a 350x480 card). Sized inherited from the
+             desktop base rule. Layout is 3 rows × 2 columns hugging the
+             phone edges: every chip sits at a phone edge with a small
+             overlap so they read as a tight orbit around the product. */
+          .eib-card--save .eib-source-chip--1 { top: 62%; left: 6%; }    /* TikTok — biggest, mid-left of phone */
+          .eib-card--save .eib-source-chip--2 { top: 42%; left: 16%; }   /* Pinterest — top-left corner of phone, nudged right */
+          .eib-card--save .eib-source-chip--3 { top: 82%; right: 8%; }   /* Google Maps — bottom-right corner of phone */
+          .eib-card--save .eib-source-chip--4 { top: 42%; right: 8%; }   /* Google Docs — top-right corner of phone */
+          .eib-card--save .eib-source-chip--5 { top: 64%; right: 4%; }   /* Apple Notes — mid-right edge of phone */
+          .eib-card--save .eib-source-chip--6 { top: 82%; left: 8%; }    /* Instagram — bottom-left corner of phone */
+          /* ── Planner tile ──────────────────────────────────────────
+             Floor card height + shrink the itinerary PNG so the title
+             reads clear of the cards underneath. Inner text gutters
+             tightened to 15px to match the rest of the bento. */
+          .eib-card.eib-card--map { min-height: 360px; padding: 0; }
+          .eib-card--map .eib-text--over { padding: 24px; }
+          .eib-planner-itinerary {
+            width: min(76%, 360px);
+            bottom: 18px;
+          }
+          /* ── Free-forever tile ─────────────────────────────────────
+             Tall enough to give the title room ABOVE the earth image
+             instead of squeezing into a thin strip. Top-align content
+             so the heading sits on the sky band and the earth fills
+             the bottom portion. */
+          .eib-card.eib-ff-tile {
+            min-height: 220px;
+            justify-content: flex-start;
+            padding: 28px 24px 20px 24px;
+          }
         }
-        /* Mobile — same single-column stack, smaller padding + titles. */
+        /* Mobile — same single-column stack, smaller padding + titles
+           and tightened gaps so the bento doesn't dominate a short phone
+           screen. */
         @media (max-width: 640px) {
           .eib-card { padding: 22px; }
           .eib-title { font-size: 22px; }
           .eib-title--hero { font-size: 26px; }
+          .eib-bento { gap: 12px; }
+          .eib-col,
+          .eib-col--right,
+          .eib-row { gap: 12px; }
         }
       `}</style>
 

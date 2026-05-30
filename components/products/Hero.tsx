@@ -621,25 +621,27 @@ export default function Hero() {
         ref={headerRef}
         className="relative z-20 flex flex-col items-center"
         style={{
-          // Header height = 100dvh + NAV_PULL so the background image
-          // fills the full visible viewport at scrollY 0. The outer
-          // wrapper has margin-top: -NAV_PULL, which would otherwise
-          // leave a NAV_PULL-tall gap below the hero (next section
-          // peeking through at the bottom of the screen). Extending the
-          // header by NAV_PULL closes that gap so the image reaches the
-          // bottom edge of the user's screen at rest.
-          height: `calc(100dvh + ${NAV_PULL}px)`,
+          // Desktop: fixed `100dvh + NAV_PULL` so the photo fills the
+          // full visible viewport at scrollY 0 (the outer wrapper's
+          // margin-top: -NAV_PULL would otherwise leave a NAV_PULL-tall
+          // gap at the bottom of the hero).
+          // Mobile: use min-height instead so the header AUTO-GROWS when
+          // the content stack (Elio lockup → H1 → CTA → MobilePhone) is
+          // taller than 100dvh — without this, the 240px MobilePhone
+          // bleeds into the MobileScenes "for your city" section below.
+          height: isLg ? `calc(100dvh + ${NAV_PULL}px)` : "auto",
+          minHeight: isLg ? undefined : `calc(100dvh + ${NAV_PULL}px)`,
           width: "100%",
           background: "#FFFFFF",
           // Top-aligned stack: the hero is pulled up behind the navbar
           // by NAV_PULL (120 px), so paddingTop = NAV_PULL + navbar
           // clearance (≈ 60 px navbar height + 30 px gap) keeps the
-          // Elio logo + heading comfortably below the navbar. Bottom
-          // padding is small because the phone now occupies the lower
-          // portion of the hero (PHONE_PEEK = 0.25).
+          // Elio logo + heading comfortably below the navbar. Mobile
+          // bottom padding gives the MobilePhone breathing room before
+          // the first MobileScenes section.
           justifyContent: "flex-start",
           paddingTop: "clamp(180px, 22vh, 230px)",
-          paddingBottom: 0,
+          paddingBottom: isLg ? 0 : 40,
         }}
       >
         {/* Consumer hero background — full-bleed photograph behind the
