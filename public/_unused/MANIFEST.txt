@@ -388,3 +388,44 @@
 72893	emoji/burger.png
 57288	how/pane.png
 3064	Icon/claude.png
+
+# Deep audit — generated 2026-05-30T22:45:00.714Z
+# Strategy: cross-check against .next/ compiled build output, not source-grep.
+# Total: 35 files, 58.3 MB
+# Format: <bytes>	<original-relative-path>
+
+9029131	use-cases/hero.png
+8701992	terra.png
+5483410	use-cases/urban.png
+5292971	beach.png
+5194700	forest.png
+3349616	use-cases/sites.png
+3001707	companyhero.png
+2630752	Blogs/madrid.png
+2456061	use-cases/logs.png
+2437722	use-cases/site.png
+1766519	product/phone.png
+1761858	use-cases/real.png
+1695339	business/hero.png
+1533918	business/desk.png
+1245682	use-cases/agent.png
+1072924	Icon/urban.png
+941212	UseCases/SiteSelection.jpg
+908406	Icon/site.png
+678058	how/card.png
+641031	TechnologyPageImages/Timeline.png
+305083	Icon/more.png
+262931	emoji/desk.png
+207578	Blogs/spain.jpeg
+99722	UseCases/Logistics.webp
+76604	how/center.png
+48379	emoji/drink.png
+48271	emoji/book.png
+45103	emoji/arrow.png
+45103	product/arrow.png
+44134	emoji/palm.png
+44134	product/palm.png
+44091	how/palm.png
+16223	Icon/mistral.png
+9378	how/avatar.png
+3883	use-cases/pins.png

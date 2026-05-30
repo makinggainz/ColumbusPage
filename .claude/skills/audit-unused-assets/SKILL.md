@@ -130,6 +130,19 @@ Append to this list any time a miss is identified.
 - **Symptom:** specific filenames in script comments evaded quarantine.
 - **Fix:** [scripts/find-unused-assets.mjs](../../../scripts/find-unused-assets.mjs) excludes itself + `find-unused-images.mjs` from the source scan via `SELF_SCRIPTS`. When adding new audit-related scripts, add them to that set.
 
+### 2026-05-30 — Tooling/skill files mention asset names by design
+
+- **Example:** This `SKILL.md` documents `beach.png` as an example of a false-positive pattern; [scripts/optimize-images.mjs](../../../scripts/optimize-images.mjs) lists `beach.png` in its hero-tier config. Both made `beach.png` look "used" to the source scan.
+- **Symptom:** an asset that's truly unused survives because some maintenance/tooling file references it by name.
+- **Fix:** `SKIP_DIRS` excludes `scripts/` and `.claude/` from the source scan entirely. Tooling files aren't production code — references inside them shouldn't count as real uses. When adding new tooling directories (e.g., `tools/`, `chore-scripts/`), add them to `SKIP_DIRS` too.
+
+### 2026-05-30 — Stem is a common English word used in UI copy
+
+- **Example:** `beach.png` was kept in place because the word "beach" appears standalone in UI copy: `"secret beach"`, `"Tulum beach club"`, `"Thai beach resort"`. A word-bounded stem check correctly excludes substrings inside longer words (`Authentic` rejecting `henti`) but cannot tell a standalone English word apart from a file-stem reference.
+- **Symptom:** files named after common English words remained in `/public` even though never referenced by path.
+- **Fix:** Stem matching now requires the stem to appear in a **path position** — preceded by `/`, `"/`, `'/`, `` `/ ``, `(/`, or `=/`. This catches dynamic refs like `` `/${name}.png` `` (real path interpolation) and rejects "secret beach" (standalone word). See `containsPathStem()` and `STEM_PREFIX` in [scripts/find-unused-assets.mjs](../../../scripts/find-unused-assets.mjs).
+- **Trade-off:** a hypothetical `import beach from "./foo"` style reference would no longer hit the stem rule — but the basename rule (full filename match) runs first and would catch that case anyway. Net: strictly tighter, no false negatives on real path refs.
+
 ## Patterns NOT yet handled (watch list)
 
 - **Asset filename in a `//` line comment.** Stripping `//` comments would create false positives from URLs (`https://`), so it's not done. If a miss is found that traces to a `//` comment, write a context-aware stripper that only kills `//` when not preceded by `:`.
@@ -185,5 +198,6 @@ console.log(hits === 0 ? '✓ clean' : `⚠ ${hits} ghost references`);
 | 2026-05-30 | 1 (source-grep only) | 205 | 150 | Initial pass with stem-and-dir-segment heuristic. |
 | 2026-05-30 | 2 (deep, .next/ cross-check) | 159 | 304 | Added word-boundary stem matching; added build-output haystack. Found `henti.png`, 42-MB `mesh-animation.mp4`, all `use-cases/* 2.png` duplicates. |
 | 2026-05-30 | 3 (fix CSS-in-JS comment leak) | 11 | 4.9 | `Colbackgroundcard.png` plus 10 more (`save-globe.png`, `minimalistCity.png`, `techDiagram2.png`, `elioName.png`, etc.) all surfaced after adding `stripBlockComments()` to both source + build preprocessing. This `SKILL.md` initialized. Dead-comment cleanup in `BentoProducts.tsx`, `DestinationsSection.tsx`, `company.module.css`, `MissionScrollIntro.tsx`, `technology.module.css`, `Hero.tsx`, `BusinessUseCases.tsx` so the same patterns can't re-poison the next pass. Final state: 0 unused, 0 raw ghost refs in HTML, 0 stripped ghost refs. |
+| 2026-05-30 | 4 (tighter path-stem + tooling exclusion) | 35 | 58.3 | `beach.png` and 34 others surfaced after two fixes: (a) stem-matching now requires a path prefix (`/`, `"/`, `'/`, etc.) so standalone English words like `beach` in UI copy stop matching, and (b) `scripts/` + `.claude/` are excluded from the source scan so audit/skill files don't self-reference assets. Wins included `use-cases/hero.png` (8.6 MB), `terra.png` (8.3 MB), `forest.png` (5 MB), `beach.png` (5 MB), `companyhero.png` (2.9 MB). Final state: 0 unused, 0 ghost refs. |
 
 — end —

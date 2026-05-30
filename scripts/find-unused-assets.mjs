@@ -39,8 +39,15 @@ const NEXT_DIR = path.join(REPO, '.next');
 
 const ASSET_EXT = /\.(png|jpe?g|webp|avif|svg|gif|mp4|webm|mov|m4v|avi|mkv|mp3|wav|m4a|ogg|flac|aac)$/i;
 const SRC_EXT = /\.(ts|tsx|js|jsx|mjs|cjs|css|scss|html|md|mdx|json)$/i;
-const SKIP_DIRS = new Set(['node_modules', '.next', '.git', 'design-extract-output', '_unused']);
-const STEM_BOUNDARY = /[/"'`(){}<>\[\],\s.\-]/; // chars that legitimately delimit a path stem
+// Tooling directories are excluded from the source scan because their
+// contents (audit scripts, skill docs, build helpers) reference asset
+// names by name for documentation or tier-config purposes — they don't
+// represent production use of those assets.
+const SKIP_DIRS = new Set(['node_modules', '.next', '.git', 'design-extract-output', '_unused', 'scripts', '.claude']);
+// Path-context prefixes: a stem match is treated as a real reference only
+// if it's preceded by one of these. Otherwise standalone English words
+// like "beach" or "card" trip the stem rule when they appear in UI copy.
+const STEM_PREFIX = ['/', '"/', "'/", '`/', '(/', '=/'];
 
 function parseArgs(argv) {
   const args = { dryRun: true };
@@ -107,21 +114,34 @@ function isTracked(absPath) {
   } catch { return false; }
 }
 
-// Test: does `haystack` contain `needle` as a word-bounded substring?
-// "henti" should NOT match inside "Authentic"; "/use-cases/henti.png"
-// or "henti" or "'henti'" should match.
-function containsBounded(haystack, needle) {
-  let idx = 0;
-  while (true) {
-    const i = haystack.indexOf(needle, idx);
-    if (i === -1) return false;
-    const before = i === 0 ? '' : haystack[i - 1];
-    const after = i + needle.length >= haystack.length ? '' : haystack[i + needle.length];
-    const okBefore = before === '' || STEM_BOUNDARY.test(before);
-    const okAfter = after === '' || STEM_BOUNDARY.test(after);
-    if (okBefore && okAfter) return true;
-    idx = i + 1;
+// Stem match is treated as a real reference ONLY when the stem is at a
+// path position — preceded by `/`, `"/`, `'/`, `` `/ ``, `(/`, or `=/`.
+//
+// Why not just "word-bounded": the stem `beach` is a common English word
+// that appears in UI copy like "secret beach" or "Tulum beach club".
+// A word-bounded match treats those as references and keeps the file in
+// place. Requiring a leading `/` separator means we only match path-like
+// occurrences (real URL refs or dynamic-path interpolations), which is
+// the actual signal we care about.
+//
+// A small downside: a real reference like `import beach from "./foo"`
+// would NOT be caught — but that's also covered by the basename rule
+// (full filename match) which runs first.
+function containsPathStem(haystack, needle) {
+  for (const prefix of STEM_PREFIX) {
+    const probe = prefix + needle;
+    let idx = 0;
+    while (true) {
+      const i = haystack.indexOf(probe, idx);
+      if (i === -1) break;
+      // After the stem, require a path-terminator (extension dot, slash,
+      // quote, paren, etc.) so e.g. `/beach` doesn't match `/beachfront`.
+      const after = i + probe.length >= haystack.length ? '' : haystack[i + probe.length];
+      if (after === '' || /[/"'`(){}<>\[\],\s.\-?#]/.test(after)) return true;
+      idx = i + 1;
+    }
   }
+  return false;
 }
 
 const args = parseArgs(process.argv.slice(2));
@@ -195,13 +215,13 @@ for (const absPath of allAssets) {
   }
 
   // Weaker: stem appears word-bounded in build output.
-  if (stem.length >= 4 && containsBounded(buildText, stem)) {
+  if (stem.length >= 4 && containsPathStem(buildText, stem)) {
     buckets.stemInBuild.push(absPath);
     continue;
   }
 
   // Weakest: stem appears word-bounded in source.
-  if (stem.length >= 4 && containsBounded(sourceText, stem)) {
+  if (stem.length >= 4 && containsPathStem(sourceText, stem)) {
     buckets.stemInSource.push(absPath);
     continue;
   }
