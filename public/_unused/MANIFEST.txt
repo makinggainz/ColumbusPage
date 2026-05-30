@@ -429,3 +429,28 @@
 16223	Icon/mistral.png
 9378	how/avatar.png
 3883	use-cases/pins.png
+
+# Deep audit — generated 2026-05-30T23:00:07.280Z
+# Strategy: cross-check against .next/ compiled build output, not source-grep.
+# Total: 19 files, 58.4 MB
+# Format: <bytes>	<original-relative-path>
+
+31758321	research-applications-video.mp4
+16931890	use-cases-video.mp4
+3519120	Blogs/MapsGPT.png
+2958476	Blogs/elio.png
+1744751	CEHQ.png
+1475409	emoji/Footer.png
+1148133	businessartbackground.png
+362745	business/basic.png
+297359	image.png
+258243	consumer/heroBackground.jpg
+113681	use-cases/logobueno.jpeg
+112371	use-cases/grid.png
+88937	emoji/earth.png
+88937	product/earth.png
+88757	how/earth.png
+80630	how/heart.png
+80577	product/emoji.png
+80573	emoji/heart.png
+47862	how/light.png

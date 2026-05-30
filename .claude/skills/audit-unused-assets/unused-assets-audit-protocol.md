@@ -132,9 +132,23 @@ Append to this list any time a miss is identified.
 
 ### 2026-05-30 — Tooling/skill files mention asset names by design
 
-- **Example:** This `SKILL.md` documents `beach.png` as an example of a false-positive pattern; [scripts/optimize-images.mjs](../../../scripts/optimize-images.mjs) lists `beach.png` in its hero-tier config. Both made `beach.png` look "used" to the source scan.
+- **Example:** This protocol document references `beach.png` as an example of a false-positive pattern; [scripts/optimize-images.mjs](../../../scripts/optimize-images.mjs) lists `beach.png` in its hero-tier config. Both made `beach.png` look "used" to the source scan.
 - **Symptom:** an asset that's truly unused survives because some maintenance/tooling file references it by name.
 - **Fix:** `SKIP_DIRS` excludes `scripts/` and `.claude/` from the source scan entirely. Tooling files aren't production code — references inside them shouldn't count as real uses. When adding new tooling directories (e.g., `tools/`, `chore-scripts/`), add them to `SKIP_DIRS` too.
+
+### 2026-05-30 — Markdown documentation references assets by name
+
+- **Examples:** `design-system/navbar.md` documents `CEHQ.png` in a table; `design-system/use-cases-pages.md` lists default video paths `/research-applications-video.mp4` and `/use-cases-video.mp4`; `design-system/business-page.md` describes the `/businessartbackground.png` backdrop. None of these are runtime references — they're docs that describe the design system for humans.
+- **Symptom:** truly orphaned assets stay in `/public` because a design-system doc names them.
+- **Fix:** Removed `md` and `mdx` from `SRC_EXT`. Markdown files no longer count toward the source scan. If this project ever uses MDX as runtime content (e.g. blog posts at `content/posts/*.mdx` rendered by a route), add a narrow exception for that subtree — don't re-enable markdown globally.
+- **Cleanup obligation:** when this fix surfaces an orphan whose only reference was in a design-system doc, update the doc to reflect reality (asset is gone or replaced by something else).
+
+### 2026-05-30 — Path-stem collision with Next.js framework paths
+
+- **Example:** `image.png` (a generic placeholder) was kept in place because its stem `image` matched `/image` inside `next/image` import statements (`from "next/image"`) and inside the Next.js Image optimizer URLs (`/_next/image?url=...`). Both are framework infrastructure, not references to a file literally named `image.png`.
+- **Symptom:** assets whose stem matches a Next/web-framework path segment evade quarantine.
+- **Fix:** Tightened `containsPathStem()` to require a `.` immediately after the stem — i.e. the stem must look like a filename, not a directory. `/image.` matches; `/image"` or `/image/` does not. This also covers the earlier word-bounded-stem improvements: standalone English words in prose (no `.` after `beach`) and word-internal substrings (no path prefix before `henti` in `Authentic`) are both rejected.
+- **Side effect:** a truly dynamic ref of the form `<Image src={\`/${name}\`}>` (no extension on the literal) is no longer caught by the stem rule. But this pattern was always partial-signal at best, and the directory-segment match still catches it whenever the file lives in a subfolder.
 
 ### 2026-05-30 — Stem is a common English word used in UI copy
 
@@ -199,5 +213,6 @@ console.log(hits === 0 ? '✓ clean' : `⚠ ${hits} ghost references`);
 | 2026-05-30 | 2 (deep, .next/ cross-check) | 159 | 304 | Added word-boundary stem matching; added build-output haystack. Found `henti.png`, 42-MB `mesh-animation.mp4`, all `use-cases/* 2.png` duplicates. |
 | 2026-05-30 | 3 (fix CSS-in-JS comment leak) | 11 | 4.9 | `Colbackgroundcard.png` plus 10 more (`save-globe.png`, `minimalistCity.png`, `techDiagram2.png`, `elioName.png`, etc.) all surfaced after adding `stripBlockComments()` to both source + build preprocessing. This `SKILL.md` initialized. Dead-comment cleanup in `BentoProducts.tsx`, `DestinationsSection.tsx`, `company.module.css`, `MissionScrollIntro.tsx`, `technology.module.css`, `Hero.tsx`, `BusinessUseCases.tsx` so the same patterns can't re-poison the next pass. Final state: 0 unused, 0 raw ghost refs in HTML, 0 stripped ghost refs. |
 | 2026-05-30 | 4 (tighter path-stem + tooling exclusion) | 35 | 58.3 | `beach.png` and 34 others surfaced after two fixes: (a) stem-matching now requires a path prefix (`/`, `"/`, `'/`, etc.) so standalone English words like `beach` in UI copy stop matching, and (b) `scripts/` + `.claude/` are excluded from the source scan so audit/skill files don't self-reference assets. Wins included `use-cases/hero.png` (8.6 MB), `terra.png` (8.3 MB), `forest.png` (5 MB), `beach.png` (5 MB), `companyhero.png` (2.9 MB). Final state: 0 unused, 0 ghost refs. |
+| 2026-05-30 | 5 (markdown exclusion + drop stem matching) | 19 | 58.4 | Three new false-positive classes surfaced. (a) `design-system/*.md` and `docs/*.md` reference assets by name as documentation, not real uses — fixed by dropping `md`/`mdx` from `SRC_EXT`. (b) `image.png`'s stem `image` collided with `next/image.js` and `/_next/image?url=...` framework paths — added strict `.<ext>` requirement, then realized stem-matching had now caused three classes of false positives (substring-in-word, English-word-in-prose, framework-path-collision) for marginal real-ref recall, so dropped it entirely. `containsPathStem()` now always returns false; basename + URL-encoded basename + build-output scan remain. Biggest wins: `research-applications-video.mp4` (30 MB), `use-cases-video.mp4` (16 MB), `Blogs/MapsGPT.png`, `Blogs/elio.png`, `CEHQ.png`, `businessartbackground.png`, `image.png`. Final state: 0 unused, 0 ghost refs, build clean. Skill file renamed from `SKILL.md` to `unused-assets-audit-protocol.md` per user. |
 
 — end —

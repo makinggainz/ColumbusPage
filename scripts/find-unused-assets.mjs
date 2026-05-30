@@ -38,7 +38,13 @@ const QUARANTINE = path.join(PUBLIC_DIR, '_unused');
 const NEXT_DIR = path.join(REPO, '.next');
 
 const ASSET_EXT = /\.(png|jpe?g|webp|avif|svg|gif|mp4|webm|mov|m4v|avi|mkv|mp3|wav|m4a|ogg|flac|aac)$/i;
-const SRC_EXT = /\.(ts|tsx|js|jsx|mjs|cjs|css|scss|html|md|mdx|json)$/i;
+// Markdown is documentation, not production code. Design-system specs and
+// PR reports name assets by file for human reference; treating those as
+// "uses" makes truly-orphaned assets look alive. If this project ever
+// adopts MDX as runtime content (e.g. /content/posts/*.mdx rendered by a
+// route), put those files under a content/ directory and add a special
+// case here.
+const SRC_EXT = /\.(ts|tsx|js|jsx|mjs|cjs|css|scss|html|json)$/i;
 // Tooling directories are excluded from the source scan because their
 // contents (audit scripts, skill docs, build helpers) reference asset
 // names by name for documentation or tier-config purposes — they don't
@@ -114,33 +120,18 @@ function isTracked(absPath) {
   } catch { return false; }
 }
 
-// Stem match is treated as a real reference ONLY when the stem is at a
-// path position — preceded by `/`, `"/`, `'/`, `` `/ ``, `(/`, or `=/`.
+// Stem matching is intentionally disabled — see retrospective in
+// .claude/skills/audit-unused-assets/unused-assets-audit-protocol.md
+// under "Patterns NOT yet handled".
 //
-// Why not just "word-bounded": the stem `beach` is a common English word
-// that appears in UI copy like "secret beach" or "Tulum beach club".
-// A word-bounded match treats those as references and keeps the file in
-// place. Requiring a leading `/` separator means we only match path-like
-// occurrences (real URL refs or dynamic-path interpolations), which is
-// the actual signal we care about.
-//
-// A small downside: a real reference like `import beach from "./foo"`
-// would NOT be caught — but that's also covered by the basename rule
-// (full filename match) which runs first.
-function containsPathStem(haystack, needle) {
-  for (const prefix of STEM_PREFIX) {
-    const probe = prefix + needle;
-    let idx = 0;
-    while (true) {
-      const i = haystack.indexOf(probe, idx);
-      if (i === -1) break;
-      // After the stem, require a path-terminator (extension dot, slash,
-      // quote, paren, etc.) so e.g. `/beach` doesn't match `/beachfront`.
-      const after = i + probe.length >= haystack.length ? '' : haystack[i + probe.length];
-      if (after === '' || /[/"'`(){}<>\[\],\s.\-?#]/.test(after)) return true;
-      idx = i + 1;
-    }
-  }
+// Three false-positive classes (substring-inside-word, standalone English
+// word, framework path collision like `next/image.js`) consistently fooled
+// stem matching, and post-hoc filtering each one added complexity without
+// catching any real references that the basename + dir-segment + build-
+// output rules don't already cover. If a future audit shows a real ref
+// that ONLY a stem match would catch, re-enable carefully and document
+// the regression in the SKILL doc.
+function containsPathStem(_haystack, _needle) {
   return false;
 }
 
