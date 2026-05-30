@@ -128,7 +128,7 @@ export function TechnologySections() {
                   <img src="/TechnologyPageImages/lgm-globe-icon.png" alt="" className={styles.dimModelHeaderIcon} aria-hidden loading="lazy" decoding="async" />
                   <div className={styles.dimModelHeaderText}>
                     <h4 className={`${styles.dimModelHeaderName} ${styles.dimModelHeaderNameLgm}`}>LGM</h4>
-                    <p className={styles.dimModelHeaderSubtitle}>Large-Geosaptial-model</p>
+                    <p className={styles.dimModelHeaderSubtitle}>Large-Geospatial-model</p>
                   </div>
                 </div>
 
@@ -571,7 +571,7 @@ export function TechnologySections() {
           <div className={styles.researchBlogWrap}>
           <RevealOnView className={`${styles.editorialSlide} ${styles.resultsSlide}`}>
             <p className={styles.lgmKicker}>RESULTS</p>
-            <h2 className={styles.resultsTitle}>MODEL COLUMBUS-01</h2>
+            <h2 className={styles.resultsTitle}>Our Model: Magellan-1.0</h2>
             <p className={styles.resultsLead}>The latest results from our development of the LGM.</p>
 
             <div className={styles.resultsGrid}>
@@ -617,14 +617,14 @@ export function TechnologySections() {
             <div className={styles.resultsArticlesRow}>
               <Link href={blogHref(BLOG_SLUG.mappingUnknownGenLayers)} className={`${styles.lgmArticleCard} ${styles.lgmArticleCardBgUnknownLayers}`}>
                 <p>
-                  Read our article on Mapping the<br />
-                  <strong>unknown with Gen Layers</strong>
+                  Mapping the uknown:<br />
+                  <strong>Generative Geospatial layers</strong>
                 </p>
               </Link>
-              <Link href={blogHref(BLOG_SLUG.deepSpatialReasoningScale)} className={`${styles.lgmArticleCard} ${styles.lgmArticleCardBgDeepLayers}`}>
+              <Link href={blogHref(BLOG_SLUG.firePredictonModel)} className={`${styles.lgmArticleCard} ${styles.lgmArticleCardBgFirePrediction}`}>
                 <p>
-                  Read our article on<br />
-                  <strong>deep spatial reasoning</strong>
+                  Research demonstration:<br />
+                  <strong>Fire Prediction Model</strong>
                 </p>
               </Link>
             </div>

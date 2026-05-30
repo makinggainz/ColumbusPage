@@ -75,7 +75,7 @@ type Quote = { quote: string; name: string; role: string; avatar: string };
 
 const FEATURED: Quote = {
   quote:
-    "We wish to apply semantic AI in simple and beautiuful products helping real people.",
+    "We apply semantic AI in simple and beautiful products helping real people.",
   name: "David Ramirez Blonski",
   role: "Co-Founder, CEO",
   avatar: "/David.png",

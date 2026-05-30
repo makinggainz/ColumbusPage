@@ -4576,10 +4576,10 @@
   background-image: url("/TechnologyPageImages/multieWaveEminations.jpeg");
 }
 .lgmArticleCardBgUnknownLayers::before {
-  background-image: url("/TechnologyPageImages/unkown-layers.jpeg");
+  background-image: url("/Blogs/EngineeringCover.png");
 }
-.lgmArticleCardBgDeepLayers::before {
-  background-image: url("/TechnologyPageImages/deep-layers.jpeg");
+.lgmArticleCardBgFirePrediction::before {
+  background-image: url("/Blogs/firePredictionBlog.png");
 }
 
 .lgmArticleCard > * {

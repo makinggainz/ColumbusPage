@@ -256,12 +256,12 @@ export function CareersContactForm({ intro }: Props = {}) {
             {tab === "columbus-pro" && (
               <form className="flex flex-col gap-5" onSubmit={handleSend}>
                 <label className="flex flex-col gap-1.5">
-                  {labelEl("Company email")}
+                  {labelEl("Email")}
                   <input type="email" name="email" required value={form.email} onChange={handleChange} className="ccf-input" placeholder="name@company.com" />
                 </label>
 
                 <label className="flex flex-col gap-1.5">
-                  {labelEl("Company size")}
+                  {labelEl("Your name")}
                   <input type="text" name="companySize" required value={form.companySize} onChange={handleChange} className="ccf-input" placeholder="Number of employees" />
                 </label>
 
@@ -335,13 +335,15 @@ export function CareersContactForm({ intro }: Props = {}) {
                   <input type="email" name="email" required value={form.email} onChange={handleChange} className="ccf-input" placeholder="name@company.com" />
                 </label>
 
-                <label className="flex flex-col gap-1.5">
-                  {labelEl(tab === "investment" ? "Organization" : "Role")}
-                  <input type="text" name="role" required value={form.role} onChange={handleChange} className="ccf-input" />
-                </label>
+                {tab === "investment" && (
+                  <label className="flex flex-col gap-1.5">
+                    {labelEl("Organization")}
+                    <input type="text" name="role" required value={form.role} onChange={handleChange} className="ccf-input" />
+                  </label>
+                )}
 
                 <label className="flex flex-col gap-1.5">
-                  {labelEl(tab === "investment" ? "Tell us about your interest" : "Tell us about your project")}
+                  {labelEl(tab === "investment" ? "Tell us about your interest" : "We're happy to talk")}
                   <textarea
                     name="message"
                     required
@@ -352,8 +354,8 @@ export function CareersContactForm({ intro }: Props = {}) {
                     className="ccf-textarea"
                     placeholder={
                       tab === "investment"
-                        ? "Share your investment thesis or partnership proposal."
-                        : "Share your objectives and any specific requirements."
+                        ? "Message goes directly to our CEO"
+                        : "App support, ideas, feature requests or anything else :)"
                     }
                   />
                   <span className="text-[12px] text-right" style={{ color: MUTED }}>{charCount}/500</span>

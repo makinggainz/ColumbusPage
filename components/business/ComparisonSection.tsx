@@ -397,14 +397,13 @@ export default function ComparisonSection() {
         <div
           className="cmp-host relative w-full min-w-0 overflow-hidden rounded-3xl lg:rounded-l-none border-2 border-(--ent-border-card) lg:border-l-0"
         >
-          {/* Env-bg-1 sky/cityscape backdrop — fills the card behind the
-              swap-in mockup children. `inset: 2` matches the 2px border
-              so the photo sits inside the padding box (mirroring the
-              original background-clip:padding-box behaviour). */}
+          {/* Env-bg-1 sky/cityscape backdrop — fills the full card behind
+              the swap-in mockup children (no inset; the overflow-hidden
+              + rounded corners on the host still clip cleanly). */}
           <div
             aria-hidden
             className="pointer-events-none absolute"
-            style={{ inset: 2, zIndex: 0 }}
+            style={{ inset: 0, zIndex: 0 }}
           >
             <ImageWithFallback
               src="/Environmental/env-bg-1.png"

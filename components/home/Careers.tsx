@@ -164,7 +164,7 @@ function ArrowDots({ className = "" }: { className?: string }) {
 // ─── Team-locations map ──────────────────────────────────────────────────────
 //
 // Hand-drawn world map asset with DC + Madrid pinned in brand blue
-// (/public/hiring-humans/world-map-countries.png). Rendered as a real <img> so the
+// (/public/hiring-humans/hiringWorldMap.png). Rendered as a real <img> so the
 // pencil-sketch detail (ships, compass rose, coastlines) reads cleanly
 // at any width. Sized via CSS — width: 100%, height auto — to scale
 // responsively inside the .careers-map wrapper.
@@ -193,7 +193,7 @@ const CSS = `
   margin: 0;
 }
 .careers-trigger {
-  color: var(--color-accent);
+  color: #0496FF;
   cursor: default;
 }
 .careers-sub {
@@ -205,19 +205,21 @@ const CSS = `
 /* ── Team-locations map (DC + Madrid pinned in brand blue) ──────────── */
 .careers-map {
   max-width: 780px;
-  margin: 0 auto;
-  padding: 8px 0;
-}
-/* Stroke-darkening via multiply stacking. The source PNG has fully-opaque
-   pale-gray strokes (~#D0) on pure white. Any global filter (brightness +
-   contrast) drags the near-white background down to gray too. mix-blend-mode:
-   multiply on duplicate copies gives surgical darkening instead — for each
-   pixel, output = a × b. White (1.0 × 1.0) stays white; pale strokes
-   (0.81 × 0.81 = 0.66 with one overlay; × 0.81 again = 0.53 with two)
-   compound down to ink. Browsers dedupe identical asset URLs, so the two
-   overlay <img>s are free over the network. */
-.careers-map-stack {
+  /* Vertical breathing room moved to margin so the container's height
+     exactly hugs the image — pulse % coords below stay locked to the
+     same map location at every viewport width. */
+  margin: 8px auto;
   position: relative;
+}
+/* Two stacked semi-transparent white washes to lighten the map. */
+.careers-map::before,
+.careers-map::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: 7px;
+  pointer-events: none;
 }
 .careers-map-img {
   display: block;
@@ -229,15 +231,45 @@ const CSS = `
      imagery. */
   border-radius: 7px;
 }
-.careers-map-img-overlay {
+
+/* Sonar pulses for DC + Madrid pins. Central dot sits at the % coords;
+   two pseudo-element rings expand + fade infinitely, offset by half the
+   cycle so a ring is always mid-flight. */
+.careers-map-pulse {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: #0496FF;
+  /* Box-shadow-as-border so the white ring doesn't shrink the inner
+     fill and the pulse rings can still emanate from the dot's edge.
+     Second layer is a slight drop shadow for elevation. */
+  box-shadow: 0 0 0 2px #FFFFFF, 0 2px 4px rgba(0, 0, 0, 0.25);
+  pointer-events: none;
+  z-index: 2;
+}
+.careers-map-pulse::before,
+.careers-map-pulse::after {
+  content: "";
   position: absolute;
   inset: 0;
-  display: block;
-  width: 100%;
-  height: auto;
-  border-radius: 7px;
-  mix-blend-mode: multiply;
-  pointer-events: none;
+  border-radius: 50%;
+  background: #0496FF;
+  animation: careersMapPulse 2.4s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+}
+.careers-map-pulse::after { animation-delay: 1.2s; }
+/* Coords are pure % of the image bounds — kept that way so the dots
+   stay pinned to the same map location across every viewport width. */
+.careers-map-pulse--dc { top: 43.76%; left: 28.21%; }
+.careers-map-pulse--madrid { top: 41.77%; left: 47.36%; }
+@keyframes careersMapPulse {
+  0%   { transform: scale(1);   opacity: 0.55; }
+  100% { transform: scale(2.5); opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .careers-map-pulse::before,
+  .careers-map-pulse::after { animation: none; opacity: 0; }
 }
 
 /* ── Join CTA (centered black pill, same arrow-dots glyph as the
@@ -569,28 +601,15 @@ export const Careers = ({ hideHeader, className = "" }: { hideHeader?: boolean; 
         )}
 
         <div className="careers-map">
-          <div className="careers-map-stack">
-            <img
-              src="/hiring-humans/world-map-countries.png"
-              alt="Team locations: Washington DC and Madrid"
-              className="careers-map-img"
-            />
-            {/* Two multiply-blend overlays darken pale-gray strokes
-                without touching the white background. See .careers-map
-                CSS for the math. */}
-            <img
-              src="/hiring-humans/world-map-countries.png"
-              alt=""
-              aria-hidden="true"
-              className="careers-map-img-overlay"
-            />
-            <img
-              src="/hiring-humans/world-map-countries.png"
-              alt=""
-              aria-hidden="true"
-              className="careers-map-img-overlay"
-            />
-          </div>
+          <img
+            src="/hiring-humans/hiringWorldMap.png"
+            alt="Team locations: Washington DC and Madrid"
+            className="careers-map-img"
+          />
+          {/* Sonar pulses on DC + Madrid. Coords are % of the map's
+              rendered box — tune in CSS if the image swaps. */}
+          <span className="careers-map-pulse careers-map-pulse--dc" aria-hidden />
+          <span className="careers-map-pulse careers-map-pulse--madrid" aria-hidden />
         </div>
 
         <div className="careers-join-row">

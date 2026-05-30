@@ -92,7 +92,7 @@ export const RESEARCH_ARTICLES: ResearchArticle[] = [
     date: "Feb 2026",
   },
   {
-    title: "Why LLMs dont cut it. Issues in LLM architecture for Geosaptial queries.",
+    title: "Why LLMs don't cut it. Issues in LLM architecture for Geospatial queries.",
     href: blogHref(BLOG_SLUG.llmsGeospatialQueries),
     date: "Jan 2026",
   },

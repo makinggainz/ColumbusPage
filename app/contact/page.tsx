@@ -398,12 +398,12 @@ function ContactPageInner() {
                   {tab === "columbus-pro" && (
                     <form className="flex flex-col gap-5" onSubmit={handleSend}>
                       <label className="flex flex-col gap-1.5">
-                        {labelEl("Company email")}
+                        {labelEl("Email")}
                         <input type="email" name="email" required value={form.email} onChange={handleChange} className="cf-input" placeholder="name@company.com" />
                       </label>
 
                       <label className="flex flex-col gap-1.5">
-                        {labelEl("Company size")}
+                        {labelEl("Your name")}
                         <input type="text" name="companySize" required value={form.companySize} onChange={handleChange} className="cf-input" placeholder="Number of employees" />
                       </label>
 
@@ -477,16 +477,18 @@ function ContactPageInner() {
                         <input type="email" name="email" required value={form.email} onChange={handleChange} className="cf-input" placeholder="name@company.com" />
                       </label>
 
-                      <label className="flex flex-col gap-1.5">
-                        {labelEl(tab === "investment" ? "Organization" : "Role")}
-                        <input type="text" name="role" required value={form.role} onChange={handleChange} className="cf-input" />
-                      </label>
+                      {tab === "investment" && (
+                        <label className="flex flex-col gap-1.5">
+                          {labelEl("Organization")}
+                          <input type="text" name="role" required value={form.role} onChange={handleChange} className="cf-input" />
+                        </label>
+                      )}
 
                       <label className="flex flex-col gap-1.5">
-                        {labelEl(tab === "investment" ? "Tell us about your interest" : "Tell us about your project")}
+                        {labelEl(tab === "investment" ? "Tell us about your interest" : "We're happy to talk")}
                         <textarea
                           name="message" required maxLength={500} rows={4} value={form.message} onChange={handleChange} className="cf-textarea"
-                          placeholder={tab === "investment" ? "Share your investment thesis or partnership proposal." : "Share your objectives and any specific requirements."}
+                          placeholder={tab === "investment" ? "Message goes directly to our CEO" : "App support, ideas, feature requests or anything else :)"}
                         />
                         <span className="text-[12px] text-right" style={{ color: MUTED }}>{charCount}/500</span>
                       </label>

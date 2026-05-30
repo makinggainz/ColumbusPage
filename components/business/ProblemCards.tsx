@@ -6,26 +6,24 @@ import {
   DollarSign,
   Filter,
   MapPinOff,
-  GraduationCap,
+  LayoutGrid,
   Layers,
   type LucideIcon,
 } from "lucide-react";
 import { GridSection, gl } from "../home/ContentGrid";
 
-/* Each pain point pairs with a glyph that hints at its specific frustration —
-   clock for time-to-report, dollar for seat-cost, filter for data-cleaning,
-   pin-off for bad coordinates, grad-cap for onboarding, layers for scattered
-   data sources. Icons + text both render in the same dark red so the strip
-   reads as one alarming list. */
+/* Each pain point pairs with a glyph that hints at its specific frustration.
+   Icons + text both render in the same dark red so the strip reads as one
+   alarming list. */
 const RED = "#7F1D1D";
 
-const PAIN_POINTS: { text: string; Icon: LucideIcon }[] = [
-  { text: "A single site selection report takes your team 2–3 weeks", Icon: Clock },
-  { text: "You pay $10K+ per seat for software half your team can't use", Icon: DollarSign },
-  { text: "Your analysts spend 60% of their time finding and cleaning data", Icon: Filter },
-  { text: "Coordinates are copy-pasted from Google and wrong half the time", Icon: MapPinOff },
-  { text: "New hires take 6 months before they can use your GIS tools", Icon: GraduationCap },
-  { text: "You can't get coordinates, demographics, and lot data in the same place", Icon: Layers },
+const PAIN_POINTS: { text: React.ReactNode; Icon: LucideIcon }[] = [
+  { text: "A single site selection report takes your team weeks to months.", Icon: Clock },
+  { text: "Legacy GIS requires specialists to operate their bulky complex apps.", Icon: DollarSign },
+  { text: "Your analysts spend 80% of their time finding, cleaning and organizing data.", Icon: Filter },
+  { text: <>Finding the <em>right</em> data to support your research is too difficult.</>, Icon: MapPinOff },
+  { text: "You use 10 different complex apps for one single project.", Icon: LayoutGrid },
+  { text: "Combining multiple types of large data on a single map is frustrating and costly.", Icon: Layers },
 ];
 
 export default function ProblemCards() {

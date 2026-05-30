@@ -24,7 +24,6 @@
  */
 
 import Image from "next/image";
-import { WorldMapLineArt } from "./WorldMapLineArt";
 
 /* Recolour filter matching MistxNav so the Columbus mark renders in the
    same navy blue everywhere it appears on the site. */
@@ -340,6 +339,30 @@ const CSS = `
 .bp-card--research .bp-name {
   font-family: var(--font-display);
 }
+/* Decorative lattice / dots / topography panel anchored to the right
+   side of the Research tile. Sits behind the text content so the body
+   copy reads on top — pointer-events:none keeps it inert. Hidden on
+   narrow viewports where the tile collapses to a single column and the
+   art would crowd the text. */
+.bp-card--research .bp-research-art {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 45%;
+  max-width: 480px;
+  pointer-events: none;
+  z-index: 0;
+}
+.bp-card--research .bp-text-block {
+  position: relative;
+  z-index: 1;
+}
+@media (max-width: 1023px) {
+  .bp-card--research .bp-research-art {
+    display: none;
+  }
+}
 /* Elio tile renders only the block "Elio" wordmark next to the brand
    icon. The source PNG is white-on-transparent — recoloured to the same
    navy #0F173C used by the Columbus wordmark on the tile to its left so
@@ -456,10 +479,6 @@ const CSS = `
   }
   .bp-card:hover .bp-visual { transform: translateY(-18px); }
 }
-/* Research tile opts out of the hover-lift — its visual is the
-   WorldMapLineArt graphic, which sits flush to the bottom of the wide
-   banner and shouldn't shift on hover. */
-.bp-card--research:hover .bp-visual { transform: none; }
 @media (prefers-reduced-motion: reduce) {
   .bp-visual { transition: none; }
   .bp-card:hover .bp-visual { transform: none; }
@@ -542,10 +561,65 @@ const PRODUCTS: Product[] = [
     tagline: "Building the Large Geospatial Model",
     audience: "For the curious",
     ctaLabel: "Read Thesis",
-    visual: "world-map",
     wide: true,
   },
 ];
+
+/* Decorative SVG that anchors the right side of the Research tile —
+   a layered lattice: fine subdivision grid behind a primary 40px grid,
+   crossed with 45° diagonal lines in both directions for a true lattice
+   / cross-bracing look. All white at varying opacities so the structure
+   reads against the tile's blue gradient. */
+function ResearchLatticeArt() {
+  const W = 400;
+  const H = 500;
+  const big = 40;
+  const small = 20;
+  const diagStep = 40;
+
+  const bigV = Array.from({ length: W / big + 1 }, (_, i) => i * big);
+  const bigH = Array.from({ length: H / big + 1 }, (_, i) => i * big);
+  const smallV = Array.from({ length: W / small + 1 }, (_, i) => i * small);
+  const smallH = Array.from({ length: H / small + 1 }, (_, i) => i * small);
+
+  // Diagonals (slope +1 and -1) sweeping the whole panel.
+  const positiveDiagonals: number[] = [];
+  for (let c = -W; c <= H; c += diagStep) positiveDiagonals.push(c);
+  const negativeDiagonals: number[] = [];
+  for (let c = 0; c <= W + H; c += diagStep) negativeDiagonals.push(c);
+
+  return (
+    <svg
+      viewBox={`0 0 ${W} ${H}`}
+      width="100%"
+      height="100%"
+      preserveAspectRatio="xMidYMid slice"
+      aria-hidden="true"
+    >
+      {/* Fine subdivision grid */}
+      <g stroke="rgba(255,255,255,0.14)" strokeWidth="0.5">
+        {smallV.map((x) => <line key={`sv${x}`} x1={x} y1={0} x2={x} y2={H} />)}
+        {smallH.map((y) => <line key={`sh${y}`} x1={0} y1={y} x2={W} y2={y} />)}
+      </g>
+
+      {/* Diagonal cross-hatch lattice */}
+      <g stroke="rgba(255,255,255,0.18)" strokeWidth="0.4">
+        {positiveDiagonals.map((c, i) => (
+          <line key={`pd${i}`} x1={0} y1={c} x2={W} y2={c + W} />
+        ))}
+        {negativeDiagonals.map((c, i) => (
+          <line key={`nd${i}`} x1={0} y1={c} x2={W} y2={c - W} />
+        ))}
+      </g>
+
+      {/* Primary 40px grid on top */}
+      <g stroke="rgba(255,255,255,0.38)" strokeWidth="0.6">
+        {bigV.map((x) => <line key={`bv${x}`} x1={x} y1={0} x2={x} y2={H} />)}
+        {bigH.map((y) => <line key={`bh${y}`} x1={0} y1={y} x2={W} y2={y} />)}
+      </g>
+    </svg>
+  );
+}
 
 /* Signature 5-dot diagonal arrow used by CtaBanner / Careers / ProductCell.
    Circles use currentColor so the wrapping `.bp-cta-arrow` controls the
@@ -645,23 +719,24 @@ export function BentoProducts() {
               </div>
               {p.visual && (
                 <div className="bp-visual">
-                  {p.cellClass === "bp-card--research" ? (
-                    <WorldMapLineArt />
-                  ) : (
-                    /* The CSS sizes the image — width:100%; max-width:720px.
-                        We give Next a hint via `sizes` so the optimizer
-                        picks an appropriately small AVIF/WebP variant
-                        (the source PNGs are 2-3 MB each). */
-                    <Image
-                      src={p.visual}
-                      alt=""
-                      aria-hidden
-                      width={720}
-                      height={520}
-                      sizes="(max-width: 1023px) calc(100vw - 56px), 720px"
-                      quality={80}
-                    />
-                  )}
+                  {/* The CSS sizes the image — width:100%; max-width:720px.
+                      We give Next a hint via `sizes` so the optimizer
+                      picks an appropriately small AVIF/WebP variant
+                      (the source PNGs are 2-3 MB each). */}
+                  <Image
+                    src={p.visual}
+                    alt=""
+                    aria-hidden
+                    width={720}
+                    height={520}
+                    sizes="(max-width: 1023px) calc(100vw - 56px), 720px"
+                    quality={80}
+                  />
+                </div>
+              )}
+              {p.cellClass === "bp-card--research" && (
+                <div className="bp-research-art" aria-hidden>
+                  <ResearchLatticeArt />
                 </div>
               )}
             </a>

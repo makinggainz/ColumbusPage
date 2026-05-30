@@ -1055,6 +1055,12 @@ export default function DestinationsSection() {
           align-items: center;
           margin-top: 6px;
         }
+        /* Stack order: leftmost on top, descending to the right so the
+           "+" (4th child) sits at the back of the stack. */
+        .eib-friends-row > *:nth-child(1) { z-index: 4; }
+        .eib-friends-row > *:nth-child(2) { z-index: 3; }
+        .eib-friends-row > *:nth-child(3) { z-index: 2; }
+        .eib-friends-row > *:nth-child(4) { z-index: 1; }
         .eib-friend-avatar {
           width: 44px;
           height: 44px;
