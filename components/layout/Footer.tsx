@@ -85,32 +85,18 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false, t
         ...(reveal ? { position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 0 } as React.CSSProperties : {}),
       }}
     >
-      {/* Background video — cinematic clip living at /public/footer-bg.mp4
-          (6.5 MB). Boot-cost optimization: preload="none" + no autoPlay,
-          so the browser does NOT fetch any video bytes at first paint.
-          The poster (/footerbackground.jpeg, 113 KB) paints the footer
-          background as a still until the scroll-driven trigger above
-          calls .play() on the videoRef — at which point the browser
-          fetches the file and starts the actual cinematic playback.
-          muted + loop + playsInline remain required: muted +
-          playsInline keeps iOS Safari willing to honor the programmatic
-          play() call; loop keeps the clip seamless once it's running.
-          aria-hidden + tabIndex=-1 keep it out of the AT tree. */}
-      {/* object-position shifts the cropped window of the video (source
-          1176×784). On mobile we anchor at 75% to hide the Kling
-          wordmark baked into the right edge of the source clip — at a
-          ~390px viewport the height-bound cover scale gives ~875px of
-          horizontal excess, so each 1% pans ≈ 8.7px; going from the
-          original 85% to 75% shifts the visible window ≈87px to the
-          left in the source, clipping the rightmost band where the
-          Kling mark sits while keeping the distant ship in frame.
-          Desktop reverts to centered (default). */}
+      {/* Background video — cinematic clip living at /public/footer-bg.mp4.
+          preload="none" + no autoPlay so the browser doesn't fetch any
+          video bytes at first paint; scroll-driven trigger calls .play()
+          on the videoRef once visible. muted + playsInline keep iOS
+          Safari willing to honor programmatic play(); loop seams the
+          clip. object-position 75% on mobile clips the Kling wordmark
+          baked into the source's right edge; desktop reverts to center. */}
       <video
         ref={videoRef}
         className="absolute inset-0 w-full h-full object-cover object-[75%_center] md:object-center"
         style={{ zIndex: 0, pointerEvents: "none" }}
         src="/footer-bg.mp4"
-        poster="/footerbackground.jpeg"
         muted
         loop
         playsInline

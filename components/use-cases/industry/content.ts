@@ -128,7 +128,6 @@ const URBAN_CHAT: ChatRowContent = {
     'These areas <span class="text-red-700">marked,</span> have streets that often have had crashes. There is poor road signal trafficking. Consumer’s have expressed disastisfaction with this section.',
   followUp:
     "/ Would you like to order a specific dataset and survey? Our partner agents will be dispatched for the study.",
-  mapImageSrc: "/HK Map-2.png",
 };
 
 const URBAN_SUPER_MODEL: SuperModelRowContent = {
@@ -139,7 +138,6 @@ const URBAN_SUPER_MODEL: SuperModelRowContent = {
     ctaLabel: "See live Smart Layers",
     ctaHref: "#smart-layers",
   },
-  mapImageSrc: "/use-cases/havana.png",
   mapQuery:
     "I need a data layer of buildings in Havana by safety score. In the perspective of: City Planning",
 };
@@ -249,7 +247,6 @@ function loremRow(industryName: string): {
       ],
       responseHtml: `Lorem ipsum dolor sit amet, <span class="text-red-700">consectetur</span> adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.`,
       followUp: "/ Lorem ipsum dolor sit amet? Consectetur adipiscing elit sed do.",
-      mapImageSrc: "/HK Map-2.png",
     },
     superModel: {
       leftRail: {
@@ -258,7 +255,6 @@ function loremRow(industryName: string): {
         ctaLabel: "See live Smart Layers",
         ctaHref: "#smart-layers",
       },
-      mapImageSrc: "/use-cases/havana.png",
       mapQuery: `Lorem ipsum dolor sit amet for ${industryName}. In the perspective of: Lorem Ipsum`,
     },
     agentResearch: {
