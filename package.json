@@ -6,8 +6,10 @@
     "dev": "next dev --hostname 127.0.0.1",
     "dev:3002": "next dev --hostname 127.0.0.1 -p 3002",
     "dev:lan": "next dev --hostname 0.0.0.0",
+    "dev:prod": "next build && next start --hostname 127.0.0.1 -p 3000",
     "build": "next build",
     "start": "next start",
+    "optimize:images": "node scripts/optimize-images.mjs",
     "lint": "eslint",
     "e2e": "playwright test --config=playwright.config.ts"
   },

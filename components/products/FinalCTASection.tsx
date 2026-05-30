@@ -448,24 +448,21 @@ function DiscoveryCardView({ p, leftPx, topPx, leftPct, topPct, mobile, visible 
             boxShadow: cardShadow,
           }}
         >
-          <div style={{ width: sz.photoW, height: sz.photoH, borderRadius: photoInnerRadius, overflow: "hidden" }}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={p.img} alt="" draggable={false} loading="lazy" decoding="async" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+          <div style={{ position: "relative", width: sz.photoW, height: sz.photoH, borderRadius: photoInnerRadius, overflow: "hidden" }}>
+            <Image src={p.img} alt="" fill sizes="128px" draggable={false} style={{ objectFit: "cover", display: "block" }} />
           </div>
           {/* Avatar stack peeks out the card's bottom-left corner */}
           <div style={{ position: "absolute", left: sz.avatarOffsetX, bottom: -sz.avatarOffsetY, display: "flex" }}>
             {p.avatars.map((src, i) => (
-              /* eslint-disable-next-line @next/next/no-img-element */
-              <img
+              <Image
                 key={i}
                 src={src}
                 alt=""
+                width={sz.avatar}
+                height={sz.avatar}
+                sizes="48px"
                 draggable={false}
-                loading="lazy"
-                decoding="async"
                 style={{
-                  width: sz.avatar,
-                  height: sz.avatar,
                   borderRadius: "9999px",
                   border: `${sz.avatarBorder}px solid #FFFFFF`,
                   objectFit: "cover",
@@ -494,6 +491,7 @@ function DiscoveryCardView({ p, leftPx, topPx, leftPct, topPct, mobile, visible 
         >
           <div
             style={{
+              position: "relative",
               width: sz.placeImg,
               height: sz.placeImg,
               borderRadius: "9999px",
@@ -502,8 +500,7 @@ function DiscoveryCardView({ p, leftPx, topPx, leftPct, topPct, mobile, visible 
               background: "#D1D5DB",
             }}
           >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={p.img} alt="" draggable={false} loading="lazy" decoding="async" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+            <Image src={p.img} alt="" fill sizes="64px" draggable={false} style={{ objectFit: "cover", display: "block" }} />
           </div>
           <div style={{ display: "flex", flexDirection: "column", lineHeight: 1.1 }}>
             <span style={{
@@ -541,6 +538,7 @@ function DiscoveryCardView({ p, leftPx, topPx, leftPct, topPct, mobile, visible 
           ...posStyle,
         });
         const subInner: React.CSSProperties = {
+          position: "relative",
           width: SUB_W,
           height: SUB_H,
           borderRadius: SUB_INNER,
@@ -551,22 +549,19 @@ function DiscoveryCardView({ p, leftPx, topPx, leftPct, topPct, mobile, visible 
             {/* Back-left card — tilted CCW */}
             <div style={subCard({ left: 0, top: SUB_H * 0.45, transform: "rotate(-7deg)", zIndex: 1 })}>
               <div style={subInner}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={p.imgs[0]} alt="" draggable={false} loading="lazy" decoding="async" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+                <Image src={p.imgs[0]} alt="" fill sizes="96px" draggable={false} style={{ objectFit: "cover", display: "block" }} />
               </div>
             </div>
             {/* Back-right card — tilted CW, sits highest */}
             <div style={subCard({ right: 0, top: 0, transform: "rotate(7deg)", zIndex: 2 })}>
               <div style={subInner}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={p.imgs[1]} alt="" draggable={false} loading="lazy" decoding="async" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+                <Image src={p.imgs[1]} alt="" fill sizes="96px" draggable={false} style={{ objectFit: "cover", display: "block" }} />
               </div>
             </div>
             {/* Front-centre card — slight CCW, sits in front */}
             <div style={subCard({ left: "50%", top: SUB_H * 0.6, transform: "translateX(-50%) rotate(-2deg)", zIndex: 3 })}>
               <div style={subInner}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={p.imgs[2]} alt="" draggable={false} loading="lazy" decoding="async" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+                <Image src={p.imgs[2]} alt="" fill sizes="96px" draggable={false} style={{ objectFit: "cover", display: "block" }} />
               </div>
             </div>
           </div>
