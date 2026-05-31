@@ -87,12 +87,15 @@ This `git mv`s tracked files (preserves history) and plain-`mv`s untracked files
 ### Phase 5 — Verify
 
 1. `npm run build` — must succeed cleanly, zero missing-asset warnings.
-2. Scan pre-rendered HTML for ghost references to quarantined basenames:
+2. **Run the broken-ref audit:** `node scripts/find-broken-asset-refs.mjs`. Exit code = number of broken refs (0 = clean). Required after **any** destructive operation — quarantine moves, folder deletes, bulk renames, file removals. The script extracts every asset path mentioned in source + compiled `.next/` output and cross-checks each one against the real `/public` filesystem. If it reports a broken ref in build output ("IN BUILD"), restore the file before proceeding.
+3. Scan pre-rendered HTML for ghost references to quarantined basenames:
    ```sh
    node -e "/* see verification snippet below */"
    ```
-3. Browser spot-check: load home, products/business, products/consumer, technology, company, blog, blog/[slug], research. Watch DevTools Network for 404s.
-4. If any 404 surfaces: `git mv public/_unused/<rel> public/<rel>`, **then go to "SELF-IMPROVING RULE" above and document the miss.**
+4. Browser spot-check: load home, products/business, products/consumer, technology, company, blog, blog/[slug], research. Watch DevTools Network for 404s.
+5. If any 404 surfaces: `git mv public/_unused/<rel> public/<rel>`, **then go to "SELF-IMPROVING RULE" above and document the miss.**
+
+> **Run after any future cleanup or bulk rename:** `node scripts/find-broken-asset-refs.mjs` — exit code = number of broken refs (0 = clean). Standing rule, not optional.
 
 ### Phase 6 — Commit
 
