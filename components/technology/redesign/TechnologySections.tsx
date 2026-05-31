@@ -723,73 +723,38 @@ export function TechnologySections() {
                 Explore the innovative research and recent papers from our team.
               </p>
 
-              {/* Blog cards grid — 3 columns matching /Blog page layout */}
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "48px 32px", marginTop: "48px" }}>
+              {/* Blog cards grid — responsive 3 → 2 → 1 columns, mirroring the
+                  homepage BlogSection card system. */}
+              <div className={styles.blogGrid}>
                 {(() => {
                   const engineeringPosts = BLOG_POSTS.filter((p) => p.category === "ENGINEERING");
                   const joinUsPost = BLOG_POSTS.find((p) => p.slug === "join-us-research-opportunities");
                   const shuffled = [...engineeringPosts].sort(() => Math.random() - 0.5);
                   const selectedPosts = joinUsPost ? [joinUsPost, ...shuffled.slice(0, 2)] : shuffled.slice(0, 3);
                   return selectedPosts.map((post) => (
-                    <Link
-                      key={post.slug}
-                      href={blogHref(post.slug)}
-                      style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        textDecoration: "none",
-                        color: "inherit",
-                      }}
-                    >
-                      <div
-                        style={{
-                          position: "relative",
-                          width: "100%",
-                          aspectRatio: "16 / 10",
-                          borderRadius: "13px",
-                          overflow: "hidden",
-                          background: "#ECEFF3",
-                          marginBottom: "16px",
-                        }}
-                      >
+                    <Link key={post.slug} href={blogHref(post.slug)} className={styles.blogCard}>
+                      <div className={styles.blogCardMedia}>
                         {post.image ? (
                           <Image
                             src={post.image}
                             alt=""
                             fill
-                            style={{ objectFit: "cover" }}
-                            sizes="(min-width: 768px) 33vw, 100vw"
+                            className={styles.blogCardImg}
+                            sizes="(min-width: 1024px) 33vw, (min-width: 600px) 50vw, 100vw"
                           />
                         ) : (
-                          <div
-                            style={{
-                              position: "absolute",
-                              inset: 0,
-                              background: "linear-gradient(135deg, #0A3760 0%, #0F4C81 52%, #2C86C6 100%)",
-                            }}
-                            aria-hidden="true"
-                          />
+                          <div className={styles.blogCardFallback} aria-hidden="true" />
                         )}
                       </div>
 
-                      <div style={{ display: "flex", flexDirection: "column" }}>
-                        <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "8px" }}>
-                          <span style={{ fontSize: "12px", fontWeight: 500, textTransform: "uppercase", color: "var(--tech-color-text-muted)" }}>
-                            {post.category}
-                          </span>
-                          <span style={{ fontSize: "12px", color: "var(--tech-color-text-muted)" }} aria-hidden="true">
-                            ·
-                          </span>
-                          <span style={{ fontSize: "12px", fontWeight: 500, textTransform: "uppercase", color: "var(--tech-color-text-muted)" }}>
-                            {post.date}
-                          </span>
+                      <div className={styles.blogCardBody}>
+                        <div className={styles.blogCardMeta}>
+                          <span className={styles.blogCardTag}>{post.category}</span>
+                          <span className={styles.blogCardDot} aria-hidden="true">·</span>
+                          <span className={styles.blogCardTag}>{post.date}</span>
                         </div>
-                        <h3 style={{ fontSize: "22px", color: "var(--tech-color-text)", margin: "0 0 8px", letterSpacing: "-0.015em" }}>
-                          {post.title}
-                        </h3>
-                        <p style={{ fontSize: "16px", color: "var(--tech-color-text-muted)", margin: 0 }}>
-                          {post.description}
-                        </p>
+                        <h3 className={`h5 ${styles.blogCardTitle}`}>{post.title}</h3>
+                        <p className={`p-m ${styles.blogCardDescription}`}>{post.description}</p>
                       </div>
                     </Link>
                   ));

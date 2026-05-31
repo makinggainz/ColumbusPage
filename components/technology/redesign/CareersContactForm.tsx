@@ -28,11 +28,13 @@ const CTA = "var(--color-cta)";
 /* Interactive accent — the teal the navbar "Try Elio" CTA arrows use. */
 const ACCENT = "var(--color-accent)";
 
+/* Box shadow lives on the .ccf-card class (in the <style> block) instead of
+   here so a mobile media query can drop it; inline styles can't be overridden
+   by @media. */
 const cardStyle: React.CSSProperties = {
   backgroundColor: "#FFFFFF",
   border: `1px solid ${HAIRLINE}`,
   borderRadius: "var(--radius-card)",
-  boxShadow: `0 1px 3px color-mix(in srgb, ${CTA} 5%, transparent), 0 16px 44px color-mix(in srgb, ${CTA} 10%, transparent)`,
 };
 
 const labelEl = (text: string) => (
@@ -202,6 +204,44 @@ export function CareersContactForm({ intro }: Props = {}) {
         }
         .ccf-file::file-selector-button:hover { background: color-mix(in srgb, var(--color-bg1), ${INK} 5%); }
 
+        /* Form card shadow — here (not inline) so the mobile @media below can
+           remove it. */
+        .ccf-card {
+          box-shadow: 0 1px 3px color-mix(in srgb, ${CTA} 5%, transparent),
+                      0 16px 44px color-mix(in srgb, ${CTA} 10%, transparent);
+        }
+
+        /* ── Tab row: single scrollable row on desktop. ── */
+        .ccf-tabrow {
+          display: flex;
+          gap: 10px;
+          overflow-x: auto;
+          padding: 16px;
+        }
+
+        /* ── Mobile ergonomics ── */
+        @media (max-width: 768px) {
+          /* 16px prevents iOS auto-zoom on focus; taller padding = comfy taps. */
+          .ccf-input, .ccf-select, .ccf-textarea { font-size: 16px; }
+          .ccf-input, .ccf-select, .ccf-textarea { padding: 13px 14px; }
+          .ccf-select { padding-right: 40px; }
+        }
+        @media (max-width: 560px) {
+          /* Balanced 2×2 grid so all four tabs are equal-width (no lone
+             wrapped tab). Grid items stretch to fill their cell. */
+          .ccf-tabrow {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            overflow-x: visible;
+            padding: 14px 12px;
+          }
+          .ccf-tabrow .ccf-tab { text-align: center; }
+          /* Full-width primary action, reassurance note beneath it. */
+          .ccf-submit-row { flex-direction: column; align-items: stretch; gap: 10px; }
+          .ccf-submit { width: 100%; justify-content: center; }
+        }
+
         @keyframes ccfTabContentIn {
           from { opacity: 0; filter: blur(6px); transform: translateY(12px); }
           to   { opacity: 1; filter: blur(0px); transform: translateY(0); }
@@ -219,10 +259,10 @@ export function CareersContactForm({ intro }: Props = {}) {
       )}
 
       {!submitted && (
-        <div style={cardStyle}>
+        <div className="ccf-card" style={cardStyle}>
           {/* Pill tab row — left-aligned */}
           <div
-            className="flex gap-2.5 overflow-x-auto px-4 py-4"
+            className="ccf-tabrow"
             style={{ borderBottom: `1px solid ${HAIRLINE}` }}
           >
             {TABS.map((opt) => (
@@ -315,8 +355,8 @@ export function CareersContactForm({ intro }: Props = {}) {
                   By submitting, you agree with our <Link href="/terms" className="underline">Terms</Link> and <Link href="/privacy" className="underline">Privacy Policy</Link>.
                 </p>
 
-                <div className="flex items-center gap-4 pt-1">
-                  <CtaButton type="submit">Submit</CtaButton>
+                <div className="ccf-submit-row flex items-center gap-4 pt-1">
+                  <CtaButton type="submit" className="ccf-submit">Submit</CtaButton>
                   <span className="text-[13px] text-muted">We answer fast.</span>
                 </div>
               </form>
@@ -370,8 +410,8 @@ export function CareersContactForm({ intro }: Props = {}) {
                   By submitting, you agree with our <Link href="/terms" className="underline">Terms</Link> and <Link href="/privacy" className="underline">Privacy Policy</Link>.
                 </p>
 
-                <div className="flex items-center gap-4 pt-1">
-                  <CtaButton type="submit">Submit</CtaButton>
+                <div className="ccf-submit-row flex items-center gap-4 pt-1">
+                  <CtaButton type="submit" className="ccf-submit">Submit</CtaButton>
                   <span className="text-[13px] text-muted">We answer fast.</span>
                 </div>
               </form>
@@ -412,8 +452,8 @@ export function CareersContactForm({ intro }: Props = {}) {
                   By submitting, you agree with our <Link href="/terms" className="underline">Terms</Link> and <Link href="/privacy" className="underline">Privacy Policy</Link>.
                 </p>
 
-                <div className="flex items-center gap-4 pt-1">
-                  <CtaButton type="submit">Submit</CtaButton>
+                <div className="ccf-submit-row flex items-center gap-4 pt-1">
+                  <CtaButton type="submit" className="ccf-submit">Submit</CtaButton>
                   <span className="text-[13px] text-muted">We answer fast.</span>
                 </div>
               </form>

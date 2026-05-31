@@ -278,24 +278,24 @@
 }
 
 .slideFrame {
-  width: 100%;
   min-height: 100vh;
   display: flex;
   align-items: center;
-  /* V2: Section content centered to the homepage / Mission page's
-     standard <Container> bounds — max-width 1287 + horizontal padding
-     of var(--page-padding) (defined in app/globals.css: 24px below
-     940px, 1vw above). Section text now starts + ends at the exact
-     same x as homepage / Mission / hero content. The section element
-     + background above this still spans the full viewport. */
+  /* Section content column uses the SAME bound as the navbar + homepage
+     body: max-width 1287, width calc(100% - 2.5rem) (= 20px gutter each
+     side on mobile, the centered 1287-box edge on desktop), no inner
+     padding. This makes section content start/end at the exact same x as
+     the navbar logo / hamburger and the homepage content-bounds at every
+     width. The .section + background above still spans the full viewport. */
+  width: calc(100% - 2.5rem);
   max-width: 1287px;
-  margin: 0 auto;
-  padding-inline: var(--page-padding);
+  margin-inline: auto;
+  padding-inline: 0;
   box-sizing: border-box;
 }
 
 .section:not(.fullBleedSection):not(.lgmSlide) .slideFrame {
-  padding-inline: var(--page-padding);
+  padding-inline: 0;
 }
 
 .fullBleedSection .slideFrame {
@@ -753,11 +753,10 @@
 .editorialSlide {
   width: 100%;
   max-width: 100%;
-  /* Vertical padding for section rhythm. Horizontal padding-inline: 16px
-     mirrors the homepage's GridCell `p-10` extra inset (40px) on top of
-     the slideFrame's own 24px page-padding — total 40px on each side,
-     matching homepage body content's horizontal alignment. */
-  padding: clamp(48px, 6vw, 80px) 16px;
+  /* Vertical padding only — the horizontal bound is owned by .slideFrame
+     (max-1287 / calc(100% - 2.5rem)), so content lines up exactly with the
+     navbar logo/hamburger + homepage content. No horizontal padding here. */
+  padding: clamp(48px, 6vw, 80px) 0;
 }
 
 .editorialBody {
@@ -1558,6 +1557,96 @@
 }
 
 /* ── Article list ── */
+/* ── Research blog card grid — mirrors the homepage BlogSection responsive
+   system (components/home/lightspark/BlogSection.tsx): 3 → 2 (≤1024) → 1
+   (≤600) columns, with responsive type via the global .h5 / .p-m utilities.
+   Uses the page's own --tech-color-text tokens so it stays on-palette. */
+.blogGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 48px 32px;
+  margin-top: 48px;
+}
+
+@media (max-width: 1024px) {
+  .blogGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 40px 24px;
+  }
+}
+
+@media (max-width: 600px) {
+  .blogGrid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+}
+
+.blogCard {
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  color: inherit;
+}
+
+.blogCardMedia {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  border-radius: 13px;
+  overflow: hidden;
+  background: #ECEFF3;
+  margin-bottom: 16px;
+}
+
+.blogCardImg {
+  object-fit: cover;
+}
+
+.blogCardFallback {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, #0A3760 0%, #0F4C81 52%, #2C86C6 100%);
+}
+
+.blogCardBody {
+  display: flex;
+  flex-direction: column;
+}
+
+.blogCardMeta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.blogCardTag {
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--tech-color-text-muted);
+}
+
+.blogCardDot {
+  font-size: 12px;
+  color: var(--tech-color-text-muted);
+}
+
+/* Font-size comes from the global .h5 utility (responsive). */
+.blogCardTitle {
+  margin: 0 0 8px;
+  color: var(--tech-color-text);
+  letter-spacing: -0.015em;
+}
+
+/* Font-size comes from the global .p-m utility. */
+.blogCardDescription {
+  margin: 0;
+  color: var(--tech-color-text-muted);
+}
+
 .articleList {
   margin-top: 48px;
 }
@@ -1662,6 +1751,18 @@
 .articleRow:hover .articleRowArrow {
   transform: translateX(4px);
   color: color-mix(in srgb, var(--color-brand) 85%, transparent);
+}
+
+/* Tighten the engineering article list rows on small screens. */
+@media (max-width: 600px) {
+  .articleList {
+    margin-top: 32px;
+  }
+
+  .articleRow {
+    padding: 18px 0;
+    gap: 14px;
+  }
 }
 
 @media (max-width: 768px) {
@@ -2707,7 +2808,9 @@
   }
 
   .section:not(.fullBleedSection):not(.lgmSlide) .slideFrame {
-    padding-inline: clamp(14px, 3vw, 24px);
+    /* Horizontal bound stays owned by .slideFrame's calc(100% - 2.5rem)
+       width so content keeps aligning with the navbar; no inner padding. */
+    padding-inline: 0;
   }
 
   .sidebarColumn {
@@ -2828,7 +2931,8 @@
 
 @media (max-width: 767px) {
   .section:not(.fullBleedSection):not(.lgmSlide) .slideFrame {
-    padding-inline: var(--page-padding);
+    /* Keep the navbar-aligned bound (calc(100% - 2.5rem)); no inner padding. */
+    padding-inline: 0;
   }
 
   .section {
@@ -4267,12 +4371,11 @@
 .lgmTimeline {
   position: relative;
   margin-top: clamp(40px, 5vw, 72px);
-  /* Bleed horizontally through .editorialSlide's 16px padding-inline via
-     negative margin-inline, so the timeline's left edge still starts at
-     the slideFrame's content-left bound (same as before padding was
-     added to .editorialSlide). The track's own negative offsets then
-     continue to reach the sidebar line / viewport-right unchanged. */
-  margin-inline: -16px;
+  /* .editorialSlide no longer adds horizontal padding (the content bound is
+     owned by .slideFrame), so the timeline already starts at the content-left
+     bound — no negative bleed needed. The track's own negative offsets still
+     reach the sidebar line / viewport-right. */
+  margin-inline: 0;
   width: auto;
   height: clamp(320px, 36vw, 420px);
   /* No `isolation: isolate` — let z-index: -1 on the halo go behind the
