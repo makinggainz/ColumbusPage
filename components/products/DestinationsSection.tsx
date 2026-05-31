@@ -1675,6 +1675,15 @@ export default function DestinationsSection() {
             display: inline-block;
             align-self: auto;
           }
+          /* On mobile the card overlays the phone, so the soft fade
+             needs to die out sooner — otherwise the third row drags a
+             half-visible smear across the phone screen. Tighter mask
+             stops the gradient by ~70% instead of running all the way
+             to 100%. */
+          .eib-card--chat .eib-trip-card {
+            -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 30%, rgba(0,0,0,0) 72%);
+            mask-image: linear-gradient(to bottom, #000 0%, #000 30%, rgba(0,0,0,0) 72%);
+          }
           /* ── Save tile (Import from anywhere) ──────────────────────
              Same height as the Friends tile above. Phone mockup is
              pushed down 40% of its own height so only the top 60%

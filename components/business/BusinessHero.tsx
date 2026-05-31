@@ -295,9 +295,12 @@ export default function BusinessHero() {
             // sections below. The 20px gutters on the wrapper above keep the
             // window from kissing the viewport edge on narrower screens.
             maxWidth: 1287,
-            // Concentric with the window: 20px window radius + 1.5px ring.
-            borderRadius: 21.5,
-            padding: 1.5,
+            // Concentric with the window: 20px window radius + 1.5px ring
+            // at desktop, scaled down to ~8px / 0.75px at phone widths so
+            // the entire chrome miniaturizes uniformly with the rest of
+            // the bar (mobile mini-version parity).
+            borderRadius: "clamp(8px, 2.2vw, 21.5px)",
+            padding: "clamp(0.75px, 0.15vw, 1.5px)",
             background:
               "linear-gradient(145deg, rgba(11,19,66,0.85) 0%, rgba(11,19,66,0.28) 38%, rgba(11,19,66,0.04) 62%, rgba(11,19,66,0.55) 100%)",
             boxShadow: "0 30px 70px rgba(11,27,43,0.28), 0 2px 10px rgba(11,27,43,0.12)",
@@ -313,7 +316,10 @@ export default function BusinessHero() {
             style={{
               position: "relative",
               width: "100%",
-              borderRadius: 20,
+              // 20px (= PageFrame card) on desktop, shrinking to the
+              // --ent-radius-card 7px corner at phone widths so the
+              // mini-window keeps a proportional radius.
+              borderRadius: "clamp(7px, 2vw, 20px)",
               overflow: "hidden",
               background: "rgba(11,19,66,0.5)",
               border: "1px solid rgba(11,19,66,0.6)",
@@ -331,14 +337,17 @@ export default function BusinessHero() {
               style={{
                 display: "flex",
                 alignItems: "center",
-                gap: "clamp(7px, 0.8vw, 10px)",
-                height: "clamp(34px, 3.4vw, 46px)",
-                paddingLeft: "clamp(15px, 1.7vw, 24px)",
-                paddingRight: "clamp(12px, 1.5vw, 20px)",
+                // All clamp `max` values match the previous hardcoded
+                // desktop values exactly — only the `min` is widened so
+                // the desktop bar miniaturizes cleanly at phone widths.
+                gap: "clamp(3px, 0.8vw, 10px)",
+                height: "clamp(24px, 3.4vw, 46px)",
+                paddingLeft: "clamp(6px, 1.7vw, 24px)",
+                paddingRight: "clamp(4px, 1.5vw, 20px)",
                 // Small top inset so the tabs sit INSIDE the title bar
                 // instead of touching the window's top edge — a few pixels
                 // of glass shows above the tab caps.
-                paddingTop: "clamp(4px, 0.5vw, 6px)",
+                paddingTop: "clamp(2px, 0.5vw, 6px)",
                 /* Title bar paints no background of its own — it inherits
                    the window's single dark-glass surface, so the strip
                    above the product image and the gutter around it read
@@ -349,7 +358,7 @@ export default function BusinessHero() {
                 <div
                   key={c}
                   style={{
-                    width: "clamp(10px, 1vw, 13px)",
+                    width: "clamp(6px, 1vw, 13px)",
                     aspectRatio: "1",
                     borderRadius: "50%",
                     backgroundColor: c,
@@ -373,8 +382,8 @@ export default function BusinessHero() {
                   // its tabs with a clear sliver so each reads as its own
                   // surface; also gives the active tab's flares clearance
                   // so they don't crowd the next tab.
-                  gap: "clamp(6px, 0.8vw, 10px)",
-                  marginLeft: "clamp(12px, 1.5vw, 22px)",
+                  gap: "clamp(2px, 0.8vw, 10px)",
+                  marginLeft: "clamp(4px, 1.5vw, 22px)",
                   height: "100%",
                   flex: 1,
                   minWidth: 0,
@@ -391,6 +400,13 @@ export default function BusinessHero() {
                   // confined to the tab body) so the flared base only
                   // appears for the active tab.
                   const tabBg = active ? "#FFFFFF" : "transparent";
+                  // Flare size — clamps the active tab's Chrome-style
+                  // bottom-corner flares from 16px (desktop) down to 8px
+                  // at phone widths so they stay proportional to the
+                  // shrunken bar. The same value is interpolated into
+                  // both the div geometry AND the radial-gradient mask
+                  // so the cutout always matches the div size.
+                  const flareSize = "clamp(8px, 1.2vw, 16px)";
                   return (
                   <div
                     key={tab.id}
@@ -409,18 +425,18 @@ export default function BusinessHero() {
                     style={{
                       display: "flex",
                       alignItems: "center",
-                      gap: "clamp(4px, 0.5vw, 7px)",
+                      gap: "clamp(2px, 0.5vw, 7px)",
                       // Tabs fill the title bar's full height so their
                       // flat bottom edge sits on the same baseline as the
                       // content area below — Chrome-style.
                       height: "100%",
-                      paddingLeft: "clamp(14px, 1.5vw, 22px)",
-                      paddingRight: "clamp(8px, 1vw, 14px)",
+                      paddingLeft: "clamp(5px, 1.5vw, 22px)",
+                      paddingRight: "clamp(3px, 1vw, 14px)",
                       // Top corners only — bottom is flat so the tab
                       // baseline meets the content area cleanly. Matches
                       // the Chrome tab silhouette (top-rounded, no
                       // bottom curve).
-                      borderRadius: "clamp(8px, 0.9vw, 12px) clamp(8px, 0.9vw, 12px) 0 0",
+                      borderRadius: "clamp(4px, 0.9vw, 12px) clamp(4px, 0.9vw, 12px) 0 0",
                       background: tabBg,
                       // No border on any tab — the fill + the flared
                       // base define each tab's silhouette.
@@ -463,11 +479,14 @@ export default function BusinessHero() {
                         aria-hidden
                         style={{
                           position: "absolute",
-                          top: 4,
-                          left: 4,
-                          right: 4,
-                          bottom: 4,
-                          borderRadius: "clamp(6px, 0.7vw, 10px)",
+                          // Clamp the inset + radius so the hover pill
+                          // stays inside the tab body at small sizes
+                          // (a fixed 4px inset eats most of a 24px tab).
+                          top: "clamp(2px, 0.3vw, 4px)",
+                          left: "clamp(2px, 0.3vw, 4px)",
+                          right: "clamp(2px, 0.3vw, 4px)",
+                          bottom: "clamp(2px, 0.3vw, 4px)",
+                          borderRadius: "clamp(3px, 0.7vw, 10px)",
                           background: hovered ? "rgba(255,255,255,0.12)" : "transparent",
                           transition: "background 180ms ease",
                           pointerEvents: "none",
@@ -492,15 +511,15 @@ export default function BusinessHero() {
                           aria-hidden
                           style={{
                             position: "absolute",
-                            left: "-16px",
+                            left: `calc(-1 * ${flareSize})`,
                             bottom: 0,
-                            width: 16,
-                            height: 16,
+                            width: flareSize,
+                            height: flareSize,
                             background: tabBg,
                             WebkitMaskImage:
-                              "radial-gradient(circle at top left, transparent 16px, black 16px)",
+                              `radial-gradient(circle at top left, transparent ${flareSize}, black ${flareSize})`,
                             maskImage:
-                              "radial-gradient(circle at top left, transparent 16px, black 16px)",
+                              `radial-gradient(circle at top left, transparent ${flareSize}, black ${flareSize})`,
                             pointerEvents: "none",
                           }}
                         />
@@ -508,15 +527,15 @@ export default function BusinessHero() {
                           aria-hidden
                           style={{
                             position: "absolute",
-                            right: "-16px",
+                            right: `calc(-1 * ${flareSize})`,
                             bottom: 0,
-                            width: 16,
-                            height: 16,
+                            width: flareSize,
+                            height: flareSize,
                             background: tabBg,
                             WebkitMaskImage:
-                              "radial-gradient(circle at top right, transparent 16px, black 16px)",
+                              `radial-gradient(circle at top right, transparent ${flareSize}, black ${flareSize})`,
                             maskImage:
-                              "radial-gradient(circle at top right, transparent 16px, black 16px)",
+                              `radial-gradient(circle at top right, transparent ${flareSize}, black ${flareSize})`,
                             pointerEvents: "none",
                           }}
                         />
@@ -535,8 +554,8 @@ export default function BusinessHero() {
                       strokeLinecap="round"
                       strokeLinejoin="round"
                       style={{
-                        width: "clamp(11px, 1.2vw, 16px)",
-                        height: "clamp(11px, 1.2vw, 16px)",
+                        width: "clamp(9px, 1.2vw, 16px)",
+                        height: "clamp(9px, 1.2vw, 16px)",
                         flexShrink: 0,
                       }}
                     >
@@ -544,7 +563,7 @@ export default function BusinessHero() {
                     </svg>
                     <span
                       style={{
-                        fontSize: "clamp(11px, 1.1vw, 15px)",
+                        fontSize: "clamp(10px, 1.1vw, 15px)",
                         fontWeight: 500,
                         letterSpacing: "-0.01em",
                         // Selected → ink (sits on the active tab's white
@@ -566,62 +585,6 @@ export default function BusinessHero() {
               </div>
             </div>
 
-            {/* Mobile-only tab strip — desktop title bar is hidden below
-                768px (see business-tokens.css), so phones get this
-                simplified Chrome-style tab row sitting flat against the
-                top of the mockup. Same `tabs` array, same activeTabId
-                state — taps just swap the mockup below. */}
-            <div
-              className="biz-hero-mobile-tabs"
-              style={{
-                alignItems: "flex-end",
-                justifyContent: "center",
-                gap: 4,
-                paddingLeft: 8,
-                paddingRight: 8,
-                paddingTop: 6,
-              }}
-            >
-              {tabs.map(tab => {
-                const active = tab.id === activeTabId;
-                return (
-                  <button
-                    key={tab.id}
-                    type="button"
-                    aria-label={tab.label}
-                    aria-pressed={active}
-                    onClick={() => setActiveTabId(tab.id)}
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      width: 64,
-                      height: 36,
-                      borderRadius: "10px 10px 0 0",
-                      background: active ? "#FFFFFF" : "transparent",
-                      border: "none",
-                      padding: 0,
-                      cursor: "pointer",
-                      WebkitTapHighlightColor: "transparent",
-                    }}
-                  >
-                    <svg
-                      aria-hidden
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke={active ? "var(--ent-text-primary)" : "#FFFFFF"}
-                      strokeWidth="1.8"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      style={{ width: 16, height: 16 }}
-                    >
-                      {tab.icon}
-                    </svg>
-                  </button>
-                );
-              })}
-            </div>
-
             {/* Product display — one of four mockup components composes
                 the frame PNG with overlaid coded UI (map tiles, cards,
                 chat panel) for the active tab. All four corners are
@@ -629,7 +592,12 @@ export default function BusinessHero() {
                 inside the window's 20px rounded clip — the active tab
                 no longer merges into the mockup surface. */}
             <div
-              style={{ padding: "0 4px 4px 4px" }}
+              // Glass gutter around the mockup. Top stays 0 so the active
+              // tab's flat bottom edge meets the mockup's top with no
+              // glass strip showing. L/R/bottom clamp from 4px (desktop)
+              // down to 2px (mobile) so the gutter scales with the rest
+              // of the mini chrome.
+              style={{ padding: "0 clamp(2px, 0.45vw, 4px) clamp(2px, 0.45vw, 4px)" }}
               className="hero-product-display"
             >
               {activeTabId === "map-chat" && <MapChatPlatform />}
@@ -641,7 +609,10 @@ export default function BusinessHero() {
               .hero-product-display > div {
                 max-width: 100% !important;
                 border: none !important;
-                border-radius: 16px !important;
+                /* 16px (matches the desktop mockup card) shrinking to ~5px
+                   at phone widths so the inner mockup corner stays
+                   visually inboard of the window's clamped radius. */
+                border-radius: clamp(5px, 1.6vw, 16px) !important;
               }
             `}</style>
           </div>

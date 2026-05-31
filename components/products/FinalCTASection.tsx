@@ -114,17 +114,24 @@ export default function FinalCTASection() {
     >
 
       {/* ═══════════ MOBILE HERO (below lg:) ═══════════ */}
-      {/* Section aspect-ratio adds ~47% extra height over the image's own
-          1447×1087 so the headline + CTA float higher above the earth
-          and the floating discovery cards sit lower in the frame. */}
+      {/* Section aspect-ratio is taller than the image's own 1447×1087
+          so the headline + CTA float higher above the earth, and the
+          earth itself reads as a more notable arrival moment. Wrapper
+          width below extends past the section edges so the globe scales
+          UP visually while keeping its own aspect ratio intact. */}
       <div
         className="lg:hidden relative w-full overflow-hidden"
-        style={{ aspectRatio: "1447 / 1600" }}
+        style={{ aspectRatio: "1447 / 1820" }}
       >
-        {/* Globe artwork — anchored to the BOTTOM at its natural aspect. */}
+        {/* Globe artwork — anchored to the BOTTOM at its natural aspect,
+            but expanded to ~118% of the section width and re-centred so
+            the earth feels larger relative to the screen. Discovery
+            cards are positioned with %s of this wrapper, so they scale
+            with it and stay on the same earth features. The extra width
+            is clipped by the section's `overflow-hidden`. */}
         <div
-          className="absolute left-0 right-0 bottom-0"
-          style={{ aspectRatio: "1447 / 1087" }}
+          className="absolute bottom-0"
+          style={{ aspectRatio: "1447 / 1087", width: "118%", left: "50%", transform: "translateX(-50%)" }}
         >
           {/* Below-the-fold final CTA — no `priority` (LCP is the hero
               at the top of the page). `sizes` lets the optimizer pick a
@@ -389,14 +396,15 @@ function DiscoveryCardView({ p, leftPx, topPx, leftPct, topPct, mobile, visible 
   // so the "group of people on this trip" affordance stays prominent.
   const sz = mobile
     ? {
-        // Shrunk ~25% from the prior mobile scale so the floating UI
-        // reads as smaller accents over the larger sky band above the
-        // earth on the taller mobile section.
-        photoW: 76, photoH: 54, frame: 3, radius: 10,
-        avatar: 20, avatarBorder: 2, avatarOverlap: 8, avatarOffsetX: 6, avatarOffsetY: 5,
-        pillFont: 8, pillPadV: 4, pillPadH: 10, pillMargin: 6,
-        placeImg: 22, placeName: 9, placeSub: 7, placeGap: 6, placePadH: 11, placePadV: 3,
-        stackedSubW: 54, stackedSubH: 38, stackedSubFrame: 3, stackedSubRadius: 8,
+        // Shrunk again (~20% below the previous mobile scale) to suit
+        // the enlarged earth + taller mobile section — the floating UI
+        // now reads as small accents pinned over a more dominant globe
+        // rather than competing with it for visual weight.
+        photoW: 60, photoH: 42, frame: 2, radius: 8,
+        avatar: 16, avatarBorder: 2, avatarOverlap: 6, avatarOffsetX: 5, avatarOffsetY: 4,
+        pillFont: 7, pillPadV: 3, pillPadH: 8, pillMargin: 5,
+        placeImg: 18, placeName: 7, placeSub: 6, placeGap: 5, placePadH: 9, placePadV: 2,
+        stackedSubW: 44, stackedSubH: 30, stackedSubFrame: 2, stackedSubRadius: 7,
       }
     : {
         // Desktop sizes — kept compact so the cards read as floating UI

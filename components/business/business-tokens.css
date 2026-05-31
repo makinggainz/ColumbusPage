@@ -285,37 +285,26 @@
    (21.5 outer ring, 20 inner window). .cmp-host uses Tailwind's
    rounded-3xl directly (no token) so it needs its own override. */
 
-/* Mobile tab strip in the hero glass window — hidden at desktop sizes
-   so only the Chrome title bar shows. Mobile media query below flips
-   this to display: flex. */
-.biz-hero-mobile-tabs {
-  display: none;
-}
-
 @media (max-width: 767px) {
+  /* On mobile the .biz-product-display class still re-points the cushy
+     desktop --ent-radius-2xl token down to the tight 7px corner. This
+     cascades into the four mockup wrappers (MapChatPlatform etc.) and
+     SuperFeatureSection — they read the token directly for their own
+     corners. The hero's outer ring + inner window no longer need the
+     blunt `border-radius: 7px !important` override because they now
+     scale via inline clamp() values (see BusinessHero.tsx). */
   .biz-product-display {
     --ent-radius-2xl: 7px;
-    border-radius: 7px !important;
   }
   .cmp-host {
     border-radius: 7px !important;
   }
-  /* Hero: hide the desktop browser-window title bar (traffic lights +
-     the four labeled Chrome tabs) on mobile — replaced by the simpler
-     icon-only .biz-hero-mobile-tabs row below, which drives the same
-     activeTabId state. */
-  .biz-hero-title-bar {
-    display: none !important;
-  }
-  /* Show the icon-only mobile tab row inside the glass window. */
-  .biz-hero-mobile-tabs {
-    display: flex !important;
-  }
-  /* Drop top padding so the active mobile tab's flat bottom meets the
-     mockup's top edge with no glass gutter — the tab reads as
-     "connected to" the display. Side + bottom stay at 4px. */
+  /* Image gutter padding — clamps the L/R/bottom inside the glass
+     window so it shrinks proportionally on phones. Top stays 0 so the
+     active tab's flat bottom meets the mockup's top edge with no glass
+     gutter — load-bearing for the "connected to" Chrome silhouette. */
   .hero-product-display {
-    padding: 0 4px 4px 4px !important;
+    padding: 0 clamp(2px, 0.45vw, 4px) clamp(2px, 0.45vw, 4px) !important;
   }
   /* "Mini product" treatment for the four standalone mockup frames
      (MapChatPlatform / DataManagerMockup / AgenticResearchMockup /
