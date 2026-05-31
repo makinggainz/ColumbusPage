@@ -21,9 +21,6 @@ import { useEffect, useRef, useState } from "react";
 //                                 viewport edge in the 768–1327px range where the
 //                                 old `mx-5 → md:mx-auto` flip collapsed to a zero
 //                                 gutter)
-//   • Logo `/images/Columbo.png` → `/logobueno.png` (same asset, this project's
-//     filename — verified ~149KB on both)
-//
 // Behavior, markup, ARIA semantics, hover/scroll dynamics are unchanged.
 // Internal link `/business` is repointed to `/products/business` (the
 // actual route on this project — a Next.js redirect would normalize the
