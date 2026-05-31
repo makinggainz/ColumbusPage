@@ -1623,12 +1623,15 @@ export default function BusinessUseCases() {
         backgroundPosition={bg.chatHeroPosition}
         subFeatureBackdrop={bg.chatSub[0]}
         demoVisual={<MapChatPlatform {...copy.mapChat} map={bg.chatMainMap} />}
+        demoDesignWidth={1180}
         subFeatures={[
           {
             title: "See what others cant",
             description: copy.sub1Description,
             backdropImage: bg.chatSub[0],
             backdropPosition: bg.chatSubPositions?.[0],
+            // Floating composite design width: 460px card + 320px map overlap.
+            visualDesignWidth: 780,
             visual: (
               <MapLayeredVisual map={bg.chatSubMaps?.[0] ?? "/MapChatbackgroundimg.png"} alt="Map chat background" variant="floating">
                 <PatternsDetectedCard {...copy.cards.patterns} />
@@ -1640,6 +1643,8 @@ export default function BusinessUseCases() {
             description: copy.sub2Description,
             backdropImage: bg.chatSub[1],
             backdropPosition: bg.chatSubPositions?.[1],
+            // Floating composite: 460px ForecastCard + 320px map overlap.
+            visualDesignWidth: 780,
             visual: (
               <MapLayeredVisual map={bg.chatSubMaps?.[1] ?? "/MapChatbackgroundimg.png"} alt="Map chat background" variant="floating">
                 <ForecastCard {...copy.cards.forecast} />
@@ -1651,6 +1656,8 @@ export default function BusinessUseCases() {
             description: copy.sub3Description,
             backdropImage: bg.chatSub[2],
             backdropPosition: bg.chatSubPositions?.[2],
+            // Standalone card design width = ColumbusReasoningCard maxWidth.
+            visualDesignWidth: 560,
             visual: <ColumbusReasoningCard {...copy.cards.reasoning} tall />,
           },
           {
@@ -1658,6 +1665,8 @@ export default function BusinessUseCases() {
             description: copy.sub4Description,
             backdropImage: bg.chatSub[3],
             backdropPosition: bg.chatSubPositions?.[3],
+            // Full-bleed composite: square map (1:1) with the 460px card overlaid.
+            visualDesignWidth: 780,
             visual: (
               <MapLayeredVisual map={bg.chatSubMaps?.[3] ?? "/MapChatbackgroundimg.png"} alt="Map chat background">
                 <HarmonizedFilesCard {...copy.cards.harmonized} />
@@ -1684,6 +1693,7 @@ export default function BusinessUseCases() {
         backgroundImage="linear-gradient(180deg, #5DADE2 0%, #AED6F1 100%)"
         subFeatureBackdrop={bg.dataCatalogueHero}
         demoVisual={<DataManagerMockup industryId={industryId} />}
+        demoDesignWidth={1180}
         subFeatures={[
           { title: "Better Data, Better Prices", description: null, visual: <BetterPricesRow {...copy.rows.betterPrices} />, stacked: true },
           { id: "super-model", title: "With smart layers, you become an artist", description: null, visual: <SmartLayerRow {...copy.rows.smartLayer} mapSrc={bg.smartLayerMap} />, stacked: true },
@@ -1707,6 +1717,7 @@ export default function BusinessUseCases() {
         backgroundImage={bg.dataCatalogueHero}
         subFeatureBackdrop={bg.agenticResearchHero}
         demoVisual={<AgenticResearchMockup industryId={industryId} />}
+        demoDesignWidth={1180}
         subFeatures={[
           { id: "due-diligence", title: "Agentic research sub-features", description: null, visual: <AgenticResearchTriad {...copy.rows.agenticTriad} />, stacked: true },
         ]}
@@ -1729,6 +1740,7 @@ export default function BusinessUseCases() {
            shape in case the chain is unwound. */
         backgroundImage={bg.agenticResearchHero}
         demoVisual={<DashboardMockup industryId={industryId} />}
+        demoDesignWidth={1180}
         panel={false}
       />
     </>

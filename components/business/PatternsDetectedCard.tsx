@@ -61,14 +61,14 @@ export default function PatternsDetectedCard({
         borderRadius: "var(--ent-radius-2xl)",
         boxShadow:
           "0 0 0 1px rgba(11, 27, 43, 0.06), 0 24px 60px rgba(11, 27, 43, 0.20)",
-        padding: "clamp(22px, 2.5vw, 30px)",
+        padding: "30px",
         color: "var(--ent-text-primary)",
         fontFamily: "Axiforma, 'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif",
       }}
     >
       <h4
         style={{
-          fontSize: "clamp(18px, 2vw, 23px)",
+          fontSize: "23px",
           fontWeight: 700,
           letterSpacing: "-0.02em",
           lineHeight: 1.15,
@@ -81,7 +81,7 @@ export default function PatternsDetectedCard({
         style={{
           marginTop: 4,
           marginBottom: 0,
-          fontSize: "clamp(12px, 1.15vw, 13.5px)",
+          fontSize: "13.5px",
           color: "var(--ent-text-secondary)",
           letterSpacing: "-0.005em",
         }}
@@ -93,7 +93,7 @@ export default function PatternsDetectedCard({
           style={{
             marginTop: 10,
             marginBottom: 0,
-            fontSize: "clamp(12px, 1.1vw, 13px)",
+            fontSize: "13px",
             color: "var(--ent-text-secondary)",
             letterSpacing: "-0.005em",
             lineHeight: 1.5,
@@ -110,7 +110,7 @@ export default function PatternsDetectedCard({
         style={{
           listStyle: "none",
           padding: 0,
-          margin: "clamp(14px, 1.8vw, 20px) 0 0",
+          margin: "20px 0 0",
           display: "flex",
           flexDirection: "column",
           gap: 8,
@@ -122,7 +122,7 @@ export default function PatternsDetectedCard({
             style={{
               backgroundColor: "#F4F4F5",
               borderRadius: 11,
-              padding: "clamp(11px, 1.3vw, 14px) clamp(12px, 1.4vw, 16px)",
+              padding: "14px 16px",
               display: "flex",
               gap: 11,
               alignItems: "flex-start",
@@ -151,7 +151,7 @@ export default function PatternsDetectedCard({
             <div style={{ minWidth: 0, flex: 1 }}>
               <div
                 style={{
-                  fontSize: "clamp(13px, 1.25vw, 14.5px)",
+                  fontSize: "14.5px",
                   fontWeight: 600,
                   letterSpacing: "-0.01em",
                   color: "var(--ent-text-primary)",
@@ -165,7 +165,7 @@ export default function PatternsDetectedCard({
                   marginTop: 4,
                   display: "flex",
                   gap: 14,
-                  fontSize: "clamp(11.5px, 1.05vw, 12.5px)",
+                  fontSize: "12.5px",
                   color: "var(--ent-text-secondary)",
                   letterSpacing: "-0.005em",
                 }}

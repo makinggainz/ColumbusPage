@@ -6,6 +6,7 @@ import MapChatPlatform from "./MapChatPlatform";
 import DataManagerMockup from "./DataManagerMockup";
 import AgenticResearchMockup from "./AgenticResearchMockup";
 import DashboardMockup from "./DashboardMockup";
+import { ScaleToFit } from "../technology/redesign/ScaleToFit";
 
 const SOFT = "var(--ent-border-card)";
 
@@ -425,7 +426,12 @@ export default function ComparisonSection() {
               className="cmp-host-visual"
               style={{ display: active === i ? "block" : "none" }}
             >
-              <ActiveVisual active={i} />
+              {/* ScaleToFit is a passthrough on desktop (the .cmp-host-visual
+                  is a fixed 1180px there, so the peek-crop is preserved) and a
+                  faithful uniform-shrink on mobile (where it's width:100%). */}
+              <ScaleToFit designWidth={1180} className="biz-scale-visual">
+                <ActiveVisual active={i} />
+              </ScaleToFit>
             </div>
           ))}
         </div>

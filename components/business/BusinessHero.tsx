@@ -8,6 +8,7 @@ import MapChatPlatform from "./MapChatPlatform";
 import AgenticResearchMockup from "./AgenticResearchMockup";
 import DataManagerMockup from "./DataManagerMockup";
 import DashboardMockup from "./DashboardMockup";
+import { ScaleToFit } from "../technology/redesign/ScaleToFit";
 
 const reveal = (visible: boolean, delay: number): React.CSSProperties => ({
   opacity: visible ? 1 : 0,
@@ -283,24 +284,26 @@ export default function BusinessHero() {
           ...reveal(visible, 0.22),
         }}
       >
+        {/* ScaleToFit renders the whole glass window at a fixed 1287px design
+            width and uniformly transform:scale()s it down on narrower screens,
+            so the chrome + mockup miniaturize together as one rigid unit (same
+            mechanism as the research page's LGM-comparison diagram). At ≥1287
+            it's a passthrough, so desktop is untouched. The maxWidth/centering
+            cap lives on the wrapper (.biz-hero-scale) so outer.clientWidth and
+            the design width agree. */}
+        <ScaleToFit designWidth={1287} className="biz-hero-scale">
         {/* Glass frame — a 1.5px gradient ring forms the "dynamic" edge:
             the white translucent border brightens and fades around the
-            window so it catches light like a pane of glass. */}
+            window so it catches light like a pane of glass. All chrome
+            dimensions below are frozen to their desktop values (no clamp)
+            because ScaleToFit handles the shrink for the entire unit. */}
         <div
           className="biz-product-display"
           style={{
             width: "100%",
-            // Matches the site content bounds (.ent-content-bounds → 1287px),
-            // the same width used by CapabilitiesGrid and other ent-scope
-            // sections below. The 20px gutters on the wrapper above keep the
-            // window from kissing the viewport edge on narrower screens.
-            maxWidth: 1287,
-            // Concentric with the window: 20px window radius + 1.5px ring
-            // at desktop, scaled down to ~8px / 0.75px at phone widths so
-            // the entire chrome miniaturizes uniformly with the rest of
-            // the bar (mobile mini-version parity).
-            borderRadius: "clamp(8px, 2.2vw, 21.5px)",
-            padding: "clamp(0.75px, 0.15vw, 1.5px)",
+            // Concentric with the window: 20px window radius + 1.5px ring.
+            borderRadius: "21.5px",
+            padding: "1.5px",
             background:
               "linear-gradient(145deg, rgba(11,19,66,0.85) 0%, rgba(11,19,66,0.28) 38%, rgba(11,19,66,0.04) 62%, rgba(11,19,66,0.55) 100%)",
             boxShadow: "0 30px 70px rgba(11,27,43,0.28), 0 2px 10px rgba(11,27,43,0.12)",
@@ -316,10 +319,8 @@ export default function BusinessHero() {
             style={{
               position: "relative",
               width: "100%",
-              // 20px (= PageFrame card) on desktop, shrinking to the
-              // --ent-radius-card 7px corner at phone widths so the
-              // mini-window keeps a proportional radius.
-              borderRadius: "clamp(7px, 2vw, 20px)",
+              // 20px (= PageFrame card). ScaleToFit shrinks it proportionally.
+              borderRadius: "20px",
               overflow: "hidden",
               background: "rgba(11,19,66,0.5)",
               border: "1px solid rgba(11,19,66,0.6)",
@@ -337,17 +338,16 @@ export default function BusinessHero() {
               style={{
                 display: "flex",
                 alignItems: "center",
-                // All clamp `max` values match the previous hardcoded
-                // desktop values exactly — only the `min` is widened so
-                // the desktop bar miniaturizes cleanly at phone widths.
-                gap: "clamp(3px, 0.8vw, 10px)",
-                height: "clamp(24px, 3.4vw, 46px)",
-                paddingLeft: "clamp(6px, 1.7vw, 24px)",
-                paddingRight: "clamp(4px, 1.5vw, 20px)",
+                // Frozen to desktop values — ScaleToFit miniaturizes the
+                // whole bar as one unit.
+                gap: "10px",
+                height: "46px",
+                paddingLeft: "24px",
+                paddingRight: "20px",
                 // Small top inset so the tabs sit INSIDE the title bar
                 // instead of touching the window's top edge — a few pixels
                 // of glass shows above the tab caps.
-                paddingTop: "clamp(2px, 0.5vw, 6px)",
+                paddingTop: "6px",
                 /* Title bar paints no background of its own — it inherits
                    the window's single dark-glass surface, so the strip
                    above the product image and the gutter around it read
@@ -358,7 +358,7 @@ export default function BusinessHero() {
                 <div
                   key={c}
                   style={{
-                    width: "clamp(6px, 1vw, 13px)",
+                    width: "13px",
                     aspectRatio: "1",
                     borderRadius: "50%",
                     backgroundColor: c,
@@ -382,8 +382,8 @@ export default function BusinessHero() {
                   // its tabs with a clear sliver so each reads as its own
                   // surface; also gives the active tab's flares clearance
                   // so they don't crowd the next tab.
-                  gap: "clamp(2px, 0.8vw, 10px)",
-                  marginLeft: "clamp(4px, 1.5vw, 22px)",
+                  gap: "10px",
+                  marginLeft: "22px",
                   height: "100%",
                   flex: 1,
                   minWidth: 0,
@@ -406,7 +406,7 @@ export default function BusinessHero() {
                   // shrunken bar. The same value is interpolated into
                   // both the div geometry AND the radial-gradient mask
                   // so the cutout always matches the div size.
-                  const flareSize = "clamp(8px, 1.2vw, 16px)";
+                  const flareSize = "16px";
                   return (
                   <div
                     key={tab.id}
@@ -425,18 +425,18 @@ export default function BusinessHero() {
                     style={{
                       display: "flex",
                       alignItems: "center",
-                      gap: "clamp(2px, 0.5vw, 7px)",
+                      gap: "7px",
                       // Tabs fill the title bar's full height so their
                       // flat bottom edge sits on the same baseline as the
                       // content area below — Chrome-style.
                       height: "100%",
-                      paddingLeft: "clamp(5px, 1.5vw, 22px)",
-                      paddingRight: "clamp(3px, 1vw, 14px)",
+                      paddingLeft: "22px",
+                      paddingRight: "14px",
                       // Top corners only — bottom is flat so the tab
                       // baseline meets the content area cleanly. Matches
                       // the Chrome tab silhouette (top-rounded, no
                       // bottom curve).
-                      borderRadius: "clamp(4px, 0.9vw, 12px) clamp(4px, 0.9vw, 12px) 0 0",
+                      borderRadius: "12px 12px 0 0",
                       background: tabBg,
                       // No border on any tab — the fill + the flared
                       // base define each tab's silhouette.
@@ -479,14 +479,12 @@ export default function BusinessHero() {
                         aria-hidden
                         style={{
                           position: "absolute",
-                          // Clamp the inset + radius so the hover pill
-                          // stays inside the tab body at small sizes
-                          // (a fixed 4px inset eats most of a 24px tab).
-                          top: "clamp(2px, 0.3vw, 4px)",
-                          left: "clamp(2px, 0.3vw, 4px)",
-                          right: "clamp(2px, 0.3vw, 4px)",
-                          bottom: "clamp(2px, 0.3vw, 4px)",
-                          borderRadius: "clamp(3px, 0.7vw, 10px)",
+                          // Frozen to desktop insets/radius — ScaleToFit shrinks the unit.
+                          top: "4px",
+                          left: "4px",
+                          right: "4px",
+                          bottom: "4px",
+                          borderRadius: "10px",
                           background: hovered ? "rgba(255,255,255,0.12)" : "transparent",
                           transition: "background 180ms ease",
                           pointerEvents: "none",
@@ -554,8 +552,8 @@ export default function BusinessHero() {
                       strokeLinecap="round"
                       strokeLinejoin="round"
                       style={{
-                        width: "clamp(9px, 1.2vw, 16px)",
-                        height: "clamp(9px, 1.2vw, 16px)",
+                        width: "16px",
+                        height: "16px",
                         flexShrink: 0,
                       }}
                     >
@@ -563,7 +561,7 @@ export default function BusinessHero() {
                     </svg>
                     <span
                       style={{
-                        fontSize: "clamp(10px, 1.1vw, 15px)",
+                        fontSize: "15px",
                         fontWeight: 500,
                         letterSpacing: "-0.01em",
                         // Selected → ink (sits on the active tab's white
@@ -594,10 +592,9 @@ export default function BusinessHero() {
             <div
               // Glass gutter around the mockup. Top stays 0 so the active
               // tab's flat bottom edge meets the mockup's top with no
-              // glass strip showing. L/R/bottom clamp from 4px (desktop)
-              // down to 2px (mobile) so the gutter scales with the rest
-              // of the mini chrome.
-              style={{ padding: "0 clamp(2px, 0.45vw, 4px) clamp(2px, 0.45vw, 4px)" }}
+              // glass strip showing. Frozen to the 4px desktop gutter —
+              // ScaleToFit shrinks it with the rest of the chrome.
+              style={{ padding: "0 4px 4px" }}
               className="hero-product-display"
             >
               {activeTabId === "map-chat" && <MapChatPlatform />}
@@ -609,14 +606,15 @@ export default function BusinessHero() {
               .hero-product-display > div {
                 max-width: 100% !important;
                 border: none !important;
-                /* 16px (matches the desktop mockup card) shrinking to ~5px
-                   at phone widths so the inner mockup corner stays
-                   visually inboard of the window's clamped radius. */
-                border-radius: clamp(5px, 1.6vw, 16px) !important;
+                /* 16px (matches the desktop mockup card), frozen — ScaleToFit
+                   shrinks it so the inner mockup corner stays visually inboard
+                   of the window's radius. */
+                border-radius: 16px !important;
               }
             `}</style>
           </div>
         </div>
+        </ScaleToFit>
       </div>
     </section>
   );

@@ -38,7 +38,7 @@ export default function MapLayeredVisual({
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          padding: "clamp(16px, 2vw, 28px)",
+          padding: "28px",
         }}
       >
         {/* Inline flex row — `alignItems: stretch` makes the map take the
@@ -96,7 +96,7 @@ export default function MapLayeredVisual({
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          padding: "clamp(16px, 2vw, 28px)",
+          padding: "28px",
         }}
       >
         <div
@@ -155,7 +155,12 @@ export default function MapLayeredVisual({
       style={{
         position: "relative",
         width: "100%",
-        height: "100%",
+        /* Intrinsic square aspect (rather than height:100%) so this variant
+           has a real height when rendered inside a ScaleToFit wrapper — whose
+           inner box is sized by its content, not a parent frame. Matches the
+           1:1 sky-backdrop frame it sits in. Only the "Drop Any File"
+           (Harmonized) sub-feature uses full-bleed, and it's always wrapped. */
+        aspectRatio: "1 / 1",
       }}
     >
       {/* Map fills the entire visual frame */}
@@ -181,7 +186,7 @@ export default function MapLayeredVisual({
       <div
         style={{
           position: "absolute",
-          left: "clamp(12px, 2vw, 28px)",
+          left: "28px",
           top: "50%",
           transform: "translateY(-50%)",
           width: "100%",
@@ -198,7 +203,7 @@ export default function MapLayeredVisual({
               position: "absolute",
               left: "100%",
               top: "50%",
-              width: "clamp(28px, 5vw, 64px)",
+              width: "64px",
               height: 1,
               background: "rgba(255,255,255,0.85)",
               boxShadow: "0 0 6px rgba(0,0,0,0.25)",
@@ -215,7 +220,7 @@ export default function MapLayeredVisual({
               position: "absolute",
               left: "100%",
               top: "50%",
-              marginLeft: "clamp(28px, 5vw, 64px)",
+              marginLeft: "64px",
               width: 14,
               height: 14,
               borderRadius: "9999px",

@@ -285,6 +285,33 @@
    (21.5 outer ring, 20 inner window). .cmp-host uses Tailwind's
    rounded-3xl directly (no token) so it needs its own override. */
 
+/* ScaleToFit wrapper around the hero glass window. Caps the design at the
+   1287px content bounds and centers it so outer.clientWidth (which ScaleToFit
+   measures to compute the scale factor) matches the design width. Below
+   1287px ScaleToFit shrinks the whole window uniformly; at/above it's a
+   passthrough so desktop is unchanged. */
+.biz-hero-scale {
+  width: 100%;
+  max-width: 1287px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Scale-to-fit visual wrappers (sub-feature cards, the starting super-section
+   demos, ComparisonSection, SmartLayerRow). Inside a ScaleToFit wrapper the
+   content renders at its fixed desktop design width and is uniformly
+   transform-scaled down — so the design-system 2xl radius must stay at its
+   DESKTOP value (24px) and scale with the transform, rather than collapsing to
+   the tight 7px mobile corner (which would shrink to ~2px on the miniature).
+   The descendant selector (higher specificity than the mobile
+   `.biz-product-display{--ent-radius-2xl:7px}` override) catches mockups that
+   carry the class on themselves; the bare selector covers cards/maps that
+   inherit the token. Desktop-safe — 24px is already the desktop value. */
+.biz-scale-visual,
+.biz-scale-visual .biz-product-display {
+  --ent-radius-2xl: 24px;
+}
+
 @media (max-width: 767px) {
   /* On mobile the .biz-product-display class still re-points the cushy
      desktop --ent-radius-2xl token down to the tight 7px corner. This
@@ -299,31 +326,13 @@
   .cmp-host {
     border-radius: 7px !important;
   }
-  /* Image gutter padding — clamps the L/R/bottom inside the glass
-     window so it shrinks proportionally on phones. Top stays 0 so the
-     active tab's flat bottom meets the mockup's top edge with no glass
-     gutter — load-bearing for the "connected to" Chrome silhouette. */
-  .hero-product-display {
-    padding: 0 clamp(2px, 0.45vw, 4px) clamp(2px, 0.45vw, 4px) !important;
-  }
-  /* "Mini product" treatment for the four standalone mockup frames
-     (MapChatPlatform / DataManagerMockup / AgenticResearchMockup /
-     DashboardMockup). On mobile, cap each mockup at 240px wide and
-     center it inside whatever container holds it. Because the mockups
-     are container-queried (containerType: inline-size + cqw inside),
-     shrinking the wrapper width auto-shrinks all interior typography,
-     spacing, icons — the demo looks like a small screenshot of the
-     real product, not a viewport-filling illustration with oversized
-     text.
-
-     Scope: only the .biz-mockup-frame class. The .biz-product-display
-     wrappers around them (hero glass window, ComparisonSection host,
-     SuperFeatureSection panel) stay at their natural mobile size, so
-     the small mockup floats centered inside the larger card. */
-  .biz-mockup-frame {
-    max-width: 240px !important;
-    margin-left: auto !important;
-    margin-right: auto !important;
-  }
+  /* No mobile overrides for the hero glass window or the bare mockups:
+     every product demo now miniaturizes as a faithful "looks the same,
+     just smaller" unit. The hero scales via ScaleToFit (fixed 1287px
+     design + transform:scale — see BusinessHero.tsx + .biz-hero-scale
+     below); the Comparison/Use-Cases mockups fill their containers via
+     their own containerType:inline-size + cqw sizing. The former 240px
+     .biz-mockup-frame cap and the .hero-product-display padding override
+     would fight those mechanisms, so they were removed. */
 }
 

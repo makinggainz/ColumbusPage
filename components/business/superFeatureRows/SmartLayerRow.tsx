@@ -3,6 +3,7 @@
 import Image from "next/image";
 import RowHeader from "./RowHeader";
 import ColumbusMark from "./ColumbusMark";
+import { ScaleToFit } from "../../technology/redesign/ScaleToFit";
 
 /* Row 1 — "With smart layers, you become an artist".
    Wraps the smart-layer mock in the shared ResearchFrame chrome (the
@@ -76,6 +77,8 @@ export default function SmartLayerRow({
           specific portion of the breadcrumb with smart-layer text and
           blank out the collaborator group; the inner pane (4.32% left,
           7.02% top, 0 right, 0.57% bottom) hosts the smart-layer mock. */}
+      {/* Faithful-miniature wrap: passthrough at ≥1180, uniform scale below. */}
+      <ScaleToFit designWidth={1180} className="biz-scale-visual">
       <div
         className="relative w-full mx-auto"
         style={{
@@ -260,6 +263,7 @@ export default function SmartLayerRow({
           </div>
         </div>
       </div>
+      </ScaleToFit>
     </div>
   );
 }

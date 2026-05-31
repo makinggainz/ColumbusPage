@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { ScaleToFit } from "../technology/redesign/ScaleToFit";
 
 /* ── Super-feature section ──────────────────────────────────────────────────
    One "super feature" on an #F7F7F7 band. Header: small icon, title, and a
@@ -21,6 +22,13 @@ export type SuperFeatureSubItem = {
   image?: string;
   imageAlt?: string;
   visual?: React.ReactNode;
+  /* When set, the `visual` is rendered at this fixed pixel design width and
+     uniformly transform:scale()'d down to fit narrower frames (via ScaleToFit)
+     — so the feature graphic stays a faithful miniature of its desktop self
+     instead of reflowing/cramping. Use the visual's natural desktop render
+     width so desktop (≥ this width) is an untouched passthrough. Only applies
+     to non-stacked `visual` rows. */
+  visualDesignWidth?: number;
   /* Per-row override of the shared sky backdrop (e.g. a map image). */
   backdropImage?: string;
   /* Per-row CSS `background-position` for the SkyBackdrop image — e.g.
@@ -72,6 +80,11 @@ export type SuperFeatureSectionProps = {
   demoImage?: string;
   demoAlt?: string;
   demoVisual?: React.ReactNode;
+  /* When set, the main demo (demoVisual or demoImage) renders at this fixed
+     pixel design width and uniformly transform:scale()'s down to fit narrower
+     screens (via ScaleToFit) — a faithful desktop miniature, not a reflow.
+     Use the demo's natural width (the four product mockups are 1180). */
+  demoDesignWidth?: number;
   subFeatures?: SuperFeatureSubItem[];
   /* When false, the surrounding #F7F7F7 panel is dropped and the hero
      block + sub-features render directly on the page background. Sections
@@ -98,6 +111,7 @@ export default function SuperFeatureSection({
   demoImage,
   demoAlt = "",
   demoVisual,
+  demoDesignWidth,
   subFeatures = [],
   panel = true,
   scrim = true,
@@ -169,11 +183,23 @@ export default function SuperFeatureSection({
         >
           <SkyBackdrop image={backgroundImage} scrim={scrim} position={backgroundPosition} size={backgroundSize} />
           <div className="relative z-10 flex justify-center" style={{ padding: "clamp(20px, 3vw, 40px)" }}>
-            {demoVisual ? (
-              demoVisual
-            ) : demoImage ? (
-              <FloatingMockup src={demoImage} alt={demoAlt} aspectRatio="16 / 9" maxWidth={1180} />
-            ) : null}
+            {(() => {
+              const node = demoVisual ? (
+                demoVisual
+              ) : demoImage ? (
+                <FloatingMockup src={demoImage} alt={demoAlt} aspectRatio="16 / 9" maxWidth={1180} />
+              ) : null;
+              if (!node) return null;
+              // Faithful-miniature wrap: fixed desktop design width, uniformly
+              // scaled to fit. w-full so ScaleToFit measures the frame interior.
+              return demoDesignWidth ? (
+                <ScaleToFit designWidth={demoDesignWidth} className="biz-scale-visual w-full">
+                  {node}
+                </ScaleToFit>
+              ) : (
+                node
+              );
+            })()}
           </div>
         </div>
 
@@ -242,7 +268,17 @@ export default function SuperFeatureSection({
                       style={{ padding: "clamp(24px, 3vw, 56px)" }}
                     >
                       {item.visual ? (
-                        item.visual
+                        item.visualDesignWidth ? (
+                          /* Faithful-miniature wrap: render the visual at its
+                             fixed desktop design width, uniformly scaled down
+                             to fit the frame. w-full so ScaleToFit measures the
+                             full frame interior. */
+                          <ScaleToFit designWidth={item.visualDesignWidth} className="biz-scale-visual w-full">
+                            {item.visual}
+                          </ScaleToFit>
+                        ) : (
+                          item.visual
+                        )
                       ) : item.image ? (
                         <div
                           style={{
