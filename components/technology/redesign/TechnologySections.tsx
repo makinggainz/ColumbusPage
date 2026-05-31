@@ -14,6 +14,7 @@ import { Definition } from "./Definition";
 import { ResearchAccordionProvider } from "./ResearchAccordionContext";
 import { ResearchGroup } from "./ResearchGroup";
 import { RevealOnView } from "./RevealOnView";
+import { ScaleToFit } from "./ScaleToFit";
 import { CareersContactForm } from "./CareersContactForm";
 import type { TechnologySectionId } from "./types";
 
@@ -92,7 +93,10 @@ export function TechnologySections() {
               </div>
             </div>
 
-            {/* ── How an LGM is different — comparison table ── */}
+            {/* ── How an LGM is different — comparison table ──
+                Wrapped in ScaleToFit so the 4-column layout shrinks
+                proportionally (instead of reflowing) below ~900px. */}
+            <ScaleToFit designWidth={900} className={`${styles.lgmCompareScale} ${styles.fullBleedMobile}`}>
             <div className={styles.lgmCompareTable}>
               <div className={styles.dimBranding}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -210,6 +214,7 @@ export function TechnologySections() {
 
               </div>
             </div>
+            </ScaleToFit>
           </RevealOnView>
         </div>
       </Slide>
@@ -248,7 +253,35 @@ export function TechnologySections() {
               });
               const xColumbus = `calc(${yearAt(nowFrac)} - clamp(20px, 2.5vw, 40px))`;
 
+              // Single source for the milestone content — drives both the
+              // mobile/tablet vertical timeline and the screen-reader outline
+              // below, so neither drifts from the horizontal layout above.
+              const milestones: {
+                year: string;
+                label: string;
+                full?: string;
+                now?: boolean;
+                cta?: { text: string; href: string };
+              }[] = [
+                { year: "2022", label: "LLM", full: "LLM (Large Language Model)" },
+                { year: "2025", label: "Geo-tuned LLM & Vision Models" },
+                { year: nowLabel, label: "Columbus", now: true },
+                {
+                  year: "2026",
+                  label: "Generalist LGM",
+                  full: "Generalist LGM (Large Geospatial Model)",
+                  cta: { text: "Read our Paper", href: blogHref(BLOG_SLUG.timelineGeneralistLgm) },
+                },
+                {
+                  year: "2028",
+                  label: "UGM",
+                  full: "UGM (Universal Geospatial Model)",
+                  cta: { text: "Our Game Plan", href: blogHref(BLOG_SLUG.ugmRoadmapGamePlan) },
+                },
+              ];
+
               return (
+              <>
             <div className={styles.lgmTimeline}>
               <div className={styles.lgmTimelineHalo} aria-hidden />
               <div id="lgm-timeline-track" className={styles.lgmTimelineTrack} aria-hidden />
@@ -344,19 +377,65 @@ export function TechnologySections() {
               <div className={styles.srOnly}>
                 <h3>Timeline of foundational AI models</h3>
                 <ul>
-                  <li>2022 — LLM (Large Language Model)</li>
-                  <li>2025 — Geo-tuned LLM &amp; Vision Models</li>
-                  <li>2026 — Generalist LGM (Large Geospatial Model)</li>
-                  <li>2028 — UGM (Universal Geospatial Model)</li>
+                  {milestones
+                    .filter((m) => !m.now)
+                    .map((m) => (
+                      <li key={m.year}>
+                        {m.year} — {m.full ?? m.label}
+                      </li>
+                    ))}
                 </ul>
               </div>
             </div>
+
+            {/* Mobile / tablet (≤1024px): the horizontal track above can't
+                fit its labels at narrow widths, so the same milestones
+                reflow into this vertical timeline. Hidden on desktop (and
+                the horizontal one is hidden here) via CSS. */}
+            <ol
+              className={styles.lgmTimelineVertical}
+              aria-label="Timeline of foundational AI models"
+            >
+              {milestones.map((m) => (
+                <li
+                  key={m.year}
+                  className={`${styles.lgmTimelineVRow}${m.now ? ` ${styles.lgmTimelineVRowNow}` : ""}`}
+                >
+                  {m.now ? (
+                    <>
+                      <Image
+                        src="/logobueno.png"
+                        alt="Columbus"
+                        width={48}
+                        height={48}
+                        className={styles.lgmTimelineVLogo}
+                      />
+                      <span className={styles.lgmTimelineColumbusDate}>Now — {m.year}</span>
+                    </>
+                  ) : (
+                    <>
+                      <span className={styles.lgmTimelineVYear}>{m.year}</span>
+                      <span className={styles.lgmTimelineVLabel}>{m.label}</span>
+                      {m.cta && (
+                        <Link href={m.cta.href} className={styles.lgmTimelineCta}>
+                          <span>{m.cta.text}</span>
+                          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden>
+                            <path d="M2.5 9.5L9.5 2.5M9.5 2.5H4M9.5 2.5V8" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
+                          </svg>
+                        </Link>
+                      )}
+                    </>
+                  )}
+                </li>
+              ))}
+            </ol>
+            </>
               );
             })()}
 
             <Link
               href={blogHref(BLOG_SLUG.lgmVsLlmVision)}
-              className={`${styles.lgmArticleCard} ${styles.lgmArticleCardGlass} ${styles.lgmArticleCardBgRadiance}`}
+              className={`${styles.lgmArticleCard} ${styles.lgmArticleCardGlass} ${styles.lgmArticleCardBgRadiance} ${styles.fullBleedMobile}`}
             >
               <span className={styles.lgmArticleKicker}>Read our article on</span>
               <p className={styles.lgmArticleHeadline}>
@@ -554,7 +633,7 @@ export function TechnologySections() {
 
             <Link
               href={blogHref(BLOG_SLUG.foundingLgmsInDepth)}
-              className={`${styles.lgmArticleCard} ${styles.lgmArticleCardGlass} ${styles.lgmArticleCardFlush} ${styles.lgmArticleCardBgWave}`}
+              className={`${styles.lgmArticleCard} ${styles.lgmArticleCardGlass} ${styles.lgmArticleCardFlush} ${styles.lgmArticleCardBgWave} ${styles.fullBleedMobile}`}
             >
               <span className={styles.lgmArticleKicker}>Read our articles on</span>
               <p className={styles.lgmArticleHeadlineStrong}>
@@ -614,7 +693,7 @@ export function TechnologySections() {
               ))}
             </div>
 
-            <div className={styles.resultsArticlesRow}>
+            <div className={`${styles.resultsArticlesRow} ${styles.fullBleedMobile}`}>
               <Link href={blogHref(BLOG_SLUG.mappingUnknownGenLayers)} className={`${styles.lgmArticleCard} ${styles.lgmArticleCardBgUnknownLayers}`}>
                 <p>
                   Mapping the uknown:<br />

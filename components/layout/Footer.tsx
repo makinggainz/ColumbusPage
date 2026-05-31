@@ -21,37 +21,67 @@ export type FooterProps = {
 export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false, theme = "light" }) => {
   const bgColor = theme === "dark" ? "#000000" : theme === "light-blue" ? "#F4F3EB" : "#F9F9F9";
 
-  // Lazy-play the reveal-variant background video. The <video> ships
-  // with preload="none" and NO autoPlay attribute so the 6.5MB
-  // footer-bg.mp4 never transfers at boot. PageFrame's scroll handler
-  // sets data-footer-near on <html> when the user is ~1.5 viewports
-  // ahead of the reveal range; that's our cue to actually begin the
-  // transfer + start playback. The .catch swallows the rejection some
-  // browsers throw if the play() promise is interrupted (e.g. tab
-  // backgrounded mid-fetch); the next intersection re-arms via the
-  // already-set attribute on a back/forward cache restore. iOS Safari
-  // accepts programmatic play() on muted + playsInline videos, so
-  // dropping autoPlay does not break mobile playback.
+  // Two-stage gating for the reveal-variant background video — boot
+  // ships with preload="none" + no autoplay so the 6.5MB footer-bg.mp4
+  // never transfers at first paint.
+  //
+  //   STAGE 1 — load (data-footer-near, ~1.5 viewports above reveal):
+  //     flip `preload` to "auto" and call `load()` so the browser starts
+  //     transferring bytes. NO playback yet — the video stays paused at
+  //     frame 0 behind the white .footer-reveal-overlay (rendered below),
+  //     so it's neither visible nor consuming decode CPU.
+  //   STAGE 2 — play (data-footer-reached, ~50% into reveal range):
+  //     start the loop. The overlay fades to opacity 0 in parallel (the
+  //     transition is owned by globals.css's .footer-reveal-overlay
+  //     rule), so the first frame the user sees is already playing.
+  //   STAGE 2′ — pause (data-footer-reached removed via hysteresis at
+  //     ~38%): scroll-back stops playback so the video is never running
+  //     while invisible. Bytes are kept in cache via the load() in
+  //     stage 1 — re-entering the range just hits play() again.
+  //
+  // Initial sync covers back/forward-cache restores and hash-anchor
+  // landings where one or both attributes may already be set when the
+  // effect runs. The MutationObserver watches BOTH attributes and runs
+  // the same paired sync on every change.
   const videoRef = useRef<HTMLVideoElement | null>(null);
   useEffect(() => {
     if (!reveal) return;
     const videoEl = videoRef.current;
     if (!videoEl) return;
     const root = document.documentElement;
-    const tryPlay = () => {
-      void videoEl.play().catch(() => {});
+
+    let loaded = false;
+    const tryLoad = () => {
+      if (loaded) return;
+      if (!root.hasAttribute("data-footer-near")) return;
+      videoEl.preload = "auto";
+      // Without an explicit load(), some browsers don't re-evaluate
+      // the preload hint after the attribute change — they treat the
+      // element as a stable "preload=none" instance for the page life.
+      videoEl.load();
+      loaded = true;
     };
-    if (root.hasAttribute("data-footer-near")) {
-      tryPlay();
-      return;
-    }
-    const observer = new MutationObserver(() => {
-      if (root.hasAttribute("data-footer-near")) {
-        tryPlay();
-        observer.disconnect();
+    const syncPlayback = () => {
+      if (root.hasAttribute("data-footer-reached")) {
+        // .catch swallows the rejection some browsers throw if play()
+        // is interrupted (e.g. tab backgrounded mid-fetch).
+        void videoEl.play().catch(() => {});
+      } else {
+        videoEl.pause();
       }
+    };
+
+    tryLoad();
+    syncPlayback();
+
+    const observer = new MutationObserver(() => {
+      tryLoad();
+      syncPlayback();
     });
-    observer.observe(root, { attributes: true, attributeFilter: ["data-footer-near"] });
+    observer.observe(root, {
+      attributes: true,
+      attributeFilter: ["data-footer-near", "data-footer-reached"],
+    });
     return () => observer.disconnect();
   }, [reveal]);
 
@@ -113,6 +143,18 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false, t
         className="absolute inset-0 pointer-events-none"
         style={{ zIndex: 1, background: "#000000", opacity: 0.25 }}
       />
+      {/* Reveal-mode white cover — opaque (opacity:1, z:30) while the
+          user is scrolling above the reveal range, so the entire footer
+          (video + scrim + content) reads as a flat white sheet that
+          matches the PageFrame card sitting in front of it. Fades to
+          opacity:0 in 500ms once <html data-footer-reached> flips,
+          exposing the full footer design at once. The opacity logic
+          and pointer-events:none live in globals.css's
+          .footer-reveal-overlay rule — see app/globals.css.
+          Gated on `reveal` because the default non-reveal footer is a
+          normal in-flow block that doesn't need masking — an always-on
+          opaque overlay there would just hide the footer permanently. */}
+      {reveal && <div aria-hidden className="footer-reveal-overlay" />}
       {/* Reveal-mode wrapper:
            • Bounds match the navbar's canonical pattern
              (`max-w-[1287px] w-[calc(100%-2.5rem)] mx-auto`, see

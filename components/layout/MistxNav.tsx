@@ -299,6 +299,43 @@ export function MistxNav({
     (heroLight && overHero && heroPhase === 2) ||
     (darkBackdrop && overHero && heroPhase !== 3) ||
     darkScrimActive;
+  // While the mobile drawer is open it paints a full-screen WHITE backdrop
+  // behind the (transparent) header, so the header's logo / wordmark / X must
+  // render dark to read against it — regardless of the page's lightNav state.
+  // mobileOpen can only flip true via the lg:hidden hamburger, so on desktop
+  // this is identical to lightNav and desktop behaviour is unchanged.
+  const navContentLight = lightNav && !mobileOpen;
+
+  // True exactly when the solid white nav backdrop is what the user sees
+  // at the top of the viewport. Drives the iOS Safari Liquid Glass tint
+  // (via `body::before` in globals.css) + the `<meta name="theme-color">`
+  // so the browser chrome reads as a seamless continuation of the navbar
+  // instead of a black slab pinned above a white bar. `darkScrimActive`
+  // excludes the consumer-page dark gradient — when that's active the
+  // navbar visually isn't white-backdrop even though `showBackdrop` is
+  // true. `heroScrim` (business sky-tinted scrim) is intentionally left
+  // in because it fades to transparent at the navbar's bottom edge, so
+  // the chrome above it still reads white from the solid backdrop.
+  const whiteBackdrop = showBackdrop && !darkScrimActive;
+
+  // Mirror `whiteBackdrop` to `<html data-navbar-white>`. CSS in
+  // globals.css (inside the mobile `body::before` block) reads this
+  // attribute and flips the safe-area overlay from black to white.
+  useEffect(() => {
+    const html = document.documentElement;
+    html.toggleAttribute("data-navbar-white", whiteBackdrop);
+    return () => html.removeAttribute("data-navbar-white");
+  }, [whiteBackdrop]);
+
+  // Defense-in-depth: also flip the meta theme-color so non-Liquid-Glass
+  // iOS (15–17) and Chrome Android — which read this directly instead of
+  // sampling page content — get the same swap. The element is added in
+  // app/layout.tsx with content="#000000" as the boot default.
+  useEffect(() => {
+    const meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute("content", whiteBackdrop ? "#FFFFFF" : "#000000");
+  }, [whiteBackdrop]);
+
   // Business-only: while scrolled ("on movement") AND the navbar still
   // overlaps the hero, the solid white backdrop is replaced by a scrim
   // tinted to the hero image's sky colour — opaque at the top, fading to
@@ -400,7 +437,7 @@ export function MistxNav({
             borderTopLeftRadius: navCornerRadius,
             borderTopRightRadius: navCornerRadius,
             background: `linear-gradient(to bottom, rgba(${scrimRGB},1) 0%, rgba(${scrimRGB},0.55) 50%, rgba(${scrimRGB},0) 100%)`,
-            opacity: heroScrim ? 1 : 0,
+            opacity: heroScrim && !mobileOpen ? 1 : 0,
             transition: "opacity 300ms ease",
           }}
         />
@@ -433,7 +470,7 @@ export function MistxNav({
             // straight through. Other modes (heroLight, heroTint) keep
             // the original behaviour.
             opacity:
-              !darkBackdrop && heroScrim ? 1 : 0,
+              !darkBackdrop && heroScrim && !mobileOpen ? 1 : 0,
             transition:
               "opacity 300ms ease, background-color 700ms cubic-bezier(0.44,0,0.56,1)",
           }}
@@ -458,7 +495,7 @@ export function MistxNav({
             // not visually heavy on the eye.
             background:
               "linear-gradient(to bottom, rgba(0, 0, 0, 0.16) 0%, rgba(0, 0, 0, 0.09) 50%, rgba(0, 0, 0, 0) 100%)",
-            opacity: darkScrimActive ? 1 : 0,
+            opacity: darkScrimActive && !mobileOpen ? 1 : 0,
             transition: "opacity 300ms ease",
           }}
         />
@@ -491,7 +528,7 @@ export function MistxNav({
                 className="object-contain transition-[filter] duration-300"
                 style={{
                   color: "transparent",
-                  filter: lightNav
+                  filter: navContentLight
                     ? "brightness(0) invert(1)"
                     : "brightness(0) saturate(100%) invert(8%) sepia(80%) saturate(1400%) hue-rotate(215deg) brightness(90%)",
                 }}
@@ -507,7 +544,7 @@ export function MistxNav({
                 marginLeft: "-4px",
                 position: "relative",
                 top: "2px",
-                color: lightNav ? "#FFFFFF" : "#0F173C",
+                color: navContentLight ? "#FFFFFF" : "#0F173C",
               }}
             >
               Columbus Earth
@@ -542,7 +579,7 @@ export function MistxNav({
           <a
             target="_self"
             className={`group rounded-button px-5 py-2 p-m hidden md:flex items-center truncate gap-2 transition-colors bg-transparent ${
-              lightNav
+              navContentLight
                 ? "text-white hover:bg-white/10"
                 : "text-[#1f1f1f] hover:bg-black/5 hover:text-accent"
             }`}
@@ -550,7 +587,7 @@ export function MistxNav({
           >
             Contact
             <span className="ml-2 inline-block transition-transform group-hover:translate-x-0.5">
-              <ArrowDot className={lightNav ? "text-white" : "text-accent"} />
+              <ArrowDot className={navContentLight ? "text-white" : "text-accent"} />
             </span>
           </a>
 
@@ -562,7 +599,7 @@ export function MistxNav({
           >
             <button
               className={`group cursor-pointer rounded-button px-5 py-2 p-m flex items-center gap-2 transition-colors hover:text-accent ${
-                lightCta && lightNav
+                lightCta && navContentLight
                   ? "bg-white text-black"
                   : "bg-cta text-white"
               }`}
@@ -654,7 +691,7 @@ export function MistxNav({
               rx = height/2; opacity steps from 1.0 (top) to 0.7
               (bottom) for a soft visual hierarchy. */}
           <button
-            className={`lg:hidden md:px-2 cursor-pointer ${lightNav ? "text-white" : "text-[#0F173C]"}`}
+            className={`lg:hidden md:px-2 cursor-pointer ${navContentLight ? "text-white" : "text-[#0F173C]"}`}
             aria-label={mobileOpen ? "Close menu" : "Open menu"}
             aria-expanded={mobileOpen}
             onClick={() => setMobileOpen((v) => !v)}

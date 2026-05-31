@@ -3381,9 +3381,49 @@
 }
 
 /* ── Comparison table ── */
+/* Wrapper that proportionally scales the diagram down on mobile/tablet
+   (see ScaleToFit.tsx). Carries the top spacing so the transform on the
+   inner table doesn't interact with a collapsing margin. */
+.lgmCompareScale {
+  margin-top: 60px;
+}
+
+/* ── Full-bleed on mobile ──────────────────────────────────────────────
+   Break selected research-page blocks out of the 40px section gutter
+   (24px .slideFrame + 16px .editorialSlide) so they span the full screen
+   width edge-to-edge. Same proven viewport-width trick the timeline uses;
+   relies on each target's containing block being centered in the viewport. */
+@media (max-width: 768px) {
+  .fullBleedMobile {
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+    margin-right: calc(-50vw + 50%);
+    max-width: none;
+    border-radius: 0;
+  }
+
+  /* Square the corners for a clean edge-to-edge band. These selectors carry
+     two classes (or a descendant combinator) so they beat the later, equally
+     specific base `.lgmArticleCard` / `.lgmCompareTable` border-radius rules. */
+  .lgmArticleCard.fullBleedMobile {            /* standalone CTA cards */
+    border-radius: 0;
+  }
+  .fullBleedMobile > .lgmArticleCard {         /* cards inside the results row */
+    border-radius: 0;
+  }
+  .fullBleedMobile .lgmCompareTable {          /* the scaled comparison diagram */
+    border-radius: 0;
+  }
+}
+
 .lgmCompareTable {
   position: relative;
-  margin-top: 60px;
+  /* Freeze the one responsive token the diagram uses (--text-h3 drops from
+     2.25rem → 1.5rem at ≤991px) so the scaled-down diagram stays a faithful
+     miniature of the desktop layout rather than re-shrinking its header text
+     independently of the uniform transform scale. */
+  --text-h3: 2.25rem;
+  --text-h3--line-height: 106%;
   padding: clamp(88px, 9vw, 120px) clamp(28px, 3vw, 44px) clamp(36px, 4vw, 52px);
   background: radial-gradient(circle at 95% 8%, #E2F0FF 0%, #E2F0FF 55%, #EDF7FF 100%);
   border-radius: 16px;
@@ -3466,18 +3506,9 @@
   -webkit-text-stroke: 0.5px currentColor;
 }
 
-/* Keep the icon proportional when the h3 token shrinks at the
-   ≤991px breakpoint (1.5rem name → ~40px icon, preserving the
-   1.7 logo:text ratio of the navbar). */
-@media (max-width: 991px) {
-  .dimModelHeaderIcon {
-    width: 40px;
-    height: 40px;
-  }
-  .dimModelHeader {
-    gap: 8px;
-  }
-}
+/* The diagram no longer shrinks its own pieces at viewport breakpoints — it
+   renders at its desktop layout and ScaleToFit scales the whole thing down
+   uniformly below 900px (see ScaleToFit.tsx). */
 
 .dimModelHeaderSubtitle {
   margin: 0;
@@ -3604,26 +3635,8 @@
   line-height: 1.45;
 }
 
-/* ── Responsive: stack the table at small screens ── */
-@media (max-width: 900px) {
-  .dimTableGrid {
-    grid-template-columns: 1fr;
-    row-gap: 12px;
-  }
-
-  .dimRowLabel,
-  .dimModelHeader,
-  .dimGridCell {
-    grid-column: 1 / -1;
-  }
-
-  .dimGridCellTop,
-  .dimGridCellMid,
-  .dimGridCellBottom {
-    border: 1.5px solid color-mix(in srgb, var(--color-cta) 30%, transparent);
-    border-radius: 12px;
-  }
-}
+/* (The old ≤900px stacking rule was removed — the diagram now keeps its
+   4-column layout at every width and is scaled down by ScaleToFit instead.) */
 
 /* ── Dimension diagram (nested-rectangles layout) ───────────────────── */
 /* ── Outer LGM rect (transparent — card IS the LGM bg) ──────────────── */
@@ -4447,7 +4460,9 @@
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--tech-color-accent);
+  /* Design-system accent (#6094C1) — only rendered by the vertical timeline's
+     "now" marker, so the horizontal layout is unaffected. */
+  color: var(--color-accent);
   white-space: nowrap;
   margin-bottom: 8px;
 }
@@ -4537,6 +4552,96 @@
   outline: 2px solid var(--color-brand);
   outline-offset: 3px;
   border-radius: 4px;
+}
+
+/* ── Vertical timeline — mobile / tablet reflow of the horizontal track ──
+   Hidden on desktop (display:none here); the ≤1024px media query below
+   hides the horizontal .lgmTimeline and shows this instead. The horizontal
+   layout can't fit its absolutely-positioned labels at narrow widths, so
+   the same milestone data restacks top-to-bottom along a left rail. */
+.lgmTimelineVertical {
+  display: none;
+  list-style: none;
+  position: relative;
+  margin: clamp(28px, 6vw, 48px) 0 0;
+  padding: 0 0 0 28px;
+}
+
+/* Left rail — vertical analogue of .lgmTimelineTrack. */
+.lgmTimelineVertical::before {
+  content: "";
+  position: absolute;
+  top: 6px;
+  bottom: 6px;
+  left: 5px;
+  width: 1px;
+  background: var(--tech-color-text-brand);
+}
+
+.lgmTimelineVRow {
+  position: relative;
+  padding-bottom: clamp(22px, 5vw, 32px);
+}
+
+.lgmTimelineVRow:last-child {
+  padding-bottom: 0;
+}
+
+/* Milestone dot, centered on the rail (rail x = 5px; row content starts at
+   28px, so the dot center sits 23px left of the content edge). */
+.lgmTimelineVRow::before {
+  content: "";
+  position: absolute;
+  top: 6px;
+  left: -23px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--tech-color-text-brand);
+  transform: translateX(-50%);
+}
+
+.lgmTimelineVYear {
+  display: block;
+  font-size: var(--text-p-m);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0;
+  color: color-mix(in srgb, var(--color-cta) 55%, transparent);
+  margin-bottom: 6px;
+}
+
+.lgmTimelineVLabel {
+  display: block;
+  font-size: var(--text-h5);
+  font-family: var(--font-display);
+  font-weight: 500;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: #000000;
+}
+
+.lgmTimelineVRow .lgmTimelineCta {
+  margin-top: 10px;
+}
+
+/* Columbus "now" row — accent dot + logo, using the design-system accent
+   (#6094C1). */
+.lgmTimelineVRowNow::before {
+  top: 4px;
+  width: 13px;
+  height: 13px;
+  background: var(--color-accent);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-accent) 18%, transparent);
+}
+
+.lgmTimelineVLogo {
+  display: block;
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  margin-bottom: 6px;
+  filter: drop-shadow(0 2px 6px color-mix(in srgb, var(--color-accent) 18%, transparent));
 }
 
 .lgmArticleCard {
@@ -6252,21 +6357,91 @@
   margin: 0 0 16px;
 }
 
-/* ── LGM Timeline mobile scroll ── */
-
-@media (max-width: 600px) {
+/* ── LGM Timeline: swap horizontal → vertical on mobile & tablet ──
+   At ≤1024px the absolutely-positioned horizontal timeline can't fit its
+   labels without overlap, so it's hidden and the vertical reflow
+   (.lgmTimelineVertical, styled above) is shown in its place. */
+@media (max-width: 1024px) {
   .lgmTimeline {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-  }
-
-  .lgmTimeline::-webkit-scrollbar {
     display: none;
   }
 
-  .lgmTimelineTrack {
-    min-width: 900px;
+  .lgmTimelineVertical {
+    display: block;
+  }
+}
+
+/* ── LGM Timeline: centered, left/right-alternating layout on small tablets ──
+   From 600–1024px there's room to center the rail and zig-zag the milestones
+   on either side of it (classic alternating timeline). Below 600px it falls
+   back to the single-column left-rail rules defined above. */
+@media (min-width: 600px) and (max-width: 1024px) {
+  .lgmTimelineVertical {
+    padding-left: 0;
+  }
+
+  /* Rail moves to the horizontal center. */
+  .lgmTimelineVertical::before {
+    left: 50%;
+  }
+
+  .lgmTimelineVRow {
+    box-sizing: border-box;
+    width: 50%;
+  }
+
+  /* Odd milestones sit in the RIGHT half, content reading left→right away
+     from the center line. */
+  .lgmTimelineVRow:nth-child(odd) {
+    margin-left: 50%;
+    padding-left: clamp(24px, 4vw, 44px);
+    text-align: left;
+  }
+
+  /* Even milestones sit in the LEFT half (a width:50% block is already
+     left-aligned), content reading right→left toward the center line. */
+  .lgmTimelineVRow:nth-child(even) {
+    padding-right: clamp(24px, 4vw, 44px);
+    text-align: right;
+  }
+
+  /* Dots ride the centered rail: odd on the row's inner (left) edge, even on
+     the row's inner (right) edge. */
+  .lgmTimelineVRow:nth-child(odd)::before {
+    left: 0;
+    right: auto;
+    transform: translateX(-50%);
+  }
+
+  .lgmTimelineVRow:nth-child(even)::before {
+    left: auto;
+    right: 0;
+    transform: translateX(50%);
+  }
+
+  /* Short connector hairline from the rail toward each milestone's content. */
+  .lgmTimelineVRow::after {
+    content: "";
+    position: absolute;
+    top: 10px;
+    width: clamp(12px, 3vw, 24px);
+    height: 1px;
+    background: var(--tech-color-text-brand);
+    opacity: 0.45;
+  }
+
+  .lgmTimelineVRow:nth-child(odd)::after {
+    left: 0;
+  }
+
+  .lgmTimelineVRow:nth-child(even)::after {
+    right: 0;
+  }
+
+  /* The "now" logo is a block image — text-align can't right-align it on the
+     left-side rows, so push it to the inner (right) edge explicitly. */
+  .lgmTimelineVRow:nth-child(even) .lgmTimelineVLogo {
+    margin-left: auto;
   }
 }
 
@@ -6340,14 +6515,5 @@
 
 /* ── LGM Compare Table mobile scroll ── */
 
-@media (max-width: 600px) {
-  .lgmCompareTable {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-  }
-
-  .lgmCompareTable::-webkit-scrollbar {
-    display: none;
-  }
-}
+/* (Removed the ≤600px horizontal-scroll hack for .lgmCompareTable — the
+   diagram is now scaled to fit by ScaleToFit, so it never overflows.) */

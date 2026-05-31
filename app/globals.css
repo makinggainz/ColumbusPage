@@ -128,6 +128,44 @@ body {
   }
 }
 
+/* iOS Safari "Liquid Glass" chrome lock — the translucent address bar
+   samples its tint from whatever sits beneath it in the viewport. With
+   only `body { background: #000 }`, the chrome reads black at the top
+   of the page (good) but flips to white as soon as the user scrolls
+   and the white PageFrame card slides up under the chrome (bad). This
+   fixed pseudo-element pins a black rectangle to the very top of the
+   viewport, exactly covering the safe-area-inset-top region, so the
+   chrome ALWAYS has a black sample regardless of scroll. z-index sits
+   above PageFrame (z:1) and the sticky navbar (typical z:50) so the
+   layer is never occluded. pointer-events:none keeps it from eating
+   touches in the status-bar area. Mobile + tablet only — desktop
+   doesn't have a translucent browser chrome to compensate for. */
+@media (max-width: 1023px) {
+  body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: env(safe-area-inset-top, 0px);
+    background-color: #000000;
+    z-index: 9999;
+    pointer-events: none;
+    /* Smooth swap when MistxNav toggles `data-navbar-white` on <html>
+       (see below) — without this the safe-area would hard-snap from
+       black to white on every scroll past the hero. */
+    transition: background-color 200ms ease;
+  }
+  /* MistxNav mirrors its `whiteBackdrop` state (solid white nav backdrop
+     visible at the top of the viewport) to this attribute. When set, the
+     safe-area overlay flips white so the iOS Liquid Glass tint reads as
+     a continuation of the navbar instead of a black slab pinned above
+     a white bar. */
+  html[data-navbar-white] body::before {
+    background-color: #FFFFFF;
+  }
+}
+
 /* Footer reveal — once the user reaches the footer, PageFrame sets
    [data-footer-reached] on <html>, which fades the white cover off the
    footer (below). The page backdrop itself stays white throughout. */
@@ -148,9 +186,14 @@ body {
   }
 }
 
-/* White cover over the reveal footer. Opaque while scrolling the page
-   (footer reads as white, matching the backdrop); fades out when the
-   footer is reached, revealing the footer's full dark design at once. */
+/* Cover over the reveal footer. Opaque while the user is scrolling
+   above the reveal range — the footer reads as a flat sheet matching
+   the body backdrop, so the area behind the PageFrame card (9px top
+   gutter, 35px rounded corner cut-outs) blends seamlessly into the
+   body bg. Fades to opacity:0 when the user reaches the footer,
+   revealing the footer's full dark design at once. The color tracks
+   the body backdrop per viewport: white on desktop, black on mobile +
+   tablet (see the `html, body` rules and the ≤1023px override above). */
 .footer-reveal-overlay {
   position: absolute;
   inset: 0;
@@ -159,6 +202,20 @@ body {
   pointer-events: none;
   opacity: 1;
   transition: opacity 500ms ease;
+}
+@media (max-width: 1023px) {
+  /* Override the overlay color AND the footer element's own inline
+     `bgColor` (#F9F9F9 light gray) so the entire reveal-mode footer —
+     element bg + masking overlay — paints black on mobile, matching
+     the black body backdrop. !important is needed because the
+     <footer> background is set via inline `style={{ background }}` in
+     Footer.tsx; selectors without it would lose the cascade fight. */
+  .footer-reveal-overlay {
+    background-color: #000000 !important;
+  }
+  footer[data-footer] {
+    background: #000000 !important;
+  }
 }
 html[data-footer-reached] .footer-reveal-overlay {
   opacity: 0;
