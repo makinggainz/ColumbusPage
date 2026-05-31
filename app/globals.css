@@ -107,15 +107,21 @@ body {
   min-height: 100%;
 }
 
-/* Mobile-only black backdrop. iOS Safari 15+ renders a translucent
-   "Liquid Glass" address bar whose tint is sampled from the page
-   content beneath it. With viewport-fit=cover the body extends up
-   into the safe-area, so a white body forces the chrome to read
-   white — the <meta theme-color> alone isn't enough on iOS 18+.
-   Painting the body black here makes the safe-area black so the
-   chrome tints black. Desktop keeps the white backdrop above so the
-   PageFrame shadow + top gutter look correct on larger viewports. */
-@media (max-width: 767px) {
+/* Mobile + tablet black backdrop. Two reasons it has to be black on
+   anything that isn't desktop:
+     1. iOS Safari 15+ renders a translucent "Liquid Glass" address bar
+        whose tint is sampled from the page content beneath it. With
+        viewport-fit=cover the body extends up into the safe-area, so
+        a white body forces the chrome to read white — <meta
+        theme-color> alone isn't enough on iOS 18+.
+     2. The PageFrame's 9px top gutter + 35px rounded corners reveal
+        the body behind the card on every route; on phones / iPads
+        the black band behind the card is the intentional design beat
+        ("PageFrame floats on a dark slab").
+   Breakpoint is `≤1023px` (Tailwind's `lg`) — covers phones AND any
+   tablet held in portrait or landscape; desktop (`≥1024px`) keeps the
+   white backdrop above so the PageFrame shadow reads correctly. */
+@media (max-width: 1023px) {
   html,
   body {
     background-color: #000000;
