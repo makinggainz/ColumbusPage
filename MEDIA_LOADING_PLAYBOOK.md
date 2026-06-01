@@ -259,14 +259,27 @@ sticky-scroll choreography) at mobile + desktop to confirm pixel-parity.
   mockups + scene backdrops (incl. 6.3MB beach→104KB AVIF), MobilePhone,
   NotifCard avatars, DestinationsSection Friends/carousel avatars + bento mockups,
   FinalCTA globe — all `next/image` + blur-up + warm; `MediaPrefetcher` mounted.
+- **Business page** `app/products/business/page.tsx` (`4a0d13f`): the most
+  image-dense page (~130 industry PNGs / 6 industries). New shared helper
+  `components/business/MapBgImage.tsx` converts the raw-PNG **CSS
+  `background-image` maps/backdrops** → AVIF `<Image fill>` + warm in the shared
+  primitives (`MapThumb`, `MapLayeredVisual` ×3, `SuperFeatureSection` SkyBackdrop,
+  `SmartLayerRow`); static-import blur-up on bounded images (SolutionShowcase,
+  CapabilitiesGrid, Comparison/Chat/Banner backdrops, 4 mockup chrome frames);
+  `MapChatPlatform` chrome priority became an `eager` prop (hero passes it,
+  reused below-fold instances stay warm-gated); `MediaPrefetcher` mounted. Wins:
+  becomeartistMap 6.1MB→260KB, SuperModelback 3.9MB→124KB, res-bg-1 1.9MB→119KB AVIF.
 - Shared utilities: `components/ui/MediaPrefetcher.tsx`, the
-  `ImageWithFallback.tsx` fix. **Reuse these as-is.**
+  `ImageWithFallback.tsx` fix. **Reuse these as-is.** For a page whose maps/photos
+  are painted as CSS `background-image`, reuse `components/business/MapBgImage.tsx`
+  (or copy the pattern) instead of hand-rolling per site.
 
 **TODO** (apply this playbook): other routes — e.g.
-`app/products/business`, `app/research`, `app/technology`, `app/company`,
+`app/research`, `app/technology`, `app/company`, `app/blog`,
 and any other `app/**/page.tsx`. Each: run §4 recipe, §5 verify.
 `MediaPrefetcher`/`useMediaWarm`/`ImageWithFallback` already exist — just import
-and apply.
+and apply. (Note: a CSS-`background-image: url()` map/photo is defect class #3 —
+convert it, don't just warm it; warming can't help a CSS background.)
 
 ### Parallelizing across multiple AIs
 Give each AI a **different route** (one page per worktree/branch) to avoid edit
