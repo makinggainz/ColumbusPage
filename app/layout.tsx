@@ -4,6 +4,7 @@ import "./globals.css";
 import { LenisProvider } from "@/components/home/LenisContext";
 import { ScrollRestorer } from "@/components/layout/ScrollRestorer";
 import { RootShell } from "@/components/layout/RootShell";
+import { HeroPrefetcher } from "@/components/ui/HeroPrefetcher";
 
 export const metadata: Metadata = {
   title: "Columbus",
@@ -24,9 +25,9 @@ export default function RootLayout({
         <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
         {/* iOS Safari tints the address-bar / status-bar region with this
             colour (the Liquid Glass chrome reads it as the page accent).
-            Setting it to #000000 replaces the default translucent white
-            band with a flat black bar across the top of the viewport. */}
-        <meta name="theme-color" content="#000000" />
+            White matches the uniformly white page backdrop, so the chrome
+            reads as a seamless continuation of the page on every route. */}
+        <meta name="theme-color" content="#FFFFFF" />
         {/* Google Fonts — Funnel Display (titles, .h1 … .h7) and
             Opening Hours Sans (body, paragraphs, UI). preconnect speeds
             the second request; display=swap avoids FOIT. The font-family
@@ -71,6 +72,9 @@ export default function RootLayout({
               every route, but article pages (/blog/<slug>) opt out and
               render full-bleed with no reveal footer. */}
           <RootShell>{children}</RootShell>
+          {/* Warms sibling routes' hero images into cache while idle, so
+              cross-page navigation lands on an already-loaded hero. */}
+          <HeroPrefetcher />
         </LenisProvider>
       </body>
     </html>

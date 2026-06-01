@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { ImageWithFallback } from "@/components/ui/ImageWithFallback";
+import { BUSINESS_HERO } from "@/lib/hero-assets";
 import MapChatPlatform from "./MapChatPlatform";
 import AgenticResearchMockup from "./AgenticResearchMockup";
 import DataManagerMockup from "./DataManagerMockup";
@@ -183,6 +184,14 @@ export default function BusinessHero() {
           sizes="100vw"
           quality={80}
           style={{ objectFit: "cover", objectPosition: "center 50%" }}
+          // Instant low-res base: render the hero's blurDataURL as the
+          // load/error surface instead of a flat grey skeleton, so the area
+          // is never empty on (cross-page) navigation before the AVIF lands.
+          fallbackStyle={{
+            backgroundImage: `url(${BUSINESS_HERO.blurDataURL})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center 50%",
+          }}
         />
       </div>
       {/* Dark overlay — a black scrim over the cityscape for text contrast.

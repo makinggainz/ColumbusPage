@@ -97,74 +97,25 @@ html,
 body {
   margin: 0;
   padding: 0;
-  /* White backdrop on desktop so the 9px top gutter + the PageFrame's
-     rounded corners read as white-on-white (and the subtle drop shadow
-     on the card actually shows against the bright surround). The black
-     backdrop is mobile-only — see the media query below. */
+  /* Uniform white backdrop on every breakpoint so the 9px top gutter +
+     the PageFrame's rounded corners read as white-on-white (and the
+     subtle drop shadow on the card shows against the bright surround).
+     Historically the mobile/tablet backdrop was black; it is now white
+     everywhere — the safe-area + footer-reveal overlays below track it. */
   background-color: #FFFFFF;
   color: #1D1D1F;
   overflow-x: clip;
   min-height: 100%;
 }
 
-/* Mobile + tablet black backdrop. Two reasons it has to be black on
-   anything that isn't desktop:
-     1. iOS Safari 15+ renders a translucent "Liquid Glass" address bar
-        whose tint is sampled from the page content beneath it. With
-        viewport-fit=cover the body extends up into the safe-area, so
-        a white body forces the chrome to read white — <meta
-        theme-color> alone isn't enough on iOS 18+.
-     2. The PageFrame's 9px top gutter + 35px rounded corners reveal
-        the body behind the card on every route; on phones / iPads
-        the black band behind the card is the intentional design beat
-        ("PageFrame floats on a dark slab").
-   Breakpoint is `≤1023px` (Tailwind's `lg`) — covers phones AND any
-   tablet held in portrait or landscape; desktop (`≥1024px`) keeps the
-   white backdrop above so the PageFrame shadow reads correctly. */
-@media (max-width: 1023px) {
-  html,
-  body {
-    background-color: #000000;
-  }
-}
-
-/* iOS Safari "Liquid Glass" chrome lock — the translucent address bar
-   samples its tint from whatever sits beneath it in the viewport. With
-   only `body { background: #000 }`, the chrome reads black at the top
-   of the page (good) but flips to white as soon as the user scrolls
-   and the white PageFrame card slides up under the chrome (bad). This
-   fixed pseudo-element pins a black rectangle to the very top of the
-   viewport, exactly covering the safe-area-inset-top region, so the
-   chrome ALWAYS has a black sample regardless of scroll. z-index sits
-   above PageFrame (z:1) and the sticky navbar (typical z:50) so the
-   layer is never occluded. pointer-events:none keeps it from eating
-   touches in the status-bar area. Mobile + tablet only — desktop
-   doesn't have a translucent browser chrome to compensate for. */
-@media (max-width: 1023px) {
-  body::before {
-    content: "";
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: env(safe-area-inset-top, 0px);
-    background-color: #000000;
-    z-index: 9999;
-    pointer-events: none;
-    /* Smooth swap when MistxNav toggles `data-navbar-white` on <html>
-       (see below) — without this the safe-area would hard-snap from
-       black to white on every scroll past the hero. */
-    transition: background-color 200ms ease;
-  }
-  /* MistxNav mirrors its `whiteBackdrop` state (solid white nav backdrop
-     visible at the top of the viewport) to this attribute. When set, the
-     safe-area overlay flips white so the iOS Liquid Glass tint reads as
-     a continuation of the navbar instead of a black slab pinned above
-     a white bar. */
-  html[data-navbar-white] body::before {
-    background-color: #FFFFFF;
-  }
-}
+/* The mobile/tablet backdrop used to be forced black here via a ≤1023px
+   override ("PageFrame floats on a dark slab"), backed by a black iOS
+   Safari chrome (the `theme-color` meta + a fixed `body::before` fill
+   over the safe-area-inset-top). All of that has been removed — the
+   backdrop is uniformly white per the base rule above, the theme-color
+   is white (app/layout.tsx), and the footer-reveal overlay below stays
+   white too. The white PageFrame card now floats on a white surround on
+   every breakpoint, matching desktop. */
 
 /* Footer reveal — once the user reaches the footer, PageFrame sets
    [data-footer-reached] on <html>, which fades the white cover off the
@@ -191,9 +142,9 @@ body {
    the body backdrop, so the area behind the PageFrame card (9px top
    gutter, 35px rounded corner cut-outs) blends seamlessly into the
    body bg. Fades to opacity:0 when the user reaches the footer,
-   revealing the footer's full dark design at once. The color tracks
-   the body backdrop per viewport: white on desktop, black on mobile +
-   tablet (see the `html, body` rules and the ≤1023px override above). */
+   revealing the footer's full dark design at once. The overlay is white
+   on every breakpoint now, tracking the uniformly white body backdrop
+   (see the `html, body` rule above). */
 .footer-reveal-overlay {
   position: absolute;
   inset: 0;
@@ -202,20 +153,6 @@ body {
   pointer-events: none;
   opacity: 1;
   transition: opacity 500ms ease;
-}
-@media (max-width: 1023px) {
-  /* Override the overlay color AND the footer element's own inline
-     `bgColor` (#F9F9F9 light gray) so the entire reveal-mode footer —
-     element bg + masking overlay — paints black on mobile, matching
-     the black body backdrop. !important is needed because the
-     <footer> background is set via inline `style={{ background }}` in
-     Footer.tsx; selectors without it would lose the cascade fight. */
-  .footer-reveal-overlay {
-    background-color: #000000 !important;
-  }
-  footer[data-footer] {
-    background: #000000 !important;
-  }
 }
 html[data-footer-reached] .footer-reveal-overlay {
   opacity: 0;

@@ -43,6 +43,7 @@ import sceneCity from "@/public/consumer/elio/ElioEndingBackground.jpg";
 import sceneTravels from "@/public/consumer/forYourTravels.png";
 import { useRef, useEffect, useState, useCallback } from "react";
 import { ImageWithFallback } from "@/components/ui/ImageWithFallback";
+import { CONSUMER_HERO } from "@/lib/hero-assets";
 import MapsGPTGlobe from "@/components/products/MapsGPTGlobe";
 import StoreBadges from "@/components/products/StoreBadges";
 
@@ -682,6 +683,14 @@ export default function Hero() {
             style={{
               objectFit: "cover",
               objectPosition: "center center",
+            }}
+            // Instant low-res base: render the hero's blurDataURL as the
+            // load/error surface instead of a flat grey skeleton, so the area
+            // is never empty on (cross-page) navigation before the AVIF lands.
+            fallbackStyle={{
+              backgroundImage: `url(${CONSUMER_HERO.blurDataURL})`,
+              backgroundSize: "cover",
+              backgroundPosition: "center center",
             }}
           />
           {/* Inactive-scene dim. Opacity is driven imperatively from JS

@@ -306,36 +306,6 @@ export function MistxNav({
   // this is identical to lightNav and desktop behaviour is unchanged.
   const navContentLight = lightNav && !mobileOpen;
 
-  // True exactly when the solid white nav backdrop is what the user sees
-  // at the top of the viewport. Drives the iOS Safari Liquid Glass tint
-  // (via `body::before` in globals.css) + the `<meta name="theme-color">`
-  // so the browser chrome reads as a seamless continuation of the navbar
-  // instead of a black slab pinned above a white bar. `darkScrimActive`
-  // excludes the consumer-page dark gradient — when that's active the
-  // navbar visually isn't white-backdrop even though `showBackdrop` is
-  // true. `heroScrim` (business sky-tinted scrim) is intentionally left
-  // in because it fades to transparent at the navbar's bottom edge, so
-  // the chrome above it still reads white from the solid backdrop.
-  const whiteBackdrop = showBackdrop && !darkScrimActive;
-
-  // Mirror `whiteBackdrop` to `<html data-navbar-white>`. CSS in
-  // globals.css (inside the mobile `body::before` block) reads this
-  // attribute and flips the safe-area overlay from black to white.
-  useEffect(() => {
-    const html = document.documentElement;
-    html.toggleAttribute("data-navbar-white", whiteBackdrop);
-    return () => html.removeAttribute("data-navbar-white");
-  }, [whiteBackdrop]);
-
-  // Defense-in-depth: also flip the meta theme-color so non-Liquid-Glass
-  // iOS (15–17) and Chrome Android — which read this directly instead of
-  // sampling page content — get the same swap. The element is added in
-  // app/layout.tsx with content="#000000" as the boot default.
-  useEffect(() => {
-    const meta = document.querySelector('meta[name="theme-color"]');
-    if (meta) meta.setAttribute("content", whiteBackdrop ? "#FFFFFF" : "#000000");
-  }, [whiteBackdrop]);
-
   // Business-only: while scrolled ("on movement") AND the navbar still
   // overlaps the hero, the solid white backdrop is replaced by a scrim
   // tinted to the hero image's sky colour — opaque at the top, fading to

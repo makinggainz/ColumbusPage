@@ -3,23 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { ArrowDot, NavArrowStack, elioMenuItems } from "../layout/MistxNav";
-
-/**
- * Build the exact srcset string the next-image optimizer serves for a
- * `fill` image so a hand-written <link rel="preload"> hits the same
- * cache entry the <Image> will request (no double fetch). Mirrors the
- * `deviceSizes` in next.config.ts. Used to emit *media-scoped* preloads
- * so only the variant the current viewport actually shows is fetched at
- * high priority — the old code marked BOTH hero variants `priority`,
- * which preloaded the hidden one too.
- */
-const HERO_DEVICE_SIZES = [640, 750, 828, 1080, 1200, 1287, 1920, 2048];
-function heroPreloadSrcSet(src: string, quality: number) {
-  return HERO_DEVICE_SIZES.map(
-    (w) =>
-      `/_next/image?url=${encodeURIComponent(src)}&w=${w}&q=${quality} ${w}w`,
-  ).join(", ");
-}
+import { heroOptimizerSrcSet } from "@/lib/hero-assets";
 
 /**
  * Hero section — minimal layout for the experimentV6-Gdesign redesign.
@@ -396,7 +380,7 @@ export function HeroNew() {
         rel="preload"
         as="image"
         media="(min-width: 768px)"
-        imageSrcSet={heroPreloadSrcSet("/HomeHero.png", 80)}
+        imageSrcSet={heroOptimizerSrcSet("/HomeHero.png", 80)}
         imageSizes="100vw"
         fetchPriority="high"
       />
@@ -404,7 +388,7 @@ export function HeroNew() {
         rel="preload"
         as="image"
         media="(max-width: 767px)"
-        imageSrcSet={heroPreloadSrcSet("/HomeHeroBackMobile.png", 80)}
+        imageSrcSet={heroOptimizerSrcSet("/HomeHeroBackMobile.png", 80)}
         imageSizes="100vw"
         fetchPriority="high"
       />
