@@ -10,6 +10,16 @@
 import Image from "next/image";
 import { useRef, useEffect, useState } from "react";
 import { Heart, Plus, CalendarDays, Users, Download, Sparkles, Check } from "lucide-react";
+import { useMediaWarm } from "@/components/ui/MediaPrefetcher";
+// Static imports → AVIF + blur-up for the heavy bento mockups + Friends
+// avatars (were 0.85–2.4 MB raw PNG).
+import heroBackdrop from "@/public/consumer/heroBackground.png";
+import planATrip from "@/public/bento/planatrip.png";
+import importMockup from "@/public/bento/import-mockup.png";
+import profileSydney from "@/public/bento/profile-sydney.png";
+import profileNatalie from "@/public/bento/profile-natalie.png";
+import profileSofiee from "@/public/bento/profile-sofiee.png";
+import elioHomeDesktop from "@/public/consumer/ElioHomeDesktop3.png";
 
 // Each marquee tile carries the same place / rating / user-prompt metadata
 // the matching photo holds in SeeWhatPeopleSection (section h) — so a
@@ -91,6 +101,7 @@ function SparkStar({ className }: { className?: string }) {
 }
 
 function Marquee({ imgs, reverse }: { imgs: DestPhoto[]; reverse?: boolean }) {
+  const warm = useMediaWarm();
   // Two copies of the list → translating one copy-width loops seamlessly.
   const doubled = [...imgs, ...imgs];
   return (
@@ -111,7 +122,7 @@ function Marquee({ imgs, reverse }: { imgs: DestPhoto[]; reverse?: boolean }) {
               border: "1px solid #E7E7F1",
             }}
           >
-            <Image src={p.src} alt="" fill sizes="304px" style={{ objectFit: "cover" }} />
+            <Image src={p.src} alt="" fill sizes="304px" loading={warm ? "eager" : "lazy"} fetchPriority={warm ? "low" : undefined} style={{ objectFit: "cover" }} />
             {/* Top + bottom legibility scrims so the white chrome reads
                 cleanly across any photo. */}
             <div
@@ -173,10 +184,16 @@ function Marquee({ imgs, reverse }: { imgs: DestPhoto[]; reverse?: boolean }) {
               alignItems: "flex-end",
               gap: 8,
             }}>
-              <img
+              <Image
                 src={p.avatar}
                 alt=""
+                aria-hidden
+                width={28}
+                height={28}
+                sizes="28px"
                 draggable={false}
+                loading={warm ? "eager" : "lazy"}
+                fetchPriority={warm ? "low" : undefined}
                 style={{
                   width: 28,
                   height: 28,
@@ -221,6 +238,7 @@ function Marquee({ imgs, reverse }: { imgs: DestPhoto[]; reverse?: boolean }) {
 }
 
 export default function DestinationsSection() {
+  const warm = useMediaWarm();
   const ref = useRef<HTMLElement>(null);
   const [vis, setVis] = useState(false);
 
@@ -326,10 +344,13 @@ export default function DestinationsSection() {
                   search UI floats over it. */}
               <div className="eib-card eib-card--phone">
                 <Image
-                  src="/consumer/heroBackground.png"
+                  src={heroBackdrop}
                   alt=""
                   fill
                   sizes="(min-width: 1200px) 660px, 90vw"
+                  placeholder="blur"
+                  loading={warm ? "eager" : "lazy"}
+                  fetchPriority={warm ? "low" : undefined}
                   className="eib-phone-map"
                 />
                 {/* Dynamic-Island-style notch — a small black pill at
@@ -419,6 +440,8 @@ export default function DestinationsSection() {
                   alt=""
                   fill
                   sizes="(min-width: 1200px) 560px, 90vw"
+                  loading={warm ? "eager" : "lazy"}
+                  fetchPriority={warm ? "low" : undefined}
                   className="eib-planner-bg"
                 />
                 <div className="eib-text eib-text--over">
@@ -439,6 +462,8 @@ export default function DestinationsSection() {
                   height={369}
                   className="eib-planner-itinerary"
                   sizes="(min-width: 1200px) 540px, 80vw"
+                  loading={warm ? "eager" : "lazy"}
+                  fetchPriority={warm ? "low" : undefined}
                 />
               </div>
 
@@ -454,6 +479,8 @@ export default function DestinationsSection() {
                   alt=""
                   fill
                   sizes="(min-width: 1200px) 560px, 90vw"
+                  loading={warm ? "eager" : "lazy"}
+                  fetchPriority={warm ? "low" : undefined}
                   className="eib-planner-bg eib-planner-bg--flip"
                 />
                 <div className="eib-chat-grid">
@@ -463,12 +490,21 @@ export default function DestinationsSection() {
                       <h3 className="eib-title">Plan a trip together<br />with your friends.</h3>
                     </div>
                     <div className="eib-friends-row">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src="/bento/profile-sydney.png" alt="" className="eib-friend-avatar" loading="lazy" decoding="async" />
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src="/bento/profile-natalie.png" alt="" className="eib-friend-avatar" loading="lazy" decoding="async" />
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src="/bento/profile-sofiee.png" alt="" className="eib-friend-avatar" loading="lazy" decoding="async" />
+                      {[profileSydney, profileNatalie, profileSofiee].map((src, i) => (
+                        <Image
+                          key={i}
+                          src={src}
+                          alt=""
+                          aria-hidden
+                          width={44}
+                          height={44}
+                          sizes="44px"
+                          placeholder="blur"
+                          className="eib-friend-avatar"
+                          loading={warm ? "eager" : "lazy"}
+                          fetchPriority={warm ? "low" : undefined}
+                        />
+                      ))}
                       <span className="eib-friend-add" aria-hidden>
                         <Plus size={18} strokeWidth={2} />
                       </span>
@@ -525,12 +561,13 @@ export default function DestinationsSection() {
                   </div>
                   <div className="eib-chat-phone" aria-hidden>
                     <Image
-                      src="/bento/planatrip.png"
+                      src={planATrip}
                       alt=""
-                      width={958}
-                      height={1164}
                       className="eib-chat-phone-img"
                       sizes="(min-width: 1200px) 220px, 160px"
+                      placeholder="blur"
+                      loading={warm ? "eager" : "lazy"}
+                      fetchPriority={warm ? "low" : undefined}
                     />
                   </div>
                 </div>
@@ -559,12 +596,13 @@ export default function DestinationsSection() {
                       .eib-card overflow:hidden, no bottom border needed). */}
                   <div className="eib-save-phone" aria-hidden>
                     <Image
-                      src="/bento/import-mockup.png"
+                      src={importMockup}
                       alt=""
-                      width={853}
-                      height={1844}
                       className="eib-save-phone-img"
                       sizes="(min-width: 1200px) 220px, 160px"
+                      placeholder="blur"
+                      loading={warm ? "eager" : "lazy"}
+                      fetchPriority={warm ? "low" : undefined}
                     />
                   </div>
                 </div>
@@ -606,6 +644,8 @@ export default function DestinationsSection() {
                   alt=""
                   fill
                   sizes="(min-width: 1200px) 280px, 50vw"
+                  loading={warm ? "eager" : "lazy"}
+                  fetchPriority={warm ? "low" : undefined}
                   className="eib-ff-bg"
                 />
                 <div className="eib-title-row eib-title-row--center">
@@ -1861,9 +1901,13 @@ export default function DestinationsSection() {
           margin: "0 auto",
         }}
       >
-        <img
-          src="/consumer/ElioHomeDesktop3.png"
+        <Image
+          src={elioHomeDesktop}
           alt="Elio Desktop"
+          sizes="(min-width: 1320px) 1287px, calc(100vw - 2.5rem)"
+          placeholder="blur"
+          loading={warm ? "eager" : "lazy"}
+          fetchPriority={warm ? "low" : undefined}
           style={{
             width: "100%",
             height: "auto",

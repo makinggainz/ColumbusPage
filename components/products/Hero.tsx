@@ -30,7 +30,17 @@
  * Lives inside the site PageFrame (fills frame width).
  */
 
-import Image from "next/image";
+import Image, { type StaticImageData } from "next/image";
+import { useMediaWarm } from "@/components/ui/MediaPrefetcher";
+// Static imports → AVIF via the optimizer + real blur-up placeholders +
+// intrinsic dimensions for the heavy phone-mockup / scene-backdrop raw
+// <img>s (were 1.5–6.3 MB PNG/JPG shipped unoptimized).
+import introPhone from "@/public/consumer/elio/ElioHeroShowcase.png";
+import phoneCity from "@/public/consumer/elio/ElioVotingShowcase1.png";
+import phoneTravels from "@/public/consumer/elio/ElioForYourTravels.png";
+import phoneProfile from "@/public/consumer/elio/ElioProfile.png";
+import sceneCity from "@/public/consumer/elio/ElioEndingBackground.jpg";
+import sceneTravels from "@/public/consumer/forYourTravels.png";
 import { useRef, useEffect, useState, useCallback } from "react";
 import { ImageWithFallback } from "@/components/ui/ImageWithFallback";
 import MapsGPTGlobe from "@/components/products/MapsGPTGlobe";
@@ -105,26 +115,32 @@ function phoneStates(isLg: boolean) {
 // Scenes 1+2 have a 400-px photo strip behind the title; Scene 3 is
 // the closing "everything in between" scene — no image, white bg, with
 // user-post cards rendered around the pinned phone (see POSTS below).
-const LABELS = [
-  { scene: 1, side: "left",  anchor: 0.5, title: "for your city",                 image: "/consumer/elio/ElioEndingBackground.jpg" },
-  { scene: 2, side: "right", anchor: 0.5, title: "for your travels",              image: "/consumer/forYourTravels.png" },
-  { scene: 3, side: "right", anchor: 0.5, title: "and everything in between",     image: "" },
-] as const;
+const LABELS: {
+  scene: number;
+  side: "left" | "right";
+  anchor: number;
+  title: string;
+  image: StaticImageData | null;
+}[] = [
+  { scene: 1, side: "left",  anchor: 0.5, title: "for your city",                 image: sceneCity },
+  { scene: 2, side: "right", anchor: 0.5, title: "for your travels",              image: sceneTravels },
+  { scene: 3, side: "right", anchor: 0.5, title: "and everything in between",     image: null },
+];
 
 // One product-shot per label. The phone screen renders all three
 // stacked, opacity-toggling to whichever label is closest to the
 // viewport anchor — see `activeLabel` below.
-const PHONE_IMAGES = [
-  "/consumer/elio/ElioVotingShowcase1.png",     // 0  For your city. (active)
-  "/consumer/elio/ElioForYourTravels.png",      // 1  For your travels.
-  "/consumer/elio/ElioProfile.png",             // 2  and everything in between
-] as const;
+const PHONE_IMAGES: StaticImageData[] = [
+  phoneCity,     // 0  For your city. (active)
+  phoneTravels,  // 1  For your travels.
+  phoneProfile,  // 2  and everything in between
+];
 
 // Distinct mockup shown during the hero header (phase 0) so the phone
 // screen visibly swaps the moment "For your city" becomes the active
 // scene. Without this, intro and active-city would both render
 // PHONE_IMAGES[0] and the transition would be invisible.
-const INTRO_PHONE_IMAGE = "/consumer/elio/ElioHeroShowcase.png";
+const INTRO_PHONE_IMAGE = introPhone;
 
 // ── Scene-3 floating notifications ────────────────────────────────────
 // Flighty-style cards that fan around the pinned phone during phase 3
@@ -208,6 +224,10 @@ const NOTIFICATIONS: Notif[] = [
 ];
 
 export default function Hero() {
+  // Flipped true once the page is loaded + idle (MediaPrefetcher) — below-fold
+  // phone mockups / scene backdrops promote lazy→eager so they're decoded
+  // before the user scrolls into each sticky-scroll phase.
+  const warm = useMediaWarm();
   const [phase, setPhase] = useState(0);
   const [mounted, setMounted] = useState(false);
   const [isLg, setIsLg] = useState(true);
@@ -560,19 +580,20 @@ export default function Hero() {
                   >
                     {/* Intro mockup — shown only during phase 0 (hero
                         header). Crossfades out the moment "For your
-                        city" activates and PHONE_IMAGES[0] takes over. */}
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
+                        city" activates and PHONE_IMAGES[0] takes over.
+                        next/image fill → AVIF + blur-up; kept eager +
+                        high fetch priority (visible pinned phone in the
+                        hero, near-LCP) so it isn't deferred. */}
+                    <Image
                       src={INTRO_PHONE_IMAGE}
                       alt=""
                       aria-hidden
+                      fill
+                      loading="eager"
                       fetchPriority="high"
-                      decoding="async"
+                      sizes="(max-width: 1023px) 70vw, 460px"
+                      placeholder="blur"
                       style={{
-                        position: "absolute",
-                        inset: 0,
-                        width: "100%",
-                        height: "100%",
                         objectFit: "cover",
                         objectPosition: "top center",
                         opacity: phase === 0 ? 1 : 0,
@@ -580,19 +601,17 @@ export default function Hero() {
                       }}
                     />
                     {PHONE_IMAGES.map((src, i) => (
-                      /* eslint-disable-next-line @next/next/no-img-element */
-                      <img
-                        key={src}
+                      <Image
+                        key={src.src}
                         src={src}
                         alt=""
                         aria-hidden
-                        loading="lazy"
-                        decoding="async"
+                        fill
+                        sizes="(max-width: 1023px) 70vw, 460px"
+                        placeholder="blur"
+                        loading={warm ? "eager" : "lazy"}
+                        fetchPriority={warm ? "low" : undefined}
                         style={{
-                          position: "absolute",
-                          inset: 0,
-                          width: "100%",
-                          height: "100%",
                           objectFit: "cover",
                           // Anchor the TOP of the source screenshot to
                           // the top of the phone screen — any overflow
@@ -922,20 +941,20 @@ export default function Hero() {
                 height: hasImage ? 400 : "70vh",
               }}
             >
-              {hasImage && (
+              {hasImage && lab.image && (
                 <>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
+                  {/* Scene backdrop — next/image fill → AVIF (the beach
+                      strip was a 6.3 MB PNG) + blur-up; warm-promoted. */}
+                  <Image
                     src={lab.image}
                     alt=""
                     aria-hidden
-                    loading="lazy"
-                    decoding="async"
+                    fill
+                    sizes="100vw"
+                    placeholder="blur"
+                    loading={warm ? "eager" : "lazy"}
+                    fetchPriority={warm ? "low" : undefined}
                     style={{
-                      position: "absolute",
-                      inset: 0,
-                      width: "100%",
-                      height: "100%",
                       objectFit: "cover",
                       display: "block",
                     }}
@@ -1091,6 +1110,7 @@ export default function Hero() {
    same NotifCard for scene-3 notifications — design language locked
    to desktop. */
 function MobileScenes() {
+  const warm = useMediaWarm();
   /* Scroll-driven smart-overlay refs. Each dark scene (scenes 1 & 2)
      gets a 0.55 black dim that fades to 0 as the section's center
      approaches the viewport center, then fades back up to 0.55 as the
@@ -1149,15 +1169,18 @@ function MobileScenes() {
             className="relative w-full overflow-hidden"
             style={{ background: isDarkScene ? "#0B1B2B" : "#FFFFFF" }}
           >
-            {isDarkScene && (
+            {isDarkScene && lab.image && (
               <>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
+                {/* Scene backdrop — next/image fill → AVIF + blur-up. */}
+                <Image
                   src={lab.image}
                   alt=""
                   aria-hidden
-                  loading="lazy"
-                  decoding="async"
+                  fill
+                  sizes="100vw"
+                  placeholder="blur"
+                  loading={warm ? "eager" : "lazy"}
+                  fetchPriority={warm ? "low" : undefined}
                   className="absolute inset-0 w-full h-full object-cover"
                 />
                 {/* Scroll-driven dim — see useEffect above. Initial
@@ -1220,7 +1243,8 @@ function MobileScenes() {
    layered drop-shadow). Rendered at a fixed 240-px width — matches
    the mobile-width the desktop phone falls back to when isLg=false,
    so visually the mockup reads as the same product device. */
-function MobilePhone({ src }: { src: string }) {
+function MobilePhone({ src }: { src: StaticImageData }) {
+  const warm = useMediaWarm();
   const w = 240;
   const h = Math.round(w / 0.4949);
   const radius = Math.round(w * 0.152);
@@ -1250,18 +1274,16 @@ function MobilePhone({ src }: { src: string }) {
           overflow: "hidden",
         }}
       >
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
+        <Image
           src={src}
           alt=""
           aria-hidden
-          loading="lazy"
-          decoding="async"
+          fill
+          sizes="240px"
+          placeholder="blur"
+          loading={warm ? "eager" : "lazy"}
+          fetchPriority={warm ? "low" : undefined}
           style={{
-            position: "absolute",
-            inset: 0,
-            width: "100%",
-            height: "100%",
             objectFit: "cover",
             objectPosition: "top center",
           }}
@@ -1299,7 +1321,7 @@ const MOBILE_SCENE3_POS: { top: number; dx: number; rot: number }[] = [
   { top: 470, dx:  85, rot:  3 },
 ];
 
-function MobileScene3Scatter({ src }: { src: string }) {
+function MobileScene3Scatter({ src }: { src: StaticImageData }) {
   return (
     /* Container height = phone bottom (565 px) + slack for the
        bottom-most card. Card 4 (Sarah & James) sits at top 500;
@@ -1373,6 +1395,7 @@ function Stagger({ show, delay, y, children }: { show: boolean; delay: number; y
 //  title + sub stack on the right.
 // ─────────────────────────────────────────────────────────────────────
 function NotifCard({ n }: { n: Notif }) {
+  const warm = useMediaWarm();
   return (
     <div
       style={{
@@ -1388,13 +1411,15 @@ function NotifCard({ n }: { n: Notif }) {
     >
       {/* Left visual — avatar, stacked avatars, or coloured icon badge. */}
       {n.kind === "avatar" && n.avatar && (
-        /* eslint-disable-next-line @next/next/no-img-element */
-        <img
+        <Image
           src={n.avatar}
           alt=""
           aria-hidden
-          loading="lazy"
-          decoding="async"
+          width={40}
+          height={40}
+          sizes="40px"
+          loading={warm ? "eager" : "lazy"}
+          fetchPriority={warm ? "low" : undefined}
           style={{
             width: 40,
             height: 40,
@@ -1407,13 +1432,15 @@ function NotifCard({ n }: { n: Notif }) {
       )}
       {n.kind === "stacked" && n.avatars && (
         <div style={{ position: "relative", width: 56, height: 40, flexShrink: 0 }}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
+          <Image
             src={n.avatars[0]}
             alt=""
             aria-hidden
-            loading="lazy"
-            decoding="async"
+            width={40}
+            height={40}
+            sizes="40px"
+            loading={warm ? "eager" : "lazy"}
+            fetchPriority={warm ? "low" : undefined}
             style={{
               position: "absolute",
               left: 0,
@@ -1425,13 +1452,15 @@ function NotifCard({ n }: { n: Notif }) {
               border: "2px solid #FFFFFF",
             }}
           />
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
+          <Image
             src={n.avatars[1]}
             alt=""
             aria-hidden
-            loading="lazy"
-            decoding="async"
+            width={40}
+            height={40}
+            sizes="40px"
+            loading={warm ? "eager" : "lazy"}
+            fetchPriority={warm ? "low" : undefined}
             style={{
               position: "absolute",
               left: 16,

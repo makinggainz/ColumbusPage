@@ -5,6 +5,9 @@ import { useEffect, useRef, useState } from "react";
 import MapsGPTGlobe from "@/components/products/MapsGPTGlobe";
 import StoreBadges from "@/components/products/StoreBadges";
 import "@/components/products/how-it-works-tokens.css";
+import { useMediaWarm } from "@/components/ui/MediaPrefetcher";
+// Static import → AVIF + blur-up for the 2.2 MB globe backdrop.
+import globeEnding from "@/public/consumer-final-cta-elio-ending.png";
 
 // Floating discovery-card overlays on the globe. Each card is one of
 // four visual variants matching the consumer page's pinned-UI design:
@@ -83,6 +86,7 @@ const DISCOVERY_CARDS: DiscoveryCard[] = [
 ];
 
 export default function FinalCTASection() {
+  const warm = useMediaWarm();
   const FRAME_WIDTH = 1728;
   // Image's own aspect at FRAME_WIDTH (1447×1087 → 1298 at 1728 wide).
   // The image lives in its own wrapper anchored to the BOTTOM of the
@@ -137,10 +141,13 @@ export default function FinalCTASection() {
               at the top of the page). `sizes` lets the optimizer pick a
               right-sized AVIF/WebP variant for mobile widths. */}
           <Image
-            src="/consumer-final-cta-elio-ending.png"
+            src={globeEnding}
             alt="Elio across the globe"
             fill
             sizes="100vw"
+            placeholder="blur"
+            loading={warm ? "eager" : "lazy"}
+            fetchPriority={warm ? "low" : undefined}
             className="object-cover"
           />
 
@@ -261,10 +268,13 @@ export default function FinalCTASection() {
               {/* Desktop variant — same image, sized to the inner frame.
                   Not LCP (this is the page-bottom CTA), so no `priority`. */}
               <Image
-                src="/consumer-final-cta-elio-ending.png"
+                src={globeEnding}
                 alt="Elio across the globe"
                 fill
                 sizes="(min-width: 1728px) 1728px, 100vw"
+                placeholder="blur"
+                loading={warm ? "eager" : "lazy"}
+                fetchPriority={warm ? "low" : undefined}
                 className="object-cover"
               />
 
@@ -390,6 +400,7 @@ type DiscoveryCardViewProps = {
 };
 
 function DiscoveryCardView({ p, leftPx, topPx, leftPct, topPct, mobile, visible }: DiscoveryCardViewProps) {
+  const warm = useMediaWarm();
   // Mode-specific size table. Desktop values are intentionally compact
   // (the cards read as floating UI accents over the globe, not as the
   // main content), while avatars are kept large relative to the card
@@ -457,7 +468,7 @@ function DiscoveryCardView({ p, leftPx, topPx, leftPct, topPct, mobile, visible 
           }}
         >
           <div style={{ position: "relative", width: sz.photoW, height: sz.photoH, borderRadius: photoInnerRadius, overflow: "hidden" }}>
-            <Image src={p.img} alt="" fill sizes="128px" draggable={false} style={{ objectFit: "cover", display: "block" }} />
+            <Image src={p.img} alt="" fill sizes="128px" draggable={false} loading={warm ? "eager" : "lazy"} fetchPriority={warm ? "low" : undefined} style={{ objectFit: "cover", display: "block" }} />
           </div>
           {/* Avatar stack peeks out the card's bottom-left corner */}
           <div style={{ position: "absolute", left: sz.avatarOffsetX, bottom: -sz.avatarOffsetY, display: "flex" }}>
@@ -470,6 +481,8 @@ function DiscoveryCardView({ p, leftPx, topPx, leftPct, topPct, mobile, visible 
                 height={sz.avatar}
                 sizes="48px"
                 draggable={false}
+                loading={warm ? "eager" : "lazy"}
+                fetchPriority={warm ? "low" : undefined}
                 style={{
                   borderRadius: "9999px",
                   border: `${sz.avatarBorder}px solid #FFFFFF`,
@@ -508,7 +521,7 @@ function DiscoveryCardView({ p, leftPx, topPx, leftPct, topPct, mobile, visible 
               background: "#D1D5DB",
             }}
           >
-            <Image src={p.img} alt="" fill sizes="64px" draggable={false} style={{ objectFit: "cover", display: "block" }} />
+            <Image src={p.img} alt="" fill sizes="64px" draggable={false} loading={warm ? "eager" : "lazy"} fetchPriority={warm ? "low" : undefined} style={{ objectFit: "cover", display: "block" }} />
           </div>
           <div style={{ display: "flex", flexDirection: "column", lineHeight: 1.1 }}>
             <span style={{
@@ -557,19 +570,19 @@ function DiscoveryCardView({ p, leftPx, topPx, leftPct, topPct, mobile, visible 
             {/* Back-left card — tilted CCW */}
             <div style={subCard({ left: 0, top: SUB_H * 0.45, transform: "rotate(-7deg)", zIndex: 1 })}>
               <div style={subInner}>
-                <Image src={p.imgs[0]} alt="" fill sizes="96px" draggable={false} style={{ objectFit: "cover", display: "block" }} />
+                <Image src={p.imgs[0]} alt="" fill sizes="96px" draggable={false} loading={warm ? "eager" : "lazy"} fetchPriority={warm ? "low" : undefined} style={{ objectFit: "cover", display: "block" }} />
               </div>
             </div>
             {/* Back-right card — tilted CW, sits highest */}
             <div style={subCard({ right: 0, top: 0, transform: "rotate(7deg)", zIndex: 2 })}>
               <div style={subInner}>
-                <Image src={p.imgs[1]} alt="" fill sizes="96px" draggable={false} style={{ objectFit: "cover", display: "block" }} />
+                <Image src={p.imgs[1]} alt="" fill sizes="96px" draggable={false} loading={warm ? "eager" : "lazy"} fetchPriority={warm ? "low" : undefined} style={{ objectFit: "cover", display: "block" }} />
               </div>
             </div>
             {/* Front-centre card — slight CCW, sits in front */}
             <div style={subCard({ left: "50%", top: SUB_H * 0.6, transform: "translateX(-50%) rotate(-2deg)", zIndex: 3 })}>
               <div style={subInner}>
-                <Image src={p.imgs[2]} alt="" fill sizes="96px" draggable={false} style={{ objectFit: "cover", display: "block" }} />
+                <Image src={p.imgs[2]} alt="" fill sizes="96px" draggable={false} loading={warm ? "eager" : "lazy"} fetchPriority={warm ? "low" : undefined} style={{ objectFit: "cover", display: "block" }} />
               </div>
             </div>
           </div>
