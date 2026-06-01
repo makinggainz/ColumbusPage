@@ -1,7 +1,21 @@
-import Image from "next/image";
 import Link from "next/link";
 
 import { blogHref, BLOG_SLUG, BLOG_POSTS } from "@/lib/blog-posts";
+import { WarmTechImage } from "./WarmTechImage";
+// Static imports → AVIF via the optimizer (these were raw plain <img> PNG/JPEG)
+// + real blur-up where shown large. The model/competitor logos render small,
+// so blur-up is omitted there — AVIF + warm-promotion is the win.
+import techDiagram from "@/public/TechnologyPageImages/techDiagram.png";
+import columbusLogo from "@/public/logobueno.png";
+import mapsGptLogo from "@/public/MapsGPT-logo.png";
+import voyagerGraphic from "@/public/TechnologyPageImages/VoyagerGraphic.png";
+import claudeLogo from "@/public/TechnologyPageImages/LogosTable/Claude_AI_logo.svg.png";
+import grokLogo from "@/public/TechnologyPageImages/LogosTable/Grok-feb-2025-logo.svg.png";
+import perplexityLogo from "@/public/TechnologyPageImages/LogosTable/Perplexity_AI_logo.svg.png";
+import chatgptLogo from "@/public/TechnologyPageImages/LogosTable/ChatGPT-Vertical-Logo-Vector.svg-.png";
+import physicalIntelligenceLogo from "@/public/TechnologyPageImages/physical-intelligence-logo.jpeg";
+import runwayLogo from "@/public/TechnologyPageImages/runway-logo.jpeg";
+import metaLogo from "@/public/TechnologyPageImages/meta-logo.jpeg";
 import styles from "../technology.module.css";
 import { TechScrollIndex } from "../TechScrollIndex";
 import {
@@ -82,12 +96,11 @@ export function TechnologySections() {
               </div>
 
               <div className={styles.lgmCompareArt} aria-hidden>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src="/TechnologyPageImages/techDiagram.png"
+                <WarmTechImage
+                  src={techDiagram}
                   alt=""
-                  loading="lazy"
-                  decoding="async"
+                  sizes="(max-width: 1011px) 100vw, 1011px"
+                  placeholder="blur"
                   className={styles.lgmCompareArtImg}
                 />
               </div>
@@ -99,8 +112,7 @@ export function TechnologySections() {
             <ScaleToFit designWidth={900} className={`${styles.lgmCompareScale} ${styles.fullBleedMobile}`}>
             <div className={styles.lgmCompareTable}>
               <div className={styles.dimBranding}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src="/logobueno.png" alt="" className={styles.dimBrandingLogo} aria-hidden loading="lazy" decoding="async" />
+                <WarmTechImage src={columbusLogo} alt="" width={32} height={32} className={styles.dimBrandingLogo} aria-hidden />
                 <span>Columbus Earth</span>
               </div>
 
@@ -171,43 +183,35 @@ export function TechnologySections() {
                 <div className={`${styles.dimGridCell} ${styles.dimGridCellBottom}`}>
                   <div className={styles.dimLogos}>
                     <div className={styles.dimLogoItem}>
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src="/TechnologyPageImages/LogosTable/ChatGPT-Vertical-Logo-Vector.svg-.png" alt="ChatGPT" className={styles.dimLogoImg} loading="lazy" decoding="async" />
+                      <WarmTechImage src={chatgptLogo} alt="ChatGPT" sizes="100px" className={styles.dimLogoImg} />
                     </div>
                     <div className={styles.dimLogoItem}>
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src="/TechnologyPageImages/LogosTable/Claude_AI_logo.svg.png" alt="Claude" className={styles.dimLogoImg} loading="lazy" decoding="async" />
+                      <WarmTechImage src={claudeLogo} alt="Claude" sizes="100px" className={styles.dimLogoImg} />
                     </div>
                     <div className={styles.dimLogoItem}>
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src="/TechnologyPageImages/LogosTable/Grok-feb-2025-logo.svg.png" alt="Grok" className={styles.dimLogoImg} loading="lazy" decoding="async" />
+                      <WarmTechImage src={grokLogo} alt="Grok" sizes="100px" className={styles.dimLogoImg} />
                     </div>
                     <div className={styles.dimLogoItem}>
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src="/TechnologyPageImages/LogosTable/Perplexity_AI_logo.svg.png" alt="Perplexity" className={styles.dimLogoImg} loading="lazy" decoding="async" />
+                      <WarmTechImage src={perplexityLogo} alt="Perplexity" sizes="100px" className={styles.dimLogoImg} />
                     </div>
                   </div>
                 </div>
                 <div className={`${styles.dimGridCell} ${styles.dimGridCellBottom}`}>
                   <div className={styles.dimLogos} style={{ gridTemplateColumns: "1fr" }}>
                     <div className={styles.dimLogoItem}>
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src="/TechnologyPageImages/physical-intelligence-logo.jpeg" alt="Physical Intelligence" className={styles.dimLogoImg} style={{ maxWidth: 135 }} loading="lazy" decoding="async" />
+                      <WarmTechImage src={physicalIntelligenceLogo} alt="Physical Intelligence" sizes="135px" className={styles.dimLogoImg} style={{ maxWidth: 135 }} />
                     </div>
                     <div className={styles.dimLogoItem}>
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src="/TechnologyPageImages/runway-logo.jpeg" alt="Runway" className={styles.dimLogoImg} loading="lazy" decoding="async" />
+                      <WarmTechImage src={runwayLogo} alt="Runway" sizes="100px" className={styles.dimLogoImg} />
                     </div>
                     <div className={styles.dimLogoItem}>
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src="/TechnologyPageImages/meta-logo.jpeg" alt="Meta" className={styles.dimLogoImg} loading="lazy" decoding="async" />
+                      <WarmTechImage src={metaLogo} alt="Meta" sizes="100px" className={styles.dimLogoImg} />
                     </div>
                   </div>
                 </div>
                 <div className={`${styles.dimGridCell} ${styles.dimGridCellBottom} ${styles.dimGridCellLgm}`}>
                   <div className={styles.dimBrand}>
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src="/logobueno.png" alt="" className={styles.dimBrandLogo} aria-hidden loading="lazy" decoding="async" />
+                    <WarmTechImage src={columbusLogo} alt="" width={64} height={64} className={styles.dimBrandLogo} aria-hidden />
                     <span className={styles.dimBrandName}>Columbus Earth</span>
                   </div>
                 </div>
@@ -333,8 +337,8 @@ export function TechnologySections() {
 
               {/* ─── Columbus — separate "now" marker between 2025 and 2026 ─── */}
               <div className={`${styles.lgmTimelineMilestone} ${styles.lgmTimelineMilestoneTop} ${styles.lgmTimelineColumbus}`} style={{ left: xColumbus }}>
-                <Image
-                  src="/logobueno.png"
+                <WarmTechImage
+                  src={columbusLogo}
                   alt="Columbus"
                   width={64}
                   height={64}
@@ -403,8 +407,8 @@ export function TechnologySections() {
                 >
                   {m.now ? (
                     <>
-                      <Image
-                        src="/logobueno.png"
+                      <WarmTechImage
+                        src={columbusLogo}
                         alt="Columbus"
                         width={48}
                         height={48}
@@ -459,13 +463,13 @@ export function TechnologySections() {
                   the gap between the intro paragraph and the aside, visually
                   splitting them. Center sits on the right side of the layout. */}
               <div className={styles.coreResearchStarburst} aria-hidden>
-                <Image
-                  src="/TechnologyPageImages/VoyagerGraphic.png"
+                <WarmTechImage
+                  src={voyagerGraphic}
                   alt=""
                   fill
                   sizes="100vw"
+                  placeholder="blur"
                   style={{ objectFit: "contain", objectPosition: "right center" }}
-                  priority={false}
                 />
               </div>
 
@@ -598,8 +602,7 @@ export function TechnologySections() {
                   <div className={styles.coreResearchProducts}>
                     <a href="/business" className={styles.coreResearchProduct}>
                       <span className={styles.coreResearchProductGlyph} aria-hidden>
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img src="/logobueno.png" alt="" loading="lazy" decoding="async" />
+                        <WarmTechImage src={columbusLogo} alt="" width={36} height={36} />
                       </span>
                       <span>Columbus</span>
                     </a>
@@ -610,8 +613,7 @@ export function TechnologySections() {
                       className={styles.coreResearchProduct}
                     >
                       <span className={styles.coreResearchProductGlyph} aria-hidden>
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img src="/MapsGPT-logo.png" alt="" loading="lazy" decoding="async" />
+                        <WarmTechImage src={mapsGptLogo} alt="" width={36} height={36} />
                       </span>
                       <span>Elio</span>
                     </a>
@@ -735,7 +737,7 @@ export function TechnologySections() {
                     <Link key={post.slug} href={blogHref(post.slug)} className={styles.blogCard}>
                       <div className={styles.blogCardMedia}>
                         {post.image ? (
-                          <Image
+                          <WarmTechImage
                             src={post.image}
                             alt=""
                             fill
