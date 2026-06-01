@@ -795,7 +795,7 @@ export default function Hero() {
                   letterSpacing: "-0.02em",
                   lineHeight: 1.2,
                   textShadow:
-                    "0 1px 2px rgba(0, 0, 0, 0.45), 0 4px 14px rgba(0, 0, 0, 0.55), 0 0 40px rgba(0, 0, 0, 0.35)",
+                    "0 1px 2px rgba(0, 57, 113, 0.225), 0 4px 14px rgba(0, 57, 113, 0.275), 0 0 40px rgba(0, 57, 113, 0.175)",
                   maxWidth: 960,
                   margin: 0,
                 }}
@@ -829,7 +829,7 @@ export default function Hero() {
                       height: "0.5em",
                       verticalAlign: "super",
                       filter:
-                        "drop-shadow(0 1px 2px rgba(0, 0, 0, 0.45)) drop-shadow(0 4px 14px rgba(0, 0, 0, 0.55)) drop-shadow(0 0 40px rgba(0, 0, 0, 0.35))",
+                        "drop-shadow(0 1px 2px rgba(0, 57, 113, 0.225)) drop-shadow(0 4px 14px rgba(0, 57, 113, 0.275)) drop-shadow(0 0 40px rgba(0, 57, 113, 0.175))",
                     }}
                   >
                     <Image

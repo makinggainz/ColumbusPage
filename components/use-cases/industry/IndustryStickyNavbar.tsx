@@ -381,7 +381,16 @@ export default function IndustryStickyNavbar({ lightTheme = false, topOffset = 5
           {/* Track */}
           <div
             ref={trackRef}
-            className="flex items-center gap-7 overflow-x-auto"
+            /* `touch-pan-x` locks touch gestures inside the track to the
+               horizontal axis, so a swipe on the carousel scrolls only
+               the carousel — the browser no longer co-scrolls the page
+               vertically (which had read as the labels "drifting up
+               and down" on mobile). Diagonal swipes resolve to whichever
+               axis is dominant. `overscroll-x-contain` then keeps the
+               horizontal momentum from chaining out into the page (or
+               into a back-navigation gesture) once the user hits the
+               end of the row. */
+            className="flex items-center gap-7 overflow-x-auto touch-pan-x overscroll-x-contain"
             style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
           >
             {order.map((id) => {

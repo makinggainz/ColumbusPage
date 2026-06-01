@@ -131,7 +131,13 @@ export default function SuperFeatureSection({
       {/* Header — sits OUTSIDE the gray panel, on the page background */}
       <div className="ent-content-bounds">
         <div className="flex flex-col items-center text-center px-6">
-          <div className="flex items-center gap-3 justify-center">
+          {/* Mobile stacks the icon ABOVE the centred title (vertical
+              column, 8px gap); from `md` up the icon sits to the LEFT of
+              the title as a horizontal row (12px gap). `items-center` does
+              double duty — centring the icon horizontally over the title
+              in column mode, and vertically aligning it with the title's
+              cap height in row mode. */}
+          <div className="flex flex-col md:flex-row items-center gap-2 md:gap-3 justify-center">
             {icon ? (
               <div className="flex-shrink-0 flex items-center justify-center">{icon}</div>
             ) : null}
