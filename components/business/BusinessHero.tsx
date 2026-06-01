@@ -597,7 +597,7 @@ export default function BusinessHero() {
               style={{ padding: "0 4px 4px" }}
               className="hero-product-display"
             >
-              {activeTabId === "map-chat" && <MapChatPlatform />}
+              {activeTabId === "map-chat" && <MapChatPlatform eager />}
               {activeTabId === "research" && <AgenticResearchMockup />}
               {activeTabId === "data" && <DataManagerMockup />}
               {activeTabId === "dashboard" && <DashboardMockup />}

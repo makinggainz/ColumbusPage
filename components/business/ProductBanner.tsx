@@ -3,10 +3,13 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { ImageWithFallback } from "@/components/ui/ImageWithFallback";
+import { useMediaWarm } from "@/components/ui/MediaPrefetcher";
+import businessArtBG from "@/public/businessArtBGEnhance.png";
 
 export default function ProductBanner() {
   const sectionRef = useRef<HTMLElement>(null);
   const [visible, setVisible] = useState(false);
+  const warm = useMediaWarm();
 
   useEffect(() => {
     const el = sectionRef.current;
@@ -42,11 +45,14 @@ export default function ProductBanner() {
         style={{ aspectRatio: "1881 / 836" }}
       >
         <ImageWithFallback
-          src="/businessArtBGEnhance.png"
+          src={businessArtBG}
           alt=""
           fill
           sizes="100vw"
           quality={80}
+          placeholder="blur"
+          loading={warm ? "eager" : "lazy"}
+          fetchPriority={warm ? "low" : undefined}
           style={{ objectFit: "fill" }}
         />
       </div>

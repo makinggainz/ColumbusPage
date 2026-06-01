@@ -4,6 +4,9 @@ import Image from "next/image";
 import RowHeader from "./RowHeader";
 import ColumbusMark from "./ColumbusMark";
 import { ScaleToFit } from "../../technology/redesign/ScaleToFit";
+import { useMediaWarm } from "@/components/ui/MediaPrefetcher";
+import MapBgImage from "../MapBgImage";
+import researchFrame from "@/public/business/ResearchFrame.png";
 
 /* Row 1 — "With smart layers, you become an artist".
    Wraps the smart-layer mock in the shared ResearchFrame chrome (the
@@ -53,6 +56,7 @@ export default function SmartLayerRow({
   mapSrc = DEFAULT_MAP_SRC,
   promptText = DEFAULT_PROMPT_TEXT,
 }: SmartLayerRowProps = {}) {
+  const warm = useMediaWarm();
   return (
     <div style={{ fontFamily: FONT }}>
       <RowHeader
@@ -106,10 +110,13 @@ export default function SmartLayerRow({
           style={{ inset: 6, zIndex: 5 }}
         >
           <Image
-            src="/business/ResearchFrame.png"
+            src={researchFrame}
             alt=""
             fill
             sizes="(max-width: 1180px) 100vw, 1180px"
+            placeholder="blur"
+            loading={warm ? "eager" : "lazy"}
+            fetchPriority={warm ? "low" : undefined}
             className="object-cover object-center"
           />
         </div>
@@ -207,12 +214,12 @@ export default function SmartLayerRow({
               bottom: 0,
               left: 0,
               borderRadius: 12,
-              backgroundImage: `url(${mapSrc})`,
-              backgroundSize: "cover",
-              backgroundPosition: "center",
+              overflow: "hidden",
               filter: "saturate(1.2) contrast(1.08)",
             }}
-          />
+          >
+            <MapBgImage src={mapSrc} />
+          </div>
 
           {/* Content stack — fills the inner pane vertically. The
               overlay wrapper carries its own top + left + bottom

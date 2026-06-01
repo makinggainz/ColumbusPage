@@ -2,6 +2,8 @@
 
 import Image from "next/image";
 import type { IndustryId } from "@/components/use-cases/industry/types";
+import { useMediaWarm } from "@/components/ui/MediaPrefetcher";
+import dashboardFrame from "@/public/business/DashboardFrame.png";
 
 /* Mock UI: the "Dashboard" demo. Reuses the same chrome PNG as
    DataManagerMockup / AgenticResearchMockup and paints the inner pane
@@ -302,6 +304,7 @@ export type DashboardMockupProps = {
 };
 
 export default function DashboardMockup({ industryId }: DashboardMockupProps = {}) {
+  const warm = useMediaWarm();
   const items =
     (industryId && CONTENT[industryId]) ?? CONTENT["residential-real-estate"]!;
 
@@ -330,10 +333,13 @@ export default function DashboardMockup({ industryId }: DashboardMockupProps = {
         style={{ inset: 0, zIndex: 5 }}
       >
         <Image
-          src="/business/DashboardFrame.png"
+          src={dashboardFrame}
           alt="Columbus Dashboard"
           fill
           sizes="(max-width: 1180px) 100vw, 1180px"
+          placeholder="blur"
+          loading={warm ? "eager" : "lazy"}
+          fetchPriority={warm ? "low" : undefined}
           className="object-cover object-center"
         />
       </div>

@@ -2,6 +2,9 @@
 
 import Image from "next/image";
 import ColumbusMark from "./superFeatureRows/ColumbusMark";
+import { useMediaWarm } from "@/components/ui/MediaPrefetcher";
+// Static import → AVIF + blur-up for the shared chrome PNG.
+import chromeBackground from "@/public/business/ConversationalMapChat.png";
 
 /* Layered composite of the Columbus chat platform mockup. Three z-stacked
    layers, deepest first:
@@ -90,10 +93,13 @@ export type MapChatPlatformProps = {
   listSubtitle?: string;
   listItems?: ReadonlyArray<MapChatListItem>;
   keyTakeaway?: string;
+  /* When true, the chrome + map load eagerly at high priority (the hero's
+     above-the-fold glass window). Below-fold callers (ComparisonSection,
+     ChatSection) leave it false so the assets stay lazy until idle. */
+  eager?: boolean;
 };
 
 const DEFAULT_MAP = "/MapChatbackgroundimg.png";
-const CHROME_BACKGROUND = "/business/ConversationalMapChat.png";
 
 const DEFAULT_USER_QUERY =
   "Forecast the districts in greater Munich most at risk of traffic-congestion growth over the next 2–3 years";
@@ -118,7 +124,9 @@ export default function MapChatPlatform({
   listSubtitle = DEFAULT_LIST_SUBTITLE,
   listItems = DEFAULT_LIST_ITEMS,
   keyTakeaway = DEFAULT_KEY_TAKEAWAY,
+  eager = false,
 }: MapChatPlatformProps = {}) {
+  const warm = useMediaWarm();
   return (
     <div
       className="biz-product-display biz-mockup-frame mx-auto w-full"
@@ -131,16 +139,19 @@ export default function MapChatPlatform({
       }}
     >
       <div style={{ position: "relative", width: "100%", aspectRatio: "5190 / 3030" }}>
-        <MapImage map={map} />
+        <MapImage map={map} eager={eager} warm={warm} />
 
         <Image
-          src={CHROME_BACKGROUND}
+          src={chromeBackground}
           alt=""
           fill
           sizes="(max-width: 1180px) 100vw, 1180px"
           className="object-cover object-center"
           aria-hidden
-          priority
+          placeholder="blur"
+          {...(eager
+            ? { priority: true }
+            : { loading: warm ? "eager" : "lazy", fetchPriority: warm ? "low" : undefined })}
         />
 
         <ChatResponse
@@ -157,7 +168,7 @@ export default function MapChatPlatform({
   );
 }
 
-function MapImage({ map }: { map: string }) {
+function MapImage({ map, eager, warm }: { map: string; eager?: boolean; warm?: boolean }) {
   return (
     <div
       className="absolute overflow-hidden"
@@ -178,6 +189,9 @@ function MapImage({ map }: { map: string }) {
         sizes="(max-width: 1180px) 55vw, 650px"
         className="object-cover object-center"
         aria-hidden
+        {...(eager
+          ? { priority: true }
+          : { loading: warm ? "eager" : "lazy", fetchPriority: warm ? "low" : undefined })}
       />
 
       <Marker top="32%" left="38%" tone="accent" />

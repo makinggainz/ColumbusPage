@@ -2,6 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import { ImageWithFallback } from "@/components/ui/ImageWithFallback";
+import { useMediaWarm } from "@/components/ui/MediaPrefetcher";
+import envBg1 from "@/public/Environmental/env-bg-1.png";
 import MapChatPlatform from "./MapChatPlatform";
 import DataManagerMockup from "./DataManagerMockup";
 import AgenticResearchMockup from "./AgenticResearchMockup";
@@ -180,6 +182,7 @@ const FEATURES = [
 ] as const;
 
 export default function ComparisonSection() {
+  const warm = useMediaWarm();
   const sectionRef = useRef<HTMLElement>(null);
   const [entered, setEntered] = useState(false);
   const [onScreen, setOnScreen] = useState(false);
@@ -407,11 +410,14 @@ export default function ComparisonSection() {
             style={{ inset: 0, zIndex: 0 }}
           >
             <ImageWithFallback
-              src="/Environmental/env-bg-1.png"
+              src={envBg1}
               alt=""
               fill
               sizes="(max-width: 1023px) 100vw, 60vw"
               quality={80}
+              placeholder="blur"
+              loading={warm ? "eager" : "lazy"}
+              fetchPriority={warm ? "low" : undefined}
               style={{ objectFit: "cover", objectPosition: "center" }}
             />
           </div>

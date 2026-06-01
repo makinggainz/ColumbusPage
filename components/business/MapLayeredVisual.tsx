@@ -1,5 +1,7 @@
 "use client";
 
+import MapBgImage from "./MapBgImage";
+
 /* Composes a map "context" panel with a data UI card anchored to the left.
    Three variants:
    - "full-bleed" (default): the map fills the surrounding rounded frame
@@ -61,20 +63,20 @@ export default function MapLayeredVisual({
             aria-label={alt || undefined}
             role={alt ? "img" : undefined}
             style={{
+              position: "relative",
               flex: 1,
               minWidth: 0,
               borderTopRightRadius: "var(--ent-radius-2xl)",
               borderBottomRightRadius: "var(--ent-radius-2xl)",
               overflow: "hidden",
-              backgroundImage: `url(${map})`,
-              backgroundSize: "cover",
-              backgroundPosition: "center",
               /* Vibrancy lift — same recipe as MapThumb; brings muted
                  industry maps up to the CRE reference's saturation. */
               filter: "saturate(1.2) contrast(1.08)",
               boxShadow: "var(--ent-shadow-card)",
             }}
-          />
+          >
+            <MapBgImage src={map} />
+          </div>
         </div>
       </div>
     );
@@ -135,16 +137,15 @@ export default function MapLayeredVisual({
               right: 0,
               borderRadius: "var(--ent-radius-2xl)",
               overflow: "hidden",
-              backgroundImage: `url(${map})`,
-              backgroundSize: "cover",
-              backgroundPosition: "center",
               /* Vibrancy lift — same recipe as MapThumb; brings muted
                  industry maps up to the CRE reference's saturation. */
               filter: "saturate(1.2) contrast(1.08)",
               boxShadow: "var(--ent-shadow-card)",
               zIndex: 1,
             }}
-          />
+          >
+            <MapBgImage src={map} />
+          </div>
         </div>
       </div>
     );
@@ -172,13 +173,12 @@ export default function MapLayeredVisual({
           inset: 0,
           borderRadius: "var(--ent-radius-2xl)",
           overflow: "hidden",
-          backgroundImage: `url(${map})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
           boxShadow:
             "0 0 0 1px rgba(11, 27, 43, 0.06), 0 24px 60px rgba(11, 27, 43, 0.20)",
         }}
-      />
+      >
+        <MapBgImage src={map} />
+      </div>
 
       {/* Card + connector group, anchored to the left of the frame and
           vertically centered. The connector emerges from the card's right

@@ -2,6 +2,8 @@
 
 import Image from "next/image";
 import type { IndustryId } from "@/components/use-cases/industry/types";
+import { useMediaWarm } from "@/components/ui/MediaPrefetcher";
+import researchFrame from "@/public/business/ResearchFrame.png";
 
 /* Mock UI: the "Agentic Research" demo. Uses the ResearchFrame chrome
    (5190×2993) and paints the inner pane with the canonical Columbus
@@ -294,6 +296,7 @@ export type AgenticResearchMockupProps = {
 };
 
 export default function AgenticResearchMockup({ industryId }: AgenticResearchMockupProps = {}) {
+  const warm = useMediaWarm();
   const c =
     (industryId && CONTENT[industryId]) ?? CONTENT["residential-real-estate"]!;
 
@@ -321,10 +324,13 @@ export default function AgenticResearchMockup({ industryId }: AgenticResearchMoc
         style={{ inset: 0, zIndex: 5 }}
       >
         <Image
-          src="/business/ResearchFrame.png"
+          src={researchFrame}
           alt="Columbus Agentic Research"
           fill
           sizes="(max-width: 1180px) 100vw, 1180px"
+          placeholder="blur"
+          loading={warm ? "eager" : "lazy"}
+          fetchPriority={warm ? "low" : undefined}
           className="object-cover object-center"
         />
       </div>

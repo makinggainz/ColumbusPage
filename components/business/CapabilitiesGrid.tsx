@@ -1,7 +1,15 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Image from "next/image";
+import Image, { type StaticImageData } from "next/image";
+import { useMediaWarm } from "@/components/ui/MediaPrefetcher";
+// Static imports → AVIF + blur-up for the six capability tiles.
+import cap1 from "@/public/capabilitiesImages/capability-1.png";
+import cap2 from "@/public/capabilitiesImages/capability-2.png";
+import cap3 from "@/public/capabilitiesImages/capability-3.png";
+import cap4 from "@/public/capabilitiesImages/capability-4.png";
+import cap5 from "@/public/capabilitiesImages/capability-5.png";
+import cap6 from "@/public/capabilitiesImages/capability-6.png";
 
 /* ── Section: "Enterprise-grade capabilities" ────────────────────────────────
    Six capability tiles in a uniform 3-up grid. The whole grid is wrapped in
@@ -13,18 +21,19 @@ import Image from "next/image";
    Each tile inside is just the product mockup (2px hairline, restrained
    corner) followed by its label. No per-tile backdrop. */
 
-const ITEMS: { title: string; image: string }[] = [
-  { title: "Ask the map anything", image: "/capabilitiesImages/capability-6.png" },
-  { title: "Agent research reports", image: "/capabilitiesImages/capability-1.png" },
-  { title: "24/7 personal support", image: "/capabilitiesImages/capability-3.png" },
-  { title: "High-fidelity accurate data", image: "/capabilitiesImages/capability-4.png" },
-  { title: "Data Catalogue", image: "/capabilitiesImages/capability-5.png" },
-  { title: "Light-speed due diligence", image: "/capabilitiesImages/capability-2.png" },
+const ITEMS: { title: string; image: StaticImageData }[] = [
+  { title: "Ask the map anything", image: cap6 },
+  { title: "Agent research reports", image: cap1 },
+  { title: "24/7 personal support", image: cap3 },
+  { title: "High-fidelity accurate data", image: cap4 },
+  { title: "Data Catalogue", image: cap5 },
+  { title: "Light-speed due diligence", image: cap2 },
 ];
 
 export default function CapabilitiesGrid() {
   const sectionRef = useRef<HTMLElement>(null);
   const [visible, setVisible] = useState(false);
+  const warm = useMediaWarm();
 
   useEffect(() => {
     const el = sectionRef.current;
@@ -92,6 +101,9 @@ export default function CapabilitiesGrid() {
                     alt={item.title}
                     fill
                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    placeholder="blur"
+                    loading={warm ? "eager" : "lazy"}
+                    fetchPriority={warm ? "low" : undefined}
                     className="object-contain"
                   />
                 </div>

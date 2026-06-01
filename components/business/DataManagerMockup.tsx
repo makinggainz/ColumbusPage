@@ -2,6 +2,8 @@
 
 import Image from "next/image";
 import type { IndustryId } from "@/components/use-cases/industry/types";
+import { useMediaWarm } from "@/components/ui/MediaPrefetcher";
+import dataManagerFrame from "@/public/business/DataManagerFrame.png";
 
 /* Mock UI: the "Trusted data, verified for confidence" demo. The frame
    image (/business/DataManagerFrame.png, 5184×3003 px) carries the Data
@@ -210,6 +212,7 @@ export type DataManagerMockupProps = {
 };
 
 export default function DataManagerMockup({ industryId }: DataManagerMockupProps = {}) {
+  const warm = useMediaWarm();
   const cards =
     (industryId && CARDS_BY_INDUSTRY[industryId]) ??
     CARDS_BY_INDUSTRY["residential-real-estate"]!;
@@ -241,10 +244,13 @@ export default function DataManagerMockup({ industryId }: DataManagerMockupProps
         style={{ inset: 6, zIndex: 5 }}
       >
         <Image
-          src="/business/DataManagerFrame.png"
+          src={dataManagerFrame}
           alt="Columbus Data Manager"
           fill
           sizes="(max-width: 1180px) 100vw, 1180px"
+          placeholder="blur"
+          loading={warm ? "eager" : "lazy"}
+          fetchPriority={warm ? "low" : undefined}
           className="object-cover object-center"
         />
       </div>

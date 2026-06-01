@@ -17,6 +17,7 @@ import CapabilitiesGrid from "@/components/business/CapabilitiesGrid";
 import FAQSection from "@/components/business/FAQSection";
 import BusinessFeatureIndex from "@/components/business/BusinessFeatureIndex";
 import BusinessUseCases from "@/components/business/BusinessUseCases";
+import { MediaPrefetcher } from "@/components/ui/MediaPrefetcher";
 
 /* The reduced industry set shown in the "Tell us where you work"
    picker (and its sticky sub-navbar), ordered as the design's 3×2 grid.
@@ -112,6 +113,12 @@ export default function BusinessPage() {
       <section className="relative">
         <ChatSection />
       </section>
+
+      {/* Eager prefetch-all: after load + idle, warms every below-fold image
+          (industry backdrops/maps, capability tiles, mockup frames) so the
+          long scroll never reveals a half-loaded section. Skips on
+          data-saver. Renders nothing. */}
+      <MediaPrefetcher />
     </main>
   );
 }

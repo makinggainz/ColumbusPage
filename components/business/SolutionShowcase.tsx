@@ -3,10 +3,15 @@
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { GridSection } from "../home/ContentGrid";
+import { useMediaWarm } from "@/components/ui/MediaPrefetcher";
+// Static imports → AVIF + blur-up for the heavy decorative line-art.
+import b3Left from "@/public/businessB3/left.png";
+import b3Right from "@/public/businessB3/right.png";
 
 export default function SolutionShowcase() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
+  const warm = useMediaWarm();
 
   useEffect(() => {
     const el = sectionRef.current;
@@ -48,19 +53,25 @@ export default function SolutionShowcase() {
       <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">
         <div className="absolute top-0 left-0 w-[22%] max-w-76 aspect-1378/1260">
           <Image
-            src="/businessB3/left.png"
+            src={b3Left}
             alt=""
             fill
             sizes="22vw"
+            placeholder="blur"
+            loading={warm ? "eager" : "lazy"}
+            fetchPriority={warm ? "low" : undefined}
             className="object-contain object-top-left"
           />
         </div>
         <div className="absolute -bottom-12.5 right-0 w-[18%] max-w-xs aspect-1604/1296">
           <Image
-            src="/businessB3/right.png"
+            src={b3Right}
             alt=""
             fill
             sizes="18vw"
+            placeholder="blur"
+            loading={warm ? "eager" : "lazy"}
+            fetchPriority={warm ? "low" : undefined}
             className="object-contain object-bottom-right"
           />
         </div>

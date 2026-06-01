@@ -4,8 +4,11 @@ import Link from "next/link";
 import { ImageWithFallback } from "@/components/ui/ImageWithFallback";
 import MapChatPlatform from "./MapChatPlatform";
 import { ScaleToFit } from "../technology/redesign/ScaleToFit";
+import { useMediaWarm } from "@/components/ui/MediaPrefetcher";
+import columBuzHero from "@/public/ColumBuzHero.png";
 
 export default function ChatSection() {
+  const warm = useMediaWarm();
   return (
     <section
       className="relative w-full overflow-hidden flex flex-col items-center pt-24 md:pt-40 lg:pt-[280px]"
@@ -24,12 +27,15 @@ export default function ChatSection() {
         style={{ zIndex: 0 }}
       >
         <ImageWithFallback
-          src="/ColumBuzHero.png"
+          src={columBuzHero}
           alt=""
           aria-hidden
           fill
           sizes="100vw"
           quality={80}
+          placeholder="blur"
+          loading={warm ? "eager" : "lazy"}
+          fetchPriority={warm ? "low" : undefined}
           style={{ objectFit: "cover", objectPosition: "center 30%" }}
         />
       </div>

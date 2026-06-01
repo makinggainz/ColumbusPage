@@ -2,6 +2,8 @@
 
 import Image from "next/image";
 import { ScaleToFit } from "../technology/redesign/ScaleToFit";
+import { useMediaWarm } from "@/components/ui/MediaPrefetcher";
+import MapBgImage from "./MapBgImage";
 
 /* ── Super-feature section ──────────────────────────────────────────────────
    One "super feature" on an #F7F7F7 band. Header: small icon, title, and a
@@ -116,6 +118,7 @@ export default function SuperFeatureSection({
   panel = true,
   scrim = true,
 }: SuperFeatureSectionProps) {
+  const warm = useMediaWarm();
   return (
     <section
       id={id}
@@ -295,6 +298,8 @@ export default function SuperFeatureSection({
                             width={900}
                             height={650}
                             sizes="(max-width: 1024px) 90vw, 600px"
+                            loading={warm ? "eager" : "lazy"}
+                            fetchPriority={warm ? "low" : undefined}
                             className="block w-full h-auto"
                           />
                         </div>
@@ -336,11 +341,11 @@ function SkyBackdrop({
      extra height of the frame (taller-than-square rows) is left
      transparent so it blends into the surrounding panel — the photo
      keeps the exact framing it had at 1:1. */
-  const imageLayer = (
+  const imageLayer = isGradient ? (
     <div
       className="absolute inset-0 pointer-events-none"
       style={{
-        backgroundImage: isGradient ? image : `url(${image})`,
+        backgroundImage: image,
         backgroundPosition: position,
         backgroundSize: size,
         backgroundRepeat: "no-repeat",
@@ -348,6 +353,17 @@ function SkyBackdrop({
       }}
       aria-hidden
     />
+  ) : (
+    /* Photo backdrop — was a raw-PNG CSS background; now an <Image fill>
+       (AVIF + warm-promotion) inside this inset-0 positioned layer. */
+    <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 0 }} aria-hidden>
+      <MapBgImage
+        src={image}
+        position={position}
+        size={size === "contain" ? "contain" : size === "fill" ? "fill" : "cover"}
+        sizes="100vw"
+      />
+    </div>
   );
   const scrimLayer =
     isGradient || !scrim ? null : (
@@ -396,6 +412,7 @@ function FloatingMockup({
   aspectRatio: string;
   maxWidth: number;
 }) {
+  const warm = useMediaWarm();
   return (
     <div
       className="mx-auto"
@@ -413,6 +430,8 @@ function FloatingMockup({
           alt={alt}
           fill
           sizes={`(max-width: ${maxWidth}px) 100vw, ${maxWidth}px`}
+          loading={warm ? "eager" : "lazy"}
+          fetchPriority={warm ? "low" : undefined}
           className="object-cover object-center"
         />
       </div>
