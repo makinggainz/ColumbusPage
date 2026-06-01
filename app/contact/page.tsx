@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useEffect, useRef, Suspense } from "react";
+import { getImageProps } from "next/image";
+import { useState, useEffect, useRef, Suspense, type CSSProperties } from "react";
 import { useSearchParams } from "next/navigation";
 import { MistxNav } from "@/components/layout/MistxNav";
 
@@ -61,6 +62,39 @@ const CTA = "var(--color-cta)";            /* #0B1342 navy */
    rings, and homepage hero eyebrow read from — one change there
    retints every accent surface site-wide. */
 const ACCENT = "var(--color-accent)";
+
+/* ── Hero backdrop ────────────────────────────────────────────────────
+   The single full-bleed image on the page (its LCP). Routed through the
+   next/image optimizer via getImageProps so it ships AVIF instead of the
+   raw multi-MB PNG, and rendered as a <picture> (below) so only the
+   matching viewport variant downloads — previously two display-toggled
+   <img>s meant *both* PNGs loaded on every device. The mask gradient is
+   identical for both variants; only the crop (object-position) differs,
+   handled by responsive classes on the <img>. See MEDIA_LOADING_PLAYBOOK.md. */
+const CONTACT_HERO_MASK =
+  "linear-gradient(to bottom, transparent 0%, #000 18%, #000 72%, transparent 100%)";
+const CONTACT_HERO_SIZES = "100vw";
+
+const { props: contactHeroDesktopProps } = getImageProps({
+  src: "/contactbackimg.png",
+  alt: "",
+  width: 1881,
+  height: 836,
+  sizes: CONTACT_HERO_SIZES,
+  quality: 75,
+  loading: "eager",
+});
+
+const {
+  props: { srcSet: contactHeroMobileSrcSet },
+} = getImageProps({
+  src: "/contactbackimg-mobile.png",
+  alt: "",
+  width: 1440,
+  height: 1440,
+  sizes: CONTACT_HERO_SIZES,
+  quality: 75,
+});
 
 const FAQS: { q: string; a: React.ReactNode }[] = [
   {
@@ -135,34 +169,102 @@ function CtaButton({ children, className = "", ...props }: React.ButtonHTMLAttri
   );
 }
 
-function FaqItem({ item }: { item: { q: string; a: React.ReactNode } }) {
-  const [open, setOpen] = useState(false);
+/* FAQ accordion — visual system lifted verbatim from the business page's
+   FAQSection (components/business/FAQSection.tsx) so the two read as members
+   of the same family: a single rounded host with a 2px soft hairline, rows
+   divided by 1px hairlines (no per-card borders), idle rows at opacity-70 that
+   snap to opacity-100 when open or hovered, and a flat #F2F2F2 fill behind the
+   open row. Single-open (clicking a row closes the others); all rows start
+   closed. The business --ent-* tokens are scoped to .ent-scope and aren't
+   available here, so the equivalent literal values are used — and the contact
+   INK / MUTED / ACCENT already match --ent-text-primary / -secondary / -accent. */
+function ContactFaq({ items }: { items: { q: string; a: React.ReactNode }[] }) {
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+
   return (
-    <div className="rounded-[7px] border bg-white overflow-hidden" style={{ borderColor: HAIRLINE }}>
-      <button
-        type="button"
-        aria-expanded={open}
-        onClick={() => setOpen(o => !o)}
-        className="flex w-full items-center justify-between gap-6 px-6 py-5 text-left cursor-pointer"
-      >
-        <span className="text-[16px] md:text-[17px] font-medium leading-[1.4]" style={{ color: INK }}>
-          {item.q}
-        </span>
-        <span className="transition-colors duration-300" style={{ color: open ? ACCENT : INK }}>
-          <PlusIcon open={open} />
-        </span>
-      </button>
-      <div
-        className="grid transition-[grid-template-rows] duration-300 ease-out"
-        style={{ gridTemplateRows: open ? "1fr" : "0fr" }}
-      >
-        <div className="overflow-hidden">
-          <p className="px-6 pb-6 text-[15px] leading-[1.65]" style={{ color: MUTED }}>
-            {item.a}
-          </p>
-        </div>
-      </div>
-    </div>
+    <ul
+      className="flex flex-col list-none m-0 p-0 overflow-hidden rounded-3xl border-2"
+      style={{ borderColor: "rgba(0, 0, 0, 0.05)", background: "transparent" }}
+    >
+      {items.map((item, i) => {
+        const isOpen = openIndex === i;
+        const isHovered = hoveredIndex === i;
+        const isLast = i === items.length - 1;
+        return (
+          <li
+            key={item.q}
+            className={[
+              "relative transition-opacity duration-200",
+              isOpen || isHovered ? "opacity-100" : "opacity-70",
+            ].join(" ")}
+            onMouseEnter={() => setHoveredIndex(i)}
+            onMouseLeave={() => setHoveredIndex(null)}
+          >
+            {/* Open-state fill — flat #F2F2F2 behind the whole row. */}
+            {isOpen && (
+              <span
+                aria-hidden
+                className="absolute inset-0"
+                style={{ backgroundColor: "#F2F2F2", zIndex: 0 }}
+              />
+            )}
+
+            <h3 className="m-0 relative z-10">
+              <button
+                type="button"
+                aria-expanded={isOpen}
+                aria-controls={`contact-faq-panel-${i}`}
+                id={`contact-faq-trigger-${i}`}
+                onClick={() => setOpenIndex(isOpen ? null : i)}
+                className="w-full text-left cursor-pointer flex items-center justify-between gap-6 px-6 md:px-10 py-7 md:py-8"
+              >
+                <span
+                  className="text-[20px] md:text-[22px] font-semibold leading-[1.2]"
+                  style={{ color: "#0E173C", letterSpacing: "-0.01em" }}
+                >
+                  {item.q}
+                </span>
+                <span
+                  className="transition-colors duration-300 shrink-0"
+                  style={{ color: isOpen ? ACCENT : "#0B1B2B" }}
+                >
+                  <PlusIcon open={isOpen} />
+                </span>
+              </button>
+            </h3>
+
+            {/* Answer — grid-rows trick for a smooth height transition. */}
+            <div
+              id={`contact-faq-panel-${i}`}
+              role="region"
+              aria-labelledby={`contact-faq-trigger-${i}`}
+              className="relative z-10 grid transition-[grid-template-rows] duration-300 ease-out"
+              style={{ gridTemplateRows: isOpen ? "1fr" : "0fr" }}
+            >
+              <div className="overflow-hidden">
+                <p
+                  className="px-6 md:px-10 pb-7 md:pb-8 text-[14px] md:text-[15px] leading-[1.6]"
+                  style={{ color: MUTED, letterSpacing: "-0.005em" }}
+                >
+                  {item.a}
+                </p>
+              </div>
+            </div>
+
+            {/* Row separator — skipped on the last cell (host border carries
+                the bottom edge). */}
+            {!isLast && (
+              <span
+                aria-hidden
+                className="absolute left-0 bottom-0 w-full"
+                style={{ height: 1, backgroundColor: "rgba(0, 0, 0, 0.05)" }}
+              />
+            )}
+          </li>
+        );
+      })}
+    </ul>
   );
 }
 
@@ -349,40 +451,50 @@ function ContactPageInner() {
           substantial on phones where the natural ratio would collapse
           the strip to ~160 px. The top + bottom mask gradient melts the
           band into the white page above and below it. */}
+      {/* Media-scoped LCP preload for the hero — one variant per viewport,
+          matching the <picture> srcSets so they can't drift. React 19 hoists
+          these to <head>; the `media` attr means only the matching variant is
+          fetched (no double-download). */}
+      <link
+        rel="preload"
+        as="image"
+        media="(min-width: 768px)"
+        imageSrcSet={contactHeroDesktopProps.srcSet}
+        imageSizes={contactHeroDesktopProps.sizes}
+        fetchPriority="high"
+      />
+      <link
+        rel="preload"
+        as="image"
+        media="(max-width: 767px)"
+        imageSrcSet={contactHeroMobileSrcSet}
+        imageSizes={CONTACT_HERO_SIZES}
+        fetchPriority="high"
+      />
       <section
         data-hero-section
         aria-hidden
         className="pointer-events-none absolute inset-x-0 top-0 z-0 w-full overflow-hidden"
         style={{ aspectRatio: "1881 / 836", minHeight: "360px" }}
       >
-        <img
-          src="/contactbackimg.png"
-          alt=""
-          aria-hidden
-          className="select-none w-full h-full hidden md:block"
-          style={{
-            objectFit: "cover",
-            objectPosition: "center",
-            WebkitMaskImage:
-              "linear-gradient(to bottom, transparent 0%, #000 18%, #000 72%, transparent 100%)",
-            maskImage:
-              "linear-gradient(to bottom, transparent 0%, #000 18%, #000 72%, transparent 100%)",
-          }}
-        />
-        <img
-          src="/contactbackimg-mobile.png"
-          alt=""
-          aria-hidden
-          className="select-none w-full h-full block md:hidden"
-          style={{
-            objectFit: "cover",
-            objectPosition: "right center",
-            WebkitMaskImage:
-              "linear-gradient(to bottom, transparent 0%, #000 18%, #000 72%, transparent 100%)",
-            maskImage:
-              "linear-gradient(to bottom, transparent 0%, #000 18%, #000 72%, transparent 100%)",
-          }}
-        />
+        {/* Art-directed <picture>: mobile source swaps in the portrait crop;
+            object-position differs per viewport (mobile right-weighted, desktop
+            centred) via responsive classes (`object-right` ≡ CSS `right center`).
+            Only the matching variant downloads. */}
+        <picture>
+          <source media="(max-width: 767px)" srcSet={contactHeroMobileSrcSet} />
+          <img
+            {...contactHeroDesktopProps}
+            alt=""
+            aria-hidden
+            className="select-none w-full h-full object-cover object-right md:object-center"
+            style={{
+              ...(contactHeroDesktopProps.style as CSSProperties),
+              WebkitMaskImage: CONTACT_HERO_MASK,
+              maskImage: CONTACT_HERO_MASK,
+            }}
+          />
+        </picture>
       </section>
       <MistxNav />
 
@@ -608,11 +720,7 @@ function ContactPageInner() {
                 <h2 className="h2 tracking-tight text-ink text-center text-balance mb-8">
                   FAQ
                 </h2>
-                <div className="flex flex-col gap-3">
-                  {FAQS.map(item => (
-                    <FaqItem key={item.q} item={item} />
-                  ))}
-                </div>
+                <ContactFaq items={FAQS} />
               </div>
 
             </div>

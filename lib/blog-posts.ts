@@ -2,6 +2,24 @@
  * Blog post content and metadata. Single source of truth for /blog and /blog/[slug].
  */
 
+import type { StaticImageData } from "next/image";
+
+// Cover images are static-imported (not string paths) so next/image emits a
+// real low-res `blurDataURL` for instant blur-up, then swaps to the full-res
+// AVIF the optimizer serves. See MEDIA_LOADING_PLAYBOOK.md.
+import engineeringCover from "@/public/Blogs/EngineeringCover.png";
+import firePredictionBlog from "@/public/Blogs/firePredictionBlog.png";
+import mapsgptBlog from "@/public/Blogs/mapsgptBlog.png";
+import chooseCitiesBlog from "@/public/Blogs/chooseCitiesBlog.png";
+import madridBlog from "@/public/Blogs/madridBlog.png";
+import europeGuideBlog from "@/public/Blogs/europeGuideBlog.png";
+import spainGuideBlog from "@/public/Blogs/spainGuideBlog.png";
+import funResearchBlog from "@/public/Blogs/funResearchBlog.png";
+import preOrdersBlog from "@/public/Blogs/preOrdersBlog.png";
+import siteSelectionBlog from "@/public/Blogs/siteSelectionBlog.png";
+import elioV2Blog from "@/public/Blogs/elioV2Blog.png";
+import joinUs from "@/public/Blogs/joinUs.png";
+
 export const BLOG_CATEGORIES = ["PRODUCT", "ENGINEERING", "COMPANY NEWS"] as const;
 export type BlogCategory = (typeof BLOG_CATEGORIES)[number];
 
@@ -13,8 +31,8 @@ export type BlogPost = {
   publishedAt: string;
   description: string;
   paragraphs: string[];
-  /** Optional hero image path shown at the top of the article. */
-  image?: string;
+  /** Optional hero image (static import) shown at the top of the article. */
+  image?: StaticImageData;
   category: BlogCategory;
   /** Playful "For …" audience tag shown as the label on article cards
       (the notch on the blog index + the related-posts cards). `category`
@@ -73,7 +91,7 @@ export const BLOG_POSTS: BlogPost[] = [
     title: "Philosophy of a Universal LGM",
     date: "Apr 2026",
     publishedAt: "2026-04-01",
-    image: "/Blogs/EngineeringCover.png",
+    image: engineeringCover,
     category: "ENGINEERING",
     audience: "For engineers",
     description: "lorem",
@@ -84,7 +102,7 @@ export const BLOG_POSTS: BlogPost[] = [
     title: "Definitions of a Large Geospatial Model",
     date: "Apr 2026",
     publishedAt: "2026-04-02",
-    image: "/Blogs/EngineeringCover.png",
+    image: engineeringCover,
     category: "ENGINEERING",
     audience: "For engineers",
     description: "lorem",
@@ -95,7 +113,7 @@ export const BLOG_POSTS: BlogPost[] = [
     title: "Why LLMs didnt cut it.",
     date: "Apr 2026",
     publishedAt: "2026-04-03",
-    image: "/Blogs/EngineeringCover.png",
+    image: engineeringCover,
     category: "ENGINEERING",
     audience: "For engineers",
     description: "lorem",
@@ -106,7 +124,7 @@ export const BLOG_POSTS: BlogPost[] = [
     title: "Earth Recipes: How a world would think",
     date: "Apr 2026",
     publishedAt: "2026-04-04",
-    image: "/Blogs/EngineeringCover.png",
+    image: engineeringCover,
     category: "ENGINEERING",
     audience: "For engineers",
     description: "lorem",
@@ -117,7 +135,7 @@ export const BLOG_POSTS: BlogPost[] = [
     title: "Mimicking an adult brain",
     date: "Apr 2026",
     publishedAt: "2026-04-05",
-    image: "/Blogs/EngineeringCover.png",
+    image: engineeringCover,
     category: "ENGINEERING",
     audience: "For engineers",
     description: "lorem",
@@ -128,7 +146,7 @@ export const BLOG_POSTS: BlogPost[] = [
     title: "LGM vs LLM Vision: Drawbacks and innovations",
     date: "Apr 2026",
     publishedAt: "2026-04-06",
-    image: "/Blogs/EngineeringCover.png",
+    image: engineeringCover,
     category: "ENGINEERING",
     audience: "For engineers",
     description: "lorem",
@@ -139,7 +157,7 @@ export const BLOG_POSTS: BlogPost[] = [
     title: "Mapping the uknown: Generative Geospatial layers",
     date: "Apr 2026",
     publishedAt: "2026-04-07",
-    image: "/Blogs/EngineeringCover.png",
+    image: engineeringCover,
     category: "ENGINEERING",
     audience: "For engineers",
     description: "lorem",
@@ -150,7 +168,7 @@ export const BLOG_POSTS: BlogPost[] = [
     title: "Turning Dormant data usable",
     date: "Apr 2026",
     publishedAt: "2026-04-08",
-    image: "/Blogs/EngineeringCover.png",
+    image: engineeringCover,
     category: "ENGINEERING",
     audience: "For engineers",
     description: "lorem",
@@ -161,7 +179,7 @@ export const BLOG_POSTS: BlogPost[] = [
     title: "Large Geospatial Model: Our timeline.",
     date: "Apr 2026",
     publishedAt: "2026-04-09",
-    image: "/Blogs/EngineeringCover.png",
+    image: engineeringCover,
     category: "ENGINEERING",
     audience: "For engineers",
     description: "lorem",
@@ -172,7 +190,7 @@ export const BLOG_POSTS: BlogPost[] = [
     title: "Why we're building an LGM.",
     date: "Apr 2026",
     publishedAt: "2026-04-10",
-    image: "/Blogs/EngineeringCover.png",
+    image: engineeringCover,
     category: "ENGINEERING",
     audience: "For engineers",
     description: "lorem",
@@ -183,7 +201,7 @@ export const BLOG_POSTS: BlogPost[] = [
     title: "Research Demonstration: Fire Prediction Model",
     date: "Apr 2026",
     publishedAt: "2026-04-11",
-    image: "/Blogs/firePredictionBlog.png",
+    image: firePredictionBlog,
     category: "ENGINEERING",
     audience: "For engineers",
     description: "lorem",
@@ -194,7 +212,7 @@ export const BLOG_POSTS: BlogPost[] = [
     title: "MapsGPT: Building a useful mapping AI",
     date: "Apr 2026",
     publishedAt: "2026-04-01",
-    image: "/Blogs/mapsgptBlog.png",
+    image: mapsgptBlog,
     category: "PRODUCT",
     audience: "For builders",
     description: "lorem",
@@ -205,7 +223,7 @@ export const BLOG_POSTS: BlogPost[] = [
     title: "How to choose cities within to live in: by Elio",
     date: "Apr 2026",
     publishedAt: "2026-04-02",
-    image: "/Blogs/chooseCitiesBlog.png",
+    image: chooseCitiesBlog,
     category: "PRODUCT",
     audience: "For travelers",
     description: "lorem",
@@ -216,7 +234,7 @@ export const BLOG_POSTS: BlogPost[] = [
     title: "A guide to Madrid: Written by Elio",
     date: "Apr 2026",
     publishedAt: "2026-04-03",
-    image: "/Blogs/madridBlog.png",
+    image: madridBlog,
     category: "PRODUCT",
     audience: "For travelers",
     description: "lorem",
@@ -227,7 +245,7 @@ export const BLOG_POSTS: BlogPost[] = [
     title: "A guide to Europe: Cheap but unique cities",
     date: "Apr 2026",
     publishedAt: "2026-04-04",
-    image: "/Blogs/europeGuideBlog.png",
+    image: europeGuideBlog,
     category: "PRODUCT",
     audience: "For travelers",
     description: "lorem",
@@ -238,7 +256,7 @@ export const BLOG_POSTS: BlogPost[] = [
     title: "A guide to Spain: Written by Elio",
     date: "Apr 2026",
     publishedAt: "2026-04-05",
-    image: "/Blogs/spainGuideBlog.png",
+    image: spainGuideBlog,
     category: "PRODUCT",
     audience: "For travelers",
     description: "lorem",
@@ -249,7 +267,7 @@ export const BLOG_POSTS: BlogPost[] = [
     title: "Using Elio for fun research",
     date: "Apr 2026",
     publishedAt: "2026-04-06",
-    image: "/Blogs/funResearchBlog.png",
+    image: funResearchBlog,
     category: "PRODUCT",
     audience: "For travelers",
     description: "lorem",
@@ -260,7 +278,7 @@ export const BLOG_POSTS: BlogPost[] = [
     title: "Announcing Columbus Pro pre-orders",
     date: "Apr 2026",
     publishedAt: "2026-04-07",
-    image: "/Blogs/preOrdersBlog.png",
+    image: preOrdersBlog,
     category: "PRODUCT",
     audience: "For builders",
     description: "lorem",
@@ -271,7 +289,7 @@ export const BLOG_POSTS: BlogPost[] = [
     title: "Faster Site Selection with Columbus",
     date: "Apr 2026",
     publishedAt: "2026-04-08",
-    image: "/Blogs/siteSelectionBlog.png",
+    image: siteSelectionBlog,
     category: "PRODUCT",
     audience: "For builders",
     description: "lorem",
@@ -282,7 +300,7 @@ export const BLOG_POSTS: BlogPost[] = [
     title: "Elio: V2 new features",
     date: "Apr 2026",
     publishedAt: "2026-04-01",
-    image: "/Blogs/elioV2Blog.png",
+    image: elioV2Blog,
     category: "COMPANY NEWS",
     audience: "For travelers",
     description: "lorem",
@@ -293,7 +311,7 @@ export const BLOG_POSTS: BlogPost[] = [
     title: "Join us! Research opportunities for the rebelious",
     date: "Apr 2026",
     publishedAt: "2026-04-02",
-    image: "/Blogs/joinUs.png",
+    image: joinUs,
     category: "COMPANY NEWS",
     audience: "For the interested",
     description: "lorem",
@@ -312,31 +330,45 @@ export function getBlogPost(slug: string): BlogPost | undefined {
  * from the dominant hue of the post's hero image (see scripts/extract-blog-colors.mjs)
  * and rendered at a fixed dark lightness so contrast against the white notch
  * passes WCAG AA (≥ 4.5:1). Fallback is the global accent.
+ *
+ * Keyed by slug (not image path) because cover images are now static imports —
+ * `post.image` is a StaticImageData whose `.src` is a hashed
+ * `/_next/static/media/...` URL, so a path-keyed lookup can't match. Slug is
+ * stable. The 10 EngineeringCover articles all share the navy override below.
  */
-const BLOG_IMAGE_ACCENT_COLORS: Record<string, string> = {
+const BLOG_ACCENT_COLORS: Record<string, string> = {
   // EngineeringCover.png is a near-neutral cream backdrop with a navy
   // Columbus brand mark + faint world-map line art. The extractor picked
   // up #8A6628 (warm paper-grain noise) because the cream falls below
   // the saturation threshold and the navy brand mark covers too few
   // pixels to win the hue vote. Overridden manually to navy so the
   // label matches the brand mark — same colour joinUs.png naturally
-  // resolved to.
-  "/Blogs/EngineeringCover.png": "#283A8A",
-  "/Blogs/firePredictionBlog.png": "#1D4F95",
-  "/Blogs/mapsgptBlog.png": "#16579C",
-  "/Blogs/chooseCitiesBlog.png": "#16689C",
-  "/Blogs/madridBlog.png": "#165D9C",
-  "/Blogs/europeGuideBlog.png": "#28548A",
-  "/Blogs/spainGuideBlog.png": "#225E91",
-  "/Blogs/funResearchBlog.png": "#28608A",
-  "/Blogs/preOrdersBlog.png": "#16679C",
-  "/Blogs/siteSelectionBlog.png": "#16609C",
-  "/Blogs/elioV2Blog.png": "#16579C",
-  "/Blogs/joinUs.png": "#283A8A",
+  // resolved to. All EngineeringCover articles share this navy.
+  [BLOG_SLUG.philosophyUniversalLgm]: "#283A8A",
+  [BLOG_SLUG.definitionsLgm]: "#283A8A",
+  [BLOG_SLUG.whyLlmsDidntCutIt]: "#283A8A",
+  [BLOG_SLUG.earthRecipesWorldThink]: "#283A8A",
+  [BLOG_SLUG.mimickingAdultBrain]: "#283A8A",
+  [BLOG_SLUG.lgmVsLlmVision]: "#283A8A",
+  [BLOG_SLUG.mappingUnknownGenLayers]: "#283A8A",
+  [BLOG_SLUG.turningDormantDataUsable]: "#283A8A",
+  [BLOG_SLUG.lgmTimeline]: "#283A8A",
+  [BLOG_SLUG.whyBuildingLgm]: "#283A8A",
+  [BLOG_SLUG.firePredictonModel]: "#1D4F95",
+  [BLOG_SLUG.mapsgptBuildingUseful]: "#16579C",
+  [BLOG_SLUG.elioChooseCities]: "#16689C",
+  [BLOG_SLUG.elioMadridGuide]: "#165D9C",
+  [BLOG_SLUG.elioEuropeGuide]: "#28548A",
+  [BLOG_SLUG.elioSpainGuide]: "#225E91",
+  [BLOG_SLUG.elioFunResearch]: "#28608A",
+  [BLOG_SLUG.announcingColumbusProPreOrders]: "#16679C",
+  [BLOG_SLUG.fasterSiteSelectionColumbus]: "#16609C",
+  [BLOG_SLUG.elioV2NewFeatures]: "#16579C",
+  [BLOG_SLUG.joinUsResearchOpportunities]: "#283A8A",
 };
 
 export function getBlogAccentColor(post: BlogPost): string | undefined {
-  return post.image ? BLOG_IMAGE_ACCENT_COLORS[post.image] : undefined;
+  return BLOG_ACCENT_COLORS[post.slug];
 }
 
 export function getAllBlogPostsSorted(): BlogPost[] {

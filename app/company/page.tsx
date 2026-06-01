@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Image, { getImageProps } from "next/image";
+import { getImageProps, type StaticImageData } from "next/image";
 import Link from "next/link";
 import { Linkedin } from "lucide-react";
 
@@ -8,8 +8,18 @@ import {
   ScrollHighlightStatement,
   type StatementSegment,
 } from "@/components/company/ScrollHighlightStatement";
+import { WarmImage } from "@/components/ui/WarmImage";
+import { MediaPrefetcher } from "@/components/ui/MediaPrefetcher";
 import { BLOG_POSTS, blogHref } from "@/lib/blog-posts";
 import styles from "./company.module.css";
+
+// Founders media is below the fold and heavy (group photo ~5 MB); static
+// imports give next/image a real blurDataURL for instant blur-up. See
+// MEDIA_LOADING_PLAYBOOK.md.
+import groupFounders from "@/public/grouppic-founders.png";
+import davidAvatar from "@/public/David.png";
+import alexAvatar from "@/public/Alex.jpg";
+import erickAvatar from "@/public/Erick.png";
 
 export const metadata: Metadata = {
   title: "Company — Columbus Earth",
@@ -71,14 +81,14 @@ function getRandomCompanyProductPosts() {
 /* Founder quotes — copy reproduced verbatim from the design mockup.
    `FEATURED` fills the left photo tile; `QUOTES` are the two stacked
    cards on the right. */
-type Quote = { quote: string; name: string; role: string; avatar: string };
+type Quote = { quote: string; name: string; role: string; avatar: StaticImageData };
 
 const FEATURED: Quote = {
   quote:
     "We apply semantic AI in simple and beautiful products helping real people.",
   name: "David Ramirez Blonski",
   role: "Co-Founder, CEO",
-  avatar: "/David.png",
+  avatar: davidAvatar,
 };
 
 const QUOTES: Quote[] = [
@@ -87,13 +97,13 @@ const QUOTES: Quote[] = [
       "As the bridge between the physical world and digital world, maps are one of the most ubiquitous interfaces that haven't changed in decades.",
     name: "Alexander Ramirez Blonski",
     role: "Co-Founder, CPO",
-    avatar: "/Alex.jpg",
+    avatar: alexAvatar,
   },
   {
     quote: "Like Columbus, and the great voyagers, we are entering the new frontier of AI. While LLMs are book-smart, we wish to be street-smart.",
     name: "Erick Lara",
     role: "Co-Founder, CTO",
-    avatar: "/Erick.png",
+    avatar: erickAvatar,
   },
 ];
 
@@ -161,6 +171,26 @@ const {
 export default function CompanyPage() {
   return (
     <main className={styles.page}>
+      {/* Media-scoped LCP preload for the hero watermark — one variant per
+          viewport, built from the same getImageProps output the <picture>
+          uses so they can't drift. React 19 hoists these to <head>; the
+          `media` attr means only the matching variant is fetched. */}
+      <link
+        rel="preload"
+        as="image"
+        media="(min-width: 768px)"
+        imageSrcSet={companyHeroDesktopProps.srcSet}
+        imageSizes={companyHeroDesktopProps.sizes}
+        fetchPriority="high"
+      />
+      <link
+        rel="preload"
+        as="image"
+        media="(max-width: 767px)"
+        imageSrcSet={companyHeroMobileSrcSet}
+        imageSizes={COMPANY_HERO_SIZES}
+        fetchPriority="high"
+      />
       <MistxNav />
 
       {/* ════════ 1. HERO ════════
@@ -292,12 +322,10 @@ export default function CompanyPage() {
                   }}
                 >
                   {post.image ? (
-                    <Image
+                    <WarmImage
                       src={post.image}
-                      alt=""
-                      fill
-                      style={{ objectFit: "cover" }}
                       sizes="(min-width: 768px) 33vw, 100vw"
+                      style={{ objectFit: "cover" }}
                     />
                   ) : (
                     <div
@@ -352,10 +380,8 @@ export default function CompanyPage() {
                 match its height. */}
             <div className={styles.founderPhoto}>
               <div className={styles.founderPhotoMedia}>
-                <Image
-                  src="/grouppic-founders.png"
-                  alt=""
-                  fill
+                <WarmImage
+                  src={groupFounders}
                   sizes="(min-width: 768px) 640px, 100vw"
                 />
               </div>
@@ -370,12 +396,7 @@ export default function CompanyPage() {
                 className={`${styles.attribution} ${styles.featuredAttribution}`}
               >
                 <div className={styles.avatar}>
-                  <Image
-                    src={FEATURED.avatar}
-                    alt={FEATURED.name}
-                    fill
-                    sizes="64px"
-                  />
+                  <WarmImage src={FEATURED.avatar} alt={FEATURED.name} sizes="64px" />
                 </div>
                 <div>
                   <p className={styles.attributionName}>{FEATURED.name}</p>
@@ -393,7 +414,7 @@ export default function CompanyPage() {
                   <div className={styles.quoteSpacer} aria-hidden />
                   <div className={styles.attribution}>
                     <div className={styles.avatar}>
-                      <Image src={q.avatar} alt={q.name} fill sizes="64px" />
+                      <WarmImage src={q.avatar} alt={q.name} sizes="64px" />
                     </div>
                     <div>
                       <p className={styles.attributionName}>{q.name}</p>
@@ -441,6 +462,11 @@ export default function CompanyPage() {
           </div>
         </div>
       </section>
+
+      {/* Warm all below-fold media (Read-more cards, group photo, avatars)
+          lazy → eager after load + idle, so each is decoded before the user
+          scrolls to it. Skips on data-saver. */}
+      <MediaPrefetcher />
     </main>
   );
 }

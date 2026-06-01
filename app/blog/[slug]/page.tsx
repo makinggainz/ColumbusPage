@@ -6,6 +6,7 @@ import { ArticleReadingOptions } from "@/components/blog/ArticleReadingOptions";
 import { RelatedPosts } from "@/components/blog/RelatedPosts";
 import { ShareButtons } from "@/components/blog/ShareButtons";
 import { MistxNav } from "@/components/layout/MistxNav";
+import { MediaPrefetcher } from "@/components/ui/MediaPrefetcher";
 import { getAllBlogSlugs, getBlogPost } from "@/lib/blog-posts";
 import { blogBodyWithSectionIds, mergeBlogBody } from "@/lib/blog-lorem-body";
 import blogStyles from "../blog.module.css";
@@ -75,6 +76,7 @@ export default async function BlogPostPage({ params }: Props) {
               aria-hidden
               fill
               priority
+              placeholder="blur"
               sizes="(min-width: 768px) 720px, 100vw"
               style={{ objectFit: "cover", objectPosition: "center" }}
             />
@@ -137,6 +139,9 @@ export default async function BlogPostPage({ params }: Props) {
 
       <RelatedPosts currentSlug={post.slug} currentCategory={post.category} />
       <div className={blogStyles.footerTransition} aria-hidden />
+
+      {/* Warm the below-fold RelatedPosts covers (lazy → eager) after load + idle. */}
+      <MediaPrefetcher />
     </main>
   );
 }

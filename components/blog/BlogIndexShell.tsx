@@ -3,6 +3,7 @@ import { getImageProps } from "next/image";
 import { MistxNav } from "@/components/layout/MistxNav";
 import { BlogIndexGrid, type BlogFilter } from "@/components/blog/BlogIndexGrid";
 import { BlogFilterBar } from "@/components/blog/BlogFilterBar";
+import { MediaPrefetcher } from "@/components/ui/MediaPrefetcher";
 import { getAllBlogPostsSorted } from "@/lib/blog-posts";
 import styles from "@/app/blog/blog-index.module.css";
 
@@ -35,6 +36,27 @@ export function BlogIndexShell({ activeFilter }: { activeFilter: BlogFilter }) {
 
   return (
     <main className={styles.page}>
+      {/* Media-scoped LCP preload for the hero watermark — one variant per
+          viewport, matching the <picture> srcSets exactly (built from the
+          same getImageProps output, so they can't drift). React 19 hoists
+          these <link>s into <head>; the `media` attr means only the matching
+          variant is fetched, so there's no double-download. */}
+      <link
+        rel="preload"
+        as="image"
+        media="(min-width: 768px)"
+        imageSrcSet={blogHeroDesktopProps.srcSet}
+        imageSizes={blogHeroDesktopProps.sizes}
+        fetchPriority="high"
+      />
+      <link
+        rel="preload"
+        as="image"
+        media="(max-width: 767px)"
+        imageSrcSet={blogHeroMobileSrcSet}
+        imageSizes={BLOG_HERO_SIZES}
+        fetchPriority="high"
+      />
       <MistxNav />
 
       {/* Full-viewport hero — the title block centres in the space below
@@ -68,6 +90,11 @@ export function BlogIndexShell({ activeFilter }: { activeFilter: BlogFilter }) {
       <div className={styles.body}>
         <BlogIndexGrid posts={posts} activeFilter={activeFilter} />
       </div>
+
+      {/* Warm all below-fold card covers (lazy → eager) after load + idle,
+          so every cover is decoded before the user scrolls or clicks into an
+          article. Skips on data-saver. */}
+      <MediaPrefetcher />
     </main>
   );
 }

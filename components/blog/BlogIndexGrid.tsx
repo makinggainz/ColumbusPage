@@ -1,6 +1,6 @@
-import Image from "next/image";
 import Link from "next/link";
 
+import { BlogCardImage } from "@/components/blog/BlogCardImage";
 import { getBlogAccentColor, type BlogCategory, type BlogPost } from "@/lib/blog-posts";
 import styles from "@/app/blog/blog-index.module.css";
 import type { CSSProperties } from "react";
@@ -29,10 +29,8 @@ export function BlogIndexGrid({ posts, activeFilter }: Props) {
           {/* Media tile — 13px corners + hairline ring + corner notch. */}
           <div className={styles.cardMedia}>
             {post.image ? (
-              <Image
+              <BlogCardImage
                 src={post.image}
-                alt=""
-                fill
                 sizes="(min-width: 1024px) 33vw, (min-width: 600px) 50vw, 100vw"
               />
             ) : (

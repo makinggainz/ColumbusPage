@@ -1,5 +1,5 @@
-import Image from "next/image";
 import Link from "next/link";
+import { BlogCardImage } from "@/components/blog/BlogCardImage";
 import { getAllBlogPostsSorted, blogHref, getBlogAccentColor, type BlogCategory } from "@/lib/blog-posts";
 import indexStyles from "@/app/blog/blog-index.module.css";
 import blogStyles from "@/app/blog/blog.module.css";
@@ -38,10 +38,8 @@ export function RelatedPosts({ currentSlug, currentCategory }: Props) {
           <Link key={post.slug} href={blogHref(post.slug)} className={indexStyles.card}>
             <div className={indexStyles.cardMedia}>
               {post.image ? (
-                <Image
+                <BlogCardImage
                   src={post.image}
-                  alt=""
-                  fill
                   sizes="(min-width: 900px) 33vw, (min-width: 580px) 50vw, 100vw"
                 />
               ) : (
