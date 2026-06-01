@@ -269,13 +269,30 @@ sticky-scroll choreography) at mobile + desktop to confirm pixel-parity.
   `MapChatPlatform` chrome priority became an `eager` prop (hero passes it,
   reused below-fold instances stay warm-gated); `MediaPrefetcher` mounted. Wins:
   becomeartistMap 6.1MB→260KB, SuperModelback 3.9MB→124KB, res-bg-1 1.9MB→119KB AVIF.
+- **Research page** `app/research/page.tsx` (`7a6d104`): renders the shared
+  `TechnologyPage` (server components), so a client wrapper
+  `components/technology/redesign/WarmTechImage.tsx` (general next/image +
+  warm-promotion passthrough) injects warming into the RSC sections. Converted
+  the heavy plain `<img>` (techDiagram 519KB, the Columbus/Elio/competitor logos)
+  → static-import next/image (AVIF + blur-up on the large ones); warm-gated the
+  existing next/image (Voyager, timeline markers, blog cards); `MediaPrefetcher`
+  mounted on `/research` only (the AVIF conversions also benefit `/technology`,
+  which renders the same component without the prefetcher). Wins: meta
+  184KB→1.4KB, logobueno 150KB→2.2KB, techDiagram 519KB→197KB AVIF. Left as-is:
+  the WebGL hero, the `techpg-radiance.png` `::before` CSS bg (pseudo-element —
+  can't be a next/image node), and 2–7KB model icons.
 - Shared utilities: `components/ui/MediaPrefetcher.tsx`, the
   `ImageWithFallback.tsx` fix. **Reuse these as-is.** For a page whose maps/photos
   are painted as CSS `background-image`, reuse `components/business/MapBgImage.tsx`
-  (or copy the pattern) instead of hand-rolling per site.
+  (or copy the pattern). For server-component sections that can't call
+  `useMediaWarm()`, use a thin client passthrough like
+  `components/technology/redesign/WarmTechImage.tsx`. NOTE: a `::before`/`::after`
+  **pseudo-element** background can't be converted to next/image (no DOM node) —
+  leave it, or restructure the element to carry a real child Image.
 
-**TODO** (apply this playbook): other routes — e.g.
-`app/research`, `app/technology`, `app/company`, `app/blog`,
+**TODO** (apply this playbook): remaining routes — e.g.
+`app/technology` (mostly covered by the shared TechnologyPage conversions; just
+needs its own `MediaPrefetcher` mount), `app/company`, `app/blog`,
 and any other `app/**/page.tsx`. Each: run §4 recipe, §5 verify.
 `MediaPrefetcher`/`useMediaWarm`/`ImageWithFallback` already exist — just import
 and apply. (Note: a CSS-`background-image: url()` map/photo is defect class #3 —
