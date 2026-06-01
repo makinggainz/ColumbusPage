@@ -12,9 +12,6 @@
  * base so the area is never empty.
  */
 
-import businessHero from "@/public/ColumbusBackgroundV2.png";
-import consumerHero from "@/public/consumer/heroBackground.png";
-
 /** == next.config.ts `deviceSizes`. The optimizer only emits these widths. */
 export const HERO_DEVICE_SIZES = [640, 750, 828, 1080, 1200, 1287, 1920, 2048];
 
@@ -32,11 +29,6 @@ export function heroOptimizerSrcSet(src: string, quality: number): string {
   ).join(", ");
 }
 
-/** Static-import heroes re-exported for the pages that use them (here, only
-    for their blurDataURL — see BusinessHero / products Hero fallbackStyle). */
-export const BUSINESS_HERO = businessHero;
-export const CONSUMER_HERO = consumerHero;
-
 /** `src` = the optimizer `url=` the page renders; `quality` MUST match the
     page's rendered quality or the prefetched URL won't be a cache hit. */
 type HeroSrc = { src: string; quality: number; blurDataURL?: string };
@@ -47,14 +39,13 @@ export const HERO_ASSETS: Record<string, HeroEntry> = {
     desktop: { src: "/HomeHero.png", quality: 80 },
     mobile: { src: "/HomeHeroBackMobile.png", quality: 80 },
   },
-  // Business + consumer still RENDER a string `src` (only the blur base was
-  // added), so the prefetch `src` must be the literal /public path to match the
-  // optimizer url= they request. The static import supplies blurDataURL only.
+  // Business + consumer render a string `src`, so the prefetch `src` must be the
+  // literal /public path to match the optimizer url= they request.
   "/products/business": {
-    desktop: { src: "/ColumbusBackgroundV2.png", quality: 80, blurDataURL: businessHero.blurDataURL },
+    desktop: { src: "/ColumbusBackgroundV2.png", quality: 80 },
   },
   "/products/consumer": {
-    desktop: { src: "/consumer/heroBackground.png", quality: 80, blurDataURL: consumerHero.blurDataURL },
+    desktop: { src: "/consumer/heroBackground.png", quality: 80 },
   },
   // getImageProps heroes left on a string src — mirror their literal /public
   // paths + rendered quality (75). Cross-prefetched; no blurDataURL (their own

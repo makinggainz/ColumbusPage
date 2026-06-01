@@ -43,7 +43,6 @@ import sceneCity from "@/public/consumer/elio/ElioEndingBackground.jpg";
 import sceneTravels from "@/public/consumer/forYourTravels.png";
 import { useRef, useEffect, useState, useCallback } from "react";
 import { ImageWithFallback } from "@/components/ui/ImageWithFallback";
-import { CONSUMER_HERO } from "@/lib/hero-assets";
 import MapsGPTGlobe from "@/components/products/MapsGPTGlobe";
 import StoreBadges from "@/components/products/StoreBadges";
 
@@ -684,14 +683,12 @@ export default function Hero() {
               objectFit: "cover",
               objectPosition: "center center",
             }}
-            // Instant low-res base: render the hero's blurDataURL as the
-            // load/error surface instead of a flat grey skeleton, so the area
-            // is never empty on (cross-page) navigation before the AVIF lands.
-            fallbackStyle={{
-              backgroundImage: `url(${CONSUMER_HERO.blurDataURL})`,
-              backgroundSize: "cover",
-              backgroundPosition: "center center",
-            }}
+            // Loading/error surface — the bento tiles' sky-blue gradient
+            // (DestinationsSection .eib-card--chat / .eib-ff-tile), so a slow or
+            // failed hero reads as part of the consumer page's design rather
+            // than a flat grey skeleton. A CSS gradient adds no network/decode
+            // cost and can't itself fail to paint.
+            fallbackStyle={{ background: "linear-gradient(180deg, #0080FF 0%, #B4DDF6 100%)" }}
           />
           {/* Inactive-scene dim. Opacity is driven imperatively from JS
               (see the rAF-coalesced effect higher up): desktop (lg+)
