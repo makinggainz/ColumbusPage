@@ -5,6 +5,23 @@ import Image from "next/image";
 import { ArrowDot, NavArrowStack, elioMenuItems } from "../layout/MistxNav";
 
 /**
+ * Build the exact srcset string the next-image optimizer serves for a
+ * `fill` image so a hand-written <link rel="preload"> hits the same
+ * cache entry the <Image> will request (no double fetch). Mirrors the
+ * `deviceSizes` in next.config.ts. Used to emit *media-scoped* preloads
+ * so only the variant the current viewport actually shows is fetched at
+ * high priority — the old code marked BOTH hero variants `priority`,
+ * which preloaded the hidden one too.
+ */
+const HERO_DEVICE_SIZES = [640, 750, 828, 1080, 1200, 1287, 1920, 2048];
+function heroPreloadSrcSet(src: string, quality: number) {
+  return HERO_DEVICE_SIZES.map(
+    (w) =>
+      `/_next/image?url=${encodeURIComponent(src)}&w=${w}&q=${quality} ${w}w`,
+  ).join(", ");
+}
+
+/**
  * Hero section — minimal layout for the experimentV6-Gdesign redesign.
  *
  * Left column: a small eyebrow ("The frontier research lab") sits
@@ -366,20 +383,37 @@ export function HeroNew() {
   return (
     <section className="hn-section" aria-label="Columbus hero" data-hero-section>
       <style>{HN_CSS}</style>
-      {/* LCP image — fill-mode <Image priority> emits a <link rel="preload">
-          so the browser starts the fetch before the bundle hydrates, and
-          serves AVIF/WebP via the next-image optimizer. Two variants are
-          rendered; CSS hides one by viewport (.hn-bg-mobile shown ≤767px,
-          .hn-bg-desktop shown ≥768px). Both are priority so whichever
-          viewport hits the page gets a preloaded LCP image. */}
+      {/* LCP image — two viewport variants (CSS hides one: .hn-bg-mobile
+          shown ≤767px, .hn-bg-desktop shown ≥768px). The <Image>s are NOT
+          `priority` (that emitted an unconstrained preload for BOTH, so
+          every device high-priority-fetched the hidden variant too). Instead
+          we emit *media-scoped* <link rel="preload"> below — React 19 hoists
+          these into <head> and the browser evaluates `media` against the
+          live viewport, so only the variant actually shown is fetched at
+          high priority. The srcset matches the optimizer URL the <Image>
+          requests, so the preload and the render share one cache entry. */}
+      <link
+        rel="preload"
+        as="image"
+        media="(min-width: 768px)"
+        imageSrcSet={heroPreloadSrcSet("/HomeHero.png", 80)}
+        imageSizes="100vw"
+        fetchPriority="high"
+      />
+      <link
+        rel="preload"
+        as="image"
+        media="(max-width: 767px)"
+        imageSrcSet={heroPreloadSrcSet("/HomeHeroBackMobile.png", 80)}
+        imageSizes="100vw"
+        fetchPriority="high"
+      />
       {/* Desktop background — /HomeHero.png. */}
       <Image
         className="hn-bg hn-bg-desktop"
         src="/HomeHero.png"
         alt=""
         fill
-        priority
-        fetchPriority="high"
         sizes="100vw"
         quality={80}
       />
@@ -388,8 +422,6 @@ export function HeroNew() {
         src="/HomeHeroBackMobile.png"
         alt=""
         fill
-        priority
-        fetchPriority="high"
         sizes="100vw"
         quality={80}
       />

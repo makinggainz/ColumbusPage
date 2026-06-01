@@ -21,6 +21,11 @@
 
 import { useRef, useEffect, useState, useCallback } from "react";
 import Link from "next/link";
+import Image from "next/image";
+import { useMediaWarm } from "@/components/ui/MediaPrefetcher";
+// Static import → AVIF via the optimizer (was a raw 1.8 MB <img>), real
+// blur-up placeholder, and intrinsic dimensions (no layout shift).
+import hiringWorldMap from "@/public/hiring-humans/hiringWorldMap.png";
 
 // ─── Walking figure types ────────────────────────────────────────────────────
 
@@ -310,6 +315,8 @@ export const Careers = ({ hideHeader, className = "" }: { hideHeader?: boolean; 
   const hoverTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [active, setActive] = useState(false);
   const [note, setNote]     = useState<string | null>(null);
+  // Promoted to eager once the page is loaded + idle (MediaPrefetcher).
+  const warm = useMediaWarm();
 
   // Spawn exactly 3 clickable figures + 1 non-clickable — tallest always
   // gets "note from alex".
@@ -601,10 +608,16 @@ export const Careers = ({ hideHeader, className = "" }: { hideHeader?: boolean; 
         )}
 
         <div className="careers-map">
-          <img
-            src="/hiring-humans/hiringWorldMap.png"
+          <Image
+            src={hiringWorldMap}
             alt="Team locations: Washington DC and Madrid"
             className="careers-map-img"
+            sizes="(max-width: 767px) 100vw, 780px"
+            quality={75}
+            placeholder="blur"
+            loading={warm ? "eager" : "lazy"}
+            fetchPriority={warm ? "low" : undefined}
+            style={{ width: "100%", height: "auto" }}
           />
           {/* Sonar pulses on DC + Madrid. Coords are % of the map's
               rendered box — tune in CSS if the image swaps. */}

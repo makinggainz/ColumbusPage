@@ -8,6 +8,7 @@ import {
   MissionScrollIntro,
 } from "@/components/home/lightspark";
 import { Careers } from "@/components/home/Careers";
+import { MediaPrefetcher } from "@/components/ui/MediaPrefetcher";
 
 // Footer is now rendered in `app/layout.tsx` with `reveal` mode — it sits
 // fixed at the viewport bottom (z-index 0) behind the PageFrame card so it
@@ -45,6 +46,12 @@ export default function Home() {
       <div>
         <Careers />
       </div>
+
+      {/* Eager prefetch-all: after the page loads + the main thread goes
+          idle, warms every below-fold image (promotes them to eager) and
+          pre-buffers the footer video, so first-run users never scroll into
+          a half-loaded section. Renders nothing; skips on data-saver. */}
+      <MediaPrefetcher />
     </main>
   );
 }

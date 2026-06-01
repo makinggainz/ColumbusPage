@@ -15,6 +15,9 @@ import {
 } from "framer-motion";
 import { useRef } from "react";
 import { ImageWithFallback } from "@/components/ui/ImageWithFallback";
+import { useMediaWarm } from "@/components/ui/MediaPrefetcher";
+// Static import → AVIF + real blur-up placeholder.
+import minimalistCity from "@/public/minimalistCityEnhanced.png";
 
 const COPY =
   "We are building a thinking earth: an AI that reasons across the vastness of geospatial data. Delivering this technology in simple and powerful products for humanity.";
@@ -22,6 +25,7 @@ const COPY =
 export function MissionScrollIntro() {
   const ref = useRef<HTMLParagraphElement>(null);
   const reduced = useReducedMotion();
+  const warm = useMediaWarm();
   const { scrollYProgress } = useScroll({
     target: ref,
     /* Tighter end offset (0.5 vs 0.3) — the word-reveal reaches full
@@ -55,11 +59,14 @@ export function MissionScrollIntro() {
         className="absolute inset-0 -z-10 pointer-events-none overflow-hidden"
       >
         <ImageWithFallback
-          src="/minimalistCityEnhanced.png"
+          src={minimalistCity}
           alt=""
           fill
           sizes="100vw"
           quality={75}
+          placeholder="blur"
+          loading={warm ? "eager" : "lazy"}
+          fetchPriority={warm ? "low" : undefined}
           style={{ objectFit: "fill" }}
         />
       </div>

@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { useMediaWarm } from "@/components/ui/MediaPrefetcher";
 import Link from "next/link";
 import { BLOG_POSTS, blogHref } from "@/lib/blog-posts";
 
@@ -159,6 +160,8 @@ function getRandomBlogCards() {
 
 export function BlogSection() {
   const randomPosts = getRandomBlogCards();
+  // Promoted to eager once the page is loaded + idle (MediaPrefetcher).
+  const warm = useMediaWarm();
 
   return (
     <>
@@ -189,6 +192,8 @@ export function BlogSection() {
                       alt=""
                       fill
                       sizes="(min-width: 768px) 50vw, 100vw"
+                      loading={warm ? "eager" : "lazy"}
+                      fetchPriority={warm ? "low" : undefined}
                     />
                   ) : (
                     <div

@@ -1,6 +1,10 @@
 "use client";
 
 import { ImageWithFallback } from "@/components/ui/ImageWithFallback";
+import { useMediaWarm } from "@/components/ui/MediaPrefetcher";
+// Static import → AVIF + real blur-up placeholder (was a string src whose
+// ImageWithFallback only showed a flat grey skeleton during the load window).
+import worldLinesBg from "@/public/ColumbusWorldLinesBG.png";
 
 /**
  * "We're all about maps" intro — section heading sitting above the
@@ -9,6 +13,7 @@ import { ImageWithFallback } from "@/components/ui/ImageWithFallback";
  */
 
 export function TextScrollIntro() {
+  const warm = useMediaWarm();
   return (
     <section className="section relative isolate">
       {/* Watermark — center-anchored, 120vw × 70vw so it bleeds past
@@ -42,11 +47,14 @@ export function TextScrollIntro() {
           }}
         >
           <ImageWithFallback
-            src="/ColumbusWorldLinesBG.png"
+            src={worldLinesBg}
             alt=""
             fill
             sizes="120vw"
             quality={75}
+            placeholder="blur"
+            loading={warm ? "eager" : "lazy"}
+            fetchPriority={warm ? "low" : undefined}
             style={{ objectFit: "fill" }}
           />
         </div>

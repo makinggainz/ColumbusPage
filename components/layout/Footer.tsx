@@ -54,11 +54,17 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false, t
     const tryLoad = () => {
       if (loaded) return;
       if (!root.hasAttribute("data-footer-near")) return;
-      videoEl.preload = "auto";
-      // Without an explicit load(), some browsers don't re-evaluate
-      // the preload hint after the attribute change — they treat the
-      // element as a stable "preload=none" instance for the page life.
-      videoEl.load();
+      // MediaPrefetcher may have already promoted this element to
+      // preload="auto" + load() during page idle (eager prefetch-all).
+      // If so, leave it buffering — calling load() again would restart
+      // the fetch from scratch.
+      if (videoEl.preload !== "auto") {
+        videoEl.preload = "auto";
+        // Without an explicit load(), some browsers don't re-evaluate
+        // the preload hint after the attribute change — they treat the
+        // element as a stable "preload=none" instance for the page life.
+        videoEl.load();
+      }
       loaded = true;
     };
     const syncPlayback = () => {
@@ -124,9 +130,14 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false, t
           baked into the source's right edge; desktop reverts to center. */}
       <video
         ref={videoRef}
+        data-footer-video
         className="absolute inset-0 w-full h-full object-cover object-[75%_center] md:object-center"
         style={{ zIndex: 0, pointerEvents: "none" }}
         src="/footer-bg.mp4"
+        // Still frame of the clip — paints during buffering so the footer
+        // never shows a blank/black box while the 6.5 MB mp4 loads on a
+        // slow link (MediaPrefetcher pre-buffers it on idle for the fast path).
+        poster="/footer-bg-poster.jpg"
         muted
         loop
         playsInline

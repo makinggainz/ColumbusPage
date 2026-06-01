@@ -23,7 +23,18 @@
  * pinned, visual offset toward an edge).
  */
 
-import Image from "next/image";
+import Image, { type StaticImageData } from "next/image";
+import { useMediaWarm } from "@/components/ui/MediaPrefetcher";
+
+// Static imports → Next generates a real low-res `blurDataURL` (progressive
+// blur-up: a tiny preview paints instantly, then swaps to the full-res AVIF
+// — no quality loss to the source) and intrinsic dimensions at build time.
+// The two card backdrops were previously CSS background-image url()s, which
+// bypassed the optimizer entirely and shipped as raw multi-MB PNG.
+import bgColumbus from "@/public/ColumbusBackgroundbento.png";
+import bgElio from "@/public/consumer/heroBackground.png";
+import visualColumbus from "@/public/ColumbusHomeimg.png";
+import visualElio from "@/public/elio-bento-v3.png";
 
 /* Recolour filter matching MistxNav so the Columbus mark renders in the
    same navy blue everywhere it appears on the site. */
@@ -100,23 +111,33 @@ const CSS = `
   }
 }
 
-/* Columbus tile: photo backdrop with a subtle flat black overlay
-   (the leading solid-colour gradient layer) to deepen the image. */
-.bp-card--columbus {
-  background-image:
-    linear-gradient(rgba(0, 0, 0, 0.18), rgba(0, 0, 0, 0.18)),
-    url('/ColumbusBackgroundbento.png');
-}
-/* Elio tile: same subtle flat black overlay as the Columbus tile.
-   Backdrop matches the /products/consumer page hero so clicking through
-   from the bento lands on a visually-continuous image. */
-.bp-card--elio {
-  background-image:
-    linear-gradient(rgba(0, 0, 0, 0.18), rgba(0, 0, 0, 0.18)),
-    url('/consumer/heroBackground.png');
-}
+/* Columbus + Elio photo backdrops are now rendered as <Image fill> behind
+   the card content (see .bp-bg / .bp-bg-tint below) so the next-image
+   optimizer serves AVIF instead of the raw multi-MB PNG the old
+   background-image url() shipped. The Elio backdrop matches the
+   /products/consumer hero so clicking through lands on a continuous image.
+   Research keeps its pure-CSS gradient (no photo). */
 .bp-card--research {
   background-image: linear-gradient(to right, #CAE5F5 0%, #76A8F3 100%);
+}
+
+/* Photo backdrop <Image fill> — sits at the bottom of the card stack
+   (z-index 0). object-fit: cover + center matches the old
+   background-size: cover; background-position: center. */
+.bp-bg {
+  object-fit: cover;
+  object-position: center;
+  z-index: 0;
+}
+/* Flat black tint over the photo — reproduces the old leading
+   linear-gradient(rgba(0,0,0,0.18), …) overlay. Paints just above the
+   image (same z-index, later in DOM) and below the top scrim. */
+.bp-bg-tint {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.18);
+  pointer-events: none;
+  z-index: 0;
 }
 
 /* Top scrim — fades from a translucent white surface at the top (where
@@ -129,7 +150,10 @@ const CSS = `
   inset: 0;
   background: linear-gradient(180deg, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0.0) 55%);
   pointer-events: none;
-  z-index: 0;
+  /* z-index 1 (was 0): sits above the photo backdrop + its 0.18 tint
+     (both z-index 0) so the white readability scrim still washes the
+     text area, while staying below the text block / hairline / notch. */
+  z-index: 1;
 }
 
 /* Hairline ring — a 1px inset stroke just inside the card edge, drawn as
@@ -517,10 +541,14 @@ interface Product {
   audience?: string;
   /** Pill CTA label, e.g. "Learn more", "Try Elio". */
   ctaLabel: string;
+  /** Full-bleed photo backdrop rendered as <Image fill> behind the card
+   *  content. Static import → AVIF + real blur-up placeholder. Omit on
+   *  tiles with a pure-CSS gradient backdrop (Research). */
+  bg?: StaticImageData;
   /** Product UI screenshot/graphic anchored to the bottom of the cell.
    *  Optional — omit on tiles that should render text-only (e.g.
    *  Research after the Gdesign tweak that dropped the LGM graphic). */
-  visual?: string;
+  visual?: StaticImageData;
   /** When true, the cell spans both columns on desktop as an elongated
    *  banner row (used by Research at the bottom of the grid). */
   wide?: boolean;
@@ -536,7 +564,8 @@ const PRODUCTS: Product[] = [
     tagline: "All-in-one map intelligence platform",
     audience: "For business",
     ctaLabel: "Learn more",
-    visual: "/ColumbusHomeimg.png",
+    bg: bgColumbus,
+    visual: visualColumbus,
   },
   {
     cellClass: "bp-card--elio",
@@ -546,7 +575,8 @@ const PRODUCTS: Product[] = [
     tagline: "Making maps feel alive",
     audience: "For consumer",
     ctaLabel: "Learn more",
-    visual: "/elio-bento-v3.png",
+    bg: bgElio,
+    visual: visualElio,
   },
   {
     cellClass: "bp-card--research",
@@ -638,16 +668,12 @@ function ArrowDots() {
 }
 
 export function BentoProducts() {
+  // Once the page is loaded + idle, MediaPrefetcher flips this true and the
+  // below-fold backdrops + visuals promote themselves from lazy to eager so
+  // they're decoded before the user scrolls down (no pop-in).
+  const warm = useMediaWarm();
   return (
     <section className="bp-section" aria-label="Our products">
-      {/* React 19 hoists these <link> tags into the document head. The
-          two bento card backdrops are CSS background-images (so the
-          next-image optimizer can't see them); preloading at section
-          render starts the fetch immediately on first paint instead of
-          waiting for the CSSOM to find the url() — a few-hundred ms
-          earlier on a slow connection. */}
-      <link rel="preload" as="image" href="/ColumbusBackgroundbento.png" />
-      <link rel="preload" as="image" href="/consumer/heroBackground.png" />
       <style>{CSS}</style>
       <div className="bp-bounds">
         <div className="bp-grid">
@@ -657,6 +683,27 @@ export function BentoProducts() {
               href={p.href}
               className={`bp-card ${p.cellClass}${p.wide ? " bp-card--wide" : ""}`}
             >
+              {p.bg && (
+                <>
+                  {/* Photo backdrop — first child so it sits at the bottom
+                      of the card's paint stack. AVIF via the optimizer +
+                      progressive blur-up. Stays lazy until the page is
+                      idle, then promotes to eager. */}
+                  <Image
+                    src={p.bg}
+                    alt=""
+                    aria-hidden
+                    fill
+                    className="bp-bg"
+                    sizes="(max-width: 1023px) 100vw, 640px"
+                    quality={70}
+                    placeholder="blur"
+                    loading={warm ? "eager" : "lazy"}
+                    fetchPriority={warm ? "low" : undefined}
+                  />
+                  <div className="bp-bg-tint" aria-hidden />
+                </>
+              )}
               {p.audience && (
                 <div className="bp-notch">
                   <span className="bp-notch-label">{p.audience}</span>
@@ -714,18 +761,20 @@ export function BentoProducts() {
               </div>
               {p.visual && (
                 <div className="bp-visual">
-                  {/* The CSS sizes the image — width:100%; max-width:720px.
-                      We give Next a hint via `sizes` so the optimizer
-                      picks an appropriately small AVIF/WebP variant
-                      (the source PNGs are 2-3 MB each). */}
+                  {/* Static import → intrinsic dimensions + real blur-up
+                      placeholder. The CSS sizes the rendered image
+                      (width:100%; max-width:720px; height:auto); `sizes`
+                      hints the optimizer to a small AVIF variant. Lazy
+                      until the page is idle, then promoted to eager. */}
                   <Image
                     src={p.visual}
                     alt=""
                     aria-hidden
-                    width={720}
-                    height={520}
                     sizes="(max-width: 1023px) calc(100vw - 56px), 720px"
                     quality={80}
+                    placeholder="blur"
+                    loading={warm ? "eager" : "lazy"}
+                    fetchPriority={warm ? "low" : undefined}
                   />
                 </div>
               )}
