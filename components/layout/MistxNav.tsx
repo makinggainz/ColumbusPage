@@ -667,6 +667,20 @@ export function MistxNav({
             onClick={() => setMobileOpen((v) => !v)}
           >
             {mobileOpen ? (
+              /* Close X — matched to the hamburger's pill bars:
+                   • strokeWidth 4 == hamburger bar height (4 px rendered)
+                   • strokeLinecap "round" == hamburger rx=height/2 pill ends
+                     (cap radius = strokeWidth/2 = 2 px, identical pixel radius)
+                   • currentColor == hamburger fill
+                   • two separate paths so the diagonals can carry the
+                     same 1.0 / 0.7 opacity hierarchy the hamburger
+                     uses on its top / bottom bars (mapping: the "\"
+                     diagonal is the rotated top bar at 1.0; the "/"
+                     diagonal is the rotated bottom bar at 0.7)
+                   • endpoints (4, 4)→(20, 20) give a 22.6 px diagonal,
+                     visually paired with the hamburger's 24 px bar
+                     length (round caps fit inside the 24×24 viewBox
+                     with 2 px padding so nothing clips). */
               <svg
                 width="24"
                 height="24"
@@ -675,9 +689,17 @@ export function MistxNav({
                 aria-hidden="true"
               >
                 <path
-                  d="M6 6L18 18M6 18L18 6"
+                  d="M4 4L20 20"
                   stroke="currentColor"
-                  strokeWidth="2"
+                  strokeWidth="4"
+                  strokeLinecap="round"
+                />
+                <path
+                  d="M4 20L20 4"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                  strokeLinecap="round"
+                  opacity="0.7"
                 />
               </svg>
             ) : (
