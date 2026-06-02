@@ -241,8 +241,14 @@ export default function ComparisonSection() {
   return (
     <section
       ref={sectionRef}
+      /* `zIndex: 1` lifts ComparisonSection's stacking context above
+         SolutionShowcase's `isolate` so the picker card sits over the
+         decorative line-art overflow. Section bg stays transparent so
+         the harbour-town image is still visible in the empty space
+         around the card — only the card itself (the `<ul>` below) gets
+         an opaque white fill to mask the image where the picker UI is. */
       className="relative w-full pb-16 lg:pb-24"
-      style={{ backgroundColor: "transparent" }}
+      style={{ backgroundColor: "transparent", zIndex: 1 }}
     >
       <style>{CMP_CSS}</style>
       <div
@@ -267,11 +273,15 @@ export default function ComparisonSection() {
         <ul
           className="flex flex-col list-none m-0 p-0 lg:h-full overflow-hidden rounded-3xl lg:rounded-r-none border-2 border-(--ent-border-card)"
           style={{
-            /* Inactive cells are transparent, matching the page background.
-               The active cell's own horizontal fill bar (see <li> styles)
-               paints #F2F2F2 from left to right on top of this so the
-               selection feels like a "lifted" card. */
-            background: "transparent",
+            /* Opaque white fill so the SolutionShowcase harbour-town
+               line-art that overflows down past its section can't show
+               through the picker card. The page background is also
+               #FFFFFF, so the card still reads as a hairline-bordered
+               rectangle on the page — only the bleed-through is hidden.
+               The active cell's own horizontal fill bar (see <li>
+               styles) paints #F2F2F2 from left to right on top of this
+               so the selection still feels like a "lifted" card. */
+            background: "#FFFFFF",
           }}
         >
           {FEATURES.map((f, i) => {
@@ -280,9 +290,20 @@ export default function ComparisonSection() {
             return (
               <li
                 key={f.title}
+                /* Mobile selection-state: a static #F2F2F2 fill on the
+                   active cell (matches the desktop fill-bar colour) so
+                   tapping a row gives an obvious visual response — the
+                   prior opacity-100 vs opacity-70 contrast alone was
+                   nearly imperceptible on text. Desktop keeps the
+                   animated fill-bar span below (lg:bg-transparent
+                   reverts the <li> here so the bar paints on a clean
+                   canvas without the static colour bleeding through).
+                   `transition-[opacity,background-color]` smooths both
+                   the opacity dip on inactive rows AND the bg swap when
+                   the user selects a new row. */
                 className={[
-                  "relative lg:flex-1 lg:flex lg:flex-col transition-opacity duration-200",
-                  isActive ? "opacity-100" : hoveredCard === i ? "opacity-100" : "opacity-70",
+                  "relative lg:flex-1 lg:flex lg:flex-col transition-[opacity,background-color] duration-200",
+                  isActive ? "opacity-100 bg-[#F2F2F2] lg:bg-transparent" : hoveredCard === i ? "opacity-100" : "opacity-70",
                 ].join(" ")}
                 onMouseEnter={() => setHoveredCard(i)}
                 onMouseLeave={() => setHoveredCard(null)}

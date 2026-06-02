@@ -37,6 +37,18 @@ function ArrowDots({ className = "" }: { className?: string }) {
   );
 }
 
+/* Short labels for the mobile circular picker — full labels
+   ("Ask the Map", "Research Reports", "Data Catalogue") wrap onto two
+   lines under a 56-px circle on phones, which reads as cluttered. The
+   compact form keeps each chip to one line at 11-px type. Order /
+   identity must stay in sync with the `tabs` state below. */
+const MOBILE_PICKER_SHORT_LABEL: Record<string, string> = {
+  "map-chat": "Map",
+  "research": "Research",
+  "data": "Data",
+  "dashboard": "Dashboard",
+};
+
 export default function BusinessHero() {
   const sectionRef = useRef<HTMLElement>(null);
   const [visible, setVisible] = useState(false);
@@ -279,8 +291,14 @@ export default function BusinessHero() {
       </div>
 
       {/* ── Product display — glass browser window ── */}
+      {/* `flex-col items-center` (was `justify-center`) lets the new
+          mobile circular picker sit BELOW the glass window as a sibling
+          rather than next to it. Desktop is unaffected — the window is
+          still centred and the picker is `lg:hidden` so it never
+          renders, leaving the column with a single child that lays out
+          identically to the old row. */}
       <div
-        className="relative z-10 flex justify-center w-full"
+        className="relative z-10 flex flex-col items-center w-full"
         style={{
           marginTop: "clamp(48px, 6vw, 80px)",
           paddingLeft: 20,
@@ -375,10 +393,15 @@ export default function BusinessHero() {
 
               {/* Browser tabs — frosted-glass strips filling the space to
                   the right of the traffic lights. Active tab reads as the
-                  foreground tab (brighter glass + ink label). */}
+                  foreground tab (brighter glass + ink label).
+                  `hidden lg:flex` (replacing the inline `display: flex`)
+                  drops the tab row on `<lg` viewports — at ~390px the
+                  ScaleToFit-shrunk row renders the 15px labels at ~4.5px,
+                  illegible. Mobile gets the circular picker below the
+                  window instead (see further down). */}
               <div
+                className="hidden lg:flex"
                 style={{
-                  display: "flex",
                   // Tabs sit on the bottom of the title bar so their flat
                   // edge meets the content area cleanly — same baseline
                   // as a Chrome window's tab strip.
@@ -620,6 +643,87 @@ export default function BusinessHero() {
           </div>
         </div>
         </ScaleToFit>
+
+        {/* Mobile-only circular picker — replaces the illegible
+            in-window tab row at `<lg`. Visual language rhymes with the
+            site's IconChip (BusinessUseCases) and the Start Now CTA:
+              • Solid white disc on every chip (same fill token the
+                desktop active-tab silhouette uses + the PageFrame card)
+              • Navy ink icon (--ent-text-primary, 1.8px stroke — same
+                recipe as the desktop tabs and the ComparisonSection
+                rail icons)
+              • Active state grafts the Start Now CTA navy on as a 2px
+                ring via box-shadow (no layout shift between states)
+                and lifts the chip 2px with a stronger elevation
+                shadow — same "lifted disc" cue used elsewhere
+              • White label below carries the three-stop dark text-shadow
+                proven on the consumer hero (works across cloud / grass /
+                building portions of the photo backdrop) */}
+        <div
+          className="lg:hidden flex items-start justify-center gap-4 mt-7 px-4"
+          role="tablist"
+          aria-label="Demo view"
+        >
+          {tabs.map((tab) => {
+            const isActive = tab.id === activeTabId;
+            return (
+              <button
+                key={tab.id}
+                type="button"
+                role="tab"
+                aria-selected={isActive}
+                onClick={() => setActiveTabId(tab.id)}
+                className="touch-target flex flex-col items-center gap-2 cursor-pointer bg-transparent border-0 p-0"
+              >
+                <span
+                  className="inline-flex items-center justify-center rounded-full transition-[box-shadow,transform] duration-150 ease-out"
+                  style={{
+                    width: 60,
+                    height: 60,
+                    backgroundColor: "#FFFFFF",
+                    // box-shadow keeps chip footprint stable between
+                    // states (a border-swap would shift layout by 2px)
+                    // and carries both the active ring and the
+                    // elevation halo in one declaration.
+                    boxShadow: isActive
+                      ? "0 0 0 2px var(--color-cta), 0 8px 20px rgba(11,19,66,0.22)"
+                      : "0 2px 6px rgba(11,19,66,0.08)",
+                    transform: isActive ? "translateY(-2px)" : "translateY(0)",
+                  }}
+                >
+                  <svg
+                    aria-hidden
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="var(--ent-text-primary)"
+                    strokeWidth="1.8"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    style={{ opacity: isActive ? 1 : 0.55 }}
+                  >
+                    {tab.icon}
+                  </svg>
+                </span>
+                <span
+                  className="text-[11px] font-medium leading-[1.2] tracking-[-0.005em]"
+                  style={{
+                    color: "#FFFFFF",
+                    opacity: isActive ? 1 : 0.82,
+                    /* Three-stop dark shadow lifted from
+                       components/products/Hero.tsx mobile scene title —
+                       punches the white label out of any photo region. */
+                    textShadow:
+                      "0 1px 2px rgba(0,0,0,0.5), 0 2px 10px rgba(0,0,0,0.55), 0 0 28px rgba(0,0,0,0.45)",
+                  }}
+                >
+                  {MOBILE_PICKER_SHORT_LABEL[tab.id] ?? tab.label}
+                </span>
+              </button>
+            );
+          })}
+        </div>
       </div>
     </section>
   );
