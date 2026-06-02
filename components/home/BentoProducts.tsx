@@ -198,7 +198,7 @@ const CSS = `
   margin: -28px 0 6px -28px;
   /* No top/left padding → the chip sits flush in the corner; the small
      right/bottom padding is the tight cut frame before the silhouette. */
-  padding: 0 10px 8px 0;
+  padding: 0 6px 5px 0;
   background: #FFFFFF;
   border-radius: 13px 0 13px 0;   /* TL = card corner, BR = concave cut */
   border-right: 1px solid #E7E7F1;
