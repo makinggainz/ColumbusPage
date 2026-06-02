@@ -76,10 +76,8 @@ const CSS = `
 
 /* Each tile: full-bleed per-product background, 13px corners. overflow:
    hidden so the bottom-peeking visual clips at the card edge. The 1px
-   hairline is NOT a CSS border — a CSS border always paints a full
-   rectangle and can't be masked, so it would run straight across the
-   audience cut-out. It's drawn instead by the ::after ring below, which
-   the white notch + fillets can sit on top of. */
+   hairline is drawn as the ::after inset-ring overlay below (not a CSS
+   border) so it follows the rounded corners and isn't clipped. */
 .bp-card {
   position: relative;
   overflow: hidden;
@@ -150,21 +148,15 @@ const CSS = `
   inset: 0;
   background: linear-gradient(180deg, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0.0) 55%);
   pointer-events: none;
-  /* z-index 1 (was 0): sits above the photo backdrop + its 0.18 tint
-     (both z-index 0) so the white readability scrim still washes the
-     text area, while staying below the text block / hairline / notch. */
+  /* z-index 1: sits above the photo backdrop + its 0.18 tint (both
+     z-index 0) so the white readability scrim still washes the text area,
+     while staying below the text block + hairline ring. */
   z-index: 1;
 }
 
 /* Hairline ring — a 1px inset stroke just inside the card edge, drawn as
-   an overlay rather than a CSS border. Two reasons it's an overlay:
-     • the white audience notch (z-index 3) + its fillets sit on top of
-       it, masking exactly the top/right spans where the silhouette
-       detours inward — so the visible hairline follows the cut-out.
-     • z-index 2 keeps it above the top scrim (::before, z-index 0) so the
-       stroke reads at full strength along the top edge.
-   inset box-shadow (not border) so it isn't clipped away and follows the
-   13px radius. */
+   an inset box-shadow overlay (z-index 2, above the top scrim) rather than
+   a CSS border so it isn't clipped away and follows the 13px radius. */
 .bp-card::after {
   content: "";
   position: absolute;
@@ -173,146 +165,6 @@ const CSS = `
   box-shadow: inset 0 0 0 1px #E7E7F1;
   pointer-events: none;
   z-index: 2;
-}
-
-/* Audience cut-out — the page surface (#FFFFFF, the colour the cards
-   sit on) notched into the card's top-right corner, with the audience
-   label ("For business" / "For consumer") set inside it. The white is
-   flush to the card's top and right edges, so it reads as a piece cut
-   out of the corner itself rather than a panel laid on top.
-
-   All three cut corners are rounded by the card's own 13px radius, so
-   the cut has no sharp edges:
-     • top-right    — coincides with the card's existing rounded corner.
-     • bottom-left  — the deep concave corner of the cut (border-radius).
-     • top-left + bottom-right — convex corners where the cut runs into
-       the card's top / right edges; rounded by the ::before / ::after
-       fillets below.
-   z-index 3 sits it above the scrim, product visual and text block. */
-.bp-notch {
-  position: absolute;
-  top: 0;
-  right: 0;
-  z-index: 3;
-  box-sizing: border-box;
-  height: 43px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0 28px;
-  background-color: #FFFFFF;
-  /* TL TR BR BL — TL/BR are squared off here and rounded by the
-     fillets; TR matches the card corner; BL is the concave cut. */
-  border-radius: 0 13px 0 13px;
-  /* Hairline on the cut edges only — the left + bottom edges are the
-     notch's silhouette (the inward detour of the card outline), so they
-     carry the 1px stroke; with border-radius BL the concave corner gets
-     it for free. The top + right edges are the cut-out opening (flush to
-     the card edge) and stay borderless. */
-  border-left: 1px solid #E7E7F1;
-  border-bottom: 1px solid #E7E7F1;
-}
-/* Corner fillets — a 13×13 box sitting just outside the notch (::before
-   top-left, ::after bottom-right), painted white everywhere except a
-   transparent quarter-disc the card keeps. This eases the notch's
-   straight edge into the card's edge on a 13px convex arc instead of a
-   hard 90° corner.
-
-   The gradient also carries the hairline: a 1px #E7E7F1 band sits at the
-   transparent→white transition (~12.5px radius), so the card outline's
-   stroke curves along the fillet arc and joins the notch's straight
-   border to the card's ::after ring. */
-.bp-notch::before,
-.bp-notch::after {
-  content: "";
-  position: absolute;
-  width: 13px;
-  height: 13px;
-  background: radial-gradient(
-    circle at left bottom,
-    rgba(255, 255, 255, 0) 11.5px,
-    #E7E7F1 12.25px,
-    #E7E7F1 12.75px,
-    #FFFFFF 13.5px
-  );
-}
-.bp-notch::before { top: 0; left: -13px; }
-.bp-notch::after { bottom: -13px; right: 0; }
-/* Label size mirrors the hero section's eyebrow / superscript
-   (.hn-eyebrow in HeroNew.tsx): 16px, stepping up to 18px ≥992px.
-   line-height: 1 keeps it tight in the notch. Colour is set per card
-   below — each label is tinted to its tile's background imagery. */
-.bp-notch-label {
-  font-size: 16px;
-  line-height: 1;
-  font-weight: 500;
-  letter-spacing: -0.015em;
-  white-space: nowrap;
-}
-@media (min-width: 992px) {
-  .bp-notch-label { font-size: 18px; }
-}
-/* Per-card label tint — keyed to each tile's actual background. All
-   three cards are blue-dominated (the Columbus + Elio backdrops are
-   bright-blue-sky cityscape photos, and Research is the CAE5F5 → 76A8F3
-   gradient), so every label sits in the blue family — each one a
-   couple of lightness stops darker than the card's dominant colour so
-   it stays legible against the white notch surface.
-   • Columbus business tile → deepest blue (#015C94), the saturated
-     sky-blue that dominates the cloud + skyline photo.
-   • Elio consumer tile → mid sky-blue (#1E6BAE), matching the brighter,
-     mid-day sky in the Elio cityscape photo and offsetting the slightly
-     warmer building tones below it.
-   • Research tile → lighter blue (#4B7BC7), the deeper end of the
-     CAE5F5 → 76A8F3 gradient, slightly darkened. */
-.bp-card--columbus .bp-notch-label { color: #015C94; }
-.bp-card--elio .bp-notch-label { color: #1E6BAE; }
-.bp-card--research .bp-notch-label { color: #4B7BC7; }
-@media (min-width: 640px) {
-  .bp-notch { height: 46px; padding: 0 32px; }
-}
-@media (min-width: 1024px) {
-  .bp-notch { height: 53px; padding: 0 40px; }
-}
-/* Mobile (<768px): the top-RIGHT corner cut-out crowds the narrow brand
-   row, so re-base the notch as a centered tab cut into the card's TOP
-   edge instead. Geometry vs the desktop corner version:
-     • top edge   → flush opening (borderless), as before but now centered.
-     • left+right+bottom → the inward silhouette, so all three carry the
-       1px hairline (desktop only needed left+bottom).
-     • the two BOTTOM corners → the concave cut (border-radius rounds them
-       and the meeting borders give the concave hairline for free).
-     • two mirrored fillets ease the top corners into the card's top edge.
-   The left fillet (::before, top:0;left:-13px) is already positioned
-   correctly from the base rule — only ::after needs mirroring. */
-@media (max-width: 767px) {
-  .bp-notch {
-    top: 0;
-    right: auto;
-    left: 50%;
-    transform: translateX(-50%);
-    border-radius: 0 0 13px 13px;
-    border-right: 1px solid #E7E7F1;
-  }
-  /* Right fillet mirrors the left: move it to the notch's top-right and
-     flip the gradient origin to "right bottom" so its convex arc + hairline
-     bend the correct way and stay continuous with the card's top edge. */
-  .bp-notch::after {
-    top: 0;
-    bottom: auto;
-    right: -13px;
-    background: radial-gradient(
-      circle at right bottom,
-      rgba(255, 255, 255, 0) 11.5px,
-      #E7E7F1 12.25px,
-      #E7E7F1 12.75px,
-      #FFFFFF 13.5px
-    );
-  }
-  /* Drop the brand row below the centered top notch (~43px tall <640,
-     ~46px 640–767) so they don't overlap — the "extra height" the design
-     needs, realised as top spacing on the auto-height mobile card. */
-  .bp-text-block { margin-top: 30px; }
 }
 
 /* Top text block — brand row, tagline, CTA stacked. Spacing is set with
@@ -557,6 +409,7 @@ const CSS = `
   border: 1px solid rgba(11, 27, 43, 0.08);
   background-color: #FFFFFF;
 }
+
 `;
 
 interface Product {
@@ -565,12 +418,10 @@ interface Product {
   logo: string;
   logoFilter?: string;
   name: string;
-  /** Single short phrase, sits below the brand row. */
+  /** Single short phrase, sits below the brand row. Carries the audience
+   *  ("…for your business" / "…for everyone" / "…for the endlessly
+   *  curious") so no separate audience label is needed. */
   tagline: string;
-  /** Optional audience label shown inside a rounded cut-out notched
-   *  into the card's top-right corner, e.g. "For business" /
-   *  "For consumer" / "For the curious". */
-  audience?: string;
   /** Pill CTA label, e.g. "Learn more", "Try Elio". */
   ctaLabel: string;
   /** Full-bleed photo backdrop rendered as <Image fill> behind the card
@@ -593,8 +444,7 @@ const PRODUCTS: Product[] = [
     logo: "/logobueno.png",
     logoFilter: COLUMBUS_LOGO_FILTER,
     name: "Columbus",
-    tagline: "All-in-one map intelligence platform",
-    audience: "For business",
+    tagline: "All-in-one map intelligence platform for your business",
     ctaLabel: "Learn more",
     bg: bgColumbus,
     visual: visualColumbus,
@@ -604,8 +454,7 @@ const PRODUCTS: Product[] = [
     href: "/products/consumer",
     logo: "/MapsGPT-logo.png",
     name: "Elio",
-    tagline: "Making maps feel alive",
-    audience: "For consumer",
+    tagline: "Making maps feel alive for everyone",
     ctaLabel: "Learn more",
     bg: bgElio,
     visual: visualElio,
@@ -615,8 +464,7 @@ const PRODUCTS: Product[] = [
     href: "/research",
     logo: "/TechnologyPageImages/lgm-globe-icon.png",
     name: "Research",
-    tagline: "Building the Large Geospatial Model",
-    audience: "For the curious",
+    tagline: "Building the Large Geospatial Model for the endlessly curious",
     ctaLabel: "Read Thesis",
     wide: true,
   },
@@ -735,11 +583,6 @@ export function BentoProducts() {
                   />
                   <div className="bp-bg-tint" aria-hidden />
                 </>
-              )}
-              {p.audience && (
-                <div className="bp-notch">
-                  <span className="bp-notch-label">{p.audience}</span>
-                </div>
               )}
               <div className="bp-text-block">
                 <div className="bp-brand">
