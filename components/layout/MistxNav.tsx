@@ -766,15 +766,12 @@ export function MistxNav({
           backgroundColor: "#FFFFFF",
           color: "var(--color-ink)",
           fontFamily: "var(--font-sans)",
-          borderRadius: "var(--frame-radius, 35px)",
-          // Accent halo — driven by `--nav-mobile-shadow` in globals.css,
-          // which resolves to alpha-non-zero values once
-          // `html[data-mobile-menu-open]` is set (see the useEffect
-          // above). 4 layers (top + bottom + left + right) so the
-          // drawer reads as a fully lifted card. Eases in with the same
-          // 1100ms cubic-bezier curve as the PageFrame's first-paint
-          // bloom so the two halos feel like siblings.
-          boxShadow: "var(--nav-mobile-shadow, none)",
+          // Square corners + no halo across all pages (per design
+          // request). The drawer previously inherited --frame-radius and
+          // an accent --nav-mobile-shadow glow to read as a lifted rounded
+          // card; both are now dropped for a flat, full-bleed panel.
+          borderRadius: 0,
+          boxShadow: "none",
           opacity: mobileOpen ? 1 : 0,
           transform: mobileOpen
             ? "translateY(0) scale(1)"
@@ -877,9 +874,15 @@ export function MistxNav({
               </ul>
             </nav>
 
-            {/* ── Contact + Social — last in the reveal cascade. ── */}
+            {/* ── Contact + Social — last in the reveal cascade.
+                Column track is `[1fr_auto]` (was `grid-cols-2`): the
+                Contact column expands to fit the long `contact@columbus.earth`
+                email on a single line, while the Social column hugs the
+                short "LinkedIn" text. On a 360-px phone the prior 50/50
+                split gave the email ~140 px (it needs ~200) and forced
+                a mid-word break via `break-all` below. */}
             <dl
-              className="mt-12 grid grid-cols-2 gap-x-8 gap-y-4"
+              className="mt-12 grid grid-cols-[1fr_auto] gap-x-8 gap-y-4"
               style={{
                 opacity: mobileOpen ? 1 : 0,
                 transform: mobileOpen ? "translateY(0)" : "translateY(4px)",
@@ -902,7 +905,11 @@ export function MistxNav({
                 <dd>
                   <a
                     href="mailto:contact@columbus.earth"
-                    className="p-m font-medium break-all hover:text-accent transition-colors"
+                    /* `whitespace-nowrap` (replaces the prior `break-all`)
+                       guarantees the address stays on one line — the
+                       parent grid track has already been widened to
+                       `1fr` above to give it the room it needs. */
+                    className="p-m font-medium whitespace-nowrap hover:text-accent transition-colors"
                     style={{ color: "var(--color-ink)" }}
                   >
                     contact@columbus.earth
