@@ -278,6 +278,11 @@ export default function DestinationsSection() {
           to   { transform: translateX(calc(-50% - 10px)); }
         }
         @media (prefers-reduced-motion: reduce) { .mg-dest-track { animation: none; } }
+        /* Elio desktop mockup frame. 40px radius reads fine on the large
+           desktop image but looks oversized once the image shrinks to a
+           phone width, so dial it down on mobile. */
+        .eib-elio-mock { border-radius: 40px; border: 10px solid #000000; }
+        @media (max-width: 640px) { .eib-elio-mock { border-radius: 16px; border-width: 5px; } }
       `}</style>
 
       {/* "For your city." / "For your travels." titles previously lived
@@ -1852,9 +1857,13 @@ export default function DestinationsSection() {
           sibling sections each anchored by a 44px Axiforma h2. */}
       <div
         style={{
-          /* Vertical paddings reduced ~25% (were 140/56). */
-          paddingTop: 105,
-          paddingBottom: 42,
+          /* Vertical rhythm uses the design-system clamp tokens
+             (--section-py / --section-py-tight) capped at the hand-tuned
+             desktop value via min(): desktop holds at 105/42, but the
+             token curve shrinks the padding on narrower / mobile
+             viewports instead of staying fixed. */
+          paddingTop: "min(105px, var(--section-py))",
+          paddingBottom: "min(42px, var(--section-py-tight))",
           /* Canonical calc-trick bounds — 1287 cap + 20px gutter,
              matches navbar / site-wide. Was maxWidth 1400 +
              paddingLeft/Right 40. */
@@ -1894,14 +1903,16 @@ export default function DestinationsSection() {
           paddingLeft/Right 40. */}
       <div
         style={{
-          /* paddingBottom reduced ~25% (was 80). */
-          paddingBottom: 60,
+          /* Token-driven bottom rhythm capped at the hand-tuned desktop
+             value (60) — shrinks on mobile via --section-py-tight. */
+          paddingBottom: "min(60px, var(--section-py-tight))",
           maxWidth: 1287,
           width: "calc(100% - 2.5rem)",
           margin: "0 auto",
         }}
       >
         <Image
+          className="eib-elio-mock"
           src={elioHomeDesktop}
           alt="Elio Desktop"
           sizes="(min-width: 1320px) 1287px, calc(100vw - 2.5rem)"
@@ -1912,8 +1923,6 @@ export default function DestinationsSection() {
             width: "100%",
             height: "auto",
             display: "block",
-            borderRadius: 40,
-            border: "10px solid #000000",
           }}
         />
       </div>

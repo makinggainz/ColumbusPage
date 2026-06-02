@@ -160,10 +160,16 @@ const { props: companyHeroDesktopProps } = getImageProps({
 const {
   props: { srcSet: companyHeroMobileSrcSet },
 } = getImageProps({
-  src: "/company-illustration-enhanced-mobile.png",
+  /* Mobile-only hero — desktop still uses
+     `/company-illustration-enhanced.png` above. The <picture> element
+     in the JSX swaps to this source at `(max-width: 767px)` and the
+     MediaPrefetcher LCP preload at the top of the page is wired to
+     the same srcSet so the right variant is fetched eagerly per
+     viewport. */
+  src: "/company-hero-mobile-v2.png",
   alt: "",
-  width: 1440,
-  height: 2880,
+  width: 852,
+  height: 1846,
   sizes: COMPANY_HERO_SIZES,
   quality: 75,
 });
@@ -351,7 +357,13 @@ export default function CompanyPage() {
                       {post.date}
                     </span>
                   </div>
-                  <h3 style={{ fontSize: "22px", color: "var(--color-ink)", margin: "0 0 8px", letterSpacing: "-0.015em" }}>
+                  {/* Title typography mirrors the blog-index .h5 treatment
+                      (globals.css :302) — Funnel Display at weight 500 —
+                      so these cards match the /blog cards instead of
+                      inheriting the body font at the browser-default
+                      heading weight. Size + letter-spacing remain
+                      company-page-specific (22px vs the .h5 default). */}
+                  <h3 style={{ fontFamily: "var(--font-display)", fontSize: "22px", fontWeight: 500, color: "var(--color-ink)", margin: "0 0 8px", letterSpacing: "-0.015em" }}>
                     {post.title}
                   </h3>
                   <p style={{ fontSize: "16px", color: "var(--color-muted)", margin: 0 }}>

@@ -48,17 +48,29 @@ export function MissionScrollIntro() {
       }}
     >
       {/* Watermark layer — 75% opacity, no top/bottom fade. The image
-          source is now an <Image> child (was a CSS background-image of
-          a 843 KB PNG) so the optimizer can ship an AVIF/WebP variant.
-          objectFit:fill mirrors the original `background-size: 100% 100%`
-          stretch — guarantees full width AND no top/bottom crop on
-          shorter sections. The minimalistCity skyline is a flat
-          horizontal scene so the vertical squish is visually invisible. */}
+          source is an <Image> child (was a CSS background-image of a
+          843 KB PNG) so the optimizer can ship an AVIF/WebP variant.
+          object-fit on the image is set via .mission-watermark-img:
+            • Desktop: `fill` mirrors the original
+              `background-size: 100% 100%` stretch — guarantees full width
+              + no top/bottom crop on shorter sections, and the flat
+              horizontal skyline hides the vertical squish.
+            • Mobile (≤640px): the section is tall + narrow, so `fill`
+              would visibly stretch the skyline. Switch to `cover` — the
+              image keeps its aspect ratio and any overflow simply bleeds
+              past the (overflow-hidden) section edges, never deformed. */}
+      <style>{`
+        .mission-watermark-img { object-fit: fill; }
+        @media (max-width: 640px) {
+          .mission-watermark-img { object-fit: cover; }
+        }
+      `}</style>
       <div
         aria-hidden
         className="absolute inset-0 -z-10 pointer-events-none overflow-hidden"
       >
         <ImageWithFallback
+          className="mission-watermark-img"
           src={minimalistCity}
           alt=""
           fill
@@ -67,7 +79,6 @@ export function MissionScrollIntro() {
           placeholder="blur"
           loading={warm ? "eager" : "lazy"}
           fetchPriority={warm ? "low" : undefined}
-          style={{ objectFit: "fill" }}
         />
       </div>
 

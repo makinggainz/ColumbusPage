@@ -268,9 +268,19 @@ export default function BusinessHero() {
           Earth for business
         </h1>
 
+        {/* Tagline: cap to 480px on phones / tablets so the line wraps
+            sensibly, but on lg+ desktops (≥1024px) lift the cap and pin
+            the text to a single line — the full 60-char string renders
+            at ~600px wide here, comfortably inside a 1024px viewport
+            even with the section's 24px gutters. `lg:max-w-none`
+            cancels the mobile cap; `lg:whitespace-nowrap` is what
+            actually prevents the wrap. The inline style intentionally
+            no longer sets maxWidth (inline > className specificity,
+            so the cap had to move into Tailwind utilities to make
+            the lg override land). */}
         <p
-          className="mt-5"
-          style={{ fontSize: "var(--ent-text-body-l)", color: "#FFFFFF", letterSpacing: "-0.01em", fontWeight: 400, maxWidth: 480 }}
+          className="mt-5 max-w-120 lg:max-w-none lg:whitespace-nowrap"
+          style={{ fontSize: "var(--ent-text-body-l)", color: "#FFFFFF", letterSpacing: "-0.01em", fontWeight: 400 }}
         >
           Agentic GIS so easy, the janitor could be your new researcher
         </p>

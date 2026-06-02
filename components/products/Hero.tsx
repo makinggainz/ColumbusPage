@@ -817,14 +817,20 @@ export default function Hero() {
                     style={{
                       display: "inline-block",
                       position: "relative",
-                      /* All offsets are in `em` so the star's
-                         relationship to "map" stays visually identical
-                         across every viewport — desktop (76 px cap)
-                         gets a ~7.6 px gap + ~11 px lift + 38 px star;
-                         mobile (36 px floor) gets a proportional
-                         ~3.6 px gap + ~5 px lift + 18 px star. */
-                      top: "-0.15em",
-                      marginLeft: "0.1em",
+                      /* Offsets are in `em` on MOBILE (<lg) so the star's
+                         relationship to "map" stays proportional: the 36 px
+                         floor gives a ~3.6 px gap + ~5 px lift + 18 px star.
+                         DESKTOP (≥lg) the H1 cap is locked at 76 px by the
+                         clamp (9vw ≥ 92 px there, so it pins to the 76 px
+                         max), making 1em = 76 px exactly — so we use
+                         pixel-exact offsets there per design tweaks: the
+                         star sits 14 px tighter to the "p" (gap 7.6→-6.4 px,
+                         i.e. a slight negative margin so the star tucks just
+                         over the "p"'s top-right) and 4 px lower (lift
+                         11.4→7.4 px) than the proportional em values
+                         would place it. */
+                      top: isLg ? "-7.4px" : "-0.15em",
+                      marginLeft: isLg ? "-6.4px" : "0.1em",
                       width: "0.5em",
                       height: "0.5em",
                       verticalAlign: "super",

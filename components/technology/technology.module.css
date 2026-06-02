@@ -4563,9 +4563,11 @@
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  /* Design-system accent (#6094C1) — only rendered by the vertical timeline's
-     "now" marker, so the horizontal layout is unaffected. */
-  color: var(--color-accent);
+  /* Muted navy — same recipe as .lgmTimelineYear (the 2022 / 2025 /
+     2026 / 2028 labels) so the "NOW — JUNE 2026" caption reads as a
+     peer of the other section labels and only the glowing dot above
+     carries the blue accent. */
+  color: color-mix(in srgb, var(--color-cta) 40%, transparent);
   white-space: nowrap;
   margin-bottom: 8px;
 }
@@ -4644,7 +4646,11 @@
 }
 
 .lgmTimelineCta:hover {
-  color: #1B37CE;
+  /* Derived from --color-brand (#1451E8) by mixing 15% black — resolves
+     to ~#114DD0, perceptually identical to the prior hardcoded #1B37CE
+     but now flows from the token so any future brand-blue update
+     carries through to the hover state automatically. */
+  color: color-mix(in srgb, var(--color-brand), #000 15%);
 }
 
 .lgmTimelineCta:hover svg {
@@ -4728,14 +4734,16 @@
   margin-top: 10px;
 }
 
-/* Columbus "now" row — accent dot + logo, using the design-system accent
-   (#6094C1). */
+/* Columbus "now" row — brand-blue dot + logo, matching the desktop
+   active-state colour (#1451E8). Was --color-accent (#6094C1) which
+   made the mobile vertical layout disagree with the horizontal one
+   on what colour "active / present moment" is. */
 .lgmTimelineVRowNow::before {
   top: 4px;
   width: 13px;
   height: 13px;
-  background: var(--color-accent);
-  box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-accent) 18%, transparent);
+  background: var(--color-brand);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-brand) 18%, transparent);
 }
 
 .lgmTimelineVLogo {
@@ -4744,7 +4752,7 @@
   height: 40px;
   object-fit: contain;
   margin-bottom: 6px;
-  filter: drop-shadow(0 2px 6px color-mix(in srgb, var(--color-accent) 18%, transparent));
+  filter: drop-shadow(0 2px 6px color-mix(in srgb, var(--color-brand) 18%, transparent));
 }
 
 .lgmArticleCard {
@@ -6363,6 +6371,10 @@
   font-family: var(--font-display);
   font-weight: 600;
   color: var(--color-cta);
+  /* Centred section title to match the centred subcontent below — the
+     carousel only renders at ≤767px (see the swap rule above), so this
+     is mobile-scoped by construction. */
+  text-align: center;
   margin-bottom: 20px;
   line-height: var(--text-h5--line-height);
 }
@@ -6444,16 +6456,21 @@
   background: var(--color-cta);
 }
 
+/* Hairline gradient divider — hidden per design feedback: the centred
+   title above the subcontent body already reads as a discrete section,
+   the divider was adding noise. Kept as a hidden node (rather than
+   removing the JSX) so the layout's vertical rhythm doesn't shift in a
+   future revert. */
 .carouselDivider {
-  height: 1px;
-  background: linear-gradient(90deg, color-mix(in srgb, var(--color-cta) 15%, transparent) 0%, transparent 100%);
-  margin-bottom: 20px;
+  display: none;
 }
 
 .carouselBody {
   font-size: var(--text-p-l);
   line-height: 1.6;
   color: color-mix(in srgb, var(--color-cta) 70%, transparent);
+  /* Centred subcontent — pairs with the centred .carouselTitle above. */
+  text-align: center;
 }
 
 .carouselBody p {

@@ -459,7 +459,7 @@ export function HeroNew() {
               role="menu"
               className="p-1.5"
               style={{
-                backgroundColor: "rgba(15, 7, 29, 0.78)",
+                backgroundColor: "#091345",
                 backdropFilter: "blur(20px) saturate(160%)",
                 WebkitBackdropFilter: "blur(20px) saturate(160%)",
                 borderRadius: "14px",

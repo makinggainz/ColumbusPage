@@ -661,7 +661,7 @@ export function MistxNav({
               rx = height/2; opacity steps from 1.0 (top) to 0.7
               (bottom) for a soft visual hierarchy. */}
           <button
-            className={`lg:hidden md:px-2 cursor-pointer ${navContentLight ? "text-white" : "text-[#0F173C]"}`}
+            className={`lg:hidden md:px-4 md:py-3 cursor-pointer ${navContentLight ? "text-white" : "text-[#0F173C]"}`}
             aria-label={mobileOpen ? "Close menu" : "Open menu"}
             aria-expanded={mobileOpen}
             onClick={() => setMobileOpen((v) => !v)}
