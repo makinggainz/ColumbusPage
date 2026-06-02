@@ -55,7 +55,7 @@ const DISCOVERY_CARDS: DiscoveryCard[] = [
   },
   {
     type: "place",
-    label: "Restaraunts",
+    label: "Restaurants",
     placeName: "Panaria",
     placeSub: "calm cafe",
     img: "/FavoriteSpots/(14).jpeg",

@@ -110,7 +110,7 @@ export const BLOG_POSTS: BlogPost[] = [
   },
   {
     slug: BLOG_SLUG.whyLlmsDidntCutIt,
-    title: "Why LLMs didnt cut it.",
+    title: "Why LLMs didn't cut it.",
     date: "Apr 2026",
     publishedAt: "2026-04-03",
     image: engineeringCover,
@@ -154,7 +154,7 @@ export const BLOG_POSTS: BlogPost[] = [
   },
   {
     slug: BLOG_SLUG.mappingUnknownGenLayers,
-    title: "Mapping the uknown: Generative Geospatial layers",
+    title: "Mapping the unknown: Generative Geospatial layers",
     date: "Apr 2026",
     publishedAt: "2026-04-07",
     image: engineeringCover,
@@ -308,7 +308,7 @@ export const BLOG_POSTS: BlogPost[] = [
   },
   {
     slug: BLOG_SLUG.joinUsResearchOpportunities,
-    title: "Join us! Research opportunities for the rebelious",
+    title: "Join us! Research opportunities for the rebellious",
     date: "Apr 2026",
     publishedAt: "2026-04-02",
     image: joinUs,

@@ -146,7 +146,7 @@ const RESIDENTIAL_BACKDROPS: IndustryBackdrops = {
   /* Residential-specific map illustrations. Same slot semantics as the
      CRE / urban-infrastructure sets — chatMainMap drives MapChatPlatform's
      MapPanel; chatSubMaps line up with the chat sub-features (slot 0
-     "See what others cant", slot 1 "Like weather forcasts…", slot 3
+     "See what others cant", slot 1 "Like weather forecasts…", slot 3
      "Drop Any File"; slot 2 has no MapLayeredVisual). smartLayerMap and
      surveyEarthMap feed the two data-catalogue rows. */
   chatMainMap: "/ResidentialMaps/chat-platform-map.png",
@@ -234,7 +234,7 @@ const ENVIRONMENTAL_BACKDROPS: IndustryBackdrops = {
   /* Environmental-specific map illustrations. Same slot semantics as the
      other industries — chatMainMap drives the MapChatPlatform demo;
      chatSubMaps align with the chat sub-features (slot 0 "See what
-     others cant", slot 1 "Like weather forcasts…", slot 3 "Drop Any
+     others cant", slot 1 "Like weather forecasts…", slot 3 "Drop Any
      File"; slot 2 has no MapLayeredVisual). smartLayerMap and
      surveyEarthMap feed the two data-catalogue rows. */
   chatMainMap: "/EnvironmentalMaps/map-chat.png",
@@ -268,7 +268,7 @@ const ACADEMIC_BACKDROPS: IndustryBackdrops = {
      "AI that critically thinks" image — academic research framing for
      the MapPanel inside MapChatPlatform. chatSubMaps line up with the
      chat sub-features (slot 0 "See what others cant", slot 1 "Like
-     weather forcasts…", slot 3 "Drop Any File"; slot 2 has no
+     weather forecasts…", slot 3 "Drop Any File"; slot 2 has no
      MapLayeredVisual). smartLayerMap and surveyEarthMap feed the two
      data-catalogue rows. */
   chatMainMap: "/AcademicMaps/chat-platform-map.png",
@@ -297,7 +297,7 @@ const GEOMARKETING_BACKDROPS: IndustryBackdrops = {
      / residential / urban-infrastructure — chatMainMap drives
      MapChatPlatform's MapPanel; chatSubMaps line up with the chat
      sub-features (slot 0 "See what others cant" → pattern-detect, slot
-     1 "Like weather forcasts…" → predict-future, slot 3 "Drop Any File"
+     1 "Like weather forecasts…" → predict-future, slot 3 "Drop Any File"
      → import-files; slot 2 has no MapLayeredVisual). smartLayerMap and
      surveyEarthMap feed the two data-catalogue rows. */
   chatMainMap: "/GeomarketingMaps/conversational.png",
@@ -325,7 +325,7 @@ const URBAN_INFRASTRUCTURE_BACKDROPS: IndustryBackdrops = {
   /* Urban-infra map illustrations. chatMainMap drives MapChatPlatform's
      MapPanel; chatSubMaps align with the chat sub-features (slot 0 "See
      what others cant" → pattern-detection, slot 1 "Like weather
-     forcasts…" → predict-future, slot 2 has no MapLayeredVisual, slot 3
+     forecasts…" → predict-future, slot 2 has no MapLayeredVisual, slot 3
      "Drop Any File" → file-compatibility). smartLayerMap and
      surveyEarthMap feed the two data-catalogue rows. */
   chatMainMap: "/UrbanPlanningMaps/map-chat.png",
@@ -1639,7 +1639,7 @@ export default function BusinessUseCases() {
             ),
           },
           {
-            title: "Like weather forcasts for real-estate",
+            title: "Like weather forecasts for real-estate",
             description: copy.sub2Description,
             backdropImage: bg.chatSub[1],
             backdropPosition: bg.chatSubPositions?.[1],

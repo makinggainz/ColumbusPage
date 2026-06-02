@@ -698,7 +698,7 @@ export function TechnologySections() {
             <div className={`${styles.resultsArticlesRow} ${styles.fullBleedMobile}`}>
               <Link href={blogHref(BLOG_SLUG.mappingUnknownGenLayers)} className={`${styles.lgmArticleCard} ${styles.lgmArticleCardBgUnknownLayers}`}>
                 <p>
-                  Mapping the uknown:<br />
+                  Mapping the unknown:<br />
                   <strong>Generative Geospatial layers</strong>
                 </p>
               </Link>

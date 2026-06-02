@@ -49,12 +49,12 @@ const META: Record<IndustryId, { name: string; shortName: string; imageSrc: stri
   "residential-real-estate": {
     name: "Residential Real Estate",
     shortName: "Residential Real Estate",
-    imageSrc: "/use-cases/residentila.png",
+    imageSrc: "/use-cases/residential.png",
   },
   "commercial-real-estate": {
     name: "CRE",
     shortName: "CRE",
-    imageSrc: "/use-cases/comercial.png",
+    imageSrc: "/use-cases/commercial.png",
   },
   "disaster-response": {
     name: "Disaster Response",
@@ -74,7 +74,7 @@ const META: Record<IndustryId, { name: string; shortName: string; imageSrc: stri
   "gis-research": {
     name: "GIS Research",
     shortName: "GIS Research",
-    imageSrc: "/use-cases/comercial.png",
+    imageSrc: "/use-cases/commercial.png",
   },
   "economic-studies": {
     name: "Economic Studies",
@@ -125,7 +125,7 @@ const URBAN_CHAT: ChatRowContent = {
     "Considering your customer target",
   ],
   responseHtml:
-    'These areas <span class="text-red-700">marked,</span> have streets that often have had crashes. There is poor road signal trafficking. Consumer’s have expressed disastisfaction with this section.',
+    'These areas <span class="text-red-700">marked,</span> have streets that often have had crashes. There is poor road signal trafficking. Consumer’s have expressed dissatisfaction with this section.',
   followUp:
     "/ Would you like to order a specific dataset and survey? Our partner agents will be dispatched for the study.",
 };
@@ -134,7 +134,7 @@ const URBAN_SUPER_MODEL: SuperModelRowContent = {
   leftRail: {
     title: "Generative surveying",
     description:
-      'Columbus has brought accurate GenAI to GeoData, dynamically creating new layers of geospatial information using our UGM.\n\n"Smart Layers" can be used to create creative data layers that would otherwise be time-intesive or expensive to obtain.\n\nSmart layers can also be used when data is unavaialble or hard to survey.',
+      'Columbus has brought accurate GenAI to GeoData, dynamically creating new layers of geospatial information using our UGM.\n\n"Smart Layers" can be used to create creative data layers that would otherwise be time-intensive or expensive to obtain.\n\nSmart layers can also be used when data is unavailable or hard to survey.',
     ctaLabel: "See live Smart Layers",
     ctaHref: "#smart-layers",
   },

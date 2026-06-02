@@ -18,14 +18,14 @@ export type Pattern = {
 };
 
 const DEFAULT_PATTERNS: Pattern[] = [
-  { n: 1, title: "High ROI Near Transit Coorridors", properties: "342 properties", roi: "Avg ROI: 28%" },
+  { n: 1, title: "High ROI Near Transit Corridors", properties: "342 properties", roi: "Avg ROI: 28%" },
   { n: 2, title: "10-20% Below Median Priced Buys", properties: "342 properties", roi: "Avg ROI: 24%" },
   { n: 3, title: "Pre-1980 Homes, Modern Updates", properties: "342 properties", roi: "Avg ROI: 28%" },
-  { n: 4, title: "High ROI Near Transit Coorridors", properties: "342 properties", roi: "Avg ROI: 28%" },
+  { n: 4, title: "High ROI Near Transit Corridors", properties: "342 properties", roi: "Avg ROI: 28%" },
 ];
 
 const DEFAULT_HEADING = "4 patterns detected";
-const DEFAULT_AREA = "Accross the Manhatan area [DATE]";
+const DEFAULT_AREA = "Across the Manhattan area [DATE]";
 
 /* Numbered badge colour ramps from bright red (1) to near-black (4), so the
    ranked list reads like a heat scale at a glance. Industries can override
