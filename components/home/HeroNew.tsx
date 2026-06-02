@@ -411,7 +411,7 @@ export function HeroNew() {
       />
       <div className="hn-bounds">
         <h1 className="h1 hn-title tracking-tight text-ink">
-          The Applied AI Lab for geospatial intelligence.
+          The Applied AI Lab for Geospatial Intelligence
         </h1>
         <p className="hn-subtitle">
           Building street-smart AI<br className="md:hidden" /> for the real world.
