@@ -75,9 +75,13 @@ const CSS = `
 }
 
 /* Each tile: full-bleed per-product background, 13px corners. overflow:
-   hidden so the bottom-peeking visual clips at the card edge. The 1px
-   hairline is drawn as the ::after inset-ring overlay below (not a CSS
-   border) so it follows the rounded corners and isn't clipped. */
+   hidden so the bottom-peeking visual clips at the card edge. The card has
+   NO drop shadow and NO hairline ring — its edge is defined purely by the
+   per-product background (photo / gradient) meeting the white page at the
+   rounded corner. Dropping the shadow keeps the white page right next to
+   the card at pure #FFFFFF, so it matches the audience cut-out's gutter
+   white exactly (the shadow used to darken the surrounding page a few
+   percent, making the pure-white gutter read as a brighter patch). */
 .bp-card {
   position: relative;
   overflow: hidden;
@@ -154,19 +158,6 @@ const CSS = `
   z-index: 1;
 }
 
-/* Hairline ring — a 1px inset stroke just inside the card edge, drawn as
-   an inset box-shadow overlay (z-index 2, above the top scrim) rather than
-   a CSS border so it isn't clipped away and follows the 13px radius. */
-.bp-card::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: 13px;
-  box-shadow: inset 0 0 0 1px #E7E7F1;
-  pointer-events: none;
-  z-index: 2;
-}
-
 /* Top text block — brand row, tagline, CTA stacked. Spacing is set with
    explicit per-pair margins (on .bp-tagline / .bp-cta) rather than one
    flex gap: see the optical-spacing note on those rules below. */
@@ -181,6 +172,121 @@ const CSS = `
 @media (min-width: 1024px) {
   .bp-card--wide .bp-text-block { max-width: 34rem; }
 }
+
+/* Audience cut-out — a white region notched into the card's top-left
+   corner (the page surface showing through), with the chip centered inside
+   it. Bleeds over the card padding so it sits flush in the corner; the
+   right + bottom edges are the cut silhouette (hairline + concave BR
+   corner), and the TR / BL convex corners are eased by the fillets. Reuses
+   the same 13px radius + #E7E7F1 hairline as the card. */
+.bp-cutout {
+  position: relative;
+  z-index: 3;
+  align-self: flex-start;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;  /* pin the chip into the top-left corner */
+  /* Negative margins bleed the cut-out's top/left edges all the way out to the
+     card's own edges (= the full card padding), so the notch white is flush in
+     the corner and reads as the corner bitten out of the card — its opening
+     (top + left) merges visually with the white page surface beyond the card.
+     There is NO card-perimeter hairline ring (the card edge is defined purely
+     by its soft drop shadow); only the notch's own cut silhouette (right +
+     bottom borders + the two fillet arcs) carries a hairline, so there is no
+     line tracing around the whole card or running out around the label.
+     Margins track the card's per-breakpoint padding. */
+  margin: -28px 0 6px -28px;
+  /* No top/left padding → the chip sits flush in the corner; the small
+     right/bottom padding is the tight cut frame before the silhouette. */
+  padding: 0 10px 8px 0;
+  background: #FFFFFF;
+  border-radius: 13px 0 13px 0;   /* TL = card corner, BR = concave cut */
+  border-right: 1px solid #E7E7F1;
+  border-bottom: 1px solid #E7E7F1;
+}
+@media (min-width: 640px)  { .bp-cutout { margin-top: -32px; margin-left: -32px; } }
+@media (min-width: 1024px) { .bp-cutout { margin-top: -40px; margin-left: -40px; } }
+
+/* Corner fillets — two 13x13 boxes sitting just outside the cut-out, each
+   painted with a radial-gradient that (a) eases a convex corner onto a 13px
+   arc instead of a hard 90deg corner and (b) carries the #E7E7F1 hairline
+   along that arc so the notch's straight cut-border curves continuously back
+   onto the card ring.
+
+   The mechanism (copied exactly from the proven desktop notch, just
+   repositioned): the gradient circle is centred at the point 13px DIAGONALLY
+   INTO THE PHOTO from the convex corner, with the photo-side TRANSPARENT
+   (inner stops) and the notch-side WHITE (outer stop). So the quarter-disc
+   nearest the photo stays transparent (card shows through, rounded off) while
+   the opposite wedge — the sliver adjacent to the notch corner — fills white,
+   rounding the corner inward. The 1px #E7E7F1 band at ~12.5px is the hairline
+   arc. (The earlier attempt inverted this — white on the photo side — which
+   bulged a white "speech-bubble tail" OUT into the photo instead of easing
+   the corner in.) Both convex corners here resolve to the SAME origin,
+   "right bottom", because both sit with the photo down-and-right of them:
+     • ::before = TOP-RIGHT convex corner (notch right cut-edge meets the
+       card TOP edge). Box flush right of the notch (left:100%), top-aligned.
+     • ::after  = BOTTOM-LEFT convex corner (notch bottom cut-edge meets the
+       card LEFT edge). Box flush below the notch (top:100%), left-aligned.
+   The 13px gradient stops are absolute, so they already match the 13px radius
+   at every breakpoint; the fillets are pinned to the notch box edges
+   (top/left 100%) so they auto-track the notch's per-label width + the
+   per-breakpoint padding bleed without any media-query overrides. */
+.bp-cutout::before,
+.bp-cutout::after {
+  content: "";
+  position: absolute;
+  width: 13px;
+  height: 13px;
+  pointer-events: none;
+}
+.bp-cutout::before {
+  top: 0;
+  left: 100%;
+  background: radial-gradient(circle at right bottom,
+    rgba(255, 255, 255, 0) 11.5px,
+    #E7E7F1 12.25px,
+    #E7E7F1 12.75px,
+    #FFFFFF 13.5px);
+}
+.bp-cutout::after {
+  top: 100%;
+  left: 0;
+  background: radial-gradient(circle at right bottom,
+    rgba(255, 255, 255, 0) 11.5px,
+    #E7E7F1 12.25px,
+    #E7E7F1 12.75px,
+    #FFFFFF 13.5px);
+}
+
+/* Audience chip — a rounded pill inside the cut-out. No border, no shadow:
+   its background is tinted to match its own card's background image (a colour
+   sampled from each photo / gradient), and the label text is white, so the
+   chip reads as a little swatch of the card's own colour sitting in the white
+   cut-out. Per-card background colours are set in the .bp-card--* overrides
+   below; the base value is a fallback. 13px radius matches the card. */
+.bp-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 11px 18px;
+  background: #78A2C2;
+  border-radius: 13px;
+  font-size: 15px;
+  line-height: 1;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: #FFFFFF;
+  white-space: nowrap;
+}
+/* Per-card chip tint — sampled from each card's background image so the
+   label matches the imagery it belongs to:
+     • Columbus — #78A2C2 (sky-blue avg of ColumbusBackgroundbento.png)
+     • Elio     — #4F8FA8 (deeper sky/teal avg of consumer/heroBackground.png)
+     • Research — #76A8F3 (the darker stop of the card's blue gradient, for
+       legible white text over the otherwise very light gradient). */
+.bp-card--columbus .bp-chip { background: #78A2C2; }
+.bp-card--elio     .bp-chip { background: #4F8FA8; }
+.bp-card--research .bp-chip { background: #76A8F3; }
 
 .bp-brand {
   display: inline-flex;
@@ -418,10 +524,11 @@ interface Product {
   logo: string;
   logoFilter?: string;
   name: string;
-  /** Single short phrase, sits below the brand row. Carries the audience
-   *  ("…for your business" / "…for everyone" / "…for the endlessly
-   *  curious") so no separate audience label is needed. */
+  /** Single short phrase, sits below the brand row. */
   tagline: string;
+  /** Audience label shown in a rounded bordered chip at the card's
+   *  top-left ("For business" / "For consumer" / "For the curious"). */
+  audience?: string;
   /** Pill CTA label, e.g. "Learn more", "Try Elio". */
   ctaLabel: string;
   /** Full-bleed photo backdrop rendered as <Image fill> behind the card
@@ -444,7 +551,8 @@ const PRODUCTS: Product[] = [
     logo: "/logobueno.png",
     logoFilter: COLUMBUS_LOGO_FILTER,
     name: "Columbus",
-    tagline: "All-in-one map intelligence platform for your business",
+    tagline: "All-in-one map intelligence platform",
+    audience: "For business",
     ctaLabel: "Learn more",
     bg: bgColumbus,
     visual: visualColumbus,
@@ -454,7 +562,8 @@ const PRODUCTS: Product[] = [
     href: "/products/consumer",
     logo: "/MapsGPT-logo.png",
     name: "Elio",
-    tagline: "Making maps feel alive for everyone",
+    tagline: "Making maps feel alive",
+    audience: "For consumer",
     ctaLabel: "Learn more",
     bg: bgElio,
     visual: visualElio,
@@ -464,7 +573,8 @@ const PRODUCTS: Product[] = [
     href: "/research",
     logo: "/TechnologyPageImages/lgm-globe-icon.png",
     name: "Research",
-    tagline: "Building the Large Geospatial Model for the endlessly curious",
+    tagline: "Building the Large Geospatial Model",
+    audience: "For the curious",
     ctaLabel: "Read Thesis",
     wide: true,
   },
@@ -585,6 +695,13 @@ export function BentoProducts() {
                 </>
               )}
               <div className="bp-text-block">
+                {/* Audience: a white corner cut-out (top-left) with the
+                    rounded bordered chip centered inside it. */}
+                {p.audience && (
+                  <div className="bp-cutout">
+                    <span className="bp-chip">{p.audience}</span>
+                  </div>
+                )}
                 <div className="bp-brand">
                   {/* 50×50 logo mark — width/height let Next pick a
                       256-wide AVIF/WebP source even though it renders
