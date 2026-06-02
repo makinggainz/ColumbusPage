@@ -19,8 +19,14 @@ import { useMediaWarm } from "@/components/ui/MediaPrefetcher";
 // Static import → AVIF + real blur-up placeholder.
 import minimalistCity from "@/public/minimalistCityEnhanced.png";
 
-const COPY =
-  "We’re building a thinking earth: an AI that reasons across the vastness of geospatial data. Delivering this technology in simple and powerful products for humanity.";
+/* Two-line copy — visual paragraph break between the two sentences. The
+   word-reveal timing is continuous across both: indices are computed off
+   the combined word count so the second line keeps fading in as part of
+   the same scroll progression. */
+const COPY_A =
+  "We’re building a thinking earth: an AI that reasons across the vastness of geospatial data.";
+const COPY_B =
+  "We deliver this through simple and powerful products for humanity.";
 
 export function MissionScrollIntro() {
   const ref = useRef<HTMLParagraphElement>(null);
@@ -33,8 +39,10 @@ export function MissionScrollIntro() {
     offset: ["start 0.85", "end 0.5"],
   });
 
-  const words = COPY.split(" ");
-  const windowSize = 2 / words.length;
+  const wordsA = COPY_A.split(" ");
+  const wordsB = COPY_B.split(" ");
+  const totalWords = wordsA.length + wordsB.length;
+  const windowSize = 2 / totalWords;
 
   return (
     <section
@@ -92,12 +100,29 @@ export function MissionScrollIntro() {
             ref={ref}
             className="text-center text-2xl sm:text-3xl lg:text-4xl font-medium tracking-tight leading-snug text-ink"
           >
-            {words.map((word, i) => {
-              const start = Math.max(0, i / words.length - windowSize * 0.25);
+            {wordsA.map((word, i) => {
+              const start = Math.max(0, i / totalWords - windowSize * 0.25);
               const end = Math.min(1, start + windowSize);
               return (
                 <Word
-                  key={`${i}-${word}`}
+                  key={`a-${i}-${word}`}
+                  word={word}
+                  start={start}
+                  end={end}
+                  progress={scrollYProgress}
+                  reduced={Boolean(reduced)}
+                />
+              );
+            })}
+            <br />
+            <br />
+            {wordsB.map((word, i) => {
+              const globalI = wordsA.length + i;
+              const start = Math.max(0, globalI / totalWords - windowSize * 0.25);
+              const end = Math.min(1, start + windowSize);
+              return (
+                <Word
+                  key={`b-${i}-${word}`}
                   word={word}
                   start={start}
                   end={end}
