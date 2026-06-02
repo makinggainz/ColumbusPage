@@ -274,13 +274,45 @@ const CSS = `
 @media (min-width: 1024px) {
   .bp-notch { height: 53px; padding: 0 40px; }
 }
-/* Mobile: hide the audience cut-out entirely. The notched corner is a
-   desktop-only design beat; on a 360–414px viewport it crowds the
-   brand row and isn't worth the visual cost. Each card's hairline
-   ring (.bp-card::after) reverts to a clean uninterrupted rectangle
-   in this range, which is what we want. */
+/* Mobile (<768px): the top-RIGHT corner cut-out crowds the narrow brand
+   row, so re-base the notch as a centered tab cut into the card's TOP
+   edge instead. Geometry vs the desktop corner version:
+     • top edge   → flush opening (borderless), as before but now centered.
+     • left+right+bottom → the inward silhouette, so all three carry the
+       1px hairline (desktop only needed left+bottom).
+     • the two BOTTOM corners → the concave cut (border-radius rounds them
+       and the meeting borders give the concave hairline for free).
+     • two mirrored fillets ease the top corners into the card's top edge.
+   The left fillet (::before, top:0;left:-13px) is already positioned
+   correctly from the base rule — only ::after needs mirroring. */
 @media (max-width: 767px) {
-  .bp-notch { display: none; }
+  .bp-notch {
+    top: 0;
+    right: auto;
+    left: 50%;
+    transform: translateX(-50%);
+    border-radius: 0 0 13px 13px;
+    border-right: 1px solid #E7E7F1;
+  }
+  /* Right fillet mirrors the left: move it to the notch's top-right and
+     flip the gradient origin to "right bottom" so its convex arc + hairline
+     bend the correct way and stay continuous with the card's top edge. */
+  .bp-notch::after {
+    top: 0;
+    bottom: auto;
+    right: -13px;
+    background: radial-gradient(
+      circle at right bottom,
+      rgba(255, 255, 255, 0) 11.5px,
+      #E7E7F1 12.25px,
+      #E7E7F1 12.75px,
+      #FFFFFF 13.5px
+    );
+  }
+  /* Drop the brand row below the centered top notch (~43px tall <640,
+     ~46px 640–767) so they don't overlap — the "extra height" the design
+     needs, realised as top spacing on the auto-height mobile card. */
+  .bp-text-block { margin-top: 30px; }
 }
 
 /* Top text block — brand row, tagline, CTA stacked. Spacing is set with
