@@ -97,6 +97,12 @@ export type MapChatPlatformProps = {
      above-the-fold glass window). Below-fold callers (ComparisonSection,
      ChatSection) leave it false so the assets stay lazy until idle. */
   eager?: boolean;
+  /* When true (but not `eager`), the chrome + map load eagerly at LOW
+     priority — used by ComparisonSection to preload every pre-mounted demo
+     once the section scrolls into view, so switching showcases never reveals
+     a half-loaded mockup. Distinct from `eager` (which is high-priority for
+     the hero). */
+  preload?: boolean;
 };
 
 const DEFAULT_MAP = "/MapChatbackgroundimg.png";
@@ -125,8 +131,11 @@ export default function MapChatPlatform({
   listItems = DEFAULT_LIST_ITEMS,
   keyTakeaway = DEFAULT_KEY_TAKEAWAY,
   eager = false,
+  preload = false,
 }: MapChatPlatformProps = {}) {
   const warm = useMediaWarm();
+  /* Eager-but-low-priority once the section is warm OR has been preloaded. */
+  const soon = warm || preload;
   return (
     <div
       className="biz-product-display biz-mockup-frame mx-auto w-full"
@@ -139,7 +148,7 @@ export default function MapChatPlatform({
       }}
     >
       <div style={{ position: "relative", width: "100%", aspectRatio: "5190 / 3030" }}>
-        <MapImage map={map} eager={eager} warm={warm} />
+        <MapImage map={map} eager={eager} warm={soon} />
 
         <Image
           src={chromeBackground}
@@ -151,7 +160,7 @@ export default function MapChatPlatform({
           placeholder="blur"
           {...(eager
             ? { priority: true }
-            : { loading: warm ? "eager" : "lazy", fetchPriority: warm ? "low" : undefined })}
+            : { loading: soon ? "eager" : "lazy", fetchPriority: soon ? "low" : undefined })}
         />
 
         <ChatResponse

@@ -625,13 +625,30 @@ export default function BusinessHero() {
               style={{ padding: "0 4px 4px" }}
               className="hero-product-display"
             >
-              {activeTabId === "map-chat" && <MapChatPlatform eager />}
-              {activeTabId === "research" && <AgenticResearchMockup />}
-              {activeTabId === "data" && <DataManagerMockup />}
-              {activeTabId === "dashboard" && <DashboardMockup />}
+              {/* All four mockups are PRE-MOUNTED (only the active tab's is
+                  display:block; the rest are display:none). This loads every
+                  demo's frame chrome up-front — MapChat at high priority (the
+                  above-the-fold LCP demo, eager), the other three at low
+                  priority (preload) — so switching tabs is an instant
+                  display-toggle, never a fresh mount whose frame PNG flashes
+                  in chrome-less. Mirrors the ComparisonSection preload fix.
+                  Each demo's own white background fill is the placeholder if a
+                  frame is still mid-load. */}
+              <div style={{ display: activeTabId === "map-chat" ? "block" : "none" }}>
+                <MapChatPlatform eager />
+              </div>
+              <div style={{ display: activeTabId === "research" ? "block" : "none" }}>
+                <AgenticResearchMockup preload />
+              </div>
+              <div style={{ display: activeTabId === "data" ? "block" : "none" }}>
+                <DataManagerMockup preload />
+              </div>
+              <div style={{ display: activeTabId === "dashboard" ? "block" : "none" }}>
+                <DashboardMockup preload />
+              </div>
             </div>
             <style>{`
-              .hero-product-display > div {
+              .hero-product-display .biz-mockup-frame {
                 max-width: 100% !important;
                 border: none !important;
                 /* 16px (matches the desktop mockup card), frozen — ScaleToFit

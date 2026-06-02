@@ -293,10 +293,15 @@ const CONTENT: Partial<Record<IndustryId, IndustryContent>> = {
 
 export type AgenticResearchMockupProps = {
   industryId?: IndustryId;
+  /* When true, the frame loads eagerly at low priority even while this demo
+     is the inactive (display:none) one — ComparisonSection sets it once the
+     section enters the viewport so all showcases are preloaded. */
+  preload?: boolean;
 };
 
-export default function AgenticResearchMockup({ industryId }: AgenticResearchMockupProps = {}) {
+export default function AgenticResearchMockup({ industryId, preload = false }: AgenticResearchMockupProps = {}) {
   const warm = useMediaWarm();
+  const soon = warm || preload;
   const c =
     (industryId && CONTENT[industryId]) ?? CONTENT["residential-real-estate"]!;
 
@@ -316,6 +321,11 @@ export default function AgenticResearchMockup({ industryId }: AgenticResearchMoc
            edge that matches the other demos in the family. */
         borderRadius: "var(--ent-radius-2xl)",
         overflow: "hidden",
+        /* White placeholder fill — before the chrome PNG loads this wrapper
+           would otherwise be transparent and show the section's sky backdrop
+           straight through (reading as a borderless/"no-frame" flash). The
+           white fill makes it a clean white panel until the chrome paints. */
+        backgroundColor: "#FFFFFF",
         containerType: "inline-size",
       }}
     >
@@ -329,8 +339,8 @@ export default function AgenticResearchMockup({ industryId }: AgenticResearchMoc
           fill
           sizes="(max-width: 1180px) 100vw, 1180px"
           placeholder="blur"
-          loading={warm ? "eager" : "lazy"}
-          fetchPriority={warm ? "low" : undefined}
+          loading={soon ? "eager" : "lazy"}
+          fetchPriority={soon ? "low" : undefined}
           className="object-cover object-center"
         />
       </div>

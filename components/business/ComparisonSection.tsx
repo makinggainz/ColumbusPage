@@ -109,16 +109,23 @@ const CMP_CSS = `
    Industry is locked to residential — this section sits ABOVE the
    page's IndustryProvider, so it can't read the selected industry from
    context yet. */
-function ActiveVisual({ active }: { active: number }) {
+/* `preload` is threaded down to every demo's images: once the section has
+   entered the viewport (or the global warm flag fires), all four mockups —
+   even the display:none inactive ones — flip their next/image to
+   loading="eager" + fetchPriority="low". Because every demo is pre-mounted,
+   that fetches all four frame PNGs up front (low priority, no LCP cost), so
+   clicking/auto-advancing through the list never reveals a half-loaded,
+   chrome-less showcase. */
+function ActiveVisual({ active, preload }: { active: number; preload: boolean }) {
   switch (active) {
     case 0:
-      return <MapChatPlatform {...RESIDENTIAL_MAP_CHAT} />;
+      return <MapChatPlatform {...RESIDENTIAL_MAP_CHAT} preload={preload} />;
     case 1:
-      return <AgenticResearchMockup industryId={RESIDENTIAL_INDUSTRY_ID} />;
+      return <AgenticResearchMockup industryId={RESIDENTIAL_INDUSTRY_ID} preload={preload} />;
     case 2:
-      return <DataManagerMockup industryId={RESIDENTIAL_INDUSTRY_ID} />;
+      return <DataManagerMockup industryId={RESIDENTIAL_INDUSTRY_ID} preload={preload} />;
     case 3:
-      return <DashboardMockup industryId={RESIDENTIAL_INDUSTRY_ID} />;
+      return <DashboardMockup industryId={RESIDENTIAL_INDUSTRY_ID} preload={preload} />;
     default:
       return null;
   }
@@ -437,8 +444,8 @@ export default function ComparisonSection() {
               sizes="(max-width: 1023px) 100vw, 60vw"
               quality={80}
               placeholder="blur"
-              loading={warm ? "eager" : "lazy"}
-              fetchPriority={warm ? "low" : undefined}
+              loading={warm || entered ? "eager" : "lazy"}
+              fetchPriority={warm || entered ? "low" : undefined}
               style={{ objectFit: "cover", objectPosition: "center" }}
             />
           </div>
@@ -457,7 +464,7 @@ export default function ComparisonSection() {
                   is a fixed 1180px there, so the peek-crop is preserved) and a
                   faithful uniform-shrink on mobile (where it's width:100%). */}
               <ScaleToFit designWidth={1180} className="biz-scale-visual">
-                <ActiveVisual active={i} />
+                <ActiveVisual active={i} preload={entered || warm} />
               </ScaleToFit>
             </div>
           ))}

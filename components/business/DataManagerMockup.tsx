@@ -209,10 +209,15 @@ const FONT_STACK =
 
 export type DataManagerMockupProps = {
   industryId?: IndustryId;
+  /* When true, the frame loads eagerly at low priority even while this demo
+     is the inactive (display:none) one — ComparisonSection sets it once the
+     section enters the viewport so all showcases are preloaded. */
+  preload?: boolean;
 };
 
-export default function DataManagerMockup({ industryId }: DataManagerMockupProps = {}) {
+export default function DataManagerMockup({ industryId, preload = false }: DataManagerMockupProps = {}) {
   const warm = useMediaWarm();
+  const soon = warm || preload;
   const cards =
     (industryId && CARDS_BY_INDUSTRY[industryId]) ??
     CARDS_BY_INDUSTRY["residential-real-estate"]!;
@@ -249,8 +254,8 @@ export default function DataManagerMockup({ industryId }: DataManagerMockupProps
           fill
           sizes="(max-width: 1180px) 100vw, 1180px"
           placeholder="blur"
-          loading={warm ? "eager" : "lazy"}
-          fetchPriority={warm ? "low" : undefined}
+          loading={soon ? "eager" : "lazy"}
+          fetchPriority={soon ? "low" : undefined}
           className="object-cover object-center"
         />
       </div>
