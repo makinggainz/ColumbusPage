@@ -157,6 +157,19 @@ const CSS = `
      while staying below the text block + hairline ring. */
   z-index: 1;
 }
+/* Research has NO photo backdrop — just the light #CAE5F5 → #76A8F3
+   gradient with dark navy text, which is already high-contrast. The top
+   white scrim above exists to keep text legible over the BUSY photo
+   backdrops on the Columbus / Elio tiles; on Research it only washes the
+   top of the gradient lighter, breaking the clean left-to-right read. Per
+   the Gdesign collaborator note ("simple left-to-right gradient"), disable
+   the scrim here so the 'to right' gradient renders as a clean, uniform
+   horizontal band (every vertical slice one consistent colour top-to-
+   bottom). Placed AFTER .bp-card::before so it wins on source order (equal
+   specificity). */
+.bp-card--research::before {
+  display: none;
+}
 
 /* Top text block — brand row, tagline, CTA stacked. Spacing is set with
    explicit per-pair margins (on .bp-tagline / .bp-cta) rather than one
