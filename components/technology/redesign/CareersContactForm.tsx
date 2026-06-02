@@ -16,7 +16,7 @@ const TAB_INTRO: Record<InquiryType, { heading: string; sub: string }> = {
   "columbus-pro": { heading: "Book a demo", sub: "See Columbus working on your own data." },
   elio: { heading: "Tell us about your project", sub: "Share what you want to build with Elio." },
   investment: { heading: "Investor relations", sub: "Let’s talk partnerships and the road ahead." },
-  careers: { heading: "Join the crew", sub: "Tell us where you’d make your mark." },
+  careers: { heading: "Join the crew", sub: "Research freely at Columbus." },
 };
 
 /* Design tokens — same source of truth as the contact page

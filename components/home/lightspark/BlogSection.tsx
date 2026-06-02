@@ -50,6 +50,17 @@ const CSS = `
 
 .blog-section-card-media img {
   object-fit: cover;
+  transition: transform 420ms cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+.blog-section-card:hover .blog-section-card-media img {
+  transform: scale(1.03);
+}
+@media (prefers-reduced-motion: reduce) {
+  .blog-section-card-media img,
+  .blog-section-card:hover .blog-section-card-media img {
+    transition: none;
+    transform: none;
+  }
 }
 
 .blog-section-card-body {
@@ -89,6 +100,10 @@ const CSS = `
   color: var(--color-ink);
   letter-spacing: -0.015em;
   margin: 0 0 8px;
+  transition: color 200ms ease;
+}
+.blog-section-card:hover .blog-section-card-title {
+  color: var(--color-accent);
 }
 
 .blog-section-card-description {

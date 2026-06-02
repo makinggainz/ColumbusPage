@@ -767,3 +767,27 @@
   background: rgba(11, 27, 43, 0.16);
   color: var(--color-accent);
 }
+
+/* "Read more about what we do" cards — hover state mirrors the
+   /blog index + homepage BlogSection: image scales 1.03×, title
+   shifts to the accent colour. */
+.readMoreCardMedia img {
+  transition: transform 420ms cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+.readMoreCard:hover .readMoreCardMedia img {
+  transform: scale(1.03);
+}
+.readMoreCardTitle {
+  color: var(--color-ink);
+  transition: color 200ms ease;
+}
+.readMoreCard:hover .readMoreCardTitle {
+  color: var(--color-accent);
+}
+@media (prefers-reduced-motion: reduce) {
+  .readMoreCardMedia img,
+  .readMoreCard:hover .readMoreCardMedia img {
+    transition: none;
+    transform: none;
+  }
+}

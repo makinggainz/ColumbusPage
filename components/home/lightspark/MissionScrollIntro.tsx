@@ -20,7 +20,7 @@ import { useMediaWarm } from "@/components/ui/MediaPrefetcher";
 import minimalistCity from "@/public/minimalistCityEnhanced.png";
 
 const COPY =
-  "We are building a thinking earth: an AI that reasons across the vastness of geospatial data. Delivering this technology in simple and powerful products for humanity.";
+  "We’re building a thinking earth: an AI that reasons across the vastness of geospatial data. Delivering this technology in simple and powerful products for humanity.";
 
 export function MissionScrollIntro() {
   const ref = useRef<HTMLParagraphElement>(null);

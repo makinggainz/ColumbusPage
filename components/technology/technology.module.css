@@ -1601,6 +1601,17 @@
 
 .blogCardImg {
   object-fit: cover;
+  transition: transform 420ms cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+.blogCard:hover .blogCardImg {
+  transform: scale(1.03);
+}
+@media (prefers-reduced-motion: reduce) {
+  .blogCardImg,
+  .blogCard:hover .blogCardImg {
+    transition: none;
+    transform: none;
+  }
 }
 
 .blogCardFallback {
@@ -1639,6 +1650,10 @@
   margin: 0 0 8px;
   color: var(--tech-color-text);
   letter-spacing: -0.015em;
+  transition: color 200ms ease;
+}
+.blogCard:hover .blogCardTitle {
+  color: var(--tech-color-accent);
 }
 
 /* Font-size comes from the global .p-m utility. */

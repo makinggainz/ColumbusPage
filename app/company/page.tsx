@@ -309,6 +309,7 @@ export default function CompanyPage() {
               <Link
                 key={post.slug}
                 href={blogHref(post.slug)}
+                className={styles.readMoreCard}
                 style={{
                   display: "flex",
                   flexDirection: "column",
@@ -317,6 +318,7 @@ export default function CompanyPage() {
                 }}
               >
                 <div
+                  className={styles.readMoreCardMedia}
                   style={{
                     position: "relative",
                     width: "100%",
@@ -363,7 +365,7 @@ export default function CompanyPage() {
                       inheriting the body font at the browser-default
                       heading weight. Size + letter-spacing remain
                       company-page-specific (22px vs the .h5 default). */}
-                  <h3 style={{ fontFamily: "var(--font-display)", fontSize: "22px", fontWeight: 500, color: "var(--color-ink)", margin: "0 0 8px", letterSpacing: "-0.015em" }}>
+                  <h3 className={styles.readMoreCardTitle} style={{ fontFamily: "var(--font-display)", fontSize: "22px", fontWeight: 500, margin: "0 0 8px", letterSpacing: "-0.015em" }}>
                     {post.title}
                   </h3>
                   <p style={{ fontSize: "16px", color: "var(--color-muted)", margin: 0 }}>
