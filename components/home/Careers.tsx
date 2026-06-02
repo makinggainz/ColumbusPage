@@ -598,7 +598,7 @@ export const Careers = ({ hideHeader, className = "" }: { hideHeader?: boolean; 
                 }}
                 onClick={spawnFigures}
               >
-                Humans.
+                Humans
               </span>
             </h2>
             <p className="p-l careers-sub">
