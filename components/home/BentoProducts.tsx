@@ -288,6 +288,85 @@ const CSS = `
 .bp-card--elio     .bp-chip { background: #4F8FA8; }
 .bp-card--research .bp-chip { background: #76A8F3; }
 
+/* ─────────────────────────────────────────────────────────────────────
+   Mobile cut-out chip  vs.  desktop top-right notch.
+
+   The top-LEFT cut-out + tinted chip (above) is the MOBILE treatment
+   (<1024px). On desktop (≥1024px) we restore the ORIGINAL design we used
+   to have (commit c8075f8): a white notch cut into each card's top-RIGHT
+   corner with the audience label tinted inside it, plus the card's 1px
+   inset hairline ring (which the notch fillets join onto). The two
+   treatments are both in the DOM and swapped purely by breakpoint.
+   ───────────────────────────────────────────────────────────────────── */
+
+/* Original desktop audience cut-out — page-surface white (#FFFFFF) notched
+   into the card's top-RIGHT corner. Flush to the card's top + right edges
+   (the borderless cut "opening"); the left + bottom edges carry the
+   hairline (the cut silhouette), and the convex TL / BR corners are eased
+   by the ::before / ::after radial-gradient fillets, which also carry the
+   hairline arc onto the card's ::after ring. Hidden by default; shown only
+   at ≥1024px (mobile uses the top-left chip instead). */
+.bp-notch {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 3;
+  box-sizing: border-box;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  height: 53px;
+  padding: 0 40px;
+  background-color: #FFFFFF;
+  border-radius: 0 13px 0 13px;
+  border-left: 1px solid #E7E7F1;
+  border-bottom: 1px solid #E7E7F1;
+}
+.bp-notch::before,
+.bp-notch::after {
+  content: "";
+  position: absolute;
+  width: 13px;
+  height: 13px;
+  background: radial-gradient(
+    circle at left bottom,
+    rgba(255, 255, 255, 0) 11.5px,
+    #E7E7F1 12.25px,
+    #E7E7F1 12.75px,
+    #FFFFFF 13.5px
+  );
+}
+.bp-notch::before { top: 0; left: -13px; }
+.bp-notch::after { bottom: -13px; right: 0; }
+/* Per-card label tint — keyed to each tile's blue-dominated backdrop. */
+.bp-notch-label {
+  font-size: 18px;
+  line-height: 1;
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  white-space: nowrap;
+}
+.bp-card--columbus .bp-notch-label { color: #015C94; }
+.bp-card--elio .bp-notch-label { color: #1E6BAE; }
+.bp-card--research .bp-notch-label { color: #4B7BC7; }
+
+@media (min-width: 1024px) {
+  /* Desktop = the original: hide the mobile chip, show the top-right
+     notch, and restore the card's hairline ring (the notch fillets join
+     onto it). Mobile stays ring-free for the clean borderless cut-out. */
+  .bp-cutout { display: none; }
+  .bp-notch { display: flex; }
+  .bp-card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 13px;
+    box-shadow: inset 0 0 0 1px #E7E7F1;
+    pointer-events: none;
+    z-index: 2;
+  }
+}
+
 .bp-brand {
   display: inline-flex;
   align-items: center;
@@ -526,8 +605,9 @@ interface Product {
   name: string;
   /** Single short phrase, sits below the brand row. */
   tagline: string;
-  /** Audience label shown in a rounded bordered chip at the card's
-   *  top-left ("For business" / "For consumer" / "For the curious"). */
+  /** Audience label. Shown TWO ways by breakpoint: the mobile top-left
+   *  cut-out chip (<1024px) and the original desktop top-right notch
+   *  (≥1024px). "For business" / "For consumer" / "For the curious". */
   audience?: string;
   /** Pill CTA label, e.g. "Learn more", "Try Elio". */
   ctaLabel: string;
@@ -694,9 +774,19 @@ export function BentoProducts() {
                   <div className="bp-bg-tint" aria-hidden />
                 </>
               )}
+              {/* Desktop (≥1024px) audience: the original white notch cut
+                  into the card's top-RIGHT corner with the tinted label
+                  inside. Absolutely positioned on the card; hidden <1024px
+                  via CSS (mobile uses the top-left cut-out chip below). */}
+                {p.audience && (
+                  <div className="bp-notch">
+                    <span className="bp-notch-label">{p.audience}</span>
+                  </div>
+                )}
               <div className="bp-text-block">
-                {/* Audience: a white corner cut-out (top-left) with the
-                    rounded bordered chip centered inside it. */}
+                {/* Mobile (<1024px) audience: a white corner cut-out
+                    (top-left) with the image-tinted chip inside it. Hidden
+                    ≥1024px (desktop uses the top-right notch above). */}
                 {p.audience && (
                   <div className="bp-cutout">
                     <span className="bp-chip">{p.audience}</span>
