@@ -763,7 +763,7 @@ export default function Hero() {
                     height: "auto",
                     width: isLg ? 200 : 138,
                     marginLeft: isLg ? 10 : 7,
-                    marginTop: 3,
+                    marginTop: 8.4,
                     // Keep the tagline white (its native colour) and add
                     // a soft drop-shadow so the faint script reads on
                     // the dark photo backdrop.
@@ -817,29 +817,24 @@ export default function Hero() {
                     style={{
                       display: "inline-block",
                       position: "relative",
-                      /* Offsets are in `em` on MOBILE (<lg) so the star's
-                         relationship to "map" stays proportional: the 36 px
-                         floor gives a ~3.6 px gap + ~5 px lift + 18 px star.
-                         DESKTOP (≥lg) the H1 cap is locked at 76 px by the
-                         clamp (9vw ≥ 92 px there, so it pins to the 76 px
-                         max), making 1em = 76 px exactly — so we use
-                         pixel-exact offsets there per design tweaks: the
-                         star sits 14 px tighter to the "p" (gap 7.6→-6.4 px,
-                         i.e. a slight negative margin so the star tucks just
-                         over the "p"'s top-right) and 4 px lower (lift
-                         11.4→7.4 px) than the proportional em values
-                         would place it. */
-                      top: isLg ? "-7.4px" : "-0.15em",
-                      marginLeft: isLg ? "-6.4px" : "0.1em",
-                      width: "0.5em",
-                      height: "0.5em",
+                      /* All offsets in `em` (cap-height-relative) so the
+                         star's position relative to "p" stays IDENTICAL
+                         across every viewport. The H1 font-size scales via
+                         clamp(36px, 9vw, 76px); locking these values to em
+                         means every offset scales in lockstep with the
+                         glyph. Values match the desktop pixel tuning at
+                         1em = 76 px (-14.4px ≈ -0.189em, 0.6px ≈ 0.008em). */
+                      top: "-0.189em",
+                      marginLeft: "0.008em",
+                      width: "0.331em",
+                      height: "0.331em",
                       verticalAlign: "super",
                       filter:
-                        "drop-shadow(0 1px 2px rgba(0, 57, 113, 0.225)) drop-shadow(0 4px 14px rgba(0, 57, 113, 0.275)) drop-shadow(0 0 40px rgba(0, 57, 113, 0.175))",
+                        "drop-shadow(0 1px 1.5px rgba(0, 57, 113, 0.36)) drop-shadow(0 4px 11px rgba(0, 57, 113, 0.44)) drop-shadow(0 0 30px rgba(0, 57, 113, 0.30))",
                     }}
                   >
                     <Image
-                      src="/consumer/star.png"
+                      src="/consumer/star1.png"
                       alt=""
                       fill
                       sizes="32px"

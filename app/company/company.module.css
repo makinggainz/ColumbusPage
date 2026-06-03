@@ -24,7 +24,10 @@
      viewport. dvh tracks mobile browser chrome; vh is the fallback. */
   min-height: calc(100vh + 80px);
   min-height: calc(100dvh + 80px);
-  padding: 80px 24px 48px;
+  /* Padding matches the blog index hero (80 24 24) so the heroInner —
+     which uses the same `flex: 1 1 auto + justify-content: center` —
+     vertically centres the title block in the same proportional band. */
+  padding: 80px 24px 24px;
   display: flex;
   flex-direction: column;
   text-align: center;
@@ -73,6 +76,12 @@
      the centred text spine never changes width down the page. */
   max-width: 768px;
   margin: 0 auto;
+  /* Reserve ~180px at the bottom so the centred title block lands at the
+     same vertical position as the blog hero's title, where a ~35px filter
+     bar + its margins anchor the bottom of the centered area. Without
+     this, the company hero (no filter bar) centers its title noticeably
+     lower than the blog hero. */
+  padding-bottom: 180px;
 }
 
 .heroHeadline {

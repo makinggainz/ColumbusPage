@@ -568,6 +568,9 @@ const CSS = `
   object-fit: contain;
   flex: 0 0 auto;
   margin-left: -7px;
+  /* Nudge the wordmark down 2.2px so it sits a touch lower than the logo
+     baseline (purely visual — transform doesn't affect layout flow). */
+  transform: translateY(2.2px);
   filter: brightness(0) saturate(100%) invert(8%) sepia(80%) saturate(1400%) hue-rotate(215deg) brightness(90%);
 }
 @media (min-width: 1024px) {

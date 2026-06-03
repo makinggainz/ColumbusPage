@@ -3601,6 +3601,13 @@
   object-fit: contain;
   flex-shrink: 0;
 }
+/* LLM + VLM icons scale down 25% so the LGM globe — the headline model —
+   reads as the visually largest in the row. Transform-based shrink keeps
+   each layout box at 60×60 so the row alignment stays put. */
+.dimModelHeaderIconLlm,
+.dimModelHeaderIconVlm {
+  transform: scale(0.75);
+}
 
 .dimModelHeaderText {
   display: flex;

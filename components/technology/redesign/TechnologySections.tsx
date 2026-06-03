@@ -125,7 +125,7 @@ export function TechnologySections() {
                 <div />
                 <div className={styles.dimModelHeader}>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src="/TechnologyPageImages/llm-text-icon.png" alt="" className={styles.dimModelHeaderIcon} aria-hidden loading="lazy" decoding="async" />
+                  <img src="/TechnologyPageImages/llm-text-icon.png" alt="" className={`${styles.dimModelHeaderIcon} ${styles.dimModelHeaderIconLlm}`} aria-hidden loading="lazy" decoding="async" />
                   <div className={styles.dimModelHeaderText}>
                     <h4 className={styles.dimModelHeaderName}>LLM</h4>
                     <p className={styles.dimModelHeaderSubtitle}>Large-Language-model</p>
@@ -133,7 +133,7 @@ export function TechnologySections() {
                 </div>
                 <div className={styles.dimModelHeader}>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src="/TechnologyPageImages/vlm-image-icon.png" alt="" className={styles.dimModelHeaderIcon} aria-hidden loading="lazy" decoding="async" />
+                  <img src="/TechnologyPageImages/vlm-image-icon.png" alt="" className={`${styles.dimModelHeaderIcon} ${styles.dimModelHeaderIconVlm}`} aria-hidden loading="lazy" decoding="async" />
                   <div className={styles.dimModelHeaderText}>
                     <h4 className={styles.dimModelHeaderName}>VLM</h4>
                     <p className={styles.dimModelHeaderSubtitle}>Vision-Language-model</p>
