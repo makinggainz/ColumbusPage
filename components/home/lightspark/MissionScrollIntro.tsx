@@ -18,6 +18,9 @@ import { ImageWithFallback } from "@/components/ui/ImageWithFallback";
 import { useMediaWarm } from "@/components/ui/MediaPrefetcher";
 // Static import → AVIF + real blur-up placeholder.
 import minimalistCity from "@/public/minimalistCityEnhanced.png";
+// Mobile-only watermark (portrait crop) — swapped in ≤640px where the
+// section is tall + narrow.
+import minimalistCityMobile from "@/public/mission-watermark-mobile.png";
 
 const COPY =
   "We’re building an AI that reasons across the vastness of geospatial data. We deliver this through simple and powerful products for humanity.";
@@ -61,8 +64,13 @@ export function MissionScrollIntro() {
               past the (overflow-hidden) section edges, never deformed. */}
       <style>{`
         .mission-watermark-img { object-fit: fill; }
+        /* Mobile-only watermark hidden by default; shown (and the desktop one
+           hidden) at ≤640px. cover keeps its portrait aspect on the tall,
+           narrow mobile section instead of stretching. */
+        .mission-watermark-mobile { display: none; object-fit: cover; }
         @media (max-width: 640px) {
-          .mission-watermark-img { object-fit: cover; }
+          .mission-watermark-desktop { display: none; }
+          .mission-watermark-mobile { display: block; }
         }
       `}</style>
       <div
@@ -70,8 +78,19 @@ export function MissionScrollIntro() {
         className="absolute inset-0 -z-10 pointer-events-none overflow-hidden"
       >
         <ImageWithFallback
-          className="mission-watermark-img"
+          className="mission-watermark-img mission-watermark-desktop"
           src={minimalistCity}
+          alt=""
+          fill
+          sizes="100vw"
+          quality={75}
+          placeholder="blur"
+          loading={warm ? "eager" : "lazy"}
+          fetchPriority={warm ? "low" : undefined}
+        />
+        <ImageWithFallback
+          className="mission-watermark-mobile"
+          src={minimalistCityMobile}
           alt=""
           fill
           sizes="100vw"
