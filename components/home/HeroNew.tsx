@@ -411,10 +411,10 @@ export function HeroNew() {
       />
       <div className="hn-bounds">
         <h1 className="h1 hn-title tracking-tight text-ink">
-          The Applied AI Lab for Geospatial Intelligence
+          The Applied AI Lab building a thinking earth
         </h1>
         <p className="hn-subtitle">
-          Building street-smart AI<br className="md:hidden" /> for the real world.
+          Geospatial Intelligence<br className="md:hidden" /> for the real world.
         </p>
         {/* Try Elio CTA — mirrors the navbar dropdown verbatim: same
             button class set (rounded-button px-5 py-2 p-m, bg-cta + white
