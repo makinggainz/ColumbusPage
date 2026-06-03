@@ -82,13 +82,13 @@ export default function BetterPricesRow({
           }}
         >
           Purchase{" "}
-          <a href="#" style={{ color: "var(--ent-accent)", fontWeight: 500 }}>
+          <span style={{ color: "var(--ent-accent)", fontWeight: 500 }}>
             premium data
-          </a>{" "}
+          </span>{" "}
           at the most{" "}
-          <a href="#" style={{ color: "var(--ent-accent)", fontWeight: 500 }}>
+          <span style={{ color: "var(--ent-accent)", fontWeight: 500 }}>
             competitive prices
-          </a>
+          </span>
           .
         </div>
       </div>

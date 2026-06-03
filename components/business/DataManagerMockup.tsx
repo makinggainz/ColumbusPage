@@ -238,15 +238,17 @@ export default function DataManagerMockup({ industryId, preload = false }: DataM
         containerType: "inline-size",
       }}
     >
-      {/* Frame chrome (z-5). Inset 6px so the chrome PNG's baked-in
-          bottom-left settings gear icon doesn't fall inside the 24px
-          rounded-corner clip — the wrapper's white background fills
-          the 6px breathing room around the chrome. The PNG's inner
-          pane is transparent; the white surface above paints that
-          area. */}
+      {/* Frame chrome (z-5). Runs flush to the rounded edge (inset 0) so the
+          chrome aligns with its content overlay, which is positioned by
+          full-frame percentages (left=215/5184, top=206/3003). The 24px
+          rounded-corner clip slightly trims the baked-in bottom-left settings
+          gear icon — accepted tradeoff for a clean edge that matches the rest
+          of the demo family (the old 6px inset created a visible polaroid-style
+          white border around the demo). The PNG's inner pane is transparent;
+          the white surface above paints that area. */}
       <div
         className="absolute pointer-events-none"
-        style={{ inset: 6, zIndex: 5 }}
+        style={{ inset: 0, zIndex: 5 }}
       >
         <Image
           src={dataManagerFrame}

@@ -51,9 +51,9 @@ export default function SurveyEarthRow({
         title="Survey the earth with a super model"
         subtitle={
           <>
-            <a href="#" style={{ color: "var(--ent-accent)", fontWeight: 500 }}>
+            <span style={{ color: "var(--ent-accent)", fontWeight: 500 }}>
               Smart Layers
-            </a>
+            </span>
             , allows you to come up with data layers that would&rsquo;ve been
             too expensive or weird to survey. Taylor data layers to your exact
             needs, create maps about anything you can think of.

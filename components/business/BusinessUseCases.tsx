@@ -403,12 +403,11 @@ type IndustryCopy = {
 const RESIDENTIAL_COPY: IndustryCopy = {
   chatSubtitle: (
     <>
-      <div>
-        With <Blue>conversational map chat</Blue>, ask your chat directly about anything. Have a conversation like you&rsquo;re talking to your best analyst.
-      </div>
-      <div className="mt-3">
-        Faster site-selection for Residential Real Estate customers, including Consultants, Residential Developers, and Wholesale brokers.
-      </div>
+      {/* Merged from two separate paragraphs (collaborator: the two lines felt
+          visually disjoint). Original two blocks were:
+            1) "With conversational map chat, ask your chat directly about anything. Have a conversation like you're talking to your best analyst."
+            2) "Faster site-selection for Residential Real Estate customers, including Consultants, Residential Developers, and Wholesale brokers." */}
+      With <Blue>conversational map chat</Blue>, ask your chat directly about anything and have a conversation like you&rsquo;re talking to your best analyst — faster site-selection for Residential Real Estate customers, including Consultants, Residential Developers, and Wholesale brokers.
     </>
   ),
   sub1Description: (
@@ -962,10 +961,11 @@ const URBAN_COPY: IndustryCopy = {
 const ENVIRONMENTAL_COPY: IndustryCopy = {
   chatSubtitle: (
     <>
-      With <Blue>conversational map chat</Blue>, ask your chat directly about anything. Have a conversation like you&rsquo;re talking to your best Forest Ecologist.
-      <div className="mt-3">
-        Faster field-team prioritization for Environmental Research customers, including Forest Ecologists, Field Research Coordinators, and Conservation Scientists.
-      </div>
+      {/* Merged from two separate paragraphs (collaborator: the two lines felt
+          visually disjoint). Original two blocks were:
+            1) "With conversational map chat, ask your chat directly about anything. Have a conversation like you're talking to your best Forest Ecologist."
+            2) "Faster field-team prioritization for Environmental Research customers, including Forest Ecologists, Field Research Coordinators, and Conservation Scientists." */}
+      With <Blue>conversational map chat</Blue>, ask your chat directly about anything and have a conversation like you&rsquo;re talking to your best Forest Ecologist — faster field-team prioritization for Environmental Research customers, including Forest Ecologists, Field Research Coordinators, and Conservation Scientists.
     </>
   ),
   sub1Description: (
@@ -1172,10 +1172,11 @@ const ENVIRONMENTAL_COPY: IndustryCopy = {
 const ACADEMIC_COPY: IndustryCopy = {
   chatSubtitle: (
     <>
-      With <Blue>conversational map chat</Blue>, ask your chat directly about anything. Have a conversation like you&rsquo;re talking to your best Spatial Epidemiologist.
-      <div className="mt-3">
-        Faster cluster identification for Academic Research customers, including Spatial Epidemiologists, Public Health Researchers, and Population Health Postdocs.
-      </div>
+      {/* Merged from two separate paragraphs (collaborator: the two lines felt
+          visually disjoint). Original two blocks were:
+            1) "With conversational map chat, ask your chat directly about anything. Have a conversation like you're talking to your best Spatial Epidemiologist."
+            2) "Faster cluster identification for Academic Research customers, including Spatial Epidemiologists, Public Health Researchers, and Population Health Postdocs." */}
+      With <Blue>conversational map chat</Blue>, ask your chat directly about anything and have a conversation like you&rsquo;re talking to your best Spatial Epidemiologist — faster cluster identification for Academic Research customers, including Spatial Epidemiologists, Public Health Researchers, and Population Health Postdocs.
     </>
   ),
   sub1Description: (
@@ -1375,10 +1376,11 @@ const ACADEMIC_COPY: IndustryCopy = {
 const GEOMARKETING_COPY: IndustryCopy = {
   chatSubtitle: (
     <>
-      With <Blue>conversational map chat</Blue>, ask your chat directly about anything. Have a conversation like you&rsquo;re talking to your best Site Selection Analyst.
-      <div className="mt-3">
-        Faster trade-area shortlisting for Geomarketing customers, including Site Selection Directors, Network Strategy VPs, and Franchise Development Leads.
-      </div>
+      {/* Merged from two separate paragraphs (collaborator: the two lines felt
+          visually disjoint). Original two blocks were:
+            1) "With conversational map chat, ask your chat directly about anything. Have a conversation like you're talking to your best Site Selection Analyst."
+            2) "Faster trade-area shortlisting for Geomarketing customers, including Site Selection Directors, Network Strategy VPs, and Franchise Development Leads." */}
+      With <Blue>conversational map chat</Blue>, ask your chat directly about anything and have a conversation like you&rsquo;re talking to your best Site Selection Analyst — faster trade-area shortlisting for Geomarketing customers, including Site Selection Directors, Network Strategy VPs, and Franchise Development Leads.
     </>
   ),
   sub1Description: (

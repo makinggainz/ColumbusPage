@@ -345,26 +345,26 @@ export default function AgenticResearchMockup({ industryId, preload = false }: A
         />
       </div>
 
-      {/* Breadcrumb cover — opaque white div over the project-title
-          portion of the chrome's top bar, with custom industry text
-          rendered on top. Sized to span x=900 → x=3160 of the source
-          PNG (17.34% → 60.89% from left), and the full chrome
-          top-bar height (0 → 7.02%). Sits above the frame (z-5) but
-          below the inner pane (z-10) so the inner pane's own content
-          remains on top should it ever bleed up here. */}
+      {/* Breadcrumb cover — opaque white div over everything after the
+          chrome's baked "Columbus" wordmark. Extended left to 15.5% so it
+          also hides the chrome's baked navy "/" separator (x≈16.8–17.2%) —
+          that slash is a different colour + tighter spacing than our
+          rendered one, so we re-render BOTH separators here for a single
+          consistent style/rhythm. Columbus ends at ~15.25%, so 15.5% clears
+          it; right edge stays at 60.89%. Sits above the frame (z-5) but
+          below the inner pane (z-10). */}
       <div
         aria-hidden
         style={{
           position: "absolute",
           top: 0,
-          left: "17.34%",
-          width: "43.55%",
+          left: "15.5%",
+          width: "45.39%",
           height: "7.02%",
           backgroundColor: "#FFFFFF",
           zIndex: 6,
           display: "flex",
           alignItems: "center",
-          paddingLeft: "clamp(2px, 0.3cqw, 4px)",
           fontFamily: FONT_STACK,
         }}
       >
@@ -380,14 +380,13 @@ export default function AgenticResearchMockup({ industryId, preload = false }: A
             textOverflow: "ellipsis",
           }}
         >
+          {/* Leading separator (Columbus / …) — same style as the inner one
+              so all breadcrumb slashes match in colour + spacing. */}
+          <span style={{ color: TEXT_MUTED, fontWeight: 500, margin: "0 clamp(6px, 0.8cqw, 10px)" }}>
+            /
+          </span>
           {c.breadcrumb[0]}
-          <span
-            style={{
-              color: TEXT_MUTED,
-              fontWeight: 500,
-              margin: "0 clamp(6px, 0.8cqw, 10px)",
-            }}
-          >
+          <span style={{ color: TEXT_MUTED, fontWeight: 500, margin: "0 clamp(6px, 0.8cqw, 10px)" }}>
             /
           </span>
           {c.breadcrumb[1]}

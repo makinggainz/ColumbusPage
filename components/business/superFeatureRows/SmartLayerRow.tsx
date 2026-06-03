@@ -66,9 +66,9 @@ export default function SmartLayerRow({
           <>
             Columbus has brought accurate GenAI to GeoData.
             <br />
-            <a href="#" style={{ color: "var(--ent-accent)", fontWeight: 500 }}>
+            <span style={{ color: "var(--ent-accent)", fontWeight: 500 }}>
               Smart layers
-            </a>{" "}
+            </span>{" "}
             complete gaps in data when its unavailable or hard to survey.
             Columbus turns you into a Cartography artist
           </>
@@ -101,13 +101,14 @@ export default function SmartLayerRow({
           containerType: "inline-size",
         }}
       >
-        {/* Chrome image inset 6px on all sides so its baked-in
-            bottom-left settings gear icon doesn't fall inside the
-            24px rounded-corner clip — the wrapper's white background
-            fills the 6px breathing room around the chrome. */}
+        {/* Chrome image runs flush to the rounded edge (inset 0). The 24px
+            rounded-corner clip slightly trims the baked-in bottom-left
+            settings gear icon — accepted tradeoff for a clean edge that
+            matches the rest of the demo family (the old 6px inset created a
+            visible polaroid-style white border around the demo). */}
         <div
           className="absolute pointer-events-none"
-          style={{ inset: 6, zIndex: 5 }}
+          style={{ inset: 0, zIndex: 5 }}
         >
           <Image
             src={researchFrame}
@@ -121,22 +122,26 @@ export default function SmartLayerRow({
           />
         </div>
 
-        {/* Breadcrumb cover — replaces the chrome's baked "Kansans
-            Project 435..." text with smart-layer breadcrumb. Spans the
-            same x range AgenticResearchMockup uses (17.34% → 60.89%). */}
+        {/* Breadcrumb cover — replaces the chrome's baked "Columbus /
+            Kansans Project 435..." trail (everything after the Columbus
+            wordmark) with our own smart-layer breadcrumb. Extended left to
+            15.5% so it also hides the chrome's baked navy "/" separator
+            (x≈16.8–17.2%) — that slash was a different colour + tighter
+            spacing than our rendered one, so we re-render BOTH separators
+            here for a single consistent style/rhythm. Columbus ends at
+            ~15.25%, so 15.5% clears it. Right edge stays at 60.89%. */}
         <div
           aria-hidden
           style={{
             position: "absolute",
             top: 0,
-            left: "17.34%",
-            width: "43.55%",
+            left: "15.5%",
+            width: "45.39%",
             height: "7.02%",
             backgroundColor: "#FFFFFF",
             zIndex: 6,
             display: "flex",
             alignItems: "center",
-            paddingLeft: "clamp(2px, 0.3cqw, 4px)",
             fontFamily: FONT,
           }}
         >
@@ -152,14 +157,13 @@ export default function SmartLayerRow({
               textOverflow: "ellipsis",
             }}
           >
+            {/* Leading separator (Columbus / …) — same style as the inner
+                one so all breadcrumb slashes match in colour + spacing. */}
+            <span style={{ color: "#6B7280", fontWeight: 500, margin: "0 clamp(6px, 0.8cqw, 10px)" }}>
+              /
+            </span>
             Smart Layers
-            <span
-              style={{
-                color: "#6B7280",
-                fontWeight: 500,
-                margin: "0 clamp(6px, 0.8cqw, 10px)",
-              }}
-            >
+            <span style={{ color: "#6B7280", fontWeight: 500, margin: "0 clamp(6px, 0.8cqw, 10px)" }}>
               /
             </span>
             {layerName}
