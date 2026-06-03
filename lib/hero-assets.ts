@@ -42,7 +42,7 @@ export const HERO_ASSETS: Record<string, HeroEntry> = {
   // Business + consumer render a string `src`, so the prefetch `src` must be the
   // literal /public path to match the optimizer url= they request.
   "/products/business": {
-    desktop: { src: "/ColumbusBackgroundV2.png", quality: 80 },
+    desktop: { src: "/ColumbusBackgroundV2Enhanced.png", quality: 80 },
   },
   "/products/consumer": {
     desktop: { src: "/consumer/heroBackground.png", quality: 80 },

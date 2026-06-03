@@ -496,6 +496,7 @@ const CSS = `
    --font-display heading face). */
 .bp-card--research .bp-name {
   font-family: var(--font-display);
+  color: #0F173C;
 }
 /* Decorative lattice / dots / topography panel anchored to the right
    side of the Research tile. Sits behind the text content so the body

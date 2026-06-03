@@ -190,10 +190,10 @@ const COMMERCIAL_BACKDROPS: IndustryBackdrops = {
      reads as clouds with just a hint of the skyline at the bottom. */
   chatHeroPosition: "center 25%",
   chatSub: [
-    "/ColumbusBackgroundV2.png",
+    "/ColumbusBackgroundV2Enhanced.png",
     "/London.png",
     "/businessback3.png",
-    "/ColumbusBackgroundV2.png",
+    "/ColumbusBackgroundV2Enhanced.png",
   ],
   /* chatSub[0] uses the former portrait hero photo of NYC's Central Park
      skyline; "center 40%" lands the square crop on the cloud + skyscraper

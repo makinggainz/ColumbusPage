@@ -376,7 +376,7 @@ export default function BusinessHero() {
         style={{ top: 0, left: 0, right: 0, bottom: 0, zIndex: 0 }}
       >
         <ImageWithFallback
-          src="/ColumbusBackgroundV2.png"
+          src="/ColumbusBackgroundV2Enhanced.png"
           alt=""
           aria-hidden
           fill
