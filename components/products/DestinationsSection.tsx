@@ -362,7 +362,7 @@ export default function DestinationsSection() {
                     the top center of the phone screen. */}
                 <div className="eib-phone-notch" aria-hidden />
                 <div className="eib-phone-overlay">
-                  <h3 className="eib-title eib-title--hero eib-phone-title">Search for exactly<br />what you&rsquo;re looking for.</h3>
+                  <h3 className="eib-title eib-title--hero eib-phone-title">Search for exactly<br />what you&rsquo;re looking for</h3>
                   <div className="eib-search-mock">
                     <div className="eib-search-bar">
                       <span className="eib-search-icon" aria-hidden>🔍</span>
@@ -452,7 +452,7 @@ export default function DestinationsSection() {
                 <div className="eib-text eib-text--over">
                   <div className="eib-title-row">
                     <CalendarDays size={22} strokeWidth={2} className="eib-title-icon" aria-hidden />
-                    <h3 className="eib-title eib-title--hero">Elio can plan a trip for you.</h3>
+                    <h3 className="eib-title eib-title--hero">Elio can plan a trip for you</h3>
                   </div>
                   <p className="eib-sub">An AI travel planner that takes all the stress out of trip planning.</p>
                 </div>
@@ -492,7 +492,7 @@ export default function DestinationsSection() {
                   <div className="eib-chat-side">
                     <div className="eib-title-row">
                       <Users size={20} strokeWidth={2} className="eib-title-icon" aria-hidden />
-                      <h3 className="eib-title">Plan a trip together<br />with your friends.</h3>
+                      <h3 className="eib-title">Plan a trip together<br />with your friends</h3>
                     </div>
                     <div className="eib-friends-row">
                       {[profileSydney, profileNatalie, profileSofiee].map((src, i) => (
@@ -590,7 +590,7 @@ export default function DestinationsSection() {
                   <div className="eib-save-text">
                     <div className="eib-title-row">
                       <Download size={20} strokeWidth={2} className="eib-title-icon" aria-hidden />
-                      <h3 className="eib-title">Import from anywhere.</h3>
+                      <h3 className="eib-title">Import from anywhere</h3>
                     </div>
                     <p className="eib-sub">Pull in spots from Instagram reels, TikTok clips, Google Maps links, screenshots, and more.</p>
                   </div>
@@ -655,7 +655,7 @@ export default function DestinationsSection() {
                 />
                 <div className="eib-title-row eib-title-row--center">
                   <Sparkles size={18} strokeWidth={2} className="eib-title-icon" aria-hidden />
-                  <h3 className="eib-title eib-ff-title">Free forever.</h3>
+                  <h3 className="eib-title eib-ff-title">Free forever</h3>
                 </div>
               </div>
               </div>{/* /.eib-row--bottom */}
