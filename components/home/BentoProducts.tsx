@@ -426,6 +426,12 @@ const CSS = `
   align-items: center;
   gap: 12px;
 }
+/* Nudge the whole brand row (logo + name) 5px left on the Columbus + Elio
+   tiles so it sits a touch tighter to the card's left edge. */
+.bp-card--columbus .bp-brand,
+.bp-card--elio .bp-brand {
+  margin-left: -5px;
+}
 .bp-logo {
   width: clamp(36px, 9vw, 42px);
   height: clamp(36px, 9vw, 42px);
@@ -456,15 +462,21 @@ const CSS = `
 }
 /* Columbus wordmark colour matches the logo to its left — same navy
    #0F173C the COLUMBUS_LOGO_FILTER chain lands on (and the same value
-   MistxNav uses for "Columbus Earth"). Font-size is pinned so the
-   cap-height visually matches the logo (42px mobile / 50px ≥1024px) —
-   sans-serif cap-height is ~0.72× font-size, so font-size = logo /
-   0.72 ≈ 30px mobile / 36px ≥1024px. line-height: 1 keeps the box from
-   carrying empty descender space that would push the row out of sync. */
+   MistxNav uses for "Columbus Earth"). Font-size is set so this live-text
+   wordmark's cap-height matches the VISIBLE height of the Elio wordmark
+   IMAGE on the adjacent tile (~21px mobile / ~25px desktop), so the two
+   top-row product names read at one consistent size. Axiforma cap-height is
+   ~0.7× font-size, and the Elio glyphs occupy ~50% of their image box, so
+   font ≈ 0.72 × Elio image height → ~clamp(26,6.5vw,30) mobile / 36px desktop.
+   line-height: 1 keeps the box from carrying empty descender space. */
 .bp-card--columbus .bp-name {
   color: #0F173C;
-  font-size: clamp(20px, 5.5vw, 26px);
+  font-size: clamp(26px, 6.5vw, 30px);
   line-height: 1;
+  /* Pull the name left to absorb the logobueno.png transparent padding
+     (~12.2% of the logo box on every side), so the VISIBLE logo→name gap
+     matches the other tiles rather than reading ~6px looser. */
+  margin-left: -5px;
   /* Drops the wordmark a hair below the brand row's optical centre so
      the baseline of the "C" sits closer to the bottom of the logo mark
      rather than dead-centred against it. */
@@ -472,7 +484,8 @@ const CSS = `
 }
 @media (min-width: 1024px) {
   .bp-card--columbus .bp-name {
-    font-size: 30px;
+    font-size: 36px;
+    margin-left: -6px;
     transform: translateY(4px);
   }
 }
@@ -541,19 +554,22 @@ const CSS = `
 /* Elio tile renders only the block "Elio" wordmark next to the brand
    icon. The source PNG is white-on-transparent — recoloured to the same
    navy #0F173C used by the Columbus wordmark on the tile to its left so
-   both product names share a palette across the bento row. */
+   both product names share a palette across the bento row. The negative
+   margin-left absorbs BOTH the MapsGPT logo's right transparent padding
+   (~6.8%) AND the wordmark PNG's own left dead space (~6.9%), so the
+   VISIBLE logo→wordmark gap matches the other tiles. */
 .bp-elio-name {
   width: auto;
   height: clamp(36px, 9vw, 42px);
   object-fit: contain;
   flex: 0 0 auto;
-  margin-left: -4px;
+  margin-left: -7px;
   filter: brightness(0) saturate(100%) invert(8%) sepia(80%) saturate(1400%) hue-rotate(215deg) brightness(90%);
 }
 @media (min-width: 1024px) {
   .bp-logo { width: 50px; height: 50px; }
   .bp-card--wide .bp-logo { width: 56px; height: 56px; }
-  .bp-elio-name { height: 50px; margin-left: -5px; }
+  .bp-elio-name { height: 50px; margin-left: -8px; }
 }
 
 /* Brand row → tagline gap = the shared --bp-gap scale. */
