@@ -243,8 +243,10 @@ const CSS = `
      by its soft drop shadow); only the notch's own cut silhouette (right +
      bottom borders + the two fillet arcs) carries a hairline, so there is no
      line tracing around the whole card or running out around the label.
-     Margins track the card's per-breakpoint padding. */
-  margin: -28px 0 6px -28px;
+     Top/left margins track the card's per-breakpoint padding; the bottom
+     margin is the gap down to the brand row (logo + name) below — widened
+     from 6px for more mobile breathing room between the chip and the name. */
+  margin: -28px 0 18px -28px;
   /* No top/left padding → the chip sits flush in the corner; the small
      right/bottom padding is the tight cut frame before the silhouette. */
   padding: 0 6px 5px 0;
@@ -327,15 +329,16 @@ const CSS = `
   color: #FFFFFF;
   white-space: nowrap;
 }
-/* Per-card chip tint — sampled from each card's background image so the
-   label matches the imagery it belongs to:
-     • Columbus — #78A2C2 (sky-blue avg of ColumbusBackgroundbento.png)
-     • Elio     — #4F8FA8 (deeper sky/teal avg of consumer/heroBackground.png)
-     • Research — #76A8F3 (the darker stop of the card's blue gradient, for
-       legible white text over the otherwise very light gradient). */
-.bp-card--columbus .bp-chip { background: #78A2C2; }
-.bp-card--elio     .bp-chip { background: #4F8FA8; }
-.bp-card--research .bp-chip { background: #76A8F3; }
+/* Per-card chip background — the EXACT top-of-sky colour from each card's
+   image (where the pill sits), so the pill reads as a true swatch of that
+   tile's backdrop. Label text stays the base white where the colour is dark
+   enough; the light Research pill flips to navy text for legibility:
+     • Columbus — #028DE3 (top sky of ColumbusBackgroundbento.png), white text
+     • Elio     — #43A2FC (top sky of elio-bento-bg.png), white text
+     • Research — #CAE5F5 (light left/top of the card's gradient → navy text) */
+.bp-card--columbus .bp-chip { background: #028DE3; }
+.bp-card--elio     .bp-chip { background: #43A2FC; }
+.bp-card--research .bp-chip { background: #CAE5F5; color: #0F173C; }
 
 /* ─────────────────────────────────────────────────────────────────────
    Mobile cut-out chip  vs.  desktop top-right notch.
