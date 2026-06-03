@@ -49,6 +49,107 @@ const MOBILE_PICKER_SHORT_LABEL: Record<string, string> = {
   "dashboard": "Dashboard",
 };
 
+// Duration of the selected-tab shape swap. The incoming tab rises up over
+// SHAPE_SWAP_MS; the outgoing tab sinks/fades out faster (SHAPE_EXIT_MS) so
+// it clears quickly and the new selection reads as the focus. SHAPE_SWAP_MS
+// (the longer of the two) also drives the timeout that retires the outgoing
+// shape node.
+const SHAPE_SWAP_MS = 340;
+const SHAPE_EXIT_MS = 160;
+
+// The Chrome tab silhouette — white top-rounded body + two masked base
+// flares — drawn as one absolutely-positioned layer at z0 (behind the
+// tab's icon + label). Shared by all three tab states so they read as the
+// SAME shape: the selected tab (opacity 1, swap animation), the hovered
+// inactive tab (opacity 0.12), and the auto-advance loading fill (opacity
+// 0.12, left→right clip-path reveal). `opacity` on the wrapper applies to
+// body + flares as a group, so the low-opacity states tint uniformly.
+//
+// The wrapper is widened by one flareSize on each side (body inset back to
+// the real tab, flares pinned at the wrapper's bottom corners). That keeps
+// the flares INSIDE the wrapper's box, so the loading fill can reveal the
+// whole shape with a `clip-path` wipe — which, unlike a scaleX transform,
+// never distorts the body's corner radius or the flare wedges.
+function TabSilhouette({
+  flareSize,
+  opacity = 1,
+  animation,
+  transition,
+  willChange,
+  fill = false,
+  shape = false,
+  onAnimationEnd,
+}: {
+  flareSize: string;
+  opacity?: number;
+  animation?: string;
+  transition?: string;
+  willChange?: string;
+  fill?: boolean;
+  shape?: boolean;
+  onAnimationEnd?: React.AnimationEventHandler<HTMLDivElement>;
+}) {
+  return (
+    <div
+      aria-hidden
+      data-bh-tab-fill={fill ? "" : undefined}
+      data-bh-tab-shape={shape ? "" : undefined}
+      onAnimationEnd={onAnimationEnd}
+      style={{
+        position: "absolute",
+        top: 0,
+        bottom: 0,
+        left: `calc(-1 * ${flareSize})`,
+        right: `calc(-1 * ${flareSize})`,
+        opacity,
+        zIndex: 0,
+        pointerEvents: "none",
+        animation,
+        transition,
+        willChange,
+      }}
+    >
+      {/* Body — the white top-rounded tab face, inset by flareSize so it
+          lands exactly on the real tab. */}
+      <div
+        style={{
+          position: "absolute",
+          top: 0,
+          bottom: 0,
+          left: flareSize,
+          right: flareSize,
+          background: "#FFFFFF",
+          borderRadius: "12px 12px 0 0",
+        }}
+      />
+      <div
+        style={{
+          position: "absolute",
+          left: 0,
+          bottom: 0,
+          width: flareSize,
+          height: flareSize,
+          background: "#FFFFFF",
+          WebkitMaskImage: `radial-gradient(circle at top left, transparent ${flareSize}, black ${flareSize})`,
+          maskImage: `radial-gradient(circle at top left, transparent ${flareSize}, black ${flareSize})`,
+        }}
+      />
+      <div
+        style={{
+          position: "absolute",
+          right: 0,
+          bottom: 0,
+          width: flareSize,
+          height: flareSize,
+          background: "#FFFFFF",
+          WebkitMaskImage: `radial-gradient(circle at top right, transparent ${flareSize}, black ${flareSize})`,
+          maskImage: `radial-gradient(circle at top right, transparent ${flareSize}, black ${flareSize})`,
+        }}
+      />
+    </div>
+  );
+}
+
 export default function BusinessHero() {
   const sectionRef = useRef<HTMLElement>(null);
   const [visible, setVisible] = useState(false);
@@ -114,6 +215,28 @@ export default function BusinessHero() {
   // show a hover highlight (a darker translucent shape) without their
   // default state painting any background at all.
   const [hoveredTabId, setHoveredTabId] = useState<string | null>(null);
+  // Desktop auto-advance: a fill bar charges up the NEXT tab over 5s and,
+  // on completion, promotes it to the active tab — a self-running demo
+  // that signals the tab strip is interactive. `runId` remounts the fill
+  // <span> so its CSS animation restarts on every advance / manual click
+  // (same trick ComparisonSection uses). `onScreen` is a *continuous*
+  // in-view flag (distinct from the one-shot `visible` reveal below) so
+  // the cycle pauses while the hero is scrolled out of view.
+  const [runId, setRunId] = useState(0);
+  const [onScreen, setOnScreen] = useState(false);
+  // Gates the auto-advance so it only begins once the page's critical
+  // media has loaded (hero background photo + active product mockup,
+  // both already high-priority/eager — see the LCP <ImageWithFallback>
+  // and the `eager` MapChat demo below). We wait for window `load`, then
+  // yield one idle tick, so the animation never competes with that work
+  // for the main thread / network. Until then the fill stays unrendered.
+  const [animReady, setAnimReady] = useState(false);
+  // The tab the selection just left. Set synchronously by the select /
+  // advance handlers (so the outgoing sink-down and incoming rise-up start
+  // on the same frame) and kept for one SHAPE_SWAP_MS beat, then retired.
+  // Doubles as the "a swap is in progress" flag — when null, the active
+  // tab's silhouette is static (no entrance on initial load).
+  const [prevActiveTabId, setPrevActiveTabId] = useState<string | null>(null);
   const dragTabIndex = useRef<number | null>(null);
 
   const moveTab = (from: number, to: number) => {
@@ -142,6 +265,73 @@ export default function BusinessHero() {
     obs.observe(el);
     return () => obs.disconnect();
   }, []);
+
+  // Continuous in-view observer — drives `onScreen` both ways so the
+  // tab auto-advance pauses when the hero scrolls out of view (in either
+  // direction — `isIntersecting` is false once the section is fully
+  // above OR below the viewport) and resumes when it returns. Kept
+  // separate from the one-shot reveal above, which disconnects after
+  // first intersection.
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([e]) => setOnScreen(e.isIntersecting),
+      { threshold: 0 }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+
+  // Deferred start — hold the auto-advance until everything else has
+  // loaded. Wait for window `load` (all images incl. the hero photo +
+  // product mockups are in by then), then a requestIdleCallback tick so
+  // first paint / image decode win the main thread before any fill runs.
+  useEffect(() => {
+    let idleId: number | undefined;
+    let timeoutId: ReturnType<typeof setTimeout> | undefined;
+    const ric = (window as typeof window & {
+      requestIdleCallback?: (cb: () => void, opts?: { timeout: number }) => number;
+    }).requestIdleCallback;
+    const start = () => {
+      if (ric) idleId = ric(() => setAnimReady(true), { timeout: 2000 });
+      else timeoutId = setTimeout(() => setAnimReady(true), 500);
+    };
+    if (document.readyState === "complete") start();
+    else window.addEventListener("load", start, { once: true });
+    return () => {
+      window.removeEventListener("load", start);
+      const cic = (window as typeof window & {
+        cancelIdleCallback?: (id: number) => void;
+      }).cancelIdleCallback;
+      if (idleId !== undefined && cic) cic(idleId);
+      if (timeoutId) clearTimeout(timeoutId);
+    };
+  }, []);
+
+  // Auto-advance bookkeeping. `activeIndex` / `nextTabId` are derived
+  // from the live (drag-reorderable) `tabs` order each render. The fill
+  // pauses while the hero is off-screen or the user is hovering any tab.
+  const activeIndex = tabs.findIndex(t => t.id === activeTabId);
+  const nextTabId = tabs[(activeIndex + 1) % tabs.length]?.id;
+  const paused = !onScreen || hoveredTabId !== null;
+  // Promote the next tab to active and restart the fill on the one after
+  // it. Closes over the current `activeIndex` (the fill <span> is keyed by
+  // runId, so this handler is re-created with a fresh index each cycle).
+  const advance = () => {
+    setPrevActiveTabId(activeTabId);
+    setActiveTabId(tabs[(activeIndex + 1) % tabs.length].id);
+    setRunId(r => r + 1);
+  };
+
+  // Retire the leaving tab's silhouette once its exit animation finishes
+  // (one swap-beat after `prevActiveTabId` is set). Clearing it back to
+  // null also returns the now-settled active tab to its static state.
+  useEffect(() => {
+    if (prevActiveTabId === null) return;
+    const t = setTimeout(() => setPrevActiveTabId(null), SHAPE_SWAP_MS);
+    return () => clearTimeout(t);
+  }, [prevActiveTabId]);
 
   return (
     <section
@@ -430,14 +620,15 @@ export default function BusinessHero() {
                 {tabs.map((tab, i) => {
                   const active = tab.id === activeTabId;
                   const hovered = tab.id === hoveredTabId;
-                  // Selected tab paints the full Chrome silhouette
-                  // (white body + matching white flares). Every other
-                  // state leaves the tab body transparent — the hover
-                  // highlight is a separate inset pill rendered below,
-                  // shaped like a regular button (rounded all corners,
-                  // confined to the tab body) so the flared base only
-                  // appears for the active tab.
-                  const tabBg = active ? "#FFFFFF" : "transparent";
+                  // The white Chrome silhouette (body + flares) is drawn as
+                  // one absolutely-positioned overlay so it can animate as a
+                  // single unit: rising UP/in when a tab is selected and
+                  // sinking DOWN/out when it's deselected. It's mounted for
+                  // the active tab (`entering`) AND for the tab the selection
+                  // just left (mid-exit). Inactive tabs keep a transparent
+                  // body + the separate hover / fill pills below.
+                  const shapeActive = active || tab.id === prevActiveTabId;
+                  const entering = active;
                   // Flare size — clamps the active tab's Chrome-style
                   // bottom-corner flares from 16px (desktop) down to 8px
                   // at phone widths so they stay proportional to the
@@ -449,7 +640,12 @@ export default function BusinessHero() {
                   <div
                     key={tab.id}
                     draggable
-                    onClick={() => setActiveTabId(tab.id)}
+                    onClick={() => {
+                      if (tab.id === activeTabId) return;
+                      setPrevActiveTabId(activeTabId);
+                      setActiveTabId(tab.id);
+                      setRunId(r => r + 1);
+                    }}
                     onMouseEnter={() => setHoveredTabId(tab.id)}
                     onMouseLeave={() => setHoveredTabId(prev => (prev === tab.id ? null : prev))}
                     onDragStart={() => { dragTabIndex.current = i; }}
@@ -475,7 +671,9 @@ export default function BusinessHero() {
                       // the Chrome tab silhouette (top-rounded, no
                       // bottom curve).
                       borderRadius: "12px 12px 0 0",
-                      background: tabBg,
+                      // Body is transparent — the white silhouette is the
+                      // animated overlay below, not the tab div's own fill.
+                      background: "transparent",
                       // No border on any tab — the fill + the flared
                       // base define each tab's silhouette.
                       border: "none",
@@ -487,13 +685,9 @@ export default function BusinessHero() {
                       maxWidth: 185,
                       cursor: "pointer",
                       userSelect: "none",
-                      /* No background transition — the flared base
-                         corners are conditionally-rendered divs that
-                         appear instantly when a tab becomes active, so
-                         transitioning the body fade-in created a visible
-                         desync (flares snap in while the body still
-                         interpolated). Snapping the body in instantly
-                         matches the flares' arrival exactly. */
+                      /* The white silhouette now lives in a single overlay
+                         layer (body + flares together), so the old body/flare
+                         desync can't happen — they animate as one unit. */
                       // Relative so each tab can host two absolute "ear"
                       // divs at its bottom-left and bottom-right that
                       // draw the Chrome-style flared base — concave
@@ -502,80 +696,70 @@ export default function BusinessHero() {
                       position: "relative",
                     }}
                   >
-                    {/* Hover highlight — only inactive tabs get this.
-                        An inset rounded pill (4px inset from every
-                        edge, fully rounded) painted with a dark
-                        translucent scrim so the hovered tab reads as
-                        a darker shape against the frosted title bar.
-                        Confined to the tab body — the flares stay
-                        clear, so the hover effect looks like a button
-                        highlight inside the tab rather than the full
-                        Chrome silhouette (which is reserved for the
-                        active tab). */}
-                    {!active && (
-                      <div
-                        aria-hidden
-                        style={{
-                          position: "absolute",
-                          // Frozen to desktop insets/radius — ScaleToFit shrinks the unit.
-                          top: "4px",
-                          left: "4px",
-                          right: "4px",
-                          bottom: "4px",
-                          borderRadius: "10px",
-                          background: hovered ? "rgba(255,255,255,0.12)" : "transparent",
-                          transition: "background 180ms ease",
-                          pointerEvents: "none",
+                    {/* Hover highlight — inactive tabs that AREN'T the
+                        charging (next) tab. The full Chrome silhouette (same
+                        body + flares as the selected state) at the low 0.12
+                        opacity, fading in/out on hover. The next tab is
+                        skipped because its fill silhouette is already mounted
+                        there (hovering it pauses the fill rather than painting
+                        a second 0.12 layer on top). Before `animReady` there's
+                        no fill yet, so the next tab still gets a hover here. */}
+                    {!active && !(tab.id === nextTabId && animReady) && (
+                      <TabSilhouette
+                        flareSize={flareSize}
+                        opacity={hovered ? 0.12 : 0}
+                        transition="opacity 180ms ease"
+                      />
+                    )}
+                    {/* Auto-advance loading fill — the upcoming (next) tab.
+                        Same silhouette shape at 0.12, revealed left→right via
+                        a clip-path wipe over 5s. Stays mounted even while
+                        hovered so hovering only PAUSES it (via `paused` →
+                        animation-play-state) and it resumes from the same
+                        point on mouse-out — never restarts. On completion it
+                        promotes itself to the active tab (advance) and
+                        remounts (key=runId) on the new next tab. Lives inside
+                        `hidden lg:flex`, so it never renders/animates on
+                        mobile → no auto-advance there. `animReady` holds it
+                        back until the page's critical media has loaded. */}
+                    {animReady && !active && tab.id === nextTabId && (
+                      <TabSilhouette
+                        key={runId}
+                        flareSize={flareSize}
+                        fill
+                        opacity={0.12}
+                        animation={`bhTabFill 5000ms linear forwards ${paused ? "paused" : "running"}`}
+                        willChange={paused ? "auto" : "clip-path"}
+                        onAnimationEnd={(e) => {
+                          if (e.animationName === "bhTabFill") advance();
                         }}
                       />
                     )}
-                    {/* Tab flares — only the active tab gets these.
-                        Two 16×16 masked squares pinned just outside the
-                        bottom-left and bottom-right corners. Mask centre
-                        sits at the FAR corner of each flare (away from
-                        the tab AND away from the baseline — top-left of
-                        the left flare, top-right of the right flare).
-                        The cutout removes the far corner, leaving a
-                        wedge whose right/bottom edges are flat (flush
-                        against the tab edge and the baseline) and whose
-                        outer edge is a smooth concave arc sweeping from
-                        the baseline up-and-outward to 16px to the side
-                        / 16px above the baseline. */}
-                    {active && (
-                      <>
-                        <div
-                          aria-hidden
-                          style={{
-                            position: "absolute",
-                            left: `calc(-1 * ${flareSize})`,
-                            bottom: 0,
-                            width: flareSize,
-                            height: flareSize,
-                            background: tabBg,
-                            WebkitMaskImage:
-                              `radial-gradient(circle at top left, transparent ${flareSize}, black ${flareSize})`,
-                            maskImage:
-                              `radial-gradient(circle at top left, transparent ${flareSize}, black ${flareSize})`,
-                            pointerEvents: "none",
-                          }}
-                        />
-                        <div
-                          aria-hidden
-                          style={{
-                            position: "absolute",
-                            right: `calc(-1 * ${flareSize})`,
-                            bottom: 0,
-                            width: flareSize,
-                            height: flareSize,
-                            background: tabBg,
-                            WebkitMaskImage:
-                              `radial-gradient(circle at top right, transparent ${flareSize}, black ${flareSize})`,
-                            maskImage:
-                              `radial-gradient(circle at top right, transparent ${flareSize}, black ${flareSize})`,
-                            pointerEvents: "none",
-                          }}
-                        />
-                      </>
+                    {/* Selected silhouette — the white tab body + its two
+                        Chrome base flares as ONE layer (so they animate
+                        together) at full opacity. Rendered for the active
+                        tab (rises up / fades in) and the tab the selection
+                        just left (sinks down / fades out), making selection
+                        visibly swap from one tab to the next. Sits at z0,
+                        behind the icon + label (z1). */}
+                    {shapeActive && (
+                      <TabSilhouette
+                        flareSize={flareSize}
+                        shape
+                        opacity={1}
+                        willChange="transform, opacity"
+                        // Outgoing tab → always sink down/out. Incoming tab →
+                        // rise up/in only during an actual swap (prevActiveTabId
+                        // set); on first load it's static so the selected tab
+                        // doesn't animate in unprompted.
+                        animation={
+                          !entering
+                            ? `bhTabShapeOut ${SHAPE_EXIT_MS}ms cubic-bezier(0.4,0,1,1) forwards`
+                            : prevActiveTabId !== null
+                              ? `bhTabShapeIn ${SHAPE_SWAP_MS}ms cubic-bezier(0.22,1,0.36,1) forwards`
+                              : "none"
+                        }
+                      />
                     )}
                     {/* Feature icon — same SVG paths as the super-feature
                         section header below, scaled to the tab favicon
@@ -585,7 +769,6 @@ export default function BusinessHero() {
                       aria-hidden
                       viewBox="0 0 24 24"
                       fill="none"
-                      stroke={active ? "var(--ent-text-primary)" : "#FFFFFF"}
                       strokeWidth="1.8"
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -593,6 +776,13 @@ export default function BusinessHero() {
                         width: "16px",
                         height: "16px",
                         flexShrink: 0,
+                        // Above the white silhouette overlay (z0).
+                        position: "relative",
+                        zIndex: 1,
+                        // Ink on the white silhouette, white on dark glass;
+                        // eased so it crossfades with the shape swap.
+                        stroke: active ? "var(--ent-text-primary)" : "#FFFFFF",
+                        transition: "stroke 200ms ease",
                       }}
                     >
                       {tab.icon}
@@ -602,10 +792,15 @@ export default function BusinessHero() {
                         fontSize: "15px",
                         fontWeight: 500,
                         letterSpacing: "-0.01em",
+                        // Above the white silhouette overlay (z0).
+                        position: "relative",
+                        zIndex: 1,
                         // Selected → ink (sits on the active tab's white
                         // silhouette). Inactive → pure white, full opacity
-                        // on the navy dark-glass background.
+                        // on the navy dark-glass background. Eased so it
+                        // crossfades with the shape swap.
                         color: active ? "var(--ent-text-primary)" : "#FFFFFF",
+                        transition: "color 200ms ease",
                         whiteSpace: "nowrap",
                         overflow: "hidden",
                         textOverflow: "ellipsis",
@@ -665,6 +860,32 @@ export default function BusinessHero() {
                    shrinks it so the inner mockup corner stays visually inboard
                    of the window's radius. */
                 border-radius: 16px !important;
+              }
+              /* Desktop tab auto-advance fill — reveals the next tab's
+                 silhouette left→right over its 5s cycle. A clip-path wipe
+                 (not a scaleX transform) so the body's corner radius + the
+                 flare wedges stay undistorted at every point of the fill. */
+              @keyframes bhTabFill {
+                from { -webkit-clip-path: inset(0 100% 0 0); clip-path: inset(0 100% 0 0); }
+                to   { -webkit-clip-path: inset(0 0 0 0);    clip-path: inset(0 0 0 0); }
+              }
+              /* Selected-tab silhouette swap — the new tab's white shape
+                 rises UP into existence; the leaving tab's shape sinks
+                 DOWN out of view. */
+              @keyframes bhTabShapeIn {
+                from { transform: translateY(40%); opacity: 0; }
+                to   { transform: translateY(0);   opacity: 1; }
+              }
+              @keyframes bhTabShapeOut {
+                from { transform: translateY(0);   opacity: 1; }
+                to   { transform: translateY(40%); opacity: 0; }
+              }
+              /* Respect reduced-motion: no animated fill, no auto-advance
+                 (the keyed span never reaches animationEnd, so the strip
+                 stays purely click-to-select), and no sliding shape swap. */
+              @media (prefers-reduced-motion: reduce) {
+                [data-bh-tab-fill] { animation: none !important; }
+                [data-bh-tab-shape] { animation: none !important; }
               }
             `}</style>
           </div>

@@ -193,7 +193,7 @@ export default function IndustryStickyNavbar({ lightTheme = false, topOffset = 5
   useEffect(() => {
     // Ensure we only run in the browser
     if (typeof window === "undefined") return;
-    if (!Number.isFinite(effectiveTop)) return;
+    if (!Number.isFinite(topOffset)) return;
 
     const target =
       document.querySelector<HTMLElement>("[data-industry-sticky-zone]") ??
@@ -201,7 +201,17 @@ export default function IndustryStickyNavbar({ lightTheme = false, topOffset = 5
     if (!target) return;
 
     const setupObs = () => {
-      const topValue = Math.max(0, Math.floor(effectiveTop));
+      // Trigger line uses the STATIC `topOffset` (the navbar's known height,
+      // passed by the page), NOT the live-measured `effectiveTop`. The
+      // measured value swings wildly the instant `shown` flips — because the
+      // main navbar then slides up (translateY(-110%)), changing its measured
+      // bottom — and if that fed this effect's dependency the observer would
+      // be torn down + recreated every scroll frame mid-transition, flicking
+      // `shown` true↔false and making both the picker fade and the navbar
+      // slide stutter. A stable trigger keeps `shown` monotonic, so the
+      // picker appears in one clean fade + slide. The navbar height is fixed,
+      // so a couple-px difference vs. the live bottom is imperceptible here.
+      const topValue = Math.max(0, Math.floor(topOffset));
       const bottomValue = Math.max(0, Math.floor(window.innerHeight - topValue - 1));
       const rootMarginString = `-${topValue}px 0px -${bottomValue}px 0px`;
 
@@ -242,7 +252,10 @@ export default function IndustryStickyNavbar({ lightTheme = false, topOffset = 5
       }
       window.removeEventListener("resize", onResize);
     };
-  }, [effectiveTop]);
+    // Depends on the STABLE topOffset only — see the note in setupObs. Using
+    // effectiveTop here (the live navbar-bottom measurement) caused the
+    // observer to churn on every scroll frame and made the picker stutter.
+  }, [topOffset]);
 
   // Track horizontal scroll position so we can show / hide the edge gradients.
   const updateScrollState = useCallback(() => {
