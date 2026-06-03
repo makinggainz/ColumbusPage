@@ -102,7 +102,7 @@ export default function BusinessPage() {
               wrapper, so the navbar appears the moment the user scrolls
               into the first super-feature ("Ask, Discover, Understand")
               and stays visible through the use-case stack below. */}
-          <div data-industry-sticky-zone>
+          <div data-industry-sticky-zone data-use-case-rows>
             <BusinessUseCases />
           </div>
         </IndustryProvider>

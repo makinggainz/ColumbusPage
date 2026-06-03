@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useIndustry } from "./IndustryContext";
-import { INDUSTRY_CONTENT, INDUSTRY_ORDER } from "./content";
+import { INDUSTRY_CONTENT, INDUSTRY_COLOR, INDUSTRY_ORDER } from "./content";
 import type { IndustryId } from "./types";
 
 type IndustryStickyNavbarProps = {
@@ -291,7 +291,6 @@ export default function IndustryStickyNavbar({ lightTheme = false, topOffset = 5
     ? "text-[rgba(29,29,31,0.45)] hover:text-[#1D1D1F]"
     : "text-white/45 hover:text-white";
   const activeLinkClass = lightTheme ? "text-[#1D1D1F]" : "text-white";
-  const activeUnderlineColor = lightTheme ? "bg-[#1D1D1F]" : "bg-white";
 
   // Edge fades — solid bg colour on the outer end fading to transparent on
   // the inner side, so they sit flat over the navbar's own bg.
@@ -402,18 +401,17 @@ export default function IndustryStickyNavbar({ lightTheme = false, topOffset = 5
                   type="button"
                   data-industry-link={id}
                   onClick={() => handleSelect(id)}
-                  className={`relative shrink-0 cursor-pointer whitespace-nowrap py-1 text-[14px] font-medium tracking-[-0.005em] transition-colors duration-200 ${
+                  className={`relative shrink-0 cursor-pointer whitespace-nowrap rounded-full px-3 py-1.5 text-[14px] font-medium tracking-[-0.005em] transition-colors duration-200 ${
                     isActive ? activeLinkClass : idleLinkClass
                   }`}
+                  /* Active-pill bg = the industry's accent (INDUSTRY_COLOR)
+                     at ~12% alpha (`#RRGGBB1F`) — same recipe the iconGrid
+                     in "Use cases in your industry" uses for its active
+                     cell, so the two pickers stay visually in sync. */
+                  style={isActive && INDUSTRY_COLOR[id] ? { backgroundColor: `${INDUSTRY_COLOR[id]}1F` } : undefined}
                   aria-pressed={isActive}
                 >
                   {item.shortName ?? item.name}
-                  {isActive && (
-                    <span
-                      className={`absolute left-0 right-0 -bottom-0.5 h-px ${activeUnderlineColor}`}
-                      aria-hidden
-                    />
-                  )}
                 </button>
               );
             })}
