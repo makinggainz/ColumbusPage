@@ -4384,6 +4384,14 @@
    alternate above/below the horizontal track. A soft brand-blue halo
    emanates from the centerline (top + bottom layers fading to transparent). */
 .lgmTimeline {
+  /* Line + dot colour. A neutral slate (#858AA3) per design direction:
+     the previous navy (--tech-color-text-brand → --color-cta #0B1342) read
+     as a dark indigo/purple at 1px against the warm off-white field. Per
+     the site-wide "no purple anywhere" rule, the track, milestone / minor /
+     trailing dots, the stems, and the mobile rail + dots all pull from this
+     one token. The "now" accent + the CTA links stay brand-blue (#1451E8 —
+     a true blue, not purple) so the present-moment marker still pops. */
+  --lgm-line: #858AA3;
   position: relative;
   margin-top: clamp(40px, 5vw, 72px);
   /* .editorialSlide no longer adds horizontal padding (the content bound is
@@ -4438,7 +4446,7 @@
   left: 0;
   right: calc(-1 * (var(--tech-sidebar-x) + var(--page-padding)));
   height: 1px;
-  background: var(--tech-color-text-brand);
+  background: var(--lgm-line);
   z-index: 200;
 }
 
@@ -4448,7 +4456,7 @@
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  background: var(--tech-color-text-brand);
+  background: var(--lgm-line);
   transform: translate(-50%, -50%);
   z-index: 2;
 }
@@ -4458,7 +4466,7 @@
 .lgmTimelineDotMinor {
   width: 5px;
   height: 5px;
-  background: var(--tech-color-text-brand);
+  background: var(--lgm-line);
   opacity: 0.22;
 }
 
@@ -4468,7 +4476,7 @@
 .lgmTimelineDotTrailing {
   width: 4px;
   height: 4px;
-  background: var(--tech-color-text-brand);
+  background: var(--lgm-line);
   opacity: 0.12;
 }
 
@@ -4602,7 +4610,7 @@
 .lgmTimelineStem {
   width: 1px;
   height: 24px;
-  background: var(--tech-color-text-brand);
+  background: var(--lgm-line);
   opacity: 0.45;
 }
 
@@ -4684,6 +4692,8 @@
    layout can't fit its absolutely-positioned labels at narrow widths, so
    the same milestone data restacks top-to-bottom along a left rail. */
 .lgmTimelineVertical {
+  /* Mobile rail + dots pull the same slate token (see .lgmTimeline). */
+  --lgm-line: #858AA3;
   display: none;
   list-style: none;
   position: relative;
@@ -4699,7 +4709,7 @@
   bottom: 6px;
   left: 5px;
   width: 1px;
-  background: var(--tech-color-text-brand);
+  background: var(--lgm-line);
 }
 
 .lgmTimelineVRow {
@@ -4721,7 +4731,7 @@
   width: 9px;
   height: 9px;
   border-radius: 50%;
-  background: var(--tech-color-text-brand);
+  background: var(--lgm-line);
   transform: translateX(-50%);
 }
 
