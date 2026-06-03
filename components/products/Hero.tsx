@@ -39,7 +39,7 @@ import introPhone from "@/public/consumer/elio/ElioHeroShowcase.png";
 import phoneCity from "@/public/consumer/elio/ElioVotingShowcase1.png";
 import phoneTravels from "@/public/consumer/elio/ElioForYourTravels.png";
 import phoneProfile from "@/public/consumer/elio/ElioProfile.png";
-import sceneCity from "@/public/consumer/elio/ElioEndingBackground.jpg";
+import sceneCity from "@/public/consumer/forYourCity.png";
 import sceneTravels from "@/public/consumer/forYourTravels.png";
 import { useRef, useEffect, useState, useCallback } from "react";
 import { ImageWithFallback } from "@/components/ui/ImageWithFallback";
@@ -968,6 +968,9 @@ export default function Hero() {
                     fetchPriority={warm ? "low" : undefined}
                     style={{
                       objectFit: "cover",
+                      // Scene 1 is the hotel-window skyline — pan the visible
+                      // band down so more of Central Park reads in the strip.
+                      objectPosition: lab.scene === 1 ? "center 52%" : undefined,
                       display: "block",
                     }}
                   />
@@ -1194,6 +1197,10 @@ function MobileScenes() {
                   loading={warm ? "eager" : "lazy"}
                   fetchPriority={warm ? "low" : undefined}
                   className="absolute inset-0 w-full h-full object-cover"
+                  // Scene 1 hotel-window skyline — pan down to show more of
+                  // Central Park (zoom is desktop-only; mobile keeps the full
+                  // cover crop).
+                  style={{ objectPosition: lab.scene === 1 ? "center 52%" : undefined }}
                 />
                 {/* Scroll-driven dim — see useEffect above. Initial
                     opacity 0.55 keeps the SSR paint identical to the
