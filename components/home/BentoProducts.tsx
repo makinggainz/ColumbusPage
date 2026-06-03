@@ -33,6 +33,7 @@ import { useMediaWarm } from "@/components/ui/MediaPrefetcher";
 // bypassed the optimizer entirely and shipped as raw multi-MB PNG.
 import bgColumbus from "@/public/ColumbusBackgroundbento.png";
 import bgElio from "@/public/elio-bento-bg.png";
+import bgResearch from "@/public/researchBento.png";
 import visualColumbus from "@/public/ColumbusHomeimg.png";
 import visualElio from "@/public/elio-bento-v3.png";
 
@@ -113,15 +114,12 @@ const CSS = `
   }
 }
 
-/* Columbus + Elio photo backdrops are now rendered as <Image fill> behind
-   the card content (see .bp-bg / .bp-bg-tint below) so the next-image
-   optimizer serves AVIF instead of the raw multi-MB PNG the old
-   background-image url() shipped. The Elio backdrop matches the
-   /products/consumer hero so clicking through lands on a continuous image.
-   Research keeps its pure-CSS gradient (no photo). */
-.bp-card--research {
-  background-image: linear-gradient(to right, #CAE5F5 0%, #76A8F3 100%);
-}
+/* Columbus + Elio + Research photo backdrops are all rendered as
+   <Image fill> behind the card content (see .bp-bg / .bp-bg-tint below)
+   so the next-image optimizer serves AVIF instead of the raw multi-MB
+   PNG the old background-image url() shipped. The Elio backdrop matches
+   the /products/consumer hero so clicking through lands on a continuous
+   image. */
 
 /* Photo backdrop <Image fill> — sits at the bottom of the card stack
    (z-index 0). object-fit: cover + center matches the old
@@ -143,6 +141,12 @@ const CSS = `
   background: linear-gradient(to top, rgba(0, 0, 0, 0.18) 0%, rgba(0, 0, 0, 0) 100%);
   pointer-events: none;
   z-index: 0;
+}
+/* Research tile has no bottom-dark tint — the wide banner is too short
+   for the gradient to ramp gracefully and the photo is already framed
+   to support the text without darkening. */
+.bp-card--research .bp-bg-tint {
+  display: none;
 }
 @media (min-width: 1024px) {
   /* Desktop tiles are a fixed 560px with the text at the top and the
@@ -186,19 +190,6 @@ const CSS = `
   background: transparent;
   pointer-events: none;
   z-index: 1;
-}
-/* Research has NO photo backdrop — just the light #CAE5F5 → #76A8F3
-   gradient with dark navy text, which is already high-contrast. The top
-   white scrim above exists to keep text legible over the BUSY photo
-   backdrops on the Columbus / Elio tiles; on Research it only washes the
-   top of the gradient lighter, breaking the clean left-to-right read. Per
-   the Gdesign collaborator note ("simple left-to-right gradient"), disable
-   the scrim here so the 'to right' gradient renders as a clean, uniform
-   horizontal band (every vertical slice one consistent colour top-to-
-   bottom). Placed AFTER .bp-card::before so it wins on source order (equal
-   specificity). */
-.bp-card--research::before {
-  display: none;
 }
 /* Elio's backdrop is a bento-specific photo (elio-bento-bg.png) — a
    skyline-from-the-park view kept separate from the consumer Hero so each
@@ -498,63 +489,6 @@ const CSS = `
   font-family: var(--font-display);
   color: #0F173C;
 }
-/* Decorative lattice / dots / topography panel anchored to the right
-   side of the Research tile. Sits behind the text content so the body
-   copy reads on top — pointer-events:none keeps it inert. Hidden on
-   narrow viewports where the tile collapses to a single column and the
-   art would crowd the text. */
-.bp-card--research .bp-research-art {
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  /* Extended leftward (was width:45% / max-width:480px) so the lattice
-     reaches across most of the tile; the SVG's viewBox width grows in
-     step (see ResearchLatticeArt) so the cell size stays constant rather
-     than scaling up. */
-  width: 82%;
-  max-width: 1000px;
-  /* Fade the grid out toward the LEFT — full opacity at the right edge,
-     ramping to transparent by the far left so the extension dissolves
-     behind the text instead of crowding it. */
-  -webkit-mask-image: linear-gradient(to right, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 60%, rgba(0, 0, 0, 1) 100%);
-  mask-image: linear-gradient(to right, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 60%, rgba(0, 0, 0, 1) 100%);
-  pointer-events: none;
-  z-index: 0;
-}
-.bp-card--research .bp-text-block {
-  position: relative;
-  z-index: 1;
-}
-@media (max-width: 1023px) {
-  .bp-card--research .bp-research-art {
-    display: none;
-  }
-}
-/* Transparent (removebg) wireframe-globe graphic in the Research tile,
-   bottom-aligned to the card's bottom edge and horizontally centred. Sits
-   above the gradient/lattice but BELOW the text block (z-index 0 < the
-   text's 1) so it never obscures the copy. pointer-events:none keeps the
-   card link live across it.
-
-   The PNG ships as faint blue/grey lines; rather than recolour each line we
-   use the image as an ALPHA MASK over a solid accent-blue fill, so every
-   opaque pixel (the wireframe lines) renders in var(--color-accent)
-   regardless of its source colour. aspect-ratio reserves height from the
-   797×313 source so "contain" never letterboxes. */
-.bp-research-center {
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: clamp(240px, 50%, 560px);
-  aspect-ratio: 797 / 313;
-  z-index: 0;
-  pointer-events: none;
-  background-color: var(--color-accent);
-  -webkit-mask: url(/bento/research-center.png) center bottom / contain no-repeat;
-  mask: url(/bento/research-center.png) center bottom / contain no-repeat;
-}
 /* Elio tile renders only the block "Elio" wordmark next to the brand
    icon. The source PNG is white-on-transparent — recoloured to the same
    navy #0F173C used by the Columbus wordmark on the tile to its left so
@@ -758,69 +692,10 @@ const PRODUCTS: Product[] = [
     tagline: "Building the Large Geospatial Model",
     audience: "For the curious",
     ctaLabel: "Read Thesis",
+    bg: bgResearch,
     wide: true,
   },
 ];
-
-/* Decorative SVG that anchors the right side of the Research tile —
-   a layered lattice: fine subdivision grid behind a primary 40px grid,
-   crossed with 45° diagonal lines in both directions for a true lattice
-   / cross-bracing look. All white at varying opacities so the structure
-   reads against the tile's blue gradient. */
-function ResearchLatticeArt() {
-  // W widened from 400 → 840 so the lattice spans the now-wider (extended-
-  // left) .bp-research-art panel with MORE grid columns at the same cell
-  // pitch, rather than the SVG scaling up (which would coarsen the grid).
-  // 840 stays divisible by both the 40px and 20px steps for clean lines.
-  const W = 840;
-  const H = 500;
-  const big = 40;
-  const small = 20;
-  const diagStep = 40;
-
-  const bigV = Array.from({ length: W / big + 1 }, (_, i) => i * big);
-  const bigH = Array.from({ length: H / big + 1 }, (_, i) => i * big);
-  const smallV = Array.from({ length: W / small + 1 }, (_, i) => i * small);
-  const smallH = Array.from({ length: H / small + 1 }, (_, i) => i * small);
-
-  // Diagonals (slope +1 and -1) sweeping the whole panel.
-  const positiveDiagonals: number[] = [];
-  for (let c = -W; c <= H; c += diagStep) positiveDiagonals.push(c);
-  const negativeDiagonals: number[] = [];
-  for (let c = 0; c <= W + H; c += diagStep) negativeDiagonals.push(c);
-
-  return (
-    <svg
-      viewBox={`0 0 ${W} ${H}`}
-      width="100%"
-      height="100%"
-      preserveAspectRatio="xMidYMid slice"
-      aria-hidden="true"
-    >
-      {/* Fine subdivision grid */}
-      <g stroke="rgba(255,255,255,0.14)" strokeWidth="0.5">
-        {smallV.map((x) => <line key={`sv${x}`} x1={x} y1={0} x2={x} y2={H} />)}
-        {smallH.map((y) => <line key={`sh${y}`} x1={0} y1={y} x2={W} y2={y} />)}
-      </g>
-
-      {/* Diagonal cross-hatch lattice */}
-      <g stroke="rgba(255,255,255,0.18)" strokeWidth="0.4">
-        {positiveDiagonals.map((c, i) => (
-          <line key={`pd${i}`} x1={0} y1={c} x2={W} y2={c + W} />
-        ))}
-        {negativeDiagonals.map((c, i) => (
-          <line key={`nd${i}`} x1={0} y1={c} x2={W} y2={c - W} />
-        ))}
-      </g>
-
-      {/* Primary 40px grid on top */}
-      <g stroke="rgba(255,255,255,0.38)" strokeWidth="0.6">
-        {bigV.map((x) => <line key={`bv${x}`} x1={x} y1={0} x2={x} y2={H} />)}
-        {bigH.map((y) => <line key={`bh${y}`} x1={0} y1={y} x2={W} y2={y} />)}
-      </g>
-    </svg>
-  );
-}
 
 /* Signature 5-dot diagonal arrow used by CtaBanner / Careers / ProductCell.
    Circles use currentColor so the wrapping `.bp-cta-arrow` controls the
@@ -965,16 +840,6 @@ export function BentoProducts() {
                     fetchPriority={warm ? "low" : undefined}
                   />
                 </div>
-              )}
-              {p.cellClass === "bp-card--research" && (
-                <div className="bp-research-art" aria-hidden>
-                  <ResearchLatticeArt />
-                </div>
-              )}
-              {/* Wireframe globe — rendered as a masked fill (not an <img>)
-                  so its lines take the accent blue; see .bp-research-center. */}
-              {p.cellClass === "bp-card--research" && (
-                <span className="bp-research-center" aria-hidden />
               )}
             </a>
           ))}
