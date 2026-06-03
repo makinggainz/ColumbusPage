@@ -355,8 +355,9 @@ const CSS = `
 .bp-notch-label {
   font-size: 18px;
   line-height: 1;
-  font-weight: 500;
+  font-weight: 600;
   letter-spacing: -0.015em;
+  text-transform: uppercase;
   white-space: nowrap;
 }
 .bp-card--columbus .bp-notch-label { color: #015C94; }

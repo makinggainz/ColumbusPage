@@ -696,15 +696,15 @@ export default function BusinessHero() {
                       position: "relative",
                     }}
                   >
-                    {/* Hover highlight — inactive tabs that AREN'T the
-                        charging (next) tab. The full Chrome silhouette (same
-                        body + flares as the selected state) at the low 0.12
-                        opacity, fading in/out on hover. The next tab is
-                        skipped because its fill silhouette is already mounted
-                        there (hovering it pauses the fill rather than painting
-                        a second 0.12 layer on top). Before `animReady` there's
-                        no fill yet, so the next tab still gets a hover here. */}
-                    {!active && !(tab.id === nextTabId && animReady) && (
+                    {/* Hover highlight — EVERY inactive tab gets the full
+                        Chrome silhouette (same body + flares as the selected
+                        state) at the low 0.12 opacity, fading in/out on hover
+                        so hovering always reads as "selectable". On the
+                        charging (next) tab this rides on top of the fill,
+                        which drops to opacity 0 while hovered (below) so the
+                        two 0.12 layers never stack — the fill stays mounted +
+                        paused underneath and resumes on leave. */}
+                    {!active && (
                       <TabSilhouette
                         flareSize={flareSize}
                         opacity={hovered ? 0.12 : 0}
@@ -727,7 +727,13 @@ export default function BusinessHero() {
                         key={runId}
                         flareSize={flareSize}
                         fill
-                        opacity={0.12}
+                        // Hidden while THIS tab is hovered (the full hover
+                        // silhouette above takes over the visual), but kept
+                        // mounted + paused so its clip progress is preserved
+                        // and resumes on leave. Eased so it crossfades with
+                        // the hover highlight.
+                        opacity={hovered ? 0 : 0.12}
+                        transition="opacity 180ms ease"
                         animation={`bhTabFill 5000ms linear forwards ${paused ? "paused" : "running"}`}
                         willChange={paused ? "auto" : "clip-path"}
                         onAnimationEnd={(e) => {
