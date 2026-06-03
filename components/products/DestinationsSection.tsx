@@ -11,6 +11,7 @@ import Image from "next/image";
 import { useRef, useEffect, useState } from "react";
 import { Heart, Plus, CalendarDays, Users, Download, Sparkles, Check } from "lucide-react";
 import { useMediaWarm } from "@/components/ui/MediaPrefetcher";
+import { ScaleToFit } from "@/components/technology/redesign/ScaleToFit";
 // Static imports → AVIF + blur-up for the heavy bento mockups + Friends
 // avatars (were 0.85–2.4 MB raw PNG).
 import heroBackdrop from "@/public/consumer/heroBackground.png";
@@ -339,6 +340,15 @@ export default function DestinationsSection() {
             margin: "0 auto",
           }}
         >
+          {/* In-between sizing: the desktop 2-col bento renders at its fixed
+              1287px design width and ScaleToFit uniformly transform:scale()s
+              it DOWN to fit any width from ~1024px up — so it miniaturises as
+              one rigid unit instead of reflowing/cramping (same mechanism as
+              the business hero product demo). minScaleWidth 984 (= the 1024px
+              breakpoint minus the 40px gutter) makes it pass through below
+              1024px so the dedicated mobile stacked layout (<=1023px) takes
+              over unchanged; >=1287px is a passthrough so desktop is untouched. */}
+          <ScaleToFit designWidth={1287} minScaleWidth={984} className="eib-bento-scale">
           <div className="eib-bento">
             {/* LEFT column — phone mockup with the Search UI inside, +
                 a Free-forever tile under it. */}
@@ -661,6 +671,7 @@ export default function DestinationsSection() {
               </div>{/* /.eib-row--bottom */}
             </div>
           </div>
+          </ScaleToFit>
         </div>
       </div>
 
@@ -682,7 +693,7 @@ export default function DestinationsSection() {
           gap: 15px;
           align-items: stretch;
         }
-        @media (min-width: 1200px) {
+        @media (min-width: 1024px) {
           .eib-bento {
             grid-template-columns: 420px 1fr;
             grid-template-rows: 720px;
@@ -750,7 +761,7 @@ export default function DestinationsSection() {
           flex-direction: column;
           gap: 14px;
         }
-        @media (min-width: 1200px) {
+        @media (min-width: 1024px) {
           .eib-card { padding: 32px; }
         }
         /* Friends + Free-forever tiles share the Planner's sky-blue
@@ -790,7 +801,7 @@ export default function DestinationsSection() {
           flex-direction: column;
           gap: 6px;
         }
-        @media (min-width: 1200px) {
+        @media (min-width: 1024px) {
           .eib-text--over { padding: 28px; }
         }
         /* White-ink overrides on the planner card so the heading
@@ -861,7 +872,7 @@ export default function DestinationsSection() {
           filter: drop-shadow(0 12px 28px rgba(11, 27, 43, 0.18))
                   drop-shadow(0 2px 6px rgba(11, 27, 43, 0.10));
         }
-        @media (min-width: 1200px) {
+        @media (min-width: 1024px) {
           .eib-planner-itinerary {
             width: min(82%, 540px);
             bottom: 8px;
@@ -877,7 +888,7 @@ export default function DestinationsSection() {
           border: 8px solid #0F1B2D;
           border-radius: 36px;
         }
-        @media (min-width: 1200px) {
+        @media (min-width: 1024px) {
           .eib-card--phone {
             border-width: 10px;
             border-radius: 44px;
@@ -902,7 +913,7 @@ export default function DestinationsSection() {
           z-index: 2;
           pointer-events: none;
         }
-        @media (min-width: 1200px) {
+        @media (min-width: 1024px) {
           .eib-phone-notch {
             top: 16px;
             width: 118px;
@@ -920,7 +931,7 @@ export default function DestinationsSection() {
           gap: 16px;
           min-height: 0;
         }
-        @media (min-width: 1200px) {
+        @media (min-width: 1024px) {
           .eib-phone-overlay { padding: 62px 28px 28px 28px; gap: 20px; }
         }
         /* Title sits at the top of the phone screen in plain white.
@@ -1048,7 +1059,7 @@ export default function DestinationsSection() {
           min-width: 0;
           padding: 24px 0 24px 24px;
         }
-        @media (min-width: 1200px) {
+        @media (min-width: 1024px) {
           .eib-chat-side { padding: 32px 0 32px 32px; }
         }
         /* Phone mock — rounded top corners + a top/left/right border,
@@ -1062,7 +1073,7 @@ export default function DestinationsSection() {
           justify-content: flex-end;
           padding-right: 18px;
         }
-        @media (min-width: 1200px) {
+        @media (min-width: 1024px) {
           .eib-chat-phone { padding-right: 24px; }
         }
         .eib-chat-phone-img {
@@ -1079,7 +1090,7 @@ export default function DestinationsSection() {
           box-sizing: border-box;
           background: #0F1B2D;
         }
-        @media (min-width: 1200px) {
+        @media (min-width: 1024px) {
           .eib-chat-phone-img {
             width: 240px;
             border-radius: 30px 30px 0 0;
@@ -1304,7 +1315,7 @@ export default function DestinationsSection() {
           gap: 0;
           min-width: 0;
         }
-        @media (min-width: 1200px) {
+        @media (min-width: 1024px) {
           .eib-ff-tile { padding: 20px; }
         }
         .eib-ff-title {
@@ -1367,7 +1378,7 @@ export default function DestinationsSection() {
              together / with your friends." block. */
           max-width: 180px;
         }
-        @media (min-width: 1200px) {
+        @media (min-width: 1024px) {
           .eib-save-text { padding: 24px 0 24px 24px; max-width: 210px; }
         }
         /* Phone mock — top/left/right border only, no bottom; the
@@ -1388,7 +1399,7 @@ export default function DestinationsSection() {
           padding-top: 40px;
           padding-right: 63px;
         }
-        @media (min-width: 1200px) {
+        @media (min-width: 1024px) {
           .eib-save-phone { padding-top: 44px; padding-right: 69px; }
         }
         .eib-save-phone-img {
@@ -1405,7 +1416,7 @@ export default function DestinationsSection() {
           box-sizing: border-box;
           background: #0F1B2D;
         }
-        @media (min-width: 1200px) {
+        @media (min-width: 1024px) {
           .eib-save-phone-img {
             width: 220px;
             border-radius: 30px 30px 0 0;
@@ -1505,7 +1516,7 @@ export default function DestinationsSection() {
           width: 56px; height: 56px;
           top: 70%; left: 47%;
         }
-        @media (min-width: 1200px) {
+        @media (min-width: 1024px) {
           .eib-source-chip--1 { width: 80px; height: 80px; }
           .eib-source-chip--2 { width: 72px; height: 72px; }
           .eib-source-chip--3 { width: 66px; height: 66px; }
@@ -1530,7 +1541,7 @@ export default function DestinationsSection() {
           object-fit: contain;
           display: block;
         }
-        @media (min-width: 1200px) {
+        @media (min-width: 1024px) {
           .eib-icon-row { gap: 10px; }
           .eib-icon { width: 32px; height: 32px; }
         }
@@ -1576,7 +1587,7 @@ export default function DestinationsSection() {
           color: var(--color-ink, #0B1B2B);
           margin: 0 0 2px 0;
         }
-        @media (min-width: 1200px) {
+        @media (min-width: 1024px) {
           .eib-title { font-size: 1.625rem; /* 26px */ }
         }
         /* Hero variant — used by the Planner + Search anchor tiles. One
@@ -1585,7 +1596,7 @@ export default function DestinationsSection() {
           font-size: 1.75rem; /* 28px */
           line-height: 1.1;
         }
-        @media (min-width: 1200px) {
+        @media (min-width: 1024px) {
           .eib-title--hero { font-size: 2.25rem; /* 36px */ }
         }
         .eib-sub {

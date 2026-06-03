@@ -17,13 +17,21 @@ const useIsoLayoutEffect =
  *
  * Used by the research page's "LGM vs other foundation models" diagram, whose
  * 4-column grid is too wide to reflow gracefully on mobile/tablet.
+ *
+ * Optional `minScaleWidth`: when the available width drops BELOW this, the
+ * wrapper becomes a pure passthrough again (scale 1) instead of shrinking
+ * further — so a component that has its OWN dedicated layout below a breakpoint
+ * (e.g. a mobile stack) can take over there rather than being miniaturised into
+ * illegibility. Leave undefined to scale all the way down (original behavior).
  */
 export function ScaleToFit({
   designWidth,
+  minScaleWidth,
   className,
   children,
 }: {
   designWidth: number;
+  minScaleWidth?: number;
   className?: string;
   children: ReactNode;
 }) {
@@ -43,6 +51,11 @@ export function ScaleToFit({
         // Enough room — render at full size (desktop behavior, untouched).
         setScale(1);
         setHeight(undefined);
+      } else if (minScaleWidth != null && avail < minScaleWidth) {
+        // Below the floor — stop shrinking and pass through so the child's own
+        // smaller-screen layout (e.g. a mobile stack) governs instead.
+        setScale(1);
+        setHeight(undefined);
       } else {
         const next = avail / designWidth;
         setScale(next);
@@ -57,7 +70,7 @@ export function ScaleToFit({
     ro.observe(inner); // catches content/font-load reflow of the inner box
     measure();
     return () => ro.disconnect();
-  }, [designWidth]);
+  }, [designWidth, minScaleWidth]);
 
   const scaling = scale < 1;
 
