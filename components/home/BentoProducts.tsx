@@ -204,10 +204,12 @@ const CSS = `
    skyline-from-the-park view kept separate from the consumer Hero so each
    can be reframed independently. */
 
-/* Top text block — brand row, tagline, CTA stacked. Spacing is set with
-   explicit per-pair margins (on .bp-tagline / .bp-cta) rather than one
-   flex gap: see the optical-spacing note on those rules below. */
+/* Top text block — brand row, tagline, CTA stacked. One proportional gap
+   scale (--bp-gap) drives BOTH the brand→tagline and tagline→CTA gaps so the
+   rhythm is even and consistent; it steps up per breakpoint to keep pace with
+   the type/padding (which also scale), instead of fixed px that drift. */
 .bp-text-block {
+  --bp-gap: 14px;
   position: relative;
   z-index: 2;
   display: flex;
@@ -216,7 +218,8 @@ const CSS = `
   max-width: 30rem;
 }
 @media (min-width: 1024px) {
-  .bp-card--wide .bp-text-block { max-width: 34rem; }
+  .bp-text-block { --bp-gap: 18px; }
+  .bp-card--wide .bp-text-block { max-width: 34rem; --bp-gap: 22px; }
 }
 
 /* Audience cut-out — a white region notched into the card's top-left
@@ -416,6 +419,10 @@ const CSS = `
 
 .bp-brand {
   display: inline-flex;
+  /* Centered: the logo is the tallest, dominant ink, so the brand→tagline gap
+     reads from the logo's bottom (= the row box). Keeps the Columbus wordmark's
+     tuned baseline nudge intact. (Bottom-aligning to kill the below-name slack
+     was considered but regressed that baseline — revisit with a visual check.) */
   align-items: center;
   gap: 12px;
 }
@@ -549,12 +556,9 @@ const CSS = `
   .bp-elio-name { height: 50px; margin-left: -5px; }
 }
 
-/* Stacked spacing — title→subtitle. The brand row is logo-height
-   (42–56px), so it carries empty box space below the shorter product-name
-   text; the subtitle→CTA gap below (.bp-cta) adds +6px to optically
-   cancel that, so both gaps read as even whitespace. */
+/* Brand row → tagline gap = the shared --bp-gap scale. */
 .bp-tagline {
-  margin: 18px 0 0;
+  margin: var(--bp-gap) 0 0;
   font-size: var(--typography--h5);
   line-height: var(--typography--h5--line-height);
   font-weight: 500;
@@ -565,10 +569,7 @@ const CSS = `
 /* Elio tagline inherits the default ink colour so it matches the
    Columbus tagline on the tile to its left. */
 @media (min-width: 1024px) {
-  /* Wide tile keeps its roomier stack (22px title→subtitle), with the
-     same +6px optical compensation on the subtitle→CTA gap. */
-  .bp-card--wide .bp-tagline { max-width: 34rem; margin-top: 22px; }
-  .bp-card--wide .bp-cta { margin-top: 28px; }
+  .bp-card--wide .bp-tagline { max-width: 34rem; }
 }
 
 /* Signature CTA pill — same pattern as CtaBanner / Careers / ProductCell:
@@ -581,12 +582,10 @@ const CSS = `
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  /* subtitle→CTA gap. 18px (matching the title→subtitle margin) + 6px
-     optical compensation: the CTA pill's top edge is hard (line-height 1),
-     unlike the brand row above the tagline which has empty box space
-     below its name text — so the raw gap here would otherwise look
-     tighter than the title→subtitle gap. */
-  margin-top: 24px;
+  /* tagline→CTA gap = the same --bp-gap as brand→tagline. Equal box gaps +
+     the pill's solid filled shape make the CTA read as the slightly stronger
+     break on its own, without an asymmetric margin or optical-comp hack. */
+  margin-top: var(--bp-gap);
   padding: 14px 28px;
   background-color: var(--color-cta);
   color: #FFFFFF;
