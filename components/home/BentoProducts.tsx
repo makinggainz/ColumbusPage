@@ -23,6 +23,7 @@
  * pinned, visual offset toward an edge).
  */
 
+import { useEffect, useRef } from "react";
 import Image, { type StaticImageData } from "next/image";
 import { useMediaWarm } from "@/components/ui/MediaPrefetcher";
 
@@ -33,7 +34,6 @@ import { useMediaWarm } from "@/components/ui/MediaPrefetcher";
 // bypassed the optimizer entirely and shipped as raw multi-MB PNG.
 import bgColumbus from "@/public/ColumbusBackgroundbento.png";
 import bgElio from "@/public/elio-bento-bg.png";
-import bgResearch from "@/public/researchBento.png";
 import visualColumbus from "@/public/ColumbusHomeimg.png";
 import visualElio from "@/public/elio-bento-v3.png";
 
@@ -128,6 +128,15 @@ const CSS = `
   object-fit: cover;
   object-position: center;
   z-index: 0;
+}
+/* The Research banner's backdrop is a <video> rather than an <Image fill>, so
+   it needs the absolute full-bleed box next/image would otherwise provide. The
+   object-fit/position + desktop top-fade mask still come from .bp-bg above. */
+video.bp-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
 }
 /* Black tint over the photo (Columbus + Elio only — the photo cards).
    Paints just above the image (same z-index, later in DOM) and below the
@@ -651,6 +660,11 @@ interface Product {
    *  content. Static import → AVIF + real blur-up placeholder. Omit on
    *  tiles with a pure-CSS gradient backdrop (Research). */
   bg?: StaticImageData;
+  /** Full-bleed looping background <video> (muted/autoplay) rendered in
+   *  place of `bg`. Used by the Research banner — a screen-recording of the
+   *  technology-page wave mesh. `poster` is the still shown until it plays. */
+  video?: string;
+  poster?: string;
   /** Product UI screenshot/graphic anchored to the bottom of the cell.
    *  Optional — omit on tiles that should render text-only (e.g.
    *  Research after the Gdesign tweak that dropped the LGM graphic). */
@@ -692,7 +706,8 @@ const PRODUCTS: Product[] = [
     tagline: "Building the Large Geospatial Model",
     audience: "For the curious",
     ctaLabel: "Read Thesis",
-    bg: bgResearch,
+    video: "/bento/research-mesh.mp4",
+    poster: "/bento/research-mesh-poster.jpg",
     wide: true,
   },
 ];
@@ -718,6 +733,46 @@ function ArrowDots() {
   );
 }
 
+/* Full-bleed looping background <video> for the Research banner. A small
+   wrapper so we can force the `muted` IDL property + kick off play() via a ref
+   — React doesn't reliably reflect the `muted` prop and some browsers block
+   muted-autoplay without it. It fills the card exactly like next/image's `fill`
+   (see `video.bp-bg` in CSS); object-fit: cover + the desktop top-fade mask
+   come from the shared `.bp-bg` class, so it matches the photo cards. */
+function BgVideo({
+  src,
+  poster,
+  warm,
+}: {
+  src: string;
+  poster?: string;
+  warm: boolean;
+}) {
+  const ref = useRef<HTMLVideoElement>(null);
+  useEffect(() => {
+    const v = ref.current;
+    if (!v) return;
+    v.muted = true;
+    const play = v.play();
+    if (play && typeof play.catch === "function") play.catch(() => {});
+  }, []);
+  return (
+    <video
+      ref={ref}
+      className="bp-bg"
+      autoPlay
+      muted
+      loop
+      playsInline
+      poster={poster}
+      preload={warm ? "auto" : "metadata"}
+      aria-hidden
+    >
+      <source src={src} type="video/mp4" />
+    </video>
+  );
+}
+
 export function BentoProducts() {
   // Once the page is loaded + idle, MediaPrefetcher flips this true and the
   // below-fold backdrops + visuals promote themselves from lazy to eager so
@@ -734,7 +789,16 @@ export function BentoProducts() {
               href={p.href}
               className={`bp-card ${p.cellClass}${p.wide ? " bp-card--wide" : ""}`}
             >
-              {p.bg && (
+              {p.video ? (
+                <>
+                  {/* Looping wave-mesh screen-recording backdrop (Research) —
+                      same full-bleed .bp-bg treatment as the photo cards, just
+                      a <video> instead of an <Image>. Muted/autoplay/loop so
+                      it behaves like an animated still. */}
+                  <BgVideo src={p.video} poster={p.poster} warm={warm} />
+                  <div className="bp-bg-tint" aria-hidden />
+                </>
+              ) : p.bg ? (
                 <>
                   {/* Photo backdrop — first child so it sits at the bottom
                       of the card's paint stack. AVIF via the optimizer +
@@ -754,7 +818,7 @@ export function BentoProducts() {
                   />
                   <div className="bp-bg-tint" aria-hidden />
                 </>
-              )}
+              ) : null}
               {/* Desktop (≥1024px) audience: the original white notch cut
                   into the card's top-RIGHT corner with the tinted label
                   inside. Absolutely positioned on the card; hidden <1024px

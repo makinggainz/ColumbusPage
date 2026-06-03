@@ -83,7 +83,7 @@ export function TechHeroSection() {
         }}
       />
 
-      <div className={styles.techHeroContent}>
+      <div className={styles.techHeroContent} style={{ display: "none" }}>
         <div className={styles.techHeroTextBlock}>
           <h1 className={styles.techHeroTitle} style={fadeIn(0)}>
             Building a brain for earth.
