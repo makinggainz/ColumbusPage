@@ -107,10 +107,25 @@
   margin: 0;
 }
 
+/* Hero subtitle — matches the company hero's subtitle exactly: "Body large"
+   per the type scale (16px → 20px at ≥1024px), line-height 1.5, weight 400,
+   and the design-system heading→subtitle gap (24px mobile / 48px desktop).
+   Previously used the global `.p-l` (16px flat, line-height 1.42) which read
+   too small beside the company hero on desktop. */
 .lead {
-  margin: 48px auto 0;
+  margin: 24px auto 0;
   max-width: 560px;
   color: var(--color-muted);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.5;
+  font-weight: 400;
+}
+@media (min-width: 768px) {
+  .lead { margin-top: 48px; }
+}
+@media (min-width: 1024px) {
+  .lead { font-size: 20px; }
 }
 
 .tagline {

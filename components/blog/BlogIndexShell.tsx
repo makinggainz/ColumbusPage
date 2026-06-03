@@ -79,7 +79,7 @@ export function BlogIndexShell({ activeFilter }: { activeFilter: BlogFilter }) {
         </div>
         <div className={styles.heroInner}>
           <h1 className={`h1 tracking-tight ${styles.headline}`}>Blog</h1>
-          <p className={`p-l ${styles.lead}`}>
+          <p className={styles.lead}>
             Research updates, product notes, and longer-form writing on
             geospatial intelligence.
           </p>
