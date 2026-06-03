@@ -32,7 +32,7 @@ import { useMediaWarm } from "@/components/ui/MediaPrefetcher";
 // The two card backdrops were previously CSS background-image url()s, which
 // bypassed the optimizer entirely and shipped as raw multi-MB PNG.
 import bgColumbus from "@/public/ColumbusBackgroundbento.png";
-import bgElio from "@/public/consumer/heroBackground.png";
+import bgElio from "@/public/elio-bento-bg.png";
 import visualColumbus from "@/public/ColumbusHomeimg.png";
 import visualElio from "@/public/elio-bento-v3.png";
 
@@ -159,13 +159,14 @@ const CSS = `
     );
   }
   /* Fade the photo's OWN opacity toward the white card surface at the top,
-     instead of overlaying anything. The mask alpha is 0.5 at the very top
+     instead of overlaying anything. The mask alpha is 0.75 at the very top
      (so the card's #FFFFFF — load-bearing here; nothing opaque sits between
-     the photo and the card bg — shows ~50% through, lightening the text
-     area) and ramps to full opacity by 42% (the CTA), full below. */
+     the photo and the card bg — shows ~25% through, gently lightening the
+     text area) and ramps GRADUALLY back to full opacity by 75%, full below.
+     The long 0.75→1 ramp keeps the change rate gentle. */
   .bp-bg {
-    -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 1) 42%, rgba(0, 0, 0, 1) 100%);
-    mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 1) 42%, rgba(0, 0, 0, 1) 100%);
+    -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 1) 75%, rgba(0, 0, 0, 1) 100%);
+    mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 1) 75%, rgba(0, 0, 0, 1) 100%);
   }
 }
 
@@ -199,9 +200,9 @@ const CSS = `
 .bp-card--research::before {
   display: none;
 }
-/* Elio's backdrop is the shared /products/consumer hero photo
-   (heroBackground.png) — the same image the consumer Hero uses, so the
-   click-through lands on a continuous image. No bento-specific copy. */
+/* Elio's backdrop is a bento-specific photo (elio-bento-bg.png) — a
+   skyline-from-the-park view kept separate from the consumer Hero so each
+   can be reframed independently. */
 
 /* Top text block — brand row, tagline, CTA stacked. Spacing is set with
    explicit per-pair margins (on .bp-tagline / .bp-cta) rather than one
@@ -522,7 +523,7 @@ const CSS = `
   bottom: 0;
   left: 50%;
   transform: translateX(-50%);
-  width: clamp(160px, 34%, 380px);
+  width: clamp(240px, 50%, 560px);
   aspect-ratio: 797 / 313;
   z-index: 0;
   pointer-events: none;
@@ -546,33 +547,6 @@ const CSS = `
   .bp-logo { width: 50px; height: 50px; }
   .bp-card--wide .bp-logo { width: 56px; height: 56px; }
   .bp-elio-name { height: 50px; margin-left: -5px; }
-}
-
-/* Small red radial glow tucked directly UNDER the Elio logo. Replaces the
-   prior (much larger) purplish wash that read at the top of the tile — this
-   is a tight, soft red dot anchored to the logo. The brand row is the
-   positioning context; the glow box matches the logo width and is pinned
-   below it (top:100%) so it auto-centres under the logo mark at every
-   breakpoint. pointer-events:none + behind siblings so it's purely
-   decorative and never blocks the card link. */
-.bp-card--elio .bp-brand { position: relative; }
-.bp-elio-glow {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  width: clamp(36px, 9vw, 42px);   /* same box as .bp-logo → centred under it */
-  height: clamp(36px, 9vw, 42px);
-  margin-top: -8px;                /* tuck snug under the logo */
-  z-index: 0;
-  pointer-events: none;
-  background: radial-gradient(
-    circle at center,
-    rgba(229, 57, 53, 0.55) 0%,
-    rgba(229, 57, 53, 0) 70%
-  );
-}
-@media (min-width: 1024px) {
-  .bp-elio-glow { width: 50px; height: 50px; }
 }
 
 /* Stacked spacing — title→subtitle. The brand row is logo-height
@@ -915,11 +889,6 @@ export function BentoProducts() {
                     height={56}
                     style={p.logoFilter ? { filter: p.logoFilter } : undefined}
                   />
-                  {/* Small red radial glow tucked under the Elio logo
-                      (Elio tile only). Decorative; styled in CSS above. */}
-                  {p.cellClass === "bp-card--elio" && (
-                    <span className="bp-elio-glow" aria-hidden />
-                  )}
                   {p.cellClass === "bp-card--elio" ? (
                     /* Elio tile renders just the block "Elio" wordmark
                        next to the brand icon — the script "making

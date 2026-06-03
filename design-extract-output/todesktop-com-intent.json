@@ -1,0 +1,381 @@
+{
+  "pageIntent": {
+    "type": "landing",
+    "confidence": 0.29,
+    "path": "/",
+    "title": "ToDesktop",
+    "description": "ToDesktop is your end-to-end Electron partner — offering effortless deployment, robust security and seamless auto-updates.",
+    "signals": [
+      {
+        "kind": "dom",
+        "type": "blog-post",
+        "weight": 0.35,
+        "detail": "byline|min-read"
+      },
+      {
+        "kind": "dom",
+        "type": "legal",
+        "weight": 0.4
+      },
+      {
+        "kind": "url",
+        "type": "landing",
+        "weight": 0.45,
+        "detail": "root-path"
+      }
+    ],
+    "alternates": [
+      {
+        "type": "legal",
+        "score": 0.4
+      },
+      {
+        "type": "blog-post",
+        "score": 0.35
+      }
+    ],
+    "needsSmart": true
+  },
+  "sectionRoles": {
+    "sections": [
+      {
+        "index": 0,
+        "tag": "header",
+        "role": "cta",
+        "subrole": null,
+        "confidence": 0.75,
+        "heading": null,
+        "bounds": {
+          "x": 76,
+          "y": 24,
+          "w": 1128,
+          "h": 96
+        },
+        "buttonCount": 5,
+        "cardCount": 16,
+        "slots": {
+          "ctaCount": 5,
+          "lede": "for Electron\nProducts\nDocs\nChangelog\nBlog\nLog in\nSign up"
+        },
+        "needsSmart": false
+      },
+      {
+        "index": 1,
+        "tag": "nav",
+        "role": "nav",
+        "subrole": null,
+        "confidence": 0.9,
+        "heading": null,
+        "bounds": {
+          "x": 220,
+          "y": 58,
+          "w": 840,
+          "h": 36
+        },
+        "buttonCount": 2,
+        "cardCount": 11,
+        "slots": {
+          "ctaCount": 2,
+          "lede": "Products\nDocs\nChangelog\nBlog"
+        },
+        "needsSmart": false
+      },
+      {
+        "index": 2,
+        "tag": "section",
+        "role": "cta",
+        "subrole": null,
+        "confidence": 0.75,
+        "heading": "Release, Secure and\nScale your Electron\nApp",
+        "bounds": {
+          "x": 0,
+          "y": 120,
+          "w": 1280,
+          "h": 1555
+        },
+        "buttonCount": 5,
+        "cardCount": 18,
+        "slots": {
+          "heading": "Release, Secure and\nScale your Electron\nApp",
+          "subheadings": [
+            "Release, Secure and Scale your ElectronApp"
+          ],
+          "ctaCount": 5,
+          "lede": "END-TO-END ELECTRON\nRelease, Secure and\nScale your Electron\nApp"
+        },
+        "needsSmart": false
+      },
+      {
+        "index": 3,
+        "tag": "section",
+        "role": "hero",
+        "subrole": null,
+        "confidence": 0.4,
+        "heading": "Powering the world's\nmost popular Electron apps\nPowering the world's\nmost popular Electron apps",
+        "bounds": {
+          "x": 0,
+          "y": 1402,
+          "w": 1280,
+          "h": 1093
+        },
+        "buttonCount": 9,
+        "cardCount": 11,
+        "slots": {
+          "heading": "Powering the world's\nmost popular Electron apps\nPowering the world's\nmost popular Electron apps",
+          "ctaCount": 9,
+          "lede": "WALL OF LOVE\nPowering the world's\nmost popular Electron apps\nPowering the world's\nmost popular Electron apps\nPerplexity\nComfyUI\nClickUp\nMoises\nGrain\nLetta Desktop\nSunsama\nDelta by eToro\nMorgen"
+        },
+        "needsSmart": true
+      },
+      {
+        "index": 4,
+        "tag": "section",
+        "role": "testimonial",
+        "subrole": null,
+        "confidence": 0.8,
+        "heading": "The Electron ops stack",
+        "bounds": {
+          "x": 0,
+          "y": 2575,
+          "w": 1280,
+          "h": 3977
+        },
+        "buttonCount": 6,
+        "cardCount": 140,
+        "slots": {
+          "heading": "The Electron ops stack",
+          "ctaCount": 6,
+          "lede": "FEATURES\nThe Electron ops stack"
+        },
+        "needsSmart": false
+      },
+      {
+        "index": 5,
+        "tag": "section",
+        "role": "cta",
+        "subrole": null,
+        "confidence": 0.75,
+        "heading": "Streamline your\nElectron\nApp Infrastructure",
+        "bounds": {
+          "x": 0,
+          "y": 6552,
+          "w": 1280,
+          "h": 1245
+        },
+        "buttonCount": 11,
+        "cardCount": 13,
+        "slots": {
+          "heading": "Streamline your\nElectron\nApp Infrastructure",
+          "ctaCount": 11,
+          "lede": "GET STARTED\nStreamline your\nElectron\nApp Infrastructure"
+        },
+        "needsSmart": false
+      },
+      {
+        "index": 6,
+        "tag": "section",
+        "role": "pricing-table",
+        "subrole": null,
+        "confidence": 0.9,
+        "heading": "Choose a plan\nthat fits your needs",
+        "bounds": {
+          "x": 0,
+          "y": 7797,
+          "w": 1280,
+          "h": 1779
+        },
+        "buttonCount": 7,
+        "cardCount": 10,
+        "slots": {
+          "heading": "Choose a plan\nthat fits your needs",
+          "ctaCount": 7,
+          "lede": "PRICING\nChoose a plan\nthat fits your needs"
+        },
+        "needsSmart": false
+      },
+      {
+        "index": 7,
+        "tag": "section",
+        "role": "faq",
+        "subrole": null,
+        "confidence": 0.85,
+        "heading": "Questions & answers",
+        "bounds": {
+          "x": 0,
+          "y": 9576,
+          "w": 1280,
+          "h": 760
+        },
+        "buttonCount": 10,
+        "cardCount": 12,
+        "slots": {
+          "heading": "Questions & answers",
+          "ctaCount": 10,
+          "lede": "F.A.Q\nQuestions & answers\nIs ToDesktop For Me?"
+        },
+        "needsSmart": false
+      },
+      {
+        "index": 8,
+        "tag": "section",
+        "role": "content",
+        "subrole": null,
+        "confidence": 0.3,
+        "heading": "Want something simpler?",
+        "bounds": {
+          "x": 0,
+          "y": 10336,
+          "w": 1280,
+          "h": 936
+        },
+        "buttonCount": 2,
+        "cardCount": 12,
+        "slots": {
+          "heading": "Want something simpler?",
+          "subheadings": [
+            "Convert your web app into a desktop app with",
+            "ToDesktop Builder"
+          ],
+          "ctaCount": 2
+        },
+        "needsSmart": true
+      },
+      {
+        "index": 9,
+        "tag": "footer",
+        "role": "footer",
+        "subrole": null,
+        "confidence": 0.95,
+        "heading": "Products",
+        "bounds": {
+          "x": 0,
+          "y": 11272,
+          "w": 1280,
+          "h": 784
+        },
+        "buttonCount": 0,
+        "cardCount": 15,
+        "slots": {
+          "heading": "Products",
+          "subheadings": [
+            "Docs & Resources",
+            "Security & Legal",
+            "Company & Contact"
+          ],
+          "lede": "ToDesktop\nAll systems are operational\nProducts\nToDesktop for Electron\nToDesktop Builder\nCompare Products\nDocs & Resources\nToDesktop for Electron Docs\nToDesktop Builder Docs\nChangelog\nBlog\nSecurity & Legal\nSecurity & Architecture\nSecurity Policy\nPrivacy Policy\nTerms\nSubprocessors\nCompany & Contact\nContact Sales\nTwitter (𝕏)\nGitHub"
+        },
+        "needsSmart": false
+      },
+      {
+        "index": 10,
+        "tag": "nav",
+        "role": "nav",
+        "subrole": null,
+        "confidence": 0.9,
+        "heading": "Products",
+        "bounds": {
+          "x": 76,
+          "y": 11554,
+          "w": 264,
+          "h": 205
+        },
+        "buttonCount": 0,
+        "cardCount": 3,
+        "slots": {
+          "heading": "Products",
+          "lede": "Products\nToDesktop for Electron\nToDesktop Builder\nCompare Products"
+        },
+        "needsSmart": false
+      },
+      {
+        "index": 11,
+        "tag": "nav",
+        "role": "nav",
+        "subrole": null,
+        "confidence": 0.9,
+        "heading": "Docs & Resources",
+        "bounds": {
+          "x": 364,
+          "y": 11554,
+          "w": 264,
+          "h": 205
+        },
+        "buttonCount": 0,
+        "cardCount": 4,
+        "slots": {
+          "heading": "Docs & Resources",
+          "lede": "Docs & Resources\nToDesktop for Electron Docs\nToDesktop Builder Docs\nChangelog\nBlog"
+        },
+        "needsSmart": false
+      },
+      {
+        "index": 12,
+        "tag": "nav",
+        "role": "nav",
+        "subrole": null,
+        "confidence": 0.9,
+        "heading": "Security & Legal",
+        "bounds": {
+          "x": 652,
+          "y": 11554,
+          "w": 264,
+          "h": 205
+        },
+        "buttonCount": 0,
+        "cardCount": 5,
+        "slots": {
+          "heading": "Security & Legal",
+          "lede": "Security & Legal\nSecurity & Architecture\nSecurity Policy\nPrivacy Policy\nTerms\nSubprocessors"
+        },
+        "needsSmart": false
+      },
+      {
+        "index": 13,
+        "tag": "nav",
+        "role": "nav",
+        "subrole": null,
+        "confidence": 0.9,
+        "heading": "Company & Contact",
+        "bounds": {
+          "x": 940,
+          "y": 11554,
+          "w": 264,
+          "h": 205
+        },
+        "buttonCount": 0,
+        "cardCount": 3,
+        "slots": {
+          "heading": "Company & Contact",
+          "lede": "Company & Contact\nContact Sales\nTwitter (𝕏)\nGitHub"
+        },
+        "needsSmart": false
+      }
+    ],
+    "counts": {
+      "cta": 3,
+      "nav": 5,
+      "hero": 1,
+      "testimonial": 1,
+      "pricing-table": 1,
+      "faq": 1,
+      "content": 1,
+      "footer": 1
+    },
+    "readingOrder": [
+      "cta",
+      "nav",
+      "cta",
+      "hero",
+      "testimonial",
+      "cta",
+      "pricing-table",
+      "faq",
+      "content",
+      "footer",
+      "nav",
+      "nav",
+      "nav",
+      "nav"
+    ]
+  }
+}

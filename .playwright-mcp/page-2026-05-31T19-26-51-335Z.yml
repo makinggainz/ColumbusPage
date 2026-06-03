@@ -1,0 +1,921 @@
+- generic [active] [ref=e1]:
+  - contentinfo [ref=e2]:
+    - generic [ref=e3]:
+      - generic [ref=e4]:
+        - generic [ref=e5]:
+          - heading "Columbus Earth" [level=3] [ref=e6]
+          - paragraph [ref=e7]: The frontier AI lab building the first production Universal Geospatial Model.
+          - generic [ref=e8]:
+            - link [ref=e9] [cursor=pointer]:
+              - /url: mailto:contact@columbus.earth
+              - img [ref=e10]
+            - link [ref=e13] [cursor=pointer]:
+              - /url: https://www.linkedin.com/company/columbusearth/about/
+              - img [ref=e14]
+        - generic [ref=e18]:
+          - generic [ref=e19]:
+            - paragraph [ref=e20]: Product
+            - list [ref=e21]:
+              - listitem [ref=e22]:
+                - link "Columbus Pro" [ref=e23] [cursor=pointer]:
+                  - /url: /products/business
+              - listitem [ref=e24]:
+                - link "Elio" [ref=e25] [cursor=pointer]:
+                  - /url: /products/consumer
+          - generic [ref=e26]:
+            - paragraph [ref=e27]: Technology
+            - list [ref=e28]:
+              - listitem [ref=e29]:
+                - link "LGM vs LLM" [ref=e30] [cursor=pointer]:
+                  - /url: /research#lgm-vs-llm
+              - listitem [ref=e31]:
+                - link "Data Collection" [ref=e32] [cursor=pointer]:
+                  - /url: /research#data-collection
+              - listitem [ref=e33]:
+                - link "Core Reasoning" [ref=e34] [cursor=pointer]:
+                  - /url: /research#core-reasoning
+          - generic [ref=e36]:
+            - paragraph [ref=e37]: Company
+            - list [ref=e38]:
+              - listitem [ref=e39]:
+                - link "Our Mission" [ref=e40] [cursor=pointer]:
+                  - /url: /company
+              - listitem [ref=e41]:
+                - link "Contact" [ref=e42] [cursor=pointer]:
+                  - /url: /contact
+      - generic [ref=e43]:
+        - generic [ref=e44]: Columbus Earth © 2026
+        - generic [ref=e45]: Website made by hand, no AI.
+        - generic [ref=e46]: Nature always prevails
+        - generic [ref=e47]: www.columbus.earth
+  - main [ref=e49]:
+    - generic [ref=e51]:
+      - link "Home" [ref=e53] [cursor=pointer]:
+        - /url: /
+        - img "Columbus Logo" [ref=e55]
+        - generic [ref=e56]: Columbus Earth
+      - navigation "Main navigation" [ref=e57]:
+        - link "Consumer" [ref=e58] [cursor=pointer]:
+          - /url: /products/consumer
+        - link "Business" [ref=e59] [cursor=pointer]:
+          - /url: /products/business
+        - link "Research" [ref=e60] [cursor=pointer]:
+          - /url: /research
+        - link "Blog" [ref=e61] [cursor=pointer]:
+          - /url: /blog
+        - link "Company" [ref=e62] [cursor=pointer]:
+          - /url: /company
+      - generic [ref=e63]:
+        - link "Contact" [ref=e64] [cursor=pointer]:
+          - /url: /contact
+          - text: Contact
+          - img [ref=e66]
+        - generic [ref=e72]:
+          - button "Try Elio" [ref=e73] [cursor=pointer]:
+            - text: Try Elio
+            - generic [ref=e76]:
+              - img [ref=e77]
+              - img [ref=e83]
+          - generic:
+            - menu:
+              - list:
+                - menuitem:
+                  - generic:
+                    - generic: Try Elio
+                    - generic: Consumer travel reasoning
+                  - generic:
+                    - img
+                - menuitem:
+                  - generic:
+                    - generic: Try Columbus
+                    - generic: Business geospatial intelligence
+                  - generic:
+                    - img
+    - generic [ref=e90]:
+      - generic:
+        - img
+      - generic [ref=e91]:
+        - generic [ref=e92]:
+          - img "Columbus Logo" [ref=e94]
+          - generic [ref=e95]: Columbus Pro
+        - heading "Earth for business" [level=1] [ref=e96]
+        - paragraph [ref=e97]: Agentic GIS so easy, the janitor could be your new researcher
+        - link "Start Now" [ref=e98] [cursor=pointer]:
+          - /url: /contact?tab=columbus-pro
+          - text: Start Now
+          - img [ref=e100]
+      - generic [ref=e110]:
+        - generic [ref=e115]:
+          - generic [ref=e116] [cursor=pointer]:
+            - img [ref=e117]
+            - generic [ref=e120]: Ask the Map
+          - generic [ref=e121] [cursor=pointer]:
+            - img [ref=e122]
+            - generic [ref=e127]: Research Reports
+          - generic [ref=e128] [cursor=pointer]:
+            - img [ref=e129]
+            - generic [ref=e133]: Data Catalogue
+          - generic [ref=e134] [cursor=pointer]:
+            - img [ref=e135]
+            - generic [ref=e140]: Dashboard
+        - generic [ref=e143]:
+          - img [ref=e145]
+          - img [ref=e155]
+          - generic [ref=e156]:
+            - generic [ref=e157]: Forecast the districts in greater Munich most at risk of traffic-congestion growth over the next 2–3 years
+            - generic [ref=e158]:
+              - img [ref=e159]
+              - generic [ref=e160]: Columbus forecasted your question
+            - paragraph [ref=e161]: Here are the districts in greater Munich forecasted to experience the worst traffic-congestion growth over the next 2–3 years
+            - generic [ref=e162]:
+              - generic [ref=e163]: Top 4 Districts by Forecasted Congestion Growth
+              - generic [ref=e164]: Next 24–36 Months
+              - list [ref=e165]:
+                - listitem [ref=e166]:
+                  - generic [ref=e167]: "1"
+                  - generic [ref=e168]: Schwabing-West
+                  - generic [ref=e169]: +14.2%
+                - listitem [ref=e170]:
+                  - generic [ref=e171]: "2"
+                  - generic [ref=e172]: Bogenhausen
+                  - generic [ref=e173]: +12.8%
+                - listitem [ref=e174]:
+                  - generic [ref=e175]: "3"
+                  - generic [ref=e176]: Sendling-Westpark
+                  - generic [ref=e177]: +11.1%
+                - listitem [ref=e178]:
+                  - generic [ref=e179]: "4"
+                  - generic [ref=e180]: Riem
+                  - generic [ref=e181]: +9.7%
+            - generic [ref=e182]:
+              - generic [ref=e183]: Key takeaway
+              - paragraph [ref=e184]: Congestion growth concentrates on residential pipelines feeding the BMW / Siemens employment ring, with S-Bahn capacity ceilings amplifying spill-over.
+            - button "View Full Report" [ref=e185] [cursor=pointer]:
+              - text: View Full Report
+              - img [ref=e186]
+          - generic [ref=e188]:
+            - textbox "Ask Columbus" [ref=e189]
+            - button "Send" [ref=e190] [cursor=pointer]:
+              - img [ref=e191]
+    - generic [ref=e194]:
+      - generic [ref=e196]:
+        - heading "Legacy GIS slows you down because..." [level=2] [ref=e199]
+        - generic [ref=e201]:
+          - generic [ref=e202]:
+            - img [ref=e204]
+            - generic [ref=e207]: A single site selection report takes your team weeks to months.
+          - generic [ref=e208]:
+            - img [ref=e210]
+            - generic [ref=e212]: Legacy GIS requires specialists to operate their bulky complex apps.
+          - generic [ref=e213]:
+            - img [ref=e215]
+            - generic [ref=e217]: Your analysts spend 80% of their time finding, cleaning and organizing data.
+          - generic [ref=e218]:
+            - img [ref=e220]
+            - generic [ref=e226]:
+              - text: Finding the
+              - emphasis [ref=e227]: right
+              - text: data to support your research is too difficult.
+          - generic [ref=e228]:
+            - img [ref=e230]
+            - generic [ref=e235]: You use 10 different complex apps for one single project.
+          - generic [ref=e236]:
+            - img [ref=e238]
+            - generic [ref=e242]: Combining multiple types of large data on a single map is frustrating and costly.
+      - generic [ref=e243]:
+        - heading "It’s time for a more powerful and intuitive GIS" [level=2] [ref=e247]
+        - generic [ref=e249]:
+          - list [ref=e250]:
+            - listitem [ref=e251]:
+              - button "Map Chat Chart your own expedition" [pressed] [ref=e252] [cursor=pointer]:
+                - generic [ref=e253]:
+                  - img [ref=e255]
+                  - generic [ref=e258]:
+                    - generic [ref=e259]: Map Chat
+                    - generic [ref=e260]: Chart your own expedition
+            - listitem [ref=e262]:
+              - button "Reports set our fleet to discover" [ref=e263] [cursor=pointer]:
+                - generic [ref=e264]:
+                  - img [ref=e266]
+                  - generic [ref=e269]:
+                    - generic [ref=e270]: Reports
+                    - generic [ref=e271]: set our fleet to discover
+            - listitem [ref=e273]:
+              - button "Data Catalogue Browse everything we've discovered" [ref=e274] [cursor=pointer]:
+                - generic [ref=e275]:
+                  - img [ref=e277]
+                  - generic [ref=e281]:
+                    - generic [ref=e282]: Data Catalogue
+                    - generic [ref=e283]: Browse everything we've discovered
+            - listitem [ref=e285]:
+              - button "Dashboard Your captain's view" [ref=e286] [cursor=pointer]:
+                - generic [ref=e287]:
+                  - img [ref=e289]
+                  - generic [ref=e294]:
+                    - generic [ref=e295]: Dashboard
+                    - generic [ref=e296]: Your captain's view
+          - generic [ref=e300]:
+            - img [ref=e302]
+            - img [ref=e312]
+            - generic [ref=e313]:
+              - generic [ref=e314]: Show me which neighborhoods in Amsterdam have seen the largest rent increases over the past 5 years
+              - generic [ref=e315]:
+                - img [ref=e316]
+                - generic [ref=e317]: Columbus forecasted your question
+              - paragraph [ref=e318]: Here are the Amsterdam buurten with the steepest free-sector rent growth over the past five years
+              - generic [ref=e319]:
+                - generic [ref=e320]: Top 4 Buurten by Free-Sector Rent Growth
+                - generic [ref=e321]: Last 5 Years
+                - list [ref=e322]:
+                  - listitem [ref=e323]:
+                    - generic [ref=e324]: "1"
+                    - generic [ref=e325]: De Pijp-Noord
+                    - generic [ref=e326]: +28.4%
+                  - listitem [ref=e327]:
+                    - generic [ref=e328]: "2"
+                    - generic [ref=e329]: Oud-West
+                    - generic [ref=e330]: +24.1%
+                  - listitem [ref=e331]:
+                    - generic [ref=e332]: "3"
+                    - generic [ref=e333]: Indische Buurt
+                    - generic [ref=e334]: +21.6%
+                  - listitem [ref=e335]:
+                    - generic [ref=e336]: "4"
+                    - generic [ref=e337]: Oostelijke Eilanden
+                    - generic [ref=e338]: +19.3%
+              - generic [ref=e339]:
+                - generic [ref=e340]: Key takeaway
+                - paragraph [ref=e341]: Rent growth concentrates in tram-served buurten with tight new-build pipelines; independent business turnover lags the price rise by 18–24 months.
+              - button "View Full Report" [ref=e342] [cursor=pointer]:
+                - text: View Full Report
+                - img [ref=e343]
+            - generic [ref=e345]:
+              - textbox "Ask Columbus" [ref=e346]
+              - button "Send" [ref=e347] [cursor=pointer]:
+                - img [ref=e348]
+    - generic [ref=e352]:
+      - heading "Columbus Pro — GIS made effortless" [level=2] [ref=e353]:
+        - strong [ref=e354]: Columbus Pro
+        - text: — GIS made effortless
+      - link "Try Demo" [ref=e355] [cursor=pointer]:
+        - /url: /contact?tab=columbus-pro
+        - generic [ref=e356]: Try Demo
+        - img [ref=e357]
+    - generic [ref=e365]:
+      - heading "Enterprise-grade capabilities" [level=2] [ref=e366]
+      - generic [ref=e368]:
+        - article [ref=e369]:
+          - img "Ask the map anything" [ref=e371]
+          - heading "Ask the map anything" [level=3] [ref=e372]
+        - article [ref=e373]:
+          - img "Agent research reports" [ref=e375]
+          - heading "Agent research reports" [level=3] [ref=e376]
+        - article [ref=e377]:
+          - img "24/7 personal support" [ref=e379]
+          - heading "24/7 personal support" [level=3] [ref=e380]
+        - article [ref=e381]:
+          - img "High-fidelity accurate data" [ref=e383]
+          - heading "High-fidelity accurate data" [level=3] [ref=e384]
+        - article [ref=e385]:
+          - img "Data Catalogue" [ref=e387]
+          - heading "Data Catalogue" [level=3] [ref=e388]
+        - article [ref=e389]:
+          - img "Light-speed due diligence" [ref=e391]
+          - heading "Light-speed due diligence" [level=3] [ref=e392]
+    - generic [ref=e393]:
+      - generic:
+        - generic:
+          - link:
+            - /url: /
+            - img
+          - generic: Industry
+          - generic:
+            - generic:
+              - button [pressed]: Residential Real Estate
+              - button: CRE
+              - button: Urban Infrastructure
+              - button: Geomarketing
+              - button: Academic Research
+              - button: Environmental Research
+      - generic [ref=e395]:
+        - heading "Use cases in your industry" [level=2] [ref=e397]
+        - generic [ref=e399]:
+          - button "Residential Real Estate" [pressed] [ref=e400] [cursor=pointer]:
+            - img [ref=e402]
+            - generic [ref=e405]: Residential Real Estate
+          - button "CRE" [ref=e406] [cursor=pointer]:
+            - img [ref=e408]
+            - generic [ref=e412]: CRE
+          - button "Urban Infrastructure" [ref=e413] [cursor=pointer]:
+            - img [ref=e415]
+            - generic [ref=e420]: Urban Infrastructure
+          - button "Geomarketing" [ref=e421] [cursor=pointer]:
+            - img [ref=e423]
+            - generic [ref=e427]: Geomarketing
+          - button "Academic Research" [ref=e428] [cursor=pointer]:
+            - img [ref=e430]
+            - generic [ref=e433]: Academic Research
+          - button "Environmental Research" [ref=e434] [cursor=pointer]:
+            - img [ref=e436]
+            - generic [ref=e439]: Environmental Research
+      - generic [ref=e440]:
+        - generic [ref=e441]:
+          - generic [ref=e443]:
+            - generic [ref=e444]:
+              - img [ref=e447]
+              - heading "Ask, Discover, Understand" [level=2] [ref=e450]
+            - generic [ref=e451]:
+              - generic [ref=e452]: With conversational map chat, ask your chat directly about anything. Have a conversation like you’re talking to your best analyst.
+              - generic [ref=e453]: Faster site-selection for Residential Real Estate customers, including Consultants, Residential Developers, and Wholesale brokers.
+          - generic [ref=e454]:
+            - generic [ref=e458]:
+              - img [ref=e460]
+              - img [ref=e470]
+              - generic [ref=e471]:
+                - generic [ref=e472]: Show me which neighborhoods in Amsterdam have seen the largest rent increases over the past 5 years
+                - generic [ref=e473]:
+                  - img [ref=e474]
+                  - generic [ref=e475]: Columbus forecasted your question
+                - paragraph [ref=e476]: Here are the Amsterdam buurten with the steepest free-sector rent growth over the past five years
+                - generic [ref=e477]:
+                  - generic [ref=e478]: Top 4 Buurten by Free-Sector Rent Growth
+                  - generic [ref=e479]: Last 5 Years
+                  - list [ref=e480]:
+                    - listitem [ref=e481]:
+                      - generic [ref=e482]: "1"
+                      - generic [ref=e483]: De Pijp-Noord
+                      - generic [ref=e484]: +28.4%
+                    - listitem [ref=e485]:
+                      - generic [ref=e486]: "2"
+                      - generic [ref=e487]: Oud-West
+                      - generic [ref=e488]: +24.1%
+                    - listitem [ref=e489]:
+                      - generic [ref=e490]: "3"
+                      - generic [ref=e491]: Indische Buurt
+                      - generic [ref=e492]: +21.6%
+                    - listitem [ref=e493]:
+                      - generic [ref=e494]: "4"
+                      - generic [ref=e495]: Oostelijke Eilanden
+                      - generic [ref=e496]: +19.3%
+                - generic [ref=e497]:
+                  - generic [ref=e498]: Key takeaway
+                  - paragraph [ref=e499]: Rent growth concentrates in tram-served buurten with tight new-build pipelines; independent business turnover lags the price rise by 18–24 months.
+                - button "View Full Report" [ref=e500] [cursor=pointer]:
+                  - text: View Full Report
+                  - img [ref=e501]
+              - generic [ref=e503]:
+                - textbox "Ask Columbus" [ref=e504]
+                - button "Send" [ref=e505] [cursor=pointer]:
+                  - img [ref=e506]
+            - generic [ref=e508]:
+              - generic [ref=e509]:
+                - generic [ref=e510]:
+                  - heading "See what others cant" [level=3] [ref=e511]
+                  - generic [ref=e512]: Sophisticated pattern detection. Ask chat to uncover hidden patterns across the map & data.
+                - generic [ref=e518]:
+                  - generic [ref=e520]:
+                    - heading "3 patterns detected" [level=4] [ref=e521]
+                    - paragraph [ref=e522]: Across Chevy Chase · Q2 2026
+                    - paragraph [ref=e523]: Rank the possibility of solar roof panel installation in this neighborhood
+                    - list [ref=e524]:
+                      - listitem [ref=e525]:
+                        - generic [ref=e526]: "1"
+                        - generic [ref=e527]:
+                          - generic [ref=e528]: Unshaded South-Facing Roofs With Strong Daily Insolation
+                          - generic [ref=e529]:
+                            - generic [ref=e530]: 312 homes
+                            - generic [ref=e531]: "Solar potential: High"
+                      - listitem [ref=e532]:
+                        - generic [ref=e533]: "2"
+                        - generic [ref=e534]:
+                          - generic [ref=e535]: Existing Rooftop Solar Arrays Already Installed
+                          - generic [ref=e536]:
+                            - generic [ref=e537]: 47 homes
+                            - generic [ref=e538]: "Status: Occupied"
+                      - listitem [ref=e539]:
+                        - generic [ref=e540]: "3"
+                        - generic [ref=e541]:
+                          - generic [ref=e542]: Workable Roofs Pending Minor Tree-Canopy Trimming
+                          - generic [ref=e543]:
+                            - generic [ref=e544]: 186 homes
+                            - generic [ref=e545]: "Solar potential: Medium"
+                    - button "View Full Report" [ref=e546] [cursor=pointer]:
+                      - generic [ref=e547]: View Full Report
+                      - img [ref=e548]
+                  - img "Map chat background" [ref=e551]
+              - generic [ref=e552]:
+                - generic [ref=e553]:
+                  - heading "Like weather forcasts for real-estate" [level=3] [ref=e554]
+                  - generic [ref=e555]:
+                    - paragraph [ref=e556]: Like weather forecasts, but for residential real estate. Predict the future on Columbus.
+                    - paragraph [ref=e557]: Forecast residential prices, note future hot areas.
+                    - paragraph [ref=e558]: Powered by a deep-learning pattern recognition fed by the most up-to-date and high quality data.
+                - generic [ref=e564]:
+                  - generic [ref=e566]:
+                    - generic [ref=e567]:
+                      - img [ref=e568]
+                      - generic [ref=e569]: Columbus forecasted your question
+                    - paragraph [ref=e570]: Here are the Chevy Chase area neighborhoods forecasted to see the highest selling prices for single-family homes in the next 1–2 years
+                    - generic [ref=e571]:
+                      - generic [ref=e572]: Top 4 Neighborhoods by Forecasted Sale Price Growth
+                      - generic [ref=e573]: Next 24 Months
+                      - list [ref=e574]:
+                        - listitem [ref=e575]:
+                          - generic [ref=e576]:
+                            - generic [ref=e577]: "1"
+                            - generic [ref=e578]: Friendship Heights
+                          - generic [ref=e579]: +9.4%
+                        - listitem [ref=e580]:
+                          - generic [ref=e581]:
+                            - generic [ref=e582]: "2"
+                            - generic [ref=e583]: Bethesda
+                          - generic [ref=e584]: +8.1%
+                        - listitem [ref=e585]:
+                          - generic [ref=e586]:
+                            - generic [ref=e587]: "3"
+                            - generic [ref=e588]: Cleveland Park
+                          - generic [ref=e589]: +7.2%
+                        - listitem [ref=e590]:
+                          - generic [ref=e591]:
+                            - generic [ref=e592]: "4"
+                            - generic [ref=e593]: Spring Valley
+                          - generic [ref=e594]: +6.5%
+                    - generic [ref=e595]:
+                      - generic [ref=e596]: Key takeaway
+                      - paragraph [ref=e597]: Single-family demand in the Chevy Chase area is concentrating in transit-served pockets, with Friendship Heights leading the inner ring.
+                    - button "View Full Report" [ref=e598]:
+                      - generic [ref=e599]: View Full Report
+                      - img [ref=e600]
+                  - img "Map chat background" [ref=e603]
+              - generic [ref=e604]:
+                - generic [ref=e605]:
+                  - heading "AI that critically thinks" [level=3] [ref=e606]
+                  - generic [ref=e607]:
+                    - paragraph [ref=e608]: Columbus AI considers a wide breadth of data everytime it critically thinks.
+                    - paragraph [ref=e609]: Transparent reasoning. You can tap to see all the investigation the AI does.
+                - generic [ref=e614]:
+                  - generic [ref=e616]: Should I acquire this 80,000 sqft parcel in Bethesda for a 60-unit residential project?
+                  - generic [ref=e617]:
+                    - img [ref=e618]
+                    - generic [ref=e619]: Columbus is reasoning
+                  - generic [ref=e620]:
+                    - paragraph [ref=e621]: "Columbus weighs:"
+                    - list [ref=e622]:
+                      - listitem [ref=e623]:
+                        - strong [ref=e624]: Current zoning vs. likely upcoming municipal plan revisions
+                      - listitem [ref=e625]:
+                        - strong [ref=e626]: Absorption rate
+                        - text: of comparable units in 5km radius
+                      - listitem [ref=e627]:
+                        - strong [ref=e628]: Demographic in-migration trends
+                      - listitem [ref=e629]:
+                        - strong [ref=e630]: Infrastructure load
+                        - text: (school capacity, road throughput)
+                      - listitem [ref=e631]:
+                        - strong [ref=e632]: Competitor pipeline
+                        - text: within the submarket
+                      - listitem [ref=e633]:
+                        - strong [ref=e634]: Mortgage rate sensitivity
+                        - text: of the target buyer profile
+                      - listitem [ref=e635]:
+                        - strong [ref=e636]: Soil / flood / seismic risk layers
+                      - listitem [ref=e637]:
+                        - strong [ref=e638]: Historical permit approval timelines
+                        - text: for this municipality
+              - generic [ref=e639]:
+                - generic [ref=e640]:
+                  - heading "Drop Any File, Columbus does the rest" [level=3] [ref=e641]
+                  - generic [ref=e642]:
+                    - paragraph [ref=e643]: Drop in any file — Shapefile, KML, CSV, XLSX, PDF, CAD — Columbus harmonizes them and overlays them as a visualized map layer.
+                    - paragraph [ref=e644]: No schemas to define, no columns to map. Just upload and ask follow-up questions in plain English.
+                - generic [ref=e649]:
+                  - img "Map chat background" [ref=e650]
+                  - generic [ref=e653]:
+                    - generic [ref=e654]:
+                      - generic [ref=e655]:
+                        - img [ref=e656]
+                        - heading "Columbus has harmonized your files" [level=4] [ref=e659]
+                      - paragraph [ref=e660]: I’ve harmonized the files and displayed them on the map
+                      - list [ref=e661]:
+                        - listitem [ref=e662]:
+                          - img [ref=e663]
+                          - generic [ref=e665]: ZoningMap_Municipal.pdf
+                          - generic [ref=e666]:
+                            - img [ref=e667]
+                            - text: Imported
+                        - listitem [ref=e669]:
+                          - img [ref=e670]
+                          - generic [ref=e672]: shapefile_GIS_contractor.shp
+                          - generic [ref=e673]:
+                            - img [ref=e674]
+                            - text: Imported
+                        - listitem [ref=e676]:
+                          - img [ref=e677]
+                          - generic [ref=e679]: parcel_addresses.xlsx
+                          - generic [ref=e680]:
+                            - img [ref=e681]
+                            - text: Imported
+                        - listitem [ref=e683]:
+                          - img [ref=e684]
+                          - generic [ref=e686]: houseCAD_file.cad
+                          - generic [ref=e687]:
+                            - img [ref=e688]
+                            - text: Imported
+                    - generic [ref=e691]:
+                      - paragraph [ref=e692]: now show me which of these parcels could legally hold a 60-unit project under current zoning
+                      - button "Stop" [ref=e693] [cursor=pointer]
+        - generic [ref=e695]:
+          - generic [ref=e697]:
+            - generic [ref=e698]:
+              - img [ref=e701]
+              - heading "Trusted data, verified for confidence" [level=2] [ref=e705]
+            - generic [ref=e706]: Access proprietary data, and the highest quality data from our curated data catalogue. Data on Columbus is triple-checked.
+          - generic [ref=e707]:
+            - generic [ref=e710]:
+              - generic:
+                - img "Columbus Data Manager"
+              - generic [ref=e711]:
+                - generic [ref=e712]:
+                  - textbox "Not sure which data sources are relevant? Ask Columbus Chatbot!" [ref=e713]
+                  - generic:
+                    - img
+                - generic [ref=e714]:
+                  - generic [ref=e715]: My Data
+                  - generic [ref=e716]: Suggested
+                  - generic [ref=e717]: All
+                  - generic [ref=e718]: Base Maps
+                  - generic [ref=e719]: Overlays
+                  - generic [ref=e720]: Packs
+                  - generic [ref=e721]: Environmental
+                  - generic [ref=e722]: Infrastructure
+                  - generic [ref=e723]: Smart Layers
+                  - generic [ref=e725]: Demographics
+                - generic [ref=e726]:
+                  - article [ref=e727]:
+                    - generic [ref=e729]:
+                      - generic [ref=e730]: Future Hot Turnover Zones
+                      - generic [ref=e731]: 55,010 rows
+                      - paragraph [ref=e732]: Predicts 2-5 year property value growth using migration, job forecasts, and permit trends.
+                      - generic [ref=e733]: "?"
+                  - article [ref=e734]:
+                    - generic [ref=e736]:
+                      - generic [ref=e737]: Rental yield data by postal code (gross and net)
+                      - generic [ref=e738]: 40,206 rows
+                      - generic [ref=e739]: "?"
+                  - article [ref=e740]:
+                    - generic [ref=e742]:
+                      - generic [ref=e743]: Short-term rental saturation
+                      - generic [ref=e744]: 33,520 rows
+                      - paragraph [ref=e745]: Airbnb density — relevant for assessing rental market dynamics.
+                      - generic [ref=e746]: "?"
+            - generic [ref=e747]:
+              - generic [ref=e749]:
+                - generic [ref=e750]:
+                  - heading "Better Data, Better Prices" [level=3] [ref=e751]
+                  - generic [ref=e752]:
+                    - text: Purchase
+                    - link "premium data" [ref=e753] [cursor=pointer]:
+                      - /url: "#"
+                    - text: at the most
+                    - link "competitive prices" [ref=e754] [cursor=pointer]:
+                      - /url: "#"
+                    - text: .
+                - generic [ref=e755]:
+                  - generic [ref=e756]:
+                    - generic [ref=e757]:
+                      - img [ref=e759]
+                      - generic [ref=e760]:
+                        - heading "Columbus Data Layer" [level=4] [ref=e761]
+                        - paragraph [ref=e762]: Market price
+                        - paragraph [ref=e763]: $2,600 / year
+                    - img "US residential parcel layer preview" [ref=e764]
+                    - generic [ref=e765]: US Residential Market Intelligence — Enriched Parcel Layer
+                    - list [ref=e766]:
+                      - listitem [ref=e767]:
+                        - img [ref=e769]
+                        - generic [ref=e773]:
+                          - generic [ref=e774]: ~155M tax-assessor parcels
+                          - generic [ref=e775]: Nationwide US parcel coverage enriched with transaction history, AVM estimates, demographic layers, and zoning — query-ready at county and ZIP granularity.
+                      - listitem [ref=e776]:
+                        - img [ref=e778]
+                        - generic [ref=e781]:
+                          - generic [ref=e782]: AVM + market comps included
+                          - generic [ref=e783]: Estimated value, price per sqft, absorption rate, and rental yield resolved to the ZIP-code level.
+                      - listitem [ref=e784]:
+                        - img [ref=e786]
+                        - generic [ref=e791]:
+                          - generic [ref=e792]: Updated monthly
+                          - generic [ref=e793]: Transaction and listing signals refreshed monthly; parcel geometry refreshed on the county assessor release cycle.
+                  - generic [ref=e794]:
+                    - generic [ref=e795]:
+                      - img [ref=e797]
+                      - generic [ref=e802]:
+                        - heading "Best Competitor" [level=4] [ref=e803]
+                        - paragraph [ref=e804]: Market price
+                        - paragraph [ref=e805]: From $54 / month · enterprise tiers quote-based
+                    - img "Per-asset valuation platform preview" [ref=e806]
+                    - generic [ref=e807]: Per-asset valuation-platform subscription
+                    - list [ref=e808]:
+                      - listitem [ref=e809]:
+                        - img [ref=e811]
+                        - generic [ref=e815]:
+                          - generic [ref=e816]: Valuation-centric
+                          - generic [ref=e817]: Optimized for individual asset appraisal; no parcel-level geospatial enrichment or zoning layer.
+                      - listitem [ref=e818]:
+                        - img [ref=e820]
+                        - generic [ref=e822]:
+                          - generic [ref=e823]: Per-asset billing
+                          - generic [ref=e824]: Starts low for small portfolios; costs scale with monitored asset count rather than flat-rate access.
+                      - listitem [ref=e825]:
+                        - img [ref=e827]
+                        - generic [ref=e829]:
+                          - generic [ref=e830]: No bulk export
+                          - generic [ref=e831]: Programmatic access for portfolio-scale queries requires a separate enterprise contract.
+              - generic [ref=e833]:
+                - generic [ref=e834]:
+                  - heading "With smart layers, you become an artist" [level=3] [ref=e835]
+                  - generic [ref=e836]:
+                    - text: Columbus has brought accurate GenAI to GeoData.
+                    - link "Smart layers" [ref=e837] [cursor=pointer]:
+                      - /url: "#"
+                    - text: complete gaps in data when its unavailable or hard to survey. Columbus turns you into a Cartography artist
+                - generic [ref=e838]:
+                  - generic [ref=e840]: Smart Layers/Façade Renovation Status
+                  - generic [ref=e842]:
+                    - img "Chevy Chase façade condition heatmap" [ref=e843]
+                    - generic [ref=e844]:
+                      - generic [ref=e847]:
+                        - generic [ref=e848]:
+                          - img [ref=e849]
+                          - generic [ref=e850]: Columbus created a new smart layer
+                        - paragraph [ref=e851]: AI-generated layer classifying every residential building as Recently Renovated, Original Condition / Well-Maintained, or Deteriorated / Renovation Candidate.
+                        - generic [ref=e852]:
+                          - generic [ref=e853]:
+                            - generic [ref=e854]:
+                              - generic [ref=e855]: Façade Renovation Status
+                              - generic [ref=e856]: Chevy Chase · every residential structure
+                            - generic [ref=e857]:
+                              - img [ref=e858]
+                              - text: Smart Layer
+                          - list [ref=e860]:
+                            - listitem [ref=e861]:
+                              - img [ref=e863]
+                              - generic [ref=e867]:
+                                - generic [ref=e868]: Inferred from satellite + street-level imagery
+                                - generic [ref=e869]: Façade condition graded across the full municipality, even where survey data is missing.
+                            - listitem [ref=e870]:
+                              - img [ref=e872]
+                              - generic [ref=e875]:
+                                - generic [ref=e876]: Cross-checked against tax-assessor construction dates
+                                - generic [ref=e877]: Triple-checked for completeness and consistency before every release.
+                            - listitem [ref=e878]:
+                              - img [ref=e880]
+                              - generic [ref=e885]:
+                                - generic [ref=e886]: Building-level scoring
+                                - generic [ref=e887]: Fresh data, continuously monitored and maintained.
+                      - generic [ref=e888]:
+                        - paragraph [ref=e889]: "Generate a smart layer estimating building age, façade condition, and renovation status for every residential structure in Chevy Chase. Classify each building as: Recently Renovated (last 10 years), Original Condition / Well-Maintained, or Deteriorated / Renovation Candidate."
+                        - button "Stop" [ref=e890] [cursor=pointer]
+              - generic [ref=e893]:
+                - generic [ref=e894]:
+                  - generic [ref=e895]:
+                    - link "Smart Layers" [ref=e896] [cursor=pointer]:
+                      - /url: "#"
+                    - text: ", allows you to come up with data layers that would’ve been too expensive or weird to survey. Taylor data layers to your exact needs, create maps about anything you can think of."
+                  - heading "Survey the earth with a super model" [level=3] [ref=e897]
+                - generic [ref=e898]:
+                  - generic [ref=e899]:
+                    - generic [ref=e901]:
+                      - generic [ref=e902]:
+                        - img [ref=e903]
+                        - generic [ref=e904]: Columbus is investigating
+                      - list [ref=e905]:
+                        - listitem [ref=e906]: Considering proximity to public and private schools rated 7+/10
+                        - listitem [ref=e907]: Filtering for density of parks over 0.5 acres within 500 ft walking distance
+                        - listitem [ref=e908]: Filtering for presence of pediatric clinics and family healthcare within 1 mi
+                        - listitem [ref=e909]: Filtering for traffic volume and street-safety scores on residential streets
+                        - listitem [ref=e910]: Filtering density of grocery stores and pharmacies within walking distance
+                    - generic [ref=e912]:
+                      - paragraph [ref=e913]: Create a smart layer showing 'family-friendliness density' — combining proximity to schools rated 7+/10, parks over 0.5 acres, pediatric clinics, low-traffic streets, and grocery stores within 500 ft walking distance.
+                      - button "Stop" [ref=e914] [cursor=pointer]
+                  - img "Family-friendliness density choropleth for residential Chevy Chase" [ref=e917]
+        - generic [ref=e918]:
+          - generic [ref=e920]:
+            - generic [ref=e921]:
+              - img [ref=e924]
+              - heading "Agentic Research" [level=2] [ref=e929]
+            - generic [ref=e930]: Hand Columbus your residential brief and grab a coffee — it’ll research new sites, run buyer-demand and absorption studies, and deliver professional, review-ready reports while you focus on other work.
+          - generic [ref=e931]:
+            - generic [ref=e934]:
+              - generic:
+                - img "Columbus Agentic Research"
+              - generic [ref=e936]: Mechlen County Property/600,000 sqft Residential
+              - generic [ref=e937]:
+                - generic [ref=e938]: Shared with
+                - generic [ref=e939]:
+                  - generic [ref=e940]: NH
+                  - generic [ref=e941]: DR
+                - img [ref=e942]
+              - generic [ref=e944]:
+                - generic [ref=e945]:
+                  - generic [ref=e946]: Show me which neighborhoods in Amsterdam have seen the largest rent increases over the past 5 years
+                  - generic [ref=e947]:
+                    - img [ref=e948]
+                    - generic [ref=e949]: Columbus forecasted your question
+                  - paragraph [ref=e950]: Here are the Amsterdam buurten with the steepest free-sector rent growth over the past five years
+                  - generic [ref=e951]:
+                    - generic [ref=e952]: Top 4 Buurten by Free-Sector Rent Growth
+                    - generic [ref=e953]: Last 5 Years
+                    - list [ref=e954]:
+                      - listitem [ref=e955]:
+                        - generic [ref=e956]:
+                          - generic [ref=e957]: "1"
+                          - generic [ref=e958]: De Pijp-Noord
+                        - generic [ref=e959]: +28.4%
+                      - listitem [ref=e960]:
+                        - generic [ref=e961]:
+                          - generic [ref=e962]: "2"
+                          - generic [ref=e963]: Oud-West
+                        - generic [ref=e964]: +24.1%
+                      - listitem [ref=e965]:
+                        - generic [ref=e966]:
+                          - generic [ref=e967]: "3"
+                          - generic [ref=e968]: Indische Buurt
+                        - generic [ref=e969]: +21.6%
+                      - listitem [ref=e970]:
+                        - generic [ref=e971]:
+                          - generic [ref=e972]: "4"
+                          - generic [ref=e973]: Oostelijke Eilanden
+                        - generic [ref=e974]: +19.3%
+                  - generic [ref=e975]:
+                    - generic [ref=e976]: Key takeaway
+                    - paragraph [ref=e977]: Rent growth concentrates in tram-served buurten with tight new-build pipelines; independent business turnover lags the price rise by 18–24 months.
+                  - button "View Full Report" [ref=e978]:
+                    - text: View Full Report
+                    - img [ref=e979]
+                  - generic [ref=e982]:
+                    - textbox "Ask Columbus" [ref=e983]
+                    - img [ref=e985]
+                - generic [ref=e988]:
+                  - generic [ref=e990]:
+                    - generic [ref=e991]:
+                      - generic [ref=e992]: "Amsterdam Buurten Rent Growth: Tram-Served Pipeline Convergence"
+                      - generic [ref=e993]: Site Suitability Report · Residential · Jan 2026
+                    - generic [ref=e994]:
+                      - img [ref=e996]
+                      - img [ref=e999]
+                  - paragraph [ref=e1005]: Free-sector rent growth across Amsterdam's central buurten has concentrated in tram-served corridors over the past five years, with De Pijp-Noord, Oud-West, Indische Buurt, and Oostelijke Eilanden each posting double-digit cumulative gains. The pattern aligns with tight new-build pipelines along the 24- and 25-tram lines, where municipal woningbouw permits have lagged demand by 18–24 months.
+                  - generic [ref=e1006]:
+                    - generic [ref=e1007]: Amsterdam · Free-Sector Rent Δ (5y)
+                    - generic [ref=e1008]:
+                      - text: Expand
+                      - img [ref=e1009]
+                  - generic [ref=e1014]:
+                    - img [ref=e1015]
+                    - generic [ref=e1016]:
+                      - generic [ref=e1017]: Columbus Agent
+                      - paragraph [ref=e1018]: Consider adding a vacancy-rate overlay to confirm pipeline tightness across the four leading buurten.
+                    - button "Implement change" [ref=e1019]
+            - generic [ref=e1022]:
+              - generic [ref=e1023]:
+                - img [ref=e1025]
+                - heading "Agentic Research Reports" [level=4] [ref=e1031]
+                - paragraph [ref=e1032]: Find the top development sites for mid-rise residential in your target region — review-ready shortlists with parcel-level comps and envelope criteria.
+              - generic [ref=e1033]:
+                - img [ref=e1035]
+                - heading "Agentic Audits and due diligence" [level=4] [ref=e1047]
+                - paragraph [ref=e1048]: "Generative parcel due diligence: zoning, infrastructure, soil/flood/seismic risk, and competitor pipeline — with an on-the-ground surveying team available on request."
+              - generic [ref=e1049]:
+                - img [ref=e1051]
+                - heading "Audit Regulatory compliance" [level=4] [ref=e1057]
+                - paragraph [ref=e1058]: Audit candidate parcels for the legal maximum buildable residential square footage across all applicable zoning, overlays, and municipal regulations.
+        - generic [ref=e1059]:
+          - generic [ref=e1061]:
+            - generic [ref=e1062]:
+              - img [ref=e1065]
+              - heading "Dashboard" [level=2] [ref=e1070]
+            - generic [ref=e1071]: All your work organized and easy to access.
+          - generic [ref=e1075]:
+            - generic:
+              - img "Columbus Dashboard"
+            - generic [ref=e1077]:
+              - generic [ref=e1078]:
+                - generic [ref=e1079]: Audits
+                - generic [ref=e1080]: Site Selections
+                - generic [ref=e1081]: Chats
+                - generic [ref=e1083]: Mapshots
+              - generic [ref=e1084]:
+                - generic [ref=e1085]:
+                  - generic [ref=e1086]: Select
+                  - generic [ref=e1087]:
+                    - text: "Sort by: Newest"
+                    - img [ref=e1088]
+                - button "New Chat" [ref=e1091]:
+                  - img [ref=e1092]
+                  - text: New Chat
+              - generic [ref=e1094]:
+                - article [ref=e1095]:
+                  - generic [ref=e1096]: Mechlen County 600k sqft Property Pipeline Analysis
+                  - paragraph [ref=e1097]: Analyzed 3 candidate parcels in Mechlen County for a 600,000 sqft middle-income residential site; ranked Westfield Industrial Park at 94/100 against R-3 zoning, topography, flood risk, and utilities-infrastructure criteria.
+                  - generic [ref=e1099]:
+                    - generic [ref=e1100]:
+                      - img [ref=e1101]
+                      - text: May 21, 2026
+                    - generic [ref=e1104]:
+                      - img [ref=e1105]
+                      - text: Public
+                - article [ref=e1112]:
+                  - generic [ref=e1113]: Amsterdam Buurten Rent Growth
+                  - paragraph [ref=e1114]: Cross-referenced free-sector rent growth against tram-line corridor density across 24 Amsterdam buurten; surfaced 4 high-growth pockets led by De Pijp-Noord at +28.4%, with takeaway on new-build pipeline tightness over a 5-year window.
+                  - generic [ref=e1116]:
+                    - generic [ref=e1117]:
+                      - img [ref=e1118]
+                      - text: May 18, 2026
+                    - generic [ref=e1121]:
+                      - img [ref=e1122]
+                      - text: Private
+                - article [ref=e1125]:
+                  - generic [ref=e1126]: Valencia Mid-Rise Shortlist
+                  - paragraph [ref=e1127]: Investigated 4,200+ parcels across Valencia province for 8,000–20,000 m² mid-rise envelopes; prioritized 15 sites with positive demographic in-migration and competitor pipeline density inside a 30-minute drive-time radius.
+                  - generic [ref=e1129]:
+                    - generic [ref=e1130]:
+                      - img [ref=e1131]
+                      - text: May 12, 2026
+                    - generic [ref=e1134]:
+                      - img [ref=e1135]
+                      - text: Private
+                - article [ref=e1138]:
+                  - generic [ref=e1139]: Patraix flood-risk vs zoning overlay
+                  - paragraph [ref=e1140]: Stacked the 2050 floodplain evolution model against R-3 zoning permissions and tram-line access in the Valencia Patraix district; flagged 3 parcels at acceptable risk and 2 with disqualifying drainage history for the rezoning panel.
+                  - generic [ref=e1142]:
+                    - generic [ref=e1143]:
+                      - img [ref=e1144]
+                      - text: May 6, 2026
+                    - generic [ref=e1147]:
+                      - img [ref=e1148]
+                      - text: Public
+                - article [ref=e1155]:
+                  - generic [ref=e1156]: Short-term rental saturation thresholds
+                  - paragraph [ref=e1157]: Modeled Airbnb density against postal-code rental yields to identify where short-term rental saturation is depressing long-term residential pricing; produced a 7-tier saturation index with thresholds tuned to mid-tier metro residential portfolios.
+                  - generic [ref=e1159]:
+                    - generic [ref=e1160]:
+                      - img [ref=e1161]
+                      - text: Apr 28, 2026
+                    - generic [ref=e1164]:
+                      - img [ref=e1165]
+                      - text: Private
+      - generic [ref=e1170]:
+        - heading "Commonly asked questions" [level=2] [ref=e1171]
+        - list [ref=e1172]:
+          - listitem [ref=e1173]:
+            - heading "Why doesn't Claude or ChatGPT work?" [level=3] [ref=e1175]:
+              - button "Why doesn't Claude or ChatGPT work?" [expanded] [ref=e1176] [cursor=pointer]:
+                - generic [ref=e1177]: Why doesn't Claude or ChatGPT work?
+            - region "Why doesn't Claude or ChatGPT work?" [ref=e1181]:
+              - paragraph [ref=e1183]: General chat models are built for text, not space. They regurgitate old articles about an area, hallucinate coordinates, can't reach live data, and produce no map or GIS output. Columbus is built for the physical world — highest-fidelity fresh data, real spatial and contextual reasoning, and actual maps and visuals as the answer.
+          - listitem [ref=e1185]:
+            - heading "How do we collect our data?" [level=3] [ref=e1186]:
+              - button "How do we collect our data?" [ref=e1187] [cursor=pointer]:
+                - generic [ref=e1188]: How do we collect our data?
+            - region "How do we collect our data?":
+              - paragraph [ref=e1193]: We continuously ingest and fuse authoritative public, commercial, and partner datasets, then validate them spatially so what you query is current and coordinate-accurate — not scraped article text. Coverage and freshness keep expanding as new sources come online.
+          - listitem [ref=e1195]:
+            - heading "What security measures do we take?" [level=3] [ref=e1196]:
+              - button "What security measures do we take?" [ref=e1197] [cursor=pointer]:
+                - generic [ref=e1198]: What security measures do we take?
+            - region "What security measures do we take?":
+              - paragraph [ref=e1203]: Business data is encrypted in transit and at rest, access is scoped per organization, and your private data is never used to train shared models. We support the controls business teams expect before rolling Columbus out across an organization.
+          - listitem [ref=e1205]:
+            - heading "Is this only for GIS professionals?" [level=3] [ref=e1206]:
+              - button "Is this only for GIS professionals?" [ref=e1207] [cursor=pointer]:
+                - generic [ref=e1208]: Is this only for GIS professionals?
+            - region "Is this only for GIS professionals?":
+              - paragraph [ref=e1213]: No. Columbus is designed so anyone — from analysts to non-technical teams — can ask spatial questions in plain language and get map-grade answers, while still giving GIS professionals the full depth and control they need.
+    - generic [ref=e1215]:
+      - generic:
+        - img
+      - heading "Chat with us now about Columbus Pro" [level=2] [ref=e1216]
+      - link "Talk to Founders" [ref=e1217] [cursor=pointer]:
+        - /url: /contact?tab=columbus-pro
+        - generic [ref=e1218]: Talk to Founders
+        - img [ref=e1219]
+      - generic [ref=e1224]:
+        - generic [ref=e1230]: columbus.earth/pro
+        - generic [ref=e1231]:
+          - generic [ref=e1237]: Columbus
+          - generic [ref=e1238]: /
+          - generic [ref=e1239]: untitled chat
+          - generic [ref=e1240]:
+            - generic [ref=e1241]: Report View
+            - generic [ref=e1242]: Save Mapshot
+            - generic [ref=e1243]: Edits not saved
+        - generic [ref=e1244]:
+          - generic [ref=e1245]:
+            - img [ref=e1246]
+            - img [ref=e1252]
+            - img [ref=e1255]
+          - generic [ref=e1258]:
+            - generic [ref=e1260]: Where should we begin?
+            - generic [ref=e1261]:
+              - generic [ref=e1262]: Ask Columbus
+              - img [ref=e1264]

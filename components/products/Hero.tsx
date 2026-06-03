@@ -951,6 +951,9 @@ export default function Hero() {
               style={{
                 position: "relative",
                 height: hasImage ? 400 : "70vh",
+                // Clip the scene-1 push-in zoom so the scaled backdrop
+                // can't bleed over the adjacent strips.
+                overflow: hasImage ? "hidden" : undefined,
               }}
             >
               {hasImage && lab.image && (
@@ -968,9 +971,25 @@ export default function Hero() {
                     fetchPriority={warm ? "low" : undefined}
                     style={{
                       objectFit: "cover",
-                      // Scene 1 is the hotel-window skyline — pan the visible
-                      // band down so more of Central Park reads in the strip.
-                      objectPosition: lab.scene === 1 ? "center 52%" : undefined,
+                      // Scene 1 is the hotel-window skyline. Y `+58px` pans the
+                      // visible band UP for more sky. The 1.08 scale gives slack
+                      // so X `-30px` pans the frame right — trimming the heavy
+                      // left drape (and revealing a touch more of the right);
+                      // the shift stays inside the overflow, so no empty edge.
+                      // Scene 2 (Rio coastline): pin X to the far-LEFT edge
+                      // (`0%` can't expose an empty edge) so the right-side
+                      // "for your travels" text sits over the bay/lagoon water.
+                      objectPosition:
+                        lab.scene === 1
+                          ? "calc(50% - 30px) calc(52% + 58px)"
+                          : lab.scene === 2
+                            ? "0% center"
+                            : undefined,
+                      transform:
+                        lab.scene === 1 || lab.scene === 2
+                          ? "scale(1.08)"
+                          : undefined,
+                      transformOrigin: "center",
                       display: "block",
                     }}
                   />
@@ -1197,10 +1216,25 @@ function MobileScenes() {
                   loading={warm ? "eager" : "lazy"}
                   fetchPriority={warm ? "low" : undefined}
                   className="absolute inset-0 w-full h-full object-cover"
-                  // Scene 1 hotel-window skyline — pan down to show more of
-                  // Central Park (zoom is desktop-only; mobile keeps the full
-                  // cover crop).
-                  style={{ objectPosition: lab.scene === 1 ? "center 52%" : undefined }}
+                  // Scene 1 hotel-window skyline. Y `+58px` pans the band UP for
+                  // more sky; the 1.08 scale gives slack so X `-30px` pans the
+                  // frame right, trimming the heavy left drape. Scene 2 (Rio
+                  // coastline) pins X to the far-LEFT edge (`0%`) so the
+                  // right-side "for your travels" text sits over the bay/lagoon
+                  // water (section already clips via overflow-hidden).
+                  style={{
+                    objectPosition:
+                      lab.scene === 1
+                        ? "calc(50% - 30px) calc(52% + 58px)"
+                        : lab.scene === 2
+                          ? "0% center"
+                          : undefined,
+                    transform:
+                      lab.scene === 1 || lab.scene === 2
+                        ? "scale(1.08)"
+                        : undefined,
+                    transformOrigin: "center",
+                  }}
                 />
                 {/* Scroll-driven dim — see useEffect above. Initial
                     opacity 0.55 keeps the SSR paint identical to the

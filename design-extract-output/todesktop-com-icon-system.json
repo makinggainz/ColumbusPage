@@ -1,0 +1,201 @@
+{
+  "library": "unknown",
+  "confidence": 0,
+  "alternates": [],
+  "stats": {
+    "count": 151,
+    "strokeOnly": 0,
+    "fillOnly": 8,
+    "mixed": 0,
+    "avgStrokeWidth": 1.56,
+    "gridDistribution": {
+      "16": 33,
+      "20": 27,
+      "24": 6
+    },
+    "roundedCapsFraction": 0.19
+  },
+  "signals": [],
+  "icons": [
+    {
+      "class": "h-20 w-20 transition-transform duration-6 md:block hidden rotate-90 opacity-50 g",
+      "grid": 24,
+      "strokeWidth": null,
+      "style": "mixed"
+    },
+    {
+      "class": "",
+      "grid": null,
+      "strokeWidth": null,
+      "style": "mixed"
+    },
+    {
+      "class": "",
+      "grid": null,
+      "strokeWidth": 1.5,
+      "style": "mixed"
+    },
+    {
+      "class": "transition mx-auto",
+      "grid": 24,
+      "strokeWidth": 0.25,
+      "style": "mixed"
+    },
+    {
+      "class": "transition mx-auto opacity-64 group-hover:opacity-90",
+      "grid": 24,
+      "strokeWidth": null,
+      "style": "mixed"
+    },
+    {
+      "class": "transition mx-auto opacity-64 group-hover:opacity-90",
+      "grid": null,
+      "strokeWidth": 1.04545,
+      "style": "mixed"
+    },
+    {
+      "class": "absolute top-[10.5px] left-[20.5px] z-[11] transition text-white/48",
+      "grid": null,
+      "strokeWidth": null,
+      "style": "mixed"
+    },
+    {
+      "class": "",
+      "grid": null,
+      "strokeWidth": null,
+      "style": "mixed"
+    },
+    {
+      "class": "",
+      "grid": 24,
+      "strokeWidth": null,
+      "style": "mixed"
+    },
+    {
+      "class": "",
+      "grid": null,
+      "strokeWidth": null,
+      "style": "mixed"
+    },
+    {
+      "class": "features-smoke-tabs-check rounded-full sm-max:hidden",
+      "grid": null,
+      "strokeWidth": null,
+      "style": "mixed"
+    },
+    {
+      "class": "",
+      "grid": 20,
+      "strokeWidth": null,
+      "style": "mixed"
+    },
+    {
+      "class": "features-smoke-tabs-check rounded-full sm-max:hidden",
+      "grid": null,
+      "strokeWidth": null,
+      "style": "mixed"
+    },
+    {
+      "class": "",
+      "grid": 20,
+      "strokeWidth": null,
+      "style": "mixed"
+    },
+    {
+      "class": "transition-all",
+      "grid": 24,
+      "strokeWidth": 3,
+      "style": "fill"
+    },
+    {
+      "class": "features-smoke-checks-overall-progress overlay transition-all delay-[200ms]",
+      "grid": 24,
+      "strokeWidth": null,
+      "style": "fill"
+    },
+    {
+      "class": "transition-all opacity-0",
+      "grid": null,
+      "strokeWidth": 2,
+      "style": "fill"
+    },
+    {
+      "class": "features-smoke-check-pie-progress overlay transition-all delay-[200ms]",
+      "grid": null,
+      "strokeWidth": null,
+      "style": "fill"
+    },
+    {
+      "class": "transition-all opacity-0",
+      "grid": null,
+      "strokeWidth": 2,
+      "style": "fill"
+    },
+    {
+      "class": "features-smoke-check-pie-progress overlay transition-all delay-[200ms]",
+      "grid": null,
+      "strokeWidth": null,
+      "style": "fill"
+    },
+    {
+      "class": "transition-all opacity-0",
+      "grid": null,
+      "strokeWidth": 2,
+      "style": "fill"
+    },
+    {
+      "class": "features-smoke-check-pie-progress overlay transition-all delay-[200ms]",
+      "grid": null,
+      "strokeWidth": null,
+      "style": "fill"
+    },
+    {
+      "class": "features-auto-app-header-icon-text",
+      "grid": 20,
+      "strokeWidth": 1.25,
+      "style": "mixed"
+    },
+    {
+      "class": "float-right",
+      "grid": null,
+      "strokeWidth": null,
+      "style": "mixed"
+    },
+    {
+      "class": "",
+      "grid": 20,
+      "strokeWidth": null,
+      "style": "mixed"
+    },
+    {
+      "class": "",
+      "grid": null,
+      "strokeWidth": null,
+      "style": "mixed"
+    },
+    {
+      "class": "",
+      "grid": 16,
+      "strokeWidth": 1.5,
+      "style": "mixed"
+    },
+    {
+      "class": "",
+      "grid": 20,
+      "strokeWidth": 1.5,
+      "style": "mixed"
+    },
+    {
+      "class": "",
+      "grid": 20,
+      "strokeWidth": 1.5,
+      "style": "mixed"
+    },
+    {
+      "class": "",
+      "grid": 16,
+      "strokeWidth": null,
+      "style": "mixed"
+    }
+  ]
+}
