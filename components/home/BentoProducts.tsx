@@ -506,19 +506,29 @@ const CSS = `
     display: none;
   }
 }
-/* Transparent (removebg) graphic centred in the Research tile. Sits above
-   the gradient/lattice but BELOW the text block (z-index 0 < the text's 1)
-   so it never obscures the copy. pointer-events:none keeps the card link
-   live across it. Width scales with the tile via clamp. */
+/* Transparent (removebg) wireframe-globe graphic in the Research tile,
+   bottom-aligned to the card's bottom edge and horizontally centred. Sits
+   above the gradient/lattice but BELOW the text block (z-index 0 < the
+   text's 1) so it never obscures the copy. pointer-events:none keeps the
+   card link live across it.
+
+   The PNG ships as faint blue/grey lines; rather than recolour each line we
+   use the image as an ALPHA MASK over a solid accent-blue fill, so every
+   opaque pixel (the wireframe lines) renders in var(--color-accent)
+   regardless of its source colour. aspect-ratio reserves height from the
+   797×313 source so "contain" never letterboxes. */
 .bp-research-center {
   position: absolute;
-  top: 50%;
+  bottom: 0;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translateX(-50%);
   width: clamp(160px, 34%, 380px);
-  height: auto;
+  aspect-ratio: 797 / 313;
   z-index: 0;
   pointer-events: none;
+  background-color: var(--color-accent);
+  -webkit-mask: url(/bento/research-center.png) center bottom / contain no-repeat;
+  mask: url(/bento/research-center.png) center bottom / contain no-repeat;
 }
 /* Elio tile renders only the block "Elio" wordmark next to the brand
    icon. The source PNG is white-on-transparent — recoloured to the same
@@ -970,15 +980,10 @@ export function BentoProducts() {
                   <ResearchLatticeArt />
                 </div>
               )}
+              {/* Wireframe globe — rendered as a masked fill (not an <img>)
+                  so its lines take the accent blue; see .bp-research-center. */}
               {p.cellClass === "bp-card--research" && (
-                <Image
-                  src="/bento/research-center.png"
-                  alt=""
-                  aria-hidden
-                  width={797}
-                  height={313}
-                  className="bp-research-center"
-                />
+                <span className="bp-research-center" aria-hidden />
               )}
             </a>
           ))}
