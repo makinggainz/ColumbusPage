@@ -131,15 +131,42 @@ const CSS = `
   object-position: center;
   z-index: 0;
 }
-/* Flat black tint over the photo — reproduces the old leading
-   linear-gradient(rgba(0,0,0,0.18), …) overlay. Paints just above the
-   image (same z-index, later in DOM) and below the top scrim. */
+/* Black tint over the photo (Columbus + Elio only — the photo cards).
+   Paints just above the image (same z-index, later in DOM) and below the
+   top scrim. Vertical gradient (was a flat 0.18): transparent at the TOP —
+   where the brand wordmark + tagline sit — ramping to 0.18 at the bottom,
+   so the text reads over a much lighter backdrop while the lower half stays
+   tinted for depth under the product visual that peeks up there. */
 .bp-bg-tint {
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.18);
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.18) 0%, rgba(0, 0, 0, 0) 100%);
   pointer-events: none;
   z-index: 0;
+}
+@media (min-width: 1024px) {
+  /* Desktop tiles are a fixed 560px with the text at the top and the
+     product visual peeking up from the bottom. Keep the tint clear through
+     the whole text block, start the darkening just below the CTA (~42%),
+     then ramp to a deeper tint at the bottom so the product display reads
+     against a darker backdrop before the eye reaches it. */
+  .bp-bg-tint {
+    background: linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0) 42%,
+      rgba(0, 0, 0, 0.14) 64%,
+      rgba(0, 0, 0, 0.38) 100%
+    );
+  }
+  /* Fade the photo's OWN opacity toward the white card surface at the top,
+     instead of overlaying anything. The mask alpha is 0.5 at the very top
+     (so the card's #FFFFFF — load-bearing here; nothing opaque sits between
+     the photo and the card bg — shows ~50% through, lightening the text
+     area) and ramps to full opacity by 42% (the CTA), full below. */
+  .bp-bg {
+    -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 1) 42%, rgba(0, 0, 0, 1) 100%);
+    mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 1) 42%, rgba(0, 0, 0, 1) 100%);
+  }
 }
 
 /* Top scrim — fades from a translucent white surface at the top (where
@@ -150,11 +177,13 @@ const CSS = `
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0.0) 55%);
+  /* White readability wash removed per design — it washed out the top of
+     the photos. Top lightening now comes from fading the photo's own
+     opacity toward the white card at the top (see the .bp-bg mask in the
+     desktop block above). Kept as a no-op transparent layer so the
+     structure/z-index stay intact. */
+  background: transparent;
   pointer-events: none;
-  /* z-index 1: sits above the photo backdrop + its 0.18 tint (both
-     z-index 0) so the white readability scrim still washes the text area,
-     while staying below the text block + hairline ring. */
   z-index: 1;
 }
 /* Research has NO photo backdrop — just the light #CAE5F5 → #76A8F3
@@ -170,6 +199,9 @@ const CSS = `
 .bp-card--research::before {
   display: none;
 }
+/* Elio's backdrop is the shared /products/consumer hero photo
+   (heroBackground.png) — the same image the consumer Hero uses, so the
+   click-through lands on a continuous image. No bento-specific copy. */
 
 /* Top text block — brand row, tagline, CTA stacked. Spacing is set with
    explicit per-pair margins (on .bp-tagline / .bp-cta) rather than one
@@ -328,8 +360,8 @@ const CSS = `
   display: none;
   align-items: center;
   justify-content: center;
-  height: 53px;
-  padding: 0 40px;
+  height: 40px;
+  padding: 0 22px;
   background-color: #FFFFFF;
   border-radius: 0 13px 0 13px;
   border-left: 1px solid #E7E7F1;
@@ -353,10 +385,10 @@ const CSS = `
 .bp-notch::after { bottom: -13px; right: 0; }
 /* Per-card label tint — keyed to each tile's blue-dominated backdrop. */
 .bp-notch-label {
-  font-size: 18px;
+  font-size: 13px;
   line-height: 1;
   font-weight: 600;
-  letter-spacing: -0.015em;
+  letter-spacing: 0.02em;
   text-transform: uppercase;
   white-space: nowrap;
 }
@@ -451,8 +483,17 @@ const CSS = `
   top: 0;
   right: 0;
   bottom: 0;
-  width: 45%;
-  max-width: 480px;
+  /* Extended leftward (was width:45% / max-width:480px) so the lattice
+     reaches across most of the tile; the SVG's viewBox width grows in
+     step (see ResearchLatticeArt) so the cell size stays constant rather
+     than scaling up. */
+  width: 82%;
+  max-width: 1000px;
+  /* Fade the grid out toward the LEFT — full opacity at the right edge,
+     ramping to transparent by the far left so the extension dissolves
+     behind the text instead of crowding it. */
+  -webkit-mask-image: linear-gradient(to right, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 60%, rgba(0, 0, 0, 1) 100%);
+  mask-image: linear-gradient(to right, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 60%, rgba(0, 0, 0, 1) 100%);
   pointer-events: none;
   z-index: 0;
 }
@@ -464,6 +505,20 @@ const CSS = `
   .bp-card--research .bp-research-art {
     display: none;
   }
+}
+/* Transparent (removebg) graphic centred in the Research tile. Sits above
+   the gradient/lattice but BELOW the text block (z-index 0 < the text's 1)
+   so it never obscures the copy. pointer-events:none keeps the card link
+   live across it. Width scales with the tile via clamp. */
+.bp-research-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: clamp(160px, 34%, 380px);
+  height: auto;
+  z-index: 0;
+  pointer-events: none;
 }
 /* Elio tile renders only the block "Elio" wordmark next to the brand
    icon. The source PNG is white-on-transparent — recoloured to the same
@@ -481,6 +536,33 @@ const CSS = `
   .bp-logo { width: 50px; height: 50px; }
   .bp-card--wide .bp-logo { width: 56px; height: 56px; }
   .bp-elio-name { height: 50px; margin-left: -5px; }
+}
+
+/* Small red radial glow tucked directly UNDER the Elio logo. Replaces the
+   prior (much larger) purplish wash that read at the top of the tile — this
+   is a tight, soft red dot anchored to the logo. The brand row is the
+   positioning context; the glow box matches the logo width and is pinned
+   below it (top:100%) so it auto-centres under the logo mark at every
+   breakpoint. pointer-events:none + behind siblings so it's purely
+   decorative and never blocks the card link. */
+.bp-card--elio .bp-brand { position: relative; }
+.bp-elio-glow {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: clamp(36px, 9vw, 42px);   /* same box as .bp-logo → centred under it */
+  height: clamp(36px, 9vw, 42px);
+  margin-top: -8px;                /* tuck snug under the logo */
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    circle at center,
+    rgba(229, 57, 53, 0.55) 0%,
+    rgba(229, 57, 53, 0) 70%
+  );
+}
+@media (min-width: 1024px) {
+  .bp-elio-glow { width: 50px; height: 50px; }
 }
 
 /* Stacked spacing — title→subtitle. The brand row is logo-height
@@ -680,7 +762,11 @@ const PRODUCTS: Product[] = [
    / cross-bracing look. All white at varying opacities so the structure
    reads against the tile's blue gradient. */
 function ResearchLatticeArt() {
-  const W = 400;
+  // W widened from 400 → 840 so the lattice spans the now-wider (extended-
+  // left) .bp-research-art panel with MORE grid columns at the same cell
+  // pitch, rather than the SVG scaling up (which would coarsen the grid).
+  // 840 stays divisible by both the 40px and 20px steps for clean lines.
+  const W = 840;
   const H = 500;
   const big = 40;
   const small = 20;
@@ -819,6 +905,11 @@ export function BentoProducts() {
                     height={56}
                     style={p.logoFilter ? { filter: p.logoFilter } : undefined}
                   />
+                  {/* Small red radial glow tucked under the Elio logo
+                      (Elio tile only). Decorative; styled in CSS above. */}
+                  {p.cellClass === "bp-card--elio" && (
+                    <span className="bp-elio-glow" aria-hidden />
+                  )}
                   {p.cellClass === "bp-card--elio" ? (
                     /* Elio tile renders just the block "Elio" wordmark
                        next to the brand icon — the script "making
@@ -878,6 +969,16 @@ export function BentoProducts() {
                 <div className="bp-research-art" aria-hidden>
                   <ResearchLatticeArt />
                 </div>
+              )}
+              {p.cellClass === "bp-card--research" && (
+                <Image
+                  src="/bento/research-center.png"
+                  alt=""
+                  aria-hidden
+                  width={797}
+                  height={313}
+                  className="bp-research-center"
+                />
               )}
             </a>
           ))}
