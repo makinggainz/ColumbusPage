@@ -36,8 +36,8 @@ export default function Home() {
         <TextScrollIntro />
         <BentoProducts />
 
-        <BlogSection />
         <MissionScrollIntro />
+        <BlogSection />
       </div>
 
       <IslandGap />

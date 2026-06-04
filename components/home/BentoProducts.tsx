@@ -191,14 +191,61 @@ video.bp-bg {
   content: "";
   position: absolute;
   inset: 0;
-  /* White readability wash removed per design — it washed out the top of
-     the photos. Top lightening now comes from fading the photo's own
-     opacity toward the white card at the top (see the .bp-bg mask in the
-     desktop block above). Kept as a no-op transparent layer so the
-     structure/z-index stay intact. */
   background: transparent;
   pointer-events: none;
   z-index: 1;
+}
+/* Solid white overlay UNDER the photo backdrop on the Columbus + Elio
+   tiles. It paints first (z 1) and the contained .bp-bg-wrap below sits
+   above it (z 2) — the card's responsive sizing flows from the white
+   overlay + text block, not from the image. */
+.bp-card--columbus::before,
+.bp-card--elio::before {
+  background: #FFFFFF;
+}
+
+/* Columbus + Elio: flex column so the bg image wrapper can sit below the
+   text block in flow and flex-fill the card's remaining height. */
+.bp-card--columbus,
+.bp-card--elio {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Contained bg image — sits 20px below the text block (= 20px below the
+   CTA's bottom edge, since the CTA is the last item in the text block),
+   rounded corners, clips its own content. z-index 2 puts it above the
+   white overlay (z 1) so the photo reads above the card surface. */
+.bp-bg-wrap {
+  position: relative;
+  /* Bleed left/right/bottom out to the card's outer edges via negative
+     margins that match the card's per-breakpoint padding (28 / 32 / 40).
+     Top keeps the +20px gap from the CTA. */
+  margin: 20px -28px -28px;
+  border-radius: 13px;
+  overflow: hidden;
+  z-index: 2;
+  aspect-ratio: 16 / 9;
+}
+@media (min-width: 640px) {
+  .bp-bg-wrap { margin: 20px -32px -32px; }
+}
+@media (min-width: 1024px) {
+  .bp-bg-wrap {
+    margin: 20px -40px -40px;
+    flex: 1 1 auto;
+    aspect-ratio: auto;
+    min-height: 0;
+  }
+  /* The top-of-image opacity fade was designed to blend a full-bleed
+     photo into the card's white surface behind the text. The contained
+     wrapper has its own hard top edge now, so the mask just softens the
+     wrapper's top — undo it for the two contained tiles. */
+  .bp-card--columbus .bp-bg,
+  .bp-card--elio .bp-bg {
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
 }
 /* Elio's backdrop is a bento-specific photo (elio-bento-bg.png) — a
    skyline-from-the-park view kept separate from the consumer Hero so each
@@ -514,7 +561,12 @@ video.bp-bg {
   /* Nudge the wordmark down 2.2px so it sits a touch lower than the logo
      baseline (purely visual — transform doesn't affect layout flow). */
   transform: translateY(2.2px);
-  filter: brightness(0) saturate(100%) invert(8%) sepia(80%) saturate(1400%) hue-rotate(215deg) brightness(90%);
+  /* Recolour the wordmark PNG to #059CFA (bright blue) via a CSS filter
+     chain. brightness(0) saturate(100%) collapses the source to solid
+     black, then the invert/sepia/saturate/hue-rotate chain tints it to
+     the target. Derived from a hex→filter generator; tweak the chain
+     numerically if the rendered hue drifts. */
+  filter: brightness(0) saturate(100%) invert(46%) sepia(98%) saturate(2009%) hue-rotate(180deg) brightness(102%) contrast(101%);
 }
 @media (min-width: 1024px) {
   .bp-logo { width: 50px; height: 50px; }
@@ -590,7 +642,7 @@ video.bp-bg {
   position: relative;
   margin-top: 24px;
   width: 100%;
-  z-index: 1;
+  z-index: 3;
   display: flex;
   justify-content: center;
   transition: transform 220ms cubic-bezier(0.22, 0.61, 0.36, 1);
@@ -798,26 +850,6 @@ export function BentoProducts() {
                   <BgVideo src={p.video} poster={p.poster} warm={warm} />
                   <div className="bp-bg-tint" aria-hidden />
                 </>
-              ) : p.bg ? (
-                <>
-                  {/* Photo backdrop — first child so it sits at the bottom
-                      of the card's paint stack. AVIF via the optimizer +
-                      progressive blur-up. Stays lazy until the page is
-                      idle, then promotes to eager. */}
-                  <Image
-                    src={p.bg}
-                    alt=""
-                    aria-hidden
-                    fill
-                    className="bp-bg"
-                    sizes="(max-width: 1023px) 100vw, 640px"
-                    quality={70}
-                    placeholder="blur"
-                    loading={warm ? "eager" : "lazy"}
-                    fetchPriority={warm ? "low" : undefined}
-                  />
-                  <div className="bp-bg-tint" aria-hidden />
-                </>
               ) : null}
               {/* Desktop (≥1024px) audience: the original white notch cut
                   into the card's top-RIGHT corner with the tinted label
@@ -886,6 +918,26 @@ export function BentoProducts() {
                   </span>
                 </span>
               </div>
+              {p.bg && (
+                /* Contained photo backdrop — sits below the text block via
+                   the card's flex column layout, with a 20px gap from the
+                   CTA bottom and rounded corners. */
+                <div className="bp-bg-wrap">
+                  <Image
+                    src={p.bg}
+                    alt=""
+                    aria-hidden
+                    fill
+                    className="bp-bg"
+                    sizes="(max-width: 1023px) 100vw, 640px"
+                    quality={70}
+                    placeholder="blur"
+                    loading={warm ? "eager" : "lazy"}
+                    fetchPriority={warm ? "low" : undefined}
+                  />
+                  <div className="bp-bg-tint" aria-hidden />
+                </div>
+              )}
               {p.visual && (
                 <div className="bp-visual">
                   {/* Static import → intrinsic dimensions + real blur-up
