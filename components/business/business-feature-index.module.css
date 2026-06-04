@@ -50,6 +50,12 @@
   transition: color 240ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
+/* Per-feature icon — only shown in the cramped icon-rail tier (see media
+   query below). Hidden in the wide tier, which is text-labels-only. */
+.icon {
+  display: none;
+}
+
 /* Active section's rail segment — a 2px dark bar sitting on the guide
    line. Absolutely positioned so toggling never reflows the labels. */
 .item::before {
@@ -83,7 +89,101 @@
   background: #0B1B2B;
 }
 
-@media (max-width: 1100px) {
+/* ── Cramped tier (≈1471–1640px, e.g. MacBook Pro 14″ at 1512px) ──────────
+   The centred 1287px content column leaves too narrow a left margin for the
+   full text rail. Collapse to a CARD that mirrors the page's own section
+   chrome (the FAQ accordion + "use cases in your industry" selector): a
+   rounded, hairline-bordered white card floating in the margin, holding the
+   six feature icons as circular chips (the BusinessUseCases `IconChip` vocab).
+   Active row tints + comes to full opacity (like the FAQ open row / active
+   industry cell), inactive rows recede; hovering a chip slides out a label.
+   Neutral navy/grey only — this rail renders OUTSIDE IndustryProvider/.ent-scope
+   so it can't read the industry accent or --ent-* tokens (values hardcoded).
+   HANDOFF (1640px): where the full TEXT rail's right edge clears the content.
+   Lower bound (1470px, see hide rule): where this ~59px card clears the
+   centred content's left edge — below it the card is hidden. */
+@media (max-width: 1640px) {
+  /* Card chrome — rounded hairline-bordered white card with a soft lift. */
+  .list {
+    flex-direction: column;
+    gap: 2px;
+    padding: 6px;
+    border: 1.5px solid rgba(0, 0, 0, 0.08);
+    border-radius: 20px;
+    background: #FFFFFF;
+  }
+
+  /* Each row = a circular icon chip. Inactive rows recede to 0.62 (echoing
+     the FAQ rows / industry cells at 0.7); active/hover come to full opacity,
+     the active row picking up a subtle tinted fill like those sections. */
+  .item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+    border-radius: 14px;
+    background: transparent;
+    opacity: 0.62;
+    transition: opacity 200ms ease, background 200ms ease;
+  }
+  .item:hover {
+    opacity: 1;
+  }
+  .itemActive,
+  .itemActive:hover {
+    opacity: 1;
+    background: rgba(11, 27, 43, 0.05);
+  }
+
+  /* Bare navy glyph (no chip circle), centred in a 36px box so the rail keeps
+     its rhythm. Active/hover row carries the highlight (see .itemActive). */
+  .icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    color: color-mix(in srgb, #0B1B2B 55%, transparent);
+    transition: color 200ms ease;
+  }
+  .itemActive .icon,
+  .item:hover .icon {
+    color: #0B1B2B;
+  }
+
+  /* No guide-line bar/dot in card mode — the chip + tint carry hierarchy. */
+  .item::before {
+    display: none;
+  }
+
+  /* Hover → label tooltip just outside the card (own backing → legible). */
+  .label {
+    position: absolute;
+    left: 60px;
+    top: 50%;
+    transform: translateY(-50%) translateX(-4px);
+    opacity: 0;
+    pointer-events: none;
+    white-space: nowrap;
+    font-size: 13px;
+    font-weight: 500;
+    color: #0B1B2B;
+    background: rgba(255, 255, 255, 0.98);
+    padding: 6px 10px;
+    border-radius: 8px;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    box-shadow: 0 6px 20px rgba(11, 27, 43, 0.14);
+    transition: opacity 180ms ease, transform 180ms ease;
+  }
+  .item:hover .label {
+    opacity: 1;
+    transform: translateY(-50%) translateX(0);
+  }
+}
+
+/* Hidden below 1470px — the card (~59px wide) needs that much left margin to
+   clear the centred 1287px content; narrower and it would overlap. */
+@media (max-width: 1470px) {
   .root {
     display: none;
   }

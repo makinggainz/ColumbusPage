@@ -1,7 +1,8 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
+import { Sparkles, ClipboardCheck } from "lucide-react";
 
 import styles from "./business-feature-index.module.css";
 
@@ -13,6 +14,64 @@ const ITEMS = [
   { label: "Due Dillegence", id: "due-diligence" },
   { label: "Dashboard", id: "dashboard" },
 ];
+
+/* Standard 24-grid stroke glyph wrapper, matching the BusinessUseCases
+   `IconChip` section icons (stroke 1.8, round caps) so each rail icon is the
+   same mark shown at the top of its section. Rendered at 20px. */
+function Glyph({ children }: { children: ReactNode }) {
+  return (
+    <svg
+      width={18}
+      height={18}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.8}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+    >
+      {children}
+    </svg>
+  );
+}
+
+/* Per-feature icons for the collapsed icon-rail (cramped 14″ widths). The four
+   that have a section header icon reuse it verbatim; Generative Data + Due
+   Diligence (nested sub-features with no section icon) use lucide glyphs. */
+const ICONS: Record<string, ReactNode> = {
+  chat: (
+    <Glyph>
+      <circle cx="11" cy="11" r="7" />
+      <path d="m20 20-3.5-3.5" />
+    </Glyph>
+  ),
+  "data-catalogue": (
+    <Glyph>
+      <ellipse cx="12" cy="5" rx="8" ry="3" />
+      <path d="M4 5v6c0 1.66 3.58 3 8 3s8-1.34 8-3V5" />
+      <path d="M4 11v6c0 1.66 3.58 3 8 3s8-1.34 8-3v-6" />
+    </Glyph>
+  ),
+  "super-model": <Sparkles size={18} strokeWidth={1.8} aria-hidden />,
+  "agentic-research": (
+    <Glyph>
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+      <path d="M14 2v6h6" />
+      <path d="m11 13 4 4" />
+      <path d="M15 11h3v3" />
+    </Glyph>
+  ),
+  "due-diligence": <ClipboardCheck size={18} strokeWidth={1.8} aria-hidden />,
+  dashboard: (
+    <Glyph>
+      <rect x="3" y="3" width="7" height="7" />
+      <rect x="14" y="3" width="7" height="7" />
+      <rect x="3" y="14" width="7" height="7" />
+      <rect x="14" y="14" width="7" height="7" />
+    </Glyph>
+  ),
+};
 
 export default function BusinessFeatureIndex() {
   const [activeIdx, setActiveIdx] = useState(0);
@@ -103,7 +162,8 @@ export default function BusinessFeatureIndex() {
                   window.dispatchEvent(new CustomEvent("industry-index-jump"));
                 }}
               >
-                {item.label}
+                <span className={styles.icon}>{ICONS[item.id]}</span>
+                <span className={styles.label}>{item.label}</span>
               </a>
             </li>
           );
