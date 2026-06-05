@@ -27,16 +27,16 @@
   padding: 0;
   display: flex;
   flex-direction: column;
-  /* Continuous faint guide rail running the full list height. Kept low
-     contrast so it ties the labels together without competing with the
-     active indicator. */
-  border-left: 1px solid color-mix(in srgb, #0B1B2B 10%, transparent);
+  /* No guide line in the wide tier — each row's accent icon-circle (matching
+     the super-section title IconChips) carries the rhythm instead. */
 }
 
 /* Idle labels recede so the active item carries the hierarchy on its
    own. Sized for a sidebar: readable but not loud. */
 .item {
-  display: block;
+  display: flex;
+  align-items: center;
+  gap: 12px;
   position: relative;
   font-size: 14px;
   font-weight: 400;
@@ -44,49 +44,51 @@
   line-height: 1.4;
   color: color-mix(in srgb, #0B1B2B 50%, transparent);
   text-decoration: none;
-  padding: 12px 0 12px 18px;
+  padding: 7px 0;
   outline: none;
   white-space: nowrap;
   transition: color 240ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-/* Per-feature icon — only shown in the cramped icon-rail tier (see media
-   query below). Hidden in the wide tier, which is text-labels-only. */
+/* Per-feature icon — a 34px box holding the stroke glyph. Only the ACTIVE row
+   gets the "chip" treatment (the super-section IconChip vocab): an accent-tinted
+   circle background + the glyph in the selected industry's accent. Inactive rows
+   are a plain neutral glyph with no background, so the current section is the
+   only one that carries colour. */
 .icon {
-  display: none;
-}
-
-/* Active section's rail segment — a 2px dark bar sitting on the guide
-   line. Absolutely positioned so toggling never reflows the labels. */
-.item::before {
-  content: "";
-  position: absolute;
-  left: -1px;
-  top: 0;
-  bottom: 0;
-  width: 2px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 34px;
+  height: 34px;
+  border-radius: 9999px;
   background: transparent;
-  transition: background 240ms cubic-bezier(0.22, 1, 0.36, 1);
+  color: color-mix(in srgb, #0B1B2B 50%, transparent);
+  transition: background 240ms cubic-bezier(0.22, 1, 0.36, 1),
+              color 240ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .item:hover {
   color: color-mix(in srgb, #0B1B2B 75%, transparent);
 }
-.item:hover::before {
-  background: color-mix(in srgb, #0B1B2B 22%, transparent);
+/* Hover gives only a subtle neutral lift — no accent/background (that's
+   reserved for the selected row). */
+.item:hover .icon {
+  color: color-mix(in srgb, #0B1B2B 80%, transparent);
 }
 
-/* Active state — pops to full ink + medium weight, paired with the
-   dark rail bar. The contrast jump (50% → 100% colour, 0 → 2px rail)
-   is what carries hierarchy. */
+/* Active (selected) row — label pops to full ink + medium weight, and the icon
+   becomes the accent chip: tinted circle background + accent-coloured glyph. */
 .itemActive,
 .itemActive:hover {
   color: #0B1B2B;
   font-weight: 500;
 }
-.itemActive::before,
-.itemActive:hover::before {
-  background: #0B1B2B;
+.itemActive .icon,
+.itemActive:hover .icon {
+  background: color-mix(in srgb, var(--idx-accent, #0B1B2B) 12%, transparent);
+  color: var(--idx-accent, #0B1B2B);
 }
 
 /* ── Cramped tier (≈1471–1640px, e.g. MacBook Pro 14″ at 1512px) ──────────
@@ -136,13 +138,15 @@
   }
 
   /* Bare navy glyph (no chip circle), centred in a 36px box so the rail keeps
-     its rhythm. Active/hover row carries the highlight (see .itemActive). */
+     its rhythm. Active/hover row carries the highlight (see .itemActive). The
+     wide-tier accent circle bg is reset here — this tier is neutral. */
   .icon {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     width: 36px;
     height: 36px;
+    background: transparent;
     color: color-mix(in srgb, #0B1B2B 55%, transparent);
     transition: color 200ms ease;
   }

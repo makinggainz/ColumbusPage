@@ -17,6 +17,7 @@ import CapabilitiesGrid from "@/components/business/CapabilitiesGrid";
 import FAQSection from "@/components/business/FAQSection";
 import BusinessFeatureIndex from "@/components/business/BusinessFeatureIndex";
 import BusinessUseCases from "@/components/business/BusinessUseCases";
+import BusinessHelper from "@/components/business/BusinessHelper";
 import { MediaPrefetcher } from "@/components/ui/MediaPrefetcher";
 
 /* The reduced industry set shown in the "Tell us where you work"
@@ -44,7 +45,6 @@ export default function BusinessPage() {
   return (
     <main className="ent-scope">
       <style>{FRAME_NO_BORDER_CSS}</style>
-      <BusinessFeatureIndex />
       {/* MistxNav is rendered as a direct child of <main> so its
           position:sticky has the full page as its containing block.
           Wrapping it in a navbar-height <section> would trap the sticky
@@ -96,6 +96,10 @@ export default function BusinessPage() {
             (its content row is py-6 ≈ 84px) so the industry sub-navbar
             pins flush under it. */}
         <IndustryProvider initialIndustryId="residential-real-estate">
+          {/* Rendered inside the provider (it portals to <body>, so its DOM
+              position is irrelevant) so its rail icons can read the selected
+              industry's accent — matching the super-section title IconChips. */}
+          <BusinessFeatureIndex />
           <IndustryStickyNavbar lightTheme topOffset={84} industries={BUSINESS_INDUSTRIES} takeover />
           <IndustrySelector lightTheme rounded industries={BUSINESS_INDUSTRIES} variant="iconGrid" />
           {/* Industry sticky zone — the sub-navbar above observes this
@@ -119,6 +123,7 @@ export default function BusinessPage() {
           long scroll never reveals a half-loaded section. Skips on
           data-saver. Renders nothing. */}
       <MediaPrefetcher />
+      <BusinessHelper />
     </main>
   );
 }

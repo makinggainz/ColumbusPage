@@ -4,6 +4,8 @@ import { useCallback, useEffect, useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { Sparkles, ClipboardCheck } from "lucide-react";
 
+import { useIndustry } from "@/components/use-cases/industry/IndustryContext";
+import { INDUSTRY_COLOR } from "@/components/use-cases/industry/content";
 import styles from "./business-feature-index.module.css";
 
 const ITEMS = [
@@ -74,6 +76,11 @@ const ICONS: Record<string, ReactNode> = {
 };
 
 export default function BusinessFeatureIndex() {
+  const { industryId } = useIndustry();
+  /* Accent for the rail's icon circles — the selected industry's colour, so
+     they recolour in lockstep with the super-section title IconChips. */
+  const accent = INDUSTRY_COLOR[industryId] ?? "#0B1B2B";
+
   const [activeIdx, setActiveIdx] = useState(0);
   const [visible, setVisible] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -140,6 +147,8 @@ export default function BusinessFeatureIndex() {
         zIndex: 9999,
         opacity: visible ? 1 : 0,
         pointerEvents: visible ? "auto" : "none",
+        // Drives the icon-circle tint in the CSS (inherits to each .icon).
+        ["--idx-accent" as string]: accent,
       }}
     >
       <ul className={styles.list}>
@@ -151,15 +160,25 @@ export default function BusinessFeatureIndex() {
                 href={`#${item.id}`}
                 className={`${styles.item} ${isActive ? styles.itemActive : ""}`}
                 aria-current={isActive ? "location" : undefined}
-                onClick={() => {
+                onClick={(e) => {
                   /* Tell the IndustryStickyNavbar to keep the main
-                     navbar hidden across the upcoming jump scroll —
-                     without this, the post-click upward motion trips
-                     its scroll-up "coexist" threshold and the navbar
-                     reappears for ~a second before being hidden again.
-                     The picker listens for `industry-index-jump` and
-                     suppresses its coexist auto-flip for a short window. */
+                     navbar hidden across the upcoming scroll —
+                     without this, the upward motion trips its scroll-up
+                     "coexist" threshold and the navbar reappears for ~a
+                     second before being hidden again. The picker listens for
+                     `industry-index-jump` and suppresses its coexist
+                     auto-flip for a short window. */
                   window.dispatchEvent(new CustomEvent("industry-index-jump"));
+
+                  /* Smooth-scroll to the section instead of the default
+                     instant anchor jump. Let modified clicks / non-primary
+                     buttons fall through to native behaviour. */
+                  if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+                  const target = document.getElementById(item.id);
+                  if (!target) return;
+                  e.preventDefault();
+                  target.scrollIntoView({ behavior: "smooth", block: "start" });
+                  history.replaceState(null, "", `#${item.id}`);
                 }}
               >
                 <span className={styles.icon}>{ICONS[item.id]}</span>
