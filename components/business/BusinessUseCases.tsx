@@ -388,6 +388,10 @@ type IndustryStackedRows = {
 type IndustryCopy = {
   chatSubtitle: React.ReactNode;
   sub1Description: React.ReactNode;
+  /* Title for the forecast sub-feature ("Like weather forecasts for …").
+     Per-industry so the heading matches sub2Description instead of always
+     reading "real-estate". */
+  sub2Title: string;
   sub2Description: React.ReactNode;
   sub3Description: React.ReactNode;
   sub4Description: React.ReactNode;
@@ -416,6 +420,7 @@ const RESIDENTIAL_COPY: IndustryCopy = {
       Ask chat to uncover hidden patterns across the map &amp; data.
     </>
   ),
+  sub2Title: "Like weather forecasts for real estate",
   sub2Description: (
     <>
       <p>
@@ -619,6 +624,7 @@ const COMMERCIAL_COPY: IndustryCopy = {
       Ask chat to uncover hidden patterns across the map &amp; data.
     </>
   ),
+  sub2Title: "Like weather forecasts for CRE",
   sub2Description: (
     <>
       <p>
@@ -766,6 +772,7 @@ const URBAN_COPY: IndustryCopy = {
       Ask chat to uncover hidden patterns across the map &amp; data.
     </>
   ),
+  sub2Title: "Like weather forecasts for urban infrastructure",
   sub2Description: (
     <>
       <p>
@@ -976,6 +983,7 @@ const ENVIRONMENTAL_COPY: IndustryCopy = {
       <p className="mt-3">Baseline-grade habitat mapping for Marine Ecologists, Conservation Scientists, and Marine Protected Area Planners.</p>
     </>
   ),
+  sub2Title: "Like weather forecasts for ecological events",
   sub2Description: (
     <>
       <p>
@@ -1184,6 +1192,7 @@ const ACADEMIC_COPY: IndustryCopy = {
       Sophisticated <Blue>pattern detection</Blue> — ask chat to uncover hidden patterns across the map and underlying data, even when the signal only appears at the join of historical archives that have never been combined before.
     </>
   ),
+  sub2Title: "Like weather forecasts for spatial research outcomes",
   sub2Description: (
     <>
       <p>
@@ -1388,6 +1397,7 @@ const GEOMARKETING_COPY: IndustryCopy = {
       Sophisticated <Blue>pattern detection</Blue> — ask chat to uncover hidden patterns across the map and underlying data, even when the signal only appears at the join of branch performance, demographic shift, and competitor activity.
     </>
   ),
+  sub2Title: "Like weather forecasts for your target customer",
   sub2Description: (
     <>
       <p>
@@ -1641,7 +1651,7 @@ export default function BusinessUseCases() {
             ),
           },
           {
-            title: "Like weather forecasts for real-estate",
+            title: copy.sub2Title,
             description: copy.sub2Description,
             backdropImage: bg.chatSub[1],
             backdropPosition: bg.chatSubPositions?.[1],
