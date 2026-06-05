@@ -8,12 +8,28 @@ import { useCallback, useEffect, useRef, useState } from "react";
    the popover grows out of the mascot's corner. See MistxNav.tsx ~L594. */
 const POPOVER_TRANSITION =
   "opacity 300ms cubic-bezier(0.6,0.6,0,1), transform 300ms cubic-bezier(0.6,0.6,0,1)";
-/* Greeting card uses the same snappy curve as the textbox focus-in (see the
-   Ask Columbus input below) so the pop-in feels like the input's snap. */
-const GREETING_TRANSITION =
-  "opacity 140ms cubic-bezier(0.32, 0.72, 0, 1), transform 140ms cubic-bezier(0.32, 0.72, 0, 1)";
 const POPOVER_HIDDEN_TRANSFORM = "translateY(8px) scale(0.96)";
 const POPOVER_VISIBLE_TRANSFORM = "translateY(0) scale(1)";
+
+/* Earth + greeting share the send-button entrance shape — same spring
+   curve, different durations. The earth uses the slower variant so its
+   arrival reads as deliberate; the greeting uses the snappier variant
+   and is scheduled to begin only after the earth has fully landed
+   (see MASCOT_REVEAL_MS below). */
+const MASCOT_REVEAL_TRANSITION =
+  "opacity 360ms cubic-bezier(0.6,0.6,0,1), transform 520ms cubic-bezier(0.22, 1.4, 0.36, 1)";
+/* Earth's transform duration — also drives the greeting's launch delay
+   so the card waits until the mascot has finished springing in. */
+const MASCOT_REVEAL_MS = 520;
+const REVEAL_TRANSITION =
+  "opacity 200ms cubic-bezier(0.6,0.6,0,1), transform 240ms cubic-bezier(0.22, 1.4, 0.36, 1)";
+const MASCOT_HIDDEN_TRANSFORM = "scale(0.6)";
+const MASCOT_VISIBLE_TRANSFORM = "scale(1)";
+/* Greeting starts as a tiny dot at the card's bottom-right corner —
+   which sits ~32px inside the earth's left edge — so the card visibly
+   grows out from inside the mascot rather than fading in beside it. */
+const GREETING_HIDDEN_TRANSFORM = "scale(0.15)";
+const GREETING_VISIBLE_TRANSFORM = "scale(1)";
 
 /* Palette mirrors the "Ask, Discover, Understand" product demo
    (MapChatPlatform.tsx) so the chat UI reads as the same product:
@@ -65,6 +81,11 @@ type Mode = "closed" | "greeting" | "chat";
 
 export default function BusinessHelper() {
   const [revealed, setRevealed] = useState(false);
+  /* mascotShown flips on the next frame after `revealed` becomes true so
+     the earth mounts in its hidden (scale 0.6, opacity 0) state and then
+     transitions to its visible state — without this we'd render straight
+     to scale 1 and skip the entrance animation. */
+  const [mascotShown, setMascotShown] = useState(false);
   const [mode, setMode] = useState<Mode>("closed");
   const [draft, setDraft] = useState("");
   const [messages, setMessages] = useState<Message[]>(() => [
@@ -84,6 +105,15 @@ export default function BusinessHelper() {
       prev.map((m) => (m.ts === 0 ? { ...m, ts: Date.now() } : m)),
     );
   }, []);
+
+  /* Mount the earth in its hidden transform, then flip on the next frame
+     so the entrance transition actually plays. */
+  useEffect(() => {
+    if (!revealed) return;
+    const id = requestAnimationFrame(() => setMascotShown(true));
+    return () => cancelAnimationFrame(id);
+  }, [revealed]);
+
   const greetedRef = useRef(false);
 
   /* Reveal once the user scrolls into the white background block. The block
@@ -100,13 +130,13 @@ export default function BusinessHelper() {
         if (!greetedRef.current) {
           greetedRef.current = true;
           /* Pop the greeting every time the mascot appears — reloads count
-             as fresh appearances, so the suggestion is offered each visit
-             rather than gated by sessionStorage. Flip on the next frame so
-             the popover mounts in its hidden state first and the transition
-             actually plays. */
-          requestAnimationFrame(() => {
+             as fresh appearances, so the suggestion is offered each visit.
+             Wait until the earth has finished springing in (its full
+             transform duration) before triggering the card so the popup
+             reads as emerging from a settled mascot, not a moving one. */
+          window.setTimeout(() => {
             setMode((m) => (m === "closed" ? "greeting" : m));
-          });
+          }, MASCOT_REVEAL_MS);
         }
       }
     };
@@ -182,8 +212,9 @@ export default function BusinessHelper() {
       }}
     >
       {/* Greeting popover — anchored to the mascot's left, slight overlap.
-          Always mounted; opacity + transform driven by state. Uses the
-          snappier textbox-focus curve so the first pop-in feels brisk. */}
+          Always mounted; scales out from its bottom-right corner (which
+          sits inside the earth) so the card visibly emerges from the
+          mascot, using the same spring curve as the earth's entrance. */}
       <div
         style={{
           position: "absolute",
@@ -191,10 +222,10 @@ export default function BusinessHelper() {
           bottom: 4,
           opacity: greetingOpen ? 1 : 0,
           transform: greetingOpen
-            ? POPOVER_VISIBLE_TRANSFORM
-            : POPOVER_HIDDEN_TRANSFORM,
+            ? GREETING_VISIBLE_TRANSFORM
+            : GREETING_HIDDEN_TRANSFORM,
           transformOrigin: "bottom right",
-          transition: GREETING_TRANSITION,
+          transition: REVEAL_TRANSITION,
           pointerEvents: greetingOpen ? "auto" : "none",
         }}
       >
@@ -229,35 +260,54 @@ export default function BusinessHelper() {
         />
       </div>
 
-      <button
-        type="button"
-        onClick={handleMascotClick}
-        aria-label={chatOpen ? "Close helper" : "Open helper"}
-        aria-expanded={chatOpen}
+      {/* Mascot reveal wrapper — drives the entrance animation only. The
+          inner button keeps its own hover transform; nesting separates
+          the two so the hover handler's DOM-mutation transform doesn't
+          clobber the reveal transform. */}
+      <div
         style={{
           position: "absolute",
           right: 0,
           bottom: 0,
-          appearance: "none",
-          border: "none",
-          background: "transparent",
-          padding: 0,
-          cursor: "pointer",
-          transition: "transform 0.25s cubic-bezier(0.25, 1, 0.5, 1)",
-          filter: "drop-shadow(0 10px 24px rgba(11, 27, 43, 0.20))",
+          width: MASCOT_SIZE,
+          height: MASCOT_SIZE,
+          opacity: mascotShown ? 1 : 0,
+          transform: mascotShown
+            ? MASCOT_VISIBLE_TRANSFORM
+            : MASCOT_HIDDEN_TRANSFORM,
+          transformOrigin: "center",
+          transition: MASCOT_REVEAL_TRANSITION,
         }}
-        onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.06)")}
-        onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
       >
-        <Image
-          src="/business-helper-mascot.png"
-          alt="Helper"
-          width={MASCOT_SIZE}
-          height={MASCOT_SIZE}
-          style={{ display: "block" }}
-          priority
-        />
-      </button>
+        <button
+          type="button"
+          onClick={handleMascotClick}
+          aria-label={chatOpen ? "Close helper" : "Open helper"}
+          aria-expanded={chatOpen}
+          style={{
+            appearance: "none",
+            border: "none",
+            background: "transparent",
+            padding: 0,
+            cursor: "pointer",
+            transition: "transform 0.25s cubic-bezier(0.25, 1, 0.5, 1)",
+            filter: "drop-shadow(0 10px 24px rgba(11, 27, 43, 0.20))",
+          }}
+          onMouseEnter={(e) =>
+            (e.currentTarget.style.transform = "scale(1.06)")
+          }
+          onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+        >
+          <Image
+            src="/business-helper-mascot.png"
+            alt="Helper"
+            width={MASCOT_SIZE}
+            height={MASCOT_SIZE}
+            style={{ display: "block" }}
+            priority
+          />
+        </button>
+      </div>
     </div>
   );
 }
@@ -424,9 +474,34 @@ function ChatPanel({
             fontWeight: 600,
             color: INK,
             letterSpacing: "-0.01em",
+            display: "inline-flex",
+            alignItems: "center",
+            /* No gap on the parent — spacing is set per element so the
+               logo can sit a normal distance from "Ask about" but tight
+               against "Columbus". */
+            gap: 0,
           }}
         >
-          Ask Columbus about Columbus
+          Ask about
+          {/* Columbus wordmark logo — same filter recipe MistxNav uses to
+              recolour the source PNG to the site's dark navy so it matches
+              the header ink. */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/logobueno.png"
+            alt=""
+            width={22}
+            height={22}
+            decoding="async"
+            style={{
+              objectFit: "contain",
+              marginLeft: 6,
+              marginRight: 2,
+              filter:
+                "brightness(0) saturate(100%) invert(8%) sepia(80%) saturate(1400%) hue-rotate(215deg) brightness(90%)",
+            }}
+          />
+          Columbus
         </span>
         <button
           type="button"
