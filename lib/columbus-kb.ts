@@ -162,6 +162,12 @@ export type Suggestion = {
   /* Lower-case single-word stems; used by matchQuestion() (the keyword
      fallback when the AI route is unavailable). */
   keywords: string[];
+  /* Override the global MIN_KEYWORD_HITS for this entry. Use 1 only for
+     entries whose keywords are specific enough to be unambiguous on their own
+     (e.g. "geospatial", "gis") — prevents the 2-hit rule from blocking
+     simple definitional questions like "what is GIS" (which tokenizes to
+     just {"gis"} after stopword filtering). */
+  minHits?: number;
 };
 
 export const COLUMBUS_SUGGESTIONS: Suggestion[] = [
@@ -336,6 +342,32 @@ export const INDUSTRY_OPTIONS: { value: string; label: string }[] = [
   { value: "other", label: "Other" },
 ];
 
+/* ─── Keyword-fallback-only answers ─────────────────────────────────
+   These are NOT rendered as chips — they exist solely so matchQuestion()
+   can give a sensible answer for simple domain questions when the AI route
+   is unavailable. Keep responses short, accurate, and Columbus-pivoting. */
+
+export const KEYWORD_FALLBACKS: Suggestion[] = [
+  {
+    id: "what-is-gis",
+    label: "What is GIS?",
+    response:
+      "GIS — Geographic Information System — is software for capturing, analyzing, and visualizing data tied to locations on earth. Columbus makes that effortless: ask the map anything in plain English and get answers, forecasts, and maps instantly.",
+    /* "gis" is specific enough to match alone — "what is GIS" tokenizes to
+       just {"gis"} after stopword filtering, so minHits:1 is required here. */
+    keywords: ["gis", "geospatial", "geographic", "spatial", "gis?"],
+    minHits: 1,
+  },
+  {
+    id: "what-is-agentic",
+    label: "What is agentic GIS?",
+    response:
+      "Agentic GIS means Columbus works like an analyst on your behalf — it takes your brief, researches sites, runs analysis, and delivers results while you focus on other work. No manual steps, no specialist required.",
+    keywords: ["agentic", "agent", "autonomous", "automation", "automated"],
+    minHits: 1,
+  },
+];
+
 /* ─── KB → system-prompt serializer ──────────────────────────────────
    Flattens the KB into the grounding block dropped into the AI route's
    system prompt. Pure function, no React deps — safe on the server. */
@@ -362,11 +394,12 @@ export function serializeKb(): string {
 /* ─── Keyword fallback matcher ───────────────────────────────────────
    Used only when the AI route returns no answer (rate-limited, erroring,
    timed out, or no key) — a cheap last attempt to answer a recognized
-   question before the chat shows the contact form. Deliberately CONSERVATIVE:
-   it requires at least two distinct keyword hits, so a single generic word
-   ("gis", "data", "ai") can't drag a question onto the wrong canned answer
-   (e.g. "what is gis" must NOT return the "do I need to be a GIS expert"
-   reply). When in doubt it returns null and the chat shows the form. */
+   question before the chat shows the contact form. Searches KEYWORD_FALLBACKS
+   first, then COLUMBUS_SUGGESTIONS. The global MIN_KEYWORD_HITS=2 prevents
+   a single generic word from matching the wrong chip answer; KEYWORD_FALLBACKS
+   entries may set minHits:1 when their keywords are specific enough to be
+   unambiguous on their own (e.g. "gis", "agentic"). When in doubt, returns
+   null and the chat shows the contact form. */
 
 const STOPWORDS = new Set([
   "a", "an", "the", "is", "are", "do", "does", "did", "can", "could", "to",
@@ -402,11 +435,12 @@ export function matchQuestion(text: string): Suggestion | null {
   const qTokens = tokenize(text);
   if (qTokens.size === 0) return null;
   let best: { overlap: number; s: Suggestion } | null = null;
-  for (const s of COLUMBUS_SUGGESTIONS) {
+  for (const s of [...KEYWORD_FALLBACKS, ...COLUMBUS_SUGGESTIONS]) {
+    const threshold = s.minHits ?? MIN_KEYWORD_HITS;
     const kw = new Set(s.keywords);
     let overlap = 0;
     for (const t of qTokens) if (kw.has(t)) overlap++;
-    if (overlap >= MIN_KEYWORD_HITS && (!best || overlap > best.overlap)) {
+    if (overlap >= threshold && (!best || overlap > best.overlap)) {
       best = { overlap, s };
     }
   }
