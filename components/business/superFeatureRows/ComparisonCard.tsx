@@ -16,6 +16,13 @@ export type ComparisonCardProps = {
   mapSrc: string;
   mapAlt?: string;
   children?: React.ReactNode;
+  /* When true, the card is painted in a featured/preferred state:
+     a 2px --ent-accent border + an accent-tinted fill that reads a
+     touch darker than the default white card. Used on the Columbus
+     Data Layer side of BetterPricesRow so it visually leads the
+     "Best Competitor" card. The non-highlighted card keeps a 2px
+     transparent border so both cards stay pixel-identical in size. */
+  highlighted?: boolean;
 };
 
 export default function ComparisonCard({
@@ -26,11 +33,15 @@ export default function ComparisonCard({
   mapSrc,
   mapAlt = "",
   children,
+  highlighted = false,
 }: ComparisonCardProps) {
   return (
     <div
       style={{
-        background: "#FFFFFF",
+        background: highlighted ? "rgba(0, 129, 172, 0.06)" : "#FFFFFF",
+        border: highlighted
+          ? "2px solid var(--ent-accent)"
+          : "2px solid transparent",
         borderRadius: "var(--ent-radius-2xl)",
         padding: "clamp(18px, 2vw, 26px)",
         display: "flex",

@@ -102,6 +102,7 @@ export default function BetterPricesRow({
           avatar={<ColumbusMark size={20} />}
           mapSrc="/business/map2.png"
           mapAlt={columbusMapAlt}
+          highlighted
         >
           <div
             style={{
