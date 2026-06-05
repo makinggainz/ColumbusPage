@@ -1,64 +1,107 @@
 /**
- * Columbus product knowledge base — facts that power the in-page chat
- * assistant (components/business/BusinessHelper.tsx).
+ * Columbus product knowledge base — the chat assistant's source of truth
+ * (components/business/BusinessHelper.tsx + app/api/columbus-chat).
  *
- * Everything in here is hand-curated from the live site copy:
- *   • FAQ — components/business/FAQSection.tsx
- *   • Capabilities — components/business/CapabilitiesGrid.tsx
- *   • Industries — app/products/business/page.tsx (BUSINESS_INDUSTRIES)
- *   • Contact / book-a-demo — components/business/ProductBanner.tsx,
- *     BusinessHero.tsx, ChatSection.tsx (all link to
- *     /contact?tab=columbus-pro)
+ * STRICT RULE: everything here must be lifted from copy that actually
+ * appears on the /products/business page. Do not add claims, descriptions,
+ * numbers, or specifics that aren't on the page. Sources:
+ *   • Hero / positioning — components/business/BusinessHero.tsx,
+ *     SolutionShowcase.tsx, ProductBanner.tsx
+ *   • Problems — components/business/ProblemCards.tsx
+ *   • Capabilities — components/business/CapabilitiesGrid.tsx (titles) +
+ *     BusinessUseCases.tsx / ComparisonSection.tsx (the on-page feature copy)
+ *   • Industries — app/products/business/page.tsx
+ *   • FAQ — components/business/FAQSection.tsx (verbatim)
+ *   • Demo / contact CTAs — ProductBanner.tsx ("Try Demo"),
+ *     BusinessHero.tsx ("Start Now"), ChatSection.tsx ("Talk to Founders")
  *
- * For v1 we use this file two ways:
- *  1. SUGGESTIONS[].response — canned answers rendered when the user
- *     clicks a quick-pick chip.
- *  2. serializeKb() — flattens the structured data into a single string
- *     ready to drop into a Claude system prompt once the chat is wired
- *     to the API (see /Users/alexramirezblonski/.claude/plans/
- *     ok-now-can-you-goofy-kettle.md, Option A).
+ * Three uses:
+ *  1. COLUMBUS_SUGGESTIONS[].response — canned answers rendered when a
+ *     visitor clicks a quick-pick chip (no model call).
+ *  2. serializeKb() — flattened into the AI route's system prompt as the
+ *     grounding context (app/api/columbus-chat/route.ts).
+ *  3. matchQuestion() — the keyword fallback used only when the AI route is
+ *     unavailable (rate-limited / erroring), before the contact form.
  *
- * Update flow: whenever the live site copy in the sources above changes
- * meaningfully, the corresponding section here should change too. Keep
- * the structure consistent so serializeKb() output stays parseable.
+ * Update flow: when the page copy above changes, change the matching entry
+ * here too. Keep the structure stable so serializeKb() stays parseable.
  */
 
 export const COLUMBUS_KB = {
   oneLiner:
-    "Columbus is the geospatial AI layer for the physical world — fresh, " +
-    "high-fidelity data and real spatial reasoning, with maps and visuals " +
+    "Columbus Pro is agentic GIS made effortless — a more powerful, more " +
+    "intuitive GIS built for the physical world, with highest-fidelity fresh " +
+    "data, real spatial and contextual reasoning, and actual maps and visuals " +
     "as the answer.",
 
+  /* The "Legacy GIS slows you down because…" pain points (ProblemCards.tsx) —
+     what Columbus is built to fix. */
+  problemsSolved: [
+    "A single site selection report takes your team weeks to months.",
+    "Legacy GIS requires specialists to operate their bulky complex apps.",
+    "Your analysts spend 80% of their time finding, cleaning and organizing data.",
+    "Finding the right data to support your research is too difficult.",
+    "You use 10 different complex apps for one single project.",
+    "Combining multiple types of large data on a single map is frustrating and costly.",
+  ],
+
+  /* The six "Enterprise-grade capabilities" tiles plus the product features
+     described on the page's feature sections. Descriptions are lifted from the
+     on-page feature copy (BusinessUseCases / ComparisonSection), generalized
+     across industries. */
   capabilities: [
     {
       title: "Ask the map anything",
       description:
-        "Plain-language questions about places. No filters, no menus — the map answers back.",
+        "Conversational map chat — ask directly about anything and have a conversation like you're talking to your best analyst, in plain English.",
+    },
+    {
+      title: "Pattern detection",
+      description:
+        "Sophisticated pattern detection — ask the chat to uncover hidden patterns across the map and data.",
+    },
+    {
+      title: "Forecasts",
+      description:
+        "Like weather forecasts, but for your market — predict the future and spot future hot areas, powered by deep-learning pattern recognition fed by the most up-to-date, high-quality data.",
+    },
+    {
+      title: "Transparent reasoning",
+      description:
+        "Columbus AI considers a wide breadth of data every time it critically thinks, and its reasoning is transparent — tap to see all the investigation it did.",
+    },
+    {
+      title: "Drop in any file",
+      description:
+        "Drop in any file — Shapefile, KML, CSV, XLSX, PDF, or CAD — and Columbus harmonizes and overlays it as a visualized map layer. No schemas to define, no columns to map; just upload and ask follow-up questions in plain English.",
     },
     {
       title: "Agent research reports",
       description:
-        "Autonomous agents produce structured spatial reports — due-diligence packs, market scans, site comparisons.",
-    },
-    {
-      title: "24/7 personal support",
-      description:
-        "Dedicated humans in the loop — onboarding, custom data ingestion, and follow-up support whenever you need it.",
-    },
-    {
-      title: "High-fidelity accurate data",
-      description:
-        "Continuously ingested and spatially validated authoritative datasets — public, commercial, and partner. Always current, coordinate-accurate.",
+        "Hand Columbus your brief and grab a coffee — it researches new sites, runs demand and absorption studies, and delivers professional, review-ready reports while you focus on other work.",
     },
     {
       title: "Data Catalogue",
       description:
-        "Browse and query the underlying datasets directly — every layer Columbus uses is auditable and queryable on its own.",
+        "Access proprietary data and the highest-quality data from a curated data catalogue. Data on Columbus is triple-checked.",
+    },
+    {
+      title: "High-fidelity accurate data",
+      description:
+        "Continuously ingested and spatially validated authoritative public, commercial, and partner datasets, so what you query is current and coordinate-accurate.",
     },
     {
       title: "Light-speed due diligence",
       description:
-        "Complete environmental, market, regulatory, and operational checks on a property or operation in minutes instead of weeks.",
+        "Site selection and research that used to take weeks to months, done at light speed.",
+    },
+    {
+      title: "24/7 personal support",
+      description: "24/7 personal support — you can talk to the founders directly.",
+    },
+    {
+      title: "Dashboard",
+      description: "A dashboard that gives you your captain's view across everything.",
     },
   ],
 
@@ -71,19 +114,20 @@ export const COLUMBUS_KB = {
     "Environmental research",
   ],
 
+  /* Verbatim from FAQSection.tsx. */
   faq: [
     {
-      q: "Why doesn't Claude or ChatGPT work for this?",
+      q: "Why doesn't Claude or ChatGPT work?",
       a:
-        "General chat models are built for text, not space. They regurgitate old articles, hallucinate coordinates, can't reach live data, and produce no map or GIS output. Columbus is built for the physical world — highest-fidelity fresh data, real spatial and contextual reasoning, and actual maps and visuals as the answer.",
+        "General chat models are built for text, not space. They regurgitate old articles about an area, hallucinate coordinates, can't reach live data, and produce no map or GIS output. Columbus is built for the physical world — highest-fidelity fresh data, real spatial and contextual reasoning, and actual maps and visuals as the answer.",
     },
     {
-      q: "How does Columbus collect its data?",
+      q: "How do we collect our data?",
       a:
         "We continuously ingest and fuse authoritative public, commercial, and partner datasets, then validate them spatially so what you query is current and coordinate-accurate — not scraped article text. Coverage and freshness keep expanding as new sources come online.",
     },
     {
-      q: "What security measures do you have?",
+      q: "What security measures do we take?",
       a:
         "Business data is encrypted in transit and at rest, access is scoped per organization, and your private data is never used to train shared models. We support the controls business teams expect before rolling Columbus out across an organization.",
     },
@@ -94,45 +138,38 @@ export const COLUMBUS_KB = {
     },
   ],
 
+  /* The page does not state a price list. The on-page paths to pricing are the
+     demo CTAs ("Try Demo" / "Start Now") and "Talk to Founders". */
   pricing:
-    "Columbus Pro is a paid business product with team-tailored pricing. " +
-    "There's no public price list — pricing is shaped around your team " +
-    "size, dataset needs, and usage. The right way to get a quote is to " +
-    "book a demo at /contact?tab=columbus-pro.",
+    "To see pricing, start a demo or talk to the founders — they'll show " +
+    "Columbus running on your own data and walk through what fits your needs.",
 
   contact: {
-    bookDemo: "/contact?tab=columbus-pro",
     description:
-      "Book a demo to see Columbus running on your own data. Reach out at /contact?tab=columbus-pro.",
+      "Start a demo or talk to the founders to see Columbus running on your own data.",
   },
 } as const;
 
 /* ─── Quick-pick suggestions ─────────────────────────────────────────
-   The three chips rendered at the top of an empty chat. Picked to match
-   what visitors most commonly ask before any sales conversation. Each
-   suggestion ships with its own canned response so v1 can answer
-   without an LLM call — the same responses are usable as gold answers
-   when an LLM-backed v2 is wired up. */
+   The chips rendered at the top of an empty chat. Each ships with a canned
+   `response` (rendered directly on click, no model call) that is also fed to
+   the AI as grounding, and `keywords` used by matchQuestion()'s fallback. */
 
 export type Suggestion = {
   id: string;
   label: string;
   response: string;
-  /* Tokens used by matchQuestion() to map a typed question to this entry
-     without calling an LLM. Should be lower-case, single-word stems —
-     plurals/variants are folded back to the root in tokenize(). */
+  /* Lower-case single-word stems; used by matchQuestion() (the keyword
+     fallback when the AI route is unavailable). */
   keywords: string[];
 };
 
-/* Full pool of canned Q&A. The chat shows three at a time as chips; once
-   the visitor clicks one, it's removed and the next from the pool slides
-   into its place (see SuggestionChips rotation in BusinessHelper.tsx). */
 export const COLUMBUS_SUGGESTIONS: Suggestion[] = [
   {
     id: "pricing",
     label: "Is Columbus free?",
     response:
-      "Columbus Pro is a paid business product — we don't publish a price list because pricing is tailored to your team size, the datasets you need, and how you'll use it. The fastest way to get a quote is to book a demo and we'll put together a plan that fits.",
+      "The best way to see pricing is to start a demo or talk to our founders — they'll show Columbus running on your own data and walk through what fits your needs.",
     keywords: [
       "free",
       "price",
@@ -152,7 +189,7 @@ export const COLUMBUS_SUGGESTIONS: Suggestion[] = [
     id: "what-is-it",
     label: "What can Columbus do?",
     response:
-      "Columbus is the geospatial AI layer for the physical world. You can ask the map anything in plain language, generate agent research reports, browse the underlying data catalogue, and run light-speed due diligence on a property, region, or operation — all backed by fresh, coordinate-accurate data, with 24/7 personal support.",
+      "Columbus Pro is agentic GIS made effortless. Ask the map anything in plain English, get agent research reports, browse a curated data catalogue, run light-speed due diligence, forecast trends, and drop in any file — Shapefile, KML, CSV, XLSX, PDF, or CAD — to overlay it as a map layer.",
     keywords: [
       "what",
       "do",
@@ -170,7 +207,7 @@ export const COLUMBUS_SUGGESTIONS: Suggestion[] = [
     id: "who-for",
     label: "Who uses Columbus?",
     response:
-      "Columbus is built for teams making decisions about physical space — residential and commercial real estate, urban infrastructure, geomarketing, academic research, and environmental research. It's designed for non-technical analysts and GIS professionals alike.",
+      "Columbus is for teams making decisions about physical space — residential and commercial real estate, urban infrastructure, geomarketing, academic research, and environmental research. It's designed so anyone, from non-technical analysts to GIS professionals, can use it.",
     keywords: [
       "who",
       "user",
@@ -188,7 +225,7 @@ export const COLUMBUS_SUGGESTIONS: Suggestion[] = [
     id: "data",
     label: "What data does Columbus have?",
     response:
-      "We continuously ingest and fuse authoritative public, commercial, and partner datasets, then validate them spatially so what you query is current and coordinate-accurate — not scraped article text. Coverage and freshness keep expanding as new sources come online.",
+      "We continuously ingest and fuse authoritative public, commercial, and partner datasets, then validate them spatially so what you query is current and coordinate-accurate — not scraped article text. You can also access proprietary, triple-checked data from our curated data catalogue.",
     keywords: [
       "data",
       "dataset",
@@ -207,7 +244,7 @@ export const COLUMBUS_SUGGESTIONS: Suggestion[] = [
     id: "vs-chatgpt",
     label: "How is it different from ChatGPT?",
     response:
-      "General chat models are built for text, not space. They regurgitate old articles, hallucinate coordinates, can't reach live data, and produce no map or GIS output. Columbus is built for the physical world — highest-fidelity fresh data, real spatial and contextual reasoning, and actual maps and visuals as the answer.",
+      "General chat models are built for text, not space. They regurgitate old articles about an area, hallucinate coordinates, can't reach live data, and produce no map or GIS output. Columbus is built for the physical world — highest-fidelity fresh data, real spatial and contextual reasoning, and actual maps and visuals as the answer.",
     keywords: [
       "chatgpt",
       "claude",
@@ -247,7 +284,7 @@ export const COLUMBUS_SUGGESTIONS: Suggestion[] = [
     id: "demo",
     label: "Can I see a demo?",
     response:
-      "Yes — we run demos on your own data so you can see Columbus working against real questions from your team. The fastest way to book one is to share a few details about your team and what you're trying to solve, and we'll set it up.",
+      "Yes — start a demo or talk to our founders to see Columbus running on your own data.",
     keywords: [
       "demo",
       "demos",
@@ -282,64 +319,57 @@ export const COLUMBUS_SUGGESTIONS: Suggestion[] = [
   },
 ];
 
-/* ─── Local question matcher (no LLM, no network) ────────────────────
-   Given a free-text question, return the suggestion whose keyword bag
-   has the highest Jaccard overlap with the question's tokens. Returns
-   null when no entry clears MATCH_THRESHOLD — the chat then escalates
-   to the Columbus-Pro mini-form. This is intentionally cheap so it can
-   run on every keystroke if we ever want live-preview matching. */
+/* ─── Industry options for the in-chat form ──────────────────────────
+   Mirrors the <select> options on the Columbus Pro tab of the contact
+   form (app/contact/page.tsx) so submissions from the chat line up with
+   submissions from the main contact form. */
+
+export const INDUSTRY_OPTIONS: { value: string; label: string }[] = [
+  { value: "real-estate", label: "Real Estate" },
+  { value: "government", label: "Government" },
+  { value: "logistics", label: "Logistics & Supply Chain" },
+  { value: "urban-planning", label: "Urban Planning" },
+  { value: "environmental", label: "Environmental" },
+  { value: "security", label: "Security & Defense" },
+  { value: "insurance", label: "Insurance" },
+  { value: "consulting", label: "Consulting" },
+  { value: "other", label: "Other" },
+];
+
+/* ─── KB → system-prompt serializer ──────────────────────────────────
+   Flattens the KB into the grounding block dropped into the AI route's
+   system prompt. Pure function, no React deps — safe on the server. */
+
+export function serializeKb(): string {
+  const k = COLUMBUS_KB;
+  const lines: string[] = [];
+  lines.push(`# What Columbus is\n${k.oneLiner}\n`);
+  lines.push(`# Problems Columbus solves`);
+  for (const p of k.problemsSolved) lines.push(`- ${p}`);
+  lines.push(`\n# Capabilities`);
+  for (const c of k.capabilities) lines.push(`- ${c.title}: ${c.description}`);
+  lines.push(`\n# Industries served`);
+  for (const ind of k.industries) lines.push(`- ${ind}`);
+  lines.push(`\n# FAQ`);
+  for (const f of k.faq) lines.push(`Q: ${f.q}\nA: ${f.a}\n`);
+  lines.push(`# Pricing\n${k.pricing}\n`);
+  lines.push(`# Contact\n${k.contact.description}`);
+  return lines.join("\n");
+}
+
+/* ─── Keyword fallback matcher ───────────────────────────────────────
+   Used ONLY when the AI route returns no answer because it was unavailable
+   (rate-limited, erroring, timed out, or no key) — a cheap last attempt to
+   answer a recognized question before the chat shows the contact form. It
+   returns the suggestion whose keyword bag overlaps the question most, or
+   null when nothing clears MATCH_THRESHOLD. */
 
 const STOPWORDS = new Set([
-  "a",
-  "an",
-  "the",
-  "is",
-  "are",
-  "do",
-  "does",
-  "did",
-  "can",
-  "could",
-  "to",
-  "of",
-  "in",
-  "on",
-  "at",
-  "for",
-  "with",
-  "and",
-  "or",
-  "but",
-  "i",
-  "you",
-  "we",
-  "it",
-  "this",
-  "that",
-  "be",
-  "by",
-  "as",
-  "from",
-  "my",
-  "your",
-  "our",
-  "me",
-  "us",
-  "any",
-  "some",
-  "how",
-  "what",
-  "why",
-  "when",
-  "where",
-  "who",
-  "which",
-  "have",
-  "has",
-  "had",
-  "will",
-  "would",
-  "should",
+  "a", "an", "the", "is", "are", "do", "does", "did", "can", "could", "to",
+  "of", "in", "on", "at", "for", "with", "and", "or", "but", "i", "you", "we",
+  "it", "this", "that", "be", "by", "as", "from", "my", "your", "our", "me",
+  "us", "any", "some", "how", "what", "why", "when", "where", "who", "which",
+  "have", "has", "had", "will", "would", "should",
 ]);
 
 function tokenize(input: string): Set<string> {
@@ -359,9 +389,8 @@ function tokenize(input: string): Set<string> {
   return out;
 }
 
-/* Cosine-like score on bag-of-words. Threshold tuned so a single shared
-   distinctive keyword ("pricing", "demo", "gis") is enough to trigger a
-   match, while generic words alone aren't. */
+/* Threshold tuned so a single distinctive shared keyword ("pricing", "demo",
+   "gis") triggers a match, while generic words alone don't. */
 const MATCH_THRESHOLD = 0.18;
 
 export function matchQuestion(text: string): Suggestion | null {
@@ -372,9 +401,8 @@ export function matchQuestion(text: string): Suggestion | null {
     const kw = new Set(s.keywords);
     let overlap = 0;
     for (const t of qTokens) if (kw.has(t)) overlap++;
-    /* Jaccard-style: shared / union size. Slight bias toward suggestions
-       with more keywords would skew results, so we normalise to the
-       smaller bag (question or keyword set). */
+    /* Normalise to the smaller bag so suggestions with more keywords aren't
+       unfairly favored. */
     const denom = Math.min(qTokens.size, kw.size);
     const score = denom > 0 ? overlap / denom : 0;
     if (score >= MATCH_THRESHOLD && (!best || score > best.score)) {
@@ -382,44 +410,4 @@ export function matchQuestion(text: string): Suggestion | null {
     }
   }
   return best?.s ?? null;
-}
-
-/* ─── Industry options for the in-chat form ──────────────────────────
-   Mirrors the <select> options on the Columbus Pro tab of the contact
-   form (app/contact/page.tsx ~L561-L570) so submissions from the chat
-   line up with submissions from the main contact form. */
-
-export const INDUSTRY_OPTIONS: { value: string; label: string }[] = [
-  { value: "real-estate", label: "Real Estate" },
-  { value: "government", label: "Government" },
-  { value: "logistics", label: "Logistics & Supply Chain" },
-  { value: "urban-planning", label: "Urban Planning" },
-  { value: "environmental", label: "Environmental" },
-  { value: "security", label: "Security & Defense" },
-  { value: "insurance", label: "Insurance" },
-  { value: "consulting", label: "Consulting" },
-  { value: "other", label: "Other" },
-];
-
-/* ─── KB → system-prompt serializer ──────────────────────────────────
-   When the chat is wired to Claude (see the plan file), the server
-   route should drop this string into the system prompt inside a
-   <kb>…</kb> block. Pure function, no React deps — safe to call on the
-   server. */
-
-export function serializeKb(): string {
-  const k = COLUMBUS_KB;
-  const lines: string[] = [];
-  lines.push(`# What Columbus is\n${k.oneLiner}\n`);
-  lines.push(`# Capabilities`);
-  for (const c of k.capabilities) {
-    lines.push(`- ${c.title}: ${c.description}`);
-  }
-  lines.push(`\n# Industries served`);
-  for (const ind of k.industries) lines.push(`- ${ind}`);
-  lines.push(`\n# FAQ`);
-  for (const f of k.faq) lines.push(`Q: ${f.q}\nA: ${f.a}\n`);
-  lines.push(`# Pricing\n${k.pricing}\n`);
-  lines.push(`# Contact\n${k.contact.description}`);
-  return lines.join("\n");
 }

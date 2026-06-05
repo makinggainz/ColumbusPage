@@ -459,7 +459,7 @@ const RESIDENTIAL_COPY: IndustryCopy = {
       heading: "3 patterns detected",
       prompt:
         "Rank the possibility of solar roof panel installation in this neighborhood",
-      area: "Across Chevy Chase · Q2 2026",
+      area: "Across the Madrid metro area · Q2 2026",
       patterns: [
         { n: 1, title: "Unshaded South-Facing Roofs With Strong Daily Insolation", properties: "312 homes", roi: "Solar potential: High" },
         { n: 2, title: "Existing Rooftop Solar Arrays Already Installed", properties: "47 homes", roi: "Status: Occupied" },
@@ -473,14 +473,14 @@ const RESIDENTIAL_COPY: IndustryCopy = {
     },
     forecast: {
       questionRecap:
-        "Here are the Chevy Chase area neighborhoods forecasted to see the highest selling prices for single-family homes in the next 1–2 years",
+        "Here are the Madrid neighborhoods forecasted to see the highest selling prices for single-family homes in the next 1–2 years",
       panelTitle: "Top 4 Neighborhoods by Forecasted Sale Price Growth",
       panelSubtitle: "Next 24 Months",
       items: [
-        { rank: 1, label: "Friendship Heights", delta: "+9.4%" },
-        { rank: 2, label: "Bethesda", delta: "+8.1%" },
-        { rank: 3, label: "Cleveland Park", delta: "+7.2%" },
-        { rank: 4, label: "Spring Valley", delta: "+6.5%" },
+        { rank: 1, label: "Chamberí", delta: "+9.4%" },
+        { rank: 2, label: "Salamanca", delta: "+8.1%" },
+        { rank: 3, label: "Alcobendas", delta: "+7.2%" },
+        { rank: 4, label: "Pozuelo", delta: "+6.5%" },
       ],
       /* Green ramp (dark → pale) — matches the residential forecast
          map's green-vegetation accent palette and reads as a heat
@@ -490,11 +490,11 @@ const RESIDENTIAL_COPY: IndustryCopy = {
          lighter than ranks 1 and 2. */
       badgeColors: ["#5AA851", "#7FC75E", "#9FE181", "#C7EBA8"],
       takeaway:
-        "Single-family demand in the Chevy Chase area is concentrating in transit-served pockets, with Friendship Heights leading the inner ring.",
+        "Single-family demand in Madrid is concentrating in inner-ring neighborhoods with new transit, with Alcobendas leading the suburban set.",
     },
     reasoning: {
       prompt:
-        "Should I acquire this 80,000 sqft parcel in Bethesda for a 60-unit residential project?",
+        "Should I acquire this 12,000 m² parcel in Alcobendas for a 60-unit residential project?",
       items: [
         { label: "Current zoning vs. likely upcoming municipal plan revisions", body: "" },
         { label: "Absorption rate", body: "of comparable units in 5km radius" },

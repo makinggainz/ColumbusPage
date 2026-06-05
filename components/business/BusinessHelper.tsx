@@ -175,15 +175,16 @@ const TYPING_LATENCY_MS = 1300;
 const CHIP_SELECT_MS = 480;
 
 /* ── AI fallback ──────────────────────────────────────────────────────
-   When the local keyword matcher can't place a typed question, we ask a
-   small hosted model (Groq) to answer it from the knowledge base. The call
-   is server-side (app/api/columbus-chat) so no key or model ships to the
-   browser and page load is untouched — it only runs on an unmatched send.
-   Any miss (model declines, network/timeout, no key configured) resolves to
-   null and the chat falls back to the existing contact form, never an
-   error. */
+   Every typed question is answered by a hosted model (Groq) grounded in our
+   knowledge base. The call is server-side (app/api/columbus-chat) so no key
+   or model ships to the browser and page load is untouched — it only runs
+   when a visitor sends a question. Any miss (model declines, network/timeout,
+   no key configured) resolves to null and the chat falls back to the existing
+   contact form, never an error. */
 const AI_ENDPOINT = "/api/columbus-chat";
-const AI_TIMEOUT_MS = 7000;
+/* Sits above the route's own upstream timeout (9s) so the server's
+   fallback-to-form fires first; this is the hard client-side ceiling. */
+const AI_TIMEOUT_MS = 11000;
 /* Floor on how long the "Columbus is thinking…" shimmer stays up on the AI
    path, so a fast model reply doesn't flash the indicator. */
 const AI_MIN_THINKING_MS = 700;
@@ -252,30 +253,6 @@ function persistChats(chats: Chat[]): void {
   } catch {
     /* Quota or private-mode failures are silent — chats live in memory. */
   }
-}
-
-function serializeChatForDownload(chat: Chat): string {
-  const lines: string[] = [];
-  lines.push(`Columbus chat — ${chat.title}`);
-  lines.push(`Started: ${new Date(chat.createdAt).toISOString()}`);
-  lines.push(`Updated: ${new Date(chat.updatedAt).toISOString()}`);
-  lines.push("");
-  for (const m of chat.messages) {
-    if (m.kind === "text") {
-      const who = m.role === "user" ? "You" : "Columbus";
-      const t = new Date(m.ts).toISOString();
-      lines.push(`[${t}] ${who}:`);
-      lines.push(m.text);
-      lines.push("");
-    } else if (m.kind === "form") {
-      lines.push(`[${new Date(m.ts).toISOString()}] Columbus (form):`);
-      lines.push(m.preamble);
-      lines.push(`Question on file: ${m.prefilledMessage}`);
-      lines.push(`Submitted: ${m.submitted ? "yes" : "no"}`);
-      lines.push("");
-    }
-  }
-  return lines.join("\n");
 }
 
 /* ════ Main component ════════════════════════════════════════════════ */
@@ -362,7 +339,7 @@ export default function BusinessHelper() {
   }, []);
 
   /* While the greeting callout is showing, auto-minimize it when either:
-       (a) 10s pass without the visitor opening it, or
+       (a) 5s pass without the visitor opening it, or
        (b) the visitor scrolls far enough that the left-side feature index
            (BusinessFeatureIndex — the fixed nav[aria-label="Feature index"])
            appears, so the two don't compete for the visitor's attention.
@@ -374,7 +351,7 @@ export default function BusinessHelper() {
   useEffect(() => {
     if (mode !== "greeting") return;
     const minimize = () => setMode((m) => (m === "greeting" ? "closed" : m));
-    const timer = window.setTimeout(minimize, 10_000);
+    const timer = window.setTimeout(minimize, 5_000);
     const index = document.querySelector('nav[aria-label="Feature index"]');
     const indexShowing = () => index?.getAttribute("aria-hidden") === "false";
     /* Already past the threshold when the callout appears → minimize now. */
@@ -508,14 +485,12 @@ export default function BusinessHelper() {
        1. Push the user's message on its own (smooth entrance) — held for
           THINKING_DELAY_MS so the send registers as "sent".
        2. Post the "Columbus is thinking…" shimmer.
-       3. Resolve the answer:
-          - Local keyword match → canned response (after the deliberate
-            thinking beat), with feedback prompt.
-          - No local match → ask the AI fallback. A real answer is shown
-            with a feedback prompt; on ANY miss (model declines, error,
-            timeout, no key) we fall through to the existing flow — a short
-            acknowledgement if a form is already open, otherwise the inline
-            Columbus-Pro form. Never an error message. ── */
+       3. Ask the AI (server-side, grounded in our KB + curated Q&A) — this
+          replaced the old keyword matcher. A real answer is shown with a
+          feedback prompt; on ANY miss (model declines, error, timeout, no
+          key) we fall through to the existing flow — a short acknowledgement
+          if a form is already open, otherwise the inline Columbus-Pro form.
+          Never an error message. ── */
   const sendMessage = useCallback(() => {
     const text = draft.trim();
     if (!text || sendStatus === "sending" || !activeChatId) return;
@@ -569,34 +544,13 @@ export default function BusinessHelper() {
           messages: [...c.messages, typingMsg],
         }));
 
-        const match = matchQuestion(text);
-        if (match) {
-          /* Local hit — keep the deliberate thinking beat, then answer. */
-          window.setTimeout(() => {
-            updateActiveChat((c) => ({
-              ...c,
-              messages: [
-                ...c.messages.filter((m) => m.id !== typingMsg.id),
-                {
-                  id: nextId(),
-                  kind: "text",
-                  role: "assistant",
-                  text: match.response,
-                  ts: Date.now(),
-                  feedback: null,
-                },
-              ],
-              usedSuggestionIds: c.usedSuggestionIds.includes(match.id)
-                ? c.usedSuggestionIds
-                : [...c.usedSuggestionIds, match.id],
-            }));
-          }, TYPING_LATENCY_MS);
-          return;
-        }
-
-        /* No local match → AI fallback. Keep the shimmer up while we ask the
-           model (with a floor so it doesn't flash). On ANY miss the answer
-           is null and we drop into the existing form/ack flow. */
+        /* Answer chain: AI (primary) → keyword match (secondary) → contact
+           form (last resort). The AI answers every typed question from our KB
+           + curated Q&A (server-side). Keep the shimmer up while we ask it
+           (with a floor so it doesn't flash). If the AI returns no answer —
+           because it declined OR was unavailable (rate-limited, error,
+           timeout, no key) — we try the keyword matcher, then fall back to the
+           form. Never an error. */
         void (async () => {
           const [answer] = await Promise.all([
             fetchColumbusAnswer(aiTurns),
@@ -622,6 +576,29 @@ export default function BusinessHelper() {
                     feedback: null,
                   },
                 ],
+              };
+            }
+            /* Secondary fallback: the keyword matcher. If it recognizes the
+               question, answer from the curated canned response before we fall
+               back to the contact form. */
+            const fallback = matchQuestion(text);
+            if (fallback) {
+              return {
+                ...c,
+                messages: [
+                  ...withoutTyping,
+                  {
+                    id: nextId(),
+                    kind: "text",
+                    role: "assistant",
+                    text: fallback.response,
+                    ts: Date.now(),
+                    feedback: null,
+                  },
+                ],
+                usedSuggestionIds: c.usedSuggestionIds.includes(fallback.id)
+                  ? c.usedSuggestionIds
+                  : [...c.usedSuggestionIds, fallback.id],
               };
             }
             const hasForm = withoutTyping.some((m) => m.kind === "form");
@@ -785,24 +762,6 @@ export default function BusinessHelper() {
     });
   }, [updateActiveChat]);
 
-  const downloadActiveChat = useCallback(() => {
-    if (!activeChat) return;
-    const txt = serializeChatForDownload(activeChat);
-    try {
-      const blob = new Blob([txt], { type: "text/plain;charset=utf-8" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `columbus-chat-${activeChat.id}.txt`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-    } catch {
-      /* download is best-effort; failures are silent. */
-    }
-  }, [activeChat]);
-
   /* ── UI handlers ── */
   const handleMascotClick = useCallback(() => {
     setMode((m) => (m === "chat" ? "closed" : "chat"));
@@ -832,13 +791,18 @@ export default function BusinessHelper() {
       <div
         style={{
           position: "absolute",
-          right: MASCOT_SIZE * 0.55,
-          bottom: 4,
+          /* Its own popup sitting to the LEFT of the globe and vertically
+             centred on it; a tail off the bubble's RIGHT edge points across
+             at the earth. Left of the globe with a small gap so the tail
+             bridges it. Springs out of the globe via the right-centre
+             origin; translateY(-50%) keeps it centred at every scale frame. */
+          right: MASCOT_SIZE + 10,
+          top: "50%",
           opacity: greetingOpen ? 1 : 0,
           transform: greetingOpen
-            ? GREETING_VISIBLE_TRANSFORM
-            : GREETING_HIDDEN_TRANSFORM,
-          transformOrigin: "bottom right",
+            ? `translateY(-50%) ${GREETING_VISIBLE_TRANSFORM}`
+            : `translateY(-50%) ${GREETING_HIDDEN_TRANSFORM}`,
+          transformOrigin: "center right",
           transition: REVEAL_TRANSITION,
           pointerEvents: greetingOpen ? "auto" : "none",
         }}
@@ -877,7 +841,6 @@ export default function BusinessHelper() {
           onMiniFormSubmit={onMiniFormSubmit}
           onFeedback={onFeedback}
           onResetChat={resetActiveChat}
-          onDownloadChat={downloadActiveChat}
           onNewChat={startNewChat}
           onSelectChat={selectChat}
           onDeleteChat={deleteChat}
@@ -956,12 +919,15 @@ function GreetingCard({
       style={{
         position: "relative",
         background: "#FFFFFF",
-        borderRadius: "var(--ent-radius-lg, 14px)",
+        /* Generous rounding to match the reference speech-bubble shape. */
+        borderRadius: 20,
         boxShadow:
           "0 16px 40px rgba(11, 27, 43, 0.14), 0 4px 12px rgba(11, 27, 43, 0.08)",
-        padding: "12px 22px 12px 22px",
+        /* Snug, natural height — just enough to wrap the text with a little
+           breathing room. */
+        padding: "12px 18px",
         width: "max-content",
-        maxWidth: 260,
+        maxWidth: 220,
       }}
     >
       <button
@@ -1059,6 +1025,27 @@ function GreetingCard({
       >
         Got a question about Columbus? Ask me.
       </button>
+      {/* Speech-bubble tail — a curved teardrop on the bubble's RIGHT edge,
+          vertically centred, tapering to a soft point that reaches across at
+          the globe (iMessage-style, not a flat triangle). Its left edge
+          overlaps a few px into the white body so the seam is invisible;
+          the drop-shadow lets it cast the same soft shadow as the bubble. */}
+      <svg
+        aria-hidden
+        width="22"
+        height="22"
+        viewBox="0 0 22 22"
+        style={{
+          position: "absolute",
+          top: "50%",
+          right: -18,
+          transform: "translateY(-50%)",
+          display: "block",
+          filter: "drop-shadow(0 5px 5px rgba(11, 27, 43, 0.06))",
+        }}
+      >
+        <path d="M0 2 C8 2 16 4 21 11 C16 18 8 20 0 20 Z" fill="#FFFFFF" />
+      </svg>
     </div>
   );
 }
@@ -1082,7 +1069,6 @@ type ChatPanelProps = {
   onMiniFormSubmit: (data: MiniFormData) => void;
   onFeedback: (messageId: string, value: "up" | "down") => void;
   onResetChat: () => void;
-  onDownloadChat: () => void;
   onNewChat: () => void;
   onSelectChat: (id: string) => void;
   onDeleteChat: (id: string) => void;
@@ -1108,7 +1094,6 @@ function ChatPanel(props: ChatPanelProps) {
     onMiniFormSubmit,
     onFeedback,
     onResetChat,
-    onDownloadChat,
     onNewChat,
     onSelectChat,
     onDeleteChat,
@@ -1237,7 +1222,6 @@ function ChatPanel(props: ChatPanelProps) {
         onBack={onBack}
         onClose={onClose}
         onResetChat={onResetChat}
-        onDownloadChat={onDownloadChat}
       />
 
       {view === "history" ? (
@@ -1314,13 +1298,11 @@ function ChatHeader({
   onBack,
   onClose,
   onResetChat,
-  onDownloadChat,
 }: {
   view: ChatView;
   onBack: () => void;
   onClose: () => void;
   onResetChat: () => void;
-  onDownloadChat: () => void;
 }) {
   const [closeHover, setCloseHover] = useState(false);
   const [backHover, setBackHover] = useState(false);
@@ -1520,14 +1502,6 @@ function ChatHeader({
                     onResetChat();
                   }}
                   iconPath="M3 12a9 9 0 1 0 3-6.7M3 4v5h5"
-                />
-                <MenuItem
-                  label="Download chat"
-                  onClick={() => {
-                    setMenuOpen(false);
-                    onDownloadChat();
-                  }}
-                  iconPath="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14"
                 />
               </div>
             )}
