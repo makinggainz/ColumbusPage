@@ -2,9 +2,32 @@
 
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
+import {
+  Brain,
+  Milestone,
+  Microscope,
+  ChartColumnBig,
+  Newspaper,
+  Mail,
+  type LucideIcon,
+} from "lucide-react";
 
 import styles from "./technology.module.css";
 import { HERO_SCROLL_INDEX_ITEMS } from "./redesign/content";
+
+/* Section icons for the compact "dock" variant of the index — shown only in
+   the ~1400–1610px (MacBook-14") band, where the full-text labels won't fit
+   the narrow gutter. Index-aligned with HERO_SCROLL_INDEX_ITEMS. lucide icons
+   default to stroke="currentColor", so they inherit the label colour and
+   follow the light/dark-band switch for free. */
+const SECTION_ICONS: LucideIcon[] = [
+  Brain, // Foundation Model
+  Milestone, // Timeline
+  Microscope, // Research
+  ChartColumnBig, // Results
+  Newspaper, // Blog
+  Mail, // Inquiries
+];
 
 export function TechScrollIndex() {
   const [activeIdx, setActiveIdx] = useState(0);
@@ -104,10 +127,20 @@ export function TechScrollIndex() {
     >
       {HERO_SCROLL_INDEX_ITEMS.map((item, i) => {
         const isActive = i === activeIdx;
+        const Icon = SECTION_ICONS[i];
+        const targetId = item.sectionIds[0];
         return (
           <Link
-            key={item.sectionIds[0]}
-            href={`#${item.sectionIds[0]}`}
+            key={targetId}
+            href={`#${targetId}`}
+            onClick={(e) => {
+              if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+              const target = document.getElementById(targetId);
+              if (!target) return;
+              e.preventDefault();
+              target.scrollIntoView({ behavior: "smooth", block: "start" });
+              history.replaceState(null, "", `#${targetId}`);
+            }}
             className={[
               styles.scrollIndexLabel,
               isActive ? styles.scrollIndexLabelActive : "",
@@ -117,6 +150,11 @@ export function TechScrollIndex() {
             aria-current={isActive ? "true" : undefined}
           >
             <span className={styles.scrollIndexDot} aria-hidden />
+            {Icon ? (
+              <span className={styles.scrollIndexIcon} aria-hidden>
+                <Icon size={20} strokeWidth={1.8} />
+              </span>
+            ) : null}
             <span className={styles.scrollIndexText}>{item.label}</span>
           </Link>
         );

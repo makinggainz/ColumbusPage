@@ -229,9 +229,12 @@
   overflow: visible;
 }
 
-/* Hide the fixed sidebar at narrower viewports where the navbar itself
-   is in compact mode and the sidebar would visually crowd the content. */
-@media (max-width: 1500px) {
+/* Hide the fixed sidebar only where the left gutter ((100vw-1287)/2) is too
+   narrow to hold even the compact icon dock (~56px) — i.e. below ~1400px.
+   Between 1400–1610px the index switches to the floating icon dock (see the
+   icon-dock media query further down); at ≥1611px the gutter is wide enough
+   for the full-text labels and the index runs in its default text mode. */
+@media (max-width: 1399px) {
   .sidebarPanel,
   .sidebarPanelRight {
     display: none;
@@ -3337,6 +3340,15 @@
               opacity 220ms ease;
 }
 
+/* Section icon — only shown in the dock variant (1400–1610px band). Hidden in
+   the default text mode so the index reads as dot + label. */
+.scrollIndexIcon {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  color: currentColor;
+}
+
 .scrollIndexLabel:hover .scrollIndexDot {
   background: rgba(19, 35, 74, 0.55);
 }
@@ -3412,6 +3424,172 @@
 
 .scrollIndexOnDark.scrollIndex:hover .scrollIndexLabelActive {
   background: rgba(255, 255, 255, 0.14);
+}
+
+/* ───────────────────────────────────────────────────────────────────────
+   ICON-DOCK MODE — MacBook-14" band (1400–1610px)
+   The full-text labels don't fit the narrow left gutter here (they'd spill
+   onto the centered content), so the index collapses to a compact floating
+   "dock" of icons — mobile-app-nav style. Active section = accent-filled
+   icon; hovering an icon pops an opaque label flyout to its right (so it
+   reads over content and never reflows the dock). The dock outer width
+   (~56px) fits inside the gutter at every width in this band.
+   ─────────────────────────────────────────────────────────────────────── */
+@media (min-width: 1400px) and (max-width: 1610px) {
+  /* The dock container (the <nav> itself) — hugs its icon buttons. Glass
+     panel matching the hero index buttons: translucent white, blur+saturate,
+     and an INSET hairline navy border (no solid border / heavy drop shadow). */
+  .scrollIndex {
+    width: fit-content;
+    gap: 4px;
+    padding: 6px;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.22);
+    -webkit-backdrop-filter: blur(18px) saturate(1.35);
+    backdrop-filter: blur(18px) saturate(1.35);
+    border-radius: var(--tech-radius-xl);
+    /* Faint glass edge only — no drop shadow (flat against the page). */
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-cta) 5%, transparent);
+  }
+
+  /* Each item is a square icon button in the hero glass-button language:
+     transparent at rest (navy icon), frosted-white on hover with a navy ring. */
+  .scrollIndexLabel {
+    position: relative;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    gap: 0;
+    justify-content: center;
+    border-radius: var(--radius-button);
+    background: transparent;
+    color: color-mix(in srgb, var(--color-cta) 60%, transparent);
+    box-shadow: none;
+    transition: color 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  /* (Hover styling for .scrollIndexLabel is defined further down, after the
+     base-rule neutralizers, so source order keeps it winning.) */
+
+  /* Dot + text hidden at rest; icon shown. */
+  .scrollIndexDot {
+    display: none;
+  }
+
+  .scrollIndexIcon {
+    display: inline-flex;
+  }
+
+  /* Active styling lives in the override block further down (reasserted last
+     so it wins over :hover for the current section): a subtle navy fill, no
+     border, full-navy icon. */
+
+  /* Label becomes a glass flyout to the right of the icon, revealed on HOVER
+     ONLY (no focus-visible — so it never sticks after a click). position:
+     absolute so it never reflows the dock; the parent .sidebarPanelSticky has
+     pointer-events:auto so it's interactive. */
+  .scrollIndexText {
+    position: absolute;
+    left: calc(100% + 10px);
+    top: 50%;
+    transform: translateY(-50%);
+    max-width: none;
+    padding: 6px 14px;
+    border-radius: var(--radius-button);
+    background: rgba(255, 255, 255, 0.7);
+    -webkit-backdrop-filter: blur(18px) saturate(1.35);
+    backdrop-filter: blur(18px) saturate(1.35);
+    color: var(--color-cta);
+    font-size: var(--text-p-s);
+    font-weight: 500;
+    white-space: nowrap;
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-cta) 14%, transparent),
+                0 6px 20px rgba(19, 35, 74, 0.14);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 160ms ease;
+    z-index: 3;
+  }
+
+  /* Neutralize the base text-mode rules that don't belong in dock mode. The
+     base index (for text mode) keeps the ACTIVE label's text shown
+     (`.scrollIndexLabelActive .scrollIndexText { opacity:1 }`) and expands
+     EVERY label while the rail is hovered (`.scrollIndex:hover .scrollIndexText`
+     + `.scrollIndex:hover .scrollIndexLabel`). Those have higher specificity
+     than a bare `.scrollIndexText`, so without these overrides the active
+     section's name would stay stuck on. Each override below matches the base
+     rule's specificity and comes later in source order, so it wins — and the
+     final `.scrollIndexLabel:hover` rules come last so the icon you actually
+     point at still lights up + reveals its flyout. */
+  .scrollIndex:hover .scrollIndexLabel {
+    background: transparent;
+    color: color-mix(in srgb, var(--color-cta) 55%, transparent);
+    box-shadow: none;
+  }
+
+  .scrollIndexLabelActive .scrollIndexText,
+  .scrollIndex:hover .scrollIndexText {
+    opacity: 0;
+  }
+
+  /* Hover — subtle navy fill, no border. */
+  .scrollIndexLabel:hover {
+    background: color-mix(in srgb, var(--color-cta) 6%, transparent);
+    color: var(--color-cta);
+    box-shadow: none;
+  }
+
+  .scrollIndexLabel:hover .scrollIndexText {
+    opacity: 1;
+  }
+
+  /* Active — a subtle navy FILL (no border), full-navy icon. Declared last so
+     it wins over :hover for the current section (equal specificity, later in
+     source order). */
+  .scrollIndexLabelActive,
+  .scrollIndexLabelActive:hover,
+  .scrollIndex:hover .scrollIndexLabelActive {
+    background: color-mix(in srgb, var(--color-cta) 13%, transparent);
+    color: var(--color-cta);
+    box-shadow: none;
+  }
+
+  /* Dark-band variant — frosted navy glass so it reads over the Gen Layers
+     section; icons inherit white via the existing onDark label colour. */
+  .scrollIndexOnDark.scrollIndex {
+    background: rgba(10, 19, 68, 0.4);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.16);
+  }
+
+  .scrollIndexOnDark .scrollIndexLabel {
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  .scrollIndexOnDark .scrollIndexLabel:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+    box-shadow: none;
+  }
+
+  .scrollIndexOnDark .scrollIndexLabelActive,
+  .scrollIndexOnDark .scrollIndexLabelActive:hover {
+    background: rgba(255, 255, 255, 0.18);
+    color: #ffffff;
+    box-shadow: none;
+  }
+
+  .scrollIndexOnDark .scrollIndexText {
+    background: rgba(10, 19, 68, 0.55);
+    color: #ffffff;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.18),
+                0 6px 20px rgba(0, 0, 0, 0.28);
+  }
+
+  /* Hide the mirrored full-height right divider line — with the left index
+     now a small floating dock, a full-height right rule looks unbalanced. */
+  .sidebarPanelRight {
+    display: none;
+  }
 }
 
 /* ── Research blog: reduce right inset to match homepage right boundary ── */
