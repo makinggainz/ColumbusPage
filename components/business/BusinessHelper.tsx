@@ -174,6 +174,44 @@ const TYPING_LATENCY_MS = 1300;
    to the actual user message. */
 const CHIP_SELECT_MS = 480;
 
+/* ── AI fallback ──────────────────────────────────────────────────────
+   When the local keyword matcher can't place a typed question, we ask a
+   small hosted model (Groq) to answer it from the knowledge base. The call
+   is server-side (app/api/columbus-chat) so no key or model ships to the
+   browser and page load is untouched — it only runs on an unmatched send.
+   Any miss (model declines, network/timeout, no key configured) resolves to
+   null and the chat falls back to the existing contact form, never an
+   error. */
+const AI_ENDPOINT = "/api/columbus-chat";
+const AI_TIMEOUT_MS = 7000;
+/* Floor on how long the "Columbus is thinking…" shimmer stays up on the AI
+   path, so a fast model reply doesn't flash the indicator. */
+const AI_MIN_THINKING_MS = 700;
+
+type AiTurn = { role: "user" | "assistant"; content: string };
+
+async function fetchColumbusAnswer(turns: AiTurn[]): Promise<string | null> {
+  try {
+    const ctrl = new AbortController();
+    const timer = window.setTimeout(() => ctrl.abort(), AI_TIMEOUT_MS);
+    const res = await fetch(AI_ENDPOINT, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ messages: turns }),
+      signal: ctrl.signal,
+    });
+    window.clearTimeout(timer);
+    if (!res.ok) return null;
+    const data = (await res.json()) as { answer?: unknown };
+    const answer = typeof data.answer === "string" ? data.answer.trim() : "";
+    return answer.length > 0 ? answer : null;
+  } catch {
+    /* Network error, abort/timeout, or bad JSON — treat as "no answer" so
+       the caller shows the contact form instead of an error. */
+    return null;
+  }
+}
+
 function loadChats(): Chat[] {
   if (typeof window === "undefined") return [];
   try {
@@ -470,12 +508,14 @@ export default function BusinessHelper() {
        1. Push the user's message on its own (smooth entrance) — held for
           THINKING_DELAY_MS so the send registers as "sent".
        2. Post the "Columbus is thinking…" shimmer.
-       3. After TYPING_LATENCY_MS, run the local question matcher.
-          - Match → swap thinking for the canned response with feedback
-            prompt.
-          - No match → swap thinking for an inline Columbus-Pro form
-            (or a short acknowledgement if a form already exists in
-            this chat). ── */
+       3. Resolve the answer:
+          - Local keyword match → canned response (after the deliberate
+            thinking beat), with feedback prompt.
+          - No local match → ask the AI fallback. A real answer is shown
+            with a feedback prompt; on ANY miss (model declines, error,
+            timeout, no key) we fall through to the existing flow — a short
+            acknowledgement if a form is already open, otherwise the inline
+            Columbus-Pro form. Never an error message. ── */
   const sendMessage = useCallback(() => {
     const text = draft.trim();
     if (!text || sendStatus === "sending" || !activeChatId) return;
@@ -494,6 +534,19 @@ export default function BusinessHelper() {
       role: "assistant",
       ts: now,
     };
+    /* Prior conversation (text turns only), captured before the new message
+       is pushed, so the AI fallback gets clean follow-up context with the
+       new question appended. */
+    const aiTurns: AiTurn[] = [
+      ...(activeChat?.messages ?? [])
+        .filter((m): m is TextMessage => m.kind === "text")
+        .slice(-8)
+        .map((m) => ({
+          role: m.role === "user" ? ("user" as const) : ("assistant" as const),
+          content: m.text,
+        })),
+      { role: "user", content: text },
+    ];
     /* Two-phase cleanup of the input field (same as before) — keep the
        textbox in its focused/white state until the send button has
        finished fading away, then blur. */
@@ -515,15 +568,15 @@ export default function BusinessHelper() {
           ...c,
           messages: [...c.messages, typingMsg],
         }));
-        window.setTimeout(() => {
-          const match = matchQuestion(text);
-          updateActiveChat((c) => {
-          const withoutTyping = c.messages.filter((m) => m.id !== typingMsg.id);
-          if (match) {
-            return {
+
+        const match = matchQuestion(text);
+        if (match) {
+          /* Local hit — keep the deliberate thinking beat, then answer. */
+          window.setTimeout(() => {
+            updateActiveChat((c) => ({
               ...c,
               messages: [
-                ...withoutTyping,
+                ...c.messages.filter((m) => m.id !== typingMsg.id),
                 {
                   id: nextId(),
                   kind: "text",
@@ -536,47 +589,80 @@ export default function BusinessHelper() {
               usedSuggestionIds: c.usedSuggestionIds.includes(match.id)
                 ? c.usedSuggestionIds
                 : [...c.usedSuggestionIds, match.id],
-            };
-          }
-          const hasForm = withoutTyping.some((m) => m.kind === "form");
-          if (hasForm) {
+            }));
+          }, TYPING_LATENCY_MS);
+          return;
+        }
+
+        /* No local match → AI fallback. Keep the shimmer up while we ask the
+           model (with a floor so it doesn't flash). On ANY miss the answer
+           is null and we drop into the existing form/ack flow. */
+        void (async () => {
+          const [answer] = await Promise.all([
+            fetchColumbusAnswer(aiTurns),
+            new Promise((resolve) =>
+              window.setTimeout(resolve, AI_MIN_THINKING_MS),
+            ),
+          ]);
+          updateActiveChat((c) => {
+            const withoutTyping = c.messages.filter(
+              (m) => m.id !== typingMsg.id,
+            );
+            if (answer) {
+              return {
+                ...c,
+                messages: [
+                  ...withoutTyping,
+                  {
+                    id: nextId(),
+                    kind: "text",
+                    role: "assistant",
+                    text: answer,
+                    ts: Date.now(),
+                    feedback: null,
+                  },
+                ],
+              };
+            }
+            const hasForm = withoutTyping.some((m) => m.kind === "form");
+            if (hasForm) {
+              return {
+                ...c,
+                messages: [
+                  ...withoutTyping,
+                  {
+                    id: nextId(),
+                    kind: "text",
+                    role: "assistant",
+                    text:
+                      "Got it — I've added that to your inquiry. Our team will follow up alongside the details you shared.",
+                    ts: Date.now(),
+                    feedback: undefined,
+                  },
+                ],
+              };
+            }
             return {
               ...c,
               messages: [
                 ...withoutTyping,
                 {
                   id: nextId(),
-                  kind: "text",
+                  kind: "form",
                   role: "assistant",
-                  text:
-                    "Got it — I've added that to your inquiry. Our team will follow up alongside the details you shared.",
+                  preamble:
+                    "That's a great one for our team. Drop a few details and we'll get back to you with a real answer — your question is pre-filled below.",
+                  prefilledMessage: text,
+                  submitted: false,
                   ts: Date.now(),
-                  feedback: undefined,
                 },
               ],
             };
-          }
-          return {
-            ...c,
-            messages: [
-              ...withoutTyping,
-              {
-                id: nextId(),
-                kind: "form",
-                role: "assistant",
-                preamble:
-                  "That's a great one for our team. Drop a few details and we'll get back to you with a real answer — your question is pre-filled below.",
-                prefilledMessage: text,
-                submitted: false,
-                ts: Date.now(),
-              },
-            ],
-          };
           });
-        }, TYPING_LATENCY_MS);
+        })();
       }, THINKING_DELAY_MS);
     }, 520);
-  }, [draft, sendStatus, activeChatId, updateActiveChat, titleFor]);
+  }, [draft, sendStatus, activeChatId, activeChat, updateActiveChat, titleFor]);
 
   /* ── Form submission. No backend — capture, mark done, post a
        confirmation bubble (no feedback prompt on the confirmation). ── */
