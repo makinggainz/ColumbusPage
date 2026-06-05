@@ -350,19 +350,23 @@ export function serializeKb(): string {
   for (const c of k.capabilities) lines.push(`- ${c.title}: ${c.description}`);
   lines.push(`\n# Industries served`);
   for (const ind of k.industries) lines.push(`- ${ind}`);
-  lines.push(`\n# FAQ`);
-  for (const f of k.faq) lines.push(`Q: ${f.q}\nA: ${f.a}\n`);
-  lines.push(`# Pricing\n${k.pricing}\n`);
+  /* COLUMBUS_KB.faq is intentionally NOT serialized here: the same Q&A is
+     already sent to the model in the route's <faq> block (built from
+     COLUMBUS_SUGGESTIONS), so emitting it again would just duplicate tokens
+     on every call. The faq field is kept as the canonical reference. */
+  lines.push(`\n# Pricing\n${k.pricing}\n`);
   lines.push(`# Contact\n${k.contact.description}`);
   return lines.join("\n");
 }
 
 /* ─── Keyword fallback matcher ───────────────────────────────────────
-   Used ONLY when the AI route returns no answer because it was unavailable
-   (rate-limited, erroring, timed out, or no key) — a cheap last attempt to
-   answer a recognized question before the chat shows the contact form. It
-   returns the suggestion whose keyword bag overlaps the question most, or
-   null when nothing clears MATCH_THRESHOLD. */
+   Used only when the AI route returns no answer (rate-limited, erroring,
+   timed out, or no key) — a cheap last attempt to answer a recognized
+   question before the chat shows the contact form. Deliberately CONSERVATIVE:
+   it requires at least two distinct keyword hits, so a single generic word
+   ("gis", "data", "ai") can't drag a question onto the wrong canned answer
+   (e.g. "what is gis" must NOT return the "do I need to be a GIS expert"
+   reply). When in doubt it returns null and the chat shows the form. */
 
 const STOPWORDS = new Set([
   "a", "an", "the", "is", "are", "do", "does", "did", "can", "could", "to",
@@ -389,24 +393,21 @@ function tokenize(input: string): Set<string> {
   return out;
 }
 
-/* Threshold tuned so a single distinctive shared keyword ("pricing", "demo",
-   "gis") triggers a match, while generic words alone don't. */
-const MATCH_THRESHOLD = 0.18;
+/* A match needs at least this many distinct keyword hits. Two avoids the
+   "one shared generic word → wrong answer" failure mode; single-keyword
+   questions fall through to the contact form instead. */
+const MIN_KEYWORD_HITS = 2;
 
 export function matchQuestion(text: string): Suggestion | null {
   const qTokens = tokenize(text);
   if (qTokens.size === 0) return null;
-  let best: { score: number; s: Suggestion } | null = null;
+  let best: { overlap: number; s: Suggestion } | null = null;
   for (const s of COLUMBUS_SUGGESTIONS) {
     const kw = new Set(s.keywords);
     let overlap = 0;
     for (const t of qTokens) if (kw.has(t)) overlap++;
-    /* Normalise to the smaller bag so suggestions with more keywords aren't
-       unfairly favored. */
-    const denom = Math.min(qTokens.size, kw.size);
-    const score = denom > 0 ? overlap / denom : 0;
-    if (score >= MATCH_THRESHOLD && (!best || score > best.score)) {
-      best = { score, s };
+    if (overlap >= MIN_KEYWORD_HITS && (!best || overlap > best.overlap)) {
+      best = { overlap, s };
     }
   }
   return best?.s ?? null;
