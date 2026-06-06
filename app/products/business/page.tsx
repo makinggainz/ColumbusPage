@@ -101,7 +101,14 @@ export default function BusinessPage() {
               industry's accent — matching the super-section title IconChips. */}
           <BusinessFeatureIndex />
           <IndustryStickyNavbar lightTheme topOffset={84} industries={BUSINESS_INDUSTRIES} takeover />
-          <IndustrySelector lightTheme rounded industries={BUSINESS_INDUSTRIES} variant="iconGrid" />
+          {/* IndustrySelector hidden until per-industry tile artwork is
+              restored — the 9 PNGs under /use-cases/ (commercial /
+              residential / env / logistics / planning / geomarketing /
+              research / security / tourism) were removed in the asset
+              reorg with no replacement on disk. content.ts still holds
+              the references, so re-adding the assets re-enables the
+              picker without further code work. */}
+          {/* <IndustrySelector lightTheme rounded industries={BUSINESS_INDUSTRIES} variant="iconGrid" /> */}
           {/* Industry sticky zone — the sub-navbar above observes this
               wrapper, so the navbar appears the moment the user scrolls
               into the first super-feature ("Ask, Discover, Understand")
