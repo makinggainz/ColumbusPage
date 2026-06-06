@@ -404,6 +404,21 @@ export default function BusinessHero() {
           zIndex: 0,
         }}
       />
+      {/* Desktop-only bottom fade — sits on top of the background photo
+          (z-index 0, painted after the dark scrim above so it stacks on
+          top of it). The top edge of this gradient sits 20px above the
+          bottom edge of the showcase image; on desktop the showcase is the
+          last visible child of the section, so anchoring the overlay 20px
+          from the section's bottom matches. Black at the bottom edge,
+          fading to fully transparent at the top edge. Hidden on mobile. */}
+      <div className="hero-bg-bottom-fade absolute left-0 right-0 bottom-0 pointer-events-none">
+        {/* Tagline centred over the gradient — vertically centred in the
+            overlay's box and horizontally centred on the viewport. White
+            ink; the browser handles wrap. */}
+        <p className="hero-bg-bottom-fade-text">
+          {"Columbus Pro is a new type of business map platform to find new sites, due diligence and any other research. We make exploration and discovery faster, cheaper. See it in practice."}
+        </p>
+      </div>
       {/* ── Text block ── */}
       {/* pt-50 (200px) restores the vertical breathing room previously
           provided by the removed ConsumerBusinessToggle wrapper
@@ -866,6 +881,50 @@ export default function BusinessHero() {
                    shrinks it so the inner mockup corner stays visually inboard
                    of the window's radius. */
                 border-radius: 16px !important;
+              }
+              /* Desktop-only black bottom-fade overlay on the background
+                 photo. The flex column wrapping the showcase carries
+                 paddingBottom: clamp(120px, 14vw, 220px) below the
+                 showcase image — adding 20px puts the top of this overlay
+                 exactly 20px above the showcase's bottom edge across every
+                 viewport in this band. z-index 0 keeps it beneath the
+                 text/showcase (z-10) and lets it paint above the dark scrim
+                 above by DOM order. */
+              .hero-bg-bottom-fade {
+                display: none;
+              }
+              @media (min-width: 1024px) {
+                .hero-bg-bottom-fade {
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  height: calc(clamp(120px, 14vw, 220px) + 20px);
+                  background: linear-gradient(
+                    to bottom,
+                    rgba(0, 0, 0, 0) 0%,
+                    rgba(0, 0, 0, 1) 100%
+                  );
+                  z-index: 0;
+                }
+                /* Tagline copy — Axiforma (matches the rest of the hero
+                   chrome), white, centred. max-width set wide enough
+                   (~1180px) so the ~245-char paragraph fits on 2 lines
+                   with text-wrap: balance redistributing evenly — keeps
+                   "See it in practice." on the second line instead of
+                   orphaning it to a third. */
+                .hero-bg-bottom-fade-text {
+                  margin: 0;
+                  max-width: 1180px;
+                  padding: 0 24px;
+                  color: #FFFFFF;
+                  text-align: center;
+                  text-wrap: balance;
+                  font-family: var(--ent-font-sans);
+                  font-size: clamp(16px, 1.4vw, 20px);
+                  line-height: 1.45;
+                  letter-spacing: -0.01em;
+                  font-weight: 500;
+                }
               }
               /* Desktop tab auto-advance fill — reveals the next tab's
                  silhouette left→right over its 5s cycle. A clip-path wipe

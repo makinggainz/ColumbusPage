@@ -90,7 +90,7 @@ const CMP_CSS = `
 .cmp-host { padding: 16px; }
 .cmp-host-visual { position: relative; width: 100%; }
 @media (min-width: 1024px) {
-  .cmp-host { padding: 0; height: 630px; }
+  .cmp-host { padding: 0; height: 730px; }
   .cmp-host-visual {
     position: absolute;
     top: 58px;
@@ -185,24 +185,24 @@ const FEATURES = [
   {
     title: "Map Chat",
     subtitle:
-      "Chart your own expedition\nDo all your research on a simple,\nyet powerful map interface.",
+      "Chart your own expedition.\nIntuitive, yet powerful map interface. Find answers, make visuals and more.",
     Icon: SearchBubbleIco,
   },
   {
     title: "Reports",
     subtitle:
-      "Send our fleet to discover\nOur AI agents will investigate\nand select your new sites in minutes.",
+      "Send our fleet to discover.\nOur AI agents will investigate and produce finding reports.",
     Icon: PenSquareIco,
   },
   {
     title: "Data Catalogue",
     subtitle:
-      "Browse everything we've discovered\nFind the right data for any project.\nAll on the same platform.",
+      "Browse everything we've discovered.\nFind the right data for any project, all on the same platform.",
     Icon: DbIco,
   },
   {
     title: "Dashboard",
-    subtitle: "Your captain's view\nEverything baked into one platform.",
+    subtitle: "Your captain's view.",
     Icon: GridIco,
   },
 ] as const;
@@ -409,7 +409,22 @@ export default function ComparisonSection() {
                           whiteSpace: "pre-line",
                         }}
                       >
-                        {f.subtitle}
+                        {(() => {
+                          /* First line is rendered in the title colour (navy
+                             #0E173C) and bumped up one weight level (default
+                             400 → 500). The remaining lines keep the muted
+                             secondary-text styling on the outer <span>. */
+                          const [tagline, ...rest] = f.subtitle.split("\n");
+                          const description = rest.join("\n");
+                          return (
+                            <>
+                              <span style={{ color: "#0E173C", fontWeight: 500 }}>
+                                {tagline}
+                              </span>
+                              {description ? `\n${description}` : null}
+                            </>
+                          );
+                        })()}
                       </span>
                     </div>
                   </div>
