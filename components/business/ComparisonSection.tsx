@@ -183,7 +183,7 @@ function DbIco({ size, color }: IcoProps) {
    live here is gone — icons replace it. */
 const FEATURES = [
   { title: "Map Chat", subtitle: "Chart your own expedition", Icon: SearchBubbleIco },
-  { title: "Reports", subtitle: "set our fleet to discover", Icon: PenSquareIco },
+  { title: "Reports", subtitle: "Send our fleet to discover", Icon: PenSquareIco },
   { title: "Data Catalogue", subtitle: "Browse everything we've discovered", Icon: DbIco },
   { title: "Dashboard", subtitle: "Your captain's view", Icon: GridIco },
 ] as const;
