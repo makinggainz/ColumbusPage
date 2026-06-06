@@ -109,6 +109,21 @@ export default function BusinessPage() {
               the references, so re-adding the assets re-enables the
               picker without further code work. */}
           {/* <IndustrySelector lightTheme rounded industries={BUSINESS_INDUSTRIES} variant="iconGrid" /> */}
+          {/* Stand-in for IndustrySelector's section heading — without
+              the selector rendering, the use-case rows below would lose
+              their visual anchor. Mirrors IndustrySelector's iconGrid
+              heading scale + spacing exactly (text-[28→36→44]px, font
+              500, -0.02em tracking, white bg, pt-30/pb-15 + 48px gap to
+              content). Drop once the picker tiles return. */}
+          <section className="w-full bg-white flex justify-center">
+            <div className="max-w-[1287px] w-[calc(100%-2.5rem)] mx-auto pt-30 pb-15 max-md:pt-18 max-md:pb-10">
+              <div className="text-center px-8 md:px-10 mb-[48px] max-md:mb-[36px]">
+                <h2 className="text-[28px] md:text-[36px] lg:text-[44px] font-medium leading-[1.15] tracking-[-0.02em] text-[#1D1D1F]">
+                  Use cases in your industry
+                </h2>
+              </div>
+            </div>
+          </section>
           {/* Industry sticky zone — the sub-navbar above observes this
               wrapper, so the navbar appears the moment the user scrolls
               into the first super-feature ("Ask, Discover, Understand")
