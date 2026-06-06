@@ -35,10 +35,10 @@ import { useMediaWarm } from "@/components/ui/MediaPrefetcher";
 // Static imports → AVIF via the optimizer + real blur-up placeholders +
 // intrinsic dimensions for the heavy phone-mockup / scene-backdrop raw
 // <img>s (were 1.5–6.3 MB PNG/JPG shipped unoptimized).
-import introPhone from "@/public/ConsumerPgMedia/elio/ElioHeroShowcase.png";
-import phoneCity from "@/public/ConsumerPgMedia/elio/ElioVotingShowcase1.png";
-import phoneTravels from "@/public/ConsumerPgMedia/elio/ElioForYourTravels.png";
-import phoneProfile from "@/public/ConsumerPgMedia/elio/ElioProfile.png";
+import introPhone from "@/public/ConsumerPgMedia/ElioShowcases/ElioHeroShowcase.png";
+import phoneCity from "@/public/ConsumerPgMedia/ElioShowcases/ElioVotingShowcase1.png";
+import phoneTravels from "@/public/ConsumerPgMedia/ElioShowcases/ElioForYourTravels.png";
+import phoneProfile from "@/public/ConsumerPgMedia/ElioShowcases/ElioProfile.png";
 import sceneCity from "@/public/ConsumerPgMedia/forYourCity.png";
 import sceneTravels from "@/public/ConsumerPgMedia/forYourTravels.png";
 import { useRef, useEffect, useState, useCallback } from "react";
@@ -175,7 +175,7 @@ const NOTIFICATIONS: Notif[] = [
     title: "Sophie saved a spot in Barcelona",
     sub: "Wants to know if you’re free Sunday · 20 min ago",
     kind: "avatar",
-    avatar: "/ConsumerPgMedia/profiles/profile2.png",
+    avatar: "/ConsumerPgMedia/ProfilePics/profile2.png",
     x: -440, y: -210, rot: -3, behind: false, delay: 0,
   },
   // Top-right — Elio built your trip (sharp, in front). Uses the

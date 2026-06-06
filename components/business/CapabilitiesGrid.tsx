@@ -137,7 +137,7 @@ export default function CapabilitiesGrid() {
                   {item.title}
                 </h3>
                 <p
-                  className="cap-tile-sub text-[14px] md:text-[15px] leading-[1.5]"
+                  className="cap-tile-sub text-[16px] leading-[1.5]"
                   style={{
                     color: "var(--ent-text-secondary)",
                     letterSpacing: "-0.005em",
