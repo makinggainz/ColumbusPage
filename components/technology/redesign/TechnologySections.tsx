@@ -5,17 +5,17 @@ import { WarmTechImage } from "./WarmTechImage";
 // Static imports → AVIF via the optimizer (these were raw plain <img> PNG/JPEG)
 // + real blur-up where shown large. The model/competitor logos render small,
 // so blur-up is omitted there — AVIF + warm-promotion is the win.
-import techDiagram from "@/public/TechnologyPageImages/techDiagram.png";
+import techDiagram from "@/public/ResearchPgMedia/techDiagram.png";
 import columbusLogo from "@/public/logobueno.png";
 import mapsGptLogo from "@/public/MapsGPT-logo.png";
-import voyagerGraphic from "@/public/TechnologyPageImages/VoyagerGraphic.png";
-import claudeLogo from "@/public/TechnologyPageImages/LogosTable/Claude_AI_logo.svg.png";
-import grokLogo from "@/public/TechnologyPageImages/LogosTable/Grok-feb-2025-logo.svg.png";
-import perplexityLogo from "@/public/TechnologyPageImages/LogosTable/Perplexity_AI_logo.svg.png";
-import chatgptLogo from "@/public/TechnologyPageImages/LogosTable/ChatGPT-Vertical-Logo-Vector.svg-.png";
-import physicalIntelligenceLogo from "@/public/TechnologyPageImages/physical-intelligence-logo.jpeg";
-import runwayLogo from "@/public/TechnologyPageImages/runway-logo.jpeg";
-import metaLogo from "@/public/TechnologyPageImages/meta-logo.jpeg";
+import voyagerGraphic from "@/public/ResearchPgMedia/VoyagerGraphic.png";
+import claudeLogo from "@/public/ResearchPgMedia/LogosTable/Claude_AI_logo.svg.png";
+import grokLogo from "@/public/ResearchPgMedia/LogosTable/Grok-feb-2025-logo.svg.png";
+import perplexityLogo from "@/public/ResearchPgMedia/LogosTable/Perplexity_AI_logo.svg.png";
+import chatgptLogo from "@/public/ResearchPgMedia/LogosTable/ChatGPT-Vertical-Logo-Vector.svg-.png";
+import physicalIntelligenceLogo from "@/public/ResearchPgMedia/physical-intelligence-logo.jpeg";
+import runwayLogo from "@/public/ResearchPgMedia/runway-logo.jpeg";
+import metaLogo from "@/public/ResearchPgMedia/meta-logo.jpeg";
 import styles from "../technology.module.css";
 import { TechScrollIndex } from "../TechScrollIndex";
 import {
@@ -70,7 +70,6 @@ export function TechnologySections() {
 
             <div className={styles.lgmCompareLayout}>
               <div className={styles.lgmCompareText}>
-                <span className={styles.sectionEyebrow}>A new foundation model</span>
                 <h2 className={styles.sectionTitle}>
                   Large Geospatial Model vs Large Language Model.
                 </h2>
@@ -125,7 +124,7 @@ export function TechnologySections() {
                 <div />
                 <div className={styles.dimModelHeader}>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src="/TechnologyPageImages/llm-text-icon.png" alt="" className={`${styles.dimModelHeaderIcon} ${styles.dimModelHeaderIconLlm}`} aria-hidden loading="lazy" decoding="async" />
+                  <img src="/ResearchPgMedia/llm-text-icon.png" alt="" className={`${styles.dimModelHeaderIcon} ${styles.dimModelHeaderIconLlm}`} aria-hidden loading="lazy" decoding="async" />
                   <div className={styles.dimModelHeaderText}>
                     <h4 className={styles.dimModelHeaderName}>LLM</h4>
                     <p className={styles.dimModelHeaderSubtitle}>Large-Language-model</p>
@@ -133,7 +132,7 @@ export function TechnologySections() {
                 </div>
                 <div className={styles.dimModelHeader}>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src="/TechnologyPageImages/vlm-image-icon.png" alt="" className={`${styles.dimModelHeaderIcon} ${styles.dimModelHeaderIconVlm}`} aria-hidden loading="lazy" decoding="async" />
+                  <img src="/ResearchPgMedia/vlm-image-icon.png" alt="" className={`${styles.dimModelHeaderIcon} ${styles.dimModelHeaderIconVlm}`} aria-hidden loading="lazy" decoding="async" />
                   <div className={styles.dimModelHeaderText}>
                     <h4 className={styles.dimModelHeaderName}>VLM</h4>
                     <p className={styles.dimModelHeaderSubtitle}>Vision-Language-model</p>
@@ -141,7 +140,7 @@ export function TechnologySections() {
                 </div>
                 <div className={styles.dimModelHeader}>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src="/TechnologyPageImages/lgm-globe-icon.png" alt="" className={styles.dimModelHeaderIcon} aria-hidden loading="lazy" decoding="async" />
+                  <img src="/ResearchPgMedia/lgm-globe-icon.png" alt="" className={styles.dimModelHeaderIcon} aria-hidden loading="lazy" decoding="async" />
                   <div className={styles.dimModelHeaderText}>
                     <h4 className={`${styles.dimModelHeaderName} ${styles.dimModelHeaderNameLgm}`}>LGM</h4>
                     <p className={styles.dimModelHeaderSubtitle}>Large-Geospatial-model</p>
@@ -475,7 +474,6 @@ export function TechnologySections() {
 
               <div className={styles.coreResearchIntroRow}>
                 <div className={styles.coreResearchIntroText}>
-                  <span className={styles.sectionEyebrow}>Core Reasoning</span>
                   <h2 className={styles.sectionTitle}>Our research</h2>
                   <div className={styles.editorialBody}>
                     <p>
@@ -651,7 +649,6 @@ export function TechnologySections() {
         <div className={styles.slideFrame}>
           <div className={styles.researchBlogWrap}>
           <RevealOnView className={`${styles.editorialSlide} ${styles.resultsSlide}`}>
-            <p className={styles.lgmKicker}>RESULTS</p>
             <h2 className={styles.resultsTitle}>Our Model: Magellan-1.0</h2>
             <p className={styles.resultsLead}>The latest results from our development of the LGM.</p>
 

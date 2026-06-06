@@ -56,22 +56,22 @@ export const RESEARCH_CARDS: ResearchCard[] = [
     featured: true,
     title: "Philosophy behind a Universal Geospatial Model",
     href: blogHref(BLOG_SLUG.philosophyUniversalLgm),
-    image: "/TechnologyPageImages/multieWaveEminations.jpeg",
+    image: "/ResearchPgMedia/multieWaveEminations.jpeg",
   },
   {
     title: "Mimicking the adult brain.",
     href: blogHref(BLOG_SLUG.mimickingAdultBrain),
-    image: "/TechnologyPageImages/deep-layers.jpeg",
+    image: "/ResearchPgMedia/deep-layers.jpeg",
   },
   {
     title: "Earth recipes.",
     href: blogHref(BLOG_SLUG.earthRecipes),
-    image: "/TechnologyPageImages/unkown-layers.jpeg",
+    image: "/ResearchPgMedia/unkown-layers.jpeg",
   },
   {
     title: "Research: creating a fire prediction model.",
     href: blogHref(BLOG_SLUG.erickFirePrediction),
-    image: "/TechnologyPageImages/techpg-radiance.png",
+    image: "/ResearchPgMedia/techpg-radiance.png",
   },
 ];
 

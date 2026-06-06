@@ -129,35 +129,35 @@ type IndustryBackdrops = {
                          (consumed as the Dashboard hero)
    dashboardHero     → unused (slot chain shifted up). */
 const RESIDENTIAL_BACKDROPS: IndustryBackdrops = {
-  chatHero: "/Residential/res-bg-1.png",
+  chatHero: "/BusinessPgMedia/ResidentialRealEstateUseCases/Bg/res-bg-1.png",
   /* res-bg-1 is a portrait suburban shot with the cloud band at ~30–55%
      of the photo. "center 40%" puts the visible slice on the clouds with
      a sliver of roof peaks at the bottom — matching the PDF chatHero. */
   chatHeroPosition: "center 40%",
   chatSub: [
-    "/Residential/res-bg-2.png",
-    "/Residential/res-bg-3.png",
-    "/Residential/res-bg-5.png",
-    "/Residential/res-bg-4.png",
+    "/BusinessPgMedia/ResidentialRealEstateUseCases/Bg/res-bg-2.png",
+    "/BusinessPgMedia/ResidentialRealEstateUseCases/Bg/res-bg-3.png",
+    "/BusinessPgMedia/ResidentialRealEstateUseCases/Bg/res-bg-5.png",
+    "/BusinessPgMedia/ResidentialRealEstateUseCases/Bg/res-bg-4.png",
   ],
-  dataCatalogueHero: "/Residential/res-bg-6.png",
-  agenticResearchHero: "/Residential/res-bg-7.png",
-  dashboardHero: "/Residential/res-bg-1.png",
+  dataCatalogueHero: "/BusinessPgMedia/ResidentialRealEstateUseCases/Bg/res-bg-6.png",
+  agenticResearchHero: "/BusinessPgMedia/ResidentialRealEstateUseCases/Bg/res-bg-7.png",
+  dashboardHero: "/BusinessPgMedia/ResidentialRealEstateUseCases/Bg/res-bg-1.png",
   /* Residential-specific map illustrations. Same slot semantics as the
      CRE / urban-infrastructure sets — chatMainMap drives MapChatPlatform's
      MapPanel; chatSubMaps line up with the chat sub-features (slot 0
      "See what others cant", slot 1 "Like weather forecasts…", slot 3
      "Drop Any File"; slot 2 has no MapLayeredVisual). smartLayerMap and
      surveyEarthMap feed the two data-catalogue rows. */
-  chatMainMap: "/ResidentialMaps/chat-platform-map.png",
+  chatMainMap: "/BusinessPgMedia/ResidentialRealEstateUseCases/MapVisuals/chat-platform-map.png",
   chatSubMaps: [
-    "/ResidentialMaps/pattern-detection.png",
-    "/ResidentialMaps/like-weather-forecasts.png",
+    "/BusinessPgMedia/ResidentialRealEstateUseCases/MapVisuals/pattern-detection.png",
+    "/BusinessPgMedia/ResidentialRealEstateUseCases/MapVisuals/like-weather-forecasts.png",
     undefined,
-    "/ResidentialMaps/import-files.png",
+    "/BusinessPgMedia/ResidentialRealEstateUseCases/MapVisuals/import-files.png",
   ],
-  smartLayerMap: "/ResidentialMaps/smart-layers.png",
-  surveyEarthMap: "/ResidentialMaps/survey-model.png",
+  smartLayerMap: "/BusinessPgMedia/ResidentialRealEstateUseCases/MapVisuals/smart-layers.png",
+  surveyEarthMap: "/BusinessPgMedia/ResidentialRealEstateUseCases/MapVisuals/survey-model.png",
 };
 
 /* Mapping authored against /Users/.../Downloads/resi.pdf (which the user
@@ -191,8 +191,8 @@ const COMMERCIAL_BACKDROPS: IndustryBackdrops = {
   chatHeroPosition: "center 25%",
   chatSub: [
     "/ColumbusBackgroundV2Enhanced.png",
-    "/London.png",
-    "/businessback3.png",
+    "/BusinessPgMedia/CREUseCases/Bg/London.png",
+    "/BusinessPgMedia/CREUseCases/Bg/businessback3.png",
     "/ColumbusBackgroundV2Enhanced.png",
   ],
   /* chatSub[0] uses the former portrait hero photo of NYC's Central Park
@@ -202,67 +202,67 @@ const COMMERCIAL_BACKDROPS: IndustryBackdrops = {
      very bottom so the visible band lands on the park lawn (matches the
      "Drop Any File" tile in the PDF). */
   chatSubPositions: ["center 40%", undefined, undefined, "center bottom"],
-  dataCatalogueHero: "/CREbg/cre-bg-2.png",
-  agenticResearchHero: "/CREbg/cre-bg-1.png",
-  dashboardHero: "/CREbg/cre-bg-2.png",
+  dataCatalogueHero: "/BusinessPgMedia/CREUseCases/Bg/cre-bg-2.png",
+  agenticResearchHero: "/BusinessPgMedia/CREUseCases/Bg/cre-bg-1.png",
+  dashboardHero: "/BusinessPgMedia/CREUseCases/Bg/cre-bg-2.png",
   /* CRE-specific map illustrations for the chat section. chatMainMap is
      the London map with City Core / Kings Cross / Southbank / Stratford
      percentage zones; the chatSubMaps line up with the chat sub-features
      (slot 0 = "See what others cant" Manhattan zone map, slot 1 = London
      forecast heatmap, slot 3 = London file-import dot map; slot 2 has no
      MapLayeredVisual). */
-  chatMainMap: "/CREMaps/chat-platform-map.png",
+  chatMainMap: "/BusinessPgMedia/CREUseCases/MapVisuals/chat-platform-map.png",
   chatSubMaps: [
-    "/CREMaps/see-what-others-cant.png",
-    "/CREMaps/like-weather-forecasts.png",
+    "/BusinessPgMedia/CREUseCases/MapVisuals/see-what-others-cant.png",
+    "/BusinessPgMedia/CREUseCases/MapVisuals/like-weather-forecasts.png",
     undefined,
-    "/CREMaps/import-files.png",
+    "/BusinessPgMedia/CREUseCases/MapVisuals/import-files.png",
   ],
 };
 
 const ENVIRONMENTAL_BACKDROPS: IndustryBackdrops = {
-  chatHero: "/Environmental/env-bg-1.png",
+  chatHero: "/BusinessPgMedia/EnvironmentalUseCases/Bg/env-bg-1.png",
   chatSub: [
-    "/Environmental/env-bg-2.png",
-    "/Environmental/env-bg-3.png",
-    "/Environmental/env-bg-4.png",
-    "/Environmental/env-bg-5.png",
+    "/BusinessPgMedia/EnvironmentalUseCases/Bg/env-bg-2.png",
+    "/BusinessPgMedia/EnvironmentalUseCases/Bg/env-bg-3.png",
+    "/BusinessPgMedia/EnvironmentalUseCases/Bg/env-bg-4.png",
+    "/BusinessPgMedia/EnvironmentalUseCases/Bg/env-bg-5.png",
   ],
-  dataCatalogueHero: "/Environmental/env-bg-6.png",
-  agenticResearchHero: "/Environmental/env-bg-7.png",
-  dashboardHero: "/Environmental/env-bg-1.png",
+  dataCatalogueHero: "/BusinessPgMedia/EnvironmentalUseCases/Bg/env-bg-6.png",
+  agenticResearchHero: "/BusinessPgMedia/EnvironmentalUseCases/Bg/env-bg-7.png",
+  dashboardHero: "/BusinessPgMedia/EnvironmentalUseCases/Bg/env-bg-1.png",
   /* Environmental-specific map illustrations. Same slot semantics as the
      other industries — chatMainMap drives the MapChatPlatform demo;
      chatSubMaps align with the chat sub-features (slot 0 "See what
      others cant", slot 1 "Like weather forecasts…", slot 3 "Drop Any
      File"; slot 2 has no MapLayeredVisual). smartLayerMap and
      surveyEarthMap feed the two data-catalogue rows. */
-  chatMainMap: "/EnvironmentalMaps/map-chat.png",
+  chatMainMap: "/BusinessPgMedia/EnvironmentalUseCases/MapVisuals/map-chat.png",
   chatSubMaps: [
-    "/EnvironmentalMaps/pattern-detection.png",
-    "/EnvironmentalMaps/predict-future.png",
+    "/BusinessPgMedia/EnvironmentalUseCases/MapVisuals/pattern-detection.png",
+    "/BusinessPgMedia/EnvironmentalUseCases/MapVisuals/predict-future.png",
     undefined,
-    "/EnvironmentalMaps/file-compatibility.png",
+    "/BusinessPgMedia/EnvironmentalUseCases/MapVisuals/file-compatibility.png",
   ],
-  smartLayerMap: "/EnvironmentalMaps/smart-layers.png",
-  surveyEarthMap: "/EnvironmentalMaps/survey-model.png",
+  smartLayerMap: "/BusinessPgMedia/EnvironmentalUseCases/MapVisuals/smart-layers.png",
+  surveyEarthMap: "/BusinessPgMedia/EnvironmentalUseCases/MapVisuals/survey-model.png",
 };
 
 const ACADEMIC_BACKDROPS: IndustryBackdrops = {
-  chatHero: "/Academic/acad-bg-1.png",
+  chatHero: "/BusinessPgMedia/AcademicUseCase/Bg/acad-bg-1.png",
   /* chatSub[3] (Drop Any File) uses acad-bg-6; the chain shifts so the
      Agentic Research and Dashboard hero slots pick up acad-bg-7 and
      acad-bg-8 respectively. The original slot-5 backdrop dropped out of
      the active mapping. */
   chatSub: [
-    "/Academic/acad-bg-2.png",
-    "/Academic/acad-bg-3.png",
-    "/Academic/acad-bg-4.png",
-    "/Academic/acad-bg-6.png",
+    "/BusinessPgMedia/AcademicUseCase/Bg/acad-bg-2.png",
+    "/BusinessPgMedia/AcademicUseCase/Bg/acad-bg-3.png",
+    "/BusinessPgMedia/AcademicUseCase/Bg/acad-bg-4.png",
+    "/BusinessPgMedia/AcademicUseCase/Bg/acad-bg-6.png",
   ],
-  dataCatalogueHero: "/Academic/acad-bg-7.png",
-  agenticResearchHero: "/Academic/acad-bg-8.png",
-  dashboardHero: "/Academic/acad-bg-1.png",
+  dataCatalogueHero: "/BusinessPgMedia/AcademicUseCase/Bg/acad-bg-7.png",
+  agenticResearchHero: "/BusinessPgMedia/AcademicUseCase/Bg/acad-bg-8.png",
+  dashboardHero: "/BusinessPgMedia/AcademicUseCase/Bg/acad-bg-1.png",
   /* Academic-specific map illustrations. Same slot semantics as CRE /
      residential / urban-infrastructure. The chatMainMap uses the novel
      "AI that critically thinks" image — academic research framing for
@@ -271,28 +271,28 @@ const ACADEMIC_BACKDROPS: IndustryBackdrops = {
      weather forecasts…", slot 3 "Drop Any File"; slot 2 has no
      MapLayeredVisual). smartLayerMap and surveyEarthMap feed the two
      data-catalogue rows. */
-  chatMainMap: "/AcademicMaps/chat-platform-map.png",
+  chatMainMap: "/BusinessPgMedia/AcademicUseCase/MapVisuals/chat-platform-map.png",
   chatSubMaps: [
-    "/AcademicMaps/see-what-others-cant.png",
-    "/AcademicMaps/like-weather-forecasts.png",
+    "/BusinessPgMedia/AcademicUseCase/MapVisuals/see-what-others-cant.png",
+    "/BusinessPgMedia/AcademicUseCase/MapVisuals/like-weather-forecasts.png",
     undefined,
-    "/AcademicMaps/import-files.png",
+    "/BusinessPgMedia/AcademicUseCase/MapVisuals/import-files.png",
   ],
-  smartLayerMap: "/AcademicMaps/smart-layers.png",
-  surveyEarthMap: "/AcademicMaps/survey-model.png",
+  smartLayerMap: "/BusinessPgMedia/AcademicUseCase/MapVisuals/smart-layers.png",
+  surveyEarthMap: "/BusinessPgMedia/AcademicUseCase/MapVisuals/survey-model.png",
 };
 
 const GEOMARKETING_BACKDROPS: IndustryBackdrops = {
-  chatHero: "/Geomarketing/geo-bg-1.png",
+  chatHero: "/BusinessPgMedia/GeomarketingUseCases/Bg/geo-bg-1.png",
   chatSub: [
-    "/Geomarketing/geo-bg-2.png",
-    "/Geomarketing/geo-bg-3.png",
-    "/Geomarketing/geo-bg-4.png",
-    "/Geomarketing/geo-bg-5.png",
+    "/BusinessPgMedia/GeomarketingUseCases/Bg/geo-bg-2.png",
+    "/BusinessPgMedia/GeomarketingUseCases/Bg/geo-bg-3.png",
+    "/BusinessPgMedia/GeomarketingUseCases/Bg/geo-bg-4.png",
+    "/BusinessPgMedia/GeomarketingUseCases/Bg/geo-bg-5.png",
   ],
-  dataCatalogueHero: "/Geomarketing/geo-bg-6.png",
-  agenticResearchHero: "/Geomarketing/geo-bg-7.png",
-  dashboardHero: "/Geomarketing/geo-bg-1.png",
+  dataCatalogueHero: "/BusinessPgMedia/GeomarketingUseCases/Bg/geo-bg-6.png",
+  agenticResearchHero: "/BusinessPgMedia/GeomarketingUseCases/Bg/geo-bg-7.png",
+  dashboardHero: "/BusinessPgMedia/GeomarketingUseCases/Bg/geo-bg-1.png",
   /* Geomarketing-specific map illustrations. Same slot semantics as CRE
      / residential / urban-infrastructure — chatMainMap drives
      MapChatPlatform's MapPanel; chatSubMaps line up with the chat
@@ -300,43 +300,43 @@ const GEOMARKETING_BACKDROPS: IndustryBackdrops = {
      1 "Like weather forecasts…" → predict-future, slot 3 "Drop Any File"
      → import-files; slot 2 has no MapLayeredVisual). smartLayerMap and
      surveyEarthMap feed the two data-catalogue rows. */
-  chatMainMap: "/GeomarketingMaps/conversational.png",
+  chatMainMap: "/BusinessPgMedia/GeomarketingUseCases/MapVisuals/conversational.png",
   chatSubMaps: [
-    "/GeomarketingMaps/pattern-detect.png",
-    "/GeomarketingMaps/predict-future.png",
+    "/BusinessPgMedia/GeomarketingUseCases/MapVisuals/pattern-detect.png",
+    "/BusinessPgMedia/GeomarketingUseCases/MapVisuals/predict-future.png",
     undefined,
-    "/GeomarketingMaps/import-files.png",
+    "/BusinessPgMedia/GeomarketingUseCases/MapVisuals/import-files.png",
   ],
-  smartLayerMap: "/GeomarketingMaps/be-creative.png",
-  surveyEarthMap: "/GeomarketingMaps/super-model.png",
+  smartLayerMap: "/BusinessPgMedia/GeomarketingUseCases/MapVisuals/be-creative.png",
+  surveyEarthMap: "/BusinessPgMedia/GeomarketingUseCases/MapVisuals/super-model.png",
 };
 
 const URBAN_INFRASTRUCTURE_BACKDROPS: IndustryBackdrops = {
-  chatHero: "/UrbanInfrastructure/urb-bg-1.png",
+  chatHero: "/BusinessPgMedia/UrbanInfrastructureUseCases/Bg/urb-bg-1.png",
   chatSub: [
-    "/UrbanInfrastructure/urb-bg-2.png",
-    "/UrbanInfrastructure/urb-bg-3.png",
-    "/UrbanInfrastructure/urb-bg-4.png",
-    "/UrbanInfrastructure/urb-bg-5.png",
+    "/BusinessPgMedia/UrbanInfrastructureUseCases/Bg/urb-bg-2.png",
+    "/BusinessPgMedia/UrbanInfrastructureUseCases/Bg/urb-bg-3.png",
+    "/BusinessPgMedia/UrbanInfrastructureUseCases/Bg/urb-bg-4.png",
+    "/BusinessPgMedia/UrbanInfrastructureUseCases/Bg/urb-bg-5.png",
   ],
-  dataCatalogueHero: "/UrbanInfrastructure/urb-bg-6.png",
-  agenticResearchHero: "/UrbanInfrastructure/urb-bg-7.png",
-  dashboardHero: "/UrbanInfrastructure/urb-bg-1.png",
+  dataCatalogueHero: "/BusinessPgMedia/UrbanInfrastructureUseCases/Bg/urb-bg-6.png",
+  agenticResearchHero: "/BusinessPgMedia/UrbanInfrastructureUseCases/Bg/urb-bg-7.png",
+  dashboardHero: "/BusinessPgMedia/UrbanInfrastructureUseCases/Bg/urb-bg-1.png",
   /* Urban-infra map illustrations. chatMainMap drives MapChatPlatform's
      MapPanel; chatSubMaps align with the chat sub-features (slot 0 "See
      what others cant" → pattern-detection, slot 1 "Like weather
      forecasts…" → predict-future, slot 2 has no MapLayeredVisual, slot 3
      "Drop Any File" → file-compatibility). smartLayerMap and
      surveyEarthMap feed the two data-catalogue rows. */
-  chatMainMap: "/UrbanPlanningMaps/map-chat.png",
+  chatMainMap: "/BusinessPgMedia/UrbanInfrastructureUseCases/MapVisuals/map-chat.png",
   chatSubMaps: [
-    "/UrbanPlanningMaps/pattern-detection.png",
-    "/UrbanPlanningMaps/predict-future.png",
+    "/BusinessPgMedia/UrbanInfrastructureUseCases/MapVisuals/pattern-detection.png",
+    "/BusinessPgMedia/UrbanInfrastructureUseCases/MapVisuals/predict-future.png",
     undefined,
-    "/UrbanPlanningMaps/file-compatibility.png",
+    "/BusinessPgMedia/UrbanInfrastructureUseCases/MapVisuals/file-compatibility.png",
   ],
-  smartLayerMap: "/UrbanPlanningMaps/survey-model.png",
-  surveyEarthMap: "/UrbanPlanningMaps/creative-smart-layers.png",
+  smartLayerMap: "/BusinessPgMedia/UrbanInfrastructureUseCases/MapVisuals/survey-model.png",
+  surveyEarthMap: "/BusinessPgMedia/UrbanInfrastructureUseCases/MapVisuals/creative-smart-layers.png",
 };
 
 const GRADIENT_BACKDROPS: IndustryBackdrops = {
@@ -459,7 +459,7 @@ const RESIDENTIAL_COPY: IndustryCopy = {
       heading: "3 patterns detected",
       prompt:
         "Rank the possibility of solar roof panel installation in this neighborhood",
-      area: "Across the Madrid metro area · Q2 2026",
+      area: "Across the Washington D.C metro area · Q3 2026",
       patterns: [
         { n: 1, title: "Unshaded South-Facing Roofs With Strong Daily Insolation", properties: "312 homes", roi: "Solar potential: High" },
         { n: 2, title: "Existing Rooftop Solar Arrays Already Installed", properties: "47 homes", roi: "Status: Occupied" },

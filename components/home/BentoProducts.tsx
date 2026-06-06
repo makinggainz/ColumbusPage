@@ -753,13 +753,13 @@ const PRODUCTS: Product[] = [
   {
     cellClass: "bp-card--research",
     href: "/research",
-    logo: "/TechnologyPageImages/lgm-globe-icon.png",
+    logo: "/ResearchPgMedia/lgm-globe-icon.png",
     name: "Research",
     tagline: "Building the Large Geospatial Model",
     audience: "For the curious",
     ctaLabel: "Read Thesis",
-    video: "/bento/research-mesh.mp4",
-    poster: "/bento/research-mesh-poster.jpg",
+    video: "/ConsumerPgMedia/bento/research-mesh.mp4",
+    poster: "/ConsumerPgMedia/bento/research-mesh-poster.jpg",
     wide: true,
   },
 ];
@@ -888,7 +888,7 @@ export function BentoProducts() {
                        maps feel alive" image was dropped because the
                        body tagline below already says it. */
                     <Image
-                      src="/consumer/elioNameHero.png"
+                      src="/ConsumerPgMedia/elioNameHero.png"
                       alt={p.name}
                       className="bp-elio-name"
                       width={260}

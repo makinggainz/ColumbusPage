@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { ImageWithFallback } from "@/components/ui/ImageWithFallback";
 import { useMediaWarm } from "@/components/ui/MediaPrefetcher";
-import envBg1 from "@/public/Environmental/env-bg-1.png";
+import envBg1 from "@/public/BusinessPgMedia/EnvironmentalUseCases/Bg/env-bg-1.png";
 import MapChatPlatform from "./MapChatPlatform";
 import DataManagerMockup from "./DataManagerMockup";
 import AgenticResearchMockup from "./AgenticResearchMockup";
@@ -22,7 +22,7 @@ const SOFT = "var(--ent-border-card)";
    that copy. */
 const RESIDENTIAL_INDUSTRY_ID = "residential-real-estate" as const;
 const RESIDENTIAL_MAP_CHAT = {
-  map: "/ResidentialMaps/chat-platform-map.png",
+  map: "/BusinessPgMedia/ResidentialRealEstateUseCases/MapVisuals/chat-platform-map.png",
   userQuery:
     "Show me which neighborhoods in Amsterdam have seen the largest rent increases over the past 5 years",
   responseIntro:
@@ -182,10 +182,29 @@ function DbIco({ size, color }: IcoProps) {
    key for the demo on the right. The numeric prefix that used to
    live here is gone — icons replace it. */
 const FEATURES = [
-  { title: "Map Chat", subtitle: "Chart your own expedition", Icon: SearchBubbleIco },
-  { title: "Reports", subtitle: "Send our fleet to discover", Icon: PenSquareIco },
-  { title: "Data Catalogue", subtitle: "Browse everything we've discovered", Icon: DbIco },
-  { title: "Dashboard", subtitle: "Your captain's view", Icon: GridIco },
+  {
+    title: "Map Chat",
+    subtitle:
+      "Chart your own expedition\nDo all your research on a simple,\nyet powerful map interface.",
+    Icon: SearchBubbleIco,
+  },
+  {
+    title: "Reports",
+    subtitle:
+      "Send our fleet to discover\nOur AI agents will investigate\nand select your new sites in minutes.",
+    Icon: PenSquareIco,
+  },
+  {
+    title: "Data Catalogue",
+    subtitle:
+      "Browse everything we've discovered\nFind the right data for any project.\nAll on the same platform.",
+    Icon: DbIco,
+  },
+  {
+    title: "Dashboard",
+    subtitle: "Your captain's view\nEverything baked into one platform.",
+    Icon: GridIco,
+  },
 ] as const;
 
 export default function ComparisonSection() {
@@ -384,7 +403,11 @@ export default function ComparisonSection() {
                       </span>
                       <span
                         className="text-[14px] md:text-[15px] leading-[1.4]"
-                        style={{ color: "var(--ent-text-secondary)", letterSpacing: "-0.005em" }}
+                        style={{
+                          color: "var(--ent-text-secondary)",
+                          letterSpacing: "-0.005em",
+                          whiteSpace: "pre-line",
+                        }}
                       >
                         {f.subtitle}
                       </span>
@@ -412,7 +435,7 @@ export default function ComparisonSection() {
             seam and read as one rounded unit. overflow:hidden clips
             the demos to the host's rounded corners.
 
-            Background is /Environmental/env-bg-1.png — the sky +
+            Background is /BusinessPgMedia/EnvironmentalUseCases/Bg/env-bg-1.png — the sky +
             clouds + palm-tree hero photo from the user's design
             reference. Host fixed at 630px tall.
 

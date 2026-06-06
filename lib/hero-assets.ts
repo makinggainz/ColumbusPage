@@ -45,7 +45,7 @@ export const HERO_ASSETS: Record<string, HeroEntry> = {
     desktop: { src: "/ColumbusBackgroundV2Enhanced.png", quality: 80 },
   },
   "/products/consumer": {
-    desktop: { src: "/consumer/heroBackground.png", quality: 80 },
+    desktop: { src: "/ConsumerPgMedia/heroBackground.png", quality: 80 },
   },
   // getImageProps heroes left on a string src — mirror their literal /public
   // paths + rendered quality (75). Cross-prefetched; no blurDataURL (their own
@@ -56,10 +56,12 @@ export const HERO_ASSETS: Record<string, HeroEntry> = {
   },
   "/company": {
     desktop: { src: "/company-illustration-enhanced.png", quality: 75 },
-    mobile: { src: "/company-illustration-enhanced-mobile.png", quality: 75 },
+    /* Mobile variant was deleted; fall back to the desktop file until a
+       mobile-specific asset is restored. */
+    mobile: { src: "/company-illustration-enhanced.png", quality: 75 },
   },
   "/contact": {
-    desktop: { src: "/contactbackimg.png", quality: 75 },
+    desktop: { src: "/ContactBg.png", quality: 75 },
     mobile: { src: "/contactbackimg-mobile.png", quality: 75 },
   },
 };

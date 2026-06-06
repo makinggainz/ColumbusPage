@@ -198,14 +198,14 @@ const URBAN_DATA_CATALOGUE: DataCatalogueRowContent = {
       rows: "55,010 rows",
       description:
         "Predicts 2–5 year property value growth using migration, job forecasts, and permit trends.",
-      imageSrc: "/use-cases/layer1.png",
+      imageSrc: "/BusinessPgMedia/layer1.png",
     },
     {
       title: "Future Turnover Hotspots",
       rows: "40,206 rows",
       description:
         "Predicts high-flip areas (DOM <20 days) from sales velocity, investor inflows, and economic cycles.",
-      imageSrc: "/use-cases/layer2.png",
+      imageSrc: "/BusinessPgMedia/layer2.png",
     },
     {
       title: "Future Displacement Risk Overlay",
@@ -299,13 +299,13 @@ function loremRow(industryName: string): {
           title: `Lorem ${industryName} layer A`,
           rows: "0 rows",
           description: LOREM_SHORT,
-          imageSrc: "/use-cases/layer1.png",
+          imageSrc: "/BusinessPgMedia/layer1.png",
         },
         {
           title: `Ipsum ${industryName} layer B`,
           rows: "0 rows",
           description: LOREM_SHORT,
-          imageSrc: "/use-cases/layer2.png",
+          imageSrc: "/BusinessPgMedia/layer2.png",
         },
         {
           title: `Dolor ${industryName} layer C`,

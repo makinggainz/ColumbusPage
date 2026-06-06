@@ -81,14 +81,16 @@ export default function NotFound() {
           explore.
         </p>
         {/* CTA — mirrors the canonical content pill (company contact CTA):
-            rounded-full, bg-cta surface, dot-arrow glyph, #154ACC accent. */}
+            rounded-full, bg-cta surface, dot-arrow glyph, var(--color-accent).
+            Hover ink + glyph use `text-accent` to match the nav's "Try Elio"
+            CTA hover colour (was a hardcoded #154ACC blue — wrong token). */}
         <Link
           href="/"
-          className="group mt-10 inline-flex items-center gap-2.5 rounded-full bg-cta px-7 py-3.5 text-sm leading-none text-white transition-colors hover:text-[#154ACC]"
+          className="group mt-10 inline-flex items-center gap-2.5 rounded-full bg-cta px-7 py-3.5 text-sm leading-none text-white transition-colors hover:text-accent"
         >
           Back to shore
           <span className="inline-block transition-transform group-hover:translate-x-0.5">
-            <ArrowDots className="text-[#154ACC]" />
+            <ArrowDots className="text-accent" />
           </span>
         </Link>
       </div>

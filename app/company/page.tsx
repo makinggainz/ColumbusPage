@@ -16,10 +16,10 @@ import styles from "./company.module.css";
 // Founders media is below the fold and heavy (group photo ~5 MB); static
 // imports give next/image a real blurDataURL for instant blur-up. See
 // MEDIA_LOADING_PLAYBOOK.md.
-import groupFounders from "@/public/grouppic-founders.png";
-import davidAvatar from "@/public/David.png";
-import alexAvatar from "@/public/Alex.jpg";
-import erickAvatar from "@/public/Erick.png";
+import groupFounders from "@/public/CompanyPgMedia/grouppic-founders.png";
+import davidAvatar from "@/public/CompanyPgMedia/David.png";
+import alexAvatar from "@/public/CompanyPgMedia/Alex.png";
+import erickAvatar from "@/public/CompanyPgMedia/Erick.png";
 
 export const metadata: Metadata = {
   title: "Company — Columbus Earth",

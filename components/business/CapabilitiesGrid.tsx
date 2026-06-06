@@ -1,39 +1,36 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Image, { type StaticImageData } from "next/image";
-import { useMediaWarm } from "@/components/ui/MediaPrefetcher";
-// Static imports → AVIF + blur-up for the six capability tiles.
-import cap1 from "@/public/capabilitiesImages/capability-1.png";
-import cap2 from "@/public/capabilitiesImages/capability-2.png";
-import cap3 from "@/public/capabilitiesImages/capability-3.png";
-import cap4 from "@/public/capabilitiesImages/capability-4.png";
-import cap5 from "@/public/capabilitiesImages/capability-5.png";
-import cap6 from "@/public/capabilitiesImages/capability-6.png";
 
 /* ── Section: "Enterprise-grade capabilities" ────────────────────────────────
-   Six capability tiles in a uniform 3-up grid. The whole grid is wrapped in
-   a single panel — same chrome the SuperFeatureSection `panel` mode uses
-   (#FAFAFA fill, 2px --ent-border-card hairline, --ent-radius-2xl corner) —
-   so the section reads as one "live demo" surface containing all six
-   capabilities rather than six independently-floating cards.
+   Three capability tiles in a single panel — same SuperFeatureSection
+   `panel` chrome (#FAFAFA fill, 2px --ent-border-card hairline,
+   --ent-radius-2xl corner) so the section reads as one demo surface.
 
-   Each tile inside is just the product mockup (2px hairline, restrained
-   corner) followed by its label. No per-tile backdrop. */
+   Each tile is left-aligned: a small icon placeholder in the top-left,
+   the title below, and a subtitle below the title (lorem ipsum until
+   the final copy lands). */
 
-const ITEMS: { title: string; image: StaticImageData }[] = [
-  { title: "Ask the map anything", image: cap6 },
-  { title: "Agent research reports", image: cap1 },
-  { title: "24/7 personal support", image: cap3 },
-  { title: "High-fidelity accurate data", image: cap4 },
-  { title: "Data Catalogue", image: cap5 },
-  { title: "Light-speed due diligence", image: cap2 },
+const ITEMS: { title: string; subtitle: string }[] = [
+  {
+    title: "Agent research reports",
+    subtitle:
+      "Describe what you’re looking for, then select what type of professional report you want. Our agents will investigate.",
+  },
+  {
+    title: "24/7 Human support",
+    subtitle: "Access Columbus’ personal support on any part of your process.",
+  },
+  {
+    title: "Light-speed due diligence",
+    subtitle:
+      "Input a parcel, select the type of report you want. Our agents will complete due diligence in minutes.",
+  },
 ];
 
 export default function CapabilitiesGrid() {
   const sectionRef = useRef<HTMLElement>(null);
   const [visible, setVisible] = useState(false);
-  const warm = useMediaWarm();
 
   useEffect(() => {
     const el = sectionRef.current;
@@ -60,7 +57,7 @@ export default function CapabilitiesGrid() {
           Enterprise-grade capabilities
         </h2>
 
-        {/* Single panel wrapping all six tiles — mirrors
+        {/* Single panel wrapping the three tiles — mirrors
             SuperFeatureSection's `panel` chrome so the capabilities grid
             reads as one demo surface. Inner dividers are a 1px gap with
             the panel's gridline color showing through, so each cell
@@ -79,36 +76,31 @@ export default function CapabilitiesGrid() {
             {ITEMS.map((item, i) => (
               <article
                 key={item.title}
-                className="cap-tile group flex flex-col items-center"
+                className="cap-tile group flex flex-col items-start text-left"
                 style={{
                   backgroundColor: "#FAFAFA",
                   padding: "clamp(24px, 3vw, 40px)",
+                  gap: 16,
                   opacity: visible ? 1 : 0,
                   transform: visible ? "translateY(0)" : "translateY(18px)",
                   transition: `opacity 0.6s ease ${0.06 * i}s, transform 0.6s ease ${0.06 * i}s`,
                 }}
               >
+                {/* Small icon placeholder — flat blue rounded square in
+                    the top-left. Stand-in until real per-tile icons
+                    land. */}
                 <div
-                  className="cap-tile-img-wrap relative w-full overflow-hidden"
                   style={{
-                    aspectRatio: "1.65 / 1",
-                    borderRadius: 7,
-                    border: "1px solid var(--color-gridline)",
+                    width: 40,
+                    height: 40,
+                    borderRadius: 8,
+                    backgroundColor: "#0080FF",
+                    flexShrink: 0,
                   }}
-                >
-                  <Image
-                    src={item.image}
-                    alt={item.title}
-                    fill
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                    placeholder="blur"
-                    loading={warm ? "eager" : "lazy"}
-                    fetchPriority={warm ? "low" : undefined}
-                    className="object-contain"
-                  />
-                </div>
+                  aria-hidden
+                />
                 <h3
-                  className="cap-tile-title mt-5 text-center text-[20px] md:text-[22px] font-semibold leading-[1.2]"
+                  className="cap-tile-title text-[20px] md:text-[22px] font-semibold leading-[1.2]"
                   style={{
                     color: "#0E173C",
                     letterSpacing: "-0.01em",
@@ -117,6 +109,16 @@ export default function CapabilitiesGrid() {
                 >
                   {item.title}
                 </h3>
+                <p
+                  className="cap-tile-sub text-[14px] md:text-[15px] leading-[1.5]"
+                  style={{
+                    color: "var(--ent-text-secondary)",
+                    letterSpacing: "-0.005em",
+                    margin: 0,
+                  }}
+                >
+                  {item.subtitle}
+                </p>
               </article>
             ))}
           </div>

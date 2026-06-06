@@ -885,7 +885,7 @@ export default function BusinessHelper() {
           onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
         >
           <Image
-            src="/business-helper-mascot.png"
+            src="/BusinessPgMedia/business-helper-mascot.png"
             alt="Helper"
             width={MASCOT_SIZE}
             height={MASCOT_SIZE}
@@ -2150,7 +2150,7 @@ function ThinkingIndicator() {
     >
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        src="/business-helper-mascot.png"
+        src="/BusinessPgMedia/business-helper-mascot.png"
         alt=""
         width={24}
         height={24}

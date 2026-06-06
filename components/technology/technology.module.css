@@ -1383,7 +1383,7 @@
      still stretches to fill (100% 100%) so it reads as full-bleed top to
      bottom and side to side with no fading halo. */
   inset: -16px;
-  background-image: var(--card-bg, url("/TechnologyPageImages/techpg-radiance.png"));
+  background-image: var(--card-bg, url("/ResearchPgMedia/techpg-radiance.png"));
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -3313,7 +3313,7 @@
   text-decoration: none;
   padding: 6px 14px 6px 10px;
   border-radius: var(--radius-full);
-  background: rgba(19, 35, 74, 0.04);
+  background: transparent;
   transition: color 220ms ease, background-color 220ms ease,
               padding 220ms cubic-bezier(0.22, 1, 0.36, 1);
 }
@@ -3360,7 +3360,7 @@
 
 .scrollIndexLabelActive,
 .scrollIndexLabelActive:hover {
-  background: rgba(19, 35, 74, 0.07);
+  background: rgba(0, 0, 0, 0.05);
   color: rgba(19, 35, 74, 0.78);
 }
 
@@ -3375,14 +3375,14 @@
 
 /* When the user hovers anywhere over the nav, expand every item so all
    labels read at once. The active item keeps its blue dot + filled pill;
-   the rest get a muted pill so the active one still stands out. */
+   the rest stay transparent (the active pill carries the only fill). */
 .scrollIndex:hover .scrollIndexLabel {
-  background: rgba(19, 35, 74, 0.04);
+  background: transparent;
   color: rgba(19, 35, 74, 0.78);
 }
 
 .scrollIndex:hover .scrollIndexLabelActive {
-  background: rgba(19, 35, 74, 0.07);
+  background: rgba(0, 0, 0, 0.05);
 }
 
 .scrollIndex:hover .scrollIndexText {
@@ -3396,7 +3396,7 @@
    active one. */
 .scrollIndexOnDark .scrollIndexLabel {
   color: #ffffff;
-  background: rgba(255, 255, 255, 0.08);
+  background: transparent;
 }
 
 .scrollIndexOnDark .scrollIndexDot {
@@ -3409,7 +3409,7 @@
 
 .scrollIndexOnDark .scrollIndexLabelActive,
 .scrollIndexOnDark .scrollIndexLabelActive:hover {
-  background: rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.10);
   color: #ffffff;
 }
 
@@ -3418,12 +3418,12 @@
 }
 
 .scrollIndexOnDark.scrollIndex:hover .scrollIndexLabel {
-  background: rgba(255, 255, 255, 0.08);
+  background: transparent;
   color: #ffffff;
 }
 
 .scrollIndexOnDark.scrollIndex:hover .scrollIndexLabelActive {
-  background: rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.10);
 }
 
 /* ───────────────────────────────────────────────────────────────────────
@@ -4997,10 +4997,10 @@
 
 /* Per-card background image overrides */
 .lgmArticleCardBgRadiance::before {
-  background-image: url("/TechnologyPageImages/techpg-radiance.png");
+  background-image: url("/ResearchPgMedia/techpg-radiance.png");
 }
 .lgmArticleCardBgWave::before {
-  background-image: url("/TechnologyPageImages/multieWaveEminations.jpeg");
+  background-image: url("/ResearchPgMedia/multieWaveEminations.jpeg");
 }
 .lgmArticleCardBgUnknownLayers::before {
   background-image: url("/Blogs/EngineeringCover.png");
@@ -6268,7 +6268,7 @@
 
 /* Tile 1 (Solar roof) — paints its own HK Map.png. */
 .genLayersTile:nth-child(1) {
-  background-image: url("/TechnologyPageImages/HK%20Map.png");
+  background-image: url("/ResearchPgMedia/HK%20Map.png");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -6279,7 +6279,7 @@
    cover tile 2 (no cropping, no repeat) at any width, matching the
    "Fill" setting used on tile 3. */
 .genLayersTile:nth-child(2) {
-  background-image: url("/TechnologyPageImages/HK%20Map3.png");
+  background-image: url("/ResearchPgMedia/HK%20Map3.png");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -6289,7 +6289,7 @@
    the row-level HK Map.png. Background-size: 100% 100% scales it to
    tile 3's actual width (whether active or sliver). */
 .genLayersTile:nth-child(3) {
-  background-image: url("/TechnologyPageImages/HK%20Map2.png");
+  background-image: url("/ResearchPgMedia/HK%20Map2.png");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;

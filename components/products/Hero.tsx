@@ -35,12 +35,12 @@ import { useMediaWarm } from "@/components/ui/MediaPrefetcher";
 // Static imports → AVIF via the optimizer + real blur-up placeholders +
 // intrinsic dimensions for the heavy phone-mockup / scene-backdrop raw
 // <img>s (were 1.5–6.3 MB PNG/JPG shipped unoptimized).
-import introPhone from "@/public/consumer/elio/ElioHeroShowcase.png";
-import phoneCity from "@/public/consumer/elio/ElioVotingShowcase1.png";
-import phoneTravels from "@/public/consumer/elio/ElioForYourTravels.png";
-import phoneProfile from "@/public/consumer/elio/ElioProfile.png";
-import sceneCity from "@/public/consumer/forYourCity.png";
-import sceneTravels from "@/public/consumer/forYourTravels.png";
+import introPhone from "@/public/ConsumerPgMedia/elio/ElioHeroShowcase.png";
+import phoneCity from "@/public/ConsumerPgMedia/elio/ElioVotingShowcase1.png";
+import phoneTravels from "@/public/ConsumerPgMedia/elio/ElioForYourTravels.png";
+import phoneProfile from "@/public/ConsumerPgMedia/elio/ElioProfile.png";
+import sceneCity from "@/public/ConsumerPgMedia/forYourCity.png";
+import sceneTravels from "@/public/ConsumerPgMedia/forYourTravels.png";
 import { useRef, useEffect, useState, useCallback } from "react";
 import { ImageWithFallback } from "@/components/ui/ImageWithFallback";
 import MapsGPTGlobe from "@/components/products/MapsGPTGlobe";
@@ -175,7 +175,7 @@ const NOTIFICATIONS: Notif[] = [
     title: "Sophie saved a spot in Barcelona",
     sub: "Wants to know if you’re free Sunday · 20 min ago",
     kind: "avatar",
-    avatar: "/profiles/profile2.png",
+    avatar: "/ConsumerPgMedia/profiles/profile2.png",
     x: -440, y: -210, rot: -3, behind: false, delay: 0,
   },
   // Top-right — Elio built your trip (sharp, in front). Uses the
@@ -209,7 +209,7 @@ const NOTIFICATIONS: Notif[] = [
     title: "Sarah & James joined your trip",
     sub: "Tokyo Gems · 14 spots saved together",
     kind: "stacked",
-    avatars: ["/David.png", "/Erick.png"],
+    avatars: ["/CompanyPgMedia/David.png", "/CompanyPgMedia/Erick.png"],
     x: -420, y: 240, rot: -2, behind: false, delay: 0.34,
   },
   // Bottom-right — Rain swap (sharp, in front)
@@ -670,7 +670,7 @@ export default function Hero() {
               so the optimizer's AVIF/WebP variant starts fetching before
               the bundle hydrates. */}
           <ImageWithFallback
-            src="/consumer/heroBackground.png"
+            src="/ConsumerPgMedia/heroBackground.png"
             alt=""
             aria-hidden
             fill
@@ -739,7 +739,7 @@ export default function Hero() {
                   <MapsGPTGlobe size={isLg ? 46 : 34} />
                 </div>
                 <Image
-                  src="/consumer/elioNameHero.png"
+                  src="/ConsumerPgMedia/elioNameHero.png"
                   alt="Elio"
                   width={260}
                   height={110}
@@ -755,7 +755,7 @@ export default function Hero() {
                   }}
                 />
                 <Image
-                  src="/consumer/elioTagline.png"
+                  src="/ConsumerPgMedia/elioTagline.png"
                   alt="making maps feel alive"
                   width={877}
                   height={285}
@@ -834,7 +834,7 @@ export default function Hero() {
                     }}
                   >
                     <Image
-                      src="/consumer/star1.png"
+                      src="/ConsumerPgMedia/star1.png"
                       alt=""
                       fill
                       sizes="32px"

@@ -14,13 +14,13 @@ import { useMediaWarm } from "@/components/ui/MediaPrefetcher";
 import { ScaleToFit } from "@/components/technology/redesign/ScaleToFit";
 // Static imports → AVIF + blur-up for the heavy bento mockups + Friends
 // avatars (were 0.85–2.4 MB raw PNG).
-import heroBackdrop from "@/public/consumer/heroBackground.png";
-import planATrip from "@/public/bento/planatrip.png";
-import importMockup from "@/public/bento/import-mockup.png";
-import profileSydney from "@/public/bento/profile-sydney.png";
-import profileNatalie from "@/public/bento/profile-natalie.png";
-import profileSofiee from "@/public/bento/profile-sofiee.png";
-import elioHomeDesktop from "@/public/consumer/ElioHomeDesktop3.png";
+import heroBackdrop from "@/public/ConsumerPgMedia/heroBackground.png";
+import planATrip from "@/public/ConsumerPgMedia/bento/planatrip.png";
+import importMockup from "@/public/ConsumerPgMedia/bento/import-mockup.png";
+import profileSydney from "@/public/ConsumerPgMedia/bento/profile-sydney.png";
+import profileNatalie from "@/public/ConsumerPgMedia/bento/profile-natalie.png";
+import profileSofiee from "@/public/ConsumerPgMedia/bento/profile-sofiee.png";
+import elioHomeDesktop from "@/public/ConsumerPgMedia/ElioHomeDesktop3.png";
 
 // Each marquee tile carries the same place / rating / user-prompt metadata
 // the matching photo holds in SeeWhatPeopleSection (section h) — so a
@@ -43,20 +43,20 @@ type DestPhoto = {
 // founder-curated feed. Use fresh pravatar seeds that aren't already
 // in ROW_B below.
 const ROW_A: DestPhoto[] = [
-  { src: "/FavoriteSpots/(14).jpeg", place: "Osteria Francescana", rating: "4.9", prompt: "Authentic Italian fine dining in Modena?", avatar: "https://i.pravatar.cc/80?img=33" },
-  { src: "/FavoriteSpots/(20).jpeg", place: "Hôtel du Cap",        rating: "4.8", prompt: "Most glamorous hotel on the French Riviera?", avatar: "https://i.pravatar.cc/80?img=16" },
-  { src: "/FavoriteSpots/(22).jpeg", place: "Mercado Central",     rating: "4.5", prompt: "Best food market in Madrid?", avatar: "https://i.pravatar.cc/80?img=11" },
-  { src: "/FavoriteSpots/(17).jpeg", place: "Oia Village",         rating: "4.7", prompt: "Best spot in Santorini for the sunset?", avatar: "https://i.pravatar.cc/80?img=1" },
-  { src: "/FavoriteSpots/(19).jpeg", place: "The Brando",          rating: "4.9", prompt: "Exclusive private island for a honeymoon?", avatar: "https://i.pravatar.cc/80?img=5" },
-  { src: "/FavoriteSpots/(21).jpeg", place: "The Ned NYC",         rating: "4.5", prompt: "Coolest NYC rooftop on a summer night?", avatar: "https://i.pravatar.cc/80?img=25" },
+  { src: "/ConsumerPgMedia/FavoriteSpots/(14).jpeg", place: "Osteria Francescana", rating: "4.9", prompt: "Authentic Italian fine dining in Modena?", avatar: "https://i.pravatar.cc/80?img=33" },
+  { src: "/ConsumerPgMedia/FavoriteSpots/(20).jpeg", place: "Hôtel du Cap",        rating: "4.8", prompt: "Most glamorous hotel on the French Riviera?", avatar: "https://i.pravatar.cc/80?img=16" },
+  { src: "/ConsumerPgMedia/FavoriteSpots/(22).jpeg", place: "Mercado Central",     rating: "4.5", prompt: "Best food market in Madrid?", avatar: "https://i.pravatar.cc/80?img=11" },
+  { src: "/ConsumerPgMedia/FavoriteSpots/(17).jpeg", place: "Oia Village",         rating: "4.7", prompt: "Best spot in Santorini for the sunset?", avatar: "https://i.pravatar.cc/80?img=1" },
+  { src: "/ConsumerPgMedia/FavoriteSpots/(19).jpeg", place: "The Brando",          rating: "4.9", prompt: "Exclusive private island for a honeymoon?", avatar: "https://i.pravatar.cc/80?img=5" },
+  { src: "/ConsumerPgMedia/FavoriteSpots/(21).jpeg", place: "The Ned NYC",         rating: "4.5", prompt: "Coolest NYC rooftop on a summer night?", avatar: "https://i.pravatar.cc/80?img=25" },
 ];
 const ROW_B: DestPhoto[] = [
-  { src: "/FavoriteSpots/(23).jpeg", place: "Four Seasons Bali",   rating: "4.9", prompt: "Secluded Bali resort with rice-terrace views?", avatar: "/profiles/profile2.png" },
-  { src: "/FavoriteSpots/(24).jpeg", place: "Catch LA",            rating: "4.6", prompt: "Best LA rooftop dinner with hill views?", avatar: "https://i.pravatar.cc/80?img=44" },
-  { src: "/FavoriteSpots/(21).jpeg", place: "Papaya Playa",        rating: "4.5", prompt: "Best Tulum beach club for music + food?", avatar: "/profiles/profile3.png" },
-  { src: "/FavoriteSpots/(19).jpeg", place: "Fushimi Inari",       rating: "4.8", prompt: "Best time to visit Fushimi Inari to skip crowds?", avatar: "https://i.pravatar.cc/80?img=9" },
-  { src: "/FavoriteSpots/(14).jpeg", place: "Nobu Malibu",         rating: "4.8", prompt: "Best oceanfront dinner in Malibu?", avatar: "/profiles/profile1.png" },
-  { src: "/FavoriteSpots/(17).jpeg", place: "Koh Lanta",           rating: "4.7", prompt: "Quiet Thai beach resort far from the parties?", avatar: "https://i.pravatar.cc/80?img=57" },
+  { src: "/ConsumerPgMedia/FavoriteSpots/(23).jpeg", place: "Four Seasons Bali",   rating: "4.9", prompt: "Secluded Bali resort with rice-terrace views?", avatar: "/ConsumerPgMedia/profiles/profile2.png" },
+  { src: "/ConsumerPgMedia/FavoriteSpots/(24).jpeg", place: "Catch LA",            rating: "4.6", prompt: "Best LA rooftop dinner with hill views?", avatar: "https://i.pravatar.cc/80?img=44" },
+  { src: "/ConsumerPgMedia/FavoriteSpots/(21).jpeg", place: "Papaya Playa",        rating: "4.5", prompt: "Best Tulum beach club for music + food?", avatar: "/ConsumerPgMedia/profiles/profile3.png" },
+  { src: "/ConsumerPgMedia/FavoriteSpots/(19).jpeg", place: "Fushimi Inari",       rating: "4.8", prompt: "Best time to visit Fushimi Inari to skip crowds?", avatar: "https://i.pravatar.cc/80?img=9" },
+  { src: "/ConsumerPgMedia/FavoriteSpots/(14).jpeg", place: "Nobu Malibu",         rating: "4.8", prompt: "Best oceanfront dinner in Malibu?", avatar: "/ConsumerPgMedia/profiles/profile1.png" },
+  { src: "/ConsumerPgMedia/FavoriteSpots/(17).jpeg", place: "Koh Lanta",           rating: "4.7", prompt: "Quiet Thai beach resort far from the parties?", avatar: "https://i.pravatar.cc/80?img=57" },
 ];
 
 
@@ -451,7 +451,7 @@ export default function DestinationsSection() {
                     pills. The cyan gradient on .eib-card--map stays as a
                     fallback colour. */}
                 <Image
-                  src="/bento/planner-bg-v2.png"
+                  src="/ConsumerPgMedia/bento/planner-bg-v2.png"
                   alt=""
                   fill
                   sizes="(min-width: 1200px) 560px, 90vw"
@@ -471,7 +471,7 @@ export default function DestinationsSection() {
                     the planner's hero visual where the Day pills used
                     to sit. */}
                 <Image
-                  src="/bento/planner-itinerary-v5.png"
+                  src="/ConsumerPgMedia/bento/planner-itinerary-v5.png"
                   alt="Three-day Madrid itinerary"
                   width={676}
                   height={369}
@@ -490,7 +490,7 @@ export default function DestinationsSection() {
                     Flipped horizontally so the cloud silhouette isn't
                     an exact mirror of the planner card above it. */}
                 <Image
-                  src="/bento/planner-bg-v2.png"
+                  src="/ConsumerPgMedia/bento/planner-bg-v2.png"
                   alt=""
                   fill
                   sizes="(min-width: 1200px) 560px, 90vw"
@@ -627,22 +627,22 @@ export default function DestinationsSection() {
                     (under "One model, innumerable granular ground truths"). */}
                 <div className="eib-source-chips" aria-hidden>
                   <span className="eib-source-chip eib-source-chip--1">
-                    <Image src="/bento/tiktok.png" alt="" width={56} height={56} />
+                    <Image src="/ConsumerPgMedia/bento/tiktok.png" alt="" width={56} height={56} />
                   </span>
                   <span className="eib-source-chip eib-source-chip--2">
-                    <Image src="/bento/pinterest.png" alt="" width={56} height={56} />
+                    <Image src="/ConsumerPgMedia/bento/pinterest.png" alt="" width={56} height={56} />
                   </span>
                   <span className="eib-source-chip eib-source-chip--3">
-                    <Image src="/bento/google-maps.png" alt="" width={56} height={56} />
+                    <Image src="/ConsumerPgMedia/bento/google-maps.png" alt="" width={56} height={56} />
                   </span>
                   <span className="eib-source-chip eib-source-chip--4">
-                    <Image src="/bento/google-docs.png" alt="" width={56} height={56} />
+                    <Image src="/ConsumerPgMedia/bento/google-docs.png" alt="" width={56} height={56} />
                   </span>
                   <span className="eib-source-chip eib-source-chip--5">
-                    <Image src="/bento/apple-notes.png" alt="" width={56} height={56} />
+                    <Image src="/ConsumerPgMedia/bento/apple-notes.png" alt="" width={56} height={56} />
                   </span>
                   <span className="eib-source-chip eib-source-chip--6">
-                    <Image src="/bento/instagram.png" alt="" width={56} height={56} />
+                    <Image src="/ConsumerPgMedia/bento/instagram.png" alt="" width={56} height={56} />
                   </span>
                 </div>
               </div>
@@ -655,7 +655,7 @@ export default function DestinationsSection() {
                     Import tile — sits as a decorative backdrop behind
                     the centred title. */}
                 <Image
-                  src="/bento/save-bg.png"
+                  src="/ConsumerPgMedia/bento/save-bg.png"
                   alt=""
                   fill
                   sizes="(min-width: 1200px) 280px, 50vw"
@@ -1840,21 +1840,54 @@ export default function DestinationsSection() {
         }
       `}</style>
 
+      {/* Section title above the two scrolling rows — matches the 44px
+          Axiforma h2 used by "and everything in between" so the page
+          reads as a stack of sibling sections each anchored by the same
+          heading scale. Centered + content-bounds for desktop ≥1024px,
+          left-aligned + reduced size on mobile (≤640px) so it scans
+          like a section opener rather than a centered banner.
+          Top padding (100 → matches the previous marquee paddingTop so
+          the bento-to-title gap is preserved) sits ABOVE the title; the
+          marquee container below now opens at 36px so the title→rows
+          rhythm reads as a single unit. */}
+      <div
+        style={{
+          textAlign: "center",
+          paddingTop: 100,
+          maxWidth: 1287,
+          width: "calc(100% - 2.5rem)",
+          margin: "0 auto",
+          opacity: vis ? 1 : 0,
+          transition: "opacity 0.8s ease-out 0.15s",
+        }}
+      >
+        <h2
+          style={{
+            fontFamily: "Axiforma, -apple-system, BlinkMacSystemFont, sans-serif",
+            fontSize: 44,
+            fontWeight: 590,
+            color: "#000000",
+            letterSpacing: "-0.02em",
+            margin: 0,
+          }}
+        >
+          What people are asking
+        </h2>
+      </div>
+
       {/* Two scrolling photo rows */}
       <div
         style={{
           display: "flex",
           flexDirection: "column",
           /* Inter-row gap + outer vertical paddings reduced ~25%
-             (were 20 / 60 / 60). With the previous CyclingTitle block
-             above this row removed, the top padding is bumped from
-             45 → 100 so the marquees keep clear breathing room from
-             the bento above (otherwise they read as butted up against
-             the bottom-most bento card). */
+             (were 20 / 60 / 60). The previous paddingTop of 100 moved
+             up to the section title above; this container now opens at
+             36px so the title and the rows read as one block. */
           gap: 15,
           opacity: vis ? 1 : 0,
           transition: "opacity 0.8s ease-out 0.15s",
-          paddingTop: 100,
+          paddingTop: 36,
           paddingBottom: 45,
         }}
       >

@@ -76,7 +76,7 @@ const CONTACT_HERO_MASK =
 const CONTACT_HERO_SIZES = "100vw";
 
 const { props: contactHeroDesktopProps } = getImageProps({
-  src: "/contactbackimg.png",
+  src: "/ContactBg.png",
   alt: "",
   width: 1881,
   height: 836,

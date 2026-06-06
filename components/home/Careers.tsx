@@ -25,7 +25,7 @@ import Image from "next/image";
 import { useMediaWarm } from "@/components/ui/MediaPrefetcher";
 // Static import → AVIF via the optimizer (was a raw 1.8 MB <img>), real
 // blur-up placeholder, and intrinsic dimensions (no layout shift).
-import hiringWorldMap from "@/public/hiring-humans/hiringWorldMap.png";
+import hiringWorldMap from "@/public/HomePgMedia/hiringWorldMap.png";
 
 // ─── Walking figure types ────────────────────────────────────────────────────
 
@@ -169,7 +169,7 @@ function ArrowDots({ className = "" }: { className?: string }) {
 // ─── Team-locations map ──────────────────────────────────────────────────────
 //
 // Hand-drawn world map asset with DC + Madrid pinned in brand blue
-// (/public/hiring-humans/hiringWorldMap.png). Rendered as a real <img> so the
+// (/public/HomePgMedia/hiringWorldMap.png). Rendered as a real <img> so the
 // pencil-sketch detail (ships, compass rose, coastlines) reads cleanly
 // at any width. Sized via CSS — width: 100%, height auto — to scale
 // responsively inside the .careers-map wrapper.

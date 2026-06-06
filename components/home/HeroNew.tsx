@@ -392,10 +392,10 @@ export function HeroNew() {
         imageSizes="100vw"
         fetchPriority="high"
       />
-      {/* Desktop background — /HomeHero.png. */}
+      {/* Desktop background — /HomeHeroBg.png. */}
       <Image
         className="hn-bg hn-bg-desktop"
-        src="/HomeHero.png"
+        src="/HomeHeroBg.png"
         alt=""
         fill
         sizes="100vw"

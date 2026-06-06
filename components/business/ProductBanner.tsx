@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { ImageWithFallback } from "@/components/ui/ImageWithFallback";
 import { useMediaWarm } from "@/components/ui/MediaPrefetcher";
-import businessArtBG from "@/public/businessArtBGEnhance.png";
+import businessArtBG from "@/public/BusinessPgMedia/businessArtBGEnhance.png";
 
 export default function ProductBanner() {
   const sectionRef = useRef<HTMLElement>(null);

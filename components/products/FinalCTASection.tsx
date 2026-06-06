@@ -7,7 +7,7 @@ import StoreBadges from "@/components/products/StoreBadges";
 import "@/components/products/how-it-works-tokens.css";
 import { useMediaWarm } from "@/components/ui/MediaPrefetcher";
 // Static import → AVIF + blur-up for the 2.2 MB globe backdrop.
-import globeEnding from "@/public/consumer-final-cta-elio-ending.png";
+import globeEnding from "@/public/ConsumerPgMedia/consumer-final-cta-elio-ending.png";
 
 // Floating discovery-card overlays on the globe. Each card is one of
 // four visual variants matching the consumer page's pinned-UI design:
@@ -27,11 +27,11 @@ const DISCOVERY_CARDS: DiscoveryCard[] = [
   {
     type: "photo",
     label: "group trips",
-    img: "/FavoriteSpots/(20).jpeg",
+    img: "/ConsumerPgMedia/FavoriteSpots/(20).jpeg",
     avatars: [
-      "/David.png",
+      "/CompanyPgMedia/David.png",
       "https://i.pravatar.cc/80?img=35",
-      "/profiles/profile2.png",
+      "/ConsumerPgMedia/profiles/profile2.png",
       "https://i.pravatar.cc/80?img=44",
     ],
     left: 380,
@@ -42,11 +42,11 @@ const DISCOVERY_CARDS: DiscoveryCard[] = [
   {
     type: "photo",
     label: "activities",
-    img: "/FavoriteSpots/(17).jpeg",
+    img: "/ConsumerPgMedia/FavoriteSpots/(17).jpeg",
     avatars: [
-      "/Alex.jpg",
+      "/CompanyPgMedia/Alex.png",
       "https://i.pravatar.cc/80?img=7",
-      "/profiles/profile3.png",
+      "/ConsumerPgMedia/profiles/profile3.png",
     ],
     left: 1310,
     top: 470,
@@ -58,7 +58,7 @@ const DISCOVERY_CARDS: DiscoveryCard[] = [
     label: "Restaurants",
     placeName: "Panaria",
     placeSub: "calm cafe",
-    img: "/FavoriteSpots/(14).jpeg",
+    img: "/ConsumerPgMedia/FavoriteSpots/(14).jpeg",
     left: 700,
     top: 1030,
     rot: 0,
@@ -67,7 +67,7 @@ const DISCOVERY_CARDS: DiscoveryCard[] = [
   {
     type: "stacked",
     label: "trending places",
-    imgs: ["/FavoriteSpots/(19).jpeg", "/FavoriteSpots/(22).jpeg", "/FavoriteSpots/(21).jpeg"],
+    imgs: ["/ConsumerPgMedia/FavoriteSpots/(19).jpeg", "/ConsumerPgMedia/FavoriteSpots/(22).jpeg", "/ConsumerPgMedia/FavoriteSpots/(21).jpeg"],
     left: 1020,
     top: 480,
     rot: -2,
@@ -77,7 +77,7 @@ const DISCOVERY_CARDS: DiscoveryCard[] = [
     type: "place-only",
     placeName: "Lupita",
     placeSub: "tapas bar",
-    img: "/FavoriteSpots/(23).jpeg",
+    img: "/ConsumerPgMedia/FavoriteSpots/(23).jpeg",
     left: 980,
     top: 950,
     rot: 0,
