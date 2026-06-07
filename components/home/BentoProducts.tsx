@@ -213,12 +213,18 @@ video.bp-bg {
   background: #FAFAFA;
 }
 @media (min-width: 1024px) {
-  /* Desktop: ::before (z-index 1) now sits OVER the full-bleed photo (z 0) and
-     UNDER the text (z 2). Left tile (Columbus) gets a frosted blur over the
-     whole image; right tile (Elio) gets a top-down scrim only (no blur) so the
-     white brand text reads against the bright sky. */
+  /* Desktop: ::before (z-index 1) sits OVER the full-bleed photo (z 0) and
+     UNDER the text (z 2). It now carries a strong PER-PRODUCT BRAND WASH so the
+     tile reads in its own brand hue (instead of both reading as the same light
+     sky-blue) while the photo texture still shows through. Columbus = navy wash
+     (#0B1342 → accent #028DE3) kept frosted; Elio = bright-blue wash
+     (#0A7BE6 → sky #5FBFF1), no blur so the cloud texture reads through. */
   .bp-card--columbus::before {
-    background: rgba(7, 22, 50, 0.22);
+    background: linear-gradient(
+      160deg,
+      rgba(11, 19, 66, 0.80) 0%,
+      rgba(2, 141, 227, 0.50) 100%
+    );
     -webkit-backdrop-filter: blur(60px);
     backdrop-filter: blur(60px);
     /* A backdrop-filter element is NOT clipped by the card's rounded
@@ -228,10 +234,9 @@ video.bp-bg {
   }
   .bp-card--elio::before {
     background: linear-gradient(
-      to bottom,
-      rgba(7, 22, 50, 0.34) 0%,
-      rgba(7, 22, 50, 0.10) 34%,
-      rgba(7, 22, 50, 0) 60%
+      160deg,
+      rgba(10, 123, 230, 0.62) 0%,
+      rgba(95, 191, 241, 0.42) 100%
     );
   }
 }
