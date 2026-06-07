@@ -103,8 +103,8 @@ const CONTENT: Partial<Record<IndustryId, IndustryContent>> = {
     prompt:
       "Show me which neighborhoods in Amsterdam have seen the largest rent increases over the past 5 years",
     recap:
-      "Here are the Amsterdam buurten with the steepest free-sector rent growth over the past five years",
-    panelTitle: "Top 4 Buurten by Free-Sector Rent Growth",
+      "Here are the Amsterdam neighborhoods with the steepest free-sector rent growth over the past five years",
+    panelTitle: "Top 4 Neighborhoods by Free-Sector Rent Growth",
     panelSubtitle: "Last 5 Years",
     items: [
       { rank: 1, label: "De Pijp-Noord", delta: "+28.4%" },
@@ -113,17 +113,17 @@ const CONTENT: Partial<Record<IndustryId, IndustryContent>> = {
       { rank: 4, label: "Oostelijke Eilanden", delta: "+19.3%" },
     ],
     takeaway:
-      "Rent growth concentrates in tram-served buurten with tight new-build pipelines; independent business turnover lags the price rise by 18–24 months.",
+      "Rent growth concentrates in tram-served neighborhoods with tight new-build pipelines; independent business turnover lags the price rise by 18–24 months.",
     reportTitle:
-      "Amsterdam Buurten Rent Growth: Tram-Served Pipeline Convergence",
+      "Amsterdam Neighborhoods Rent Growth: Tram-Served Pipeline Convergence",
     reportMeta: "Site Suitability Report · Residential · Jan 2026",
     reportBody:
-      "Free-sector rent growth across Amsterdam's central buurten has concentrated in tram-served corridors over the past five years, with De Pijp-Noord, Oud-West, Indische Buurt, and Oostelijke Eilanden each posting double-digit cumulative gains. The pattern aligns with tight new-build pipelines along the 24- and 25-tram lines, where municipal woningbouw permits have lagged demand by 18–24 months.",
+      "Free-sector rent growth across Amsterdam's central neighborhoods has concentrated in tram-served corridors over the past five years, with De Pijp-Noord, Oud-West, Indische Buurt, and Oostelijke Eilanden each posting double-digit cumulative gains. The pattern aligns with tight new-build pipelines along the 24- and 25-tram lines, where municipal woningbouw permits have lagged demand by 18–24 months.",
     mapLabel: "Amsterdam · Free-Sector Rent Δ (5y)",
     mapBackground:
       "radial-gradient(circle at 52% 60%, #b32a1c 0%, #d35a30 18%, #e88a3a 38%, #f4b465 58%, #fce0a7 80%, #f8efdb 100%)",
     aiSuggestion:
-      "Consider adding a vacancy-rate overlay to confirm pipeline tightness across the four leading buurten.",
+      "Consider adding a vacancy-rate overlay to confirm pipeline tightness across the four leading neighborhoods.",
   },
   "commercial-real-estate": {
     breadcrumb: ["French Flagship Rollout", "36-Month Sequence"],

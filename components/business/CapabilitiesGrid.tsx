@@ -15,23 +15,23 @@ import { FileSearch, Headphones, Zap, type LucideIcon } from "lucide-react";
 
 const ITEMS: { title: string; subtitle: string; Icon: LucideIcon }[] = [
   {
-    title: "Agent research reports",
+    title: "Agent Research Report",
     subtitle:
-      "Describe what you’re looking for, then select what type of professional report you want. Our agents will investigate.",
+      "Describe what you’re looking for and select the professional report you want. Our agents will investigate.",
     /* FileSearch — a document being inspected; combines the "agent
        investigates" + "report" sides of the capability. */
     Icon: FileSearch,
   },
   {
-    title: "24/7 Human support",
-    subtitle: "Access Columbus’ personal support on any part of your process.",
+    title: "24/7 Human Support",
+    subtitle: "Get personal support whenever you need it.",
     /* Headphones — universal customer-support glyph. */
     Icon: Headphones,
   },
   {
-    title: "Light-speed due diligence",
+    title: "Light-speed Due Diligence",
     subtitle:
-      "Input a parcel, select the type of report you want. Our agents will complete due diligence in minutes.",
+      "Input a land parcel, and choose the analysis you need. Our agents will complete due diligence in minutes.",
     /* Zap — lightning bolt for "light-speed". */
     Icon: Zap,
   },
@@ -111,9 +111,12 @@ export default function CapabilitiesGrid() {
                   transition: `opacity 0.6s ease ${0.06 * i}s, transform 0.6s ease ${0.06 * i}s`,
                 }}
               >
-                {/* Per-tile icon — original near-black glyph on a soft grey
-                    (#FAFAFA) circle. On hover the accent circle floods the tile
-                    and the icon flips to white (see .cap-tile:hover rules). */}
+                {/* Per-tile icon — accent-coloured glyph on a soft grey
+                    (#FAFAFA) circle. Uses the site accent token
+                    (--color-accent, #6094C1) so it tracks the navbar arrows,
+                    hover states, and any future accent retint. On hover the
+                    accent circle floods the tile and the icon flips to white
+                    (see .cap-tile:hover rules). */}
                 <span
                   aria-hidden
                   className="cap-icon"
@@ -125,7 +128,7 @@ export default function CapabilitiesGrid() {
                     justifyContent: "center",
                     borderRadius: "50%",
                     backgroundColor: "#FAFAFA",
-                    color: "#0A1342",
+                    color: "var(--color-accent)",
                     flexShrink: 0,
                   }}
                 >

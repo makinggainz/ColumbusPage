@@ -598,8 +598,8 @@ const RESIDENTIAL_COPY: IndustryCopy = {
     dataCardMax: "$280,000",
     dataCardSecondary: "Single-Family Buyer Density",
     userQuery: "Show me which neighborhoods in Amsterdam have seen the largest rent increases over the past 5 years",
-    responseIntro: "Here are the Amsterdam buurten with the steepest free-sector rent growth over the past five years",
-    listTitle: "Top 4 Buurten by Free-Sector Rent Growth",
+    responseIntro: "Here are the Amsterdam neighborhoods with the steepest free-sector rent growth over the past five years",
+    listTitle: "Top 4 Neighborhoods by Free-Sector Rent Growth",
     listSubtitle: "Last 5 Years",
     listItems: [
       { rank: 1, name: "De Pijp-Noord", pct: "+28.4%" },
@@ -607,7 +607,7 @@ const RESIDENTIAL_COPY: IndustryCopy = {
       { rank: 3, name: "Indische Buurt", pct: "+21.6%" },
       { rank: 4, name: "Oostelijke Eilanden", pct: "+19.3%" },
     ],
-    keyTakeaway: "Rent growth concentrates in tram-served buurten with tight new-build pipelines; independent business turnover lags the price rise by 18–24 months.",
+    keyTakeaway: "Rent growth concentrates in tram-served neighborhoods with tight new-build pipelines; independent business turnover lags the price rise by 18–24 months.",
   },
 };
 

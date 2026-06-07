@@ -444,46 +444,11 @@ export default function DestinationsSection() {
                 column ratio independently of the other. */}
             <div className="eib-col eib-col--right">
               <div className="eib-row eib-row--top">
-              {/* Planner — sky-blue gradient backdrop (set on
-                  .eib-card--map); title + Day pills on the left. */}
-              <div className="eib-card eib-card--map">
-                {/* Cloud-sky backdrop sitting beneath the heading + day
-                    pills. The cyan gradient on .eib-card--map stays as a
-                    fallback colour. */}
-                <Image
-                  src="/ConsumerPgMedia/bento/planner-bg-v2.png"
-                  alt=""
-                  fill
-                  sizes="(min-width: 1200px) 560px, 90vw"
-                  loading={warm ? "eager" : "lazy"}
-                  fetchPriority={warm ? "low" : undefined}
-                  className="eib-planner-bg"
-                />
-                <div className="eib-text eib-text--over">
-                  <div className="eib-title-row">
-                    <CalendarDays size={22} strokeWidth={2} className="eib-title-icon" aria-hidden />
-                    <h3 className="eib-title eib-title--hero">Elio can plan a trip for you</h3>
-                  </div>
-                  <p className="eib-sub">An AI travel planner that takes all the stress out of trip planning.</p>
-                </div>
-                {/* Three-day itinerary stack — a removebg PNG floated in
-                    the centre of the card so the trip artefact reads as
-                    the planner's hero visual where the Day pills used
-                    to sit. */}
-                <Image
-                  src="/ConsumerPgMedia/bento/planner-itinerary-v5.png"
-                  alt="Three-day Madrid itinerary"
-                  width={676}
-                  height={369}
-                  className="eib-planner-itinerary"
-                  sizes="(min-width: 1200px) 540px, 80vw"
-                  loading={warm ? "eager" : "lazy"}
-                  fetchPriority={warm ? "low" : undefined}
-                />
-              </div>
-
               {/* Friends — chat content on the left, planatrip phone
-                  mockup peeking out of the bottom-right corner. */}
+                  mockup peeking out of the bottom-right corner. Swapped
+                  to the LEFT column per design; the wider-column rule on
+                  .eib-row--top was reversed to keep this tile in the
+                  wider track. */}
               <div className="eib-card eib-card--chat">
                 {/* Same cloud-sky backdrop the planner card uses, so the
                     Friends tile reads as part of the same sky band.
@@ -502,7 +467,7 @@ export default function DestinationsSection() {
                   <div className="eib-chat-side">
                     <div className="eib-title-row">
                       <Users size={20} strokeWidth={2} className="eib-title-icon" aria-hidden />
-                      <h3 className="eib-title">Plan a trip together<br />with your friends</h3>
+                      <h3 className="eib-title eib-title--hero">Plan a trip together<br />with your friends</h3>
                     </div>
                     <div className="eib-friends-row">
                       {[profileSydney, profileNatalie, profileSofiee].map((src, i) => (
@@ -586,6 +551,45 @@ export default function DestinationsSection() {
                     />
                   </div>
                 </div>
+              </div>
+
+              {/* Planner — sky-blue gradient backdrop (set on
+                  .eib-card--map); title + itinerary stack. Swapped to the
+                  RIGHT column per design. */}
+              <div className="eib-card eib-card--map">
+                {/* Cloud-sky backdrop sitting beneath the heading + day
+                    pills. The cyan gradient on .eib-card--map stays as a
+                    fallback colour. */}
+                <Image
+                  src="/ConsumerPgMedia/bento/planner-bg-v2.png"
+                  alt=""
+                  fill
+                  sizes="(min-width: 1200px) 560px, 90vw"
+                  loading={warm ? "eager" : "lazy"}
+                  fetchPriority={warm ? "low" : undefined}
+                  className="eib-planner-bg"
+                />
+                <div className="eib-text eib-text--over">
+                  <div className="eib-title-row">
+                    <CalendarDays size={22} strokeWidth={2} className="eib-title-icon" aria-hidden />
+                    <h3 className="eib-title eib-title--hero">Elio can plan a trip for you</h3>
+                  </div>
+                  <p className="eib-sub">An AI travel planner that takes all the stress out of trip planning.</p>
+                </div>
+                {/* Three-day itinerary stack — a removebg PNG floated in
+                    the centre of the card so the trip artefact reads as
+                    the planner's hero visual where the Day pills used
+                    to sit. */}
+                <Image
+                  src="/ConsumerPgMedia/bento/planner-itinerary-v5.png"
+                  alt="Three-day Madrid itinerary"
+                  width={676}
+                  height={369}
+                  className="eib-planner-itinerary"
+                  sizes="(min-width: 1200px) 540px, 80vw"
+                  loading={warm ? "eager" : "lazy"}
+                  fetchPriority={warm ? "low" : undefined}
+                />
               </div>
 
               </div>{/* /.eib-row--top */}
@@ -735,11 +739,14 @@ export default function DestinationsSection() {
         }
         /* Top row — Friends is 35px wider than Planner (was 15px). The
            extra 20px each way gives the Friends tile more room for its
-           "3 places added" trip-summary card without crowding the phone. */
+           "3 places added" trip-summary card without crowding the phone.
+           Cards were swapped in source order (Friends now first / LEFT,
+           Planner second / RIGHT), so the wider track moved to the first
+           column too. */
         .eib-row--top {
           grid-template-columns:
-            calc(50% - 7.5px - 35px)
-            calc(50% - 7.5px + 35px);
+            calc(50% - 7.5px + 35px)
+            calc(50% - 7.5px - 35px);
         }
         /* Bottom row — Save spans 2/3 of the row, Free-forever 1/3
            (mirrors the previous 4:2 column-span ratio). */

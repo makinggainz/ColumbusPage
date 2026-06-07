@@ -75,8 +75,8 @@ const CONTENT: Partial<Record<IndustryId, DashboardItem[]>> = {
       kind: "chat",
     },
     {
-      title: "Amsterdam Buurten Rent Growth",
-      body: "Cross-referenced free-sector rent growth against tram-line corridor density across 24 Amsterdam buurten; surfaced 4 high-growth pockets led by De Pijp-Noord at +28.4%, with takeaway on new-build pipeline tightness over a 5-year window.",
+      title: "Amsterdam Neighborhoods Rent Growth",
+      body: "Cross-referenced free-sector rent growth against tram-line corridor density across 24 Amsterdam neighborhoods; surfaced 4 high-growth pockets led by De Pijp-Noord at +28.4%, with takeaway on new-build pipeline tightness over a 5-year window.",
       date: "May 18, 2026",
       visibility: "private",
       kind: "chat",

@@ -26,8 +26,8 @@ const RESIDENTIAL_MAP_CHAT = {
   userQuery:
     "Show me which neighborhoods in Amsterdam have seen the largest rent increases over the past 5 years",
   responseIntro:
-    "Here are the Amsterdam buurten with the steepest free-sector rent growth over the past five years",
-  listTitle: "Top 4 Buurten by Free-Sector Rent Growth",
+    "Here are the Amsterdam neighborhoods with the steepest free-sector rent growth over the past five years",
+  listTitle: "Top 4 Neighborhoods by Free-Sector Rent Growth",
   listSubtitle: "Last 5 Years",
   listItems: [
     { rank: 1, name: "De Pijp-Noord", pct: "+28.4%" },
@@ -36,7 +36,7 @@ const RESIDENTIAL_MAP_CHAT = {
     { rank: 4, name: "Oostelijke Eilanden", pct: "+19.3%" },
   ],
   keyTakeaway:
-    "Rent growth concentrates in tram-served buurten with tight new-build pipelines; independent business turnover lags the price rise by 18–24 months.",
+    "Rent growth concentrates in tram-served neighborhoods with tight new-build pipelines; independent business turnover lags the price rise by 18–24 months.",
 };
 
 /* Each feature auto-advances after this long; the expanded item's
@@ -185,13 +185,13 @@ const FEATURES = [
   {
     title: "Map Chat",
     subtitle:
-      "Chart your own expedition.\nIntuitive, yet powerful map interface. Find answers, make visuals and more.",
+      "Chart your own expedition.\nChat with Columbus to find answers, make visuals and more.",
     Icon: SearchBubbleIco,
   },
   {
     title: "Reports",
     subtitle:
-      "Send our fleet to discover.\nOur AI agents will investigate and produce finding reports.",
+      "Send our fleet to discover.\nOur AI agents will investigate and report their findings",
     Icon: PenSquareIco,
   },
   {
@@ -202,7 +202,7 @@ const FEATURES = [
   },
   {
     title: "Dashboard",
-    subtitle: "Your captain's view.",
+    subtitle: "Your captain's view.\nAll your projects in one place.",
     Icon: GridIco,
   },
 ] as const;
@@ -278,7 +278,7 @@ export default function ComparisonSection() {
     >
       <style>{CMP_CSS}</style>
       <div
-        className="ent-content-bounds grid grid-cols-1 lg:grid-cols-[380px_1fr] gap-10 lg:gap-0 lg:items-stretch"
+        className="ent-content-bounds grid grid-cols-1 lg:grid-cols-[400px_1fr] gap-10 lg:gap-0 lg:items-stretch"
         style={{
           opacity: entered ? 1 : 0,
           transform: entered ? "translateY(0)" : "translateY(16px)",

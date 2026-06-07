@@ -18,10 +18,10 @@ import { GridSection, gl } from "../home/ContentGrid";
 const RED = "#7F1D1D";
 
 const PAIN_POINTS: { text: React.ReactNode; Icon: LucideIcon }[] = [
-  { text: "A single site selection report takes your team weeks to months.", Icon: Clock },
+  { text: "A single site selection report takes your team weeks to months to complete.", Icon: Clock },
   { text: "Legacy GIS requires specialists to operate their bulky complex apps.", Icon: DollarSign },
   { text: "Your analysts spend 80% of their time finding, cleaning and organizing data.", Icon: Filter },
-  { text: <>Finding the <em>right</em> data to support your research is too difficult.</>, Icon: MapPinOff },
+  { text: <>Sourcing the <em>right</em> data to support your research is needlessly difficult.</>, Icon: MapPinOff },
   { text: "You use 10 different complex apps for one single project.", Icon: LayoutGrid },
   { text: "Combining multiple types of large data on a single map is frustrating and costly.", Icon: Layers },
 ];

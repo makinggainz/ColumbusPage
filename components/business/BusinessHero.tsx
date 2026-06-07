@@ -416,7 +416,7 @@ export default function BusinessHero() {
             overlay's box and horizontally centred on the viewport. White
             ink; the browser handles wrap. */}
         <p className="hero-bg-bottom-fade-text">
-          {"Columbus Pro is a new type of business map platform to find new sites, due diligence and any other research. We make exploration and discovery faster, cheaper. See it in practice."}
+          {"Columbus Pro is a new kind of mapping platform built for site selection, due diligence, and location research. We make exploration and discovery easier and cheaper. See it in action."}
         </p>
       </div>
       {/* ── Text block ── */}

@@ -43,7 +43,7 @@ const CSS = `
   text-decoration: none;
   transition: color 150ms ease;
 }
-.mg-badge:hover { color: #154ACC; }
+.mg-badge:hover { color: var(--color-accent); }
 .mg-badge-label { display: flex; flex-direction: column; text-align: left; line-height: 1.1; }
 .mg-badge-l1 { font-size: 10px; letter-spacing: 0.02em; }
 .mg-badge-l2 { font-size: 14px; font-weight: 500; }
@@ -62,7 +62,7 @@ const CSS = `
 /* Light variant — white pill with dark text, for use over photo
    backgrounds (consumer hero). Hover stays in the cyan band. */
 .mg-badge--light { background: #ffffff; color: #0B1342; }
-.mg-badge--light:hover { color: #154ACC; }
+.mg-badge--light:hover { color: var(--color-accent); }
 `;
 
 export default function StoreBadges({
