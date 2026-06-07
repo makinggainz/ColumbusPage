@@ -519,13 +519,13 @@ video.bp-bg {
   .bp-card--elio::after {
     box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.05);
   }
-  /* Photo tiles: the notch's hairline treatment (its #E7E7F1 border + the
-     corner fillets) was tuned for the old light #FAFAFA card surface. Over the
-     full-bleed photo the fillets — transparent-centred radial gradients meant
-     to ease the cut onto a light surface — leave a visible crescent/line of
-     photo at the corners, and the border draws a gray hairline. Drop the
-     border and remove the fillets entirely so the notch is a clean white tab
-     sitting flush over the photo (it keeps its own rounded corners). */
+  /* Photo tiles: the notch's hairline (its #E7E7F1 border + the #E7E7F1 stop
+     baked into the corner fillets) was tuned for the old light #FAFAFA card
+     surface — over the full-bleed photo it draws a glitchy gray line at the
+     cut corners. Drop the border, and recolour the fillets to a clean
+     transparent→white ramp. The fillets are KEPT (they round the cut-out's
+     concave corners to match the card's 13px radius); only the gray hairline
+     is removed, so the corners stay rounded with no stray line. */
   .bp-card--columbus .bp-notch,
   .bp-card--elio .bp-notch {
     border-color: transparent;
@@ -534,7 +534,11 @@ video.bp-bg {
   .bp-card--columbus .bp-notch::after,
   .bp-card--elio .bp-notch::before,
   .bp-card--elio .bp-notch::after {
-    display: none;
+    background: radial-gradient(
+      circle at left bottom,
+      rgba(255, 255, 255, 0) 12.5px,
+      #FFFFFF 13.5px
+    );
   }
 }
 
