@@ -61,7 +61,7 @@ const ROW_B: DestPhoto[] = [
 
 
 /* Bookmark glyph — tucked to the right of each search-result row in
-   the "Search for exactly…" bento card. Inherits its outline colour
+   the "Search the way you think" bento card. Inherits its outline colour
    from the surrounding text so the icon weight tracks the result-name
    typography. */
 function BookmarkIcon() {
@@ -372,7 +372,7 @@ export default function DestinationsSection() {
                     the top center of the phone screen. */}
                 <div className="eib-phone-notch" aria-hidden />
                 <div className="eib-phone-overlay">
-                  <h3 className="eib-title eib-title--hero eib-phone-title">Search for exactly<br />what you&rsquo;re looking for</h3>
+                  <h3 className="eib-title eib-title--hero eib-phone-title">Search the way<br />you think</h3>
                   <div className="eib-search-mock">
                     <div className="eib-search-bar">
                       <span className="eib-search-icon" aria-hidden>🔍</span>
@@ -464,11 +464,14 @@ export default function DestinationsSection() {
                   className="eib-planner-bg eib-planner-bg--flip"
                 />
                 <div className="eib-chat-grid">
+                  {/* Title spans the full width across the top of the tile
+                      (a direct grid child) so it spreads out instead of being
+                      boxed into the narrow left column. */}
+                  <div className="eib-title-row">
+                    <Users size={20} strokeWidth={2} className="eib-title-icon" aria-hidden />
+                    <h3 className="eib-title eib-title--hero">Plan a trip together<br />with your friends</h3>
+                  </div>
                   <div className="eib-chat-side">
-                    <div className="eib-title-row">
-                      <Users size={20} strokeWidth={2} className="eib-title-icon" aria-hidden />
-                      <h3 className="eib-title eib-title--hero">Plan a trip together<br />with your friends</h3>
-                    </div>
                     <div className="eib-friends-row">
                       {[profileSydney, profileNatalie, profileSofiee].map((src, i) => (
                         <Image
@@ -572,7 +575,7 @@ export default function DestinationsSection() {
                 <div className="eib-text eib-text--over">
                   <div className="eib-title-row">
                     <CalendarDays size={22} strokeWidth={2} className="eib-title-icon" aria-hidden />
-                    <h3 className="eib-title eib-title--hero">Elio can plan a trip for you</h3>
+                    <h3 className="eib-title">Elio can plan a trip for you</h3>
                   </div>
                   <p className="eib-sub">An AI travel planner that takes all the stress out of trip planning.</p>
                 </div>
@@ -1055,24 +1058,40 @@ export default function DestinationsSection() {
           z-index: 1;
           display: grid;
           grid-template-columns: 1fr auto;
-          gap: 16px;
+          grid-template-rows: auto 1fr;
+          gap: 8px 16px;
           height: 100%;
           align-items: stretch;
         }
+        /* Title row spans the full width across the TOP of the tile, over both
+           the content column and the phone, so it spreads out rather than
+           being boxed into the narrow left column. */
+        .eib-card--chat .eib-chat-grid > .eib-title-row {
+          grid-column: 1 / -1;
+          grid-row: 1;
+          padding: 24px 24px 0;
+        }
+        @media (min-width: 1024px) {
+          .eib-card--chat .eib-chat-grid > .eib-title-row { padding: 32px 32px 0; }
+        }
         .eib-chat-side {
+          grid-row: 2;
+          grid-column: 1;
           display: flex;
           flex-direction: column;
           gap: 12px;
           min-width: 0;
-          padding: 24px 0 24px 24px;
+          padding: 0 0 24px 24px;
         }
         @media (min-width: 1024px) {
-          .eib-chat-side { padding: 32px 0 32px 32px; }
+          .eib-chat-side { padding: 0 0 32px 32px; }
         }
         /* Phone mock — rounded top corners + a top/left/right border,
            NO bottom border so the device hangs off the bottom edge of
            the card. */
         .eib-chat-phone {
+          grid-row: 2;
+          grid-column: 2;
           position: relative;
           align-self: stretch;
           display: flex;
@@ -1680,13 +1699,13 @@ export default function DestinationsSection() {
             position: static;
           }
           .eib-chat-side {
-            padding: 24px 24px 0 24px;
+            padding: 0;
           }
-          /* Left column = title only. Friends-row (avatars) + trip-card
-             stack on the right side, both absolute-positioned. Title is
-             constrained so it can't wrap into the right column area. */
-          .eib-card--chat .eib-chat-side > .eib-title-row {
-            max-width: 140px;
+          /* Title is now a direct grid child (block flow here). Its top/left
+             inset comes from the base .eib-title-row padding; constrain its
+             width so it can't wrap into the absolute right-column content. */
+          .eib-card--chat .eib-title-row {
+            max-width: 164px;
           }
           /* Avatars row anchored top-right. Removed margin-top so the
              positioning math is clean. */
