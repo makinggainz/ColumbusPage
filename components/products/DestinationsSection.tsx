@@ -1870,7 +1870,7 @@ export default function DestinationsSection() {
             margin: 0,
           }}
         >
-          What people are asking
+          What people are finding
         </h2>
       </div>
 

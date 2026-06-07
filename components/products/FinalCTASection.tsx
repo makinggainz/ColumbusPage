@@ -45,7 +45,7 @@ const DISCOVERY_CARDS: DiscoveryCard[] = [
     img: "/ConsumerPgMedia/ExampleSpots/(17).jpeg",
     avatars: [
       "/CompanyPgMedia/Alex.png",
-      "/ConsumerPgMedia/ProfilePics/profile4.png",
+      "/ConsumerPgMedia/ProfilePics/profile4.jpg",
       "/ConsumerPgMedia/ProfilePics/profile3.png",
     ],
     left: 1310,
@@ -484,6 +484,12 @@ function DiscoveryCardView({ p, leftPx, topPx, leftPct, topPct, mobile, visible 
                 loading={warm ? "eager" : "lazy"}
                 fetchPriority={warm ? "low" : undefined}
                 style={{
+                  /* Pin width/height in CSS too — the global preflight
+                     `img { height: auto }` otherwise overrides the height
+                     attribute and a non-square source renders as an oval.
+                     Forcing a square box + objectFit:cover keeps it a circle. */
+                  width: sz.avatar,
+                  height: sz.avatar,
                   borderRadius: "9999px",
                   border: `${sz.avatarBorder}px solid #FFFFFF`,
                   objectFit: "cover",

@@ -101,6 +101,8 @@ export default function CapabilitiesGrid() {
                 key={item.title}
                 className="cap-tile group flex flex-col items-start text-left"
                 style={{
+                  /* Tile fill removed — plain white; the soft grey now lives in
+                     the icon badge instead. */
                   backgroundColor: "#FFFFFF",
                   padding: "clamp(24px, 3vw, 40px)",
                   gap: 16,
@@ -109,22 +111,25 @@ export default function CapabilitiesGrid() {
                   transition: `opacity 0.6s ease ${0.06 * i}s, transform 0.6s ease ${0.06 * i}s`,
                 }}
               >
-                {/* Per-tile icon — lucide glyph in Columbus blue. Sized
-                    at 40px so the icon footprint matches the previous
-                    placeholder square. */}
+                {/* Per-tile icon — original near-black glyph on a soft grey
+                    (#FAFAFA) circle. On hover the accent circle floods the tile
+                    and the icon flips to white (see .cap-tile:hover rules). */}
                 <span
                   aria-hidden
+                  className="cap-icon"
                   style={{
                     display: "inline-flex",
-                    width: 40,
-                    height: 40,
+                    width: 52,
+                    height: 52,
                     alignItems: "center",
-                    justifyContent: "flex-start",
+                    justifyContent: "center",
+                    borderRadius: "50%",
+                    backgroundColor: "#FAFAFA",
                     color: "#0A1342",
                     flexShrink: 0,
                   }}
                 >
-                  <item.Icon size={36} strokeWidth={1.6} absoluteStrokeWidth />
+                  <item.Icon size={26} strokeWidth={1.8} absoluteStrokeWidth />
                 </span>
                 <h3
                   className="cap-tile-title text-[20px] md:text-[22px] font-semibold leading-[1.2]"
@@ -183,6 +188,30 @@ export default function CapabilitiesGrid() {
               down for small brand marks (44px row, 48px gap). Real PNGs
               from public/BusinessPgMedia/VettedPartners/. */}
           <style>{`
+            /* Hover: the grey circle behind the icon expands to wash the whole
+               tile in that same #FAFAFA grey; content stays dark above it. */
+            .cap-tile { position: relative; overflow: hidden; }
+            .cap-tile > * { position: relative; z-index: 1; }
+            .cap-tile::before {
+              content: "";
+              position: absolute;
+              z-index: 0;
+              /* Centred on the icon badge: padding + half the 52px badge. */
+              top: calc(clamp(24px, 3vw, 40px) + 26px);
+              left: calc(clamp(24px, 3vw, 40px) + 26px);
+              width: 52px;
+              height: 52px;
+              margin: -26px 0 0 -26px;
+              border-radius: 50%;
+              background: #FAFAFA;
+              transform: scale(0);
+              transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+              pointer-events: none;
+            }
+            .cap-tile:hover::before { transform: scale(26); }
+            @media (prefers-reduced-motion: reduce) {
+              .cap-tile::before { transition: none; }
+            }
             .cap-logo-mask {
               -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
               mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);

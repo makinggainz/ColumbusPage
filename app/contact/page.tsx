@@ -287,6 +287,9 @@ function ContactPageInner() {
   const [charCount, setCharCount] = useState(0);
   const [mounted, setMounted] = useState(false);
   const [tabKey, setTabKey] = useState(0);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const [honeypot, setHoneypot] = useState("");
   const cardRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -321,11 +324,60 @@ function ContactPageInner() {
     if (name === "message") setCharCount(value.length);
   };
 
-  const handleSend = (e: React.FormEvent) => {
+  const handleSend = async (e: React.FormEvent) => {
     e.preventDefault();
-    setPhase("folding");
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    if (submitting) return;
+    setSubmitting(true);
+    setSubmitError(null);
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          tab,
+          ...form,
+          updates,
+          honeypot,
+          pageUri: window.location.href,
+          pageName: "Contact",
+        }),
+      });
+      if (!res.ok) throw new Error("failed");
+      setPhase("folding");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } catch {
+      setSubmitError("Something went wrong — please try again.");
+    } finally {
+      setSubmitting(false);
+    }
   };
+
+  const renderSubmitRow = () => (
+    <>
+      {/* Honeypot — positioned off-screen; filled by bots, invisible to users */}
+      <input
+        type="text"
+        name="website"
+        value={honeypot}
+        onChange={e => setHoneypot(e.target.value)}
+        tabIndex={-1}
+        aria-hidden="true"
+        autoComplete="off"
+        style={{ position: "absolute", left: "-9999px", top: 0, opacity: 0, pointerEvents: "none", height: 0 }}
+      />
+      <div className="flex flex-col gap-2 pt-1">
+        {submitError && (
+          <p className="text-[13px]" style={{ color: "#C0392B" }}>{submitError}</p>
+        )}
+        <div className="flex items-center gap-4">
+          <CtaButton type="submit" disabled={submitting}>
+            {submitting ? "Sending…" : "Submit"}
+          </CtaButton>
+          {!submitError && <span className="text-[13px] text-muted">We answer fast.</span>}
+        </div>
+      </div>
+    </>
+  );
 
   useEffect(() => {
     if (phase === "folding")  { const t = setTimeout(() => setPhase("bottling"), 1200); return () => clearTimeout(t); }
@@ -582,10 +634,7 @@ function ContactPageInner() {
                         By submitting, you agree with our <Link href="/terms" className="underline">Terms</Link> and <Link href="/privacy" className="underline">Privacy Policy</Link>.
                       </p>
 
-                      <div className="flex items-center gap-4 pt-1">
-                        <CtaButton type="submit">Submit</CtaButton>
-                        <span className="text-[13px] text-muted">We answer fast.</span>
-                      </div>
+                      {renderSubmitRow()}
                     </form>
                   )}
 
@@ -629,10 +678,7 @@ function ContactPageInner() {
                         By submitting, you agree with our <Link href="/terms" className="underline">Terms</Link> and <Link href="/privacy" className="underline">Privacy Policy</Link>.
                       </p>
 
-                      <div className="flex items-center gap-4 pt-1">
-                        <CtaButton type="submit">Submit</CtaButton>
-                        <span className="text-[13px] text-muted">We answer fast.</span>
-                      </div>
+                      {renderSubmitRow()}
                     </form>
                   )}
 
@@ -673,10 +719,7 @@ function ContactPageInner() {
                         By submitting, you agree with our <Link href="/terms" className="underline">Terms</Link> and <Link href="/privacy" className="underline">Privacy Policy</Link>.
                       </p>
 
-                      <div className="flex items-center gap-4 pt-1">
-                        <CtaButton type="submit">Submit</CtaButton>
-                        <span className="text-[13px] text-muted">We answer fast.</span>
-                      </div>
+                      {renderSubmitRow()}
                     </form>
                   )}
 
@@ -705,10 +748,7 @@ function ContactPageInner() {
                         By submitting, you agree with our <Link href="/terms" className="underline">Terms</Link> and <Link href="/privacy" className="underline">Privacy Policy</Link>.
                       </p>
 
-                      <div className="flex items-center gap-4 pt-1">
-                        <CtaButton type="submit">Submit</CtaButton>
-                        <span className="text-[13px] text-muted">We answer fast.</span>
-                      </div>
+                      {renderSubmitRow()}
                     </form>
                   )}
 
@@ -752,7 +792,7 @@ function ContactPageInner() {
               </p>
               <CtaButton
                 className="mt-8"
-                onClick={() => { setPhase("writing"); setForm({ firstName: "", lastName: "", email: "", role: "", message: "", companySize: "", industry: "", heardFrom: "" }); setCharCount(0); }}
+                onClick={() => { setPhase("writing"); setForm({ firstName: "", lastName: "", email: "", role: "", message: "", companySize: "", industry: "", heardFrom: "" }); setCharCount(0); setSubmitError(null); setHoneypot(""); }}
               >
                 Send another message
               </CtaButton>

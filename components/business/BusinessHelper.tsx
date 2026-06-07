@@ -641,9 +641,23 @@ export default function BusinessHelper() {
     }, 520);
   }, [draft, sendStatus, activeChatId, activeChat, updateActiveChat, titleFor]);
 
-  /* ── Form submission. No backend — capture, mark done, post a
-       confirmation bubble (no feedback prompt on the confirmation). ── */
+  /* ── Form submission. Fires a HubSpot submission in the background
+       then marks the inline form done and posts a confirmation bubble. ── */
   const onMiniFormSubmit = useCallback((_data: MiniFormData) => {
+    fetch("/api/contact", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        tab: "columbus-pro",
+        email: _data.email,
+        firstName: _data.name,
+        message: _data.message,
+        industry: _data.industry,
+        pageUri: typeof window !== "undefined" ? window.location.href : "",
+        pageName: "Business Helper Chat",
+      }),
+    }).catch(console.error);
+
     updateActiveChat((c) => {
       const updated = c.messages.map((m): Message =>
         m.kind === "form" && !m.submitted ? { ...m, submitted: true } : m,
