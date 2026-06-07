@@ -43,20 +43,20 @@ type DestPhoto = {
 // founder-curated feed. Use fresh pravatar seeds that aren't already
 // in ROW_B below.
 const ROW_A: DestPhoto[] = [
-  { src: "/ConsumerPgMedia/ExampleSpots/(14).jpeg", place: "Osteria Francescana", rating: "4.9", prompt: "Authentic Italian fine dining in Modena?", avatar: "https://i.pravatar.cc/80?img=33" },
-  { src: "/ConsumerPgMedia/ExampleSpots/(20).jpeg", place: "Hôtel du Cap",        rating: "4.8", prompt: "Most glamorous hotel on the French Riviera?", avatar: "https://i.pravatar.cc/80?img=16" },
-  { src: "/ConsumerPgMedia/ExampleSpots/(22).jpeg", place: "Mercado Central",     rating: "4.5", prompt: "Best food market in Madrid?", avatar: "https://i.pravatar.cc/80?img=11" },
-  { src: "/ConsumerPgMedia/ExampleSpots/(17).jpeg", place: "Oia Village",         rating: "4.7", prompt: "Best spot in Santorini for the sunset?", avatar: "https://i.pravatar.cc/80?img=1" },
-  { src: "/ConsumerPgMedia/ExampleSpots/(19).jpeg", place: "The Brando",          rating: "4.9", prompt: "Exclusive private island for a honeymoon?", avatar: "https://i.pravatar.cc/80?img=5" },
-  { src: "/ConsumerPgMedia/ExampleSpots/(21).jpeg", place: "The Ned NYC",         rating: "4.5", prompt: "Coolest NYC rooftop on a summer night?", avatar: "https://i.pravatar.cc/80?img=25" },
+  { src: "/ConsumerPgMedia/ExampleSpots/GoKartTokyo.jpeg",     place: "GoKart Shibuya",       rating: "4.9", prompt: "Interesting activities in Tokyo",              avatar: "/ConsumerPgMedia/ProfilePics/profile2.png" },
+  { src: "/ConsumerPgMedia/ExampleSpots/WestminsterBridge1.png",place: "Westminster Bridge",   rating: "4.6", prompt: "Cool instagram photo spots in London",         avatar: "https://i.pravatar.cc/80?img=44" },
+  { src: "/ConsumerPgMedia/ExampleSpots/FranceBeach.png",      place: "Villefranche beach",   rating: "4.5", prompt: "Affordable but beautiful beaches in France",   avatar: "/ConsumerPgMedia/ProfilePics/profile3.png" },
+  { src: "/ConsumerPgMedia/ExampleSpots/RioCafe.png",          place: "Café 18 do Forte",     rating: "4.8", prompt: "Co-working cafes in Rio",                      avatar: "https://i.pravatar.cc/80?img=9" },
+  { src: "/ConsumerPgMedia/ExampleSpots/BouncyCastle.jpeg",    place: "Bouncy Castle Boutique", rating: "4.8", prompt: "Fun stuff to do today for kids",             avatar: "/ConsumerPgMedia/ProfilePics/profile1.png" },
+  { src: "/ConsumerPgMedia/ExampleSpots/RioCarnival.jpeg",     place: "Carnival of Rio",      rating: "4.7", prompt: "Festivals happening today in Rio?",            avatar: "https://i.pravatar.cc/80?img=57" },
 ];
 const ROW_B: DestPhoto[] = [
-  { src: "/ConsumerPgMedia/ExampleSpots/(23).jpeg", place: "Four Seasons Bali",   rating: "4.9", prompt: "Secluded Bali resort with rice-terrace views?", avatar: "/ConsumerPgMedia/ProfilePics/profile2.png" },
-  { src: "/ConsumerPgMedia/ExampleSpots/(24).jpeg", place: "Catch LA",            rating: "4.6", prompt: "Best LA rooftop dinner with hill views?", avatar: "https://i.pravatar.cc/80?img=44" },
-  { src: "/ConsumerPgMedia/ExampleSpots/(21).jpeg", place: "Papaya Playa",        rating: "4.5", prompt: "Best Tulum beach club for music + food?", avatar: "/ConsumerPgMedia/ProfilePics/profile3.png" },
-  { src: "/ConsumerPgMedia/ExampleSpots/(19).jpeg", place: "Fushimi Inari",       rating: "4.8", prompt: "Best time to visit Fushimi Inari to skip crowds?", avatar: "https://i.pravatar.cc/80?img=9" },
-  { src: "/ConsumerPgMedia/ExampleSpots/(14).jpeg", place: "Nobu Malibu",         rating: "4.8", prompt: "Best oceanfront dinner in Malibu?", avatar: "/ConsumerPgMedia/ProfilePics/profile1.png" },
-  { src: "/ConsumerPgMedia/ExampleSpots/(17).jpeg", place: "Koh Lanta",           rating: "4.7", prompt: "Quiet Thai beach resort far from the parties?", avatar: "https://i.pravatar.cc/80?img=57" },
+  { src: "/ConsumerPgMedia/ExampleSpots/ZlataPraha.png",       place: "Zlata Praha",          rating: "4.9", prompt: "Fancy + cheap date spot in Prague?",            avatar: "https://i.pravatar.cc/80?img=33" },
+  { src: "/ConsumerPgMedia/ExampleSpots/ThriftMarketParis.png",place: "Marché de Saint-Ouen", rating: "4.8", prompt: "Best thrift market in Paris",                  avatar: "https://i.pravatar.cc/80?img=16" },
+  { src: "/ConsumerPgMedia/ExampleSpots/FairmontBaku.png",     place: "Little Venice Baku",   rating: "4.5", prompt: "Best spot in Baku for a sunset?",              avatar: "https://i.pravatar.cc/80?img=11" },
+  { src: "/ConsumerPgMedia/ExampleSpots/TemperoDeVoinha1.png",  place: "Tempero de Voinha",    rating: "4.7", prompt: "Authentic local Brazilian spot in Madrid",     avatar: "https://i.pravatar.cc/80?img=1" },
+  { src: "/ConsumerPgMedia/ExampleSpots/JamesBond1.jpeg",       place: "Chanel event",         rating: "4.9", prompt: "Bars that feel like a James Bond movie",       avatar: "https://i.pravatar.cc/80?img=5" },
+  { src: "/ConsumerPgMedia/ExampleSpots/Palosanto.png",        place: "Palo Santo",           rating: "4.5", prompt: "Coolest NYC rooftop on a summer night",        avatar: "https://i.pravatar.cc/80?img=25" },
 ];
 
 
@@ -1843,17 +1843,16 @@ export default function DestinationsSection() {
       {/* Section title above the two scrolling rows — matches the 44px
           Axiforma h2 used by "and everything in between" so the page
           reads as a stack of sibling sections each anchored by the same
-          heading scale. Centered + content-bounds for desktop ≥1024px,
-          left-aligned + reduced size on mobile (≤640px) so it scans
-          like a section opener rather than a centered banner.
-          Top padding (100 → matches the previous marquee paddingTop so
-          the bento-to-title gap is preserved) sits ABOVE the title; the
-          marquee container below now opens at 36px so the title→rows
-          rhythm reads as a single unit. */}
+          heading scale.
+          paddingTop mirrors the bottom→next-title gap below the rows:
+          marquee container's paddingBottom (45px) + the next section's
+          paddingTop (min(105px, --section-py)). Both gaps now compute to
+          the same value at every breakpoint, so the bento↘title spacing
+          matches the rows↘"Elio is on desktop and mobile" spacing. */}
       <div
         style={{
           textAlign: "center",
-          paddingTop: 100,
+          paddingTop: "calc(45px + min(105px, var(--section-py)))",
           maxWidth: 1287,
           width: "calc(100% - 2.5rem)",
           margin: "0 auto",
