@@ -3,23 +3,21 @@ import { COLUMBUS_SUGGESTIONS, serializeKb } from "@/lib/columbus-kb";
 /**
  * AI answer engine for the in-page Columbus helper (components/business/
  * BusinessHelper.tsx). Every typed question is answered here, grounded in the
- * Columbus knowledge base plus the curated Q&A pairs — this replaced the old
- * brittle keyword matcher. The model answers from that context or declines;
- * ANY miss (model declines, upstream error, timeout, or no key configured)
- * returns `{ answer: null }`, which the client treats as "show the contact
- * form". No key, model, or KB ever ships to the browser, and this only runs
- * on a send, so page load is untouched.
+ * Columbus knowledge base plus the curated Q&A pairs. The model answers from
+ * that context or declines; ANY miss (model declines, upstream error, timeout,
+ * or no key configured) returns `{ answer: null }`, which the client treats as
+ * "show the contact form". No key, model, or KB ever ships to the browser, and
+ * this only runs on a send, so page load is untouched.
  */
 
-const GROQ_URL = "https://api.groq.com/openai/v1/chat/completions";
-/* 8B (instant) is the free-tier default: it has a far larger free tokens-per-
-   day budget than 70B (which is only ~100k TPD free — exhausted in a few dozen
-   of our ~2.3k-token calls). The strict master prompt biases behavior and the
-   deterministic output guards (deHedge, redactNames, isDecline) enforce the
-   hard rules regardless of model. Only invoked when a visitor sends a question
-   — never on page load. Overridable via env (set GROQ_MODEL=llama-3.3-70b-
-   versatile if on a paid Groq tier); the endpoint is OpenAI-compatible. */
-const MODEL = process.env.GROQ_MODEL || "llama-3.1-8b-instant";
+const GEMINI_API_BASE =
+  "https://generativelanguage.googleapis.com/v1beta/models";
+/* gemini-2.5-flash: frontier-tier quality at fast/cheap pricing. Thinking is
+   disabled (thinkingBudget:0) — unnecessary for short support answers and
+   keeps latency and cost low. Override via GEMINI_MODEL env var if needed
+   (e.g. gemini-2.5-pro for heavier reasoning). Check ai.google.dev for the
+   latest stable model ID if this needs updating. */
+const MODEL = process.env.GEMINI_MODEL || "gemini-2.5-flash";
 const REQUEST_TIMEOUT_MS = 9000;
 /* What the model emits when the KB doesn't cover the question. The client
    never sees this — it's mapped to a null answer (→ contact form). Kept as a
@@ -120,8 +118,17 @@ const GIS_NAMES = [
   "google earth",
   "mapbox",
 ];
-/* Provider/model tokens — these reveal "what powers you", so strip them. */
-const PROVIDER_TOKENS = ["groq", "llama-3.3", "llama-3.1", "llama 3", "llama"];
+/* Provider/model tokens — these reveal "what powers you", so strip them.
+   "gemini" is already covered by AI_TOOL_NAMES above; these catch the Google
+   provider name and model version strings that may slip through separately. */
+const PROVIDER_TOKENS = [
+  "google ai",
+  "google deepmind",
+  "gemini-2.5",
+  "gemini flash",
+  "gemini-2",
+  "google",
+];
 
 function escapeRe(s: string): string {
   return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
@@ -216,9 +223,10 @@ function jsonAnswer(answer: string | null): Response {
 }
 
 export async function POST(req: Request): Promise<Response> {
-  const apiKey = process.env.GROQ_API_KEY;
+  const apiKey = process.env.GEMINI_API_KEY;
   /* No key configured → behave exactly like before: the client falls back
-     to the contact form. Lets the feature ship dark until a key is set. */
+     to the keyword matcher then the contact form. Lets the feature ship dark
+     until a key is set. */
   if (!apiKey) return jsonAnswer(null);
 
   let turns: Turn[] = [];
@@ -246,40 +254,48 @@ export async function POST(req: Request): Promise<Response> {
   try {
     const ctrl = new AbortController();
     const timer = setTimeout(() => ctrl.abort(), REQUEST_TIMEOUT_MS);
-    const res = await fetch(GROQ_URL, {
+    /* Gemini REST API: system prompt goes in system_instruction (separate from
+       contents), and the assistant role is "model" not "assistant". */
+    const url = `${GEMINI_API_BASE}/${MODEL}:generateContent`;
+    const res = await fetch(url, {
       method: "POST",
       headers: {
         "content-type": "application/json",
-        authorization: `Bearer ${apiKey}`,
+        "x-goog-api-key": apiKey,
       },
       body: JSON.stringify({
-        model: MODEL,
-        temperature: 0.1,
-        /* Answers are 1-3 sentences; 200 is comfortable headroom. Lower =
-           less reserved against Groq's per-minute/day token budget. */
-        max_tokens: 200,
-        messages: [{ role: "system", content: buildSystemPrompt() }, ...turns],
+        system_instruction: {
+          parts: [{ text: buildSystemPrompt() }],
+        },
+        contents: turns.map((t) => ({
+          role: t.role === "assistant" ? "model" : "user",
+          parts: [{ text: t.content }],
+        })),
+        generationConfig: {
+          temperature: 0.1,
+          maxOutputTokens: 200,
+          /* Disable thinking: unnecessary for short support answers and keeps
+             latency and cost low. Remove or increase thinkingBudget if the
+             model needs to reason through a complex question. */
+          thinkingConfig: { thinkingBudget: 0 },
+        },
       }),
       signal: ctrl.signal,
     });
     clearTimeout(timer);
     if (!res.ok) {
-      /* Surface upstream failures (esp. 429 rate-limit / token-budget) in the
-         server log instead of swallowing them silently — the client still
-         degrades to the keyword fallback / contact form. */
-      console.warn(`[columbus-chat] groq ${res.status}`);
+      console.warn(`[columbus-chat] gemini ${res.status}`);
       return jsonAnswer(null);
     }
     const data = (await res.json()) as {
-      choices?: { message?: { content?: string } }[];
+      candidates?: { content?: { parts?: { text?: string }[] } }[];
     };
-    const raw = data.choices?.[0]?.message?.content?.trim() ?? "";
+    const raw =
+      data.candidates?.[0]?.content?.parts?.[0]?.text?.trim() ?? "";
     if (!raw || isDecline(raw)) return jsonAnswer(null);
     const cleaned = redactNames(sanitizeAnswer(deHedge(raw)));
     return jsonAnswer(cleaned || null);
   } catch (e) {
-    /* Upstream error, abort/timeout, or bad JSON — treat as "no answer" so
-       the client shows the contact form instead of surfacing an error. */
     console.warn("[columbus-chat] upstream error", e);
     return jsonAnswer(null);
   }
