@@ -129,6 +129,12 @@ const CSS = `
   object-position: center;
   z-index: 0;
 }
+/* Columbus: anchor the cover-crop to the top of the photo so more of the sky
+   shows (the frame sits higher over the image); the skyline/trees at the
+   bottom are cropped — they sit behind the product visual anyway. */
+.bp-card--columbus .bp-bg {
+  object-position: center top;
+}
 /* The Research banner's backdrop is a <video> rather than an <Image fill>, so
    it needs the absolute full-bleed box next/image would otherwise provide. The
    object-fit/position + desktop top-fade mask still come from .bp-bg above. */
@@ -201,7 +207,33 @@ video.bp-bg {
    overlay + text block, not from the image. */
 .bp-card--columbus::before,
 .bp-card--elio::before {
-  background: #FFFFFF;
+  /* Mobile (<1024px) keeps the contained layout, so this stays the #FAFAFA
+     surface that sits behind the contained photo band. Desktop repurposes it
+     as a legibility layer over the full-bleed photo (see media query below). */
+  background: #FAFAFA;
+}
+@media (min-width: 1024px) {
+  /* Desktop: ::before (z-index 1) now sits OVER the full-bleed photo (z 0) and
+     UNDER the text (z 2). Left tile (Columbus) gets a frosted blur over the
+     whole image; right tile (Elio) gets a top-down scrim only (no blur) so the
+     white brand text reads against the bright sky. */
+  .bp-card--columbus::before {
+    background: rgba(7, 22, 50, 0.22);
+    -webkit-backdrop-filter: blur(60px);
+    backdrop-filter: blur(60px);
+    /* A backdrop-filter element is NOT clipped by the card's rounded
+       overflow:hidden, so it paints square corners over the rounded card.
+       Round it to match (13px) so the bottom corners stay clipped. */
+    border-radius: 13px;
+  }
+  .bp-card--elio::before {
+    background: linear-gradient(
+      to bottom,
+      rgba(7, 22, 50, 0.34) 0%,
+      rgba(7, 22, 50, 0.10) 34%,
+      rgba(7, 22, 50, 0) 60%
+    );
+  }
 }
 
 /* Columbus + Elio: flex column so the bg image wrapper can sit below the
@@ -210,6 +242,9 @@ video.bp-bg {
 .bp-card--elio {
   display: flex;
   flex-direction: column;
+  /* Card surface matched to the business-page super-section panel (#FAFAFA).
+     This is the bg the masked photo lets show through at the top text area. */
+  background-color: #FAFAFA;
 }
 
 /* Contained bg image — sits 20px below the text block (= 20px below the
@@ -222,7 +257,10 @@ video.bp-bg {
      margins that match the card's per-breakpoint padding (28 / 32 / 40).
      Top keeps the +20px gap from the CTA. */
   margin: 20px -28px -28px;
-  border-radius: 13px;
+  /* Square top corners — the contained photo's top edge reads as a flat band
+     under the text block; bottom corners stay 13px to meet the card's rounded
+     bottom (the left/right/bottom bleed is clipped by the card anyway). */
+  border-radius: 0 0 13px 13px;
   overflow: hidden;
   z-index: 2;
   aspect-ratio: 16 / 9;
@@ -231,16 +269,25 @@ video.bp-bg {
   .bp-bg-wrap { margin: 20px -32px -32px; }
 }
 @media (min-width: 1024px) {
+  /* Full-bleed backdrop — the photo fills the ENTIRE card (inset:0) with the
+     text labels overlaid on top (text-block z-index 2 sits above this z 0).
+     Replaces the old "contained band below the text" treatment. The card's
+     overflow:hidden + 13px radius rounds the photo to the card corners. */
   .bp-bg-wrap {
-    margin: 20px -40px -40px;
-    flex: 1 1 auto;
+    position: absolute;
+    inset: 0;
+    margin: 0;
+    border-radius: 13px;
+    z-index: 0;
+    flex: none;
+    /* Cancel the contained band's 16/9 ratio so inset:0 stretches the wrapper
+       (and the <Image fill> inside it) to the card's FULL height, not just the
+       top ~356px the aspect-ratio would otherwise cap it at. */
     aspect-ratio: auto;
-    min-height: 0;
+    width: 100%;
+    height: 100%;
   }
-  /* The top-of-image opacity fade was designed to blend a full-bleed
-     photo into the card's white surface behind the text. The contained
-     wrapper has its own hard top edge now, so the mask just softens the
-     wrapper's top — undo it for the two contained tiles. */
+  /* Full-bleed photo is crisp top-to-bottom — drop the top opacity fade. */
   .bp-card--columbus .bp-bg,
   .bp-card--elio .bp-bg {
     -webkit-mask-image: none;
@@ -465,6 +512,30 @@ video.bp-bg {
     pointer-events: none;
     z-index: 2;
   }
+  /* Columbus + Elio borders matched to the business-page super-section panel:
+     2px ring in rgba(0,0,0,0.05) (vs the default 1px #E7E7F1). Kept as an inset
+     box-shadow so it adds no layout box, and at the bento's 13px corner. */
+  .bp-card--columbus::after,
+  .bp-card--elio::after {
+    box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.05);
+  }
+  /* Photo tiles: the notch's hairline treatment (its #E7E7F1 border + the
+     corner fillets) was tuned for the old light #FAFAFA card surface. Over the
+     full-bleed photo the fillets — transparent-centred radial gradients meant
+     to ease the cut onto a light surface — leave a visible crescent/line of
+     photo at the corners, and the border draws a gray hairline. Drop the
+     border and remove the fillets entirely so the notch is a clean white tab
+     sitting flush over the photo (it keeps its own rounded corners). */
+  .bp-card--columbus .bp-notch,
+  .bp-card--elio .bp-notch {
+    border-color: transparent;
+  }
+  .bp-card--columbus .bp-notch::before,
+  .bp-card--columbus .bp-notch::after,
+  .bp-card--elio .bp-notch::before,
+  .bp-card--elio .bp-notch::after {
+    display: none;
+  }
 }
 
 .bp-brand {
@@ -630,6 +701,33 @@ video.bp-bg {
   .bp-cta-arrow { transition: none; }
 }
 
+/* Desktop: Columbus + Elio sit over full-bleed photos, so flip the brand
+   text / wordmarks / logos to white with a soft shadow for legibility. The
+   CTA pill stays its dark filled surface (reads over any backdrop). Mobile
+   keeps its dark-on-#FAFAFA contained treatment untouched. */
+@media (min-width: 1024px) {
+  .bp-card--columbus .bp-name,
+  .bp-card--columbus .bp-tagline,
+  .bp-card--elio .bp-tagline {
+    color: #FFFFFF;
+    text-shadow: 0 1px 12px rgba(0, 0, 0, 0.28);
+  }
+  /* Columbus globe mark is a flat navy glyph — recolour to solid white
+     (overrides the inline COLUMBUS_LOGO_FILTER navy tint). */
+  .bp-card--columbus .bp-logo {
+    filter: brightness(0) invert(1) !important;
+  }
+  /* Elio wordmark image: white instead of the blue (#059CFA) tint. */
+  .bp-elio-name {
+    filter: brightness(0) invert(1);
+  }
+  /* Elio brand icon is full-colour 3D art — keep its colours, just lift it
+     off the photo with a drop shadow. */
+  .bp-card--elio .bp-logo {
+    filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.30));
+  }
+}
+
 /* Mobile (<1024px): the visual sits in normal document flow at the
    bottom of the card, scaling to the card's content width. Aspect
    ratio is preserved (height: auto + max-width: 100% on the inner
@@ -753,7 +851,7 @@ const PRODUCTS: Product[] = [
   {
     cellClass: "bp-card--research",
     href: "/research",
-    logo: "/ResearchPgMedia/lgm-globe-icon.png",
+    logo: "/TechnologyPageImages/lgm-globe-icon.png",
     name: "Research",
     tagline: "Building the Large Geospatial Model",
     audience: "For the curious",
@@ -888,7 +986,7 @@ export function BentoProducts() {
                        maps feel alive" image was dropped because the
                        body tagline below already says it. */
                     <Image
-                      src="/ConsumerPgMedia/elioNameHero.png"
+                      src="/consumer/elioNameHero.png"
                       alt={p.name}
                       className="bp-elio-name"
                       width={260}

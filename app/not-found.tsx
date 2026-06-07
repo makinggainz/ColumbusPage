@@ -80,10 +80,10 @@ export default function NotFound() {
           This page doesn&apos;t exist — but there&apos;s plenty more to
           explore.
         </p>
-        {/* CTA — mirrors the canonical content pill (company contact CTA):
-            rounded-full, bg-cta surface, dot-arrow glyph, var(--color-accent).
-            Hover ink + glyph use `text-accent` to match the nav's "Try Elio"
-            CTA hover colour (was a hardcoded #154ACC blue — wrong token). */}
+        {/* CTA — canonical content pill (rounded-full, bg-cta surface,
+            dot-arrow glyph). Uses the design-system `text-accent` token
+            (--color-accent #6094C1) so the glyph matches the navbar arrows
+            exactly and tracks the single source of truth. */}
         <Link
           href="/"
           className="group mt-10 inline-flex items-center gap-2.5 rounded-full bg-cta px-7 py-3.5 text-sm leading-none text-white transition-colors hover:text-accent"
