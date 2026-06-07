@@ -213,19 +213,31 @@ video.bp-bg {
   background: #FAFAFA;
 }
 @media (min-width: 1024px) {
-  /* Desktop: ::before (z-index 1) is now the card's OPAQUE per-product BRAND
-     FIELD covering the whole tile (text sits over it at z 2). The photo is no
-     longer full-bleed — it's a contained panel in the bottom half (see
-     .bp-bg-wrap below, z 2) that frames the product mockup, with small brand
-     gutters showing around it. Columbus = navy gradient (#0B1342 → #0C5AA8);
-     Elio = bright-blue gradient (#0A7BE6 → #5FBFF1). */
+  /* Desktop: ::before (z-index 1) sits OVER the full-bleed photo (z 0) and
+     UNDER the text (z 2). It now carries a strong PER-PRODUCT BRAND WASH so the
+     tile reads in its own brand hue (instead of both reading as the same light
+     sky-blue) while the photo texture still shows through. Columbus = navy wash
+     (#0B1342 → accent #028DE3) kept frosted; Elio = bright-blue wash
+     (#0A7BE6 → sky #5FBFF1), no blur so the cloud texture reads through. */
   .bp-card--columbus::before {
-    background: linear-gradient(160deg, #0B1342 0%, #0C5AA8 100%);
+    background: linear-gradient(
+      160deg,
+      rgba(11, 19, 66, 0.80) 0%,
+      rgba(2, 141, 227, 0.50) 100%
+    );
+    -webkit-backdrop-filter: blur(60px);
+    backdrop-filter: blur(60px);
+    /* A backdrop-filter element is NOT clipped by the card's rounded
+       overflow:hidden, so it paints square corners over the rounded card.
+       Round it to match (13px) so the bottom corners stay clipped. */
     border-radius: 13px;
   }
   .bp-card--elio::before {
-    background: linear-gradient(160deg, #0A7BE6 0%, #5FBFF1 100%);
-    border-radius: 13px;
+    background: linear-gradient(
+      160deg,
+      rgba(10, 123, 230, 0.62) 0%,
+      rgba(95, 191, 241, 0.42) 100%
+    );
   }
 }
 
@@ -262,25 +274,23 @@ video.bp-bg {
   .bp-bg-wrap { margin: 20px -32px -32px; }
 }
 @media (min-width: 1024px) {
-  /* Contained photo panel — the photo fills only the BOTTOM HALF of the card as
-     a rounded panel that frames the product mockup, with small brand-coloured
-     gutters on the sides and bottom (the brand ::before field shows through
-     them). z 2 puts it over the brand field (z 1); the mockup (z 3) sits on
-     top of it. Top starts at 44% so the brand field + text own the top half. */
+  /* Full-bleed backdrop — the photo fills the ENTIRE card (inset:0) with the
+     text labels overlaid on top (text-block z-index 2 sits above this z 0).
+     Replaces the old "contained band below the text" treatment. The card's
+     overflow:hidden + 13px radius rounds the photo to the card corners. */
   .bp-bg-wrap {
     position: absolute;
-    inset: auto;
-    top: 38%;
-    left: 16px;
-    right: 16px;
-    bottom: 16px;
+    inset: 0;
     margin: 0;
     border-radius: 13px;
-    z-index: 2;
+    z-index: 0;
     flex: none;
+    /* Cancel the contained band's 16/9 ratio so inset:0 stretches the wrapper
+       (and the <Image fill> inside it) to the card's FULL height, not just the
+       top ~356px the aspect-ratio would otherwise cap it at. */
     aspect-ratio: auto;
-    width: auto;
-    height: auto;
+    width: 100%;
+    height: 100%;
   }
   /* Full-bleed photo is crisp top-to-bottom — drop the top opacity fade. */
   .bp-card--columbus .bp-bg,
@@ -709,6 +719,7 @@ video.bp-bg {
   .bp-card--columbus .bp-tagline,
   .bp-card--elio .bp-tagline {
     color: #FFFFFF;
+    text-shadow: 0 1px 12px rgba(0, 0, 0, 0.28);
   }
   /* Columbus globe mark is a flat navy glyph — recolour to solid white
      (overrides the inline COLUMBUS_LOGO_FILTER navy tint). */
@@ -752,14 +763,11 @@ video.bp-bg {
 @media (min-width: 1024px) {
   .bp-visual {
     position: absolute;
-    /* Inset inside the bottom photo panel so the sky frames the mockup on the
-       top + sides, with the brand gutter showing below. */
-    left: 52px;
-    right: 52px;
-    bottom: 28px;
+    left: 40px;
+    right: 40px;
+    bottom: -2%;
     margin-top: 0;
     width: auto;
-    z-index: 3;
   }
   .bp-card:hover .bp-visual { transform: translateY(-18px); }
 }
