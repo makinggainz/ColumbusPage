@@ -603,7 +603,7 @@ function ContactPageInner() {
 
                       <label className="flex flex-col gap-1.5">
                         {labelEl("Your name")}
-                        <input type="text" name="companySize" required value={form.companySize} onChange={handleChange} className="cf-input" placeholder="Number of employees" />
+                        <input type="text" name="firstName" required value={form.firstName} onChange={handleChange} className="cf-input" placeholder="Your full name" />
                       </label>
 
                       <label className="flex flex-col gap-1.5">

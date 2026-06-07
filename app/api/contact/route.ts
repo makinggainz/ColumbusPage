@@ -46,13 +46,16 @@ export async function POST(req: NextRequest) {
   push("email", body.email);
   push("firstname", body.firstName);
   push("lastname", body.lastName);
-  push("message", body.message);
+  // "description" is a standard HubSpot contact property — "message" is not,
+  // which caused HubSpot to reject submissions silently.
+  push("description", body.message);
   push("industry", body.industry);
-  // Columbus Pro "Your name / Number of employees" field
+  // Columbus Pro "Number of employees" field
   push("numemployees", body.companySize);
   // Role interest (careers) or organization name (investors)
   push("jobtitle", body.role);
-  // Attribution — create this as a custom contact property in HubSpot if missing
+  // Attribution — requires a custom contact property named "how_did_you_hear_about_us"
+  // in HubSpot (Settings → Properties → Create property). Skipped if missing/empty.
   push("how_did_you_hear_about_us", body.heardFrom);
 
   const hsPayload: Record<string, unknown> = {
@@ -88,7 +91,9 @@ export async function POST(req: NextRequest) {
 
   if (!res.ok) {
     const text = await res.text().catch(() => "");
-    console.error(`[contact] HubSpot ${res.status}:`, text);
+    console.error(
+      `[contact] HubSpot ${res.status} — fields sent: [${fields.map(f => f.name).join(", ")}] — body: ${text}`,
+    );
     // Forward 4xx as 400 (client config issue), 5xx as 502
     return NextResponse.json(
       { error: "Submission failed" },
@@ -96,5 +101,6 @@ export async function POST(req: NextRequest) {
     );
   }
 
+  console.log(`[contact] ok — fields saved: [${fields.map(f => f.name).join(", ")}]`);
   return NextResponse.json({ ok: true });
 }
