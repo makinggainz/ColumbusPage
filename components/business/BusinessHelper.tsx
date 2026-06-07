@@ -213,6 +213,14 @@ async function fetchColumbusAnswer(turns: AiTurn[]): Promise<string | null> {
   }
 }
 
+/* The AI master prompt defers pricing and uncovered specifics to "talk to the
+   founders". When an answer makes that suggestion, surface the inline contact
+   form right after it so the visitor can act on it in one step. Matches
+   "founder"/"founders" in any casing. */
+function suggestsFounderContact(answer: string): boolean {
+  return /\bfounders?\b/i.test(answer);
+}
+
 function loadChats(): Chat[] {
   if (typeof window === "undefined") return [];
   try {
@@ -563,20 +571,36 @@ export default function BusinessHelper() {
               (m) => m.id !== typingMsg.id,
             );
             if (answer) {
-              return {
-                ...c,
-                messages: [
-                  ...withoutTyping,
-                  {
-                    id: nextId(),
-                    kind: "text",
-                    role: "assistant",
-                    text: answer,
-                    ts: Date.now(),
-                    feedback: null,
-                  },
-                ],
-              };
+              const next: Message[] = [
+                ...withoutTyping,
+                {
+                  id: nextId(),
+                  kind: "text",
+                  role: "assistant",
+                  text: answer,
+                  ts: Date.now(),
+                  feedback: null,
+                },
+              ];
+              /* If the answer suggests talking to the founders, surface the
+                 contact form right below it (once per chat) so they can act
+                 on it immediately. */
+              if (
+                suggestsFounderContact(answer) &&
+                !withoutTyping.some((m) => m.kind === "form")
+              ) {
+                next.push({
+                  id: nextId(),
+                  kind: "form",
+                  role: "assistant",
+                  preamble:
+                    "Share a few details below and our founders will get back to you.",
+                  prefilledMessage: text,
+                  submitted: false,
+                  ts: Date.now(),
+                });
+              }
+              return { ...c, messages: next };
             }
             /* Secondary fallback: the keyword matcher. If it recognizes the
                question, answer from the curated canned response before we fall
@@ -2111,25 +2135,41 @@ function InlineFeedbackButton({
   onClick: () => void;
 }) {
   const [hover, setHover] = useState(false);
+  const [confirmed, setConfirmed] = useState(false);
+
+  /* On click, play the confirmation pop in place, THEN run the real handler
+     (which collapses the feedback row away) — so the animation is visible
+     before the row slides out. Guard against double taps. */
+  const handleClick = () => {
+    if (confirmed) return;
+    setConfirmed(true);
+    window.setTimeout(onClick, 340);
+  };
+
   return (
     <button
       type="button"
-      onClick={onClick}
+      onClick={handleClick}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
       aria-label={
         kind === "up" ? "Yes, it answered my question" : "No, route to the team"
       }
       style={{
+        position: "relative",
         appearance: "none",
         border: "none",
-        background: hover ? SURFACE_TINT : "transparent",
+        background: confirmed
+          ? `color-mix(in srgb, ${ACCENT} 14%, transparent)`
+          : hover
+            ? SURFACE_TINT
+            : "transparent",
         padding: 0,
         width: 22,
         height: 22,
         borderRadius: 6,
-        color: hover ? INK : MUTED,
-        cursor: "pointer",
+        color: confirmed ? ACCENT : hover ? INK : MUTED,
+        cursor: confirmed ? "default" : "pointer",
         display: "inline-flex",
         alignItems: "center",
         justifyContent: "center",
@@ -2138,7 +2178,30 @@ function InlineFeedbackButton({
         flexShrink: 0,
       }}
     >
-      <ThumbIcon up={kind === "up"} />
+      {/* Accent ring that bursts outward on confirm. */}
+      {confirmed && (
+        <span
+          aria-hidden
+          style={{
+            position: "absolute",
+            inset: -2,
+            borderRadius: 9999,
+            border: `1.5px solid ${ACCENT}`,
+            animation: "ch-thumb-ring 460ms cubic-bezier(0.32, 0.72, 0, 1) forwards",
+            pointerEvents: "none",
+          }}
+        />
+      )}
+      <span
+        style={{
+          display: "inline-flex",
+          animation: confirmed
+            ? "ch-thumb-pop 360ms cubic-bezier(0.34, 1.56, 0.64, 1)"
+            : undefined,
+        }}
+      >
+        <ThumbIcon up={kind === "up"} filled={confirmed} />
+      </span>
     </button>
   );
 }
@@ -2185,13 +2248,13 @@ function ThinkingIndicator() {
    several engines, which was throwing the rotated "down" icon off the
    canvas (the "glitched" appearance). Two paths sidesteps that entirely
    and lets each glyph sit naturally inside its 24-unit viewBox. */
-function ThumbIcon({ up }: { up: boolean }) {
+function ThumbIcon({ up, filled = false }: { up: boolean; filled?: boolean }) {
   return (
     <svg
       width="14"
       height="14"
       viewBox="0 0 24 24"
-      fill="none"
+      fill={filled ? "currentColor" : "none"}
       stroke="currentColor"
       strokeWidth="1.8"
       strokeLinecap="round"
@@ -2812,6 +2875,19 @@ const CHAT_KEYFRAMES = `
   @keyframes ch-popover {
     0% { opacity: 0; transform: translateY(-4px) scale(0.96); transform-origin: top right; }
     100% { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  /* Thumb confirmation — a springy pop on the glyph (overshoot, then
+     settle) paired with an accent ring that bursts outward and fades.
+     Same accent blue + snappy feel as the rest of the chat. */
+  @keyframes ch-thumb-pop {
+    0% { transform: scale(1); }
+    35% { transform: scale(1.4); }
+    62% { transform: scale(0.9); }
+    100% { transform: scale(1); }
+  }
+  @keyframes ch-thumb-ring {
+    0% { transform: scale(0.55); opacity: 0.5; }
+    100% { transform: scale(2.3); opacity: 0; }
   }
   /* Earth bob — a gentle rock + float while Columbus is thinking. The
      translateY swings symmetrically (+1.5px ↔ −1.5px) around the rest
