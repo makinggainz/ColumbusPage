@@ -45,7 +45,7 @@ const DISCOVERY_CARDS: DiscoveryCard[] = [
     img: "/ConsumerPgMedia/ExampleSpots/(17).jpeg",
     avatars: [
       "/CompanyPgMedia/Alex.png",
-      "https://i.pravatar.cc/80?img=7",
+      "/ConsumerPgMedia/ProfilePics/profile4.png",
       "/ConsumerPgMedia/ProfilePics/profile3.png",
     ],
     left: 1310,
