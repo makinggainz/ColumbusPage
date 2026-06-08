@@ -1,12 +1,13 @@
 "use client";
 
-import MapThumb from "./MapThumb";
+import { useIndustry } from "@/components/use-cases/industry/IndustryContext";
+import { INDUSTRY_COLOR } from "@/components/use-cases/industry/content";
 
 /* Shared card chrome for row 3 ("Better Data, Better Prices") — both
    Columbus and the competitor card use the same outer shell. Avatar circle
-   + heading on the top row, a "Market price" label below, then a map
-   thumbnail, then optional `children` (Card B intentionally renders nothing
-   below the map per the screenshot). */
+   + heading on the top row, a "Market price" label below, then a white
+   data-layer panel (a layers glyph on a white fill, replacing the old map
+   thumbnail), then optional `children`. */
 
 export type ComparisonCardProps = {
   title: string;
@@ -30,14 +31,19 @@ export default function ComparisonCard({
   priceLabel = "Market price",
   price,
   avatar,
-  mapSrc,
   mapAlt = "",
   children,
   highlighted = false,
 }: ComparisonCardProps) {
+  /* The highlighted (Columbus) card tints its layers glyph with the selected
+     industry's accent; the competitor card keeps a neutral grey. */
+  const { industryId } = useIndustry();
+  const accent = INDUSTRY_COLOR[industryId];
+  const iconColor = highlighted ? accent ?? "var(--ent-accent)" : "#52525B";
   return (
     <div
       style={{
+        position: "relative",
         background: highlighted ? "rgba(0, 129, 172, 0.06)" : "#FFFFFF",
         border: highlighted
           ? "2px solid var(--ent-accent)"
@@ -51,6 +57,33 @@ export default function ComparisonCard({
           "Axiforma, 'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif",
       }}
     >
+      {/* "Best value" badge — only on the highlighted (Columbus) card.
+          Straddles the top-left edge, tinted with the industry accent. */}
+      {highlighted && (
+        <div
+          style={{
+            position: "absolute",
+            top: -14,
+            left: 16,
+            display: "inline-flex",
+            alignItems: "center",
+            gap: 6,
+            padding: "6px 12px",
+            /* Same shape as the "Try Elio" nav CTA (rounded-button = 16px). */
+            borderRadius: "var(--radius-button)",
+            background: accent ?? "var(--ent-accent)",
+            color: "#FFFFFF",
+            fontSize: 12,
+            fontWeight: 700,
+            letterSpacing: "0.06em",
+            textTransform: "uppercase",
+            whiteSpace: "nowrap",
+          }}
+        >
+          <StarIcon />
+          Best Value
+        </div>
+      )}
       <div className="flex items-start gap-3">
         <span
           aria-hidden
@@ -106,9 +139,85 @@ export default function ComparisonCard({
         </div>
       </div>
 
-      <MapThumb src={mapSrc} alt={mapAlt} aspectRatio="4 / 3" shadow={false} />
+      {/* Competitor card (non-highlighted, the right box) gets a thinner
+          layers glyph so Columbus's stays the bolder of the two. */}
+      <LayerPanel
+        label={mapAlt}
+        strokeWidth={highlighted ? 1.6 : 1}
+        color={iconColor}
+      />
 
       {children}
     </div>
+  );
+}
+
+/* Filled star for the "Best value" badge. */
+function StarIcon() {
+  return (
+    <svg
+      width="13"
+      height="13"
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      aria-hidden
+      style={{ display: "block" }}
+    >
+      <path d="M12 2l2.9 6.26 6.1.55-4.6 4.04 1.36 6.15L12 16.9l-5.76 3.1 1.36-6.15-4.6-4.04 6.1-.55z" />
+    </svg>
+  );
+}
+
+/* White data-layer panel — replaces the old 4:3 map thumbnail at the same
+   size. A faint hairline keeps the white fill legible on the white
+   competitor card (the highlighted card's tinted fill already frames it). */
+function LayerPanel({
+  label,
+  strokeWidth,
+  color,
+}: {
+  label?: string;
+  strokeWidth: number;
+  color: string;
+}) {
+  return (
+    <div
+      role={label ? "img" : undefined}
+      aria-label={label || undefined}
+      style={{
+        width: "100%",
+        aspectRatio: "4 / 3",
+        borderRadius: "var(--ent-radius-card)",
+        background: "#FFFFFF",
+        border: "1px solid var(--ent-border-subtle)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      <LayersIcon strokeWidth={strokeWidth} color={color} />
+    </div>
+  );
+}
+
+/* Stacked-layers glyph (top plate + two sheets), centered in the panel. */
+function LayersIcon({ strokeWidth, color }: { strokeWidth: number; color: string }) {
+  return (
+    <svg
+      width="96"
+      height="96"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke={color}
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+      style={{ display: "block" }}
+    >
+      <path d="M12 2 2 7l10 5 10-5-10-5Z" />
+      <path d="m2 12 10 5 10-5" />
+      <path d="m2 17 10 5 10-5" />
+    </svg>
   );
 }
