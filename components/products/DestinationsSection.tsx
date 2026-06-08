@@ -109,19 +109,23 @@ function Marquee({ imgs, reverse }: { imgs: DestPhoto[]; reverse?: boolean }) {
     <div className="mg-dest-mask">
       <div className={`mg-dest-track${reverse ? " mg-dest-rev" : ""}`}>
         {doubled.map((p, i) => (
-          <div
+          <a
             key={i}
+            href="https://mapsgpt.es"
+            target="_blank"
+            rel="noopener noreferrer"
             className="mg-dest-card"
             style={{
+              display: "block",
               position: "relative",
               flex: "none",
               width: 304,
-              /* Marquee tile height reduced ~25% (was 208) so the
-                 scrolling photo rows are vertically compressed. */
               height: 156,
               borderRadius: 20,
               overflow: "hidden",
               border: "1px solid #E7E7F1",
+              textDecoration: "none",
+              cursor: "pointer",
             }}
           >
             <Image src={p.src} alt="" fill sizes="304px" loading={warm ? "eager" : "lazy"} fetchPriority={warm ? "low" : undefined} style={{ objectFit: "cover" }} />
@@ -232,7 +236,7 @@ function Marquee({ imgs, reverse }: { imgs: DestPhoto[]; reverse?: boolean }) {
                 }}>{p.prompt}</p>
               </div>
             </div>
-          </div>
+          </a>
         ))}
       </div>
     </div>
@@ -261,11 +265,17 @@ export default function DestinationsSection() {
   }, []);
 
   return (
-    <section ref={ref} className="section" style={{ background: "#FFFFFF", overflow: "hidden", paddingTop: 0 }}>
+    <section ref={ref} className="section" style={{ background: "#FFFFFF", overflowX: "clip", paddingTop: 0 }}>
       <style>{`
         .mg-dest-mask {
           -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
           mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+          /* Padding expands the mask's painted box so the scale(1.04)
+             hover animation (adds ~6px on each side) stays inside the
+             mask area and is not clipped. Negative margin cancels the
+             space so the visual layout is unchanged. */
+          padding: 12px 0;
+          margin: -12px 0;
         }
         .mg-dest-track {
           display: flex;

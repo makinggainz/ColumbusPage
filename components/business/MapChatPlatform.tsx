@@ -44,8 +44,10 @@ const TYPE = {
    uses the PNG's native aspect (5190/3030) so no object-cover cropping. */
 const CHAT_TOP = 9;
 const CHAT_BOTTOM = 11;
-const CHAT_LEFT = 6;
-const CHAT_RIGHT = 47;
+/* Left-side UI (chat response + input) shifted ~10px left on the 1180px card
+   (≈0.85%); both edges move together so the panel width is unchanged. */
+const CHAT_LEFT = 5.15;
+const CHAT_RIGHT = 46.15;
 
 const INPUT_TOP = 89;
 const INPUT_BOTTOM = 96;
