@@ -165,16 +165,25 @@ video.bp-bg {
 }
 @media (min-width: 1024px) {
   /* Desktop tiles are a fixed 560px with the text at the top and the
-     product visual peeking up from the bottom. Keep the tint clear through
-     the whole text block, start the darkening just below the CTA (~42%),
-     then ramp to a deeper tint at the bottom so the product display reads
-     against a darker backdrop before the eye reaches it. */
-  .bp-bg-tint {
+     contained bg+frost band sitting in the lower portion. The tint here
+     becomes the FROST: a strong per-product brand wash painted ON TOP of
+     the bg image (since .bp-bg-tint is the last child of .bp-bg-wrap,
+     painting over the <Image>). Columbus keeps a frosted blur over the
+     photo; Elio drops the blur so the cloud texture reads through. */
+  .bp-card--columbus .bp-bg-tint {
     background: linear-gradient(
-      to bottom,
-      rgba(0, 0, 0, 0) 42%,
-      rgba(0, 0, 0, 0.14) 64%,
-      rgba(0, 0, 0, 0.38) 100%
+      160deg,
+      rgba(11, 19, 66, 0.80) 0%,
+      rgba(2, 141, 227, 0.50) 100%
+    );
+    -webkit-backdrop-filter: blur(60px);
+    backdrop-filter: blur(60px);
+  }
+  .bp-card--elio .bp-bg-tint {
+    background: linear-gradient(
+      160deg,
+      rgba(10, 123, 230, 0.62) 0%,
+      rgba(95, 191, 241, 0.42) 100%
     );
   }
   /* Fade the photo's OWN opacity toward the white card surface at the top,
@@ -202,43 +211,12 @@ video.bp-bg {
   z-index: 1;
 }
 /* Solid white overlay UNDER the photo backdrop on the Columbus + Elio
-   tiles. It paints first (z 1) and the contained .bp-bg-wrap below sits
-   above it (z 2) — the card's responsive sizing flows from the white
-   overlay + text block, not from the image. */
+   tiles. It paints at z-index 1 (above the card surface, but below
+   .bp-bg-wrap at z 2 which carries the bg image + frost). This is the
+   surface the text/CTA read against at the top of the card. */
 .bp-card--columbus::before,
 .bp-card--elio::before {
-  /* Mobile (<1024px) keeps the contained layout, so this stays the #FAFAFA
-     surface that sits behind the contained photo band. Desktop repurposes it
-     as a legibility layer over the full-bleed photo (see media query below). */
-  background: #FAFAFA;
-}
-@media (min-width: 1024px) {
-  /* Desktop: ::before (z-index 1) sits OVER the full-bleed photo (z 0) and
-     UNDER the text (z 2). It now carries a strong PER-PRODUCT BRAND WASH so the
-     tile reads in its own brand hue (instead of both reading as the same light
-     sky-blue) while the photo texture still shows through. Columbus = navy wash
-     (#0B1342 → accent #028DE3) kept frosted; Elio = bright-blue wash
-     (#0A7BE6 → sky #5FBFF1), no blur so the cloud texture reads through. */
-  .bp-card--columbus::before {
-    background: linear-gradient(
-      160deg,
-      rgba(11, 19, 66, 0.80) 0%,
-      rgba(2, 141, 227, 0.50) 100%
-    );
-    -webkit-backdrop-filter: blur(60px);
-    backdrop-filter: blur(60px);
-    /* A backdrop-filter element is NOT clipped by the card's rounded
-       overflow:hidden, so it paints square corners over the rounded card.
-       Round it to match (13px) so the bottom corners stay clipped. */
-    border-radius: 13px;
-  }
-  .bp-card--elio::before {
-    background: linear-gradient(
-      160deg,
-      rgba(10, 123, 230, 0.62) 0%,
-      rgba(95, 191, 241, 0.42) 100%
-    );
-  }
+  background: #FFFFFF;
 }
 
 /* Columbus + Elio: flex column so the bg image wrapper can sit below the
@@ -247,25 +225,28 @@ video.bp-bg {
 .bp-card--elio {
   display: flex;
   flex-direction: column;
-  /* Card surface matched to the business-page super-section panel (#FAFAFA).
-     This is the bg the masked photo lets show through at the top text area. */
-  background-color: #FAFAFA;
+  /* Card surface = pure white. The bg-wrap + frost sit ABOVE this in the
+     lower portion of the card (top edge 20px below the CTA), so the upper
+     half (where text + CTA live) reads as a flat white panel. */
+  background-color: #FFFFFF;
 }
 
-/* Contained bg image — sits 20px below the text block (= 20px below the
-   CTA's bottom edge, since the CTA is the last item in the text block),
-   rounded corners, clips its own content. z-index 2 puts it above the
-   white overlay (z 1) so the photo reads above the card surface. */
+/* Contained bg image + frost — sits 20px below the text block (= 20px below
+   the CTA's bottom edge, since the CTA is the last item in the text block),
+   rounded corners, clips its own content. z-index 2 puts it above the white
+   overlay (z 1). */
 .bp-bg-wrap {
   position: relative;
   /* Bleed left/right/bottom out to the card's outer edges via negative
      margins that match the card's per-breakpoint padding (28 / 32 / 40).
      Top keeps the +20px gap from the CTA. */
   margin: 20px -28px -28px;
-  /* Square top corners — the contained photo's top edge reads as a flat band
-     under the text block; bottom corners stay 13px to meet the card's rounded
-     bottom (the left/right/bottom bleed is clipped by the card anyway). */
-  border-radius: 0 0 13px 13px;
+  /* All four corners rounded to 13px — matches the card's outer radius
+     so the contained bg band reads as a smaller, fully-rounded panel.
+     The left/right/bottom bleed past the card edge is clipped by the
+     card's own overflow:hidden, so those outer corners still tuck into
+     the card's 13px. */
+  border-radius: 13px;
   overflow: hidden;
   z-index: 2;
   aspect-ratio: 16 / 9;
@@ -274,25 +255,17 @@ video.bp-bg {
   .bp-bg-wrap { margin: 20px -32px -32px; }
 }
 @media (min-width: 1024px) {
-  /* Full-bleed backdrop — the photo fills the ENTIRE card (inset:0) with the
-     text labels overlaid on top (text-block z-index 2 sits above this z 0).
-     Replaces the old "contained band below the text" treatment. The card's
-     overflow:hidden + 13px radius rounds the photo to the card corners. */
+  /* Desktop: stay CONTAINED (not full-bleed). Flex-fills the remaining
+     card height after the text block + 20px gap, with card-edge bleed
+     on left/right/bottom via negative margins. */
   .bp-bg-wrap {
-    position: absolute;
-    inset: 0;
-    margin: 0;
-    border-radius: 13px;
-    z-index: 0;
-    flex: none;
-    /* Cancel the contained band's 16/9 ratio so inset:0 stretches the wrapper
-       (and the <Image fill> inside it) to the card's FULL height, not just the
-       top ~356px the aspect-ratio would otherwise cap it at. */
+    margin: 20px -40px -40px;
+    flex: 1 1 auto;
     aspect-ratio: auto;
-    width: 100%;
-    height: 100%;
+    min-height: 0;
   }
-  /* Full-bleed photo is crisp top-to-bottom — drop the top opacity fade. */
+  /* Contained photo no longer needs the top-opacity fade (the wrapper has
+     a hard top edge of its own). */
   .bp-card--columbus .bp-bg,
   .bp-card--elio .bp-bg {
     -webkit-mask-image: none;
@@ -710,31 +683,29 @@ video.bp-bg {
   .bp-cta-arrow { transition: none; }
 }
 
-/* Desktop: Columbus + Elio sit over full-bleed photos, so flip the brand
-   text / wordmarks / logos to white with a soft shadow for legibility. The
-   CTA pill stays its dark filled surface (reads over any backdrop). Mobile
-   keeps its dark-on-#FAFAFA contained treatment untouched. */
-@media (min-width: 1024px) {
-  .bp-card--columbus .bp-name,
-  .bp-card--columbus .bp-tagline,
-  .bp-card--elio .bp-tagline {
-    color: #FFFFFF;
-    text-shadow: 0 1px 12px rgba(0, 0, 0, 0.28);
-  }
-  /* Columbus globe mark is a flat navy glyph — recolour to solid white
-     (overrides the inline COLUMBUS_LOGO_FILTER navy tint). */
-  .bp-card--columbus .bp-logo {
-    filter: brightness(0) invert(1) !important;
-  }
-  /* Elio wordmark image: white instead of the blue (#059CFA) tint. */
-  .bp-elio-name {
-    filter: brightness(0) invert(1);
-  }
-  /* Elio brand icon is full-colour 3D art — keep its colours, just lift it
-     off the photo with a drop shadow. */
-  .bp-card--elio .bp-logo {
-    filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.30));
-  }
+/* Brand text colours on the Columbus + Elio tiles. The text sits over the
+   card's WHITE surface now (the bg image + frost is contained below the
+   CTA), so it reads in brand ink rather than white.
+
+   • Columbus tile  — logo + name + tagline all render in Columbus blue
+     (#0F173C; same navy the navbar wordmark uses). The logo already gets
+     this colour from the inline COLUMBUS_LOGO_FILTER on the <Image>, and
+     .bp-name has its own #0F173C rule above; only the tagline needs a
+     scoped override here (the default .bp-card colour is #0B1B2B).
+
+   • Elio tile      — wordmark recoloured to #00A6FF via a CSS filter
+     chain (overriding the #059CFA recipe baked into .bp-elio-name); the
+     tagline pins to Columbus blue so it reads as the same brand-blue
+     family as the Columbus tile next door. */
+.bp-card--columbus .bp-tagline,
+.bp-card--elio .bp-tagline {
+  color: #0F173C;
+}
+.bp-elio-name {
+  /* Approximation of #00A6FF via brightness(0) collapse + hue shift —
+     CSS filters are imprecise; tweak the chain numerically if the
+     rendered hue drifts. */
+  filter: brightness(0) saturate(100%) invert(48%) sepia(99%) saturate(2800%) hue-rotate(180deg) brightness(102%) contrast(102%) !important;
 }
 
 /* Mobile (<1024px): the visual sits in normal document flow at the
@@ -839,7 +810,7 @@ const PRODUCTS: Product[] = [
     href: "/products/business",
     logo: "/logobueno.png",
     logoFilter: COLUMBUS_LOGO_FILTER,
-    name: "Columbus",
+    name: "Columbus Pro",
     tagline: "All-in-one map intelligence platform",
     audience: "For business",
     ctaLabel: "Learn more",

@@ -209,12 +209,12 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false, t
             >
               Columbus Earth
             </h3>
-            <p className="text-[16px] md:text-[14px] leading-relaxed mb-6 md:mb-4 max-w-[320px] md:max-w-[260px] mx-auto md:mx-0 text-white/70 md:text-white/60">
+            <p className="text-[16px] md:text-[14px] leading-relaxed mb-6 md:mb-4 max-w-[320px] md:max-w-[260px] mx-auto md:mx-0 text-white/80 md:text-white/70">
               The frontier AI lab building the first production Universal Geospatial Model.
             </p>
             <div className="flex justify-center md:justify-start gap-5 md:gap-4">
-              <a href="mailto:contact@columbus.earth"><Mail size={18} className="transition-colors text-white/50 hover:text-white" /></a>
-              <a href="https://www.linkedin.com/company/columbusearth/about/" target="_blank" rel="noopener noreferrer"><Linkedin size={18} className="transition-colors text-white/50 hover:text-white" /></a>
+              <a href="mailto:contact@columbus.earth"><Mail size={18} className="transition-colors text-white/80 md:text-white/70 hover:text-white" /></a>
+              <a href="https://www.linkedin.com/company/columbusearth/about/" target="_blank" rel="noopener noreferrer"><Linkedin size={18} className="transition-colors text-white/80 md:text-white/70 hover:text-white" /></a>
             </div>
           </div>
           {/* Link columns — mobile uses a 2+1 layout (Product + Technology
@@ -249,7 +249,7 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false, t
             content-sized. Mobile stacks the 4 spans vertically because a
             360-px viewport can't fit them in a row; desktop keeps the
             original horizontal row. */}
-        <div className="mt-auto border-t pt-4 pb-2 flex flex-col items-center text-center gap-2 md:flex-row md:items-center md:justify-between md:text-left md:gap-4 text-[13px] border-white/15 text-white/50">
+        <div className="mt-auto border-t pt-4 pb-2 flex flex-col items-center text-center gap-2 md:flex-row md:items-center md:justify-between md:text-left md:gap-4 text-[13px] border-white/15 text-white/80 md:text-white/70">
           <span>Columbus Earth &copy; 2026</span>
           <span className="italic text-[12px]">Website made by hand, no AI.</span>
           <span className="italic text-[12px]">Nature always prevails</span>
@@ -274,7 +274,7 @@ const FooterColumn = ({
     <p className="mb-3 md:mb-4 font-medium text-[16px] md:text-[17.5px] tracking-wide text-white">
       {title}
     </p>
-    <ul className="space-y-2 text-[16px] md:text-[17.5px] text-white/70">
+    <ul className="space-y-2 text-[16px] md:text-[17.5px] text-white/80 md:text-white/70">
       {links.map((link, i) => (
         <li key={i}>
           <Link

@@ -51,7 +51,7 @@ const ROW_A: DestPhoto[] = [
   { src: "/ConsumerPgMedia/ExampleSpots/RioCarnival.jpeg",     place: "Carnival of Rio",      rating: "4.7", prompt: "Festivals happening today in Rio?",            avatar: "https://i.pravatar.cc/80?img=57" },
 ];
 const ROW_B: DestPhoto[] = [
-  { src: "/ConsumerPgMedia/ExampleSpots/ZlataPraha.png",       place: "Zlata Praha",          rating: "4.9", prompt: "Fancy + cheap date spot in Prague?",            avatar: "https://i.pravatar.cc/80?img=33" },
+  { src: "/ConsumerPgMedia/ExampleSpots/ZlataPraha.png",       place: "Zlata Praha",          rating: "4.9", prompt: "Romantic date spot with a view in Prague",            avatar: "https://i.pravatar.cc/80?img=33" },
   { src: "/ConsumerPgMedia/ExampleSpots/ThriftMarketParis.png",place: "Marché de Saint-Ouen", rating: "4.8", prompt: "Best thrift market in Paris",                  avatar: "https://i.pravatar.cc/80?img=16" },
   { src: "/ConsumerPgMedia/ExampleSpots/FairmontBaku.png",     place: "Little Venice Baku",   rating: "4.5", prompt: "Best spot in Baku for a sunset?",              avatar: "https://i.pravatar.cc/80?img=11" },
   { src: "/ConsumerPgMedia/ExampleSpots/TemperoDeVoinha1.png",  place: "Tempero de Voinha",    rating: "4.7", prompt: "Authentic local Brazilian spot in Madrid",     avatar: "https://i.pravatar.cc/80?img=1" },

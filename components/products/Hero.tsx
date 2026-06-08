@@ -734,9 +734,9 @@ export default function Hero() {
               >
                 <div
                   className="flex items-center justify-center"
-                  style={{ width: isLg ? 64 : 46, height: isLg ? 64 : 46 }}
+                  style={{ width: isLg ? 77 : 55, height: isLg ? 77 : 55 }}
                 >
-                  <MapsGPTGlobe size={isLg ? 46 : 34} />
+                  <MapsGPTGlobe size={isLg ? 55 : 41} />
                 </div>
                 <Image
                   src="/ConsumerPgMedia/elioNameHero.png"
@@ -745,7 +745,7 @@ export default function Hero() {
                   height={110}
                   style={{
                     height: "auto",
-                    width: isLg ? 80 : 56,
+                    width: isLg ? 96 : 67,
                     marginLeft: isLg ? 4 : 3,
                     marginTop: 1,
                     // Soft white halo + tight contact shadow so the
@@ -761,8 +761,8 @@ export default function Hero() {
                   height={285}
                   style={{
                     height: "auto",
-                    width: isLg ? 200 : 138,
-                    marginLeft: isLg ? 10 : 7,
+                    width: isLg ? 240 : 166,
+                    marginLeft: isLg ? 5 : 2,
                     marginTop: 8.4,
                     // Keep the tagline white (its native colour) and add
                     // a soft drop-shadow so the faint script reads on

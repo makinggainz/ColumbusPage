@@ -3361,7 +3361,9 @@
 .scrollIndexLabelActive,
 .scrollIndexLabelActive:hover {
   background: rgba(0, 0, 0, 0.05);
-  color: rgba(19, 35, 74, 0.78);
+  /* Label text matches the active dot colour (var(--color-cta), navy)
+     so the selected pill reads as one cohesive ink. */
+  color: var(--color-cta);
 }
 
 .scrollIndexLabelActive .scrollIndexDot {
