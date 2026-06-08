@@ -609,7 +609,7 @@ export default function DestinationsSection() {
                       <Download size={20} strokeWidth={2} className="eib-title-icon" aria-hidden />
                       <h3 className="eib-title">Import from anywhere</h3>
                     </div>
-                    <p className="eib-sub">Pull in spots from Instagram reels, TikTok clips, Google Maps links, screenshots, and more.</p>
+                    <p className="eib-sub">Pull in spots from Instagram Reels, TikToks, Google Maps lists, screenshots, and more.</p>
                   </div>
                   {/* Phone mockup — anchored to the top of the card so
                       its top edge aligns with the "Import from anywhere"
