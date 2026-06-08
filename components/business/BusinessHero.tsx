@@ -498,11 +498,11 @@ export default function BusinessHero() {
         <Link
           href="/contact?tab=columbus-pro"
           onClick={() => track.demoRequested("business")}
-          className="group mt-8 rounded-full px-7 py-3.5 text-sm leading-none flex items-center gap-2.5 transition-colors bg-cta text-white hover:text-[#154ACC]"
+          className="group mt-8 rounded-full px-7 py-3.5 text-sm leading-none flex items-center gap-2.5 transition-colors bg-cta text-white hover:text-accent"
         >
           Start Now
           <span className="inline-block transition-transform group-hover:translate-x-0.5">
-            <ArrowDots className="text-[#154ACC]" />
+            <ArrowDots className="text-accent" />
           </span>
         </Link>
       </div>

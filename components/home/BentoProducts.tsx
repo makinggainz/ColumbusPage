@@ -814,7 +814,12 @@ const PRODUCTS: Product[] = [
   {
     cellClass: "bp-card--research",
     href: "/research",
-    logo: "/TechnologyPageImages/lgm-globe-icon.png",
+    logo: "/ResearchPgMedia/lgm-globe-icon.png",
+    // Recolour the black globe icon to the navy #0F173C the "Research" title
+    // (.bp-card--research .bp-name) uses, so the icon matches its label. Same
+    // chain the Columbus logo uses — it normalises any source to black, then
+    // tints to #0F173C.
+    logoFilter: COLUMBUS_LOGO_FILTER,
     name: "Research",
     tagline: "Building the Large Geospatial Model",
     audience: "For the curious",
@@ -949,7 +954,7 @@ export function BentoProducts() {
                        maps feel alive" image was dropped because the
                        body tagline below already says it. */
                     <Image
-                      src="/consumer/elioNameHero.png"
+                      src="/ConsumerPgMedia/elioNameHero.png"
                       alt={p.name}
                       className="bp-elio-name"
                       width={260}

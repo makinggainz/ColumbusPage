@@ -380,7 +380,7 @@ export function HeroNew() {
         rel="preload"
         as="image"
         media="(min-width: 768px)"
-        imageSrcSet={heroOptimizerSrcSet("/HomeHero.png", 80)}
+        imageSrcSet={heroOptimizerSrcSet("/HomeHeroBg.png", 80)}
         imageSizes="100vw"
         fetchPriority="high"
       />

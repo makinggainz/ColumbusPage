@@ -36,7 +36,7 @@ export type HeroEntry = { desktop: HeroSrc; mobile?: HeroSrc };
 
 export const HERO_ASSETS: Record<string, HeroEntry> = {
   "/": {
-    desktop: { src: "/HomeHero.png", quality: 80 },
+    desktop: { src: "/HomeHeroBg.png", quality: 80 },
     mobile: { src: "/HomeHeroBackMobile.png", quality: 80 },
   },
   // Business + consumer render a string `src`, so the prefetch `src` must be the
