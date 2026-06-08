@@ -944,11 +944,11 @@ const URBAN_COPY: IndustryCopy = {
     },
   },
   mapChat: {
-    breadcrumb: "Munich · traffic-signal siting study",
-    cityLabel: "Munich",
+    breadcrumb: "Chicago · traffic-signal siting study",
+    cityLabel: "Chicago",
     pois: [
-      { top: "28%", left: "55%", label: "BMW HQ", tone: "accent" },
-      { top: "78%", left: "46%", label: "Hauptbahnhof", tone: "dark" },
+      { top: "28%", left: "55%", label: "Willis Tower", tone: "accent" },
+      { top: "78%", left: "46%", label: "Union Station", tone: "dark" },
     ],
     filterLabel: "Congestion data",
     filterHelp: "Filter by hourly vehicle throughput",
@@ -956,17 +956,17 @@ const URBAN_COPY: IndustryCopy = {
     dataCardMin: "4,200",
     dataCardMax: "62,800",
     dataCardSecondary: "Pedestrian Crossing Volume",
-    userQuery: "Where should the Transportation authority install a new traffic signal?",
-    responseIntro: "Here are the Munich intersections where a new traffic signal would cut the most delay and crash risk, scored across vehicle throughput, pedestrian crossing volume, and collision history",
+    userQuery: "Where should the Chicago Department of Transportation install a new traffic signal?",
+    responseIntro: "Here are the Chicago intersections where a new traffic signal would cut the most delay and crash risk, scored across vehicle throughput, pedestrian crossing volume, and collision history",
     listTitle: "Top 4 Intersections for a New Signal",
     listSubtitle: "Ranked by Expected Impact",
     listItems: [
-      { rank: 1, name: "Schwabing — Münchner Freiheit", pct: "−18% delay" },
-      { rank: 2, name: "Bogenhausen — Effnerplatz", pct: "−15% delay" },
-      { rank: 3, name: "Sendling — Brudermühlstraße", pct: "−13% delay" },
-      { rank: 4, name: "Riem — Willy-Brandt-Allee", pct: "−11% delay" },
+      { rank: 1, name: "Loop — State & Madison", pct: "−18% delay" },
+      { rank: 2, name: "Wicker Park — Damen & North", pct: "−15% delay" },
+      { rank: 3, name: "Lincoln Park — Halsted & Fullerton", pct: "−13% delay" },
+      { rank: 4, name: "Hyde Park — 55th & Lake Park", pct: "−11% delay" },
     ],
-    keyTakeaway: "The highest-impact sites pair heavy turning movements with unsignalized pedestrian crossings near transit; a single signal at Münchner Freiheit clears the worst recurring queue.",
+    keyTakeaway: "The highest-impact sites pair heavy turning movements with unsignalized pedestrian crossings near transit; a single signal at State & Madison clears the worst recurring Loop queue.",
   },
 };
 
@@ -1040,7 +1040,7 @@ const ENVIRONMENTAL_COPY: IndustryCopy = {
     },
     forecast: {
       questionRecap:
-        "Here are the Sierra Nevada (Granada) foothill 1km grid cells most likely to experience a wildfire ignition exceeding 400 hectares in the next 12–24 months",
+        "Here are the Sierra Nevada foothill 1km grid cells in Spain most likely to experience a wildfire ignition exceeding 400 hectares in the next 12–24 months",
       panelTitle: "Top 4 Grid Cells by Forecasted Ignition Risk",
       panelSubtitle: "Next 12–24 Months",
       items: [
@@ -1148,7 +1148,7 @@ const ENVIRONMENTAL_COPY: IndustryCopy = {
       rows: [
         { title: "Southern Spain shrinking rivers + nearby farms (10-year)", body: "In this chat we mapped where rivers and lakes have shrunk the most across southern Spain and overlaid the nearest farms.", age: "20 hours ago" },
         { title: "North Atlantic sperm whale sighting patterns (20-year)", body: "In this chat we found patterns in sperm whale sightings against SST shifts, currents, and shipping-lane density.", age: "1 day ago" },
-        { title: "Sierra Nevada (Granada) wildfire ignition risk forecast (1km grid)", body: "In this chat we ranked grid cells by 12–24 month ignition probability above 400 hectares given fuel moisture, beetle mortality, and wind corridors.", age: "2 days ago" },
+        { title: "Sierra Nevada, Spain — wildfire ignition risk forecast (1km grid)", body: "In this chat we ranked grid cells by 12–24 month ignition probability above 400 hectares given fuel moisture, beetle mortality, and wind corridors.", age: "2 days ago" },
         { title: "Spain €18M solar farm siting reasoning", body: "In this chat Columbus weighed sunlight, slope, grid capacity, Natura 2000 sites, and bird migration corridors across 200,000 hectares.", age: "3 days ago" },
         { title: "Borneo orangutan habitat loss + last strongholds (20-year)", body: "In this chat we produced a review-ready report on palm-oil-driven loss and identified intact forest patches to protect.", age: "4 days ago" },
         { title: "Cádiz solar farm extension — EU wildlife compliance audit", body: "In this chat we checked a 180MW expansion against EU rules and SEO/BirdLife migration counts; three areas failed and need design changes.", age: "5 days ago" },
@@ -1168,7 +1168,7 @@ const ENVIRONMENTAL_COPY: IndustryCopy = {
     dataCardMin: "62%",
     dataCardMax: "180%",
     dataCardSecondary: "Bark Beetle Mortality Patches",
-    userQuery: "Which 1km grid cells in the Sierra Nevada foothills (Granada, Spain) are most likely to experience a wildfire ignition exceeding 400 hectares in the next 12–24 months?",
+    userQuery: "Which 1km grid cells in the Sierra Nevada foothills in Spain are most likely to experience a wildfire ignition exceeding 400 hectares in the next 12–24 months?",
     responseIntro: "Here are the Sierra Nevada foothill grid cells flagged by Columbus's fire-weather model for the highest probability of a 400+ hectare ignition",
     listTitle: "Top 4 Grid Cells by Ignition Probability",
     listSubtitle: "Next 12–24 Months",
@@ -1379,8 +1379,8 @@ const ACADEMIC_COPY: IndustryCopy = {
     listSubtitle: "Next 5 Years",
     listItems: [
       { rank: 1, name: "Pilsen — Chicago", pct: "+18.2%" },
-      { rank: 2, name: "Humboldt Park — Chicago", pct: "+15.7%" },
-      { rank: 3, name: "Logan Square Edge — Chicago", pct: "+14.3%" },
+      { rank: 2, name: "Logan Square Edge — Chicago", pct: "+15.7%" },
+      { rank: 3, name: "West Loop — Chicago", pct: "+14.3%" },
       { rank: 4, name: "Bronzeville — Chicago", pct: "+12.6%" },
     ],
     keyTakeaway: "Independent-business turnover lags rent acceleration by 18–24 months; tracts adjacent to Section 8 phaseouts show the sharpest tenure shifts.",
@@ -1460,8 +1460,8 @@ const GEOMARKETING_COPY: IndustryCopy = {
       items: [
         { rank: 1, label: "Central London — Shoreditch", delta: "+12.1%" },
         { rank: 2, label: "North West London — Camden", delta: "+10.7%" },
-        { rank: 3, label: "Reading — Town Centre", delta: "+9.3%" },
-        { rank: 4, label: "Brighton — North Laine", delta: "+8.5%" },
+        { rank: 3, label: "North East London — Stratford", delta: "+9.3%" },
+        { rank: 4, label: "Reading — Town Centre", delta: "+8.5%" },
       ],
       /* Blue ramp (dark → pale) — matches the Geomarketing forecast
          map's blue audience-density heatmap palette. Ranks 3 and 4
