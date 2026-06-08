@@ -1084,7 +1084,7 @@ export default function DestinationsSection() {
           padding: 0 0 24px 24px;
         }
         @media (min-width: 1024px) {
-          .eib-chat-side { padding: 0 0 32px 32px; }
+          .eib-chat-side { padding: 20px 0 32px 32px; }
         }
         /* Phone mock — rounded top corners + a top/left/right border,
            NO bottom border so the device hangs off the bottom edge of
@@ -1100,7 +1100,9 @@ export default function DestinationsSection() {
           padding-right: 18px;
         }
         @media (min-width: 1024px) {
-          .eib-chat-phone { padding-right: 24px; }
+          /* Nudge the phone mock down to match the content drop; the card's
+             overflow:hidden clips the extra that hangs off the bottom. */
+          .eib-chat-phone { padding-right: 24px; transform: translateY(24px); }
         }
         .eib-chat-phone-img {
           display: block;
@@ -1208,8 +1210,8 @@ export default function DestinationsSection() {
              fully opaque at the top to transparent at the bottom. mask
              cascades to every descendant so text, rows, check pill and
              title all share the same soft fade — feels cohesive. */
-          -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 35%, rgba(0,0,0,0) 100%);
-          mask-image: linear-gradient(to bottom, #000 0%, #000 35%, rgba(0,0,0,0) 100%);
+          -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 58%, rgba(0,0,0,0) 88%);
+          mask-image: linear-gradient(to bottom, #000 0%, #000 58%, rgba(0,0,0,0) 88%);
         }
         /* Three white pill-shaped confetti lines anchored to the top-
            right corner of the trip card. Container pushed further off
@@ -1624,6 +1626,16 @@ export default function DestinationsSection() {
         }
         @media (min-width: 1024px) {
           .eib-title--hero { font-size: 2.25rem; /* 36px */ }
+        }
+        /* Elio (map) tile heading — a midpoint between the old hero size and
+           the plain .eib-title size it was dropped to. */
+        .eib-card--map .eib-title {
+          font-size: 1.5625rem; /* 25px — midpoint of 28 (was) and 22 (now) */
+        }
+        @media (min-width: 1024px) {
+          .eib-card--map .eib-title {
+            font-size: 1.9375rem; /* 31px — midpoint of 36 (was) and 26 (now) */
+          }
         }
         .eib-sub {
           font-family: var(--font-sans, "Opening Hours Sans", -apple-system, BlinkMacSystemFont, sans-serif);
