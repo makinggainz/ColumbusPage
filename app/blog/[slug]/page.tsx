@@ -9,6 +9,7 @@ import { MistxNav } from "@/components/layout/MistxNav";
 import { MediaPrefetcher } from "@/components/ui/MediaPrefetcher";
 import { getAllBlogSlugs, getBlogPost } from "@/lib/blog-posts";
 import { blogBodyWithSectionIds, mergeBlogBody } from "@/lib/blog-lorem-body";
+import { JsonLd } from "@/components/JsonLd";
 import blogStyles from "../blog.module.css";
 
 type Props = { params: Promise<{ slug: string }> };
@@ -40,8 +41,29 @@ export default async function BlogPostPage({ params }: Props) {
       .map((b) => ({ id: b.id, label: b.text })),
   ];
 
+  const BASE_URL = "https://columbus.earth";
+
   return (
     <main className={`min-h-screen ${blogStyles.articlePage}`}>
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "BlogPosting",
+          "@id": `${BASE_URL}/blog/${post.slug}`,
+          headline: post.title,
+          description: post.description,
+          datePublished: post.publishedAt,
+          ...(post.image ? { image: `${BASE_URL}${post.image.src}` } : {}),
+          author: { "@id": `${BASE_URL}/#organization` },
+          publisher: { "@id": `${BASE_URL}/#organization` },
+          mainEntityOfPage: `${BASE_URL}/blog/${post.slug}`,
+          isPartOf: {
+            "@type": "Blog",
+            url: `${BASE_URL}/blog`,
+            name: "Columbus Blog",
+          },
+        }}
+      />
       <div className="max-[1314px]:block hidden">
         <MistxNav />
       </div>

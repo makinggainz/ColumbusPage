@@ -94,7 +94,8 @@ export const BLOG_POSTS: BlogPost[] = [
     image: engineeringCover,
     category: "ENGINEERING",
     audience: "For engineers",
-    description: "lorem",
+    description:
+      "The core principles behind building a Universal Large Geospatial Model — why the physical world needs a dedicated spatial intelligence layer and what sets the LGM apart from general-purpose AI.",
     paragraphs: ["lorem"],
   },
   {
@@ -105,7 +106,8 @@ export const BLOG_POSTS: BlogPost[] = [
     image: engineeringCover,
     category: "ENGINEERING",
     audience: "For engineers",
-    description: "lorem",
+    description:
+      "A precise definition of what a Large Geospatial Model is, how it differs from LLMs and computer vision models, and the key capabilities that make it purpose-built for the physical world.",
     paragraphs: ["lorem"],
   },
   {
@@ -116,7 +118,8 @@ export const BLOG_POSTS: BlogPost[] = [
     image: engineeringCover,
     category: "ENGINEERING",
     audience: "For engineers",
-    description: "lorem",
+    description:
+      "An analysis of why Large Language Models fall short for geospatial reasoning, and the architectural differences that led Columbus Earth to build a dedicated Large Geospatial Model.",
     paragraphs: ["lorem"],
   },
   {
@@ -127,7 +130,8 @@ export const BLOG_POSTS: BlogPost[] = [
     image: engineeringCover,
     category: "ENGINEERING",
     audience: "For engineers",
-    description: "lorem",
+    description:
+      "A conceptual framework for how a geospatial AI processes and reasons about the world — the design patterns that translate raw earth data into actionable spatial intelligence.",
     paragraphs: ["lorem"],
   },
   {
@@ -138,7 +142,8 @@ export const BLOG_POSTS: BlogPost[] = [
     image: engineeringCover,
     category: "ENGINEERING",
     audience: "For engineers",
-    description: "lorem",
+    description:
+      "How Columbus Earth's Large Geospatial Model draws on principles of mature spatial cognition to build AI that reasons about the physical world like an experienced human would.",
     paragraphs: ["lorem"],
   },
   {
@@ -149,7 +154,8 @@ export const BLOG_POSTS: BlogPost[] = [
     image: engineeringCover,
     category: "ENGINEERING",
     audience: "For engineers",
-    description: "lorem",
+    description:
+      "A direct comparison of the Large Geospatial Model versus LLM vision systems for spatial tasks — where vision models fall short and where the LGM innovates.",
     paragraphs: ["lorem"],
   },
   {
@@ -160,7 +166,8 @@ export const BLOG_POSTS: BlogPost[] = [
     image: engineeringCover,
     category: "ENGINEERING",
     audience: "For engineers",
-    description: "lorem",
+    description:
+      "How Columbus Earth's LGM generates new geospatial layers from incomplete data, turning fragmented earth observations into structured, actionable spatial knowledge.",
     paragraphs: ["lorem"],
   },
   {
@@ -171,7 +178,8 @@ export const BLOG_POSTS: BlogPost[] = [
     image: engineeringCover,
     category: "ENGINEERING",
     audience: "For engineers",
-    description: "lorem",
+    description:
+      "The challenge of activating the world's vast stores of unused geospatial data — how Columbus Earth ingests, normalizes, and reasons over satellite imagery, temporal patterns, and private datasets.",
     paragraphs: ["lorem"],
   },
   {
@@ -182,7 +190,8 @@ export const BLOG_POSTS: BlogPost[] = [
     image: engineeringCover,
     category: "ENGINEERING",
     audience: "For engineers",
-    description: "lorem",
+    description:
+      "Columbus Earth's development roadmap for the Large Geospatial Model — from data collection and model training through to production deployment as a thinking earth.",
     paragraphs: ["lorem"],
   },
   {
@@ -193,7 +202,8 @@ export const BLOG_POSTS: BlogPost[] = [
     image: engineeringCover,
     category: "ENGINEERING",
     audience: "For engineers",
-    description: "lorem",
+    description:
+      "The founding motivation behind Columbus Earth: why the world needs a dedicated Large Geospatial Model and what becomes possible when AI truly understands the physical world.",
     paragraphs: ["lorem"],
   },
   {
@@ -204,7 +214,8 @@ export const BLOG_POSTS: BlogPost[] = [
     image: firePredictionBlog,
     category: "ENGINEERING",
     audience: "For engineers",
-    description: "lorem",
+    description:
+      "A research demonstration of the Columbus Earth Large Geospatial Model applied to fire prediction — using geospatial AI to forecast fire risk and behavior at scale.",
     paragraphs: ["lorem"],
   },
   {
@@ -215,7 +226,8 @@ export const BLOG_POSTS: BlogPost[] = [
     image: mapsgptBlog,
     category: "PRODUCT",
     audience: "For builders",
-    description: "lorem",
+    description:
+      "How Columbus Earth built MapsGPT — a mapping AI that returns actual maps and geographic reasoning, not just text. The design decisions behind making AI genuinely useful for location questions.",
     paragraphs: ["lorem"],
   },
   {
@@ -226,7 +238,8 @@ export const BLOG_POSTS: BlogPost[] = [
     image: chooseCitiesBlog,
     category: "PRODUCT",
     audience: "For travelers",
-    description: "lorem",
+    description:
+      "Elio's approach to helping you choose a city to live in — weighing neighborhoods, walkability, culture, and quality of life through geospatial intelligence.",
     paragraphs: ["lorem"],
   },
   {
@@ -237,7 +250,8 @@ export const BLOG_POSTS: BlogPost[] = [
     image: madridBlog,
     category: "PRODUCT",
     audience: "For travelers",
-    description: "lorem",
+    description:
+      "Elio's AI-generated guide to Madrid — neighborhoods, hidden spots, local culture, and travel tips curated through spatial intelligence.",
     paragraphs: ["lorem"],
   },
   {
@@ -248,7 +262,8 @@ export const BLOG_POSTS: BlogPost[] = [
     image: europeGuideBlog,
     category: "PRODUCT",
     audience: "For travelers",
-    description: "lorem",
+    description:
+      "Elio's guide to Europe's most affordable yet distinctive cities — off-the-beaten-path destinations selected through geospatial analysis of cost, culture, and character.",
     paragraphs: ["lorem"],
   },
   {
@@ -259,7 +274,8 @@ export const BLOG_POSTS: BlogPost[] = [
     image: spainGuideBlog,
     category: "PRODUCT",
     audience: "For travelers",
-    description: "lorem",
+    description:
+      "Elio's AI-powered guide to Spain — regions, cities, and experiences recommended through geospatial intelligence for travelers and city-curious explorers.",
     paragraphs: ["lorem"],
   },
   {
@@ -270,7 +286,8 @@ export const BLOG_POSTS: BlogPost[] = [
     image: funResearchBlog,
     category: "PRODUCT",
     audience: "For travelers",
-    description: "lorem",
+    description:
+      "How to use Elio's geospatial AI for personal research — exploring data about cities, neighborhoods, and destinations in ways that go beyond standard travel guides.",
     paragraphs: ["lorem"],
   },
   {
@@ -281,7 +298,8 @@ export const BLOG_POSTS: BlogPost[] = [
     image: preOrdersBlog,
     category: "PRODUCT",
     audience: "For builders",
-    description: "lorem",
+    description:
+      "Columbus Earth opens pre-orders for Columbus Pro — the agentic GIS platform built for site selection, due diligence, and location research.",
     paragraphs: ["lorem"],
   },
   {
@@ -292,7 +310,8 @@ export const BLOG_POSTS: BlogPost[] = [
     image: siteSelectionBlog,
     category: "PRODUCT",
     audience: "For builders",
-    description: "lorem",
+    description:
+      "How Columbus Pro accelerates site selection for real estate and business expansion — replacing weeks of manual GIS work with conversational spatial intelligence.",
     paragraphs: ["lorem"],
   },
   {
@@ -303,7 +322,8 @@ export const BLOG_POSTS: BlogPost[] = [
     image: elioV2Blog,
     category: "COMPANY NEWS",
     audience: "For travelers",
-    description: "lorem",
+    description:
+      "A look at what's new in Elio V2 — the latest updates to Columbus Earth's social super map, bringing new features for city exploration and travel discovery.",
     paragraphs: ["lorem"],
   },
   {
@@ -314,7 +334,8 @@ export const BLOG_POSTS: BlogPost[] = [
     image: joinUs,
     category: "COMPANY NEWS",
     audience: "For the interested",
-    description: "lorem",
+    description:
+      "Columbus Earth is hiring — open research opportunities for those who want to build the Large Geospatial Model and help shape the future of geospatial AI.",
     paragraphs: ["lorem"],
   },
 ];

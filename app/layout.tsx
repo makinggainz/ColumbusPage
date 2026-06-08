@@ -5,12 +5,33 @@ import { LenisProvider } from "@/components/home/LenisContext";
 import { ScrollRestorer } from "@/components/layout/ScrollRestorer";
 import { RootShell } from "@/components/layout/RootShell";
 import { HeroPrefetcher } from "@/components/ui/HeroPrefetcher";
+import { JsonLd } from "@/components/JsonLd";
 
 export const metadata: Metadata = {
-  title: "Columbus",
-  description: "AI-powered location and market research",
+  metadataBase: new URL("https://columbus.earth"),
+  title: {
+    template: "%s | Columbus Earth",
+    default: "Columbus Earth — AI-Powered Geospatial Intelligence",
+  },
+  description:
+    "Columbus Earth builds frontier geospatial AI — the Large Geospatial Model, Columbus Pro for enterprise site selection, and Elio for travel exploration.",
   icons: {
     icon: "/favicon.png",
+  },
+  openGraph: {
+    type: "website",
+    siteName: "Columbus Earth",
+    images: [
+      {
+        url: "/HomeHeroBg.png",
+        width: 1400,
+        height: 900,
+        alt: "Columbus Earth — AI-Powered Geospatial Intelligence",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
   },
 };
 
@@ -76,6 +97,46 @@ export default function RootLayout({
               cross-page navigation lands on an already-loaded hero. */}
           <HeroPrefetcher />
         </LenisProvider>
+        <JsonLd
+          data={{
+            "@context": "https://schema.org",
+            "@graph": [
+              {
+                "@type": "Organization",
+                "@id": "https://columbus.earth/#organization",
+                name: "Columbus Earth",
+                url: "https://columbus.earth",
+                logo: "https://columbus.earth/logobueno.png",
+                description:
+                  "Columbus Earth Inc. is a spatial frontier AI company building the first production Large Geospatial Model.",
+                founders: [
+                  {
+                    "@type": "Person",
+                    name: "David Ramirez Blonski",
+                    jobTitle: "Co-Founder, CEO",
+                  },
+                  {
+                    "@type": "Person",
+                    name: "Alexander Ramirez Blonski",
+                    jobTitle: "Co-Founder, CPO",
+                  },
+                  {
+                    "@type": "Person",
+                    name: "Erick Lara",
+                    jobTitle: "Co-Founder, CTO",
+                  },
+                ],
+              },
+              {
+                "@type": "WebSite",
+                "@id": "https://columbus.earth/#website",
+                url: "https://columbus.earth",
+                name: "Columbus Earth",
+                publisher: { "@id": "https://columbus.earth/#organization" },
+              },
+            ],
+          }}
+        />
       </body>
     </html>
   );

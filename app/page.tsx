@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { type ReactNode } from "react";
 import { MistxNav } from "@/components/layout/MistxNav";
 import { HeroNew } from "@/components/home/HeroNew";
@@ -9,6 +10,18 @@ import {
 } from "@/components/home/lightspark";
 import { Careers } from "@/components/home/Careers";
 import { MediaPrefetcher } from "@/components/ui/MediaPrefetcher";
+
+export const metadata: Metadata = {
+  title: "Columbus Earth — AI-Powered Geospatial Intelligence",
+  description:
+    "The Applied AI lab building a thinking earth. Columbus Pro for enterprise location intelligence. Elio — the social super map for city and travel exploration.",
+  openGraph: {
+    title: "Columbus Earth — AI-Powered Geospatial Intelligence",
+    description:
+      "The Applied AI lab building a thinking earth. Columbus Pro for enterprise location intelligence. Elio — the social super map for city and travel exploration.",
+    url: "https://columbus.earth",
+  },
+};
 
 // Footer is now rendered in `app/layout.tsx` with `reveal` mode — it sits
 // fixed at the viewport bottom (z-index 0) behind the PageFrame card so it
