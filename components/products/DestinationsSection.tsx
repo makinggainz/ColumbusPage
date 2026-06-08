@@ -285,17 +285,15 @@ export default function DestinationsSection() {
         }
         .mg-dest-rev { animation-direction: reverse; }
         .mg-dest-mask:hover .mg-dest-track { animation-play-state: paused; }
-        /* Per-card hover lift — the card grows a touch and gains a soft
-           drop shadow so it feels interactive. The row pauses its scroll
-           on hover (rule above), so the hovered card holds still. */
+        /* Per-card hover lift — the card grows a touch so it feels
+           interactive (no drop shadow). The row pauses its scroll on
+           hover (rule above), so the hovered card holds still. */
         .mg-dest-card {
-          transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1),
-                      box-shadow 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+          transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
           will-change: transform;
         }
         .mg-dest-card:hover {
           transform: scale(1.04);
-          box-shadow: 0 14px 30px rgba(0, 0, 0, 0.18);
           z-index: 1;
         }
         @media (prefers-reduced-motion: reduce) {

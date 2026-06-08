@@ -204,6 +204,14 @@
   color: #71717A;
 }
 
+.compactSub {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--color-muted);
+  margin-top: -4px;
+}
+
 .compactForm {
   display: flex;
   flex-direction: column;
@@ -289,6 +297,7 @@
 :global(body.bg-mode-dark) .pillInput::placeholder { color: rgba(255, 255, 255, 0.32); }
 :global(body.bg-mode-dark) .compactWidget { border-top-color: rgba(255, 255, 255, 0.1); }
 :global(body.bg-mode-dark) .compactLabel { color: rgba(255, 255, 255, 0.45); }
+:global(body.bg-mode-dark) .compactSub   { color: rgba(255, 255, 255, 0.35); }
 :global(body.bg-mode-dark) .compactInput {
   background: rgba(255, 255, 255, 0.06);
   border-color: rgba(255, 255, 255, 0.1);
@@ -315,6 +324,7 @@
 :global(body.bg-mode-sepia) .pillInput::placeholder { color: rgba(67, 52, 34, 0.32); }
 :global(body.bg-mode-sepia) .compactWidget { border-top-color: rgba(67, 52, 34, 0.16); }
 :global(body.bg-mode-sepia) .compactLabel { color: rgba(67, 52, 34, 0.55); }
+:global(body.bg-mode-sepia) .compactSub   { color: rgba(67, 52, 34, 0.45); }
 :global(body.bg-mode-sepia) .compactInput {
   background: #EFE7D7;
   border-color: rgba(67, 52, 34, 0.18);

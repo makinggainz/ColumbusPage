@@ -253,6 +253,8 @@ export function BlogArticleStickyNav({ sections, articleSlug }: Props) {
           in .compactWidget. Fades out with the rest of dockContent when
           the panel is minimised. */}
       <div className={subStyles.compactWidget}>
+        <p className={subStyles.compactLabel}>Columbus Blog</p>
+        <p className={subStyles.compactSub}>New articles to your inbox</p>
         {subPhase !== "success" ? (
           <form className={subStyles.compactForm} onSubmit={handleSubscribe}>
             <input
