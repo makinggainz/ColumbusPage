@@ -17,7 +17,7 @@ const ITEMS: { title: string; subtitle: string; Icon: LucideIcon }[] = [
   {
     title: "Agent Research Report",
     subtitle:
-      "Describe what you’re looking for and select the professional report you want. Our agents will investigate.",
+      "Describe what you’re looking for and select the professional report you want. Columbus will investigate.",
     /* FileSearch — a document being inspected; combines the "agent
        investigates" + "report" sides of the capability. */
     Icon: FileSearch,
@@ -31,7 +31,7 @@ const ITEMS: { title: string; subtitle: string; Icon: LucideIcon }[] = [
   {
     title: "Light-speed Due Diligence",
     subtitle:
-      "Input a land parcel, and choose the analysis you need. Our agents will complete due diligence in minutes.",
+      "Input a land parcel, and choose the analysis you need. Columbus will complete due diligence in minutes.",
     /* Zap — lightning bolt for "light-speed". */
     Icon: Zap,
   },

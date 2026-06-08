@@ -416,7 +416,7 @@ export default function BusinessHero() {
             overlay's box and horizontally centred on the viewport. White
             ink; the browser handles wrap. */}
         <p className="hero-bg-bottom-fade-text">
-          {"Columbus Pro is a new kind of mapping platform built for site selection, due diligence, and location research. We make exploration and discovery easier and cheaper. See it in action."}
+          {"Columbus Pro is a new kind of mapping platform built for site selection, due diligence, and location research. We make exploration and discovery easier and cheaper."}
         </p>
       </div>
       {/* ── Text block ── */}
@@ -924,6 +924,11 @@ export default function BusinessHero() {
                   line-height: 1.45;
                   letter-spacing: -0.01em;
                   font-weight: 500;
+                  /* The parent .hero-bg-bottom-fade has pointer-events: none
+                     so the gradient surface stays passthrough; without
+                     re-enabling here, the text would inherit the none and
+                     wouldn't be selectable. */
+                  pointer-events: auto;
                 }
               }
               /* Desktop tab auto-advance fill — reveals the next tab's

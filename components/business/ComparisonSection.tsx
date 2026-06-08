@@ -191,7 +191,7 @@ const FEATURES = [
   {
     title: "Reports",
     subtitle:
-      "Send our fleet to discover.\nOur AI agents will investigate and report their findings",
+      "Send our fleet to discover.\nOur AI agents will investigate and report their findings.",
     Icon: PenSquareIco,
   },
   {

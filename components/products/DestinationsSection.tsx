@@ -43,19 +43,19 @@ type DestPhoto = {
 // founder-curated feed. Use fresh pravatar seeds that aren't already
 // in ROW_B below.
 const ROW_A: DestPhoto[] = [
-  { src: "/ConsumerPgMedia/ExampleSpots/GoKartTokyo.jpeg",     place: "GoKart Shibuya",       rating: "4.9", prompt: "Interesting activities in Tokyo",              avatar: "/ConsumerPgMedia/ProfilePics/profile2.png" },
+  { src: "/ConsumerPgMedia/ExampleSpots/GoKartTokyo1.jpeg",     place: "GoKart Shibuya",       rating: "4.9", prompt: "Interesting activities in Tokyo",              avatar: "/ConsumerPgMedia/ProfilePics/profile2.png" },
   { src: "/ConsumerPgMedia/ExampleSpots/WestminsterBridge1.png",place: "Westminster Bridge",   rating: "4.6", prompt: "Cool instagram photo spots in London",         avatar: "https://i.pravatar.cc/80?img=44" },
   { src: "/ConsumerPgMedia/ExampleSpots/FranceBeach.png",      place: "Villefranche beach",   rating: "4.5", prompt: "Affordable but beautiful beaches in France",   avatar: "/ConsumerPgMedia/ProfilePics/profile3.png" },
-  { src: "/ConsumerPgMedia/ExampleSpots/RioCafe.png",          place: "Café 18 do Forte",     rating: "4.8", prompt: "Co-working cafes in Rio",                      avatar: "https://i.pravatar.cc/80?img=9" },
+  { src: "/ConsumerPgMedia/ExampleSpots/RioCafe1.png",          place: "Café 18 do Forte",     rating: "4.8", prompt: "Co-working cafes in Rio",                      avatar: "https://i.pravatar.cc/80?img=9" },
   { src: "/ConsumerPgMedia/ExampleSpots/BouncyCastle.jpeg",    place: "Bouncy Castle Boutique", rating: "4.8", prompt: "Fun stuff to do today for kids",             avatar: "/ConsumerPgMedia/ProfilePics/profile1.png" },
-  { src: "/ConsumerPgMedia/ExampleSpots/RioCarnival.jpeg",     place: "Carnival of Rio",      rating: "4.7", prompt: "Festivals happening today in Rio?",            avatar: "https://i.pravatar.cc/80?img=57" },
+  { src: "/ConsumerPgMedia/ExampleSpots/RioCarnival1.jpeg",     place: "Carnival of Rio",      rating: "4.7", prompt: "Festivals happening today in Rio?",            avatar: "https://i.pravatar.cc/80?img=57" },
 ];
 const ROW_B: DestPhoto[] = [
   { src: "/ConsumerPgMedia/ExampleSpots/ZlataPraha.png",       place: "Zlata Praha",          rating: "4.9", prompt: "Romantic date spot with a view in Prague",            avatar: "https://i.pravatar.cc/80?img=33" },
-  { src: "/ConsumerPgMedia/ExampleSpots/ThriftMarketParis.png",place: "Marché de Saint-Ouen", rating: "4.8", prompt: "Best thrift market in Paris",                  avatar: "https://i.pravatar.cc/80?img=16" },
+  { src: "/ConsumerPgMedia/ExampleSpots/ThriftMarketParis1.png",place: "Marché de Saint-Ouen", rating: "4.8", prompt: "Best thrift market in Paris",                  avatar: "https://i.pravatar.cc/80?img=16" },
   { src: "/ConsumerPgMedia/ExampleSpots/FairmontBaku.png",     place: "Little Venice Baku",   rating: "4.5", prompt: "Best spot in Baku for a sunset?",              avatar: "https://i.pravatar.cc/80?img=11" },
   { src: "/ConsumerPgMedia/ExampleSpots/TemperoDeVoinha1.png",  place: "Tempero de Voinha",    rating: "4.7", prompt: "Authentic local Brazilian spot in Madrid",     avatar: "https://i.pravatar.cc/80?img=1" },
-  { src: "/ConsumerPgMedia/ExampleSpots/JamesBond1.jpeg",       place: "Chanel event",         rating: "4.9", prompt: "Bars that feel like a James Bond movie",       avatar: "https://i.pravatar.cc/80?img=5" },
+  { src: "/ConsumerPgMedia/ExampleSpots/JamesBond2.jpeg",       place: "Chanel event",         rating: "4.9", prompt: "Bars that feel like a James Bond movie",       avatar: "https://i.pravatar.cc/80?img=5" },
   { src: "/ConsumerPgMedia/ExampleSpots/Palosanto.png",        place: "Palo Santo",           rating: "4.5", prompt: "Coolest NYC rooftop on a summer night",        avatar: "https://i.pravatar.cc/80?img=25" },
 ];
 
