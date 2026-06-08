@@ -178,6 +178,10 @@ video.bp-bg {
     );
     -webkit-backdrop-filter: blur(60px);
     backdrop-filter: blur(60px);
+    /* backdrop-filter is NOT clipped by the parent's border-radius +
+       overflow:hidden (Chrome/Safari), so the frost renders square corners
+       over the rounded photo. Give it the matching 13px radius itself. */
+    border-radius: 13px;
   }
   .bp-card--elio .bp-bg-tint {
     background: linear-gradient(
@@ -496,27 +500,6 @@ video.bp-bg {
   .bp-card--columbus::after,
   .bp-card--elio::after {
     box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.05);
-  }
-  /* Photo tiles: the notch's hairline (its #E7E7F1 border + the #E7E7F1 stop
-     baked into the corner fillets) was tuned for the old light #FAFAFA card
-     surface — over the full-bleed photo it draws a glitchy gray line at the
-     cut corners. Drop the border, and recolour the fillets to a clean
-     transparent→white ramp. The fillets are KEPT (they round the cut-out's
-     concave corners to match the card's 13px radius); only the gray hairline
-     is removed, so the corners stay rounded with no stray line. */
-  .bp-card--columbus .bp-notch,
-  .bp-card--elio .bp-notch {
-    border-color: transparent;
-  }
-  .bp-card--columbus .bp-notch::before,
-  .bp-card--columbus .bp-notch::after,
-  .bp-card--elio .bp-notch::before,
-  .bp-card--elio .bp-notch::after {
-    background: radial-gradient(
-      circle at left bottom,
-      rgba(255, 255, 255, 0) 12.5px,
-      #FFFFFF 13.5px
-    );
   }
 }
 
