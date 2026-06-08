@@ -4,6 +4,19 @@ import { getPostHogClient } from "@/lib/posthog-server";
 const PORTAL_ID = process.env.HUBSPOT_PORTAL_ID;
 const FORM_GUID = process.env.HUBSPOT_FORM_GUID;
 
+function deriveContactSource(tab: string | undefined, pageName: string | undefined): string {
+  if (pageName === "Business Helper Chat") return "business_chat";
+  const prefix = pageName === "Technology" ? "technology" : "contact";
+  switch (tab) {
+    case "general":      return `${prefix}_general`;
+    case "columbus-pro": return `${prefix}_columbus_pro`;
+    case "elio":         return `${prefix}_elio`;
+    case "investment":   return `${prefix}_investors`;
+    case "careers":      return `${prefix}_careers`;
+    default:             return tab ? `${prefix}_${tab}` : prefix;
+  }
+}
+
 type Field = { objectTypeId: "0-1"; name: string; value: string };
 
 type Payload = {
@@ -58,6 +71,7 @@ export async function POST(req: NextRequest) {
   // Attribution — requires a custom contact property named "how_did_you_hear_about_us"
   // in HubSpot (Settings → Properties → Create property). Skipped if missing/empty.
   push("how_did_you_hear_about_us", body.heardFrom);
+  push("contact_source", deriveContactSource(body.tab, body.pageName));
 
   const hsPayload: Record<string, unknown> = {
     fields,

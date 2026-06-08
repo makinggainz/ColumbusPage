@@ -124,7 +124,7 @@ export function CareersContactForm({ intro }: Props = {}) {
           updates,
           honeypot,
           pageUri: typeof window !== "undefined" ? window.location.href : "",
-          pageName: "Contact Form",
+          pageName: "Technology",
         }),
       });
       if (!res.ok) throw new Error("failed");
