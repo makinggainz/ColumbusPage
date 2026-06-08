@@ -1074,8 +1074,7 @@ function GreetingCard({
       {/* Speech-bubble tail — a curved teardrop on the bubble's RIGHT edge,
           vertically centred, tapering to a soft point that reaches across at
           the globe (iMessage-style, not a flat triangle). Its left edge
-          overlaps a few px into the white body so the seam is invisible;
-          the drop-shadow lets it cast the same soft shadow as the bubble. */}
+          overlaps a few px into the white body so the seam is invisible. */}
       <svg
         aria-hidden
         width="22"
@@ -1087,7 +1086,6 @@ function GreetingCard({
           right: -18,
           transform: "translateY(-50%)",
           display: "block",
-          filter: "drop-shadow(0 5px 5px rgba(11, 27, 43, 0.06))",
         }}
       >
         <path d="M0 2 C8 2 16 4 21 11 C16 18 8 20 0 20 Z" fill="#FFFFFF" />

@@ -418,10 +418,19 @@ export default function ComparisonSection() {
                           const description = rest.join("\n");
                           return (
                             <>
-                              <span style={{ color: "#0E173C", fontWeight: 500 }}>
+                              <span
+                                style={{
+                                  display: "block",
+                                  color: "#0E173C",
+                                  fontWeight: 500,
+                                  /* 5px gap between the tagline and the
+                                     subdescription below it. */
+                                  marginBottom: description ? 5 : 0,
+                                }}
+                              >
                                 {tagline}
                               </span>
-                              {description ? `\n${description}` : null}
+                              {description || null}
                             </>
                           );
                         })()}
