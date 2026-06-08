@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import styles from "./share-buttons.module.css";
+import posthog from "posthog-js";
 
 type Props = {
   title?: string;
@@ -51,6 +52,7 @@ function ShareBtn({
 
 export function ShareButtons({ title = "", size = 20, className = "" }: Props) {
   const open = (platform: Platform) => {
+    posthog.capture("blog_article_shared", { platform });
     const url = encodeURIComponent(window.location.href);
     const text = encodeURIComponent(title);
     const targets: Record<Platform, string> = {

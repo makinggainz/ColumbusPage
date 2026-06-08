@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
+import { track } from "@/lib/analytics";
 import MapsGPTGlobe from "@/components/products/MapsGPTGlobe";
 import StoreBadges from "@/components/products/StoreBadges";
 import "@/components/products/how-it-works-tokens.css";
@@ -214,6 +215,7 @@ export default function FinalCTASection() {
               href="https://mapsgpt.es"
               target="_blank"
               rel="noreferrer"
+              onClick={() => track.ctaClicked("try_elio_free", "consumer")}
               className="group inline-flex items-center justify-center gap-3 rounded-button-md bg-cta no-underline transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
               style={{
                 height: 43,
@@ -341,6 +343,7 @@ export default function FinalCTASection() {
                 href="https://mapsgpt.es"
                 target="_blank"
                 rel="noreferrer"
+                onClick={() => track.ctaClicked("try_elio_free", "consumer")}
                 className="group inline-flex items-center justify-center gap-3 bg-cta no-underline transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
                 style={{
                   // Height locked to the StoreBadges `--lg` height so the

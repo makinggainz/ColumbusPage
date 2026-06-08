@@ -2,6 +2,8 @@
 
 import Image from "next/image";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import posthog from "posthog-js";
+import { track } from "@/lib/analytics";
 import {
   COLUMBUS_SUGGESTIONS,
   INDUSTRY_OPTIONS,
@@ -502,6 +504,7 @@ export default function BusinessHelper() {
   const sendMessage = useCallback(() => {
     const text = draft.trim();
     if (!text || sendStatus === "sending" || !activeChatId) return;
+    posthog.capture("business_helper_message_sent", { chat_id: activeChatId });
     setSendStatus("sending");
     const now = Date.now();
     const userMsg: TextMessage = {
@@ -668,6 +671,7 @@ export default function BusinessHelper() {
   /* ── Form submission. Fires a HubSpot submission in the background
        then marks the inline form done and posts a confirmation bubble. ── */
   const onMiniFormSubmit = useCallback((_data: MiniFormData) => {
+    track.contactSubmitted("business", { industry: _data.industry });
     fetch("/api/contact", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -802,7 +806,11 @@ export default function BusinessHelper() {
 
   /* ── UI handlers ── */
   const handleMascotClick = useCallback(() => {
-    setMode((m) => (m === "chat" ? "closed" : "chat"));
+    setMode((m) => {
+      const next = m === "chat" ? "closed" : "chat";
+      if (next === "chat") posthog.capture("business_helper_opened");
+      return next;
+    });
   }, []);
   const dismissGreeting = useCallback(() => setMode("closed"), []);
   const goBackToHistory = useCallback(() => setChatView("history"), []);

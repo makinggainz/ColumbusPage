@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { TechnologyPage } from "@/components/technology/TechnologyPage";
 import { MediaPrefetcher } from "@/components/ui/MediaPrefetcher";
 import { JsonLd } from "@/components/JsonLd";
+import { ScrollDepthTracker } from "@/components/ScrollDepthTracker";
 
 export const metadata: Metadata = {
   title: "Research — Large Geospatial Model",
@@ -36,6 +37,7 @@ export default function ResearchRoutePage() {
           scroll never reveals a half-loaded section. Scoped to /research;
           /technology renders the same TechnologyPage without it. */}
       <MediaPrefetcher />
+      <ScrollDepthTracker page="research" />
     </>
   );
 }

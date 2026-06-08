@@ -5,6 +5,7 @@ import { getImageProps } from "next/image";
 import { useState, useEffect, useRef, Suspense, type CSSProperties } from "react";
 import { useSearchParams } from "next/navigation";
 import { MistxNav } from "@/components/layout/MistxNav";
+import { track } from "@/lib/analytics";
 
 type Phase = "writing" | "folding" | "bottling" | "dropping" | "floating" | "done";
 type InquiryType = "columbus-pro" | "elio" | "investment" | "careers" | "general";
@@ -291,6 +292,20 @@ function ContactPageInner() {
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [honeypot, setHoneypot] = useState("");
   const cardRef = useRef<HTMLDivElement>(null);
+  const formStartedRef = useRef(false);
+
+  // Reset the form_started guard whenever the user switches tabs so the event
+  // fires once per tab, not just once per page load.
+  useEffect(() => {
+    formStartedRef.current = false;
+  }, [tab]);
+
+  const handleFirstFocus = () => {
+    if (!formStartedRef.current) {
+      formStartedRef.current = true;
+      track.formStarted(tab, "contact");
+    }
+  };
 
   useEffect(() => {
     const t = setTimeout(() => setMounted(true), 120);
@@ -330,6 +345,8 @@ function ContactPageInner() {
     setSubmitting(true);
     setSubmitError(null);
     try {
+      track.contactSubmitted(tab, { heard_from: form.heardFrom });
+      if (tab === "columbus-pro") track.demoRequested("contact");
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -575,7 +592,11 @@ function ContactPageInner() {
                     <button
                       key={opt.value}
                       type="button"
-                      onClick={() => { setTab(opt.value); setTabKey(k => k + 1); }}
+                      onClick={() => {
+                        setTab(opt.value);
+                        setTabKey(k => k + 1);
+                        track.ctaClicked(`contact_tab_${opt.value}`, "contact");
+                      }}
                       data-active={tab === opt.value}
                       className="cf-tab"
                     >
@@ -595,7 +616,7 @@ function ContactPageInner() {
 
                   {/* ── Columbus Pro — book a demo ── */}
                   {tab === "columbus-pro" && (
-                    <form className="flex flex-col gap-5" onSubmit={handleSend}>
+                    <form className="flex flex-col gap-5" onSubmit={handleSend} onFocus={handleFirstFocus}>
                       <label className="flex flex-col gap-1.5">
                         {labelEl("Email")}
                         <input type="email" name="email" required value={form.email} onChange={handleChange} className="cf-input" placeholder="name@company.com" />
@@ -640,7 +661,7 @@ function ContactPageInner() {
 
                   {/* ── Investors / Elio ── */}
                   {(tab === "investment" || tab === "elio") && (
-                    <form className="flex flex-col gap-5" onSubmit={handleSend}>
+                    <form className="flex flex-col gap-5" onSubmit={handleSend} onFocus={handleFirstFocus}>
                       <label className="flex flex-col gap-1.5">
                         {labelEl("Name")}
                         <input type="text" name="firstName" required value={form.firstName} onChange={handleChange} className="cf-input" placeholder="Your name" />
@@ -684,7 +705,7 @@ function ContactPageInner() {
 
                   {/* ── Careers ── */}
                   {tab === "careers" && (
-                    <form className="flex flex-col gap-5" onSubmit={handleSend}>
+                    <form className="flex flex-col gap-5" onSubmit={handleSend} onFocus={handleFirstFocus}>
                       <label className="flex flex-col gap-1.5">
                         {labelEl("Name")}
                         <input type="text" name="firstName" required value={form.firstName} onChange={handleChange} className="cf-input" placeholder="Your name" />
@@ -725,7 +746,7 @@ function ContactPageInner() {
 
                   {/* ── General inquiry ── */}
                   {tab === "general" && (
-                    <form className="flex flex-col gap-5" onSubmit={handleSend}>
+                    <form className="flex flex-col gap-5" onSubmit={handleSend} onFocus={handleFirstFocus}>
                       <label className="flex flex-col gap-1.5">
                         {labelEl("Name")}
                         <input type="text" name="firstName" required value={form.firstName} onChange={handleChange} className="cf-input" placeholder="Your name" />

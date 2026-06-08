@@ -6,6 +6,7 @@ import { ScrollRestorer } from "@/components/layout/ScrollRestorer";
 import { RootShell } from "@/components/layout/RootShell";
 import { HeroPrefetcher } from "@/components/ui/HeroPrefetcher";
 import { JsonLd } from "@/components/JsonLd";
+import { ConsentBanner } from "@/components/ui/ConsentBanner";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://columbus.earth"),
@@ -97,6 +98,7 @@ export default function RootLayout({
               cross-page navigation lands on an already-loaded hero. */}
           <HeroPrefetcher />
         </LenisProvider>
+        <ConsentBanner />
         <JsonLd
           data={{
             "@context": "https://schema.org",

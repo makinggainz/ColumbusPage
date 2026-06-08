@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { track } from "@/lib/analytics";
 import { ImageWithFallback } from "@/components/ui/ImageWithFallback";
 import MapChatPlatform from "./MapChatPlatform";
 import { ScaleToFit } from "../technology/redesign/ScaleToFit";
@@ -62,6 +63,7 @@ export default function ChatSection() {
       {/* Button */}
       <Link
         href="/contact?tab=columbus-pro"
+        onClick={() => track.demoRequested("business")}
         className="relative z-10 group mt-8 flex items-center gap-3 leading-none whitespace-nowrap rounded-button-md hover:opacity-90 transition-all duration-300 cursor-pointer"
         style={{ fontSize: 15, fontWeight: 500, height: 36, paddingLeft: 20, paddingRight: 16, backgroundColor: "var(--ent-btn-dark)", color: "white" }}
       >

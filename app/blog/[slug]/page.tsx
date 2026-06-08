@@ -10,6 +10,8 @@ import { MediaPrefetcher } from "@/components/ui/MediaPrefetcher";
 import { getAllBlogSlugs, getBlogPost } from "@/lib/blog-posts";
 import { blogBodyWithSectionIds, mergeBlogBody } from "@/lib/blog-lorem-body";
 import { JsonLd } from "@/components/JsonLd";
+import { BlogSubscribeSection } from "@/components/blog/BlogSubscribeSection";
+import { ScrollDepthTracker } from "@/components/ScrollDepthTracker";
 import blogStyles from "../blog.module.css";
 
 type Props = { params: Promise<{ slug: string }> };
@@ -67,7 +69,7 @@ export default async function BlogPostPage({ params }: Props) {
       <div className="max-[1314px]:block hidden">
         <MistxNav />
       </div>
-      <BlogArticleStickyNav sections={stickySections} />
+      <BlogArticleStickyNav sections={stickySections} articleSlug={post.slug} />
 
       <article className="relative z-[1] mx-auto w-full max-w-[720px] px-5 pt-24 md:pt-[175px] min-[1315px]:pt-[162px] pb-12 md:px-6">
         <h1 id="article-title" className={`${blogStyles.headlineLarge} mb-4 scroll-mt-24`}>{post.title}</h1>
@@ -159,11 +161,17 @@ export default async function BlogPostPage({ params }: Props) {
         </div>
       </article>
 
+      {/* Subscribe section — visible only when the sidebar dock is hidden
+          (< 1315px). At ≥ 1315px the compact subscribe widget lives inside
+          BlogArticleStickyNav so this section would duplicate it. */}
+      <BlogSubscribeSection source="article_bottom" articleSlug={post.slug} className="min-[1315px]:hidden" />
+
       <RelatedPosts currentSlug={post.slug} currentCategory={post.category} />
       <div className={blogStyles.footerTransition} aria-hidden />
 
       {/* Warm the below-fold RelatedPosts covers (lazy → eager) after load + idle. */}
       <MediaPrefetcher />
+      <ScrollDepthTracker page={`blog/${post.slug}`} />
     </main>
   );
 }

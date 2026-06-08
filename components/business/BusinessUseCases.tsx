@@ -205,16 +205,17 @@ const COMMERCIAL_BACKDROPS: IndustryBackdrops = {
   dataCatalogueHero: "/BusinessPgMedia/CREUseCases/Bg/cre-bg-2.png",
   agenticResearchHero: "/BusinessPgMedia/CREUseCases/Bg/cre-bg-1.png",
   dashboardHero: "/BusinessPgMedia/CREUseCases/Bg/cre-bg-2.png",
-  /* CRE-specific map illustrations for the chat section. chatMainMap is
-     the London map with City Core / Kings Cross / Southbank / Stratford
-     percentage zones; the chatSubMaps line up with the chat sub-features
-     (slot 0 = "See what others cant" Manhattan zone map, slot 1 = London
-     forecast heatmap, slot 3 = London file-import dot map; slot 2 has no
-     MapLayeredVisual). */
-  chatMainMap: "/BusinessPgMedia/CREUseCases/MapVisuals/chat-platform-map.png",
+  /* CRE-specific map illustrations for the chat section. Per collaborator,
+     the ask/discover/understand (chatMainMap) and "Like weather forecasts"
+     (chatSubMaps[1]) maps are SWAPPED: the dot-density parcel map now drives
+     the parcel-search map chat, and the numbered ranked-zones choropleth
+     drives the forecast card. chatSubMaps slot 0 = "See what others cant"
+     Manhattan zone map, slot 3 = London file-import dot map; slot 2 has no
+     MapLayeredVisual. */
+  chatMainMap: "/BusinessPgMedia/CREUseCases/MapVisuals/like-weather-forecasts.png",
   chatSubMaps: [
     "/BusinessPgMedia/CREUseCases/MapVisuals/see-what-others-cant.png",
-    "/BusinessPgMedia/CREUseCases/MapVisuals/like-weather-forecasts.png",
+    "/BusinessPgMedia/CREUseCases/MapVisuals/chat-platform-map.png",
     undefined,
     "/BusinessPgMedia/CREUseCases/MapVisuals/import-files.png",
   ],
@@ -244,8 +245,10 @@ const ENVIRONMENTAL_BACKDROPS: IndustryBackdrops = {
     undefined,
     "/BusinessPgMedia/EnvironmentalUseCases/MapVisuals/file-compatibility.png",
   ],
-  smartLayerMap: "/BusinessPgMedia/EnvironmentalUseCases/MapVisuals/smart-layers.png",
-  surveyEarthMap: "/BusinessPgMedia/EnvironmentalUseCases/MapVisuals/survey-model.png",
+  /* Maps swapped per collaborator: the "become an artist" smart-layer row now
+     shows survey-model.png and the "survey the earth" row shows smart-layers.png. */
+  smartLayerMap: "/BusinessPgMedia/EnvironmentalUseCases/MapVisuals/survey-model.png",
+  surveyEarthMap: "/BusinessPgMedia/EnvironmentalUseCases/MapVisuals/smart-layers.png",
 };
 
 const ACADEMIC_BACKDROPS: IndustryBackdrops = {
@@ -692,6 +695,8 @@ const COMMERCIAL_COPY: IndustryCopy = {
         "Planning_Consultant_Parcels_DE.shp",
         "Yardi_Export_Q1_2026.csv",
       ],
+      description:
+        "I’ve harmonized the four files and built a single map showing the full picture of your portfolio.",
       followUp:
         "now overlay our nearest 2 competitors, and their portfolios. I want to see a easy visual of the comparison",
     },
@@ -733,29 +738,29 @@ const COMMERCIAL_COPY: IndustryCopy = {
     },
   },
   mapChat: {
-    breadcrumb: "Manhattan · PE buyer pattern map",
-    cityLabel: "Manhattan",
+    breadcrumb: "London · mixed-use parcel search",
+    cityLabel: "London",
     pois: [
-      { top: "28%", left: "55%", label: "Hudson Yards", tone: "accent" },
-      { top: "78%", left: "46%", label: "Midtown East", tone: "dark" },
+      { top: "28%", left: "55%", label: "Mayfair", tone: "accent" },
+      { top: "78%", left: "46%", label: "Covent Garden", tone: "dark" },
     ],
     filterLabel: "Vacancy data",
     filterHelp: "Filter by Grade A office vacancy rate (%)",
-    dataCardTitle: "Prime Rent Growth (24-mo)",
-    dataCardMin: "+2.1%",
-    dataCardMax: "+11.8%",
-    dataCardSecondary: "Cap Rate Compression",
-    userQuery: "Which London office submarkets will see the strongest prime rent growth for Grade A space over the next 24 months?",
-    responseIntro: "Here are the London submarkets forecasted to lead Grade A prime-rent growth as Elizabeth Line ridership matures and ESG-compliant supply stays thin",
-    listTitle: "Top 4 Submarkets by Grade A Prime Rent Growth",
-    listSubtitle: "Next 24 Months",
+    dataCardTitle: "Luxury Retail Density",
+    dataCardMin: "12 / km²",
+    dataCardMax: "180 / km²",
+    dataCardSecondary: "Grade A Office Vacancy",
+    userQuery: "Show me parcels between 2,500–4,000 sqm where the surrounding luxury retail density is high but office vacancy is below 8%. I'm developing a mixed-use building in London with ground-floor luxury retail, 4 floors of premium office, and 6 floors of branded residences.",
+    responseIntro: "Here are the London parcels between 2,500–4,000 sqm that fit your mixed-use brief — high surrounding luxury-retail density with Grade A office vacancy under 8%",
+    listTitle: "Top 4 Parcels by Mixed-Use Fit",
+    listSubtitle: "2,500–4,000 sqm · vacancy < 8%",
     listItems: [
-      { rank: 1, name: "Mayfair / St. James's", pct: "+9.4%" },
-      { rank: 2, name: "King's Cross", pct: "+8.2%" },
-      { rank: 3, name: "Paddington", pct: "+7.6%" },
-      { rank: 4, name: "City Core (EC2)", pct: "+6.1%" },
+      { rank: 1, name: "Mayfair — Mount Street", pct: "3,400 sqm" },
+      { rank: 2, name: "Marylebone — Marylebone Lane", pct: "3,050 sqm" },
+      { rank: 3, name: "Covent Garden — Floral Street", pct: "2,800 sqm" },
+      { rank: 4, name: "Soho — Berwick Street", pct: "2,600 sqm" },
     ],
-    keyTakeaway: "Stranding risk on pre-2010 stock pushes demand into ESG-compliant towers; Elizabeth Line catchments lead on absorption velocity.",
+    keyTakeaway: "All four sit inside dense luxury-retail catchments with sub-8% Grade A vacancy; the Mayfair / Mount Street parcel best balances retail frontage with premium-office demand for the branded residences above.",
   },
 };
 
@@ -939,7 +944,7 @@ const URBAN_COPY: IndustryCopy = {
     },
   },
   mapChat: {
-    breadcrumb: "Munich · congestion-growth forecast",
+    breadcrumb: "Munich · traffic-signal siting study",
     cityLabel: "Munich",
     pois: [
       { top: "28%", left: "55%", label: "BMW HQ", tone: "accent" },
@@ -950,18 +955,18 @@ const URBAN_COPY: IndustryCopy = {
     dataCardTitle: "Daily Vehicle Throughput",
     dataCardMin: "4,200",
     dataCardMax: "62,800",
-    dataCardSecondary: "Transit Capacity Headroom",
-    userQuery: "Forecast the districts in greater Munich most at risk of traffic-congestion growth over the next 2–3 years",
-    responseIntro: "Here are the districts in greater Munich forecasted to experience the worst traffic-congestion growth over the next 2–3 years",
-    listTitle: "Top 4 Districts by Forecasted Congestion Growth",
-    listSubtitle: "Next 24–36 Months",
+    dataCardSecondary: "Pedestrian Crossing Volume",
+    userQuery: "Where should the Transportation authority install a new traffic signal?",
+    responseIntro: "Here are the Munich intersections where a new traffic signal would cut the most delay and crash risk, scored across vehicle throughput, pedestrian crossing volume, and collision history",
+    listTitle: "Top 4 Intersections for a New Signal",
+    listSubtitle: "Ranked by Expected Impact",
     listItems: [
-      { rank: 1, name: "Schwabing-West", pct: "+14.2%" },
-      { rank: 2, name: "Bogenhausen", pct: "+12.8%" },
-      { rank: 3, name: "Sendling-Westpark", pct: "+11.1%" },
-      { rank: 4, name: "Riem", pct: "+9.7%" },
+      { rank: 1, name: "Schwabing — Münchner Freiheit", pct: "−18% delay" },
+      { rank: 2, name: "Bogenhausen — Effnerplatz", pct: "−15% delay" },
+      { rank: 3, name: "Sendling — Brudermühlstraße", pct: "−13% delay" },
+      { rank: 4, name: "Riem — Willy-Brandt-Allee", pct: "−11% delay" },
     ],
-    keyTakeaway: "Congestion growth concentrates on residential pipelines feeding the BMW / Siemens employment ring, with S-Bahn capacity ceilings amplifying spill-over.",
+    keyTakeaway: "The highest-impact sites pair heavy turning movements with unsignalized pedestrian crossings near transit; a single signal at Münchner Freiheit clears the worst recurring queue.",
   },
 };
 
@@ -1035,14 +1040,14 @@ const ENVIRONMENTAL_COPY: IndustryCopy = {
     },
     forecast: {
       questionRecap:
-        "Here are the Sierra Nevada foothills 1km grid cells most likely to experience a wildfire ignition exceeding 1,000 acres in the next 12–24 months",
+        "Here are the Sierra Nevada (Granada) foothill 1km grid cells most likely to experience a wildfire ignition exceeding 400 hectares in the next 12–24 months",
       panelTitle: "Top 4 Grid Cells by Forecasted Ignition Risk",
       panelSubtitle: "Next 12–24 Months",
       items: [
-        { rank: 1, label: "Plumas Ridge North", delta: "+38%" },
-        { rank: 2, label: "Tahoe Foothills SE", delta: "+31%" },
-        { rank: 3, label: "Mariposa Corridor", delta: "+27%" },
-        { rank: 4, label: "Sequoia Buffer", delta: "+22%" },
+        { rank: 1, label: "Genil Valley North", delta: "+38%" },
+        { rank: 2, label: "Guadix Foothills SE", delta: "+31%" },
+        { rank: 3, label: "Lecrín Corridor", delta: "+27%" },
+        { rank: 4, label: "Lanjarón Buffer", delta: "+22%" },
       ],
       /* Warm ramp (red → orange → yellow → pale) — matches the Sierra
          Nevada wildfire ignition map's red→yellow ignition risk
@@ -1051,7 +1056,7 @@ const ENVIRONMENTAL_COPY: IndustryCopy = {
          readable while still being clearly lighter than ranks 1 and 2. */
       badgeColors: ["#DE1F20", "#F79654", "#FAB94A", "#F2D770"],
       takeaway:
-        "Ignition risk peaks where bark-beetle mortality patches overlap historic Santa Ana / Diablo wind corridors and the wildland-urban interface.",
+        "Ignition risk peaks where bark-beetle mortality patches overlap the hot, dry Terral wind corridors descending off the range and the wildland-urban interface.",
     },
     reasoning: {
       prompt:
@@ -1143,7 +1148,7 @@ const ENVIRONMENTAL_COPY: IndustryCopy = {
       rows: [
         { title: "Southern Spain shrinking rivers + nearby farms (10-year)", body: "In this chat we mapped where rivers and lakes have shrunk the most across southern Spain and overlaid the nearest farms.", age: "20 hours ago" },
         { title: "North Atlantic sperm whale sighting patterns (20-year)", body: "In this chat we found patterns in sperm whale sightings against SST shifts, currents, and shipping-lane density.", age: "1 day ago" },
-        { title: "Sierra Nevada wildfire ignition risk forecast (1km grid)", body: "In this chat we ranked grid cells by 12–24 month ignition probability above 1,000 acres given fuel moisture, beetle mortality, and wind corridors.", age: "2 days ago" },
+        { title: "Sierra Nevada (Granada) wildfire ignition risk forecast (1km grid)", body: "In this chat we ranked grid cells by 12–24 month ignition probability above 400 hectares given fuel moisture, beetle mortality, and wind corridors.", age: "2 days ago" },
         { title: "Spain €18M solar farm siting reasoning", body: "In this chat Columbus weighed sunlight, slope, grid capacity, Natura 2000 sites, and bird migration corridors across 200,000 hectares.", age: "3 days ago" },
         { title: "Borneo orangutan habitat loss + last strongholds (20-year)", body: "In this chat we produced a review-ready report on palm-oil-driven loss and identified intact forest patches to protect.", age: "4 days ago" },
         { title: "Cádiz solar farm extension — EU wildlife compliance audit", body: "In this chat we checked a 180MW expansion against EU rules and SEO/BirdLife migration counts; three areas failed and need design changes.", age: "5 days ago" },
@@ -1151,11 +1156,11 @@ const ENVIRONMENTAL_COPY: IndustryCopy = {
     },
   },
   mapChat: {
-    breadcrumb: "Sierra Nevada · wildfire ignition forecast",
-    cityLabel: "Sierra Nevada",
+    breadcrumb: "Sierra Nevada, Granada · wildfire ignition forecast",
+    cityLabel: "Sierra Nevada, Granada",
     pois: [
-      { top: "28%", left: "55%", label: "Plumas Ridge", tone: "accent" },
-      { top: "78%", left: "46%", label: "Tahoe Foothills", tone: "dark" },
+      { top: "28%", left: "55%", label: "Genil Ridge", tone: "accent" },
+      { top: "78%", left: "46%", label: "Guadix Foothills", tone: "dark" },
     ],
     filterLabel: "Fuel moisture data",
     filterHelp: "Filter by dryness percentile (live fuel moisture)",
@@ -1163,17 +1168,17 @@ const ENVIRONMENTAL_COPY: IndustryCopy = {
     dataCardMin: "62%",
     dataCardMax: "180%",
     dataCardSecondary: "Bark Beetle Mortality Patches",
-    userQuery: "Which 1km grid cells in the Sierra Nevada foothills are most likely to experience a wildfire ignition exceeding 1,000 acres in the next 12–24 months?",
-    responseIntro: "Here are the Sierra Nevada foothill grid cells flagged by Columbus's fire-weather model for the highest probability of a 1,000+ acre ignition",
+    userQuery: "Which 1km grid cells in the Sierra Nevada foothills (Granada, Spain) are most likely to experience a wildfire ignition exceeding 400 hectares in the next 12–24 months?",
+    responseIntro: "Here are the Sierra Nevada foothill grid cells flagged by Columbus's fire-weather model for the highest probability of a 400+ hectare ignition",
     listTitle: "Top 4 Grid Cells by Ignition Probability",
     listSubtitle: "Next 12–24 Months",
     listItems: [
-      { rank: 1, name: "Tahoe Basin Rim", pct: "18.7%" },
-      { rank: 2, name: "Yuba River Canyon", pct: "16.4%" },
-      { rank: 3, name: "Stanislaus N.F. Foothills", pct: "14.2%" },
-      { rank: 4, name: "Sequoia Edge — Three Rivers", pct: "12.5%" },
+      { rank: 1, name: "Genil Basin Rim", pct: "18.7%" },
+      { rank: 2, name: "Guadalfeo River Canyon", pct: "16.4%" },
+      { rank: 3, name: "Alpujarras Foothills", pct: "14.2%" },
+      { rank: 4, name: "Lanjarón Edge — Órgiva", pct: "12.5%" },
     ],
-    keyTakeaway: "Beetle-mortality patches paired with Diablo wind corridors dominate the risk signal; PSPS event history adds a powerline-ignition tail on the western flanks.",
+    keyTakeaway: "Beetle-mortality patches paired with hot Terral wind corridors dominate the risk signal; the wildland-urban interface around the Alpujarras adds an ignition tail on the southern flanks.",
   },
 };
 
@@ -1368,15 +1373,15 @@ const ACADEMIC_COPY: IndustryCopy = {
     dataCardMin: "¥3.2M",
     dataCardMax: "¥14.8M",
     dataCardSecondary: "Daytime / Resident Population Ratio",
-    userQuery: "Forecast which census tracts across Chicago, Atlanta, and Detroit will experience the strongest gentrification pressure over the next 5 years",
+    userQuery: "Forecast which census tracts across Chicago will experience the strongest gentrification pressure over the next 5 years",
     responseIntro: "Here are the tracts most at risk of cohort-level displacement, scored across rent trajectory, building-permit activity, and longitudinal tenure shifts",
     listTitle: "Top 4 Tracts by Gentrification Pressure",
     listSubtitle: "Next 5 Years",
     listItems: [
       { rank: 1, name: "Pilsen — Chicago", pct: "+18.2%" },
-      { rank: 2, name: "Old Fourth Ward — Atlanta", pct: "+15.7%" },
+      { rank: 2, name: "Humboldt Park — Chicago", pct: "+15.7%" },
       { rank: 3, name: "Logan Square Edge — Chicago", pct: "+14.3%" },
-      { rank: 4, name: "Corktown — Detroit", pct: "+12.6%" },
+      { rank: 4, name: "Bronzeville — Chicago", pct: "+12.6%" },
     ],
     keyTakeaway: "Independent-business turnover lags rent acceleration by 18–24 months; tracts adjacent to Section 8 phaseouts show the sharpest tenure shifts.",
   },
@@ -1449,14 +1454,14 @@ const GEOMARKETING_COPY: IndustryCopy = {
     },
     forecast: {
       questionRecap:
-        "Here are the European cities and submarkets forecasted to see the fastest growth in our target customer over the next 24 months",
+        "Here are the British markets and submarkets forecasted to see the fastest growth in our target customer over the next 24 months",
       panelTitle: "Top 4 Submarkets by Forecasted Target-Customer Growth",
       panelSubtitle: "Next 24 Months",
       items: [
-        { rank: 1, label: "Milan — Porta Romana", delta: "+12.1%" },
-        { rank: 2, label: "Madrid — Chamberí", delta: "+10.7%" },
-        { rank: 3, label: "Berlin — Neukölln", delta: "+9.3%" },
-        { rank: 4, label: "Lisbon — Marvila", delta: "+8.5%" },
+        { rank: 1, label: "Central London — Shoreditch", delta: "+12.1%" },
+        { rank: 2, label: "North West London — Camden", delta: "+10.7%" },
+        { rank: 3, label: "Reading — Town Centre", delta: "+9.3%" },
+        { rank: 4, label: "Brighton — North Laine", delta: "+8.5%" },
       ],
       /* Blue ramp (dark → pale) — matches the Geomarketing forecast
          map's blue audience-density heatmap palette. Ranks 3 and 4
@@ -1465,7 +1470,7 @@ const GEOMARKETING_COPY: IndustryCopy = {
          lighter than ranks 1 and 2. */
       badgeColors: ["#001FAE", "#3B6EF0", "#74B9FE", "#A5D0FA"],
       takeaway:
-        "Italian, Spanish, and Latin-American diaspora concentration is the strongest forward signal — Porta Romana leads on disposable-income trajectory.",
+        "Inner-London regeneration corridors and improved rail links are the strongest forward signal — Shoreditch leads on disposable-income trajectory.",
     },
     reasoning: {
       prompt:
@@ -1563,29 +1568,29 @@ const GEOMARKETING_COPY: IndustryCopy = {
     },
   },
   mapChat: {
-    breadcrumb: "Lisbon · Q2 OOH campaign network",
-    cityLabel: "Lisbon",
+    breadcrumb: "Los Angeles · opening-day OOH campaign",
+    cityLabel: "Los Angeles",
     pois: [
-      { top: "28%", left: "55%", label: "Baixa-Chiado", tone: "accent" },
-      { top: "78%", left: "46%", label: "Avenidas Novas", tone: "dark" },
+      { top: "28%", left: "55%", label: "Echo Park", tone: "accent" },
+      { top: "78%", left: "46%", label: "Venice", tone: "dark" },
     ],
     filterLabel: "Audience data",
     filterHelp: "Filter by daypart impressions and dwell time",
     dataCardTitle: "Daily Impressions",
     dataCardMin: "1,840",
     dataCardMax: "112,400",
-    dataCardSecondary: "Target-Buyer Match %",
-    userQuery: "Over the next 24 months, which European cities and submarkets will see the fastest growth in our target customer profile?",
-    responseIntro: "Here are the EU submarkets forecasted to gain the most of your target cohort, based on disposable-income trends, residential pipelines, and confirmed transport upgrades",
-    listTitle: "Top 4 Submarkets by Target Customer Growth",
-    listSubtitle: "Next 24 Months",
+    dataCardSecondary: "Coffee-Buyer Match %",
+    userQuery: "I want to run an ad for my new coffee shop — an opening-day promotion. Where should I put up ads in Los Angeles?",
+    responseIntro: "Here are the highest-impact billboard placements across Los Angeles for your opening-day promotion, ranked by morning-commute coffee-buyer reach and dwell time near each site",
+    listTitle: "Top 4 Ad Placements by Coffee-Buyer Reach",
+    listSubtitle: "Opening-Day Promotion",
     listItems: [
-      { rank: 1, name: "Berlin — Friedrichshain", pct: "+13.4%" },
-      { rank: 2, name: "Lisbon — Avenidas Novas", pct: "+11.7%" },
-      { rank: 3, name: "Milan — Isola", pct: "+10.2%" },
-      { rank: 4, name: "Madrid — Chamberí", pct: "+9.1%" },
+      { rank: 1, name: "Echo Park — Sunset Blvd", pct: "94%" },
+      { rank: 2, name: "Silver Lake — Sunset Junction", pct: "91%" },
+      { rank: 3, name: "Downtown LA — Arts District", pct: "88%" },
+      { rank: 4, name: "Culver City — Washington Blvd", pct: "85%" },
     ],
-    keyTakeaway: "Submarkets with sub-€2K/sqm rent and confirmed metro extensions absorb the bulk of the in-migration; Italian and Latin American diaspora clusters reinforce the Iberian leg.",
+    keyTakeaway: "Morning-commute corridors next to dense residential pockets convert best for a coffee launch; Echo Park and Silver Lake billboards pair the highest foot traffic with the strongest coffee-buyer match.",
   },
 };
 

@@ -19,6 +19,7 @@ import BusinessFeatureIndex from "@/components/business/BusinessFeatureIndex";
 import BusinessUseCases from "@/components/business/BusinessUseCases";
 import BusinessHelper from "@/components/business/BusinessHelper";
 import { MediaPrefetcher } from "@/components/ui/MediaPrefetcher";
+import { ScrollDepthTracker } from "@/components/ScrollDepthTracker";
 
 /* The reduced industry set shown in the "Tell us where you work"
    picker (and its sticky sub-navbar), ordered as the design's 3×2 grid.
@@ -124,6 +125,7 @@ export default function BusinessPage() {
           data-saver. Renders nothing. */}
       <MediaPrefetcher />
       <BusinessHelper />
+      <ScrollDepthTracker page="business" />
     </main>
   );
 }

@@ -16,14 +16,22 @@ const DEFAULT_FILES = [
 const DEFAULT_FOLLOWUP =
   "now overlay our nearest 2 competitors, and their portfolios. I want to see a easy visual of the comparison";
 
+const DEFAULT_DESCRIPTION =
+  "I’ve harmonized the files and displayed them on the map";
+
 export type HarmonizedFilesCardProps = {
   files?: string[];
   followUp?: string;
+  /* Columbus's first-person response line under the header. Industries can
+     override it to spell out what was actually built (e.g. CRE: a single
+     unified portfolio map across the four files). */
+  description?: string;
 };
 
 export default function HarmonizedFilesCard({
   files = DEFAULT_FILES,
   followUp = DEFAULT_FOLLOWUP,
+  description = DEFAULT_DESCRIPTION,
 }: HarmonizedFilesCardProps = {}) {
   return (
     <div
@@ -67,7 +75,7 @@ export default function HarmonizedFilesCard({
             lineHeight: 1.5,
           }}
         >
-          I&rsquo;ve harmonized the files and displayed them on the map
+          {description}
         </p>
 
         {/* File list — inside the same card */}

@@ -2,6 +2,7 @@
 
 /* eslint-disable @next/next/no-img-element */
 import { useEffect, useRef, useState } from "react";
+import { track } from "@/lib/analytics";
 
 // Site-wide nav, ported verbatim from MistX (/Users/alexramirezblonski/
 // Documents/MistX/components/nav/Nav.tsx) and adapted for ColumbusPage.
@@ -554,6 +555,7 @@ export function MistxNav({
                 : "text-[#1f1f1f] hover:bg-black/5 hover:text-accent"
             }`}
             href="/contact"
+            onClick={() => track.ctaClicked("contact", "navbar")}
           >
             Contact
             <span className="ml-2 inline-block transition-transform group-hover:translate-x-0.5">
@@ -628,6 +630,7 @@ export function MistxNav({
                       <a
                         role="menuitem"
                         href={item.href}
+                        onClick={() => track.ctaClicked(item.href === "/products/consumer" ? "try_elio_nav" : "try_columbus_nav", "navbar")}
                         className="group flex items-start gap-3 px-3 py-2.5 rounded-[10px] transition-colors duration-150 hover:bg-white/8"
                         style={{
                           opacity: elioOpen ? 1 : 0,
@@ -853,7 +856,7 @@ export function MistxNav({
                   >
                     <a
                       href={link.href}
-                      onClick={() => setMobileOpen(false)}
+                      onClick={() => { setMobileOpen(false); track.ctaClicked(link.label.toLowerCase(), "navbar_mobile"); }}
                       className="group flex items-center justify-between py-3 transition-colors hover:text-accent"
                     >
                       <span
@@ -948,7 +951,7 @@ export function MistxNav({
         >
           <a
             href="/products/consumer"
-            onClick={() => setMobileOpen(false)}
+            onClick={() => { setMobileOpen(false); track.ctaClicked("try_elio", "navbar_mobile"); }}
             className="group bg-cta text-white rounded-button p-m flex items-center justify-center gap-3 w-full font-medium transition-colors hover:text-accent"
             style={{ height: 56 }}
           >

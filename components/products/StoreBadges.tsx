@@ -1,5 +1,7 @@
 "use client";
 
+import { track } from "@/lib/analytics";
+
 /**
  * StoreBadges — Apple App Store + Google Play download badges.
  * The site's dark-pill store-badge pattern, mirroring
@@ -78,6 +80,7 @@ export default function StoreBadges({
         href="https://mapsgpt.es"
         target="_blank"
         rel="noreferrer"
+        onClick={() => track.ctaClicked("app_store_badge", "consumer")}
         className={cls}
         aria-label="Coming soon to the App Store — try Elio in your browser"
       >
@@ -91,6 +94,7 @@ export default function StoreBadges({
         href="https://mapsgpt.es"
         target="_blank"
         rel="noreferrer"
+        onClick={() => track.ctaClicked("google_play_badge", "consumer")}
         className={cls}
         aria-label="Coming soon to Google Play — try Elio in your browser"
       >

@@ -5,6 +5,7 @@ import DestinationsSection from "@/components/products/DestinationsSection";
 import FinalCTASection from "@/components/products/FinalCTASection";
 import { MediaPrefetcher } from "@/components/ui/MediaPrefetcher";
 import { JsonLd } from "@/components/JsonLd";
+import { ScrollDepthTracker } from "@/components/ScrollDepthTracker";
 
 export const metadata: Metadata = {
   title: "Elio — The Social Super Map",
@@ -53,6 +54,7 @@ export default function ProductsPage() {
           sticky-scroll never reveals a half-loaded scene. Skips on
           data-saver. Renders nothing. */}
       <MediaPrefetcher />
+      <ScrollDepthTracker page="consumer" />
     </main>
   );
 }

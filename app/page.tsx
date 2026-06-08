@@ -10,6 +10,7 @@ import {
 } from "@/components/home/lightspark";
 import { Careers } from "@/components/home/Careers";
 import { MediaPrefetcher } from "@/components/ui/MediaPrefetcher";
+import { ScrollDepthTracker } from "@/components/ScrollDepthTracker";
 
 export const metadata: Metadata = {
   title: "Columbus Earth — AI-Powered Geospatial Intelligence",
@@ -65,6 +66,7 @@ export default function Home() {
           pre-buffers the footer video, so first-run users never scroll into
           a half-loaded section. Renders nothing; skips on data-saver. */}
       <MediaPrefetcher />
+      <ScrollDepthTracker page="homepage" />
     </main>
   );
 }

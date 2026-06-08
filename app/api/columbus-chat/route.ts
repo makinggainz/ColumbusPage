@@ -1,4 +1,5 @@
 import { COLUMBUS_SUGGESTIONS, serializeKb } from "@/lib/columbus-kb";
+import { getPostHogClient } from "@/lib/posthog-server";
 
 /**
  * AI answer engine for the in-page Columbus helper (components/business/
@@ -252,6 +253,13 @@ export async function POST(req: Request): Promise<Response> {
     return jsonAnswer(null);
   }
   if (turns.length === 0) return jsonAnswer(null);
+
+  const posthog = getPostHogClient();
+  posthog.capture({
+    distinctId: "anonymous",
+    event: "chat_message_sent",
+    properties: { turn_count: turns.length },
+  });
 
   try {
     const ctrl = new AbortController();

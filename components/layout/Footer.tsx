@@ -4,6 +4,7 @@ import type { FC } from "react";
 import { useEffect, useRef } from "react";
 import Link from "next/link";
 import { Mail, Linkedin } from "lucide-react";
+import { track } from "@/lib/analytics";
 
 export type FooterProps = {
   variant?: "default" | "compact";
@@ -279,6 +280,7 @@ const FooterColumn = ({
         <li key={i}>
           <Link
             href={link.href}
+            onClick={() => track.ctaClicked(`footer_${link.label.toLowerCase().replace(/ /g, "_")}`, "footer")}
             className="cursor-pointer transition-colors hover:text-white"
           >
             {link.label}

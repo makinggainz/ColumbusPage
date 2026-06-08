@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { track } from "@/lib/analytics";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import { MistxNav } from "@/components/layout/MistxNav";
@@ -43,6 +44,10 @@ export default function NotFound() {
   // 0 also keeps MistxNav transparent (its backdrop is driven by
   // `scrollY > 0`), so the navbar has no background here. Restored on
   // unmount so other routes scroll normally.
+  useEffect(() => {
+    track.pageNotFound(window.location.pathname);
+  }, []);
+
   useEffect(() => {
     const html = document.documentElement;
     const { body } = document;

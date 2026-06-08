@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { track } from "@/lib/analytics";
 
 type InquiryType = "columbus-pro" | "elio" | "investment" | "careers";
 
@@ -112,6 +113,8 @@ export function CareersContactForm({ intro }: Props = {}) {
     setSubmitting(true);
     setSubmitError(null);
     try {
+      track.contactSubmitted(tab);
+      if (tab === "columbus-pro") track.demoRequested("research");
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },

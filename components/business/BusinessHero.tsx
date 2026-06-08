@@ -9,6 +9,7 @@ import AgenticResearchMockup from "./AgenticResearchMockup";
 import DataManagerMockup from "./DataManagerMockup";
 import DashboardMockup from "./DashboardMockup";
 import { ScaleToFit } from "../technology/redesign/ScaleToFit";
+import { track } from "@/lib/analytics";
 
 const reveal = (visible: boolean, delay: number): React.CSSProperties => ({
   opacity: visible ? 1 : 0,
@@ -496,6 +497,7 @@ export default function BusinessHero() {
             CTAs across the site. */}
         <Link
           href="/contact?tab=columbus-pro"
+          onClick={() => track.demoRequested("business")}
           className="group mt-8 rounded-full px-7 py-3.5 text-sm leading-none flex items-center gap-2.5 transition-colors bg-cta text-white hover:text-[#154ACC]"
         >
           Start Now

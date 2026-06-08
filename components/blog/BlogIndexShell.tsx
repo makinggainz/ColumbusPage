@@ -3,6 +3,7 @@ import { getImageProps } from "next/image";
 import { MistxNav } from "@/components/layout/MistxNav";
 import { BlogIndexGrid, type BlogFilter } from "@/components/blog/BlogIndexGrid";
 import { BlogFilterBar } from "@/components/blog/BlogFilterBar";
+import { BlogSubscribeSection } from "@/components/blog/BlogSubscribeSection";
 import { MediaPrefetcher } from "@/components/ui/MediaPrefetcher";
 import { getAllBlogPostsSorted } from "@/lib/blog-posts";
 import styles from "@/app/blog/blog-index.module.css";
@@ -90,6 +91,11 @@ export function BlogIndexShell({ activeFilter }: { activeFilter: BlogFilter }) {
       <div className={styles.body}>
         <BlogIndexGrid posts={posts} activeFilter={activeFilter} />
       </div>
+
+      {/* Subscribe section — sits between the article grid and the reveal
+          footer, giving readers a clear path to stay connected after
+          browsing. Max-width mirrors the article column (720px). */}
+      <BlogSubscribeSection source="blog_index" />
 
       {/* Warm all below-fold card covers (lazy → eager) after load + idle,
           so every cover is decoded before the user scrolls or clicks into an

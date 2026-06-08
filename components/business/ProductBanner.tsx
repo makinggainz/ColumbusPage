@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { ImageWithFallback } from "@/components/ui/ImageWithFallback";
 import { useMediaWarm } from "@/components/ui/MediaPrefetcher";
+import { track } from "@/lib/analytics";
 import businessArtBG from "@/public/BusinessPgMedia/businessArtBGEnhance.png";
 
 export default function ProductBanner() {
@@ -81,6 +82,7 @@ export default function ProductBanner() {
 
         <Link
           href="/contact?tab=columbus-pro"
+          onClick={() => track.demoRequested("business")}
           className="group mt-10 flex items-center gap-3 leading-none whitespace-nowrap rounded-button-md hover:opacity-90 transition-all duration-300"
           style={{ fontSize: 15, fontWeight: 500, height: 36, paddingLeft: 20, paddingRight: 16, backgroundColor: "var(--ent-btn-dark)", color: "white" }}
         >

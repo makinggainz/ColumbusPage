@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { getPostHogClient } from "@/lib/posthog-server";
 
 const PORTAL_ID = process.env.HUBSPOT_PORTAL_ID;
 const FORM_GUID = process.env.HUBSPOT_FORM_GUID;
@@ -102,5 +103,18 @@ export async function POST(req: NextRequest) {
   }
 
   console.log(`[contact] ok — fields saved: [${fields.map(f => f.name).join(", ")}]`);
+
+  const posthog = getPostHogClient();
+  posthog.capture({
+    distinctId: body.email!.trim(),
+    event: "contact_submitted",
+    properties: {
+      tab: body.tab,
+      industry: body.industry,
+      heard_from: body.heardFrom,
+      has_updates_consent: !!body.updates,
+    },
+  });
+
   return NextResponse.json({ ok: true });
 }

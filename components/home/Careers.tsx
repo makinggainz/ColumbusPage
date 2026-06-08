@@ -23,6 +23,7 @@ import { useRef, useEffect, useState, useCallback } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useMediaWarm } from "@/components/ui/MediaPrefetcher";
+import { track } from "@/lib/analytics";
 // Static import → AVIF via the optimizer (was a raw 1.8 MB <img>), real
 // blur-up placeholder, and intrinsic dimensions (no layout shift).
 import hiringWorldMap from "@/public/HomePgMedia/hiringWorldMap.png";
@@ -626,7 +627,7 @@ export const Careers = ({ hideHeader, className = "" }: { hideHeader?: boolean; 
         </div>
 
         <div className="careers-join-row">
-          <Link href="/contact?tab=careers" className="careers-join group">
+          <Link href="/contact?tab=careers" onClick={() => track.ctaClicked("join_our_team", "homepage")} className="careers-join group">
             Join our team
             <span className="inline-block transition-transform group-hover:translate-x-0.5">
               <ArrowDots className="text-accent" />
