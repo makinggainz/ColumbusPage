@@ -25,6 +25,8 @@ export function BlogArticleStickyNav({ sections, articleSlug }: Props) {
   const [activeId, setActiveId] = useState<string>("");
   const [pastEnd, setPastEnd] = useState(false);
   const [minimized, setMinimized] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const [dockHovered, setDockHovered] = useState(false);
 
   /* Compact subscribe widget state */
   const [subEmail, setSubEmail] = useState("");
@@ -84,6 +86,13 @@ export function BlogArticleStickyNav({ sections, articleSlug }: Props) {
   }, []);
 
   useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 200);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  useEffect(() => {
     if (sections.length === 0) return;
     const observer = new IntersectionObserver(
       (entries) => {
@@ -104,6 +113,9 @@ export function BlogArticleStickyNav({ sections, articleSlug }: Props) {
     <nav
       className={`${styles.dock} ${pastEnd ? styles.dockHidden : ""} ${minimized ? styles.dockMinimized : ""}`}
       aria-label="Article navigation"
+      style={{ opacity: scrolled && !dockHovered ? 0.5 : 1 }}
+      onMouseEnter={() => setDockHovered(true)}
+      onMouseLeave={() => setDockHovered(false)}
     >
       {/* Minimize/restore toggle — single button sitting in the top-right
           of the panel. When minimized the panel shrinks to a small circle
@@ -162,7 +174,6 @@ export function BlogArticleStickyNav({ sections, articleSlug }: Props) {
             style={{
               fontFamily: "var(--font-hero)",
               opacity: logoHovered ? 1 : 0,
-              transform: logoHovered ? "translateX(0)" : "translateX(-12px)",
             }}
           >
             Columbus Earth
