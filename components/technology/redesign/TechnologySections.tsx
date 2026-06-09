@@ -48,6 +48,339 @@ function Slide({
   );
 }
 
+/* Static wireframe globe (cards 2–4, for now). */
+function ResultsGlobeStatic() {
+  return (
+    <svg viewBox="0 0 100 100" fill="none" preserveAspectRatio="xMidYMid meet">
+      {/* Wireframe globe — outer rim, latitudes, longitudes, surface marker. */}
+      <circle cx="50" cy="50" r="34" stroke="rgba(255,255,255,0.85)" strokeWidth="0.9" />
+      <ellipse cx="50" cy="50" rx="34" ry="9" stroke="rgba(255,255,255,0.7)" strokeWidth="0.7" />
+      <ellipse cx="50" cy="50" rx="32" ry="22" stroke="rgba(255,255,255,0.55)" strokeWidth="0.6" />
+      <ellipse cx="50" cy="50" rx="28" ry="32" stroke="rgba(255,255,255,0.55)" strokeWidth="0.6" />
+      <line x1="50" y1="16" x2="50" y2="84" stroke="rgba(255,255,255,0.85)" strokeWidth="0.8" />
+      <line x1="34" y1="22" x2="66" y2="22" stroke="rgba(255,255,255,0.55)" strokeWidth="0.6" />
+      <line x1="28" y1="34" x2="72" y2="34" stroke="rgba(255,255,255,0.55)" strokeWidth="0.6" />
+      <line x1="28" y1="66" x2="72" y2="66" stroke="rgba(255,255,255,0.55)" strokeWidth="0.6" />
+      <line x1="34" y1="78" x2="66" y2="78" stroke="rgba(255,255,255,0.55)" strokeWidth="0.6" />
+      <circle cx="61" cy="40" r="3" fill="rgba(255,255,255,0.9)" />
+    </svg>
+  );
+}
+
+/* Card 1 — a true 3D wireframe globe (meridians + parallels assembled in 3D
+   space) spinning on its polar axis. Built from HTML layers because SVG can't
+   render real 3D rotation; the parent .resultsCardArt supplies the blue tile.
+   GLOBE_R is the sphere radius in px and must match --globe-d (= 2·R) in the
+   stylesheet so the parallel rings' translateZ math lines up with the
+   meridian circles. */
+const GLOBE_R = 81;
+// Longitude great circles every 20° (0–160°; 180° duplicates 0°).
+const GLOBE_MERIDIANS = [0, 20, 40, 60, 80, 100, 120, 140, 160];
+// Latitude rings every 20° north + south of the equator.
+const GLOBE_PARALLELS = [-60, -40, -20, 0, 20, 40, 60];
+// Projection rays — emitted from a node near the BOTTOM interior of the sphere
+// up toward surface points in the upper region. Each target is [theta, phi]
+// in degrees: theta = angle from the top pole, phi = azimuth. Because both the
+// origin (inside) and every target (on the surface) lie within the sphere, the
+// ray segments — and their 2D projection — always stay within the circle.
+const RAY_ORIGIN_Y = 1; // = R: the node sits on the sphere's bottom point
+const GLOBE_RAY_TARGETS: [number, number][] = [
+  [0, 0],
+  [52, 0], [52, 60], [52, 120], [52, 180], [52, 240], [52, 300],
+  [98, 30], [98, 90], [98, 150], [98, 210], [98, 270], [98, 330],
+];
+
+/* Card 4 — "Deep spatial reasoning at scale": a 3D gravity-well / warp tunnel.
+   Built like the globe — concentric horizontal rings (latitude-style) at
+   shrinking radius + growing depth form the funnel, then a straight tube; radial
+   spokes connect consecutive rings down the surface. The whole thing tilts for
+   the oblique view and spins on its axis at the same speed as card 1. */
+const FUNNEL_R = 92;      // rim radius (px)
+const THROAT_R = 13;      // narrowest radius at the funnel's throat
+const WELL_DEPTH = 78;    // depth from rim to throat
+const N_WELL = 7;         // rings forming the curved well
+const N_TUBE = 4;         // rings forming the straight tube below the throat
+const TUBE_STEP = 16;     // depth added per tube ring
+const FUNNEL_AZIMUTHS = 12; // radial spokes around the funnel
+
+function ResultsGlobe3D({
+  spin = false,
+  rays = false,
+  reveal = false,
+}: {
+  spin?: boolean;
+  rays?: boolean;
+  reveal?: boolean;
+}) {
+  // Layer-by-layer (card 2) build order: latitude rings stack top→bottom
+  // first, then the meridians draw in. STAGGER is the per-layer delay step.
+  const STAGGER = 0.12;
+  const inner = (
+    <div className={styles.globe}>
+        <div
+          className={[
+            styles.globeRotor,
+            spin ? styles.globeRotorSpin : "",
+            reveal ? styles.globeRotorLayered : "",
+          ]
+            .filter(Boolean)
+            .join(" ")}
+        >
+          {GLOBE_MERIDIANS.map((deg, mi) => (
+            <span
+              key={`m${deg}`}
+              className={styles.globeMeridian}
+              style={{
+                transform: `rotateY(${deg}deg)`,
+                animationDelay: `${(GLOBE_PARALLELS.length + mi) * STAGGER}s`,
+              }}
+            />
+          ))}
+          {GLOBE_PARALLELS.map((lat, pi) => {
+            const rad = (lat * Math.PI) / 180;
+            const size = 2 * GLOBE_R * Math.cos(rad);
+            const z = GLOBE_R * Math.sin(rad);
+            return (
+              <span
+                key={`p${lat}`}
+                className={styles.globeParallel}
+                style={{
+                  width: size,
+                  height: size,
+                  transform: `translate(-50%, -50%) rotateX(90deg) translateZ(${z}px)`,
+                  // Top ring (highest lat) first, descending to the bottom.
+                  animationDelay: `${(GLOBE_PARALLELS.length - 1 - pi) * STAGGER}s`,
+                }}
+              />
+            );
+          })}
+          {/* 3D projection rays from a bottom-interior node, contained in the
+              sphere. Each ray is a thin bar anchored (transform-origin 0 50%)
+              at the globe centre, translated to the origin node, then oriented
+              toward its surface target via rotateZ (in-plane) + rotateY (depth). */}
+          {rays && (() => {
+            const sx = 0;
+            const sy = GLOBE_R * RAY_ORIGIN_Y;
+            const sz = 0;
+            return (
+              <>
+                {GLOBE_RAY_TARGETS.map(([th, ph], i) => {
+                  const t = (th * Math.PI) / 180;
+                  const p = (ph * Math.PI) / 180;
+                  const ex = GLOBE_R * Math.sin(t) * Math.cos(p);
+                  const ey = -GLOBE_R * Math.cos(t);
+                  const ez = GLOBE_R * Math.sin(t) * Math.sin(p);
+                  const dx = ex - sx;
+                  const dy = ey - sy;
+                  const dz = ez - sz;
+                  const len = Math.hypot(dx, dy, dz);
+                  const angleZ = (Math.atan2(dy, dx) * 180) / Math.PI;
+                  const angleY = (Math.asin(-dz / len) * 180) / Math.PI;
+                  return (
+                    <span
+                      key={`ray${i}`}
+                      className={styles.globeRay}
+                      style={{
+                        width: len,
+                        transform: `translate3d(${sx}px, ${sy}px, ${sz}px) rotateZ(${angleZ}deg) rotateY(${angleY}deg)`,
+                      }}
+                    />
+                  );
+                })}
+                <span
+                  className={styles.globeRayNode}
+                  style={{ transform: `translate3d(${sx}px, ${sy}px, ${sz}px)` }}
+                />
+              </>
+            );
+          })()}
+        </div>
+        {/* Sphere silhouette — a crisp static rim that frames the rotor. */}
+        <span className={styles.globeRim} />
+      </div>
+  );
+
+  return (
+    <div className={styles.globeScene} aria-hidden>
+      {inner}
+    </div>
+  );
+}
+
+/* Card 4 — 3D warp tunnel (gravity well), spinning on its axis. */
+function ResultsWarp() {
+  // Rings from the rim down to the throat (curved well), then the straight tube.
+  const rings: { r: number; y: number }[] = [];
+  for (let k = 0; k < N_WELL; k++) {
+    const u = k / (N_WELL - 1);
+    rings.push({
+      r: FUNNEL_R + (THROAT_R - FUNNEL_R) * u,
+      y: WELL_DEPTH * Math.pow(u, 1.7), // steeper near the throat
+    });
+  }
+  for (let j = 1; j <= N_TUBE; j++) {
+    rings.push({ r: THROAT_R, y: WELL_DEPTH + TUBE_STEP * j });
+  }
+
+  // Centre the funnel vertically: shift every ring up by half the total depth
+  // so the rim/tube straddle the origin instead of hanging below it.
+  const MID = (WELL_DEPTH + N_TUBE * TUBE_STEP) / 2;
+
+  // Radial spokes — straight segments connecting consecutive rings at each
+  // azimuth, so they follow the funnel + tube surface (built with the same
+  // 3D line-as-bar math as the globe's rays).
+  const spokes: {
+    key: string;
+    len: number;
+    sx: number;
+    sy: number;
+    sz: number;
+    angleZ: number;
+    angleY: number;
+  }[] = [];
+  for (let a = 0; a < FUNNEL_AZIMUTHS; a++) {
+    const phi = (a * 2 * Math.PI) / FUNNEL_AZIMUTHS;
+    const c = Math.cos(phi);
+    const s = Math.sin(phi);
+    for (let i = 0; i < rings.length - 1; i++) {
+      const A = rings[i];
+      const B = rings[i + 1];
+      const sx = A.r * c;
+      const sz = A.r * s;
+      const dx = B.r * c - sx;
+      const dy = B.y - A.y;
+      const dz = B.r * s - sz;
+      const len = Math.hypot(dx, dy, dz);
+      spokes.push({
+        key: `${a}-${i}`,
+        len,
+        sx,
+        sy: A.y - MID,
+        sz,
+        angleZ: (Math.atan2(dy, dx) * 180) / Math.PI,
+        angleY: (Math.asin(-dz / len) * 180) / Math.PI,
+      });
+    }
+  }
+
+  // Opaque surface panels — one quad per cell, filled with the tile colour so
+  // they occlude the wireframe on the far side (no more see-through). Each is a
+  // 1px box mapped onto the cell's plane via matrix3d, then clipped to the
+  // trapezoid (top edge longer than bottom since the funnel narrows downward).
+  const faces: { key: string; m: string; clip: string }[] = [];
+  for (let a = 0; a < FUNNEL_AZIMUTHS; a++) {
+    const a0 = (a * 2 * Math.PI) / FUNNEL_AZIMUTHS;
+    const a1 = ((a + 1) * 2 * Math.PI) / FUNNEL_AZIMUTHS;
+    for (let i = 0; i < rings.length - 1; i++) {
+      const ri = rings[i].r;
+      const ri1 = rings[i + 1].r;
+      const yi = rings[i].y - MID;
+      const yi1 = rings[i + 1].y - MID;
+      const A = { x: ri * Math.cos(a0), y: yi, z: ri * Math.sin(a0) };
+      const B = { x: ri * Math.cos(a1), y: yi, z: ri * Math.sin(a1) };
+      const D = { x: ri1 * Math.cos(a0), y: yi1, z: ri1 * Math.sin(a0) };
+      const u = { x: B.x - A.x, y: B.y - A.y, z: B.z - A.z };
+      const v = { x: D.x - A.x, y: D.y - A.y, z: D.z - A.z };
+      let nx = u.y * v.z - u.z * v.y;
+      let ny = u.z * v.x - u.x * v.z;
+      let nz = u.x * v.y - u.y * v.x;
+      const nl = Math.hypot(nx, ny, nz) || 1;
+      nx /= nl;
+      ny /= nl;
+      nz /= nl;
+      // Push the panel a hair behind the grid lines so the lines stay on top.
+      const ox = A.x - 0.4 * nx;
+      const oy = A.y - 0.4 * ny;
+      const oz = A.z - 0.4 * nz;
+      const f = (ri1 / ri) * 100; // bottom edge is shorter → trapezoid
+      faces.push({
+        key: `f${a}-${i}`,
+        m: `matrix3d(${u.x},${u.y},${u.z},0, ${v.x},${v.y},${v.z},0, ${nx},${ny},${nz},0, ${ox},${oy},${oz},1)`,
+        clip: `polygon(0% 0%, 100% 0%, ${f}% 100%, 0% 100%)`,
+      });
+    }
+  }
+
+  return (
+    <div className={styles.warpScene} aria-hidden>
+      <div className={styles.warpFunnel}>
+        <div className={styles.warpRotor}>
+          {faces.map((face) => (
+            <span
+              key={face.key}
+              className={styles.warpFace}
+              style={{ transform: face.m, clipPath: face.clip }}
+            />
+          ))}
+          {rings.map((ring, i) => (
+            <span
+              key={`ring${i}`}
+              className={styles.warpRing}
+              style={{
+                width: 2 * ring.r,
+                height: 2 * ring.r,
+                transform: `translate(-50%, -50%) rotateX(90deg) translateZ(${MID - ring.y}px)`,
+              }}
+            />
+          ))}
+          {spokes.map((sp) => (
+            <span
+              key={`sp${sp.key}`}
+              className={styles.warpSpoke}
+              style={{
+                width: sp.len,
+                transform: `translate3d(${sp.sx}px, ${sp.sy}px, ${sp.sz}px) rotateZ(${sp.angleZ}deg) rotateY(${sp.angleY}deg)`,
+              }}
+            />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* Card 3 — "Generalist model, with access to wide catalogue": a meridian-only
+   wireframe globe with dashed crosshairs that roam, plus a small target circle
+   (with its own crosshair) drifting around the globe — a scanning/lookup feel. */
+function ResultsCatalogue() {
+  return (
+    <div className={styles.catScene} aria-hidden>
+      <div className={styles.globe}>
+        <div className={styles.globeRotor}>
+          {GLOBE_MERIDIANS.map((deg) => (
+            <span
+              key={`m${deg}`}
+              className={styles.globeMeridian}
+              style={{ transform: `rotateY(${deg}deg)` }}
+            />
+          ))}
+        </div>
+        <span className={styles.globeRim} />
+      </div>
+      {/* Roaming dashed crosshairs (different periods → wandering intersection). */}
+      <span className={styles.catCrossH} />
+      <span className={styles.catCrossV} />
+      {/* Target circle with its own mini crosshair, drifting around the globe. */}
+      <span className={styles.catTarget}>
+        <span className={styles.catTargetH} />
+        <span className={styles.catTargetV} />
+      </span>
+    </div>
+  );
+}
+
+function ResultsGlobe({ num }: { num: string }) {
+  if (num === "1") return <ResultsGlobe3D spin rays />;
+  // Card 3 — meridian globe with roaming crosshairs + drifting target.
+  if (num === "3") return <ResultsCatalogue />;
+  // Card 2 — "Generative geospatial data": wireframe globe that loads in
+  // top-to-bottom on a loop (no spin, no rays).
+  if (num === "2") return <ResultsGlobe3D reveal />;
+  // Card 4 — "Deep spatial reasoning at scale": rotating 3D warp tunnel.
+  if (num === "4") return <ResultsWarp />;
+  return <ResultsGlobeStatic />;
+}
+
 
 export function TechnologySections() {
   return (
@@ -673,19 +1006,7 @@ export function TechnologySections() {
               ].map((item) => (
                 <div key={item.num} className={styles.resultsCard}>
                   <div className={styles.resultsCardArt} aria-hidden>
-                    <svg viewBox="0 0 100 100" fill="none" preserveAspectRatio="xMidYMid meet">
-                      {/* Wireframe globe — outer rim, latitudes, longitudes, surface marker. */}
-                      <circle cx="50" cy="50" r="34" stroke="rgba(255,255,255,0.85)" strokeWidth="0.9" />
-                      <ellipse cx="50" cy="50" rx="34" ry="9" stroke="rgba(255,255,255,0.7)" strokeWidth="0.7" />
-                      <ellipse cx="50" cy="50" rx="32" ry="22" stroke="rgba(255,255,255,0.55)" strokeWidth="0.6" />
-                      <ellipse cx="50" cy="50" rx="28" ry="32" stroke="rgba(255,255,255,0.55)" strokeWidth="0.6" />
-                      <line x1="50" y1="16" x2="50" y2="84" stroke="rgba(255,255,255,0.85)" strokeWidth="0.8" />
-                      <line x1="34" y1="22" x2="66" y2="22" stroke="rgba(255,255,255,0.55)" strokeWidth="0.6" />
-                      <line x1="28" y1="34" x2="72" y2="34" stroke="rgba(255,255,255,0.55)" strokeWidth="0.6" />
-                      <line x1="28" y1="66" x2="72" y2="66" stroke="rgba(255,255,255,0.55)" strokeWidth="0.6" />
-                      <line x1="34" y1="78" x2="66" y2="78" stroke="rgba(255,255,255,0.55)" strokeWidth="0.6" />
-                      <circle cx="61" cy="40" r="3" fill="rgba(255,255,255,0.9)" />
-                    </svg>
+                    <ResultsGlobe num={item.num} />
                   </div>
                   <h3 className={styles.resultsCardText}>{item.text}</h3>
                 </div>

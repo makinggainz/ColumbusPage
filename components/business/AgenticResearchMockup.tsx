@@ -471,7 +471,8 @@ export default function AgenticResearchMockup({ industryId, preload = false }: A
       </div>
 
       <div
-        className="absolute"
+        key={industryId ?? "default"}
+        className="absolute industry-fade-in"
         style={{
           left: "4.32%",
           top: "7.02%",

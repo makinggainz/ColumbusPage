@@ -5,6 +5,17 @@ import Image from "next/image";
 import { ArrowDot, NavArrowStack, elioMenuItems } from "../layout/MistxNav";
 import { heroOptimizerSrcSet } from "@/lib/hero-assets";
 
+const APPEAR = "cubic-bezier(0.22, 1.4, 0.36, 1)";
+
+function slideLeft(ready: boolean, delayMs: number) {
+  return {
+    opacity: ready ? 1 : 0,
+    filter: ready ? "blur(0px)" : "blur(8px)",
+    transform: ready ? "translateX(0)" : "translateX(-22px)",
+    transition: `opacity 1000ms ease ${delayMs}ms, filter 1000ms ease ${delayMs}ms, transform 900ms ${APPEAR} ${delayMs}ms`,
+  };
+}
+
 /**
  * Hero section — minimal layout for the experimentV6-Gdesign redesign.
  *
@@ -71,7 +82,17 @@ const HN_CSS = `
    all layer cleanly on top. Shared rules for both bg variants below;
    .hn-bg-desktop carries the 1672×941 landscape art; .hn-bg-mobile
    carries the 853×1844 portrait variant. Display is swapped by viewport
-   in the media-query block. */
+   in the media-query block.
+   opacity starts at 0 and transitions to 1 via onLoad so the image
+   fades in smoothly rather than popping in.
+   hn-colorize: image starts fully desaturated (grayscale) and blooms
+   back to color once the blue glow has animated in. The 1.4s delay
+   lands when the glow is ~80% visible (ease-out 1.6s at 350ms offset),
+   so the color feels "unlocked" by the glow rather than arriving with it. */
+@keyframes hn-colorize {
+  from { filter: grayscale(1); }
+  to   { filter: grayscale(0); }
+}
 .hn-bg {
   position: absolute;
   inset: 0;
@@ -79,6 +100,10 @@ const HN_CSS = `
   height: 100%;
   object-fit: cover;
   z-index: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.45s ease;
+  animation: hn-colorize 0.9s ease-in 1.4s both;
 }
 .hn-bg-desktop {
   object-position: right center;
@@ -146,14 +171,9 @@ const HN_CSS = `
     );
   }
   /* Mobile ::after — strip the desktop bottom-fade and ship-halo
-     layers; keep only the top-left blue tint. The bottom-fade was
-     blending the hero's bottom edge into the next section, but both
-     surfaces are already pure #FFFFFF (see hn-section bg-color +
-     app/page.tsx), so the fade is doing visual work it doesn't need
-     to and was washing out the hull (≈y516–610 on a 633px section,
-     which is exactly where the 80%→100% white ramp landed). The
-     centered ellipse halo was a desktop carryover with no purpose
-     on mobile. */
+     layers; keep only the top-right white wash. The blue glow is now
+     handled by .hn-glow (a separate animated element) so it can fade
+     in independently on both breakpoints. */
   .hn-section::after {
     background:
       /* Top-right white wash — wide ellipse anchored at the top-right
@@ -166,11 +186,6 @@ const HN_CSS = `
         rgba(255, 255, 255, 0.82) 30%,
         rgba(255, 255, 255, 0.5) 55%,
         rgba(255, 255, 255, 0) 82%
-      ),
-      radial-gradient(
-        circle at top left,
-        rgba(96, 148, 193, 0.35) 0%,
-        rgba(255, 255, 255, 0) 25%
       );
   }
 }
@@ -203,19 +218,14 @@ const HN_CSS = `
   }
 }
 
-/* Three-layer overlay (single ::after). CSS multi-background paints
-   the *first* layer on top, so the stack from top to bottom is:
-   1. Top — top-left blue emanation. Radial gradient anchored at the
-      top-left corner, opaque #81A5FF at the corner and fading to
-      transparent (rgba 255,255,255,0) at the farthest-corner extent.
-      Sits above the bottom fade + vignette so the blue tint shows
-      across the whole top-left quadrant rather than getting hidden
-      by the vignette's opaque-white corner zone.
-   2. Middle — linear bottom fade. Ensures the section's bottom edge
+/* Two-layer overlay (single ::after). Blue glow moved to .hn-glow so
+   it can animate independently. CSS multi-background paints the *first*
+   layer on top, so the stack from top to bottom is:
+   1. Middle — linear bottom fade. Ensures the section's bottom edge
       is fully opaque white so the hand-off to the next section
       (TextScrollIntro / page wrapper #FFFFFF) is seamless, with no
       leftover image showing at the seam.
-   3. Bottom — radial vignette centred at ~76% horizontal / 50%
+   2. Bottom — radial vignette centred at ~76% horizontal / 50%
       vertical (the tall-ship's position). Transparent at the ship,
       ramps to opaque white outward so the surrounding water + map
       texture fades into the page and the eye lands on the ship.
@@ -231,11 +241,6 @@ const HN_CSS = `
 @media (min-width: 768px) {
   .hn-section::after {
     background:
-      radial-gradient(
-        circle at top left,
-        rgba(96, 148, 193, 0.35) 0%,
-        rgba(255, 255, 255, 0) 25%
-      ),
       linear-gradient(
         to bottom,
         transparent 65%,
@@ -252,9 +257,30 @@ const HN_CSS = `
   }
 }
 
+/* Blue emanating glow — separated from ::after so it can animate in
+   independently. Fades from invisible to full over 1.6s, starting
+   0.35s after mount, giving it a "breathing into existence" quality
+   that complements the text sliding in from the left. */
+@keyframes hn-glow-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+.hn-glow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+  background: radial-gradient(
+    circle at top left,
+    rgba(96, 148, 193, 0.35) 0%,
+    rgba(255, 255, 255, 0) 25%
+  );
+  animation: hn-glow-in 1.6s ease-out 0.35s both;
+}
+
 .hn-bounds {
   position: relative;
-  z-index: 2;
+  z-index: 3;
   /* Canonical content-bounds calc trick — 1287px cap, always 40px
      narrower than parent (= 20px gutter on each side at every viewport
      width), centered. Matches navbar / .content-bounds / site-wide. */
@@ -344,7 +370,15 @@ const HN_CSS = `
 
 export function HeroNew() {
   const [ctaOpen, setCtaOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const ctaRef = useRef<HTMLDivElement>(null);
+  const desktopImgRef = useRef<HTMLImageElement>(null);
+  const mobileImgRef = useRef<HTMLImageElement>(null);
+
+  useEffect(() => {
+    const id = setTimeout(() => setMounted(true), 60);
+    return () => clearTimeout(id);
+  }, []);
 
   useEffect(() => {
     if (!ctaOpen) return;
@@ -392,28 +426,45 @@ export function HeroNew() {
         imageSizes="100vw"
         fetchPriority="high"
       />
-      {/* Desktop background — /HomeHeroBg.png. */}
+      {/* Desktop background — /HomeHeroBg.png. onLoad sets opacity:1 via
+          ref so the image fades in smoothly (CSS starts it at opacity:0). */}
       <Image
+        ref={desktopImgRef}
         className="hn-bg hn-bg-desktop"
         src="/HomeHeroBg.png"
         alt=""
         fill
         sizes="100vw"
         quality={80}
+        draggable={false}
+        onLoad={() => {
+          if (desktopImgRef.current) desktopImgRef.current.style.opacity = "1";
+        }}
       />
       <Image
+        ref={mobileImgRef}
         className="hn-bg hn-bg-mobile"
         src="/HomeHeroBackMobile.png"
         alt=""
         fill
         sizes="100vw"
         quality={80}
+        draggable={false}
+        onLoad={() => {
+          if (mobileImgRef.current) mobileImgRef.current.style.opacity = "1";
+        }}
       />
+      {/* Animated blue glow — separated from ::after so it can fade in
+          independently via CSS animation (hn-glow-in). */}
+      <div className="hn-glow" aria-hidden="true" />
       <div className="hn-bounds">
-        <h1 className="h1 hn-title tracking-tight text-ink">
+        <h1
+          className="h1 hn-title tracking-tight text-ink"
+          style={slideLeft(mounted, 100)}
+        >
           The Applied AI Lab building a thinking earth
         </h1>
-        <p className="hn-subtitle">
+        <p className="hn-subtitle" style={slideLeft(mounted, 280)}>
           Geospatial Intelligence<br className="md:hidden" /> for the real world.
         </p>
         {/* Try Elio CTA — mirrors the navbar dropdown verbatim: same
@@ -428,6 +479,7 @@ export function HeroNew() {
           className="relative mt-7 inline-block md:mt-9 md:hidden"
           onMouseEnter={() => setCtaOpen(true)}
           onMouseLeave={() => setCtaOpen(false)}
+          style={slideLeft(mounted, 440)}
         >
           <button
             type="button"

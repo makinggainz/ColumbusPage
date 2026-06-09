@@ -5796,6 +5796,286 @@
   height: 100%;
 }
 
+/* Card 1 — true 3D wireframe globe spinning on its polar axis. Built from
+   HTML layers (meridian + parallel rings) composited in 3D space. --globe-d
+   is the sphere diameter (= 2·GLOBE_R in TechnologySections.tsx). */
+.globeScene {
+  --globe-d: 162px;
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Perspective gives the rings real depth as they swing front-to-back. */
+  perspective: 540px;
+}
+
+.globe {
+  position: relative;
+  width: var(--globe-d);
+  height: var(--globe-d);
+  transform-style: preserve-3d;
+  /* Slight forward tilt so the poles read and the spin looks 3D, not flat. */
+  transform: rotateX(-16deg);
+}
+
+/* The wireframe group. preserve-3d so meridians/parallels/rays sort in 3D. */
+.globeRotor {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+}
+
+/* Card 1 — spin around the vertical (polar) axis. */
+.globeRotorSpin {
+  animation: globeSpin 16s linear infinite;
+}
+
+@keyframes globeSpin {
+  from { transform: rotateY(0deg); }
+  to   { transform: rotateY(360deg); }
+}
+
+/* Card 2 — "Generative geospatial data": the globe assembles LAYER BY LAYER.
+   Each ring fades in on a staggered delay (set inline per element, top-to-
+   bottom), holds, then fades out, looping — a continuous generative build.
+   Scoped to .globeRotorLayered so card 1's spinning globe is unaffected.
+   Only opacity animates (never transform — the rings' positions live there). */
+.globeRotorLayered .globeMeridian,
+.globeRotorLayered .globeParallel {
+  opacity: 0;
+  animation: globeLayerIn 4.6s ease-in-out infinite both;
+}
+
+@keyframes globeLayerIn {
+  0%   { opacity: 0; }
+  10%  { opacity: 1; }
+  72%  { opacity: 1; }
+  88%  { opacity: 0; }
+  100% { opacity: 0; }
+}
+
+/* Meridians — full great circles, each rotated around Y to a longitude. */
+.globeMeridian {
+  position: absolute;
+  inset: 0;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 50%;
+}
+
+/* Parallels — horizontal latitude rings; size + translateZ set inline. */
+.globeParallel {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.42);
+  border-radius: 50%;
+}
+
+/* Static sphere silhouette drawn over the rotor for a crisp outer edge. */
+.globeRim {
+  position: absolute;
+  inset: 0;
+  border: 1.2px solid rgba(255, 255, 255, 0.9);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+/* 3D projection ray — a thin bar anchored at the globe centre (transform-origin
+   0 50%), positioned + oriented entirely via inline transform. Fades from the
+   bright origin node toward its tip. Lives inside .globeRotor so it spins (and
+   z-sorts) with the wireframe — reading as rays inside the sphere. */
+.globeRay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  height: 1px;
+  margin-top: -0.5px;
+  border-radius: 1px;
+  transform-origin: 0 50%;
+  background: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0.85) 0%,
+    rgba(255, 255, 255, 0.7) 55%,
+    rgba(255, 255, 255, 0.4) 100%
+  );
+}
+
+/* Glowing origin node at the bottom-interior projection point. */
+.globeRayNode {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 9px;
+  height: 9px;
+  margin: -4.5px 0 0 -4.5px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.95) 0%,
+    rgba(255, 255, 255, 0.55) 35%,
+    rgba(255, 255, 255, 0) 70%
+  );
+}
+
+/* Card 4 — 3D warp tunnel (gravity well). Concentric rings + radial spokes
+   assembled in 3D, tilted for an oblique view, spun on its axis via the same
+   globeSpin keyframe (16s) as card 1. Sizing is driven by inline px (rings/
+   spokes), so the funnel/rotor boxes are zero-size anchors at the centre. */
+.warpScene {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  perspective: 560px;
+}
+
+.warpFunnel {
+  position: relative;
+  width: 0;
+  height: 0;
+  transform-style: preserve-3d;
+  /* Steep top-down (from-above) view — negative tilt looks DOWN into the
+     funnel (positive looked up at it from underneath). Geometry is centred on
+     the origin (see MID offset), so the scene's flex centring keeps it placed. */
+  transform: rotateX(-58deg);
+}
+
+.warpRotor {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform-style: preserve-3d;
+  animation: globeSpin 16s linear infinite;
+}
+
+.warpRing {
+  position: absolute;
+  top: 0;
+  left: 0;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 50%;
+}
+
+.warpSpoke {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 1px;
+  margin-top: -0.5px;
+  transform-origin: 0 50%;
+  background: rgba(255, 255, 255, 0.5);
+}
+
+/* Opaque funnel surface panel — filled with the tile colour so it hides the
+   wireframe behind it (3D z-sorting). The 1px box is mapped onto the cell via
+   inline matrix3d + clipped to the trapezoid. */
+.warpFace {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1px;
+  height: 1px;
+  transform-origin: 0 0;
+  background: #1d3fa6; /* = .resultsCardArt tile background */
+}
+
+/* Card 3 — meridian globe + roaming crosshairs + drifting target reticle. */
+.catScene {
+  --globe-d: 162px;
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  perspective: 540px;
+}
+
+/* Full-width / full-height dashed crosshair lines that wander on their own
+   periods, so their intersection roams around the globe. */
+.catCrossH {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 3px;
+  margin-top: -1.5px;
+  background: repeating-linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0.9) 0 14px,
+    transparent 14px 26px
+  );
+  animation: catCrossH 7s ease-in-out infinite;
+}
+.catCrossV {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 3px;
+  margin-left: -1.5px;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.9) 0 14px,
+    transparent 14px 26px
+  );
+  animation: catCrossV 9s ease-in-out infinite;
+}
+@keyframes catCrossH {
+  0%, 100% { transform: translateY(-46px); }
+  50%      { transform: translateY(46px); }
+}
+@keyframes catCrossV {
+  0%, 100% { transform: translateX(58px); }
+  50%      { transform: translateX(-58px); }
+}
+
+/* Target reticle — a small circle with its own crosshair, drifting around. */
+.catTarget {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 54px;
+  height: 54px;
+  margin: -27px 0 0 -27px;
+  animation: catTargetRoam 13s ease-in-out infinite;
+}
+.catTarget::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 3px solid #ffffff;
+  border-radius: 50%;
+}
+.catTargetH,
+.catTargetV {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  background: #ffffff;
+  transform: translate(-50%, -50%);
+}
+.catTargetH { width: 74px; height: 2px; }
+.catTargetV { width: 2px; height: 74px; }
+@keyframes catTargetRoam {
+  0%   { transform: translate(-66px, 6px); }
+  25%  { transform: translate(-12px, -54px); }
+  50%  { transform: translate(56px, -6px); }
+  75%  { transform: translate(4px, 54px); }
+  100% { transform: translate(-66px, 6px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .globeRotorSpin { animation: none; }
+  .globeRotorLayered .globeMeridian,
+  .globeRotorLayered .globeParallel { animation: none; opacity: 1; }
+  .warpRotor { animation: none; }
+  .catCrossH,
+  .catCrossV,
+  .catTarget { animation: none; }
+}
+
 /* Caption — centred under the art tile. */
 .resultsCardText {
   margin: 0;

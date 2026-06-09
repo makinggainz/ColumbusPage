@@ -252,6 +252,57 @@ html {
   --text-p-s: var(--typography--p-s); --text-p-s--line-height: var(--typography--p-s--line-height);
 }
 
+/* Skeleton shimmer — a highlight band sweeps left→right while an image
+   decodes. Used by ImageWithFallback via the .skel-shimmer class. Callers
+   who pass a custom fallbackStyle background override this automatically
+   (inline > class specificity). Reduced-motion: flat grey, no animation. */
+@keyframes skel-pulse {
+  0%   { background-position: -100% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.skel-shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--image-skel, #ECECEE) 25%,
+    #F8F8F9 50%,
+    var(--image-skel, #ECECEE) 75%
+  );
+  background-size: 200% 100%;
+  animation: skel-pulse 1.4s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skel-shimmer {
+    animation: none;
+    background: var(--image-skel, #ECECEE);
+  }
+}
+
+/* Industry switch fade-in — plays when a content wrapper remounts on
+   industryId change. `both` fill-mode: element starts at opacity 0
+   immediately (no pre-animation flash), settles at opacity 1. */
+@keyframes industry-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.industry-fade-in {
+  animation: industry-fade-in 220ms ease-out both;
+}
+
+/* Page-mount image fade-in — CSS-only (no JS), used by server components
+   that can't use onLoad. `both` fill-mode starts the element at opacity 0
+   on mount and holds it at opacity 1 after the animation completes. */
+@keyframes page-image-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.page-image-in {
+  animation: page-image-in 600ms ease-out both;
+}
+
 /* ─── catcherX typography scale ────────────────────────────────────────
    Ten steps (h1–h7, p-l, p-m, p-s). Each token holds the desktop size;
    its --line-height companion holds the matching leading. The mobile

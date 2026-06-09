@@ -267,7 +267,8 @@ export default function DataManagerMockup({ industryId, preload = false }: DataM
           frame's hairline dividers at x=213–215 / y=204–206 sit just
           inside the chrome side and stay visible. */}
       <div
-        className="absolute"
+        key={industryId ?? "default"}
+        className="absolute industry-fade-in"
         style={{
           left: "4.166%",
           top: "6.893%",

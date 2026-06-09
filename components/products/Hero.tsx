@@ -665,7 +665,7 @@ export default function Hero() {
       >
         {/* Consumer hero background — full-bleed photograph behind the
             typed-phrase H1 + CTA. */}
-        <div aria-hidden className="absolute inset-0 overflow-hidden">
+        <div aria-hidden className="absolute inset-0 overflow-hidden pointer-events-none">
           {/* LCP for /products/consumer — `priority` emits a preload tag
               so the optimizer's AVIF/WebP variant starts fetching before
               the bundle hydrates. */}
@@ -678,6 +678,7 @@ export default function Hero() {
             fetchPriority="high"
             sizes="100vw"
             quality={80}
+            draggable={false}
             className="absolute inset-0 w-full h-full"
             style={{
               objectFit: "cover",
