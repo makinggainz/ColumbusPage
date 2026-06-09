@@ -54,11 +54,11 @@ export function ConsentBanner() {
         </p>
       </div>
       <div className={styles.buttons}>
-        <button onClick={accept} className={styles.btnAccept}>
-          Accept all
-        </button>
         <button onClick={reject} className={styles.btnReject}>
           Reject
+        </button>
+        <button onClick={accept} className={styles.btnAccept}>
+          Accept all
         </button>
       </div>
     </div>

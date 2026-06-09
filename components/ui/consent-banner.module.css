@@ -57,23 +57,24 @@
   padding: 12px 20px;
   border-radius: 16px;
   font-size: 13px;
-  font-weight: 500;
+  font-weight: 600;
   font-family: var(--font-sans);
   letter-spacing: -0.01em;
-  border: none;
-  background: #0B1342;
-  color: #ffffff;
+  border: 1px solid #3D82CE;
+  background: transparent;
+  color: #3D82CE;
   cursor: pointer;
-  transition: background 140ms ease;
+  transition: background 140ms ease, color 140ms ease;
 }
 
 .btnAccept:hover {
-  background: #172060;
+  background: #3D82CE;
+  color: #ffffff;
 }
 
 .btnReject {
   white-space: nowrap;
-  padding: 12px 20px;
+  padding: 10px 16px;
   border-radius: 16px;
   font-size: 13px;
   font-weight: 500;
@@ -81,7 +82,7 @@
   letter-spacing: -0.01em;
   border: 1px solid rgba(0, 0, 0, 0.09);
   background: transparent;
-  color: #5A6B7B;
+  color: rgba(90, 107, 123, 0.8);
   cursor: pointer;
   transition: background 140ms ease, border-color 140ms ease;
 }
