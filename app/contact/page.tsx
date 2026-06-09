@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { getImageProps } from "next/image";
-import { useState, useEffect, useRef, Suspense, type CSSProperties } from "react";
+import { useState, useEffect, useLayoutEffect, useRef, Suspense, type CSSProperties } from "react";
 import { useSearchParams } from "next/navigation";
 import { MistxNav } from "@/components/layout/MistxNav";
 import { track } from "@/lib/analytics";
@@ -292,6 +292,7 @@ function ContactPageInner() {
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [honeypot, setHoneypot] = useState("");
   const [heroLoaded, setHeroLoaded] = useState(false);
+  const heroAlreadyCached = useRef(false);
   const cardRef = useRef<HTMLDivElement>(null);
   const formStartedRef = useRef(false);
   const heroImgRef = useRef<HTMLImageElement>(null);
@@ -314,8 +315,11 @@ function ContactPageInner() {
     return () => clearTimeout(t);
   }, []);
 
-  useEffect(() => {
-    if (heroImgRef.current?.complete) setHeroLoaded(true);
+  useLayoutEffect(() => {
+    if (heroImgRef.current?.complete) {
+      heroAlreadyCached.current = true;
+      setHeroLoaded(true);
+    }
   }, []);
 
   const heroFadeIn = (delay: number): React.CSSProperties => ({
@@ -550,16 +554,8 @@ function ContactPageInner() {
         data-hero-section
         aria-hidden
         className="pointer-events-none absolute inset-x-0 top-0 z-0 w-full overflow-hidden"
-        style={{ position: "relative", aspectRatio: "1881 / 836", minHeight: "360px" }}
+        style={{ aspectRatio: "1881 / 836", minHeight: "360px" }}
       >
-        {/* Shimmer skeleton behind the hero — fades out once the image loads. */}
-        {!heroLoaded && (
-          <div
-            aria-hidden
-            className="skel-shimmer absolute inset-0"
-            style={{ zIndex: 0 }}
-          />
-        )}
         {/* Art-directed <picture>: mobile source swaps in the portrait crop;
             object-position differs per viewport (mobile right-weighted, desktop
             centred) via responsive classes (`object-right` ≡ CSS `right center`).
@@ -578,7 +574,7 @@ function ContactPageInner() {
               WebkitMaskImage: CONTACT_HERO_MASK,
               maskImage: CONTACT_HERO_MASK,
               opacity: heroLoaded ? 1 : 0,
-              transition: heroLoaded ? "opacity 450ms ease-out" : "none",
+              transition: (heroLoaded && !heroAlreadyCached.current) ? "opacity 450ms ease-out" : "none",
             }}
           />
         </picture>
