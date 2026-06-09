@@ -95,8 +95,8 @@ const GLOBE_RAY_TARGETS: [number, number][] = [
    stacked dashed planes (layers), each scattered with nodes, and projection
    rays linking each layer's nodes to the layer above. The rays animate as
    flowing dashes (data projecting up through the layers). */
-const NET_S = 150;                       // plane side (px)
-const NET_LAYER_Y = [82, 0, -82];        // bottom, middle, top (y is down-positive)
+const NET_PLANE_SIZE = [124, 160, 124];  // bottom, middle, top — middle largest
+const NET_LAYER_Y = [50, 0, -50];        // bottom, middle, top (y is down-positive)
 // Node positions per layer as [x, z] within the plane (local px).
 const NET_NODES: [number, number][][] = [
   // Layer 0 — bottom (densest)
@@ -111,10 +111,12 @@ function ResultsGlobe3D({
   spin = false,
   rays = false,
   reveal = false,
+  grow = false,
 }: {
   spin?: boolean;
   rays?: boolean;
   reveal?: boolean;
+  grow?: boolean;
 }) {
   // Layer-by-layer (card 2) build order: latitude rings stack top→bottom
   // first, then the meridians draw in. STAGGER is the per-layer delay step.
@@ -133,10 +135,13 @@ function ResultsGlobe3D({
           {GLOBE_MERIDIANS.map((deg, mi) => (
             <span
               key={`m${deg}`}
-              className={styles.globeMeridian}
+              className={`${styles.globeMeridian}${grow ? ` ${styles.globeGrow}` : ""}`}
               style={{
                 transform: `rotateY(${deg}deg)`,
-                animationDelay: `${(GLOBE_PARALLELS.length + mi) * STAGGER}s`,
+                // Stagger only drives the reveal mode; grow sweeps in unison.
+                animationDelay: reveal
+                  ? `${(GLOBE_PARALLELS.length + mi) * STAGGER}s`
+                  : undefined,
               }}
             />
           ))}
@@ -144,16 +149,23 @@ function ResultsGlobe3D({
             const rad = (lat * Math.PI) / 180;
             const size = 2 * GLOBE_R * Math.cos(rad);
             const z = GLOBE_R * Math.sin(rad);
+            // Vertical position 0 (top pole) → 1 (bottom). In grow mode each
+            // ring fades in when the meridian fill-front (which sweeps top→
+            // bottom over the first half of the 4s cycle) reaches it.
+            const p = (1 - Math.sin(rad)) / 2;
             return (
               <span
                 key={`p${lat}`}
-                className={styles.globeParallel}
+                className={`${styles.globeParallel}${grow ? ` ${styles.globeGrowParallel}` : ""}`}
                 style={{
                   width: size,
                   height: size,
                   transform: `translate(-50%, -50%) rotateX(90deg) translateZ(${z}px)`,
-                  // Top ring (highest lat) first, descending to the bottom.
-                  animationDelay: `${(GLOBE_PARALLELS.length - 1 - pi) * STAGGER}s`,
+                  animationDelay: grow
+                    ? `${p * 2}s`
+                    : reveal
+                      ? `${(GLOBE_PARALLELS.length - 1 - pi) * STAGGER}s`
+                      : undefined,
                 }}
               />
             );
@@ -199,8 +211,10 @@ function ResultsGlobe3D({
             );
           })()}
         </div>
-        {/* Sphere silhouette — a crisp static rim that frames the rotor. */}
-        <span className={styles.globeRim} />
+        {/* Sphere silhouette. Omitted in grow mode — the rotateY(0) meridian
+            already traces the outer circle and draws in sync with the others,
+            so a separate (static) rim would read as out of step. */}
+        {!grow && <span className={styles.globeRim} />}
       </div>
   );
 
@@ -259,8 +273,8 @@ function ResultsLayers() {
             key={`plane${li}`}
             className={styles.netPlane}
             style={{
-              width: NET_S,
-              height: NET_S,
+              width: NET_PLANE_SIZE[li],
+              height: NET_PLANE_SIZE[li],
               transform: `translate(-50%, -50%) rotateX(90deg) translateZ(${-y}px)`,
             }}
           />
@@ -279,9 +293,11 @@ function ResultsLayers() {
           layer.map(([x, z], ni) => (
             <span
               key={`node${li}-${ni}`}
-              className={`${styles.netNode} ${[styles.netNode0, styles.netNode1, styles.netNode2][li]}`}
+              className={styles.netNode}
               style={{ transform: `translate3d(${x}px, ${NET_LAYER_Y[li]}px, ${z}px)` }}
-            />
+            >
+              <span className={styles.netNodeDot} />
+            </span>
           )),
         )}
       </div>
@@ -310,10 +326,14 @@ function ResultsCatalogue() {
       {/* Roaming dashed crosshairs (different periods → wandering intersection). */}
       <span className={styles.catCrossH} />
       <span className={styles.catCrossV} />
-      {/* Target circle with its own mini crosshair, drifting around the globe. */}
+      {/* Target reticle — pinned to the crosshair intersection: the outer span
+          shares the vertical crosshair's horizontal roam, the inner span shares
+          the horizontal crosshair's vertical roam. */}
       <span className={styles.catTarget}>
-        <span className={styles.catTargetH} />
-        <span className={styles.catTargetV} />
+        <span className={styles.catTargetInner}>
+          <span className={styles.catTargetH} />
+          <span className={styles.catTargetV} />
+        </span>
       </span>
     </div>
   );
@@ -323,9 +343,9 @@ function ResultsGlobe({ num }: { num: string }) {
   if (num === "1") return <ResultsGlobe3D spin rays />;
   // Card 3 — meridian globe with roaming crosshairs + drifting target.
   if (num === "3") return <ResultsCatalogue />;
-  // Card 2 — "Generative geospatial data": wireframe globe that loads in
-  // top-to-bottom on a loop (no spin, no rays).
-  if (num === "2") return <ResultsGlobe3D reveal />;
+  // Card 2 — "Generative geospatial data": static globe whose meridians grow
+  // from the top pole down to the bottom pole, on a loop.
+  if (num === "2") return <ResultsGlobe3D grow />;
   // Card 4 — "Deep spatial reasoning at scale": 3D multilayer network.
   if (num === "4") return <ResultsLayers />;
   return <ResultsGlobeStatic />;

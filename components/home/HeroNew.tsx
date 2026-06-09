@@ -90,8 +90,15 @@ const HN_CSS = `
    lands when the glow is ~80% visible (ease-out 1.6s at 350ms offset),
    so the color feels "unlocked" by the glow rather than arriving with it. */
 @keyframes hn-colorize {
-  from { filter: grayscale(1); }
-  to   { filter: grayscale(0); }
+  from { filter: grayscale(1) url(#hn-blue-cycle); }
+  to   { filter: grayscale(0) url(#hn-blue-cycle); }
+}
+/* Hidden host for the SVG filter def. */
+.hn-filter-defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+  pointer-events: none;
 }
 .hn-bg {
   position: absolute;
@@ -279,40 +286,41 @@ const HN_CSS = `
 }
 .hn-glow-accent {
   background: radial-gradient(circle at top left, rgba(96, 148, 193, 0.35) 0%, rgba(255, 255, 255, 0) 28%);
-  animation: hn-glow-accent-cycle 7s linear 1.95s both infinite;
+  animation: hn-glow-accent-cycle 7s ease-in-out 1.95s both infinite;
 }
 .hn-glow-elio {
   background: radial-gradient(circle at top left, rgba(2, 157, 253, 0.42) 0%, rgba(255, 255, 255, 0) 28%);
-  animation: hn-glow-elio-cycle 7s linear 1.95s both infinite;
+  animation: hn-glow-elio-cycle 7s ease-in-out 1.95s both infinite;
 }
 .hn-glow-columbus {
   background: radial-gradient(circle at top left, rgba(10, 19, 66, 0.28) 0%, rgba(255, 255, 255, 0) 28%);
-  animation: hn-glow-columbus-cycle 7s linear 1.95s both infinite;
+  animation: hn-glow-columbus-cycle 7s ease-in-out 1.95s both infinite;
 }
 
-/* Each cycle: hold → cross-fade out → hold invisible → cross-fade in.
-   Cross-fades are 8% of 7s ≈ 0.56s each — noticeable but unhurried. */
+/* Each cycle: a short hold, then a long, eased cross-fade into the next
+   colour. Cross-fades span ~20% of 7s (~1.4s) and overlap (each colour fades
+   out exactly while the next fades in), with ease-in-out timing on the layers
+   — so the transitions are soft rather than sharp. */
 @keyframes hn-glow-accent-cycle {
   0%   { opacity: 1; }
-  28%  { opacity: 1; }
-  36%  { opacity: 0; }
-  86%  { opacity: 0; }
-  94%  { opacity: 1; }
+  13%  { opacity: 1; }
+  33%  { opacity: 0; }
+  80%  { opacity: 0; }
   100% { opacity: 1; }
 }
 @keyframes hn-glow-elio-cycle {
   0%   { opacity: 0; }
-  28%  { opacity: 0; }
-  36%  { opacity: 1; }
-  61%  { opacity: 1; }
-  69%  { opacity: 0; }
+  13%  { opacity: 0; }
+  33%  { opacity: 1; }
+  46%  { opacity: 1; }
+  66%  { opacity: 0; }
   100% { opacity: 0; }
 }
 @keyframes hn-glow-columbus-cycle {
   0%   { opacity: 0; }
-  61%  { opacity: 0; }
-  69%  { opacity: 1; }
-  94%  { opacity: 1; }
+  46%  { opacity: 0; }
+  66%  { opacity: 1; }
+  80%  { opacity: 1; }
   100% { opacity: 0; }
 }
 
@@ -458,6 +466,45 @@ export function HeroNew() {
   return (
     <section className="hn-section" aria-label="Columbus hero" data-hero-section>
       <style>{HN_CSS}</style>
+      {/* Blue-isolating recolor filter (applied to .hn-bg via CSS filter:url()).
+          Builds an alpha mask of blue-dominant pixels (the ship + wave),
+          floods it with a colour that cycles accent → Elio → Columbus in sync
+          with the glow (begin 1.95s, 7s loop), and "color"-blends that back
+          over the image so only the blue areas shift hue. */}
+      <svg className="hn-filter-defs" aria-hidden="true">
+        <defs>
+          <filter id="hn-blue-cycle" colorInterpolationFilters="sRGB" x="0" y="0" width="100%" height="100%">
+            {/* Blueness → alpha: A = 2·B − R − G − 0.15. */}
+            <feColorMatrix
+              in="SourceGraphic"
+              type="matrix"
+              values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  -1 -1 2 0 -0.15"
+              result="bm"
+            />
+            {/* Sharpen the mask into a cleaner cutout. */}
+            <feComponentTransfer in="bm" result="mask">
+              <feFuncA type="linear" slope="5" intercept="-0.4" />
+            </feComponentTransfer>
+            {/* Cycling tint colour, synced to the glow. */}
+            <feFlood floodColor="#6094C1" result="tint">
+              <animate
+                attributeName="flood-color"
+                begin="1.95s"
+                dur="7s"
+                repeatCount="indefinite"
+                calcMode="spline"
+                keyTimes="0;0.13;0.33;0.46;0.66;0.8;1"
+                keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"
+                values="#6094C1;#6094C1;#029DFD;#029DFD;#0A1342;#0A1342;#6094C1"
+              />
+            </feFlood>
+            {/* Keep the tint only inside the blue mask, then colour-blend it
+                over the source so the ship/wave take the hue, keep their shading. */}
+            <feComposite in="tint" in2="mask" operator="in" result="tintshape" />
+            <feBlend in="tintshape" in2="SourceGraphic" mode="color" />
+          </filter>
+        </defs>
+      </svg>
       {/* LCP image — two viewport variants (CSS hides one: .hn-bg-mobile
           shown ≤767px, .hn-bg-desktop shown ≥768px). The <Image>s are NOT
           `priority` (that emitted an unconstrained preload for BOTH, so
