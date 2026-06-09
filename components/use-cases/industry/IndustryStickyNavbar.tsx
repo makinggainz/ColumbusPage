@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useIndustry } from "./IndustryContext";
-import { INDUSTRY_CONTENT, INDUSTRY_ORDER } from "./content";
+import { INDUSTRY_CONTENT, INDUSTRY_COLOR, INDUSTRY_ORDER } from "./content";
 import type { IndustryId } from "./types";
 
 type IndustryStickyNavbarProps = {
@@ -67,14 +67,32 @@ export default function IndustryStickyNavbar({ lightTheme = false, topOffset = 5
     if (!header) return;
     const measure = () => {
       const rect = header.getBoundingClientRect();
-      setMeasuredTop(rect.bottom);
+      // The navbar slides itself out of the way with `transform:
+      // translateY(-110%)` while the picker is in takeover mode. That
+      // transform IS reflected in getBoundingClientRect, so when we
+      // re-measure during takeover the bottom value is wildly negative
+      // and won't represent where the navbar will land when it comes
+      // back. Clamp to 0 in that case so we never anchor the picker
+      // off-screen; once the navbar is back in view the next measurement
+      // catches its real bottom.
+      const bottom = rect.bottom > 0 ? rect.bottom : 0;
+      setMeasuredTop(bottom);
     };
     measure();
     const ro = new ResizeObserver(measure);
     ro.observe(header);
+    // Re-measure on scroll so the picker tracks the navbar's *current*
+    // bottom when it slides back in from takeover (a CSS transform
+    // change doesn't fire ResizeObserver, so without this listener the
+    // measurement stays stuck at whatever bottom value was captured the
+    // last time the observer fired — often the wrong value, which left
+    // a visible gap between the navbar's bottom and the picker's top
+    // in coexist mode).
+    window.addEventListener("scroll", measure, { passive: true });
     window.addEventListener("resize", measure);
     return () => {
       ro.disconnect();
+      window.removeEventListener("scroll", measure);
       window.removeEventListener("resize", measure);
     };
   }, []);
@@ -86,7 +104,14 @@ export default function IndustryStickyNavbar({ lightTheme = false, topOffset = 5
      sub-navbar drops back to its under-navbar slot and the main navbar
      comes back. */
   const inTakeover = takeover && !coexist;
-  const topPosition = inTakeover ? "var(--frame-margin, 30px)" : effectiveTop;
+  /* In takeover mode this sub-navbar REPLACES the main navbar, so it
+     must pin flush with the viewport top (top: 0) — same anchor the
+     main navbar uses when stuck. Anchoring to `var(--frame-margin)`
+     instead left a visible page-frame gutter (≈9px on the current
+     frame) between the picker and the top of the screen. While
+     coexisting under the main navbar, it still sits at `effectiveTop`
+     (the measured navbar bottom) so the two stack flush. */
+  const topPosition = inTakeover ? 0 : effectiveTop;
 
   /* Broadcast the effective takeover state so a takeover-capable main
      navbar hides only when this sub-navbar is actually replacing it (not
@@ -102,15 +127,33 @@ export default function IndustryStickyNavbar({ lightTheme = false, topOffset = 5
   /* Scroll-up reveal: while takeover is in play, an upward scroll of
      >100px brings the main navbar back and slides this sub-navbar down
      into its coexist position. Any downward scroll resets the threshold
-     and re-engages takeover. */
+     and re-engages takeover.
+
+     Programmatic anchor jumps from the feature-index dispatch an
+     `industry-index-jump` CustomEvent immediately before the browser
+     starts smooth-scrolling. The jump usually moves upward, which would
+     trip the coexist threshold and reveal the navbar for ~a second
+     before snapping back. We use the event to clamp coexist off and
+     ignore upward deltas for a short window after the jump. */
   useEffect(() => {
     if (!takeover) return;
     let lastY = window.scrollY;
     let upAccum = 0;
+    let suppressUntil = 0;
     const THRESHOLD = 100;
+    const SUPPRESS_MS = 1500;
     const onScroll = () => {
       const y = window.scrollY;
       const delta = y - lastY;
+      const now = performance.now();
+      if (now < suppressUntil) {
+        // Ignore deltas during the index-jump window; keep takeover
+        // engaged and let the page settle before re-arming the
+        // scroll-up reveal.
+        upAccum = 0;
+        lastY = y;
+        return;
+      }
       if (delta < 0) {
         upAccum += -delta;
         if (upAccum > THRESHOLD) setCoexist(true);
@@ -120,8 +163,17 @@ export default function IndustryStickyNavbar({ lightTheme = false, topOffset = 5
       }
       lastY = y;
     };
+    const onIndexJump = () => {
+      suppressUntil = performance.now() + SUPPRESS_MS;
+      upAccum = 0;
+      setCoexist(false);
+    };
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    window.addEventListener("industry-index-jump", onIndexJump);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("industry-index-jump", onIndexJump);
+    };
   }, [takeover]);
 
   // Visibility: prefer the explicit industry sticky-zone wrapper if a
@@ -141,7 +193,7 @@ export default function IndustryStickyNavbar({ lightTheme = false, topOffset = 5
   useEffect(() => {
     // Ensure we only run in the browser
     if (typeof window === "undefined") return;
-    if (!Number.isFinite(effectiveTop)) return;
+    if (!Number.isFinite(topOffset)) return;
 
     const target =
       document.querySelector<HTMLElement>("[data-industry-sticky-zone]") ??
@@ -149,7 +201,17 @@ export default function IndustryStickyNavbar({ lightTheme = false, topOffset = 5
     if (!target) return;
 
     const setupObs = () => {
-      const topValue = Math.max(0, Math.floor(effectiveTop));
+      // Trigger line uses the STATIC `topOffset` (the navbar's known height,
+      // passed by the page), NOT the live-measured `effectiveTop`. The
+      // measured value swings wildly the instant `shown` flips — because the
+      // main navbar then slides up (translateY(-110%)), changing its measured
+      // bottom — and if that fed this effect's dependency the observer would
+      // be torn down + recreated every scroll frame mid-transition, flicking
+      // `shown` true↔false and making both the picker fade and the navbar
+      // slide stutter. A stable trigger keeps `shown` monotonic, so the
+      // picker appears in one clean fade + slide. The navbar height is fixed,
+      // so a couple-px difference vs. the live bottom is imperceptible here.
+      const topValue = Math.max(0, Math.floor(topOffset));
       const bottomValue = Math.max(0, Math.floor(window.innerHeight - topValue - 1));
       const rootMarginString = `-${topValue}px 0px -${bottomValue}px 0px`;
 
@@ -190,7 +252,10 @@ export default function IndustryStickyNavbar({ lightTheme = false, topOffset = 5
       }
       window.removeEventListener("resize", onResize);
     };
-  }, [effectiveTop]);
+    // Depends on the STABLE topOffset only — see the note in setupObs. Using
+    // effectiveTop here (the live navbar-bottom measurement) caused the
+    // observer to churn on every scroll frame and made the picker stutter.
+  }, [topOffset]);
 
   // Track horizontal scroll position so we can show / hide the edge gradients.
   const updateScrollState = useCallback(() => {
@@ -239,7 +304,6 @@ export default function IndustryStickyNavbar({ lightTheme = false, topOffset = 5
     ? "text-[rgba(29,29,31,0.45)] hover:text-[#1D1D1F]"
     : "text-white/45 hover:text-white";
   const activeLinkClass = lightTheme ? "text-[#1D1D1F]" : "text-white";
-  const activeUnderlineColor = lightTheme ? "bg-[#1D1D1F]" : "bg-white";
 
   // Edge fades — solid bg colour on the outer end fading to transparent on
   // the inner side, so they sit flat over the navbar's own bg.
@@ -265,7 +329,7 @@ export default function IndustryStickyNavbar({ lightTheme = false, topOffset = 5
       }}
       aria-hidden={!shown}
     >
-      <div className="flex items-center gap-4 px-6 md:px-10 py-3 max-w-[1287px] mx-auto">
+      <div className="flex items-center gap-4 py-3 max-w-[1287px] w-[calc(100%-2.5rem)] mx-auto">
         {/* Columbus home logo + leading separator — visible ONLY in
             active takeover (the picker is replacing the main navbar).
             In coexist mode the main navbar above already shows its own
@@ -329,7 +393,16 @@ export default function IndustryStickyNavbar({ lightTheme = false, topOffset = 5
           {/* Track */}
           <div
             ref={trackRef}
-            className="flex items-center gap-7 overflow-x-auto"
+            /* `touch-pan-x` locks touch gestures inside the track to the
+               horizontal axis, so a swipe on the carousel scrolls only
+               the carousel — the browser no longer co-scrolls the page
+               vertically (which had read as the labels "drifting up
+               and down" on mobile). Diagonal swipes resolve to whichever
+               axis is dominant. `overscroll-x-contain` then keeps the
+               horizontal momentum from chaining out into the page (or
+               into a back-navigation gesture) once the user hits the
+               end of the row. */
+            className="flex items-center gap-7 overflow-x-auto touch-pan-x overscroll-x-contain"
             style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
           >
             {order.map((id) => {
@@ -341,18 +414,17 @@ export default function IndustryStickyNavbar({ lightTheme = false, topOffset = 5
                   type="button"
                   data-industry-link={id}
                   onClick={() => handleSelect(id)}
-                  className={`relative shrink-0 cursor-pointer whitespace-nowrap py-1 text-[14px] font-medium tracking-[-0.005em] transition-colors duration-200 ${
+                  className={`relative shrink-0 cursor-pointer whitespace-nowrap rounded-full px-3 py-1.5 text-[14px] font-medium tracking-[-0.005em] transition-colors duration-200 ${
                     isActive ? activeLinkClass : idleLinkClass
                   }`}
+                  /* Active-pill bg = the industry's accent (INDUSTRY_COLOR)
+                     at ~12% alpha (`#RRGGBB1F`) — same recipe the iconGrid
+                     in "Use cases in your industry" uses for its active
+                     cell, so the two pickers stay visually in sync. */
+                  style={isActive && INDUSTRY_COLOR[id] ? { backgroundColor: `${INDUSTRY_COLOR[id]}1F` } : undefined}
                   aria-pressed={isActive}
                 >
                   {item.shortName ?? item.name}
-                  {isActive && (
-                    <span
-                      className={`absolute left-0 right-0 -bottom-0.5 h-px ${activeUnderlineColor}`}
-                      aria-hidden
-                    />
-                  )}
                 </button>
               );
             })}

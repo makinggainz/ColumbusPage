@@ -174,10 +174,7 @@
   line-height: 1;
   white-space: nowrap;
   color: var(--color-ink);
-  transition:
-    opacity 420ms cubic-bezier(0.05, 0.7, 0.1, 1),
-    transform 520ms cubic-bezier(0.05, 0.7, 0.1, 1),
-    filter 420ms cubic-bezier(0.05, 0.7, 0.1, 1);
+  transition: opacity 420ms cubic-bezier(0.05, 0.7, 0.1, 1);
 }
 
 /* ── Back link ───────────────────────────────────────────────────────── */
@@ -218,7 +215,7 @@
 }
 
 .tocHeading {
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 600;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -243,9 +240,9 @@
 .tocList::before {
   content: "";
   position: absolute;
-  left: 7px;
-  top: 14px;
-  bottom: 14px;
+  left: 8px;
+  top: 15px;
+  bottom: 15px;
   width: 1px;
   background: #D4D4D8;
 }
@@ -259,7 +256,7 @@
   align-items: center;
   gap: 12px;
   position: relative;
-  font-size: 12.5px;
+  font-size: 14px;
   font-weight: 500;
   letter-spacing: -0.005em;
   line-height: 1.35;
@@ -281,8 +278,8 @@
   position: relative;
   z-index: 1;
   flex-shrink: 0;
-  width: 14px;
-  height: 14px;
+  width: 16px;
+  height: 16px;
   border-radius: 9999px;
   border: 1px solid #C4C4C7;
   /* Matches the panel background so the guide rail visually breaks at
@@ -302,15 +299,15 @@
 }
 
 .tocActiveDot {
-  width: 5px;
-  height: 5px;
+  width: 6px;
+  height: 6px;
   border-radius: 9999px;
   background: #FFFFFF;
 }
 
 .tocCheck {
-  width: 9px;
-  height: 9px;
+  width: 10px;
+  height: 10px;
 }
 
 /* Active section — accent text + accent-filled circle. Colour-only

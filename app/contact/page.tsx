@@ -1,25 +1,55 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useEffect, useRef } from "react";
+import { getImageProps } from "next/image";
+import { useState, useEffect, useRef, Suspense, type CSSProperties } from "react";
+import { useSearchParams } from "next/navigation";
 import { MistxNav } from "@/components/layout/MistxNav";
+import { track } from "@/lib/analytics";
 
 type Phase = "writing" | "folding" | "bottling" | "dropping" | "floating" | "done";
-type InquiryType = "columbus-pro" | "elio" | "investment" | "careers";
+type InquiryType = "columbus-pro" | "elio" | "investment" | "careers" | "general";
 
 const TABS: { value: InquiryType; label: string }[] = [
+  { value: "general", label: "General inquiry" },
   { value: "columbus-pro", label: "Columbus Pro" },
   { value: "elio", label: "Elio" },
   { value: "investment", label: "Investors" },
   { value: "careers", label: "Careers" },
 ];
 
-const TAB_INTRO: Record<InquiryType, { heading: string; sub: string }> = {
-  "columbus-pro": { heading: "Book a demo", sub: "See Columbus working on your own data." },
-  "elio": { heading: "Tell us about your project", sub: "Share what you want to build with Elio." },
-  "investment": { heading: "Investor relations", sub: "Let’s talk partnerships and the road ahead." },
-  "careers": { heading: "Join the crew", sub: "Tell us where you’d make your mark." },
+const VALID_TABS = new Set<InquiryType>(["general", "columbus-pro", "elio", "investment", "careers"]);
+
+const TAB_INTRO: Record<InquiryType, { heading: string }> = {
+  "columbus-pro": { heading: "Book a demo" },
+  "elio": { heading: "What’s up" },
+  "investment": { heading: "Investor relations" },
+  "careers": { heading: "Join the crew" },
+  "general": { heading: "Get in touch" },
 };
+
+/* Source-of-truth list for the "How did you hear about us?" select.
+   Defined once at module scope so every tab's form renders the same
+   options in the same order — keeps marketing attribution clean. */
+const HEARD_FROM_OPTIONS: { value: string; label: string }[] = [
+  { value: "linkedin", label: "LinkedIn" },
+  { value: "twitter", label: "Twitter / X" },
+  { value: "facebook-instagram", label: "Facebook / Instagram" },
+  { value: "reddit", label: "Reddit" },
+  { value: "other-social", label: "Other Social Media" },
+  { value: "google", label: "Google" },
+  { value: "chatgpt-llm", label: "ChatGPT / Claude / Grok / Other LLM" },
+  { value: "other-search", label: "Other Search / Research" },
+  { value: "word-of-mouth", label: "Word of Mouth / Referral" },
+  { value: "events", label: "Events / Conferences / Webinars" },
+  { value: "news-press", label: "News / Press / Articles / Podcast" },
+  { value: "ooh-billboards", label: "Out of Home / Billboards" },
+  { value: "product-hunt", label: "Product Hunt / Forums" },
+  { value: "direct-outreach", label: "Direct Outreach" },
+  { value: "partnership", label: "Partnership / Integration" },
+  { value: "existing-customer", label: "Existing Customer" },
+  { value: "other", label: "Other" },
+];
 
 /* Design tokens — referenced straight from app/globals.css (@theme),
    the site's single source of truth for colour, so the form stays in
@@ -33,6 +63,39 @@ const CTA = "var(--color-cta)";            /* #0B1342 navy */
    rings, and homepage hero eyebrow read from — one change there
    retints every accent surface site-wide. */
 const ACCENT = "var(--color-accent)";
+
+/* ── Hero backdrop ────────────────────────────────────────────────────
+   The single full-bleed image on the page (its LCP). Routed through the
+   next/image optimizer via getImageProps so it ships AVIF instead of the
+   raw multi-MB PNG, and rendered as a <picture> (below) so only the
+   matching viewport variant downloads — previously two display-toggled
+   <img>s meant *both* PNGs loaded on every device. The mask gradient is
+   identical for both variants; only the crop (object-position) differs,
+   handled by responsive classes on the <img>. See MEDIA_LOADING_PLAYBOOK.md. */
+const CONTACT_HERO_MASK =
+  "linear-gradient(to bottom, transparent 0%, #000 18%, #000 72%, transparent 100%)";
+const CONTACT_HERO_SIZES = "100vw";
+
+const { props: contactHeroDesktopProps } = getImageProps({
+  src: "/ContactBg.png",
+  alt: "",
+  width: 1881,
+  height: 836,
+  sizes: CONTACT_HERO_SIZES,
+  quality: 75,
+  loading: "eager",
+});
+
+const {
+  props: { srcSet: contactHeroMobileSrcSet },
+} = getImageProps({
+  src: "/contactbackimg-mobile.png",
+  alt: "",
+  width: 1440,
+  height: 1440,
+  sizes: CONTACT_HERO_SIZES,
+  quality: 75,
+});
 
 const FAQS: { q: string; a: React.ReactNode }[] = [
   {
@@ -89,12 +152,15 @@ function ArrowDots({ className = "" }: { className?: string }) {
 }
 
 /* Primary CTA — the site-wide button idiom: navy `bg-cta` fill, white
-   label that turns to the accent on hover, dot-arrow nudging right. */
+   label that turns to the accent on hover, dot-arrow nudging right.
+   `touch-target` floors the height at 44px on mobile (Phase 1.5 utility)
+   so the button meets WCAG AA on phones while keeping the slim 36-px
+   desktop look (px-5 py-2 ≈ 36px tall, matches the navbar buttons). */
 function CtaButton({ children, className = "", ...props }: React.ButtonHTMLAttributes<HTMLButtonElement>) {
   return (
     <button
       {...props}
-      className={`group rounded-button px-5 py-2 text-sm flex items-center gap-2 transition-colors bg-cta text-white hover:text-accent cursor-pointer ${className}`}
+      className={`touch-target group rounded-button px-5 py-2 text-sm flex items-center gap-2 transition-colors bg-cta text-white hover:text-accent cursor-pointer ${className}`}
     >
       {children}
       <span className="ml-2 inline-block transition-transform group-hover:translate-x-0.5">
@@ -104,46 +170,142 @@ function CtaButton({ children, className = "", ...props }: React.ButtonHTMLAttri
   );
 }
 
-function FaqItem({ item }: { item: { q: string; a: React.ReactNode } }) {
-  const [open, setOpen] = useState(false);
+/* FAQ accordion — visual system lifted verbatim from the business page's
+   FAQSection (components/business/FAQSection.tsx) so the two read as members
+   of the same family: a single rounded host with a 2px soft hairline, rows
+   divided by 1px hairlines (no per-card borders), idle rows at opacity-70 that
+   snap to opacity-100 when open or hovered, and a flat #F2F2F2 fill behind the
+   open row. Single-open (clicking a row closes the others); all rows start
+   closed. The business --ent-* tokens are scoped to .ent-scope and aren't
+   available here, so the equivalent literal values are used — and the contact
+   INK / MUTED / ACCENT already match --ent-text-primary / -secondary / -accent. */
+function ContactFaq({ items }: { items: { q: string; a: React.ReactNode }[] }) {
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+
   return (
-    <div className="rounded-[7px] border bg-white overflow-hidden" style={{ borderColor: HAIRLINE }}>
-      <button
-        type="button"
-        aria-expanded={open}
-        onClick={() => setOpen(o => !o)}
-        className="flex w-full items-center justify-between gap-6 px-6 py-5 text-left cursor-pointer"
-      >
-        <span className="text-[16px] md:text-[17px] font-medium leading-[1.4]" style={{ color: INK }}>
-          {item.q}
-        </span>
-        <span className="transition-colors duration-300" style={{ color: open ? ACCENT : INK }}>
-          <PlusIcon open={open} />
-        </span>
-      </button>
-      <div
-        className="grid transition-[grid-template-rows] duration-300 ease-out"
-        style={{ gridTemplateRows: open ? "1fr" : "0fr" }}
-      >
-        <div className="overflow-hidden">
-          <p className="px-6 pb-6 text-[15px] leading-[1.65]" style={{ color: MUTED }}>
-            {item.a}
-          </p>
-        </div>
-      </div>
-    </div>
+    <ul
+      className="flex flex-col list-none m-0 p-0 overflow-hidden rounded-3xl border-2"
+      style={{ borderColor: "rgba(0, 0, 0, 0.05)", background: "transparent" }}
+    >
+      {items.map((item, i) => {
+        const isOpen = openIndex === i;
+        const isHovered = hoveredIndex === i;
+        const isLast = i === items.length - 1;
+        return (
+          <li
+            key={item.q}
+            className={[
+              "relative transition-opacity duration-200",
+              isOpen || isHovered ? "opacity-100" : "opacity-70",
+            ].join(" ")}
+            onMouseEnter={() => setHoveredIndex(i)}
+            onMouseLeave={() => setHoveredIndex(null)}
+          >
+            {/* Open-state fill — flat #F2F2F2 behind the whole row. */}
+            {isOpen && (
+              <span
+                aria-hidden
+                className="absolute inset-0"
+                style={{ backgroundColor: "#F2F2F2", zIndex: 0 }}
+              />
+            )}
+
+            <h3 className="m-0 relative z-10">
+              <button
+                type="button"
+                aria-expanded={isOpen}
+                aria-controls={`contact-faq-panel-${i}`}
+                id={`contact-faq-trigger-${i}`}
+                onClick={() => setOpenIndex(isOpen ? null : i)}
+                className="w-full text-left cursor-pointer flex items-center justify-between gap-6 px-6 md:px-10 py-7 md:py-8"
+              >
+                <span
+                  className="text-[20px] md:text-[22px] font-semibold leading-[1.2]"
+                  style={{ color: "#0E173C", letterSpacing: "-0.01em" }}
+                >
+                  {item.q}
+                </span>
+                <span
+                  className="transition-colors duration-300 shrink-0"
+                  style={{ color: isOpen ? ACCENT : "#0B1B2B" }}
+                >
+                  <PlusIcon open={isOpen} />
+                </span>
+              </button>
+            </h3>
+
+            {/* Answer — grid-rows trick for a smooth height transition. */}
+            <div
+              id={`contact-faq-panel-${i}`}
+              role="region"
+              aria-labelledby={`contact-faq-trigger-${i}`}
+              className="relative z-10 grid transition-[grid-template-rows] duration-300 ease-out"
+              style={{ gridTemplateRows: isOpen ? "1fr" : "0fr" }}
+            >
+              <div className="overflow-hidden">
+                <p
+                  className="px-6 md:px-10 pb-7 md:pb-8 text-[14px] md:text-[15px] leading-[1.6]"
+                  style={{ color: MUTED, letterSpacing: "-0.005em" }}
+                >
+                  {item.a}
+                </p>
+              </div>
+            </div>
+
+            {/* Row separator — skipped on the last cell (host border carries
+                the bottom edge). */}
+            {!isLast && (
+              <span
+                aria-hidden
+                className="absolute left-0 bottom-0 w-full"
+                style={{ height: 1, backgroundColor: "rgba(0, 0, 0, 0.05)" }}
+              />
+            )}
+          </li>
+        );
+      })}
+    </ul>
   );
 }
 
-export default function ContactPage() {
+function ContactPageInner() {
+  const searchParams = useSearchParams();
+  /* Seed the form tab from `?tab=…` so CTAs around the site can route
+     users straight to the form that matches where they came from
+     (e.g. the homepage "Join our team" tile lands on Careers, the
+     business-page "Try Demo" pill lands on Columbus Pro). Falls back
+     to General if the param is missing or unknown. */
+  const initialTab: InquiryType = (() => {
+    const raw = searchParams.get("tab");
+    return raw && VALID_TABS.has(raw as InquiryType) ? (raw as InquiryType) : "general";
+  })();
+
   const [form, setForm] = useState({ firstName: "", lastName: "", email: "", role: "", message: "", companySize: "", industry: "", heardFrom: "" });
   const [phase, setPhase] = useState<Phase>("writing");
-  const [tab, setTab] = useState<InquiryType>("columbus-pro");
+  const [tab, setTab] = useState<InquiryType>(initialTab);
   const [updates, setUpdates] = useState(false);
   const [charCount, setCharCount] = useState(0);
   const [mounted, setMounted] = useState(false);
   const [tabKey, setTabKey] = useState(0);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const [honeypot, setHoneypot] = useState("");
   const cardRef = useRef<HTMLDivElement>(null);
+  const formStartedRef = useRef(false);
+
+  // Reset the form_started guard whenever the user switches tabs so the event
+  // fires once per tab, not just once per page load.
+  useEffect(() => {
+    formStartedRef.current = false;
+  }, [tab]);
+
+  const handleFirstFocus = () => {
+    if (!formStartedRef.current) {
+      formStartedRef.current = true;
+      track.formStarted(tab, "contact");
+    }
+  };
 
   useEffect(() => {
     const t = setTimeout(() => setMounted(true), 120);
@@ -177,10 +339,62 @@ export default function ContactPage() {
     if (name === "message") setCharCount(value.length);
   };
 
-  const handleSend = (e: React.FormEvent) => {
+  const handleSend = async (e: React.FormEvent) => {
     e.preventDefault();
-    setPhase("folding");
+    if (submitting) return;
+    setSubmitting(true);
+    setSubmitError(null);
+    try {
+      track.contactSubmitted(tab, { heard_from: form.heardFrom });
+      if (tab === "columbus-pro") track.demoRequested("contact");
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          tab,
+          ...form,
+          updates,
+          honeypot,
+          pageUri: window.location.href,
+          pageName: "Contact",
+        }),
+      });
+      if (!res.ok) throw new Error("failed");
+      setPhase("folding");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } catch {
+      setSubmitError("Something went wrong — please try again.");
+    } finally {
+      setSubmitting(false);
+    }
   };
+
+  const renderSubmitRow = () => (
+    <>
+      {/* Honeypot — positioned off-screen; filled by bots, invisible to users */}
+      <input
+        type="text"
+        name="website"
+        value={honeypot}
+        onChange={e => setHoneypot(e.target.value)}
+        tabIndex={-1}
+        aria-hidden="true"
+        autoComplete="off"
+        style={{ position: "absolute", left: "-9999px", top: 0, opacity: 0, pointerEvents: "none", height: 0 }}
+      />
+      <div className="flex flex-col gap-2 pt-1">
+        {submitError && (
+          <p className="text-[13px]" style={{ color: "#C0392B" }}>{submitError}</p>
+        )}
+        <div className="flex items-center gap-4">
+          <CtaButton type="submit" disabled={submitting}>
+            {submitting ? "Sending…" : "Submit"}
+          </CtaButton>
+          {!submitError && <span className="text-[13px] text-muted">We answer fast.</span>}
+        </div>
+      </div>
+    </>
+  );
 
   useEffect(() => {
     if (phase === "folding")  { const t = setTimeout(() => setPhase("bottling"), 1200); return () => clearTimeout(t); }
@@ -198,6 +412,18 @@ export default function ContactPage() {
 
   const labelEl = (text: string) => (
     <span className="text-[13px] font-medium" style={{ color: MUTED }}>{text}</span>
+  );
+
+  const heardFromField = (
+    <label className="flex flex-col gap-1.5">
+      {labelEl("How did you hear about us?")}
+      <select name="heardFrom" value={form.heardFrom} onChange={handleChange} className="cf-select">
+        <option value="" disabled>Please select</option>
+        {HEARD_FROM_OPTIONS.map(o => (
+          <option key={o.value} value={o.value}>{o.label}</option>
+        ))}
+      </select>
+    </label>
   );
 
   return (
@@ -239,6 +465,18 @@ export default function ContactPage() {
           white-space: nowrap;
           cursor: pointer;
           transition: background-color 0.25s ease, color 0.25s ease;
+          /* Inline-flex so min-height (mobile touch-target floor below)
+             vertically centres the label without needing line-height
+             gymnastics. */
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+        }
+        /* Mobile touch-target floor — 44 × 44 px (WCAG AA). Padding
+           still keeps the visual pill snug on desktop; mobile gets the
+           extra hit area via min-height. */
+        @media (max-width: 1023px) {
+          .cf-tab { min-height: 44px; }
         }
         .cf-tab:hover { color: ${INK}; background: color-mix(in srgb, ${INK} 5%, transparent); }
         .cf-tab[data-active="true"],
@@ -273,20 +511,67 @@ export default function ContactPage() {
       `}</style>
 
       {/* Static hand-drawn beach backdrop — sits behind all content,
-          full-bleed at the top of the page, fading naturally to white. */}
-      <img
-        src="/contactbackimg.png"
-        alt=""
-        aria-hidden
-        className="pointer-events-none select-none absolute inset-x-0 top-0 z-0 w-full h-auto"
+          full-bleed at the top of the page. The wrapping section carries
+          `data-hero-section` so the navbar reads as transparent at the
+          top of the page (same handshake the company / blog heroes use)
+          — otherwise the navbar paints a solid white band over the top
+          of the image. `aspect-ratio` on the wrapper preserves the
+          natural 1881:836 ratio, and `min-height: 360px` keeps the scene
+          substantial on phones where the natural ratio would collapse
+          the strip to ~160 px. The top + bottom mask gradient melts the
+          band into the white page above and below it. */}
+      {/* Media-scoped LCP preload for the hero — one variant per viewport,
+          matching the <picture> srcSets so they can't drift. React 19 hoists
+          these to <head>; the `media` attr means only the matching variant is
+          fetched (no double-download). */}
+      <link
+        rel="preload"
+        as="image"
+        media="(min-width: 768px)"
+        imageSrcSet={contactHeroDesktopProps.srcSet}
+        imageSizes={contactHeroDesktopProps.sizes}
+        fetchPriority="high"
       />
+      <link
+        rel="preload"
+        as="image"
+        media="(max-width: 767px)"
+        imageSrcSet={contactHeroMobileSrcSet}
+        imageSizes={CONTACT_HERO_SIZES}
+        fetchPriority="high"
+      />
+      <section
+        data-hero-section
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 top-0 z-0 w-full overflow-hidden"
+        style={{ aspectRatio: "1881 / 836", minHeight: "360px" }}
+      >
+        {/* Art-directed <picture>: mobile source swaps in the portrait crop;
+            object-position differs per viewport (mobile right-weighted, desktop
+            centred) via responsive classes (`object-right` ≡ CSS `right center`).
+            Only the matching variant downloads. */}
+        <picture>
+          <source media="(max-width: 767px)" srcSet={contactHeroMobileSrcSet} />
+          <img
+            {...contactHeroDesktopProps}
+            alt=""
+            aria-hidden
+            className="select-none w-full h-full object-cover object-right md:object-center"
+            style={{
+              ...(contactHeroDesktopProps.style as CSSProperties),
+              WebkitMaskImage: CONTACT_HERO_MASK,
+              maskImage: CONTACT_HERO_MASK,
+            }}
+          />
+        </picture>
+      </section>
       <MistxNav />
 
       <div className="relative z-10">
 
         {phase === "writing" && (
-          <div className="pt-36 md:pt-44 pb-10 md:pb-14 px-8 md:px-10 text-center">
-            <h1 className="h1 tracking-tight text-ink" style={heroFadeIn(0)}>
+          <div className="pt-28 md:pt-44 pb-10 md:pb-14 px-5 md:px-10 text-center">
+            <h1 className="h1 tracking-tight text-ink text-balance" style={heroFadeIn(0)}>
               Get in touch.
             </h1>
           </div>
@@ -307,7 +592,11 @@ export default function ContactPage() {
                     <button
                       key={opt.value}
                       type="button"
-                      onClick={() => { setTab(opt.value); setTabKey(k => k + 1); }}
+                      onClick={() => {
+                        setTab(opt.value);
+                        setTabKey(k => k + 1);
+                        track.ctaClicked(`contact_tab_${opt.value}`, "contact");
+                      }}
                       data-active={tab === opt.value}
                       className="cf-tab"
                     >
@@ -323,22 +612,19 @@ export default function ContactPage() {
                     <h2 className="h4 tracking-tight text-ink">
                       {TAB_INTRO[tab].heading}
                     </h2>
-                    <p className="p-m text-muted mt-2">
-                      {TAB_INTRO[tab].sub}
-                    </p>
                   </div>
 
                   {/* ── Columbus Pro — book a demo ── */}
                   {tab === "columbus-pro" && (
-                    <form className="flex flex-col gap-5" onSubmit={handleSend}>
+                    <form className="flex flex-col gap-5" onSubmit={handleSend} onFocus={handleFirstFocus}>
                       <label className="flex flex-col gap-1.5">
-                        {labelEl("Company email")}
+                        {labelEl("Email")}
                         <input type="email" name="email" required value={form.email} onChange={handleChange} className="cf-input" placeholder="name@company.com" />
                       </label>
 
                       <label className="flex flex-col gap-1.5">
-                        {labelEl("Company size")}
-                        <input type="text" name="companySize" required value={form.companySize} onChange={handleChange} className="cf-input" placeholder="Number of employees" />
+                        {labelEl("Your name")}
+                        <input type="text" name="firstName" required value={form.firstName} onChange={handleChange} className="cf-input" placeholder="Your full name" />
                       </label>
 
                       <label className="flex flex-col gap-1.5">
@@ -363,44 +649,19 @@ export default function ContactPage() {
                         <span className="text-[12px] text-right" style={{ color: MUTED }}>{charCount}/500</span>
                       </label>
 
-                      <label className="flex flex-col gap-1.5">
-                        {labelEl("How did you hear about us?")}
-                        <select name="heardFrom" value={form.heardFrom} onChange={handleChange} className="cf-select">
-                          <option value="" disabled>Please select</option>
-                          <option value="linkedin">LinkedIn</option>
-                          <option value="twitter">Twitter / X</option>
-                          <option value="facebook-instagram">Facebook / Instagram</option>
-                          <option value="reddit">Reddit</option>
-                          <option value="other-social">Other Social Media</option>
-                          <option value="google">Google</option>
-                          <option value="chatgpt-llm">ChatGPT / Claude / Grok / Other LLM</option>
-                          <option value="other-search">Other Search / Research</option>
-                          <option value="word-of-mouth">Word of Mouth / Referral</option>
-                          <option value="events">Events / Conferences / Webinars</option>
-                          <option value="news-press">News / Press / Articles / Podcast</option>
-                          <option value="ooh-billboards">Out of Home / Billboards</option>
-                          <option value="product-hunt">Product Hunt / Forums</option>
-                          <option value="direct-outreach">Direct Outreach</option>
-                          <option value="partnership">Partnership / Integration</option>
-                          <option value="existing-customer">Existing Customer</option>
-                          <option value="other">Other</option>
-                        </select>
-                      </label>
+                      {heardFromField}
 
                       <p className="text-[13px] leading-[1.5]" style={{ color: MUTED }}>
                         By submitting, you agree with our <Link href="/terms" className="underline">Terms</Link> and <Link href="/privacy" className="underline">Privacy Policy</Link>.
                       </p>
 
-                      <div className="flex items-center gap-4 pt-1">
-                        <CtaButton type="submit">Submit</CtaButton>
-                        <span className="text-[13px] text-muted">We answer fast.</span>
-                      </div>
+                      {renderSubmitRow()}
                     </form>
                   )}
 
                   {/* ── Investors / Elio ── */}
                   {(tab === "investment" || tab === "elio") && (
-                    <form className="flex flex-col gap-5" onSubmit={handleSend}>
+                    <form className="flex flex-col gap-5" onSubmit={handleSend} onFocus={handleFirstFocus}>
                       <label className="flex flex-col gap-1.5">
                         {labelEl("Name")}
                         <input type="text" name="firstName" required value={form.firstName} onChange={handleChange} className="cf-input" placeholder="Your name" />
@@ -411,19 +672,23 @@ export default function ContactPage() {
                         <input type="email" name="email" required value={form.email} onChange={handleChange} className="cf-input" placeholder="name@company.com" />
                       </label>
 
-                      <label className="flex flex-col gap-1.5">
-                        {labelEl(tab === "investment" ? "Organization" : "Role")}
-                        <input type="text" name="role" required value={form.role} onChange={handleChange} className="cf-input" />
-                      </label>
+                      {tab === "investment" && (
+                        <label className="flex flex-col gap-1.5">
+                          {labelEl("Organization")}
+                          <input type="text" name="role" required value={form.role} onChange={handleChange} className="cf-input" />
+                        </label>
+                      )}
 
                       <label className="flex flex-col gap-1.5">
-                        {labelEl(tab === "investment" ? "Tell us about your interest" : "Tell us about your project")}
+                        {labelEl(tab === "investment" ? "Tell us about your interest" : "We're happy to talk")}
                         <textarea
                           name="message" required maxLength={500} rows={4} value={form.message} onChange={handleChange} className="cf-textarea"
-                          placeholder={tab === "investment" ? "Share your investment thesis or partnership proposal." : "Share your objectives and any specific requirements."}
+                          placeholder={tab === "investment" ? "Message goes directly to our CEO" : "App support, ideas, feature requests or anything else :)"}
                         />
                         <span className="text-[12px] text-right" style={{ color: MUTED }}>{charCount}/500</span>
                       </label>
+
+                      {heardFromField}
 
                       <label className="flex items-start gap-3 cursor-pointer">
                         <input type="checkbox" checked={updates} onChange={e => setUpdates(e.target.checked)} className="mt-0.5 w-4 h-4 accent-accent" />
@@ -434,16 +699,13 @@ export default function ContactPage() {
                         By submitting, you agree with our <Link href="/terms" className="underline">Terms</Link> and <Link href="/privacy" className="underline">Privacy Policy</Link>.
                       </p>
 
-                      <div className="flex items-center gap-4 pt-1">
-                        <CtaButton type="submit">Submit</CtaButton>
-                        <span className="text-[13px] text-muted">We answer fast.</span>
-                      </div>
+                      {renderSubmitRow()}
                     </form>
                   )}
 
                   {/* ── Careers ── */}
                   {tab === "careers" && (
-                    <form className="flex flex-col gap-5" onSubmit={handleSend}>
+                    <form className="flex flex-col gap-5" onSubmit={handleSend} onFocus={handleFirstFocus}>
                       <label className="flex flex-col gap-1.5">
                         {labelEl("Name")}
                         <input type="text" name="firstName" required value={form.firstName} onChange={handleChange} className="cf-input" placeholder="Your name" />
@@ -465,6 +727,8 @@ export default function ContactPage() {
                         <span className="text-[12px] text-right" style={{ color: MUTED }}>{charCount}/500</span>
                       </label>
 
+                      {heardFromField}
+
                       <label className="flex flex-col gap-2">
                         <span className="text-[13px] font-medium" style={{ color: MUTED }}>
                           Resume <span className="text-[12px]" style={{ color: MUTED }}>(optional — PDF or DOC)</span>
@@ -476,10 +740,36 @@ export default function ContactPage() {
                         By submitting, you agree with our <Link href="/terms" className="underline">Terms</Link> and <Link href="/privacy" className="underline">Privacy Policy</Link>.
                       </p>
 
-                      <div className="flex items-center gap-4 pt-1">
-                        <CtaButton type="submit">Submit</CtaButton>
-                        <span className="text-[13px] text-muted">We answer fast.</span>
-                      </div>
+                      {renderSubmitRow()}
+                    </form>
+                  )}
+
+                  {/* ── General inquiry ── */}
+                  {tab === "general" && (
+                    <form className="flex flex-col gap-5" onSubmit={handleSend} onFocus={handleFirstFocus}>
+                      <label className="flex flex-col gap-1.5">
+                        {labelEl("Name")}
+                        <input type="text" name="firstName" required value={form.firstName} onChange={handleChange} className="cf-input" placeholder="Your name" />
+                      </label>
+
+                      <label className="flex flex-col gap-1.5">
+                        {labelEl("Email")}
+                        <input type="email" name="email" required value={form.email} onChange={handleChange} className="cf-input" placeholder="name@example.com" />
+                      </label>
+
+                      <label className="flex flex-col gap-1.5">
+                        {labelEl("Message")}
+                        <textarea name="message" required maxLength={500} rows={4} value={form.message} onChange={handleChange} className="cf-textarea" placeholder="What can we help you with?" />
+                        <span className="text-[12px] text-right" style={{ color: MUTED }}>{charCount}/500</span>
+                      </label>
+
+                      {heardFromField}
+
+                      <p className="text-[13px] leading-[1.5]" style={{ color: MUTED }}>
+                        By submitting, you agree with our <Link href="/terms" className="underline">Terms</Link> and <Link href="/privacy" className="underline">Privacy Policy</Link>.
+                      </p>
+
+                      {renderSubmitRow()}
                     </form>
                   )}
 
@@ -488,14 +778,10 @@ export default function ContactPage() {
 
               {/* ── FAQ ── */}
               <div className="mt-20 md:mt-24">
-                <h2 className="h2 tracking-tight text-ink text-center mb-8">
+                <h2 className="h2 tracking-tight text-ink text-center text-balance mb-8">
                   FAQ
                 </h2>
-                <div className="flex flex-col gap-3">
-                  {FAQS.map(item => (
-                    <FaqItem key={item.q} item={item} />
-                  ))}
-                </div>
+                <ContactFaq items={FAQS} />
               </div>
 
             </div>
@@ -525,14 +811,12 @@ export default function ContactPage() {
               <p className="p-l text-muted max-w-[400px]">
                 Your bottle has landed. We respond fast.
               </p>
-              {phase === "done" && (
-                <CtaButton
-                  className="mt-8"
-                  onClick={() => { setPhase("writing"); setForm({ firstName: "", lastName: "", email: "", role: "", message: "", companySize: "", industry: "", heardFrom: "" }); setCharCount(0); }}
-                >
-                  Send another message
-                </CtaButton>
-              )}
+              <CtaButton
+                className="mt-8"
+                onClick={() => { setPhase("writing"); setForm({ firstName: "", lastName: "", email: "", role: "", message: "", companySize: "", industry: "", heardFrom: "" }); setCharCount(0); setSubmitError(null); setHoneypot(""); }}
+              >
+                Send another message
+              </CtaButton>
             </div>
           )}
 
@@ -542,5 +826,13 @@ export default function ContactPage() {
 
       </div>
     </main>
+  );
+}
+
+export default function ContactPage() {
+  return (
+    <Suspense fallback={null}>
+      <ContactPageInner />
+    </Suspense>
   );
 }

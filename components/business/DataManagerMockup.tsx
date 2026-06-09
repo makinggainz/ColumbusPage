@@ -2,6 +2,8 @@
 
 import Image from "next/image";
 import type { IndustryId } from "@/components/use-cases/industry/types";
+import { useMediaWarm } from "@/components/ui/MediaPrefetcher";
+import dataManagerFrame from "@/public/business/DataManagerFrame.png";
 
 /* Mock UI: the "Trusted data, verified for confidence" demo. The frame
    image (/business/DataManagerFrame.png, 5184×3003 px) carries the Data
@@ -207,16 +209,22 @@ const FONT_STACK =
 
 export type DataManagerMockupProps = {
   industryId?: IndustryId;
+  /* When true, the frame loads eagerly at low priority even while this demo
+     is the inactive (display:none) one — ComparisonSection sets it once the
+     section enters the viewport so all showcases are preloaded. */
+  preload?: boolean;
 };
 
-export default function DataManagerMockup({ industryId }: DataManagerMockupProps = {}) {
+export default function DataManagerMockup({ industryId, preload = false }: DataManagerMockupProps = {}) {
+  const warm = useMediaWarm();
+  const soon = warm || preload;
   const cards =
     (industryId && CARDS_BY_INDUSTRY[industryId]) ??
     CARDS_BY_INDUSTRY["residential-real-estate"]!;
 
   return (
     <div
-      className="relative w-full mx-auto"
+      className="biz-product-display biz-mockup-frame relative w-full mx-auto"
       style={{
         aspectRatio: "5184 / 3003",
         maxWidth: 1180,
@@ -230,21 +238,26 @@ export default function DataManagerMockup({ industryId }: DataManagerMockupProps
         containerType: "inline-size",
       }}
     >
-      {/* Frame chrome (z-5). Inset 6px so the chrome PNG's baked-in
-          bottom-left settings gear icon doesn't fall inside the 24px
-          rounded-corner clip — the wrapper's white background fills
-          the 6px breathing room around the chrome. The PNG's inner
-          pane is transparent; the white surface above paints that
-          area. */}
+      {/* Frame chrome (z-5). Runs flush to the rounded edge (inset 0) so the
+          chrome aligns with its content overlay, which is positioned by
+          full-frame percentages (left=215/5184, top=206/3003). The 24px
+          rounded-corner clip slightly trims the baked-in bottom-left settings
+          gear icon — accepted tradeoff for a clean edge that matches the rest
+          of the demo family (the old 6px inset created a visible polaroid-style
+          white border around the demo). The PNG's inner pane is transparent;
+          the white surface above paints that area. */}
       <div
         className="absolute pointer-events-none"
-        style={{ inset: 6, zIndex: 5 }}
+        style={{ inset: 0, zIndex: 5 }}
       >
         <Image
-          src="/business/DataManagerFrame.png"
+          src={dataManagerFrame}
           alt="Columbus Data Manager"
           fill
           sizes="(max-width: 1180px) 100vw, 1180px"
+          placeholder="blur"
+          loading={soon ? "eager" : "lazy"}
+          fetchPriority={soon ? "low" : undefined}
           className="object-cover object-center"
         />
       </div>

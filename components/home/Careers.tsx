@@ -20,6 +20,13 @@
  */
 
 import { useRef, useEffect, useState, useCallback } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import { useMediaWarm } from "@/components/ui/MediaPrefetcher";
+import { track } from "@/lib/analytics";
+// Static import → AVIF via the optimizer (was a raw 1.8 MB <img>), real
+// blur-up placeholder, and intrinsic dimensions (no layout shift).
+import hiringWorldMap from "@/public/HomePgMedia/hiringWorldMap.png";
 
 // ─── Walking figure types ────────────────────────────────────────────────────
 
@@ -163,20 +170,21 @@ function ArrowDots({ className = "" }: { className?: string }) {
 // ─── Team-locations map ──────────────────────────────────────────────────────
 //
 // Hand-drawn world map asset with DC + Madrid pinned in brand blue
-// (/public/hiring-humans/world-map-countries.png). Rendered as a real <img> so the
+// (/public/HomePgMedia/hiringWorldMap.png). Rendered as a real <img> so the
 // pencil-sketch detail (ships, compass rose, coastlines) reads cleanly
 // at any width. Sized via CSS — width: 100%, height auto — to scale
 // responsively inside the .careers-map wrapper.
 
 const CSS = `
+/* Canonical content-bounds calc trick — 1287px cap, always 40px
+   narrower than parent (= 20px gutter on each side at every viewport
+   width), centered. Matches navbar / .content-bounds / site-wide. */
 .careers-bounds {
   max-width: 1287px;
-  margin-left: 20px;
-  margin-right: 20px;
+  width: calc(100% - 2.5rem);
+  margin-left: auto;
+  margin-right: auto;
   box-sizing: border-box;
-}
-@media (min-width: 768px) {
-  .careers-bounds { margin-left: auto; margin-right: auto; }
 }
 
 /* ── Header ─────────────────────────────────────────────────────────────
@@ -191,7 +199,7 @@ const CSS = `
   margin: 0;
 }
 .careers-trigger {
-  color: var(--color-accent);
+  color: #0496FF;
   cursor: default;
 }
 .careers-sub {
@@ -203,8 +211,21 @@ const CSS = `
 /* ── Team-locations map (DC + Madrid pinned in brand blue) ──────────── */
 .careers-map {
   max-width: 780px;
-  margin: 0 auto;
-  padding: 8px 0;
+  /* Vertical breathing room moved to margin so the container's height
+     exactly hugs the image — pulse % coords below stay locked to the
+     same map location at every viewport width. */
+  margin: 8px auto;
+  position: relative;
+}
+/* Two stacked semi-transparent white washes to lighten the map. */
+.careers-map::before,
+.careers-map::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: 7px;
+  pointer-events: none;
 }
 .careers-map-img {
   display: block;
@@ -215,6 +236,46 @@ const CSS = `
      radius belongs to the PageFrame card itself, not to in-card
      imagery. */
   border-radius: 7px;
+}
+
+/* Sonar pulses for DC + Madrid pins. Central dot sits at the % coords;
+   two pseudo-element rings expand + fade infinitely, offset by half the
+   cycle so a ring is always mid-flight. */
+.careers-map-pulse {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: #0496FF;
+  /* Box-shadow-as-border so the white ring doesn't shrink the inner
+     fill and the pulse rings can still emanate from the dot's edge.
+     Second layer is a slight drop shadow for elevation. */
+  box-shadow: 0 0 0 2px #FFFFFF, 0 2px 4px rgba(0, 0, 0, 0.25);
+  pointer-events: none;
+  z-index: 2;
+}
+.careers-map-pulse::before,
+.careers-map-pulse::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: #0496FF;
+  animation: careersMapPulse 2.4s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+}
+.careers-map-pulse::after { animation-delay: 1.2s; }
+/* Coords are pure % of the image bounds — kept that way so the dots
+   stay pinned to the same map location across every viewport width. */
+.careers-map-pulse--dc { top: 43.76%; left: 28.21%; }
+.careers-map-pulse--madrid { top: 41.77%; left: 47.36%; }
+@keyframes careersMapPulse {
+  0%   { transform: scale(1);   opacity: 0.55; }
+  100% { transform: scale(2.5); opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .careers-map-pulse::before,
+  .careers-map-pulse::after { animation: none; opacity: 0; }
 }
 
 /* ── Join CTA (centered black pill, same arrow-dots glyph as the
@@ -240,109 +301,6 @@ const CSS = `
   transition: color 150ms ease;
 }
 .careers-join:hover { color: var(--color-accent); }
-
-/* ── Reveal form panel ────────────────────────────────────────────────
-   Hidden by default; clicking "Join our team" toggles it open. Keeps
-   the original Name / Message / Email form + Submit + "We accept
-   interns." aside available on the page. */
-.careers-form-panel {
-  overflow: hidden;
-  max-height: 0;
-  opacity: 0;
-  transition: max-height 320ms ease, opacity 320ms ease, margin-top 320ms ease;
-  margin-top: 0;
-}
-.careers-form-panel[data-open="true"] {
-  /* Large ceiling rather than an exact height so the reveal never
-     clips if the form grows (extra fields, validation messages, etc.).
-     The cap is needed because CSS transitions can't animate max-height
-     when the value is "auto". */
-  max-height: 1600px;
-  opacity: 1;
-  margin-top: 56px;
-}
-@media (prefers-reduced-motion: reduce) {
-  .careers-form-panel { transition: none; }
-}
-
-.careers-form-wrap {
-  max-width: 600px;
-  margin: 0 auto;
-}
-
-/* Form-panel intro typography. Heading + lede live above the inputs;
-   the form-grid spacing sits below them via .careers-form-fields. */
-.careers-form-intro-title {
-  margin: 0 0 8px;
-}
-.careers-form-intro-copy {
-  margin: 0;
-  color: var(--color-muted);
-}
-.careers-form-intro-emph {
-  color: var(--color-ink);
-  font-weight: 500;
-}
-.careers-form-fields {
-  margin-top: 24px;
-  display: flex;
-  flex-direction: column;
-}
-
-.careers-field {
-  display: block;
-  padding: 18px 0;
-  border-bottom: 1px solid var(--color-gridline);
-  transition: border-color 200ms ease;
-}
-.careers-field:focus-within {
-  border-bottom-color: var(--color-accent);
-}
-.careers-field input,
-.careers-field textarea {
-  width: 100%;
-  background: transparent;
-  border: 0;
-  outline: 0;
-  resize: none;
-  display: block;
-  overflow: hidden;
-  color: var(--color-ink);
-  font-size: var(--typography--p-l);
-  line-height: var(--typography--p-l--line-height);
-}
-.careers-field input::placeholder,
-.careers-field textarea::placeholder {
-  color: rgba(29, 29, 31, 0.45);
-}
-
-.careers-aside {
-  margin-top: 12px;
-  text-align: right;
-  color: var(--color-muted);
-}
-
-.careers-submit-row {
-  margin-top: 32px;
-  display: flex;
-  justify-content: flex-end;
-}
-.careers-submit {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  background: var(--color-cta);
-  color: #ffffff;
-  border-radius: var(--radius-button-md);
-  padding: 14px 28px;
-  font-size: var(--typography--p-m);
-  line-height: 1;
-  font-weight: 500;
-  transition: color 150ms ease;
-  border: 0;
-  cursor: pointer;
-}
-.careers-submit:hover { color: var(--color-accent); }
 `;
 
 // ─── Component ───────────────────────────────────────────────────────────────
@@ -350,7 +308,6 @@ const CSS = `
 const CANVAS_H = 180;
 
 export const Careers = ({ hideHeader, className = "" }: { hideHeader?: boolean; className?: string } = {}) => {
-  const textareaRef  = useRef<HTMLTextAreaElement>(null);
   const canvasRef    = useRef<HTMLCanvasElement>(null);
   const figuresRef   = useRef<Figure[]>([]);
   const animRef      = useRef(0);
@@ -359,18 +316,18 @@ export const Careers = ({ hideHeader, className = "" }: { hideHeader?: boolean; 
   const hoverTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [active, setActive] = useState(false);
   const [note, setNote]     = useState<string | null>(null);
-  const [formOpen, setFormOpen] = useState(false);
-
-  const handleTextareaInput = () => {
-    const el = textareaRef.current;
-    if (!el) return;
-    el.style.height = "auto";
-    el.style.height = `${el.scrollHeight}px`;
-  };
+  // Promoted to eager once the page is loaded + idle (MediaPrefetcher).
+  const warm = useMediaWarm();
 
   // Spawn exactly 3 clickable figures + 1 non-clickable — tallest always
   // gets "note from alex".
   const spawnFigures = useCallback(() => {
+    // Easter egg is a desktop hover interaction (5-second hover delay
+    // primary, click fallback). The fixed-position canvas covers the
+    // bottom 180px of the viewport, which is ~28% of a phone screen and
+    // blocks page content. Skip on mobile/tablet (<1024px) where the
+    // interaction model doesn't apply.
+    if (window.matchMedia("(max-width: 1023px)").matches) return;
     if (figuresRef.current.some(f => f.state === "walking" || f.state === "paused")) return;
 
     const scales = [1.2, 0.9, 0.95];
@@ -642,7 +599,7 @@ export const Careers = ({ hideHeader, className = "" }: { hideHeader?: boolean; 
                 }}
                 onClick={spawnFigures}
               >
-                Humans.
+                Humans
               </span>
             </h2>
             <p className="p-l careers-sub">
@@ -652,71 +609,30 @@ export const Careers = ({ hideHeader, className = "" }: { hideHeader?: boolean; 
         )}
 
         <div className="careers-map">
-          <img
-            src="/hiring-humans/world-map-countries.png"
+          <Image
+            src={hiringWorldMap}
             alt="Team locations: Washington DC and Madrid"
             className="careers-map-img"
+            sizes="(max-width: 767px) 100vw, 780px"
+            quality={75}
+            placeholder="blur"
+            loading={warm ? "eager" : "lazy"}
+            fetchPriority={warm ? "low" : undefined}
+            style={{ width: "100%", height: "auto" }}
           />
+          {/* Sonar pulses on DC + Madrid. Coords are % of the map's
+              rendered box — tune in CSS if the image swaps. */}
+          <span className="careers-map-pulse careers-map-pulse--dc" aria-hidden />
+          <span className="careers-map-pulse careers-map-pulse--madrid" aria-hidden />
         </div>
 
         <div className="careers-join-row">
-          <button
-            type="button"
-            className="careers-join group"
-            aria-expanded={formOpen}
-            aria-controls="careers-form-panel"
-            onClick={() => setFormOpen((v) => !v)}
-          >
+          <Link href="/contact?tab=careers" onClick={() => track.ctaClicked("join_our_team", "homepage")} className="careers-join group">
             Join our team
             <span className="inline-block transition-transform group-hover:translate-x-0.5">
               <ArrowDots className="text-accent" />
             </span>
-          </button>
-        </div>
-
-        <div
-          id="careers-form-panel"
-          className="careers-form-panel"
-          data-open={formOpen ? "true" : "false"}
-          aria-hidden={!formOpen}
-        >
-          <div className="careers-form-wrap">
-            <h3 className="h3 tracking-tight text-ink careers-form-intro-title">
-              Careers &amp; investment queries
-            </h3>
-            <p className="p-m careers-form-intro-copy">
-              If you&apos;re excited about creating paradigm shifts in physical world understanding.{" "}
-              <span className="careers-form-intro-emph">Join us now.</span>
-            </p>
-
-            <form className="careers-form-fields">
-              <label className="careers-field">
-                <input type="text" placeholder="Name" />
-              </label>
-              <label className="careers-field">
-                <textarea
-                  ref={textareaRef}
-                  placeholder="Message"
-                  rows={1}
-                  onInput={handleTextareaInput}
-                />
-              </label>
-              <label className="careers-field">
-                <input type="email" placeholder="Enter email" />
-              </label>
-            </form>
-
-            <p className="p-s careers-aside">We accept interns.</p>
-
-            <div className="careers-submit-row">
-              <button type="submit" className="careers-submit group">
-                Submit
-                <span className="ml-1 inline-block transition-transform group-hover:translate-x-0.5">
-                  <ArrowDots className="text-accent" />
-                </span>
-              </button>
-            </div>
-          </div>
+          </Link>
         </div>
       </div>
 

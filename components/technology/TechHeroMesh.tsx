@@ -476,14 +476,14 @@ export function TechHeroMesh() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const ripplesRef = useRef<Ripple[]>([]);
 
-  // Boat physics — starts on the left, auto-sails right and wraps.
+  // Boat physics — starts right of center, auto-sails right and wraps.
   const boatRef = useRef<BoatPhysics>({
-    wx: -700, wz: 900,
+    wx: 450, wz: 900,
     vx: 0, vz: 0,
     wy: 0, pitch: 0, roll: 0, heading: 0,
     lastT: 0,
   });
-  const prevBoatPosRef = useRef({ wx: -700, wz: 900 });
+  const prevBoatPosRef = useRef({ wx: 450, wz: 900 });
 
   useEffect(() => {
     // rAF handle + visibility flag live in the effect closure so the

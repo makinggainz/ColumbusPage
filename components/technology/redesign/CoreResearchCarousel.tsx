@@ -3,6 +3,9 @@
 import React, { useState, useRef } from "react";
 import Link from "next/link";
 import { TechDiagramSVG } from "./TechDiagramSVG";
+import { WarmTechImage } from "./WarmTechImage";
+import columbusLogo from "@/public/logobueno.png";
+import mapsGptLogo from "@/public/MapsGPT-logo.png";
 import styles from "../technology.module.css";
 
 interface Slide {
@@ -115,15 +118,13 @@ export function CoreResearchCarousel() {
           <div className={styles.coreResearchProducts}>
             <a href="/" className={styles.coreResearchProduct}>
               <span className={styles.coreResearchProductGlyph} aria-hidden>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src="/logobueno.png" alt="" loading="lazy" decoding="async" />
+                <WarmTechImage src={columbusLogo} alt="" width={36} height={36} />
               </span>
               <span>Columbus</span>
             </a>
             <a href="/products/consumer" className={styles.coreResearchProduct}>
               <span className={styles.coreResearchProductGlyph} aria-hidden>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src="/MapsGPT-logo.png" alt="" loading="lazy" decoding="async" />
+                <WarmTechImage src={mapsGptLogo} alt="" width={36} height={36} />
               </span>
               <span>Elio</span>
             </a>

@@ -46,11 +46,50 @@
 :root {
   --font-hero: "Axiforma", "SF Pro", -apple-system, BlinkMacSystemFont, sans-serif;
 
-  /* PageFrame drop shadow — site-wide. Lets the white frame card read as
-     a floating panel against the white site backdrop on every route.
-     A route can drop the frame's hairline border via --frame-border. */
-  --frame-shadow: 0 0 2px rgba(0, 0, 0, 0.10),
-                  0 0 14px rgba(0, 0, 0, 0.15);
+  /* PageFrame drop shadow — three stacked directional shadows (top +
+     left + right), no bottom (so the card sits flush on the backdrop
+     without a dark halo bleeding past it). Default is the *hidden*
+     variant (every alpha 0) so the shadow animates IN once PageFrame
+     sets `data-page-mounted` and the user is at the top of the page —
+     see the override below. */
+  --frame-shadow: 0 -24px 24px rgba(0, 0, 0, 0),
+                  -8px 0 14px rgba(0, 0, 0, 0),
+                   8px 0 14px rgba(0, 0, 0, 0);
+}
+
+/* Visible-shadow state — set once PageFrame mounts AND the user is at
+   (or near) the top of the page. Alphas are intentionally very low
+   (0.01 top / 0.0125 sides — halved from the prior 0.02/0.025) so
+   the halo reads as a barely-there floating cue, not a heavy drop
+   shadow. The `:not([data-page-scrolled])` clause fades it back to
+   the transparent default the moment the user scrolls away from the
+   top, and fades it back in when they return. PageFrame's inline
+   `transition: box-shadow …` carries the easing for both directions. */
+html[data-page-mounted]:not([data-page-scrolled]) {
+  --frame-shadow: 0 -24px 6px rgba(0, 0, 0, 0.01),
+                  -8px 0 4px rgba(0, 0, 0, 0.0125),
+                   8px 0 4px rgba(0, 0, 0, 0.0125);
+}
+
+/* Mobile nav drawer shadow — sibling of `--frame-shadow` but with FOUR
+   layers (top + bottom + left + right) since the drawer is a free-
+   floating card with no fixed bottom edge against the white backdrop.
+   Same accent-tinted color-mix recipe and same alphas as the page
+   frame so the drawer reads as a peer of the site card. Default is
+   the alpha-0 variant so MistxNav can fade the halo in when the
+   drawer opens via the `data-mobile-menu-open` attribute on <html>. */
+:root {
+  --nav-mobile-shadow: 0 -24px 24px color-mix(in srgb, var(--color-accent) 0%, transparent),
+                       0  24px 24px color-mix(in srgb, var(--color-accent) 0%, transparent),
+                       -8px 0  14px color-mix(in srgb, var(--color-accent) 0%, transparent),
+                        8px 0  14px color-mix(in srgb, var(--color-accent) 0%, transparent);
+}
+
+html[data-mobile-menu-open] {
+  --nav-mobile-shadow: 0 -24px 24px color-mix(in srgb, var(--color-accent) 12%, transparent),
+                       0  24px 24px color-mix(in srgb, var(--color-accent) 12%, transparent),
+                       -8px 0  14px color-mix(in srgb, var(--color-accent) 14%, transparent),
+                        8px 0  14px color-mix(in srgb, var(--color-accent) 14%, transparent);
 }
 
 /* Base reset — use overflow-x: clip (not hidden) so position:sticky works on business Section C */
@@ -58,21 +97,54 @@ html,
 body {
   margin: 0;
   padding: 0;
-  /* White site backdrop behind the PageFrame card — visible through the
-     30px gutter around the frame on every route. */
+  /* Uniform white backdrop on every breakpoint so the 9px top gutter +
+     the PageFrame's rounded corners read as white-on-white (and the
+     subtle drop shadow on the card shows against the bright surround).
+     Historically the mobile/tablet backdrop was black; it is now white
+     everywhere — the safe-area + footer-reveal overlays below track it. */
   background-color: #FFFFFF;
   color: #1D1D1F;
   overflow-x: clip;
   min-height: 100%;
 }
 
+/* The mobile/tablet backdrop used to be forced black here via a ≤1023px
+   override ("PageFrame floats on a dark slab"), backed by a black iOS
+   Safari chrome (the `theme-color` meta + a fixed `body::before` fill
+   over the safe-area-inset-top). All of that has been removed — the
+   backdrop is uniformly white per the base rule above, the theme-color
+   is white (app/layout.tsx), and the footer-reveal overlay below stays
+   white too. The white PageFrame card now floats on a white surround on
+   every breakpoint, matching desktop. */
+
 /* Footer reveal — once the user reaches the footer, PageFrame sets
    [data-footer-reached] on <html>, which fades the white cover off the
    footer (below). The page backdrop itself stays white throughout. */
 
-/* White cover over the reveal footer. Opaque while scrolling the page
-   (footer reads as white, matching the backdrop); fades out when the
-   footer is reached, revealing the footer's full dark design at once. */
+/* PageFrame's bottom-margin scroll reservation. Default subtracts 60px
+   from the footer height so the card's rounded bottom corners end up
+   sitting ON the footer's dark video bg at max scroll — a desktop
+   design beat. On mobile (<md) the override drops the −60px so the
+   PageFrame scrolls fully past the viewport top, letting the fixed
+   `min-h-screen` footer read as a dedicated full-viewport surface (its
+   sticky navbar is dragged out with it). */
+:root {
+  --frame-bottom-margin: calc(var(--footer-reveal-height, 100vh) - 60px);
+}
+@media (max-width: 767px) {
+  :root {
+    --frame-bottom-margin: var(--footer-reveal-height, 100vh);
+  }
+}
+
+/* Cover over the reveal footer. Opaque while the user is scrolling
+   above the reveal range — the footer reads as a flat sheet matching
+   the body backdrop, so the area behind the PageFrame card (9px top
+   gutter, 35px rounded corner cut-outs) blends seamlessly into the
+   body bg. Fades to opacity:0 when the user reaches the footer,
+   revealing the footer's full dark design at once. The overlay is white
+   on every breakpoint now, tracking the uniformly white body backdrop
+   (see the `html, body` rule above). */
 .footer-reveal-overlay {
   position: absolute;
   inset: 0;
@@ -132,7 +204,6 @@ html {
      without flashing animation or distracting the eye on LCP heroes. */
   --image-skel: #ECECEE;
 
-  --container-site: 1200px;      /* the single content-column width */
   --radius-card: 20px;           /* signature container radius */
   /* Button/CTA corner roundness, scaled by button size. Anchored to the
      navbar button (~35px tall, 16px radius → radius/height ratio ≈ 0.457);
@@ -345,6 +416,95 @@ html {
 }
 
 
+/* ══════════════════════════════════════════════════════════════════════════
+   RESPONSIVE DESIGN-SYSTEM PRIMITIVES
+   ──────────────────────────────────────────────────────────────────────────
+   Canonical responsive tokens + utilities used site-wide. Added as part of
+   the responsive rollout (see /Users/alexramirezblonski/.claude/plans/
+   site-responsive-rollout.md, Phase 1).
+
+   Breakpoints — Tailwind defaults are the canonical set:
+       sm 640px · md 768px · lg 1024px · xl 1280px · 2xl 1536px
+   Custom arbitrary breakpoints are allowed only when annotated with a
+   `WHY:` comment explaining the reason they can't use the standard set.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* Type ramp — mobile→desktop clamps. Use these in place of fixed
+   text-[Npx] declarations whenever a heading risks overflow at narrow
+   viewports. Values reach desktop targets that match the existing
+   homepage / business / catcherX type scale. */
+:root {
+  --type-display:  clamp(36px, 7vw, 76px);   /* hero h1 */
+  --type-h2:       clamp(28px, 5vw, 56px);   /* section heading */
+  --type-h3:       clamp(22px, 3.5vw, 36px); /* sub heading */
+  --type-body:     clamp(15px, 1.6vw, 18px); /* body copy */
+  --type-eyebrow:  clamp(11px, 1.2vw, 13px); /* eyebrow / kicker label */
+
+  /* Vertical rhythm — section padding tokens. Mobile drops ~40% from
+     desktop. Use these in place of fixed py-32 / py-40 declarations on
+     section wrappers where the desktop padding would dominate the
+     mobile viewport. */
+  --section-py:        clamp(56px, 8vw, 128px);
+  --section-py-tight:  clamp(32px, 5vw, 80px);
+}
+
+/* Canonical content bounds — the single width rule for the site.
+       max-width 1287px · always 20px gutter to viewport · auto-centered
+   Uses `width: calc(100% - 2.5rem)` (40px narrower than the parent,
+   i.e. 20px gutter on each side) + `margin: 0 auto`. Replaces the
+   older `mx-5 md:mx-auto` flip, which collapsed to a zero gutter in
+   the 768–1327px viewport range (container = viewport, mx-auto = 0
+   outer margin). With the calc trick the gutter holds at EVERY
+   viewport width, and the bounds outer edge is the visible edge —
+   children fill the bounds with no inner padding required, so panel
+   chrome (gray bg, border, radius) reads flush to its inner content
+   exactly as before. Mirrors what MistxNav now uses.
+   `.ent-content-bounds` is kept as an alias for backward
+   compatibility; new code should prefer `.content-bounds`. */
+.content-bounds,
+.ent-content-bounds {
+  max-width: 1287px;
+  width: calc(100% - 2.5rem);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Touch-target floor — WCAG AA requires 44×44px minimum interactive
+   area on mobile. Apply this utility to any small button, pill, icon
+   button, or accordion trigger that renders below 44px tall on mobile.
+   Desktop sizes are unaffected. */
+@media (max-width: 1023px) {
+  .touch-target {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+/* Sticky guardrail — kills `position: sticky` on mobile for elements
+   that were designed for desktop only. Apply this class alongside the
+   sticky element's existing classes; below lg (1024px) the element
+   reverts to normal flow. */
+@media (max-width: 1023px) {
+  .lg-only-sticky {
+    position: static !important;
+  }
+}
+
+/* Mockup-fit wrapper — the four industry mockup frames
+   (DataManagerMockup, AgenticResearchMockup, DashboardMockup,
+   MapChatPlatform) are 5K-pixel PNGs with hardcoded aspect ratios.
+   Wrap them with this utility to constrain to viewport width while
+   preserving aspect. Per design decision, mockups become decorative-
+   only on mobile (text inside becomes unreadable) — surrounding
+   section copy carries the story. Set `--mockup-aspect` inline to
+   match the specific frame's native ratio if it differs from the
+   default 5184/3003. */
+.mockup-fit {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: var(--mockup-aspect, 5184 / 3003);
+}
+
 /* Section F (SiteSelection): animated gradient blobs — orbital paths, linear timing = no pause at loop */
 @keyframes blink {
   0%, 100% { opacity: 1; }
@@ -381,8 +541,9 @@ html {
 
 /* Typography */
 body {
-  /* Backdrop colour is owned by the `html, body` rule above (white) —
-     not re-set here, so there's a single source of truth. */
+  /* Backdrop colour is owned by the `html, body` rule above (white on
+     desktop, black on mobile via the <768px media query) — not re-set
+     here, so there's a single source of truth. */
   color: var(--foreground);
   /* Opening Hours Sans is the project-wide body face. Everything that
      doesn't set its own font-family inherits it from here. Headings
@@ -1196,23 +1357,6 @@ body.bg-mode-dark article {
   background: linear-gradient(180deg, var(--catcher-bg1) 0%, #ffffff 40%);
   color: #0B1B2B;
   font-family: var(--font-inter), system-ui, sans-serif;
-}
-
-/* Page-width content column — the single content constraint for every
-   section on a catcherX-themed page. 1200px max + responsive gutters. */
-.container-site {
-  margin-left: auto;
-  margin-right: auto;
-  width: 100%;
-  max-width: 1200px;
-  padding-left: 24px;
-  padding-right: 24px;
-}
-@media (min-width: 1024px) {
-  .container-site {
-    padding-left: 32px;
-    padding-right: 32px;
-  }
 }
 
 /* Vertical section rhythm — padding, not margin, so gaps never collapse. */

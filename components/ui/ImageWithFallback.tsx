@@ -1,7 +1,7 @@
 "use client";
 
 import Image, { type ImageProps } from "next/image";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 /**
  * Drop-in replacement for next/image that adds two graceful UI states:
@@ -48,6 +48,19 @@ export function ImageWithFallback({
   const [state, setState] = useState<"loading" | "loaded" | "error">(
     "loading",
   );
+  const imgRef = useRef<HTMLImageElement | null>(null);
+
+  // Cached-image recovery: if the <img> is already `complete` before React
+  // attaches `onLoad` (reload / back-forward / warm cache), the load event
+  // already fired and `onLoad` will never run — leaving the skeleton stuck.
+  // Reconcile against the live DOM node on mount so a cached image clears the
+  // skeleton immediately instead of forever showing grey.
+  useEffect(() => {
+    const node = imgRef.current;
+    if (node?.complete) {
+      setState(node.naturalWidth > 0 ? "loaded" : "error");
+    }
+  }, []);
 
   const showSurface = state !== "loaded";
 
@@ -70,6 +83,7 @@ export function ImageWithFallback({
       )}
       <Image
         {...imageProps}
+        ref={imgRef}
         onLoad={(event) => {
           setState("loaded");
           onLoad?.(event);

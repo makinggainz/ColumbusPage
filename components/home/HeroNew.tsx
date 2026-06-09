@@ -1,6 +1,9 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import { ArrowDot, NavArrowStack, elioMenuItems } from "../layout/MistxNav";
+import { heroOptimizerSrcSet } from "@/lib/hero-assets";
 
 /**
  * Hero section — minimal layout for the experimentV6-Gdesign redesign.
@@ -65,35 +68,139 @@ const HN_CSS = `
 /* Full-bleed background image. Sits at the very bottom of the section's
    stacking (z-index: 0) so the ::before readability gradient and ::after
    vignette (both z-index: 1) and the .hn-bounds content (z-index: 2)
-   all layer cleanly on top. object-position mirrors the old
-   background-position so the ::after radial vignette stays aligned. */
+   all layer cleanly on top. Shared rules for both bg variants below;
+   .hn-bg-desktop carries the 1672×941 landscape art; .hn-bg-mobile
+   carries the 853×1844 portrait variant. Display is swapped by viewport
+   in the media-query block. */
 .hn-bg {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: right center;
   z-index: 0;
+}
+.hn-bg-desktop {
+  object-position: right center;
+}
+.hn-bg-mobile {
+  object-position: center center;
+  display: none;
+}
+@media (max-width: 767px) {
+  .hn-bg-desktop {
+    display: none;
+  }
+  .hn-bg-mobile {
+    display: block;
+  }
+}
+
+/* Mobile: hero fills the full viewport — same calc(100vh + 40px) the
+   desktop rule uses, where the +40 absorbs the navbar overshoot
+   (margin-top: -120 + padding-top: 120 leaves the box 40 px taller
+   than 100vh on top, then PageFrame's overflow:clip discards it).
+   The portrait .hn-bg-mobile (853×1844) cover-fills the section
+   naturally; H1+subtitle sit centred on top of the upper white band
+   of the illustration. */
+@media (max-width: 767px) {
+  .hn-section {
+    min-height: calc(100vh + 40px);
+  }
+  /* On mobile, lift the title block 100px above the section's vertical
+     centre — lands the headline + subtitle + CTA in the upper third of
+     the viewport (≈ 40 % from top), leaving breathing room from the
+     navbar above and the lower 60 % for the ship illustration to read.
+     Pattern matches Mobbin references (Duolingo, Yazio) for hero with
+     title overlaid on illustration. */
+  .hn-bounds {
+    transform: translateY(-100px);
+  }
+  /* Stacked white halo on the subtitle so glyphs stay readable over the
+     image where the radial wash thins out. Three zero-offset shadows
+     ramp the halo from a tight 2px core out to an 8px diffuse glow. */
+  .hn-subtitle {
+    text-shadow:
+      0 0 2px rgba(255, 255, 255, 0.95),
+      0 0 4px rgba(255, 255, 255, 0.9),
+      0 0 8px rgba(255, 255, 255, 0.85);
+  }
+  /* Flip the readability gradient on mobile from left→right to top→bottom.
+     Desktop fades the left side to white so the H1 (which sits left of
+     the ship) reads cleanly; on mobile the H1 sits ABOVE the ship
+     instead of beside it, so the fade needs to run vertically — opaque
+     white behind the headline at the top, transparent down where the
+     ship lives. Stops compressed to 0/15/30/45% (vs 0/30/55/75% on
+     desktop) so the fade fully clears by ~45% of section height
+     (≈y285 on a 633px section), leaving the masts (≈y280–516) and
+     hull (≈y516–610) reading at full ink. The headline block only
+     extends to ~40% of section height, so this still gives the H1
+     all the white backdrop it needs. */
+  .hn-section::before {
+    background: linear-gradient(
+      to bottom,
+      rgba(255, 255, 255, 0.92) 0%,
+      rgba(255, 255, 255, 0.78) 15%,
+      rgba(255, 255, 255, 0.30) 30%,
+      transparent 45%
+    );
+  }
+  /* Mobile ::after — strip the desktop bottom-fade and ship-halo
+     layers; keep only the top-left blue tint. The bottom-fade was
+     blending the hero's bottom edge into the next section, but both
+     surfaces are already pure #FFFFFF (see hn-section bg-color +
+     app/page.tsx), so the fade is doing visual work it doesn't need
+     to and was washing out the hull (≈y516–610 on a 633px section,
+     which is exactly where the 80%→100% white ramp landed). The
+     centered ellipse halo was a desktop carryover with no purpose
+     on mobile. */
+  .hn-section::after {
+    background:
+      /* Top-right white wash — wide ellipse anchored at the top-right
+         that extends across most of the upper section. Sized 130% wide ×
+         70% tall so it reaches past the subtitle's left edge on mobile,
+         keeping the skyline buildings from interfering with text. */
+      radial-gradient(
+        ellipse 130% 70% at top right,
+        rgba(255, 255, 255, 0.95) 0%,
+        rgba(255, 255, 255, 0.82) 30%,
+        rgba(255, 255, 255, 0.5) 55%,
+        rgba(255, 255, 255, 0) 82%
+      ),
+      radial-gradient(
+        circle at top left,
+        rgba(96, 148, 193, 0.35) 0%,
+        rgba(255, 255, 255, 0) 25%
+      );
+  }
 }
 
 /* Left-side readability layer — fades from the section's base surface
    (#FDFCFC) at the left edge to transparent past the H1's max-width,
    so the H1 sits on a near-solid background while the ship half of
-   the image reads through cleanly on the right. */
+   the image reads through cleanly on the right.
+
+   Base ::before (positioning + z-index) applies at every viewport so
+   the mobile @media block above only needs to override the background.
+   The desktop-specific left→right gradient is scoped to min-width 768
+   so it doesn't leak onto mobile and override the top→bottom fade. */
 .hn-section::before {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    to right,
-    rgba(255, 255, 255, 0.92) 0%,
-    rgba(255, 255, 255, 0.78) 30%,
-    rgba(255, 255, 255, 0.30) 55%,
-    transparent 75%
-  );
   pointer-events: none;
   z-index: 1;
+}
+@media (min-width: 768px) {
+  .hn-section::before {
+    background: linear-gradient(
+      to right,
+      rgba(255, 255, 255, 0.92) 0%,
+      rgba(255, 255, 255, 0.78) 30%,
+      rgba(255, 255, 255, 0.30) 55%,
+      transparent 75%
+    );
+  }
 }
 
 /* Three-layer overlay (single ::after). CSS multi-background paints
@@ -118,45 +225,56 @@ const HN_CSS = `
   content: "";
   position: absolute;
   inset: 0;
-  background:
-    radial-gradient(
-      circle at top left,
-      rgba(96, 148, 193, 0.35) 0%,
-      rgba(255, 255, 255, 0) 25%
-    ),
-    linear-gradient(
-      to bottom,
-      transparent 65%,
-      rgba(255, 255, 255, 0.55) 85%,
-      rgba(255, 255, 255, 1) 100%
-    ),
-    radial-gradient(
-      ellipse 56% 80% at 76% 50%,
-      rgba(255, 255, 255, 0) 0%,
-      rgba(255, 255, 255, 0) 44%,
-      rgba(255, 255, 255, 0.55) 73%,
-      rgba(255, 255, 255, 1) 100%
-    );
   pointer-events: none;
   z-index: 1;
+}
+@media (min-width: 768px) {
+  .hn-section::after {
+    background:
+      radial-gradient(
+        circle at top left,
+        rgba(96, 148, 193, 0.35) 0%,
+        rgba(255, 255, 255, 0) 25%
+      ),
+      linear-gradient(
+        to bottom,
+        transparent 65%,
+        rgba(255, 255, 255, 0.55) 85%,
+        rgba(255, 255, 255, 1) 100%
+      ),
+      radial-gradient(
+        ellipse 56% 80% at 76% 50%,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0) 44%,
+        rgba(255, 255, 255, 0.55) 73%,
+        rgba(255, 255, 255, 1) 100%
+      );
+  }
 }
 
 .hn-bounds {
   position: relative;
   z-index: 2;
-  width: 100%;
+  /* Canonical content-bounds calc trick — 1287px cap, always 40px
+     narrower than parent (= 20px gutter on each side at every viewport
+     width), centered. Matches navbar / .content-bounds / site-wide. */
   max-width: 1287px;
-  margin-left: 20px;
-  margin-right: 20px;
+  width: calc(100% - 2.5rem);
+  margin-left: auto;
+  margin-right: auto;
   box-sizing: border-box;
-  /* Lift the title 50px above the section's vertical centre. translateY
-     is preferred over a negative margin so the flex centering math
-     stays clean and adjacent siblings (none today, but future-proof)
-     aren't dragged with it. */
-  transform: translateY(-50px);
 }
+/* Lift the title 50px above the section's vertical centre on desktop.
+   translateY is preferred over a negative margin so the flex centering
+   math stays clean and adjacent siblings (none today, but future-proof)
+   aren't dragged with it. Gated to ≥768px so the mobile @media block
+   higher in this stylesheet (which sets -200px) wins on phones — the
+   earlier mobile rule would otherwise be overridden by this one due to
+   matching specificity + later source order. */
 @media (min-width: 768px) {
-  .hn-bounds { margin-left: auto; margin-right: auto; }
+  .hn-bounds {
+    transform: translateY(-50px);
+  }
 }
 
 /* Font-size + line-height come from the .h1 class on the element
@@ -221,34 +339,168 @@ const HN_CSS = `
     font-size: 22px;
   }
 }
+
 `;
 
 export function HeroNew() {
+  const [ctaOpen, setCtaOpen] = useState(false);
+  const ctaRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!ctaOpen) return;
+    function onDocClick(e: MouseEvent) {
+      if (!ctaRef.current?.contains(e.target as Node)) {
+        setCtaOpen(false);
+      }
+    }
+    function onKey(e: KeyboardEvent) {
+      if (e.key === "Escape") setCtaOpen(false);
+    }
+    document.addEventListener("mousedown", onDocClick);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("mousedown", onDocClick);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [ctaOpen]);
+
   return (
     <section className="hn-section" aria-label="Columbus hero" data-hero-section>
       <style>{HN_CSS}</style>
-      {/* LCP image — fill-mode <Image priority> emits a <link rel="preload">
-          so the browser starts the fetch before the bundle hydrates, and
-          serves AVIF/WebP via the next-image optimizer (the 1.2 MB PNG
-          shrinks to ~120-300 KB depending on viewport). */}
+      {/* LCP image — two viewport variants (CSS hides one: .hn-bg-mobile
+          shown ≤767px, .hn-bg-desktop shown ≥768px). The <Image>s are NOT
+          `priority` (that emitted an unconstrained preload for BOTH, so
+          every device high-priority-fetched the hidden variant too). Instead
+          we emit *media-scoped* <link rel="preload"> below — React 19 hoists
+          these into <head> and the browser evaluates `media` against the
+          live viewport, so only the variant actually shown is fetched at
+          high priority. The srcset matches the optimizer URL the <Image>
+          requests, so the preload and the render share one cache entry. */}
+      <link
+        rel="preload"
+        as="image"
+        media="(min-width: 768px)"
+        imageSrcSet={heroOptimizerSrcSet("/HomeHeroBg.png", 80)}
+        imageSizes="100vw"
+        fetchPriority="high"
+      />
+      <link
+        rel="preload"
+        as="image"
+        media="(max-width: 767px)"
+        imageSrcSet={heroOptimizerSrcSet("/HomeHeroBackMobile.png", 80)}
+        imageSizes="100vw"
+        fetchPriority="high"
+      />
+      {/* Desktop background — /HomeHeroBg.png. */}
       <Image
-        className="hn-bg"
-        src="/HomeHeroBack.png"
+        className="hn-bg hn-bg-desktop"
+        src="/HomeHeroBg.png"
         alt=""
         fill
-        priority
-        fetchPriority="high"
+        sizes="100vw"
+        quality={80}
+      />
+      <Image
+        className="hn-bg hn-bg-mobile"
+        src="/HomeHeroBackMobile.png"
+        alt=""
+        fill
         sizes="100vw"
         quality={80}
       />
       <div className="hn-bounds">
-        <p className="hn-eyebrow">The frontier research lab</p>
         <h1 className="h1 hn-title tracking-tight text-ink">
-          building geospatial reasoning for the real world.
+          The Applied AI Lab building a thinking earth
         </h1>
         <p className="hn-subtitle">
-          We're an Applied AI lab for geospatial intelligence
+          Geospatial Intelligence<br className="md:hidden" /> for the real world.
         </p>
+        {/* Try Elio CTA — mirrors the navbar dropdown verbatim: same
+            button class set (rounded-button px-5 py-2 p-m, bg-cta + white
+            text, hover:text-accent, NavArrowStack icon) and the same dark
+            glassy translucent panel + stagger animation below. The
+            elioMenuItems data is imported from MistxNav so the two stay
+            in sync. Hover opens it (matches navbar); click toggles for
+            touch; Esc / outside-click closes. */}
+        <div
+          ref={ctaRef}
+          className="relative mt-7 inline-block md:mt-9 md:hidden"
+          onMouseEnter={() => setCtaOpen(true)}
+          onMouseLeave={() => setCtaOpen(false)}
+        >
+          <button
+            type="button"
+            className="group cursor-pointer rounded-button-md px-7 py-3.5 p-l md:rounded-button md:px-5 md:py-2 md:p-m flex items-center gap-2 transition-colors hover:text-accent bg-cta text-white"
+            onClick={() => setCtaOpen((o) => !o)}
+            aria-haspopup="menu"
+            aria-expanded={ctaOpen}
+          >
+            Try Elio
+            <span className="ml-2 inline-block transition-transform group-hover:translate-x-0.5">
+              <NavArrowStack className="text-accent" />
+            </span>
+          </button>
+          <div
+            aria-hidden={!ctaOpen}
+            className="absolute left-0 top-full pt-2.5 w-[320px] z-50"
+            style={{
+              opacity: ctaOpen ? 1 : 0,
+              transform: ctaOpen
+                ? "translateY(0) scale(1)"
+                : "translateY(-6px) scale(0.96)",
+              transformOrigin: "top left",
+              pointerEvents: ctaOpen ? "auto" : "none",
+              transition:
+                "opacity 300ms cubic-bezier(0.6,0.6,0,1), transform 300ms cubic-bezier(0.6,0.6,0,1)",
+            }}
+          >
+            <div
+              role="menu"
+              className="p-1.5"
+              style={{
+                backgroundColor: "#091345",
+                backdropFilter: "blur(20px) saturate(160%)",
+                WebkitBackdropFilter: "blur(20px) saturate(160%)",
+                borderRadius: "14px",
+                border: "1px solid rgba(255,255,255,0.08)",
+                boxShadow:
+                  "rgba(9,1,20,0.06) 0px 8px 8px -3px, rgba(8,1,20,0.06) 0px 3px 3px -1.5px, rgba(8,1,20,0.04) 0px 2px 2px -1px, rgba(8,1,20,0.03) 0px 1px 1px -0.5px, rgba(8,1,20,0.03) 0px 0.5px 0.5px 0px, rgba(255,255,255,0.08) 0px -4px 12px -4px inset, rgba(255,255,255,0.06) 0px 1px 3px 0px inset, rgba(255,255,255,0.12) 0px 0.5px 0.5px 0px inset",
+              }}
+            >
+              <ul>
+                {elioMenuItems.map((item, i) => (
+                  <li key={item.label} role="none">
+                    <a
+                      role="menuitem"
+                      href={item.href}
+                      className="group flex items-start gap-3 px-3 py-2.5 rounded-[10px] transition-colors duration-150 hover:bg-white/8"
+                      style={{
+                        opacity: ctaOpen ? 1 : 0,
+                        transform: ctaOpen
+                          ? "translateY(0)"
+                          : "translateY(4px)",
+                        transition: `opacity 260ms cubic-bezier(0.6,0.6,0,1) ${
+                          ctaOpen ? 70 + i * 45 : 0
+                        }ms, transform 260ms cubic-bezier(0.6,0.6,0,1) ${
+                          ctaOpen ? 70 + i * 45 : 0
+                        }ms`,
+                      }}
+                    >
+                      <div className="flex-1 min-w-0">
+                        <div className="p-m font-medium leading-snug text-white">{item.label}</div>
+                        <div className="p-s leading-snug mt-0.5 text-white/50">{item.desc}</div>
+                      </div>
+                      <span className="mt-1 shrink-0 text-white/35 transition-transform group-hover:translate-x-0.5">
+                        <ArrowDot />
+                      </span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   );

@@ -11,7 +11,7 @@ import {
   MapPinned,
 } from "lucide-react";
 import { useIndustry } from "./IndustryContext";
-import { INDUSTRY_CONTENT, INDUSTRY_ORDER } from "./content";
+import { INDUSTRY_CONTENT, INDUSTRY_COLOR, INDUSTRY_ORDER } from "./content";
 import type { IndustryId } from "./types";
 
 type IndustrySelectorVariant = "photo" | "iconGrid";
@@ -99,7 +99,7 @@ export default function IndustrySelector({
     <section className={`w-full ${sectionBg} flex justify-center`}>
       <div
         ref={sectionRef}
-        className={`${sectionLinesClass} w-full max-w-[1287px] mx-auto pt-30 pb-15 max-md:pt-18 max-md:pb-10`}
+        className={`${sectionLinesClass} max-w-[1287px] w-[calc(100%-2.5rem)] mx-auto pt-30 pb-15 max-md:pt-18 max-md:pb-10`}
       >
         {/* Header */}
         <div className="text-center px-8 md:px-10 mb-[48px] max-md:mb-[36px]" style={anim(0)}>
@@ -208,11 +208,14 @@ function IconGrid({
   const [hoveredCard, setHoveredCard] = useState<IndustryId | null>(null);
 
   return (
-    <div className="px-6 md:px-10" style={animStyle}>
+    <div style={animStyle}>
       <div
-        className="mx-auto grid grid-cols-3 max-md:grid-cols-1"
+        className="grid grid-cols-3 max-md:grid-cols-1"
         style={{
-          maxWidth: 1100,
+          /* Width tracks the parent .section content-bounds wrapper
+             (max-w-[1287px] w-[calc(100%-2.5rem)]) — no further inset,
+             so the grid spans the page's canonical content column on
+             both mobile and desktop. */
           /* Match the corner radius of the SuperFeatureSection panels that
              sit directly below this grid (--ent-radius-2xl, 24px). */
           borderRadius: "var(--ent-radius-2xl, 24px)",
@@ -255,9 +258,22 @@ function IconGrid({
                 "max-md:last:border-b-0",
                 "md:nth-[3n]:border-r-0",
                 "md:nth-[n+4]:border-b-0",
-                isActive ? "bg-[#F2F2F2]" : "bg-transparent",
               ].join(" ")}
-              style={{ minHeight: 130, opacity: isActive ? 1 : hoveredCard === id ? 1 : 0.7 }}
+              style={{
+                minHeight: 130,
+                opacity: isActive ? 1 : hoveredCard === id ? 1 : 0.7,
+                /* Active cell paints the industry's accent colour at ~12%
+                   alpha (`#RRGGBB1F`) — same perceptual weight as the
+                   previous flat #F2F2F2 tint but coloured per industry.
+                   `INDUSTRY_COLOR` only covers the six business-page
+                   industries; any other id falls back to the original
+                   neutral. Inactive cells stay transparent. */
+                background: isActive
+                  ? INDUSTRY_COLOR[id]
+                    ? `${INDUSTRY_COLOR[id]}1F`
+                    : "#F2F2F2"
+                  : "transparent",
+              }}
               onMouseEnter={() => setHoveredCard(id)}
               onMouseLeave={() => setHoveredCard(null)}
             >

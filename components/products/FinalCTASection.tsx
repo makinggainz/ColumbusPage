@@ -2,9 +2,13 @@
 
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
+import { track } from "@/lib/analytics";
 import MapsGPTGlobe from "@/components/products/MapsGPTGlobe";
 import StoreBadges from "@/components/products/StoreBadges";
 import "@/components/products/how-it-works-tokens.css";
+import { useMediaWarm } from "@/components/ui/MediaPrefetcher";
+// Static import → AVIF + blur-up for the 2.2 MB globe backdrop.
+import globeEnding from "@/public/ConsumerPgMedia/consumer-final-cta-elio-ending.png";
 
 // Floating discovery-card overlays on the globe. Each card is one of
 // four visual variants matching the consumer page's pinned-UI design:
@@ -24,11 +28,11 @@ const DISCOVERY_CARDS: DiscoveryCard[] = [
   {
     type: "photo",
     label: "group trips",
-    img: "/FavoriteSpots/(20).jpeg",
+    img: "/ConsumerPgMedia/ExampleSpots/(20).jpeg",
     avatars: [
-      "/David.png",
+      "/CompanyPgMedia/David.png",
       "https://i.pravatar.cc/80?img=35",
-      "/profiles/profile2.png",
+      "/ConsumerPgMedia/ProfilePics/profile2.png",
       "https://i.pravatar.cc/80?img=44",
     ],
     left: 380,
@@ -39,11 +43,11 @@ const DISCOVERY_CARDS: DiscoveryCard[] = [
   {
     type: "photo",
     label: "activities",
-    img: "/FavoriteSpots/(17).jpeg",
+    img: "/ConsumerPgMedia/ExampleSpots/(17).jpeg",
     avatars: [
-      "/Alex.jpg",
-      "https://i.pravatar.cc/80?img=7",
-      "/profiles/profile3.png",
+      "/CompanyPgMedia/Alex.png",
+      "/ConsumerPgMedia/ProfilePics/profile4.jpg",
+      "/ConsumerPgMedia/ProfilePics/profile3.png",
     ],
     left: 1310,
     top: 470,
@@ -52,10 +56,10 @@ const DISCOVERY_CARDS: DiscoveryCard[] = [
   },
   {
     type: "place",
-    label: "Restaraunts",
+    label: "Restaurants",
     placeName: "Panaria",
     placeSub: "calm cafe",
-    img: "/FavoriteSpots/(14).jpeg",
+    img: "/ConsumerPgMedia/ExampleSpots/(14).jpeg",
     left: 700,
     top: 1030,
     rot: 0,
@@ -64,7 +68,7 @@ const DISCOVERY_CARDS: DiscoveryCard[] = [
   {
     type: "stacked",
     label: "trending places",
-    imgs: ["/FavoriteSpots/(19).jpeg", "/FavoriteSpots/(22).jpeg", "/FavoriteSpots/(21).jpeg"],
+    imgs: ["/ConsumerPgMedia/ExampleSpots/(19).jpeg", "/ConsumerPgMedia/ExampleSpots/(22).jpeg", "/ConsumerPgMedia/ExampleSpots/(21).jpeg"],
     left: 1020,
     top: 480,
     rot: -2,
@@ -74,7 +78,7 @@ const DISCOVERY_CARDS: DiscoveryCard[] = [
     type: "place-only",
     placeName: "Lupita",
     placeSub: "tapas bar",
-    img: "/FavoriteSpots/(23).jpeg",
+    img: "/ConsumerPgMedia/ExampleSpots/(23).jpeg",
     left: 980,
     top: 950,
     rot: 0,
@@ -83,6 +87,7 @@ const DISCOVERY_CARDS: DiscoveryCard[] = [
 ];
 
 export default function FinalCTASection() {
+  const warm = useMediaWarm();
   const FRAME_WIDTH = 1728;
   // Image's own aspect at FRAME_WIDTH (1447×1087 → 1298 at 1728 wide).
   // The image lives in its own wrapper anchored to the BOTTOM of the
@@ -114,27 +119,36 @@ export default function FinalCTASection() {
     >
 
       {/* ═══════════ MOBILE HERO (below lg:) ═══════════ */}
-      {/* Section aspect-ratio adds ~19% extra height over the image's own
-          1447×1087 (≈ desktop's 250px sky band, scaled): mirrors desktop
-          so the headline + CTA sit on a clean white sky band above the
-          earth, never overlapping it. */}
+      {/* Section aspect-ratio is taller than the image's own 1447×1087
+          so the headline + CTA float higher above the earth, and the
+          earth itself reads as a more notable arrival moment. Wrapper
+          width below extends past the section edges so the globe scales
+          UP visually while keeping its own aspect ratio intact. */}
       <div
         className="lg:hidden relative w-full overflow-hidden"
-        style={{ aspectRatio: "1447 / 1304" }}
+        style={{ aspectRatio: "1447 / 1820" }}
       >
-        {/* Globe artwork — anchored to the BOTTOM at its natural aspect. */}
+        {/* Globe artwork — anchored to the BOTTOM at its natural aspect,
+            but expanded to ~118% of the section width and re-centred so
+            the earth feels larger relative to the screen. Discovery
+            cards are positioned with %s of this wrapper, so they scale
+            with it and stay on the same earth features. The extra width
+            is clipped by the section's `overflow-hidden`. */}
         <div
-          className="absolute left-0 right-0 bottom-0"
-          style={{ aspectRatio: "1447 / 1087" }}
+          className="absolute bottom-0"
+          style={{ aspectRatio: "1447 / 1087", width: "118%", left: "50%", transform: "translateX(-50%)" }}
         >
           {/* Below-the-fold final CTA — no `priority` (LCP is the hero
               at the top of the page). `sizes` lets the optimizer pick a
               right-sized AVIF/WebP variant for mobile widths. */}
           <Image
-            src="/consumer-final-cta-elio-ending.png"
+            src={globeEnding}
             alt="Elio across the globe"
             fill
             sizes="100vw"
+            placeholder="blur"
+            loading={warm ? "eager" : "lazy"}
+            fetchPriority={warm ? "low" : undefined}
             className="object-cover"
           />
 
@@ -178,7 +192,7 @@ export default function FinalCTASection() {
                 WebkitTextFillColor: "transparent",
                 backgroundClip: "text",
               }}>Elio</span>
-              <span>{" "}is browser based</span>
+              <span>{" "}is also on browser</span>
             </p>
           </div>
           <h2 style={{
@@ -193,20 +207,26 @@ export default function FinalCTASection() {
             Find your next<br />
             <TypedPhrase />
           </h2>
-          {/* Browser CTA + App Store + Google Play badges — same trio the
-              Hero uses. Flex-wrap so the badges stack under the pill on
-              narrow viewports. */}
-          <div className="flex flex-wrap items-center justify-center" style={{ gap: 12 }}>
+          {/* Mobile: Browser CTA only — App Store + Google Play badges
+              removed so the mobile final-CTA reads as a single primary
+              action above the floating globe UI. */}
+          <div className="flex items-center justify-center" style={{ gap: 12 }}>
             <a
               href="https://mapsgpt.es"
               target="_blank"
               rel="noreferrer"
-              className="group inline-flex items-center justify-center gap-3 rounded-button-md bg-cta px-5 py-3 no-underline transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
+              onClick={() => track.ctaClicked("try_elio_free", "consumer")}
+              className="group inline-flex items-center justify-center gap-3 rounded-button-md bg-cta no-underline transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
+              style={{
+                height: 43,
+                padding: "0 20px",
+              }}
             >
               <span style={{
                 fontFamily: "var(--hiw-font-sans)",
                 fontWeight: 590,
                 fontSize: "16px",
+                lineHeight: 1,
                 letterSpacing: "-0.02em",
                 color: "#FFFFFF",
                 whiteSpace: "nowrap",
@@ -217,7 +237,6 @@ export default function FinalCTASection() {
                 <path d="M2 11L11 2M11 2H4M11 2V9" stroke="#FFFFFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </a>
-            <StoreBadges />
           </div>
         </div>
 
@@ -251,10 +270,13 @@ export default function FinalCTASection() {
               {/* Desktop variant — same image, sized to the inner frame.
                   Not LCP (this is the page-bottom CTA), so no `priority`. */}
               <Image
-                src="/consumer-final-cta-elio-ending.png"
+                src={globeEnding}
                 alt="Elio across the globe"
                 fill
                 sizes="(min-width: 1728px) 1728px, 100vw"
+                placeholder="blur"
+                loading={warm ? "eager" : "lazy"}
+                fetchPriority={warm ? "low" : undefined}
                 className="object-cover"
               />
 
@@ -294,7 +316,7 @@ export default function FinalCTASection() {
                   WebkitTextFillColor: "transparent",
                   backgroundClip: "text",
                 }}>Elio</span>
-                <span>{" "}is browser based</span>
+                <span>{" "}is also on browser</span>
               </p>
             </div>
 
@@ -321,13 +343,20 @@ export default function FinalCTASection() {
                 href="https://mapsgpt.es"
                 target="_blank"
                 rel="noreferrer"
+                onClick={() => track.ctaClicked("try_elio_free", "consumer")}
                 className="group inline-flex items-center justify-center gap-3 bg-cta no-underline transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
                 style={{
-                  // Padding + radius matched to StoreBadges `size="lg"`
-                  // (.mg-badge--lg: 14px 22px, radius-button-lg) so the
-                  // navy pill reads at the same visual weight as the
-                  // App Store + Google Play badges next to it.
-                  padding: "14px 22px",
+                  // Height locked to the StoreBadges `--lg` height so the
+                  // navy pill lands at the exact same height as the App
+                  // Store + Google Play badges next to it. The badges
+                  // measure ~61px (14px vertical padding + the stacked
+                  // "Download on the / App Store" label, ~33px tall);
+                  // matching by padding alone left the single-line pill
+                  // ~6–8px shorter and visually off — see the Mobbin
+                  // pattern (Oku) for the same-height side-by-side
+                  // treatment this mirrors.
+                  height: 61,
+                  padding: "0 22px",
                   borderRadius: "var(--radius-button-lg, 26px)",
                 }}
               >
@@ -335,6 +364,7 @@ export default function FinalCTASection() {
                   fontFamily: "var(--hiw-font-sans)",
                   fontWeight: 600,
                   fontSize: "18px",
+                  lineHeight: 1,
                   letterSpacing: "-0.01em",
                   color: "#FFFFFF",
                 }}>
@@ -373,17 +403,22 @@ type DiscoveryCardViewProps = {
 };
 
 function DiscoveryCardView({ p, leftPx, topPx, leftPct, topPct, mobile, visible }: DiscoveryCardViewProps) {
+  const warm = useMediaWarm();
   // Mode-specific size table. Desktop values are intentionally compact
   // (the cards read as floating UI accents over the globe, not as the
   // main content), while avatars are kept large relative to the card
   // so the "group of people on this trip" affordance stays prominent.
   const sz = mobile
     ? {
-        photoW: 100, photoH: 70, frame: 4, radius: 12,
-        avatar: 26, avatarBorder: 2, avatarOverlap: 10, avatarOffsetX: 8, avatarOffsetY: 7,
-        pillFont: 9, pillPadV: 5, pillPadH: 13, pillMargin: 7,
-        placeImg: 28, placeName: 11, placeSub: 8, placeGap: 7, placePadH: 14, placePadV: 4,
-        stackedSubW: 70, stackedSubH: 50, stackedSubFrame: 4, stackedSubRadius: 10,
+        // Shrunk again (~20% below the previous mobile scale) to suit
+        // the enlarged earth + taller mobile section — the floating UI
+        // now reads as small accents pinned over a more dominant globe
+        // rather than competing with it for visual weight.
+        photoW: 60, photoH: 42, frame: 2, radius: 8,
+        avatar: 16, avatarBorder: 2, avatarOverlap: 6, avatarOffsetX: 5, avatarOffsetY: 4,
+        pillFont: 7, pillPadV: 3, pillPadH: 8, pillMargin: 5,
+        placeImg: 18, placeName: 7, placeSub: 6, placeGap: 5, placePadH: 9, placePadV: 2,
+        stackedSubW: 44, stackedSubH: 30, stackedSubFrame: 2, stackedSubRadius: 7,
       }
     : {
         // Desktop sizes — kept compact so the cards read as floating UI
@@ -435,22 +470,27 @@ function DiscoveryCardView({ p, leftPx, topPx, leftPct, topPct, mobile, visible 
             boxShadow: cardShadow,
           }}
         >
-          <div style={{ width: sz.photoW, height: sz.photoH, borderRadius: photoInnerRadius, overflow: "hidden" }}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={p.img} alt="" draggable={false} loading="lazy" decoding="async" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+          <div style={{ position: "relative", width: sz.photoW, height: sz.photoH, borderRadius: photoInnerRadius, overflow: "hidden" }}>
+            <Image src={p.img} alt="" fill sizes="128px" draggable={false} loading={warm ? "eager" : "lazy"} fetchPriority={warm ? "low" : undefined} style={{ objectFit: "cover", display: "block" }} />
           </div>
           {/* Avatar stack peeks out the card's bottom-left corner */}
           <div style={{ position: "absolute", left: sz.avatarOffsetX, bottom: -sz.avatarOffsetY, display: "flex" }}>
             {p.avatars.map((src, i) => (
-              /* eslint-disable-next-line @next/next/no-img-element */
-              <img
+              <Image
                 key={i}
                 src={src}
                 alt=""
+                width={sz.avatar}
+                height={sz.avatar}
+                sizes="48px"
                 draggable={false}
-                loading="lazy"
-                decoding="async"
+                loading={warm ? "eager" : "lazy"}
+                fetchPriority={warm ? "low" : undefined}
                 style={{
+                  /* Pin width/height in CSS too — the global preflight
+                     `img { height: auto }` otherwise overrides the height
+                     attribute and a non-square source renders as an oval.
+                     Forcing a square box + objectFit:cover keeps it a circle. */
                   width: sz.avatar,
                   height: sz.avatar,
                   borderRadius: "9999px",
@@ -481,6 +521,7 @@ function DiscoveryCardView({ p, leftPx, topPx, leftPct, topPct, mobile, visible 
         >
           <div
             style={{
+              position: "relative",
               width: sz.placeImg,
               height: sz.placeImg,
               borderRadius: "9999px",
@@ -489,8 +530,7 @@ function DiscoveryCardView({ p, leftPx, topPx, leftPct, topPct, mobile, visible 
               background: "#D1D5DB",
             }}
           >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={p.img} alt="" draggable={false} loading="lazy" decoding="async" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+            <Image src={p.img} alt="" fill sizes="64px" draggable={false} loading={warm ? "eager" : "lazy"} fetchPriority={warm ? "low" : undefined} style={{ objectFit: "cover", display: "block" }} />
           </div>
           <div style={{ display: "flex", flexDirection: "column", lineHeight: 1.1 }}>
             <span style={{
@@ -528,6 +568,7 @@ function DiscoveryCardView({ p, leftPx, topPx, leftPct, topPct, mobile, visible 
           ...posStyle,
         });
         const subInner: React.CSSProperties = {
+          position: "relative",
           width: SUB_W,
           height: SUB_H,
           borderRadius: SUB_INNER,
@@ -538,22 +579,19 @@ function DiscoveryCardView({ p, leftPx, topPx, leftPct, topPct, mobile, visible 
             {/* Back-left card — tilted CCW */}
             <div style={subCard({ left: 0, top: SUB_H * 0.45, transform: "rotate(-7deg)", zIndex: 1 })}>
               <div style={subInner}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={p.imgs[0]} alt="" draggable={false} loading="lazy" decoding="async" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+                <Image src={p.imgs[0]} alt="" fill sizes="96px" draggable={false} loading={warm ? "eager" : "lazy"} fetchPriority={warm ? "low" : undefined} style={{ objectFit: "cover", display: "block" }} />
               </div>
             </div>
             {/* Back-right card — tilted CW, sits highest */}
             <div style={subCard({ right: 0, top: 0, transform: "rotate(7deg)", zIndex: 2 })}>
               <div style={subInner}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={p.imgs[1]} alt="" draggable={false} loading="lazy" decoding="async" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+                <Image src={p.imgs[1]} alt="" fill sizes="96px" draggable={false} loading={warm ? "eager" : "lazy"} fetchPriority={warm ? "low" : undefined} style={{ objectFit: "cover", display: "block" }} />
               </div>
             </div>
             {/* Front-centre card — slight CCW, sits in front */}
             <div style={subCard({ left: "50%", top: SUB_H * 0.6, transform: "translateX(-50%) rotate(-2deg)", zIndex: 3 })}>
               <div style={subInner}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={p.imgs[2]} alt="" draggable={false} loading="lazy" decoding="async" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+                <Image src={p.imgs[2]} alt="" fill sizes="96px" draggable={false} loading={warm ? "eager" : "lazy"} fetchPriority={warm ? "low" : undefined} style={{ objectFit: "cover", display: "block" }} />
               </div>
             </div>
           </div>

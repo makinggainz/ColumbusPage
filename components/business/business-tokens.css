@@ -220,18 +220,10 @@
   }
 }
 
-/* Content bounds — mirrors homepage GridSection: max-w-[1287px] mx-5 md:mx-auto */
-.ent-content-bounds {
-  max-width: 1287px;
-  margin-left: 1.25rem;
-  margin-right: 1.25rem;
-}
-@media (min-width: 768px) {
-  .ent-content-bounds {
-    margin-left: auto;
-    margin-right: auto;
-  }
-}
+/* Content bounds — moved to app/globals.css as `.content-bounds` (the
+   canonical name) with `.ent-content-bounds` kept as a global alias so
+   existing business components continue to work unchanged. New code
+   should reach for `.content-bounds`. */
 
 /* ── Typography — font families ──
    Strict homepage parity: title texts render in Funnel Display
@@ -274,5 +266,73 @@
 .ent-scope .section-lines-dark::before,
 .ent-scope .section-lines-dark::after {
   display: none;
+}
+
+/* ── Mobile: tighter corners on every product-display wrapper ──
+   On phones, product mockups + their wrappers shrink to 7px corners
+   to match the per-tile image corners under "Enterprise-grade
+   capabilities" (CapabilitiesGrid renders each tile's image with a
+   hardcoded `borderRadius: 7`). The desktop 24px --ent-radius-2xl
+   reads as cushy at small scale; 7px is the project's MistX placeholder
+   corner used site-wide on tight UI tiles.
+
+   Scope: the .biz-product-display class is on all four mockup outer
+   wrappers, the SuperFeatureSection panel, and the BusinessHero glass
+   frame + inner window. Two passes: the variable override cascades to
+   descendants whose inline borderRadius uses var(--ent-radius-2xl)
+   (mockups, SuperFeatureSection inner block, sub-feature panels);
+   the !important rule covers the hero's hardcoded inline values
+   (21.5 outer ring, 20 inner window). .cmp-host uses Tailwind's
+   rounded-3xl directly (no token) so it needs its own override. */
+
+/* ScaleToFit wrapper around the hero glass window. Caps the design at the
+   1287px content bounds and centers it so outer.clientWidth (which ScaleToFit
+   measures to compute the scale factor) matches the design width. Below
+   1287px ScaleToFit shrinks the whole window uniformly; at/above it's a
+   passthrough so desktop is unchanged. */
+.biz-hero-scale {
+  width: 100%;
+  max-width: 1287px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Scale-to-fit visual wrappers (sub-feature cards, the starting super-section
+   demos, ComparisonSection, SmartLayerRow). Inside a ScaleToFit wrapper the
+   content renders at its fixed desktop design width and is uniformly
+   transform-scaled down — so the design-system 2xl radius must stay at its
+   DESKTOP value (24px) and scale with the transform, rather than collapsing to
+   the tight 7px mobile corner (which would shrink to ~2px on the miniature).
+   The descendant selector (higher specificity than the mobile
+   `.biz-product-display{--ent-radius-2xl:7px}` override) catches mockups that
+   carry the class on themselves; the bare selector covers cards/maps that
+   inherit the token. Desktop-safe — 24px is already the desktop value. */
+.biz-scale-visual,
+.biz-scale-visual .biz-product-display {
+  --ent-radius-2xl: 24px;
+}
+
+@media (max-width: 767px) {
+  /* On mobile the .biz-product-display class still re-points the cushy
+     desktop --ent-radius-2xl token down to the tight 7px corner. This
+     cascades into the four mockup wrappers (MapChatPlatform etc.) and
+     SuperFeatureSection — they read the token directly for their own
+     corners. The hero's outer ring + inner window no longer need the
+     blunt `border-radius: 7px !important` override because they now
+     scale via inline clamp() values (see BusinessHero.tsx). */
+  .biz-product-display {
+    --ent-radius-2xl: 7px;
+  }
+  .cmp-host {
+    border-radius: 7px !important;
+  }
+  /* No mobile overrides for the hero glass window or the bare mockups:
+     every product demo now miniaturizes as a faithful "looks the same,
+     just smaller" unit. The hero scales via ScaleToFit (fixed 1287px
+     design + transform:scale — see BusinessHero.tsx + .biz-hero-scale
+     below); the Comparison/Use-Cases mockups fill their containers via
+     their own containerType:inline-size + cqw sizing. The former 240px
+     .biz-mockup-frame cap and the .hero-product-display padding override
+     would fight those mechanisms, so they were removed. */
 }
 

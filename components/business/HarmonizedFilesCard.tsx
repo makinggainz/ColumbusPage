@@ -16,14 +16,22 @@ const DEFAULT_FILES = [
 const DEFAULT_FOLLOWUP =
   "now overlay our nearest 2 competitors, and their portfolios. I want to see a easy visual of the comparison";
 
+const DEFAULT_DESCRIPTION =
+  "I’ve harmonized the files and displayed them on the map";
+
 export type HarmonizedFilesCardProps = {
   files?: string[];
   followUp?: string;
+  /* Columbus's first-person response line under the header. Industries can
+     override it to spell out what was actually built (e.g. CRE: a single
+     unified portfolio map across the four files). */
+  description?: string;
 };
 
 export default function HarmonizedFilesCard({
   files = DEFAULT_FILES,
   followUp = DEFAULT_FOLLOWUP,
+  description = DEFAULT_DESCRIPTION,
 }: HarmonizedFilesCardProps = {}) {
   return (
     <div
@@ -41,14 +49,14 @@ export default function HarmonizedFilesCard({
       {/* Top section — header + file list */}
       <div
         style={{
-          padding: "clamp(16px, 2vw, 22px) clamp(16px, 2vw, 24px) clamp(16px, 2vw, 22px)",
+          padding: "22px 24px 22px",
         }}
       >
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
           <CheckCircleHeader />
           <h4
             style={{
-              fontSize: "clamp(15px, 1.5vw, 18px)",
+              fontSize: "18px",
               fontWeight: 700,
               letterSpacing: "-0.02em",
               lineHeight: 1.2,
@@ -61,13 +69,13 @@ export default function HarmonizedFilesCard({
         <p
           style={{
             marginTop: 8,
-            fontSize: "clamp(12px, 1.1vw, 14px)",
+            fontSize: "14px",
             color: "var(--ent-text-secondary)",
             letterSpacing: "-0.005em",
             lineHeight: 1.5,
           }}
         >
-          I&rsquo;ve harmonized the files and displayed them on the map
+          {description}
         </p>
 
         {/* File list — inside the same card */}
@@ -75,7 +83,7 @@ export default function HarmonizedFilesCard({
           style={{
             listStyle: "none",
             padding: 0,
-            margin: "clamp(12px, 1.4vw, 16px) 0 0",
+            margin: "16px 0 0",
             border: "1px solid rgba(0, 0, 0, 0.05)",
             borderRadius: 12,
             overflow: "hidden",
@@ -88,7 +96,7 @@ export default function HarmonizedFilesCard({
                 display: "flex",
                 alignItems: "center",
                 gap: 10,
-                padding: "clamp(9px, 1vw, 12px) clamp(10px, 1.2vw, 14px)",
+                padding: "12px 14px",
                 borderTop: i === 0 ? "none" : "1px solid rgba(0, 0, 0, 0.05)",
                 backgroundColor: "#FFFFFF",
                 minWidth: 0,
@@ -118,12 +126,12 @@ export default function HarmonizedFilesCard({
 
       {/* Hairline divider before chat-input section — keeps everything in
           ONE continuous card while visually separating the input. */}
-      <div style={{ height: 1, backgroundColor: "#F0F0F0", margin: "clamp(4px, 0.6vw, 8px) clamp(16px, 2vw, 24px) 0" }} />
+      <div style={{ height: 1, backgroundColor: "#F0F0F0", margin: "8px 24px 0" }} />
 
       {/* Bottom section — chat input inside the same card */}
       <div
         style={{
-          padding: "clamp(14px, 1.6vw, 18px) clamp(16px, 2vw, 24px) clamp(16px, 2vw, 22px)",
+          padding: "18px 24px 22px",
           display: "flex",
           alignItems: "center",
           gap: 12,
@@ -227,7 +235,7 @@ function ImportedPill() {
         borderRadius: 9999,
         backgroundColor: "#E4EFE9",
         color: "#2F6B4F",
-        fontSize: "clamp(11px, 1vw, 12px)",
+        fontSize: "12px",
         fontWeight: 600,
         letterSpacing: "-0.005em",
       }}

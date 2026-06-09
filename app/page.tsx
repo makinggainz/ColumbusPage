@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { type ReactNode } from "react";
 import { MistxNav } from "@/components/layout/MistxNav";
 import { HeroNew } from "@/components/home/HeroNew";
@@ -8,13 +9,27 @@ import {
   MissionScrollIntro,
 } from "@/components/home/lightspark";
 import { Careers } from "@/components/home/Careers";
+import { MediaPrefetcher } from "@/components/ui/MediaPrefetcher";
+import { ScrollDepthTracker } from "@/components/ScrollDepthTracker";
+
+export const metadata: Metadata = {
+  title: "Columbus Earth — AI-Powered Geospatial Intelligence",
+  description:
+    "The Applied AI lab building a thinking earth. Columbus Pro for enterprise location intelligence. Elio — the social super map for city and travel exploration.",
+  openGraph: {
+    title: "Columbus Earth — AI-Powered Geospatial Intelligence",
+    description:
+      "The Applied AI lab building a thinking earth. Columbus Pro for enterprise location intelligence. Elio — the social super map for city and travel exploration.",
+    url: "https://columbus.earth",
+  },
+};
 
 // Footer is now rendered in `app/layout.tsx` with `reveal` mode — it sits
 // fixed at the viewport bottom (z-index 0) behind the PageFrame card so it
 // reveals when the user scrolls past the end of the page content.
 function IslandGap() {
   return (
-    <div className="max-w-[1287px] mx-5 md:mx-auto" style={{ height: 120 }} />
+    <div className="max-w-[1287px] w-[calc(100%-2.5rem)] mx-auto" style={{ height: 120 }} />
   );
 }
 
@@ -35,8 +50,8 @@ export default function Home() {
         <TextScrollIntro />
         <BentoProducts />
 
-        <BlogSection />
         <MissionScrollIntro />
+        <BlogSection />
       </div>
 
       <IslandGap />
@@ -45,6 +60,13 @@ export default function Home() {
       <div>
         <Careers />
       </div>
+
+      {/* Eager prefetch-all: after the page loads + the main thread goes
+          idle, warms every below-fold image (promotes them to eager) and
+          pre-buffers the footer video, so first-run users never scroll into
+          a half-loaded section. Renders nothing; skips on data-saver. */}
+      <MediaPrefetcher />
+      <ScrollDepthTracker page="homepage" />
     </main>
   );
 }

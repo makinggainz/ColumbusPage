@@ -1,0 +1,116 @@
+.banner {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 9999;
+  width: min(620px, calc(100vw - 40px));
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.88);
+  -webkit-backdrop-filter: blur(24px) saturate(1.6);
+  backdrop-filter: blur(24px) saturate(1.6);
+  border: 1px solid rgba(0, 0, 0, 0.065);
+  box-shadow:
+    0 8px 40px rgba(11, 27, 43, 0.10),
+    0 1px 2px  rgba(11, 27, 43, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 0.85);
+  padding: 26px 22px;
+  font-family: var(--font-sans);
+  /* Content on the left, buttons in a row on the right. */
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.content {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.body {
+  font-size: 13px;
+  line-height: 1.6;
+  color: #5A6B7B;
+  margin: 0;
+}
+
+.link {
+  color: #5A6B7B;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  text-decoration-color: rgba(90, 107, 123, 0.4);
+  transition: text-decoration-color 120ms ease;
+}
+
+.link:hover {
+  text-decoration-color: #5A6B7B;
+}
+
+.buttons {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.btnAccept {
+  white-space: nowrap;
+  padding: 12px 20px;
+  border-radius: 16px;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: var(--font-sans);
+  letter-spacing: -0.01em;
+  border: 1px solid #3D82CE;
+  background: transparent;
+  color: #3D82CE;
+  cursor: pointer;
+  transition: background 140ms ease, color 140ms ease;
+}
+
+.btnAccept:hover {
+  background: #3D82CE;
+  color: #ffffff;
+}
+
+.btnReject {
+  white-space: nowrap;
+  padding: 10px 16px;
+  border-radius: 16px;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: var(--font-sans);
+  letter-spacing: -0.01em;
+  border: 1px solid rgba(90, 107, 123, 0.25);
+  background: transparent;
+  color: rgba(90, 107, 123, 0.8);
+  cursor: pointer;
+  transition: background 140ms ease, border-color 140ms ease;
+}
+
+.btnReject:hover {
+  background: rgba(90, 107, 123, 0.05);
+  border-color: rgba(90, 107, 123, 0.4);
+}
+
+/* On narrow viewports the card snaps to a full-width bottom sheet with
+   rounded top corners, matching the mobile-nav drawer pattern. */
+@media (max-width: 479px) {
+  .banner {
+    bottom: 0;
+    right: 0;
+    left: 0;
+    width: 100%;
+    max-width: 100%;
+    border-radius: 20px 20px 0 0;
+    padding: 20px 16px 28px;
+    /* Stack content over the buttons on a phone-width sheet. */
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+  }
+  /* Buttons split the row evenly on mobile. */
+  .btnAccept,
+  .btnReject {
+    flex: 1 1 0;
+  }
+}

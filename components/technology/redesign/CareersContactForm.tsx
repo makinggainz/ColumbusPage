@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { track } from "@/lib/analytics";
 
 type InquiryType = "columbus-pro" | "elio" | "investment" | "careers";
 
@@ -16,7 +17,7 @@ const TAB_INTRO: Record<InquiryType, { heading: string; sub: string }> = {
   "columbus-pro": { heading: "Book a demo", sub: "See Columbus working on your own data." },
   elio: { heading: "Tell us about your project", sub: "Share what you want to build with Elio." },
   investment: { heading: "Investor relations", sub: "Let’s talk partnerships and the road ahead." },
-  careers: { heading: "Join the crew", sub: "Tell us where you’d make your mark." },
+  careers: { heading: "Join the crew", sub: "Research freely at Columbus." },
 };
 
 /* Design tokens — same source of truth as the contact page
@@ -28,11 +29,13 @@ const CTA = "var(--color-cta)";
 /* Interactive accent — the teal the navbar "Try Elio" CTA arrows use. */
 const ACCENT = "var(--color-accent)";
 
+/* Box shadow lives on the .ccf-card class (in the <style> block) instead of
+   here so a mobile media query can drop it; inline styles can't be overridden
+   by @media. */
 const cardStyle: React.CSSProperties = {
   backgroundColor: "#FFFFFF",
   border: `1px solid ${HAIRLINE}`,
   borderRadius: "var(--radius-card)",
-  boxShadow: `0 1px 3px color-mix(in srgb, ${CTA} 5%, transparent), 0 16px 44px color-mix(in srgb, ${CTA} 10%, transparent)`,
 };
 
 const labelEl = (text: string) => (
@@ -92,6 +95,9 @@ export function CareersContactForm({ intro }: Props = {}) {
   const [charCount, setCharCount] = useState(0);
   const [tabKey, setTabKey] = useState(0);
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const [honeypot, setHoneypot] = useState("");
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
@@ -101,10 +107,61 @@ export function CareersContactForm({ intro }: Props = {}) {
     if (name === "message") setCharCount(value.length);
   };
 
-  const handleSend = (e: React.FormEvent) => {
+  const handleSend = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
+    if (submitting) return;
+    setSubmitting(true);
+    setSubmitError(null);
+    try {
+      track.contactSubmitted(tab);
+      if (tab === "columbus-pro") track.demoRequested("research");
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          tab,
+          ...form,
+          updates,
+          honeypot,
+          pageUri: typeof window !== "undefined" ? window.location.href : "",
+          pageName: "Technology",
+        }),
+      });
+      if (!res.ok) throw new Error("failed");
+      setSubmitted(true);
+    } catch {
+      setSubmitError("Something went wrong — please try again.");
+    } finally {
+      setSubmitting(false);
+    }
   };
+
+  const renderSubmitRow = () => (
+    <>
+      {/* Honeypot — positioned off-screen; filled by bots, invisible to users */}
+      <input
+        type="text"
+        name="website"
+        value={honeypot}
+        onChange={(e) => setHoneypot(e.target.value)}
+        tabIndex={-1}
+        aria-hidden="true"
+        autoComplete="off"
+        style={{ position: "absolute", left: "-9999px", top: 0, opacity: 0, pointerEvents: "none", height: 0 }}
+      />
+      <div className="flex flex-col gap-2 pt-1">
+        {submitError && (
+          <p className="text-[13px]" style={{ color: "#C0392B" }}>{submitError}</p>
+        )}
+        <div className="ccf-submit-row flex items-center gap-4">
+          <CtaButton type="submit" className="ccf-submit" disabled={submitting}>
+            {submitting ? "Sending…" : "Submit"}
+          </CtaButton>
+          {!submitError && <span className="text-[13px] text-muted">We answer fast.</span>}
+        </div>
+      </div>
+    </>
+  );
 
   const resetForm = () => {
     setForm({
@@ -120,6 +177,8 @@ export function CareersContactForm({ intro }: Props = {}) {
     setCharCount(0);
     setUpdates(false);
     setSubmitted(false);
+    setSubmitError(null);
+    setHoneypot("");
   };
 
   return (
@@ -202,6 +261,44 @@ export function CareersContactForm({ intro }: Props = {}) {
         }
         .ccf-file::file-selector-button:hover { background: color-mix(in srgb, var(--color-bg1), ${INK} 5%); }
 
+        /* Form card shadow — here (not inline) so the mobile @media below can
+           remove it. */
+        .ccf-card {
+          box-shadow: 0 1px 3px color-mix(in srgb, ${CTA} 5%, transparent),
+                      0 16px 44px color-mix(in srgb, ${CTA} 10%, transparent);
+        }
+
+        /* ── Tab row: single scrollable row on desktop. ── */
+        .ccf-tabrow {
+          display: flex;
+          gap: 10px;
+          overflow-x: auto;
+          padding: 16px;
+        }
+
+        /* ── Mobile ergonomics ── */
+        @media (max-width: 768px) {
+          /* 16px prevents iOS auto-zoom on focus; taller padding = comfy taps. */
+          .ccf-input, .ccf-select, .ccf-textarea { font-size: 16px; }
+          .ccf-input, .ccf-select, .ccf-textarea { padding: 13px 14px; }
+          .ccf-select { padding-right: 40px; }
+        }
+        @media (max-width: 560px) {
+          /* Balanced 2×2 grid so all four tabs are equal-width (no lone
+             wrapped tab). Grid items stretch to fill their cell. */
+          .ccf-tabrow {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            overflow-x: visible;
+            padding: 14px 12px;
+          }
+          .ccf-tabrow .ccf-tab { text-align: center; }
+          /* Full-width primary action, reassurance note beneath it. */
+          .ccf-submit-row { flex-direction: column; align-items: stretch; gap: 10px; }
+          .ccf-submit { width: 100%; justify-content: center; }
+        }
+
         @keyframes ccfTabContentIn {
           from { opacity: 0; filter: blur(6px); transform: translateY(12px); }
           to   { opacity: 1; filter: blur(0px); transform: translateY(0); }
@@ -219,10 +316,10 @@ export function CareersContactForm({ intro }: Props = {}) {
       )}
 
       {!submitted && (
-        <div style={cardStyle}>
+        <div className="ccf-card" style={cardStyle}>
           {/* Pill tab row — left-aligned */}
           <div
-            className="flex gap-2.5 overflow-x-auto px-4 py-4"
+            className="ccf-tabrow"
             style={{ borderBottom: `1px solid ${HAIRLINE}` }}
           >
             {TABS.map((opt) => (
@@ -256,12 +353,12 @@ export function CareersContactForm({ intro }: Props = {}) {
             {tab === "columbus-pro" && (
               <form className="flex flex-col gap-5" onSubmit={handleSend}>
                 <label className="flex flex-col gap-1.5">
-                  {labelEl("Company email")}
+                  {labelEl("Email")}
                   <input type="email" name="email" required value={form.email} onChange={handleChange} className="ccf-input" placeholder="name@company.com" />
                 </label>
 
                 <label className="flex flex-col gap-1.5">
-                  {labelEl("Company size")}
+                  {labelEl("Your name")}
                   <input type="text" name="companySize" required value={form.companySize} onChange={handleChange} className="ccf-input" placeholder="Number of employees" />
                 </label>
 
@@ -315,10 +412,7 @@ export function CareersContactForm({ intro }: Props = {}) {
                   By submitting, you agree with our <Link href="/terms" className="underline">Terms</Link> and <Link href="/privacy" className="underline">Privacy Policy</Link>.
                 </p>
 
-                <div className="flex items-center gap-4 pt-1">
-                  <CtaButton type="submit">Submit</CtaButton>
-                  <span className="text-[13px] text-muted">We answer fast.</span>
-                </div>
+                {renderSubmitRow()}
               </form>
             )}
 
@@ -335,13 +429,15 @@ export function CareersContactForm({ intro }: Props = {}) {
                   <input type="email" name="email" required value={form.email} onChange={handleChange} className="ccf-input" placeholder="name@company.com" />
                 </label>
 
-                <label className="flex flex-col gap-1.5">
-                  {labelEl(tab === "investment" ? "Organization" : "Role")}
-                  <input type="text" name="role" required value={form.role} onChange={handleChange} className="ccf-input" />
-                </label>
+                {tab === "investment" && (
+                  <label className="flex flex-col gap-1.5">
+                    {labelEl("Organization")}
+                    <input type="text" name="role" required value={form.role} onChange={handleChange} className="ccf-input" />
+                  </label>
+                )}
 
                 <label className="flex flex-col gap-1.5">
-                  {labelEl(tab === "investment" ? "Tell us about your interest" : "Tell us about your project")}
+                  {labelEl(tab === "investment" ? "Tell us about your interest" : "We're happy to talk")}
                   <textarea
                     name="message"
                     required
@@ -352,8 +448,8 @@ export function CareersContactForm({ intro }: Props = {}) {
                     className="ccf-textarea"
                     placeholder={
                       tab === "investment"
-                        ? "Share your investment thesis or partnership proposal."
-                        : "Share your objectives and any specific requirements."
+                        ? "Message goes directly to our CEO"
+                        : "App support, ideas, feature requests or anything else :)"
                     }
                   />
                   <span className="text-[12px] text-right" style={{ color: MUTED }}>{charCount}/500</span>
@@ -368,10 +464,7 @@ export function CareersContactForm({ intro }: Props = {}) {
                   By submitting, you agree with our <Link href="/terms" className="underline">Terms</Link> and <Link href="/privacy" className="underline">Privacy Policy</Link>.
                 </p>
 
-                <div className="flex items-center gap-4 pt-1">
-                  <CtaButton type="submit">Submit</CtaButton>
-                  <span className="text-[13px] text-muted">We answer fast.</span>
-                </div>
+                {renderSubmitRow()}
               </form>
             )}
 
@@ -410,10 +503,7 @@ export function CareersContactForm({ intro }: Props = {}) {
                   By submitting, you agree with our <Link href="/terms" className="underline">Terms</Link> and <Link href="/privacy" className="underline">Privacy Policy</Link>.
                 </p>
 
-                <div className="flex items-center gap-4 pt-1">
-                  <CtaButton type="submit">Submit</CtaButton>
-                  <span className="text-[13px] text-muted">We answer fast.</span>
-                </div>
+                {renderSubmitRow()}
               </form>
             )}
           </div>

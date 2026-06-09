@@ -1,0 +1,483 @@
+- generic [active] [ref=e1]:
+  - contentinfo [ref=e2]:
+    - generic [ref=e3]:
+      - generic [ref=e4]:
+        - generic [ref=e5]:
+          - heading "Columbus Earth" [level=3] [ref=e6]
+          - paragraph [ref=e7]: The frontier AI lab building the first production Universal Geospatial Model.
+          - generic [ref=e8]:
+            - link [ref=e9] [cursor=pointer]:
+              - /url: mailto:contact@columbus.earth
+              - img [ref=e10]
+            - link [ref=e13] [cursor=pointer]:
+              - /url: https://www.linkedin.com/company/columbusearth/about/
+              - img [ref=e14]
+        - generic [ref=e18]:
+          - generic [ref=e19]:
+            - paragraph [ref=e20]: Product
+            - list [ref=e21]:
+              - listitem [ref=e22]:
+                - link "Columbus Pro" [ref=e23] [cursor=pointer]:
+                  - /url: /products/business
+              - listitem [ref=e24]:
+                - link "Elio" [ref=e25] [cursor=pointer]:
+                  - /url: /products/consumer
+          - generic [ref=e26]:
+            - paragraph [ref=e27]: Technology
+            - list [ref=e28]:
+              - listitem [ref=e29]:
+                - link "LGM vs LLM" [ref=e30] [cursor=pointer]:
+                  - /url: /research#lgm-vs-llm
+              - listitem [ref=e31]:
+                - link "Data Collection" [ref=e32] [cursor=pointer]:
+                  - /url: /research#data-collection
+              - listitem [ref=e33]:
+                - link "Core Reasoning" [ref=e34] [cursor=pointer]:
+                  - /url: /research#core-reasoning
+          - generic [ref=e36]:
+            - paragraph [ref=e37]: Company
+            - list [ref=e38]:
+              - listitem [ref=e39]:
+                - link "Our Mission" [ref=e40] [cursor=pointer]:
+                  - /url: /company
+              - listitem [ref=e41]:
+                - link "Contact" [ref=e42] [cursor=pointer]:
+                  - /url: /contact
+      - generic [ref=e43]:
+        - generic [ref=e44]: Columbus Earth © 2026
+        - generic [ref=e45]: Website made by hand, no AI.
+        - generic [ref=e46]: Nature always prevails
+        - generic [ref=e47]: www.columbus.earth
+  - main [ref=e49]:
+    - generic [ref=e51]:
+      - link "Home" [ref=e53] [cursor=pointer]:
+        - /url: /
+        - img "Columbus Logo" [ref=e55]
+        - generic [ref=e56]: Columbus Earth
+      - navigation "Main navigation" [ref=e57]:
+        - link "Consumer" [ref=e58] [cursor=pointer]:
+          - /url: /products/consumer
+        - link "Business" [ref=e59] [cursor=pointer]:
+          - /url: /products/business
+        - link "Research" [ref=e60] [cursor=pointer]:
+          - /url: /research
+        - link "Blog" [ref=e61] [cursor=pointer]:
+          - /url: /blog
+        - link "Company" [ref=e62] [cursor=pointer]:
+          - /url: /company
+      - generic [ref=e63]:
+        - link "Contact" [ref=e64] [cursor=pointer]:
+          - /url: /contact
+          - text: Contact
+          - img [ref=e66]
+        - generic [ref=e72]:
+          - button "Try Elio" [ref=e73] [cursor=pointer]:
+            - text: Try Elio
+            - generic [ref=e76]:
+              - img [ref=e77]
+              - img [ref=e83]
+          - generic:
+            - menu:
+              - list:
+                - menuitem:
+                  - generic:
+                    - generic: Try Elio
+                    - generic: Consumer travel reasoning
+                  - generic:
+                    - img
+                - menuitem:
+                  - generic:
+                    - generic: Try Columbus
+                    - generic: Business geospatial intelligence
+                  - generic:
+                    - img
+    - generic [ref=e90]:
+      - generic [ref=e94]:
+        - heading "Building a brain for earth." [level=1] [ref=e95]
+        - paragraph [ref=e96]:
+          - text: At Columbus, we collect the world’s data, and build a brain that comprehends it all.
+          - text: We’re building frontier geospatial intelligence.
+        - paragraph [ref=e98]: An interactive Thesis
+        - navigation [ref=e99]:
+          - link "Foundation Model" [ref=e100] [cursor=pointer]:
+            - /url: "#index"
+            - generic [ref=e101]: Foundation Model
+            - img [ref=e102]
+          - link "Timeline" [ref=e104] [cursor=pointer]:
+            - /url: "#lgm-vs-llm"
+            - generic [ref=e105]: Timeline
+            - img [ref=e106]
+          - link "Research" [ref=e108] [cursor=pointer]:
+            - /url: "#core-reasoning"
+            - generic [ref=e109]: Research
+            - img [ref=e110]
+          - link "Results" [ref=e112] [cursor=pointer]:
+            - /url: "#data-collection"
+            - generic [ref=e113]: Results
+            - img [ref=e114]
+          - link "Blog" [ref=e116] [cursor=pointer]:
+            - /url: "#research-blog"
+            - generic [ref=e117]: Blog
+            - img [ref=e118]
+          - link "Inquiries" [ref=e120] [cursor=pointer]:
+            - /url: "#careers"
+            - generic [ref=e121]: Inquiries
+            - img [ref=e122]
+      - generic [ref=e126]:
+        - generic [ref=e129]:
+          - generic [ref=e131]:
+            - generic [ref=e132]: A new foundation model
+            - heading "Large Geospatial Model vs Large Language Model." [level=2] [ref=e133]
+            - generic [ref=e134]:
+              - paragraph [ref=e135]:
+                - text: If an LLM is for the digital world, our LGM is for the physical world.
+                - text: We’re personifying earth with physical AI. Instead of words, we process data about our surroundings and the anthropology in them.
+              - paragraph [ref=e136]: A new foundational model is needed.
+            - link "Read our in-depth article" [ref=e137] [cursor=pointer]:
+              - /url: /blog/philosophy-universal-lgm
+              - generic [ref=e138]: Read our in-depth article
+              - img [ref=e139]
+          - generic [ref=e144]:
+            - generic [ref=e145]:
+              - img [ref=e146]
+              - generic [ref=e147]: Columbus Earth
+            - heading "An LGM vs other foundation models" [level=3]
+            - generic [ref=e148]:
+              - generic [ref=e150]:
+                - img [ref=e151]
+                - generic [ref=e152]:
+                  - heading "LLM" [level=4] [ref=e153]
+                  - paragraph [ref=e154]: Large-Language-model
+              - generic [ref=e155]:
+                - img [ref=e156]
+                - generic [ref=e157]:
+                  - heading "VLM" [level=4] [ref=e158]
+                  - paragraph [ref=e159]: Vision-Language-model
+              - generic [ref=e160]:
+                - img [ref=e161]
+                - generic [ref=e162]:
+                  - heading "LGM" [level=4] [ref=e163]
+                  - paragraph [ref=e164]: Large-Geospatial-model
+              - generic [ref=e165]: Trained on
+              - generic [ref=e166]:
+                - heading "Text" [level=4] [ref=e167]
+                - paragraph [ref=e168]: e.g. “The grass is” → “green”
+              - generic [ref=e169]:
+                - heading "Text & Image" [level=4] [ref=e170]
+                - paragraph [ref=e171]: e.g. dog photo → “a border collie”
+              - generic [ref=e172]:
+                - heading "Physical reality" [level=4] [ref=e173]
+                - paragraph [ref=e174]: e.g. public data + urban imagery + GIS → crime risk map
+              - generic [ref=e175]:
+                - text: What it
+                - text: outputs
+              - generic [ref=e176]:
+                - heading "Predictive words" [level=4] [ref=e177]
+                - paragraph [ref=e178]: “What word comes next?”
+              - generic [ref=e179]:
+                - heading "Visual reasoning" [level=4] [ref=e180]
+                - paragraph [ref=e181]: “What’s in this image?”
+              - generic [ref=e182]:
+                - heading "Ground truths" [level=4] [ref=e183]
+                - paragraph [ref=e184]: “What’s in this physical space?”
+              - generic [ref=e185]:
+                - text: Who’s
+                - text: building it
+              - generic [ref=e187]:
+                - img "ChatGPT" [ref=e189]
+                - img "Claude" [ref=e191]
+                - img "Grok" [ref=e193]
+                - img "Perplexity" [ref=e195]
+              - generic [ref=e197]:
+                - img "Physical Intelligence" [ref=e199]
+                - img "Runway" [ref=e201]
+                - img "Meta" [ref=e203]
+              - generic [ref=e205]:
+                - img [ref=e206]
+                - generic [ref=e207]: Columbus Earth
+        - generic [ref=e210]:
+          - heading "A Large Geospatial Model is the next frontier in AI" [level=2] [ref=e211]
+          - paragraph [ref=e212]: The path forward
+          - generic [ref=e213]:
+            - generic [ref=e230]: LLM
+            - generic [ref=e233]: "2022"
+            - generic [ref=e235]:
+              - text: Geo-tuned LLM
+              - text: "& Vision Models"
+            - generic [ref=e238]: "2025"
+            - generic:
+              - img "Columbus"
+            - generic [ref=e240]:
+              - text: Generalist
+              - text: LGM
+            - generic [ref=e242]:
+              - generic [ref=e243]: "2026"
+              - link "Read our Paper" [ref=e244] [cursor=pointer]:
+                - /url: /blog/lgm-timeline
+                - generic [ref=e245]: Read our Paper
+                - img [ref=e246]
+            - generic [ref=e249]: UGM
+            - generic [ref=e251]:
+              - generic [ref=e252]: "2028"
+              - link "Our Game Plan" [ref=e253] [cursor=pointer]:
+                - /url: /blog/why-building-lgm
+                - generic [ref=e254]: Our Game Plan
+                - img [ref=e255]
+            - generic [ref=e257]:
+              - heading "Timeline of foundational AI models" [level=3] [ref=e258]
+              - list [ref=e259]:
+                - listitem [ref=e260]: 2022 — LLM (Large Language Model)
+                - listitem [ref=e261]: 2025 — Geo-tuned LLM & Vision Models
+                - listitem [ref=e262]: 2026 — Generalist LGM (Large Geospatial Model)
+                - listitem [ref=e263]: 2028 — UGM (Universal Geospatial Model)
+          - link "Read our article on the drawbacks of LLMs & vision models. How the LGM innovates." [ref=e264] [cursor=pointer]:
+            - /url: /blog/lgm-vs-llm-vision
+            - generic [ref=e265]: Read our article on
+            - paragraph [ref=e266]: the drawbacks of LLMs & vision models.
+            - paragraph [ref=e267]: How the LGM innovates.
+        - generic [ref=e270]:
+          - generic [ref=e271]:
+            - generic [ref=e273]:
+              - generic [ref=e274]: Core Reasoning
+              - heading "Our research" [level=2] [ref=e275]
+              - paragraph [ref=e277]: We've come up with several innovations within data collection, fusion, and core reasoning. We combine several innovations in unique ways in our research.
+            - generic [ref=e278]:
+              - paragraph [ref=e280]: We learned first-hand how LLMs are not built for geospatial needs. We set out to fix every technical issue that came with GPT architecture and it converged into a new foundational model, the LGM.
+              - link "Why LLMs didn't work" [ref=e281] [cursor=pointer]:
+                - /url: /blog/why-llms-didnt-cut-it
+                - generic [ref=e282]: Why LLMs didn't work
+                - img [ref=e283]
+          - paragraph [ref=e285]: Our proprietary architecture is comprised of 3 parts. Within each are several innovations built during our practical research.
+          - generic [ref=e286]:
+            - img [ref=e288]
+            - generic [ref=e663]:
+              - generic [ref=e664]:
+                - button "1. Data Collection" [ref=e665] [cursor=pointer]:
+                  - heading "1. Data Collection" [level=3] [ref=e666]
+                  - img [ref=e668]
+                - generic [ref=e671]:
+                  - paragraph [ref=e672]: The most extensive data collection in the industry. Versatile methods ranging from drones, car data, human data, public data and more.
+                  - paragraph [ref=e673]:
+                    - text: We've achieved the cheapest
+                    - button [ref=e675]: P/POI.
+                  - link [ref=e676] [cursor=pointer]:
+                    - /url: /blog
+                    - text: Read our blog
+                    - img [ref=e677]
+              - generic [ref=e679]:
+                - button "2. Fusion" [ref=e680] [cursor=pointer]:
+                  - heading "2. Fusion" [level=3] [ref=e681]
+                  - img [ref=e683]
+                - generic [ref=e686]:
+                  - paragraph [ref=e687]:
+                    - text: Accurate, automatic data filtering
+                    - button [ref=e689]: "& labeling."
+                  - paragraph [ref=e690]:
+                    - text: We care about
+                    - button [ref=e692]: Ground Truths.
+                    - text: We make sure each data point is the truth at that specific X,Y,Z point at that given time.
+                  - paragraph [ref=e693]: Data scarcity is one of the hardest parts about the LGM endeavor. To solve this, we have built innovative methods to universally digest data. Meaning we are able to fuse data together that our model then trains on. Cheaper and more data → smarter model.
+              - generic [ref=e694]:
+                - button "3. Core Reasoning" [ref=e695] [cursor=pointer]:
+                  - heading "3. Core Reasoning" [level=3] [ref=e696]
+                  - img [ref=e698]
+                - generic [ref=e701]:
+                  - paragraph [ref=e702]: Our reasoning model considers temporal data, and sifts through vast amounts of aggregated geospatial data — including anthropologic data.
+                  - paragraph [ref=e703]: It continuously learns and creates new patterns through our relational architecture.
+                  - paragraph [ref=e704]: Our core reasoning is comprised of a new permutation of Reverse Diffusion and RAG architecture.
+                  - link [ref=e705] [cursor=pointer]:
+                    - /url: /blog/mapping-unknown-gen-layers
+                    - text: Read our Paper
+                    - img [ref=e706]
+              - generic [ref=e708]:
+                - button "4. Answers, insights, patterns" [ref=e709] [cursor=pointer]:
+                  - heading "4. Answers, insights, patterns" [level=3] [ref=e710]
+                  - img [ref=e712]
+                - generic [ref=e715]:
+                  - paragraph [ref=e716]: One model, innumerable granular ground truths.
+                  - generic [ref=e717]:
+                    - link [ref=e718] [cursor=pointer]:
+                      - /url: /business
+                      - generic [ref=e720]: Columbus
+                    - link [ref=e721] [cursor=pointer]:
+                      - /url: https://mapsgpt.es
+                      - generic [ref=e723]: Elio
+                    - generic [ref=e725]: More Soon
+          - link "Read our articles on our foundational model research" [ref=e726] [cursor=pointer]:
+            - /url: /blog/philosophy-universal-lgm
+            - generic [ref=e727]: Read our articles on
+            - paragraph [ref=e728]: our foundational model research
+        - generic [ref=e732]:
+          - paragraph [ref=e733]: RESULTS
+          - 'heading "Our Model: Magellan-1.0" [level=2] [ref=e734]'
+          - paragraph [ref=e735]: The latest results from our development of the LGM.
+          - generic [ref=e736]:
+            - generic [ref=e737]:
+              - img [ref=e739]
+              - heading "Fast semantic reasoning in cities. Contextual enrichment." [level=3] [ref=e745]
+            - generic [ref=e746]:
+              - img [ref=e748]
+              - heading "Generative geospatial data" [level=3] [ref=e754]
+            - generic [ref=e755]:
+              - img [ref=e757]
+              - heading "Generalist model, with access to wide catalogue" [level=3] [ref=e763]
+            - generic [ref=e764]:
+              - img [ref=e766]
+              - heading "Deep spatial reasoning at scale" [level=3] [ref=e772]
+          - generic [ref=e773]:
+            - 'link "Mapping the uknown: Generative Geospatial layers" [ref=e774] [cursor=pointer]':
+              - /url: /blog/mapping-unknown-gen-layers
+              - paragraph [ref=e775]:
+                - text: "Mapping the uknown:"
+                - strong [ref=e776]: Generative Geospatial layers
+            - 'link "Research demonstration: Fire Prediction Model" [ref=e777] [cursor=pointer]':
+              - /url: /blog/fire-prediction-model
+              - paragraph [ref=e778]:
+                - text: "Research demonstration:"
+                - strong [ref=e779]: Fire Prediction Model
+        - generic [ref=e783]:
+          - heading "Read our latest releases" [level=2] [ref=e784]
+          - paragraph [ref=e785]: Explore the innovative research and recent papers from our team.
+          - generic [ref=e786]:
+            - link "COMPANY NEWS Apr 2026 Join us! Research opportunities for the rebelious lorem" [ref=e787] [cursor=pointer]:
+              - /url: /blog/join-us-research-opportunities
+              - generic [ref=e789]:
+                - generic [ref=e790]:
+                  - generic [ref=e791]: COMPANY NEWS
+                  - generic [ref=e792]: ·
+                  - generic [ref=e793]: Apr 2026
+                - heading "Join us! Research opportunities for the rebelious" [level=3] [ref=e794]
+                - paragraph [ref=e795]: lorem
+            - link "ENGINEERING Apr 2026 Definitions of a Large Geospatial Model lorem" [ref=e796] [cursor=pointer]:
+              - /url: /blog/definitions-lgm
+              - generic [ref=e798]:
+                - generic [ref=e799]:
+                  - generic [ref=e800]: ENGINEERING
+                  - generic [ref=e801]: ·
+                  - generic [ref=e802]: Apr 2026
+                - heading "Definitions of a Large Geospatial Model" [level=3] [ref=e803]
+                - paragraph [ref=e804]: lorem
+            - 'link "ENGINEERING Apr 2026 Mapping the uknown: Generative Geospatial layers lorem" [ref=e805] [cursor=pointer]':
+              - /url: /blog/mapping-unknown-gen-layers
+              - generic [ref=e807]:
+                - generic [ref=e808]:
+                  - generic [ref=e809]: ENGINEERING
+                  - generic [ref=e810]: ·
+                  - generic [ref=e811]: Apr 2026
+                - 'heading "Mapping the uknown: Generative Geospatial layers" [level=3] [ref=e812]'
+                - paragraph [ref=e813]: lorem
+          - generic [ref=e814]:
+            - link "Philosophy of a Universal LGM Apr 2026 →" [ref=e815] [cursor=pointer]:
+              - /url: /blog/philosophy-universal-lgm
+              - generic [ref=e816]: Philosophy of a Universal LGM
+              - generic [ref=e817]:
+                - generic [ref=e818]: Apr 2026
+                - generic [ref=e819]: →
+            - link "Definitions of a Large Geospatial Model Apr 2026 →" [ref=e820] [cursor=pointer]:
+              - /url: /blog/definitions-lgm
+              - generic [ref=e821]: Definitions of a Large Geospatial Model
+              - generic [ref=e822]:
+                - generic [ref=e823]: Apr 2026
+                - generic [ref=e824]: →
+            - link "Why LLMs didnt cut it. Apr 2026 →" [ref=e825] [cursor=pointer]:
+              - /url: /blog/why-llms-didnt-cut-it
+              - generic [ref=e826]: Why LLMs didnt cut it.
+              - generic [ref=e827]:
+                - generic [ref=e828]: Apr 2026
+                - generic [ref=e829]: →
+            - 'link "Earth Recipes: How a world would think Apr 2026 →" [ref=e830] [cursor=pointer]':
+              - /url: /blog/earth-recipes-world-think
+              - generic [ref=e831]: "Earth Recipes: How a world would think"
+              - generic [ref=e832]:
+                - generic [ref=e833]: Apr 2026
+                - generic [ref=e834]: →
+            - link "Mimicking an adult brain Apr 2026 →" [ref=e835] [cursor=pointer]:
+              - /url: /blog/mimicking-adult-brain
+              - generic [ref=e836]: Mimicking an adult brain
+              - generic [ref=e837]:
+                - generic [ref=e838]: Apr 2026
+                - generic [ref=e839]: →
+            - 'link "LGM vs LLM Vision: Drawbacks and innovations Apr 2026 →" [ref=e840] [cursor=pointer]':
+              - /url: /blog/lgm-vs-llm-vision
+              - generic [ref=e841]: "LGM vs LLM Vision: Drawbacks and innovations"
+              - generic [ref=e842]:
+                - generic [ref=e843]: Apr 2026
+                - generic [ref=e844]: →
+            - 'link "Mapping the uknown: Generative Geospatial layers Apr 2026 →" [ref=e845] [cursor=pointer]':
+              - /url: /blog/mapping-unknown-gen-layers
+              - generic [ref=e846]: "Mapping the uknown: Generative Geospatial layers"
+              - generic [ref=e847]:
+                - generic [ref=e848]: Apr 2026
+                - generic [ref=e849]: →
+            - link "Turning Dormant data usable Apr 2026 →" [ref=e850] [cursor=pointer]:
+              - /url: /blog/turning-dormant-data-usable
+              - generic [ref=e851]: Turning Dormant data usable
+              - generic [ref=e852]:
+                - generic [ref=e853]: Apr 2026
+                - generic [ref=e854]: →
+            - 'link "Large Geospatial Model: Our timeline. Apr 2026 →" [ref=e855] [cursor=pointer]':
+              - /url: /blog/lgm-timeline
+              - generic [ref=e856]: "Large Geospatial Model: Our timeline."
+              - generic [ref=e857]:
+                - generic [ref=e858]: Apr 2026
+                - generic [ref=e859]: →
+            - link "Why we're building an LGM. Apr 2026 →" [ref=e860] [cursor=pointer]:
+              - /url: /blog/why-building-lgm
+              - generic [ref=e861]: Why we're building an LGM.
+              - generic [ref=e862]:
+                - generic [ref=e863]: Apr 2026
+                - generic [ref=e864]: →
+            - 'link "Research Demonstration: Fire Prediction Model Apr 2026 →" [ref=e865] [cursor=pointer]':
+              - /url: /blog/fire-prediction-model
+              - generic [ref=e866]: "Research Demonstration: Fire Prediction Model"
+              - generic [ref=e867]:
+                - generic [ref=e868]: Apr 2026
+                - generic [ref=e869]: →
+        - generic [ref=e874]:
+          - generic [ref=e877]:
+            - heading "Careers" [level=2] [ref=e878]
+            - paragraph [ref=e879]: If you're excited about creating paradigm shifts in physical world understanding.
+          - generic [ref=e880]:
+            - generic [ref=e881]:
+              - button "Columbus Pro" [ref=e882] [cursor=pointer]
+              - button "Elio" [ref=e883] [cursor=pointer]
+              - button "Investors" [ref=e884] [cursor=pointer]
+              - button "Careers" [ref=e885] [cursor=pointer]
+            - generic [ref=e886]:
+              - generic [ref=e887]:
+                - heading "Join the crew" [level=3] [ref=e888]
+                - paragraph [ref=e889]: Tell us where you’d make your mark.
+              - generic [ref=e890]:
+                - generic [ref=e891]:
+                  - generic [ref=e892]: Name
+                  - textbox "Name" [ref=e893]:
+                    - /placeholder: Your name
+                - generic [ref=e894]:
+                  - generic [ref=e895]: Email
+                  - textbox "Email" [ref=e896]:
+                    - /placeholder: name@company.com
+                - generic [ref=e897]:
+                  - generic [ref=e898]: Role you’re interested in
+                  - textbox "Role you’re interested in" [ref=e899]:
+                    - /placeholder: e.g. Software Engineer, Data Scientist…
+                - generic [ref=e900]:
+                  - generic [ref=e901]: Tell us about yourself
+                  - textbox "Tell us about yourself 0/500" [ref=e902]:
+                    - /placeholder: What excites you about geospatial intelligence? What would you bring to the team?
+                  - generic [ref=e903]: 0/500
+                - generic [ref=e904]:
+                  - generic [ref=e905]: Resume (optional — PDF or DOC)
+                  - button "Resume (optional — PDF or DOC)" [ref=e906]
+                - paragraph [ref=e907]:
+                  - text: By submitting, you agree with our
+                  - link "Terms" [ref=e908] [cursor=pointer]:
+                    - /url: /terms
+                  - text: and
+                  - link "Privacy Policy" [ref=e909] [cursor=pointer]:
+                    - /url: /privacy
+                  - text: .
+                - generic [ref=e910]:
+                  - button "Submit" [ref=e911] [cursor=pointer]:
+                    - text: Submit
+                    - img [ref=e913]
+                  - generic [ref=e919]: We answer fast.

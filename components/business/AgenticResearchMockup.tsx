@@ -2,6 +2,8 @@
 
 import Image from "next/image";
 import type { IndustryId } from "@/components/use-cases/industry/types";
+import { useMediaWarm } from "@/components/ui/MediaPrefetcher";
+import researchFrame from "@/public/business/ResearchFrame.png";
 
 /* Mock UI: the "Agentic Research" demo. Uses the ResearchFrame chrome
    (5190×2993) and paints the inner pane with the canonical Columbus
@@ -101,8 +103,8 @@ const CONTENT: Partial<Record<IndustryId, IndustryContent>> = {
     prompt:
       "Show me which neighborhoods in Amsterdam have seen the largest rent increases over the past 5 years",
     recap:
-      "Here are the Amsterdam buurten with the steepest free-sector rent growth over the past five years",
-    panelTitle: "Top 4 Buurten by Free-Sector Rent Growth",
+      "Here are the Amsterdam neighborhoods with the steepest free-sector rent growth over the past five years",
+    panelTitle: "Top 4 Neighborhoods by Free-Sector Rent Growth",
     panelSubtitle: "Last 5 Years",
     items: [
       { rank: 1, label: "De Pijp-Noord", delta: "+28.4%" },
@@ -111,17 +113,17 @@ const CONTENT: Partial<Record<IndustryId, IndustryContent>> = {
       { rank: 4, label: "Oostelijke Eilanden", delta: "+19.3%" },
     ],
     takeaway:
-      "Rent growth concentrates in tram-served buurten with tight new-build pipelines; independent business turnover lags the price rise by 18–24 months.",
+      "Rent growth concentrates in tram-served neighborhoods with tight new-build pipelines; independent business turnover lags the price rise by 18–24 months.",
     reportTitle:
-      "Amsterdam Buurten Rent Growth: Tram-Served Pipeline Convergence",
+      "Amsterdam Neighborhoods Rent Growth: Tram-Served Pipeline Convergence",
     reportMeta: "Site Suitability Report · Residential · Jan 2026",
     reportBody:
-      "Free-sector rent growth across Amsterdam's central buurten has concentrated in tram-served corridors over the past five years, with De Pijp-Noord, Oud-West, Indische Buurt, and Oostelijke Eilanden each posting double-digit cumulative gains. The pattern aligns with tight new-build pipelines along the 24- and 25-tram lines, where municipal woningbouw permits have lagged demand by 18–24 months.",
+      "Free-sector rent growth across Amsterdam's central neighborhoods has concentrated in tram-served corridors over the past five years, with De Pijp-Noord, Oud-West, Indische Buurt, and Oostelijke Eilanden each posting double-digit cumulative gains. The pattern aligns with tight new-build pipelines along the 24- and 25-tram lines, where municipal woningbouw permits have lagged demand by 18–24 months.",
     mapLabel: "Amsterdam · Free-Sector Rent Δ (5y)",
     mapBackground:
       "radial-gradient(circle at 52% 60%, #b32a1c 0%, #d35a30 18%, #e88a3a 38%, #f4b465 58%, #fce0a7 80%, #f8efdb 100%)",
     aiSuggestion:
-      "Consider adding a vacancy-rate overlay to confirm pipeline tightness across the four leading buurten.",
+      "Consider adding a vacancy-rate overlay to confirm pipeline tightness across the four leading neighborhoods.",
   },
   "commercial-real-estate": {
     breadcrumb: ["French Flagship Rollout", "36-Month Sequence"],
@@ -291,15 +293,21 @@ const CONTENT: Partial<Record<IndustryId, IndustryContent>> = {
 
 export type AgenticResearchMockupProps = {
   industryId?: IndustryId;
+  /* When true, the frame loads eagerly at low priority even while this demo
+     is the inactive (display:none) one — ComparisonSection sets it once the
+     section enters the viewport so all showcases are preloaded. */
+  preload?: boolean;
 };
 
-export default function AgenticResearchMockup({ industryId }: AgenticResearchMockupProps = {}) {
+export default function AgenticResearchMockup({ industryId, preload = false }: AgenticResearchMockupProps = {}) {
+  const warm = useMediaWarm();
+  const soon = warm || preload;
   const c =
     (industryId && CONTENT[industryId]) ?? CONTENT["residential-real-estate"]!;
 
   return (
     <div
-      className="relative w-full mx-auto"
+      className="biz-product-display biz-mockup-frame relative w-full mx-auto"
       style={{
         aspectRatio: "5190 / 2993",
         maxWidth: 1180,
@@ -313,6 +321,11 @@ export default function AgenticResearchMockup({ industryId }: AgenticResearchMoc
            edge that matches the other demos in the family. */
         borderRadius: "var(--ent-radius-2xl)",
         overflow: "hidden",
+        /* White placeholder fill — before the chrome PNG loads this wrapper
+           would otherwise be transparent and show the section's sky backdrop
+           straight through (reading as a borderless/"no-frame" flash). The
+           white fill makes it a clean white panel until the chrome paints. */
+        backgroundColor: "#FFFFFF",
         containerType: "inline-size",
       }}
     >
@@ -321,34 +334,37 @@ export default function AgenticResearchMockup({ industryId }: AgenticResearchMoc
         style={{ inset: 0, zIndex: 5 }}
       >
         <Image
-          src="/business/ResearchFrame.png"
+          src={researchFrame}
           alt="Columbus Agentic Research"
           fill
           sizes="(max-width: 1180px) 100vw, 1180px"
+          placeholder="blur"
+          loading={soon ? "eager" : "lazy"}
+          fetchPriority={soon ? "low" : undefined}
           className="object-cover object-center"
         />
       </div>
 
-      {/* Breadcrumb cover — opaque white div over the project-title
-          portion of the chrome's top bar, with custom industry text
-          rendered on top. Sized to span x=900 → x=3160 of the source
-          PNG (17.34% → 60.89% from left), and the full chrome
-          top-bar height (0 → 7.02%). Sits above the frame (z-5) but
-          below the inner pane (z-10) so the inner pane's own content
-          remains on top should it ever bleed up here. */}
+      {/* Breadcrumb cover — opaque white div over everything after the
+          chrome's baked "Columbus" wordmark. Extended left to 15.5% so it
+          also hides the chrome's baked navy "/" separator (x≈16.8–17.2%) —
+          that slash is a different colour + tighter spacing than our
+          rendered one, so we re-render BOTH separators here for a single
+          consistent style/rhythm. Columbus ends at ~15.25%, so 15.5% clears
+          it; right edge stays at 60.89%. Sits above the frame (z-5) but
+          below the inner pane (z-10). */}
       <div
         aria-hidden
         style={{
           position: "absolute",
           top: 0,
-          left: "17.34%",
-          width: "43.55%",
+          left: "15.5%",
+          width: "45.39%",
           height: "7.02%",
           backgroundColor: "#FFFFFF",
           zIndex: 6,
           display: "flex",
           alignItems: "center",
-          paddingLeft: "clamp(2px, 0.3cqw, 4px)",
           fontFamily: FONT_STACK,
         }}
       >
@@ -364,14 +380,13 @@ export default function AgenticResearchMockup({ industryId }: AgenticResearchMoc
             textOverflow: "ellipsis",
           }}
         >
+          {/* Leading separator (Columbus / …) — same style as the inner one
+              so all breadcrumb slashes match in colour + spacing. */}
+          <span style={{ color: TEXT_MUTED, fontWeight: 500, margin: "0 clamp(6px, 0.8cqw, 10px)" }}>
+            /
+          </span>
           {c.breadcrumb[0]}
-          <span
-            style={{
-              color: TEXT_MUTED,
-              fontWeight: 500,
-              margin: "0 clamp(6px, 0.8cqw, 10px)",
-            }}
-          >
+          <span style={{ color: TEXT_MUTED, fontWeight: 500, margin: "0 clamp(6px, 0.8cqw, 10px)" }}>
             /
           </span>
           {c.breadcrumb[1]}

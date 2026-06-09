@@ -1,16 +1,25 @@
 import type { Metadata } from "next";
-import Image from "next/image";
+import { getImageProps, type StaticImageData } from "next/image";
 import Link from "next/link";
 import { Linkedin } from "lucide-react";
 
-import { ImageWithFallback } from "@/components/ui/ImageWithFallback";
 import { MistxNav } from "@/components/layout/MistxNav";
 import {
   ScrollHighlightStatement,
   type StatementSegment,
 } from "@/components/company/ScrollHighlightStatement";
+import { WarmImage } from "@/components/ui/WarmImage";
+import { MediaPrefetcher } from "@/components/ui/MediaPrefetcher";
 import { BLOG_POSTS, blogHref } from "@/lib/blog-posts";
 import styles from "./company.module.css";
+
+// Founders media is below the fold and heavy (group photo ~5 MB); static
+// imports give next/image a real blurDataURL for instant blur-up. See
+// MEDIA_LOADING_PLAYBOOK.md.
+import groupFounders from "@/public/CompanyPgMedia/grouppic-founders.png";
+import davidAvatar from "@/public/CompanyPgMedia/David.png";
+import alexAvatar from "@/public/CompanyPgMedia/Alex.png";
+import erickAvatar from "@/public/CompanyPgMedia/Erick.png";
 
 export const metadata: Metadata = {
   title: "Company — Columbus Earth",
@@ -72,14 +81,14 @@ function getRandomCompanyProductPosts() {
 /* Founder quotes — copy reproduced verbatim from the design mockup.
    `FEATURED` fills the left photo tile; `QUOTES` are the two stacked
    cards on the right. */
-type Quote = { quote: string; name: string; role: string; avatar: string };
+type Quote = { quote: string; name: string; role: string; avatar: StaticImageData };
 
 const FEATURED: Quote = {
   quote:
-    "We wish to apply semantic AI in simple and beautiuful products helping real people.",
+    "We apply semantic AI in simple and beautiful products helping real people.",
   name: "David Ramirez Blonski",
   role: "Co-Founder, CEO",
-  avatar: "/David.png",
+  avatar: davidAvatar,
 };
 
 const QUOTES: Quote[] = [
@@ -88,13 +97,13 @@ const QUOTES: Quote[] = [
       "As the bridge between the physical world and digital world, maps are one of the most ubiquitous interfaces that haven't changed in decades.",
     name: "Alexander Ramirez Blonski",
     role: "Co-Founder, CPO",
-    avatar: "/Alex.jpg",
+    avatar: alexAvatar,
   },
   {
     quote: "Like Columbus, and the great voyagers, we are entering the new frontier of AI. While LLMs are book-smart, we wish to be street-smart.",
     name: "Erick Lara",
     role: "Co-Founder, CTO",
-    avatar: "/Erick.png",
+    avatar: erickAvatar,
   },
 ];
 
@@ -135,9 +144,59 @@ const PILLARS: Pillar[] = [
   },
 ];
 
+const COMPANY_HERO_SIZES = "100vw";
+
+const { props: companyHeroDesktopProps } = getImageProps({
+  src: "/company-illustration-enhanced.png",
+  alt: "",
+  width: 3762,
+  height: 2174,
+  sizes: COMPANY_HERO_SIZES,
+  quality: 75,
+  loading: "eager",
+  className: styles.heroWatermarkImage,
+});
+
+const {
+  props: { srcSet: companyHeroMobileSrcSet },
+} = getImageProps({
+  /* Mobile-only hero — desktop still uses
+     `/company-illustration-enhanced.png` above. The <picture> element
+     in the JSX swaps to this source at `(max-width: 767px)` and the
+     MediaPrefetcher LCP preload at the top of the page is wired to
+     the same srcSet so the right variant is fetched eagerly per
+     viewport. */
+  src: "/company-hero-mobile-v2.png",
+  alt: "",
+  width: 852,
+  height: 1846,
+  sizes: COMPANY_HERO_SIZES,
+  quality: 75,
+});
+
 export default function CompanyPage() {
   return (
     <main className={styles.page}>
+      {/* Media-scoped LCP preload for the hero watermark — one variant per
+          viewport, built from the same getImageProps output the <picture>
+          uses so they can't drift. React 19 hoists these to <head>; the
+          `media` attr means only the matching variant is fetched. */}
+      <link
+        rel="preload"
+        as="image"
+        media="(min-width: 768px)"
+        imageSrcSet={companyHeroDesktopProps.srcSet}
+        imageSizes={companyHeroDesktopProps.sizes}
+        fetchPriority="high"
+      />
+      <link
+        rel="preload"
+        as="image"
+        media="(max-width: 767px)"
+        imageSrcSet={companyHeroMobileSrcSet}
+        imageSizes={COMPANY_HERO_SIZES}
+        fetchPriority="high"
+      />
       <MistxNav />
 
       {/* ════════ 1. HERO ════════
@@ -146,22 +205,17 @@ export default function CompanyPage() {
           the homepage hero. `data-hero-section` lets the navbar render
           transparent at the top of the page. */}
       <section className={styles.hero} data-hero-section aria-label="Company">
-        {/* Watermark — formerly a CSS background-image (companyhero.png is
-            ~8.6 MB). Routing it through next/image with `priority` lets
-            the optimizer ship a sub-megabyte AVIF/WebP variant and emits
-            a preload tag so the watermark is on screen before hydration.
-            The wrapper still owns the mask/opacity so the visual is
-            unchanged. */}
+        {/* Watermark — art-directed with a portrait mobile source so the
+            phone hero keeps both the globe and tall ship instead of
+            cropping the desktop canvas. */}
         <div className={styles.heroWatermark} aria-hidden>
-          <ImageWithFallback
-            src="/companyhero.png"
-            alt=""
-            fill
-            priority
-            sizes="100vw"
-            quality={75}
-            style={{ objectFit: "cover", objectPosition: "center" }}
-          />
+          <picture className={styles.heroWatermarkPicture}>
+            <source
+              media="(max-width: 767px)"
+              srcSet={companyHeroMobileSrcSet}
+            />
+            <img {...companyHeroDesktopProps} alt="" />
+          </picture>
         </div>
         <div className={styles.heroInner}>
           <h1 className={`h1 tracking-tight ${styles.heroHeadline}`}>
@@ -244,11 +298,18 @@ export default function CompanyPage() {
           <h2 className={`mb-6 md:mb-8 ${styles.sectionLabel}`}>
             Read more about what we do
           </h2>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "48px 32px" }}>
+          {/* 3-col desktop / 2-col tablet / 1-col mobile. Previously
+              this was an inline gridTemplateColumns: repeat(3, 1fr)
+              with no media queries, so on mobile each card squeezed
+              to ~107 px wide with a ~67-px-tall hero image (unreadable).
+              gap-y-12 = 48 px row gap (matches design); gap-x-8 = 32 px
+              column gap (matches design). */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-12 gap-x-8">
             {getRandomCompanyProductPosts().map((post) => (
               <Link
                 key={post.slug}
                 href={blogHref(post.slug)}
+                className={styles.readMoreCard}
                 style={{
                   display: "flex",
                   flexDirection: "column",
@@ -257,6 +318,7 @@ export default function CompanyPage() {
                 }}
               >
                 <div
+                  className={styles.readMoreCardMedia}
                   style={{
                     position: "relative",
                     width: "100%",
@@ -268,12 +330,10 @@ export default function CompanyPage() {
                   }}
                 >
                   {post.image ? (
-                    <Image
+                    <WarmImage
                       src={post.image}
-                      alt=""
-                      fill
-                      style={{ objectFit: "cover" }}
                       sizes="(min-width: 768px) 33vw, 100vw"
+                      style={{ objectFit: "cover" }}
                     />
                   ) : (
                     <div
@@ -285,12 +345,6 @@ export default function CompanyPage() {
                       aria-hidden="true"
                     />
                   )}
-                  {/* Top-right cut-out — page-surface white so it reads as
-                      a real notch out of the image, carrying the post's
-                      playful audience tag (e.g. "For builders"). */}
-                  <div className={styles.readMoreNotch}>
-                    <span className={styles.readMoreNotchLabel}>{post.audience}</span>
-                  </div>
                 </div>
 
                 <div style={{ display: "flex", flexDirection: "column" }}>
@@ -305,7 +359,13 @@ export default function CompanyPage() {
                       {post.date}
                     </span>
                   </div>
-                  <h3 style={{ fontSize: "22px", color: "var(--color-ink)", margin: "0 0 8px", letterSpacing: "-0.015em" }}>
+                  {/* Title typography mirrors the blog-index .h5 treatment
+                      (globals.css :302) — Funnel Display at weight 500 —
+                      so these cards match the /blog cards instead of
+                      inheriting the body font at the browser-default
+                      heading weight. Size + letter-spacing remain
+                      company-page-specific (22px vs the .h5 default). */}
+                  <h3 className={styles.readMoreCardTitle} style={{ fontFamily: "var(--font-display)", fontSize: "22px", fontWeight: 500, margin: "0 0 8px", letterSpacing: "-0.015em" }}>
                     {post.title}
                   </h3>
                   <p style={{ fontSize: "16px", color: "var(--color-muted)", margin: 0 }}>
@@ -334,10 +394,8 @@ export default function CompanyPage() {
                 match its height. */}
             <div className={styles.founderPhoto}>
               <div className={styles.founderPhotoMedia}>
-                <Image
-                  src="/grouppic-founders.png"
-                  alt=""
-                  fill
+                <WarmImage
+                  src={groupFounders}
                   sizes="(min-width: 768px) 640px, 100vw"
                 />
               </div>
@@ -352,12 +410,7 @@ export default function CompanyPage() {
                 className={`${styles.attribution} ${styles.featuredAttribution}`}
               >
                 <div className={styles.avatar}>
-                  <Image
-                    src={FEATURED.avatar}
-                    alt={FEATURED.name}
-                    fill
-                    sizes="64px"
-                  />
+                  <WarmImage src={FEATURED.avatar} alt={FEATURED.name} sizes="64px" />
                 </div>
                 <div>
                   <p className={styles.attributionName}>{FEATURED.name}</p>
@@ -375,7 +428,7 @@ export default function CompanyPage() {
                   <div className={styles.quoteSpacer} aria-hidden />
                   <div className={styles.attribution}>
                     <div className={styles.avatar}>
-                      <Image src={q.avatar} alt={q.name} fill sizes="64px" />
+                      <WarmImage src={q.avatar} alt={q.name} sizes="64px" />
                     </div>
                     <div>
                       <p className={styles.attributionName}>{q.name}</p>
@@ -423,6 +476,11 @@ export default function CompanyPage() {
           </div>
         </div>
       </section>
+
+      {/* Warm all below-fold media (Read-more cards, group photo, avatars)
+          lazy → eager after load + idle, so each is decoded before the user
+          scrolls to it. Skips on data-saver. */}
+      <MediaPrefetcher />
     </main>
   );
 }

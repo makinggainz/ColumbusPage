@@ -64,7 +64,7 @@ export default function ColumbusReasoningCard({
         borderRadius: "var(--ent-radius-2xl)",
         border: "2px solid var(--ent-border-card)",
         boxShadow: "var(--ent-shadow-card)",
-        padding: "clamp(28px, 3vw, 40px)",
+        padding: "40px",
         overflow: "hidden",
         fontFamily: "Axiforma, 'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif",
       }}

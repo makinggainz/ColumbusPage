@@ -2,10 +2,13 @@
 
 import { useEffect, useRef, useState } from "react";
 import { ImageWithFallback } from "@/components/ui/ImageWithFallback";
+import { useMediaWarm } from "@/components/ui/MediaPrefetcher";
+import envBg1 from "@/public/BusinessPgMedia/EnvironmentalUseCases/Bg/env-bg-1.png";
 import MapChatPlatform from "./MapChatPlatform";
 import DataManagerMockup from "./DataManagerMockup";
 import AgenticResearchMockup from "./AgenticResearchMockup";
 import DashboardMockup from "./DashboardMockup";
+import { ScaleToFit } from "../technology/redesign/ScaleToFit";
 
 const SOFT = "var(--ent-border-card)";
 
@@ -19,12 +22,12 @@ const SOFT = "var(--ent-border-card)";
    that copy. */
 const RESIDENTIAL_INDUSTRY_ID = "residential-real-estate" as const;
 const RESIDENTIAL_MAP_CHAT = {
-  map: "/ResidentialMaps/chat-platform-map.png",
+  map: "/BusinessPgMedia/ResidentialRealEstateUseCases/MapVisuals/chat-platform-map.png",
   userQuery:
     "Show me which neighborhoods in Amsterdam have seen the largest rent increases over the past 5 years",
   responseIntro:
-    "Here are the Amsterdam buurten with the steepest free-sector rent growth over the past five years",
-  listTitle: "Top 4 Buurten by Free-Sector Rent Growth",
+    "Here are the Amsterdam neighborhoods with the steepest free-sector rent growth over the past five years",
+  listTitle: "Top 4 Neighborhoods by Free-Sector Rent Growth",
   listSubtitle: "Last 5 Years",
   listItems: [
     { rank: 1, name: "De Pijp-Noord", pct: "+28.4%" },
@@ -33,42 +36,57 @@ const RESIDENTIAL_MAP_CHAT = {
     { rank: 4, name: "Oostelijke Eilanden", pct: "+19.3%" },
   ],
   keyTakeaway:
-    "Rent growth concentrates in tram-served buurten with tight new-build pipelines; independent business turnover lags the price rise by 18–24 months.",
+    "Rent growth concentrates in tram-served neighborhoods with tight new-build pipelines; independent business turnover lags the price rise by 18–24 months.",
 };
 
-/* Each feature auto-advances after this long; the expanded item's
-   horizontal progress bar is driven by the same CSS animation, so its end
-   event triggers the advance — bar and timer stay in sync and pause
-   together. */
+/* Each feature auto-advances after this long. The active item's horizontal
+   progress bar and the advance are driven by the same rAF clock (see the
+   component), so the bar and the timer stay in sync and pause together. */
 const CYCLE_MS = 6000;
 
-/* Scoped CSS:
-   • cmpBarFillIn: when a cell becomes active, the gray fill wipes in
-     from the left edge over FILL_IN_MS (origin: left, scaleX 0 → 1).
-   • cmpBarRecede: chained right after — over the remainder of
-     CYCLE_MS the fill recedes anchored to the right edge (origin:
-     right, scaleX 1 → 0) so the left edge slides rightward and the
-     fill thins as time runs out. The recede's animation-end fires
-     advance(), so the visible countdown IS the timer.
-   • .cmp-host-visual > *: kills only the box-shadow on each demo's
-     outermost wrapper (MapChatPlatform / *Mockup all set a heavy
-     floating-card shadow via inline style). Per the user's pass on
-     this design, the demos shouldn't sit on a shadow — they should
-     read as if you're clicking through the live app rather than
-     swapping between framed product screenshots. Rounded corners
-     and the rest of each demo's chrome stay intact. */
+/* The active cell's gray countdown bar is painted every frame by the
+   requestAnimationFrame loop in the component (see paintBar): it wipes in
+   from the left over the first FILL_IN_MS, then recedes toward the right for
+   the rest of CYCLE_MS. Driving it from the same clock that advances the
+   carousel keeps the bar and the timer perfectly in sync and — unlike the
+   old CSS-animation-end approach — means a dropped event can never strand
+   the countdown. */
 const FILL_IN_MS = 500;
-const RECEDE_MS = CYCLE_MS - FILL_IN_MS;
+/* Scoped CSS — `.cmp-host-visual > *` kills only the box-shadow on each
+   demo's outermost wrapper (MapChatPlatform / *Mockup all set a heavy
+   floating-card shadow via inline style). Per the user's pass on this
+   design, the demos shouldn't sit on a shadow — they should read as if
+   you're clicking through the live app rather than swapping between framed
+   product screenshots. Rounded corners and the rest of each demo's chrome
+   stay intact. */
 const CMP_CSS = `
-@keyframes cmpBarFillIn {
-  from { transform: scaleX(0); transform-origin: left center; }
-  to { transform: scaleX(1); transform-origin: left center; }
-}
-@keyframes cmpBarRecede {
-  from { transform: scaleX(1); transform-origin: right center; }
-  to { transform: scaleX(0); transform-origin: right center; }
-}
 .cmp-host-visual > * { box-shadow: none !important; }
+
+/* Host card layout — split between mobile (full mockup visible at
+   container width, scales like a real product screenshot) and desktop
+   (fixed 630px, demo absolutely positioned to peek through the
+   top-left, mimicking "you're in the live app").
+
+   Mobile: the host card sizes to the demo's natural aspect ratio. The
+   demo overlay sits in normal flow at full width with 16px breathing
+   room. Interior typography uses cqw, so on a narrow container the
+   text scales proportionally small — the mockup reads as a miniature
+   real product UI rather than a blown-up illustration.
+   Desktop (lg+): the existing zoomed framing — host fixed at 630px,
+   demo absolutely placed at top:58 / left:88 / width:1180 so only the
+   top-left of the mockup peeks through the host's overflow-hidden
+   crop. */
+.cmp-host { padding: 16px; }
+.cmp-host-visual { position: relative; width: 100%; }
+@media (min-width: 1024px) {
+  .cmp-host { padding: 0; height: 730px; }
+  .cmp-host-visual {
+    position: absolute;
+    top: 58px;
+    left: 88px;
+    width: 1180px;
+  }
+}
 `;
 
 /* Renders the real SuperFeatureSection demoVisual that corresponds to
@@ -80,16 +98,23 @@ const CMP_CSS = `
    Industry is locked to residential — this section sits ABOVE the
    page's IndustryProvider, so it can't read the selected industry from
    context yet. */
-function ActiveVisual({ active }: { active: number }) {
+/* `preload` is threaded down to every demo's images: once the section has
+   entered the viewport (or the global warm flag fires), all four mockups —
+   even the display:none inactive ones — flip their next/image to
+   loading="eager" + fetchPriority="low". Because every demo is pre-mounted,
+   that fetches all four frame PNGs up front (low priority, no LCP cost), so
+   clicking/auto-advancing through the list never reveals a half-loaded,
+   chrome-less showcase. */
+function ActiveVisual({ active, preload }: { active: number; preload: boolean }) {
   switch (active) {
     case 0:
-      return <MapChatPlatform {...RESIDENTIAL_MAP_CHAT} />;
+      return <MapChatPlatform {...RESIDENTIAL_MAP_CHAT} preload={preload} />;
     case 1:
-      return <AgenticResearchMockup industryId={RESIDENTIAL_INDUSTRY_ID} />;
+      return <AgenticResearchMockup industryId={RESIDENTIAL_INDUSTRY_ID} preload={preload} />;
     case 2:
-      return <DataManagerMockup industryId={RESIDENTIAL_INDUSTRY_ID} />;
+      return <DataManagerMockup industryId={RESIDENTIAL_INDUSTRY_ID} preload={preload} />;
     case 3:
-      return <DashboardMockup industryId={RESIDENTIAL_INDUSTRY_ID} />;
+      return <DashboardMockup industryId={RESIDENTIAL_INDUSTRY_ID} preload={preload} />;
     default:
       return null;
   }
@@ -146,36 +171,77 @@ function DbIco({ size, color }: IcoProps) {
    key for the demo on the right. The numeric prefix that used to
    live here is gone — icons replace it. */
 const FEATURES = [
-  { title: "Map Chat", subtitle: "Chart your own expedition", Icon: SearchBubbleIco },
-  { title: "Reports", subtitle: "set our fleet to discover", Icon: PenSquareIco },
-  { title: "Data Catalogue", subtitle: "Browse everything we've discovered", Icon: DbIco },
-  { title: "Dashboard", subtitle: "Your captain's view", Icon: GridIco },
+  {
+    title: "Map Chat",
+    subtitle:
+      "Chart your own expedition.\nChat with Columbus to find answers, make visuals and more.",
+    Icon: SearchBubbleIco,
+  },
+  {
+    title: "Reports",
+    subtitle:
+      "Send our fleet to discover.\nOur AI agents will investigate and report their findings.",
+    Icon: PenSquareIco,
+  },
+  {
+    title: "Data Catalogue",
+    subtitle:
+      "Browse everything we've discovered.\nFind the right data for any project, all on the same platform.",
+    Icon: DbIco,
+  },
+  {
+    title: "Dashboard",
+    subtitle: "Your captain's view.\nAll your projects in one place.",
+    Icon: GridIco,
+  },
 ] as const;
 
 export default function ComparisonSection() {
+  const warm = useMediaWarm();
   const sectionRef = useRef<HTMLElement>(null);
   const [entered, setEntered] = useState(false);
-  const [onScreen, setOnScreen] = useState(false);
   const [active, setActive] = useState(0);
-  const [hovered, setHovered] = useState(false);
   const [hoveredCard, setHoveredCard] = useState<number | null>(null);
-  /* Bumped on every advance/click to remount the progress fill so its
-     CSS animation restarts from 0. */
-  const [runId, setRunId] = useState(0);
-  /* Tracks where the active cell sits in its two-stage animation. The
-     fill-in entrance should ALWAYS play (it's selection feedback,
-     triggered by click or auto-advance — both of which can occur while
-     the cursor is still inside the section). Only the recede phase
-     respects the hover pause, so the user can "stop and read" without
-     freezing the entrance into the next card. */
-  const [cyclePhase, setCyclePhase] = useState<"fillIn" | "recede">("fillIn");
+
+  /* ── Auto-advance is driven by a single requestAnimationFrame loop that
+     owns the cycle clock, instead of a CSS animation whose `animationend`
+     event triggered the advance. The old approach could freeze for good: a
+     missed `animationend` (dropped when the play-state was toggled while the
+     cursor moved over the section) left nothing to fire the next advance,
+     and the hover-pause covered the whole section — including the large
+     demo — so any mouse movement read as a "random freeze."
+
+     The loop writes the progress bar's transform straight to the DOM via
+     `barRef` (no per-frame React re-render, so the four heavy mockups aren't
+     reconciled 60×/sec) and only calls setActive when a cell's cycle
+     completes. Pausing just stops accumulating time, so it can never get
+     stuck — when the pause condition clears, the loop simply resumes. ── */
+  const FILL_FRAC = FILL_IN_MS / CYCLE_MS;
+  const barRef = useRef<HTMLSpanElement | null>(null);
+  const onScreenRef = useRef(false);
+  const autoRef = useRef(false);        // auto-advance only at lg+ (desktop)
+  const activeRef = useRef(0);
+  const progressRef = useRef(0);        // 0‒1 within the active cell's cycle
+  const lastTsRef = useRef<number | null>(null);
+
+  useEffect(() => { activeRef.current = active; }, [active]);
+
+  /* Auto-advance is a desktop-only behaviour (mobile is a tap-to-select
+     stack). matchMedia keeps `autoRef` in sync across resizes. */
+  useEffect(() => {
+    const mq = window.matchMedia("(min-width: 1024px)");
+    const apply = () => { autoRef.current = mq.matches; };
+    apply();
+    mq.addEventListener("change", apply);
+    return () => mq.removeEventListener("change", apply);
+  }, []);
 
   useEffect(() => {
     const el = sectionRef.current;
     if (!el) return;
     const obs = new IntersectionObserver(
       ([e]) => {
-        setOnScreen(e.isIntersecting);
+        onScreenRef.current = e.isIntersecting;
         if (e.isIntersecting) setEntered(true);
       },
       { threshold: 0.1 }
@@ -184,46 +250,86 @@ export default function ComparisonSection() {
     return () => obs.disconnect();
   }, []);
 
-  /* Reset to the fill-in phase whenever a new slot becomes active
-     (select() / advance() both bump runId). After FILL_IN_MS we flip
-     to recede so the pause logic kicks in for the rest of the cycle. */
-  useEffect(() => {
-    setCyclePhase("fillIn");
-    const t = setTimeout(() => setCyclePhase("recede"), FILL_IN_MS);
-    return () => clearTimeout(t);
-  }, [runId]);
+  /* Paint the active cell's fill bar for a given cycle progress (0‒1): it
+     wipes in from the left over the first FILL_FRAC of the cycle, then
+     recedes toward the right for the remainder — the same two-stage visual
+     the CSS keyframes used to produce, now sampled every frame. */
+  const paintBar = (p: number) => {
+    const bar = barRef.current;
+    if (!bar) return;
+    if (p < FILL_FRAC) {
+      bar.style.transformOrigin = "left center";
+      bar.style.transform = `scaleX(${p / FILL_FRAC})`;
+    } else {
+      bar.style.transformOrigin = "right center";
+      bar.style.transform = `scaleX(${1 - (p - FILL_FRAC) / (1 - FILL_FRAC)})`;
+    }
+  };
 
-  /* Cycling pauses off-screen, OR while the user hovers AND the active
-     cell has finished its fill-in entrance. The fill-in is never paused
-     so clicking always gives immediate visual feedback. */
-  const paused = !onScreen || (hovered && cyclePhase === "recede");
+  useEffect(() => {
+    let raf = requestAnimationFrame(function tick(ts: number) {
+      raf = requestAnimationFrame(tick);
+      const paused = !onScreenRef.current || !autoRef.current;
+      if (paused) {
+        lastTsRef.current = ts;   // swallow the gap so we resume smoothly
+        return;
+      }
+      if (lastTsRef.current == null) {
+        lastTsRef.current = ts;
+        return;
+      }
+      const dt = ts - lastTsRef.current;
+      lastTsRef.current = ts;
+      let p = progressRef.current + dt / CYCLE_MS;
+      if (p >= 1) {
+        p = 0;
+        const next = (activeRef.current + 1) % FEATURES.length;
+        activeRef.current = next;
+        setActive(next);
+      }
+      progressRef.current = p;
+      paintBar(p);
+    });
+    return () => cancelAnimationFrame(raf);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  /* When a new cell becomes active (auto-advance OR click) restart its cycle
+     from 0 and immediately paint the fresh bar node. lastTs is nulled so the
+     next frame doesn't count the gap since the previous one. */
+  useEffect(() => {
+    progressRef.current = 0;
+    lastTsRef.current = null;
+    paintBar(0);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [active]);
 
   const select = (i: number) => {
     if (i === active) return;
+    activeRef.current = i;
     setActive(i);
-    setRunId(r => r + 1);
-  };
-  const advance = () => {
-    setActive(a => (a + 1) % FEATURES.length);
-    setRunId(r => r + 1);
   };
 
   return (
     <section
       ref={sectionRef}
+      /* `zIndex: 1` lifts ComparisonSection's stacking context above
+         SolutionShowcase's `isolate` so the picker card sits over the
+         decorative line-art overflow. Section bg stays transparent so
+         the harbour-town image is still visible in the empty space
+         around the card — only the card itself (the `<ul>` below) gets
+         an opaque white fill to mask the image where the picker UI is. */
       className="relative w-full pb-16 lg:pb-24"
-      style={{ backgroundColor: "transparent" }}
+      style={{ backgroundColor: "transparent", zIndex: 1 }}
     >
       <style>{CMP_CSS}</style>
       <div
-        className="ent-content-bounds grid grid-cols-1 lg:grid-cols-[380px_1fr] gap-10 lg:gap-0 lg:items-stretch"
+        className="ent-content-bounds grid grid-cols-1 lg:grid-cols-[400px_1fr] gap-10 lg:gap-0 lg:items-stretch"
         style={{
           opacity: entered ? 1 : 0,
           transform: entered ? "translateY(0)" : "translateY(16px)",
           transition: "opacity 0.6s ease, transform 0.6s ease",
         }}
-        onMouseEnter={() => setHovered(true)}
-        onMouseLeave={() => setHovered(false)}
       >
         {/* ── Left: feature accordion. 24px corner, hairline #E7E7F1
             border, #FDFDFD off-white fill, overflow:hidden. At lg+ the
@@ -237,11 +343,15 @@ export default function ComparisonSection() {
         <ul
           className="flex flex-col list-none m-0 p-0 lg:h-full overflow-hidden rounded-3xl lg:rounded-r-none border-2 border-(--ent-border-card)"
           style={{
-            /* Inactive cells are transparent, matching the page background.
-               The active cell's own horizontal fill bar (see <li> styles)
-               paints #F2F2F2 from left to right on top of this so the
-               selection feels like a "lifted" card. */
-            background: "transparent",
+            /* Opaque white fill so the SolutionShowcase harbour-town
+               line-art that overflows down past its section can't show
+               through the picker card. The page background is also
+               #FFFFFF, so the card still reads as a hairline-bordered
+               rectangle on the page — only the bleed-through is hidden.
+               The active cell's own horizontal fill bar (see <li>
+               styles) paints #F2F2F2 from left to right on top of this
+               so the selection still feels like a "lifted" card. */
+            background: "#FFFFFF",
           }}
         >
           {FEATURES.map((f, i) => {
@@ -250,36 +360,46 @@ export default function ComparisonSection() {
             return (
               <li
                 key={f.title}
+                /* Mobile selection-state: a static #F2F2F2 fill on the
+                   active cell (matches the desktop fill-bar colour) so
+                   tapping a row gives an obvious visual response — the
+                   prior opacity-100 vs opacity-70 contrast alone was
+                   nearly imperceptible on text. Desktop keeps the
+                   animated fill-bar span below (lg:bg-transparent
+                   reverts the <li> here so the bar paints on a clean
+                   canvas without the static colour bleeding through).
+                   `transition-[opacity,background-color]` smooths both
+                   the opacity dip on inactive rows AND the bg swap when
+                   the user selects a new row. */
                 className={[
-                  "relative lg:flex-1 lg:flex lg:flex-col transition-opacity duration-200",
-                  isActive ? "opacity-100" : hoveredCard === i ? "opacity-100" : "opacity-70",
+                  "relative lg:flex-1 lg:flex lg:flex-col transition-[opacity,background-color] duration-200",
+                  isActive ? "opacity-100 bg-[#F2F2F2] lg:bg-transparent" : hoveredCard === i ? "opacity-100" : "opacity-70",
                 ].join(" ")}
                 onMouseEnter={() => setHoveredCard(i)}
                 onMouseLeave={() => setHoveredCard(null)}
               >
-                {/* Countdown fill — when the cell becomes active the
-                    gray fill first wipes in from the LEFT edge over
-                    FILL_IN_MS (cmpBarFillIn), then chains into the
-                    cmpBarRecede countdown which shrinks the fill
-                    anchored to the RIGHT edge over the rest of the
-                    cycle (left edge slides rightward, fill thins).
-                    The mount is keyed by runId so each new active
-                    slot restarts the two-stage animation from
-                    scratch. The recede's animation-end fires
-                    advance() — the visible countdown IS the
-                    auto-advance timer. */}
+                {/* Countdown fill — when the cell becomes active the gray
+                    fill wipes in from the LEFT over FILL_IN_MS, then recedes
+                    anchored to the RIGHT for the rest of the cycle (left edge
+                    slides rightward, fill thins). Both stages are painted
+                    frame-by-frame by the component's rAF loop (paintBar) and
+                    the cycle's completion there advances to the next slot —
+                    the visible countdown IS the auto-advance timer. */}
                 {isActive && (
+                  /* `hidden lg:block` — the gray countdown bar is desktop
+                     only. On mobile the section is a tap-to-select list (no
+                     auto-advance); active-state feedback there comes from the
+                     opacity-100 vs opacity-70 contrast on the parent <li>.
+                     The bar's transform is written every frame by the rAF
+                     loop via barRef — see paintBar in the component. */
                   <span
-                    key={runId}
-                    onAnimationEnd={(e) => {
-                      if (e.animationName === "cmpBarRecede") advance();
-                    }}
+                    ref={barRef}
                     aria-hidden
-                    className="absolute inset-0"
+                    className="absolute inset-0 hidden lg:block"
                     style={{
                       backgroundColor: "#F2F2F2",
-                      animation: `cmpBarFillIn ${FILL_IN_MS}ms cubic-bezier(0.4, 0, 0.2, 1) forwards, cmpBarRecede ${RECEDE_MS}ms linear ${FILL_IN_MS}ms forwards`,
-                      animationPlayState: paused ? "paused" : "running",
+                      transform: "scaleX(0)",
+                      transformOrigin: "left center",
                       willChange: "transform",
                       zIndex: 0,
                     }}
@@ -318,9 +438,37 @@ export default function ComparisonSection() {
                       </span>
                       <span
                         className="text-[14px] md:text-[15px] leading-[1.4]"
-                        style={{ color: "var(--ent-text-secondary)", letterSpacing: "-0.005em" }}
+                        style={{
+                          color: "var(--ent-text-secondary)",
+                          letterSpacing: "-0.005em",
+                          whiteSpace: "pre-line",
+                        }}
                       >
-                        {f.subtitle}
+                        {(() => {
+                          /* First line is rendered in the title colour (navy
+                             #0E173C) and bumped up one weight level (default
+                             400 → 500). The remaining lines keep the muted
+                             secondary-text styling on the outer <span>. */
+                          const [tagline, ...rest] = f.subtitle.split("\n");
+                          const description = rest.join("\n");
+                          return (
+                            <>
+                              <span
+                                style={{
+                                  display: "block",
+                                  color: "#0E173C",
+                                  fontWeight: 500,
+                                  /* 5px gap between the tagline and the
+                                     subdescription below it. */
+                                  marginBottom: description ? 5 : 0,
+                                }}
+                              >
+                                {tagline}
+                              </span>
+                              {description || null}
+                            </>
+                          );
+                        })()}
                       </span>
                     </div>
                   </div>
@@ -346,7 +494,7 @@ export default function ComparisonSection() {
             seam and read as one rounded unit. overflow:hidden clips
             the demos to the host's rounded corners.
 
-            Background is /Environmental/env-bg-1.png — the sky +
+            Background is /BusinessPgMedia/EnvironmentalUseCases/Bg/env-bg-1.png — the sky +
             clouds + palm-tree hero photo from the user's design
             reference. Host fixed at 630px tall.
 
@@ -361,47 +509,45 @@ export default function ComparisonSection() {
             between separate product screenshots. cmpFade is gone
             entirely — the swap is instant. ── */}
         <div
-          className="relative w-full min-w-0 overflow-hidden rounded-3xl lg:rounded-l-none border-2 border-(--ent-border-card) lg:border-l-0"
-          style={{
-            // Background was a CSS `background-image: url('…env-bg-1.png')`
-            // (1.8 MB PNG) — migrated to next/image (below) so the
-            // optimizer can ship an AVIF/WebP variant. The same
-            // padding-box clipping rationale applies to the <Image> via
-            // `inset` on the wrapper: the photo stays flush with the
-            // inside of the border, with no fringe at rounded corners.
-            height: 630,
-          }}
+          className="cmp-host relative w-full min-w-0 overflow-hidden rounded-3xl lg:rounded-l-none border-2 border-(--ent-border-card) lg:border-l-0"
         >
-          {/* Env-bg-1 sky/cityscape backdrop — fills the card behind the
-              swap-in mockup children. `inset: 2` matches the 2px border
-              so the photo sits inside the padding box (mirroring the
-              original background-clip:padding-box behaviour). */}
+          {/* Env-bg-1 sky/cityscape backdrop — fills the full card behind
+              the swap-in mockup children (no inset; the overflow-hidden
+              + rounded corners on the host still clip cleanly). */}
           <div
             aria-hidden
             className="pointer-events-none absolute"
-            style={{ inset: 2, zIndex: 0 }}
+            style={{ inset: 0, zIndex: 0 }}
           >
             <ImageWithFallback
-              src="/Environmental/env-bg-1.png"
+              src={envBg1}
               alt=""
               fill
               sizes="(max-width: 1023px) 100vw, 60vw"
               quality={80}
+              placeholder="blur"
+              loading={warm || entered ? "eager" : "lazy"}
+              fetchPriority={warm || entered ? "low" : undefined}
               style={{ objectFit: "cover", objectPosition: "center" }}
             />
           </div>
           {FEATURES.map((_, i) => (
+            /* Positioning is split between mobile (relative, full width,
+               sits inside the host's 16px padding) and desktop (absolute,
+               top:58 / left:88 / width:1180 — only top-left of the mockup
+               peeks through the host's overflow-hidden crop). See .cmp-host
+               and .cmp-host-visual media queries in CMP_CSS above. */
             <div
               key={i}
-              className="cmp-host-visual absolute"
-              style={{
-                top: 58,
-                left: 88,
-                width: 1180,
-                display: active === i ? "block" : "none",
-              }}
+              className="cmp-host-visual"
+              style={{ display: active === i ? "block" : "none" }}
             >
-              <ActiveVisual active={i} />
+              {/* ScaleToFit is a passthrough on desktop (the .cmp-host-visual
+                  is a fixed 1180px there, so the peek-crop is preserved) and a
+                  faithful uniform-shrink on mobile (where it's width:100%). */}
+              <ScaleToFit designWidth={1180} className="biz-scale-visual">
+                <ActiveVisual active={i} preload={entered || warm} />
+              </ScaleToFit>
             </div>
           ))}
         </div>

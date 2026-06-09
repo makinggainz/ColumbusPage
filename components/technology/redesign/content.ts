@@ -56,22 +56,22 @@ export const RESEARCH_CARDS: ResearchCard[] = [
     featured: true,
     title: "Philosophy behind a Universal Geospatial Model",
     href: blogHref(BLOG_SLUG.philosophyUniversalLgm),
-    image: "/TechnologyPageImages/multieWaveEminations.jpeg",
+    image: "/ResearchPgMedia/multieWaveEminations.jpeg",
   },
   {
     title: "Mimicking the adult brain.",
     href: blogHref(BLOG_SLUG.mimickingAdultBrain),
-    image: "/TechnologyPageImages/deep-layers.jpeg",
+    image: "/ResearchPgMedia/deep-layers.jpeg",
   },
   {
     title: "Earth recipes.",
-    href: blogHref(BLOG_SLUG.earthRecipesWorldThink),
-    image: "/TechnologyPageImages/unkown-layers.jpeg",
+    href: blogHref(BLOG_SLUG.earthRecipes),
+    image: "/ResearchPgMedia/unkown-layers.jpeg",
   },
   {
     title: "Research: creating a fire prediction model.",
-    href: blogHref(BLOG_SLUG.firePredictonModel),
-    image: "/TechnologyPageImages/techpg-radiance.png",
+    href: blogHref(BLOG_SLUG.erickFirePrediction),
+    image: "/ResearchPgMedia/techpg-radiance.png",
   },
 ];
 
@@ -92,8 +92,8 @@ export const RESEARCH_ARTICLES: ResearchArticle[] = [
     date: "Feb 2026",
   },
   {
-    title: "Why LLMs dont cut it. Issues in LLM architecture for Geosaptial queries.",
-    href: blogHref(BLOG_SLUG.whyLlmsDidntCutIt),
+    title: "Why LLMs don't cut it. Issues in LLM architecture for Geospatial queries.",
+    href: blogHref(BLOG_SLUG.llmsGeospatialQueries),
     date: "Jan 2026",
   },
   {

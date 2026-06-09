@@ -24,16 +24,16 @@
      viewport. dvh tracks mobile browser chrome; vh is the fallback. */
   min-height: calc(100vh + 80px);
   min-height: calc(100dvh + 80px);
-  padding: 80px 24px 48px;
+  /* Padding matches the blog index hero (80 24 24) so the heroInner —
+     which uses the same `flex: 1 1 auto + justify-content: center` —
+     vertically centres the title block in the same proportional band. */
+  padding: 80px 24px 24px;
   display: flex;
   flex-direction: column;
   text-align: center;
   background: #FFFFFF;
 }
 
-/* companyhero watermark — the tall-ship-and-globe sketch, dimmed and
-   top/bottom-masked so it melts into the white page exactly like the
-   minimalistCity watermark on the blog + homepage heroes. */
 .heroWatermark {
   position: absolute;
   inset: 0;
@@ -43,9 +43,22 @@
      optimizer can ship AVIF/WebP. The wrapper keeps the mask + opacity
      so the visual treatment is identical. */
   overflow: hidden;
-  opacity: 0.5;
   -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 20%, #000 80%, transparent 100%);
   mask-image: linear-gradient(to bottom, transparent 0%, #000 20%, #000 80%, transparent 100%);
+}
+
+.heroWatermarkPicture {
+  position: absolute;
+  inset: 0;
+  display: block;
+}
+
+.heroWatermarkImage {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
 }
 
 .heroInner {
@@ -63,6 +76,12 @@
      the centred text spine never changes width down the page. */
   max-width: 768px;
   margin: 0 auto;
+  /* Reserve ~180px at the bottom so the centred title block lands at the
+     same vertical position as the blog hero's title, where a ~35px filter
+     bar + its margins anchor the bottom of the centered area. Without
+     this, the company hero (no filter bar) centers its title noticeably
+     lower than the blog hero. */
+  padding-bottom: 180px;
 }
 
 .heroHeadline {
@@ -96,34 +115,27 @@
   }
 }
 
-/* ── Content bounds — 1287px column, matching the homepage + blog. ────── */
+/* ── Content bounds — 1287px column, matching the homepage + blog.
+   Uses the site-wide calc trick (40px narrower than parent → 20px
+   gutter on each side at every viewport, centered, capped at 1287). */
 .bounds {
   max-width: 1287px;
-  margin-left: 20px;
-  margin-right: 20px;
+  width: calc(100% - 2.5rem);
+  margin-left: auto;
+  margin-right: auto;
   box-sizing: border-box;
-}
-@media (min-width: 768px) {
-  .bounds {
-    margin-left: auto;
-    margin-right: auto;
-  }
 }
 
 /* ── Reading column — the 768px centred text spine. Used by the mission,
    vision and contact sections so every text block shares one width; only
-   the §4 / §5 card rows widen out to the full .bounds. ─────────────────── */
+   the §4 / §5 card rows widen out to the full .bounds. Same calc trick
+   so the 20px gutter holds at every viewport. ─────────────────── */
 .textColumn {
   max-width: 768px;
-  margin-left: 20px;
-  margin-right: 20px;
+  width: calc(100% - 2.5rem);
+  margin-left: auto;
+  margin-right: auto;
   box-sizing: border-box;
-}
-@media (min-width: 768px) {
-  .textColumn {
-    margin-left: auto;
-    margin-right: auto;
-  }
 }
 
 /* ── Section opener ───────────────────────────────────────────────────────
@@ -217,9 +229,14 @@
 .pillar {
   border: 1px solid var(--color-gridline);
   border-radius: 13px;
-  padding: 40px;
+  padding: 28px 24px;
   display: flex;
   flex-direction: column;
+}
+@media (min-width: 768px) {
+  .pillar {
+    padding: 40px;
+  }
 }
 
 /* Pillar index — a quiet "01 / 02 / 03" sequence marker, sized to the
@@ -425,8 +442,8 @@
   }
 }
 
-/* Featured photo tile — 13px corners + hairline ring + top-right cut-out
-   notch, carrying the featured founder quote over the group photo. A flex
+/* Featured photo tile — 13px corners + hairline ring, carrying the
+   featured founder quote over the group photo. A flex
    column with space-between pins the quote block to the top and the
    attribution to the bottom. */
 .founderPhoto {
@@ -439,13 +456,20 @@
      stretch` (grid default) then makes this tile match — bottoms align.
      A min-height keeps the tile from collapsing if the quotes are ever
      made unusually short again. */
-  min-height: 480px;
+  min-height: 420px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  /* 40px inset — matches the .quoteCard padding so the attribution row
-     lines up with the profile components on the right-hand cards. */
-  padding: 40px;
+  /* 40px inset on desktop — matches the .quoteCard padding so the
+     attribution row lines up with the profile components on the
+     right-hand cards. Phones tighten to 24px to free interior width. */
+  padding: 24px;
+}
+@media (min-width: 768px) {
+  .founderPhoto {
+    min-height: 480px;
+    padding: 40px;
+  }
 }
 /* Dedicated image layer — an absolutely-positioned box so the <Image fill>
    sizes to the full tile, decoupled from the flex layout container. */
@@ -495,6 +519,65 @@
   z-index: 2;
 }
 
+/* Cut-out notch — the white page surface notched into the founder
+   photo's top-right corner, carrying the "Our CEO" label. Geometry +
+   fillet technique ported verbatim from BentoProducts (.bp-notch). */
+.photoNotch {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 3;
+  box-sizing: border-box;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 24px;
+  background-color: #FFFFFF;
+  /* TL TR BR BL — TR matches the card corner; BL is the concave cut. */
+  border-radius: 0 13px 0 13px;
+  border-left: 1px solid var(--color-gridline);
+  border-bottom: 1px solid var(--color-gridline);
+}
+@media (min-width: 1024px) {
+  .photoNotch {
+    height: 44px;
+    padding: 0 32px;
+  }
+}
+.photoNotch::before,
+.photoNotch::after {
+  content: "";
+  position: absolute;
+  width: 13px;
+  height: 13px;
+  background: radial-gradient(
+    circle at left bottom,
+    rgba(255, 255, 255, 0) 11.5px,
+    #E7E7F1 12.25px,
+    #E7E7F1 12.75px,
+    #FFFFFF 13.5px
+  );
+}
+.photoNotch::before { top: 0; left: -13px; }
+.photoNotch::after { bottom: -13px; right: 0; }
+
+.photoNotchLabel {
+  font-size: 13px;
+  line-height: 1;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  white-space: nowrap;
+  color: var(--color-muted);
+}
+
+/* Desktop-only — hide on mobile per the user's "on desktop not on
+   mobile" requirement. */
+@media (max-width: 1023px) {
+  .photoNotch { display: none; }
+}
+
 /* Featured quote block — quote mark + quote, at the top of the tile (just
    the 40px tile padding), sitting above the gradient. */
 .featuredQuoteBlock {
@@ -509,14 +592,20 @@
 }
 
 /* Featured quote — Medium weight, stepping up to the 32px type-scale step
-   at the lg breakpoint. */
+   at the lg breakpoint. Mobile drops to 20px so the quote fits clean
+   without crowding the photo subjects. */
 .featuredQuote {
   color: #FFFFFF;
   font-family: var(--font-sans);
-  font-size: 24px;
+  font-size: 20px;
   line-height: 1.4;
   font-weight: 500;
   letter-spacing: -0.01em;
+}
+@media (min-width: 768px) {
+  .featuredQuote {
+    font-size: 24px;
+  }
 }
 @media (min-width: 1024px) {
   .featuredQuote {
@@ -541,132 +630,14 @@
 /* Quote-mark glyph on the featured tile — faint white, recedes into the
    dimmed photo backdrop. */
 .quoteMarkLight {
-  width: 44px;
+  width: 36px;
   height: auto;
   color: rgba(255, 255, 255, 0.5);
 }
-
-/* Cut-out notch — the white page surface notched into the tile's
-   top-right corner, carrying the "Our CEO" label. Geometry + fillet
-   technique ported verbatim from BentoProducts. */
-.photoNotch {
-  position: absolute;
-  top: 0;
-  right: 0;
-  z-index: 3;
-  box-sizing: border-box;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0 24px;
-  background-color: #FFFFFF;
-  /* TL TR BR BL — TR matches the card corner; BL is the concave cut. */
-  border-radius: 0 13px 0 13px;
-  border-left: 1px solid var(--color-gridline);
-  border-bottom: 1px solid var(--color-gridline);
-}
-@media (min-width: 1024px) {
-  .photoNotch {
-    height: 44px;
-    padding: 0 32px;
+@media (min-width: 768px) {
+  .quoteMarkLight {
+    width: 44px;
   }
-}
-
-/* Corner fillets — ease the notch's straight edges into the card edge on
-   a 13px convex arc, carrying the hairline around that arc. */
-.photoNotch::before,
-.photoNotch::after {
-  content: "";
-  position: absolute;
-  width: 13px;
-  height: 13px;
-  background: radial-gradient(
-    circle at left bottom,
-    rgba(255, 255, 255, 0) 11.5px,
-    #E7E7F1 12.25px,
-    #E7E7F1 12.75px,
-    #FFFFFF 13.5px
-  );
-}
-.photoNotch::before {
-  top: 0;
-  left: -13px;
-}
-.photoNotch::after {
-  bottom: -13px;
-  right: 0;
-}
-
-.photoNotchLabel {
-  /* 13px — matches the section-kicker (.sectionLabel) size so every small
-     uppercase label on the page reads at one consistent scale. */
-  font-size: 13px;
-  line-height: 1;
-  /* 600 — uppercase at 500 optically reads light, so it needs a step up
-     to land as a visible medium weight. */
-  font-weight: 600;
-  text-transform: uppercase;
-  /* tracking-widest (0.1em) — same as the section kickers. */
-  letter-spacing: 0.1em;
-  white-space: nowrap;
-  /* Muted secondary text — softer than full ink so it recedes against
-     the white notch, but still has enough contrast to read clearly. */
-  color: var(--color-muted);
-}
-
-/* ── Read-more card notch ─────────────────────────────────────────────
-   Cut-out shape sitting in the top-right of each "Read more about what
-   we do" card. Same geometry as the blog index notch (38px tall, 18px
-   side padding) — proportioned for the smaller 3-up cards — with the
-   white page surface notched into the tile so it reads as a true cutout
-   against the white page background. */
-.readMoreNotch {
-  position: absolute;
-  top: 0;
-  right: 0;
-  z-index: 3;
-  box-sizing: border-box;
-  height: 38px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0 18px;
-  background-color: #FFFFFF;
-  /* TL TR BR BL — TR matches the card corner; BL is the concave cut. */
-  border-radius: 0 13px 0 13px;
-  border-left: 1px solid #E7E7F1;
-  border-bottom: 1px solid #E7E7F1;
-}
-/* Corner fillets — ease the notch's straight edges into the card edge
-   on a 13px convex arc, carrying the hairline around that arc. */
-.readMoreNotch::before,
-.readMoreNotch::after {
-  content: "";
-  position: absolute;
-  width: 13px;
-  height: 13px;
-  background: radial-gradient(
-    circle at left bottom,
-    rgba(255, 255, 255, 0) 11.5px,
-    #E7E7F1 12.25px,
-    #E7E7F1 12.75px,
-    #FFFFFF 13.5px
-  );
-}
-.readMoreNotch::before { top: 0; left: -13px; }
-.readMoreNotch::after { bottom: -13px; right: 0; }
-
-.readMoreNotchLabel {
-  font-size: 12px;
-  line-height: 1;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  white-space: nowrap;
-  /* Muted ink — readable on the white notch surface (≈ 6:1 contrast)
-     without competing with the card title underneath. */
-  color: var(--color-muted);
 }
 
 .quoteCol {
@@ -697,10 +668,15 @@
   border-radius: 13px;
   /* Subtle tonal fill (--color-bg1) instead of white + drop shadow. */
   background: var(--color-bg1);
-  padding: 40px;
+  padding: 24px;
   display: flex;
   flex-direction: column;
   overflow: hidden;
+}
+@media (min-width: 768px) {
+  .quoteCard {
+    padding: 40px;
+  }
 }
 
 /* Quote copy — "Body large": 16px, stepping up to 20px at lg. Medium
@@ -799,4 +775,28 @@
 .iconCircle:hover {
   background: rgba(11, 27, 43, 0.16);
   color: var(--color-accent);
+}
+
+/* "Read more about what we do" cards — hover state mirrors the
+   /blog index + homepage BlogSection: image scales 1.03×, title
+   shifts to the accent colour. */
+.readMoreCardMedia img {
+  transition: transform 420ms cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+.readMoreCard:hover .readMoreCardMedia img {
+  transform: scale(1.03);
+}
+.readMoreCardTitle {
+  color: var(--color-ink);
+  transition: color 200ms ease;
+}
+.readMoreCard:hover .readMoreCardTitle {
+  color: var(--color-accent);
+}
+@media (prefers-reduced-motion: reduce) {
+  .readMoreCardMedia img,
+  .readMoreCard:hover .readMoreCardMedia img {
+    transition: none;
+    transform: none;
+  }
 }

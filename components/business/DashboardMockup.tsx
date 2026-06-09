@@ -2,6 +2,8 @@
 
 import Image from "next/image";
 import type { IndustryId } from "@/components/use-cases/industry/types";
+import { useMediaWarm } from "@/components/ui/MediaPrefetcher";
+import dashboardFrame from "@/public/business/DashboardFrame.png";
 
 /* Mock UI: the "Dashboard" demo. Reuses the same chrome PNG as
    DataManagerMockup / AgenticResearchMockup and paints the inner pane
@@ -73,8 +75,8 @@ const CONTENT: Partial<Record<IndustryId, DashboardItem[]>> = {
       kind: "chat",
     },
     {
-      title: "Amsterdam Buurten Rent Growth",
-      body: "Cross-referenced free-sector rent growth against tram-line corridor density across 24 Amsterdam buurten; surfaced 4 high-growth pockets led by De Pijp-Noord at +28.4%, with takeaway on new-build pipeline tightness over a 5-year window.",
+      title: "Amsterdam Neighborhoods Rent Growth",
+      body: "Cross-referenced free-sector rent growth against tram-line corridor density across 24 Amsterdam neighborhoods; surfaced 4 high-growth pockets led by De Pijp-Noord at +28.4%, with takeaway on new-build pipeline tightness over a 5-year window.",
       date: "May 18, 2026",
       visibility: "private",
       kind: "chat",
@@ -299,15 +301,21 @@ const AVATAR_PALETTES: { from: string; to: string }[] = [
 
 export type DashboardMockupProps = {
   industryId?: IndustryId;
+  /* When true, the frame loads eagerly at low priority even while this demo
+     is the inactive (display:none) one — ComparisonSection sets it once the
+     section enters the viewport so all showcases are preloaded. */
+  preload?: boolean;
 };
 
-export default function DashboardMockup({ industryId }: DashboardMockupProps = {}) {
+export default function DashboardMockup({ industryId, preload = false }: DashboardMockupProps = {}) {
+  const warm = useMediaWarm();
+  const soon = warm || preload;
   const items =
     (industryId && CONTENT[industryId]) ?? CONTENT["residential-real-estate"]!;
 
   return (
     <div
-      className="relative w-full mx-auto"
+      className="biz-product-display biz-mockup-frame relative w-full mx-auto"
       style={{
         aspectRatio: "5184 / 2976",
         maxWidth: 1180,
@@ -322,6 +330,11 @@ export default function DashboardMockup({ industryId }: DashboardMockupProps = {
            edge that matches the rest of the family. */
         borderRadius: "var(--ent-radius-2xl)",
         overflow: "hidden",
+        /* White placeholder fill — before the chrome PNG loads this wrapper
+           would otherwise be transparent and show the section's sky backdrop
+           straight through (reading as a borderless/"no-frame" flash). The
+           white fill makes it a clean white panel until the chrome paints. */
+        backgroundColor: "#FFFFFF",
         containerType: "inline-size",
       }}
     >
@@ -330,10 +343,13 @@ export default function DashboardMockup({ industryId }: DashboardMockupProps = {
         style={{ inset: 0, zIndex: 5 }}
       >
         <Image
-          src="/business/DashboardFrame.png"
+          src={dashboardFrame}
           alt="Columbus Dashboard"
           fill
           sizes="(max-width: 1180px) 100vw, 1180px"
+          placeholder="blur"
+          loading={soon ? "eager" : "lazy"}
+          fetchPriority={soon ? "low" : undefined}
           className="object-cover object-center"
         />
       </div>

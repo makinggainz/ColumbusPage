@@ -1,25 +1,54 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import { useEffect, useRef, useState } from "react";
+import { FileSearch, Headphones, Zap, type LucideIcon } from "lucide-react";
 
 /* ── Section: "Enterprise-grade capabilities" ────────────────────────────────
-   Six capability tiles in a uniform 3-up grid. The whole grid is wrapped in
-   a single panel — same chrome the SuperFeatureSection `panel` mode uses
-   (#FAFAFA fill, 2px --ent-border-card hairline, --ent-radius-2xl corner) —
-   so the section reads as one "live demo" surface containing all six
-   capabilities rather than six independently-floating cards.
+   Three capability tiles in a single panel — same SuperFeatureSection
+   `panel` chrome (#FAFAFA fill, 2px --ent-border-card hairline,
+   --ent-radius-2xl corner) so the section reads as one demo surface.
 
-   Each tile inside is just the product mockup (2px hairline, restrained
-   corner) followed by its label. No per-tile backdrop. */
+   Each tile is left-aligned: a small icon placeholder in the top-left,
+   the title below, and a subtitle below the title (lorem ipsum until
+   the final copy lands). */
 
-const ITEMS: { title: string; image: string }[] = [
-  { title: "Ask the map anything", image: "/capabilitiesImages/capability-6.png" },
-  { title: "Agent research reports", image: "/capabilitiesImages/capability-1.png" },
-  { title: "24/7 personal support", image: "/capabilitiesImages/capability-3.png" },
-  { title: "High-fidelity accurate data", image: "/capabilitiesImages/capability-4.png" },
-  { title: "Data Catalogue", image: "/capabilitiesImages/capability-5.png" },
-  { title: "Light-speed due diligence", image: "/capabilitiesImages/capability-2.png" },
+const ITEMS: { title: string; subtitle: string; Icon: LucideIcon }[] = [
+  {
+    title: "Agent Research Report",
+    subtitle:
+      "Describe what you’re looking for and select the professional report you want. Columbus will investigate.",
+    /* FileSearch — a document being inspected; combines the "agent
+       investigates" + "report" sides of the capability. */
+    Icon: FileSearch,
+  },
+  {
+    title: "24/7 Human Support",
+    subtitle: "Get personal support whenever you need it.",
+    /* Headphones — universal customer-support glyph. */
+    Icon: Headphones,
+  },
+  {
+    title: "Light-speed Due Diligence",
+    subtitle:
+      "Input a land parcel, and choose the analysis you need. Columbus will complete due diligence in minutes.",
+    /* Zap — lightning bolt for "light-speed". */
+    Icon: Zap,
+  },
+];
+
+/* Partner-org logos for the marquee. Source files live in
+   public/BusinessPgMedia/VettedPartners/. Heights are pinned via CSS
+   (.cap-logo-slot, 44px row), so each <Image> gets a generous nominal
+   width/height for the optimizer to derive sharp 2× retina output. */
+const PARTNER_LOGOS: string[] = [
+  "/BusinessPgMedia/VettedPartners/logo1.png",
+  "/BusinessPgMedia/VettedPartners/logo2.png",
+  "/BusinessPgMedia/VettedPartners/logo3.png",
+  "/BusinessPgMedia/VettedPartners/logo4.png",
+  "/BusinessPgMedia/VettedPartners/logo5.png",
+  "/BusinessPgMedia/VettedPartners/logo6.png",
+  "/BusinessPgMedia/VettedPartners/logo7.png",
 ];
 
 export default function CapabilitiesGrid() {
@@ -51,7 +80,7 @@ export default function CapabilitiesGrid() {
           Enterprise-grade capabilities
         </h2>
 
-        {/* Single panel wrapping all six tiles — mirrors
+        {/* Single panel wrapping the three tiles — mirrors
             SuperFeatureSection's `panel` chrome so the capabilities grid
             reads as one demo surface. Inner dividers are a 1px gap with
             the panel's gridline color showing through, so each cell
@@ -70,33 +99,43 @@ export default function CapabilitiesGrid() {
             {ITEMS.map((item, i) => (
               <article
                 key={item.title}
-                className="cap-tile group flex flex-col items-center"
+                className="cap-tile group flex flex-col items-start text-left"
                 style={{
-                  backgroundColor: "#FAFAFA",
+                  /* Tile fill removed — plain white; the soft grey now lives in
+                     the icon badge instead. */
+                  backgroundColor: "#FFFFFF",
                   padding: "clamp(24px, 3vw, 40px)",
+                  gap: 16,
                   opacity: visible ? 1 : 0,
                   transform: visible ? "translateY(0)" : "translateY(18px)",
                   transition: `opacity 0.6s ease ${0.06 * i}s, transform 0.6s ease ${0.06 * i}s`,
                 }}
               >
-                <div
-                  className="cap-tile-img-wrap relative w-full overflow-hidden"
+                {/* Per-tile icon — accent-coloured glyph on a soft grey
+                    (#FAFAFA) circle. Uses the site accent token
+                    (--color-accent, #6094C1) so it tracks the navbar arrows,
+                    hover states, and any future accent retint. On hover the
+                    accent circle floods the tile and the icon flips to white
+                    (see .cap-tile:hover rules). */}
+                <span
+                  aria-hidden
+                  className="cap-icon"
                   style={{
-                    aspectRatio: "1.65 / 1",
-                    borderRadius: 7,
-                    border: "1px solid var(--color-gridline)",
+                    display: "inline-flex",
+                    width: 52,
+                    height: 52,
+                    alignItems: "center",
+                    justifyContent: "center",
+                    borderRadius: "50%",
+                    backgroundColor: "#FAFAFA",
+                    color: "var(--color-accent)",
+                    flexShrink: 0,
                   }}
                 >
-                  <Image
-                    src={item.image}
-                    alt={item.title}
-                    fill
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                    className="object-cover"
-                  />
-                </div>
+                  <item.Icon size={26} strokeWidth={1.8} absoluteStrokeWidth />
+                </span>
                 <h3
-                  className="cap-tile-title mt-5 text-center text-[20px] md:text-[22px] font-semibold leading-[1.2]"
+                  className="cap-tile-title text-[20px] md:text-[22px] font-semibold leading-[1.2]"
                   style={{
                     color: "#0E173C",
                     letterSpacing: "-0.01em",
@@ -105,8 +144,127 @@ export default function CapabilitiesGrid() {
                 >
                   {item.title}
                 </h3>
+                <p
+                  className="cap-tile-sub text-[16px] leading-[1.5]"
+                  style={{
+                    color: "var(--ent-text-secondary)",
+                    letterSpacing: "-0.005em",
+                    margin: 0,
+                  }}
+                >
+                  {item.subtitle}
+                </p>
               </article>
             ))}
+          </div>
+        </div>
+
+        {/* ── Sub-section: "High-fidelity and smart datasets" ──────────────
+            Title + subtitle anchor an autoscrolling band of partner-org
+            logos below. Vertical spacing mirrors the capabilities title's
+            mt-14 lg:mt-20 rhythm so the two halves sit at the same scale. */}
+        <div className="mt-20 lg:mt-28 text-center">
+          <h3
+            className="leading-[1.15] text-[24px] md:text-[30px] lg:text-[36px]"
+            style={{
+              color: "var(--ent-text-primary)",
+              fontWeight: 500,
+              letterSpacing: "-0.02em",
+              margin: 0,
+            }}
+          >
+            High-fidelity and smart datasets
+          </h3>
+          <p
+            className="mx-auto mt-4 text-[15px] md:text-[16px] leading-[1.5]"
+            style={{
+              color: "var(--ent-text-secondary)",
+              letterSpacing: "-0.005em",
+              maxWidth: 560,
+            }}
+          >
+            We vet our data with reputable partner organizations.
+          </p>
+
+          {/* Partner-logo marquee. Same edge-fade + duplicate-track loop
+              pattern the consumer DestinationsSection uses, just sized
+              down for small brand marks (44px row, 48px gap). Real PNGs
+              from public/BusinessPgMedia/VettedPartners/. */}
+          <style>{`
+            /* Hover: the grey circle behind the icon expands to wash the whole
+               tile in that same #FAFAFA grey; content stays dark above it. */
+            .cap-tile { position: relative; overflow: hidden; }
+            .cap-tile > * { position: relative; z-index: 1; }
+            .cap-tile::before {
+              content: "";
+              position: absolute;
+              z-index: 0;
+              /* Centred on the icon badge: padding + half the 52px badge. */
+              top: calc(clamp(24px, 3vw, 40px) + 26px);
+              left: calc(clamp(24px, 3vw, 40px) + 26px);
+              width: 52px;
+              height: 52px;
+              margin: -26px 0 0 -26px;
+              border-radius: 50%;
+              background: #FAFAFA;
+              transform: scale(0);
+              transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+              pointer-events: none;
+            }
+            .cap-tile:hover::before { transform: scale(26); }
+            @media (prefers-reduced-motion: reduce) {
+              .cap-tile::before { transition: none; }
+            }
+            .cap-logo-mask {
+              -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+              mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+            }
+            .cap-logo-track {
+              display: flex;
+              align-items: center;
+              gap: 48px;
+              width: max-content;
+              animation: cap-logo-scroll 40s linear infinite;
+            }
+            .cap-logo-mask:hover .cap-logo-track { animation-play-state: paused; }
+            @keyframes cap-logo-scroll {
+              from { transform: translateX(0); }
+              to   { transform: translateX(calc(-50% - 24px)); }
+            }
+            @media (prefers-reduced-motion: reduce) {
+              .cap-logo-track { animation: none; }
+            }
+            /* Logo cell — fixed 57px row height (44px × 1.3 → +30%);
+               width tracks the source PNG's intrinsic aspect via auto
+               width + height: 100% on the nested <img>. */
+            .cap-logo-slot {
+              flex: none;
+              height: 57px;
+              display: inline-flex;
+              align-items: center;
+            }
+            .cap-logo-slot img {
+              height: 100%;
+              width: auto;
+              object-fit: contain;
+            }
+          `}</style>
+          <div className="cap-logo-mask mt-12 lg:mt-16 overflow-hidden">
+            <div className="cap-logo-track">
+              {[...PARTNER_LOGOS, ...PARTNER_LOGOS].map((src, idx) => (
+                <span key={`${src}-${idx}`} className="cap-logo-slot">
+                  <Image
+                    src={src}
+                    alt=""
+                    aria-hidden
+                    width={200}
+                    height={88}
+                    sizes="200px"
+                    loading="lazy"
+                  />
+                </span>
+              ))}
+            </div>
           </div>
         </div>
       </div>

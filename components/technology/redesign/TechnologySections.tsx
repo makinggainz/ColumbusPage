@@ -1,7 +1,21 @@
-import Image from "next/image";
 import Link from "next/link";
 
 import { blogHref, BLOG_SLUG, BLOG_POSTS } from "@/lib/blog-posts";
+import { WarmTechImage } from "./WarmTechImage";
+// Static imports → AVIF via the optimizer (these were raw plain <img> PNG/JPEG)
+// + real blur-up where shown large. The model/competitor logos render small,
+// so blur-up is omitted there — AVIF + warm-promotion is the win.
+import techDiagram from "@/public/ResearchPgMedia/techDiagram.png";
+import columbusLogo from "@/public/logobueno.png";
+import mapsGptLogo from "@/public/MapsGPT-logo.png";
+import voyagerGraphic from "@/public/ResearchPgMedia/VoyagerGraphic.png";
+import claudeLogo from "@/public/ResearchPgMedia/LogosTable/Claude_AI_logo.svg.png";
+import grokLogo from "@/public/ResearchPgMedia/LogosTable/Grok-feb-2025-logo.svg.png";
+import perplexityLogo from "@/public/ResearchPgMedia/LogosTable/Perplexity_AI_logo.svg.png";
+import chatgptLogo from "@/public/ResearchPgMedia/LogosTable/ChatGPT-Vertical-Logo-Vector.svg-.png";
+import physicalIntelligenceLogo from "@/public/ResearchPgMedia/physical-intelligence-logo.jpeg";
+import runwayLogo from "@/public/ResearchPgMedia/runway-logo.jpeg";
+import metaLogo from "@/public/ResearchPgMedia/meta-logo.jpeg";
 import styles from "../technology.module.css";
 import { TechScrollIndex } from "../TechScrollIndex";
 import {
@@ -14,6 +28,7 @@ import { Definition } from "./Definition";
 import { ResearchAccordionProvider } from "./ResearchAccordionContext";
 import { ResearchGroup } from "./ResearchGroup";
 import { RevealOnView } from "./RevealOnView";
+import { ScaleToFit } from "./ScaleToFit";
 import { CareersContactForm } from "./CareersContactForm";
 import type { TechnologySectionId } from "./types";
 
@@ -55,7 +70,6 @@ export function TechnologySections() {
 
             <div className={styles.lgmCompareLayout}>
               <div className={styles.lgmCompareText}>
-                <span className={styles.sectionEyebrow}>A new foundation model</span>
                 <h2 className={styles.sectionTitle}>
                   Large Geospatial Model vs Large Language Model.
                 </h2>
@@ -81,22 +95,23 @@ export function TechnologySections() {
               </div>
 
               <div className={styles.lgmCompareArt} aria-hidden>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src="/TechnologyPageImages/techDiagram.png"
+                <WarmTechImage
+                  src={techDiagram}
                   alt=""
-                  loading="lazy"
-                  decoding="async"
+                  sizes="(max-width: 1011px) 100vw, 1011px"
+                  placeholder="blur"
                   className={styles.lgmCompareArtImg}
                 />
               </div>
             </div>
 
-            {/* ── How an LGM is different — comparison table ── */}
+            {/* ── How an LGM is different — comparison table ──
+                Wrapped in ScaleToFit so the 4-column layout shrinks
+                proportionally (instead of reflowing) below ~900px. */}
+            <ScaleToFit designWidth={900} className={`${styles.lgmCompareScale} ${styles.fullBleedMobile}`}>
             <div className={styles.lgmCompareTable}>
               <div className={styles.dimBranding}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src="/logobueno.png" alt="" className={styles.dimBrandingLogo} aria-hidden loading="lazy" decoding="async" />
+                <WarmTechImage src={columbusLogo} alt="" width={32} height={32} className={styles.dimBrandingLogo} aria-hidden />
                 <span>Columbus Earth</span>
               </div>
 
@@ -109,7 +124,7 @@ export function TechnologySections() {
                 <div />
                 <div className={styles.dimModelHeader}>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src="/TechnologyPageImages/llm-text-icon.png" alt="" className={styles.dimModelHeaderIcon} aria-hidden loading="lazy" decoding="async" />
+                  <img src="/ResearchPgMedia/llm-text-icon.png" alt="" className={`${styles.dimModelHeaderIcon} ${styles.dimModelHeaderIconLlm}`} aria-hidden loading="lazy" decoding="async" />
                   <div className={styles.dimModelHeaderText}>
                     <h4 className={styles.dimModelHeaderName}>LLM</h4>
                     <p className={styles.dimModelHeaderSubtitle}>Large-Language-model</p>
@@ -117,7 +132,7 @@ export function TechnologySections() {
                 </div>
                 <div className={styles.dimModelHeader}>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src="/TechnologyPageImages/vlm-image-icon.png" alt="" className={styles.dimModelHeaderIcon} aria-hidden loading="lazy" decoding="async" />
+                  <img src="/ResearchPgMedia/vlm-image-icon.png" alt="" className={`${styles.dimModelHeaderIcon} ${styles.dimModelHeaderIconVlm}`} aria-hidden loading="lazy" decoding="async" />
                   <div className={styles.dimModelHeaderText}>
                     <h4 className={styles.dimModelHeaderName}>VLM</h4>
                     <p className={styles.dimModelHeaderSubtitle}>Vision-Language-model</p>
@@ -125,10 +140,10 @@ export function TechnologySections() {
                 </div>
                 <div className={styles.dimModelHeader}>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src="/TechnologyPageImages/lgm-globe-icon.png" alt="" className={styles.dimModelHeaderIcon} aria-hidden loading="lazy" decoding="async" />
+                  <img src="/ResearchPgMedia/lgm-globe-icon.png" alt="" className={styles.dimModelHeaderIcon} aria-hidden loading="lazy" decoding="async" />
                   <div className={styles.dimModelHeaderText}>
                     <h4 className={`${styles.dimModelHeaderName} ${styles.dimModelHeaderNameLgm}`}>LGM</h4>
-                    <p className={styles.dimModelHeaderSubtitle}>Large-Geosaptial-model</p>
+                    <p className={styles.dimModelHeaderSubtitle}>Large-Geospatial-model</p>
                   </div>
                 </div>
 
@@ -167,49 +182,42 @@ export function TechnologySections() {
                 <div className={`${styles.dimGridCell} ${styles.dimGridCellBottom}`}>
                   <div className={styles.dimLogos}>
                     <div className={styles.dimLogoItem}>
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src="/TechnologyPageImages/LogosTable/ChatGPT-Vertical-Logo-Vector.svg-.png" alt="ChatGPT" className={styles.dimLogoImg} loading="lazy" decoding="async" />
+                      <WarmTechImage src={chatgptLogo} alt="ChatGPT" sizes="100px" className={styles.dimLogoImg} />
                     </div>
                     <div className={styles.dimLogoItem}>
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src="/TechnologyPageImages/LogosTable/Claude_AI_logo.svg.png" alt="Claude" className={styles.dimLogoImg} loading="lazy" decoding="async" />
+                      <WarmTechImage src={claudeLogo} alt="Claude" sizes="100px" className={styles.dimLogoImg} />
                     </div>
                     <div className={styles.dimLogoItem}>
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src="/TechnologyPageImages/LogosTable/Grok-feb-2025-logo.svg.png" alt="Grok" className={styles.dimLogoImg} loading="lazy" decoding="async" />
+                      <WarmTechImage src={grokLogo} alt="Grok" sizes="100px" className={styles.dimLogoImg} />
                     </div>
                     <div className={styles.dimLogoItem}>
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src="/TechnologyPageImages/LogosTable/Perplexity_AI_logo.svg.png" alt="Perplexity" className={styles.dimLogoImg} loading="lazy" decoding="async" />
+                      <WarmTechImage src={perplexityLogo} alt="Perplexity" sizes="100px" className={styles.dimLogoImg} />
                     </div>
                   </div>
                 </div>
                 <div className={`${styles.dimGridCell} ${styles.dimGridCellBottom}`}>
                   <div className={styles.dimLogos} style={{ gridTemplateColumns: "1fr" }}>
                     <div className={styles.dimLogoItem}>
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src="/TechnologyPageImages/physical-intelligence-logo.jpeg" alt="Physical Intelligence" className={styles.dimLogoImg} style={{ maxWidth: 135 }} loading="lazy" decoding="async" />
+                      <WarmTechImage src={physicalIntelligenceLogo} alt="Physical Intelligence" sizes="135px" className={styles.dimLogoImg} style={{ maxWidth: 135 }} />
                     </div>
                     <div className={styles.dimLogoItem}>
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src="/TechnologyPageImages/runway-logo.jpeg" alt="Runway" className={styles.dimLogoImg} loading="lazy" decoding="async" />
+                      <WarmTechImage src={runwayLogo} alt="Runway" sizes="100px" className={styles.dimLogoImg} />
                     </div>
                     <div className={styles.dimLogoItem}>
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src="/TechnologyPageImages/meta-logo.jpeg" alt="Meta" className={styles.dimLogoImg} loading="lazy" decoding="async" />
+                      <WarmTechImage src={metaLogo} alt="Meta" sizes="100px" className={styles.dimLogoImg} />
                     </div>
                   </div>
                 </div>
                 <div className={`${styles.dimGridCell} ${styles.dimGridCellBottom} ${styles.dimGridCellLgm}`}>
                   <div className={styles.dimBrand}>
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src="/logobueno.png" alt="" className={styles.dimBrandLogo} aria-hidden loading="lazy" decoding="async" />
+                    <WarmTechImage src={columbusLogo} alt="" width={64} height={64} className={styles.dimBrandLogo} aria-hidden />
                     <span className={styles.dimBrandName}>Columbus Earth</span>
                   </div>
                 </div>
 
               </div>
             </div>
+            </ScaleToFit>
           </RevealOnView>
         </div>
       </Slide>
@@ -248,7 +256,35 @@ export function TechnologySections() {
               });
               const xColumbus = `calc(${yearAt(nowFrac)} - clamp(20px, 2.5vw, 40px))`;
 
+              // Single source for the milestone content — drives both the
+              // mobile/tablet vertical timeline and the screen-reader outline
+              // below, so neither drifts from the horizontal layout above.
+              const milestones: {
+                year: string;
+                label: string;
+                full?: string;
+                now?: boolean;
+                cta?: { text: string; href: string };
+              }[] = [
+                { year: "2022", label: "LLM", full: "LLM (Large Language Model)" },
+                { year: "2025", label: "Geo-tuned LLM & Vision Models" },
+                { year: nowLabel, label: "Columbus", now: true },
+                {
+                  year: "2026",
+                  label: "Generalist LGM",
+                  full: "Generalist LGM (Large Geospatial Model)",
+                  cta: { text: "Read our Paper", href: blogHref(BLOG_SLUG.timelineGeneralistLgm) },
+                },
+                {
+                  year: "2028",
+                  label: "UGM",
+                  full: "UGM (Universal Geospatial Model)",
+                  cta: { text: "Our Game Plan", href: blogHref(BLOG_SLUG.ugmRoadmapGamePlan) },
+                },
+              ];
+
               return (
+              <>
             <div className={styles.lgmTimeline}>
               <div className={styles.lgmTimelineHalo} aria-hidden />
               <div id="lgm-timeline-track" className={styles.lgmTimelineTrack} aria-hidden />
@@ -300,8 +336,8 @@ export function TechnologySections() {
 
               {/* ─── Columbus — separate "now" marker between 2025 and 2026 ─── */}
               <div className={`${styles.lgmTimelineMilestone} ${styles.lgmTimelineMilestoneTop} ${styles.lgmTimelineColumbus}`} style={{ left: xColumbus }}>
-                <Image
-                  src="/logobueno.png"
+                <WarmTechImage
+                  src={columbusLogo}
                   alt="Columbus"
                   width={64}
                   height={64}
@@ -344,19 +380,65 @@ export function TechnologySections() {
               <div className={styles.srOnly}>
                 <h3>Timeline of foundational AI models</h3>
                 <ul>
-                  <li>2022 — LLM (Large Language Model)</li>
-                  <li>2025 — Geo-tuned LLM &amp; Vision Models</li>
-                  <li>2026 — Generalist LGM (Large Geospatial Model)</li>
-                  <li>2028 — UGM (Universal Geospatial Model)</li>
+                  {milestones
+                    .filter((m) => !m.now)
+                    .map((m) => (
+                      <li key={m.year}>
+                        {m.year} — {m.full ?? m.label}
+                      </li>
+                    ))}
                 </ul>
               </div>
             </div>
+
+            {/* Mobile / tablet (≤1024px): the horizontal track above can't
+                fit its labels at narrow widths, so the same milestones
+                reflow into this vertical timeline. Hidden on desktop (and
+                the horizontal one is hidden here) via CSS. */}
+            <ol
+              className={styles.lgmTimelineVertical}
+              aria-label="Timeline of foundational AI models"
+            >
+              {milestones.map((m) => (
+                <li
+                  key={m.year}
+                  className={`${styles.lgmTimelineVRow}${m.now ? ` ${styles.lgmTimelineVRowNow}` : ""}`}
+                >
+                  {m.now ? (
+                    <>
+                      <WarmTechImage
+                        src={columbusLogo}
+                        alt="Columbus"
+                        width={48}
+                        height={48}
+                        className={styles.lgmTimelineVLogo}
+                      />
+                      <span className={styles.lgmTimelineColumbusDate}>Now — {m.year}</span>
+                    </>
+                  ) : (
+                    <>
+                      <span className={styles.lgmTimelineVYear}>{m.year}</span>
+                      <span className={styles.lgmTimelineVLabel}>{m.label}</span>
+                      {m.cta && (
+                        <Link href={m.cta.href} className={styles.lgmTimelineCta}>
+                          <span>{m.cta.text}</span>
+                          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden>
+                            <path d="M2.5 9.5L9.5 2.5M9.5 2.5H4M9.5 2.5V8" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
+                          </svg>
+                        </Link>
+                      )}
+                    </>
+                  )}
+                </li>
+              ))}
+            </ol>
+            </>
               );
             })()}
 
             <Link
               href={blogHref(BLOG_SLUG.lgmVsLlmVision)}
-              className={`${styles.lgmArticleCard} ${styles.lgmArticleCardGlass} ${styles.lgmArticleCardBgRadiance}`}
+              className={`${styles.lgmArticleCard} ${styles.lgmArticleCardGlass} ${styles.lgmArticleCardBgRadiance} ${styles.fullBleedMobile}`}
             >
               <span className={styles.lgmArticleKicker}>Read our article on</span>
               <p className={styles.lgmArticleHeadline}>
@@ -380,19 +462,18 @@ export function TechnologySections() {
                   the gap between the intro paragraph and the aside, visually
                   splitting them. Center sits on the right side of the layout. */}
               <div className={styles.coreResearchStarburst} aria-hidden>
-                <Image
-                  src="/TechnologyPageImages/VoyagerGraphic.png"
+                <WarmTechImage
+                  src={voyagerGraphic}
                   alt=""
                   fill
                   sizes="100vw"
+                  placeholder="blur"
                   style={{ objectFit: "contain", objectPosition: "right center" }}
-                  priority={false}
                 />
               </div>
 
               <div className={styles.coreResearchIntroRow}>
                 <div className={styles.coreResearchIntroText}>
-                  <span className={styles.sectionEyebrow}>Core Reasoning</span>
                   <h2 className={styles.sectionTitle}>Our research</h2>
                   <div className={styles.editorialBody}>
                     <p>
@@ -519,8 +600,7 @@ export function TechnologySections() {
                   <div className={styles.coreResearchProducts}>
                     <a href="/business" className={styles.coreResearchProduct}>
                       <span className={styles.coreResearchProductGlyph} aria-hidden>
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img src="/logobueno.png" alt="" loading="lazy" decoding="async" />
+                        <WarmTechImage src={columbusLogo} alt="" width={36} height={36} />
                       </span>
                       <span>Columbus</span>
                     </a>
@@ -531,8 +611,7 @@ export function TechnologySections() {
                       className={styles.coreResearchProduct}
                     >
                       <span className={styles.coreResearchProductGlyph} aria-hidden>
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img src="/MapsGPT-logo.png" alt="" loading="lazy" decoding="async" />
+                        <WarmTechImage src={mapsGptLogo} alt="" width={36} height={36} />
                       </span>
                       <span>Elio</span>
                     </a>
@@ -552,15 +631,15 @@ export function TechnologySections() {
               <CoreResearchCarousel />
             </div>
 
-            <a
-              href="#"
-              className={`${styles.lgmArticleCard} ${styles.lgmArticleCardGlass} ${styles.lgmArticleCardFlush} ${styles.lgmArticleCardBgWave}`}
+            <Link
+              href={blogHref(BLOG_SLUG.foundingLgmsInDepth)}
+              className={`${styles.lgmArticleCard} ${styles.lgmArticleCardGlass} ${styles.lgmArticleCardFlush} ${styles.lgmArticleCardBgWave} ${styles.fullBleedMobile}`}
             >
               <span className={styles.lgmArticleKicker}>Read our articles on</span>
               <p className={styles.lgmArticleHeadlineStrong}>
                 our foundational model research
               </p>
-            </a>
+            </Link>
           </RevealOnView>
         </div>
       </Slide>
@@ -570,8 +649,7 @@ export function TechnologySections() {
         <div className={styles.slideFrame}>
           <div className={styles.researchBlogWrap}>
           <RevealOnView className={`${styles.editorialSlide} ${styles.resultsSlide}`}>
-            <p className={styles.lgmKicker}>RESULTS</p>
-            <h2 className={styles.resultsTitle}>MODEL COLUMBUS-01</h2>
+            <h2 className={styles.resultsTitle}>Our Model: Magellan-1.0</h2>
             <p className={styles.resultsLead}>The latest results from our development of the LGM.</p>
 
             <div className={styles.resultsGrid}>
@@ -614,17 +692,17 @@ export function TechnologySections() {
               ))}
             </div>
 
-            <div className={styles.resultsArticlesRow}>
+            <div className={`${styles.resultsArticlesRow} ${styles.fullBleedMobile}`}>
               <Link href={blogHref(BLOG_SLUG.mappingUnknownGenLayers)} className={`${styles.lgmArticleCard} ${styles.lgmArticleCardBgUnknownLayers}`}>
                 <p>
-                  Read our article on Mapping the<br />
-                  <strong>unknown with Gen Layers</strong>
+                  Mapping the unknown:<br />
+                  <strong>Generative Geospatial layers</strong>
                 </p>
               </Link>
-              <Link href={blogHref(BLOG_SLUG.mimickingAdultBrain)} className={`${styles.lgmArticleCard} ${styles.lgmArticleCardBgDeepLayers}`}>
+              <Link href={blogHref(BLOG_SLUG.firePredictonModel)} className={`${styles.lgmArticleCard} ${styles.lgmArticleCardBgFirePrediction}`}>
                 <p>
-                  Read our article on<br />
-                  <strong>deep spatial reasoning</strong>
+                  Research demonstration:<br />
+                  <strong>Fire Prediction Model</strong>
                 </p>
               </Link>
             </div>
@@ -644,73 +722,38 @@ export function TechnologySections() {
                 Explore the innovative research and recent papers from our team.
               </p>
 
-              {/* Blog cards grid — 3 columns matching /Blog page layout */}
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "48px 32px", marginTop: "48px" }}>
+              {/* Blog cards grid — responsive 3 → 2 → 1 columns, mirroring the
+                  homepage BlogSection card system. */}
+              <div className={styles.blogGrid}>
                 {(() => {
                   const engineeringPosts = BLOG_POSTS.filter((p) => p.category === "ENGINEERING");
                   const joinUsPost = BLOG_POSTS.find((p) => p.slug === "join-us-research-opportunities");
                   const shuffled = [...engineeringPosts].sort(() => Math.random() - 0.5);
                   const selectedPosts = joinUsPost ? [joinUsPost, ...shuffled.slice(0, 2)] : shuffled.slice(0, 3);
                   return selectedPosts.map((post) => (
-                    <Link
-                      key={post.slug}
-                      href={blogHref(post.slug)}
-                      style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        textDecoration: "none",
-                        color: "inherit",
-                      }}
-                    >
-                      <div
-                        style={{
-                          position: "relative",
-                          width: "100%",
-                          aspectRatio: "16 / 10",
-                          borderRadius: "13px",
-                          overflow: "hidden",
-                          background: "#ECEFF3",
-                          marginBottom: "16px",
-                        }}
-                      >
+                    <Link key={post.slug} href={blogHref(post.slug)} className={styles.blogCard}>
+                      <div className={styles.blogCardMedia}>
                         {post.image ? (
-                          <Image
+                          <WarmTechImage
                             src={post.image}
                             alt=""
                             fill
-                            style={{ objectFit: "cover" }}
-                            sizes="(min-width: 768px) 33vw, 100vw"
+                            className={styles.blogCardImg}
+                            sizes="(min-width: 1024px) 33vw, (min-width: 600px) 50vw, 100vw"
                           />
                         ) : (
-                          <div
-                            style={{
-                              position: "absolute",
-                              inset: 0,
-                              background: "linear-gradient(135deg, #0A3760 0%, #0F4C81 52%, #2C86C6 100%)",
-                            }}
-                            aria-hidden="true"
-                          />
+                          <div className={styles.blogCardFallback} aria-hidden="true" />
                         )}
                       </div>
 
-                      <div style={{ display: "flex", flexDirection: "column" }}>
-                        <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "8px" }}>
-                          <span style={{ fontSize: "12px", fontWeight: 500, textTransform: "uppercase", color: "var(--tech-color-text-muted)" }}>
-                            {post.category}
-                          </span>
-                          <span style={{ fontSize: "12px", color: "var(--tech-color-text-muted)" }} aria-hidden="true">
-                            ·
-                          </span>
-                          <span style={{ fontSize: "12px", fontWeight: 500, textTransform: "uppercase", color: "var(--tech-color-text-muted)" }}>
-                            {post.date}
-                          </span>
+                      <div className={styles.blogCardBody}>
+                        <div className={styles.blogCardMeta}>
+                          <span className={styles.blogCardTag}>{post.category}</span>
+                          <span className={styles.blogCardDot} aria-hidden="true">·</span>
+                          <span className={styles.blogCardTag}>{post.date}</span>
                         </div>
-                        <h3 style={{ fontSize: "22px", color: "var(--tech-color-text)", margin: "0 0 8px", letterSpacing: "-0.015em" }}>
-                          {post.title}
-                        </h3>
-                        <p style={{ fontSize: "16px", color: "var(--tech-color-text-muted)", margin: 0 }}>
-                          {post.description}
-                        </p>
+                        <h3 className={`h5 ${styles.blogCardTitle}`}>{post.title}</h3>
+                        <p className={`p-m ${styles.blogCardDescription}`}>{post.description}</p>
                       </div>
                     </Link>
                   ));

@@ -1,6 +1,9 @@
 "use client";
 
 import Image from "next/image";
+import { ScaleToFit } from "../technology/redesign/ScaleToFit";
+import { useMediaWarm } from "@/components/ui/MediaPrefetcher";
+import MapBgImage from "./MapBgImage";
 
 /* ── Super-feature section ──────────────────────────────────────────────────
    One "super feature" on an #F7F7F7 band. Header: small icon, title, and a
@@ -21,6 +24,13 @@ export type SuperFeatureSubItem = {
   image?: string;
   imageAlt?: string;
   visual?: React.ReactNode;
+  /* When set, the `visual` is rendered at this fixed pixel design width and
+     uniformly transform:scale()'d down to fit narrower frames (via ScaleToFit)
+     — so the feature graphic stays a faithful miniature of its desktop self
+     instead of reflowing/cramping. Use the visual's natural desktop render
+     width so desktop (≥ this width) is an untouched passthrough. Only applies
+     to non-stacked `visual` rows. */
+  visualDesignWidth?: number;
   /* Per-row override of the shared sky backdrop (e.g. a map image). */
   backdropImage?: string;
   /* Per-row CSS `background-position` for the SkyBackdrop image — e.g.
@@ -72,6 +82,11 @@ export type SuperFeatureSectionProps = {
   demoImage?: string;
   demoAlt?: string;
   demoVisual?: React.ReactNode;
+  /* When set, the main demo (demoVisual or demoImage) renders at this fixed
+     pixel design width and uniformly transform:scale()'s down to fit narrower
+     screens (via ScaleToFit) — a faithful desktop miniature, not a reflow.
+     Use the demo's natural width (the four product mockups are 1180). */
+  demoDesignWidth?: number;
   subFeatures?: SuperFeatureSubItem[];
   /* When false, the surrounding #F7F7F7 panel is dropped and the hero
      block + sub-features render directly on the page background. Sections
@@ -98,10 +113,12 @@ export default function SuperFeatureSection({
   demoImage,
   demoAlt = "",
   demoVisual,
+  demoDesignWidth,
   subFeatures = [],
   panel = true,
   scrim = true,
 }: SuperFeatureSectionProps) {
+  const warm = useMediaWarm();
   return (
     <section
       id={id}
@@ -114,7 +131,13 @@ export default function SuperFeatureSection({
       {/* Header — sits OUTSIDE the gray panel, on the page background */}
       <div className="ent-content-bounds">
         <div className="flex flex-col items-center text-center px-6">
-          <div className="flex items-center gap-3 justify-center">
+          {/* Mobile stacks the icon ABOVE the centred title (vertical
+              column, 8px gap); from `md` up the icon sits to the LEFT of
+              the title as a horizontal row (12px gap). `items-center` does
+              double duty — centring the icon horizontally over the title
+              in column mode, and vertically aligning it with the title's
+              cap height in row mode. */}
+          <div className="flex flex-col md:flex-row items-center gap-2 md:gap-3 justify-center">
             {icon ? (
               <div className="flex-shrink-0 flex items-center justify-center">{icon}</div>
             ) : null}
@@ -148,7 +171,7 @@ export default function SuperFeatureSection({
           the panel chrome (background, radius, overflow clipping) is
           dropped so content sits directly on the page background. */}
       <div
-        className="ent-content-bounds mt-10 lg:mt-14"
+        className="biz-product-display ent-content-bounds mt-10 lg:mt-14"
         style={{
           backgroundColor: panel ? "#FAFAFA" : "transparent",
           /* Shared panel chrome — 2px --ent-border-card hairline + 24px
@@ -164,16 +187,28 @@ export default function SuperFeatureSection({
         {/* Main framed block — sky backdrop + product demo, fills the
             panel's full width (no inset). */}
         <div
-          className="relative overflow-hidden"
+          className="biz-product-display relative overflow-hidden"
           style={{ borderRadius: "var(--ent-radius-2xl)" }}
         >
           <SkyBackdrop image={backgroundImage} scrim={scrim} position={backgroundPosition} size={backgroundSize} />
           <div className="relative z-10 flex justify-center" style={{ padding: "clamp(20px, 3vw, 40px)" }}>
-            {demoVisual ? (
-              demoVisual
-            ) : demoImage ? (
-              <FloatingMockup src={demoImage} alt={demoAlt} aspectRatio="16 / 9" maxWidth={1180} />
-            ) : null}
+            {(() => {
+              const node = demoVisual ? (
+                demoVisual
+              ) : demoImage ? (
+                <FloatingMockup src={demoImage} alt={demoAlt} aspectRatio="16 / 9" maxWidth={1180} />
+              ) : null;
+              if (!node) return null;
+              // Faithful-miniature wrap: fixed desktop design width, uniformly
+              // scaled to fit. w-full so ScaleToFit measures the frame interior.
+              return demoDesignWidth ? (
+                <ScaleToFit designWidth={demoDesignWidth} className="biz-scale-visual w-full">
+                  {node}
+                </ScaleToFit>
+              ) : (
+                node
+              );
+            })()}
           </div>
         </div>
 
@@ -188,12 +223,18 @@ export default function SuperFeatureSection({
           >
             {subFeatures.map((item, i) => {
               const reversed = i % 2 === 1;
+              // When this row is the target of an in-page anchor (e.g.
+              // BusinessFeatureIndex → #super-model), the sticky industry
+              // picker covers the top ~56px of the viewport, so a default
+              // scroll lands the user under the section's title. Reserve
+              // clearance so the heading sits clearly below the picker.
+              const anchorStyle = item.id ? { scrollMarginTop: 90 } : undefined;
               if (item.stacked) {
                 /* Full-width row — the visual owns its header, subtitle,
                    and backdrop. No 4/8 grid, no 1:1 square frame, no
                    SkyBackdrop. */
                 return (
-                  <div key={item.title} id={item.id} className="w-full">
+                  <div key={item.title} id={item.id} className="w-full" style={anchorStyle}>
                     {item.visual}
                   </div>
                 );
@@ -203,6 +244,7 @@ export default function SuperFeatureSection({
                   key={item.title}
                   id={item.id}
                   className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center"
+                  style={anchorStyle}
                 >
                   <div className={`lg:col-span-4 px-6 lg:px-0 ${reversed ? "lg:order-2 lg:pl-8" : "lg:pr-8"}`}>
                     <h3
@@ -235,7 +277,17 @@ export default function SuperFeatureSection({
                       style={{ padding: "clamp(24px, 3vw, 56px)" }}
                     >
                       {item.visual ? (
-                        item.visual
+                        item.visualDesignWidth ? (
+                          /* Faithful-miniature wrap: render the visual at its
+                             fixed desktop design width, uniformly scaled down
+                             to fit the frame. w-full so ScaleToFit measures the
+                             full frame interior. */
+                          <ScaleToFit designWidth={item.visualDesignWidth} className="biz-scale-visual w-full">
+                            {item.visual}
+                          </ScaleToFit>
+                        ) : (
+                          item.visual
+                        )
                       ) : item.image ? (
                         <div
                           style={{
@@ -252,6 +304,8 @@ export default function SuperFeatureSection({
                             width={900}
                             height={650}
                             sizes="(max-width: 1024px) 90vw, 600px"
+                            loading={warm ? "eager" : "lazy"}
+                            fetchPriority={warm ? "low" : undefined}
                             className="block w-full h-auto"
                           />
                         </div>
@@ -293,11 +347,11 @@ function SkyBackdrop({
      extra height of the frame (taller-than-square rows) is left
      transparent so it blends into the surrounding panel — the photo
      keeps the exact framing it had at 1:1. */
-  const imageLayer = (
+  const imageLayer = isGradient ? (
     <div
       className="absolute inset-0 pointer-events-none"
       style={{
-        backgroundImage: isGradient ? image : `url(${image})`,
+        backgroundImage: image,
         backgroundPosition: position,
         backgroundSize: size,
         backgroundRepeat: "no-repeat",
@@ -305,6 +359,17 @@ function SkyBackdrop({
       }}
       aria-hidden
     />
+  ) : (
+    /* Photo backdrop — was a raw-PNG CSS background; now an <Image fill>
+       (AVIF + warm-promotion) inside this inset-0 positioned layer. */
+    <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 0 }} aria-hidden>
+      <MapBgImage
+        src={image}
+        position={position}
+        size={size === "contain" ? "contain" : size === "fill" ? "fill" : "cover"}
+        sizes="100vw"
+      />
+    </div>
   );
   const scrimLayer =
     isGradient || !scrim ? null : (
@@ -353,6 +418,7 @@ function FloatingMockup({
   aspectRatio: string;
   maxWidth: number;
 }) {
+  const warm = useMediaWarm();
   return (
     <div
       className="mx-auto"
@@ -370,6 +436,8 @@ function FloatingMockup({
           alt={alt}
           fill
           sizes={`(max-width: ${maxWidth}px) 100vw, ${maxWidth}px`}
+          loading={warm ? "eager" : "lazy"}
+          fetchPriority={warm ? "low" : undefined}
           className="object-cover object-center"
         />
       </div>

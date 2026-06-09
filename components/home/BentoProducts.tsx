@@ -23,8 +23,19 @@
  * pinned, visual offset toward an edge).
  */
 
-import Image from "next/image";
-import { WorldMapLineArt } from "./WorldMapLineArt";
+import { useEffect, useRef } from "react";
+import Image, { type StaticImageData } from "next/image";
+import { useMediaWarm } from "@/components/ui/MediaPrefetcher";
+
+// Static imports → Next generates a real low-res `blurDataURL` (progressive
+// blur-up: a tiny preview paints instantly, then swaps to the full-res AVIF
+// — no quality loss to the source) and intrinsic dimensions at build time.
+// The two card backdrops were previously CSS background-image url()s, which
+// bypassed the optimizer entirely and shipped as raw multi-MB PNG.
+import bgColumbus from "@/public/ColumbusBackgroundbento.png";
+import bgElio from "@/public/elio-bento-bg.png";
+import visualColumbus from "@/public/ColumbusHomeimg.png";
+import visualElio from "@/public/elio-bento-v3.png";
 
 /* Recolour filter matching MistxNav so the Columbus mark renders in the
    same navy blue everywhere it appears on the site. */
@@ -41,14 +52,15 @@ const CSS = `
   .bp-section { padding-bottom: 112px; }
 }
 
+/* Canonical content-bounds calc trick — 1287px cap, always 40px
+   narrower than parent (= 20px gutter on each side at every viewport
+   width), centered. Matches navbar / .content-bounds / site-wide. */
 .bp-bounds {
   max-width: 1287px;
-  margin-left: 20px;
-  margin-right: 20px;
+  width: calc(100% - 2.5rem);
+  margin-left: auto;
+  margin-right: auto;
   box-sizing: border-box;
-}
-@media (min-width: 768px) {
-  .bp-bounds { margin-left: auto; margin-right: auto; }
 }
 
 .bp-grid {
@@ -64,11 +76,13 @@ const CSS = `
 }
 
 /* Each tile: full-bleed per-product background, 13px corners. overflow:
-   hidden so the bottom-peeking visual clips at the card edge. The 1px
-   hairline is NOT a CSS border — a CSS border always paints a full
-   rectangle and can't be masked, so it would run straight across the
-   audience cut-out. It's drawn instead by the ::after ring below, which
-   the white notch + fillets can sit on top of. */
+   hidden so the bottom-peeking visual clips at the card edge. The card has
+   NO drop shadow and NO hairline ring — its edge is defined purely by the
+   per-product background (photo / gradient) meeting the white page at the
+   rounded corner. Dropping the shadow keeps the white page right next to
+   the card at pure #FFFFFF, so it matches the audience cut-out's gutter
+   white exactly (the shadow used to darken the surrounding page a few
+   percent, making the pure-white gutter read as a brighter patch). */
 .bp-card {
   position: relative;
   overflow: hidden;
@@ -81,9 +95,12 @@ const CSS = `
   text-decoration: none;
   color: #0B1B2B;
   display: block;
-  height: 460px;
 }
-@media (min-width: 640px)  { .bp-card { height: 520px; padding: 32px; } }
+/* Mobile: drop the fixed pixel height — let the card grow to fit its
+   text + the (now statically-positioned) .bp-visual below. The desktop
+   "text-top, mockup-peeks-from-bottom" pattern only re-engages at
+   ≥1024px where there's room for the absolutely-positioned mockup. */
+@media (min-width: 640px)  { .bp-card { padding: 32px; } }
 @media (min-width: 1024px) { .bp-card { height: 560px; padding: 40px; } }
 
 /* Wide tile (Research) spans both columns on desktop as an elongated
@@ -97,28 +114,92 @@ const CSS = `
   }
 }
 
-/* Columbus tile: photo backdrop with a subtle flat black overlay
-   (the leading solid-colour gradient layer) to deepen the image. */
-.bp-card--columbus {
-  background-image:
-    linear-gradient(rgba(0, 0, 0, 0.18), rgba(0, 0, 0, 0.18)),
-    url('/ColumbusBackgroundbento.png');
+/* Columbus + Elio + Research photo backdrops are all rendered as
+   <Image fill> behind the card content (see .bp-bg / .bp-bg-tint below)
+   so the next-image optimizer serves AVIF instead of the raw multi-MB
+   PNG the old background-image url() shipped. The Elio backdrop matches
+   the /products/consumer hero so clicking through lands on a continuous
+   image. */
+
+/* Photo backdrop <Image fill> — sits at the bottom of the card stack
+   (z-index 0). object-fit: cover + center matches the old
+   background-size: cover; background-position: center. */
+.bp-bg {
+  object-fit: cover;
+  object-position: center;
+  z-index: 0;
 }
-/* Elio tile: same subtle flat black overlay as the Columbus tile.
-   Backdrop matches the /products/consumer page hero so clicking through
-   from the bento lands on a visually-continuous image. */
-.bp-card--elio {
-  background-image:
-    linear-gradient(rgba(0, 0, 0, 0.18), rgba(0, 0, 0, 0.18)),
-    url('/consumer/heroBackground.png');
+/* Columbus: anchor the cover-crop to the top of the photo so more of the sky
+   shows (the frame sits higher over the image); the skyline/trees at the
+   bottom are cropped — they sit behind the product visual anyway. */
+.bp-card--columbus .bp-bg {
+  object-position: center top;
 }
-/* Research uses a left-to-right linear gradient — light sky #CAE5F5 at
-   0% to mid-blue #76A8F3 at 100%, both fully opaque — matching the
-   Figma swatch supplied by Gdesign. Replaces the prior cream backdrop
-   (/Colbackgroundcard.png) so the Research tile reads as a distinct
-   blue band against the cream Columbus / Elio tiles above. */
-.bp-card--research {
-  background-image: linear-gradient(to right, #CAE5F5 0%, #76A8F3 100%);
+/* The Research banner's backdrop is a <video> rather than an <Image fill>, so
+   it needs the absolute full-bleed box next/image would otherwise provide. The
+   object-fit/position + desktop top-fade mask still come from .bp-bg above. */
+video.bp-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+/* Black tint over the photo (Columbus + Elio only — the photo cards).
+   Paints just above the image (same z-index, later in DOM) and below the
+   top scrim. Vertical gradient (was a flat 0.18): transparent at the TOP —
+   where the brand wordmark + tagline sit — ramping to 0.18 at the bottom,
+   so the text reads over a much lighter backdrop while the lower half stays
+   tinted for depth under the product visual that peeks up there. */
+.bp-bg-tint {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.18) 0%, rgba(0, 0, 0, 0) 100%);
+  pointer-events: none;
+  z-index: 0;
+}
+/* Research tile has no bottom-dark tint — the wide banner is too short
+   for the gradient to ramp gracefully and the photo is already framed
+   to support the text without darkening. */
+.bp-card--research .bp-bg-tint {
+  display: none;
+}
+@media (min-width: 1024px) {
+  /* Desktop tiles are a fixed 560px with the text at the top and the
+     contained bg+frost band sitting in the lower portion. The tint here
+     becomes the FROST: a strong per-product brand wash painted ON TOP of
+     the bg image (since .bp-bg-tint is the last child of .bp-bg-wrap,
+     painting over the <Image>). Columbus keeps a frosted blur over the
+     photo; Elio drops the blur so the cloud texture reads through. */
+  .bp-card--columbus .bp-bg-tint {
+    background: linear-gradient(
+      160deg,
+      rgba(11, 19, 66, 0.80) 0%,
+      rgba(2, 141, 227, 0.50) 100%
+    );
+    -webkit-backdrop-filter: blur(60px);
+    backdrop-filter: blur(60px);
+    /* backdrop-filter is NOT clipped by the parent's border-radius +
+       overflow:hidden (Chrome/Safari), so the frost renders square corners
+       over the rounded photo. Give it the matching 13px radius itself. */
+    border-radius: 13px;
+  }
+  .bp-card--elio .bp-bg-tint {
+    background: linear-gradient(
+      160deg,
+      rgba(10, 123, 230, 0.62) 0%,
+      rgba(95, 191, 241, 0.42) 100%
+    );
+  }
+  /* Fade the photo's OWN opacity toward the white card surface at the top,
+     instead of overlaying anything. The mask alpha is 0.75 at the very top
+     (so the card's #FFFFFF — load-bearing here; nothing opaque sits between
+     the photo and the card bg — shows ~25% through, gently lightening the
+     text area) and ramps GRADUALLY back to full opacity by 75%, full below.
+     The long 0.75→1 ramp keeps the change rate gentle. */
+  .bp-bg {
+    -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 1) 75%, rgba(0, 0, 0, 1) 100%);
+    mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 1) 75%, rgba(0, 0, 0, 1) 100%);
+  }
 }
 
 /* Top scrim — fades from a translucent white surface at the top (where
@@ -129,77 +210,246 @@ const CSS = `
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0.0) 55%);
+  background: transparent;
   pointer-events: none;
-  z-index: 0;
+  z-index: 1;
+}
+/* Solid white overlay UNDER the photo backdrop on the Columbus + Elio
+   tiles. It paints at z-index 1 (above the card surface, but below
+   .bp-bg-wrap at z 2 which carries the bg image + frost). This is the
+   surface the text/CTA read against at the top of the card. */
+.bp-card--columbus::before,
+.bp-card--elio::before {
+  background: #FFFFFF;
 }
 
-/* Hairline ring — a 1px inset stroke just inside the card edge, drawn as
-   an overlay rather than a CSS border. Two reasons it's an overlay:
-     • the white audience notch (z-index 3) + its fillets sit on top of
-       it, masking exactly the top/right spans where the silhouette
-       detours inward — so the visible hairline follows the cut-out.
-     • z-index 2 keeps it above the top scrim (::before, z-index 0) so the
-       stroke reads at full strength along the top edge.
-   inset box-shadow (not border) so it isn't clipped away and follows the
-   13px radius. */
-.bp-card::after {
+/* Columbus + Elio: flex column so the bg image wrapper can sit below the
+   text block in flow and flex-fill the card's remaining height. */
+.bp-card--columbus,
+.bp-card--elio {
+  display: flex;
+  flex-direction: column;
+  /* Card surface = pure white. The bg-wrap + frost sit ABOVE this in the
+     lower portion of the card (top edge 20px below the CTA), so the upper
+     half (where text + CTA live) reads as a flat white panel. */
+  background-color: #FFFFFF;
+}
+
+/* Contained bg image + frost — sits 20px below the text block (= 20px below
+   the CTA's bottom edge, since the CTA is the last item in the text block),
+   rounded corners, clips its own content. z-index 2 puts it above the white
+   overlay (z 1). */
+.bp-bg-wrap {
+  position: relative;
+  /* Bleed left/right/bottom out to the card's outer edges via negative
+     margins that match the card's per-breakpoint padding (28 / 32 / 40).
+     Top keeps the +20px gap from the CTA. */
+  margin: 20px -28px -28px;
+  /* All four corners rounded to 13px — matches the card's outer radius
+     so the contained bg band reads as a smaller, fully-rounded panel.
+     The left/right/bottom bleed past the card edge is clipped by the
+     card's own overflow:hidden, so those outer corners still tuck into
+     the card's 13px. */
+  border-radius: 13px;
+  overflow: hidden;
+  z-index: 2;
+  aspect-ratio: 16 / 9;
+}
+@media (min-width: 640px) {
+  .bp-bg-wrap { margin: 20px -32px -32px; }
+}
+@media (min-width: 1024px) {
+  /* Desktop: stay CONTAINED (not full-bleed). Flex-fills the remaining
+     card height after the text block + 20px gap, with card-edge bleed
+     on left/right/bottom via negative margins. */
+  .bp-bg-wrap {
+    margin: 20px -40px -40px;
+    flex: 1 1 auto;
+    aspect-ratio: auto;
+    min-height: 0;
+  }
+  /* Contained photo no longer needs the top-opacity fade (the wrapper has
+     a hard top edge of its own). */
+  .bp-card--columbus .bp-bg,
+  .bp-card--elio .bp-bg {
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+}
+/* Elio's backdrop is a bento-specific photo (elio-bento-bg.png) — a
+   skyline-from-the-park view kept separate from the consumer Hero so each
+   can be reframed independently. */
+
+/* Top text block — brand row, tagline, CTA stacked. One proportional gap
+   scale (--bp-gap) drives BOTH the brand→tagline and tagline→CTA gaps so the
+   rhythm is even and consistent; it steps up per breakpoint to keep pace with
+   the type/padding (which also scale), instead of fixed px that drift. */
+.bp-text-block {
+  --bp-gap: 14px;
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  max-width: 30rem;
+}
+@media (min-width: 1024px) {
+  .bp-text-block { --bp-gap: 18px; }
+  .bp-card--wide .bp-text-block { max-width: 34rem; --bp-gap: 22px; }
+}
+
+/* Audience cut-out — a white region notched into the card's top-left
+   corner (the page surface showing through), with the chip centered inside
+   it. Bleeds over the card padding so it sits flush in the corner; the
+   right + bottom edges are the cut silhouette (hairline + concave BR
+   corner), and the TR / BL convex corners are eased by the fillets. Reuses
+   the same 13px radius + #E7E7F1 hairline as the card. */
+.bp-cutout {
+  position: relative;
+  z-index: 3;
+  align-self: flex-start;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;  /* pin the chip into the top-left corner */
+  /* Negative margins bleed the cut-out's top/left edges all the way out to the
+     card's own edges (= the full card padding), so the notch white is flush in
+     the corner and reads as the corner bitten out of the card — its opening
+     (top + left) merges visually with the white page surface beyond the card.
+     There is NO card-perimeter hairline ring (the card edge is defined purely
+     by its soft drop shadow); only the notch's own cut silhouette (right +
+     bottom borders + the two fillet arcs) carries a hairline, so there is no
+     line tracing around the whole card or running out around the label.
+     Top/left margins track the card's per-breakpoint padding; the bottom
+     margin is the gap down to the brand row (logo + name) below — widened
+     from 6px for more mobile breathing room between the chip and the name. */
+  margin: -28px 0 18px -28px;
+  /* No top/left padding → the chip sits flush in the corner; the small
+     right/bottom padding is the tight cut frame before the silhouette. */
+  padding: 0 6px 5px 0;
+  background: #FFFFFF;
+  border-radius: 13px 0 13px 0;   /* TL = card corner, BR = concave cut */
+  border-right: 1px solid #E7E7F1;
+  border-bottom: 1px solid #E7E7F1;
+}
+@media (min-width: 640px)  { .bp-cutout { margin-top: -32px; margin-left: -32px; } }
+@media (min-width: 1024px) { .bp-cutout { margin-top: -40px; margin-left: -40px; } }
+
+/* Corner fillets — two 13x13 boxes sitting just outside the cut-out, each
+   painted with a radial-gradient that (a) eases a convex corner onto a 13px
+   arc instead of a hard 90deg corner and (b) carries the #E7E7F1 hairline
+   along that arc so the notch's straight cut-border curves continuously back
+   onto the card ring.
+
+   The mechanism (copied exactly from the proven desktop notch, just
+   repositioned): the gradient circle is centred at the point 13px DIAGONALLY
+   INTO THE PHOTO from the convex corner, with the photo-side TRANSPARENT
+   (inner stops) and the notch-side WHITE (outer stop). So the quarter-disc
+   nearest the photo stays transparent (card shows through, rounded off) while
+   the opposite wedge — the sliver adjacent to the notch corner — fills white,
+   rounding the corner inward. The 1px #E7E7F1 band at ~12.5px is the hairline
+   arc. (The earlier attempt inverted this — white on the photo side — which
+   bulged a white "speech-bubble tail" OUT into the photo instead of easing
+   the corner in.) Both convex corners here resolve to the SAME origin,
+   "right bottom", because both sit with the photo down-and-right of them:
+     • ::before = TOP-RIGHT convex corner (notch right cut-edge meets the
+       card TOP edge). Box flush right of the notch (left:100%), top-aligned.
+     • ::after  = BOTTOM-LEFT convex corner (notch bottom cut-edge meets the
+       card LEFT edge). Box flush below the notch (top:100%), left-aligned.
+   The 13px gradient stops are absolute, so they already match the 13px radius
+   at every breakpoint; the fillets are pinned to the notch box edges
+   (top/left 100%) so they auto-track the notch's per-label width + the
+   per-breakpoint padding bleed without any media-query overrides. */
+.bp-cutout::before,
+.bp-cutout::after {
   content: "";
   position: absolute;
-  inset: 0;
-  border-radius: 13px;
-  box-shadow: inset 0 0 0 1px #E7E7F1;
+  width: 13px;
+  height: 13px;
   pointer-events: none;
-  z-index: 2;
+}
+.bp-cutout::before {
+  top: 0;
+  left: 100%;
+  background: radial-gradient(circle at right bottom,
+    rgba(255, 255, 255, 0) 11.5px,
+    #E7E7F1 12.25px,
+    #E7E7F1 12.75px,
+    #FFFFFF 13.5px);
+}
+.bp-cutout::after {
+  top: 100%;
+  left: 0;
+  background: radial-gradient(circle at right bottom,
+    rgba(255, 255, 255, 0) 11.5px,
+    #E7E7F1 12.25px,
+    #E7E7F1 12.75px,
+    #FFFFFF 13.5px);
 }
 
-/* Audience cut-out — the page surface (#FFFFFF, the colour the cards
-   sit on) notched into the card's top-right corner, with the audience
-   label ("For business" / "For consumer") set inside it. The white is
-   flush to the card's top and right edges, so it reads as a piece cut
-   out of the corner itself rather than a panel laid on top.
+/* Audience chip — a rounded pill inside the cut-out. No border, no shadow:
+   its background is tinted to match its own card's background image (a colour
+   sampled from each photo / gradient), and the label text is white, so the
+   chip reads as a little swatch of the card's own colour sitting in the white
+   cut-out. Per-card background colours are set in the .bp-card--* overrides
+   below; the base value is a fallback. 13px radius matches the card. */
+.bp-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 11px 18px;
+  background: #78A2C2;
+  border-radius: 13px;
+  font-size: 15px;
+  line-height: 1;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: #FFFFFF;
+  white-space: nowrap;
+}
+/* Per-card chip background — the EXACT top-of-sky colour from each card's
+   image (where the pill sits), so the pill reads as a true swatch of that
+   tile's backdrop. Label text stays the base white where the colour is dark
+   enough; the light Research pill flips to navy text for legibility:
+     • Columbus — #028DE3 (top sky of ColumbusBackgroundbento.png), white text
+     • Elio     — #43A2FC (top sky of elio-bento-bg.png), white text
+     • Research — #CAE5F5 (light left/top of the card's gradient → navy text) */
+.bp-card--columbus .bp-chip { background: #028DE3; }
+.bp-card--elio     .bp-chip { background: #43A2FC; }
+.bp-card--research .bp-chip { background: #CAE5F5; color: #0F173C; }
 
-   All three cut corners are rounded by the card's own 13px radius, so
-   the cut has no sharp edges:
-     • top-right    — coincides with the card's existing rounded corner.
-     • bottom-left  — the deep concave corner of the cut (border-radius).
-     • top-left + bottom-right — convex corners where the cut runs into
-       the card's top / right edges; rounded by the ::before / ::after
-       fillets below.
-   z-index 3 sits it above the scrim, product visual and text block. */
+/* ─────────────────────────────────────────────────────────────────────
+   Mobile cut-out chip  vs.  desktop top-right notch.
+
+   The top-LEFT cut-out + tinted chip (above) is the MOBILE treatment
+   (<1024px). On desktop (≥1024px) we restore the ORIGINAL design we used
+   to have (commit c8075f8): a white notch cut into each card's top-RIGHT
+   corner with the audience label tinted inside it, plus the card's 1px
+   inset hairline ring (which the notch fillets join onto). The two
+   treatments are both in the DOM and swapped purely by breakpoint.
+   ───────────────────────────────────────────────────────────────────── */
+
+/* Original desktop audience cut-out — page-surface white (#FFFFFF) notched
+   into the card's top-RIGHT corner. Flush to the card's top + right edges
+   (the borderless cut "opening"); the left + bottom edges carry the
+   hairline (the cut silhouette), and the convex TL / BR corners are eased
+   by the ::before / ::after radial-gradient fillets, which also carry the
+   hairline arc onto the card's ::after ring. Hidden by default; shown only
+   at ≥1024px (mobile uses the top-left chip instead). */
 .bp-notch {
   position: absolute;
   top: 0;
   right: 0;
   z-index: 3;
   box-sizing: border-box;
-  height: 43px;
-  display: flex;
+  display: none;
   align-items: center;
   justify-content: center;
-  padding: 0 28px;
+  height: 40px;
+  padding: 0 22px;
   background-color: #FFFFFF;
-  /* TL TR BR BL — TL/BR are squared off here and rounded by the
-     fillets; TR matches the card corner; BL is the concave cut. */
   border-radius: 0 13px 0 13px;
-  /* Hairline on the cut edges only — the left + bottom edges are the
-     notch's silhouette (the inward detour of the card outline), so they
-     carry the 1px stroke; with border-radius BL the concave corner gets
-     it for free. The top + right edges are the cut-out opening (flush to
-     the card edge) and stay borderless. */
   border-left: 1px solid #E7E7F1;
   border-bottom: 1px solid #E7E7F1;
 }
-/* Corner fillets — a 13×13 box sitting just outside the notch (::before
-   top-left, ::after bottom-right), painted white everywhere except a
-   transparent quarter-disc the card keeps. This eases the notch's
-   straight edge into the card's edge on a 13px convex arc instead of a
-   hard 90° corner.
-
-   The gradient also carries the hairline: a 1px #E7E7F1 band sits at the
-   transparent→white transition (~12.5px radius), so the card outline's
-   stroke curves along the fillet arc and joins the notch's straight
-   border to the card's ::after ring. */
 .bp-notch::before,
 .bp-notch::after {
   content: "";
@@ -216,66 +466,61 @@ const CSS = `
 }
 .bp-notch::before { top: 0; left: -13px; }
 .bp-notch::after { bottom: -13px; right: 0; }
-/* Label size mirrors the hero section's eyebrow / superscript
-   (.hn-eyebrow in HeroNew.tsx): 16px, stepping up to 18px ≥992px.
-   line-height: 1 keeps it tight in the notch. Colour is set per card
-   below — each label is tinted to its tile's background imagery. */
+/* Per-card label tint — keyed to each tile's blue-dominated backdrop. */
 .bp-notch-label {
-  font-size: 16px;
+  font-size: 13px;
   line-height: 1;
-  font-weight: 500;
-  letter-spacing: -0.015em;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
   white-space: nowrap;
 }
-@media (min-width: 992px) {
-  .bp-notch-label { font-size: 18px; }
-}
-/* Per-card label tint — keyed to each tile's actual background. All
-   three cards are blue-dominated (the Columbus + Elio backdrops are
-   bright-blue-sky cityscape photos, and Research is the CAE5F5 → 76A8F3
-   gradient), so every label sits in the blue family — each one a
-   couple of lightness stops darker than the card's dominant colour so
-   it stays legible against the white notch surface.
-   • Columbus business tile → deepest blue (#015C94), the saturated
-     sky-blue that dominates the cloud + skyline photo.
-   • Elio consumer tile → mid sky-blue (#1E6BAE), matching the brighter,
-     mid-day sky in the Elio cityscape photo and offsetting the slightly
-     warmer building tones below it.
-   • Research tile → lighter blue (#4B7BC7), the deeper end of the
-     CAE5F5 → 76A8F3 gradient, slightly darkened. */
 .bp-card--columbus .bp-notch-label { color: #015C94; }
 .bp-card--elio .bp-notch-label { color: #1E6BAE; }
 .bp-card--research .bp-notch-label { color: #4B7BC7; }
-@media (min-width: 640px) {
-  .bp-notch { height: 46px; padding: 0 32px; }
-}
-@media (min-width: 1024px) {
-  .bp-notch { height: 53px; padding: 0 40px; }
-}
 
-/* Top text block — brand row, tagline, CTA stacked. Spacing is set with
-   explicit per-pair margins (on .bp-tagline / .bp-cta) rather than one
-   flex gap: see the optical-spacing note on those rules below. */
-.bp-text-block {
-  position: relative;
-  z-index: 2;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  max-width: 30rem;
-}
 @media (min-width: 1024px) {
-  .bp-card--wide .bp-text-block { max-width: 34rem; }
+  /* Desktop = the original: hide the mobile chip, show the top-right
+     notch, and restore the card's hairline ring (the notch fillets join
+     onto it). Mobile stays ring-free for the clean borderless cut-out. */
+  .bp-cutout { display: none; }
+  .bp-notch { display: flex; }
+  .bp-card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 13px;
+    box-shadow: inset 0 0 0 1px #E7E7F1;
+    pointer-events: none;
+    z-index: 2;
+  }
+  /* Columbus + Elio borders matched to the business-page super-section panel:
+     2px ring in rgba(0,0,0,0.05) (vs the default 1px #E7E7F1). Kept as an inset
+     box-shadow so it adds no layout box, and at the bento's 13px corner. */
+  .bp-card--columbus::after,
+  .bp-card--elio::after {
+    box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.05);
+  }
 }
 
 .bp-brand {
   display: inline-flex;
+  /* Centered: the logo is the tallest, dominant ink, so the brand→tagline gap
+     reads from the logo's bottom (= the row box). Keeps the Columbus wordmark's
+     tuned baseline nudge intact. (Bottom-aligning to kill the below-name slack
+     was considered but regressed that baseline — revisit with a visual check.) */
   align-items: center;
   gap: 12px;
 }
+/* Nudge the whole brand row (logo + name) 5px left on the Columbus + Elio
+   tiles so it sits a touch tighter to the card's left edge. */
+.bp-card--columbus .bp-brand,
+.bp-card--elio .bp-brand {
+  margin-left: -5px;
+}
 .bp-logo {
-  width: 42px;
-  height: 42px;
+  width: clamp(36px, 9vw, 42px);
+  height: clamp(36px, 9vw, 42px);
   object-fit: contain;
   flex: 0 0 auto;
 }
@@ -301,39 +546,73 @@ const CSS = `
 .bp-card--elio .bp-name {
   font-weight: 600;
 }
+/* Columbus wordmark colour matches the logo to its left — same navy
+   #0F173C the COLUMBUS_LOGO_FILTER chain lands on (and the same value
+   MistxNav uses for "Columbus Earth"). Font-size is set so this live-text
+   wordmark's cap-height matches the VISIBLE height of the Elio wordmark
+   IMAGE on the adjacent tile (~21px mobile / ~25px desktop), so the two
+   top-row product names read at one consistent size. Axiforma cap-height is
+   ~0.7× font-size, and the Elio glyphs occupy ~50% of their image box, so
+   font ≈ 0.72 × Elio image height → ~clamp(26,6.5vw,30) mobile / 36px desktop.
+   line-height: 1 keeps the box from carrying empty descender space. */
+.bp-card--columbus .bp-name {
+  color: #0F173C;
+  font-size: clamp(26px, 6.5vw, 30px);
+  line-height: 1;
+  /* Pull the name left to absorb the logobueno.png transparent padding
+     (~12.2% of the logo box on every side), so the VISIBLE logo→name gap
+     matches the other tiles rather than reading ~6px looser. */
+  margin-left: -5px;
+  /* Drops the wordmark a hair below the brand row's optical centre so
+     the baseline of the "C" sits closer to the bottom of the logo mark
+     rather than dead-centred against it. */
+  transform: translateY(3px);
+}
+@media (min-width: 1024px) {
+  .bp-card--columbus .bp-name {
+    font-size: 36px;
+    margin-left: -6px;
+    transform: translateY(4px);
+  }
+}
 /* Research tile sets its title in Funnel Display (the design system's
    --font-display heading face). */
 .bp-card--research .bp-name {
   font-family: var(--font-display);
+  color: #0F173C;
 }
-/* Elio tile uses the elioName.png wordmark (same image rendered next
-   to the 3D earth in the /products/consumer hero) instead of plain
-   text. Height is locked to the .bp-logo's height (42px mobile, 50px
-   desktop) so the brand row matches the Columbus tile's row height
-   exactly — this keeps the tagline + CTA at the same Y position as
-   Columbus's. Width is derived from the natural 260×110 aspect via
-   'width: auto', so the image isn't stretched. The wordmark is still
-   the dominant visual in the row (≈99×42 / 118×50 vs the 42/50px
-   logo). */
-.bp-elio-wordmark {
+/* Elio tile renders only the block "Elio" wordmark next to the brand
+   icon. The source PNG is white-on-transparent — recoloured to the same
+   navy #0F173C used by the Columbus wordmark on the tile to its left so
+   both product names share a palette across the bento row. The negative
+   margin-left absorbs BOTH the MapsGPT logo's right transparent padding
+   (~6.8%) AND the wordmark PNG's own left dead space (~6.9%), so the
+   VISIBLE logo→wordmark gap matches the other tiles. */
+.bp-elio-name {
   width: auto;
-  height: 42px;
+  height: clamp(36px, 9vw, 42px);
   object-fit: contain;
   flex: 0 0 auto;
-  margin-left: -6px;
+  margin-left: -7px;
+  /* Nudge the wordmark down 2.2px so it sits a touch lower than the logo
+     baseline (purely visual — transform doesn't affect layout flow). */
+  transform: translateY(2.2px);
+  /* Recolour the wordmark PNG to #059CFA (bright blue) via a CSS filter
+     chain. brightness(0) saturate(100%) collapses the source to solid
+     black, then the invert/sepia/saturate/hue-rotate chain tints it to
+     the target. Derived from a hex→filter generator; tweak the chain
+     numerically if the rendered hue drifts. */
+  filter: brightness(0) saturate(100%) invert(46%) sepia(98%) saturate(2009%) hue-rotate(180deg) brightness(102%) contrast(101%);
 }
 @media (min-width: 1024px) {
   .bp-logo { width: 50px; height: 50px; }
   .bp-card--wide .bp-logo { width: 56px; height: 56px; }
-  .bp-elio-wordmark { height: 50px; margin-left: -8px; }
+  .bp-elio-name { height: 50px; margin-left: -8px; }
 }
 
-/* Stacked spacing — title→subtitle. The brand row is logo-height
-   (42–56px), so it carries empty box space below the shorter product-name
-   text; the subtitle→CTA gap below (.bp-cta) adds +6px to optically
-   cancel that, so both gaps read as even whitespace. */
+/* Brand row → tagline gap = the shared --bp-gap scale. */
 .bp-tagline {
-  margin: 18px 0 0;
+  margin: var(--bp-gap) 0 0;
   font-size: var(--typography--h5);
   line-height: var(--typography--h5--line-height);
   font-weight: 500;
@@ -341,11 +620,10 @@ const CSS = `
   color: inherit;
   max-width: 28rem;
 }
+/* Elio tagline inherits the default ink colour so it matches the
+   Columbus tagline on the tile to its left. */
 @media (min-width: 1024px) {
-  /* Wide tile keeps its roomier stack (22px title→subtitle), with the
-     same +6px optical compensation on the subtitle→CTA gap. */
-  .bp-card--wide .bp-tagline { max-width: 34rem; margin-top: 22px; }
-  .bp-card--wide .bp-cta { margin-top: 28px; }
+  .bp-card--wide .bp-tagline { max-width: 34rem; }
 }
 
 /* Signature CTA pill — same pattern as CtaBanner / Careers / ProductCell:
@@ -358,12 +636,10 @@ const CSS = `
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  /* subtitle→CTA gap. 18px (matching the title→subtitle margin) + 6px
-     optical compensation: the CTA pill's top edge is hard (line-height 1),
-     unlike the brand row above the tagline which has empty box space
-     below its name text — so the raw gap here would otherwise look
-     tighter than the title→subtitle gap. */
-  margin-top: 24px;
+  /* tagline→CTA gap = the same --bp-gap as brand→tagline. Equal box gaps +
+     the pill's solid filled shape make the CTA read as the slightly stronger
+     break on its own, without an asymmetric margin or optical-comp hack. */
+  margin-top: var(--bp-gap);
   padding: 14px 28px;
   background-color: var(--color-cta);
   color: #FFFFFF;
@@ -382,34 +658,71 @@ const CSS = `
 }
 .bp-cta:hover .bp-cta-arrow { transform: translateX(2px); }
 .bp-cta-arrow svg { display: block; }
+
+/* Elio CTA matches the Columbus tile — navy pill with white label —
+   so both tiles share a single CTA treatment across the bento row. */
 @media (prefers-reduced-motion: reduce) {
   .bp-cta,
   .bp-cta-arrow { transition: none; }
 }
 
-/* Bottom-anchored product visual — now lifted above the card's bottom
-   edge (positive bottom %) so the entire screenshot is visible and the
-   image floats with a small breathing-room gap below it. The
-   horizontal insets keep the visual aligned with the text rail's
-   left padding so the composition reads as one column. */
+/* Brand text colours on the Columbus + Elio tiles. The text sits over the
+   card's WHITE surface now (the bg image + frost is contained below the
+   CTA), so it reads in brand ink rather than white.
+
+   • Columbus tile  — logo + name + tagline all render in Columbus blue
+     (#0F173C; same navy the navbar wordmark uses). The logo already gets
+     this colour from the inline COLUMBUS_LOGO_FILTER on the <Image>, and
+     .bp-name has its own #0F173C rule above; only the tagline needs a
+     scoped override here (the default .bp-card colour is #0B1B2B).
+
+   • Elio tile      — wordmark recoloured to #00A6FF via a CSS filter
+     chain (overriding the #059CFA recipe baked into .bp-elio-name); the
+     tagline pins to Columbus blue so it reads as the same brand-blue
+     family as the Columbus tile next door. */
+.bp-card--columbus .bp-tagline,
+.bp-card--elio .bp-tagline {
+  color: #0F173C;
+}
+.bp-elio-name {
+  /* Approximation of #00A6FF via brightness(0) collapse + hue shift —
+     CSS filters are imprecise; tweak the chain numerically if the
+     rendered hue drifts. */
+  filter: brightness(0) saturate(100%) invert(48%) sepia(99%) saturate(2800%) hue-rotate(180deg) brightness(102%) contrast(102%) !important;
+}
+
+/* Mobile (<1024px): the visual sits in normal document flow at the
+   bottom of the card, scaling to the card's content width. Aspect
+   ratio is preserved (height: auto + max-width: 100% on the inner
+   <img>), so the mockup never gets clipped by the card's bounds.
+
+   Desktop (≥1024px) switches back to the original absolute-positioned
+   "peeks-from-bottom" pattern that gave the design its signature
+   text-top / mockup-bottom rhythm. */
 .bp-visual {
-  position: absolute;
-  left: 28px;
-  right: 28px;
-  bottom: -2%;
-  z-index: 1;
+  position: relative;
+  margin-top: 24px;
+  width: 100%;
+  z-index: 3;
   display: flex;
   justify-content: center;
-  /* Fast-but-smooth lift on card hover. Eased with a custom decel
-     curve (close to ease-out-quart) so the visual snaps up then
-     settles. */
   transition: transform 220ms cubic-bezier(0.22, 0.61, 0.36, 1);
   will-change: transform;
 }
-@media (min-width: 640px)  { .bp-visual { left: 32px; right: 32px; bottom: -2%; } }
-@media (min-width: 1024px) { .bp-visual { left: 40px; right: 40px; bottom: -2%; } }
-.bp-card:hover .bp-visual { transform: translateY(-12px); }
+.bp-visual img,
+.bp-visual > * {
+  max-width: 100%;
+  height: auto;
+}
 @media (min-width: 1024px) {
+  .bp-visual {
+    position: absolute;
+    left: 40px;
+    right: 40px;
+    bottom: -2%;
+    margin-top: 0;
+    width: auto;
+  }
   .bp-card:hover .bp-visual { transform: translateY(-18px); }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -439,6 +752,7 @@ const CSS = `
   border: 1px solid rgba(11, 27, 43, 0.08);
   background-color: #FFFFFF;
 }
+
 `;
 
 interface Product {
@@ -449,16 +763,25 @@ interface Product {
   name: string;
   /** Single short phrase, sits below the brand row. */
   tagline: string;
-  /** Optional audience label shown inside a rounded cut-out notched
-   *  into the card's top-right corner, e.g. "For business" /
-   *  "For consumer" / "For the curious". */
+  /** Audience label. Shown TWO ways by breakpoint: the mobile top-left
+   *  cut-out chip (<1024px) and the original desktop top-right notch
+   *  (≥1024px). "For business" / "For consumer" / "For the curious". */
   audience?: string;
   /** Pill CTA label, e.g. "Learn more", "Try Elio". */
   ctaLabel: string;
+  /** Full-bleed photo backdrop rendered as <Image fill> behind the card
+   *  content. Static import → AVIF + real blur-up placeholder. Omit on
+   *  tiles with a pure-CSS gradient backdrop (Research). */
+  bg?: StaticImageData;
+  /** Full-bleed looping background <video> (muted/autoplay) rendered in
+   *  place of `bg`. Used by the Research banner — a screen-recording of the
+   *  technology-page wave mesh. `poster` is the still shown until it plays. */
+  video?: string;
+  poster?: string;
   /** Product UI screenshot/graphic anchored to the bottom of the cell.
    *  Optional — omit on tiles that should render text-only (e.g.
    *  Research after the Gdesign tweak that dropped the LGM graphic). */
-  visual?: string;
+  visual?: StaticImageData;
   /** When true, the cell spans both columns on desktop as an elongated
    *  banner row (used by Research at the bottom of the grid). */
   wide?: boolean;
@@ -470,31 +793,39 @@ const PRODUCTS: Product[] = [
     href: "/products/business",
     logo: "/logobueno.png",
     logoFilter: COLUMBUS_LOGO_FILTER,
-    name: "Columbus",
+    name: "Columbus Pro",
     tagline: "All-in-one map intelligence platform",
     audience: "For business",
     ctaLabel: "Learn more",
-    visual: "/ColumbusHomeimg.png",
+    bg: bgColumbus,
+    visual: visualColumbus,
   },
   {
     cellClass: "bp-card--elio",
     href: "/products/consumer",
     logo: "/MapsGPT-logo.png",
     name: "Elio",
-    tagline: "Making maps feel alive again",
+    tagline: "Making maps feel alive",
     audience: "For consumer",
     ctaLabel: "Learn more",
-    visual: "/mapsgptdesktopimg.png",
+    bg: bgElio,
+    visual: visualElio,
   },
   {
     cellClass: "bp-card--research",
     href: "/research",
-    logo: "/TechnologyPageImages/lgm-globe-icon.png",
+    logo: "/ResearchPgMedia/lgm-globe-icon.png",
+    // Recolour the black globe icon to the navy #0F173C the "Research" title
+    // (.bp-card--research .bp-name) uses, so the icon matches its label. Same
+    // chain the Columbus logo uses — it normalises any source to black, then
+    // tints to #0F173C.
+    logoFilter: COLUMBUS_LOGO_FILTER,
     name: "Research",
     tagline: "Building the Large Geospatial Model",
     audience: "For the curious",
     ctaLabel: "Read Thesis",
-    visual: "world-map",
+    video: "/ConsumerPgMedia/bento/research-mesh.mp4",
+    poster: "/ConsumerPgMedia/bento/research-mesh-poster.jpg",
     wide: true,
   },
 ];
@@ -520,17 +851,53 @@ function ArrowDots() {
   );
 }
 
+/* Full-bleed looping background <video> for the Research banner. A small
+   wrapper so we can force the `muted` IDL property + kick off play() via a ref
+   — React doesn't reliably reflect the `muted` prop and some browsers block
+   muted-autoplay without it. It fills the card exactly like next/image's `fill`
+   (see `video.bp-bg` in CSS); object-fit: cover + the desktop top-fade mask
+   come from the shared `.bp-bg` class, so it matches the photo cards. */
+function BgVideo({
+  src,
+  poster,
+  warm,
+}: {
+  src: string;
+  poster?: string;
+  warm: boolean;
+}) {
+  const ref = useRef<HTMLVideoElement>(null);
+  useEffect(() => {
+    const v = ref.current;
+    if (!v) return;
+    v.muted = true;
+    const play = v.play();
+    if (play && typeof play.catch === "function") play.catch(() => {});
+  }, []);
+  return (
+    <video
+      ref={ref}
+      className="bp-bg"
+      autoPlay
+      muted
+      loop
+      playsInline
+      poster={poster}
+      preload={warm ? "auto" : "metadata"}
+      aria-hidden
+    >
+      <source src={src} type="video/mp4" />
+    </video>
+  );
+}
+
 export function BentoProducts() {
+  // Once the page is loaded + idle, MediaPrefetcher flips this true and the
+  // below-fold backdrops + visuals promote themselves from lazy to eager so
+  // they're decoded before the user scrolls down (no pop-in).
+  const warm = useMediaWarm();
   return (
     <section className="bp-section" aria-label="Our products">
-      {/* React 19 hoists these <link> tags into the document head. The
-          two bento card backdrops are CSS background-images (so the
-          next-image optimizer can't see them); preloading at section
-          render starts the fetch immediately on first paint instead of
-          waiting for the CSSOM to find the url() — a few-hundred ms
-          earlier on a slow connection. */}
-      <link rel="preload" as="image" href="/ColumbusBackgroundbento.png" />
-      <link rel="preload" as="image" href="/consumer/heroBackground.png" />
       <style>{CSS}</style>
       <div className="bp-bounds">
         <div className="bp-grid">
@@ -540,12 +907,34 @@ export function BentoProducts() {
               href={p.href}
               className={`bp-card ${p.cellClass}${p.wide ? " bp-card--wide" : ""}`}
             >
-              {p.audience && (
-                <div className="bp-notch">
-                  <span className="bp-notch-label">{p.audience}</span>
-                </div>
-              )}
+              {p.video ? (
+                <>
+                  {/* Looping wave-mesh screen-recording backdrop (Research) —
+                      same full-bleed .bp-bg treatment as the photo cards, just
+                      a <video> instead of an <Image>. Muted/autoplay/loop so
+                      it behaves like an animated still. */}
+                  <BgVideo src={p.video} poster={p.poster} warm={warm} />
+                  <div className="bp-bg-tint" aria-hidden />
+                </>
+              ) : null}
+              {/* Desktop (≥1024px) audience: the original white notch cut
+                  into the card's top-RIGHT corner with the tinted label
+                  inside. Absolutely positioned on the card; hidden <1024px
+                  via CSS (mobile uses the top-left cut-out chip below). */}
+                {p.audience && (
+                  <div className="bp-notch">
+                    <span className="bp-notch-label">{p.audience}</span>
+                  </div>
+                )}
               <div className="bp-text-block">
+                {/* Mobile (<1024px) audience: a white corner cut-out
+                    (top-left) with the image-tinted chip inside it. Hidden
+                    ≥1024px (desktop uses the top-right notch above). */}
+                {p.audience && (
+                  <div className="bp-cutout">
+                    <span className="bp-chip">{p.audience}</span>
+                  </div>
+                )}
                 <div className="bp-brand">
                   {/* 50×50 logo mark — width/height let Next pick a
                       256-wide AVIF/WebP source even though it renders
@@ -560,15 +949,14 @@ export function BentoProducts() {
                     style={p.logoFilter ? { filter: p.logoFilter } : undefined}
                   />
                   {p.cellClass === "bp-card--elio" ? (
-                    /* Elio tile renders the wordmark image (same asset
-                       used in the /products/consumer hero lockup, next
-                       to the 3D earth) in place of plain text. Sized
-                       via .bp-elio-wordmark; height auto preserves the
-                       natural 260×110 aspect. */
+                    /* Elio tile renders just the block "Elio" wordmark
+                       next to the brand icon — the script "making
+                       maps feel alive" image was dropped because the
+                       body tagline below already says it. */
                     <Image
-                      src="/consumer/elioName.png"
+                      src="/ConsumerPgMedia/elioNameHero.png"
                       alt={p.name}
-                      className="bp-elio-wordmark"
+                      className="bp-elio-name"
                       width={260}
                       height={110}
                     />
@@ -596,25 +984,43 @@ export function BentoProducts() {
                   </span>
                 </span>
               </div>
+              {p.bg && (
+                /* Contained photo backdrop — sits below the text block via
+                   the card's flex column layout, with a 20px gap from the
+                   CTA bottom and rounded corners. */
+                <div className="bp-bg-wrap">
+                  <Image
+                    src={p.bg}
+                    alt=""
+                    aria-hidden
+                    fill
+                    className="bp-bg"
+                    sizes="(max-width: 1023px) 100vw, 640px"
+                    quality={70}
+                    placeholder="blur"
+                    loading={warm ? "eager" : "lazy"}
+                    fetchPriority={warm ? "low" : undefined}
+                  />
+                  <div className="bp-bg-tint" aria-hidden />
+                </div>
+              )}
               {p.visual && (
                 <div className="bp-visual">
-                  {p.cellClass === "bp-card--research" ? (
-                    <WorldMapLineArt />
-                  ) : (
-                    /* The CSS sizes the image — width:100%; max-width:720px.
-                        We give Next a hint via `sizes` so the optimizer
-                        picks an appropriately small AVIF/WebP variant
-                        (the source PNGs are 2-3 MB each). */
-                    <Image
-                      src={p.visual}
-                      alt=""
-                      aria-hidden
-                      width={720}
-                      height={520}
-                      sizes="(max-width: 1023px) calc(100vw - 56px), 720px"
-                      quality={80}
-                    />
-                  )}
+                  {/* Static import → intrinsic dimensions + real blur-up
+                      placeholder. The CSS sizes the rendered image
+                      (width:100%; max-width:720px; height:auto); `sizes`
+                      hints the optimizer to a small AVIF variant. Lazy
+                      until the page is idle, then promoted to eager. */}
+                  <Image
+                    src={p.visual}
+                    alt=""
+                    aria-hidden
+                    sizes="(max-width: 1023px) calc(100vw - 56px), 720px"
+                    quality={80}
+                    placeholder="blur"
+                    loading={warm ? "eager" : "lazy"}
+                    fetchPriority={warm ? "low" : undefined}
+                  />
                 </div>
               )}
             </a>

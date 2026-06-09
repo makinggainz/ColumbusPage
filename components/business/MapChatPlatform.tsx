@@ -2,6 +2,9 @@
 
 import Image from "next/image";
 import ColumbusMark from "./superFeatureRows/ColumbusMark";
+import { useMediaWarm } from "@/components/ui/MediaPrefetcher";
+// Static import → AVIF + blur-up for the shared chrome PNG.
+import chromeBackground from "@/public/business/ConversationalMapChat.png";
 
 /* Layered composite of the Columbus chat platform mockup. Three z-stacked
    layers, deepest first:
@@ -41,8 +44,15 @@ const TYPE = {
    uses the PNG's native aspect (5190/3030) so no object-cover cropping. */
 const CHAT_TOP = 9;
 const CHAT_BOTTOM = 11;
-const CHAT_LEFT = 6;
-const CHAT_RIGHT = 47;
+/* Left-side UI (chat response + input) shifted ~10px left on the 1180px card
+   (≈0.85%); both edges move together so the panel width is unchanged. */
+const CHAT_LEFT = 5.15;
+const CHAT_RIGHT = 46.15;
+
+/* Horizontal padding inside the chat-response panel. The input box is inset
+   by this same amount on each side so its border lines up with the content
+   (results card, paragraphs) above it rather than running wider. */
+const PANEL_PAD = "clamp(6px, 0.7vw, 10px)";
 
 const INPUT_TOP = 89;
 const INPUT_BOTTOM = 96;
@@ -90,10 +100,19 @@ export type MapChatPlatformProps = {
   listSubtitle?: string;
   listItems?: ReadonlyArray<MapChatListItem>;
   keyTakeaway?: string;
+  /* When true, the chrome + map load eagerly at high priority (the hero's
+     above-the-fold glass window). Below-fold callers (ComparisonSection,
+     ChatSection) leave it false so the assets stay lazy until idle. */
+  eager?: boolean;
+  /* When true (but not `eager`), the chrome + map load eagerly at LOW
+     priority — used by ComparisonSection to preload every pre-mounted demo
+     once the section scrolls into view, so switching showcases never reveals
+     a half-loaded mockup. Distinct from `eager` (which is high-priority for
+     the hero). */
+  preload?: boolean;
 };
 
 const DEFAULT_MAP = "/MapChatbackgroundimg.png";
-const CHROME_BACKGROUND = "/business/ConversationalMapChat.png";
 
 const DEFAULT_USER_QUERY =
   "Forecast the districts in greater Munich most at risk of traffic-congestion growth over the next 2–3 years";
@@ -118,10 +137,15 @@ export default function MapChatPlatform({
   listSubtitle = DEFAULT_LIST_SUBTITLE,
   listItems = DEFAULT_LIST_ITEMS,
   keyTakeaway = DEFAULT_KEY_TAKEAWAY,
+  eager = false,
+  preload = false,
 }: MapChatPlatformProps = {}) {
+  const warm = useMediaWarm();
+  /* Eager-but-low-priority once the section is warm OR has been preloaded. */
+  const soon = warm || preload;
   return (
     <div
-      className="mx-auto w-full"
+      className="biz-product-display biz-mockup-frame mx-auto w-full"
       style={{
         maxWidth: 1180,
         borderRadius: "var(--ent-radius-2xl)",
@@ -131,16 +155,19 @@ export default function MapChatPlatform({
       }}
     >
       <div style={{ position: "relative", width: "100%", aspectRatio: "5190 / 3030" }}>
-        <MapImage map={map} />
+        <MapImage map={map} eager={eager} warm={soon} />
 
         <Image
-          src={CHROME_BACKGROUND}
+          src={chromeBackground}
           alt=""
           fill
           sizes="(max-width: 1180px) 100vw, 1180px"
           className="object-cover object-center"
           aria-hidden
-          priority
+          placeholder="blur"
+          {...(eager
+            ? { priority: true }
+            : { loading: soon ? "eager" : "lazy", fetchPriority: soon ? "low" : undefined })}
         />
 
         <ChatResponse
@@ -157,7 +184,7 @@ export default function MapChatPlatform({
   );
 }
 
-function MapImage({ map }: { map: string }) {
+function MapImage({ map, eager, warm }: { map: string; eager?: boolean; warm?: boolean }) {
   return (
     <div
       className="absolute overflow-hidden"
@@ -178,6 +205,9 @@ function MapImage({ map }: { map: string }) {
         sizes="(max-width: 1180px) 55vw, 650px"
         className="object-cover object-center"
         aria-hidden
+        {...(eager
+          ? { priority: true }
+          : { loading: warm ? "eager" : "lazy", fetchPriority: warm ? "low" : undefined })}
       />
 
       <Marker top="32%" left="38%" tone="accent" />
@@ -224,8 +254,8 @@ function ChatInputBox() {
       style={{
         top: `${INPUT_TOP}%`,
         bottom: `${100 - INPUT_BOTTOM}%`,
-        left: `${INPUT_LEFT}%`,
-        right: `${100 - INPUT_RIGHT}%`,
+        left: `calc(${INPUT_LEFT}% + ${PANEL_PAD})`,
+        right: `calc(${100 - INPUT_RIGHT}% + ${PANEL_PAD})`,
         backgroundColor: PANEL_BG,
         border: `1px solid ${HAIRLINE}`,
         borderRadius: 10,
@@ -297,7 +327,7 @@ function ChatResponse({
         left: `${CHAT_LEFT}%`,
         right: `${100 - CHAT_RIGHT}%`,
         backgroundColor: PANEL_BG,
-        padding: "clamp(6px, 0.7vw, 10px)",
+        padding: PANEL_PAD,
         gap: "clamp(4px, 0.5vw, 7px)",
         justifyContent: "flex-start",
         overflow: "hidden",

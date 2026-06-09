@@ -1,15 +1,63 @@
-import { ImageWithFallback } from "@/components/ui/ImageWithFallback";
+import { getImageProps } from "next/image";
+
 import { MistxNav } from "@/components/layout/MistxNav";
 import { BlogIndexGrid, type BlogFilter } from "@/components/blog/BlogIndexGrid";
 import { BlogFilterBar } from "@/components/blog/BlogFilterBar";
+import { BlogSubscribeSection } from "@/components/blog/BlogSubscribeSection";
+import { MediaPrefetcher } from "@/components/ui/MediaPrefetcher";
 import { getAllBlogPostsSorted } from "@/lib/blog-posts";
 import styles from "@/app/blog/blog-index.module.css";
+
+const BLOG_HERO_SIZES = "(max-width: 767px) 100vw, 120vw";
+
+const { props: blogHeroDesktopProps } = getImageProps({
+  src: "/ColumbusWorldLinesBG.png",
+  alt: "",
+  width: 3480,
+  height: 1808,
+  sizes: BLOG_HERO_SIZES,
+  quality: 75,
+  loading: "eager",
+  className: styles.heroWatermarkImage,
+});
+
+const {
+  props: { srcSet: blogHeroMobileSrcSet },
+} = getImageProps({
+  src: "/BlogHeroMobile-v2.png",
+  alt: "",
+  width: 1024,
+  height: 1536,
+  sizes: BLOG_HERO_SIZES,
+  quality: 75,
+});
 
 export function BlogIndexShell({ activeFilter }: { activeFilter: BlogFilter }) {
   const posts = getAllBlogPostsSorted();
 
   return (
     <main className={styles.page}>
+      {/* Media-scoped LCP preload for the hero watermark — one variant per
+          viewport, matching the <picture> srcSets exactly (built from the
+          same getImageProps output, so they can't drift). React 19 hoists
+          these <link>s into <head>; the `media` attr means only the matching
+          variant is fetched, so there's no double-download. */}
+      <link
+        rel="preload"
+        as="image"
+        media="(min-width: 768px)"
+        imageSrcSet={blogHeroDesktopProps.srcSet}
+        imageSizes={blogHeroDesktopProps.sizes}
+        fetchPriority="high"
+      />
+      <link
+        rel="preload"
+        as="image"
+        media="(max-width: 767px)"
+        imageSrcSet={blogHeroMobileSrcSet}
+        imageSizes={BLOG_HERO_SIZES}
+        fetchPriority="high"
+      />
       <MistxNav />
 
       {/* Full-viewport hero — the title block centres in the space below
@@ -18,25 +66,21 @@ export function BlogIndexShell({ activeFilter }: { activeFilter: BlogFilter }) {
           `data-hero-section` lets the navbar render transparent at the
           top of the page so the watermark reads through it. */}
       <section className={styles.hero} data-hero-section aria-label="Blog">
-        {/* Watermark — formerly a CSS background-image (948 KB PNG).
-            Routing it through next/image with `priority` lets the
-            optimizer ship a sub-200 KB AVIF/WebP variant and emits a
-            preload tag so the watermark is on screen before hydration.
-            The wrapper still owns the mask/opacity treatment. */}
+        {/* Watermark — art-directed with a portrait mobile source so the
+            phone hero keeps the map continents + contour lines instead
+            of cropping the desktop canvas. */}
         <div className={styles.heroWatermark} aria-hidden>
-          <ImageWithFallback
-            src="/ColumbusBackgroundMB.png"
-            alt=""
-            fill
-            priority
-            sizes="120vw"
-            quality={75}
-            style={{ objectFit: "cover", objectPosition: "center" }}
-          />
+          <picture className={styles.heroWatermarkPicture}>
+            <source
+              media="(max-width: 767px)"
+              srcSet={blogHeroMobileSrcSet}
+            />
+            <img {...blogHeroDesktopProps} alt="" />
+          </picture>
         </div>
         <div className={styles.heroInner}>
           <h1 className={`h1 tracking-tight ${styles.headline}`}>Blog</h1>
-          <p className={`p-l ${styles.lead}`}>
+          <p className={styles.lead}>
             Research updates, product notes, and longer-form writing on
             geospatial intelligence.
           </p>
@@ -47,6 +91,16 @@ export function BlogIndexShell({ activeFilter }: { activeFilter: BlogFilter }) {
       <div className={styles.body}>
         <BlogIndexGrid posts={posts} activeFilter={activeFilter} />
       </div>
+
+      {/* Subscribe section — sits between the article grid and the reveal
+          footer, giving readers a clear path to stay connected after
+          browsing. Max-width mirrors the article column (720px). */}
+      <BlogSubscribeSection source="blog_index" />
+
+      {/* Warm all below-fold card covers (lazy → eager) after load + idle,
+          so every cover is decoded before the user scrolls or clicks into an
+          article. Skips on data-saver. */}
+      <MediaPrefetcher />
     </main>
   );
 }

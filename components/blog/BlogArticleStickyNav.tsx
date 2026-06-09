@@ -2,9 +2,11 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
+import { track } from "@/lib/analytics";
 import styles from "./blog-sticky-nav.module.css";
+import subStyles from "./blog-subscribe.module.css";
 
 export type BlogStickySection = {
   id: string;
@@ -13,13 +15,59 @@ export type BlogStickySection = {
 
 type Props = {
   sections: BlogStickySection[];
+  articleSlug?: string;
 };
 
-export function BlogArticleStickyNav({ sections }: Props) {
+type SubPhase = "idle" | "submitting" | "success" | "error";
+
+export function BlogArticleStickyNav({ sections, articleSlug }: Props) {
   const [logoHovered, setLogoHovered] = useState(false);
   const [activeId, setActiveId] = useState<string>("");
   const [pastEnd, setPastEnd] = useState(false);
   const [minimized, setMinimized] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const [dockHovered, setDockHovered] = useState(false);
+
+  /* Compact subscribe widget state */
+  const [subEmail, setSubEmail] = useState("");
+  const [subPhase, setSubPhase] = useState<SubPhase>("idle");
+  const [subErrorKey, setSubErrorKey] = useState(0);
+  const subStartedRef = useRef(false);
+
+  const handleSubFocus = () => {
+    if (!subStartedRef.current) {
+      subStartedRef.current = true;
+      track.subscribeStarted("article_sidebar", articleSlug);
+    }
+  };
+
+  const handleSubscribe = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (subPhase === "submitting" || subPhase === "success") return;
+    const emailDomain = subEmail.trim().split("@")[1] ?? "unknown";
+    track.subscribeSubmitted("article_sidebar", emailDomain, articleSlug);
+    setSubPhase("submitting");
+    try {
+      const res = await fetch("/api/subscribe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: subEmail.trim(),
+          source: "article_sidebar",
+          pageUri: typeof window !== "undefined" ? window.location.href : undefined,
+          pageName: "Blog Article",
+        }),
+      });
+      if (!res.ok) throw new Error("failed");
+      track.subscribeSuccess("article_sidebar", articleSlug);
+      setSubPhase("success");
+      setSubEmail("");
+    } catch {
+      track.subscribeError("article_sidebar", "api_error", articleSlug);
+      setSubPhase("error");
+      setSubErrorKey((k) => k + 1);
+    }
+  };
 
   useEffect(() => {
     // Scope to the article's own footer, which lives inside <main>. A
@@ -35,6 +83,13 @@ export function BlogArticleStickyNav({ sections }: Props) {
     );
     observer.observe(footer);
     return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 200);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   useEffect(() => {
@@ -58,6 +113,9 @@ export function BlogArticleStickyNav({ sections }: Props) {
     <nav
       className={`${styles.dock} ${pastEnd ? styles.dockHidden : ""} ${minimized ? styles.dockMinimized : ""}`}
       aria-label="Article navigation"
+      style={{ opacity: scrolled && !dockHovered ? 0.5 : 1 }}
+      onMouseEnter={() => setDockHovered(true)}
+      onMouseLeave={() => setDockHovered(false)}
     >
       {/* Minimize/restore toggle — single button sitting in the top-right
           of the panel. When minimized the panel shrinks to a small circle
@@ -116,7 +174,6 @@ export function BlogArticleStickyNav({ sections }: Props) {
             style={{
               fontFamily: "var(--font-hero)",
               opacity: logoHovered ? 1 : 0,
-              transform: logoHovered ? "translateX(0)" : "translateX(-12px)",
             }}
           >
             Columbus Earth
@@ -190,6 +247,62 @@ export function BlogArticleStickyNav({ sections }: Props) {
         </div>
         );
       })()}
+
+      {/* ── Compact subscribe widget ─────────────────────────────────────
+          Pinned to the bottom of the content column via margin-top:auto
+          in .compactWidget. Fades out with the rest of dockContent when
+          the panel is minimised. */}
+      <div className={subStyles.compactWidget}>
+        <p className={subStyles.compactLabel}>Columbus Blog</p>
+        <p className={subStyles.compactSub}>New articles to your inbox</p>
+        {subPhase !== "success" ? (
+          <form className={subStyles.compactForm} onSubmit={handleSubscribe}>
+            <input
+              type="email"
+              required
+              value={subEmail}
+              onChange={(e) => {
+                setSubEmail(e.target.value);
+                if (subPhase === "error") setSubPhase("idle");
+              }}
+              onFocus={handleSubFocus}
+              className={`${subStyles.compactInput} ${subPhase === "error" ? subStyles.pillError : ""}`}
+              key={subErrorKey}
+              placeholder="your@email.com"
+              aria-label="Email address for blog updates"
+              disabled={subPhase === "submitting"}
+              autoComplete="email"
+            />
+            <button
+              type="submit"
+              className={subStyles.compactBtn}
+              disabled={subPhase === "submitting"}
+            >
+              {subPhase === "submitting" ? (
+                <span className={subStyles.spinner} aria-hidden />
+              ) : (
+                "Subscribe"
+              )}
+            </button>
+          </form>
+        ) : (
+          <div className={subStyles.compactSuccess} role="status">
+            <span className={subStyles.checkCircle} aria-hidden>
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+                <path
+                  className={subStyles.checkPath}
+                  d="M3 8.2l3.2 3.2 7-7"
+                  stroke="var(--color-accent)"
+                  strokeWidth="1.8"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </span>
+            <span className={subStyles.compactSuccessText}>You&apos;re in!</span>
+          </div>
+        )}
+      </div>
 
       </div>
     </nav>

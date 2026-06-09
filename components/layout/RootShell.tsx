@@ -37,7 +37,6 @@ const KNOWN_ROUTE_PATTERNS: RegExp[] = [
   /^\/contact(\/|$)/,
   /^\/products\/business(\/|$)/,
   /^\/products\/consumer(\/|$)/,
-  /^\/products\/maps-gpt(\/|$)/,
   /^\/research(\/|$)/,
 ];
 
@@ -80,7 +79,12 @@ export function RootShell({ children }: { children: ReactNode }) {
   }
   return (
     <>
-      <Footer reveal theme="light" />
+      <Footer
+        reveal
+        theme="light"
+        bg="#FFFFFF"
+        bgImage="/footer-bg-poster.jpg"
+      />
       <PageFrame>{children}</PageFrame>
     </>
   );

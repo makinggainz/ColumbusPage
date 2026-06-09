@@ -261,9 +261,9 @@ export function TechDiagramSVG({ activeTitle, onLayerClick, ...props }: TechDiag
 
   const layerTitles = ["Data Collection", "Fusion", "Core Reasoning", "Answers, insights, patterns"];
 
-  const dataCollectionProps = { href: "/TechnologyPageImages/DataCollectionLayer.png", preserveAspectRatio: "none" };
-  const fusionLayerProps = { href: "/TechnologyPageImages/FusionLayer.png", preserveAspectRatio: "none" };
-  const lastLayerProps = { href: "/TechnologyPageImages/LastLayer.png", preserveAspectRatio: "none" };
+  const dataCollectionProps = { href: "/ResearchPgMedia/DataCollectionLayer.png", preserveAspectRatio: "none" };
+  const fusionLayerProps = { href: "/ResearchPgMedia/FusionLayer.png", preserveAspectRatio: "none" };
+  const lastLayerProps = { href: "/ResearchPgMedia/LastLayer.png", preserveAspectRatio: "none" };
 
   // Strip an optional leading numeric prefix like "1." or "1. " (with
   // regular space, em-space, or any whitespace), so the diagram still

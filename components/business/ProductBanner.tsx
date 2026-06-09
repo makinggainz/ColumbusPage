@@ -3,10 +3,14 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { ImageWithFallback } from "@/components/ui/ImageWithFallback";
+import { useMediaWarm } from "@/components/ui/MediaPrefetcher";
+import { track } from "@/lib/analytics";
+import businessArtBG from "@/public/BusinessPgMedia/businessArtBGEnhance.png";
 
 export default function ProductBanner() {
   const sectionRef = useRef<HTMLElement>(null);
   const [visible, setVisible] = useState(false);
+  const warm = useMediaWarm();
 
   useEffect(() => {
     const el = sectionRef.current;
@@ -42,16 +46,19 @@ export default function ProductBanner() {
         style={{ aspectRatio: "1881 / 836" }}
       >
         <ImageWithFallback
-          src="/businessartbackground.png"
+          src={businessArtBG}
           alt=""
           fill
           sizes="100vw"
           quality={80}
+          placeholder="blur"
+          loading={warm ? "eager" : "lazy"}
+          fetchPriority={warm ? "low" : undefined}
           style={{ objectFit: "fill" }}
         />
       </div>
       <div
-        className="relative z-10 flex flex-col items-center justify-center px-4 md:px-10"
+        className="relative z-10 flex flex-col items-center justify-center px-5 md:px-10"
         style={{
           paddingTop: "clamp(120px, 15vw, 192px)",
           paddingBottom: "clamp(120px, 15vw, 192px)",
@@ -74,7 +81,8 @@ export default function ProductBanner() {
         </h2>
 
         <Link
-          href="/contact"
+          href="/contact?tab=columbus-pro"
+          onClick={() => track.demoRequested("business")}
           className="group mt-10 flex items-center gap-3 leading-none whitespace-nowrap rounded-button-md hover:opacity-90 transition-all duration-300"
           style={{ fontSize: 15, fontWeight: 500, height: 36, paddingLeft: 20, paddingRight: 16, backgroundColor: "var(--ent-btn-dark)", color: "white" }}
         >

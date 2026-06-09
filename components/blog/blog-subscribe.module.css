@@ -1,0 +1,337 @@
+/* ── Blog subscribe form — inline email+button pill with interaction
+   and submit-state animations. Shared by the full BlogSubscribeSection
+   (blog index + article mobile fallback) and the compact sidebar widget.
+   Tokens from globals.css (--color-ink / -accent / -cta / -gridline, etc.)
+   and the business-page flat-hairline palette: #FAFAFA panel, #ECECEF 1px
+   hairline, navy fill button, no gradients or drop-shadows. ──────────── */
+
+/* ── Pill container (input + button side-by-side) ─────────────────────── */
+.pill {
+  display: flex;
+  align-items: stretch;
+  border: 1px solid var(--color-gridline);
+  border-radius: var(--radius-button-lg);  /* 26px — generous pill */
+  overflow: hidden;
+  background: #FFFFFF;
+  transition:
+    border-color 220ms ease,
+    box-shadow   220ms ease;
+}
+
+.pill:focus-within {
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-accent) 14%, transparent);
+}
+
+.pillError {
+  border-color: #C0392B !important;
+  box-shadow: 0 0 0 3px rgba(192, 57, 43, 0.12) !important;
+  animation: pillShake 0.42s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+.pillInput {
+  flex: 1;
+  min-width: 0;
+  padding: 13px 18px;
+  border: none;
+  background: transparent;
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-size: 15px;
+  line-height: 1.4;
+  outline: none;
+}
+
+.pillInput::placeholder {
+  color: color-mix(in srgb, var(--color-ink) 28%, transparent);
+}
+
+/* ── Subscribe button ─────────────────────────────────────────────────── */
+.pillBtn {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 13px 22px;
+  background: var(--color-cta);
+  color: #FFFFFF;
+  border: none;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  cursor: pointer;
+  transition:
+    background-color 220ms ease,
+    color            220ms ease,
+    opacity          200ms ease;
+}
+
+.pillBtn:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--color-cta) 80%, var(--color-accent));
+  color: var(--color-accent);
+}
+
+.pillBtn:disabled {
+  opacity: 0.72;
+  cursor: not-allowed;
+}
+
+/* ── Loading spinner inside the button ──────────────────────────────── */
+@keyframes spinRing {
+  to { transform: rotate(360deg); }
+}
+
+.spinner {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.28);
+  border-top-color: #FFFFFF;
+  animation: spinRing 0.65s linear infinite;
+  flex-shrink: 0;
+}
+
+/* ── Form / success grid-rows transition ────────────────────────────── */
+/* The form row and success message each live inside a grid cell whose
+   height is animated via grid-template-rows 1fr / 0fr — the same trick
+   the contact-page FAQ answer panels use. */
+.transitionWrap {
+  display: grid;
+  transition: grid-template-rows 380ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.transitionWrap[data-open="true"]  { grid-template-rows: 1fr; }
+.transitionWrap[data-open="false"] { grid-template-rows: 0fr; }
+
+.transitionInner {
+  overflow-x: visible;
+  overflow-y: hidden;
+}
+
+/* ── Success state ─────────────────────────────────────────────────── */
+@keyframes successFadeUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+
+.successBox {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 0 2px;
+  animation: successFadeUp 0.44s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.checkCircle {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--color-accent) 14%, transparent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Stroke draw-on animation for the checkmark path */
+@keyframes checkDraw {
+  from { stroke-dashoffset: 22; }
+  to   { stroke-dashoffset: 0;  }
+}
+
+.checkPath {
+  stroke-dasharray: 22;
+  stroke-dashoffset: 22;
+  animation: checkDraw 0.38s cubic-bezier(0.22, 1, 0.36, 1) 0.18s forwards;
+}
+
+.successText {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.successPrimary {
+  font-family: var(--font-sans);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--color-ink);
+}
+
+.successSecondary {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  color: var(--color-muted);
+  line-height: 1.45;
+}
+
+/* ── Error text ─────────────────────────────────────────────────────── */
+.errorText {
+  margin-top: 8px;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  color: #C0392B;
+  letter-spacing: -0.005em;
+}
+
+/* ── Shake animation (pill border during error) ─────────────────────── */
+@keyframes pillShake {
+  0%,  100% { transform: translateX(0);  }
+  18%       { transform: translateX(-5px); }
+  36%       { transform: translateX(5px);  }
+  54%       { transform: translateX(-3px); }
+  72%       { transform: translateX(3px);  }
+}
+
+/* ── Compact sidebar variant — stacked layout ───────────────────────── */
+.compactWidget {
+  margin-top: auto;        /* push to bottom of the flex dock */
+  padding-top: 20px;
+  border-top: 1px solid #ECECEF;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.compactLabel {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: #71717A;
+}
+
+.compactSub {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--color-muted);
+  margin-top: -4px;
+}
+
+.compactForm {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.compactInput {
+  width: 100%;
+  padding: 9px 12px;
+  border: 1px solid #ECECEF;
+  border-radius: var(--radius-md);
+  background: #FFFFFF;
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  outline: none;
+  transition: border-color 200ms ease, box-shadow 200ms ease;
+}
+
+.compactInput::placeholder {
+  color: color-mix(in srgb, var(--color-ink) 28%, transparent);
+}
+
+.compactInput:focus {
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-accent) 14%, transparent);
+}
+
+.compactBtn {
+  width: 100%;
+  padding: 9px 12px;
+  background: var(--color-cta);
+  color: #FFFFFF;
+  border: none;
+  border-radius: var(--radius-md);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: background-color 200ms ease, color 200ms ease, opacity 200ms ease;
+}
+
+.compactBtn:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--color-cta) 80%, var(--color-accent));
+  color: var(--color-accent);
+}
+
+.compactBtn:disabled {
+  opacity: 0.72;
+  cursor: not-allowed;
+}
+
+.compactSuccess {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0 2px;
+  animation: successFadeUp 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.compactSuccessText {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--color-ink);
+}
+
+/* ── Dark mode ────────────────────────────────────────────────────── */
+:global(body.bg-mode-dark) .pill {
+  background: #1F1F1F;
+  border-color: rgba(255, 255, 255, 0.1);
+}
+:global(body.bg-mode-dark) .pill:focus-within {
+  border-color: #5BB8D8;
+  box-shadow: 0 0 0 3px rgba(91, 184, 216, 0.16);
+}
+:global(body.bg-mode-dark) .pillInput { color: rgba(255, 255, 255, 0.9); }
+:global(body.bg-mode-dark) .pillInput::placeholder { color: rgba(255, 255, 255, 0.32); }
+:global(body.bg-mode-dark) .compactWidget { border-top-color: rgba(255, 255, 255, 0.1); }
+:global(body.bg-mode-dark) .compactLabel { color: rgba(255, 255, 255, 0.45); }
+:global(body.bg-mode-dark) .compactSub   { color: rgba(255, 255, 255, 0.35); }
+:global(body.bg-mode-dark) .compactInput {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.9);
+}
+:global(body.bg-mode-dark) .compactInput:focus {
+  border-color: #5BB8D8;
+  box-shadow: 0 0 0 2px rgba(91, 184, 216, 0.16);
+}
+:global(body.bg-mode-dark) .successPrimary { color: rgba(255, 255, 255, 0.92); }
+:global(body.bg-mode-dark) .successSecondary { color: rgba(255, 255, 255, 0.5); }
+:global(body.bg-mode-dark) .compactSuccessText { color: rgba(255, 255, 255, 0.88); }
+
+/* ── Sepia mode ────────────────────────────────────────────────────── */
+:global(body.bg-mode-sepia) .pill {
+  background: #F7EFE0;
+  border-color: rgba(67, 52, 34, 0.18);
+}
+:global(body.bg-mode-sepia) .pill:focus-within {
+  border-color: #8A5A2B;
+  box-shadow: 0 0 0 3px rgba(138, 90, 43, 0.14);
+}
+:global(body.bg-mode-sepia) .pillInput { color: #433422; }
+:global(body.bg-mode-sepia) .pillInput::placeholder { color: rgba(67, 52, 34, 0.32); }
+:global(body.bg-mode-sepia) .compactWidget { border-top-color: rgba(67, 52, 34, 0.16); }
+:global(body.bg-mode-sepia) .compactLabel { color: rgba(67, 52, 34, 0.55); }
+:global(body.bg-mode-sepia) .compactSub   { color: rgba(67, 52, 34, 0.45); }
+:global(body.bg-mode-sepia) .compactInput {
+  background: #EFE7D7;
+  border-color: rgba(67, 52, 34, 0.18);
+  color: #433422;
+}
+:global(body.bg-mode-sepia) .compactInput:focus {
+  border-color: #8A5A2B;
+}
+:global(body.bg-mode-sepia) .successPrimary { color: #2E2113; }
+:global(body.bg-mode-sepia) .successSecondary { color: rgba(67, 52, 34, 0.6); }

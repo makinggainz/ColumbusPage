@@ -52,13 +52,10 @@ export type ChatRowContent = {
   responseHtml: string;
   /** Follow-up paragraph rendered after the response. */
   followUp: string;
-  /** Map image used as the chat panel background. */
-  mapImageSrc: string;
 };
 
 export type SuperModelRowContent = {
   leftRail: RowLeftRail;
-  mapImageSrc: string;
   mapQuery: string;
 };
 

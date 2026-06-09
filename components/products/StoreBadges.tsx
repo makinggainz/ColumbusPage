@@ -1,5 +1,7 @@
 "use client";
 
+import { track } from "@/lib/analytics";
+
 /**
  * StoreBadges — Apple App Store + Google Play download badges.
  * The site's dark-pill store-badge pattern, mirroring
@@ -43,7 +45,7 @@ const CSS = `
   text-decoration: none;
   transition: color 150ms ease;
 }
-.mg-badge:hover { color: #154ACC; }
+.mg-badge:hover { color: var(--color-accent); }
 .mg-badge-label { display: flex; flex-direction: column; text-align: left; line-height: 1.1; }
 .mg-badge-l1 { font-size: 10px; letter-spacing: 0.02em; }
 .mg-badge-l2 { font-size: 14px; font-weight: 500; }
@@ -62,7 +64,7 @@ const CSS = `
 /* Light variant — white pill with dark text, for use over photo
    backgrounds (consumer hero). Hover stays in the cyan band. */
 .mg-badge--light { background: #ffffff; color: #0B1342; }
-.mg-badge--light:hover { color: #154ACC; }
+.mg-badge--light:hover { color: var(--color-accent); }
 `;
 
 export default function StoreBadges({
@@ -74,17 +76,31 @@ export default function StoreBadges({
   return (
     <>
       <style>{CSS}</style>
-      <a href="#" className={cls} aria-label="Download on the App Store">
+      <a
+        href="https://mapsgpt.es"
+        target="_blank"
+        rel="noreferrer"
+        onClick={() => track.ctaClicked("app_store_badge", "consumer")}
+        className={cls}
+        aria-label="Coming soon to the App Store — try Elio in your browser"
+      >
         <AppleGlyph size={glyphSize} />
         <span className="mg-badge-label">
-          <span className="mg-badge-l1">Download on the</span>
+          <span className="mg-badge-l1">Coming soon to</span>
           <span className="mg-badge-l2">App Store</span>
         </span>
       </a>
-      <a href="#" className={cls} aria-label="Get it on Google Play">
+      <a
+        href="https://mapsgpt.es"
+        target="_blank"
+        rel="noreferrer"
+        onClick={() => track.ctaClicked("google_play_badge", "consumer")}
+        className={cls}
+        aria-label="Coming soon to Google Play — try Elio in your browser"
+      >
         <GooglePlayGlyph size={glyphSize} />
         <span className="mg-badge-label">
-          <span className="mg-badge-l1">GET IT ON</span>
+          <span className="mg-badge-l1">Coming soon to</span>
           <span className="mg-badge-l2">Google Play</span>
         </span>
       </a>

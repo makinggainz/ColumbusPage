@@ -4,16 +4,6 @@
  * Mission / vision section — mirrors the scroll-driven word-reveal
  * pattern used by TextScrollIntro and ElioTextScrollIntro (Framer
  * Motion useScroll + per-word useTransform opacity 0.15 → 1).
- *
- * Background: minimalistCity watermark applied via the exact same
- * masked + dimmed pseudo-layer treatment that ColumbusBackgroundMB
- * carries on TextScrollIntro (the "We're all about maps" / Columbus
- * intro background pattern):
- *   - absolute-positioned div at -z-10 so the foreground text isn't dimmed
- *   - background-size: 120vw 70vw (extends past the viewport's left + right)
- *   - opacity: 0.5
- *   - linear-gradient mask: transparent → 15% → 85% → transparent so the
- *     watermark melts seamlessly into the page above and below
  */
 
 import {
@@ -25,13 +15,20 @@ import {
 } from "framer-motion";
 import { useRef } from "react";
 import { ImageWithFallback } from "@/components/ui/ImageWithFallback";
+import { useMediaWarm } from "@/components/ui/MediaPrefetcher";
+// Static import → AVIF + real blur-up placeholder.
+import minimalistCity from "@/public/minimalistCityEnhanced.png";
+// Mobile-only watermark (portrait crop) — swapped in ≤640px where the
+// section is tall + narrow.
+import minimalistCityMobile from "@/public/mission-watermark-mobile.png";
 
 const COPY =
-  "We are building a thinking earth: an AI that reasons across the vastness of geospatial data. Delivering this technology in simple and powerful products for humanity.";
+  "We’re building an AI that reasons across the vastness of geospatial data. We deliver this through simple and powerful products for humanity.";
 
 export function MissionScrollIntro() {
   const ref = useRef<HTMLParagraphElement>(null);
   const reduced = useReducedMotion();
+  const warm = useMediaWarm();
   const { scrollYProgress } = useScroll({
     target: ref,
     /* Tighter end offset (0.5 vs 0.3) — the word-reveal reaches full
@@ -46,9 +43,6 @@ export function MissionScrollIntro() {
     <section
       className="section relative isolate"
       style={{
-        /* Extra height for this section vs the base .section padding so
-           the minimalistCity watermark renders taller and the band has
-           more breathing room around the scroll-reveal paragraph. */
         minHeight: "min(85vh, 820px)",
         paddingTop: 160,
         paddingBottom: 160,
@@ -57,27 +51,57 @@ export function MissionScrollIntro() {
       }}
     >
       {/* Watermark layer — 75% opacity, no top/bottom fade. The image
-          source is now an <Image> child (was a CSS background-image of
-          a 843 KB PNG) so the optimizer can ship an AVIF/WebP variant.
-          objectFit:fill mirrors the original `background-size: 100% 100%`
-          stretch — guarantees full width AND no top/bottom crop on
-          shorter sections. The minimalistCity skyline is a flat
-          horizontal scene so the vertical squish is visually invisible. */}
+          source is an <Image> child (was a CSS background-image of a
+          843 KB PNG) so the optimizer can ship an AVIF/WebP variant.
+          object-fit on the image is set via .mission-watermark-img:
+            • Desktop: `fill` mirrors the original
+              `background-size: 100% 100%` stretch — guarantees full width
+              + no top/bottom crop on shorter sections, and the flat
+              horizontal skyline hides the vertical squish.
+            • Mobile (≤640px): the section is tall + narrow, so `fill`
+              would visibly stretch the skyline. Switch to `cover` — the
+              image keeps its aspect ratio and any overflow simply bleeds
+              past the (overflow-hidden) section edges, never deformed. */}
+      <style>{`
+        .mission-watermark-img { object-fit: fill; }
+        /* Mobile-only watermark hidden by default; shown (and the desktop one
+           hidden) at ≤640px. cover keeps its portrait aspect on the tall,
+           narrow mobile section instead of stretching. */
+        .mission-watermark-mobile { display: none; object-fit: cover; }
+        @media (max-width: 640px) {
+          .mission-watermark-desktop { display: none; }
+          .mission-watermark-mobile { display: block; }
+        }
+      `}</style>
       <div
         aria-hidden
         className="absolute inset-0 -z-10 pointer-events-none overflow-hidden"
       >
         <ImageWithFallback
-          src="/minimalistCity.png"
+          className="mission-watermark-img mission-watermark-desktop"
+          src={minimalistCity}
           alt=""
           fill
           sizes="100vw"
           quality={75}
-          style={{ objectFit: "fill" }}
+          placeholder="blur"
+          loading={warm ? "eager" : "lazy"}
+          fetchPriority={warm ? "low" : undefined}
+        />
+        <ImageWithFallback
+          className="mission-watermark-mobile"
+          src={minimalistCityMobile}
+          alt=""
+          fill
+          sizes="100vw"
+          quality={75}
+          placeholder="blur"
+          loading={warm ? "eager" : "lazy"}
+          fetchPriority={warm ? "low" : undefined}
         />
       </div>
 
-      <div className="container-site">
+      <div className="content-bounds">
         <div className="mx-auto max-w-3xl">
           {/* Exception to the typography system: this scroll-reveal lead
               paragraph keeps the three-tier responsive sizing (24/30/36px)

@@ -15,6 +15,20 @@ import type {
  */
 export const DEFAULT_INDUSTRY: IndustryId = "urban-infrastructure";
 
+/** Per-industry accent colour used on the /products/business page —
+ *  paints the IndustrySelector active-cell background (low-alpha tint)
+ *  and the round IconChips next to titles in the section below. Only
+ *  the six business-page industries have a colour today; consumers
+ *  should fall back gracefully when a key is undefined. */
+export const INDUSTRY_COLOR: Partial<Record<IndustryId, string>> = {
+  "residential-real-estate": "#00A7C0",
+  "commercial-real-estate": "#B6B300",
+  "urban-infrastructure": "#8D8D8D",
+  "geomarketing": "#0066B6",
+  "academic-research": "#8E5801",
+  "environmental-research": "#00B539",
+};
+
 /** Tile order for the IndustrySelector grid + sticky navbar carousel. */
 export const INDUSTRY_ORDER: IndustryId[] = [
   "residential-real-estate",
@@ -35,12 +49,12 @@ const META: Record<IndustryId, { name: string; shortName: string; imageSrc: stri
   "residential-real-estate": {
     name: "Residential Real Estate",
     shortName: "Residential Real Estate",
-    imageSrc: "/use-cases/residentila.png",
+    imageSrc: "/use-cases/residential.png",
   },
   "commercial-real-estate": {
     name: "CRE",
     shortName: "CRE",
-    imageSrc: "/use-cases/comercial.png",
+    imageSrc: "/use-cases/commercial.png",
   },
   "disaster-response": {
     name: "Disaster Response",
@@ -60,7 +74,7 @@ const META: Record<IndustryId, { name: string; shortName: string; imageSrc: stri
   "gis-research": {
     name: "GIS Research",
     shortName: "GIS Research",
-    imageSrc: "/use-cases/comercial.png",
+    imageSrc: "/use-cases/commercial.png",
   },
   "economic-studies": {
     name: "Economic Studies",
@@ -111,21 +125,19 @@ const URBAN_CHAT: ChatRowContent = {
     "Considering your customer target",
   ],
   responseHtml:
-    'These areas <span class="text-red-700">marked,</span> have streets that often have had crashes. There is poor road signal trafficking. Consumer’s have expressed disastisfaction with this section.',
+    'These areas <span class="text-red-700">marked,</span> have streets that often have had crashes. There is poor road signal trafficking. Consumer’s have expressed dissatisfaction with this section.',
   followUp:
     "/ Would you like to order a specific dataset and survey? Our partner agents will be dispatched for the study.",
-  mapImageSrc: "/HK Map-2.png",
 };
 
 const URBAN_SUPER_MODEL: SuperModelRowContent = {
   leftRail: {
     title: "Generative surveying",
     description:
-      'Columbus has brought accurate GenAI to GeoData, dynamically creating new layers of geospatial information using our UGM.\n\n"Smart Layers" can be used to create creative data layers that would otherwise be time-intesive or expensive to obtain.\n\nSmart layers can also be used when data is unavaialble or hard to survey.',
+      'Columbus has brought accurate GenAI to GeoData, dynamically creating new layers of geospatial information using our UGM.\n\n"Smart Layers" can be used to create creative data layers that would otherwise be time-intensive or expensive to obtain.\n\nSmart layers can also be used when data is unavailable or hard to survey.',
     ctaLabel: "See live Smart Layers",
     ctaHref: "#smart-layers",
   },
-  mapImageSrc: "/use-cases/havana.png",
   mapQuery:
     "I need a data layer of buildings in Havana by safety score. In the perspective of: City Planning",
 };
@@ -186,14 +198,14 @@ const URBAN_DATA_CATALOGUE: DataCatalogueRowContent = {
       rows: "55,010 rows",
       description:
         "Predicts 2–5 year property value growth using migration, job forecasts, and permit trends.",
-      imageSrc: "/use-cases/layer1.png",
+      imageSrc: "/BusinessPgMedia/layer1.png",
     },
     {
       title: "Future Turnover Hotspots",
       rows: "40,206 rows",
       description:
         "Predicts high-flip areas (DOM <20 days) from sales velocity, investor inflows, and economic cycles.",
-      imageSrc: "/use-cases/layer2.png",
+      imageSrc: "/BusinessPgMedia/layer2.png",
     },
     {
       title: "Future Displacement Risk Overlay",
@@ -235,7 +247,6 @@ function loremRow(industryName: string): {
       ],
       responseHtml: `Lorem ipsum dolor sit amet, <span class="text-red-700">consectetur</span> adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.`,
       followUp: "/ Lorem ipsum dolor sit amet? Consectetur adipiscing elit sed do.",
-      mapImageSrc: "/HK Map-2.png",
     },
     superModel: {
       leftRail: {
@@ -244,7 +255,6 @@ function loremRow(industryName: string): {
         ctaLabel: "See live Smart Layers",
         ctaHref: "#smart-layers",
       },
-      mapImageSrc: "/use-cases/havana.png",
       mapQuery: `Lorem ipsum dolor sit amet for ${industryName}. In the perspective of: Lorem Ipsum`,
     },
     agentResearch: {
@@ -289,13 +299,13 @@ function loremRow(industryName: string): {
           title: `Lorem ${industryName} layer A`,
           rows: "0 rows",
           description: LOREM_SHORT,
-          imageSrc: "/use-cases/layer1.png",
+          imageSrc: "/BusinessPgMedia/layer1.png",
         },
         {
           title: `Ipsum ${industryName} layer B`,
           rows: "0 rows",
           description: LOREM_SHORT,
-          imageSrc: "/use-cases/layer2.png",
+          imageSrc: "/BusinessPgMedia/layer2.png",
         },
         {
           title: `Dolor ${industryName} layer C`,
