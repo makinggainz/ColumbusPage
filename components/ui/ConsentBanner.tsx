@@ -43,15 +43,16 @@ export function ConsentBanner() {
       aria-live="polite"
       className={styles.banner}
     >
-      <p className={styles.title}>Cookie preferences</p>
-      <p className={styles.body}>
-        We use optional analytics cookies to understand how you use this site so
-        we can improve your experience.{" "}
-        <Link href="/privacy" className={styles.link}>
-          Privacy Policy
-        </Link>
-        .
-      </p>
+      <div className={styles.content}>
+        <p className={styles.body}>
+          We use optional analytics cookies to understand how you use our site
+          so we can improve it.{" "}
+          <Link href="/privacy" className={styles.link}>
+            Privacy Policy
+          </Link>
+          .
+        </p>
+      </div>
       <div className={styles.buttons}>
         <button onClick={accept} className={styles.btnAccept}>
           Accept all
