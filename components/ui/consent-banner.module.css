@@ -82,7 +82,7 @@
   letter-spacing: -0.01em;
   border: 1px solid rgba(90, 107, 123, 0.25);
   background: transparent;
-  color: rgba(90, 107, 123, 0.8);
+  color: #0B1B3A;
   cursor: pointer;
   transition: background 140ms ease, border-color 140ms ease;
 }
