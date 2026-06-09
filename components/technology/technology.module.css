@@ -5855,6 +5855,34 @@
   100% { opacity: 0; }
 }
 
+/* Card 2 — meridians (vertical lines) grow from the top pole down to the
+   bottom pole, then drain off the bottom and loop (both empty states match,
+   so the loop is seamless). clip-path is in the meridian's own box, whose
+   top/bottom map to the poles regardless of its rotateY. */
+.globeGrow {
+  animation: globeMeridianGrow 4s linear infinite;
+}
+@keyframes globeMeridianGrow {
+  0%   { clip-path: inset(0 0 100% 0); }
+  50%  { clip-path: inset(0 0 0 0); }
+  100% { clip-path: inset(100% 0 0 0); }
+}
+
+/* Card 2 — each parallel snaps on the instant the meridian fill-front reaches
+   it (delay set per ring by its vertical position) and snaps off as the lines
+   drain. Same 4s cycle as .globeGrow; the jumps are instant (no fade). */
+.globeGrowParallel {
+  opacity: 0;
+  animation: globeParallelAppear 4s linear infinite both;
+}
+@keyframes globeParallelAppear {
+  0%     { opacity: 0; }
+  0.1%   { opacity: 1; }
+  50%    { opacity: 1; }
+  50.1%  { opacity: 0; }
+  100%   { opacity: 0; }
+}
+
 /* Meridians — full great circles, each rotated around Y to a longitude. */
 .globeMeridian {
   position: absolute;
@@ -5918,67 +5946,97 @@
   );
 }
 
-/* Card 4 — 3D warp tunnel (gravity well). Concentric rings + radial spokes
-   assembled in 3D, tilted for an oblique view, spun on its axis via the same
-   globeSpin keyframe (16s) as card 1. Sizing is driven by inline px (rings/
-   spokes), so the funnel/rotor boxes are zero-size anchors at the centre. */
-.warpScene {
+/* Card 4 — 3D multilayer network. Three stacked horizontal planes (dashed
+   outlines) with nodes, connected by projection rays. The stack tilts for an
+   oblique view; .netStack is a zero-size anchor (geometry is inline px). */
+.netScene {
   position: absolute;
   inset: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  perspective: 560px;
+  perspective: 760px;
 }
 
-.warpFunnel {
+.netStack {
   position: relative;
   width: 0;
   height: 0;
   transform-style: preserve-3d;
-  /* Steep top-down (from-above) view — negative tilt looks DOWN into the
-     funnel (positive looked up at it from underneath). Geometry is centred on
-     the origin (see MID offset), so the scene's flex centring keeps it placed. */
-  transform: rotateX(-58deg);
+  /* Mostly frontal (eye-level) view — low tilt so the discs read as thin
+     stacked ellipses with the rays clearly visible between layers. Spins on
+     its vertical axis at the same 16s speed as card 1's globe. */
+  transform: rotateX(30deg);
+  animation: netSpin 16s linear infinite;
 }
 
-.warpRotor {
-  position: absolute;
-  top: 0;
-  left: 0;
-  transform-style: preserve-3d;
-  animation: globeSpin 16s linear infinite;
+/* Spin around the stack's (tilted) vertical axis — tilt baked in so it holds. */
+@keyframes netSpin {
+  from { transform: rotateX(30deg) rotateY(0deg); }
+  to   { transform: rotateX(30deg) rotateY(-360deg); }
 }
 
-.warpRing {
+/* Circular layer disc — solid hairline outline (matches the wireframe stroke)
+   + a faint white fill. */
+.netPlane {
   position: absolute;
   top: 0;
   left: 0;
   border: 1px solid rgba(255, 255, 255, 0.5);
   border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
 }
 
-.warpSpoke {
+/* Projection ray — a thin line that fades along its length (same look as the
+   globe's rays on card 1). */
+.netEdge {
   position: absolute;
   top: 0;
   left: 0;
   height: 1px;
   margin-top: -0.5px;
+  border-radius: 1px;
   transform-origin: 0 50%;
-  background: rgba(255, 255, 255, 0.5);
+  background: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0.85) 0%,
+    rgba(255, 255, 255, 0.7) 55%,
+    rgba(255, 255, 255, 0.4) 100%
+  );
 }
 
-/* Opaque funnel surface panel — filled with the tile colour so it hides the
-   wireframe behind it (3D z-sorting). The 1px box is mapped onto the cell via
-   inline matrix3d + clipped to the trapezoid. */
-.warpFace {
+/* Layer nodes — the wrapper carries the 3D position (orbits with the spin);
+   the inner dot counter-rotates so it always faces the viewer as a round
+   dot (a billboard) instead of a flat disc that turns edge-on. */
+.netNode {
   position: absolute;
   top: 0;
   left: 0;
-  width: 1px;
-  height: 1px;
-  transform-origin: 0 0;
-  background: #1d3fa6; /* = .resultsCardArt tile background */
+  transform-style: preserve-3d;
+}
+.netNodeDot {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1.8px;
+  height: 1.8px;
+  margin: -0.9px 0 0 -0.9px;
+  border-radius: 50%;
+  /* Spherical shading — bright highlight toward the top-left, shading to a
+     soft edge, so the dot reads as a 3D sphere. */
+  background: radial-gradient(
+    circle at 34% 30%,
+    #ffffff 0%,
+    #eef3f9 42%,
+    #aebfd4 100%
+  );
+  /* Cancels the stack's rotateX(30) tilt + rotateY(-360) spin so the sphere
+     stays camera-facing (highlight stays put). */
+  animation: netNodeBillboard 16s linear infinite;
+}
+@keyframes netNodeBillboard {
+  from { transform: rotateY(0deg) rotateX(-30deg); }
+  to   { transform: rotateY(360deg) rotateX(-30deg); }
 }
 
 /* Card 3 — meridian globe + roaming crosshairs + drifting target reticle. */
@@ -5992,34 +6050,27 @@
   perspective: 540px;
 }
 
-/* Full-width / full-height dashed crosshair lines that wander on their own
-   periods, so their intersection roams around the globe. */
+/* Crosshair lines — globe-diameter long, centered, and matched to the globe's
+   wireframe stroke (1px solid, same opacity). They wander on their own periods
+   so their intersection roams around the globe. */
 .catCrossH {
   position: absolute;
-  left: 0;
-  right: 0;
   top: 50%;
-  height: 3px;
-  margin-top: -1.5px;
-  background: repeating-linear-gradient(
-    to right,
-    rgba(255, 255, 255, 0.9) 0 14px,
-    transparent 14px 26px
-  );
+  left: calc(50% - var(--globe-d) / 2);
+  width: var(--globe-d);
+  height: 1px;
+  margin-top: -0.5px;
+  background: rgba(255, 255, 255, 0.5);
   animation: catCrossH 7s ease-in-out infinite;
 }
 .catCrossV {
   position: absolute;
-  top: 0;
-  bottom: 0;
   left: 50%;
-  width: 3px;
-  margin-left: -1.5px;
-  background: repeating-linear-gradient(
-    to bottom,
-    rgba(255, 255, 255, 0.9) 0 14px,
-    transparent 14px 26px
-  );
+  top: calc(50% - var(--globe-d) / 2);
+  width: 1px;
+  height: var(--globe-d);
+  margin-left: -0.5px;
+  background: rgba(255, 255, 255, 0.5);
   animation: catCrossV 9s ease-in-out infinite;
 }
 @keyframes catCrossH {
@@ -6031,21 +6082,31 @@
   50%      { transform: translateX(-58px); }
 }
 
-/* Target reticle — a small circle with its own crosshair, drifting around. */
+/* Target reticle — pinned to the crosshair intersection. The outer span rides
+   the vertical crosshair's horizontal roam (catCrossV, 9s); the inner span
+   rides the horizontal crosshair's vertical roam (catCrossH, 7s). Same
+   keyframes + periods as the lines → it sits exactly where they cross. */
 .catTarget {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 54px;
-  height: 54px;
-  margin: -27px 0 0 -27px;
-  animation: catTargetRoam 13s ease-in-out infinite;
+  animation: catCrossV 9s ease-in-out infinite;
 }
-.catTarget::before {
+.catTargetInner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 27px;
+  height: 27px;
+  margin: -13.5px 0 0 -13.5px;
+  animation: catCrossH 7s ease-in-out infinite;
+}
+.catTargetInner::before {
   content: "";
   position: absolute;
   inset: 0;
-  border: 3px solid #ffffff;
+  /* Match the globe wireframe stroke. */
+  border: 1px solid rgba(255, 255, 255, 0.5);
   border-radius: 50%;
 }
 .catTargetH,
@@ -6053,27 +6114,33 @@
   position: absolute;
   top: 50%;
   left: 50%;
-  background: #ffffff;
+  background: rgba(255, 255, 255, 0.5);
   transform: translate(-50%, -50%);
 }
-.catTargetH { width: 74px; height: 2px; }
-.catTargetV { width: 2px; height: 74px; }
-@keyframes catTargetRoam {
-  0%   { transform: translate(-66px, 6px); }
-  25%  { transform: translate(-12px, -54px); }
-  50%  { transform: translate(56px, -6px); }
-  75%  { transform: translate(4px, 54px); }
-  100% { transform: translate(-66px, 6px); }
+.catTargetH { width: 37px; height: 1px; }
+.catTargetV { width: 1px; height: 37px; }
+
+/* Paused state — set on the art tile when it's not fully in frame. Pauses
+   every animation in the subtree (play-state isn't inherited, so target all
+   descendants). */
+.resultsArtPaused *,
+.resultsArtPaused *::before,
+.resultsArtPaused *::after {
+  animation-play-state: paused !important;
 }
 
 @media (prefers-reduced-motion: reduce) {
   .globeRotorSpin { animation: none; }
   .globeRotorLayered .globeMeridian,
   .globeRotorLayered .globeParallel { animation: none; opacity: 1; }
-  .warpRotor { animation: none; }
+  .globeGrow { animation: none; clip-path: none; }
+  .globeGrowParallel { animation: none; opacity: 1; }
   .catCrossH,
   .catCrossV,
-  .catTarget { animation: none; }
+  .catTarget,
+  .catTargetInner { animation: none; }
+  .netStack { animation: none; }
+  .netNodeDot { animation: none; transform: rotateX(-30deg); }
 }
 
 /* Caption — centred under the art tile. */

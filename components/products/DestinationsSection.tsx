@@ -105,9 +105,56 @@ function Marquee({ imgs, reverse }: { imgs: DestPhoto[]; reverse?: boolean }) {
   const warm = useMediaWarm();
   // Two copies of the list → translating one copy-width loops seamlessly.
   const doubled = [...imgs, ...imgs];
+
+  // JS-driven scroll: hovering eases the velocity to 0 (a gentle glide-stop)
+  // and back up on leave, instead of snapping the animation to a pause.
+  const trackRef = useRef<HTMLDivElement>(null);
+  const hoveredRef = useRef(false);
+
+  useEffect(() => {
+    const track = trackRef.current;
+    if (!track) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    let raf = 0;
+    let last = 0;
+    let vel = 0; // px/ms
+    // Half the doubled track (+ half the 20px gap) is one seamless loop.
+    let loopDist = track.scrollWidth / 2 + 10;
+    let offset = reverse ? -loopDist : 0;
+    const dir = reverse ? 1 : -1;
+    const baseVel = loopDist > 0 ? loopDist / 52000 : 0; // matches the old 52s loop
+    const onResize = () => { loopDist = track.scrollWidth / 2 + 10; };
+    window.addEventListener("resize", onResize);
+
+    const tick = (t: number) => {
+      if (!last) last = t;
+      const dt = Math.min(64, t - last);
+      last = t;
+      const target = hoveredRef.current ? 0 : baseVel;
+      vel += (target - vel) * Math.min(1, dt / 250); // ~250ms glide
+      offset += dir * vel * dt;
+      if (loopDist > 0) {
+        offset %= loopDist;
+        if (offset > 0) offset -= loopDist;
+      }
+      track.style.transform = `translateX(${offset}px)`;
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener("resize", onResize);
+    };
+  }, [reverse]);
+
   return (
-    <div className="mg-dest-mask">
-      <div className={`mg-dest-track${reverse ? " mg-dest-rev" : ""}`}>
+    <div
+      className="mg-dest-mask"
+      onMouseEnter={() => { hoveredRef.current = true; }}
+      onMouseLeave={() => { hoveredRef.current = false; }}
+    >
+      <div ref={trackRef} className="mg-dest-track">
         {doubled.map((p, i) => (
           <a
             key={i}
@@ -277,17 +324,17 @@ export default function DestinationsSection() {
           padding: 12px 0;
           margin: -12px 0;
         }
+        /* Scroll position is driven by JS (rAF) so hovering eases the speed to
+           a gentle stop (a slight glide) instead of snapping. */
         .mg-dest-track {
           display: flex;
           gap: 20px;
           width: max-content;
-          animation: mg-dest-scroll 52s linear infinite;
+          will-change: transform;
         }
-        .mg-dest-rev { animation-direction: reverse; }
-        .mg-dest-mask:hover .mg-dest-track { animation-play-state: paused; }
         /* Per-card hover lift — the card grows a touch so it feels
-           interactive (no drop shadow). The row pauses its scroll on
-           hover (rule above), so the hovered card holds still. */
+           interactive (no drop shadow). The row eases its scroll to a stop on
+           hover (JS), so the hovered card holds still. */
         .mg-dest-card {
           transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
           will-change: transform;
@@ -300,11 +347,6 @@ export default function DestinationsSection() {
           .mg-dest-card { transition: none; }
           .mg-dest-card:hover { transform: none; }
         }
-        @keyframes mg-dest-scroll {
-          from { transform: translateX(0); }
-          to   { transform: translateX(calc(-50% - 10px)); }
-        }
-        @media (prefers-reduced-motion: reduce) { .mg-dest-track { animation: none; } }
         /* Elio desktop mockup frame. 40px radius reads fine on the large
            desktop image but looks oversized once the image shrinks to a
            phone width, so dial it down on mobile. */

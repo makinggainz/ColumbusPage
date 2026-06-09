@@ -90,8 +90,15 @@ const HN_CSS = `
    lands when the glow is ~80% visible (ease-out 1.6s at 350ms offset),
    so the color feels "unlocked" by the glow rather than arriving with it. */
 @keyframes hn-colorize {
-  from { filter: grayscale(1); }
-  to   { filter: grayscale(0); }
+  from { filter: grayscale(1) url(#hn-blue-cycle); }
+  to   { filter: grayscale(0) url(#hn-blue-cycle); }
+}
+/* Hidden host for the SVG filter def. */
+.hn-filter-defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+  pointer-events: none;
 }
 .hn-bg {
   position: absolute;
@@ -257,26 +264,66 @@ const HN_CSS = `
   }
 }
 
-/* Blue emanating glow — separated from ::after so it can animate in
-   independently. Fades from invisible to full over 1.6s, starting
-   0.35s after mount, giving it a "breathing into existence" quality
-   that complements the text sliding in from the left. */
+/* Blue glow — three stacked radials at top-left, cross-fading by opacity.
+   Animating opacity (not background) gives smooth browser interpolation.
+   Wrapper holds the entrance fade-in; children each own one color and
+   cross-fade in sequence: accent → elio blue (#029DFD) → columbus navy
+   (#0A1342) → accent, on a 7s linear loop starting after fade-in. */
 @keyframes hn-glow-in {
   from { opacity: 0; }
   to   { opacity: 1; }
 }
-.hn-glow {
+.hn-glow-wrap {
   position: absolute;
   inset: 0;
   pointer-events: none;
   z-index: 2;
-  background: radial-gradient(
-    circle at top left,
-    rgba(96, 148, 193, 0.35) 0%,
-    rgba(255, 255, 255, 0) 25%
-  );
   animation: hn-glow-in 1.6s ease-out 0.35s both;
 }
+.hn-glow-accent, .hn-glow-elio, .hn-glow-columbus {
+  position: absolute;
+  inset: 0;
+}
+.hn-glow-accent {
+  background: radial-gradient(circle at top left, rgba(96, 148, 193, 0.35) 0%, rgba(255, 255, 255, 0) 28%);
+  animation: hn-glow-accent-cycle 7s ease-in-out 1.95s both infinite;
+}
+.hn-glow-elio {
+  background: radial-gradient(circle at top left, rgba(2, 157, 253, 0.42) 0%, rgba(255, 255, 255, 0) 28%);
+  animation: hn-glow-elio-cycle 7s ease-in-out 1.95s both infinite;
+}
+.hn-glow-columbus {
+  background: radial-gradient(circle at top left, rgba(10, 19, 66, 0.28) 0%, rgba(255, 255, 255, 0) 28%);
+  animation: hn-glow-columbus-cycle 7s ease-in-out 1.95s both infinite;
+}
+
+/* Each cycle: a short hold, then a long, eased cross-fade into the next
+   colour. Cross-fades span ~20% of 7s (~1.4s) and overlap (each colour fades
+   out exactly while the next fades in), with ease-in-out timing on the layers
+   — so the transitions are soft rather than sharp. */
+@keyframes hn-glow-accent-cycle {
+  0%   { opacity: 1; }
+  13%  { opacity: 1; }
+  33%  { opacity: 0; }
+  80%  { opacity: 0; }
+  100% { opacity: 1; }
+}
+@keyframes hn-glow-elio-cycle {
+  0%   { opacity: 0; }
+  13%  { opacity: 0; }
+  33%  { opacity: 1; }
+  46%  { opacity: 1; }
+  66%  { opacity: 0; }
+  100% { opacity: 0; }
+}
+@keyframes hn-glow-columbus-cycle {
+  0%   { opacity: 0; }
+  46%  { opacity: 0; }
+  66%  { opacity: 1; }
+  80%  { opacity: 1; }
+  100% { opacity: 0; }
+}
+
 
 .hn-bounds {
   position: relative;
@@ -419,6 +466,45 @@ export function HeroNew() {
   return (
     <section className="hn-section" aria-label="Columbus hero" data-hero-section>
       <style>{HN_CSS}</style>
+      {/* Blue-isolating recolor filter (applied to .hn-bg via CSS filter:url()).
+          Builds an alpha mask of blue-dominant pixels (the ship + wave),
+          floods it with a colour that cycles accent → Elio → Columbus in sync
+          with the glow (begin 1.95s, 7s loop), and "color"-blends that back
+          over the image so only the blue areas shift hue. */}
+      <svg className="hn-filter-defs" aria-hidden="true">
+        <defs>
+          <filter id="hn-blue-cycle" colorInterpolationFilters="sRGB" x="0" y="0" width="100%" height="100%">
+            {/* Blueness → alpha: A = 2·B − R − G − 0.15. */}
+            <feColorMatrix
+              in="SourceGraphic"
+              type="matrix"
+              values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  -1 -1 2 0 -0.15"
+              result="bm"
+            />
+            {/* Sharpen the mask into a cleaner cutout. */}
+            <feComponentTransfer in="bm" result="mask">
+              <feFuncA type="linear" slope="5" intercept="-0.4" />
+            </feComponentTransfer>
+            {/* Cycling tint colour, synced to the glow. */}
+            <feFlood floodColor="#6094C1" result="tint">
+              <animate
+                attributeName="flood-color"
+                begin="1.95s"
+                dur="7s"
+                repeatCount="indefinite"
+                calcMode="spline"
+                keyTimes="0;0.13;0.33;0.46;0.66;0.8;1"
+                keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"
+                values="#6094C1;#6094C1;#029DFD;#029DFD;#0A1342;#0A1342;#6094C1"
+              />
+            </feFlood>
+            {/* Keep the tint only inside the blue mask, then colour-blend it
+                over the source so the ship/wave take the hue, keep their shading. */}
+            <feComposite in="tint" in2="mask" operator="in" result="tintshape" />
+            <feBlend in="tintshape" in2="SourceGraphic" mode="color" />
+          </filter>
+        </defs>
+      </svg>
       {/* LCP image — two viewport variants (CSS hides one: .hn-bg-mobile
           shown ≤767px, .hn-bg-desktop shown ≥768px). The <Image>s are NOT
           `priority` (that emitted an unconstrained preload for BOTH, so
@@ -482,9 +568,13 @@ export function HeroNew() {
           node.style.opacity = "1";
         }}
       />
-      {/* Animated blue glow — separated from ::after so it can fade in
-          independently via CSS animation (hn-glow-in). */}
-      <div className="hn-glow" aria-hidden="true" />
+{/* Color-cycling glow — wrapper fades in; three stacked color
+          radials cross-fade by opacity for smooth transitions. */}
+      <div className="hn-glow-wrap" aria-hidden="true">
+        <div className="hn-glow-accent" />
+        <div className="hn-glow-elio" />
+        <div className="hn-glow-columbus" />
+      </div>
       <div className="hn-bounds">
         <h1
           className="h1 hn-title tracking-tight text-ink"
