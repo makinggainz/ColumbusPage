@@ -253,10 +253,16 @@ video.bp-bg {
   border-radius: 13px;
   overflow: hidden;
   z-index: 2;
-  aspect-ratio: 16 / 9;
+  /* Mobile: a 12px padding ring shows the sky photo (the .bp-bg fill below)
+     as a frame around the product screenshot that now lives inside this
+     wrapper, so the screenshot reads as ONE framed panel instead of a
+     detached block floating below the band. Height is auto — the wrapper
+     shrink-wraps the screenshot + ring. Desktop resets padding to 0 and
+     flex-fills, with the screenshot absolutely peeking from the bottom. */
+  padding: 12px;
 }
 @media (min-width: 640px) {
-  .bp-bg-wrap { margin: 20px -32px -32px; }
+  .bp-bg-wrap { margin: 20px -32px -32px; padding: 14px; }
 }
 @media (min-width: 1024px) {
   /* Desktop: stay CONTAINED (not full-bleed). Flex-fills the remaining
@@ -264,6 +270,7 @@ video.bp-bg {
      on left/right/bottom via negative margins. */
   .bp-bg-wrap {
     margin: 20px -40px -40px;
+    padding: 0;
     flex: 1 1 auto;
     aspect-ratio: auto;
     min-height: 0;
@@ -298,123 +305,44 @@ video.bp-bg {
   .bp-card--wide .bp-text-block { max-width: 34rem; --bp-gap: 22px; }
 }
 
-/* Audience cut-out — a white region notched into the card's top-left
-   corner (the page surface showing through), with the chip centered inside
-   it. Bleeds over the card padding so it sits flush in the corner; the
-   right + bottom edges are the cut silhouette (hairline + concave BR
-   corner), and the TR / BL convex corners are eased by the fillets. Reuses
-   the same 13px radius + #E7E7F1 hairline as the card. */
+/* Mobile audience label (<1024px) — free-floating tinted text. No white
+   cut-out, no filled chip: just the label set in a colour sampled from each
+   card's backdrop (per-card .bp-chip overrides below), sitting at the
+   top-left of the text block. Desktop (≥1024px) still uses the top-right
+   notch; this wrapper is hidden there. */
 .bp-cutout {
   position: relative;
   z-index: 3;
   align-self: flex-start;
   display: flex;
-  align-items: flex-start;
-  justify-content: flex-start;  /* pin the chip into the top-left corner */
-  /* Negative margins bleed the cut-out's top/left edges all the way out to the
-     card's own edges (= the full card padding), so the notch white is flush in
-     the corner and reads as the corner bitten out of the card — its opening
-     (top + left) merges visually with the white page surface beyond the card.
-     There is NO card-perimeter hairline ring (the card edge is defined purely
-     by its soft drop shadow); only the notch's own cut silhouette (right +
-     bottom borders + the two fillet arcs) carries a hairline, so there is no
-     line tracing around the whole card or running out around the label.
-     Top/left margins track the card's per-breakpoint padding; the bottom
-     margin is the gap down to the brand row (logo + name) below — widened
-     from 6px for more mobile breathing room between the chip and the name. */
-  margin: -28px 0 18px -28px;
-  /* No top/left padding → the chip sits flush in the corner; the small
-     right/bottom padding is the tight cut frame before the silhouette. */
-  padding: 0 6px 5px 0;
-  background: #FFFFFF;
-  border-radius: 13px 0 13px 0;   /* TL = card corner, BR = concave cut */
-  border-right: 1px solid #E7E7F1;
-  border-bottom: 1px solid #E7E7F1;
-}
-@media (min-width: 640px)  { .bp-cutout { margin-top: -32px; margin-left: -32px; } }
-@media (min-width: 1024px) { .bp-cutout { margin-top: -40px; margin-left: -40px; } }
-
-/* Corner fillets — two 13x13 boxes sitting just outside the cut-out, each
-   painted with a radial-gradient that (a) eases a convex corner onto a 13px
-   arc instead of a hard 90deg corner and (b) carries the #E7E7F1 hairline
-   along that arc so the notch's straight cut-border curves continuously back
-   onto the card ring.
-
-   The mechanism (copied exactly from the proven desktop notch, just
-   repositioned): the gradient circle is centred at the point 13px DIAGONALLY
-   INTO THE PHOTO from the convex corner, with the photo-side TRANSPARENT
-   (inner stops) and the notch-side WHITE (outer stop). So the quarter-disc
-   nearest the photo stays transparent (card shows through, rounded off) while
-   the opposite wedge — the sliver adjacent to the notch corner — fills white,
-   rounding the corner inward. The 1px #E7E7F1 band at ~12.5px is the hairline
-   arc. (The earlier attempt inverted this — white on the photo side — which
-   bulged a white "speech-bubble tail" OUT into the photo instead of easing
-   the corner in.) Both convex corners here resolve to the SAME origin,
-   "right bottom", because both sit with the photo down-and-right of them:
-     • ::before = TOP-RIGHT convex corner (notch right cut-edge meets the
-       card TOP edge). Box flush right of the notch (left:100%), top-aligned.
-     • ::after  = BOTTOM-LEFT convex corner (notch bottom cut-edge meets the
-       card LEFT edge). Box flush below the notch (top:100%), left-aligned.
-   The 13px gradient stops are absolute, so they already match the 13px radius
-   at every breakpoint; the fillets are pinned to the notch box edges
-   (top/left 100%) so they auto-track the notch's per-label width + the
-   per-breakpoint padding bleed without any media-query overrides. */
-.bp-cutout::before,
-.bp-cutout::after {
-  content: "";
-  position: absolute;
-  width: 13px;
-  height: 13px;
-  pointer-events: none;
-}
-.bp-cutout::before {
-  top: 0;
-  left: 100%;
-  background: radial-gradient(circle at right bottom,
-    rgba(255, 255, 255, 0) 11.5px,
-    #E7E7F1 12.25px,
-    #E7E7F1 12.75px,
-    #FFFFFF 13.5px);
-}
-.bp-cutout::after {
-  top: 100%;
-  left: 0;
-  background: radial-gradient(circle at right bottom,
-    rgba(255, 255, 255, 0) 11.5px,
-    #E7E7F1 12.25px,
-    #E7E7F1 12.75px,
-    #FFFFFF 13.5px);
+  align-items: center;
+  margin: 0 0 16px;
+  padding: 0;
 }
 
-/* Audience chip — a rounded pill inside the cut-out. No border, no shadow:
-   its background is tinted to match its own card's background image (a colour
-   sampled from each photo / gradient), and the label text is white, so the
-   chip reads as a little swatch of the card's own colour sitting in the white
-   cut-out. Per-card background colours are set in the .bp-card--* overrides
-   below; the base value is a fallback. 13px radius matches the card. */
+/* Audience label — free-floating text, no fill. Colour is per-card (matching
+   the backdrop) via the .bp-card--* overrides; the base is a fallback. Set in
+   the same uppercase micro-label style as the desktop notch so the two
+   treatments read as the same element. */
 .bp-chip {
   display: inline-flex;
   align-items: center;
-  padding: 11px 18px;
-  background: #78A2C2;
-  border-radius: 13px;
-  font-size: 15px;
+  padding: 0;
+  background: transparent;
+  font-size: 13px;
   line-height: 1;
-  font-weight: 500;
-  letter-spacing: -0.01em;
-  color: #FFFFFF;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: #015C94;
   white-space: nowrap;
 }
-/* Per-card chip background — the EXACT top-of-sky colour from each card's
-   image (where the pill sits), so the pill reads as a true swatch of that
-   tile's backdrop. Label text stays the base white where the colour is dark
-   enough; the light Research pill flips to navy text for legibility:
-     • Columbus — #028DE3 (top sky of ColumbusBackgroundbento.png), white text
-     • Elio     — #43A2FC (top sky of elio-bento-bg.png), white text
-     • Research — #CAE5F5 (light left/top of the card's gradient → navy text) */
-.bp-card--columbus .bp-chip { background: #028DE3; }
-.bp-card--elio     .bp-chip { background: #43A2FC; }
-.bp-card--research .bp-chip { background: #CAE5F5; color: #0F173C; }
+/* Per-card label colour — a readable tint drawn from each tile's blue
+   backdrop (same values the desktop notch label uses, so mobile + desktop
+   labels match): Columbus deep sky, Elio mid blue, Research lighter blue. */
+.bp-card--columbus .bp-chip { color: #015C94; }
+.bp-card--elio     .bp-chip { color: #1E6BAE; }
+.bp-card--research .bp-chip { color: #4B7BC7; }
 
 /* ─────────────────────────────────────────────────────────────────────
    Mobile cut-out chip  vs.  desktop top-right notch.
@@ -701,7 +629,10 @@ video.bp-bg {
    text-top / mockup-bottom rhythm. */
 .bp-visual {
   position: relative;
-  margin-top: 24px;
+  /* No top margin on mobile — the screenshot is centered inside the
+     .bp-bg-wrap padding ring (it's a child of the wrapper now), so the sky
+     photo frames it on all four sides. */
+  margin-top: 0;
   width: 100%;
   z-index: 3;
   display: flex;
@@ -987,7 +918,11 @@ export function BentoProducts() {
               {p.bg && (
                 /* Contained photo backdrop — sits below the text block via
                    the card's flex column layout, with a 20px gap from the
-                   CTA bottom and rounded corners. */
+                   CTA bottom and rounded corners. The product visual lives
+                   INSIDE this wrapper so the photo+frost frames it on every
+                   breakpoint: on mobile a padding ring shows the sky photo
+                   around the screenshot; on desktop the visual is absolutely
+                   positioned to peek from the wrapper's bottom. */
                 <div className="bp-bg-wrap">
                   <Image
                     src={p.bg}
@@ -1002,25 +937,25 @@ export function BentoProducts() {
                     fetchPriority={warm ? "low" : undefined}
                   />
                   <div className="bp-bg-tint" aria-hidden />
-                </div>
-              )}
-              {p.visual && (
-                <div className="bp-visual">
-                  {/* Static import → intrinsic dimensions + real blur-up
-                      placeholder. The CSS sizes the rendered image
-                      (width:100%; max-width:720px; height:auto); `sizes`
-                      hints the optimizer to a small AVIF variant. Lazy
-                      until the page is idle, then promoted to eager. */}
-                  <Image
-                    src={p.visual}
-                    alt=""
-                    aria-hidden
-                    sizes="(max-width: 1023px) calc(100vw - 56px), 720px"
-                    quality={80}
-                    placeholder="blur"
-                    loading={warm ? "eager" : "lazy"}
-                    fetchPriority={warm ? "low" : undefined}
-                  />
+                  {p.visual && (
+                    <div className="bp-visual">
+                      {/* Static import → intrinsic dimensions + real blur-up
+                          placeholder. The CSS sizes the rendered image
+                          (width:100%; max-width:720px; height:auto); `sizes`
+                          hints the optimizer to a small AVIF variant. Lazy
+                          until the page is idle, then promoted to eager. */}
+                      <Image
+                        src={p.visual}
+                        alt=""
+                        aria-hidden
+                        sizes="(max-width: 1023px) calc(100vw - 84px), 720px"
+                        quality={80}
+                        placeholder="blur"
+                        loading={warm ? "eager" : "lazy"}
+                        fetchPriority={warm ? "low" : undefined}
+                      />
+                    </div>
+                  )}
                 </div>
               )}
             </a>

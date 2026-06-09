@@ -54,6 +54,26 @@ const BRAND_ACCENT = "#6094C1";
 const MUTED = "#5A6B7B";
 const INK = NAVY;
 
+/* ════ Responsive ═════════════════════════════════════════════════════
+   Phones + small tablets (≤768px) get the mobile treatment: a smaller
+   floating mascot and a full-screen chat with scaled-up touch controls.
+   matchMedia mirrors the pattern in ComparisonSection.tsx. SSR/first paint
+   render the desktop tree (initial false) — no hydration mismatch, and the
+   widget is hidden until the mascot reveals post-mount anyway, so the flag
+   resolves before anything is visible. */
+const MOBILE_MQ = "(max-width: 768px)";
+function useIsMobile() {
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia(MOBILE_MQ);
+    const apply = () => setIsMobile(mq.matches);
+    apply();
+    mq.addEventListener("change", apply);
+    return () => mq.removeEventListener("change", apply);
+  }, []);
+  return isMobile;
+}
+
 /* ════ Types ══════════════════════════════════════════════════════════ */
 
 type TextMessage = {
@@ -270,6 +290,10 @@ function persistChats(chats: Chat[]): void {
 /* ════ Main component ════════════════════════════════════════════════ */
 
 export default function BusinessHelper() {
+  const isMobile = useIsMobile();
+  /* Floating mascot shrinks on mobile; offsets tighten to 16px. */
+  const mascotSize = isMobile ? 56 : MASCOT_SIZE;
+
   /* Reveal & greeting state — preserved exactly so the existing
      mascot-spring-in + greeting-emerges-from-mascot motion is intact. */
   const [revealed, setRevealed] = useState(false);
@@ -320,6 +344,18 @@ export default function BusinessHelper() {
     if (!hydrated) return;
     persistChats(chats);
   }, [chats, hydrated]);
+
+  /* Lock body scroll while the chat is full-screen on mobile. Captures the
+     prior value so it composes with any other lock (e.g. the nav drawer);
+     restores on close, on resize→desktop, and on unmount. */
+  useEffect(() => {
+    if (!(isMobile && mode === "chat")) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, [isMobile, mode]);
 
   /* Mascot reveal animation — flips on next frame after revealed becomes
      true so the entrance transition plays. */
@@ -911,11 +947,17 @@ export default function BusinessHelper() {
       aria-live="polite"
       style={{
         position: "fixed",
-        right: "var(--ent-space-6, 24px)",
-        bottom: "var(--ent-space-6, 24px)",
-        width: MASCOT_SIZE,
-        height: MASCOT_SIZE,
-        zIndex: 60,
+        right: isMobile ? 16 : "var(--ent-space-6, 24px)",
+        bottom: isMobile ? 16 : "var(--ent-space-6, 24px)",
+        width: mascotSize,
+        height: mascotSize,
+        /* This fixed+z-index root creates a stacking context, so a child's
+           z-index can never escape it — the panel can only beat the navbar
+           (z-100) if the ROOT outranks it. Lift the whole widget above
+           everything while the chat is open (both the desktop popover and the
+           mobile full-screen panel); drop back to 60 when closed so the
+           resting mascot keeps its original stacking under the navbar. */
+        zIndex: chatOpen ? 120 : 60,
         fontFamily: "var(--ent-font-sans, var(--font-sans))",
       }}
     >
@@ -927,8 +969,11 @@ export default function BusinessHelper() {
              at the earth. Left of the globe with a small gap so the tail
              bridges it. Springs out of the globe via the right-centre
              origin; translateY(-50%) keeps it centred at every scale frame. */
-          right: MASCOT_SIZE + 10,
+          right: mascotSize + 10,
           top: "50%",
+          /* Cap the leftward-growing card so it can't run off-screen-left on
+             a narrow phone (mascot is 16px from the right edge). */
+          maxWidth: isMobile ? "calc(100vw - 32px)" : undefined,
           opacity: greetingOpen ? 1 : 0,
           transform: greetingOpen
             ? `translateY(-50%) ${GREETING_VISIBLE_TRANSFORM}`
@@ -942,18 +987,35 @@ export default function BusinessHelper() {
       </div>
 
       <div
-        style={{
-          position: "absolute",
-          right: 0,
-          bottom: MASCOT_SIZE + 12,
-          opacity: chatOpen ? 1 : 0,
-          transform: chatOpen
-            ? POPOVER_VISIBLE_TRANSFORM
-            : POPOVER_HIDDEN_TRANSFORM,
-          transformOrigin: "bottom right",
-          transition: POPOVER_TRANSITION,
-          pointerEvents: chatOpen ? "auto" : "none",
-        }}
+        style={
+          isMobile
+            ? {
+                /* Full-screen on mobile — escape the 72px fixed root and
+                   cover the viewport above the navbar (z-100). Fade +
+                   slide-up entrance (no scale: scaling a full-viewport box
+                   blurs and the bottom-right origin is wrong here). */
+                position: "fixed",
+                inset: 0,
+                zIndex: 110,
+                opacity: chatOpen ? 1 : 0,
+                transform: chatOpen ? "translateY(0)" : "translateY(12px)",
+                transformOrigin: "center",
+                transition: POPOVER_TRANSITION,
+                pointerEvents: chatOpen ? "auto" : "none",
+              }
+            : {
+                position: "absolute",
+                right: 0,
+                bottom: mascotSize + 12,
+                opacity: chatOpen ? 1 : 0,
+                transform: chatOpen
+                  ? POPOVER_VISIBLE_TRANSFORM
+                  : POPOVER_HIDDEN_TRANSFORM,
+                transformOrigin: "bottom right",
+                transition: POPOVER_TRANSITION,
+                pointerEvents: chatOpen ? "auto" : "none",
+              }
+        }
       >
         <ChatPanel
           isOpen={chatOpen}
@@ -986,8 +1048,8 @@ export default function BusinessHelper() {
           position: "absolute",
           right: 0,
           bottom: 0,
-          width: MASCOT_SIZE,
-          height: MASCOT_SIZE,
+          width: mascotSize,
+          height: mascotSize,
           opacity: mascotShown ? 1 : 0,
           transform: mascotShown
             ? MASCOT_VISIBLE_TRANSFORM
@@ -1018,8 +1080,8 @@ export default function BusinessHelper() {
           <Image
             src="/BusinessPgMedia/business-helper-mascot.png"
             alt="Helper"
-            width={MASCOT_SIZE}
-            height={MASCOT_SIZE}
+            width={mascotSize}
+            height={mascotSize}
             style={{ display: "block" }}
             priority
           />
@@ -1207,6 +1269,7 @@ type ChatPanelProps = {
 };
 
 function ChatPanel(props: ChatPanelProps) {
+  const isMobile = useIsMobile();
   const {
     isOpen,
     chats,
@@ -1328,15 +1391,19 @@ function ChatPanel(props: ChatPanelProps) {
       aria-label="Helper chat"
       style={{
         background: "#FFFFFF",
-        borderRadius: "var(--ent-radius-xl, 18px)",
-        boxShadow:
-          "0 24px 60px rgba(11, 27, 43, 0.20), 0 6px 20px rgba(11, 27, 43, 0.08)",
-        width: 400,
+        /* Mobile: fill the fixed inset:0 wrapper (using 100% sidesteps the
+           mobile-browser 100vh/dynamic-toolbar problem entirely), squared
+           corners, no drop shadow. Desktop: the floating 400px popover. */
+        borderRadius: isMobile ? 0 : "var(--ent-radius-xl, 18px)",
+        boxShadow: isMobile
+          ? "none"
+          : "0 24px 60px rgba(11, 27, 43, 0.20), 0 6px 20px rgba(11, 27, 43, 0.08)",
+        width: isMobile ? "100%" : 400,
         /* Notably taller than the previous 540px — capped against the
            viewport so the panel never bleeds past the top edge on short
            windows. ~108px reserved for the mascot stack + gap + the
            24px bottom inset, plus a 20px breathing margin at the top. */
-        height: "min(680px, calc(100dvh - 128px))",
+        height: isMobile ? "100%" : "min(680px, calc(100dvh - 128px))",
         display: "flex",
         flexDirection: "column",
         overflow: "hidden",
@@ -1433,6 +1500,7 @@ function ChatHeader({
   onClose: () => void;
   onResetChat: () => void;
 }) {
+  const isMobile = useIsMobile();
   const [closeHover, setCloseHover] = useState(false);
   const [backHover, setBackHover] = useState(false);
   const [menuHover, setMenuHover] = useState(false);
@@ -1459,14 +1527,16 @@ function ChatHeader({
     return () => window.removeEventListener("mousedown", onDocClick);
   }, [menuOpen]);
 
+  /* Larger hit targets on mobile (44px — the touch-target minimum). */
+  const iconBtn = isMobile ? 44 : 36;
   const iconBtnStyle = (hover: boolean): React.CSSProperties => ({
     appearance: "none",
     border: "none",
     background: hover ? SURFACE_TINT : "transparent",
-    borderRadius: "var(--ent-radius-md, 10px)",
+    borderRadius: isMobile ? 12 : "var(--ent-radius-md, 10px)",
     padding: 0,
-    width: 36,
-    height: 36,
+    width: iconBtn,
+    height: iconBtn,
     display: "inline-flex",
     alignItems: "center",
     justifyContent: "center",
@@ -1480,7 +1550,12 @@ function ChatHeader({
   return (
     <header
       style={{
-        padding: "16px 14px 10px",
+        /* Mobile full-screen: bump padding + clear the notch via the safe-area
+           inset on top. Desktop unchanged. */
+        paddingTop: isMobile ? "calc(14px + env(safe-area-inset-top))" : 16,
+        paddingRight: isMobile ? 12 : 14,
+        paddingBottom: isMobile ? 12 : 10,
+        paddingLeft: isMobile ? 12 : 14,
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
@@ -1507,8 +1582,8 @@ function ChatHeader({
             style={iconBtnStyle(backHover)}
           >
             <svg
-              width="22"
-              height="22"
+              width={isMobile ? 24 : 22}
+              height={isMobile ? 24 : 22}
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
@@ -1524,7 +1599,7 @@ function ChatHeader({
         )}
         <span
           style={{
-            fontSize: 16,
+            fontSize: isMobile ? 17 : 16,
             fontWeight: 600,
             color: INK,
             letterSpacing: "-0.01em",
@@ -1592,8 +1667,8 @@ function ChatHeader({
               {/* Vertical 3-dot SVG. Hand-placed circles for crisp render
                   at small sizes vs. relying on font glyph metrics. */}
               <svg
-                width="14"
-                height="14"
+                width={isMobile ? 18 : 14}
+                height={isMobile ? 18 : 14}
                 viewBox="0 0 14 14"
                 fill="currentColor"
                 aria-hidden
@@ -1611,7 +1686,8 @@ function ChatHeader({
                 style={{
                   position: "absolute",
                   top: "calc(100% + 4px)",
-                  right: 40,
+                  /* Align with the wider 44px icon button on mobile. */
+                  right: isMobile ? 48 : 40,
                   background: "#FFFFFF",
                   border: `1px solid ${HAIRLINE}`,
                   borderRadius: 12,
@@ -1647,8 +1723,8 @@ function ChatHeader({
           style={iconBtnStyle(closeHover)}
         >
           <svg
-            width="14"
-            height="14"
+            width={isMobile ? 20 : 14}
+            height={isMobile ? 20 : 14}
             viewBox="0 0 14 14"
             fill="none"
             stroke="currentColor"
@@ -2534,10 +2610,13 @@ function ChatInput({
   sendStatus: "idle" | "sending";
   inputRef: React.RefObject<HTMLInputElement | null>;
 }) {
+  const isMobile = useIsMobile();
   const hasText = draft.trim().length > 0;
   const showSend = hasText || sendStatus === "sending";
   const [inputFocused, setInputFocused] = useState(false);
   const showFocused = inputFocused || sendStatus === "sending";
+  const sendBtn = isMobile ? 44 : 38;
+  const sendIcon = isMobile ? 18 : 16;
 
   return (
     <form
@@ -2545,7 +2624,15 @@ function ChatInput({
         e.preventDefault();
         onSend();
       }}
-      style={{ padding: "8px 16px 16px" }}
+      style={{
+        paddingTop: 8,
+        paddingRight: 16,
+        paddingLeft: 16,
+        /* Clear the home-indicator on full-screen mobile. */
+        paddingBottom: isMobile
+          ? "calc(16px + env(safe-area-inset-bottom))"
+          : 16,
+      }}
     >
       <div
         style={{
@@ -2578,7 +2665,8 @@ function ChatInput({
             outline: "none",
             background: "transparent",
             color: INK,
-            fontSize: 15,
+            /* 16px on mobile prevents iOS Safari from auto-zooming on focus. */
+            fontSize: isMobile ? 16 : 15,
             fontFamily: "inherit",
             padding: "6px 8px 6px 0",
           }}
@@ -2592,9 +2680,9 @@ function ChatInput({
           style={{
             appearance: "none",
             border: "none",
-            width: 38,
-            height: 38,
-            borderRadius: 10,
+            width: sendBtn,
+            height: sendBtn,
+            borderRadius: isMobile ? 12 : 10,
             background: NAVY,
             color: "#FFFFFF",
             display: "inline-flex",
@@ -2616,15 +2704,15 @@ function ChatInput({
           <span
             style={{
               position: "relative",
-              width: 16,
-              height: 16,
+              width: sendIcon,
+              height: sendIcon,
               display: "inline-block",
             }}
           >
             <svg
               viewBox="0 0 24 24"
-              width="16"
-              height="16"
+              width={sendIcon}
+              height={sendIcon}
               fill="none"
               stroke="currentColor"
               strokeWidth="2.5"
@@ -2648,8 +2736,8 @@ function ChatInput({
             </svg>
             <svg
               viewBox="0 0 24 24"
-              width="16"
-              height="16"
+              width={sendIcon}
+              height={sendIcon}
               fill="none"
               stroke="currentColor"
               strokeWidth="2.5"

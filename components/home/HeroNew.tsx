@@ -257,26 +257,65 @@ const HN_CSS = `
   }
 }
 
-/* Blue emanating glow — separated from ::after so it can animate in
-   independently. Fades from invisible to full over 1.6s, starting
-   0.35s after mount, giving it a "breathing into existence" quality
-   that complements the text sliding in from the left. */
+/* Blue glow — three stacked radials at top-left, cross-fading by opacity.
+   Animating opacity (not background) gives smooth browser interpolation.
+   Wrapper holds the entrance fade-in; children each own one color and
+   cross-fade in sequence: accent → elio blue (#029DFD) → columbus navy
+   (#0A1342) → accent, on a 7s linear loop starting after fade-in. */
 @keyframes hn-glow-in {
   from { opacity: 0; }
   to   { opacity: 1; }
 }
-.hn-glow {
+.hn-glow-wrap {
   position: absolute;
   inset: 0;
   pointer-events: none;
   z-index: 2;
-  background: radial-gradient(
-    circle at top left,
-    rgba(96, 148, 193, 0.35) 0%,
-    rgba(255, 255, 255, 0) 25%
-  );
   animation: hn-glow-in 1.6s ease-out 0.35s both;
 }
+.hn-glow-accent, .hn-glow-elio, .hn-glow-columbus {
+  position: absolute;
+  inset: 0;
+}
+.hn-glow-accent {
+  background: radial-gradient(circle at top left, rgba(96, 148, 193, 0.35) 0%, rgba(255, 255, 255, 0) 28%);
+  animation: hn-glow-accent-cycle 7s linear 1.95s both infinite;
+}
+.hn-glow-elio {
+  background: radial-gradient(circle at top left, rgba(2, 157, 253, 0.42) 0%, rgba(255, 255, 255, 0) 28%);
+  animation: hn-glow-elio-cycle 7s linear 1.95s both infinite;
+}
+.hn-glow-columbus {
+  background: radial-gradient(circle at top left, rgba(10, 19, 66, 0.28) 0%, rgba(255, 255, 255, 0) 28%);
+  animation: hn-glow-columbus-cycle 7s linear 1.95s both infinite;
+}
+
+/* Each cycle: hold → cross-fade out → hold invisible → cross-fade in.
+   Cross-fades are 8% of 7s ≈ 0.56s each — noticeable but unhurried. */
+@keyframes hn-glow-accent-cycle {
+  0%   { opacity: 1; }
+  28%  { opacity: 1; }
+  36%  { opacity: 0; }
+  86%  { opacity: 0; }
+  94%  { opacity: 1; }
+  100% { opacity: 1; }
+}
+@keyframes hn-glow-elio-cycle {
+  0%   { opacity: 0; }
+  28%  { opacity: 0; }
+  36%  { opacity: 1; }
+  61%  { opacity: 1; }
+  69%  { opacity: 0; }
+  100% { opacity: 0; }
+}
+@keyframes hn-glow-columbus-cycle {
+  0%   { opacity: 0; }
+  61%  { opacity: 0; }
+  69%  { opacity: 1; }
+  94%  { opacity: 1; }
+  100% { opacity: 0; }
+}
+
 
 .hn-bounds {
   position: relative;
@@ -482,9 +521,13 @@ export function HeroNew() {
           node.style.opacity = "1";
         }}
       />
-      {/* Animated blue glow — separated from ::after so it can fade in
-          independently via CSS animation (hn-glow-in). */}
-      <div className="hn-glow" aria-hidden="true" />
+{/* Color-cycling glow — wrapper fades in; three stacked color
+          radials cross-fade by opacity for smooth transitions. */}
+      <div className="hn-glow-wrap" aria-hidden="true">
+        <div className="hn-glow-accent" />
+        <div className="hn-glow-elio" />
+        <div className="hn-glow-columbus" />
+      </div>
       <div className="hn-bounds">
         <h1
           className="h1 hn-title tracking-tight text-ink"
