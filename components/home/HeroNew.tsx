@@ -393,7 +393,6 @@ export function HeroNew() {
       const node = ref.current;
       if (node?.complete && node.naturalWidth > 0) {
         node.style.transition = "none";
-        node.style.animation = "none";
         node.style.opacity = "1";
       }
     }
@@ -461,7 +460,6 @@ export function HeroNew() {
           if (!node) return;
           if (performance.now() - mountTimeRef.current < 150) {
             node.style.transition = "none";
-            node.style.animation = "none";
           }
           node.style.opacity = "1";
         }}
@@ -480,7 +478,6 @@ export function HeroNew() {
           if (!node) return;
           if (performance.now() - mountTimeRef.current < 150) {
             node.style.transition = "none";
-            node.style.animation = "none";
           }
           node.style.opacity = "1";
         }}
