@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { ImageWithFallback } from "@/components/ui/ImageWithFallback";
 import ColumbusMark from "./superFeatureRows/ColumbusMark";
 import { useMediaWarm } from "@/components/ui/MediaPrefetcher";
 // Static import → AVIF + blur-up for the shared chrome PNG.
@@ -198,13 +199,17 @@ function MapImage({ map, eager, warm }: { map: string; eager?: boolean; warm?: b
         filter: "saturate(1.2) contrast(1.08)",
       }}
     >
-      <Image
+      {/* ImageWithFallback: shimmer skeleton + fade-in on load, plus
+          automatic src-change reset so switching industries fades the
+          new map in rather than snapping it in. */}
+      <ImageWithFallback
         src={map}
         alt=""
         fill
         sizes="(max-width: 1180px) 55vw, 650px"
         className="object-cover object-center"
         aria-hidden
+        fallbackStyle={{ borderRadius: 0 }}
         {...(eager
           ? { priority: true }
           : { loading: warm ? "eager" : "lazy", fetchPriority: warm ? "low" : undefined })}

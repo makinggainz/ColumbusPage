@@ -355,7 +355,8 @@ export default function DashboardMockup({ industryId, preload = false }: Dashboa
       </div>
 
       <div
-        className="absolute"
+        key={industryId ?? "default"}
+        className="absolute industry-fade-in"
         style={{
           left: "4.167%",
           top: "6.048%",

@@ -1628,6 +1628,7 @@ export default function BusinessUseCases() {
     <>
       <SuperFeatureSection
         id="chat"
+        contentKey={industryId}
         icon={
           <IconChip>
             <circle cx="11" cy="11" r="7" />
@@ -1694,6 +1695,7 @@ export default function BusinessUseCases() {
       />
       <SuperFeatureSection
         id="data-catalogue"
+        contentKey={industryId}
         icon={
           <IconChip>
             <ellipse cx="12" cy="5" rx="8" ry="3" />
@@ -1719,6 +1721,7 @@ export default function BusinessUseCases() {
       />
       <SuperFeatureSection
         id="agentic-research"
+        contentKey={industryId}
         icon={
           <IconChip>
             <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
@@ -1741,6 +1744,7 @@ export default function BusinessUseCases() {
       />
       <SuperFeatureSection
         id="dashboard"
+        contentKey={industryId}
         icon={
           <IconChip>
             <rect x="3" y="3" width="7" height="7" />

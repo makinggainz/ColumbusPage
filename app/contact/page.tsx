@@ -291,8 +291,10 @@ function ContactPageInner() {
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [honeypot, setHoneypot] = useState("");
+  const [heroLoaded, setHeroLoaded] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
   const formStartedRef = useRef(false);
+  const heroImgRef = useRef<HTMLImageElement>(null);
 
   // Reset the form_started guard whenever the user switches tabs so the event
   // fires once per tab, not just once per page load.
@@ -310,6 +312,10 @@ function ContactPageInner() {
   useEffect(() => {
     const t = setTimeout(() => setMounted(true), 120);
     return () => clearTimeout(t);
+  }, []);
+
+  useEffect(() => {
+    if (heroImgRef.current?.complete) setHeroLoaded(true);
   }, []);
 
   const heroFadeIn = (delay: number): React.CSSProperties => ({
@@ -544,23 +550,35 @@ function ContactPageInner() {
         data-hero-section
         aria-hidden
         className="pointer-events-none absolute inset-x-0 top-0 z-0 w-full overflow-hidden"
-        style={{ aspectRatio: "1881 / 836", minHeight: "360px" }}
+        style={{ position: "relative", aspectRatio: "1881 / 836", minHeight: "360px" }}
       >
+        {/* Shimmer skeleton behind the hero — fades out once the image loads. */}
+        {!heroLoaded && (
+          <div
+            aria-hidden
+            className="skel-shimmer absolute inset-0"
+            style={{ zIndex: 0 }}
+          />
+        )}
         {/* Art-directed <picture>: mobile source swaps in the portrait crop;
             object-position differs per viewport (mobile right-weighted, desktop
             centred) via responsive classes (`object-right` ≡ CSS `right center`).
             Only the matching variant downloads. */}
-        <picture>
+        <picture style={{ position: "relative", zIndex: 1 }}>
           <source media="(max-width: 767px)" srcSet={contactHeroMobileSrcSet} />
           <img
             {...contactHeroDesktopProps}
             alt=""
             aria-hidden
+            ref={heroImgRef}
+            onLoad={() => setHeroLoaded(true)}
             className="select-none w-full h-full object-cover object-right md:object-center"
             style={{
               ...(contactHeroDesktopProps.style as CSSProperties),
               WebkitMaskImage: CONTACT_HERO_MASK,
               maskImage: CONTACT_HERO_MASK,
+              opacity: heroLoaded ? 1 : 0,
+              transition: heroLoaded ? "opacity 450ms ease-out" : "none",
             }}
           />
         </picture>

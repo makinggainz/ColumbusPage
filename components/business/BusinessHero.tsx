@@ -154,6 +154,7 @@ function TabSilhouette({
 export default function BusinessHero() {
   const sectionRef = useRef<HTMLElement>(null);
   const [visible, setVisible] = useState(false);
+  const [bgLoaded, setBgLoaded] = useState(false);
 
   // Browser-tab mock: each tab maps to one of the four product-display
   // mockup components (MapChat / Agentic Research / Data Manager /
@@ -386,6 +387,7 @@ export default function BusinessHero() {
           sizes="100vw"
           quality={80}
           draggable={false}
+          onLoad={() => setBgLoaded(true)}
           style={{ objectFit: "cover", objectPosition: "center 50%" }}
           // Loading/error surface — a top-to-bottom gradient of the cityscape's
           // two dominant sky-blues, so a slow or failed hero reads as a believable
@@ -404,6 +406,8 @@ export default function BusinessHero() {
           background:
             "linear-gradient(to bottom, rgba(0,0,0,0.42) 0%, rgba(0,0,0,0.28) 38%, rgba(0,0,0,0.12) 62%, rgba(0,0,0,0) 86%)",
           zIndex: 0,
+          opacity: bgLoaded ? 1 : 0,
+          transition: "opacity 0.4s ease",
         }}
       />
       {/* Desktop-only bottom fade — sits on top of the background photo
@@ -854,26 +858,35 @@ export default function BusinessHero() {
               style={{ padding: "0 4px 4px" }}
               className="hero-product-display"
             >
-              {/* All four mockups are PRE-MOUNTED (only the active tab's is
-                  display:block; the rest are display:none). This loads every
-                  demo's frame chrome up-front — MapChat at high priority (the
-                  above-the-fold LCP demo, eager), the other three at low
-                  priority (preload) — so switching tabs is an instant
-                  display-toggle, never a fresh mount whose frame PNG flashes
-                  in chrome-less. Mirrors the ComparisonSection preload fix.
-                  Each demo's own white background fill is the placeholder if a
-                  frame is still mid-load. */}
-              <div style={{ display: activeTabId === "map-chat" ? "block" : "none" }}>
-                <MapChatPlatform eager />
-              </div>
-              <div style={{ display: activeTabId === "research" ? "block" : "none" }}>
-                <AgenticResearchMockup preload />
-              </div>
-              <div style={{ display: activeTabId === "data" ? "block" : "none" }}>
-                <DataManagerMockup preload />
-              </div>
-              <div style={{ display: activeTabId === "dashboard" ? "block" : "none" }}>
-                <DashboardMockup preload />
+              {/* All four mockups are PRE-MOUNTED — the pre-mount strategy is
+                  preserved. All four load their frame chrome up-front (MapChat
+                  at high priority as the above-the-fold LCP demo, the other
+                  three at low priority via the preload prop). Visibility is now
+                  controlled by opacity + pointer-events instead of display:none
+                  so the active tab can cross-fade in rather than snapping in
+                  instantly. A CSS grid wrapper stacks all four children into the
+                  same cell; the active pane fades to opacity:1 in 220ms. */}
+              <div style={{ display: "grid" }}>
+                {(
+                  [
+                    { id: "map-chat",   node: <MapChatPlatform eager /> },
+                    { id: "research",   node: <AgenticResearchMockup preload /> },
+                    { id: "data",       node: <DataManagerMockup preload /> },
+                    { id: "dashboard",  node: <DashboardMockup preload /> },
+                  ] as const
+                ).map(({ id, node }) => (
+                  <div
+                    key={id}
+                    style={{
+                      gridArea: "1 / 1",
+                      opacity: activeTabId === id ? 1 : 0,
+                      transition: "opacity 220ms ease-out",
+                      pointerEvents: activeTabId === id ? "auto" : "none",
+                    }}
+                  >
+                    {node}
+                  </div>
+                ))}
               </div>
             </div>
             <style>{`

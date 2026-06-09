@@ -88,6 +88,10 @@ export type SuperFeatureSectionProps = {
      Use the demo's natural width (the four product mockups are 1180). */
   demoDesignWidth?: number;
   subFeatures?: SuperFeatureSubItem[];
+  /* When provided, used as part of the key for sub-feature text columns so
+     they remount + play `.industry-fade-in` when the key changes. Pass the
+     active industryId to get a smooth cross-fade on industry switches. */
+  contentKey?: string;
   /* When false, the surrounding #F7F7F7 panel is dropped and the hero
      block + sub-features render directly on the page background. Sections
      that already supply their own framing (e.g. a card mockup) use this
@@ -115,6 +119,7 @@ export default function SuperFeatureSection({
   demoVisual,
   demoDesignWidth,
   subFeatures = [],
+  contentKey,
   panel = true,
   scrim = true,
 }: SuperFeatureSectionProps) {
@@ -246,7 +251,10 @@ export default function SuperFeatureSection({
                   className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center"
                   style={anchorStyle}
                 >
-                  <div className={`lg:col-span-4 px-6 lg:px-0 ${reversed ? "lg:order-2 lg:pl-8" : "lg:pr-8"}`}>
+                  <div
+                    key={contentKey ? `${item.title}-${contentKey}` : item.title}
+                    className={`lg:col-span-4 px-6 lg:px-0 ${contentKey ? "industry-fade-in" : ""} ${reversed ? "lg:order-2 lg:pl-8" : "lg:pr-8"}`}
+                  >
                     <h3
                       className="text-[24px] md:text-[30px] lg:text-[36px] leading-[1.1]"
                       style={{ color: "var(--ent-text-primary)", fontWeight: 600, letterSpacing: "-0.02em" }}
