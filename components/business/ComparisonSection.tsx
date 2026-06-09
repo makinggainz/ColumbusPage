@@ -39,38 +39,27 @@ const RESIDENTIAL_MAP_CHAT = {
     "Rent growth concentrates in tram-served neighborhoods with tight new-build pipelines; independent business turnover lags the price rise by 18–24 months.",
 };
 
-/* Each feature auto-advances after this long; the expanded item's
-   horizontal progress bar is driven by the same CSS animation, so its end
-   event triggers the advance — bar and timer stay in sync and pause
-   together. */
+/* Each feature auto-advances after this long. The active item's horizontal
+   progress bar and the advance are driven by the same rAF clock (see the
+   component), so the bar and the timer stay in sync and pause together. */
 const CYCLE_MS = 6000;
 
-/* Scoped CSS:
-   • cmpBarFillIn: when a cell becomes active, the gray fill wipes in
-     from the left edge over FILL_IN_MS (origin: left, scaleX 0 → 1).
-   • cmpBarRecede: chained right after — over the remainder of
-     CYCLE_MS the fill recedes anchored to the right edge (origin:
-     right, scaleX 1 → 0) so the left edge slides rightward and the
-     fill thins as time runs out. The recede's animation-end fires
-     advance(), so the visible countdown IS the timer.
-   • .cmp-host-visual > *: kills only the box-shadow on each demo's
-     outermost wrapper (MapChatPlatform / *Mockup all set a heavy
-     floating-card shadow via inline style). Per the user's pass on
-     this design, the demos shouldn't sit on a shadow — they should
-     read as if you're clicking through the live app rather than
-     swapping between framed product screenshots. Rounded corners
-     and the rest of each demo's chrome stay intact. */
+/* The active cell's gray countdown bar is painted every frame by the
+   requestAnimationFrame loop in the component (see paintBar): it wipes in
+   from the left over the first FILL_IN_MS, then recedes toward the right for
+   the rest of CYCLE_MS. Driving it from the same clock that advances the
+   carousel keeps the bar and the timer perfectly in sync and — unlike the
+   old CSS-animation-end approach — means a dropped event can never strand
+   the countdown. */
 const FILL_IN_MS = 500;
-const RECEDE_MS = CYCLE_MS - FILL_IN_MS;
+/* Scoped CSS — `.cmp-host-visual > *` kills only the box-shadow on each
+   demo's outermost wrapper (MapChatPlatform / *Mockup all set a heavy
+   floating-card shadow via inline style). Per the user's pass on this
+   design, the demos shouldn't sit on a shadow — they should read as if
+   you're clicking through the live app rather than swapping between framed
+   product screenshots. Rounded corners and the rest of each demo's chrome
+   stay intact. */
 const CMP_CSS = `
-@keyframes cmpBarFillIn {
-  from { transform: scaleX(0); transform-origin: left center; }
-  to { transform: scaleX(1); transform-origin: left center; }
-}
-@keyframes cmpBarRecede {
-  from { transform: scaleX(1); transform-origin: right center; }
-  to { transform: scaleX(0); transform-origin: right center; }
-}
 .cmp-host-visual > * { box-shadow: none !important; }
 
 /* Host card layout — split between mobile (full mockup visible at
@@ -211,27 +200,48 @@ export default function ComparisonSection() {
   const warm = useMediaWarm();
   const sectionRef = useRef<HTMLElement>(null);
   const [entered, setEntered] = useState(false);
-  const [onScreen, setOnScreen] = useState(false);
   const [active, setActive] = useState(0);
-  const [hovered, setHovered] = useState(false);
   const [hoveredCard, setHoveredCard] = useState<number | null>(null);
-  /* Bumped on every advance/click to remount the progress fill so its
-     CSS animation restarts from 0. */
-  const [runId, setRunId] = useState(0);
-  /* Tracks where the active cell sits in its two-stage animation. The
-     fill-in entrance should ALWAYS play (it's selection feedback,
-     triggered by click or auto-advance — both of which can occur while
-     the cursor is still inside the section). Only the recede phase
-     respects the hover pause, so the user can "stop and read" without
-     freezing the entrance into the next card. */
-  const [cyclePhase, setCyclePhase] = useState<"fillIn" | "recede">("fillIn");
+
+  /* ── Auto-advance is driven by a single requestAnimationFrame loop that
+     owns the cycle clock, instead of a CSS animation whose `animationend`
+     event triggered the advance. The old approach could freeze for good: a
+     missed `animationend` (dropped when the play-state was toggled while the
+     cursor moved over the section) left nothing to fire the next advance,
+     and the hover-pause covered the whole section — including the large
+     demo — so any mouse movement read as a "random freeze."
+
+     The loop writes the progress bar's transform straight to the DOM via
+     `barRef` (no per-frame React re-render, so the four heavy mockups aren't
+     reconciled 60×/sec) and only calls setActive when a cell's cycle
+     completes. Pausing just stops accumulating time, so it can never get
+     stuck — when the pause condition clears, the loop simply resumes. ── */
+  const FILL_FRAC = FILL_IN_MS / CYCLE_MS;
+  const barRef = useRef<HTMLSpanElement | null>(null);
+  const onScreenRef = useRef(false);
+  const autoRef = useRef(false);        // auto-advance only at lg+ (desktop)
+  const activeRef = useRef(0);
+  const progressRef = useRef(0);        // 0‒1 within the active cell's cycle
+  const lastTsRef = useRef<number | null>(null);
+
+  useEffect(() => { activeRef.current = active; }, [active]);
+
+  /* Auto-advance is a desktop-only behaviour (mobile is a tap-to-select
+     stack). matchMedia keeps `autoRef` in sync across resizes. */
+  useEffect(() => {
+    const mq = window.matchMedia("(min-width: 1024px)");
+    const apply = () => { autoRef.current = mq.matches; };
+    apply();
+    mq.addEventListener("change", apply);
+    return () => mq.removeEventListener("change", apply);
+  }, []);
 
   useEffect(() => {
     const el = sectionRef.current;
     if (!el) return;
     const obs = new IntersectionObserver(
       ([e]) => {
-        setOnScreen(e.isIntersecting);
+        onScreenRef.current = e.isIntersecting;
         if (e.isIntersecting) setEntered(true);
       },
       { threshold: 0.1 }
@@ -240,28 +250,64 @@ export default function ComparisonSection() {
     return () => obs.disconnect();
   }, []);
 
-  /* Reset to the fill-in phase whenever a new slot becomes active
-     (select() / advance() both bump runId). After FILL_IN_MS we flip
-     to recede so the pause logic kicks in for the rest of the cycle. */
-  useEffect(() => {
-    setCyclePhase("fillIn");
-    const t = setTimeout(() => setCyclePhase("recede"), FILL_IN_MS);
-    return () => clearTimeout(t);
-  }, [runId]);
+  /* Paint the active cell's fill bar for a given cycle progress (0‒1): it
+     wipes in from the left over the first FILL_FRAC of the cycle, then
+     recedes toward the right for the remainder — the same two-stage visual
+     the CSS keyframes used to produce, now sampled every frame. */
+  const paintBar = (p: number) => {
+    const bar = barRef.current;
+    if (!bar) return;
+    if (p < FILL_FRAC) {
+      bar.style.transformOrigin = "left center";
+      bar.style.transform = `scaleX(${p / FILL_FRAC})`;
+    } else {
+      bar.style.transformOrigin = "right center";
+      bar.style.transform = `scaleX(${1 - (p - FILL_FRAC) / (1 - FILL_FRAC)})`;
+    }
+  };
 
-  /* Cycling pauses off-screen, OR while the user hovers AND the active
-     cell has finished its fill-in entrance. The fill-in is never paused
-     so clicking always gives immediate visual feedback. */
-  const paused = !onScreen || (hovered && cyclePhase === "recede");
+  useEffect(() => {
+    let raf = requestAnimationFrame(function tick(ts: number) {
+      raf = requestAnimationFrame(tick);
+      const paused = !onScreenRef.current || !autoRef.current;
+      if (paused) {
+        lastTsRef.current = ts;   // swallow the gap so we resume smoothly
+        return;
+      }
+      if (lastTsRef.current == null) {
+        lastTsRef.current = ts;
+        return;
+      }
+      const dt = ts - lastTsRef.current;
+      lastTsRef.current = ts;
+      let p = progressRef.current + dt / CYCLE_MS;
+      if (p >= 1) {
+        p = 0;
+        const next = (activeRef.current + 1) % FEATURES.length;
+        activeRef.current = next;
+        setActive(next);
+      }
+      progressRef.current = p;
+      paintBar(p);
+    });
+    return () => cancelAnimationFrame(raf);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  /* When a new cell becomes active (auto-advance OR click) restart its cycle
+     from 0 and immediately paint the fresh bar node. lastTs is nulled so the
+     next frame doesn't count the gap since the previous one. */
+  useEffect(() => {
+    progressRef.current = 0;
+    lastTsRef.current = null;
+    paintBar(0);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [active]);
 
   const select = (i: number) => {
     if (i === active) return;
+    activeRef.current = i;
     setActive(i);
-    setRunId(r => r + 1);
-  };
-  const advance = () => {
-    setActive(a => (a + 1) % FEATURES.length);
-    setRunId(r => r + 1);
   };
 
   return (
@@ -284,8 +330,6 @@ export default function ComparisonSection() {
           transform: entered ? "translateY(0)" : "translateY(16px)",
           transition: "opacity 0.6s ease, transform 0.6s ease",
         }}
-        onMouseEnter={() => setHovered(true)}
-        onMouseLeave={() => setHovered(false)}
       >
         {/* ── Left: feature accordion. 24px corner, hairline #E7E7F1
             border, #FDFDFD off-white fill, overflow:hidden. At lg+ the
@@ -334,37 +378,28 @@ export default function ComparisonSection() {
                 onMouseEnter={() => setHoveredCard(i)}
                 onMouseLeave={() => setHoveredCard(null)}
               >
-                {/* Countdown fill — when the cell becomes active the
-                    gray fill first wipes in from the LEFT edge over
-                    FILL_IN_MS (cmpBarFillIn), then chains into the
-                    cmpBarRecede countdown which shrinks the fill
-                    anchored to the RIGHT edge over the rest of the
-                    cycle (left edge slides rightward, fill thins).
-                    The mount is keyed by runId so each new active
-                    slot restarts the two-stage animation from
-                    scratch. The recede's animation-end fires
-                    advance() — the visible countdown IS the
-                    auto-advance timer. */}
+                {/* Countdown fill — when the cell becomes active the gray
+                    fill wipes in from the LEFT over FILL_IN_MS, then recedes
+                    anchored to the RIGHT for the rest of the cycle (left edge
+                    slides rightward, fill thins). Both stages are painted
+                    frame-by-frame by the component's rAF loop (paintBar) and
+                    the cycle's completion there advances to the next slot —
+                    the visible countdown IS the auto-advance timer. */}
                 {isActive && (
-                  /* `hidden lg:block` — kills the gray fill bar on mobile.
-                     `display: none` also prevents the CSS animation from
-                     firing, so onAnimationEnd → advance() never runs and
-                     the section becomes a tap-to-select list on mobile
-                     (per Phase 2.2 plan: static stack on mobile, no
-                     auto-advance). Active-state feedback on mobile
-                     comes from the opacity-100 vs opacity-70 contrast
-                     applied to the parent <li> above. */
+                  /* `hidden lg:block` — the gray countdown bar is desktop
+                     only. On mobile the section is a tap-to-select list (no
+                     auto-advance); active-state feedback there comes from the
+                     opacity-100 vs opacity-70 contrast on the parent <li>.
+                     The bar's transform is written every frame by the rAF
+                     loop via barRef — see paintBar in the component. */
                   <span
-                    key={runId}
-                    onAnimationEnd={(e) => {
-                      if (e.animationName === "cmpBarRecede") advance();
-                    }}
+                    ref={barRef}
                     aria-hidden
                     className="absolute inset-0 hidden lg:block"
                     style={{
                       backgroundColor: "#F2F2F2",
-                      animation: `cmpBarFillIn ${FILL_IN_MS}ms cubic-bezier(0.4, 0, 0.2, 1) forwards, cmpBarRecede ${RECEDE_MS}ms linear ${FILL_IN_MS}ms forwards`,
-                      animationPlayState: paused ? "paused" : "running",
+                      transform: "scaleX(0)",
+                      transformOrigin: "left center",
                       willChange: "transform",
                       zIndex: 0,
                     }}

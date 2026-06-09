@@ -168,9 +168,24 @@ export type Suggestion = {
      simple definitional questions like "what is GIS" (which tokenizes to
      just {"gis"} after stopword filtering). */
   minHits?: number;
+  /* When set, clicking this chip opens the inline contact form instead of
+     printing `response` — for next-step intents (e.g. "Can I see a demo?")
+     where a dead-end text answer would frustrate. `response` is still kept as
+     the AI/<faq> grounding for the same question typed freely. */
+  action?: "contact";
 };
 
 export const COLUMBUS_SUGGESTIONS: Suggestion[] = [
+  {
+    id: "what-is-gis",
+    label: "What is GIS?",
+    response:
+      "GIS — Geographic Information System — is software for capturing, analyzing, and visualizing data tied to locations on earth. Columbus makes that effortless: ask the map anything in plain English and get answers, forecasts, and maps instantly.",
+    /* "gis" is specific enough to match alone — "what is GIS" tokenizes to
+       just {"gis"} after stopword filtering, so minHits:1 is required here. */
+    keywords: ["gis", "geospatial", "geographic", "spatial", "gis?"],
+    minHits: 1,
+  },
   {
     id: "pricing",
     label: "Is Columbus free?",
@@ -289,6 +304,9 @@ export const COLUMBUS_SUGGESTIONS: Suggestion[] = [
   {
     id: "demo",
     label: "Can I see a demo?",
+    /* Clicking opens the contact form (see `action`) rather than printing this
+       text — but it stays as grounding for the same question typed freely. */
+    action: "contact",
     response:
       "Yes — start a demo or talk to our founders to see Columbus running on your own data.",
     keywords: [
@@ -348,16 +366,6 @@ export const INDUSTRY_OPTIONS: { value: string; label: string }[] = [
    is unavailable. Keep responses short, accurate, and Columbus-pivoting. */
 
 export const KEYWORD_FALLBACKS: Suggestion[] = [
-  {
-    id: "what-is-gis",
-    label: "What is GIS?",
-    response:
-      "GIS — Geographic Information System — is software for capturing, analyzing, and visualizing data tied to locations on earth. Columbus makes that effortless: ask the map anything in plain English and get answers, forecasts, and maps instantly.",
-    /* "gis" is specific enough to match alone — "what is GIS" tokenizes to
-       just {"gis"} after stopword filtering, so minHits:1 is required here. */
-    keywords: ["gis", "geospatial", "geographic", "spatial", "gis?"],
-    minHits: 1,
-  },
   {
     id: "what-is-agentic",
     label: "What is agentic GIS?",

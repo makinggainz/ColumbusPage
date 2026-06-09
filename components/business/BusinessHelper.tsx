@@ -193,7 +193,13 @@ const AI_MIN_THINKING_MS = 700;
 
 type AiTurn = { role: "user" | "assistant"; content: string };
 
-async function fetchColumbusAnswer(turns: AiTurn[]): Promise<string | null> {
+/* The server returns a text answer, OR an `action`: "contact" (demo /
+   get-started / contact intent → open the inline form) or "unavailable"
+   (transient upstream failure → keyword fallback then a retry nudge, NOT a
+   form), OR neither (a genuine miss → keyword fallback then form). */
+type AiResult = { answer: string | null; action: "contact" | "unavailable" | null };
+
+async function fetchColumbusAnswer(turns: AiTurn[]): Promise<AiResult> {
   try {
     const ctrl = new AbortController();
     const timer = window.setTimeout(() => ctrl.abort(), AI_TIMEOUT_MS);
@@ -204,23 +210,19 @@ async function fetchColumbusAnswer(turns: AiTurn[]): Promise<string | null> {
       signal: ctrl.signal,
     });
     window.clearTimeout(timer);
-    if (!res.ok) return null;
-    const data = (await res.json()) as { answer?: unknown };
+    if (!res.ok) return { answer: null, action: "unavailable" };
+    const data = (await res.json()) as { answer?: unknown; action?: unknown };
     const answer = typeof data.answer === "string" ? data.answer.trim() : "";
-    return answer.length > 0 ? answer : null;
+    const action =
+      data.action === "contact" || data.action === "unavailable"
+        ? data.action
+        : null;
+    return { answer: answer.length > 0 ? answer : null, action };
   } catch {
-    /* Network error, abort/timeout, or bad JSON — treat as "no answer" so
-       the caller shows the contact form instead of an error. */
-    return null;
+    /* Network error, abort/timeout, or bad JSON — transient, so signal
+       "unavailable" (keyword fallback then a retry nudge), not a form. */
+    return { answer: null, action: "unavailable" };
   }
-}
-
-/* The AI master prompt defers pricing and uncovered specifics to "talk to the
-   founders". When an answer makes that suggestion, surface the inline contact
-   form right after it so the visitor can act on it in one step. Matches
-   "founder"/"founders" in any casing. */
-function suggestsFounderContact(answer: string): boolean {
-  return /\bfounders?\b/i.test(answer);
 }
 
 function loadChats(): Chat[] {
@@ -468,22 +470,54 @@ export default function BusinessHelper() {
             ...c,
             messages: [...c.messages, typingMsg],
           }));
-          /* Phase 3 — the thinking indicator gives way to the answer. */
+          /* Phase 3 — the thinking indicator gives way to the answer. A
+             next-step chip (action: "contact", e.g. "Can I see a demo?")
+             opens the inline contact form instead of a dead-end text reply;
+             if a form is already open, just acknowledge. */
           window.setTimeout(() => {
-            updateActiveChat((c) => ({
-              ...c,
-              messages: [
-                ...c.messages.filter((m) => m.id !== typingMsg.id),
-                {
-                  id: nextId(),
-                  kind: "text",
-                  role: "assistant",
-                  text: s.response,
-                  ts: Date.now(),
-                  feedback: null,
-                },
-              ],
-            }));
+            updateActiveChat((c) => {
+              const withoutTyping = c.messages.filter(
+                (m) => m.id !== typingMsg.id,
+              );
+              if (s.action === "contact") {
+                const hasForm = withoutTyping.some((m) => m.kind === "form");
+                const next: Message = hasForm
+                  ? {
+                      id: nextId(),
+                      kind: "text",
+                      role: "assistant",
+                      text:
+                        "Perfect — add your details in the form above and our founders will set up your demo.",
+                      ts: Date.now(),
+                      feedback: undefined,
+                    }
+                  : {
+                      id: nextId(),
+                      kind: "form",
+                      role: "assistant",
+                      preamble:
+                        "Love to — share a few details below and our founders will set you up with a demo on your own data.",
+                      prefilledMessage: s.label,
+                      submitted: false,
+                      ts: Date.now(),
+                    };
+                return { ...c, messages: [...withoutTyping, next] };
+              }
+              return {
+                ...c,
+                messages: [
+                  ...withoutTyping,
+                  {
+                    id: nextId(),
+                    kind: "text",
+                    role: "assistant",
+                    text: s.response,
+                    ts: Date.now(),
+                    feedback: null,
+                  },
+                ],
+              };
+            });
           }, TYPING_LATENCY_MS);
         }, THINKING_DELAY_MS);
       }, CHIP_SELECT_MS);
@@ -563,47 +597,77 @@ export default function BusinessHelper() {
            timeout, no key) — we try the keyword matcher, then fall back to the
            form. Never an error. */
         void (async () => {
-          const [answer] = await Promise.all([
+          const [result] = await Promise.all([
             fetchColumbusAnswer(aiTurns),
             new Promise((resolve) =>
               window.setTimeout(resolve, AI_MIN_THINKING_MS),
             ),
           ]);
+          const { answer, action } = result;
           updateActiveChat((c) => {
             const withoutTyping = c.messages.filter(
               (m) => m.id !== typingMsg.id,
             );
-            if (answer) {
-              const next: Message[] = [
-                ...withoutTyping,
-                {
-                  id: nextId(),
-                  kind: "text",
-                  role: "assistant",
-                  text: answer,
-                  ts: Date.now(),
-                  feedback: null,
-                },
-              ];
-              /* If the answer suggests talking to the founders, surface the
-                 contact form right below it (once per chat) so they can act
-                 on it immediately. */
-              if (
-                suggestsFounderContact(answer) &&
-                !withoutTyping.some((m) => m.kind === "form")
-              ) {
-                next.push({
-                  id: nextId(),
-                  kind: "form",
-                  role: "assistant",
-                  preamble:
-                    "Share a few details below and our founders will get back to you.",
-                  prefilledMessage: text,
-                  submitted: false,
-                  ts: Date.now(),
-                });
+            /* Demo / get-started / contact intent — open the inline contact
+               form directly so they can act, instead of a dead-end "go start
+               a demo" line. If a form is already open, just acknowledge. */
+            if (action === "contact") {
+              const hasForm = withoutTyping.some((m) => m.kind === "form");
+              if (hasForm) {
+                return {
+                  ...c,
+                  messages: [
+                    ...withoutTyping,
+                    {
+                      id: nextId(),
+                      kind: "text",
+                      role: "assistant",
+                      text:
+                        "Perfect — add your details in the form above and our founders will set up your demo.",
+                      ts: Date.now(),
+                      feedback: undefined,
+                    },
+                  ],
+                };
               }
-              return { ...c, messages: next };
+              return {
+                ...c,
+                messages: [
+                  ...withoutTyping,
+                  {
+                    id: nextId(),
+                    kind: "form",
+                    role: "assistant",
+                    preamble:
+                      "Love to — share a few details below and our founders will set you up with a demo on your own data.",
+                    prefilledMessage: text,
+                    submitted: false,
+                    ts: Date.now(),
+                  },
+                ],
+              };
+            }
+            if (answer) {
+              /* Just show the answer. We deliberately do NOT auto-append a
+                 contact form here: the model closes many replies by inviting a
+                 demo / the founders, so appending a form on every such mention
+                 made it pop up far too often. The form now appears only on
+                 explicit next-step intent (action "contact"), a thumbs-down, or
+                 a genuine unanswerable question (below). */
+              return {
+                ...c,
+                messages: [
+                  ...withoutTyping,
+                  {
+                    id: nextId(),
+                    kind: "text",
+                    role: "assistant",
+                    text: answer,
+                    ts: Date.now(),
+                    feedback: null,
+                  },
+                ],
+              };
             }
             /* Secondary fallback: the keyword matcher. If it recognizes the
                question, answer from the curated canned response before we fall
@@ -626,6 +690,27 @@ export default function BusinessHelper() {
                 usedSuggestionIds: c.usedSuggestionIds.includes(fallback.id)
                   ? c.usedSuggestionIds
                   : [...c.usedSuggestionIds, fallback.id],
+              };
+            }
+            /* Transient upstream failure (rate limit, timeout, network) — the
+               question was probably answerable, so don't dead-end into a
+               contact form. Nudge a retry instead. (Distinct from a genuine
+               "we can't answer this" decline, which still shows the form.) */
+            if (action === "unavailable") {
+              return {
+                ...c,
+                messages: [
+                  ...withoutTyping,
+                  {
+                    id: nextId(),
+                    kind: "text",
+                    role: "assistant",
+                    text:
+                      "Sorry — I hit a brief hiccup just now. Could you ask that again?",
+                    ts: Date.now(),
+                    feedback: undefined,
+                  },
+                ],
               };
             }
             const hasForm = withoutTyping.some((m) => m.kind === "form");
