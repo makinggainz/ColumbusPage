@@ -5918,68 +5918,72 @@
   );
 }
 
-/* Card 4 — 3D warp tunnel (gravity well). Concentric rings + radial spokes
-   assembled in 3D, tilted for an oblique view, spun on its axis via the same
-   globeSpin keyframe (16s) as card 1. Sizing is driven by inline px (rings/
-   spokes), so the funnel/rotor boxes are zero-size anchors at the centre. */
-.warpScene {
+/* Card 4 — 3D multilayer network. Three stacked horizontal planes (dashed
+   outlines) with nodes, connected by projection rays. The stack tilts for an
+   oblique view; .netStack is a zero-size anchor (geometry is inline px). */
+.netScene {
   position: absolute;
   inset: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  perspective: 560px;
+  perspective: 760px;
 }
 
-.warpFunnel {
+.netStack {
   position: relative;
   width: 0;
   height: 0;
   transform-style: preserve-3d;
-  /* Steep top-down (from-above) view — negative tilt looks DOWN into the
-     funnel (positive looked up at it from underneath). Geometry is centred on
-     the origin (see MID offset), so the scene's flex centring keeps it placed. */
-  transform: rotateX(-58deg);
+  /* Oblique view: tilt down + rotate so the square planes read as diamonds. */
+  transform: rotateX(58deg) rotateZ(-30deg);
 }
 
-.warpRotor {
+/* Dashed plane outline (a layer). */
+.netPlane {
   position: absolute;
   top: 0;
   left: 0;
-  transform-style: preserve-3d;
-  animation: globeSpin 16s linear infinite;
+  border: 1.5px dashed rgba(255, 255, 255, 0.45);
+  border-radius: 2px;
 }
 
-.warpRing {
+/* Projection ray — a thin bar with flowing dashes (data moving up a layer). */
+.netEdge {
   position: absolute;
   top: 0;
   left: 0;
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  border-radius: 50%;
-}
-
-.warpSpoke {
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 1px;
-  margin-top: -0.5px;
+  height: 2px;
+  margin-top: -1px;
   transform-origin: 0 50%;
-  background: rgba(255, 255, 255, 0.5);
+  background: repeating-linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0.85) 0 5px,
+    transparent 5px 13px
+  );
+  background-size: 13px 100%;
+  animation: netFlow 1.1s linear infinite;
 }
 
-/* Opaque funnel surface panel — filled with the tile colour so it hides the
-   wireframe behind it (3D z-sorting). The 1px box is mapped onto the cell via
-   inline matrix3d + clipped to the trapezoid. */
-.warpFace {
+@keyframes netFlow {
+  from { background-position-x: 13px; }
+  to   { background-position-x: 0; }
+}
+
+/* Layer nodes — coloured dots, one palette per layer. */
+.netNode {
   position: absolute;
   top: 0;
   left: 0;
-  width: 1px;
-  height: 1px;
-  transform-origin: 0 0;
-  background: #1d3fa6; /* = .resultsCardArt tile background */
+  width: 9px;
+  height: 9px;
+  margin: -4.5px 0 0 -4.5px;
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px rgba(11, 27, 43, 0.25);
 }
+.netNode0 { background: #6ca0f0; } /* bottom layer */
+.netNode1 { background: #e5823a; } /* middle layer */
+.netNode2 { background: #37b27a; } /* top layer */
 
 /* Card 3 — meridian globe + roaming crosshairs + drifting target reticle. */
 .catScene {
@@ -6066,11 +6070,20 @@
   100% { transform: translate(-66px, 6px); }
 }
 
+/* Paused state — set on the art tile when it's not fully in frame. Pauses
+   every animation in the subtree (play-state isn't inherited, so target all
+   descendants). */
+.resultsArtPaused *,
+.resultsArtPaused *::before,
+.resultsArtPaused *::after {
+  animation-play-state: paused !important;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .globeRotorSpin { animation: none; }
   .globeRotorLayered .globeMeridian,
   .globeRotorLayered .globeParallel { animation: none; opacity: 1; }
-  .warpRotor { animation: none; }
+  .netEdge { animation: none; }
   .catCrossH,
   .catCrossV,
   .catTarget { animation: none; }

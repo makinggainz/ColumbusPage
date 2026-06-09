@@ -27,6 +27,7 @@ import { CoreResearchCarousel } from "./CoreResearchCarousel";
 import { Definition } from "./Definition";
 import { ResearchAccordionProvider } from "./ResearchAccordionContext";
 import { ResearchGroup } from "./ResearchGroup";
+import { ResultsArtFrame } from "./ResultsArtFrame";
 import { RevealOnView } from "./RevealOnView";
 import { ScaleToFit } from "./ScaleToFit";
 import { CareersContactForm } from "./CareersContactForm";
@@ -90,18 +91,21 @@ const GLOBE_RAY_TARGETS: [number, number][] = [
   [98, 30], [98, 90], [98, 150], [98, 210], [98, 270], [98, 330],
 ];
 
-/* Card 4 — "Deep spatial reasoning at scale": a 3D gravity-well / warp tunnel.
-   Built like the globe — concentric horizontal rings (latitude-style) at
-   shrinking radius + growing depth form the funnel, then a straight tube; radial
-   spokes connect consecutive rings down the surface. The whole thing tilts for
-   the oblique view and spins on its axis at the same speed as card 1. */
-const FUNNEL_R = 92;      // rim radius (px)
-const THROAT_R = 13;      // narrowest radius at the funnel's throat
-const WELL_DEPTH = 78;    // depth from rim to throat
-const N_WELL = 7;         // rings forming the curved well
-const N_TUBE = 4;         // rings forming the straight tube below the throat
-const TUBE_STEP = 16;     // depth added per tube ring
-const FUNNEL_AZIMUTHS = 12; // radial spokes around the funnel
+/* Card 4 — "Deep spatial reasoning at scale": a 3D multilayer network — three
+   stacked dashed planes (layers), each scattered with nodes, and projection
+   rays linking each layer's nodes to the layer above. The rays animate as
+   flowing dashes (data projecting up through the layers). */
+const NET_S = 150;                       // plane side (px)
+const NET_LAYER_Y = [82, 0, -82];        // bottom, middle, top (y is down-positive)
+// Node positions per layer as [x, z] within the plane (local px).
+const NET_NODES: [number, number][][] = [
+  // Layer 0 — bottom (densest)
+  [[-52, -26], [-22, -50], [8, -22], [40, -44], [-40, 18], [-8, 42], [30, 26], [54, 2]],
+  // Layer 1 — middle
+  [[-42, -18], [-6, -36], [26, -12], [46, 24], [-20, 32]],
+  // Layer 2 — top
+  [[-46, -24], [-16, -46], [14, -30], [42, -34], [0, 12], [30, 30], [-26, 34]],
+];
 
 function ResultsGlobe3D({
   spin = false,
@@ -207,29 +211,13 @@ function ResultsGlobe3D({
   );
 }
 
-/* Card 4 — 3D warp tunnel (gravity well), spinning on its axis. */
-function ResultsWarp() {
-  // Rings from the rim down to the throat (curved well), then the straight tube.
-  const rings: { r: number; y: number }[] = [];
-  for (let k = 0; k < N_WELL; k++) {
-    const u = k / (N_WELL - 1);
-    rings.push({
-      r: FUNNEL_R + (THROAT_R - FUNNEL_R) * u,
-      y: WELL_DEPTH * Math.pow(u, 1.7), // steeper near the throat
-    });
-  }
-  for (let j = 1; j <= N_TUBE; j++) {
-    rings.push({ r: THROAT_R, y: WELL_DEPTH + TUBE_STEP * j });
-  }
-
-  // Centre the funnel vertically: shift every ring up by half the total depth
-  // so the rim/tube straddle the origin instead of hanging below it.
-  const MID = (WELL_DEPTH + N_TUBE * TUBE_STEP) / 2;
-
-  // Radial spokes — straight segments connecting consecutive rings at each
-  // azimuth, so they follow the funnel + tube surface (built with the same
-  // 3D line-as-bar math as the globe's rays).
-  const spokes: {
+/* Card 4 — 3D multilayer network. Three stacked dashed planes with nodes,
+   linked by projection rays (flowing dashes) from each layer to the next. */
+function ResultsLayers() {
+  // Projection rays — connect each lower-layer node to two upper-layer nodes
+  // (different per layer, so the web converges upward). Built with the same
+  // 3D line-as-bar math as the globe's rays.
+  const edges: {
     key: string;
     len: number;
     sx: number;
@@ -238,102 +226,64 @@ function ResultsWarp() {
     angleZ: number;
     angleY: number;
   }[] = [];
-  for (let a = 0; a < FUNNEL_AZIMUTHS; a++) {
-    const phi = (a * 2 * Math.PI) / FUNNEL_AZIMUTHS;
-    const c = Math.cos(phi);
-    const s = Math.sin(phi);
-    for (let i = 0; i < rings.length - 1; i++) {
-      const A = rings[i];
-      const B = rings[i + 1];
-      const sx = A.r * c;
-      const sz = A.r * s;
-      const dx = B.r * c - sx;
-      const dy = B.y - A.y;
-      const dz = B.r * s - sz;
-      const len = Math.hypot(dx, dy, dz);
-      spokes.push({
-        key: `${a}-${i}`,
-        len,
-        sx,
-        sy: A.y - MID,
-        sz,
-        angleZ: (Math.atan2(dy, dx) * 180) / Math.PI,
-        angleY: (Math.asin(-dz / len) * 180) / Math.PI,
-      });
-    }
-  }
-
-  // Opaque surface panels — one quad per cell, filled with the tile colour so
-  // they occlude the wireframe on the far side (no more see-through). Each is a
-  // 1px box mapped onto the cell's plane via matrix3d, then clipped to the
-  // trapezoid (top edge longer than bottom since the funnel narrows downward).
-  const faces: { key: string; m: string; clip: string }[] = [];
-  for (let a = 0; a < FUNNEL_AZIMUTHS; a++) {
-    const a0 = (a * 2 * Math.PI) / FUNNEL_AZIMUTHS;
-    const a1 = ((a + 1) * 2 * Math.PI) / FUNNEL_AZIMUTHS;
-    for (let i = 0; i < rings.length - 1; i++) {
-      const ri = rings[i].r;
-      const ri1 = rings[i + 1].r;
-      const yi = rings[i].y - MID;
-      const yi1 = rings[i + 1].y - MID;
-      const A = { x: ri * Math.cos(a0), y: yi, z: ri * Math.sin(a0) };
-      const B = { x: ri * Math.cos(a1), y: yi, z: ri * Math.sin(a1) };
-      const D = { x: ri1 * Math.cos(a0), y: yi1, z: ri1 * Math.sin(a0) };
-      const u = { x: B.x - A.x, y: B.y - A.y, z: B.z - A.z };
-      const v = { x: D.x - A.x, y: D.y - A.y, z: D.z - A.z };
-      let nx = u.y * v.z - u.z * v.y;
-      let ny = u.z * v.x - u.x * v.z;
-      let nz = u.x * v.y - u.y * v.x;
-      const nl = Math.hypot(nx, ny, nz) || 1;
-      nx /= nl;
-      ny /= nl;
-      nz /= nl;
-      // Push the panel a hair behind the grid lines so the lines stay on top.
-      const ox = A.x - 0.4 * nx;
-      const oy = A.y - 0.4 * ny;
-      const oz = A.z - 0.4 * nz;
-      const f = (ri1 / ri) * 100; // bottom edge is shorter → trapezoid
-      faces.push({
-        key: `f${a}-${i}`,
-        m: `matrix3d(${u.x},${u.y},${u.z},0, ${v.x},${v.y},${v.z},0, ${nx},${ny},${nz},0, ${ox},${oy},${oz},1)`,
-        clip: `polygon(0% 0%, 100% 0%, ${f}% 100%, 0% 100%)`,
-      });
-    }
+  for (let L = 0; L < NET_NODES.length - 1; L++) {
+    const lower = NET_NODES[L];
+    const upper = NET_NODES[L + 1];
+    const yl = NET_LAYER_Y[L];
+    const yu = NET_LAYER_Y[L + 1];
+    lower.forEach(([lx, lz], i) => {
+      for (const tIdx of [i % upper.length, (i + 2) % upper.length]) {
+        const [ux, uz] = upper[tIdx];
+        const dx = ux - lx;
+        const dy = yu - yl;
+        const dz = uz - lz;
+        const len = Math.hypot(dx, dy, dz);
+        edges.push({
+          key: `e${L}-${i}-${tIdx}`,
+          len,
+          sx: lx,
+          sy: yl,
+          sz: lz,
+          angleZ: (Math.atan2(dy, dx) * 180) / Math.PI,
+          angleY: (Math.asin(-dz / len) * 180) / Math.PI,
+        });
+      }
+    });
   }
 
   return (
-    <div className={styles.warpScene} aria-hidden>
-      <div className={styles.warpFunnel}>
-        <div className={styles.warpRotor}>
-          {faces.map((face) => (
+    <div className={styles.netScene} aria-hidden>
+      <div className={styles.netStack}>
+        {NET_LAYER_Y.map((y, li) => (
+          <span
+            key={`plane${li}`}
+            className={styles.netPlane}
+            style={{
+              width: NET_S,
+              height: NET_S,
+              transform: `translate(-50%, -50%) rotateX(90deg) translateZ(${-y}px)`,
+            }}
+          />
+        ))}
+        {edges.map((e) => (
+          <span
+            key={e.key}
+            className={styles.netEdge}
+            style={{
+              width: e.len,
+              transform: `translate3d(${e.sx}px, ${e.sy}px, ${e.sz}px) rotateZ(${e.angleZ}deg) rotateY(${e.angleY}deg)`,
+            }}
+          />
+        ))}
+        {NET_NODES.map((layer, li) =>
+          layer.map(([x, z], ni) => (
             <span
-              key={face.key}
-              className={styles.warpFace}
-              style={{ transform: face.m, clipPath: face.clip }}
+              key={`node${li}-${ni}`}
+              className={`${styles.netNode} ${[styles.netNode0, styles.netNode1, styles.netNode2][li]}`}
+              style={{ transform: `translate3d(${x}px, ${NET_LAYER_Y[li]}px, ${z}px)` }}
             />
-          ))}
-          {rings.map((ring, i) => (
-            <span
-              key={`ring${i}`}
-              className={styles.warpRing}
-              style={{
-                width: 2 * ring.r,
-                height: 2 * ring.r,
-                transform: `translate(-50%, -50%) rotateX(90deg) translateZ(${MID - ring.y}px)`,
-              }}
-            />
-          ))}
-          {spokes.map((sp) => (
-            <span
-              key={`sp${sp.key}`}
-              className={styles.warpSpoke}
-              style={{
-                width: sp.len,
-                transform: `translate3d(${sp.sx}px, ${sp.sy}px, ${sp.sz}px) rotateZ(${sp.angleZ}deg) rotateY(${sp.angleY}deg)`,
-              }}
-            />
-          ))}
-        </div>
+          )),
+        )}
       </div>
     </div>
   );
@@ -376,8 +326,8 @@ function ResultsGlobe({ num }: { num: string }) {
   // Card 2 — "Generative geospatial data": wireframe globe that loads in
   // top-to-bottom on a loop (no spin, no rays).
   if (num === "2") return <ResultsGlobe3D reveal />;
-  // Card 4 — "Deep spatial reasoning at scale": rotating 3D warp tunnel.
-  if (num === "4") return <ResultsWarp />;
+  // Card 4 — "Deep spatial reasoning at scale": 3D multilayer network.
+  if (num === "4") return <ResultsLayers />;
   return <ResultsGlobeStatic />;
 }
 
@@ -1005,9 +955,9 @@ export function TechnologySections() {
                 },
               ].map((item) => (
                 <div key={item.num} className={styles.resultsCard}>
-                  <div className={styles.resultsCardArt} aria-hidden>
+                  <ResultsArtFrame>
                     <ResultsGlobe num={item.num} />
-                  </div>
+                  </ResultsArtFrame>
                   <h3 className={styles.resultsCardText}>{item.text}</h3>
                 </div>
               ))}

@@ -55,6 +55,11 @@ export default function CapabilitiesGrid() {
   const sectionRef = useRef<HTMLElement>(null);
   const [visible, setVisible] = useState(false);
 
+  /* Logo marquee — JS-driven so hover eases the scroll velocity to 0 (a
+     gentle glide-stop) and back up on leave, instead of snapping. */
+  const trackRef = useRef<HTMLDivElement>(null);
+  const hoveredRef = useRef(false);
+
   useEffect(() => {
     const el = sectionRef.current;
     if (!el) return;
@@ -64,6 +69,43 @@ export default function CapabilitiesGrid() {
     );
     obs.observe(el);
     return () => obs.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const track = trackRef.current;
+    if (!track) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    let raf = 0;
+    let last = 0;
+    let offset = 0;
+    let vel = 0; // px/ms
+    // Half the doubled track (+ half the 48px gap) is one seamless loop.
+    let loopDist = track.scrollWidth / 2 + 24;
+    const baseVel = loopDist > 0 ? loopDist / 40000 : 0; // matches the old 40s loop
+    const onResize = () => { loopDist = track.scrollWidth / 2 + 24; };
+    window.addEventListener("resize", onResize);
+
+    const tick = (t: number) => {
+      if (!last) last = t;
+      const dt = Math.min(64, t - last);
+      last = t;
+      const target = hoveredRef.current ? 0 : baseVel;
+      // Ease velocity toward the target (~250ms time constant → soft glide).
+      vel += (target - vel) * Math.min(1, dt / 250);
+      offset -= vel * dt;
+      if (loopDist > 0) {
+        offset %= loopDist;
+        if (offset > 0) offset -= loopDist;
+      }
+      track.style.transform = `translateX(${offset}px)`;
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener("resize", onResize);
+    };
   }, []);
 
   return (
@@ -219,20 +261,14 @@ export default function CapabilitiesGrid() {
               -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
               mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
             }
+            /* Scroll position is driven by JS (rAF) so hovering eases the
+               speed to a stop (a gentle glide) instead of snapping. */
             .cap-logo-track {
               display: flex;
               align-items: center;
               gap: 48px;
               width: max-content;
-              animation: cap-logo-scroll 40s linear infinite;
-            }
-            .cap-logo-mask:hover .cap-logo-track { animation-play-state: paused; }
-            @keyframes cap-logo-scroll {
-              from { transform: translateX(0); }
-              to   { transform: translateX(calc(-50% - 24px)); }
-            }
-            @media (prefers-reduced-motion: reduce) {
-              .cap-logo-track { animation: none; }
+              will-change: transform;
             }
             /* Logo cell — fixed 57px row height (44px × 1.3 → +30%);
                width tracks the source PNG's intrinsic aspect via auto
@@ -249,8 +285,12 @@ export default function CapabilitiesGrid() {
               object-fit: contain;
             }
           `}</style>
-          <div className="cap-logo-mask mt-12 lg:mt-16 overflow-hidden">
-            <div className="cap-logo-track">
+          <div
+            className="cap-logo-mask mt-12 lg:mt-16 overflow-hidden"
+            onMouseEnter={() => { hoveredRef.current = true; }}
+            onMouseLeave={() => { hoveredRef.current = false; }}
+          >
+            <div ref={trackRef} className="cap-logo-track">
               {[...PARTNER_LOGOS, ...PARTNER_LOGOS].map((src, idx) => (
                 <span key={`${src}-${idx}`} className="cap-logo-slot">
                   <Image
