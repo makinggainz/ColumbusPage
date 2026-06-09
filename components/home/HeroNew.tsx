@@ -84,7 +84,15 @@ const HN_CSS = `
    carries the 853×1844 portrait variant. Display is swapped by viewport
    in the media-query block.
    opacity starts at 0 and transitions to 1 via onLoad so the image
-   fades in smoothly rather than popping in. */
+   fades in smoothly rather than popping in.
+   hn-colorize: image starts fully desaturated (grayscale) and blooms
+   back to color once the blue glow has animated in. The 1.4s delay
+   lands when the glow is ~80% visible (ease-out 1.6s at 350ms offset),
+   so the color feels "unlocked" by the glow rather than arriving with it. */
+@keyframes hn-colorize {
+  from { filter: grayscale(1); }
+  to   { filter: grayscale(0); }
+}
 .hn-bg {
   position: absolute;
   inset: 0;
@@ -92,8 +100,10 @@ const HN_CSS = `
   height: 100%;
   object-fit: cover;
   z-index: 0;
+  pointer-events: none;
   opacity: 0;
   transition: opacity 0.45s ease;
+  animation: hn-colorize 0.9s ease-in 1.4s both;
 }
 .hn-bg-desktop {
   object-position: right center;
@@ -426,6 +436,7 @@ export function HeroNew() {
         fill
         sizes="100vw"
         quality={80}
+        draggable={false}
         onLoad={() => {
           if (desktopImgRef.current) desktopImgRef.current.style.opacity = "1";
         }}
@@ -438,6 +449,7 @@ export function HeroNew() {
         fill
         sizes="100vw"
         quality={80}
+        draggable={false}
         onLoad={() => {
           if (mobileImgRef.current) mobileImgRef.current.style.opacity = "1";
         }}

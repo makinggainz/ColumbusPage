@@ -385,6 +385,7 @@ export default function BusinessHero() {
           fetchPriority="high"
           sizes="100vw"
           quality={80}
+          draggable={false}
           style={{ objectFit: "cover", objectPosition: "center 50%" }}
           // Loading/error surface — a top-to-bottom gradient of the cityscape's
           // two dominant sky-blues, so a slow or failed hero reads as a believable
