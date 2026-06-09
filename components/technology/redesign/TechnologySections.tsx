@@ -959,19 +959,19 @@ export function TechnologySections() {
               {[
                 {
                   num: "1",
-                  text: "Fast semantic reasoning in cities. Contextual enrichment.",
+                  text: "Contextually enriched reasoning over the semantics of urban space",
                 },
                 {
                   num: "2",
-                  text: "Generative geospatial data",
+                  text: "Generative Geospatial data",
                 },
                 {
                   num: "3",
-                  text: "Generalist model, with access to wide catalogue",
+                  text: "A generalist model, grounded on a living data catalogue",
                 },
                 {
                   num: "4",
-                  text: "Deep spatial reasoning at scale",
+                  text: "Granular reasoning at scale",
                 },
               ].map((item) => (
                 <div key={item.num} className={styles.resultsCard}>

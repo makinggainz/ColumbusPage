@@ -90,8 +90,8 @@ const HN_CSS = `
    lands when the glow is ~80% visible (ease-out 1.6s at 350ms offset),
    so the color feels "unlocked" by the glow rather than arriving with it. */
 @keyframes hn-colorize {
-  from { filter: grayscale(1) url(#hn-blue-cycle); }
-  to   { filter: grayscale(0) url(#hn-blue-cycle); }
+  from { filter: grayscale(1); }
+  to   { filter: grayscale(0); }
 }
 /* Hidden host for the SVG filter def. */
 .hn-filter-defs {
@@ -99,6 +99,16 @@ const HN_CSS = `
   width: 0;
   height: 0;
   pointer-events: none;
+}
+/* Wrapper carries the blue-isolating recolor filter, kept OFF the image's own
+   filter property so the grayscale-to-colour animation interpolates smoothly
+   (a filter list containing url() can't be tweened, which made the colour pop). */
+.hn-bg-fx {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  filter: url(#hn-blue-cycle);
 }
 .hn-bg {
   position: absolute;
@@ -110,7 +120,7 @@ const HN_CSS = `
   pointer-events: none;
   opacity: 0;
   transition: opacity 0.45s ease;
-  animation: hn-colorize 0.9s ease-in 1.4s both;
+  animation: hn-colorize 1.1s ease-out 0.2s both;
 }
 .hn-bg-desktop {
   object-position: right center;
@@ -530,44 +540,49 @@ export function HeroNew() {
         imageSizes="100vw"
         fetchPriority="high"
       />
-      {/* Desktop background — /HomeHeroBg.png. onLoad sets opacity:1 via
-          ref so the image fades in smoothly (CSS starts it at opacity:0). */}
-      <Image
-        ref={desktopImgRef}
-        className="hn-bg hn-bg-desktop"
-        src="/HomeHeroBg.png"
-        alt=""
-        fill
-        sizes="100vw"
-        quality={80}
-        draggable={false}
-        onLoad={() => {
-          const node = desktopImgRef.current;
-          if (!node) return;
-          if (performance.now() - mountTimeRef.current < 150) {
-            node.style.transition = "none";
-          }
-          node.style.opacity = "1";
-        }}
-      />
-      <Image
-        ref={mobileImgRef}
-        className="hn-bg hn-bg-mobile"
-        src="/HomeHeroBackMobile.png"
-        alt=""
-        fill
-        sizes="100vw"
-        quality={80}
-        draggable={false}
-        onLoad={() => {
-          const node = mobileImgRef.current;
-          if (!node) return;
-          if (performance.now() - mountTimeRef.current < 150) {
-            node.style.transition = "none";
-          }
-          node.style.opacity = "1";
-        }}
-      />
+      {/* Background images wrapped so the blue-recolor filter lives on the
+          wrapper (not the image), leaving the image's grayscale→colour
+          animation free to interpolate smoothly. Desktop background —
+          /HomeHeroBg.png. onLoad sets opacity:1 via ref so the image fades in
+          smoothly (CSS starts it at opacity:0). */}
+      <div className="hn-bg-fx">
+        <Image
+          ref={desktopImgRef}
+          className="hn-bg hn-bg-desktop"
+          src="/HomeHeroBg.png"
+          alt=""
+          fill
+          sizes="100vw"
+          quality={80}
+          draggable={false}
+          onLoad={() => {
+            const node = desktopImgRef.current;
+            if (!node) return;
+            if (performance.now() - mountTimeRef.current < 150) {
+              node.style.transition = "none";
+            }
+            node.style.opacity = "1";
+          }}
+        />
+        <Image
+          ref={mobileImgRef}
+          className="hn-bg hn-bg-mobile"
+          src="/HomeHeroBackMobile.png"
+          alt=""
+          fill
+          sizes="100vw"
+          quality={80}
+          draggable={false}
+          onLoad={() => {
+            const node = mobileImgRef.current;
+            if (!node) return;
+            if (performance.now() - mountTimeRef.current < 150) {
+              node.style.transition = "none";
+            }
+            node.style.opacity = "1";
+          }}
+        />
+      </div>
 {/* Color-cycling glow — wrapper fades in; three stacked color
           radials cross-fade by opacity for smooth transitions. */}
       <div className="hn-glow-wrap" aria-hidden="true">
