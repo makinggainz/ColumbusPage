@@ -49,6 +49,11 @@ const CHAT_BOTTOM = 11;
 const CHAT_LEFT = 5.15;
 const CHAT_RIGHT = 46.15;
 
+/* Horizontal padding inside the chat-response panel. The input box is inset
+   by this same amount on each side so its border lines up with the content
+   (results card, paragraphs) above it rather than running wider. */
+const PANEL_PAD = "clamp(6px, 0.7vw, 10px)";
+
 const INPUT_TOP = 89;
 const INPUT_BOTTOM = 96;
 const INPUT_LEFT = CHAT_LEFT;
@@ -249,8 +254,8 @@ function ChatInputBox() {
       style={{
         top: `${INPUT_TOP}%`,
         bottom: `${100 - INPUT_BOTTOM}%`,
-        left: `${INPUT_LEFT}%`,
-        right: `${100 - INPUT_RIGHT}%`,
+        left: `calc(${INPUT_LEFT}% + ${PANEL_PAD})`,
+        right: `calc(${100 - INPUT_RIGHT}% + ${PANEL_PAD})`,
         backgroundColor: PANEL_BG,
         border: `1px solid ${HAIRLINE}`,
         borderRadius: 10,
@@ -322,7 +327,7 @@ function ChatResponse({
         left: `${CHAT_LEFT}%`,
         right: `${100 - CHAT_RIGHT}%`,
         backgroundColor: PANEL_BG,
-        padding: "clamp(6px, 0.7vw, 10px)",
+        padding: PANEL_PAD,
         gap: "clamp(4px, 0.5vw, 7px)",
         justifyContent: "flex-start",
         overflow: "hidden",
