@@ -154,7 +154,6 @@ function TabSilhouette({
 export default function BusinessHero() {
   const sectionRef = useRef<HTMLElement>(null);
   const [visible, setVisible] = useState(false);
-  const [bgLoaded, setBgLoaded] = useState(false);
 
   // Browser-tab mock: each tab maps to one of the four product-display
   // mockup components (MapChat / Agentic Research / Data Manager /
@@ -387,7 +386,6 @@ export default function BusinessHero() {
           sizes="100vw"
           quality={80}
           draggable={false}
-          onLoad={() => setBgLoaded(true)}
           style={{ objectFit: "cover", objectPosition: "center 50%" }}
           // Loading/error surface — a top-to-bottom gradient of the cityscape's
           // two dominant sky-blues, so a slow or failed hero reads as a believable
@@ -406,8 +404,6 @@ export default function BusinessHero() {
           background:
             "linear-gradient(to bottom, rgba(0,0,0,0.42) 0%, rgba(0,0,0,0.28) 38%, rgba(0,0,0,0.12) 62%, rgba(0,0,0,0) 86%)",
           zIndex: 0,
-          opacity: bgLoaded ? 1 : 0,
-          transition: "opacity 0.4s ease",
         }}
       />
       {/* Desktop-only bottom fade — sits on top of the background photo

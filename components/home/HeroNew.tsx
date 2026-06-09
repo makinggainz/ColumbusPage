@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { ArrowDot, NavArrowStack, elioMenuItems } from "../layout/MistxNav";
 import { heroOptimizerSrcSet } from "@/lib/hero-assets";
@@ -374,10 +374,29 @@ export function HeroNew() {
   const ctaRef = useRef<HTMLDivElement>(null);
   const desktopImgRef = useRef<HTMLImageElement>(null);
   const mobileImgRef = useRef<HTMLImageElement>(null);
+  const mountTimeRef = useRef<number>(0);
 
   useEffect(() => {
     const id = setTimeout(() => setMounted(true), 60);
     return () => clearTimeout(id);
+  }, []);
+
+  // Cached-image fast-path: if either background image is already decoded
+  // (memory cache hit), show it at full opacity BEFORE the first paint so
+  // no fade-in or colorize animation plays. Runs synchronously in
+  // useLayoutEffect (before paint) so the first frame the user sees already
+  // has the image at opacity:1 with all animations disabled.
+  // Also records mount time for the disk-cache heuristic in onLoad.
+  useLayoutEffect(() => {
+    mountTimeRef.current = performance.now();
+    for (const ref of [desktopImgRef, mobileImgRef]) {
+      const node = ref.current;
+      if (node?.complete && node.naturalWidth > 0) {
+        node.style.transition = "none";
+        node.style.animation = "none";
+        node.style.opacity = "1";
+      }
+    }
   }, []);
 
   useEffect(() => {
@@ -438,7 +457,13 @@ export function HeroNew() {
         quality={80}
         draggable={false}
         onLoad={() => {
-          if (desktopImgRef.current) desktopImgRef.current.style.opacity = "1";
+          const node = desktopImgRef.current;
+          if (!node) return;
+          if (performance.now() - mountTimeRef.current < 150) {
+            node.style.transition = "none";
+            node.style.animation = "none";
+          }
+          node.style.opacity = "1";
         }}
       />
       <Image
@@ -451,7 +476,13 @@ export function HeroNew() {
         quality={80}
         draggable={false}
         onLoad={() => {
-          if (mobileImgRef.current) mobileImgRef.current.style.opacity = "1";
+          const node = mobileImgRef.current;
+          if (!node) return;
+          if (performance.now() - mountTimeRef.current < 150) {
+            node.style.transition = "none";
+            node.style.animation = "none";
+          }
+          node.style.opacity = "1";
         }}
       />
       {/* Animated blue glow — separated from ::after so it can fade in
