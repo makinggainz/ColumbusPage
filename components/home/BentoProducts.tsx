@@ -216,13 +216,16 @@ video.bp-bg {
   pointer-events: none;
   z-index: 1;
 }
-/* Solid white overlay UNDER the photo backdrop on the Columbus + Elio
-   tiles. It paints at z-index 1 (above the card surface, but below
-   .bp-bg-wrap at z 2 which carries the bg image + frost). This is the
-   surface the text/CTA read against at the top of the card. */
-.bp-card--columbus::before,
+/* Overlay behind the text on Columbus + Elio tiles. On mobile the photo
+   is contained in .bp-bg-wrap below the text, so we bleed the sky color
+   upward via a gradient — opaque sky tint at the bottom (where the photo
+   panel starts) fading to transparent at the top (card bg white shows
+   through). On desktop the frost/blur handles things; reset to flat white. */
+.bp-card--columbus::before {
+  background: linear-gradient(to bottom, rgba(25, 65, 145, 0.22) 0%, rgba(255, 255, 255, 0) 40%);
+}
 .bp-card--elio::before {
-  background: #FFFFFF;
+  background: linear-gradient(to bottom, rgba(45, 125, 215, 0.18) 0%, rgba(255, 255, 255, 0) 40%);
 }
 
 /* Columbus + Elio: flex column so the bg image wrapper can sit below the
