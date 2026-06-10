@@ -85,145 +85,105 @@ export function BlogSubscribeSection({ source, articleSlug, className = "" }: Pr
 
   return (
     <section
-      className={`mx-auto w-full max-w-[720px] px-5 md:px-6 pb-16 md:pb-24 ${className}`}
+      className={`mx-auto w-full max-w-[760px] px-5 md:px-6 pt-2 pb-16 md:pb-24 text-center ${className}`}
     >
+      {/* Heading */}
+      <h2 className={styles.bigHeading}>Stay in the loop</h2>
+
+      {/* Form area — collapses out when success */}
       <div
-        style={{
-          border: "1px solid rgba(0,0,0,0.065)",
-          borderRadius: "var(--radius-card)",
-          background: "#FAFAFA",
-          padding: "clamp(28px, 5vw, 48px) clamp(24px, 5vw, 44px)",
-        }}
+        className={styles.transitionWrap}
+        data-open={(!isSuccess).toString()}
       >
-        {/* Heading */}
-        <h2
-          style={{
-            fontFamily: "var(--font-display)",
-            fontSize: "clamp(22px, 4vw, 30px)",
-            fontWeight: 500,
-            letterSpacing: "-0.02em",
-            lineHeight: 1.15,
-            color: "var(--color-ink)",
-            marginBottom: 10,
-          }}
-        >
-          Stay in the loop
-        </h2>
-
-        {/* Subtitle */}
-        <p
-          style={{
-            fontFamily: "var(--font-sans)",
-            fontSize: 15,
-            lineHeight: 1.55,
-            color: "var(--color-muted)",
-            marginBottom: 24,
-            maxWidth: 440,
-          }}
-        >
-          New articles, research notes, and product updates — delivered straight
-          to your inbox. No noise.
-        </p>
-
-        {/* Form area — collapses out when success */}
-        <div
-          className={styles.transitionWrap}
-          data-open={(!isSuccess).toString()}
-        >
-          <div className={styles.transitionInner}>
-            <form onSubmit={handleSubmit} onFocus={handleFocus}>
-              <div
-                className={`${styles.pill} ${phase === "error" ? styles.pillError : ""}`}
-                key={errorKey}
+        <div className={styles.transitionInner}>
+          <form
+            onSubmit={handleSubmit}
+            onFocus={handleFocus}
+            className={styles.formCentered}
+          >
+            <div
+              className={`${styles.pill} ${phase === "error" ? styles.pillError : ""}`}
+              key={errorKey}
+            >
+              <input
+                ref={inputRef}
+                type="email"
+                required
+                value={email}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  if (phase === "error") setPhase("idle");
+                }}
+                className={styles.pillInput}
+                placeholder="Enter your email"
+                aria-label="Email address"
+                disabled={phase === "submitting"}
+                autoComplete="email"
+              />
+              <button
+                type="submit"
+                className={styles.pillBtn}
+                disabled={phase === "submitting"}
+                aria-label="Subscribe"
               >
-                <input
-                  ref={inputRef}
-                  type="email"
-                  required
-                  value={email}
-                  onChange={(e) => {
-                    setEmail(e.target.value);
-                    if (phase === "error") setPhase("idle");
-                  }}
-                  className={styles.pillInput}
-                  placeholder="your@email.com"
-                  aria-label="Email address"
-                  disabled={phase === "submitting"}
-                  autoComplete="email"
-                />
-                <button
-                  type="submit"
-                  className={styles.pillBtn}
-                  disabled={phase === "submitting"}
-                  aria-label="Subscribe"
-                >
-                  {phase === "submitting" ? (
-                    <span className={styles.spinner} aria-hidden />
-                  ) : (
-                    <>
-                      Subscribe
-                      <ArrowDots />
-                    </>
-                  )}
-                </button>
-              </div>
-
-              {phase === "error" && (
-                <p className={styles.errorText} role="alert">
-                  {errorMsg}
-                </p>
-              )}
-            </form>
-          </div>
-        </div>
-
-        {/* Success area — expands in when success */}
-        <div
-          className={styles.transitionWrap}
-          data-open={isSuccess.toString()}
-        >
-          <div className={styles.transitionInner}>
-            <div className={styles.successBox} role="status">
-              <span className={styles.checkCircle} aria-hidden>
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                  <path
-                    className={styles.checkPath}
-                    d="M3 8.2l3.2 3.2 7-7"
-                    stroke="var(--color-accent)"
-                    strokeWidth="1.8"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </span>
-              <span className={styles.successText}>
-                <span className={styles.successPrimary}>You&apos;re in!</span>
-                <span className={styles.successSecondary}>
-                  Watch for updates from Columbus Earth in your inbox.
-                </span>
-              </span>
+                {phase === "submitting" ? (
+                  <span className={styles.spinner} aria-hidden />
+                ) : (
+                  <>
+                    Subscribe
+                    <ArrowDots />
+                  </>
+                )}
+              </button>
             </div>
+
+            {phase === "error" && (
+              <p
+                className={`${styles.errorText} ${styles.errorTextCentered}`}
+                role="alert"
+              >
+                {errorMsg}
+              </p>
+            )}
+          </form>
+        </div>
+      </div>
+
+      {/* Success area — expands in when success */}
+      <div className={styles.transitionWrap} data-open={isSuccess.toString()}>
+        <div className={styles.transitionInner}>
+          <div
+            className={`${styles.successBox} ${styles.successBoxCentered}`}
+            role="status"
+          >
+            <span className={styles.checkCircle} aria-hidden>
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path
+                  className={styles.checkPath}
+                  d="M3 8.2l3.2 3.2 7-7"
+                  stroke="var(--color-accent)"
+                  strokeWidth="1.8"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </span>
+            <span className={`${styles.successText} ${styles.successTextCentered}`}>
+              <span className={styles.successPrimary}>You&apos;re in!</span>
+              <span className={styles.successSecondary}>
+                Watch for updates from Columbus Earth in your inbox.
+              </span>
+            </span>
           </div>
         </div>
-
-        {/* Legal */}
-        <p
-          style={{
-            fontFamily: "var(--font-sans)",
-            fontSize: 12,
-            lineHeight: 1.55,
-            color: "var(--color-muted)",
-            marginTop: isSuccess ? 20 : 16,
-            opacity: 0.8,
-          }}
-        >
-          By subscribing you agree to our{" "}
-          <Link href="/privacy" className="underline hover:opacity-70 transition-opacity">
-            Privacy Policy
-          </Link>
-          . Unsubscribe at any time.
-        </p>
       </div>
+
+      {/* Caption — value prop + legal, folded into one quiet line below
+          the pill, mirroring the reference's single sub-caption. */}
+      <p className={styles.caption}>
+        New articles, research notes, and product updates — no noise.{" "}
+        <Link href="/privacy">Privacy Policy</Link>. Unsubscribe anytime.
+      </p>
     </section>
   );
 }
