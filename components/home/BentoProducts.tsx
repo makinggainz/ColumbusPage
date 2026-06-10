@@ -103,13 +103,15 @@ const CSS = `
 @media (min-width: 640px)  { .bp-card { padding: 32px; } }
 @media (min-width: 1024px) { .bp-card { height: 560px; padding: 40px; } }
 
-/* Wide tile (Research) spans both columns on desktop as an elongated
-   banner row. Slightly shorter than the square tiles above so the
-   banner reads as a horizontal panel — reduced a further 30%
-   (440 → 308) per Gdesign tweak so the panel reads as a thin band. */
+/* Wide tile (Research) — taller on mobile so the video backdrop has room
+   to breathe beneath the text. Desktop keeps the original 308px band. */
+.bp-card--wide {
+  min-height: 280px;
+}
 @media (min-width: 1024px) {
   .bp-card--wide {
     grid-column: span 2;
+    min-height: unset;
     height: 308px;
   }
 }
@@ -299,25 +301,25 @@ video.bp-bg {
   flex-direction: column;
   align-items: flex-start;
   max-width: 30rem;
+  /* Notch is 40px tall; card padding is 28px. Target: brand row starts at
+     notch-bottom (40px) + 24px gap = 64px from card top. padding-top = 64 - 28 = 36px. */
+  padding-top: 36px;
+}
+@media (min-width: 640px) {
+  /* Card padding is 32px. Same 24px gap target → padding-top = 64 - 32 = 32px. */
+  .bp-text-block { padding-top: 32px; }
 }
 @media (min-width: 1024px) {
-  .bp-text-block { --bp-gap: 18px; }
+  /* Notch is on the RIGHT; text is LEFT-aligned — no vertical overlap. */
+  .bp-text-block { --bp-gap: 18px; padding-top: 0; }
   .bp-card--wide .bp-text-block { max-width: 34rem; --bp-gap: 22px; }
 }
 
-/* Mobile audience label (<1024px) — free-floating tinted text. No white
-   cut-out, no filled chip: just the label set in a colour sampled from each
-   card's backdrop (per-card .bp-chip overrides below), sitting at the
-   top-left of the text block. Desktop (≥1024px) still uses the top-right
-   notch; this wrapper is hidden there. */
+/* Mobile chip wrapper — superseded by the notch at all breakpoints now that
+   the notch shows on mobile too. Hidden everywhere; kept in the DOM so the
+   JSX doesn't need to change. */
 .bp-cutout {
-  position: relative;
-  z-index: 3;
-  align-self: flex-start;
-  display: flex;
-  align-items: center;
-  margin: 0 0 16px;
-  padding: 0;
+  display: none;
 }
 
 /* Audience label — free-floating text, no fill. Colour is per-card (matching
@@ -355,29 +357,34 @@ video.bp-bg {
    treatments are both in the DOM and swapped purely by breakpoint.
    ───────────────────────────────────────────────────────────────────── */
 
-/* Original desktop audience cut-out — page-surface white (#FFFFFF) notched
-   into the card's top-RIGHT corner. Flush to the card's top + right edges
-   (the borderless cut "opening"); the left + bottom edges carry the
-   hairline (the cut silhouette), and the convex TL / BR corners are eased
-   by the ::before / ::after radial-gradient fillets, which also carry the
-   hairline arc onto the card's ::after ring. Hidden by default; shown only
-   at ≥1024px (mobile uses the top-left chip instead). */
+/* Audience cut-out — page-surface white (#FFFFFF) notched into the card's
+   corner. Mobile/tablet (<1024px): top-LEFT corner. Desktop (≥1024px): restored
+   to the original top-RIGHT corner. Flush to the card's two outer edges
+   (the borderless "opening"); the other two edges carry the hairline silhouette.
+   The ::before / ::after radial-gradient fillets ease the convex junctions and
+   carry the hairline arc onto the card's ::after ring. */
+
+/* ── Mobile/tablet default: TOP-LEFT corner ── */
 .bp-notch {
   position: absolute;
   top: 0;
-  right: 0;
+  left: 0;
   z-index: 3;
   box-sizing: border-box;
-  display: none;
+  display: flex;
   align-items: center;
   justify-content: center;
   height: 40px;
   padding: 0 22px;
   background-color: #FFFFFF;
-  border-radius: 0 13px 0 13px;
-  border-left: 1px solid #E7E7F1;
+  border-radius: 13px 0 13px 0;
+  border-right: 1px solid #E7E7F1;
   border-bottom: 1px solid #E7E7F1;
 }
+/* Fillets for the top-left notch — horizontal mirror of the right-side originals.
+   ::before sits to the RIGHT of the notch (where notch right-border meets the card's
+   top ring). ::after sits BELOW the notch (where card's left ring meets notch bottom).
+   circle at right bottom is the horizontal mirror of circle at left bottom. */
 .bp-notch::before,
 .bp-notch::after {
   content: "";
@@ -385,15 +392,38 @@ video.bp-bg {
   width: 13px;
   height: 13px;
   background: radial-gradient(
-    circle at left bottom,
+    circle at right bottom,
     rgba(255, 255, 255, 0) 11.5px,
     #E7E7F1 12.25px,
     #E7E7F1 12.75px,
     #FFFFFF 13.5px
   );
 }
-.bp-notch::before { top: 0; left: -13px; }
-.bp-notch::after { bottom: -13px; right: 0; }
+.bp-notch::before { top: 0; right: -13px; }
+.bp-notch::after  { bottom: -13px; left: 0; }
+
+/* ── Desktop (≥1024px): restore original TOP-RIGHT corner ── */
+@media (min-width: 1024px) {
+  .bp-notch {
+    left: auto;
+    right: 0;
+    border-radius: 0 13px 0 13px;
+    border-right: none;
+    border-left: 1px solid #E7E7F1;
+  }
+  .bp-notch::before,
+  .bp-notch::after {
+    background: radial-gradient(
+      circle at left bottom,
+      rgba(255, 255, 255, 0) 11.5px,
+      #E7E7F1 12.25px,
+      #E7E7F1 12.75px,
+      #FFFFFF 13.5px
+    );
+  }
+  .bp-notch::before { top: 0; right: auto; left: -13px; }
+  .bp-notch::after  { bottom: -13px; left: auto; right: 0; }
+}
 /* Per-card label tint — keyed to each tile's blue-dominated backdrop. */
 .bp-notch-label {
   font-size: 13px;
@@ -407,29 +437,24 @@ video.bp-bg {
 .bp-card--elio .bp-notch-label { color: #1E6BAE; }
 .bp-card--research .bp-notch-label { color: #4B7BC7; }
 
-@media (min-width: 1024px) {
-  /* Desktop = the original: hide the mobile chip, show the top-right
-     notch, and restore the card's hairline ring (the notch fillets join
-     onto it). Mobile stays ring-free for the clean borderless cut-out. */
-  .bp-cutout { display: none; }
-  .bp-notch { display: flex; }
-  .bp-card::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    border-radius: 13px;
-    box-shadow: inset 0 0 0 1px #E7E7F1;
-    pointer-events: none;
-    z-index: 2;
-  }
-  /* Columbus + Elio borders matched to the business-page super-section panel:
-     2px ring in rgba(0,0,0,0.05) (vs the default 1px #E7E7F1). Kept as an inset
-     box-shadow so it adds no layout box, and at the bento's 13px corner. */
-  .bp-card--columbus::after,
-  .bp-card--elio::after {
-    box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.05);
-  }
+/* Hairline ring on all breakpoints — inset box-shadow so it adds no
+   layout box and stays within the 13px rounded corner. */
+.bp-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 13px;
+  box-shadow: inset 0 0 0 1px #E7E7F1;
+  pointer-events: none;
+  z-index: 2;
 }
+/* Columbus + Elio use a subtler 2px semi-transparent ring (matched to the
+   business-page super-section panel style). */
+.bp-card--columbus::after,
+.bp-card--elio::after {
+  box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.05);
+}
+
 
 .bp-brand {
   display: inline-flex;
