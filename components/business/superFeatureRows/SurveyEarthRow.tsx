@@ -36,7 +36,7 @@ export type SurveyEarthRowProps = {
   mapSrc?: string;
 };
 
-const DEFAULT_MAP_SRC = "/business/SuperModelback.png";
+const DEFAULT_MAP_SRC = "/BusinessPgMedia/business/SuperModelback.png";
 
 export default function SurveyEarthRow({
   reasoningBullets = DEFAULT_REASONING_BULLETS,
@@ -120,7 +120,7 @@ export default function SurveyEarthRow({
           </div>
         </div>
         <MapThumb
-          src="/business/SuperModelback.png"
+          src="/BusinessPgMedia/business/SuperModelback.png"
           alt={mapAlt}
           aspectRatio="4 / 3"
           radius="var(--ent-radius-2xl)"

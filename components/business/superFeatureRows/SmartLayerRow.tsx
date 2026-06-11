@@ -6,7 +6,7 @@ import ColumbusMark from "./ColumbusMark";
 import { ScaleToFit } from "../../technology/redesign/ScaleToFit";
 import { useMediaWarm } from "@/components/ui/MediaPrefetcher";
 import MapBgImage from "../MapBgImage";
-import researchFrame from "@/public/business/ResearchFrame.png";
+import researchFrame from "@/public/BusinessPgMedia/business/ResearchFrame.png";
 
 /* Row 1 — "With smart layers, you become an artist".
    Wraps the smart-layer mock in the shared ResearchFrame chrome (the
@@ -43,7 +43,7 @@ const DEFAULT_FEATURES: SmartLayerFeature[] = [
   { title: "property level scoring", description: "Fresh data, continuously monitored and maintained" },
 ];
 const DEFAULT_MAP_ALT = "Nashville smart layer heatmap";
-const DEFAULT_MAP_SRC = "/business/becomeartistMap.png";
+const DEFAULT_MAP_SRC = "/BusinessPgMedia/business/becomeartistMap.png";
 const DEFAULT_PROMPT_TEXT =
   "Create a smart layer called 'Value-Add Rent Lift Probability' for every multifamily property of 100+ units built between 1975 and 2000 across the Nashville MSA. Score each property on the probability of supporting a 25%+ rent lift within 24 months of renovation";
 

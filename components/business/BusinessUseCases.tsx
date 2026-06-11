@@ -105,8 +105,8 @@ type IndustryBackdrops = {
   chatSubMaps?: [string?, string?, string?, string?];
   /* Optional per-industry overrides for the map IMAGES rendered inside
      the data-catalogue rows (SmartLayerRow and SurveyEarthRow). Each row
-     keeps its hardcoded default ("/business/becomeartistMap.png" /
-     "/business/SuperModelback.png") when an industry omits these. */
+     keeps its hardcoded default ("/BusinessPgMedia/business/becomeartistMap.png" /
+     "/BusinessPgMedia/business/SuperModelback.png") when an industry omits these. */
   smartLayerMap?: string;
   surveyEarthMap?: string;
 };

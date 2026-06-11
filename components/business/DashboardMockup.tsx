@@ -3,7 +3,7 @@
 import Image from "next/image";
 import type { IndustryId } from "@/components/use-cases/industry/types";
 import { useMediaWarm } from "@/components/ui/MediaPrefetcher";
-import dashboardFrame from "@/public/business/DashboardFrame.png";
+import dashboardFrame from "@/public/BusinessPgMedia/business/DashboardFrame.png";
 
 /* Mock UI: the "Dashboard" demo. Reuses the same chrome PNG as
    DataManagerMockup / AgenticResearchMockup and paints the inner pane

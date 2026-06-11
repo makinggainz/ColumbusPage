@@ -34,17 +34,28 @@ const FADE_END = 0.72;
 /** Width (in progress units) of a single word's fade ramp. */
 const RAMP = 0.14;
 
-export type StatementSegment = { text: string; important?: boolean };
+export type StatementSegment = {
+  text: string;
+  important?: boolean;
+  /** Force a line break BEFORE this segment. */
+  break?: boolean;
+};
 
-type Token = { word: string; important: boolean };
+type Token = { word: string; important: boolean; break: boolean };
 
-/** Flatten segments to words, each carrying its segment's `important`. */
+/** Flatten segments to words, each carrying its segment's `important`. The
+    first word of a `break` segment carries a forced line break. */
 function tokenize(segments: StatementSegment[]): Token[] {
   const tokens: Token[] = [];
   for (const seg of segments) {
-    for (const word of seg.text.trim().split(/\s+/)) {
-      if (word) tokens.push({ word, important: Boolean(seg.important) });
-    }
+    const words = seg.text.trim().split(/\s+/).filter(Boolean);
+    words.forEach((word, idx) => {
+      tokens.push({
+        word,
+        important: Boolean(seg.important),
+        break: idx === 0 && Boolean(seg.break),
+      });
+    });
   }
   return tokens;
 }
@@ -121,6 +132,7 @@ function Word({
 
   return (
     <>
+      {token.break && <br />}
       {content}
       <span> </span>
     </>

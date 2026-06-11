@@ -85,7 +85,7 @@ type Quote = { quote: string; name: string; role: string; avatar: StaticImageDat
 
 const FEATURED: Quote = {
   quote:
-    "We apply semantic AI in simple and beautiful products helping real people.",
+    "We apply semantic AI in simple and beautiful products to help real people.",
   name: "David Ramirez Blonski",
   role: "Co-Founder, CEO",
   avatar: davidAvatar,
@@ -94,13 +94,13 @@ const FEATURED: Quote = {
 const QUOTES: Quote[] = [
   {
     quote:
-      "As the bridge between the physical world and digital world, maps are one of the most ubiquitous interfaces that haven't changed in decades.",
+      "As the bridge between the physical and digital world, maps are one of the most ubiquitous interfaces that haven’t changed in decades.",
     name: "Alexander Ramirez Blonski",
     role: "Co-Founder, CPO",
     avatar: alexAvatar,
   },
   {
-    quote: "Like Columbus, and the great voyagers, we are entering the new frontier of AI. While LLMs are book-smart, we wish to be street-smart.",
+    quote: "Like Columbus, and the great voyagers, we are entering the new frontier of AI. While LLMs are book smart, we wish to be street smart.",
     name: "Erick Lara",
     role: "Co-Founder, CTO",
     avatar: erickAvatar,
@@ -117,9 +117,9 @@ const MISSION_STATEMENT: StatementSegment[] = [
 ];
 
 const VISION_STATEMENT: StatementSegment[] = [
-  { text: "We believe maps will lead the journey to" },
-  { text: "a Universal Geospatial model.", important: true },
-  { text: "A thinking earth.", important: true },
+  { text: "We believe maps will guide the journey to a" },
+  { text: "Universal Geospatial Model.", important: true, break: true },
+  { text: "A thinking Earth.", important: true },
 ];
 
 /* ── What we're building — the Large Geospatial Model, as three parts.
@@ -129,13 +129,13 @@ type Pillar = { index: string; title: string; body: string };
 const PILLARS: Pillar[] = [
   {
     index: "01",
-    title: "Surveying all of earth",
-    body: "Granular, accurate and continuous surveying of our planet. From geology to anthropology in spaces.",
+    title: "Surveying all of Earth",
+    body: "Granular, accurate and continuous surveying of our planet, from geology to anthropology in spaces.",
   },
   {
     index: "02",
-    title: "Semantic AI model to reason with all data",
-    body: "Our semantic AI reasons across multiple data types including satellite imagery, temporal patterns, public data, private data, 3d data and more",
+    title: "Semantic intelligence to reason across all data",
+    body: "Our semantic AI reasons across multiple data types including satellite imagery, temporal patterns, public and private data, 3D data and more.",
   },
   {
     index: "03",
@@ -262,15 +262,15 @@ export default function CompanyPage() {
       </section>
 
       {/* ════════ 4. OUR VISION ════════
-          Static statement — the scroll-fade is a signature effect, used
-          once (Mission); rendering Vision lit keeps the page from
-          animating two sections back-to-back. */}
+          Same scroll-fade as Our Mission — the lead-in dims to grey as you
+          scroll, leaving "Universal Geospatial Model. A thinking earth."
+          standing out in full ink. */}
       <section className="section">
         <div className={styles.textColumn}>
           <h2 className={`mb-6 md:mb-8 ${styles.sectionLabel}`}>
             Our Vision
           </h2>
-          <ScrollHighlightStatement segments={VISION_STATEMENT} static />
+          <ScrollHighlightStatement segments={VISION_STATEMENT} />
           <div className={styles.timelineWrap}>
             <Link href="/research" className={`p-m ${styles.timelineLink}`}>
               The timeline
@@ -447,7 +447,7 @@ export default function CompanyPage() {
         <div className={styles.bounds}>
           <div className={styles.card}>
             <p className={`h4 ${styles.contactText}`}>
-              {"We're always open to communicate. If you have any questions send us a message in a bottle here"}
+              {"We want to hear from you. If you have questions, send your message in a bottle here"}
             </p>
             <div className={styles.contactActions}>
               <a
@@ -465,11 +465,11 @@ export default function CompanyPage() {
                   circular icon buttons beside it. */}
               <Link
                 href="/contact"
-                className="group rounded-full px-7 py-3.5 text-sm leading-none flex items-center gap-2.5 transition-colors bg-cta text-white hover:text-[#154ACC]"
+                className="group rounded-full px-7 py-3.5 text-sm leading-none flex items-center gap-2.5 transition-colors bg-cta text-white hover:text-accent"
               >
                 Contact Us
                 <span className="inline-block transition-transform group-hover:translate-x-0.5">
-                  <ArrowDots className="text-[#154ACC]" />
+                  <ArrowDots className="text-accent" />
                 </span>
               </Link>
             </div>

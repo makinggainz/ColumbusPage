@@ -3,7 +3,7 @@
 import Image from "next/image";
 import type { IndustryId } from "@/components/use-cases/industry/types";
 import { useMediaWarm } from "@/components/ui/MediaPrefetcher";
-import researchFrame from "@/public/business/ResearchFrame.png";
+import researchFrame from "@/public/BusinessPgMedia/business/ResearchFrame.png";
 
 /* Mock UI: the "Agentic Research" demo. Uses the ResearchFrame chrome
    (5190×2993) and paints the inner pane with the canonical Columbus

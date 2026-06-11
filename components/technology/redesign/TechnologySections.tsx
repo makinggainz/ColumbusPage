@@ -367,7 +367,7 @@ export function TechnologySections() {
           nav always paints over the page content. */}
       <div style={{ position: "relative", zIndex: 1 }}>
       {/* ── 1. What's an LGM ── */}
-      <Slide id="index">
+      <Slide id="foundationmodel">
         <div className={styles.slideFrame}>
           <RevealOnView className={styles.editorialSlide}>
 
@@ -526,7 +526,7 @@ export function TechnologySections() {
       </Slide>
 
       {/* ── 2. A New Foundational Model ── */}
-      <Slide id="lgm-vs-llm" className={`${styles.lgmSlide} ${styles.dotGrid}`}>
+      <Slide id="timeline" className={`${styles.lgmSlide} ${styles.dotGrid}`}>
         <div className={styles.slideFrame}>
           <RevealOnView className={`${styles.editorialSlide} ${styles.lgmFoundationalSlide}`}>
             <h2 className={styles.lgmFoundationalTitle}>
@@ -592,30 +592,19 @@ export function TechnologySections() {
               <div className={styles.lgmTimelineHalo} aria-hidden />
               <div id="lgm-timeline-track" className={styles.lgmTimelineTrack} aria-hidden />
 
-              {/* Faint leading dot for visual symmetry with the trailing dots */}
-              <span className={`${styles.lgmTimelineDot} ${styles.lgmTimelineDotTrailing}`} style={{ left: "1.5%" }} aria-hidden />
+              {/* (No major milestone dots — only the subtle minor rhythm dots
+                  and the Columbus logo above the line remain.) */}
 
-              {/* (No major milestone dots — only the subtle minor + trailing
-                  dots and the Columbus logo above the line remain.) */}
-
-              {/* Minor rhythm dots at in-between years + a handful of off-grid
-                  positions so the line reads as a continuous, lived-in track
-                  rather than a strict 1-per-year grid. */}
+              {/* Minor rhythm dots at the in-between years so the line reads as
+                  a continuous, lived-in track rather than a strict 1-per-year
+                  grid — plus one before 2022 and one past UGM to bookend it. */}
+              <span className={`${styles.lgmTimelineDot} ${styles.lgmTimelineDotMinor}`} style={{ left: "3%" }} aria-hidden />
               <span className={`${styles.lgmTimelineDot} ${styles.lgmTimelineDotMinor}`} style={{ left: yearMid(2023) }} aria-hidden />
               <span className={`${styles.lgmTimelineDot} ${styles.lgmTimelineDotMinor}`} style={{ left: yearMid(2024) }} aria-hidden />
+              {/* Just left of the Columbus "now" logo (tracks the live marker). */}
+              <span className={`${styles.lgmTimelineDot} ${styles.lgmTimelineDotMinor}`} style={{ left: `calc(${yearAt(nowFrac)} - clamp(60px, 7vw, 110px))` }} aria-hidden />
               <span className={`${styles.lgmTimelineDot} ${styles.lgmTimelineDotMinor}`} style={{ left: yearMid(2027) }} aria-hidden />
-              <span className={`${styles.lgmTimelineDot} ${styles.lgmTimelineDotTrailing}`} style={{ left: "16.5%" }} aria-hidden />
-              <span className={`${styles.lgmTimelineDot} ${styles.lgmTimelineDotTrailing}`} style={{ left: "29%" }} aria-hidden />
-              <span className={`${styles.lgmTimelineDot} ${styles.lgmTimelineDotTrailing}`} style={{ left: "44.5%" }} aria-hidden />
-              <span className={`${styles.lgmTimelineDot} ${styles.lgmTimelineDotTrailing}`} style={{ left: "57%" }} aria-hidden />
-              <span className={`${styles.lgmTimelineDot} ${styles.lgmTimelineDotTrailing}`} style={{ left: "71.5%" }} aria-hidden />
-              <span className={`${styles.lgmTimelineDot} ${styles.lgmTimelineDotTrailing}`} style={{ left: "84%" }} aria-hidden />
-
-              {/* Trailing dots — cadence continues past UGM */}
-              <span className={`${styles.lgmTimelineDot} ${styles.lgmTimelineDotTrailing}`} style={{ left: yearMid(2029) }} aria-hidden />
-              <span className={`${styles.lgmTimelineDot} ${styles.lgmTimelineDotTrailing}`} style={{ left: yearMid(2030) }} aria-hidden />
-              <span className={`${styles.lgmTimelineDot} ${styles.lgmTimelineDotTrailing}`} style={{ left: yearMid(2031) }} aria-hidden />
-              <span className={`${styles.lgmTimelineDot} ${styles.lgmTimelineDotTrailing}`} style={{ left: yearMid(2032) }} aria-hidden />
+              <span className={`${styles.lgmTimelineDot} ${styles.lgmTimelineDotMinor}`} style={{ left: "94%" }} aria-hidden />
 
               {/* ─── 2022 — year above the line (no stem); LLM below ─── */}
               <div className={`${styles.lgmTimelineMilestone} ${styles.lgmTimelineMilestoneTop}`} style={{ left: yearMid(2022) }}>
@@ -756,7 +745,7 @@ export function TechnologySections() {
       </Slide>
 
       {/* ── 3. Core Reasoning / Our Research ── */}
-      <Slide id="core-reasoning" className={styles.coreReasoningSlide}>
+      <Slide id="reasoning" className={styles.coreReasoningSlide}>
         <div className={styles.slideFrame}>
           <RevealOnView className={`${styles.editorialSlide} ${styles.coreResearchSlide}`}>
             <div className={styles.coreResearchHero}>
@@ -777,7 +766,7 @@ export function TechnologySections() {
 
               <div className={styles.coreResearchIntroRow}>
                 <div className={styles.coreResearchIntroText}>
-                  <h2 className={styles.sectionTitle}>Our research</h2>
+                  <h2 className={styles.sectionTitle}>Our Reasoning</h2>
                   <div className={styles.editorialBody}>
                     <p>
                       We&apos;ve come up with several innovations within data
@@ -948,7 +937,7 @@ export function TechnologySections() {
       </Slide>
 
       {/* ── 4. Results / Model Columbus-01 + Gen Layers + The Grid ── */}
-      <Slide id="data-collection" className={styles.dataCollectionSection}>
+      <Slide id="results" className={styles.dataCollectionSection}>
         <div className={styles.slideFrame}>
           <div className={styles.researchBlogWrap}>
           <RevealOnView className={`${styles.editorialSlide} ${styles.resultsSlide}`}>
@@ -1004,7 +993,7 @@ export function TechnologySections() {
       </Slide>
 
       {/* ── 5. Research Blog ── */}
-      <Slide id="research-blog">
+      <Slide id="blog">
         <div className={styles.slideFrame}>
           <div className={styles.researchBlogWrap}>
             <RevealOnView className={`${styles.editorialSlide} ${styles.researchEditorial}`}>
@@ -1074,7 +1063,7 @@ export function TechnologySections() {
       </Slide>
 
       {/* ── 6. Careers ── */}
-      <Slide id="careers" className={styles.noSnapSection}>
+      <Slide id="inquiries" className={styles.noSnapSection}>
         <div className={styles.slideFrame}>
           <RevealOnView className={styles.editorialSlide}>
 

@@ -3,7 +3,7 @@
 import Image from "next/image";
 import type { IndustryId } from "@/components/use-cases/industry/types";
 import { useMediaWarm } from "@/components/ui/MediaPrefetcher";
-import dataManagerFrame from "@/public/business/DataManagerFrame.png";
+import dataManagerFrame from "@/public/BusinessPgMedia/business/DataManagerFrame.png";
 
 /* Mock UI: the "Trusted data, verified for confidence" demo. The frame
    image (/business/DataManagerFrame.png, 5184×3003 px) carries the Data

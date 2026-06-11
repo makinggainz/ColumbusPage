@@ -230,10 +230,10 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false, t
               { label: "Columbus Pro", href: "/products/business" },
               { label: "Elio", href: "/products/consumer" },
             ]} />
-            <FooterColumn theme={theme} title="Technology" links={[
-              { label: "LGM vs LLM", href: "/research#lgm-vs-llm" },
-              { label: "Data Collection", href: "/research#data-collection" },
-              { label: "Core Reasoning", href: "/research#core-reasoning" },
+            <FooterColumn theme={theme} title="Research" links={[
+              { label: "LGM vs LLM", href: "/research#foundationmodel" },
+              { label: "Reasoning", href: "/research#reasoning" },
+              { label: "Results", href: "/research#results" },
             ]} />
             <div className="col-span-2 flex justify-center md:contents">
               <FooterColumn theme={theme} title="Company" links={[
@@ -271,7 +271,7 @@ const FooterColumn = ({
    *  text — footer copy is locked to white over the video background. */
   theme?: "light" | "dark" | "light-blue";
 }) => (
-  <div>
+  <div className="md:justify-self-end">
     <p className="mb-3 md:mb-4 font-medium text-[16px] md:text-[17.5px] tracking-wide text-white">
       {title}
     </p>

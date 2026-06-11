@@ -5,7 +5,7 @@ import { ImageWithFallback } from "@/components/ui/ImageWithFallback";
 import ColumbusMark from "./superFeatureRows/ColumbusMark";
 import { useMediaWarm } from "@/components/ui/MediaPrefetcher";
 // Static import → AVIF + blur-up for the shared chrome PNG.
-import chromeBackground from "@/public/business/ConversationalMapChat.png";
+import chromeBackground from "@/public/BusinessPgMedia/business/ConversationalMapChat.png";
 
 /* Layered composite of the Columbus chat platform mockup. Three z-stacked
    layers, deepest first:

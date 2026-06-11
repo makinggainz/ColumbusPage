@@ -107,7 +107,7 @@ export default function BetterPricesRow({
           priceLabel="Market price"
           price={columbusPrice}
           avatar={<ColumbusMark size={20} />}
-          mapSrc="/business/map2.png"
+          mapSrc="/BusinessPgMedia/business/map2.png"
           mapAlt={columbusMapAlt}
           highlighted
         >
@@ -150,7 +150,7 @@ export default function BetterPricesRow({
           priceLabel="Market price"
           price={competitorPrice}
           avatar={<CompetitorMark />}
-          mapSrc="/business/map3.png"
+          mapSrc="/BusinessPgMedia/business/map3.png"
           mapAlt={competitorMapAlt}
         >
           <div
