@@ -11,8 +11,9 @@
  * both columns (Research). On mobile all three collapse into a single
  * column.
  *
- * Columbus + Elio use a "split" layout: a flat per-product surface (no
- * photo) with the brand row pinned top-LEFT, the tagline + CTA pinned
+ * Columbus + Elio use a "split" layout: a soft per-product surface (flat
+ * gray for Columbus; a blurred consumer-hero photo under a light blue wash
+ * for Elio) with the brand row pinned top-LEFT, the tagline + CTA pinned
  * bottom-LEFT, and the product visual anchored bottom-RIGHT, bleeding off
  * the card's right/bottom edges (overflow:hidden clips it). Research keeps
  * its wide video-banner treatment with text at the top.
@@ -26,8 +27,10 @@ import { useMediaWarm } from "@/components/ui/MediaPrefetcher";
 // blur-up) + intrinsic dimensions at build time.
 import visualColumbus from "@/public/ColumbusHomeimg.png";
 // Elio's bottom-right phone reuses the consumer-Hero map screenshot inside a
-// CSS phone bezel (the screen content only; the dark frame is built in CSS).
+// CSS phone bezel (screen content only; the dark frame is built in CSS).
 import elioPhone from "@/public/ConsumerPgMedia/ElioShowcases/ElioHeroShowcase.png";
+// Elio's tile background = the consumer-page hero photo, blurred + washed.
+import elioHeroBg from "@/public/ConsumerPgMedia/heroBackground.png";
 
 /* Recolour filter matching MistxNav so the Columbus mark renders in the
    same navy blue everywhere it appears on the site. */
@@ -66,14 +69,14 @@ const CSS = `
 }
 
 /* ── Card ──────────────────────────────────────────────────────────────
-   Flat per-product surface, 16px corners, overflow:hidden so the
+   Soft per-product surface, 13px corners, overflow:hidden so the
    bottom-right visual clips at the card edge. Flex column so the text rail
    (brand top / tagline+CTA bottom) fills the height and the visual is
    absolutely placed over it. */
 .bp-card {
   position: relative;
   overflow: hidden;
-  border-radius: 16px;
+  border-radius: 13px;
   padding: 28px;
   text-decoration: none;
   color: #0F173C;
@@ -84,11 +87,9 @@ const CSS = `
 @media (min-width: 640px)  { .bp-card { padding: 32px; min-height: 400px; } }
 @media (min-width: 1024px) { .bp-card { padding: 40px; height: 500px; min-height: 0; } }
 
-/* Per-product surfaces (flat — no photo). */
+/* Per-product surfaces. */
 .bp-card--columbus { background: #EEEFF1; }
-.bp-card--elio {
-  background: linear-gradient(180deg, #A6C8E8 0%, #C8E0F1 46%, #EFF5F9 100%);
-}
+.bp-card--elio { background-color: #CDE2F2; }
 
 /* Wide tile (Research) keeps its video banner + 2-col span. */
 .bp-card--wide { min-height: 280px; }
@@ -102,23 +103,77 @@ video.bp-bg { position: absolute; inset: 0; width: 100%; height: 100%; }
 .bp-bg-tint { position: absolute; inset: 0; pointer-events: none; z-index: 0; }
 .bp-card--research .bp-bg-tint { display: none; }
 
-/* ── Audience tab (top-right) ──────────────────────────────────────────
-   A clean white label tab tucked into the card's top-right corner: its
-   top-right corner matches the card radius, its bottom-left is rounded for
-   the inset "cut" read. Same on every breakpoint. */
+/* ── Elio surface: blurred consumer-hero photo + a neutral white frost ───
+   The photo fills the tile (next/image fill, z-0) with a heavy blur; it's
+   scaled up so the blur doesn't leave soft gaps at the edges. The wash on
+   top is a colourless (white) translucent veil — it softens the photo into a
+   frosted-glass surface and keeps the text legible without adding any tint. */
+.bp-elio-bg {
+  object-fit: cover;
+  object-position: center;
+  z-index: 0;
+  filter: blur(16px);
+  /* Scale up anchored to the TOP so the photo's dark foreground grass is
+     pushed off the bottom edge — only the lighter sky + skyline fill the
+     tile (the "scene moved up"). */
+  transform: scale(1.6);
+  transform-origin: center top;
+  /* Dialled back 25% so the photo reads as a fainter texture under the wash. */
+  opacity: 0.75;
+}
+.bp-elio-wash {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.74) 0%,
+    rgba(255, 255, 255, 0.46) 45%,
+    rgba(255, 255, 255, 0.38) 100%
+  );
+}
+
+/* ── Audience cut-out (top-right) ──────────────────────────────────────
+   White notch tucked into the card's top-right corner, with the ::before /
+   ::after radial-gradient fillets that smooth the two inner junctions (the
+   "curved edges" the tile had before). Same on every breakpoint. */
 .bp-notch {
   position: absolute;
   top: 0;
   right: 0;
   z-index: 3;
+  box-sizing: border-box;
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 42px;
+  height: 40px;
   padding: 0 22px;
   background-color: #FFFFFF;
-  border-radius: 0 16px 0 16px;
+  border-radius: 0 13px 0 13px;
+  border-left: 1px solid #E7E7F1;
+  border-bottom: 1px solid #E7E7F1;
 }
+.bp-notch::before,
+.bp-notch::after {
+  content: "";
+  position: absolute;
+  width: 13px;
+  height: 13px;
+  background: radial-gradient(
+    circle at left bottom,
+    rgba(255, 255, 255, 0) 11.5px,
+    #E7E7F1 12.25px,
+    #E7E7F1 12.75px,
+    #FFFFFF 13.5px
+  );
+}
+.bp-notch::before { top: 0; left: -13px; }
+.bp-notch::after  { bottom: -13px; right: 0; }
+
+/* Label colour keyed to each tile's surface so it reads as part of it:
+   Columbus = navy ink of the gray tile; Elio = the tile's blue; Research
+   = the lighter banner blue. */
 .bp-notch-label {
   font-size: 13px;
   line-height: 1;
@@ -127,7 +182,7 @@ video.bp-bg { position: absolute; inset: 0; width: 100%; height: 100%; }
   text-transform: uppercase;
   white-space: nowrap;
 }
-.bp-card--columbus .bp-notch-label { color: #015C94; }
+.bp-card--columbus .bp-notch-label { color: #0F173C; }
 .bp-card--elio .bp-notch-label { color: #1E6BAE; }
 .bp-card--research .bp-notch-label { color: #4B7BC7; }
 
@@ -180,9 +235,11 @@ video.bp-bg { position: absolute; inset: 0; width: 100%; height: 100%; }
   .bp-card--wide .bp-logo { width: 50px; height: 50px; }
 }
 
+/* Brand name — sized just above the design-system h4 on the standard tiles
+   (h2 still drives the wide Research banner). */
 .bp-name {
-  font-size: var(--typography--h3);
-  line-height: var(--typography--h3--line-height);
+  font-size: clamp(22px, 4.2vw, 30px);
+  line-height: 1.08;
   font-weight: 500;
   letter-spacing: -0.025em;
   color: inherit;
@@ -192,23 +249,13 @@ video.bp-bg { position: absolute; inset: 0; width: 100%; height: 100%; }
   line-height: var(--typography--h2--line-height);
 }
 .bp-card--research .bp-name { font-family: var(--font-display); color: #0F173C; }
+.bp-card--columbus .bp-name { color: #0F173C; font-weight: 600; }
 
-/* Columbus wordmark — navy, Axiforma, semibold, sized to read as the brand. */
-.bp-card--columbus .bp-name {
-  color: #0F173C;
-  font-weight: 600;
-  font-size: clamp(24px, 6vw, 29px);
-  line-height: 1;
-  margin-left: -3px;
-  transform: translateY(2px);
-}
-@media (min-width: 1024px) {
-  .bp-card--columbus .bp-name { font-size: 31px; }
-}
-/* Elio wordmark image — recoloured from white-on-transparent to brand blue. */
+/* Elio wordmark image — recoloured from white-on-transparent to brand blue,
+   sized so its glyphs read at roughly the Columbus name's cap height. */
 .bp-elio-name {
   width: auto;
-  height: clamp(30px, 7.5vw, 36px);
+  height: clamp(32px, 7.4vw, 38px);
   object-fit: contain;
   flex: 0 0 auto;
   margin-left: -4px;
@@ -216,41 +263,39 @@ video.bp-bg { position: absolute; inset: 0; width: 100%; height: 100%; }
   filter: brightness(0) saturate(100%) invert(46%) sepia(98%) saturate(2009%) hue-rotate(180deg) brightness(102%) contrast(101%);
 }
 @media (min-width: 1024px) {
-  .bp-elio-name { height: 40px; }
+  .bp-elio-name { height: 41px; }
 }
 
-/* ── Tagline ── */
+/* ── Tagline — just above the design-system h5 on the standard tiles. ── */
 .bp-tagline {
   margin: 0;
+  font-size: clamp(18px, 3.2vw, 23px);
+  line-height: 1.2;
   font-weight: 600;
   letter-spacing: -0.02em;
   color: #0F173C;
-  font-size: clamp(20px, 5vw, 24px);
-  line-height: 1.18;
-  max-width: 13rem;
+  max-width: 16rem;
 }
-/* Research keeps its lighter, smaller supporting tagline. */
+/* Research keeps its lighter, normal-weight h5 supporting tagline. */
 .bp-card--research .bp-tagline {
-  font-weight: 500;
   font-size: var(--typography--h5);
   line-height: var(--typography--h5--line-height);
+  font-weight: 500;
   letter-spacing: -0.015em;
   max-width: 34rem;
 }
-@media (min-width: 1024px) {
-  .bp-card--columbus .bp-tagline,
-  .bp-card--elio .bp-tagline { font-size: 25px; max-width: 12rem; }
-}
 
-/* ── CTA pill ── */
+/* ── Classic homepage CTA pill (CtaBanner / Careers / ProductCell pattern):
+   var(--color-cta) navy surface, white label that swaps to var(--color-accent)
+   on hover, with the signature 5-dot ArrowDots glyph sliding right on hover. */
 .bp-cta {
   display: inline-flex;
   align-items: center;
-  gap: 9px;
-  padding: 13px 24px;
+  gap: 10px;
+  padding: 14px 28px;
   background-color: var(--color-cta);
   color: #FFFFFF;
-  border-radius: 11px;
+  border-radius: var(--radius-button-md);
   font-size: var(--typography--p-m);
   line-height: 1;
   font-weight: 500;
@@ -263,17 +308,8 @@ video.bp-bg { position: absolute; inset: 0; width: 100%; height: 100%; }
   color: var(--color-accent);
   transition: transform 180ms ease;
 }
-.bp-cta:hover .bp-cta-arrow { transform: translateX(3px); }
+.bp-cta:hover .bp-cta-arrow { transform: translateX(2px); }
 .bp-cta-arrow svg { display: block; }
-
-/* Columbus + Elio: deep-navy pill, white label + white chevron. */
-.bp-card--columbus .bp-cta,
-.bp-card--elio .bp-cta { background-color: #1B2A4D; color: #FFFFFF; }
-.bp-card--columbus .bp-cta:hover,
-.bp-card--elio .bp-cta:hover { color: #FFFFFF; }
-.bp-card--columbus .bp-cta-arrow,
-.bp-card--elio .bp-cta-arrow { color: #FFFFFF; }
-
 @media (prefers-reduced-motion: reduce) {
   .bp-cta, .bp-cta-arrow { transition: none; }
 }
@@ -319,7 +355,7 @@ video.bp-bg { position: absolute; inset: 0; width: 100%; height: 100%; }
   }
 }
 
-/* Elio phone (dark PolarX bezel around the map screenshot). */
+/* Elio phone (dark PolarX bezel around the map screenshot) — no drop shadow. */
 .bp-visual--phone {
   width: clamp(160px, 46%, 210px);
 }
@@ -330,12 +366,6 @@ video.bp-bg { position: absolute; inset: 0; width: 100%; height: 100%; }
   padding: 6px;
   border-radius: 32px;
   background: #10212B;
-  box-shadow:
-    0 2px 2px -0.25px rgba(0, 0, 0, 0.08),
-    0 6px 6px -1px rgba(0, 0, 0, 0.08),
-    0 16px 16px -1.5px rgba(0, 0, 0, 0.09),
-    0 27px 27px -1.75px rgba(0, 0, 0, 0.10),
-    0 50px 50px -2px rgba(0, 40, 60, 0.22);
 }
 .bp-phone-screen {
   position: relative;
@@ -368,7 +398,7 @@ interface Product {
   name: string;
   /** Single short phrase; on Columbus/Elio it's the bottom-left headline. */
   tagline: string;
-  /** Audience label shown in the top-right white tab. */
+  /** Audience label shown in the top-right white cut-out. */
   audience?: string;
   /** Pill CTA label, e.g. "Learn more", "Try Elio". */
   ctaLabel: string;
@@ -421,22 +451,9 @@ const PRODUCTS: Product[] = [
   },
 ];
 
-/* Chevron used on the Columbus + Elio CTA pills (matches the reference). */
-function Chevron() {
-  return (
-    <svg width="9" height="14" viewBox="0 0 9 14" fill="none" aria-hidden="true">
-      <path
-        d="M1.6 1.4L7.2 7l-5.6 5.6"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
-/* Signature 5-dot diagonal arrow — kept for the Research CTA. */
+/* Signature 5-dot diagonal arrow used by the classic homepage CTA pill
+   (CtaBanner / Careers / ProductCell). Circles use currentColor so the
+   wrapping .bp-cta-arrow controls the fill (var(--color-accent)). */
 function ArrowDots() {
   return (
     <svg width="12" height="13" viewBox="0 0 9 13" fill="none" aria-hidden="true">
@@ -528,7 +545,26 @@ export function BentoProducts() {
                 </>
               ) : null}
 
-              {/* Audience tab — white label tucked into the top-right corner. */}
+              {/* Elio surface: blurred consumer-hero photo + lighter blue wash. */}
+              {p.cellClass === "bp-card--elio" && (
+                <>
+                  <Image
+                    src={elioHeroBg}
+                    alt=""
+                    aria-hidden
+                    fill
+                    className="bp-elio-bg"
+                    sizes="(max-width: 1023px) 100vw, 640px"
+                    quality={55}
+                    placeholder="blur"
+                    loading={warm ? "eager" : "lazy"}
+                    fetchPriority={warm ? "low" : undefined}
+                  />
+                  <div className="bp-elio-wash" aria-hidden />
+                </>
+              )}
+
+              {/* Audience cut-out — white notch in the top-right corner. */}
               {p.audience && (
                 <div className="bp-notch">
                   <span className="bp-notch-label">{p.audience}</span>
@@ -577,7 +613,7 @@ export function BentoProducts() {
                   <span className="bp-cta">
                     {p.ctaLabel}
                     <span className="bp-cta-arrow">
-                      {p.wide ? <ArrowDots /> : <Chevron />}
+                      <ArrowDots />
                     </span>
                   </span>
                 </div>
