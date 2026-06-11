@@ -29,7 +29,7 @@ import visualColumbus from "@/public/ColumbusHomeimg.png";
 // Elio's bottom-right phone reuses the consumer-Hero map screenshot inside a
 // CSS phone bezel (screen content only; the dark frame is built in CSS).
 import elioPhone from "@/public/ConsumerPgMedia/ElioShowcases/ElioHeroShowcase.png";
-// Elio's tile background = the consumer-page hero photo, blurred + washed.
+// Elio's tile background = the consumer-page hero photo.
 import elioHeroBg from "@/public/ConsumerPgMedia/heroBackground.png";
 
 /* Recolour filter matching MistxNav so the Columbus mark renders in the
@@ -87,8 +87,9 @@ const CSS = `
 @media (min-width: 640px)  { .bp-card { padding: 32px; min-height: 400px; } }
 @media (min-width: 1024px) { .bp-card { padding: 40px; height: 500px; min-height: 0; } }
 
-/* Per-product surfaces. */
-.bp-card--columbus { background: #EEEFF1; }
+/* Per-product surfaces. Columbus = the flat #F4F4F5 gray used by the
+   business-page super-section mockup panels. */
+.bp-card--columbus { background: #F4F4F5; }
 .bp-card--elio { background-color: #CDE2F2; }
 
 /* Wide tile (Research) keeps its video banner + 2-col span. */
@@ -103,35 +104,45 @@ video.bp-bg { position: absolute; inset: 0; width: 100%; height: 100%; }
 .bp-bg-tint { position: absolute; inset: 0; pointer-events: none; z-index: 0; }
 .bp-card--research .bp-bg-tint { display: none; }
 
-/* ── Elio surface: blurred consumer-hero photo + a neutral white frost ───
-   The photo fills the tile (next/image fill, z-0) with a heavy blur; it's
-   scaled up so the blur doesn't leave soft gaps at the edges. The wash on
-   top is a colourless (white) translucent veil — it softens the photo into a
-   frosted-glass surface and keeps the text legible without adding any tint. */
+/* ── Elio surface: soft city-skyline photo + a left-anchored white wash ───
+   The photo (already softly blurred at the source) fills the tile crisp — we
+   don't blur it again, just nudge the scale so it covers cleanly. The wash is
+   a left→right white veil that keeps the brand row + tagline + CTA legible
+   over the lighter sky on the left while leaving the skyline clear on the
+   right behind the phone. */
 .bp-elio-bg {
   object-fit: cover;
   object-position: center;
   z-index: 0;
-  filter: blur(16px);
+  filter: blur(9px);
   /* Scale up anchored to the TOP so the photo's dark foreground grass is
      pushed off the bottom edge — only the lighter sky + skyline fill the
-     tile (the "scene moved up"). */
-  transform: scale(1.6);
+     tile — and so the blur doesn't leave soft gaps at the edges. */
+  transform: scale(1.5);
   transform-origin: center top;
-  /* Dialled back 25% so the photo reads as a fainter texture under the wash. */
-  opacity: 0.75;
 }
 .bp-elio-wash {
   position: absolute;
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.74) 0%,
-    rgba(255, 255, 255, 0.46) 45%,
-    rgba(255, 255, 255, 0.38) 100%
-  );
+  /* Two layers: a left→right white wash that keeps the text legible, plus a
+     bottom-right corner glow that lifts the murky brown foreground (the
+     picnic people) behind the phone into a soft, light haze. */
+  background:
+    radial-gradient(
+      120% 110% at 100% 100%,
+      rgba(255, 255, 255, 0.78) 0%,
+      rgba(255, 255, 255, 0.42) 32%,
+      rgba(255, 255, 255, 0) 62%
+    ),
+    linear-gradient(
+      100deg,
+      rgba(255, 255, 255, 0.82) 0%,
+      rgba(255, 255, 255, 0.5) 38%,
+      rgba(255, 255, 255, 0.12) 68%,
+      rgba(255, 255, 255, 0) 100%
+    );
 }
 
 /* ── Audience cut-out (top-right) ──────────────────────────────────────
@@ -302,16 +313,45 @@ video.bp-bg { position: absolute; inset: 0; width: 100%; height: 100%; }
   white-space: nowrap;
   transition: color 180ms ease;
 }
-.bp-cta:hover { color: var(--color-accent); }
+/* The CTA reacts to hover on its own AND to hover anywhere on the card, so
+   hovering the whole tile animates the button as if it were hovered. */
+.bp-cta:hover,
+.bp-card:hover .bp-cta { color: var(--color-accent); }
 .bp-cta-arrow {
   display: inline-flex;
   color: var(--color-accent);
   transition: transform 180ms ease;
 }
-.bp-cta:hover .bp-cta-arrow { transform: translateX(2px); }
+.bp-cta:hover .bp-cta-arrow,
+.bp-card:hover .bp-cta-arrow { transform: translateX(2px); }
 .bp-cta-arrow svg { display: block; }
 @media (prefers-reduced-motion: reduce) {
   .bp-cta, .bp-cta-arrow { transition: none; }
+}
+
+/* Research CTA — borderless text link (no pill background). Navy label that
+   swaps to the accent on hover, sized up from the pill's small caption and
+   paired with a slightly larger ArrowDots glyph. */
+.bp-card--research .bp-cta {
+  background-color: transparent;
+  padding: 0;
+  border-radius: 0;
+  color: var(--color-cta);
+  font-size: 1.0625rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  gap: 12px;
+}
+.bp-card--research .bp-cta-arrow svg {
+  width: 14px;
+  height: 15px;
+}
+/* Without the pill's padding the link crowds the tagline — open the vertical
+   rhythm so brand → tagline → link read as evenly spaced. */
+.bp-card--research .bp-tagline { margin-bottom: 4px; }
+.bp-card--research .bp-text-bottom {
+  margin-top: 22px;
+  gap: 22px;
 }
 
 /* ── Product visual (bottom-right) ─────────────────────────────────────
@@ -330,28 +370,74 @@ video.bp-bg { position: absolute; inset: 0; width: 100%; height: 100%; }
 @media (min-width: 1024px) {
   .bp-visual { margin-top: 0; }
   .bp-card:hover .bp-visual { transform: translateY(-10px); }
+  /* Columbus: the MacBook sits bled off the right edge — on hover it slides
+     LEFT, pulling more of the screenshot into view. */
+  .bp-card--columbus:hover .bp-visual { transform: translateX(-26px); }
 }
 @media (prefers-reduced-motion: reduce) {
   .bp-visual { transition: none; }
   .bp-card:hover .bp-visual { transform: none; }
 }
 
-/* Columbus framed screenshot — black border, no drop shadow. */
-.bp-visual--shot img {
+/* Columbus screenshot inside a CSS MacBook Pro mockup ───────────────────
+   .bp-mac        — wrapper sizing both the lid and the base
+   .bp-mac-screen — dark aluminium lid: thin uniform black bezel, rounded
+                    top, with a camera dot centred in the top bezel
+   .bp-mac-base   — the silver deck seen edge-on below the lid; slightly
+                    wider than the lid with a centred finger-groove dip. */
+.bp-mac { width: 100%; }
+.bp-mac-screen {
+  position: relative;
+  background: #0B0B0B;
+  border-radius: 11px 11px 5px 5px;
+  padding: 6px 6px 7px;
+}
+.bp-mac-screen img {
   display: block;
   width: 100%;
   height: auto;
-  border-radius: 10px;
-  border: 2px solid #0B0B0B;
+  border-radius: 3px;
   background-color: #FFFFFF;
+}
+.bp-mac-cam {
+  position: absolute;
+  top: 2px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: #2A2E33;
+}
+/* Space-Black MacBook Pro deck — dark aluminium, thinner front lip. */
+.bp-mac-base {
+  position: relative;
+  width: 108%;
+  margin-left: -4%;
+  height: 10px;
+  background: linear-gradient(180deg, #4A4D53 0%, #303338 45%, #232529 78%, #161719 100%);
+  border-radius: 2px 2px 10px 10px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14);
+}
+.bp-mac-base::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 14%;
+  max-width: 86px;
+  height: 5px;
+  background: linear-gradient(180deg, #161719 0%, #303338 100%);
+  border-radius: 0 0 6px 6px;
 }
 @media (min-width: 1024px) {
   .bp-card--columbus .bp-visual {
     position: absolute;
     margin-top: 0;
-    width: 70%;
-    right: -90px;
-    bottom: 44px;
+    width: 72%;
+    right: -170px;
+    bottom: 30px;
   }
 }
 
@@ -360,24 +446,58 @@ video.bp-bg { position: absolute; inset: 0; width: 100%; height: 100%; }
   width: clamp(160px, 46%, 210px);
 }
 .bp-phone {
+  position: relative;
   width: 100%;
   aspect-ratio: 0.4949;
   box-sizing: border-box;
-  padding: 6px;
-  border-radius: 32px;
-  background: #10212B;
+  padding: 5px;
+  border-radius: 38px;
+  background: #0A0A0C;
+  /* Titanium-edge rim: a thin lighter inner ring reads as the polished
+     metal band around a modern iPhone. */
+  box-shadow:
+    inset 0 0 0 1.5px #34373D,
+    0 1px 3px rgba(10, 14, 20, 0.22);
 }
+/* Side buttons — thin nubs on the metal edge (volume left, power right). */
+.bp-phone::before,
+.bp-phone::after {
+  content: "";
+  position: absolute;
+  width: 2px;
+  border-radius: 2px;
+  background: #34373D;
+}
+.bp-phone::before { left: -2px; top: 27%; height: 16%; }
+.bp-phone::after  { right: -2px; top: 30%; height: 13%; }
 .bp-phone-screen {
   position: relative;
   width: 100%;
   height: 100%;
-  border-radius: 26px;
+  border-radius: 33px;
   overflow: hidden;
   background: linear-gradient(180deg, #FFFFFF 0%, #EAF4F5 100%);
 }
 .bp-phone-screen img {
   object-fit: cover;
   object-position: top center;
+  /* Nudge the screenshot down so its status bar (5:04 / battery) sits level
+     with the Dynamic Island instead of above it. The thin strip exposed at
+     the very top is the white screen background, which matches the white
+     status-bar area so the seam is invisible. */
+  transform: translateY(2.6%);
+}
+/* Dynamic Island — black pill floating over the top of the screen. */
+.bp-phone-island {
+  position: absolute;
+  top: 2.6%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 32%;
+  aspect-ratio: 3.6 / 1;
+  background: #0A0A0C;
+  border-radius: 999px;
+  z-index: 2;
 }
 @media (min-width: 1024px) {
   .bp-card--elio .bp-visual {
@@ -432,7 +552,7 @@ const PRODUCTS: Product[] = [
     name: "Elio",
     tagline: "Making maps feel alive again",
     audience: "For consumer",
-    ctaLabel: "Try Elio",
+    ctaLabel: "Learn more",
     phone: elioPhone,
   },
   {
@@ -508,6 +628,7 @@ function PhoneFrame({ src, warm }: { src: StaticImageData; warm: boolean }) {
   return (
     <div className="bp-phone" aria-hidden>
       <div className="bp-phone-screen">
+        <span className="bp-phone-island" />
         <Image
           src={src}
           alt=""
@@ -619,19 +740,25 @@ export function BentoProducts() {
                 </div>
               </div>
 
-              {/* Columbus framed screenshot, bottom-right. */}
+              {/* Columbus screenshot inside a MacBook Pro mockup, bottom-right. */}
               {p.visual && (
-                <div className="bp-visual bp-visual--shot">
-                  <Image
-                    src={p.visual}
-                    alt=""
-                    aria-hidden
-                    sizes="(max-width: 1023px) calc(100vw - 84px), 440px"
-                    quality={80}
-                    placeholder="blur"
-                    loading={warm ? "eager" : "lazy"}
-                    fetchPriority={warm ? "low" : undefined}
-                  />
+                <div className="bp-visual bp-visual--mac">
+                  <div className="bp-mac" aria-hidden>
+                    <div className="bp-mac-screen">
+                      <span className="bp-mac-cam" />
+                      <Image
+                        src={p.visual}
+                        alt=""
+                        aria-hidden
+                        sizes="(max-width: 1023px) calc(100vw - 84px), 440px"
+                        quality={80}
+                        placeholder="blur"
+                        loading={warm ? "eager" : "lazy"}
+                        fetchPriority={warm ? "low" : undefined}
+                      />
+                    </div>
+                    <div className="bp-mac-base" />
+                  </div>
                 </div>
               )}
 
