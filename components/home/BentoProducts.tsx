@@ -287,6 +287,18 @@ video.bp-bg { position: absolute; inset: 0; width: 100%; height: 100%; }
   color: #0F173C;
   max-width: 16rem;
 }
+/* Flagship taglines (Columbus + Elio) use the Funnel Display heading face —
+   the same "Research" font — at a lighter weight, with balanced wrapping so
+   lines split evenly instead of leaving an orphan word ("…alive / again"). */
+.bp-card--columbus .bp-tagline,
+.bp-card--elio .bp-tagline {
+  font-family: var(--font-display);
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  line-height: 1.16;
+  max-width: 18rem;
+  text-wrap: balance;
+}
 /* Research keeps its lighter, normal-weight h5 supporting tagline. */
 .bp-card--research .bp-tagline {
   font-size: var(--typography--h5);
