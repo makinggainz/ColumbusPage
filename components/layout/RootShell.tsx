@@ -38,20 +38,10 @@ const KNOWN_ROUTE_PATTERNS: RegExp[] = [
   /^\/products\/business(\/|$)/,
   /^\/products\/consumer(\/|$)/,
   /^\/research(\/|$)/,
-  /^\/waitlist(\/|$)/,
 ];
 
 function isKnownRoute(pathname: string): boolean {
   return KNOWN_ROUTE_PATTERNS.some((re) => re.test(pathname));
-}
-
-/* Real routes that intentionally render edge-to-edge with NO navbar,
-   PageFrame card, or reveal footer — currently the full-screen waitlist
-   landing reached from the navbar "Try Elio" popout. */
-const FULL_BLEED_ROUTE_PATTERNS: RegExp[] = [/^\/waitlist(\/|$)/];
-
-function isFullBleedRoute(pathname: string): boolean {
-  return FULL_BLEED_ROUTE_PATTERNS.some((re) => re.test(pathname));
 }
 
 export function RootShell({ children }: { children: ReactNode }) {
@@ -61,7 +51,7 @@ export function RootShell({ children }: { children: ReactNode }) {
      still returns that original path here, so we treat anything outside
      our route whitelist (and not an article) as the 404 page. */
   const notFound = !article && !isKnownRoute(pathname);
-  const fullBleed = article || notFound || isFullBleedRoute(pathname);
+  const fullBleed = article || notFound;
 
   // Full-bleed pages (articles + 404) bypass the PageFrame card, so the
   // frame CSS vars need to be pinned to 0 (MistxNav's `top` and top-corner

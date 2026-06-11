@@ -63,22 +63,6 @@ export const track = {
   subscribeError: (source: "blog_index" | "article_bottom" | "article_sidebar", errorReason: string, articleSlug?: string) =>
     capture("subscribe_error", { source, error_reason: errorReason, ...(articleSlug ? { article_slug: articleSlug } : {}) }),
 
-  // ── Waitlist ──────────────────────────────────────────────────────────────
-  // Full-screen waitlist landing reached from the navbar "Try Elio" popout.
-  // `product` distinguishes the Elio (consumer) and Columbus (business) flows.
-  // `emailDomain` is the part after @ — never the full address.
-  waitlistStarted: (product: "elio" | "columbus") =>
-    capture("waitlist_started", { product }),
-
-  waitlistSubmitted: (product: "elio" | "columbus", emailDomain: string) =>
-    capture("waitlist_submitted", { product, email_domain: emailDomain }),
-
-  waitlistSuccess: (product: "elio" | "columbus") =>
-    capture("waitlist_success", { product }),
-
-  waitlistError: (product: "elio" | "columbus", errorReason: string) =>
-    capture("waitlist_error", { product, error_reason: errorReason }),
-
   // ── Outbound links ────────────────────────────────────────────────────────
   // PostHog autocapture records all clicks automatically, but this named event
   // lets you filter cleanly in funnels without parsing $current_url. Use for
