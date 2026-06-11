@@ -19,7 +19,7 @@
  * its wide video-banner treatment with text at the top.
  */
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, type ReactNode } from "react";
 import Image, { type StaticImageData } from "next/image";
 import { useMediaWarm } from "@/components/ui/MediaPrefetcher";
 
@@ -31,11 +31,16 @@ import visualColumbus from "@/public/ColumbusHomeimg.png";
 import elioPhone from "@/public/ConsumerPgMedia/ElioShowcases/ElioHeroShowcase.png";
 // Elio's tile background = the consumer-page hero photo.
 import elioHeroBg from "@/public/ConsumerPgMedia/heroBackground.png";
+// Columbus's tile background = the business-page hero photo.
+import columbusHeroBg from "@/public/ColumbusBackgroundV2Enhanced.png";
 
 /* Recolour filter matching MistxNav so the Columbus mark renders in the
-   same navy blue everywhere it appears on the site. */
+   same navy blue everywhere it appears on the site (used by Research's globe). */
 const COLUMBUS_LOGO_FILTER =
   "brightness(0) saturate(100%) invert(8%) sepia(80%) saturate(1400%) hue-rotate(215deg) brightness(90%)";
+
+/* White recolour for the Columbus mark on the dark navy tile. */
+const LOGO_FILTER_WHITE = "brightness(0) invert(1)";
 
 const CSS = `
 .bp-section {
@@ -87,10 +92,38 @@ const CSS = `
 @media (min-width: 640px)  { .bp-card { padding: 32px; min-height: 400px; } }
 @media (min-width: 1024px) { .bp-card { padding: 40px; height: 500px; min-height: 0; } }
 
-/* Per-product surfaces. Columbus = the flat #F4F4F5 gray used by the
-   business-page super-section mockup panels. */
-.bp-card--columbus { background: #F4F4F5; }
+/* Per-product surfaces — bases behind each tile's blurred hero photo.
+   Columbus = the business-page hero photo under a navy-tinted wash (white
+   content on top); Elio = the consumer-page hero photo. */
+.bp-card--columbus {
+  background-color: #14204A;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
 .bp-card--elio { background-color: #CDE2F2; }
+
+/* Columbus surface: blurred business-hero photo + a left-weighted navy wash
+   that keeps the white brand / features / tagline / CTA legible while the
+   right side stays clearer behind the MacBook. */
+.bp-columbus-bg {
+  object-fit: cover;
+  object-position: center;
+  z-index: 0;
+  filter: blur(9px);
+  transform: scale(1.12);
+}
+.bp-columbus-wash {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    100deg,
+    rgba(8, 15, 45, 0.85) 0%,
+    rgba(8, 15, 45, 0.58) 40%,
+    rgba(8, 15, 45, 0.2) 72%,
+    rgba(8, 15, 45, 0.05) 100%
+  );
+}
 
 /* Wide tile (Research) keeps its video banner + 2-col span. */
 .bp-card--wide { min-height: 280px; }
@@ -104,45 +137,56 @@ video.bp-bg { position: absolute; inset: 0; width: 100%; height: 100%; }
 .bp-bg-tint { position: absolute; inset: 0; pointer-events: none; z-index: 0; }
 .bp-card--research .bp-bg-tint { display: none; }
 
-/* ── Elio surface: soft city-skyline photo + a left-anchored white wash ───
-   The photo (already softly blurred at the source) fills the tile crisp — we
-   don't blur it again, just nudge the scale so it covers cleanly. The wash is
-   a left→right white veil that keeps the brand row + tagline + CTA legible
-   over the lighter sky on the left while leaving the skyline clear on the
-   right behind the phone. */
+/* ── Elio surface: consumer-page hero photo, blurred + washed ──────────
+   The hero photo fills the tile (next/image fill, z-0) blurred and scaled up
+   from the top so the dark foreground grass is pushed off the bottom edge;
+   the wash is a left→right white veil (keeps brand/tagline/CTA legible) plus
+   a bottom-right corner glow that lifts the foreground behind the phone. */
 .bp-elio-bg {
   object-fit: cover;
   object-position: center;
   z-index: 0;
+  /* Blurred hero photo, framed so the skyline + foreground sit a touch higher
+     in the tile. */
   filter: blur(9px);
-  /* Scale up anchored to the TOP so the photo's dark foreground grass is
-     pushed off the bottom edge — only the lighter sky + skyline fill the
-     tile — and so the blur doesn't leave soft gaps at the edges. */
-  transform: scale(1.5);
-  transform-origin: center top;
+  transform: scale(1.28);
+  transform-origin: center 78%;
 }
-.bp-elio-wash {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  /* Two layers: a left→right white wash that keeps the text legible, plus a
-     bottom-right corner glow that lifts the murky brown foreground (the
-     picnic people) behind the phone into a soft, light haze. */
-  background:
-    radial-gradient(
-      120% 110% at 100% 100%,
-      rgba(255, 255, 255, 0.78) 0%,
-      rgba(255, 255, 255, 0.42) 32%,
-      rgba(255, 255, 255, 0) 62%
-    ),
-    linear-gradient(
-      100deg,
-      rgba(255, 255, 255, 0.82) 0%,
-      rgba(255, 255, 255, 0.5) 38%,
-      rgba(255, 255, 255, 0.12) 68%,
-      rgba(255, 255, 255, 0) 100%
-    );
+
+/* ── Columbus capability rail (business-page DNA) ──────────────────────
+   A vertical list of IconChips — the same device the business page uses for
+   its feature rail. Each chip is a 34px circle in a single neutral tint with
+   the matching stroke icon, beside a navy label. Even rhythm is owned by the
+   parent .bp-text-bottom gap, so no margins here. */
+.bp-features {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin: 0;
+}
+.bp-feature {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+}
+.bp-feature-chip {
+  width: 34px;
+  height: 34px;
+  border-radius: 9999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+}
+.bp-feature-chip svg { display: block; }
+.bp-feature-label {
+  font-size: 0.9375rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: #E6EAF3;
+}
+@media (max-width: 1023px) {
+  .bp-features { gap: 12px; }
 }
 
 /* ── Audience cut-out (top-right) ──────────────────────────────────────
@@ -217,6 +261,13 @@ video.bp-bg { position: absolute; inset: 0; width: 100%; height: 100%; }
   gap: 16px;
   margin-top: 18px;
 }
+/* Columbus top zone: brand + tagline grouped together. */
+.bp-col-head {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+}
 @media (min-width: 1024px) {
   .bp-card--columbus .bp-text,
   .bp-card--elio .bp-text {
@@ -227,6 +278,11 @@ video.bp-bg { position: absolute; inset: 0; width: 100%; height: 100%; }
   .bp-card--columbus .bp-text-bottom,
   .bp-card--elio .bp-text-bottom { margin-top: auto; }
   .bp-card--wide .bp-text { max-width: 34rem; }
+  /* Columbus splits into three zones — brand+tagline (top), capability rail
+     (centred), CTA (bottom). space-between distributes them top/centre/bottom,
+     and the CTA's bottom edge lines up with the MacBook base. */
+  .bp-card--columbus .bp-text { justify-content: space-between; }
+  .bp-card--columbus .bp-text-bottom { margin-top: 0; }
 }
 
 /* ── Brand row ── */
@@ -260,10 +316,11 @@ video.bp-bg { position: absolute; inset: 0; width: 100%; height: 100%; }
   line-height: var(--typography--h2--line-height);
 }
 .bp-card--research .bp-name { font-family: var(--font-display); color: #0F173C; }
-.bp-card--columbus .bp-name { color: #0F173C; font-weight: 600; }
+.bp-card--columbus .bp-name { color: #FFFFFF; font-weight: 600; }
 
-/* Elio wordmark image — recoloured from white-on-transparent to brand blue,
-   sized so its glyphs read at roughly the Columbus name's cap height. */
+/* Elio wordmark image — rendered white over the photo (soft drop-shadow for
+   legibility), sized so its glyphs read at roughly the Columbus name's cap
+   height. */
 .bp-elio-name {
   width: auto;
   height: clamp(32px, 7.4vw, 38px);
@@ -271,7 +328,7 @@ video.bp-bg { position: absolute; inset: 0; width: 100%; height: 100%; }
   flex: 0 0 auto;
   margin-left: -4px;
   transform: translateY(1px);
-  filter: brightness(0) saturate(100%) invert(46%) sepia(98%) saturate(2009%) hue-rotate(180deg) brightness(102%) contrast(101%);
+  filter: brightness(0) invert(1) drop-shadow(0 1px 4px rgba(0, 30, 60, 0.4));
 }
 @media (min-width: 1024px) {
   .bp-elio-name { height: 41px; }
@@ -366,6 +423,26 @@ video.bp-bg { position: absolute; inset: 0; width: 100%; height: 100%; }
   gap: 22px;
 }
 
+/* Elio (over the photo): white tagline + a white CTA pill with navy ink that
+   swaps to the accent on hover — legible against the crisp hero image. */
+.bp-card--elio .bp-tagline {
+  color: #FFFFFF;
+  text-shadow: 0 1px 4px rgba(0, 30, 60, 0.4);
+}
+.bp-card--elio .bp-cta {
+  background-color: #FFFFFF;
+  color: #0B1342;
+  box-shadow: 0 8px 22px rgba(0, 45, 90, 0.2);
+}
+
+/* Columbus (on the dark navy tile): white tagline + a white CTA pill with
+   navy ink, so both read crisply against the deep background. */
+.bp-card--columbus .bp-tagline { color: #FFFFFF; }
+.bp-card--columbus .bp-cta {
+  background-color: #FFFFFF;
+  color: #0B1342;
+}
+
 /* ── Product visual (bottom-right) ─────────────────────────────────────
    Columbus = framed desktop screenshot; Elio = phone in a dark bezel. On
    mobile both sit in normal flow below the text; on desktop they're
@@ -449,7 +526,8 @@ video.bp-bg { position: absolute; inset: 0; width: 100%; height: 100%; }
     margin-top: 0;
     width: 72%;
     right: -170px;
-    bottom: 30px;
+    /* Aligned with the CTA's bottom edge (= card padding-bottom). */
+    bottom: 40px;
   }
 }
 
@@ -550,7 +628,7 @@ const PRODUCTS: Product[] = [
     cellClass: "bp-card--columbus",
     href: "/products/business",
     logo: "/logobueno.png",
-    logoFilter: COLUMBUS_LOGO_FILTER,
+    logoFilter: LOGO_FILTER_WHITE,
     name: "Columbus Pro",
     tagline: "All-in-one map intelligence platform",
     audience: "For business",
@@ -597,6 +675,78 @@ function ArrowDots() {
     </svg>
   );
 }
+
+/* Stroke-glyph wrapper matching the business-page IconChip spec (24-vbox,
+   stroke 1.8, round caps) so the Columbus capability rail reads as a slice of
+   that page. currentColor lets each chip tint its own icon. */
+function Glyph({ children }: { children: ReactNode }) {
+  return (
+    <svg
+      width="17"
+      height="17"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      {children}
+    </svg>
+  );
+}
+
+/* Single neutral tint for every capability chip — light on the dark navy
+   tile (no per-feature colour) so the rail reads quiet and uniform. Used at
+   ~13% alpha for the circle, full for the icon. */
+const FEATURE_COLOR = "#FFFFFF";
+
+/* Columbus capability rail — the four flagship features from the business
+   page (Map Chat / Data Catalogue / Agentic Research / Dashboard). */
+const COLUMBUS_FEATURES = [
+  {
+    label: "Map Chat",
+    icon: (
+      <Glyph>
+        <circle cx="11" cy="11" r="7" />
+        <path d="m20 20-3.5-3.5" />
+      </Glyph>
+    ),
+  },
+  {
+    label: "Data Catalogue",
+    icon: (
+      <Glyph>
+        <ellipse cx="12" cy="5" rx="8" ry="3" />
+        <path d="M4 5v6c0 1.66 3.58 3 8 3s8-1.34 8-3V5" />
+        <path d="M4 11v6c0 1.66 3.58 3 8 3s8-1.34 8-3v-6" />
+      </Glyph>
+    ),
+  },
+  {
+    label: "Agentic Research",
+    icon: (
+      <Glyph>
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+        <path d="M14 2v6h6" />
+        <path d="m11 13 4 4" />
+        <path d="M15 11h3v3" />
+      </Glyph>
+    ),
+  },
+  {
+    label: "Dashboard",
+    icon: (
+      <Glyph>
+        <rect x="3" y="3" width="7" height="7" />
+        <rect x="14" y="3" width="7" height="7" />
+        <rect x="3" y="14" width="7" height="7" />
+        <rect x="14" y="14" width="7" height="7" />
+      </Glyph>
+    ),
+  },
+];
 
 /* Full-bleed looping background <video> for the Research banner. Forces the
    muted IDL property + kicks off play() via a ref so muted-autoplay isn't
@@ -665,7 +815,53 @@ export function BentoProducts() {
       <style>{CSS}</style>
       <div className="bp-bounds">
         <div className="bp-grid">
-          {PRODUCTS.map((p) => (
+          {PRODUCTS.map((p) => {
+            const isColumbus = p.cellClass === "bp-card--columbus";
+            const brand = (
+              <div className="bp-brand">
+                <Image
+                  src={p.logo}
+                  alt=""
+                  aria-hidden
+                  className="bp-logo"
+                  width={56}
+                  height={56}
+                  style={p.logoFilter ? { filter: p.logoFilter } : undefined}
+                />
+                {p.cellClass === "bp-card--elio" ? (
+                  <Image
+                    src="/ConsumerPgMedia/elioNameHero.png"
+                    alt={p.name}
+                    className="bp-elio-name"
+                    width={260}
+                    height={110}
+                  />
+                ) : (
+                  <span
+                    className="bp-name"
+                    style={
+                      isColumbus
+                        ? {
+                            fontFamily:
+                              '"Axiforma", "SF Pro", -apple-system, BlinkMacSystemFont, sans-serif',
+                          }
+                        : undefined
+                    }
+                  >
+                    {p.name}
+                  </span>
+                )}
+              </div>
+            );
+            const cta = (
+              <span className="bp-cta">
+                {p.ctaLabel}
+                <span className="bp-cta-arrow">
+                  <ArrowDots />
+                </span>
+              </span>
+            );
+            return (
             <a
               key={p.name}
               href={p.href}
@@ -678,22 +874,38 @@ export function BentoProducts() {
                 </>
               ) : null}
 
-              {/* Elio surface: blurred consumer-hero photo + lighter blue wash. */}
+              {/* Elio surface: blurred consumer-hero photo. */}
               {p.cellClass === "bp-card--elio" && (
+                <Image
+                  src={elioHeroBg}
+                  alt=""
+                  aria-hidden
+                  fill
+                  className="bp-elio-bg"
+                  sizes="(max-width: 1023px) 100vw, 640px"
+                  quality={78}
+                  placeholder="blur"
+                  loading={warm ? "eager" : "lazy"}
+                  fetchPriority={warm ? "low" : undefined}
+                />
+              )}
+
+              {/* Columbus surface: blurred business-hero photo + navy wash. */}
+              {isColumbus && (
                 <>
                   <Image
-                    src={elioHeroBg}
+                    src={columbusHeroBg}
                     alt=""
                     aria-hidden
                     fill
-                    className="bp-elio-bg"
+                    className="bp-columbus-bg"
                     sizes="(max-width: 1023px) 100vw, 640px"
-                    quality={55}
+                    quality={70}
                     placeholder="blur"
                     loading={warm ? "eager" : "lazy"}
                     fetchPriority={warm ? "low" : undefined}
                   />
-                  <div className="bp-elio-wash" aria-hidden />
+                  <div className="bp-columbus-wash" aria-hidden />
                 </>
               )}
 
@@ -704,53 +916,41 @@ export function BentoProducts() {
                 </div>
               )}
 
-              {/* Text rail: brand top-left, tagline + CTA bottom-left. */}
-              <div className="bp-text">
-                <div className="bp-brand">
-                  <Image
-                    src={p.logo}
-                    alt=""
-                    aria-hidden
-                    className="bp-logo"
-                    width={56}
-                    height={56}
-                    style={p.logoFilter ? { filter: p.logoFilter } : undefined}
-                  />
-                  {p.cellClass === "bp-card--elio" ? (
-                    <Image
-                      src="/ConsumerPgMedia/elioNameHero.png"
-                      alt={p.name}
-                      className="bp-elio-name"
-                      width={260}
-                      height={110}
-                    />
-                  ) : (
-                    <span
-                      className="bp-name"
-                      style={
-                        p.cellClass === "bp-card--columbus"
-                          ? {
-                              fontFamily:
-                                '"Axiforma", "SF Pro", -apple-system, BlinkMacSystemFont, sans-serif',
-                            }
-                          : undefined
-                      }
-                    >
-                      {p.name}
-                    </span>
-                  )}
-                </div>
+              {/* Text rail. Columbus splits into three zones — brand+tagline
+                  (top), capability rail (centred), CTA (bottom, aligned to the
+                  MacBook base). Elio/Research keep brand-top + tagline+CTA. */}
+              {isColumbus ? (
+                <div className="bp-text">
+                  <div className="bp-col-head">
+                    {brand}
+                    <p className="bp-tagline">{p.tagline}</p>
+                  </div>
 
-                <div className="bp-text-bottom">
-                  <p className="bp-tagline">{p.tagline}</p>
-                  <span className="bp-cta">
-                    {p.ctaLabel}
-                    <span className="bp-cta-arrow">
-                      <ArrowDots />
-                    </span>
-                  </span>
+                  <ul className="bp-features">
+                    {COLUMBUS_FEATURES.map((f) => (
+                      <li key={f.label} className="bp-feature">
+                        <span
+                          className="bp-feature-chip"
+                          style={{ backgroundColor: `${FEATURE_COLOR}21`, color: FEATURE_COLOR }}
+                        >
+                          {f.icon}
+                        </span>
+                        <span className="bp-feature-label">{f.label}</span>
+                      </li>
+                    ))}
+                  </ul>
+
+                  <div className="bp-text-bottom">{cta}</div>
                 </div>
-              </div>
+              ) : (
+                <div className="bp-text">
+                  {brand}
+                  <div className="bp-text-bottom">
+                    <p className="bp-tagline">{p.tagline}</p>
+                    {cta}
+                  </div>
+                </div>
+              )}
 
               {/* Columbus screenshot inside a MacBook Pro mockup, bottom-right. */}
               {p.visual && (
@@ -781,7 +981,8 @@ export function BentoProducts() {
                 </div>
               )}
             </a>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>

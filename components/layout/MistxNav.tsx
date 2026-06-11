@@ -59,7 +59,7 @@ const MOBILE_NAV: { label: string; href: string }[] = [
 // and a fade + scale-from-top entrance with a per-row stagger.
 export const elioMenuItems: { label: string; href: string; desc: string }[] = [
   { label: "Try Elio", href: "/waitlist?product=elio", desc: "Consumer travel reasoning" },
-  { label: "Try Columbus", href: "/waitlist?product=columbus", desc: "Business geospatial intelligence" },
+  { label: "Try Columbus Pro", href: "/waitlist?product=columbus", desc: "Business geospatial intelligence" },
 ];
 
 /**
