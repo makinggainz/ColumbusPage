@@ -24,7 +24,7 @@ import erickAvatar from "@/public/CompanyPgMedia/Erick.png";
 export const metadata: Metadata = {
   title: "Company — Columbus Earth",
   description:
-    "Columbus Earth Inc. is a spatial frontier AI company building the first production Large Geospatial Model.",
+    "Columbus Earth Corp. is a spatial frontier AI company building the first production Large Geospatial Model.",
 };
 
 /**
@@ -222,7 +222,7 @@ export default function CompanyPage() {
             Building a thinking earth
           </h1>
           <p className={styles.heroLead}>
-            Columbus Earth Inc. is a spatial frontier AI company building the
+            Columbus Earth Corp. is a spatial frontier AI company building the
             first production Large Geospatial Model to answer the most
             difficult questions about our planet.
           </p>
