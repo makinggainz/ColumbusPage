@@ -30,6 +30,12 @@ import MockupChrome, { BarDivider, EditsNotSaved } from "./MockupChrome";
 const FONT_STACK =
   "Axiforma, 'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif";
 
+/* Collaborator profile photos for the top-bar "Shared with" stack. */
+const SHARED_PHOTOS = [
+  "/BusinessPgMedia/ProfileImages/Prof2.jpeg",
+  "/BusinessPgMedia/ProfileImages/Prof3.png",
+];
+
 /* Site-wide panel + accent tokens. Used here directly rather than via
    CSS variables so the component renders correctly in isolation
    (Storybook / docs / etc.) without a wrapping .ent-scope. */
@@ -321,27 +327,21 @@ export default function AgenticResearchMockup({ industryId }: AgenticResearchMoc
             </span>
             <span style={{ display: "inline-flex", alignItems: "center" }}>
               {c.sharedWith.map((person, i) => (
-                <span
+                <img
                   key={`${person.initials}-${i}`}
+                  src={SHARED_PHOTOS[i % SHARED_PHOTOS.length]}
+                  alt=""
+                  aria-hidden
                   style={{
                     width: "clamp(16px, 2.2cqw, 30px)",
                     height: "clamp(16px, 2.2cqw, 30px)",
                     borderRadius: 9999,
-                    background: `linear-gradient(135deg, ${person.from} 0%, ${person.to} 100%)`,
+                    objectFit: "cover",
                     border: "1.5px solid #FFFFFF",
                     marginLeft: i === 0 ? 0 : "clamp(-8px, -0.7cqw, -5px)",
-                    color: "#FFFFFF",
-                    fontSize: "clamp(0.5rem, 0.78cqw, 0.7rem)",
-                    fontWeight: 600,
-                    letterSpacing: "-0.02em",
-                    display: "inline-flex",
-                    alignItems: "center",
-                    justifyContent: "center",
                     boxShadow: "0 1px 2px rgba(15,23,60,0.10)",
                   }}
-                >
-                  {person.initials}
-                </span>
+                />
               ))}
             </span>
             <svg
@@ -361,8 +361,8 @@ export default function AgenticResearchMockup({ industryId }: AgenticResearchMoc
               <path d="m6 9 6 6 6-6" />
             </svg>
           </span>
-          <BarDivider />
-          <EditsNotSaved fontSize="14px" />
+          <BarDivider height="20px" color="#D5D5D5" />
+          <EditsNotSaved fontSize="14px" fontWeight={400} saved />
         </>
       }
     >
@@ -397,8 +397,10 @@ export default function AgenticResearchMockup({ industryId }: AgenticResearchMoc
               overflow: "hidden",
               display: "flex",
               flexDirection: "column",
+              // Horizontal inset trimmed 8px each side so the conversation
+              // content (user query + response) reads ~8px wider per edge.
               padding:
-                "clamp(14px, 2.4cqw, 32px) clamp(14px, 2.2cqw, 28px) clamp(12px, 2cqw, 22px)",
+                "clamp(14px, 2.4cqw, 32px) max(0px, calc(clamp(14px, 2.2cqw, 28px) - 8px)) clamp(12px, 2cqw, 22px)",
             }}
           >
           {/* User prompt — gray rounded bubble, right-aligned per the
@@ -640,7 +642,7 @@ export default function AgenticResearchMockup({ industryId }: AgenticResearchMoc
             >
               <input
                 readOnly
-                placeholder="Ask Columbus"
+                placeholder="Ask Columbus anything"
                 style={{
                   flex: 1,
                   minWidth: 0,

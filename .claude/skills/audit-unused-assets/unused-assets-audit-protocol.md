@@ -188,7 +188,7 @@ Append to this list any time a miss is identified.
 The script supports an `ALLOWLIST` set at the top of [scripts/find-unused-assets.mjs](../../../scripts/find-unused-assets.mjs). Files listed there are forced into the `inBuild` bucket regardless of detection results. Use sparingly — prefer fixing the missing reference. Always leave a comment explaining the entry.
 
 Current entries:
-- `businessPageBackground.png` — user-protected (kept for planned reuse / pending design swap, 2026-05-30).
+- _(none)_ — `businessPageBackground.png` was deleted on 2026-06-12 (orphaned after the BusinessHero background swap; no longer needed).
 
 Conventional Next/web files that should also be left alone even if unused-looking:
 - `favicon.*`, `apple-touch-icon*`, `manifest.json`, `site.webmanifest`, `robots.txt`, `sitemap.xml`

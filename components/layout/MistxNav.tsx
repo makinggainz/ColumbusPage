@@ -58,8 +58,8 @@ const MOBILE_NAV: { label: string; href: string }[] = [
 // shadow with inset white top-edge highlights, light text on dark,
 // and a fade + scale-from-top entrance with a per-row stagger.
 export const elioMenuItems: { label: string; href: string; desc: string }[] = [
-  { label: "Try Elio", href: "/contact?tab=elio", desc: "Consumer travel reasoning" },
-  { label: "Try Columbus Pro", href: "/contact?tab=columbus-pro", desc: "Business geospatial intelligence" },
+  { label: "Try Elio", href: "/contact?tab=elio", desc: "Consumer Social Map" },
+  { label: "Try Columbus Pro", href: "/contact?tab=columbus-pro", desc: "Business Geospatial Intelligence" },
 ];
 
 /**

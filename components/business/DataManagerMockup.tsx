@@ -267,14 +267,17 @@ export default function DataManagerMockup({ industryId }: DataManagerMockupProps
           color: "var(--ent-text-navy, #0F173C)",
         }}
       >
-        {/* Search bar — pill with placeholder + trailing search glyph. */}
+        {/* Search bar — placeholder + trailing search glyph. Corner radius
+            matches the Dashboard's top-bar search field (borderRadius 10). */}
         <div className="relative">
           <input
             readOnly
             placeholder="Not sure which data sources are relevant? Ask Columbus Chatbot!"
-            className="w-full"
+            // placeholder:* forces the placeholder to the icon's #6B7280 at full
+            // opacity (browsers otherwise render placeholders lighter than `color`).
+            className="w-full placeholder:text-[#6B7280] placeholder:opacity-100"
             style={{
-              borderRadius: 9999,
+              borderRadius: 10,
               border: "1px solid rgba(0, 0, 0, 0.05)",
               backgroundColor: "#FFFFFF",
               padding: "clamp(6px, 0.85cqw, 11px) clamp(14px, 1.6cqw, 22px)",

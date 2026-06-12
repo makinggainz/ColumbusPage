@@ -57,9 +57,8 @@ const SKIP_DIRS = new Set(['node_modules', '.next', '.git', 'design-extract-outp
 //
 // Paths are relative to PUBLIC_DIR, using forward slashes.
 const ALLOWLIST = new Set([
-  // User-protected: kept for planned reuse / pending design swap, even
-  // though no current code path references it. Don't quarantine.
-  'businessPageBackground.png',
+  // (empty) Add a public-relative path here only to protect a genuinely
+  // unreferenced asset from quarantine; include a comment explaining why.
 ]);
 // Path-context prefixes: a stem match is treated as a real reference only
 // if it's preceded by one of these. Otherwise standalone English words

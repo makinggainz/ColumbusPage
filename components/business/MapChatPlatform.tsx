@@ -86,7 +86,7 @@ export type MapChatPlatformProps = {
   preload?: boolean;
 };
 
-const DEFAULT_MAP = "/MapChatbackgroundimg.png";
+const DEFAULT_MAP = "/BusinessPgMedia/UrbanInfrastructureUseCases/MapVisuals/map-chat.png";
 
 const DEFAULT_USER_QUERY =
   "Forecast the districts in greater Munich most at risk of traffic-congestion growth over the next 2–3 years";
@@ -218,7 +218,11 @@ export default function MapChatPlatform({
               minHeight: 0,
               display: "flex",
               flexDirection: "column",
-              padding: PANEL_PAD,
+              // Horizontal inset matches the Reports view exactly so the
+              // answer content's left/right edges line up across both
+              // showcases (cqw resolves against the shared MockupChrome
+              // frame). Top/bottom keep this panel's own PANEL_PAD rhythm.
+              padding: `${PANEL_PAD} max(0px, calc(clamp(14px, 2.2cqw, 28px) - 8px))`,
               overflow: "hidden",
             }}
           >
@@ -294,8 +298,6 @@ function MapImage({ map, eager, warm }: { map: string; eager?: boolean; warm?: b
       />
 
       <Marker top="32%" left="38%" tone="accent" />
-      <Marker top="58%" left="56%" tone="dark" />
-      <Marker top="46%" left="22%" tone="accent" />
 
       <MapFloatingButtons />
       <MapControls />
@@ -345,8 +347,12 @@ function MapControls() {
       className="absolute"
       style={{
         right: "clamp(8px, 1.2cqw, 18px)",
-        top: "50%",
-        transform: "translateY(-50%)",
+        /* Anchor the stack's bottom 10px above the Earth helper mascot's top
+           edge. The mascot (drawn by MockupChrome at the frame's bottom-right)
+           sits clamp(8px,1.1cqw,18px) up from the bottom and is
+           clamp(26px,3cqw,44px) tall, so its top edge is the sum of those. */
+        bottom:
+          "calc(clamp(8px, 1.1cqw, 18px) + clamp(26px, 3cqw, 44px) + 10px)",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
@@ -461,8 +467,8 @@ function ChatInputBox() {
     >
       <input
         type="text"
-        placeholder="Ask Columbus"
-        aria-label="Ask Columbus"
+        placeholder="Ask Columbus anything"
+        aria-label="Ask Columbus anything"
         style={{
           flex: 1,
           minWidth: 0,

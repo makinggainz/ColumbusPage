@@ -88,7 +88,7 @@ export default function ChatSection() {
               The card's bottom corners overlap the -20% bleed and are clipped by
               the section's overflow:hidden, same as the old monitor mockup. */}
           <ScaleToFit designWidth={1287} className="biz-hero-scale">
-            <MapChatPlatform />
+            <MapChatPlatform map="/BusinessPgMedia/UrbanInfrastructureUseCases/MapVisuals/map-chat.png" />
           </ScaleToFit>
         </div>
       </div>

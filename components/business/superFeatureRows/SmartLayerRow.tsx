@@ -40,7 +40,7 @@ const DEFAULT_FEATURES: SmartLayerFeature[] = [
   { title: "property level scoring", description: "Fresh data, continuously monitored and maintained" },
 ];
 const DEFAULT_MAP_ALT = "Nashville smart layer heatmap";
-const DEFAULT_MAP_SRC = "/BusinessPgMedia/business/becomeartistMap.png";
+const DEFAULT_MAP_SRC = "/BusinessPgMedia/CREUseCases/MapVisuals/becomeartistMap.png";
 const DEFAULT_PROMPT_TEXT =
   "Create a smart layer called 'Value-Add Rent Lift Probability' for every multifamily property of 100+ units built between 1975 and 2000 across the Nashville MSA. Score each property on the probability of supporting a 25%+ rent lift within 24 months of renovation";
 
@@ -78,6 +78,7 @@ export default function SmartLayerRow({
         railIcons={["grid", "search-star", "edit", "database"]}
         activeRailIndex={0}
         crumbs={["Smart Layers", layerName]}
+        hideMascot
       >
         {/* Inner pane — map fills it; the smart-layer card and the prompt
             bar float on top. */}
@@ -90,21 +91,18 @@ export default function SmartLayerRow({
             fontFamily: FONT,
           }}
         >
-          {/* Map — fills the inner pane with a 3px gutter on top and
-              right; extends all the way left and down so it sits
-              BEHIND the smart-layer overlay card and prompt bar.
-              Carries the same vibrancy filter as MapThumb /
-              MapLayeredVisual so industry maps match the CRE reference
-              regardless of which renderer they're piped through. */}
+          {/* Map — fills the entire inner pane (flush to all four edges,
+              up to the bottom of the top nav bar) so it sits BEHIND the
+              smart-layer overlay card and prompt bar. Carries the same
+              vibrancy filter as MapThumb / MapLayeredVisual so industry
+              maps match the CRE reference regardless of which renderer
+              they're piped through. */}
           <div
             role={mapAlt ? "img" : undefined}
             aria-label={mapAlt || undefined}
             style={{
               position: "absolute",
-              top: 3,
-              right: 3,
-              bottom: 0,
-              left: 0,
+              inset: 0,
               borderRadius: 12,
               overflow: "hidden",
               filter: "saturate(1.2) contrast(1.08)",

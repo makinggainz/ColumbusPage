@@ -290,12 +290,11 @@ const CONTENT: Partial<Record<IndustryId, DashboardItem[]>> = {
 };
 
 /* Three gradient palettes used for the small collaborator avatar
-   chips on Public items. Indexed by position so each item's avatar
-   row reads as a distinct trio. */
-const AVATAR_PALETTES: { from: string; to: string }[] = [
-  { from: "#F5D386", to: "#C28C4E" },
-  { from: "#A7C2E8", to: "#3A6FB3" },
-  { from: "#E8B8B0", to: "#A45C58" },
+   chips on Public items — collaborator profile photos. */
+const AVATAR_PHOTOS: string[] = [
+  "/BusinessPgMedia/ProfileImages/Prof4.png",
+  "/BusinessPgMedia/ProfileImages/Prof5.png",
+  "/BusinessPgMedia/ProfileImages/Prof6.png",
 ];
 
 export type DashboardMockupProps = {
@@ -643,15 +642,17 @@ function ItemRow({ item }: { item: DashboardItem }) {
 function AvatarStack() {
   return (
     <div style={{ display: "inline-flex", alignItems: "center" }}>
-      {AVATAR_PALETTES.map((p, i) => (
-        <span
+      {AVATAR_PHOTOS.map((src, i) => (
+        <img
           key={i}
+          src={src}
+          alt=""
           aria-hidden
           style={{
             width: "clamp(14px, 1.7cqw, 22px)",
             height: "clamp(14px, 1.7cqw, 22px)",
             borderRadius: 9999,
-            background: `linear-gradient(135deg, ${p.from} 0%, ${p.to} 100%)`,
+            objectFit: "cover",
             border: "1.5px solid #FFFFFF",
             marginLeft: i === 0 ? 0 : "clamp(-6px, -0.7cqw, -4px)",
             boxShadow: "0 1px 2px rgba(15,23,60,0.10)",

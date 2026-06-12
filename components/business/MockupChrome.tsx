@@ -80,8 +80,10 @@ function RailGlyph({ id }: { id: RailIconId }) {
         <>
           <circle cx="11" cy="11" r="7" />
           <path d="m20 20-3-3" />
-          {/* small sparkle inside the lens */}
-          <path d="M11 7.6l.85 1.85 1.85.85-1.85.85L11 13l-.85-1.9-1.85-.85 1.85-.85z" />
+          {/* small sparkle inside the lens — filled (not just stroked).
+              Scaled up ~25% about its own centre (11, 10.3) so it reads a
+              touch bigger without drifting off the lens. */}
+          <path d="M11 7.6l.85 1.85 1.85.85-1.85.85L11 13l-.85-1.9-1.85-.85 1.85-.85z" fill="currentColor" stroke="none" transform="translate(11 10.3) scale(1.25) translate(-11 -10.3)" />
         </>
       );
     case "edit":
@@ -130,7 +132,9 @@ function RailIcon({
       aria-hidden
       viewBox="0 0 24 24"
       fill="none"
-      stroke={color ?? (active ? "#FFFFFF" : RAIL_ICON)}
+      // Stroke + any fill="currentColor" paths (e.g. the search-star sparkle)
+      // both resolve to this color.
+      stroke="currentColor"
       strokeWidth={strokeWidth}
       strokeLinecap="round"
       strokeLinejoin="round"
@@ -139,6 +143,7 @@ function RailIcon({
         height: size,
         position: "relative",
         zIndex: 1,
+        color: color ?? (active ? "#FFFFFF" : RAIL_ICON),
       }}
     >
       <RailGlyph id={id} />
@@ -159,6 +164,8 @@ export type MockupChromeProps = {
   crumbs: string[];
   /* Right-hand side of the top bar — view-specific actions. */
   actions?: React.ReactNode;
+  /* Hide the bottom-right Earth helper mascot for this view (default shown). */
+  hideMascot?: boolean;
   /* The inner pane content (everything that used to overlay the PNG). */
   children: React.ReactNode;
 };
@@ -169,6 +176,7 @@ export default function MockupChrome({
   activeRailIndex,
   crumbs,
   actions,
+  hideMascot = false,
   children,
 }: MockupChromeProps) {
   const railWidth = "clamp(36px, 4.17cqw, 50px)";
@@ -273,15 +281,16 @@ export default function MockupChrome({
             </svg>
           </RailRow>
           <RailRow height={railWidth}>
-            {/* Circular user avatar — gradient stand-in, matches the small
-                photo bubble baked into the source frames. */}
-            <span
+            {/* Circular user avatar — the logged-in user's profile photo. */}
+            <img
+              src="/BusinessPgMedia/ProfileImages/MainProf.png"
+              alt=""
               aria-hidden
               style={{
                 width: "clamp(19px, 2.16cqw, 30px)",
                 height: "clamp(19px, 2.16cqw, 30px)",
                 borderRadius: "50%",
-                background: "linear-gradient(135deg, #6E8CB8 0%, #344A6E 100%)",
+                objectFit: "cover",
                 border: "1px solid rgba(0,0,0,0.12)",
               }}
             />
@@ -459,21 +468,23 @@ export default function MockupChrome({
       </div>
 
       {/* ── Earth mascot ── */}
-      <img
-        src={MASCOT_SRC}
-        alt=""
-        aria-hidden
-        style={{
-          position: "absolute",
-          right: "clamp(8px, 1.1cqw, 18px)",
-          bottom: "clamp(8px, 1.1cqw, 18px)",
-          width: "clamp(26px, 3cqw, 44px)",
-          height: "clamp(26px, 3cqw, 44px)",
-          objectFit: "contain",
-          zIndex: 8,
-          pointerEvents: "none",
-        }}
-      />
+      {!hideMascot && (
+        <img
+          src={MASCOT_SRC}
+          alt=""
+          aria-hidden
+          style={{
+            position: "absolute",
+            right: "clamp(8px, 1.1cqw, 18px)",
+            bottom: "clamp(8px, 1.1cqw, 18px)",
+            width: "clamp(26px, 3cqw, 44px)",
+            height: "clamp(26px, 3cqw, 44px)",
+            objectFit: "contain",
+            zIndex: 8,
+            pointerEvents: "none",
+          }}
+        />
+      )}
     </div>
   );
 }
@@ -512,12 +523,14 @@ function RailRow({
    Small building blocks for the view-specific actions so the four mockups
    share one button language (faithful to the source frames' top-bar pills). */
 
-/* "Edits not saved" status — slashed-cloud glyph + muted label. Used by the
-   Map Chat and Research views. */
+/* "Edits not saved" status — slashed-cloud glyph + muted label. With
+   `saved`, it flips to "Edits saved" + a clean (un-slashed) cloud. Used by
+   the Map Chat and Research views. */
 export function EditsNotSaved({
   fontSize = "clamp(0.6rem, 0.95cqw, 0.82rem)",
   fontWeight = 500,
-}: { fontSize?: string; fontWeight?: number } = {}) {
+  saved = false,
+}: { fontSize?: string; fontWeight?: number; saved?: boolean } = {}) {
   return (
     <span
       style={{
@@ -541,11 +554,20 @@ export function EditsNotSaved({
         aria-hidden
         style={{ width: "clamp(13px, 1.5cqw, 19px)", height: "clamp(13px, 1.5cqw, 19px)" }}
       >
-        <path d="m2 2 20 20" />
-        <path d="M5.8 9.8A5 5 0 0 0 6 19h11a4 4 0 0 0 1.9-.5" />
-        <path d="M9 5.5A5.5 5.5 0 0 1 18.6 9 4 4 0 0 1 21 12.5" />
+        {saved ? (
+          // Whole cloud — no slash, no gaps. The cloud's mass (flat bottom +
+          // body) sits in the lower half of the viewBox, so it reads low next
+          // to the label; lift it ~1.5 units to optically centre with the text.
+          <path d="M17.5 19a4.5 4.5 0 1 0-1.4-8.78A6 6 0 1 0 6 19h11.5z" transform="translate(0 -1.5)" />
+        ) : (
+          <>
+            <path d="m2 2 20 20" />
+            <path d="M5.8 9.8A5 5 0 0 0 6 19h11a4 4 0 0 0 1.9-.5" />
+            <path d="M9 5.5A5.5 5.5 0 0 1 18.6 9 4 4 0 0 1 21 12.5" />
+          </>
+        )}
       </svg>
-      Edits not saved
+      {saved ? "Edits saved" : "Edits not saved"}
     </span>
   );
 }
@@ -597,7 +619,11 @@ export function BarPill({
         color: textColor,
         borderRadius: radius,
         border: gradient ? "none" : "1px solid rgba(0,0,0,0.12)",
-        padding: `${paddingY} clamp(9px, 1.2cqw, 16px)`,
+        // Tighten the line box to the glyphs and bias the vertical padding
+        // 0.5px heavier on top: Axiforma rides high in its line box, so equal
+        // padding leaves the text reading ~1px above the pill's centre.
+        lineHeight: 1,
+        padding: `calc(${paddingY} + 0.5px) clamp(9px, 1.2cqw, 16px) calc(${paddingY} - 0.5px)`,
         fontSize,
         fontWeight,
         letterSpacing: "-0.005em",

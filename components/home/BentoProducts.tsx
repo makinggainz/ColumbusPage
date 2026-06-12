@@ -524,10 +524,11 @@ video.bp-bg { position: absolute; inset: 0; width: 100%; height: 100%; }
   .bp-card--columbus .bp-visual {
     position: absolute;
     margin-top: 0;
-    width: 72%;
+    /* Grows up-and-left from the bottom-right anchor. */
+    width: 77.76%;
     right: -170px;
-    /* Aligned with the CTA's bottom edge (= card padding-bottom). */
-    bottom: 40px;
+    /* Dropped flush to the card's bottom edge. */
+    bottom: 0;
   }
 }
 

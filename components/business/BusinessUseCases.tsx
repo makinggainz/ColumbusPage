@@ -98,15 +98,15 @@ type IndustryBackdrops = {
   /* Optional per-industry override for the map IMAGE rendered inside the
      chat-section visuals (the MapPanel inside MapChatPlatform and the
      MapLayeredVisual map inside each chat sub-feature). Industries that
-     omit these fall back to the generic "/MapChatbackgroundimg.png".
+     omit these fall back to the Urban-Infrastructure map-chat.png.
      `chatSubMaps` is aligned to `chatSub` by index; only the slots that
      render a MapLayeredVisual (0, 1, 3 today) actually consume it. */
   chatMainMap?: string;
   chatSubMaps?: [string?, string?, string?, string?];
   /* Optional per-industry overrides for the map IMAGES rendered inside
      the data-catalogue rows (SmartLayerRow and SurveyEarthRow). Each row
-     keeps its hardcoded default ("/BusinessPgMedia/business/becomeartistMap.png" /
-     "/BusinessPgMedia/business/SuperModelback.png") when an industry omits these. */
+     keeps its hardcoded default ("/BusinessPgMedia/CREUseCases/MapVisuals/becomeartistMap.png" /
+     "/BusinessPgMedia/CREUseCases/MapVisuals/supermodel.png") when an industry omits these. */
   smartLayerMap?: string;
   surveyEarthMap?: string;
 };
@@ -182,13 +182,11 @@ const RESIDENTIAL_BACKDROPS: IndustryBackdrops = {
                          (consumed as the Dashboard hero)
    dashboardHero     → unused (slot chain shifted up). */
 const COMMERCIAL_BACKDROPS: IndustryBackdrops = {
-  chatHero: "/ColumBuzHero.png",
-  /* ColumBuzHero is a portrait NYC photo with pure blue sky at the very
-     top, cloud + skyscraper-peak band at ~30–55%, full skyline at
-     ~55–70%, and a faded Central Park at the bottom. "center 25%" puts
-     the visible slice on the upper sky + cloud zone so the chat hero
-     reads as clouds with just a hint of the skyline at the bottom. */
-  chatHeroPosition: "center 25%",
+  // Same backdrop as the page hero section + ChatSection, for a consistent
+  // commercial-industry look.
+  chatHero: "/ColumbusBackgroundV2Enhanced.png",
+  /* Match the hero's framing (objectPosition "center 50%"). */
+  chatHeroPosition: "center 50%",
   chatSub: [
     "/ColumbusBackgroundV2Enhanced.png",
     "/BusinessPgMedia/CREUseCases/Bg/London.png",
@@ -219,6 +217,8 @@ const COMMERCIAL_BACKDROPS: IndustryBackdrops = {
     undefined,
     "/BusinessPgMedia/CREUseCases/MapVisuals/import-files.png",
   ],
+  smartLayerMap: "/BusinessPgMedia/CREUseCases/MapVisuals/becomeartistMap.png",
+  surveyEarthMap: "/BusinessPgMedia/CREUseCases/MapVisuals/supermodel.png",
 };
 
 const ENVIRONMENTAL_BACKDROPS: IndustryBackdrops = {
@@ -1651,7 +1651,7 @@ export default function BusinessUseCases() {
             // Floating composite design width: 460px card + 320px map overlap.
             visualDesignWidth: 780,
             visual: (
-              <MapLayeredVisual map={bg.chatSubMaps?.[0] ?? "/MapChatbackgroundimg.png"} alt="Map chat background" variant="floating">
+              <MapLayeredVisual map={bg.chatSubMaps?.[0] ?? "/BusinessPgMedia/UrbanInfrastructureUseCases/MapVisuals/map-chat.png"} alt="Map chat background" variant="floating">
                 <PatternsDetectedCard {...copy.cards.patterns} />
               </MapLayeredVisual>
             ),
@@ -1664,7 +1664,7 @@ export default function BusinessUseCases() {
             // Floating composite: 460px ForecastCard + 320px map overlap.
             visualDesignWidth: 780,
             visual: (
-              <MapLayeredVisual map={bg.chatSubMaps?.[1] ?? "/MapChatbackgroundimg.png"} alt="Map chat background" variant="floating">
+              <MapLayeredVisual map={bg.chatSubMaps?.[1] ?? "/BusinessPgMedia/UrbanInfrastructureUseCases/MapVisuals/map-chat.png"} alt="Map chat background" variant="floating">
                 <ForecastCard {...copy.cards.forecast} />
               </MapLayeredVisual>
             ),
@@ -1686,7 +1686,7 @@ export default function BusinessUseCases() {
             // Full-bleed composite: square map (1:1) with the 460px card overlaid.
             visualDesignWidth: 780,
             visual: (
-              <MapLayeredVisual map={bg.chatSubMaps?.[3] ?? "/MapChatbackgroundimg.png"} alt="Map chat background">
+              <MapLayeredVisual map={bg.chatSubMaps?.[3] ?? "/BusinessPgMedia/UrbanInfrastructureUseCases/MapVisuals/map-chat.png"} alt="Map chat background">
                 <HarmonizedFilesCard {...copy.cards.harmonized} />
               </MapLayeredVisual>
             ),
