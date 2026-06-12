@@ -189,7 +189,7 @@ export default function BusinessHero() {
     },
     {
       id: "data",
-      label: "Data Catalogue",
+      label: "Data Catalog",
       icon: (
         <>
           <ellipse cx="12" cy="5" rx="8" ry="3" />
@@ -225,6 +225,9 @@ export default function BusinessHero() {
   // the cycle pauses while the hero is scrolled out of view.
   const [runId, setRunId] = useState(0);
   const [onScreen, setOnScreen] = useState(false);
+  // Tracks browser-tab / window visibility so the auto-advance also pauses
+  // when the page isn't the active tab (not just when scrolled out of view).
+  const [pageVisible, setPageVisible] = useState(true);
   // Gates the auto-advance so it only begins once the page's critical
   // media has loaded (hero background photo + active product mockup,
   // both already high-priority/eager — see the LCP <ImageWithFallback>
@@ -284,6 +287,17 @@ export default function BusinessHero() {
     return () => obs.disconnect();
   }, []);
 
+  // Page Visibility — pause the auto-advance whenever the tab/window isn't
+  // the active view (switched browser tab, minimized, etc.), complementing
+  // the scroll-based `onScreen` flag so "not actively on screen" fully halts
+  // the showcase's state switching.
+  useEffect(() => {
+    const sync = () => setPageVisible(document.visibilityState === "visible");
+    sync();
+    document.addEventListener("visibilitychange", sync);
+    return () => document.removeEventListener("visibilitychange", sync);
+  }, []);
+
   // Deferred start — hold the auto-advance until everything else has
   // loaded. Wait for window `load` (all images incl. the hero photo +
   // product mockups are in by then), then a requestIdleCallback tick so
@@ -315,7 +329,7 @@ export default function BusinessHero() {
   // pauses while the hero is off-screen or the user is hovering any tab.
   const activeIndex = tabs.findIndex(t => t.id === activeTabId);
   const nextTabId = tabs[(activeIndex + 1) % tabs.length]?.id;
-  const paused = !onScreen || hoveredTabId !== null;
+  const paused = !onScreen || !pageVisible || hoveredTabId !== null;
   // Promote the next tab to active and restart the fill on the one after
   // it. Closes over the current `activeIndex` (the fill <span> is keyed by
   // runId, so this handler is re-created with a fresh index each cycle).
@@ -682,7 +696,8 @@ export default function BusinessHero() {
                       // flat bottom edge sits on the same baseline as the
                       // content area below — Chrome-style.
                       height: "100%",
-                      paddingLeft: "22px",
+                      // 22px − 7px to shift each tab's icon + label left by 7px.
+                      paddingLeft: "15px",
                       paddingRight: "14px",
                       // Top corners only — bottom is flat so the tab
                       // baseline meets the content area cleanly. Matches
@@ -830,6 +845,10 @@ export default function BusinessHero() {
                         textOverflow: "ellipsis",
                         minWidth: 0,
                         flex: 1,
+                        // The label's caps sit high in its line box; nudge down
+                        // ~1px so the text optically centres with the icon.
+                        lineHeight: 1,
+                        transform: "translateY(1px)",
                       }}
                     >
                       {tab.label}

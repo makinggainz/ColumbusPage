@@ -184,7 +184,7 @@ const FEATURES = [
     Icon: PenSquareIco,
   },
   {
-    title: "Data Catalogue",
+    title: "Data Catalog",
     subtitle:
       "Browse everything we've discovered.\nFind the right data for any project, all on the same platform.",
     Icon: DbIco,

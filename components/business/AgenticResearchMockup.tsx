@@ -1,25 +1,15 @@
 "use client";
 
-import Image from "next/image";
 import type { IndustryId } from "@/components/use-cases/industry/types";
-import { useMediaWarm } from "@/components/ui/MediaPrefetcher";
-import researchFrame from "@/public/BusinessPgMedia/business/ResearchFrame.png";
+import MockupChrome, { BarDivider, EditsNotSaved } from "./MockupChrome";
 
-/* Mock UI: the "Agentic Research" demo. Uses the ResearchFrame chrome
-   (5190×2993) and paints the inner pane with the canonical Columbus
-   chat-and-report split. The chrome has a soft drop-shadow at its
-   inner edge — content starts INSIDE the shadow zone so the white
-   inner pane sits flush against the chrome's solid white area (no
-   visible "gap" from the shadow gradient):
-     • left rail solid right-edge:  x=224  →  4.32%
-     • top bar  solid bottom-edge:  y=210  →  7.02%
-
-   The chrome's top bar carries a "Columbus / Kansans Project 435
-   Greenfield / Cater County Sector 3" breadcrumb baked into the PNG.
-   We cover the project-specific portion (x=900 → x=3160 of the
-   original = 17.34% → 60.89%) with a flush-white div and render an
-   industry-specific breadcrumb in its place — keeping the Columbus
-   logo + wordmark + first "/" separator visible from the source.
+/* Mock UI: the "Agentic Research" demo. The app chrome (left icon rail + top
+   bar with the Columbus logo, the project breadcrumb, the "Shared with"
+   collaborator avatars, and the "Edits not saved" status) is drawn
+   programmatically by the shared <MockupChrome>; this component supplies the
+   inner pane — the canonical Columbus chat-and-report split. The breadcrumb
+   and collaborator set are passed into the chrome as props, so the old
+   opaque "cover" divs that used to hide the baked PNG text are gone.
 
    Inner pane layout:
      • Left column (~40%): the chat — user prompt → "Columbus
@@ -293,197 +283,96 @@ const CONTENT: Partial<Record<IndustryId, IndustryContent>> = {
 
 export type AgenticResearchMockupProps = {
   industryId?: IndustryId;
-  /* When true, the frame loads eagerly at low priority even while this demo
-     is the inactive (display:none) one — ComparisonSection sets it once the
-     section enters the viewport so all showcases are preloaded. */
+  /* Accepted for call-site compatibility (ComparisonSection passes it). The
+     chrome is now code-drawn, so there's no frame raster to preload — no-op. */
   preload?: boolean;
 };
 
-export default function AgenticResearchMockup({ industryId, preload = false }: AgenticResearchMockupProps = {}) {
-  const warm = useMediaWarm();
-  const soon = warm || preload;
+export default function AgenticResearchMockup({ industryId }: AgenticResearchMockupProps = {}) {
   const c =
     (industryId && CONTENT[industryId]) ?? CONTENT["residential-real-estate"]!;
 
   return (
-    <div
-      className="biz-product-display biz-mockup-frame relative w-full mx-auto"
-      style={{
-        aspectRatio: "5190 / 2993",
-        maxWidth: 1180,
-        /* 24px rounded corners matching MapChatPlatform /
-           DataManagerMockup. The chrome PNG runs flush to the
-           rounded edges (the 6px white-frame inset that used to
-           live here was creating a visible polaroid-style border
-           around the demo — removed per the design pass). The
-           rounded clip slightly trims the baked-in bottom-left
-           settings gear icon — accepted tradeoff for a cleaner
-           edge that matches the other demos in the family. */
-        borderRadius: "var(--ent-radius-2xl)",
-        overflow: "hidden",
-        /* White placeholder fill — before the chrome PNG loads this wrapper
-           would otherwise be transparent and show the section's sky backdrop
-           straight through (reading as a borderless/"no-frame" flash). The
-           white fill makes it a clean white panel until the chrome paints. */
-        backgroundColor: "#FFFFFF",
-        containerType: "inline-size",
-      }}
-    >
-      <div
-        className="absolute pointer-events-none"
-        style={{ inset: 0, zIndex: 5 }}
-      >
-        <Image
-          src={researchFrame}
-          alt="Columbus Agentic Research"
-          fill
-          sizes="(max-width: 1180px) 100vw, 1180px"
-          placeholder="blur"
-          loading={soon ? "eager" : "lazy"}
-          fetchPriority={soon ? "low" : undefined}
-          className="object-cover object-center"
-        />
-      </div>
-
-      {/* Breadcrumb cover — opaque white div over everything after the
-          chrome's baked "Columbus" wordmark. Extended left to 15.5% so it
-          also hides the chrome's baked navy "/" separator (x≈16.8–17.2%) —
-          that slash is a different colour + tighter spacing than our
-          rendered one, so we re-render BOTH separators here for a single
-          consistent style/rhythm. Columbus ends at ~15.25%, so 15.5% clears
-          it; right edge stays at 60.89%. Sits above the frame (z-5) but
-          below the inner pane (z-10). */}
-      <div
-        aria-hidden
-        style={{
-          position: "absolute",
-          top: 0,
-          left: "15.5%",
-          width: "45.39%",
-          height: "7.02%",
-          backgroundColor: "#FFFFFF",
-          zIndex: 6,
-          display: "flex",
-          alignItems: "center",
-          fontFamily: FONT_STACK,
-        }}
-      >
-        <span
-          style={{
-            fontSize: "clamp(0.7rem, 1.15cqw, 1rem)",
-            fontWeight: 600,
-            color: TEXT_NAVY,
-            letterSpacing: "-0.015em",
-            lineHeight: 1.1,
-            whiteSpace: "nowrap",
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-          }}
-        >
-          {/* Leading separator (Columbus / …) — same style as the inner one
-              so all breadcrumb slashes match in colour + spacing. */}
-          <span style={{ color: TEXT_MUTED, fontWeight: 500, margin: "0 clamp(6px, 0.8cqw, 10px)" }}>
-            /
-          </span>
-          {c.breadcrumb[0]}
-          <span style={{ color: TEXT_MUTED, fontWeight: 500, margin: "0 clamp(6px, 0.8cqw, 10px)" }}>
-            /
-          </span>
-          {c.breadcrumb[1]}
-        </span>
-      </div>
-
-      {/* Shared-with cover — opaque white div over the
-          "Shared with [UC Trade Joe's][Giant] ▾" portion of the
-          chrome's top bar (x=3600 → x=4400 of the source = 69.36% →
-          84.78% from left). Renders the industry's collaborator
-          set: "Shared with" label + overlapping circular avatars +
-          chevron dropdown. Same z-stack as the breadcrumb cover. */}
-      <div
-        aria-hidden
-        style={{
-          position: "absolute",
-          top: 0,
-          left: "69.36%",
-          width: "15.42%",
-          height: "7.02%",
-          backgroundColor: "#FFFFFF",
-          zIndex: 6,
-          display: "flex",
-          alignItems: "center",
-          gap: "clamp(6px, 0.9cqw, 12px)",
-          paddingLeft: "clamp(2px, 0.3cqw, 4px)",
-          fontFamily: FONT_STACK,
-        }}
-      >
-        <span
-          style={{
-            fontSize: "clamp(0.62rem, 0.95cqw, 0.82rem)",
-            fontWeight: 500,
-            color: TEXT_MUTED,
-            letterSpacing: "-0.005em",
-            whiteSpace: "nowrap",
-          }}
-        >
-          Shared with
-        </span>
-        <div style={{ display: "inline-flex", alignItems: "center" }}>
-          {c.sharedWith.map((person, i) => (
+    <MockupChrome
+      className="biz-product-display biz-mockup-frame"
+      railIcons={["grid", "search-star", "edit", "database"]}
+      activeRailIndex={2}
+      crumbs={[c.breadcrumb[0], c.breadcrumb[1]]}
+      actions={
+        <>
+          {/* Shared-with collaborators */}
+          <span
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "clamp(5px, 0.8cqw, 11px)",
+            }}
+          >
             <span
-              key={`${person.initials}-${i}`}
               style={{
-                width: "clamp(16px, 2.2cqw, 30px)",
-                height: "clamp(16px, 2.2cqw, 30px)",
-                borderRadius: 9999,
-                background: `linear-gradient(135deg, ${person.from} 0%, ${person.to} 100%)`,
-                border: "1.5px solid #FFFFFF",
-                marginLeft: i === 0 ? 0 : "clamp(-8px, -0.7cqw, -5px)",
-                color: "#FFFFFF",
-                fontSize: "clamp(0.5rem, 0.78cqw, 0.7rem)",
-                fontWeight: 600,
-                letterSpacing: "-0.02em",
-                display: "inline-flex",
-                alignItems: "center",
-                justifyContent: "center",
-                boxShadow: "0 1px 2px rgba(15,23,60,0.10)",
+                fontSize: "14px",
+                fontWeight: 500,
+                color: TEXT_MUTED,
+                letterSpacing: "-0.005em",
+                whiteSpace: "nowrap",
               }}
             >
-              {person.initials}
+              Shared with
             </span>
-          ))}
-        </div>
-        <svg
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          aria-hidden
-          style={{
-            width: "clamp(11px, 1.3cqw, 16px)",
-            height: "clamp(11px, 1.3cqw, 16px)",
-            color: TEXT_MUTED,
-          }}
-        >
-          <path d="m6 9 6 6 6-6" />
-        </svg>
-      </div>
-
+            <span style={{ display: "inline-flex", alignItems: "center" }}>
+              {c.sharedWith.map((person, i) => (
+                <span
+                  key={`${person.initials}-${i}`}
+                  style={{
+                    width: "clamp(16px, 2.2cqw, 30px)",
+                    height: "clamp(16px, 2.2cqw, 30px)",
+                    borderRadius: 9999,
+                    background: `linear-gradient(135deg, ${person.from} 0%, ${person.to} 100%)`,
+                    border: "1.5px solid #FFFFFF",
+                    marginLeft: i === 0 ? 0 : "clamp(-8px, -0.7cqw, -5px)",
+                    color: "#FFFFFF",
+                    fontSize: "clamp(0.5rem, 0.78cqw, 0.7rem)",
+                    fontWeight: 600,
+                    letterSpacing: "-0.02em",
+                    display: "inline-flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    boxShadow: "0 1px 2px rgba(15,23,60,0.10)",
+                  }}
+                >
+                  {person.initials}
+                </span>
+              ))}
+            </span>
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden
+              style={{
+                width: "clamp(11px, 1.3cqw, 16px)",
+                height: "clamp(11px, 1.3cqw, 16px)",
+                color: TEXT_MUTED,
+              }}
+            >
+              <path d="m6 9 6 6 6-6" />
+            </svg>
+          </span>
+          <BarDivider />
+          <EditsNotSaved fontSize="14px" />
+        </>
+      }
+    >
       <div
         key={industryId ?? "default"}
-        className="absolute industry-fade-in"
+        className="industry-fade-in"
         style={{
-          left: "4.32%",
-          top: "7.02%",
-          right: 0,
-          /* Inner pane extends all the way to the chrome's bottom so
-             the AI suggestion banner inside the right column has room
-             to breathe and doesn't read as prematurely cut off. */
-          bottom: 0,
-          backgroundColor: "#FFFFFF",
+          width: "100%",
+          height: "100%",
           overflow: "hidden",
-          zIndex: 10,
           fontFamily: FONT_STACK,
           color: TEXT_NAVY,
           display: "grid",
@@ -495,12 +384,23 @@ export default function AgenticResearchMockup({ industryId, preload = false }: A
           style={{
             display: "flex",
             flexDirection: "column",
-            padding:
-              "clamp(14px, 2.4cqw, 32px) clamp(14px, 2.2cqw, 28px) clamp(12px, 2cqw, 22px)",
             minHeight: 0,
             overflow: "hidden",
           }}
         >
+          {/* Conversation — keeps its inset padding; the input docks flush to
+              the column's edges below (mirrors the Map Chat view). */}
+          <div
+            style={{
+              flex: 1,
+              minHeight: 0,
+              overflow: "hidden",
+              display: "flex",
+              flexDirection: "column",
+              padding:
+                "clamp(14px, 2.4cqw, 32px) clamp(14px, 2.2cqw, 28px) clamp(12px, 2cqw, 22px)",
+            }}
+          >
           {/* User prompt — gray rounded bubble, right-aligned per the
               reference screenshot. */}
           <div
@@ -717,64 +617,87 @@ export default function AgenticResearchMockup({ industryId, preload = false }: A
             <ArrowGlyph />
           </button>
 
-          <div style={{ flex: 1 }} />
+          </div>
 
-          {/* Bottom Ask Columbus input — white pill with the same
-              navy-fill submit button used elsewhere in the site. */}
+          {/* Input + disclaimer dock — flush to the chat column's
+              left/right/bottom edges; only a top hairline separates it from
+              the conversation. Mirrors the Map Chat view. */}
           <div
-            className="relative"
-            style={{ marginTop: "clamp(10px, 1.3cqw, 16px)" }}
+            style={{
+              backgroundColor: "#FFFFFF",
+              borderTop: `1px solid ${BORDER}`,
+              paddingBottom: "clamp(5px, 0.7cqw, 9px)",
+            }}
           >
-            <input
-              readOnly
-              placeholder="Ask Columbus"
-              className="w-full"
+            <div
               style={{
-                borderRadius: "clamp(8px, 1cqw, 14px)",
-                border: `1px solid ${BORDER}`,
-                backgroundColor: "#FFFFFF",
-                padding:
-                  "clamp(8px, 1.1cqw, 14px) clamp(40px, 4cqw, 54px) clamp(8px, 1.1cqw, 14px) clamp(12px, 1.4cqw, 20px)",
-                fontSize: "clamp(0.62rem, 0.92cqw, 0.78rem)",
-                color: TEXT_MUTED,
-                outline: "none",
-                fontFamily: FONT_STACK,
-              }}
-            />
-            <span
-              aria-hidden
-              style={{
-                position: "absolute",
-                right: "clamp(6px, 0.7cqw, 10px)",
-                top: "50%",
-                transform: "translateY(-50%)",
-                width: "clamp(22px, 2.6cqw, 34px)",
-                height: "clamp(22px, 2.6cqw, 34px)",
-                borderRadius: "clamp(6px, 0.7cqw, 10px)",
-                backgroundColor: BADGE_BG,
-                color: "#FFFFFF",
-                display: "inline-flex",
+                display: "flex",
                 alignItems: "center",
-                justifyContent: "center",
+                height: "clamp(46px, 5.6cqw, 76px)",
+                padding: "0 clamp(6px, 0.8cqw, 12px) 0 clamp(10px, 1.2cqw, 20px)",
+                gap: "clamp(6px, 0.8cqw, 10px)",
               }}
             >
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
+              <input
+                readOnly
+                placeholder="Ask Columbus"
+                style={{
+                  flex: 1,
+                  minWidth: 0,
+                  height: "100%",
+                  border: "none",
+                  outline: "none",
+                  background: "transparent",
+                  color: TEXT_MUTED,
+                  fontSize: "clamp(0.62rem, 0.92cqw, 0.78rem)",
+                  fontFamily: FONT_STACK,
+                  padding: 0,
+                }}
+              />
+              <span
                 aria-hidden
                 style={{
-                  width: "clamp(11px, 1.3cqw, 16px)",
-                  height: "clamp(11px, 1.3cqw, 16px)",
+                  flexShrink: 0,
+                  width: "clamp(22px, 2.6cqw, 34px)",
+                  height: "clamp(22px, 2.6cqw, 34px)",
+                  borderRadius: "clamp(6px, 0.7cqw, 10px)",
+                  backgroundColor: BADGE_BG,
+                  color: "#FFFFFF",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "center",
                 }}
               >
-                <path d="M5 12h14" />
-                <path d="m13 5 7 7-7 7" />
-              </svg>
-            </span>
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden
+                  style={{
+                    width: "clamp(11px, 1.3cqw, 16px)",
+                    height: "clamp(11px, 1.3cqw, 16px)",
+                  }}
+                >
+                  <path d="M5 12h14" />
+                  <path d="m13 5 7 7-7 7" />
+                </svg>
+              </span>
+            </div>
+            <p
+              style={{
+                margin: 0,
+                textAlign: "center",
+                color: TEXT_MUTED,
+                fontSize: "clamp(0.5rem, 0.72cqw, 0.64rem)",
+                letterSpacing: "-0.005em",
+                padding: "0 clamp(8px, 1cqw, 16px)",
+              }}
+            >
+              Columbus Pro is an LGM and can get things wrong.
+            </p>
           </div>
         </div>
 
@@ -982,7 +905,7 @@ export default function AgenticResearchMockup({ industryId, preload = false }: A
           </div>
         </div>
       </div>
-    </div>
+    </MockupChrome>
   );
 }
 

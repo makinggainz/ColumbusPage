@@ -1,32 +1,23 @@
 "use client";
 
-import Image from "next/image";
 import { ImageWithFallback } from "@/components/ui/ImageWithFallback";
 import ColumbusMark from "./superFeatureRows/ColumbusMark";
 import { useMediaWarm } from "@/components/ui/MediaPrefetcher";
-// Static import → AVIF + blur-up for the shared chrome PNG.
-import chromeBackground from "@/public/BusinessPgMedia/business/ConversationalMapChat.png";
+import MockupChrome, { BarDivider, BarPill, EditsNotSaved, GRADIENT_ORANGE } from "./MockupChrome";
 
-/* Layered composite of the Columbus chat platform mockup. Three z-stacked
-   layers, deepest first:
-
-     1. MapImage — covers the right column with a real map tile
-     2. /business/ConversationalMapChat.png — chrome PNG (transparent in
-        the chat panel and right-side button area, so the map shows
-        through while the sidebar, top bar, and baked controls remain)
-     3. Coded UI on top: ChatResponse (industry-specific query bubble +
-        Columbus forecast answer) and ChatInputBox (typeable "Ask
-        Columbus" field) */
-
-const FLOATING_SHADOW =
-  "0 1px 2px rgba(0,0,0,0.10), 0 6px 14px rgba(0,0,0,0.10), 0 28px 56px rgba(0,0,0,0.22), 0 56px 96px rgba(0,0,0,0.18)";
+/* The Columbus "Ask the Map" mockup. The app chrome (left icon rail + top
+   bar with the Columbus logo, "untitled chat" crumb, and the Report View /
+   Save Mapshot / Edits-not-saved actions) is drawn programmatically by the
+   shared <MockupChrome>. This component supplies the inner pane: a two-column
+   split — a coded chat panel on the left (ChatResponse + ChatInputBox) and a
+   real map tile on the right with floating search/data buttons and map
+   controls drawn in code (these used to be baked into the chrome PNG). */
 
 const NAVY = "#0B1B3A";
 const ACCENT = "#154ACC";
 const DARK_SURFACE = "#0A0B10";
 const HAIRLINE = "#E5E7EB";
 const MUTED = "#9CA3AF";
-const MID = "#374151";
 const PANEL_BG = "#FFFFFF";
 const SURFACE_TINT = "#F3F4F6";
 
@@ -41,27 +32,9 @@ const TYPE = {
   meta: "clamp(8.5px, 0.8vw, 10.5px)",
 };
 
-/* Chrome PNG layout — these % values are relative to the card, which
-   uses the PNG's native aspect (5190/3030) so no object-cover cropping. */
-const CHAT_TOP = 9;
-const CHAT_BOTTOM = 11;
-/* Left-side UI (chat response + input) shifted ~10px left on the 1180px card
-   (≈0.85%); both edges move together so the panel width is unchanged. */
-const CHAT_LEFT = 5.15;
-const CHAT_RIGHT = 46.15;
-
-/* Horizontal padding inside the chat-response panel. The input box is inset
-   by this same amount on each side so its border lines up with the content
-   (results card, paragraphs) above it rather than running wider. */
+/* Horizontal padding inside the chat-response panel. The input box shares
+   this padding so its border lines up with the content above it. */
 const PANEL_PAD = "clamp(6px, 0.7vw, 10px)";
-
-const INPUT_TOP = 89;
-const INPUT_BOTTOM = 96;
-const INPUT_LEFT = CHAT_LEFT;
-const INPUT_RIGHT = CHAT_RIGHT;
-
-const MAP_LEFT = 47;
-const MAP_TOP = 5.5;
 
 export type MapChatPoi = {
   top: string;
@@ -145,55 +118,160 @@ export default function MapChatPlatform({
   /* Eager-but-low-priority once the section is warm OR has been preloaded. */
   const soon = warm || preload;
   return (
-    <div
-      className="biz-product-display biz-mockup-frame mx-auto w-full"
-      style={{
-        maxWidth: 1180,
-        borderRadius: "var(--ent-radius-2xl)",
-        border: "2px solid var(--ent-border-card)",
-        overflow: "hidden",
-        backgroundColor: PANEL_BG,
-      }}
+    <MockupChrome
+      className="biz-product-display biz-mockup-frame"
+      railIcons={["grid", "search-star", "edit", "database"]}
+      activeRailIndex={1}
+      crumbs={["untitled chat"]}
+      actions={
+        // +5px per gap over the shared wrapper's default → ~10px more
+        // horizontal space between Report View ↔ Save Mapshot ↔ Edits not saved
+        // (a divider sits in each gap).
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "calc(clamp(6px, 0.8cqw, 12px) + 5px)",
+          }}
+        >
+          {/* The shared actions wrapper is nudged down to align action TEXT
+              with the Columbus title; that pushes the bordered Report View
+              rectangle ~1px below the bar's centre, so counter-shift it up 1px
+              to keep the rectangle itself vertically centred. */}
+          <span style={{ display: "inline-flex", transform: "translateY(-1px)" }}>
+          <BarPill
+            gradient={GRADIENT_ORANGE}
+            fontSize="14px"
+            fontWeight={500}
+            radius={10}
+            paddingY="calc(clamp(4px, 0.7cqw, 9px) - 1.5px)"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.9"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden
+              style={{ width: "clamp(11px, 1.3cqw, 16px)", height: "clamp(11px, 1.3cqw, 16px)" }}
+            >
+              <path d="M12 20h9" />
+              <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4Z" />
+            </svg>
+            Report View
+          </BarPill>
+          </span>
+          <BarDivider height="20px" color="#D5D5D5" />
+          <span
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "clamp(4px, 0.6cqw, 8px)",
+              color: NAVY,
+              fontSize: "14px",
+              fontWeight: 500,
+              letterSpacing: "-0.005em",
+              whiteSpace: "nowrap",
+            }}
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.9"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden
+              style={{ width: "clamp(12px, 1.4cqw, 17px)", height: "clamp(12px, 1.4cqw, 17px)" }}
+            >
+              <path d="M15 3h6v6" />
+              <path d="M9 21H3v-6" />
+              <path d="M21 3l-7 7" />
+              <path d="M3 21l7-7" />
+            </svg>
+            Save Mapshot
+          </span>
+          <BarDivider height="20px" color="#D5D5D5" />
+          <EditsNotSaved fontSize="14px" fontWeight={400} />
+        </div>
+      }
     >
-      <div style={{ position: "relative", width: "100%", aspectRatio: "5190 / 3030" }}>
+      <div style={{ display: "flex", width: "100%", height: "100%" }}>
+        {/* ── Left: coded chat panel ── */}
+        <div
+          style={{
+            width: "44%",
+            flexShrink: 0,
+            height: "100%",
+            backgroundColor: PANEL_BG,
+            borderRight: `1px solid ${HAIRLINE}`,
+            display: "flex",
+            flexDirection: "column",
+            overflow: "hidden",
+          }}
+        >
+          {/* Conversation — keeps its inset padding. */}
+          <div
+            style={{
+              flex: 1,
+              minHeight: 0,
+              display: "flex",
+              flexDirection: "column",
+              padding: PANEL_PAD,
+              overflow: "hidden",
+            }}
+          >
+            <ChatResponse
+              userQuery={userQuery}
+              responseIntro={responseIntro}
+              listTitle={listTitle}
+              listSubtitle={listSubtitle}
+              listItems={listItems}
+              keyTakeaway={keyTakeaway}
+            />
+          </div>
+          {/* Input + disclaimer dock — flush to the panel's left/right/bottom
+              edges; only a top hairline separates it from the conversation. */}
+          <div
+            className="shrink-0"
+            style={{
+              backgroundColor: "#FFFFFF",
+              borderTop: `1px solid ${HAIRLINE}`,
+              paddingBottom: "clamp(5px, 0.7cqw, 9px)",
+            }}
+          >
+            <ChatInputBox />
+            <p
+              style={{
+                margin: 0,
+                textAlign: "center",
+                color: MUTED,
+                fontSize: TYPE.meta,
+                letterSpacing: "-0.005em",
+                padding: "0 clamp(8px, 1cqw, 16px)",
+              }}
+            >
+              Columbus Pro is an LGM and can get things wrong.
+            </p>
+          </div>
+        </div>
+
+        {/* ── Right: live map tile + floating controls ── */}
         <MapImage map={map} eager={eager} warm={soon} />
-
-        <Image
-          src={chromeBackground}
-          alt=""
-          fill
-          sizes="(max-width: 1180px) 100vw, 1180px"
-          className="object-cover object-center"
-          aria-hidden
-          placeholder="blur"
-          {...(eager
-            ? { priority: true }
-            : { loading: soon ? "eager" : "lazy", fetchPriority: soon ? "low" : undefined })}
-        />
-
-        <ChatResponse
-          userQuery={userQuery}
-          responseIntro={responseIntro}
-          listTitle={listTitle}
-          listSubtitle={listSubtitle}
-          listItems={listItems}
-          keyTakeaway={keyTakeaway}
-        />
-        <ChatInputBox />
       </div>
-    </div>
+    </MockupChrome>
   );
 }
 
 function MapImage({ map, eager, warm }: { map: string; eager?: boolean; warm?: boolean }) {
   return (
     <div
-      className="absolute overflow-hidden"
+      className="relative overflow-hidden"
       style={{
-        top: `${MAP_TOP}%`,
-        bottom: 0,
-        left: `${MAP_LEFT}%`,
-        right: 0,
+        flex: 1,
+        minWidth: 0,
+        height: "100%",
         /* Vibrancy lift — same recipe as MapThumb / MapLayeredVisual,
            applied to the wrapper so the next/image below inherits it. */
         filter: "saturate(1.2) contrast(1.08)",
@@ -218,6 +296,123 @@ function MapImage({ map, eager, warm }: { map: string; eager?: boolean; warm?: b
       <Marker top="32%" left="38%" tone="accent" />
       <Marker top="58%" left="56%" tone="dark" />
       <Marker top="46%" left="22%" tone="accent" />
+
+      <MapFloatingButtons />
+      <MapControls />
+    </div>
+  );
+}
+
+/* Floating action buttons over the map — a search and a data (database)
+   circle, matching the pair baked into the source chrome PNG. Anchored 20px
+   in from the map's left edge (i.e. 20px from the chat area's right edge). */
+function MapFloatingButtons() {
+  return (
+    <div
+      aria-hidden
+      className="absolute"
+      style={{
+        top: "clamp(8px, 1.4cqw, 18px)",
+        left: 20,
+        display: "flex",
+        flexDirection: "column",
+        gap: "clamp(5px, 0.7cqw, 9px)",
+      }}
+    >
+      <CircleButton>
+        <svg viewBox="0 0 24 24" fill="none" stroke={DARK_SURFACE} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ width: "52%", height: "52%" }}>
+          <circle cx="11" cy="11" r="7" />
+          <path d="m20 20-3.5-3.5" />
+        </svg>
+      </CircleButton>
+      <CircleButton>
+        <svg viewBox="0 0 24 24" fill="none" stroke={DARK_SURFACE} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ width: "52%", height: "52%" }}>
+          <ellipse cx="12" cy="5" rx="8" ry="3" />
+          <path d="M4 5v6c0 1.66 3.58 3 8 3s8-1.34 8-3V5" />
+          <path d="M4 11v6c0 1.66 3.58 3 8 3s8-1.34 8-3v-6" />
+        </svg>
+      </CircleButton>
+    </div>
+  );
+}
+
+/* Right-edge map controls — zoom box, 3D toggle, draw/edit, and a compass,
+   matching the control stack baked into the source chrome PNG. */
+function MapControls() {
+  return (
+    <div
+      aria-hidden
+      className="absolute"
+      style={{
+        right: "clamp(8px, 1.2cqw, 18px)",
+        top: "50%",
+        transform: "translateY(-50%)",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        gap: "clamp(6px, 0.9cqw, 12px)",
+      }}
+    >
+      {/* Zoom +/- */}
+      <div
+        style={{
+          backgroundColor: "#FFFFFF",
+          borderRadius: "clamp(6px, 0.7cqw, 9px)",
+          boxShadow: "0 1px 3px rgba(0,0,0,0.18)",
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
+        <ZoomGlyph kind="plus" />
+        <div style={{ height: 1, backgroundColor: "rgba(0,0,0,0.10)" }} />
+        <ZoomGlyph kind="minus" />
+      </div>
+      <CircleButton size="small">
+        <span style={{ color: ACCENT, fontSize: "clamp(7px, 0.85cqw, 11px)", fontWeight: 700, letterSpacing: "-0.02em" }}>3D</span>
+      </CircleButton>
+      <CircleButton size="small">
+        <svg viewBox="0 0 24 24" fill="none" stroke={ACCENT} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ width: "50%", height: "50%" }}>
+          <path d="M12 20h9" />
+          <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4Z" />
+        </svg>
+      </CircleButton>
+      <CircleButton size="small">
+        <svg viewBox="0 0 24 24" fill={ACCENT} stroke="none" style={{ width: "46%", height: "46%" }}>
+          <path d="M12 3l5 16-5-4-5 4z" />
+        </svg>
+      </CircleButton>
+    </div>
+  );
+}
+
+function CircleButton({ children, size = "normal" }: { children: React.ReactNode; size?: "normal" | "small" }) {
+  const dim = size === "small" ? "clamp(20px, 2.4cqw, 34px)" : "clamp(24px, 2.9cqw, 40px)";
+  return (
+    <div
+      style={{
+        width: dim,
+        height: dim,
+        borderRadius: "50%",
+        backgroundColor: "#FFFFFF",
+        boxShadow: "0 1px 3px rgba(0,0,0,0.18)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      {children}
+    </div>
+  );
+}
+
+function ZoomGlyph({ kind }: { kind: "plus" | "minus" }) {
+  const dim = "clamp(20px, 2.4cqw, 34px)";
+  return (
+    <div style={{ width: dim, height: dim, display: "flex", alignItems: "center", justifyContent: "center" }}>
+      <svg viewBox="0 0 24 24" fill="none" stroke={DARK_SURFACE} strokeWidth="2" strokeLinecap="round" style={{ width: "44%", height: "44%" }}>
+        <path d="M5 12h14" />
+        {kind === "plus" && <path d="M12 5v14" />}
+      </svg>
     </div>
   );
 }
@@ -255,16 +450,12 @@ function Marker({ top, left, tone }: { top: string; left: string; tone: "accent"
 function ChatInputBox() {
   return (
     <div
-      className="absolute flex items-center"
+      className="flex items-center shrink-0"
       style={{
-        top: `${INPUT_TOP}%`,
-        bottom: `${100 - INPUT_BOTTOM}%`,
-        left: `calc(${INPUT_LEFT}% + ${PANEL_PAD})`,
-        right: `calc(${100 - INPUT_RIGHT}% + ${PANEL_PAD})`,
-        backgroundColor: PANEL_BG,
-        border: `1px solid ${HAIRLINE}`,
-        borderRadius: 10,
-        padding: "0 8px 0 16px",
+        height: "clamp(46px, 5.6cqw, 76px)",
+        // Border + background live on the dock wrapper; this row only lays
+        // out the field + send button, flush to the panel's side edges.
+        padding: "0 clamp(6px, 0.8cqw, 12px) 0 clamp(10px, 1.2cqw, 20px)",
         gap: 10,
       }}
     >
@@ -290,8 +481,8 @@ function ChatInputBox() {
         aria-label="Send"
         className="flex items-center justify-center shrink-0"
         style={{
-          width: 36,
-          height: 36,
+          width: "clamp(24px, 2.7cqw, 36px)",
+          height: "clamp(24px, 2.7cqw, 36px)",
           borderRadius: 8,
           backgroundColor: NAVY,
           color: "#FFFFFF",
@@ -325,14 +516,10 @@ function ChatResponse({
 }) {
   return (
     <div
-      className="absolute flex flex-col"
+      className="flex flex-col"
       style={{
-        top: `${CHAT_TOP}%`,
-        bottom: `${CHAT_BOTTOM}%`,
-        left: `${CHAT_LEFT}%`,
-        right: `${100 - CHAT_RIGHT}%`,
-        backgroundColor: PANEL_BG,
-        padding: PANEL_PAD,
+        flex: 1,
+        minHeight: 0,
         gap: "clamp(4px, 0.5vw, 7px)",
         justifyContent: "flex-start",
         overflow: "hidden",

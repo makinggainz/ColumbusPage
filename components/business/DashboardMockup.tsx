@@ -1,14 +1,13 @@
 "use client";
 
-import Image from "next/image";
 import type { IndustryId } from "@/components/use-cases/industry/types";
-import { useMediaWarm } from "@/components/ui/MediaPrefetcher";
-import dashboardFrame from "@/public/BusinessPgMedia/business/DashboardFrame.png";
+import MockupChrome from "./MockupChrome";
 
-/* Mock UI: the "Dashboard" demo. Reuses the same chrome PNG as
-   DataManagerMockup / AgenticResearchMockup and paints the inner pane
-   with a list-style activity view, modelled on the reference
-   screenshot's Chats tab.
+/* Mock UI: the "Dashboard" demo. The app chrome (left icon rail + top bar
+   with the Columbus logo, "Dashboard" crumb, and the "Tell Columbus Chatbot
+   to search" field) is drawn programmatically by the shared <MockupChrome>;
+   this component supplies the inner pane — a list-style activity view modelled
+   on the reference screenshot's Chats tab.
 
    Structure (top-to-bottom):
      1. Underlined tab row — Audits / Site Selections / Chats /
@@ -301,70 +300,74 @@ const AVATAR_PALETTES: { from: string; to: string }[] = [
 
 export type DashboardMockupProps = {
   industryId?: IndustryId;
-  /* When true, the frame loads eagerly at low priority even while this demo
-     is the inactive (display:none) one — ComparisonSection sets it once the
-     section enters the viewport so all showcases are preloaded. */
+  /* Accepted for call-site compatibility (ComparisonSection passes it). The
+     chrome is now code-drawn, so there's no frame raster to preload — no-op. */
   preload?: boolean;
 };
 
-export default function DashboardMockup({ industryId, preload = false }: DashboardMockupProps = {}) {
-  const warm = useMediaWarm();
-  const soon = warm || preload;
+export default function DashboardMockup({ industryId }: DashboardMockupProps = {}) {
   const items =
     (industryId && CONTENT[industryId]) ?? CONTENT["residential-real-estate"]!;
 
   return (
-    <div
-      className="biz-product-display biz-mockup-frame relative w-full mx-auto"
-      style={{
-        aspectRatio: "5184 / 2976",
-        maxWidth: 1180,
-        /* 24px rounded corners matching the other demos in the
-           ComparisonSection (MapChatPlatform / DataManagerMockup /
-           AgenticResearchMockup). The chrome PNG runs flush to the
-           rounded edges — the white-frame inset that used to live
-           here was creating a visible polaroid-style border around
-           the demo and was removed per the design pass. The
-           rounded clip slightly trims the baked-in burger / gear
-           icons at the corners — accepted tradeoff for a cleaner
-           edge that matches the rest of the family. */
-        borderRadius: "var(--ent-radius-2xl)",
-        overflow: "hidden",
-        /* White placeholder fill — before the chrome PNG loads this wrapper
-           would otherwise be transparent and show the section's sky backdrop
-           straight through (reading as a borderless/"no-frame" flash). The
-           white fill makes it a clean white panel until the chrome paints. */
-        backgroundColor: "#FFFFFF",
-        containerType: "inline-size",
-      }}
+    <MockupChrome
+      className="biz-product-display biz-mockup-frame"
+      railIcons={["grid", "search-star", "edit", "database"]}
+      activeRailIndex={0}
+      crumbs={["Dashboard"]}
+      actions={
+        <div
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: "clamp(6px, 0.8cqw, 12px)",
+            flex: "0 1 clamp(180px, 32cqw, 420px)",
+            minWidth: 0,
+            border: "1px solid rgba(0,0,0,0.12)",
+            borderRadius: 10,
+            // Vertical padding tuned so the field matches the Report View /
+            // Data Catalogue pill height (≈38.8px).
+            padding: "calc(clamp(4px, 0.7cqw, 9px) - 1px) clamp(10px, 1.3cqw, 18px)",
+          }}
+        >
+          <span
+            style={{
+              flex: 1,
+              minWidth: 0,
+              color: TEXT_MUTED,
+              fontSize: "14px",
+              fontWeight: 500,
+              letterSpacing: "-0.005em",
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+            }}
+          >
+            Tell Columbus Chatbot to search
+          </span>
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke={TEXT_NAVY}
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden
+            style={{ width: "clamp(12px, 1.4cqw, 18px)", height: "clamp(12px, 1.4cqw, 18px)", flexShrink: 0 }}
+          >
+            <circle cx="11" cy="11" r="7" />
+            <path d="m20 20-3.5-3.5" />
+          </svg>
+        </div>
+      }
     >
       <div
-        className="absolute pointer-events-none"
-        style={{ inset: 0, zIndex: 5 }}
-      >
-        <Image
-          src={dashboardFrame}
-          alt="Columbus Dashboard"
-          fill
-          sizes="(max-width: 1180px) 100vw, 1180px"
-          placeholder="blur"
-          loading={soon ? "eager" : "lazy"}
-          fetchPriority={soon ? "low" : undefined}
-          className="object-cover object-center"
-        />
-      </div>
-
-      <div
         key={industryId ?? "default"}
-        className="absolute industry-fade-in"
+        className="industry-fade-in"
         style={{
-          left: "4.167%",
-          top: "6.048%",
-          right: 0,
-          bottom: 0,
-          backgroundColor: "#FFFFFF",
+          width: "100%",
+          height: "100%",
           overflow: "hidden",
-          zIndex: 10,
           fontFamily: FONT_STACK,
           color: TEXT_NAVY,
           display: "flex",
@@ -564,7 +567,7 @@ export default function DashboardMockup({ industryId, preload = false }: Dashboa
         </div>
       </div>
       </div>
-    </div>
+    </MockupChrome>
   );
 }
 
