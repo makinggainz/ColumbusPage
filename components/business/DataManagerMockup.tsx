@@ -1,21 +1,18 @@
 "use client";
 
-import Image from "next/image";
 import type { IndustryId } from "@/components/use-cases/industry/types";
-import { useMediaWarm } from "@/components/ui/MediaPrefetcher";
-import dataManagerFrame from "@/public/business/DataManagerFrame.png";
+import MockupChrome, {
+  BarPill,
+  PlusGlyph,
+  GRADIENT_PURPLE,
+  GRADIENT_RAINBOW,
+} from "./MockupChrome";
 
-/* Mock UI: the "Trusted data, verified for confidence" demo. The frame
-   image (/business/DataManagerFrame.png, 5184×3003 px) carries the Data
-   Manager chrome — left icon rail + top bar with the Columbus logo,
-   "Data Manager" crumb, and the +Import data / Data Digestion /
-   +Smart Layers actions. Its inner pane is TRANSPARENT, so we paint a
-   white surface inset to the chrome's exact pixel boundaries:
-     • left rail right-edge:  x=215/5184 → 4.166%
-     • top bar bottom-edge:   y=206/3003 → 6.893%
-   The hairline dividers at x=213–215 and y=204–206 in the frame are
-   the chrome's own; the white surface starts at x=216 / y=207 so the
-   dividers remain visible.
+/* Mock UI: the "Trusted data, verified for confidence" demo. The app chrome
+   (left icon rail + top bar with the Columbus logo, "Data Manager" crumb, and
+   the +Import data / Data Digestion / +Smart Layers actions) is now drawn
+   programmatically by the shared <MockupChrome>; this component only supplies
+   the inner pane content.
 
    Layout matches the cards as they appear in the per-industry source
    PDFs (Residential Real Estate.pdf, Commercial Real Estate.pdf,
@@ -209,94 +206,78 @@ const FONT_STACK =
 
 export type DataManagerMockupProps = {
   industryId?: IndustryId;
-  /* When true, the frame loads eagerly at low priority even while this demo
-     is the inactive (display:none) one — ComparisonSection sets it once the
-     section enters the viewport so all showcases are preloaded. */
+  /* Accepted for call-site compatibility (ComparisonSection passes it). The
+     chrome is now code-drawn, so there's no frame raster left to preload —
+     the prop is a no-op. */
   preload?: boolean;
 };
 
-export default function DataManagerMockup({ industryId, preload = false }: DataManagerMockupProps = {}) {
-  const warm = useMediaWarm();
-  const soon = warm || preload;
+export default function DataManagerMockup({ industryId }: DataManagerMockupProps = {}) {
   const cards =
     (industryId && CARDS_BY_INDUSTRY[industryId]) ??
     CARDS_BY_INDUSTRY["residential-real-estate"]!;
 
   return (
-    <div
-      className="biz-product-display biz-mockup-frame relative w-full mx-auto"
-      style={{
-        aspectRatio: "5184 / 3003",
-        maxWidth: 1180,
-        borderRadius: "var(--ent-radius-2xl)",
-        border: "2px solid var(--ent-border-card)",
-        backgroundColor: "#FFFFFF",
-        overflow: "hidden",
-        /* Container query unit basis — `cqw` inside resolves to 1% of
-           this wrapper's width, so typography and spacing inside the
-           mockup track its rendered size at every viewport. */
-        containerType: "inline-size",
-      }}
+    <MockupChrome
+      className="biz-product-display biz-mockup-frame"
+      railIcons={["grid", "search-star", "edit", "database"]}
+      activeRailIndex={3}
+      crumbs={["Data Manager"]}
+      actions={
+        // The shared actions wrapper is nudged down 1.5px to align action TEXT
+        // with the Columbus title; these are bordered pill rectangles, so
+        // counter-shift the group up 1px to keep the rectangles centred in the
+        // bar (same treatment as Map Chat's Report View).
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "clamp(6px, 0.8cqw, 12px)",
+            transform: "translateY(-1px)",
+          }}
+        >
+          <BarPill fontSize="14px" fontWeight={500} radius={10} paddingY="calc(clamp(4px, 0.7cqw, 9px) - 1.5px)">
+            <PlusGlyph />
+            Import data
+          </BarPill>
+          <BarPill gradient={GRADIENT_PURPLE} textColor="#154ACC" fontSize="14px" fontWeight={500} radius={10} paddingY="calc(clamp(4px, 0.7cqw, 9px) - 1.5px)">
+            Data Digestion
+          </BarPill>
+          <BarPill gradient={GRADIENT_RAINBOW} textColor="#154ACC" fontSize="14px" fontWeight={500} radius={10} paddingY="calc(clamp(4px, 0.7cqw, 9px) - 1.5px)">
+            <PlusGlyph />
+            Smart Layers
+          </BarPill>
+        </div>
+      }
     >
-      {/* Frame chrome (z-5). Runs flush to the rounded edge (inset 0) so the
-          chrome aligns with its content overlay, which is positioned by
-          full-frame percentages (left=215/5184, top=206/3003). The 24px
-          rounded-corner clip slightly trims the baked-in bottom-left settings
-          gear icon — accepted tradeoff for a clean edge that matches the rest
-          of the demo family (the old 6px inset created a visible polaroid-style
-          white border around the demo). The PNG's inner pane is transparent;
-          the white surface above paints that area. */}
-      <div
-        className="absolute pointer-events-none"
-        style={{ inset: 0, zIndex: 5 }}
-      >
-        <Image
-          src={dataManagerFrame}
-          alt="Columbus Data Manager"
-          fill
-          sizes="(max-width: 1180px) 100vw, 1180px"
-          placeholder="blur"
-          loading={soon ? "eager" : "lazy"}
-          fetchPriority={soon ? "low" : undefined}
-          className="object-cover object-center"
-        />
-      </div>
-
-      {/* White inner surface (z-10). Insets are the chrome's exact
-          pixel boundaries normalised: left=215/5184, top=206/3003. The
-          frame's hairline dividers at x=213–215 / y=204–206 sit just
-          inside the chrome side and stay visible. */}
+      {/* Inner pane content — search / tabs / card grid. The horizontal
+          padding keeps the grid at the same visual width as the source
+          screenshot, distributed symmetrically. */}
       <div
         key={industryId ?? "default"}
-        className="absolute industry-fade-in"
+        className="industry-fade-in"
         style={{
-          left: "4.166%",
-          top: "6.893%",
-          right: 0,
-          bottom: 0,
-          backgroundColor: "#FFFFFF",
+          width: "100%",
+          height: "100%",
           overflow: "hidden",
-          /* Equal left/right gutters inside the inner pane. The total
-             horizontal padding (~21% of the inner pane width) keeps
-             the search / tabs / card grid at the same visual width as
-             the source screenshot, but distributed symmetrically so
-             neither side reads as larger than the other. */
           paddingLeft: "clamp(28px, 10.5cqw, 124px)",
           paddingRight: "clamp(28px, 10.5cqw, 124px)",
           paddingTop: "clamp(16px, 2.5cqw, 36px)",
-          zIndex: 10,
           fontFamily: FONT_STACK,
           color: "var(--ent-text-navy, #0F173C)",
         }}
       >
-        {/* Search bar — pill with placeholder + trailing search glyph. */}
+        {/* Search bar — placeholder + trailing search glyph. Corner radius
+            matches the Dashboard's top-bar search field (borderRadius 10). */}
         <div className="relative">
           <input
             readOnly
             placeholder="Not sure which data sources are relevant? Ask Columbus Chatbot!"
-            className="w-full"
+            // placeholder:* forces the placeholder to the icon's #6B7280 at full
+            // opacity (browsers otherwise render placeholders lighter than `color`).
+            className="w-full placeholder:text-[#6B7280] placeholder:opacity-100"
             style={{
-              borderRadius: 9999,
+              borderRadius: 10,
               border: "1px solid rgba(0, 0, 0, 0.05)",
               backgroundColor: "#FFFFFF",
               padding: "clamp(6px, 0.85cqw, 11px) clamp(14px, 1.6cqw, 22px)",
@@ -483,6 +464,6 @@ export default function DataManagerMockup({ industryId, preload = false }: DataM
           ))}
         </div>
       </div>
-    </div>
+    </MockupChrome>
   );
 }

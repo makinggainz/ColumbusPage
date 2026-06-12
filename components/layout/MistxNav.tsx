@@ -58,8 +58,8 @@ const MOBILE_NAV: { label: string; href: string }[] = [
 // shadow with inset white top-edge highlights, light text on dark,
 // and a fade + scale-from-top entrance with a per-row stagger.
 export const elioMenuItems: { label: string; href: string; desc: string }[] = [
-  { label: "Try Elio", href: "/products/consumer", desc: "Consumer travel reasoning" },
-  { label: "Try Columbus", href: "/products/business", desc: "Business geospatial intelligence" },
+  { label: "Try Elio", href: "/contact?tab=elio", desc: "Consumer Social Map" },
+  { label: "Try Columbus Pro", href: "/contact?tab=columbus-pro", desc: "Business Geospatial Intelligence" },
 ];
 
 /**
@@ -630,7 +630,7 @@ export function MistxNav({
                       <a
                         role="menuitem"
                         href={item.href}
-                        onClick={() => track.ctaClicked(item.href === "/products/consumer" ? "try_elio_nav" : "try_columbus_nav", "navbar")}
+                        onClick={() => track.ctaClicked(item.href === "/contact?tab=elio" ? "try_elio_nav" : "try_columbus_nav", "navbar")}
                         className="group flex items-start gap-3 px-3 py-2.5 rounded-[10px] transition-colors duration-150 hover:bg-white/8"
                         style={{
                           opacity: elioOpen ? 1 : 0,

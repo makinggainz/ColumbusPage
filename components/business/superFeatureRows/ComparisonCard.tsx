@@ -14,7 +14,6 @@ export type ComparisonCardProps = {
   priceLabel?: string;
   price?: React.ReactNode;
   avatar?: React.ReactNode;
-  mapSrc: string;
   mapAlt?: string;
   children?: React.ReactNode;
   /* When true, the card is painted in a featured/preferred state:

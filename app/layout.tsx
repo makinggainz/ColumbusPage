@@ -110,7 +110,7 @@ export default function RootLayout({
                 url: "https://columbus.earth",
                 logo: "https://columbus.earth/logobueno.png",
                 description:
-                  "Columbus Earth Inc. is a spatial frontier AI company building the first production Large Geospatial Model.",
+                  "Columbus Earth Corp. is a spatial frontier AI company building the first production Large Geospatial Model.",
                 founders: [
                   {
                     "@type": "Person",

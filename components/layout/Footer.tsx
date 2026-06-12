@@ -97,7 +97,7 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false, t
       <footer data-navbar-theme="light" className="relative bg-[#F5F5F7] border-t border-[rgba(0,0,0,0.08)] py-10">
         <div className="max-w-[980px] mx-auto px-6 flex flex-col items-center text-center gap-5">
           <p className="text-[12px] text-[#6E6E73] max-w-md leading-relaxed">
-            The frontier AI lab building the first production Universal Geospatial Model.
+            The applied AI lab building the first production Large Geospatial Model.
           </p>
           <div className="flex gap-4">
             <Mail size={16} className="cursor-pointer text-[#6E6E73] hover:text-[#1D1D1F] transition-colors" />
@@ -211,7 +211,7 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false, t
               Columbus Earth
             </h3>
             <p className="text-[16px] md:text-[14px] leading-relaxed mb-6 md:mb-4 max-w-[320px] md:max-w-[260px] mx-auto md:mx-0 text-white/80 md:text-white/70">
-              The frontier AI lab building the first production Universal Geospatial Model.
+              The applied AI lab building the first production Large Geospatial Model.
             </p>
             <div className="flex justify-center md:justify-start gap-5 md:gap-4">
               <a href="mailto:contact@columbus.earth"><Mail size={18} className="transition-colors text-white/80 md:text-white/70 hover:text-white" /></a>
@@ -230,10 +230,10 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false, t
               { label: "Columbus Pro", href: "/products/business" },
               { label: "Elio", href: "/products/consumer" },
             ]} />
-            <FooterColumn theme={theme} title="Technology" links={[
-              { label: "LGM vs LLM", href: "/research#lgm-vs-llm" },
-              { label: "Data Collection", href: "/research#data-collection" },
-              { label: "Core Reasoning", href: "/research#core-reasoning" },
+            <FooterColumn theme={theme} title="Research" links={[
+              { label: "LGM vs LLM", href: "/research#foundationmodel" },
+              { label: "Reasoning", href: "/research#reasoning" },
+              { label: "Results", href: "/research#results" },
             ]} />
             <div className="col-span-2 flex justify-center md:contents">
               <FooterColumn theme={theme} title="Company" links={[
@@ -250,7 +250,7 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false, t
             content-sized. Mobile stacks the 4 spans vertically because a
             360-px viewport can't fit them in a row; desktop keeps the
             original horizontal row. */}
-        <div className="mt-auto border-t pt-4 pb-2 flex flex-col items-center text-center gap-2 md:flex-row md:items-center md:justify-between md:text-left md:gap-4 text-[13px] border-white/15 text-white/80 md:text-white/70">
+        <div className="mt-auto border-t pt-4 pb-2 flex flex-col items-center text-center gap-2 md:flex-row md:items-center md:justify-between md:text-left md:gap-4 text-[13px] border-white/15 text-white">
           <span>Columbus Earth &copy; 2026</span>
           <span className="italic text-[12px]">Website made by hand, no AI.</span>
           <span className="italic text-[12px]">Nature always prevails</span>
@@ -271,7 +271,7 @@ const FooterColumn = ({
    *  text — footer copy is locked to white over the video background. */
   theme?: "light" | "dark" | "light-blue";
 }) => (
-  <div>
+  <div className="md:justify-self-end">
     <p className="mb-3 md:mb-4 font-medium text-[16px] md:text-[17.5px] tracking-wide text-white">
       {title}
     </p>

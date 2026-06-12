@@ -1656,7 +1656,7 @@
   transition: color 200ms ease;
 }
 .blogCard:hover .blogCardTitle {
-  color: var(--tech-color-accent);
+  color: var(--color-accent);
 }
 
 /* Font-size comes from the global .p-m utility. */
@@ -1714,7 +1714,7 @@
   left: 0;
   height: 1px;
   width: 0;
-  background: color-mix(in srgb, var(--color-brand) 70%, transparent);
+  background: var(--color-accent);
   transition: width 0.5s cubic-bezier(0.22, 1, 0.36, 1);
   z-index: 1;
 }
@@ -1724,7 +1724,7 @@
 }
 
 .articleRow:hover {
-  color: color-mix(in srgb, var(--color-brand) 85%, transparent);
+  color: var(--color-accent);
 }
 
 .articleRowTitle {
@@ -1736,7 +1736,7 @@
 }
 
 .articleRow:hover .articleRowTitle {
-  color: color-mix(in srgb, var(--color-brand) 85%, transparent);
+  color: var(--color-accent);
 }
 
 .articleRowRight {
@@ -1756,7 +1756,7 @@
 }
 
 .articleRow:hover .articleRowDate {
-  color: color-mix(in srgb, var(--color-brand) 85%, transparent);
+  color: var(--color-accent);
 }
 
 .articleRowArrow {
@@ -1768,7 +1768,7 @@
 
 .articleRow:hover .articleRowArrow {
   transform: translateX(4px);
-  color: color-mix(in srgb, var(--color-brand) 85%, transparent);
+  color: var(--color-accent);
 }
 
 /* Tighten the engineering article list rows on small screens. */
@@ -3658,10 +3658,10 @@
   align-items: center;
   gap: 10px;
   margin-top: 32px;
-  font-size: var(--text-h7);
+  font-size: 16px;
   font-family: var(--font-display);
   font-weight: 500;
-  color: var(--color-brand);
+  color: #3371E4;
   text-decoration: none;
   transition: color 200ms ease;
 }
@@ -4631,6 +4631,10 @@
 .lgmTimelineTrack {
   position: absolute;
   top: 50%;
+  /* Centre the 1px line on 50% (matching the dots' centres) so it passes
+     exactly through them — otherwise its top edge sits 0.5px below the dot
+     centres and, rendering on top, makes the dots read as too high. */
+  transform: translateY(-50%);
   left: 0;
   right: calc(-1 * (var(--tech-sidebar-x) + var(--page-padding)));
   height: 1px;
@@ -4655,17 +4659,6 @@
   width: 5px;
   height: 5px;
   background: var(--lgm-line);
-  opacity: 0.22;
-}
-
-/* Trailing decorative dots — sit on the right extension of the track
-   (past the last milestone). Smaller and dimmer than the regular minor
-   dots so they read as soft texture trailing off into the distance. */
-.lgmTimelineDotTrailing {
-  width: 4px;
-  height: 4px;
-  background: var(--lgm-line);
-  opacity: 0.12;
 }
 
 /* Columbus "you are here" dot — bigger than a milestone dot, accent
@@ -4767,6 +4760,11 @@
   height: auto;
   margin-top: 0;
   margin-bottom: 0;
+  /* Dim the stem LINE via colour alpha (not `opacity`) so its ::after dot can
+     render at full opacity — otherwise the base stem's opacity:0.45 cascades
+     onto the dot, making it lighter than the (full-opacity) minor dots. */
+  opacity: 1;
+  background: color-mix(in srgb, var(--lgm-line) 45%, transparent);
 }
 
 .lgmTimelineColumbusDate {
@@ -4817,13 +4815,15 @@
 .lgmTimelineColumbus .lgmTimelineStem::after {
   content: "";
   position: absolute;
-  bottom: -3px;
+  /* Anchor to the stem's bottom (the centerline) and translate down by half
+     the dot's height so its CENTRE sits exactly on the track line. */
+  bottom: 0;
   left: 50%;
-  transform: translateX(-50%);
+  transform: translate(-50%, 50%);
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: #000000;
+  background: var(--lgm-line);
   opacity: 1;
 }
 
@@ -4840,9 +4840,9 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-size: var(--tech-fs-body-sm);
+  font-size: 16px;
   font-weight: 500;
-  color: var(--color-brand);
+  color: #3371E4;
   text-decoration: none;
   white-space: nowrap;
   transition: color 200ms ease;
@@ -5604,7 +5604,7 @@
   font-size: var(--text-h7);
   font-family: var(--font-display);
   font-weight: 500;
-  color: var(--tech-color-accent);
+  color: #3371E4;
   text-decoration: none;
   transition: color 200ms ease;
 }
@@ -7176,7 +7176,7 @@
 
   .lgmTimelineCta {
     margin-top: clamp(12px, 2vw, 24px);
-    font-size: var(--text-p-m);
+    font-size: 16px;
   }
 
   .lgmTimelineHalo {

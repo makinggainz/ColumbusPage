@@ -6,7 +6,6 @@ import { ImageWithFallback } from "@/components/ui/ImageWithFallback";
 import MapChatPlatform from "./MapChatPlatform";
 import { ScaleToFit } from "../technology/redesign/ScaleToFit";
 import { useMediaWarm } from "@/components/ui/MediaPrefetcher";
-import columBuzHero from "@/public/ColumBuzHero.png";
 
 export default function ChatSection() {
   const warm = useMediaWarm();
@@ -15,29 +14,28 @@ export default function ChatSection() {
       className="relative w-full overflow-hidden flex flex-col items-center pt-24 md:pt-40 lg:pt-[280px]"
       style={{ backgroundColor: "var(--ent-bg-dark-alt)" }}
     >
-      {/* Background image — ColumBuzHero portrait photo. Anchored at
-          "center 30%" instead of "center bottom" so the cloud band
-          (≈35–55% of the photo) lands in the lower half of the
-          visible section frame, sitting behind the bottom half of the
-          monitor mockup instead of the snowy park (which would
-          otherwise fill that area). Migrated from CSS background-image
-          (2.5 MB PNG) to next/image so the optimizer can ship an
-          AVIF/WebP variant. */}
+      {/* Background image — reuses the SAME hero photo the business hero loads
+          (/ColumbusBackgroundV2Enhanced.png). Matching the hero's src + sizes +
+          quality makes this request the identical next/image optimizer URL, so
+          it's a cache hit (the hero already fetched it eagerly as the LCP) — no
+          extra download. Anchored at "center 30%" so the focal band sits in the
+          lower half of the section, behind the monitor mockup. The fallback
+          gradient mirrors the hero's loading/error surface. */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{ zIndex: 0 }}
       >
         <ImageWithFallback
-          src={columBuzHero}
+          src="/ColumbusBackgroundV2Enhanced.png"
           alt=""
           aria-hidden
           fill
           sizes="100vw"
           quality={80}
-          placeholder="blur"
           loading={warm ? "eager" : "lazy"}
           fetchPriority={warm ? "low" : undefined}
           style={{ objectFit: "cover", objectPosition: "center 30%" }}
+          fallbackStyle={{ background: "linear-gradient(180deg, #1C99E8 0%, #0371CB 100%)" }}
         />
       </div>
       {/* Dark scrim — same gradient as BusinessHero: black at the top for
@@ -90,7 +88,7 @@ export default function ChatSection() {
               The card's bottom corners overlap the -20% bleed and are clipped by
               the section's overflow:hidden, same as the old monitor mockup. */}
           <ScaleToFit designWidth={1287} className="biz-hero-scale">
-            <MapChatPlatform />
+            <MapChatPlatform map="/BusinessPgMedia/UrbanInfrastructureUseCases/MapVisuals/map-chat.png" />
           </ScaleToFit>
         </div>
       </div>

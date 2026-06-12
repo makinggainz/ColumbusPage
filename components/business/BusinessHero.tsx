@@ -168,28 +168,36 @@ export default function BusinessHero() {
     {
       id: "map-chat",
       label: "Ask the Map",
+      // Matches the Map Chat (search-star) rail glyph in the showcase left nav:
+      // magnifier + filled sparkle (scaled ~25% about its centre).
       icon: (
         <>
           <circle cx="11" cy="11" r="7" />
-          <path d="m20 20-3.5-3.5" />
+          <path d="m20 20-3-3" />
+          <path
+            d="M11 7.6l.85 1.85 1.85.85-1.85.85L11 13l-.85-1.9-1.85-.85 1.85-.85z"
+            fill="currentColor"
+            stroke="none"
+            transform="translate(11 10.3) scale(1.25) translate(-11 -10.3)"
+          />
         </>
       ),
     },
     {
       id: "research",
       label: "Research Reports",
+      // Matches the "Reports" rail glyph in the product-display showcase
+      // (the `edit` icon in MockupChrome, highlighted in AgenticResearchMockup).
       icon: (
         <>
-          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-          <path d="M14 2v6h6" />
-          <path d="m11 13 4 4" />
-          <path d="M15 11h3v3" />
+          <path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+          <path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4z" />
         </>
       ),
     },
     {
       id: "data",
-      label: "Data Catalogue",
+      label: "Data Catalog",
       icon: (
         <>
           <ellipse cx="12" cy="5" rx="8" ry="3" />
@@ -225,6 +233,9 @@ export default function BusinessHero() {
   // the cycle pauses while the hero is scrolled out of view.
   const [runId, setRunId] = useState(0);
   const [onScreen, setOnScreen] = useState(false);
+  // Tracks browser-tab / window visibility so the auto-advance also pauses
+  // when the page isn't the active tab (not just when scrolled out of view).
+  const [pageVisible, setPageVisible] = useState(true);
   // Gates the auto-advance so it only begins once the page's critical
   // media has loaded (hero background photo + active product mockup,
   // both already high-priority/eager — see the LCP <ImageWithFallback>
@@ -284,6 +295,17 @@ export default function BusinessHero() {
     return () => obs.disconnect();
   }, []);
 
+  // Page Visibility — pause the auto-advance whenever the tab/window isn't
+  // the active view (switched browser tab, minimized, etc.), complementing
+  // the scroll-based `onScreen` flag so "not actively on screen" fully halts
+  // the showcase's state switching.
+  useEffect(() => {
+    const sync = () => setPageVisible(document.visibilityState === "visible");
+    sync();
+    document.addEventListener("visibilitychange", sync);
+    return () => document.removeEventListener("visibilitychange", sync);
+  }, []);
+
   // Deferred start — hold the auto-advance until everything else has
   // loaded. Wait for window `load` (all images incl. the hero photo +
   // product mockups are in by then), then a requestIdleCallback tick so
@@ -315,7 +337,7 @@ export default function BusinessHero() {
   // pauses while the hero is off-screen or the user is hovering any tab.
   const activeIndex = tabs.findIndex(t => t.id === activeTabId);
   const nextTabId = tabs[(activeIndex + 1) % tabs.length]?.id;
-  const paused = !onScreen || hoveredTabId !== null;
+  const paused = !onScreen || !pageVisible || hoveredTabId !== null;
   // Promote the next tab to active and restart the fill on the one after
   // it. Closes over the current `activeIndex` (the fill <span> is keyed by
   // runId, so this handler is re-created with a fresh index each cycle).
@@ -682,7 +704,8 @@ export default function BusinessHero() {
                       // flat bottom edge sits on the same baseline as the
                       // content area below — Chrome-style.
                       height: "100%",
-                      paddingLeft: "22px",
+                      // 22px − 7px to shift each tab's icon + label left by 7px.
+                      paddingLeft: "15px",
                       paddingRight: "14px",
                       // Top corners only — bottom is flat so the tab
                       // baseline meets the content area cleanly. Matches
@@ -806,7 +829,12 @@ export default function BusinessHero() {
                         // Ink on the white silhouette, white on dark glass;
                         // eased so it crossfades with the shape swap.
                         stroke: active ? "var(--ent-text-primary)" : "#FFFFFF",
-                        transition: "stroke 200ms ease",
+                        // Drives the search-star sparkle's fill="currentColor".
+                        color: active ? "var(--ent-text-primary)" : "#FFFFFF",
+                        transition: "stroke 200ms ease, color 200ms ease",
+                        // The Data Catalog (database) glyph reads slightly high
+                        // against the label; nudge it down 1px to align.
+                        transform: tab.id === "data" ? "translateY(1px)" : undefined,
                       }}
                     >
                       {tab.icon}
@@ -830,6 +858,12 @@ export default function BusinessHero() {
                         textOverflow: "ellipsis",
                         minWidth: 0,
                         flex: 1,
+                        // Line box must clear descenders ("g" in "Data
+                        // Catalog"), else overflow:hidden (for the ellipsis)
+                        // crops them. 1.3 stays symmetric so the text remains
+                        // optically centred with the icon.
+                        lineHeight: 1.3,
+                        transform: "translateY(0px)",
                       }}
                     >
                       {tab.label}
@@ -865,7 +899,7 @@ export default function BusinessHero() {
               <div style={{ display: "grid" }}>
                 {(
                   [
-                    { id: "map-chat",   node: <MapChatPlatform eager /> },
+                    { id: "map-chat",   node: <MapChatPlatform eager map="/BusinessPgMedia/UrbanInfrastructureUseCases/MapVisuals/map-chat.png" /> },
                     { id: "research",   node: <AgenticResearchMockup preload /> },
                     { id: "data",       node: <DataManagerMockup preload /> },
                     { id: "dashboard",  node: <DashboardMockup preload /> },
@@ -1031,7 +1065,8 @@ export default function BusinessHero() {
                     strokeWidth="1.8"
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    style={{ opacity: isActive ? 1 : 0.55 }}
+                    // color drives the search-star sparkle's fill="currentColor".
+                    style={{ opacity: isActive ? 1 : 0.55, color: "var(--ent-text-primary)" }}
                   >
                     {tab.icon}
                   </svg>

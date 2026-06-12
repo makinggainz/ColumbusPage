@@ -1,12 +1,12 @@
 import type { ReactNode } from "react";
 
 export type TechnologySectionId =
-  | "index"
-  | "lgm-vs-llm"
-  | "data-collection"
-  | "core-reasoning"
-  | "research-blog"
-  | "careers"
+  | "foundationmodel"
+  | "timeline"
+  | "reasoning"
+  | "results"
+  | "blog"
+  | "inquiries"
   | "hiring-humans";
 
 export type NavItem = {

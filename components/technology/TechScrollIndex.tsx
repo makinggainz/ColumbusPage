@@ -82,7 +82,7 @@ export function TechScrollIndex() {
   /* Fade the index out once the user reaches the bottom of the last
      section (Careers) — its bottom edge scrolling into view. */
   const updateAtEnd = useCallback(() => {
-    const careers = document.getElementById("careers");
+    const careers = document.getElementById("inquiries");
     if (!careers) {
       setAtEnd(false);
       return;

@@ -1,18 +1,15 @@
 "use client";
 
-import Image from "next/image";
 import RowHeader from "./RowHeader";
 import ColumbusMark from "./ColumbusMark";
 import { ScaleToFit } from "../../technology/redesign/ScaleToFit";
-import { useMediaWarm } from "@/components/ui/MediaPrefetcher";
 import MapBgImage from "../MapBgImage";
-import researchFrame from "@/public/business/ResearchFrame.png";
+import MockupChrome from "../MockupChrome";
 
 /* Row 1 — "With smart layers, you become an artist".
-   Wraps the smart-layer mock in the shared ResearchFrame chrome (the
-   same PNG used by AgenticResearchMockup) so the workspace reads with
-   the canonical Columbus app frame: baked-in left rail + top bar, with
-   the inner pane (4.32% left, 7.02% top, 0 right, 0.57% bottom) hosting
+   Wraps the smart-layer mock in the shared programmatic <MockupChrome> —
+   the same code-drawn Columbus app frame used by the hero's Agentic
+   Research view — so the two stay visually identical. The inner pane hosts
    the map, the floating smart-layer card, and the prompt bar. */
 
 const FONT =
@@ -43,7 +40,7 @@ const DEFAULT_FEATURES: SmartLayerFeature[] = [
   { title: "property level scoring", description: "Fresh data, continuously monitored and maintained" },
 ];
 const DEFAULT_MAP_ALT = "Nashville smart layer heatmap";
-const DEFAULT_MAP_SRC = "/business/becomeartistMap.png";
+const DEFAULT_MAP_SRC = "/BusinessPgMedia/CREUseCases/MapVisuals/becomeartistMap.png";
 const DEFAULT_PROMPT_TEXT =
   "Create a smart layer called 'Value-Add Rent Lift Probability' for every multifamily property of 100+ units built between 1975 and 2000 across the Nashville MSA. Score each property on the probability of supporting a 25%+ rent lift within 24 months of renovation";
 
@@ -56,7 +53,6 @@ export default function SmartLayerRow({
   mapSrc = DEFAULT_MAP_SRC,
   promptText = DEFAULT_PROMPT_TEXT,
 }: SmartLayerRowProps = {}) {
-  const warm = useMediaWarm();
   return (
     <div style={{ fontFamily: FONT }}>
       <RowHeader
@@ -75,148 +71,38 @@ export default function SmartLayerRow({
         }
       />
 
-      {/* ResearchFrame chrome — same PNG used by AgenticResearchMockup.
-          Carries a baked left rail + top bar (with a "Columbus / project"
-          breadcrumb and a "Shared with" group). We cover the project-
-          specific portion of the breadcrumb with smart-layer text and
-          blank out the collaborator group; the inner pane (4.32% left,
-          7.02% top, 0 right, 0.57% bottom) hosts the smart-layer mock. */}
       {/* Faithful-miniature wrap: passthrough at ≥1180, uniform scale below. */}
       <ScaleToFit designWidth={1180} className="biz-scale-visual">
-      <div
-        className="relative w-full mx-auto"
-        style={{
-          aspectRatio: "5190 / 2993",
-          maxWidth: 1180,
-          borderRadius: "var(--ent-radius-2xl)",
-          /* Stronger than the default --ent-border-card (rgba(0,0,0,0.05))
-             so the white chrome reads as a defined card instead of
-             dissolving into the white page surface around it. */
-          border: "1.5px solid rgba(0, 0, 0, 0.12)",
-          /* White wrapper background blends with the chrome image's
-             white edges, so the 6px chrome inset below reads as
-             seamless across the 24px rounded-corner negative space. */
-          backgroundColor: "#FFFFFF",
-          overflow: "hidden",
-          containerType: "inline-size",
-        }}
+      <MockupChrome
+        className="biz-product-display"
+        railIcons={["grid", "search-star", "edit", "database"]}
+        activeRailIndex={0}
+        crumbs={["Smart Layers", layerName]}
+        hideMascot
       >
-        {/* Chrome image runs flush to the rounded edge (inset 0). The 24px
-            rounded-corner clip slightly trims the baked-in bottom-left
-            settings gear icon — accepted tradeoff for a clean edge that
-            matches the rest of the demo family (the old 6px inset created a
-            visible polaroid-style white border around the demo). */}
-        <div
-          className="absolute pointer-events-none"
-          style={{ inset: 0, zIndex: 5 }}
-        >
-          <Image
-            src={researchFrame}
-            alt=""
-            fill
-            sizes="(max-width: 1180px) 100vw, 1180px"
-            placeholder="blur"
-            loading={warm ? "eager" : "lazy"}
-            fetchPriority={warm ? "low" : undefined}
-            className="object-cover object-center"
-          />
-        </div>
-
-        {/* Breadcrumb cover — replaces the chrome's baked "Columbus /
-            Kansans Project 435..." trail (everything after the Columbus
-            wordmark) with our own smart-layer breadcrumb. Extended left to
-            15.5% so it also hides the chrome's baked navy "/" separator
-            (x≈16.8–17.2%) — that slash was a different colour + tighter
-            spacing than our rendered one, so we re-render BOTH separators
-            here for a single consistent style/rhythm. Columbus ends at
-            ~15.25%, so 15.5% clears it. Right edge stays at 60.89%. */}
-        <div
-          aria-hidden
-          style={{
-            position: "absolute",
-            top: 0,
-            left: "15.5%",
-            width: "45.39%",
-            height: "7.02%",
-            backgroundColor: "#FFFFFF",
-            zIndex: 6,
-            display: "flex",
-            alignItems: "center",
-            fontFamily: FONT,
-          }}
-        >
-          <span
-            style={{
-              fontSize: "clamp(0.7rem, 1.15cqw, 1rem)",
-              fontWeight: 600,
-              color: "#0F173C",
-              letterSpacing: "-0.015em",
-              lineHeight: 1.1,
-              whiteSpace: "nowrap",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-            }}
-          >
-            {/* Leading separator (Columbus / …) — same style as the inner
-                one so all breadcrumb slashes match in colour + spacing. */}
-            <span style={{ color: "#6B7280", fontWeight: 500, margin: "0 clamp(6px, 0.8cqw, 10px)" }}>
-              /
-            </span>
-            Smart Layers
-            <span style={{ color: "#6B7280", fontWeight: 500, margin: "0 clamp(6px, 0.8cqw, 10px)" }}>
-              /
-            </span>
-            {layerName}
-          </span>
-        </div>
-
-        {/* Shared-with cover — blanks out the baked-in collaborator
-            avatars since the smart-layer view doesn't share an artifact
-            the way agentic research does. */}
-        <div
-          aria-hidden
-          style={{
-            position: "absolute",
-            top: 0,
-            left: "69.36%",
-            width: "15.42%",
-            height: "7.02%",
-            backgroundColor: "#FFFFFF",
-            zIndex: 6,
-          }}
-        />
-
-        {/* Inner pane — sits flush against the chrome's solid white
-            content area. Map fills the pane; the smart-layer card and
-            the prompt bar float on top. */}
+        {/* Inner pane — map fills it; the smart-layer card and the prompt
+            bar float on top. */}
         <div
           className="absolute"
           style={{
-            left: "4.32%",
-            top: "7.02%",
-            right: 0,
-            bottom: "0.57%",
+            inset: 0,
             backgroundColor: "#FFFFFF",
             overflow: "hidden",
-            zIndex: 10,
             fontFamily: FONT,
           }}
         >
-          {/* Map — fills the inner pane with a 3px gutter on top and
-              right; extends all the way left and down so it sits
-              BEHIND the smart-layer overlay card and prompt bar.
-              Carries the same vibrancy filter as MapThumb /
-              MapLayeredVisual so industry maps match the CRE reference
-              regardless of which renderer they're piped through. */}
+          {/* Map — fills the entire inner pane (flush to all four edges,
+              up to the bottom of the top nav bar) so it sits BEHIND the
+              smart-layer overlay card and prompt bar. Carries the same
+              vibrancy filter as MapThumb / MapLayeredVisual so industry
+              maps match the CRE reference regardless of which renderer
+              they're piped through. */}
           <div
             role={mapAlt ? "img" : undefined}
             aria-label={mapAlt || undefined}
             style={{
               position: "absolute",
-              top: 3,
-              right: 3,
-              bottom: 0,
-              left: 0,
+              inset: 0,
               borderRadius: 12,
               overflow: "hidden",
               filter: "saturate(1.2) contrast(1.08)",
@@ -273,7 +159,7 @@ export default function SmartLayerRow({
             <PromptBar text={promptText} />
           </div>
         </div>
-      </div>
+      </MockupChrome>
       </ScaleToFit>
     </div>
   );

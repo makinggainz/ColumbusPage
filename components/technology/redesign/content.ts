@@ -9,32 +9,32 @@ import type {
 } from "./types";
 
 export const TECHNOLOGY_NAV_ITEMS: NavItem[] = [
-  { id: "index", label: "Foundation Model" },
-  { id: "lgm-vs-llm", label: "Timeline" },
-  { id: "core-reasoning", label: "Research" },
-  { id: "data-collection", label: "Results" },
-  { id: "research-blog", label: "Blog" },
-  { id: "careers", label: "Inquiries" },
+  { id: "foundationmodel", label: "Foundation Model" },
+  { id: "timeline", label: "Timeline" },
+  { id: "reasoning", label: "Reasoning" },
+  { id: "results", label: "Results" },
+  { id: "blog", label: "Blog" },
+  { id: "inquiries", label: "Inquiries" },
 ];
 
 export const OBSERVED_SECTION_IDS: TechnologySectionId[] = [
-  "index",
-  "lgm-vs-llm",
-  "core-reasoning",
-  "data-collection",
-  "research-blog",
-  "careers",
+  "foundationmodel",
+  "timeline",
+  "reasoning",
+  "results",
+  "blog",
+  "inquiries",
   "hiring-humans",
 ];
 
 export const SECTION_TO_NAV_ID: Record<TechnologySectionId, TechnologySectionId> = {
-  index: "index",
-  "lgm-vs-llm": "lgm-vs-llm",
-  "core-reasoning": "core-reasoning",
-  "data-collection": "data-collection",
-  "research-blog": "research-blog",
-  careers: "careers",
-  "hiring-humans": "careers",
+  foundationmodel: "foundationmodel",
+  timeline: "timeline",
+  reasoning: "reasoning",
+  results: "results",
+  blog: "blog",
+  inquiries: "inquiries",
+  "hiring-humans": "inquiries",
 };
 
 export const SIDEBAR_HIDDEN_ON = new Set<TechnologySectionId>([
@@ -104,10 +104,10 @@ export const RESEARCH_ARTICLES: ResearchArticle[] = [
 ];
 
 export const HERO_SCROLL_INDEX_ITEMS = [
-  { label: "Foundation Model", sectionIds: ["index"] },
-  { label: "Timeline", sectionIds: ["lgm-vs-llm"] },
-  { label: "Research", sectionIds: ["core-reasoning"] },
-  { label: "Results", sectionIds: ["data-collection"] },
-  { label: "Blog", sectionIds: ["research-blog"] },
-  { label: "Inquiries", sectionIds: ["careers"] },
+  { label: "Foundation Model", sectionIds: ["foundationmodel"] },
+  { label: "Timeline", sectionIds: ["timeline"] },
+  { label: "Reasoning", sectionIds: ["reasoning"] },
+  { label: "Results", sectionIds: ["results"] },
+  { label: "Blog", sectionIds: ["blog"] },
+  { label: "Inquiries", sectionIds: ["inquiries"] },
 ];

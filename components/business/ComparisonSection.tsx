@@ -144,7 +144,10 @@ function SearchBubbleIco({ size, color }: IcoProps) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
       <circle cx="11" cy="11" r="7" />
-      <path d="m20 20-3.5-3.5" />
+      <path d="m20 20-3-3" />
+      {/* Filled sparkle inside the lens — matches the showcase's Map Chat
+          rail glyph (scaled ~25% about its centre). */}
+      <path d="M11 7.6l.85 1.85 1.85.85-1.85.85L11 13l-.85-1.9-1.85-.85 1.85-.85z" fill={color} stroke="none" transform="translate(11 10.3) scale(1.25) translate(-11 -10.3)" />
     </svg>
   );
 }
@@ -184,7 +187,7 @@ const FEATURES = [
     Icon: PenSquareIco,
   },
   {
-    title: "Data Catalogue",
+    title: "Data Catalog",
     subtitle:
       "Browse everything we've discovered.\nFind the right data for any project, all on the same platform.",
     Icon: DbIco,

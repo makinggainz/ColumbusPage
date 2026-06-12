@@ -10,7 +10,7 @@ import styles from "./business-feature-index.module.css";
 
 const ITEMS = [
   { label: "Map Chat", id: "chat" },
-  { label: "Data Catalogue", id: "data-catalogue" },
+  { label: "Data Catalog", id: "data-catalogue" },
   { label: "Generative Data", id: "super-model" },
   { label: "Research", id: "agentic-research" },
   { label: "Due Dillegence", id: "due-diligence" },

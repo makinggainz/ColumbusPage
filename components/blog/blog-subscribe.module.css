@@ -5,6 +5,48 @@
    and the business-page flat-hairline palette: #FAFAFA panel, #ECECEF 1px
    hairline, navy fill button, no gradients or drop-shadows. ──────────── */
 
+/* ── Centered composition (blog index) ────────────────────────────────
+   Heading → pill → caption, stacked and centered on the plain page
+   background — no card box. */
+.bigHeading {
+  font-family: var(--font-display);
+  font-size: clamp(26px, 4.6vw, 42px);
+  font-weight: 500;
+  letter-spacing: -0.025em;
+  line-height: 1.1;
+  color: var(--color-ink);
+  margin-bottom: clamp(22px, 3.4vw, 32px);
+}
+
+/* Caps the pill so it stays a tidy, centered control rather than
+   stretching the full text column. */
+.formCentered {
+  width: 100%;
+  max-width: 520px;
+  margin: 0 auto;
+}
+
+.caption {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--color-muted);
+  max-width: 460px;
+  margin: clamp(16px, 2.4vw, 22px) auto 0;
+}
+
+.caption a {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  transition: opacity 180ms ease;
+}
+.caption a:hover { opacity: 0.7; }
+
+/* Centered variants of the submit-state rows for the centered layout. */
+.successBoxCentered { justify-content: center; }
+.successTextCentered { align-items: center; text-align: center; }
+.errorTextCentered { text-align: center; }
+
 /* ── Pill container (input + button side-by-side) ─────────────────────── */
 .pill {
   display: flex;
@@ -13,6 +55,11 @@
   border-radius: var(--radius-button-lg);  /* 26px — generous pill */
   overflow: hidden;
   background: #FFFFFF;
+  /* Restrained lift so the pill floats off the page background — the
+     same soft-glow-on-white feel as the homepage, not a heavy shadow. */
+  box-shadow:
+    0 1px 2px rgba(11, 27, 43, 0.04),
+    0 8px 24px rgba(11, 27, 43, 0.06);
   transition:
     border-color 220ms ease,
     box-shadow   220ms ease;
@@ -20,7 +67,9 @@
 
 .pill:focus-within {
   border-color: var(--color-accent);
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-accent) 14%, transparent);
+  box-shadow:
+    0 0 0 3px color-mix(in srgb, var(--color-accent) 14%, transparent),
+    0 8px 24px rgba(11, 27, 43, 0.06);
 }
 
 .pillError {
